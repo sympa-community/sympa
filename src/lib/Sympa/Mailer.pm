@@ -138,8 +138,16 @@ sub store {
 
         my $pipeout =
             $self->_get_sendmail_handle($return_path, [@rcpt], $envid);
+        unless ($pipeout) {
+            return undef;
+        }
         print $pipeout $msg_string;
         unless (close $pipeout) {
+            Log::do_log(
+                'err',
+                'Failed to close pipe: %m, exit status %s',
+                $CHILD_ERROR >> 8
+            );
             return undef;
         }
         $numsmtp++;
