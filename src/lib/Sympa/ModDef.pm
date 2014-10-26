@@ -171,6 +171,8 @@ our %cpan_modules = (
         'gettext_id' =>
             "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install the associated FastCGI frontend, e.g. mod_fcgid for Apache.",
     },
+    # Fcntl is core module.
+    # File::Basename is core module.
     'File::Copy::Recursive' => {
         required_version => '0.36',
         package_name     => 'File-Copy-Recursive',
@@ -181,6 +183,12 @@ our %cpan_modules = (
         package_name => 'File-NFSLock',
         mandatory    => 1,
         'gettext_id' => 'required to perform NFS-safe file locking',
+    },
+    'File::Path' => {
+        required_version => '2.08',
+        package_name     => 'File-Path',
+        mandatory        => 1,
+        'gettext_id'     => 'used to create or remove paths',
     },
     'HTML::FormatText' => {
         package_name => 'HTML-Format',

@@ -48,7 +48,6 @@ use tools;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::Text;
-use Sympa::Tools::Password;
 
 my $language = Sympa::Language->instance;
 
