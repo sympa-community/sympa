@@ -121,11 +121,20 @@ sub store {
     my $msg_string = $message->as_string;
     $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
 
+    my $sendmail = $Conf::Conf{'sendmail'};
+    my @sendmail_args = split /\s+/, $Conf::Conf{'sendmail_args'};
+    if (defined $envid and length $envid) {
+        # Postfix clone of sendmail command doesn't allow spaces between
+        # "-V" and envid.
+        push @sendmail_args, '-N', 'success,delay,failure', "-V$envid";
+    }
     my $min_cmd_size =
-        length($Conf::Conf{'sendmail'}) + 1 +
-        length($Conf::Conf{'sendmail_args'}) +
-        length(' -N success,delay,failure -V') + 32 +
-        length(" -f $return_path");
+        length($sendmail) + 1 +
+        length(join ' ', @sendmail_args) + 1 +
+        length("-f $return_path --");
+    my $maxsmtp =
+        int($Conf::Conf{'maxsmtp'} / ($self->{redundancy} || 1)) || 1;
+
     my $numsmtp = 0;
     while (@all_rcpt) {
         # Split rcpt by max length of command line (_SC_ARG_MAX).
@@ -136,11 +145,65 @@ sub store {
             push @rcpt, (shift @all_rcpt);
         }
 
-        my $pipeout =
-            $self->_get_sendmail_handle($return_path, [@rcpt], $envid);
-        unless ($pipeout) {
-            return undef;
+        # Get sendmail handle.
+
+        unless ($return_path) {
+            Log::do_log('err', 'Missing Return-Path');
         }
+
+        # Check how many open smtp's we have, if too many wait for a few
+        # to terminate and then do our job.
+        Log::do_log('debug3', 'Open = %s', $self->{_opensmtp});
+        while ($self->{_opensmtp} > $maxsmtp) {
+            Log::do_log('debug3', 'Too many open SMTP (%s), calling reaper',
+                $self->{_opensmtp});
+            last if $self->reaper(0) == -1;    # Blocking call to the reaper.
+        }
+
+        my ($pipein, $pipeout, $pid);
+        unless (pipe $pipein, $pipeout) {
+            die sprintf 'Unable to create a SMTP channel: %s', $ERRNO;
+            # No return
+        }
+        $pid = _safefork();
+        $self->{_pids}->{$pid} = 0;
+
+        unless ($pid) {    # _safefork() would die if fork() had failed.
+            # Child
+            close $pipeout;
+            open STDIN, '<&', $pipein;
+
+            # The '<>' means null sender.
+            # Terminate options by "--" to prevent addresses beginning with "-"
+            # being treated as options.
+            exec $sendmail, @sendmail_args, '-f',
+                ($return_path eq '<>' ? '' : $return_path), '--', @rcpt;
+
+            exit 1;        # Should never get there.
+        } else {
+            # Parent
+            if ($self->{log_smtp}) {
+                Log::do_log(
+                    'notice',
+                    'Forked process %d: %s %s -f \'%s\' -- %s',
+                    $pid,
+                    $sendmail,
+                    join(' ', @sendmail_args),
+                    $return_path,
+                    join(' ', @rcpt)
+                );
+            }
+            unless (close $pipein) {
+                Log::do_log('err', 'Could not close forked process %d', $pid);
+                return undef;
+            }
+            $self->{_opensmtp}++;
+            select undef, undef, undef, 0.3
+                if $self->{_opensmtp} < $maxsmtp;
+        }
+
+        # Output to handle.
+
         print $pipeout $msg_string;
         unless (close $pipeout) {
             Log::do_log(
@@ -169,82 +232,8 @@ sub store {
 
 # Old names: mail::smtpto(), Sympa::Mail::smtpto(),
 # Sympa::Mailer::get_sendmail_handle().
-# Note: Use store().
-sub _get_sendmail_handle {
-    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
-    my $self = shift;
-    my ($return_path, $rcpt, $envid) = @_;
-
-    unless ($return_path) {
-        Log::do_log('err', 'Missing Return-Path');
-    }
-
-    Log::do_log('debug3', '(%s, %s)', $return_path, join(',', @$rcpt));
-
-    my ($pid, $str);
-
-    # Check how many open smtp's we have, if too many wait for a few
-    # to terminate and then do our job.
-    my $maxsmtp =
-        int($Conf::Conf{'maxsmtp'} / ($self->{redundancy} || 1)) || 1;
-
-    Log::do_log('debug3', 'Open = %s', $self->{_opensmtp});
-    while ($self->{_opensmtp} > $maxsmtp) {
-        Log::do_log('debug3', 'Too many open SMTP (%s), calling reaper',
-            $self->{_opensmtp});
-        last if $self->reaper(0) == -1;    # Blocking call to the reaper.
-    }
-
-    my ($in, $out);
-    unless (pipe $in, $out) {
-        die sprintf 'Unable to create a SMTP channel: %s', $ERRNO;
-        # No return
-    }
-    $pid = _safefork();
-    $self->{_pids}->{$pid} = 0;
-
-    my $sendmail = $Conf::Conf{'sendmail'};
-    my @sendmail_args = split /\s+/, $Conf::Conf{'sendmail_args'};
-    if (defined $envid and length $envid) {
-        # Postfix clone of sendmail command doesn't allow spaces between
-        # "-V" and envid.
-        push @sendmail_args, '-N', 'success,delay,failure', "-V$envid";
-    }
-    if ($pid == 0) {
-        # Child
-        close $out;
-        open STDIN, '<&', $in;
-
-        $return_path = '' if $return_path eq '<>';    # null sender
-        # Terminate options by "--" to prevent addresses beginning with "-"
-        # being treated as options.
-        exec $sendmail, @sendmail_args, '-f', $return_path, '--', @$rcpt;
-
-        exit 1;    # Should never get there.
-    }
-
-    # Parent
-    if ($self->{log_smtp}) {
-        Log::do_log(
-            'notice',
-            'Forked process %d: %s %s -f \'%s\' -- %s',
-            $pid,
-            $sendmail,
-            join(' ', @sendmail_args),
-            $return_path,
-            join(' ', @$rcpt)
-        );
-    }
-    unless (close $in) {
-        Log::do_log('err', 'Could not close forked process %d', $pid);
-        return undef;
-    }
-    $self->{_opensmtp}++;
-    select(undef, undef, undef, 0.3)
-        if $self->{_opensmtp} < $maxsmtp;
-
-    return $out;
-}
+# DEPRECATED: Merged into store().
+#sub _get_sendmail_handle;
 
 #This has never been used.
 #sub send_in_spool($rcpt, $robot, $sympa_email, $XSympaFrom);
