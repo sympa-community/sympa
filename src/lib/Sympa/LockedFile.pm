@@ -317,6 +317,9 @@ In both cases returns false value.
 
 Closes filehandle and releases lock on it.
 
+Note that destruction of instance will safely close filehandle and release
+lock.
+
 Parameters:
 
 None.
@@ -373,6 +376,7 @@ Returns:
 
 If renaming succeeded, returns true value, otherwise false value
 and does not release lock.
+In both cases filehandle is closed anyway.
 
 If filehandle had not been locked by current process,
 this method will die doing nothing.

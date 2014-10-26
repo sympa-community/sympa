@@ -43,6 +43,7 @@ use Sympa::Crash;    # Show traceback.
 use Sympa::Family;
 use Sympa::Language;
 use Sympa::List;
+use Sympa::LockedFile;
 use Log;
 use Sympa::Mailer;
 use Sympa::Message;
@@ -202,7 +203,8 @@ if ($main::options{'help'}) {
 
     foreach my $file (@files) {
         unless (File::Copy::move("$old_dir/$file", "$dir/$file")) {
-            die "Could not move $old_dir/$file to $dir/$file : $!";
+            die sprintf 'Could not move %s/%s to %s/%s: %s', $old_dir, $file,
+                $dir, $file, $ERRNO;
         }
     }
 
@@ -348,7 +350,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
     ## Main program
     if (!chdir($Conf::Conf{'home'})) {
-        die sprintf 'Can\'t chdir to %s: %s', $Conf::Conf{'home'}, $!;
+        die sprintf 'Can\'t chdir to %s: %s', $Conf::Conf{'home'}, $ERRNO;
         ## Function never returns.
     }
 
@@ -620,7 +622,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         foreach my $sympa_aliases (values %sympa_aliases) {
             my $fh;
             unless (open $fh, '>', $sympa_aliases) {    # truncate if exists
-                printf STDERR "Unable to create %s: %s\n", $sympa_aliases, $!;
+                printf STDERR "Unable to create %s: %s\n", $sympa_aliases,
+                    $ERRNO;
                 exit 1;
             }
             close $fh;
@@ -634,7 +637,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
             my $fh;
             unless (open $fh, '>>', $sympa_aliases) {    # append
-                printf STDERR "Unable to create %s: %s\n", $sympa_aliases, $!;
+                printf STDERR "Unable to create %s: %s\n", $sympa_aliases,
+                    $ERRNO;
                 exit 1;
             }
             printf $fh "#\n#\tAliases for all Sympa lists open on %s\n#\n",
@@ -1352,12 +1356,17 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         # Process grouped notifications
         Sympa::Alarm->instance->flush;
 
-        if (!opendir(DIR, $spool)) {
-            die sprintf 'Can\'t open dir %s: %s', $spool, $!;
+        my $dh;
+        unless (opendir $dh, $spool) {
+            die sprintf 'Can\'t open dir %s: %s', $spool, $ERRNO;
             ## No return.
         }
-        @qfile = sort tools::by_date grep (!/^\./, readdir(DIR));
-        closedir(DIR);
+        @qfile = sort tools::by_date grep {
+                    !/,lock/
+                and !/\A(?:\.|T\.|BAD-)/
+                and -f ($spool . '/' . $_)
+        } readdir $dh;
+        closedir $dh;
 
         unless ($main::daemon_usage == Conf::DAEMON_COMMAND) {
             # process digest only in distribution mode
@@ -1431,24 +1440,6 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         ## Scans files in queue
         ## Search file with highest priority
         foreach my $t_filename (@qfile) {
-            next unless -f "$t_spool/$t_filename";
-            next if $t_filename =~ /,lock/;    # Skip lock.
-
-            ## test ever if it is an old bad file
-            if ($t_filename =~ /^BAD\-/i) {
-                if (Sympa::Tools::File::get_mtime("$t_spool/$t_filename") <
-                    time - $Conf::Conf{'clean_delay_queue'} * 86400) {
-                    unlink("$t_spool/$t_filename");
-                    Log::do_log('notice',
-                        "Deleting bad message %s because too old",
-                        $t_filename);
-                }
-                next;
-            }
-
-            ## Don't process temporary files created by queue (T.xxx)
-            next if ($t_filename =~ /^T\./);
-
             my $t_metadata;
             if ($main::daemon_usage == Conf::DAEMON_CREATION) {
                 $t_metadata = tools::unmarshal_metadata(
@@ -1479,9 +1470,12 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             next;
         }
 
-        my $message =
-            Sympa::Message->new_from_file($t_spool . '/' . $filename,
-            %$metadata);
+        my $lock_fh =
+            Sympa::LockedFile->new($t_spool . '/' . $filename, -1, '+<');
+        next unless $lock_fh;
+
+        my $msg_string = do { local $RS; <$lock_fh> };
+        my $message = Sympa::Message->new($msg_string, %$metadata);
 
         # Compatibility: Message with checksum by Sympa <=6.2a.40
         # They should be migrated.
@@ -1507,7 +1501,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         # Appel de la fonction de traitement des mails entrants
         my $status = process_message($message);
 
-        if (defined($status)) {
+        if (defined $status) {
             Log::do_log('debug', "Finished %s", "$t_spool/$filename");
 
             if ($main::options{'keepcopy'}) {
@@ -1519,32 +1513,32 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                     ) {
                     Log::do_log(
                         'notice',
-                        'Could not rename %s to %s: %s',
-                        "$t_spool/$filename",
-                        $main::options{'keepcopy'} . "/$filename",
-                        $!
+                        'Could not rename %s/%s to %s/%s: %m',
+                        $t_spool,
+                        $filename,
+                        $main::options{'keepcopy'},
+                        $filename
                     );
                 }
             }
-            unlink("$t_spool/$filename");
+            $lock_fh->unlink;
         } else {
             my $bad_dir = "$t_spool/bad";
 
             if (-d $bad_dir) {
-                unless (rename("$t_spool/$filename", "$bad_dir/$filename")) {
+                unless ($lock_fh->rename($bad_dir . '/' . $filename)) {
                     die sprintf
                         'Unable to rename bad file %s to %s/%s: %s',
-                        $filename, $bad_dir, $filename, $!;
+                        $filename, $bad_dir, $filename, $lock_fh->last_error;
                 }
                 Log::do_log('notice', "Moving bad file %s to bad/",
                     $filename);
             } else {
                 Log::do_log('notice', 'Missing directory "%s"', $bad_dir);
-                unless (
-                    rename("$t_spool/$filename", "$t_spool/BAD-$filename")) {
+                unless ($lock_fh->rename($t_spool . '/BAD-' . $filename)) {
                     die sprintf
                         'Unable to rename bad file %s to BAD-%s: %s',
-                        $filename, $filename, $!;
+                        $filename, $filename, $lock_fh->last_error;
                 }
                 Log::do_log('notice', "Renaming bad file %s to BAD-%s",
                     $filename, $filename);
@@ -3503,7 +3497,7 @@ sub SendDigest {
 
     if (!opendir(DIR, $Conf::Conf{'queuedigest'})) {
         die sprintf 'Unable to access directory %s : %s',
-            $Conf::Conf{'queuedigest'}, $!;
+            $Conf::Conf{'queuedigest'}, $ERRNO;
         ## No return.
     }
     my @dfile = (sort grep (!/^\./, readdir(DIR)));

@@ -34,6 +34,7 @@ use Pod::Usage;
 use Sympa::Bulk;
 use Sympa::Constants;
 use Conf;
+use Sympa::LockedFile;
 use Log;
 
 my %options;
@@ -64,11 +65,13 @@ unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
         "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.";
 }
 # Sets the UMASK
-umask(oct($Conf::Conf{'umask'}));
+umask oct $Conf::Conf{'umask'};
 
-my $bulk = Sympa::Bulk->new;
-
+my $bulk      = Sympa::Bulk->new;
 my $spool_dir = $Conf::Conf{'queue'};
+
+mkdir "$spool_dir/bad",   0755 unless -d "$spool_dir/bad";
+mkdir "$spool_dir/moved", 0755 unless -d "$spool_dir/moved";
 
 my ($dh, $filename);
 unless (open $dh, $spool_dir) {
@@ -82,28 +85,32 @@ while ($filename = readdir $dh) {
     next unless /\ABAD-/;
     next unless /\A\.+/;
 
+    my $lock_fh =
+        Sympa::LockedFile->new($spool_dir . '/' . $filename, -1, '+<');
+    next unless $lock_fh;
+
     my $metadata = tools::unmarshal_metadata(
         $spool_dir, $filename,
         qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.(\w+)(?:,.*)?\z},
         [qw(localpart domainpart date pid)]
     );
-    next unless $metadata;
+    unless ($metadata) {
+        $lock_fh->close;
+        next;
+    }
 
-    my $fh;
-    next unless open $fh, '<', "$spool_dir/$filename";
-    my $msg_string = do { local $RS; <$fh> };
-    close $fh;
+    my $msg_string = do { local $RS; <$lock_fh> };
     my $message = Sympa::Message->new($msg_string, %$metadata);
-    next unless $message;
-
-    next unless $message->{checksum};
+    unless ($message and $message->{checksum}) {
+        $lock_fh->close;
+        next;
+    }
 
     unless (process($message)) {
-        rename $spool_dir . '/' . $filename, $spool_dir . '/bad/' . $filename
+        $lock_fh->rename($spool_dir . '/bad/' . $filename)
             unless $options{dry_run};
     } else {
-        rename $spool_dir . '/' . $filename,
-            $spool_dir . '/moved/' . $filename
+        $lock_fh->rename($spool_dir . '/moved/' . $filename)
             unless $options{dry_run};
     }
 }
