@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Cwd qw();
 use English qw(-no_match_vars);
+use File::Copy qw();
 use Time::HiRes qw();
 
 use Conf;
@@ -42,10 +43,12 @@ sub new {
     my $class = shift;
 
     my $self = bless {
-        msg_directory => $Conf::Conf{'queuebulk'} . '/msg',
-        pct_directory => $Conf::Conf{'queuebulk'} . '/pct',
-        bad_directory => $Conf::Conf{'queuebulk'} . '/bad',
-        _metadatas    => undef,
+        msg_directory     => $Conf::Conf{'queuebulk'} . '/msg',
+        pct_directory     => $Conf::Conf{'queuebulk'} . '/pct',
+        bad_directory     => $Conf::Conf{'queuebulk'} . '/bad',
+        bad_msg_directory => $Conf::Conf{'queuebulk'} . '/bad/msg',
+        bad_pct_directory => $Conf::Conf{'queuebulk'} . '/bad/pct',
+        _metadatas        => undef,
     } => $class;
 
     $self->_create_spool;
@@ -58,9 +61,9 @@ sub _create_spool {
 
     my $umask = umask oct $Conf::Conf{'umask'};
     foreach my $directory (
-        (   $Conf::Conf{queuebulk}, $self->{msg_directory},
-            $self->{pct_directory}, $self->{bad_directory}
-        )
+        $Conf::Conf{queuebulk},     $self->{msg_directory},
+        $self->{pct_directory},     $self->{bad_directory},
+        $self->{bad_msg_directory}, $self->{bad_pct_directory}
         ) {
         unless (-d $directory) {
             Log::do_log('info', 'Creating spool %s', $directory);
@@ -149,18 +152,29 @@ sub quarantine {
     my $self    = shift;
     my $lock_fh = shift;
 
-    my $bad_dir = $self->{bad_directory} . '/' . $lock_fh->basename(1);
-    my $bad_file;
+    my $marshalled        = $lock_fh->basename(1);
+    my $bad_pct_directory = $self->{bad_pct_directory} . '/' . $marshalled;
+    my $bad_msg_file      = $self->{bad_msg_directory} . '/' . $marshalled;
+    my $bad_pct_file;
 
-    $bad_file = $bad_dir . '/' . $lock_fh->basename;
-    mkdir $bad_dir unless -d $bad_dir;
-    return 1 if -d $bad_dir and $lock_fh->rename($bad_file);
+    File::Copy::cp($self->{msg_directory} . '/' . $marshalled, $bad_msg_file)
+        unless -e $bad_msg_file;
 
-    $bad_file =
-          $self->{pct_directory} . '/BAD-'
-        . $lock_fh->basename(1) . '-'
-        . $lock_fh->basename;
-    return $lock_fh->rename($bad_file);
+    $bad_pct_file = $bad_pct_directory . '/' . $lock_fh->basename;
+    mkdir $bad_pct_directory unless -d $bad_pct_directory;
+    unless (-d $bad_pct_directory and $lock_fh->rename($bad_pct_file)) {
+        $bad_pct_file =
+              $self->{pct_directory} . '/BAD-'
+            . $lock_fh->basename(1) . '-'
+            . $lock_fh->basename;
+        return undef unless $lock_fh->rename($bad_pct_file);
+    }
+
+    if (rmdir($self->{pct_directory} . '/' . $marshalled)) {
+        # No more packet.
+        unlink($self->{msg_directory} . '/' . $marshalled);
+    }
+    return 1;
 }
 
 sub remove {
