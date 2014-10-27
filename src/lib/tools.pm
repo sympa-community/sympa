@@ -65,12 +65,26 @@ sub _create_xss_parser {
     my $robot      = $parameters{'robot'};
     Log::do_log('debug3', '(%s)', $robot);
 
-    my $http_host_re = Conf::get_robot_conf($robot, 'http_host');
-    $http_host_re =~ s/([^\s\w\x80-\xFF])/\\$1/g;
+    # Workaround to allow only cid URLs and local links in src attribute.
+    # FIXME: how about subclassing HTML::StripScripts?
+    my $url_prefix =
+        lc(    Conf::get_robot_conf($robot, 'http_host')
+            || Conf::get_robot_conf($robot, 'wwsympa_url'));
+    $url_prefix = 'http://' . $url_prefix
+        unless $url_prefix =~ m{\A[-\w]+://};
+    do {
+        no warnings;
+        *HTML::StripScripts::validate_src_attribute = sub {
+            my $self = shift;
+            my $text = shift;
+            return (   index(lc $text, 'cid:') == 0
+                    || index(lc $text, $url_prefix) == 0) ? $text : undef;
+        };
+    };
+
     my $hss = HTML::StripScripts::Parser->new(
         {   Context  => 'Document',
             AllowSrc => 1,
-            Rules    => {'*' => {src => qr{^http://$http_host_re},},},
         }
     );
     return $hss;
