@@ -2183,7 +2183,7 @@ sub distribute_msg {
         # Ignore those reception option where mail must not ne sent.
         next
             if $mode eq 'digest'
-                or $mode eq 'digestlplain'
+                or $mode eq 'digestplain'
                 or $mode eq 'summary'
                 or $mode eq 'nomail';
 
@@ -2359,6 +2359,8 @@ sub distribute_digest {
         push @group_of_msg, \@group;
     }
 
+    my $bulk = Sympa::Bulk->new;
+
     $param->{'current_group'} = 0;
     $param->{'total_group'}   = $#group_of_msg + 1;
     ## Foreach set of digest_max_size messages...
@@ -2368,53 +2370,34 @@ sub distribute_digest {
         $param->{'msg_list'}       = $group;
         $param->{'auto_submitted'} = 'auto-forwarded';
 
-        ## Prepare Digest
-        if (exists $available_recipients->{'digest'}) {
-            ## Send digest
-            unless (
-                tools::send_file(
-                    $self,                             'digest',
-                    $available_recipients->{'digest'}, $param
-                )
-                ) {
-                Log::do_log(
-                    'notice',
-                    'Unable to send template "digest" to %s list subscribers',
-                    $self
-                );
-            }
-        }
+        # Prepare and send MIME digest, plain digest and summary.
+        foreach my $mode (qw{digest digestplain summary}) {
+            next unless exists $available_recipients->{$mode};
 
-        ## Prepare Plain Text Digest
-        if (exists $available_recipients->{'digestplain'}) {
-            ## Send digest-plain
-            unless (
-                tools::send_file(
-                    $self,                                  'digest_plain',
-                    $available_recipients->{'digestplain'}, $param
-                )
-                ) {
-                Log::do_log(
-                    'notice',
-                    'Unable to send template "digest_plain" to %s list subscribers',
-                    $self
-                );
+            my $digest_message =
+                Sympa::Message->new_from_template($self, $mode,
+                $available_recipients->{$mode}, $param);
+            if ($digest_message) {
+                # Add RFC 2919 header field
+                $self->add_list_header($digest_message, 'id');
+                # Add RFC 2369 header fields
+                foreach my $field (
+                    @{  tools::get_list_params($self->{'domain'})
+                            ->{'rfc2369_header_fields'}->{'format'}
+                    }
+                    ) {
+                    if (scalar grep { $_ eq $field }
+                        @{$self->{'admin'}{'rfc2369_header_fields'}}) {
+                        $self->add_list_header($digest_message, $field);
+                    }
+                }
             }
-        }
-
-        ## send summary
-        if (exists $available_recipients->{'summary'}) {
-            unless (
-                tools::send_file(
-                    $self,                              'summary',
-                    $available_recipients->{'summary'}, $param
-                )
-                ) {
-                Log::do_log(
-                    'notice',
-                    'Unable to send template "summary" to %s list subscribers',
-                    $self
-                );
+            unless ($digest_message
+                and defined $bulk->store($digest_message,
+                    $available_recipients->{$mode})) {
+                Log::do_log('notice',
+                    'Unable to send template "%s" to %s list subscribers',
+                    $mode, $self);
             }
         }
     }
