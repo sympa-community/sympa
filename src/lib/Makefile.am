@@ -46,6 +46,7 @@ nobase_modules_DATA = \
 	Sympa/Family.pm \
 	Sympa/Fetch.pm \
 	Sympa/HTML/FormatText.pm \
+	Sympa/HTMLSanitizer.pm \
 	Sympa/Language.pm \
 	Sympa/LDAP.pm \
 	Sympa/LDAPSource.pm \
@@ -105,6 +106,7 @@ MAN3PM = \
 	Sympa/DatabaseDriver/PostgreSQL.pm \
 	Sympa/DatabaseDriver/SQLite.pm\
 	Sympa/DatabaseDriver/Sybase.pm \
+	Sympa/HTMLSanitizer.pm \
 	Sympa/Language.pm \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \

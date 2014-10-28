@@ -70,6 +70,7 @@ use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Crash Hook => \&_crash_handler;    # Show traceback.
 use Sympa::Family;
+use Sympa::HTMLSanitizer;
 use Sympa::Language;
 use Sympa::LDAPSource;
 use Sympa::List;
@@ -2358,10 +2359,8 @@ sub get_parameters {
             && $in{'path'} =~ $list->{'dir'} . '/shared'
             && lc($in{'path'}) =~ /\.html?/) {
             my $tmpparam = $in{$p};
-            $tmpparam = tools::sanitize_html(
-                'robot'  => $robot,
-                'string' => $in{$p}
-            );
+            $tmpparam =
+                Sympa::HTMLSanitizer->new($robot)->sanitize_html($in{$p});
             if (defined $tmpparam) {
                 $in{$p} = $tmpparam;
             } else {
@@ -2626,10 +2625,8 @@ sub get_parameters_old {
             && $in{'path'} =~ $list->{'dir'} . '/shared'
             && lc($in{'path'}) =~ /\.html?/) {
             my $tmpparam = $in{$p};
-            $tmpparam = tools::sanitize_html(
-                'robot'  => $robot,
-                'string' => $in{$p}
-            );
+            $tmpparam =
+                Sympa::HTMLSanitizer->new($robot)->sanitize_html($in{$p});
             if (defined $tmpparam) {
                 $in{$p} = $tmpparam;
             } else {
@@ -2872,10 +2869,8 @@ sub send_html {
     my $param_copy = Sympa::Tools::Data::dup_var($param);
     if (defined $param_copy) {
         unless (
-            tools::sanitize_var(
-                'var'              => $param_copy,
-                'level'            => 0,
-                'robot'            => $robot,
+            Sympa::HTMLSanitizer->new($robot)->sanitize_var(
+                $param_copy,
                 'htmlAllowedParam' => $param_copy->{'htmlAllowedParam'},
                 'htmlToFilter'     => $param_copy->{'htmlToFilter'},
             )
@@ -17692,14 +17687,13 @@ sub creation_shared_file {
 
     ## XSS Protection for HTML files.
     if (lc($fname) =~ /\.html?/) {
-        my $sanitized_file = tools::sanitize_html_file(
-            'robot' => $robot,
-            'file'  => "$shareddir/$path/$fname"
-        );
-        if (defined $sanitized_file) {
-            open HTMLFILE, ">:bytes", "$shareddir/$path/$fname";
-            print HTMLFILE $sanitized_file;
-            close HTMLFILE;
+        my $sanitized_html =
+            Sympa::HTMLSanitizer->new($robot)
+            ->sanitize_html_file("$shareddir/$path/$fname");
+        if (defined $sanitized_html) {
+            open my $fh, '>', "$shareddir/$path/$fname";
+            print $fh $sanitized_html;
+            close $fh;
         } else {
             Log::do_log('err', 'Unable to sanitize file %s', $fname);
         }
@@ -18989,14 +18983,13 @@ sub d_copy_file {
 
         ## XSS Protection for HTML files.
         if (lc($fname) =~ /\.html?/) {
-            my $sanitized_file = tools::sanitize_html_file(
-                'robot' => $robot,
-                'file'  => "$dest_dir/$fname"
-            );
-            if (defined $sanitized_file) {
-                open HTMLFILE, ">:bytes", "$dest_dir/$fname";
-                print HTMLFILE $sanitized_file;
-                close HTMLFILE;
+            my $sanitized_html =
+                Sympa::HTMLSanitizer->new($robot)
+                ->sanitize_html_file("$dest_dir/$fname");
+            if (defined $sanitized_html) {
+                open my $fh, '>', "$dest_dir/$fname";
+                print $fh $sanitized_html;
+                close $fh;
             } else {
                 Log::do_log('err', 'Unable to sanitize file %s', $fname);
             }

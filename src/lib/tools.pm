@@ -32,10 +32,8 @@ use Digest::MD5;
 use Encode qw();
 use Encode::MIME::Header;    # for 'MIME-Q' encoding
 use English qw(-no_match_vars);
-use HTML::StripScripts::Parser;
 use MIME::EncWords;
 use POSIX qw();
-use Scalar::Util qw();
 use Sys::Hostname qw();
 use Time::HiRes qw();
 
@@ -60,158 +58,22 @@ my $separator =
 
 ## Returns an HTML::StripScripts::Parser object built with  the parameters
 ## provided as arguments.
-sub _create_xss_parser {
-    my %parameters = @_;
-    my $robot      = $parameters{'robot'};
-    Log::do_log('debug3', '(%s)', $robot);
-
-    # Workaround to allow only cid URLs and local links in src attribute.
-    # FIXME: how about subclassing HTML::StripScripts?
-    my $url_prefix =
-        lc(    Conf::get_robot_conf($robot, 'http_host')
-            || Conf::get_robot_conf($robot, 'wwsympa_url'));
-    $url_prefix = 'http://' . $url_prefix
-        unless $url_prefix =~ m{\A[-\w]+://};
-    do {
-        no warnings;
-        *HTML::StripScripts::validate_src_attribute = sub {
-            my $self = shift;
-            my $text = shift;
-            return (   index(lc $text, 'cid:') == 0
-                    || index(lc $text, $url_prefix) == 0) ? $text : undef;
-        };
-    };
-
-    my $hss = HTML::StripScripts::Parser->new(
-        {   Context  => 'Document',
-            AllowSrc => 1,
-        }
-    );
-    return $hss;
-}
+# DEPRECATED: Use Sympa::HTMLSanitizer::new().
+#sub _create_xss_parser(robot => $robot);
 
 ## Returns sanitized version (using StripScripts) of the string provided as
 ## argument.
-sub sanitize_html {
-    my %parameters = @_;
-    my $robot      = $parameters{'robot'};
-    Log::do_log('debug3', '(string=%s, robot=%s)',
-        $parameters{'string'}, $robot);
-
-    unless (defined $parameters{'string'}) {
-        Log::do_log('err', 'No string provided');
-        return undef;
-    }
-
-    my $hss = _create_xss_parser('robot' => $robot);
-    unless (defined $hss) {
-        Log::do_log('err', 'Can\'t create StripScript parser');
-        return undef;
-    }
-    my $string = $hss->filter_html($parameters{'string'});
-    return $string;
-}
+# DEPRECATED: Use Sympa::HTMLSanitizer::filter_html().
+#sub sanitize_html(robot => $robot, string => $string);
 
 ## Returns sanitized version (using StripScripts) of the content of the file
 ## whose path is provided as argument.
-sub sanitize_html_file {
-    my %parameters = @_;
-    my $robot      = $parameters{'robot'};
-    Log::do_log('debug3', '(file=%s, robot=%s)', $parameters{'file'}, $robot);
-
-    unless (defined $parameters{'file'}) {
-        Log::do_log('err', 'No path to file provided');
-        return undef;
-    }
-
-    my $hss = _create_xss_parser('robot' => $robot);
-    unless (defined $hss) {
-        Log::do_log('err', 'Can\'t create StripScript parser');
-        return undef;
-    }
-    $hss->parse_file($parameters{'file'});
-    return $hss->filtered_document;
-}
+# DEPRECATED: Use Sympa::HTMLSanitizer::filter_html_file().
+#sub sanitize_html_file($robot => $robot, file => $file);
 
 ## Sanitize all values in the hash $var, starting from $level
-sub sanitize_var {
-    my %parameters = @_;
-    my $robot      = $parameters{'robot'};
-    Log::do_log('debug3', '(var=%s, level=%s, robot=%s)',
-        $parameters{'var'}, $parameters{'level'}, $robot);
-    unless (defined $parameters{'var'}) {
-        Log::do_log('err', 'Missing var to sanitize');
-        return undef;
-    }
-    unless (defined $parameters{'htmlAllowedParam'}
-        && $parameters{'htmlToFilter'}) {
-        Log::do_log(
-            'err',
-            'Missing var *** %s *** %s *** to ignore',
-            $parameters{'htmlAllowedParam'},
-            $parameters{'htmlToFilter'}
-        );
-        return undef;
-    }
-    my $level = $parameters{'level'};
-    $level |= 0;
-
-    if (ref($parameters{'var'})) {
-        if (ref($parameters{'var'}) eq 'ARRAY') {
-            foreach my $index (0 .. $#{$parameters{'var'}}) {
-                if (   (ref($parameters{'var'}->[$index]) eq 'ARRAY')
-                    || (ref($parameters{'var'}->[$index]) eq 'HASH')) {
-                    sanitize_var(
-                        'var'              => $parameters{'var'}->[$index],
-                        'level'            => $level + 1,
-                        'robot'            => $robot,
-                        'htmlAllowedParam' => $parameters{'htmlAllowedParam'},
-                        'htmlToFilter'     => $parameters{'htmlToFilter'},
-                    );
-                } elsif (defined $parameters{'var'}->[$index]) {
-                    # preserve numeric flags.
-                    $parameters{'var'}->[$index] =
-                        escape_html($parameters{'var'}->[$index])
-                        unless Scalar::Util::looks_like_number(
-                        $parameters{'var'}->[$index]);
-                }
-            }
-        } elsif (ref($parameters{'var'}) eq 'HASH') {
-            foreach my $key (keys %{$parameters{'var'}}) {
-                if (   (ref($parameters{'var'}->{$key}) eq 'ARRAY')
-                    || (ref($parameters{'var'}->{$key}) eq 'HASH')) {
-                    sanitize_var(
-                        'var'              => $parameters{'var'}->{$key},
-                        'level'            => $level + 1,
-                        'robot'            => $robot,
-                        'htmlAllowedParam' => $parameters{'htmlAllowedParam'},
-                        'htmlToFilter'     => $parameters{'htmlToFilter'},
-                    );
-                } elsif (defined $parameters{'var'}->{$key}) {
-                    unless ($parameters{'htmlAllowedParam'}{$key}
-                        or $parameters{'htmlToFilter'}{$key}) {
-                        # preserve numeric flags.
-                        $parameters{'var'}->{$key} =
-                            escape_html($parameters{'var'}->{$key})
-                            unless Scalar::Util::looks_like_number(
-                            $parameters{'var'}->{$key});
-                    }
-                    if ($parameters{'htmlToFilter'}{$key}) {
-                        $parameters{'var'}->{$key} = sanitize_html(
-                            'string' => $parameters{'var'}->{$key},
-                            'robot'  => $robot
-                        );
-                    }
-                }
-
-            }
-        }
-    } else {
-        Log::do_log('err', 'Variable is neither a hash nor an array');
-        return undef;
-    }
-    return 1;
-}
+# DEPRECATED: Use Sympa::HTMLSanitizer().
+#sub sanitize_var(robot => $robot, var => $var, ...);
 
 # DEPRECATED: No longer used.
 #sub sortbydomain($x, $y);

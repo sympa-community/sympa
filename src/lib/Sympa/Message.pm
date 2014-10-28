@@ -62,6 +62,7 @@ BEGIN { eval 'use Crypt::SMIME'; }
 
 use Conf;
 use Sympa::Constants;
+use Sympa::HTMLSanitizer;
 use Sympa::Language;
 use Sympa::List;
 use Log;
@@ -1649,7 +1650,7 @@ sub _fix_html_part {
         }
 
         my $filtered_body =
-            tools::sanitize_html('string' => $body, 'robot' => $robot);
+            Sympa::HTMLSanitizer->new($robot)->sanitize_html($body);
 
         my $io = $bodyh->open("w");
         unless (defined $io) {
