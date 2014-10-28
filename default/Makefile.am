@@ -316,7 +316,7 @@ nobase_default_DATA = \
 	mail_tt2/bye.tt2 \
 	mail_tt2/certif_warning.tt2 \
 	mail_tt2/command_report.tt2 \
-	mail_tt2/digest_plain.tt2 \
+	mail_tt2/digestplain.tt2 \
 	mail_tt2/digest.tt2 \
 	mail_tt2/dsn.tt2 \
 	mail_tt2/d_install_shared.tt2 \

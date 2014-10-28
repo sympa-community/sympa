@@ -24,7 +24,7 @@
 mailtemplate_DATA = authorization_reject.tt2 \
 		    bye.tt2 certif_warning.tt2 \
 		    command_report.tt2 \
-		    digest_plain.tt2 \
+		    digestplain.tt2 \
 		    digest.tt2 \
 		    dsn.tt2 \
 		    d_install_shared.tt2 \
