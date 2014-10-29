@@ -135,6 +135,9 @@ sub store {
     my $maxsmtp =
         int($Conf::Conf{'maxsmtp'} / ($self->{redundancy} || 1)) || 1;
 
+    # Ignore SIGPIPE which may occur at the time of close().
+    local $SIG{PIPE} = 'IGNORE';
+
     my $numsmtp = 0;
     while (@all_rcpt) {
         # Split rcpt by max length of command line (_SC_ARG_MAX).
