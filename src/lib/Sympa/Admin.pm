@@ -459,8 +459,8 @@ sub create_list {
     my $tt_result =
         tt2::parse_tt2($param, 'config.tt2', \$conf, [$family->{'dir'}]);
     unless (defined $tt_result || !$abort_on_error) {
-        Log::do_log('err', 'Abort on tt2 error. List %s from family %s@%s',
-            $param->{'listname'}, $family->{'name'}, $robot);
+        Log::do_log('err', 'Abort on tt2 error. List %s from family %s@%s, file config.tt2 : %s',
+            $param->{'listname'}, $family->{'name'}, $robot, tt2::get_error()->info());
         return undef;
     }
 
@@ -535,8 +535,8 @@ sub create_list {
                 \$file_content, [$family->{'dir'}]);
             unless (defined $tt_result) {
                 Log::do_log('err',
-                    'Tt2 error. List %s from family %s@%s, file %s',
-                    $param->{'listname'}, $family->{'name'}, $robot, $file);
+                    'Tt2 error. List %s from family %s@%s, file %s : %s',
+                    $param->{'listname'}, $family->{'name'}, $robot, $file, tt2::get_error()->info());
             }
             unless (open FILE, '>', "$list_dir/$file") {
                 Log::do_log('err', 'Impossible to create %s/%s: %m',
