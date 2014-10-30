@@ -9697,7 +9697,7 @@ sub _save_list_param {
         $fd->print(sprintf "%s %s\n", $key, $p->{'name'});
         $fd->print("\n");
 
-    } elsif (ref($pinfo->{$key}{'file_format'})) {
+    } elsif (ref($pinfo->{$key}{'file_format'}) eq 'HASH') {
         $fd->print(sprintf "%s\n", $key);
         foreach my $k (keys %{$p}) {
 
