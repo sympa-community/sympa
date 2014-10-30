@@ -1449,8 +1449,9 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                     $t_spool,
                     $t_filename,
                     qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
-                    [qw(automatic_listname domainpart date)]
+                    [qw(familyname domainpart date)]
                 );
+                $t_metadata->{'familyname'} =~ s/^([^\@]+)\@.+$/$1/; # get rid of existing domain
             } else {
                 $t_metadata = tools::unmarshal_metadata(
                     $t_spool,
@@ -1479,6 +1480,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
         my $msg_string = do { local $RS; <$lock_fh> };
         my $message = Sympa::Message->new($msg_string, %$metadata);
+        $message->{filename} = $t_spool . '/' . $filename;
 
         # Compatibility: Message with checksum by Sympa <=6.2a.40
         # They should be migrated.
