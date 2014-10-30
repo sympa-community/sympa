@@ -507,7 +507,7 @@ while (!$end) {
                     )
                     ) {
                     Log::do_log('err',
-                        'Failed to store message %s into mailer: %m',
+                        'Failed to store message %s into mailer',
                         $new_message);
                     $bulk->quarantine($handle);
                     undef $handle;
@@ -555,8 +555,7 @@ while (!$end) {
                     $new_message, [@rcpts], tag => $new_message->{serial}
                 )
                 ) {
-                Log::do_log('err',
-                    'Failed to store message %s into mailer: %m',
+                Log::do_log('err', 'Failed to store message %s into mailer',
                     $new_message);
                 $bulk->quarantine($handle);
                 undef $handle;

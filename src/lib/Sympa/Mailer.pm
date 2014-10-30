@@ -77,6 +77,10 @@ sub reaper {
                 $i);
             next;
         }
+        if ($CHILD_ERROR) {
+            Log::do_log('err', 'Child process %s exited with status %s',
+                $i, $CHILD_ERROR >> 8);
+        }
         $self->{_opensmtp}--;
         delete $self->{_pids}->{$i};
     }
@@ -209,11 +213,8 @@ sub store {
 
         print $pipeout $msg_string;
         unless (close $pipeout) {
-            Log::do_log(
-                'err',
-                'Failed to close pipe: %m, exit status %s',
-                $CHILD_ERROR >> 8
-            );
+            Log::do_log('err', 'Failed to close pipe to process %d: %m',
+                $pid);
             return undef;
         }
         $numsmtp++;
