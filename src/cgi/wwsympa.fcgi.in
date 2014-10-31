@@ -22075,6 +22075,16 @@ sub do_send_mail {
             HTMLEncoding   => '8bit',
             IncludeType    => 'cid',
             remove_jscript => '1',       #delete the scripts in the html
+            'From'         => $from,
+            'To'           => $to,
+            'Message-Id' => $in{'message_id'},
+            (     ($in{'in_reply_to'} and $in{'in_reply_to'} ne '<>')
+                ? ('In-Reply-To' => $in{'in_reply_to'})
+                : ()
+            ),
+            (     (defined $encoded_subject) ? ('Subject' => $encoded_subject)
+                : ()
+            ),
         );
         # parse return the MIME::Lite part to send
         my $part = eval { $mail_html->parse($page_source) } if $mail_html;
@@ -22090,13 +22100,6 @@ sub do_send_mail {
             return undef;
         }
         $message = Sympa::Message->new($part->as_string, context => $list);
-        $message->add_header('To'          => $to);
-        $message->add_header('Message-Id'  => $in{'message_id'});
-        $message->add_header('In-Reply-To' => $in{'in_reply_to'})
-            if $in{'in_reply_to'} and $in{'in_reply_to'} ne '<>';
-        $message->add_header('Subject' => $encoded_subject)
-            if defined $encoded_subject;
-        $message->add_header('From' => $from);
         $message->reformat_utf8_message([], 'utf-8');
     } else {
         ## Message body should not be empty
@@ -22122,14 +22125,16 @@ sub do_send_mail {
             return undef;
         }
 
-        $message = Sympa::Message->new("\n" . $in{'body'}, context => $list);
-        $message->add_header('To'          => $to);
-        $message->add_header('Message-Id'  => $in{'message_id'});
-        $message->add_header('In-Reply-To' => $in{'in_reply_to'})
+        my $msg_string = sprintf "From: %s\nTo: %s\nMessage-Id: %s\n",
+            $from, $to, $in{'message_id'};
+        $msg_string .= sprintf "In-Reply-To: %s\n", $in{'in_reply_to'}
             if $in{'in_reply_to'} and $in{'in_reply_to'} ne '<>';
-        $message->add_header('Subject' => $encoded_subject)
+        $msg_string .= sprintf "Subject: %s\n", $encoded_subject
             if defined $encoded_subject;
-        $message->add_header('From' => $from);
+        $msg_string .= sprintf "\n%s", $in{'body'};
+        $msg_string =~ s/(?<!\n)\z/\n/;
+
+        $message = Sympa::Message->new($msg_string, context => $list);
         $message->reformat_utf8_message([], $charset);
     }
 
