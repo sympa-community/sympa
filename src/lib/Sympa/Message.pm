@@ -3840,7 +3840,7 @@ Original message ID of the message.
 
 =item {rcpt}
 
-Recipients for delivery.  This is used by bulk spool.
+Recipients for delivery.  This is used by automatic spool and bulk spool.
 
 =item {sender}
 

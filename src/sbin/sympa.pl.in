@@ -1449,9 +1449,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                     $t_spool,
                     $t_filename,
                     qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
-                    [qw(familyname domainpart date)]
+                    [qw(list_or_family domainpart date)]
                 );
-                $t_metadata->{'familyname'} =~ s/^([^\@]+)\@.+$/$1/; # get rid of existing domain
             } else {
                 $t_metadata = tools::unmarshal_metadata(
                     $t_spool,
@@ -1682,13 +1681,25 @@ sub process_message {
     Log::do_log('notice', 'Processing %s; sender: %s; message ID: %s',
         $message, $message->{'sender'}, $message->{'message_id'});
 
-    my $robot =
-        (ref $message->{context} eq 'Sympa::List')
-        ? $message->{context}->{'domain'}
-        : $message->{context};
-    my $listname           = $message->{'listname'};
-    my $automatic_listname = $message->{'automatic_listname'}
-        if $main::daemon_usage == Conf::DAEMON_CREATION();
+    my $robot;
+    my $listname;
+    my $automatic_listname;
+    if ($main::daemon_usage == Conf::DAEMON_CREATION()) {
+        # Automatic list name and robot name are taken from {rcpt} attribute
+        # (X-Sympa-To: pseudo-header field) instead of {list_or_family}
+        # metadata in the file name, because sympa-milter doesn't include
+        # them in file name.
+        # Family name is taken from {family} attribute (X-Sympa-Family:).
+        ($automatic_listname, $robot) = split /\@/, $message->{'rcpt'}, 2;
+        # If robot is not specified, use default robot.
+        $robot ||= $Conf::Conf{'domain'};
+    } else {
+        $robot =
+            (ref $message->{context} eq 'Sympa::List')
+            ? $message->{context}->{'domain'}
+            : $message->{context};
+        $listname = $message->{'listname'};
+    }
 
     ## Ignoring messages with no sender
     my $sender = $message->{'sender'};
