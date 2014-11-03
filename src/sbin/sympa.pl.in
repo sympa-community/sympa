@@ -1443,22 +1443,12 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         ## Scans files in queue
         ## Search file with highest priority
         foreach my $t_filename (@qfile) {
-            my $t_metadata;
-            if ($main::daemon_usage == Conf::DAEMON_CREATION) {
-                $t_metadata = tools::unmarshal_metadata(
-                    $t_spool,
-                    $t_filename,
-                    qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
-                    [qw(list_or_family domainpart date)]
-                );
-            } else {
-                $t_metadata = tools::unmarshal_metadata(
-                    $t_spool,
-                    $t_filename,
-                    qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
-                    [qw(localpart domainpart date)]
-                );
-            }
+            my $t_metadata = tools::unmarshal_metadata(
+				$t_spool,
+				$t_filename,
+				qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
+				[qw(localpart domainpart date)]
+			);
             next unless $t_metadata;
 
             if (ord($t_metadata->{'priority'}) < ord($highest_priority)) {
@@ -1683,23 +1673,12 @@ sub process_message {
 
     my $robot;
     my $listname;
-    my $automatic_listname;
-    if ($main::daemon_usage == Conf::DAEMON_CREATION()) {
-        # Automatic list name and robot name are taken from {rcpt} attribute
-        # (X-Sympa-To: pseudo-header field) instead of {list_or_family}
-        # metadata in the file name, because sympa-milter doesn't include
-        # them in file name.
-        # Family name is taken from {family} attribute (X-Sympa-Family:).
-        ($automatic_listname, $robot) = split /\@/, $message->{'rcpt'}, 2;
-        # If robot is not specified, use default robot.
-        $robot ||= $Conf::Conf{'domain'};
-    } else {
-        $robot =
-            (ref $message->{context} eq 'Sympa::List')
-            ? $message->{context}->{'domain'}
-            : $message->{context};
-        $listname = $message->{'listname'};
-    }
+    
+	$robot =
+		(ref $message->{context} eq 'Sympa::List')
+		? $message->{context}->{'domain'}
+		: $message->{context};
+	$listname = $message->{'listname'};
 
     ## Ignoring messages with no sender
     my $sender = $message->{'sender'};
@@ -1807,12 +1786,12 @@ sub process_message {
         unless (ref $list eq 'Sympa::List') {
             unless ($dyn_list_family) {
                 Log::do_log('err', 'List %s does not exist',
-                    $automatic_listname);
+                    $listname);
                 Sympa::Report::reject_report_msg(
                     'user',
                     'list_unknown',
                     $sender,
-                    {   'listname' => $automatic_listname,
+                    {   'listname' => $listname,
                         'message'  => $message
                     },
                     $robot,
@@ -1821,7 +1800,7 @@ sub process_message {
                 );
                 Log::db_log(
                     {   'robot'        => $robot,
-                        'list'         => $automatic_listname,
+                        'list'         => $listname,
                         'action'       => 'process_message',
                         'parameters'   => "",
                         'target_email' => "",
@@ -1859,7 +1838,7 @@ sub process_message {
                     'user',
                     'list_unknown',
                     $sender,
-                    {   'listname' => $automatic_listname,
+                    {   'listname' => $listname,
                         'message'  => $message
                     },
                     $robot,
@@ -1875,7 +1854,7 @@ sub process_message {
                 : $message->{'dkim_pass'}    ? 'dkim'
                 :                              'smtp';
             if ($list = $dyn_family->create_automatic_list(
-                    (   'listname'   => $automatic_listname,
+                    (   'listname'   => $listname,
                         'auth_level' => $auth_level,
                         'sender'     => $sender,
                         'message'    => $message
@@ -1888,11 +1867,11 @@ sub process_message {
             } else {
                 Log::do_log('err',
                     'Unable to create list %s. Message %s ignored',
-                    $automatic_listname, $message);
+                    $listname, $message);
                 tools::send_notify_to_listmaster(
                     $dyn_family->{'robot'},
                     'automatic_list_creation_failed',
-                    {   'listname' => $automatic_listname,
+                    {   'listname' => $listname,
                         'family'   => $dyn_list_family,
                         'robot'    => $robot,
                         'msg_id'   => $msg_id,
@@ -1903,7 +1882,7 @@ sub process_message {
                     'user',
                     'dyn_cant_create',
                     $sender,
-                    {   'listname' => $automatic_listname,
+                    {   'listname' => $listname,
                         'message'  => $message
                     },
                     $robot,
@@ -1912,7 +1891,7 @@ sub process_message {
                 );
                 Log::db_log(
                     {   'robot'      => $dyn_family->{'robot'},
-                        'list'       => $automatic_listname,
+                        'list'       => $listname,
                         'action'     => 'process_message',
                         'parameters' => $msg_id . ","
                             . $dyn_family->{'robot'},

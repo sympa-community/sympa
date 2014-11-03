@@ -2686,12 +2686,11 @@ sub _decorate_parts {
 
         if ($header and -s $header) {
             open my $fh, '<', $header;
-            my $header_text = do { local $RS; <$fh> };
-            close $fh;
 
             if ($header =~ /\.mime$/) {
                 my $header_part;
-                eval { $header_part = $parser->parse($header_text); };
+                eval { $header_part = $parser->parse($fh); };
+				close $fh;
                 if ($EVAL_ERROR) {
                     Log::do_log('err', 'Failed to parse MIME data %s: %s',
                         $header, $parser->last_error);
@@ -2703,6 +2702,8 @@ sub _decorate_parts {
             } else {
                 ## text/plain header
                 $entity->make_multipart unless $entity->is_multipart;
+				my $header_text = do { local $RS; <$fh> };
+				close $fh;
                 my $header_part = MIME::Entity->build(
                     Data       => $header_text,
                     Type       => "text/plain",
@@ -2716,12 +2717,11 @@ sub _decorate_parts {
         }
         if ($footer and -s $footer) {
             open my $fh, '<', $footer;
-            my $footer_text = do { local $RS; <$fh> };
-            close $fh;
 
             if ($footer =~ /\.mime$/) {
                 my $footer_part;
-                eval { $footer_part = $parser->parse($footer_text); };
+                eval { $footer_part = $parser->parse($fh); };
+				close $fh;
                 if ($EVAL_ERROR) {
                     Log::do_log('err', 'Failed to parse MIME data %s: %s',
                         $footer, $parser->last_error);
@@ -2732,6 +2732,8 @@ sub _decorate_parts {
             } else {
                 ## text/plain footer
                 $entity->make_multipart unless $entity->is_multipart;
+				my $footer_text = do { local $RS; <$fh> };
+				close $fh;
                 $entity->attach(
                     Data       => $footer_text,
                     Type       => "text/plain",
