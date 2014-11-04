@@ -2857,7 +2857,8 @@ sub confirm {
     }
     closedir DIR;
 
-    unless ($metadata) {
+    # auth spool keeps messages only with List context.
+    unless ($metadata and ref($metadata->{context}) eq 'Sympa::List') {
         Log::do_log('info', 'CONFIRM %s from %s refused, auth failed',
             $key, $sender);
         Sympa::Report::reject_report_msg('user', 'unfound_file_message',

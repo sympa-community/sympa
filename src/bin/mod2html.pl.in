@@ -50,7 +50,11 @@ foreach my $msg_file (sort grep(!/^\./, readdir SPOOL)) {
         qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_([^_]+)\z},
         [qw(localpart domainpart modkey)]
     );
-    next unless $metadata;
+    # moderation spool keeps messages only with List context.
+    unless ($metadata and ref($metadata->{context}) eq 'Sympa::List') {
+        next;
+    }
+
     my $message = Sympa::Message->new_from_file($modspool . '/' . $msg_file,
         %$metadata);
     next unless $message;
