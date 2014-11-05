@@ -1444,11 +1444,10 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         ## Search file with highest priority
         foreach my $t_filename (@qfile) {
             my $t_metadata = tools::unmarshal_metadata(
-				$t_spool,
-				$t_filename,
-				qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
-				[qw(localpart domainpart date)]
-			);
+                $t_spool, $t_filename,
+                qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
+                [qw(localpart domainpart date)]
+            );
             next unless $t_metadata;
 
             if (ord($t_metadata->{'priority'}) < ord($highest_priority)) {
@@ -1471,6 +1470,13 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         my $message = Sympa::Message->new($msg_string, %$metadata);
         $message->{filename} = $t_spool . '/' . $filename;
 
+        # Compatibility to Sympa <=6.2a.40
+        # Acceptable format of file name in automatic spool was changed.
+        if (    $main::daemon_usage == Conf::DAEMON_CREATION()
+            and $filename =~ m{\A[^\s\@]+\.\d+\.\d+\z}) {
+            Log::do_log('%s: Message with old format.  Skipped', $message);
+            next;
+        }
         # Compatibility: Message with checksum by Sympa <=6.2a.40
         # They should be migrated.
         if ($message->{checksum}) {
@@ -1673,12 +1679,12 @@ sub process_message {
 
     my $robot;
     my $listname;
-    
-	$robot =
-		(ref $message->{context} eq 'Sympa::List')
-		? $message->{context}->{'domain'}
-		: $message->{context};
-	$listname = $message->{'listname'};
+
+    $robot =
+        (ref $message->{context} eq 'Sympa::List')
+        ? $message->{context}->{'domain'}
+        : $message->{context};
+    $listname = $message->{'listname'};
 
     ## Ignoring messages with no sender
     my $sender = $message->{'sender'};
@@ -1785,8 +1791,7 @@ sub process_message {
         $list = $message->{context};
         unless (ref $list eq 'Sympa::List') {
             unless ($dyn_list_family) {
-                Log::do_log('err', 'List %s does not exist',
-                    $listname);
+                Log::do_log('err', 'List %s does not exist', $listname);
                 Sympa::Report::reject_report_msg(
                     'user',
                     'list_unknown',
