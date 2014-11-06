@@ -1445,7 +1445,6 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
         my $msg_string = do { local $RS; <$lock_fh> };
         my $message = Sympa::Message->new($msg_string, %$metadata);
-        $message->{filename} = $t_spool . '/' . $filename;
 
         # Compatibility: Message with checksum by Sympa <=6.2a.40
         # They should be migrated.
@@ -2140,9 +2139,14 @@ sub process_message {
     if ($main::daemon_usage == Conf::DAEMON_CREATION) {
         # do not process messages in list creation only mode, move them to
         # main spool
-        unless (
-            $list->move_message($message->{'filename'}, $Conf::Conf{'queue'}))
-        {
+        my $marshalled =
+            tools::store_spool($Conf::Conf{'queue'}, $message,
+            '%s@%s.%ld.%ld,%d', [qw(localpart domainpart date PID RAND)]);
+        if ($marshalled) {
+            Log::do_log('notice',
+                'Message %s is stored into incoming spool as <%s>',
+                $message, $marshalled);
+        } else {
             Log::do_log(
                 'err',
                 'Unable to move in spool for processing message to list %s (daemon_usage = creation)',
@@ -2153,6 +2157,7 @@ sub process_message {
                 $robot, $message->as_string, $list);
             return undef;
         }
+
         if ($dyn_just_created) {
             Log::do_log(
                 'info',

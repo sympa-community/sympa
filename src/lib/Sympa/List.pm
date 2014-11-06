@@ -11400,6 +11400,7 @@ sub has_include_data_sources {
 }
 
 # move a message to a queue or distribute spool
+#DEPRECATED: No longer used.  Use tools::store_spool() (and unlink()).
 sub move_message {
     my ($self, $file, $queue) = @_;
     Log::do_log('debug2', '(%s, %s, %s)', $file, $self->{'name'}, $queue);
