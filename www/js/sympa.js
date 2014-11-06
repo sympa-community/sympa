@@ -1,79 +1,25 @@
-// fix IE broken getElementById
-if (/msie/i.test (navigator.userAgent)) //only override IE
-{
-  document.nativeGetElementById = document.getElementById;
-  document.getElementById = function(id)
-  {
-    var elem = document.nativeGetElementById(id);
-    if(elem)
-    {
-      //make sure that it is a valid match on id
-      if(elem.id == id)
-      {
-        return elem;
-      }
-      else
-      {
-        //otherwise find the correct element
-        for(var i=1;i<document.all[id].length;i++)
-        {
-          if(document.all[id][i].id == id)
-          {
-            return document.all[id][i];
-          }
-        }
-      }
-    }
-    return null;
-  };
-}
-
 function showMDN(el) {
-  var pre = el.parentNode.getElementsByTagName('pre');
-  if(!pre) return;
-  var mdn = pre[0].innerHTML;
-  return showMessage(mdn.replace(/ /g, '&nbsp;').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/\n/g, '<br />'), true);
+	var pre = $(el).parent().find('pre').eq(0);
+	if(!pre.length) return;
+	var mdn = pre.html();
+	return showMessage(mdn.replace(/ /g, '&nbsp;').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/\n/g, '<br />'), true);
 }
 
 function showMessage(message, ishtml) { // if ishtml not set then \n to <br /> transformation is applied to message
-  if(!ishtml) message = message.replace(/\n/g, '<br />');
-  var body = document.getElementsByTagName('body')[0];
-  if(!body) return;
-  
-  var block = document.createElement('div');
-  block.id = 'ErrorBlock';
-  body.insertBefore(block, body.childNodes[0]);
-  
-  var msg = document.createElement('div');
-  msg.id = 'ErrorMsg';
-  body.insertBefore(msg, body.childNodes[0]);
-  
-  var ctn = document.createElement('div');
-  ctn.className = 'messageContent';
-  msg.appendChild(ctn);
-  
-  if(message) ctn.innerHTML = message;
-  
-  var form = document.createElement('form');
-  msg.appendChild(form);
-  
-  var fs = document.createElement('fieldset');
-  form.appendChild(fs);
-  
-  var cls = document.createElement('input');
-  cls.type = 'button';
-  cls.className = 'MainMenuLinks';
-  cls.value = 'OK';
-  cls._body = body;
-  cls._block = block;
-  cls._msg = msg;
-  cls.onclick = function() {
-    this._body.removeChild(this._block);
-    this._body.removeChild(this._msg);
-  };
-  fs.appendChild(cls);
-  
-  return ctn;
+	if(!ishtml) message = message.replace(/\n/g, '<br />');
+	
+	var block = $('<div id="ErrorBlock" />').prependTo('body');
+	var msg = $('<div id="ErrorMsg" />').prependTo('body');
+	var ctn = $('<div class="messageContent" />').appendTo(msg).append(message);
+	
+	var fs = $('<fieldset />').appendTo($('<form />').appendTo(msg));
+	
+	$('<input type="button" class="MainMenuLinks" value="OK" />').appendTo(fs).on('click', function() {
+		$('#ErrorBlock').remove();
+		$('#ErrorMsg').remove();
+	});
+	
+	return ctn;
 }
 
 // To confirm archives deletion
@@ -97,160 +43,84 @@ function refresh_mom_and_die() {
   self.close();
 }
 
-function setnsubmit(element,attribute,value,formid) {
-	elt =  document.getElementById(element);
-	elt.setAttribute(attribute,value);
-	form=document.getElementById(formid);
-	form.submit();
+function setnsubmit(element, attribute, value, formid) {
+	$('#' + element).attr(attribute, value);
+	$('#' + formid).submit();
 }
 
-function showhide(div){
-    oDiv = document.getElementById(div);
-    if(oDiv.style.display == "none"){
-        oDiv.style.display = "block";
-    }else{
-        oDiv.style.display = "none";
-    }
+function showhide(div) {
+	$('#' + div).toggle();
 }
 
-function show(div){
-    oDiv = document.getElementById(div);
-    oDiv.style.display = "block";
+function show(div) {
+	$('#' + div).show();
 }
 
-function hide(div){
-    oDiv = document.getElementById(div);
-    oDiv.style.display = "none";
+function hide(div) {
+	$('#' + div).hide();
 }
 
-function hideError()
-{
-  document.getElementById('ErrorBlock').style.display = 'none';
-  document.getElementById('ErrorMsg').style.display = 'none';
+function hideError() {
+	$('#ErrorBlock').remove();
+	$('#ErrorMsg').remove();
 }
 
 // To confirm a form submition
 function request_confirm(my_message) {
-  if (confirm(my_message)) {
-    return true;
-  }else {
-    return false;
-  } 
+	return !!confirm(my_message);
 }
 
 // To confirm on a link (A HREF)
 function request_confirm_link(my_url, my_message) {
-  question = confirm(my_message);
-  if (question !="0") {
-       top.location = my_url;
-  }
+	if(confirm(my_message)) top.location = my_url;
 }
 
-function GetCookie (name) {
-   var arg = name + "=";
-   var alen = arg.length;
-   var clen = document.cookie.length;
-   var i = 0;
-   while (i < clen) {
-     var j = i + alen;
-     if (document.cookie.substring(i, j) == arg) 
-       return getCookieVal (j);
-       i = document.cookie.indexOf(" ", i) + 1;
-       if (i == 0) break; 
-     }
-   return null;
+function GetCookie(name) {
+	var cookies = document.cookies.split('; ');
+	
+	for(var i=0; i<cookies.length; i++) {
+		var parts = cookies[i].split('=');
+		var key = parts.shift();
+		if(key != name) continue;
+		
+		return parts.join('='); // In case of =s in value
+	}
+	
+	return null;
 }  
 
-function getCookieVal (offset) {
-  var endstr = document.cookie.indexOf (";", offset);
-  if (endstr == -1)
-    endstr = document.cookie.length;
-  return unescape(document.cookie.substring(offset, endstr));
-}
-
 function toggle_selection(myfield) {
-  if (!myfield.length) {
-     if (myfield.checked) {
-       myfield.checked = false;
-     }else {
-   myfield.checked = true;
-     }
-  }else if (myfield.length){
-    for (i = 0; i < myfield.length; i++) {
-       if (myfield[i].checked) {
-         myfield[i].checked = false;
-       }else {
-         myfield[i].checked = true;
-       }
-    }
-  }
+	if(typeof myfield.length == 'undefined') myfield = [myfield];
+	$.each(myfield, function() {
+		$(this).prop('checked',  !$(this).is(':checked'));
+    });
 }
 
 function chooseColorNumber(cn, cv) {
-    var select = document.getElementById('custom_color_number');
-    var text = document.getElementById('custom_color_value');
-
-    if (select)
-        for (var i=0; i<select.options.length; i++)
-            if (select.options[i].value == cn) {
-                select.options.selectedIndex = i;
-                if (text && cv) {
-                    text.value = cv; 
-                    // FIXME: use jQuery trigger()
-                    if (document.all)
-                        text.fireEvent('onchange');
-                    else {
-                        var evt = document.createEvent('HTMLEvents');
-                        evt.initEvent('change', false, true);
-                        text.dispatchEvent(evt);
-                    }
-                }
-            }
+    $('#custom_color_number').val(cn);
+    if(cv) $('#custom_color_value').val(cv);
 }
 
-// check if rejecting quietly spams
- function check_reject_spam(form,warningId) {
-
-    if (form.elements['iConfirm'].checked) {
-	return (true);
-    }
-    if ( form.elements['message_template'].options[form.elements['message_template'].selectedIndex].value ==  'reject_quiet' ){
-	return (true);
-    }	
-    document.getElementById(warningId).style.display = 'block';	
-    return (false);
+// check if rejecting quietly spams TODO
+function check_reject_spam(form,warningId) {
+	if(form.elements['iConfirm'].checked) return true;
+	
+	if(form.elements['message_template'].options[form.elements['message_template'].selectedIndex].value ==  'reject_quiet') return true;
+	
+	$('#' + warningId).show();
+	return false;
 }
-
 
 // To check at least one checkbox checked
-function checkbox_check_topic(form,warningId) {
- 
-    var checkbox_checked = false;
-    var expr = /^topic_/;	
-  
-    for (i = 0; i < form.elements.length; i++) {
-      if (form.elements[i].type == "checkbox") { 
-        var box = form.elements[i];
-        if (box.checked == "1" && expr.test(box.name)) {
- 	 checkbox_checked = true;
-       	 break;	
-        }
-      }
-    }
-    if (checkbox_checked) {
-      	return(true);	
-    } else {
-	document.getElementById(warningId).style.display='block';
-        return(false);
-    }
+function checkbox_check_topic(form, warningId) {
+	if($(form).find('input[name^="topic_"]:checked').length) return true;
+	
+	$('#' + warningId).show();
+	return false;
 }
 
 function set_select_value(s, v) {
-	for(var i=0; i<s.options.length; i++) s.options[i].selected = false;
-	for(var i=0; i<s.options.length; i++) if(s.options[i].value == v) {
-		s.options[i].selected = true;
-		return;
-	}
+	$(s).val(v);
 }
 
 //launch a search by message Id
@@ -1087,59 +957,32 @@ function getOffsets(obj) {
 
 /* popups config contextual help */
 function config_ctxhelp(td) {
-	if(!td.d) {
-		var tbl = td;
-		var d = td.getElementsByTagName('div')[0];
-		while(tbl.parentNode && tbl.tagName.toLowerCase() != 'table') tbl = tbl.parentNode;
-		if(tbl.tagName.toLowerCase() == 'table') d.style.width = tbl.offsetWidth + 'px';
-		td.d = d;
-		td.onmouseout = function() {
-			this.d.style.display = 'none';
-		}
-	}
-	td.d.style.display = 'block';
+	td = $(td);
+	if(!td.data('ctx_help')) td.data('ctx_help', td.find('div').eq(0).width(td.closest('table').width()).on('mouseout', function() {
+		$(this).hide();
+	}));
+	td.data('ctx_help').show();
 }
 
 
 // function that hide all hiddenform except one which Id is the function parameter (used in modindex and more)
-function toggleDivDisplay(my_message_id)
-{
-  var divs = document.getElementsByTagName('div');
-  for(var i=0; i<divs.length; i++){
-     if(divs[i].getAttribute('name') != 'hiddenform') continue;
-     if (divs[i].id == my_message_id) {
-        if (divs[i].style.display == 'block') {
-                divs[i].style.display = 'none';
-        } else {
-                divs[i].style.display = 'block';
-        }
-     } else {
-        divs[i].style.display = 'none';
-     }
-  }
+function toggleDivDisplay(my_message_id) {
+	$('div[name="hiddenform"]:not(#' + my_message_id + ')').hide();
+	$('#' + my_message_id).show();
 }
-
-
 
 //hide a div (usually a part of a form) 
-function hideform(my_message_id)
-{
-	document.getElementById(my_message_id).style.display='none';
+function hideform(my_message_id) {
+	$('#' + my_message_id).hide();
 }
 
-
 // fade effect for notification boxes
-jQuery(document).ready(function() {
-    $('#noticeMsg').delay(500).fadeOut(4000);
-  }
-);
+$(function() {
+	$('#noticeMsg').delay(500).fadeOut(4000);
+});
 
 /* check if the value of element is not empty */
 function isNotEmpty(id) {
-  if (document.getElementById(id)) {
-    var value = document.getElementById(id).value;
-    if (value.replace(/\s+/g, ''))
-      return true;
-  }
-  return false;
+	var v = $('#' + id).val();
+	return !v || v.match(/\s+/);
 }

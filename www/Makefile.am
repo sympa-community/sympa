@@ -47,13 +47,28 @@ nobase_static_DATA = \
 	icons/text.png \
 	icons/top.png \
 	icons/unknown.png \
-	js/jqplot.barRenderer.min.js \
-	js/jqplot.CanvasAxisTickRenderer.js \
-	js/jqplot.CanvasTextRenderer.js \
-	js/jqplot.categoryAxisRenderer.min.js \
-	js/jquery.jqplot.css \
-	js/jquery.jqplot.min.js \
-	js/jquery.js \
+	external/jqplot.barRenderer.min.js \
+	external/jqplot.CanvasAxisTickRenderer.js \
+	external/jqplot.CanvasTextRenderer.js \
+	external/jqplot.categoryAxisRenderer.min.js \
+	external/jquery.jqplot.css \
+	external/jquery.jqplot.min.js \
+	external/jquery.js \
+	external/jquery-ui.js \
+	external/jquery-ui.css \
+	external/images/ui-bg_flat_0_aaaaaa_40x100.png \
+	external/images/ui-bg_flat_75_ffffff_40x100.png \
+	external/images/ui-bg_glass_55_fbf9ee_1x400.png \
+	external/images/ui-bg_glass_65_ffffff_1x400.png \
+	external/images/ui-bg_glass_75_dadada_1x400.png \
+	external/images/ui-bg_glass_75_e6e6e6_1x400.png \
+	external/images/ui-bg_glass_95_fef1ec_1x400.png \
+	external/images/ui-bg_highlight-soft_75_cccccc_1x100.png \
+	external/images/ui-icons_222222_256x240.png \
+	external/images/ui-icons_2e83ff_256x240.png \
+	external/images/ui-icons_454545_256x240.png \
+	external/images/ui-icons_888888_256x240.png \
+	external/images/ui-icons_cd0a0a_256x240.png \
 	js/sympa.js
 
 EXTRA_DIST = $(nobase_static_DATA)
