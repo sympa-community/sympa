@@ -2712,93 +2712,61 @@ sub distribute {
     $message->add_header('X-Validation-by', $sender);
 
     ## Distribute the message
-    if (   ($main::daemon_usage == Conf::DAEMON_MESSAGE)
-        || ($main::daemon_usage == Conf::DAEMON_ALL)) {
-        my $numsmtp;
-        $message->{shelved}{dkim_sign} = 1
-            if Sympa::Tools::Data::is_in_array(
-            $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-            or Sympa::Tools::Data::is_in_array(
-            $list->{'admin'}{'dkim_signature_apply_on'},
-            'editor_validated_messages');
+    my $numsmtp;
+    $message->{shelved}{dkim_sign} = 1
+        if Sympa::Tools::Data::is_in_array(
+        $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
+        or Sympa::Tools::Data::is_in_array(
+        $list->{'admin'}{'dkim_signature_apply_on'},
+        'editor_validated_messages');
 
-        $numsmtp = Sympa::List::distribute_msg($message);
-        unless (defined $numsmtp) {
-            Log::do_log('err', 'Unable to send message to list %s', $name);
-            Sympa::Report::reject_report_msg('intern', '', $sender,
-                {'msg_id' => $msg_id},
-                $robot, $msg_string, $list);
-            return undef;
-        }
-        unless ($numsmtp) {
+    $numsmtp = Sympa::List::distribute_msg($message);
+    unless (defined $numsmtp) {
+        Log::do_log('err', 'Unable to send message to list %s', $name);
+        Sympa::Report::reject_report_msg('intern', '', $sender,
+            {'msg_id' => $msg_id},
+            $robot, $msg_string, $list);
+        return undef;
+    }
+    unless ($numsmtp) {
+        Log::do_log(
+            'info',
+            'Message for %s from %s accepted but all subscribers use digest, nomail or summary',
+            $which,
+            $sender
+        );
+    }
+    Log::do_log(
+        'info',
+        'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
+        $which,
+        $sender,
+        time - $start_time,
+        $numsmtp,
+        $list->get_total(),
+        $msg_id,
+        $message->{'size'}
+    );
+
+    unless ($quiet) {
+        unless (
+            Sympa::Report::notice_report_msg(
+                'message_distributed', $sender,
+                {'key' => $key, 'message' => $message}, $robot,
+                $list
+            )
+            ) {
             Log::do_log(
-                'info',
-                'Message for %s from %s accepted but all subscribers use digest, nomail or summary',
-                $which,
+                'notice',
+                'Unable to send template "message_report", entry "message_distributed" to %s',
                 $sender
             );
         }
-        Log::do_log(
-            'info',
-            'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
-            $which,
-            $sender,
-            time - $start_time,
-            $numsmtp,
-            $list->get_total(),
-            $msg_id,
-            $message->{'size'}
-        );
-
-        unless ($quiet) {
-            unless (
-                Sympa::Report::notice_report_msg(
-                    'message_distributed', $sender,
-                    {'key' => $key, 'message' => $message}, $robot,
-                    $list
-                )
-                ) {
-                Log::do_log(
-                    'notice',
-                    'Unable to send template "message_report", entry "message_distributed" to %s',
-                    $sender
-                );
-            }
-        }
-
-        Log::do_log('info', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
-            $name, $key, $sender, time - $time_command);
-
-    } else {
-        # this message is to be distributed but this daemon is dedicated to
-        # commands -> move it to distribution spool
-        unless ($list->move_message($file, $Conf::Conf{'queuedistribute'})) {
-            Log::do_log(
-                'err',
-                'Unable to move in spool for distribution message to list %s (daemon_usage = command)',
-                $list->{'name'}
-            );
-            Sympa::Report::reject_report_msg('intern', '', $sender,
-                {'msg_id' => $msg_id},
-                $robot, $msg_string, $list);
-            return undef;
-        }
-        unless ($quiet) {
-            Sympa::Report::notice_report_msg(
-                'message_in_distribution_spool',
-                $sender, {'key' => $key, 'message' => $message},
-                $robot, $list
-            );
-        }
-        Log::do_log(
-            'info',
-            'Message for %s from %s moved in spool %s for distribution message ID=%s',
-            $name,
-            $sender,
-            $Conf::Conf{'queuedistribute'},
-            $msg_id
-        );
     }
+
+    Log::do_log('info', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
+        $name, $key, $sender, time - $time_command);
+
     unlink($file);
 
     return 1;
@@ -3035,81 +3003,43 @@ sub confirm {
         $message->add_header('X-Validation-by', $sender);
 
         ## Distribute the message
-        if (   ($main::daemon_usage == Conf::DAEMON_MESSAGE)
-            || ($main::daemon_usage == Conf::DAEMON_ALL)) {
-            my $numsmtp;
-            $message->{shelved}{dkim_sign} = 1
-                if Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-                or Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'},
-                'md5_authenticated_messages');
+        my $numsmtp;
+        $message->{shelved}{dkim_sign} = 1
+            if Sympa::Tools::Data::is_in_array(
+            $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
+            or Sympa::Tools::Data::is_in_array(
+            $list->{'admin'}{'dkim_signature_apply_on'},
+            'md5_authenticated_messages');
 
-            $numsmtp = Sympa::List::distribute_msg($message);
-            unless (defined $numsmtp) {
-                Log::do_log('err', 'Unable to send message to list %s',
-                    $list->{'name'});
-                Sympa::Report::reject_report_msg('intern', '', $sender,
-                    {'msg_id' => $msgid, 'message' => $message},
-                    $robot, $msg_string, $list);
-                return undef;
-            }
+        $numsmtp = Sympa::List::distribute_msg($message);
+        unless (defined $numsmtp) {
+            Log::do_log('err', 'Unable to send message to list %s',
+                $list->{'name'});
+            Sympa::Report::reject_report_msg('intern', '', $sender,
+                {'msg_id' => $msgid, 'message' => $message},
+                $robot, $msg_string, $list);
+            return undef;
+        }
 
-            unless ($quiet || ($action =~ /quiet/i)) {
-                unless (
-                    Sympa::Report::notice_report_msg(
-                        'message_confirmed', $sender,
-                        {'key' => $key, 'message' => $message}, $robot,
-                        $list
-                    )
-                    ) {
-                    Log::do_log(
-                        'notice',
-                        'Unable to send template "message_report", entry "message_confirmed" to %s',
-                        $sender
-                    );
-                }
-            }
-            Log::do_log('info',
-                'CONFIRM %s from %s for list %s accepted (%d seconds)',
-                $key, $sender, $list->{'name'}, time - $time_command);
-
-        } else {
-            # this message is to be distributed but this daemon is dedicated
-            # to commands -> move it to distribution spool
+        unless ($quiet || ($action =~ /quiet/i)) {
             unless (
-                $list->move_message(
-                    $filename, $Conf::Conf{'queuedistribute'}
+                Sympa::Report::notice_report_msg(
+                    'message_confirmed', $sender,
+                    {'key' => $key, 'message' => $message}, $robot,
+                    $list
                 )
                 ) {
                 Log::do_log(
-                    'err',
-                    'Unable to move in spool for distribution message to list %s (daemon_usage = command)',
-                    $list->{'name'}
-                );
-                Sympa::Report::reject_report_msg('intern', '', $sender,
-                    {'msg_id' => $msgid, 'message' => $message},
-                    $robot, $msg_string, $list);
-                return undef;
-            }
-            unless ($quiet || ($action =~ /quiet/i)) {
-                Sympa::Report::notice_report_msg(
-                    'message_confirmed_and_in_distribution_spool',
-                    $sender, {'key' => $key, 'message' => $message},
-                    $robot, $list
+                    'notice',
+                    'Unable to send template "message_report", entry "message_confirmed" to %s',
+                    $sender
                 );
             }
-
-            Log::do_log(
-                'info',
-                'Message %s for list %s from %s confirmed; moved to spool %s for distribution message ID=%s',
-                $message,
-                $list,
-                $sender,
-                $Conf::Conf{'queuedistribute'},
-                $msgid
-            );
         }
+        Log::do_log('info',
+            'CONFIRM %s from %s for list %s accepted (%d seconds)',
+            $key, $sender, $list->{'name'}, time - $time_command);
+
         unlink($filename);
 
         return 1;

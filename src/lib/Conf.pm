@@ -52,7 +52,7 @@ Conf - Sympa configuration
 =cut
 
 sub DAEMON_MESSAGE  {1}
-sub DAEMON_COMMAND  {2}
+#sub DAEMON_COMMAND  {2}
 sub DAEMON_CREATION {4}
 sub DAEMON_ALL      {7}
 

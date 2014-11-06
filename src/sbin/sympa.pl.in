@@ -369,7 +369,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             'process_command'
         )
         ) {
-        $main::daemon_usage = Conf::DAEMON_COMMAND;
+        die "The option --service=process_command was deprecated.\n";
     } elsif (
         Sympa::Tools::Data::smart_eq(
             $main::options{'service'},
@@ -418,9 +418,9 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                 } elsif (not defined $child_pid) {
                     Log::do_log('err', 'Cannot fork: %m');
                 } else {
-                    ## We're in the specialized child process
-                    $main::daemon_usage =
-                        Conf::DAEMON_CREATION;    # automatic lists creation
+                    # We're in the specialized child process:
+                    # automatic lists creation.
+                    $main::daemon_usage = Conf::DAEMON_CREATION;
                 }
             }
 
@@ -438,31 +438,11 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                     } elsif (not defined $child_pid) {
                         die sprintf 'Cannot fork: %s', $ERRNO;
                     }
-
-                    ## Starting a dedicated process if sympa.pl is started
-                    ## with a --service argument
-                } elsif ($main::daemon_usage == Conf::DAEMON_COMMAND
-                    || $main::daemon_usage == Conf::DAEMON_COMMAND) {
-                    my $purpose;
-                    if ($main::daemon_usage == Conf::DAEMON_COMMAND) {
-                        $purpose = 'commands';
-                    } elsif ($main::daemon_usage == Conf::DAEMON_MESSAGE) {
-                        $purpose = 'messages';
-                    }
-                    my $child_pid = fork;
-                    if ($child_pid) {
-                        Log::do_log('info', 'Sympa for %s started, PID %s',
-                            $purpose, $child_pid);
-                        exit 0;
-                    } elsif (not defined $child_pid) {
-                        die sprintf 'Cannot fork: %s', $ERRNO;
-                    }
-
-                    ## Sympa forks to have 2 dedicated processes for
-                    ## processing commands and messages
                 } else {
+                    # Sympa forks to have a dedicated processes for
+                    # processing messages
                     # fork sympa.pl dedicated to commands
-                    $main::daemon_usage = Conf::DAEMON_COMMAND;
+                    $main::daemon_usage = Conf::DAEMON_ALL;
                     my $child_pid = fork;
                     if ($child_pid) {
                         Log::do_log('info',
@@ -488,8 +468,6 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         my $service = 'sympa';
         $service .= '(distribute)'
             if ($main::daemon_usage == Conf::DAEMON_MESSAGE);
-        $service .= '(command)'
-            if ($main::daemon_usage == Conf::DAEMON_COMMAND);
         $service .= '(creation)'
             if ($main::daemon_usage == Conf::DAEMON_CREATION);
         Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
@@ -547,8 +525,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
 ## Check for several files.
 ## Prevent that 2 processes perform checks at the same time...
-    if (   $main::daemon_usage == Conf::DAEMON_COMMAND
-        || $main::daemon_usage == Conf::DAEMON_ALL) {
+    if ($main::daemon_usage == Conf::DAEMON_ALL) {
         unless (Conf::checkfiles()) {
             Log::fatal_err('Missing files');
             ## No return.
@@ -1371,7 +1348,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         } readdir $dh;
         closedir $dh;
 
-        unless ($main::daemon_usage == Conf::DAEMON_COMMAND) {
+        if ($main::daemon_usage == Conf::DAEMON_ALL) {
             # process digest only in distribution mode
             ## Scan queuedigest
             if ($index_queuedigest++ >= $digestsleep) {
@@ -2837,122 +2814,48 @@ sub DoMessage {
     if (   ($action =~ /^do_it/)
         || ($main::daemon_usage == Conf::DAEMON_MESSAGE)) {
 
-        if (   ($main::daemon_usage == Conf::DAEMON_MESSAGE)
-            || ($main::daemon_usage == Conf::DAEMON_ALL)) {
-            $message->{shelved}{dkim_sign} = 1
-                if Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-                or (
-                Sympa::Tools::Data::is_in_array(
-                    $list->{'admin'}{'dkim_signature_apply_on'},
-                    'smime_authenticated_messages')
-                and $message->{'smime_signed'}
-                )
-                or (
-                Sympa::Tools::Data::is_in_array(
-                    $list->{'admin'}{'dkim_signature_apply_on'},
-                    'dkim_authenticated_messages')
-                and $message->{'dkim_pass'}
-                );
+        $message->{shelved}{dkim_sign} = 1
+            if Sympa::Tools::Data::is_in_array(
+            $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
+            or (
+            Sympa::Tools::Data::is_in_array(
+                $list->{'admin'}{'dkim_signature_apply_on'},
+                'smime_authenticated_messages')
+            and $message->{'smime_signed'}
+            )
+            or (
+            Sympa::Tools::Data::is_in_array(
+                $list->{'admin'}{'dkim_signature_apply_on'},
+                'dkim_authenticated_messages')
+            and $message->{'dkim_pass'}
+            );
 
-            ## Check TT2 syntax for merge_feature.
-            unless ($message->test_personalize($list)) {
-                Log::do_log(
-                    'err',
-                    'Failed to personalize. Message %s for list %s was rejected',
-                    $message,
-                    $list
-                );
-                tools::send_dsn($list, $message, {}, '5.6.5');
-                return undef;
-            }
-
-            my $numsmtp;
-            #XXX eval {
-            $numsmtp = Sympa::List::distribute_msg($message);
-            #XXX };
-            ## Keep track of known message IDs...if any
-            $msgid_table{$list->get_list_id()}{$messageid} = time
-                if $messageid;
-
-            unless (defined($numsmtp)) {
-                Log::do_log('err', 'Unable to send message to list %s',
-                    $listname);
-                Sympa::Report::reject_report_msg('intern', '', $sender,
-                    {'msg_id' => $messageid, 'message' => $message},
-                    $robot_id, $msg_string, $list);
-                Log::db_log(
-                    {   'robot'        => $robot_id,
-                        'list'         => $list->{'name'},
-                        'action'       => 'DoMessage',
-                        'parameters'   => $message->get_id,
-                        'target_email' => '',
-                        'msg_id'       => $messageid,
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $sender,
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
-                    }
-                );
-                return undef;
-            }
+        ## Check TT2 syntax for merge_feature.
+        unless ($message->test_personalize($list)) {
             Log::do_log(
-                'info',
-                'Message %s for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
+                'err',
+                'Failed to personalize. Message %s for list %s was rejected',
                 $message,
-                $listname,
-                $sender,
-                time - $start_time,
-                $numsmtp,
-                $list->get_total(),
-                $messageid,
-                $message->{'size'}
+                $list
             );
+            tools::send_dsn($list, $message, {}, '5.6.5');
+            return undef;
+        }
 
-            return 1;
+        my $numsmtp;
+        #XXX eval {
+        $numsmtp = Sympa::List::distribute_msg($message);
+        #XXX };
+        ## Keep track of known message IDs...if any
+        $msgid_table{$list->get_list_id()}{$messageid} = time
+            if $messageid;
 
-        } else {
-            # this message is to be distributed but this daemon is dedicated
-            # to commands or list creation -> move it to distribution spool
-            unless (
-                $list->move_message(
-                    $message->{'filename'},
-                    $Conf::Conf{'queuedistribute'}
-                )
-                ) {
-                Log::do_log(
-                    'err',
-                    'Unable to move in spool for distribution message to list %s (daemon_usage = command)',
-                    $listname
-                );
-                Sympa::Report::reject_report_msg('intern', '', $sender,
-                    {'msg_id' => $messageid, 'message' => $message},
-                    $robot_id, $msg_string, $list);
-                Log::db_log(
-                    {   'robot'        => $robot_id,
-                        'list'         => $list->{'name'},
-                        'action'       => 'DoMessage',
-                        'parameters'   => $message->get_id,
-                        'target_email' => '',
-                        'msg_id'       => $messageid,
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $sender,
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
-                    }
-                );
-                return undef;
-            }
-            Log::do_log(
-                'info',
-                'Message for %s from %s moved in spool %s for distribution message ID=%s',
-                $listname,
-                $sender,
-                $Conf::Conf{'queuedistribute'},
-                $messageid
-            );
+        unless (defined($numsmtp)) {
+            Log::do_log('err', 'Unable to send message to list %s',
+                $listname);
+            Sympa::Report::reject_report_msg('intern', '', $sender,
+                {'msg_id' => $messageid, 'message' => $message},
+                $robot_id, $msg_string, $list);
             Log::db_log(
                 {   'robot'        => $robot_id,
                     'list'         => $list->{'name'},
@@ -2960,16 +2863,29 @@ sub DoMessage {
                     'parameters'   => $message->get_id,
                     'target_email' => '',
                     'msg_id'       => $messageid,
-                    'status'       => 'success',
-                    'error_type'   => 'moved_in_spool',
+                    'status'       => 'error',
+                    'error_type'   => 'internal',
                     'user_email'   => $sender,
                     'client'       => $ip,
                     'daemon'       => $daemon_name
                 }
             );
-            return 1;
+            return undef;
         }
+        Log::do_log(
+            'info',
+            'Message %s for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
+            $message,
+            $listname,
+            $sender,
+            time - $start_time,
+            $numsmtp,
+            $list->get_total(),
+            $messageid,
+            $message->{'size'}
+        );
 
+        return 1;
     } elsif ($action =~ /^request_auth/) {
         ## Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
