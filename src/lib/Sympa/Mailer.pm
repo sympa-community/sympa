@@ -67,22 +67,36 @@ sub _new_instance {
 sub reaper {
     my $self  = shift;
     my $block = shift;
-    my $i;
+
+    my $pid;
 
     $block = 1 unless defined $block;
-    while (($i = waitpid(-1, $block ? POSIX::WNOHANG() : 0)) > 0) {
+    while (($pid = waitpid(-1, $block ? POSIX::WNOHANG() : 0)) > 0) {
         $block = 1;
-        unless (defined($self->{_pids}->{$i})) {
+        unless (exists $self->{_pids}->{$pid}) {
             Log::do_log('debug2', 'Reaper waited %s, unknown process to me',
-                $i);
+                $pid);
             next;
         }
-        if ($CHILD_ERROR) {
-            Log::do_log('err', 'Child process %s exited with status %s',
-                $i, $CHILD_ERROR >> 8);
+        if ($CHILD_ERROR & 127) {
+            Log::do_log(
+                'err',
+                'Child process %s for message <%s> was terminated by signal %d',
+                $pid,
+                $self->{_pids}->{$pid},
+                $CHILD_ERROR & 127
+            );
+        } elsif ($CHILD_ERROR) {
+            Log::do_log(
+                'err',
+                'Child process %s for message <%s> exited with status %s',
+                $pid,
+                $self->{_pids}->{$pid},
+                $CHILD_ERROR >> 8
+            );
         }
         $self->{_opensmtp}--;
-        delete $self->{_pids}->{$i};
+        delete $self->{_pids}->{$pid};
     }
     Log::do_log(
         'debug2',
@@ -90,7 +104,7 @@ sub reaper {
         join(' ', sort { $a <=> $b } keys %{$self->{_pids}}),
         $self->{_opensmtp}
     );
-    return $i;
+    return $pid;
 }
 
 #DEPRECATED.
@@ -173,7 +187,7 @@ sub store {
             # No return
         }
         $pid = _safefork();
-        $self->{_pids}->{$pid} = 0;
+        $self->{_pids}->{$pid} = $message->get_id;
 
         unless ($pid) {    # _safefork() would die if fork() had failed.
             # Child
