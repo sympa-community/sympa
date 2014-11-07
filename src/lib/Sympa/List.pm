@@ -11405,7 +11405,7 @@ sub move_message {
     my ($self, $file, $queue) = @_;
     Log::do_log('debug2', '(%s, %s, %s)', $file, $self->{'name'}, $queue);
 
-    my $dir = $queue || $Conf::Conf{'queuedistribute'};
+    my $dir = $queue || (Sympa::Constants::SPOOLDIR() . '/distribute');
     my $filename = $self->get_list_id() . '.' . time . '.' . int(rand(999));
 
     unless (open OUT, ">$dir/T.$filename") {

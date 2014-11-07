@@ -51,11 +51,6 @@ Conf - Sympa configuration
 
 =cut
 
-sub DAEMON_MESSAGE  {1}
-#sub DAEMON_COMMAND  {2}
-sub DAEMON_CREATION {4}
-sub DAEMON_ALL      {7}
-
 ## Database and SQL statement handlers
 my $sth;
 # parameters hash, keyed by parameter name
@@ -99,10 +94,12 @@ my %old_params = (
     'archived_pidfile'               => '',                    # ,,
     'bounced_pidfile'                => '',                    # ,,
     'task_manager_pidfile'           => '',                    # ,,
-    'email_gecos'      => 'gecos',              # 6.2a.?? - 6.2a.33
-    'lock_method'      => '',                   # 5.3b.3 - 6.2a.33
-    'html_editor_file' => 'html_editor_url',    # 6.2a
-    'openssl'          => '',                   # ?? - 6.2a.40
+    'email_gecos'       => 'gecos',              # 6.2a.?? - 6.2a.33
+    'lock_method'       => '',                   # 5.3b.3 - 6.2a.33
+    'html_editor_file'  => 'html_editor_url',    # 6.2a
+    'openssl'           => '',                   # ?? - 6.2a.40
+    'distribution_mode' => '',                   # 5.0a.1 - 6.2a.40
+    'queuedistribute'   => '',                   # ,,
 );
 
 ## These parameters now have a hard-coded value
@@ -710,8 +707,7 @@ sub checkfiles {
         'queuemod',       'queuetopic',
         'queueauth',      'queueoutgoing',
         'queuebounce',    'queuesubscribe',
-        'queuetask',      'queuedistribute',
-        'tmpdir'
+        'queuetask',      'tmpdir'
         ) {
         unless (-d $Conf{$qdir}) {
             Log::do_log('info', 'Creating spool %s', $Conf{$qdir});
@@ -734,8 +730,7 @@ sub checkfiles {
     }
 
     ## Also create associated bad/ spools
-    foreach
-        my $qdir ('queue', 'queuedistribute', 'queueautomatic') {
+    foreach my $qdir ('queue', 'queueautomatic') {
         my $subdir = $Conf{$qdir} . '/bad';
         unless (-d $subdir) {
             Log::do_log('info', 'Creating spool %s', $subdir);

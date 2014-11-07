@@ -99,9 +99,8 @@ unless (
         'list=s',               'quiet',
         'close_unknown',        'test_database_message_buffer',
         'conf_2_db',            'export_list',
-        'health_check',         'service=s',
-        'send_digest',          'keep_digest',
-        'upgrade_config_location',
+        'health_check',         'send_digest',
+        'keep_digest',          'upgrade_config_location',
     )
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -295,7 +294,7 @@ my $default_lang;
 # this loop is run foreach HUP signal received
 my $signal = 0;
 
-local $main::daemon_usage;
+my $do_creation;
 
 my $language = Sympa::Language->instance;
 my $mailer   = Sympa::Mailer->instance;
@@ -357,32 +356,6 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         ## Function never returns.
     }
 
-    if (Sympa::Tools::Data::smart_eq(
-            $main::options{'service'},
-            'process_message'
-        )
-        ) {
-        $main::daemon_usage = Conf::DAEMON_MESSAGE;
-    } elsif (
-        Sympa::Tools::Data::smart_eq(
-            $main::options{'service'},
-            'process_command'
-        )
-        ) {
-        die "The option --service=process_command was deprecated.\n";
-    } elsif (
-        Sympa::Tools::Data::smart_eq(
-            $main::options{'service'},
-            'process_creation'
-        )
-        ) {
-        $main::daemon_usage = Conf::DAEMON_CREATION;
-    } else {
-        # default is to run one sympa.pl server for commands, messages and
-        # automatic lists creation.
-        $main::daemon_usage = Conf::DAEMON_ALL;
-    }
-
     ## Check for several files.
     unless (Conf::checkfiles_as_root()) {
         Log::fatal_err('Missing files');
@@ -404,90 +377,57 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             open(STDERR, ">> /dev/null");
 
             setpgrp(0, 0);
+
+            my $child_pid = fork;
+            if ($child_pid) {
+                Log::do_log('notice', 'Sympa for all purpose started, PID %d',
+                    $child_pid);
+                exit 0;
+            } elsif (not defined $child_pid) {
+                die sprintf 'Cannot fork: %s', $ERRNO;
+            }
+
             # start the main sympa.pl daemon
 
             ## Fork a new process dedicated to automatic list creation, if
             ## required
-            if (($Conf::Conf{'automatic_list_feature'} eq 'on')
-                || $main::daemon_usage == Conf::DAEMON_CREATION) {
+            if ($Conf::Conf{'automatic_list_feature'} eq 'on') {
                 my $child_pid = fork;
-                if ($child_pid) {
-                    Log::do_log('notice',
-                        'Sympa for automatic list creation started, PID %s',
-                        $child_pid);
-                } elsif (not defined $child_pid) {
-                    Log::do_log('err', 'Cannot fork: %m');
-                } else {
-                    # We're in the specialized child process:
-                    # automatic lists creation.
-                    $main::daemon_usage = Conf::DAEMON_CREATION;
-                }
-            }
-
-            unless ($main::daemon_usage == Conf::DAEMON_CREATION) {
-                ## A single process that handles both messages and commands
-                ## The distribute/ spool is not used
-                if (    $Conf::Conf{'distribution_mode'} eq 'single'
-                    and $main::daemon_usage == Conf::DAEMON_ALL) {
-                    my $child_pid = fork;
+                if (not defined $child_pid) {
+                    die sprintf 'Cannot fork: %s', $ERRNO;
+                } elsif ($child_pid == 0) {
+                    $child_pid = fork;
                     if ($child_pid) {
-                        Log::do_log('info',
-                            'Sympa for all purpose started, PID %s',
-                            $child_pid);
+                        Log::do_log(
+                            'notice',
+                            'Sympa for automatic list creation started, PID %s',
+                            $child_pid
+                        );
                         exit 0;
                     } elsif (not defined $child_pid) {
                         die sprintf 'Cannot fork: %s', $ERRNO;
                     }
-                } else {
-                    # Sympa forks to have a dedicated processes for
-                    # processing messages
-                    # fork sympa.pl dedicated to commands
-                    $main::daemon_usage = Conf::DAEMON_ALL;
-                    my $child_pid = fork;
-                    if ($child_pid) {
-                        Log::do_log('info',
-                            'Sympa for commands started, PID %s', $child_pid);
-                        # main process continue in order to fork
-                        $main::daemon_usage = Conf::DAEMON_MESSAGE;
-                        my $child_pid = fork;
-                        if ($child_pid) {
-                            Log::do_log('notice',
-                                'Sympa for messages started, PID %s',
-                                $child_pid);
-                            exit 0;    # exit from main process
-                        } elsif (not defined $child_pid) {
-                            die sprintf 'Cannot fork: %s', $ERRNO;
-                        }
-                    } elsif (not defined $child_pid) {
-                        die sprintf 'Cannot fork: %s', $ERRNO;
-                    }
+                    # We're in the specialized child process:
+                    # automatic lists creation.
+                    $do_creation = 1;
                 }
             }
         }
 
-        my $service = 'sympa';
-        $service .= '(distribute)'
-            if ($main::daemon_usage == Conf::DAEMON_MESSAGE);
-        $service .= '(creation)'
-            if ($main::daemon_usage == Conf::DAEMON_CREATION);
+        my $service = $do_creation ? 'sympa(creation)' : 'sympa';
         Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
             $service);
 
         Log::do_log('debug', 'Running server %s for %s purpose',
             $PID, $service);
         unless ($main::options{'batch'}) {
-
             ## Create and write the PID file
-            my $file = 'sympa';
-            $file = 'sympa-distribute'
-                if $main::daemon_usage == Conf::DAEMON_MESSAGE;
-            $file = 'sympa-creation'
-                if $main::daemon_usage == Conf::DAEMON_CREATION;
+            my $file = $do_creation ? 'sympa-creation' : 'sympa';
 
             ## If process is running in foreground, don't write STDERR to a
             ## dedicated file
             my $options;
-            $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
+            $options->{'stderr_to_tty'} = 1 if $main::options{'foreground'};
             Sympa::Tools::Daemon::write_pid($file, $PID, $options);
             unless ($options->{'stderr_to_tty'}) {
                 Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
@@ -523,11 +463,12 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         $signal = '0';
     }
 
-## Check for several files.
-## Prevent that 2 processes perform checks at the same time...
-    if ($main::daemon_usage == Conf::DAEMON_ALL) {
+    # Check for several files.
+    # Prevent that 2 processes perform checks at the same time...
+    #FIXME: This would be done in --health_check mode.
+    unless ($do_creation) {
         unless (Conf::checkfiles()) {
-            Log::fatal_err('Missing files');
+            die "Missing files.\n";
             ## No return.
         }
     } else {
@@ -1318,14 +1259,10 @@ while ($signal ne 'term') {    #as long as a signal is not received }
     my $index_cleanqueue  = 0;
     my @qfile;
 
-    my $spool = $Conf::Conf{'queue'};
-# if daemon is dedicated to message or automatic lists creation, change the
-# current spool
-    if ($main::daemon_usage == Conf::DAEMON_MESSAGE) {
-        $spool = $Conf::Conf{'queuedistribute'};
-    } elsif ($main::daemon_usage == Conf::DAEMON_CREATION) {
-        $spool = $Conf::Conf{'queueautomatic'};
-    }
+    # if daemon is dedicated to automatic lists creation, change the
+    # current spool
+    my $spool =
+        $do_creation ? $Conf::Conf{'queueautomatic'} : $Conf::Conf{'queue'};
 
 ## This is the main loop : look for files in the directory, handles
 ## them, sleeps a while and continues the good job.
@@ -1348,7 +1285,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         } readdir $dh;
         closedir $dh;
 
-        if ($main::daemon_usage == Conf::DAEMON_ALL) {
+        unless ($do_creation) {
             # process digest only in distribution mode
             ## Scan queuedigest
             if ($index_queuedigest++ >= $digestsleep) {
@@ -1356,7 +1293,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                 SendDigest();
             }
         }
-        unless ($main::daemon_usage == Conf::DAEMON_MESSAGE) {
+
+        unless ($do_creation) {
             # process expire and bads only in command mode
 
             ## Clean queue (bad)
@@ -1528,9 +1466,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 }    #end of block while ($signal ne 'term'){
 
 Log::do_log('notice', 'Sympa exited normally due to signal');
-my $file = 'sympa';
-$file = 'sympa-distribute' if $main::daemon_usage == Conf::DAEMON_MESSAGE;
-$file = 'sympa-creation'   if $main::daemon_usage == Conf::DAEMON_CREATION;
+my $file = $do_creation ? 'sympa-creation' : 'sympa';
 Sympa::Tools::Daemon::remove_pid($file, $PID);
 
 exit(0);
@@ -1736,7 +1672,8 @@ sub process_message {
     # we care of fake headers. If we put it, it's the 1st one.
     $dyn_list_family = $message->{'family'};
 
-    if ($main::daemon_usage == Conf::DAEMON_CREATION && !$dyn_list_family) {
+    if ($do_creation
+        and not(defined $dyn_list_family and length $dyn_list_family)) {
         Log::do_log('err',
             'internal server error : automatic lists creation daemon should never proceed messages without X-Sympa-Family header'
         );
@@ -1992,41 +1929,9 @@ sub process_message {
         return undef;
     }
 
-    if ($main::daemon_usage == Conf::DAEMON_MESSAGE) {
-        if (   $type eq 'listmaster'
-            or $type eq 'sympa'
-            or $type eq 'subscribe'
-            or $type eq 'unsubscribe'
-            or $type eq 'owner'
-            or $type eq 'return_path'
-            or $type eq 'editor') {
-            Log::do_log('err',
-                'internal serveur error : distribution daemon should never proceed with command'
-            );
-            Sympa::Report::global_report_cmd('intern',
-                'Distribution daemon proceed with command',
-                {}, $sender, $robot, 1);
-            Log::db_log(
-                {   'robot'        => $robot,
-                    'list'         => $listname,
-                    'action'       => 'process_message',
-                    'parameters'   => "",
-                    'target_email' => "",
-                    'msg_id'       => $msg_id,
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $sender,
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
-                }
-            );
-            return undef;
-        }
-    }
-
-    if ($main::daemon_usage == Conf::DAEMON_CREATION
-        || (($Conf::Conf{'automatic_list_feature'} eq 'on')
-            && $main::daemon_usage == Conf::DAEMON_ALL)
+    if ($do_creation
+        or ($Conf::Conf{'automatic_list_feature'} eq 'on'
+            and not $do_creation)
         ) {
         if ($dyn_list_family && $dyn_just_created) {
             unless (defined $list->sync_include()) {
@@ -2136,7 +2041,7 @@ sub process_message {
         }
     }
 
-    if ($main::daemon_usage == Conf::DAEMON_CREATION) {
+    if ($do_creation) {
         # do not process messages in list creation only mode, move them to
         # main spool
         my $marshalled =
@@ -2816,9 +2721,7 @@ sub DoMessage {
             if ($list->{'admin'}{'msg_topic_tagging'} eq 'required_sender');
     }
 
-    if (   ($action =~ /^do_it/)
-        || ($main::daemon_usage == Conf::DAEMON_MESSAGE)) {
-
+    if ($action =~ /^do_it/) {
         $message->{shelved}{dkim_sign} = 1
             if Sympa::Tools::Data::is_in_array(
             $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
@@ -3584,16 +3487,13 @@ Sympa will log calls to sendmail, including recipients. This option is
 useful for keeping track of each mail sent (log files may grow faster
 though).
 
-=begin comment
-
 =item B<--service=process_command>|B<process_message>|B<process_creation>
+
+B<Note>:
+This option was deprecated.
 
 Process is dedicated to messages distribution, commands or to automatic lists
 creation (default three of them).
-
-B<Not implemented>.
-
-=end comment
 
 =back
 

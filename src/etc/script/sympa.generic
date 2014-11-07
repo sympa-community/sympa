@@ -106,7 +106,8 @@ case "$1" in
 	echo "Stopping Sympa subsystem: "
 	if [ -f $pidfilepath/sympa ]; then
 		kill `cat $pidfilepath/sympa.pid`
-		kill `cat $pidfilepath/sympa-distribution.pid`
+		kill `cat $pidfilepath/sympa-creation.pid`
+		kill `cat $pidfilepath/sympa-distribute.pid`
 		kill `cat $pidfilepath/archived.pid`
 		kill `cat $pidfilepath/bounced.pid`
 		kill `cat $pidfilepath/task_manager.pid`
