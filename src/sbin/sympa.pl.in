@@ -376,7 +376,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             open(STDOUT, ">> /dev/null");
             open(STDERR, ">> /dev/null");
 
-            setpgrp(0, 0);
+            setpgrp 0, 0;
 
             my $child_pid = fork;
             if ($child_pid) {
@@ -393,9 +393,12 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             ## required
             if ($Conf::Conf{'automatic_list_feature'} eq 'on') {
                 my $child_pid = fork;
-                if (not defined $child_pid) {
+                if ($child_pid) {
+                    waitpid $child_pid, 0;
+                    $CHILD_ERROR and die;
+                } elsif (not defined $child_pid) {
                     die sprintf 'Cannot fork: %s', $ERRNO;
-                } elsif ($child_pid == 0) {
+                } else {
                     $child_pid = fork;
                     if ($child_pid) {
                         Log::do_log(
