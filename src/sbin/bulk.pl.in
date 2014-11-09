@@ -182,9 +182,6 @@ $SIG{'TERM'} = 'sigterm';
 $SIG{'INT'}  = \&sigterm;
 my $end = 0;
 
-my $message;
-my $messagekey;    # the key of the current message in the message_table
-
 my $timeout         = $Conf::Conf{'bulk_wait_to_fork'};
 my $last_check_date = 0;
 my %created_children;
@@ -261,9 +258,8 @@ while (!$end) {
                 Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
                 $pids_in_pfile = [$PID];
             }
-            ## Start new processes if there remain at least
-            ## 'bulk_fork_threshold' packets to send in the bulkmailer_table
-            ## table
+            # Start new processes if there remain at least
+            # 'bulk_fork_threshold' packets to send in the bulk spool.
             if (my $r_packets = $bulk->too_much_remaining_packets()
                 and scalar(@remaining_children) <
                 $Conf::Conf{'bulk_max_count'}) {
@@ -628,7 +624,7 @@ S<B<bulk.pl> [ B<--foreground> ] [ B<--debug> ]>
 =head1 DESCRIPTION 
 
 This daemon must be run along with Sympa.  It regularly checks the
-C<bulkpacket_table> content and submit the messages it finds in it to the
+content of bulk spool and submit the messages it finds in it to the
 sendmail engine.  Several daemon should be used on deferent server for huge
 traffic.
 
@@ -639,6 +635,11 @@ traffic.
 =item B<-d>, B<--debug>
 
 Sets the debug mode
+
+=item B<-f>, B<--config=>I<file>
+
+Force bulk to use an alternative configuration file instead
+of F<--CONFIG-->.
 
 =item B<-F>, B<--foreground>
 

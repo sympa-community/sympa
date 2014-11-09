@@ -516,27 +516,27 @@ sub remove {
     );
 }
 
-=head2 sub rebuild(STRING $adrlist)
-
-Rebuilds archives for the list the name of which is given in the argument $adrlist.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$adrlist>, a character string containing the name of the list the archives of which we want to rebuild.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<undef> if something goes wrong.
-
-=back 
-
-=cut 
+# =head2 sub rebuild(STRING $adrlist)
+# 
+# Rebuilds archives for the list the name of which is given in the argument $adrlist.
+# 
+# =head3 Arguments 
+# 
+# =over 
+# 
+# =item * I<$adrlist>, a character string containing the name of the list the archives of which we want to rebuild.
+# 
+# =back 
+# 
+# =head3 Return 
+# 
+# =over 
+# 
+# =item * I<undef> if something goes wrong.
+# 
+# =back 
+# 
+# =cut 
 
 sub rebuild {
 
@@ -751,43 +751,43 @@ sub rebuild {
     }
 }
 
-=head2 sub mail2arc(STRING $file,STRING $listname,STRING $robot_id,STRING $yyyy,STRING $mm,STRING $dd,STRING $hh,STRING $min,STRING $ss)
-
-Archives one message into one list archives directory.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$file>: a character string containing the message filename.
-
-=item * I<$listname>: a character string containing the name of the list in which to archive the message
-
-=item * $robot: a character string containing the name of the virtual robot hosting the list.
-
-=item * I<$yyyy>: a character string containing the year of the date when the message is archived (i.e. now)
-
-=item * I<$mm>: a character string containing the month of the date when the message is archived (i.e. now)
-
-=item * I<$dd>: a character string containing the day of the date when the message is archived (i.e. now)
-
-=item * I<$hh>: a character string containing the hour of the date when the message is archived (i.e. now)
-
-=item * I<$min>: a character string containing the minute of the date when the message is archived (i.e. now)
-
-=item * I<$ss>: a character string containing the second of the date when the message is archived (i.e. now)
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<undef> if something goes wrong.
-
-=back 
-
-=cut 
+# =head2 sub mail2arc(STRING $file,STRING $listname,STRING $robot_id,STRING $yyyy,STRING $mm,STRING $dd,STRING $hh,STRING $min,STRING $ss)
+# 
+# Archives one message into one list archives directory.
+# 
+# =head3 Arguments 
+# 
+# =over 
+# 
+# =item * I<$file>: a character string containing the message filename.
+# 
+# =item * I<$listname>: a character string containing the name of the list in which to archive the message
+# 
+# =item * $robot: a character string containing the name of the virtual robot hosting the list.
+# 
+# =item * I<$yyyy>: a character string containing the year of the date when the message is archived (i.e. now)
+# 
+# =item * I<$mm>: a character string containing the month of the date when the message is archived (i.e. now)
+# 
+# =item * I<$dd>: a character string containing the day of the date when the message is archived (i.e. now)
+# 
+# =item * I<$hh>: a character string containing the hour of the date when the message is archived (i.e. now)
+# 
+# =item * I<$min>: a character string containing the minute of the date when the message is archived (i.e. now)
+# 
+# =item * I<$ss>: a character string containing the second of the date when the message is archived (i.e. now)
+# 
+# =back 
+# 
+# =head3 Return 
+# 
+# =over 
+# 
+# =item * I<undef> if something goes wrong.
+# 
+# =back 
+# 
+# =cut 
 
 sub mail2arc {
     my ($file, $listname, $robot, $yyyy, $mm, $dd, $hh, $min, $ss) = @_;
@@ -1140,6 +1140,11 @@ options is included below.
 =item B<-F>, B<--foreground>
 
 Do not detach TTY.
+
+=item B<-f>, B<--config=>I<file>
+
+Force archived to use an alternative configuration file instead
+of F<--CONFIG-->.
 
 =item B<-d>, B<--debug>
 
