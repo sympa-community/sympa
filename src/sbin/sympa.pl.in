@@ -1829,7 +1829,8 @@ sub process_message {
         $list_address = $list->get_list_address();
     }
     ## Loop prevention
-    if (Sympa::Tools::Data::smart_eq(
+    if (ref $list eq 'Sympa::List'
+        and Sympa::Tools::Data::smart_eq(
             $list->{'admin'}{'reject_mail_from_automates_feature'}, 'on'
         )
         ) {
@@ -1897,7 +1898,8 @@ sub process_message {
             );
         } elsif ($antivirus_notify eq 'delivery_status') {
             tools::send_dsn(
-                $list, $message,
+                $message->{context},
+                $message,
                 {   'virus_name' => $rc,
                     'recipient'  => $list_address,
                     'from'       => $message->{sender}
