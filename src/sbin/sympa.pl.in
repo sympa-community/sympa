@@ -299,186 +299,116 @@ my $do_creation;
 my $language = Sympa::Language->instance;
 my $mailer   = Sympa::Mailer->instance;
 
-while ($signal ne 'term') {    #as long as a signal is not received }
-    ## Load sympa.conf.
-    unless (Conf::load(Conf::get_sympa_conf())) {    #Site and Robot
-        printf STDERR
-            "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
-            Conf::get_sympa_conf();
-        exit 1;
+_load();
+
+## Put ourselves in background if we're not in debug mode. That method
+## works on many systems, although, it seems that Unix conceptors have
+## decided that there won't be a single and easy way to detach a
+## process from its controlling TTY.
+unless ($main::options{'foreground'}) {
+    if (open(TTY, "/dev/tty")) {
+        ioctl(TTY, 0x20007471, 0);    # XXX s/b TIOCNOTTY()
+        close(TTY);
+    }
+    open(STDIN,  ">> /dev/null");
+    open(STDOUT, ">> /dev/null");
+    open(STDERR, ">> /dev/null");
+
+    setpgrp 0, 0;
+
+    my $child_pid = fork;
+    if ($child_pid) {
+        Log::do_log('notice', 'Sympa for all purpose started, PID %d',
+            $child_pid);
+        exit 0;
+    } elsif (not defined $child_pid) {
+        die sprintf 'Cannot fork: %s', $ERRNO;
     }
 
-    ## Open the syslog and say we're read out stuff.
-    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-        'sympa');
+    # start the main sympa.pl daemon
 
-    # Enable SMTP logging if required
-    $mailer->{log_smtp} = $main::options{'mail'}
-        || Sympa::Tools::Data::smart_eq($Conf::Conf{'log_smtp'}, 'on');
-
-    # setting log_level using conf unless it is set by calling option
-    if (defined $main::options{'log_level'}) {
-        Log::set_log_level($main::options{'log_level'});
-        Log::do_log(
-            'info',
-            'Configuration file read, log level set using options: %s',
-            $main::options{'log_level'}
-        );
-    } else {
-        Log::set_log_level($Conf::Conf{'log_level'});
-        Log::do_log(
-            'info',
-            'Configuration file read, default log level %s',
-            $Conf::Conf{'log_level'}
-        );
-    }
-
-    Sympa::Tools::Password::ciphersaber_installed();
-
-    if (tools::cookie_changed($Conf::Conf{'cookie'})) {
-        Log::fatal_err(
-            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file)',
-            $Conf::Conf{'etc'}
-        );
-    }
-
-    ## Set locale configuration
-    ## Compatibility with version < 2.3.3
-    $main::options{'lang'} =~ s/\.cat$//
-        if defined $main::options{'lang'};
-    $default_lang =
-        $language->set_lang($main::options{'lang'}, $Conf::Conf{'lang'},
-        'en');
-
-    ## Main program
-    if (!chdir($Conf::Conf{'home'})) {
-        die sprintf 'Can\'t chdir to %s: %s', $Conf::Conf{'home'}, $ERRNO;
-        ## Function never returns.
-    }
-
-    ## Check for several files.
-    unless (Conf::checkfiles_as_root()) {
-        Log::fatal_err('Missing files');
-        ## No return.
-    }
-
-    if ($signal ne 'hup') {
-        ## Put ourselves in background if we're not in debug mode. That method
-        ## works on many systems, although, it seems that Unix conceptors have
-        ## decided that there won't be a single and easy way to detach a
-        ## process from its controlling TTY.
-        unless ($main::options{'foreground'}) {
-            if (open(TTY, "/dev/tty")) {
-                ioctl(TTY, 0x20007471, 0);    # XXX s/b TIOCNOTTY()
-                close(TTY);
-            }
-            open(STDIN,  ">> /dev/null");
-            open(STDOUT, ">> /dev/null");
-            open(STDERR, ">> /dev/null");
-
-            setpgrp 0, 0;
-
-            my $child_pid = fork;
+    ## Fork a new process dedicated to automatic list creation, if
+    ## required
+    if ($Conf::Conf{'automatic_list_feature'} eq 'on') {
+        my $child_pid = fork;
+        if ($child_pid) {
+            waitpid $child_pid, 0;
+            $CHILD_ERROR and die;
+        } elsif (not defined $child_pid) {
+            die sprintf 'Cannot fork: %s', $ERRNO;
+        } else {
+            $child_pid = fork;
             if ($child_pid) {
-                Log::do_log('notice', 'Sympa for all purpose started, PID %d',
+                Log::do_log('notice',
+                    'Sympa for automatic list creation started, PID %s',
                     $child_pid);
                 exit 0;
             } elsif (not defined $child_pid) {
                 die sprintf 'Cannot fork: %s', $ERRNO;
             }
-
-            # start the main sympa.pl daemon
-
-            ## Fork a new process dedicated to automatic list creation, if
-            ## required
-            if ($Conf::Conf{'automatic_list_feature'} eq 'on') {
-                my $child_pid = fork;
-                if ($child_pid) {
-                    waitpid $child_pid, 0;
-                    $CHILD_ERROR and die;
-                } elsif (not defined $child_pid) {
-                    die sprintf 'Cannot fork: %s', $ERRNO;
-                } else {
-                    $child_pid = fork;
-                    if ($child_pid) {
-                        Log::do_log(
-                            'notice',
-                            'Sympa for automatic list creation started, PID %s',
-                            $child_pid
-                        );
-                        exit 0;
-                    } elsif (not defined $child_pid) {
-                        die sprintf 'Cannot fork: %s', $ERRNO;
-                    }
-                    # We're in the specialized child process:
-                    # automatic lists creation.
-                    $do_creation = 1;
-                }
-            }
+            # We're in the specialized child process:
+            # automatic lists creation.
+            $do_creation = 1;
         }
-
-        my $service = $do_creation ? 'sympa(creation)' : 'sympa';
-        Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-            $service);
-
-        Log::do_log('debug', 'Running server %s for %s purpose',
-            $PID, $service);
-        unless ($main::options{'batch'}) {
-            ## Create and write the PID file
-            my $file = $do_creation ? 'sympa-creation' : 'sympa';
-
-            ## If process is running in foreground, don't write STDERR to a
-            ## dedicated file
-            my $options;
-            $options->{'stderr_to_tty'} = 1 if $main::options{'foreground'};
-            Sympa::Tools::Daemon::write_pid($file, $PID, $options);
-            unless ($options->{'stderr_to_tty'}) {
-                Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
-            }
-        }
-
-        # Set the User ID & Group ID for the process
-        $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
-        $UID = $EUID = (getpwnam(Sympa::Constants::USER))[2];
-
-        ## Required on FreeBSD to change ALL IDs
-        ## (effective UID + real UID + saved UID)
-        POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
-        POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
-
-        ## Check if the UID has correctly been set (useful on OS X)
-        unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
-            && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
-            Log::fatal_err(
-                "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
-            );
-        }
-
-        # Sets the UMASK
-        umask(oct($Conf::Conf{'umask'}));
-
-        ## Most initializations have now been done.
-        Log::do_log('notice', 'Sympa %s Started',
-            Sympa::Constants::VERSION());
-    } else {
-        Log::do_log('notice', "Sympa %s reload config",
-            Sympa::Constants::VERSION);
-        $signal = '0';
     }
+}
 
-    # Check for several files.
-    # Prevent that 2 processes perform checks at the same time...
-    #FIXME: This would be done in --health_check mode.
-    unless ($do_creation) {
-        unless (Conf::checkfiles()) {
-            die "Missing files.\n";
-            ## No return.
-        }
-    } else {
-        sleep 1;   ## wait until main process has created required directories
+my $service = $do_creation ? 'sympa(creation)' : 'sympa';
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
+    $service);
+
+Log::do_log('debug', 'Running server %s for %s purpose', $PID, $service);
+unless ($main::options{'batch'}) {
+    ## Create and write the PID file
+    my $file = $do_creation ? 'sympa-creation' : 'sympa';
+
+    ## If process is running in foreground, don't write STDERR to a
+    ## dedicated file
+    my $options;
+    $options->{'stderr_to_tty'} = 1 if $main::options{'foreground'};
+    Sympa::Tools::Daemon::write_pid($file, $PID, $options);
+    unless ($options->{'stderr_to_tty'}) {
+        Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
     }
+}
 
-## Daemon called for dumping subscribers list
+# Set the User ID & Group ID for the process
+$GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
+$UID = $EUID = (getpwnam(Sympa::Constants::USER))[2];
+
+## Required on FreeBSD to change ALL IDs
+## (effective UID + real UID + saved UID)
+POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
+POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
+
+## Check if the UID has correctly been set (useful on OS X)
+unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
+    && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
+    Log::fatal_err(
+        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
+    );
+}
+
+# Sets the UMASK
+umask(oct($Conf::Conf{'umask'}));
+
+## Most initializations have now been done.
+Log::do_log('notice', 'Sympa %s Started', Sympa::Constants::VERSION());
+
+# Check for several files.
+# Prevent that 2 processes perform checks at the same time...
+#FIXME: This would be done in --health_check mode.
+unless ($do_creation) {
+    unless (Conf::checkfiles()) {
+        die "Missing files.\n";
+        ## No return.
+    }
+} else {
+    sleep 1;    ## wait until main process has created required directories
+}
+
+if ($main::options{'batch'}) {
+    # Daemon called for dumping subscribers list
     if ($main::options{'dump'}) {
 
         my ($all_lists, $list);
@@ -1233,42 +1163,46 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         exit 0;
     }
 
+    die 'Unknown option';
+}    # if ($main::options{'batch'})
+
 ## Do we have right access in the directory
-    if ($main::options{'keepcopy'}) {
-        if (!-d $main::options{'keepcopy'}) {
-            Log::do_log(
-                'notice',
-                'Cannot keep a copy of incoming messages: %s is not a directory',
-                $main::options{'keepcopy'}
-            );
-            delete $main::options{'keepcopy'};
-        } elsif (!-w $main::options{'keepcopy'}) {
-            Log::do_log(
-                'notice',
-                'Cannot keep a copy of incoming messages: no write access to %s',
-                $main::options{'keepcopy'}
-            );
-            delete $main::options{'keepcopy'};
-        }
+if ($main::options{'keepcopy'}) {
+    if (!-d $main::options{'keepcopy'}) {
+        Log::do_log(
+            'notice',
+            'Cannot keep a copy of incoming messages: %s is not a directory',
+            $main::options{'keepcopy'}
+        );
+        delete $main::options{'keepcopy'};
+    } elsif (!-w $main::options{'keepcopy'}) {
+        Log::do_log(
+            'notice',
+            'Cannot keep a copy of incoming messages: no write access to %s',
+            $main::options{'keepcopy'}
+        );
+        delete $main::options{'keepcopy'};
     }
+}
 
-    ## Catch signals, in order to exit cleanly, whenever possible.
-    $SIG{'TERM'} = 'sigterm';
-    $SIG{'INT'}  = \&sigterm; # Interrupt from terminal.
-    $SIG{'HUP'}  = 'sighup';
-    $SIG{'PIPE'} = 'IGNORE';  ## Ignore SIGPIPE ; prevents sympa.pl from dying
+## Catch signals, in order to exit cleanly, whenever possible.
+$SIG{'TERM'} = 'sigterm';
+$SIG{'INT'}  = \&sigterm;    # Interrupt from terminal.
+$SIG{'HUP'}  = 'sighup';
+$SIG{'PIPE'} = 'IGNORE';     ## Ignore SIGPIPE ; prevents sympa.pl from dying
 
-    my $index_queuedigest = 0;    # verify the digest queue
-    my $index_cleanqueue  = 0;
-    my @qfile;
+my $index_queuedigest = 0;   # verify the digest queue
+my $index_cleanqueue  = 0;
+my @qfile;
 
-    # if daemon is dedicated to automatic lists creation, change the
-    # current spool
-    my $spool =
-        $do_creation ? $Conf::Conf{'queueautomatic'} : $Conf::Conf{'queue'};
+# if daemon is dedicated to automatic lists creation, change the
+# current spool
+my $spool =
+    $do_creation ? $Conf::Conf{'queueautomatic'} : $Conf::Conf{'queue'};
 
-## This is the main loop : look for files in the directory, handles
-## them, sleeps a while and continues the good job.
+while ($signal ne 'term') {
+    # This is the main loop : look for files in the directory, handles
+    # them, sleeps a while and continues the good job.
     while (!$signal) {
         $language->set_lang($default_lang);
 
@@ -1460,12 +1394,18 @@ while ($signal ne 'term') {    #as long as a signal is not received }
     # Purge grouped notifications
     Sympa::Alarm->instance->flush(purge => 1);
 
-## Dump of User files in DB
-#Sympa::List::dump();
+    ## Dump of User files in DB
+    #Sympa::List::dump();
 
-## Disconnect from Database
+    # Disconnect from Database
     SDM::db_disconnect();
 
+    if ($signal eq 'hup') {
+        Log::do_log('notice', "Sympa %s reload config",
+            Sympa::Constants::VERSION);
+        _load();
+        $signal = '0';
+    }
 }    #end of block while ($signal ne 'term'){
 
 Log::do_log('notice', 'Sympa exited normally due to signal');
@@ -1473,6 +1413,71 @@ my $file = $do_creation ? 'sympa-creation' : 'sympa';
 Sympa::Tools::Daemon::remove_pid($file, $PID);
 
 exit(0);
+
+# Load configuration.
+sub _load {
+    ## Load sympa.conf.
+    unless (Conf::load(Conf::get_sympa_conf())) {    #Site and Robot
+        printf STDERR
+            "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
+            Conf::get_sympa_conf();
+        exit 1;
+    }
+
+    ## Open the syslog and say we're read out stuff.
+    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
+        'sympa');
+
+    # Enable SMTP logging if required
+    $mailer->{log_smtp} = $main::options{'mail'}
+        || Sympa::Tools::Data::smart_eq($Conf::Conf{'log_smtp'}, 'on');
+
+    # setting log_level using conf unless it is set by calling option
+    if (defined $main::options{'log_level'}) {
+        Log::set_log_level($main::options{'log_level'});
+        Log::do_log(
+            'info',
+            'Configuration file read, log level set using options: %s',
+            $main::options{'log_level'}
+        );
+    } else {
+        Log::set_log_level($Conf::Conf{'log_level'});
+        Log::do_log(
+            'info',
+            'Configuration file read, default log level %s',
+            $Conf::Conf{'log_level'}
+        );
+    }
+
+    Sympa::Tools::Password::ciphersaber_installed();
+
+    if (tools::cookie_changed($Conf::Conf{'cookie'})) {
+        Log::fatal_err(
+            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file)',
+            $Conf::Conf{'etc'}
+        );
+    }
+
+    ## Set locale configuration
+    ## Compatibility with version < 2.3.3
+    $main::options{'lang'} =~ s/\.cat$//
+        if defined $main::options{'lang'};
+    $default_lang =
+        $language->set_lang($main::options{'lang'}, $Conf::Conf{'lang'},
+        'en');
+
+    ## Main program
+    if (!chdir($Conf::Conf{'home'})) {
+        die sprintf 'Can\'t chdir to %s: %s', $Conf::Conf{'home'}, $ERRNO;
+        ## Function never returns.
+    }
+
+    ## Check for several files.
+    unless (Conf::checkfiles_as_root()) {
+        Log::fatal_err('Missing files');
+        ## No return.
+    }
+}
 
 ############################################################
 # sigterm
