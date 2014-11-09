@@ -1692,48 +1692,16 @@ sub process_message {
     }
     delete $message->{'family'};
 
-    my $list;
     my $list_address;
 
+    my $list =
+        (ref $message->{context} eq 'Sympa::List')
+        ? $message->{context}
+        : undef;
     my $type = $message->{'listtype'} || '';
 
-    if ($type eq 'listmaster' or $type eq 'sympa') {
-        $list_address =
-            $message->{'localpart'} . '@'
-            . Conf::get_robot_conf($robot, 'host');
-    } else {
-        $list = $message->{context};
+    if ($do_creation) {
         unless (ref $list eq 'Sympa::List') {
-            unless ($dyn_list_family) {
-                Log::do_log('err', 'List %s does not exist', $listname);
-                Sympa::Report::reject_report_msg(
-                    'user',
-                    'list_unknown',
-                    $sender,
-                    {   'listname' => $listname,
-                        'message'  => $message
-                    },
-                    $robot,
-                    $message->as_string,
-                    ''
-                );
-                Log::db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $listname,
-                        'action'       => 'process_message',
-                        'parameters'   => "",
-                        'target_email' => "",
-                        'msg_id'       => $msg_id,
-                        'status'       => 'error',
-                        'error_type'   => 'unknown_list',
-                        'user_email'   => $sender,
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
-                    }
-                );
-                return undef;
-            }
-
             ## Automatic creation of a mailing list, based on a family
             my $dyn_family;
             unless ($dyn_family =
@@ -1827,7 +1795,43 @@ sub process_message {
             }
         }
         $list_address = $list->get_list_address();
+    } elsif ($type eq 'listmaster' or $type eq 'sympa') {
+        $list_address =
+            $message->{'localpart'} . '@'
+            . Conf::get_robot_conf($robot, 'host');
+    } else {
+        unless (ref $list eq 'Sympa::List') {
+            Log::do_log('err', 'List %s does not exist', $listname);
+            Sympa::Report::reject_report_msg(
+                'user',
+                'list_unknown',
+                $sender,
+                {   'listname' => $listname,
+                    'message'  => $message
+                },
+                $robot,
+                $message->as_string,
+                ''
+            );
+            Log::db_log(
+                {   'robot'        => $robot,
+                    'list'         => $listname,
+                    'action'       => 'process_message',
+                    'parameters'   => "",
+                    'target_email' => "",
+                    'msg_id'       => $msg_id,
+                    'status'       => 'error',
+                    'error_type'   => 'unknown_list',
+                    'user_email'   => $sender,
+                    'client'       => $ip,
+                    'daemon'       => $daemon_name
+                }
+            );
+            return undef;
+        }
+        $list_address = $list->get_list_address();
     }
+
     ## Loop prevention
     if (ref $list eq 'Sympa::List'
         and Sympa::Tools::Data::smart_eq(
@@ -1939,11 +1943,8 @@ sub process_message {
         return undef;
     }
 
-    if ($do_creation
-        or ($Conf::Conf{'automatic_list_feature'} eq 'on'
-            and not $do_creation)
-        ) {
-        if ($dyn_list_family && $dyn_just_created) {
+    if ($do_creation) {
+        if ($dyn_just_created) {
             unless (defined $list->sync_include()) {
                 Log::do_log(
                     'err',
@@ -2049,9 +2050,7 @@ sub process_message {
                 'Successfully create list %s with %s subscribers',
                 $list, $list->get_total());
         }
-    }
 
-    if ($do_creation) {
         # do not process messages in list creation only mode, move them to
         # main spool
         my $marshalled =
