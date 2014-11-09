@@ -190,7 +190,9 @@ sub create_list_old {
         }
     }
 
-    if ($param->{'listname'} eq Conf::get_robot_conf($robot, 'email')) {
+    if (   $param->{'listname'} eq Conf::get_robot_conf($robot, 'email')
+        or $param->{'listname'} eq
+        Conf::get_robot_conf($robot, 'listmaster_email')) {
         Log::do_log('err',
             'Incorrect listname %s matches one of service aliases',
             $param->{'listname'});
@@ -419,7 +421,9 @@ sub create_list {
             return undef;
         }
     }
-    if ($param->{'listname'} eq Conf::get_robot_conf($robot, 'email')) {
+    if (   $param->{'listname'} eq Conf::get_robot_conf($robot, 'email')
+        or $param->{'listname'} eq
+        Conf::get_robot_conf($robot, 'listmaster_email')) {
         Log::do_log('err',
             'Incorrect listname %s matches one of service aliases',
             $param->{'listname'});
@@ -459,8 +463,14 @@ sub create_list {
     my $tt_result =
         tt2::parse_tt2($param, 'config.tt2', \$conf, [$family->{'dir'}]);
     unless (defined $tt_result || !$abort_on_error) {
-        Log::do_log('err', 'Abort on tt2 error. List %s from family %s@%s, file config.tt2 : %s',
-            $param->{'listname'}, $family->{'name'}, $robot, tt2::get_error()->info());
+        Log::do_log(
+            'err',
+            'Abort on tt2 error. List %s from family %s@%s, file config.tt2 : %s',
+            $param->{'listname'},
+            $family->{'name'},
+            $robot,
+            tt2::get_error()->info()
+        );
         return undef;
     }
 
@@ -534,9 +544,15 @@ sub create_list {
             my $tt_result = tt2::parse_tt2($param, $file . ".tt2",
                 \$file_content, [$family->{'dir'}]);
             unless (defined $tt_result) {
-                Log::do_log('err',
+                Log::do_log(
+                    'err',
                     'Tt2 error. List %s from family %s@%s, file %s : %s',
-                    $param->{'listname'}, $family->{'name'}, $robot, $file, tt2::get_error()->info());
+                    $param->{'listname'},
+                    $family->{'name'},
+                    $robot,
+                    $file,
+                    tt2::get_error()->info()
+                );
             }
             unless (open FILE, '>', "$list_dir/$file") {
                 Log::do_log('err', 'Impossible to create %s/%s: %m',
