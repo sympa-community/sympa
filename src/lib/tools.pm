@@ -2070,10 +2070,10 @@ sub unmarshal_metadata {
         if Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
     ($listname, $type) =
         tools::split_listname($robot_id || '*', $data->{'localpart'});
-    
+
     $list = Sympa::List->new($listname, $robot_id || '*', {'just_try' => 1})
-		if (defined $listname);
-    
+        if defined $listname;
+
     ## Get priority
     #FIXME: is this always needed?
     if (exists $data->{'priority'}) {
@@ -2111,10 +2111,12 @@ sub marshal_metadata {
     my $metadata_format = shift;
     my $metadata_keys   = shift;
 
-    # Currently only "sympa@DOMAIN" and "listname@DOMAIN" are supported.
+    #FIXME: Currently only "sympa@DOMAIN" and "LISTNAME(-TYPE)@DOMAIN" are
+    # supported.
     my ($localpart, $domainpart);
     if (ref $message->{context} eq 'Sympa::List') {
-        $localpart  = $message->{context}->{'name'};
+        ($localpart) = split /\@/,
+            $message->{context}->get_list_address($message->{listtype});
         $domainpart = $message->{context}->{'domain'};
     } else {
         my $robot_id = $message->{context} || '*';
