@@ -56,6 +56,7 @@ archived.pl bounced.pl bulk.pl sympa.pl task_manager.pl: Makefile
 		-e 's|--defaultdir--|$(defaultdir)|' \
 		-e 's|--docdir--|$(docdir)|' \
 		-e 's|--libexecdir--|$(libexecdir)|' \
+		-e 's|--localedir--|$(localedir)|' \
 		-e 's|--modulesdir--|$(modulesdir)|' \
 		-e 's|--piddir--|$(piddir)|' \
 		-e 's|--spooldir--|$(spooldir)|' \

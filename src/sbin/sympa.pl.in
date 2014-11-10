@@ -1195,12 +1195,12 @@ my $index_queuedigest = 0;   # verify the digest queue
 my $index_cleanqueue  = 0;
 my @qfile;
 
-# if daemon is dedicated to automatic lists creation, change the
-# current spool
-my $spool =
-    $do_creation ? $Conf::Conf{'queueautomatic'} : $Conf::Conf{'queue'};
-
 while ($signal ne 'term') {
+    # if daemon is dedicated to automatic lists creation, change the
+    # current spool
+    my $spool =
+        $do_creation ? $Conf::Conf{'queueautomatic'} : $Conf::Conf{'queue'};
+
     # This is the main loop : look for files in the directory, handles
     # them, sleeps a while and continues the good job.
     while (!$signal) {
@@ -1404,7 +1404,7 @@ while ($signal ne 'term') {
         Log::do_log('notice', "Sympa %s reload config",
             Sympa::Constants::VERSION);
         _load();
-        $signal = '0';
+        $signal = 0;
     }
 }    #end of block while ($signal ne 'term'){
 
@@ -3713,7 +3713,7 @@ See L<http://www.sympa.org/tracking>.
 
 L<sympa.conf(5)>, L<sympa_wizard(1)>.
 
-L<archived(8)>, L<bulk(8)>, L<bounced(8)>, L<spooler(8)>, L<task_manager(8)>.
+L<archived(8)>, L<bulk(8)>, L<bounced(8)>, L<task_manager(8)>.
 
 L<sendmail(8)>, L<alias_manager(8)>.
 
