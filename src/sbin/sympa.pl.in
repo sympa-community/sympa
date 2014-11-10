@@ -2055,7 +2055,8 @@ sub process_message {
         # main spool
         my $marshalled =
             tools::store_spool($Conf::Conf{'queue'}, $message,
-            '%s@%s.%ld.%ld,%d', [qw(localpart domainpart date PID RAND)]);
+            '%s@%s.%ld.%ld,%d', [qw(localpart domainpart date PID RAND)],
+            original => 1);
         if ($marshalled) {
             Log::do_log('notice',
                 'Message %s is stored into incoming spool as <%s>',
