@@ -284,16 +284,7 @@ if ($main::options{'help'}) {
     exit 0;
 }
 
-## Main loop
-
-my %loop_info;
-my %msgid_table;
-my $latest_msgid_table_cleanup = time;
 my $default_lang;
-
-# this loop is run foreach HUP signal received
-my $signal = 0;
-
 my $do_creation;
 
 my $language = Sympa::Language->instance;
@@ -1185,14 +1176,21 @@ if ($main::options{'keepcopy'}) {
     }
 }
 
-## Catch signals, in order to exit cleanly, whenever possible.
+# Catch signals, in order to exit cleanly, whenever possible.
+my $signal = 0;
 $SIG{'TERM'} = 'sigterm';
 $SIG{'INT'}  = \&sigterm;    # Interrupt from terminal.
 $SIG{'HUP'}  = 'sighup';
 $SIG{'PIPE'} = 'IGNORE';     ## Ignore SIGPIPE ; prevents sympa.pl from dying
 
-my $index_queuedigest = 0;   # verify the digest queue
-my $index_cleanqueue  = 0;
+# Main loop.
+# This loop is run foreach HUP signal received.
+
+my %loop_info;
+my %msgid_table;
+my $latest_msgid_table_cleanup = time;
+my $index_queuedigest          = 0;      # verify the digest queue
+my $index_cleanqueue           = 0;
 my @qfile;
 
 while ($signal ne 'term') {
@@ -1671,36 +1669,38 @@ sub process_message {
     delete $message->{'rcpt'};
     delete $message->{'checksum'};
 
-    ## Initialize command report
-    Sympa::Report::init_report_cmd();
-
-    ## Maybe we are an automatic list
-    #_amr ici on ne doit prendre que la première ligne !
-    my ($dyn_list_family, $dyn_just_created);
-    # we care of fake headers. If we put it, it's the 1st one.
-    $dyn_list_family = $message->{'family'};
-
-    if ($do_creation
-        and not(defined $dyn_list_family and length $dyn_list_family)) {
-        Log::do_log('err',
-            'internal server error : automatic lists creation daemon should never proceed messages without X-Sympa-Family header'
-        );
-        Sympa::Report::global_report_cmd('intern',
-            'Automatic lists creation daemon with message without header',
-            {}, $sender, $robot, 1);
-        return undef;
-    }
-    delete $message->{'family'};
-
-    my $list_address;
-
-    my $list =
-        (ref $message->{context} eq 'Sympa::List')
-        ? $message->{context}
-        : undef;
-    my $type = $message->{'listtype'} || '';
-
+    # We are in creation mode.
     if ($do_creation) {
+        my $list =
+            (ref $message->{context} eq 'Sympa::List')
+            ? $message->{context}
+            : undef;
+
+        # Maybe we are an automatic list
+        #_amr ici on ne doit prendre que la première ligne !
+        my ($dyn_list_family, $dyn_just_created);
+        # we care of fake headers. If we put it, it's the 1st one.
+        $dyn_list_family = $message->{'family'};
+
+        unless (defined $dyn_list_family and length $dyn_list_family) {
+            Log::do_log(
+                'err',
+                'Internal server error: Automatic lists creation daemon should never proceed message %s without X-Sympa-Family header',
+                $message
+            );
+            tools::send_notify_to_listmaster(
+                '*',
+                'intern_error',
+                {   'error' =>
+                        sprintf(
+                        'Internal server error: Automatic lists creation daemon should never proceed message %s without X-Sympa-Family header',
+                        $message)
+                }
+            );
+            return undef;
+        }
+        delete $message->{'family'};
+
         unless (ref $list eq 'Sympa::List') {
             ## Automatic creation of a mailing list, based on a family
             my $dyn_family;
@@ -1794,8 +1794,155 @@ sub process_message {
                 return undef;
             }
         }
-        $list_address = $list->get_list_address();
-    } elsif ($type eq 'listmaster' or $type eq 'sympa') {
+
+        if ($dyn_just_created) {
+            unless (defined $list->sync_include()) {
+                Log::do_log(
+                    'err',
+                    'Failed to synchronize list members of dynamic list %s from %s family',
+                    $list,
+                    $dyn_list_family
+                );
+                # FIXME: send DSN.
+                Sympa::Report::reject_report_msg(
+                    'user',
+                    'dyn_cant_create',
+                    $sender,
+                    {'listname' => $list->{'name'}, 'message' => $message},
+                    $robot,
+                    $message->as_string,
+                    ''
+                );
+                Log::db_log(
+                    {   'robot'        => $robot,
+                        'list'         => $list->{'name'},
+                        'action'       => 'process_message',
+                        'parameters'   => "",
+                        'target_email' => "",
+                        'msg_id'       => $msg_id,
+                        'status'       => 'error',
+                        'error_type'   => 'dyn_cant_sync',
+                        'user_email'   => $sender,
+                        'client'       => $ip,
+                        'daemon'       => $daemon_name
+                    }
+                );
+                # purge the unwanted empty automatic list
+                if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
+                    $list->close_list();
+                    # verifier pour tt ce bloc si supprime bien tout
+                    $list->purge();
+                    # but what about list_of_lists ?
+                    if (exists $Sympa::List::list_of_lists{$list->{'domain'}}
+                        {$list->{'name'}}) {    # test à virer si ok
+                        delete $Sympa::List::list_of_lists{$list->{'domain'}}
+                            {$list->{'name'}};
+                        Log::do_log(
+                            'err',
+                            'La liste a été trouvée dans la list_of_lists',
+                            $list,
+                            $dyn_list_family
+                        );
+                    }
+                }
+                return undef;
+            }
+            unless ($list->get_total() > 0) {
+                Log::do_log('err',
+                    'Dynamic list %s from %s family has ZERO subscribers',
+                    $list, $dyn_list_family);
+                # FIXME: send DSN.
+                Sympa::Report::reject_report_msg(
+                    'user',
+                    'list_unknown',
+                    $sender,
+                    {   'listname' => $list->{'name'},
+                        'list' =>
+                            {'name' => $list->{'name'}, 'host' => $robot},
+                        'message' => $message
+                    },
+                    $robot,
+                    $message->as_string,
+                    ''
+                );
+                Log::db_log(
+                    {   'robot'        => $robot,
+                        'list'         => $list->{'name'},
+                        'action'       => 'process_message',
+                        'parameters'   => "",
+                        'target_email' => "",
+                        'msg_id'       => $msg_id,
+                        'status'       => 'error',
+                        'error_type'   => 'list_unknown',
+                        'user_email'   => $sender,
+                        'client'       => $ip,
+                        'daemon'       => $daemon_name
+                    }
+                );
+                # purge the unwanted empty automatic list
+                if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
+                    $list->close_list();
+                    # verifier pour tt ce bloc si supprime bien tout
+                    $list->purge();
+                    # but what about list_of_lists ?
+                    if (exists $Sympa::List::list_of_lists{$list->{'domain'}}
+                        {$list->{'name'}}) {    # test à virer si ok
+                        delete $Sympa::List::list_of_lists{$list->{'domain'}}
+                            {$list->{'name'}};
+                        Log::do_log(
+                            'err',
+                            'La liste a été trouvée dans la list_of_lists',
+                            $list,
+                            $dyn_list_family
+                        );
+                    }
+                }
+                return undef;
+            }
+            Log::do_log('info',
+                'Successfully create list %s with %s subscribers',
+                $list, $list->get_total());
+        }
+
+        # do not process messages in list creation only mode, move them to
+        # main spool
+        my $marshalled = tools::store_spool(
+            $Conf::Conf{'queue'}, $message, '%s@%s.%ld.%ld,%d',
+            [qw(localpart domainpart date PID RAND)],
+            original => 1
+        );
+        if ($marshalled) {
+            Log::do_log('notice',
+                'Message %s is stored into incoming spool as <%s>',
+                $message, $marshalled);
+        } else {
+            Log::do_log(
+                'err',
+                'Unable to move in spool for processing message %s to list %s (daemon_usage = creation)',
+                $message,
+                $list
+            );
+            Sympa::Report::reject_report_msg('intern', '', $sender,
+                {'msg_id' => $msg_id, 'message' => $message},
+                $robot, $message->as_string, $list);
+            return undef;
+        }
+
+        return 1;
+    }
+    # End of processing for automatic list.
+
+    ## Initialize command report
+    Sympa::Report::init_report_cmd();
+
+    my $list =
+        (ref $message->{context} eq 'Sympa::List')
+        ? $message->{context}
+        : undef;
+    my $type = $message->{'listtype'} || '';
+    my $list_address;
+
+    if ($type eq 'listmaster' or $type eq 'sympa') {
         $list_address =
             $message->{'localpart'} . '@'
             . Conf::get_robot_conf($robot, 'host');
@@ -1884,7 +2031,7 @@ sub process_message {
         #}
     }
 
-    #  anti-virus
+    # Anti-virus
     my $rc = $message->check_virus_infection;
     if ($rc) {
         my $antivirus_notify =
@@ -1929,7 +2076,6 @@ sub process_message {
             }
         );
         return undef;
-
     } elsif (!defined($rc)) {
         tools::send_notify_to_listmaster(
             $robot,
@@ -1943,158 +2089,7 @@ sub process_message {
         return undef;
     }
 
-    if ($do_creation) {
-        if ($dyn_just_created) {
-            unless (defined $list->sync_include()) {
-                Log::do_log(
-                    'err',
-                    'Failed to synchronize list members of dynamic list %s from %s family',
-                    $list,
-                    $dyn_list_family
-                );
-                Sympa::Report::reject_report_msg(
-                    'user',
-                    'dyn_cant_create',
-                    $sender,
-                    {'listname' => $list->{'name'}, 'message' => $message},
-                    $robot,
-                    $message->as_string,
-                    ''
-                );
-                Log::db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => 'process_message',
-                        'parameters'   => "",
-                        'target_email' => "",
-                        'msg_id'       => $msg_id,
-                        'status'       => 'error',
-                        'error_type'   => 'dyn_cant_sync',
-                        'user_email'   => $sender,
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
-                    }
-                );
-                # purge the unwanted empty automatic list
-                if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
-                    $list->close_list();
-                    # verifier pour tt ce bloc si supprime bien tout
-                    $list->purge();
-                    # but what about list_of_lists ?
-                    if (exists $Sympa::List::list_of_lists{$list->{'domain'}}
-                        {$list->{'name'}}) {    # test à virer si ok
-                        delete $Sympa::List::list_of_lists{$list->{'domain'}}
-                            {$list->{'name'}};
-                        Log::do_log(
-                            'err',
-                            'La liste a été trouvée dans la list_of_lists',
-                            $list,
-                            $dyn_list_family
-                        );
-                    }
-                }
-                return undef;
-            }
-            unless ($list->get_total() > 0) {
-                Log::do_log('err',
-                    'Dynamic list %s from %s family has ZERO subscribers',
-                    $list, $dyn_list_family);
-                Sympa::Report::reject_report_msg(
-                    'user',
-                    'list_unknown',
-                    $sender,
-                    {   'listname' => $list->{'name'},
-                        'list' =>
-                            {'name' => $list->{'name'}, 'host' => $robot},
-                        'message' => $message
-                    },
-                    $robot,
-                    $message->as_string,
-                    ''
-                );
-                Log::db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => 'process_message',
-                        'parameters'   => "",
-                        'target_email' => "",
-                        'msg_id'       => $msg_id,
-                        'status'       => 'error',
-                        'error_type'   => 'list_unknown',
-                        'user_email'   => $sender,
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
-                    }
-                );
-                # purge the unwanted empty automatic list
-                if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
-                    $list->close_list();
-                    # verifier pour tt ce bloc si supprime bien tout
-                    $list->purge();
-                    # but what about list_of_lists ?
-                    if (exists $Sympa::List::list_of_lists{$list->{'domain'}}
-                        {$list->{'name'}}) {    # test à virer si ok
-                        delete $Sympa::List::list_of_lists{$list->{'domain'}}
-                            {$list->{'name'}};
-                        Log::do_log(
-                            'err',
-                            'La liste a été trouvée dans la list_of_lists',
-                            $list,
-                            $dyn_list_family
-                        );
-                    }
-                }
-                return undef;
-            }
-            Log::do_log('info',
-                'Successfully create list %s with %s subscribers',
-                $list, $list->get_total());
-        }
-
-        # do not process messages in list creation only mode, move them to
-        # main spool
-        my $marshalled =
-            tools::store_spool($Conf::Conf{'queue'}, $message,
-            '%s@%s.%ld.%ld,%d', [qw(localpart domainpart date PID RAND)],
-            original => 1);
-        if ($marshalled) {
-            Log::do_log('notice',
-                'Message %s is stored into incoming spool as <%s>',
-                $message, $marshalled);
-        } else {
-            Log::do_log(
-                'err',
-                'Unable to move in spool for processing message to list %s (daemon_usage = creation)',
-                $list
-            );
-            Sympa::Report::reject_report_msg('intern', '', $sender,
-                {'msg_id' => $msg_id, 'message' => $message},
-                $robot, $message->as_string, $list);
-            return undef;
-        }
-
-        if ($dyn_just_created) {
-            Log::do_log(
-                'info',
-                'After automatic list creation, Message for %s from %s moved in spool %s for processing message-id=%s',
-                $list,
-                $sender,
-                $Conf::Conf{'queue'},
-                $msg_id
-            );
-        } else {
-            Log::do_log(
-                'info',
-                'Message for %s from %s moved in spool %s for processing message-id=%s',
-                $list,
-                $sender,
-                $Conf::Conf{'queue'},
-                $msg_id
-            );
-        }
-        $status = 1;
-
-    } elsif ($type eq 'listmaster') {
+    if ($type eq 'listmaster') {
         $status = DoForward('sympa', 'listmaster', $robot, $message);
     } elsif ($type eq 'sympa') {
         # Mail addressed to the robot is command.
