@@ -41,6 +41,7 @@ use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::List;
+use Sympa::LockedFile;
 use Log;
 use Sympa::Message;
 use SDM;
@@ -1323,6 +1324,58 @@ sub upgrade {
         Log::do_log('info', 'Upgrade process for spool %s: ignored files %s',
             $spooldir, join(', ', @ignored))
             if @ignored;
+        Log::do_log('info',
+            'Upgrade process for spool %s: performed files %s',
+            $spooldir, join(', ', @performed))
+            if @performed;
+    }
+
+    # Rename files in automatic spool with older format created by
+    # sympa-milter 0.6 or earlier: <family_name>.<date>.<rand> to
+    # <localpart>@<domainpart>.<date>.<rand>.
+    if (lower_version($previous_version, '6.2b.1')) {
+        my $spooldir = $Conf::Conf{'queueautomatic'};
+
+        my $dh;
+        my @qfile;
+        unless (opendir $dh, $spooldir) {
+            Log::do_log('err', 'Can\'t open dir %s: %m', $spooldir);
+        } else {
+            @qfile = sort grep {
+                    !/,lock/
+                and !/\A(?:\.|T\.|BAD-)/
+                and -f ($spooldir . '/' . $_)
+            } readdir $dh;
+            closedir $dh;
+        }
+
+        my $lock_fh;
+        my @performed;
+        foreach my $filename (@qfile) {
+            $lock_fh = Sympa::LockedFile->new($spooldir . '/' . $filename,
+                -1, '+<');
+            next unless $lock_fh;
+
+            my $metadata = tools::unmarshal_metadata(
+                $spooldir, $filename,
+                qr{\A([^\s\@]+)\.(\d+)\.(\d+)\z},
+                [qw(list_or_family date rand)]
+            );
+            next unless $metadata;
+
+            my $msg_string = do { local $RS; <$lock_fh> };
+            my $message = Sympa::Message->new($msg_string, %$metadata);
+            next unless $message->{rcpt} and $message->{family};
+
+            my $new_filename = tools::marshal_metadata(
+                $message, '%s.%ld.%d', [qw(rcpt date rand)]);
+            next unless $new_filename ne $filename;
+
+            if ($lock_fh->rename($spooldir . '/' . $new_filename)) {
+                push @performed, $new_filename;
+            }
+        }
+
         Log::do_log('info',
             'Upgrade process for spool %s: performed files %s',
             $spooldir, join(', ', @performed))
