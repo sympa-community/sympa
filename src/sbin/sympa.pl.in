@@ -1990,7 +1990,7 @@ sub process_message {
             $list->{'admin'}{'loop_prevention_regex'};
         $conf_loop_prevention_regex ||=
             Conf::get_robot_conf($robot, 'loop_prevention_regex');
-        if ($sender =~ /^($conf_loop_prevention_regex)(\@|$)/mio) {
+        if ($sender =~ /^($conf_loop_prevention_regex)(\@|$)/mi) {
             Log::do_log(
                 'err',
                 'Ignoring message which would cause a loop, sent by %s; matches loop_prevention_regex',
