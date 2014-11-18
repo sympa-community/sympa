@@ -119,7 +119,7 @@ sub dump_html_var {
         }
     } else {
         if (defined $var) {
-            $html .= escape_html($var);
+            $html .= tools::escape_html($var);
         } else {
             $html .= 'UNDEF';
         }
