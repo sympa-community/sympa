@@ -5608,8 +5608,6 @@ sub am_i {
         # sa contestable.
         if (($function eq 'owner' || $function eq 'privileged_owner')
             and Sympa::Robot::is_listmaster($who, $self->{'domain'})) {
-            $list_cache{'am_i'}{$function}{$self->{'domain'}}{$self->{'name'}}
-                {$who} = 1;
             return 1;
         }
     }
