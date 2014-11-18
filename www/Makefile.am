@@ -47,6 +47,13 @@ nobase_static_DATA = \
 	icons/text.png \
 	icons/top.png \
 	icons/unknown.png \
+	icons/arc.png \
+	icons/config.png \
+	icons/datasources.png \
+	icons/new_list.png \
+	icons/search.png \
+	icons/subscribe.png \
+	icons/spinner.gif \
 	external/jqplot.barRenderer.min.js \
 	external/jqplot.CanvasAxisTickRenderer.js \
 	external/jqplot.CanvasTextRenderer.js \

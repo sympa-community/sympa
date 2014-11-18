@@ -222,7 +222,7 @@ sub create_list_old {
 
     ## Check the template supposed to be used exist.
     my $template_file = tools::search_fullpath($robot, 'config.tt2',
-        subidr => 'create_list_templates/' . $template);
+        subdir => 'create_list_templates/' . $template);
     unless (defined $template_file) {
         Log::do_log('err', 'No template %s found', $template);
         return undef;
