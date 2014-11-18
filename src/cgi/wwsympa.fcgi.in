@@ -257,6 +257,7 @@ our %comm = (
     'resetbounce'          => 'do_resetbounce',
     'scenario_test'        => 'do_scenario_test',
     'search_list'          => 'do_search_list',
+    'search_list_request'  => 'do_search_list_request',
     'show_cert'            => 'do_show_cert',
     'close_list_request'   => 'do_close_list_request',
     'close_list'           => 'do_close_list',
@@ -12096,6 +12097,14 @@ sub do_edit_attributes {
     return 1;
 }
 
+
+## list search form
+sub do_search_list_request {
+    wwslog('info', '');
+	
+    return 1;
+}
+
 ## Search among lists
 sub do_search_list {
     wwslog('info', '(%s)', $in{'filter'});
@@ -12131,8 +12140,8 @@ sub do_search_list {
         next unless ($r_action eq 'do_it');
 
         if ($param->{'user'}{'email'}
-            && (   $list->am_i('owner', $param->{'user'}{'email'})
-                || $list->am_i('editor', $param->{'user'}{'email'}))
+            && (   $list->am_i('owner', $param->{'user'}{'email'}, {'strict' => 1})
+                || $list->am_i('editor', $param->{'user'}{'email'}, {'strict' => 1}))
             ) {
             $is_admin = 1;
         }
