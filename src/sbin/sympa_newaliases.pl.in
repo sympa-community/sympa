@@ -33,6 +33,12 @@ use Conf;
 use Sympa::Crash;    # Show traceback.
 use Log;
 
+# If this program was invoked by the other, throw standard output away so
+# that parent's output (e.g. via CGI) won't be stained.
+unless (-t) {
+    open STDOUT, '>&STDERR';
+}
+
 my %options;
 unless (
     GetOptions(
