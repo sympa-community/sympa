@@ -260,7 +260,9 @@ sub play_soap {
     ## Don't use authenticateAndRun for lists command
 
     ## Split parameters
-    @parameters = split /,/, $service_parameters;
+    if ($service_parameters && $service_parameters ne '') {
+		@parameters = split /,/, $service_parameters;
+	}
 
     if ($service eq 'lists') {
         printf "\n\nlists....\n";
