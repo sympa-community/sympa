@@ -1420,25 +1420,11 @@ sub install_aliases {
         return undef;
     }
 
-    #FIXME: 'host' parameter is passed to alias_manager: no 'domain'
-    # parameter to determine robot.
-    my ($saveout, $saveerr);
-    unless (open $saveout, '>&STDOUT' and open STDOUT, '>', $output_file) {
-        Log::do_log('err', 'Cannot open file %s: %m', $output_file);
-        return undef;
-    }
-    unless (open $saveerr, '>&STDERR'
-        and open STDERR, '>', $error_output_file) {
-        Log::do_log('err', 'Cannot open file %s: %m', $error_output_file);
-        open STDOUT, '>&', $saveout;
-        return undef;
-    }
-    my $status =
-        system($alias_manager, 'add', $list->{'name'},
-        $list->{'admin'}{'host'}) >> 8;
-    open STDOUT, '>&', $saveout;
-    open STDERR, '>&', $saveerr;
-
+    my $status = system($alias_manager,
+		'add', $list->{'name'}, $list->{'admin'}{'host'},
+		'2>'.$error_output_file, '1>'.$output_file
+	) >> 8;
+	
     if ($status == 0) {
         Log::do_log('info', 'Aliases installed successfully');
         return 1;
