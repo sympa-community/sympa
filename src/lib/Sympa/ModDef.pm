@@ -190,6 +190,8 @@ our %cpan_modules = (
         mandatory        => 1,
         'gettext_id'     => 'used to create or remove paths',
     },
+    # HTML::Entities >=3.59 is included in HTML-Parser which
+    # HTML::StripScripts::Parser depends on.
     'HTML::FormatText' => {
         package_name => 'HTML-Format',
         mandatory    => 1,
