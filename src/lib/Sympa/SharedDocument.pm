@@ -26,6 +26,7 @@ package SharedDocument;
 
 use strict;
 use warnings;
+use HTML::Entities qw();
 
 use Log;
 use Sympa::Scenario;
@@ -170,7 +171,7 @@ sub new {
         $document->{'owner'} = $desc_hash{'email'};
         $document->{'title'} = $desc_hash{'title'};
         $document->{'escaped_title'} =
-            tools::escape_html($document->{'title'});
+            HTML::Entities::encode_entities($document->{'title'}, '<>&"');
 
         # Author
         if ($desc_hash{'email'}) {

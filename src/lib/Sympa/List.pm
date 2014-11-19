@@ -28,7 +28,8 @@ use strict;
 use warnings;
 use Digest::MD5 qw();
 use Encode qw();
-use English;    # FIXME: drop $PREMATCH usage
+use English;    # FIXME: drop $POSTMATCH usage
+use HTML::Entities qw();
 use HTTP::Request;
 use IO::Scalar;
 use LWP::UserAgent;
@@ -4544,7 +4545,7 @@ sub createXMLCustomAttribute {
 
         $XMLstr .=
               "<custom_attribute id=\"$k\"><value>"
-            . tools::escape_html($value)
+            . HTML::Entities::encode_entities($value, '<>&"')
             . "</value></custom_attribute>";
     }
     $XMLstr .= "</custom_attributes>";

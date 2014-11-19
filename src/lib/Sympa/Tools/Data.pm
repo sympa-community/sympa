@@ -26,7 +26,8 @@ package Sympa::Tools::Data;
 
 use strict;
 use warnings;
-use English qw(no_match_vars);
+use English qw(-no_match_vars);
+use HTML::Entities qw();
 use POSIX qw();
 
 ## This applies recursively to a data structure
@@ -119,7 +120,7 @@ sub dump_html_var {
         }
     } else {
         if (defined $var) {
-            $html .= tools::escape_html($var);
+            $html .= HTML::Entities::encode_entities($var, '<>&"');
         } else {
             $html .= 'UNDEF';
         }
