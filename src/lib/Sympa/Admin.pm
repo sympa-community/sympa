@@ -1409,9 +1409,6 @@ sub install_aliases {
             /^none$/i;
 
     my $alias_manager = $Conf::Conf{'alias_manager'};
-    my $output_file = $Conf::Conf{'tmpdir'} . '/aliasmanager.stdout.' . $PID;
-    my $error_output_file =
-        $Conf::Conf{'tmpdir'} . '/aliasmanager.stderr.' . $PID;
     Log::do_log('debug2', '%s add %s %s', $alias_manager, $list->{'name'},
         $list->{'admin'}{'host'});
 
@@ -1420,69 +1417,50 @@ sub install_aliases {
         return undef;
     }
 
-    my $status = system($alias_manager,
-		'add', $list->{'name'}, $list->{'admin'}{'host'},
-		'2>'.$error_output_file, '1>'.$output_file
-	) >> 8;
-	
+    #FIXME: 'host' parameter is passed to alias_manager: no 'domain'
+    # parameter to determine robot.
+    my $status =
+        system($alias_manager, 'add', $list->{'name'},
+        $list->{'admin'}{'host'}) >> 8;
+
     if ($status == 0) {
         Log::do_log('info', 'Aliases installed successfully');
         return 1;
     }
 
-    ## get error code
-    my $error_output;
-    open ERR, $error_output_file;
-    while (<ERR>) {
-        $error_output .= $_;
-    }
-    close ERR;
-    unlink $error_output_file;
-
     if ($status == 1) {
-        Log::do_log('err', 'Configuration file %s has errors: %s',
-            Conf::get_sympa_conf(), $error_output);
+        Log::do_log('err', 'Configuration file %s has errors',
+            Conf::get_sympa_conf());
     } elsif ($status == 2) {
-        Log::do_log('err',
-            'Internal error: Incorrect call to alias_manager: %s',
-            $error_output);
+        Log::do_log('err', 'Internal error: Incorrect call to alias_manager');
     } elsif ($status == 3) {
-        Log::do_log(
-            'err',
-            'Could not read sympa config file, report to httpd error_log: %s',
-            $error_output
-        );
-    } elsif ($status == 4) {
+        # Won't occur
         Log::do_log('err',
-            'Could not get default domain, report to httpd error_log: %s',
-            $error_output);
+            'Could not read sympa config file, report to httpd error_log');
+    } elsif ($status == 4) {
+        # Won't occur
+        Log::do_log('err',
+            'Could not get default domain, report to httpd error_log');
     } elsif ($status == 5) {
-        Log::do_log('err', 'Unable to append to alias file: %s',
-            $error_output);
+        Log::do_log('err', 'Unable to append to alias file');
     } elsif ($status == 6) {
-        Log::do_log('err', 'Unable to run newaliases: %s', $error_output);
+        Log::do_log('err', 'Unable to run newaliases');
     } elsif ($status == 7) {
         Log::do_log('err',
-            'Unable to read alias file, report to httpd error_log: %s',
-            $error_output);
+            'Unable to read alias file, report to httpd error_log');
     } elsif ($status == 8) {
         Log::do_log('err',
-            'Could not create temporay file, report to httpd error_log: %s',
-            $error_output);
+            'Could not create temporay file, report to httpd error_log');
     } elsif ($status == 13) {
-        Log::do_log('info', 'Some of list aliases already exist: %s',
-            $error_output);
+        Log::do_log('info', 'Some of list aliases already exist');
     } elsif ($status == 14) {
         Log::do_log('err',
-            'Can not open lock file, report to httpd error_log: %s',
-            $error_output);
+            'Can not open lock file, report to httpd error_log');
     } elsif ($status == 15) {
-        Log::do_log('err', 'The parser returned empty aliases: %s',
-            $error_output);
+        Log::do_log('err', 'The parser returned empty aliases');
     } else {
-        Log::do_log('err',
-            'Unknown error %s while running alias manager %s: %s',
-            $status, $alias_manager, $error_output);
+        Log::do_log('err', 'Unknown error %s while running alias manager %s',
+            $status, $alias_manager);
     }
 
     return undef;
