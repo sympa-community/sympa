@@ -182,9 +182,8 @@ sub create_configuration {
         } elsif ($param->{'optional'}) {
             printf NEWF "#%s\t\n", $param->{'name'};
         } else {
-            printf NEWF '#'
-                . gettext("%s\t(You must define this parameter)")
-                . "\n", $param->{'name'};
+            printf NEWF "#%s\t%s\n", $param->{'name'},
+                gettext("(You must define this parameter)");
         }
         print NEWF "\n";
     }
