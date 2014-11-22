@@ -43,7 +43,7 @@ my %options;
 unless (
     GetOptions(
         \%options, 'config|f=s', 'debug|d', 'domain=s',
-        'help|h',  'log_level',  'version|v'
+        'help|h',  'log_level=s',  'version|v'
     )
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
