@@ -193,14 +193,7 @@ sub new {
     # If old style X-Sympa-From: has been found, omit Return-Path:.
     #
     # We trust in "Return-Path:" header field only at the top of message
-    # to prevent forgery.  To ensure it will be added to messages by MDA:
-    # - Sendmail:   Add 'P' in the 'F=' flags of local mailer line (such
-    #               as 'Mlocal').
-    # - Postfix:
-    #   - local(8): Available by default.
-    #   - pipe(8):  Add 'R' in the 'flags=' attributes in master.cf.
-    # - Exim:       Set 'return_path_add' to true with pipe_transport.
-    # - qmail:      Use preline(1).
+    # to prevent forgery.  See CAVEAT.
     if ($serialized =~ /\GReturn-Path: (.*?)\n(?![ \t])/cgs
         and not exists $self->{'envelope_sender'}) {
         my $addr = $1;
@@ -2690,7 +2683,7 @@ sub _decorate_parts {
             if ($header =~ /\.mime$/) {
                 my $header_part;
                 eval { $header_part = $parser->parse($fh); };
-				close $fh;
+                close $fh;
                 if ($EVAL_ERROR) {
                     Log::do_log('err', 'Failed to parse MIME data %s: %s',
                         $header, $parser->last_error);
@@ -2702,8 +2695,8 @@ sub _decorate_parts {
             } else {
                 ## text/plain header
                 $entity->make_multipart unless $entity->is_multipart;
-				my $header_text = do { local $RS; <$fh> };
-				close $fh;
+                my $header_text = do { local $RS; <$fh> };
+                close $fh;
                 my $header_part = MIME::Entity->build(
                     Data       => $header_text,
                     Type       => "text/plain",
@@ -2721,7 +2714,7 @@ sub _decorate_parts {
             if ($footer =~ /\.mime$/) {
                 my $footer_part;
                 eval { $footer_part = $parser->parse($fh); };
-				close $fh;
+                close $fh;
                 if ($EVAL_ERROR) {
                     Log::do_log('err', 'Failed to parse MIME data %s: %s',
                         $footer, $parser->last_error);
@@ -2732,8 +2725,8 @@ sub _decorate_parts {
             } else {
                 ## text/plain footer
                 $entity->make_multipart unless $entity->is_multipart;
-				my $footer_text = do { local $RS; <$fh> };
-				close $fh;
+                my $footer_text = do { local $RS; <$fh> };
+                close $fh;
                 $entity->attach(
                     Data       => $footer_text,
                     Type       => "text/plain",
@@ -3778,11 +3771,13 @@ delivered.
 
 =item {domainpart}
 
+=item {listname}
+
 =item {listtype}
 
 =item {localpart}
 
-Domain, type and local part of context.
+Domain, name, type and local part of context.
 
 =item {priority}
 
@@ -3842,7 +3837,8 @@ Original message ID of the message.
 
 =item {rcpt}
 
-Recipients for delivery.  This is used by automatic spool and bulk spool.
+Recipients for delivery.
+This is kept for compatibility with earlier releases.
 
 =item {sender}
 
@@ -3878,7 +3874,8 @@ For example a file name
 
 encodes the metadata
 
-  localpart  => 'listname',
+  localpart  => 'listname-owner',
+  listname   => 'listname',
   listtype   => 'return_path',
   domainpart => 'domain.name',
   date       => 143599229,
@@ -3911,7 +3908,7 @@ Attributes are encoded in C<X-Sympa-*:> pseudo-header fields and
 C<Return-Path:> header field.
 Below is an example of serialized form.
 
-  X-Sympa-Message-ID: 23456789.12345@domain.name  : {message_id} attribute
+  X-Sympa-Message-ID: 123456789.12345@domain.name : {message_id} attribute
   X-Sympa-Sender: user01@user.sympa.test          : {sender} attribute
   X-Sympa-Display-Name: Infant                    : {gecos} attribute
   X-Sympa-Shelved: dkim_sign; tracking=mdn        : {shelved} attribute
@@ -3937,6 +3934,43 @@ attributes but are the part of raw message content.
 
 Pseudo-header fields I<should not> be included in actually sent messages.
 
+=head1 CAVEAT
+
+=head2 Adding C<Return-Path:> field
+
+We trust in C<Return-Path:> header field only at the top of message
+to prevent forgery.  To ensure it will be added to messages by MDA,
+
+=over
+
+=item Sendmail
+
+Add C<P> in the C<F=> flags of local mailer line (such as C<Mlocal>).
+
+=item Postfix
+
+=over
+
+=item local(8)
+
+Prepending C<Return-Path:> is available by default.
+
+=item pipe(8)
+
+Add C<R> to the C<flags=> attributes in master.cf.
+
+=back
+
+=item Exim
+
+Set C<return_path_add> to be true with pipe_transport.
+
+=item qmail
+
+Use preline(1).
+
+=back
+
 =head1 HISTORY
 
 L<Message> module appeared on Sympa 3.3.6.
@@ -3949,5 +3983,7 @@ It was initially written by:
 =item * Olivier SalaE<252>n <os AT cru.fr> 
 
 =back 
+
+Renamed L<Sympa::Message> appeard on Sympa 6.2.0.
 
 =cut 
