@@ -49,6 +49,7 @@ use DateTime;
 use Encode qw();
 use English;    # FIXME: drop $PREMATCH usage
 use HTML::Entities qw();
+use HTML::TreeBuilder;
 use Mail::Address;
 use MIME::Charset;
 use MIME::EncWords;
@@ -62,6 +63,7 @@ BEGIN { eval 'use Crypt::SMIME'; }
 
 use Conf;
 use Sympa::Constants;
+use Sympa::HTML::FormatText;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
 use Sympa::List;
@@ -3710,6 +3712,369 @@ sub _split_mail {
 
 =over
 
+=item get_plaindigest_body ( )
+
+I<Instance method>.
+Returns a plain text version of message, suitable for use in plain text
+digests.
+
+=over
+
+=item *
+
+Most attachments are stripped out and replaced with a
+note that they've been stripped. text/plain parts are
+retained.
+
+=item *
+
+An attempt to convert text/html parts to plain text is made
+if there is no text/plain alternative.
+
+=item *
+
+All messages are converted from their original character
+set to UTF-8.
+
+=item *
+
+Parts of type message/rfc822 are recursed
+through in the same way, with brief headers included.
+
+=item *
+
+Any line consisting only of 30 hyphens has the first
+character changed to space (see RFC 1153). Lines are
+wrapped at 76 columns.
+
+=back
+
+Parameters:
+
+None.
+
+Returns:
+
+String.
+
+=back
+
+=cut
+
+# Old name: PlainDigest::plain_body_as_string(),
+#   Sympa::Tools::Message::plain_body_as_string().
+#
+# Changes
+# 20080910
+# - don't bother trying to find path to lynx unless use_lynx is true
+# - anchor content-type test strings to end of string to avoid
+#    picking up malformed headers as per bug 3702
+# - local Text::Wrap variables
+# - moved repeated code to get charset into sub _getCharset
+# - added use of MIME::Charset to check charset aliases
+# 20100810 - S. Ikeda
+# - Remove dependency on Text::Wrap: use common utility tools::wrap_text().
+# - Use MIME::Charset OO to handle vendor-defined encodings.
+# - Use MIME::EncWords instead of MIME::WordDecoder.
+# - Now HTML::FormatText is mandatory.  Remove Lynx support.
+#
+sub get_plaindigest_body {
+    my $self = shift;
+
+    # Reparse message to extract UUEncode.
+    my $parser = MIME::Parser->new;
+    $parser->output_to_core(1);
+    $parser->extract_uuencode(1);
+    $parser->extract_nested_messages(1);
+    my $topent = $parser->parse_data($self->as_string);
+
+    my $string = _do_toplevel($topent);
+
+    ## clean up after ourselves
+    #$topent->purge;
+
+    return Sympa::Tools::Text::wrap_text($string, '', '');
+}
+
+sub _do_toplevel {
+    my $topent = shift;
+    if (   $topent->effective_type =~ /^text\/plain$/i
+        || $topent->effective_type =~ /^text\/enriched/i) {
+        return _do_text_plain($topent);
+    } elsif ($topent->effective_type =~ /^text\/html$/i) {
+        return _do_text_html($topent);
+    } elsif ($topent->effective_type =~ /^multipart\/.*/i) {
+        return _do_multipart($topent);
+    } elsif ($topent->effective_type =~ /^message\/rfc822$/i) {
+        return _do_message($topent);
+    } elsif ($topent->effective_type =~ /^message\/delivery\-status$/i) {
+        return _do_dsn($topent);
+    } else {
+        return _do_other($topent);
+    }
+}
+
+sub _do_multipart {
+    my $topent = shift;
+
+    my $string = '';
+
+    # cycle through each part and process accordingly
+    foreach my $subent ($topent->parts) {
+        if (   $subent->effective_type =~ /^text\/plain$/i
+            || $subent->effective_type =~ /^text\/enriched/i) {
+            $string .= _do_text_plain($subent);
+        } elsif ($subent->effective_type =~ /^multipart\/related$/i) {
+            if ($topent->effective_type =~ /^multipart\/alternative$/i
+                && _hasTextPlain($topent)) {
+                # this is a rare case - /related nested inside /alternative.
+                # If there's also a text/plain alternative just ignore it
+                next;
+            } else {
+                # just treat like any other multipart
+                $string .= _do_multipart($subent);
+            }
+        } elsif ($subent->effective_type =~ /^multipart\/.*/i) {
+            $string .= _do_multipart($subent);
+        } elsif ($subent->effective_type =~ /^text\/html$/i) {
+            if ($topent->effective_type =~ /^multipart\/alternative$/i
+                && _hasTextPlain($topent)) {
+                # there's a text/plain alternive, so don't warn
+                # that the text/html part has been scrubbed
+                next;
+            }
+            $string .= _do_text_html($subent);
+        } elsif ($subent->effective_type =~ /^message\/rfc822$/i) {
+            $string .= _do_message($subent);
+        } elsif ($subent->effective_type =~ /^message\/delivery\-status$/i) {
+            $string .= _do_dsn($subent);
+        } else {
+            # something else - just scrub it and add a message to say what was
+            # there
+            $string .= _do_other($subent);
+        }
+    }
+
+    return $string;
+}
+
+sub _do_message {
+    my $topent = shift;
+    my $msgent = $topent->parts(0);
+
+    my $string = '';
+
+    unless ($msgent) {
+        return $language->gettext(
+            "----- Malformed message ignored -----\n\n");
+    }
+
+    # Get decoded headers.
+    # Note that MIME::Head::get() returns empty array if requested fields are
+    # not found.
+    my ($from) = map {
+        chomp $_;
+        MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
+    } ($msgent->head->get('From', 0));
+    $from = $language->gettext("[Unknown]")
+        unless defined $from and length $from;
+    my ($subject) = map {
+        chomp $_;
+        MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
+    } ($msgent->head->get('Subject', 0));
+    my ($date) = map {
+        chomp $_;
+        MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
+    } ($msgent->head->get('Date', 0));
+    my $to = join ', ', map {
+        chomp $_;
+        MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
+    } ($msgent->head->get('To'));
+    my $cc = join ', ', map {
+        chomp $_;
+        MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
+    } ($msgent->head->get('Cc'));
+
+    my @fromline = Mail::Address->parse($msgent->head->get('From'));
+    my $name;
+    if ($fromline[0]) {
+        $name = MIME::EncWords::decode_mimewords($fromline[0]->name(),
+            Charset => 'utf8');
+        $name = $fromline[0]->address()
+            unless defined $name and $name =~ /\S/;
+        chomp $name;
+    }
+    $name = $from unless defined $name and length $name;
+
+    $string .= $language->gettext(
+        "\n[Attached message follows]\n-----Original message-----\n");
+    my $headers = '';
+    $headers .= $language->gettext_sprintf("Date: %s\n", $date) if $date;
+    $headers .= $language->gettext_sprintf("From: %s\n", $from) if $from;
+    $headers .= $language->gettext_sprintf("To: %s\n",   $to)   if $to;
+    $headers .= $language->gettext_sprintf("Cc: %s\n",   $cc)   if $cc;
+    $headers .= $language->gettext_sprintf("Subject: %s\n", $subject)
+        if $subject;
+    $headers .= "\n";
+    $string .= Sympa::Tools::Text::wrap_text($headers, '', '    ');
+
+    $string .= _do_toplevel($msgent);
+
+    $string .= $language->gettext_sprintf(
+        "-----End of original message from %s-----\n\n", $name);
+    return $string;
+}
+
+sub _do_text_plain {
+    my $entity = shift;
+
+    my $string = '';
+
+    if (($entity->head->get('Content-Disposition') || '') =~ /attachment/) {
+        return _do_other($entity);
+    }
+
+    my $thispart = $entity->bodyhandle->as_string;
+
+    # deal with CR/LF left over - a problem from Outlook which
+    # qp encodes them
+    $thispart =~ s/\r\n/\n/g;
+
+    ## normalise body to UTF-8
+    # get charset
+    my $charset = _getCharset($entity);
+    eval {
+        $charset->encoder('utf8');
+        $thispart = $charset->encode($thispart);
+    };
+    if ($EVAL_ERROR) {
+        # mmm, what to do if it fails?
+        $string .= $language->gettext_sprintf(
+            "** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
+            $charset->as_string
+        );
+        $thispart =~ s/[^\x00-\x7F]/?/g;
+    }
+
+    # deal with 30 hyphens (RFC 1153)
+    $thispart =~ s/\n-{30}(\n|$)/\n -----------------------------\n/g;
+    # leading and trailing lines (RFC 1153)
+    $thispart =~ s/^\n*//;
+    $thispart =~ s/\n+$/\n/;
+
+    $string .= $thispart;
+    return $string;
+}
+
+sub _do_other {
+    # just add a note that attachment was stripped.
+    my $entity = shift;
+
+    return $language->gettext_sprintf(
+        "\n[An attachment of type %s was included here]\n",
+        $entity->mime_type);
+}
+
+sub _do_dsn {
+    my $entity = shift;
+
+    my $string = '';
+
+    $string .= $language->gettext("\n-----Delivery Status Report-----\n");
+    $string .= _do_text_plain($entity);
+    $string .=
+        $language->gettext("\n-----End of Delivery Status Report-----\n");
+
+    return $string;
+}
+
+sub _do_text_html {
+    # get a plain text representation of an HTML part
+    my $entity = shift;
+
+    my $string = '';
+    my $text;
+
+    unless (defined $entity->bodyhandle) {
+        return $language->gettext(
+            "\n[** Unable to process HTML message part **]\n");
+    }
+
+    my $body = $entity->bodyhandle->as_string;
+
+    # deal with CR/LF left over - a problem from Outlook which
+    # qp encodes them
+    $body =~ s/\r\n/\n/g;
+
+    my $charset = _getCharset($entity);
+
+    eval {
+        # normalise body to internal unicode
+        if ($charset->decoder) {
+            $body = $charset->decode($body);
+        } else {
+            # mmm, what to do if it fails?
+            $string .= $language->gettext_sprintf(
+                "** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
+                $charset->as_string
+            );
+            $body =~ s/[^\x00-\x7F]/?/g;
+        }
+        my $tree = HTML::TreeBuilder->new->parse($body);
+        $tree->eof();
+        my $formatter =
+            Sympa::HTML::FormatText->new(leftmargin => 0, rightmargin => 72);
+        $text = $formatter->format($tree);
+        $tree->delete();
+        $text = Encode::encode_utf8($text);
+    };
+    if ($EVAL_ERROR) {
+        $string .= $language->gettext(
+            "\n[** Unable to process HTML message part **]\n");
+        return $string;
+    }
+
+    $string .= $language->gettext("[ Text converted from HTML ]\n");
+
+    # deal with 30 hyphens (RFC 1153)
+    $text =~ s/\n-{30}(\n|$)/\n -----------------------------\n/g;
+    # leading and trailing lines (RFC 1153)
+    $text =~ s/^\n*//;
+    $text =~ s/\n+$/\n/;
+
+    $string .= $text;
+
+    return $string;
+}
+
+sub _hasTextPlain {
+    # tell if an entity has text/plain children
+    my $topent  = shift;
+    my @subents = $topent->parts;
+    foreach my $subent (@subents) {
+        if ($subent->effective_type =~ /^text\/plain$/i) {
+            return 1;
+        }
+    }
+    return undef;
+}
+
+sub _getCharset {
+    my $entity = shift;
+
+    my $charset =
+          $entity->head->mime_attr('content-type.charset')
+        ? $entity->head->mime_attr('content-type.charset')
+        : 'us-ascii';
+    # malformed mail with single quotes around charset?
+    if ($charset =~ /'([^']*)'/i) { $charset = $1; }
+
+    # get charset object.
+    return MIME::Charset->new($charset);
+}
+
+=over
+
 =item get_id ( )
 
 I<Instance method>.
@@ -3971,6 +4336,11 @@ Use preline(1).
 
 =back
 
+=head1 BUGS
+
+L<get_plaindigest_body>()
+seems to ignore any text after a UUencoded attachment.
+
 =head1 HISTORY
 
 L<Message> module appeared on Sympa 3.3.6.
@@ -3984,6 +4354,11 @@ It was initially written by:
 
 =back 
 
-Renamed L<Sympa::Message> appeard on Sympa 6.2.0.
+L<get_plaindigest_body>, ex. L<PlainDigest/plain_body_as_string>,
+was initially written by Chris Hastie.  It appeared on Sympa 4.2b.1.
+
+  (c) Chris Hastie 2004 - 2008.
+
+Renamed and merged L<Sympa::Message> appeard on Sympa 6.2.0.
 
 =cut 

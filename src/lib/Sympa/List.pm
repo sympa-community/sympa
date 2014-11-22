@@ -57,7 +57,6 @@ use Sympa::LockedFile;
 use Log;
 use Sympa::Message;
 use Sympa::Message::Plugin;
-use Sympa::PlainDigest;
 use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
@@ -2332,14 +2331,13 @@ sub distribute_digest {
         # Commented because one Spam made Sympa die (MIME::tools 5.413)
         #$entity->remove_sig;
         my $msg = {
-            'id'       => $i,
-            'subject'  => $message->{'decoded_subject'},
-            'from'     => $message->get_decoded_header('From'),
-            'date'     => $message->get_decoded_header('Date'),
-            'full_msg' => $message->as_string,
-            'body'     => $message->body_as_string,
-            'plain_body' =>
-                $message->Sympa::PlainDigest::plain_body_as_string,
+            'id'         => $i,
+            'subject'    => $message->{'decoded_subject'},
+            'from'       => $message->get_decoded_header('From'),
+            'date'       => $message->get_decoded_header('Date'),
+            'full_msg'   => $message->as_string,
+            'body'       => $message->body_as_string,
+            'plain_body' => $message->get_plaindigest_body,
             # Should be extracted from Date:
             'month'      => POSIX::strftime("%Y-%m", localtime time),
             'message_id' => $message->{'message_id'},
