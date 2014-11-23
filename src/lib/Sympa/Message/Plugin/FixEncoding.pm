@@ -166,4 +166,3 @@ L<Sympa::Message::Plugin>
 IKEDA Soji <ikeda@conversion.co.jp>.
 
 =cut
-

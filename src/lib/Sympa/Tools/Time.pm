@@ -40,7 +40,7 @@ use Time::Local qw();
 # Note: This is used only once.
 sub get_midnight_time {
     my $epoch = $_[0];
-    my @date = localtime($epoch);
+    my @date  = localtime($epoch);
     return $epoch - $date[0] - $date[1] * 60 - $date[2] * 3600;
 }
 

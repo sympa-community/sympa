@@ -112,7 +112,8 @@ if (   ($main::options{'help'} ne '')
     }
 
     unless ($openssl) {
-        printf "You must set PATH environment variable to use openssl command line utility.\n";
+        printf
+            "You must set PATH environment variable to use openssl command line utility.\n";
         die;
     }
 

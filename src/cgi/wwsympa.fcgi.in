@@ -1754,35 +1754,39 @@ while ($query = new_loop()) {
             ) {
             wwslog('notice', 'Could not set HTTP cookie');
         }
-        
+
         $param->{'is_user_allowed_to'} = sub {
-			my $permission = shift;
-			my $list = shift;
-			
-			return 0 unless $permission and $list;
-			
-			$list = Sympa::List->new($list, $robot) unless ref $list eq 'Sympa::List';
-			
-			my $result = Sympa::Scenario::request_action(
-				$list,
-				$permission,
-				$param->{'auth_method'},
-				{
-					'sender'      => $param->{'user'}{'email'},
-					'remote_host' => $param->{'remote_host'},
-					'remote_addr' => $param->{'remote_addr'}
-				}
-			);
-			
-			return 0 unless $result =~ /do_it/;
-			
-			return 0 if $permission eq 'subscribe' and $list->is_list_member($param->{'user'}{'email'});
-			
-			return 0 if $permission eq 'web_archive.access' and not defined $list->{'admin'}{'web_archive'};
-			
-			return 1;
-		};
-		
+            my $permission = shift;
+            my $list       = shift;
+
+            return 0 unless $permission and $list;
+
+            $list = Sympa::List->new($list, $robot)
+                unless ref $list eq 'Sympa::List';
+
+            my $result = Sympa::Scenario::request_action(
+                $list,
+                $permission,
+                $param->{'auth_method'},
+                {   'sender'      => $param->{'user'}{'email'},
+                    'remote_host' => $param->{'remote_host'},
+                    'remote_addr' => $param->{'remote_addr'}
+                }
+            );
+
+            return 0 unless $result =~ /do_it/;
+
+            return 0
+                if $permission eq 'subscribe'
+                    and $list->is_list_member($param->{'user'}{'email'});
+
+            return 0
+                if $permission eq 'web_archive.access'
+                    and not defined $list->{'admin'}{'web_archive'};
+
+            return 1;
+        };
+
         ## Set cookies "your_subscribtions" unless in one list page
         if ($param->{'user'}{'email'} && ref($list) ne 'Sympa::List') {
             # In case get_which was not set.
@@ -12125,11 +12129,10 @@ sub do_edit_attributes {
     return 1;
 }
 
-
 ## list search form
 sub do_search_list_request {
     wwslog('info', '');
-	
+
     return 1;
 }
 
@@ -12168,8 +12171,17 @@ sub do_search_list {
         next unless ($r_action eq 'do_it');
 
         if ($param->{'user'}{'email'}
-            && (   $list->am_i('owner', $param->{'user'}{'email'}, {'strict' => 1})
-                || $list->am_i('editor', $param->{'user'}{'email'}, {'strict' => 1}))
+            && ($list->am_i(
+                    'owner',
+                    $param->{'user'}{'email'},
+                    {'strict' => 1}
+                )
+                || $list->am_i(
+                    'editor',
+                    $param->{'user'}{'email'},
+                    {'strict' => 1}
+                )
+            )
             ) {
             $is_admin = 1;
         }

@@ -1342,9 +1342,9 @@ sub upgrade {
             Log::do_log('err', 'Can\'t open dir %s: %m', $spooldir);
         } else {
             @qfile = sort grep {
-                    !/,lock/
-                and !/\A(?:\.|T\.|BAD-)/
-                and -f ($spooldir . '/' . $_)
+                        !/,lock/
+                    and !/\A(?:\.|T\.|BAD-)/
+                    and -f ($spooldir . '/' . $_)
             } readdir $dh;
             closedir $dh;
         }
@@ -1352,8 +1352,8 @@ sub upgrade {
         my $lock_fh;
         my @performed;
         foreach my $filename (@qfile) {
-            $lock_fh = Sympa::LockedFile->new($spooldir . '/' . $filename,
-                -1, '+<');
+            $lock_fh =
+                Sympa::LockedFile->new($spooldir . '/' . $filename, -1, '+<');
             next unless $lock_fh;
 
             my $metadata = tools::unmarshal_metadata(
@@ -1367,8 +1367,9 @@ sub upgrade {
             my $message = Sympa::Message->new($msg_string, %$metadata);
             next unless $message->{rcpt} and $message->{family};
 
-            my $new_filename = tools::marshal_metadata(
-                $message, '%s.%ld.%d', [qw(rcpt date rand)]);
+            my $new_filename =
+                tools::marshal_metadata($message, '%s.%ld.%d',
+                [qw(rcpt date rand)]);
             next unless $new_filename ne $filename;
 
             if ($lock_fh->rename($spooldir . '/' . $new_filename)) {
