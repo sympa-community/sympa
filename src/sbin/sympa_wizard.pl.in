@@ -173,7 +173,7 @@ sub create_configuration {
             if $param->{'gettext_comment'};
 
         if (defined $param->{'sample'}) {
-            printf NEWF '## ' . gettext("Example: %s\t%s") . "\n",
+            printf NEWF '## ' . gettext('Example: ') . "%s\t%s\n",
                 $param->{'name'}, $param->{'sample'};
         }
 
@@ -352,8 +352,8 @@ sub edit_configuration {
 }
 
 sub check_cpan {
-    print
-        "##########################################################################################
+    print gettext(
+        "##############################################################################
 # This process will help you install all Perl (CPAN) modules required by Sympa
 # software.
 # Sympa requires from 50 to 65 additional Perl modules to run properly. 
@@ -365,34 +365,34 @@ sub check_cpan {
 # Feel free to interrupt the process if needed ; you can restart it safely
 # afterward.
 ##############################################################################
-Strike return key to continue...
-";
+Press the Enter key to continue..."
+    ) . "\n";
     my $rep = <STDIN>;
 
-    ### main:
-    print "******* Check perl for SYMPA ********\n";
+    print "\n";
+
     ### REQ perl version
-    print "\nChecking for PERL version:\n-----------------------------\n";
+    print "\n" . gettext('Checking for PERL version:') . "\n\n";
     my $rpv = $Sympa::ModDef::cpan_modules{"perl"}{'required_version'};
     if ($] >= $Sympa::ModDef::cpan_modules{"perl"}{'required_version'}) {
-        print "your version of perl is OK ($]  >= $rpv)\n";
+        printf gettext('Your version of perl is OK (%s  >= %s)') . "\n", $],
+            $rpv;
     } else {
-        print
-            "Your version of perl is TOO OLD ($]  < $rpv)\nPlease INSTALL a new one !\n";
+        printf gettext(
+            "Your version of perl is TOO OLD (%s  < %s)\nPlease INSTALL a new one !"
+        ) . "\n", $], $rpv;
     }
 
-    print
-        "\nChecking for REQUIRED modules:\n------------------------------------------\n";
+    print "\n" . gettext('Checking for REQUIRED modules:') . "\n\n";
     check_modules('y', \%Sympa::ModDef::cpan_modules, 'mandatory');
-    print
-        "\nChecking for OPTIONAL modules:\n------------------------------------------\n";
+    print "\n" . gettext('Checking for OPTIONAL modules:') . "\n\n";
     check_modules('n', \%Sympa::ModDef::cpan_modules, 'optional');
 
-    print <<EOM;
-******* NOTE *******
+    print gettext(
+        "******* NOTE *******
 You can retrieve all theses modules from any CPAN server
-(for example ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)
-EOM
+(for example ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
+    ) . "\n";
 ###--------------------------
 # reports modules status
 # $cpan_modules is the cpan_modules structure
@@ -404,8 +404,10 @@ sub check_modules {
 #    my($default, $todo, $versions, $opt_features) = @_;
     my ($default, $cpan_modules, $type) = @_;
 
-    print "perl module          from CPAN       STATUS\n";
-    print "-----------          ---------       ------\n";
+    printf "%-24s%-24s%s\n", gettext('perl module'), gettext('from CPAN'),
+        gettext('STATUS');
+    printf "%-24s%-24s%s\n", gettext('-----------'), gettext('---------'),
+        gettext('------');
 
     foreach my $mod (sort keys %$cpan_modules) {
 
@@ -419,12 +421,12 @@ sub check_modules {
         ## Skip perl itself to prevent a huge upgrade
         next if ($mod eq 'perl');
 
-        printf("%-20s %-15s", $mod, $cpan_modules->{$mod}{package_name});
+        printf("%-24s%-24s", $mod, $cpan_modules->{$mod}{package_name});
 
         eval "require $mod";
         if ($EVAL_ERROR) {
             ### not installed
-            print "was not found on this system.\n";
+            print gettext('was not found on this system.') . "\n";
             install_module($mod, {'default' => $default}, $cpan_modules);
         } else {
 
@@ -446,12 +448,15 @@ sub check_modules {
             my $rv = $cpan_modules->{$mod}{required_version} || "1.0";
             ### OK: check version
             if ($v ge $rv) {
-                printf("OK (%-6s >= %s)\n", $v, $rv);
+                printf gettext('OK (%-6s >= %s)') . "\n", $v, $rv;
                 next;
             } else {
-                print "version is too old ($v < $rv).\n";
-                print
-                    ">>>>>>> You must update \"$cpan_modules->{$mod}{package_name}\" to version \"$cpan_modules->{$mod}{required_version}\" <<<<<<.\n";
+                printf gettext('version is too old (%s < %s)') . "\n", $v,
+                    $rv;
+                printf gettext(
+                    '>>>>>>> You must update "%s" to version "%s" <<<<<<.')
+                    . "\n", $cpan_modules->{$mod}{package_name},
+                    $cpan_modules->{$mod}{required_version};
                 install_module($mod, {'default' => $default}, $cpan_modules);
             }
         }
@@ -478,9 +483,11 @@ sub install_module {
     $ENV{'LANG'} = 'C' if ($ENV{'LANG'} =~ /UTF\-8/);
 
     unless ($EUID == 0) {
-        print
-            "\#\# You need root privileges to install $module module. \#\#\n";
-        print "\#\# Press the Enter key to continue checking modules. \#\#\n";
+        printf gettext('## You need root privileges to install %s module. ##')
+            . "\n", $module;
+        print gettext(
+            '## Press the Enter key to continue checking modules. ##')
+            . "\n";
         my $t = <STDIN>;
         return undef;
     }
@@ -500,7 +507,7 @@ sub install_module {
             ),
             '', '   '
         ) if ($cpan_modules->{$module}{'gettext_comment'});
-        print "-> Install module $module ? [$default]";
+        printf gettext('-> Install module %s ? [%s] '), $module, $default;
         my $answer = <STDIN>;
         chomp $answer;
         $answer ||= $default;
@@ -537,12 +544,14 @@ sub install_module {
 
         ## Prevent recusive calls if already in force mode
         if ($options->{'force'}) {
-            print
-                "Installation of $module still FAILED. You should download the tar.gz from http://search.cpan.org and install it manually.";
+            printf gettext(
+                "Installation of %s still FAILED. You should download the tar.gz from http://search.cpan.org and install it manually."
+            ), $module;
             my $answer = <STDIN>;
         } else {
-            print
-                "Installation of $module FAILED. Do you want to force the installation of this module? (y/N) ";
+            printf gettext(
+                'Installation of %s FAILED. Do you want to force the installation of this module? (y/N) '
+            ), $module;
             my $answer = <STDIN>;
             chomp $answer;
             if ($answer =~ /^y/i) {
