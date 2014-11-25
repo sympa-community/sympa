@@ -407,9 +407,9 @@ sub get_email_by_net_id {
 # check trusted_application_name et trusted_application_password : return 1 or
 # undef;
 sub remote_app_check_password {
-
-    my ($trusted_application_name, $password, $robot) = @_;
-    Log::do_log('debug', '(%s, %s)', $trusted_application_name, $robot);
+    my ($trusted_application_name, $password, $robot, $service) = @_;
+    Log::do_log('debug', '(%s, %s, %s)', $trusted_application_name, $robot,
+        $service);
 
     my $md5 = Digest::MD5::md5_hex($password);
 
@@ -426,22 +426,38 @@ sub remote_app_check_password {
             if ($md5 eq $application->{'md5password'}) {
                 # Log::do_log('debug', 'Authentication succeed for %s',$application->{'name'});
                 my %proxy_for_vars;
+                my %set_vars;
                 foreach my $varname (@{$application->{'proxy_for_variables'}})
                 {
                     $proxy_for_vars{$varname} = 1;
                 }
-                return (\%proxy_for_vars);
+                foreach my $varname (@{$application->{'set_variables'}}) {
+                    $set_vars{$1} = $2 if $varname =~ /(\S+)=(.*)/;
+                }
+                if ($application->{'allow_commands'}) {
+                    foreach my $cmdname (@{$application->{'allow_commands'}})
+                    {
+                        return (\%proxy_for_vars, \%set_vars)
+                            if $cmdname eq $service;
+                    }
+                    Log::do_log(
+                        'info',   'Illegal command %s received from %s',
+                        $service, $trusted_application_name
+                    );
+                    return;
+                }
+                return (\%proxy_for_vars, \%set_vars);
             } else {
                 Log::do_log('info', 'Bad password from %s',
                     $trusted_application_name);
-                return undef;
+                return;
             }
         }
     }
     # no matching application found
     Log::do_log('info', 'Unknown application name %s',
         $trusted_application_name);
-    return undef;
+    return;
 }
 
 # create new entry in one_time_ticket table using a rand as id so later

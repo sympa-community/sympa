@@ -320,7 +320,7 @@ sub authenticateAndRun {
         $email      = $session->{'email'};
         $session_id = $session->{'id_session'};
     }
-    unless ($email or ($email eq 'unkown')) {
+    unless ($email or $email eq 'unknown') {
         Log::do_log('err', 'Failed to authenticate user with session ID %s',
             $session_id);
         die SOAP::Fault->faultcode('Client')
@@ -331,7 +331,7 @@ sub authenticateAndRun {
     $ENV{'SESSION_ID'} = $session_id;
 
     no strict 'refs';
-    &{$service}($self, @$parameters);
+    $service->($self, @$parameters);
 }
 ## request user email from http cookie
 ##
@@ -379,9 +379,9 @@ sub authenticateRemoteAppAndRun {
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <appname> <apppassword> <vars> <service>');
     }
-    my $proxy_vars =
-        Sympa::Auth::remote_app_check_password($appname, $apppassword,
-        $robot);
+    my ($proxy_vars, $set_vars) =
+        Sympa::Auth::remote_app_check_password($appname, $apppassword, $robot,
+        $service);
 
     unless (defined $proxy_vars) {
         Log::do_log('notice', 'Authentication failed');
@@ -411,9 +411,13 @@ sub authenticateRemoteAppAndRun {
         }
         $ENV{$id} = $value if ($proxy_vars->{$id});
     }
+    # Set fixed variables.
+    foreach my $var (keys %$set_vars) {
+        $ENV{$var} = $set_vars->{$var};
+    }
 
     no strict 'refs';
-    &{$service}($self, @$parameters);
+    $service->($self, @$parameters);
 }
 
 sub amI {
@@ -1681,6 +1685,199 @@ sub which {
 #    return SOAP::Data->name('return')->type->('ArrayOfString')
 #    ->value(\@result);
     return SOAP::Data->name('return')->value(\@result);
+}
+
+sub getDetails {
+    my $class    = shift;
+    my $listname = shift;
+    my $subscriber;
+    my $list;
+    my %result = ();
+
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot  = $ENV{'SYMPA_ROBOT'};
+
+    unless ($sender) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('User not authentified')
+            ->faultdetail('You should login first');
+    }
+
+    unless ($listname) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('Incorrect number of parameters')
+            ->faultdetail('Use : <list>');
+    }
+
+    Log::do_log('debug', 'SOAP getDetails(%s,%s,%s)',
+        $listname, $robot, $sender);
+
+    $list = new List($listname, $robot);
+    if (!$list) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('List does not exist')->faultdetail('Use : <list>');
+    }
+    if ($subscriber = $list->get_subscriber($sender)) {
+        $result{'gecos'}         = $subscriber->{'gecos'};
+        $result{'reception'}     = $subscriber->{'reception'};
+        $result{'subscribeDate'} = $subscriber->{'date'};
+        $result{'updateDate'}    = $subscriber->{'update_date'};
+        $result{'custom'}        = [];
+        if ($subscriber->{'custom_attribute'}) {
+            foreach my $k (keys %{$subscriber->{'custom_attribute'}}) {
+                push @{$result{'custom'}},
+                    {
+                    key   => $k,
+                    value => $subscriber->{'custom_attribute'}{$k}{value}
+                    }
+                    if $k;
+            }
+        }
+    } else {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('Not a subscriber to this list')
+            ->faultdetail('Use : <list>');
+    }
+
+    return SOAP::Data->name('return')->value(\%result);
+}
+
+sub setDetails {
+    my $class    = shift;
+    my $listname = shift;
+    my $subscriber;
+    my $list;
+    my %newcustom = ();
+    my %user      = ();
+    my $gecos     = shift;
+    my $reception = shift;
+    my ($key, $value);
+
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot  = $ENV{'SYMPA_ROBOT'};
+
+    unless ($sender) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('User not authentified')
+            ->faultdetail('You should login first');
+    }
+
+    unless ($listname) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('Incorrect number of parameters')
+            ->faultdetail(
+            'Use : <list> <gecos> <reception> [ <key> <value> ] ...');
+    }
+
+    Log::do_log('debug', 'SOAP setDetails(%s,%s,%s)',
+        $listname, $robot, $sender);
+    $list = new List($listname, $robot);
+    if (!$list) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('List does not exist')
+            ->faultdetail(
+            'Use : <list> <gecos> <reception> [ <key> <value> ] ...');
+    }
+    $subscriber = $list->get_subscriber($sender);
+    if (!$subscriber) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('Not a subscriber to this list')
+            ->faultdetail(
+            'Use : <list> <gecos> <reception> [ <key> <value> ] ...');
+    }
+
+    # Set subscriber values; return 1 for success
+    %user = ();
+    $user{'gecos'} = $gecos if (defined $gecos);
+    $user{'reception'} = $reception
+        # ideally, this should check against the available_user_options
+        # values from the $list config
+        if $reception
+            and $reception =~
+            /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)$/;
+    if (@_) {    # do we have any custom attributes passed?
+        %newcustom = %{$subscriber->{'custom_attribute'}};
+        while (@_) {
+            $key = shift;
+            next unless $key;
+            $value = shift;
+            if (!defined $value or $value eq '') {
+                undef $newcustom{$key};
+            } else {
+                # $newcustom{$key} = $list->{'admin'}{'custom_attribute'}{$key}
+                #     if !defined $newcustom{$key};
+                $newcustom{$key}{value} = $value;
+            }
+        }
+        $user{'custom_attribute'} =
+            List::createXMLCustomAttribute(\%newcustom);
+    }
+    die SOAP::Fault->faultcode('Server')
+        ->faultstring('Unable to set user details')
+        ->faultdetail("SOAP setDetails : update user failed")
+        unless $list->update_user($sender, \%user);
+
+    return SOAP::Data->name('result')->type('boolean')->value(1);
+}
+
+sub setCustom {
+    my ($class, $listname, $key, $value) = @_;
+    my $subscriber;
+    my $list;
+    my $rv;
+    my %newcustom;
+    my %user;
+
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot  = $ENV{'SYMPA_ROBOT'};
+
+    unless ($sender) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('User not authentified')
+            ->faultdetail('You should login first');
+    }
+
+    unless ($listname and $key) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('Incorrect number of parameters')
+            ->faultdetail('Use : <list> <key> <value>');
+    }
+
+    Log::do_log('debug', 'SOAP setCustom(%s,%s,%s,%s)',
+        $listname, $robot, $sender, $key);
+
+    $list = new List($listname, $robot);
+    if (!$list) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('List does not exist')
+            ->faultdetail('Use : <list> <key> <value>');
+    }
+    $subscriber = $list->get_subscriber($sender);
+    if (!$subscriber) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('Not a subscriber to this list')
+            ->faultdetail('Use : <list> <key> <value> ');
+    }
+    %newcustom = %{$subscriber->{'custom_attribute'}};
+    #if(! defined $list->{'admin'}{'custom_attribute'}{$key} ) {
+    #	return SOAP::Data->name('result')->type('boolean')->value(0);
+    #}
+    if ($value eq '') {
+        undef $newcustom{$key};
+    } else {
+        # $newcustom{$key} = $list->{'admin'}{'custom_attribute'}{$key}
+        #     if !defined $newcustom{$key}
+        #         and defined $list->{'admin'}{'custom_attribute'};
+        $newcustom{$key}{value} = $value;
+    }
+    %user = ();
+    $user{'custom_attribute'} = List::createXMLCustomAttribute(\%newcustom);
+    die SOAP::Fault->faultcode('Server')
+        ->faultstring('Unable to set user attributes')
+        ->faultdetail("SOAP setCustom : update user failed")
+        unless $list->update_user($sender, \%user);
+
+    return SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 ## Return a structure in SOAP data format

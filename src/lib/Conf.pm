@@ -128,7 +128,17 @@ my %trusted_applications = (
                 'format'     => '.*',
                 'occurrence' => '0-n',
                 'split_char' => ','
-            }
+            },
+            'set_variables' => {
+                'format'     => '\S+=.*',
+                'occurrence' => '0-n',
+                'split_char' => ',',
+            },
+            'allow_commands' => {
+                'format'     => '\S+',
+                'occurrence' => '0-n',
+                'split_char' => ',',
+            },
         }
     }
 );
