@@ -22064,23 +22064,14 @@ sub do_send_mail {
             );
             return 'compose_mail';
         }
-        my $page_source = $in{'url'};
+        my $page_source;
         if ($in{'uploaded_file'} =~ /\S/) {
-            $page_source =
-                Conf::get_robot_conf($robot, 'tmpdir') . '/'
-                . $in{'uploaded_file'};
-            unless (
-                Sympa::Tools::WWW::upload_file_to_server(
-                    {   'query'       => $query,
-                        'file_field'  => 'uploaded_file',
-                        'destination' => $page_source,
-                    }
-                )
-                ) {
+            my $fh = $query->upload('uploaded_file');
+            unless ($fh) {
                 wwslog('err', 'Can\'t upload %s', $in{'uploaded_file'});
                 Sympa::Report::reject_report_web(
                     'intern', 'cannot_upload',
-                    {'path' => $page_source}, $param->{'action'},
+                    {'path' => $in{'uploaded_file'}}, $param->{'action'},
                     $list, $param->{'user'}{'email'},
                     $robot
                 );
@@ -22100,7 +22091,17 @@ sub do_send_mail {
                 );
                 return undef;
             }
-            $page_source = 'file://' . $page_source;
+
+            #FIXME: Check the size!
+            $page_source = do { local $RS; <$fh> };
+            close $fh;
+
+            # If uploaded content looks like URL, escape it by newline.
+            if ($page_source and $page_source =~ m{^[-\w]+://}) {
+                $page_source = "\n$page_source";
+            }
+        } else {
+            $page_source = $in{'url'};
         }
 
         # Generate message from page source.
@@ -22123,8 +22124,12 @@ sub do_send_mail {
                 : ()
             ),
         );
+        # Restrict protocols of URL entered _and_ URLs embedded in the pages.
+        $mail_html->{_AGENT}
+            ->protocols_allowed(['http', 'https', 'ftp', 'nntp']);
+
         # parse return the MIME::Lite part to send
-        my $part = eval { $mail_html->parse($page_source) } if $mail_html;
+        my $part = eval { $mail_html->parse($page_source) };
         unless ($part) {
             Sympa::Report::reject_report_web('user', 'unable_to_parse', {},
                 $param->{'action'});
