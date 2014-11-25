@@ -25,6 +25,7 @@
 
 use lib '--modulesdir--';
 use strict;
+use warnings;
 use English qw(-no_match_vars);
 use Getopt::Long;
 use Pod::Usage;
@@ -103,7 +104,7 @@ GetOptions(
 
 if ($options{help}) {
     pod2usage();
-} elsif ($main::options{'version'}) {
+} elsif ($options{'version'}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 } elsif (defined $options{create}) {
@@ -473,7 +474,7 @@ sub install_module {
 
     my $default = $options->{'default'};
 
-    unless ($ENV{'FTP_PASSIVE'} eq 1) {
+    unless ($ENV{'FTP_PASSIVE'} and $ENV{'FTP_PASSIVE'} eq 1) {
         $ENV{'FTP_PASSIVE'} = 1;
         print "Setting FTP Passive mode\n";
     }
