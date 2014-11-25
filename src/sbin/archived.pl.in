@@ -666,10 +666,15 @@ sub rebuild {
                 'Command %s failed with exit code %s',
                 join(' ', @cmd), $exitcode
             );
-        }
+        }else {
+			Log::do_log('notice', "Rebuild %s of %s archive complete", $arc, $adrlist);
+		}
     } else {
         Log::do_log('notice', 'Rebuilding %s archive completely', $adrlist);
-
+		unless (-d "$arcpath/$adrlist") {
+			Log::do_log('info','List %s does not have an archive directory (looked for in %s/%s)',$adrlist,$arcpath,$adrlist);
+			return;
+		}
         if (!opendir(DIR, "$arcpath/$adrlist")) {
             Log::do_log('err', 'Unable to open %s/%s to rebuild archive',
                 $arcpath, $adrlist);
@@ -748,6 +753,7 @@ sub rebuild {
             }
 
         }
+		Log::do_log('notice', "Rebuild of %s archives completed", $adrlist);
     }
 }
 
