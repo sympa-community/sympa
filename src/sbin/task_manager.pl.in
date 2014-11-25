@@ -1293,7 +1293,11 @@ sub purge_logs_table {
     my @res = $sth->fetchrow_array;
     $sth->finish;    # Fetch only the oldest row.
 
-    return unless @res;
+	# If the array is emty, then we don't have anything to aggregate.
+	# Simply return and carry on.
+    unless (@res) {
+		return 1;
+	}
     my $date_deb = $res[0] - ($res[0] % 3600);
 
     #hour to hour
