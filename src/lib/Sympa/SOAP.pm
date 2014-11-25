@@ -543,7 +543,7 @@ sub info {
         }
 
         #push @result, SOAP::Data->type('listType')->value($result_item);
-        return SOAP::Data->value($result_item);
+        return SOAP::Data->value([$result_item]);
     }
     Log::do_log('info',
         'Info %s from %s aborted, unknown requested action in scenario',
