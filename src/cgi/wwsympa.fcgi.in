@@ -13953,6 +13953,10 @@ sub do_close_list {
             }
         );
 
+        # Prevent 'unknown_list' error.
+        delete $in{'list'};
+        undef $list;
+
         return 'home';
     } else {
         unless ($list->close_list($param->{'user'}{'email'})) {
