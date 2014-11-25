@@ -302,7 +302,7 @@ sub make_visible_path {
     }
 
     ## Qdecode the visible path
-    return Sympa::Tools::qdecode_filename($visible_path);
+    return tools::qdecode_filename($visible_path);
 }
 
 ## returns a mailto according to list spam protection parameter
