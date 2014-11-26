@@ -347,7 +347,7 @@ our %cpan_modules = (
         required_version => '2.09',
         package_name     => 'Term-ProgressBar',
         mandatory        => 1,
-        'gettext_id'     => 'used while checking the RDBMS buffer size',
+        'gettext_id' => 'used to show progress bar by command line utilities',
     },
     'Text::LineFold' => {
         required_version => '2011.05',
@@ -360,8 +360,7 @@ our %cpan_modules = (
         required_version => '1.29',
         package_name     => 'Time-HiRes',
         mandatory        => 1,
-        'gettext_id' =>
-            'used by sympa.pl --test_database_message_buffer to test database performances',
+        'gettext_id'     => 'used to get time with sub-second precision',
     },
     'URI::Escape' => {
         required_version => '1.35',
