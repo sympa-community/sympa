@@ -1712,12 +1712,12 @@ sub getDetails {
     Log::do_log('debug', 'SOAP getDetails(%s,%s,%s)',
         $listname, $robot, $sender);
 
-    $list = new List($listname, $robot);
+    $list = Sympa::List->new($listname, $robot);
     if (!$list) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('List does not exist')->faultdetail('Use : <list>');
     }
-    if ($subscriber = $list->get_subscriber($sender)) {
+    if ($subscriber = $list->get_list_member($sender)) {
         $result{'gecos'}         = $subscriber->{'gecos'};
         $result{'reception'}     = $subscriber->{'reception'};
         $result{'subscribeDate'} = $subscriber->{'date'};
@@ -1771,14 +1771,14 @@ sub setDetails {
 
     Log::do_log('debug', 'SOAP setDetails(%s,%s,%s)',
         $listname, $robot, $sender);
-    $list = new List($listname, $robot);
+    $list = Sympa::List->new($listname, $robot);
     if (!$list) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('List does not exist')
             ->faultdetail(
             'Use : <list> <gecos> <reception> [ <key> <value> ] ...');
     }
-    $subscriber = $list->get_subscriber($sender);
+    $subscriber = $list->get_list_member($sender);
     if (!$subscriber) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Not a subscriber to this list')
@@ -1815,7 +1815,7 @@ sub setDetails {
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user details')
         ->faultdetail("SOAP setDetails : update user failed")
-        unless $list->update_user($sender, \%user);
+        unless $list->update_list_member($sender, \%user);
 
     return SOAP::Data->name('result')->type('boolean')->value(1);
 }
@@ -1846,13 +1846,13 @@ sub setCustom {
     Log::do_log('debug', 'SOAP setCustom(%s,%s,%s,%s)',
         $listname, $robot, $sender, $key);
 
-    $list = new List($listname, $robot);
+    $list = Sympa::List->new($listname, $robot);
     if (!$list) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('List does not exist')
             ->faultdetail('Use : <list> <key> <value>');
     }
-    $subscriber = $list->get_subscriber($sender);
+    $subscriber = $list->get_list_member($sender);
     if (!$subscriber) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Not a subscriber to this list')
@@ -1875,7 +1875,7 @@ sub setCustom {
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user attributes')
         ->faultdetail("SOAP setCustom : update user failed")
-        unless $list->update_user($sender, \%user);
+        unless $list->update_list_member($sender, \%user);
 
     return SOAP::Data->name('result')->type('boolean')->value(1);
 }
