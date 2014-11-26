@@ -1213,9 +1213,15 @@ Each definition is hashref containig following keys:
 
 =item fields
 
+See below.
+
 =item doc
 
+Description of the table.
+
 =item order
+
+TBD.
 
 =back
 
@@ -1225,14 +1231,14 @@ C<fields> item is hasref which may contain following items.
 
 =item struct
 
-Column data types.  Types are based on MySQL.
+Column data types.  Definitions are based on MySQL.
 Following types are recognized:
 
 =over
 
-=item varchar(X)
+=item varchar(I<length>)
 
-Text with length upto X.  X must be lower than 2^16 - 2.
+Text with length upto I<length>.  I<length> must be lower than 2^16 - 2.
 
 =item int(1)
 
@@ -1242,9 +1248,9 @@ Boolean, 1 or 0.
 
 Unix time (a.k.a. "epoch").
 
-=item int(X)
+=item int(I<cols>)
 
-Integer with columns upto X, -2^31 to 2^31 - 1.
+Integer with columns upto I<cols>, with its value from -2^31 to 2^31 - 1.
 
 =item tinyint
 
@@ -1286,15 +1292,16 @@ Binary data with length upto 2^24 - 3 o.
 
 =item doc
 
-XXX
+Description of the field.
 
 =item primary
 
-XXX
+If this is true, primary key consists of this field.
 
 =item not_null
 
-XXX
+If this is true, Null value is not allowed.
+Note that fields included in primary key always don't allow Null value.
 
 =back
 
@@ -1308,17 +1315,17 @@ converted according to types.
 =item not_null ()
 
 I<Function>.
-XXX
+TBD.
 
 =item autoincrement ()
 
 I<Function>.
-XXX
+TBD.
 
 =item primary ()
 
 I<Function>.
-XXX
+TBD.
 
 
 =back

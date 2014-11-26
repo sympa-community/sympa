@@ -294,6 +294,15 @@ __END__
 
 Sympa::Mailer - Store messages to sendmail
 
+=head1 SYNOPSIS
+
+  use Sympa::Mailer;
+  my $mailer = Sympa::Mailer->instance;
+
+  $mailer->store($message, ['user1@dom.ain', user2@other.dom.ain']);
+
+  $mailer->reaper;
+
 =head1 DESCRIPTION
 
 L<Sympa::Mailer> implements the class to invoke sendmail processes and
@@ -376,7 +385,7 @@ Otherwise C<undef>.
 
 =head2 Attributes
 
-L<Sympa::Mailer> instance has following attributes:
+L<Sympa::Mailer> instance may have following attributes:
 
 =over
 
@@ -386,7 +395,8 @@ If true value is set, each invokation of sendmail process will be logged.
 
 =item {redundancy}
 
-TBD.
+Positive integer.
+If set, maximum number of invokation of sendmail is divided by this value.
 
 =back
 

@@ -28,6 +28,11 @@
 
 Message - Mail message embedding for internal use in Sympa
 
+=head1 SYNOPSYS
+
+  use Sympa::Message;
+  my $message = Sympa::Message->new($serialized, context => $list);
+
 =head1 DESCRIPTION 
 
 While processing a message in Sympa, we need to link informations to the
@@ -945,7 +950,9 @@ sub to_string {
 =item add_header ( $field, $value, [ $index ] )
 
 I<Instance method>.
-XXX
+Adds a header field named $field with body $value.
+If $index is given, the field will be inserted at the place it indicates:
+If it is C<0>, the field will be prepended.
 
 =back
 
@@ -962,7 +969,7 @@ sub add_header {
 =item delete_header ( $field, [ $index ] )
 
 I<Instance method>.
-XXX
+Deletes all occurences of the header field named $field.
 
 =back
 
@@ -979,7 +986,7 @@ sub delete_header {
 =item replace_header ( $field, $value, [ $index ] )
 
 I<Instance method>.
-XXX
+Replaces header fields named $field with $value.
 
 =back
 
@@ -1049,10 +1056,11 @@ sub check_spam_status {
 
 =over
 
-=item dkim_sign ( )
+=item dkim_sign ( dkim_d =E<gt> $d, [ dkim_i =E<gt> $i ],
+dkim_selector =E<gt> $selector, dkim_privatekey =E<gt> $privatekey )
 
 I<Instance method>.
-XXX
+Adds DKIM signature to the message.
 
 =back
 
@@ -1201,7 +1209,8 @@ sub check_dkim_signature {
 =item remove_invalid_dkim_signature ( )
 
 I<Instance method>.
-XXX
+Verify DKIM signatures included in the message,
+and if any of them are invalid, remove them.
 
 =back
 
@@ -1338,7 +1347,9 @@ sub as_string {
 =item body_as_string ( )
 
 I<Instance method>.
-XXX
+Gets body of the message as string.
+
+Note that the result won't be decoded.
 
 =back
 
@@ -1354,7 +1365,9 @@ sub body_as_string {
 =item header_as_string ( )
 
 I<Instance method>.
-XXX
+Gets header part of the message as string.
+
+Note that the result won't be decoded nor unfolded.
 
 =back
 
@@ -1928,7 +1941,9 @@ sub smime_encrypt {
 =item smime_sign ( )
 
 I<Instance method>.
-XXX
+Adds S/MIME signature to the message.
+
+Signing key is taken from what stored in list directory.
 
 Parameters:
 
@@ -2031,7 +2046,8 @@ sub smime_sign {
 =item check_smime_signature ( )
 
 I<Instance method>.
-XXX
+Verifys S/MIME signature of the message,
+and if verification succeeded, sets {smime_signed} item true.
 
 Parameters:
 
@@ -2492,7 +2508,11 @@ sub personalize_text {
 =item prepare_message_according_to_mode ( $mode, $list )
 
 I<Instance method>.
-XXX
+Transforms the message according to reception mode:
+C<'mail'>, C<'notice'>, C<'txt'> or C<'html'>.
+
+By C<'nomail'>, C<'digest'>, C<'digestplain'> or C<'summary'> mode,
+the message is not modified.
 
 =back
 
@@ -3137,7 +3157,7 @@ string
 # More Note: Latter behavior above will give expected result only if
 # contents of sub-messages are US-ASCII or ISO-8859-1. In other cases
 # customized templates (if any) should be modified so that they have
-# appropriate `X-Sympa-Attach:' header fileds.
+# appropriate `X-Sympa-Attach:' header fields.
 #
 # Sub-messages are gathered from template context paramenters.
 
@@ -3383,7 +3403,7 @@ sub _as_singlepart {
 =item check_virus_infection ()
 
 I<Instance method>.
-XXX
+Checks the message using anti-virus plugin, if configuration requests it.
 
 Returns:
 
@@ -4215,7 +4235,33 @@ See also {envelope_sender} above.
 
 Shelved processing.
 Hashref with multiple items.
-XXX
+Currently these items are available:
+
+=over
+
+=item dkim_sign =E<gt> 1
+
+Adding DKIM signature.
+
+=item merge =E<gt> 1
+
+Personalizing.
+
+=item smime_encrypt =E<gt> 1
+
+Adding S/MIME encryption.
+
+=item smime_sign =E<gt> 1
+
+Adding S/MIME signature.
+
+=item tracking =E<gt> C<dsn>|C<mdn>|C<r>|C<w>|C<verp>
+
+Requesting tracking feature including VERP.
+
+=back
+
+This is used by bulk spool.
 
 =item {spam_status}
 
@@ -4223,8 +4269,6 @@ Result of spam check.
 This is set by L</check_spam_status>() method.
 
 =back
-
-XXX
 
 =head2 Serialization
 

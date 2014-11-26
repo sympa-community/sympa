@@ -2028,7 +2028,7 @@ sub distribute_msg {
     ## Add RFC5064 Archived-At SMTP header field
     $self->add_list_header($message, 'archived_at');
 
-    ## Remove outgoing header fileds
+    ## Remove outgoing header fields
     ## Useful to remove some header fields that Sympa has set
     if ($self->{'admin'}{'remove_outgoing_headers'}) {
         foreach my $field (@{$self->{'admin'}{'remove_outgoing_headers'}}) {
@@ -7971,7 +7971,8 @@ sub sync_include_ca {
         $users{$user->{'email'}} = $user->{'custom_attribute'};
     }
 
-    foreach my $type ('include_sql_ca','include_ldap_ca','include_ldap_2level_ca') {
+    foreach my $type ('include_sql_ca', 'include_ldap_ca',
+        'include_ldap_2level_ca') {
         foreach my $tmp_incl (@{$admin->{$type}}) {
             ## Work with a copy of admin hash branch to avoid including
             ## temporary variables into the actual admin hash.[bug #3182]

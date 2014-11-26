@@ -186,11 +186,12 @@ Sympa::Alarm - Spool on memory for listmaster notification
 =head1 SYNOPSIS
 
     use Sympa::Alarm;
-    
-    Sympa::Alarm->instance->store($message, $rcpt, $operation);
-    
-    Sympa::Alarm->instance->flush();
-    Sympa::Alarm->instance->flush(purge => 1);
+    my $alarm = Sympa::Alarm->instance;
+
+    $alarm->store($message, $rcpt, $operation);
+
+    $alarm->flush();
+    $alarm->flush(purge => 1);
 
 =head1 DESCRIPTION
 

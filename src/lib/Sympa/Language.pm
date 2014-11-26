@@ -714,6 +714,14 @@ __END__
 
 Sympa::Language - Handling languages and locales
 
+=head1 SYNOPSIS
+
+  use Sympa::Language;
+  my $language = Sympa::Language->instance;
+  $language->set_lang('zh-TW', 'zh', 'en');
+  
+  print $language->gettext('Lorem ipsum dolor sit amet.');
+
 =head1 DESCRIPTION
 
 This package provides interfaces for i18n (internationalization) of Sympa.
@@ -978,7 +986,7 @@ Note that the language actually set may not be identical to the parameter
 $lang, even when latter has been canonicalized.
 
 The language tag C<'en'> is special:
-it is used to set C<'C'> locale and will succeed always.
+It is used to set C<'C'> locale and will succeed always.
 
 Note:
 This function of Sympa 6.2a or earlier returned old style "locale" names.
@@ -1023,7 +1031,26 @@ If it is not known, returns default language tag.
 =item dgettext ( $domain, $msgid )
 
 I<Instance method>.
-XXX @todo doc
+Returns the translation of given string using NLS catalog in domain $domain.
+Note that L</set_lang>() must be called in advance.
+
+Parameter:
+
+=over
+
+=item $domain
+
+gettext domain.
+
+=item $msgid
+
+gettext message ID.
+
+=back
+
+Returns:
+
+Translated string or, if it wasn't found, original string.
 
 =item gettext ( $msgid )
 
@@ -1110,7 +1137,33 @@ Translated and formatted string.
 =item maketext ( $textdomain, $template, $args, ... )
 
 I<Instance method>.
-XXX @todo doc
+At first, translates $template argument using L</gettext>().
+Then replaces placeholders (C<%1>, C<%2>, ...) in template with arguments.
+
+Numeric arguments will be formatted using appropriate locale, if any:
+Typically, the decimal point specific to each locale may be used.
+
+Parameters:
+
+=over
+
+=item $textdomain
+
+NLS domain to be used for searching catalogs.
+
+=item $template
+
+Template string which may include placeholders.
+
+=item $args, ...
+
+Arguments corresponding to placeholders.
+
+=back
+
+Returns:
+
+Translated and replaced string.
 
 =back
 

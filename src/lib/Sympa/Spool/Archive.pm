@@ -78,8 +78,7 @@ sub next {
     unless ($self->{_metadatas}) {
         my $dh;
         unless (opendir $dh, $self->{directory}) {
-            die sprintf 'Cannot open dir %s: %s', $self->{directory},
-                $ERRNO;
+            die sprintf 'Cannot open dir %s: %s', $self->{directory}, $ERRNO;
         }
         $self->{_metadatas} = [
             sort grep {
@@ -151,13 +150,9 @@ sub store {
 
     $message->{date} = time unless defined $message->{date};
 
-    my $marshalled = tools::store_spool(
-        $self->{directory},
-        $message,
-        '%d.%f.%s@%s,%ld,%d',
-        [qw(date TIME localpart domainpart PID RAND) ],
-        %options
-    );
+    my $marshalled =
+        tools::store_spool($self->{directory}, $message, '%d.%f.%s@%s,%ld,%d',
+        [qw(date TIME localpart domainpart PID RAND)], %options);
     return unless $marshalled;
 
     Log::do_log('notice', 'Message %s is stored into archive spool as <%s>',
@@ -176,7 +171,12 @@ Sympa::Spool::Archive - Spool for messages waiting for archiving.
 
 =head1 SYNOPSIS
 
-TBD
+  use Sympa::Spool::Archive;
+  my $spool = Sympa::Spool::Archive->new;
+
+  $spool->store($message);
+
+  my ($message, $handle) = $spool->next;
 
 =head1 DESCRIPTION
 
@@ -280,7 +280,7 @@ Unix time in floating point number when the message was stored.
 
 =item original =E<gt> $original
 
-TBD
+If the message was decrypted, stores original encrypted form.
 
 =back
 

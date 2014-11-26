@@ -390,7 +390,12 @@ Sympa::Bulk - Spool for bulk sending
 
 =head1 SYNOPSIS
 
-TBD
+  use Sympa::Bulk;
+  my $bulk = Sympa::Bulk->new;
+
+  $bulk->store($message, ['user@dom.ain', 'user@other.dom.ain']);
+
+  my ($message, $handle) = $bulk->next;
 
 =head1 DESCRIPTION
 
@@ -511,11 +516,11 @@ Scalar, scalarref or arrayref, for SMTP "RCPT TO:" field(s).
 
 =item original =E<gt> $original
 
-TBD
+If the message was decrypted, stores original encrypted form.
 
 =item tag =E<gt> $tag
 
-TBD
+TBD.
 
 =back
 
