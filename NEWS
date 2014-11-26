@@ -3,6 +3,281 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.41		November 26, 2014
+
+  Features:
+
+	[11715] src/lib/Conf.pm, src/lib/Sympa/Auth.pm, src/lib/Sympa/SOAP.pm: 
+	[Submitted by S. Shipway, Univ. of Auckland] Adding new functions to
+	SympaSOAP: getDetails, setDetails, getCustom and setCustom.
+	The patch was for Sympa 6.1 then a bit modified for Sympa 6.2.
+
+	[11407] default/edit_list.conf, src/lib/Makefile.am,
+	src/lib/Sympa/List.pm, src/lib/Sympa/ListDef.pm,
+	src/lib/Sympa/Message/Plugin,
+	src/lib/Sympa/Message/Plugin/FixEncoding.pm,
+	src/lib/Sympa/Message/Plugin.pm: [experimental] Sympa::Message::Plugin
+	providing hook mechanism to intervene in processing by Sympa.  Each
+	hook may modify messages or may break ordinary processing. 
+
+	[11331] default/Makefile.am, default/scenari/del.ownerdkim:  New
+	scenarios to check DKIM signature are added:
+	- add.authdkim
+	- add.ownerdkim
+	- del.authdkim
+	- del.ownerdkim
+	- remind.listmasterdkim
+	- remind.ownerdkim
+	- send.editordkim
+	- subscribe.authdkim
+	- subscribe.auth_notifydkim
+	- subscribe.auth_ownerdkim
+	- unsubscribe.authdkim
+	- unsubscribe.auth_notifydkim
+
+	[11154] po/de.po, po/el.po, po/es.po, po/fr.po, po/it.po, po/pt.po,
+	po/sympa.pot, soap/sympasoap.pm, src/lib/confdef.pm, src/lib/tools.pm,
+	src/sympa_wizard.pl.in, web_tt2/error.tt2, wwsympa/wwsympa.fcgi.in:
+	[#9306] [Submitted by Evoltech, Riseup] Better password validation.
+	When the user requests change of password via WWSympa or SympaSOAP, new
+	password may be checked its strength.
+	New parameter password_validation may be used to customize policy of
+	password validation.  See help text of the parameter for more details.
+
+
+
+  Changes:
+
+	[11664] src/etc/script/sympa.generic, src/etc/script/sympa.in,
+	src/lib/Conf.pm, src/lib/Sympa/ConfDef.pm, src/lib/Sympa/List.pm,
+	src/sbin/sympa.pl.in:  sympa.pl distribution mode was withdrawn.
+	- distribution spool will not be used anymore.
+	- The --service option of sympa.pl was deprecated.
+	- The distribution daemon and command processing daemon were removed.
+	- The creation daemon will be forked from sympa.pl main daemon if
+	automatic_list_feature configuration option is "on".
+	- The distribution_mode configuration option was deprecated.
+
+	[11655] default/web_tt2/javascript.tt2, www/Makefile.am, www/js:11654),
+	www/external/images,
+	www/external/images/ui-bg_flat_0_aaaaaa_40x100.png,
+	www/external/images/ui-bg_flat_75_ffffff_40x100.png,
+	www/external/images/ui-bg_glass_55_fbf9ee_1x400.png,
+	www/external/images/ui-bg_glass_65_ffffff_1x400.png,
+	www/external/images/ui-bg_glass_75_dadada_1x400.png,
+	www/external/images/ui-bg_glass_75_e6e6e6_1x400.png,
+	www/external/images/ui-bg_glass_95_fef1ec_1x400.png,
+	www/external/images/ui-bg_highlight-soft_75_cccccc_1x100.png,
+	www/external/images/ui-icons_222222_256x240.png,
+	www/external/images/ui-icons_2e83ff_256x240.png,
+	www/external/images/ui-icons_454545_256x240.png,
+	www/external/images/ui-icons_888888_256x240.png,
+	www/external/images/ui-icons_cd0a0a_256x240.png,
+	www/external/jquery-ui.css, www/external/jquery-ui.js,
+	www/external/jquery.js, www/external/sympa.js, www/js, www/js/sympa.js:
+	 Update jquery version, add jquery ui, starts updating javascript to
+	use more modern features.
+
+	[11607] src/lib/Sympa/Message.pm, src/lib/tools.pm,
+	src/sbin/sympa.pl.in:  New automatic lists handling logic so that file
+	naming is more consistent and milter and familyqueue behave the same
+	way.
+	Now the sendmail milter MUST put serialized messages in files
+	respecting the usual format
+	(<final_list_with_domain>.<timestamp>.<pid>), file proccessing then
+	becomes simpler.
+	tools::unmarshal_metadata don't fail if listname doesn't exist, this is
+	left to main::proccess_message logic.
+	Patch will be submitted to the milter author to add a configuration
+	switch enabling the new behavior in sympa-milter.conf -> <general> :
+	file_prefix				list # Value defaults to
+	"family" which is the old behavior
+
+	[11596] default/Makefile.am, default/mail_tt2/Makefile.am,
+	default/mail_tt2/digest_plain.tt2,
+	default/mail_tt2/digest_plain.tt2:11584):  mail_tt2/digest_plain.tt2
+	was renamed to mail_tt2/digestplain.tt2.
+
+*****	[11556] Makefile.am, src/lib/Conf.pm, src/lib/Sympa/Bulk.pm,
+*****	src/lib/Sympa/ConfDef.pm, src/lib/Sympa/DatabaseDescription.pm,
+*****	src/lib/Sympa/LockedFile.pm, src/lib/Sympa/Mailer.pm,
+*****	src/lib/Sympa/Message.pm, src/lib/Sympa/Tools/Daemon.pm,
+*****	src/sbin/bulk.pl.in, src/sbin/sympa.pl.in, src/sbin/task_manager.pl.in:
+*****	 Spool for bulk sending no longer depends on database tables: It based
+*****	on filesystem.
+*****	Packets and messages stored in database by earlier version of Sympa
+*****	should be migrated using update_bulk_spool.pl utility.
+
+*****	[11475] configure.ac, src/lib/Conf.pm, src/lib/Sympa/Upgrade.pm,
+*****	src/sbin/sympa.pl.in, src/sbin/sympa_wizard.pl.in:  Default config
+*****	location is now /etc/sympa/ (or $sysconfig/sympa/) instead of /etc/.
+*****	This solves the problem of config file lock creation being denied when
+*****	trying to read the binary version of the config file at startup.
+*****	WARNING : to upgrade the config location one MUST run sympa.pl
+*****	--upgrade_config_location before any other upgrading operation.
+
+	[11325] src/bin/Makefile.am, src/lib/tools.pm:11322),
+	src/cgi/wwsympa.fcgi.in, src/lib/Sympa/Mail.pm,
+	src/lib/Sympa/Message.pm, src/lib/tools.pm, src/sbin/sympa.pl.in:  Now
+	messages sent via WWSympa will be stored in bulk spool, directly if
+	they are outbound messages.  On earlier releases outbound messages were
+	injected in msg spool with special checksum.
+	A program upgrade_send_spool.pl to migrate messages with old format is
+	proveded.
+
+	[11313] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/List.pm,
+	src/sbin/sympa.pl.in:  Messages forwarded to listmaster, owner or
+	editor, and archived messages resent by user, will be added or modified
+	header fields such as Sender:.	Thus, messages will be forwarded
+	safely.
+	Known bug: Existing DKIM signature depending on those header fields may
+	be broken.
+
+	[11311] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/Mail.pm,
+	src/sbin/sympa.pl.in:  Messages forwarded to listmater, owner or
+	editor, and archived messages resent by user, no longer have
+	"Auto-Submitted: auto-forwarded" header field.
+	The "auto-forwarded" keyword was once proposed by
+	draft-palme-autosub-01, however withdrawn by rev.02 of this I-D and
+	have not been registered by IANA:
+	http://www.iana.org/assignments/auto-submitted-keywords
+
+	[11309] src/bin/p12topem.pl.in, src/lib/Conf.pm,
+	src/lib/Sympa/ConfDef.pm, t/Tools_SMIME.t:  openssl(1) utility is no
+	longer required.  Instead, a few CPAN modules are required to use
+	S/MIME or SSL features:
+	- Crypt::SMIME
+	- Crypt::OpenSSL::X509
+	The parameter "openssl" in sympa.conf was obsoleted.
+	Note that p12topem.pl still needs openssl: To make it work, PATH
+	environment variable should be set appropriately.
+
+	[11160] src/sbin/archived.pl.in, src/sbin/bounced.pl.in,
+	src/sbin/sympa.pl.in:  (r11007, r11158) Again, file extensions of lock
+	files are changed from ".lock" to ",lock" (comma and "lock"), because
+	names including full stop can conflict with domain parts.  Temporary
+	files created by Sympa::LockedFile are also renamed in similar way.
+
+  Bug fixes:
+
+	[11698] src/lib/Sympa/Admin.pm:  Don't do STDOUT/STDERR dupping when
+	calling alias manager, use multi-arguments system call with output
+	redirection instead.
+	When running under web server (web interface, soap) CGI ties STDOUT and
+	STDERR with FGCI::Stream and override "open", leading to either a
+	syntax error or a Carp::croak (see FCGI.pm) depending on version of
+	FCGI.
+	Multi-arguments call to system avoids having to redirect STDOUT/STDERR
+	in code and is safer than original single string call with
+	concatenated/sprintf'ed command.
+
+	[11690] src/sympa.pl.in: [Submitted by B. Marchal, univ. Lorraine] the
+	loop_prevention_regex parameter was never taken into account. This was
+	due to a o modifier in the regexp which resulted in the regexp being
+	set at compile time and never changed after. Fixed by removing this
+	modifier.
+
+	[11595] src/lib/Sympa/List.pm: [#6477] Digest and summary messages
+	should include List-* header fields to provide information about
+	archive, unsubscribe and so on.
+
+	[11594] src/lib/tools.pm:  cid URLs in archived messages were omitted. 
+	As a result, MHonArc treated multipart/related HTML messages just as if
+	simple multipart.
+	Fixed by overwriting HTML::StripScripts::validate_src_attribute()
+	method.
+
+	[11587] src/lib/Sympa/Mailer.pm: [#9555] [Reported by M. Howe, Univ. of
+	Oxford] bulk.pl or sympa.pl will crash if sendmail failed to accept
+	messages, e.g. insufficient space for spool.  Fixed by making
+	Sympa::Mailer::store() to check status of close().
+
+	[11579] src/lib/Sympa/List.pm:	Topics for message bodies in signed
+	messages can't be detected by Sympa.
+	Check if message has multipart/signed content and strip signature
+	before seeking topics.
+	ToDo: Should support application/pkcs7-mime format too.
+
+	[11563] soap/sympasoap.pm: [#9542] [Submitted by M. Howe, Univ. of
+	Oxford] SympaSOAP does not validate added addresses.
+
+	[11553] src/lib/Sympa/Alarm.pm, src/lib/Sympa/Bulk.pm,
+	src/lib/Sympa/List.pm, src/lib/Sympa/Mailer.pm, src/sbin/bulk.pl.in:
+	[#6749] Sending is not always specified in the logs.  Now logging is
+	done when the messages are really sent to sendmail.
+
+	[11539] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/List.pm:  Oracle: Review
+	page cannot be paginated.
+	Several RDBMSs don't support nonstandard OFFSET clause, OTOH some
+	others don't support standard ROW_NUMBER function.  Instead, fetch
+	unneccessary rows and discard them.
+	List::get_first_list_member(): "rows" parameter was deprecated.
+
+	[11537] src/lib/Sympa/Bulk.pm:	Oracle: Messages in bulk spool won't be
+	processed in order.  Because rownum is assigned before applying ORDER
+	BY clause, random packets were locked and fetched.  Fixed by not using
+	rownum, LIMIT and so on but fetching the top row and finalizing
+	statement handle immediately.
+
+	[11506] src/lib/Sympa/List.pm:	If users' reception mode are "html",
+	"text" or "urlize", and if any of such users don't have user
+	certificate, encryption is failed and no messages are sent.
+
+	[11470] src/lib/Sympa/DBManipulatorOracle,
+	src/lib/Sympa/DBManipulatorOracle/St.pm,
+	src/lib/Sympa/DBManipulatorOracle.pm:  Oracle: If NLS_LANG environment
+	variable is properly set with charset AL32UTF8 (or UTF8), DBD::Oracle
+	treats character values as Unicode, i.e. "utf8 flags" are set.	This
+	behavior is not desirable for Sympa.
+	Sympa::DBManipulatorOracle::St overrides functions of DBI statement
+	handle object to reset utf8 flags.
+
+	[11430] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/Constants.pm.in,
+	src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/Family.pm,
+	src/lib/Sympa/SOAP.pm, src/sbin/sympa.pl.in: [#6162] [Reported by T.
+	Retout] When creating a list with a name longer than 50 characters, the
+	validation process allows this, but creation fails or list name is
+	truncated.  Fixed by checking length before creation.
+
+	[11428] src/lib/confdef.pm, src/lib/tools.pm:  When checking
+	misaddressed commands in subject, the command length was not taken into
+	account. Any message whose subjects started with unsubscribe, signoff
+	or subscribe would be rejectd. Fixed by forcing test to match only if
+	the subject contains two words exactly, including the command. We might
+	miss wom better form subscribe commands but will have very less false
+	positive.
+
+	[11384] default/web_tt2/viewlogs.tt2, src/cgi/wwsympa.fcgi.in:
+	[#9243][Submitted by M. Howe, Univ. of Oxford] Sorting for viewlogs is
+	broken.  It tries to sort on the non-existent 'email' field.
+	Patch was modified a bit.
+
+	[11341] src/lib/List.pm:  [Reported by M. Goebel, Eastern Michigan
+	Univ.] Typos at several places in List.pm may crash Sympa.
+
+	[11327] src/lib/Sympa/List.pm:	When dkim_add_signature_to parameter
+	contains "list", DKIM signature won't be added.  A typo has been
+	corrected.
+
+	[11239] src/lib/Message.pm, src/sbin/sympa.pl.in:  Could not check
+	S/MIME signature if the message was encrypted.	An S/MIME message may
+	be nested either as "encrypted then signed" or as "signed then
+	encrypted", however we didn't check latter case.
+
+	[11229] src/lib/Message.pm:  DKIM signatures become ineffective even if
+	messages are altered.
+	This is caused by refolding of	base64 and quoted-printable contents:
+	Signatures are kept.  Fixed by keeping original content if MIME
+	structure were not really changed.
+	n.b. Though I previously compared binary form using Storable::freeze,
+	this method was incompetent.  Now MIME::Entity::as_string is used.
+
+	[11211] src/lib/Message.pm:  Messages attached to system messages, such
+	as moderation notifications, were altered.  As a result, for example,
+	editors could not verify signature in attached messages.
+	This was caused by that attachments were always parsed and stringified
+	again.	Now stringified attachments won't be parsed anymore.
+
 6.2a.40		July 11, 2014
 
   Features:
