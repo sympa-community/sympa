@@ -601,30 +601,24 @@ sub unescape_html {
 # create a cipher
 sub cookie_changed {
     my $current = shift;
+    $current = '' unless defined $current;
+
     my $changed = 1;
     if (-f "$Conf::Conf{'etc'}/cookies.history") {
-        unless (open COOK, "$Conf::Conf{'etc'}/cookies.history") {
+        my $fh;
+        unless (open $fh, "$Conf::Conf{'etc'}/cookies.history") {
             Log::do_log('err', 'Unable to read %s/cookies.history',
                 $Conf::Conf{'etc'});
             return undef;
         }
-        my $oldcook = <COOK>;
-        close COOK;
+        my $oldcook = <$fh>;
+        close $fh;
+        ($oldcook) = reverse split /\s+/, $oldcook;
+        $oldcook = '' unless defined $oldcook;
 
-        my @cookies = split(/\s+/, $oldcook);
-
-        if ($cookies[$#cookies] eq $current) {
+        if ($oldcook eq $current) {
             Log::do_log('debug2', 'Cookie is stable');
             $changed = 0;
-#	}else{
-#	    push @cookies, $current ;
-#	    unless (open COOK, ">$Conf::Conf{'etc'}/cookies.history") {
-#		Log::do_log('err', 'Unable to create %s/cookies.history', $Conf::Conf{'etc'}) ;
-#		return undef ;
-#	    }
-#	    printf COOK "%s",join(" ",@cookies) ;
-#
-#	    close COOK;
         }
         return $changed;
     } else {
