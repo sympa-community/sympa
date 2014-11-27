@@ -41,9 +41,9 @@ my %options;
 unless (GetOptions(\%options, 'help|h', 'dry_run', 'version|v')) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
-if ($main::options{'help'}) {
+if ($options{'help'}) {
     pod2usage(0);
-} elsif ($main::options{'version'}) {
+} elsif ($options{'version'}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 }

@@ -41,9 +41,9 @@ my %options;
 unless (GetOptions(\%options, 'help|h', 'dry_run', 'version|v')) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
-if ($main::options{'help'}) {
+if ($options{'help'}) {
     pod2usage(0);
-} elsif ($main::options{'version'}) {
+} elsif ($options{'version'}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 }
@@ -68,19 +68,9 @@ unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
         "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.";
 }
 # Sets the UMASK
-umask(oct($Conf::Conf{'umask'}));
+umask oct $Conf::Conf{'umask'};
 
-Log::do_openlog(
-    $Conf::Conf{'log_facility'},
-    $Conf::Conf{'log_socket_type'},
-    'upgrade_bulk_spool'
-);
-Log::set_log_level($Conf::Conf{'log_level'});
-Log::do_log(
-    'info',
-    'Configuration file read, default log level %s',
-    $Conf::Conf{'log_level'}
-);
+# We won't open log: Output messages to STDERR.
 
 process();
 exit 0;
@@ -99,6 +89,16 @@ sub process {
     }
     my ($row_mailer, $row_spool);
     while ($row_mailer = $sth->fetchrow_hashref('NAME_lc')) {
+        if ($row_mailer->{lock_bulkmailer}) {
+            Log::do_log(
+                'info',
+                'Packet %s is locked.  Skipping',
+                $row_mailer->{packetid_bulkmailer}
+            );
+            next;
+        }
+        my $packetid = $row_mailer->{packetid_bulkmailer};
+
         my ($list, $robot_id);
         $list = Sympa::List->new(
             $row_mailer->{listname_bulkmailer},
@@ -124,7 +124,7 @@ sub process {
         unless ($sth2) {
             die 'Fatal: Cannot execute SQL query';
         }
-        $row_spool = $sth2->fetrow_hashref('NAME_lc');
+        $row_spool = $sth2->fetchrow_hashref('NAME_lc');
         $sth2->finish;
         unless ($row_spool) {
             Log::do_log('err', '%s: No messages found.  Skipping',
@@ -133,7 +133,6 @@ sub process {
             next;
         }
 
-        # Update message and messagekey.
         my $msg_string =
             MIME::Base64::decode($row_spool->{message_bulkspool});
         my $message = Sympa::Message->new(
@@ -141,6 +140,25 @@ sub process {
             context => ($list || $robot_id),
             messagekey => $messagekey
         );
+
+        printf
+            "---\nMessage:       %s\nPacket:        %s\nDelivery Date: %s\nRecipients:    %s\nContext:       %s\@%s\n\nMessage-ID:    %s\nFrom:          %s\nSubject:       %s\n",
+            $messagekey, $packetid,
+            POSIX::strftime('%Y-%m-%d %H:%M:%S',
+            localtime $row_mailer->{delivery_date_bulkmailer}),
+            ($row_mailer->{receipients_bulkmailer} || 'NONE'),
+            ($row_mailer->{listname_bulkmailer}    || ''),
+            $row_mailer->{robot_bulkmailer},
+            ($row_spool->{messageid_bulkspool} || ''),
+            ($message->get_header('From', ', ') || ''),
+            ($message->{decoded_subject} || '');
+
+        print "Migrate this message? [yN] ";
+        my $answer = <STDIN>;
+        chomp $answer;
+        next unless lc $answer eq 'y';
+
+        # Update message and messagekey.
 
         $message->{date} = $row_mailer->{delivery_date_bulkmailer}  || time;
         $message->{time} = $row_mailer->{reception_date_bulkmailer} || time;
@@ -166,10 +184,10 @@ sub process {
 
         # Not a typo: column name was recEipients_bulkmailer.
         my $rcpt_string = $row_mailer->{receipients_bulkmailer};
-        my $rcpt        = [split /,/ . $rcpt_string];
+        my $rcpt = [split /,/, $rcpt_string];
 
         my $marshalled;
-        if ($options{dry_run}) {
+        unless ($options{dry_run}) {
             $marshalled =
                 $bulk->store($message, $rcpt, tag => $message->{tag});
         } else {
@@ -191,8 +209,10 @@ sub process {
         } else {
             Log::do_log(
                 'notice',
-                'Packet %s of message %s was migrated into new spool',
-                $row_mailer->{packetid_bulkmailer}, $message
+                'Packet %s of message %s was migrated into new spool as <%s>',
+                $row_mailer->{packetid_bulkmailer},
+                $message,
+                $marshalled
             );
         }
     }
