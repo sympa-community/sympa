@@ -1,6 +1,6 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id: Bulk.pm 11592 2014-10-26 01:38:30Z sikeda $
+# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #

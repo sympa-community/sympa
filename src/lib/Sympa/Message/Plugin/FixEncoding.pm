@@ -1,6 +1,6 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id: Message.pm 11388 2014-09-16 12:36:30Z sikeda $
+# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
