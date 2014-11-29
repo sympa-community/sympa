@@ -45,7 +45,7 @@
 [% END %]
 [% IF latest_d_read_url %]
 [% s = String.new(latest_d_read_url) %]
-<li><label for="latest_arc">[%|loc%]latest document:[%END%]
+<li><label for="latest_d_read">[%|loc%]latest document:[%END%]
       <input type="text" name="latest_d_read" id="latest_d_read" size="[% s.length %]" value="[% latest_d_read_url %]" /></label></li>
 [% END %]
 [% IF active_lists_url %]
