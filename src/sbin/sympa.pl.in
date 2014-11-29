@@ -3621,13 +3621,10 @@ If B<--keep_digest> is specified, stocked digest will not be removed.
 
 Trigger the list members update.
 
-=begin comment
+=item B<--sync_list_db> [ B<--list=>I<listname>@I<robot> ]
 
-=item B<--sync_list_db>
-
-B<Deprecated>.  Use B<--reload_list_config>.
-
-=end comment
+Syncs filesystem list configs to the database cache of list configs,
+optionally syncs an individual list if specified.
 
 =item B<--test_database_message_buffer>
 
