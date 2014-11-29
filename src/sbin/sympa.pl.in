@@ -219,10 +219,9 @@ if ($main::options{'help'}) {
     ## trying to load a database that could not exist yet.
     unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
         #FIXME: force reload
-        printf STDERR
+        die sprintf
             "Configuration file %s has errors.\n",
             Conf::get_sympa_conf();
-        exit 1;
     }
 
     ## Open the syslog and say we're read out stuff.
@@ -248,18 +247,16 @@ if ($main::options{'help'}) {
 
     ## Check database connectivity and probe database
     unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
-        printf STDERR
+        die sprintf
             "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
             $Conf::Conf{'db_name'};
-        exit 1;
     }
 
     ## Now trying to load full config (including database)
     unless (Conf::load()) {    #FIXME: load Site, then robot cache
-        printf STDERR
+        die sprintf
             "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
             Conf::get_sympa_conf();
-        exit 1;
     }
 
     ## Change working directory.
@@ -375,9 +372,8 @@ POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 ## Check if the UID has correctly been set (useful on OS X)
 unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
     && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
-    Log::fatal_err(
-        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
-    );
+    die
+        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.\n";
 }
 
 # Sets the UMASK
@@ -526,7 +522,12 @@ if ($main::options{'batch'}) {
         }
 
         unless ($list = Sympa::List->new($main::options{'import'})) {
-            Log::fatal_err('Unknown list name %s', $main::options{'import'});
+            Log::do_log(
+                'err',
+                'Unknown list name %s',
+                $main::options{'import'}
+            );
+            exit 1;
         }
 
         ## Read imported data from STDIN
@@ -561,35 +562,26 @@ if ($main::options{'batch'}) {
 
         exit 0;
     } elsif ($main::options{'md5_encode_password'}) {
-
-        unless ($Sympa::List::use_db) {
-            Log::fatal_err(
-                "You don't have a database setup, can't lowercase email addresses"
-            );
-        }
-
         my $total = Sympa::Upgrade::md5_encode_password();
         printf STDERR "Total password re-encoded using md5: %d\n", $total;
 
         exit 0;
-
     } elsif ($main::options{'lowercase'}) {
-
-        unless ($Sympa::List::use_db) {
-            Log::fatal_err(
-                "You don't have a database setup, can't lowercase email addresses"
-            );
-        }
-
         print STDERR "Working on user_table...\n";
         my $total = Sympa::List::lowercase_field('user_table', 'email_user');
 
-        print STDERR "Working on subscriber_table...\n";
-        $total += Sympa::List::lowercase_field('subscriber_table',
-            'user_subscriber');
+        if (defined $total) {
+            print STDERR "Working on subscriber_table...\n";
+            my $total_sub = Sympa::List::lowercase_field('subscriber_table',
+                'user_subscriber');
+            if (defined $total_sub) {
+                $total += $total_sub;
+            }
+        }
 
         unless (defined $total) {
-            Log::fatal_err("Could not work on dabatase");
+            print STDERR "Could not work on dabatase.\n";
+            exit 1;
         }
 
         printf STDERR "Total lowercased rows: %d\n", $total;
@@ -1450,10 +1442,9 @@ sub _load {
     Sympa::Tools::Password::ciphersaber_installed();
 
     if (tools::cookie_changed($Conf::Conf{'cookie'})) {
-        Log::fatal_err(
-            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file)',
-            $Conf::Conf{'etc'}
-        );
+        die sprintf
+            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file).',
+            $Conf::Conf{'etc'};
     }
 
     ## Set locale configuration
@@ -1472,8 +1463,7 @@ sub _load {
 
     ## Check for several files.
     unless (Conf::checkfiles_as_root()) {
-        Log::fatal_err('Missing files');
-        ## No return.
+        die "Missing files\n";
     }
 }
 

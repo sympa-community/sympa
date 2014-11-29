@@ -59,6 +59,7 @@ my %levels = (
 
 our $last_date_aggregation;
 
+# Deprecated: No longer used.
 sub fatal_err {
     my $m     = shift;
     my $errno = $ERRNO;

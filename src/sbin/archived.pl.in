@@ -85,18 +85,16 @@ $main::options{'log_to_stderr'} = 1
 
 # Load sympa.conf
 unless (Conf::load()) {
-    printf STDERR
+    die sprintf
         "Unable to load sympa configuration, file %s has errors.\n",
         Conf::get_sympa_conf();
-    exit 1;
 }
 
 ## Check databse connectivity
 unless (SDM::check_db_connect()) {
-    Log::fatal_err(
-        'Database %s defined in sympa.conf has not the right structure or is unreachable.',
-        $Conf::Conf{'db_name'}
-    );
+    die sprintf
+        "Database %s defined in sympa.conf has not the right structure or is unreachable.\n",
+        $Conf::Conf{'db_name'};
 }
 
 ## Put ourselves in background if not in debug mode.
@@ -155,9 +153,8 @@ POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 ## Check if the UID has correctly been set (useful on OS X)
 unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
     && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
-    Log::fatal_err(
-        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
-    );
+    die
+        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.\n";
 }
 
 ## Sets the UMASK
@@ -666,15 +663,22 @@ sub rebuild {
                 'Command %s failed with exit code %s',
                 join(' ', @cmd), $exitcode
             );
-        }else {
-			Log::do_log('notice', "Rebuild %s of %s archive complete", $arc, $adrlist);
-		}
+        } else {
+            Log::do_log('notice', "Rebuild %s of %s archive complete",
+                $arc, $adrlist);
+        }
     } else {
         Log::do_log('notice', 'Rebuilding %s archive completely', $adrlist);
-		unless (-d "$arcpath/$adrlist") {
-			Log::do_log('info','List %s does not have an archive directory (looked for in %s/%s)',$adrlist,$arcpath,$adrlist);
-			return;
-		}
+        unless (-d "$arcpath/$adrlist") {
+            Log::do_log(
+                'info',
+                'List %s does not have an archive directory (looked for in %s/%s)',
+                $adrlist,
+                $arcpath,
+                $adrlist
+            );
+            return;
+        }
         if (!opendir(DIR, "$arcpath/$adrlist")) {
             Log::do_log('err', 'Unable to open %s/%s to rebuild archive',
                 $arcpath, $adrlist);
@@ -753,7 +757,7 @@ sub rebuild {
             }
 
         }
-		Log::do_log('notice', "Rebuild of %s archives completed", $adrlist);
+        Log::do_log('notice', "Rebuild of %s archives completed", $adrlist);
     }
 }
 

@@ -87,10 +87,9 @@ my $adrlist = {};
 
 # Load sympa.conf
 unless (Conf::load()) {
-    printf STDERR
+    die sprintf
         "Unable to load Sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.\n",
         Conf::get_sympa_conf();
-    exit 1;
 }
 
 Log::do_openlog(
@@ -156,9 +155,8 @@ POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 ## Check if the UID has correctly been set (usefull on OS X)
 unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
     && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
-    Log::fatal_err(
-        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
-    );
+    die
+        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.\n";
 }
 
 ## Sets the UMASK
@@ -1293,11 +1291,11 @@ sub purge_logs_table {
     my @res = $sth->fetchrow_array;
     $sth->finish;    # Fetch only the oldest row.
 
-	# If the array is emty, then we don't have anything to aggregate.
-	# Simply return and carry on.
+    # If the array is emty, then we don't have anything to aggregate.
+    # Simply return and carry on.
     unless (@res) {
-		return 1;
-	}
+        return 1;
+    }
     my $date_deb = $res[0] - ($res[0] % 3600);
 
     #hour to hour

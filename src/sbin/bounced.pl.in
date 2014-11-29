@@ -110,20 +110,18 @@ my $ip          = $ENV{'REMOTE_HOST'};
 
 # Load sympa.conf
 unless (Conf::load()) {
-    printf STDERR
+    die sprintf
         "Unable to load sympa configuration, file %s has errors.\n",
         Conf::get_sympa_conf();
-    exit 1;
 }
 
 ##unshift @INC, $Conf::Conf{'wws_path'};
 
 ## Check databse connectivity
 unless (SDM::check_db_connect()) {
-    Log::fatal_err(
-        'Database %s defined in sympa.conf has not the right structure or is unreachable.',
-        $Conf::Conf{'db_name'}
-    );
+    die sprintf
+        "Database %s defined in sympa.conf has not the right structure or is unreachable.\n",
+        $Conf::Conf{'db_name'};
 }
 
 ## Put ourselves in background if not in debug mode.
@@ -185,9 +183,8 @@ POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 ## Check if the UID has correctly been set (useful on OS X)
 unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
     && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
-    Log::fatal_err(
-        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
-    );
+    die
+        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.\n";
 }
 
 ## Sets the UMASK
