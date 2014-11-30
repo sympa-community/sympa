@@ -983,6 +983,11 @@ $(function() {
 
 /* check if the value of element is not empty */
 function isNotEmpty(id) {
-	var v = $('#' + id).val();
-	return !v || v.match(/\s+/);
+	var elem = $('#' + id);
+	if (elem) {
+		var v = elem.val();
+		if (v.replace(/\s+/g, ''))
+			return true;
+	}
+	return false;
 }
