@@ -87,9 +87,12 @@
 <input type="hidden" name="previous_action" value="review" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="action" value="search" />
-<label for="filter_review">[%|loc%]Search user by e-mail: [%END%]</label>
-<input title="[%|loc%]Search user by email[%END%]" type="text" size="18" id="filter_review" name="filter" value="[% filter %]" />
+<label for="filter_review">[%|loc%]Search user: [%END%]</label>
+<input title="[%|loc%]Search user[%END%]" type="text" size="18" id="filter_review" name="filter" value="[% filter %]" />
 <input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" onclick="return isNotEmpty('filter_review')" /> 
+[% IF filter %]
+<input class="MainMenuLinks" type="submit" name="action_review" value="[%|loc%]Reset[%END%]"  />
+[% END %]
 <br />
 [% IF action == 'search' %]
 [% IF too_many_select %]
@@ -99,23 +102,6 @@
 </fieldset>
 </form>
 <br /><br />
-<!-- SJS add -->
-<script><!--
-function searchfor(letter) {
-  document.forms["searchform"]["filter"].value = "^"+letter;
-  document.forms["searchform"].submit();
-}
-// --></script>
-[% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' ] %]
-<div id="nav">
-<ul>
-[% FOREACH letter IN letters -%]
-    <li class="MainMenuLinks" onclick="searchfor('[%letter%]');" ><a href="javascript:searchfor('[%letter%]');">&nbsp;[%letter%]&nbsp;</a></li>
-[% END -%]
- <li class="MainMenuLinksCurrentPage"><a href="[% path_cgi %]/review/[% list %]" >All</a> </li>
-</ul>
-</div>
-<!-- end -->
 <form name="myform" action="[% path_cgi %]" method="post">
 <fieldset>
   <input type="hidden" name="previous_action" value="[% action %]" />
