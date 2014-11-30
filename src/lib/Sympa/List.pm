@@ -8830,7 +8830,7 @@ sub _save_list_members_file {
     Log::do_log('debug2', 'Saving user file %s', $file);
 
     rename("$file", "$file.old");
-    open SUB, "> $file" or return undef;
+    open my $fh, '>', $file or return undef;
 
     for (
         $s = $self->get_first_list_member();
@@ -8841,12 +8841,13 @@ sub _save_list_members_file {
             'date',      'update_date', 'email', 'gecos',
             'reception', 'visibility'
             ) {
-            printf SUB "%s %s\n", $k, $s->{$k} unless ($s->{$k} eq '');
+            printf $fh "%s %s\n", $k, $s->{$k}
+                if defined $s->{$k} and length $s->{$k};
 
         }
-        print SUB "\n";
+        print $fh "\n";
     }
-    close SUB;
+    close $fh;
     return 1;
 }
 
