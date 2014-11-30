@@ -78,18 +78,14 @@
  	 [% END %]
 	 [% IF u.bounce %]
 	   <td colspan="2" class="text_left">
-	 
 	     [% IF is_listmaster || is_owner %]
 	       <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
 	     [% ELSE %]
  	       [% u.email %]
  	     [% END %]
 	   </td>
-	 [% IF is_listmaster || is_owner || is_editor  %]
            <td class="bg_color_error"><strong>[%|loc%]bouncing[%END%]</strong>
 	   </td>
-	 [% END %]
-
 	 [% ELSE %]
 	   <td colspan="3" class="text_left">
 	     [% IF is_listmaster || is_owner %]
