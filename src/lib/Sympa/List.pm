@@ -6418,6 +6418,17 @@ sub _include_users_list {
     Log::do_log('debug2', '');
 
     my $total = 0;
+    my $filter;
+    
+    my $id = Sympa::Datasource::_get_datasource_id($includelistname);
+
+    my $filter_regex = '(?<list>'.Sympa::Regexps::listname().'(\@'.Sympa::Regexps::host().')?)\s+filter\s+(?<filter>.+)';
+    if($includelistname =~ m/$filter_regex/) {
+        $includelistname = $+{list};
+        $filter = $+{filter};
+        chomp $filter;
+        $filter =~ s/^((?:USE [^;];)*)(.+)/[% $1 %][%IF $2 %]1[%END%]/; # Build tt2
+    }
 
     my $includelist;
 
@@ -6433,13 +6444,46 @@ sub _include_users_list {
         return undef;
     }
 
-    my $id = Sympa::Datasource::_get_datasource_id($includelistname);
-
     for (
         my $user = $includelist->get_first_list_member();
         $user;
         $user = $includelist->get_next_list_member()
         ) {
+            # Do we need filtering ?
+            if(defined $filter) {
+                # Prepare available variables
+                my $variables = {};
+                $variables->{$_} = $user->{$_} foreach(keys %$user);
+                $variables->{ca} = $user->{custom_attributes}; # Alias
+                
+                # Status filters
+                $variables->{isSubscriberOf} = sub {
+                    my $list = Sympa::List->new(shift, $robot);
+                    return defined $list ? $list->is_list_member($user->{email}) : undef;
+                };
+                $variables->{isEditorOf} = sub {
+                    my $list = Sympa::List->new(shift, $robot);
+                    return defined $list ? $list->am_i('editor', $user->{email}) : undef;
+                };
+                $variables->{isOwnerOf} = sub {
+                    my $list = Sympa::List->new(shift, $robot);
+                    return defined $list ? $list->am_i('owner', $user->{email}) : undef;
+                };
+                
+                # Run the test
+                my $result;
+                unless(tt2::parse_tt2($variables, \($filter), \$result)) {
+                    Log::do_log('err',
+                        'Error while applying filter "%s" : %s, aborting include',
+                        $filter,
+                        Template::get_error()
+                    );
+                    return undef;
+                }
+                
+                next unless($result =~ /1/); # skip user if filter returned false (= empty result)
+            }
+            
         my %u;
 
         ## Check if user has already been included
@@ -11107,6 +11151,10 @@ sub get_datasource_name {
                         || $datasource->{'def'}{'host'};
                 } else {
                     $sources{$id} = $datasource->{'def'};
+                    
+					if($datasource->{'type'} eq 'include_list' and $sources{$id} =~ /^([^\s]+)\s+filter/) {
+						$sources{$id} = $1.'>filtered';
+					}
                 }
             }
         }

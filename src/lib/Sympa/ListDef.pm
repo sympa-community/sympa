@@ -914,7 +914,7 @@ our %pinfo = (
         'group'      => 'data_source',
         'gettext_id' => "List inclusion",
         'format'     => Sympa::Regexps::listname() . '(\@'
-            . Sympa::Regexps::host() . ')?',
+            . Sympa::Regexps::host() . ')?(\s+filter\s+.+)?',
         'occurrence' => '0-n'
     },
 
