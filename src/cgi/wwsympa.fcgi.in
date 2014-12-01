@@ -410,7 +410,7 @@ our %action_args = (
     'get_latest_lists'   => [],
     'get_inactive_lists' => [],
     'get_biggest_lists'  => [],
-    'search_list'        => ['filter'],
+    'search_list'        => ['filter_list'],
     'shared'             => ['list', '@path'],       #FIXME: no such function.
     'd_read'             => ['list', '@path'],
     'latest_d_read'      => ['list'],
@@ -786,7 +786,8 @@ our %in_regexp = (
     'dump'             => '[^<>\\\*\$]+',     # contents email + gecos
 
     ## Search
-    'filter'   => '.*',                       # search list
+    'filter'   => '.*',                       # search subscriber
+    'filter_list' => '.*',                    # search list
     'key_word' => '.*',
     'format'   => '[^<>\\\$\n]+',             # dump format/filter string
 
@@ -12135,9 +12136,9 @@ sub do_search_list_request {
 
 ## Search among lists
 sub do_search_list {
-    wwslog('info', '(%s)', $in{'filter'});
+    wwslog('info', '(%s)', $in{'filter_list'});
 
-    unless (defined $in{'filter'} and length $in{'filter'}) {
+    unless (defined $in{'filter_list'} and length $in{'filter_list'}) {
         Sympa::Report::reject_report_web('user', 'no_filter', {},
             $param->{'action'});
         wwslog('info', 'No filter');
@@ -12145,13 +12146,13 @@ sub do_search_list {
     }
 
     ## Search key
-    $param->{'filter'} = $in{'filter'};
+    $param->{'filter_list'} = $in{'filter_list'};
 
     ## Members list
     my $record = 0;
     my $all_lists =
         Sympa::List::get_lists($robot,
-        'filter' => ['%name%|%subject%' => $param->{'filter'}]);
+        'filter' => ['%name%|%subject%' => $param->{'filter_list'}]);
     foreach my $list (@$all_lists) {
         my $is_admin = 0;
         my $result   = Sympa::Scenario::request_action(
