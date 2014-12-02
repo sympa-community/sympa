@@ -6432,6 +6432,7 @@ sub _include_users_list {
         chomp $filter;
         $filter =~
             s/^((?:USE\s[^;]+;)*)(.+)/[% TRY %][% $1 %][%IF $2 %]1[%END%][% CATCH %][% error %][%END%]/; # Build tt2
+        Log::do_log('notice', 'Applying filter on included list %s : %s', $includelistname, $filter);
     }
 
     my $includelist;
@@ -6458,7 +6459,13 @@ sub _include_users_list {
                 # Prepare available variables
                 my $variables = {};
                 $variables->{$_} = $user->{$_} foreach(keys %$user);
-                $variables->{ca} = $user->{custom_attributes}; # Alias
+                
+                # Rename date to avoid conflicts with date tt2 plugin and make name clearer
+                $variables->{subscription_date} = $variables->{date};
+                delete $variables->{date};
+                
+                # Aliases
+                $variables->{ca} = $user->{custom_attributes};
                 
                 # Status filters
                 $variables->{isSubscriberOf} = sub {
