@@ -292,7 +292,7 @@ while (!$end) {
         if ($to_header) {
             my @to = Mail::Address->parse($to_header);
             if (@to and $to[0] and $to[0]->address) {
-                $to = $to[0]->address;
+                $to = lc($to[0]->address);
             }
         }
 
@@ -306,24 +306,23 @@ while (!$end) {
             $to,     $Conf::Conf{'bounce_email_prefix'}
         );
 
-        if ($to and $to =~ /^$Conf::Conf{'bounce_email_prefix'}\+(.*)\@(.*)$/)
-        {
-            # VERP in use
+        my $to_re = '^'
+            . quotemeta($Conf::Conf{'bounce_email_prefix'})
+            . '[+](.*)\@(.*)$';
+        if ($to and $to =~ $to_re) {
+            # VERP in use.
             my $local_part = $1;
             my $robot      = $2;
             my $unique;
             if ($local_part =~ /^(.*)(\=\=([wr]))$/) {
+                # VERP for welcome/remind probe in use.
                 $local_part = $1;
                 $unique     = $2;
-            } elsif ($local_part =~ /^(.*)\=\=a\=\=(.*)\=\=(.*)\=\=(.*)$/)
-            {    # Tracking in use
-
+            } elsif ($local_part =~ /^(.*)\=\=a\=\=(.*)\=\=(.*)\=\=(.*)$/) {
+                # Tracking in use.
                 $distribution_id = $4;
                 $local_part =~ /^(.*)\=\=(.*)$/;
                 $local_part = $1;
-            } else {
-                undef $distribution_id;
-                Log::do_log('err', 'NOT ID PART in the bounce for: %s', $to);
             }
 
             $local_part =~ s/\=\=a\=\=/\@/;
@@ -335,7 +334,7 @@ while (!$end) {
                 'VERP in use: bounce related to %s for list %s@%s',
                 $who, $listname, $robot);
 
-            if ($unique =~ /[wr]/) {
+            if ($unique and $unique =~ /[wr]/) {
                 # in this case the bounce result from a remind or a welcome
                 # message ;so try to remove the subscriber
                 Log::do_log('debug',
