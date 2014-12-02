@@ -13615,17 +13615,20 @@ sub _prepare_data {
                 $p_glob->{'type'} = 'enum';
 
                 foreach my $elt (keys %{$constraint}) {
-                    $p->{'value'}{tools::escape_html($elt)}{'selected'} = 0;
+					$elt =~ s/"/&quot;/;
+                    $p->{'value'}{$elt}{'selected'} = 0;
                 }
 
-                $p->{'value'}{tools::escape_html($d)}{'selected'} = 1;
+                $d =~ s/"/&quot;/;
+                $p->{'value'}{$d}{'selected'} = 1;
                 $p->{'length'} = $struct->{'length'};
                 $p->{'unit'} = $language->gettext($struct->{'gettext_unit'});
 
             } else {
 
+                $d =~ s/"/&quot;/;
                 $p_glob->{'type'}  = 'scalar';
-                $p->{'value'}      = tools::escape_html($d);
+                $p->{'value'}      = $d;
                 $p->{'length'}     = $struct->{'length'};
                 $p->{'field_type'} = $struct->{'field_type'};
                 my $l = length($p->{'value'});
