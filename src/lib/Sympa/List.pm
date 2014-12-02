@@ -6422,12 +6422,16 @@ sub _include_users_list {
     
     my $id = Sympa::Datasource::_get_datasource_id($includelistname);
 
-    my $filter_regex = '(?<list>'.Sympa::Regexps::listname().'(\@'.Sympa::Regexps::host().')?)\s+filter\s+(?<filter>.+)';
-    if($includelistname =~ m/$filter_regex/) {
-        $includelistname = $+{list};
-        $filter = $+{filter};
+    my $filter_regex = '('
+        . Sympa::Regexps::listname() . '(?:\@'
+        . Sympa::Regexps::host()
+        . ')?)\s+filter\s+(.+)';
+    if ($includelistname =~ m/$filter_regex/) {
+        $includelistname = $1;
+        $filter          = $2;
         chomp $filter;
-        $filter =~ s/^((?:USE [^;];)*)(.+)/[% $1 %][%IF $2 %]1[%END%]/; # Build tt2
+        $filter =~
+            s/^((?:USE [^;];)*)(.+)/[% $1 %][%IF $2 %]1[%END%]/;   # Build tt2
     }
 
     my $includelist;
