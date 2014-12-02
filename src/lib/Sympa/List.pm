@@ -6431,7 +6431,7 @@ sub _include_users_list {
         $filter          = $2;
         chomp $filter;
         $filter =~
-            s/^((?:USE [^;];)*)(.+)/[% $1 %][%IF $2 %]1[%END%]/;   # Build tt2
+            s/^((?:USE\s[^;]+;)*)(.+)/[% TRY %][% $1 %][%IF $2 %]1[%END%][% CATCH %][% error %][%END%]/; # Build tt2
     }
 
     my $includelist;
@@ -6480,10 +6480,20 @@ sub _include_users_list {
                     Log::do_log('err',
                         'Error while applying filter "%s" : %s, aborting include',
                         $filter,
-                        Template::get_error()
+                        tt2::get_error()
                     );
                     return undef;
                 }
+                chomp $result;
+                
+                if($result !~ /^1?$/) { # Anything not 1 or empty result is an error
+                    Log::do_log('err',
+                        'Error while applying filter "%s" : %s, aborting include',
+                        $filter,
+                        $result
+                    );
+                    return undef;
+				}
                 
                 next unless($result =~ /1/); # skip user if filter returned false (= empty result)
             }
