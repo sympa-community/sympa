@@ -39,8 +39,8 @@ msgstr ""
 #: src/cgi/wwsympa.fcgi.in:24377 src/cgi/wwsympa.fcgi.in:5476
 #: src/cgi/wwsympa.fcgi.in:5544 src/cgi/wwsympa.fcgi.in:6349
 #: src/cgi/wwsympa.fcgi.in:6351 src/cgi/wwsympa.fcgi.in:8648
-#: src/lib/Sympa/Message.pm:498 src/lib/Sympa/Message.pm:501
-#: src/lib/Sympa/Message.pm:508 src/libexec/alias_manager.pl.in:102
+#: src/lib/Sympa/Message.pm:503 src/lib/Sympa/Message.pm:506
+#: src/lib/Sympa/Message.pm:513 src/libexec/alias_manager.pl.in:102
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
@@ -237,31 +237,31 @@ msgstr ""
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日%H時%M分%S秒"
 
-#: src/lib/tools.pm:1820
+#: src/lib/tools.pm:1814
 msgid "contains the dictionary word '%s'"
 msgstr "辞書にある単語「%s」を含みます"
 
-#: src/lib/tools.pm:1814
+#: src/lib/tools.pm:1808
 msgid "Not between %d and %d characters"
 msgstr "%d 文字以上 %d 文字以下でなければなりません"
 
-#: src/lib/tools.pm:1815
+#: src/lib/tools.pm:1809
 msgid "Not %d characters or greater"
 msgstr "%d 文字以上でなければなりません"
 
-#: src/lib/tools.pm:1816
+#: src/lib/tools.pm:1810
 msgid "Not less than or equal to %d characters"
 msgstr "%d 文字以下でなければなりません"
 
-#: src/lib/tools.pm:1817
+#: src/lib/tools.pm:1811
 msgid "contains bad characters"
 msgstr "使えない文字があります"
 
-#: src/lib/tools.pm:1818
+#: src/lib/tools.pm:1812
 msgid "contains less than %d character groups"
 msgstr "%d 種類以上の文字を含まなければなりません"
 
-#: src/lib/tools.pm:1819
+#: src/lib/tools.pm:1813
 msgid "contains over %d leading characters in sequence"
 msgstr "%d 文字以上の続き文字があります"
 
@@ -1294,6 +1294,10 @@ msgstr " 1月: 2月: 3月: 4月: 5月: 6月: 7月: 8月: 9月:10月:11月:12月"
 #: src/lib/Sympa/Language.pm:633
 msgid "AM:PM"
 msgstr "午前:午後"
+
+#: src/lib/Sympa/Language.pm:723
+msgid "Lorem ipsum dolor sit amet."
+msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:67
 msgid "Subject of the list"
@@ -2700,11 +2704,11 @@ msgstr "%2$s 名のうち、実際に追加できたのは %1$s 名です。"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:2472 src/lib/Sympa/Tools/Daemon.pm:222
+#: src/lib/Sympa/Message.pm:2488 src/lib/Sympa/Tools/Daemon.pm:222
 msgid "%d %b %Y  %H:%M"
 msgstr "%Y/%m/%d %H:%M"
 
-#: src/lib/Sympa/Message.pm:3869
+#: src/lib/Sympa/Message.pm:3889
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -2712,11 +2716,11 @@ msgstr ""
 "----- メッセージ形式が正しくないので省略 -----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:3879
+#: src/lib/Sympa/Message.pm:3899
 msgid "[Unknown]"
 msgstr "[不明]"
 
-#: src/lib/Sympa/Message.pm:3910
+#: src/lib/Sympa/Message.pm:3930
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -2728,37 +2732,37 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3912
+#: src/lib/Sympa/Message.pm:3932
 msgid "Date: %s\n"
 msgstr "日付: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3913
+#: src/lib/Sympa/Message.pm:3933
 msgid "From: %s\n"
 msgstr "送信者: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3914
+#: src/lib/Sympa/Message.pm:3934
 msgid "To: %s\n"
 msgstr "送信先: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3915
+#: src/lib/Sympa/Message.pm:3935
 msgid "Cc: %s\n"
 msgstr "CC: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3916
+#: src/lib/Sympa/Message.pm:3936
 msgid "Subject: %s\n"
 msgstr "件名: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3924
+#: src/lib/Sympa/Message.pm:3944
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -2768,7 +2772,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3953 src/lib/Sympa/Message.pm:4018
+#: src/lib/Sympa/Message.pm:3973 src/lib/Sympa/Message.pm:4038
 msgid ""
 "** Warning: Message part using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -2780,7 +2784,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3974
+#: src/lib/Sympa/Message.pm:3994
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -2788,7 +2792,7 @@ msgstr ""
 "\n"
 "[ここには %s 型の添付がありました]\n"
 
-#: src/lib/Sympa/Message.pm:3983
+#: src/lib/Sympa/Message.pm:4003
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -2796,7 +2800,7 @@ msgstr ""
 "\n"
 "-----配送状況報告-----\n"
 
-#: src/lib/Sympa/Message.pm:3986
+#: src/lib/Sympa/Message.pm:4006
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -2804,7 +2808,7 @@ msgstr ""
 "\n"
 "-----配送状況報告終わり-----\n"
 
-#: src/lib/Sympa/Message.pm:4000 src/lib/Sympa/Message.pm:4033
+#: src/lib/Sympa/Message.pm:4020 src/lib/Sympa/Message.pm:4053
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -2812,7 +2816,7 @@ msgstr ""
 "\n"
 "[ ** HTML のメッセージパートを処理できませんでした **]\n"
 
-#: src/lib/Sympa/Message.pm:4037
+#: src/lib/Sympa/Message.pm:4057
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ HTML をテキストに変換しました ]\n"
 
@@ -3082,7 +3086,7 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:350
-msgid "used while checking the RDBMS buffer size"
+msgid "used to show progress bar by command line utilities"
 msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:357
@@ -3091,25 +3095,24 @@ msgid ""
 "Wrap"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:364
-msgid ""
-"used by sympa.pl --test_database_message_buffer to test database performances"
+#: src/lib/Sympa/ModDef.pm:363
+msgid "used to get time with sub-second precision"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:371
+#: src/lib/Sympa/ModDef.pm:370
 msgid "Used to create URI containing non URI-canonical characters."
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:374
+#: src/lib/Sympa/ModDef.pm:373
 msgid "libxml2-devel is needed to build the Perl code"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:378
+#: src/lib/Sympa/ModDef.pm:377
 msgid ""
 "used to parse list configuration templates and instanciate list families"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:386
+#: src/lib/Sympa/ModDef.pm:385
 msgid "used to compute case-folding search keys"
 msgstr "大文字小文字を区別しない検索キーを得る"
 
@@ -12281,21 +12284,14 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "そのようなプロバイダは知りません。"
 
-#: src/sbin/sympa_wizard.pl.in:176
-msgid "Example: %s\t%s"
-msgstr "例: %s\\t%s"
+#: src/lib/Sympa/ModDef.pm:350
+msgid "used while checking the RDBMS buffer size"
+msgstr ""
 
-#: src/sbin/sympa_wizard.pl.in:186
-msgid "%s\t(You must define this parameter)"
-msgstr "%s\\t(パラメータの値を決めてください)"
-
-#: src/lib/Sympa/ConfDef.pm:680
-msgid "Directory for incoming spool"
-msgstr "メッセージ受け付け用キューのディレクトリ"
-
-#: src/lib/Sympa/ConfDef.pm:704
-msgid "Directory for outgoing spool"
-msgstr "メッセージ送出用キューのディレクトリ"
+#: src/lib/Sympa/ModDef.pm:364
+msgid ""
+"used by sympa.pl --test_database_message_buffer to test database performances"
+msgstr ""
 
 #: default/mail_tt2/dsn.tt2:49
 msgid ""
@@ -12303,6 +12299,18 @@ msgid ""
 "be encrypted again.  Probably because they have not sent certificates of "
 "their own."
 msgstr ""
+
+#~ msgid "Example: %s\t%s"
+#~ msgstr "例: %s\\t%s"
+
+#~ msgid "%s\t(You must define this parameter)"
+#~ msgstr "%s\\t(パラメータの値を決めてください)"
+
+#~ msgid "Directory for incoming spool"
+#~ msgstr "メッセージ受け付け用キューのディレクトリ"
+
+#~ msgid "Directory for outgoing spool"
+#~ msgstr "メッセージ送出用キューのディレクトリ"
 
 #~ msgid "tracking message by message delivery notification"
 #~ msgstr "メッセージ開封通知によるメッセージの追跡"

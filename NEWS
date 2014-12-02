@@ -3,6 +3,59 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.42		December 02, 2014
+
+  Features:
+
+	[11740] src/lib/Sympa/List.pm, src/lib/Sympa/ListDef.pm:  Add filtering
+	capabilities to list inclusion.
+	This allows to include criteria-based subsets of other lists.
+	include_list parameter value can now be like :
+	<listname> filter <filter_condition>
+	filter_condition is a TT2-compatible condition expression, it inherits
+	current potential subscriber properties such as email, gecos,
+	custom_attributes ... Tests like isSubscriberOf, isEditorOf and
+	isOwnerOf are also available.
+	Test examples :
+	- include_list foo filter email.match('@bar.tld$')
+	Includes members from list "foo" whose email domain is "bar.tld"
+	- include_list foo filter isSubscriberOf('bar')
+	Includes members from list "foo" who are also subscribed to
+	list "bar"
+	- include_list foo filter reception == 'mail' and not gecos
+	Includes members from list "foo" who have their reception mode
+	set to mail and no gecos
+	Available variables are (they represent the subscriber from the
+	included list) :
+	- email
+	- gecos
+	- bounce (last bounce info, see manual)
+	- bounce_score (see manual)
+	- bounce_address (see manual)
+	- reception (reception mode)
+	- topics
+	- visibility (conceal, noconceal or empty)
+	- date (first subscription date, as a unix timestamp)
+	- update_date (last metadata update date, as a unix timestamp)
+	- subscribed (1 if manually subscribed)
+	- included (1 if included from one or more datasources)
+	- id (datasources ids)
+	- custom_attributes (as a hash)
+	- ca (alias to custom_attributes)
+	- suspend (1 if subscription is suspended)
+	- startdate (subscription suspension start date, as a unix timestamp)
+	- enddate (subscription suspension end date if provided, as a unix
+	timestamp)
+	Datasource synced custom attributes are available the same way as user
+	defined ones.
+	Additionnal fields defined in configuration parameter
+	db_additional_subscriber_fields
+	are also made available.
+	The additionnal methods are :
+	- isSubscriberOf(<listname>)
+	- isEditorOf(<listname>)
+	- isOwnerOf(<listname>)
+
 6.2a.41		November 26, 2014
 
   Features:
