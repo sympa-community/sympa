@@ -521,29 +521,22 @@ sub get_first_db_log {
 
     #if the search is between two date
     if ($select->{'date_from'}) {
-        my @tab_date_from = split(/\//, $select->{'date_from'});
-        my $date_from = POSIX::mktime(
-            0, 0, -1, $tab_date_from[0],
-            $tab_date_from[1] - 1,
-            $tab_date_from[2] - 1900
-        );
+        my ($yyyy, $mm, $dd) = split /[^\da-z]/i, $select->{'date_from'};
+        ($dd, $mm, $yyyy) = ($yyyy, $mm, $dd) if 31 < $dd;
+        $yyyy += ($yyyy < 50 ? 2000 : 1900);
+
+        my $date_from = POSIX::mktime(0, 0, -1, $dd, $mm - 1, $yyyy - 1900);
         unless ($select->{'date_to'}) {
-            my $date_from2 = POSIX::mktime(
-                0, 0, 25, $tab_date_from[0],
-                $tab_date_from[1] - 1,
-                $tab_date_from[2] - 1900
-            );
+            my $date_from2 =
+                POSIX::mktime(0, 0, 25, $dd, $mm - 1, $yyyy - 1900);
             $statement .= sprintf "AND date_logs >= %s AND date_logs <= %s ",
                 $date_from, $date_from2;
-        }
-        if ($select->{'date_to'}) {
-            my @tab_date_to = split(/\//, $select->{'date_to'});
-            my $date_to = POSIX::mktime(
-                0, 0, 25, $tab_date_to[0],
-                $tab_date_to[1] - 1,
-                $tab_date_to[2] - 1900
-            );
+        } else {
+            my ($yyyy, $mm, $dd) = split /[^\da-z]/i, $select->{'date_to'};
+            ($dd, $mm, $yyyy) = ($yyyy, $mm, $dd) if 31 < $dd;
+            $yyyy += ($yyyy < 50 ? 2000 : 1900);
 
+            my $date_to = POSIX::mktime(0, 0, 25, $dd, $mm - 1, $yyyy - 1900);
             $statement .= sprintf "AND date_logs >= %s AND date_logs <= %s ",
                 $date_from, $date_to;
         }
