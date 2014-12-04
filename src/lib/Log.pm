@@ -523,7 +523,7 @@ sub get_first_db_log {
     if ($select->{'date_from'}) {
         my ($yyyy, $mm, $dd) = split /[^\da-z]/i, $select->{'date_from'};
         ($dd, $mm, $yyyy) = ($yyyy, $mm, $dd) if 31 < $dd;
-        $yyyy += ($yyyy < 50 ? 2000 : 1900);
+        $yyyy += ($yyyy < 50 ? 2000 : $yyyy < 100 ? 1900 : 0);
 
         my $date_from = POSIX::mktime(0, 0, -1, $dd, $mm - 1, $yyyy - 1900);
         unless ($select->{'date_to'}) {
@@ -534,7 +534,7 @@ sub get_first_db_log {
         } else {
             my ($yyyy, $mm, $dd) = split /[^\da-z]/i, $select->{'date_to'};
             ($dd, $mm, $yyyy) = ($yyyy, $mm, $dd) if 31 < $dd;
-            $yyyy += ($yyyy < 50 ? 2000 : 1900);
+            $yyyy += ($yyyy < 50 ? 2000 : $yyyy < 100 ? 1900 : 0);
 
             my $date_to = POSIX::mktime(0, 0, 25, $dd, $mm - 1, $yyyy - 1900);
             $statement .= sprintf "AND date_logs >= %s AND date_logs <= %s ",
