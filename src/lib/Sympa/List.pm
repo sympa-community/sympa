@@ -4452,11 +4452,11 @@ sub get_first_list_member {
         my $remainder = $offset;
         while (1000 < $remainder) {
             $remainder -= 1000;
-            my $rows = $sth->fetchrow_arrayref([qw(email)], 1000);
+            my $rows = $sth->fetchall_arrayref([qw(email)], 1000);
             last unless $rows and @$rows;
         }
-        if ($remainder) {
-            $sth->fetchrow_arrayref([qw(email)], $remainder);
+        if (0 < $remainder) {
+            $sth->fetchall_arrayref([qw(email)], $remainder);
         }
     }
 
