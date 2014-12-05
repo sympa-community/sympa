@@ -36,6 +36,7 @@ use LWP::UserAgent;
 use Mail::Address;
 use MIME::Charset;
 use MIME::EncWords;
+use Net::DNS;
 use POSIX qw();
 use Storable qw();
 use Time::Local qw();
@@ -1649,67 +1650,55 @@ sub distribute_msg {
             # Strict auto policy - is the sender domain policy to reject
             my $dom = $origFrom;
             $dom =~ s/^.*\@//;
-            eval {    # In case Net::DNS is not installed
-                Log::do_log('debug', 'Requiring Net::DNS');
-                require Net::DNS;
-                my $res = Net::DNS::Resolver->new;
-                my $packet = $res->query("_dmarc.$dom", "TXT");
-                if ($packet) {
-                    Log::do_log('debug', 'DMARC DNS entry found');
-                    foreach
-                        my $rr (grep { $_->type eq 'TXT' } $packet->answer) {
-                        next if ($rr->string !~ /v=DMARC/);
-                        if (!$mungeFrom
-                            and Sympa::Tools::Data::is_in_array(
-                                $self->{'admin'}{'dmarc_protection'}{'mode'},
-                                'dmarc_reject'
-                            )
-                            ) {
-                            Log::do_log('debug',
-                                'Will block if DMARC rejects');
-                            if ($rr->string =~ /p=reject/) {
-                                Log::do_log('debug',
-                                    'DMARC reject policy found');
-                                $mungeFrom = 1;
-                            }
-                        }
-                        if (!$mungeFrom
-                            and Sympa::Tools::Data::is_in_array(
-                                $self->{'admin'}{'dmarc_protection'}{'mode'},
-                                'dmarc_quarantine'
-                            )
-                            ) {
-                            Log::do_log('debug',
-                                'Will block if DMARC quarantine');
-                            if ($rr->string =~ /p=quarantine/) {
-                                Log::do_log('debug',
-                                    'DMARC quarantine  policy found');
-                                $mungeFrom = 1;
-                            }
-                        }
-                        if (!$mungeFrom
-                            and Sympa::Tools::Data::is_in_array(
-                                $self->{'admin'}{'dmarc_protection'}{'mode'},
-                                'dmarc_any'
-                            )
-                            ) {
-                            Log::do_log('debug',
-                                'Will munge whatever DMARC policy is');
+
+            my $res = Net::DNS::Resolver->new;
+            my $packet = $res->query("_dmarc.$dom", "TXT");
+            if ($packet) {
+                Log::do_log('debug', 'DMARC DNS entry found');
+                foreach my $rr (grep { $_->type eq 'TXT' } $packet->answer) {
+                    next if ($rr->string !~ /v=DMARC/);
+                    if (!$mungeFrom
+                        and Sympa::Tools::Data::is_in_array(
+                            $self->{'admin'}{'dmarc_protection'}{'mode'},
+                            'dmarc_reject'
+                        )
+                        ) {
+                        Log::do_log('debug', 'Will block if DMARC rejects');
+                        if ($rr->string =~ /p=reject/) {
+                            Log::do_log('debug', 'DMARC reject policy found');
                             $mungeFrom = 1;
                         }
-                        $message->add_header(
-                            'X-Original-DMARC-Record',
-                            "domain=$dom; " . $rr->string
-                        );
-                        last;
                     }
+                    if (!$mungeFrom
+                        and Sympa::Tools::Data::is_in_array(
+                            $self->{'admin'}{'dmarc_protection'}{'mode'},
+                            'dmarc_quarantine'
+                        )
+                        ) {
+                        Log::do_log('debug',
+                            'Will block if DMARC quarantine');
+                        if ($rr->string =~ /p=quarantine/) {
+                            Log::do_log('debug',
+                                'DMARC quarantine  policy found');
+                            $mungeFrom = 1;
+                        }
+                    }
+                    if (!$mungeFrom
+                        and Sympa::Tools::Data::is_in_array(
+                            $self->{'admin'}{'dmarc_protection'}{'mode'},
+                            'dmarc_any'
+                        )
+                        ) {
+                        Log::do_log('debug',
+                            'Will munge whatever DMARC policy is');
+                        $mungeFrom = 1;
+                    }
+                    $message->add_header(
+                        'X-Original-DMARC-Record',
+                        "domain=$dom; " . $rr->string
+                    );
+                    last;
                 }
-            };
-            if ($@) {
-                $message->add_header('X-DMARC-Error', $@);
-                Log::do_log('err',
-                    'No Net::DNS found. Trying to save the message by adding a X-DMARC-Error header'
-                );
             }
         }
 
@@ -6419,7 +6408,7 @@ sub _include_users_list {
 
     my $total = 0;
     my $filter;
-    
+
     my $id = Sympa::Datasource::_get_datasource_id($includelistname);
 
     my $filter_regex = '('
@@ -6430,9 +6419,11 @@ sub _include_users_list {
         $includelistname = $1;
         $filter          = $2;
         chomp $filter;
+        # Build tt2.
         $filter =~
-            s/^((?:USE\s[^;]+;)*)(.+)/[% TRY %][% $1 %][%IF $2 %]1[%END%][% CATCH %][% error %][%END%]/; # Build tt2
-        Log::do_log('notice', 'Applying filter on included list %s : %s', $includelistname, $filter);
+            s/^((?:USE\s[^;]+;)*)(.+)/[% TRY %][% $1 %][%IF $2 %]1[%END%][% CATCH %][% error %][%END%]/;
+        Log::do_log('notice', 'Applying filter on included list %s : %s',
+            $includelistname, $filter);
     }
 
     my $includelist;
@@ -6454,57 +6445,68 @@ sub _include_users_list {
         $user;
         $user = $includelist->get_next_list_member()
         ) {
-            # Do we need filtering ?
-            if(defined $filter) {
-                # Prepare available variables
-                my $variables = {};
-                $variables->{$_} = $user->{$_} foreach(keys %$user);
-                
-                # Rename date to avoid conflicts with date tt2 plugin and make name clearer
-                $variables->{subscription_date} = $variables->{date};
-                delete $variables->{date};
-                
-                # Aliases
-                $variables->{ca} = $user->{custom_attributes};
-                
-                # Status filters
-                $variables->{isSubscriberOf} = sub {
-                    my $list = Sympa::List->new(shift, $robot);
-                    return defined $list ? $list->is_list_member($user->{email}) : undef;
-                };
-                $variables->{isEditorOf} = sub {
-                    my $list = Sympa::List->new(shift, $robot);
-                    return defined $list ? $list->am_i('editor', $user->{email}) : undef;
-                };
-                $variables->{isOwnerOf} = sub {
-                    my $list = Sympa::List->new(shift, $robot);
-                    return defined $list ? $list->am_i('owner', $user->{email}) : undef;
-                };
-                
-                # Run the test
-                my $result;
-                unless(tt2::parse_tt2($variables, \($filter), \$result)) {
-                    Log::do_log('err',
-                        'Error while applying filter "%s" : %s, aborting include',
-                        $filter,
-                        tt2::get_error()
-                    );
-                    return undef;
-                }
-                chomp $result;
-                
-                if($result !~ /^1?$/) { # Anything not 1 or empty result is an error
-                    Log::do_log('err',
-                        'Error while applying filter "%s" : %s, aborting include',
-                        $filter,
-                        $result
-                    );
-                    return undef;
-				}
-                
-                next unless($result =~ /1/); # skip user if filter returned false (= empty result)
+        # Do we need filtering ?
+        if (defined $filter) {
+            # Prepare available variables
+            my $variables = {};
+            $variables->{$_} = $user->{$_} foreach (keys %$user);
+
+            # Rename date to avoid conflicts with date tt2 plugin and make name clearer
+            $variables->{subscription_date} = $variables->{date};
+            delete $variables->{date};
+
+            # Aliases
+            $variables->{ca} = $user->{custom_attributes};
+
+            # Status filters
+            $variables->{isSubscriberOf} = sub {
+                my $list = Sympa::List->new(shift, $robot);
+                return defined $list
+                    ? $list->is_list_member($user->{email})
+                    : undef;
+            };
+            $variables->{isEditorOf} = sub {
+                my $list = Sympa::List->new(shift, $robot);
+                return defined $list
+                    ? $list->am_i('editor', $user->{email})
+                    : undef;
+            };
+            $variables->{isOwnerOf} = sub {
+                my $list = Sympa::List->new(shift, $robot);
+                return defined $list
+                    ? $list->am_i('owner', $user->{email})
+                    : undef;
+            };
+
+            # Run the test
+            my $result;
+            unless (tt2::parse_tt2($variables, \($filter), \$result)) {
+                Log::do_log(
+                    'err',
+                    'Error while applying filter "%s" : %s, aborting include',
+                    $filter,
+                    tt2::get_error()
+                );
+                return undef;
             }
-            
+            chomp $result;
+
+            if ($result !~ /^1?$/)
+            {    # Anything not 1 or empty result is an error
+                Log::do_log(
+                    'err',
+                    'Error while applying filter "%s" : %s, aborting include',
+                    $filter,
+                    $result
+                );
+                return undef;
+            }
+
+            next
+                unless ($result =~ /1/)
+                ;    # skip user if filter returned false (= empty result)
+        }
+
         my %u;
 
         ## Check if user has already been included
@@ -11172,10 +11174,11 @@ sub get_datasource_name {
                         || $datasource->{'def'}{'host'};
                 } else {
                     $sources{$id} = $datasource->{'def'};
-                    
-					if($datasource->{'type'} eq 'include_list' and $sources{$id} =~ /^([^\s]+)\s+filter/) {
-						$sources{$id} = $1.'>filtered';
-					}
+
+                    if (    $datasource->{'type'} eq 'include_list'
+                        and $sources{$id} =~ /^([^\s]+)\s+filter/) {
+                        $sources{$id} = $1 . '>filtered';
+                    }
                 }
             }
         }
