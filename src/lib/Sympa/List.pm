@@ -40,6 +40,7 @@ use Net::DNS;
 use POSIX qw();
 use Storable qw();
 use Time::Local qw();
+use URI::Escape qw();
 use XML::LibXML;
 
 use Sympa::Archive;
@@ -11670,6 +11671,11 @@ sub add_list_header {
     } elsif ($field eq 'archived_at') {
         if (Conf::get_robot_conf($robot, 'wwsympa_url')
             and $self->is_web_archived()) {
+            # Use possiblly anonymized Message-Id: field instead of
+            # {message_id} attribute.
+            my $message_id =
+                tools::clean_msg_id($message->get_header('Message-Id'));
+
             my @now  = localtime(time);
             my $yyyy = sprintf '%04d', 1900 + $now[5];
             my $mm   = sprintf '%02d', $now[4] + 1;
@@ -11677,16 +11683,14 @@ sub add_list_header {
                 sprintf '%s/arcsearch_id/%s/%s-%s/%s',
                 Conf::get_robot_conf($robot, 'wwsympa_url'),
                 $self->{'name'}, $yyyy, $mm,
-                $message->{'message_id'}    #FIXME: Should be escaped.
-                ;
+                URI::Escape::uri_escape($message_id);
             $message->add_header('Archived-At',
                 '<' . $archived_msg_url . '>');
         } else {
             return 0;
         }
     } else {
-        Log::do_log('err', 'Unknown field "%s".  Ask developer', $field);
-        return undef;
+        die sprintf 'Unknown field "%s".  Ask developer', $field;
     }
 
     return 1;
