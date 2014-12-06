@@ -786,10 +786,10 @@ our %in_regexp = (
     'dump'             => '[^<>\\\*\$]+',     # contents email + gecos
 
     ## Search
-    'filter'   => '.*',                       # search subscriber
+    'filter'      => '.*',                    # search subscriber
     'filter_list' => '.*',                    # search list
-    'key_word' => '.*',
-    'format'   => '[^<>\\\$\n]+',             # dump format/filter string
+    'key_word'    => '.*',
+    'format'      => '[^<>\\\$\n]+',          # dump format/filter string
 
     ## File names
     'file'          => '[^<>\*\$\n]+',
@@ -1755,34 +1755,40 @@ while ($query = new_loop()) {
             ) {
             wwslog('notice', 'Could not set HTTP cookie');
         }
-        
+
         $param->{'is_user_allowed_to'} = sub {
-			my $permission = shift;
-			my $list = shift;
-			
-			return 0 unless $permission and $list;
-			
-			$list = Sympa::List->new($list, $robot) unless ref $list eq 'Sympa::List';
-			
-			my $result = Sympa::Scenario::request_action(
-				$list,
-				$permission,
-				$param->{'auth_method'},
-				{
-					'sender'      => $param->{'user'}{'email'},
-					'remote_host' => $param->{'remote_host'},
-					'remote_addr' => $param->{'remote_addr'}
-				}
-			);
-			
-			return 0 unless ref($result) eq 'HASH' and $result->{'action'} ne 'reject';
-			
-			return 0 if $permission eq 'subscribe' and $list->is_list_member($param->{'user'}{'email'});
-			
-			return 0 if $permission eq 'web_archive.access' and not defined $list->{'admin'}{'web_archive'};
-			
-			return 1;
-		};
+            my $permission = shift;
+            my $list       = shift;
+
+            return 0 unless $permission and $list;
+
+            $list = Sympa::List->new($list, $robot)
+                unless ref $list eq 'Sympa::List';
+
+            my $result = Sympa::Scenario::request_action(
+                $list,
+                $permission,
+                $param->{'auth_method'},
+                {   'sender'      => $param->{'user'}{'email'},
+                    'remote_host' => $param->{'remote_host'},
+                    'remote_addr' => $param->{'remote_addr'}
+                }
+            );
+
+            return 0
+                unless ref($result) eq 'HASH'
+                    and $result->{'action'} ne 'reject';
+
+            return 0
+                if $permission eq 'subscribe'
+                    and $list->is_list_member($param->{'user'}{'email'});
+
+            return 0
+                if $permission eq 'web_archive.access'
+                    and not defined $list->{'admin'}{'web_archive'};
+
+            return 1;
+        };
 
         ## Set cookies "your_subscribtions" unless in one list page
         if ($param->{'user'}{'email'} && ref($list) ne 'Sympa::List') {
@@ -10428,6 +10434,13 @@ sub do_send_me {
 
         # Add footer/header.
         $message->decorate;
+
+        # Shelve DMARC protection.
+        $message->{shelved}{dmarc_protect} = 1
+            if $list->{'admin'}{'dmarc_protection'}
+                and $list->{'admin'}{'dmarc_protection'}{'mode'}
+                and not $list->{'admin'}{'anonymous_sender'};
+
         # Shelve personalization.
         $message->{shelved}{merge} = 1
             if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
@@ -12116,11 +12129,10 @@ sub do_edit_attributes {
     return 1;
 }
 
-
 ## list search form
 sub do_search_list_request {
     wwslog('info', '');
-	
+
     return 1;
 }
 
@@ -12159,8 +12171,17 @@ sub do_search_list {
         next unless ($r_action eq 'do_it');
 
         if ($param->{'user'}{'email'}
-            && (   $list->am_i('owner', $param->{'user'}{'email'}, {'strict' => 1})
-                || $list->am_i('editor', $param->{'user'}{'email'}, {'strict' => 1}))
+            && ($list->am_i(
+                    'owner',
+                    $param->{'user'}{'email'},
+                    {'strict' => 1}
+                )
+                || $list->am_i(
+                    'editor',
+                    $param->{'user'}{'email'},
+                    {'strict' => 1}
+                )
+            )
             ) {
             $is_admin = 1;
         }
@@ -13605,7 +13626,7 @@ sub _prepare_data {
                 $p_glob->{'type'} = 'enum';
 
                 foreach my $elt (keys %{$constraint}) {
-					$elt =~ s/"/&quot;/;
+                    $elt =~ s/"/&quot;/;
                     $p->{'value'}{$elt}{'selected'} = 0;
                 }
 
@@ -22064,9 +22085,12 @@ sub do_send_mail {
             unless ($fh) {
                 wwslog('err', 'Can\'t upload %s', $in{'uploaded_file'});
                 Sympa::Report::reject_report_web(
-                    'intern', 'cannot_upload',
-                    {'path' => $in{'uploaded_file'}}, $param->{'action'},
-                    $list, $param->{'user'}{'email'},
+                    'intern',
+                    'cannot_upload',
+                    {'path' => $in{'uploaded_file'}},
+                    $param->{'action'},
+                    $list,
+                    $param->{'user'}{'email'},
                     $robot
                 );
                 web_db_log(

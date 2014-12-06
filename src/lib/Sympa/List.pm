@@ -33,10 +33,8 @@ use HTML::Entities qw();
 use HTTP::Request;
 use IO::Scalar;
 use LWP::UserAgent;
-use Mail::Address;
 use MIME::Charset;
 use MIME::EncWords;
-use Net::DNS;
 use POSIX qw();
 use Storable qw();
 use Time::Local qw();
@@ -1585,202 +1583,7 @@ sub distribute_msg {
         }
     }
 
-    # Munge the From header if we are using DMARC Protection mode
-    if ($self->{'admin'}{'dmarc_protection'}{'mode'}
-        and not $self->{'admin'}{'anonymous_sender'}) {
-        Log::do_log('debug', 'DMARC protection on');
-        my $dkimdomain = $self->{'admin'}{'dmarc_protection'}{'domain_regex'};
-        my $originalFromHeader = $message->get_header('From');
-        my $anonaddr;
-        my @addresses = Mail::Address->parse($originalFromHeader);
-        my @anonFrom;
-        my $dkimSignature = $message->get_header('DKIM-Signature');
-        my $origFrom      = '';
-        my $mungeFrom     = 0;
-
-        if (@addresses) {
-            $origFrom = $addresses[0]->address;
-            Log::do_log('debug', 'From addresses: %s', $origFrom);
-        }
-
-        # Will this message be processed?
-        if (Sympa::Tools::Data::is_in_array(
-                $self->{'admin'}{'dmarc_protection'}{'mode'}, 'all'
-            )
-            ) {
-            Log::do_log('debug', 'Munging From for ALL messages');
-            $mungeFrom = 1;
-        }
-        if (   !$mungeFrom
-            and $dkimSignature
-            and Sympa::Tools::Data::is_in_array(
-                $self->{'admin'}{'dmarc_protection'}{'mode'},
-                'dkim_signature'
-            )
-            ) {
-            Log::do_log('debug', 'Munging From for DKIM-signed messages');
-            $mungeFrom = 1;
-        }
-        if (   !$mungeFrom
-            and $origFrom
-            and $dkimdomain
-            and Sympa::Tools::Data::is_in_array(
-                $self->{'admin'}{'dmarc_protection'}{'mode'},
-                'domain_regex'
-            )
-            ) {
-            Log::do_log('debug',
-                'Munging From for messages based on domain regexp');
-            $mungeFrom = 1 if ($origFrom =~ /$dkimdomain$/);
-        }
-        if (   !$mungeFrom
-            and $origFrom
-            and (
-                Sympa::Tools::Data::is_in_array(
-                    $self->{'admin'}{'dmarc_protection'}{'mode'},
-                    'dmarc_reject')
-                or Sympa::Tools::Data::is_in_array(
-                    $self->{'admin'}{'dmarc_protection'}{'mode'}, 'dmarc_any')
-                or Sympa::Tools::Data::is_in_array(
-                    $self->{'admin'}{'dmarc_protection'}{'mode'},
-                    'dmarc_quarantine'
-                )
-            )
-            ) {
-            Log::do_log('debug',
-                'Munging From for messages with strict policy');
-            # Strict auto policy - is the sender domain policy to reject
-            my $dom = $origFrom;
-            $dom =~ s/^.*\@//;
-
-            my $res = Net::DNS::Resolver->new;
-            my $packet = $res->query("_dmarc.$dom", "TXT");
-            if ($packet) {
-                Log::do_log('debug', 'DMARC DNS entry found');
-                foreach my $rr (grep { $_->type eq 'TXT' } $packet->answer) {
-                    next if ($rr->string !~ /v=DMARC/);
-                    if (!$mungeFrom
-                        and Sympa::Tools::Data::is_in_array(
-                            $self->{'admin'}{'dmarc_protection'}{'mode'},
-                            'dmarc_reject'
-                        )
-                        ) {
-                        Log::do_log('debug', 'Will block if DMARC rejects');
-                        if ($rr->string =~ /p=reject/) {
-                            Log::do_log('debug', 'DMARC reject policy found');
-                            $mungeFrom = 1;
-                        }
-                    }
-                    if (!$mungeFrom
-                        and Sympa::Tools::Data::is_in_array(
-                            $self->{'admin'}{'dmarc_protection'}{'mode'},
-                            'dmarc_quarantine'
-                        )
-                        ) {
-                        Log::do_log('debug',
-                            'Will block if DMARC quarantine');
-                        if ($rr->string =~ /p=quarantine/) {
-                            Log::do_log('debug',
-                                'DMARC quarantine  policy found');
-                            $mungeFrom = 1;
-                        }
-                    }
-                    if (!$mungeFrom
-                        and Sympa::Tools::Data::is_in_array(
-                            $self->{'admin'}{'dmarc_protection'}{'mode'},
-                            'dmarc_any'
-                        )
-                        ) {
-                        Log::do_log('debug',
-                            'Will munge whatever DMARC policy is');
-                        $mungeFrom = 1;
-                    }
-                    $message->add_header(
-                        'X-Original-DMARC-Record',
-                        "domain=$dom; " . $rr->string
-                    );
-                    last;
-                }
-            }
-        }
-
-        if ($mungeFrom) {
-            Log::do_log('debug', 'Will munge From field');
-            # Remove any DKIM signatures we find
-            if ($dkimSignature) {
-                $message->add_header('X-Original-DKIM-Signature',
-                    $dkimSignature);
-                $message->delete_header('DKIM-Signature');
-                $message->delete_header('DomainKey-Signature');
-                Log::do_log('debug',
-                    'Removing previous DKIM and DomainKey signatures');
-            }
-
-            # Identify default new From address
-            my $phraseMode = $self->{'admin'}{'dmarc_protection'}{'phrase'}
-                || 'name_via_list';
-            my $newAddr;
-            my $displayName;
-            my $newComment;
-            $anonaddr = $self->{'admin'}{'dmarc_protection'}{'other_email'};
-            $anonaddr = $self->get_list_address()
-                unless $anonaddr and $anonaddr =~ /\@/;
-            @anonFrom = Mail::Address->parse($anonaddr);
-            Log::do_log('debug', 'Anonymous From: %s', $anonaddr);
-
-            if (@addresses) {
-                # We should always have a From address in reality, unless the
-                # message is from a badly-behaved automate
-                if ($addresses[0]->phrase) {
-                    $displayName = MIME::EncWords::decode_mimewords(
-                        $addresses[0]->phrase, Charset => 'UTF-8');
-                    $newComment = $addresses[0]->address
-                        if $phraseMode =~ /email/;
-                } else {
-                    # If we dont have a Phrase, should we search the Sympa
-                    # database
-                    # for the sender to obtain their name that way? Might be
-                    # difficult.
-                    $displayName = $addresses[0]->address;
-                    $displayName =~ s/\@.*// unless $phraseMode =~ /email/;
-                }
-                if ($phraseMode =~ /list/) {
-                    if ($newComment and $newComment =~ /\S/) {
-                        $newComment = $language->gettext_sprintf(
-                            '%s via %s Mailing List',
-                            $newComment, $self->{'name'});
-                    } else {
-                        $newComment =
-                            $language->gettext_sprintf('via %s Mailing List',
-                            $self->{'name'});
-                    }
-                }
-                $message->add_header('Reply-To', $addresses[0]->address)
-                    unless $message->get_header('Reply-To');
-            }
-            # If the new From email address has a Phrase component, then
-            # append it
-            if (@anonFrom and $anonFrom[0]->phrase) {
-                if ($displayName and $displayName =~ /\S/) {
-                    $displayName .= ' ' . $anonFrom[0]->phrase;
-                } else {
-                    $displayName = $anonFrom[0]->phrase;
-                }
-            }
-            $displayName = $language->gettext('Anonymous')
-                unless $displayName and $displayName =~ /\S/;
-
-            $newAddr = tools::addrencode(
-                (@anonFrom ? $anonFrom[0]->address : $anonaddr),
-                $displayName, tools::lang2charset($language->get_lang),
-                $newComment);
-
-            $message->add_header('X-Original-From', "$originalFromHeader");
-            $message->replace_header('From', $newAddr);
-        }
-    }
-
-    ## Hide the sender if the list is anonymoused
+    # Hide the sender if the list is anonymized
     if ($self->{'admin'}{'anonymous_sender'}) {
         foreach my $field (@{$Conf::Conf{'anonymous_header_fields'}}) {
             $message->delete_header($field);
@@ -2232,6 +2035,12 @@ sub _mail_message {
     my $tag = $params{tag};
 
     my $list = $message->{context};
+
+    # Shelve DMARC protection.
+    $message->{shelved}{dmarc_protect} = 1
+        if $list->{'admin'}{'dmarc_protection'}
+            and $list->{'admin'}{'dmarc_protection'}{'mode'}
+            and not $list->{'admin'}{'anonymous_sender'};
 
     # Shelve personalization.
     $message->{shelved}{merge} = 1

@@ -381,13 +381,18 @@ while (!$end) {
         ## Use an intermediate handler to encode to filesystem_encoding
         my $user;
 
-        # message transformation must be done in the folowing order
+        # Message transformation should be done in the folowing order:
         #  -1 headers modifications (done in sympa.pl)
-        #  -2 personalize (a.k.a. "merge")
-        #  -3 smime sign
-        #  -4 smime encrypt
-        #  -5 remove existing signature if altered
-        #  -6 dkim sign
+        #  -2 DMARC protection
+        #  -3 personalize (a.k.a. "merge")
+        #  -4 S/MIME signing
+        #  -5 S/MIME encryption
+        #  -6 remove existing signature if altered
+        #  -7 DKIM signing
+
+        if ($message->{shelved}{dmarc_protect}) {
+            $message->dmarc_protect;
+        }
 
         my $dkim;
         if ($message->{shelved}{dkim_sign}) {
