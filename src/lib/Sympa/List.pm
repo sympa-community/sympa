@@ -1585,8 +1585,9 @@ sub distribute_msg {
         }
     }
 
-    ## Munge the From header if we are using DMARC Protection mode
-    if ($self->{'admin'}{'dmarc_protection'}{'mode'}) {
+    # Munge the From header if we are using DMARC Protection mode
+    if ($self->{'admin'}{'dmarc_protection'}{'mode'}
+        and not $self->{'admin'}{'anonymous_sender'}) {
         Log::do_log('debug', 'DMARC protection on');
         my $dkimdomain = $self->{'admin'}{'dmarc_protection'}{'domain_regex'};
         my $originalFromHeader = $message->get_header('From');
@@ -1935,96 +1936,8 @@ sub distribute_msg {
     ## Archives
     $self->archive_msg($message);
 
-    Sympa::Message::Plugin::execute('post_archive', $message);
-
-    ## Change the reply-to header if necessary.
-    if ($self->{'admin'}{'reply_to_header'}) {
-        unless ($message->get_header('Reply-To')
-            and $self->{'admin'}{'reply_to_header'}->{'apply'} ne 'forced') {
-            my $reply;
-
-            $message->delete_header('Reply-To');
-            $message->delete_header('Resent-Reply-To');
-
-            if ($self->{'admin'}{'reply_to_header'}->{'value'} eq 'list') {
-                $reply = $self->get_list_address();
-            } elsif (
-                $self->{'admin'}{'reply_to_header'}->{'value'} eq 'sender') {
-                #FIXME: Missing From: field?
-                $reply = $message->get_header('From');
-            } elsif ($self->{'admin'}{'reply_to_header'}->{'value'} eq 'all')
-            {
-                #FIXME: Missing From: field?
-                $reply =
-                      $self->get_list_address() . ','
-                    . $message->get_header('From');
-            } elsif ($self->{'admin'}{'reply_to_header'}->{'value'} eq
-                'other_email') {
-                $reply = $self->{'admin'}{'reply_to_header'}->{'other_email'};
-            }
-
-            $message->add_header('Reply-To', $reply) if $reply;
-        }
-    }
-
-    ## Add/replace useful headers
-
-    ## These fields should be added preserving existing ones.
-    $message->add_header('X-Loop',     $self->get_list_address());
-    $message->add_header('X-Sequence', $sequence);
-    ## These fields should be overwritten if any of them already exist
-    $message->delete_header('Errors-To');
-    $message->add_header('Errors-To', $self->get_list_address('return_path'));
-    ## Two Precedence: fields are added (overwritten), as some MTAs recognize
-    ## only one of them.
-    $message->delete_header('Precedence');
-    $message->add_header('Precedence', 'list');
-    $message->add_header('Precedence', 'bulk');
-    # The Sender: field should be added (overwritten) at least for DKIM or
-    # Sender ID (a.k.a. SPF 2.0) compatibility.  Note that Resent-Sender:
-    # field will be removed.
-    $message->replace_header('Sender', $self->get_list_address('owner'));
-    $message->delete_header('Resent-Sender');
-    $message->replace_header('X-no-archive', 'yes');
-
-    ## - add custom headers
-    foreach my $i (@{$self->{'admin'}{'custom_header'}}) {
-        $message->add_header($1, $2) if $i =~ /^([\S\-\:]*)\s(.*)$/;
-    }
-
-    ## Add RFC 2919 header field
-    if ($message->get_header('List-Id')) {
-        Log::do_log(
-            'notice',
-            'Found List-Id: %s',
-            $message->get_header('List-Id')
-        );
-        $message->delete_header('List-ID');
-    }
-    $self->add_list_header($message, 'id');
-
-    ## Add RFC 2369 header fields
-    foreach my $field (
-        @{  tools::get_list_params($self->{'domain'})
-                ->{'rfc2369_header_fields'}->{'format'}
-        }
-        ) {
-        if (scalar grep { $_ eq $field }
-            @{$self->{'admin'}{'rfc2369_header_fields'}}) {
-            $self->add_list_header($message, $field);
-        }
-    }
-
-    ## Add RFC5064 Archived-At SMTP header field
-    $self->add_list_header($message, 'archived_at');
-
-    ## Remove outgoing header fields
-    ## Useful to remove some header fields that Sympa has set
-    if ($self->{'admin'}{'remove_outgoing_headers'}) {
-        foreach my $field (@{$self->{'admin'}{'remove_outgoing_headers'}}) {
-            $message->delete_header($field);
-        }
-    }
+    # Transformation of message after archiving.
+    $self->post_archive($message, $sequence);
 
     ## store msg in digest if list accept digest mode (encrypted message can't
     ## be included in digest)
@@ -2201,6 +2114,104 @@ sub distribute_msg {
 
     $self->savestats;
     return $nbr_smtp;
+}
+
+# Note: this would be moved to Pipeline package.
+sub post_archive {
+    my $self     = shift;
+    my $message  = shift;
+    my $sequence = shift;
+
+    Sympa::Message::Plugin::execute('post_archive', $message);
+
+    # Change the Reply-To: header field if necessary.
+    if ($self->{'admin'}{'reply_to_header'}) {
+        unless ($message->get_header('Reply-To')
+            and $self->{'admin'}{'reply_to_header'}->{'apply'} ne 'forced') {
+            my $reply;
+
+            $message->delete_header('Reply-To');
+            $message->delete_header('Resent-Reply-To');
+
+            if ($self->{'admin'}{'reply_to_header'}->{'value'} eq 'list') {
+                $reply = $self->get_list_address();
+            } elsif (
+                $self->{'admin'}{'reply_to_header'}->{'value'} eq 'sender') {
+                #FIXME: Missing From: field?
+                $reply = $message->get_header('From');
+            } elsif ($self->{'admin'}{'reply_to_header'}->{'value'} eq 'all')
+            {
+                #FIXME: Missing From: field?
+                $reply =
+                      $self->get_list_address() . ','
+                    . $message->get_header('From');
+            } elsif ($self->{'admin'}{'reply_to_header'}->{'value'} eq
+                'other_email') {
+                $reply = $self->{'admin'}{'reply_to_header'}->{'other_email'};
+            }
+
+            $message->add_header('Reply-To', $reply) if $reply;
+        }
+    }
+
+    ## Add/replace useful header fields
+
+    ## These fields should be added preserving existing ones.
+    $message->add_header('X-Loop', $self->get_list_address());
+    $message->add_header('X-Sequence', $sequence) if defined $sequence;
+    ## These fields should be overwritten if any of them already exist
+    $message->delete_header('Errors-To');
+    $message->add_header('Errors-To', $self->get_list_address('return_path'));
+    ## Two Precedence: fields are added (overwritten), as some MTAs recognize
+    ## only one of them.
+    $message->delete_header('Precedence');
+    $message->add_header('Precedence', 'list');
+    $message->add_header('Precedence', 'bulk');
+    # The Sender: field should be added (overwritten) at least for DKIM or
+    # Sender ID (a.k.a. SPF 2.0) compatibility.  Note that Resent-Sender:
+    # field will be removed.
+    $message->replace_header('Sender', $self->get_list_address('owner'));
+    $message->delete_header('Resent-Sender');
+    $message->replace_header('X-no-archive', 'yes');
+
+    # Add custom header fields
+    foreach my $i (@{$self->{'admin'}{'custom_header'}}) {
+        $message->add_header($1, $2) if $i =~ /^([\S\-\:]*)\s(.*)$/;
+    }
+
+    ## Add RFC 2919 header field
+    if ($message->get_header('List-Id')) {
+        Log::do_log(
+            'notice',
+            'Found List-Id: %s',
+            $message->get_header('List-Id')
+        );
+        $message->delete_header('List-ID');
+    }
+    $self->add_list_header($message, 'id');
+
+    ## Add RFC 2369 header fields
+    foreach my $field (
+        @{  tools::get_list_params($self->{'domain'})
+                ->{'rfc2369_header_fields'}->{'format'}
+        }
+        ) {
+        if (scalar grep { $_ eq $field }
+            @{$self->{'admin'}{'rfc2369_header_fields'}}) {
+            $self->add_list_header($message, $field);
+        }
+    }
+
+    # Add RFC5064 Archived-At: header field
+    $self->add_list_header($message, 'archived_at');
+
+    ## Remove outgoing header fields
+    ## Useful to remove some header fields that Sympa has set
+    if ($self->{'admin'}{'remove_outgoing_headers'}) {
+        foreach my $field (@{$self->{'admin'}{'remove_outgoing_headers'}}) {
+            $message->delete_header($field);
+        }
+    }
 }
 
 # distribute a message to a list, Crypting if needed

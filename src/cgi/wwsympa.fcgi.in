@@ -10423,18 +10423,8 @@ sub do_send_me {
         # Decrypt message if possible
         $message->smime_decrypt;
 
-        # Add or remove several headers.
-        # TODO:more headers may be added. cf. Sympa::List::distribute_msg().
-        $message->add_header('X-Loop', $list->get_list_address());
-        $message->delete_header('Errors-To');
-        $message->add_header('Errors-To',
-            $list->get_list_address('return_path'));
-        $message->delete_header('Precedence');
-        $message->add_header('Precedence', 'list');
-        $message->add_header('Precedence', 'bulk');
-        $message->replace_header('Sender', $list->get_list_address('owner'));
-        $message->delete_header('Resent-Sender');
-        $message->replace_header('X-no-archive', 'yes');
+        # Add or remove several header fields.
+        $list->post_archive($message);
 
         # Add footer/header.
         $message->decorate;
