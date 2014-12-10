@@ -4999,7 +4999,6 @@ sub do_lists {
         $param->{'subtitle'} = $language->gettext('Your lists');
     } elsif ($in{'topic'}) {
         my %topics = Sympa::Robot::load_topics($robot);
-
         $param->{'topic'} = $in{'topic'};
         if ($in{'subtopic'}) {
             $param->{'subtopic'} = $in{'subtopic'};
@@ -5027,7 +5026,7 @@ sub do_lists {
                 $options->{'filter'} = ['topics' => $in{'topic'}];
             }
         }
-        $all_lists = Sympa::List::get_lists($robot, $options);
+        $all_lists = Sympa::List::get_lists($robot, %$options);
     } else {
         $all_lists = Sympa::List::get_lists($robot);
     }
