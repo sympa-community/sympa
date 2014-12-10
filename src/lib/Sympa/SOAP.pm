@@ -371,8 +371,13 @@ sub authenticateRemoteAppAndRun {
     my ($self, $appname, $apppassword, $vars, $service, $parameters) = @_;
     my $robot = $ENV{'SYMPA_ROBOT'};
 
-    Log::do_log('notice', '(%s, %s, %s, %s)',
-        $appname, $vars, $service, join(',', @$parameters));
+	if ($parameters) {
+		Log::do_log('notice', '(%s, %s, %s, %s)',
+			$appname, $vars, $service, join(',', @$parameters));
+	}else{
+		Log::do_log('notice', '(%s, %s, %s)',
+			$appname, $vars, $service);
+	}
 
     unless ($appname and $apppassword and $service) {
         die SOAP::Fault->faultcode('Client')
