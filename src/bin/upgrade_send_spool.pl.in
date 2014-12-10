@@ -74,7 +74,7 @@ mkdir "$spool_dir/bad",   0755 unless -d "$spool_dir/bad";
 mkdir "$spool_dir/moved", 0755 unless -d "$spool_dir/moved";
 
 my ($dh, $filename);
-unless (open $dh, $spool_dir) {
+unless (opendir $dh, $spool_dir) {
     printf STDERR "Cannot open directory %s.\n", $spool_dir;
     exit 1;
 }
