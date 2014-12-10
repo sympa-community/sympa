@@ -301,8 +301,13 @@ sub authenticateAndRun {
     my ($self, $email, $cookie, $service, $parameters) = @_;
     my $session_id;
 
-    Log::do_log('notice', '(%s, %s, %s, %s)',
-        $email, $cookie, $service, join(',', @$parameters));
+	if ($parameters) {
+		Log::do_log('notice', '(%s, %s, %s, %s)',
+			$email, $cookie, $service, join(',', @$parameters));
+	}else{
+		Log::do_log('notice', '(%s, %s, %s)',
+			$email, $cookie, $service);
+	}
 
     unless ($cookie and $service) {
         Log::do_log('err', "Missing parameter");
