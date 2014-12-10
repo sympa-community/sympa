@@ -269,17 +269,26 @@ sub store {
         @rcpts = _get_recipient_tabs_by_domain($robot_id, @{$rcpt || []});
     }
 
+    # Create a temporary lock file in the packet directory to prevent bulk.pl
+    # from removing packet directory and the message during addition of
+    # packets.
+    my $lock_fh_tmp = Sympa::LockedFile->new(
+        $self->{pct_directory} . '/' . $marshalled . '/dont_rmdir',
+        -1, '+');
+
     my $serial = $message->{tag};
-    foreach my $rcpt (@rcpts) {
+    while (my $rcpt = shift @rcpts) {
         my $lock_fh = Sympa::LockedFile->new(
             $self->{pct_directory} . '/' . $marshalled . '/' . $serial,
             5, '>>');
         return unless $lock_fh;
 
+        $lock_fh_tmp->unlock unless @rcpts;  # Now the last packet is written.
+
         print $lock_fh join("\n", @{$rcpt}) . "\n";
         $lock_fh->close;
 
-        if (length $serial == 1) {    # '0', 's' or 'z'.
+        if (length $serial == 1) {           # '0', 's' or 'z'.
             $serial = '0001';
         } else {
             $serial++;
