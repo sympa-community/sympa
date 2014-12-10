@@ -21890,7 +21890,7 @@ sub do_compose_mail {
     # headers will be encoded later.
     #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
     $param->{'subject'}     = $in{'subject'};
-    $param->{'in_reply_to'} = '<' . $in{'in_reply_to'} . '>';
+    $param->{'in_reply_to'} = tools::clean_msg_id($in{'in_reply_to'});
     $param->{'message_id'}  = tools::get_message_id($robot);
 
     if ($list->is_there_msg_topic()) {
@@ -22054,6 +22054,10 @@ sub do_send_mail {
             $list->tag_topic($in{'message_id'}, $list_topics, 'sender');
     }
 
+    # "In-Reply-To:" field, eliminating hostile characters.
+    my $in_reply_to = tools::clean_msg_id($in{'in_reply_to'});
+    undef $in_reply_to if $in_reply_to and $in_reply_to =~ /[\s<>]/;
+
     ##--------------- send an html page or a message -------------------
     my $message;
 
@@ -22134,8 +22138,7 @@ sub do_send_mail {
             'From'         => $from,
             'To'           => $to,
             'Message-Id' => $in{'message_id'},
-            (     ($in{'in_reply_to'} and $in{'in_reply_to'} ne '<>')
-                ? ('In-Reply-To' => $in{'in_reply_to'})
+            (   $in_reply_to ? ('In-Reply-To' => '<' . $in_reply_to . '>')
                 : ()
             ),
             (     (defined $encoded_subject) ? ('Subject' => $encoded_subject)
@@ -22187,8 +22190,8 @@ sub do_send_mail {
 
         my $msg_string = sprintf "From: %s\nTo: %s\nMessage-Id: %s\n",
             $from, $to, $in{'message_id'};
-        $msg_string .= sprintf "In-Reply-To: %s\n", $in{'in_reply_to'}
-            if $in{'in_reply_to'} and $in{'in_reply_to'} ne '<>';
+        $msg_string .= sprintf "In-Reply-To: <%s>\n", $in_reply_to
+            if $in_reply_to;
         $msg_string .= sprintf "Subject: %s\n", $encoded_subject
             if defined $encoded_subject;
         $msg_string .= sprintf "\n%s", $in{'body'};
