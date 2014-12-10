@@ -40,8 +40,8 @@ msgstr ""
 #: src/cgi/wwsympa.fcgi.in:24377 src/cgi/wwsympa.fcgi.in:5476
 #: src/cgi/wwsympa.fcgi.in:5544 src/cgi/wwsympa.fcgi.in:6349
 #: src/cgi/wwsympa.fcgi.in:6351 src/cgi/wwsympa.fcgi.in:8648
-#: src/lib/Sympa/Message.pm:503 src/lib/Sympa/Message.pm:506
-#: src/lib/Sympa/Message.pm:513 src/libexec/alias_manager.pl.in:102
+#: src/lib/Sympa/Message.pm:498 src/lib/Sympa/Message.pm:501
+#: src/lib/Sympa/Message.pm:508 src/libexec/alias_manager.pl.in:102
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
@@ -229,31 +229,31 @@ msgstr ""
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y a %H:%M:%S"
 
-#: src/lib/tools.pm:1814
+#: src/lib/tools.pm:1820
 msgid "contains the dictionary word '%s'"
 msgstr ""
 
-#: src/lib/tools.pm:1808
+#: src/lib/tools.pm:1814
 msgid "Not between %d and %d characters"
 msgstr ""
 
-#: src/lib/tools.pm:1809
+#: src/lib/tools.pm:1815
 msgid "Not %d characters or greater"
 msgstr ""
 
-#: src/lib/tools.pm:1810
+#: src/lib/tools.pm:1816
 msgid "Not less than or equal to %d characters"
 msgstr ""
 
-#: src/lib/tools.pm:1811
+#: src/lib/tools.pm:1817
 msgid "contains bad characters"
 msgstr ""
 
-#: src/lib/tools.pm:1812
+#: src/lib/tools.pm:1818
 msgid "contains less than %d character groups"
 msgstr ""
 
-#: src/lib/tools.pm:1813
+#: src/lib/tools.pm:1819
 msgid "contains over %d leading characters in sequence"
 msgstr ""
 
@@ -1204,10 +1204,6 @@ msgstr ""
 
 #: src/lib/Sympa/Language.pm:633
 msgid "AM:PM"
-msgstr ""
-
-#: src/lib/Sympa/Language.pm:723
-msgid "Lorem ipsum dolor sit amet."
 msgstr ""
 
 # nlsref 16,72
@@ -2815,12 +2811,12 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:2488 src/lib/Sympa/Tools/Daemon.pm:222
+#: src/lib/Sympa/Message.pm:2472 src/lib/Sympa/Tools/Daemon.pm:222
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:3889
+#: src/lib/Sympa/Message.pm:3869
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -2828,12 +2824,12 @@ msgstr ""
 "------Fin del messatge de %s ------\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:3899
+#: src/lib/Sympa/Message.pm:3879
 #, fuzzy
 msgid "[Unknown]"
 msgstr "[Desconegut]"
 
-#: src/lib/Sympa/Message.pm:3930
+#: src/lib/Sympa/Message.pm:3910
 #, fuzzy
 msgid ""
 "\n"
@@ -2846,38 +2842,38 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3932
+#: src/lib/Sympa/Message.pm:3912
 msgid "Date: %s\n"
 msgstr "Data : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3933
+#: src/lib/Sympa/Message.pm:3913
 msgid "From: %s\n"
 msgstr "De : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3934
+#: src/lib/Sympa/Message.pm:3914
 msgid "To: %s\n"
 msgstr "A : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3935
+#: src/lib/Sympa/Message.pm:3915
 msgid "Cc: %s\n"
 msgstr "Cc : %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3936
+#: src/lib/Sympa/Message.pm:3916
 msgid "Subject: %s\n"
 msgstr "Objècte : %s\n"
 
 # nlsref 5,4
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3944
+#: src/lib/Sympa/Message.pm:3924
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -2887,7 +2883,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3973 src/lib/Sympa/Message.pm:4038
+#: src/lib/Sympa/Message.pm:3953 src/lib/Sympa/Message.pm:4018
 #, fuzzy
 msgid ""
 "** Warning: Message part using unrecognised character set %s\n"
@@ -2900,7 +2896,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3994
+#: src/lib/Sympa/Message.pm:3974
 #, fuzzy
 msgid ""
 "\n"
@@ -2909,7 +2905,7 @@ msgstr ""
 "\n"
 "%Un ( estacament de format %s èra inserit aicí)\n"
 
-#: src/lib/Sympa/Message.pm:4003
+#: src/lib/Sympa/Message.pm:3983
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -2917,7 +2913,7 @@ msgstr ""
 "\n"
 "-----Rapòrt de distribucion-----\n"
 
-#: src/lib/Sympa/Message.pm:4006
+#: src/lib/Sympa/Message.pm:3986
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -2925,7 +2921,7 @@ msgstr ""
 "\n"
 "-----Fin del rapòrt de non-remesa-----\n"
 
-#: src/lib/Sympa/Message.pm:4020 src/lib/Sympa/Message.pm:4053
+#: src/lib/Sympa/Message.pm:4000 src/lib/Sympa/Message.pm:4033
 #, fuzzy
 msgid ""
 "\n"
@@ -2934,7 +2930,7 @@ msgstr ""
 "\n"
 "[ **  La part HTML del messatge se poguèt pas tractar **]\n"
 
-#: src/lib/Sympa/Message.pm:4057
+#: src/lib/Sympa/Message.pm:4037
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Tèxt convertit a partir del format HTML ]\n"
 
@@ -3185,7 +3181,7 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:350
-msgid "used to show progress bar by command line utilities"
+msgid "used while checking the RDBMS buffer size"
 msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:357
@@ -3194,24 +3190,25 @@ msgid ""
 "Wrap"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:363
-msgid "used to get time with sub-second precision"
+#: src/lib/Sympa/ModDef.pm:364
+msgid ""
+"used by sympa.pl --test_database_message_buffer to test database performances"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:370
+#: src/lib/Sympa/ModDef.pm:371
 msgid "Used to create URI containing non URI-canonical characters."
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:373
+#: src/lib/Sympa/ModDef.pm:374
 msgid "libxml2-devel is needed to build the Perl code"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:377
+#: src/lib/Sympa/ModDef.pm:378
 msgid ""
 "used to parse list configuration templates and instanciate list families"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:385
+#: src/lib/Sympa/ModDef.pm:386
 msgid "used to compute case-folding search keys"
 msgstr ""
 
@@ -12505,15 +12502,6 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Font desconeguda"
 
-#: src/lib/Sympa/ModDef.pm:350
-msgid "used while checking the RDBMS buffer size"
-msgstr ""
-
-#: src/lib/Sympa/ModDef.pm:364
-msgid ""
-"used by sympa.pl --test_database_message_buffer to test database performances"
-msgstr ""
-
 #: src/sbin/sympa_wizard.pl.in:176
 msgid "Example: %s\t%s"
 msgstr ""
@@ -12544,6 +12532,16 @@ msgid ""
 "be encrypted again.  Probably because they have not sent certificates of "
 "their own."
 msgstr ""
+
+#. (virus_name,recipient,from)
+#: default/mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our viruschecker found a virus named %1\n"
+"in a message addressed to %2 and that seems\n"
+"to be yours (From: %3)."
+msgstr ""
+"Un messatge que sembla venir de vos (%3)\n"
+"a destinacion de %2 capiá lo virus seguent : %1."
 
 #: ../web_tt2/modindex.tt2:25
 msgid ""
@@ -12700,14 +12698,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-#~ msgid ""
-#~ "Our viruschecker found a virus named %1\n"
-#~ "in a message addressed to %2 and that seems\n"
-#~ "to be yours (From: %3)."
-#~ msgstr ""
-#~ "Un messatge que sembla venir de vos (%3)\n"
-#~ "a destinacion de %2 capiá lo virus seguent : %1."
 
 #, fuzzy
 #~ msgid "[Image%s]"

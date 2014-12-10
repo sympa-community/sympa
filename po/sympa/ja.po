@@ -12,16 +12,16 @@ msgstr ""
 "Project-Id-Version: Sympa-6.1.20+, 6.2a.38\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2014-10-03 12:35+0000\n"
+"PO-Revision-Date: 2014-11-26 05:02+0000\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1\n"
-"X-POOTLE-MTIME: 1412339754.000000\n"
+"X-POOTLE-MTIME: 1416978167.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -39,8 +39,8 @@ msgstr ""
 #: src/cgi/wwsympa.fcgi.in:24377 src/cgi/wwsympa.fcgi.in:5476
 #: src/cgi/wwsympa.fcgi.in:5544 src/cgi/wwsympa.fcgi.in:6349
 #: src/cgi/wwsympa.fcgi.in:6351 src/cgi/wwsympa.fcgi.in:8648
-#: src/lib/Sympa/Message.pm:503 src/lib/Sympa/Message.pm:506
-#: src/lib/Sympa/Message.pm:513 src/libexec/alias_manager.pl.in:102
+#: src/lib/Sympa/Message.pm:498 src/lib/Sympa/Message.pm:501
+#: src/lib/Sympa/Message.pm:508 src/libexec/alias_manager.pl.in:102
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
@@ -50,14 +50,12 @@ msgid "The configuration file contains errors.\n"
 msgstr "設定ファイルに間違いがあります。\n"
 
 #: src/sbin/sympa_wizard.pl.in:177
-#, fuzzy
 msgid "Example: "
-msgstr "例: %s\\t%s"
+msgstr "例: "
 
 #: src/sbin/sympa_wizard.pl.in:187
-#, fuzzy
 msgid "(You must define this parameter)"
-msgstr "%s\\t(パラメータの値を決めてください)"
+msgstr "(パラメータの値を決めてください)"
 
 #: src/sbin/sympa_wizard.pl.in:274
 msgid "%s [%s] : "
@@ -107,18 +105,30 @@ msgid ""
 "##############################################################################\n"
 "Press the Enter key to continue..."
 msgstr ""
+"#############################################################################"
+"#\n"
+"# Sympaソフトウェアに必要なすべてのPerl (CPAN) モジュールのインストールを支援\n"
+"# します。\n"
+"# Sympaを正常に動作させるためには、およそ50から65個のPerlモジュールを追加する\n"
+"# 必要があります。\n"
+"# インストールの作業には15分前後かかります。\n"
+"# まず、CPANシェルを設定し、使用するCPANサーバを選択しておく必要があります。\n"
+"# なお、必要なPerlモジュールは、お好みのパッケージシステム (DEBやRPMなど) でイ\n"
+"# ンストールすることもできます。\n"
+"# この作業はいつでも中断できますし、あとで再開することもできます。\n"
+"#############################################################################"
+"#\n"
+"続けるにはEnterキーを押してください……"
 
 #: src/sbin/sympa_wizard.pl.in:376
 msgid "Checking for PERL version:"
-msgstr ""
+msgstr "Perlのバージョンの確認:"
 
 #: src/sbin/sympa_wizard.pl.in:379
-#, fuzzy
 msgid "Your version of perl is OK (%s  >= %s)"
 msgstr "Perlのバージョン --- OK (%s >= %s)。"
 
 #: src/sbin/sympa_wizard.pl.in:383
-#, fuzzy
 msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
@@ -128,14 +138,13 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:387
 msgid "Checking for REQUIRED modules:"
-msgstr ""
+msgstr "必須のモジュールの確認:"
 
 #: src/sbin/sympa_wizard.pl.in:389
 msgid "Checking for OPTIONAL modules:"
-msgstr ""
+msgstr "オプションモジュールの確認:"
 
 #: src/sbin/sympa_wizard.pl.in:393
-#, fuzzy
 msgid ""
 "******* NOTE *******\n"
 "You can retrieve all theses modules from any CPAN server\n"
@@ -146,50 +155,44 @@ msgstr ""
 "jp/pub/CPAN/CPAN.html>) で手に入れることができます。"
 
 #: src/sbin/sympa_wizard.pl.in:408
-#, fuzzy
 msgid "perl module"
-msgstr "詳細"
+msgstr "Perl モジュール"
 
 #: src/sbin/sympa_wizard.pl.in:408
 msgid "from CPAN"
-msgstr ""
+msgstr "CPANパッケージ"
 
 #: src/sbin/sympa_wizard.pl.in:409
-#, fuzzy
 msgid "STATUS"
-msgstr "%1 メーリングリストの統計情報"
+msgstr "状況"
 
 #: src/sbin/sympa_wizard.pl.in:410
 msgid "-----------"
-msgstr ""
+msgstr "--------------"
 
 #: src/sbin/sympa_wizard.pl.in:410
 msgid "---------"
-msgstr ""
+msgstr "--------------"
 
 #: src/sbin/sympa_wizard.pl.in:411
 msgid "------"
-msgstr ""
+msgstr "----"
 
 #: src/sbin/sympa_wizard.pl.in:430
-#, fuzzy
 msgid "was not found on this system."
-msgstr "見つかりませんでした。"
+msgstr "このシステムにはありません。"
 
 #: src/sbin/sympa_wizard.pl.in:452
-#, fuzzy
 msgid "OK (%-6s >= %s)"
 msgstr "OK (%-6s >= %s)。"
 
 #: src/sbin/sympa_wizard.pl.in:455
-#, fuzzy
 msgid "version is too old (%s < %s)"
 msgstr "古すぎます (%s < %s)。"
 
 #: src/sbin/sympa_wizard.pl.in:458
-#, fuzzy
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
-msgstr ">>>>>>> 「%s」は「%s」に更新しなければなりません <<<<<<"
+msgstr ">>>>>>> 「%s」は「%s」に更新しなければなりません。 <<<<<<"
 
 #: src/sbin/sympa_wizard.pl.in:487
 msgid "## You need root privileges to install %s module. ##"
@@ -208,7 +211,6 @@ msgid "-> Prerequisites: %s"
 msgstr "-> 要件等: %s"
 
 #: src/sbin/sympa_wizard.pl.in:511
-#, fuzzy
 msgid "-> Install module %s ? [%s] "
 msgstr "-> 「%s」モジュールをインストールしますか [%s] "
 
@@ -217,12 +219,14 @@ msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
 msgstr ""
+"%sのインストールがどうしても失敗してしまいます。<http://search.cpan.org> "
+"からソースtarボールをダウンロードし、手作業でインストールしてください。"
 
 #: src/sbin/sympa_wizard.pl.in:554
 msgid ""
 "Installation of %s FAILED. Do you want to force the installation of this "
 "module? (y/N) "
-msgstr ""
+msgstr "%sのインストールが失敗しました。強制的にインストールしますか [y/N] "
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -237,31 +241,31 @@ msgstr ""
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日%H時%M分%S秒"
 
-#: src/lib/tools.pm:1814
+#: src/lib/tools.pm:1820
 msgid "contains the dictionary word '%s'"
 msgstr "辞書にある単語「%s」を含みます"
 
-#: src/lib/tools.pm:1808
+#: src/lib/tools.pm:1814
 msgid "Not between %d and %d characters"
 msgstr "%d 文字以上 %d 文字以下でなければなりません"
 
-#: src/lib/tools.pm:1809
+#: src/lib/tools.pm:1815
 msgid "Not %d characters or greater"
 msgstr "%d 文字以上でなければなりません"
 
-#: src/lib/tools.pm:1810
+#: src/lib/tools.pm:1816
 msgid "Not less than or equal to %d characters"
 msgstr "%d 文字以下でなければなりません"
 
-#: src/lib/tools.pm:1811
+#: src/lib/tools.pm:1817
 msgid "contains bad characters"
 msgstr "使えない文字があります"
 
-#: src/lib/tools.pm:1812
+#: src/lib/tools.pm:1818
 msgid "contains less than %d character groups"
 msgstr "%d 種類以上の文字を含まなければなりません"
 
-#: src/lib/tools.pm:1813
+#: src/lib/tools.pm:1819
 msgid "contains over %d leading characters in sequence"
 msgstr "%d 文字以上の続き文字があります"
 
@@ -674,7 +678,6 @@ msgid "All spool are created at runtime by sympa.pl"
 msgstr "キューはすべて、sympa.plの実行時に作成されます。"
 
 #: src/lib/Sympa/ConfDef.pm:680
-#, fuzzy
 msgid "Directory for message incoming spool"
 msgstr "メッセージ受け付け用キューのディレクトリ"
 
@@ -691,9 +694,8 @@ msgid "Directory for authentication spool"
 msgstr "認証キューのディレクトリ"
 
 #: src/lib/Sympa/ConfDef.pm:704
-#, fuzzy
 msgid "Directory for archive spool"
-msgstr "まとめ読み用キューのディレクトリ"
+msgstr "投稿保管庫用キューのディレクトリ"
 
 #: src/lib/Sympa/ConfDef.pm:709
 msgid "Directory for subscription spool"
@@ -716,7 +718,6 @@ msgid "Directory for automatic list creation spool"
 msgstr "リスト自動作成用キューのディレクトリ"
 
 #: src/lib/Sympa/ConfDef.pm:735
-#, fuzzy
 msgid "Directory for message outgoing spool"
 msgstr "メッセージ送出用キューのディレクトリ"
 
@@ -1269,6 +1270,8 @@ msgid ""
 "are added to mailing lists. Options come from Data::Password (http://search."
 "cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)"
 msgstr ""
+"利用者のパスワードの強度を検査する方法。Data::Passwordによるオプションを設定できます。 "
+"<http://search.cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES>"
 
 #: default/mhonarc-ressources.tt2:666 default/web_tt2/javascript.tt2:29
 #: src/lib/Sympa/Language.pm:615
@@ -1294,10 +1297,6 @@ msgstr " 1月: 2月: 3月: 4月: 5月: 6月: 7月: 8月: 9月:10月:11月:12月"
 #: src/lib/Sympa/Language.pm:633
 msgid "AM:PM"
 msgstr "午前:午後"
-
-#: src/lib/Sympa/Language.pm:723
-msgid "Lorem ipsum dolor sit amet."
-msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:67
 msgid "Subject of the list"
@@ -2704,11 +2703,11 @@ msgstr "%2$s 名のうち、実際に追加できたのは %1$s 名です。"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:2488 src/lib/Sympa/Tools/Daemon.pm:222
+#: src/lib/Sympa/Message.pm:2472 src/lib/Sympa/Tools/Daemon.pm:222
 msgid "%d %b %Y  %H:%M"
 msgstr "%Y/%m/%d %H:%M"
 
-#: src/lib/Sympa/Message.pm:3889
+#: src/lib/Sympa/Message.pm:3869
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -2716,11 +2715,11 @@ msgstr ""
 "----- メッセージ形式が正しくないので省略 -----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:3899
+#: src/lib/Sympa/Message.pm:3879
 msgid "[Unknown]"
 msgstr "[不明]"
 
-#: src/lib/Sympa/Message.pm:3930
+#: src/lib/Sympa/Message.pm:3910
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -2732,37 +2731,37 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3932
+#: src/lib/Sympa/Message.pm:3912
 msgid "Date: %s\n"
 msgstr "日付: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3933
+#: src/lib/Sympa/Message.pm:3913
 msgid "From: %s\n"
 msgstr "送信者: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3934
+#: src/lib/Sympa/Message.pm:3914
 msgid "To: %s\n"
 msgstr "送信先: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3935
+#: src/lib/Sympa/Message.pm:3915
 msgid "Cc: %s\n"
 msgstr "CC: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3936
+#: src/lib/Sympa/Message.pm:3916
 msgid "Subject: %s\n"
 msgstr "件名: %s\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3944
+#: src/lib/Sympa/Message.pm:3924
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -2772,7 +2771,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3973 src/lib/Sympa/Message.pm:4038
+#: src/lib/Sympa/Message.pm:3953 src/lib/Sympa/Message.pm:4018
 msgid ""
 "** Warning: Message part using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -2784,7 +2783,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3994
+#: src/lib/Sympa/Message.pm:3974
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
@@ -2792,7 +2791,7 @@ msgstr ""
 "\n"
 "[ここには %s 型の添付がありました]\n"
 
-#: src/lib/Sympa/Message.pm:4003
+#: src/lib/Sympa/Message.pm:3983
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -2800,7 +2799,7 @@ msgstr ""
 "\n"
 "-----配送状況報告-----\n"
 
-#: src/lib/Sympa/Message.pm:4006
+#: src/lib/Sympa/Message.pm:3986
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -2808,7 +2807,7 @@ msgstr ""
 "\n"
 "-----配送状況報告終わり-----\n"
 
-#: src/lib/Sympa/Message.pm:4020 src/lib/Sympa/Message.pm:4053
+#: src/lib/Sympa/Message.pm:4000 src/lib/Sympa/Message.pm:4033
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
@@ -2816,7 +2815,7 @@ msgstr ""
 "\n"
 "[ ** HTML のメッセージパートを処理できませんでした **]\n"
 
-#: src/lib/Sympa/Message.pm:4057
+#: src/lib/Sympa/Message.pm:4037
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ HTML をテキストに変換しました ]\n"
 
@@ -2859,22 +2858,22 @@ msgid ""
 "database.  Useful when updating from old version with password reversible "
 "encryption, or if secure session cookies in non-SSL environments are "
 "required."
-msgstr ""
+msgstr "パスワード等のための可逆暗号化機能を提供。旧バージョンのパスワードを暗号化したり、非暗号化環境で安全なセッションクッキーが必要な場合に使う"
 
 #: src/lib/Sympa/ModDef.pm:69
 msgid ""
 "required to extract user certificates for SSL clients and S/MIME messages."
-msgstr ""
+msgstr "SSLクライアントやS/MIMEメッセージの利用者証明書を展開するのに必要"
 
 #: src/lib/Sympa/ModDef.pm:75
 msgid "required to sign, verify, encrypt and decrypt S/MIME messages."
-msgstr ""
+msgstr "S/MIMEメッセージの署名、検証、暗号化、復号に必要"
 
 #: src/lib/Sympa/ModDef.pm:81
 msgid ""
 "Used for configureable hardening of passwords via the password_validation "
 "sympa.conf directive."
-msgstr ""
+msgstr "sympa.confのパラメータpassword_validationによるパスワード強化の設定に使用"
 
 #: src/lib/Sympa/ModDef.pm:88 src/lib/Sympa/ModDef.pm:94
 msgid "used to decode date and time in message headers"
@@ -2943,6 +2942,7 @@ msgid ""
 "information and User preferences. An additional Database Driver is required "
 "for each database type you wish to connect to."
 msgstr ""
+"汎用データベースドライバ。Sympaが読者情報や利用者の個人設定にアクセスするのに必要。使用するデータベースの種類に応じたデータベースドライバが別途必要"
 
 #: src/lib/Sympa/ModDef.pm:149
 msgid "used to compute MD5 digests for passwords, etc."
@@ -2972,9 +2972,8 @@ msgid "required to perform NFS-safe file locking"
 msgstr "NFSに対応したファイルロックを実行するのに必要"
 
 #: src/lib/Sympa/ModDef.pm:191
-#, fuzzy
 msgid "used to create or remove paths"
-msgstr "新しいfromヘッダのフレーズを作成するときに使われるパターン"
+msgstr "ファイルパスの作成や削除"
 
 #: src/lib/Sympa/ModDef.pm:198 src/lib/Sympa/ModDef.pm:209
 msgid "used to compute plaindigest messages from HTML"
@@ -3007,7 +3006,7 @@ msgstr "国際化機能"
 
 #: src/lib/Sympa/ModDef.pm:251
 msgid "used to parse or build mailboxes in message headers"
-msgstr ""
+msgstr "メッセージヘッダ中のメールボックスの解析と生成"
 
 #: src/lib/Sympa/ModDef.pm:259
 msgid ""
@@ -3025,13 +3024,13 @@ msgstr "パスワードや電子メールのMD5ダイジェストを計算する
 
 #: src/lib/Sympa/ModDef.pm:277
 msgid "used to encode mail body using a different charset"
-msgstr ""
+msgstr "異なるキャラクタセットでメールの内容を符号化"
 
 #: src/lib/Sympa/ModDef.pm:284
 msgid ""
 "required to decode/encode SMTP header fields without breaking character "
 "encoding"
-msgstr ""
+msgstr "キャラクタセットを考慮してヘッダフィールドを符号化・復号"
 
 #: src/lib/Sympa/ModDef.pm:290
 msgid "used to compose HTML mail from the web interface"
@@ -3043,13 +3042,13 @@ msgstr "MIME 準拠のメッセージを操作するライブラリを提供"
 
 #: src/lib/Sympa/ModDef.pm:303
 msgid "used to check netmask within Sympa autorization scenario rules"
-msgstr ""
+msgstr "認可シナリオのルールでクライアントのIPアドレスレンジを検査するのに使用"
 
 #: src/lib/Sympa/ModDef.pm:310
 msgid ""
 "this is required if you set a value for \"dmarc_protection_mode\" which "
 "requires DNS verification"
-msgstr ""
+msgstr "dmarc_protection_mode (DNSによる検証) を設定するなら必要"
 
 #: src/lib/Sympa/ModDef.pm:315
 msgid "openldap-devel is needed to build the Perl code"
@@ -3067,52 +3066,53 @@ msgstr ""
 msgid ""
 "this is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
-msgstr ""
+msgstr "sympa.confでlist_check_smtpを設定 (リスト作成の前にエイリアスの存在を確認) するなら必要"
 
 #: src/lib/Sympa/ModDef.pm:331
 msgid "Used by the bulk.pl daemon to check the number of slave bulks running."
-msgstr ""
+msgstr "bulk.plデーモンでスレーブプロセスの起動数を調べるのに使う。"
 
 #: src/lib/Sympa/ModDef.pm:338
 msgid ""
 "required if you want to run the Sympa SOAP server that provides ML services "
 "via a \"web service\""
-msgstr ""
+msgstr "SympaのSOAPサーバ (ウェブAPIによるメーリングリストサービスを提供) を動作させるのに必要"
 
 #: src/lib/Sympa/ModDef.pm:344
 msgid ""
 "Sympa template format, used for web pages and other mail, config file "
 "templates. See http://template-toolkit.org/."
-msgstr ""
+msgstr "ウェブページ、電子メールメッセージ、設定ファイルをテンプレートから作成。http://template-toolkit.org/ を参照"
 
 #: src/lib/Sympa/ModDef.pm:350
-msgid "used to show progress bar by command line utilities"
+msgid "used while checking the RDBMS buffer size"
 msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:357
 msgid ""
 "used to fold lines in HTML mail composer and system messages, prior to Text::"
 "Wrap"
+msgstr "システムメッセージなどの行折りに使う"
+
+#: src/lib/Sympa/ModDef.pm:364
+msgid ""
+"used by sympa.pl --test_database_message_buffer to test database performances"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:363
-msgid "used to get time with sub-second precision"
-msgstr ""
-
-#: src/lib/Sympa/ModDef.pm:370
+#: src/lib/Sympa/ModDef.pm:371
 msgid "Used to create URI containing non URI-canonical characters."
-msgstr ""
+msgstr "URI用に文字列をエンコードする"
 
-#: src/lib/Sympa/ModDef.pm:373
+#: src/lib/Sympa/ModDef.pm:374
 msgid "libxml2-devel is needed to build the Perl code"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:377
+#: src/lib/Sympa/ModDef.pm:378
 msgid ""
 "used to parse list configuration templates and instanciate list families"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:385
+#: src/lib/Sympa/ModDef.pm:386
 msgid "used to compute case-folding search keys"
 msgstr "大文字小文字を区別しない検索キーを得る"
 
@@ -12284,14 +12284,21 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "そのようなプロバイダは知りません。"
 
-#: src/lib/Sympa/ModDef.pm:350
-msgid "used while checking the RDBMS buffer size"
-msgstr ""
+#: src/sbin/sympa_wizard.pl.in:176
+msgid "Example: %s\t%s"
+msgstr "例: %s\\t%s"
 
-#: src/lib/Sympa/ModDef.pm:364
-msgid ""
-"used by sympa.pl --test_database_message_buffer to test database performances"
-msgstr ""
+#: src/sbin/sympa_wizard.pl.in:186
+msgid "%s\t(You must define this parameter)"
+msgstr "%s\\t(パラメータの値を決めてください)"
+
+#: src/lib/Sympa/ConfDef.pm:680
+msgid "Directory for incoming spool"
+msgstr "メッセージ受け付け用キューのディレクトリ"
+
+#: src/lib/Sympa/ConfDef.pm:704
+msgid "Directory for outgoing spool"
+msgstr "メッセージ送出用キューのディレクトリ"
 
 #: default/mail_tt2/dsn.tt2:49
 msgid ""
@@ -12299,18 +12306,6 @@ msgid ""
 "be encrypted again.  Probably because they have not sent certificates of "
 "their own."
 msgstr ""
-
-#~ msgid "Example: %s\t%s"
-#~ msgstr "例: %s\\t%s"
-
-#~ msgid "%s\t(You must define this parameter)"
-#~ msgstr "%s\\t(パラメータの値を決めてください)"
-
-#~ msgid "Directory for incoming spool"
-#~ msgstr "メッセージ受け付け用キューのディレクトリ"
-
-#~ msgid "Directory for outgoing spool"
-#~ msgstr "メッセージ送出用キューのディレクトリ"
 
 #~ msgid "tracking message by message delivery notification"
 #~ msgstr "メッセージ開封通知によるメッセージの追跡"

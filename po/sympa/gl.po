@@ -35,8 +35,8 @@ msgstr ""
 #: src/cgi/wwsympa.fcgi.in:24377 src/cgi/wwsympa.fcgi.in:5476
 #: src/cgi/wwsympa.fcgi.in:5544 src/cgi/wwsympa.fcgi.in:6349
 #: src/cgi/wwsympa.fcgi.in:6351 src/cgi/wwsympa.fcgi.in:8648
-#: src/lib/Sympa/Message.pm:503 src/lib/Sympa/Message.pm:506
-#: src/lib/Sympa/Message.pm:513 src/libexec/alias_manager.pl.in:102
+#: src/lib/Sympa/Message.pm:498 src/lib/Sympa/Message.pm:501
+#: src/lib/Sympa/Message.pm:508 src/libexec/alias_manager.pl.in:102
 msgid "%d %b %Y"
 msgstr ""
 
@@ -217,31 +217,31 @@ msgstr ""
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
-#: src/lib/tools.pm:1814
+#: src/lib/tools.pm:1820
 msgid "contains the dictionary word '%s'"
 msgstr ""
 
-#: src/lib/tools.pm:1808
+#: src/lib/tools.pm:1814
 msgid "Not between %d and %d characters"
 msgstr ""
 
-#: src/lib/tools.pm:1809
+#: src/lib/tools.pm:1815
 msgid "Not %d characters or greater"
 msgstr ""
 
-#: src/lib/tools.pm:1810
+#: src/lib/tools.pm:1816
 msgid "Not less than or equal to %d characters"
 msgstr ""
 
-#: src/lib/tools.pm:1811
+#: src/lib/tools.pm:1817
 msgid "contains bad characters"
 msgstr ""
 
-#: src/lib/tools.pm:1812
+#: src/lib/tools.pm:1818
 msgid "contains less than %d character groups"
 msgstr ""
 
-#: src/lib/tools.pm:1813
+#: src/lib/tools.pm:1819
 msgid "contains over %d leading characters in sequence"
 msgstr ""
 
@@ -1165,10 +1165,6 @@ msgstr ""
 
 #: src/lib/Sympa/Language.pm:633
 msgid "AM:PM"
-msgstr ""
-
-#: src/lib/Sympa/Language.pm:723
-msgid "Lorem ipsum dolor sit amet."
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:67
@@ -2585,21 +2581,21 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:2488 src/lib/Sympa/Tools/Daemon.pm:222
+#: src/lib/Sympa/Message.pm:2472 src/lib/Sympa/Tools/Daemon.pm:222
 msgid "%d %b %Y  %H:%M"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3889
+#: src/lib/Sympa/Message.pm:3869
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3899
+#: src/lib/Sympa/Message.pm:3879
 msgid "[Unknown]"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3930
+#: src/lib/Sympa/Message.pm:3910
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -2608,37 +2604,37 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3932
+#: src/lib/Sympa/Message.pm:3912
 msgid "Date: %s\n"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3933
+#: src/lib/Sympa/Message.pm:3913
 msgid "From: %s\n"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3934
+#: src/lib/Sympa/Message.pm:3914
 msgid "To: %s\n"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3935
+#: src/lib/Sympa/Message.pm:3915
 msgid "Cc: %s\n"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3936
+#: src/lib/Sympa/Message.pm:3916
 msgid "Subject: %s\n"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3944
+#: src/lib/Sympa/Message.pm:3924
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -2646,7 +2642,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3973 src/lib/Sympa/Message.pm:4038
+#: src/lib/Sympa/Message.pm:3953 src/lib/Sympa/Message.pm:4018
 msgid ""
 "** Warning: Message part using unrecognised character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -2655,31 +2651,31 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3994
+#: src/lib/Sympa/Message.pm:3974
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:4003
+#: src/lib/Sympa/Message.pm:3983
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:4006
+#: src/lib/Sympa/Message.pm:3986
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:4020 src/lib/Sympa/Message.pm:4053
+#: src/lib/Sympa/Message.pm:4000 src/lib/Sympa/Message.pm:4033
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:4057
+#: src/lib/Sympa/Message.pm:4037
 msgid "[ Text converted from HTML ]\n"
 msgstr ""
 
@@ -2927,7 +2923,7 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:350
-msgid "used to show progress bar by command line utilities"
+msgid "used while checking the RDBMS buffer size"
 msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:357
@@ -2936,24 +2932,25 @@ msgid ""
 "Wrap"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:363
-msgid "used to get time with sub-second precision"
+#: src/lib/Sympa/ModDef.pm:364
+msgid ""
+"used by sympa.pl --test_database_message_buffer to test database performances"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:370
+#: src/lib/Sympa/ModDef.pm:371
 msgid "Used to create URI containing non URI-canonical characters."
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:373
+#: src/lib/Sympa/ModDef.pm:374
 msgid "libxml2-devel is needed to build the Perl code"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:377
+#: src/lib/Sympa/ModDef.pm:378
 msgid ""
 "used to parse list configuration templates and instanciate list families"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:385
+#: src/lib/Sympa/ModDef.pm:386
 msgid "used to compute case-folding search keys"
 msgstr ""
 
@@ -11652,6 +11649,399 @@ msgstr ""
 
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
+msgstr ""
+
+#: src/sbin/sympa_wizard.pl.in:176
+msgid "Example: %s\t%s"
+msgstr ""
+
+#: src/sbin/sympa_wizard.pl.in:186
+msgid "%s\t(You must define this parameter)"
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:679
+msgid "Directory for incoming spool"
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:703
+msgid "Directory for outgoing spool"
+msgstr ""
+
+#: src/lib/Sympa/ListDef.pm:789
+msgid "tracking message by message delivery notification"
+msgstr ""
+
+#: src/lib/Sympa/ModDef.pm:221
+msgid "required when using the VOOT protocol"
+msgstr ""
+
+#: default/mail_tt2/dsn.tt2:49
+msgid ""
+"Your encrypted message bound for one or more subscribers of this list cannot "
+"be encrypted again.  Probably because they have not sent certificates of "
+"their own."
+msgstr ""
+
+#. (virus_name,recipient,from)
+#: default/mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our viruschecker found a virus named %1\n"
+"in a message addressed to %2 and that seems\n"
+"to be yours (From: %3)."
+msgstr ""
+
+#: ../web_tt2/admin.tt2:9
+msgid "Editing of various files and messages attached to your list."
+msgstr ""
+
+#: ../web_tt2/modindex.tt2:128
+msgid "Toggle spams"
+msgstr ""
+
+#: ../web_tt2/stats.tt2:2
+msgid "Shared document directory size:"
+msgstr ""
+
+#: ../web_tt2/stats.tt2:3
+msgid "Web archives size:"
+msgstr ""
+
+#: ../web_tt2/tt2_error.tt2:22
+msgid "Powered by"
+msgstr ""
+
+#: ../mail_tt2/listmaster_notification.tt2:42
+msgid "Previous process crashed"
+msgstr ""
+
+#: ../mail_tt2/listmaster_notification.tt2:44
+msgid "Previous process has died unexpectedly."
+msgstr ""
+
+#. (listname)
+#: ../mail_tt2/listmaster_notification.tt2:85
+msgid ""
+"Sympa failed to store a message for list %1 in the bulk mailer. You should "
+"check log files !!"
+msgstr ""
+
+#. (listname)
+#: ../mail_tt2/listmaster_notification.tt2:157
+msgid "subscribers update failed for list %1"
+msgstr ""
+
+#: ../mail_tt2/listmaster_notification.tt2:159
+msgid ""
+"Sympa could not include subscribers from the following external data sources:"
+msgstr ""
+
+#. (e.name,e.type)
+#: ../mail_tt2/listmaster_notification.tt2:162
+msgid "Include of datasource %1 (type %2) failed."
+msgstr ""
+
+#. (total,list.name)
+#: ../mail_tt2/listowner_notification.tt2:47
+msgid ""
+"Because we received many non-delivery reports, the %1 subscribers listed "
+"below have been\n"
+"notified that they might be removed from list %2:"
+msgstr ""
+
+#. (total,list.name)
+#: ../mail_tt2/listowner_notification.tt2:50
+msgid ""
+"Because we received many non-delivery reports, the %1 subscribers listed "
+"below have been\n"
+"removed from list %2:"
+msgstr ""
+
+#. (total,list.name)
+#: ../mail_tt2/listowner_notification.tt2:53
+msgid ""
+"Because we received many non-delivery reports, the %1 subscribers listed "
+"below have been\n"
+"selected by Sympa as severe bouncing addresses:"
+msgstr ""
+
+#. (list.name,msg_from)
+#: ../mail_tt2/moderate.tt2:3
+msgid "Article to be tagged for list %1 from %2"
+msgstr ""
+
+#. (list.name)
+#: ../mail_tt2/moderate.tt2:21
+msgid ""
+"To tag the message in list %1 for the appropriate topic, please use the "
+"following link:"
+msgstr ""
+
+#: ../mail_tt2/moderate.tt2:27
+msgid ""
+"Because the new message is suspected to be a spam it is not attached to this "
+"one. You must use\n"
+"the web interface to reject or validate it."
+msgstr ""
+
+#. (list.name)
+#: ../mail_tt2/summary.tt2:2
+msgid "Summary of list %1"
+msgstr ""
+
+#: ../src/lib/Conf.pm:161
+msgid "Error at line %d: %s\n"
+msgstr ""
+
+#: ../src/lib/Conf.pm:478
+msgid "Error at line %d: %s"
+msgstr ""
+
+#: ../src/lib/PlainDigest.pm:360
+msgid "[ Image%s ]"
+msgstr ""
+
+#: ../src/lib/PlainDigest.pm:360
+msgid "[Image%s]"
+msgstr ""
+
+#: ../src/lib/mail.pm:56
+msgid ""
+"Your system does not conform to the POSIX P1003.1 standard, or\n"
+"your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
+"library. You must modify the smtp.pm module in order to set a value\n"
+"for variable %s.\n"
+msgstr ""
+
+#: ../src/lib/mail.pm:863
+msgid "Unable to create a channel in smtpto: %s"
+msgstr ""
+
+#: ../wwsympa/wwslib.pm:39
+msgid "no mail (useful for vacations)"
+msgstr ""
+
+#: src/lib/confdef.pm:756
+msgid "Temporary directory used by OpenSSL, antivirus plugins, mhonarc etc"
+msgstr ""
+
+#: src/lib/confdef.pm:761
+msgid ""
+"Directory containing html file generated by mhonarc while diplay messages "
+"others than archives"
+msgstr ""
+
+#: src/lib/Sympa/ModDef.pm:102
+msgid "used for maintaining snapshots of list members"
+msgstr ""
+
+#: src/lib/Sympa/ModDef.pm:260
+msgid "mhonarc is used to build Sympa web archives"
+msgstr ""
+
+#. (listname)
+#: default/mail_tt2/listmaster_notification.tt2:157
+msgid "Limit of users count reached for list %1"
+msgstr ""
+
+#. (listname,max_number_of_subscribers)
+#: default/mail_tt2/listmaster_notification.tt2:159
+msgid ""
+"Sympa could not include subscribers to list %1 because the maximum number of "
+"users was reached for this list. This limit is defined to %2."
+msgstr ""
+
+#. (error)
+#: default/mail_tt2/listmaster_notification.tt2:303
+msgid "The following error occurred whila managing bounces: %&"
+msgstr ""
+
+#: src/lib/confdef.pm:445
+msgid ""
+"Sympa also locks this file to ensure that it is not running more than once. "
+"Caution: user sympa need to write access without special privilege."
+msgstr ""
+
+#: src/lib/confdef.pm:885
+msgid ""
+"Directory containing available NLS catalogues (Message internationalization)"
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:421
+msgid ""
+"postgresql-devel and postgresql-server. postgresql should be running for "
+"make test to succeed"
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:438
+msgid ""
+"mysql-devel and myslq-server. mysql should be running for make test to "
+"succeed"
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:441
+msgid ""
+"Mysql database driver, required if you connect to a Mysql database.\n"
+"You first need to install the Mysql server and have it started before "
+"installing the Perl DBD module."
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:453
+msgid "used to compute MD5 digests for passwords, etc"
+msgstr ""
+
+#: ../src/lib/Conf.pm:1072
+msgid "Conf::load_nrcpt_by_domain(): Error at line %d: %s"
+msgstr ""
+
+#. (list,robot)
+#: ../web_tt2/view_template.tt2:12
+msgid "( this template is defined for list %1@%2 )"
+msgstr ""
+
+#. (robot)
+#: ../web_tt2/view_template.tt2:15
+msgid ""
+"( this template is the default for all lists of robot %1 unless it is "
+"redefined for a specific list )"
+msgstr ""
+
+#: ../web_tt2/view_template.tt2:17
+msgid ""
+"( this template is the default used by all robots unless redefined for a "
+"specific robot )"
+msgstr ""
+
+#. (u_err.listname,u_err.modes)
+#: ../mail_tt2/command_report.tt2:121
+msgid "List %1 allows only these reception modes: %2"
+msgstr ""
+
+#. (list.name)
+#: ../mail_tt2/digest.tt2:4
+msgid "Digest for list %1"
+msgstr ""
+
+#. (delegator,list.name,list.host)
+#: ../mail_tt2/user_notification.tt2:30
+msgid ""
+"You have been delegate the responsability of list owner by %1 for list %2@%3."
+msgstr ""
+
+#. (delegator,list.name,list.host)
+#: ../mail_tt2/user_notification.tt2:32
+msgid ""
+"You have been delegate the responsability of list moderator by %1 for list %"
+"2@%3."
+msgstr ""
+
+#: ../src/etc/mhonarc-ressources.tt2:469
+msgid "Reply to sender"
+msgstr ""
+
+#: ../src/etc/mhonarc-ressources.tt2:471
+msgid "to list"
+msgstr ""
+
+#: ../src/etc/mhonarc-ressources.tt2:473
+msgid "to both"
+msgstr ""
+
+#: ../web_tt2/show_exclude.tt2:3
+msgid "Show the exclusion table"
+msgstr ""
+
+#. (automatic_lists_description.family_name)
+#: ../web_tt2/automatic_lists_management_request.tt2:4
+msgid "The automatic lists are based on the $1 family"
+msgstr ""
+
+#. (base_url,path_cgi,u_err.oauth_provider)
+#: ../web_tt2/error.tt2:134
+msgid ""
+"Failed to include members from VOOT group, use the following link to check "
+"the OAuth status : <a href=\"%1%2/oauth_check/%3\">%1%2/oauth_check/%3</a>"
+msgstr ""
+
+#: ../web_tt2/modform.tt2:32
+msgid "Choose notification "
+msgstr ""
+
+#: ../web_tt2/review.tt2:42
+msgid "<strong>Last update:"
+msgstr ""
+
+#: ../web_tt2/review.tt2:56
+msgid "Add quietly"
+msgstr ""
+
+#: ../web_tt2/review.tt2:71
+msgid "Searches are limited to 50 results, except when using a @domain mask."
+msgstr ""
+
+#: ../web_tt2/select_voot_groups_request.tt2:6
+msgid ""
+"Hereafter is the list of the groups you accepted to share with Sympa. Select "
+"which group you want members to be included in your list."
+msgstr ""
+
+#. (crashed_process,pid)
+#: ../mail_tt2/listmaster_notification.tt2:44
+msgid "Previous process %1 (with pid %2) has died unexpectedly."
+msgstr ""
+
+#. (consumer_name,oauth_provider)
+#: ../mail_tt2/message_report.tt2:96
+msgid "Your OAuth token used by consumer %1 may have expired."
+msgstr ""
+
+#. (consumer_name,oauth_provider,conf.wwsympa_url)
+#: ../mail_tt2/message_report.tt2:105
+msgid ""
+"Sympa failed to retreive data using %1 consumer, this may be because your "
+"access token for OAuth provider %2 is out of date.\n"
+"\n"
+"Visit  %3/oauth_check/%2 to check the token state and renew it if necessary."
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:337
+msgid ""
+"%s and %s have been updated.\n"
+"Previous versions have been saved as %s and %s.\n"
+msgstr ""
+
+#: ../src/lib/confdef.pm:69
+msgid "This parameter is used in mail_tt2 files"
+msgstr ""
+
+#: ../src/lib/confdef.pm:777
+msgid "Temporary directory used by OpenSSL and antivirus plugins"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1295
+msgid "wwsympa.conf parameters"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1400
+msgid "Virtual host specific parameters"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1463
+msgid "Path to the javascript file making the WYSIWYG HTML editor available"
+msgstr ""
+
+#. (list.name)
+#: ../mail_tt2/user_notification.tt2:53
+msgid ""
+"You have requested to removed from list %1. To confirm and get removed from "
+"the list, please click the link below: "
+msgstr ""
+
+#: ../src/lib/confdef.pm:1197
+msgid "List of headers to be included into the message for signature"
+msgstr ""
+
+#: ../src/lib/mail.pm:922
+msgid "Unable to create a channel in smtpto: %m"
 msgstr ""
 
 #~ msgid "Reject without notification "
