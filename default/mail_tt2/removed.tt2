@@ -1,7 +1,7 @@
 From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Removed from %1[%END%][%END%]
 
-[%|loc(user.email,list.name,list.host)%]Your address (%1) has been removed from list %2@%3.[%END%]
+[%|loc(user.email,list.name,list.host)%]Your email address (%1) has been removed from list %2@%3[%END%]
 
 [%|loc%]You can subscribe again:[%END%]
 [% FILTER escape_url %]mailto:[%conf.email%]@[%conf.host%]?subject=sub [%list.name%][% END %]
