@@ -283,7 +283,7 @@ sub store {
             5, '>>');
         return unless $lock_fh;
 
-        $lock_fh_tmp->unlock unless @rcpts;  # Now the last packet is written.
+        $lock_fh_tmp->close unless @rcpts;   # Now the last packet is written.
 
         print $lock_fh join("\n", @{$rcpt}) . "\n";
         $lock_fh->close;
