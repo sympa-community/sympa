@@ -313,6 +313,7 @@ nobase_default_DATA = \
 	web_tt2/zh-CN/css.tt2 \
 	web_tt2/zh-TW/css.tt2 \
 	mail_tt2/authorization_reject.tt2 \
+	mail_tt2/automatic_bounce_management.tt2 \
 	mail_tt2/bye.tt2 \
 	mail_tt2/certif_warning.tt2 \
 	mail_tt2/command_report.tt2 \
