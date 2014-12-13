@@ -271,7 +271,7 @@ our %cpan_modules = (
         'gettext_id' => 'required to compute digest for password and emails',
     },
     'MIME::Charset' => {
-        required_version => '1.010',
+        required_version => '1.011.3',
         package_name     => 'MIME-Charset',
         mandatory        => 1,
         'gettext_id' => 'used to encode mail body using a different charset',
