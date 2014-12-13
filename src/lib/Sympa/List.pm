@@ -6687,9 +6687,8 @@ sub _include_users_ldap {
     my $ldap_attrs  = $source->{'attrs'};
     my $ldap_select = $source->{'select'};
 
-    my ($email_attr, $gecos_attr) = split(/\s*,\s*/, $ldap_attrs);
-    my @ldap_attrs = ($email_attr);
-    push @ldap_attrs, $gecos_attr if ($gecos_attr);
+    my @attrs = split /\s*,\s*/, $ldap_attrs;
+    my ($email_attr, $gecos_attr) = @attrs;
 
     ## LDAP and query handler
     my ($ldaph, $fetch);
@@ -6708,7 +6707,7 @@ sub _include_users_ldap {
     $fetch = $source->{'ldap_handler'}->search(
         base   => "$ldap_suffix",
         filter => "$ldap_filter",
-        attrs  => @ldap_attrs,
+        attrs  => [@attrs],
         scope  => "$source->{'scope'}"
     );
     if ($fetch->code()) {
@@ -7088,7 +7087,7 @@ sub _include_ldap_ca {
     my $results = $source->{'ldap_handler'}->search(
         base   => $source->{'suffix'},
         filter => $source->{'filter'},
-        attrs  => @attrs,
+        attrs  => [@attrs],
         scope  => $source->{'scope'}
     );
     if ($results->code()) {
@@ -7133,7 +7132,7 @@ sub _include_ldap_level2_ca {
     my $results = $source->{'ldap_handler'}->search(
         base   => $source->{'suffix'},
         filter => $source->{'filter'},
-        attrs  => @attrs,
+        attrs  => [@attrs],
         scope  => $source->{'scope'}
     );
     if ($results->code()) {
