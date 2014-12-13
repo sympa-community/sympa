@@ -26,23 +26,18 @@
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
-use DateTime;
 use English qw(-no_match_vars);
 use Getopt::Long;
-use LWP::UserAgent;
 use Pod::Usage;
 use POSIX qw();
 use Template;
 use Time::Local qw();
-
-BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
 use Sympa::Alarm;
 use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
-use Sympa::Language;
 use Sympa::List;
 use Log;
 use Sympa::Mailer;
@@ -179,7 +174,6 @@ Log::do_log('notice', 'Task_Manager %s Started', Sympa::Constants::VERSION());
 
 my $bulk       = Sympa::Bulk->new;
 my $spool_task = $Conf::Conf{'queuetask'};
-my $cert_dir   = $Conf::Conf{'ssl_cert_dir'};
 my @tasks;    # list of tasks in the spool
 
 # won't execute send_msg and delete_subs commands if true, only log
@@ -191,8 +185,7 @@ undef my $log;
 my @list_models = ('sync_include', 'remind');
 
 ## hash of the global task models
-my %global_models = (    #'crl_update_task' => 'crl_update',
-    #'chk_cert_expiration_task' => 'chk_cert_expiration',
+my %global_models = (
     'expire_bounce_task'               => 'expire_bounce',
     'purge_user_table_task'            => 'purge_user_table',
     'purge_logs_table_task'            => 'purge_logs_table',
@@ -202,7 +195,6 @@ my %global_models = (    #'crl_update_task' => 'crl_update',
     'purge_orphan_bounces_task'        => 'purge_orphan_bounces',
     'eval_bouncers_task'               => 'eval_bouncers',
     'process_bouncers_task'            => 'process_bouncers',
-    #,'global_remind_task' => 'global_remind'
 );
 
 ## month hash used by epoch conversion routines
@@ -230,12 +222,8 @@ my %commands = (
     'create' => ['subarg', '\w+', '\w+'],
     #object    model  model choice
     'exec' => ['.+'],
-    #script
-    'update_crl' => ['\w+', 'date'],
     #file    #delay
     'expire_bounce' => ['\d+'],
-    #Number of days (delay)
-    'chk_cert_expiration' => ['\w+', 'date'],
     #template  date
     'sync_include'                => [],
     'purge_user_table'            => [],
@@ -892,8 +880,6 @@ sub cmd_process {
     return create_cmd($task, $Rarguments, \%context)
         if ($command eq 'create');
     return exec_cmd($task, $Rarguments) if ($command eq 'exec');
-    return update_crl($task, $Rarguments, \%context)
-        if ($command eq 'update_crl');
     return expire_bounce($task, $Rarguments, \%context)
         if ($command eq 'expire_bounce');
     return purge_user_table($task, \%context)
@@ -921,8 +907,6 @@ sub cmd_process {
     # commands which return a variable
     return select_subs($task, $Rarguments, \%context)
         if ($command eq 'select_subs');
-    return chk_cert_expiration($task, $Rarguments, \%context)
-        if ($command eq 'chk_cert_expiration');
 
     # commands which return and use a variable
     return delete_subs_cmd($task, $Rarguments, $Rvars, \%context)
@@ -1589,243 +1573,11 @@ sub expire_bounce {
     return 1;
 }
 
-sub chk_cert_expiration {
-    my ($task, $Rarguments, $context) = @_;
+# Removed because not yet fully implemented.  See r11771.
+#sub chk_cert_expiration;
 
-    # Silently returns if Crypt::OpenSSL::X509 module is not available.
-    return 1 unless $Crypt::OpenSSL::X509::VERSION;
-
-    my $execution_date = $task->{'date'};
-    my @tab            = @{$Rarguments};
-    my $template       = $tab[0];
-    my $limit = Sympa::Tools::Time::duration_conv($tab[1], $execution_date);
-
-    Log::do_log('notice',
-        "line $context->{'line_number'} : chk_cert_expiration (@{$Rarguments})"
-    );
-
-    ## building of certificate list
-    unless (opendir(DIR, $cert_dir)) {
-        error($task->{'filepath'},
-            "error in chk_cert_expiration command : can't open dir $cert_dir"
-        );
-        return undef;
-    }
-    my @certificates = grep !/^(\.\.?)|(.+expired)$/, readdir DIR;
-    closedir(DIR);
-
-    foreach my $cert (@certificates) {
-        # an empty .soon_expired file is created when a user is warned that
-        # his certificate is soon expired
-        my $soon_expired_file = $cert . '.soon_expired';
-
-        # recovery of the certificate expiration date
-        my ($x509, $datestr, $expiration_date);
-        eval {
-            $x509 =
-                Crypt::OpenSSL::X509->new_from_file($cert_dir . '/' . $cert);
-            $datestr = $x509->notAfter;
-            $datestr =~ /\A(\w+)\s+(\d+)\s(\d+)[:](\d+)[:](\d+)\s(\d+).+/;
-            $expiration_date = DateTime->new(
-                year   => $6,
-                month  => $months{$1} + 1,
-                day    => $2,
-                hour   => $3,
-                minute => $4,
-                second => $5,
-            )->epoch;
-        };
-        unless (defined $expiration_date) {
-            Log::do_log('err', 'Can\'t get expiration date for %s', $cert);
-            next;
-        }
-
-        # no near expiration nor expiration processing
-        if ($limit < $expiration_date) {
-            # deletion of unuseful soon_expired file if it is existing
-            if (-e $soon_expired_file) {
-                unlink $soon_expired_file
-                    or Log::do_log('err', 'Can\'t delete %s',
-                    $soon_expired_file);
-            }
-            next;
-        }
-
-        # expired certificate processing
-        if ($expiration_date < $execution_date) {
-            Log::do_log('notice',
-                '--> Certificate %s expired (at %s).  It is deleted',
-                $cert, $datestr);
-            if (!$log) {
-                unlink($cert_dir . '/' . $cert)
-                    or
-                    Log::do_log('notice', 'Can\'t delete certificate file %s',
-                    $cert);
-            }
-            if (-e $soon_expired_file) {
-                unlink($cert_dir . '/' . $soon_expired_file)
-                    or Log::do_log('err', 'Can\'t delete %s',
-                    $soon_expired_file);
-            }
-            next;
-        }
-
-        # soon expired certificate processing
-        if (    $execution_date < $expiration_date
-            and $expiration_date < $limit
-            and !-e $soon_expired_file) {
-            if (open my $fh, '>', $cert_dir . '/' . $soon_expired_file) {
-                close $fh;
-            } else {
-                Log::do_log('err', 'Can\'t create %s', $soon_expired_file);
-                next;
-            }
-
-            my %tpl_context;    # datas necessary to the template
-
-            my $id = $x509->subject;
-            unless ($id) {
-                Log::do_log('err', 'Can\'t get subject of certificate %s',
-                    $cert);
-                next;
-            }
-
-            Log::do_log('notice', '%s', $id);
-            $tpl_context{'expiration_date'} =
-                Sympa::Language->instance->gettext_strftime(
-                '%d %b %Y at %H:%M:%S',
-                localtime $expiration_date);
-            $tpl_context{'certificate_id'} = $id;
-            $tpl_context{'auto_submitted'} = 'auto-generated';
-
-            if (!$log) {
-                unless (
-                    tools::send_file('*', $template, $cert, \%tpl_context)) {
-                    Log::do_log('notice', 'Unable to send template %s to %s',
-                        $template, $cert);
-                }
-            }
-            Log::do_log('notice',
-                '--> %s certificate soon expired (%s), user warned',
-                $cert, $datestr);
-        }
-    }
-    return 1;
-}
-
-sub update_crl {
-
-    my ($task, $Rarguments, $context) = @_;
-
-    # Silently returns if openssl parameter is not set.
-    return 1 unless $Conf::Conf{'openssl'};
-
-    my @tab = @{$Rarguments};
-    my $limit = Sympa::Tools::Time::epoch_conv($tab[1], $task->{'date'});
-    # file where CA URLs are stored
-    my $CA_file = $Conf::Conf{'home'} . '/' . $tab[0];
-    Log::do_log(
-        'notice',
-        'Line %s: update_crl (@tab)',
-        $context->{'line_number'}
-    );
-
-    # building of CA list
-    my @CA;
-    unless (open(FILE, $CA_file)) {
-        error($task->{'filepath'},
-            "error in update_crl command : can't open $CA_file file");
-        return undef;
-    }
-    while (<FILE>) {
-        chomp;
-        push(@CA, $_);
-    }
-    close(FILE);
-
-    # updating of crl files
-    my $crl_dir = "$Conf::Conf{'crl_dir'}";
-    unless (-d $Conf::Conf{'crl_dir'}) {
-        if (mkdir($Conf::Conf{'crl_dir'}, 0775)) {
-            Log::do_log('notice', 'Creating spool %s',
-                $Conf::Conf{'crl_dir'});
-        } else {
-            Log::do_log('err', 'Unable to create CRLs directory %s',
-                $Conf::Conf{'crl_dir'});
-            return undef;
-        }
-    }
-
-    foreach my $url (@CA) {
-
-        my $crl_file =
-            tools::escape_chars($url);    # convert an URL into a file name
-        my $file = "$crl_dir/$crl_file";
-
-        ## create $file if it doesn't exist
-        unless (-e $file) {
-            my $ua       = LWP::UserAgent->new;
-            my $response = $ua->get($url);
-            if ($response->is_success) {
-                open my $fh, '>', $file;
-                print $fh $response->decoded_content(alt_charset => 'none');
-                close $fh;
-            }
-        }
-
-        # recovery of the crl expiration date
-        my ($datestr, $expiration_date);
-        open my $pipein, '-|', $Conf::Conf{'openssl'}, 'crl', '-nextupdate',
-            '-in' => $file,
-            '-noout', '-inform' => 'der';
-        $datestr = $pipein;    # expiration date
-        close $pipein;
-        chomp $datestr if $datestr;
-        unless ($datestr) {
-            Log::do_log('err', 'Can\'t get expiration date for CRL %s',
-                $file);
-            next;
-        }
-        eval {
-            if ($datestr =~
-                /nextUpdate=(\w+)\s+(\d+)\s(\d+)[:](\d+)[:](\d+)\s(\d+).+/) {
-                $expiration_date = DateTime->new(
-                    year   => $6,
-                    month  => $months{$1} + 1,
-                    day    => $2,
-                    hour   => $3,
-                    minute => $4,
-                    second => $5,
-                )->epoch;
-            }
-        };
-        unless (defined $expiration_date) {
-            Log::do_log('err', 'Can\'t get expiration date for CRL %s',
-                $file);
-            next;
-        }
-
-        ## check if the crl is soon expired or expired
-        #my $file_date = $task->{'date'} - (-M $file) * 24 * 60 * 60; # last modification date
-        my $condition = "newer($limit, $expiration_date)";
-        my $verify_context;
-        $verify_context->{'sender'} = 'nobody';
-
-        if (Sympa::Scenario::verify($verify_context, $condition) == 1) {
-            unlink $file;
-            Log::do_log('notice', '--> updating of the %s crl file', $file);
-            my $ua       = LWP::UserAgent->new;
-            my $response = $ua->get($url);
-            if ($response->is_success) {
-                open my $fh, '>', $file;
-                print $fh $response->decoded_content(alt_charset => 'none');
-                close $fh;
-            }
-            next;
-        }
-    }
-    return 1;
-}
+# Removed becuase not yet fully implemented.  See r11771.
+#sub update_crl;
 
 ## Subroutine for bouncers evaluation:
 # give a score for each bouncing user

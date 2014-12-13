@@ -76,7 +76,6 @@ my %old_params = (
     'msgcat'                         => '',
     queueexpire                      => '',
     clean_delay_queueother           => '',
-    'dkim_header_list'               => '',
     web_recode_to                    => 'filesystem_encoding', # ??? - 5.2
     'localedir'                      => '',
     'ldap_export_connection_timeout' => '',                    # 3.3b3 - 4.1?
@@ -100,6 +99,10 @@ my %old_params = (
     'openssl'           => '',                   # ?? - 6.2a.40
     'distribution_mode' => '',                   # 5.0a.1 - 6.2a.40
     'queuedistribute'   => '',                   # ,,
+
+    # These are not yet implemented
+    'crl_dir'          => '',
+    'dkim_header_list' => '',
 );
 
 ## These parameters now have a hard-coded value

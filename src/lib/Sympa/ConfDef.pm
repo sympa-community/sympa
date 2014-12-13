@@ -1149,10 +1149,11 @@ our @params = (
         'edit'       => '1',
         'optional'   => '1',
     },
-    {   'name'    => 'crl_dir',
-        'default' => Sympa::Constants::EXPLDIR . '/crl',
-        'file'    => 'sympa.conf',
-    },
+    # Not yet implemented
+    #{   'name'    => 'crl_dir',
+    #    'default' => Sympa::Constants::EXPLDIR . '/crl',
+    #    'file'    => 'sympa.conf',
+    #},
     {   'name'       => 'ssl_cert_dir',
         'default'    => Sympa::Constants::EXPLDIR . '/X509-user-certs',
         'gettext_id' => 'Directory containing user certificates',
@@ -1215,16 +1216,16 @@ our @params = (
         'optional' => '1',
         'file'     => 'sympa.conf',
     },
-    ##{
-    ##name => 'dkim_header_list',
-    ##vhost => '1',
-    ##file   => 'sympa.conf',
-    ## 'gettext_id' =>
-    ## 'List of headers to be included ito the message for signature',
-    ## default =>
-    ## 'from:sender:reply-to:subject:date:message-id:to:cc:list-id:list-help:list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:in-reply-to:references:resent-date:resent-from:resent-sender:resent-to:resent-cc:resent-message-id:mime-version:content-type:content-transfer-encoding:content-id:content-description',
-    ##},
-
+    # Not yet implemented.
+    #{
+    #    name => 'dkim_header_list',
+    #    vhost => '1',
+    #    file   => 'sympa.conf',
+    #    'gettext_id' =>
+    #        'List of headers to be included ito the message for signature',
+    #    default =>
+    #        'from:sender:reply-to:subject:date:message-id:to:cc:list-id:list-help:list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:in-reply-to:references:resent-date:resent-from:resent-sender:resent-to:resent-cc:resent-message-id:mime-version:content-type:content-transfer-encoding:content-id:content-description',
+    #},
     {   'name'       => 'dmarc_protection_mode',
         'gettext_id' => 'Test mode(s) for DMARC Protection',
         'sample'     => 'dmarc_reject,dkim_signature',
