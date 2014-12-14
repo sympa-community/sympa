@@ -72,7 +72,6 @@ use Sympa::Constants;
 use Sympa::HTML::FormatText;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
-use Sympa::List;
 use Log;
 use Sympa::Scenario;
 use tools;
@@ -1811,7 +1810,7 @@ sub smime_decrypt {
 
 =over
 
-=item smime_encrypt ( $email, [ $is_list ] )
+=item smime_encrypt ( $email )
 
 I<Instance method>.
 Encrypt message using certificate of user.
@@ -1826,10 +1825,6 @@ Parameters:
 
 E-mail address of user.
 
-=item $is_list
-
-Currently not used.
-
 =back
 
 Returns:
@@ -1842,29 +1837,21 @@ True value if encryption succeeded, or C<undef>.
 
 # Old name: tools::smime_encrypt() which returns stringified message.
 sub smime_encrypt {
-    my $self    = shift;
-    my $email   = shift;
-    my $is_list = shift;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $self  = shift;
+    my $email = shift;
 
     my $msg_header = $self->{_head};
 
     my $certfile;
     my $entity;
 
-    Log::do_log('debug2', '(%s, %s', $email, $is_list);
-    if ($is_list eq 'list') {    #FIXME: Not in case
-        my $list = Sympa::List->new($email);
-        my $dummy;
-        ($certfile, $dummy) =
-            Sympa::Tools::SMIME::find_keys($list, 'encrypt');
+    my $base =
+        $Conf::Conf{'ssl_cert_dir'} . '/' . tools::escape_chars($email);
+    if (-f $base . '@enc') {
+        $certfile = $base . '@enc';
     } else {
-        my $base =
-            "$Conf::Conf{'ssl_cert_dir'}/" . tools::escape_chars($email);
-        if (-f "$base\@enc") {
-            $certfile = "$base\@enc";
-        } else {
-            $certfile = "$base";
-        }
+        $certfile = $base;
     }
     unless (-r $certfile) {
         Log::do_log('notice',
@@ -2473,14 +2460,7 @@ sub personalize_text {
 
     $options->{'is_not_template'} = 1;
 
-    # get_list_member_no_object() return the user's details with the custom
-    # attributes
-    my $user = Sympa::List::get_list_member_no_object(
-        {   'email'  => $rcpt,
-            'name'   => $listname,
-            'domain' => $robot_id,
-        }
-    );
+    my $user = $list->get_list_member($rcpt);
 
     if ($user) {
         $user->{'escaped_email'} = URI::Escape::uri_escape($rcpt);
