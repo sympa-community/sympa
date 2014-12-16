@@ -7175,8 +7175,9 @@ sub _include_users_sql {
         return undef;
     }
 
-    unless ($source->connect() && ($source->do_query($source->{'sql_query'})))
-    {
+    my $sth;
+    unless ($source->connect()
+        and $sth = $source->do_query($source->{'sql_query'})) {
         Log::do_log(
             'err',
             'Unable to connect to SQL datasource with parameters host: %s, database: %s',
@@ -7189,10 +7190,11 @@ sub _include_users_sql {
     my $total = 0;
 
     ## Process the SQL results
-    $source->set_fetch_timeout($fetch_timeout);
-    my $array_of_users = $source->fetch;
+    my $array_of_users =
+        tools::eval_in_time(sub { $sth->fetchall_arrayref }, $fetch_timeout);
+    $sth->finish;
 
-    unless (defined $array_of_users && ref($array_of_users) eq 'ARRAY') {
+    unless (ref $array_of_users eq 'ARRAY') {
         Log::do_log('err', 'Failed to include users from %s',
             $source->{'name'});
         return undef;

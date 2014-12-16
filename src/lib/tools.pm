@@ -1867,6 +1867,47 @@ sub password_validation {
     return $output;
 }
 
+=over
+
+=item eval_in_time ( $subref, $timeout )
+
+Evaluate subroutine $subref in $timeout seconds.
+
+TBD.
+
+=back
+
+=cut
+
+sub eval_in_time {
+    my $subref  = shift;
+    my $timeout = shift;
+
+    # Call to subroutine uses eval to set a timeout.
+    # This prevents a subroutine to make the process wait forever if it does
+    # not respond.
+    my $ret = eval {
+        local $SIG{__DIE__} = 'DEFAULT';
+        local $SIG{ALRM} = sub { die "TIMEOUT\n" };    # NB: \n required
+        alarm $timeout;
+
+        # Inner eval just in case the subroutine would die, thus leaving the
+        # alarm trigered.
+        my $ret = eval { $subref->() };
+        alarm 0;
+        $ret;
+    };
+    if ($EVAL_ERROR and $EVAL_ERROR eq "TIMEOUT\n") {
+        Log::do_log('err', 'Processing timeout');
+        return undef;
+    } elsif ($EVAL_ERROR) {
+        Log::do_log('err', 'Processing failed: %m');
+        return undef;
+    }
+
+    return $ret;
+}
+
 sub fix_children {
 }
 

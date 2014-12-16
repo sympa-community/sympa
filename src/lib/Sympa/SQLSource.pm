@@ -579,34 +579,8 @@ sub prepare_query_log_values {
     return \@result;
 }
 
-sub fetch {
-    my $self = shift;
-
-    ## call to fetchrow_arrayref() uses eval to set a timeout
-    ## this prevents one data source to make the process wait forever if
-    ## SELECT does not respond
-    my $array_of_users;
-    $array_of_users = eval {
-        local $SIG{__DIE__} = 'DEFAULT';
-        local $SIG{ALRM} = sub { die "TIMEOUT\n" };    # NB: \n required
-        alarm $self->{'fetch_timeout'};
-
-        ## Inner eval just in case the fetchall_arrayref call would die, thus
-        ## leaving the alarm trigered
-        my $status = eval { return $self->{'sth'}->fetchall_arrayref; };
-        alarm 0;
-        return $status;
-    };
-    if ($EVAL_ERROR eq "TIMEOUT\n") {
-        Log::do_log('err', 'Fetch timeout on remote SQL database');
-        return undef;
-    } elsif ($EVAL_ERROR) {
-        Log::do_log('err', 'Fetch failed on remote SQL database');
-        return undef;
-    }
-
-    return $array_of_users;
-}
+# DEPRECATED: Use tools::eval_in_time() and fetchall_arrayref().
+#sub fetch();
 
 sub disconnect {
     my $self = shift;

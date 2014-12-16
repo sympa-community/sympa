@@ -224,11 +224,6 @@ sub ping {
 sub quote {
 }
 
-sub fetch {
-    my $self = shift;
-    return $self->{'sth'}->fetchrow_arrayref;
-}
-
 ## Does not make sense in LDAP context
 sub create_db {
 }
