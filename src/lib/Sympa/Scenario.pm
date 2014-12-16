@@ -1457,18 +1457,18 @@ sub search {
                 }
 
                 $filter    =~ s/\[$full_var\]/$context->{$var}{$key}/;
-                $statement =~ s/\[$full_var\]/\%s/;
+                $statement =~ s/\[$full_var\]/?/;
                 push @statement_args, $context->{$var}{$key};
             } else {               ## Scalar
                 $filter    =~ s/\[$full_var\]/$context->{$var}/;
-                $statement =~ s/\[$full_var\]/\%s/;
+                $statement =~ s/\[$full_var\]/?/;
                 push @statement_args, $context->{$var};
 
             }
         }
 
-#        $statement =~ s/\[sender\]/%s/g;
-#        $filter =~ s/\[sender\]/$sender/g;
+        # $statement =~ s/\[sender\]/?/g;
+        # $filter =~ s/\[sender\]/$sender/g;
 
         if (defined($persistent_cache{'named_filter'}{$filter_file}{$filter})
             && (time <=
@@ -1491,18 +1491,13 @@ sub search {
             return undef;
         }
 
-        ## Quote parameters
-        foreach (@statement_args) {
-            $_ = $ds->quote($_);
-        }
-
-        $statement = sprintf $statement, @statement_args;
-        unless ($ds->query($statement)) {
+        my $sth;
+        unless ($sth = $ds->do_prepared_query($statement, @statement_args)) {
             Log::do_log('debug', '%s named filter cancelled', $file);
             return undef;
         }
 
-        my $res = $ds->fetch;
+        my $res = $sth->fetchall_arrayref;    #FIXME: Check timeout.
         $ds->disconnect();
         my $first_row = ref($res->[0]) ? $res->[0]->[0] : $res->[0];
         Log::do_log('debug2', 'Result of SQL query: %d = %s',
