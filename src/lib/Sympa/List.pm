@@ -6194,7 +6194,11 @@ sub _include_users_remote_sympa_list {
             $total++;
         }
         $u{'email'} = $user{'email'};
-        $u{'id'}    = join(',', split(',', $u{'id'}), $id);
+        if ($u{'id'}) {
+			$u{'id'} = join(',', split(',', $u{'id'}), $id);
+		}else{
+			$u{'id'} = $id;
+		}
         $u{'gecos'} = $user{'gecos'};
         delete $user{'gecos'};
 
@@ -6344,7 +6348,11 @@ sub _include_users_list {
 
         my $email = $u{'email'} = $user->{'email'};
         $u{'gecos'} = $user->{'gecos'};
-        $u{'id'} = join(',', split(',', $u{'id'}), $id);
+        if ($u{'id'}) {
+			$u{'id'} = join(',', split(',', $u{'id'}), $id);
+		}else{
+			$u{'id'} = $id;
+		}
 
         $u{'visibility'} = $default_user_options->{'visibility'}
             if (defined $default_user_options->{'visibility'});
@@ -6458,7 +6466,11 @@ sub _include_users_file {
         }
         $u{'email'} = $email;
         $u{'gecos'} = $gecos;
-        $u{'id'}    = join(',', split(',', $u{'id'}), $id);
+        if ($u{'id'}) {
+			$u{'id'} = join(',', split(',', $u{'id'}), $id);
+		}else{
+			$u{'id'} = $id;
+		}
 
         $u{'visibility'} = $default_user_options->{'visibility'}
             if (defined $default_user_options->{'visibility'});
@@ -6564,7 +6576,11 @@ sub _include_users_remote_file {
             }
             $u{'email'} = $email;
             $u{'gecos'} = $gecos;
-            $u{'id'}    = join(',', split(',', $u{'id'}), $id);
+            if ($u{'id'}) {
+                $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            }else{
+                $u{'id'} = $id;
+            }
 
             $u{'visibility'} = $default_user_options->{'visibility'}
                 if (defined $default_user_options->{'visibility'});
@@ -6650,7 +6666,11 @@ sub _include_users_voot_group {
 
             $u{'email'} = $email;
             $u{'gecos'} = $member->{'displayName'};
-            $u{'id'}    = join(',', split(',', $u{'id'}), $id);
+            if ($u{'id'}) {
+                $u{'id'} = join(',', split(',', $u{'id'}), $id);
+            }else{
+                $u{'id'} = $id;
+            }
 
             $u{'visibility'} = $default_user_options->{'visibility'}
                 if (defined $default_user_options->{'visibility'});
@@ -6793,7 +6813,11 @@ sub _include_users_ldap {
         $u{'gecos'}       = $gecos if ($gecos);
         $u{'date'}        = time;
         $u{'update_date'} = time;
-        $u{'id'}          = join(',', split(',', $u{'id'}), $id);
+        if ($u{'id'}) {
+			$u{'id'} = join(',', split(',', $u{'id'}), $id);
+		}else{
+			$u{'id'} = $id;
+		}
 
         $u{'visibility'} = $default_user_options->{'visibility'}
             if (defined $default_user_options->{'visibility'});
@@ -7019,7 +7043,11 @@ sub _include_users_ldap_2level {
         $u{'gecos'}       = $gecos if ($gecos);
         $u{'date'}        = time;
         $u{'update_date'} = time;
-        $u{'id'}          = join(',', split(',', $u{'id'}), $id);
+        if ($u{'id'}) {
+			$u{'id'} = join(',', split(',', $u{'id'}), $id);
+		}else{
+			$u{'id'} = $id;
+		}
 
         $u{'visibility'} = $default_user_options->{'visibility'}
             if (defined $default_user_options->{'visibility'});
@@ -7232,7 +7260,11 @@ sub _include_users_sql {
         $u{'gecos'}       = $gecos if ($gecos);
         $u{'date'}        = time;
         $u{'update_date'} = time;
-        $u{'id'}          = join(',', split(',', $u{'id'}), $id);
+        if ($u{'id'}) {
+			$u{'id'} = join(',', split(',', $u{'id'}), $id);
+		}else{
+			$u{'id'} = $id;
+		}
 
         $u{'visibility'} = $default_user_options->{'visibility'}
             if (defined $default_user_options->{'visibility'});
