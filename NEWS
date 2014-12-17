@@ -3,6 +3,34 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.43		December 17, 2014
+
+  Bug fixes:
+
+	[11770] src/lib/Sympa/List.pm:	If gecos attribute is specified for
+	LDAP datasources, inclusion fails.
+	Fixed by correcting typos to use arrayrefs instead of arrays.
+
+	[11760] src/lib/Sympa/SOAP.pm:	AthenticateAndRun was liable to the
+	same bug as fixed in r11757. Fixed the same way.
+
+	[11754] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/List.pm: [#5805] When
+	archived messages are resent via WWSympa mailer, several header fields
+	were not modified nor added: Reply-To:, List-* and so on.
+
+	[11749] default/mail_tt2/removed.tt2: [#7245] When a list owner deletes
+	a user, a message suggesting that unsubscription was due to automatic
+	process is sent.
+	Fixed by removing a phrase "probably because we received non-delivery
+	reports for your address" in removed.tt2 template.
+
+	[11748] src/lib/Log.pm: [#9578][Reported by M. Howe, univ. of Oxford]
+	viewlogs with date range does not work.  Fixed by allowing any
+	non-alphanumeric characters as separator.
+	And, now viewlogs supports date formats YY*MM*DD and YYYY*MM*DD along
+	with previous DD*MM*YYYY.  Note that the format MM*DD*YYYY is not
+	supported.
+
 6.2a.42		December 02, 2014
 
   Features:
