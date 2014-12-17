@@ -9133,7 +9133,7 @@ sub get_lists {
                         $ve =~ s/^["'](.*)['"]$/$1/;
                         $ve =~ s/([%_])/\\$1/g;
                         push @expr_sql,
-                            sprintf("topics_list LIKE '%%,%s,%%'", $ve);
+                            sprintf("topics_list LIKE '%%%s%%'", $ve);
                     }
                 }
             }
