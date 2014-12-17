@@ -198,24 +198,6 @@ sub connect {
 
 }
 
-sub query {
-    my ($self, $sql_query) = @_;
-    unless ($self->{'sth'} = $self->{'dbh'}->prepare($sql_query)) {
-        Log::do_log(
-            'err',
-            'Unable to prepare SQL query: %s',
-            $self->{'dbh'}->errstr
-        );
-        return undef;
-    }
-    unless ($self->{'sth'}->execute) {
-        Log::do_log('err', 'Unable to perform SQL query %s: %s',
-            $sql_query, $self->{'dbh'}->errstr);
-        return undef;
-    }
-
-}
-
 ## Does not make sense in LDAP context
 sub ping {
 }
@@ -231,10 +213,6 @@ sub create_db {
 sub disconnect {
     my $self = shift;
     $self->{'ldap_handler'}->unbind if $self->{'ldap_handler'};
-}
-
-## Does not make sense in LDAP context
-sub set_fetch_timeout {
 }
 
 1;

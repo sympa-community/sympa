@@ -604,10 +604,8 @@ sub quote {
     return $self->{'dbh'}->quote($string, $datatype);
 }
 
-sub set_fetch_timeout {
-    my ($self, $timeout) = @_;
-    return $self->{'fetch_timeout'} = $timeout;
-}
+# No longer used.
+#sub set_fetch_timeout($timeout);
 
 ## Returns a character string corresponding to the expression to use in
 ## a read query (e.g. SELECT) for the field given as argument.
