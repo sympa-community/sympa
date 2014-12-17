@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: 2014-12-11 08:33+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: 한국어 <ko_KR@li.org>\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1418286811.000000\n"
@@ -28,14 +28,14 @@ msgstr ""
 #: src/cgi/wwsympa.fcgi.in:11962 src/cgi/wwsympa.fcgi.in:11965
 #: src/cgi/wwsympa.fcgi.in:14647 src/cgi/wwsympa.fcgi.in:14728
 #: src/cgi/wwsympa.fcgi.in:14985 src/cgi/wwsympa.fcgi.in:15299
-#: src/cgi/wwsympa.fcgi.in:21549 src/cgi/wwsympa.fcgi.in:21558
-#: src/cgi/wwsympa.fcgi.in:22821 src/cgi/wwsympa.fcgi.in:22926
-#: src/cgi/wwsympa.fcgi.in:24306 src/cgi/wwsympa.fcgi.in:24308
-#: src/cgi/wwsympa.fcgi.in:24397 src/cgi/wwsympa.fcgi.in:5482
+#: src/cgi/wwsympa.fcgi.in:21551 src/cgi/wwsympa.fcgi.in:21560
+#: src/cgi/wwsympa.fcgi.in:22823 src/cgi/wwsympa.fcgi.in:22928
+#: src/cgi/wwsympa.fcgi.in:24308 src/cgi/wwsympa.fcgi.in:24310
+#: src/cgi/wwsympa.fcgi.in:24399 src/cgi/wwsympa.fcgi.in:5482
 #: src/cgi/wwsympa.fcgi.in:5550 src/cgi/wwsympa.fcgi.in:6355
 #: src/cgi/wwsympa.fcgi.in:6357 src/cgi/wwsympa.fcgi.in:8654
-#: src/lib/Sympa/Message.pm:503 src/lib/Sympa/Message.pm:506
-#: src/lib/Sympa/Message.pm:513 src/libexec/alias_manager.pl.in:102
+#: src/lib/Sympa/Message.pm:502 src/lib/Sympa/Message.pm:505
+#: src/lib/Sympa/Message.pm:512 src/libexec/alias_manager.pl.in:102
 msgid "%d %b %Y"
 msgstr "%Y년%m월%d일"
 
@@ -207,19 +207,6 @@ msgid ""
 "module? (y/N) "
 msgstr ""
 
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1202 src/cgi/wwsympa.fcgi.in:24058
-#: src/cgi/wwsympa.fcgi.in:3278 src/cgi/wwsympa.fcgi.in:3648
-#: src/cgi/wwsympa.fcgi.in:3672 src/cgi/wwsympa.fcgi.in:3831
-#: src/cgi/wwsympa.fcgi.in:7179 src/cgi/wwsympa.fcgi.in:7182
-#: src/lib/Sympa/Admin.pm:268 src/lib/Sympa/Admin.pm:580
-#: src/lib/Sympa/Admin.pm:682 src/lib/Sympa/Family.pm:2487
-#: src/lib/Sympa/Family.pm:396 src/lib/Sympa/Family.pm:668
-#: src/lib/Sympa/List.pm:920 src/sbin/task_manager.pl.in:1696
-msgid "%d %b %Y at %H:%M:%S"
-msgstr "%Y년%m월%d일 %H시%M분%S초"
-
 #: src/lib/tools.pm:1814
 msgid "contains the dictionary word '%s'"
 msgstr ""
@@ -252,6 +239,19 @@ msgstr ""
 #: src/lib/tt2.pm:167
 msgid "(unknown date)"
 msgstr "(확인 불가 날짜)"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: src/cgi/wwsympa.fcgi.in:1202 src/cgi/wwsympa.fcgi.in:24060
+#: src/cgi/wwsympa.fcgi.in:3278 src/cgi/wwsympa.fcgi.in:3648
+#: src/cgi/wwsympa.fcgi.in:3672 src/cgi/wwsympa.fcgi.in:3831
+#: src/cgi/wwsympa.fcgi.in:7179 src/cgi/wwsympa.fcgi.in:7182
+#: src/lib/Sympa/Admin.pm:268 src/lib/Sympa/Admin.pm:580
+#: src/lib/Sympa/Admin.pm:682 src/lib/Sympa/Family.pm:2487
+#: src/lib/Sympa/Family.pm:396 src/lib/Sympa/Family.pm:668
+#: src/lib/Sympa/List.pm:920
+msgid "%d %b %Y at %H:%M:%S"
+msgstr "%Y년%m월%d일 %H시%M분%S초"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -347,7 +347,7 @@ msgstr ""
 msgid "Secret used by Sympa to make MD5 fingerprint in web cookies secure"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1431 src/lib/Sympa/ConfDef.pm:302
+#: src/lib/Sympa/ConfDef.pm:1432 src/lib/Sympa/ConfDef.pm:302
 msgid "Should not be changed ! May invalid all user password"
 msgstr ""
 
@@ -742,7 +742,7 @@ msgstr ""
 msgid "Directory for storing bounces"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1335 src/lib/Sympa/ConfDef.pm:852
+#: src/lib/Sympa/ConfDef.pm:1336 src/lib/Sympa/ConfDef.pm:852
 msgid "Better if not in a critical partition"
 msgstr ""
 
@@ -910,25 +910,25 @@ msgstr ""
 msgid "File containing bundled trusted CA certificates"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1158
+#: src/lib/Sympa/ConfDef.pm:1159
 msgid "Directory containing user certificates"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1163
+#: src/lib/Sympa/ConfDef.pm:1164
 msgid "Password used to crypt lists private keys"
 msgstr ""
 
-#: default/web_tt2/nav.tt2:103 src/lib/Sympa/ConfDef.pm:1169
+#: default/web_tt2/nav.tt2:103 src/lib/Sympa/ConfDef.pm:1170
 msgid "DKIM"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1179
+#: src/lib/Sympa/ConfDef.pm:1180
 #, fuzzy
 msgid ""
 "Insert a DKIM signature to message from the robot, from the list or both"
 msgstr "메세지를 보내중   : %1"
 
-#: src/lib/Sympa/ConfDef.pm:1187
+#: src/lib/Sympa/ConfDef.pm:1188
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -937,29 +937,29 @@ msgid ""
 "\"editor_validated_messages\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1194
+#: src/lib/Sympa/ConfDef.pm:1195
 msgid "Location of the file where DKIM private key is stored"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1201
+#: src/lib/Sympa/ConfDef.pm:1202
 msgid ""
 "The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1207
+#: src/lib/Sympa/ConfDef.pm:1208
 #, fuzzy
 msgid "The selector"
 msgstr "모두 선택/해제"
 
-#: src/lib/Sympa/ConfDef.pm:1214
+#: src/lib/Sympa/ConfDef.pm:1215
 msgid "The \"i=\" tag as defined in rfc 4871, default is null"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1229
+#: src/lib/Sympa/ConfDef.pm:1230
 msgid "Test mode(s) for DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1235
+#: src/lib/Sympa/ConfDef.pm:1236
 msgid ""
 "Do not set unless you want to use DMARC protection.  This is a comma "
 "separated list of test modes; if multiple are selected then protection is "
@@ -967,70 +967,70 @@ msgid ""
 "DNS cache as they do a DNS lookup for each received message."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1238
+#: src/lib/Sympa/ConfDef.pm:1239
 msgid "Regexp for domain name match"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1243
+#: src/lib/Sympa/ConfDef.pm:1244
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1246
+#: src/lib/Sympa/ConfDef.pm:1247
 msgid "Pattern used to create new From header phrase"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1253
+#: src/lib/Sympa/ConfDef.pm:1254
 msgid "Email to use for replacement From header"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1259
+#: src/lib/Sympa/ConfDef.pm:1260
 msgid "Antivirus plug-in"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1264
+#: src/lib/Sympa/ConfDef.pm:1265
 msgid "Path to the antivirus scanner engine"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1269
+#: src/lib/Sympa/ConfDef.pm:1270
 msgid ""
 "supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
 "Micro/VirusWall"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1274
+#: src/lib/Sympa/ConfDef.pm:1275
 msgid "Antivirus plugin command argument"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1281
+#: src/lib/Sympa/ConfDef.pm:1282
 msgid "Notify sender if virus checker detects malicious content"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1285
+#: src/lib/Sympa/ConfDef.pm:1286
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1288
+#: src/lib/Sympa/ConfDef.pm:1289
 msgid "Tag based spam filtering"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1297
+#: src/lib/Sympa/ConfDef.pm:1298
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
 "spams, name of this header (example X-Spam-Status)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1305
+#: src/lib/Sympa/ConfDef.pm:1306
 msgid "Regexp applied on this header to verify message is a spam (example Yes)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1313
+#: src/lib/Sympa/ConfDef.pm:1314
 msgid ""
 "Regexp applied on this header to verify message is NOT a spam (example No)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1321
+#: src/lib/Sympa/ConfDef.pm:1322
 msgid ""
 "Messages are supposed to be filtered by an antispam that add one more "
 "headers to messages. This parameter is used to select a special scenario in "
@@ -1039,49 +1039,49 @@ msgid ""
 "antispam_tag_header_ham_regexp."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1328
+#: src/lib/Sympa/ConfDef.pm:1329
 #, fuzzy
 msgid "Web interface parameters"
 msgstr "웹 인터페이스"
 
-#: src/lib/Sympa/ConfDef.pm:1332
+#: src/lib/Sympa/ConfDef.pm:1333
 msgid "Directory for storing HTML archives"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1341
+#: src/lib/Sympa/ConfDef.pm:1342
 msgid ""
 "Default index organization when entering the web archive: either threaded or "
 "in chronological order"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1348
+#: src/lib/Sympa/ConfDef.pm:1349
 msgid "File containing archived PID while running"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1353
+#: src/lib/Sympa/ConfDef.pm:1354
 msgid "HTTP cookies lifetime"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1358
+#: src/lib/Sympa/ConfDef.pm:1359
 msgid "HTTP cookies validity domain"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1364
+#: src/lib/Sympa/ConfDef.pm:1365
 msgid "Average interval to refresh HTTP session ID."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1370
+#: src/lib/Sympa/ConfDef.pm:1371
 msgid ""
 "Activates a custom archiver to use instead of MHonArc. The value of this "
 "parameter is the absolute path on the file system to the script of the "
 "custom archiver."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1376
+#: src/lib/Sympa/ConfDef.pm:1377
 msgid "Type of main Web page ( lists | home )"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1388
+#: src/lib/Sympa/ConfDef.pm:1389
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -1089,91 +1089,91 @@ msgid ""
 "by the LDAP server will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1394
+#: src/lib/Sympa/ConfDef.pm:1395
 msgid "Syslog facility for wwsympa, archived and bounced"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1398
+#: src/lib/Sympa/ConfDef.pm:1399
 msgid "Default is to use previously defined sympa log facility."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1402
+#: src/lib/Sympa/ConfDef.pm:1403
 msgid "Path to MHonArc mail2html plugin"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1405
+#: src/lib/Sympa/ConfDef.pm:1406
 msgid "This is required for HTML mail archiving"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1416
+#: src/lib/Sympa/ConfDef.pm:1417
 msgid "duration before the one time tickets are expired"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1421
+#: src/lib/Sympa/ConfDef.pm:1422
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1427
+#: src/lib/Sympa/ConfDef.pm:1428
 msgid "Password case (insensitive | sensitive)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1435
+#: src/lib/Sympa/ConfDef.pm:1436
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1442
+#: src/lib/Sympa/ConfDef.pm:1443
 msgid "Title of main Web page"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1449
+#: src/lib/Sympa/ConfDef.pm:1450
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1457
+#: src/lib/Sympa/ConfDef.pm:1458
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1459
+#: src/lib/Sympa/ConfDef.pm:1460
 msgid ""
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1467
+#: src/lib/Sympa/ConfDef.pm:1468
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1479
+#: src/lib/Sympa/ConfDef.pm:1480
 msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1482
+#: src/lib/Sympa/ConfDef.pm:1483
 msgid "This module provide much faster web interface"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1486
+#: src/lib/Sympa/ConfDef.pm:1487
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1493
+#: src/lib/Sympa/ConfDef.pm:1494
 msgid ""
 "Maximum number of lists listed in \"Your lists\" menu.  0 lists none.  "
 "negative value means unlimited."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1498
+#: src/lib/Sympa/ConfDef.pm:1499
 msgid "URL of a virtual host"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1507
+#: src/lib/Sympa/ConfDef.pm:1508
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -2659,12 +2659,12 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Message.pm:2488 src/lib/Sympa/Tools/Daemon.pm:222
+#: src/lib/Sympa/Message.pm:2468 src/lib/Sympa/Tools/Daemon.pm:222
 #, fuzzy
 msgid "%d %b %Y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
-#: src/lib/Sympa/Message.pm:3889
+#: src/lib/Sympa/Message.pm:3869
 #, fuzzy
 msgid ""
 "----- Malformed message ignored -----\n"
@@ -2673,12 +2673,12 @@ msgstr ""
 "-----%s 에서 메시지의 끝-----\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:3899
+#: src/lib/Sympa/Message.pm:3879
 #, fuzzy
 msgid "[Unknown]"
 msgstr "확인 불가"
 
-#: src/lib/Sympa/Message.pm:3930
+#: src/lib/Sympa/Message.pm:3910
 #, fuzzy
 msgid ""
 "\n"
@@ -2691,41 +2691,41 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3932
+#: src/lib/Sympa/Message.pm:3912
 #, fuzzy
 msgid "Date: %s\n"
 msgstr "날짜 : %1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3933
+#: src/lib/Sympa/Message.pm:3913
 #, fuzzy
 msgid "From: %s\n"
 msgstr "보낸 사람: %1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3934
+#: src/lib/Sympa/Message.pm:3914
 #, fuzzy
 msgid "To: %s\n"
 msgstr "받는 사람: %1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3935
+#: src/lib/Sympa/Message.pm:3915
 msgid "Cc: %s\n"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3936
+#: src/lib/Sympa/Message.pm:3916
 #, fuzzy
 msgid "Subject: %s\n"
 msgstr "제목 : %1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3944
+#: src/lib/Sympa/Message.pm:3924
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -2735,7 +2735,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3973 src/lib/Sympa/Message.pm:4038
+#: src/lib/Sympa/Message.pm:3953 src/lib/Sympa/Message.pm:4018
 #, fuzzy
 msgid ""
 "** Warning: Message part using unrecognised character set %s\n"
@@ -2748,7 +2748,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3994
+#: src/lib/Sympa/Message.pm:3974
 #, fuzzy
 msgid ""
 "\n"
@@ -2757,7 +2757,7 @@ msgstr ""
 "\n"
 "(%s 유형 의 첨부 파일가 포함한)\n"
 
-#: src/lib/Sympa/Message.pm:4003
+#: src/lib/Sympa/Message.pm:3983
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -2765,14 +2765,14 @@ msgstr ""
 "\n"
 "-----배달 상태 알림-----\n"
 
-#: src/lib/Sympa/Message.pm:4006
+#: src/lib/Sympa/Message.pm:3986
 #, fuzzy
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
 msgstr "-----Delivery(배달) 상태 마지막 알림-----\n"
 
-#: src/lib/Sympa/Message.pm:4020 src/lib/Sympa/Message.pm:4053
+#: src/lib/Sympa/Message.pm:4000 src/lib/Sympa/Message.pm:4033
 #, fuzzy
 msgid ""
 "\n"
@@ -2781,24 +2781,24 @@ msgstr ""
 "\n"
 "[** HTML 메시지 부속을 관리할 수 없음 **]\n"
 
-#: src/lib/Sympa/Message.pm:4057
+#: src/lib/Sympa/Message.pm:4037
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ HTML 에서 개조된 텍스트 ]\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:4283
+#: src/lib/Sympa/Message.pm:4263
 msgid "%s via %s Mailing List"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:4287
+#: src/lib/Sympa/Message.pm:4267
 #, fuzzy
 msgid "via %s Mailing List"
 msgstr "핫라인 리스트"
 
-#: src/lib/Sympa/Message.pm:4303
+#: src/lib/Sympa/Message.pm:4283
 #, fuzzy
 msgid "Anonymous"
 msgstr "익명의 보낸 사람"
@@ -3296,53 +3296,53 @@ msgstr "확인 불가"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:21799
+#: src/cgi/wwsympa.fcgi.in:21801
 #, fuzzy
 msgid "Your unsubscription request to list %s was sent to the list owner."
 msgstr "리스트 소유자으로 요청 전달되었습니다"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:21804
+#: src/cgi/wwsympa.fcgi.in:21806
 #, fuzzy
 msgid "You were successfully unsubscribed from list %s."
 msgstr "%1 메일링 리스트 에서 가입되지 않 요청했습니다."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:21810
+#: src/cgi/wwsympa.fcgi.in:21812
 msgid ""
 "Unsubscription from list %s denied: Unsubscription from this list is closed."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:21815
+#: src/cgi/wwsympa.fcgi.in:21817
 #, fuzzy
 msgid "Unsubscription from list %s failed."
 msgstr "%1 메일링 리스트에서 등록취소"
 
-#: src/cgi/wwsympa.fcgi.in:22906
+#: src/cgi/wwsympa.fcgi.in:22908
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:22908
+#: src/cgi/wwsympa.fcgi.in:22910
 #, fuzzy
 msgid "Subscription additions"
 msgstr "구독"
 
-#: src/cgi/wwsympa.fcgi.in:22910
+#: src/cgi/wwsympa.fcgi.in:22912
 #, fuzzy
 msgid "Unsubscription"
 msgstr "등록취소 :"
 
-#: src/cgi/wwsympa.fcgi.in:22912
+#: src/cgi/wwsympa.fcgi.in:22914
 msgid "Users deleted by admin"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:23463 src/cgi/wwsympa.fcgi.in:23465
+#: src/cgi/wwsympa.fcgi.in:23465 src/cgi/wwsympa.fcgi.in:23467
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr ""
 
@@ -3350,13 +3350,13 @@ msgstr ""
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:113 src/cgi/wwsympa.fcgi.in:23484
+#: default/web_tt2/viewlogs.tt2:113 src/cgi/wwsympa.fcgi.in:23486
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y년%m월%d일 %H:%M:%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:24315
+#: src/cgi/wwsympa.fcgi.in:24317
 #, fuzzy
 msgid "topic (%s)"
 msgstr "화제"
@@ -9065,7 +9065,7 @@ msgid "Unsubscribed from %1"
 msgstr "%1 에서 등록취소"
 
 #. (user.email,list.name,list.host)
-#: default/mail_tt2/bye.tt2:4
+#: default/mail_tt2/bye.tt2:4 default/mail_tt2/removed.tt2:4
 msgid "Your email address (%1) has been removed from list %2@%3"
 msgstr "메일링 리스트 %2@%3 에서 이메일 주소 (%1) 삭제되었습니다."
 
@@ -11253,12 +11253,6 @@ msgstr "%1 메일링 리스트에 구독의 미리 알림"
 msgid "Your are subscriber of list %1@%2 with  email %3"
 msgstr "이메일 %3 값것 있는 메일링 리스트 %1@%2의 가입자 입니다."
 
-#. (user.email,list.name,list.host)
-#: default/mail_tt2/removed.tt2:4
-#, fuzzy
-msgid "Your address (%1) has been removed from list %2@%3."
-msgstr "메일링 리스트 %2@%3 에서 이메일 주소 (%1) 삭제되었습니다."
-
 #. (list.name)-)
 #: default/mail_tt2/request_auth.tt2:6
 msgid "You asked for your e-mail address to be removed from list '%1'."
@@ -12943,6 +12937,10 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Your address (%1) has been removed from list %2@%3."
+#~ msgstr "메일링 리스트 %2@%3 에서 이메일 주소 (%1) 삭제되었습니다."
 
 #, fuzzy
 #~ msgid "Search user by e-mail: "
