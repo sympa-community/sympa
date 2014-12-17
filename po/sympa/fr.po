@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2014-09-18 11:02+0000\n"
+"PO-Revision-Date: 2014-12-12 15:15+0000\n"
 "Last-Translator: David Verdin <david.verdin@cru.fr>\n"
 "Language-Team: Français\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "Projct-Id-Version: fr\n"
-"X-POOTLE-MTIME: 1411038172.000000\n"
+"X-POOTLE-MTIME: 1418397317.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -40,14 +40,12 @@ msgid "The configuration file contains errors.\n"
 msgstr "Le fichier de configuration contient des erreurs.\n"
 
 #: src/sbin/sympa_wizard.pl.in:177
-#, fuzzy
 msgid "Example: "
-msgstr "Exemple : %s\t %s"
+msgstr "Exemple :"
 
 #: src/sbin/sympa_wizard.pl.in:187
-#, fuzzy
 msgid "(You must define this parameter)"
-msgstr "%s\t (Vous devez définir ce paramètre)"
+msgstr "(Vous devez définir ce paramètre)"
 
 #: src/sbin/sympa_wizard.pl.in:274
 msgid "%s [%s] : "
@@ -99,28 +97,48 @@ msgid ""
 "##############################################################################\n"
 "Press the Enter key to continue..."
 msgstr ""
+"#############################################################################"
+"#\n"
+"# The programme va vous aider à installer tous les modules Perl (CPAN) "
+"requis par Sympa.\n"
+"## Sympa nécessite l'installation de 50 à 65 modules pour fonctionner "
+"correctement. \n"
+"# L'ensemble du processus d'installation devrait prendre autour de 15 "
+"minutes.\n"
+"# Vous devrez tout d'abord l'outil de ligne de commande CPAN lui-même\n"
+"# et sélectionner votre serveur CPAN favori.\n"
+"# Notez que vous pouvez préférer installer ces modules à l'aide de votre\n"
+"# gestionnaire de paquetage (yum, apt-get) préféré.\n"
+"# Vous pouvez interrompre ce programme à tout moment. Il pourra être "
+"relancé\n"
+"# sans dommage par la suite.\n"
+"#############################################################################"
+"#\n"
+"Appuyez sur une touche pour continuer..."
 
 #: src/sbin/sympa_wizard.pl.in:376
 msgid "Checking for PERL version:"
-msgstr ""
+msgstr "Vérification de la version de l'interpréteur Perl :"
 
 #: src/sbin/sympa_wizard.pl.in:379
 msgid "Your version of perl is OK (%s  >= %s)"
-msgstr ""
+msgstr "Votre version de Perl est suffisante (%s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:383
 msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
 msgstr ""
+"Votre version de Perl est TROP ÂGÉE (%s < %s)\n"
+"Veuillez en INSTALLER une nouvelle !"
 
 #: src/sbin/sympa_wizard.pl.in:387
 msgid "Checking for REQUIRED modules:"
-msgstr ""
+msgstr "Vérification des modules OBLIGATOIRES :"
 
 #: src/sbin/sympa_wizard.pl.in:389
 msgid "Checking for OPTIONAL modules:"
-msgstr ""
+msgstr "Vérification des modules OPTIONNELS :"
 
 #: src/sbin/sympa_wizard.pl.in:393
 msgid ""
@@ -128,57 +146,57 @@ msgid ""
 "You can retrieve all theses modules from any CPAN server\n"
 "(for example ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 msgstr ""
+"******* NOTE *******\n"
+"Vous pouvez récupérer tous ces modules depuis n'importe quel serveur CPAN\n"
+"(par exemple ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 
 #: src/sbin/sympa_wizard.pl.in:408
-#, fuzzy
 msgid "perl module"
-msgstr "Mode expert"
+msgstr "module Perl"
 
 #: src/sbin/sympa_wizard.pl.in:408
 msgid "from CPAN"
-msgstr ""
+msgstr "depuis CPAN"
 
 #: src/sbin/sympa_wizard.pl.in:409
-#, fuzzy
 msgid "STATUS"
-msgstr "STATS %1"
+msgstr "STATUS"
 
 #: src/sbin/sympa_wizard.pl.in:410
 msgid "-----------"
-msgstr ""
+msgstr "-----------"
 
 #: src/sbin/sympa_wizard.pl.in:410
 msgid "---------"
-msgstr ""
+msgstr "---------"
 
 #: src/sbin/sympa_wizard.pl.in:411
 msgid "------"
-msgstr ""
+msgstr "------"
 
 #: src/sbin/sympa_wizard.pl.in:430
 msgid "was not found on this system."
-msgstr ""
+msgstr "n'a pas été trouvé sur le sytème."
 
 #: src/sbin/sympa_wizard.pl.in:452
 msgid "OK (%-6s >= %s)"
-msgstr ""
+msgstr "OK (%-6s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:455
-#, fuzzy
 msgid "version is too old (%s < %s)"
-msgstr "La période est trop longue (%1 jours)"
+msgstr "version trop ancienne (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:458
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
-msgstr ""
+msgstr ">>>>>>> Vous devez mettre à jour \"%s\" vers la version \"%s\". <<<<<<"
 
 #: src/sbin/sympa_wizard.pl.in:487
 msgid "## You need root privileges to install %s module. ##"
-msgstr ""
+msgstr "## Vous devez avoir les privilèges root pour installer le module %s. ##"
 
 #: src/sbin/sympa_wizard.pl.in:490
 msgid "## Press the Enter key to continue checking modules. ##"
-msgstr ""
+msgstr "## Appuyer sur Entrée pour continuer la vérfification des modules. ##"
 
 #: src/sbin/sympa_wizard.pl.in:499
 msgid "-> Usage of this module: %s"
@@ -190,19 +208,24 @@ msgstr "-> Pré-requis : %s"
 
 #: src/sbin/sympa_wizard.pl.in:511
 msgid "-> Install module %s ? [%s] "
-msgstr ""
+msgstr "-> Installer le module %s ? [%s]"
 
 #: src/sbin/sympa_wizard.pl.in:549
 msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
 msgstr ""
+"L'installation du module %s a encore ÉCHOUÉ. Vous devrez télécharger le "
+"tar.gz depuis http://search.cpan.org et l'installer manuellement (ou "
+"utiliser le paquetage présent dans votre distribution)."
 
 #: src/sbin/sympa_wizard.pl.in:554
 msgid ""
 "Installation of %s FAILED. Do you want to force the installation of this "
 "module? (y/N) "
 msgstr ""
+"L'installation du module %s a ÉCHOUÉ. Voulez-vous forcer l'installation de "
+"ce module ? [o/N]"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -690,7 +713,6 @@ msgid "All spool are created at runtime by sympa.pl"
 msgstr "Tous les spools sont créés lors de l'exécution de sympa.pl"
 
 #: src/lib/Sympa/ConfDef.pm:680
-#, fuzzy
 msgid "Directory for message incoming spool"
 msgstr "Répertoire du spool des messages entrants"
 
@@ -709,9 +731,8 @@ msgstr "Répertoire du spool d'authentification"
 
 # nlsref 15,10
 #: src/lib/Sympa/ConfDef.pm:704
-#, fuzzy
 msgid "Directory for archive spool"
-msgstr "Répertoire du spool de constitution des digests"
+msgstr "Répertoire du spool d'archivage"
 
 #: src/lib/Sympa/ConfDef.pm:709
 msgid "Directory for subscription spool"
@@ -736,9 +757,8 @@ msgid "Directory for automatic list creation spool"
 msgstr "Répertoire du spool des listes automatiques"
 
 #: src/lib/Sympa/ConfDef.pm:735
-#, fuzzy
 msgid "Directory for message outgoing spool"
-msgstr "Répertoire du spool d'archivage"
+msgstr "Répertoire du spool de messages sortants"
 
 #: src/lib/Sympa/ConfDef.pm:740
 msgid "Must not be 0."
@@ -1103,12 +1123,16 @@ msgstr "Arguments de la ligne de commande de l'antivirus."
 #: src/lib/Sympa/ConfDef.pm:1281
 msgid "Notify sender if virus checker detects malicious content"
 msgstr ""
+"Envoyer une notification à l'expéditeur si l'antivirus détecte un contenu "
+"infecté"
 
 #: src/lib/Sympa/ConfDef.pm:1285
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
+"\"sender\" pour notify l'émetteur du message, \"delivery_status\" pour "
+"envoyer un rapport de remise ou \"none\""
 
 #: src/lib/Sympa/ConfDef.pm:1288
 msgid "Tag based spam filtering"
@@ -1350,7 +1374,7 @@ msgstr "-"
 
 #: src/lib/Sympa/Language.pm:723
 msgid "Lorem ipsum dolor sit amet."
-msgstr ""
+msgstr "Lorem ipsum dolor sit amet."
 
 # nlsref 16,72
 #: src/lib/Sympa/ListDef.pm:67
@@ -1708,9 +1732,8 @@ msgid "tracking message by delivery status notification"
 msgstr "Suivre les messages par delivery status notification (DSN)"
 
 #: src/lib/Sympa/ListDef.pm:806
-#, fuzzy
 msgid "tracking message by message disposition notification"
-msgstr "Suivre les messages par message delivery notification (MDN)"
+msgstr "Suivre les messages par message disposition notification (MDN)"
 
 # nlsref 15,4
 #: src/lib/Sympa/ListDef.pm:813
@@ -2254,21 +2277,18 @@ msgid "Outgoing SMTP header fields to be removed"
 msgstr "En-têtes SMTP à supprimer dans les messages sortants"
 
 #: src/lib/Sympa/ListDef.pm:550
-#, fuzzy
 msgid "Hook modules for message processing"
-msgstr "Module pour le traitement des encodages de caractère"
+msgstr "Modules de plugins pour le traitement des messages"
 
 # nlsref 15,4
 #: src/lib/Sympa/ListDef.pm:554
-#, fuzzy
 msgid "A hook on the messages before distribution"
-msgstr "Diffusion des messages"
+msgstr "Un traitement à effectuer sur les messages avant distribution"
 
 # nlsref 15,4
 #: src/lib/Sympa/ListDef.pm:559
-#, fuzzy
 msgid "A hook on the messages just after archiving"
-msgstr "Qui peut voir le suivi des messages par corrélation des avis ?"
+msgstr "Un traitement à effectuer sur les messages avant de les archiver"
 
 #: src/lib/Sympa/ListDef.pm:633 src/lib/Sympa/ListDef.pm:655
 msgid "Kbytes"
@@ -3204,9 +3224,8 @@ msgid "required to perform NFS-safe file locking"
 msgstr "Requis pour gérer des verrous fichier NFS"
 
 #: src/lib/Sympa/ModDef.pm:191
-#, fuzzy
 msgid "used to create or remove paths"
-msgstr "Motif pour créer un nouveau champ From"
+msgstr "utilisés pour créer ou supprimer des chemins"
 
 #: src/lib/Sympa/ModDef.pm:198 src/lib/Sympa/ModDef.pm:209
 msgid "used to compute plaindigest messages from HTML"
@@ -3348,6 +3367,8 @@ msgstr ""
 #: src/lib/Sympa/ModDef.pm:350
 msgid "used to show progress bar by command line utilities"
 msgstr ""
+"utilisé pour afficher une barre de progression dans les outils en ligne de "
+"commande"
 
 #: src/lib/Sympa/ModDef.pm:357
 msgid ""
@@ -3360,6 +3381,7 @@ msgstr ""
 #: src/lib/Sympa/ModDef.pm:363
 msgid "used to get time with sub-second precision"
 msgstr ""
+"utilisé pour afficher des temps avec un précision supérieure à la seconde"
 
 #: src/lib/Sympa/ModDef.pm:370
 msgid "Used to create URI containing non URI-canonical characters."
@@ -3452,9 +3474,8 @@ msgstr "[ Image]"
 
 # nlsref 15,4
 #: src/lib/Sympa/Message/Plugin.pm:145
-#, fuzzy
 msgid "My message hook"
-msgstr "attachement de fin de message"
+msgstr "Mon traitement de message"
 
 # nlsref 17,1
 #: src/lib/Sympa/Tools/WWW.pm:58
@@ -3588,7 +3609,7 @@ msgstr "modèle d'alias de liste"
 
 #: src/lib/Sympa/Message/Plugin/FixEncoding.pm:31
 msgid "Fix character set and encoding"
-msgstr ""
+msgstr "Correction du jeu de caractère et de l'encodage"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -7546,12 +7567,10 @@ msgid "Multiple add"
 msgstr "Abonnements par lots"
 
 #: default/web_tt2/review.tt2:90
-#, fuzzy
 msgid "Search user: "
-msgstr "Rechercher un utilisateur"
+msgstr "Rechercher un utilisateur&nbsp;:"
 
 #: default/web_tt2/review.tt2:91
-#, fuzzy
 msgid "Search user"
 msgstr "Rechercher un utilisateur"
 
@@ -9751,9 +9770,8 @@ msgid "Cannot personalize message"
 msgstr "Impossible de personnaliser le message"
 
 #: default/mail_tt2/dsn.tt2:16
-#, fuzzy
 msgid "A virus in your mail"
-msgstr "Détection de virus."
+msgstr "Un virus dans votre message"
 
 #. (action)
 #: default/mail_tt2/dsn.tt2:18
@@ -9810,7 +9828,6 @@ msgstr "**** A L E R T E    V I R U S ****"
 
 #. (virus_name,recipient,from)
 #: default/mail_tt2/dsn.tt2:53 default/mail_tt2/your_infected_msg.tt2:5
-#, fuzzy
 msgid ""
 "Our viruschecker found a virus named %1 in a message addressed to %2 and "
 "that seems to be yours (From: %3)."
@@ -11618,9 +11635,8 @@ msgstr "Vous êtes abonné à la liste %1@%2 avec l'adresse %3"
 
 #. (user.email,list.name,list.host)
 #: default/mail_tt2/removed.tt2:4
-#, fuzzy
 msgid "Your address (%1) has been removed from list %2@%3."
-msgstr "Vous (%1) êtes désabonné de la liste %2@%3"
+msgstr "Vous (%1) êtes désabonné de la liste %2@%3."
 
 #. (list.name)-)
 #: default/mail_tt2/request_auth.tt2:6
