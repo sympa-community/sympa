@@ -87,6 +87,7 @@ my @sources_providing_listmembers = qw/
 my @more_data_sources = qw/
     editor_include
     owner_include
+    member_include
     /;
 
 # All non-pluggable sources are in the admin user file
@@ -7301,6 +7302,57 @@ sub _load_list_members_from_include {
     my $result;
     my @ex_sources;
 
+    foreach my $entry (@{$admin->{'member_include'}}) {
+
+        next unless (defined $entry);
+
+        my $include_file = tools::search_fullpath(
+            $self,
+            $entry->{'source'} . '.incl',
+            subdir => 'data_sources'
+        );
+
+        unless (defined $include_file) {
+            Log::do_log('err', 'The file %s.incl doesn\'t exist',
+                $entry->{'source'});
+            return undef;
+        }
+        
+        my $include_member;
+        ## the file has parameters
+        if (defined $entry->{'source_parameters'}) {
+            my %parsing;
+
+            $parsing{'data'}     = $entry->{'source_parameters'};
+            $parsing{'template'} = "$entry->{'source'}\.incl";
+
+            my $name = "$entry->{'source'}\.incl";
+
+            my $include_path = $include_file;
+            if ($include_path =~ s/$name$//) {
+                $parsing{'include_path'} = $include_path;
+                $include_member =
+                    _load_include_admin_user_file($self->{'domain'},
+                    $include_path, \%parsing);
+            } else {
+                Log::do_log('err',
+                    'Errors to get path of the the file %s.incl',
+                    $entry->{'source'});
+                return undef;
+            }
+
+        } else {
+            $include_member =
+                _load_include_admin_user_file($self->{'domain'},
+                $include_file);
+        }
+        my @types = keys %{$include_member};
+        my $type = $types[0];
+        my @defs = @{$include_member->{$type}};
+        my $def = $defs[0];
+        push @{$admin->{$type}},$def;
+    }
+    
     foreach my $type (@sources_providing_listmembers) {
 
         foreach my $tmp_incl (@{$admin->{$type}}) {

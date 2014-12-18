@@ -959,6 +959,26 @@ our %pinfo = (
         'occurrence' => '0-n'
     },
 
+    'member_include' => {
+        'group'      => 'data_source',
+        'gettext_id' => 'Users included from parameterizable data sources',
+        'format'     => {
+            'source' => {
+                'order'      => 1,
+                'gettext_id' => 'the data source',
+                'datasource' => 1,
+                'occurrence' => '1'
+            },
+            'source_parameters' => {
+                'order'      => 2,
+                'gettext_id' => 'data source parameters',
+                'format'     => '.*',
+                'occurrence' => '0-1'
+            },
+        },
+        'occurrence' => '0-n'
+    },
+
     'include_ldap_query' => {
         'group'      => 'data_source',
         'gettext_id' => "LDAP query inclusion",
