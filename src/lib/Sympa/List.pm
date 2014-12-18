@@ -6195,10 +6195,10 @@ sub _include_users_remote_sympa_list {
         }
         $u{'email'} = $user{'email'};
         if ($u{'id'}) {
-			$u{'id'} = join(',', split(',', $u{'id'}), $id);
-		}else{
-			$u{'id'} = $id;
-		}
+            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+        } else {
+            $u{'id'} = $id;
+        }
         $u{'gecos'} = $user{'gecos'};
         delete $user{'gecos'};
 
@@ -6349,10 +6349,10 @@ sub _include_users_list {
         my $email = $u{'email'} = $user->{'email'};
         $u{'gecos'} = $user->{'gecos'};
         if ($u{'id'}) {
-			$u{'id'} = join(',', split(',', $u{'id'}), $id);
-		}else{
-			$u{'id'} = $id;
-		}
+            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+        } else {
+            $u{'id'} = $id;
+        }
 
         $u{'visibility'} = $default_user_options->{'visibility'}
             if (defined $default_user_options->{'visibility'});
@@ -6467,10 +6467,10 @@ sub _include_users_file {
         $u{'email'} = $email;
         $u{'gecos'} = $gecos;
         if ($u{'id'}) {
-			$u{'id'} = join(',', split(',', $u{'id'}), $id);
-		}else{
-			$u{'id'} = $id;
-		}
+            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+        } else {
+            $u{'id'} = $id;
+        }
 
         $u{'visibility'} = $default_user_options->{'visibility'}
             if (defined $default_user_options->{'visibility'});
@@ -6578,7 +6578,7 @@ sub _include_users_remote_file {
             $u{'gecos'} = $gecos;
             if ($u{'id'}) {
                 $u{'id'} = join(',', split(',', $u{'id'}), $id);
-            }else{
+            } else {
                 $u{'id'} = $id;
             }
 
@@ -6668,7 +6668,7 @@ sub _include_users_voot_group {
             $u{'gecos'} = $member->{'displayName'};
             if ($u{'id'}) {
                 $u{'id'} = join(',', split(',', $u{'id'}), $id);
-            }else{
+            } else {
                 $u{'id'} = $id;
             }
 
@@ -6814,10 +6814,10 @@ sub _include_users_ldap {
         $u{'date'}        = time;
         $u{'update_date'} = time;
         if ($u{'id'}) {
-			$u{'id'} = join(',', split(',', $u{'id'}), $id);
-		}else{
-			$u{'id'} = $id;
-		}
+            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+        } else {
+            $u{'id'} = $id;
+        }
 
         $u{'visibility'} = $default_user_options->{'visibility'}
             if (defined $default_user_options->{'visibility'});
@@ -7044,10 +7044,10 @@ sub _include_users_ldap_2level {
         $u{'date'}        = time;
         $u{'update_date'} = time;
         if ($u{'id'}) {
-			$u{'id'} = join(',', split(',', $u{'id'}), $id);
-		}else{
-			$u{'id'} = $id;
-		}
+            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+        } else {
+            $u{'id'} = $id;
+        }
 
         $u{'visibility'} = $default_user_options->{'visibility'}
             if (defined $default_user_options->{'visibility'});
@@ -7261,10 +7261,10 @@ sub _include_users_sql {
         $u{'date'}        = time;
         $u{'update_date'} = time;
         if ($u{'id'}) {
-			$u{'id'} = join(',', split(',', $u{'id'}), $id);
-		}else{
-			$u{'id'} = $id;
-		}
+            $u{'id'} = join(',', split(',', $u{'id'}), $id);
+        } else {
+            $u{'id'} = $id;
+        }
 
         $u{'visibility'} = $default_user_options->{'visibility'}
             if (defined $default_user_options->{'visibility'});
@@ -9104,8 +9104,8 @@ sub get_lists {
                         $ve =~ s/([^ \w\x80-\xFF])/\\$1/g;
                         push @expr_perl,
                             sprintf(
-                            'scalar(grep { $_ eq "%s" } @{$list->{"admin"}{"topics"} || []})',
-                            $ve);
+                            'scalar(grep { $_ eq "%s" or index($_, "%s/") == 0 } @{$list->{"admin"}{"topics"} || []})',
+                            $ve, $ve);
                     }
                 } else {
                     Log::do_log('err', 'bug in logic. Ask developer: $k=%s',
@@ -9133,7 +9133,9 @@ sub get_lists {
                         $ve =~ s/^["'](.*)['"]$/$1/;
                         $ve =~ s/([%_])/\\$1/g;
                         push @expr_sql,
-                            sprintf("topics_list LIKE '%%%s%%'", $ve);
+                            sprintf(
+                            "topics_list LIKE '%%,%s,%%' OR topics_list LIKE '%%,%s/%%'",
+                            $ve, $ve);
                     }
                 }
             }
