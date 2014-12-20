@@ -9646,9 +9646,9 @@ sub lowercase_field {
 
 ## Sort function for writing config files
 sub by_order {
-    ($Sympa::ListDef::pinfo{$main::a}
-            {'order'} <=> $Sympa::ListDef::pinfo{$main::b}{'order'})
-        || ($main::a cmp $main::b);
+    (($Sympa::ListDef::pinfo{$main::a || ''}{'order'} || 0)
+        <=> ($Sympa::ListDef::pinfo{$main::b || ''}{'order'} || 0))
+        || (($main::a || '') cmp ($main::b || ''));
 }
 
 ## Apply defaults to parameters definition (%Sympa::ListDef::pinfo)
@@ -9660,7 +9660,7 @@ sub _save_list_param {
     my ($robot_id, $key, $p, $defaults, $fd) = @_;
 
     ## Ignore default value
-    return 1 if ($defaults == 1);
+    return 1 if $defaults;
     return 1 unless (defined($p));
 
     my $pinfo = tools::get_list_params($robot_id);
@@ -9677,7 +9677,9 @@ sub _save_list_param {
 
             if (defined($pinfo->{$key}{'file_format'}{$k}{'scenario'})) {
                 ## Skip if empty value
-                next if ($p->{$k}{'name'} =~ /^\s*$/);
+                next
+                    unless defined $p->{$k}{'name'}
+                        and $p->{$k}{'name'} =~ /\S/;
 
                 $fd->print(sprintf "%s %s\n", $k, $p->{$k}{'name'});
 
@@ -9694,7 +9696,7 @@ sub _save_list_param {
                 );
             } else {
                 ## Skip if empty value
-                next if ($p->{$k} =~ /^\s*$/);
+                next unless defined $p->{$k} and $p->{$k} =~ /\S/;
 
                 $fd->print(sprintf "%s %s\n", $k, $p->{$k});
             }
