@@ -10,12 +10,11 @@ visibility noconceal
 
 send privateorpublickey
 
-web_archive
-  access intranet
+process_archive on
 
 archive
-  period month
-  access owner
+  web_access intranet
+  mail_access owner
 
 clean_delay_queuemod 15
 

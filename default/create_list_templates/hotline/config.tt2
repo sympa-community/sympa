@@ -12,12 +12,11 @@ send public
 
 reject_mail_from_automates_feature off
 
-web_archive
-  access private
+process_archive on
 
 archive
-  period month
-  access owner
+  web_access private
+  mail_access owner
 
 clean_delay_queuemod 15
 

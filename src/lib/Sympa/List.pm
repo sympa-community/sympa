@@ -264,6 +264,11 @@ Archives the Mail::Internet message given as argument.
 Returns true is the list is configured to keep archives of
 its messages.
 
+=item is_archiving_enabled ( )
+
+Returns true is the list is configured to keep archives of
+its messages, i.e. process_archive parameter is set to "on".
+
 =item get_stats ( OPTION )
 
 Returns either a formatted printable strings or an array whith
@@ -328,7 +333,7 @@ my %list_option = (
 
     # bouncers_level2.notification, bouncers_level1.notification,
     # welcome_return_path, remind_return_path, rfc2369_header_fields,
-    # archive.access
+    # archive.mail_access
     'owner' => {'gettext_id' => 'owner'},
 
     # bouncers_level2.notification, bouncers_level1.notification
@@ -416,7 +421,7 @@ my %list_option = (
     'mime'   => {'gettext_id' => 'add a new MIME part'},
     'append' => {'gettext_id' => 'append to message body'},
 
-    # archive.access
+    # archive.mail_access
     'open'    => {'gettext_id' => 'open'},
     'closed'  => {'gettext_id' => 'closed'},
     'private' => {'gettext_id' => 'subscribers only'},
@@ -1738,7 +1743,9 @@ sub distribute_msg {
     }
 
     ## Archives
-    $self->archive_msg($message);
+    if ($self->is_archiving_enabled) {
+        $self->archive_msg($message);
+    }
 
     # Transformation of message after archiving.
     $self->post_archive($message, $sequence);
@@ -5638,7 +5645,7 @@ sub may_do {
     $who    =~ y/A-Z/a-z/;
 
     if ($action =~ /^(index|get)$/io) {
-        my $arc_access = $admin->{'archive'}{'access'};
+        my $arc_access = $admin->{'archive'}{'mail_access'};
         if ($arc_access =~ /^public$/io) {
             return 1;
         } elsif ($arc_access =~ /^private$/io) {
@@ -5745,7 +5752,7 @@ sub archive_msg {
     my ($self, $message) = @_;
     Log::do_log('debug2', 'For %s', $self->{'name'});
 
-    if ($self->is_archived()) {
+    if ($self->is_archiving_enabled) {
         my $msg_string = $message->to_string(
             original => Sympa::Tools::Data::smart_eq(
                 $self->{admin}{archive_crypted_msg}, 'original'
@@ -5809,7 +5816,7 @@ sub is_moderated {
 ## Is the list archived?
 sub is_archived {
     Log::do_log('debug', '');
-    if (shift->{'admin'}{'web_archive'}{'access'}) {
+    if (shift->{'admin'}{'archive'}{'web_access'}) {
         Log::do_log('debug', '1');
         return 1;
     }
@@ -5821,9 +5828,14 @@ sub is_archived {
 sub is_web_archived {
     my $self = shift;
     return 1
-        if ref $self->{'admin'}{'web_archive'} eq 'HASH'
-            and $self->{'admin'}{'web_archive'}{'access'};
+        if ref $self->{'admin'}{'archive'} eq 'HASH'
+            and $self->{'admin'}{'archive'}{'web_access'};
     return undef;
+}
+
+sub is_archiving_enabled {
+    return Sympa::Tools::Data::smart_eq(shift->{'admin'}{'process_archive'},
+        'on');
 }
 
 ## Returns 1 if the  digest  must be send
@@ -7317,7 +7329,7 @@ sub _load_list_members_from_include {
                 $entry->{'source'});
             return undef;
         }
-        
+
         my $include_member;
         ## the file has parameters
         if (defined $entry->{'source_parameters'}) {
@@ -7347,12 +7359,12 @@ sub _load_list_members_from_include {
                 $include_file);
         }
         my @types = keys %{$include_member};
-        my $type = $types[0];
-        my @defs = @{$include_member->{$type}};
-        my $def = $defs[0];
-        push @{$admin->{$type}},$def;
+        my $type  = $types[0];
+        my @defs  = @{$include_member->{$type}};
+        my $def   = $defs[0];
+        push @{$admin->{$type}}, $def;
     }
-    
+
     foreach my $type (@sources_providing_listmembers) {
 
         foreach my $tmp_incl (@{$admin->{$type}}) {
@@ -9648,7 +9660,7 @@ sub lowercase_field {
 sub by_order {
     (($Sympa::ListDef::pinfo{$main::a || ''}{'order'} || 0)
         <=> ($Sympa::ListDef::pinfo{$main::b || ''}{'order'} || 0))
-        || (($main::a || '') cmp ($main::b || ''));
+        || (($main::a || '') cmp($main::b || ''));
 }
 
 ## Apply defaults to parameters definition (%Sympa::ListDef::pinfo)

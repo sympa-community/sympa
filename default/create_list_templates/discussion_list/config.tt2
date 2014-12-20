@@ -36,12 +36,11 @@ send privateoreditorkey
 topics [% topics %]
 [% END -%]
 
-web_archive
-access public
+process_archive on
 
 archive
-access owner
-period week
+  web_access public
+  mail_access owner
 
 digest 1,4 13:26
 
@@ -54,8 +53,8 @@ d_read public
 pictures_feature on
 
 creation
-date_epoch [% creation.date_epoch %]
-date       [% creation.date %]
+  date_epoch [% creation.date_epoch %]
+  date       [% creation.date %]
 [% IF creation_email -%]
-email      [% creation_email %]
+  email      [% creation_email %]
 [% END -%]

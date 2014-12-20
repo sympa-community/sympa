@@ -153,7 +153,9 @@ sub upgrade {
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             # FIXME: line below will always success
-            next unless (defined $list->{'admin'}{'web_archive'});
+            next
+                unless defined $list->{'admin'}{'web_archive'}
+                    or defined $list->{'admin'}{'archive'};
             my $file =
                   $Conf::Conf{'queueoutgoing'}
                 . '/.rebuild.'
@@ -557,7 +559,9 @@ sub upgrade {
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             # FIXME: next line always success
-            next unless (defined $list->{'admin'}{'web_archive'});
+            next
+                unless defined $list->{'admin'}{'web_archive'}
+                    or defined $list->{'admin'}{'archive'};
             my $file =
                   $Conf::Conf{'queueoutgoing'}
                 . '/.rebuild.'
@@ -1381,6 +1385,43 @@ sub upgrade {
             'Upgrade process for spool %s: performed files %s',
             $spooldir, join(', ', @performed))
             if @performed;
+    }
+
+    # As of 6.2b.1, several list parameters are renamed or added.
+    if (lower_version($previous_version, '6.2b.1')) {
+        Log::do_log('notice', 'Upgrading list config...');
+        my $all_lists = Sympa::List::get_lists('*');
+        foreach my $list (@$all_lists) {
+            $list->{'admin'}{'archive'} = {}
+                unless ref $list->{'admin'}{'archive'} eq 'HASH';
+
+            $list->{'admin'}{'archive'}{'mail_access'} =
+                $list->{'admin'}{'archive'}{'access'}
+                if $list->{'admin'}{'archive'}{'access'};
+            delete $list->{'admin'}{'archive'}{'access'};
+
+            if (ref $list->{'admin'}{'web_archive'} eq 'HASH'
+                and $list->{'admin'}{'web_archive'}{'access'}) {
+                $list->{'admin'}{'process_archive'} = 'on';
+                delete $list->{'admin'}{'defaults'}{'process_archive'};
+                #} else {
+                #    $list->{'admin'}{'process_archive'} = 'off';
+            }
+            if (ref $list->{'admin'}{'web_archive'} eq 'HASH') {
+                $list->{'admin'}{'archive'}{'web_access'} =
+                    $list->{'admin'}{'web_archive'}{'access'}
+                    if $list->{'admin'}{'web_archive'}{'access'};
+                $list->{'admin'}{'archive'}{'quota'} =
+                    $list->{'admin'}{'web_archive'}{'quota'}
+                    if $list->{'admin'}{'web_archive'}{'quota'};
+                $list->{'admin'}{'archive'}{'max_month'} =
+                    $list->{'admin'}{'web_archive'}{'max_month'}
+                    if $list->{'admin'}{'web_archive'}{'max_month'};
+            }
+            delete $list->{'admin'}{'web_archive'};
+
+            $list->save_config('automatic');
+        }
     }
 
     return 1;

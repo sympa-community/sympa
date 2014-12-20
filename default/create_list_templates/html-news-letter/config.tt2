@@ -16,12 +16,11 @@ reception mail,nomail,txt,html
 default_user_options 
 reception html
 
-web_archive
-  access public
+process_archive on
 
 archive
-  period year
-  access owner
+  web_access public
+  mail_access owner
 
 clean_delay_queuemod 15
 

@@ -844,10 +844,10 @@ sub mail2arc {
         }
 
         ## Check quota
-        if ($list->{'admin'}{'web_archive'}{'quota'}) {
+        if ($list->{'admin'}{'archive'}{'quota'}) {
             my $used = $list->get_arc_size("$arcpath");
 
-            if ($used >= $list->{'admin'}{'web_archive'}{'quota'} * 1024) {
+            if ($used >= $list->{'admin'}{'archive'}{'quota'} * 1024) {
                 Log::do_log('err',
                     "archived::mail2arc : web_arc Quota exceeded for list $list->{'name'}"
                 );
@@ -855,8 +855,8 @@ sub mail2arc {
                     {'size' => $used});
                 return undef;
             }
-            if ($used >=
-                ($list->{'admin'}{'web_archive'}{'quota'} * 1024 * 0.95)) {
+            if ($used >= ($list->{'admin'}{'archive'}{'quota'} * 1024 * 0.95))
+            {
                 Log::do_log('err',
                     "archived::mail2arc : web_arc Quota exceeded for list $list->{'name'}"
                 );
@@ -864,10 +864,8 @@ sub mail2arc {
                     'arc_quota_95',
                     {   'size' => $used,
                         'rate' => int(
-                            $used * 100 / (
-                                $list->{'admin'}{'web_archive'}{'quota'} *
-                                    1024
-                            )
+                            $used * 100 /
+                                ($list->{'admin'}{'archive'}{'quota'} * 1024)
                         )
                     }
                 );
@@ -885,7 +883,7 @@ sub mail2arc {
             Log::do_log('debug', 'mkdir %s/%s/%s-%s',
                 $arcpath, $list->get_list_id(), $yyyy, $mm);
 
-            if ($list->{'admin'}{'web_archive'}{'max_month'}) {
+            if ($list->{'admin'}{'archive'}{'max_month'}) {
                 # maybe need to remove some old archive
                 if (opendir DIR, $arcpath . '/' . $list->get_list_id()) {
                     my @archives = (
@@ -895,8 +893,9 @@ sub mail2arc {
                     closedir DIR;
                     my $nb_month = $#archives + 1;
                     my $i        = 0;
-                    while ($nb_month >
-                        $list->{'admin'}{'web_archive'}{'max_month'}) {
+                    while (
+                        $nb_month > $list->{'admin'}{'archive'}{'max_month'})
+                    {
                         Log::do_log('info', 'Removing %s/%s/%s',
                             $arcpath, $list->get_list_id(), $archives[$i]);
                         Sympa::Tools::File::remove_dir($arcpath . '/'

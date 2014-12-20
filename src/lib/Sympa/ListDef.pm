@@ -38,7 +38,7 @@ our %default = (
 our @param_order =
     qw (subject visibility info subscribe add unsubscribe del owner owner_include
     send editor editor_include delivery_time account topics
-    host lang web_archive archive digest digest_max_size available_user_options
+    host lang process_archive web_archive archive digest digest_max_size available_user_options
     default_user_options msg_topic msg_topic_keywords_apply_on msg_topic_tagging reply_to_header reply_to forced_reply_to *
     verp_rate tracking welcome_return_path remind_return_path user_data_source include_file include_remote_file
     include_list include_remote_sympa_list include_ldap_query
@@ -640,14 +640,22 @@ our %pinfo = (
 
     ### Archives page ###
 
+    'process_archive' => {
+        'group'      => 'archives',
+        'gettext_id' => "Store distributed messages into archive",
+        'format'     => ['on', 'off'],
+        'default'    => {'conf' => 'process_archive'},
+    },
     'web_archive' => {
+        'obsolete'   => '1',              # Merged into archive.
         'group'      => 'archives',
         'gettext_id' => "Web archives",
         'format'     => {
             'access' => {
                 'order'      => 1,
                 'gettext_id' => "access right",
-                'scenario'   => 'access_web_archive'
+                'scenario'   => 'access_web_archive',
+                'obsolete'   => 1,                    # Use archive.web_access
             },
             'quota' => {
                 'order'        => 2,
@@ -655,33 +663,60 @@ our %pinfo = (
                 'gettext_unit' => 'Kbytes',
                 'format'       => '\d+',
                 'default'      => {'conf' => 'default_archive_quota'},
-                'length'       => 8
+                'length'       => 8,
+                'obsolete' => 1,                      # Use archive.quota
             },
             'max_month' => {
                 'order'      => 3,
                 'gettext_id' => "Maximum number of month archived",
                 'format'     => '\d+',
-                'length'     => 3
+                'length'     => 3,
+                'obsolete' => 1,                      # Use archive.max_month
             }
         }
     },
-
     'archive' => {
         'group'      => 'archives',
-        'gettext_id' => "Text archives",
+        'gettext_id' => "Archives",
         'format'     => {
             'period' => {
                 'order'      => 1,
                 'gettext_id' => "frequency",
                 'format'     => ['day', 'week', 'month', 'quarter', 'year'],
                 'synonym'  => {'weekly' => 'week'},
-                'obsolete' => 1,
+                'obsolete' => 1,        # Not yet implemented.
             },
             'access' => {
                 'order'      => 2,
                 'gettext_id' => "access right",
                 'format' => ['open', 'private', 'public', 'owner', 'closed'],
+                'synonym'  => {'open' => 'public'},
+                'obsolete' => 1,      # Use archive.mail_access
+            },
+            'web_access' => {
+                'order'      => 3,
+                'gettext_id' => "access right",
+                'scenario'   => 'access_web_archive'
+            },
+            'mail_access' => {
+                'order'      => 4,
+                'gettext_id' => "access right by mail commands",
+                'format' => ['open', 'private', 'public', 'owner', 'closed'],
                 'synonym' => {'open' => 'public'}
+            },
+            'quota' => {
+                'order'        => 5,
+                'gettext_id'   => "quota",
+                'gettext_unit' => 'Kbytes',
+                'format'       => '\d+',
+                'default'      => {'conf' => 'default_archive_quota'},
+                'length'       => 8
+            },
+            'max_month' => {
+                'order'      => 6,
+                'gettext_id' => "Maximum number of month archived",
+                'format'     => '\d+',
+                'length'     => 3
             }
         }
     },
@@ -914,7 +949,8 @@ our %pinfo = (
         'group'      => 'data_source',
         'gettext_id' => "List inclusion",
         'format'     => Sympa::Regexps::listname() . '(\@'
-            . Sympa::Regexps::host() . ')?(\s+filter\s+.+)?',
+            . Sympa::Regexps::host()
+            . ')?(\s+filter\s+.+)?',
         'occurrence' => '0-n'
     },
 
@@ -2169,7 +2205,8 @@ sub cleanup {
             && $v->{'format'}{$k}{'scenario'}) {
             $v->{'format'}{$k}{'format'}  = Sympa::Regexps::scenario();
             $v->{'format'}{$k}{'default'} = 'default'
-                unless (($p eq 'web_archive') && ($k eq 'access'));
+                unless ($p eq 'web_archive' and $k eq 'access')
+                or ($p eq 'archive' and $k eq 'web_access');
         }
 
         ## Task format

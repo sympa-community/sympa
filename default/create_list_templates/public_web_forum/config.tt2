@@ -10,12 +10,11 @@ visibility noconceal
 
 send privateoreditorkey
 
-web_archive
-  access public
+process_archive on
 
 archive
-  period month
-  access owner
+  web_access public
+  mail_access owner
 
 clean_delay_queuemod 15
 

@@ -384,7 +384,7 @@ sub request_action {
                 if (defined $list->{'admin'}{$operations[0]});
         }
 
-        ## List parameter might not be defined (example : web_archive.access)
+        # List parameter might not be defined (example : archive.web_access)
         unless (defined $scenario_path) {
             my $return = {
                 'action'      => 'reject',

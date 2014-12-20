@@ -1784,8 +1784,8 @@ while ($query = new_loop()) {
                     and $list->is_list_member($param->{'user'}{'email'});
 
             return 0
-                if $permission eq 'web_archive.access'
-                    and not defined $list->{'admin'}{'web_archive'};
+                if $permission eq 'archive.web_access'
+                    and not defined $list->{'admin'}{'archive'};
 
             return 1;
         };
@@ -3573,13 +3573,13 @@ sub check_param_out {
 # SJS END
 
         ## Archives Access control
-        if (defined $list->{'admin'}{'web_archive'}) {
+        if (defined $list->{'admin'}{'archive'}) {
             $param->{'is_archived'} = 1;
 
             ## Check if the current user may access web archives
             my $result = Sympa::Scenario::request_action(
                 $list,
-                'web_archive.access',
+                'archive.web_access',
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
@@ -3598,7 +3598,7 @@ sub check_param_out {
             ## Check if web archive is publically accessible (useful
             ## information for RSS)
             $result = Sympa::Scenario::request_action(
-                $list, 'web_archive.access',
+                $list, 'archive.web_access',
                 $param->{'auth_method'},
                 {'sender' => 'nobody'}
             );
@@ -9871,7 +9871,7 @@ sub do_arc {
     }
 
     ## Access control
-    unless (defined check_authz('do_arc', 'web_archive.access')) {
+    unless (defined check_authz('do_arc', 'archive.web_access')) {
         $param->{'previous_action'} = 'arc';
         $param->{'previous_list'}   = $list->{'name'};
         return undef;
@@ -10063,7 +10063,7 @@ sub do_latest_arc {
 
     ## Access control
     return undef
-        unless (defined check_authz('do_latest_arc', 'web_archive.access'));
+        unless (defined check_authz('do_latest_arc', 'archive.web_access'));
 
     ## parameters of the query
     my $today = time;
@@ -10508,7 +10508,7 @@ sub do_view_source {
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
     ## Access control
-    unless (defined check_authz('do_arc', 'web_archive.access')) {
+    unless (defined check_authz('do_arc', 'archive.web_access')) {
         $param->{'previous_action'} = 'arc';
         $param->{'previous_list'}   = $list->{'name'};
         return undef;
@@ -10668,7 +10668,7 @@ sub do_arcsearch_form {
     ## Access control
     return undef
         unless (
-        defined check_authz('do_arcsearch_form', 'web_archive.access'));
+        defined check_authz('do_arcsearch_form', 'archive.web_access'));
 
     my $search_base =
         Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id();
@@ -10692,7 +10692,7 @@ sub do_arcsearch {
 
     ## Access control
     return undef
-        unless (defined check_authz('do_arcsearch', 'web_archive.access'));
+        unless (defined check_authz('do_arcsearch', 'archive.web_access'));
 
     my $search = Sympa::Marc::Search->new;
     $search->search_base(Conf::get_robot_conf($robot, 'arc_path') . '/'
@@ -10838,7 +10838,7 @@ sub do_arcsearch_id {
 
     ## Access control
     return undef
-        unless (defined check_authz('do_arcsearch_id', 'web_archive.access'));
+        unless (defined check_authz('do_arcsearch_id', 'archive.web_access'));
 
     my $search = Sympa::Marc::Search->new;
     $search->search_base(Conf::get_robot_conf($robot, 'arc_path') . '/'
@@ -12090,7 +12090,7 @@ sub do_rebuildallarc {
 
     my $all_lists = Sympa::List::get_lists($robot);
     foreach my $list (@$all_lists) {
-        next unless (defined $list->{'admin'}{'web_archive'});
+        next unless defined $list->{'admin'}{'archive'};
         my $file =
               $Conf::Conf{'queueoutgoing'}
             . '/.rebuild.'
@@ -22786,7 +22786,7 @@ sub do_attach {
 
     ## Access control
     return undef
-        unless (defined check_authz('do_attach', 'web_archive.access'));
+        unless (defined check_authz('do_attach', 'archive.web_access'));
 
     # parameters for the template file
     # view a file
@@ -23548,7 +23548,7 @@ sub do_arc_manage {
     wwslog('info', '(%s)', $in{'list'});
 
     ## Access control
-    unless (defined check_authz('do_arc', 'web_archive.access')) {
+    unless (defined check_authz('do_arc', 'archive.web_access')) {
         return undef;
     }
 
@@ -23571,7 +23571,7 @@ sub do_arc_download {
     wwslog('info', '(%s)', $in{'list'});
 
     ## Access control
-    unless (defined check_authz('do_arc', 'web_archive.access')) {
+    unless (defined check_authz('do_arc', 'archive.web_access')) {
         return undef;
     }
 
@@ -23832,7 +23832,7 @@ sub do_arc_delete {
     wwslog('info', '(%s)', $in{'list'});
 
     ## Access control
-    unless (defined check_authz('do_arc', 'web_archive.access')) {
+    unless (defined check_authz('do_arc', 'archive.web_access')) {
         return undef;
     }
 
