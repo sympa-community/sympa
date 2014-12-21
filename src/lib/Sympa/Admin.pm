@@ -175,7 +175,8 @@ sub create_list_old {
     $param->{'listname'} = lc($param->{'listname'});
     my $listname_regexp = Sympa::Regexps::listname();
 
-    unless ($param->{'listname'} =~ /^$listname_regexp$/i) {
+    unless ($param->{'listname'} =~ /^$listname_regexp$/i
+        and length $param->{'listname'} <= Sympa::Constants::LIST_LEN()) {
         Log::do_log('err', 'Incorrect listname %s', $param->{'listname'});
         return undef;
     }
@@ -407,7 +408,8 @@ sub create_list {
     $param->{'listname'} = lc($param->{'listname'});
     my $listname_regexp = Sympa::Regexps::listname();
 
-    unless ($param->{'listname'} =~ /^$listname_regexp$/i) {
+    unless ($param->{'listname'} =~ /^$listname_regexp$/i
+        and length $param->{'listname'} <= Sympa::Constants::LIST_LEN()) {
         Log::do_log('err', 'Incorrect listname %s', $param->{'listname'});
         return undef;
     }
@@ -767,7 +769,8 @@ sub rename_list {
     my $new_listname    = lc($param{'new_listname'});
     my $listname_regexp = Sympa::Regexps::listname();
 
-    unless ($new_listname =~ /^$listname_regexp$/i) {
+    unless ($new_listname =~ /^$listname_regexp$/i
+        and length $new_listname <= Sympa::Constants::LIST_LEN()) {
         Log::do_log('err', 'Incorrect listname %s', $new_listname);
         return 'incorrect_listname';
     }

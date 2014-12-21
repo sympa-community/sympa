@@ -37,7 +37,7 @@ use constant template_name => qr'[a-zA-Z0-9][a-zA-Z0-9\-\.\+_\s]*';
 use constant host          => qr'[\w\.\-]+';
 use constant multiple_host_with_port =>
     '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*';
-use constant listname    => qr'[a-z0-9][a-z0-9\-\.\+_]{0,49}';
+use constant listname    => qr'[a-z0-9][a-z0-9\-\.\+_]*';
 use constant sql_query   => qr'(SELECT|select).*';
 use constant scenario    => qr'[\w,\.\-]+';
 use constant task        => qr'\w+';
