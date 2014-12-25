@@ -33,13 +33,12 @@ use Net::CIDR;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
+use Sympa::Datasource::LDAP;
+use Sympa::Datasource::SQL;
 use Sympa::Language;
-use Sympa::LDAP;
-use Sympa::LDAPSource;
 use Sympa::List;
 use Log;
 use Sympa::Robot;
-use Sympa::SQLSource;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -1480,7 +1479,8 @@ sub search {
                 {'value'};
         }
 
-        my $ds = Sympa::SQLSource->new($sql_conf->{'sql_named_filter_query'});
+        my $ds = Sympa::Datasource::SQL->new(
+            $sql_conf->{'sql_named_filter_query'});
         unless (defined $ds && $ds->connect() && $ds->ping) {
             Log::do_log(
                 'notice',
@@ -1525,12 +1525,10 @@ sub search {
                 $filter_file);
             return undef;
         }
-        my $timeout = 3600;
-        my $var;
-        my $time = time;
-        my %ldap_conf;
+        my $timeout   = 3600;
+        my %ldap_conf = _load_ldap_configuration($file);
 
-        return undef unless (%ldap_conf = Sympa::LDAP::load($file));
+        return undef unless %ldap_conf;
 
         my $filter = $ldap_conf{'filter'};
 
@@ -1576,7 +1574,7 @@ sub search {
 
         my $ldap;
         my $param = Sympa::Tools::Data::dup_var(\%ldap_conf);
-        my $ds    = Sympa::LDAPSource->new($param);
+        my $ds    = Sympa::Datasource::LDAP->new($param);
 
         unless (defined $ds && ($ldap = $ds->connect())) {
             Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
@@ -1759,6 +1757,86 @@ sub is_purely_closed {
     Log::do_log('notice', 'Scenario %s is purely closed',
         $self->{'file_path'});
     return 1;
+}
+
+## Loads and parses the configuration file. Reports errors if any.
+sub _load_ldap_configuration {
+    Log::do_log('debug3', '(%s)', @_);
+    my $config = shift;
+
+    my $line_num   = 0;
+    my $config_err = 0;
+    my ($i, %o);
+
+    ## Open the configuration file or return and read the lines.
+    unless (open(IN, $config)) {
+        Log::do_log('err', 'Unable to open %s: %m', $config);
+        return;
+    }
+
+    my @valid_options    = qw(host suffix filter scope bind_dn bind_password);
+    my @required_options = qw(host suffix filter);
+
+    my %valid_options    = map { $_ => 1 } @valid_options;
+    my %required_options = map { $_ => 1 } @required_options;
+
+    my %Default_Conf = (
+        'host'          => undef,
+        'suffix'        => undef,
+        'filter'        => undef,
+        'scope'         => 'sub',
+        'bind_dn'       => undef,
+        'bind_password' => undef
+    );
+
+    my %Ldap = ();
+
+    my $folded_line;
+    while (my $current_line = <IN>) {
+        $line_num++;
+        next if ($current_line =~ /^\s*$/o || $current_line =~ /^[\#\;]/o);
+
+        ## Cope with folded line (ending with '\')
+        if ($current_line =~ /\\\s*$/) {
+            $current_line =~ s/\\\s*$//;    ## remove trailing \
+            chomp $current_line;
+            $folded_line .= $current_line;
+            next;
+        } elsif (defined $folded_line) {
+            $current_line = $folded_line . $current_line;
+            $folded_line  = undef;
+        }
+
+        if ($current_line =~ /^(\S+)\s+(.+)$/io) {
+            my ($keyword, $value) = ($1, $2);
+            $value =~ s/\s*$//;
+
+            $o{$keyword} = [$value, $line_num];
+        } else {
+            #printf STDERR Msg(1, 3, "Malformed line %d: %s"), $config, $_;
+            $config_err++;
+        }
+    }
+    close(IN);
+
+    ## Check if we have unknown values.
+    foreach $i (sort keys %o) {
+        $Ldap{$i} = $o{$i}[0] || $Default_Conf{$i};
+
+        unless ($valid_options{$i}) {
+            Log::do_log('err', 'Line %d, unknown field: %s', $o{$i}[1], $i);
+            $config_err++;
+        }
+    }
+    ## Do we have all required values ?
+    foreach $i (keys %required_options) {
+        unless (defined $o{$i} or defined $Default_Conf{$i}) {
+            Log::do_log('err', 'Required field not found: %s', $i);
+            $config_err++;
+            next;
+        }
+    }
+    return %Ldap;
 }
 
 1;

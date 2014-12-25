@@ -29,7 +29,7 @@ use warnings;
 
 use Log;
 
-use base qw(Sympa::SQLSource);
+use base qw(Sympa::Datasource::SQL);
 
 ############################
 #### Section containing generic functions          #

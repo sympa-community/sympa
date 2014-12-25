@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::LDAPSource;
+package Sympa::Datasource::LDAP;
 
 use strict;
 use warnings;
@@ -34,8 +34,8 @@ use base qw(Sympa::Datasource);
 sub new {
     my $pkg   = shift;
     my $param = shift;
-    my $self  = $param;
-    Log::do_log('debug', 'Creating new Sympa::LDAPSource object');
+    my $self  = $param || {};
+    Log::do_log('debug', 'Creating new Sympa::Datasource::LDAP object');
     ## Map equivalent parameters (depends on the calling context : included
     ## members, scenario, authN
     ## Also set defaults
@@ -49,9 +49,9 @@ sub new {
     }
 
     $self->{'timeout'} ||= 3;
-    $self->{'async'}              = 1;
     $self->{'ldap_bind_dn'}       = $self->{'user'};
     $self->{'ldap_bind_password'} = $self->{'passwd'};
+    $self->{'ca_verify'} ||= 'optional';
 
     $self = $pkg->SUPER::new($self);
     bless $self, $pkg;
@@ -86,7 +86,7 @@ sub new {
 #  connect
 ############################################################
 #  Connect to an LDAP directory. This could be called as
-#  a Sympa::LDAPSource object member, or as a static sub.
+#  a Sympa::Datasource::LDAP object member, or as a static sub.
 #
 # IN : -$options : ref to a hash. Options for the connection process.
 #         currently accepts 'keep_trying' : wait and retry until
@@ -97,8 +97,7 @@ sub new {
 #
 ##############################################################
 sub connect {
-    my $self    = shift;
-    my $options = shift;
+    my $self = shift;
 
     ## Do we have all required parameters
     foreach my $ldap_param ('ldap_host') {
@@ -160,18 +159,15 @@ sub connect {
     ## "supported_extension" in Net::LDAP::RootDSE to
     ## check this.
     if ($self->{'use_start_tls'}) {
-        my %tls_param;
-        $tls_param{'sslversion'} = $self->{'ssl_version'}
-            if ($self->{'ssl_version'});
-        $tls_param{'ciphers'} = $self->{'ssl_ciphers'}
-            if ($self->{'ssl_ciphers'});
-        $tls_param{'verify'} = $self->{'ca_verify'} || "optional";
-        $tls_param{'capath'} = $self->{'ca_path'}   || "/etc/ssl";
-        $tls_param{'cafile'} = $self->{'ca_file'} if ($self->{'ca_file'});
-        $tls_param{'clientcert'} = $self->{'ssl_cert'}
-            if ($self->{'ssl_cert'});
-        $tls_param{'clientkey'} = $self->{'ssl_key'} if ($self->{'ssl_key'});
-        $self->{'ldap_handler'}->start_tls(%tls_param);
+        $self->{'ldap_handler'}->start_tls(
+            verify     => $self->{'ca_verify'},
+            capath     => $self->{'ca_path'},
+            cafile     => $self->{'ca_file'},
+            sslversion => $self->{'ssl_version'},
+            ciphers    => $self->{'ssl_ciphers'},
+            clientcert => $self->{'ssl_cert'},
+            clientkey  => $self->{'ssl_key'},
+        );
     }
 
     my $cnx;
@@ -193,7 +189,6 @@ sub connect {
     }
     Log::do_log('debug', 'Bound to LDAP host "%s"', $host_entry);
 
-    Log::do_log('debug', 'Connected to Database %s', $self->{'db_name'});
     return $self->{'ldap_handler'};
 
 }

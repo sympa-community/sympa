@@ -72,7 +72,7 @@ use Sympa::Crash Hook => \&_crash_handler;    # Show traceback.
 use Sympa::Family;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
-use Sympa::LDAPSource;
+use Sympa::Datasource::LDAP;
 use Sympa::List;
 use Log;
 use Sympa::Marc::Search;
@@ -4501,7 +4501,7 @@ sub is_ldap_user {
         next unless ($auth =~ /$ldap->{'regexp'}/i);
 
         my $param = Sympa::Tools::Data::dup_var($ldap);
-        my $ds    = Sympa::LDAPSource->new($param);
+        my $ds    = Sympa::Datasource::LDAP->new($param);
 
         unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
             Log::do_log('err', 'Unable to connect to the LDAP server "%s"',

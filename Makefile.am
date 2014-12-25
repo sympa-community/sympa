@@ -28,6 +28,7 @@ check_SCRIPTS = t/Language.t \
 		t/Regexps.t \
 		t/compile_modules.t \
 		t/compile_executables.t \
+		t/Datasource_LDAP.t \
 		t/tools_data.t \
 		t/tools_file.t \
 		t/Tools_SMIME.t \

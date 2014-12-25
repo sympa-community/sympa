@@ -32,7 +32,7 @@ use Sympa::Constants;
 use Sympa::DatabaseDescription;
 use Log;
 #use Sympa::List;
-use Sympa::SQLSource;
+use Sympa::Datasource::SQL;
 use tools;
 use Sympa::Tools::Data;
 
@@ -149,12 +149,12 @@ sub connect_sympa_database {
             ($option ne 'just_try' && !$ENV{'GATEWAY_INTERFACE'}),
         'warn' => 1,
     };
-    unless ($db_source = Sympa::SQLSource->new($db_conf)) {
-        Log::do_log('err', 'Unable to create Sympa::SQLSource object');
+    unless ($db_source = Sympa::Datasource::SQL->new($db_conf)) {
+        Log::do_log('err', 'Unable to create Sympa::Datasource::SQL object');
         return undef;
     }
     ## Used to check that connecting to the Sympa database works and the
-    ## Sympa::SQLSource object is created.
+    ## Sympa::Datasource::SQL object is created.
     $use_db = 1;
 
     # Just in case, we connect to the database here. Probably not necessary.

@@ -43,13 +43,13 @@ nobase_modules_DATA = \
 	Sympa/DatabaseDriver/SQLite.pm\
 	Sympa/DatabaseDriver/Sybase.pm \
 	Sympa/Datasource.pm \
+	Sympa/Datasource/LDAP.pm \
+	Sympa/Datasource/SQL.pm \
 	Sympa/Family.pm \
 	Sympa/Fetch.pm \
 	Sympa/HTML/FormatText.pm \
 	Sympa/HTMLSanitizer.pm \
 	Sympa/Language.pm \
-	Sympa/LDAP.pm \
-	Sympa/LDAPSource.pm \
 	Sympa/List.pm \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \
@@ -67,7 +67,6 @@ nobase_modules_DATA = \
 	Sympa/Scenario.pm \
 	SDM.pm \
 	Sympa/SharedDocument.pm \
-	Sympa/SQLSource.pm \
 	Sympa/Session.pm \
 	Sympa/SOAP.pm \
 	Sympa/SOAP/Transport.pm \

@@ -48,10 +48,11 @@ use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Datasource;
+use Sympa::Datasource::LDAP;
+use Sympa::Datasource::SQL;
 use Sympa::Family;
 use Sympa::Fetch;
 use Sympa::Language;
-use Sympa::LDAPSource;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Log;
@@ -61,7 +62,6 @@ use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
-use Sympa::SQLSource;
 use Sympa::Task;
 use tools;
 use Sympa::Tools::Data;
@@ -7395,7 +7395,7 @@ sub _load_list_members_from_include {
                         {type => $type, name => $incl->{name}};
                 }
             } elsif ($type eq 'include_sql_query') {
-                my $source = Sympa::SQLSource->new($incl);
+                my $source = Sympa::Datasource::SQL->new($incl);
                 if ($source->is_allowed_to_sync() || $source_is_new) {
                     Log::do_log('debug', 'Is_new %d, syncing',
                         $source_is_new);
@@ -7420,7 +7420,7 @@ sub _load_list_members_from_include {
                     $included = 0;
                 }
             } elsif ($type eq 'include_ldap_query') {
-                my $source = Sympa::LDAPSource->new($incl);
+                my $source = Sympa::Datasource::LDAP->new($incl);
                 if ($source->is_allowed_to_sync() || $source_is_new) {
                     $included =
                         _include_users_ldap(\%users, $source_id, $source,
@@ -7442,7 +7442,7 @@ sub _load_list_members_from_include {
                     $included = 0;
                 }
             } elsif ($type eq 'include_ldap_2level_query') {
-                my $source = Sympa::LDAPSource->new($incl);
+                my $source = Sympa::Datasource::LDAP->new($incl);
                 if ($source->is_allowed_to_sync() || $source_is_new) {
                     my $result =
                         _include_users_ldap_2level(\%users, $source_id,
@@ -7622,18 +7622,18 @@ sub _load_list_admin_from_include {
                         admin_only    => 1
                     );
                 } elsif ($type eq 'include_sql_query') {
-                    my $source = Sympa::SQLSource->new($incl);
+                    my $source = Sympa::Datasource::SQL->new($incl);
                     $included =
                         _include_users_sql(\%admin_users, $incl, $source,
                         \%option, 'untied',
                         $list_admin->{'sql_fetch_timeout'});
                 } elsif ($type eq 'include_ldap_query') {
-                    my $source = Sympa::LDAPSource->new($incl);
+                    my $source = Sympa::Datasource::LDAP->new($incl);
                     $included =
                         _include_users_ldap(\%admin_users, $incl, $source,
                         \%option);
                 } elsif ($type eq 'include_ldap_2level_query') {
-                    my $source = Sympa::LDAPSource->new($incl);
+                    my $source = Sympa::Datasource::LDAP->new($incl);
                     my $result =
                         _include_users_ldap_2level(\%admin_users, $incl,
                         $source, \%option);
@@ -7965,10 +7965,10 @@ sub sync_include_ca {
             my $source = undef;
             my $srcca  = undef;
             if ($type eq 'include_sql_ca') {
-                $source = Sympa::SQLSource->new($incl);
+                $source = Sympa::Datasource::SQL->new($incl);
             } elsif (($type eq 'include_ldap_ca')
                 or ($type eq 'include_ldap_2level_ca')) {
-                $source = Sympa::LDAPSource->new($incl);
+                $source = Sympa::Datasource::LDAP->new($incl);
             }
             next unless (defined($source));
             if ($source->is_allowed_to_sync()) {
