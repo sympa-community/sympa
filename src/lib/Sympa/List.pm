@@ -7157,7 +7157,7 @@ sub _include_ldap_ca {
     return $attributes;
 }
 
-sub _include_ldap_level2_ca {
+sub _include_ldap_2level_ca {
     my $source = shift;
 
     return {} unless ($source->connect());
