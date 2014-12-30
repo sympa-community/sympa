@@ -1572,19 +1572,18 @@ sub search {
                 {'value'};
         }
 
-        my $ldap;
-        my $param = Sympa::Tools::Data::dup_var(\%ldap_conf);
-        my $ds    = Sympa::Datasource::LDAP->new($param);
+        my $ds = Sympa::Datasource::LDAP->new(\%ldap_conf);
 
-        unless (defined $ds && ($ldap = $ds->connect())) {
+        my $ldaph;
+        unless ($ds and $ldaph = $ds->connect()) {
             Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
-                $param->{'ldap_host'});
+                $ldap_conf{'host'});
             return undef;
         }
 
         ## The 1.1 OID correponds to DNs ; it prevents the LDAP server from
         ## preparing/providing too much data
-        my $mesg = $ldap->search(
+        my $mesg = $ldaph->search(
             base   => "$ldap_conf{'suffix'}",
             filter => "$filter",
             scope  => "$ldap_conf{'scope'}",

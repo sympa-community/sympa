@@ -1028,7 +1028,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_with_port(),
+                'format'     => Sympa::Regexps::multiple_host_or_url(),
                 'occurrence' => '1'
             },
             'port' => {
@@ -1129,7 +1129,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_with_port(),
+                'format'     => Sympa::Regexps::multiple_host_or_url(),
                 'occurrence' => '1'
             },
             'port' => {
@@ -1410,7 +1410,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_with_port(),
+                'format'     => Sympa::Regexps::multiple_host_or_url(),
                 'occurrence' => '1'
             },
             'port' => {
@@ -1517,7 +1517,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 1,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_with_port(),
+                'format'     => Sympa::Regexps::multiple_host_or_url(),
                 'occurrence' => '1'
             },
             'port' => {

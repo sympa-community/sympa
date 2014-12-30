@@ -1051,6 +1051,7 @@ sub _load_auth {
             'negative_regexp' => '.*'
         },
 
+        # Note: prefixes "ldap_" will be stripped.  See below.
         'cas' => {
             'base_url'                   => 'http(s)?:/.*',
             'non_blocking_redirection'   => 'on|off',
@@ -1074,6 +1075,7 @@ sub _load_auth {
             'ldap_ssl_version'             => 'sslv2/3|sslv2|sslv3|tlsv1',
             'ldap_ssl_ciphers'             => '[\w:]+'
         },
+        # Note: prefixes "ldap_" will be stripped.  See below.
         'generic_sso' => {
             'service_name'                => '.+',
             'service_id'                  => '\S+',
@@ -1145,7 +1147,14 @@ sub _load_auth {
                 $value =~ s/\s//g;
             }
 
-            $current_paragraph->{$keyword} = $value;
+            # Workaround: cas and generic_sso auth types require parameters
+            # prefixed by "ldap_", but LDAP datasource requires those not
+            # prefixed.
+            if ($keyword =~ /\Aldap_(\w+)\z/) {
+                $current_paragraph->{$1} = $value;
+            } else {
+                $current_paragraph->{$keyword} = $value;
+            }
         }
 
         ## process current paragraph
@@ -1217,7 +1226,7 @@ sub _load_auth {
 
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
-                    $current_paragraph->{'ldap_scope'} ||= 'sub';
+                    $current_paragraph->{'scope'} ||= 'sub';
                 } elsif ($current_paragraph->{'auth_type'} eq 'generic_sso') {
                     $Conf{'generic_sso_number'}{$robot}++;
                     $Conf{'generic_sso_id'}{$robot}
@@ -1225,7 +1234,7 @@ sub _load_auth {
                         $#paragraphs + 1;
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
-                    $current_paragraph->{'ldap_scope'} ||= 'sub';
+                    $current_paragraph->{'scope'} ||= 'sub';
                     ## default value for http_header_value_separator is ';'
                     $current_paragraph->{'http_header_value_separator'} ||=
                         ';';

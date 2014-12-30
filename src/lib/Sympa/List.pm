@@ -6710,11 +6710,9 @@ sub _include_users_voot_group {
 
 ## Returns a list of subscribers extracted from a remote LDAP Directory
 sub _include_users_ldap {
-    my ($users, $id, $source, $default_user_options, $tied) = @_;
+    my ($users, $id, $source, $ds, $default_user_options, $tied) = @_;
     Log::do_log('debug2', '');
 
-    my $user        = $source->{'user'};
-    my $passwd      = $source->{'passwd'};
     my $ldap_suffix = $source->{'suffix'};
     my $ldap_filter = $source->{'filter'};
     my $ldap_attrs  = $source->{'attrs'};
@@ -6729,7 +6727,7 @@ sub _include_users_ldap {
     ## Connection timeout (default is 120)
     #my $timeout = 30;
 
-    unless (defined $source && $source->connect()) {
+    unless ($ds and $ldaph = $ds->connect()) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $source->{'host'});
         return undef;
@@ -6737,7 +6735,7 @@ sub _include_users_ldap {
     Log::do_log('debug2',
         'Searching on server %s; suffix %s; filter %s; attrs: %s',
         $source->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
-    $fetch = $source->{'ldap_handler'}->search(
+    $fetch = $ldaph->search(
         base   => "$ldap_suffix",
         filter => "$ldap_filter",
         attrs  => [@attrs],
@@ -6798,7 +6796,7 @@ sub _include_users_ldap {
         }
     }
 
-    unless ($source->disconnect()) {
+    unless ($ds->disconnect()) {
         Log::do_log('notice', 'Can\'t unbind from LDAP server %s',
             $source->{'host'});
         return undef;
@@ -6857,11 +6855,9 @@ sub _include_users_ldap {
 ## Returns a list of subscribers extracted indirectly from a remote LDAP
 ## Directory using a two-level query
 sub _include_users_ldap_2level {
-    my ($users, $id, $source, $default_user_options, $tied) = @_;
+    my ($users, $id, $source, $ds, $default_user_options, $tied) = @_;
     Log::do_log('debug2', '');
 
-    my $user         = $source->{'user'};
-    my $passwd       = $source->{'passwd'};
     my $ldap_suffix1 = $source->{'suffix1'};
     my $ldap_filter1 = $source->{'filter1'};
     my $ldap_attrs1  = $source->{'attrs1'};
@@ -6883,7 +6879,7 @@ sub _include_users_ldap_2level {
     ## LDAP and query handler
     my ($ldaph, $fetch);
 
-    unless (defined $source && ($ldaph = $source->connect())) {
+    unless ($ds and $ldaph = $ds->connect()) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $source->{'host'});
         return undef;
@@ -7028,7 +7024,7 @@ sub _include_users_ldap_2level {
         }
     }
 
-    unless ($source->disconnect()) {
+    unless ($ds->disconnect()) {
         Log::do_log('err', 'Can\'t unbind from LDAP server %s',
             $source->{'host'});
         return undef;
@@ -7116,8 +7112,11 @@ sub _include_sql_ca {
 
 sub _include_ldap_ca {
     my $source = shift;
+    my $ds     = shift;
 
-    return {} unless ($source->connect());
+    my $ldaph;
+
+    return {} unless $ds and $ldaph = $ds->connect();
 
     Log::do_log('debug', 'Server %s; suffix %s; filter %s; attrs: %s',
         $source->{'host'}, $source->{'suffix'}, $source->{'filter'},
@@ -7125,7 +7124,7 @@ sub _include_ldap_ca {
 
     my @attrs = split(/\s*,\s*/, $source->{'attrs'});
 
-    my $results = $source->{'ldap_handler'}->search(
+    my $results = $ldaph->search(
         base   => $source->{'suffix'},
         filter => $source->{'filter'},
         attrs  => [@attrs],
@@ -7159,8 +7158,10 @@ sub _include_ldap_ca {
 
 sub _include_ldap_2level_ca {
     my $source = shift;
+    my $ds     = shift;
 
-    return {} unless ($source->connect());
+    my $ldaph;
+    return {} unless $ds and $ldaph = $ds->connect();
 
     return {};
 
@@ -7170,7 +7171,7 @@ sub _include_ldap_2level_ca {
 
     my @attrs = split(/\s*,\s*/, $source->{'attrs'});
 
-    my $results = $source->{'ldap_handler'}->search(
+    my $results = $ldaph->search(
         base   => $source->{'suffix'},
         filter => $source->{'filter'},
         attrs  => [@attrs],
@@ -7396,7 +7397,11 @@ sub _load_list_members_from_include {
                 }
             } elsif ($type eq 'include_sql_query') {
                 my $source = Sympa::Datasource::SQL->new($incl);
-                if ($source->is_allowed_to_sync() || $source_is_new) {
+                if (Sympa::Datasource::is_allowed_to_sync(
+                        $incl->{'nosync_time_ranges'}
+                    )
+                    or $source_is_new
+                    ) {
                     Log::do_log('debug', 'Is_new %d, syncing',
                         $source_is_new);
                     $included =
@@ -7409,21 +7414,26 @@ sub _load_list_members_from_include {
                     }
                 } else {
                     my $exclusion_data = {
-                        'id'          => $source_id,
-                        'name'        => $incl->{'name'},
-                        'starthour'   => $source->{'starthour'},
-                        'startminute' => $source->{'startminute'},
-                        'endhour'     => $source->{'endhour'},
-                        'endminute'   => $source->{'endminute'}
+                        'id'   => $source_id,
+                        'name' => $incl->{'name'},
                     };
                     push @ex_sources, $exclusion_data;
                     $included = 0;
                 }
             } elsif ($type eq 'include_ldap_query') {
-                my $source = Sympa::Datasource::LDAP->new($incl);
-                if ($source->is_allowed_to_sync() || $source_is_new) {
+                my $ds = Sympa::Datasource::LDAP->new(
+                    {   %$incl,
+                        bind_dn       => $incl->{'user'},
+                        bind_password => $incl->{'passwd'},
+                    }
+                );
+                if (Sympa::Datasource::is_allowed_to_sync(
+                        $incl->{'nosync_time_ranges'}
+                    )
+                    or $source_is_new
+                    ) {
                     $included =
-                        _include_users_ldap(\%users, $source_id, $source,
+                        _include_users_ldap(\%users, $source_id, $incl, $ds,
                         $admin->{'default_user_options'});
                     unless (defined $included) {
                         push @errors,
@@ -7431,22 +7441,28 @@ sub _load_list_members_from_include {
                     }
                 } else {
                     my $exclusion_data = {
-                        'id'          => $source_id,
-                        'name'        => $incl->{'name'},
-                        'starthour'   => $source->{'starthour'},
-                        'startminute' => $source->{'startminute'},
-                        'endhour'     => $source->{'endhour'},
-                        'endminute'   => $source->{'endminute'}
+                        'id'   => $source_id,
+                        'name' => $incl->{'name'},
                     };
                     push @ex_sources, $exclusion_data;
                     $included = 0;
                 }
             } elsif ($type eq 'include_ldap_2level_query') {
-                my $source = Sympa::Datasource::LDAP->new($incl);
-                if ($source->is_allowed_to_sync() || $source_is_new) {
+                my $ds = Sympa::Datasource::LDAP->new(
+                    {   %$incl,
+                        bind_dn       => $incl->{'user'},
+                        bind_password => $incl->{'passwd'},
+                        timeout => $incl->{'timeout1'},  # Note: not "timeout"
+                    }
+                );
+                if (Sympa::Datasource::is_allowed_to_sync(
+                        $incl->{'nosync_time_ranges'}
+                    )
+                    or $source_is_new
+                    ) {
                     my $result =
-                        _include_users_ldap_2level(\%users, $source_id,
-                        $source, $admin->{'default_user_options'});
+                        _include_users_ldap_2level(\%users, $source_id, $incl,
+                        $ds, $admin->{'default_user_options'});
                     if (defined $result) {
                         $included = $result->{'total'};
                         if (defined $result->{'errors'}) {
@@ -7463,12 +7479,8 @@ sub _load_list_members_from_include {
                     }
                 } else {
                     my $exclusion_data = {
-                        'id'          => $source_id,
-                        'name'        => $incl->{'name'},
-                        'starthour'   => $source->{'starthour'},
-                        'startminute' => $source->{'startminute'},
-                        'endhour'     => $source->{'endhour'},
-                        'endminute'   => $source->{'endminute'}
+                        'id'   => $source_id,
+                        'name' => $incl->{'name'},
                     };
                     push @ex_sources, $exclusion_data;
                     $included = 0;
@@ -7628,15 +7640,27 @@ sub _load_list_admin_from_include {
                         \%option, 'untied',
                         $list_admin->{'sql_fetch_timeout'});
                 } elsif ($type eq 'include_ldap_query') {
-                    my $source = Sympa::Datasource::LDAP->new($incl);
+                    my $ds = Sympa::Datasource::LDAP->new(
+                        {   %$incl,
+                            bind_dn       => $incl->{'user'},
+                            bind_password => $incl->{'passwd'},
+                        }
+                    );
                     $included =
-                        _include_users_ldap(\%admin_users, $incl, $source,
+                        _include_users_ldap(\%admin_users, $incl, $incl, $ds,
                         \%option);
                 } elsif ($type eq 'include_ldap_2level_query') {
-                    my $source = Sympa::Datasource::LDAP->new($incl);
+                    my $ds = Sympa::Datasource::LDAP->new(
+                        {   %$incl,
+                            bind_dn       => $incl->{'user'},
+                            bind_password => $incl->{'passwd'},
+                            timeout =>
+                                $incl->{'timeout1'},    # Note: not "timeout"
+                        }
+                    );
                     my $result =
                         _include_users_ldap_2level(\%admin_users, $incl,
-                        $source, \%option);
+                        $incl, $ds, \%option);
                     if (defined $result) {
                         $included = $result->{'total'};
                         if (defined $result->{'errors'}) {
@@ -7961,21 +7985,31 @@ sub sync_include_ca {
         foreach my $tmp_incl (@{$admin->{$type}}) {
             ## Work with a copy of admin hash branch to avoid including
             ## temporary variables into the actual admin hash.[bug #3182]
-            my $incl   = Sympa::Tools::Data::dup_var($tmp_incl);
-            my $source = undef;
-            my $srcca  = undef;
+            my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
+            my $ds;
+            my $srcca = undef;
             if ($type eq 'include_sql_ca') {
-                $source = Sympa::Datasource::SQL->new($incl);
-            } elsif (($type eq 'include_ldap_ca')
-                or ($type eq 'include_ldap_2level_ca')) {
-                $source = Sympa::Datasource::LDAP->new($incl);
+                $ds = Sympa::Datasource::SQL->new($incl);
+            } elsif ($type eq 'include_ldap_ca'
+                or $type eq 'include_ldap_2level_ca') {
+                $ds = Sympa::Datasource::LDAP->new(
+                    {   %$incl,
+                        bind_dn       => $incl->{'user'},
+                        bind_password => $incl->{'passwd'},
+                        timeout =>
+                            ($incl->{'timeout'} || $incl->{'timeout1'}),
+                    }
+                );
             }
-            next unless (defined($source));
-            if ($source->is_allowed_to_sync()) {
+            next unless $ds;
+            if (Sympa::Datasource::is_allowed_to_sync(
+                    $incl->{'nosync_time_ranges'}
+                )
+                ) {
                 my $getter = '_' . $type;
                 {    # Magic inside
                     no strict "refs";
-                    $srcca = &$getter($source);
+                    $srcca = &$getter($incl, $ds);
                 }
                 if (defined($srcca)) {
                     foreach my $email (keys %$srcca) {
@@ -7990,7 +8024,7 @@ sub sync_include_ca {
                     }
                 }
             }
-            unless ($source->disconnect()) {
+            unless ($ds->disconnect()) {
                 Log::do_log('notice', 'Can\'t unbind from source %s', $type);
                 return undef;
             }

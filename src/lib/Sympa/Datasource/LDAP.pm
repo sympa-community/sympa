@@ -31,54 +31,41 @@ use Log;
 
 use base qw(Sympa::Datasource);
 
+use constant required_parameters => [qw(host)];
+use constant optional_parameters => [
+    qw(port bind_dn bind_password
+        use_ssl use_start_tls ssl_version ssl_ciphers
+        ssl_cert ssl_key ca_verify ca_path ca_file)
+];
+use constant required_modules => [qw(Net::LDAP)];
+
 sub new {
-    my $pkg   = shift;
-    my $param = shift;
-    my $self  = $param || {};
-    Log::do_log('debug', 'Creating new Sympa::Datasource::LDAP object');
-    ## Map equivalent parameters (depends on the calling context : included
-    ## members, scenario, authN
-    ## Also set defaults
-    foreach my $p (keys %{$self}) {
-        unless ($p =~ /^ldap_/) {
-            my $p_equiv = 'ldap_' . $p;
-            ## Respect existing entries
-            $self->{$p_equiv} = $self->{$p}
-                unless (defined $self->{$p_equiv});
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $class  = shift;
+    my $params = shift;
+    my %params = %$params;
+
+    my $self = bless {
+        map {
+                  (exists $params{$_} and defined $params{$_})
+                ? ($_ => $params{$_})
+                : ()
+            } (@{$class->required_parameters}, @{$class->optional_parameters})
+    } => $class;
+    $self->{timeout}   ||= 3;
+    $self->{ca_verify} ||= 'optional';
+
+    foreach my $module (@{$class->required_modules}) {
+        unless (eval "require $module") {
+            Log::do_log(
+                'err',
+                'No module installed for LDAP. You should download and install %s',
+                $module
+            );
+            return undef;
         }
     }
 
-    $self->{'timeout'} ||= 3;
-    $self->{'ldap_bind_dn'}       = $self->{'user'};
-    $self->{'ldap_bind_password'} = $self->{'passwd'};
-    $self->{'ca_verify'} ||= 'optional';
-
-    $self = $pkg->SUPER::new($self);
-    bless $self, $pkg;
-
-    unless (eval "require Net::LDAP") {
-        Log::do_log('err',
-            "Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first"
-        );
-        return undef;
-    }
-    require Net::LDAP;
-
-    unless (eval "require Net::LDAP::Entry") {
-        Log::do_log('err',
-            "Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first"
-        );
-        return undef;
-    }
-    require Net::LDAP::Entry;
-
-    unless (eval "require Net::LDAP::Message") {
-        Log::do_log('err',
-            "Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first"
-        );
-        return undef;
-    }
-    require Net::LDAP::Message;
     return $self;
 }
 
@@ -100,7 +87,7 @@ sub connect {
     my $self = shift;
 
     ## Do we have all required parameters
-    foreach my $ldap_param ('ldap_host') {
+    foreach my $ldap_param (@{$self->required_parameters}) {
         unless ($self->{$ldap_param}) {
             Log::do_log('info', 'Missing parameter %s for LDAP connection',
                 $ldap_param);
@@ -109,88 +96,90 @@ sub connect {
     }
 
     my $host_entry;
-    ## There might be multiple alternate hosts defined
-    foreach $host_entry (split(/,/, $self->{'ldap_host'})) {
+    # There might be multiple alternate hosts defined
+    foreach my $host (split /\s*,\s*/, $self->{host}) {
+        # Canonicalize host parameter to be "scheme://host:port".
+        # Value of obsoleted use_ssl parameter may be '1' or 'yes' depending
+        # on the context.
+        $host .= ':' . $self->{port}
+            if $self->{port} and $host !~ m{:[-\w]+\z};
+        $host = 'ldaps://' . $host
+            if $self->{use_ssl}
+                and ($self->{use_ssl} eq '1' or $self->{use_ssl} eq 'yes')
+                and $host !~ m{\A[-\w]+://};
+        $host = 'ldap://' . $host
+            if $host !~ m{\A[-\w]+://};
 
-        ## Remove leading and trailing spaces
-        $host_entry =~ s/^\s*(\S.*\S)\s*$/$1/;
-        my ($host, $port) = split(/:/, $host_entry);
-        ## If port a 'port' entry was defined, use it as default
-        $self->{'port'} ||= $port if (defined $port);
+        # new() may die if depending module is missing (e.g. for SSL).
+        $self->{'ldap_handler'} = eval {
+            Net::LDAP->new(
+                $host,
+                timeout    => $self->{'timeout'},
+                verify     => $self->{'ca_verify'},
+                capath     => $self->{'ca_path'},
+                cafile     => $self->{'ca_file'},
+                sslversion => $self->{'ssl_version'},
+                ciphers    => $self->{'ssl_ciphers'},
+                clientcert => $self->{'ssl_cert'},
+                clientkey  => $self->{'ssl_key'},
+            );
+        };
 
-        ## value may be '1' or 'yes' depending on the context
-        if (   $self->{'ldap_use_ssl'} eq 'yes'
-            || $self->{'ldap_use_ssl'} eq '1') {
-            $self->{'sslversion'} = $self->{'ldap_ssl_version'}
-                if ($self->{'ldap_ssl_version'});
-            $self->{'ciphers'} = $self->{'ldap_ssl_ciphers'}
-                if ($self->{'ldap_ssl_ciphers'});
-
-            unless (eval "require Net::LDAPS") {
-                Log::do_log('err',
-                    "Unable to use LDAPS library, Net::LDAPS required");
-                return undef;
-            }
-            require Net::LDAPS;
-
-            $self->{'ldap_handler'} =
-                Net::LDAPS->new($host, port => $port, %{$self});
-        } else {
-            $self->{'ldap_handler'} = Net::LDAP->new($host, %{$self});
+        # if $self->{'ldap_handler'} is defined, skip alternate hosts
+        if ($self->{'ldap_handler'}) {
+            $host_entry = $host;
+            last;
         }
-
-        next unless (defined $self->{'ldap_handler'});
-
-        ## if $self->{'ldap_handler'} is defined, skip alternate hosts
-        last;
     }
 
-    unless (defined $self->{'ldap_handler'}) {
+    unless ($self->{'ldap_handler'}) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
-            $self->{'ldap_host'});
+            $self->{'host'});
         return undef;
     }
 
-    ## Using start_tls() will convert the existing connection to using
-    ## Transport Layer Security (TLS), which pro-
-    ## vides an encrypted connection. This is only possible if the connection
-    ## uses LDAPv3, and requires that the
-    ## server advertizes support for LDAP_EXTENSION_START_TLS. Use
-    ## "supported_extension" in Net::LDAP::RootDSE to
-    ## check this.
+    # Using start_tls() will convert the existing connection to using
+    # Transport Layer Security (TLS), which provides an encrypted connection.
+    # FIXME: This is only possible if the connection uses LDAPv3, and requires
+    # that the server advertizes support for LDAP_EXTENSION_START_TLS. Use
+    # "supported_extension" in Net::LDAP::RootDSE to check this.
     if ($self->{'use_start_tls'}) {
-        $self->{'ldap_handler'}->start_tls(
-            verify     => $self->{'ca_verify'},
-            capath     => $self->{'ca_path'},
-            cafile     => $self->{'ca_file'},
-            sslversion => $self->{'ssl_version'},
-            ciphers    => $self->{'ssl_ciphers'},
-            clientcert => $self->{'ssl_cert'},
-            clientkey  => $self->{'ssl_key'},
-        );
+        # new() may die if depending module for SSL/TLS is missing.
+        # FIXME: Result should be checked.
+        eval {
+            $self->{'ldap_handler'}->start_tls(
+                verify     => $self->{'ca_verify'},
+                capath     => $self->{'ca_path'},
+                cafile     => $self->{'ca_file'},
+                sslversion => $self->{'ssl_version'},
+                ciphers    => $self->{'ssl_ciphers'},
+                clientcert => $self->{'ssl_cert'},
+                clientkey  => $self->{'ssl_key'},
+            );
+        };
     }
 
     my $cnx;
     ## Not always anonymous...
-    if (   defined($self->{'ldap_bind_dn'})
-        && defined($self->{'ldap_bind_password'})) {
-        $cnx = $self->{'ldap_handler'}->bind($self->{'ldap_bind_dn'},
-            password => $self->{'ldap_bind_password'});
+    if (    defined $self->{'bind_dn'}
+        and defined $self->{'bind_password'}) {
+        $cnx =
+            $self->{'ldap_handler'}
+            ->bind($self->{'bind_dn'}, password => $self->{'bind_password'});
     } else {
         $cnx = $self->{'ldap_handler'}->bind;
     }
 
-    unless (defined($cnx) && ($cnx->code() == 0)) {
+    unless (defined $cnx and $cnx->code() == 0) {
         Log::do_log('err',
             'Failed to bind to LDAP server: "%s", LDAP server error: "%s"',
             $host_entry, $cnx->error, $cnx->server_error);
         $self->{'ldap_handler'}->unbind;
         return undef;
     }
-    Log::do_log('debug', 'Bound to LDAP host "%s"', $host_entry);
+    Log::do_log('notice', 'Bound to LDAP host "%s"', $host_entry);
 
     return $self->{'ldap_handler'};
-
 }
 
 ## Does not make sense in LDAP context

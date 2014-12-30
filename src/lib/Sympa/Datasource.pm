@@ -58,9 +58,10 @@ sub new {
 sub _get_datasource_id {
     my ($source) = shift;
     Log::do_log('debug2', 'Getting datasource id for source "%s"', $source);
-    if (ref($source) eq 'Datasource') {
-        $source = shift;
-    }
+    # Not in case.
+    #if (ref($source) eq 'Sympa::Datasource') {
+    #    $source = shift;
+    #}
 
     if (ref($source)) {
         ## Ordering values so that order of keys in a hash don't mess the
@@ -83,8 +84,10 @@ sub _get_datasource_id {
 }
 
 sub is_allowed_to_sync {
-    my $self   = shift;
-    my $ranges = $self->{'nosync_time_ranges'};
+    #my $self   = shift;
+    #my $ranges = $self->{'nosync_time_ranges'};
+    my $ranges = shift;
+
     $ranges =~ s/^\s+//;
     $ranges =~ s/\s+$//;
     my $rsre = Sympa::Regexps::time_ranges();

@@ -205,7 +205,7 @@ sub authentication {
 
 sub ldap_authentication {
     my ($robot, $ldap, $auth, $pwd, $whichfilter) = @_;
-    my ($mesg, $host, $ldap_passwd, $ldap_anonymous);
+    my ($mesg, $host, $ldaph);
     Log::do_log('debug2', '(%s, %s, %s)', $auth, '****', $whichfilter);
     Log::do_log('debug3', 'Password used: %s', $pwd);
 
@@ -235,16 +235,15 @@ sub ldap_authentication {
     $filter =~ s/\[sender\]/$auth/ig;
 
     ## bind in order to have the user's DN
-    my $param = Sympa::Tools::Data::dup_var($ldap);
-    my $ds    = Sympa::Datasource::LDAP->new($param);
+    my $ds = Sympa::Datasource::LDAP->new($ldap);
 
-    unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
+    unless ($ds and $ldaph = $ds->connect()) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $ldap->{'host'});
         return undef;
     }
 
-    $mesg = $ldap_anonymous->search(
+    $mesg = $ldaph->search(
         base    => $ldap->{'suffix'},
         filter  => "$filter",
         scope   => $ldap->{'scope'},
@@ -265,21 +264,21 @@ sub ldap_authentication {
 
     ##  bind with the DN and the pwd
 
-    ## Duplicate structure first
-    ## Then set the bind_dn and password according to the current user
-    $param                         = Sympa::Tools::Data::dup_var($ldap);
-    $param->{'ldap_bind_dn'}       = $DN[0];
-    $param->{'ldap_bind_password'} = $pwd;
+    # Then set the bind_dn and password according to the current user
+    $ds = Sympa::Datasource::LDAP->new(
+        {   %$ldap,
+            bind_dn       => $DN[0],
+            bind_password => $pwd,
+        }
+    );
 
-    $ds = Sympa::Datasource::LDAP->new($param);
-
-    unless (defined $ds && ($ldap_passwd = $ds->connect())) {
+    unless ($ds and $ldaph = $ds->connect()) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
-            $param->{'host'});
+            $ldap->{'host'});
         return undef;
     }
 
-    $mesg = $ldap_passwd->search(
+    $mesg = $ldaph->search(
         base    => $ldap->{'suffix'},
         filter  => "$filter",
         scope   => $ldap->{'scope'},
@@ -296,6 +295,7 @@ sub ldap_authentication {
     ## To get the value of the canonic email and the alternative email
     my (@canonic_email, @alternative);
 
+    my $param = Sympa::Tools::Data::dup_var($ldap);
     ## Keep previous alt emails not from LDAP source
     my $previous = {};
     foreach my $alt (keys %{$param->{'alt_emails'}}) {
@@ -361,35 +361,34 @@ sub get_email_by_net_id {
         return $email;
     }
 
-    my $ldap = @{$Conf::Conf{'auth_services'}{$robot}}[$auth_id];
+    my $ldap = $Conf::Conf{'auth_services'}{$robot}->[$auth_id];
 
-    my $param = Sympa::Tools::Data::dup_var($ldap);
-    my $ds    = Sympa::Datasource::LDAP->new($param);
-    my $ldap_anonymous;
+    my $ds = Sympa::Datasource::LDAP->new($ldap);
+    my $ldaph;
 
-    unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
+    unless ($ds and $ldaph = $ds->connect()) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
-            $ldap->{'ldap_host'});
+            $ldap->{'host'});
         return undef;
     }
 
-    my $filter = $ldap->{'ldap_get_email_by_uid_filter'};
+    my $filter = $ldap->{'get_email_by_uid_filter'};
     $filter =~ s/\[([\w-]+)\]/$attributes->{$1}/ig;
 
     # my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
 
-    my $emails = $ldap_anonymous->search(
-        base    => $ldap->{'ldap_suffix'},
+    my $emails = $ldaph->search(
+        base    => $ldap->{'suffix'},
         filter  => $filter,
-        scope   => $ldap->{'ldap_scope'},
-        timeout => $ldap->{'ldap_timeout'},
-        attrs   => [$ldap->{'ldap_email_attribute'}],
+        scope   => $ldap->{'scope'},
+        timeout => $ldap->{'timeout'},
+        attrs   => [$ldap->{'email_attribute'}],
     );
     my $count = $emails->count();
 
     if ($emails->count() == 0) {
         Log::do_log('notice', "No entry in the LDAP Directory Tree of %s",
-            $ldap->{'ldap_host'});
+            $ldap->{'host'});
         $ds->disconnect();
         return undef;
     }
@@ -399,7 +398,7 @@ sub get_email_by_net_id {
     ## return only the first attribute
     my @results = $emails->entries;
     foreach my $result (@results) {
-        return (lc($result->get_value($ldap->{'ldap_email_attribute'})));
+        return (lc($result->get_value($ldap->{'email_attribute'})));
     }
 
 }

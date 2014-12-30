@@ -3755,7 +3755,7 @@ sub do_login {
         #Does the email belongs to an ldap directory?
         if ($url_redirect = is_ldap_user($in{'email'})) {
             $param->{'redirect_to'} = $url_redirect
-                if ($url_redirect && ($url_redirect != 1));
+                if $url_redirect ne 'none';
         } elsif ($in{'failure_referer'}) {
             $param->{'redirect_to'} = $in{'failure_referer'};
         } else {
@@ -4272,9 +4272,9 @@ sub do_sso_login {
             } else {
                 unless (
                     defined $Conf::Conf{'auth_services'}{$robot}[$sso_id]
-                    {'ldap_host'}
+                    {'host'}
                     && defined $Conf::Conf{'auth_services'}{$robot}[$sso_id]
-                    {'ldap_get_email_by_uid_filter'}) {
+                    {'get_email_by_uid_filter'}) {
                     Sympa::Report::reject_report_web('intern',
                         'auth_conf_no_identified_user',
                         {}, $param->{'action'}, '', '', $robot);
@@ -4473,7 +4473,7 @@ sub is_ldap_user {
         return undef;
     }
 
-    ## List all LDAP servers first
+    # List all LDAP servers first
     my @ldap_servers;
     foreach my $ldap (@{$Conf::Conf{'auth_services'}{$robot}}) {
         next unless ($ldap->{'auth_type'} eq 'ldap');
@@ -4481,7 +4481,7 @@ sub is_ldap_user {
         push @ldap_servers, $ldap;
     }
 
-    unless ($#ldap_servers >= 0) {
+    unless (@ldap_servers) {
         return undef;
     }
 
@@ -4492,20 +4492,18 @@ sub is_ldap_user {
         return undef;
     }
 
-    my ($ldap_anonymous, $filter);
+    my ($ldaph, $filter);
 
     foreach my $ldap (@ldap_servers) {
-
         # skip ldap auth service if the user id or email do not match regexp
         # auth service parameter
         next unless ($auth =~ /$ldap->{'regexp'}/i);
 
-        my $param = Sympa::Tools::Data::dup_var($ldap);
-        my $ds    = Sympa::Datasource::LDAP->new($param);
+        my $ds = Sympa::Datasource::LDAP->new($ldap);
 
-        unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
+        unless ($ds and $ldaph = $ds->connect()) {
             Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
-                $ldap->{'ldap_host'});
+                $ldap->{'host'});
             next;
         }
 
@@ -4522,14 +4520,14 @@ sub is_ldap_user {
 
         ## !! une fonction get_dn_by_email/uid
 
-        my $mesg = $ldap_anonymous->search(
+        my $mesg = $ldaph->search(
             base    => $ldap->{'suffix'},
             filter  => "$filter",
             scope   => $ldap->{'scope'},
             timeout => $ldap->{'timeout'}
         );
 
-        unless ($mesg->count() != 0) {
+        unless ($mesg->count()) {
             wwslog('notice',
                 'No entry in the LDAP Directory Tree of %s for %s',
                 $ldap->{'host'}, $auth);
@@ -4538,11 +4536,10 @@ sub is_ldap_user {
         }
 
         $ds->disconnect();
-        my $redirect = $ldap->{'authentication_info_url'};
-        return $redirect || 1;
-
-        next unless ($ldap_anonymous);
+        return $ldap->{'authentication_info_url'} || 'none';
     }
+
+    return undef;
 }
 
 ## send back login form
@@ -4816,7 +4813,7 @@ sub do_renewpasswd {
     if ($in{'email'}) {
         if ($url_redirect = is_ldap_user($in{'email'})) {
             $param->{'redirect_to'} = $url_redirect
-                if ($url_redirect && ($url_redirect != 1));
+                if $url_redirect ne 'none';
         } elsif (!tools::valid_email($in{'email'})) {
             Sympa::Report::reject_report_web('user', 'incorrect_email',
                 {'email' => $in{'email'}},
@@ -4866,7 +4863,7 @@ sub do_requestpasswd {
     my $url_redirect;
     if ($url_redirect = is_ldap_user($in{'email'})) {
         ## There might be no authentication_info_url URL defined in auth.conf
-        if ($url_redirect == 1) {
+        if ($url_redirect eq 'none') {
             Sympa::Report::reject_report_web('user', 'ldap_user', {},
                 $param->{'action'});
             wwslog('info', 'LDAP user %s, cannot remind password',
@@ -4880,8 +4877,7 @@ sub do_requestpasswd {
             );
             return 'home';
         } else {
-            $param->{'redirect_to'} = $url_redirect
-                if ($url_redirect && ($url_redirect != 1));
+            $param->{'redirect_to'} = $url_redirect;
             return 1;
         }
     }
