@@ -8313,8 +8313,12 @@ sub sync_include {
                 ## the user entry
                 my $succesful_update = 0;
                 foreach my $attribute ('id', 'gecos') {
-                    if ($old_subscribers{$email}{$attribute} ne
-                        $new_subscribers->{$email}{$attribute}) {
+                    unless (
+                        Sympa::Tools::Data::smart_eq(
+                            $old_subscribers{$email}{$attribute},
+                            $new_subscribers->{$email}{$attribute}
+                        )
+                        ) {
                         Log::do_log('debug', 'Updating %s to list %s',
                             $email, $name);
                         my $update_time =

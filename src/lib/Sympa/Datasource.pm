@@ -88,6 +88,8 @@ sub is_allowed_to_sync {
     #my $ranges = $self->{'nosync_time_ranges'};
     my $ranges = shift;
 
+    return 1 unless defined $ranges and length $ranges;
+
     $ranges =~ s/^\s+//;
     $ranges =~ s/\s+$//;
     my $rsre = Sympa::Regexps::time_ranges();

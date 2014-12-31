@@ -55,6 +55,25 @@ sub new {
     $self->{timeout}   ||= 3;
     $self->{ca_verify} ||= 'optional';
 
+    # Canonicalize host parameter to be "scheme://host:port".
+    my @hosts =
+        (ref $self->{host})
+        ? @{$self->{host}}
+        : (split /\s*,\s*/, $self->{host});
+    foreach my $host (@hosts) {
+        $host .= ':' . $self->{port}
+            if $self->{port} and $host !~ m{:[-\w]+\z};
+        # Value of obsoleted use_ssl parameter may be '1' or 'yes' depending
+        # on the context.
+        $host = 'ldaps://' . $host
+            if $self->{use_ssl}
+                and ($self->{use_ssl} eq '1' or $self->{use_ssl} eq 'yes')
+                and $host !~ m{\A[-\w]+://};
+        $host = 'ldap://' . $host
+            if $host !~ m{\A[-\w]+://};
+    }
+    $self->{host} = [@hosts];
+
     foreach my $module (@{$class->required_modules}) {
         unless (eval "require $module") {
             Log::do_log(
@@ -97,19 +116,7 @@ sub connect {
 
     my $host_entry;
     # There might be multiple alternate hosts defined
-    foreach my $host (split /\s*,\s*/, $self->{host}) {
-        # Canonicalize host parameter to be "scheme://host:port".
-        # Value of obsoleted use_ssl parameter may be '1' or 'yes' depending
-        # on the context.
-        $host .= ':' . $self->{port}
-            if $self->{port} and $host !~ m{:[-\w]+\z};
-        $host = 'ldaps://' . $host
-            if $self->{use_ssl}
-                and ($self->{use_ssl} eq '1' or $self->{use_ssl} eq 'yes')
-                and $host !~ m{\A[-\w]+://};
-        $host = 'ldap://' . $host
-            if $host !~ m{\A[-\w]+://};
-
+    foreach my $host (@{$self->{host}}) {
         # new() may die if depending module is missing (e.g. for SSL).
         $self->{'ldap_handler'} = eval {
             Net::LDAP->new(
@@ -133,8 +140,11 @@ sub connect {
     }
 
     unless ($self->{'ldap_handler'}) {
-        Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
-            $self->{'host'});
+        Log::do_log(
+            'err',
+            'Unable to connect to the LDAP server %s',
+            join(',', @{$self->{'host'}})
+        );
         return undef;
     }
 
@@ -177,7 +187,7 @@ sub connect {
         $self->{'ldap_handler'}->unbind;
         return undef;
     }
-    Log::do_log('notice', 'Bound to LDAP host "%s"', $host_entry);
+    Log::do_log('debug3', 'Bound to LDAP host "%s"', $host_entry);
 
     return $self->{'ldap_handler'};
 }
