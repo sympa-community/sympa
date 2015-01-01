@@ -139,7 +139,8 @@ sub flush {
 
                 # Skip DB access because DB is not accessible
                 $rcpt = [$rcpt]
-                    if $operation eq 'no_db'
+                    if $operation eq 'missing_dbd'
+                        or $operation eq 'no_db'
                         or $operation eq 'db_restored';
 
                 my $message =

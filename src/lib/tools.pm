@@ -1401,7 +1401,9 @@ sub send_notify_to_listmaster {
         # Skip DB access because DB is not accessible
         $email = [$email]
             if not ref $email
-                and ($operation eq 'no_db' or $operation eq 'db_restored');
+                and (  $operation eq 'missing_dbd'
+                    or $operation eq 'no_db'
+                    or $operation eq 'db_restored');
 
         my $notif_message =
             Sympa::Message->new_from_template($that,
