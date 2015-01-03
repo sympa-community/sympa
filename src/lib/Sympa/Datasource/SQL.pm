@@ -42,7 +42,7 @@ my %db_connections;
 sub new {
     my $pkg   = shift;
     my $param = shift;
-    my $self  = $param;
+
     Log::do_log('debug', 'Creating new SQLSource object for RDBMS "%s"',
         $param->{'db_type'});
     my $actualclass;
@@ -109,15 +109,8 @@ sub new {
 
         $actualclass = "Sympa::DatabaseDriver";
     }
-    $self = $pkg->SUPER::new($param);
 
-    $self->{'db_host'}    ||= $self->{'host'};
-    $self->{'db_user'}    ||= $self->{'user'};
-    $self->{'db_passwd'}  ||= $self->{'passwd'};
-    $self->{'db_options'} ||= $self->{'connect_options'};
-
-    bless $self, $actualclass;
-    return $self;
+    return bless {%$param} => $actualclass;
 }
 
 sub connect {

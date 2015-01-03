@@ -7086,8 +7086,9 @@ sub _include_users_ldap_2level {
 
 sub _include_sql_ca {
     my $source = shift;
+    my $ds     = shift;
 
-    return {} unless ($source->connect());
+    return {} unless $ds and $ds->connect();
 
     Log::do_log(
         'debug',
@@ -7096,7 +7097,7 @@ sub _include_sql_ca {
         $source->{'email_entry'}
     );
 
-    my $sth     = $source->do_query($source->{'sql_query'});
+    my $sth     = $ds->do_query($source->{'sql_query'});
     my $mailkey = $source->{'email_entry'};
     my $ca      = $sth->fetchall_hashref($mailkey);
     my $result;
@@ -7205,21 +7206,14 @@ sub _include_ldap_2level_ca {
 
 ## Returns a list of subscribers extracted from an remote Database
 sub _include_users_sql {
-    my ($users, $id, $source, $default_user_options, $tied, $fetch_timeout) =
-        @_;
-
-    Log::do_log('debug', '');
-
-    unless (ref($source) =~ /DatabaseDriver/) {
-        Log::do_log('err',
-            'Source object has not a Sympa::DatabaseDriver type: %s',
-            $source);
-        return undef;
-    }
+    my ($users, $id, $source, $ds, $default_user_options, $tied,
+        $fetch_timeout)
+        = @_;
 
     my $sth;
-    unless ($source->connect()
-        and $sth = $source->do_query($source->{'sql_query'})) {
+    unless ($ds
+        and $ds->connect()
+        and $sth = $ds->do_query($source->{'sql_query'})) {
         Log::do_log(
             'err',
             'Unable to connect to SQL datasource with parameters host: %s, database: %s',
@@ -7295,7 +7289,7 @@ sub _include_users_sql {
             $users->{$email} = \%u;
         }
     }
-    $source->disconnect();
+    $ds->disconnect();
     Log::do_log('info', '%d included users from SQL query', $total);
     return $total;
 }
@@ -7396,7 +7390,14 @@ sub _load_list_members_from_include {
                         {type => $type, name => $incl->{name}};
                 }
             } elsif ($type eq 'include_sql_query') {
-                my $source = Sympa::Datasource::SQL->new($incl);
+                my $ds = Sympa::Datasource::SQL->new(
+                    {   %$incl,
+                        db_host    => $incl->{'host'},
+                        db_options => $incl->{'connect_options'},
+                        db_user    => $incl->{'user'},
+                        db_passwd  => $incl->{'passwd'},
+                    }
+                );
                 if (Sympa::Datasource::is_allowed_to_sync(
                         $incl->{'nosync_time_ranges'}
                     )
@@ -7404,10 +7405,12 @@ sub _load_list_members_from_include {
                     ) {
                     Log::do_log('debug', 'Is_new %d, syncing',
                         $source_is_new);
-                    $included =
-                        _include_users_sql(\%users, $source_id, $source,
-                        $admin->{'default_user_options'},
-                        'untied', $admin->{'sql_fetch_timeout'});
+                    $included = _include_users_sql(
+                        \%users,                          $source_id,
+                        $incl,                            $ds,
+                        $admin->{'default_user_options'}, 'untied',
+                        $admin->{'sql_fetch_timeout'}
+                    );
                     unless (defined $included) {
                         push @errors,
                             {'type' => $type, 'name' => $incl->{'name'}};
@@ -7634,9 +7637,16 @@ sub _load_list_admin_from_include {
                         admin_only    => 1
                     );
                 } elsif ($type eq 'include_sql_query') {
-                    my $source = Sympa::Datasource::SQL->new($incl);
+                    my $ds = Sympa::Datasource::SQL->new(
+                        {   %$incl,
+                            db_host    => $incl->{'host'},
+                            db_options => $incl->{'connect_options'},
+                            db_user    => $incl->{'user'},
+                            db_passwd  => $incl->{'passwd'},
+                        }
+                    );
                     $included =
-                        _include_users_sql(\%admin_users, $incl, $source,
+                        _include_users_sql(\%admin_users, $incl, $incl, $ds,
                         \%option, 'untied',
                         $list_admin->{'sql_fetch_timeout'});
                 } elsif ($type eq 'include_ldap_query') {
@@ -7989,7 +7999,14 @@ sub sync_include_ca {
             my $ds;
             my $srcca = undef;
             if ($type eq 'include_sql_ca') {
-                $ds = Sympa::Datasource::SQL->new($incl);
+                $ds = Sympa::Datasource::SQL->new(
+                    {   %$incl,
+                        db_host    => $incl->{'host'},
+                        db_options => $incl->{'connect_options'},
+                        db_user    => $incl->{'user'},
+                        db_passwd  => $incl->{'passwd'},
+                    }
+                );
             } elsif ($type eq 'include_ldap_ca'
                 or $type eq 'include_ldap_2level_ca') {
                 $ds = Sympa::Datasource::LDAP->new(
@@ -8009,7 +8026,7 @@ sub sync_include_ca {
                 my $getter = '_' . $type;
                 {    # Magic inside
                     no strict "refs";
-                    $srcca = &$getter($incl, $ds);
+                    $srcca = $getter->($incl, $ds);
                 }
                 if (defined($srcca)) {
                     foreach my $email (keys %$srcca) {
