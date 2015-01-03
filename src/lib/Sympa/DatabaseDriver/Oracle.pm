@@ -26,20 +26,50 @@ package Sympa::DatabaseDriver::Oracle;
 
 use strict;
 use warnings;
-##use Data::Dumper;
 
 use Sympa::DatabaseDriver::Oracle::St;
 use Log;
 
 use base qw(Sympa::DatabaseDriver);
 
+use constant required_modules => [qw(DBD::Oracle)];
+
 sub build_connect_string {
     my $self = shift;
-    $self->{'connect_string'} = "DBI:Oracle:";
-    if ($self->{'db_host'} && $self->{'db_name'}) {
-        $self->{'connect_string'} .=
-            "host=$self->{'db_host'};sid=$self->{'db_name'}";
+
+    my $connect_string = "DBI:Oracle:";
+    if ($self->{'db_host'} and $self->{'db_name'}) {
+        $connect_string .= "host=$self->{'db_host'};sid=$self->{'db_name'}";
     }
+    $connect_string .= ';port=' . $self->{'db_port'}
+        if defined $self->{'db_port'};
+    $connect_string .= ';' . $self->{'db_options'}
+        if defined $self->{'db_options'};
+    return $connect_string;
+}
+
+sub connect {
+    my $self = shift;
+
+    # Client encoding derived from the environment variable.
+    # Set this before parsing db_env to allow override if one knows what
+    # she is doing.
+    # NLS_LANG needs to be set before connecting, otherwise it's useless.
+    # Underscore (_) and dot (.) are a vital part as NLS_LANG has the
+    # syntax "language_territory.charset".
+    #
+    # NOTE: "UTF8" should be overridden by "AL32UTF8" on Oracle 9i
+    # or later (use db_env).  Former can't correctly handle characters
+    # beyond BMP.
+    $ENV{'NLS_LANG'} = '_.UTF8';
+
+    $self->SUPER::connect() or return undef;
+
+    # We set long preload length instead of defaulting to 80.
+    $self->__dbh->{LongReadLen} = 204800;
+    $self->__dbh->{LongTruncOk} = 0;
+
+    return 1;
 }
 
 sub get_substring_clause {
@@ -416,7 +446,6 @@ sub get_indexes {
             $found_indexes{$index_name}{$field_name} = 1;
         }
     }
-    ##open TMP, ">>/tmp/toto"; print TMP Dumper(\%found_indexes); close TMP;
     return \%found_indexes;
 }
 

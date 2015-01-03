@@ -31,11 +31,31 @@ use Log;
 
 use base qw(Sympa::DatabaseDriver);
 
+use constant required_modules => [qw(DBD::Pg)];
+
 sub build_connect_string {
     my $self = shift;
-    Log::do_log('debug', 'Building connect string');
-    $self->{'connect_string'} =
+
+    my $connect_string =
         "DBI:Pg:dbname=$self->{'db_name'};host=$self->{'db_host'}";
+    $connect_string .= ';port=' . $self->{'db_port'}
+        if defined $self->{'db_port'};
+    $connect_string .= ';' . $self->{'db_options'}
+        if defined $self->{'db_options'};
+    return $connect_string;
+}
+
+sub connect {
+    my $self = shift;
+
+    $self->SUPER::connect() or return undef;
+
+    # - Configure Postgres to use ISO format dates.
+    # - Set client encoding to UTF8.
+    $self->__dbh->do("SET DATESTYLE TO 'ISO';");
+    $self->__dbh->do("SET NAMES 'utf8'");
+
+    return 1;
 }
 
 sub get_substring_clause {
@@ -173,8 +193,8 @@ sub get_tables {
     my %raw_tables;
     foreach my $schema (@{$search_path || []}) {
         my @tables =
-            $self->{'dbh'}
-            ->tables(undef, $schema, undef, 'TABLE', {pg_noprefix => 1});
+            $self->__dbh->tables(undef, $schema, undef, 'TABLE',
+            {pg_noprefix => 1});
         foreach my $t (@tables) {
             next if $raw_tables{$t};
             push @raw_tables, $t;

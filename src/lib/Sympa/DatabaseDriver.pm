@@ -31,6 +31,11 @@ use Log;
 
 use base qw(Sympa::Datasource::SQL);
 
+use constant required_modules    => [];
+use constant required_parameters => [qw(db_host db_name db_user db_passwd)];
+use constant optional_parameters =>
+    [qw(db_port db_timeout db_options db_env)];
+
 ############################
 #### Section containing generic functions          #
 #### without anything related to a specific RDBMS. #
@@ -213,6 +218,24 @@ Sympa Database Manager (SDM).
 
 =over
 
+=item required_modules ( )
+
+I<Overridable>.
+Returns an arrayref including package name(s) this driver requires.
+By default, no packages are required.
+
+=item required_parameters ( )
+
+I<Overridable>.
+Returns an arrayref including names of required (not optional) parameters.
+By default, returns C<['db_host', 'db_name', 'db_user', 'db_passwd']>.
+
+=item optional_parameters ( )
+
+I<Overridable>.
+Returns an arrayref including all names of optional parameters.
+By default, returns C<'db_port'>, C<'db_options'> and so on.
+
 =item build_connect_string ( )
 
 I<Mandatory>.
@@ -225,6 +248,26 @@ None.
 Returns:
 
 String representing data source name (DSN).
+
+=item connect ( )
+
+I<Overridable>.
+Connects to database calling L</_connect>() and sets database handle.
+
+Parameter:
+
+None.
+
+Returns:
+
+True value or, if connection failed, false value.
+
+=item _connect ( )
+
+I<Overridable>.
+Connects to database and returns native database handle.
+
+The default implementation is for L<DBI> database handle.
 
 =item get_substring_clause ( { source_field => $source_field,
 separator => $separator, substring_length => $substring_length } )
@@ -705,6 +748,18 @@ value used by L</do_prepared_query>().
 Overridden by inherited classes.
 
 See L</AS_DOUBLE> for more details.
+
+=back
+
+=head2 Utility method
+
+=over
+
+=item __dbh ( )
+
+I<Instance method>, I<protected>.
+Returns native database handle which L<_connect>() returned.
+This may be used at inside of each driver class.
 
 =back
 

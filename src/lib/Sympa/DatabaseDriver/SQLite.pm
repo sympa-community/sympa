@@ -34,10 +34,32 @@ use Log;
 
 use base qw(Sympa::DatabaseDriver);
 
+use constant required_modules    => [qw(DBD::SQLite)];
+use constant required_parameters => [qw(db_name)];
+use constant optional_parameters => [qw(db_timeout)];
+
 sub build_connect_string {
     my $self = shift;
-    $self->{'connect_string'} =
-        "DBI:SQLite(sqlite_use_immediate_transaction=>1):dbname=$self->{'db_name'}";
+
+    return 'DBI:SQLite(sqlite_use_immediate_transaction=>1):dbname='
+        . $self->{'db_name'};
+}
+
+sub connect {
+    my $self = shift;
+
+    $self->SUPER::connect() or return undef;
+
+    # Configure to use sympa database
+    $self->__dbh->func('func_index', -1, sub { return index($_[0], $_[1]) },
+        'create_function');
+    if (defined $self->{'db_timeout'}) {
+        $self->__dbh->func($self->{'db_timeout'}, 'busy_timeout');
+    } else {
+        $self->__dbh->func(5000, 'busy_timeout');
+    }
+
+    return 1;
 }
 
 sub get_substring_clause {
@@ -126,7 +148,7 @@ sub get_tables {
     my $self = shift;
     my @raw_tables;
     my @result;
-    unless (@raw_tables = $self->{'dbh'}->tables()) {
+    unless (@raw_tables = $self->__dbh->tables()) {
         Log::do_log('err',
             'Unable to retrieve the list of tables from database %s',
             $self->{'db_name'});
@@ -488,9 +510,9 @@ sub do_query {
         );
 
     ## acquire "immediate" lock
-    unless (!$need_lock or $self->{'dbh'}->begin_work) {
+    unless (!$need_lock or $self->__dbh->begin_work) {
         Log::do_log('err', 'Could not lock database: (%s) %s',
-            $self->{'dbh'}->err, $self->{'dbh'}->errstr);
+            $self->__dbh->err, $self->__dbh->errstr);
         return undef;
     }
 
@@ -501,17 +523,17 @@ sub do_query {
     return $sth unless $need_lock;
     eval {
         if ($sth) {
-            $rc = $self->{'dbh'}->commit;
+            $rc = $self->__dbh->commit;
         } else {
-            $rc = $self->{'dbh'}->rollback;
+            $rc = $self->__dbh->rollback;
         }
     };
     if ($EVAL_ERROR or !$rc) {
         Log::do_log(
             'err',
             'Could not unlock database: %s',
-            $EVAL_ERROR || sprintf('(%s) %s',
-                $self->{'dbh'}->err, $self->{'dbh'}->errstr)
+            $EVAL_ERROR
+                || sprintf('(%s) %s', $self->__dbh->err, $self->__dbh->errstr)
         );
         return undef;
     }
@@ -530,9 +552,9 @@ sub do_prepared_query {
         );
 
     ## acquire "immediate" lock
-    unless (!$need_lock or $self->{'dbh'}->begin_work) {
+    unless (!$need_lock or $self->__dbh->begin_work) {
         Log::do_log('err', 'Could not lock database: (%s) %s',
-            $self->{'dbh'}->err, $self->{'dbh'}->errstr);
+            $self->__dbh->err, $self->__dbh->errstr);
         return undef;
     }
 
@@ -543,17 +565,17 @@ sub do_prepared_query {
     return $sth unless $need_lock;
     eval {
         if ($sth) {
-            $rc = $self->{'dbh'}->commit;
+            $rc = $self->__dbh->commit;
         } else {
-            $rc = $self->{'dbh'}->rollback;
+            $rc = $self->__dbh->rollback;
         }
     };
     if ($EVAL_ERROR or !$rc) {
         Log::do_log(
             'err',
             'Could not unlock database: %s',
-            $EVAL_ERROR || sprintf('(%s) %s',
-                $self->{'dbh'}->err, $self->{'dbh'}->errstr)
+            $EVAL_ERROR
+                || sprintf('(%s) %s', $self->__dbh->err, $self->__dbh->errstr)
         );
         return undef;
     }

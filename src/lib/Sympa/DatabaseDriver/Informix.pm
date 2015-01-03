@@ -29,10 +29,12 @@ use warnings;
 
 use base qw(Sympa::DatabaseDriver);
 
+use constant required_modules => [qw(DBD::Informix)];
+
 sub build_connect_string {
     my $self = shift;
-    $self->{'connect_string'} =
-        "DBI:Informix:" . $self->{'db_name'} . "@" . $self->{'db_host'};
+
+    return 'DBI:Informix:' . $self->{'db_name'} . '@' . $self->{'db_host'};
 }
 
 1;

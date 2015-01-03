@@ -29,109 +29,54 @@ use warnings;
 use DBI;
 use English qw(-no_match_vars);
 
-use Sympa::Datasource;
 use Log;
 
-## Structure to keep track of active connections/connection status
-## Key : connect_string (includes server+port+dbname+DB type)
-## Values : dbh,status,first_try
-## "status" can have value 'failed'
-## 'first_try' contains an epoch date
-my %db_connections;
+#use base qw(Sympa::Datasource);
+
+# Structure to keep track of active connections/connection status
+# Keys: unique ID of connection (includes type, server, port, dbname and user).
+# Values: database handler.
+our %connection_of;
+
+# Map to driver names from older format of db_type parameter.
+my %driver_aliases = (
+    mysql => 'Sympa::DatabaseDriver::MySQL',
+    Pg    => 'Sympa::DatabaseDriver::PostgreSQL',
+);
 
 sub new {
-    my $pkg   = shift;
-    my $param = shift;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $class  = shift;
+    my $params = shift;
+    my %params = %$params;
 
-    Log::do_log('debug', 'Creating new SQLSource object for RDBMS "%s"',
-        $param->{'db_type'});
-    my $actualclass;
-    our @ISA = qw(Sympa::Datasource);    #FIXME FIXME
-    if ($param->{'db_type'} =~ /^mysql$/i) {
-        unless (eval "require Sympa::DatabaseDriver::MySQL") {
-            Log::do_log('err',
-                'Unable to use Sympa::DatabaseDriver::MySQL module: %s',
-                $EVAL_ERROR);
-            return undef;
-        }
-        require Sympa::DatabaseDriver::MySQL;
-        $actualclass = "Sympa::DatabaseDriver::MySQL";
-    } elsif ($param->{'db_type'} =~ /^sqlite$/i) {
-        unless (eval "require Sympa::DatabaseDriver::SQLite") {
-            Log::do_log('err',
-                "Unable to use Sympa::DatabaseDriver::SQLite module");
-            return undef;
-        }
-        require Sympa::DatabaseDriver::SQLite;
-
-        $actualclass = "Sympa::DatabaseDriver::SQLite";
-    } elsif ($param->{'db_type'} =~ /^pg$/i) {
-        unless (eval "require Sympa::DatabaseDriver::PostgreSQL") {
-            Log::do_log('err',
-                "Unable to use Sympa::DatabaseDriver::PostgreSQL module");
-            return undef;
-        }
-        require Sympa::DatabaseDriver::PostgreSQL;
-
-        $actualclass = "Sympa::DatabaseDriver::PostgreSQL";
-    } elsif ($param->{'db_type'} =~ /^oracle$/i) {
-        unless (eval "require Sympa::DatabaseDriver::Oracle") {
-            Log::do_log('err',
-                "Unable to use Sympa::DatabaseDriver::Oracle module");
-            return undef;
-        }
-        require Sympa::DatabaseDriver::Oracle;
-
-        $actualclass = "Sympa::DatabaseDriver::Oracle";
-    } elsif ($param->{'db_type'} =~ /^sybase$/i) {
-        unless (eval "require Sympa::DatabaseDriver::Sybase") {
-            Log::do_log('err',
-                "Unable to use Sympa::DatabaseDriver::Sybase module");
-            return undef;
-        }
-        require Sympa::DatabaseDriver::Sybase;
-
-        $actualclass = "Sympa::DatabaseDriver::Sybase";
-    } elsif ($param->{'db_type'} =~ /^odbc$/i) {
-        unless (eval "require Sympa::DatabaseDriver::ODBC") {
-            Log::do_log('err',
-                'Unable to use Sympa::DatabaseDriver::ODBC module');
-            return undef;
-        }
-        require Sympa::DatabaseDriver::ODBC;
-
-        $actualclass = 'Sympa::DatabaseDriver::ODBC';
-    } else {
-        ## We don't have a DB Manipulator for this RDBMS
-        ## It might be an SQL source used to include list members/owners
-        ## like CSV
-        require Sympa::DatabaseDriver;
-
-        $actualclass = "Sympa::DatabaseDriver";
-    }
-
-    return bless {%$param} => $actualclass;
-}
-
-sub connect {
-    my $self = shift;
-    Log::do_log('debug3', "Checking connection to database %s",
-        $self->{'db_name'});
-    if ($self->{'dbh'} && $self->{'dbh'}->ping) {
-        Log::do_log('debug3', 'Connection to database %s already available',
-            $self->{'db_name'});
-        return 1;
-    }
-    unless ($self->establish_connection()) {
-        Log::do_log('err',
-            'Unable to establish new connection to database %s on host %s',
-            $self->{'db_name'}, $self->{'db_host'});
+    my $driver = $driver_aliases{$params{'db_type'}} || $params{'db_type'};
+    $driver = 'Sympa::DatabaseDriver::' . $driver
+        unless $driver =~ /::/;
+    unless (eval "require $driver"
+        and $driver->isa('Sympa::DatabaseDriver')) {
+        Log::do_log('err', 'Unable to use %s module: %s',
+            $driver, $EVAL_ERROR);
         return undef;
     }
+
+    my $self = bless {
+        map {
+                  (exists $params{$_} and defined $params{$_})
+                ? ($_ => $params{$_})
+                : ()
+            } (
+            @{$driver->required_parameters},
+            @{$driver->optional_parameters},
+            'reconnect_options'
+            )
+    } => $driver;
+
+    return $self;
 }
 
 ############################################################
-#  establish_connection
+#  connect
 ############################################################
 #  Connect to an SQL database.
 #
@@ -139,254 +84,124 @@ sub connect {
 #         currently accepts 'keep_trying' : wait and retry until
 #         db connection is ok (boolean) ; 'warn' : warn
 #         listmaster if connection fails (boolean)
-# OUT : $self->{'dbh'}
-#     | undef
+# OUT : 1 | undef
 #
 ##############################################################
-sub establish_connection {
+sub connect {
+    Log::do_log('debug3', '(%s)', @_);
     my $self = shift;
 
-    Log::do_log('debug', 'Creating connection to database %s',
-        $self->{'db_name'});
-    ## Do we have db_xxx required parameters
-    foreach my $db_param ('db_type', 'db_name') {
-        unless ($self->{$db_param}) {
+    # First check if we have an active connection with this server
+    if ($self->ping) {
+        Log::do_log('debug3', 'Connection to database %s already available',
+            $self);
+        return 1;
+    }
+
+    # Do we have required parameters?
+    foreach my $param (@{$self->required_parameters}) {
+        unless (defined $self->{$param}) {
             Log::do_log('info', 'Missing parameter %s for DBI connection',
-                $db_param);
+                $param);
             return undef;
         }
     }
-    if ($self->{'db_type'} eq 'SQLite') {
-        ## SQLite just need a db_name
-    } elsif ($self->{'db_type'} eq 'ODBC') {
-        ## ODBC just needs a db_name, db_user
-        foreach my $db_param ('db_user', 'db_passwd') {
-            unless ($self->{$db_param}) {
-                Log::do_log('info', 'Missing parameter %s for DBI connection',
-                    $db_param);
-                return undef;
-            }
-        }
-    } else {
-        foreach my $db_param ('db_host', 'db_user', 'db_passwd') {
-            unless ($self->{$db_param}) {
-                Log::do_log('info', 'Missing parameter %s for DBI connection',
-                    $db_param);
-                return undef;
-            }
-        }
-    }
 
-    ## Check if DBD is installed
-    unless (eval "require DBD::$self->{'db_type'}") {
-        Log::do_log('err',
-            "No Database Driver installed for $self->{'db_type'} ; you should download and install DBD::$self->{'db_type'} from CPAN"
-        );
-        tools::send_notify_to_listmaster('*', 'missing_dbd',
-            {'db_type' => $self->{'db_type'}});
-        return undef;
-    }
-
-    ## Build connect_string
-    if ($self->{'f_dir'}) {
-        $self->{'connect_string'} = "DBI:CSV:f_dir=$self->{'f_dir'}";
-        # ODBC support
-    } elsif ($self->{'db_type'} eq 'ODBC') {
-        $self->{'connect_string'} = "DBI:ODBC:" . $self->{'db_name'};
-    } else {
-        $self->build_connect_string();
-    }
-    if ($self->{'db_options'}) {
-        $self->{'connect_string'} .= ';' . $self->{'db_options'};
-    }
-    if (defined $self->{'db_port'}) {
-        $self->{'connect_string'} .= ';port=' . $self->{'db_port'};
-    }
-
-    ## First check if we have an active connection with this server
-    ## We require that user also matches (except SQLite).
-    if (defined $db_connections{$self->{'connect_string'}}
-        && (   $self->{'db_type'} eq 'SQLite'
-            or $db_connections{$self->{'connect_string'}}{'db_user'} eq
-            $self->{'db_user'})
-        && defined $db_connections{$self->{'connect_string'}}{'dbh'}
-        && $db_connections{$self->{'connect_string'}}{'dbh'}->ping()
-        ) {
-
-        Log::do_log('debug', "Use previous connection");
-        $self->{'dbh'} = $db_connections{$self->{'connect_string'}}{'dbh'};
-        return $db_connections{$self->{'connect_string'}}{'dbh'};
-
-    } else {
-        # Set environment variables
-        # Used by Oracle (ORACLE_HOME) etc.
-
-        # Client encoding derived from the environment variable.
-        # Set this before parsing db_env to allow override if one knows what
-        # she is doing.
-        # Note: on mysql and Pg, "SET NAMES" will be executed below; on
-        # SQLite, no need to set encoding.
-        if ($self->{'db_type'} eq 'Oracle') {
-            # NLS_LANG.  This needs to be set before connecting, otherwise
-            # it's useless.  Underscore (_) and dot (.) are a vital part as
-            # NLS_LANG has the syntax "language_territory.charset".
-            #
-            # NOTE: "UTF8" should be overridden by "AL32UTF8" on Oracle 9i
-            # or later (use db_env).  Former can't correctly handle characters
-            # beyond BMP.
-            $ENV{'NLS_LANG'} = '_.UTF8';
-        } elsif ($self->{'db_type'} eq 'Sybase') {
-            $ENV{'SYBASE_CHARSET'} = 'utf8';
-        }
-
-        if ($self->{'db_env'}) {
-            foreach my $env (split /;/, $self->{'db_env'}) {
-                my ($key, $value) = split /=/, $env;
-                $ENV{$key} = $value if ($key);
-            }
-        }
-
-        $self->{'dbh'} = eval {
-            DBI->connect(
-                $self->{'connect_string'}, $self->{'db_user'},
-                $self->{'db_passwd'}, {PrintError => 0}
+    # Check if required module such as DBD is installed.
+    foreach my $module (@{$self->required_modules}) {
+        unless (eval "require $module") {
+            Log::do_log(
+                'err',
+                'A module for %s is not installed. You should download and install %s',
+                ref($self),
+                $module
             );
-        };
-        unless (defined $self->{'dbh'}) {
-            ## Notify listmaster if warn option was set
-            ## Unless the 'failed' status was set earlier
-            if ($self->{'reconnect_options'}{'warn'}) {
-                unless (defined $db_connections{$self->{'connect_string'}}
-                    && $db_connections{$self->{'connect_string'}}{'status'} eq
-                    'failed') {
-                    tools::send_notify_to_listmaster('*', 'no_db', {});
-                }
-            }
-            if ($self->{'reconnect_options'}{'keep_trying'}) {
-                Log::do_log(
-                    'err',
-                    'Can\'t connect to Database %s as %s, still trying...',
-                    $self->{'connect_string'},
-                    $self->{'db_user'}
-                );
-            } else {
-                Log::do_log(
-                    'err',
-                    'Can\'t connect to Database %s as %s',
-                    $self->{'connect_string'},
-                    $self->{'db_user'}
-                );
-                $db_connections{$self->{'connect_string'}}{'status'} =
-                    'failed';
-                $db_connections{$self->{'connect_string'}}{'first_try'} ||=
-                    time;
-                return undef;
-            }
-            ## Loop until connect works
-            my $sleep_delay = 60;
-            while (1) {
-                sleep $sleep_delay;
-                eval {
-                    $self->{'dbh'} = DBI->connect(
-                        $self->{'connect_string'}, $self->{'db_user'},
-                        $self->{'db_passwd'}, {PrintError => 0}
-                    );
-                };
-                last if ($self->{'dbh'} && $self->{'dbh'}->ping());
-                $sleep_delay += 10;
-            }
-
-            if ($self->{'reconnect_options'}{'warn'}) {
-                Log::do_log(
-                    'notice',
-                    'Connection to Database %s restored',
-                    $self->{'connect_string'}
-                );
-                tools::send_notify_to_listmaster('*', 'db_restored', {});
-            }
+            tools::send_notify_to_listmaster('*', 'missing_dbd',
+                {'db_type' => ref($self), 'db_module' => $module});
+            return undef;
         }
-
-        # mysql:
-        # - At first, reset "mysql_auto_reconnect" driver attribute.
-        #   connect() sets it to true not according to \%attr argument
-        #   when the processes are running under mod_perl or CGI environment
-        #   so
-        #   that "SET NAMES utf8" will be skipped.
-        # - Set client-side character set to "utf8" or "utf8mb4".
-        if ($self->{'db_type'} eq 'mysql') {
-            $self->{'dbh'}->{'mysql_auto_reconnect'} = 0;
-
-            unless (defined $self->{'dbh'}->do("SET NAMES 'utf8mb4'")
-                or defined $self->{'dbh'}->do("SET NAMES 'utf8'")) {
-                Log::do_log(
-                    'err',
-                    'Cannot set client-side character set: %s',
-                    $self->{'dbh'}->errstr
-                );
-            }
-        }
-
-        # Pg:
-        # - Configure Postgres to use ISO format dates.
-        # - Set client encoding to UTF8.
-        if ($self->{'db_type'} eq 'Pg') {
-            $self->{'dbh'}->do("SET DATESTYLE TO 'ISO';");
-            $self->{'dbh'}->do("SET NAMES 'utf8'");
-        }
-
-        ## added sybase support
-        if ($self->{'db_type'} eq 'Sybase') {
-            my $dbname;
-            $dbname = "use $self->{'db_name'}";
-            $self->{'dbh'}->do($dbname);
-        }
-
-        ## Force field names to be lowercased
-        ## This has has been added after some problems of field names
-        ## upercased with Oracle
-        $self->{'dbh'}{'FetchHashKeyName'} = 'NAME_lc';
-
-        if ($self->{'db_type'} eq 'SQLite') {
-            # Configure to use sympa database
-            $self->{'dbh'}
-                ->func('func_index', -1, sub { return index($_[0], $_[1]) },
-                'create_function');
-            if (defined $self->{'db_timeout'}) {
-                $self->{'dbh'}->func($self->{'db_timeout'}, 'busy_timeout');
-            } else {
-                $self->{'dbh'}->func(5000, 'busy_timeout');
-            }
-        }
-
-        $db_connections{$self->{'connect_string'}}{'dbh'} = $self->{'dbh'};
-        $db_connections{$self->{'connect_string'}}{'db_user'} =
-            $self->{'db_user'};
-
-        Log::do_log('debug2', 'Connected to Database %s', $self->{'db_name'});
-
-        # We set long preload length instead of defaulting to 80 on Oracle and
-        # 32768 on Sybase.
-        if (   $self->{'db_type'} eq 'Oracle'
-            or $self->{'db_type'} eq 'Sybase') {
-            $self->{'dbh'}->{LongReadLen} = 204800;
-            $self->{'dbh'}->{LongTruncOk} = 0;
-        }
-        Log::do_log(
-            'debug3',
-            'Database driver seetings for this session: LongReadLen= %d, LongTruncOk = %d, RaiseError= %d',
-            $self->{'dbh'}->{LongReadLen},
-            $self->{'dbh'}->{LongTruncOk},
-            $self->{'dbh'}->{RaiseError}
-        );
-
-        return $self->{'dbh'};
     }
+
+    # Set unique ID to determine connection.
+    $self->{_id} = $self->get_id;
+
+    # Establish new connection.
+
+    # Set environment variables
+    # Used by Oracle (ORACLE_HOME) etc.
+    if ($self->{'db_env'}) {
+        foreach my $env (split /;/, $self->{'db_env'}) {
+            my ($key, $value) = split /=/, $env, 2;
+            $ENV{$key} = $value if ($key);
+        }
+    }
+
+    $connection_of{$self->{_id}} = eval { $self->_connect };
+
+    unless ($self->ping) {
+        unless (    $self->{'reconnect_options'}
+            and $self->{'reconnect_options'}{'keep_trying'}) {
+            Log::do_log('err', 'Can\'t connect to Database %s', $self);
+            $self->{_status} = 'failed';
+            return undef;
+        }
+
+        # Notify listmaster unless the 'failed' status was set earlier.
+        Log::do_log('err', 'Can\'t connect to Database %s, still trying...',
+            $self);
+        unless ($self->{_status} and $self->{_status} eq 'failed') {
+            tools::send_notify_to_listmaster('*', 'no_db', {});
+        }
+
+        # Loop until connect works
+        my $sleep_delay = 60;
+        while (1) {
+            sleep $sleep_delay;
+            $connection_of{$self->{_id}} = eval { $self->_connect };
+            last if $self->ping;
+            $sleep_delay += 10;
+        }
+
+        delete $self->{_status};
+
+        Log::do_log('notice', 'Connection to Database %s restored', $self);
+        tools::send_notify_to_listmaster('*', 'db_restored', {});
+    }
+
+    Log::do_log('debug2', 'Connected to Database %s', $self);
+
+    return 1;
+}
+
+# Merged into connect(().
+#sub establish_connection();
+
+sub _connect {
+    my $self = shift;
+
+    my $connection = DBI->connect(
+        $self->build_connect_string, $self->{'db_user'},
+        $self->{'db_passwd'}, {PrintError => 0}
+    );
+    # Force field names to be lowercased.
+    # This has has been added after some problems of field names
+    # upercased with Oracle.
+    $connection->{FetchHashKeyName} = 'NAME_lc' if $connection;
+
+    return $connection;
+}
+
+sub __dbh {
+    my $self = shift;
+    return $connection_of{$self->{_id} || ''};
 }
 
 sub do_query {
     my $self   = shift;
     my $query  = shift;
     my @params = @_;
+
+    my $sth;
 
     $query =~ s/^\s+//;
     $query =~ s/\s+$//;
@@ -396,7 +211,7 @@ sub do_query {
     $s =~ s/\n\s*/ /g;
     Log::do_log('debug3', 'Will perform query "%s"', $s);
 
-    unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
+    unless ($sth = $self->__dbh->prepare($statement)) {
         # Check connection to database in case it would be the cause of the
         # problem.
         unless ($self->connect()) {
@@ -404,16 +219,16 @@ sub do_query {
                 $self->{'db_name'});
             return undef;
         } else {
-            unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
+            unless ($sth = $self->__dbh->prepare($statement)) {
                 my $trace_statement = sprintf $query,
                     @{$self->prepare_query_log_values(@params)};
                 Log::do_log('err', 'Unable to prepare SQL statement %s: %s',
-                    $trace_statement, $self->{'dbh'}->errstr);
+                    $trace_statement, $self->__dbh->errstr);
                 return undef;
             }
         }
     }
-    unless ($self->{'sth'}->execute) {
+    unless ($sth->execute) {
         # Check connection to database in case it would be the cause of the
         # problem.
         unless ($self->connect()) {
@@ -421,7 +236,7 @@ sub do_query {
                 $self->{'db_name'});
             return undef;
         } else {
-            unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
+            unless ($sth = $self->__dbh->prepare($statement)) {
                 # Check connection to database in case it would be the cause
                 # of the problem.
                 unless ($self->connect()) {
@@ -430,28 +245,27 @@ sub do_query {
                         $self->{'db_name'});
                     return undef;
                 } else {
-                    unless ($self->{'sth'} =
-                        $self->{'dbh'}->prepare($statement)) {
+                    unless ($sth = $self->__dbh->prepare($statement)) {
                         my $trace_statement = sprintf $query,
                             @{$self->prepare_query_log_values(@params)};
                         Log::do_log('err',
                             'Unable to prepare SQL statement %s: %s',
-                            $trace_statement, $self->{'dbh'}->errstr);
+                            $trace_statement, $self->__dbh->errstr);
                         return undef;
                     }
                 }
             }
-            unless ($self->{'sth'}->execute) {
+            unless ($sth->execute) {
                 my $trace_statement = sprintf $query,
                     @{$self->prepare_query_log_values(@params)};
                 Log::do_log('err', 'Unable to execute SQL statement "%s": %s',
-                    $trace_statement, $self->{'dbh'}->errstr);
+                    $trace_statement, $self->__dbh->errstr);
                 return undef;
             }
         }
     }
 
-    return $self->{'sth'};
+    return $sth;
 }
 
 sub do_prepared_query {
@@ -459,6 +273,8 @@ sub do_prepared_query {
     my $query  = shift;
     my @params = ();
     my %types  = ();
+
+    my $sth;
 
     ## get binding types and parameters
     my $i = 0;
@@ -478,8 +294,6 @@ sub do_prepared_query {
         $i++;
     }
 
-    my $sth;
-
     $query =~ s/^\s+//;
     $query =~ s/\s+$//;
     $query =~ s/\n\s*/ /g;
@@ -490,18 +304,15 @@ sub do_prepared_query {
     } else {
         Log::do_log('debug3',
             'Did not find prepared statement for %s. Doing it', $query);
-        unless ($sth = $self->{'dbh'}->prepare($query)) {
+        unless ($sth = $self->__dbh->prepare($query)) {
             unless ($self->connect()) {
                 Log::do_log('err', 'Unable to get a handle to %s database',
                     $self->{'db_name'});
                 return undef;
             } else {
-                unless ($sth = $self->{'dbh'}->prepare($query)) {
-                    Log::do_log(
-                        'err',
-                        'Unable to prepare SQL statement: %s',
-                        $self->{'dbh'}->errstr
-                    );
+                unless ($sth = $self->__dbh->prepare($query)) {
+                    Log::do_log('err', 'Unable to prepare SQL statement: %s',
+                        $self->__dbh->errstr);
                     return undef;
                 }
             }
@@ -523,19 +334,17 @@ sub do_prepared_query {
                 $self->{'db_name'});
             return undef;
         } else {
-            unless ($sth = $self->{'dbh'}->prepare($query)) {
+            unless ($sth = $self->__dbh->prepare($query)) {
                 unless ($self->connect()) {
                     Log::do_log('err',
                         'Unable to get a handle to %s database',
                         $self->{'db_name'});
                     return undef;
                 } else {
-                    unless ($sth = $self->{'dbh'}->prepare($query)) {
-                        Log::do_log(
-                            'err',
+                    unless ($sth = $self->__dbh->prepare($query)) {
+                        Log::do_log('err',
                             'Unable to prepare SQL statement: %s',
-                            $self->{'dbh'}->errstr
-                        );
+                            $self->__dbh->errstr);
                         return undef;
                     }
                 }
@@ -550,7 +359,7 @@ sub do_prepared_query {
             $self->{'cached_prepared_statements'}{$query} = $sth;
             unless ($sth->execute(@params)) {
                 Log::do_log('err', 'Unable to execute SQL statement "%s": %s',
-                    $query, $self->{'dbh'}->errstr);
+                    $query, $self->__dbh->errstr);
                 return undef;
             }
         }
@@ -577,24 +386,34 @@ sub prepare_query_log_values {
 
 sub disconnect {
     my $self = shift;
-    $self->{'sth'}->finish if $self->{'sth'};
-    if ($self->{'dbh'}) { $self->{'dbh'}->disconnect; }
-    delete $db_connections{$self->{'connect_string'}};
-}
 
-sub create_db {
-    Log::do_log('debug3', '');
+    my $id = $self->get_id;
+    $connection_of{$id}->disconnect if $connection_of{$id};
+    delete $connection_of{$id};
+
     return 1;
 }
 
+# NOT YET USED.
+#sub create_db;
+
 sub ping {
     my $self = shift;
-    return $self->{'dbh'}->ping;
+
+    my $dbh = $self->__dbh;
+
+    # Disconnected explicitly.
+    return undef unless $dbh;
+    # Some drivers don't have ping().
+    return 1 unless $dbh->can('ping');
+    return $dbh->ping;
 }
 
 sub quote {
-    my ($self, $string, $datatype) = @_;
-    return $self->{'dbh'}->quote($string, $datatype);
+    my $self = shift;
+    my ($string, $datatype) = @_;
+
+    return $self->__dbh->quote($string, $datatype);
 }
 
 # No longer used.
@@ -620,6 +439,20 @@ sub get_canonical_read_date {
     my $self  = shift;
     my $value = shift;
     return $self->get_formatted_date({'mode' => 'read', 'target' => $value});
+}
+
+# We require that user also matches (except SQLite).
+sub get_id {
+    my $self = shift;
+
+    return join ';', map {"$_=$self->{$_}"}
+        grep {
+               !ref($self->{$_})
+            and defined $self->{$_}
+            and !/\A_/
+            and !/passw(or)?d/
+        }
+        sort keys %$self;
 }
 
 1;

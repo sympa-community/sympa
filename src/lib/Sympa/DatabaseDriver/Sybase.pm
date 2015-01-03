@@ -26,16 +26,42 @@ package Sympa::DatabaseDriver::Sybase;
 
 use strict;
 use warnings;
-##use Data::Dumper;
 
 use Log;
 
 use base qw(Sympa::DatabaseDriver);
 
+use constant required_modules => [qw(DBD::Sybase)];
+
 sub build_connect_string {
     my $self = shift;
-    $self->{'connect_string'} =
+
+    my $connect_string =
         "DBI:Sybase:database=$self->{'db_name'};server=$self->{'db_host'}";
+    $connect_string .= ';port=' . $self->{'db_port'}
+        if defined $self->{'db_port'};
+    $connect_string .= ';' . $self->{'db_options'}
+        if defined $self->{'db_options'};
+    return $connect_string;
+}
+
+sub connect {
+    my $self = shift;
+
+    # Client encoding derived from the environment variable.
+    # Set this before parsing db_env to allow override if one knows what
+    # she is doing.
+    $ENV{'SYBASE_CHARSET'} = 'utf8';
+
+    $self->SUPER::connect() or return undef;
+
+    $self->__dbh->do("use $self->{'db_name'}");
+
+    # We set long preload length instead of defaulting to 32768.
+    $self->__dbh->{LongReadLen} = 204800;
+    $self->__dbh->{LongTruncOk} = 0;
+
+    return 1;
 }
 
 sub get_substring_clause {
@@ -369,7 +395,6 @@ sub get_indexes {
             $found_indexes{$index_name}{$field_name} = 1;
         }
     }
-    ##open TMP, ">>/tmp/toto"; print TMP Dumper(\%found_indexes); close TMP;
     return \%found_indexes;
 }
 

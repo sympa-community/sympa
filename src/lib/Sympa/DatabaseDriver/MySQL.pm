@@ -26,18 +26,43 @@ package Sympa::DatabaseDriver::MySQL;
 
 use strict;
 use warnings;
-#use Data::Dumper;
 
 use Log;
 
 use base qw(Sympa::DatabaseDriver);
 
+use constant required_modules => [qw(DBD::mysql)];
+
 sub build_connect_string {
     my $self = shift;
-    Log::do_log('debug', 'Building connection string to database %s',
-        $self->{'db_name'});
-    $self->{'connect_string'} =
-        "DBI:$self->{'db_type'}:$self->{'db_name'}:$self->{'db_host'}";
+
+    my $connect_string =
+        'DBI:mysql:' . $self->{'db_name'} . ':' . $self->{'db_host'};
+    $connect_string .= ';port=' . $self->{'db_port'}
+        if defined $self->{'db_port'};
+    $connect_string .= ';' . $self->{'db_options'}
+        if defined $self->{'db_options'};
+    return $connect_string;
+}
+
+sub connect {
+    my $self = shift;
+
+    $self->SUPER::connect() or return undef;
+
+    # - At first, reset "mysql_auto_reconnect" driver attribute.
+    #   DBI::connect() sets it to true not according to \%attr argument
+    #   when the processes are running under mod_perl or CGI environment
+    #   so that "SET NAMES utf8" will be skipped.
+    # - Set client-side character set to "utf8" or "utf8mb4".
+    $self->__dbh->{'mysql_auto_reconnect'} = 0;
+    unless (defined $self->__dbh->do("SET NAMES 'utf8mb4'")
+        or defined $self->__dbh->do("SET NAMES 'utf8'")) {
+        Log::do_log('err', 'Cannot set client-side character set: %s',
+            $self->__dbh->errstr);
+    }
+
+    return 1;
 }
 
 sub get_substring_clause {
@@ -123,7 +148,7 @@ sub get_tables {
         $self->{'db_name'});
     my @raw_tables;
     my @result;
-    unless (@raw_tables = $self->{'dbh'}->tables()) {
+    unless (@raw_tables = $self->__dbh->tables()) {
         Log::do_log('err',
             'Unable to retrieve the list of tables from database %s',
             $self->{'db_name'});
@@ -383,7 +408,6 @@ sub get_indexes {
             $found_indexes{$index_name}{$field_name} = 1;
         }
     }
-    ##open TMP, ">>/tmp/toto"; print TMP Dumper(\%found_indexes); close TMP;
     return \%found_indexes;
 }
 

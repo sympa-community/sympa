@@ -34,8 +34,7 @@ Subject: [% FILTER qencode %][%|loc%]No DataBase[%END%][%END%]
 [% ELSIF type == 'missing_dbd' -%]
 Subject: [% FILTER qencode %][%|loc(db_type)%]No DataBase Driver for %1[%END%][%END%]
 
-[%|loc(db_type)%]No Database Driver installed for %1; you should download and install DBD::%1 from CPAN.[%END%]
-
+[%|loc(db_type,db_module)%]No Database Driver installed for %1; you should download and install %2 from CPAN.[%END%]
 
 [% ELSIF type == 'crash' -%]
 Subject: [% FILTER qencode %][%|loc(crashed_process)%]Previous process %1 crashed[%END%][%END%]

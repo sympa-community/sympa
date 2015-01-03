@@ -99,17 +99,8 @@ sub do_prepared_query {
 ## Note: if database connection is not available, this function returns
 ## immediately.
 ##
-## NOT RECOMMENDED.  Should not access to database handler.
-sub db_get_handler {
-    Log::do_log('debug3', '');
-
-    if (check_db_connect('just_try')) {
-        return $db_source->{'dbh'};
-    } else {
-        Log::do_log('err', 'Unable to get a handle to Sympa database');
-        return undef;
-    }
-}
+## NO LONGER USED.  Should not access to database handler.
+#sub db_get_handler();
 
 ## Just check if DB connection is ok
 ## Possible option is 'just_try', won't try to reconnect if database
@@ -123,9 +114,7 @@ sub check_db_connect {
         return undef;
     }
 
-    unless ($db_source
-        and $db_source->{'dbh'}
-        and $db_source->{'dbh'}->ping()) {
+    unless ($db_source and $db_source->ping) {
         unless (connect_sympa_database(@options)) {
             Log::do_log('err', 'Failed to connect to database');
             return undef;
@@ -158,7 +147,7 @@ sub connect_sympa_database {
     $use_db = 1;
 
     # Just in case, we connect to the database here. Probably not necessary.
-    unless ($db_source->{'dbh'} = $db_source->connect()) {
+    unless ($db_source->connect()) {
         Log::do_log('err', 'Unable to connect to the Sympa database');
         return undef;
     }
@@ -176,9 +165,7 @@ sub connect_sympa_database {
 sub db_disconnect {
     Log::do_log('debug2', '');
 
-    my $dbh = $db_source->{'dbh'};
-    $dbh->disconnect if $dbh;
-    delete $db_source->{'dbh'};
+    $db_source->disconnect if $db_source;
     return 1;
 }
 
@@ -706,7 +693,7 @@ sub check_db_field_type {
 
 sub quote {
     my $param = shift;
-    if ($db_source and $db_source->{dbh}) {
+    if ($db_source and $db_source->__dbh) {
         return $db_source->quote($param);
     } else {
         if (check_db_connect()) {
@@ -720,7 +707,7 @@ sub quote {
 
 sub get_substring_clause {
     my $param = shift;
-    if ($db_source and $db_source->{dbh}) {
+    if ($db_source) {
         return $db_source->get_substring_clause($param);
     } else {
         if (check_db_connect()) {
@@ -742,7 +729,7 @@ sub get_substring_clause {
 ##
 sub get_canonical_write_date {
     my $param = shift;
-    if ($db_source and $db_source->{dbh}) {
+    if ($db_source) {
         return $db_source->get_canonical_write_date($param);
     } else {
         if (check_db_connect()) {
@@ -761,7 +748,7 @@ sub get_canonical_write_date {
 ##
 sub get_canonical_read_date {
     my $param = shift;
-    if ($db_source and $db_source->{dbh}) {
+    if ($db_source) {
         return $db_source->get_canonical_read_date($param);
     } else {
         if (check_db_connect()) {

@@ -35,6 +35,7 @@ nobase_modules_DATA = \
 	Sympa/Crash.pm \
 	Sympa/DatabaseDescription.pm \
 	Sympa/DatabaseDriver.pm \
+	Sympa/DatabaseDriver/CSV.pm \
 	Sympa/DatabaseDriver/MySQL.pm \
 	Sympa/DatabaseDriver/ODBC.pm \
 	Sympa/DatabaseDriver/Oracle.pm \
@@ -97,6 +98,7 @@ MAN3PM = \
 	Sympa/Crash.pm \
 	Sympa/DatabaseDescription.pm \
 	Sympa/DatabaseDriver.pm \
+	Sympa/DatabaseDriver/CSV.pm \
 	Sympa/DatabaseDriver/MySQL.pm \
 	Sympa/DatabaseDriver/ODBC.pm \
 	Sympa/DatabaseDriver/Oracle.pm \

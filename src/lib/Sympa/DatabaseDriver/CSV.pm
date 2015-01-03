@@ -22,56 +22,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::DatabaseDriver::ODBC;
+package Sympa::DatabaseDriver::CSV;
 
 use strict;
 use warnings;
 
-use Log;
-
 use base qw(Sympa::DatabaseDriver);
 
-use constant required_modules    => [qw(DBD::ODBC)];
-use constant required_parameters => [qw(db_name db_user db_passwd)];
-use constant optional_parameters => [];
+use constant required_modules    => [qw(DBD::CSV)];
+use constant required_parameters => [qw(f_dir)];
+use constant optional_parameters => [qw(db_options)];
 
 sub build_connect_string {
     my $self = shift;
-    return 'DBI:ODBC:' . $self->{'db_name'};
-}
 
-sub get_substring_clause {
-    my $self  = shift;
-    my $param = shift;
-
-    die 'not yet implemented: This is required by Sympa';
-}
-
-sub get_formatted_date {
-    my $self  = shift;
-    my $param = shift;
-
-    die 'Not yet implemented: This is required by Sympa';
-}
-
-sub AS_DOUBLE {
-    return ({'TYPE' => DBI::SQL_DOUBLE()} => $_[1])
-        if scalar @_ > 1;
-    return ();
+    my $connect_string = 'DBI:CSV:f_dir=' . $self->{'f_dir'};
+    $connect_string .= ';' . $self->{'db_options'}
+        if defined $self->{'db_options'};
+    return $connect_string;
 }
 
 1;
-__END__
 
 =encoding utf-8
 
 =head1 NAME
 
-Sympa::DatabaseDriver::ODBC - Database driver for ODBC
-
-=head1 DESCRIPTION
-
-I<This module is under development>.
+Sympa::DatabaseDriver::CSV - Database driver for CSV
 
 =head1 SEE ALSO
 
