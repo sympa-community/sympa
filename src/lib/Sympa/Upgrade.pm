@@ -291,9 +291,7 @@ sub upgrade {
                         tools::send_notify_to_listmaster(
                             '*',
                             'upgrade_failed',
-                            {   'error' =>
-                                    $SDM::db_source->{'db_handler'}->errstr
-                            }
+                            { 'error' => $SDM::db_source->error }
                         );
                         return undef;
                     }

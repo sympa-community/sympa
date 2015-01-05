@@ -30,7 +30,7 @@ use Digest::MD5;
 use POSIX qw();
 
 use Conf;
-use Sympa::Datasource::LDAP;
+use Sympa::Database;
 use Log;
 use Sympa::Report;
 use Sympa::Robot;
@@ -205,7 +205,7 @@ sub authentication {
 
 sub ldap_authentication {
     my ($robot, $ldap, $auth, $pwd, $whichfilter) = @_;
-    my ($mesg, $host, $ldaph);
+    my ($mesg, $host);
     Log::do_log('debug2', '(%s, %s, %s)', $auth, '****', $whichfilter);
     Log::do_log('debug3', 'Password used: %s', $pwd);
 
@@ -235,60 +235,62 @@ sub ldap_authentication {
     $filter =~ s/\[sender\]/$auth/ig;
 
     ## bind in order to have the user's DN
-    my $ds = Sympa::Datasource::LDAP->new($ldap);
+    my $db = Sympa::Database->new('LDAP', %$ldap);
 
-    unless ($ds and $ldaph = $ds->connect()) {
+    unless ($db and $db->connect()) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $ldap->{'host'});
         return undef;
     }
 
-    $mesg = $ldaph->search(
+    $mesg = $db->do_operation(
+        'search',
         base    => $ldap->{'suffix'},
         filter  => "$filter",
         scope   => $ldap->{'scope'},
         timeout => $ldap->{'timeout'}
     );
 
-    if ($mesg->count() == 0) {
+    unless ($mesg and $mesg->count()) {
         Log::do_log('notice',
             'No entry in the LDAP Directory Tree of %s for %s',
             $ldap->{'host'}, $auth);
-        $ds->disconnect();
+        $db->disconnect();
         return undef;
     }
 
     my $refhash = $mesg->as_struct();
     my (@DN) = keys(%$refhash);
-    $ds->disconnect();
+    $db->disconnect();
 
     ##  bind with the DN and the pwd
 
     # Then set the bind_dn and password according to the current user
-    $ds = Sympa::Datasource::LDAP->new(
-        {   %$ldap,
-            bind_dn       => $DN[0],
-            bind_password => $pwd,
-        }
+    $db = Sympa::Database->new(
+        'LDAP',
+        %$ldap,
+        bind_dn       => $DN[0],
+        bind_password => $pwd,
     );
 
-    unless ($ds and $ldaph = $ds->connect()) {
+    unless ($db and $db->connect()) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $ldap->{'host'});
         return undef;
     }
 
-    $mesg = $ldaph->search(
+    $mesg = $db->do_operation(
+        'search',
         base    => $ldap->{'suffix'},
         filter  => "$filter",
         scope   => $ldap->{'scope'},
         timeout => $ldap->{'timeout'}
     );
 
-    if ($mesg->count() == 0 || $mesg->code() != 0) {
+    unless ($mesg and $mesg->count()) {
         Log::do_log('notice', "No entry in the LDAP Directory Tree of %s",
             $ldap->{'host'});
-        $ds->disconnect();
+        $db->disconnect();
         return undef;
     }
 
@@ -324,7 +326,7 @@ sub ldap_authentication {
         $param->{'alt_emails'}{$alt} = $previous->{$alt};
     }
 
-    $ds->disconnect() or Log::do_log('notice', 'Unable to unbind');
+    $db->disconnect() or Log::do_log('notice', 'Unable to unbind');
     Log::do_log('debug3', 'Canonic: %s', $canonic_email[0]);
     ## If the identifier provided was a valid email, return the provided
     ## email.
@@ -363,10 +365,9 @@ sub get_email_by_net_id {
 
     my $ldap = $Conf::Conf{'auth_services'}{$robot}->[$auth_id];
 
-    my $ds = Sympa::Datasource::LDAP->new($ldap);
-    my $ldaph;
+    my $db = Sympa::Database->new('LDAP', %$ldap);
 
-    unless ($ds and $ldaph = $ds->connect()) {
+    unless ($db and $db->connect()) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $ldap->{'host'});
         return undef;
@@ -377,26 +378,26 @@ sub get_email_by_net_id {
 
     # my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
 
-    my $emails = $ldaph->search(
+    my $mesg = $db->do_operation(
+        'search',
         base    => $ldap->{'suffix'},
         filter  => $filter,
         scope   => $ldap->{'scope'},
         timeout => $ldap->{'timeout'},
         attrs   => [$ldap->{'email_attribute'}],
     );
-    my $count = $emails->count();
 
-    if ($emails->count() == 0) {
+    unless ($mesg and $mesg->count()) {
         Log::do_log('notice', "No entry in the LDAP Directory Tree of %s",
             $ldap->{'host'});
-        $ds->disconnect();
+        $db->disconnect();
         return undef;
     }
 
-    $ds->disconnect();
+    $db->disconnect();
 
     ## return only the first attribute
-    my @results = $emails->entries;
+    my @results = $mesg->entries;
     foreach my $result (@results) {
         return (lc($result->get_value($ldap->{'email_attribute'})));
     }

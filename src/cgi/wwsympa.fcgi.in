@@ -69,10 +69,10 @@ use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Crash Hook => \&_crash_handler;    # Show traceback.
+use Sympa::Database;
 use Sympa::Family;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
-use Sympa::Datasource::LDAP;
 use Sympa::List;
 use Log;
 use Sympa::Marc::Search;
@@ -4463,8 +4463,6 @@ sub do_sso_login_succeeded {
     }
 }
 
-BEGIN { eval 'use Net::LDAP'; }
-
 sub is_ldap_user {
     my $auth = shift;    ## User email or UID
     wwslog('debug2', '(%s)', $auth);
@@ -4485,23 +4483,15 @@ sub is_ldap_user {
         return undef;
     }
 
-    unless ($Net::LDAP::VERSION) {
-        wwslog('err',
-            "Unable to use LDAP library, Net::LDAP required,install perl-ldap (CPAN) first"
-        );
-        return undef;
-    }
-
-    my ($ldaph, $filter);
+    my $filter;
 
     foreach my $ldap (@ldap_servers) {
         # skip ldap auth service if the user id or email do not match regexp
         # auth service parameter
-        next unless ($auth =~ /$ldap->{'regexp'}/i);
+        next unless $auth =~ /$ldap->{'regexp'}/i;
 
-        my $ds = Sympa::Datasource::LDAP->new($ldap);
-
-        unless ($ds and $ldaph = $ds->connect()) {
+        my $db = Sympa::Database->new('LDAP', %$ldap);
+        unless ($db and $db->connect) {
             Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
                 $ldap->{'host'});
             next;
@@ -4520,22 +4510,23 @@ sub is_ldap_user {
 
         ## !! une fonction get_dn_by_email/uid
 
-        my $mesg = $ldaph->search(
+        my $mesg = $db->do_operation(
+            'search',
             base    => $ldap->{'suffix'},
             filter  => "$filter",
             scope   => $ldap->{'scope'},
             timeout => $ldap->{'timeout'}
         );
 
-        unless ($mesg->count()) {
+        unless ($mesg and $mesg->count()) {
             wwslog('notice',
                 'No entry in the LDAP Directory Tree of %s for %s',
                 $ldap->{'host'}, $auth);
-            $ds->disconnect();
+            $db->disconnect();
             last;
         }
 
-        $ds->disconnect();
+        $db->disconnect();
         return $ldap->{'authentication_info_url'} || 'none';
     }
 

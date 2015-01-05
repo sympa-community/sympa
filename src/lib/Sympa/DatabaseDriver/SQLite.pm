@@ -511,8 +511,7 @@ sub do_query {
 
     ## acquire "immediate" lock
     unless (!$need_lock or $self->__dbh->begin_work) {
-        Log::do_log('err', 'Could not lock database: (%s) %s',
-            $self->__dbh->err, $self->__dbh->errstr);
+        Log::do_log('err', 'Could not lock database: %s', $self->error);
         return undef;
     }
 
@@ -529,12 +528,8 @@ sub do_query {
         }
     };
     if ($EVAL_ERROR or !$rc) {
-        Log::do_log(
-            'err',
-            'Could not unlock database: %s',
-            $EVAL_ERROR
-                || sprintf('(%s) %s', $self->__dbh->err, $self->__dbh->errstr)
-        );
+        Log::do_log('err', 'Could not unlock database: %s',
+            $EVAL_ERROR || $self->error);
         return undef;
     }
 
@@ -553,8 +548,7 @@ sub do_prepared_query {
 
     ## acquire "immediate" lock
     unless (!$need_lock or $self->__dbh->begin_work) {
-        Log::do_log('err', 'Could not lock database: (%s) %s',
-            $self->__dbh->err, $self->__dbh->errstr);
+        Log::do_log('err', 'Could not lock database: %s', $self->error);
         return undef;
     }
 
@@ -571,12 +565,8 @@ sub do_prepared_query {
         }
     };
     if ($EVAL_ERROR or !$rc) {
-        Log::do_log(
-            'err',
-            'Could not unlock database: %s',
-            $EVAL_ERROR
-                || sprintf('(%s) %s', $self->__dbh->err, $self->__dbh->errstr)
-        );
+        Log::do_log('err', 'Could not unlock database: %s',
+            $EVAL_ERROR || $self->error);
         return undef;
     }
 

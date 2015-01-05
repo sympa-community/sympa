@@ -59,7 +59,7 @@ sub connect {
     unless (defined $self->__dbh->do("SET NAMES 'utf8mb4'")
         or defined $self->__dbh->do("SET NAMES 'utf8'")) {
         Log::do_log('err', 'Cannot set client-side character set: %s',
-            $self->__dbh->errstr);
+            $self->error);
     }
 
     return 1;

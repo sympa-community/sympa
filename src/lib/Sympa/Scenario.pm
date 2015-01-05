@@ -33,8 +33,7 @@ use Net::CIDR;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
-use Sympa::Datasource::LDAP;
-use Sympa::Datasource::SQL;
+use Sympa::Database;
 use Sympa::Language;
 use Sympa::List;
 use Log;
@@ -1479,9 +1478,11 @@ sub search {
                 {'value'};
         }
 
-        my $ds = Sympa::Datasource::SQL->new(
-            $sql_conf->{'sql_named_filter_query'});
-        unless (defined $ds && $ds->connect() && $ds->ping) {
+        my $db = Sympa::Database->new(
+            $sql_conf->{'sql_named_filter_query'}->{db_type},
+            %{$sql_conf->{'sql_named_filter_query'}}
+        );
+        unless ($db and $db->connect()) {
             Log::do_log(
                 'notice',
                 'Unable to connect to the SQL server %s:%d',
@@ -1492,13 +1493,13 @@ sub search {
         }
 
         my $sth;
-        unless ($sth = $ds->do_prepared_query($statement, @statement_args)) {
+        unless ($sth = $db->do_prepared_query($statement, @statement_args)) {
             Log::do_log('debug', '%s named filter cancelled', $file);
             return undef;
         }
 
         my $res = $sth->fetchall_arrayref;    #FIXME: Check timeout.
-        $ds->disconnect();
+        $db->disconnect();
         my $first_row = ref($res->[0]) ? $res->[0]->[0] : $res->[0];
         Log::do_log('debug2', 'Result of SQL query: %d = %s',
             $first_row, $statement);
@@ -1572,10 +1573,8 @@ sub search {
                 {'value'};
         }
 
-        my $ds = Sympa::Datasource::LDAP->new(\%ldap_conf);
-
-        my $ldaph;
-        unless ($ds and $ldaph = $ds->connect()) {
+        my $db = Sympa::Database->new('LDAP', %ldap_conf);
+        unless ($db and $db->connect) {
             Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
                 $ldap_conf{'host'});
             return undef;
@@ -1583,7 +1582,8 @@ sub search {
 
         ## The 1.1 OID correponds to DNs ; it prevents the LDAP server from
         ## preparing/providing too much data
-        my $mesg = $ldaph->search(
+        my $mesg = $db->do_operation(
+            'search',
             base   => "$ldap_conf{'suffix'}",
             filter => "$filter",
             scope  => "$ldap_conf{'scope'}",
@@ -1591,10 +1591,6 @@ sub search {
         );
         unless ($mesg) {
             Log::do_log('err', "Unable to perform LDAP search");
-            return undef;
-        }
-        unless ($mesg->code == 0) {
-            Log::do_log('err', 'LDAP search failed');
             return undef;
         }
 
@@ -1607,7 +1603,7 @@ sub search {
                 {'value'} = 1;
         }
 
-        $ds->disconnect()
+        $db->disconnect()
             or Log::do_log('notice', 'Unbind impossible');
         $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} =
             time;

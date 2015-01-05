@@ -33,9 +33,11 @@ nobase_modules_DATA = \
 	Sympa/Config_XML.pm \
 	Sympa/Constants.pm \
 	Sympa/Crash.pm \
+	Sympa/Database.pm \
 	Sympa/DatabaseDescription.pm \
 	Sympa/DatabaseDriver.pm \
 	Sympa/DatabaseDriver/CSV.pm \
+	Sympa/DatabaseDriver/LDAP.pm \
 	Sympa/DatabaseDriver/MySQL.pm \
 	Sympa/DatabaseDriver/ODBC.pm \
 	Sympa/DatabaseDriver/Oracle.pm \
@@ -44,8 +46,6 @@ nobase_modules_DATA = \
 	Sympa/DatabaseDriver/SQLite.pm\
 	Sympa/DatabaseDriver/Sybase.pm \
 	Sympa/Datasource.pm \
-	Sympa/Datasource/LDAP.pm \
-	Sympa/Datasource/SQL.pm \
 	Sympa/Family.pm \
 	Sympa/Fetch.pm \
 	Sympa/HTML/FormatText.pm \
@@ -96,9 +96,11 @@ MAN3PM = \
 	Sympa/ConfDef.pm \
 	Sympa/Constants.pm \
 	Sympa/Crash.pm \
+	Sympa/Database.pm \
 	Sympa/DatabaseDescription.pm \
 	Sympa/DatabaseDriver.pm \
 	Sympa/DatabaseDriver/CSV.pm \
+	Sympa/DatabaseDriver/LDAP.pm \
 	Sympa/DatabaseDriver/MySQL.pm \
 	Sympa/DatabaseDriver/ODBC.pm \
 	Sympa/DatabaseDriver/Oracle.pm \

@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Datasource::SQL;
+package Sympa::Database;
 
 use strict;
 use warnings;
@@ -44,13 +44,15 @@ my %driver_aliases = (
     Pg    => 'Sympa::DatabaseDriver::PostgreSQL',
 );
 
+# Sympa::Database is the proxy class of Sympa::DatabaseDriver subclasses.
+# The constructor may be overridden by _new() method.
 sub new {
     Log::do_log('debug2', '(%s, %s)', @_);
-    my $class  = shift;
-    my $params = shift;
-    my %params = %$params;
+    my $class   = shift;
+    my $db_type = shift;
+    my %params  = @_;
 
-    my $driver = $driver_aliases{$params{'db_type'}} || $params{'db_type'};
+    my $driver = $driver_aliases{$db_type} || $db_type;
     $driver = 'Sympa::DatabaseDriver::' . $driver
         unless $driver =~ /::/;
     unless (eval "require $driver"
@@ -60,7 +62,8 @@ sub new {
         return undef;
     }
 
-    my $self = bless {
+    return $driver->_new(
+        $db_type,
         map {
                   (exists $params{$_} and defined $params{$_})
                 ? ($_ => $params{$_})
@@ -70,9 +73,15 @@ sub new {
             @{$driver->optional_parameters},
             'reconnect_options'
             )
-    } => $driver;
+    );
+}
 
-    return $self;
+sub _new {
+    my $class   = shift;
+    my $db_type = shift;
+    my %params  = @_;
+
+    return bless {%params} => $class;
 }
 
 ############################################################
@@ -139,7 +148,7 @@ sub connect {
     $connection_of{$self->{_id}} = eval { $self->_connect };
 
     unless ($self->ping) {
-        unless (    $self->{'reconnect_options'}
+        unless ($self->{'reconnect_options'}
             and $self->{'reconnect_options'}{'keep_trying'}) {
             Log::do_log('err', 'Can\'t connect to Database %s', $self);
             $self->{_status} = 'failed';
@@ -196,6 +205,10 @@ sub __dbh {
     return $connection_of{$self->{_id} || ''};
 }
 
+sub do_operation {
+    die 'Not implemented';
+}
+
 sub do_query {
     my $self   = shift;
     my $query  = shift;
@@ -223,7 +236,7 @@ sub do_query {
                 my $trace_statement = sprintf $query,
                     @{$self->prepare_query_log_values(@params)};
                 Log::do_log('err', 'Unable to prepare SQL statement %s: %s',
-                    $trace_statement, $self->__dbh->errstr);
+                    $trace_statement, $self->error);
                 return undef;
             }
         }
@@ -250,7 +263,7 @@ sub do_query {
                             @{$self->prepare_query_log_values(@params)};
                         Log::do_log('err',
                             'Unable to prepare SQL statement %s: %s',
-                            $trace_statement, $self->__dbh->errstr);
+                            $trace_statement, $self->error);
                         return undef;
                     }
                 }
@@ -259,7 +272,7 @@ sub do_query {
                 my $trace_statement = sprintf $query,
                     @{$self->prepare_query_log_values(@params)};
                 Log::do_log('err', 'Unable to execute SQL statement "%s": %s',
-                    $trace_statement, $self->__dbh->errstr);
+                    $trace_statement, $self->error);
                 return undef;
             }
         }
@@ -312,7 +325,7 @@ sub do_prepared_query {
             } else {
                 unless ($sth = $self->__dbh->prepare($query)) {
                     Log::do_log('err', 'Unable to prepare SQL statement: %s',
-                        $self->__dbh->errstr);
+                        $self->error);
                     return undef;
                 }
             }
@@ -344,7 +357,7 @@ sub do_prepared_query {
                     unless ($sth = $self->__dbh->prepare($query)) {
                         Log::do_log('err',
                             'Unable to prepare SQL statement: %s',
-                            $self->__dbh->errstr);
+                            $self->error);
                         return undef;
                     }
                 }
@@ -359,7 +372,7 @@ sub do_prepared_query {
             $self->{'cached_prepared_statements'}{$query} = $sth;
             unless ($sth->execute(@params)) {
                 Log::do_log('err', 'Unable to execute SQL statement "%s": %s',
-                    $query, $self->__dbh->errstr);
+                    $query, $self->error);
                 return undef;
             }
         }
@@ -396,6 +409,14 @@ sub disconnect {
 
 # NOT YET USED.
 #sub create_db;
+
+sub error {
+    my $self = shift;
+
+    my $dbh = $self->__dbh;
+    return sprintf '(%s) %s', $dbh->state, ($dbh->errstr || '') if $dbh;
+    return undef;
+}
 
 sub ping {
     my $self = shift;
@@ -456,3 +477,51 @@ sub get_id {
 }
 
 1;
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Database - Handling databases
+
+=head1 SYNOPSIS
+
+TBD.
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head2 Methods
+
+=over
+
+=item new ( $db_type, [ option => value, ... ] )
+
+I<Constructor>.
+TBD.
+
+=item do_operation ( $operation, options... )
+
+I<Instance method>, I<only for LDAP>.
+TBD.
+
+=item do_prepared_query ( $statement, parameters... )
+
+I<Instance method>, I<only for SQL>.
+TBD.
+
+=item do_query ( $statement, parameters... )
+
+I<Instance method>, I<only for SQL>.
+TBD.
+
+TBD.
+
+=back
+
+=head1 SEE ALSO
+
+L<Sympa::DatabaseDriver>, L<Sympa::Datasource>, L<SDM>.
+
+=cut

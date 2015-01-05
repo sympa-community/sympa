@@ -29,7 +29,7 @@ use warnings;
 
 use Log;
 
-use base qw(Sympa::Datasource::SQL);
+use base qw(Sympa::Database);
 
 use constant required_modules    => [];
 use constant required_parameters => [qw(db_host db_name db_user db_passwd)];
