@@ -310,7 +310,7 @@ our %cpan_modules = (
             'this is required if you set a value for "dmarc_protection_mode" which requires DNS verification',
     },
     'Net::LDAP' => {
-        required_version => '0.27',
+        required_version => '0.34',
         'gettext_comment' =>
             'openldap-devel is needed to build the Perl code',
         package_name => 'perl-ldap',

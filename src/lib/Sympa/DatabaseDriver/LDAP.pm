@@ -73,39 +73,32 @@ sub _new {
 sub _connect {
     my $self = shift;
 
-    my $connection;
-    my $host_entry;
-    # There might be multiple alternate hosts defined
-    foreach my $host (@{$self->{_hosts}}) {
-        # new() may die if depending module is missing (e.g. for SSL).
-        $connection = eval {
-            Net::LDAP->new(
-                $host,
-                timeout => ($self->{'timeout'}   || 3),
-                verify  => ($self->{'ca_verify'} || 'optional'),
-                capath  => $self->{'ca_path'},
-                cafile  => $self->{'ca_file'},
-                sslversion => $self->{'ssl_version'},
-                ciphers    => $self->{'ssl_ciphers'},
-                clientcert => $self->{'ssl_cert'},
-                clientkey  => $self->{'ssl_key'},
-            );
-        };
-        $self->{_error_code} = 0;
-        $self->{_error_string} = $EVAL_ERROR;
-
-        # if connection is defined, skip alternate hosts
-        if ($connection) {
-            $host_entry = $host;
-            last;
-        }
-    }
+    # new() with multiple alternate hosts needs perl-ldap >= 0.27.
+    # It may die if depending module is missing (e.g. for SSL).
+    my $connection = eval {
+        Net::LDAP->new(
+            $self->{_hosts},
+            timeout => ($self->{'timeout'}   || 3),
+            verify  => ($self->{'ca_verify'} || 'optional'),
+            capath  => $self->{'ca_path'},
+            cafile  => $self->{'ca_file'},
+            sslversion => $self->{'ssl_version'},
+            ciphers    => $self->{'ssl_ciphers'},
+            clientcert => $self->{'ssl_cert'},
+            clientkey  => $self->{'ssl_key'},
+        );
+    };
+    $self->{_error_code} = 0;
+    $self->{_error_string} = $EVAL_ERROR;
 
     unless ($connection) {
         Log::do_log('err', 'Unable to connect to the LDAP server %s',
             $self->{host});
         return undef;
     }
+
+    # scheme() and uri() need perl-ldap >= 0.34.
+    my $host_entry = sprintf '%s://%s', $connection->scheme, $connection->uri;
 
     # Using start_tls() will convert the existing connection to using
     # Transport Layer Security (TLS), which provides an encrypted connection.
