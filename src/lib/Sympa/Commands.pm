@@ -1051,13 +1051,11 @@ sub subscribe {
             }
         }
 
-        if ($Sympa::List::use_db) {
-            my $u = Sympa::User->new($sender);
-            $u->lang($list->{'admin'}{'lang'}) unless $u->lang;
-            $u->password(Sympa::Tools::Password::tmp_passwd($sender))
-                unless $u->password;
-            $u->save;
-        }
+        my $u = Sympa::User->new($sender);
+        $u->lang($list->{'admin'}{'lang'}) unless $u->lang;
+        $u->password(Sympa::Tools::Password::tmp_passwd($sender))
+            unless $u->password;
+        $u->save;
 
         ## Now send the welcome file to the user
         unless ($quiet || ($action =~ /quiet/i)) {
@@ -1663,13 +1661,11 @@ sub add {
                 {'email' => $email, 'listname' => $which}, $cmd_line);
         }
 
-        if ($Sympa::List::use_db) {
-            my $u = Sympa::User->new($email);
-            $u->lang($list->{'admin'}{'lang'}) unless $u->lang;
-            $u->password(Sympa::Tools::Password::tmp_passwd($email))
-                unless $u->password;
-            $u->save;
-        }
+        my $u = Sympa::User->new($email);
+        $u->lang($list->{'admin'}{'lang'}) unless $u->lang;
+        $u->password(Sympa::Tools::Password::tmp_passwd($email))
+            unless $u->password;
+        $u->save;
 
         ## Now send the welcome file to the user if it exists and notification
         ## is supposed to be sent.

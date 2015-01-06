@@ -55,7 +55,6 @@ my %indexes = %Sympa::DatabaseDescription::indexes;
 my @former_indexes = @Sympa::DatabaseDescription::former_indexes;
 
 our $db_source;
-our $use_db;
 
 sub do_query {
     my $query  = shift;
@@ -143,9 +142,6 @@ sub connect_sympa_database {
         Log::do_log('err', 'Unable to create Sympa::Database object');
         return undef;
     }
-    ## Used to check that connecting to the Sympa database works and the
-    ## Sympa::Database object is created.
-    $use_db = 1;
 
     # Just in case, we connect to the database here. Probably not necessary.
     unless ($db_source->connect()) {
@@ -317,9 +313,6 @@ sub probe_db {
         );
         return undef;
     }
-
-    ## Used by List subroutines to check that the DB is available
-    $Sympa::List::use_db = 1;
 
     ## Notify listmaster
     tools::send_notify_to_listmaster('*', 'db_struct_updated',

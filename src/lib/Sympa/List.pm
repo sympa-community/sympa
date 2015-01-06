@@ -956,10 +956,8 @@ sub save_config {
         return undef;
     }
 
-    if ($SDM::use_db) {
-        unless ($self->_update_list_db) {
-            Log::do_log('err', "Unable to update list_table");
-        }
+    unless ($self->_update_list_db) {
+        Log::do_log('err', "Unable to update list_table");
     }
 
     return 1;
@@ -5389,19 +5387,17 @@ sub rename_list_db {
     }
     Log::do_log('debug', 'Statement: %s', $statement_admin);
 
-    if ($SDM::use_db) {
-        unless (
-            SDM::do_query(
-                "UPDATE list_table SET name_list=%s, robot_list=%s WHERE (name_list=%s AND robot_list=%s)",
-                SDM::quote($new_listname),
-                SDM::quote($new_robot),
-                SDM::quote($self->{'name'}),
-                SDM::quote($self->{'domain'})
-            )
-            ) {
-            Log::do_log('err', "Unable to rename list in database");
-            return undef;
-        }
+    unless (
+        SDM::do_query(
+            "UPDATE list_table SET name_list=%s, robot_list=%s WHERE (name_list=%s AND robot_list=%s)",
+            SDM::quote($new_listname),
+            SDM::quote($new_robot),
+            SDM::quote($self->{'name'}),
+            SDM::quote($self->{'domain'})
+        )
+        ) {
+        Log::do_log('err', "Unable to rename list in database");
+        return undef;
     }
 
     return 1;
@@ -6501,8 +6497,7 @@ sub _include_users_file {
     }
     close INCLUDE;
 
-    Log::do_log('info', '%d included users from file %s',
-        $total, $filename);
+    Log::do_log('info', '%d included users from file %s', $total, $filename);
     return $total;
 }
 
@@ -6617,7 +6612,8 @@ sub _include_users_remote_file {
 
     #FIXME: Reset http credentials
 
-    Log::do_log('info', '%d included users from remote file %s', $total, $url);
+    Log::do_log('info', '%d included users from remote file %s', $total,
+        $url);
     return $total;
 }
 
@@ -7077,8 +7073,7 @@ sub _include_users_ldap_2level {
     }
 
     Log::do_log('debug2', 'Unbinded from LDAP server %s', $source->{'host'});
-    Log::do_log('info', '%d included users from LDAP query 2level',
-        $total);
+    Log::do_log('info', '%d included users from LDAP query 2level', $total);
 
     my $result;
     $result->{'total'} = $total;
@@ -10240,14 +10235,6 @@ sub _load_list_config_file {
     ############################################
     ## Below are constraints between parameters
     ############################################
-
-    ## Do we have a database config/access
-    unless ($SDM::use_db) {
-        Log::do_log('info',
-            'Sympa not setup to use DBI or no database access');
-        ## We should notify the listmaster here...
-        #return undef;
-    }
 
     ## This default setting MUST BE THE LAST ONE PERFORMED
 #    if ($admin{'status'} ne 'open') {

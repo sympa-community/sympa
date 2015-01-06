@@ -301,13 +301,12 @@ sub authenticateAndRun {
     my ($self, $email, $cookie, $service, $parameters) = @_;
     my $session_id;
 
-	if ($parameters) {
-		Log::do_log('notice', '(%s, %s, %s, %s)',
-			$email, $cookie, $service, join(',', @$parameters));
-	}else{
-		Log::do_log('notice', '(%s, %s, %s)',
-			$email, $cookie, $service);
-	}
+    if ($parameters) {
+        Log::do_log('notice', '(%s, %s, %s, %s)',
+            $email, $cookie, $service, join(',', @$parameters));
+    } else {
+        Log::do_log('notice', '(%s, %s, %s)', $email, $cookie, $service);
+    }
 
     unless ($cookie and $service) {
         Log::do_log('err', "Missing parameter");
@@ -376,13 +375,12 @@ sub authenticateRemoteAppAndRun {
     my ($self, $appname, $apppassword, $vars, $service, $parameters) = @_;
     my $robot = $ENV{'SYMPA_ROBOT'};
 
-	if ($parameters) {
-		Log::do_log('notice', '(%s, %s, %s, %s)',
-			$appname, $vars, $service, join(',', @$parameters));
-	}else{
-		Log::do_log('notice', '(%s, %s, %s)',
-			$appname, $vars, $service);
-	}
+    if ($parameters) {
+        Log::do_log('notice', '(%s, %s, %s, %s)',
+            $appname, $vars, $service, join(',', @$parameters));
+    } else {
+        Log::do_log('notice', '(%s, %s, %s)', $appname, $vars, $service);
+    }
 
     unless ($appname and $apppassword and $service) {
         die SOAP::Fault->faultcode('Client')
@@ -1533,12 +1531,10 @@ sub subscribe {
                 unless $list->add_list_member($u);
         }
 
-        if ($Sympa::List::use_db) {
-            my $u = Sympa::User->new($sender);
-            unless ($u->lang) {
-                $u->lang($list->{'admin'}{'lang'});
-                $u->save();
-            }
+        my $u = Sympa::User->new($sender);
+        unless ($u->lang) {
+            $u->lang($list->{'admin'}{'lang'});
+            $u->save();
         }
 
         ## Now send the welcome file to the user

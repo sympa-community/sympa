@@ -288,11 +288,9 @@ sub upgrade {
                             'Unable to fille the robot_admin and robot_subscriber fields in database for robot %s',
                             $r
                         );
-                        tools::send_notify_to_listmaster(
-                            '*',
+                        tools::send_notify_to_listmaster('*',
                             'upgrade_failed',
-                            { 'error' => $SDM::db_source->error }
-                        );
+                            {'error' => $SDM::db_source->error});
                         return undef;
                     }
                 }
@@ -361,8 +359,7 @@ sub upgrade {
 
     ## DB fields of enum type have been changed to int
     if (lower_version($previous_version, '5.2a.1')) {
-
-        if ($SDM::use_db && $Conf::Conf{'db_type'} eq 'mysql') {
+        if ($Conf::Conf{'db_type'} eq 'mysql') {
             my %check = (
                 'subscribed_subscriber' => 'subscriber_table',
                 'included_subscriber'   => 'subscriber_table',

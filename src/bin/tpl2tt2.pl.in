@@ -53,12 +53,12 @@ unless (Conf::load()) {
     die 'config_error';
 }
 
-if ($Conf::Conf{'db_name'} and $Conf::Conf{'db_type'}) {
-    unless ($Sympa::List::use_db = SDM::probe_db()) {
-        die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf',
-            $Conf::Conf{'db_name'}
-        );
-    }
+# Check database connectivity and probe database
+#FIXME: Is it required?
+unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+    die sprintf
+        "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
+        $Conf::Conf{'db_name'};
 }
 
 ## We have a parameter that should be a template to convert
