@@ -8,18 +8,18 @@ msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2014-05-19 13:37+0000\n"
-"Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
+"PO-Revision-Date: 2014-12-20 23:24+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Português do Brasil\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Version: 0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-POOTLE-MTIME: 1400506672.000000\n"
+"X-POOTLE-MTIME: 1419117879.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -39,19 +39,19 @@ msgstr ""
 #: src/cgi/wwsympa.fcgi.in:6357 src/cgi/wwsympa.fcgi.in:8654
 #: src/lib/Sympa/Message.pm:502 src/lib/Sympa/Message.pm:505
 #: src/lib/Sympa/Message.pm:512 src/libexec/alias_manager.pl.in:102
+#, fuzzy
 msgid "%d %b %Y"
 msgstr "%d/%b/%Y"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:29
-#, fuzzy
 msgid "The configuration file contains errors.\n"
-msgstr "O arquivo de configuração -- config -- contem erros.\n"
+msgstr "O arquivo de configuração contém erros.\n"
 
 #: src/sbin/sympa_wizard.pl.in:177
 #, fuzzy
 msgid "Example: "
-msgstr "Nome: "
+msgstr "Exemplo"
 
 #: src/sbin/sympa_wizard.pl.in:187
 #, fuzzy
@@ -89,6 +89,7 @@ msgstr ""
 "Versões anteriores foram salvas como %s.\n"
 
 #: src/sbin/sympa_wizard.pl.in:357
+#, fuzzy
 msgid ""
 "##############################################################################\n"
 "# This process will help you install all Perl (CPAN) modules required by "
@@ -106,28 +107,49 @@ msgid ""
 "##############################################################################\n"
 "Press the Enter key to continue..."
 msgstr ""
+"#############################################################################"
+"#\n"
+"#Este processo irá ajudá-lo a instalar todos os módulos Perl (CPAN) "
+"requeridos pelo Sympa\n"
+"# Sympa requer cerca de 50 a 65 módulos Perl adicionais para funcionar "
+"corretamente. \n"
+"# Todo o processo de instalação deve demorar cerca de 15 minutos.\n"
+"# Você deve primeiramente configurar o CPAN shell, e selecionar o seu\n"
+"servidor CPAN favorito.\n"
+"# Note que você preferirá instalar os módulos Perl requeridos utilizando o "
+"seu \n"
+"# preditelo mecanismo DEB/RPM.\n"
+"# Sinta-se à vontade para interromper o processo, caso necessário; poderá "
+"reiniciá-lo seguramente\n"
+" em seguida.\n"
+"#############################################################################"
+"#\n"
+"Aperte a tecla Enter para continuar..."
 
 #: src/sbin/sympa_wizard.pl.in:376
+#, fuzzy
 msgid "Checking for PERL version:"
-msgstr ""
+msgstr "Verificando a versão do PERL:"
 
 #: src/sbin/sympa_wizard.pl.in:379
 msgid "Your version of perl is OK (%s  >= %s)"
-msgstr ""
+msgstr "Sua versão do perl está OK(%s  >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:383
 msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
 msgstr ""
+"Sua versão do perl é ANTIGA(%s  < %s)\n"
+"Por favor, INSTALE a mais recente!"
 
 #: src/sbin/sympa_wizard.pl.in:387
 msgid "Checking for REQUIRED modules:"
-msgstr ""
+msgstr "Verificando módulos REQUERIDOS:"
 
 #: src/sbin/sympa_wizard.pl.in:389
 msgid "Checking for OPTIONAL modules:"
-msgstr ""
+msgstr "Verficando por módulos OPICIONAIS:"
 
 #: src/sbin/sympa_wizard.pl.in:393
 msgid ""
@@ -139,15 +161,15 @@ msgstr ""
 #: src/sbin/sympa_wizard.pl.in:408
 #, fuzzy
 msgid "perl module"
-msgstr "Modo avançado"
+msgstr "Módulo perl"
 
 #: src/sbin/sympa_wizard.pl.in:408
 msgid "from CPAN"
-msgstr ""
+msgstr "sobre CPAN"
 
 #: src/sbin/sympa_wizard.pl.in:409
 msgid "STATUS"
-msgstr ""
+msgstr "SITUAÇÃO"
 
 #: src/sbin/sympa_wizard.pl.in:410
 msgid "-----------"
@@ -163,7 +185,7 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:430
 msgid "was not found on this system."
-msgstr ""
+msgstr "não foi encontrado no sistema"
 
 #: src/sbin/sympa_wizard.pl.in:452
 msgid "OK (%-6s >= %s)"
@@ -172,19 +194,21 @@ msgstr ""
 #: src/sbin/sympa_wizard.pl.in:455
 #, fuzzy
 msgid "version is too old (%s < %s)"
-msgstr "O período é muito longo (%1 dias)"
+msgstr "versão muito antiga (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:458
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
 msgstr ""
+">>>>>>> Você precisa atualizar da versão \"%s\" para a versão \"%s\" <<<<<<."
 
 #: src/sbin/sympa_wizard.pl.in:487
+#, fuzzy
 msgid "## You need root privileges to install %s module. ##"
-msgstr ""
+msgstr "## Você necessita de privilégios root para instalar %s módulo ##"
 
 #: src/sbin/sympa_wizard.pl.in:490
 msgid "## Press the Enter key to continue checking modules. ##"
-msgstr ""
+msgstr "## Pressione a tecla Enter para continuar verificando módulos. ##"
 
 #: src/sbin/sympa_wizard.pl.in:499
 msgid "-> Usage of this module: %s"
@@ -196,19 +220,23 @@ msgstr "-> Pré-requisitos: %s"
 
 #: src/sbin/sympa_wizard.pl.in:511
 msgid "-> Install module %s ? [%s] "
-msgstr ""
+msgstr "-> Instalar módulo %s? [%s]  "
 
 #: src/sbin/sympa_wizard.pl.in:549
 msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
 msgstr ""
+"Instalação de %s falhou. Você deve baixar o arquivo com extensão tar.gz de "
+"http://search.cpan.org e instalá-lo manualmente."
 
 #: src/sbin/sympa_wizard.pl.in:554
 msgid ""
 "Installation of %s FAILED. Do you want to force the installation of this "
 "module? (y/N) "
 msgstr ""
+"Instalação de %s FALHOU. Você gostaria de forçar a instalação deste módulo? "
+"(y/N)"
 
 #: src/lib/tools.pm:1814
 msgid "contains the dictionary word '%s'"
@@ -220,19 +248,19 @@ msgstr "Não entre os caractéres: %d e %d"
 
 #: src/lib/tools.pm:1809
 msgid "Not %d characters or greater"
-msgstr "Não para caractéres maiores ou iguais a %d"
+msgstr "Não para caracteres maiores ou iguais a %d"
 
 #: src/lib/tools.pm:1810
 msgid "Not less than or equal to %d characters"
-msgstr ""
+msgstr "Não menor ou igual a %d caracteres"
 
 #: src/lib/tools.pm:1811
 msgid "contains bad characters"
-msgstr ""
+msgstr "contém caracteres irreconhecíveis"
 
 #: src/lib/tools.pm:1812
 msgid "contains less than %d character groups"
-msgstr ""
+msgstr "contém menos que %d grupos de caracteres"
 
 #: src/lib/tools.pm:1813
 msgid "contains over %d leading characters in sequence"
@@ -12369,6 +12397,67 @@ msgstr ""
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Provedor desconhecido."
+
+#: src/lib/Sympa/ModDef.pm:350
+msgid "used while checking the RDBMS buffer size"
+msgstr ""
+
+#: src/lib/Sympa/ModDef.pm:364
+msgid ""
+"used by sympa.pl --test_database_message_buffer to test database performances"
+msgstr ""
+
+#: src/sbin/sympa_wizard.pl.in:176
+msgid "Example: %s\t%s"
+msgstr ""
+
+#: src/lib/Sympa/ModDef.pm:221
+msgid "required when using the VOOT protocol"
+msgstr ""
+
+#: default/mail_tt2/dsn.tt2:49
+msgid ""
+"Your encrypted message bound for one or more subscribers of this list cannot "
+"be encrypted again.  Probably because they have not sent certificates of "
+"their own."
+msgstr ""
+
+#: src/lib/confdef.pm:761
+msgid ""
+"Directory containing html file generated by mhonarc while diplay messages "
+"others than archives"
+msgstr ""
+
+#: src/lib/Sympa/ModDef.pm:102
+msgid "used for maintaining snapshots of list members"
+msgstr ""
+
+#: src/lib/Sympa/ModDef.pm:260
+msgid "mhonarc is used to build Sympa web archives"
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:421
+msgid ""
+"postgresql-devel and postgresql-server. postgresql should be running for "
+"make test to succeed"
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:438
+msgid ""
+"mysql-devel and myslq-server. mysql should be running for make test to "
+"succeed"
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:441
+msgid ""
+"Mysql database driver, required if you connect to a Mysql database.\n"
+"You first need to install the Mysql server and have it started before "
+"installing the Perl DBD module."
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:453
+msgid "used to compute MD5 digests for passwords, etc"
+msgstr ""
 
 #, fuzzy
 #~ msgid "Your address (%1) has been removed from list %2@%3."
