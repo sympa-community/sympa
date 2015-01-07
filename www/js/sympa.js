@@ -60,6 +60,17 @@ function hide(div) {
 	$('#' + div).hide();
 }
 
+$(function() {
+	$('a[href="#list_copy"], a[href="#list_create"]').on('click',function(e){
+		e.stopPropagation();
+		e.preventDefault();
+		id = $(this).attr('href').substr(1);
+		$('#list_copy, #list_create').hide();
+		$('#' + id).show();
+		return false;
+	});
+});
+
 function hideError() {
 	$('#ErrorBlock').remove();
 	$('#ErrorMsg').remove();
