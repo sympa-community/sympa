@@ -5,6 +5,8 @@
 <meta charset="UTF-8" />
 <meta name="generator" content="Sympa [% version %]" />
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
 <title> [% main_title %] - [% action %] </title>
 
 [% IF custom_css %]
@@ -51,75 +53,101 @@
 
 [% PROCESS javascript.tt2 %]
 
+<!--<link rel="stylesheet" type="text/css" href="/hub/res/bar.css" />
+<script type="text/javascript" src="/hub/res/bar.js"></script>-->
+<script src="/static-sympa/external/modernizr.custom.js"></script>
+
 [% IF base %] <base href="[% base %]" /> [% END %]
 
 </head>
 
 <body onload="[% IF use_htmlarea %] HTMLArea.replaceAll();[% END %][% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]">
 
-<div id="TopAnchor"><a name="top"></a></div>
+<a name="top"></a>
 
 <noscript><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></noscript>
 
 [% IF nomenu %]
-       [% PROCESS error.tt2 IF errors %]
-       <div class="ContentBlock"> 
-         [% PROCESS notice.tt2 IF notices %]
-         [% PROCESS "${action}.tt2" IF action %]
-       </div>
+      [% PROCESS error.tt2 IF errors %]
+      <div class="nomenu">
+		<div class="ContentBlock">
+			[% PROCESS notice.tt2 IF notices %]
+			[% PROCESS "${action}.tt2" IF action %]
+		</div>
+      </div>
 [% ELSE %]
 
-       [% PROCESS error.tt2 IF errors %]
-       [% PROCESS login_menu.tt2 %]
-<div id="Canvas">
+      [% PROCESS error.tt2 IF errors %]
+   <div class="sidebar" style="padding-top: 10px;">
+      [% PROCESS login_menu.tt2 %]
+      [% PROCESS list_menu.tt2 IF list %]
+      <h2>Sympa Menu</h2>
+      [% PROCESS menu.tt2 %]
+   </div>
 
-  <div id="Header">
-    
-	<!-- a href="javascript:afficheId('contenu','Stretcher')">ouvrir</a>
-    	<a href="javascript:cacheId('contenu','Stretcher');">Fermer</a-->
 
+       <!-- a href="javascript:afficheId('contenu','Stretcher')">ouvrir</a>
+       <a href="javascript:cacheId('contenu','Stretcher');">Fermer</a-->
+
+<div id="loading" style="overflow: hidden; display: none;">
+   <div style="position:relative;float:left;"><img src="[% static_content_url %]/icons/spinner.gif"></div>
+   <div style="position:relative;width:50%;"><h1 id="loadingText">[%|loc%]Please Wait...[%END%]</h1></div>
+</div>
+
+<div id="content-inner">
     [% PROCESS title.tt2 %]
-    [% PROCESS menu.tt2 %]
-  </div> <!-- end div Header -->
-  <!-- <div class="contenant" id="contenu"> --> <!-- To hide Menus -->&nbsp;
-  <div id="Menus"><!-- Start Menus -->&nbsp;
+      [% IF list %]
+       [% IF list_title %]<p><b>Subject:</b> [% IF is_owner %]<a href="[% path_cgi %]/edit_list_request/[% list %]/description">(Edit)</a>[% END %] [% list_title %]</p>[% END %]
+      [% END %]
 
-	
-    [% PROCESS menu_search.tt2 %]
-    [% PROCESS list_menu.tt2 IF list %]
-    [% PROCESS your_lists.tt2 IF !list %]
-    [% PROCESS setlang.tt2 %]
-  </div><!-- End div Menus -->
-  <!-- </div> --><!-- End div contenant -->
-	
+        [% PROCESS nav.tt2 %]
 
-  <div id="Stretcher">  <!-- <span id="toggleMenu" title="A javascript could hide or show the menu" class="smalltext info printNone toggleNone">toggle menu</span><br /> --> &nbsp;<br />
-     <div id="Paint">
-
-       [% IF list %]
-	<div class="listTitle"><a href="[% path_cgi %]/info/[% list %]">[% list_protected_email %]</a>&nbsp;</div>
-        <div class="listTitle description">
-	[% IF list_title %] <span> [% list_title %] </span> [% END %]</div><br />
-       [% END %]
-
-	 [% PROCESS nav.tt2 %]
-
-        <div class="ContentBlock">
-         [% PROCESS notice.tt2 IF notices %]
-	 [% IF action == 'edit_list_request' || action == 'editfile' %]<br /><br />[% END %]
-         [% PROCESS "${action}.tt2" IF action %]
-       </div><!-- End div ContentBlock -->
-      <div class="top"><a href="#top" title="Top of Page"><img src="[% icons_url %]/top.png" alt="Top of Page" /></a></div>
-     </div><!-- End div Paint -->
-  </div><!-- end div Stretcher -->
+       <div class="ContentBlock">
+        [% PROCESS notice.tt2 IF notices %]
+        [% IF action == 'edit_list_request' %]<br /><br />[% END %]
+        [% PROCESS "${action}.tt2" IF action %]
+      </div><!-- End div ContentBlock -->
 
 
-  [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
+ [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
+</div><!-- End content-inner -->
 
-</div> <!-- end div canvas -->
-
-  [% PROCESS footer.tt2 %]
+ [% PROCESS footer.tt2 %]
 [% END %]
+
+		<script>
+			//  The function to change the class
+			var changeClass = function (r,className1,className2) {
+				var regex = new RegExp("(?:^|\\s+)" + className1 + "(?:\\s+|$)");
+				if( regex.test(r.className) ) {
+					r.className = r.className.replace(regex,' '+className2+' ');
+			    }
+			    else{
+					r.className = r.className.replace(new RegExp("(?:^|\\s+)" + className2 + "(?:\\s+|$)"),' '+className1+' ');
+			    }
+			    return r.className;
+			};	
+
+			//  Creating our button in JS for smaller screens
+			var menuElements = document.getElementById('menu');
+			menuElements.insertAdjacentHTML('afterBegin','<button type="button" id="menutoggle" class="navtoogle" aria-hidden="true"><i aria-hidden="true" class="icon-menu"> </i> Menu</button>');
+
+			//  Toggle the class on click to show / hide the menu
+			document.getElementById('menutoggle').onclick = function() {
+				changeClass(this, 'navtoogle active', 'navtoogle');
+			}
+
+			// http://tympanus.net/codrops/2013/05/08/responsive-retina-ready-menu/comment-page-2/#comment-438918
+			document.onclick = function(e) {
+				var mobileButton = document.getElementById('menutoggle'),
+					buttonStyle =  mobileButton.currentStyle ? mobileButton.currentStyle.display : getComputedStyle(mobileButton, null).display;
+
+				if(buttonStyle === 'block' && e.target !== mobileButton && new RegExp(' ' + 'active' + ' ').test(' ' + mobileButton.className + ' ')) {
+					changeClass(mobileButton, 'navtoogle active', 'navtoogle');
+				}
+			}
+		</script>
+		
 </body>
 <!-- end main.tt2 -->
 </html>

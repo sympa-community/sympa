@@ -2,7 +2,7 @@
 
 <div class="list_panel">
 
-<ul>
+<ul id="MainMenuLinks">
 	
 	[% IF list_status == 'closed' || list_status == 'family_closed' %]
 	<li class="menuLinks"><span class="bg_color_error">[%|loc%]Closed list[%END%]</span></li>
@@ -21,7 +21,7 @@
 		[% END %]
 		
 		[% IF is_priv %]
-		<br />
+		
 		<span style="font-weight: normal;">
 			&nbsp;&nbsp;(<a href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Error rate:[%END%]</a> [% bounce_rate %]% )
 		</span>

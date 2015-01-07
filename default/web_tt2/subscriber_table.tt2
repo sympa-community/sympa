@@ -3,10 +3,13 @@
 
     <table summary="[%|loc%]List members[%END%]" class="listOfItems text_center">
       <tr>
-	[% IF is_listmaster || is_owner  || may_del %]
+	[% SET colspan = 0 %]
+	[% IF is_owner %]
+	   [% SET colspan = colspan + 1 %]
 	   <th><a href="#" onclick="toggle_selection(document.myform.email);return false;" title="[%|loc%]Toggle Selection[%END%]">&laquo;&raquo;</a></th>
 	[% END %]
 
+	[% SET colspan = colspan + 3 %]
         [% IF sortby == 'email' %]
   	    <th colspan="2" class="sortby">
 	    [%|loc%]Email[%END%]
@@ -24,10 +27,13 @@
 	[% END %]
 	</th>
 	[% IF pictures_display %]
+	    [% SET colspan = colspan + 1 %]
   	    <th>	    
   	    [%|loc%]Picture[%END%]
 	    </th>
   	[% END %]
+
+	[% SET colspan = colspan + 1 %]
 	[% IF sortby == 'name' %]
 	<th class="sortby">
 	  [%|loc%]Name[%END%]
@@ -36,7 +42,8 @@
           <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/name">[%|loc%]Name[%END%]</a>
 	[% END %] 
 	</th>
-        [% IF is_listmaster || is_owner || is_editor  %]
+        [% IF is_owner %]
+	  [% SET colspan = colspan + 4 %]
           <th>
 	  [%|loc%]Reception[%END%]
 	  </th>
@@ -58,12 +65,17 @@
           </th>
 	  <th>[%|loc%]Last update[%END%]</th>
 	  [% IF additional_fields %]
+	    [% SET colspan = colspan + 1 %]
 	    <th>[% additional_fields %]</th>
 	  [% END %]
-          [% FOREACH ca_k IN list_conf.custom_attribute %]<th>[% ca_k.name %]</th>[% END %]
+          [% FOREACH ca_k IN list_conf.custom_attribute %]
+	    [% SET colspan = colspan + 1 %]
+	    <th>[% ca_k.name %]</th>
+	  [% END %]
         [% END %]
       </tr>
-      
+
+    [% IF total != 0 %]
       [% FOREACH u = thosesubscribers %]
 	[% IF dark == '1' %]
 	  <tr>
@@ -71,24 +83,28 @@
           <tr class="color0">
 	[% END %]
 
-	 [% IF is_listmaster || is_owner || may_del %]
+	 [% IF is_owner %]
 	    <td>
 	        <input type="checkbox" name="email" value="[% u.escaped_email %]" />
 	    </td>
  	 [% END %]
 	 [% IF u.bounce %]
 	   <td colspan="2" class="text_left">
-	     [% IF is_listmaster || is_owner %]
+	 
+	     [% IF is_owner %]
 	       <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
 	     [% ELSE %]
  	       [% u.email %]
  	     [% END %]
 	   </td>
-           <td class="bg_color_error"><strong>[%|loc%]bouncing[%END%]</strong>
+	 [% IF is_owner %]
+           <td class="color7"><strong>[%|loc%]bouncing[%END%]</strong>
 	   </td>
+	 [% END %]
+
 	 [% ELSE %]
 	   <td colspan="3" class="text_left">
-	     [% IF is_listmaster || is_owner %]
+	     [% IF is_owner %]
 	       <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
 	     [% ELSE %]
 	       [% u.email %]
@@ -107,20 +123,20 @@
   	    [% END %]
   	  [% END %]
 	  <td>
-             <span class="smaller">
+             <span>
 	        [% u.gecos %]&nbsp;
 	     </span>
           </td>
-	  [% IF is_listmaster || is_owner || is_editor  %]
+	  [% IF is_owner %]
   	    <td>
-  	      [%|optdesc('reception')%][% u.reception %][% END %]
+  	      [% u.reception %]
 	    </td>
             <td>
             [% IF u.subscribed %]
               [% IF u.included %]
-                 subscribed<br />[% u.sources %]
+                 [%|loc%]subscribed[%END%]<br />[% u.sources %]
               [% ELSE %]
-                 subscribed
+                 [%|loc%]subscribed[%END%]
               [% END %]
             [% ELSE %]
               [% u.sources %]
@@ -147,6 +163,13 @@
 	  [% SET dark = 1 %]
 	[% END %]
 
-        [% END %]
+      [% END %]
+    [% ELSE %]
+      <tr>
+	<th colspan="[% colspan %]">
+	  [%|loc%]List has no subscribers[%END%]
+	</th>
+      </tr>
+    [% END %]
 </table>
 <!-- end subscribers_table.tt2 (distrib) -->

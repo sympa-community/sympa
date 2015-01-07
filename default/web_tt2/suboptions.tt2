@@ -2,58 +2,98 @@
 <div class="block">
 
 <h2>[%|loc%]Your list options[%END%]</h2>
-<br />
   <form action="[% path_cgi %]" method="post">
   <fieldset>
-   <label for="gecos">[%|loc%]Name:[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" /> <br /><br />
+     <div class="form_row"><label for="gecos">[%|loc%]Name:[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" /></div>
 [% PROCESS edit_attributes.tt2 %]
-  [%|loc%]You are subscribed since[%END%] [% subscriber.date %]  <br /><br />
-  [%|loc%]Last update:[%END%] [% subscriber.update_date %]  <br /><br />
+
+
+
+
+<div class="form_row">
+
+<label>
+  [%|loc%]Member since:[%END%]
+</label>
+ [% subscriber.date %]
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="form_row">
+<label>
+  [%|loc%]Last update:[%END%]
+</label>
+[% subscriber.update_date %]
+</div>
+
+
+
+     <div class="form_row">
+
+
+
+
      <input type="hidden" name="list" value="[% list %]" />
+
+
+<label>
+
      [%|loc%]Receiving mode:[%END%] 
-    [% SET single_option = 0 %][% FOREACH r = reception %]
-      [% IF loop.size == 1 %][% SET single_option = 1 %][% END %][% LAST %]
-    [% END %]
-    [% IF single_option %]
-      [% FOREACH r = reception %]
-	<input type="hidden" name="reception" value="[% r.key %]" />
-	[% r.value.description %]
-      [% END %]
-    [% ELSE %]
+
+
+</label>
+
+
      <select name="reception">
         [% FOREACH r = reception %]
           <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
         [% END %]
      </select>
-    [% END %]
 
-      <a class="input" href="[% path_cgi %]/nomenu/help/user_options" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">
+      <a class="actionMenuLinks" href="[% path_cgi %]/nomenu/help/user_options" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help">
      [%|loc%]Help[%END%]</a>
+</div>
+
+
+
+
+
+
+
  
+     <br /><br />
      [%IF available_topics %]	
-	<br /><br />
         [%|loc%]Topic subscription:[%END%]		
         [%IF possible_topic %]
  	 <BLOCKQUOTE>	
  	  [% FOREACH t = available_topics %]
  	    [%IF topic_checked.${t.name} %]	
-             <input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1" checked="1" /> <label for="topic_[%t.name%]">[% t.title %] </label>
+             <input type="checkbox" name="topic_[%t.name%]" value="1" checked="1"> [% t.title %] </input>
  	    [%ELSE%]
- 	     <input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1" /> <label for="topic_[%t.name%]">[% t.title %] </label>
+ 	     <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
  	    [%END%] 	
  	     <br />
  	  [% END %]
  	  [%IF topic_checked.other %]
- 	   <input id="topic_other" type="checkbox" name="topic_other" value="1"  checked="1"/> <label for="topic_other">[%|loc%]Other (messages not tagged) [%END%]</label>
+ 	   <input type="checkbox" name="topic_other" value="1"  checked="1"/> [%|loc%]Other (messages not tagged) [%END%]
           [%ELSE%]	
-           <input id="topic_other" type="checkbox" name="topic_other" value="1" /> <label for="topic_other">[%|loc%]Other (messages not tagged) [%END%]</label>
+           <input type="checkbox" name="topic_other" value="1" /> [%|loc%]Other (messages not tagged) [%END%] 	
  	  [%END%] 
  	  <br />
           </BLOCKQUOTE>
   
  	  [%IF sub_user_topic %]
 	   <br />	
- 	   <input id="no_topic" type="checkbox" name="no_topic" value="1" /> <label for="no_topic">[%|loc%]Disable topics subscription[%END%]</label>
+ 	   <input type="checkbox" name="no_topic" value="1"> [%|loc%]Disable topics subscription[%END%]</input>
  	   <br />
  	  [%END%]
        	
@@ -62,21 +102,46 @@
         [%END%]
      [%END%]	
  	 
-     <br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="form_row">
+<label>
      [%|loc%]Visibility:[%END%]
+</label>
      <select name="visibility">
         [% FOREACH r = visibility %]
           <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
         [% END %]
      </select>
+</div>
 
 
-     <br/>  <br/>
+
+
+
+
+<div class="form_row">
      <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
+</div>
+
 </fieldset>     
 </form><br /><br /> 
-
-[% PROCESS picture_upload.tt2 %]
 
 </div>
 <!-- end suboptions.tt2 -->

@@ -1,77 +1,38 @@
 <!-- $Id$ -->
-   <h1>[%|loc%]Mailing lists server[%END%]</h1>
-<p class="text_justify">
-[%|loc%]This server provides you access to your mailing list environment. Starting from this web page, you can perform subscription options, unsubscription, archive, list moderation, list configuration.[%END%]
-</p>
 
+<h2>[%|loc%]Welcome[%END%]</h2>
+<p>[%|loc%]This server provides you access to your mailing list environment. Starting from this web page, you can perform subscription options, unsubscription, archive, list moderation, list configuration.[%END%]<p>
 
-[% PROCESS news.tt2 %]
-
-
-
-
-<h2>[%|loc%]Mailing lists categories[%END%]</h2>
-<br />
-
-<div id="home_container">
-
- <div id="global_mailing_lists">
- 
-  [% SET single_topic = "other" %]
-  [% FOREACH topic = topics %]
-    [% IF topic.id && topic.id != "other" && topic.id != "topicsless" %]
-      [% SET single_topic = "" %]
-      [% LAST %]
-    [% ELSIF topic.sub %]
-      [% FOREACH subtopic = topic.sub %]
-	[% SET single_topic = "" %]
-	[% LAST %]
-      [% END %]
-    [% END %]
-  [% END %]
-  [% IF single_topic != "" %]
-    <ul class="mailing_lists_menu">
-      <li><a href="[% path_cgi %]/lists"><strong>[%|loc%]List of lists[%END%]</strong></a></li>
-    </ul>
-  [% ELSE %]
-      <ul class="mailing_lists_menu">
-    [% SET topic_other = 0 %]
-    [% FOREACH topic = topics %]
-      [% IF topic.id == 'other' || topic.id == 'topicsless' %]
-	[% UNLESS topic_other %]
-          <li><a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[% IF topic.current_title %][% topic.current_title %][% ELSE %][%|loc%]Others[%END%][% END %]</strong></a></li>
-	  [% SET topic_other = 1 %]
-	[% END %]
-      [% ELSE %]
-       <li><a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[% topic.current_title %]</strong></a></li>
-      [% END %]
-
-      [% IF topic.sub.size %]
-            <ul class="no_style">
-      [% FOREACH subtopic = topic.sub %]
-              <li class="smaller"><a href="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.current_title %]</a></li>
-      [% END %]
-      </ul>
-      [% END %]
-      [% IF topic.next %]
-       </ul>
-   
-   
-      <ul class="mailing_lists_menu">
-      [% END %]
-    [% END %]
-      </ul>
-  [% END %]
-
-  </div>
-<div id="home_search_list">
- <form action="[% path_cgi %]" method="post"> 
- <fieldset id="home_rss_news">
-    <input type="submit" name="action_rss_request" value="[%|loc%]RSS news[%END%]" />
- </fieldset> 
- </form>
+[% IF not user.email %]
+<div style="padding: 0 0 2em 0;">
+	<h2>[%|loc%]Logging In[%END%]</h2>
+	
+	<p>[%|loc%]Many functions in Sympa require you to identify yourself to the system by logging in, using the login form to the left.[%END%]<p>
+	
 </div>
 
+[% ELSE %]
+
+<h3>[%|loc%]What would you like to do ?[%END%]</h3>
+
+<div class="item_list">
+	<div class="item">
+		<img class="item_icon" src="[% static_content_url %]/icons/search.png" />
+		<div class="item_content">
+			<a class="item_title" href="[% path_cgi %]/search_list_request">[%|loc%]Search lists[%END%]</a>
+			[%|loc%]Search for a list given its name (or a part thereof).[%END%]
+		</div>
+	</div>
+	<div class="item">
+		<img class="item_icon" src="[% static_content_url %]/icons/new_list.png" />
+		<div class="item_content">
+			<a class="item_title" href="/sympa/create_list_request">[%|loc%]Create list[%END%]</a>
+			[%|loc%]Submit a mailing list creation request.[%END%]
+		</div>
+	</div>
 </div>
-<br />
+
+<b>[%|loc%]Note:[%END%]</b> [%|loc%]Additional options are available in the left navigation menu.[%END%]
+
+[% END %]
 <!-- end home.tt2 -->

@@ -1,15 +1,15 @@
 <!-- $Id: nav.tt2 5675 2009-04-28 13:59:12Z david.verdin $ -->
 [% IF action == 'create_list_request' %]
-<div id="nav">
+<nav id="menu" class="nav">
   <ul>
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Copy an existing list.[%END%]</a></li>
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Create a list using a template[%END%]</a></li>
+    <li class="MainMenuLinksCurrentPage"><a href="#list_create">[%|loc%]Create a list using a template[%END%]</a></li>
+    <li class="MainMenuLinksCurrentPage"><a href="#list_copy">[%|loc%]Copy an existing list.[%END%]</a></li>
   </ul>
-</div>
+</nav>
 [% END %]
 
 [% IF action == 'serveradmin' or action == 'skinsedit'  or action == 'edit_config' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' %]
-<div id="nav">
+<nav id="menu" class="nav">
   <ul>
 [% IF (subaction == '' or subaction == 'm_lists') and action != 'skinsedit' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/m_lists">[%|loc%]Lists[%END%]</a></li>
@@ -38,30 +38,32 @@
 [% IF subaction == 'tracker' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/tracker">[%|loc%]Submitting a bug, a feature request[%END%]</a></li>
   </ul>
-</div>
+</nav>
 [% END %]
 
 [% IF action == 'lists' %]
+<h2>[%|loc%]Index of lists[%END%]</h2>
 [% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] %]
-<div id="nav">
+<nav id="menu" class="nav">
   <ul>
 [% FOREACH letter IN letters %]
   [% IF orderedlist.$letter.0 %]
-    <li class="MainMenuLinks"><a href="#[%letter%]">[%IF letter == 'others'%][%|loc%]others[%END%][%ELSE%][%letter%][%END%]</a></li>
+    <li class="MainMenuLinks letter"><a href="#[%letter%]">[%IF letter == 'others'%][%|loc%]others[%END%][%ELSE%][%letter%][%END%]</a></li>
   [% ELSE %]
-    <li class="nolink">[%IF letter == 'others'%][%|loc%]others[%END%][%ELSE%][%letter%][%END%]</li>
+    <li class="nolink letter">[%IF letter == 'others'%][%|loc%]others[%END%][%ELSE%][%letter%][%END%]</li>
  [% END %] 
 [% END %]
- <li class="MainMenuLinks"><a href="[% path_cgi %]/lists" >[%|loc%]all[%END%]</a> </li>
+ <li class="MainMenuLinks letter"><a href="[% path_cgi %]/lists" >[%|loc%]All[%END%]</a> </li>
   </ul>
-</div>
+</nav>
 [% END %]
 
 [% IF action == 'admin' || action_type == 'admin' || action == 'editfile' %]
-<div id="nav">
+<h2>[%|loc%]Basic Operations[%END%]</h2>
+<nav id="menu" class="nav">
   <ul>
 [% IF action == 'edit_list_request' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
-    <li class="[% class %]"><a  href="[% path_cgi %]/edit_list_request/[% list %]">[%|loc%]Edit List Config[%END%]</a></li>
+    <li class="[% class %]"><a  href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Edit List Config[%END%]</a></li>
 [% IF is_owner %]
 [% IF action == 'review' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a  href="[% path_cgi %]/review/[% list %]">[%|loc%]Manage Subscribers[%END%]</a></li>
@@ -84,7 +86,7 @@
 [% END %]
 
   </ul>
-</div>
+</nav>
 
 [% IF action == 'edit_list_request' || action == 'editfile' %]
 <div id="subnav">
@@ -113,14 +115,14 @@
 [% END %]
 
 [% IF action == 'compose_mail' %]
-<div id="nav">
+<nav id="menu" class="nav">
   <ul>
     [% IF subaction == '' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/compose_mail/[% list %]">[%|loc%]Send a message[%END%]</a></li>
     [% IF subaction == 'html_news_letter' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/compose_mail/[% list %]/html_news_letter">[%|loc%]Send an html page[%END%]</a></li>
   </ul>
-</div>
+</nav>
 [% END %]
 
 <!-- end nav.tt2 -->

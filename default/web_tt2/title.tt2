@@ -1,12 +1,6 @@
 <!-- $Id$ -->
 
 <!-- begin title.tt2 -->
-[% IF  conf.logo_html_definition %]
-<div id="logo" >[% conf.logo_html_definition %]</div>
-[% ELSE %]
-<div id="logo" ><img src="[% icons_url %]/logo_sympa.png" alt="SYMPA logo"></div>
-[% END %]
-<div id="Title">[% title %]<br /></div>
-<div id="top"><a class="displayNone" href="#Paint">Skip to Content.</a></div>
+<h1 style="padding-top: 10px;">[% title %]</h1>
+<div id="top"><a class="displayNone" href="#Paint">[%|loc%]Skip to Content.[%END%]</a></div>
 <!-- end title.tt2 -->
-

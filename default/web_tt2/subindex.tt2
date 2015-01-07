@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 <div class="block">
 
-<h2>[%|loc%]Listing subscription to moderate[%END%]</h2>
+<h3 style="margin-top:0;">[%|loc%]Listing subscription to moderate[%END%]</h3>
 <form class="noborder" action="[% path_cgi %]" method="post" name="myform"> 
 <fieldset>
 <input type="hidden" name="list" value="[% list %]" />
@@ -54,9 +54,15 @@
       </table>
 <input type="hidden" name="previous_action" value="subindex" />
 <input type="hidden" name="previous_list" value="[% list %]" />
+<div style="clear:left; overflow:hidden; padding: 1.2em 0 0.25em;">
 <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.pending_email)" />
+</div>
+<div style="clear:left; overflow:hidden; padding: 0.25em 0 0.25em;">
 <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add selected addresses[%END%]" />
+</div>
+<div style="clear:left; overflow:hidden; padding: 0.25em 0 0.25em;">
 <input class="MainMenuLinks" type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />
+</div>
 </fieldset>
 </form>
 

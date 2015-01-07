@@ -37,9 +37,9 @@
 
       <input type="hidden" name="action" value="login" />
       <label for="email_login">[%|loc%]email address:[%END%]</label>
-      <input type="text" name="email" id="email_login" size="28" value="[% unauthenticated_email %]" /> &nbsp;&nbsp;
+      <div><input type="text" name="email" id="email_login" size="28" value="[% unauthenticated_email %]" /></div>
       <label for="passwd" >[%|loc%]password:[%END%]</label>
-      <input type="password" name="passwd" id="passwd" size="8" /> &nbsp;&nbsp;
+      <div><input type="password" name="passwd" id="passwd" size="8" /></div>
       <input class="MainMenuLinks" type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
 	</fieldset>
       </form>
