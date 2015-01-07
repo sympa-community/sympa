@@ -562,8 +562,7 @@ if ($main::options{'batch'}) {
 
         exit 0;
     } elsif ($main::options{'md5_encode_password'}) {
-        my $total = Sympa::Upgrade::md5_encode_password();
-        printf STDERR "Total password re-encoded using md5: %d\n", $total;
+        printf STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
 
         exit 0;
     } elsif ($main::options{'lowercase'}) {
@@ -3579,6 +3578,9 @@ F<list_aliases.tt2> template  (useful when list_aliases.tt2 was changed).
 
 Rewrite password in C<user_table> of database using MD5 fingerprint.
 YOU CAN'T UNDO unless you save this table first.
+
+Note that this option was obsoleted.
+Use L<upgrade_sympa_password(1)>.
 
 =item B<--modify_list=>I<family_name> B<--robot=>I<robot_name>
     B<--input_file=>I</path/to/file.xml>

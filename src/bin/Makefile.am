@@ -33,24 +33,24 @@ perlscripts = \
 	testldap.pl \
 	p12topem.pl \
 	init_comment.pl \
-	crypt_passwd.pl \
 	testlogs.pl \
 	mod2html.pl \
 	tpl2tt2.pl \
 	sympa_soap_client.pl \
 	upgrade_bulk_spool.pl \
-	upgrade_send_spool.pl
+	upgrade_send_spool.pl \
+	upgrade_sympa_password.pl
 
 script_SCRIPTS = $(dbscripts) $(perlscripts)
 
 man1_MANS = \
 	mod2html.1 \
 	upgrade_bulk_spool.1 \
-	upgrade_send_spool.1
+	upgrade_send_spool.1 \
+	upgrade_sympa_password.1
 
 EXTRA_DIST = $(dbscripts) \
 	arc2webarc.pl.in \
-	crypt_passwd.pl.in \
 	init_comment.pl.in \
 	mod2html.pl.in \
 	p12topem.pl.in \
@@ -59,11 +59,12 @@ EXTRA_DIST = $(dbscripts) \
 	tpl2tt2.pl.in \
 	sympa_soap_client.pl.in \
 	upgrade_bulk_spool.pl.in \
-	upgrade_send_spool.pl.in
+	upgrade_send_spool.pl.in \
+	upgrade_sympa_password.pl.in
 
 CLEANFILES = $(perlscripts) $(bin_SCRIPTS) $(man1_MANS)
 
-arc2webarc.pl crypt_passwd.pl init_comment.pl mod2html.pl p12topem.pl testldap.pl testlogs.pl tpl2tt2.pl sympa_soap_client.pl upgrade_bulk_spool.pl upgrade_send_spool.pl: Makefile
+arc2webarc.pl init_comment.pl mod2html.pl p12topem.pl testldap.pl testlogs.pl tpl2tt2.pl sympa_soap_client.pl upgrade_bulk_spool.pl upgrade_send_spool.pl upgrade_sympa_password.pl: Makefile
 	rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
@@ -81,7 +82,6 @@ arc2webarc.pl crypt_passwd.pl init_comment.pl mod2html.pl p12topem.pl testldap.p
 	chmod +x $@
 
 arc2webarc.pl: $(srcdir)/arc2webarc.pl.in
-crypt_passwd.pl: $(srcdir)/crypt_passwd.pl.in
 init_comment.pl: $(srcdir)/init_comment.pl.in
 mod2html.pl: $(srcdir)/mod2html.pl.in
 p12topem.pl: $(srcdir)/p12topem.pl.in
@@ -91,6 +91,7 @@ tpl2tt2.pl: $(srcdir)/tpl2tt2.pl.in
 sympa_soap_client.pl: $(srcdir)/sympa_soap_client.pl.in
 upgrade_bulk_spool.pl: $(srcdir)/upgrade_bulk_spool.pl.in
 upgrade_send_spool.pl: $(srcdir)/upgrade_send_spool.pl.in
+upgrade_sympa_password.pl: $(srcdir)/upgrade_sympa_password.pl.in
 
 .pl.1: Makefile
 	rm -f $@
