@@ -129,6 +129,8 @@ sub is_autoinc {
     return $sth->fetchrow_array;
 }
 
+=begin comment
+
 #FIXME: Currently not works.
 sub set_autoinc {
     my $self  = shift;
@@ -148,6 +150,10 @@ sub set_autoinc {
     }
     return 1;
 }
+
+=end comment
+
+=cut
 
 sub get_tables {
     my $self = shift;
@@ -218,6 +224,8 @@ sub get_fields {
     return \%result;
 }
 
+=begin comment
+
 #FIXME: Currently not works.
 sub update_field {
     my $self  = shift;
@@ -254,6 +262,12 @@ sub update_field {
         $param->{'field'}, $param->{'table'});
     return $report;
 }
+
+=end comment
+
+=cut
+
+=begin comment
 
 #FIXME: Currently not works.
 sub add_field {
@@ -297,6 +311,12 @@ sub add_field {
     return $report;
 }
 
+=end comment
+
+=cut
+
+=begin comment
+
 #FIXME: Currently not works.
 sub delete_field {
     my $self  = shift;
@@ -323,6 +343,10 @@ sub delete_field {
 
     return $report;
 }
+
+=end comment
+
+=cut
 
 sub get_primary_key {
     my $self  = shift;
@@ -357,6 +381,8 @@ sub get_primary_key {
     return \%found_keys;
 }
 
+=begin comment
+
 # Currently not work
 sub unset_primary_key {
     my $self  = shift;
@@ -383,6 +409,12 @@ sub unset_primary_key {
 
     return $report;
 }
+
+=end comment
+
+=cut
+
+=begin comment
 
 # Currently not work
 sub set_primary_key {
@@ -421,6 +453,12 @@ sub set_primary_key {
     return $report;
 }
 
+=end comment
+
+=cut
+
+=begin comment
+
 #FIXME: Currently not works.
 sub get_indexes {
     my $self  = shift;
@@ -449,6 +487,12 @@ sub get_indexes {
     return \%found_indexes;
 }
 
+=end comment
+
+=cut
+
+=begin comment
+
 #FIXME: Currently not works.
 sub unset_index {
     my $self  = shift;
@@ -474,6 +518,12 @@ sub unset_index {
 
     return $report;
 }
+
+=end comment
+
+=cut
+
+=begin comment
 
 #FIXME: Currently not works.
 sub set_index {
@@ -508,6 +558,10 @@ sub set_index {
         $param->{'table'}, $param->{'index_name'}, $fields);
     return $report;
 }
+
+=end comment
+
+=cut
 
 sub do_query {
     my $self = shift;

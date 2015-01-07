@@ -173,14 +173,40 @@ sub probe_db {
     my $db_type = Conf::get_robot_conf('*', 'db_type');
     my $update_db_field_types =
         Conf::get_robot_conf('*', 'update_db_field_types') || 'off';
-    my $may_update = $update_db_field_types eq 'auto'
-        && ($db_type eq 'mysql' || $db_type eq 'Pg' || $db_type eq 'SQLite');
 
     unless (check_db_connect()) {
         Log::do_log('err',
             'Could not check the database structure.  Make sure that database connection is available'
         );
         return undef;
+    }
+
+    # Does the driver support probing database structure?
+    foreach my $method (
+        qw(is_autoinc get_tables get_fields get_primary_key get_indexes)) {
+        unless ($db_source->can($method)) {
+            Log::do_log('notice',
+                'Could not check the database structure: required methods have not been implemented'
+            );
+            return 1;
+        }
+    }
+
+    # Does the driver support updating database structure?
+    my $may_update;
+    unless ($update_db_field_types eq 'auto') {
+        $may_update = 0;
+    } else {
+        $may_update = 1;
+        foreach my $method (
+            qw(set_autoinc add_table update_field add_field delete_field
+            unset_primary_key set_primary_key unset_index set_index)
+            ) {
+            unless ($db_source->can($method)) {
+                $may_update = 0;
+                last;
+            }
+        }
     }
 
     ## Database structure
@@ -239,7 +265,8 @@ sub probe_db {
                 check_fields(
                     {   'table'       => $t,
                         'report'      => \@report,
-                        'real_struct' => \%real_struct
+                        'real_struct' => \%real_struct,
+                        'may_update'  => $may_update,
                     }
                 )
                 ) {
@@ -261,8 +288,14 @@ sub probe_db {
             }
 
             ## Check that primary key has the right structure.
-            unless (check_primary_key({'table' => $t, 'report' => \@report}))
-            {
+            unless (
+                check_primary_key(
+                    {   'table'      => $t,
+                        'report'     => \@report,
+                        'may_update' => $may_update
+                    }
+                )
+                ) {
                 Log::do_log(
                     'err',
                     'Unable to check the validity of primary key for table %s. Aborting',
@@ -271,7 +304,14 @@ sub probe_db {
                 return undef;
             }
 
-            unless (check_indexes({'table' => $t, 'report' => \@report})) {
+            unless (
+                check_indexes(
+                    {   'table'      => $t,
+                        'report'     => \@report,
+                        'may_update' => $may_update
+                    }
+                )
+                ) {
                 Log::do_log(
                     'err',
                     'Unable to check the valifity of indexes for table %s. Aborting',
@@ -327,19 +367,9 @@ sub check_fields {
     my $t           = $param->{'table'};
     my %real_struct = %{$param->{'real_struct'}};
     my $report_ref  = $param->{'report'};
+    my $may_update  = $param->{'may_update'};
 
     my $db_type = Conf::get_robot_conf('*', 'db_type');
-    my $update_db_field_types =
-        Conf::get_robot_conf('*', 'update_db_field_types') || 'off';
-    my $may_update = $update_db_field_types eq 'auto'
-        && ($db_type eq 'mysql' || $db_type eq 'Pg' || $db_type eq 'SQLite');
-
-    #FIXME:
-    return 1
-        unless $db_type eq 'mysql'
-            or $db_type eq 'Pg'
-            or $db_type eq 'SQLite'
-            or $db_type eq 'Oracle';
 
     foreach my $f (sort keys %{$db_struct{$db_type}{$t}}) {
         unless ($real_struct{$t}{$f}) {
@@ -372,7 +402,6 @@ sub check_fields {
                 )
                 ) {
                 push @{$report_ref}, $rep;
-
             } else {
                 Log::do_log('err',
                     'Addition of fields in database failed. Aborting');
@@ -448,14 +477,7 @@ sub check_primary_key {
     my $param      = shift;
     my $t          = $param->{'table'};
     my $report_ref = $param->{'report'};
-
-    #FIXME
-    my $db_type = Conf::get_robot_conf('*', 'db_type');
-    return 1
-        unless $db_type eq 'mysql'
-            or $db_type eq 'Pg'
-            or $db_type eq 'SQLite'
-            or $db_type eq 'Oracle';
+    my $may_update = $param->{'may_update'};
 
     my $list_of_keys = join ',', @{$primary{$t}};
     my $key_as_string = "$t [$list_of_keys]";
@@ -477,7 +499,8 @@ sub check_primary_key {
                 $key_as_string);
             ## Add primary key
             my $rep = undef;
-            if ($rep = $db_source->set_primary_key(
+            if ($may_update
+                and $rep = $db_source->set_primary_key(
                     {'table' => $t, 'fields' => $primary{$t}}
                 )
                 ) {
@@ -492,14 +515,16 @@ sub check_primary_key {
         } else {
             ## drop previous primary key
             my $rep = undef;
-            if ($rep = $db_source->unset_primary_key({'table' => $t})) {
+            if (    $may_update
+                and $rep = $db_source->unset_primary_key({'table' => $t})) {
                 push @{$report_ref}, $rep;
             } else {
                 return undef;
             }
             ## Add primary key
             $rep = undef;
-            if ($rep = $db_source->set_primary_key(
+            if ($may_update
+                and $rep = $db_source->set_primary_key(
                     {'table' => $t, 'fields' => $primary{$t}}
                 )
                 ) {
@@ -519,14 +544,8 @@ sub check_indexes {
     my $param      = shift;
     my $t          = $param->{'table'};
     my $report_ref = $param->{'report'};
+    my $may_update = $param->{'may_update'};
     Log::do_log('debug', 'Checking indexes for table %s', $t);
-
-    #FIXME
-    my $db_type = Conf::get_robot_conf('*', 'db_type');
-    return 1
-        unless $db_type eq 'mysql'
-            or $db_type eq 'Pg'
-            or $db_type eq 'SQLite';
 
     ## drop previous index if this index is not a primary key and was defined
     ## by a previous Sympa version
@@ -536,8 +555,10 @@ sub check_indexes {
         ## Remove the index if obsolete.
         foreach my $known_index (@former_indexes) {
             if ($idx eq $known_index) {
+                my $rep;
                 Log::do_log('notice', 'Removing obsolete index %s', $idx);
-                if (my $rep =
+                if (    $may_update
+                    and $rep =
                     $db_source->unset_index({'table' => $t, 'index' => $idx}))
                 {
                     push @{$report_ref}, $rep;
@@ -551,10 +572,12 @@ sub check_indexes {
     foreach my $idx (keys %{$indexes{$t}}) {
         ## Add indexes
         unless ($index_columns{$idx}) {
+            my $rep;
             Log::do_log('notice',
                 'Index %s on table %s does not exist. Adding it',
                 $idx, $t);
-            if (my $rep = $db_source->set_index(
+            if ($may_update
+                and $rep = $db_source->set_index(
                     {   'table'      => $t,
                         'index_name' => $idx,
                         'fields'     => $indexes{$t}{$idx}
@@ -578,7 +601,8 @@ sub check_indexes {
                 my $rep = undef;
                 Log::do_log('notice', 'Index %s is missing. Adding it',
                     $index_as_string);
-                if ($rep = $db_source->set_index(
+                if ($may_update
+                    and $rep = $db_source->set_index(
                         {   'table'      => $t,
                             'index_name' => $idx,
                             'fields'     => $indexes{$t}{$idx}
@@ -599,14 +623,16 @@ sub check_indexes {
                     'Index %s has not the right structure. Changing it',
                     $index_as_string);
                 my $rep = undef;
-                if ($rep =
+                if (    $may_update
+                    and $rep =
                     $db_source->unset_index({'table' => $t, 'index' => $idx}))
                 {
                     push @{$report_ref}, $rep;
                 }
                 ## Add index
                 $rep = undef;
-                if ($rep = $db_source->set_index(
+                if ($may_update
+                    and $rep = $db_source->set_index(
                         {   'table'      => $t,
                             'index_name' => $idx,
                             'fields'     => $indexes{$t}{$idx}
