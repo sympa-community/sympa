@@ -1418,6 +1418,18 @@ sub upgrade {
             $list->save_config('automatic');
         }
     }
+    if (lower_version($previous_version, '6.2b.1')) {
+		Log::do_log('info','Setting web interface colors to new defaults.');
+		fix_colors(Sympa::Constants::CONFIG);
+        my @robots = Sympa::List::get_robots();
+        foreach my $robot (@robots) {
+			if (-f "$Conf::Conf{'etc'}/$robot/robot.conf") {
+				Log::do_log('info','Fixing colors for %s robot',$robot);
+				fix_colors("$Conf::Conf{'etc'}/$robot/robot.conf");
+			}
+		}
+		Log::do_log('info','Web interface colors defaulted to new values.');
+	}
 
     return 1;
 }
@@ -1577,6 +1589,59 @@ sub lower_version {
     }
 
     return 0;
+}
+
+sub fix_colors {
+	my ($file) = @_;
+	my $new_conf = '';
+	my %default_colors;
+	return unless (-f $file);
+	foreach my $param (@Sympa::ConfDef::params) {
+		my $name = $param->{'name'};
+		next unless ($name);
+		if ($name =~ m{color_.+}) {
+			printf "%s\n",$name;
+			printf "%s\n",$param->{'default'};
+			$default_colors{$name} = $param->{'default'};
+			unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+				die sprintf
+					"Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
+					$Conf::Conf{'db_name'};
+			}
+			unless (
+				SDM::do_query(
+					'DELETE FROM conf_table WHERE label_conf like %s',SDM::quote($name)
+				)
+			) {
+				Log::do_log('err', 'Cannot clean color parameters from database.');
+			}
+		}
+	}
+	unless (open(FILE, "$file")) {
+		die sprintf("Unable to open %s : %s",
+			$file, $ERRNO);
+	}
+	foreach my $line (<FILE>) {
+		chomp $line;
+		if ($line =~ m{^\s*(color_\d+)}) {
+			my $param_name = $1;
+			$line = sprintf '%s %s',$param_name,$default_colors{$param_name};
+		}
+		$new_conf .= "$line\n";
+	}
+	## Write new config file
+	my $umask = umask 037;
+	unless (open(FILE, "> $file")) {
+		umask $umask;
+		die sprintf("Unable to open %s : %s",
+			$file, $ERRNO);
+	}
+	umask $umask;
+	chown [getpwnam(Sympa::Constants::USER)]->[2],
+		[getgrnam(Sympa::Constants::GROUP)]->[2], $file;
+
+	print FILE $new_conf;
+	close FILE;
 }
 
 1;
