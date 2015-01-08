@@ -12,16 +12,16 @@ msgstr ""
 "Project-Id-Version: Sympa-6.1.20+, 6.2a.38\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2014-10-03 11:49+0000\n"
+"PO-Revision-Date: 2015-01-08 12:47+0000\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1\n"
-"X-POOTLE-MTIME: 1412336963.000000\n"
+"X-POOTLE-MTIME: 1420721247.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -360,13 +360,12 @@ msgid "URL of main Web page"
 msgstr "メインページのURL"
 
 #: src/lib/Sympa/ConfDef.pm:90 src/lib/Sympa/ListDef.pm:645
-#, fuzzy
 msgid "Store distributed messages into archive"
-msgstr "配信するメッセージに追加するもの"
+msgstr "配送したメッセージを投稿保管庫に格納する"
 
 #: src/lib/Sympa/ConfDef.pm:91
 msgid "This setting can be overridden by each list"
-msgstr ""
+msgstr "設定はリストごとに上書きできます"
 
 #: src/lib/Sympa/ConfDef.pm:284
 msgid ""
@@ -1310,6 +1309,7 @@ msgstr " 1月: 2月: 3月: 4月: 5月: 6月: 7月: 8月: 9月:10月:11月:12月"
 msgid "AM:PM"
 msgstr "午前:午後"
 
+# 翻訳不要
 #: src/lib/Sympa/Language.pm:723
 msgid "Lorem ipsum dolor sit amet."
 msgstr ""
@@ -1569,7 +1569,7 @@ msgstr "時期"
 
 #: src/lib/Sympa/ListDef.pm:703
 msgid "access right by mail commands"
-msgstr ""
+msgstr "メールコマンドによるアクセス権限"
 
 #: src/lib/Sympa/ListDef.pm:726
 msgid "Archive encrypted mails as cleartext"
@@ -2137,9 +2137,8 @@ msgid "seconds"
 msgstr "秒"
 
 #: src/lib/Sympa/ListDef.pm:1000
-#, fuzzy
 msgid "Users included from parameterizable data sources"
-msgstr "外部ソースから取り込み"
+msgstr "パラメータつき外部ソースから取り込み"
 
 #: src/lib/Sympa/ListDef.pm:1043 src/lib/Sympa/ListDef.pm:1144
 #: src/lib/Sympa/ListDef.pm:1425 src/lib/Sympa/ListDef.pm:1532
@@ -3599,9 +3598,8 @@ msgid "Attribute optionnal/required"
 msgstr "任意/必須の属性"
 
 #: default/web_tt2/admin.tt2:4
-#, fuzzy
 msgid "Advanced Operations"
-msgstr "影響の大きい作業"
+msgstr "高度な作業"
 
 #. (list)
 #: default/web_tt2/admin.tt2:10
@@ -4316,12 +4314,11 @@ msgstr "リストの種類:"
 
 #: default/web_tt2/create_list_request.tt2:52
 msgid "Audience:"
-msgstr ""
+msgstr "対象者: "
 
 #: default/web_tt2/create_list_request.tt2:54
-#, fuzzy
 msgid "-- Select an Audience --"
-msgstr "--分野を選択してください--"
+msgstr "--対象者を選択してください--"
 
 #: default/web_tt2/create_list_request.tt2:70
 msgid "Other"
@@ -4930,13 +4927,12 @@ msgstr ""
 "つかったとき、その人にこのメッセージを送ります。"
 
 #: default/web_tt2/edit_list_request.tt2:4
-#, fuzzy
 msgid "Edit List Configuration"
 msgstr "リストの設定変更"
 
 #: default/web_tt2/edit_list_request.tt2:9
 msgid "Here you can edit your list's configuration parameters."
-msgstr ""
+msgstr "リストの設定パラメータを変更できます。"
 
 #: default/web_tt2/edit_list_request.tt2:41
 msgid "scenario source"
@@ -5777,7 +5773,7 @@ msgstr "申込日"
 
 #: default/web_tt2/home.tt2:3
 msgid "Welcome"
-msgstr ""
+msgstr "ようこそ"
 
 #: default/web_tt2/home.tt2:4
 msgid ""
@@ -5790,7 +5786,6 @@ msgstr ""
 "リストの設定へ行けます。"
 
 #: default/web_tt2/home.tt2:8
-#, fuzzy
 msgid "Logging In"
 msgstr "ログイン"
 
@@ -5798,7 +5793,7 @@ msgstr "ログイン"
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form to the left."
-msgstr ""
+msgstr "Sympaの多くの機能を利用するには、ログインによって本人確認する必要があります。左のログインフォームをお使いください。"
 
 #: default/web_tt2/home.tt2:16
 msgid "What would you like to do ?"
@@ -5811,26 +5806,23 @@ msgstr "リストを探す"
 
 #: default/web_tt2/home.tt2:23
 msgid "Search for a list given its name (or a part thereof)."
-msgstr ""
+msgstr "名前やその一部からリストを探します。"
 
 #: default/web_tt2/home.tt2:30
-#, fuzzy
 msgid "Submit a mailing list creation request."
-msgstr "作成申込を送る"
+msgstr "メーリングリスト作成申込を送る"
 
 #: default/web_tt2/home.tt2:35
-#, fuzzy
 msgid "Note:"
-msgstr "名前:"
+msgstr "メモ:"
 
 #: default/web_tt2/home.tt2:35
 msgid "Additional options are available in the left navigation menu."
-msgstr ""
+msgstr "ほかにもできることがあります。ナビゲーションメニューをご覧ください。"
 
 #: default/web_tt2/home.tt2:39
-#, fuzzy
 msgid "Browse lists by categories"
-msgstr "メーリングリストのカテゴリ"
+msgstr "メーリングリストのカテゴリ別一覧"
 
 #: default/web_tt2/home.tt2:56
 msgid "List of lists"
@@ -5841,12 +5833,10 @@ msgid "Others"
 msgstr "その他"
 
 #: default/web_tt2/info.tt2:7
-#, fuzzy
 msgid "(Edit)"
 msgstr "(変更)"
 
 #: default/web_tt2/info.tt2:11 default/web_tt2/review.tt2:7
-#, fuzzy
 msgid "Administrative Options"
 msgstr "運営作業"
 
@@ -5855,6 +5845,8 @@ msgid ""
 "There are message(s) awaiting moderation. To review these, please <a href="
 "\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
 msgstr ""
+"モデレーションを待っているメッセージがあります。一覧を見るには<a href=\"[% path_cgi %]/modindex/[% list %]\""
+">ここをクリック</a>。"
 
 #: default/web_tt2/info.tt2:24
 msgid ""
@@ -5870,74 +5862,64 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/info.tt2:37
-#, fuzzy
 msgid "View the list of subscribers"
-msgstr "リストに読者がいません"
+msgstr "読者一覧を見る"
 
 #: default/web_tt2/info.tt2:38
-#, fuzzy
 msgid "Review subscription requests"
-msgstr "読者登録申込はありません"
+msgstr "読者登録申込一覧"
 
 #: default/web_tt2/info.tt2:39
-#, fuzzy
 msgid "Add/delete subscribers"
-msgstr "読者を追加"
+msgstr "読者を追加・削除"
 
 #: default/web_tt2/info.tt2:47
-#, fuzzy
 msgid "List Configuration"
-msgstr "リストの設定を複写"
+msgstr "リストの設定"
 
 #: default/web_tt2/info.tt2:49
 msgid "Modify owners or moderators (editors)"
-msgstr ""
+msgstr "オーナーやモデレータの変更"
 
 #: default/web_tt2/info.tt2:50
 msgid "Modify list subject and visibility"
-msgstr ""
+msgstr "リストの件名や見えかたの変更"
 
 #: default/web_tt2/info.tt2:51
-#, fuzzy
 msgid "Change who can post to this list"
-msgstr "このリストでのピクチャを変更"
+msgstr "リストに投稿できるのは"
 
 #: default/web_tt2/info.tt2:52
-#, fuzzy
 msgid "Change who can (un)subscribe and view list information"
-msgstr "リストの案内を見ることができるのは"
+msgstr "リストへの読者登録・登録解除かでき、リストの案内を見ることができるのは"
 
 #: default/web_tt2/info.tt2:53
-#, fuzzy
 msgid "Close this list"
-msgstr "閉鎖中のリスト"
+msgstr "リストの閉鎖"
 
 #: default/web_tt2/info.tt2:61
-#, fuzzy
 msgid "List Archives"
 msgstr "リストの投稿保管庫"
 
 #: default/web_tt2/info.tt2:63
 msgid "Change settings for who can view archives"
-msgstr ""
+msgstr "投稿保管庫を見ることができる人の設定を変更"
 
 #: default/web_tt2/info.tt2:64
-#, fuzzy
 msgid "Download archives"
-msgstr "投稿保管庫の管理: "
+msgstr "投稿保管庫をダウンロード "
 
 #: default/web_tt2/info.tt2:72
-#, fuzzy
 msgid "Data Sources Configuration"
-msgstr "DKIMの設定"
+msgstr "データソース設定"
 
 #: default/web_tt2/info.tt2:74
 msgid "Configure data sources (SQL, LDAP, text file) for list membership"
-msgstr ""
+msgstr "リスト登録者のデータソース (SQL、LDAP、テキストファイル) の設定"
 
 #: default/web_tt2/info.tt2:75
 msgid "Include (nest) Sympa lists"
-msgstr ""
+msgstr "Sympaのリストを取り込む"
 
 #: default/web_tt2/install_pending_list.tt2:11
 #: default/web_tt2/scenario_test.tt2:13
@@ -6025,9 +6007,8 @@ msgid " The latest lists of this robot"
 msgstr " このロボットの最新のリスト "
 
 #: default/web_tt2/list_menu.tt2:3
-#, fuzzy
 msgid "List Options"
-msgstr "読者登録のオプション"
+msgstr "リストのオプション"
 
 #: default/web_tt2/list_menu.tt2:11
 msgid "Subscriber Options"
@@ -6057,9 +6038,8 @@ msgid "Admin"
 msgstr "運営"
 
 #: default/web_tt2/list_menu.tt2:37
-#, fuzzy
 msgid "<h3>Moderate</h3>"
-msgstr "モデレーション"
+msgstr "<h3>モデレーション</h3>"
 
 #: default/web_tt2/list_menu.tt2:43 default/web_tt2/viewlogs.tt2:91
 msgid "Message"
@@ -6187,16 +6167,14 @@ msgid "Lost password?"
 msgstr "パスワードを忘れた"
 
 #: default/web_tt2/login_menu.tt2:12
-#, fuzzy
 msgid "User Information"
-msgstr "読者情報"
+msgstr "利用者情報"
 
 #: default/web_tt2/login_menu.tt2:15 default/web_tt2/login_menu.tt2:16
 #: default/web_tt2/login_menu.tt2:17 default/web_tt2/login_menu.tt2:18
 #: default/web_tt2/login_menu.tt2:19
-#, fuzzy
 msgid "Role"
-msgstr "役目"
+msgstr "役割"
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
@@ -6226,14 +6204,12 @@ msgid "last login from %1"
 msgstr "前回のログインは %1 からでした"
 
 #: default/web_tt2/login_menu.tt2:38
-#, fuzzy
 msgid "My preferences"
 msgstr "個人設定"
 
 #: default/web_tt2/login_menu.tt2:39
-#, fuzzy
 msgid "My lists"
-msgstr "新しいリスト"
+msgstr "関わっているリスト"
 
 #: default/web_tt2/login_menu.tt2:53
 msgid "Logout"
@@ -6363,7 +6339,7 @@ msgstr "ブラウザの JavaScript を有効にしてください"
 
 #: default/web_tt2/main.tt2:94
 msgid "Please Wait..."
-msgstr ""
+msgstr "お待ちください……"
 
 #: default/web_tt2/manage_template.tt2:3
 msgid "Modify or delete existing rejection messages"
@@ -6420,7 +6396,6 @@ msgid "create"
 msgstr "作成"
 
 #: default/web_tt2/menu_search.tt2:2
-#, fuzzy
 msgid "Search Lists"
 msgstr "リストを探す"
 
@@ -6433,22 +6408,18 @@ msgid "Home"
 msgstr "ホーム"
 
 #: default/web_tt2/menu.tt2:10
-#, fuzzy
 msgid "Request a List"
-msgstr "申込日"
+msgstr "リストの申込"
 
 #: default/web_tt2/menu.tt2:15
-#, fuzzy
 msgid "Listmaster Admin"
-msgstr "リスト システム管理者"
+msgstr "リスト システム管理"
 
 #: default/web_tt2/menu.tt2:19
-#, fuzzy
 msgid "Index of Lists"
-msgstr "活発でないリスト"
+msgstr "リスト一覧"
 
 #: default/web_tt2/menu.tt2:21
-#, fuzzy
 msgid "Search for List(s)"
 msgstr "リストを探す"
 
@@ -6623,7 +6594,6 @@ msgid "Submitting a bug, a feature request"
 msgstr "バグや仕様追加希望の登録"
 
 #: default/web_tt2/nav.tt2:45
-#, fuzzy
 msgid "Index of lists"
 msgstr "リスト一覧"
 
@@ -6637,9 +6607,8 @@ msgid "All"
 msgstr "すべて"
 
 #: default/web_tt2/nav.tt2:62
-#, fuzzy
 msgid "Basic Operations"
-msgstr "影響の大きい作業"
+msgstr "基本操作"
 
 #: default/web_tt2/nav.tt2:69
 msgid "Manage Subscribers"
@@ -7003,9 +6972,8 @@ msgid "Registration: Non-Massey Users"
 msgstr ""
 
 #: default/web_tt2/renewpasswd.tt2:18
-#, fuzzy
 msgid "Please enter your email address to begin the registration process."
-msgstr "あなたのメール アドレスを認証サービスから取得するのに失敗しました。"
+msgstr "あなたの電子メールアドレスを入力してください。登録処理を開始します。"
 
 #: default/web_tt2/renewpasswd.tt2:20
 msgid "You forgot your password, so you have to renew it."
@@ -7182,26 +7150,24 @@ msgid "Remind all"
 msgstr "すべてに登録確認を送る"
 
 #: default/web_tt2/review.tt2:35
-#, fuzzy
 msgid "Add Subscribers"
 msgstr "読者を追加"
 
 #: default/web_tt2/review.tt2:37
 msgid "To add an individual user:"
-msgstr ""
+msgstr "一人だけ追加: "
 
 #: default/web_tt2/review.tt2:43
-#, fuzzy
 msgid "Email address:"
-msgstr "メール アドレス:"
+msgstr "電子メール アドレス:"
 
 #: default/web_tt2/review.tt2:45
 msgid "Quiet (don't send welcome email)"
-msgstr ""
+msgstr "非通知 (歓迎メッセージを送らない)"
 
 #: default/web_tt2/review.tt2:50
 msgid "To add multiple users:"
-msgstr ""
+msgstr "まとめて追加: "
 
 #: default/web_tt2/review.tt2:51
 msgid ""
@@ -7209,13 +7175,14 @@ msgid ""
 "(Alternatively, consider using a data-source such as SQL or an Active "
 "Directory Group)."
 msgstr ""
+"大勢の人を追加するには「まとめて追加」ボタンをクリックします (なお、SQLやActive "
+"Directoryグループをデータソースとして利用することもできます)。"
 
 #: default/web_tt2/review.tt2:52
 msgid "Multiple add"
 msgstr "まとめて追加"
 
 #: default/web_tt2/review.tt2:56
-#, fuzzy
 msgid "Search for a User"
 msgstr "人を探す"
 
@@ -7232,9 +7199,8 @@ msgid "Selection too wide, can not show selection"
 msgstr "探す範囲が広すぎて表示することができません"
 
 #: default/web_tt2/review.tt2:77
-#, fuzzy
 msgid "Subscriber Table"
-msgstr "読者"
+msgstr "読者一覧"
 
 #. (similar_subscribers_occurence)
 #: default/web_tt2/review.tt2:92
@@ -7247,7 +7213,7 @@ msgstr "本当に選択したアドレスすべての登録を解除してよい
 
 #: default/web_tt2/review.tt2:102
 msgid "Quiet (don't send deletion email)"
-msgstr ""
+msgstr "非通知 (削除を知らせるメッセージを送らない)"
 
 #: default/web_tt2/review.tt2:111
 msgid "Excluded users"
@@ -7411,19 +7377,16 @@ msgid "get matched rule"
 msgstr "該当するルールを取得する"
 
 #: default/web_tt2/search_list_request.tt2:1
-#, fuzzy
 msgid "Search for list(s)"
 msgstr "リストを探す"
 
 #: default/web_tt2/search_list.tt2:7
-#, fuzzy
 msgid "Results"
-msgstr "結果 %1件"
+msgstr "結果"
 
 #: default/web_tt2/search_list.tt2:29
-#, fuzzy
 msgid "Request subscription"
-msgstr "受け取りを再開"
+msgstr "読者登録の申込"
 
 #: default/web_tt2/search_user.tt2:3
 msgid "User search result:"
@@ -7464,29 +7427,24 @@ msgid "editor"
 msgstr "モデレータ"
 
 #: default/web_tt2/serveradmin.tt2:7
-#, fuzzy
 msgid "Information"
-msgstr "案内ファイル:"
+msgstr "ご案内"
 
 #: default/web_tt2/serveradmin.tt2:10
-#, fuzzy
 msgid "View Pending (Requested) lists"
-msgstr "承認待ちのリスト"
+msgstr "承認待ちのリストを見る"
 
 #: default/web_tt2/serveradmin.tt2:11
-#, fuzzy
 msgid "View Closed Lists"
-msgstr "閉鎖中のリスト"
+msgstr "閉鎖中のリストを見る"
 
 #: default/web_tt2/serveradmin.tt2:12
-#, fuzzy
 msgid "View Lists sorted by Creation Date"
-msgstr "作成日順"
+msgstr "リストを作成日順で見る"
 
 #: default/web_tt2/serveradmin.tt2:13
-#, fuzzy
 msgid "View Lists sorted by Last Message Date"
-msgstr "最終投稿日順"
+msgstr "リストを最終投稿日順で見る"
 
 #: default/web_tt2/serveradmin.tt2:24
 msgid "The following virtual robots are running on this server:"
@@ -7515,16 +7473,15 @@ msgstr "この設定族に入っているリストの一覧を参照"
 #: default/web_tt2/serveradmin.tt2:55
 msgid ""
 "Enter an email address of a user to view lists that they are subscribed to:"
-msgstr ""
+msgstr "電子メールアドレスを入力すると、その人が読者登録しているリストの一覧を見ることができます: "
 
 #: default/web_tt2/serveradmin.tt2:62
 msgid "Search User"
 msgstr "人を探す"
 
 #: default/web_tt2/serveradmin.tt2:68
-#, fuzzy
 msgid "Sessions"
-msgstr "ブラウザを終了するまで"
+msgstr "セッション"
 
 #: default/web_tt2/serveradmin.tt2:72
 msgid "View session information for users connected to this web interface:"
@@ -7537,48 +7494,44 @@ msgstr "何分前のセッションまで表示するか"
 
 # 仮訳です。
 #: default/web_tt2/serveradmin.tt2:77
-#, fuzzy
 msgid "Show only currently connected users"
-msgstr "ログインした人だけ表示"
+msgstr "ログインしている人だけ表示"
 
 #: default/web_tt2/serveradmin.tt2:79
-#, fuzzy
 msgid "Show Sessions"
 msgstr "セッションの表示"
 
 #: default/web_tt2/serveradmin.tt2:85
 msgid "Impersonate another User"
-msgstr ""
+msgstr "他人になる"
 
 #: default/web_tt2/serveradmin.tt2:87
-#, fuzzy
 msgid ""
 "Listmasters can switch context (impersonate) other users; this may be useful "
 "when providing assistance or when testing privileges.  Enter the email "
 "address of the user you'd like to switch context to:"
 msgstr ""
-"リスト システム管理者であれば、他人になってその人の権限で操作をすることができ"
-"ます。誰かの手伝いをしたり、利用者権限のテストをしたりするときに便利でしょ"
-"う。セッションが終わるまで有効です"
+"リスト システム管理者であれば、他人になってその人の権限で操作をすることができます。誰かの手伝いをしたり、利用者権限のテストをしたりするときに便利でしょう"
+"。なりたい人の電子メールアドレスを入力してください: "
 
 #: default/web_tt2/serveradmin.tt2:92
 msgid "Switch User Context"
-msgstr ""
+msgstr "この人になる"
 
 #: default/web_tt2/serveradmin.tt2:101
 msgid ""
 "It is possible to rebuild HTML archives for an individual list or for all "
 "lists (in batch)."
-msgstr ""
+msgstr "特定のリストやすべてのリストのHTML投稿保管庫を再構築することができます。"
 
 #: default/web_tt2/serveradmin.tt2:103
 msgid "Rebuild archives for an individual list"
-msgstr ""
+msgstr "特定のリストの投稿保管庫を再構築"
 
 #: default/web_tt2/serveradmin.tt2:104
 msgid ""
 "Enter the name of the list that you'd like to rebuild HTML archives for:"
-msgstr ""
+msgstr "HTML投稿保管庫を再構築したいリストの名前を入力: "
 
 # 「ページ」補う
 #: default/web_tt2/serveradmin.tt2:108
@@ -7587,22 +7540,20 @@ msgstr "投稿保管庫ページを再構築"
 
 # 「ページ」補う
 #: default/web_tt2/serveradmin.tt2:110
-#, fuzzy
 msgid "Rebuild archives for all lists"
-msgstr "投稿保管庫ページを再構築"
+msgstr "全リストの投稿保管庫を再構築"
 
 #: default/web_tt2/serveradmin.tt2:111
 msgid ""
 "As this option may take a long time to complete, it is recommended (if "
 "possible) to use this option during non-busy times."
-msgstr ""
+msgstr "この操作は長時間かかることがありますので、(できれば) 繁忙期を避けて実施することをおすすめします。"
 
 #: default/web_tt2/serveradmin.tt2:112
 msgid "Rebuild all"
 msgstr "すべてを再構築"
 
 #: default/web_tt2/serveradmin.tt2:122
-#, fuzzy
 msgid "Sympa log level"
 msgstr "記録レベルの設定"
 
@@ -7610,7 +7561,7 @@ msgstr "記録レベルの設定"
 msgid ""
 "Set debug level for logs written to disk.  This setting is temporary, "
 "applying only for the lifetime of the fastcgi session hosting this interface."
-msgstr ""
+msgstr "システムログの詳細度を設定します。この設定は一時的なもので、セッションが終了するまでだけ適用されます。"
 
 #: default/web_tt2/serveradmin.tt2:128
 msgid "Log level:"
@@ -7621,14 +7572,12 @@ msgid "Set log level"
 msgstr "記録レベルの設定"
 
 #: default/web_tt2/serveradmin.tt2:145
-#, fuzzy
 msgid "Edit default list template"
-msgstr "リストテンプレートの初期設定"
+msgstr "リストテンプレートの初期設定を変更"
 
 #: default/web_tt2/serveradmin.tt2:160
-#, fuzzy
 msgid "Edit site-wide templates"
-msgstr "リスト専用のテンプレートを変更"
+msgstr "サイト全体用のテンプレートを変更"
 
 #: default/web_tt2/serveradmin.tt2:170
 msgid "view translations"
@@ -7640,7 +7589,7 @@ msgstr "テンプレートのカスタマイズ"
 
 #: default/web_tt2/serveradmin.tt2:177
 msgid "Dump TT2 Variables"
-msgstr ""
+msgstr "テンプレート変数を表示"
 
 #: default/web_tt2/serveradmin.tt2:178
 msgid ""
@@ -7651,14 +7600,12 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/serveradmin.tt2:182
-#, fuzzy
 msgid "Disable template variables dump"
 msgstr "テンプレート変数を表示しない"
 
 #: default/web_tt2/serveradmin.tt2:184
-#, fuzzy
 msgid "Enable template variables dump"
-msgstr "テンプレート変数を表示しない"
+msgstr "テンプレート変数を表示する"
 
 #: default/web_tt2/serveradmin.tt2:195
 msgid "Skins administration page"
@@ -7909,7 +7856,6 @@ msgid "the current definition for css location (css_url parameter) is"
 msgstr "現在のCSSの場所 (css_url パラメータ) は、次のように決めてあります"
 
 #: default/web_tt2/skinsedit.tt2:25
-#, fuzzy
 msgid "Install Static CSS"
 msgstr "静的なCSSを設置"
 
@@ -8036,21 +7982,20 @@ msgid "background color of:"
 msgstr "背景色として: "
 
 #: default/web_tt2/skinsedit.tt2:89
-#, fuzzy
 msgid "Text background color"
-msgstr "背景色として: "
+msgstr "テキストの背景色"
 
 #: default/web_tt2/skinsedit.tt2:95
 msgid "Miscelaneous texts font color"
-msgstr ""
+msgstr "その他のテキストの文字色"
 
 #: default/web_tt2/skinsedit.tt2:101
 msgid "Titles and buttons color"
-msgstr ""
+msgstr "タイトルとボタンの色"
 
 #: default/web_tt2/skinsedit.tt2:107
 msgid "Main texts font color"
-msgstr ""
+msgstr "本文の文字色"
 
 #: default/web_tt2/skinsedit.tt2:113
 msgid "font color of:"
@@ -8058,54 +8003,47 @@ msgstr "文字色として: "
 
 #: default/web_tt2/skinsedit.tt2:114
 msgid "form labels;"
-msgstr ""
+msgstr "フォームのラベル、"
 
 #: default/web_tt2/skinsedit.tt2:115
-#, fuzzy
 msgid "side menu titles;"
-msgstr "画面左側のメニュー。"
+msgstr "サイドメニューの表題"
 
 #: default/web_tt2/skinsedit.tt2:116
 msgid "text areas in forms."
-msgstr ""
+msgstr "フォームの複数行テキストエリア"
 
 #: default/web_tt2/skinsedit.tt2:123
 msgid "HTTP links"
-msgstr ""
+msgstr "リンク"
 
 #: default/web_tt2/skinsedit.tt2:123
-#, fuzzy
 msgid "hovered buttons"
-msgstr "マウス カーソルのあるリンク。"
+msgstr "マウス カーソルのあるボタン"
 
 #: default/web_tt2/skinsedit.tt2:129
-#, fuzzy
 msgid "text color of hovered links;"
-msgstr "マウス カーソルのあるリンク。"
+msgstr "マウス カーソルのあるリンクのテキストの色、"
 
 #: default/web_tt2/skinsedit.tt2:129
-#, fuzzy
 msgid "background color of buttons."
-msgstr "マウス カーソルのあるボタンの背景色。"
+msgstr "ボタンの背景色。"
 
 #: default/web_tt2/skinsedit.tt2:135
-#, fuzzy
 msgid "text color of:"
 msgstr "文字色として: "
 
 #: default/web_tt2/skinsedit.tt2:135
-#, fuzzy
 msgid "navigation links and buttons"
-msgstr "画面上部のタブ。"
+msgstr "ナビゲーションリンクとボタン"
 
 #: default/web_tt2/skinsedit.tt2:141 default/web_tt2/skinsedit.tt2:147
 msgid "tables;"
 msgstr "表。"
 
 #: default/web_tt2/skinsedit.tt2:141
-#, fuzzy
 msgid "notice messages."
-msgstr "自動送信されるメッセージ"
+msgstr "通知メッセージ。"
 
 #: default/web_tt2/skinsedit.tt2:147
 msgid "border color of:"
@@ -8123,28 +8061,24 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/skinsedit.tt2:165
-#, fuzzy
 msgid "border color of form elements;"
-msgstr "入力フォームの境界色。"
+msgstr "入力フォームの境界色、"
 
 #: default/web_tt2/skinsedit.tt2:165
-#, fuzzy
 msgid "background color of disabled form elements"
-msgstr "マウス カーソルのあるボタンの背景色。"
+msgstr "無効になっているフォーム部品の背景色"
 
 #: default/web_tt2/skinsedit.tt2:171
 msgid "invalid form elements"
-msgstr ""
+msgstr "無効になっているフォーム部品"
 
 #: default/web_tt2/skinsedit.tt2:177
-#, fuzzy
 msgid "Background color of ins and mark elements."
-msgstr "表の背景色の初期値。"
+msgstr "ins、mark要素の背景色。"
 
 #: default/web_tt2/skinsedit.tt2:183
-#, fuzzy
 msgid "Selected text background color"
-msgstr "背景色として: "
+msgstr "選択されたテキストの背景色"
 
 #: default/web_tt2/skinsedit.tt2:189 default/web_tt2/skinsedit.tt2:195
 #: default/web_tt2/skinsedit.tt2:201 default/web_tt2/skinsedit.tt2:207
@@ -8244,7 +8178,6 @@ msgid "Your list options"
 msgstr "読者登録のオプション"
 
 #: default/web_tt2/suboptions.tt2:16
-#, fuzzy
 msgid "Member since:"
 msgstr "読者登録した日:"
 
@@ -8392,15 +8325,13 @@ msgid "Manage your subscriptions"
 msgstr "受け取り休止/再開"
 
 #: default/web_tt2/suspend_request.tt2:7
-#, fuzzy
 msgid "You are subscribed to the following lists"
-msgstr "すでに %1 メーリングリストに読者登録しています"
+msgstr "読者登録しているメーリングリスト"
 
 #. (sub.liststartdate)
 #: default/web_tt2/suspend_request.tt2:35
-#, fuzzy
 msgid "Suspended from %1 to"
-msgstr "休止期間"
+msgstr "休止期間 %1 から"
 
 #: default/web_tt2/suspend_request.tt2:39
 msgid "indefinite end date"
@@ -8408,22 +8339,19 @@ msgstr "期限なし"
 
 #. (l.key)
 #: default/web_tt2/suspend_request.tt2:42
-#, fuzzy
 msgid "Check to restore reception from list %1"
-msgstr "リスト「%1」の共有文書置き場を再開できません。"
+msgstr "チェックを入れるとリスト「%1」の受け取りを再開します"
 
 #. (l.key)
 #: default/web_tt2/suspend_request.tt2:45
-#, fuzzy
 msgid "Check to suspend or unsubscribe from list %1"
-msgstr "あなたは %1 メーリングリストの登録解除を申し込みました。"
+msgstr "チェックを入れると %1 メーリングリストの受け取り休止・登録解除をします"
 
 #: default/web_tt2/suspend_request.tt2:48
-#, fuzzy
 msgid ""
 "You are not allowed to suspend your subscription / unsusbscribe from this "
 "list."
-msgstr "このリストへの読者登録は受け付けられません。"
+msgstr "このリストでは受け取り休止・登録解除は受け付けられません。"
 
 # 「リスト」補う
 #: default/web_tt2/suspend_request.tt2:69
@@ -8451,7 +8379,7 @@ msgstr "終了:"
 
 #: default/web_tt2/suspend_request.tt2:82
 msgid "Suspend my membership indefinitely"
-msgstr ""
+msgstr "永久に休止"
 
 #: default/web_tt2/suspend_request.tt2:86
 msgid "Resume my subscriptions"
@@ -8459,7 +8387,7 @@ msgstr "受け取りを再開"
 
 #: default/web_tt2/suspend_request.tt2:93
 msgid "You need to be logged in to access this page."
-msgstr ""
+msgstr "このページにアクセスするにはログインする必要があります。"
 
 #: default/web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -10016,13 +9944,10 @@ msgstr "%1 のデータベースドライバがありません"
 
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:37
-#, fuzzy
 msgid ""
 "No Database Driver installed for %1; you should download and install %2 from "
 "CPAN."
-msgstr ""
-"%1 のデータベースドライバがインストールしてありません。 CPAN から DBD::%1 を"
-"ダウンロードしてきてインストールしなければなりません。"
+msgstr "%1 のデータベースドライバがインストールしてありません。CPAN から %2 をダウンロードしてきてインストールしなければなりません。"
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:40
