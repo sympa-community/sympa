@@ -254,7 +254,7 @@ our %pinfo = (
         'group'      => 'description',
         'gettext_id' => "Language of the list",
         'format' => [],    ## tools::get_supported_languages() called later
-        'file_format' => '\w+(\-\w+)?',
+        'file_format' => '\w+(\-\w+)*',
         'default'     => {'conf' => 'lang'}
     },
 
