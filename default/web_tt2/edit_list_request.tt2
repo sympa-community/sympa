@@ -62,7 +62,7 @@
                                 [% IF enum.value.title %]
                                   >[% enum.value.title %]</option>
                                 [% ELSE %]
-                                  >[% enum.key %]</option>
+                                  >[%|optdesc('',is_listmaster)%][% enum.key %][%END%]</option>
                                 [% END %]
                               [% END %]
                             </select>
@@ -72,7 +72,7 @@
                                 [% IF enum.value.title %]
                                   [% enum.value.title %]
                                 [% ELSE %]
-                                  [% enum.key %]
+                                  [%|optdesc('',is_listmaster)%][% enum.key %][%END%]
                                 [% END %]
                               [% END %]
                             [% END %]
@@ -106,14 +106,14 @@
                                               [%- IF enum.value.selected == '1' -%]
                                                 selected="selected"
                                               [%- END -%]
-                                              >[% enum.key %]
+                                              >[% IF enum.value.title %][% enum.value.title %][% ELSE %][%|optdesc('',is_listmaster)%][% enum.key %][%END%][% END %]
                                               </option>
                                             [% END %]
                                           </select><br />
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH enum = key.value %]
                                             [% IF enum.value.selected == '1' %]
-                                              [% enum.key %]
+                                              [% IF enum.value.title %][% enum.value.title %][% ELSE %][%|optdesc('',is_listmaster)%][% enum.key %][%END%][% END %]
                                               <br /><input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% enum.key %]" />
                                             [% END %]
                                           [% END %]
@@ -328,10 +328,14 @@
                                               [% IF enum.value.selected == '1' %]
                                                 selected="selected"
                                               [% END %]
+                                              [% IF p.name == 'lang' %]
+                                                lang="[%enum.key%]"
+                                                xml:lang="[%enum.key%]"
+                                              [%END%]
                                               [% IF enum.value.title %]
                                                 >[% enum.value.title %]</option>
                                               [% ELSE %]
-                                                >[% enum.key %]</option>
+                                                >[%|optdesc('',is_listmaster)%][% enum.key %][%END%]</option>
                                               [% END %]
                                           [% END %]
                                           </select></div>
@@ -340,9 +344,16 @@
                                           [% FOREACH enum = key.value %]
                                             [% IF enum.value.selected == '1' %]
                                               [% IF enum.value.title %]
-                                                [% enum.value.title %] 
+                                                [% IF p.name == 'lang' %]
+                                                  <span
+                                                  lang="[%enum.key%]"
+                                                  xml:lang="[%enum.key%]"
+                                                  >[% enum.value.title %]</span>
+                                                [% ELSE %]
+                                                  [% enum.value.title %] 
+                                                [% END %]
                                               [% ELSE %]
-                                                [% enum.key %]
+                                                [%|optdesc('',is_listmaster)%][% enum.key %][%END%]
                                               [% END %]
                                             [% END %]
                                           [% END %]
@@ -373,17 +384,32 @@
                                   [% IF enum.value.selected == '1' %]
                                     selected="selected"
                                   [% END %]
+                                  [% IF p.name == 'lang' %]
+                                    lang="[%enum.key%]"
+                                    xml:lang="[%enum.key%]"
+                                  [%END%]
                                   [% IF enum.value.title %]
                                     >[% enum.value.title %]</option>
                                   [% ELSE %]
-                                    >[% enum.key %]</option>
+                                    >[%|optdesc('',is_listmaster)%][% enum.key %][%END%]</option>
                                   [% END %]
                                 [% END %]
                               </select>
                             [% ELSIF p.may_edit == 'read' %]
                               [% FOREACH enum = p.value %]
                                 [% IF enum.value.selected == '1' %]
-                                  [% enum.key %]
+                                  [% IF enum.value.title %]
+                                    [% IF p.name == 'lang' %]
+                                      <span
+                                      lang="[%enum.key%]"
+                                      xml:lang="[%enum.key%]"
+                                      >[% enum.value.title %]</span>
+                                    [% ELSE %]
+                                      [% enum.value.title %]
+                                    [% END %]
+                                  [% ELSE %]
+                                    [%|optdesc('',is_listmaster)%][% enum.key %][%END%]
+                                  [% END %]
                                 [% END %]
                               [% END %]
                             [% END %]

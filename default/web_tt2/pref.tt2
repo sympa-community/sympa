@@ -10,7 +10,7 @@
  <div class="form_row">
     <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label><select id="lang" name="lang">
               [% FOREACH l = languages %]
-		<option value='[% l.key %]' [% l.value.selected %]>[% l.value.complete %]</option>
+		<option value='[% l.key %]' lang="[% l.key %]" xml:lang="[% l.key %]" [% l.value.selected %]>[% l.value.complete %]</option>
               [% END %]
             					        </select></div>
  <div class="form_row">
