@@ -1050,27 +1050,27 @@ sub _get_search_path {
         } else {
             unshift @search_path, $path_family;
         }
-    } elsif (not ref $that and $that and $that ne '*') {    # Robot
+   } elsif (not ref $that and $that and $that ne '*') {    # Robot
         my $path_robot;
         @search_path = _get_search_path('*', @_);
 
-        if ($that ne $Conf::Conf{'domain'}) {
-            if ($subdir) {
-                $path_robot =
-                    $Conf::Conf{'etc'} . '/' . $that . '/' . $subdir;
-            } else {
-                $path_robot = $Conf::Conf{'etc'} . '/' . $that;
-            }
-            if ($lang_dirs) {
-                unless ($lang_only) {
-                    unshift @search_path, $path_robot;
-                }
-                unshift @search_path,
-                    map { $path_robot . '/' . $_ } @$lang_dirs;
-            } else {
-                unshift @search_path, $path_robot;
-            }
-        }
+		if ($subdir) {
+			$path_robot =
+				$Conf::Conf{'etc'} . '/' . $that . '/' . $subdir;
+		} else {
+			$path_robot = $Conf::Conf{'etc'} . '/' . $that;
+		}
+		if (-d $path_robot) {
+			if ($lang_dirs) {
+				unless ($lang_only) {
+					unshift @search_path, $path_robot;
+				}
+				unshift @search_path,
+					map { $path_robot . '/' . $_ } @$lang_dirs;
+			} else {
+				unshift @search_path, $path_robot;
+			}
+		}
     } elsif (not ref $that and $that eq '*') {    # Site
         my $path_etcbindir;
         my $path_etcdir;
