@@ -81,7 +81,7 @@
    <div class="sidebar" style="padding-top: 10px;">
       [% PROCESS login_menu.tt2 %]
       [% PROCESS list_menu.tt2 IF list %]
-      <h2>Sympa Menu</h2>
+      <h2>[%|loc%]Sympa Menu[%END%]</h2>
       [% PROCESS menu.tt2 %]
    </div>
 
@@ -97,7 +97,7 @@
 <div id="content-inner">
     [% PROCESS title.tt2 %]
       [% IF list %]
-       [% IF list_title %]<p><b>Subject:</b> [% IF is_owner %]<a href="[% path_cgi %]/edit_list_request/[% list %]/description">(Edit)</a>[% END %] [% list_title %]</p>[% END %]
+       [% IF list_title %]<p><b>[%|loc%]Subject:[%END%]</b> [% IF is_owner %]<a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%](Edit)[%END%]</a>[% END %] [% list_title %]</p>[% END %]
       [% END %]
 
         [% PROCESS nav.tt2 %]
@@ -130,7 +130,7 @@
 
 			//  Creating our button in JS for smaller screens
 			var menuElements = document.getElementById('menu');
-			menuElements.insertAdjacentHTML('afterBegin','<button type="button" id="menutoggle" class="navtoogle" aria-hidden="true"><i aria-hidden="true" class="icon-menu"> </i> Menu</button>');
+			menuElements.insertAdjacentHTML('afterBegin','<button type="button" id="menutoggle" class="navtoogle" aria-hidden="true"><i aria-hidden="true" class="icon-menu"> </i> [%|loc%]Menu[%END%]</button>');
 
 			//  Toggle the class on click to show / hide the menu
 			document.getElementById('menutoggle').onclick = function() {

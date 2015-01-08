@@ -3,7 +3,7 @@
 [% IF  conf.logo_html_definition %]
 <div id="logo" >[% conf.logo_html_definition %]</div>
 [% ELSE %]
-<div id="logo" ><a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="SYMPA logo" /></a></div>
+<div id="logo" ><a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a></div>
 [% END %]
 
 
@@ -12,11 +12,11 @@
 	<h2>[%|loc%]User Information[%END%]</h2>
 	<div id="Identity">
 		[% user.email %]&nbsp; <br/>
-		[% IF is_listmaster %][%|loc%]Role[%END%]:&nbsp;[%|loc%]Listmaster[%END%]
-		[% ELSIF is_privileged_owner %][%|loc%]Role[%END%]:&nbsp;[%|loc%]Privileged owner[%END%]
-		[% ELSIF is_owner %][%|loc%]Role[%END%]:&nbsp;[%|loc%]Owner[%END%]
-		[% ELSIF is_editor %][%|loc%]Role[%END%]:&nbsp;[%|loc%]Editor[%END%]
-		[% ELSIF is_subscriber %][%|loc%]Role[%END%]:&nbsp;[%|loc%]Subscriber[%END%]
+		[% IF is_listmaster %][%|loc%]Role:&nbsp;[%END%][%|loc%]Listmaster[%END%]
+		[% ELSIF is_privileged_owner %][%|loc%]Role:&nbsp;[%END%][%|loc%]Privileged owner[%END%]
+		[% ELSIF is_owner %][%|loc%]Role:&nbsp;[%END%][%|loc%]Owner[%END%]
+		[% ELSIF is_editor %][%|loc%]Role:&nbsp;[%END%][%|loc%]Editor[%END%]
+		[% ELSIF is_subscriber %][%|loc%]Role:&nbsp;[%END%][%|loc%]Subscriber[%END%]
 		[% END %]
 		<br />
 		

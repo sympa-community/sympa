@@ -28,7 +28,7 @@
 [% END %]
 
 [% IF action == 'info'%][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<li class="[% class %]"><a href="[% path_cgi %]/info/[% list %]">List Home</a></li>
+<li class="[% class %]"><a href="[% path_cgi %]/info/[% list %]">[%|loc%]List Home[%END%]</a></li>
 
 [% IF action == 'admin' || action_type == 'admin' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 <li class="[% class %]"><a href="[% path_cgi %]/admin/[% list %]">[%|loc%]Admin[%END%]</a></li>

@@ -33,7 +33,7 @@
 		[%|loc%]Owners:[%END%]
 		<span style="font-weight: normal;">
 		[% FOREACH o = owner %]
-			[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %][% IF ! loop.last %],[% END %] 
+			[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %][% IF ! loop.last %][%|loc%], [%END%][% END %] 
 		[% END %]
 		</span>
 		
@@ -50,7 +50,7 @@
 		[% IF editor %]
 			[% FOREACH e = editor %]
 				[% IF e.value.visibility != 'conceal' %]
-					[% IF e.value.gecos %]<span>[% e.value.gecos %]</span>[% ELSE %]<span>[% e.value.local %][% IF ! loop.last %],[% END %]</span>[% END %]<br />
+					[% IF e.value.gecos %]<span>[% e.value.gecos %]</span>[% ELSE %]<span>[% e.value.local %][% IF ! loop.last %][%|loc%], [%END%][% END %]</span>[% END %]<br />
 				[% END %]
 			[% END %]
 		[% ELSE %]
