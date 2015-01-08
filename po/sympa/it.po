@@ -15,10 +15,10 @@ msgstr ""
 "PO-Revision-Date: 2014-05-13 15:01+0000\n"
 "Last-Translator: EnzoSilvestri <vincenzo.silvestri@uniba.it>\n"
 "Language-Team: Italiano\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1399993275.000000\n"
@@ -4411,7 +4411,7 @@ msgstr "To; %1"
 
 #: default/web_tt2/compose_mail.tt2:21
 #: default/web_tt2/create_list_request.tt2:34
-#: default/web_tt2/install_pending_list.tt2:14
+#: default/web_tt2/install_pending_list.tt2:14 default/web_tt2/main.tt2:100
 #: default/web_tt2/set_pending_list_request.tt2:8
 msgid "Subject:"
 msgstr "Oggetto:"
@@ -4523,7 +4523,7 @@ msgstr "Ambito: "
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:43 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:403
+#: default/web_tt2/edit_list_request.tt2:429
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:40
 #: default/web_tt2/serveradmin.tt2:206 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -4603,16 +4603,22 @@ msgstr "Inserisci il nome della lista: "
 msgid "Apply"
 msgstr "Applica"
 
-#: default/web_tt2/crash.tt2:57 default/web_tt2/tt2_error.tt2:57
+#: default/web_tt2/crash.tt2:53 default/web_tt2/main.tt2:84
+#: default/web_tt2/tt2_error.tt2:53
+#, fuzzy
+msgid "Sympa Menu"
+msgstr "Amministrazione Sympa"
+
+#: default/web_tt2/crash.tt2:64 default/web_tt2/tt2_error.tt2:64
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "Errore del server"
 
-#: default/web_tt2/crash.tt2:58
+#: default/web_tt2/crash.tt2:65
 msgid "Sympa encountered an internal error."
 msgstr "Sympa ha incontrato un errore interno al server"
 
-#: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
+#: default/web_tt2/crash.tt2:66 default/web_tt2/tt2_error.tt2:67
 msgid "Please contact the listmaster."
 msgstr "Per favore contatta il Listmaster."
 
@@ -4621,11 +4627,11 @@ msgstr "Per favore contatta il Listmaster."
 #. (tt2_error)
 #. (error)
 #: default/mail_tt2/listmaster_notification.tt2:146
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
+#: default/web_tt2/crash.tt2:69 default/web_tt2/tt2_error.tt2:66
 msgid "Error: %1"
 msgstr "Errore: %1"
 
-#: default/web_tt2/crash.tt2:64
+#: default/web_tt2/crash.tt2:71
 msgid "Traceback"
 msgstr ""
 
@@ -4791,7 +4797,7 @@ msgstr "URL Segnalibro"
 msgid "Replace the file %1 with your file"
 msgstr "Sostituisci il file %1 con il tuo file"
 
-#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:414
+#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:440
 #: default/web_tt2/editsubscriber.tt2:60 default/web_tt2/suboptions.tt2:140
 msgid "Update"
 msgstr "Aggiorna"
@@ -6204,7 +6210,7 @@ msgstr "Elenco delle liste"
 msgid "Others"
 msgstr "Altre"
 
-#: default/web_tt2/info.tt2:7
+#: default/web_tt2/info.tt2:7 default/web_tt2/main.tt2:100
 #, fuzzy
 msgid "(Edit)"
 msgstr "modifica"
@@ -6214,17 +6220,22 @@ msgstr "modifica"
 msgid "Administrative Options"
 msgstr "Pannello di amministrazione"
 
+#. (mod_message)
 #: default/web_tt2/info.tt2:16
-msgid ""
-"There are message(s) awaiting moderation. To review these, please <a href="
-"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
-msgstr ""
+#, fuzzy
+msgid "There are %1 message(s) awaiting moderation."
+msgstr "Ci sono %1 messaggi in attesa di moderazione."
 
+#: default/web_tt2/info.tt2:16 default/web_tt2/info.tt2:24
+#, fuzzy
+msgid "(Review)"
+msgstr "rivedi"
+
+#. (mod_subscription)
 #: default/web_tt2/info.tt2:24
-msgid ""
-"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
-"review these, please click here."
-msgstr ""
+#, fuzzy
+msgid "There are %1 subscription(s) awaiting moderation."
+msgstr "Ci sono %1 messaggi in attesa di moderazione."
 
 #: default/web_tt2/info.tt2:30
 msgid ""
@@ -6421,6 +6432,11 @@ msgstr "Vuoi davvero iscriverti alla lista %1?"
 msgid "Subscribe"
 msgstr "Iscriviti"
 
+#: default/web_tt2/list_menu.tt2:31
+#, fuzzy
+msgid "List Home"
+msgstr "Nome della lista"
+
 #: default/web_tt2/list_menu.tt2:34
 msgid "Admin"
 msgstr "Amministra"
@@ -6480,6 +6496,11 @@ msgstr "Tasso di errori:"
 #, fuzzy
 msgid "Owners:"
 msgstr "Proprietari"
+
+#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
+#: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+msgid ", "
+msgstr ""
 
 #: default/web_tt2/list_panel.tt2:42 default/web_tt2/list_panel.tt2:63
 #, fuzzy
@@ -6560,18 +6581,20 @@ msgstr "Primo accesso?"
 msgid "Lost password?"
 msgstr "Password dimenticata?"
 
+#: default/web_tt2/login_menu.tt2:6
+msgid "SYMPA logo"
+msgstr ""
+
 #: default/web_tt2/login_menu.tt2:12
 #, fuzzy
 msgid "User Information"
 msgstr "Informazione sull'iscritto"
 
-# nlsref 16,62
 #: default/web_tt2/login_menu.tt2:15 default/web_tt2/login_menu.tt2:16
 #: default/web_tt2/login_menu.tt2:17 default/web_tt2/login_menu.tt2:18
 #: default/web_tt2/login_menu.tt2:19
-#, fuzzy
-msgid "Role"
-msgstr "ruolo"
+msgid "Role:&nbsp;"
+msgstr ""
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
@@ -6741,6 +6764,10 @@ msgstr ""
 msgid "Please Wait..."
 msgstr ""
 
+#: default/web_tt2/main.tt2:133
+msgid "Menu"
+msgstr ""
+
 # nlsref 15,7
 #: default/web_tt2/manage_template.tt2:3
 msgid "Modify or delete existing rejection messages"
@@ -6822,6 +6849,10 @@ msgstr "Data della richiesta"
 #, fuzzy
 msgid "Listmaster Admin"
 msgstr "Listmaster"
+
+#: default/web_tt2/menu.tt2:19
+msgid "Generating index..."
+msgstr ""
 
 # nlsref 8,1
 #: default/web_tt2/menu.tt2:19
@@ -7510,8 +7541,8 @@ msgid "Previous page"
 msgstr "Pagina precedente"
 
 #. (page,total_page)
-#: default/web_tt2/reviewbouncing.tt2:119
-#: default/web_tt2/reviewbouncing.tt2:48
+#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:119
+#: default/web_tt2/reviewbouncing.tt2:48 default/web_tt2/viewlogs.tt2:34
 msgid "page %1 / %2"
 msgstr "pagina %1 / %2"
 
@@ -7664,10 +7695,6 @@ msgstr "Utenti esclusi"
 #: default/web_tt2/review.tt2:138 default/web_tt2/viewlogs.tt2:8
 msgid "Page size"
 msgstr "Per pagina"
-
-#: default/web_tt2/review.tt2:156 default/web_tt2/viewlogs.tt2:34
-msgid "page"
-msgstr "pagina"
 
 #: default/web_tt2/rss_request.tt2:5
 msgid "RSS channel"
@@ -8993,11 +9020,7 @@ msgstr "Data di notifica"
 msgid "Notification"
 msgstr "Notifica"
 
-#: default/web_tt2/tt2_error.tt2:8
-msgid "Sympa error - could not display web page"
-msgstr "Errore in Sympa - impossibile mostrare la pagina web"
-
-#: default/web_tt2/tt2_error.tt2:58
+#: default/web_tt2/tt2_error.tt2:65
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr ""
 "Sympa non ha pututo mostrare la pagina richiesta per il seguente motivo:"
@@ -9743,10 +9766,6 @@ msgstr "La lista %1 permette solo queste modalità di ricezione: "
 
 #: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
 msgid ", and "
-msgstr ""
-
-#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
-msgid ", "
 msgstr ""
 
 #: default/mail_tt2/command_report.tt2:132
@@ -13146,110 +13165,21 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Provider sconosciuto."
 
-#: default/web_tt2/admin.tt2:18
-msgid "Manage archives:"
-msgstr "Gestisci archivi:"
+#: default/web_tt2/info.tt2:16
+msgid ""
+"There are message(s) awaiting moderation. To review these, please <a href="
+"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
+msgstr ""
 
-# nlsref 16,61
-#: default/web_tt2/admin.tt2:30
-msgid "Drastic operations"
-msgstr "Altre operazioni"
-
-#: default/web_tt2/create_list_request.tt2:91
-msgid "--Select a topic--"
-msgstr "--Scegli un argomento--"
-
-#: default/web_tt2/home.tt2:13
-msgid "Mailing lists categories"
-msgstr "Liste per categoria"
+#: default/web_tt2/info.tt2:24
+msgid ""
+"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
+"review these, please click here."
+msgstr ""
 
 #: default/web_tt2/list_menu.tt2:10
 msgid " -- go to:"
 msgstr ""
-
-#: default/web_tt2/login_menu.tt2:43
-msgid "Your preferences"
-msgstr "Le tue preferenze"
-
-#: default/web_tt2/serveradmin.tt2:14
-msgid "Lists sorted by creation date"
-msgstr "Liste ordinate per data di creazione"
-
-#: default/web_tt2/serveradmin.tt2:15
-msgid "Lists sorted by last message date"
-msgstr "Liste ordinate per data dell'ultimo messaggio"
-
-#: default/web_tt2/serveradmin.tt2:73
-msgid "Show only connected users"
-msgstr "Mostra solo gli utenti connessi"
-
-# nlsref 17,1
-#: default/web_tt2/serveradmin.tt2:74
-msgid "Show sessions"
-msgstr "Mostra sessioni"
-
-#: default/web_tt2/serveradmin.tt2:98
-msgid ""
-"As listmaster, you can change your identity and act as someone else. This is "
-"may be usefull when providing assistance or to test users privileges. The "
-"new identity is attached to the current session"
-msgstr ""
-"Come Listmaster, puoi cambiare la tua identità e agire come qualcun altro. "
-"Questa opzione potrebbe essere utile per fornire assistenza o per testare i "
-"permessi di un utente. La nuova identità è legata alla sessione corrente"
-
-#: default/web_tt2/serveradmin.tt2:146
-msgid "Setting defaults list templates"
-msgstr "Imposta i modelli predefiniti per i seguenti messaggi"
-
-#: default/web_tt2/serveradmin.tt2:176
-msgid "Unset template vars dump"
-msgstr "Disabilita il dump delle variabili del template"
-
-#: default/web_tt2/skinsedit.tt2:24
-msgid "install static css"
-msgstr "Installa un css statico"
-
-#: default/web_tt2/skinsedit.tt2:127
-msgid "hovered links."
-msgstr "link selezionati."
-
-#: default/web_tt2/skinsedit.tt2:143 default/web_tt2/skinsedit.tt2:159
-msgid "navigation tabs;"
-msgstr "schede di navigazione;"
-
-#: default/web_tt2/skinsedit.tt2:159
-msgid "hovered links;"
-msgstr "link selezionati;"
-
-#: default/web_tt2/skinsedit.tt2:159
-msgid "background color of hovered buttons."
-msgstr "colore di sfondo dei pulsanti selezionati."
-
-#: default/web_tt2/skinsedit.tt2:175
-msgid "border color for forms."
-msgstr "colore dei bordi dei form."
-
-#: default/web_tt2/skinsedit.tt2:191
-msgid "side menu areas."
-msgstr "menu laterali."
-
-#: default/web_tt2/skinsedit.tt2:207
-msgid "Default background color of the tables."
-msgstr "Colore di sfondo predefinito per le tabelle."
-
-#: default/web_tt2/suspend_request.tt2:23
-msgid "Suspended from"
-msgstr "Sospeso da"
-
-#. (db_type)
-#: default/mail_tt2/listmaster_notification.tt2:37
-msgid ""
-"No Database Driver installed for %1; you should download and install DBD::%1 "
-"from CPAN."
-msgstr ""
-"Nessun driver installato per il database %1; devi scaricare e installare "
-"DBD::%1 da CPAN"
 
 #: src/lib/Sympa/ModDef.pm:350
 msgid "used while checking the RDBMS buffer size"
@@ -13320,6 +13250,96 @@ msgstr ""
 #: ../web_tt2/review.tt2:71
 msgid "Searches are limited to 50 results, except when using a @domain mask."
 msgstr ""
+
+# nlsref 16,62
+#, fuzzy
+#~ msgid "Role"
+#~ msgstr "ruolo"
+
+#~ msgid "page"
+#~ msgstr "pagina"
+
+#~ msgid "Sympa error - could not display web page"
+#~ msgstr "Errore in Sympa - impossibile mostrare la pagina web"
+
+#~ msgid "Manage archives:"
+#~ msgstr "Gestisci archivi:"
+
+# nlsref 16,61
+#~ msgid "Drastic operations"
+#~ msgstr "Altre operazioni"
+
+#~ msgid "--Select a topic--"
+#~ msgstr "--Scegli un argomento--"
+
+#~ msgid "Mailing lists categories"
+#~ msgstr "Liste per categoria"
+
+#~ msgid "Your preferences"
+#~ msgstr "Le tue preferenze"
+
+#~ msgid "Lists sorted by creation date"
+#~ msgstr "Liste ordinate per data di creazione"
+
+#~ msgid "Lists sorted by last message date"
+#~ msgstr "Liste ordinate per data dell'ultimo messaggio"
+
+#~ msgid "Show only connected users"
+#~ msgstr "Mostra solo gli utenti connessi"
+
+# nlsref 17,1
+#~ msgid "Show sessions"
+#~ msgstr "Mostra sessioni"
+
+#~ msgid ""
+#~ "As listmaster, you can change your identity and act as someone else. This "
+#~ "is may be usefull when providing assistance or to test users privileges. "
+#~ "The new identity is attached to the current session"
+#~ msgstr ""
+#~ "Come Listmaster, puoi cambiare la tua identità e agire come qualcun "
+#~ "altro. Questa opzione potrebbe essere utile per fornire assistenza o per "
+#~ "testare i permessi di un utente. La nuova identità è legata alla sessione "
+#~ "corrente"
+
+#~ msgid "Setting defaults list templates"
+#~ msgstr "Imposta i modelli predefiniti per i seguenti messaggi"
+
+#~ msgid "Unset template vars dump"
+#~ msgstr "Disabilita il dump delle variabili del template"
+
+#~ msgid "install static css"
+#~ msgstr "Installa un css statico"
+
+#~ msgid "hovered links."
+#~ msgstr "link selezionati."
+
+#~ msgid "navigation tabs;"
+#~ msgstr "schede di navigazione;"
+
+#~ msgid "hovered links;"
+#~ msgstr "link selezionati;"
+
+#~ msgid "background color of hovered buttons."
+#~ msgstr "colore di sfondo dei pulsanti selezionati."
+
+#~ msgid "border color for forms."
+#~ msgstr "colore dei bordi dei form."
+
+#~ msgid "side menu areas."
+#~ msgstr "menu laterali."
+
+#~ msgid "Default background color of the tables."
+#~ msgstr "Colore di sfondo predefinito per le tabelle."
+
+#~ msgid "Suspended from"
+#~ msgstr "Sospeso da"
+
+#~ msgid ""
+#~ "No Database Driver installed for %1; you should download and install DBD::"
+#~ "%1 from CPAN."
+#~ msgstr ""
+#~ "Nessun driver installato per il database %1; devi scaricare e installare "
+#~ "DBD::%1 da CPAN"
 
 # nlsref 16,4
 #~ msgid "Text archives"
@@ -13460,9 +13480,6 @@ msgstr ""
 
 #~ msgid "RSS"
 #~ msgstr "RSS"
-
-#~ msgid "Sympa admin"
-#~ msgstr "Amministrazione Sympa"
 
 #~ msgid "The password you submitted is wrong. Maybe you forgot it?"
 #~ msgstr "La password che hai inserito è sbagliata. Forse l'hai dimenticata?"
@@ -16843,3 +16860,6 @@ msgstr ""
 # nlsref 8,1
 #~ msgid "Owners of list %s"
 #~ msgstr "Gestore della lista %s"
+
+#~ msgid "Sympa admin"
+#~ msgstr "Amministrazione Sympa"

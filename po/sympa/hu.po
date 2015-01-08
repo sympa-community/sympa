@@ -8,10 +8,10 @@ msgstr ""
 "PO-Revision-Date: 2012-08-10 00:31+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Magyar <kde-i18n-doc@kde.org>\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1344558710.000000\n"
@@ -4226,7 +4226,7 @@ msgstr "Címzett: %1"
 
 #: default/web_tt2/compose_mail.tt2:21
 #: default/web_tt2/create_list_request.tt2:34
-#: default/web_tt2/install_pending_list.tt2:14
+#: default/web_tt2/install_pending_list.tt2:14 default/web_tt2/main.tt2:100
 #: default/web_tt2/set_pending_list_request.tt2:8
 msgid "Subject:"
 msgstr "Tárgy:"
@@ -4338,7 +4338,7 @@ msgstr "Hatókör:"
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:43 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:403
+#: default/web_tt2/edit_list_request.tt2:429
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:40
 #: default/web_tt2/serveradmin.tt2:206 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -4418,17 +4418,23 @@ msgstr "Lista neve:"
 msgid "Apply"
 msgstr "Alkalmaz"
 
-#: default/web_tt2/crash.tt2:57 default/web_tt2/tt2_error.tt2:57
+#: default/web_tt2/crash.tt2:53 default/web_tt2/main.tt2:84
+#: default/web_tt2/tt2_error.tt2:53
+#, fuzzy
+msgid "Sympa Menu"
+msgstr "Sympa admin"
+
+#: default/web_tt2/crash.tt2:64 default/web_tt2/tt2_error.tt2:64
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "Szerver hiba"
 
-#: default/web_tt2/crash.tt2:58
+#: default/web_tt2/crash.tt2:65
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr " %1 felhasználó egy belső szerver hibát okozott"
 
-#: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
+#: default/web_tt2/crash.tt2:66 default/web_tt2/tt2_error.tt2:67
 msgid "Please contact the listmaster."
 msgstr "Lépjen kapcsolatba a listmasterrel."
 
@@ -4437,11 +4443,11 @@ msgstr "Lépjen kapcsolatba a listmasterrel."
 #. (tt2_error)
 #. (error)
 #: default/mail_tt2/listmaster_notification.tt2:146
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
+#: default/web_tt2/crash.tt2:69 default/web_tt2/tt2_error.tt2:66
 msgid "Error: %1"
 msgstr "Hiba: %1"
 
-#: default/web_tt2/crash.tt2:64
+#: default/web_tt2/crash.tt2:71
 msgid "Traceback"
 msgstr ""
 
@@ -4608,7 +4614,7 @@ msgstr "Webcím felvétele a könyvjelzőbe"
 msgid "Replace the file %1 with your file"
 msgstr "A(z) %1 állomány lecserélése az új állománnyal"
 
-#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:414
+#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:440
 #: default/web_tt2/editsubscriber.tt2:60 default/web_tt2/suboptions.tt2:140
 msgid "Update"
 msgstr "Frissít"
@@ -6016,7 +6022,7 @@ msgstr "Listák felsorolása"
 msgid "Others"
 msgstr "Egyéb"
 
-#: default/web_tt2/info.tt2:7
+#: default/web_tt2/info.tt2:7 default/web_tt2/main.tt2:100
 #, fuzzy
 msgid "(Edit)"
 msgstr "szerkeszt"
@@ -6026,17 +6032,22 @@ msgstr "szerkeszt"
 msgid "Administrative Options"
 msgstr "Lista adminisztrációs oldal"
 
+#. (mod_message)
 #: default/web_tt2/info.tt2:16
-msgid ""
-"There are message(s) awaiting moderation. To review these, please <a href="
-"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
-msgstr ""
+#, fuzzy
+msgid "There are %1 message(s) awaiting moderation."
+msgstr "A listán moderálásra váró levelek száma: %1"
 
+#: default/web_tt2/info.tt2:16 default/web_tt2/info.tt2:24
+#, fuzzy
+msgid "(Review)"
+msgstr "megtekint"
+
+#. (mod_subscription)
 #: default/web_tt2/info.tt2:24
-msgid ""
-"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
-"review these, please click here."
-msgstr ""
+#, fuzzy
+msgid "There are %1 subscription(s) awaiting moderation."
+msgstr "A listán moderálásra váró levelek száma: %1"
 
 #: default/web_tt2/info.tt2:30
 msgid ""
@@ -6233,6 +6244,11 @@ msgstr "Tényleg fel akar iratkozni a(z) %1 listára?"
 msgid "Subscribe"
 msgstr "Feliratkozás"
 
+#: default/web_tt2/list_menu.tt2:31
+#, fuzzy
+msgid "List Home"
+msgstr "Lista neve"
+
 #: default/web_tt2/list_menu.tt2:34
 msgid "Admin"
 msgstr "Adminisztráció"
@@ -6294,6 +6310,11 @@ msgstr "Hibák aránya:"
 #, fuzzy
 msgid "Owners:"
 msgstr "Tulajdonosok"
+
+#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
+#: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+msgid ", "
+msgstr ""
 
 #: default/web_tt2/list_panel.tt2:42 default/web_tt2/list_panel.tt2:63
 #, fuzzy
@@ -6374,18 +6395,20 @@ msgstr "Ez az első bejelentkezése?"
 msgid "Lost password?"
 msgstr "Elveszett a jelszava?"
 
+#: default/web_tt2/login_menu.tt2:6
+msgid "SYMPA logo"
+msgstr ""
+
 #: default/web_tt2/login_menu.tt2:12
 #, fuzzy
 msgid "User Information"
 msgstr "Információk a listatagról"
 
-# nlsref 16,62
 #: default/web_tt2/login_menu.tt2:15 default/web_tt2/login_menu.tt2:16
 #: default/web_tt2/login_menu.tt2:17 default/web_tt2/login_menu.tt2:18
 #: default/web_tt2/login_menu.tt2:19
-#, fuzzy
-msgid "Role"
-msgstr "szerep"
+msgid "Role:&nbsp;"
+msgstr ""
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
@@ -6557,6 +6580,10 @@ msgstr "Kérem engedélyezze a JavaScriptet a böngészőjében"
 msgid "Please Wait..."
 msgstr ""
 
+#: default/web_tt2/main.tt2:133
+msgid "Menu"
+msgstr ""
+
 # nlsref 15,7
 #: default/web_tt2/manage_template.tt2:3
 msgid "Modify or delete existing rejection messages"
@@ -6638,6 +6665,10 @@ msgstr "Kérelmezés dátuma"
 #, fuzzy
 msgid "Listmaster Admin"
 msgstr "Listamester"
+
+#: default/web_tt2/menu.tt2:19
+msgid "Generating index..."
+msgstr ""
 
 # nlsref 8,1
 #: default/web_tt2/menu.tt2:19
@@ -7332,8 +7363,8 @@ msgid "Previous page"
 msgstr "Előző oldal"
 
 #. (page,total_page)
-#: default/web_tt2/reviewbouncing.tt2:119
-#: default/web_tt2/reviewbouncing.tt2:48
+#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:119
+#: default/web_tt2/reviewbouncing.tt2:48 default/web_tt2/viewlogs.tt2:34
 msgid "page %1 / %2"
 msgstr "%1.-ik oldal %2 oldalból"
 
@@ -7486,10 +7517,6 @@ msgstr "Kizárt felhasználók"
 #: default/web_tt2/review.tt2:138 default/web_tt2/viewlogs.tt2:8
 msgid "Page size"
 msgstr "Oldal méret"
-
-#: default/web_tt2/review.tt2:156 default/web_tt2/viewlogs.tt2:34
-msgid "page"
-msgstr "oldal"
 
 #: default/web_tt2/rss_request.tt2:5
 msgid "RSS channel"
@@ -8818,11 +8845,7 @@ msgstr "Értesítés"
 msgid "Notification"
 msgstr "Értesítés"
 
-#: default/web_tt2/tt2_error.tt2:8
-msgid "Sympa error - could not display web page"
-msgstr "Sympa hiba - nem sikerült megjeleníteni a weblapot"
-
-#: default/web_tt2/tt2_error.tt2:58
+#: default/web_tt2/tt2_error.tt2:65
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "A Sympa nem tudta megjeleníteni a kért oldalt a következő ok miatt:"
 
@@ -9558,10 +9581,6 @@ msgstr "A(z) %1 listán csak a következő levélfogadási módok használhatóa
 
 #: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
 msgid ", and "
-msgstr ""
-
-#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
-msgid ", "
 msgstr ""
 
 #: default/mail_tt2/command_report.tt2:132
@@ -12783,22 +12802,17 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Ismeretlen hiba."
 
-#: default/web_tt2/admin.tt2:18
-msgid "Manage archives:"
-msgstr "Archívumok kezelése:"
+#: default/web_tt2/info.tt2:16
+msgid ""
+"There are message(s) awaiting moderation. To review these, please <a href="
+"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
+msgstr ""
 
-# nlsref 16,61
-#: default/web_tt2/admin.tt2:30
-msgid "Drastic operations"
-msgstr "Drasztikus műveletek"
-
-#: default/web_tt2/create_list_request.tt2:91
-msgid "--Select a topic--"
-msgstr "--Válasszon témakört--"
-
-#: default/web_tt2/home.tt2:13
-msgid "Mailing lists categories"
-msgstr "Levelezőlista-kategóriák"
+#: default/web_tt2/info.tt2:24
+msgid ""
+"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
+"review these, please click here."
+msgstr ""
 
 #: default/web_tt2/list_menu.tt2:10
 msgid ""
@@ -12815,49 +12829,6 @@ msgid ""
 "subscribed"
 msgstr ""
 
-#: default/web_tt2/login_menu.tt2:43
-msgid "Your preferences"
-msgstr "Beállításaim"
-
-#: default/web_tt2/serveradmin.tt2:14
-msgid "Lists sorted by creation date"
-msgstr "Listák sorbarendezése létrehozás dátuma alapján"
-
-#: default/web_tt2/serveradmin.tt2:15
-msgid "Lists sorted by last message date"
-msgstr "Listák sorbarendezése utolsó üzenet szerint"
-
-#: default/web_tt2/serveradmin.tt2:73
-msgid "Show only connected users"
-msgstr "Csak a bejelentkezett felhasználókat mutassuk"
-
-# nlsref 17,1
-#: default/web_tt2/serveradmin.tt2:74
-msgid "Show sessions"
-msgstr "A munkamenetek listája"
-
-#: default/web_tt2/serveradmin.tt2:98
-msgid ""
-"As listmaster, you can change your identity and act as someone else. This is "
-"may be usefull when providing assistance or to test users privileges. The "
-"new identity is attached to the current session"
-msgstr ""
-"A szolgáltatás adminisztrátoraként más felhasználó képében is dolgozhat. Ez "
-"hasznos lehet, ha egy felhasználó segítségre szorul, vagy ellenőrizni kell a "
-"jogosultságát. A felhasználóváltás erre a munkamenetre lesz érvényes."
-
-#: default/web_tt2/serveradmin.tt2:146
-msgid "Setting defaults list templates"
-msgstr "A lista alapértelmezett sablonjainak beállítása"
-
-#: default/web_tt2/serveradmin.tt2:176
-msgid "Unset template vars dump"
-msgstr "Sablon változók elrejtése"
-
-#: default/web_tt2/skinsedit.tt2:24
-msgid "install static css"
-msgstr "statikus css telepítése"
-
 #: default/web_tt2/skinsedit.tt2:95
 msgid "one out of two lines in tables, alternated with color_14."
 msgstr ""
@@ -12866,46 +12837,13 @@ msgstr ""
 msgid "Background color for the news area of the home page."
 msgstr ""
 
-#: default/web_tt2/skinsedit.tt2:127
-msgid "hovered links."
-msgstr "\"lebegő\" linkek."
-
-#: default/web_tt2/skinsedit.tt2:143 default/web_tt2/skinsedit.tt2:159
-msgid "navigation tabs;"
-msgstr "navígációs fülek;"
-
-#: default/web_tt2/skinsedit.tt2:159
-msgid "hovered links;"
-msgstr "\"lebegő\" linkek;"
-
 #: default/web_tt2/skinsedit.tt2:159
 msgid "background color of hovered buttons."
 msgstr ""
 
-#: default/web_tt2/skinsedit.tt2:175
-msgid "border color for forms."
-msgstr "űrlap keret szín"
-
 #: default/web_tt2/skinsedit.tt2:191
 msgid "side menu areas."
 msgstr ""
-
-#: default/web_tt2/skinsedit.tt2:207
-msgid "Default background color of the tables."
-msgstr "Táblázatok alapértelmezett háttérszíne."
-
-#: default/web_tt2/suspend_request.tt2:23
-msgid "Suspended from"
-msgstr "Felfüggesztettve"
-
-#. (db_type)
-#: default/mail_tt2/listmaster_notification.tt2:37
-msgid ""
-"No Database Driver installed for %1; you should download and install DBD::%1 "
-"from CPAN."
-msgstr ""
-"Nincs adatbázis-meghajtó telepítve a %1-hoz/hez, le kell töltenie és "
-"telepíteni a DBD::%1-et a CPAN-ről."
 
 #: src/lib/Sympa/ModDef.pm:350
 msgid "used while checking the RDBMS buffer size"
@@ -13279,6 +13217,90 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
+# nlsref 16,62
+#, fuzzy
+#~ msgid "Role"
+#~ msgstr "szerep"
+
+#~ msgid "page"
+#~ msgstr "oldal"
+
+#~ msgid "Sympa error - could not display web page"
+#~ msgstr "Sympa hiba - nem sikerült megjeleníteni a weblapot"
+
+#~ msgid "Manage archives:"
+#~ msgstr "Archívumok kezelése:"
+
+# nlsref 16,61
+#~ msgid "Drastic operations"
+#~ msgstr "Drasztikus műveletek"
+
+#~ msgid "--Select a topic--"
+#~ msgstr "--Válasszon témakört--"
+
+#~ msgid "Mailing lists categories"
+#~ msgstr "Levelezőlista-kategóriák"
+
+#~ msgid "Your preferences"
+#~ msgstr "Beállításaim"
+
+#~ msgid "Lists sorted by creation date"
+#~ msgstr "Listák sorbarendezése létrehozás dátuma alapján"
+
+#~ msgid "Lists sorted by last message date"
+#~ msgstr "Listák sorbarendezése utolsó üzenet szerint"
+
+#~ msgid "Show only connected users"
+#~ msgstr "Csak a bejelentkezett felhasználókat mutassuk"
+
+# nlsref 17,1
+#~ msgid "Show sessions"
+#~ msgstr "A munkamenetek listája"
+
+#~ msgid ""
+#~ "As listmaster, you can change your identity and act as someone else. This "
+#~ "is may be usefull when providing assistance or to test users privileges. "
+#~ "The new identity is attached to the current session"
+#~ msgstr ""
+#~ "A szolgáltatás adminisztrátoraként más felhasználó képében is dolgozhat. "
+#~ "Ez hasznos lehet, ha egy felhasználó segítségre szorul, vagy ellenőrizni "
+#~ "kell a jogosultságát. A felhasználóváltás erre a munkamenetre lesz "
+#~ "érvényes."
+
+#~ msgid "Setting defaults list templates"
+#~ msgstr "A lista alapértelmezett sablonjainak beállítása"
+
+#~ msgid "Unset template vars dump"
+#~ msgstr "Sablon változók elrejtése"
+
+#~ msgid "install static css"
+#~ msgstr "statikus css telepítése"
+
+#~ msgid "hovered links."
+#~ msgstr "\"lebegő\" linkek."
+
+#~ msgid "navigation tabs;"
+#~ msgstr "navígációs fülek;"
+
+#~ msgid "hovered links;"
+#~ msgstr "\"lebegő\" linkek;"
+
+#~ msgid "border color for forms."
+#~ msgstr "űrlap keret szín"
+
+#~ msgid "Default background color of the tables."
+#~ msgstr "Táblázatok alapértelmezett háttérszíne."
+
+#~ msgid "Suspended from"
+#~ msgstr "Felfüggesztettve"
+
+#~ msgid ""
+#~ "No Database Driver installed for %1; you should download and install DBD::"
+#~ "%1 from CPAN."
+#~ msgstr ""
+#~ "Nincs adatbázis-meghajtó telepítve a %1-hoz/hez, le kell töltenie és "
+#~ "telepíteni a DBD::%1-et a CPAN-ről."
+
 # nlsref 16,4
 #~ msgid "Text archives"
 #~ msgstr "Szöveges archívumok"
@@ -13409,9 +13431,6 @@ msgstr ""
 
 #~ msgid "RSS"
 #~ msgstr "RSS"
-
-#~ msgid "Sympa admin"
-#~ msgstr "Sympa admin"
 
 #~ msgid "The password you submitted is wrong. Maybe you forgot it?"
 #~ msgstr "A megadott jelszó hibás. Talán elfelejtette?"
@@ -16464,3 +16483,6 @@ msgstr ""
 # nlsref 8,1
 #~ msgid "Owners of list %s"
 #~ msgstr "A(z) %s lista tulajdonosai"
+
+#~ msgid "Sympa admin"
+#~ msgstr "Sympa admin"

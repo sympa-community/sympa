@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: 2012-09-13 12:06+0000\n"
 "Last-Translator: kopolyzo <kopolyzo@ccf.auth.gr>\n"
 "Language-Team: Ελληνικά\n"
-"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Version: 0.1\n"
@@ -4165,7 +4165,7 @@ msgstr "Προς: %1"
 
 #: default/web_tt2/compose_mail.tt2:21
 #: default/web_tt2/create_list_request.tt2:34
-#: default/web_tt2/install_pending_list.tt2:14
+#: default/web_tt2/install_pending_list.tt2:14 default/web_tt2/main.tt2:100
 #: default/web_tt2/set_pending_list_request.tt2:8
 msgid "Subject:"
 msgstr "Θέμα:"
@@ -4279,7 +4279,7 @@ msgstr "Έκταση: "
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:43 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:403
+#: default/web_tt2/edit_list_request.tt2:429
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:40
 #: default/web_tt2/serveradmin.tt2:206 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -4358,17 +4358,23 @@ msgstr "Εισάγετε όνομα λίστας: "
 msgid "Apply"
 msgstr "Εφαρμογή"
 
-#: default/web_tt2/crash.tt2:57 default/web_tt2/tt2_error.tt2:57
+#: default/web_tt2/crash.tt2:53 default/web_tt2/main.tt2:84
+#: default/web_tt2/tt2_error.tt2:53
+#, fuzzy
+msgid "Sympa Menu"
+msgstr "Διαχειριστής Sympa"
+
+#: default/web_tt2/crash.tt2:64 default/web_tt2/tt2_error.tt2:64
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "Σφάλμα εξυπηρετητή"
 
-#: default/web_tt2/crash.tt2:58
+#: default/web_tt2/crash.tt2:65
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr " Ο χρήστης %1 συνάντησε ένα εσωτερικό σφάλμα"
 
-#: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
+#: default/web_tt2/crash.tt2:66 default/web_tt2/tt2_error.tt2:67
 msgid "Please contact the listmaster."
 msgstr "Παρακαλούμε επικοινωνήστε με το διαχειριστή του συστήματος."
 
@@ -4376,11 +4382,11 @@ msgstr "Παρακαλούμε επικοινωνήστε με το διαχει
 #. (tt2_error)
 #. (error)
 #: default/mail_tt2/listmaster_notification.tt2:146
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
+#: default/web_tt2/crash.tt2:69 default/web_tt2/tt2_error.tt2:66
 msgid "Error: %1"
 msgstr "Σφάλμα: %1"
 
-#: default/web_tt2/crash.tt2:64
+#: default/web_tt2/crash.tt2:71
 msgid "Traceback"
 msgstr ""
 
@@ -4549,7 +4555,7 @@ msgstr "URL Σελιδοδείκτη"
 msgid "Replace the file %1 with your file"
 msgstr "Αντικατάσταση του αρχείου %1 με το αρχείο σας"
 
-#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:414
+#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:440
 #: default/web_tt2/editsubscriber.tt2:60 default/web_tt2/suboptions.tt2:140
 msgid "Update"
 msgstr "Ανανέωση"
@@ -5936,7 +5942,7 @@ msgstr "Λίστες"
 msgid "Others"
 msgstr "Άλλα"
 
-#: default/web_tt2/info.tt2:7
+#: default/web_tt2/info.tt2:7 default/web_tt2/main.tt2:100
 #, fuzzy
 msgid "(Edit)"
 msgstr "επεξεργασία"
@@ -5946,17 +5952,22 @@ msgstr "επεξεργασία"
 msgid "Administrative Options"
 msgstr "Πλαίσιο Διαχείρισης Λίστας"
 
+#. (mod_message)
 #: default/web_tt2/info.tt2:16
-msgid ""
-"There are message(s) awaiting moderation. To review these, please <a href="
-"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
-msgstr ""
+#, fuzzy
+msgid "There are %1 message(s) awaiting moderation."
+msgstr "Υπάρχουν %1 μηνύματα για συντονισμό."
 
+#: default/web_tt2/info.tt2:16 default/web_tt2/info.tt2:24
+#, fuzzy
+msgid "(Review)"
+msgstr "προβολή"
+
+#. (mod_subscription)
 #: default/web_tt2/info.tt2:24
-msgid ""
-"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
-"review these, please click here."
-msgstr ""
+#, fuzzy
+msgid "There are %1 subscription(s) awaiting moderation."
+msgstr "Υπάρχουν %1 μηνύματα για συντονισμό."
 
 #: default/web_tt2/info.tt2:30
 msgid ""
@@ -6148,6 +6159,11 @@ msgstr "Επιθυμείτε να εγγραφείτε ως συνδρομητή
 msgid "Subscribe"
 msgstr "Εγγραφή στη λίστα"
 
+#: default/web_tt2/list_menu.tt2:31
+#, fuzzy
+msgid "List Home"
+msgstr "Όνομα λίστας"
+
 #: default/web_tt2/list_menu.tt2:34
 msgid "Admin"
 msgstr "Διαχείριση"
@@ -6208,6 +6224,11 @@ msgstr "Δείκτης σφαλμάτων:"
 #, fuzzy
 msgid "Owners:"
 msgstr "Ιδιοκτήτες"
+
+#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
+#: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+msgid ", "
+msgstr ""
 
 #: default/web_tt2/list_panel.tt2:42 default/web_tt2/list_panel.tt2:63
 #, fuzzy
@@ -6287,6 +6308,10 @@ msgstr "Πρώτη είσοδος;"
 msgid "Lost password?"
 msgstr "Χάσατε τον κωδικό;"
 
+#: default/web_tt2/login_menu.tt2:6
+msgid "SYMPA logo"
+msgstr ""
+
 #: default/web_tt2/login_menu.tt2:12
 #, fuzzy
 msgid "User Information"
@@ -6295,9 +6320,8 @@ msgstr "Πληροφορίες συνδρομητή"
 #: default/web_tt2/login_menu.tt2:15 default/web_tt2/login_menu.tt2:16
 #: default/web_tt2/login_menu.tt2:17 default/web_tt2/login_menu.tt2:18
 #: default/web_tt2/login_menu.tt2:19
-#, fuzzy
-msgid "Role"
-msgstr "ρόλος"
+msgid "Role:&nbsp;"
+msgstr ""
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
@@ -6466,6 +6490,10 @@ msgstr "Παρακαλούμε ενεργοποιείστε τη JavaScript στ
 msgid "Please Wait..."
 msgstr ""
 
+#: default/web_tt2/main.tt2:133
+msgid "Menu"
+msgstr ""
+
 #: default/web_tt2/manage_template.tt2:3
 msgid "Modify or delete existing rejection messages"
 msgstr "Τροποποίηση ή διαγραφή υπαρχόντων μηνυμάτων απόρριψης"
@@ -6542,6 +6570,10 @@ msgstr "Αιτήθηκε στις"
 #, fuzzy
 msgid "Listmaster Admin"
 msgstr "Διαχειριστής συστήματος"
+
+#: default/web_tt2/menu.tt2:19
+msgid "Generating index..."
+msgstr ""
 
 #: default/web_tt2/menu.tt2:19
 #, fuzzy
@@ -7233,8 +7265,8 @@ msgid "Previous page"
 msgstr "Προηγούμενη σελίδα"
 
 #. (page,total_page)
-#: default/web_tt2/reviewbouncing.tt2:119
-#: default/web_tt2/reviewbouncing.tt2:48
+#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:119
+#: default/web_tt2/reviewbouncing.tt2:48 default/web_tt2/viewlogs.tt2:34
 msgid "page %1 / %2"
 msgstr "σελίδα %1 / %2"
 
@@ -7386,10 +7418,6 @@ msgstr "Εξαίρεση χρηστών"
 #: default/web_tt2/review.tt2:138 default/web_tt2/viewlogs.tt2:8
 msgid "Page size"
 msgstr "Μέγεθος σελίδας"
-
-#: default/web_tt2/review.tt2:156 default/web_tt2/viewlogs.tt2:34
-msgid "page"
-msgstr "σελίδα"
 
 #: default/web_tt2/rss_request.tt2:5
 msgid "RSS channel"
@@ -8707,11 +8735,7 @@ msgstr "Ημερομηνία λήξης πιστοποιητικού"
 msgid "Notification"
 msgstr "Αίτηση ταυτοποίησης"
 
-#: default/web_tt2/tt2_error.tt2:8
-msgid "Sympa error - could not display web page"
-msgstr "Σφάλμα λογισμικού Sympa - Δεν ήταν δυνατή η παρουσίαση της ιστοσελίδας"
-
-#: default/web_tt2/tt2_error.tt2:58
+#: default/web_tt2/tt2_error.tt2:65
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr ""
 "Το λογισμικό Sympa δεν μπόρεσε να παραδώσει την αιτούμενη σελίδα για τους "
@@ -9444,10 +9468,6 @@ msgstr "Η λίστα %1 επιτρέπει μόνο τους τρόπους λ�
 
 #: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
 msgid ", and "
-msgstr ""
-
-#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
-msgid ", "
 msgstr ""
 
 #: default/mail_tt2/command_report.tt2:132
@@ -12637,109 +12657,21 @@ msgstr "Αδυναμία φόρτωσης καταναλωτή, ίσως η δι
 msgid "Unknown provider."
 msgstr "Άγνωστος παροχέας."
 
-#: default/web_tt2/admin.tt2:18
-msgid "Manage archives:"
-msgstr "Διαχείριση Αρχείου"
+#: default/web_tt2/info.tt2:16
+msgid ""
+"There are message(s) awaiting moderation. To review these, please <a href="
+"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
+msgstr ""
 
-#: default/web_tt2/admin.tt2:30
-msgid "Drastic operations"
-msgstr "Δραστικές ενέργειες"
-
-#: default/web_tt2/create_list_request.tt2:91
-msgid "--Select a topic--"
-msgstr "--Επιλογή θέματος--"
-
-#: default/web_tt2/home.tt2:13
-msgid "Mailing lists categories"
-msgstr "Κατηγορίες λιστών"
+#: default/web_tt2/info.tt2:24
+msgid ""
+"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
+"review these, please click here."
+msgstr ""
 
 #: default/web_tt2/list_menu.tt2:10
 msgid " -- go to:"
 msgstr ""
-
-#: default/web_tt2/login_menu.tt2:43
-msgid "Your preferences"
-msgstr "Προτιμήσεις"
-
-#: default/web_tt2/serveradmin.tt2:14
-msgid "Lists sorted by creation date"
-msgstr "Λίστες ταξινομημένες κατά ημερομηνία δημιουργίας"
-
-#: default/web_tt2/serveradmin.tt2:15
-msgid "Lists sorted by last message date"
-msgstr "Λίστες ταξινομημένες κατά ημερομηνία τελευταίου μηνύματος"
-
-#: default/web_tt2/serveradmin.tt2:73
-msgid "Show only connected users"
-msgstr "Προβολή μόνο συνδεδεμένων χρηστών"
-
-#: default/web_tt2/serveradmin.tt2:74
-msgid "Show sessions"
-msgstr "Προβολή συνδέσεων"
-
-#: default/web_tt2/serveradmin.tt2:98
-msgid ""
-"As listmaster, you can change your identity and act as someone else. This is "
-"may be usefull when providing assistance or to test users privileges. The "
-"new identity is attached to the current session"
-msgstr ""
-"Ως διαχειριστής συστήματος, μπορείτε να αλλάξετε την ταυτότητά σας και να "
-"ενεργήσετε ως κάποιος άλλος. Αυτό είναι χρήσιμο σε περιπτώσεις παροχής "
-"βοήθειας ή ελέγχου των προνομίων των χρηστών. Η νέα ταυτότητα ενσωματώνεται "
-"στην τρέχουσα σύνδεση"
-
-#: default/web_tt2/serveradmin.tt2:146
-msgid "Setting defaults list templates"
-msgstr "Ρύθμιση προκαθορισμένων προτύπων λιστών"
-
-#: default/web_tt2/serveradmin.tt2:176
-msgid "Unset template vars dump"
-msgstr "Απενεργοποίηση προβολής μεταβλητών tt2"
-
-#: default/web_tt2/skinsedit.tt2:24
-msgid "install static css"
-msgstr "εγκατέστησε στατικό css"
-
-#: default/web_tt2/skinsedit.tt2:127
-msgid "hovered links."
-msgstr "hovered σύνδεσμοι."
-
-#: default/web_tt2/skinsedit.tt2:143 default/web_tt2/skinsedit.tt2:159
-msgid "navigation tabs;"
-msgstr "καρτέλες περιήγησης"
-
-#: default/web_tt2/skinsedit.tt2:159
-msgid "hovered links;"
-msgstr "hovered σύνδεσμοι"
-
-#: default/web_tt2/skinsedit.tt2:159
-msgid "background color of hovered buttons."
-msgstr "χρώμα φόντου hovered κουμπιών."
-
-#: default/web_tt2/skinsedit.tt2:175
-msgid "border color for forms."
-msgstr "χρώμα περιγράμματος φορμών."
-
-#: default/web_tt2/skinsedit.tt2:191
-msgid "side menu areas."
-msgstr "περιοχές πλευρικού μενού."
-
-#: default/web_tt2/skinsedit.tt2:207
-msgid "Default background color of the tables."
-msgstr "Προεπιλεγμένο χρώμα παρασκηνίου πινάκων."
-
-#: default/web_tt2/suspend_request.tt2:23
-msgid "Suspended from"
-msgstr "Ανεστάλη από"
-
-#. (db_type)
-#: default/mail_tt2/listmaster_notification.tt2:37
-msgid ""
-"No Database Driver installed for %1; you should download and install DBD::%1 "
-"from CPAN."
-msgstr ""
-"Δεν υπάρχει οδηγός βάσης δεδομένων για %1. Κατεβάστε και εγκαταστήστε το "
-"DBD::%1 από το CPAN."
 
 #: src/lib/Sympa/ModDef.pm:350
 msgid "used while checking the RDBMS buffer size"
@@ -12955,6 +12887,94 @@ msgstr ""
 msgid "(top-level)"
 msgstr ""
 
+#, fuzzy
+#~ msgid "Role"
+#~ msgstr "ρόλος"
+
+#~ msgid "page"
+#~ msgstr "σελίδα"
+
+#~ msgid "Sympa error - could not display web page"
+#~ msgstr ""
+#~ "Σφάλμα λογισμικού Sympa - Δεν ήταν δυνατή η παρουσίαση της ιστοσελίδας"
+
+#~ msgid "Manage archives:"
+#~ msgstr "Διαχείριση Αρχείου"
+
+#~ msgid "Drastic operations"
+#~ msgstr "Δραστικές ενέργειες"
+
+#~ msgid "--Select a topic--"
+#~ msgstr "--Επιλογή θέματος--"
+
+#~ msgid "Mailing lists categories"
+#~ msgstr "Κατηγορίες λιστών"
+
+#~ msgid "Your preferences"
+#~ msgstr "Προτιμήσεις"
+
+#~ msgid "Lists sorted by creation date"
+#~ msgstr "Λίστες ταξινομημένες κατά ημερομηνία δημιουργίας"
+
+#~ msgid "Lists sorted by last message date"
+#~ msgstr "Λίστες ταξινομημένες κατά ημερομηνία τελευταίου μηνύματος"
+
+#~ msgid "Show only connected users"
+#~ msgstr "Προβολή μόνο συνδεδεμένων χρηστών"
+
+#~ msgid "Show sessions"
+#~ msgstr "Προβολή συνδέσεων"
+
+#~ msgid ""
+#~ "As listmaster, you can change your identity and act as someone else. This "
+#~ "is may be usefull when providing assistance or to test users privileges. "
+#~ "The new identity is attached to the current session"
+#~ msgstr ""
+#~ "Ως διαχειριστής συστήματος, μπορείτε να αλλάξετε την ταυτότητά σας και να "
+#~ "ενεργήσετε ως κάποιος άλλος. Αυτό είναι χρήσιμο σε περιπτώσεις παροχής "
+#~ "βοήθειας ή ελέγχου των προνομίων των χρηστών. Η νέα ταυτότητα "
+#~ "ενσωματώνεται στην τρέχουσα σύνδεση"
+
+#~ msgid "Setting defaults list templates"
+#~ msgstr "Ρύθμιση προκαθορισμένων προτύπων λιστών"
+
+#~ msgid "Unset template vars dump"
+#~ msgstr "Απενεργοποίηση προβολής μεταβλητών tt2"
+
+#~ msgid "install static css"
+#~ msgstr "εγκατέστησε στατικό css"
+
+#~ msgid "hovered links."
+#~ msgstr "hovered σύνδεσμοι."
+
+#~ msgid "navigation tabs;"
+#~ msgstr "καρτέλες περιήγησης"
+
+#~ msgid "hovered links;"
+#~ msgstr "hovered σύνδεσμοι"
+
+#~ msgid "background color of hovered buttons."
+#~ msgstr "χρώμα φόντου hovered κουμπιών."
+
+#~ msgid "border color for forms."
+#~ msgstr "χρώμα περιγράμματος φορμών."
+
+#~ msgid "side menu areas."
+#~ msgstr "περιοχές πλευρικού μενού."
+
+#~ msgid "Default background color of the tables."
+#~ msgstr "Προεπιλεγμένο χρώμα παρασκηνίου πινάκων."
+
+#~ msgid "Suspended from"
+#~ msgstr "Ανεστάλη από"
+
+#~ msgid ""
+#~ "No Database Driver installed for %1; you should download and install DBD::"
+#~ "%1 from CPAN."
+#~ msgstr ""
+#~ "Δεν υπάρχει οδηγός βάσης δεδομένων για %1. Κατεβάστε και εγκαταστήστε το "
+#~ "DBD::%1 από το CPAN."
+
 #~ msgid "Text archives"
 #~ msgstr "Αρχεία κειμένου"
 
@@ -13101,9 +13121,6 @@ msgstr ""
 
 #~ msgid "RSS"
 #~ msgstr "RSS"
-
-#~ msgid "Sympa admin"
-#~ msgstr "Διαχειριστής Sympa"
 
 #~ msgid "The password you submitted is wrong. Maybe you forgot it?"
 #~ msgstr "Ο κωδικός πρόσβασης είναι λανθασμένος. Μήπως τον ξεχάσατε;"
@@ -15398,3 +15415,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "List of the list subscribers"
 #~ msgstr "Η λίστα δεν έχει συνδρομητές"
+
+#~ msgid "Sympa admin"
+#~ msgstr "Διαχειριστής Sympa"

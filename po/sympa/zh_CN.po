@@ -5,10 +5,10 @@ msgstr ""
 "PO-Revision-Date: 2012-12-07 05:33+0000\n"
 "Last-Translator: Hongquan <lhq.mickey@gmail.com>\n"
 "Language-Team: 简体中文 <zh_CN@li.org>\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1354858432.000000\n"
@@ -4041,7 +4041,7 @@ msgstr "收件人：%1"
 
 #: default/web_tt2/compose_mail.tt2:21
 #: default/web_tt2/create_list_request.tt2:34
-#: default/web_tt2/install_pending_list.tt2:14
+#: default/web_tt2/install_pending_list.tt2:14 default/web_tt2/main.tt2:100
 #: default/web_tt2/set_pending_list_request.tt2:8
 msgid "Subject:"
 msgstr "标题："
@@ -4152,7 +4152,7 @@ msgstr "范围："
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:43 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:403
+#: default/web_tt2/edit_list_request.tt2:429
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:40
 #: default/web_tt2/serveradmin.tt2:206 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -4230,17 +4230,23 @@ msgstr "输入邮件列表名称："
 msgid "Apply"
 msgstr "应用"
 
-#: default/web_tt2/crash.tt2:57 default/web_tt2/tt2_error.tt2:57
+#: default/web_tt2/crash.tt2:53 default/web_tt2/main.tt2:84
+#: default/web_tt2/tt2_error.tt2:53
+#, fuzzy
+msgid "Sympa Menu"
+msgstr "Sympa 管理"
+
+#: default/web_tt2/crash.tt2:64 default/web_tt2/tt2_error.tt2:64
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "服务器错误"
 
-#: default/web_tt2/crash.tt2:58
+#: default/web_tt2/crash.tt2:65
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr "用户%1遇到了一个内部服务器错误"
 
-#: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
+#: default/web_tt2/crash.tt2:66 default/web_tt2/tt2_error.tt2:67
 msgid "Please contact the listmaster."
 msgstr "请与邮件列表管理员联系。"
 
@@ -4248,11 +4254,11 @@ msgstr "请与邮件列表管理员联系。"
 #. (tt2_error)
 #. (error)
 #: default/mail_tt2/listmaster_notification.tt2:146
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
+#: default/web_tt2/crash.tt2:69 default/web_tt2/tt2_error.tt2:66
 msgid "Error: %1"
 msgstr "错误：%1"
 
-#: default/web_tt2/crash.tt2:64
+#: default/web_tt2/crash.tt2:71
 msgid "Traceback"
 msgstr ""
 
@@ -4415,7 +4421,7 @@ msgstr "书签网址"
 msgid "Replace the file %1 with your file"
 msgstr "用您的文件取代文件 %1"
 
-#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:414
+#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:440
 #: default/web_tt2/editsubscriber.tt2:60 default/web_tt2/suboptions.tt2:140
 msgid "Update"
 msgstr "更新"
@@ -5846,7 +5852,7 @@ msgstr "邮件列表目录"
 msgid "Others"
 msgstr "其它"
 
-#: default/web_tt2/info.tt2:7
+#: default/web_tt2/info.tt2:7 default/web_tt2/main.tt2:100
 #, fuzzy
 msgid "(Edit)"
 msgstr "编辑"
@@ -5856,17 +5862,22 @@ msgstr "编辑"
 msgid "Administrative Options"
 msgstr "邮件列表管理面板"
 
+#. (mod_message)
 #: default/web_tt2/info.tt2:16
-msgid ""
-"There are message(s) awaiting moderation. To review these, please <a href="
-"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
-msgstr ""
+#, fuzzy
+msgid "There are %1 message(s) awaiting moderation."
+msgstr "这张邮件列表等候监管的邮件数：%1则"
 
+#: default/web_tt2/info.tt2:16 default/web_tt2/info.tt2:24
+#, fuzzy
+msgid "(Review)"
+msgstr "查看"
+
+#. (mod_subscription)
 #: default/web_tt2/info.tt2:24
-msgid ""
-"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
-"review these, please click here."
-msgstr ""
+#, fuzzy
+msgid "There are %1 subscription(s) awaiting moderation."
+msgstr "这张邮件列表等候监管的邮件数：%1则"
 
 #: default/web_tt2/info.tt2:30
 msgid ""
@@ -6062,6 +6073,11 @@ msgstr "确定要订阅邮件列表%1吗？"
 msgid "Subscribe"
 msgstr "订阅"
 
+#: default/web_tt2/list_menu.tt2:31
+#, fuzzy
+msgid "List Home"
+msgstr "邮件列表名称"
+
 #: default/web_tt2/list_menu.tt2:34
 msgid "Admin"
 msgstr "管理"
@@ -6123,6 +6139,11 @@ msgstr "误差率："
 #, fuzzy
 msgid "Owners:"
 msgstr "所有者"
+
+#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
+#: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+msgid ", "
+msgstr ""
 
 #: default/web_tt2/list_panel.tt2:42 default/web_tt2/list_panel.tt2:63
 #, fuzzy
@@ -6205,6 +6226,10 @@ msgstr "初次登录？"
 msgid "Lost password?"
 msgstr "忘了口令？"
 
+#: default/web_tt2/login_menu.tt2:6
+msgid "SYMPA logo"
+msgstr ""
+
 #: default/web_tt2/login_menu.tt2:12
 #, fuzzy
 msgid "User Information"
@@ -6213,9 +6238,8 @@ msgstr "订阅者信息"
 #: default/web_tt2/login_menu.tt2:15 default/web_tt2/login_menu.tt2:16
 #: default/web_tt2/login_menu.tt2:17 default/web_tt2/login_menu.tt2:18
 #: default/web_tt2/login_menu.tt2:19
-#, fuzzy
-msgid "Role"
-msgstr "角色"
+msgid "Role:&nbsp;"
+msgstr ""
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
@@ -6382,6 +6406,10 @@ msgstr "请启用浏览器的JavaScript支持"
 msgid "Please Wait..."
 msgstr ""
 
+#: default/web_tt2/main.tt2:133
+msgid "Menu"
+msgstr ""
+
 #: default/web_tt2/manage_template.tt2:3
 #, fuzzy
 msgid "Modify or delete existing rejection messages"
@@ -6470,6 +6498,10 @@ msgstr "请求的日期"
 #, fuzzy
 msgid "Listmaster Admin"
 msgstr "邮件列表管理员"
+
+#: default/web_tt2/menu.tt2:19
+msgid "Generating index..."
+msgstr ""
 
 #: default/web_tt2/menu.tt2:19
 #, fuzzy
@@ -7152,8 +7184,8 @@ msgid "Previous page"
 msgstr "前页"
 
 #. (page,total_page)
-#: default/web_tt2/reviewbouncing.tt2:119
-#: default/web_tt2/reviewbouncing.tt2:48
+#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:119
+#: default/web_tt2/reviewbouncing.tt2:48 default/web_tt2/viewlogs.tt2:34
 msgid "page %1 / %2"
 msgstr "第%1页 共%2页"
 
@@ -7312,10 +7344,6 @@ msgstr ""
 #: default/web_tt2/review.tt2:138 default/web_tt2/viewlogs.tt2:8
 msgid "Page size"
 msgstr "页面大小"
-
-#: default/web_tt2/review.tt2:156 default/web_tt2/viewlogs.tt2:34
-msgid "page"
-msgstr "页"
 
 #: default/web_tt2/rss_request.tt2:5
 msgid "RSS channel"
@@ -8600,11 +8628,7 @@ msgstr "通知"
 msgid "Notification"
 msgstr "通知"
 
-#: default/web_tt2/tt2_error.tt2:8
-msgid "Sympa error - could not display web page"
-msgstr "Sympa错误－不能显示网页"
-
-#: default/web_tt2/tt2_error.tt2:58
+#: default/web_tt2/tt2_error.tt2:65
 #, fuzzy
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "由于以下原因Sympa不能发送请求页："
@@ -9283,10 +9307,6 @@ msgstr "邮件列表%1仅允许这些接收模式：%2"
 
 #: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
 msgid ", and "
-msgstr ""
-
-#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
-msgid ", "
 msgstr ""
 
 #: default/mail_tt2/command_report.tt2:132
@@ -12393,15 +12413,17 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "未知"
 
-#: default/web_tt2/admin.tt2:18
-#, fuzzy
-msgid "Manage archives:"
-msgstr "处理归档"
+#: default/web_tt2/info.tt2:16
+msgid ""
+"There are message(s) awaiting moderation. To review these, please <a href="
+"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
+msgstr ""
 
-#: default/web_tt2/admin.tt2:30
-#, fuzzy
-msgid "Drastic operations"
-msgstr "不公开的信息"
+#: default/web_tt2/info.tt2:24
+msgid ""
+"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
+"review these, please click here."
+msgstr ""
 
 #: default/web_tt2/create_list_request.tt2:28
 msgid ""
@@ -12409,14 +12431,6 @@ msgid ""
 "choose a list template that will preset most of the list parameters "
 "according to the list usage you plan. "
 msgstr ""
-
-#: default/web_tt2/create_list_request.tt2:91
-msgid "--Select a topic--"
-msgstr "－－选择主题类－－"
-
-#: default/web_tt2/home.tt2:13
-msgid "Mailing lists categories"
-msgstr "邮件列表分类"
 
 #: default/web_tt2/list_menu.tt2:10
 msgid ""
@@ -12433,10 +12447,6 @@ msgid ""
 "subscribed"
 msgstr ""
 
-#: default/web_tt2/login_menu.tt2:43
-msgid "Your preferences"
-msgstr "您的选项"
-
 #: default/web_tt2/renewpasswd.tt2:7
 msgid "The password you submitted is wrong. Maybe you forgot it?"
 msgstr ""
@@ -12451,22 +12461,9 @@ msgid ""
 "access to the appropriate form in order to choose your password."
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:14
-#, fuzzy
-msgid "Lists sorted by creation date"
-msgstr "邮件列表还未被激活"
-
 #: default/web_tt2/serveradmin.tt2:15
 msgid "Lists sorted by last message date"
 msgstr ""
-
-#: default/web_tt2/serveradmin.tt2:73
-msgid "Show only connected users"
-msgstr "只显示当前连接用户"
-
-#: default/web_tt2/serveradmin.tt2:74
-msgid "Show sessions"
-msgstr "显示会话"
 
 #: default/web_tt2/serveradmin.tt2:82
 msgid ""
@@ -12477,28 +12474,6 @@ msgstr ""
 #: default/web_tt2/serveradmin.tt2:91
 msgid "Update user memberships"
 msgstr ""
-
-#: default/web_tt2/serveradmin.tt2:98
-#, fuzzy
-msgid ""
-"As listmaster, you can change your identity and act as someone else. This is "
-"may be usefull when providing assistance or to test users privileges. The "
-"new identity is attached to the current session"
-msgstr ""
-"做为列表管理员，你可以改变你的ID并以此ID进行操作。这个有助于提供帮助或者测试"
-"用户的权限。"
-
-#: default/web_tt2/serveradmin.tt2:146
-msgid "Setting defaults list templates"
-msgstr "配置默认邮件列表模板"
-
-#: default/web_tt2/serveradmin.tt2:176
-msgid "Unset template vars dump"
-msgstr "去掉模板变量属性显示"
-
-#: default/web_tt2/skinsedit.tt2:24
-msgid "install static css"
-msgstr "安装静态css"
 
 #: default/web_tt2/skinsedit.tt2:95
 msgid "one out of two lines in tables, alternated with color_14."
@@ -12531,11 +12506,6 @@ msgstr ""
 #: default/web_tt2/skinsedit.tt2:143 default/web_tt2/skinsedit.tt2:159
 msgid "buttons;"
 msgstr ""
-
-#: default/web_tt2/skinsedit.tt2:143 default/web_tt2/skinsedit.tt2:159
-#, fuzzy
-msgid "navigation tabs;"
-msgstr "网页导航："
 
 #: default/web_tt2/skinsedit.tt2:143
 msgid "active option, if you have several buttons representing an alternative."
@@ -12581,22 +12551,9 @@ msgstr ""
 msgid "Default background color of the tables."
 msgstr ""
 
-#: default/web_tt2/suspend_request.tt2:23
-#, fuzzy
-msgid "Suspended from"
-msgstr "发送者"
-
 #: default/web_tt2/suspend_request.tt2:46
 msgid "Check this box if you want to suspend your subscription indefinitely."
 msgstr ""
-
-#. (db_type)
-#: default/mail_tt2/listmaster_notification.tt2:37
-#, fuzzy
-msgid ""
-"No Database Driver installed for %1; you should download and install DBD::%1 "
-"from CPAN."
-msgstr "没有为%1安装数据库驱动器；您应该从CPAN下载和安装DBD::%1。"
 
 #: src/lib/Sympa/ModDef.pm:350
 msgid "used while checking the RDBMS buffer size"
@@ -13086,6 +13043,75 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
+#, fuzzy
+#~ msgid "Role"
+#~ msgstr "角色"
+
+#~ msgid "page"
+#~ msgstr "页"
+
+#~ msgid "Sympa error - could not display web page"
+#~ msgstr "Sympa错误－不能显示网页"
+
+#, fuzzy
+#~ msgid "Manage archives:"
+#~ msgstr "处理归档"
+
+#, fuzzy
+#~ msgid "Drastic operations"
+#~ msgstr "不公开的信息"
+
+#~ msgid "--Select a topic--"
+#~ msgstr "－－选择主题类－－"
+
+#~ msgid "Mailing lists categories"
+#~ msgstr "邮件列表分类"
+
+#~ msgid "Your preferences"
+#~ msgstr "您的选项"
+
+#, fuzzy
+#~ msgid "Lists sorted by creation date"
+#~ msgstr "邮件列表还未被激活"
+
+#~ msgid "Show only connected users"
+#~ msgstr "只显示当前连接用户"
+
+#~ msgid "Show sessions"
+#~ msgstr "显示会话"
+
+#, fuzzy
+#~ msgid ""
+#~ "As listmaster, you can change your identity and act as someone else. This "
+#~ "is may be usefull when providing assistance or to test users privileges. "
+#~ "The new identity is attached to the current session"
+#~ msgstr ""
+#~ "做为列表管理员，你可以改变你的ID并以此ID进行操作。这个有助于提供帮助或者测"
+#~ "试用户的权限。"
+
+#~ msgid "Setting defaults list templates"
+#~ msgstr "配置默认邮件列表模板"
+
+#~ msgid "Unset template vars dump"
+#~ msgstr "去掉模板变量属性显示"
+
+#~ msgid "install static css"
+#~ msgstr "安装静态css"
+
+#, fuzzy
+#~ msgid "navigation tabs;"
+#~ msgstr "网页导航："
+
+#, fuzzy
+#~ msgid "Suspended from"
+#~ msgstr "发送者"
+
+#, fuzzy
+#~ msgid ""
+#~ "No Database Driver installed for %1; you should download and install DBD::"
+#~ "%1 from CPAN."
+#~ msgstr "没有为%1安装数据库驱动器；您应该从CPAN下载和安装DBD::%1。"
+
 #~ msgid "Text archives"
 #~ msgstr "文本归档"
 
@@ -13214,9 +13240,6 @@ msgstr ""
 
 #~ msgid "RSS"
 #~ msgstr "RSS"
-
-#~ msgid "Sympa admin"
-#~ msgstr "Sympa 管理"
 
 #~ msgid "Add an user: "
 #~ msgstr "添加一个用户"
@@ -15316,3 +15339,6 @@ msgstr ""
 
 #~ msgid "Welcome message"
 #~ msgstr "欢迎邮件"
+
+#~ msgid "Sympa admin"
+#~ msgstr "Sympa 管理"

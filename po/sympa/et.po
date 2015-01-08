@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: 2012-05-17 16:09+0000\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: Eesti\n"
-"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -4197,7 +4197,7 @@ msgstr "Kellele: %1"
 
 #: default/web_tt2/compose_mail.tt2:21
 #: default/web_tt2/create_list_request.tt2:34
-#: default/web_tt2/install_pending_list.tt2:14
+#: default/web_tt2/install_pending_list.tt2:14 default/web_tt2/main.tt2:100
 #: default/web_tt2/set_pending_list_request.tt2:8
 msgid "Subject:"
 msgstr "Teema:"
@@ -4309,7 +4309,7 @@ msgstr "Kasutusala: "
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:43 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:403
+#: default/web_tt2/edit_list_request.tt2:429
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:40
 #: default/web_tt2/serveradmin.tt2:206 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -4388,17 +4388,23 @@ msgstr "Listi nimi: "
 msgid "Apply"
 msgstr "Rakenda"
 
-#: default/web_tt2/crash.tt2:57 default/web_tt2/tt2_error.tt2:57
+#: default/web_tt2/crash.tt2:53 default/web_tt2/main.tt2:84
+#: default/web_tt2/tt2_error.tt2:53
+#, fuzzy
+msgid "Sympa Menu"
+msgstr "Sympa haldamine"
+
+#: default/web_tt2/crash.tt2:64 default/web_tt2/tt2_error.tt2:64
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "Serveri viga"
 
-#: default/web_tt2/crash.tt2:58
+#: default/web_tt2/crash.tt2:65
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr " Kasutajal %1 tekkis serveri viga"
 
-#: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
+#: default/web_tt2/crash.tt2:66 default/web_tt2/tt2_error.tt2:67
 msgid "Please contact the listmaster."
 msgstr "Palun kontakteeru listmasteriga."
 
@@ -4407,11 +4413,11 @@ msgstr "Palun kontakteeru listmasteriga."
 #. (tt2_error)
 #. (error)
 #: default/mail_tt2/listmaster_notification.tt2:146
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
+#: default/web_tt2/crash.tt2:69 default/web_tt2/tt2_error.tt2:66
 msgid "Error: %1"
 msgstr "Viga: %1"
 
-#: default/web_tt2/crash.tt2:64
+#: default/web_tt2/crash.tt2:71
 msgid "Traceback"
 msgstr ""
 
@@ -4574,7 +4580,7 @@ msgstr "Järjehoidja URL"
 msgid "Replace the file %1 with your file"
 msgstr "Asenda fail %1 teie failiga"
 
-#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:414
+#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:440
 #: default/web_tt2/editsubscriber.tt2:60 default/web_tt2/suboptions.tt2:140
 msgid "Update"
 msgstr "Uuenda"
@@ -5968,7 +5974,7 @@ msgstr "Listide nimekiri"
 msgid "Others"
 msgstr "Teemata"
 
-#: default/web_tt2/info.tt2:7
+#: default/web_tt2/info.tt2:7 default/web_tt2/main.tt2:100
 #, fuzzy
 msgid "(Edit)"
 msgstr "muuda"
@@ -5978,17 +5984,22 @@ msgstr "muuda"
 msgid "Administrative Options"
 msgstr "Admistreerimine"
 
+#. (mod_message)
 #: default/web_tt2/info.tt2:16
-msgid ""
-"There are message(s) awaiting moderation. To review these, please <a href="
-"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
-msgstr ""
+#, fuzzy
+msgid "There are %1 message(s) awaiting moderation."
+msgstr "Modereerimist ootab %1 kirja."
 
+#: default/web_tt2/info.tt2:16 default/web_tt2/info.tt2:24
+#, fuzzy
+msgid "(Review)"
+msgstr "vaatan"
+
+#. (mod_subscription)
 #: default/web_tt2/info.tt2:24
-msgid ""
-"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
-"review these, please click here."
-msgstr ""
+#, fuzzy
+msgid "There are %1 subscription(s) awaiting moderation."
+msgstr "Modereerimist ootab %1 kirja."
 
 #: default/web_tt2/info.tt2:30
 msgid ""
@@ -6187,6 +6198,11 @@ msgstr "Kas olete kindel, et soovite listiga %1 liituda?"
 msgid "Subscribe"
 msgstr "Liitu listiga"
 
+#: default/web_tt2/list_menu.tt2:31
+#, fuzzy
+msgid "List Home"
+msgstr "Listi nimi"
+
 #: default/web_tt2/list_menu.tt2:34
 msgid "Admin"
 msgstr "Halda"
@@ -6248,6 +6264,11 @@ msgstr "Vigade osakaal:"
 #, fuzzy
 msgid "Owners:"
 msgstr "Omanikud"
+
+#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
+#: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+msgid ", "
+msgstr ", "
 
 #: default/web_tt2/list_panel.tt2:42 default/web_tt2/list_panel.tt2:63
 #, fuzzy
@@ -6326,18 +6347,20 @@ msgstr "Kas logite sisse esimest korda?"
 msgid "Lost password?"
 msgstr "Olete unustanud salasõna?"
 
+#: default/web_tt2/login_menu.tt2:6
+msgid "SYMPA logo"
+msgstr ""
+
 #: default/web_tt2/login_menu.tt2:12
 #, fuzzy
 msgid "User Information"
 msgstr "Listiliikme info"
 
-# nlsref 16,62
 #: default/web_tt2/login_menu.tt2:15 default/web_tt2/login_menu.tt2:16
 #: default/web_tt2/login_menu.tt2:17 default/web_tt2/login_menu.tt2:18
 #: default/web_tt2/login_menu.tt2:19
-#, fuzzy
-msgid "Role"
-msgstr "roll"
+msgid "Role:&nbsp;"
+msgstr ""
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
@@ -6503,6 +6526,10 @@ msgstr "Palun aktiveerige JavaScript oma veebibrauseris"
 msgid "Please Wait..."
 msgstr ""
 
+#: default/web_tt2/main.tt2:133
+msgid "Menu"
+msgstr ""
+
 # nlsref 15,7
 #: default/web_tt2/manage_template.tt2:3
 msgid "Modify or delete existing rejection messages"
@@ -6581,6 +6608,10 @@ msgstr "Taotluse kuupäev"
 #, fuzzy
 msgid "Listmaster Admin"
 msgstr "Listiülem"
+
+#: default/web_tt2/menu.tt2:19
+msgid "Generating index..."
+msgstr ""
 
 # nlsref 8,1
 #: default/web_tt2/menu.tt2:19
@@ -7258,8 +7289,8 @@ msgid "Previous page"
 msgstr "Eelmine leht"
 
 #. (page,total_page)
-#: default/web_tt2/reviewbouncing.tt2:119
-#: default/web_tt2/reviewbouncing.tt2:48
+#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:119
+#: default/web_tt2/reviewbouncing.tt2:48 default/web_tt2/viewlogs.tt2:34
 msgid "page %1 / %2"
 msgstr "lk %1 / %2"
 
@@ -7412,10 +7443,6 @@ msgstr "Välista kasutajad"
 #: default/web_tt2/review.tt2:138 default/web_tt2/viewlogs.tt2:8
 msgid "Page size"
 msgstr "Lehe suurus"
-
-#: default/web_tt2/review.tt2:156 default/web_tt2/viewlogs.tt2:34
-msgid "page"
-msgstr "leht"
 
 #: default/web_tt2/rss_request.tt2:5
 msgid "RSS channel"
@@ -8723,11 +8750,7 @@ msgstr "Teavituse kuupäev"
 msgid "Notification"
 msgstr "Teavitus"
 
-#: default/web_tt2/tt2_error.tt2:8
-msgid "Sympa error - could not display web page"
-msgstr "Sympa viga - ei saanud lehekülge näidata"
-
-#: default/web_tt2/tt2_error.tt2:58
+#: default/web_tt2/tt2_error.tt2:65
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "Sympa ei saa saata soovitud lehte järgmisel põhjusel: "
 
@@ -9439,10 +9462,6 @@ msgstr "Listis %1 on lubatud vaid need vastuvõtuviisid: %2"
 #: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
 msgid ", and "
 msgstr " ja "
-
-#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
-msgid ", "
-msgstr ", "
 
 #: default/mail_tt2/command_report.tt2:132
 msgid "This list archive is empty."
@@ -12618,110 +12637,21 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Tundmatu viga."
 
-#: default/web_tt2/admin.tt2:18
-msgid "Manage archives:"
-msgstr "Arhiive haldus:"
+#: default/web_tt2/info.tt2:16
+msgid ""
+"There are message(s) awaiting moderation. To review these, please <a href="
+"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
+msgstr ""
 
-# nlsref 16,61
-#: default/web_tt2/admin.tt2:30
-msgid "Drastic operations"
-msgstr "Äärmuslikud vahendid"
-
-#: default/web_tt2/create_list_request.tt2:91
-msgid "--Select a topic--"
-msgstr "--Vali jaotis--"
-
-#: default/web_tt2/home.tt2:13
-msgid "Mailing lists categories"
-msgstr "E-posti listide kategooriad"
+#: default/web_tt2/info.tt2:24
+msgid ""
+"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
+"review these, please click here."
+msgstr ""
 
 #: default/web_tt2/list_menu.tt2:10
 msgid " -- go to:"
 msgstr ""
-
-#: default/web_tt2/login_menu.tt2:43
-msgid "Your preferences"
-msgstr "Eelistused"
-
-#: default/web_tt2/serveradmin.tt2:14
-msgid "Lists sorted by creation date"
-msgstr "Listid sorteeritult tegemise aja järgi"
-
-#: default/web_tt2/serveradmin.tt2:15
-msgid "Lists sorted by last message date"
-msgstr "Listid sorteeritult viimase kirja aja järgi"
-
-#: default/web_tt2/serveradmin.tt2:73
-msgid "Show only connected users"
-msgstr "Näita vaid sisse logitud kasutajaid"
-
-# nlsref 17,1
-#: default/web_tt2/serveradmin.tt2:74
-msgid "Show sessions"
-msgstr "Sessioonid"
-
-#: default/web_tt2/serveradmin.tt2:98
-msgid ""
-"As listmaster, you can change your identity and act as someone else. This is "
-"may be usefull when providing assistance or to test users privileges. The "
-"new identity is attached to the current session"
-msgstr ""
-"Listiülemana on teil võimalus muuta oma identiteeti ja käituda teise "
-"kasutajana. See võib olla kasulik kasutaja abistamisel või õiguste "
-"testimisel. Uus identiteet on seotud vaid praeguse sessiooniga"
-
-#: default/web_tt2/serveradmin.tt2:146
-msgid "Setting defaults list templates"
-msgstr "Listimallidele vaikeväärtuste kohandamine"
-
-#: default/web_tt2/serveradmin.tt2:176
-msgid "Unset template vars dump"
-msgstr "Muutujate tõmmise tegemise välja lülitamine"
-
-#: default/web_tt2/skinsedit.tt2:24
-msgid "install static css"
-msgstr "seadista staatiline CSS"
-
-#: default/web_tt2/skinsedit.tt2:127
-msgid "hovered links."
-msgstr "linkidel, millel on parajasti hiirekursor."
-
-#: default/web_tt2/skinsedit.tt2:143 default/web_tt2/skinsedit.tt2:159
-msgid "navigation tabs;"
-msgstr "sakid;"
-
-#: default/web_tt2/skinsedit.tt2:159
-msgid "hovered links;"
-msgstr "viited, millel peatub hiir;"
-
-#: default/web_tt2/skinsedit.tt2:159
-msgid "background color of hovered buttons."
-msgstr "aktiivsete nuppude taustavärv."
-
-#: default/web_tt2/skinsedit.tt2:175
-msgid "border color for forms."
-msgstr "vormide äärejoone värv."
-
-#: default/web_tt2/skinsedit.tt2:191
-msgid "side menu areas."
-msgstr "külgmenüü."
-
-#: default/web_tt2/skinsedit.tt2:207
-msgid "Default background color of the tables."
-msgstr "Tabelite vaikimisi taustavärv."
-
-#: default/web_tt2/suspend_request.tt2:23
-msgid "Suspended from"
-msgstr "Peatatud alates"
-
-#. (db_type)
-#: default/mail_tt2/listmaster_notification.tt2:37
-msgid ""
-"No Database Driver installed for %1; you should download and install DBD::%1 "
-"from CPAN."
-msgstr ""
-"Andmebaasi draiverit %1 pole installeeritud; te peaksite alla laadima ja "
-"installeerima CPAN mooduli DBD::%1."
 
 #: src/lib/Sympa/ModDef.pm:350
 msgid "used while checking the RDBMS buffer size"
@@ -13018,6 +12948,95 @@ msgstr ""
 msgid "Path to the javascript file making the WYSIWYG HTML editor available"
 msgstr ""
 
+# nlsref 16,62
+#, fuzzy
+#~ msgid "Role"
+#~ msgstr "roll"
+
+#~ msgid "page"
+#~ msgstr "leht"
+
+#~ msgid "Sympa error - could not display web page"
+#~ msgstr "Sympa viga - ei saanud lehekülge näidata"
+
+#~ msgid "Manage archives:"
+#~ msgstr "Arhiive haldus:"
+
+# nlsref 16,61
+#~ msgid "Drastic operations"
+#~ msgstr "Äärmuslikud vahendid"
+
+#~ msgid "--Select a topic--"
+#~ msgstr "--Vali jaotis--"
+
+#~ msgid "Mailing lists categories"
+#~ msgstr "E-posti listide kategooriad"
+
+#~ msgid "Your preferences"
+#~ msgstr "Eelistused"
+
+#~ msgid "Lists sorted by creation date"
+#~ msgstr "Listid sorteeritult tegemise aja järgi"
+
+#~ msgid "Lists sorted by last message date"
+#~ msgstr "Listid sorteeritult viimase kirja aja järgi"
+
+#~ msgid "Show only connected users"
+#~ msgstr "Näita vaid sisse logitud kasutajaid"
+
+# nlsref 17,1
+#~ msgid "Show sessions"
+#~ msgstr "Sessioonid"
+
+#~ msgid ""
+#~ "As listmaster, you can change your identity and act as someone else. This "
+#~ "is may be usefull when providing assistance or to test users privileges. "
+#~ "The new identity is attached to the current session"
+#~ msgstr ""
+#~ "Listiülemana on teil võimalus muuta oma identiteeti ja käituda teise "
+#~ "kasutajana. See võib olla kasulik kasutaja abistamisel või õiguste "
+#~ "testimisel. Uus identiteet on seotud vaid praeguse sessiooniga"
+
+#~ msgid "Setting defaults list templates"
+#~ msgstr "Listimallidele vaikeväärtuste kohandamine"
+
+#~ msgid "Unset template vars dump"
+#~ msgstr "Muutujate tõmmise tegemise välja lülitamine"
+
+#~ msgid "install static css"
+#~ msgstr "seadista staatiline CSS"
+
+#~ msgid "hovered links."
+#~ msgstr "linkidel, millel on parajasti hiirekursor."
+
+#~ msgid "navigation tabs;"
+#~ msgstr "sakid;"
+
+#~ msgid "hovered links;"
+#~ msgstr "viited, millel peatub hiir;"
+
+#~ msgid "background color of hovered buttons."
+#~ msgstr "aktiivsete nuppude taustavärv."
+
+#~ msgid "border color for forms."
+#~ msgstr "vormide äärejoone värv."
+
+#~ msgid "side menu areas."
+#~ msgstr "külgmenüü."
+
+#~ msgid "Default background color of the tables."
+#~ msgstr "Tabelite vaikimisi taustavärv."
+
+#~ msgid "Suspended from"
+#~ msgstr "Peatatud alates"
+
+#~ msgid ""
+#~ "No Database Driver installed for %1; you should download and install DBD::"
+#~ "%1 from CPAN."
+#~ msgstr ""
+#~ "Andmebaasi draiverit %1 pole installeeritud; te peaksite alla laadima ja "
+#~ "installeerima CPAN mooduli DBD::%1."
+
 # nlsref 16,4
 #~ msgid "Text archives"
 #~ msgstr "Tekstipõhised arhiivid"
@@ -13157,9 +13176,6 @@ msgstr ""
 
 #~ msgid "RSS"
 #~ msgstr "RSS"
-
-#~ msgid "Sympa admin"
-#~ msgstr "Sympa haldamine"
 
 #~ msgid "The password you submitted is wrong. Maybe you forgot it?"
 #~ msgstr "Sisestatud salasõna on vale. Vahest te unustasite selle?"
@@ -15547,3 +15563,6 @@ msgstr ""
 # nlsref 8,1
 #~ msgid "Owners of list %s"
 #~ msgstr "Listi %s omanikud"
+
+#~ msgid "Sympa admin"
+#~ msgstr "Sympa haldamine"

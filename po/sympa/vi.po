@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: 2012-05-17 16:21+0000\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: Tiếng Việt\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1337271705.000000\n"
@@ -4052,7 +4052,7 @@ msgstr "Cho : %1"
 
 #: default/web_tt2/compose_mail.tt2:21
 #: default/web_tt2/create_list_request.tt2:34
-#: default/web_tt2/install_pending_list.tt2:14
+#: default/web_tt2/install_pending_list.tt2:14 default/web_tt2/main.tt2:100
 #: default/web_tt2/set_pending_list_request.tt2:8
 msgid "Subject:"
 msgstr "Chủ đề:"
@@ -4163,7 +4163,7 @@ msgstr "Phạm vi:"
 
 #: default/web_tt2/copy_template.tt2:10 default/web_tt2/copy_template.tt2:23
 #: default/web_tt2/copy_template.tt2:43 default/web_tt2/edit_config.tt2:19
-#: default/web_tt2/edit_list_request.tt2:403
+#: default/web_tt2/edit_list_request.tt2:429
 #: default/web_tt2/edit_template.tt2:25 default/web_tt2/ls_templates.tt2:40
 #: default/web_tt2/serveradmin.tt2:206 default/web_tt2/view_template.tt2:16
 #: default/web_tt2/view_template.tt2:28
@@ -4245,17 +4245,23 @@ msgstr "Nhập tên hộp thư chung:"
 msgid "Apply"
 msgstr "Áp dụng"
 
-#: default/web_tt2/crash.tt2:57 default/web_tt2/tt2_error.tt2:57
+#: default/web_tt2/crash.tt2:53 default/web_tt2/main.tt2:84
+#: default/web_tt2/tt2_error.tt2:53
+#, fuzzy
+msgid "Sympa Menu"
+msgstr "Quản trị Sympa"
+
+#: default/web_tt2/crash.tt2:64 default/web_tt2/tt2_error.tt2:64
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "Lỗi trình phục vụ"
 
-#: default/web_tt2/crash.tt2:58
+#: default/web_tt2/crash.tt2:65
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr "Người dùng %1 đã gặp một lỗi phần mềm nội bộ."
 
-#: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
+#: default/web_tt2/crash.tt2:66 default/web_tt2/tt2_error.tt2:67
 msgid "Please contact the listmaster."
 msgstr "Hãy liên lạc với chủ hộp thư chung."
 
@@ -4263,11 +4269,11 @@ msgstr "Hãy liên lạc với chủ hộp thư chung."
 #. (tt2_error)
 #. (error)
 #: default/mail_tt2/listmaster_notification.tt2:146
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
+#: default/web_tt2/crash.tt2:69 default/web_tt2/tt2_error.tt2:66
 msgid "Error: %1"
 msgstr "Lỗi: %1"
 
-#: default/web_tt2/crash.tt2:64
+#: default/web_tt2/crash.tt2:71
 msgid "Traceback"
 msgstr ""
 
@@ -4436,7 +4442,7 @@ msgstr "Đạnh dấu URL"
 msgid "Replace the file %1 with your file"
 msgstr "Thay thế tập tin %1 bằng tập tin của bạn."
 
-#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:414
+#: default/web_tt2/d_editfile.tt2:38 default/web_tt2/edit_list_request.tt2:440
 #: default/web_tt2/editsubscriber.tt2:60 default/web_tt2/suboptions.tt2:140
 msgid "Update"
 msgstr "Cập nhật"
@@ -5840,7 +5846,7 @@ msgstr "Danh sách hộp thư chung"
 msgid "Others"
 msgstr "Khác"
 
-#: default/web_tt2/info.tt2:7
+#: default/web_tt2/info.tt2:7 default/web_tt2/main.tt2:100
 #, fuzzy
 msgid "(Edit)"
 msgstr "sửa"
@@ -5850,17 +5856,22 @@ msgstr "sửa"
 msgid "Administrative Options"
 msgstr "Bảng quản trị hộp"
 
+#. (mod_message)
 #: default/web_tt2/info.tt2:16
-msgid ""
-"There are message(s) awaiting moderation. To review these, please <a href="
-"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
-msgstr ""
+#, fuzzy
+msgid "There are %1 message(s) awaiting moderation."
+msgstr "Có %1 thư đang đợi điều tiết."
 
+#: default/web_tt2/info.tt2:16 default/web_tt2/info.tt2:24
+#, fuzzy
+msgid "(Review)"
+msgstr "xem"
+
+#. (mod_subscription)
 #: default/web_tt2/info.tt2:24
-msgid ""
-"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
-"review these, please click here."
-msgstr ""
+#, fuzzy
+msgid "There are %1 subscription(s) awaiting moderation."
+msgstr "Có %1 thư đang đợi điều tiết."
 
 #: default/web_tt2/info.tt2:30
 msgid ""
@@ -6056,6 +6067,11 @@ msgstr "Bạn thực sự muốn đăng ký với hộp thư chung %1 không?"
 msgid "Subscribe"
 msgstr "Đăng ký"
 
+#: default/web_tt2/list_menu.tt2:31
+#, fuzzy
+msgid "List Home"
+msgstr "Tên hộp"
+
 #: default/web_tt2/list_menu.tt2:34
 msgid "Admin"
 msgstr "Quản trị"
@@ -6117,6 +6133,11 @@ msgstr "Tỷ lệ lỗi:"
 #, fuzzy
 msgid "Owners:"
 msgstr "Người sở hữu"
+
+#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
+#: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+msgid ", "
+msgstr ""
 
 #: default/web_tt2/list_panel.tt2:42 default/web_tt2/list_panel.tt2:63
 #, fuzzy
@@ -6199,6 +6220,10 @@ msgstr "Đăng nhập đầu tiên ?"
 msgid "Lost password?"
 msgstr "Mất mật khẩu ?"
 
+#: default/web_tt2/login_menu.tt2:6
+msgid "SYMPA logo"
+msgstr ""
+
 #: default/web_tt2/login_menu.tt2:12
 #, fuzzy
 msgid "User Information"
@@ -6207,9 +6232,8 @@ msgstr "Thông tin về người đăng ký"
 #: default/web_tt2/login_menu.tt2:15 default/web_tt2/login_menu.tt2:16
 #: default/web_tt2/login_menu.tt2:17 default/web_tt2/login_menu.tt2:18
 #: default/web_tt2/login_menu.tt2:19
-#, fuzzy
-msgid "Role"
-msgstr "nhiệm vụ"
+msgid "Role:&nbsp;"
+msgstr ""
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
@@ -6376,6 +6400,10 @@ msgstr "Hãy kích hoạt JavaScript trong trình duyệt Web"
 msgid "Please Wait..."
 msgstr ""
 
+#: default/web_tt2/main.tt2:133
+msgid "Menu"
+msgstr ""
+
 #: default/web_tt2/manage_template.tt2:3
 msgid "Modify or delete existing rejection messages"
 msgstr "Sửa đổi hoặc xoá thông điệp từ chối đã có"
@@ -6453,6 +6481,10 @@ msgstr "Ngày tháng đã yêu cầu"
 #, fuzzy
 msgid "Listmaster Admin"
 msgstr "Chủ hộp thư chung"
+
+#: default/web_tt2/menu.tt2:19
+msgid "Generating index..."
+msgstr ""
 
 #: default/web_tt2/menu.tt2:19
 #, fuzzy
@@ -7141,8 +7173,8 @@ msgid "Previous page"
 msgstr "Trang trước"
 
 #. (page,total_page)
-#: default/web_tt2/reviewbouncing.tt2:119
-#: default/web_tt2/reviewbouncing.tt2:48
+#: default/web_tt2/review.tt2:156 default/web_tt2/reviewbouncing.tt2:119
+#: default/web_tt2/reviewbouncing.tt2:48 default/web_tt2/viewlogs.tt2:34
 msgid "page %1 / %2"
 msgstr "trang %1 / %2"
 
@@ -7294,10 +7326,6 @@ msgstr ""
 #: default/web_tt2/review.tt2:138 default/web_tt2/viewlogs.tt2:8
 msgid "Page size"
 msgstr "Kích cỡ trang"
-
-#: default/web_tt2/review.tt2:156 default/web_tt2/viewlogs.tt2:34
-msgid "page"
-msgstr "trang"
 
 #: default/web_tt2/rss_request.tt2:5
 msgid "RSS channel"
@@ -8635,11 +8663,7 @@ msgstr "thông báo"
 msgid "Notification"
 msgstr "thông báo"
 
-#: default/web_tt2/tt2_error.tt2:8
-msgid "Sympa error - could not display web page"
-msgstr "Lỗi Sympa — không thể hiển thị trang Web"
-
-#: default/web_tt2/tt2_error.tt2:58
+#: default/web_tt2/tt2_error.tt2:65
 #, fuzzy
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "Sympa không thể hiển thị trang được yêu cầu vì lý do này:"
@@ -9377,10 +9401,6 @@ msgstr "Hộp thư chung %1 chỉ cho phép những chế độ nhận thư này
 
 #: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
 msgid ", and "
-msgstr ""
-
-#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
-msgid ", "
 msgstr ""
 
 #: default/mail_tt2/command_report.tt2:132
@@ -12639,21 +12659,17 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Lỗi không rõ."
 
-#: default/web_tt2/admin.tt2:18
-msgid "Manage archives:"
-msgstr "Quản lý kho thư :"
+#: default/web_tt2/info.tt2:16
+msgid ""
+"There are message(s) awaiting moderation. To review these, please <a href="
+"\"[% path_cgi %]/modindex/[% list %]\">click here</a>."
+msgstr ""
 
-#: default/web_tt2/admin.tt2:30
-msgid "Drastic operations"
-msgstr "Thao tác quyết liệt"
-
-#: default/web_tt2/create_list_request.tt2:91
-msgid "--Select a topic--"
-msgstr "~Chọn vấn đề—"
-
-#: default/web_tt2/home.tt2:13
-msgid "Mailing lists categories"
-msgstr "Loại hộp thư chung"
+#: default/web_tt2/info.tt2:24
+msgid ""
+"There are [% mod_subscription %] subscription(s) awaiting moderation. To "
+"review these, please click here."
+msgstr ""
 
 #: default/web_tt2/list_menu.tt2:10
 msgid ""
@@ -12669,49 +12685,6 @@ msgid ""
 "You <span style=\"font-weight: bold; font-size: 10px\">are not</span> "
 "subscribed"
 msgstr ""
-
-#: default/web_tt2/login_menu.tt2:43
-msgid "Your preferences"
-msgstr "Tùy thích của bạn"
-
-#: default/web_tt2/serveradmin.tt2:14
-msgid "Lists sorted by creation date"
-msgstr "Hộp thư chung được sắp xếp theo ngày tạo"
-
-#: default/web_tt2/serveradmin.tt2:15
-msgid "Lists sorted by last message date"
-msgstr "Hộp thư chung được sắp xếp theo ngày nhận thư cuối cùng"
-
-#: default/web_tt2/serveradmin.tt2:73
-msgid "Show only connected users"
-msgstr "Hiện chỉ người dùng có kết nối"
-
-#: default/web_tt2/serveradmin.tt2:74
-msgid "Show sessions"
-msgstr "Hiện buổi đăng nhập"
-
-#: default/web_tt2/serveradmin.tt2:98
-#, fuzzy
-msgid ""
-"As listmaster, you can change your identity and act as someone else. This is "
-"may be usefull when providing assistance or to test users privileges. The "
-"new identity is attached to the current session"
-msgstr ""
-"Vì bạn là chủ hộp thư chung, bạn có khả năng thay đổi cá tính và trở thành "
-"một người khác. Có thể hữu ích khi cung cấp hỗ trợ, hoặc để thử quyền hạn "
-"của người dùng."
-
-#: default/web_tt2/serveradmin.tt2:146
-msgid "Setting defaults list templates"
-msgstr "Đang đặt các mẫu của danh sách mặc định"
-
-#: default/web_tt2/serveradmin.tt2:176
-msgid "Unset template vars dump"
-msgstr "Hủy đặt mẫu đổ vars"
-
-#: default/web_tt2/skinsedit.tt2:24
-msgid "install static css"
-msgstr "Cài đặt CSS tĩnh"
 
 #: default/web_tt2/skinsedit.tt2:95
 msgid "one out of two lines in tables, alternated with color_14."
@@ -12744,11 +12717,6 @@ msgstr ""
 #: default/web_tt2/skinsedit.tt2:143 default/web_tt2/skinsedit.tt2:159
 msgid "buttons;"
 msgstr ""
-
-#: default/web_tt2/skinsedit.tt2:143 default/web_tt2/skinsedit.tt2:159
-#, fuzzy
-msgid "navigation tabs;"
-msgstr "Duyệt qua các trang:"
 
 #: default/web_tt2/skinsedit.tt2:143
 msgid "active option, if you have several buttons representing an alternative."
@@ -12794,24 +12762,9 @@ msgstr ""
 msgid "Default background color of the tables."
 msgstr ""
 
-#: default/web_tt2/suspend_request.tt2:23
-#, fuzzy
-msgid "Suspended from"
-msgstr "Người gửi"
-
 #: default/web_tt2/suspend_request.tt2:46
 msgid "Check this box if you want to suspend your subscription indefinitely."
 msgstr ""
-
-#. (db_type)
-#: default/mail_tt2/listmaster_notification.tt2:37
-#, fuzzy
-msgid ""
-"No Database Driver installed for %1; you should download and install DBD::%1 "
-"from CPAN."
-msgstr ""
-"Chưa cài đặt trình điều khiển cơ sở dữ liệu cho %1. Bạn nên tải xuống và cài "
-"đặt gói « DBD::%1 » thông qua chương trình quản lý gói phần mềm CPAN."
 
 #: src/lib/Sympa/ModDef.pm:350
 msgid "used while checking the RDBMS buffer size"
@@ -13276,6 +13229,78 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
+#, fuzzy
+#~ msgid "Role"
+#~ msgstr "nhiệm vụ"
+
+#~ msgid "page"
+#~ msgstr "trang"
+
+#~ msgid "Sympa error - could not display web page"
+#~ msgstr "Lỗi Sympa — không thể hiển thị trang Web"
+
+#~ msgid "Manage archives:"
+#~ msgstr "Quản lý kho thư :"
+
+#~ msgid "Drastic operations"
+#~ msgstr "Thao tác quyết liệt"
+
+#~ msgid "--Select a topic--"
+#~ msgstr "~Chọn vấn đề—"
+
+#~ msgid "Mailing lists categories"
+#~ msgstr "Loại hộp thư chung"
+
+#~ msgid "Your preferences"
+#~ msgstr "Tùy thích của bạn"
+
+#~ msgid "Lists sorted by creation date"
+#~ msgstr "Hộp thư chung được sắp xếp theo ngày tạo"
+
+#~ msgid "Lists sorted by last message date"
+#~ msgstr "Hộp thư chung được sắp xếp theo ngày nhận thư cuối cùng"
+
+#~ msgid "Show only connected users"
+#~ msgstr "Hiện chỉ người dùng có kết nối"
+
+#~ msgid "Show sessions"
+#~ msgstr "Hiện buổi đăng nhập"
+
+#, fuzzy
+#~ msgid ""
+#~ "As listmaster, you can change your identity and act as someone else. This "
+#~ "is may be usefull when providing assistance or to test users privileges. "
+#~ "The new identity is attached to the current session"
+#~ msgstr ""
+#~ "Vì bạn là chủ hộp thư chung, bạn có khả năng thay đổi cá tính và trở "
+#~ "thành một người khác. Có thể hữu ích khi cung cấp hỗ trợ, hoặc để thử "
+#~ "quyền hạn của người dùng."
+
+#~ msgid "Setting defaults list templates"
+#~ msgstr "Đang đặt các mẫu của danh sách mặc định"
+
+#~ msgid "Unset template vars dump"
+#~ msgstr "Hủy đặt mẫu đổ vars"
+
+#~ msgid "install static css"
+#~ msgstr "Cài đặt CSS tĩnh"
+
+#, fuzzy
+#~ msgid "navigation tabs;"
+#~ msgstr "Duyệt qua các trang:"
+
+#, fuzzy
+#~ msgid "Suspended from"
+#~ msgstr "Người gửi"
+
+#, fuzzy
+#~ msgid ""
+#~ "No Database Driver installed for %1; you should download and install DBD::"
+#~ "%1 from CPAN."
+#~ msgstr ""
+#~ "Chưa cài đặt trình điều khiển cơ sở dữ liệu cho %1. Bạn nên tải xuống và "
+#~ "cài đặt gói « DBD::%1 » thông qua chương trình quản lý gói phần mềm CPAN."
+
 #~ msgid "Text archives"
 #~ msgstr "Kho thư nhập thô"
 
@@ -13405,9 +13430,6 @@ msgstr ""
 
 #~ msgid "RSS"
 #~ msgstr "RSS"
-
-#~ msgid "Sympa admin"
-#~ msgstr "Quản trị Sympa"
 
 #, fuzzy
 #~ msgid "The password you submitted is wrong. Maybe you forgot it?"
@@ -15077,3 +15099,6 @@ msgstr ""
 
 #~ msgid "You requested unsubscription from list %1"
 #~ msgstr "Bạn đã yêu cầu hủy đăng ký với hộp thư chung %1"
+
+#~ msgid "Sympa admin"
+#~ msgstr "Quản trị Sympa"
