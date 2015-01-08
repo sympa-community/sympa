@@ -7,7 +7,7 @@ So this may be used for locale-specific customization.
 @media screen {  }
 [%# Enlarge fonts. %]
 body {
-    font-size: 69%;
+    font-size: 110%;
     line-height: 1.5;
 }
 [%#
@@ -26,17 +26,15 @@ ignored by Safari), MacOS classic (if any), Windows (Vista or later, then
 XP/2000 or earlier), Red Hat/Fedora, Debian/Ubuntu, and others if any.
 -%]
 [%# Overriding default font family. %]
-* {
+body,
+.nav .navtoogle {
     font-family: "游ゴシック", YuGothic, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "ヒラギノ 角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, "Yu Gothic", "メイリオ", Meiryo, "ＭＳ Ｐゴ シック", "VL Pゴシック", "VL PGothic", "TakaoExゴシック", TakaoExGothic, "IPAex ゴシック", IPAexGothic, "IPA Pゴシック", IPAPGothic, sans-serif;
 }
-[%# Overriding "serif!important" %]
-#bandeau_top #Identity,
-#bandeau_top #Identity_not_connect,
-#bandeau_top #Identity_not_connect label,
-#bandeau_top .prefs,
-#bandeau_top a,
-#bandeau_top .login,
-#bandeau_top .remember {
-    font-family: "游明朝", YuMincho, "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "Yu Mincho", "ＭＳ Ｐ明朝", "さざなみ明朝", "Sazanami Mincho", "TakaoEx明朝", TakaoExMincho, "IPAex明朝", IPAexMincho, "IPA P明朝", IPAPMincho, serif !important;
+[%# Overriding "monospace, serif" %]
+pre,
+code,
+kbd,
+samp {
+    font-family: monospace, "游明朝", YuMincho, "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "Yu Mincho", "ＭＳ Ｐ明朝", "さざなみ明朝", "Sazanami Mincho", "TakaoEx明朝", TakaoExMincho, "IPAex明朝", IPAexMincho, "IPA P明朝", IPAPMincho, serif;
 }
 /* end ja/css.tt2 */

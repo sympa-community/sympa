@@ -7,21 +7,19 @@ So this may be used for locale-specific customization.
 @media screen {  }
 [%# Enlarge fonts. %]
 body {
-    font-size: 69%;
+    font-size: 110%;
     line-height: 1.5;
 }
 [%# Overriding default font family. %]
-* {
+body,
+.nav .navtoogle {
     font-family:"儷黑 Pro", "LiHei Pro", "Apple LiGothic", "微軟正黑體", "Microsoft JhengHei", sans-serif;
 }
-[%# Overriding "serif!important" %]
-#bandeau_top #Identity,
-#bandeau_top #Identity_not_connect,
-#bandeau_top #Identity_not_connect label,
-#bandeau_top .prefs,
-#bandeau_top a,
-#bandeau_top .login,
-#bandeau_top .remember {
-    font-family:"儷宋 Pro", "LiSong Pro", "Apple LiSung Light", PMingLiu, "PMingLiu-ExtB", serif !important;
+[%# Overriding "monospace, serif" %]
+pre,
+code,
+kbd,
+samp {
+    font-family:monospace,"儷宋 Pro", "LiSong Pro", "Apple LiSung Light", PMingLiu, "PMingLiu-ExtB", serif;
 }
 /* end zh-TW/css.tt2 */

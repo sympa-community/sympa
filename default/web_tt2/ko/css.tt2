@@ -6,17 +6,15 @@ So this may be used for locale-specific customization.
 /* begin ko/css.tt2 */
 @media screen {  }
 [%# Overriding default font family. %]
-* {
+body,
+.nav .navtoogle {
     font-family:"Apple SD Gothic Neo Medium", AppleGothic, "맑은 고딕", "Malgun Gothic", "돋움 Regular", Dotum, UnDotum, "백묵 돋움", "Baekmuk Dotum", "은 돋움 Regular", "Un Dotum", sans-serif;
 }
-[%# Overriding "serif!important". %]
-#bandeau_top #Identity,
-#bandeau_top #Identity_not_connect,
-#bandeau_top #Identity_not_connect label,
-#bandeau_top .prefs,
-#bandeau_top a,
-#bandeau_top .login,
-.remember {
-    font-family:"나눔명조", "Nanum Myeongjo", AppleMyungjo, "바탕 Regular", Batang, UnBatang, "백묵 바탕 Regular", "Baekmuk Batang", "은 바탕 Regular", "Un Batang", serif !important;
+[%# Overriding "monospace, serif". %]
+pre,
+code,
+kbd,
+samp {
+    font-family:monospace,"나눔명조", "Nanum Myeongjo", AppleMyungjo, "바탕 Regular", Batang, UnBatang, "백묵 바탕 Regular", "Baekmuk Batang", "은 바탕 Regular", "Un Batang", serif;
 }
 /* end ko/css.tt2 */
