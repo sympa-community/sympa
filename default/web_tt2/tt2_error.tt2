@@ -5,7 +5,9 @@
 <meta charset="UTF-8" />
 <meta name="generator" content="Sympa [% version %]" />
 
-<title> [%|loc%]Sympa error - could not display web page[%END%] - [% main_title %] - [% action %] </title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+<title> [% main_title %] - [% action %] </title>
 
 [% IF custom_css %]
 <style>
@@ -36,35 +38,39 @@
 
 [% PROCESS javascript.tt2 %]
 
+<!--<link rel="stylesheet" type="text/css" href="/hub/res/bar.css" />
+<script type="text/javascript" src="/hub/res/bar.js"></script>-->
+<script src="/static-sympa/external/modernizr.custom.js"></script>
+
 [% IF base %] <base href="[% base %]" /> [% END %]
 
 </head>
 
 <body>
 
-[% PROCESS login_menu.tt2 %]
+   <div class="sidebar" style="padding-top: 10px;">
+      [% PROCESS login_menu.tt2 %]
+      <h2>Sympa Menu</h2>
+      [% PROCESS menu.tt2 %]
+   </div>
 
-<div id="Canvas">
-  <div id="Header">
+       <!-- a href="javascript:afficheId('contenu','Stretcher')">ouvrir</a>
+       <a href="javascript:cacheId('contenu','Stretcher');">Fermer</a-->
+
+<div id="content-inner">
     [% PROCESS title.tt2 %]
-    [% PROCESS menu.tt2 %]
-  </div> <!-- end div Header -->
 
-  <div id="Stretcher">&nbsp;<br />
-     <div id="Paint">
-        <div class="ContentBlock">
-
-         <h1>[%|loc%]Internal Server Error[%END%]</h1>
+       <div class="ContentBlock">
+         <h2>[%|loc%]Internal Server Error[%END%]</h2>
          <p>[%|loc%]Sympa could not deliver the requested page for the following reason: [%END%]</p>
          <p>[%|loc(tt2_error)%]Error: %1[%END%]</p>
          <p>[%|loc%]Please contact the listmaster.[%END%]</p>
+      </div><!-- End div ContentBlock -->
 
-       </div><!-- End div ContentBlock -->
-     </div><!-- End div Paint -->
-  </div><!-- end div Stretcher -->
-</div> <!-- end div canvas -->
+</div><!-- End content-inner -->
 
-  [% PROCESS footer.tt2 %]
+ [% PROCESS footer.tt2 %]
+
 </body>
-<!-- end crash.tt2 -->
+<!-- end tt2_error.tt2 -->
 </html>
