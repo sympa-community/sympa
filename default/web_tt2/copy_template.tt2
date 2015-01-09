@@ -23,7 +23,7 @@
 <strong> [%|loc%]default[%END%] </strong>
 [%|loc%](This template is the default for all languages unless it is redefined for a specific language)[%END%]
 [%- ELSE -%]
-<strong
+<strong class="neutral"
 lang="[%tpl_lang_lang%]" xml:lang="[%tpl_lang_lang%]"
 > [%tpl_lang_title%] </strong>
 [%- END %] <br />
@@ -39,7 +39,7 @@ lang="[%tpl_lang_lang%]" xml:lang="[%tpl_lang_lang%]"
         <option value="list" [% IF scope == 'list' %]selected[% END %]>[%|loc%]list[%END%]</option>
     </select><br />
   <label for="tpl_lang_out">[%|loc%]Language: [%END%] </label>
-    <select id="tpl_lang_out" name="tpl_lang_out">
+    <select id="tpl_lang_out" name="tpl_lang_out" class="neutral">
 	<option value="default">[%|loc%]default[%END%]</option>
 	[% FOREACH lg = languages %]
         <option lang="[%lg.key%]" xml:lang="[%lg.key%]"

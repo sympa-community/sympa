@@ -321,7 +321,7 @@
                                           [% IF key.occurrence == 'multiple' %]
                                             <div><select name="multiple_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" multiple="multiple">
                                           [% ELSE %]
-                                            <div><select name="single_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name">
+                                            <div><select name="single_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" class="neutral">
                                           [% END %]
                                           [% FOREACH enum = key.value %]
                                             <option value="[% enum.key %]"
@@ -345,7 +345,7 @@
                                             [% IF enum.value.selected == '1' %]
                                               [% IF enum.value.title %]
                                                 [% IF p.name == 'lang' %]
-                                                  <span
+                                                  <span class="neutral"
                                                   lang="[%enum.key%]"
                                                   xml:lang="[%enum.key%]"
                                                   >[% enum.value.title %]</span>
@@ -378,7 +378,7 @@
                           [% ELSIF p.type == 'enum' %]
                           <!-- Enum -->
                             [% IF p.may_edit == 'write' %]
-                              <select name="single_param.[% p.name %]" id="single_param.[% p.name %].name">
+                              <select name="single_param.[% p.name %]" id="single_param.[% p.name %].name" class="neutral">
                                 [% FOREACH enum = p.value %]
                                   <option value="[% enum.key %]"
                                   [% IF enum.value.selected == '1' %]
@@ -400,7 +400,7 @@
                                 [% IF enum.value.selected == '1' %]
                                   [% IF enum.value.title %]
                                     [% IF p.name == 'lang' %]
-                                      <span
+                                      <span class="neutral"
                                       lang="[%enum.key%]"
                                       xml:lang="[%enum.key%]"
                                       >[% enum.value.title %]</span>

@@ -8,7 +8,7 @@
  <div class="form_row"><label>[%|loc%]Email:[%END%]  </label>[% user.email %]</div>
  <div class="form_row">    <label for="gecos">[%|loc%]Name:[%END%]  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" /></div>
  <div class="form_row">
-    <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label><select id="lang" name="lang">
+    <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label><select id="lang" name="lang" class="neutral">
               [% FOREACH l = languages %]
 		<option value='[% l.key %]' lang="[% l.key %]" xml:lang="[% l.key %]" [% l.value.selected %]>[% l.value.complete %]</option>
               [% END %]
