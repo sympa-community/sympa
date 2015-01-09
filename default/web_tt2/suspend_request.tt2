@@ -2,93 +2,93 @@
 
 <div class="block">
 [% IF user.email %]
-	<h2>[%|loc%]Manage your subscriptions[%END%] <a class="input" href="[%path_cgi %]/help/suspend">[%|loc%]Help[%END%]</a></h2>
-	
-	<p>[%|loc%]You are subscribed to the following lists[%END%]</p>
-	
-	<form class="noborder" action="[% path_cgi %]" method="post" name="suspend_request">
-		[% IF which_info.size %]
-		<div class="item_list">
-			[% FOREACH l = which_info %]
-				[% suspended = 0 %]
-				[% suspendable = 0 %]
-				[% additional_class = '' %]
-				[% FOREACH sub = suspend_list %]
-					[% IF sub.listname == l.key %]
-						[% suspendable = 1 %]
-						[% IF sub.listsuspend %]
-							[% suspended = 1 %]
-							[% additional_class = ' suspended' %]
-						[% END %]
-					[% END %]
-				[% END %]
-			<div class="item[% additional_class %]">
-				<div class="item_content">
-					<a class="item_title" href="[% path_cgi %]/info/[% l.key %]">
-						[% hidden_head %][% l.key %][% hidden_end %]
-						[% IF l.value.admin %]
-							<span class="highlighted">([%|loc%]Owner[%END%])</span>
-						[% END %]
-					</a>
-					[% IF suspendable %]
-						[% IF suspended %]
-							[%|loc(sub.liststartdate)%]Suspended from %1 to[% END %]
-							[% IF sub.listenddate %]
-								[% sub.listenddate %]
-							[% ELSE %]
-								[%|loc%]indefinite end date[%END%]
-							[% END %]<br/>
-							<input id="listname.[% sub.listname %]" type="checkbox" checked="checked" name="listname" value="[% l.key %]" />
-							<label for="listname">[%|loc(l.key)%]Check to restore reception from list %1[% END %]</label>
-						[% ELSE %]
-							<input id="listname.[% sub.listname %]" type="checkbox" checked="checked" name="listname" value="[% l.key %]" />
-							<label for="listname">[%|loc(l.key)%]Check to suspend or unsubscribe from list %1[% END %]</label>
-						[% END %]
-					[% ELSE %]
-						<p class="note">[%|loc%]You are not allowed to suspend your subscription / unsusbscribe from this list.[% END %]
-					[% END %]
-					<p class="list_subject">[% l.value.subject %]</p>
-					
-					
-					<ul>
-						[% IF l.value.admin %]
-							<li><a href="[% path_cgi %]/review/[% l.key %]">[%|loc%]Review members[%END%]</a></li>
-						[% END %]
-						
-						[% IF is_user_allowed_to('web_archive.access', l.key) %]
-							<li><a href="[% path_cgi %]/arc/[% l.key %]">[%|loc%]Archives[%END%]</a></li>
-						[% END %]
-					</ul>
-				</div>
-			</div>
-			[% END %]
-		</div>
-		
-		[% ELSE %]
-		
-		<p>[%|loc%]No subscription.[%END%]</p>
-		
+  <h2>[%|loc%]Manage your subscriptions[%END%] <a class="input" href="[%path_cgi %]/help/suspend">[%|loc%]Help[%END%]</a></h2>
+  
+  <p>[%|loc%]You are subscribed to the following lists[%END%]</p>
+  
+  <form class="noborder" action="[% path_cgi %]" method="post" name="suspend_request">
+    [% IF which_info.size %]
+    <div class="item_list">
+      [% FOREACH l = which_info %]
+        [% suspended = 0 %]
+        [% suspendable = 0 %]
+        [% additional_class = '' %]
+        [% FOREACH sub = suspend_list %]
+          [% IF sub.listname == l.key %]
+            [% suspendable = 1 %]
+            [% IF sub.listsuspend %]
+              [% suspended = 1 %]
+              [% additional_class = ' suspended' %]
+            [% END %]
+          [% END %]
         [% END %]
-		
-		<p>[%|loc%]You can bulk suspend or revoke your memberships by selecting relevant lists and using the buttons below. The suspend option prevents delivery of emails, this can be useful if you are out of the office for some time.[%END%]</p>
-		
-		<input class="MainMenuLinks" type="button" value="Toggle selection" onclick="toggle_selection(document.suspend_request.listname)" />
-		<br />
-		
-		<input type="hidden" name="action" value="suspend_request_action"/>
-		<input class="MainMenuLinks" type="submit" name="sub_action_suspendsave" value="[%|loc%]Suspend my subscriptions[%END%]"/>
-		[%|loc%]From:[%END%] <noscript>(dd-mm-yyyy)</noscript><input type="text" id="date_deb" name="date_deb" maxlength="10" size="10" value="[% d_day %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" />
-		[%|loc%]To:[%END%] <noscript>(dd-mm-yyyy)</noscript><input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" />
-		<input type="checkbox" name="indefinite" />[%|loc%]Suspend my membership indefinitely[%END%]
-		<br />
-		
-		[% IF suspended %]
-		<input class="MainMenuLinks" type="submit" name="sub_action_suspendstop" value="[%|loc%]Resume my subscriptions[%END%]"/>
-		<br />
-		[% END %]
-		
-		<input class="MainMenuLinks" type="submit" name="sub_action_signoff" value="[%|loc%]Unsubscribe[%END%]"/>
-	</form>
+      <div class="item[% additional_class %]">
+        <div class="item_content">
+          <a class="item_title" href="[% path_cgi %]/info/[% l.key %]">
+            [% hidden_head %][% l.key %][% hidden_end %]
+            [% IF l.value.admin %]
+              <span class="highlighted">([%|loc%]Owner[%END%])</span>
+            [% END %]
+          </a>
+          [% IF suspendable %]
+            [% IF suspended %]
+              [%|loc(sub.liststartdate)%]Suspended from %1 to[% END %]
+              [% IF sub.listenddate %]
+                [% sub.listenddate %]
+              [% ELSE %]
+                [%|loc%]indefinite end date[%END%]
+              [% END %]<br/>
+              <input id="listname.[% sub.listname %]" type="checkbox" checked="checked" name="listname" value="[% l.key %]" />
+              <label for="listname">[%|loc(l.key)%]Check to restore reception from list %1[% END %]</label>
+            [% ELSE %]
+              <input id="listname.[% sub.listname %]" type="checkbox" checked="checked" name="listname" value="[% l.key %]" />
+              <label for="listname">[%|loc(l.key)%]Check to suspend or unsubscribe from list %1[% END %]</label>
+            [% END %]
+          [% ELSE %]
+            <p class="note">[%|loc%]You are not allowed to suspend your subscription / unsusbscribe from this list.[% END %]
+          [% END %]
+          <p class="list_subject">[% l.value.subject %]</p>
+          
+          
+          <ul>
+            [% IF l.value.admin %]
+              <li><a href="[% path_cgi %]/review/[% l.key %]">[%|loc%]Review members[%END%]</a></li>
+            [% END %]
+            
+            [% IF is_user_allowed_to('archive.web_access', l.key) %]
+              <li><a href="[% path_cgi %]/arc/[% l.key %]">[%|loc%]Archives[%END%]</a></li>
+            [% END %]
+          </ul>
+        </div>
+      </div>
+      [% END %]
+    </div>
+    
+    [% ELSE %]
+    
+    <p>[%|loc%]No subscription.[%END%]</p>
+    
+  [% END %]
+    
+    <p>[%|loc%]You can bulk suspend or revoke your memberships by selecting relevant lists and using the buttons below. The suspend option prevents delivery of emails, this can be useful if you are out of the office for some time.[%END%]</p>
+    
+    <input class="MainMenuLinks" type="button" value="Toggle selection" onclick="toggle_selection(document.suspend_request.listname)" />
+    <br />
+    
+    <input type="hidden" name="action" value="suspend_request_action"/>
+    <input class="MainMenuLinks" type="submit" name="sub_action_suspendsave" value="[%|loc%]Suspend my subscriptions[%END%]"/>
+    [%|loc%]From:[%END%] <noscript>(dd-mm-yyyy)</noscript><input type="text" id="date_deb" name="date_deb" maxlength="10" size="10" value="[% d_day %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" />
+    [%|loc%]To:[%END%] <noscript>(dd-mm-yyyy)</noscript><input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" />
+    <input type="checkbox" name="indefinite" />[%|loc%]Suspend my membership indefinitely[%END%]
+    <br />
+    
+    [% IF suspended %]
+    <input class="MainMenuLinks" type="submit" name="sub_action_suspendstop" value="[%|loc%]Resume my subscriptions[%END%]"/>
+    <br />
+    [% END %]
+    
+    <input class="MainMenuLinks" type="submit" name="sub_action_signoff" value="[%|loc%]Unsubscribe[%END%]"/>
+  </form>
 [% ELSE %]
    [%|loc%]You need to be logged in to access this page.[%END%]
 [% END %]

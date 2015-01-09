@@ -12,34 +12,34 @@
 
 <div class="item_list">
 [% FOREACH letter IN letters %]
-	[% FOREACH listname IN orderedlist.$letter %]
-	<div class="item">
-		<div class="item_content">
-			<a class="item_title" href="[% path_cgi %]/info/[% listname %]">
-				[% hidden_head %][% listname %][% hidden_at %][% which.$listname.host %][% hidden_end %]
-				[% IF which.$listname.admin %]
-					<span class="highlighted">([%|loc%]Owner[%END%])</span>
-				[% END %]
-			</a>
-			
-			<p class="list_subject">[% which.$listname.subject %]</p>
-			
-			<ul>
-				[% IF is_user_allowed_to('subscribe', listname) %]
-					<li><a href="[% path_cgi %]/subscribe/[% listname %]">[%|loc%]Request subscription[%END%]</a></li>
-				[% END %]
-				
-				[% IF which.$listname.admin %]
-					<li><a href="[% path_cgi %]/review/[% listname %]">[%|loc%]Review members[%END%]</a></li>
-				[% END %]
-				
-				[% IF is_user_allowed_to('web_archive.access', listname) %]
-					<li><a href="[% path_cgi %]/arc/[% listname %]">[%|loc%]Archives[%END%]</a></li>
-				[% END %]
-			</ul>
-		</div>
-	</div>
-	[% END %]
+  [% FOREACH listname IN orderedlist.$letter %]
+  <div class="item">
+    <div class="item_content">
+      <a class="item_title" href="[% path_cgi %]/info/[% listname %]">
+        [% hidden_head %][% listname %][% hidden_at %][% which.$listname.host %][% hidden_end %]
+        [% IF which.$listname.admin %]
+          <span class="highlighted">([%|loc%]Owner[%END%])</span>
+        [% END %]
+      </a>
+      
+      <p class="list_subject">[% which.$listname.subject %]</p>
+      
+      <ul>
+        [% IF is_user_allowed_to('subscribe', listname) %]
+          <li><a href="[% path_cgi %]/subscribe/[% listname %]">[%|loc%]Request subscription[%END%]</a></li>
+        [% END %]
+        
+        [% IF which.$listname.admin %]
+          <li><a href="[% path_cgi %]/review/[% listname %]">[%|loc%]Review members[%END%]</a></li>
+        [% END %]
+        
+        [% IF is_user_allowed_to('archive.web_access', listname) %]
+          <li><a href="[% path_cgi %]/arc/[% listname %]">[%|loc%]Archives[%END%]</a></li>
+        [% END %]
+      </ul>
+    </div>
+  </div>
+  [% END %]
 [% END %] 
 </div>
 
@@ -49,7 +49,7 @@
 
 [% END %]
 
-	</div>
+  </div>
 </div>
 
 <!-- end search_list.tt2 -->
