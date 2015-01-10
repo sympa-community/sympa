@@ -16,7 +16,7 @@
 	[% END %]
 		
 		[% IF action == 'lists' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
-		<li><a class="[% class %]" href="[% path_cgi %]/lists" onclick="document.getElementById('loadingText').innerHTML='[%|loc%]Generating index...[%END%]'; show('loading'); hide('content-inner');">[%|loc%]Index of Lists[%END%]</a></li>
+		<li><a class="[% class %]" href="[% path_cgi %]/lists" onclick="show('loading'); hide('content-inner');">[%|loc%]Index of Lists[%END%]</a></li>
 		
 		<li><a href="[% path_cgi %]/search_list_request">[%|loc%]Search for List(s)[%END%]</a></li>
 		

@@ -5,11 +5,6 @@ So this may be used for locale-specific customization.
 -%]
 /* begin ja/css.tt2 */
 @media screen {  }
-[%# Enlarge fonts. %]
-body {
-    font-size: 110%;
-    line-height: 1.5;
-}
 [%#
 Overriding font families.  Problems such as below will be solved:
 
@@ -26,8 +21,7 @@ ignored by Safari), MacOS classic (if any), Windows (Vista or later, then
 XP/2000 or earlier), Red Hat/Fedora, Debian/Ubuntu, and others if any.
 -%]
 [%# Overriding default font family. %]
-body,
-.nav .navtoogle {
+body {
     font-family: "游ゴシック", YuGothic, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "ヒラギノ 角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, "Yu Gothic", "メイリオ", Meiryo, "ＭＳ Ｐゴ シック", "VL Pゴシック", "VL PGothic", "TakaoExゴシック", TakaoExGothic, "IPAex ゴシック", IPAexGothic, "IPA Pゴシック", IPAPGothic, sans-serif;
 }
 [%# Overriding "monospace, serif" %]

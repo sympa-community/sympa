@@ -14,10 +14,9 @@
       [%|loc%]You will receive an email that will allow you to choose your password.[%END%]
 [% ELSE %]
 [% IF requestpasswd_context == 'firstpasswd' %]	
-      <h3>[%|loc%]Registration: Non-Massey Users[%END%]</h3>
       <p>[%|loc%]Please enter your email address to begin the registration process.[%END%]</p>
 [% ELSE %]
-      [%|loc%]You forgot your password, so you have to renew it.[%END%]
+      <p>[%|loc%]You forgot your password, so you have to renew it.[%END%]</p>
 [% END %]
 [% END %]
 [% IF SAFE_TO_REVEAL_EMAIL %]

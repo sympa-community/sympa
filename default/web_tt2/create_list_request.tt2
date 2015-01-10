@@ -17,6 +17,7 @@
          [% IF template.value.selected || loop.size == 1 %]
          checked="checked"
          [% END %]
+         id="template.[% template.key %]"
          />
          [% PROCESS $template.value.comment %]
          </li>
@@ -26,6 +27,7 @@
          [% IF template.value.selected %]
          checked="checked"
          [% END %]
+         id="template.[% template.key %]"
          /> [% template.key %]
          </li>
          [% END %]
@@ -104,4 +106,21 @@
 [% END %]
 
 </div>
+
+[%# Initialize toggle. #%]
+<script>
+<!--
+  $('#list_copy').hide();
+
+  $('a[href="#list_copy"], a[href="#list_create"]').on('click', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    id = $(this).attr('href').substr(1);
+    $('#list_copy, #list_create').hide();
+    $('#' + id).show();
+    return false;
+  });
+//-->
+</script>
+
 <!-- end create_list_request.tt2 -->
