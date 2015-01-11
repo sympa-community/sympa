@@ -26,7 +26,7 @@
 	<div class="item">
 		<img class="item_icon" src="[% static_content_url %]/icons/new_list.png" />
 		<div class="item_content">
-			<a class="item_title" href="/sympa/create_list_request">[%|loc%]Create list[%END%]</a>
+			<a class="item_title" href="[% path_cgi %]/create_list_request" onclick="show('loading'); hide('content-inner');">[%|loc%]Create list[%END%]</a>
 			[%|loc%]Submit a mailing list creation request.[%END%]
 		</div>
 	</div>

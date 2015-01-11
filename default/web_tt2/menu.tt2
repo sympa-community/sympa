@@ -7,7 +7,7 @@
 		
 	[% IF may_create_list %]
 		[% IF action == 'create_list_request' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
-		<li><a class="[% class %]" href="[% path_cgi %]/create_list_request" >[%|loc%]Request a List[%END%]</a></li>
+		<li><a class="[% class %]" href="[% path_cgi %]/create_list_request" onclick="show('loading'); hide('content-inner');">[%|loc%]Request a List[%END%]</a></li>
 	[% END %]
 		
 	[% IF is_listmaster %]
