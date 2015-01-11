@@ -1497,12 +1497,7 @@ our @params = (
         'default' => 25,
         'file'    => 'wwsympa.conf',
     },
-    {   'name' => 'your_lists_size',
-        'gettext_id' =>
-            'Maximum number of lists listed in "Your lists" menu.  0 lists none.  negative value means unlimited.',
-        'vhost'   => '1',
-        'default' => '10',
-    },
+    # { your_lists_size: not yet implemented. }
     {   'name'       => 'http_host',
         'gettext_id' => 'URL of a virtual host',
         'sample'     => 'http://host.domain.tld',

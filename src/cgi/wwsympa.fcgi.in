@@ -1163,7 +1163,6 @@ while ($query = new_loop()) {
         'color_15',
         'reporting_spam_script_path',
         'automatic_list_families',
-        'your_lists_size',
         ) {
 
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
@@ -1340,10 +1339,9 @@ while ($query = new_loop()) {
 
     ## RSS does not require user authentication
     unless ($rss) {
-
-        if (   ($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS')
-            && ($in{'action'} ne 'sso_login'))
-        {    ## Do not check client certificate automatically if in sso_login
+        if (    $ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS'
+            and $in{'action'} ne 'sso_login') {
+            # Do not check client certificate automatically if in sso_login
 
             Log::do_log(
                 'debug2',
@@ -1352,8 +1350,8 @@ while ($query = new_loop()) {
                 $ENV{'SSL_CLIENT_S_DN_Email'}
             );
             if (($ENV{'SSL_CLIENT_S_EMAIL'})) {
-                ## this is the X509v3 SubjectAlternativeName, and requires
-                ## a patch to mod_ssl -- cm@coretec.at
+                # this is the X509v3 SubjectAlternativeName, and requires
+                # a patch to mod_ssl -- cm@coretec.at
                 $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_EMAIL'});
             } elsif ($ENV{SSL_CLIENT_S_DN_Email}) {
                 $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
@@ -1362,9 +1360,9 @@ while ($query = new_loop()) {
                 $param->{'user'}{'email'} = lc($1);
             } elsif ($Crypt::OpenSSL::X509::VERSION
                 and exists($ENV{SSL_CLIENT_CERT})) {
-                ## this is the X509v3 SubjectAlternativeName, and does only
-                ## require "SSLOptions +ExportCertData" without patching
-                ## mod_ssl -- massar@unix-ag.uni-kl.de
+                # this is the X509v3 SubjectAlternativeName, and does only
+                # require "SSLOptions +ExportCertData" without patching
+                # mod_ssl -- massar@unix-ag.uni-kl.de
                 $param->{'user'}{'email'} = lc(
                     Crypt::OpenSSL::X509->new_from_string(
                         $ENV{SSL_CLIENT_CERT}
@@ -1385,10 +1383,11 @@ while ($query = new_loop()) {
 
         } elsif (($session->{'email'}) && ($session->{'email'} ne 'nobody')) {
             $param->{'user'}{'email'} = $session->{'email'};
-        } elsif ($in{'ticket'} =~ /(S|P)T\-/)
-        {  # the request contain a CAS named ticket that use CAS ticket format
-            delete $session->{'do_not_use_cas'
-                };  #reset do_not_use_cas because this client probably use CAS
+        } elsif ($in{'ticket'} =~ /(S|P)T\-/) {
+            # the request contain a CAS named ticket that use CAS ticket format
+            #reset do_not_use_cas because this client probably use CAS
+            delete $session->{'do_not_use_cas'};
+
             # select the cas server that redirect the user to sympa and check
             # the ticket
             Log::do_log('notice',
@@ -1435,9 +1434,9 @@ while ($query = new_loop()) {
                     "Internal error while receiving a CAS ticket $session->{'checked_cas'} "
                 );
             }
-        } elsif (($Conf::Conf{'cas_number'}{$robot} > 0)
-            && ($in{'action'} !~ /^(login|sso_login|wsdl)$/))
-        {    # some cas server are defined but no CAS ticket detected
+        } elsif ($Conf::Conf{'cas_number'}{$robot} > 0
+            and $in{'action'} !~ /^(login|sso_login|wsdl)$/) {
+            # some cas server are defined but no CAS ticket detected
             unless ($session->{'do_not_use_cas'}) {
                 # user not taggued as not using cas
                 foreach
@@ -1522,30 +1521,8 @@ while ($query = new_loop()) {
                 $param->{'user'}{'cookie_delay'} =
                     $Conf::Conf{'cookie_expire'};
             }
-
-            ## Skip get_which if either in a list context or accessing the CSS
-            unless ($in{'action'} eq 'css' || defined $in{'list'}) {
-                ## get_which will be limited at most (your_lists_size + 1).
-                my $your_lists_size =
-                    Conf::get_robot_conf($robot, 'your_lists_size');
-                my %limit_which = ();
-                %limit_which = ('limit' => $your_lists_size + 1)
-                    if 0 <= $your_lists_size;
-                foreach my $role ('member', 'owner', 'editor') {
-                    $param->{"get_which_$role"} = Sympa::List::get_lists(
-                        $robot,
-                        'filter' => [
-                            $role      => $param->{'user'}{'email'},
-                            '! status' => 'closed|family_closed'
-                        ],
-                        %limit_which
-                    );
-                }
-                ## for compatibility to <= 6.2a
-                $param->{'get_which'} = $param->{'get_which_member'};
-            }
         }
-    }    ## END if RSS
+    }    # END unless ($rss)
 
     ## Action
     my $action = $in{'action'};
@@ -1790,69 +1767,7 @@ while ($query = new_loop()) {
             return 1;
         };
 
-        ## Set cookies "your_subscribtions" unless in one list page
-        if ($param->{'user'}{'email'} && ref($list) ne 'Sympa::List') {
-            # In case get_which was not set.
-            # The get_which will be limited at most (your_lists_size + 1).
-            my $your_lists_size =
-                Conf::get_robot_conf($robot, 'your_lists_size');
-            my %limit_which = ();
-            %limit_which = ('limit' => $your_lists_size + 1)
-                if 0 <= $your_lists_size;
-            foreach my $role ('member', 'owner', 'editor') {
-                $param->{"get_which_$role"} = Sympa::List::get_lists(
-                    $robot,
-                    'filter' => [
-                        $role      => $param->{'user'}{'email'},
-                        '! status' => 'closed|family_closed'
-                    ],
-                    %limit_which
-                ) unless defined $param->{"get_which_$role"};
-            }
-            ## for compatibility to <= 6.2a.
-            $param->{'get_which'} = $param->{'get_which_member'};
-
-            ## Add lists information to 'which_info'
-            foreach my $list (@{$param->{'get_which_member'}}) {
-                ## Evaluate AuthZ scenario first
-                my $result = Sympa::Scenario::request_action(
-                    $list,
-                    'visibility',
-                    $param->{'auth_method'},
-                    {   'sender'      => $param->{'user'}{'email'},
-                        'remote_host' => $param->{'remote_host'},
-                        'remote_addr' => $param->{'remote_addr'}
-                    }
-                );
-                next
-                    unless (ref($result) eq 'HASH'
-                    && $result->{'action'} eq 'do_it');
-
-                my $l = $list->{'name'};
-                $param->{'which_info'}{$l}{'subject'} =
-                    $list->{'admin'}{'subject'};
-                $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
-                $param->{'which_info'}{$l}{'info'} = 1;
-            }
-            foreach my $list (@{$param->{'get_which_owner'}}) {
-                my $l = $list->{'name'};
-                $param->{'which_info'}{$l}{'subject'} =
-                    $list->{'admin'}{'subject'};
-                $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
-                $param->{'which_info'}{$l}{'info'} = 1;
-                $param->{'which_info'}{$l}{'admin'} = 1;
-            }
-            foreach my $list (@{$param->{'get_which_editor'}}) {
-                my $l = $list->{'name'};
-
-                $param->{'which_info'}{$l}{'subject'} =
-                    $list->{'admin'}{'subject'};
-                $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
-                $param->{'which_info'}{$l}{'info'} = 1;
-                $param->{'which_info'}{$l}{'admin'} = 1;
-            }
-        }
-        ## Set cookies unless client use https authentication
+        # Set cookies unless client use https authentication
         if ($param->{'user'}{'email'}) {
             if ($param->{'user'}{'email'} ne 'x509') {    #FIXME FIXME FIXME
                 $session->{'auth'} ||= 'classic';
@@ -6258,9 +6173,7 @@ sub do_subscribe {
             return 'subrequest';
         }
     }
-    ## perform which to update your_subscriptions cookie ;
-    $param->{'get_which'} =
-        [Sympa::List::get_which($param->{'user'}{'email'}, $robot, 'member')];
+
     Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
     web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
 
@@ -6772,13 +6685,6 @@ sub unsubscribe {
                 }
             );
         }
-
-        ## perform which to update your_subscribtions cookie ;
-        $param->{'get_which'} = [
-            Sympa::List::get_which(
-                $authenticated_email_address, $robot, 'member'
-            )
-        ];
 
         unless (
             tools::send_file($list, 'bye', $authenticated_email_address, {}))
@@ -11561,13 +11467,12 @@ sub do_create_list_request {
 
     # load lists the user is administoring
     if ($param->{'is_listmaster'}) {
-        $param->{'all_lists'} = Sympa::List::get_lists($robot);
+        $param->{'all_lists'} = Sympa::List::get_lists($robot) || [];
     } else {
-        $param->{'all_lists'} = [
-            Sympa::List::get_which(
-                $param->{'user'}{'email'}, $robot, 'owner'
-            )
-        ];
+        $param->{'all_lists'} =
+            Sympa::List::get_lists($robot,
+            filter => ['owner' => $param->{'user'}{'email'}])
+            || [];
     }
 
     my %topics;
@@ -11611,41 +11516,46 @@ sub do_create_list_request {
 sub do_home {
     wwslog('info', '');
 
-    if (!$session->is_anonymous()) {
+    unless ($session->is_anonymous()) {
+        my @which_owner =
+            Sympa::List::get_which($param->{'user'}{'email'}, $robot,
+            'owner');
+        my @which_editor = Sympa::List::get_which($param->{'user'}{'email'},
+            $robot, 'editor');
+        my @which_member = Sympa::List::get_which($param->{'user'}{'email'},
+            $robot, 'member');
 
         ## Build the admin_summary variable that tells foreach list
         ## how many messages/subscriptions are awaiting moderation
-        foreach my $one_list (@{$param->{'get_which_owner'}},
-            @{$param->{'get_which_editor'}}) {
-
+        foreach my $one_list (@which_owner, @which_editor) {
+            # skip already treated ones
             next
-                if $param->{'admin_summary'}
-                {$one_list->{'name'}};    ## skip already treated ones
+                if $param->{'admin_summary'}{$one_list->{'name'}};
 
             my $mod_message = $one_list->get_mod_spool_size();
             $param->{'admin_summary'}{$one_list->{'name'}}{'mod_message'} =
                 $mod_message
-                if ($mod_message > 0);
+                if $mod_message;
 
             my $mod_subscription =
                 $one_list->get_subscription_request_count();
             $param->{'admin_summary'}{$one_list->{'name'}}
                 {'mod_subscription'} = $mod_subscription
-                if ($mod_subscription > 0);
+                if $mod_subscription;
 
             my $doc_mod_list     = $one_list->get_shared_moderated();
             my $mod_shared_total = $#{$doc_mod_list} + 1;
             $param->{'admin_summary'}{$one_list->{'name'}}
                 {'mod_shared_total'} = $mod_shared_total
-                if ($mod_shared_total > 0);
+                if $mod_shared_total;
 
         }
 
         ## Build the errors_summary variable, tells for a suscriber
         ## how many sending messages are in errors
 
-        foreach my $the_list (@{$param->{'get_which'}})
-        {    #review all the lists
+        foreach my $the_list (@which_member) {
+            # review all the lists
 
             next if $param->{'errors_summary'}{$the_list->{'name'}};
 
@@ -11654,7 +11564,7 @@ sub do_home {
 
             # if there is bounces put it in errors_summary
             $param->{'errors_summary'}{$the_list->{'name'}} = $errors
-                if ($errors > 0);
+                if $errors;
         }
     }
 
@@ -21458,28 +21368,6 @@ sub do_change_email {
         return undef;
     }
 
-    ## Update the data structure that tells which lists the current user is
-    ## member/owner/editor of
-    unless ($edited_by_listmaster == 1) {
-        $param->{'get_which'} = [
-            Sympa::List::get_which(
-                $param->{'user'}{'email'},
-                $robot, 'member'
-            )
-        ];
-        $param->{'get_which_owner'} = [
-            Sympa::List::get_which(
-                $param->{'user'}{'email'}, $robot, 'owner'
-            )
-        ];
-        $param->{'get_which_editor'} = [
-            Sympa::List::get_which(
-                $param->{'user'}{'email'},
-                $robot, 'editor'
-            )
-        ];
-    }
-
     if ($edited_by_listmaster == 1) {
         return 'serveradmin';
     }
@@ -21578,7 +21466,66 @@ sub do_suspend_request {
         push @{$param->{'suspend_list'}}, $subscription;
     }
 
+    _set_which_info();
+
     return 1;
+}
+
+sub _set_which_info {
+    # Set which_info unless in one list page
+    if ($param->{'user'}{'email'} and ref $list ne 'Sympa::List') {
+        my %get_which;
+
+        foreach my $role (qw(member owner editor)) {
+            $get_which{$role} = Sympa::List::get_lists(
+                $robot,
+                'filter' => [
+                    $role      => $param->{'user'}{'email'},
+                    '! status' => 'closed|family_closed'
+                ],
+            );
+        }
+
+        # Add lists information to 'which_info'
+        foreach my $list (@{$get_which{member}}) {
+            # Evaluate AuthZ scenario first
+            my $result = Sympa::Scenario::request_action(
+                $list,
+                'visibility',
+                $param->{'auth_method'},
+                {   'sender'      => $param->{'user'}{'email'},
+                    'remote_host' => $param->{'remote_host'},
+                    'remote_addr' => $param->{'remote_addr'}
+                }
+            );
+            next
+                unless ref $result eq 'HASH'
+                    and $result->{'action'} eq 'do_it';
+
+            my $l = $list->{'name'};
+            $param->{'which_info'}{$l}{'subject'} =
+                $list->{'admin'}{'subject'};
+            $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
+            $param->{'which_info'}{$l}{'info'} = 1;
+        }
+        foreach my $list (@{$get_which{owner}}) {
+            my $l = $list->{'name'};
+            $param->{'which_info'}{$l}{'subject'} =
+                $list->{'admin'}{'subject'};
+            $param->{'which_info'}{$l}{'host'}  = $list->{'admin'}{'host'};
+            $param->{'which_info'}{$l}{'info'}  = 1;
+            $param->{'which_info'}{$l}{'admin'} = 1;
+        }
+        foreach my $list (@{$get_which{editor}}) {
+            my $l = $list->{'name'};
+
+            $param->{'which_info'}{$l}{'subject'} =
+                $list->{'admin'}{'subject'};
+            $param->{'which_info'}{$l}{'host'}  = $list->{'admin'}{'host'};
+            $param->{'which_info'}{$l}{'info'}  = 1;
+            $param->{'which_info'}{$l}{'admin'} = 1;
+        }
+    }
 }
 
 ####################################################
@@ -24702,7 +24649,6 @@ sub get_safe_robot_conf {
         color_4 color_5 color_6 color_7 color_8 color_9 color_10 color_11
         color_12 color_13 color_14 color_15
         reporting_spam_script_path automatic_list_families
-        your_lists_size
         )
         ) {
         $param->{'conf'}{$p} = $robot->$p;
