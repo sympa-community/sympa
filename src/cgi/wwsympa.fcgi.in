@@ -1006,7 +1006,7 @@ while ($query = new_loop()) {
     undef $session;
 
     Log::set_log_level($Conf::Conf{'log_level'});
-    $language->set_lang($Conf::Conf{'lang'}, 'en');
+    $language->set_lang(tools::best_language('*'));
 
     ## Empty cache of the List.pm module
     Sympa::List::init_list_cache();
@@ -1567,15 +1567,12 @@ while ($query = new_loop()) {
             $param->{'domain'} = $list->{'domain'}
                 if (ref($list) eq 'Sympa::List');
 
-            # Set content language
-            # FIXME: $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !
-            my $list_lang = $list->{'admin'}{'lang'}
-                if ref $list eq 'Sympa::List';
+            # Set best content language
             my $user_lang = $param->{'user'}{'lang'} if $param->{'user'};
+            my $lang_context = (ref $list eq 'Sympa::List') ? $list : $robot;
             $param->{'lang'} =
                 $language->set_lang($session->{'lang'}, $user_lang,
-                $list_lang, Conf::get_robot_conf($robot, 'lang'),
-                $Conf::Conf{'lang'}, 'en');
+                tools::best_language($lang_context));
             # compatibility concern: old-style locale.
             $param->{'locale'} =
                 Sympa::Language::lang2oldlocale($param->{'lang'});
@@ -1670,9 +1667,7 @@ while ($query = new_loop()) {
     unless ($param->{'lang'}) {
         my $user_lang = $param->{'user'}{'lang'} if $param->{'user'};
         $param->{'lang'} =
-            $language->set_lang($user_lang,
-            Conf::get_robot_conf($robot, 'lang'),
-            $Conf::Conf{'lang'}, 'en');
+            $language->set_lang($user_lang, tools::best_language($robot));
         # compatibility: 6.1.
         $param->{'lang_tag'} = $param->{'lang'};
     }
@@ -3801,11 +3796,10 @@ sub do_login {
     } else {
         # user did not choose a specific language, apply user pref for this
         # session.
-        my $list_lang = $list->{'admin'}{'lang'}
-            if ref $list eq 'Sympa::List';
+        my $lang_context = (ref $list eq 'Sympa::List') ? $list : $robot;
         $param->{'lang'} =
-            $language->set_lang($user->{'lang'}, $list_lang,
-            Conf::get_robot_conf($robot, 'lang'), 'en');
+            $language->set_lang($user->{'lang'},
+            tools::best_language($lang_context));
         $session->{'lang'} = $param->{'lang'};
     }
     # compatibility: old-style locale.
@@ -4910,9 +4904,12 @@ sub do_lists {
                 $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'}
                     || $in{'subtopic'}
             );
-        } else {
+        } elsif ($topics{$in{'topic'}}{'current_title'}) {
             $param->{'subtitle'} = $topics{$in{'topic'}}{'current_title'}
-                || $in{'topic'};
+        } elsif ($in{'topic'} eq 'others' or $in{'topic'} eq 'topicsless') {
+            $param->{'subtitle'} = $language->gettext('Others');
+        } else {
+            $param->{'subtitle'} = $in{'topic'};
         }
 
         ## Filter lists by topic.

@@ -1050,27 +1050,26 @@ sub _get_search_path {
         } else {
             unshift @search_path, $path_family;
         }
-   } elsif (not ref $that and $that and $that ne '*') {    # Robot
+    } elsif (not ref $that and $that and $that ne '*') {    # Robot
         my $path_robot;
         @search_path = _get_search_path('*', @_);
 
-		if ($subdir) {
-			$path_robot =
-				$Conf::Conf{'etc'} . '/' . $that . '/' . $subdir;
-		} else {
-			$path_robot = $Conf::Conf{'etc'} . '/' . $that;
-		}
-		if (-d $path_robot) {
-			if ($lang_dirs) {
-				unless ($lang_only) {
-					unshift @search_path, $path_robot;
-				}
-				unshift @search_path,
-					map { $path_robot . '/' . $_ } @$lang_dirs;
-			} else {
-				unshift @search_path, $path_robot;
-			}
-		}
+        if ($subdir) {
+            $path_robot = $Conf::Conf{'etc'} . '/' . $that . '/' . $subdir;
+        } else {
+            $path_robot = $Conf::Conf{'etc'} . '/' . $that;
+        }
+        if (-d $path_robot) {
+            if ($lang_dirs) {
+                unless ($lang_only) {
+                    unshift @search_path, $path_robot;
+                }
+                unshift @search_path,
+                    map { $path_robot . '/' . $_ } @$lang_dirs;
+            } else {
+                unshift @search_path, $path_robot;
+            }
+        }
     } elsif (not ref $that and $that eq '*') {    # Site
         my $path_etcbindir;
         my $path_etcdir;
@@ -1911,6 +1910,70 @@ sub eval_in_time {
 }
 
 sub fix_children {
+}
+
+=over
+
+=item best_language ( LANG, ... )
+
+    # To get site-wide best language.
+    $lang = Site->best_language('de', 'en-US;q=0.9');
+    # To get robot-wide best language.
+    $lang = $robot->best_language('de', 'en-US;q=0.9');
+    # To get list-specific best language.
+    $lang = $list->best_language('de', 'en-US;q=0.9');
+
+Chooses best language under the context of List, Robot or Site.
+Arguments are language codes (see L<Language>) or ones with quality value.
+If no arguments are given, the value of C<HTTP_ACCEPT_LANGUAGE> environment
+variable will be used.
+
+Returns language tag or, if negotiation failed, lang of object.
+
+=back
+
+=cut
+
+sub best_language {
+    my $that = shift;
+    my $accept_string = join ',', grep { $_ and $_ =~ /\S/ } @_;
+    $accept_string ||= $ENV{HTTP_ACCEPT_LANGUAGE} || '*';
+
+    my @supported_languages;
+    my %supported_languages;
+    my @langs = ();
+    my $lang;
+
+    if (ref $that eq 'Sympa::List') {
+        @supported_languages =
+            tools::get_supported_languages($that->{'domain'});
+        $lang = $that->{'admin'}{'lang'};
+    } elsif (!ref $that) {
+        @supported_languages = tools::get_supported_languages($that || '*');
+        $lang = Conf::get_robot_conf($that || '*', 'lang');
+    } else {
+        die 'bug in logic.  Ask developer';
+    }
+    %supported_languages = map { $_ => 1 } @supported_languages;
+    push @langs, $lang
+        if $supported_languages{$lang};
+
+    if (ref $that eq 'Sympa::List') {
+        my $lang = Conf::get_robot_conf($that->{'domain'}, 'lang');
+        push @langs, $lang
+            if $supported_languages{$lang} and !grep { $_ eq $lang } @langs;
+    }
+    if (ref $that eq 'Sympa::List' or !ref $that and $that and $that ne '*') {
+        my $lang = $Conf::Conf{'lang'};
+        push @langs, $lang
+            if $supported_languages{$lang} and !grep { $_ eq $lang } @langs;
+    }
+    foreach my $lang (@supported_languages) {
+        push @langs, $lang
+            if !grep { $_ eq $lang } @langs;
+    }
+
+    return Sympa::Language::negotiate_lang($accept_string, @langs) || $lang;
 }
 
 =over 4
