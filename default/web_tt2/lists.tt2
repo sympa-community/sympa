@@ -1,45 +1,39 @@
 <!-- $Id$ -->
 
-[% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] %]
+[%- IF subtitle %]<h3>[% subtitle %]</h3>[% END -%]
 
+[% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] %]
+[% all_letters = [] %]
 
 [% IF action == 'search_list' %]
-  [%|loc(occurrence)%]%1 occurrence(s) found[%END%]<br /><br />
+  <p>[%|loc(occurrence)%]%1 occurrence(s) found[%END%]</p>
 [% ELSIF action == 'search_user' %]
-  [%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%]
+  <p>[%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%]</p>
 [% END %]
 
 [% IF which %]
 
+  [% FOREACH letter IN letters %]
+    [% IF orderedlist.$letter.0 %]
+      <div id="[% letter %]" />
+      <h4>[% IF letter == "others" %][%|loc%]Others[%END%][% ELSE %][% letter %][% END %]</h4>
 
-<div class="block">
-<div class="columns">
+      <ul class="listenum">
+      [% FOREACH listname IN  orderedlist.$letter %]
+        <li class="listenum">
+          <a href="[% path_cgi %]/info/[% listname %]">[% hidden_head %][% listname %][% hidden_at %][% which.$listname.host %][% hidden_end %]
+           [% IF which.$listname.admin %]<b style="color: red">([%|loc%]Owner[%END%])</b>[% END %]
+          </a><br />
 
-[% FOREACH letter IN letters %]
-[% IF orderedlist.$letter.0 %]
-<a name="[% letter %]" />
-[% END %] 
-<div>
- [% FOREACH listname IN  orderedlist.$letter %]
-<ul class="listenum" >
+          <p class="listenum" >[% which.$listname.subject %]</p>
+        </li>
+      [% END %]
+      </ul>
+      </div>
 
- <li class="listenum">
-  <a href="[% path_cgi %]/info/[% listname %]">[% hidden_head %][% listname %][% hidden_at %][% which.$listname.host %][% hidden_end %]
-  [% IF which.$listname.admin %]<b style="color: red">([%|loc%]Owner[%END%])</b>[% END %]
-  </a><br />
- </li>
-
-</ul>
-<p class="listenum" >[% which.$listname.subject %]</p>
-
-[% END %]
-
-</div>
-
- [% END %] 
-
-
-
+      [% all_letters.push(letter) %]
+    [% END %]
+  [% END %] 
 
  <br />
 
@@ -54,8 +48,20 @@
 <p>[%|loc%]No mailing list available.[%END%]</p>
 [% END %]
 
-</div>
-
-</div>
-
+[% IF all_letters.size %]
+<script>
+<!--
+  $(
+    '[% 'a[href="#' _ all_letters.join( '"], a[href="#' ) _ '"]' %]'
+  ).on('click', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    id = $(this).attr('href').substr(1);
+    $( '[% '#' _ all_letters.join(', #') %]' ).hide();
+    $('#' + id).show();
+    return false;
+  });
+//-->
+</script>
+[% END %]
 <!-- end lists.tt2 -->
