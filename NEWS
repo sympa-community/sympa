@@ -249,7 +249,7 @@
 	- confdef: keys of 'query' & 'advice' in @confdef::params were changed
 	to 'gettext_id' & 'gettext_comment', 'title' to 'gettext_id', to sync
 	style with 0stdef::pinfo;
-	- sympa_wizard: keys of 'usage' and 'prerequisites' in  pan_modules
+	- sympa_wizard: keys of 'usage' and 'prerequisites' in pan_modules
 	were changed to 'gettext_id' & 'gettext_comment'.
 
 	[10321] src/lib/Conf.pm, src/lib/Upgrade.pm, src/lib/confdef.pm,
@@ -455,9 +455,9 @@
 *****	display your template. You don't need the <head/> section or the
 *****	<body/> tag.
 *****	ANY PRE-EXISTING CUSTOM ACTION MUST BE MOVED TO THE CUSTOM_ACTION DIRECTORY
-*****   AND MUST BE ADDED AT LEAST A MINIMAL .PM FILE TO KEEP WORKING.
+*****   TO KEEP WORKING.
 *****	The HTML code in <your_action>.tt2 can make use of the parameters this
-*****	way: [ ap.1 %] for param1, [ ap.2 %] for param, and so on.
+*****	way: [% ap.1 %] for param1, [% ap.2 %] for param, and so on.
 *****	If the module is not defined the template is displayed.
 *****	You can even have a robot-common <your_action>.pm module with a
 *****	specific <your_action>.tt2 for each robot as the file (.pm or .tt2) is
@@ -2032,7 +2032,7 @@
 	readable form in "other similar subscribers" results.
 	Format date and update_date fields in tt2 parameters.
 
-	[9948] src/lib/List.pm: [Reported by ÷. Sahin, univ.Lyon 2] When
+	[9948] src/lib/List.pm: [Reported by √ñ. Sahin, univ.Lyon 2] When
 	List::new sub was called, sync_include_admin was systematically
 	executed, except when specifically stated. If using a lot of owenr and
 	editor datasources, this resulted in large amount of queries to these
@@ -2042,7 +2042,7 @@
 	'ditribution_ttl' parameters are not exceeded.
 
 	[9946] src/lib/List.pm, wwsympa/wwsympa.fcgi.in: [Reported by P. Aepli,
-	univ. GenËve] Multi-valued parameters obtained from Shibboleth IdP were
+	univ. Gen√®ve] Multi-valued parameters obtained from Shibboleth IdP were
 	badly parsed. This as due to the fact that Sympa stored additional
 	parameters under the form: "key1=value1;key2=value2;etc." As Shibboleth
 	uses semi-columns to separate values in multivalued attributes, values
@@ -2097,7 +2097,7 @@
 	 Fixed by replacing ":utf8" input layer with ":encoding(utf8)", since
 	former won't really check inputs.
 
-	[9058] src/sympa.pl.in:  [#7825] [Reported by D. Marant, UniversitÈ
+	[9058] src/sympa.pl.in:  [#7825] [Reported by D. Marant, Universit√©
 	Lille 1] spam_status scenario has no effect for messages sent to
 	command addresses.
 	Fixed  a typo in sympa::DoCommand(). 
@@ -2348,7 +2348,7 @@
 
   Bug fixes:
 
-	[7059] wwsympa/SympaSession.pm: [Reported by V. Carpier, AC RÈunion
+	[7059] wwsympa/SympaSession.pm: [Reported by V. Carpier, AC R√©union
 	(but seriously, he was in the CRU before!)] SympaSession.pm caused
 	"fetch without execute" errors to be issued into the Apache error logs.
 	This was due to a second call to "fetchrow_hashref" after all the lines
@@ -2442,7 +2442,7 @@
 	because the needed cookie is obviously not here in such a situation.
 
 	[6987] wwsympa/wwsympa.fcgi.in: [Reported by M. Larchet, univ. Nancy 2,
-	M.LiËvre, Orange and L. GrÈgoire, ENSEEIHT] Owners trying to access the
+	M.Li√®vre, Orange and L. Gr√©goire, ENSEEIHT] Owners trying to access the
 	list config edition form, section "Sending/receiving setup" when:
 	1- No digest parameter was defined in the config file and
 	2- they had only read access to the digest parameter
@@ -2726,7 +2726,7 @@
 	to generate CSS files in static_content/. Now also checking customized
 	css.tt2.
 
-	src/lib/List.pm:  fix verp rate 0 ase where Sympa do not send
+	src/lib/List.pm:  fix verp rate ase where Sympa do not send
 	messages to subscriber with bounces 
 
 	src/sympa_wizard.pl.in: Encoding in body of web composed messages was
@@ -2795,7 +2795,7 @@
 	soap/sympa_soap_client.pl.in: Fixed a bug that prevented authentication
 	while using authenticateAndRun()
 
-	src/lib/SQLSource.pm: [Subm˘itted by F. Lachapelle, Inverse] If the
+	src/lib/SQLSource.pm: [Subm√πitted by F. Lachapelle, Inverse] If the
 	db_type is set to Oracle and db_port is specified in the main
 	configuration file, than the port would appear two times in the
 	connection string.
@@ -3256,7 +3256,7 @@
 	to generate CSS files in static_content/. Now also checking customized
 	css.tt2.
 
-	src/lib/List.pm:  fix verp rate 0 ase where Sympa do not send
+	src/lib/List.pm:  fix verp rate ase where Sympa do not send
 	messages to subscriber with bounces 
 
 	src/sympa_wizard.pl.in: Encoding in body of web composed messages was
@@ -3589,7 +3589,7 @@
 	soap/sympa_soap_client.pl.in: Fixed a bug that prevented authentication
 	while using authenticateAndRun()
 
-	src/lib/SQLSource.pm: [Subm˘itted by F. Lachapelle, Inverse] If the
+	src/lib/SQLSource.pm: [Subm√πitted by F. Lachapelle, Inverse] If the
 	db_type is set to Oracle and db_port is specified in the main
 	configuration file, than the port would appear two times in the
 	connection string.
@@ -4974,7 +4974,7 @@ invocation, the functions return undef.
 	wwsympa/Auth.pm: [#3183][] : Trusted application name check was case sensitive, xhreas it is not supposed to be the case.
 	Fixed by lowercasing comparison in remote_app_check_password().
 
-	src/Language.pm: [#3269][Submitted by J. Å√ñstman, Helsinki univ.of technology]: sympa would take the LANGUAGE environment
+	src/Language.pm: [#3269][Submitted by J. ¬Å√É¬ñstman, Helsinki univ.of technology]: sympa would take the LANGUAGE environment
 	variable as its default instead of its lang parameter value, because this is Gettext default behaviour.
 
 	src/Conf.pm, src/Family.pm, src/List.pm, wwsympa/bounce-lib.pl: [#3271][Reported by M. Anderson, riseup.net] 
@@ -5607,7 +5607,7 @@ parser::parse_tpl().
 	src/List.pm: 'host' robot.conf parameter was not well supported. It is now the default value for the list 'host'
 	parameter.
 
-	src/sympa.pl: [reported by P.Maes, UniversitÅÈ Louvain] Sympa would improperly detect a loop if the same message 
+	src/sympa.pl: [reported by P.Maes, Universit¬Å√© Louvain] Sympa would improperly detect a loop if the same message 
 	is sent to 2 lists with same local part. Now added list robot to %msgid_table keys.
 
 	mail_tt2/message_report.tt2, src/Commands.pm: [reported by D.Lamballais, IRISA] moderator was no more notified after
@@ -5805,7 +5805,7 @@ parser::parse_tpl().
 *****   You should run 'configure --enable-secure' and 
 *****   use wwsympa_sudo_wrapper.pl instead of wwsympa.fcgi
 
-	po/nb_NO.po:  [A.Lund and J.Gunnar] Added Norwegian BokmÅÂl
+	po/nb_NO.po:  [A.Lund and J.Gunnar] Added Norwegian Bokm¬Å√•l
 
 	po/Makefile: new "check" target to compare the PO files with another set of PO files (usefull for Rosetta)
 
@@ -7890,7 +7890,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 *****		ALTER TABLE subscriber_table ADD include_sources_subscriber varchar(50);
 *****	If you are using another RDBMS, please check create_db.xxx scripts
 
-	src/etc/script/sympa: [Pierre MÅÈtras] Changes: adapt statup
+	src/etc/script/sympa: [Pierre M¬Å√©tras] Changes: adapt statup
 	script for Solaris (second episod)	 
 		* comparison operator with SH is '=' ('==' is Bash-specific)    
 		* use PIDDIR    
@@ -9040,7 +9040,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 	wwsympa/wws_templates/fr/help_editlist.fr.tpl: [Michel Bouissou]
 	Translated editlist helpfile to french
 
-	[JÈrÙme Marant] New feature: change sympa man page to POD format
+	[J√©r√¥me Marant] New feature: change sympa man page to POD format
 	Add archived, bounced and alias_manager man pages
 
 	wwsympa/wwsympa.fcgi: "Reply" feature from web archives It uses the "compose_mail" 
@@ -9094,7 +9094,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 
 	[Petr Prazak] Czech templates update
 
-	nls/es.msg: [Josep Rom·n] additions and corrections
+	nls/es.msg: [Josep Rom√°n] additions and corrections
 
   Bug Fixes :
 	
@@ -9146,7 +9146,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 
 	could not delete editor/owner entries
 
-	src/Makefile: [JÅÈrÅÙme Marant] Change: clean aliaswrapper
+	src/Makefile: [J¬Å√©r¬Å√¥me Marant] Change: clean aliaswrapper
 
 	src/Commands.pm: Missing list::get_user_db() in REMIND for getting 
 	user prefs (including password)
@@ -9248,7 +9248,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 	src/List.pm: when subscribers are extracted from an SQL query,
 	the query ends getting emails at first empty entry
 
-	src/sympa.pl: [reported by JÈrÙme Marant] parameter
+	src/sympa.pl: [reported by J√©r√¥me Marant] parameter
 	for --debug is compulsory
 
 	wwsympa/wwsympa.fcgi: no more lowercase in shared ; otherwise
@@ -9306,7 +9306,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 
 	src/List.pm: bad condition, never alert owners about bounce rate
 
-	src/etc/script/load_subscribers.pl: [GÈrard Gachelin]
+	src/etc/script/load_subscribers.pl: [G√©rard Gachelin]
 	insert comment
 
 	src/tools.pl, wwsympa/wwsympa.fcgi: [reported by Anne Durand]
@@ -9542,7 +9542,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 	products.
 
 	src/List.pm: Allow . and - in scenario file names. (reported by
-	Odile GermËs)
+	Odile Germ√®s)
 
  	Hard-coded colors in wws_templates
 
@@ -9641,7 +9641,7 @@ src/sympa.pl: new --sync_include sympa.pl option
         [Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
 	Replace system call to MhOnArc in wwsympa.fcgi
 
-        [reported by FranÁois Dagorn <dagorn AT univ-rennes1.fr>]
+        [reported by Fran√ßois Dagorn <dagorn AT univ-rennes1.fr>]
 	When subscribtion is sent to owner, the approve command
         should be a mailto:
 
@@ -9649,7 +9649,7 @@ src/sympa.pl: new --sync_include sympa.pl option
         Using uniq Return-path impossible with postfix. Replace the
         separator char "/" by "==".  
 	
-        [JÈrÙme Marant <jmarant AT free.fr>]
+        [J√©r√¥me Marant <jmarant AT free.fr>]
 	Missing "CREATE DATABASE" in create_db.Pg
 
 3.0b.8	18 Dec 2000
@@ -9699,7 +9699,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 	[reported by J.E. Gadenne <jeg AT lettres.net>]
 	Escape '<' and '>' chars in modindex's Subject field
 
-	[JÈrÙme Marant <jmarant AT free.fr>]
+	[J√©r√¥me Marant <jmarant AT free.fr>]
 	Delete Perl interpreter calls in perl modules
 	Correct privileges on mhonarc-ressources file
 
@@ -10034,7 +10034,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 
 	Rename a message as BAD if it cannot be opened
 
-	[reported by HervÈ Maza <herve.maza AT education.gouv.fr>]
+	[reported by Herv√© Maza <herve.maza AT education.gouv.fr>]
 	Add Subject: to moderation notification message
 
 	Create "spool/" directory before attempting to create spools.
@@ -10077,7 +10077,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 
 	Don't consider messages as BAD if list has 0 subscriber
 
-	[reported by Emmanuelle RiviËre <cdb AT bok.net>]
+	[reported by Emmanuelle Rivi√®re <cdb AT bok.net>]
 	Hide recepients of summaries
 
 	[reported by Michel Bouissou <michel.bouissou AT i-quake.com>]
@@ -10146,7 +10146,7 @@ src/sympa.pl: new --sync_include sympa.pl option
         One more bug in modindex
 
     Changes :
-        [Josep Rom·n <josep.roman AT zuerich-see.ch>] 
+        [Josep Rom√°n <josep.roman AT zuerich-see.ch>] 
 	update spanish templates
 
 2.7.1 30 June 2000
@@ -10191,7 +10191,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 
 *****	Requires MIME::Parser >= 5.209
 	
-	[Josep Rom·n <josep.roman AT zuerich-see.ch>]
+	[Josep Rom√°n <josep.roman AT zuerich-see.ch>]
 	Updated nls/es.msg
 
 	Default log_facility in wwsympa.conf is now sympa's log facility
@@ -10226,7 +10226,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 	'hostname --long' on Solaris systems sets hostname to '--long'
 	Changes in the Makefile to make it work on Solaris
 
-	[reported by Josep Rom·n <josep.roman AT zuerich-see.ch>]
+	[reported by Josep Rom√°n <josep.roman AT zuerich-see.ch>]
 	Sympa is unable to use default helpfile.tpl and lists.tpl
 
 2.7b.3 16 June 2000
@@ -10656,7 +10656,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 	a search engine dedicated to MhOnArc, written by Eric D. Friedman
 	<edf2 AT pacbell.net>.
 
-        [Josep Rom·n <josep.roman AT zuerich-see.ch>]
+        [Josep Rom√°n <josep.roman AT zuerich-see.ch>]
 	Translations of templates to spanish (changes in wws-lib.pl
 	and wwsympa.fcgi also)
 
@@ -10687,7 +10687,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 
 	Set NLS language in wwsympa.
 	
-	[HervÈ MAZA <herve.maza AT education.gouv.fr>]
+	[Herv√© MAZA <herve.maza AT education.gouv.fr>]
 	Save files (as listmaster) in etc/templates/ instead
 	of expl/ (in do_savefile()).
 
@@ -10695,7 +10695,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 
 	Archived.pl did not use default mhonarc ressource file.
 
-        [HervÈ Maza <herve.maza AT education.gouv.fr>]
+        [Herv√© Maza <herve.maza AT education.gouv.fr>]
 	bounced died when using unique return_path. Fixed.
 
 	[reported by Stephane Igounet <Stephane.Igounet AT univ-avignon.frd>]
@@ -10710,7 +10710,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 	[Laurent LAVAUD <laurent.lavaud AT u-bordeaux2.fr>]
 	Changed the connect string for PostgreSQL
 
-	[HervÈ Maza <herve.maza AT education.gouv.fr>]
+	[Herv√© Maza <herve.maza AT education.gouv.fr>]
 	Corrections in List::is_moderated()
 
 	Number of subscribers updated in stats file
@@ -10728,7 +10728,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 *****	We HIGHLY RECOMMEND set this parameter to have
 *****	different MD5 authentication keys from one site to another
 
-	[Josep Rom·n <josep.roman AT zuerich-see.ch>]
+	[Josep Rom√°n <josep.roman AT zuerich-see.ch>]
 	Translation to spanish of :
 		+ Sympa templates
 		+ scenari descriptions
@@ -10773,7 +10773,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 	List's "host" parameter uncompletely used ; when forwarding
 	requests to owners for instance.
 
-	[HervÈ MAZA <herve.maza AT education.gouv.fr>]	
+	[Herv√© MAZA <herve.maza AT education.gouv.fr>]	
 	Corrected $list->info()
 	Corrected REMIND when authentifying
 	Corrected loop in global_remind.tpl
@@ -10958,7 +10958,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 
      	User lang is initialized at subscription time.
 
-     	[Josep Rom·n <josep.roman AT zuerich-see.ch>]
+     	[Josep Rom√°n <josep.roman AT zuerich-see.ch>]
      	Corrections in es.msg
 
      	Makefile doesn't use "install" anymore.
@@ -11210,7 +11210,7 @@ src/sympa.pl: new --sync_include sympa.pl option
 
      	Listmaster is owner of every list
      
-     	List::get_subscriber() returns ´langª and ´gecosª from user_table.
+     	List::get_subscriber() returns ¬´lang¬ª and ¬´gecos¬ª from user_table.
 
      	New robot configuration parameter "helpfile_advanced"
 
@@ -11268,8 +11268,8 @@ src/sympa.pl: new --sync_include sympa.pl option
 	  Eg : %sympa.pl -l fr
 
      	Priorities for -owner and -request are no more list priority.
-     	Two new global parameters define these priorities : ´owner_priorityª 
-     	and ´request_priorityª.
+     	Two new global parameters define these priorities : ¬´owner_priority¬ª 
+     	and ¬´request_priority¬ª.
 
      	Command & messages priority added to the log.
 
@@ -11330,8 +11330,8 @@ src/sympa.pl: new --sync_include sympa.pl option
       	entries.
 
       	Priorities are now defined in list configuration files (instead
-      	of aliases) by ´priorityª parameter. New (optional) parameters
-      	in sympa.conf : ´sympa_priorityª and ´default_list_priorityª. 
+      	of aliases) by ¬´priority¬ª parameter. New (optional) parameters
+      	in sympa.conf : ¬´sympa_priority¬ª and ¬´default_list_priority¬ª. 
       	Changes in aliases : no more priority param is needed
       	(though old style remains compatible)
 
@@ -11523,13 +11523,13 @@ src/sympa.pl: new --sync_include sympa.pl option
 
       	include_file fixed
 
-      	Ignore ´Re:ª in front of commands in subjects
+      	Ignore ¬´Re:¬ª in front of commands in subjects
       	Process commands in subjects longer than 79 characters 
       	(Mail::Header) 
 
       	Decoding of "_" in Q-coded subjects
 
-      	From: header fields of reports from sympa respect ´hostª config
+      	From: header fields of reports from sympa respect ¬´host¬ª config
       	; files sent (welcome, bye,...) are from <listname>-request.
             
 
@@ -11856,7 +11856,7 @@ src/sympa.pl: new --sync_include sympa.pl option
         - Allow option "reception nomail" in owner and editor definition.
 	  usefull to define multiple address of one privilegied person.
 	
-        - Add sympa version number at the end of command  ´HELPª result.
+        - Add sympa version number at the end of command  ¬´HELP¬ª result.
 	
 	- Allow file bienvenue.mime insteed of bienvenue. In this case
 	  bienvenue.mime is sent as is so you can use complexe mime structure
@@ -11886,121 +11886,121 @@ src/sympa.pl: new --sync_include sympa.pl option
 	  
 	
 	
-1.3.4-1 29 dÈcembre 1998
+1.3.4-1 29 d√©cembre 1998
 
-        Correction dans la numÈrotation des messages de fr.msg.
+        Correction dans la num√©rotation des messages de fr.msg.
 
-1.3.4	22 dÈcembre 1998
+1.3.4	22 d√©cembre 1998
 
 	Les "digest" sont au format MIME, il faut maintenant installer
-	le module CPAN MIME-Base64 en plus des autres modules dÈj‡.
+	le module CPAN MIME-Base64 en plus des autres modules d√©j√†.
 
-	Quelques petits dÈfauts de corrigÈs.
+	Quelques petits d√©fauts de corrig√©s.
 
-1.3.3	10 dÈcembre 1998
+1.3.3	10 d√©cembre 1998
 
 	Nouvelle option log_socket_type dans sympa.conf pour choisir la
 	journalisation via UDP ou un socket Unix.
 
-	La limite "anti-commandes" passe de 20 lignes ‡ 15 lignes dans le
-	corps du message (c'Ètait vraiment pÈnible).
+	La limite "anti-commandes" passe de 20 lignes √† 15 lignes dans le
+	corps du message (c'√©tait vraiment p√©nible).
 
 	On peut maintenant utiliser DESTDIR. Exemple :
 		make install DESTDIR=/mnt
-	Le nom DESTDIR est prÈfixÈ au rÈpertoire DIR du fichier Makefile
-	(proposition de RaphaÎl Hertzog).
+	Le nom DESTDIR est pr√©fix√© au r√©pertoire DIR du fichier Makefile
+	(proposition de Rapha√´l Hertzog).
 	
-	Nouvelle fonction : on peut dorÈnavant mettre des commandes dans
+	Nouvelle fonction : on peut dor√©navant mettre des commandes dans
 	le fichier sympa.conf. Exemple :
 		host	`cat /etc/hostname`
-	(proposition de RaphaÎl Hertzog).
+	(proposition de Rapha√´l Hertzog).
 
 1.3.2	18 septembre 1998
 
-	Avec certaines versions de l'interpÈteur Perl, "smtp.pm::reaper"
+	Avec certaines versions de l'interp√©teur Perl, "smtp.pm::reaper"
 	ne se comportait pas correctement.
 
 	IMPORTANT : changement des conditions d'utilisation, de modification
 	et de diffusion de Sympa (grosso-modo on adopte GPL) -- ceci afin de
-	permette crÈation et la diffusion d'un module Debian sympa.deb.
+	permette cr√©ation et la diffusion d'un module Debian sympa.deb.
 
 1.3.1-2	6 juillet 1998
 
 	Correction d'une erreur dans sympa.pl rejettant les messages et
 	commandes provenant des domaines contenant les chaines "listeserv" ou
 	"sympa" (par exemple sympatico.ca).
-	Correction d'un dÈfaut mineur dans Commands.pm.
+	Correction d'un d√©faut mineur dans Commands.pm.
 
 1.3.1	1 juillet 1998
 
-	CrÈation automatique du rÈpertoire "archives" d'une liste, si besoin
+	Cr√©ation automatique du r√©pertoire "archives" d'une liste, si besoin
 	est.
-	Correction des messages associÈs ‡ la commande EXPIRE.
-	Restructuration du chapitre 7 (Commands.pm) du catalogue franÁais.
-	Ajout d'entÍte MIME dans les notifications de rejet (contribution
+	Correction des messages associ√©s √† la commande EXPIRE.
+	Restructuration du chapitre 7 (Commands.pm) du catalogue fran√ßais.
+	Ajout d'ent√™te MIME dans les notifications de rejet (contribution
 	d'Olivier.Lacroix AT ciril.fr).
 	Journalisation des boucles
-	Mise ‡ jour de la dÈtection des commandes dans les messages.
+	Mise √† jour de la d√©tection des commandes dans les messages.
 
 1.3.0	11 juin 1998	Contributions du CRU (Fabien Marquois)
 
-	NouveautÈs dans les commandes WHICH, expiration des abonnements,
-	diffusion des messages pour les listes modÈrÈes, Ètat des messages en
+	Nouveaut√©s dans les commandes WHICH, expiration des abonnements,
+	diffusion des messages pour les listes mod√©r√©es, √©tat des messages en
 	attente.
 
 	Nouvelles options de configuration : authentification des signatures de
 	messages, valeurs privatekey, publickey et privateorpublickey pour le
-	paramËtre "send" ; paramËtres clean_delay_queueauth et queueauth dans
-	sympa.conf ; paramËtre clean_delay_queue dans sympa.conf ; paramËtre
-	queueexpire dans sympa.conf ; paramËtre clean_delay_queuemod dans
-	sympa.conf ; paramËtre sleep dans sympa.conf.
+	param√®tre "send" ; param√®tres clean_delay_queueauth et queueauth dans
+	sympa.conf ; param√®tre clean_delay_queue dans sympa.conf ; param√®tre
+	queueexpire dans sympa.conf ; param√®tre clean_delay_queuemod dans
+	sympa.conf ; param√®tre sleep dans sympa.conf.
 
-	Corrections : la date d'abonnement ou de derniËre confirmation
-	d'abonnement est mise ‡ jour lorsque celui-ci envoie un mail dans
+	Corrections : la date d'abonnement ou de derni√®re confirmation
+	d'abonnement est mise √† jour lorsque celui-ci envoie un mail dans
 	la liste, uniformisation des logs de Sympa, correction de la
-	vÈrification du champ x-loop des messages modÈrÈs, mise ‡ jour de la
-	documentation, utilisation du cookie dans la gÈnÈration des clÈs de
-	modÈration.
+	v√©rification du champ x-loop des messages mod√©r√©s, mise √† jour de la
+	documentation, utilisation du cookie dans la g√©n√©ration des cl√©s de
+	mod√©ration.
 
 1.2.2	20 mai 1998	Contributions du CRU (Fabien Marquois)
 
-	Corrections de dÈfauts et nouvelles fonctions : plusieurs
-	"custom-header", traiter les rÈponses prÈfixÈes par ">",
-	prÈsentation en MIME des messages ‡ modÈrer, accents supprimÈs
+	Corrections de d√©fauts et nouvelles fonctions : plusieurs
+	"custom-header", traiter les r√©ponses pr√©fix√©es par ">",
+	pr√©sentation en MIME des messages √† mod√©rer, accents supprim√©s
 	des journaux (syslog ne sait pas faire), gestion des accents dans
-	certaines commandes, journalisation de la durÈe des commandes.
+	certaines commandes, journalisation de la dur√©e des commandes.
 
-	Makefile pour gÈnÈrer et installer le catalogue de Sympa.
+	Makefile pour g√©n√©rer et installer le catalogue de Sympa.
 
 1.2.1	15 mai 1998	Contributions du CRU (Fabien Marquois)
 
-	Corrections de dÈfauts de la 1.2.0 : review, gÈnÈration des clÈs de
-	modÈration.
+	Corrections de d√©fauts de la 1.2.0 : review, g√©n√©ration des cl√©s de
+	mod√©ration.
 
 1.2.0	13 mai 1998	Contributions du CRU (Fabien Marquois)
 
-	Refonte de la documentation : fonctions non encore documentÈes,
+	Refonte de la documentation : fonctions non encore document√©es,
 	fichiers de configuration, notes pour certains Unix.
 
-	Nouvelles fonctions : digest, modÈrator avec editorkey et
+	Nouvelles fonctions : digest, mod√©rator avec editorkey et
 	editorkeyonly, commentaires dans les fichiers de configuration,
 	liste rouge (conceal, noconceal), nomail, custom-header, tri par
-	prioritÈ selon le domaine destination.
+	priorit√© selon le domaine destination.
 
-	Corrections : problËme d'allocation mÈmoire, mot-clÈ msgcat pris en
-	compte, corrections pour "confirm", fonction stats plus prÈcise,
-	problËmes avec les guillements dans le catalogue des messages.
+	Corrections : probl√®me d'allocation m√©moire, mot-cl√© msgcat pris en
+	compte, corrections pour "confirm", fonction stats plus pr√©cise,
+	probl√®mes avec les guillements dans le catalogue des messages.
 
-0.011	2 fÈvrier 1998
+0.011	2 f√©vrier 1998
 
-	LÈgers changements dans Makefile (crÈation du rÈpertoire bin qui
-	n'Ètait pas faite au bon endroit).
+	L√©gers changements dans Makefile (cr√©ation du r√©pertoire bin qui
+	n'√©tait pas faite au bon endroit).
 
-	Les commandes add/del ne fonctionnaient pas comme prÈvu dans certains
-	cas ‡ cause d'une erreur de programmation.
+	Les commandes add/del ne fonctionnaient pas comme pr√©vu dans certains
+	cas √† cause d'une erreur de programmation.
 
-	Ajout systÈmatique des entÍtes MIME du catalogue des messages (si elles
-	sont dÈfinies).
+	Ajout syst√©matique des ent√™tes MIME du catalogue des messages (si elles
+	sont d√©finies).
 
 0.010   27 janvier 1998
 
@@ -12008,48 +12008,48 @@ src/sympa.pl: new --sync_include sympa.pl option
 	avec "gencat".
 
 	Les commandes add/del permettent l'usage de l'authentifieur MD5. Pour
-	cela il faut que le propriÈtaire de la liste ait "auth md5" dans le
+	cela il faut que le propri√©taire de la liste ait "auth md5" dans le
 	fichier de configuration.
 
 	Une erreur dans Archive.pm mettait des dates fantaisistes dans la date
-	de crÈation d'une archive.
+	de cr√©ation d'une archive.
 
-	On journalise la durÈe de l'envoi des messages ainsi que le nombre de
+	On journalise la dur√©e de l'envoi des messages ainsi que le nombre de
 	sessions SMTP.
 
-	Gestion des entÍtes MIME (‡ dÈfinir ‡ la fin de fr.msg).
+	Gestion des ent√™tes MIME (√† d√©finir √† la fin de fr.msg).
 
-0.009   10 dÈcembre 1997
+0.009   10 d√©cembre 1997
 
-	Correction d'une erreur dans les expressions rÈguliËres de gestion des
-	commandes : cela pouvait faire Èchouer l'usage de l'authentifieur dans
-	certains cas trËs rares.
+	Correction d'une erreur dans les expressions r√©guli√®res de gestion des
+	commandes : cela pouvait faire √©chouer l'usage de l'authentifieur dans
+	certains cas tr√®s rares.
 
-	Ajout de l'entÍte X-Loop et traitement visant ‡ prevenir les boucles.
+	Ajout de l'ent√™te X-Loop et traitement visant √† prevenir les boucles.
 
-	Erreur dans le total du nombre d'abonnÈs : l'ajout d'un utilisateur
-	n'Ètait pas comptabilisÈ.
+	Erreur dans le total du nombre d'abonn√©s : l'ajout d'un utilisateur
+	n'√©tait pas comptabilis√©.
 
 	Reply List ne fonctionnait pas dans certains cas en raison d'une faute
 	de programmation.
 
 0.008	15 novembre 1997
 
-	CorrigÈ quelques bugs et rajout de l'option maxsmtp dans sympa.conf.
+	Corrig√© quelques bugs et rajout de l'option maxsmtp dans sympa.conf.
 
 0.007   10 novembre 1997
 
-	La modÈration Ètait en avance sur son temps : on revient ‡ la (mauvaise)
-	vieille mÈthode (AtArticle to modÈrate).
+	La mod√©ration √©tait en avance sur son temps : on revient √† la (mauvaise)
+	vieille m√©thode (AtArticle to mod√©rate).
 	Corrections mineures dans les autres modules.
-	Le fichier fr.msg a ÈtÈ corrigÈ et Ètendu.
+	Le fichier fr.msg a √©t√© corrig√© et √©tendu.
 
 0.006   15 septembre 1997
 
 	Beaucoup de changements dans de nombreux modules, notamment un
-	dÈbut d'Ècriture en objet pour certains d'entre eux. Quelques
-	corrections de dÈfauts. A se demander si on ne devrait pas
-	appeler cela une bÈta de la version 2 de Sympa.
+	d√©but d'√©criture en objet pour certains d'entre eux. Quelques
+	corrections de d√©fauts. A se demander si on ne devrait pas
+	appeler cela une b√©ta de la version 2 de Sympa.
 
 
 0.005	8 juillet 1997
@@ -12058,44 +12058,44 @@ src/sympa.pl: new --sync_include sympa.pl option
 
 	La commande `get' fonctionne enfin.
 
-	Certaines fonctions passent du module `tools' vers `list' o˘ elles
-	sont mieux ‡ leur place.
+	Certaines fonctions passent du module `tools' vers `list' o√π elles
+	sont mieux √† leur place.
 
-	Bug dans list.pl lorsque le fichier des abonnÈs n'existe pas il faut
-	refuser de charger la liste [signalÈ par Olivier Lacroix].
+	Bug dans list.pl lorsque le fichier des abonn√©s n'existe pas il faut
+	refuser de charger la liste [signal√© par Olivier Lacroix].
 
-	La substitution remplace Ègalement le chemin vers le fichier de
-	configuration dÈfinit dans le Makefile. Cela fonctionnait dÈj‡
+	La substitution remplace √©galement le chemin vers le fichier de
+	configuration d√©finit dans le Makefile. Cela fonctionnait d√©j√†
 	pour le programme queue, mais par pour sympa.pl [O. Lacroix].
 
 0.004	17 juin 1997
 
-	La documentation Èvolue un peu.
+	La documentation √©volue un peu.
 
-	La commande reconfirm envoie un message aux abonnÈs qui n'ont pas
-	confirmÈ leur abonnement ‡ la liste depuis le dÈlais indiquÈ en
-	paramËtre. Le troisiËme argument est le nombre de semaines de
-	gr‚ce (donnÈ ‡ titre indicatif). Ex : reconfirm tulp-fr 2 4.
+	La commande reconfirm envoie un message aux abonn√©s qui n'ont pas
+	confirm√© leur abonnement √† la liste depuis le d√©lais indiqu√© en
+	param√®tre. Le troisi√®me argument est le nombre de semaines de
+	gr√¢ce (donn√© √† titre indicatif). Ex : reconfirm tulp-fr 2 4.
 
-	La commande purge permet de virer les abonnÈs qui n'ont pas
-	renouvellÈ leur abonnement depuis le nombre de mois indiquÈ
+	La commande purge permet de virer les abonn√©s qui n'ont pas
+	renouvell√© leur abonnement depuis le nombre de mois indiqu√©
 	en argument. Ex : purge tulp-fr 2.
 
-	L'authentification est maintenant supportÈe pour les commandes
+	L'authentification est maintenant support√©e pour les commandes
 	sub et sig : il faut mettre le drapeau `auth' dans le champ
 	subscription du fichier de configuration (et non pas md5).
 
 	Le paquettage MD5 (dans CPAN) n'est plus facultatif : vous devez
 	l'installer pour utiliser Sympa.
 
-	Correction de quelques bugs dans la gestion des entÍtes
+	Correction de quelques bugs dans la gestion des ent√™tes
 	[A. Thivillon].
 
 0.003	13 juin 1997
 
 	*** ATTENTION - IMPORTANT ***
 	Pour utiliser Sympa vous devez installer le paquettage DB de
-	Berkeley dans une version supportÈe par Perl (use DB_File),
+	Berkeley dans une version support√©e par Perl (use DB_File),
 	et il vous faut aussi installer MailTools (dans CPAN).
 
 	Correction de 2 petits bugs de programmation [Alain Thivillon].
@@ -12105,22 +12105,22 @@ src/sympa.pl: new --sync_include sympa.pl option
 	Utilisation de my a la place de local, usage de my devant $id (pour
 	use strict) [O. Robert].
 
-	La fonction "index" a ÈtÈ rajoutÈe et fonctionne.
+	La fonction "index" a √©t√© rajout√©e et fonctionne.
 
-	Le tri des abonnÈs se fait maintenant par un arbre binaire en
+	Le tri des abonn√©s se fait maintenant par un arbre binaire en
 	utilisant le module DB_File. C'est beaucoup plus rapide pour
 	les grandes listes.
 
-	Le module rfc822.pl n'est plus nÈcessaire, il a ÈtÈ supprimÈ de
+	Le module rfc822.pl n'est plus n√©cessaire, il a √©t√© supprim√© de
 	la distribution. Le programme utilise maintenant Mail::Address
 	(disponible dans CPAN).
 
 0.002	19 mai 1997
 
-	Ajout du nombre d'abonnÈs ‡ la liste en derniËre ligne de la
+	Ajout du nombre d'abonn√©s √† la liste en derni√®re ligne de la
 	commande Review.
 
 0.001	1er avril 1997
 
-	PremiËre version de tests diffusÈe ‡ un large public.
+	Premi√®re version de tests diffus√©e √† un large public.
 
