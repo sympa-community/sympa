@@ -267,6 +267,7 @@ nobase_default_DATA = \
 	web_tt2/menu_search.tt2 \
 	web_tt2/modindex.tt2 \
 	web_tt2/modform.tt2 \
+	web_tt2/my.tt2 \
 	web_tt2/nav.tt2 \
 	web_tt2/news.tt2 \
 	web_tt2/notice.tt2 \

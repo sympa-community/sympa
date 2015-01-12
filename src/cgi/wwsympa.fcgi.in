@@ -177,6 +177,7 @@ our %comm = (
     #XXX'multiple_signoff' => 'do_multiple_signoff',
     'sigrequest'       => 'do_sigrequest',
     'ignoresub'        => 'do_ignoresub',
+    'my'               => 'do_my',
     'which'            => 'do_which',
     'lists'            => 'do_lists',
     'latest_lists'     => 'do_latest_lists',
@@ -4819,6 +4820,15 @@ sub do_requestpasswd {
     return $param->{'previous_action'};
 }
 
+sub do_my {
+    wwslog('info', '', $in{'action'});
+
+    # Sets the date of the field "start date" to "today"
+    $param->{'d_day'} = POSIX::strftime('%d-%m-%Y', localtime time);
+    _set_my_lists_info();
+    return 1;
+}
+
 ## Which list the user is subscribed to
 ## TODO (pour listmaster, toutes les listes)
 sub do_which {
@@ -4905,7 +4915,7 @@ sub do_lists {
                     || $in{'subtopic'}
             );
         } elsif ($topics{$in{'topic'}}{'current_title'}) {
-            $param->{'subtitle'} = $topics{$in{'topic'}}{'current_title'}
+            $param->{'subtitle'} = $topics{$in{'topic'}}{'current_title'};
         } elsif ($in{'topic'} eq 'others' or $in{'topic'} eq 'topicsless') {
             $param->{'subtitle'} = $language->gettext('Others');
         } else {
@@ -21393,82 +21403,29 @@ sub do_change_email {
 #      | 'info' | undef                            #
 #                                                  #
 ####################################################
+# We display in the table the lists of the subscriber and the state in
+# which they are.
+# reception : - nomail/digest/mail ||
+#             - . suspended  From XX-XX-XXXX To XX-XX-XXXX
 sub do_suspend_request {
-
     # Action = suspend_request
     wwslog('info', '', $in{'action'});
-    my $email = $param->{'user'}{'email'};
-    my $data;
 
     ## Sets the date of the field "start date" to "today"
-    my @d_day = localtime(time);
-    $param->{'d_day'} =
-        ($d_day[3]) . "-" . ($d_day[4] + 1) . "-" . ($d_day[5] + 1900);
-    my $display_resume = 0;
+    $param->{'d_day'} = POSIX::strftime('%d-%m-%Y', localtime time);
+    _set_my_lists_info();
 
-    ## We display in the table the lists of the subscriber and the state in
-    ## which they are.
-    ## reception : - nomail/digest/mail ||
-    ##             - . suspended  From XX-XX-XXXX To XX-XX-XXXX
-    my @lists = Sympa::List::get_which($email, $robot, 'member');
-
-    foreach my $list (@lists) {
-        my $member_info = $list->get_list_member($param->{'user'}{'email'});
-        if ($member_info->{'enddate'} and $member_info->{'enddate'} < time) {
-            ## If end date is < time, update the BDD by deleting the
-            ## suspending's data
-            $list->restore_suspended_subscription($param->{'user'}{'email'});
-        }
-        my $final_start_date =
-            $language->gettext_strftime("%d %b %Y",
-            localtime($member_info->{'startdate'}));
-        my $final_end_date;
-
-        if ($member_info->{'suspend'} == 1) {
-            $display_resume = 1;
-        }
-        if ($member_info->{'enddate'}) {
-            $final_end_date =
-                $language->gettext_strftime("%d %b %Y",
-                localtime($member_info->{'enddate'}));
-        } else {
-            $final_end_date = undef;
-        }
-
-        $member_info->{'reception'}  ||= 'mail';
-        $member_info->{'visibility'} ||= 'noconceal';
-        foreach my $mode ($list->available_reception_mode) {
-            $param->{'reception'}{$list->{'name'}}{$mode}{'description'} =
-                $list->get_option_title($mode, 'reception');
-            if ($member_info->{'reception'} eq $mode) {
-                $param->{'reception'}{$list->{'name'}}{$mode}{'selected'} =
-                    ' selected';
-            } else {
-                $param->{'reception'}{$list->{'name'}}{$mode}{'selected'} =
-                    '';
-            }
-        }
-
-        my $subscription = {
-            'listname'      => $list->{'name'},
-            'listdomain'    => $list->{'domain'},
-            'listreception' => $member_info->{'reception'},
-            'listsuspend'   => $member_info->{'suspend'},
-            'liststartdate' => $final_start_date,
-            'listenddate'   => $final_end_date,
-            'display'       => $display_resume,
-            'visibility'    => $member_info->{'visibility'},
-            'reception'     => $param->{'reception'}{$list->{'name'}},
-        };
-        push @{$param->{'suspend_list'}}, $subscription;
-    }
-
-    _set_which_info();
+    # Compatibility with Sympa <= 6.1b.1.
+    $param->{'which_info'} = $param->{'which'};
+    $param->{'suspend_list'} =
+        [grep { $_->{'listsuspend'} } values %{$param->{'which'}}];
 
     return 1;
 }
 
-sub _set_which_info {
+sub _set_my_lists_info {
+    my $which = {};
+
     # Set which_info unless in one list page
     if ($param->{'user'}{'email'} and ref $list ne 'Sympa::List') {
         my %get_which;
@@ -21483,7 +21440,7 @@ sub _set_which_info {
             );
         }
 
-        # Add lists information to 'which_info'
+        # Add lists information to 'which'
         foreach my $list (@{$get_which{member}}) {
             # Evaluate AuthZ scenario first
             my $result = Sympa::Scenario::request_action(
@@ -21500,29 +21457,83 @@ sub _set_which_info {
                     and $result->{'action'} eq 'do_it';
 
             my $l = $list->{'name'};
-            $param->{'which_info'}{$l}{'subject'} =
-                $list->{'admin'}{'subject'};
-            $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
-            $param->{'which_info'}{$l}{'info'} = 1;
+            $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'host'}    = $list->{'admin'}{'host'};
+            $which->{$l}{'is_subscriber'} = 1;    # New on 6.2b.2.
+            # Compat. < 6.2b.2.
+            $which->{$l}{'info'} = 1;
+
+            my $member_info =
+                $list->get_list_member($param->{'user'}{'email'});
+            my ($final_start_date, $final_end_date);
+            if ($member_info->{'suspend'}) {
+                if (defined $member_info->{'enddate'}
+                    and $member_info->{'enddate'} < time) {
+                    # If end date is < time, update the BDD by deleting the
+                    # suspending's data
+                    # FIXME: Is this required?
+                    $list->restore_suspended_subscription(
+                        $param->{'user'}{'email'});
+                }
+                $final_start_date =
+                    $language->gettext_strftime("%d %b %Y",
+                    localtime $member_info->{'startdate'})
+                    if defined $member_info->{'startdate'};
+                $final_end_date =
+                    $language->gettext_strftime("%d %b %Y",
+                    localtime $member_info->{'enddate'})
+                    if defined $member_info->{'enddate'};
+            }
+
+            $member_info->{'reception'}  ||= 'mail';
+            $member_info->{'visibility'} ||= 'noconceal';
+            foreach my $mode ($list->available_reception_mode) {
+                $param->{'reception'}{$list->{'name'}}{$mode}{'description'} =
+                    $list->get_option_title($mode, 'reception');
+                if ($member_info->{'reception'} eq $mode) {
+                    $param->{'reception'}{$list->{'name'}}{$mode}
+                        {'selected'} = ' selected';
+                } else {
+                    $param->{'reception'}{$list->{'name'}}{$mode}
+                        {'selected'} = '';
+                }
+            }
+
+            $which->{$l}{'listname'}      = $list->{'name'};
+            $which->{$l}{'listdomain'}    = $list->{'domain'};
+            $which->{$l}{'listreception'} = $member_info->{'reception'};
+            $which->{$l}{'listsuspend'}   = $member_info->{'suspend'};
+            $which->{$l}{'liststartdate'} = $final_start_date;
+            $which->{$l}{'listenddate'}   = $final_end_date;
+            $which->{$l}{'visibility'}    = $member_info->{'visibility'};
+            $which->{$l}{'reception'} =
+                $param->{'reception'}{$list->{'name'}};
+            # Compat. < 6.2b.1.
+            $which->{$l}{'display'} = $which->{$l}{'listsuspend'};
         }
         foreach my $list (@{$get_which{owner}}) {
             my $l = $list->{'name'};
-            $param->{'which_info'}{$l}{'subject'} =
-                $list->{'admin'}{'subject'};
-            $param->{'which_info'}{$l}{'host'}  = $list->{'admin'}{'host'};
-            $param->{'which_info'}{$l}{'info'}  = 1;
-            $param->{'which_info'}{$l}{'admin'} = 1;
+
+            $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'host'}    = $list->{'admin'}{'host'};
+            $which->{$l}{'is_owner'} = 1; # New on 6.2b.2.
+            # Compat. < 6.2b.1.
+            $which->{$l}{'info'}    = 1;
+            $which->{$l}{'admin'}   = 1;
         }
         foreach my $list (@{$get_which{editor}}) {
             my $l = $list->{'name'};
 
-            $param->{'which_info'}{$l}{'subject'} =
-                $list->{'admin'}{'subject'};
-            $param->{'which_info'}{$l}{'host'}  = $list->{'admin'}{'host'};
-            $param->{'which_info'}{$l}{'info'}  = 1;
-            $param->{'which_info'}{$l}{'admin'} = 1;
+            $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
+            $which->{$l}{'host'}    = $list->{'admin'}{'host'};
+            $which->{$l}{'is_editor'} = 1; # New on 6.2b.2.
+            # Compat. < 6.2b.1.
+            $which->{$l}{'info'}    = 1;
+            $which->{$l}{'admin'}   = 1;
         }
     }
+
+    $param->{'which'} = $which;
 }
 
 ####################################################
