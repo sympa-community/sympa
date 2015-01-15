@@ -526,6 +526,7 @@ sub new {
     Log::do_log('debug2', '(%s, %s, %s)', $name, $robot,
         join('/', keys %$options));
 
+    $name = lc($name);
     ## Allow robot in the name
     if ($name =~ /\@/) {
         my @parts = split /\@/, $name;
