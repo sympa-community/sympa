@@ -316,7 +316,7 @@
       [%|loc%]Create a new folder inside root folder[%END%]
     [% END %]
     </strong> <br />
-    <label for="name_doc">[%|loc%]Folder name[%END%]</label> <input id="name_doc" maxlength="30" type="text" name="name_doc" />
+    <label for="name_dir">[%|loc%]Folder name[%END%]</label> <input id="name_dir" maxlength="30" type="text" name="name_doc" />
     <input class="MainMenuLinks" type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_dir" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
@@ -326,7 +326,7 @@
     </fieldset>
     </form>
     </div><br/>
-    [% END %]
+   [% END %]
 
     <div class="block">
     <form method="post" action="[% path_cgi %]">
@@ -347,7 +347,7 @@
     <form method="post" action="[% path_cgi %]">
     <fieldset>
     <strong>[%|loc%]Add a bookmark[%END%]</strong><br />
-    <label for="name_doc">[%|loc%]title[%END%]</label> <input id="name_doc" maxlength="100" size="25" type="text" name="name_doc" /><br />
+    <label for="name_title">[%|loc%]title[%END%]</label> <input id="name_title" maxlength="100" size="25" type="text" name="name_doc" /><br />
     <label for="url">[%|loc%]URL[%END%]</label> <input id="url" size="35" type="text" name="url" />
     <input class="MainMenuLinks" type="submit" value="[%|loc%]Add[%END%]" name="action_d_savefile" />
     <input type="hidden" name="previous_action" value="d_read" />

@@ -8,7 +8,7 @@
 <form action="[% path_cgi %]" method="post">
 <fieldset>
    <div class="form_row"><label for="listname"><strong>[%|loc%]List name:[%END%]</strong></label><input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" /></div>
-   <div class="form_row"><label><strong>[%|loc%]Owner:[%END%]</strong></label><span style="font-family:'Lucida Console', 'Courier New', Courier, Monospace;">[% user.email %]</span></div>    
+   <div class="form_row"><label><strong>[%|loc%]Owner:[%END%]</strong></label><code>[% user.email %]</code></div>    
    <div class="form_row"><label for="list_type"><strong>[%|loc%]List type:[%END%]</strong></label><div style="width:70%; float:left;"><ul id="list_type" style="padding:0;">
       [% FOREACH template = list_list_tpl %]
          [% IF template.value.comment %]
@@ -28,7 +28,7 @@
          checked="checked"
          [% END %]
          id="template.[% template.key %]"
-         /> [% template.key %]
+         /> <label for="template.[% template.key %]">[% template.key %]</label>
          </li>
          [% END %]
       [% END %]

@@ -6,17 +6,17 @@
 ## Use the src/etc/script/js/sympa.js file instead to write your scripts.
 #%]
 <script>
-
+<!--
 // this script only contains variable initializations.
 
 // Miscellaneous vars
 var path_cgi = '[% path_cgi %]/';
 var lang = '[% lang %]';
-
+//-->
 </script>
 
 <script>
-
+<!--
 // A few configuration settings
 var CROSSHAIRS_LOCATION = '[% icons_url %]/crosshairs.png';
 var HUE_SLIDER_LOCATION = '[% icons_url %]/h.png';
@@ -47,6 +47,8 @@ var param_dfin = {"ddeb" : "date_deb", "titre" : "[%|loc%]End date[%END%]"  };
 var tempo = new Array(); /*gestion de la fermeture des calendriers quand on perd le focus*/
 var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI":0,"PRE":0,"SPAN":0,"SUB":0,"SUP":0,"FORM":0};
 //var nomove={"TD":0,"TABLE":0};
+
+//-->
 </script>
 
 <!-- Now retrieving the javascript files -->
@@ -68,7 +70,9 @@ var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI
 [% IF use_html_editor -%]
 <script src="[% html_editor_url %]"></script>
 <script>
+<!--
 [% html_editor_init %];
+//-->
 </script>
 [% END -%]
 <!-- end javascript.tt2 -->

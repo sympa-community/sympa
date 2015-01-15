@@ -1,4 +1,4 @@
-<!-- $Id: suspend_request.tt2 5973 2009-07-20 10:29:53Z meleard $ -->
+<!-- $Id$ -->
 
 <div class="block">
 [% IF user.email %]
@@ -39,10 +39,10 @@
                 [%|loc%]indefinite end date[%END%]
               [% END %]<br/>
               <input id="listname.[% l.key %]" type="checkbox" checked="checked" name="listname" value="[% l.key %]" />
-              <label for="listname">[%|loc(l.key)%]Check to restore reception from list %1[% END %]</label>
+              <label for="listname.[% l.key %]">[%|loc(l.key)%]Check to restore reception from list %1[% END %]</label>
             [% ELSE %]
               <input id="listname.[% l.key %]" type="checkbox" checked="checked" name="listname" value="[% l.key %]" />
-              <label for="listname">[%|loc(l.key)%]Check to suspend or unsubscribe from list %1[% END %]</label>
+              <label for="listname.[% l.key %]">[%|loc(l.key)%]Check to suspend or unsubscribe from list %1[% END %]</label>
             [% END %]
           [% ELSE %]
             <p class="note">[%|loc%]You are not allowed to suspend your subscription / unsusbscribe from this list.[% END %]
