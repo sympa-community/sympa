@@ -3,6 +3,30 @@
 
 (See Changelog file for the full changes log)
 
+6.2b.2		January 16, 2015
+
+  Changes:
+
+*****	[11848] src/lib/Conf.pm, src/lib/Sympa/Upgrade.pm:  Improved upgrade
+*****	process:
+*****	- Now CSS files and colors are automatically forced to be defaulted to
+*****	Sympa default values
+*****	- templates are reinitialized to match the new Sympa skin
+*****	The following files and directories are copies:
+*****	- sympa.conf
+*****	- robot.conf
+*****	- web_tt2 for etc and each robot
+*****	Users should see how their customization can be reinserted into the new
+*****	Sympa skin.
+
+  Bug fixes:
+
+	[11847] src/lib/Sympa/List.pm:	Lists typed with upper-case by end
+	users were considered as not existing on the server. This was because
+	the name typed by the user was compared to the list folder name, which
+	iw always lower-cased. Fixed by lower-casing the list name before
+	creating a new List object.
+
 6.2b.1		January 12, 2015
 
   Features:
