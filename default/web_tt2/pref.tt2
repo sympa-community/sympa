@@ -5,35 +5,32 @@
 
 <form action="[% path_cgi %]" method="post">
   <fieldset>
- <div class="form_row"><label>[%|loc%]Email:[%END%]  </label>[% user.email %]</div>
- <div class="form_row">    <label for="gecos">[%|loc%]Name:[%END%]  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" /></div>
- <div class="form_row">
+  <div class="form_row"><label>[%|loc%]Email:[%END%]  </label>[% user.email %]</div>
+  <div class="form_row">    <label for="gecos">[%|loc%]Name:[%END%]  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" /></div>
+  <div class="form_row">
     <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label><select id="lang" name="lang" class="neutral">
-              [% FOREACH l = languages %]
-		<option value='[% l.key %]' lang="[% l.key %]" xml:lang="[% l.key %]" [% l.value.selected %]>[% l.value.complete %]</option>
-              [% END %]
-            					        </select></div>
- <div class="form_row">
+    [% FOREACH l = languages %]
+      <option value="[% l.key %]" lang="[% l.key %]" xml:lang="[% l.key %]" [% l.value.selected %]>[% l.value.complete %]</option>
+    [% END %]
+    </select></div>
+  <div class="form_row">
     <label for="cookie_delay">[%|loc%]Connection expiration period:[%END%]  </label><select name="cookie_delay" id="cookie_delay">
-              [% FOREACH period = cookie_periods %]
-                <option value="[% period.value %]" [% period.selected %]>[% period.desc %]</option>
-              [% END %]
-									            </select></div>
+    [% FOREACH period = cookie_periods %]
+      <option value="[% period.value %]" [% period.selected %]>[% period.desc %]</option>
+    [% END %]
+    </select></div>
 
- <div class="form_row">              <input class="MainMenuLinks" type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" />
-</div>
+  <div class="form_row">
+    <input class="MainMenuLinks" type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" /></div>
 
   </fieldset>
 </form>
 <br />
 
 
-<!-- prynhart: Workaround for Sympa Bug 8605 -->
-[% res = user.email.match('@massey.ac.nz') %]
-[% IF res.0 != '1' %]
 <h4>[%|loc%]Changing your email address[%END%]</h4>
-        
-[%|loc%]You can update your email address for all your list memberships at once. If you are also list owner or list moderator your email address for these roles will also be updated.[%END%]
+
+<p>[%|loc%]You can update your email address for all your list memberships at once. If you are also list owner or list moderator your email address for these roles will also be updated.[%END%]</p>
 <form action="[% path_cgi %]" method="post">
 <fieldset>
 <div class="form_row"><label for="new_email">[%|loc%]New email address:[%END%]  </label><input id="new_email" name="new_email" size="25" /></div>
@@ -42,6 +39,7 @@
 </form>
 <br /> 
 
+[% UNLESS use_sso %]
 <h4>[%|loc%]Changing your password[%END%]</h4>
   
 <form action="[% path_cgi %]" method="post">
