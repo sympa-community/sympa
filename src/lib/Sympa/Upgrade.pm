@@ -1421,16 +1421,23 @@ sub upgrade {
     if (lower_version($previous_version, '6.2b.1')) {
 		Log::do_log('info','Setting web interface colors to new defaults.');
 		fix_colors(Sympa::Constants::CONFIG);
+        Log::do_log('info','Saving main web_tt2 directory');
+        save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
         my @robots = Sympa::List::get_robots();
         foreach my $robot (@robots) {
 			if (-f "$Conf::Conf{'etc'}/$robot/robot.conf") {
 				Log::do_log('info','Fixing colors for %s robot',$robot);
 				fix_colors("$Conf::Conf{'etc'}/$robot/robot.conf");
 			}
+			if (-d "$Conf::Conf{'etc'}/$robot/web_tt2") {
+				Log::do_log('info','Saving web_tt2 directory %s robot',$robot);
+				save_web_tt2("$Conf::Conf{'etc'}/$robot/web_tt2");
+			}
 		}
+        #Used to regenerate CSS...
+        Conf::update_css((force => 1));
 		Log::do_log('info','Web interface colors defaulted to new values.');
 	}
-
     return 1;
 }
 
@@ -1600,8 +1607,6 @@ sub fix_colors {
 		my $name = $param->{'name'};
 		next unless ($name);
 		if ($name =~ m{color_.+}) {
-			printf "%s\n",$name;
-			printf "%s\n",$param->{'default'};
 			$default_colors{$name} = $param->{'default'};
 			unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
 				die sprintf
@@ -1629,12 +1634,20 @@ sub fix_colors {
 		}
 		$new_conf .= "$line\n";
 	}
+    # Save previous config file
+    my $date = $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
+    unless(rename($file, "$file.upgrade$date")) {
+        Log::do_log('err','Unable to rename %s file: %s. Web interface might look buggy after upgrade',$file,$ERRNO);
+        return 0;
+    }
+    Log::do_log('notice','%s file saved as %s',$file, "$file.upgrade$date");
 	## Write new config file
 	my $umask = umask 037;
 	unless (open(FILE, "> $file")) {
 		umask $umask;
-		die sprintf("Unable to open %s : %s",
+		Log::do_log('err', 'Unable to open %s : %s. Web interface colors not updated. Please remove them by hand in config file.',
 			$file, $ERRNO);
+        return 0;
 	}
 	umask $umask;
 	chown [getpwnam(Sympa::Constants::USER)]->[2],
@@ -1642,6 +1655,21 @@ sub fix_colors {
 
 	print FILE $new_conf;
 	close FILE;
+}
+
+sub save_web_tt2 {
+    my ($dir) = @_;
+    unless (-w $dir) {
+        Log::do_log('err', '%s directory is not writable: %s. Unable to rename it. Web interface might look buggy after upgrade',$dir,$ERRNO);
+        return 0;
+    }
+    my $date = $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
+    unless(rename($dir, "$dir.upgrade$date")) {
+        Log::do_log('err','Unable to rename %s directory: %s. Web interface might look buggy after upgrade',$dir,$ERRNO);
+        return 0;
+    }
+    Log::do_log('notice','%s directory saved as %s',$dir, "$dir.upgrade$date");
+    return 1;
 }
 
 1;
