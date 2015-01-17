@@ -22871,12 +22871,12 @@ sub do_stats {
         $language->gettext("Subscription additions");
     $stats->{'unsubscription'}{'title'} =
         $language->gettext("Unsubscription");
-    $stats->{'deleted by admin'}{'title'} =
+    $stats->{'deleted_by_admin'}{'title'} =
         $language->gettext("Users deleted by admin");
 
     foreach my $operation (
         (   'send_mail', 'add_subscriber', 'unsubscription',
-            'deleted by admin'
+            'deleted_by_admin'
         )
         ) {
         my $raw_data = Sympa::List::get_data($operation, $robot, $in{'list'});

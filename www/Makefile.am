@@ -55,8 +55,8 @@ nobase_static_DATA = \
 	icons/subscribe.png \
 	icons/spinner.gif \
 	external/jqplot.barRenderer.min.js \
-	external/jqplot.CanvasAxisTickRenderer.js \
-	external/jqplot.CanvasTextRenderer.js \
+	external/jqplot.canvasAxisTickRenderer.min.js \
+	external/jqplot.canvasTextRenderer.min.js \
 	external/jqplot.categoryAxisRenderer.min.js \
 	external/jquery.jqplot.css \
 	external/jquery.jqplot.min.js \
