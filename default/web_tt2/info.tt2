@@ -1,83 +1,85 @@
 <!-- $Id$ -->
 
 [% IF homepage_content %]
-	[% homepage_content %]
+  [% homepage_content %]
 [% ELSE %]
 
-<p><b>[%|loc%]Description:[%END%]</b> [% IF is_owner %]<a href="[% path_cgi %]/editfile/[% list %]/info">[%|loc%](Edit)[%END%]</a>[% END %] [% info_content %]</p>
+  <p><b>[%|loc%]Description:[%END%]</b> [% IF is_owner %]<a href="[% path_cgi %]/editfile/[% list %]/info">[%|loc%](Edit)[%END%]</a>[% END %] [% info_content %]</p>
 
-	[% IF is_owner %]
-<hr />
-<h3>[%|loc%]Administrative Options[%END%]</h3>
+  [% IF is_owner || is_editor %]
+    <hr />
+    <h3>[%|loc%]Administrative Options[%END%]</h3>
 
-		[% IF is_editor %]
-			[% IF mod_message > 0 %]
-<div id="noticeMsg">
-	[%|loc(mod_message)%]There are %1 message(s) awaiting moderation.[%END%] <a href="[% path_cgi %]/modindex/[% list %]">[%|loc%](Review)[%END%]</a>
-</div>
-			[% END %]
-		[% END %]
-		
-		[% IF is_owner %]
-			[% IF mod_subscription > 0 %]
-<div id="noticeMsg">
-	[%|loc(mod_subscription)%]There are %1 subscription(s) awaiting moderation.[%END%] <a href="[% path_cgi %]/subindex/[% list %]">[%|loc%](Review)[%END%]
-</div>
-			[% END %]
-		[% END %]
+    [% IF is_owner || is_editor %]
+      [% IF mod_message > 0 %]
+        <div id="noticeMsg">
+          [%|loc(mod_message)%]There are %1 message(s) awaiting moderation.[%END%] <a href="[% path_cgi %]/modindex/[% list %]">[%|loc%](Review)[%END%]</a>
+        </div>
+      [% END %]
+    [% END %]
+    
+    [% IF is_owner %]
+      [% IF mod_subscription > 0 %]
+        <div id="noticeMsg">
+          [%|loc(mod_subscription)%]There are %1 subscription(s) awaiting moderation.[%END%] <a href="[% path_cgi %]/subindex/[% list %]">[%|loc%](Review)[%END%]
+        </div>
+      [% END %]
+    [% END %]
 
-<div class="item_list">
-	<p>[%|loc%]Common administrative options are linked below; full administrative options are available by selecting Admin beneath List Options in the Left Navigation menu.[%END%]</p>
-	
-	<div class="item">
-		<img class="item_icon" src="[% static_content_url %]/icons/subscribe.png" />
-		<div class="item_content">
-			<a class="item_title" href="[% path_cgi %]/review/[% list %]">View or Manage Subscribers</a>
-			<ul>
-				<li>[%|loc%]View the list of subscribers[%END%]</li>
-				<li>[%|loc%]Review subscription requests[%END%]</li>
-				<li>[%|loc%]Add/delete subscribers[%END%]</li>
-			</ul>
-		</div>
-	</div>
-	
-	<div class="item">
-		<img class="item_icon" src="[% static_content_url %]/icons/config.png" />
-		<div class="item_content">
-			<a class="item_title" href="[% path_cgi %]/admin/[% list %]">[%|loc%]List Configuration[%END%]</a>
-			<ul>
-				<li><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Modify owners or moderators (editors)[%END%]</a></li>
-				<li><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Modify list subject and visibility[%END%]</a></li>
-				<li><a href="[% path_cgi %]/edit_list_request/[% list %]/sending">[%|loc%]Change who can post to this list[%END%]</a></li>
-				<li><a href="[% path_cgi %]/edit_list_request/[% list %]/command">[%|loc%]Change who can (un)subscribe and view list information[%END%]</a></li>
-				<li><a href="[% path_cgi %]/admin/[% list %]">[%|loc%]Close this list[%END%]</a></li>
-			</ul>
-		</div>
-	</div>
-	
-	<div class="item">
-		<img class="item_icon" src="[% static_content_url %]/icons/arc.png" />
-		<div class="item_content">
-			<a class="item_title" href="[% path_cgi %]/arc/[% list %]">[%|loc%]List Archives[%END%]</a>
-			<ul>
-				<li><a href="[% path_cgi %]/edit_list_request/[% list %]/archives">[%|loc%]Change settings for who can view archives[%END%]</a></li>
-				<li><a href="[% path_cgi %]/arc_manage/[% list %]">[%|loc%]Download archives[%END%]</a></li>
-			</ul>
-		</div>
-	</div>
-	
-	<div class="item">
-		<img class="item_icon" src="[% static_content_url %]/icons/datasources.png" />
-		<div class="item_content">
-			<a class="item_title" href="[% path_cgi %]/edit_list_request/[% list %]/data_source">[%|loc%]Data Sources Configuration[%END%]</a>
-			<ul>
-				<li>[%|loc%]Configure data sources (SQL, LDAP, text file) for list membership[%END%]</li>
-				<li>[%|loc%]Include (nest) Sympa lists[%END%]</li>
-			</ul>
-		</div>
-	</div>
-</div>
+    [% IF is_owner %]
+    <div class="item_list">
+      <p>[%|loc%]Common administrative options are linked below; full administrative options are available by selecting Admin beneath List Options in the Left Navigation menu.[%END%]</p>
+  
+      <div class="item">
+        <img class="item_icon" src="[% static_content_url %]/icons/subscribe.png" />
+        <div class="item_content">
+          <a class="item_title" href="[% path_cgi %]/review/[% list %]">[%|loc%]View or Manage Subscribers[%END%]</a>
+          <ul>
+            <li>[%|loc%]View the list of subscribers[%END%]</li>
+            <li>[%|loc%]Review subscription requests[%END%]</li>
+            <li>[%|loc%]Add/delete subscribers[%END%]</li>
+          </ul>
+        </div>
+      </div>
+  
+      <div class="item">
+        <img class="item_icon" src="[% static_content_url %]/icons/config.png" />
+        <div class="item_content">
+          <a class="item_title" href="[% path_cgi %]/admin/[% list %]">[%|loc%]List Configuration[%END%]</a>
+          <ul>
+            <li><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Modify owners or moderators (editors)[%END%]</a></li>
+            <li><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Modify list subject and visibility[%END%]</a></li>
+            <li><a href="[% path_cgi %]/edit_list_request/[% list %]/sending">[%|loc%]Change who can post to this list[%END%]</a></li>
+            <li><a href="[% path_cgi %]/edit_list_request/[% list %]/command">[%|loc%]Change who can (un)subscribe and view list information[%END%]</a></li>
+            <li><a href="[% path_cgi %]/admin/[% list %]">[%|loc%]Close this list[%END%]</a></li>
+          </ul>
+        </div>
+      </div>
+  
+      <div class="item">
+        <img class="item_icon" src="[% static_content_url %]/icons/arc.png" />
+        <div class="item_content">
+          <a class="item_title" href="[% path_cgi %]/arc/[% list %]">[%|loc%]List Archives[%END%]</a>
+          <ul>
+            <li><a href="[% path_cgi %]/edit_list_request/[% list %]/archives">[%|loc%]Change settings for who can view archives[%END%]</a></li>
+            <li><a href="[% path_cgi %]/arc_manage/[% list %]">[%|loc%]Download archives[%END%]</a></li>
+          </ul>
+        </div>
+      </div>
+  
+      <div class="item">
+        <img class="item_icon" src="[% static_content_url %]/icons/datasources.png" />
+        <div class="item_content">
+          <a class="item_title" href="[% path_cgi %]/edit_list_request/[% list %]/data_source">[%|loc%]Data Sources Configuration[%END%]</a>
+          <ul>
+            <li>[%|loc%]Configure data sources (SQL, LDAP, text file) for list membership[%END%]</li>
+            <li>[%|loc%]Include (nest) Sympa lists[%END%]</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    [% END %]
 
-	[% END %]
+  [% END %]
 [% END %]
 <!-- end info.tt2 -->

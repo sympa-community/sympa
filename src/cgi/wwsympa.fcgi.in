@@ -4966,14 +4966,33 @@ sub do_lists {
             $list->{'admin'}{'creation'}{'date_epoch'};
         $list_info->{'date'}   = $list->{'admin'}{'creation'}{'date'};
         $list_info->{'topics'} = $list->{'admin'}{'topics'};
+
         if ($param->{'user'}{'email'}
-            && (   $list->am_i('owner', $param->{'user'}{'email'})
-                || $list->am_i('editor', $param->{'user'}{'email'}))
+            and $list->am_i(
+                'privileged_owner', $param->{'user'}{'email'},
+                {strict => 1}
+            )
             ) {
+            $list_info->{'is_privileged_owner'} = 1;
+            $list_info->{'is_owner'}            = 1;
+            # Compat. < 6.2b.2.
             $list_info->{'admin'} = 1;
         }
-        if (   $param->{'user'}{'email'}
-            && $list->is_list_member($param->{'user'}{'email'})) {
+        if (    $param->{'user'}{'email'}
+            and $list->am_i('owner', $param->{'user'}{'email'}, {strict => 1})
+            ) {
+            $list_info->{'is_owner'} = 1;
+            # Compat. < 6.2b.2.
+            $list_info->{'admin'} = 1;
+        }
+        if (    $param->{'user'}{'email'}
+            and $list->am_i('editor', $param->{'user'}{'email'})) {
+            $list_info->{'is_editor'} = 1;
+            # Compat. < 6.2b.2.
+            $list_info->{'admin'} = 1;
+        }
+        if (    $param->{'user'}{'email'}
+            and $list->is_list_member($param->{'user'}{'email'})) {
             $list_info->{'is_subscriber'} = 1;
         }
 
@@ -21516,20 +21535,20 @@ sub _set_my_lists_info {
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
             $which->{$l}{'host'}    = $list->{'admin'}{'host'};
-            $which->{$l}{'is_owner'} = 1; # New on 6.2b.2.
+            $which->{$l}{'is_owner'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.1.
-            $which->{$l}{'info'}    = 1;
-            $which->{$l}{'admin'}   = 1;
+            $which->{$l}{'info'}  = 1;
+            $which->{$l}{'admin'} = 1;
         }
         foreach my $list (@{$get_which{editor}}) {
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
             $which->{$l}{'host'}    = $list->{'admin'}{'host'};
-            $which->{$l}{'is_editor'} = 1; # New on 6.2b.2.
+            $which->{$l}{'is_editor'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.1.
-            $which->{$l}{'info'}    = 1;
-            $which->{$l}{'admin'}   = 1;
+            $which->{$l}{'info'}  = 1;
+            $which->{$l}{'admin'} = 1;
         }
     }
 

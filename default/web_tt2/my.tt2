@@ -8,7 +8,7 @@
   
   <form class="noborder" action="[% path_cgi %]" method="post" name="suspend_request">
     [% IF which.size %]
-    <div class="item_list">
+      <div class="item_list">
       [% FOREACH l = which %]
         [% suspended = 0 %]
         [% suspendable = 0 %]
@@ -24,10 +24,17 @@
         <div class="item_content">
           <a class="item_title" href="[% path_cgi %]/info/[% l.key %]">
             [% hidden_head %][% l.key %][% hidden_end %]
-            [% IF l.value.is_owner %]
-              <span class="highlighted">[%|loc%](Owner)[%END%]</span>
-            [% ELSIF l.value.is_editor %]
-              <span class="highlighted">[%|loc%](Editor)[%END%]</span>
+            [% IF l.value.is_owner || l.value.is_editor || l.value.is_subscriber ~%]
+              <span class="highlighted">(
+              [%~ IF l.value.is_owner ~%]
+                [%|loc%]Owner[%END ~%]
+                [% IF l.value.is_subscriber %][%|loc%], [%END%][%END ~%]
+              [% ELSIF l.value.is_editor ~%]
+                [%|loc%]Editor[%END ~%]
+                [% IF l.value.is_subscriber %][%|loc%], [%END%][%END ~%]
+              [% END ~%]
+              [% IF l.value.is_subscriber %][%|loc%]Subscriber[%END%][%END ~%]
+              )</span>
             [% END %]
           </a>
           [% IF suspendable %]
@@ -51,7 +58,7 @@
           
           
           <ul>
-            [% IF l.value.admin %]
+            [% IF l.value.is_owner %]
               <li><a href="[% path_cgi %]/review/[% l.key %]">[%|loc%]Review members[%END%]</a></li>
             [% END %]
             
@@ -62,13 +69,13 @@
         </div>
         </div>
       [% END %]
-    </div>
+      </div>
     
     [% ELSE %]
     
-    <p>[%|loc%]No subscription.[%END%]</p>
+      <p>[%|loc%]No subscription.[%END%]</p>
     
-  [% END %]
+    [% END %]
     
     <p>[%|loc%]You can bulk suspend or revoke your memberships by selecting relevant lists and using the buttons below. The suspend option prevents delivery of emails, this can be useful if you are out of the office for some time.[%END%]</p>
     

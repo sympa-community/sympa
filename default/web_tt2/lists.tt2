@@ -11,7 +11,7 @@
   <p>[%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%]</p>
 [% END %]
 
-[% IF which %]
+[% IF which && which.size %]
 
   [% FOREACH letter IN letters %]
     [% IF orderedlist.$letter.0 %]
@@ -35,17 +35,16 @@
     [% END %]
   [% END %] 
 
- <br />
+  <br />
 
- [% IF action == 'which' %]
-  [% IF ! which %]
-   &nbsp;&nbsp;<span class="color_dark">[%|loc(user.email)%]No subscriptions with address <strong>%1</strong>![%END%]</span>
-   <br />
+  [% IF action == 'which' %]
+    [% IF ! which %]
+      &nbsp;&nbsp;<span class="color_dark">[%|loc(user.email)%]No subscriptions with address <strong>%1</strong>![%END%]</span>
+      <br />
+    [% END %]
   [% END %]
-
- [% END %]
 [% ELSE %]
-<p>[%|loc%]No mailing list available.[%END%]</p>
+  <p>[%|loc%]No mailing list available.[%END%]</p>
 [% END %]
 
 [% IF all_letters.size %]

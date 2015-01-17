@@ -53,7 +53,8 @@
     <li class="nolink letter">[%IF letter == 'others'%][%|loc%]others[%END%][%ELSE%][%letter%][%END%]</li>
  [% END %] 
 [% END %]
- <li class="MainMenuLinks letter"><a href="[% path_cgi %]/lists" onclick="show('loading'); hide('content-inner');">[%|loc%]All[%END%]</a> </li>
+ <li class="MainMenuLinks letter">
+  <a href="[% path_cgi %]/lists[%IF topic%]/[%topic%][%IF subtopic%]/[%subtopic%][%END%][%END%]" onclick="show('loading'); hide('content-inner');">[%|loc%]All[%END%]</a> </li>
   </ul>
 </nav>
 [% END %]

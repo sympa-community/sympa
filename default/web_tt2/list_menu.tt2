@@ -48,9 +48,8 @@
      [% IF action == 'subindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 
 	<li class="[% class %]"><a href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a></li>
-
   [% END %]
-  </ul>
+</ul>
 </li>
 [% END %]
 
@@ -71,7 +70,11 @@
           <div class="menuInactive2">[%|loc%]Post[%END%]</div><br />
 [% END %]
 
+[% IF 0 %][%# Change if you want to display menu item. %]
 [% IF action == 'rss_request' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<li class="[% class %]"><a href="[% path_cgi %]/rss_request/[% list %]" >[%|loc
+%]RSS[%END%]</a></li>
+[% END %]
 
 [% IF shared == 'exist' %]
     [% IF may_d_read %]
@@ -85,7 +88,11 @@
 [% IF may_review %]
 [% IF action == 'review' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 <li class="[% class %]"><a href="[% path_cgi %]/review/[% list %]" >[%|loc%]Review members[%END%]</a></li>
+[% END %]
 
+[% IF is_owner %]
+   [% IF action == 'stats' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+      <li class="[% class %]"><a href="[% path_cgi %]/stats/[% list %]">[%|loc%]Statistics[%END%]</a></li>
 [% END %]
  </div>
 </div>
