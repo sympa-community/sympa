@@ -98,7 +98,10 @@ function toggle_selection(myfield) {
 
 function chooseColorNumber(cn, cv) {
     $('#custom_color_number').val(cn);
-    if(cv) $('#custom_color_value').val(cv);
+    if (cv) {
+      $('#custom_color_value').val(cv);
+      $('#custom_color_value').trigger('change');
+    }
 }
 
 // check if rejecting quietly spams TODO
@@ -540,16 +543,24 @@ function rgbToHsv(red, green, blue)
 
 function pageCoords(node)
 {
-    var x = node.offsetLeft;
-    var y = node.offsetTop;
-    var parent = node.offsetParent;
-    while (parent != null)
+  if (node.getBoundingClientRect)
+  {
+    var rect = node.getBoundingClientRect();
+    return {x: rect.left, y: rect.top};
+  }
+  else
+  {
+    /* buggy, however, some browsers don't support getBoundingClient(). */ 
+    var left = 0;
+    var top = 0;
+    while (node)
     {
-        x += parent.offsetLeft;
-        y += parent.offsetTop;
-        parent = parent.offsetParent;
+        left += node.offsetLeft;
+        top += node.offsetTop;
+        node = node.offsetParent;
     }
-    return {x: x, y: y};
+    return {x: left, y: top};
+  }
 }
 
 // The real code begins here.
@@ -662,7 +673,7 @@ function makeColorSelector(inputBox)
         rgb = hexToRgb(inputBox.value, {r: 0, g: 0, b: 0});
         rgbChanged();
     }
-    myAddEventListener(inputBox, 'change', inputBoxChanged);
+    $(inputBox).change(inputBoxChanged);
     inputBox.size = 8;
     inputBox.style.position = 'absolute';
     inputBox.style.right = '15px';
