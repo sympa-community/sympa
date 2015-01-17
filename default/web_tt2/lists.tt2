@@ -22,8 +22,19 @@
       [% FOREACH listname IN  orderedlist.$letter %]
         <li class="listenum">
           <a href="[% path_cgi %]/info/[% listname %]">[% hidden_head %][% listname %][% hidden_at %][% which.$listname.host %][% hidden_end %]
-           [% IF which.$listname.admin %]<b style="color: red">([%|loc%]Owner[%END%])</b>[% END %]
-          </a><br />
+            [% IF which.$listname.is_owner || which.$listname.is_editor || which.$listname.is_subscriber ~%]
+              <span class="highlighted">(
+              [%~ IF which.$listname.is_owner ~%]
+                [%|loc%]Owner[%END ~%]
+                [% IF which.$listname.is_subscriber %][%|loc%], [%END%][%END ~%]
+              [% ELSIF which.$listname.is_editor ~%]
+                [%|loc%]Editor[%END ~%]
+                [% IF which.$listname.is_subscriber %][%|loc%], [%END%][%END ~%]
+              [% END ~%]
+              [% IF which.$listname.is_subscriber %][%|loc%]Subscriber[%END%][%END ~%]
+              )</span>
+            [% END %]
+         </a><br />
 
           <p class="listenum" >[% which.$listname.subject %]</p>
         </li>
