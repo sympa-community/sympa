@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="[% css_url %]/style.css" media="screen" title="Sympa CSS" />
 [% END %]
 
-[% PROCESS css_ie.tt2 %]
+[% TRY; PROCESS css_ie.tt2; CATCH; ''; END %]
 
 [% IF locale_css %]
 <style>
@@ -36,7 +36,7 @@
 <link rel="shortcut icon" href="[% icons_url %]/favicon_sympa.png" />
 [% END %]
 
-[% PROCESS javascript.tt2 %]
+[% TRY; PROCESS javascript.tt2; CATCH; ''; END %]
 
 [% IF base %] <base href="[% base %]" /> [% END %]
 
@@ -45,16 +45,13 @@
 <body>
 
    <div class="sidebar" style="padding-top: 10px;">
-      [% PROCESS login_menu.tt2 %]
+      [% TRY; PROCESS login_menu.tt2; CATCH; ''; END %]
       <h2>[%|loc%]Sympa Menu[%END%]</h2>
-      [% PROCESS menu.tt2 %]
+      [% TRY; PROCESS menu.tt2; CATCH; ''; END %]
    </div>
 
-       <!-- a href="javascript:afficheId('contenu','Stretcher')">ouvrir</a>
-       <a href="javascript:cacheId('contenu','Stretcher');">Fermer</a-->
-
 <div id="content-inner">
-    [% PROCESS title.tt2 %]
+    [% TRY; PROCESS title.tt2; CATCH; ''; END %]
 
        <div class="ContentBlock">
          <h2>[%|loc%]Internal Server Error[%END%]</h2>
@@ -65,7 +62,7 @@
 
 </div><!-- End content-inner -->
 
- [% PROCESS footer.tt2 %]
+ [% TRY; PROCESS footer.tt2; CATCH; ''; END %]
 
 </body>
 <!-- end tt2_error.tt2 -->

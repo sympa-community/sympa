@@ -2917,8 +2917,6 @@ sub send_html {
         )
         ) {
         my $error = tt2::get_error();
-        $param->{'tt2_error'}      = $error;
-        $param_copy->{'tt2_error'} = $error;
 
         if (    $param->{'action'} eq 'help'
             and ref $error
@@ -2930,8 +2928,13 @@ sub send_html {
                 [$error]);
         }
 
+        my $error_string = HTML::Entities::encode_entities(
+            (ref $error ? $error->as_string : $error), '<>&"');
+        $param->{'tt2_error'}      = $error_string;
+        $param_copy->{'tt2_error'} = $error_string;
         tt2::parse_tt2($param_copy, 'tt2_error.tt2', \*STDOUT,
             $tt2_include_path, {'has_header' => 1});
+        print "\n\n";    # when tt2 failed to parse
     }
 }
 
