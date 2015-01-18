@@ -11,7 +11,8 @@
 [% IF user.email %]
   <h2>[%|loc%]User Information[%END%]</h2>
   <div id="Identity">
-  [% user.email %]&nbsp; <br/>
+  [% user.email %] <br/>
+  [% user.gecos %] <br />
   [% IF is_listmaster || is_privileged_owner || is_owner || is_editor || is_subscriber %]
     [%|loc%]Role:&nbsp;[%END%][% IF is_listmaster ~%]
       [%|loc%]Listmaster[%END%][% IF is_privileged_owner || is_owner || is_editor || is_subscriber %][%|loc%], [%END%][% END ~%]
