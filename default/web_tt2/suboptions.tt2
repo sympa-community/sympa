@@ -14,9 +14,8 @@
   </div>
 
   <div class="form_row">
-  <input type="hidden" name="list" value="[% list %]" />
-  <label> [%|loc%]Receiving mode:[%END%] </label>
-  <select name="reception">
+  <label for="reception"> [%|loc%]Receiving mode:[%END%] </label>
+  <select name="reception" id="reception">
   [% FOREACH r = reception %]
     <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
   [% END %]
@@ -58,19 +57,79 @@
   [%END%]	
  	 
   <div class="form_row">
-  <label> [%|loc%]Visibility:[%END%] </label>
-  <select name="visibility">
+  <label for="visibility"> [%|loc%]Visibility:[%END%] </label>
+  <select id="visibility" name="visibility">
   [% FOREACH r = visibility %]
     <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
   [% END %]
   </select>
   </div>
 
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="previous_action" value="[% action %]" />
   <div class="form_row">
   <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
   </div>
 
 </form><br /><br /> 
+
+
+<form action="[%path_cgi%]" method="POST">
+[% IF subscriber.suspend %]
+  <h3>[%|loc%]Restore subscription[%END%]
+    <a class="actionMenuLinks" href="[%path_cgi %]/help/suspend">[%|loc%]Help[%END%]</a>
+  </h3>
+  <p>[%|loc%]Your subscription is suspended.[%END%]</p>
+
+  <div class="form_row">
+  <label>[%|loc%]From:[%END%] </label>
+  [% subscriber.startdate %]
+  </div>
+
+  <div class="form_row">
+  <label>[%|loc%]To:[%END%] </label>
+  [% IF subscriber.enddate %]
+    [% subscriber.enddate %]
+  [% ELSE %]
+    [%|loc%]Indefinite end date[% END %]
+  [% END %]
+  </div>
+
+  <input type="hidden" name="listname" value="[% list %]" />
+  <input type="hidden" name="action" value="suspend_request_action" />
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="previous_action" value="[% action %]" />
+  <div class="form_row">
+  <input class="MainMenuLinks" type="submit" name="sub_action_suspendstop" value="[%|loc%]Resume my subscription[%END%]" />
+  </div>
+[% ELSE %]
+  <h3>[%|loc%]Suspend subscription[%END%]
+    <a class="actionMenuLinks" href="[%path_cgi %]/help/suspend">[%|loc%]Help[%END%]</a>
+  </h3>
+  <p>[%|loc%]You can suspend your membership by using the button below. The suspend option prevents delivery of emails, this can be useful if you are out of the office for some time.[%END%]</p>
+
+  <div class="form_row">
+  <label for="date_deb">[%|loc%]From:[%END%] </label>
+  <input type="text" id="date_deb" name="date_deb" maxlength="10" size="10" value="[% d_day %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" />
+  <noscript>(dd-mm-yyyy)</noscript>
+  </div>
+
+  <div class="form_row">
+  <label for="date_fin">[%|loc%]To:[%END%] </label>
+  <input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" />
+  <noscript>(dd-mm-yyyy)</noscript>
+  <input type="checkbox" name="indefinite" />[%|loc%]Suspend my membership indefinitely[%END%]
+  </div>
+
+  <input type="hidden" name="listname" value="[% list %]" />
+  <input type="hidden" name="action" value="suspend_request_action"/>
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="previous_action" value="[% action %]" />
+  <div class="form_row">
+  <input class="MainMenuLinks" type="submit" name="sub_action_suspendsave" value="[%|loc%]Suspend my subscriptions[%END%]" />
+  </div>
+[% END %]
+</form>
 
 [% PROCESS picture_upload.tt2 %]
 <!-- end suboptions.tt2 -->

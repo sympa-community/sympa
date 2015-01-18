@@ -313,6 +313,7 @@ our %comm = (
     'ticket'          => 'do_ticket',
     'manage_template' => 'do_manage_template',
     #XXX'send_newsletter' => 'do_send_newsletter',
+    'suspend'                => 'do_suspend',
     'suspend_request'        => 'do_suspend_request',
     'suspend_request_action' => 'do_suspend_request_action',
     'show_exclude'           => 'do_show_exclude',
@@ -456,6 +457,7 @@ our %action_args = (
     'manage_template' => ['subaction', 'list', 'message_template'],
     'send_newsletter' => [],
     'compose_mail'    => ['list',          'subaction'],
+    'suspend'         => ['list'],
     'suspend_request' => ['subaction'],
     'show_exclude'    => ['list'],
     'ca'              => ['custom_action', '@cap'],
@@ -593,6 +595,7 @@ our %required_args = (
     'subrequest'             => ['param.list'],
     'subscribe'              => ['param.list'],
     'subscriber_count'       => ['param.list'],
+    'suspend'                => ['param.list',       'param.user.email'],
     'suspend_request'        => [],
     'suspend_request_action' => [],
     'show_exclude'           => ['param.list'],
@@ -21409,6 +21412,10 @@ sub do_change_email {
 
 }
 
+sub do_suspend {
+    goto &do_suspend_request_action;    # "&" is required.
+}
+
 ####################################################
 #  do_suspend_request
 ####################################################
@@ -21578,6 +21585,8 @@ sub do_suspend_request_action {
     my @lists;
     my $data;
 
+    my $previous_action = $in{'previous_action'} || 'suspend_request';
+
     if ($in{'sub_action'} eq 'suspendsave') {
 
         # to retrieve the selected list
@@ -21601,7 +21610,7 @@ sub do_suspend_request_action {
             wwslog('info',
                 'suspend_request: must picked one or more list(s) you are subscribed'
             );
-            return 'suspend_request';
+            return $previous_action;
         }
 
         if ($in{'date_deb'}) {
@@ -21623,14 +21632,14 @@ sub do_suspend_request_action {
                         {'argument' => 'Start Date doesn\'t exist.'},
                         $param->{'action'});
                     wwslog('info', 'Date doesn\'t exist');
-                    return 'suspend_request';
+                    return $previous_action;
                 }
             } else {
                 Sympa::Report::reject_report_web('user', 'missing_arg',
                     {'argument' => 'Start Date doesn\'t exist.'},
                     $param->{'action'});
                 wwslog('info', 'Date doesn\'t exist');
-                return 'suspend_request';
+                return $previous_action;
             }
             ## Case 1 : Start date & End date (without indefinite)
             if (($in{'date_fin'}) && (!$in{'indefinite'})) {
@@ -21653,14 +21662,14 @@ sub do_suspend_request_action {
                             {'argument' => 'End Date doesn\'t exist.'},
                             $param->{'action'});
                         wwslog('info', 'Date doesn\'t exist');
-                        return 'suspend_request';
+                        return $previous_action;
                     }
                 } else {
                     Sympa::Report::reject_report_web('user', 'missing_arg',
                         {'argument' => 'End Date doesn\'t exist.'},
                         $param->{'action'});
                     wwslog('info', 'Date doesn\'t exist');
-                    return 'suspend_request';
+                    return $previous_action;
                 }
 
                 unless ($data->{'startdate'} <= $data->{'enddate'}) {
@@ -21675,7 +21684,7 @@ sub do_suspend_request_action {
                     wwslog('info',
                         'suspend_request: The start date must be less than the end date.'
                     );
-                    return 'suspend_request';
+                    return $previous_action;
                 }
                 ## Case 2 : Start date & without indefinite (without end date)
             } elsif ((!$in{'date_fin'}) && ($in{'indefinite'})) {
@@ -21692,7 +21701,7 @@ sub do_suspend_request_action {
                 wwslog('info',
                     'suspend_request: missing argument for the end date or syntax error : dd/mm/yyyy or must choose a end date or indefinite end date'
                 );
-                return 'suspend_request';
+                return $previous_action;
             }
         } else {
             Sympa::Report::reject_report_web('user', 'missing_arg',
@@ -21701,7 +21710,7 @@ sub do_suspend_request_action {
             wwslog('info',
                 'suspend_request: missing argument for the start date or syntax error : dd/mm/yyyy'
             );
-            return 'suspend_request';
+            return $previous_action;
         }
 
         ## Suspend subscription
@@ -21713,7 +21722,7 @@ sub do_suspend_request_action {
                 )
                 ) {
                 wwslog('info', 'Can\'t do List suspend_subscription');
-                return 'suspend_request';
+                return $previous_action;
             }
         }
 
@@ -21735,7 +21744,7 @@ sub do_suspend_request_action {
                 {'argument' => 'must picked one or more list(s)'},
                 $param->{'action'});
             wwslog('info', 'Must picked one or more list(s)');
-            return 'suspend_request';
+            return $previous_action;
         }
         Sympa::Report::notice_report_web('performed', {},
             "Resume the subscription for the list(s)");
@@ -21787,7 +21796,7 @@ sub do_suspend_request_action {
                 {'argument' => 'must picked one or more list(s)'},
                 $param->{'action'});
             wwslog('info', 'Must picked one or more list(s)');
-            return 'suspend_request';
+            return $previous_action;
         }
 
         Sympa::Report::notice_report_web($report, {}, '');
@@ -21798,7 +21807,7 @@ sub do_suspend_request_action {
         return undef;
     }
 
-    return 'suspend_request';
+    return $previous_action;
 }
 
 ####################################################
