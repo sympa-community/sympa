@@ -989,7 +989,7 @@ function hideform(my_message_id) {
 
 // fade effect for notification boxes
 $(function() {
-	$('#noticeMsg').delay(500).fadeOut(4000);
+	$('#ephemeralMsg').delay(500).fadeOut(4000);
 });
 
 /* check if the value of element is not empty */
