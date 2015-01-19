@@ -107,24 +107,6 @@
  [% PROCESS footer.tt2 %]
 [% END %]
 
-		<script>
-			//  Creating our button in JS for smaller screens
-			$(function() {
-				$('#menu').prepend('<button type="button" id="menutoggle" class="navtoogle" aria-hidden="true"><span aria-hidden="true" class="fa fa-lg fa-2x fa-bars"></span> [%|loc%]Menu[%END%]</button>');
-				
-				//  Toggle the class on click to show / hide the menu
-				$('#menutoggle').on('click', function() {
-					$(this).addClass('active');
-				});
-				
-				// http://tympanus.net/codrops/2013/05/08/responsive-retina-ready-menu/comment-page-2/#comment-438918
-				$(document).on('click', function(event) {
-					var button = $('#menutoggle');
-					if(event.target !== button[0] && button.is(':visible')) button.removeClass('active');
-				});
-			});
-		</script>
-		
 </body>
 <!-- end main.tt2 -->
 </html>
