@@ -76,6 +76,13 @@ nobase_static_DATA = \
 	external/images/ui-icons_454545_256x240.png \
 	external/images/ui-icons_888888_256x240.png \
 	external/images/ui-icons_cd0a0a_256x240.png \
+	external/font-awesome/css/font-awesome.css \
+	external/font-awesome/css/font-awesome.min.css \
+	external/font-awesome/fonts/FontAwesome.otf \
+	external/font-awesome/fonts/fontawesome-webfont.eot \
+	external/font-awesome/fonts/fontawesome-webfont.svg \
+	external/font-awesome/fonts/fontawesome-webfont.ttf \
+	external/font-awesome/fonts/fontawesome-webfont.woff \
 	js/sympa.js
 
 EXTRA_DIST = $(nobase_static_DATA)
