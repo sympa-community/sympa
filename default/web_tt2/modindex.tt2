@@ -12,7 +12,7 @@
 [% mod_display_message = 1 %]
 [% FOREACH msg = spool %]
     [% line_count = line_count + 1 %]
-<div id="mainviewmod[% msg.key %]" class="block viewmod" style="display:none; background-color:[% color_5 %]; position:absolute; width:80%">
+<div id="mainviewmod[% msg.key %]" class="block viewmod">
 <input style="float:right" type="button" name="action_distribute" value="X"  onclick="return hideform('mainviewmod[% msg.key %]')"/>
 <h3>[%|loc%]Current message[%END%]</h3>
 [% PROCESS modform.tt2 %]
