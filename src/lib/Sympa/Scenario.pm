@@ -555,7 +555,7 @@ sub request_action {
                 Log::do_log(
                     'info',
                     'Error in %s scenario, in list %s',
-                    $context->{'scenario'},
+                    $name,
                     $context->{'listname'}
                 );
 
