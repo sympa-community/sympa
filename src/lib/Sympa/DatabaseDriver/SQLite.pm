@@ -528,8 +528,11 @@ sub do_query {
         }
     };
     if ($EVAL_ERROR or !$rc) {
-        Log::do_log('err', 'Could not unlock database: %s',
-            $EVAL_ERROR || $self->error);
+        Log::do_log(
+            'err',
+            'Could not unlock database: %s',
+            $EVAL_ERROR || $self->error
+        );
         return undef;
     }
 
@@ -565,8 +568,11 @@ sub do_prepared_query {
         }
     };
     if ($EVAL_ERROR or !$rc) {
-        Log::do_log('err', 'Could not unlock database: %s',
-            $EVAL_ERROR || $self->error);
+        Log::do_log(
+            'err',
+            'Could not unlock database: %s',
+            $EVAL_ERROR || $self->error
+        );
         return undef;
     }
 
@@ -792,6 +798,6 @@ Sympa::DatabaseDriver::SQLite - Database driver for SQLite
 
 =head1 SEE ALSO
 
-L<Sympa::DatabaseDriver>, L<SDM>.
+L<Sympa::DatabaseDriver>.
 
 =cut

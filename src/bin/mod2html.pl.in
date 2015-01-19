@@ -11,9 +11,9 @@ use English qw(-no_match_vars);
 use Sympa::Archive;
 use Conf;
 use Sympa::Constants;
+use Sympa::DatabaseManager;
 use Log;
 use Sympa::Message;
-use SDM;
 use tools;
 
 unless (Conf::load(Sympa::Constants::CONFIG)) {
@@ -23,7 +23,7 @@ Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
     'sympa');
 
 if ($Conf::Conf{'db_name'} and $Conf::Conf{'db_type'}) {
-    unless (SDM::probe_db()) {
+    unless (Sympa::DatabaseManager::probe_db()) {
         die "Sympa can't connect to database";
     }
 }    #  to check availabity of Sympa database

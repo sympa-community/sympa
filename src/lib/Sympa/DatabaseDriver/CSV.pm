@@ -52,6 +52,6 @@ Sympa::DatabaseDriver::CSV - Database driver for CSV
 
 =head1 SEE ALSO
 
-L<Sympa::DatabaseDriver>, L<SDM>.
+L<Sympa::DatabaseDriver>.
 
 =cut

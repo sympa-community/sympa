@@ -598,6 +598,6 @@ Sympa::DatabaseDriver::Oracle - Database driver for Oracle Database
 
 =head1 SEE ALSO
 
-L<Sympa::DatabaseDriver>, L<SDM>.
+L<Sympa::DatabaseDriver>.
 
 =cut

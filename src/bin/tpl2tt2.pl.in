@@ -30,6 +30,7 @@ use English qw(-no_match_vars);
 
 use Conf;
 use Sympa::Constants;
+use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::List;
 use Log;
@@ -55,7 +56,7 @@ unless (Conf::load()) {
 
 # Check database connectivity and probe database
 #FIXME: Is it required?
-unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+unless (Sympa::DatabaseManager::probe_db()) {
     die sprintf
         "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
         $Conf::Conf{'db_name'};

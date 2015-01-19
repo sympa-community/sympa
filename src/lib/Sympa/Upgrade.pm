@@ -39,6 +39,7 @@ use Sympa::Auth;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
+use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::List;
 use Sympa::LockedFile;
@@ -112,7 +113,7 @@ sub upgrade {
     }
 
     ## Check database connectivity and probe database
-    unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+    unless (Sympa::DatabaseManager::probe_db()) {
         Log::do_log(
             'err',
             'Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf',
@@ -1419,35 +1420,34 @@ sub upgrade {
         }
     }
     if (lower_version($previous_version, '6.2b.1')) {
-		Log::do_log('info','Setting web interface colors to new defaults.');
-		fix_colors(Sympa::Constants::CONFIG);
-        Log::do_log('info','Saving main web_tt2 directory');
+        Log::do_log('info', 'Setting web interface colors to new defaults.');
+        fix_colors(Sympa::Constants::CONFIG);
+        Log::do_log('info', 'Saving main web_tt2 directory');
         save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
         my @robots = Sympa::List::get_robots();
         foreach my $robot (@robots) {
-			if (-f "$Conf::Conf{'etc'}/$robot/robot.conf") {
-				Log::do_log('info','Fixing colors for %s robot',$robot);
-				fix_colors("$Conf::Conf{'etc'}/$robot/robot.conf");
-			}
-			if (-d "$Conf::Conf{'etc'}/$robot/web_tt2") {
-				Log::do_log('info','Saving web_tt2 directory %s robot',$robot);
-				save_web_tt2("$Conf::Conf{'etc'}/$robot/web_tt2");
-			}
-		}
+            if (-f "$Conf::Conf{'etc'}/$robot/robot.conf") {
+                Log::do_log('info', 'Fixing colors for %s robot', $robot);
+                fix_colors("$Conf::Conf{'etc'}/$robot/robot.conf");
+            }
+            if (-d "$Conf::Conf{'etc'}/$robot/web_tt2") {
+                Log::do_log('info', 'Saving web_tt2 directory %s robot',
+                    $robot);
+                save_web_tt2("$Conf::Conf{'etc'}/$robot/web_tt2");
+            }
+        }
         #Used to regenerate CSS...
         Conf::update_css((force => 1));
-		Log::do_log('info','Web interface colors defaulted to new values.');
-	}
+        Log::do_log('info', 'Web interface colors defaulted to new values.');
+    }
     return 1;
 }
 
-sub probe_db {
-    SDM::probe_db();
-}
+# Use Sympa::DatabaseManager::probe_db();
+#sub probe_db;
 
-sub data_structure_uptodate {
-    SDM::data_structure_uptodate();
-}
+# Use Conf::data_structure_uptodate();
+#sub data_structure_uptodate;
 
 ## used to encode files to UTF-8
 ## also add X-Attach header field if template requires it
@@ -1599,76 +1599,100 @@ sub lower_version {
 }
 
 sub fix_colors {
-	my ($file) = @_;
-	my $new_conf = '';
-	my %default_colors;
-	return unless (-f $file);
-	foreach my $param (@Sympa::ConfDef::params) {
-		my $name = $param->{'name'};
-		next unless ($name);
-		if ($name =~ m{color_.+}) {
-			$default_colors{$name} = $param->{'default'};
-			unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
-				die sprintf
-					"Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
-					$Conf::Conf{'db_name'};
-			}
-			unless (
-				SDM::do_query(
-					'DELETE FROM conf_table WHERE label_conf like %s',SDM::quote($name)
-				)
-			) {
-				Log::do_log('err', 'Cannot clean color parameters from database.');
-			}
-		}
-	}
-	unless (open(FILE, "$file")) {
-		die sprintf("Unable to open %s : %s",
-			$file, $ERRNO);
-	}
-	foreach my $line (<FILE>) {
-		chomp $line;
-		if ($line =~ m{^\s*(color_\d+)}) {
-			my $param_name = $1;
-			$line = sprintf '%s %s',$param_name,$default_colors{$param_name};
-		}
-		$new_conf .= "$line\n";
-	}
+    my ($file) = @_;
+    my $new_conf = '';
+    my %default_colors;
+    return unless (-f $file);
+    foreach my $param (@Sympa::ConfDef::params) {
+        my $name = $param->{'name'};
+        next unless ($name);
+        if ($name =~ m{color_.+}) {
+            $default_colors{$name} = $param->{'default'};
+            unless (Sympa::DatabaseManager::probe_db()) {
+                die sprintf
+                    "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
+                    $Conf::Conf{'db_name'};
+            }
+            unless (
+                SDM::do_query(
+                    'DELETE FROM conf_table WHERE label_conf like %s',
+                    SDM::quote($name)
+                )
+                ) {
+                Log::do_log('err',
+                    'Cannot clean color parameters from database.');
+            }
+        }
+    }
+    unless (open(FILE, "$file")) {
+        die sprintf("Unable to open %s : %s", $file, $ERRNO);
+    }
+    foreach my $line (<FILE>) {
+        chomp $line;
+        if ($line =~ m{^\s*(color_\d+)}) {
+            my $param_name = $1;
+            $line = sprintf '%s %s', $param_name,
+                $default_colors{$param_name};
+        }
+        $new_conf .= "$line\n";
+    }
     # Save previous config file
-    my $date = $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
-    unless(rename($file, "$file.upgrade$date")) {
-        Log::do_log('err','Unable to rename %s file: %s. Web interface might look buggy after upgrade',$file,$ERRNO);
+    my $date =
+        $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
+    unless (rename($file, "$file.upgrade$date")) {
+        Log::do_log(
+            'err',
+            'Unable to rename %s file: %s. Web interface might look buggy after upgrade',
+            $file,
+            $ERRNO
+        );
         return 0;
     }
-    Log::do_log('notice','%s file saved as %s',$file, "$file.upgrade$date");
-	## Write new config file
-	my $umask = umask 037;
-	unless (open(FILE, "> $file")) {
-		umask $umask;
-		Log::do_log('err', 'Unable to open %s : %s. Web interface colors not updated. Please remove them by hand in config file.',
-			$file, $ERRNO);
+    Log::do_log('notice', '%s file saved as %s', $file, "$file.upgrade$date");
+    ## Write new config file
+    my $umask = umask 037;
+    unless (open(FILE, "> $file")) {
+        umask $umask;
+        Log::do_log(
+            'err',
+            'Unable to open %s : %s. Web interface colors not updated. Please remove them by hand in config file.',
+            $file,
+            $ERRNO
+        );
         return 0;
-	}
-	umask $umask;
-	chown [getpwnam(Sympa::Constants::USER)]->[2],
-		[getgrnam(Sympa::Constants::GROUP)]->[2], $file;
+    }
+    umask $umask;
+    chown [getpwnam(Sympa::Constants::USER)]->[2],
+        [getgrnam(Sympa::Constants::GROUP)]->[2], $file;
 
-	print FILE $new_conf;
-	close FILE;
+    print FILE $new_conf;
+    close FILE;
 }
 
 sub save_web_tt2 {
     my ($dir) = @_;
     unless (-w $dir) {
-        Log::do_log('err', '%s directory is not writable: %s. Unable to rename it. Web interface might look buggy after upgrade',$dir,$ERRNO);
+        Log::do_log(
+            'err',
+            '%s directory is not writable: %s. Unable to rename it. Web interface might look buggy after upgrade',
+            $dir,
+            $ERRNO
+        );
         return 0;
     }
-    my $date = $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
-    unless(rename($dir, "$dir.upgrade$date")) {
-        Log::do_log('err','Unable to rename %s directory: %s. Web interface might look buggy after upgrade',$dir,$ERRNO);
+    my $date =
+        $language->gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime time);
+    unless (rename($dir, "$dir.upgrade$date")) {
+        Log::do_log(
+            'err',
+            'Unable to rename %s directory: %s. Web interface might look buggy after upgrade',
+            $dir,
+            $ERRNO
+        );
         return 0;
     }
-    Log::do_log('notice','%s directory saved as %s',$dir, "$dir.upgrade$date");
+    Log::do_log('notice', '%s directory saved as %s',
+        $dir, "$dir.upgrade$date");
     return 1;
 }
 

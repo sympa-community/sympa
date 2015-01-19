@@ -43,6 +43,7 @@ use Conf;
 use Sympa::Config_XML;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
+use Sympa::DatabaseManager;
 use Sympa::Family;
 use Sympa::Language;
 use Sympa::List;
@@ -246,7 +247,7 @@ if ($main::options{'help'}) {
     }
 
     ## Check database connectivity and probe database
-    unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+    unless (Sympa::DatabaseManager::probe_db()) {
         die sprintf
             "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
             $Conf::Conf{'db_name'};
@@ -272,7 +273,7 @@ if ($main::options{'help'}) {
     }
 
     ## Check that the data structure is uptodate
-    unless (SDM::data_structure_uptodate()) {
+    unless (Conf::data_structure_uptodate()) {
         printf STDERR
             "Data structure was not updated; you should run sympa.pl --upgrade to run the upgrade process.\n";
         exit 1;

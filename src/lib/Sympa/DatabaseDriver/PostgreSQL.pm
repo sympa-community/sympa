@@ -617,6 +617,6 @@ Sympa::DatabaseDriver::PostgreSQL - Database driver for PostgreSQL
 
 =head1 SEE ALSO
 
-L<Sympa::DatabaseDriver>, L<SDM>.
+L<Sympa::DatabaseDriver>.
 
 =cut

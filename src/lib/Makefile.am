@@ -45,6 +45,7 @@ nobase_modules_DATA = \
 	Sympa/DatabaseDriver/PostgreSQL.pm \
 	Sympa/DatabaseDriver/SQLite.pm\
 	Sympa/DatabaseDriver/Sybase.pm \
+	Sympa/DatabaseManager.pm \
 	Sympa/Datasource.pm \
 	Sympa/Family.pm \
 	Sympa/Fetch.pm \
@@ -108,6 +109,7 @@ MAN3PM = \
 	Sympa/DatabaseDriver/PostgreSQL.pm \
 	Sympa/DatabaseDriver/SQLite.pm\
 	Sympa/DatabaseDriver/Sybase.pm \
+	Sympa/DatabaseManager.pm \
 	Sympa/HTMLSanitizer.pm \
 	Sympa/Language.pm \
 	Sympa/ListDef.pm \

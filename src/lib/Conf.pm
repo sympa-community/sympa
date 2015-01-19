@@ -700,6 +700,40 @@ sub checkfiles_as_root {
     return 1;
 }
 
+## Check if data structures are uptodate
+## If not, no operation should be performed before the upgrade process is run
+sub data_structure_uptodate {
+    my $version_file =
+        Conf::get_robot_conf('*', 'etc') . '/data_structure.version';
+    my $data_structure_version;
+
+    if (-f $version_file) {
+        my $fh;
+        unless (open $fh, '<', $version_file) {
+            Log::do_log('err', 'Unable to open %s: %m', $version_file);
+            return undef;
+        }
+        while (<$fh>) {
+            next if /^\s*$/;
+            next if /^\s*\#/;
+            chomp;
+            $data_structure_version = $_;
+            last;
+        }
+        close $fh;
+    }
+
+    if (defined $data_structure_version
+        and $data_structure_version ne Sympa::Constants::VERSION) {
+        Log::do_log('err',
+            "Data structure (%s) is not uptodate for current release (%s)",
+            $data_structure_version, Sympa::Constants::VERSION);
+        return 0;
+    }
+
+    return 1;
+}
+
 ## Check a few files
 sub checkfiles {
     my $config_err = 0;

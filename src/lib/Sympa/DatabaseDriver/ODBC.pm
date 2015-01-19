@@ -75,6 +75,6 @@ I<This module is under development>.
 
 =head1 SEE ALSO
 
-L<Sympa::DatabaseDriver>, L<SDM>.
+L<Sympa::DatabaseDriver>.
 
 =cut

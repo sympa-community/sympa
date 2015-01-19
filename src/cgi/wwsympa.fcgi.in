@@ -964,7 +964,7 @@ $plugins->start if $plugins;
 ## Check that the data structure is uptodate
 ## If not, set the web interface to maintenance mode
 my $maintenance_mode;
-unless (SDM::data_structure_uptodate()) {
+unless (Conf::data_structure_uptodate()) {
     $maintenance_mode = 1;
     Log::do_log('err',
         "Web interface set to maintenance mode ; you should run sympa.pl --upgrade"
@@ -1044,10 +1044,9 @@ while ($query = new_loop()) {
     }
 
     ## If in maintenance mode, check if the data structure is now uptodate
-    if ($maintenance_mode
-        && (SDM::data_structure_uptodate()
-            && ($EUID eq (getpwnam(Sympa::Constants::USER))[2]))
-        ) {
+    if (    $maintenance_mode
+        and Conf::data_structure_uptodate()
+        and ($EUID eq (getpwnam(Sympa::Constants::USER))[2])) {
         $maintenance_mode = undef;
         Log::do_log('notice',
             "Data structure seem updated, setting OFF maintenance mode");
@@ -10575,8 +10574,9 @@ sub do_tracking {
             $in{'msgid'}, $in{'list'}, $robot
         )
         ) {
-        Sympa::Report::reject_report_web('user', 'could_not_get_tracking_info',
-            {}, $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+        Sympa::Report::reject_report_web('user',
+            'could_not_get_tracking_info', {}, $param->{'action'}, $list,
+            $param->{'user'}{'email'}, $robot);
         wwslog('err',
             "could not get tracking info for message_id $in{'msgid'} and list $in{'list'}"
         );

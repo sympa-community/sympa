@@ -487,6 +487,6 @@ Sympa::DatabaseDriver::MySQL - Database driver for MySQL / MariaDB
 
 =head1 SEE ALSO
 
-L<Sympa::DatabaseDriver>, L<SDM>.
+L<Sympa::DatabaseDriver>.
 
 =cut

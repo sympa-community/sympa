@@ -1332,6 +1332,12 @@ TBD.
 
 =head1 SEE ALSO
 
-L<SDM>.
+L<Sympa::DatabaseManager>.
+
+=head1 HISTORY
+
+L<Sympa::DatabaseDescription> was introduced behind the veil on Sympa 6.1.
+It began to be referred overtly as a part of Sympa Database Manager (SDM) on
+Sympa 6.2.
 
 =cut
