@@ -10556,7 +10556,7 @@ sub do_tracking {
     }
     if (  !$in{'msgid'}
         || $in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
-        Sympa::Report::reject_report_web('err', 'no_msgid', {},
+        Sympa::Report::reject_report_web('user', 'no_msgid', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('err', 'No message id found');
         $param->{'status'} = 'no_msgid';
@@ -10575,7 +10575,7 @@ sub do_tracking {
             $in{'msgid'}, $in{'list'}, $robot
         )
         ) {
-        Sympa::Report::reject_report_web('err', 'could_not_get_tracking_info',
+        Sympa::Report::reject_report_web('user', 'could_not_get_tracking_info',
             {}, $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('err',
             "could not get tracking info for message_id $in{'msgid'} and list $in{'list'}"
