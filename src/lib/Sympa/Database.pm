@@ -37,6 +37,7 @@ use Log;
 # Keys: unique ID of connection (includes type, server, port, dbname and user).
 # Values: database handler.
 our %connection_of;
+our %persistent_connection_of;
 
 # Map to driver names from older format of db_type parameter.
 my %driver_aliases = (
@@ -58,7 +59,7 @@ sub new {
     unless (eval "require $driver"
         and $driver->isa('Sympa::DatabaseDriver')) {
         Log::do_log('err', 'Unable to use %s module: %s',
-            $driver, $EVAL_ERROR);
+            $driver, $EVAL_ERROR || 'Not a Sympa::DatabaseDriver class');
         return undef;
     }
 
@@ -69,9 +70,7 @@ sub new {
                 ? ($_ => $params{$_})
                 : ()
             } (
-            @{$driver->required_parameters},
-            @{$driver->optional_parameters},
-            'reconnect_options'
+            @{$driver->required_parameters}, @{$driver->optional_parameters}
             )
     );
 }
@@ -148,8 +147,7 @@ sub connect {
     $connection_of{$self->{_id}} = eval { $self->_connect };
 
     unless ($self->ping) {
-        unless ($self->{'reconnect_options'}
-            and $self->{'reconnect_options'}{'keep_trying'}) {
+        unless ($persistent_connection_of{$self->{_id}}) {
             Log::do_log('err', 'Can\'t connect to Database %s', $self);
             $self->{_status} = 'failed';
             return undef;
@@ -224,7 +222,7 @@ sub do_query {
     $s =~ s/\n\s*/ /g;
     Log::do_log('debug3', 'Will perform query "%s"', $s);
 
-    unless ($sth = $self->__dbh->prepare($statement)) {
+    unless ($self->__dbh and $sth = $self->__dbh->prepare($statement)) {
         # Check connection to database in case it would be the cause of the
         # problem.
         unless ($self->connect()) {
@@ -232,7 +230,8 @@ sub do_query {
                 $self->{'db_name'});
             return undef;
         } else {
-            unless ($sth = $self->__dbh->prepare($statement)) {
+            unless ($self->__dbh and $sth = $self->__dbh->prepare($statement))
+            {
                 my $trace_statement = sprintf $query,
                     @{$self->prepare_query_log_values(@params)};
                 Log::do_log('err', 'Unable to prepare SQL statement %s: %s',
@@ -317,13 +316,14 @@ sub do_prepared_query {
     } else {
         Log::do_log('debug3',
             'Did not find prepared statement for %s. Doing it', $query);
-        unless ($sth = $self->__dbh->prepare($query)) {
+        unless ($self->__dbh and $sth = $self->__dbh->prepare($query)) {
             unless ($self->connect()) {
                 Log::do_log('err', 'Unable to get a handle to %s database',
                     $self->{'db_name'});
                 return undef;
             } else {
-                unless ($sth = $self->__dbh->prepare($query)) {
+                unless ($self->__dbh and $sth = $self->__dbh->prepare($query))
+                {
                     Log::do_log('err', 'Unable to prepare SQL statement: %s',
                         $self->error);
                     return undef;
@@ -400,11 +400,25 @@ sub prepare_query_log_values {
 sub disconnect {
     my $self = shift;
 
-    my $id = $self->get_id;
-    $connection_of{$id}->disconnect if $connection_of{$id};
-    delete $connection_of{$id};
+    if (ref $self) {
+        my $id = $self->get_id;
 
-    return 1;
+        # Don't disconnect persistent connection.
+        return 0 if $persistent_connection_of{$id};
+
+        $connection_of{$id}->disconnect if $connection_of{$id};
+        delete $connection_of{$id};
+        return 1;
+    } elsif ($self eq __PACKAGE__) {
+        # Disconnect all.
+        foreach my $connection (values %connection_of) {
+            $connection->disconnect if $connection;
+        }
+        %connection_of = ();
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 # NOT YET USED.
@@ -416,6 +430,18 @@ sub error {
     my $dbh = $self->__dbh;
     return sprintf '(%s) %s', $dbh->state, ($dbh->errstr || '') if $dbh;
     return undef;
+}
+
+sub set_persistent {
+    my $self = shift;
+    my $flag = shift;
+
+    if ($flag) {
+        $persistent_connection_of{$self->get_id} = 1;
+    } elsif (defined $flag) {
+        delete $persistent_connection_of{$self->get_id};
+    }
+    return $self;
 }
 
 sub ping {
@@ -434,6 +460,10 @@ sub quote {
     my $self = shift;
     my ($string, $datatype) = @_;
 
+    # quote() does not need actual connection but driver handle.
+    unless ($self->__dbh or $self->connect) {
+        return undef;
+    }
     return $self->__dbh->quote($string, $datatype);
 }
 
@@ -474,6 +504,10 @@ sub get_id {
             and !/passw(or)?d/
         }
         sort keys %$self;
+}
+
+sub DESTROY {
+    shift->disconnect;
 }
 
 1;

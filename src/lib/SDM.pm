@@ -29,46 +29,23 @@ use warnings;
 
 use Conf;
 use Sympa::Database;
+use Sympa::DatabaseManager;
 use Log;
 
-our $db_source;
-
 sub do_query {
-    my $query  = shift;
-    my @params = @_;
-    my $sth;
-
-    if (check_db_connect()) {
-        unless ($sth = $db_source->do_query($query, @params)) {
-            Log::do_log('err',
-                'SQL query failed to execute in the Sympa database');
-            return undef;
-        }
+    if (my $sdm = Sympa::DatabaseManager->instance) {
+        return $sdm->do_query(@_);
     } else {
-        Log::do_log('err', 'Unable to get a handle to Sympa database');
         return undef;
     }
-
-    return $sth;
 }
 
 sub do_prepared_query {
-    my $query  = shift;
-    my @params = @_;
-    my $sth;
-
-    if (check_db_connect()) {
-        unless ($sth = $db_source->do_prepared_query($query, @params)) {
-            Log::do_log('err',
-                'SQL query failed to execute in the Sympa database');
-            return undef;
-        }
+    if (my $sdm = Sympa::DatabaseManager->instance) {
+        return $sdm->do_prepared_query(@_);
     } else {
-        Log::do_log('err', 'Unable to get a handle to Sympa database');
         return undef;
     }
-
-    return $sth;
 }
 
 ## Get database handler
@@ -82,64 +59,13 @@ sub do_prepared_query {
 ## Possible option is 'just_try', won't try to reconnect if database
 ## connection is not available.
 sub check_db_connect {
-    my @options = @_;
-
-    ## Is the Database defined
-    unless (Conf::get_robot_conf('*', 'db_name')) {
-        Log::do_log('err', 'No db_name defined in configuration file');
-        return undef;
-    }
-
-    unless ($db_source and $db_source->ping) {
-        unless (connect_sympa_database(@options)) {
-            Log::do_log('err', 'Failed to connect to database');
-            return undef;
-        }
-    }
-
-    return 1;
-}
-
-## Connect to Database
-sub connect_sympa_database {
-    Log::do_log('debug2', '(%s)', @_);
-    my $option = shift || '';
-
-    ## We keep trying to connect if 'just_try' option was not set.
-    ## Unless in a web context, because we can't afford long response time on
-    ## the web interface
-    my $db_conf = Conf::get_parameters_group('*', 'Database related');
-    $db_conf->{'reconnect_options'} = {
-        'keep_trying' =>
-            ($option ne 'just_try' && !$ENV{'GATEWAY_INTERFACE'}),
-        'warn' => 1,
-    };
-    unless ($db_source =
-        Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)) {
-        Log::do_log('err', 'Unable to create Sympa::Database object');
-        return undef;
-    }
-
-    # Just in case, we connect to the database here. Probably not necessary.
-    unless ($db_source->connect()) {
-        Log::do_log('err', 'Unable to connect to the Sympa database');
-        return undef;
-    }
-    Log::do_log(
-        'debug2',
-        'Connected to Database %s',
-        Conf::get_robot_conf('*', 'db_name')
-    );
-
-    return 1;
+    return Sympa::DatabaseManager->instance ? 1 : undef;
 }
 
 ## Disconnect from Database.
 ## Destroy db handle so that any pending statement handles will be finalized.
 sub db_disconnect {
-    Log::do_log('debug2', '');
-
-    $db_source->disconnect if $db_source;
+    Sympa::Database->disconnect;
     return 1;
 }
 
@@ -150,30 +76,18 @@ sub db_disconnect {
 #sub data_structure_uptodate();
 
 sub quote {
-    my $param = shift;
-    if ($db_source and $db_source->__dbh) {
-        return $db_source->quote($param);
+    if (my $sdm = Sympa::DatabaseManager->instance) {
+        return $sdm->quote(@_);
     } else {
-        if (check_db_connect()) {
-            return $db_source->quote($param);
-        } else {
-            Log::do_log('err', 'Unable to get a handle to Sympa database');
-            return undef;
-        }
+        return undef;
     }
 }
 
 sub get_substring_clause {
-    my $param = shift;
-    if ($db_source) {
-        return $db_source->get_substring_clause($param);
+    if (my $sdm = Sympa::DatabaseManager->instance) {
+        return $sdm->get_substring_clause(@_);
     } else {
-        if (check_db_connect()) {
-            return $db_source->get_substring_clause($param);
-        } else {
-            Log::do_log('err', 'Unable to get a handle to Sympa database');
-            return undef;
-        }
+        return undef;
     }
 }
 
@@ -186,16 +100,10 @@ sub get_substring_clause {
 ## the query.
 ##
 sub get_canonical_write_date {
-    my $param = shift;
-    if ($db_source) {
-        return $db_source->get_canonical_write_date($param);
+    if (my $sdm = Sympa::DatabaseManager->instance) {
+        return $sdm->get_canonical_write_date(@_);
     } else {
-        if (check_db_connect()) {
-            return $db_source->get_canonical_write_date($param);
-        } else {
-            Log::do_log('err', 'Unable to get a handle to Sympa database');
-            return undef;
-        }
+        return undef;
     }
 }
 
@@ -205,16 +113,10 @@ sub get_canonical_write_date {
 ## the query.
 ##
 sub get_canonical_read_date {
-    my $param = shift;
-    if ($db_source) {
-        return $db_source->get_canonical_read_date($param);
+    if (my $sdm = Sympa::DatabaseManager->instance) {
+        return $sdm->get_canonical_read_date(@_);
     } else {
-        if (check_db_connect()) {
-            return $db_source->get_canonical_read_date($param);
-        } else {
-            Log::do_log('err', 'Unable to get a handle to Sympa database');
-            return undef;
-        }
+        return undef;
     }
 }
 
@@ -223,11 +125,19 @@ sub get_canonical_read_date {
 ## single scalar or empty array.
 ##
 sub AS_DOUBLE {
-    return $db_source->AS_DOUBLE(@_);
+    if (my $sdm = Sympa::DatabaseManager->instance) {
+        return $sdm->AS_DOUBLE(@_);
+    } else {
+        return undef;
+    }
 }
 
 sub AS_BLOB {
-    return $db_source->AS_BLOB(@_);
+    if (my $sdm = Sympa::DatabaseManager->instance) {
+        return $sdm->AS_BLOB(@_);
+    } else {
+        return undef;
+    }
 }
 
 1;

@@ -45,7 +45,6 @@ use Sympa::List;
 use Sympa::LockedFile;
 use Log;
 use Sympa::Message;
-use SDM;
 use tools;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
@@ -272,16 +271,17 @@ sub upgrade {
             my $all_lists =
                 Sympa::List::get_lists($r, 'skip_sync_admin' => 1);
             foreach my $list (@$all_lists) {
-
+                my $sdm = Sympa::DatabaseManager->instance;
                 foreach my $table ('subscriber', 'admin') {
                     unless (
-                        SDM::do_query(
+                        $sdm
+                        and $sdm->do_query(
                             "UPDATE %s_table SET robot_%s=%s WHERE (list_%s=%s)",
                             $table,
                             $table,
-                            SDM::quote($r),
+                            $sdm->quote($r),
                             $table,
-                            SDM::quote($list->{'name'})
+                            $sdm->quote($list->{'name'})
                         )
                         ) {
                         Log::do_log(
@@ -290,8 +290,7 @@ sub upgrade {
                             $r
                         );
                         tools::send_notify_to_listmaster('*',
-                            'upgrade_failed',
-                            {'error' => $SDM::db_source->error});
+                            'upgrade_failed', {'error' => $sdm->error});
                         return undef;
                     }
                 }
@@ -372,9 +371,14 @@ sub upgrade {
                 my $statement;
                 my $sth;
 
-                $sth = SDM::do_query(q{SELECT max(%s) FROM %s},
-                    $field, $check{$field});
-                unless ($sth) {
+                my $sdm = Sympa::DatabaseManager->instance;
+                unless (
+                    $sdm
+                    and $sth = $sdm->do_query(
+                        q{SELECT max(%s) FROM %s},
+                        $field, $check{$field}
+                    )
+                    ) {
                     Log::do_log('err', 'Unable to prepare SQL statement');
                     return undef;
                 }
@@ -390,7 +394,7 @@ sub upgrade {
                         'Fixing DB field %s; turning 1 to 0...', $field);
                     my $rows;
                     $sth =
-                        SDM::do_query(q{UPDATE %s SET %s = %d WHERE %s = %d},
+                        $sdm->do_query(q{UPDATE %s SET %s = %d WHERE %s = %d},
                         $check{$field}, $field, 0, $field, 1);
                     unless ($sth) {
                         Log::do_log('err', 'Unable to execute SQL statement');
@@ -404,7 +408,7 @@ sub upgrade {
                         'Fixing DB field %s; turning 2 to 1...', $field);
 
                     $sth =
-                        SDM::do_query(q{UPDATE %s SET %s = %d WHERE %s = %d},
+                        $sdm->do_query(q{UPDATE %s SET %s = %d WHERE %s = %d},
                         $check{$field}, $field, 1, $field, 2);
                     unless ($sth) {
                         Log::do_log('err', 'Unable to execute SQL statement');
@@ -419,7 +423,7 @@ sub upgrade {
                 Log::do_log('notice',
                     'Updating subscribed field of the subscriber table...');
                 my $rows;
-                $sth = SDM::do_query(
+                $sth = $sdm->do_query(
                     q{UPDATE subscriber_table
 		      SET subscribed_subscriber = 1
 		      WHERE (included_subscriber IS NULL OR
@@ -902,7 +906,9 @@ sub upgrade {
         ## Exclusion table was not robot-enabled.
         Log::do_log('notice', 'Fixing robot column of exclusion table');
         my $sth;
-        unless ($sth = SDM::do_query("SELECT * FROM exclusion_table")) {
+        my $sdm = Sympa::DatabaseManager->instance;
+        unless ($sdm
+            and $sth = $sdm->do_query("SELECT * FROM exclusion_table")) {
             Log::do_log('err',
                 'Unable to gather informations from the exclusions table');
         }
@@ -926,11 +932,11 @@ sub upgrade {
                 $valid_robot = $valid_robot_candidates[0];
                 my $sth;
                 unless (
-                    $sth = SDM::do_query(
+                    $sth = $sdm->do_query(
                         "UPDATE exclusion_table SET robot_exclusion = %s WHERE list_exclusion=%s AND user_exclusion=%s",
-                        SDM::quote($valid_robot),
-                        SDM::quote($data->{'list_exclusion'}),
-                        SDM::quote($data->{'user_exclusion'})
+                        $sdm->quote($valid_robot),
+                        $sdm->quote($data->{'list_exclusion'}),
+                        $sdm->quote($data->{'user_exclusion'})
                     )
                     ) {
                     Log::do_log(
@@ -1613,10 +1619,12 @@ sub fix_colors {
                     "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
                     $Conf::Conf{'db_name'};
             }
+            my $sdm = Sympa::DatabaseManager->instance;
             unless (
-                SDM::do_query(
+                $sdm
+                and $sdm->do_query(
                     'DELETE FROM conf_table WHERE label_conf like %s',
-                    SDM::quote($name)
+                    $sdm->quote($name)
                 )
                 ) {
                 Log::do_log('err',

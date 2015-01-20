@@ -29,16 +29,40 @@ use warnings;
 
 use Conf;
 use Sympa::Constants;
+use Sympa::Database;
 use Sympa::DatabaseDescription;
 use Log;
-use SDM;
 use tools;
 use Sympa::Tools::Data;
 
+use base qw(Class::Singleton);
+
+# Constructor for Class::Singleton.
+# NOTE: This method actually returns an instance of Sympa::DatabaseDriver
+# subclass not inheriting this class.  That's why probe_db() isn't the method
+# but a static function.
+sub _new_instance {
+    my $class = shift;
+
+    my $self;
+    my $db_conf = Conf::get_parameters_group('*', 'Database related');
+
+    return undef
+        unless $self = Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)
+            and $self->connect;
+
+    # At once connection succeeded, we keep trying to connect.
+    # Unless in a web context, because we can't afford long response time on
+    # the web interface.
+    $self->set_persistent(1) unless $ENV{'GATEWAY_INTERFACE'};
+
+    return $self;
+}
+
 # db structure description has moved in Sympa::DatabaseDescription.
-my %db_struct = Sympa::DatabaseDescription::db_struct();
-my %not_null = Sympa::DatabaseDescription::not_null();
-my %primary = Sympa::DatabaseDescription::primary();
+my %db_struct     = Sympa::DatabaseDescription::db_struct();
+my %not_null      = Sympa::DatabaseDescription::not_null();
+my %primary       = Sympa::DatabaseDescription::primary();
 my %autoincrement = Sympa::DatabaseDescription::autoincrement();
 
 # List the required INDEXES
@@ -52,23 +76,24 @@ my @former_indexes = @Sympa::DatabaseDescription::former_indexes;
 
 sub probe_db {
     Log::do_log('debug3', 'Checking database structure');
-    my (%checked, $table);
 
-    my $db_type = Conf::get_robot_conf('*', 'db_type');
-    my $update_db_field_types =
-        Conf::get_robot_conf('*', 'update_db_field_types') || 'off';
-
-    unless (SDM::check_db_connect('just_try')) {
+    my $sdm = __PACKAGE__->instance;
+    unless ($sdm) {
         Log::do_log('err',
             'Could not check the database structure.  Make sure that database connection is available'
         );
         return undef;
     }
 
+    my (%checked, $table);
+    my $db_type = Conf::get_robot_conf('*', 'db_type');
+    my $update_db_field_types =
+        Conf::get_robot_conf('*', 'update_db_field_types') || 'off';
+
     # Does the driver support probing database structure?
     foreach my $method (
         qw(is_autoinc get_tables get_fields get_primary_key get_indexes)) {
-        unless ($SDM::db_source->can($method)) {
+        unless ($sdm->can($method)) {
             Log::do_log('notice',
                 'Could not check the database structure: required methods have not been implemented'
             );
@@ -86,7 +111,7 @@ sub probe_db {
             qw(set_autoinc add_table update_field add_field delete_field
             unset_primary_key set_primary_key unset_index set_index)
             ) {
-            unless ($SDM::db_source->can($method)) {
+            unless ($sdm->can($method)) {
                 $may_update = 0;
                 last;
             }
@@ -100,7 +125,7 @@ sub probe_db {
     ## Get tables
     my @tables;
     my $list_of_tables;
-    if ($list_of_tables = $SDM::db_source->get_tables()) {
+    if ($list_of_tables = $sdm->get_tables()) {
         @tables = @{$list_of_tables};
     } else {
         @tables = ();
@@ -116,7 +141,7 @@ sub probe_db {
         unless ($found) {
             my $rep;
             if (    $may_update
-                and $rep = $SDM::db_source->add_table({'table' => $t1})) {
+                and $rep = $sdm->add_table({'table' => $t1})) {
                 push @report, $rep;
                 Log::do_log(
                     'notice', 'Table %s created in database %s',
@@ -129,7 +154,7 @@ sub probe_db {
     }
     ## Get fields
     foreach my $t (keys %{$db_struct{'mysql'}}) {
-        $real_struct{$t} = $SDM::db_source->get_fields({'table' => $t});
+        $real_struct{$t} = $sdm->get_fields({'table' => $t});
     }
     ## Check tables structure if we could get it
     ## Only performed with mysql , Pg and SQLite
@@ -147,6 +172,7 @@ sub probe_db {
             }
             unless (
                 _check_fields(
+                    $sdm,
                     {   'table'       => $t,
                         'report'      => \@report,
                         'real_struct' => \%real_struct,
@@ -163,7 +189,7 @@ sub probe_db {
             }
             ## Remove temporary DB field
             if ($may_update and $real_struct{$t}{'temporary'}) {
-                $SDM::db_source->delete_field(
+                $sdm->delete_field(
                     {   'table' => $t,
                         'field' => 'temporary',
                     }
@@ -174,6 +200,7 @@ sub probe_db {
             ## Check that primary key has the right structure.
             unless (
                 _check_primary_key(
+                    $sdm,
                     {   'table'      => $t,
                         'report'     => \@report,
                         'may_update' => $may_update
@@ -190,6 +217,7 @@ sub probe_db {
 
             unless (
                 _check_indexes(
+                    $sdm,
                     {   'table'      => $t,
                         'report'     => \@report,
                         'may_update' => $may_update
@@ -207,12 +235,12 @@ sub probe_db {
         # add autoincrement if needed
         foreach my $table (keys %autoincrement) {
             unless (
-                $SDM::db_source->is_autoinc(
+                $sdm->is_autoinc(
                     {'table' => $table, 'field' => $autoincrement{$table}}
                 )
                 ) {
                 if ($may_update
-                    and $SDM::db_source->set_autoinc(
+                    and $sdm->set_autoinc(
                         {   'table'      => $table,
                             'field'      => $autoincrement{$table},
                             'field_type' => $db_struct{$db_type}->{$table}
@@ -247,6 +275,7 @@ sub probe_db {
 }
 
 sub _check_fields {
+    my $sdm         = shift;
     my $param       = shift;
     my $t           = $param->{'table'};
     my %real_struct = %{$param->{'real_struct'}};
@@ -271,7 +300,7 @@ sub _check_fields {
 
             my $rep;
             if ($may_update
-                and $rep = $SDM::db_source->add_field(
+                and $rep = $sdm->add_field(
                     {   'table'   => $t,
                         'field'   => $f,
                         'type'    => $db_struct{$db_type}{$t}{$f},
@@ -322,7 +351,7 @@ sub _check_fields {
 
                 my $rep;
                 if ($may_update
-                    and $rep = $SDM::db_source->update_field(
+                    and $rep = $sdm->update_field(
                         {   'table'   => $t,
                             'field'   => $f,
                             'type'    => $db_struct{$db_type}{$t}{$f},
@@ -358,6 +387,7 @@ sub _check_fields {
 }
 
 sub _check_primary_key {
+    my $sdm        = shift;
     my $param      = shift;
     my $t          = $param->{'table'};
     my $report_ref = $param->{'report'};
@@ -370,6 +400,7 @@ sub _check_primary_key {
         $t, $key_as_string);
 
     my $should_update = _check_key(
+        $sdm,
         {   'table'         => $t,
             'key_name'      => 'primary',
             'expected_keys' => $primary{$t}
@@ -384,7 +415,7 @@ sub _check_primary_key {
             ## Add primary key
             my $rep = undef;
             if ($may_update
-                and $rep = $SDM::db_source->set_primary_key(
+                and $rep = $sdm->set_primary_key(
                     {'table' => $t, 'fields' => $primary{$t}}
                 )
                 ) {
@@ -400,7 +431,7 @@ sub _check_primary_key {
             ## drop previous primary key
             my $rep = undef;
             if (    $may_update
-                and $rep = $SDM::db_source->unset_primary_key({'table' => $t})) {
+                and $rep = $sdm->unset_primary_key({'table' => $t})) {
                 push @{$report_ref}, $rep;
             } else {
                 return undef;
@@ -408,7 +439,7 @@ sub _check_primary_key {
             ## Add primary key
             $rep = undef;
             if ($may_update
-                and $rep = $SDM::db_source->set_primary_key(
+                and $rep = $sdm->set_primary_key(
                     {'table' => $t, 'fields' => $primary{$t}}
                 )
                 ) {
@@ -425,6 +456,7 @@ sub _check_primary_key {
 }
 
 sub _check_indexes {
+    my $sdm        = shift;
     my $param      = shift;
     my $t          = $param->{'table'};
     my $report_ref = $param->{'report'};
@@ -433,7 +465,7 @@ sub _check_indexes {
 
     ## drop previous index if this index is not a primary key and was defined
     ## by a previous Sympa version
-    my %index_columns = %{$SDM::db_source->get_indexes({'table' => $t})};
+    my %index_columns = %{$sdm->get_indexes({'table' => $t})};
     foreach my $idx (keys %index_columns) {
         Log::do_log('debug', 'Found index %s', $idx);
         ## Remove the index if obsolete.
@@ -443,8 +475,7 @@ sub _check_indexes {
                 Log::do_log('notice', 'Removing obsolete index %s', $idx);
                 if (    $may_update
                     and $rep =
-                    $SDM::db_source->unset_index({'table' => $t, 'index' => $idx}))
-                {
+                    $sdm->unset_index({'table' => $t, 'index' => $idx})) {
                     push @{$report_ref}, $rep;
                 }
                 last;
@@ -461,7 +492,7 @@ sub _check_indexes {
                 'Index %s on table %s does not exist. Adding it',
                 $idx, $t);
             if ($may_update
-                and $rep = $SDM::db_source->set_index(
+                and $rep = $sdm->set_index(
                     {   'table'      => $t,
                         'index_name' => $idx,
                         'fields'     => $indexes{$t}{$idx}
@@ -472,6 +503,7 @@ sub _check_indexes {
             }
         }
         my $index_check = _check_key(
+            $sdm,
             {   'table'         => $t,
                 'key_name'      => $idx,
                 'expected_keys' => $indexes{$t}{$idx}
@@ -486,7 +518,7 @@ sub _check_indexes {
                 Log::do_log('notice', 'Index %s is missing. Adding it',
                     $index_as_string);
                 if ($may_update
-                    and $rep = $SDM::db_source->set_index(
+                    and $rep = $sdm->set_index(
                         {   'table'      => $t,
                             'index_name' => $idx,
                             'fields'     => $indexes{$t}{$idx}
@@ -509,14 +541,13 @@ sub _check_indexes {
                 my $rep = undef;
                 if (    $may_update
                     and $rep =
-                    $SDM::db_source->unset_index({'table' => $t, 'index' => $idx}))
-                {
+                    $sdm->unset_index({'table' => $t, 'index' => $idx})) {
                     push @{$report_ref}, $rep;
                 }
                 ## Add index
                 $rep = undef;
                 if ($may_update
-                    and $rep = $SDM::db_source->set_index(
+                    and $rep = $sdm->set_index(
                         {   'table'      => $t,
                             'index_name' => $idx,
                             'fields'     => $indexes{$t}{$idx}
@@ -563,7 +594,8 @@ sub _check_indexes {
 #   The value associated to this key is a hash whose keys are the names of the
 #   fields unexpectedely found.
 sub _check_key {
-    my $param     = shift;
+    my $sdm   = shift;
+    my $param = shift;
     Log::do_log('debug', 'Checking %s key structure for table %s',
         $param->{'key_name'}, $param->{'table'});
     my $keysFound;
@@ -571,11 +603,11 @@ sub _check_key {
     if (lc($param->{'key_name'}) eq 'primary') {
         return undef
             unless ($keysFound =
-            $SDM::db_source->get_primary_key({'table' => $param->{'table'}}));
+            $sdm->get_primary_key({'table' => $param->{'table'}}));
     } else {
         return undef
             unless ($keysFound =
-            $SDM::db_source->get_indexes({'table' => $param->{'table'}}));
+            $sdm->get_indexes({'table' => $param->{'table'}}));
         $keysFound = $keysFound->{$param->{'key_name'}};
     }
 
@@ -647,12 +679,25 @@ Sympa::DatabaseManager - Managing schema of Sympa core database
 
   use Sympa::DatabaseManager;
   
+  $sdm = Sympa::DatabaseManager->instance or die 'Cannot connect to database';
+
   Sympa::DatabaseManager::probe_db() or die 'Database is not up-to-date';
 
 =head1 DESCRIPTION
 
 L<Sympa::DatabaseManager> provides functions to manage schema of Sympa core
 database.
+
+=head2 Constructor
+
+=over
+
+=item instance ( )
+
+I<Constructor>.
+Gets singleton instance of Sympa::Database class managing Sympa core database.
+
+=back
 
 =head2 Function
 
