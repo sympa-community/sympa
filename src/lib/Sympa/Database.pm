@@ -400,25 +400,14 @@ sub prepare_query_log_values {
 sub disconnect {
     my $self = shift;
 
-    if (ref $self) {
-        my $id = $self->get_id;
+    my $id = $self->get_id;
 
-        # Don't disconnect persistent connection.
-        return 0 if $persistent_connection_of{$id};
+    # Don't disconnect persistent connection.
+    return 0 if $persistent_connection_of{$id};
 
-        $connection_of{$id}->disconnect if $connection_of{$id};
-        delete $connection_of{$id};
-        return 1;
-    } elsif ($self eq __PACKAGE__) {
-        # Disconnect all.
-        foreach my $connection (values %connection_of) {
-            $connection->disconnect if $connection;
-        }
-        %connection_of = ();
-        return 1;
-    } else {
-        return 0;
-    }
+    $connection_of{$id}->disconnect if $connection_of{$id};
+    delete $connection_of{$id};
+    return 1;
 }
 
 # NOT YET USED.

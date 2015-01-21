@@ -35,14 +35,15 @@ use Log;
 use tools;
 use Sympa::Tools::Data;
 
-use base qw(Class::Singleton);
+our $instance;
 
-# Constructor for Class::Singleton.
 # NOTE: This method actually returns an instance of Sympa::DatabaseDriver
 # subclass not inheriting this class.  That's why probe_db() isn't the method
 # but a static function.
-sub _new_instance {
+sub instance {
     my $class = shift;
+
+    return $instance if $instance;
 
     my $self;
     my $db_conf = Conf::get_parameters_group('*', 'Database related');
@@ -56,7 +57,19 @@ sub _new_instance {
     # the web interface.
     $self->set_persistent(1) unless $ENV{'GATEWAY_INTERFACE'};
 
+    $instance = $self;
     return $self;
+}
+
+sub disconnect {
+    my $class = shift;
+
+    return 0 unless $instance;
+
+    $instance->set_persistent(0);
+    $instance->disconnect;
+    undef $instance;
+    return 1;
 }
 
 # db structure description has moved in Sympa::DatabaseDescription.
@@ -688,7 +701,7 @@ Sympa::DatabaseManager - Managing schema of Sympa core database
 L<Sympa::DatabaseManager> provides functions to manage schema of Sympa core
 database.
 
-=head2 Constructor
+=head2 Methods and functions
 
 =over
 
@@ -697,11 +710,10 @@ database.
 I<Constructor>.
 Gets singleton instance of Sympa::Database class managing Sympa core database.
 
-=back
+=item disconnect ( )
 
-=head2 Function
-
-=over
+I<Class method>.
+Disconnect from core database and destruct singleton instance.
 
 =item probe_db ( )
 

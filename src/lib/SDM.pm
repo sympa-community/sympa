@@ -27,11 +27,10 @@ package SDM;
 use strict;
 use warnings;
 
-use Conf;
-use Sympa::Database;
 use Sympa::DatabaseManager;
 use Log;
 
+# OBSOLETED. Use $sdm->do_quert directly.
 sub do_query {
     if (my $sdm = Sympa::DatabaseManager->instance) {
         return $sdm->do_query(@_);
@@ -40,6 +39,7 @@ sub do_query {
     }
 }
 
+# OBSOLETED. Use $sdm->do_prepared_query directly.
 sub do_prepared_query {
     if (my $sdm = Sympa::DatabaseManager->instance) {
         return $sdm->do_prepared_query(@_);
@@ -58,14 +58,16 @@ sub do_prepared_query {
 ## Just check if DB connection is ok
 ## Possible option is 'just_try', won't try to reconnect if database
 ## connection is not available.
+# OBSOLETED. Use Sympa::DatabaseManager->instance().
 sub check_db_connect {
     return Sympa::DatabaseManager->instance ? 1 : undef;
 }
 
 ## Disconnect from Database.
 ## Destroy db handle so that any pending statement handles will be finalized.
+# OBSOLETED. Use Sympa::DatabaseManager->disconnect().
 sub db_disconnect {
-    Sympa::Database->disconnect;
+    Sympa::DatabaseManager->disconnect;
     return 1;
 }
 
@@ -75,6 +77,7 @@ sub db_disconnect {
 # Moved to Conf::data_structure_uptodate().
 #sub data_structure_uptodate();
 
+# OBSOLETED. Use $sdm->quote directly.
 sub quote {
     if (my $sdm = Sympa::DatabaseManager->instance) {
         return $sdm->quote(@_);
@@ -83,6 +86,7 @@ sub quote {
     }
 }
 
+# OBSOLETED. Use $sdm->get_substring_clause directly.
 sub get_substring_clause {
     if (my $sdm = Sympa::DatabaseManager->instance) {
         return $sdm->get_substring_clause(@_);
@@ -99,6 +103,7 @@ sub get_substring_clause {
 ## This sub takes a single argument: the name of the field to be used in
 ## the query.
 ##
+# OBSOLETED. Use $sdm->get_canonical_write_date directly.
 sub get_canonical_write_date {
     if (my $sdm = Sympa::DatabaseManager->instance) {
         return $sdm->get_canonical_write_date(@_);
@@ -112,6 +117,7 @@ sub get_canonical_write_date {
 ## This sub takes a single argument: the value of the date to be used in
 ## the query.
 ##
+# OBSOLETED. Use $sdm->get_canonical_read_date directly.
 sub get_canonical_read_date {
     if (my $sdm = Sympa::DatabaseManager->instance) {
         return $sdm->get_canonical_read_date(@_);
@@ -124,6 +130,7 @@ sub get_canonical_read_date {
 ## returns an array ( { sql_type => SQL_type }, value ),
 ## single scalar or empty array.
 ##
+# OBSOLETED. Use $sdm->AS_DOUBLE directly.
 sub AS_DOUBLE {
     if (my $sdm = Sympa::DatabaseManager->instance) {
         return $sdm->AS_DOUBLE(@_);
@@ -132,6 +139,7 @@ sub AS_DOUBLE {
     }
 }
 
+# OBSOLETED. Use $sdm->AS_BLOB directly.
 sub AS_BLOB {
     if (my $sdm = Sympa::DatabaseManager->instance) {
         return $sdm->AS_BLOB(@_);
@@ -141,3 +149,17 @@ sub AS_BLOB {
 }
 
 1;
+
+=encoding utf-8
+
+=head1 NAME
+
+SDM
+
+=head1 NOTICE
+
+This module was OBSOLETED.
+Use L<Sympa::DatabaseManager> instead.
+
+=cut
+
