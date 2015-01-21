@@ -54,7 +54,6 @@ use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Scenario;
-use SDM;
 use tools;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
@@ -1387,10 +1386,10 @@ while ($signal ne 'term') {
     ## Dump of User files in DB
     #Sympa::List::dump();
 
-    # Disconnect from Database
-    SDM::db_disconnect();
-
     if ($signal eq 'hup') {
+        # Disconnect from Database
+        Sympa::DatabaseManager->disconnect;
+
         Log::do_log('notice', "Sympa %s reload config",
             Sympa::Constants::VERSION);
         _load();
@@ -1407,11 +1406,10 @@ exit(0);
 # Load configuration.
 sub _load {
     ## Load sympa.conf.
-    unless (Conf::load(Conf::get_sympa_conf())) {    #Site and Robot
-        printf STDERR
+    unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) { #Site and Robot
+        die sprintf
             "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
             Conf::get_sympa_conf();
-        exit 1;
     }
 
     ## Open the syslog and say we're read out stuff.
@@ -1445,6 +1443,20 @@ sub _load {
         die sprintf
             'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file).',
             $Conf::Conf{'etc'};
+    }
+
+    # Check database connectivity.
+    unless (Sympa::DatabaseManager->instance) {
+        die sprintf
+            "Database %s defined in sympa.conf is unreachable. verify db_xxx parameters in sympa.conf\n",
+            $Conf::Conf{'db_name'};
+    }
+
+    # Now trying to load full config (including database)
+    unless (Conf::load()) {    #FIXME: load Site, then robot cache
+        die sprintf
+            "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+            Conf::get_sympa_conf();
     }
 
     ## Set locale configuration

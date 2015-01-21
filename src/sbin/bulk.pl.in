@@ -36,11 +36,11 @@ use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
+use Sympa::DatabaseManager;
 use Sympa::List;
 use Log;
 use Sympa::Mailer;
 use Sympa::Message;
-use SDM;
 use tools;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
@@ -261,11 +261,10 @@ while (!$end) {
             if (my $r_packets = $bulk->too_much_remaining_packets()
                 and scalar(@remaining_children) <
                 $Conf::Conf{'bulk_max_count'}) {
-                ## disconnect from database before fork
-                ## to prevent DB handlers to be shared by different processes
-                # when loading conf in database disconnect because of sharing
-                # database handler may crash bulk.pl
-                SDM::db_disconnect();
+                # Disconnect from database before fork to prevent DB handles
+                # to be shared by different processes.  Sharing database
+                # handles may crash bulk.pl.
+                Sympa::DatabaseManager->disconnect;
 
                 if ($Conf::Conf{'bulk_max_count'} > 1) {
                     Log::do_log(
@@ -308,6 +307,10 @@ while (!$end) {
                         }
                     }
                 }
+
+                # Restore persistent connection.
+                Sympa::DatabaseManager->instance
+                    or die 'Reconnecting database failed';
             }
             $last_check_date = time();
         }

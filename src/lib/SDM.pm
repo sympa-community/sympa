@@ -28,7 +28,6 @@ use strict;
 use warnings;
 
 use Sympa::DatabaseManager;
-use Log;
 
 # OBSOLETED. Use $sdm->do_quert directly.
 sub do_query {
