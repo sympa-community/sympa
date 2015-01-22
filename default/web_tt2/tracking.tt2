@@ -3,11 +3,14 @@
 
 <h4>[%|loc %]Message tracking[%END%]</h4>
 
-[%|loc(fromname,fromaddr,listname)%]Message from %1 %2 for list %3 [%END%]
+<a href="[%path_cgi%]/arcsearch_id/[%list%]/[%archive_name%]/[%msgid%]">
+  [%|loc(fromname,fromaddr,listname)%]Message from %1 %2 for list %3 [%END%]
+</a>
+
 <ul>
-    <li>Subject : [% subject %]</li>
-    <li>Message-Id :  [% msgid %]</li>
-    <li>[%|loc%]Distribution ended at[%END%] : [% distribution_date %]</li>
+    <li>[%|loc(subject)%]Subject: %1[%END%]</li>
+    <li>[%|loc(msgid)%]Message-Id: %1[%END%]</li>
+    <li>[%|loc(distribution_date)%]Distribution ended at: %1[%END%]</li>
 </ul>
 
 <table summary="[%|loc%]Message tracking[%END%]" class="listOfItems text_center">
@@ -25,7 +28,7 @@
        <tr class="color0">
        [% SET dark = 1 %]
     [% END %]
-    <td>[% u.recipient %]</td><td>[% u.reception_option %]</td><td>[% u.status %]</td><td>[% u.arrival_date %]</td>
+    <td>[% u.recipient %]</td><td>[%|optdesc('reception')%][% u.reception_option %][%END%]</td><td>[% u.status %]</td><td>[% u.arrival_date %]</td>
      <td>
        [% IF u.notification_message %] <a href="javascript:void(0);" onclick="showMDN(this)">X</a><pre style="display:none">[% u.notification_message %]</pre>[% END %]
      </td>
@@ -34,4 +37,4 @@
 </table>
 
 </div>
-<!-- end tracking.tt2 (distrib) -->
+<!-- end tracking.tt2 -->

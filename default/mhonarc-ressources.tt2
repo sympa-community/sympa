@@ -504,7 +504,7 @@ $POWERED_BY$
 
     ($tag$% IF listconf.tracking.delivery_status_notification == 'on' || listconf.tracking.message_delivery_notification == 'on_demand' || listconf.tracking.message_delivery_notification == 'on' %$tag$) 
       ($tag$% IF may_tracking %$tag$) 
-        <input class="MainMenuLinks" type="submit" name="action_tracking" value="mail tracking" /> 
+        <input class="MainMenuLinks" type="submit" name="action_tracking" value="($tag$%|loc%$tag$)mail tracking($tag$%END%$tag$)" /> 
       ($tag$% END %$tag$) 
     ($tag$% END %$tag$) 
 

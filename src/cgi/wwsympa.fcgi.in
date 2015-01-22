@@ -10512,6 +10512,10 @@ sub do_tracking {
     wwslog('info', '(%s, %s, %s, %s',
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
+    if ($in{'yyyy'} and $in{'yyyy'} =~ /\A\d\d\d\d\z/ and $in{'month'} and $in{'month'} =~ /\A\d\d?\z/) {
+        $param->{'archive_name'} = sprintf '%d-%02d', $in{'yyyy'}, $in{'month'};
+    }
+
     ## Access control
     my $result = Sympa::Scenario::request_action(
         $list,
