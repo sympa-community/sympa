@@ -144,7 +144,9 @@ sub store {
     if (defined $envid and length $envid) {
         # Postfix clone of sendmail command doesn't allow spaces between
         # "-V" and envid.
-        push @sendmail_args, '-N', 'success,delay,failure', "-V$envid";
+        # And as it denys "-V" with 2 characters, "0" are padded.
+        push @sendmail_args, '-N', 'success,delay,failure',
+            sprintf('-V%08s', $envid);
     }
     my $min_cmd_size =
         length($sendmail) + 1 +
