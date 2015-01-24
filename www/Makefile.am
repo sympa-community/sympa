@@ -54,15 +54,13 @@ nobase_static_DATA = \
 	icons/search.png \
 	icons/subscribe.png \
 	icons/spinner.gif \
-	external/jqplot.barRenderer.min.js \
-	external/jqplot.canvasAxisTickRenderer.min.js \
-	external/jqplot.canvasTextRenderer.min.js \
-	external/jqplot.categoryAxisRenderer.min.js \
-	external/jquery.jqplot.css \
-	external/jquery.jqplot.min.js \
-	external/jquery.js \
-	external/jquery-ui.js \
-	external/jquery-ui.css \
+	external/font-awesome/css/font-awesome.css \
+	external/font-awesome/css/font-awesome.min.css \
+	external/font-awesome/fonts/FontAwesome.otf \
+	external/font-awesome/fonts/fontawesome-webfont.eot \
+	external/font-awesome/fonts/fontawesome-webfont.svg \
+	external/font-awesome/fonts/fontawesome-webfont.ttf \
+	external/font-awesome/fonts/fontawesome-webfont.woff \
 	external/images/ui-bg_flat_0_aaaaaa_40x100.png \
 	external/images/ui-bg_flat_75_ffffff_40x100.png \
 	external/images/ui-bg_glass_55_fbf9ee_1x400.png \
@@ -76,13 +74,16 @@ nobase_static_DATA = \
 	external/images/ui-icons_454545_256x240.png \
 	external/images/ui-icons_888888_256x240.png \
 	external/images/ui-icons_cd0a0a_256x240.png \
-	external/font-awesome/css/font-awesome.css \
-	external/font-awesome/css/font-awesome.min.css \
-	external/font-awesome/fonts/FontAwesome.otf \
-	external/font-awesome/fonts/fontawesome-webfont.eot \
-	external/font-awesome/fonts/fontawesome-webfont.svg \
-	external/font-awesome/fonts/fontawesome-webfont.ttf \
-	external/font-awesome/fonts/fontawesome-webfont.woff \
+	external/jqplot.barRenderer.min.js \
+	external/jqplot.canvasAxisTickRenderer.min.js \
+	external/jqplot.canvasTextRenderer.min.js \
+	external/jqplot.categoryAxisRenderer.min.js \
+	external/jquery.jqplot.css \
+	external/jquery.jqplot.min.js \
+	external/jquery.js \
+	external/jquery-ui.js \
+	external/jquery-ui.css \
+	external/modernizr.custom.js \
 	js/sympa.js
 
 EXTRA_DIST = $(nobase_static_DATA)
