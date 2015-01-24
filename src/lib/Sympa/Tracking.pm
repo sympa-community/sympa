@@ -26,6 +26,7 @@ package Sympa::Tracking;
 
 use strict;
 use warnings;
+use DateTime::Format::Mail;
 use MIME::Base64 qw();
 
 use Log;
@@ -62,6 +63,7 @@ sub get_recipients_status {
                      reception_option_notification AS reception_option,
                      status_notification AS status,
                      arrival_date_notification AS arrival_date,
+                     arrival_date_epoch_notification AS arrival_date_epoch,
                      type_notification as type,
                      message_notification as notification_message
               FROM notification_table
@@ -172,7 +174,7 @@ sub db_init_notification_table {
 #     -$status (+): the new state of the recipient entry depending of the
 #     report data
 #     -$arrival_date (+): the mail arrival date.
-#     -$notification_as_string : the DSN or the MDM as string
+#     -$notification_as_string : the DSN or the MDN as string
 #
 # OUT : 1 | undef
 #
@@ -191,6 +193,10 @@ sub db_insert_notification {
     );
 
     chomp $arrival_date;
+    my $arrival_date_epoch = eval {
+        DateTime::Format::Mail->new->loose->parse_datetime($arrival_date)
+            ->epoch;
+    };
 
     $notification_as_string = MIME::Base64::encode($notification_as_string);
 
@@ -198,9 +204,11 @@ sub db_insert_notification {
         SDM::do_prepared_query(
             q{UPDATE notification_table
               SET status_notification = ?, arrival_date_notification = ?,
+                  arrival_date_epoch_notification = ?,
                   message_notification = ?
               WHERE pk_notification = ?},
             $status, $arrival_date,
+            $arrival_date_epoch,
             $notification_as_string,
             $notification_id
         )

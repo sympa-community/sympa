@@ -527,7 +527,7 @@ my %full_db_struct = (
             'recipient_notification' => {
                 'struct' => $email_struct,
                 'doc' =>
-                    'email address of recipient for which a DSN or MDM was received',
+                    'email address of recipient for which a DSN or MDN was received',
                 'order' => 3,
             },
             'reception_option_notification' => {
@@ -543,28 +543,33 @@ my %full_db_struct = (
             },
             'arrival_date_notification' => {
                 'struct' => 'varchar(80)',
-                'doc'    => 'reception date of latest DSN or MDM',
+                'doc'    => 'reception date of latest DSN or MDN',
                 'order'  => 6,
+            },
+            'arrival_date_epoch_notification' => {
+                'struct' => 'int(11)',
+                'doc'    => 'reception date of latest DSN or MDN',
+                'order'  => 7,
             },
             'type_notification' => {
                 'struct' => "enum('DSN', 'MDN')",
-                'doc'    => 'Type of the notification (DSN or MDM)',
-                'order'  => 7,
+                'doc'    => 'Type of the notification (DSN or MDN)',
+                'order'  => 8,
             },
             'message_notification' => {
                 'struct' => 'longtext',
                 'doc'    => 'The DSN or the MDN itself',
-                'order'  => 8,
+                'order'  => 9,
             },
             'list_notification' => {
                 'struct' => $list_struct,
                 'doc'    => 'The listname the messaage was issued for',
-                'order'  => 9,
+                'order'  => 10,
             },
             'robot_notification' => {
                 'struct' => $robot_struct,
                 'doc'    => 'The robot the message is related to',
-                'order'  => 10,
+                'order'  => 11,
             },
             'date_notification' => {
                 'struct'   => 'int(11)',

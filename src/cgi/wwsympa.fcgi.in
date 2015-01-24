@@ -10512,8 +10512,12 @@ sub do_tracking {
     wwslog('info', '(%s, %s, %s, %s',
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
-    if ($in{'yyyy'} and $in{'yyyy'} =~ /\A\d\d\d\d\z/ and $in{'month'} and $in{'month'} =~ /\A\d\d?\z/) {
-        $param->{'archive_name'} = sprintf '%d-%02d', $in{'yyyy'}, $in{'month'};
+    if (    $in{'yyyy'}
+        and $in{'yyyy'} =~ /\A\d\d\d\d\z/
+        and $in{'month'}
+        and $in{'month'} =~ /\A\d\d?\z/) {
+        $param->{'archive_name'} = sprintf '%d-%02d', $in{'yyyy'},
+            $in{'month'};
     }
 
     ## Access control
@@ -10573,20 +10577,30 @@ sub do_tracking {
     $param->{'msgid'}    = $in{'msgid'};
     $param->{'listname'} = $in{'list'};
 
-    unless (
-        $param->{'tracking_info'} = Sympa::Tracking::get_recipients_status(
-            $in{'msgid'}, $in{'list'}, $robot
-        )
-        ) {
+    my $tracking_info =
+        Sympa::Tracking::get_recipients_status($in{'msgid'}, $in{'list'},
+        $robot);
+    unless ($tracking_info) {
         Sympa::Report::reject_report_web('user',
             'could_not_get_tracking_info', {}, $param->{'action'}, $list,
             $param->{'user'}{'email'}, $robot);
         wwslog('err',
             "could not get tracking info for message_id $in{'msgid'} and list $in{'list'}"
         );
+        delete $param->{'tracking_info'};
         $param->{'status'} = 'could_not_get_tracking_info';
         return undef;
     }
+
+    # Arrival-Date would be reformatted as local time and current language.
+    foreach my $info (@$tracking_info) {
+        $info->{'arrival_date'} =
+            $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime $info->{'arrival_date_epoch'})
+            if defined $info->{'arrival_date_epoch'};
+    }
+
+    $param->{'tracking_info'} = $tracking_info;
     return 1;
 }
 
