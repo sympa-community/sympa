@@ -22,11 +22,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 dbscripts = \
-	create_db.Pg \
-	create_db.mysql \
 	create_db.Oracle \
-	create_db.Sybase \
-	create_db.SQLite
+	create_db.Sybase
 
 perlscripts = \
 	arc2webarc.pl \
