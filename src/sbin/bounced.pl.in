@@ -545,7 +545,8 @@ while (!$end) {
                 # DSN with status "failed" should not be removed because they
                 # must be processed for classical bounce managment (not only
                 # for tracking feature)
-                Log::do_log('err', 'Non failed dsn status %s', $dsn_status);
+                Log::do_log('notice', 'Non failed dsn status %s',
+                    $dsn_status);
                 unless ($distribution_id) {
                     Log::do_log('err',
                         'Id not found in to address %s, will ignore', $to);
@@ -569,10 +570,14 @@ while (!$end) {
                 }
             }
 
-            if (Sympa::Tracking::db_insert_notification(
-                    $distribution_id, 'DSN',
-                    $dsn_status,      $arrival_date,
-                    $notification_as_string
+            my $tracking = Sympa::Tracking->new($list);
+
+            if ($tracking->store(
+                    $queue . '/' . $file, $who,
+                    envid        => $distribution_id,
+                    type         => 'DSN',
+                    status       => $dsn_status,
+                    arrival_date => $arrival_date
                 )
                 ) {
                 Log::do_log('notice', "DSN Correctly treated...");
@@ -704,11 +709,15 @@ while (!$end) {
                 next;
             }
 
-            Log::do_log('debug2', "Save in database...");
+            my $tracking = Sympa::Tracking->new($list);
+
             unless (
-                Sympa::Tracking::db_insert_notification(
-                    $distribution_id, 'MDN', $mdn_status,
-                    $date,            $notification_as_string
+                $tracking->store(
+                    $queue . '/' . $file, $who,
+                    envid        => $distribution_id,
+                    type         => 'MDN',
+                    status       => $mdn_status,
+                    arrival_date => $date
                 )
                 ) {
                 Log::do_log('err',
@@ -969,7 +978,6 @@ while (!$end) {
             }
 
             my (%hash, $from);
-            my $bounce_dir = $list->get_bounce_dir();
 
             ## RFC1891 compliance check
             my $bounce_count = Bounce::rfc1891(\*BOUNCE, \%hash, \$from);
@@ -995,26 +1003,7 @@ while (!$end) {
             }
             close BOUNCE;
 
-            ## Bounce directory
-            if (!-d $bounce_dir) {
-                unless (mkdir $bounce_dir, 0777) {
-                    tools::send_notify_to_listmaster(
-                        $list,
-                        'bounce_intern_error',
-                        {   'error' => sprintf(
-                                'Failed to list create bounce directory %s: %s',
-                                $bounce_dir, $ERRNO
-                            )
-                        }
-                    );
-                    Log::do_log(
-                        'err',
-                        'Could not create bounce dirirectory %s: %m.  Check bounce_path in sympa.conf',
-                        $bounce_dir
-                    );
-                    exit;
-                }
-            }
+            my $tracking = Sympa::Tracking->new($list);
 
             my $adr_count;
             ## Bouncing addresses
@@ -1029,7 +1018,10 @@ while (!$end) {
                 my $bouncefor = $who;
                 $bouncefor ||= $rcpt;
 
-                next unless (store_bounce($bounce_dir, $file, $bouncefor));
+                unless ($tracking->store($queue . '/' . $file, $bouncefor)) {
+                    ignore_bounce({file => $file, queue => $queue});
+                    next;
+                }
                 next
                     unless (
                     update_subscriber_bounce_history(
@@ -1044,7 +1036,9 @@ while (!$end) {
 
                 if ($who) {
                     # rcpt not recognized in the bounce but VERP was used
-                    store_bounce($bounce_dir, $file, $who);
+                    unless ($tracking->store($queue . '/' . $file, $who)) {
+                        ignore_bounce({file => $file, queue => $queue});
+                    }
                     # status is undefined
                     update_subscriber_bounce_history($list, 'unknown', $who);
                 } else {    # no VERP and no rcpt recognized
@@ -1099,43 +1093,8 @@ sub sigterm {
 }
 
 ## copy the bounce to the appropriate filename
-sub store_bounce {
-
-    my $bounce_dir = shift;
-    my $file       = shift;
-    my $rcpt       = shift;
-
-    Log::do_log('debug', '(%s, %s, %s)', $bounce_dir, $file, $rcpt);
-
-    my $queue = $Conf::Conf{'queuebounce'};
-
-    #Store bounce
-    unless (open BOUNCE, "$queue/$file") {
-        Log::do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
-        ignore_bounce(
-            {   'file'  => $file,
-                'queue' => $queue,
-            }
-        );
-        return undef;
-    }
-
-    my $filename = tools::escape_chars($rcpt);
-
-    unless (open ARC, ">$bounce_dir/$filename") {
-        Log::do_log('notice', 'Unable to write %s/%s', $bounce_dir,
-            $filename);
-        ignore_bounce(
-            {   'file'  => $file,
-                'queue' => $queue,
-            }
-        );
-        return undef;
-    }
-    print ARC <BOUNCE>;
-    close ARC;
-    close BOUNCE;
-}
+# Moved: Use Sympa::Tracking::store().
+#sub store_bounce;
 
 ## Set error message to a status RFC1893 compliant
 sub canonicalize_status {

@@ -23,15 +23,22 @@
   [% FOREACH u = tracking_info %]
     [% IF dark == '1' %]
       [% SET dark = 0 %]
-       <tr>
+      <tr>
     [% ELSE %]
-       <tr class="color0">
-       [% SET dark = 1 %]
+      <tr class="color0">
+      [% SET dark = 1 %]
     [% END %]
-    <td>[% u.recipient %]</td><td>[%|optdesc('reception')%][% u.reception_option %][%END%]</td><td>[% u.status %]</td><td>[% u.arrival_date %]</td>
-     <td>
-       [% IF u.notification_message %] <a href="javascript:void(0);" onclick="showMDN(this)">X</a><pre style="display:none">[% u.notification_message %]</pre>[% END %]
-     </td>
+    <td>[% u.recipient %]</td>
+    <td>[%|optdesc('reception')%][% u.reception_option %][%END%]</td>
+    <td>[% u.status %]</td>
+    <td>[% u.arrival_date %]</td>
+    <td>
+    [% IF u.status %]
+      <a href="[% path_cgi %]/viewbounce/[% list %]/[% u.recipient.replace('/','%2F') %]/[% u.envid %]">[%|loc%]View[%END%]</a>
+    [% ELSE %]
+      &nbsp;
+    [% END %]
+    </td>
     </tr>
   [% END %]
 </table>

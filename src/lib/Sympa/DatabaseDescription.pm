@@ -556,20 +556,15 @@ my %full_db_struct = (
                 'doc'    => 'Type of the notification (DSN or MDN)',
                 'order'  => 8,
             },
-            'message_notification' => {
-                'struct' => 'longtext',
-                'doc'    => 'The DSN or the MDN itself',
-                'order'  => 9,
-            },
             'list_notification' => {
                 'struct' => $list_struct,
                 'doc'    => 'The listname the messaage was issued for',
-                'order'  => 10,
+                'order'  => 9,
             },
             'robot_notification' => {
                 'struct' => $robot_struct,
                 'doc'    => 'The robot the message is related to',
-                'order'  => 11,
+                'order'  => 10,
             },
             'date_notification' => {
                 'struct'   => 'int(11)',

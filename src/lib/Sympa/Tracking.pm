@@ -27,10 +27,52 @@ package Sympa::Tracking;
 use strict;
 use warnings;
 use DateTime::Format::Mail;
-use MIME::Base64 qw();
+use English qw(-no_match_vars);
 
+use Sympa::Constants;
 use Log;
 use SDM;
+use tools;
+use Sympa::Tools::File;
+
+sub new {
+    my $class = shift;
+    my $list  = shift;
+
+    die 'Bug in logic.  Ask developer'
+        unless ref $list eq 'Sympa::List';
+
+    my $self = bless {
+        directory => $list->get_bounce_dir,
+        context   => $list,
+    } => $class;
+
+    $self->_create_spool;
+
+    return $self;
+}
+
+sub _create_spool {
+    my $self = shift;
+
+    my $umask = umask oct $Conf::Conf{'umask'};
+    foreach my $directory (($self->{directory})) {
+        unless (-d $directory) {
+            Log::do_log('info', 'Creating spool %s', $directory);
+            unless (
+                mkdir($directory, 0755)
+                and Sympa::Tools::File::set_file_rights(
+                    file  => $directory,
+                    user  => Sympa::Constants::USER(),
+                    group => Sympa::Constants::GROUP()
+                )
+                ) {
+                die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
+            }
+        }
+    }
+    umask $umask;
+}
 
 ##############################################
 #   get_recipients_status
@@ -64,8 +106,8 @@ sub get_recipients_status {
                      status_notification AS status,
                      arrival_date_notification AS arrival_date,
                      arrival_date_epoch_notification AS arrival_date_epoch,
-                     type_notification as type,
-                     message_notification as notification_message
+                     type_notification AS "type",
+                     pk_notification AS envid
               FROM notification_table
               WHERE list_notification = ? AND robot_notification = ? AND
                     (message_id_notification = ? OR
@@ -86,12 +128,6 @@ sub get_recipients_status {
     }
     my @pk_notifs;
     while (my $pk_notif = $sth->fetchrow_hashref) {
-        if ($pk_notif->{'notification_message'}) {
-            $pk_notif->{'notification_message'} =
-                MIME::Base64::decode($pk_notif->{'notification_message'});
-        } else {
-            $pk_notif->{'notification_message'} = '';
-        }
         push @pk_notifs, $pk_notif;
     }
     $sth->finish;
@@ -131,14 +167,13 @@ sub db_init_notification_table {
         my $email = lc($email);
 
         unless (
-            SDM::do_query(
-                "INSERT INTO notification_table (message_id_notification,recipient_notification,reception_option_notification,list_notification,robot_notification,date_notification) VALUES (%s,%s,%s,%s,%s,%s)",
-                SDM::quote($msgid),
-                SDM::quote($email),
-                SDM::quote($reception_option),
-                SDM::quote($listname),
-                SDM::quote($robot),
-                $time
+            SDM::do_prepared_query(
+                q{INSERT INTO notification_table
+                  (message_id_notification, recipient_notification,
+                   reception_option_notification,
+                   list_notification, robot_notification, date_notification)
+                  VALUES (?, ?, ?, ?, ?, ?)},
+                $msgid, $email, $reception_option, $listname, $robot, $time
             )
             ) {
             Log::do_log(
@@ -155,8 +190,57 @@ sub db_init_notification_table {
     return 1;
 }
 
+# copy the bounce to the appropriate filename
+# Old name: store_bounce() in bounced.pl
+sub store {
+    Log::do_log('debug2', '(%s, %s, %s, %s, ...)', @_);
+    my $self     = shift;
+    my $filepath = shift;
+    my $rcpt     = shift;
+    my %options  = @_;
+
+    my $bounce_dir = $self->{directory};
+
+    # Store bounce
+    my ($ifh, $ofh);
+    unless (open $ifh, '<', $filepath) {
+        Log::do_log('err', 'Could not open %s: %m', $filepath);
+        return undef;
+    }
+    my $msg_string = do { local $RS; <$ifh> };
+    close $ifh;
+
+    my $filename;
+    unless (defined $options{envid} and length $options{envid}) {
+        $filename = tools::escape_chars($rcpt);
+    } else {
+        $filename = sprintf '%s_%08s', tools::escape_chars($rcpt),
+            $options{envid};
+    }
+    unless (open $ofh, '>', $bounce_dir . '/' . $filename) {
+        Log::do_log('err', 'Unable to write %s/%s', $bounce_dir, $filename);
+        return undef;
+    }
+    print $ofh $msg_string;
+    close $ofh;
+    close $ifh;
+
+    if (defined $options{envid} and length $options{envid}) {
+        unless (
+            _db_insert_notification(
+                $options{envid},  $options{type},
+                $options{status}, $options{arrival_date}
+            )
+            ) {
+            return undef;
+        }
+    }
+
+    return 1;
+}
+
 ##############################################
-#   db_insert_notification
+#   _db_insert_notification
 ##############################################
 # Function used to add a notification entry
 # corresponding to a new report. This function
@@ -170,27 +254,19 @@ sub db_init_notification_table {
 # IN :-$id (+): the identifiant entry of the initial mail
 #     -$type (+): the notification entry type (DSN|MDN)
 #     -$recipient (+): the list subscriber who correspond to this entry
-#     -$msg_id (+): the report message-id
 #     -$status (+): the new state of the recipient entry depending of the
 #     report data
 #     -$arrival_date (+): the mail arrival date.
-#     -$notification_as_string : the DSN or the MDN as string
 #
 # OUT : 1 | undef
 #
 ##############################################
-sub db_insert_notification {
-    my ($notification_id, $type, $status, $arrival_date,
-        $notification_as_string)
-        = @_;
+sub _db_insert_notification {
+    my ($notification_id, $type, $status, $arrival_date) = @_;
 
-    Log::do_log(
-        'debug2',
-        'Notification_id: %s, type: %s, recipient: %s, msgid: %s, status: %s',
-        $notification_id,
-        $type,
-        $status
-    );
+    Log::do_log('debug2',
+        'Notification_id: %s, type: %s, recipient: %s, status: %s',
+        $notification_id, $type, $status);
 
     chomp $arrival_date;
     my $arrival_date_epoch = eval {
@@ -198,18 +274,16 @@ sub db_insert_notification {
             ->epoch;
     };
 
-    $notification_as_string = MIME::Base64::encode($notification_as_string);
-
     unless (
         SDM::do_prepared_query(
             q{UPDATE notification_table
-              SET status_notification = ?, arrival_date_notification = ?,
-                  arrival_date_epoch_notification = ?,
-                  message_notification = ?
+              SET status_notification = ?, type_notification = ?,
+                  arrival_date_notification = ?,
+                  arrival_date_epoch_notification = ?
               WHERE pk_notification = ?},
-            $status, $arrival_date,
+            $status, $type,
+            $arrival_date,
             $arrival_date_epoch,
-            $notification_as_string,
             $notification_id
         )
         ) {
@@ -274,10 +348,10 @@ sub find_notification_id_by_message {
     my @pk_notifications = $sth->fetchrow_array;
     $sth->finish;
 
-    if ($#pk_notifications > 0) {
+    if (scalar @pk_notifications > 1) {
         Log::do_log(
             'err',
-            'Found more then one pk_notification maching (recipient=%s, msgis=%s, listname=%s, robot%s)',
+            'Found more then one envelope ID maching (recipient=%s, msgis=%s, listname=%s, robot%s)',
             $recipient,
             $msgid,
             $listname,
@@ -301,13 +375,45 @@ sub find_notification_id_by_message {
 #
 ##############################################
 sub remove_message_by_id {
-    my $msgid    = shift;
-    my $listname = shift;
-    my $robot    = shift;
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    my $self  = shift;
+    my $msgid = shift;
 
-    Log::do_log('debug2', 'Remove message id = %s, listname = %s, robot = %s',
-        $msgid, $listname, $robot);
+    my $listname = $self->{context}->{'name'};
+    my $robot    = $self->{context}->{'domain'};
+
     my $sth;
+
+    # Remove messages in bounce directory.
+    unless (
+        $sth = SDM::do_prepared_query(
+            q{SELECT recipient_notification AS recipient,
+                     pk_notification AS envid
+              FROM notification_table
+              WHERE message_id_notification = ? AND
+                    list_notification = ? AND robot_notification = ?},
+            $msgid,
+            $listname, $robot
+        )
+        ) {
+        Log::do_log(
+            'err',
+            'Unable to search tracking information for message %s, list %s@%s',
+            $msgid,
+            $listname,
+            $robot
+        );
+        return undef;
+    }
+    while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
+        my $bounce_dir    = $self->{directory};
+        my $escaped_email = tools::escape_chars($info->{'recipient'});
+        my $envid         = $info->{'envid'};
+        unlink sprintf('%s/%s_%08s', $bounce_dir, $escaped_email, $envid);
+    }
+    $sth->finish;
+
+    # Remove row in notification table.
     unless (
         $sth = SDM::do_prepared_query(
             q{DELETE FROM notification_table
@@ -344,14 +450,46 @@ sub remove_message_by_id {
 ##############################################
 sub remove_message_by_period {
     Log::do_log('debug2', '(%s, %s, %s)', @_);
-    my $period   = shift;
-    my $listname = shift;
-    my $robot    = shift;
+    my $self   = shift;
+    my $period = shift;
+
+    my $listname = $self->{context}->{'name'};
+    my $robot    = $self->{context}->{'domain'};
 
     my $sth;
 
     my $limit = time - ($period * 24 * 60 * 60);
 
+    # Remove messages in bounce directory.
+    unless (
+        $sth = SDM::do_prepared_query(
+            q{SELECT recipient_notification AS recipient,
+                     pk_notification AS envid
+              FROM notification_table
+              WHERE date_notification < ? AND
+                    list_notification = ? AND robot_notification = ?},
+            $limit,
+            $listname, $robot
+        )
+        ) {
+        Log::do_log(
+            'err',
+            'Unable to search tracking information for older than %s days for list %s@%s',
+            $limit,
+            $listname,
+            $robot
+        );
+        return undef;
+    }
+    while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
+        my $bounce_dir    = $self->{directory};
+        my $escaped_email = tools::escape_chars($info->{'recipient'});
+        my $envid         = $info->{'envid'};
+        unlink sprintf('%s/%s_%08s', $bounce_dir, $escaped_email, $envid);
+    }
+    $sth->finish;
+
+    # Remove rows in notification table.
     unless (
         $sth = SDM::do_prepared_query(
             q{DELETE FROM notification_table

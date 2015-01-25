@@ -1326,9 +1326,11 @@ sub purge_tables {
     foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
         my $all_lists = Sympa::List::get_lists($robot);
         foreach my $list (@$all_lists) {
-            $removed += Sympa::Tracking::remove_message_by_period(
-                $list->{'admin'}{'tracking'}{'retention_period'},
-                $list->{'name'}, $robot);
+            my $tracking = Sympa::Tracking->new($list);
+
+            $removed +=
+                $tracking->remove_message_by_period(
+                $list->{'admin'}{'tracking'}{'retention_period'});
         }
     }
     Log::do_log('notice', "%s rows removed in tracking table", $removed);

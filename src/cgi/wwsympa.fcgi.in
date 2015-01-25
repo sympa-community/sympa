@@ -377,9 +377,9 @@ our %action_args = (
     'editsubscriber' =>
         ['list', 'email', 'previous_action', 'custom_attribute'],
 #		'editsubscriber' => ['list','email','previous_action'],
-    'viewbounce'  => ['list', 'email'],
+    'viewbounce'  => ['list', 'email', 'envid'],
     'resetbounce' => ['list', 'email'],
-    'review'      => ['list', 'page', 'size', 'sortby'],
+    'review'         => ['list', 'page',  'size', 'sortby'],
     'reviewbouncing' => ['list', 'page',  'size'],
     'arc'            => ['list', 'month', '@arc_file'],
     'latest_arc'     => ['list'],
@@ -909,6 +909,9 @@ our %in_regexp = (
     'lcap' => '.*',
 
     'plugin' => '.*',
+
+    ## Envelope ID
+    'envid' => '\w+',
 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -10255,13 +10258,15 @@ sub do_remove_arc {
         return undef;
     }
 
+    my $tracking = Sympa::Tracking->new($list);
+
     foreach my $msgid (@msgids) {
         chomp $msgid;
         printf REBUILD "%s||%s\n", $msgid, $param->{'user'}{'email'};
         ######################################################################
         # Tracking
         # Removing tracking should be done by archived.
-        Sympa::Tracking::remove_message_by_id($msgid, $in{'list'}, $robot);
+        $tracking->remove_message_by_id($msgid);
         ######################################################################
     }
     close REBUILD;
@@ -11741,12 +11746,15 @@ sub do_editsubscriber {
 }
 
 sub do_viewbounce {
-    wwslog('info', '(%s)', $in{'email'});
+    wwslog('info', '(%s, %s)', $in{'email'}, $in{'envid'});
 
     my $escaped_email = tools::escape_chars($in{'email'});
 
     $param->{'lastbounce_path'} =
-        $list->get_bounce_dir() . '/' . $escaped_email;
+        $in{'envid'}
+        ? sprintf('%s/%s_%08s',
+        $list->get_bounce_dir(), $escaped_email, $in{'envid'})
+        : $list->get_bounce_dir() . '/' . $escaped_email;
 
     unless (-r $param->{'lastbounce_path'}) {
         Sympa::Report::reject_report_web('user', 'no_bounce_user',

@@ -122,7 +122,7 @@
     [%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]
     </div>
 
-    <p><a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.escaped_email %]">[%|loc%]View last bounce[%END%]</a></p>
+    <p><a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.email.replace('/','%2F') %]">[%|loc%]View last bounce[%END%]</a></p>
 
     <div class="form_row">
     <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" />
