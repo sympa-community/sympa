@@ -135,28 +135,20 @@ sub get_recipients_status {
     return \@pk_notifs;
 }
 
-##############################################
-#   db_init_notification_table
-##############################################
-# Function used to initialyse notification table for each subscriber
-# IN :
-#   listname
-#   robot,
-#   msgid  : the messageid of the original message
-#   rcpt : a tab ref of recipients
-#   reception_option : teh reception option of thoses subscribers
-# OUT : 1 | undef
-#
-##############################################
-sub db_init_notification_table {
+# Old name: Sympa::Tracking::db_init_notification_table()
+sub register {
+    my $self    = shift;
+    my $message = shift;
+    my $rcpt    = shift;
+    my %params  = @_;
 
-    my %params = @_;
-    my $msgid  = $params{'msgid'};
-    chomp $msgid;
-    my $listname         = $params{'listname'};
-    my $robot            = $params{'robot'};
+    # What ever the message is transformed because of the reception option,
+    # tracking use the original message ID.
+    my $msgid            = $message->{message_id};
+    my $listname         = $self->{context}->{'name'};
+    my $robot            = $self->{context}->{'domain'};
     my $reception_option = $params{'reception_option'};
-    my @rcpt             = @{$params{'rcpt'}};
+    my @rcpt             = @{$rcpt || []};
 
     Log::do_log('debug2', '(msgid = %s, listname = %s, reception_option = %s',
         $msgid, $listname, $reception_option);
@@ -514,3 +506,139 @@ sub remove_message_by_period {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Tracking - Spool for message tracking
+
+=head1 SYNOPSIS
+
+TBD.
+
+=head1 DESCRIPTION
+
+The tracking feature is a way to request Delivery Status Notification (DSN) or
+DSN and Message Disposition Notification (MDN) when sending a 
+message to each subscribers. In that case, Sympa (bounced.pl) collect both 
+DSN and MDN and store them in tracking spools.
+Thus, for each message, the user can know which subscribers has displayed,
+received or not received the message. This can be used for some important 
+list where list owner need to collect the proof of reception or display of 
+each message.
+
+=head2 Methods
+
+=over
+
+=item new ( $list )
+
+I<Constructor>.
+Creates new L<Sympa::Tracking> instance.
+
+Parameter:
+
+=over
+
+=item $list
+
+L<Sympa::List> object.
+
+=back
+
+Returns:
+
+New L<Sympa::Tracking> object or C<undef>.
+If unrecoverable error occurred, this method will die.
+
+=item get_recipients_status
+
+TBD.
+
+=item register ( $message, $rcpts, reception_option => $mode )
+
+I<Instance method>.
+Initializes notification table for each subscriber.
+
+Parameters:
+
+=over
+
+=item $message
+
+The message.
+
+=item $rcpts
+
+An arrayref of recipients.
+
+=item reception_option =E<gt> $mode
+
+The reception option of those subscribers.
+
+=back
+
+Returns:
+
+C<1> or C<undef>.
+
+=item store ( $message, $rcpt,
+[ envid =E<gt> $envid, status =E<gt> $status, type =E<gt> $type,
+arrival_date =E<gt> $datestring ] )
+
+I<Instance method>.
+Store notification into tracking spool.
+
+Parameters:
+
+=over
+
+=item $message
+
+Notification message.
+
+=item $rcpt
+
+E-mail address of recipient of original message.
+
+=item envid =E<gt> $envid, status =E<gt> $status, type =E<gt> $type,
+arrival_date =E<gt> $datestring
+
+If these optional parameters are specified,
+notification table is updated.
+
+=back
+
+Returns:
+
+True value if storing succeed.  Otherwise false.
+
+=item find_notification_id_by_message
+
+TBD.
+
+=item remove_message_by_id
+
+TBD.
+
+=item remove_message_by_period
+
+TBD.
+
+=back
+
+=head1 SEE ALSO
+
+bounced(8), L<Sympa::Message>.
+
+=head1 HISTORY
+
+The tracking feature was contributed by
+Guillaume Colotte and laurent Cailleux,
+French army DGA Information Superiority.
+
+L<Sympa::Tracking> module appeared on Sympa 6.2.
+
+=cut

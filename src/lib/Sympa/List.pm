@@ -1880,16 +1880,11 @@ sub distribute_msg {
         $new_message->{shelved}{tracking} ||= 'verp';
 
         if ($new_message->{shelved}{tracking} =~ /dsn|mdn/) {
-            Sympa::Tracking::db_init_notification_table(
-                'listname' => $self->{'name'},
-                'robot'    => $robot,
-                # what ever the message is transformed because of the
-                # reception option, tracking use the original message id
-                'msgid'            => $new_message->{message_id},
-                'rcpt'             => \@verp_selected_tabrcpt,
+            my $tracking = Sympa::Tracking->new($self);
+
+            $tracking->register($new_message, [@verp_selected_tabrcpt],
                 'reception_option' => $mode,
             );
-
         }
 
         # Ignore those reception option where mail must not ne sent.
