@@ -151,10 +151,10 @@ CREATE TABLE netidmap_table (
 
 CREATE TABLE notification_table ( 
 	 arrival_date_notification 	varchar2(80), 
+	 arrival_date_epoch_notification	number;
 	 date_notification 	number, 
 	 list_notification 	varchar2(50), 
 	 message_id_notification 	varchar2(100), 
-	 message_notification 	long, 
 	 pk_notification 	number, 
 	 reception_option_notification 	varchar2(20), 
 	 recipient_notification 	varchar2(100), 
