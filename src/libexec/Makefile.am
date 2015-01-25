@@ -69,7 +69,7 @@ install-exec-hook:
 	chmod 4755 $(DESTDIR)$(libexecdir)/familyqueue
 if SMRSH
 	@echo 'Installing symbolic links for Sendmail smrsh'
-	install -d -m755 $(DESTDIR)$(smrshdir)
+	install -d -m 755 $(DESTDIR)$(smrshdir)
 	-rm -f $(DESTDIR)$(smrshdir)/queue
 	$(LN_S) $(libexecdir)/queue $(DESTDIR)$(smrshdir)/queue
 	-rm -f $(DESTDIR)$(smrshdir)/bouncequeue
