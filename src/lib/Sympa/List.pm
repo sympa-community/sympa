@@ -1883,8 +1883,7 @@ sub distribute_msg {
             my $tracking = Sympa::Tracking->new($self);
 
             $tracking->register($new_message, [@verp_selected_tabrcpt],
-                'reception_option' => $mode,
-            );
+                'reception_option' => $mode);
         }
 
         # Ignore those reception option where mail must not ne sent.
@@ -4306,11 +4305,11 @@ sub get_first_list_member {
 }
 
 # Create a custom attribute from an XML description
-# IN : File handle or a string, XML formed data as stored in database
+# IN : A string, XML formed data as stored in database
 # OUT : HASH data storing custome attributes.
 sub parseCustomAttribute {
     my $xmldoc = shift;
-    return undef if !defined $xmldoc or $xmldoc eq '';
+    return undef unless defined $xmldoc and length $xmldoc;
 
     my $parser = XML::LibXML->new();
     my $tree;
@@ -10907,8 +10906,8 @@ sub get_subscription_requests {
         sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/,
             readdir SPOOL)
         ) {
-        unless (open REQUEST, "<:bytes",
-            "$Conf::Conf{'queuesubscribe'}/$filename") {
+        my $fh;    #FIXME: files should be locked.
+        unless (open $fh, '<', "$Conf::Conf{'queuesubscribe'}/$filename") {
             Log::do_log('err', 'Could not open %s', $filename);
             closedir SPOOL;
             next;
@@ -10916,7 +10915,7 @@ sub get_subscription_requests {
 
         ## First line of the file contains the user email address + his/her
         ## name
-        my $line = <REQUEST>;
+        my $line = <$fh>;
         my ($email, $gecos);
         if ($line =~ /^((\S+|\".*\")\@\S+)\s*([^\t]*)\t(.*)$/) {
             ($email, $gecos) = ($1, $3);
@@ -10942,8 +10941,9 @@ sub get_subscription_requests {
             next;
         }
         ## Following lines may contain custom attributes in an XML format
-        my $xml = parseCustomAttribute(\*REQUEST);
-        close REQUEST;
+        my $custom_attribute = do { local $RS; <$fh> };
+        close $fh;
+        my $xml = parseCustomAttribute($custom_attribute);
 
         $subscriptions{$email} = {
             'gecos'            => $gecos,
