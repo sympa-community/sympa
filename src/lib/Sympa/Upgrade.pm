@@ -30,12 +30,10 @@ use Encode qw();
 use English qw(-no_match_vars);
 use File::Find qw();
 use File::Path qw();
-use File::Basename;
-use Fcntl ':mode';
+use MIME::Base64 qw();
 use POSIX qw();
 
 use Sympa::Archive;
-use Sympa::Auth;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -47,7 +45,6 @@ use Log;
 use Sympa::Message;
 use tools;
 use Sympa::Tools::File;
-use Sympa::Tools::Password;
 use Sympa::Tools::Text;
 
 my $language = Sympa::Language->instance;
@@ -1446,6 +1443,49 @@ sub upgrade {
         Conf::update_css((force => 1));
         Log::do_log('info', 'Web interface colors defaulted to new values.');
     }
+
+    # notification_table no longer keeps DSN/MDN.
+    if (lower_version($previous_version, '6.2b.3')
+        and not lower_version($previous_version, '6.2a.7')) {
+        Log::do_log('info', 'Upgrading tracking spool.');
+        my $sdm = Sympa::DatabaseManager->instance;
+        my $sth;
+        unless ($sdm
+            and $sth =
+            $sdm->do_prepared_query(q{SELECT * FROM notification_table})) {
+            Log::do_log('err',
+                'Cannot execute SQL query.  Database is inaccessible');
+        } else {
+            while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
+                my $list = Sympa::List->new(
+                    $info->{'list_notification'},
+                    $info->{'robot_notification'}
+                );
+                next unless $list;
+
+                my $msg_string = $info->{'message_notification'};
+                my $recipient  = $info->{'recipient_notification'};
+                if (    defined $msg_string
+                    and length $msg_string
+                    and $recipient) {
+                    $msg_string = MIME::Base64::decode_base64($msg_string);
+                    my $bounce_path = sprintf '%s/%s_%08s',
+                        $list->get_bounce_dir,
+                        tools::escape_chars($recipient),
+                        $info->{'pk_notification'};
+                    if (open my $fh, '>', $bounce_path) {
+                        print $fh $msg_string;
+                        close $fh;
+                    } else {
+                        Log::do_log('err', 'Cannot open file %s: %m',
+                            $bounce_path);
+                    }
+                }
+            }
+            $sth->finish;
+        }
+    }
+
     return 1;
 }
 
