@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: 2013-04-20 11:25+0000\n"
 "Last-Translator: dabid <dabid@hackinbadakigu.net>\n"
 "Language-Team: Euskara\n"
-"Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Export-Date: 2006-12-11 09:58+0000\n"
@@ -1191,7 +1191,8 @@ msgstr ""
 msgid "Visibility of the list"
 msgstr ""
 
-#: default/web_tt2/login_menu.tt2:23 default/web_tt2/search_list.tt2:21
+#: default/web_tt2/lists.tt2:28 default/web_tt2/login_menu.tt2:23
+#: default/web_tt2/my.tt2:23 default/web_tt2/search_list.tt2:21
 #: default/web_tt2/suspend_request.tt2:30 src/lib/Sympa/ListDef.pm:85
 msgid "Owner"
 msgstr "Jabea"
@@ -5889,8 +5890,10 @@ msgstr "Jabeak"
 
 #: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+#: default/web_tt2/lists.tt2:29 default/web_tt2/lists.tt2:32
 #: default/web_tt2/login_menu.tt2:18 default/web_tt2/login_menu.tt2:21
 #: default/web_tt2/login_menu.tt2:23 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:24 default/web_tt2/my.tt2:27
 msgid ", "
 msgstr ""
 
@@ -5927,17 +5930,10 @@ msgstr ""
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr ""
 
-#: default/web_tt2/lists.tt2:29
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/lists.tt2:32
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
+#: default/web_tt2/lists.tt2:31 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:26
+msgid "Editor"
+msgstr "Editorea"
 
 #: default/web_tt2/lists.tt2:34 default/web_tt2/login_menu.tt2:28
 #: default/web_tt2/my.tt2:29
@@ -6012,10 +6008,6 @@ msgstr "Posta zerrenda administratzailea"
 #: default/web_tt2/login_menu.tt2:21
 msgid "Privileged owner"
 msgstr "Erregalia jabea"
-
-#: default/web_tt2/login_menu.tt2:25
-msgid "Editor"
-msgstr "Editorea"
 
 #: default/web_tt2/login_menu.tt2:36
 msgid "Restore identity"
@@ -6368,18 +6360,6 @@ msgstr " azken mezuak "
 
 #: default/web_tt2/my.tt2:6
 msgid "You are subscribed to or managing the following lists."
-msgstr ""
-
-#: default/web_tt2/my.tt2:24
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/my.tt2:27
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
 msgstr ""
 
 #. (l.value.liststartdate,l.value.listenddate)
@@ -11832,6 +11812,30 @@ msgstr ""
 
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
+msgstr ""
+
+#: default/web_tt2/lists.tt2:29
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/lists.tt2:32
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:24
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:27
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
 msgstr ""
 
 #: default/web_tt2/main.tt2:129

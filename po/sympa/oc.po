@@ -16,10 +16,10 @@ msgstr ""
 "PO-Revision-Date: 2014-04-15 07:19+0000\n"
 "Last-Translator: Cedric31 <cvalmary@yahoo.fr>\n"
 "Language-Team: Occitan <asso.oc@abuledu.org>\n"
-"Language: oc\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: oc\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1397546385.000000\n"
@@ -1226,7 +1226,8 @@ msgid "Visibility of the list"
 msgstr "Visibilitat de la lista"
 
 # nlsref 16,57
-#: default/web_tt2/login_menu.tt2:23 default/web_tt2/search_list.tt2:21
+#: default/web_tt2/lists.tt2:28 default/web_tt2/login_menu.tt2:23
+#: default/web_tt2/my.tt2:23 default/web_tt2/search_list.tt2:21
 #: default/web_tt2/suspend_request.tt2:30 src/lib/Sympa/ListDef.pm:85
 msgid "Owner"
 msgstr "Proprietari"
@@ -6334,8 +6335,10 @@ msgstr "Proprietaris :"
 
 #: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+#: default/web_tt2/lists.tt2:29 default/web_tt2/lists.tt2:32
 #: default/web_tt2/login_menu.tt2:18 default/web_tt2/login_menu.tt2:21
 #: default/web_tt2/login_menu.tt2:23 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:24 default/web_tt2/my.tt2:27
 msgid ", "
 msgstr ""
 
@@ -6371,17 +6374,10 @@ msgstr "%1 ocurréncia(s) trobada(s)"
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong>%1</strong> es abonat a las listas seguentas"
 
-#: default/web_tt2/lists.tt2:29
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/lists.tt2:32
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
+#: default/web_tt2/lists.tt2:31 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:26
+msgid "Editor"
+msgstr "Moderator"
 
 #: default/web_tt2/lists.tt2:34 default/web_tt2/login_menu.tt2:28
 #: default/web_tt2/my.tt2:29
@@ -6460,10 +6456,6 @@ msgstr "Responsable (listmaster)"
 #: default/web_tt2/login_menu.tt2:21
 msgid "Privileged owner"
 msgstr "Gestionari privilegiat"
-
-#: default/web_tt2/login_menu.tt2:25
-msgid "Editor"
-msgstr "Moderator"
 
 #: default/web_tt2/login_menu.tt2:36
 msgid "Restore identity"
@@ -6847,18 +6839,6 @@ msgstr "Gestion dels messatges de reget"
 #, fuzzy
 msgid "You are subscribed to or managing the following lists."
 msgstr "Ja sètz abonat(/ada) a la lista %1"
-
-#: default/web_tt2/my.tt2:24
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/my.tt2:27
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
 
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:37
@@ -12793,13 +12773,33 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Font desconeguda"
 
+#: default/web_tt2/lists.tt2:29
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/lists.tt2:32
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:24
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:27
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
 #: default/web_tt2/main.tt2:129
 msgid "Menu"
 msgstr ""
-
-#: default/web_tt2/tracking.tt2:10
-msgid "Distribution ended at"
-msgstr "La distribucion s'es acabada a"
 
 #: src/lib/Sympa/ConfDef.pm:1502
 msgid ""
@@ -13059,6 +13059,9 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#~ msgid "Distribution ended at"
+#~ msgstr "La distribucion s'es acabada a"
 
 # nlsref 16,57
 #, fuzzy

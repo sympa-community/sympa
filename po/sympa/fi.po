@@ -16,10 +16,10 @@ msgstr ""
 "PO-Revision-Date: 2013-11-22 02:20+0000\n"
 "Last-Translator: Jyri-Petteri <jyri-petteri.paloposki@iki.fi>\n"
 "Language-Team: Suomi\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1385086807.000000\n"
@@ -1256,7 +1256,8 @@ msgstr "Listan näkyminen"
 
 # #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,57
-#: default/web_tt2/login_menu.tt2:23 default/web_tt2/search_list.tt2:21
+#: default/web_tt2/lists.tt2:28 default/web_tt2/login_menu.tt2:23
+#: default/web_tt2/my.tt2:23 default/web_tt2/search_list.tt2:21
 #: default/web_tt2/suspend_request.tt2:30 src/lib/Sympa/ListDef.pm:85
 msgid "Owner"
 msgstr "Omistaja"
@@ -6351,8 +6352,10 @@ msgstr "Omistajat"
 
 #: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+#: default/web_tt2/lists.tt2:29 default/web_tt2/lists.tt2:32
 #: default/web_tt2/login_menu.tt2:18 default/web_tt2/login_menu.tt2:21
 #: default/web_tt2/login_menu.tt2:23 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:24 default/web_tt2/my.tt2:27
 msgid ", "
 msgstr ""
 
@@ -6391,17 +6394,10 @@ msgstr "%1 osuma(a) löytyi"
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong>%1</strong> on tilaajana seuraavilla listoilla"
 
-#: default/web_tt2/lists.tt2:29
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/lists.tt2:32
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
+#: default/web_tt2/lists.tt2:31 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:26
+msgid "Editor"
+msgstr "Toimittaja"
 
 #: default/web_tt2/lists.tt2:34 default/web_tt2/login_menu.tt2:28
 #: default/web_tt2/my.tt2:29
@@ -6480,10 +6476,6 @@ msgstr "Ylläpitäjä"
 #: default/web_tt2/login_menu.tt2:21
 msgid "Privileged owner"
 msgstr "Etuoikeutettu omistaja"
-
-#: default/web_tt2/login_menu.tt2:25
-msgid "Editor"
-msgstr "Toimittaja"
 
 #: default/web_tt2/login_menu.tt2:36
 msgid "Restore identity"
@@ -6870,18 +6862,6 @@ msgstr "Hallitse hylkäysviestejä"
 #, fuzzy
 msgid "You are subscribed to or managing the following lists."
 msgstr "Olet jo tilannut listan %1"
-
-#: default/web_tt2/my.tt2:24
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/my.tt2:27
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
 
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:37
@@ -12971,14 +12951,33 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Tuntematon virhe."
 
+#: default/web_tt2/lists.tt2:29
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/lists.tt2:32
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:24
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:27
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
 #: default/web_tt2/main.tt2:129
 msgid "Menu"
 msgstr ""
-
-#: default/web_tt2/tracking.tt2:10
-#, fuzzy
-msgid "Distribution ended at"
-msgstr "Lähetä eteenpäin"
 
 #: src/lib/Sympa/ConfDef.pm:1502
 msgid ""
@@ -13249,6 +13248,10 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Distribution ended at"
+#~ msgstr "Lähetä eteenpäin"
 
 # #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,57

@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: 2012-09-13 12:06+0000\n"
 "Last-Translator: kopolyzo <kopolyzo@ccf.auth.gr>\n"
 "Language-Team: Ελληνικά\n"
-"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Version: 0.1\n"
@@ -1346,7 +1346,8 @@ msgstr "Θέμα της λίστας"
 msgid "Visibility of the list"
 msgstr "Ορατότητα της λίστας"
 
-#: default/web_tt2/login_menu.tt2:23 default/web_tt2/search_list.tt2:21
+#: default/web_tt2/lists.tt2:28 default/web_tt2/login_menu.tt2:23
+#: default/web_tt2/my.tt2:23 default/web_tt2/search_list.tt2:21
 #: default/web_tt2/suspend_request.tt2:30 src/lib/Sympa/ListDef.pm:85
 msgid "Owner"
 msgstr "Ιδιοκτήτης"
@@ -6260,8 +6261,10 @@ msgstr "Ιδιοκτήτες"
 
 #: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+#: default/web_tt2/lists.tt2:29 default/web_tt2/lists.tt2:32
 #: default/web_tt2/login_menu.tt2:18 default/web_tt2/login_menu.tt2:21
 #: default/web_tt2/login_menu.tt2:23 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:24 default/web_tt2/my.tt2:27
 msgid ", "
 msgstr ""
 
@@ -6300,17 +6303,10 @@ msgstr ""
 "<strong>%1</strong> είναι συνδρομητής στις ακόλουθες λίστες ηλεκτρονικού "
 "ταχυδρομείου"
 
-#: default/web_tt2/lists.tt2:29
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/lists.tt2:32
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
+#: default/web_tt2/lists.tt2:31 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:26
+msgid "Editor"
+msgstr "Συντάκτης"
 
 #: default/web_tt2/lists.tt2:34 default/web_tt2/login_menu.tt2:28
 #: default/web_tt2/my.tt2:29
@@ -6387,10 +6383,6 @@ msgstr "Διαχειριστής συστήματος"
 #: default/web_tt2/login_menu.tt2:21
 msgid "Privileged owner"
 msgstr "Προνομιούχος ιδιοκτήτης"
-
-#: default/web_tt2/login_menu.tt2:25
-msgid "Editor"
-msgstr "Συντάκτης"
 
 #: default/web_tt2/login_menu.tt2:36
 msgid "Restore identity"
@@ -6767,18 +6759,6 @@ msgstr "Διαχείριση μηνυμάτων απόρριψης"
 #, fuzzy
 msgid "You are subscribed to or managing the following lists."
 msgstr "Είστε ήδη συνδρομητής στη λίστα %1"
-
-#: default/web_tt2/my.tt2:24
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/my.tt2:27
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
 
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:37
@@ -12796,6 +12776,30 @@ msgstr "Αδυναμία φόρτωσης καταναλωτή, ίσως η δι
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Άγνωστος παροχέας."
+
+#: default/web_tt2/lists.tt2:29
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/lists.tt2:32
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:24
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:27
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
 
 #: default/web_tt2/main.tt2:129
 msgid "Menu"

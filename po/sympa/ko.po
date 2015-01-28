@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: 2015-01-27 17:10+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: 한국어 <ko_KR@li.org>\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1422378626.000000\n"
@@ -1223,7 +1223,8 @@ msgstr "리스트의 제목"
 msgid "Visibility of the list"
 msgstr "리스트의 시정"
 
-#: default/web_tt2/login_menu.tt2:23 default/web_tt2/search_list.tt2:21
+#: default/web_tt2/lists.tt2:28 default/web_tt2/login_menu.tt2:23
+#: default/web_tt2/my.tt2:23 default/web_tt2/search_list.tt2:21
 #: default/web_tt2/suspend_request.tt2:30 src/lib/Sympa/ListDef.pm:85
 msgid "Owner"
 msgstr "소유자"
@@ -6208,8 +6209,10 @@ msgstr "소유자"
 
 #: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+#: default/web_tt2/lists.tt2:29 default/web_tt2/lists.tt2:32
 #: default/web_tt2/login_menu.tt2:18 default/web_tt2/login_menu.tt2:21
 #: default/web_tt2/login_menu.tt2:23 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:24 default/web_tt2/my.tt2:27
 msgid ", "
 msgstr ""
 
@@ -6246,17 +6249,11 @@ msgstr "%1가 발견 되었습니다"
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong> %1는 다음의 메일링 리스트에 가입되었습니다."
 
-#: default/web_tt2/lists.tt2:29
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/lists.tt2:32
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
+#: default/web_tt2/lists.tt2:31 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:26
+#, fuzzy
+msgid "Editor"
+msgstr "편집자"
 
 #: default/web_tt2/lists.tt2:34 default/web_tt2/login_menu.tt2:28
 #: default/web_tt2/my.tt2:29
@@ -6341,11 +6338,6 @@ msgstr "리스트마스터"
 #, fuzzy
 msgid "Privileged owner"
 msgstr "권한 소유자"
-
-#: default/web_tt2/login_menu.tt2:25
-#, fuzzy
-msgid "Editor"
-msgstr "편집자"
 
 #: default/web_tt2/login_menu.tt2:36
 #, fuzzy
@@ -6738,18 +6730,6 @@ msgstr "편집자 거부 메시지"
 #, fuzzy
 msgid "You are subscribed to or managing the following lists."
 msgstr "%1 메일링 리스트를 이미 등록구독됩니다."
-
-#: default/web_tt2/my.tt2:24
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/my.tt2:27
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
 
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:37
@@ -12692,6 +12672,30 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "확인 불가"
+
+#: default/web_tt2/lists.tt2:29
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/lists.tt2:32
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:24
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:27
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
 
 #: default/web_tt2/main.tt2:129
 msgid "Menu"

@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: 2014-06-04 10:52+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Deutsch\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1401879168.000000\n"
@@ -1345,7 +1345,8 @@ msgid "Visibility of the list"
 msgstr "Sichtbarkeit der Liste"
 
 # #-#-#-#-#  de.po (PACKAGE VERSION)  #-#-#-#-#
-#: default/web_tt2/login_menu.tt2:23 default/web_tt2/search_list.tt2:21
+#: default/web_tt2/lists.tt2:28 default/web_tt2/login_menu.tt2:23
+#: default/web_tt2/my.tt2:23 default/web_tt2/search_list.tt2:21
 #: default/web_tt2/suspend_request.tt2:30 src/lib/Sympa/ListDef.pm:85
 msgid "Owner"
 msgstr "Eigentümer"
@@ -6258,8 +6259,10 @@ msgstr "Eigentümer"
 
 #: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+#: default/web_tt2/lists.tt2:29 default/web_tt2/lists.tt2:32
 #: default/web_tt2/login_menu.tt2:18 default/web_tt2/login_menu.tt2:21
 #: default/web_tt2/login_menu.tt2:23 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:24 default/web_tt2/my.tt2:27
 msgid ", "
 msgstr ""
 
@@ -6297,17 +6300,10 @@ msgstr "%1 Treffer"
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong>%1</strong> hat folgende Mailinglisten abonniert"
 
-#: default/web_tt2/lists.tt2:29
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/lists.tt2:32
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
+#: default/web_tt2/lists.tt2:31 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:26
+msgid "Editor"
+msgstr "Moderator"
 
 #: default/web_tt2/lists.tt2:34 default/web_tt2/login_menu.tt2:28
 #: default/web_tt2/my.tt2:29
@@ -6384,10 +6380,6 @@ msgstr "Listenadministrator"
 #: default/web_tt2/login_menu.tt2:21
 msgid "Privileged owner"
 msgstr "Privilegierter Eigentümer"
-
-#: default/web_tt2/login_menu.tt2:25
-msgid "Editor"
-msgstr "Moderator"
 
 #: default/web_tt2/login_menu.tt2:36
 msgid "Restore identity"
@@ -6771,18 +6763,6 @@ msgstr "Ablehnungsnachrichten verwalten"
 #, fuzzy
 msgid "You are subscribed to or managing the following lists."
 msgstr "Sie sind bereits Abonnent der Liste %1"
-
-#: default/web_tt2/my.tt2:24
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/my.tt2:27
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
 
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:37
@@ -12800,14 +12780,33 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Unbekannter Fehler."
 
+#: default/web_tt2/lists.tt2:29
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/lists.tt2:32
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:24
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:27
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
 #: default/web_tt2/main.tt2:129
 msgid "Menu"
 msgstr ""
-
-#: default/web_tt2/tracking.tt2:10
-#, fuzzy
-msgid "Distribution ended at"
-msgstr "Verteilen"
 
 #: src/lib/Sympa/ConfDef.pm:1502
 msgid ""
@@ -12919,6 +12918,10 @@ msgid ""
 "\n"
 "Visit  %3/oauth_check/%2 to check the token state and renew it if necessary."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Distribution ended at"
+#~ msgstr "Verteilen"
 
 # #-#-#-#-#  de.po (PACKAGE VERSION)  #-#-#-#-#
 #, fuzzy

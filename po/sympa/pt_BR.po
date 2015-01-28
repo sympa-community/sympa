@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: 2014-05-19 13:37+0000\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: Português do Brasil\n"
-"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Version: 0.1\n"
@@ -1342,7 +1342,8 @@ msgstr "Assunto da lista"
 msgid "Visibility of the list"
 msgstr "Visibilidade da lista"
 
-#: default/web_tt2/login_menu.tt2:23 default/web_tt2/search_list.tt2:21
+#: default/web_tt2/lists.tt2:28 default/web_tt2/login_menu.tt2:23
+#: default/web_tt2/my.tt2:23 default/web_tt2/search_list.tt2:21
 #: default/web_tt2/suspend_request.tt2:30 src/lib/Sympa/ListDef.pm:85
 msgid "Owner"
 msgstr "Proprietário"
@@ -6205,8 +6206,10 @@ msgstr "Proprietários"
 
 #: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_panel.tt2:36 default/web_tt2/list_panel.tt2:53
+#: default/web_tt2/lists.tt2:29 default/web_tt2/lists.tt2:32
 #: default/web_tt2/login_menu.tt2:18 default/web_tt2/login_menu.tt2:21
 #: default/web_tt2/login_menu.tt2:23 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:24 default/web_tt2/my.tt2:27
 msgid ", "
 msgstr ""
 
@@ -6243,17 +6246,11 @@ msgstr "%1 ocorrência(s) encontrada(s)"
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong>%1</strong> está inscrito nas seguintes listas de e-mails"
 
-#: default/web_tt2/lists.tt2:29
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/lists.tt2:32
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF which.$listname.is_subscriber %][%|loc%], "
-msgstr ""
+# its the same word in portuguese
+#: default/web_tt2/lists.tt2:31 default/web_tt2/login_menu.tt2:25
+#: default/web_tt2/my.tt2:26
+msgid "Editor"
+msgstr "Editor"
 
 #: default/web_tt2/lists.tt2:34 default/web_tt2/login_menu.tt2:28
 #: default/web_tt2/my.tt2:29
@@ -6329,11 +6326,6 @@ msgstr "Administrador geral de listas"
 #: default/web_tt2/login_menu.tt2:21
 msgid "Privileged owner"
 msgstr "Proprietário com privilégios"
-
-# its the same word in portuguese
-#: default/web_tt2/login_menu.tt2:25
-msgid "Editor"
-msgstr "Editor"
 
 #: default/web_tt2/login_menu.tt2:36
 msgid "Restore identity"
@@ -6706,18 +6698,6 @@ msgstr "Gerenciar mensagens de rejeição"
 #, fuzzy
 msgid "You are subscribed to or managing the following lists."
 msgstr "Você já está inscrito à lista %1"
-
-#: default/web_tt2/my.tt2:24
-msgid ""
-"Owner[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
-
-#: default/web_tt2/my.tt2:27
-msgid ""
-"Editor[%END ~%]\n"
-"                [% IF l.value.is_subscriber %][%|loc%], "
-msgstr ""
 
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:37
@@ -12674,13 +12654,33 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Provedor desconhecido."
 
+#: default/web_tt2/lists.tt2:29
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/lists.tt2:32
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF which.$listname.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:24
+msgid ""
+"Owner[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
+#: default/web_tt2/my.tt2:27
+msgid ""
+"Editor[%END ~%]\n"
+"                [% IF l.value.is_subscriber %][%|loc%], "
+msgstr ""
+
 #: default/web_tt2/main.tt2:129
 msgid "Menu"
 msgstr ""
-
-#: default/web_tt2/tracking.tt2:10
-msgid "Distribution ended at"
-msgstr "Distribuição terminada em"
 
 #: src/lib/Sympa/ConfDef.pm:1502
 msgid ""
@@ -12768,6 +12768,9 @@ msgstr ""
 #: ../src/sympa_wizard.pl.in:453
 msgid "used to compute MD5 digests for passwords, etc"
 msgstr ""
+
+#~ msgid "Distribution ended at"
+#~ msgstr "Distribuição terminada em"
 
 #, fuzzy
 #~ msgid "(Owner)"
