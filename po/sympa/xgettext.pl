@@ -302,7 +302,7 @@ foreach my $file (@ordered_files) {
     $line = 1;
     pos($_) = 0;
     while (
-        m!\G.*?\[%\s*\|($available_tags)(.*?)\s*%\](.*?)\[%\-?\s*END\s*\-?%\]!sg
+        m!\G.*?\[%\s*\|($available_tags)(.*?)\s*%\](.*?)\[%[-=~+]?\s*END\s*[-=~+]?%\]!sg
         ) {
         my ($this_tag, $vars, $str) = ($1, $2, $3);
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
@@ -323,7 +323,7 @@ foreach my $file (@ordered_files) {
     $line = 1;
     pos($_) = 0;
     while (
-        m!\G.*?\(\$tag\$%\s*\|($available_tags)(.*?)\s*%\$tag\$\)(.*?)\(\$tag\$%\s*END\s*%\$tag\$\)!sg
+        m!\G.*?\(\$tag\$%\s*\|($available_tags)(.*?)\s*%\$tag\$\)(.*?)\(\$tag\$%[-=~+]?\s*END\s*[-=~+]?%\$tag\$\)!sg
         ) {
         my ($this_tag, $vars, $str) = ($1, $2, $3);
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
