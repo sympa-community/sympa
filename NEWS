@@ -3,6 +3,55 @@
 
 (See Changelog file for the full changes log)
 
+6.2b.3		January 30, 2015
+
+  Changes:
+
+	[11881] src/bin/Makefile.am:  create_db scripts for MySQL, PostgreSQL
+	and SQLite were dropped.
+	Use sympa.pl --health_check instead.
+
+	[11880] default/web_tt2/editsubscriber.tt2,
+	default/web_tt2/tracking.tt2, src/cgi/wwsympa.fcgi.in,
+	src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/Tracking.pm,
+	src/sbin/bounced.pl.in, src/sbin/task_manager.pl.in:  Tracking: DSN and
+	MDN are no longer stored into database table: They are stored into
+	bounce directory by each list.
+	Additionally, notifications may be shown in separate viewbounce page,
+	instead of loading all notifications at the time of showing tracking
+	index page.
+
+  Bug fixes:
+
+	[11898] src/cgi/wwsympa.fcgi.in, src/sbin/sympa.pl.in,
+	src/sbin/task_manager.pl.in:  Default robot was ignored and its lists
+	won't be processed in some cases,
+	if no virtual robot setting with the same domain as default robot.
+	sympa.pl:
+	- --change_user_email omits lists in default robot.
+	task_manager.pl:
+	- List tasks in default robot aren't loaded. 
+	- purge_user_table task: Users subscribing only to the lists in default
+	robot will be purged.
+
+	[11884] src/libexec/Makefile.am: [Reported by B. Eliassen] An option
+	given to install(1) terminates installation.  This utility at least of
+	Solaris needs the space between "-m" and argument.
+
+	[11877] src/lib/Sympa/Mailer.pm:  Postfix: If tracking feature is
+	enabled, distribution of messages will be denied when Envelope-Id is
+	"10" to "99".  Postfix (2.3 or later) clone of sendmail interprets -V
+	option with two characters as -XV option and rejects it because
+	argument is incorrect.
+	Fixed by padding "0" to make length of envid at least eight.
+
+	[11863] default/web_tt2/crash.tt2, default/web_tt2/main.tt2,
+	default/web_tt2/tt2_error.tt2, src/cgi/wwsympa.fcgi.in:  WWSympa: When
+	TT2 parse error occurs and tt2_error.tt2 has error again, no content is
+	sent and HTTP server will report error status (e.g. 503 with nginx).
+	To prevent such situation, wrap PROCESS directives in this template
+	with TRY...CATCH.  The same measure is taken for crash.tt2.
+
 6.2b.2		January 16, 2015
 
   Changes:
