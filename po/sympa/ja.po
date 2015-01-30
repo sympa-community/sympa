@@ -12,16 +12,16 @@ msgstr ""
 "Project-Id-Version: Sympa-6.1.20+, 6.2a.38\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2014-10-03 11:49+0000\n"
+"PO-Revision-Date: 2015-01-30 10:15+0000\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1\n"
-"X-POOTLE-MTIME: 1412336963.000000\n"
+"X-POOTLE-MTIME: 1422612922.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -3610,9 +3610,8 @@ msgid ""
 msgstr "このリストは現在、閉鎖中です。このボタンをクリックすると再開できます。"
 
 #: default/web_tt2/admin.tt2:13
-#, fuzzy
 msgid "Close List"
-msgstr "閉鎖する"
+msgstr "リストの閉鎖"
 
 #. (list)
 #: default/web_tt2/admin.tt2:13
@@ -3620,7 +3619,6 @@ msgid "Are you sure you wish to close list %1?"
 msgstr "%1メーリングリストは閉鎖されてしまいますが、それでよいのですか。"
 
 #: default/web_tt2/admin.tt2:36
-#, fuzzy
 msgid "Create Shared Content"
 msgstr "共有文書置き場の開設"
 
@@ -3629,9 +3627,8 @@ msgid "Initializes the shared document web space."
 msgstr "共有文書を置くウェブスペースを初期化します。"
 
 #: default/web_tt2/admin.tt2:40
-#, fuzzy
 msgid "Delete Shared Documents"
-msgstr "共有文書置き場"
+msgstr "共有文書置き場の閉鎖"
 
 #. (listname)
 #: default/web_tt2/admin.tt2:40
@@ -5889,9 +5886,8 @@ msgstr ""
 "になれます。"
 
 #: default/web_tt2/info.tt2:36
-#, fuzzy
 msgid "View or Manage Subscribers"
-msgstr "読者管理"
+msgstr "読者一覧・読者管理"
 
 #: default/web_tt2/info.tt2:38
 msgid "View the list of subscribers"
@@ -6611,21 +6607,18 @@ msgid "Manage rejection messages"
 msgstr "拒否メッセージの管理"
 
 #: default/web_tt2/my.tt2:6
-#, fuzzy
 msgid "You are subscribed to or managing the following lists."
-msgstr "読者登録しているメーリングリスト"
+msgstr "読者登録・運営しているメーリングリスト"
 
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:37
-#, fuzzy
 msgid "Suspended from %1 to %2"
-msgstr "休止期間 %1 から"
+msgstr "休止期間 %1 から %2 まで"
 
 #. (l.value.liststartdate)
 #: default/web_tt2/my.tt2:39
-#, fuzzy
 msgid "Suspended from %1 to indefinite end date"
-msgstr "休止期間 %1 から"
+msgstr "休止期間 %1 から無期限"
 
 # 「リスト」補う
 #: default/web_tt2/my.tt2:59 default/web_tt2/suspend_request.tt2:69
@@ -7270,12 +7263,10 @@ msgid "Search for a User"
 msgstr "人を探す"
 
 #: default/web_tt2/review.tt2:63
-#, fuzzy
 msgid "Search for a user by email address, name or part of them: "
-msgstr "メール アドレスや名前で探す: "
+msgstr "メール アドレスや名前の一部から人を探します: "
 
 #: default/web_tt2/review.tt2:64
-#, fuzzy
 msgid "Search for a user"
 msgstr "人を探す"
 
@@ -8243,30 +8234,25 @@ msgid "No operation recorded in this field yet."
 msgstr "この項目は未集計です。"
 
 #: default/web_tt2/stats.tt2:55
-#, fuzzy
 msgid "Subscriptions: "
 msgstr "読者登録"
 
 #. (id.value.beginning_date_counter,id.value.end_date_counter,id.value.variation_counter)
 #: default/web_tt2/stats.tt2:57 default/web_tt2/stats.tt2:93
-#, fuzzy
 msgid "from %1 to %2: +%3"
-msgstr "%1 から %2 まで"
+msgstr "%1 から %2 まで: %3 増加"
 
 #: default/web_tt2/stats.tt2:64
-#, fuzzy
 msgid "Unsubscriptions: "
-msgstr "登録解除するには:"
+msgstr "登録解除"
 
 #. (id.value.beginning_date_counter,id.value.end_date_counter,id.value.variation_counter)
 #: default/web_tt2/stats.tt2:66 default/web_tt2/stats.tt2:75
 #: default/web_tt2/stats.tt2:84
-#, fuzzy
 msgid "from %1 to %2: -%3"
-msgstr "%1 から %2 まで"
+msgstr "%1 から %2 まで: %3 減少"
 
 #: default/web_tt2/stats.tt2:73
-#, fuzzy
 msgid "Deleted by an admin: "
 msgstr "オーナーが削除した人"
 
@@ -8320,14 +8306,12 @@ msgid "Only possible for direct reception modes."
 msgstr "「直接受け取る」(normal) 受け取りモードのときだけできます。"
 
 #: default/web_tt2/suboptions.tt2:79
-#, fuzzy
 msgid "Restore subscription"
-msgstr "読者登録の申込"
+msgstr "受け取り再開"
 
 #: default/web_tt2/suboptions.tt2:82
-#, fuzzy
 msgid "Your subscription is suspended."
-msgstr "読者登録したメール アドレスは %1 です"
+msgstr "受け取り休止中です。"
 
 #: default/web_tt2/suboptions.tt2:112 default/web_tt2/suboptions.tt2:85
 #: default/web_tt2/suspend_request.tt2:80
@@ -8340,30 +8324,25 @@ msgid "To:"
 msgstr "終了:"
 
 #: default/web_tt2/suboptions.tt2:94
-#, fuzzy
 msgid "Indefinite end date"
-msgstr "期限なし"
+msgstr "無期限"
 
 #: default/web_tt2/suboptions.tt2:103
-#, fuzzy
 msgid "Resume my subscription"
 msgstr "受け取りを再開"
 
 #: default/web_tt2/suboptions.tt2:106
-#, fuzzy
 msgid "Suspend subscription"
 msgstr "受け取りを休止"
 
 #: default/web_tt2/suboptions.tt2:109
-#, fuzzy
 msgid ""
 "You can suspend your membership by using the button below. The suspend "
 "option prevents delivery of emails, this can be useful if you are out of the "
 "office for some time."
 msgstr ""
-"リストを選択した上で下のボタンを押せば、まとめて受け取り休止や登録解除を実行"
-"できます。受け取りを休止するとメッセージの配送を止めることができます (しばら"
-"くの間留守にするようなときに便利でしょう)。"
+"リストを選択した上で下のボタンを押せば、まとめて受け取りを休止できます。受け取りを休止するとメッセージの配送を止めることができます "
+"(しばらくの間留守にするようなときに便利でしょう)。"
 
 #: default/web_tt2/suboptions.tt2:121 default/web_tt2/suspend_request.tt2:82
 msgid "Suspend my membership indefinitely"
@@ -8535,7 +8514,6 @@ msgstr ""
 "くの間留守にするようなときに便利でしょう)。"
 
 #: default/web_tt2/suspend_request.tt2:75
-#, fuzzy
 msgid "Toggle selection"
 msgstr "選択を逆転"
 
@@ -8619,9 +8597,8 @@ msgstr "メッセージ ID"
 
 #. (distribution_date)
 #: default/web_tt2/tracking.tt2:13
-#, fuzzy
 msgid "Distribution ended at: %1"
-msgstr "最終配送先: "
+msgstr "最終配送先: %1"
 
 #: default/web_tt2/tracking.tt2:17
 msgid "Recipient Email"
@@ -11858,9 +11835,8 @@ msgid "view source"
 msgstr "ソースを見る"
 
 #: default/mhonarc-ressources.tt2:507
-#, fuzzy
 msgid "mail tracking"
-msgstr "電子メールの追跡に使用"
+msgstr "電子メールの追跡"
 
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
