@@ -307,7 +307,7 @@ while (!$end) {
     }
 
     ## list tasks
-    foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
+    foreach my $robot (Sympa::List::get_robots()) {
         my $all_lists = Sympa::List::get_lists($robot);
         foreach my $list (@$all_lists) {
 
@@ -1323,7 +1323,7 @@ sub purge_tables {
     # Log::do_log('notice', '%s rows removed in bulkspool_table', $removed);
     #
     $removed = 0;
-    foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
+    foreach my $robot (Sympa::List::get_robots()) {
         my $all_lists = Sympa::List::get_lists($robot);
         foreach my $list (@$all_lists) {
             my $tracking = Sympa::Tracking->new($list);
@@ -1362,12 +1362,17 @@ sub purge_user_table {
     ## Load known subscribers/owners/editors
     my %known_people;
 
-    ## Listmasters
+    # Super-listmasters
     foreach my $l (@{$Conf::Conf{'listmasters'}}) {
         $known_people{$l} = 1;
     }
 
-    foreach my $r (keys %{$Conf::Conf{'robots'}}) {
+    foreach my $r (Sympa::List::get_robots()) {
+        # Per-robot listmasters.
+        foreach my $l (@{Conf::get_robot_conf($r, 'listmasters') || []}) {
+            $known_people{$l} = 1;
+        }
+
         ## To prevent information loss by misconfiguration, we won't use
         ## list_table cache!
         my $all_lists = Sympa::List::get_lists($r, 'reload_config' => 1);

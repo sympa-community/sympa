@@ -13676,14 +13676,17 @@ sub do_rename_list_request {
     }
 
     ## Super listmaster can move a list to another robot
-    if (Sympa::Robot::is_listmaster($param->{'user'}{'email'}, $robot)) {
-        foreach (keys %{$Conf::Conf{'robots'}}) {
-            if ($_ eq $robot) {
-                $param->{'robots'}{$_} = 'selected="selected"';
+    if (Sympa::Robot::is_listmaster($param->{'user'}{'email'}, '*')) {
+        $param->{'robots'} = {};
+        foreach my $r (Sympa::List::get_robots()) {
+            if ($r eq $robot) {
+                $param->{'robots'}{$r} = 'selected="selected"';
             } else {
-                $param->{'robots'}{$_} = '';
+                $param->{'robots'}{$r} = '';
             }
         }
+    } else {
+        delete $param->{'robots'};
     }
 
     return '1';
@@ -24683,9 +24686,10 @@ sub check_authz {
 
 sub get_server_details {
     ## All Robots are shown to super listmaster
-    if (Sympa::Robot::is_listmaster($param->{'user'}{'email'})) {
+    if (Sympa::Robot::is_listmaster($param->{'user'}{'email'}, '*')) {
         $param->{'main_robot'} = 1;
-        $param->{'robots'}     = $Conf::Conf{'robots'};
+        #FIXME: Entry for main robot is missing.
+        $param->{'robots'} = $Conf::Conf{'robots'};
     }
 
     ## Families

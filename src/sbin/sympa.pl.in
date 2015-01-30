@@ -626,8 +626,7 @@ if ($main::options{'batch'}) {
             exit 1;
         }
 
-        foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
-
+        foreach my $robot (Sympa::List::get_robots()) {
             printf STDOUT "Doing processing for virtual robot %s...\n",
                 $robot;
             my ($status, $failed_for) = Sympa::Admin::change_user_email(
