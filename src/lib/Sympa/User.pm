@@ -293,6 +293,8 @@ sub get_users {
 
 =item get_all_global_user
 
+I<Obsoleted>.
+
 =item update_global_user
 
 =back
@@ -401,6 +403,7 @@ sub get_global_user {
 }
 
 ## Returns an array of all users in User table hash for a given user
+# OBSOLETED: No longer used.
 sub get_all_global_user {
     Log::do_log('debug2', '');
 

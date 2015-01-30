@@ -304,6 +304,7 @@ CREATE TABLE user_table (
 	 last_login_host_user 	varchar2(60), 
 	 password_user 	varchar2(40), 
 	 wrong_login_count_user 	number, 
+	 last_active_date_user	number,
 	 CONSTRAINT ind_user PRIMARY KEY (email_user)
  );
 

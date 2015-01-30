@@ -193,6 +193,12 @@ my %full_db_struct = (
                     'login attempt count, used to prevent brut force attack',
                 'order' => 6,
             },
+            'last_active_date_user' => {
+                'struct' => 'int(11)',
+                'doc' =>
+                    'the last date epoch when this user was confirmed their activity by purge_user_table task',
+                'order' => 7,
+            },
             'cookie_delay_user' => {
                 'struct' => 'int(11)',
                 'doc'    => 'FIXME',

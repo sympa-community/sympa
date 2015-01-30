@@ -1356,73 +1356,94 @@ sub purge_user_table {
     my ($task, $Rarguments, $context) = @_;
     Log::do_log('debug2', '');
 
-    ## Load user_table entries
-    my @users = Sympa::User::get_all_global_user();
+    my $time = time;
 
-    ## Load known subscribers/owners/editors
-    my %known_people;
-
-    # Super-listmasters
+    # Marking super listmasters
     foreach my $l (@{$Conf::Conf{'listmasters'}}) {
-        $known_people{$l} = 1;
-    }
-
-    foreach my $r (Sympa::List::get_robots()) {
-        # Per-robot listmasters.
-        foreach my $l (@{Conf::get_robot_conf($r, 'listmasters') || []}) {
-            $known_people{$l} = 1;
-        }
-
-        ## To prevent information loss by misconfiguration, we won't use
-        ## list_table cache!
-        my $all_lists = Sympa::List::get_lists($r, 'reload_config' => 1);
-        foreach my $list (@$all_lists) {
-
-            ## Owners
-            my $owners = $list->get_owners();
-            if (defined $owners) {
-                foreach my $o (@{$owners}) {
-                    $known_people{$o->{'email'}} = 1;
-                }
-            }
-
-            ## Editors
-            my $editors = $list->get_editors();
-            if (defined $editors) {
-                foreach my $e (@{$editors}) {
-                    $known_people{$e->{'email'}} = 1;
-                }
-            }
-
-            ## Subscribers
-            for (
-                my $user = $list->get_first_list_member();
-                $user;
-                $user = $list->get_next_list_member()
-                ) {
-                $known_people{$user->{'email'}} = 1;
-            }
-        }
-    }
-
-    ## Look for unused entries
-    my @purged_users;
-    foreach (@users) {
-        unless ($known_people{$_}) {
-            Log::do_log('debug2', 'User to purge: %s', $_);
-            push @purged_users, $_;
-        }
-    }
-
-    unless ($#purged_users < 0) {
-        unless (Sympa::User::delete_global_user(@purged_users)) {
-            Log::do_log('err',
-                'Purge_user_table error: Failed to delete users');
+        unless (
+            SDM::do_prepared_query(
+                q{UPDATE user_table
+                  SET last_active_date_user = ?
+                  WHERE email_user = ?},
+                $time, lc $l
+            )
+            ) {
+            Log::do_log('err', 'Failed to check activity of users');
             return undef;
         }
     }
+    # Marking per-robot listmasters.
+    foreach my $robot_id (Sympa::List::get_robots()) {
+        foreach my $l (@{Conf::get_robot_conf($robot_id, 'listmasters')}) {
+            unless (
+                SDM::do_prepared_query(
+                    q{UPDATE user_table
+                      SET last_active_date_user = ?
+                      WHERE email_user = ?},
+                    $time, lc $l
+                )
+                ) {
+                Log::do_log('err', 'Failed to check activity of users');
+                return undef;
+            }
+        }
+    }
+    # Marking new users, owners/editors and subscribers.
+    unless (
+        SDM::do_prepared_query(
+            q{UPDATE user_table
+              SET last_active_date_user = ?
+              WHERE last_active_date_user IS NULL
+              OR EXISTS (
+                SELECT 1
+                FROM admin_table
+                WHERE admin_table.user_admin = user_table.email_user
+              )
+              OR EXISTS (
+                SELECT 1
+                FROM subscriber_table
+                WHERE subscriber_table.user_subscriber = user_table.email_user
+              )},
+            $time
+        )
+        ) {
+        Log::do_log('err', 'Failed to check activity of users');
+        return undef;
+    }
 
-    return $#purged_users + 1;
+    # Look for unused entries.
+    my @purged_users;
+    my $sth;
+    unless (
+        $sth = SDM::do_prepared_query(
+            q{SELECT email_user
+              FROM user_table
+              WHERE last_active_date_user IS NOT NULL AND
+                    last_active_date_user < ?},
+            $time
+        )
+        ) {
+        Log::do_log('err', 'Failed to get inactive users');
+        return undef;
+    }
+    @purged_users =
+        grep {$_} map { $_->[0] } @{$sth->fetchall_arrayref || []};
+    $sth->finish;
+
+    # Purge unused entries.
+    foreach my $email (@purged_users) {
+        my $user = Sympa::User->new($email);
+        next unless $user;
+
+        unless ($user->expire) {
+            Log::do_log('err', 'Failed to purge inactive user %s', $user);
+            return undef;
+        } else {
+            Log::do_log('info', 'User %s was expired', $user);
+        }
+    }
+
+    return scalar @purged_users;
 }
 
 ## Subroutine which remove bounced message of no-more known users
