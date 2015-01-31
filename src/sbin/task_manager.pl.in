@@ -1452,60 +1452,63 @@ sub purge_orphan_bounces {
 
     Log::do_log('info', '');
 
-    ## Hash {'listname' => 'bounced address' => 1}
-    my %bounced_users;
     my $all_lists;
-
     unless ($all_lists = Sympa::List::get_lists('*')) {
         Log::do_log('notice', 'No list available');
         return 1;
     }
 
     foreach my $list (@$all_lists) {
+        # First time: loading DB entries into %bounced_users,
+        # hash {'bounced address' => 1}
+        my %bounced_users;
 
-        my $listname = $list->{'name'};
-
-        ## first time: loading DB entries into %bounced_users
         for (
             my $user_ref = $list->get_first_bouncing_list_member();
             $user_ref;
             $user_ref = $list->get_next_bouncing_list_member()
             ) {
             my $user_id = $user_ref->{'email'};
-            $bounced_users{$listname}{$user_id} = 1;
+            $bounced_users{tools::escape_chars($user_id)} = 1;
         }
 
         my $bounce_dir = $list->get_bounce_dir();
-
         unless (-d $bounce_dir) {
             Log::do_log('notice', 'No bouncing subscribers in list %s',
-                $listname);
+                $list);
             next;
         }
 
-        ## then reading Bounce directory & compare with %bounced_users
-        unless (opendir(BOUNCE, $bounce_dir)) {
+        # Then reading Bounce directory & compare with %bounced_users
+        my $dh;
+        unless (opendir $dh, $bounce_dir) {
             Log::do_log('err', 'Error while opening bounce directory %s',
                 $bounce_dir);
             return undef;
         }
 
-        ## Finally removing orphan files
-        foreach my $bounce (readdir(BOUNCE)) {
-            if ($bounce =~ /\@/) {
-                unless (defined($bounced_users{$listname}{$bounce})) {
-                    Log::do_log('info',
-                        'Removing orphan Bounce for user %s in list %s',
-                        $bounce, $listname);
-                    unless (unlink($bounce_dir . '/' . $bounce)) {
-                        Log::do_log('err', 'Error while removing file %s/%s',
-                            $bounce_dir, $bounce);
-                    }
+        # Finally removing orphan files
+        my $marshalled;
+        while ($marshalled = readdir $dh) {
+            my $metadata = tools::unmarshal_metadata($bounce_dir,
+                $marshalled, qr/\A([^\s\@]+\@[\w\.\-*]+?)(?:_(\w+))?\z/,
+                [qw(recipient envid)]);
+            next unless $metadata;
+            # Skip <email>_<envid> which is used by tracking feature.
+            next if defined $metadata->{envid};
+
+            unless ($bounced_users{$marshalled}) {
+                Log::do_log('info',
+                    'Removing orphan Bounce for user %s in list %s',
+                    $marshalled, $list);
+                unless (unlink($bounce_dir . '/' . $marshalled)) {
+                    Log::do_log('err', 'Error while removing file %s/%s',
+                        $bounce_dir, $marshalled);
                 }
             }
         }
 
-        closedir BOUNCE;
+        closedir $dh;
     }
     return 1;
 }
