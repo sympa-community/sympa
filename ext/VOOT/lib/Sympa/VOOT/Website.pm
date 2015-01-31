@@ -221,7 +221,8 @@ sub doAcceptVootGroup(%)
           };
     }
 
-    $list->defaults(include_voot_group => undef); # No save otherwise ...
+    # No save otherwise ...
+    $list->{'admin'}{'defaults'}{'include_voot_group'} = undef;
     $list->includes(voot_group => [values %groups]);
 
     my $action = $param->{action};

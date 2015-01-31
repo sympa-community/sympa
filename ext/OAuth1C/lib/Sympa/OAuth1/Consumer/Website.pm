@@ -6,7 +6,7 @@ use base 'Sympa::OAuth1::Consumer';
 
 use Sympa::Plugin::Util qw/plugin/;
 
-use Auth;
+use Sympa::Auth;
 
 my @url_commands =
   ( 
@@ -64,7 +64,7 @@ sub startAuth(%)
 {   my ($self, $param, $session, $come_back) = @_;
 
     my $ip       = $param->{session}{remote_addr} || 'mail';
-    my $ticket   = Auth::create_one_time_ticket($session->{user}
+    my $ticket   = Sympa::Auth::create_one_time_ticket($session->{user}
       , $param->{session}{robot}, $come_back, $ip);
 
     join '/', "$param->{base_url}$param->{path_cgi}"

@@ -221,7 +221,7 @@ sub registerListSource($)
         }
     }
 
-    List->registerPlugin($self);
+    Sympa::List->registerPlugin($self);
 }
 
 

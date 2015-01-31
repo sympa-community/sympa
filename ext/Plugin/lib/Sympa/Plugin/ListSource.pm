@@ -7,7 +7,7 @@ use Sympa::Plugin::Util qw/:functions/;
 
 # From Sympa core
 # be sure they are loaded before me!
-use Datasource          ();
+use Sympa::Datasource          ();
 
 =head1 NAME
 
@@ -73,7 +73,7 @@ sub isAllowedToSync() { shift->{SPL_sync} }
 
 =cut
 
-sub getSourceId($)    { Datasource::_get_datasource_id($_[1]) }
+sub getSourceId($)    { Sympa::Datasource::_get_datasource_id($_[1]) }
 
 =head3 $obj->getListMembers(OPTIONS)
 

@@ -19,7 +19,7 @@ our %EXPORT_TAGS =
   , functions => [@obj, @log]
   );
 
-use report;
+use Sympa::Report;
 
 =head1 NAME
 
@@ -85,8 +85,8 @@ The object returned offers the following methods:
 
 =head3 $db->do(DBH, QUERY, BINDS)
 
-In "core" named SDM::do_query(), but here with bindings, to remove the need
-for SDM::quote().
+In "core" named do_query(), but here with bindings, to remove the need for
+quote().
 
 =cut
 
@@ -94,7 +94,8 @@ for SDM::quote().
 
    sub prepared($$@)
    {   my $db = shift;
-       SDM::do_prepared_query(@_);
+       my $sdm = Sympa::DatabaseManager->instance;
+       $sdm->do_prepared_query(@_);
    }
 
    sub do($$@)               # I want automatic quoting
@@ -113,22 +114,22 @@ sub default_db() { $default_db || (bless {}, 'SPU_db') }
 
 =head3 $reporter->rejectToWeb(@options);
 
-OO wrapper around C<eport::reject_report_web()>
+OO wrapper around C<Sympa::Report::reject_report_web()>
 
 =head3 $reporter->noticeToWeb(@options);
 
-OO wrapper around C<eport::notice_report_web()>
+OO wrapper around C<Sympa::Report::notice_report_web()>
 
 =head3 $reporter->rejectPerlEmail(@options);
 
-OO wrapper around C<eport::reject_report_msg()>
+OO wrapper around C<Sympa::Report::reject_report_msg()>
 
 =cut
 
 {  package SPU_report;
-   sub rejectToWeb(@)    { my $self = shift; report::reject_report_web(@_) }
-   sub noticeToWeb(@)    { my $self = shift; report::notice_report_web(@_) }
-   sub rejectPerEmail(@) { my $self = shift; report::reject_report_msg(@_) }
+   sub rejectToWeb(@)    { my $self = shift; Sympa::Report::reject_report_web(@_) }
+   sub noticeToWeb(@)    { my $self = shift; Sympa::Report::notice_report_web(@_) }
+   sub rejectPerEmail(@) { my $self = shift; Sympa::Report::reject_report_msg(@_) }
 }
 
 my $report;

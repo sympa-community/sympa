@@ -10,7 +10,7 @@ use JSON           qw/decode_json/;
 use List::Util     qw/first/;
 
 # Sympa modules
-use Site;
+use tools;
 use Sympa::Plugin::Util   qw/:log reporter/;
 use Sympa::VOOT::Consumer ();
 
@@ -86,7 +86,7 @@ sub init($)
     $args->{website}     ||= 'Sympa::VOOT::Website';
     $self->SUPER::init($args);
 
-    my $config = $args->{config} || Site->get_etc_filename('voot.conf');
+    my $config = $args->{config} || tools::search_fullpath('*', 'voot.conf');
 
     if(ref $config eq 'HASH')
     {   $self->{SV_config}    = $config;
@@ -309,12 +309,12 @@ sub reportListError($$)
 
     reporter->rejectToWeb
       ( user => 'sync_include_voot_failed.tt2', $conf
-      , 'sync_include', $list->domain, $conf->{user}, $list->name
+      , 'sync_include', $list->{'domain'}, $conf->{user}, $list->{'name'}
       );
 
     reporter->rejectPerEmail
       ( plugin => 'message_report_voot_failed.tt2', $conf->{user}
-      , $conf, $list->robot, '', $list->name
+      , $conf, $list->{'domain'}, '', $list->{'name'}
       );
 
     1;

@@ -291,15 +291,15 @@ sub getGroups {
 	
 	my @entries = ();
 	
-	#foreach my $list (&List::get_which($self->{'user'}, $self->{'robot'}, 'owner')) {
+	#foreach my $list (Sympa::List::get_which($self->{'user'}, $self->{'robot'}, 'owner')) {
 	#	push(@entries, $self->_list_to_group($list, 'admin'));
 	#}
 	
-	#foreach my $list (&List::get_which($self->{'user'}, $self->{'robot'}, 'editor')) {
+	#foreach my $list (Sympa::List::get_which($self->{'user'}, $self->{'robot'}, 'editor')) {
 	#	push(@entries, $self->_list_to_group($list, '???'));
 	#}
 	
-	foreach my $list (&List::get_which($self->{'user'}, $self->{'robot'}, 'member')) {
+	foreach my $list (Sympa::List::get_which($self->{'user'}, $self->{'robot'}, 'member')) {
 		push(@entries, $self->_list_to_group($list, 'member'));
 	}
 	
@@ -312,8 +312,8 @@ sub _list_to_group {
 	my $role = shift;
 	
 	return {
-		id => $list->name,
-		title => $list->subject,
+		id => $list->{'name'},
+		title => $list->{'admin'}{'subject'},
 		description => $list->get_info(),
 		voot_membership_role => $role
 	};
@@ -363,7 +363,7 @@ sub getGroupMembers {
 	
 	my @entries = ();
 	
-	my $list = new List($param{'group'}, $self->{'robot'});
+	my $list = Sympa::List->new($param{'group'}, $self->{'robot'});
 	if(defined $list) {
 		my $r = Scenario::request_action($list, 'review', 'md5',
 			{'sender' => $self->{'user'}});
