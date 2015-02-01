@@ -34,7 +34,9 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 use Getopt::Long;
+use IO::Scalar;
 use Mail::Address;
+use MIME::Head;
 use Pod::Usage;
 use POSIX qw();
 
@@ -115,8 +117,6 @@ unless (Conf::load()) {
         "Unable to load sympa configuration, file %s has errors.\n",
         Conf::get_sympa_conf();
 }
-
-##unshift @INC, $Conf::Conf{'wws_path'};
 
 ## Check databse connectivity
 unless (SDM::check_db_connect()) {
@@ -434,20 +434,47 @@ while (!$end) {
                 my $eff_type = $p->effective_type || '';
 
                 if ($eff_type eq 'message/delivery-status') {
-                    my @report = split(/\n/, $p->bodyhandle->as_string());
-                    foreach my $line (@report) {
-                        $line = lc($line);
+                    next unless $p->bodyhandle;
+
+                    my @fields = grep {$_} map {
+                        my $str = $_ . "\n\n";
+                        MIME::Head->read(IO::Scalar->new(\$str));
+                        } split /(?:\A|\r\n|\n)[\r\n]+/,
+                        $p->bodyhandle->as_string;
+                    next unless @fields;
+
+                    # Per-message fields.
+
+                    #XXX $distribution_id is set using VERP nothing else.
+                    # if ($fields[0]->get('Original-Envelope-Id')) {
+                    #     $distribution_id =
+                    #         $fields[0]->get('Original-Envelope-Id', 0);
+                    #     chomp $distribution_id;
+                    #     Log::do_log('debug2',
+                    #         "Original Envelope ID Detected, value: %s",
+                    #         $distribution_id);
+                    # }
+                    if ($fields[0]->get('Arrival-Date')) {
+                        $arrival_date = $fields[0]->get('Arrival-Date', 0);
+                        chomp $arrival_date;
+                    }
+
+                    # Per-recipient fields.
+
+                    foreach my $fields (@fields) {
                         # Action Field MUST be present in a DSN report.
                         # Possible values: failed, delayed, delivered,
                         # relayed, expanded (RFC3464).
-                        if ($line =~ /action\:\s*(.+)/i) {
-                            $dsn_status = $1;
+                        if ($fields->get('Action')) {
+                            $dsn_status = lc($fields->get('Action', 0));
                             chomp $dsn_status;
                         }
 
-                        if (   ($line =~ /final\-recipient\:\s*(.+)\s*$/i)
-                            && (not $final_rcpt)) {
-                            $final_rcpt = $1;
+                        #FIXME: Only the first occurrence is recognized.
+                        if ($fields->get('Final-Recipient')
+                            and not $final_rcpt) {
+                            $final_rcpt =
+                                lc($fields->get('Final-Recipient', 0));
                             chomp $final_rcpt;
                             my @rcpt;
                             if ($final_rcpt =~ /.*;.*/) {
@@ -461,29 +488,15 @@ while (!$end) {
                             } else {
                                 ($final_rcpt) = $final_rcpt =~ /(\S+\@\S+)/;
                             }
-                        }
-                        # # $distribution_id is set using VERP nothing else.
-                        # if (    $line =~ /original\-envelope\-id\:\s*(.+)/i
-                        #     and not $distribution_id) {
-                        #     $distribution_id = $1;
-                        #     chomp $distribution_id;
-                        #     Log::do_log('debug2',
-                        #         "Original Envelope-id Detected, value: %s",
-                        #         $distribution_id);
-                        # }
-                        if ($line =~ /arrival\-date\:\s*(.+)/i) {
-                            $arrival_date = $1;
-                            chomp $arrival_date;
+                            if ($final_rcpt =~ /<(\S+\@\S+)>/) {
+                                ($final_rcpt) = $final_rcpt =~ /<(\S+\@\S+)>/;
+                            }
                         }
                     }
                 }
             }
 
             $original_rcpt = $who;
-
-            if ($final_rcpt =~ /<(\S+\@\S+)>/) {
-                ($final_rcpt) = $final_rcpt =~ /<(\S+\@\S+)>/;
-            }
 
             Log::do_log(
                 'debug2',
@@ -570,22 +583,31 @@ while (!$end) {
                 my $eff_type = $p->effective_type || '';
 
                 if ($eff_type eq 'message/disposition-notification') {
-                    my @report = split(/\n/, $p->bodyhandle->as_string());
-                    foreach my $line (@report) {
-                        $line = lc($line);
+                    next unless $p->bodyhandle;
+
+                    my @fields = grep {$_} map {
+                        my $str = $_ . "\n\n";
+                        MIME::Head->read(IO::Scalar->new(\$str));
+                        } split /(?:\A|\r\n|\n)[\r\n]+/,
+                        $p->bodyhandle->as_string;
+                    next unless @fields;
+
+                    foreach my $fields (@fields) {
                         # Disposition Field MUST be present in a MDN report.
                         # Possible values: displayed, deleted (RFC3798).
-                        if ($line =~ /disposition\:\s*(.+)\s*\;\s*(.+)/i) {
-                            $mdn_status = $2;
+                        if ($fields->get('Disposition')) {
+                            $mdn_status = lc($fields->get('Disposition', 0));
+                            chomp $mdn_status;
                             if ($mdn_status =~ /.*\/.*/) {
                                 my @results = split /\/\s*/, $mdn_status;
-                                $mdn_status = $results[$0];
-                                chomp $mdn_status;
+                                $mdn_status = $results[0];
                             }
+                            $mdn_status = lc $mdn_status;
                         }
-                        if (   ($line =~ /final\-recipient\:\s*(.+)\s*$/i)
-                            && (not $final_rcpt)) {
-                            $final_rcpt = $1;
+                        if ($fields->get('Final-Recipient')
+                            and not $final_rcpt) {
+                            $final_rcpt =
+                                lc($fields->get('Final-Recipient', 0));
                             chomp $final_rcpt;
                             my @rcpt;
                             if ($final_rcpt =~ /.*;.*/) {
@@ -599,17 +621,14 @@ while (!$end) {
                             } else {
                                 ($final_rcpt) = $final_rcpt =~ /(\S+\@\S+)/;
                             }
+                            if ($final_rcpt =~ /<(\S+\@\S+)>/) {
+                                ($final_rcpt) = $final_rcpt =~ /<(\S+\@\S+)>/;
+                            }
                         }
                     }
                 }
             }
 
-            if ($original_rcpt =~ /<(\S+\@\S+)>/) {
-                ($original_rcpt) = $original_rcpt =~ /<(\S+\@\S+)>/;
-            }
-            if ($final_rcpt =~ /<(\S+\@\S+)>/) {
-                ($final_rcpt) = $final_rcpt =~ /<(\S+\@\S+)>/;
-            }
             # let's use VERP
             $original_rcpt = $who;
 
@@ -682,38 +701,52 @@ while (!$end) {
                 my $eff_type = $p->effective_type || '';
 
                 if ($eff_type eq 'message/feedback-report') {
-                    my @report = split(/\n/, $p->bodyhandle->as_string());
-                    foreach my $line (@report) {
-                        $feedback_type = 'abuse'
-                            if ($line =~ /Feedback\-Type\:\s*abuse/i);
-                        if ($line =~ /Feedback\-Type\:\s*(.*)/i) {
-                            $feedback_type = $1;
+                    next unless $p->bodyhandle;
+
+                    my @fields = grep {$_} map {
+                        my $str = $_ . "\n\n";
+                        MIME::Head->read(IO::Scalar->new(\$str));
+                        } split /(?:\A|\r\n|\n)[\r\n]+/,
+                        $p->bodyhandle->as_string;
+                    next unless @fields;
+
+                    foreach my $fields (@fields) {
+                        if ($fields->get('Feedback-Type')) {
+                            $feedback_type =
+                                lc($fields->get('Feedback-Type', 0));
+                            chomp $feedback_type;
+                            $feedback_type = 'abuse'
+                                if $feedback_type =~ /\A\s*abuse/i;
                         }
 
-                        if ($line =~ /User\-Agent\:\s*(.*)/i) {
-                            $user_agent = $1;
+                        if ($fields->get('User-Agent')) {
+                            $user_agent = $fields->get('User-Agent', 0);
+                            chomp $user_agent;
                         }
-                        if ($line =~ /Version\:\s*(.*)/i) {
-                            $version = $1;
+                        if ($fields->get('Version')) {
+                            $version = fields->get('Version', 0);
+                            chomp $version;
                         }
                         my $email_regexp = Sympa::Regexps::email();
-                        if ($line =~
-                            /Original\-Rcpt\-To\:\s*($email_regexp)\s*$/i) {
-                            $original_rcpt = $1;
+                        if (    $fields->get('Original-Rcpt-To')
+                            and $fields->get('Original-Rcpt-To', 0) =~
+                            /\A\s*$email_regexp\s*\z/i) {
+                            $original_rcpt =
+                                lc($fields->get('Original-Rcpt-To', 0));
                             chomp $original_rcpt;
                         }
                     }
                 } elsif ($eff_type eq 'message/rfc822') {
-                    # Log::do_log
-                    # ('notice',"xxx processing  Email Feedback Report : message/rfc822 part");
+                    # Log::do_log('notice',
+                    #     "xxx processing  Email Feedback Report : message/rfc822 part");
                     my @subparts = $p->parts();
                     foreach my $subp (@subparts) {
                         # Log::do_log ('notice',"xxx subparts : subps");
                         my $subph = $subp->head;
                         $listname = $subph->get('X-Loop');
                     }
-                    # Log::do_log
-                    # ('notice',"xxx processing  Email Feedback Report : extract listname $listname");
+                    # Log::do_log('notice',
+                    #     "xxx processing  Email Feedback Report : extract listname $listname");
                 }
             }
             my $forward;
@@ -723,12 +756,10 @@ while (!$end) {
             ## (fraud, miscategorized, not-spam, virus or other)
             ## but we don't take action if we meet them yet. This is to be
             ## done, if relevant.
-            if ((   $feedback_type =~
-                    /(abuse|opt-out|opt-out-list|fraud|miscategorized|not-spam|virus|other)/i
-                )
-                && (defined $version)
-                && (defined $user_agent)
-                ) {
+            if ($feedback_type =~
+                /(abuse|opt-out|opt-out-list|fraud|miscategorized|not-spam|virus|other)/i
+                and defined $version
+                and defined $user_agent) {
 
                 Log::do_log('debug',
                     "Email Feedback Report: $listname feedback-type: $feedback_type"
@@ -738,8 +769,8 @@ while (!$end) {
                         $original_rcpt);
                     my @lists;
 
-                    if (   ($feedback_type =~ /(opt-out-list|abuse)/i)
-                        && (defined $listname)) {
+                    if ($feedback_type =~ /(opt-out-list|abuse)/i
+                        and defined $listname) {
                         $listname = lc($listname);
                         chomp $listname;
                         $listname =~ /(.*)\@(.*)/;
@@ -759,7 +790,7 @@ while (!$end) {
                         }
                         push @lists, $list;
                     } elsif ($feedback_type =~ /opt-out/
-                        && (defined $original_rcpt)) {
+                        and defined $original_rcpt) {
                         @lists =
                             Sympa::List::get_which($original_rcpt, $robot,
                             'member');
@@ -917,10 +948,8 @@ while (!$end) {
                 next;
             }
             next
-                unless
-                update_subscriber_bounce_history(
-                    $list, $rcpt, $bouncefor, canonicalize_status($status)
-                );
+                unless update_subscriber_bounce_history($list, $rcpt,
+                $bouncefor, canonicalize_status($status));
         }
 
         ## No address found in the bounce itself
