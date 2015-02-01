@@ -33,15 +33,14 @@ use MIME::Parser;
 
 ## RFC1891 compliance check
 sub rfc1891 {
-    my ($fic, $result, $from) = @_;
+    my $message = shift;
+    my $result  = shift;
+    my $from    = shift;
 
     local $RS = "\n";
 
     my $nbrcpt;
-    my $parser = MIME::Parser->new;
-    $parser->output_to_core(1);
-
-    my $entity = $parser->read($fic);
+    my $entity = $message->as_entity;
 
     unless ($entity) {
         return undef;
@@ -142,7 +141,13 @@ sub corrige {
 ## //    3 : reference d'un tableau pour retourner des stats
 ## //    4 : reference d'un tableau pour renvoyer le bounce
 sub anabounce {
-    my ($fic, $result, $from) = @_;
+    my $message = shift;
+    my $result  = shift;
+    my $from    = shift;
+
+    my $msg_string = $message->as_string;
+    my $fic        = IO::Scalar->new(\$msg_string);
+
     my $entete = 1;
     my $type;
     my %info;

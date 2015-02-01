@@ -35,7 +35,6 @@ use warnings;
 use English qw(-no_match_vars);
 use Getopt::Long;
 use Mail::Address;
-use MIME::Parser;
 use Pod::Usage;
 use POSIX qw();
 
@@ -45,8 +44,10 @@ use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::List;
+use Sympa::LockedFile;
 use Log;
 use Sympa::Mailer;
+use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Scenario;
 use SDM;
@@ -203,7 +204,7 @@ $SIG{'TERM'} = 'sigterm';
 $SIG{'INT'}  = \&sigterm;
 my $end = 0;
 
-my $queue = $Conf::Conf{'queuebounce'};
+my $spool = $Conf::Conf{'queuebounce'};
 
 Log::do_log('debug', 'Starting infinite loop');
 ## infinite loop scanning the queue (unless a sig TERM is received
@@ -218,86 +219,65 @@ while (!$end) {
     # Process grouped notifications
     Sympa::Alarm->instance->flush;
 
-    unless (opendir DIR, $queue) {
-        die sprintf 'Can\'t open dir %s: %s', $queue, $!;
-        ## No return.
+    my $dh;
+    unless (opendir $dh, $spool) {
+        die sprintf 'Can\'t open dir %s: %s', $spool, $ERRNO;
+        # No return.
     }
+    my @qfile =
+        sort
+        grep { !/,lock/ and !/\A(?:\.|T\.|BAD-)/ and -f ($spool . '/' . $_) }
+        readdir $dh;
+    closedir $dh;
 
-    my @files = (sort grep(!/^(\.|T\.|BAD\-)/, readdir DIR));
-    closedir DIR;
-
-    foreach my $file (@files) {
-
+    foreach my $filename (@qfile) {
         last if $end;
-        next unless (-f "$queue/$file");
 
-        next if $file =~ /,lock/;    # Skip lock.
+        my $lock_fh =
+            Sympa::LockedFile->new($spool . '/' . $filename, -1, '+<');
+        next unless $lock_fh;
 
-        unless ($file =~ /^(\S+)\.\d+\.\d+$/) {
-            my @s = stat("$queue/$file");
-            if (POSIX::S_ISREG($s[2])) {
-                Log::do_log('notice',
-                    'Ignoring file %s/%s because unknown format',
-                    $queue, $file);
-                ignore_bounce(
-                    {   'file'  => $file,
-                        'queue' => $queue,
-                    }
-                );
-                unlink("$queue/$file");
-            }
+        my $metadata = tools::unmarshal_metadata(
+            $spool, $filename,
+            qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
+            [qw(localpart domainpart date)]
+        );
+        next unless $metadata;
+
+        my $msg_string = do { local $RS; <$lock_fh> };
+        my $message = Sympa::Message->new($msg_string, %$metadata);
+        unless ($message) {
+            Log::do_log('notice', 'Ignoring malformed message %s', $message);
+            quarantine($lock_fh);
             next;
         }
 
-        if ($file =~ /^(\S+)\.\d+\.\d+$/) {
-            my ($listname, $robot) = split(/\@/, $1);
-            $robot ||= Sympa::List::search_list_among_robots($listname);
-        }
-
-        my ($listname, $robot) = split(/\@/, $1);
-        $robot ||= Sympa::List::search_list_among_robots($listname);
-
-        if (-z "$queue/$file") {
-            Log::do_log('notice', 'Ignoring file %s/%s because empty file',
-                $queue, $file);
-            ignore_bounce(
-                {   'file'  => $file,
-                    'robot' => $robot,
-                    'queue' => $queue,
-                }
-            );
-            unlink("$queue/$file");
-        }
-
-        unless (open BOUNCE, "$queue/$file") {
-            Log::do_log('notice', 'Could not open %s/%s: %s',
-                $queue, $file, $!);
-            ignore_bounce(
-                {   'file'  => $file,
-                    'robot' => $robot,
-                    'queue' => $queue,
-                }
-            );
+        unless (defined $message->{'message_id'}
+            and length $message->{'message_id'}) {
+            Log::do_log('err', 'Message %s has no message ID', $message);
+            quarantine($lock_fh);
             next;
         }
-        my $parser = MIME::Parser->new;
-        $parser->output_to_core(1);
-        my $entity = $parser->read(\*BOUNCE);
+
+        my ($listname, $robot);
+        if (ref $message->{context} eq 'Sympa::List') {
+            $listname = $message->{context}->{'name'};
+            $robot    = $message->{context}->{'domain'};
+        }
+
+        my $entity = $message->as_entity;
         my $head   = $entity->head;
 
         ## Some MTAs decorate To: field of DSN as "mailbox <address>".
         ## Pick address only.
         my $to;
-        my $to_header = $head->get('to', 0);
+        my $to_header = $head->get('To', 0);
         if ($to_header) {
             my @to = Mail::Address->parse($to_header);
             if (@to and $to[0] and $to[0]->address) {
                 $to = lc($to[0]->address);
             }
         }
-
-        my $notification_as_string = $entity->as_string;
-        close BOUNCE;
 
         my $who;
         my $distribution_id;
@@ -343,17 +323,14 @@ while (!$end) {
                 my $list = Sympa::List->new($listname, $robot);
                 unless ($list) {
                     Log::do_log('notice',
-                        'Skipping bouncefile %s for unknown list %s@%s',
-                        $file, $listname, $robot);
-                    ignore_bounce(
-                        {   'file'  => $file,
-                            'robot' => $robot,
-                            'queue' => $queue,
-                        }
-                    );
-                    unlink("$queue/$file");
+                        'Skipping bounce %s for unknown list %s@%s',
+                        $message, $listname, $robot);
+                    quarantine($lock_fh);
                     next;
                 }
+                # Overwrite context.
+                $message->{context} = $list;
+
                 my $result = Sympa::Scenario::request_action(
                     $list, 'del', 'smtp',
                     {   'sender' => $Conf::Conf{'listmasters'}[0],
@@ -404,36 +381,26 @@ while (!$end) {
                             );
                         }
                     }
+                    remove($lock_fh);
                 } else {
                     Log::do_log('notice',
                         "Unable to remove $who from $listname (welcome message bounced but del is closed)"
                     );
-                    ignore_bounce(
-                        {   'file'  => $file,
-                            'robot' => $robot,
-                            'queue' => $queue,
-                        }
-                    );
+                    quarantine($lock_fh);
                 }
-                unlink("$queue/$file");
                 next;
             }    # close VERP + remind or welcome block
         }    # close VERP in use block
 
         my $list = Sympa::List->new($listname, $robot);
         unless ($list) {
-            Log::do_log('err',
-                'Skipping bouncefile %s for unknown list %s@%s',
-                $file, $listname, $robot);
-            ignore_bounce(
-                {   'file'  => $file,
-                    'robot' => $robot,
-                    'queue' => $queue,
-                }
-            );
-            unlink("$queue/$file");
+            Log::do_log('err', 'Skipping bounce %s for unknown list %s@%s',
+                $message, $listname, $robot);
+            quarantine($lock_fh);
             next;
         }
+        # Overwrite context.
+        $message->{context} = $list;
 
         # ---
         # If the DSN notification is correct and the tracking mode is enable,
@@ -460,27 +427,19 @@ while (!$end) {
             my $user_agent;
             my $version;
             my $dsn_status;
-            my $msg_id;
-            my $orig_msg_id;
             my $listname;
             my $arrival_date;
 
-            $msg_id = $head->get('Message-Id');
-            chomp $msg_id;
-
-            my $date = $head->get('Date');
-
             foreach my $p (@parts) {
-                my $h       = $p->head();
-                my $content = $h->get('Content-type');
+                my $eff_type = $p->effective_type || '';
 
-                if ($content =~ /message\/delivery-status/) {
+                if ($eff_type eq 'message/delivery-status') {
                     my @report = split(/\n/, $p->bodyhandle->as_string());
                     foreach my $line (@report) {
                         $line = lc($line);
-                        # Action Field MUST be present in a DSN report,
-                        # possible values : failed, delayed, delivered,
-                        # relayed, expanded(rfc3464)
+                        # Action Field MUST be present in a DSN report.
+                        # Possible values: failed, delayed, delivered,
+                        # relayed, expanded (RFC3464).
                         if ($line =~ /action\:\s*(.+)/i) {
                             $dsn_status = $1;
                             chomp $dsn_status;
@@ -503,15 +462,15 @@ while (!$end) {
                                 ($final_rcpt) = $final_rcpt =~ /(\S+\@\S+)/;
                             }
                         }
-                        #  $distribution_id is set using VERP nothing else.
-                        # if ( ($line =~ /original\-envelope\-id\:\s*(.+)/i)
-                        # && (!$distribution_id) ) {
-                        #    $distribution_id = $1;
-                        #    chomp $distribution_id;
-                        #    Log::do_log
-                        #    ('debug2',"1 - Original Envelope-id Detected, value : %s",
-                        #    $distribution_id);
-                        #}
+                        # # $distribution_id is set using VERP nothing else.
+                        # if (    $line =~ /original\-envelope\-id\:\s*(.+)/i
+                        #     and not $distribution_id) {
+                        #     $distribution_id = $1;
+                        #     chomp $distribution_id;
+                        #     Log::do_log('debug2',
+                        #         "Original Envelope-id Detected, value: %s",
+                        #         $distribution_id);
+                        # }
                         if ($line =~ /arrival\-date\:\s*(.+)/i) {
                             $arrival_date = $1;
                             chomp $arrival_date;
@@ -525,47 +484,40 @@ while (!$end) {
             if ($final_rcpt =~ /<(\S+\@\S+)>/) {
                 ($final_rcpt) = $final_rcpt =~ /<(\S+\@\S+)>/;
             }
-            if ($msg_id =~ /<(\S+\@\S+)>/) {
-                ($msg_id) = $msg_id =~ /<(\S+\@\S+)>/;
-            }
 
-            Log::do_log('debug2', 'FINAL DSN Action Detected, value: %s',
-                $dsn_status);
-            Log::do_log('debug2', 'FINAL DSN Recipient Detected, value: %s',
-                $original_rcpt);
-            Log::do_log('debug2',
-                'FINAL DSN final Recipient Detected, value: %s', $final_rcpt);
-            Log::do_log('debug2', 'FINAL DSN message ID Detected, value: %s',
-                $msg_id);
-            Log::do_log('debug2',
-                'FINAL DSN Arrival Date Detected, value: %s',
-                $arrival_date);
+            Log::do_log(
+                'debug2',
+                '%s: DSN detected: dsn_status=%s; original_rcpt=%s; final_rcpt=%s; arrival_date=%s',
+                $message,
+                $dsn_status,
+                $original_rcpt,
+                $final_rcpt,
+                $arrival_date
+            );
 
             unless ($dsn_status =~ /failed/) {
                 # DSN with status "failed" should not be removed because they
                 # must be processed for classical bounce managment (not only
                 # for tracking feature)
-                Log::do_log('notice', 'Non failed dsn status %s',
+                Log::do_log('notice', 'Non failed DSN status %s',
                     $dsn_status);
                 unless ($distribution_id) {
-                    Log::do_log('err',
-                        'Id not found in to address %s, will ignore', $to);
-                    unlink("$queue/$file");
+                    Log::do_log(
+                        'err',
+                        'Envelope ID not found in to address %s of DSN %s, will ignore',
+                        $to,
+                        $message
+                    );
+                    remove($lock_fh);
                     next;
                 }
                 unless ($original_rcpt) {
                     Log::do_log(
                         'err',
-                        'Original recipient not found in dsn: %s, will ignore',
-                        $msg_id
+                        'Original recipient not found in DSN %s, will ignore',
+                        $message
                     );
-                    unlink("$queue/$file");
-                    next;
-                }
-                unless ($msg_id) {
-                    Log::do_log('err',
-                        'Message_id not found in dsn will ignore');
-                    unlink("$queue/$file");
+                    remove($lock_fh);
                     next;
                 }
             }
@@ -573,7 +525,7 @@ while (!$end) {
             my $tracking = Sympa::Tracking->new($list);
 
             if ($tracking->store(
-                    $queue . '/' . $file, $who,
+                    $message, $who,
                     envid        => $distribution_id,
                     type         => 'DSN',
                     status       => $dsn_status,
@@ -586,12 +538,7 @@ while (!$end) {
                     'Not able to fill database with notification data');
             }
             unless ($dsn_status =~ /failed/) {
-                if (unlink("$queue/$file")) {
-                    Log::do_log('debug2', "DSN Correctly removed...");
-                } else {
-                    Log::do_log('err', 'Could not unlink %s/%s',
-                        $queue, $file);
-                }
+                remove($lock_fh);
                 next;
             }
         }
@@ -613,27 +560,21 @@ while (!$end) {
             my $user_agent;
             my $version;
             my $dsn_status;
-            my $msg_id;
-            my $orig_msg_id;
             my $listname;
             my $date;
             my $mdn_status;
 
-            $msg_id = $head->get('Message-Id');
-            chomp $msg_id;
-
             $date = $head->get('Date');
 
             foreach my $p (@parts) {
-                my $h       = $p->head();
-                my $content = $h->get('Content-type');
+                my $eff_type = $p->effective_type || '';
 
-                if ($content =~ /message\/disposition-notification/) {
+                if ($eff_type eq 'message/disposition-notification') {
                     my @report = split(/\n/, $p->bodyhandle->as_string());
                     foreach my $line (@report) {
                         $line = lc($line);
-# Disposition Field MUST be present in a MDN report, possible values :
-# displayed, deleted(rfc3798)
+                        # Disposition Field MUST be present in a MDN report.
+                        # Possible values: displayed, deleted (RFC3798).
                         if ($line =~ /disposition\:\s*(.+)\s*\;\s*(.+)/i) {
                             $mdn_status = $2;
                             if ($mdn_status =~ /.*\/.*/) {
@@ -669,43 +610,39 @@ while (!$end) {
             if ($final_rcpt =~ /<(\S+\@\S+)>/) {
                 ($final_rcpt) = $final_rcpt =~ /<(\S+\@\S+)>/;
             }
-            if ($msg_id =~ /<(\S+\@\S+)>/) {
-                ($msg_id) = $msg_id =~ /<(\S+\@\S+)>/;
-            }
             # let's use VERP
             $original_rcpt = $who;
 
-            Log::do_log('debug2', 'FINAL MDN Disposition Detected, value: %s',
-                $mdn_status);
-            Log::do_log('debug2', 'FINAL MDN Recipient Detected, value: %s',
-                $original_rcpt);
-            Log::do_log('debug2', 'FINAL MDN message ID Detected, value: %s',
-                $msg_id);
-            Log::do_log('debug2', 'FINAL MDN Date Detected, value: %s',
-                $date);
+            Log::do_log(
+                'debug2',
+                '%s: MDN detected: mdn_status=%s; original_rcpt=%s; date=%s',
+                $message,
+                $mdn_status,
+                $original_rcpt,
+                $date
+            );
 
             unless ($distribution_id) {
-                Log::do_log('err',
-                    'Id not found in to address %s, will ignore', $to);
-                unlink("$queue/$file");
+                Log::do_log(
+                    'err',
+                    'Envelope ID not found in to address %s of MDN %s, will ignore',
+                    $to,
+                    $message
+                );
+                remove($lock_fh);
                 next;
             }
             unless ($original_rcpt) {
                 Log::do_log('err',
-                    'Original recipient not found in dsn: %s, will ignore',
-                    $msg_id);
-                unlink("$queue/$file");
-                next;
-            }
-            unless ($msg_id) {
-                Log::do_log('err', 'Message_id not found in dsn will ignore');
-                unlink("$queue/$file");
+                    'Original recipient not found in MDN %s, will ignore',
+                    $message);
+                remove($lock_fh);
                 next;
             }
             unless ($mdn_status) {
                 Log::do_log('err',
-                    'Dsn status not found in dsn: %s, will ignore', $msg_id);
-                unlink("$queue/$file");
+                    'MDN status not found in MDN %s, will ignore', $message);
+                remove($lock_fh);
                 next;
             }
 
@@ -713,7 +650,7 @@ while (!$end) {
 
             unless (
                 $tracking->store(
-                    $queue . '/' . $file, $who,
+                    $message, $who,
                     envid        => $distribution_id,
                     type         => 'MDN',
                     status       => $mdn_status,
@@ -724,19 +661,14 @@ while (!$end) {
                     'Not able to fill database with notification data');
             }
             Log::do_log('notice', "MDN Correctly treated...");
-            if (unlink("$queue/$file")) {
-                Log::do_log('debug2', "MDN Correctly removed...");
-            } else {
-                Log::do_log('debug2', 'Could not unlink queue/%s', $file);
-            }
+            remove($lock_fh);
             next;
         }
 
         if (    $eff_type eq 'multipart/report'
             and $report_type eq 'feedback-report') {
-            # this case a report Email Feedback Reports
-            # http://www.shaftek.org/publications/drafts/abuse-report/draft-shafranovich-feedback-report-01.txt
-            # mainly use by AOL
+            # This case a report Email Feedback Reports (RFC5965) mainly used
+            # by AOL.
             Log::do_log('notice', 'Processing Email Feedback Report');
             my @parts = $entity->parts();
             my $original_rcpt;
@@ -747,10 +679,9 @@ while (!$end) {
             my $robot;
 
             foreach my $p (@parts) {
-                my $h       = $p->head();
-                my $content = $h->get('Content-type');
-                next if ($content =~ /text\/plain/i);
-                if ($content =~ /message\/feedback-report/) {
+                my $eff_type = $p->effective_type || '';
+
+                if ($eff_type eq 'message/feedback-report') {
                     my @report = split(/\n/, $p->bodyhandle->as_string());
                     foreach my $line (@report) {
                         $feedback_type = 'abuse'
@@ -772,7 +703,7 @@ while (!$end) {
                             chomp $original_rcpt;
                         }
                     }
-                } elsif ($content =~ /message\/rfc822/) {
+                } elsif ($eff_type eq 'message/rfc822') {
                     # Log::do_log
                     # ('notice',"xxx processing  Email Feedback Report : message/rfc822 part");
                     my @subparts = $p->parts();
@@ -818,18 +749,12 @@ while (!$end) {
                         unless ($list) {
                             Log::do_log(
                                 'err',
-                                'Skipping Feedback Report for unknown list %s@%s',
-                                $file,
+                                'Skipping Feedback Report %s for unknown list %s@%s',
+                                $message,
                                 $listname,
                                 $robot
                             );
-                            ignore_bounce(
-                                {   'file'  => $file,
-                                    'robot' => $robot,
-                                    'queue' => $queue,
-                                }
-                            );
-                            unlink("$queue/$file");
+                            quarantine($lock_fh);
                             next;
                         }
                         push @lists, $list;
@@ -842,17 +767,12 @@ while (!$end) {
                         Log::do_log(
                             'notice',
                             'Ignoring Feedback Report %s: Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',
-                            $file,
+                            $message,
                             $feedback_type,
                             $original_rcpt,
                             $listname
                         );
-                        ignore_bounce(
-                            {   'file'  => $file,
-                                'robot' => $robot,
-                                'queue' => $queue,
-                            }
-                        );
+                        quarantine($lock_fh);
                     }
                     foreach my $list (@lists) {
                         my $result =
@@ -885,7 +805,7 @@ while (!$end) {
                                 Log::do_log(
                                     'err',
                                     'Ignore Feedback Report %s for list %s: user %s not subscribed',
-                                    $file,
+                                    $message,
                                     $list,
                                     $original_rcpt
                                 );
@@ -897,7 +817,7 @@ while (!$end) {
                             Log::do_log(
                                 'err',
                                 'Ignore Feedback Report %s for list %s@%s: user %s is not allowed to unsubscribe',
-                                $file,
+                                $message,
                                 $list,
                                 $original_rcpt
                             );
@@ -907,15 +827,16 @@ while (!$end) {
                     Log::do_log(
                         'err',
                         'Ignoring Feedback Report %s: Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',
-                        $file,
+                        $message,
                         $feedback_type,
                         $listname
                     );
-                    ignore_bounce(
-                        {   'file'   => $file,
-                            'notify' => 1,
-                            'robot'  => $robot,
-                            'queue'  => $queue,
+                    quarantine($lock_fh);
+                    tools::send_notify_to_listmaster(
+                        $robot,
+                        'bounce_management_failed',
+                        {   'file' => $lock_fh->basename,
+                            'bad'  => "$spool/bad",
                             'error' =>
                                 "Unknown Original-Rcpt-To field (feedback_type:$feedback_type, listname:$listname)",
                         }
@@ -925,23 +846,24 @@ while (!$end) {
                 Log::do_log(
                     'err',
                     'Ignoring Feedback Report %s: Unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',
-                    $file,
+                    $message,
                     $feedback_type,
                     $original_rcpt,
                     $listname
                 );
-                ignore_bounce(
-                    {   'file'   => $file,
-                        'notify' => 1,
-                        'robot'  => $robot,
-                        'queue'  => $queue,
+                quarantine($lock_fh);
+                tools::send_notify_to_listmaster(
+                    $robot,
+                    'bounce_management_failed',
+                    {   'file' => $lock_fh->basename,
+                        'bad'  => "$spool/bad",
                         'error' =>
                             "Unknown format (feedback_type:$feedback_type, original_rcpt:$original_rcpt, listname:$listname)",
                     }
                 );
             }
-            if (-f "$queue/$file") {
-                unlink("$queue/$file");
+            if (-f "$spool/$filename") {
+                remove($lock_fh);
             }
             next;
         }
@@ -949,128 +871,81 @@ while (!$end) {
         # Fin section feedback report
         # else (not welcome or remind)
         $list = Sympa::List->new($listname, $robot);
-        if (!$list) {
+        unless ($list) {
             Log::do_log('err',
                 'Skipping bouncefile %s for unknown list %s@%s',
-                $file, $listname, $robot);
-            ignore_bounce(
-                {   'file'  => $file,
-                    'robot' => $robot,
-                    'queue' => $queue,
-                }
-            );
-            unlink("$queue/$file");
+                $message, $listname, $robot);
+            quarantine($lock_fh);
             next;
-        } else {
-            Log::do_log('debug', 'Processing bouncefile %s for list %s',
-                $file, $list);
+        }
+        # Overwrite context.
+        $message->{context} = $list;
 
-            unless (open BOUNCE, "$queue/$file") {
-                Log::do_log('notice', 'Could not open %s/%s: %s',
-                    $queue, $file, $!);
-                ignore_bounce(
-                    {   'file'  => $file,
-                        'robot' => $robot,
-                        'queue' => $queue,
-                    }
-                );
+        Log::do_log('debug', 'Processing bounce %s for list %s',
+            $message, $list);
+
+        my (%hash, $from);
+
+        ## RFC1891 compliance check
+        my $bounce_count = Bounce::rfc1891($message, \%hash, \$from);
+
+        unless ($bounce_count) {
+            # Analysis of bounced message
+            Bounce::anabounce($message, \%hash, \$from);
+            # Voir pour appeler une methode de parsing des dsn qui maj la
+            # bdd
+            # updatedatabase(%hash);
+        }
+
+        my $tracking = Sympa::Tracking->new($list);
+
+        my $adr_count;
+        ## Bouncing addresses
+        # Voir si pas mettre un test conditionnel sur le status code pour
+        # detecter les dsn positifs et ne pas fausser les statistiques de
+        # l'abonné.
+        # Peut être possibilité de lancer la maj des tables pour chaque
+        # recipient ici a condition d'avoir approfondi le parsing en
+        # amont.
+        while (my ($rcpt, $status) = each %hash) {
+            $adr_count++;
+            my $bouncefor = $who;
+            $bouncefor ||= $rcpt;
+
+            unless ($tracking->store($message, $bouncefor)) {
+                quarantine($lock_fh);
                 next;
             }
+            next
+                unless
+                update_subscriber_bounce_history(
+                    $list, $rcpt, $bouncefor, canonicalize_status($status)
+                );
+        }
 
-            my (%hash, $from);
-
-            ## RFC1891 compliance check
-            my $bounce_count = Bounce::rfc1891(\*BOUNCE, \%hash, \$from);
-
-            unless ($bounce_count) {
-                close BOUNCE;
-                unless (open BOUNCE, "$queue/$file") {
-                    Log::do_log('notice', 'Could not open %s/%s: %s',
-                        $queue, $file, $!);
-                    ignore_bounce(
-                        {   'file'  => $file,
-                            'robot' => $robot,
-                            'queue' => $queue,
-                        }
-                    );
-                    next;
+        ## No address found in the bounce itself
+        unless ($adr_count) {
+            if ($who) {
+                # rcpt not recognized in the bounce but VERP was used
+                # Status is undefined.
+                update_subscriber_bounce_history($list, 'unknown', $who);
+                unless ($tracking->store($message, $who)) {
+                    quarantine($lock_fh);
+                } else {
+                    remove($lock_fh);
                 }
-                ## Analysis of bounced message
-                Bounce::anabounce(\*BOUNCE, \%hash, \$from);
-                # Voir pour appeler une methode de parsing des dsn qui maj la
-                # bdd
-                # updatedatabase(%hash);
-            }
-            close BOUNCE;
-
-            my $tracking = Sympa::Tracking->new($list);
-
-            my $adr_count;
-            ## Bouncing addresses
-            # Voir si pas mettre un test conditionnel sur le status code pour
-            # detecter les dsn positifs et ne pas fausser les statistiques de
-            # l'abonné.
-            # Peut être possibilité de lancer la maj des tables pour chaque
-            # recipient ici a condition d'avoir approfondi le parsing en
-            # amont.
-            while (my ($rcpt, $status) = each %hash) {
-                $adr_count++;
-                my $bouncefor = $who;
-                $bouncefor ||= $rcpt;
-
-                unless ($tracking->store($queue . '/' . $file, $bouncefor)) {
-                    ignore_bounce({file => $file, queue => $queue});
-                    next;
-                }
-                next
-                    unless (
-                    update_subscriber_bounce_history(
-                        $list,      $rcpt,
-                        $bouncefor, canonicalize_status($status)
-                    )
-                    );
-            }
-
-            ## No address found in the bounce itself
-            unless ($adr_count) {
-
-                if ($who) {
-                    # rcpt not recognized in the bounce but VERP was used
-                    unless ($tracking->store($queue . '/' . $file, $who)) {
-                        ignore_bounce({file => $file, queue => $queue});
-                    }
-                    # status is undefined
-                    update_subscriber_bounce_history($list, 'unknown', $who);
-                } else {    # no VERP and no rcpt recognized
-                    my $escaped_from = tools::escape_chars($from);
-                    Log::do_log('info',
-                        'No address found in message from %s for list %s',
-                        $from, $list);
-                    ignore_bounce(
-                        {   'file'  => $file,
-                            'robot' => $robot,
-                            'queue' => $queue,
-                        }
-                    );
-                    next;
-                }
+            } else {    # no VERP and no rcpt recognized
+                my $escaped_from = tools::escape_chars($from);
+                Log::do_log('info',
+                    'No address found in message from %s for list %s',
+                    $from, $list);
+                quarantine($lock_fh);
+                next;
             }
         }
 
-        unless (unlink("$queue/$file")) {
-            Log::do_log('err',
-                "Could not remove $queue/$file ; $0 might NOT be running with the right UID or file was not created with the right UID"
-            );
-            ignore_bounce(
-                {   'file'   => $file,
-                    'notify' => 1,
-                    'robot'  => $robot,
-                    'queue'  => $queue,
-                    'error' =>
-                        "Could not remove $queue/$file ; $0 might NOT be running with the right UID or file was not created with the right UID",
-                }
-            );
-            last;
+        if (-f "$spool/$filename") {    #FIXME
+            remove($lock_fh);
         }
     }
 
@@ -1185,36 +1060,38 @@ sub update_subscriber_bounce_history {
     }
 }
 
-## If bounce can't be handled correctly, saves it to the "bad" subdirectory of
-## the bounce spool and notifies listmaster.
-sub ignore_bounce {
+# If bounce can't be handled correctly, saves it to the "bad" subdirectory of
+# the bounce spool.
+sub quarantine {
+    my $lock_fh = shift;
+    my $robot = shift || '*';
 
-    my $param = shift;
+    my $bad_dir  = "$spool/bad";
+    my $filename = $lock_fh->basename;
 
-    my $file   = $param->{'file'};
-    my $notify = $param->{'notify'};
-    my $error  = $param->{'error'};
-    my $queue  = $param->{'queue'};
-    my $robot  = $param->{'robot'};
-
-    $notify |= 0;
-
-    tools::save_to_bad(
-        {   'file'     => $file,
-            'hostname' => $robot,
-            'queue'    => $queue,
+    if (-d $bad_dir) {
+        unless ($lock_fh->rename($bad_dir . '/' . $filename)) {
+            die sprintf
+                'Unable to rename bad file %s to %s/%s: %s',
+                $filename, $bad_dir, $filename, $lock_fh->last_error;
         }
-    );
-    if ($notify) {
-        tools::send_notify_to_listmaster(
-            $robot,
-            'bounce_management_failed',
-            {   'file'  => $file,
-                'bad'   => "$queue/bad",
-                'error' => $error,
-            }
-        );
+        Log::do_log('notice', "Moving bad file %s to bad/", $filename);
+    } else {
+        Log::do_log('notice', 'Missing directory "%s"', $bad_dir);
+        unless ($lock_fh->rename($spool . '/BAD-' . $filename)) {
+            die sprintf
+                'Unable to rename bad file %s to BAD-%s: %s',
+                $filename, $filename, $lock_fh->last_error;
+        }
+        Log::do_log('notice', "Renaming bad file %s to BAD-%s",
+            $filename, $filename);
     }
+}
+
+sub remove {
+    my $lock_fh = shift;
+
+    $lock_fh->unlink;
 }
 
 __END__

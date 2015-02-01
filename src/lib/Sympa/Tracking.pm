@@ -186,21 +186,15 @@ sub register {
 # Old name: store_bounce() in bounced.pl
 sub store {
     Log::do_log('debug2', '(%s, %s, %s, %s, ...)', @_);
-    my $self     = shift;
-    my $filepath = shift;
-    my $rcpt     = shift;
-    my %options  = @_;
+    my $self    = shift;
+    my $message = shift;
+    my $rcpt    = shift;
+    my %options = @_;
 
     my $bounce_dir = $self->{directory};
 
     # Store bounce
-    my ($ifh, $ofh);
-    unless (open $ifh, '<', $filepath) {
-        Log::do_log('err', 'Could not open %s: %m', $filepath);
-        return undef;
-    }
-    my $msg_string = do { local $RS; <$ifh> };
-    close $ifh;
+    my $ofh;
 
     my $filename;
     unless (defined $options{envid} and length $options{envid}) {
@@ -213,9 +207,8 @@ sub store {
         Log::do_log('err', 'Unable to write %s/%s', $bounce_dir, $filename);
         return undef;
     }
-    print $ofh $msg_string;
+    print $ofh $message->as_string;
     close $ofh;
-    close $ifh;
 
     if (defined $options{envid} and length $options{envid}) {
         unless (
