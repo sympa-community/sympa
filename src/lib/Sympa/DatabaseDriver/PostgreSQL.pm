@@ -315,7 +315,7 @@ sub add_field {
         $param->{'type'},    $param->{'notnull'},
         $param->{'autoinc'}, $param->{'primary'}
     );
-    my $options;
+    my $options = '';
     # To prevent "Cannot add a NOT NULL column with default value NULL" errors
     if ($param->{'notnull'}) {
         $options .= 'NOT NULL ';

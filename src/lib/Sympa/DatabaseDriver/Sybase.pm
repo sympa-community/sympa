@@ -199,7 +199,7 @@ sub update_field {
     Log::do_log('debug', 'Updating field %s in table %s (%s, %s)',
         $param->{'field'}, $param->{'table'}, $param->{'type'},
         $param->{'notnull'});
-    my $options;
+    my $options = '';
     if ($param->{'notnull'}) {
         $options .= ' NOT NULL ';
     }
@@ -238,7 +238,7 @@ sub add_field {
         $param->{'type'},    $param->{'notnull'},
         $param->{'autoinc'}, $param->{'primary'}
     );
-    my $options;
+    my $options = '';
     # To prevent "Cannot add a NOT NULL column with default value NULL" errors
     if ($param->{'notnull'}) {
         $options .= 'NOT NULL ';
