@@ -1038,7 +1038,7 @@ sub _parse_dsn {
                     and $fields->get('Original-Recipient', 0) =~
                     /\A\s*rfc822\s*;\s*(.*)\z/mi) {
                     $recipient = $1;
-                    $recipient =~ s/\s+\z//p;
+                    $recipient =~ s/\s+\z//;
                     if ($recipient =~ /\@.+:(.+)$/) {
                         $recipient = $1;
                     }
@@ -1048,7 +1048,7 @@ sub _parse_dsn {
                     and $fields->get('Final-Recipient', 0) =~
                     /\A\s*rfc822\s*;\s*(.*)\z/mi) {
                     $recipient = $1;
-                    $recipient =~ s/\s+\z//p;
+                    $recipient =~ s/\s+\z//;
                     if ($recipient =~ /\@.+:(.+)$/) {
                         $recipient = $1;
                     }
