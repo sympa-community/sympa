@@ -32,9 +32,9 @@ use Log;
 use base qw(Sympa::Database);
 
 use constant required_modules    => [];
-use constant required_parameters => [qw(db_host db_name db_user db_passwd)];
+use constant required_parameters => [qw(db_host db_name db_user)];
 use constant optional_parameters =>
-    [qw(db_port db_timeout db_options db_env)];
+    [qw(db_port db_passwd db_timeout db_options db_env)];
 
 # For DOUBLE type.
 sub AS_DOUBLE {
