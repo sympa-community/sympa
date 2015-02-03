@@ -193,7 +193,7 @@ if ($main::options{'help'}) {
     }
 
     # Check permissions on config folder
-    if (($stat[2] & Fcntl::S_IRWXU) != Fcntl::S_IRWXU) {
+    if (($stat[2] & Fcntl::S_IRWXU()) != Fcntl::S_IRWXU()) {
         die
             "Config dir $dir exists, but sympa does not have rwx permissions on it";
     }
