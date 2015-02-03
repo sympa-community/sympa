@@ -1499,9 +1499,9 @@ our @params = (
     },
     # { your_lists_size: not yet implemented. }
     {   'name'       => 'http_host',
-        'gettext_id' => 'URL of a virtual host',
-        'sample'     => 'http://host.domain.tld',
-        'default'    => 'http://host.domain.tld',
+        'gettext_id' => 'Web domain of a virtual host',
+        'sample'     => 'host.domain.tld',
+        'default'    => 'host.domain.tld',
         'vhost'      => '1',
         'edit'       => '1',
         'file'       => 'sympa.conf',
