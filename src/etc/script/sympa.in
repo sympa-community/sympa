@@ -249,7 +249,7 @@ case "$1" in
 	if [ ! -f ${sympalockdir}/sympa ]; then
 		echo "Starting Sympa subsystem: "
 		sympa_check || exit 1
-		sympa_start sympa
+		sympa_start sympa_msg
 		sympa_start bulk
 		sympa_start archived
 		sympa_start bounced
@@ -268,13 +268,21 @@ case "$1" in
 	sympa_stop bounced
 	sympa_stop archived
 	sympa_stop bulk
-	sympa_stop sympa
+	sympa_stop sympa_msg
+	if [ -f ${sympapiddir}/sympa.pid ]; then
+		# For Sympa earlier than 6.2b.4
+		sympa_stop sympa
+	fi
 	if [ -f ${sympapiddir}/sympa-distribute.pid ]; then
-		# For Sympa earlier than 6.2.
+		# For Sympa earlier than 6.2b.1
 		sympa_stop sympa-distribute
 	fi
 	if [ -f ${sympapiddir}/sympa-creation.pid ]; then
+		# For Sympa earlier than 6.2b.4
 		sympa_stop sympa-creation
+	fi
+	if [ -f ${sympapiddir}/sympa_automatic.pid ]; then
+		sympa_stop sympa_automatic
 	fi
 	sympa_stop task_manager
 	if [ -f ${sympalockdir}/sympa ]; then
@@ -288,7 +296,7 @@ case "$1" in
 	else
 		echo "Status file for subsystem NOT found."
 	fi
-	sympa_status sympa
+	sympa_status sympa_msg
 	sympa_status bulk
 	sympa_status archived
 	sympa_status bounced

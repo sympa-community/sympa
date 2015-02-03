@@ -86,14 +86,16 @@ case "$1" in
 
 	if [ ! -f $pidfilepath/sympa ]; then
 		echo "Starting Sympa subsystem: "
-		echo '   ***  sympa.pl...'
-    		$sympadir/sympa.pl
+		echo '   ***  sympa_msg.pl...'
+    		$sympadir/sympa_msg.pl
+		echo '   ***  bulk.pl...'
+		$sympadir/bulk.pl
 		echo '   ***  archived.pl...'
     		$sympadir/archived.pl
 		echo '   ***  bounced.pl...'
-    		$sympadir/task_manager.pl
-		echo '   ***  task_manager.pl...'
     		$sympadir/bounced.pl
+		echo '   ***  task_manager.pl...'
+    		$sympadir/task_manager.pl
 		touch $pidfilepath/sympa
 		sleep $start_wait
 	else
@@ -105,9 +107,20 @@ case "$1" in
   stop)
 	echo "Stopping Sympa subsystem: "
 	if [ -f $pidfilepath/sympa ]; then
-		kill `cat $pidfilepath/sympa.pid`
-		kill `cat $pidfilepath/sympa-creation.pid`
-		kill `cat $pidfilepath/sympa-distribute.pid`
+		kill `cat $pidfilepath/sympa_msg.pid`
+		if [ -f $pidfilepath/sympa.pid ]; then
+			kill `cat $pidfilepath/sympa.pid`
+		fi
+		if [ -f $pidfilepath/sympa-creation.pid ]; then
+			kill `cat $pidfilepath/sympa-creation.pid`
+		fi
+		if [ -f $pidfilepath/sympa-distribute.pid ]; then
+			kill `cat $pidfilepath/sympa-distribute.pid`
+		fi
+		if [ -f $pidfilepath/sympa_automatic.pid ]; then
+			kill `cat $pidfilepath/sympa_automatic.pid`
+		fi
+		kill `cat $pidfilepath/bulk.pid`
 		kill `cat $pidfilepath/archived.pid`
 		kill `cat $pidfilepath/bounced.pid`
 		kill `cat $pidfilepath/task_manager.pid`
@@ -130,9 +143,11 @@ case "$1" in
   verify_up)
 	some_are_down=0
 	echo "Verifying Sympa is UP:"
-	check_up sympa || some_are_down=1
+	check_up sympa_msg || some_are_down=1
 	check_up bounced || some_are_down=1
+	check_up bulk || some_are_down=1
 	check_up archived || some_are_down=1
+	check_up task_manager || some_are_down=1
 	if [ $some_are_down -eq 0 ]; then 
 		echo "   All fine."
 		exit 0
@@ -144,9 +159,11 @@ case "$1" in
   verify_down)
 	some_are_up=0
 	echo "Verifying Sympa is DOWN:"
-	check_down sympa || some_are_up=1
+	check_down sympa_msg || some_are_up=1
 	check_down bounced || some_are_up=1
+	check_down bulk || some_are_up=1
 	check_down archived || some_are_up=1
+	check_down task_manager || some_are_up=1
 	if [ $some_are_up -eq 0 ]; then 
 		echo "   All is down."
 		exit 0

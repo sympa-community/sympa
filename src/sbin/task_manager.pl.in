@@ -1490,8 +1490,9 @@ sub purge_orphan_bounces {
         # Finally removing orphan files
         my $marshalled;
         while ($marshalled = readdir $dh) {
-            my $metadata = tools::unmarshal_metadata($bounce_dir,
-                $marshalled, qr/\A([^\s\@]+\@[\w\.\-*]+?)(?:_(\w+))?\z/,
+            my $metadata =
+                tools::unmarshal_metadata($bounce_dir, $marshalled,
+                qr/\A([^\s\@]+\@[\w\.\-*]+?)(?:_(\w+))?\z/,
                 [qw(recipient envid)]);
             next unless $metadata;
             # Skip <email>_<envid> which is used by tracking feature.
@@ -2016,7 +2017,7 @@ See L<http://www.sympa.org/tracking>.
 
 =head1 SEE ALSO
 
-L<sympa(8)>, L<wwsympa(8)>
+L<sympa_msg(8)>, L<wwsympa(8)>
 
 
 =cut
