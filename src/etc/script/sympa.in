@@ -179,6 +179,7 @@ sympa_stop() {
 	else
 		process_name=$1;
     fi
+    comm=`echo $process_name.pl | cut -c-15`
 
     if [ -f ${sympapiddir}/$1.pid ]; then
 	echo $echo_opt "Stopping module $process_name.pl: "
@@ -187,7 +188,7 @@ sympa_stop() {
 	if [ "$pids" != "" ]; then
 	    for pid in $pids; do
 		killcount=0
-		running=`ps -A | grep "$pid ..* $process_name\\.pl"`
+		running=`ps -A | grep "$pid ..* $comm"`
 		while [ "$running" != "" ]; do
 		    if [ $killcount -gt 10 ]; then
 			if [ ${use_functions} ]; then
@@ -199,13 +200,13 @@ sympa_stop() {
 		    fi
 
 		    kill -TERM $pid >/dev/null 2>&1
-		    running=`ps -A | grep "$pid ..* $process_name\\.pl"`
+		    running=`ps -A | grep "$pid ..* $comm"`
 		    if [ "$running" = "" ]; then
 			runcount=`expr $runcount + 1`
 			break
 		    fi
 		    sleep 2
-		    running=`ps -A | grep "$pid ..* $process_name\\.pl"`
+		    running=`ps -A | grep "$pid ..* $comm"`
 		    if [ "$running" = "" ]; then
 			runcount=`expr $runcount + 1`
 			break

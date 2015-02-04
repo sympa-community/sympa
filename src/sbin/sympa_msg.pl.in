@@ -118,7 +118,8 @@ unless ($main::options{'foreground'}) {
 
     my $child_pid = fork;
     if ($child_pid) {
-        Log::do_log('notice', 'Sympa/msg started, PID %d', $child_pid);
+        Log::do_log('notice', 'Starting sympa/msg daemon, PID %d',
+            $child_pid);
         exit 0;
     } elsif (not defined $child_pid) {
         die sprintf 'Cannot fork: %s', $ERRNO;
@@ -183,7 +184,7 @@ unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
 umask(oct($Conf::Conf{'umask'}));
 
 ## Most initializations have now been done.
-Log::do_log('notice', 'Sympa %s Started', Sympa::Constants::VERSION());
+Log::do_log('notice', 'Sympa/msg %s Started', Sympa::Constants::VERSION());
 
 # Check for several files.
 # Prevent that 2 processes perform checks at the same time...
@@ -435,7 +436,7 @@ while ($signal ne 'term') {
     }
 }    #end of block while ($signal ne 'term'){
 
-Log::do_log('notice', 'Sympa exited normally due to signal');
+Log::do_log('notice', 'Sympa/msg exited normally due to signal');
 my $file = 'sympa_msg';
 Sympa::Tools::Daemon::remove_pid($file, $PID);
 
