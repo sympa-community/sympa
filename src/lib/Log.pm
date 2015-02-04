@@ -292,7 +292,7 @@ sub db_log {
     my $daemon       = $arg->{'daemon'};
     my $date         = time;
     my $random       = int(rand(1000000));
-#    my $id = $date*1000000+$random;
+    # my $id = $date * 1000000 + $random;
     my $id = $date . $random;
 
     unless ($user_email) {
@@ -308,29 +308,28 @@ sub db_log {
         }
     }
 
-    unless ($daemon =~ /^(task|archived|sympa|wwsympa|bounced|sympa_soap)$/) {
-        do_log('err', "Internal_error : incorrect process value $daemon");
+    unless ($daemon
+        and $daemon =~
+        /^(task|archived|sympa|sympa_automatic|sympa_msg|wwsympa|bounced|sympa_soap)$/
+        ) {
+        do_log('err', 'Internal_error: incorrect process value %s', $daemon);
         return undef;
     }
 
     ## Insert in log_table
 
     unless (
-        SDM::do_query(
-            'INSERT INTO logs_table (id_logs,date_logs,robot_logs,list_logs,action_logs,parameters_logs,target_email_logs,msg_id_logs,status_logs,error_type_logs,user_email_logs,client_logs,daemon_logs) VALUES (%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
-            $id,
-            $date,
-            SDM::quote($robot),
-            SDM::quote($list),
-            SDM::quote($action),
-            SDM::quote(substr($parameters || '', 0, 100)),
-            SDM::quote($target_email),
-            SDM::quote($msg_id),
-            SDM::quote($status),
-            SDM::quote($error_type),
-            SDM::quote($user_email),
-            SDM::quote($client),
-            SDM::quote($daemon)
+        SDM::do_prepared_query(
+            q{INSERT INTO logs_table
+              (id_logs, date_logs, robot_logs, list_logs, action_logs,
+               parameters_logs,
+               target_email_logs, msg_id_logs, status_logs, error_type_logs,
+               user_email_logs, client_logs, daemon_logs)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+            $id, $date, $robot, $list, $action,
+            substr($parameters || '', 0, 100),
+            $target_email, $msg_id, $status, $error_type,
+            $user_email,   $client, $daemon
         )
         ) {
         do_log('err', 'Unable to insert new db_log entry in the database');

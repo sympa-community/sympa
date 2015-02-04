@@ -38,7 +38,6 @@ use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::DatabaseManager;
 use Sympa::Family;
-use Sympa::Language;
 use Sympa::List;
 use Sympa::LockedFile;
 use Log;
@@ -54,17 +53,14 @@ use Sympa::Tools::Password;
 srand(time());
 
 my $daemon_name = Log::set_daemon($0);
-my $ip;
-$ip = $ENV{'REMOTE_HOST'};
-$ip = $ENV{'REMOTE_ADDR'} unless ($ip);
 
 ## Check --dump option
 my %options;
 unless (
     GetOptions(
-        \%main::options, 'debug|d',  'log_level=s', 'foreground',
-        'config|f=s',    'lang|l=s', 'mail|m',      'keepcopy|k=s',
-        'help|h',        'version|v',
+        \%main::options, 'debug|d', 'log_level=s',  'foreground',
+        'config|f=s',    'mail|m',  'keepcopy|k=s', 'help|h',
+        'version|v',
     )
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -87,10 +83,7 @@ if ($main::options{'help'}) {
     exit 0;
 }
 
-my $default_lang;
-
-my $language = Sympa::Language->instance;
-my $mailer   = Sympa::Mailer->instance;
+my $mailer = Sympa::Mailer->instance;
 
 _load();
 
@@ -121,19 +114,16 @@ unless ($main::options{'foreground'}) {
 }
 
 my $service = 'sympa/automatic';
+my $pidfile = 'sympa_automatic';
+
 Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
     $service);
 
-Log::do_log('debug', 'Running server %s for %s purpose', $PID, $service);
-
-## Create and write the PID file
-my $file = 'sympa_automatic';
-
-## If process is running in foreground, don't write STDERR to a
-## dedicated file
+# If process is running in foreground, don't write STDERR to a
+# dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if $main::options{'foreground'};
-Sympa::Tools::Daemon::write_pid($file, $PID, $options);
+Sympa::Tools::Daemon::write_pid($pidfile, $PID, $options);
 unless ($options->{'stderr_to_tty'}) {
     Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
 }
@@ -194,111 +184,72 @@ $SIG{'PIPE'} = 'IGNORE';     ## Ignore SIGPIPE ; prevents process from dying
 
 # Main loop.
 # This loop is run foreach HUP signal received.
+# This is the main loop : look for files in the directory, handles
+# them, sleeps a while and continues the good job.
 
-my @qfile;
+my $spool = $Conf::Conf{'queueautomatic'};
 
 while ($signal ne 'term') {
-    my $spool = $Conf::Conf{'queueautomatic'};
+    Sympa::List::init_list_cache();
+    # Process grouped notifications
+    Sympa::Alarm->instance->flush;
 
-    # This is the main loop : look for files in the directory, handles
-    # them, sleeps a while and continues the good job.
-    while (!$signal) {
-        $language->set_lang($default_lang);
+    my ($message, $handle);
 
-        Sympa::List::init_list_cache();
-        # Process grouped notifications
-        Sympa::Alarm->instance->flush;
+    my $dh;
+    unless (opendir $dh, $spool) {
+        die sprintf 'Can\'t open dir %s: %s', $spool, $ERRNO;
+        # No return.
+    }
+    my @qfile =
+        sort
+        grep { !/,lock/ and !/\A(?:\.|T\.|BAD-)/ and -f ($spool . '/' . $_) }
+        readdir $dh;
+    closedir $dh;
 
-        my $dh;
-        unless (opendir $dh, $spool) {
-            die sprintf 'Can\'t open dir %s: %s', $spool, $ERRNO;
-            ## No return.
-        }
-        @qfile = sort tools::by_date grep {
-                    !/,lock/
-                and !/\A(?:\.|T\.|BAD-)/
-                and -f ($spool . '/' . $_)
-        } readdir $dh;
-        closedir $dh;
+    foreach my $filename (@qfile) {
+        last if $signal;
 
         $mailer->reaper();    # finish terminated process
 
-        my $filename;
-        my $metadata;
+        my $lock_fh =
+            Sympa::LockedFile->new($spool . '/' . $filename, -1, '+<');
+        next unless $lock_fh;
+
+        my $metadata = tools::unmarshal_metadata(
+            $spool, $filename,
+            qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
+            [qw(localpart domainpart date)]
+        );
+        next unless $metadata;
 
         # z and Z are a null priority, so file stay in queue and are
         # processed only if renamed by administrator
-        my $highest_priority = 'z';    ## lowest priority
-        ## in single mode we may have to supervise automatic spool
-        my $t_spool = $spool;
-
-        ## Scans files in queue
-        ## Search file with highest priority
-        foreach my $t_filename (@qfile) {
-            my $t_metadata = tools::unmarshal_metadata(
-                $t_spool, $t_filename,
-                qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
-                [qw(localpart domainpart date)]
-            );
-            next unless $t_metadata;
-
-            if (ord($t_metadata->{'priority'}) < ord($highest_priority)) {
-                $highest_priority = $t_metadata->{'priority'};
-                $filename         = $t_filename;
-                $metadata         = $t_metadata;
-            }
-        }    ## END of spool lookup
-
-        unless ($filename) {
-            sleep($Conf::Conf{'sleep'});
-            next;
-        }
-
-        my $lock_fh =
-            Sympa::LockedFile->new($t_spool . '/' . $filename, -1, '+<');
-        next unless $lock_fh;
+        next
+            if $metadata->{'priority'} and lc($metadata->{'priority'}) eq 'z';
 
         my $msg_string = do { local $RS; <$lock_fh> };
         my $message = Sympa::Message->new($msg_string, %$metadata);
 
-        # Compatibility: Message with checksum by Sympa <=6.2a.40
-        # They should be migrated.
-        if ($message->{checksum}) {
-            Log::do_log('err',
-                '%s: Message with old format.  Run upgrade_send_spool.pl',
-                $message);
-            next;
-        }
-
-        my $robot =
-            (ref $message->{context} eq 'Sympa::List')
-            ? $message->{context}->{'domain'}
-            : $message->{context};
-
-        Log::do_log('debug', "Processing %s/%s with priority %s",
-            $t_spool, $filename, $highest_priority);
-
-        ## Set NLS default lang for current message
-        $language->set_lang(Conf::get_robot_conf($robot, 'lang'),
-            $default_lang);
+        Log::do_log('debug', 'Processing message %s', $message);
 
         # Appel de la fonction de traitement des mails entrants
         my $status = process_message($message);
 
         if (defined $status) {
-            Log::do_log('debug', "Finished %s", "$t_spool/$filename");
+            Log::do_log('debug', "Finished %s", $message);
 
             if ($main::options{'keepcopy'}) {
                 unless (
                     File::Copy::copy(
-                        $t_spool . '/' . $filename,
+                        $spool . '/' . $filename,
                         $main::options{'keepcopy'} . '/' . $filename
                     )
                     ) {
                     Log::do_log(
                         'notice',
                         'Could not rename %s/%s to %s/%s: %m',
-                        $t_spool,
+                        $spool,
                         $filename,
                         $main::options{'keepcopy'},
                         $filename
@@ -307,7 +258,7 @@ while ($signal ne 'term') {
             }
             $lock_fh->unlink;
         } else {
-            my $bad_dir = "$t_spool/bad";
+            my $bad_dir = "$spool/bad";
 
             if (-d $bad_dir) {
                 unless ($lock_fh->rename($bad_dir . '/' . $filename)) {
@@ -319,7 +270,7 @@ while ($signal ne 'term') {
                     $filename);
             } else {
                 Log::do_log('notice', 'Missing directory "%s"', $bad_dir);
-                unless ($lock_fh->rename($t_spool . '/BAD-' . $filename)) {
+                unless ($lock_fh->rename($spool . '/BAD-' . $filename)) {
                     die sprintf
                         'Unable to rename bad file %s to BAD-%s: %s',
                         $filename, $filename, $lock_fh->last_error;
@@ -334,9 +285,6 @@ while ($signal ne 'term') {
     # Purge grouped notifications
     Sympa::Alarm->instance->flush(purge => 1);
 
-    ## Dump of User files in DB
-    #Sympa::List::dump();
-
     if ($signal eq 'hup') {
         # Disconnect from Database
         Sympa::DatabaseManager->disconnect;
@@ -349,8 +297,7 @@ while ($signal ne 'term') {
 }    #end of block while ($signal ne 'term'){
 
 Log::do_log('notice', 'Sympa/automatic exited normally due to signal');
-my $file = 'sympa_automatic';
-Sympa::Tools::Daemon::remove_pid($file, $PID);
+Sympa::Tools::Daemon::remove_pid($pidfile, $PID);
 
 exit(0);
 
@@ -409,14 +356,6 @@ sub _load {
             "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
             Conf::get_sympa_conf();
     }
-
-    ## Set locale configuration
-    ## Compatibility with version < 2.3.3
-    $main::options{'lang'} =~ s/\.cat$//
-        if defined $main::options{'lang'};
-    $default_lang =
-        $language->set_lang($main::options{'lang'}, $Conf::Conf{'lang'},
-        'en');
 
     ## Main program
     if (!chdir($Conf::Conf{'home'})) {
@@ -508,8 +447,8 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'unable_create_message',
                 'user_email'   => '',
-                'client'       => $ip,
-                'daemon'       => $daemon_name
+                #'client'       => $ip,
+                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -529,8 +468,8 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'no_message_id',
                 'user_email'   => $message->{'sender'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
+                #'client'       => $ip,
+                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -564,8 +503,8 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'no_sender',
                 'user_email'   => $sender,
-                'client'       => $ip,
-                'daemon'       => $daemon_name
+                #'client'       => $ip,
+                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -587,8 +526,8 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'unknown_robot',
                 'user_email'   => $sender,
-                'client'       => $ip,
-                'daemon'       => $daemon_name
+                #'client'       => $ip,
+                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -735,8 +674,8 @@ sub process_message {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $sender,
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
+                    #'client'       => $ip,
+                    'daemon' => $daemon_name
                 }
             );
             return undef;
@@ -771,8 +710,8 @@ sub process_message {
                     'status'       => 'error',
                     'error_type'   => 'dyn_cant_sync',
                     'user_email'   => $sender,
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
+                    #'client'       => $ip,
+                    'daemon' => $daemon_name
                 }
             );
             # purge the unwanted empty automatic list
@@ -819,8 +758,8 @@ sub process_message {
                     'status'       => 'error',
                     'error_type'   => 'list_unknown',
                     'user_email'   => $sender,
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
+                    #'client'       => $ip,
+                    'daemon' => $daemon_name
                 }
             );
             # purge the unwanted empty automatic list
@@ -883,7 +822,7 @@ sympa_automatic, sympa_automatic.pl - Automatic list creation daemon
 
 S<B<sympa_automatic.pl> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
       S<[ B<-k, --keepcopy>=I<directory> ]>
-      S<[ B<-l, --lang>=I<lang> ]> [ B<-m, --mail> ]
+      S<[ [ B<-m, --mail> ]
       S<[ B<-h, --help> ]> [ B<-v, --version> ]
 
 =head1 DESCRIPTION
@@ -913,12 +852,6 @@ Enable debug mode.
 
 Force Sympa to use an alternative configuration file instead
 of F<--CONFIG-->.
-
-=item B<-l>, B<--lang=>I<lang>
-
-Set this option to use a language for Sympa. The corresponding
-gettext catalog file must be located in F<--localedir-->
-directory.
 
 =item B<--log_level=>I<level>
 
