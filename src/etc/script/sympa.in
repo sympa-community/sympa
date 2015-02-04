@@ -174,12 +174,12 @@ sympa_stop() {
         echo "Usage: sympa_stop {program}"
         return 1
     fi
-    if [ $1 == 'sympa-creation' ]; then
+    if [ $1 = 'sympa-creation' ]; then
 		process_name='sympa';
 	else
 		process_name=$1;
     fi
-    comm=`echo $process_name.pl | cut -c-15`
+    comm=`echo $process_name.pl | cut -c-8`
 
     if [ -f ${sympapiddir}/$1.pid ]; then
 	echo $echo_opt "Stopping module $process_name.pl: "
