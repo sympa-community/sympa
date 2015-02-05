@@ -701,7 +701,7 @@ my %full_db_struct = (
                 'order'  => 5,
             },
             'daemon_stat' => {
-                'struct' => 'varchar(10)',
+                'struct' => 'varchar(20)',
                 'doc'    => '',
                 'order'  => 6,
             },

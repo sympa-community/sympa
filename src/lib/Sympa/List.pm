@@ -1915,6 +1915,21 @@ sub distribute_msg {
         }
     }
 
+    #log in stat_table to make statistics...
+    unless($message->{sender} =~ /($Conf::Conf{'email'})\@/) { #ignore messages sent by robot
+        unless ($message->{sender} =~ /($self->{name})-request/) { #ignore messages of requests
+            Log::db_stat_log(
+                {   'robot'     => $self->{'domain'},
+                    'list'      => $self->{'name'},
+                    'operation' => 'send_mail',
+                    'parameter' => $message->{size},
+                    'mail'      => $message->{sender},
+                    'client'    => '',
+                    'daemon'    => 'sympa_msg.pl'
+                }
+            );
+        }
+    }
     $self->savestats;
     return $nbr_smtp;
 }
