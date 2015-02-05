@@ -131,7 +131,6 @@ our %cpan_modules = (
         'gettext_comment' =>
             'mysql-devel and myslq-server. MySQL (or MariaDB) server should be running for make test to succeed',
         package_name => 'DBD-mysql',
-        mandatory    => 1,
         'gettext_id' =>
             'MySQL / MariaDB database driver, required if you connect to a MySQL (or MariaDB) database.',
     },
