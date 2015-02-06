@@ -372,6 +372,31 @@ Press the Enter key to continue..."
 
     print "\n";
 
+    # Select DBD module.
+    my @dbd = (
+        'MySQL/MariaDB' => 'DBD::mysql',
+        'PostgreSQL'    => 'DBD::Pg',
+        'SQLite'        => 'DBD::SQLite',
+        'Oracle'        => 'DBD::Oracle',
+        'Sybase'        => 'DBD::Sybase',
+    );
+    my $selected;
+    while (1) {
+        print "\n"
+            . gettext('Which RDBMS will you use for core database:') . "\n";
+        for (my $i = 0; $i < scalar @dbd; $i += 2) {
+            printf "%-15s [%d]\n", $dbd[$i], $i / 2 + 1;
+        }
+        printf "[1-%d] ", scalar @dbd / 2;
+        $selected = <>;
+        chomp $selected;
+        last
+            if $selected =~ /\A\d+\z/
+                and 0 < $selected
+                and $selected * 2 <= scalar @dbd;
+    }
+    $Sympa::ModDef::cpan_modules{$dbd[$selected * 2 - 1]}->{mandatory} = 1;
+
     ### REQ perl version
     print "\n" . gettext('Checking for PERL version:') . "\n\n";
     my $rpv = $Sympa::ModDef::cpan_modules{"perl"}{'required_version'};
