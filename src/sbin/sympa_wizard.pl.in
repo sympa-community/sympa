@@ -504,9 +504,12 @@ sub install_module {
         print "Setting FTP Passive mode\n";
     }
 
-    ## This is required on RedHat 9 for DBD::mysql installation
-    my $lang = $ENV{'LANG'};
-    $ENV{'LANG'} = 'C' if ($ENV{'LANG'} =~ /UTF\-8/);
+    # This is required on RedHat 9 for DBD::mysql installation
+    my $lang;
+    if ($ENV{'LANG'} and $ENV{'LANG'} =~ /UTF-8/) {
+        $lang = $ENV{'LANG'};
+        $ENV{'LANG'} = 'C';
+    }
 
     unless ($EUID == 0) {
         printf gettext('## You need root privileges to install %s module. ##')
@@ -586,9 +589,8 @@ sub install_module {
         }
     }
 
-    ## Restore lang
-    $ENV{'LANG'} = $lang if (defined $lang);
-
+    # Restore lang
+    $ENV{'LANG'} = $lang if $lang;
 }
 __END__
 
