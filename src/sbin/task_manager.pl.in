@@ -48,6 +48,7 @@ use Sympa::Session;
 use Sympa::Task;
 use tools;
 use Sympa::Tools::Daemon;
+use Sympa::Tools::File;
 use Sympa::Tools::Time;
 use Sympa::Tracking;
 use Sympa::User;
@@ -1315,19 +1316,38 @@ sub purge_session_table {
 
 # Remove messages from spools if older than duration given by configuration.
 sub purge_spools {
+    # Expiring bad messages in incoming spools.
     foreach my $queue (
-        qw(queue queueautomatic queuebounce queuebulk queueoutgoing)) {
+        qw(queue queueautomatic queuebounce queueoutgoing)) {
         my $directory   = $Conf::Conf{$queue} . '/bad';
         my $clean_delay = $Conf::Conf{'clean_delay_' . $queue};
         if (-e $directory) {
             _clean_spool($directory, $clean_delay);
         }
     }
+    # Expiring bad packets and messages in bulk spool.
+    foreach my $subdir (qw(pct msg)) {
+        my $directory   = $Conf::Conf{$queuebulk} . '/bad/' . $subdir;
+        my $clean_delay = $Conf::Conf{'clean_delay_' . $queue};
+        if (-e $directory) {
+            _clean_spool($directory, $clean_delay);
+        }
+    }
+    # Expiring moderation spools, topic spool and temporary files.
     foreach my $queue (
         qw(queueauth queueautomatic queuemod queuesubscribe queuetopic tmpdir)
         ) {
         my $directory   = $Conf::Conf{$queue};
         my $clean_delay = $Conf::Conf{'clean_delay_' . $queue};
+        if (-e $directory) {
+            _clean_spool($directory, $clean_delay);
+        }
+    }
+    # Expiring formatted held messages.
+    my $all_lists = Sympa::List::get_lists('*');
+    foreach my $list (@{$all_lists || []}) {
+        my $directory = $Conf::Conf{'viewmail_dir'} . '/mod/' . $list->get_id;
+        my $clean_delay = $Conf::Conf{'clean_delay_queuemod'};
         if (-e $directory) {
             _clean_spool($directory, $clean_delay);
         }
