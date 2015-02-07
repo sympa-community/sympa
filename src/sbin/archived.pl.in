@@ -397,7 +397,8 @@ while (!$end) {
             } else {
                 Log::do_log('err', 'Match of list address "%s" failed',
                     $adrlist);
-                return undef;
+                unlink("$queue/$file");
+                next;
             }
 
             Log::do_log('notice', 'Archiving %s for list %s', $file,
