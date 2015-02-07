@@ -78,7 +78,8 @@ my $separator =
 # DEPRECATED: No longer used.
 #sub sortbydomain($x, $y);
 
-## Sort subroutine to order files in sympa spool by date
+# Sort subroutine to order files in sympa spool by date
+#OBSOLETED: No longer used.
 sub by_date {
     my @a_tokens = split /\./, ($a || '');
     my @b_tokens = split /\./, ($b || '');
