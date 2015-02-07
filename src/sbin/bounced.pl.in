@@ -208,12 +208,6 @@ my $spool = $Conf::Conf{'queuebounce'};
 Log::do_log('debug', 'Starting infinite loop');
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
-    ## this sleep is important to be raisonably sure that sympa is not
-    ## currently
-    ## writting the file this deamon is openning.
-
-    sleep $Conf::Conf{'sleep'};
-
     Sympa::List::init_list_cache();
     # Process grouped notifications
     Sympa::Alarm->instance->flush;
@@ -229,6 +223,7 @@ while (!$end) {
         readdir $dh;
     closedir $dh;
 
+    my $numprocessed = 0;
     foreach my $filename (@qfile) {
         last if $end;
 
@@ -245,6 +240,9 @@ while (!$end) {
 
         my $msg_string = do { local $RS; <$lock_fh> };
         my $message = Sympa::Message->new($msg_string, %$metadata);
+
+        $numprocessed++;
+
         unless ($message) {
             Log::do_log('notice', 'Ignoring malformed message %s', $message);
             quarantine($lock_fh);
@@ -979,6 +977,11 @@ while (!$end) {
 
     ## Free zombie sendmail processes
     Sympa::Mailer->instance->reaper();
+
+    # If the spool was empty, sleep for a while.
+    unless ($numprocessed) {
+        sleep $Conf::Conf{'sleep'};
+    }
 }
 
 # Purge grouped notifications

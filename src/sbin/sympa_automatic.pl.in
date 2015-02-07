@@ -207,6 +207,7 @@ while ($signal ne 'term') {
         readdir $dh;
     closedir $dh;
 
+    my $numprocessed = 0;
     foreach my $filename (@qfile) {
         last if $signal;
 
@@ -231,7 +232,7 @@ while ($signal ne 'term') {
         my $msg_string = do { local $RS; <$lock_fh> };
         my $message = Sympa::Message->new($msg_string, %$metadata);
 
-        Log::do_log('debug', 'Processing message %s', $message);
+        $numprocessed++;
 
         # Appel de la fonction de traitement des mails entrants
         my $status = process_message($message);
@@ -293,6 +294,11 @@ while ($signal ne 'term') {
             Sympa::Constants::VERSION);
         _load();
         $signal = 0;
+    }
+
+    # If the spool was empty, sleep for a while.
+    unless ($numprocessed) {
+        sleep $Conf::Conf{'sleep'};
     }
 }    #end of block while ($signal ne 'term'){
 
