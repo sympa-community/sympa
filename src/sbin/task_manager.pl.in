@@ -1327,8 +1327,8 @@ sub purge_spools {
     }
     # Expiring bad packets and messages in bulk spool.
     foreach my $subdir (qw(pct msg)) {
-        my $directory   = $Conf::Conf{$queuebulk} . '/bad/' . $subdir;
-        my $clean_delay = $Conf::Conf{'clean_delay_' . $queue};
+        my $directory   = $Conf::Conf{'queuebulk'} . '/bad/' . $subdir;
+        my $clean_delay = $Conf::Conf{'clean_delay_queuebulk'};
         if (-e $directory) {
             _clean_spool($directory, $clean_delay);
         }
