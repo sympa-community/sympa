@@ -222,82 +222,73 @@ my %msgid_table;
 my $latest_msgid_table_cleanup = time;
 my $index_queuedigest          = 0;      # verify the digest queue
 my $index_cleanqueue           = 0;
-my @qfile;
+
+# This is the main loop : look for files in the directory, handles
+# them, sleeps a while and continues the good job.
+
+my $spool = $Conf::Conf{'queue'};
 
 while ($signal ne 'term') {
-    my $spool = $Conf::Conf{'queue'};
+    Sympa::List::init_list_cache();
+    # Process grouped notifications
+    Sympa::Alarm->instance->flush;
 
-    # This is the main loop : look for files in the directory, handles
-    # them, sleeps a while and continues the good job.
-    while (!$signal) {
+    my $dh;
+    unless (opendir $dh, $spool) {
+        die sprintf 'Can\'t open dir %s: %s', $spool, $ERRNO;
+        ## No return.
+    }
+    my @qfile =
+        sort
+        grep { !/,lock/ and !/\A(?:\.|T\.|BAD-)/ and -f ($spool . '/' . $_) }
+        readdir $dh;
+    closedir $dh;
+
+    # process digest only in distribution mode.
+    # Scan queuedigest.
+    if ($index_queuedigest++ >= $digestsleep) {
+        $index_queuedigest = 0;
+        SendDigest();
+    }
+
+    # Cleanup in-memory msgid table, only in a while.
+    if (time > $latest_msgid_table_cleanup +
+        $Conf::Conf{'msgid_table_cleanup_frequency'}) {
+        clean_msgid_table();
+        $latest_msgid_table_cleanup = time;
+    }
+
+    my $highest_priority = 'z';
+    my $numprocessed     = 0;
+    foreach my $filename (@qfile) {
+        last if $signal;
+
         $language->set_lang($default_lang);
-
-        Sympa::List::init_list_cache();
-        # Process grouped notifications
-        Sympa::Alarm->instance->flush;
-
-        my $dh;
-        unless (opendir $dh, $spool) {
-            die sprintf 'Can\'t open dir %s: %s', $spool, $ERRNO;
-            ## No return.
-        }
-        @qfile = sort tools::by_date grep {
-                    !/,lock/
-                and !/\A(?:\.|T\.|BAD-)/
-                and -f ($spool . '/' . $_)
-        } readdir $dh;
-        closedir $dh;
-
-        # process digest only in distribution mode
-        ## Scan queuedigest
-        if ($index_queuedigest++ >= $digestsleep) {
-            $index_queuedigest = 0;
-            SendDigest();
-        }
-
-        ## Cleanup in-memory msgid table, only in a while
-        if (time > $latest_msgid_table_cleanup +
-            $Conf::Conf{'msgid_table_cleanup_frequency'}) {
-            clean_msgid_table();
-            $latest_msgid_table_cleanup = time;
-        }
 
         $mailer->reaper();    # finish terminated process
 
-        my $filename;
-        my $metadata;
+        my $lock_fh =
+            Sympa::LockedFile->new($spool . '/' . $filename, -1, '+<');
+        next unless $lock_fh;
+
+        my $metadata = tools::unmarshal_metadata(
+            $spool, $filename,
+            qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
+            [qw(localpart domainpart date)]
+        );
+        next unless $metadata;
 
         # z and Z are a null priority, so file stay in queue and are
         # processed only if renamed by administrator
-        my $highest_priority = 'z';    ## lowest priority
-        ## in single mode we may have to supervise automatic spool
-        my $t_spool = $spool;
+        next
+            if $metadata->{'priority'} and lc($metadata->{'priority'}) eq 'z';
 
-        ## Scans files in queue
-        ## Search file with highest priority
-        foreach my $t_filename (@qfile) {
-            my $t_metadata = tools::unmarshal_metadata(
-                $t_spool, $t_filename,
-                qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
-                [qw(localpart domainpart date)]
-            );
-            next unless $t_metadata;
-
-            if (ord($t_metadata->{'priority'}) < ord($highest_priority)) {
-                $highest_priority = $t_metadata->{'priority'};
-                $filename         = $t_filename;
-                $metadata         = $t_metadata;
-            }
-        }    ## END of spool lookup
-
-        unless ($filename) {
-            sleep($Conf::Conf{'sleep'});
-            next;
+        # Lazily seek highest priority: Messages with lower priority than
+        # those already found are skipped.
+        if (defined $metadata->{priority} and length $metadata->{priority}) {
+            next if $highest_priority lt $metadata->{priority};
+            $highest_priority = $metadata->{priority};
         }
-
-        my $lock_fh =
-            Sympa::LockedFile->new($t_spool . '/' . $filename, -1, '+<');
-        next unless $lock_fh;
 
         my $msg_string = do { local $RS; <$lock_fh> };
         my $message = Sympa::Message->new($msg_string, %$metadata);
@@ -311,13 +302,12 @@ while ($signal ne 'term') {
             next;
         }
 
+        $numprocessed++;
+
         my $robot =
             (ref $message->{context} eq 'Sympa::List')
             ? $message->{context}->{'domain'}
             : $message->{context};
-
-        Log::do_log('debug', 'Processing message %s with priority %s',
-            $message, $highest_priority);
 
         ## Set NLS default lang for current message
         $language->set_lang(Conf::get_robot_conf($robot, 'lang'),
@@ -327,19 +317,19 @@ while ($signal ne 'term') {
         my $status = process_message($message);
 
         if (defined $status) {
-            Log::do_log('debug', "Finished %s", "$t_spool/$filename");
+            Log::do_log('debug', "Finished %s", "$spool/$filename");
 
             if ($main::options{'keepcopy'}) {
                 unless (
                     File::Copy::copy(
-                        $t_spool . '/' . $filename,
+                        $spool . '/' . $filename,
                         $main::options{'keepcopy'} . '/' . $filename
                     )
                     ) {
                     Log::do_log(
                         'notice',
                         'Could not rename %s/%s to %s/%s: %m',
-                        $t_spool,
+                        $spool,
                         $filename,
                         $main::options{'keepcopy'},
                         $filename
@@ -348,7 +338,7 @@ while ($signal ne 'term') {
             }
             $lock_fh->unlink;
         } else {
-            my $bad_dir = "$t_spool/bad";
+            my $bad_dir = "$spool/bad";
 
             if (-d $bad_dir) {
                 unless ($lock_fh->rename($bad_dir . '/' . $filename)) {
@@ -360,7 +350,7 @@ while ($signal ne 'term') {
                     $filename);
             } else {
                 Log::do_log('notice', 'Missing directory "%s"', $bad_dir);
-                unless ($lock_fh->rename($t_spool . '/BAD-' . $filename)) {
+                unless ($lock_fh->rename($spool . '/BAD-' . $filename)) {
                     die sprintf
                         'Unable to rename bad file %s to BAD-%s: %s',
                         $filename, $filename, $lock_fh->last_error;
@@ -383,6 +373,11 @@ while ($signal ne 'term') {
             Sympa::Constants::VERSION);
         _load();
         $signal = 0;
+    }
+
+    # If the spool was empty, sleep for a while.
+    unless ($numprocessed) {
+        sleep $Conf::Conf{'sleep'};
     }
 }    #end of block while ($signal ne 'term'){
 
