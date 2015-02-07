@@ -255,47 +255,6 @@ while ($signal ne 'term') {
             SendDigest();
         }
 
-        # process expire and bads only in command mode
-
-        ## Clean queue (bad)
-        if ($index_cleanqueue++ >= 100) {
-            $index_cleanqueue = 0;
-            if (-e "$spool/bad") {
-                Sympa::Tools::File::CleanDir("$spool/bad",
-                    $Conf::Conf{'clean_delay_queue'});
-            }
-            Sympa::Tools::File::CleanDir($Conf::Conf{'queuemod'},
-                $Conf::Conf{'clean_delay_queuemod'});
-            if (-e $Conf::Conf{'queueoutgoing'} . '/bad') {
-                Sympa::Tools::File::CleanDir(
-                    $Conf::Conf{'queueoutgoing'} . '/bad',
-                    $Conf::Conf{'clean_delay_queueoutgoing'}
-                );
-            }
-            if (-e $Conf::Conf{'queuebounce'} . '/bad') {
-                Sympa::Tools::File::CleanDir(
-                    $Conf::Conf{'queuebounce'} . '/bad',
-                    $Conf::Conf{'clean_delay_queuebounce'}
-                );
-            }
-            if (-e $Conf::Conf{'queuebulk'} . '/bad') {
-                Sympa::Tools::File::CleanDir(
-                    $Conf::Conf{'queuebulk'} . '/bad',
-                    $Conf::Conf{'clean_delay_queuebulk'}
-                );
-            }
-            Sympa::Tools::File::CleanDir($Conf::Conf{'queueauth'},
-                $Conf::Conf{'clean_delay_queueauth'});
-            Sympa::Tools::File::CleanDir($Conf::Conf{'queuetopic'},
-                $Conf::Conf{'clean_delay_queuetopic'});
-            Sympa::Tools::File::CleanDir($Conf::Conf{'tmpdir'},
-                $Conf::Conf{'clean_delay_tmpdir'});
-            Sympa::Tools::File::CleanDir($Conf::Conf{'queuesubscribe'},
-                $Conf::Conf{'clean_delay_queuesubscribe'});
-            Sympa::Tools::File::CleanDir($Conf::Conf{'queueautomatic'},
-                $Conf::Conf{'clean_delay_queueautomatic'});
-        }
-
         ## Cleanup in-memory msgid table, only in a while
         if (time > $latest_msgid_table_cleanup +
             $Conf::Conf{'msgid_table_cleanup_frequency'}) {

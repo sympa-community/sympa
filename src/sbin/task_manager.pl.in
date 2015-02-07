@@ -190,6 +190,7 @@ my %global_models = (
     'purge_user_table_task'            => 'purge_user_table',
     'purge_logs_table_task'            => 'purge_logs_table',
     'purge_session_table_task'         => 'purge_session_table',
+    'purge_spools_task'                => 'purge_spools',
     'purge_tables_task'                => 'purge_tables',
     'purge_one_time_ticket_table_task' => 'purge_one_time_ticket_table',
     'purge_orphan_bounces_task'        => 'purge_orphan_bounces',
@@ -229,6 +230,7 @@ my %commands = (
     'purge_user_table'            => [],
     'purge_logs_table'            => [],
     'purge_session_table'         => [],
+    'purge_spools'                => [],
     'purge_tables'                => [],
     'purge_one_time_ticket_table' => [],
     'purge_orphan_bounces'        => [],
@@ -888,6 +890,7 @@ sub cmd_process {
         if ($command eq 'purge_logs_table');
     return purge_session_table($task, \%context)
         if ($command eq 'purge_session_table');
+    return purge_spools($task, \%context) if $command eq 'purge_spools';
     return purge_tables($task, \%context) if ($command eq 'purge_tables');
     return purge_one_time_ticket_table($task, \%context)
         if ($command eq 'purge_one_time_ticket_table');
@@ -1310,18 +1313,70 @@ sub purge_session_table {
     return 1;
 }
 
+# Remove messages from spools if older than duration given by configuration.
+sub purge_spools {
+    foreach my $queue (qw(queue queuebounce queuebulk queueoutgoing)) {
+        my $directory   = $Conf::Conf{$queue} . '/bad';
+        my $clean_delay = $Conf::Conf{'clean_delay_' . $queue};
+        if (-e $directory) {
+            _clean_spool($directory, $clean_delay);
+        }
+    }
+    foreach my $queue (
+        qw(queueauth queueautomatic queuemod queuesubscribe queuetopic tmpdir)
+        ) {
+        my $directory   = $Conf::Conf{$queue};
+        my $clean_delay = $Conf::Conf{'clean_delay_' . $queue};
+        if (-e $directory) {
+            _clean_spool($directory, $clean_delay);
+        }
+    }
+}
+
+# Old name: tools::CleanSpool(), Sympa::Tools::File::CleanDir().
+sub _clean_spool {
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my ($directory, $clean_delay) = @_;
+
+    return 1 unless $clean_delay;
+
+    my $dh;
+    unless (opendir $dh, $directory) {
+        Log::do_log('err', 'Unable to open "%s" spool: %m', $directory);
+        return undef;
+    }
+    my @qfile = sort grep { !/\A\.+\z/ } readdir $dh;
+    closedir $dh;
+
+    my ($curlist, $moddelay);
+    foreach my $f (@qfile) {
+        if (Sympa::Tools::File::get_mtime("$directory/$f") <
+            time - $clean_delay * 60 * 60 * 24) {
+            if (-f "$directory/$f") {
+                unlink("$directory/$f");
+                Log::do_log('notice', 'Deleting old file %s',
+                    "$directory/$f");
+            } elsif (-d "$directory/$f") {
+                unless (Sympa::Tools::File::remove_dir("$directory/$f")) {
+                    Log::do_log('err', 'Cannot remove old directory %s: %m',
+                        "$directory/$f");
+                    next;
+                }
+                Log::do_log('notice', 'Deleting old directory %s',
+                    "$directory/$f");
+            }
+        }
+    }
+
+    return 1;
+}
+
 ## remove messages from bulkspool table when no more packet have any pointer
 ## to this message
 sub purge_tables {
     Log::do_log('info', '');
     my $removed;
 
-    # $removed = Sympa::Bulk::purge_bulkspool();
-    # unless (defined $removed) {
-    #     Log::do_log('err', 'Failed to purge bulkspool');
-    # }
-    # Log::do_log('notice', '%s rows removed in bulkspool_table', $removed);
-    #
     $removed = 0;
     foreach my $robot (Sympa::List::get_robots()) {
         my $all_lists = Sympa::List::get_lists($robot);

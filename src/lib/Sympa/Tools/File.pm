@@ -334,81 +334,8 @@ sub remove_dir {
 #DEPRECATED: No longer used.
 #sub a_is_older_than_b({a_file => file, b_file => file);
 
-=over
-
-=item CleanDir (STRING $spool_dir, INT $clean_delay)
-
-Clean all messages in spool $spool_dir older than $clean_delay.
-
-Arguments:
-
-=over 
-
-=item * I<spool_dir> : a string corresponding to the path to the spool to clean;
-
-=item * I<clean_delay> : the delay between the moment we try to clean spool and the last modification date of a file.
-
-=back
-
-Returns:
-
-=over
-
-=item * 1 if the spool was cleaned withou troubles.
-
-=item * undef if something went wrong.
-
-=back 
-
-=back
-
-=cut 
-
-############################################################
-#  CleanDir
-############################################################
-#  Cleans files older than $clean_delay from spool $spool_dir
-#
-# IN : -$spool_dir (+): the spool directory
-#      -$clean_delay (+): delay in days
-#
-# OUT : 1
-#
-##############################################################
+#MOVED to _clean_spool() in task_manager.pl.
 # Old name: tools::CleanSpool().
-sub CleanDir {
-    my ($spool_dir, $clean_delay) = @_;
-    Log::do_log('debug', '(%s, %s)', $spool_dir, $clean_delay);
-
-    unless (opendir(DIR, $spool_dir)) {
-        Log::do_log('err', 'Unable to open "%s" spool: %m', $spool_dir);
-        return undef;
-    }
-
-    my @qfile = sort grep (!/^\.+$/, readdir(DIR));
-    closedir DIR;
-
-    my ($curlist, $moddelay);
-    foreach my $f (@qfile) {
-        if (Sympa::Tools::File::get_mtime("$spool_dir/$f") <
-            time - $clean_delay * 60 * 60 * 24) {
-            if (-f "$spool_dir/$f") {
-                unlink("$spool_dir/$f");
-                Log::do_log('notice', 'Deleting old file %s',
-                    "$spool_dir/$f");
-            } elsif (-d "$spool_dir/$f") {
-                unless (Sympa::Tools::File::remove_dir("$spool_dir/$f")) {
-                    Log::do_log('err', 'Cannot remove old directory %s: %m',
-                        "$spool_dir/$f");
-                    next;
-                }
-                Log::do_log('notice', 'Deleting old directory %s',
-                    "$spool_dir/$f");
-            }
-        }
-    }
-
-    return 1;
-}
+#sub CleanDir;
 
 1;
