@@ -60,6 +60,7 @@ nobase_default_DATA = \
 	global_task_models/purge_one_time_ticket_table.daily.task \
 	global_task_models/purge_orphan_bounces.monthly.task \
 	global_task_models/purge_session_table.daily.task \
+	global_task_models/purge_spools.daily.task \
 	global_task_models/purge_tables.daily.task \
 	global_task_models/purge_user_table.monthly.task \
 	list_task_models/expire.yearly.task \
