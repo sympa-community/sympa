@@ -540,7 +540,7 @@ TBD.
 
 Returns:
 
-TBD.
+Operation handle (L<LDAP::Search> object or such), or C<undef>.
 
 =item do_query ( $query, $parameters, ... )
 
@@ -553,7 +553,7 @@ TBD.
 
 Returns:
 
-TBD.
+Statement handle (L<DBI::st> object or such), or C<undef>.
 
 =item do_prepared_query ( $query, $parameters, ... )
 
@@ -566,7 +566,7 @@ TBD.
 
 Returns:
 
-TBD.
+Statement handle (L<DBI::st> object or such>, or C<undef>.
 
 =item AS_DOUBLE ( $value )
 
@@ -631,7 +631,7 @@ This may be used at inside of each driver class.
 
 =head1 SEE ALSO
 
-L<SDM>, L<Sympa::Database>, L<Sympa::DatabaseManager>.
+L<Sympa::Database>, L<Sympa::DatabaseManager>.
 
 =head1 HISTORY
 

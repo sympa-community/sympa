@@ -297,6 +297,6 @@ L<archived(8)>, L<Sympa::Message>.
 
 =head1 HISTORY
 
-L<Sympa::Spool::Archive> appeared on Sympa 6.2.0.
+L<Sympa::Spool::Archive> appeared on Sympa 6.2.
 
 =cut

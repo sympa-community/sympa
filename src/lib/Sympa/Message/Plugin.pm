@@ -170,5 +170,5 @@ L<Sympa::Message::Plugin::FixEncoding> - An example module for message hook.
 
 =head1 HISTORY
 
-L<Sympa::Message::Plugin> appeared on Sympa 6.2.0.
+L<Sympa::Message::Plugin> appeared on Sympa 6.2.
 It was initially written by IKEDA Soji <ikeda@conversion.co.jp>.

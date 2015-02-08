@@ -833,16 +833,12 @@ S<B<sympa_automatic.pl> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf>
 
 =head1 DESCRIPTION
 
-B<Sympa> is scalable and highly customizable mailing list manager. 
-It can cope with big lists (200,000 subscribers) and comes with 
-a complete (user and admin) Web interface. It is 
-internationalized, and supports the us, fr, de, es, it, fi, and 
-chinese locales. A scripting language allows you to extend the 
-behavior of commands. B<Sympa> can be linked to an LDAP directory 
-or an RDBMS to create dynamic mailing lists. B<Sympa> provides S/MIME 
-and HTTPS based authentication and encryption.
-Sympa is a modern mailing-list manager. It supports a lot of useful
-features.
+Sympa_automatic.pl is a program which scans permanently the automatic creation
+spool and processes each message.
+
+If the list a message is bound for has not been there and list creation is
+authorized, it will be created.  Then the message is stored into incoming
+message spool again and wait for processing by F<sympa_msg.pl>.
 
 =head1 OPTIONS
 
@@ -905,24 +901,16 @@ Print the version number.
 
 F<--CONFIG--> main configuration file.
 
-F<--piddir--/sympa-creation.pid> this file contains the process ID
+F<--piddir--/sympa_automatic.pid> this file contains the process ID
 of F<sympa_automatic.pl>.
 
-=head1 AVAILABILITY
+=head1 SEE ALSO
 
-Latest version of B<Sympa> is available from L<http://www.sympa.org/>.
-
-=head1 MORE DOCUMENTATION
-
-The full documentation in HTML and PDF formats can be
-found in L<http://www.sympa.org/manual/>.
-
-The mailing lists (with web archives) can be accessed at
-L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+L<sympa.conf(5)>, L<sympa(1)>, L<sympa_msg(8)>.
 
 =head1 HISTORY
 
-This program was originally written by:
+F<sympa.pl> was originally written by:
 
 =over 4
 
@@ -936,13 +924,8 @@ ComitE<233> RE<233>seau des UniversitE<233>s
 
 =back
 
-=head1 BUGS
-
-Report bugs to Sympa bug tracker.
-See L<http://www.sympa.org/tracking>.
-
-=head1 SEE ALSO
-
-L<sympa.conf(5)>, L<sympa_msg(8)>.
+As of Sympa 6.2b.4, it was splitted into three programs:
+F<sympa.pl> command line utility, F<sympa_automatic.pl> daemon and
+F<sympa_msg.pl> daemon.
 
 =cut

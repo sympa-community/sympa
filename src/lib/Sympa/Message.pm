@@ -4607,6 +4607,6 @@ was initially written by Chris Hastie.  It appeared on Sympa 4.2b.1.
 
   (c) Chris Hastie 2004 - 2008.
 
-Renamed and merged L<Sympa::Message> appeard on Sympa 6.2.0.
+Renamed and merged L<Sympa::Message> appeard on Sympa 6.2.
 
 =cut 
