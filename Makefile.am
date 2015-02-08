@@ -160,11 +160,11 @@ uninstall-hook:
 	rm -f $(DESTDIR)$(confdir)/sympa.conf
 	rm -f $(DESTDIR)$(confdir)/wwsympa.conf
 
-META.json: META.json.pl Makefile
+META.json: META.json.pl Makefile src/lib/Sympa/ModDef.pm
 	cd src/lib; $(MAKE) Sympa/Constants.pm
 	$(PERL) META.json.pl > META.json
 
-sympa.spec: sympa.spec.pl Makefile
+sympa.spec: sympa.spec.pl Makefile src/lib/Sympa/ModDef.pm
 	cd src/lib; $(MAKE) Sympa/Constants.pm
 	$(PERL) sympa.spec.pl > sympa.spec
 
