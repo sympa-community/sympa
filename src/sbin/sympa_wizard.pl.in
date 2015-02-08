@@ -402,7 +402,7 @@ Press the Enter key to continue..."
                 printf "%d: %s\n", $i / 2 + 1, $dbd[$i];
             }
             printf gettext('-> Select RDBMS [1-%d] '), scalar @dbd / 2;
-            $selected = <>;
+            $selected = <STDIN>;
             chomp $selected;
             last
                 if $selected =~ /\A\d+\z/
