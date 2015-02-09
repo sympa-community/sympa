@@ -107,9 +107,6 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1
     if ($main::options{'debug'} || $main::options{'foreground'});
 
-my $daemon_name = Log::set_daemon($0);
-my $ip          = $ENV{'REMOTE_HOST'};
-
 # Load sympa.conf
 unless (Conf::load()) {
     die sprintf
@@ -1369,7 +1366,7 @@ sub _anabounce {
 
             $type = 7;
 
-        } elsif (($type == 7) && (/^\s+(\S+)/)) {
+        } elsif ($type and $type == 7 and /^\s+(\S+)/) {
 
             undef $type;
             my $adr = $1;
@@ -2014,7 +2011,7 @@ sub _anabounce {
         $a3 = _corrige($a2, $$from);
         $a3 =~ y/[A-Z]/[a-z]/;
         $a3 =~ s/^<(.*)>$/$1/;
-        $result->{$a3} = lc($info{$a1}{error});
+        $result->{$a3} = lc($info{$a1}{error}) if $info{$a1}{error};
     }
 
     return $count;
