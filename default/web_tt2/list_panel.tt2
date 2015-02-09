@@ -3,82 +3,109 @@
 <div class="list_panel">
 
 <ul id="MainMenuLinks">
-	
-	[% IF list_status == 'closed' || list_status == 'family_closed' %]
-	<li class="menuLinks"><span class="bg_color_error">[%|loc%]Closed list[%END%]</span></li>
-	[% ELSIF list_status == 'pending' %]
-	<li class="menuLinks"><span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span></li>
-	[% ELSIF list_status == 'error_config' %]
-	<li class="menuLinks"><span class="bg_color_error">[%|loc%]Erroneous configuration[%END%]</span></li>
-	[% END %]
-	
-	<li class="menuLinks">
-		[%|loc%]Subscribers:[%END%] [% total %]
-		[% IF may_review %]
-		<span style="font-weight: normal;">
-			<a href="[% path_cgi %]/review/[% list %]">[%|loc%](review)[%END%]</a>
-		</span>
-		[% END %]
-		
-		[% IF is_priv %]
-		
-		<span style="font-weight: normal;">
-			&nbsp;&nbsp;(<a href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Error rate:[%END%]</a> [% bounce_rate %]% )
-		</span>
-		<br />
-		[% END %]
-	</li>
-	
-	<li class="menuLinks">
-		[%|loc%]Owners:[%END%]
-		<span style="font-weight: normal;">
-		[% FOREACH o = owner %]
-			[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %][% IF ! loop.last %][%|loc%], [%END%][% END %] 
-		[% END %]
-		</span>
-		
-		[% IF is_priv %]
-		<span style="font-weight: normal;">
-			<a href="[% path_cgi %]/edit_list_request/[% list %]/description#owner">[%|loc%](edit)[%END%]</a>
-		</span>
-		[% END %]
-	</li>
-	
-	<li class="menuLinks">
-		[%|loc%]Moderators:[%END%]
-		<span style="font-weight: normal;">
-		[% IF editor %]
-			[% FOREACH e = editor %]
-				[% IF e.value.visibility != 'conceal' %]
-					[% IF e.value.gecos %]<span>[% e.value.gecos %]</span>[% ELSE %]<span>[% e.value.local %][% IF ! loop.last %][%|loc%], [%END%][% END %]</span>[% END %]<br />
-				[% END %]
-			[% END %]
-		[% ELSE %]
-			<i>[%|loc%](same as owners)[%END%]</i>
-		[% END %]
-		</span>
-		
-		[% IF is_priv %]
-		<span style="font-weight: normal;">
-			<a href="[% path_cgi %]/edit_list_request/[% list %]/description#editor">[%|loc%](edit)[%END%]</a>
-		</span>
-		[% END %]
-	</li>
-	
-	[% IF list_as_x509_cert %]
-	<li class="menuLinks">
-		<a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a>
-	</li>
-	[% END %]
-	
-	<li class="menuLinks">
-	[% IF protection_type == 'javascript' %]
-		[% hidden_head %]<a href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]</a>[% hidden_end %]
-	[% ELSE %]
-		<a href="mailto:[% hidden_head %][% list %]-request[% hidden_at %][% domain %][% hidden_end %]">[%|loc%]Contact owners[%END%]</a>
-	[% END %]
-	</li>
-	
+
+[% IF list_status == 'closed' || list_status == 'family_closed' %]
+  <li class="menuLinks"><span class="bg_color_error">[%|loc%]Closed list[%END%]</span></li>
+[% ELSIF list_status == 'pending' %]
+  <li class="menuLinks"><span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span></li>
+[% ELSIF list_status == 'error_config' %]
+  <li class="menuLinks"><span class="bg_color_error">[%|loc%]Erroneous configuration[%END%]</span></li>
+[% END %]
+
+<li class="menuLinks">
+  [%|loc%]Subscribers:[%END%] [% total %]
+  [% IF may_review %]
+    <span style="font-weight: normal;">
+      <a href="[% path_cgi %]/review/[% list %]">[%|loc%](review)[%END%]</a>
+    </span>
+  [% END %]
+
+  [% IF is_priv %]
+    <span style="font-weight: normal;">
+      &nbsp;&nbsp;(<a href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Error rate:[%END%]</a> [% bounce_rate %]% )
+    </span>
+    <br />
+  [% END %]
+</li>
+
+<li class="menuLinks">
+  [%|loc%]Owners:[%END%]
+  <span style="font-weight: normal;">
+  [% SET concealed = 0 ~%]
+  [% FOREACH o = owner ~%]
+    [% IF o.value.visibility != 'conceal' ~%]
+      [% IF o.value.gecos ~%]
+        [% o.value.gecos ~%]
+      [% ELSE ~%]
+        [% o.value.local ~%]
+      [% END ~%]
+      [% IF ! loop.last || concealed ~%]
+        [%|loc%], [%END~%]
+      [% END ~%]
+    [% ELSE ~%]
+      [% SET concealed = concealed + 1 ~%]
+    [% END ~%]
+  [% END ~%]
+  [% IF concealed ~%]
+    [%|loc(concealed)%](%1 owners)[% END ~%]
+  [% END ~%]
+  </span>
+
+  [% IF is_priv %]
+    <span style="font-weight: normal;">
+      <a href="[% path_cgi %]/edit_list_request/[% list %]/description#owner">[%|loc%](edit)[%END%]</a>
+    </span>
+  [% END %]
+</li>
+
+<li class="menuLinks">
+  [%|loc%]Moderators:[%END%]
+  <span style="font-weight: normal;">
+  [% IF editor %]
+    [% SET concealed = 0 ~%]
+    [% FOREACH e = editor ~%]
+      [% IF e.value.visibility != 'conceal' ~%]
+        [% IF e.value.gecos ~%]
+          [% e.value.gecos ~%]
+        [% ELSE ~%]
+          [% e.value.local ~%]
+        [% END ~%]
+        [% IF ! loop.last || concealed ~%]
+          [%|loc%], [%END~%]
+        [% END ~%]
+      [% ELSE ~%]
+        [% SET concealed = concealed + 1 ~%]
+      [% END ~%]
+    [% END ~%]
+    [% IF concealed ~%]
+      [%|loc(concealed)%](%1 moderators)[% END ~%]
+    [% END ~%]
+  [% ELSE %]
+    <i>[%|loc%](same as owners)[%END%]</i>
+  [% END %]
+  </span>
+
+  [% IF is_priv %]
+    <span style="font-weight: normal;">
+      <a href="[% path_cgi %]/edit_list_request/[% list %]/description#editor">[%|loc%](edit)[%END%]</a>
+    </span>
+  [% END %]
+</li>
+
+[% IF list_as_x509_cert %]
+  <li class="menuLinks">
+    <a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a>
+  </li>
+[% END %]
+
+<li class="menuLinks">
+  [% IF protection_type == 'javascript' %]
+    [% hidden_head %]<a href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]</a>[% hidden_end %]
+  [% ELSE %]
+    <a href="mailto:[% hidden_head %][% list %]-request[% hidden_at %][% domain %][% hidden_end %]">[%|loc%]Contact owners[%END%]</a>
+  [% END %]
+</li>
+
 </ul>
 
 </div>
