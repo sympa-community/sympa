@@ -481,10 +481,16 @@ sub process_message {
         return undef;
     }
 
-    my $msg_id = $message->{'message_id'};
+    my $msg_id = $message->{message_id};
 
-    Log::do_log('notice', 'Processing %s; sender: %s; message ID: %s',
-        $message, $message->{'sender'}, $message->{'message_id'});
+    Log::do_log(
+        'notice',
+        'Processing %s; envelope_sender=%s; message_id=%s; sender=%s',
+        $message,
+        $message->{envelope_sender},
+        $message->{message_id},
+        $message->{sender}
+    );
 
     my $robot;
     my $listname;

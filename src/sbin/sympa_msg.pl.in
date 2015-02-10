@@ -568,10 +568,16 @@ sub process_message {
         return undef;
     }
 
-    my $msg_id = $message->{'message_id'};
+    my $msg_id = $message->{message_id};
 
-    Log::do_log('notice', 'Processing %s; sender: %s; message ID: %s',
-        $message, $message->{'sender'}, $message->{'message_id'});
+    Log::do_log(
+        'notice',
+        'Processing %s; envelope_sender=%s; message_id=%s; sender=%s',
+        $message,
+        $message->{envelope_sender},
+        $message->{message_id},
+        $message->{sender}
+    );
 
     my $robot;
     my $listname;
@@ -940,10 +946,10 @@ sub DoForward {
     }
 
     ##  Search for the list
-    my ($list, $admin, $host, $recepient, $priority);
+    my ($list, $admin, $host, $recipient, $priority);
 
     if ($function eq 'listmaster') {
-        $recepient =
+        $recipient =
             $Conf::Conf{'listmaster_email'} . '@'
             . Conf::get_robot_conf($robot, 'host');
         $priority = 0;
@@ -982,15 +988,15 @@ sub DoForward {
         }
 
         $admin     = $list->{'admin'};
-        $recepient = $list->get_list_address($function);
+        $recipient = $list->get_list_address($function);
         $priority  = $admin->{'priority'};
     }
 
     my @rcpt;
 
     Log::do_log('info',
-        'Processing message for %s with priority %s, (message ID:%s)',
-        $recepient, $priority, $messageid);
+        'Processing %s; message_id=%s; priority=%s; recipient=%s',
+        $message, $messageid, $priority, $recipient);
 
     delete $message->{'rcpt'};
     delete $message->{'family'};
@@ -1104,7 +1110,7 @@ sub DoForward {
     # (a.k.a. SPF 2.0) compatibility.  Note that Resent-Sender: field will be
     # removed.
     #FIXME: Existing DKIM signature depends on these headers will be broken.
-    $message->add_header('X-Loop', $recepient);
+    $message->add_header('X-Loop', $recipient);
     $message->replace_header('Sender',
         Conf::get_robot_conf($robot, 'request'));
     $message->delete_header('Resent-Sender');
@@ -1809,7 +1815,7 @@ sub DoMessage {
 ############################################################
 #  Handles a command sent to the list manager.
 #
-# IN : -$rcpt : recepient | <listname>-<subscribe|unsubscribe>
+# IN : -$rcpt : recipient | <listname>-<subscribe|unsubscribe>
 #      -$robot (+): robot
 #      -$message : ref(Message) with :
 #        ->msg (+): ref(MIME::Entity) : message containing command
