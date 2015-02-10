@@ -1916,8 +1916,10 @@ sub distribute_msg {
     }
 
     #log in stat_table to make statistics...
-    unless($message->{sender} =~ /($Conf::Conf{'email'})\@/) { #ignore messages sent by robot
-        unless ($message->{sender} =~ /($self->{name})-request/) { #ignore messages of requests
+    unless ($message->{sender} =~ /($Conf::Conf{'email'})\@/) {
+        #ignore messages sent by robot
+        unless ($message->{sender} =~ /($self->{name})-request/) {
+            #ignore messages of requests
             Log::db_stat_log(
                 {   'robot'     => $self->{'domain'},
                     'list'      => $self->{'name'},
@@ -6769,10 +6771,12 @@ sub _include_users_ldap {
     while (my $e = $mesg->shift_entry) {
         my $emailentry = $e->get_value($email_attr, asref => 1);
         my $gecosentry = $e->get_value($gecos_attr, asref => 1);
-        $gecosentry = $gecosentry->[0] if (ref($gecosentry) eq 'ARRAY');
+        $gecosentry = $gecosentry->[0] if ref $gecosentry eq 'ARRAY';
 
-        ## Multiple values
-        if (ref($emailentry) eq 'ARRAY') {
+        unless (defined $emailentry) {
+            next;
+        } elsif (ref $emailentry eq 'ARRAY') {
+            # Multiple values
             foreach my $email (@{$emailentry}) {
                 my $cleanmail = tools::clean_email($email);
                 ## Skip badly formed emails
@@ -6782,12 +6786,12 @@ sub _include_users_ldap {
                     next;
                 }
 
-                next if ($emailsViewed{$cleanmail});
+                next if $emailsViewed{$cleanmail};
                 push @emails, [$cleanmail, $gecosentry];
                 $emailsViewed{$cleanmail} = 1;
-                last if ($ldap_select eq 'first');
+                last if $ldap_select eq 'first';
             }
-        } else {
+        } else {    #FIMXE: Probably not reached due to asref.
             my $cleanmail = tools::clean_email($emailentry);
             ## Skip badly formed emails
             unless (tools::valid_email($emailentry)) {
@@ -6795,10 +6799,10 @@ sub _include_users_ldap {
                     $emailentry);
                 next;
             }
-            unless ($emailsViewed{$cleanmail}) {
-                push @emails, [$cleanmail, $gecosentry];
-                $emailsViewed{$cleanmail} = 1;
-            }
+
+            next if $emailsViewed{$cleanmail};
+            push @emails, [$cleanmail, $gecosentry];
+            $emailsViewed{$cleanmail} = 1;
         }
     }
 
@@ -6925,19 +6929,19 @@ sub _include_users_ldap_2level {
 
     while (my $e = $mesg->shift_entry) {
         my $entry = $e->get_value($ldap_attrs1, asref => 1);
-        ## Multiple values
-        if (ref($entry) eq 'ARRAY') {
+
+        unless (defined $entry) {
+            next;
+        } elsif (ref $entry eq 'ARRAY') {
+            # Multiple values
             foreach my $attr (@{$entry}) {
-                next
-                    if (($ldap_select1 eq 'regex')
-                    && ($attr !~ /$ldap_regex1/));
+                next if $ldap_select1 eq 'regex' and $attr !~ /$ldap_regex1/;
                 push @attrs, $attr;
-                last if ($ldap_select1 eq 'first');
+                last if $ldap_select1 eq 'first';
             }
-        } else {
-            push @attrs, $entry
-                unless (($ldap_select1 eq 'regex')
-                && ($entry !~ /$ldap_regex1/));
+        } else {    #FIXME: Probably not reached due to asref
+            next if $ldap_select1 eq 'regex' and $entry !~ /$ldap_regex1/;
+            push @attrs, $entry;
         }
     }
 
@@ -6989,10 +6993,12 @@ sub _include_users_ldap_2level {
         while (my $e = $mesg->shift_entry) {
             my $emailentry = $e->get_value($email_attr, asref => 1);
             my $gecosentry = $e->get_value($gecos_attr, asref => 1);
-            $gecosentry = $gecosentry->[0] if (ref($gecosentry) eq 'ARRAY');
+            $gecosentry = $gecosentry->[0] if ref $gecosentry eq 'ARRAY';
 
-            ## Multiple values
-            if (ref($emailentry) eq 'ARRAY') {
+            unless (defined $emailentry) {
+                next;
+            } elsif (ref $emailentry eq 'ARRAY') {
+                # Multiple values
                 foreach my $email (@{$emailentry}) {
                     my $cleanmail = tools::clean_email($email);
                     ## Skip badly formed emails
@@ -7003,14 +7009,14 @@ sub _include_users_ldap_2level {
                     }
 
                     next
-                        if (($ldap_select2 eq 'regex')
-                        && ($cleanmail !~ /$ldap_regex2/));
-                    next if ($emailsViewed{$cleanmail});
+                        if $ldap_select2 eq 'regex'
+                            and $cleanmail !~ /$ldap_regex2/;
+                    next if $emailsViewed{$cleanmail};
                     push @emails, [$cleanmail, $gecosentry];
                     $emailsViewed{$cleanmail} = 1;
-                    last if ($ldap_select2 eq 'first');
+                    last if $ldap_select2 eq 'first';
                 }
-            } else {
+            } else {    #FIXME: Probably not reached due to asref
                 my $cleanmail = tools::clean_email($emailentry);
                 ## Skip badly formed emails
                 unless (tools::valid_email($emailentry)) {
@@ -7019,15 +7025,12 @@ sub _include_users_ldap_2level {
                     next;
                 }
 
-                unless (
-                    (      ($ldap_select2 eq 'regex')
-                        && ($cleanmail !~ /$ldap_regex2/)
-                    )
-                    || $emailsViewed{$cleanmail}
-                    ) {
-                    push @emails, [$cleanmail, $gecosentry];
-                    $emailsViewed{$cleanmail} = 1;
-                }
+                next
+                    if $ldap_select2 eq 'regex'
+                        and $cleanmail !~ /$ldap_regex2/;
+                next if $emailsViewed{$cleanmail};
+                push @emails, [$cleanmail, $gecosentry];
+                $emailsViewed{$cleanmail} = 1;
             }
         }
     }
