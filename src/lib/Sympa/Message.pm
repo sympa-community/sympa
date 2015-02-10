@@ -609,7 +609,16 @@ sub new_from_template {
     }
 
     # Set default delivery date.
-    $self->{'date'} = time;
+    $self->{date} = time;
+
+    # Assign unique ID and log it.
+    my $marshalled =
+        tools::marshal_metadata($self, '%s@%s.%ld.%ld,%d',
+        [qw(localpart domainpart date PID RAND)]);
+    $self->{messagekey} = $marshalled;
+    Log::do_log('notice',
+        'Processing %s; message_id=%s; recipients=%s; sender=%s; template=%s',
+        $self, $self->{message_id}, $who, $self->{sender}, $tpl);
 
     return $self;
 }
