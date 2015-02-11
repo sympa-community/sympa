@@ -574,7 +574,7 @@ while (!$end) {
 
         $date_of_last_activity = time();
     } elsif ($handle) {
-        Log::do_log('err', 'Cannot parse message <%s>', $handle->basename);
+        Log::do_log('err', 'Cannot parse message <%s>', $handle->basename(1));
         $bulk->quarantine($handle);
         next;
     } else {
