@@ -234,6 +234,9 @@ Returns the value for a flag : sig or sub.
 
 =item may_do ( ACTION, USER )
 
+B<Note>:
+This method was obsoleted.
+
 Chcks is USER may do the ACTION for the list. ACTION can be
 one of following : send, review, index, getm add, del,
 reconfirm, purge.
@@ -5637,6 +5640,7 @@ sub may_create_parameter {
 ## May the indicated user do something with the list or not?
 ## Action can be : send, review, index, get
 ##                 add, del, reconfirm, purge
+# OBSOLETED: No longer used.
 sub may_do {
     my ($self, $action, $who) = @_;
     Log::do_log('debug3', '(%s, %s)', $action, $who);

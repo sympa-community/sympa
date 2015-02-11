@@ -3337,7 +3337,7 @@ sub modindex {
 
     my $i;
 
-    unless ($list->may_do('modindex', $sender)) {
+    unless ($list->am_i('editor', $sender)) {
         Sympa::Report::reject_report_cmd('auth', 'restricted_modindex', {},
             $cmd_line);
         Log::do_log('info', 'MODINDEX %s from %s refused, not allowed',
