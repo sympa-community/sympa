@@ -105,8 +105,9 @@ sub next {
         return;
     }
 
-    my ($lock_fh, $metadata, $message);
     while (my $marshalled = shift @{$self->{_metadatas}}) {
+        my ($lock_fh, $metadata, $message);
+
         # Try locking packet.  Those locked or removed by other process will
         # be skipped.
         $lock_fh =
@@ -136,6 +137,7 @@ sub next {
             );
             $message = Sympa::Message->new_from_file(
                 $self->{msg_directory} . '/' . $msg_file, %$metadata);
+
             if ($message) {
                 my $rcpt_string = do { local $RS; <$lock_fh> };
                 $message->{rcpt} = [split /\n+/, $rcpt_string];

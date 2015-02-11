@@ -94,8 +94,9 @@ sub next {
         return;
     }
 
-    my ($lock_fh, $metadata, $message);
     while (my $marshalled = shift @{$self->{_metadatas}}) {
+        my ($lock_fh, $metadata, $message);
+
         # Try locking message.  Those locked or removed by other process will
         # be skipped.
         $lock_fh =
