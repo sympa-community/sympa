@@ -1,7 +1,17 @@
 [%#################################-%]
 [%#### REJECTED AUTHORIZATION #####-%]
 [%#################################-%]
-[% IF reason == 'web_archive_closed' -%]
+[% IF reason == 'mail_archive_closed' -%]
+[%|loc()%]Archives are closed.[%END%]
+
+[% ELSIF reason == 'mail_archive_owner' -%]
+[%|loc()%]Archives are restricted to list owners.[%END%]
+
+[% ELSIF reason == 'mail_archive_subscriber' -%]
+[%|loc()%]Archives are restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[% ELSIF reason == 'web_archive_closed' -%]
 [%|loc()%]Web archives are closed.[%END%]
 
 [% ELSIF reason == 'web_archive_local_user_sub' -%]

@@ -80,6 +80,10 @@ nobase_default_DATA = \
 	scenari/add.owner \
 	scenari/add.owner_notify \
 	scenari/add.ownerdkim \
+	scenari/archive_mail_access.closed \
+	scenari/archive_mail_access.owner \
+	scenari/archive_mail_access.private \
+	scenari/archive_mail_access.public \
 	scenari/automatic_list_creation.listmaster \
 	scenari/automatic_list_creation.public \
 	scenari/automatic_list_creation.family_owner \
@@ -368,20 +372,22 @@ EXTRA_DIST = $(nobase_default_DATA) \
 
 CLEANFILES = list_aliases.tt2
 
-DEFAULT_SCENARIOS = add.owner \
-		    d_edit.owner \
-		    d_read.private \
-		    del.owner \
-		    info.open \
-		    invite.private \
-		    remind.owner \
-		    review.owner \
-		    send.private \
-		    subscribe.open \
-		    topics_visibility.noconceal \
-		    tracking.owner \
-		    unsubscribe.open \
-		    visibility.conceal
+DEFAULT_SCENARIOS = \
+	add.owner \
+	archive_mail_acccess.closed \
+	d_edit.owner \
+	d_read.private \
+	del.owner \
+	info.open \
+	invite.private \
+	remind.owner \
+	review.owner \
+	send.private \
+	subscribe.open \
+	topics_visibility.noconceal \
+	tracking.owner \
+	unsubscribe.open \
+	visibility.conceal
 
 list_aliases.tt2: Makefile list_aliases.tt2.in
 	rm -f $@

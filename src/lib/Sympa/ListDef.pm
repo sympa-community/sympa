@@ -701,8 +701,8 @@ our %pinfo = (
             'mail_access' => {
                 'order'      => 4,
                 'gettext_id' => "access right by mail commands",
-                'format' => ['open', 'private', 'public', 'owner', 'closed'],
-                'synonym' => {'open' => 'public'}
+                'scenario'   => 'archive_mail_access',
+                'synonym' => {'open' => 'public'}    # Compat. with <=6.2b.4.
             },
             'quota' => {
                 'order'        => 5,

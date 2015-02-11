@@ -136,7 +136,7 @@ sub parse {
 
             my $status;
             $cmd_line = $i;
-            $status = &{$comms{$j}}($args, $robot, $sign_mod, $message);
+            $status = $comms{$j}->($args, $robot, $sign_mod, $message);
 
             return $status;
         }
@@ -413,10 +413,13 @@ sub stats {
 #
 ###############################################
 sub getfile {
-    my ($which, $file) = split(/\s+/, shift);
-    my $robot = shift;
+    Log::do_log('debug', '(%s, %s, %s, %s)', @_);
+    my $args     = shift;
+    my $robot    = shift;
+    my $sign_mod = shift;
+    my $message  = shift;
 
-    Log::do_log('debug', '(%s, %s, %s)', $which, $file, $robot);
+    my ($which, $file) = split /\s+/, $args;
 
     my $list = Sympa::List->new($which, $robot);
     unless ($list) {
@@ -446,10 +449,57 @@ sub getfile {
             $which, $file, $sender);
         return 'no_archive';
     }
-    unless ($list->may_do('get', $sender)) {
-        Sympa::Report::reject_report_cmd('auth', 'list_private_no_archive',
-            {}, $cmd_line);
-        Log::do_log('info', 'GET %s %s from %s refused, review not allowed',
+
+    my $auth_method = get_auth_method(
+        'get', $sender,
+        {   'type' => 'auth_failed',
+            'data' => {},
+            'msg'  => "GET $which $file from $sender"
+        },
+        $sign_mod,
+        $list
+    );
+    return 'wrong_auth'
+        unless (defined $auth_method);
+
+    my $result = Sympa::Scenario::request_action(
+        $list,
+        'archive.mail_access',
+        $auth_method,
+        {   'sender'  => $sender,
+            'message' => $message,
+        }
+    );
+    my $action;
+    $action = $result->{'action'} if (ref($result) eq 'HASH');
+
+    unless (defined $action) {
+        my $error =
+            "Unable to evaluate scenario 'archive_mail_access' for list $which";
+        Sympa::Report::reject_report_cmd('intern', $error,
+            {'listname' => $which, 'list' => $list},
+            $cmd_line, $sender, $robot);
+        return undef;
+    }
+
+    if ($action =~ /reject/i) {
+        if (defined $result->{'tt2'}) {
+            unless (
+                tools::send_file(
+                    $list, $result->{'tt2'},
+                    $sender, {'auto_submitted' => 'auto-replied'}
+                )
+                ) {
+                Log::do_log('notice', 'Unable to send template "%s" to %s',
+                    $result->{'tt2'}, $sender);
+                Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
+                    {}, $cmd_line);
+            }
+        } else {
+            Sympa::Report::reject_report_cmd('auth', $result->{'reason'}, {},
+                $cmd_line);
+        }
+        Log::do_log('info', 'GET %s %s from %s refused (not allowed)',
             $which, $file, $sender);
         return 'not_allowed';
     }
@@ -491,12 +541,11 @@ sub getfile {
 #
 ###############################################
 sub last {
-    my $which = shift;
-    my $robot = shift;
-
-    my $sympa = Conf::get_robot_conf($robot, 'sympa');
-
-    Log::do_log('debug', '(%s, %s)', $which, $robot);
+    Log::do_log('debug', '(%s, %s, %s, %s)', @_);
+    my $which    = shift;
+    my $robot    = shift;
+    my $sign_mod = shift;
+    my $message  = shift;
 
     my $list = Sympa::List->new($which, $robot);
     unless ($list) {
@@ -526,11 +575,57 @@ sub last {
             $which, $sender, $file);
         return 'no_archive';
     }
-    unless ($list->may_do('get', $sender)) {
-        Sympa::Report::reject_report_cmd('auth', 'list_private_no_archive',
-            {}, $cmd_line);
-        Log::do_log('info',
-            'LAST %s from %s refused, archive access not allowed',
+
+    my $auth_method = get_auth_method(
+        'last', $sender,
+        {   'type' => 'auth_failed',
+            'data' => {},
+            'msg'  => "LAST $which from $sender"
+        },
+        $sign_mod,
+        $list
+    );
+    return 'wrong_auth'
+        unless (defined $auth_method);
+
+    my $result = Sympa::Scenario::request_action(
+        $list,
+        'archive.mail_access',
+        $auth_method,
+        {   'sender'  => $sender,
+            'message' => $message,
+        }
+    );
+    my $action;
+    $action = $result->{'action'} if (ref($result) eq 'HASH');
+
+    unless (defined $action) {
+        my $error =
+            "Unable to evaluate scenario 'archive_mail_access' for list $which";
+        Sympa::Report::reject_report_cmd('intern', $error,
+            {'listname' => $which, 'list' => $list},
+            $cmd_line, $sender, $robot);
+        return undef;
+    }
+
+    if ($action =~ /reject/i) {
+        if (defined $result->{'tt2'}) {
+            unless (
+                tools::send_file(
+                    $list, $result->{'tt2'},
+                    $sender, {'auto_submitted' => 'auto-replied'}
+                )
+                ) {
+                Log::do_log('notice', 'Unable to send template "%s" to %s',
+                    $result->{'tt2'}, $sender);
+                Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
+                    {}, $cmd_line);
+            }
+        } else {
+            Sympa::Report::reject_report_cmd('auth', $result->{'reason'}, {},
+                $cmd_line);
+        }
+        Log::do_log('info', 'LAST %s from %s refused (not allowed)',
             $which, $sender);
         return 'not_allowed';
     }
@@ -563,10 +658,11 @@ sub last {
 #
 #############################################################
 sub index {
-    my $which = shift;
-    my $robot = shift;
-
-    Log::do_log('debug', '(%s) Robot (%s)', $which, $robot);
+    Log::do_log('debug', '(%s, %s, %s, %s)', @_);
+    my $which    = shift;
+    my $robot    = shift;
+    my $sign_mod = shift;
+    my $message  = shift;
 
     my $list = Sympa::List->new($which, $robot);
     unless ($list) {
@@ -580,16 +676,60 @@ sub index {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    ## Now check if we may send the list of users to the requestor.
-    ## Check all this depending on the values of the Review field in
-    ## the control file.
-    unless ($list->may_do('index', $sender)) {
-        Sympa::Report::reject_report_cmd('auth', 'list_private_no_browse', {},
-            $cmd_line);
-        Log::do_log('info', 'INDEX %s from %s refused, not allowed',
+    my $auth_method = get_auth_method(
+        'index', $sender,
+        {   'type' => 'auth_failed',
+            'data' => {},
+            'msg'  => "INDEX $which from $sender"
+        },
+        $sign_mod,
+        $list
+    );
+    return 'wrong_auth'
+        unless (defined $auth_method);
+
+    my $result = Sympa::Scenario::request_action(
+        $list,
+        'archive.mail_access',
+        $auth_method,
+        {   'sender'  => $sender,
+            'message' => $message,
+        }
+    );
+    my $action;
+    $action = $result->{'action'} if (ref($result) eq 'HASH');
+
+    unless (defined $action) {
+        my $error =
+            "Unable to evaluate scenario 'archive_mail_access' for list $which";
+        Sympa::Report::reject_report_cmd('intern', $error,
+            {'listname' => $which, 'list' => $list},
+            $cmd_line, $sender, $robot);
+        return undef;
+    }
+
+    if ($action =~ /reject/i) {
+        if (defined $result->{'tt2'}) {
+            unless (
+                tools::send_file(
+                    $list, $result->{'tt2'},
+                    $sender, {'auto_submitted' => 'auto-replied'}
+                )
+                ) {
+                Log::do_log('notice', 'Unable to send template "%s" to %s',
+                    $result->{'tt2'}, $sender);
+                Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
+                    {}, $cmd_line);
+            }
+        } else {
+            Sympa::Report::reject_report_cmd('auth', $result->{'reason'}, {},
+                $cmd_line);
+        }
+        Log::do_log('info', 'INDEX %s from %s refused (not allowed)',
             $which, $sender);
         return 'not_allowed';
     }
+
     unless ($list->is_archived()) {
         Sympa::Report::reject_report_cmd('user', 'empty_archives', {},
             $cmd_line);
