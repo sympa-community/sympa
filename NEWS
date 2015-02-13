@@ -3,6 +3,61 @@
 
 (See Changelog file for the full changes log)
 
+6.2b.4		February 13, 2015
+
+  Changes:
+
+	[11912] src/etc/script/sympa.generic, src/etc/script/sympa.in,
+	src/libexec/alias_manager.pl.in, src/sbin/Makefile.am,
+	src/sbin/archived.pl.in, src/sbin/bounced.pl.in, src/sbin/bulk.pl.in,
+	src/sbin/sympa.pl.in, src/sbin/sympa.pl.in:11903),
+	src/sbin/sympa.pl.in:11903), src/sbin/task_manager.pl.in:  sympa.pl was
+	splitted to three programs: sympa.pl command-line utility, sympa_msg.pl
+	daemon and sympa_automatic.pl daemon.
+
+  Bug fixes:
+
+	[11949] src/lib/Sympa/Tools/SMIME.pm:  Crypt::OpenSSL::X509->email has
+	a bug: when email comes from subjectAltName certificate field, it
+	return the whole field as a string. Consequently, if several addresses
+	are defined in this field, it returns
+	address1@domain.tldaddress2@domain.tld... Fixed by explicitely parsing
+	subjectAltName before deciding how to set the email. A bug report has
+	been made to the module maintainer:
+	https://github.com/dsully/perl-crypt-openssl-x509/issues/40
+
+	[11946] src/sbin/sympa_wizard.pl.in:  In some cases, module install
+	would fall in a recursive infintie llop. It was because we first called
+	CAPN::Shell::make, then force or test, then only install. It looks like
+	make would not actually install dependencies, but only build them.
+	Consequently, dependencies reuired to build a module would never be
+	available forerequire, leading to the infinite loop. Fixed by simply
+	skipping all the make, force and test to directly go to the install
+	call. It performs make and test anyway.
+
+	[11942] default/Makefile.am, default/mail_tt2/authorization_reject.tt2,
+	default/scenari/access_web_archive.closed:11920),
+	default/scenari/access_web_archive.owner:11920),
+	default/scenari/access_web_archive.private:11920),
+	default/scenari/access_web_archive.public:11920),
+	src/lib/Sympa/Commands.pm, src/lib/Sympa/ListDef.pm:  Blacklist was not
+	applied to GET, INDEX and LAST email commands.
+	New scenario archive_mail_access (archive.mail_access in list config)
+	is intrduced, and it will perform authorization.
+
+	[11920] src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/List.pm: 
+	Stat for mail sending had disappeared.
+
+	[11919] src/lib/Sympa/ModDef.pm:  DBD::mysql module was mandatory. It
+	should not.
+
+	[11914] src/lib/Sympa/ConfDef.pm:  Bad defaults and examples were set
+	for the http_host parameter: it must not start by http:// or https://.
+	Protocol is irrelevant. Only the domain part is usefull.
+
+	[11910] src/sbin/sympa.pl.in:  Fix "constant" getter to satisfy "strict
+	subs".
+
 6.2b.3		January 30, 2015
 
   Changes:
