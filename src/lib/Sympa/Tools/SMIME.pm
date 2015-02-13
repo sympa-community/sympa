@@ -174,7 +174,7 @@ sub parse_cert {
 	foreach my $extension_name (keys %$extensions) {
 		if ($extension_name eq 'subjectAltName') {
 			my $extension_value = $extensions->{$extension_name}->value();
-			my @addresses = split '\.\.', $extension_value;
+			my @addresses = split '\.{2,}', $extension_value;
 			shift @addresses;
 			foreach my $address (@addresses) {
 				$emails{$address} = 1;
