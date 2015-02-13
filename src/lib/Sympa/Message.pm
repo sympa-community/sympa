@@ -377,7 +377,7 @@ sub _get_message_id {
 =item new_from_template ( $that, $filename, $rcpt, $data )
 
 I<Constructor>.
-Create L<Sympa::Message> object from template.
+Creates L<Sympa::Message> object from template.
 
 Parameters:
 
@@ -393,7 +393,7 @@ Template filename (without extension).
 
 =item $rcpt
 
-Scalar or arrayref: SMTP "RCPT To:" field.
+Scalar or arrayref: SMTP "RCPT TO:" field.
 
 If it is a scalar, trys to retrieve information of the user
 (See also L<Sympa::User>.
@@ -406,7 +406,8 @@ Hashref used to parse template file, with keys:
 
 =item return_path
 
-SMTP "MAIL From:" field if send by smtp, "X-Sympa-From:" field if send by spool
+SMTP "MAIL FROM:" field if sent by SMTP (see L<Sympa::Mailer>),
+"Return-Path:" field if sent by spool.
 
 Note: This parameter is obsoleted.  Currently, {envelope_sender} attribute of
 object is taken from the context.
@@ -430,7 +431,7 @@ See also L<Sympa::Language>.
 
 =item replyto
 
-"Reply-to:" field if not a full msg
+"Reply-To:" field if not a full msg
 
 =item body
 
@@ -1011,10 +1012,10 @@ sub replace_header {
 =item head
 
 I<Instance method>.
-Get header of the message as L<MIME::Head> instance.
+Gets header of the message as L<MIME::Head> instance.
 
 Note that returned value is real reference to internal data structure.
-Even if it was changed, string representaion of message won't be updated.
+Even if it was changed, string representaion of message may not be updated.
 Alternatively, use L</add_header>(), L</delete_header>() or
 L</replace_header>() to modify header.
 
@@ -1217,8 +1218,8 @@ sub check_dkim_signature {
 =item remove_invalid_dkim_signature ( )
 
 I<Instance method>.
-Verify DKIM signatures included in the message,
-and if any of them are invalid, remove them.
+Verifys DKIM signatures included in the message,
+and if any of them are invalid, removes them.
 
 =back
 
@@ -1245,10 +1246,10 @@ sub remove_invalid_dkim_signature {
 =item as_entity ( )
 
 I<Instance method>.
-Get message content as MIME entity (L<MIME::Entity> instance).
+Gets message content as MIME entity (L<MIME::Entity> instance).
 
 Note that returned value is real reference to internal data structure.
-Even if it was changed, string representaion of message won't be updated.
+Even if it was changed, string representaion of message may not be updated.
 Below is better way to modify message.
 
     my $entity = $message->as_entity->dup;
@@ -1279,7 +1280,7 @@ sub as_entity {
 =item set_entity ( $entity )
 
 I<Instance method>.
-Update message with MIME entity (L<MIME::Entity> instance).
+Updates message with MIME entity (L<MIME::Entity> instance).
 String representation will be automatically updated.
 
 =back
@@ -1308,7 +1309,7 @@ sub set_entity {
 =item as_string ( )
 
 I<Instance method>.
-Get a string representation of message in MIME-compliant format.
+Gets a string representation of message.
 
 Parameter:
 
@@ -1472,7 +1473,7 @@ sub get_decoded_header {
 =item dump ( $output )
 
 I<Instance method>.
-Dump a Message object to a stream.
+Dumps a Message object to a stream.
 
 Parameters:
 
@@ -1526,7 +1527,7 @@ sub dump {
 =item add_topic ( $output )
 
 I<Instance method>.
-Add topic and put header X-Sympa-Topic.
+Adds topic and puts header X-Sympa-Topic.
 
 Parameters:
 
@@ -1565,7 +1566,7 @@ sub add_topic {
 =item get_topic ( )
 
 I<Instance method>.
-Get topic of message.
+Gets topic of message.
 
 Parameters:
 
@@ -1606,7 +1607,8 @@ sub get_topic {
 =item clean_html ( )
 
 I<Instance method>.
-Encode HTML parts of the message by UTF-8 and strip scripts included in them.
+Encodes HTML parts of the message by UTF-8 and strips scripts included in
+them.
 
 =back
 
@@ -1686,7 +1688,9 @@ sub _fix_html_part {
 =item smime_decrypt ( )
 
 I<Instance method>.
-Decrypt message using private key of user.
+Decrypts message using private key of user.
+
+Note that this method modifys Message object.
 
 Parameters:
 
@@ -1822,7 +1826,7 @@ sub smime_decrypt {
 =item smime_encrypt ( $email )
 
 I<Instance method>.
-Encrypt message using certificate of user.
+Encrypts message using certificate of user.
 
 Note that this method modifys Message object.
 
@@ -2165,7 +2169,7 @@ sub check_smime_signature {
 =item personalize ( $list, [ $rcpt ], [ $data ] )
 
 I<Instance method>.
-Personalize a message with custom attributes of a user.
+Personalizes a message with custom attributes of a user.
 
 Parameters:
 
@@ -2363,7 +2367,7 @@ sub _merge_msg {
 =item test_personalize ( $list )
 
 I<Instance method>.
-Test if personalization can be performed successfully over all subscribers
+Tests if personalization can be performed successfully over all subscribers
 of list.
 
 Parameters:
@@ -2415,7 +2419,7 @@ sub test_personalize {
 
 I<Function>.
 Retrieves the customized data of the
-users then parse the text. It returns the
+users then parses the text. It returns the
 personalized text.
 
 Parameters:
@@ -2583,7 +2587,7 @@ sub prepare_message_according_to_mode {
 =item decorate ( )
 
 I<Instance method>.
-Add footer/header to a message.
+Adds footer/header to a message.
 
 =back
 
@@ -3098,7 +3102,7 @@ sub _urlize_one_part {
 =item reformat_utf8_message ( )
 
 I<Instance method>.
-Reformat bodies of text parts contained in the message using
+Reformats bodies of text parts contained in the message using
 recommended encoding schema and/or charsets defined by MIME::Charset.
 
 MIME-compliant headers are appended / modified.  And custom X-Mailer:
@@ -3296,7 +3300,7 @@ sub _fix_utf8_parts {
 =item get_plain_body ( )
 
 I<Instance method>.
-Get decoded content of text/plain part.
+Gets decoded content of text/plain part.
 The text will be converted to UTF-8.
 
 =back
@@ -4087,7 +4091,7 @@ sub _getCharset {
 =item dmarc_protect ( )
 
 I<Instance method>.
-Munge the C<From:> header field if we are using DMARC Protection mode.
+Munges the C<From:> header field if we are using DMARC Protection mode.
 
 Parameters:
 
@@ -4307,7 +4311,7 @@ sub dmarc_protect {
 =item get_id ( )
 
 I<Instance method>.
-Get unique identifier of instance.
+Gets unique identifier of instance.
 
 =back
 
@@ -4437,7 +4441,7 @@ This is kept for compatibility with earlier releases.
 =item {sender}
 
 Actual sender of the message.
-This is determined according to C<sender_header> configuration parameter.
+This is determined according to C<sender_headers> configuration parameter.
 See also {envelope_sender} above.
 
 =item {shelved}
