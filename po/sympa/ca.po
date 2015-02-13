@@ -7,16 +7,16 @@ msgstr ""
 "Project-Id-Version: Sympa\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2013-10-19 16:48+0000\n"
+"PO-Revision-Date: 2015-02-05 17:14+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Català <projectek2@upcnet.es>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
-"X-POOTLE-MTIME: 1382201310.000000\n"
+"X-POOTLE-MTIME: 1423156479.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -46,9 +46,8 @@ msgid "The configuration file contains errors.\n"
 msgstr "L'arxiu de configuració --CONFIGURACIÓ-- conté errors.\n"
 
 #: src/sbin/sympa_wizard.pl.in:177
-#, fuzzy
 msgid "Example: "
-msgstr "Nom: "
+msgstr "Exemple:"
 
 #: src/sbin/sympa_wizard.pl.in:187
 msgid "(You must define this parameter)"
@@ -60,7 +59,7 @@ msgstr "%s [%s] : "
 
 #: src/sbin/sympa_wizard.pl.in:293
 msgid "Incorrect parameter definition: %s\n"
-msgstr "Definició incorrecte del paràmetre %s\n"
+msgstr "Definició incorrecta del paràmetre %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -107,25 +106,27 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:376
 msgid "Checking for PERL version:"
-msgstr ""
+msgstr "Comprovant la versió de PERL:"
 
 #: src/sbin/sympa_wizard.pl.in:379
 msgid "Your version of perl is OK (%s  >= %s)"
-msgstr ""
+msgstr "La vostra versió de PERL és correcta (%s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:383
 msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
 msgstr ""
+"La vostra versió de PERL és massa antiga (%s < %s)\n"
+"Siusplau, instaleu-ne una de més nova!"
 
 #: src/sbin/sympa_wizard.pl.in:387
 msgid "Checking for REQUIRED modules:"
-msgstr ""
+msgstr "Comprovant els mòduls REQUERITS"
 
 #: src/sbin/sympa_wizard.pl.in:389
 msgid "Checking for OPTIONAL modules:"
-msgstr ""
+msgstr "Comprovant els mòduls OPCIONALS:"
 
 #: src/sbin/sympa_wizard.pl.in:393
 msgid ""
@@ -133,74 +134,77 @@ msgid ""
 "You can retrieve all theses modules from any CPAN server\n"
 "(for example ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 msgstr ""
+"******* NOTA *******\n"
+"Podeu descarregar tots aquests mòduls des d'un servidor CPAN\n"
+"(per exemple ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 
 #: src/sbin/sympa_wizard.pl.in:408
-#, fuzzy
 msgid "perl module"
-msgstr "Mode expert"
+msgstr "Mòdul perl"
 
 #: src/sbin/sympa_wizard.pl.in:408
 msgid "from CPAN"
-msgstr ""
+msgstr "des de CPAN"
 
 #: src/sbin/sympa_wizard.pl.in:409
 msgid "STATUS"
-msgstr ""
+msgstr "ESTAT"
 
 #: src/sbin/sympa_wizard.pl.in:410
 msgid "-----------"
-msgstr ""
+msgstr "-----------"
 
 #: src/sbin/sympa_wizard.pl.in:410
 msgid "---------"
-msgstr ""
+msgstr "---------"
 
 #: src/sbin/sympa_wizard.pl.in:411
 msgid "------"
-msgstr ""
+msgstr "------"
 
 #: src/sbin/sympa_wizard.pl.in:430
 msgid "was not found on this system."
-msgstr ""
+msgstr "no s'ha trobat en aquest sistema."
 
 #: src/sbin/sympa_wizard.pl.in:452
 msgid "OK (%-6s >= %s)"
-msgstr ""
+msgstr "Correcte (%-6s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:455
-#, fuzzy
 msgid "version is too old (%s < %s)"
-msgstr "El període és massa llarg (%1 dies)"
+msgstr "la versió és massa antiga (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:458
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
-msgstr ""
+msgstr ">>>>>>> Heu d'actualitzar \"%s\" a la versió \"%s\" <<<<<<."
 
 #: src/sbin/sympa_wizard.pl.in:487
 msgid "## You need root privileges to install %s module. ##"
-msgstr ""
+msgstr "## Heu de ser root per poder instal·lar el mòdul %s ##"
 
 #: src/sbin/sympa_wizard.pl.in:490
 msgid "## Press the Enter key to continue checking modules. ##"
-msgstr ""
+msgstr "## Premeu la tecla Intro per continuar comprovant mòduls. ##"
 
 #: src/sbin/sympa_wizard.pl.in:499
 msgid "-> Usage of this module: %s"
-msgstr ""
+msgstr "-> Ús d'aquest mòdul: %s"
 
 #: src/sbin/sympa_wizard.pl.in:506
 msgid "-> Prerequisites: %s"
-msgstr ""
+msgstr "-> Prerequesits: %s"
 
 #: src/sbin/sympa_wizard.pl.in:511
 msgid "-> Install module %s ? [%s] "
-msgstr ""
+msgstr "-> Instal·lar el mòdul %s? [%s]"
 
 #: src/sbin/sympa_wizard.pl.in:549
 msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
 msgstr ""
+"L'instal·lació de %s segueix FALLANT. Hauríeu de descarregar el tar.gz des "
+"de http://search.cpan.org i instal·lar-lo manualment."
 
 #: src/sbin/sympa_wizard.pl.in:554
 msgid ""
@@ -210,31 +214,31 @@ msgstr ""
 
 #: src/lib/tools.pm:1815
 msgid "contains the dictionary word '%s'"
-msgstr ""
+msgstr "conté la paraula de diccionari '%s'"
 
 #: src/lib/tools.pm:1809
 msgid "Not between %d and %d characters"
-msgstr ""
+msgstr "No és entre %d i %d caràcters."
 
 #: src/lib/tools.pm:1810
 msgid "Not %d characters or greater"
-msgstr ""
+msgstr "No és de %d caràcters o més."
 
 #: src/lib/tools.pm:1811
 msgid "Not less than or equal to %d characters"
-msgstr ""
+msgstr "No menys o igual a %d caràcters. "
 
 #: src/lib/tools.pm:1812
 msgid "contains bad characters"
-msgstr ""
+msgstr "conté caràcters incorrectes"
 
 #: src/lib/tools.pm:1813
 msgid "contains less than %d character groups"
-msgstr ""
+msgstr "conté menys de %d grups de caràcters"
 
 #: src/lib/tools.pm:1814
 msgid "contains over %d leading characters in sequence"
-msgstr ""
+msgstr "conté més de %d caràcters seguits al principi"
 
 #: src/lib/Sympa/Tools/Daemon.pm:225 src/lib/Sympa/Tools/Daemon.pm:228
 #: src/lib/tt2.pm:167
@@ -257,7 +261,6 @@ msgstr "%d %b %Y at %H:%M:%S"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/lib/Sympa/Admin.pm:1230
-#, fuzzy
 msgid "%d %b %y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
