@@ -295,7 +295,7 @@ while ($signal ne 'term') {
 
         # Compatibility: Message with checksum by Sympa <=6.2a.40
         # They should be migrated.
-        if ($message->{checksum}) {
+        if ($message and $message->{checksum}) {
             Log::do_log('err',
                 '%s: Message with old format.  Run upgrade_send_spool.pl',
                 $message);
@@ -303,15 +303,6 @@ while ($signal ne 'term') {
         }
 
         $numprocessed++;
-
-        my $robot =
-            (ref $message->{context} eq 'Sympa::List')
-            ? $message->{context}->{'domain'}
-            : $message->{context};
-
-        ## Set NLS default lang for current message
-        $language->set_lang(Conf::get_robot_conf($robot, 'lang'),
-            $default_lang);
 
         # Appel de la fonction de traitement des mails entrants
         my $status = process_message($message);
@@ -631,6 +622,8 @@ sub process_message {
         );
         return undef;
     }
+
+    $language->set_lang(Conf::get_robot_conf($robot, 'lang'), $default_lang);
 
     # Load spam status.
     $message->check_spam_status;
