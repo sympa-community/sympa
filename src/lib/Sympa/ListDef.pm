@@ -702,7 +702,7 @@ our %pinfo = (
                 'order'      => 4,
                 'gettext_id' => "access right by mail commands",
                 'scenario'   => 'archive_mail_access',
-                'synonym' => {'open' => 'public'}    # Compat. with <=6.2b.4.
+                'synonym' => {'open' => 'public'}    # Compat. with <=6.2b.3.
             },
             'quota' => {
                 'order'        => 5,
@@ -713,10 +713,11 @@ our %pinfo = (
                 'length'       => 8
             },
             'max_month' => {
-                'order'      => 6,
-                'gettext_id' => "Maximum number of month archived",
-                'format'     => '\d+',
-                'length'     => 3
+                'order'        => 6,
+                'gettext_id'   => "Maximum number of month archived",
+                'gettext_unit' => 'months',
+                'format'       => '\d+',
+                'length'       => 3
             }
         }
     },

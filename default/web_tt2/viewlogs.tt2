@@ -3,51 +3,13 @@
 
 <h2>[%|loc%]Logs view[%END%]</h2>
 
-[% IF action != 'search' %]
-<div id="page_size">
-[%|loc%]Page size[%END%]
-  <form action="[% path_cgi %]">
-  <fieldset>
-  <input type="hidden" name="sortby" value="[% sortby %]" />
-  <input type="hidden" name="action" value="viewlogs" />
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="target_type" value="[% target_type %]" />
-  <input type="hidden" name="target" value="[% target %]" />
-  <input type="hidden" name="date_from" value="[% date_from %]" />
-  <input type="hidden" name="date_to" value="[% date_to %]" />
-  <input type="hidden" name="type" value="[% type %]" />
-  <input type="hidden" name="ip" value="[% ip %]" />
-  <select name="size" onchange="this.form.submit();">
-          <option value="[% size %]" selected="selected">[% size %]</option>
-	  <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-	  <option value="500">500</option>
-  </select>
-  </fieldset>
-  </form>
-<br />
-   [% IF prev_page %]
-    <a href="[% path_cgi %]/viewlogs/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
-   [% END %]
-   [% IF page %]
-     [%|loc(page,total_page)%]page %1 / %2[%END%]
-   [% END %]
-   [% IF next_page %]
-     <a href="[% path_cgi %]/viewlogs/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
-   [% END %]
-
-
-
-</div>
-[% END %]
-
 <form id="logs_form" name="log_form" method="post" action="[% path_cgi %]">
 <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="action" value="viewlogs" />
 
-  <label for="target_type">[%|loc%]Search by:[%END%]</label>
+  <div class="form_row">
+    <label for="target_type">[%|loc%]Search by:[%END%]</label>
     <select id="target_type" name="target_type">
 
        [% IF target_type  == 'target_email' %]
@@ -66,14 +28,19 @@
     </select>
        
     <input id="target" type="text" name="target" value="[% target %]" size ="20"/><br />
+  </div>[%# class="form_row" #%]
 
+  <div class="form_row">
     <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
-      <input type="text" id="date_from" name="date_from" maxlength="10" size="10" value="[% date_from %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" >
-          <label for="date_to">[%|loc%]to:[%END%]</label>
-      <input type="text" id="date_to" name="date_to" maxlength="10" size="10" value="[% date_to %]" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" ><noscript><em>[%|loc%]ex: 24-05-2006[%END%]</em></noscript>
-      <br />
+    <input type="text" id="date_from" name="date_from" maxlength="10" size="10" value="[% date_from %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" >
+    <label for="date_to" class="inlineLabel">[%|loc%]to:[%END%]</label>
+    <input type="text" id="date_to" name="date_to" maxlength="10" size="10" value="[% date_to %]" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" ><noscript><em>[%|loc%]ex: 24-05-2006[%END%]</em></noscript>
+    <br />
+  </div>[%# class="form_row" #%]
+
+  <div class="form_row">
     <label for="type">[%|loc%]Search by type:[%END%]</label>
-      <select id="type" name="type">
+    <select id="type" name="type">
        [% IF type %]
 	 [% IF type == 'all_actions' %]
 	   <option value="all_actions">[%|loc%]All[%END%]</option>
@@ -93,18 +60,22 @@
        <option value="subscription">[%|loc%]User management[%END%]</option>
        <option value="shared">[%|loc%]Web documents management[%END%]</option>
        <option value="none">------------</option>
-      </select><br />
-       
-   [% IF is_listmaster %]
+    </select><br />
+  </div>[%# class="form_row" #%]
 
-	<label for="ip">[%|loc%]Search by IP:[%END%]</label>
-	  <input id="ip" type="text" name="ip" value="[% ip %]"/><br />
-   [% END %]
+  [% IF is_listmaster %]
+    <div class="form_row">
+      <label for="ip">[%|loc%]Search by IP:[%END%]</label>
+      <input id="ip" type="text" name="ip" value="[% ip %]"/><br />
+    </div>[%# class="form_row" #%]
+  [% END %]
 
-       <label for="submit"></label>
-	 <input  class="MainMenuLinks" id="btnsubmit" type="submit" name="action_viewlogs" value="[%|loc%]View[%END%]" />
-       &nbsp;&nbsp;
-         <input  class="MainMenuLinks" id="btnreset" type="button" value="[%|loc%]Reset[%END%]" onclick="javascript:clear_log_form()"/>
+  <div class="form_row">
+    <label for="submit"></label>
+    <input  class="MainMenuLinks" id="btnsubmit" type="submit" name="action_viewlogs" value="[%|loc%]View[%END%]" />
+    &nbsp;&nbsp;
+    <input  class="MainMenuLinks" id="btnreset" type="button" value="[%|loc%]Reset[%END%]" onclick="javascript:clear_log_form()"/>
+  </div>[%# class="form_row" #%]
 </fieldset>
 </form>
 
@@ -240,6 +211,42 @@
       [% END %]
 </table>
 </div>
+[% END %]
+
+[% IF action != 'search' %]
+  <div id="page_size">
+  [%|loc%]Page size[%END%]
+  <form action="[% path_cgi %]">
+  <fieldset>
+  <input type="hidden" name="sortby" value="[% sortby %]" />
+  <input type="hidden" name="action" value="viewlogs" />
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="target_type" value="[% target_type %]" />
+  <input type="hidden" name="target" value="[% target %]" />
+  <input type="hidden" name="date_from" value="[% date_from %]" />
+  <input type="hidden" name="date_to" value="[% date_to %]" />
+  <input type="hidden" name="type" value="[% type %]" />
+  <input type="hidden" name="ip" value="[% ip %]" />
+  <select name="size" onchange="this.form.submit();">
+          <option value="[% size %]" selected="selected">[% size %]</option>
+	  <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+	  <option value="500">500</option>
+  </select>
+  </fieldset>
+  </form>
+<br />
+  [% IF prev_page %]
+    <a href="[% path_cgi %]/viewlogs/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
+  [% END %]
+  [% IF page %]
+    [%|loc(page,total_page)%]page %1 / %2[%END%]
+  [% END %]
+  [% IF next_page %]
+    <a href="[% path_cgi %]/viewlogs/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
+  [% END %]
+  </div>
 [% END %]
 
 </div>

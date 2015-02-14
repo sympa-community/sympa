@@ -2367,9 +2367,9 @@ sub get_recipients_per_mode {
                 and $message->{sender} eq $user->{'email'};
 
         # Recipients who won't receive encrypted messages.
+        # The digest, digestplain, nomail and summary reception option are
+        # initialized for tracking feature only.
         if ($user->{'reception'} eq 'digestplain') {
-            # digest digestplain, nomail and summary reception option are
-            # initialized for tracking feature only
             push @tabrcpt_digestplain_verp, $user->{'email'};
             next;
         } elsif ($user->{'reception'} eq 'digest') {

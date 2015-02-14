@@ -89,6 +89,7 @@
                               <!-- ParagrapH -->
                               [% FOREACH key = o.value %]
                                 [% IF key.may_edit != 'hidden' %]
+                                  <div class="form_row">
                                       <label for="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
                                         [% IF key.title %]
                                           [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
@@ -121,7 +122,7 @@
                                         [% END %]
                                         <br />
                                         </div>
-                                     [% ELSIF key.type == 'datasource' %]
+                                      [% ELSIF key.type == 'datasource' %]
                                         <!-- Datasource -->
                                         [% IF key.may_edit == 'write' %]
                                           <div><select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
@@ -160,7 +161,7 @@
                                         [% END %]
                                         [% key.unit %]<br />
                                       [% END %]
-                                   
+                                  </div>[%# class="form_row" #%] 
                                 [% END %]
                               [% END %]
                             [% ELSE %]
@@ -249,6 +250,7 @@
                               <!-- Paragraph -->
                               [% FOREACH key = p.value %]
                                 [% IF key.may_edit != 'hidden' %]
+                                  <div class="form_row">
                                       <label for="single_param.[% p.name %].[% key.name %].name">
                                         [% IF key.title %]
                                           [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
@@ -309,12 +311,12 @@
                                             [% END %]
                                           </select>
                                         [% ELSIF key.may_edit == 'read' %]
-                                        [% FOREACH source = key.value %]
-                                          [% IF source.value.selected == '1' %]
-                                            [% source.value.title %] ([% source.value.name %])
+                                          [% FOREACH source = key.value %]
+                                            [% IF source.value.selected == '1' %]
+                                              [% source.value.title %] ([% source.value.name %])
+                                            [% END %]
                                           [% END %]
                                         [% END %]
-                                      [% END %]
 
                                       [% ELSIF key.type == 'enum' %]
                                         <!-- Enum -->
@@ -371,7 +373,7 @@
                                         [% key.unit %]
                                         <br />
                                       [% END %]
-                                    
+                                  </div>[%# class="form_row" #%]
                                  
                               [% END %]
                             [% END %]
@@ -425,9 +427,9 @@
                           [% END %]
 
                       [% END %]
-          </div>[%# /div class="edit_list_request_enum" #%]
+          </div>[%# class="edit_list_request_enum" #%]
           [% IF p.default == '1' %]
-            <span class="default">[%|loc%]default[%END%]</span>
+            <div class="default" style="clear: both;">[%|loc%]default[%END%]</span>
           [% END %]
 
           </div><br />
