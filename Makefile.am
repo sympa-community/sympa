@@ -37,14 +37,22 @@ check_DATA = t/locale/cs/LC_MESSAGES/sympa.mo \
 	     t/locale/cs/LC_MESSAGES/web_help.mo \
 	     t/locale/zh_TW/LC_MESSAGES/sympa.mo \
 	     t/stub/Sympa/Constants.pm
+authorcheck_SCRIPTS = \
+	xt/pod-coverage.t \
+	xt/pod-spelling.t \
+	xt/pod-syntax.t
+authorcheckdir = xt
 
-EXTRA_DIST = important_changes.pl \
-	     META.json.pl \
-	     META.json \
-	     sympa.spec.pl \
-	     sympa.spec \
-	     etc_README \
-	     $(check_SCRIPTS) $(check_DATA)
+EXTRA_DIST = \
+	important_changes.pl \
+	META.json.pl \
+	META.json \
+	sympa.spec.pl \
+	sympa.spec \
+	etc_README \
+	$(check_SCRIPTS) $(check_DATA) \
+	$(authorcheck_SCRIPTS)
+
 CLEANFILES = META.json previous_sympa_version sympa.spec sympa_wizard.pl.inst
 
 MSGFMT=@MSGFMT@
@@ -55,6 +63,10 @@ check-local:
 	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
 	PERL5LIB=src/lib; export PERL5LIB; \
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
+
+authorcheck:
+	PERL5LIB=src/lib; export PERL5LIB; \
+	$(PERL) -MTest::Harness -e 'runtests @ARGV' $(authorcheck_SCRIPTS)
 
 install-data-hook: installdir installconfig nextstep importantchanges
 

@@ -21,7 +21,7 @@ my $struct = {
     version        => Sympa::Constants::VERSION(),
 
     # Optional fields
-    no_index          => {directory => [qw(po t www)],},
+    no_index          => {directory => [qw(po t www xt)],},
     optional_features => {},        # See below
     prereqs   => {},                                 # See below
     resources => {

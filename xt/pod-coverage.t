@@ -5,23 +5,14 @@
 
 use strict;
 use warnings;
-
-use FindBin qw($Bin);
-use lib "$Bin/../src/lib";
-
 use English qw(-no_match_vars);
 use Test::More;
-
-plan(skip_all => 'Author test, set $ENV{TEST_AUTHOR} to a true value to run')
-    if !$ENV{TEST_AUTHOR};
 
 eval {
     require Test::Pod::Coverage;
     Test::Pod::Coverage->import();
 };
 plan(skip_all => 'Test::Pod::Coverage required') if $EVAL_ERROR;
-
-chdir "$Bin/..";
 
 # Test::Pod::Coverage hardcodes 'lib' as prefix, whereas we use 'src/lib'
 my @modules = map {
