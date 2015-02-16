@@ -142,9 +142,8 @@ sub getHash {
 # OUT : -1 or undef
 #################################################################
 sub _getRequiredElements {
+    Log::do_log('debug3', @_);
     my $self = shift;
-    Log::do_log('debug3', '');
-    my $error = 0;
 
     # listname element is obligatory
     unless ($self->_getRequiredSingle('listname')) {
@@ -290,8 +289,7 @@ sub _getChildren {
     my $node = shift;
     Log::do_log('debug3', '(%s)', $node->nodeName);
 
-    my %error_nodes;
-    ## return value
+    # return value
     my $hash   = {};
     my $string = "";
     my $return = "empty";    # "hash", "string", "empty"

@@ -61,7 +61,7 @@ sub new {
     my $cookie = $context->{'cookie'};
     my $action = $context->{'action'};
     my $rss    = $context->{'rss'};
-    my $ajax   = $context->{'ajax'};
+    #my $ajax = $context->{'ajax'};
 
     Log::do_log('debug', '(%s, %s, %s)', $robot, $cookie, $action);
     my $self = {'robot' => $robot};    # set current robot
@@ -76,7 +76,7 @@ sub new {
 #   passive_session are session not stored in the database, they are used for
 #   crawler bots and action such as css, wsdl, ajax and rss
 
-    if (tools::is_a_crawler(
+    if (_is_a_crawler(
             $robot, {'user_agent_string' => $ENV{'HTTP_USER_AGENT'}}
         )
         ) {
@@ -354,7 +354,6 @@ sub renew {
         next unless ($var);
         $hash{$var} = $self->{$var};
     }
-    my $data_string = Sympa::Tools::Data::hash_2_string(\%hash);
 
     my $sth;
     ## Cookie may contain previous session ID.
@@ -823,7 +822,6 @@ sub _get_mac {
 # cookielib::set_cookie_extern(), Sympa::CookieLib::set_cookie_extern().
 sub set_cookie_extern {
     my ($secret, $http_domain, %alt_emails) = @_;
-    my $expiration;
     my $cookie;
     my $value;
 
@@ -902,6 +900,17 @@ sub check_cookie_extern {
         return (\%alt_emails);
     }
     return undef;
+}
+
+# input user agent string and IP. return 1 if suspected to be a crawler.
+# initial version based on rawlers_dtection.conf file only
+# later : use Session table to identify those who create a lot of sessions
+sub _is_a_crawler {
+    my $robot   = shift;
+    my $context = shift;
+
+    return $Conf::Conf{'crawlers_detection'}{'user_agent_string'}
+        {$context->{'user_agent_string'}};
 }
 
 1;

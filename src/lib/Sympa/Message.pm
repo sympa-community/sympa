@@ -35,7 +35,7 @@ Message - Mail message embedding for internal use in Sympa
 
 =head1 DESCRIPTION 
 
-While processing a message in Sympa, we need to link informations to the
+While processing a message in Sympa, we need to link information to the
 message, modify headers and such.  This was quite a problem when a message was
 signed, as modifying anything in the message body would alter its MD5
 footprint. And probably make the message to be rejected by clients verifying
@@ -94,7 +94,7 @@ my $language = Sympa::Language->instance;
 =item new ( $serialized, context =E<gt> $that, KEY =E<gt> value, ... )
 
 I<Constructor>.
-Creates a new Message object.
+Creates a new L<Sympa::Message> object.
 
 Parameters:
 
@@ -116,23 +116,12 @@ Metadata.
 
 Returns:
 
-=over 
-
-=item a Message object
-
-if created
-
-=item undef
-
-if something went wrong
-
-=back 
+A new <Sympa::Message> object, or I<undef>, if something went wrong. 
 
 =back
 
 =cut 
 
-## Creates a new object
 sub new {
     Log::do_log('debug2', '(%s, ...)', @_);
     my $class      = shift;
@@ -140,11 +129,6 @@ sub new {
 
     my $self = bless {@_} => $class;
 
-    if (ref $serialized) {
-        Log::do_log('err', 'Deprecated: $serialized must be string, not %s',
-            $serialized);
-        return undef;
-    }
     unless (defined $serialized and length $serialized) {
         Log::do_log('err', 'Empty message');
         return undef;
@@ -617,9 +601,15 @@ sub new_from_template {
         tools::marshal_metadata($self, '%s@%s.%ld.%ld,%d',
         [qw(localpart domainpart date PID RAND)]);
     $self->{messagekey} = $marshalled;
-    Log::do_log('notice',
+    Log::do_log(
+        'notice',
         'Processing %s; message_id=%s; recipients=%s; sender=%s; template=%s',
-        $self, $self->{message_id}, $who, $self->{sender}, $tpl);
+        $self,
+        $self->{message_id},
+        $who,
+        $self->{sender},
+        $tpl
+    );
 
     return $self;
 }
@@ -2620,7 +2610,7 @@ sub _decorate_parts {
         return $entity;
     }
 
-    my ($header, $headermime);
+    my $header;
     foreach my $file (
         "$listdir/message.header",
         "$listdir/message.header.mime",
@@ -2637,7 +2627,7 @@ sub _decorate_parts {
         }
     }
 
-    my ($footer, $footermime);
+    my $footer;
     foreach my $file (
         "$listdir/message.footer",
         "$listdir/message.footer.mime",
@@ -3013,7 +3003,6 @@ sub _urlize_one_part {
     my $wwsympa_url = shift;
 
     my $expl     = $list->{'dir'} . '/urlized';
-    my $robot    = $list->{'domain'};
     my $listname = $list->{'name'};
     my $head     = $entity->head;
     my $encoding = $head->mime_encoding;

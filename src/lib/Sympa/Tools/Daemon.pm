@@ -22,6 +22,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Tools::Daemon - Daemon-related functions
+
+=head1 DESCRIPTION
+
+This package provides some daemon-related functions.
+
+=head2 Functions
+
+=cut
+
 package Sympa::Tools::Daemon;
 
 use strict;
@@ -37,7 +51,35 @@ use Log;
 use tools;
 use Sympa::Tools::File;
 
-## Remove PID file and STDERR output
+=over
+
+=item get_daemon_name($path)
+
+Returns a name for current process, suitable for logging.
+
+=back
+
+=cut
+
+# Old name: Log::set_daemon().
+sub get_daemon_name {
+    my $daemon_tmp = shift;
+    my @path       = split(/\//, $daemon_tmp);
+    my $daemon     = $path[$#path];
+    $daemon =~ s/(\.[^\.]+)$//;
+    return $daemon;
+}
+
+=over
+
+=item remove_pid($name, $pid, $options)
+
+Remove PID file and STDERR output.
+
+=back
+
+=cut
+
 sub remove_pid {
     my ($name, $pid, $options) = @_;
 
@@ -95,6 +137,16 @@ sub remove_pid {
     $lock_fh->close;
     return 1;
 }
+
+=over
+
+=item write_pid($name, $pid, $options)
+
+TBD.
+
+=back
+
+=cut
 
 sub write_pid {
     my ($name, $pid, $options) = @_;
@@ -181,6 +233,16 @@ sub write_pid {
     return 1;
 }
 
+=over
+
+=item direct_stderr_to_file(%parameters)
+
+TBD.
+
+=back
+
+=cut
+
 sub direct_stderr_to_file {
     my %data = @_;
     ## Error output is stored in a file with PID-based name
@@ -204,7 +266,16 @@ sub direct_stderr_to_file {
     return 1;
 }
 
-# Send content of $pid.stderr to listmaster for process whose pid is $pid.
+=over
+
+=item send_crash_report(%parameters)
+
+Send content of $pid.stderr to listmaster for process whose pid is $pid.
+
+=back
+
+=cut
+
 sub send_crash_report {
     my %data = @_;
     Log::do_log('debug', 'Sending crash report for process %s', $data{'pid'}),
@@ -243,7 +314,16 @@ sub send_crash_report {
 # DEPRECATED: No longer used.
 #sub get_lockname();
 
-## Returns the list of pid identifiers in the pid file.
+=over
+
+=item get_pids_in_pid_file($name)
+
+Returns the list of pid identifiers in the pid file.
+
+=back
+
+=cut
+
 sub get_pids_in_pid_file {
     my $name = shift;
 
@@ -260,6 +340,16 @@ sub get_pids_in_pid_file {
     $lock_fh->close;
     return \@pids;
 }
+
+=over
+
+=item get_children_processes_list()
+
+TBD.
+
+=back
+
+=cut
 
 sub get_children_processes_list {
     Log::do_log('debug3', '');

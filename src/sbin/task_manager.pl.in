@@ -54,7 +54,6 @@ use Sympa::Tracking;
 use Sympa::User;
 
 my %options;
-
 unless (
     GetOptions(
         \%main::options, 'config|f=s',  'debug|d', 'help|h',
@@ -1243,9 +1242,9 @@ sub exec_cmd {
 }
 
 sub purge_logs_table {
-    # If a log is older then $list->get_latest_distribution_date()-$delai expire the log
+    # If a log is older than $list->get_latest_distribution_date() - $delay
+    # expire the log.
     my ($task, $context) = @_;
-    my $date;
     my $execution_date = $task->{'date'};
     my @slots          = ();
 
@@ -1317,8 +1316,7 @@ sub purge_session_table {
 # Remove messages from spools if older than duration given by configuration.
 sub purge_spools {
     # Expiring bad messages in incoming spools.
-    foreach my $queue (
-        qw(queue queueautomatic queuebounce queueoutgoing)) {
+    foreach my $queue (qw(queue queueautomatic queuebounce queueoutgoing)) {
         my $directory   = $Conf::Conf{$queue} . '/bad';
         my $clean_delay = $Conf::Conf{'clean_delay_' . $queue};
         if (-e $directory) {
@@ -1591,13 +1589,13 @@ sub purge_orphan_bounces {
 }
 
 sub expire_bounce {
-    # If a bounce is older then $list->get_latest_distribution_date()-$delai expire the bounce
-    # Is this variable my be set in to task modele ?
+    # If a bounce is older than $list->get_latest_distribution_date() - $delay
+    # expire the bounce.
+    # May this variable be set in to task model ?
     my ($task, $Rarguments, $context) = @_;
 
-    my $execution_date = $task->{'date'};
-    my @tab            = @{$Rarguments};
-    my $delay          = $tab[0];
+    my @tab   = @{$Rarguments};
+    my $delay = $tab[0];
 
     Log::do_log('debug2', '(%d)', $delay);
     my $all_lists = Sympa::List::get_lists('*');

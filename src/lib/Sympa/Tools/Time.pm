@@ -77,11 +77,9 @@ sub epoch_conv {
 }
 
 sub date_conv {
+    my $arg = shift;
 
-    my $arg  = $_[0];
-    my $time = $_[1];
-
-    if (($arg eq 'execution_date')) {    # execution date
+    if ($arg eq 'execution_date') {    # execution date
         return time;
     }
 

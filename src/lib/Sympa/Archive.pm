@@ -49,8 +49,6 @@ sub store_last {
 
     Log::do_log('debug2', '');
 
-    my ($filename, $newfile);
-
     return unless $list->is_archived();
     my $dir = $list->{'dir'} . '/archives';
 
@@ -76,8 +74,7 @@ sub list {
 
     Log::do_log('debug', '(%s)', $name);
 
-    my ($filename, $newfile);
-    my (@l,        $i);
+    my (@l, $i);
 
     unless (-d "$name") {
         Log::do_log('err', '(%s) Failed, no directory %s', $name, $name);
@@ -216,18 +213,15 @@ sub exist {
 
 # return path for latest message distributed in the list
 sub last_path {
-
+    Log::do_log('debug', '(%s)', @_);
     my $list = shift;
 
-    Log::do_log('debug', '(%s)', $list->{'name'});
+    return undef unless $list->is_archived();
 
-    return undef unless ($list->is_archived());
     my $file = $list->{'dir'} . '/archives/last_message';
+    return $file if -f $file;
 
-    return ($list->{'dir'} . '/archives/last_message')
-        if (-f $list->{'dir'} . '/archives/last_message');
     return undef;
-
 }
 
 ## Load an archived message, returns the mhonarc metadata
@@ -297,7 +291,11 @@ sub clean_archive_directory {
         foreach my $file (readdir(ARCDIR)) {
             next if ($file =~ /^\./);
             $files_left_uncleaned++
-                unless clean_archived_message($robot, undef, $answer->{'cleaned_dir'}.'/'.$file, $answer->{'cleaned_dir'}.'/'.$file);
+                unless clean_archived_message(
+                $robot, undef,
+                $answer->{'cleaned_dir'} . '/' . $file,
+                $answer->{'cleaned_dir'} . '/' . $file
+                );
         }
         closedir DIR;
         if ($files_left_uncleaned) {

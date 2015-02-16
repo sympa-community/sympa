@@ -98,7 +98,6 @@ sub probe_db {
         return undef;
     }
 
-    my (%checked, $table);
     my $db_type = Conf::get_robot_conf('*', 'db_type');
     my $update_db_field_types =
         Conf::get_robot_conf('*', 'update_db_field_types') || 'off';
@@ -144,8 +143,8 @@ sub probe_db {
         @tables = ();
     }
 
-    my ($fields, %real_struct);
-    ## Check required tables
+    my %real_struct;
+    # Check required tables
     foreach my $t1 (keys %{$db_struct{'mysql'}}) {
         my $found;
         foreach my $t2 (@tables) {

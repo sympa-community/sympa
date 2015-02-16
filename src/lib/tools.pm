@@ -104,17 +104,15 @@ sub by_date {
 #
 # IN : -$msg (+): ref(MIME::Entity) - message to check
 #      -$sender (+): the sender of $msg
-#      -$robot (+) : robot
 #
 # OUT : -1 if there are some command in $msg
 #       -0 else
 #
 ######################################################
 sub checkcommand {
-    my ($msg, $sender, $robot) = @_;
+    my ($msg, $sender) = @_;
 
-    my ($avoid, $i);
-
+    my $i;
     my $hdr = $msg->head;
 
     ## Check for commands in the subject.
@@ -729,7 +727,7 @@ sub compute_auth {
     # To send auth request specific to a list
     $list->request_auth('user@dom.ain', 'subscribe'):
 
-Sends an authentification request for a requested
+Sends an authentication request for a requested
 command.
 
 Parameters:
@@ -1470,25 +1468,8 @@ sub qencode_hierarchy {
 # DEPRECATED: No longer used.
 #sub dump_encoding($out);
 
-# input user agent string and IP. return 1 if suspected to be a crawler.
-# initial version based on rawlers_dtection.conf file only
-# later : use Session table to identify those who create a lot of sessions
-sub is_a_crawler {
-
-    my $robot   = shift;
-    my $context = shift;
-
-#    if ($Conf::Conf{$robot}{'crawlers_detection'}) {
-#	return ($Conf::Conf{$robot}{'crawlers_detection'}{'user_agent_string'}{$context->{'user_agent_string'}});
-#    }
-
-    # open (TMP, ">> /tmp/dump1");
-    # print TMP "dump de la conf dans is_a_crawler : \n";
-    # Sympa::Tools::Data::dump_var($Conf::Conf{'crawlers_detection'}, 0,\*TMP);
-    # close TMP;
-    return $Conf::Conf{'crawlers_detection'}{'user_agent_string'}
-        {$context->{'user_agent_string'}};
-}
+# MOVED to Sympa::Session::_is_a_crawler().
+#sub is_a_crawler;
 
 sub get_message_id {
     my $robot = shift;

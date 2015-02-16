@@ -95,7 +95,6 @@ sub get_recipients_status {
     $msgid = tools::clean_msg_id($msgid);
 
     my $sth;
-    my $pk;
 
     # the message->head method return message-id including <blabla@dom> where
     # mhonarc return blabla@dom that's why we test both of them
@@ -119,7 +118,7 @@ sub get_recipients_status {
         ) {
         Log::do_log(
             'err',
-            'Unable to retrieve tracking informations for message %s, list %s@%s',
+            'Unable to retrieve tracking information for message %s, list %s@%s',
             $msgid,
             $listname,
             $robot
@@ -299,8 +298,6 @@ sub find_notification_id_by_message {
 
     $msgid = tools::clean_msg_id($msgid);
 
-    my $pk;
-
     my $sth;
 
     # the message->head method return message-id including <blabla@dom> where
@@ -321,7 +318,7 @@ sub find_notification_id_by_message {
         ) {
         Log::do_log(
             'err',
-            'Unable to retrieve the tracking informations for user %s, message %s, list %s@%s',
+            'Unable to retrieve the tracking information for user %s, message %s, list %s@%s',
             $recipient,
             $msgid,
             $listname,
@@ -410,7 +407,7 @@ sub remove_message_by_id {
         ) {
         Log::do_log(
             'err',
-            'Unable to remove the tracking informations for message %s, list %s@%s',
+            'Unable to remove the tracking information for message %s, list %s@%s',
             $msgid,
             $listname,
             $robot
@@ -486,7 +483,7 @@ sub remove_message_by_period {
         ) {
         Log::do_log(
             'err',
-            'Unable to remove the tracking informations older than %s days for list %s@%s',
+            'Unable to remove the tracking information older than %s days for list %s@%s',
             $limit,
             $listname,
             $robot

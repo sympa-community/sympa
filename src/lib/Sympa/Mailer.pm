@@ -271,10 +271,8 @@ sub store {
 # Old name: tools::safefork().
 # Note: Use store().
 sub _safefork {
-    my ($i, $pid);
-
     my $err;
-    for ($i = 1; $i < 4; $i++) {
+    for (my $i = 1; $i < 4; $i++) {
         my ($pid) = fork;
         return $pid if defined $pid;
 

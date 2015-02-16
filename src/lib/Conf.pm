@@ -559,7 +559,6 @@ sub set_robot_conf {
 # Store configs to database
 sub conf_2_db {
     Log::do_log('debug2', '(%s)', @_);
-    my $config_file = shift || get_sympa_conf();
 
     my @conf_parameters = @Sympa::ConfDef::params;
 
@@ -890,7 +889,7 @@ sub checkfiles {
         }
     }
 
-	update_css();
+    update_css();
     return undef if ($config_err);
     return 1;
 }
@@ -2588,11 +2587,13 @@ sub _load_wwsconf {
 }
 
 sub update_css {
-	my (%param) = @_;
-	my $force = $param{force} if (%param);
+    my %param = @_;
+
+    my $force = $param{force} if %param;
+
     # create or update static CSS files
     my $css_updated = undef;
-    my @robots = ('*',keys %{$Conf{'robots'}});
+    my @robots = ('*', keys %{$Conf{'robots'}});
     foreach my $robot (@robots) {
         my $dir = get_robot_conf($robot, 'css_path');
 
@@ -2626,7 +2627,7 @@ sub update_css {
 
             ## Update the CSS if it is missing or if a new css.tt2 was
             ## installed
-            if (!-f $dir . '/' . $css
+            if (   !-f $dir . '/' . $css
                 || (stat($css_tt2_path))[9] > (stat($dir . '/' . $css))[9]
                 || $force) {
                 Log::do_log('notice',

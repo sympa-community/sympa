@@ -47,7 +47,7 @@ use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
 use Sympa::Tracking;
 
-my $daemon_name           = Log::set_daemon($0);
+my $daemon_name           = Sympa::Tools::Daemon::get_daemon_name($0);
 my $date_of_last_activity = time();
 local $main::daemon_usage =
     'DAEMON_MASTER';    ## Default is to launch bulk as master daemon.

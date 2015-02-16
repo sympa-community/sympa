@@ -85,6 +85,7 @@ use SDM;
 use Sympa::Session;
 use Sympa::SharedDocument;
 use tools;
+use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
@@ -125,7 +126,7 @@ unless (Conf::load()) {
 
 Log::set_log_level($Conf::Conf{'log_level'});
 
-my $daemon_name = Log::set_daemon($0);
+my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
 
 ## Open log
 my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
@@ -1977,9 +1978,6 @@ Sympa::Alarm->instance->flush(purge => 1);
 sub wwslog {
     my $facility = shift;
 
-    # do not log if log level if too high regarding the log requested by user
-    return if ($Log::levels{$facility} > $Log::log_level);
-
     my $msg    = shift;
     my $remote = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'};
     my $wwsmsg = '';
@@ -3015,7 +3013,7 @@ sub check_param_in {
             return undef;
         }
 
-        ## Gather list configuration informations for further output.
+        # Gather list configuration information for further output.
         $param->{'list'}      = $in{'list'};
         $param->{'subtitle'}  = $list->{'admin'}{'subject'};
         $param->{'subscribe'} = $list->{'admin'}{'subscribe'}{'name'};
@@ -3074,9 +3072,8 @@ sub check_param_in {
             my $r_action;
             $r_action = $result->{'action'} if (ref($result) eq 'HASH');
             $param->{'may_post'} = 1 if ($r_action !~ /reject/);
-
-            ## If no user logged in, the output can ask for authentification.
         } else {
+            # If no user logged in, the output can ask for authentication.
             $param->{'user'}{'email'} = undef;
             $param->{'need_login'} = 1;
 
@@ -3085,8 +3082,8 @@ sub check_param_in {
         ## Check if this list's messages must be moderated.
         $param->{'is_moderated'} = $list->is_moderated();
 
-        ## If the user logged in is a privileged user, gather informations
-        ## relative to administration tasks
+        # If the user logged in is a privileged user, gather information
+        # relative to administration tasks.
         if ($param->{'is_priv'}) {
             $param->{'mod_message'} = $list->get_mod_spool_size();
 
@@ -6486,7 +6483,7 @@ sub do_auto_signoff {
         return Conf::get_robot_conf($robot, 'default_home');
     }
     $param->{'signing_off_email'} = $in{'email'};
-    ## If OK, return the page displaying the informations to the user.
+    # If OK, return the page displaying the information to the user.
     return 1;
 
 }
@@ -6522,7 +6519,7 @@ sub do_family_signoff_request {
     }
     $param->{'signing_off_email'} = $in{'email'};
     $param->{'family'}            = $in{'family'};
-    ## If OK, return the page displaying the informations to the user.
+    # If OK, return the page displaying the information to the user.
     return 1;
 
 }
@@ -13194,8 +13191,8 @@ sub _prepare_edit_form {
             $is_form_editable = '1';
         }
 
-        ## Store in $p a reference to the hash containing the informations
-        ## relative to the parameter editing.
+        # Store in $p a reference to the hash containing the information
+        # relative to the parameter editing.
         my $p =
             _prepare_data($pname, $pinfo->{$pname}, $list_config->{$pname},
             $may_edit, $family);

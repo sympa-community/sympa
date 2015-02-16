@@ -359,12 +359,12 @@ sub add_list {
         $self, $self->{'robot'}, $abort_on_error);
     unless (defined $result) {
         push @{$return->{'string_error'}},
-            "Error during list creation, see logs for more informations";
+            "Error during list creation, see logs for more information";
         return $return;
     }
     unless (defined $result->{'list'}) {
         push @{$return->{'string_error'}},
-            "Errors : no created list, see logs for more informations";
+            "Errors : no created list, see logs for more information";
         return $return;
     }
     my $list = $result->{'list'};
@@ -407,7 +407,7 @@ sub add_list {
         $list->set_status_error_config('no_check_rules_family',
             $self->{'name'});
         push @{$return->{'string_error'}},
-            "Impossible to check parameters constraint, see logs for more informations. The list is set in status error_config";
+            "Impossible to check parameters constraint, see logs for more information. The list is set in status error_config";
         return $return;
     }
 
@@ -679,7 +679,7 @@ sub modify_list {
         $list->set_status_error_config('no_check_rules_family',
             $self->{'name'});
         push @{$return->{'string_error'}},
-            "Impossible to check parameters constraint, see logs for more informations. The list is set in status error_config";
+            "Impossible to check parameters constraint, see logs for more information. The list is set in status error_config";
         return $return;
     }
 
@@ -1118,7 +1118,7 @@ sub instantiate {
 
 =head2 sub get_instantiation_results()
 
-Returns a string with informations summarizing the instantiation results.
+Returns a string with information summarizing the instantiation results.
 
 =head3 Arguments 
 
@@ -1529,10 +1529,7 @@ sub check_values {
     }
 
     foreach my $p_val (@param_values) {
-
-        my $found = 0;
-
-        ## multiple values
+        # multiple values
         if (ref($p_val) eq 'ARRAY') {
 
             foreach my $p (@{$p_val}) {
@@ -1994,7 +1991,6 @@ sub _split_xml_file {
                 join(", ", @error)
             );
             return undef;
-            my $minor_param = $2;
         }
         my $listname_elt = shift @children;
         my $listname     = $listname_elt->textContent();
@@ -2309,7 +2305,6 @@ sub _get_customizing {
 
     # keep allowed values
     foreach my $param (@{$result->{'forbidden'}{'param'}}) {
-        my $minor_p;
         if ($param =~ /^([\w-]+)\.([\w-]+)$/) {
             $param = $1;
         }
@@ -2692,12 +2687,10 @@ sub _load_param_constraint_conf {
 }
 
 sub create_automatic_list {
-    my $self       = shift;
-    my %param      = @_;
-    my $auth_level = $param{'auth_level'};
-    my $sender     = $param{'sender'};
-    my $message    = $param{'message'};
-    my $listname   = $param{'listname'};
+    my $self     = shift;
+    my %param    = @_;
+    my $sender   = $param{'sender'};
+    my $listname = $param{'listname'};
 
     unless ($self->is_allowed_to_create_automatic_lists(%param)) {
         Log::do_log(

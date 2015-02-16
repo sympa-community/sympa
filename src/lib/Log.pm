@@ -247,18 +247,10 @@ sub do_connect {
     }
 }
 
-# return the name of the used daemon
-sub set_daemon {
-    my $daemon_tmp = shift;
-    my @path       = split(/\//, $daemon_tmp);
-    my $daemon     = $path[$#path];
-    $daemon =~ s/(\.[^\.]+)$//;
-    return $daemon;
-}
+# MOVED to Sympa::Tools::Daemon::get_daemon_name().
+#sub set_daemon;
 
 sub get_log_date {
-    my $date_from, my $date_to;
-
     my $sth;
     my @dates;
     foreach my $query ('MIN', 'MAX') {
@@ -631,6 +623,7 @@ sub set_log_level {
     $log_level = shift;
 }
 
+#OBSOLETED: No longer used.
 sub get_log_level {
     return $log_level;
 }

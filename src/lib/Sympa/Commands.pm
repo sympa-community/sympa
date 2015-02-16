@@ -76,7 +76,7 @@ my $time_command;
 ## my $msg_file;
 # command line to process
 my $cmd_line;
-# key authentification if 'auth' is present in the command line
+# key authentication if 'auth' is present in the command line
 my $auth;
 # boolean says if quiet is in the cmd line
 my $quiet;
@@ -221,9 +221,6 @@ sub lists {
     my $robot    = shift;
     my $sign_mod = shift;
     my $message  = shift;
-
-    my $sympa = Conf::get_robot_conf($robot, 'sympa');
-    my $host  = Conf::get_robot_conf($robot, 'host');
 
     Log::do_log('debug', 'For robot %s, sign_mod %, message %s',
         $robot, $sign_mod, $message);
@@ -778,7 +775,6 @@ sub review {
     my $message  = shift;
 
     Log::do_log('debug', '(%s, %s, %s)', $listname, $robot, $sign_mod);
-    my $sympa = Conf::get_robot_conf($robot, 'sympa');
 
     my $user;
     my $list = Sympa::List->new($listname, $robot);
@@ -830,7 +826,7 @@ sub review {
         Log::do_log('debug2', 'Auth requested from %s', $sender);
         unless (tools::request_auth($list, $sender, 'review')) {
             my $error =
-                "Unable to request authentification for command 'review'";
+                'Unable to request authentication for command "review"';
             Sympa::Report::reject_report_cmd('intern', $error,
                 {'listname' => $listname},
                 $cmd_line, $sender, $robot);
@@ -941,8 +937,6 @@ sub verify {
             $sender, $robot);
         return 'unknown_list';
     }
-
-    my $user;
 
     $language->set_lang($list->{'admin'}{'lang'});
 
@@ -1134,7 +1128,7 @@ sub subscribe {
         $cmd = "quiet $cmd" if $quiet;
         unless (tools::request_auth($list, $sender, $cmd, $comment)) {
             my $error =
-                "Unable to request authentification for command 'subscribe'";
+                'Unable to request authentication for command "subscribe"';
             Sympa::Report::reject_report_cmd('intern', $error,
                 {'listname' => $which},
                 $cmd_line, $sender, $robot);
@@ -1255,8 +1249,6 @@ sub info {
 
     Log::do_log('debug', '(%s, %s, %s, %s)',
         $listname, $robot, $sign_mod, $message);
-
-    my $sympa = Conf::get_robot_conf($robot, 'sympa');
 
     my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
@@ -1536,7 +1528,7 @@ sub signoff {
         $cmd = "quiet $cmd" if $quiet;
         unless (tools::request_auth($list, $to, $cmd)) {
             my $error =
-                "Unable to request authentification for command 'signoff'";
+                'Unable to request authentication for command "signoff"';
             Sympa::Report::reject_report_cmd('intern', $error,
                 {'listname' => $which},
                 $cmd_line, $sender, $robot);
@@ -1748,8 +1740,7 @@ sub add {
         my $cmd = 'add';
         $cmd = "quiet $cmd" if $quiet;
         unless (tools::request_auth($list, $sender, $cmd, $email, $comment)) {
-            my $error =
-                "Unable to request authentification for command 'add'";
+            my $error = 'Unable to request authentication for command "add"';
             Sympa::Report::reject_report_cmd('intern', $error,
                 {'listname' => $which},
                 $cmd_line, $sender, $robot);
@@ -1942,7 +1933,7 @@ sub invite {
         unless (
             tools::request_auth($list, $sender, 'invite', $email, $comment)) {
             my $error =
-                "Unable to request authentification for command 'invite'";
+                'Unable to request authentication for command "invite"';
             Sympa::Report::reject_report_cmd('intern', $error,
                 {'listname' => $which},
                 $cmd_line, $sender, $robot);
@@ -2229,7 +2220,7 @@ sub remind {
         if ($listname eq '*') {
             unless (tools::request_auth('*', $sender, 'remind')) {
                 my $error =
-                    "Unable to request authentification for command 'remind'";
+                    'Unable to request authentication for command "remind"';
                 Sympa::Report::reject_report_cmd('intern', $error,
                     {'listname' => $listname},
                     $cmd_line, $sender, $robot);
@@ -2238,7 +2229,7 @@ sub remind {
         } else {
             unless (tools::request_auth($list, $sender, 'remind')) {
                 my $error =
-                    "Unable to request authentification for command 'remind'";
+                    'Unable to request authentication for command "remind"';
                 Sympa::Report::reject_report_cmd('intern', $error,
                     {'listname' => $listname},
                     $cmd_line, $sender, $robot);
@@ -2499,8 +2490,7 @@ sub del {
         my $cmd = 'del';
         $cmd = "quiet $cmd" if $quiet;
         unless (tools::request_auth($list, $sender, $cmd, $who)) {
-            my $error =
-                "Unable to request authentification for command 'del'";
+            my $error = 'Unable to request authentication for command "del"';
             Sympa::Report::reject_report_cmd('intern', $error,
                 {'listname' => $which, 'list' => $list},
                 $cmd_line, $sender, $robot);
@@ -2524,10 +2514,7 @@ sub del {
             return 'not_allowed';
         }
 
-        ## Get gecos before deletion
-        my $gecos = $user_entry->{'gecos'};
-
-        ## Really delete and rewrite to disk.
+        # Really delete and rewrite to disk.
         my $u;
         unless (
             $u = $list->delete_list_member(
@@ -2775,7 +2762,7 @@ sub set {
 ############################################################
 #  distributes the broadcast of a validated moderated message
 #
-# IN : -$what (+): command parameters : listname(+), authentification key(+)
+# IN : -$what (+): command parameters : listname(+), authentication key(+)
 #      -$robot (+): robot
 #
 # OUT : 'unknown_list'|'msg_noty_found'| 1 | undef
@@ -2911,10 +2898,10 @@ sub distribute {
 ############################################################
 #  confirm
 ############################################################
-#  confirms the authentification of a message for its
+#  confirms the authentication of a message for its
 #  distribution on a list
 #
-# IN : -$what (+): command parameter : authentification key
+# IN : -$what (+): command parameter : authentication key
 #      -$robot (+): robot
 #
 # OUT : 'wrong_auth'|'msg_not_found'
@@ -3188,7 +3175,7 @@ sub confirm {
 #  Refuse and delete  a moderated message and notify sender
 #  by sending template 'reject'
 #
-# IN : -$what (+): command parameter : listname and authentification key
+# IN : -$what (+): command parameter : listname and authentication key
 #      -$robot (+): robot
 #
 # OUT : 'unknown_list'|'wrong_auth'| 1 | undef
@@ -3529,13 +3516,13 @@ sub which {
     return 1;
 }
 
-################ Function for authentification #######################
+################ Function for authentication #######################
 
 ##########################################################
 #  get_auth_method
 ##########################################################
-# Checks the authentification and return method
-# used if authentification not failed
+# Checks the authentication and return method
+# used if authentication not failed
 #
 # IN :-$cmd (+): current command
 #     -$email (+): used to compute auth
@@ -3546,7 +3533,7 @@ sub which {
 #     -$sign_mod (+): 'smime'| 'dkim' | -
 #     -$list : ref(List) | -
 #
-# OUT : 'smime'|'md5'|'dkim'|'smtp' if authentification OK, undef else
+# OUT : 'smime'|'md5'|'dkim'|'smtp' if authentication OK, undef else
 #       | undef
 ##########################################################
 sub get_auth_method {

@@ -22,6 +22,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Tools::File - File-related functions
+
+=head1 DESCRIPTION
+
+This package provides some file-related functions.
+
+=cut
+
 package Sympa::Tools::File;
 
 use strict;
@@ -33,7 +45,18 @@ use POSIX qw();
 
 use Log;
 
-## Sets owner and/or access rights on a file.
+=head2 Functions
+
+=over
+
+=item set_file_rights(%parameters)
+
+Sets owner and/or access rights on a file.
+
+=back
+
+=cut
+
 sub set_file_rights {
     my %param = @_;
     my ($uid, $gid);
@@ -74,7 +97,16 @@ sub set_file_rights {
     return 1;
 }
 
-#copy a directory and its content
+=over
+
+=item copy_dir($dir1, $dir2)
+
+Copy a directory and its content
+
+=back
+
+=cut
+
 sub copy_dir {
     my $dir1 = shift;
     my $dir2 = shift;
@@ -88,7 +120,16 @@ sub copy_dir {
     return (File::Copy::Recursive::dircopy($dir1, $dir2));
 }
 
-#delete a directory and its content
+=over
+
+=item del_dir($dir)
+
+Delete a directory and its content
+
+=back
+
+=cut
+
 sub del_dir {
     Log::do_log('debug3', '(%s)', @_);
     my $dir = shift;
@@ -113,7 +154,16 @@ sub del_dir {
     }
 }
 
-#to be used before creating a file in a directory that may not exist already.
+=over
+
+=item mk_parent_dir($file)
+
+To be used before creating a file in a directory that may not exist already.
+
+=back
+
+=cut
+
 sub mk_parent_dir {
     my $file = shift;
     $file =~ /^(.*)\/([^\/])*$/;
@@ -123,7 +173,16 @@ sub mk_parent_dir {
     mkdir_all($dir, 0755);
 }
 
-## Recursively create directory and all parent directories
+=over
+
+=item mkdir_all($path, $mode)
+
+Recursively create directory and all parent directories
+
+=back
+
+=cut
+
 sub mkdir_all {
     my ($path, $mode) = @_;
     my $status = 1;
@@ -158,8 +217,17 @@ sub mkdir_all {
     return $status;
 }
 
-# shift file renaming it with date. If count is defined, keep $count file and
-# unlink others
+=over
+
+=item shift_file($file, $count)
+
+Shift file renaming it with date. If count is defined, keep $count file and
+unlink others
+
+=back
+
+=cut
+
 # Note: This is used only once.
 sub shift_file {
     my $file  = shift;
@@ -243,14 +311,21 @@ sub get_mtime {
 #DEPRECATED: No longer used.
 #sub find_file($filename, @directories);
 
-## Recursively list the content of a directory
-## Return an array of hash, each entry with directory + filename + encoding
+=over
+
+=item list_dir($dir, $all, $original_encoding)
+
+Recursively list the content of a directory
+Return an array of hash, each entry with directory + filename + encoding
+
+=back
+
+=cut
+
 sub list_dir {
     my $dir               = shift;
     my $all               = shift;
-    my $original_encoding = shift; ## Suspected original encoding of filenames
-
-    my $size = 0;
+    my $original_encoding = shift;  # Suspected original encoding of filenames
 
     if (opendir(DIR, $dir)) {
         foreach my $file (sort grep (!/^\.\.?$/, readdir(DIR))) {
@@ -283,6 +358,16 @@ sub list_dir {
     return 1;
 }
 
+=over
+
+=item get_dir_size($dir)
+
+TBD.
+
+=back
+
+=cut
+
 sub get_dir_size {
     my $dir = shift;
 
@@ -303,10 +388,18 @@ sub get_dir_size {
     return $size;
 }
 
-## Function for Removing a non-empty directory
-## It takes a variale number of arguments :
-## it can be a list of directory
-## or few direcoty paths
+=over
+
+=item remove_dir(@directories)
+
+Function for Removing a non-empty directory.
+It takes a variale number of arguments:
+It can be a list of directory or few direcoty paths.
+
+=back
+
+=cut
+
 sub remove_dir {
 
     Log::do_log('debug2', '');

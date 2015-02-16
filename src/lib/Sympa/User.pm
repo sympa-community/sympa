@@ -482,8 +482,6 @@ sub update_global_user {
 
     my ($field, $value);
 
-    my ($user, $statement, $table);
-
     ## Update each table
     my @set_list;
 
@@ -517,7 +515,7 @@ sub update_global_user {
     );
     unless (defined $sth) {
         Log::do_log('err',
-            'Could not update informations for user %s in user_table', $who);
+            'Could not update information for user %s in user_table', $who);
         $sth = pop @sth_stack;
         return undef;
     }
@@ -542,7 +540,6 @@ sub add_global_user {
     }
 
     my ($field, $value);
-    my ($user, $statement, $table);
 
     ## encrypt password
     $values->{'password'} =

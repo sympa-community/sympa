@@ -60,7 +60,7 @@ my $digestsleep = 5;
 ## Init random engine
 srand(time());
 
-my $daemon_name = Log::set_daemon($0);
+my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
 
 ## Check --dump option
 my %options;
@@ -1266,10 +1266,8 @@ sub DoMessage {
     # Reject messages with commands
     if ($Conf::Conf{'misaddressed_commands'} =~ /reject/i) {
         ## Check the message for commands and catch them.
-        if (tools::checkcommand($msg, $sender, $robot_id)) {
-            Log::do_log('err',
-                'sympa::DoMessage(): Found command in message, ignoring message'
-            );
+        if (tools::checkcommand($msg, $sender)) {
+            Log::do_log('err', 'Found command in message, ignoring message');
             Sympa::Report::reject_report_msg('user', 'routing_error', $sender,
                 {'message' => $message},
                 $robot_id, $msg_string, $list);

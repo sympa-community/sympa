@@ -687,13 +687,12 @@ sub set_status_family_closed {
 
 ## Saves the statistics data to disk.
 sub savestats {
+    Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
-    Log::do_log('debug2', '');
 
-    ## Be sure the list has been loaded.
-    my $name = $self->{'name'};
-    my $dir  = $self->{'dir'};
-    return undef unless ($list_of_lists{$self->{'domain'}}{$name});
+    # Be sure the list has been loaded.
+    my $dir = $self->{'dir'};
+    return undef unless $list_of_lists{$self->{'domain'}}{$self->{'name'}};
 
     unless (ref($self->{'stats'}) eq 'ARRAY') {
         Log::do_log('err', 'Incorrect parameter %s', $self->{'stats'});
@@ -724,11 +723,10 @@ sub savestats {
 
 ## msg count.
 sub increment_msg_count {
+    Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
-    Log::do_log('debug2', '(%s)', $self->{'name'});
 
-    ## Be sure the list has been loaded.
-    my $name = $self->{'name'};
+    # Be sure the list has been loaded.
     my $file = "$self->{'dir'}/msg_count";
 
     my %count;
@@ -765,12 +763,10 @@ sub increment_msg_count {
 
 # Returns the number of messages sent to the list
 sub get_msg_count {
+    Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
-    Log::do_log('debug3', "Getting the number of messages for list %s",
-        $self->{'name'});
 
-    ## Be sure the list has been loaded.
-    my $name = $self->{'name'};
+    # Be sure the list has been loaded.
     my $file = "$self->{'dir'}/stats";
 
     my $count = 0;
@@ -784,18 +780,15 @@ sub get_msg_count {
     }
 
     return $count;
-
 }
 ## last date of distribution message .
 sub get_latest_distribution_date {
+    Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
-    Log::do_log('debug3', '(%s)', $self->{'name'});
 
-    ## Be sure the list has been loaded.
-    my $name = $self->{'name'};
+    # Be sure the list has been loaded.
     my $file = "$self->{'dir'}/msg_count";
 
-    my %count;
     my $latest_date = 0;
     unless (open(MSG_COUNT, $file)) {
         Log::do_log('debug2', 'Unable to open %s', $file);
@@ -1575,7 +1568,7 @@ sub distribute_msg {
 
     my $robot = $self->{'domain'};
 
-    ## Update the stats, and returns the new X-Sequence, if any.
+    # Update the stats, and returns the new X-Sequence, if any.
     my $sequence = $self->update_stats($message->{'size'});
 
     ## Loading info msg_topic file if exists, add X-Sympa-Topic
@@ -3442,8 +3435,6 @@ sub delete_list_admin {
 sub delete_all_list_admin {
     Log::do_log('debug2', '');
 
-    my $total = 0;
-
     ## Delete record in ADMIN
     unless ($sth = SDM::do_query("DELETE FROM admin_table")) {
         Log::do_log('err', 'Unable to remove all admin from database');
@@ -3826,7 +3817,6 @@ sub get_resembling_list_members_no_object {
     my $options = shift;
     Log::do_log('debug2', '(%s, %s, %s)', $options->{'name'},
         $options->{'email'}, $options->{'domain'});
-    my $name = $options->{'name'};
     my @output;
 
     my $email    = tools::clean_email($options->{'email'});
@@ -4018,7 +4008,7 @@ sub find_list_member_by_pattern_no_object {
         ) {
         Log::do_log(
             'err',
-            'Unable to gather informations corresponding to pattern %s for list %s@%s',
+            'Unable to gather information corresponding to pattern %s for list %s@%s',
             $email_pattern,
             $name,
             $options->{'domain'}
@@ -4105,7 +4095,7 @@ sub get_list_member_no_object {
             $options->{'domain'}
         )
         ) {
-        Log::do_log('err', 'Unable to gather informations for user: %s',
+        Log::do_log('err', 'Unable to gather information for user: %s',
             $email, $name, $options->{'domain'});
         return undef;
     }
@@ -4391,7 +4381,6 @@ sub get_first_list_admin {
     ## Sort may be domain, email, date
     $sortby ||= 'domain';
     $sql_regexp = $data->{'sql_regexp'};
-    my $fh;
 
     Log::do_log('debug2', '(%s, %s, %s, %s, %s)',
         $self->{'name'}, $role, $sortby);
@@ -4740,12 +4729,10 @@ sub update_list_member {
     Log::do_log('debug2', '(%s)', $who);
     $who = tools::clean_email($who);
 
-    my ($field, $value);
-
-    my ($user, $statement, $table);
+    my ($field, $value, $table);
     my $name = $self->{'name'};
 
-    ## mapping between var and field names
+    # mapping between var and field names
     my %map_field = (
         reception            => 'reception_subscriber',
         topics               => 'topics_subscriber',
@@ -4862,7 +4849,7 @@ sub update_list_member {
                 )
                 ) {
                 Log::do_log('err',
-                    'Could not update informations for user %s in table %s',
+                    'Could not update information for user %s in table %s',
                     $who, $table);
                 return undef;
             }
@@ -4879,7 +4866,7 @@ sub update_list_member {
                     ) {
                     Log::do_log(
                         'err',
-                        'Could not update informations for user %s in table %s for list %s@%s',
+                        'Could not update information for user %s in table %s for list %s@%s',
                         $who,
                         $table,
                         $name,
@@ -4900,7 +4887,7 @@ sub update_list_member {
                     ) {
                     Log::do_log(
                         'err',
-                        'Could not update informations for user %s in table %s for list %s@%s',
+                        'Could not update information for user %s in table %s for list %s@%s',
                         $who,
                         $table,
                         $name,
@@ -4938,9 +4925,7 @@ sub update_list_admin {
     Log::do_log('debug2', '(%s, %s)', $role, $who);
     $who = tools::clean_email($who);
 
-    my ($field, $value);
-
-    my ($admin_user, $statement, $table);
+    my ($field, $value, $table);
     my $name = $self->{'name'};
 
     ## mapping between var and field names
@@ -5026,12 +5011,9 @@ sub update_list_admin {
                     SDM::quote($who)
                 )
                 ) {
-                Log::do_log(
-                    'err',
-                    'Could not update informations for admin %s in table %s',
-                    $who,
-                    $table
-                );
+                Log::do_log('err',
+                    'Could not update information for admin %s in table %s',
+                    $who, $table);
                 return undef;
             }
 
@@ -5049,7 +5031,7 @@ sub update_list_admin {
                     ) {
                     Log::do_log(
                         'err',
-                        'Could not update informations for admin %s in table %s for list %s@%s',
+                        'Could not update information for admin %s in table %s for list %s@%s',
                         $who,
                         $table,
                         $name,
@@ -5071,7 +5053,7 @@ sub update_list_admin {
                     ) {
                     Log::do_log(
                         'err',
-                        'Could not update informations for admin %s in table %s for list %s@%s',
+                        'Could not update information for admin %s in table %s for list %s@%s',
                         $who,
                         $table,
                         $name,
@@ -6029,7 +6011,6 @@ sub load_data_sources_list {
     my ($self, $robot) = @_;
     Log::do_log('debug3', '(%s, %s)', $self->{'name'}, $robot);
 
-    my $directory = "$self->{'dir'}";
     my %list_of_data_sources;
 
     foreach
@@ -6590,8 +6571,6 @@ sub _include_users_remote_file {
                     %u = split "\n", $users->{$email};
                 } else {
                     %u = %{$users->{$email}};
-                    foreach my $k (keys %u) {
-                    }
                 }
             } else {
                 %u = %{$default_user_options};
@@ -6768,7 +6747,6 @@ sub _include_users_ldap {
 
     ## Counters.
     my $total = 0;
-    my $dn;
     my @emails;
     my %emailsViewed;
 
@@ -6924,7 +6902,6 @@ sub _include_users_ldap_2level {
 
     ## Counters.
     my $total = 0;
-    my $dn;
 
     ## returns a reference to a HASH where the keys are the DNs
     ##  the second level hash's hold the attributes
@@ -7316,7 +7293,7 @@ sub _load_list_members_from_include {
     my $dir      = $self->{'dir'};
     Log::do_log('debug2', '(%s)', $name);
 
-    my (%users, $depend_on, $ref);
+    my (%users, $depend_on);
     my $total = 0;
     my @errors;
     my $result;
@@ -7570,7 +7547,7 @@ sub _load_list_admin_from_include {
 
     Log::do_log('debug2', '(%s) For list %s', $role, $name);
 
-    my (%admin_users, $depend_on, $ref);
+    my (%admin_users, $depend_on);
     my $total      = 0;
     my $list_admin = $self->{'admin'};
     my $dir        = $self->{'dir'};
@@ -7979,7 +7956,6 @@ sub get_list_of_sources_id {
             $old_subs_id{$raw} = 1;
         }
     }
-    my $ids = join(',', keys %old_subs_id);
     return \%old_subs_id;
 }
 
@@ -8122,10 +8098,10 @@ sub purge_ca {
 }
 
 sub sync_include {
-    my ($self) = shift;
+    Log::do_log('debug', '(%s, %s)', @_);
+    my $self   = shift;
     my $option = shift;
-    my $name   = $self->{'name'};
-    Log::do_log('debug', '(%s)', $name);
+
     my %old_subscribers;
     my $total           = 0;
     my $errors_occurred = 0;
@@ -8154,7 +8130,7 @@ sub sync_include {
                 ) {
                 Log::do_log(
                     'err', '(%s) Failed to update %s',
-                    $name, lc($user->{'email'})
+                    $self, lc($user->{'email'})
                 );
                 next;
             }
@@ -8271,7 +8247,7 @@ sub sync_include {
         unless (defined($new_subscribers->{$email})) {
             ## User is also subscribed, update DB entry
             if ($old_subscribers{$email}{'subscribed'}) {
-                Log::do_log('debug', 'Updating %s to list %s', $email, $name);
+                Log::do_log('debug', 'Updating %s to list %s', $email, $self);
                 unless (
                     $self->update_list_member(
                         $email,
@@ -8282,7 +8258,7 @@ sub sync_include {
                     )
                     ) {
                     Log::do_log('err', '(%s) Failed to update %s',
-                        $name, $email);
+                        $self, $email);
                     next;
                 }
 
@@ -8291,12 +8267,12 @@ sub sync_include {
                 ## Tag user for deletion
             } else {
                 Log::do_log('debug3', 'Removing %s from list %s',
-                    $email, $name);
+                    $email, $self);
                 @deltab = ($email);
                 unless ($user_removed =
                     $self->delete_list_member('users' => \@deltab)) {
                     Log::do_log('err', '(%s) Failed to delete %s',
-                        $name, $user_removed);
+                        $self, $user_removed);
                     return undef;
                 }
                 if ($user_removed) {
@@ -8317,7 +8293,7 @@ sub sync_include {
         }
     }
     if ($users_removed > 0) {
-        Log::do_log('notice', '(%s) %d users removed', $name, $users_removed);
+        Log::do_log('notice', '(%s) %d users removed', $self, $users_removed);
     }
 
     ## Go through new users
@@ -8348,7 +8324,7 @@ sub sync_include {
                         )
                         ) {
                         Log::do_log('debug', 'Updating %s to list %s',
-                            $email, $name);
+                            $email, $self);
                         my $update_time =
                             $new_subscribers->{$email}{'update_date'} || time;
                         unless (
@@ -8362,7 +8338,7 @@ sub sync_include {
                             ) {
 
                             Log::do_log('err', '(%s) Failed to update %s',
-                                $name, $email);
+                                $self, $email);
                             next;
                         } else {
                             $succesful_update = 1;
@@ -8373,7 +8349,7 @@ sub sync_include {
                 ## User was already subscribed, update
                 ## include_sources_subscriber in DB
             } else {
-                Log::do_log('debug', 'Updating %s to list %s', $email, $name);
+                Log::do_log('debug', 'Updating %s to list %s', $email, $self);
                 unless (
                     $self->update_list_member(
                         $email,
@@ -8384,7 +8360,7 @@ sub sync_include {
                     )
                     ) {
                     Log::do_log('err', '(%s) Failed to update %s',
-                        $name, $email);
+                        $self, $email);
                     next;
                 }
                 $users_updated++;
@@ -8405,14 +8381,14 @@ sub sync_include {
             if ($compare eq '1') {
                 next;
             }
-            Log::do_log('debug3', 'Adding %s to list %s', $email, $name);
+            Log::do_log('debug3', 'Adding %s to list %s', $email, $self);
             my $u = $new_subscribers->{$email};
             $u->{'included'} = 1;
             $u->{'date'}     = time;
             @add_tab         = ($u);
             my $user_added = 0;
             unless ($user_added = $self->add_list_member(@add_tab)) {
-                Log::do_log('err', '(%s) Failed to add new users', $name);
+                Log::do_log('err', '(%s) Failed to add new users', $self);
                 return undef;
             }
             if ($user_added) {
@@ -8432,10 +8408,10 @@ sub sync_include {
     }
 
     if ($users_added) {
-        Log::do_log('notice', '(%s) %d users added', $name, $users_added);
+        Log::do_log('notice', '(%s) %d users added', $self, $users_added);
     }
 
-    Log::do_log('notice', '(%s) %d users updated', $name, $users_updated);
+    Log::do_log('notice', '(%s) %d users updated', $self, $users_updated);
 
     ## Release lock
     unless ($lock_fh->close()) {
@@ -8909,7 +8885,6 @@ sub store_digest {
     Log::do_log('debug3', '');
 
     my ($filename, $newfile);
-    my $separator = tools::get_separator();
 
     unless (-d "$Conf::Conf{'queuedigest'}") {
         return;
@@ -9804,8 +9779,8 @@ sub _save_list_param {
 
 ## Load a single line
 sub _load_list_param {
+    Log::do_log('debug3', '(%s, %s, %s, %s, %s)', @_);
     my ($robot, $key, $value, $p, $directory) = @_;
-    Log::do_log('debug3', '(%s, "%s", "%s")', $robot, $key, $value);
 
     ## Empty value
     if ($value =~ /^\s*$/) {

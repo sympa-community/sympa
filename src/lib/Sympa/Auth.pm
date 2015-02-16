@@ -205,7 +205,7 @@ sub authentication {
 
 sub ldap_authentication {
     my ($robot, $ldap, $auth, $pwd, $whichfilter) = @_;
-    my ($mesg, $host);
+    my $mesg;
     Log::do_log('debug2', '(%s, %s, %s)', $auth, '****', $whichfilter);
     Log::do_log('debug3', 'Password used: %s', $pwd);
 
@@ -413,7 +413,6 @@ sub remote_app_check_password {
 
     my $md5 = Digest::MD5::md5_hex($password);
 
-    my $vars;
     # seach entry for trusted_application in Conf
     my @trusted_apps;
 

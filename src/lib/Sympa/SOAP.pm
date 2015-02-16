@@ -314,7 +314,6 @@ sub authenticateAndRun {
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <email> <cookie> <service>');
     }
-    my $auth;
 
     ## Provided email is not trusted, we fetch the user email from the
     ## session_table instead
@@ -478,8 +477,6 @@ sub info {
             ->faultdetail('You should login first');
     }
 
-    my @resultSoap;
-
     unless ($listname) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Incorrect number of parameters')
@@ -495,8 +492,6 @@ sub info {
         die SOAP::Fault->faultcode('Server')->faultstring('Unknown list')
             ->faultdetail("List $listname unknown");
     }
-
-    my $sympa = Conf::get_robot_conf($robot, 'sympa');
 
     my $result = Sympa::Scenario::request_action(
         $list, 'info', 'md5',
@@ -593,8 +588,6 @@ sub createList {
             ->faultstring('User not specified')
             ->faultdetail('Use a trusted proxy or login first ');
     }
-
-    my @resultSoap;
 
     unless ($listname) {
         die SOAP::Fault->faultcode('Client')
@@ -735,8 +728,6 @@ sub closeList {
             ->faultstring('User not specified')
             ->faultdetail('Use a trusted proxy or login first ');
     }
-
-    my @resultSoap;
 
     unless ($listname) {
         die SOAP::Fault->faultcode('Client')
@@ -1025,9 +1016,7 @@ sub del {
             ->faultdetail('Not member of list or not subscribed');
     }
 
-    my $gecos = $user_entry->{'gecos'};
-
-    ## Really delete and rewrite to disk.
+    # Really delete and rewrite to disk.
     my $u;
     unless ($u =
         $list->delete_list_member('users' => [$email], 'exclude' => ' 1')) {
@@ -1035,7 +1024,7 @@ sub del {
             "Unable to delete user $email from list $listname for command 'del'";
         Log::do_log('info', 'DEL %s %s from %s failed, ' . $error);
         die SOAP::Fault->faultcode('Server')
-            ->faultstring('Unable to remove subscriber informations')
+            ->faultstring('Unable to remove subscriber information')
             ->faultdetail('Database access failed');
     }
 
@@ -1099,8 +1088,6 @@ sub review {
         die SOAP::Fault->faultcode('Server')->faultstring('Unknown list')
             ->faultdetail("List $listname unknown");
     }
-
-    my $sympa = Conf::get_robot_conf($robot, 'sympa');
 
     my $user;
 
@@ -1206,11 +1193,7 @@ sub fullReview {
             ->faultdetail('Listmaster or listowner required');
     }
 
-    my $sympa = Conf::get_robot_conf($robot, 'sympa');
-
-    my $is_owner = $list->am_i('owner', $sender);
-
-    ## Members list synchronization if include is in use
+    # Members list synchronization if include is in use
     if ($list->has_include_data_sources()) {
         unless ($list->on_the_fly_sync_include('use_ttl' => 1)) {
             Log::do_log('notice', 'Unable to synchronize list %s', $listname);
@@ -1302,7 +1285,6 @@ sub signoff {
             ->faultdetail('Use : <list> ');
     }
 
-    my $l;
     my $list = Sympa::List->new($listname, $robot);
 
     ## Is this list defined
@@ -1471,9 +1453,7 @@ sub subscribe {
             ->faultdetail($reason_string);
     }
     if ($action =~ /owner/i) {
-
-        ## Send a notice to the owners.
-        my $keyauth = tools::compute_auth($list, $sender, 'add');
+        # Send a notice to the owners.
         $list->send_notify_to_owner(
             'subrequest',
             {   'who'     => $sender,
@@ -1572,8 +1552,7 @@ sub subscribe {
 ## Which list the user is subscribed to
 ## TODO (pour listmaster, toutes les listes)
 sub complexWhich {
-    my $self = shift;
-    my @result;
+    my $self   = shift;
     my $sender = $ENV{'USER_EMAIL'};
     Log::do_log('notice', 'Xx complexWhich(%s)', $sender);
 
@@ -1584,8 +1563,7 @@ sub complexLists {
     my $self     = shift;
     my $topic    = shift || '';
     my $subtopic = shift || '';
-    my @result;
-    my $sender = $ENV{'USER_EMAIL'};
+    my $sender   = $ENV{'USER_EMAIL'};
     Log::do_log('notice', '(%s)', $sender);
 
     $self->lists($topic, $subtopic, 'complex');
@@ -1622,7 +1600,6 @@ sub which {
     foreach my $name (keys %listnames) {
         my $list = $listnames{$name};
 
-        my $list_address;
         my $result_item;
 
         my $result = Sympa::Scenario::request_action(
@@ -1661,7 +1638,7 @@ sub which {
         if ($list->is_list_member($sender)) {
             $result_item->{'isSubscriber'} = 1;
         }
-        ## determine bounce informations of this user for this list
+        # determine bounce information of this user for this list
         if ($result_item->{'isSubscriber'}) {
             my $subscriber;
             if ($subscriber = $list->get_list_member($sender)) {

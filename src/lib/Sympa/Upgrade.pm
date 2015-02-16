@@ -249,7 +249,6 @@ sub upgrade {
         Log::do_log('notice', 'Rename archives/log. files...');
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
-            my $l = $list->{'name'};
             if (-f $list->{'dir'} . '/archives/log.') {
                 rename $list->{'dir'} . '/archives/log.',
                     $list->{'dir'} . '/archives/log.00';
@@ -907,7 +906,7 @@ sub upgrade {
         unless ($sdm
             and $sth = $sdm->do_query("SELECT * FROM exclusion_table")) {
             Log::do_log('err',
-                'Unable to gather informations from the exclusions table');
+                'Unable to gather information from the exclusions table');
         }
         my @robots = Sympa::List::get_robots();
         while (my $data = $sth->fetchrow_hashref) {

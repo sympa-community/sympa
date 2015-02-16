@@ -81,6 +81,8 @@ my %equiv = (
     "User's Disk Quota Exceeded:"                      => '4.2.2'
 );
 
+my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
+
 ## Check options
 my %options;
 unless (
@@ -345,12 +347,15 @@ while (!$end) {
 
                 if ($action =~ /do_it/i) {
                     if ($list->is_list_member($who)) {
-                        my $u = $list->delete_list_member(
+                        $list->delete_list_member(
                             'users'   => [$who],
                             'exclude' => ' 1'
                         );
-                        Log::do_log('notice',
-                            "$who has been removed from $listname because welcome message bounced"
+                        Log::do_log(
+                            'notice',
+                            '%s has been removed from %s because welcome message bounced',
+                            $who,
+                            $list
                         );
                         Log::db_log(
                             {   'robot'        => $list->{'domain'},
@@ -359,7 +364,7 @@ while (!$end) {
                                 'target_email' => $who,
                                 'status'       => 'error',
                                 'error_type'   => 'welcome_bounced',
-                                'daemon'       => 'bounced'
+                                'daemon'       => $daemon_name
                             }
                         );
 
@@ -427,8 +432,6 @@ while (!$end) {
             my @parts = $entity->parts();
             my $original_rcpt;
             my $final_rcpt;
-            my $user_agent;
-            my $version;
             my $dsn_status;
             my $listname;
             my $arrival_date;
@@ -818,7 +821,7 @@ while (!$end) {
                             if (ref($result) eq 'HASH');
                         if ($action =~ /do_it/i) {
                             if ($list->is_list_member($original_rcpt)) {
-                                my $u = $list->delete_list_member(
+                                $list->delete_list_member(
                                     'users'   => [$original_rcpt],
                                     'exclude' => ' 1'
                                 );
@@ -967,7 +970,6 @@ while (!$end) {
                     remove($lock_fh);
                 }
             } else {    # no VERP and no rcpt recognized
-                my $escaped_from = tools::escape_chars($from);
                 Log::do_log('info',
                     'No address found in message from %s for list %s',
                     $from, $list);
@@ -1180,7 +1182,6 @@ sub _anabounce {
 
             $champ{from} =~ s/^.*<(.+)[\>]$/$1/;
             $champ{from} =~ y/[A-Z]/[a-z]/;
-            my ($local, $domaine) = split /\@/, $champ{from};
 
             if ($champ{subject} =~
                 /^Returned mail: (Quota exceeded for user (\S+))$/) {
@@ -2092,7 +2093,7 @@ sub _update_subscriber_bounce_history {
                 'msg_id'       => '',
                 'status'       => 'error',
                 'error_type'   => $status,
-                'daemon'       => 'bounced'
+                'daemon'       => $daemon_name
             }
         );
     } else {
@@ -2108,7 +2109,7 @@ sub _update_subscriber_bounce_history {
                 'msg_id'       => '',
                 'status'       => 'error',
                 'error_type'   => $status,
-                'daemon'       => 'bounced'
+                'daemon'       => $daemon_name
             }
         );
     }

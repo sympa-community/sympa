@@ -48,6 +48,7 @@ use Log;
 use Sympa::Mailer;
 use Sympa::Report;
 use tools;
+use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::Password;
 use Sympa::Upgrade;
@@ -55,7 +56,7 @@ use Sympa::Upgrade;
 ## Init random engine
 srand(time());
 
-my $daemon_name = Log::set_daemon($0);
+my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
 my $ip;
 $ip = $ENV{'REMOTE_HOST'};
 $ip = $ENV{'REMOTE_ADDR'} unless ($ip);

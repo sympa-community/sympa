@@ -553,10 +553,8 @@ sub request_action {
                     "error in $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'}"
                 );
                 Log::do_log(
-                    'info',
-                    'Error in %s scenario, in list %s',
-                    $name,
-                    $context->{'listname'}
+                    'info', 'Error in %s scenario, in list %s',
+                    $name,  $context->{'listname'}
                 );
 
                 if ($debug) {
@@ -1419,7 +1417,7 @@ sub search {
             subdir => 'search_filters');
 
         my $timeout = 3600;
-        my ($sql_conf, $tsth);
+        my $sql_conf;
         my $time = time;
 
         unless ($sql_conf = Conf::load_sql_filter($file)) {
