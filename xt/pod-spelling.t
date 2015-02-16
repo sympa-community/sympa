@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # -*- indent-tabs-mode: t; -*-
 # vim:ft=perl:noet:sw=8:textwidth=78
-# $Id: pod-spelling.t 8606 2013-02-06 08:44:02Z rousse $
+# $Id$
 
 use strict;
 use warnings;

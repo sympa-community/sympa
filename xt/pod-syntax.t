@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # -*- indent-tabs-mode: t; -*-
 # vim:ft=perl:noet:sw=8:textwidth=78
-# $Id: pod-syntax.t 8623 2013-02-11 14:52:18Z rousse $
+# $Id$
 
 use strict;
 use warnings;
