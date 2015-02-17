@@ -236,13 +236,16 @@ while ($signal ne 'term') {
     my $dh;
     unless (opendir $dh, $spool) {
         die sprintf 'Can\'t open dir %s: %s', $spool, $ERRNO;
-        ## No return.
+        # No return.
     }
     my @qfile =
-        sort
         grep { !/,lock/ and !/\A(?:\.|T\.|BAD-)/ and -f ($spool . '/' . $_) }
         readdir $dh;
     closedir $dh;
+    my %mtime =
+        map { ($_ => Sympa::Tools::File::get_mtime($spool . '/' . $_)) }
+        @qfile;
+    @qfile = sort { $mtime{$a} <=> $mtime{$b} } @qfile;
 
     # process digest only in distribution mode.
     # Scan queuedigest.

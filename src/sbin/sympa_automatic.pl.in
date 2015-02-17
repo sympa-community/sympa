@@ -47,6 +47,7 @@ use Sympa::Report;
 use tools;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
+use Sympa::Tools::File;
 use Sympa::Tools::Password;
 
 ## Init random engine
@@ -194,18 +195,19 @@ while ($signal ne 'term') {
     # Process grouped notifications
     Sympa::Alarm->instance->flush;
 
-    my ($message, $handle);
-
     my $dh;
     unless (opendir $dh, $spool) {
         die sprintf 'Can\'t open dir %s: %s', $spool, $ERRNO;
         # No return.
     }
     my @qfile =
-        sort
         grep { !/,lock/ and !/\A(?:\.|T\.|BAD-)/ and -f ($spool . '/' . $_) }
         readdir $dh;
     closedir $dh;
+    my %mtime =
+        map { ($_ => Sympa::Tools::File::get_mtime($spool . '/' . $_)) }
+        @qfile;
+    @qfile = sort { $mtime{$a} <=> $mtime{$b} } @qfile;
 
     my $numprocessed = 0;
     foreach my $filename (@qfile) {

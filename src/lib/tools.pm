@@ -2276,6 +2276,14 @@ sub store_spool {
             die sprintf 'Cannot create %s: %s', $path, $ERRNO;
         }
         $lock->close;
+
+        # Set mtime to be {date} in metadata of the message.
+        my $mtime =
+              defined $message->{date} ? $message->{date}
+            : defined $message->{time} ? $message->{time}
+            :                            time;
+        utime $mtime, $mtime, $path;
+
         return $marshalled;
     }
 
