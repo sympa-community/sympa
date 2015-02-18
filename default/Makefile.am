@@ -374,7 +374,7 @@ CLEANFILES = list_aliases.tt2
 
 DEFAULT_SCENARIOS = \
 	add.owner \
-	archive_mail_acccess.closed \
+	archive_mail_access.closed \
 	d_edit.owner \
 	d_read.private \
 	del.owner \
