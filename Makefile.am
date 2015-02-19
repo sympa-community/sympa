@@ -79,7 +79,7 @@ installdir:
 	done
 	@echo "Creating writable directories"
 	@for dir in $(expldir) $(spooldir) $(spooldir)/msg $(spooldir)/digest \
-		$(spooldir)/moderation $(spooldir)/expire $(spooldir)/auth \
+		$(spooldir)/moderation $(spooldir)/auth \
 		$(spooldir)/outgoing $(spooldir)/tmp $(spooldir)/task \
 		$(spooldir)/bulk \
 		$(bouncedir) $(arcdir) $(piddir) $(staticdir) $(staticdir)/js $(sysconfdir); do \
