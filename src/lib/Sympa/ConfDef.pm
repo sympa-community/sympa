@@ -963,7 +963,6 @@ our @params = (
         'default'    => '5',
         'vhost'      => '1',
     },
-
     {   'name' => 'parsed_family_files',
         'gettext_id' =>
             'comma-separated list of files that will be parsed by Sympa when instantiating a family (no space allowed in file names)',
@@ -971,6 +970,11 @@ our @params = (
         'default' =>
             'message.footer,message.header,message.footer.mime,message.header.mime,info',
         'vhost' => '1',
+    },
+    {   'name'    => 'incoming_max_count',
+        'default' => '1',
+        'gettext_id' =>
+            'Max number of daemons processing incoming spool that will run on the same server',
     },
 
     {'gettext_id' => 'Database related'},

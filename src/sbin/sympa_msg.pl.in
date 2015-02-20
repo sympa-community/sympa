@@ -61,6 +61,8 @@ my $digestsleep = 5;
 srand(time());
 
 my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
+# Default is to launch process as master daemon.
+my $daemon_usage = 'DAEMON_MASTER';
 
 ## Check --dump option
 my %options;
@@ -153,9 +155,54 @@ Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
 # dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if $main::options{'foreground'};
+$options->{'multiple_process'} = 0;
+
+# Save the PID number
 Sympa::Tools::Daemon::write_pid($pidfile, $PID, $options);
 unless ($options->{'stderr_to_tty'}) {
-    Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
+    Sympa::Tools::Daemon::direct_stderr_to_file(pid => $PID);
+}
+
+# Start multiple processes if required.
+unless ($main::options{'foreground'}) {
+    if ($daemon_usage eq 'DAEMON_MASTER'
+        and ($Conf::Conf{'incoming_max_count'} || 0) > 1) {
+        $options->{'multiple_process'} = 1;
+
+        # Disconnect from database before fork to prevent DB handles
+        # to be shared by different processes.  Sharing database
+        # handles may crash sympa_msg.pl.
+        Sympa::DatabaseManager->disconnect;
+
+        for my $process_count (2 .. $Conf::Conf{'incoming_max_count'}) {
+            my $child_pid = fork;
+            if ($child_pid) {
+                Log::do_log('info', 'Starting child daemon, PID %s',
+                    $child_pid);
+                # Saves the PID number
+                Sympa::Tools::Daemon::write_pid($pidfile, $child_pid,
+                    $options);
+                #$created_children{$child_pid} = 1;
+                sleep 1;
+            } elsif (not defined $child_pid) {
+                Log::do_log('err', 'Cannot fork: %m');
+                last;
+            } else {
+                # We're in a child process
+                close STDERR;
+                Sympa::Tools::Daemon::direct_stderr_to_file(pid => $PID);
+                $daemon_usage = 'DAEMON_SLAVE';    # child
+                Log::do_openlog($Conf::Conf{'syslog'},
+                    $Conf::Conf{'log_socket_type'}, $service);
+                Log::do_log('info', 'Slave daemon started with PID %s', $PID);
+                last;
+            }
+        }
+
+        # Restore persistent connection.
+        Sympa::DatabaseManager->instance
+            or die 'Reconnecting database failed';
+    }
 }
 
 # Set the User ID & Group ID for the process
@@ -249,7 +296,8 @@ while ($signal ne 'term') {
 
     # process digest only in distribution mode.
     # Scan queuedigest.
-    if ($index_queuedigest++ >= $digestsleep) {
+    if (    $daemon_usage eq 'DAEMON_MASTER'
+        and $index_queuedigest++ >= $digestsleep) {
         $index_queuedigest = 0;
         SendDigest();
     }
@@ -376,7 +424,7 @@ while ($signal ne 'term') {
 }    #end of block while ($signal ne 'term'){
 
 Log::do_log('notice', 'Sympa/msg exited normally due to signal');
-Sympa::Tools::Daemon::remove_pid($pidfile, $PID);
+Sympa::Tools::Daemon::remove_pid($pidfile, $PID, $options);
 
 exit(0);
 
