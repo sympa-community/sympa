@@ -1249,7 +1249,7 @@ sub purge_logs_table {
     my @slots          = ();
 
     Log::do_log('debug2', '');
-    unless (Log::db_log_del()) {
+    unless (_db_log_del()) {
         Log::do_log('err', 'Failed to delete logs');
         return undef;
     }
@@ -1298,6 +1298,25 @@ sub purge_logs_table {
 
     Log::do_log('notice', 'Logs purged');
     return 1;
+}
+
+# delete logs in RDBMS
+sub _db_log_del {
+    my $exp = Conf::get_robot_conf('*', 'logs_expiration_period');
+    my $date = time - ($exp * 30 * 24 * 60 * 60);
+
+    unless (
+        SDM::do_prepared_query(
+            q{DELETE FROM logs_table
+              WHERE date_logs <= ?},
+            $date
+        )
+        ) {
+        Log::do_log('err', 'Unable to delete db_log entry from the database');
+        return undef;
+    }
+    return 1;
+
 }
 
 ## remove sessions from session_table if older than $Conf::Conf{'session_table_ttl'}

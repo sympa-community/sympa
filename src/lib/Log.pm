@@ -31,7 +31,6 @@ use POSIX qw();
 use Scalar::Util;
 use Sys::Syslog qw();
 
-use Conf;
 use SDM;
 use tools;
 use Sympa::Tools::Time;
@@ -60,35 +59,7 @@ my %levels = (
 our $last_date_aggregation;
 
 # Deprecated: No longer used.
-sub fatal_err {
-    my $m     = shift;
-    my $errno = $ERRNO;
-
-    eval {
-        Sys::Syslog::syslog('err', $m, @_);
-        Sys::Syslog::syslog('err', "Exiting.");
-    };
-    if ($EVAL_ERROR && ($warning_date < time - $warning_timeout)) {
-        $warning_date = time + $warning_timeout;
-        unless (
-            tools::send_notify_to_listmaster(
-                '*', 'logs_failed', [$EVAL_ERROR]
-            )
-            ) {
-            print STDERR "No logs available, can't send warning message";
-        }
-    }
-    $m =~ s/%m/$errno/g;
-
-    my $full_msg = sprintf $m, @_;
-
-    ## Notify listmaster
-    #FIXME: Add entry to listmaster_notification.tt2
-    tools::send_notify_to_listmaster('*', 'sympa_died', [$full_msg]);
-
-    printf STDERR "$m\n", @_;
-    exit(1);
-}
+#sub fatal_err;
 
 sub do_log {
     my $level   = shift;
@@ -435,22 +406,8 @@ sub db_stat_counter_log {
 }    #end sub
 
 # delete logs in RDBMS
-sub db_log_del {
-    my $exp = Conf::get_robot_conf('*', 'logs_expiration_period');
-    my $date = time - ($exp * 30 * 24 * 60 * 60);
-
-    unless (
-        SDM::do_query(
-            "DELETE FROM logs_table WHERE (logs_table.date_logs <= %s)",
-            SDM::quote($date)
-        )
-        ) {
-        do_log('err', 'Unable to delete db_log entry from the database');
-        return undef;
-    }
-    return 1;
-
-}
+# MOVED to _db_log_del() in task_manager.pl.
+#sub db_log_del;
 
 # Scan log_table with appropriate select
 sub get_first_db_log {
