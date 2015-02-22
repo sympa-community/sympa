@@ -26,6 +26,7 @@
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use Getopt::Long;
 use Pod::Usage;
 
@@ -118,7 +119,7 @@ if ($aliases_program =~ m{\A/}) {
         q{--MAKEMAP--}, $aliases_db_type, $aliases_file, $aliases_file);
 
     unless (open STDIN, '<', $aliases_file) {
-        Log::do_log('err', 'Canot open $s', $aliases_file);
+        Log::do_log('err', 'Canot open %s', $aliases_file);
         exit 1;
     }
     exec q{--MAKEMAP--}, $aliases_db_type, $aliases_file;
@@ -152,9 +153,8 @@ if ($aliases_program =~ m{\A/}) {
     exit 1;
 }
 
-my $errno = $!;
-Log::do_log('Cannot execute aliases_program "%s": %s',
-    $aliases_program, $errno);
+my $errno = $ERRNO;
+Log::do_log('Cannot execute aliases_program "%s": %m', $aliases_program);
 exit($errno || 1);
 
 __END__
