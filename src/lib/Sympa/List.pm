@@ -2089,66 +2089,59 @@ sub _mail_message {
 ####################################################
 # Old name: send_msg_digest().
 sub distribute_digest {
-    Log::do_log('debug2', '(%s)', @_);
-    my $self = shift;
+    Log::do_log('debug2', '(%s, ...)', @_);
+    my $self    = shift;
+    my %options = @_;
 
-    my $listname = $self->{'name'};
-    my $robot    = $self->{'domain'};
-    my $i;
+    my $spool = $Conf::Conf{'queuedigest'} . '/' . $self->get_id;
 
     my $available_recipients = $self->get_digest_recipients_per_mode;
     unless ($available_recipients) {
         Log::do_log('info', 'No subscriber for sending digest in list %s',
             $self);
+
+        unless ($options{keep_digest}) {
+            # Locking directory to remove it exclusively.
+            my $lock_fh_dir = Sympa::LockedFile->new($spool, -1, '+');
+            return 0 unless $lock_fh_dir;
+            Sympa::Tools::File::remove_dir($spool); # even if it is NOT empty.
+            # Releasing lock.
+            $lock_fh_dir->close;
+        }
+
         return 0;
     }
 
-    my $filename;
-    ## Backward compatibility concern
-    if (-f "$Conf::Conf{'queuedigest'}/$listname") {
-        $filename = "$Conf::Conf{'queuedigest'}/$listname";
-    } else {
-        $filename = $Conf::Conf{'queuedigest'} . '/' . $self->get_list_id();
+    my $dh;
+    unless (opendir $dh, $spool) {
+        return undef;
     }
+    my @qfile = sort
+        grep { !/,lock/ and !/\A(?:\.|T\.|BAD-)/ and -f ($spool . '/' . $_) }
+        readdir $dh;
+    closedir $dh;
 
-    my $param = {
-        'replyto'   => $self->get_list_address('owner'),
-        'to'        => $self->get_list_address(),
-        'boundary1' => '----------=_' . tools::get_message_id($robot),
-        'boundary2' => '----------=_' . tools::get_message_id($robot),
-    };
-    # Compat. to 6.2a or earlier
-    $param->{'table_of_content'} = $language->gettext("Table of contents:");
+    my $time = time;
 
-    if ($self->get_reply_to() =~ /^list$/io) {
-        $param->{'replyto'} = "$param->{'to'}";
-    }
+    # Digest index.
+    my @all_msg;
+    my $i = 0;
+    foreach my $filename (@qfile) {
+        my $lock_fh =
+            Sympa::LockedFile->new($spool . '/' . $filename, -1, '+<');
+        next unless $lock_fh;
 
-    my @list_of_message;
-    my $old = $/;
-    local $/ = "\n\n" . tools::get_separator() . "\n\n";
+        my $metadata =
+            tools::unmarshal_metadata($spool, $filename,
+            qr{\A(\d+)\.(\d+\.\d+)(?:,.*)?\z},
+            [qw(date time)]);
+        next unless $metadata;
 
-    ## Digest split in individual messages
-    open DIGEST, $filename or return undef;
-    $i = 0;
-    foreach my $text (<DIGEST>) {
-        next unless $i++;    # Skip introduction part.
-
-        $text =~ s{$/\z}{};
-        $text =~ s/\r?\z/\n/ unless $text =~ /\n\z/;
-
-        my $message = Sympa::Message->new($text, context => $self);
+        my $msg_string = do { local $RS; <$lock_fh> };
+        my $message =
+            Sympa::Message->new($msg_string, %$metadata, context => $self);
         next unless $message;
 
-        push @list_of_message, $message;
-    }
-    close DIGEST;
-    local $/ = $old;
-
-    ## Digest index
-    my @all_msg;
-    $i = 0;
-    foreach my $message (@list_of_message) {
         $i++;
 
         # Commented because one Spam made Sympa die (MIME::tools 5.413)
@@ -2161,23 +2154,46 @@ sub distribute_digest {
             'full_msg'   => $message->as_string,
             'body'       => $message->body_as_string,
             'plain_body' => $message->get_plaindigest_body,
-            # Should be extracted from Date:
-            'month'      => POSIX::strftime("%Y-%m", localtime time),
+            #FIXME: Might be extracted from Date:.
+            'month'      => POSIX::strftime("%Y-%m", localtime $time),
             'message_id' => $message->{'message_id'},
         };
         push @all_msg, $msg;
+
+        $lock_fh->unlink unless $options{keep_digest};
+
+        # Locking directory to remove it exclusively.
+        my $lock_fh_dir = Sympa::LockedFile->new($spool, -1, '+');
+        next unless $lock_fh_dir;
+        rmdir $spool;    # if it is empty.
+        # Releasing lock.
+        $lock_fh_dir->close;
     }
 
-    my @now = localtime(time);
+    my $param = {
+        'replyto'   => $self->get_list_address('owner'),
+        'to'        => $self->get_list_address(),
+        'boundary1' => '----------=_'
+            . tools::get_message_id($self->{'domain'}),
+        'boundary2' => '----------=_'
+            . tools::get_message_id($self->{'domain'}),
+    };
+    # Compat. to 6.2a or earlier
+    $param->{'table_of_content'} = $language->gettext("Table of contents:");
+
+    if ($self->get_reply_to() =~ /^list$/io) {
+        $param->{'replyto'} = "$param->{'to'}";
+    }
+
     $param->{'datetime'} =
-        $language->gettext_strftime("%a, %d %b %Y %H:%M:%S", @now);
-    $param->{'date'} = $language->gettext_strftime("%a, %d %b %Y", @now);
+        $language->gettext_strftime("%a, %d %b %Y %H:%M:%S", localtime $time);
+    $param->{'date'} =
+        $language->gettext_strftime("%a, %d %b %Y", localtime $time);
 
     ## Split messages into groups of digest_max_size size
     my @group_of_msg;
     while (@all_msg) {
         my @group = splice @all_msg, 0, $self->{'admin'}{'digest_max_size'};
-
         push @group_of_msg, \@group;
     }
 
@@ -2187,7 +2203,6 @@ sub distribute_digest {
     $param->{'total_group'}   = $#group_of_msg + 1;
     ## Foreach set of digest_max_size messages...
     foreach my $group (@group_of_msg) {
-
         $param->{'current_group'}++;
         $param->{'msg_list'}       = $group;
         $param->{'auto_submitted'} = 'auto-forwarded';
@@ -8881,44 +8896,35 @@ sub _save_list_members_file {
 ## Does the real job : stores the message given as an argument into
 ## the digest of the list.
 sub store_digest {
-    my ($self, $message) = @_;
-    Log::do_log('debug3', '');
+    Log::do_log('debug3', '(%s, %s)', @_);
+    my $self    = shift;
+    my $message = shift->dup;
 
-    my ($filename, $newfile);
+    # Delete original message ID because it can be anonymized.
+    delete $message->{message_id};
 
-    unless (-d "$Conf::Conf{'queuedigest'}") {
-        return;
+    unless (-d $Conf::Conf{'queuedigest'}) {
+        return unless mkdir $Conf::Conf{'queuedigest'};
     }
+    my $spool = $Conf::Conf{'queuedigest'} . '/' . $self->get_id;
 
-    my @now = localtime(time);
+    # Locking directory to prevent removal.
+    my $lock_fh_dir = Sympa::LockedFile->new($spool, 5, '+');
+    return unless $lock_fh_dir;
 
-    ## Reverse compatibility concern
-    if (-f "$Conf::Conf{'queuedigest'}/$self->{'name'}") {
-        $filename = "$Conf::Conf{'queuedigest'}/$self->{'name'}";
-    } else {
-        $filename = $Conf::Conf{'queuedigest'} . '/' . $self->get_list_id();
+    unless (-d $spool) {
+        return unless mkdir $spool;
     }
+    my $oldtime = Sympa::Tools::File::get_mtime($spool);
+    my $marshalled =
+        tools::store_spool($spool, $message, '%ld.%f,%ld,%d',
+        [qw(date TIME PID RAND)]);
+    utime $oldtime, $oldtime, $spool;
 
-    $newfile = !(-e $filename);
-    my $oldtime = Sympa::Tools::File::get_mtime($filename) unless $newfile;
+    # Releasing lock.
+    $lock_fh_dir->close;
 
-    open(OUT, ">> $filename") || return;
-    if ($newfile) {
-        ## create header
-        printf OUT "\nThis digest for list has been created on %s\n\n",
-            POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
-        print OUT
-            "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
-        printf OUT "\n%s\n\n", tools::get_separator();
-
-        # send the date of the next digest to the users
-    }
-
-    printf OUT "%s\n%s\n\n", $message->as_string, tools::get_separator();
-    close OUT;
-
-    #replace the old time
-    utime $oldtime, $oldtime, $filename unless ($newfile);
+    return $marshalled;
 }
 
 =over 4

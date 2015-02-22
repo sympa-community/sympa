@@ -53,9 +53,6 @@ use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use tt2;
 
-my $separator =
-    "------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
-
 ## Returns an HTML::StripScripts::Parser object built with  the parameters
 ## provided as arguments.
 # DEPRECATED: Use Sympa::HTMLSanitizer::new().
@@ -1640,9 +1637,12 @@ sub add_in_blacklist {
 # DEPRECATED: No longer used.
 # sub init_db_random();
 
-sub get_separator {
-    return $separator;
-}
+# DEPRECATED: No longer used.
+#my $separator =
+#    "------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
+#sub get_separator {
+#    return $separator;
+#}
 
 ## Return the Sympa regexp corresponding to the input param
 # OBSOLETED: Use Sympa::Regexps::<type>().

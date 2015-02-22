@@ -1096,13 +1096,27 @@ sub SendDigest {
     my $keep_digest = $options{keep_digest};
     my $send_now    = $options{send_now};
 
-    if (!opendir(DIR, $Conf::Conf{'queuedigest'})) {
+    my $dh;
+    unless (opendir $dh, $Conf::Conf{'queuedigest'}) {
         die sprintf 'Unable to access directory %s : %s',
             $Conf::Conf{'queuedigest'}, $ERRNO;
-        ## No return.
+        # No return.
     }
-    my @dfile = (sort grep (!/^\./, readdir(DIR)));
-    closedir(DIR);
+    my @dfile =
+        grep {
+                !/,lock/
+            and !/\A(?:\.|T\.|BAD-)/
+            and -d ($Conf::Conf{'queuedigest'} . '/' . $_)
+        } readdir $dh;
+    closedir $dh;
+    my %mtime =
+        map {
+        (   $_ => Sympa::Tools::File::get_mtime(
+                $Conf::Conf{'queuedigest'} . '/' . $_
+            )
+            )
+        } @dfile;
+    @dfile = sort { $mtime{$a} <=> $mtime{$b} } @dfile;
 
     foreach my $listaddress (@dfile) {
         my $filename = $Conf::Conf{'queuedigest'} . '/' . $listaddress;
@@ -1148,9 +1162,7 @@ sub SendDigest {
             ## Blindly send the message to all users.
             Log::do_log('info', "Sending digest to list %s", $listaddress);
             my $start_time = time;
-            $list->distribute_digest();
-
-            unlink($filename) unless $keep_digest;
+            $list->distribute_digest(keep_digest => $keep_digest);
 
             Log::do_log('info', 'Digest of the list %s sent (%d seconds)',
                 $list, time - $start_time);

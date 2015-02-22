@@ -1485,6 +1485,61 @@ sub upgrade {
         }
     }
 
+    # Format of digest spool was changed.
+    my $digest_separator =
+        '------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------';
+
+    if (lower_version($previous_version, '6.2b.5')) {
+        Log::do_log('info', 'Upgrading digest spool.');
+
+        my $dh;
+        my @dfile;
+        if (opendir $dh, $Conf::Conf{'queuedigest'}) {
+            @dfile =
+                grep {
+                        !/,lock/
+                    and !/\A(?:\.|T\.|BAD-)/
+                    and !/(?:_unknown|_migrated)\z/
+                    and -f ($Conf::Conf{'queuedigest'} . '/' . $_)
+                } readdir $dh;
+            closedir $dh;
+        }
+        foreach my $filename (@dfile) {
+            # Backward compatibility concern
+            my ($listname, $robot_id) = split /\@/, $filename, 2;
+            $robot_id ||= $Conf::Conf{'domain'};
+            my $list = Sympa::List->new($listname, $robot_id);
+            unless ($list) {
+                Log::do_log('err', 'Unknown list %s', $filename);
+                rename $Conf::Conf{'queuedigest'} . '/' . $filename,
+                    $Conf::Conf{'queuedigest'} . '/' . $filename . '_unknown';
+                next;
+            }
+            rename $Conf::Conf{'queuedigest'} . '/' . $filename,
+                $Conf::Conf{'queuedigest'} . '/' . $filename . '_migrated';
+
+            local $RS = "\n\n" . $digest_separator . "\n\n";
+            open my $fh, '<',
+                $Conf::Conf{'queuedigest'} . '/' . $filename . '_migrated'
+                or next;
+            my $i = 0;
+            while (my $text = <$fh>) {
+                next unless $i++;    # Skip introduction part.
+
+                $text =~ s{$RS\z}{};
+                $text =~ s/\r?\z/\n/ unless $text =~ /\n\z/;
+
+                my $message = Sympa::Message->new($text, context => $list);
+                next unless $message;
+
+                $message->{date} = time;
+                $list->store_digest($message);
+            }
+            close $fh;
+        }
+
+    }
+
     return 1;
 }
 
