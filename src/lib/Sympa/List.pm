@@ -5846,33 +5846,23 @@ sub is_archiving_enabled {
         'on');
 }
 
-## Returns 1 if the  digest  must be send
+## Returns 1 if the  digest must be sent.
 sub get_nextdigest {
+    Log::do_log('debug3', '(%s)', @_);
     my $self = shift;
-    Log::do_log('debug3', '(%s)');
 
-    my $digest   = $self->{'admin'}{'digest'};
-    my $listname = $self->{'name'};
+    my $spool = $Conf::Conf{'queuedigest'} . '/' . $self->get_id;
+    return undef unless -d $spool;
 
-    ## Reverse compatibility concerns
-    my $filename;
-    foreach my $f ("$Conf::Conf{'queuedigest'}/$listname",
-        $Conf::Conf{'queuedigest'} . '/' . $self->get_list_id()) {
-        $filename = $f if (-f $f);
-    }
+    return undef unless $self->is_digest;
 
-    return undef unless (defined $filename);
-
-    unless ($digest) {
-        return undef;
-    }
-
-    my @days = @{$digest->{'days'}};
-    my ($hh, $mm) = ($digest->{'hour'}, $digest->{'minute'});
+    my @days = @{$self->{'admin'}{'digest'}->{'days'} || []};
+    my $hh = $self->{'admin'}{'digest'}->{'hour'}   || 0;
+    my $mm = $self->{'admin'}{'digest'}->{'minute'} || 0;
 
     my @now   = localtime time;
     my $today = $now[6];          # current day
-    my @timedigest = localtime Sympa::Tools::File::get_mtime($filename);
+    my @timedigest = localtime Sympa::Tools::File::get_mtime($spool);
 
     ## Should we send a digest today
     my $send_digest = 0;
@@ -5882,9 +5872,7 @@ sub get_nextdigest {
             last;
         }
     }
-
-    return undef
-        unless ($send_digest == 1);
+    return undef unless $send_digest;
 
     if (($now[2] * 60 + $now[1]) >= ($hh * 60 + $mm)
         and (
