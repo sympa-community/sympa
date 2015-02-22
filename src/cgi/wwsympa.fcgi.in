@@ -85,7 +85,6 @@ use SDM;
 use Sympa::Session;
 use Sympa::SharedDocument;
 use tools;
-use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
@@ -125,8 +124,6 @@ unless (Conf::load()) {
 }
 
 Log::set_log_level($Conf::Conf{'log_level'});
-
-my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
 
 ## Open log
 my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
@@ -2030,12 +2027,12 @@ sub web_db_log {
     $data->{'client'} = $param->{'remote_addr'};
     $data->{'daemon'} = 'wwsympa';
     $data->{'robot'}      ||= $robot;
-    $data->{'list'}       ||= $list->{'name'} if (defined $list);
+    $data->{'list'}       ||= $list->{'name'} if ref $list eq 'Sympa::List';
     $data->{'action'}     ||= $param->{'action'};
     $data->{'user_email'} ||= $param->{'user'}{'email'}
-        if (defined $param->{'user'});
-    $data->{'target_email'} ||=
-        $data->{'user_email'};    ## Default email is the user email
+        if defined $param->{'user'};
+    # Default email is the user email
+    $data->{'target_email'} ||= $data->{'user_email'};
 
     unless (Log::db_log($data)) {
         wwslog('err', 'Failed to log in database');
@@ -2051,9 +2048,9 @@ sub web_db_stat_log {
 
     my $data = shift;
     $data->{'mail'} ||= $param->{'user'}{'email'}
-        if (defined $param->{'user'});
+        if defined $param->{'user'};
     $data->{'operation'} ||= $param->{'action'};
-    $data->{'list'} ||= $list->{'name'} if (defined $list);
+    $data->{'list'} ||= $list->{'name'} if ref $list eq 'Sympa::List';
     $data->{'daemon'} = 'wwsympa';
     $data->{'client'} = $param->{'remote_addr'};
     $data->{'robot'} ||= $robot;
@@ -3857,8 +3854,6 @@ sub do_login {
         {   'robot'     => $robot,
             'operation' => $param->{'action'},
             'mail'      => $param->{'user'}{'email'},
-            'client'    => $ip,
-            'daemon'    => $daemon_name
         }
     );
 
@@ -4597,8 +4592,6 @@ sub do_logout {
         {   'robot'     => $robot,
             'operation' => $param->{'action'},
             'mail'      => $param->{'user'}{'email'},
-            'client'    => $ip,
-            'daemon'    => $daemon_name
         }
     );
 
@@ -9039,8 +9032,6 @@ sub do_reject {
             "operation" => $param->{'action'},
             'parameter' => "",
             'mail'      => $param->{'user'}{'email'},
-            'client'    => $ip,
-            'daemon'    => $daemon_name
         }
     );
 
@@ -9973,8 +9964,6 @@ sub do_arc {
             'operation' => $param->{'action'},
             'parameter' => "",
             'mail'      => $param->{'user'}{'email'},
-            'client'    => $ip,
-            'daemon'    => $daemon_name
         }
     );
 
@@ -10279,8 +10268,13 @@ sub do_remove_arc {
         }
     );
 
-    #web_db_stat_log({'robot' => $robot, 'list' => $list->{'name'}, 'operation' => $param->{'action'}, 'parameter' => "",
-    #'client' => $ip, 'daemon' => $daemon_name});
+    #web_db_stat_log(
+    #    {   'robot'     => $robot,
+    #        'list'      => $list->{'name'},
+    #        'operation' => $param->{'action'},
+    #        'parameter' => "",
+    #    }
+    #);
 
     $param->{'status'} = 'done';
 
@@ -11195,8 +11189,6 @@ sub do_install_pending_list {
                 'operation' => 'list_rejected',
                 'parameter' => '',
                 'mail'      => $param->{'user'}{'email'},
-                'client'    => '',
-                'daemon'    => $daemon_name
             }
         );
     }
@@ -13699,8 +13691,6 @@ sub do_copy_list {
                 'operation' => 'copy list',
                 'parameter' => '',
                 'mail'      => $param->{'user'}{'email'},
-                'client'    => '',
-                'dameon'    => $daemon_name
             }
         );
         return $success;
@@ -13906,7 +13896,6 @@ sub do_close_list {
             {   'robot'     => $robot,
                 'list'      => $list->{'name'},
                 'operation' => $param->{'action'},
-                'daemon'    => $daemon_name
             }
         );
 
@@ -13984,7 +13973,6 @@ sub do_restore_list {
         {   'robot'     => $robot,
             'list'      => $list->{'name'},
             'operation' => $param->{'action'},
-            'daemon'    => $daemon_name
         }
     );
 
@@ -16560,8 +16548,6 @@ sub do_d_upload {
                 'status'       => 'error',
                 'error_type'   => 'no_file',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -16586,8 +16572,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'shared_full',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -16618,8 +16602,6 @@ sub do_d_upload {
                 'status'       => 'error',
                 'error_type'   => 'bad_parameter',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -16641,8 +16623,6 @@ sub do_d_upload {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -16669,8 +16649,6 @@ sub do_d_upload {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -16745,8 +16723,6 @@ sub do_d_upload {
                             'status'       => 'error',
                             'error_type'   => 'internal',
                             'user_email'   => $param->{'user'}{'email'},
-                            'client'       => $ip,
-                            'daemon'       => $daemon_name
                         }
                     );
                     return undef;
@@ -16803,8 +16779,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'file_already_exists',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -16836,8 +16810,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'authorization',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -16866,8 +16838,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'no_file',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -16889,8 +16859,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'no_file',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -16917,8 +16885,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'synchro_failed',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -16955,8 +16921,6 @@ sub do_d_upload {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
                 return undef;
@@ -16989,8 +16953,6 @@ sub do_d_upload {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -17020,8 +16982,6 @@ sub do_d_upload {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -17051,8 +17011,6 @@ sub do_d_upload {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -17083,8 +17041,6 @@ sub do_d_upload {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -17113,8 +17069,6 @@ sub do_d_upload {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -17140,8 +17094,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'authorization',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -17162,8 +17114,6 @@ sub do_d_upload {
                 'status'       => 'success',
                 'error_type'   => '',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return 'd_read';
@@ -17191,8 +17141,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'missing_parameter',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -17216,8 +17164,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'bad_parameter',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -17240,8 +17186,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'bad_parameter',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -17262,8 +17206,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'file_already_exists',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -17287,8 +17229,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'file_already_exists',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -17311,8 +17251,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'file_already_exists',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
         }
@@ -17344,8 +17282,6 @@ sub do_d_upload {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -17377,8 +17313,6 @@ sub do_d_upload {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -17411,8 +17345,6 @@ sub do_d_upload {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -17444,8 +17376,6 @@ sub do_d_upload {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -17471,8 +17401,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'authorization',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -17493,8 +17421,6 @@ sub do_d_upload {
                 'status'       => 'success',
                 'error_type'   => '',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return 'd_read';
@@ -17519,8 +17445,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -17543,8 +17467,6 @@ sub do_d_upload {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -17594,8 +17516,6 @@ sub do_d_upload {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
 
@@ -17605,8 +17525,6 @@ sub do_d_upload {
             'operation' => $param->{'action'},
             'parameter' => $size,
             'mail'      => $param->{'user'}{'email'},
-            'client'    => $ip,
-            'daemon'    => $daemon_name
         }
     );
 
@@ -17684,8 +17602,6 @@ sub creation_shared_file {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -17775,8 +17691,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'no_file',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -17805,8 +17719,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'bad_parameter',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -17830,8 +17742,6 @@ sub do_d_unzip {
                     'status'       => 'error',
                     'error_type'   => 'shared_full',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -17856,8 +17766,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'bad_parameter',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -17880,8 +17788,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -17909,8 +17815,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -17931,8 +17835,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -17961,8 +17863,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -17986,8 +17886,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -18012,8 +17910,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -18049,8 +17945,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -18081,8 +17975,6 @@ sub do_d_unzip {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -18105,8 +17997,6 @@ sub do_d_unzip {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     return 'd_read';
@@ -18137,8 +18027,6 @@ sub d_unzip_shared_file {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -18162,8 +18050,6 @@ sub d_unzip_shared_file {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             $status = 0;
@@ -18207,8 +18093,6 @@ sub d_install_file_hierarchy {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -18288,8 +18172,6 @@ sub d_install_file_hierarchy {
                             'status'       => 'error',
                             'error_type'   => 'internal',
                             'user_email'   => $param->{'user'}{'email'},
-                            'client'       => $ip,
-                            'daemon'       => $daemon_name
                         }
                     );
 
@@ -18324,8 +18206,6 @@ sub d_install_file_hierarchy {
                 'status'       => 'success',
                 'error_type'   => '',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return 1;
@@ -18376,8 +18256,6 @@ sub d_copy_rec_dir {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return 1;
@@ -18401,8 +18279,6 @@ sub d_copy_rec_dir {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return 1;
@@ -18429,8 +18305,6 @@ sub d_copy_rec_dir {
                     'status'       => 'error',
                     'error_type'   => 'bad_parameter',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return 1;
@@ -18454,8 +18328,6 @@ sub d_copy_rec_dir {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return 1;
@@ -18479,8 +18351,6 @@ sub d_copy_rec_dir {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return 1;
@@ -18501,8 +18371,6 @@ sub d_copy_rec_dir {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
         }
@@ -18536,8 +18404,6 @@ sub d_copy_rec_dir {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return 1;
@@ -18625,8 +18491,6 @@ sub d_copy_rec_dir {
                                 'status'       => 'error',
                                 'error_type'   => 'internal',
                                 'user_email'   => $param->{'user'}{'email'},
-                                'client'       => $ip,
-                                'daemon'       => $daemon_name
                             }
                         );
                         $fatal_error = 1;
@@ -18673,8 +18537,6 @@ sub d_copy_rec_dir {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
     }
@@ -18692,8 +18554,6 @@ sub d_copy_rec_dir {
                 'status'       => 'success',
                 'error_type'   => '',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return 1;
@@ -18735,8 +18595,6 @@ sub d_copy_file {
                 'status'       => 'error',
                 'error_type'   => 'file_no_copied',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return 1;
@@ -18764,8 +18622,6 @@ sub d_copy_file {
                     'status'       => 'error',
                     'error_type'   => 'bad_parameter',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return 1;
@@ -18791,8 +18647,6 @@ sub d_copy_file {
                         'status'       => 'error',
                         'error_type'   => 'authorization',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
                 return 1;
@@ -18820,8 +18674,6 @@ sub d_copy_file {
                         'status'       => 'error',
                         'error_type'   => 'shared_full',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
                 return undef;
@@ -18869,8 +18721,6 @@ sub d_copy_file {
                             'status'       => 'error',
                             'error_type'   => 'file_no_copied',
                             'user_email'   => $param->{'user'}{'email'},
-                            'client'       => $ip,
-                            'daemon'       => $daemon_name
                         }
                     );
                     return 1;
@@ -18913,8 +18763,6 @@ sub d_copy_file {
                         'status'       => 'error',
                         'error_type'   => 'file_no_copied',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
                 return 1;
@@ -18942,8 +18790,6 @@ sub d_copy_file {
                     'status'       => 'error',
                     'error_type'   => 'file_no_copied',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return 1;
@@ -18974,8 +18820,6 @@ sub d_copy_file {
                     'status'       => 'error',
                     'error_type'   => 'file_no_copied',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return 1;
@@ -19017,8 +18861,6 @@ sub d_copy_file {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
         }
@@ -19049,8 +18891,6 @@ sub d_copy_file {
                 'status'       => 'success',
                 'error_type'   => '',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
     } else {
@@ -19078,8 +18918,6 @@ sub d_copy_file {
                 'status'       => 'error',
                 'error_type'   => 'file_no_copied',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
     }
@@ -19159,8 +18997,6 @@ sub do_d_delete {
                 'status'       => 'error',
                 'error_type'   => 'missing_parameter',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19182,8 +19018,6 @@ sub do_d_delete {
                 'status'       => 'error',
                 'error_type'   => 'description_file',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19205,8 +19039,6 @@ sub do_d_delete {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19234,8 +19066,6 @@ sub do_d_delete {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19268,8 +19098,6 @@ sub do_d_delete {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -19293,8 +19121,6 @@ sub do_d_delete {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
                 return undef;
@@ -19322,8 +19148,6 @@ sub do_d_delete {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -19344,8 +19168,6 @@ sub do_d_delete {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -19361,8 +19183,6 @@ sub do_d_delete {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
 
@@ -19372,8 +19192,6 @@ sub do_d_delete {
             'operation' => $param->{'action'},
             'parameter' => "",
             'mail'      => $param->{'user'}{'email'},
-            'client'    => $ip,
-            'daemon'    => $daemon_name
         }
     );
 
@@ -19433,8 +19251,6 @@ sub do_d_rename {
                 'status'       => 'error',
                 'error_type'   => 'no_file',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19456,8 +19272,6 @@ sub do_d_rename {
                 'status'       => 'error',
                 'error_type'   => 'no_such_document',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19479,8 +19293,6 @@ sub do_d_rename {
                 'status'       => 'error',
                 'error_type'   => 'no_such_document',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19505,8 +19317,6 @@ sub do_d_rename {
                 'status'       => 'error',
                 'error_type'   => 'bad_parameter',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19529,8 +19339,6 @@ sub do_d_rename {
                 'status'       => 'error',
                 'error_type'   => 'bad_parameter',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19557,8 +19365,6 @@ sub do_d_rename {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19593,8 +19399,6 @@ sub do_d_rename {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -19628,8 +19432,6 @@ sub do_d_rename {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -19668,8 +19470,6 @@ sub do_d_rename {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -19685,8 +19485,6 @@ sub do_d_rename {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     $in{'list'} = $list_name;
@@ -19739,8 +19537,6 @@ sub do_d_create_dir {
                 'status'       => 'error',
                 'error_type'   => 'missing_parameter',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19766,8 +19562,6 @@ sub do_d_create_dir {
                 'status'       => 'error',
                 'error_type'   => 'bad_parameter',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19794,8 +19588,6 @@ sub do_d_create_dir {
                     'status'       => 'error',
                     'error_type'   => 'authorization',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -19814,8 +19606,6 @@ sub do_d_create_dir {
                     'status'       => 'error',
                     'error_type'   => 'authorization',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -19836,8 +19626,6 @@ sub do_d_create_dir {
                     'status'       => 'error',
                     'error_type'   => 'authorization',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -19869,8 +19657,6 @@ sub do_d_create_dir {
                 'status'       => 'error',
                 'error_type'   => 'file_already_exists',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -19912,8 +19698,6 @@ sub do_d_create_dir {
                     'status'       => 'error',
                     'error_type'   => 'file_already_exists',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -19939,8 +19723,6 @@ sub do_d_create_dir {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -19968,8 +19750,6 @@ sub do_d_create_dir {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -20030,8 +19810,6 @@ sub do_d_create_dir {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
         }
@@ -20062,8 +19840,6 @@ sub do_d_create_dir {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
         }
@@ -20089,8 +19865,6 @@ sub do_d_create_dir {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
 
@@ -20104,8 +19878,6 @@ sub do_d_create_dir {
                 'operation' => $op,
                 'parameter' => "",
                 'mail'      => $param->{'user'}{'email'},
-                'client'    => $ip,
-                'daemon'    => $daemon_name
             }
         );
     } else {
@@ -20116,8 +19888,6 @@ sub do_d_create_dir {
                 'operation' => $op,
                 'parameter' => $filesize,
                 'mail'      => $param->{'user'}{'email'},
-                'client'    => $ip,
-                'daemon'    => $daemon_name
             }
         );
     }
@@ -20172,8 +19942,6 @@ sub do_d_control {
                 'status'       => 'error',
                 'error_type'   => 'missing_parameter',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20197,8 +19965,6 @@ sub do_d_control {
                 'status'       => 'error',
                 'error_type'   => 'no_such_document',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20220,8 +19986,6 @@ sub do_d_control {
                 'status'       => 'error',
                 'error_type'   => 'no_such_document',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20245,8 +20009,6 @@ sub do_d_control {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20351,8 +20113,6 @@ sub do_d_control {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     return 1;
@@ -20400,8 +20160,6 @@ sub do_d_change_access {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20425,8 +20183,6 @@ sub do_d_change_access {
                 'status'       => 'error',
                 'error_type'   => 'no_file',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20452,8 +20208,6 @@ sub do_d_change_access {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20492,8 +20246,6 @@ sub do_d_change_access {
                     'status'       => 'error',
                     'error_type'   => 'synchro_failed',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -20514,8 +20266,6 @@ sub do_d_change_access {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -20555,8 +20305,6 @@ sub do_d_change_access {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -20618,8 +20366,6 @@ sub do_d_set_owner {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20641,8 +20387,6 @@ sub do_d_set_owner {
                 'status'       => 'error',
                 'error_type'   => 'incorrect_email',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20680,8 +20424,6 @@ sub do_d_set_owner {
                 'status'       => 'error',
                 'error_type'   => 'authentication',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20704,8 +20446,6 @@ sub do_d_set_owner {
                 'status'       => 'error',
                 'error_type'   => 'full_directory',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20735,8 +20475,6 @@ sub do_d_set_owner {
                     'status'       => 'error',
                     'error_type'   => 'synchro_failed',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -20757,8 +20495,6 @@ sub do_d_set_owner {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -20798,8 +20534,6 @@ sub do_d_set_owner {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -20826,8 +20560,6 @@ sub do_d_set_owner {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     ## ONLY IF SET_OWNER can be performed even if not control of the father
@@ -20900,8 +20632,6 @@ sub do_remind {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20951,8 +20681,6 @@ sub do_remind {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -20970,8 +20698,6 @@ sub do_remind {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     return 'admin';
@@ -21286,8 +21012,6 @@ sub do_change_email {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $old_email,
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
     }
@@ -21392,8 +21116,6 @@ sub do_change_email {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $old_email,
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -21954,8 +21676,6 @@ sub do_send_mail {
                         'status'       => 'error',
                         'error_type'   => 'no_list',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
                 return undef;
@@ -21977,8 +21697,6 @@ sub do_send_mail {
                     'status'       => 'error',
                     'error_type'   => 'authorization',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -22042,8 +21760,6 @@ sub do_send_mail {
                 'status'       => 'error',
                 'error_type'   => 'no_topic',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -22107,8 +21823,6 @@ sub do_send_mail {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
                 return undef;
@@ -22181,8 +21895,6 @@ sub do_send_mail {
                     'status'       => 'error',
                     'error_type'   => 'no_body',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -22272,8 +21984,6 @@ sub do_send_mail {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -22310,8 +22020,6 @@ sub do_send_mail {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -22363,8 +22071,6 @@ sub do_send_mail {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
 
@@ -22666,8 +22372,6 @@ sub do_set_lang {
                             'status'       => 'error',
                             'error_type'   => 'internal',
                             'user_email'   => $param->{'user'}{'email'},
-                            'client'       => $ip,
-                            'daemon'       => $daemon_name
                         }
                     );
                     return undef;
@@ -22700,8 +22404,6 @@ sub do_set_lang {
                             'status'       => 'error',
                             'error_type'   => 'internal',
                             'user_email'   => $param->{'user'}{'email'},
-                            'client'       => $ip,
-                            'daemon'       => $daemon_name
                         }
                     );
                     return undef;
@@ -22753,8 +22455,6 @@ sub do_attach {
                 'status'       => 'error',
                 'error_type'   => 'no_file',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -22776,8 +22476,6 @@ sub do_attach {
                 'status'       => 'error',
                 'error_type'   => 'empty_file',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -22806,8 +22504,6 @@ sub do_attach {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     return 1;
@@ -22834,8 +22530,6 @@ sub do_subindex {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     return 1;
@@ -22868,8 +22562,6 @@ sub do_ignoresub {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return 'subindex';
@@ -22885,8 +22577,6 @@ sub do_ignoresub {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     return 'subindex';
@@ -23038,8 +22728,6 @@ sub do_blacklist {
                 'status'       => 'error',
                 'error_type'   => 'no_list',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -23058,8 +22746,6 @@ sub do_blacklist {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -23084,8 +22770,6 @@ sub do_blacklist {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
         }
@@ -23104,8 +22788,6 @@ sub do_blacklist {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
         }
@@ -23141,8 +22823,6 @@ sub do_blacklist {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -23170,8 +22850,6 @@ sub do_blacklist {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
             }
@@ -23193,8 +22871,6 @@ sub do_blacklist {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     return 1;
@@ -23594,8 +23270,6 @@ sub do_arc_download {
                 'status'       => 'error',
                 'error_type'   => 'select_month',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return 'arc_manage';
@@ -23638,8 +23312,6 @@ sub do_arc_download {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             next;
@@ -23662,8 +23334,6 @@ sub do_arc_download {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $param->{'user'}{'email'},
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             return undef;
@@ -23697,8 +23367,6 @@ sub do_arc_download {
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
                     }
                 );
                 return undef;
@@ -23727,8 +23395,6 @@ sub do_arc_download {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -23749,8 +23415,6 @@ sub do_arc_download {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -23777,8 +23441,6 @@ sub do_arc_download {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -23802,8 +23464,6 @@ sub do_arc_download {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
     }
@@ -23817,8 +23477,6 @@ sub do_arc_download {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     return 1;
@@ -23849,8 +23507,6 @@ sub do_arc_delete {
                 'status'       => 'error',
                 'error_type'   => 'select_month',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return 'arc_manage';
@@ -23884,8 +23540,6 @@ sub do_arc_delete {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     return 'arc_manage';
@@ -24379,8 +24033,6 @@ sub new_d_read {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -24413,8 +24065,6 @@ sub new_d_read {
                 'status'       => 'error',
                 'error_type'   => 'authorization',
                 'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         );
         return undef;
@@ -24637,8 +24287,6 @@ sub new_d_read {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $param->{'user'}{'email'},
-            'client'       => $ip,
-            'daemon'       => $daemon_name
         }
     );
     return 1;

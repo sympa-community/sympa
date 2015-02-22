@@ -53,12 +53,7 @@ use Sympa::Tools::Daemon;
 use Sympa::Tools::File;
 use Sympa::Tools::Time;
 
-my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
-my $ip          = $ENV{'REMOTE_HOST'};
-
-#getopts('dF');
-
-## Check options
+# Check options
 my %options;
 unless (
     GetOptions(
@@ -479,8 +474,6 @@ sub remove {
             'operation' => 'remove archive',
             'parameter' => '',
             'mail'      => 'test@cru.fr',
-            'client'    => $ip,
-            'daemon'    => $daemon_name
         }
     );
 
@@ -495,8 +488,6 @@ sub remove {
                 'status'       => 'succes',
                 'error_type'   => '',
                 'user_email'   => '',
-                'client'       => $ip,
-                'daemon'       => $daemon_name
             }
         )
         ) {

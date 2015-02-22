@@ -48,7 +48,6 @@ use Log;
 use Sympa::Mailer;
 use Sympa::Report;
 use tools;
-use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::Password;
 use Sympa::Upgrade;
@@ -56,12 +55,7 @@ use Sympa::Upgrade;
 ## Init random engine
 srand(time());
 
-my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
-my $ip;
-$ip = $ENV{'REMOTE_HOST'};
-$ip = $ENV{'REMOTE_ADDR'} unless ($ip);
-
-## Check --dump option
+# Check options.
 my %options;
 unless (
     GetOptions(
@@ -1142,8 +1136,6 @@ sub SendDigest {
                     'status'       => 'error',
                     'error_type'   => 'unknown_list',
                     'user_email'   => '',
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
             unlink $filename;
@@ -1176,8 +1168,6 @@ sub SendDigest {
                     'status'       => 'success',
                     'error_type'   => '',
                     'user_email'   => '',
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
                 }
             );
         }

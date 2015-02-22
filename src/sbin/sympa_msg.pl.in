@@ -60,11 +60,10 @@ my $digestsleep = 5;
 ## Init random engine
 srand(time());
 
-my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
 # Default is to launch process as master daemon.
 my $daemon_usage = 'DAEMON_MASTER';
 
-## Check --dump option
+# Check options.
 my %options;
 unless (
     GetOptions(
@@ -582,8 +581,6 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'unable_create_message',
                 'user_email'   => '',
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -603,8 +600,6 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'no_message_id',
                 'user_email'   => $message->{'sender'},
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -644,8 +639,6 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'no_sender',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -667,8 +660,6 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'unknown_robot',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -742,8 +733,6 @@ sub process_message {
                     'status'       => 'error',
                     'error_type'   => 'unknown_list',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             return undef;
@@ -843,8 +832,6 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'virus',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -939,8 +926,6 @@ sub process_message {
                 'status'       => 'success',
                 'error_type'   => '',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
 
@@ -1141,8 +1126,6 @@ sub DoForward {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             return undef;
@@ -1189,8 +1172,6 @@ sub DoForward {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -1205,8 +1186,6 @@ sub DoForward {
             'status'       => 'success',
             'error_type'   => '',
             'user_email'   => $sender,
-            #'client'       => $ip,
-            'daemon' => $daemon_name
         }
     );
 
@@ -1307,8 +1286,6 @@ sub DoMessage {
                 'status'       => 'error',
                 'error_type'   => 'known_message',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -1332,8 +1309,6 @@ sub DoMessage {
                     'status'       => 'error',
                     'error_type'   => 'routing_error',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             return undef;
@@ -1356,8 +1331,6 @@ sub DoMessage {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -1392,8 +1365,6 @@ sub DoMessage {
                 'status'       => 'error',
                 'error_type'   => 'message_too_large',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -1480,8 +1451,6 @@ sub DoMessage {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -1549,8 +1518,6 @@ sub DoMessage {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             return undef;
@@ -1604,8 +1571,6 @@ sub DoMessage {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             return undef;
@@ -1623,8 +1588,6 @@ sub DoMessage {
                 'status'       => 'success',
                 'error_type'   => 'kept_for_auth',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return 1;
@@ -1672,8 +1635,6 @@ sub DoMessage {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             return undef;
@@ -1744,8 +1705,6 @@ sub DoMessage {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             return undef;
@@ -1820,8 +1779,6 @@ sub DoMessage {
                 'status'       => 'error',
                 'error_type'   => 'rejected_authorization',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -1844,8 +1801,6 @@ sub DoMessage {
                 'status'       => 'error',
                 'error_type'   => 'internal',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -1911,8 +1866,6 @@ sub DoCommand {
                 'status'       => 'error',
                 'error_type'   => 'known_message',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -1945,8 +1898,6 @@ sub DoCommand {
                 'status'       => 'success',
                 'error_type'   => '',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return 1;
@@ -1995,8 +1946,6 @@ sub DoCommand {
                     'status'       => 'error',
                     'error_type'   => 'error_content_type',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             return $success;
@@ -2031,8 +1980,6 @@ sub DoCommand {
                         'status'       => 'error',
                         'error_type'   => 'not_understood',
                         'user_email'   => $sender,
-                        #'client'       => $ip,
-                        'daemon' => $daemon_name
                     }
                 );
                 last;
@@ -2059,8 +2006,6 @@ sub DoCommand {
                 'status'       => 'error',
                 'error_type'   => 'no_cmd_found',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -2133,8 +2078,6 @@ sub SendDigest {
                     'status'       => 'error',
                     'error_type'   => 'unknown_list',
                     'user_email'   => '',
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             unlink $filename;
@@ -2167,8 +2110,6 @@ sub SendDigest {
                     'status'       => 'success',
                     'error_type'   => '',
                     'user_email'   => '',
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
         }

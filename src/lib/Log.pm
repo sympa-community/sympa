@@ -247,8 +247,17 @@ sub do_connect {
     }
 }
 
-# MOVED to Sympa::Tools::Daemon::get_daemon_name().
-#sub set_daemon;
+# Old names: Log::set_daemon(), Sympa::Tools::Daemon::get_daemon_name().
+my $daemon_name;
+
+sub _daemon_name {
+    return $daemon_name if $daemon_name;
+
+    my @path = split /\//, $PROGRAM_NAME;
+    $daemon_name = $path[$#path];
+    $daemon_name =~ s/(\.[^\.]+)$//;
+    return $daemon_name;
+}
 
 sub get_log_date {
     my $sth;
@@ -279,9 +288,9 @@ sub db_log {
     my $msg_id       = tools::clean_msg_id($arg->{'msg_id'});
     my $status       = $arg->{'status'};
     my $error_type   = $arg->{'error_type'};
-    my $user_email   = tools::clean_msg_id($arg->{'user_email'});
+    my $user_email   = $arg->{'user_email'};
     my $client       = $arg->{'client'};
-    my $daemon       = $arg->{'daemon'};
+    my $daemon       = _daemon_name();
     my $date         = time;
     my $random       = int(rand(1000000));
     # my $id = $date * 1000000 + $random;
@@ -342,7 +351,7 @@ sub db_stat_log {
     my $operation = $arg->{'operation'};
     my $date   = time;               #epoch time : time since 1st january 1970
     my $mail   = $arg->{'mail'};
-    my $daemon = $arg->{'daemon'};
+    my $daemon = _daemon_name();
     my $ip     = $arg->{'client'};
     my $robot  = $arg->{'robot'};
     my $parameter = $arg->{'parameter'};

@@ -82,8 +82,6 @@ my %equiv = (
     "User's Disk Quota Exceeded:"                      => '4.2.2'
 );
 
-my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
-
 ## Check options
 my %options;
 unless (
@@ -368,7 +366,6 @@ while (!$end) {
                                 'target_email' => $who,
                                 'status'       => 'error',
                                 'error_type'   => 'welcome_bounced',
-                                'daemon'       => $daemon_name
                             }
                         );
 
@@ -378,8 +375,6 @@ while (!$end) {
                                 'operation' => 'auto_del',
                                 'parameter' => "",
                                 'mail'      => $who,
-                                'client'    => "",
-                                'daemon'    => 'bounced.pl'
                             }
                         );
 
@@ -2097,7 +2092,6 @@ sub _update_subscriber_bounce_history {
                 'msg_id'       => '',
                 'status'       => 'error',
                 'error_type'   => $status,
-                'daemon'       => $daemon_name
             }
         );
     } else {
@@ -2113,7 +2107,6 @@ sub _update_subscriber_bounce_history {
                 'msg_id'       => '',
                 'status'       => 'error',
                 'error_type'   => $status,
-                'daemon'       => $daemon_name
             }
         );
     }

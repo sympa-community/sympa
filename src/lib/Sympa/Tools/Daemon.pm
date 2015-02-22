@@ -51,24 +51,8 @@ use Log;
 use tools;
 use Sympa::Tools::File;
 
-=over
-
-=item get_daemon_name($path)
-
-Returns a name for current process, suitable for logging.
-
-=back
-
-=cut
-
-# Old name: Log::set_daemon().
-sub get_daemon_name {
-    my $daemon_tmp = shift;
-    my @path       = split(/\//, $daemon_tmp);
-    my $daemon     = $path[$#path];
-    $daemon =~ s/(\.[^\.]+)$//;
-    return $daemon;
-}
+# Moved to Log::_daemon_name().
+#sub get_daemon_name;
 
 =over
 

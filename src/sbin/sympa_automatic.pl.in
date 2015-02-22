@@ -53,9 +53,7 @@ use Sympa::Tools::Password;
 ## Init random engine
 srand(time());
 
-my $daemon_name = Sympa::Tools::Daemon::get_daemon_name($0);
-
-## Check --dump option
+# Check options.
 my %options;
 unless (
     GetOptions(
@@ -455,8 +453,6 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'unable_create_message',
                 'user_email'   => '',
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -476,8 +472,6 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'no_message_id',
                 'user_email'   => $message->{'sender'},
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -517,8 +511,6 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'no_sender',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -540,8 +532,6 @@ sub process_message {
                 'status'       => 'error',
                 'error_type'   => 'unknown_robot',
                 'user_email'   => $sender,
-                #'client'       => $ip,
-                'daemon' => $daemon_name
             }
         );
         return undef;
@@ -688,8 +678,6 @@ sub process_message {
                     'status'       => 'error',
                     'error_type'   => 'internal',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             return undef;
@@ -724,8 +712,6 @@ sub process_message {
                     'status'       => 'error',
                     'error_type'   => 'dyn_cant_sync',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             # purge the unwanted empty automatic list
@@ -772,8 +758,6 @@ sub process_message {
                     'status'       => 'error',
                     'error_type'   => 'list_unknown',
                     'user_email'   => $sender,
-                    #'client'       => $ip,
-                    'daemon' => $daemon_name
                 }
             );
             # purge the unwanted empty automatic list
