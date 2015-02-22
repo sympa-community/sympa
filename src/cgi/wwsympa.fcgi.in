@@ -10206,7 +10206,7 @@ sub do_remove_arc {
 #    $in{'msgid'} = tools::unescape_chars($in{'msgid'});
     my @msgids = split /\0/, $in{'msgid'};
 
-    if ($#msgids == -1) {
+    unless (@msgids) {
         Sympa::Report::reject_report_web('user', 'may_not_remove_arc', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('err', 'No message id found');
@@ -10248,6 +10248,9 @@ sub do_remove_arc {
 
     foreach my $msgid (@msgids) {
         chomp $msgid;
+        $msgid = tools::clean_msg_id($msgid);
+        next unless $msgid;
+
         printf REBUILD "%s||%s\n", $msgid, $param->{'user'}{'email'};
         ######################################################################
         # Tracking
@@ -10259,7 +10262,7 @@ sub do_remove_arc {
     wwslog(
         'info',
         '%d messages marked to be removed by archived',
-        $#msgids + 1
+        scalar @msgids
     );
     web_db_log(
         {   'parameters' => $in{'msgid'},

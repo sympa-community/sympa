@@ -32,7 +32,6 @@ use Scalar::Util;
 use Sys::Syslog qw();
 
 use SDM;
-use tools;
 use Sympa::Tools::Time;
 
 my ($log_facility, $log_socket_type, $log_service, $sth, @sth_stack,
@@ -181,15 +180,12 @@ sub do_log {
 }
 
 sub do_openlog {
-    my ($fac, $socket_type, $service) = @_;
-    $service ||= 'sympa';
+    my $fac = shift;
+    my $socket_type = shift;
+    my $service = shift || 'sympa';
 
     ($log_facility, $log_socket_type, $log_service) =
         ($fac, $socket_type, $service);
-
-#   foreach my $k (keys %options) {
-#       printf "%s = %s\n", $k, $options{$k};
-#   }
 
     return _do_connect();
 }
@@ -250,9 +246,9 @@ sub db_log {
     my $list         = $arg->{'list'};
     my $robot        = $arg->{'robot'};
     my $action       = $arg->{'action'};
-    my $parameters   = tools::clean_msg_id($arg->{'parameters'});
+    my $parameters   = $arg->{'parameters'};
     my $target_email = $arg->{'target_email'};
-    my $msg_id       = tools::clean_msg_id($arg->{'msg_id'});
+    my $msg_id       = $arg->{'msg_id'};
     my $status       = $arg->{'status'};
     my $error_type   = $arg->{'error_type'};
     my $user_email   = $arg->{'user_email'};
