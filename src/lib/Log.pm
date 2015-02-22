@@ -170,14 +170,13 @@ sub do_log {
     # workaround, always pass format string '%s' along with $message.
     eval {
         unless (Sys::Syslog::syslog($level, '%s', $message)) {
-            do_connect();
+            _do_connect();
             Sys::Syslog::syslog($level, '%s', $message);
         }
     };
     if ($EVAL_ERROR and $warning_date < time - $warning_timeout) {
+        warn sprintf 'No logs available: %s', $EVAL_ERROR;
         $warning_date = time + $warning_timeout;
-        #FIXIME: Add entry to listmaster_notification.tt2
-        tools::send_notify_to_listmaster('*', 'logs_failed', [$EVAL_ERROR]);
     }
 }
 
@@ -192,10 +191,10 @@ sub do_openlog {
 #       printf "%s = %s\n", $k, $options{$k};
 #   }
 
-    do_connect();
+    return _do_connect();
 }
 
-sub do_connect {
+sub _do_connect {
     if ($log_socket_type =~ /^(unix|inet)$/i) {
         Sys::Syslog::setlogsock(lc($log_socket_type));
     }
@@ -207,15 +206,12 @@ sub do_connect {
             $log_facility);
     };
     if ($EVAL_ERROR && ($warning_date < time - $warning_timeout)) {
+        warn sprintf 'No logs available: %s', $EVAL_ERROR;
         $warning_date = time + $warning_timeout;
-        unless (
-            tools::send_notify_to_listmaster(
-                '*', 'logs_failed', [$EVAL_ERROR]
-            )
-            ) {
-            print STDERR "No logs available, can't send warning message";
-        }
+        return undef;
     }
+
+    return 1;
 }
 
 # Old names: Log::set_daemon(), Sympa::Tools::Daemon::get_daemon_name().
