@@ -2149,7 +2149,9 @@ sub unmarshal_metadata {
     my ($robot_id, $listname, $type, $list, $priority);
 
     $robot_id = lc($data->{'domainpart'})
-        if Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
+        if defined $data->{'domainpart'}
+            and length $data->{'domainpart'}
+            and Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
     ($listname, $type) =
         tools::split_listname($robot_id || '*', $data->{'localpart'});
 
