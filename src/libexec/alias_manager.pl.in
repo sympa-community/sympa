@@ -61,8 +61,7 @@ unless (defined Conf::load()) {
 }
 
 Log::set_log_level($Conf::Conf{'log_level'});
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-    'alias_manager');
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
 my $tmp_alias_file = $Conf::Conf{'tmpdir'} . '/sympa_aliases.' . time;
 

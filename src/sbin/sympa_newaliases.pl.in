@@ -74,8 +74,7 @@ unless (Conf::load()) {
     exit 1;
 }
 
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-    'sympa_newaliases');
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
 # setting log_level using conf unless it is set by calling option
 if (defined $main::options{'log_level'}) {

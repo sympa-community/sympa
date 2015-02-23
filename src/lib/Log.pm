@@ -180,16 +180,25 @@ sub do_log {
 }
 
 sub do_openlog {
-    my $fac = shift;
+    my $facility    = shift;
     my $socket_type = shift;
-    my $service = shift || 'sympa';
+    my %options     = @_;
 
-    ($log_facility, $log_socket_type, $log_service) =
-        ($fac, $socket_type, $service);
+    $log_service = $options{service} || _daemon_name() || 'sympa';
+    ($log_facility, $log_socket_type) = ($facility, $socket_type);
 
     return _do_connect();
 }
 
+# Old names: Log::set_daemon(), Sympa::Tools::Daemon::get_daemon_name().
+sub _daemon_name {
+    my @path = split /\//, $PROGRAM_NAME;
+    my $service = $path[$#path];
+    $service =~ s/(\.[^\.]+)$//;
+    return $service;
+}
+
+# Old name: Log::do_connect().
 sub _do_connect {
     if ($log_socket_type =~ /^(unix|inet)$/i) {
         Sys::Syslog::setlogsock(lc($log_socket_type));
@@ -208,18 +217,6 @@ sub _do_connect {
     }
 
     return 1;
-}
-
-# Old names: Log::set_daemon(), Sympa::Tools::Daemon::get_daemon_name().
-my $daemon_name;
-
-sub _daemon_name {
-    return $daemon_name if $daemon_name;
-
-    my @path = split /\//, $PROGRAM_NAME;
-    $daemon_name = $path[$#path];
-    $daemon_name =~ s/(\.[^\.]+)$//;
-    return $daemon_name;
 }
 
 sub get_log_date {
@@ -253,7 +250,7 @@ sub db_log {
     my $error_type   = $arg->{'error_type'};
     my $user_email   = $arg->{'user_email'};
     my $client       = $arg->{'client'};
-    my $daemon       = _daemon_name();
+    my $daemon       = $log_service || 'sympa';
     my $date         = time;
     my $random       = int(rand(1000000));
     # my $id = $date * 1000000 + $random;
@@ -272,16 +269,7 @@ sub db_log {
         }
     }
 
-    unless ($daemon
-        and $daemon =~
-        /^(task|archived|sympa|sympa_automatic|sympa_msg|wwsympa|bounced|sympa_soap)$/
-        ) {
-        do_log('err', 'Internal_error: incorrect process value %s', $daemon);
-        return undef;
-    }
-
-    ## Insert in log_table
-
+    # Insert in log_table
     unless (
         SDM::do_prepared_query(
             q{INSERT INTO logs_table
@@ -312,11 +300,11 @@ sub db_stat_log {
 
     my $list      = $arg->{'list'};
     my $operation = $arg->{'operation'};
-    my $date   = time;               #epoch time : time since 1st january 1970
-    my $mail   = $arg->{'mail'};
-    my $daemon = _daemon_name();
-    my $ip     = $arg->{'client'};
-    my $robot  = $arg->{'robot'};
+    my $date = time;             #epoch time : time since 1st january 1970
+    my $mail = $arg->{'mail'};
+    my $daemon    = $log_service || 'sympa';
+    my $ip        = $arg->{'client'};
+    my $robot     = $arg->{'robot'};
     my $parameter = $arg->{'parameter'};
     my $random    = int(rand(1000000));
     my $id        = $date . $random;

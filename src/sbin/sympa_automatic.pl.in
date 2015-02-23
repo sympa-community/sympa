@@ -112,11 +112,9 @@ unless ($main::options{'foreground'}) {
 
 }
 
-my $service = 'sympa/automatic';
 my $pidfile = 'sympa_automatic';
 
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-    $service);
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
 # If process is running in foreground, don't write STDERR to a
 # dedicated file
@@ -317,8 +315,7 @@ sub _load {
     }
 
     ## Open the syslog and say we're read out stuff.
-    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-        'sympa/automatic');
+    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
     # Enable SMTP logging if required
     $mailer->{log_smtp} = $main::options{'mail'}

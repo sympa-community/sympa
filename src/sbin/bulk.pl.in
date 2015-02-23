@@ -87,8 +87,7 @@ unless (Conf::load()) {
         Conf::get_sympa_conf();
 }
 
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-    'bulk');
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
 my $mailer = Sympa::Mailer->instance;
 
@@ -137,8 +136,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
         die sprintf 'Cannot fork: %s', $ERRNO;
     }
 }
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-    'bulk');
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});

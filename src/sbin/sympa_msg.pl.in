@@ -144,11 +144,9 @@ unless ($main::options{'foreground'}) {
     }
 }
 
-my $service = 'sympa/msg';
 my $pidfile = 'sympa_msg';
 
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-    $service);
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
 # If process is running in foreground, don't write STDERR to a
 # dedicated file
@@ -192,7 +190,7 @@ unless ($main::options{'foreground'}) {
                 Sympa::Tools::Daemon::direct_stderr_to_file(pid => $PID);
                 $daemon_usage = 'DAEMON_SLAVE';    # child
                 Log::do_openlog($Conf::Conf{'syslog'},
-                    $Conf::Conf{'log_socket_type'}, $service);
+                    $Conf::Conf{'log_socket_type'});
                 Log::do_log('info', 'Slave daemon started with PID %s', $PID);
                 last;
             }
@@ -437,8 +435,7 @@ sub _load {
     }
 
     ## Open the syslog and say we're read out stuff.
-    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-        'sympa/msg');
+    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
     # Enable SMTP logging if required
     $mailer->{log_smtp} = $main::options{'mail'}

@@ -87,11 +87,7 @@ unless (Conf::load()) {
         Conf::get_sympa_conf();
 }
 
-Log::do_openlog(
-    $Conf::Conf{'log_facility'},
-    $Conf::Conf{'log_socket_type'},
-    'task_manager'
-);
+Log::do_openlog($Conf::Conf{'log_facility'}, $Conf::Conf{'log_socket_type'});
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {

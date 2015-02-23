@@ -50,7 +50,11 @@ Log::set_log_level($Conf::Conf{'log_level'});
 
 ## Open log
 my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
-Log::do_openlog($log_facility, $Conf::Conf{'log_socket_type'}, 'soap');
+Log::do_openlog(
+    $log_facility,
+    $Conf::Conf{'log_socket_type'},
+    service => 'sympasoap'
+);
 Log::do_log('info', 'SOAP server launched');
 
 ## We set the real UID with the effective UID value

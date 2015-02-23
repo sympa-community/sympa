@@ -173,8 +173,11 @@ if ($main::options{'help'}) {
     }
 
     ## Open the syslog and say we're read out stuff.
-    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-        'sympa/health_check');
+    Log::do_openlog(
+        $Conf::Conf{'syslog'},
+        $Conf::Conf{'log_socket_type'},
+        service => 'sympa/health_check'
+    );
 
     ## Setting log_level using conf unless it is set by calling option
     if ($main::options{'log_level'}) {
@@ -236,9 +239,7 @@ my $mailer   = Sympa::Mailer->instance;
 
 _load();
 
-my $service = 'sympa';
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-    $service);
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
 # Set the User ID & Group ID for the process
 $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
@@ -1006,8 +1007,7 @@ sub _load {
     }
 
     ## Open the syslog and say we're read out stuff.
-    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-        'sympa');
+    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
     # Enable SMTP logging if required
     $mailer->{log_smtp} = $main::options{'mail'}

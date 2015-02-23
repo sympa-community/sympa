@@ -127,7 +127,7 @@ Log::set_log_level($Conf::Conf{'log_level'});
 
 ## Open log
 my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
-Log::do_openlog($log_facility, $Conf::Conf{'log_socket_type'}, 'wwsympa');
+Log::do_openlog($log_facility, $Conf::Conf{'log_socket_type'});
 
 ## Start plugins
 if (eval "require Sympa::Plugin::Manager") {

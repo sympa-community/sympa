@@ -42,8 +42,11 @@ unless (Conf::load()) {
 }
 
 ## Open the syslog and say we're read out stuff.
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
-    'sympa');
+Log::do_openlog(
+    $Conf::Conf{'syslog'},
+    $Conf::Conf{'log_socket_type'},
+    service => 'sympa/testlogs'
+);
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
