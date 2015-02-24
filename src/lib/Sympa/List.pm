@@ -372,9 +372,11 @@ my %list_option = (
     'no'  => {'gettext_id' => 'no'},
 
     # include_ldap_2level_query.ssl_version, include_ldap_query.ssl_version
-    'sslv2' => {'gettext_id' => 'SSL version 2'},
-    'sslv3' => {'gettext_id' => 'SSL version 3'},
-    'tls'   => {'gettext_id' => 'TLS'},
+    'sslv2'   => {'gettext_id' => 'SSL version 2'},
+    'sslv3'   => {'gettext_id' => 'SSL version 3'},
+    'tlsv1'   => {'gettext_id' => 'TLS version 1'},
+    'tlsv1_1' => {'gettext_id' => 'TLS version 1.1'},
+    'tlsv1_2' => {'gettext_id' => 'TLS version 1.2'},
 
     # editor.reception, owner_include.reception, owner.reception,
     # editor_include.reception

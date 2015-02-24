@@ -1048,8 +1048,10 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format'     => ['sslv2', 'sslv3', 'tls'],
-                'default'    => 'sslv3'
+                'format' =>
+                    ['sslv2', 'sslv3', 'tls', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'synonim' => {'tls' => 'tlsv1'},
+                'default' => 'sslv3'
             },
             'ssl_ciphers' => {
                 'order'      => 2.7,
@@ -1149,8 +1151,10 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format'     => ['sslv2', 'sslv3', 'tls'],
-                'default'    => ''
+                'format' =>
+                    ['sslv2', 'sslv3', 'tls', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'synonim' => {'tls' => 'tlsv1'},
+                'default' => 'sslv3'
             },
             'ssl_ciphers' => {
                 'order'      => 2.7,
@@ -1430,8 +1434,10 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format'     => ['sslv2', 'sslv3', 'tls'],
-                'default'    => 'sslv3'
+                'format' =>
+                    ['sslv2', 'sslv3', 'tls', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'synonim' => {'tls' => 'tlsv1'},
+                'default' => 'sslv3'
             },
             'ssl_ciphers' => {
                 'order'      => 2.7,
@@ -1537,8 +1543,10 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format'     => ['sslv2', 'sslv3', 'tls'],
-                'default'    => ''
+                'format' =>
+                    ['sslv2', 'sslv3', 'tls', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'synonim' => {'tls' => 'tlsv1'},
+                'default' => 'sslv3'
             },
             'ssl_ciphers' => {
                 'order'      => 2.7,

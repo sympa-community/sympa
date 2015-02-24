@@ -988,8 +988,8 @@ sub _load_auth {
             'scope'                       => 'base|one|sub',
             'authentication_info_url'     => 'http(s)?:/.*',
             'use_ssl'                     => '1',
-            'ssl_version'                 => 'sslv2/3|sslv2|sslv3|tlsv1',
-            'ssl_ciphers'                 => '[\w:]+'
+            'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
+            'ssl_ciphers' => '[\w:]+'
         },
 
         'user_table' => {
@@ -1018,8 +1018,8 @@ sub _load_auth {
             'ldap_get_email_by_uid_filter' => '.+',
             'ldap_email_attribute'         => '\w+',
             'ldap_use_ssl'                 => '1',
-            'ldap_ssl_version'             => 'sslv2/3|sslv2|sslv3|tlsv1',
-            'ldap_ssl_ciphers'             => '[\w:]+'
+            'ldap_ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
+            'ldap_ssl_ciphers' => '[\w:]+'
         },
         # Note: prefixes "ldap_" will be stripped.  See below.
         'generic_sso' => {
@@ -1039,11 +1039,11 @@ sub _load_auth {
             'ldap_get_email_by_uid_filter' => '.+',
             'ldap_email_attribute'         => '\w+',
             'ldap_use_ssl'                 => '1',
-            'ldap_ssl_version'             => 'sslv2/3|sslv2|sslv3|tlsv1',
-            'ldap_ssl_ciphers'             => '[\w:]+',
-            'force_email_verify'           => '1',
-            'internal_email_by_netid'      => '1',
-            'netid_http_header'            => '[\w\-\.]+',
+            'ldap_ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
+            'ldap_ssl_ciphers' => '[\w:]+',
+            'force_email_verify'      => '1',
+            'internal_email_by_netid' => '1',
+            'netid_http_header'       => '[\w\-\.]+',
         },
         'authentication_info_url' => 'http(s)?:/.*'
     );
