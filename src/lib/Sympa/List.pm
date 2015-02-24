@@ -3394,7 +3394,7 @@ sub delete_list_member {
         Log::db_stat_log(
             {   'robot'     => $self->{'domain'},
                 'list'      => $name,
-                'operation' => 'del subscriber',
+                'operation' => 'del_subscriber',
                 'parameter' => $parameter,
                 'mail'      => $who,
                 'client'    => '',
@@ -5196,7 +5196,7 @@ sub add_list_member {
         Log::db_stat_log(
             {   'robot'     => $self->{'domain'},
                 'list'      => $self->{'name'},
-                'operation' => 'add subscriber',
+                'operation' => 'add_subscriber',
                 'parameter' => '',
                 'mail'      => $new_user->{'email'},
                 'client'    => '',
@@ -11306,7 +11306,7 @@ sub purge {
     Log::db_stat_log(
         {   'robot'     => $self->{'domain'},
             'list'      => $self->{'name'},
-            'operation' => 'purge list',
+            'operation' => 'purge_list',
             'parameter' => '',
             'mail'      => $email,
             'client'    => '',

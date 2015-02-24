@@ -955,7 +955,7 @@ sub deal_data {
             $data{'send_mail'}{$r_name}{$l_name}{$email}++;
         }
         # ---test about add_susbcriber---
-        if ($result_request->{$id}->{'operation_stat'} eq 'add subscriber') {
+        if ($result_request->{$id}->{'operation_stat'} eq 'add_subscriber') {
 
             unless (exists($data{'add_subscriber'})) {
                 $data{'add_subscriber'} = undef;
@@ -977,7 +977,7 @@ sub deal_data {
 
         }
         # ---test about del_subscriber---
-        if ($result_request->{$id}->{'operation_stat'} eq 'del subscriber') {
+        if ($result_request->{$id}->{'operation_stat'} eq 'del_subscriber') {
 
             unless (exists($data{'del_subscriber'})) {
                 $data{'del_subscriber'} = undef;
@@ -1017,7 +1017,7 @@ sub deal_data {
             $data{'create_list'}{$r_name}++;
         }
         # ---test about copy list---
-        if ($result_request->{$id}->{'operation_stat'} eq 'copy list') {
+        if ($result_request->{$id}->{'operation_stat'} eq 'copy_list') {
 
             unless (exists($data{'copy_list'})) {
                 $data{'copy_list'} = undef;
@@ -1053,7 +1053,7 @@ sub deal_data {
             $data{'close_list'}{$r_name}++;
         }
         # ---test abount purge list---
-        if ($result_request->{$id}->{'operation_stat'} eq 'purge list') {
+        if ($result_request->{$id}->{'operation_stat'} eq 'purge_list') {
 
             unless (exists($data{'purge_list'})) {
                 $data{'purge_list'} = {};
@@ -1169,7 +1169,7 @@ sub deal_data {
         # ---test about archive---
         if ($result_request->{$id}->{'operation_stat'} eq 'arc') {
 
-            unless (exists($data{'archive visited'})) {
+            unless (exists($data{'archive_visited'})) {
                 $data{'archive_visited'} = undef;
             }
 

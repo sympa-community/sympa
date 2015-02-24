@@ -2520,7 +2520,7 @@ sub del {
             $u = $list->delete_list_member(
                 'users'     => [$who],
                 'exclude'   => ' 1',
-                'parameter' => 'deletd by admin'
+                'parameter' => 'deleted_by_admin'
             )
             ) {
             my $error =

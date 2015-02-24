@@ -8339,7 +8339,7 @@ sub do_del {
     $total = $list->delete_list_member(
         'users'     => \@removed_users,
         'exclude'   => '1',
-        'parameter' => 'deleted by admin',
+        'parameter' => 'deleted_by_admin',
         'daemon'    => 'wwsympa.fcgi'
     );
 
@@ -9960,7 +9960,7 @@ sub do_arc {
 
     web_db_stat_log(
         {   'robot'     => $robot,
-            'liste'     => $list->{'name'},
+            'list'      => $list->{'name'},
             'operation' => $param->{'action'},
             'parameter' => "",
             'mail'      => $param->{'user'}{'email'},
@@ -11234,9 +11234,8 @@ Creates a list using a list template
 
 =cut 
 
-## create a liste using a list template.
+# create a list using a list template.
 sub do_create_list {
-
     wwslog(
         'info', '(%s, %s, %s)', $in{'listname'}, $in{'subject'},
         $in{'template'}
@@ -11363,7 +11362,7 @@ sub do_create_list {
     $parameters->{'description'}    = $in{'info'};
     $parameters->{'custom_input'}   = $in{'custom_input'};
 
-    ## create liste
+    # Create list
     if (my $testlist = Sympa::List->new($in{'listname'}, $robot)) {
         Sympa::Report::reject_report_web('user', 'list_already_exists',
             {'new_listname' => $in{'listname'}},
@@ -13691,7 +13690,7 @@ sub do_copy_list {
         web_db_stat_log(
             {   'robot'     => $robot,
                 'list'      => $in{'new_listname'},
-                'operation' => 'copy list',
+                'operation' => 'copy_list',
                 'parameter' => '',
                 'mail'      => $param->{'user'}{'email'},
             }
