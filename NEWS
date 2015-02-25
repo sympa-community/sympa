@@ -3,6 +3,57 @@
 
 (See Changelog file for the full changes log)
 
+6.2b.5		February 25, 2015
+
+  Features:
+
+	[11969] src/lib/Sympa/ConfDef.pm, src/sbin/sympa_msg.pl.in: 
+	[experimental] Multiple instances of sympa_msg.pl, daemon processing
+	incoming message spool, may be run.  Multiplicity is controlled by
+	"incoming_max_count" config parameter: By default single instance will
+	run.
+
+
+
+  Changes:
+
+	[11978] src/bin/mod2html.pl.in, src/bin/testlogs.pl.in,
+	src/cgi/sympa_soap_server.fcgi.in, src/cgi/wwsympa.fcgi.in,
+	src/lib/Log.pm, src/libexec/alias_manager.pl.in,
+	src/sbin/archived.pl.in, src/sbin/bounced.pl.in, src/sbin/bulk.pl.in,
+	src/sbin/sympa.pl.in, src/sbin/sympa_automatic.pl.in,
+	src/sbin/sympa_msg.pl.in, src/sbin/sympa_newaliases.pl.in,
+	src/sbin/task_manager.pl.in:  A few service names in system log and
+	database logs were changed.  Now they are taken from the name of each
+	program:
+	- sympa_automatic.pl : "sympa_automatic" (formerley "sympa")
+	- sympa_msg.pl : "sympa_msg" (formerly "sympa")
+	Exception:
+	- sympa_soap_server.fcgi : "sympasoap" (formerly "soap")
+	ToDo: sympa_soap_server.fcgi would be renamed.
+
+	[11970] src/lib/Sympa/List.pm, src/lib/Sympa/Upgrade.pm,
+	src/lib/tools.pm, src/sbin/sympa.pl.in, src/sbin/sympa_msg.pl.in:  Now
+	digest spool will keep messages as separate files by each, instead of
+	accumulating messages in single file with RFC934 format.  This change
+	is desirable because messages may be locked and handled safely.
+
+  Bug fixes:
+
+	[11980] src/lib/Conf.pm, src/lib/Sympa/List.pm,
+	src/lib/Sympa/ListDef.pm: [#9665] [Reported by L. Einarsen, Norges
+	teknisk-naturvitenskapelige universitet] Invalid SSL_version "tls"
+	specified in include_ldap_query.  Recent versions of IO::Socket::SSL
+	(though it is not explicitly documented that which version changed the
+	syntax) accepts "tlsv1" and so on.
+	Fixed by treating "tls" as synonim of "tlsv1".	Additionally, "tlsv1_1"
+	and "tlsv1_2" are also supported now.
+
+	[11979] src/cgi/wwsympa.fcgi.in, src/lib/Log.pm,
+	src/lib/Sympa/Commands.pm, src/lib/Sympa/List.pm:  Statistics: Some
+	action weren't recorded correctly and were omitted.  Fixed by
+	correcting typos.
+
 6.2b.4		February 13, 2015
 
   Changes:
