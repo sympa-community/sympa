@@ -48,12 +48,11 @@ my $manager_conf_file = $Conf::Conf{etc} . '/ldap_alias_manager.conf';
 
 ## LDAP configuration
 my %ldap_params;
-my ($ldap_host,     $ldap_base_dn,        $ldap_bind_dn,
-    $ldap_bind_pwd, $ldap_mail_attribute, $ldap_objectclasses,
-    $ldap_ssl,      $ldap_cachain,        $queue_transport,
-    $bouncequeue_transport
-    )
-    = (undef, undef, undef, undef, undef, undef, undef, undef, undef, undef);
+my ($ldap_host,       $ldap_base_dn,        $ldap_bind_dn,
+    $ldap_bind_pwd,   $ldap_mail_attribute, $ldap_objectclasses,
+    $ldap_cachain,    $ldap_ssl,            $ldap_ssl_version,
+    $queue_transport, $bouncequeue_transport
+);
 GetLdapParameter();
 
 my $ldap_connection = undef;
@@ -81,6 +80,17 @@ $ldap_mail_attribute = $ldap_params{'ldap_mail_attribute'}
     or print STDERR
     "Missing required parameter ldap_ssl (possible value: 0 or 1) in the config file $manager_conf_file\n"
     and exit 0;
+
+$ldap_ssl_version = lc($ldap_params{'ldap_ssl_version'} || '');
+unless ($ldap_ssl_version) {
+    $ldap_ssl_version = $ldap_ssl ? 'tlsv1' : undef;
+} elsif ($ldap_ssl_version !~ /\A(sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2)\z/) {
+    printf STDERR
+        "Invalid parameter ldap_ssl_version in the config file %s\n",
+        $manager_conf_file;
+    exit 0;
+}
+
 $ldap_cachain = $ldap_params{'ldap_cachain'} or undef;
 $queue_transport = $ldap_params{'queue_transport'}
     or print STDERR
@@ -323,7 +333,7 @@ sub initialize_ldap {
                     $ldap_host,
                     version    => 3,
                     verify     => 'require',
-                    sslversion => 'sslv3',
+                    sslversion => $ldap_ssl_version,
                     cafile     => $ldap_cachain
                 )
                 ) {
@@ -337,7 +347,7 @@ sub initialize_ldap {
                     $ldap_host,
                     version    => 3,
                     verify     => 'none',
-                    sslversion => 'sslv3'
+                    sslversion => $ldap_ssl_version
                 )
                 ) {
                 print STDERR
