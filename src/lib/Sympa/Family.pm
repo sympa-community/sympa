@@ -853,7 +853,7 @@ sub instantiate {
 
     ## get the currently existing lists in the family
     my $previous_family_lists =
-        {(map { $_->name => $_ } @{Sympa::List::get_lists($self) || []})};
+        {(map { $_->{name} => $_ } @{Sympa::List::get_lists($self) || []})};
 
     ## Splits the family description XML file into a set of list description
     ## xml files
@@ -864,7 +864,7 @@ sub instantiate {
     }
 
     my $created  = 0;
-    my $total    = $#{@{$self->{'list_to_generate'}}} + 1;
+    my $total    = scalar @{$self->{'list_to_generate'}} + 1;
     my $progress = Term::ProgressBar->new(
         {   name  => 'Creating lists',
             count => $total,
@@ -1077,6 +1077,8 @@ sub instantiate {
             }
             push(@{$self->{'family_closed'}{'ok'}}, $list->{'name'});
 
+        } elsif (lc($answer) eq 'n') {
+			next;
         } else {
             ## get data from list xml file
             my $xml_fh;
@@ -2100,6 +2102,9 @@ sub _update_existing_list {
 
         unless (open INFO, '>', $list->{'dir'} . '/info') {
             Log::do_log('err', 'Impossible to open %s/info: %m',
+		unless ($hash_list->{'config'}{'description'}) {
+			$hash_list->{'config'}{'description'} = '';
+		}
                 $list->{'dir'});
         }
         print INFO $hash_list->{'config'}{'description'};
