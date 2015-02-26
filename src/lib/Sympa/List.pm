@@ -10156,7 +10156,7 @@ sub _load_list_config_file {
         }
 
         ## Required fields
-        if ($pinfo->{$p}{'occurrence'} =~ /^1(-n)?$/) {
+        if ($pinfo->{$p}{'occurrence'} && $pinfo->{$p}{'occurrence'} =~ /^1(-n)?$/) {
             unless (defined $admin{$p}) {
                 Log::do_log('info', 'Missing parameter "%s" in %s',
                     $p, $config_file);
