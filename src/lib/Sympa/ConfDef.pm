@@ -821,10 +821,9 @@ our @params = (
         'default' => 'off',
         'gettext_id' =>
             'If set to "on", enables support of legacy character set',
-        'file' => 'sympa.conf',
-        'edit' => '1',
-        'gettext_comment' =>
-            'In some language environments, legacy encoding (character set) is preferred for e-mail messages: for example iso-2022-jp in Japanese language.',
+        'file'            => 'sympa.conf',
+        'edit'            => '1',
+        'gettext_comment' => 'See also charset.conf(5) manpage',
     },
     {   'name'    => 'filesystem_encoding',
         'default' => 'utf-8',

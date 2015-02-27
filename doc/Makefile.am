@@ -20,7 +20,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nobase_doc_DATA = \
-	README.charset \
 	README.perltidy \
 	dot.perltidyrc \
 	samples/README \
@@ -36,14 +35,44 @@ nobase_doc_DATA = \
 	samples/families/sample-auto/param_constraint.conf \
 	sympa.pdf
 
-EXTRA_DIST = $(nobase_doc_DATA) README.charset.in
-CLEANFILES = README.charset
+man5dir = $(mandir)/man5
+man5ext = 5Sympa
+MAN5POD = \
+	charset.conf.pod
 
-README.charset: README.charset.in Makefile
+EXTRA_DIST = $(nobase_doc_DATA) charset.conf.podin
+CLEANFILES = $(MAN5POD) *.$(man5ext)
+
+.podin.pod: Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--defaultdir--|$(defaultdir)|' \
 		-e 's|--sysconfdir--|$(sysconfdir)|' \
 		-e 's|--CONFIG--|$(CONFIG)|' \
-		< $(srcdir)/$@.in > $@
+		< $(srcdir)/$< > $@
+
+man5pod: $(MAN5POD) Makefile
+	@test -n "$(man5ext)" || exit 0; \
+	for pod in $(MAN5POD); do \
+		echo "$$pod" | $(SED) -e 's/\.pod$$//' \
+		| while read tmp; do \
+		rm -f $$tmp.$(man5ext); \
+		echo "GEN $$tmp.$(man5ext)"; \
+		$(POD2MAN) --section=$(man5ext) --center="sympa $(VERSION)" \
+			--lax --release="$(VERSION)" $$pod $$tmp.$(man5ext); \
+		done; \
+	done
+
+install-data-hook: man5pod
+	@test -n "$(man5ext)" || exit 0; \
+	test -n "$(man5dir)" || exit 0; \
+	$(mkdir_p) "$(DESTDIR)$(man5dir)" || exit 1; \
+	for pod in $(MAN5POD); do \
+		echo "$$pod" | $(SED) -e 's/\.pod$$//' \
+		| while read tmp; do \
+		echo "installing $$tmp.$(man5ext)"; \
+		$(INSTALL_DATA) "$$tmp.$(man5ext)" "$(DESTDIR)$(man5dir)" \
+		|| exit $$?; \
+		done; \
+	done
 
