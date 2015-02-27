@@ -3,6 +3,39 @@
 
 (See Changelog file for the full changes log)
 
+6.2b.6		February 27, 2015
+
+  Changes:
+
+	[11995] src/lib/Sympa/Scenario.pm:  When scenario debug log is
+	activated, the scenario file used is also logged.
+
+	[11985] src/lib/Sympa/ListDef.pm, src/libexec/ldap_alias_manager.pl.in:
+	 Default cryptographic protocol of LDAP over SSL/TLS became TLSv1. 
+	Note that SSLv2 and SSLv3 are no longer recommended due to their
+	weakness.
+	- List config: The default of "ssl_version" parameters in
+	"include_ldap" paragraph and so on became "tlsv1".
+	- ldap_alias_manager.pl: New parameter "ldap_ssl_version" to specify
+	protocol version which defaults to "tlsv1" was introduced.  On earlier
+	releases it was fixed to "sslv3".
+
+  Bug fixes:
+
+	[11994] src/lib/Sympa/Family.pm:  When instantiating a family, Sympa
+	would crash if no list is found in the XML file. Preventing it by
+	setting the list of lists to create as an empty list. Having an empty
+	XML file can be a reasonnable (yet crude) mean to close all lists in a
+	family.
+
+	[11989] src/lib/Sympa/Family.pm:  Several bugs made family
+	instantiation crash sympa.
+
+	[11988] src/lib/Sympa/List.pm:	When using DB list cache, all lists
+	would be returned when queryinf the lists from a family, leading to the
+	possibility that ALL lists not belonging to a family would be closed if
+	close_unkown option was used.
+
 6.2b.5		February 25, 2015
 
   Features:
