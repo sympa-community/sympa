@@ -522,7 +522,9 @@ sub create_list {
     ## Creation of the info file
     # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and
     # EIMS:
-    $param->{'description'} =~ s/\r\n|\r/\n/g;
+    if (defined $param->{'description'}) {
+		$param->{'description'} =~ s/\r\n|\r/\n/g;
+	}
 
     unless (open INFO, '>', "$list_dir/info") {
         Log::do_log('err', 'Impossible to create %s/info: %m', $list_dir);
@@ -1355,7 +1357,7 @@ sub list_check_smtp {
     my $smtp_relay = Conf::get_robot_conf($robot, 'list_check_smtp');
     my $smtp_helo  = Conf::get_robot_conf($robot, 'list_check_helo')
         || $smtp_relay;
-    $smtp_helo =~ s/:[-\w]+$//;
+    $smtp_helo =~ s/:[-\w]+$// if $smtp_helo;
     my $suffixes = Conf::get_robot_conf($robot, 'list_check_suffixes');
     return 0
         unless ($smtp_relay && $suffixes);
