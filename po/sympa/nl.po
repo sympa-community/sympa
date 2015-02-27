@@ -18,17 +18,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2013-01-10 21:19+0000\n"
-"Last-Translator: Kwadro Naut <kwadronaut@autistici.org>\n"
+"PO-Revision-Date: 2015-02-26 09:45+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Nederlands\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "plural-forms: nplurals=2; plural=n != 1\n"
-"X-POOTLE-MTIME: 1357852743.000000\n"
+"X-POOTLE-MTIME: 1424943939.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -72,7 +72,7 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:293
 msgid "Incorrect parameter definition: %s\n"
-msgstr ""
+msgstr "Foute parameter definitie: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -87,15 +87,16 @@ msgid "Unable to rename %s : %s"
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 
 #: src/sbin/sympa_wizard.pl.in:339
-#, fuzzy
 msgid "Unable to open %s : %s"
-msgstr "Het helpbestand kan niet gelezen worden : %s\n"
+msgstr "Kan %s - %s niet openen\n"
 
 #: src/sbin/sympa_wizard.pl.in:350
 msgid ""
 "%s have been updated.\n"
 "Previous versions have been saved as %s.\n"
 msgstr ""
+"%s werden bijgewerkt.\n"
+"Vorige versies zijn bewaard als %s.\n"
 
 #: src/sbin/sympa_wizard.pl.in:357
 msgid ""
@@ -115,6 +116,23 @@ msgid ""
 "##############################################################################\n"
 "Press the Enter key to continue..."
 msgstr ""
+"#############################################################################"
+"#\n"
+"# Deze procedure help u om alle Perl (CPAN) modules te installeren die nodig "
+"zijn voor de Sympa\n"
+"# software.\n"
+"# Sympa heeft een bijkomende 50 tot 65 Perl modules nodig om te werken. \n"
+"# De ganse installatie procedure duurt ongeveer 15 minuten.\n"
+"# U dient eerst de CPAN shell configureren en uw favoriete CPAN server te "
+"selecteren.\n"
+"# Het is ook mogelijk om de nodige Perl modules te installeren door gebruik "
+"van uw favoriete\n"
+"# DEB/RPM installatie tool.\n"
+"# U kan de procedure op elk moment onderbreken indien nodig en achteraf "
+"terug opstarten\n"
+"#############################################################################"
+"#\n"
+"Druk op de Enter toets om verder te gaan..."
 
 #: src/sbin/sympa_wizard.pl.in:399
 msgid "Which RDBMS will you use for core database:"
@@ -122,7 +140,7 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:404
 msgid "-> Select RDBMS [1-%d] "
-msgstr ""
+msgstr "-> Selecteer een RDBMS [1-%d]"
 
 #: src/sbin/sympa_wizard.pl.in:417
 msgid "Checking for PERL version:"
@@ -130,7 +148,7 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:420
 msgid "Your version of perl is OK (%s  >= %s)"
-msgstr ""
+msgstr "Uw versie van Perl is OK (%s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:424
 msgid ""
@@ -140,11 +158,11 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:428
 msgid "Checking for REQUIRED modules:"
-msgstr ""
+msgstr "Zoek naar de VEREISTE modules:"
 
 #: src/sbin/sympa_wizard.pl.in:430
 msgid "Checking for OPTIONAL modules:"
-msgstr ""
+msgstr "Zoek naar de OPTIONELE modules:"
 
 #: src/sbin/sympa_wizard.pl.in:434
 msgid ""
@@ -152,67 +170,72 @@ msgid ""
 "You can retrieve all theses modules from any CPAN server\n"
 "(for example ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 msgstr ""
+"******* OPMERKING *******\n"
+"U kan al deze modules via om het even welke CPAN server bekomen\n"
+"(voorbeeld: ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 
 #: src/sbin/sympa_wizard.pl.in:449
 #, fuzzy
 msgid "perl module"
-msgstr "Lege map"
+msgstr "Perl module"
 
 #: src/sbin/sympa_wizard.pl.in:449
 msgid "from CPAN"
-msgstr ""
+msgstr "van CPAN"
 
 #: src/sbin/sympa_wizard.pl.in:450
 msgid "STATUS"
-msgstr ""
+msgstr "STATUS"
 
 #: src/sbin/sympa_wizard.pl.in:451
 msgid "-----------"
-msgstr ""
+msgstr "-----------"
 
 #: src/sbin/sympa_wizard.pl.in:451
 msgid "---------"
-msgstr ""
+msgstr "---------"
 
 #: src/sbin/sympa_wizard.pl.in:452
 msgid "------"
-msgstr ""
+msgstr "------"
 
 #: src/sbin/sympa_wizard.pl.in:471
 msgid "was not found on this system."
-msgstr ""
+msgstr "werd niet gevonden op dit systeem."
 
 #: src/sbin/sympa_wizard.pl.in:493
 msgid "OK (%-6s >= %s)"
-msgstr ""
+msgstr "OK (%-6s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:496
 msgid "version is too old (%s < %s)"
-msgstr ""
+msgstr "versie is te oud (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:499
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
-msgstr ""
+msgstr ">>>>>>> U dient \"%s\" te updaten naar versie \"%s\" <<<<<<."
 
 #: src/sbin/sympa_wizard.pl.in:531
 msgid "## You need root privileges to install %s module. ##"
-msgstr ""
+msgstr "## U hebt root toegang nodig om module %s te installeren. ##"
 
 #: src/sbin/sympa_wizard.pl.in:534
 msgid "## Press the Enter key to continue checking modules. ##"
 msgstr ""
+"## Druk op de Enter toets om verder te gaan met de controle van de modules. "
+"##"
 
 #: src/sbin/sympa_wizard.pl.in:543
 msgid "-> Usage of this module: %s"
-msgstr ""
+msgstr "-> Gebruik van deze module: %s"
 
 #: src/sbin/sympa_wizard.pl.in:550
 msgid "-> Prerequisites: %s"
-msgstr ""
+msgstr "-> Vereisten: %s"
 
 #: src/sbin/sympa_wizard.pl.in:555
 msgid "-> Install module %s ? [%s] "
-msgstr ""
+msgstr "-> Module %s installeren? [%s]"
 
 #: src/sbin/sympa_wizard.pl.in:593
 msgid ""
@@ -228,7 +251,7 @@ msgstr ""
 
 #: src/lib/tools.pm:1797
 msgid "contains the dictionary word '%s'"
-msgstr ""
+msgstr "bevat het woordenboek woord '%s'"
 
 #: src/lib/tools.pm:1791
 msgid "Not between %d and %d characters"
