@@ -474,6 +474,10 @@ sub request_action {
         return undef;
     }
 
+	if ($log_it) {
+		Log::do_log('info','Evaluating scenario file %s',$scenario->{'file_path'});
+	}
+
     push @rules, @{$scenario->{'rules'}};
     $name = $scenario->{'name'};
 
