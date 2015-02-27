@@ -864,7 +864,7 @@ sub instantiate {
     }
 
     my $created  = 0;
-    my $total    = scalar @{$self->{'list_to_generate'}} + 1;
+    my $total    = scalar @{$self->{'list_to_generate'}};
     my $progress = Term::ProgressBar->new(
         {   name  => 'Creating lists',
             count => $total,
@@ -2098,13 +2098,13 @@ sub _update_existing_list {
 
     ## info file
     unless ($config_changes->{'file'}{'info'}) {
+        unless (defined $hash_list->{'config'}{'description'}) {
+            $hash_list->{'config'}{'description'} = '';
+        }
         $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
 
         unless (open INFO, '>', $list->{'dir'} . '/info') {
             Log::do_log('err', 'Impossible to open %s/info: %m',
-		unless ($hash_list->{'config'}{'description'}) {
-			$hash_list->{'config'}{'description'} = '';
-		}
                 $list->{'dir'});
         }
         print INFO $hash_list->{'config'}{'description'};
