@@ -864,14 +864,22 @@ sub instantiate {
     }
 
     my $created  = 0;
-    my $total    = scalar @{$self->{'list_to_generate'}};
-    my $progress = Term::ProgressBar->new(
-        {   name  => 'Creating lists',
-            count => $total,
-            ETA   => 'linear'
-        }
-    );
-    $progress->max_update_rate(1);
+    my $total;
+    my $progress;
+    unless ($self->{'list_to_generate'}) {
+		Log::do_log('err', 'No list found in XML file %s.',$xml_file);
+		$self->{'list_to_generate'} = [];
+		$total = 0;
+	}else {
+		$total    = scalar @{$self->{'list_to_generate'}};
+        $progress = Term::ProgressBar->new(
+            {   name  => 'Creating lists',
+                count => $total,
+                ETA   => 'linear'
+            }
+        );
+        $progress->max_update_rate(1);
+	}
     my $next_update = 0;
     my $aliasmanager_output_file =
         $Conf::Conf{'tmpdir'} . '/aliasmanager.stdout.' . $PID;
@@ -1025,7 +1033,7 @@ sub instantiate {
         }
     }
 
-    $progress->update($total);
+    $progress->update($total) if $progress;
 
     if ($output && !$main::options{'quiet'}) {
         print STDOUT
