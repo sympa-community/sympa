@@ -3080,14 +3080,15 @@ sub find_picture_filenames {
     my $self  = shift;
     my $email = shift;
 
-    my $login = Digest::MD5::md5_hex($email);
     my @ret   = ();
-
-    foreach my $ext (qw{gif jpg jpeg png}) {
-        if (-f $self->get_picture_path($login . '.' . $ext)) {
-            push @ret, $login . '.' . $ext;
-        }
-    }
+	if ($email) {
+		my $login = Digest::MD5::md5_hex($email);
+		foreach my $ext (qw{gif jpg jpeg png}) {
+			if (-f $self->get_picture_path($login . '.' . $ext)) {
+				push @ret, $login . '.' . $ext;
+			}
+		}
+	}
     return @ret;
 }
 
