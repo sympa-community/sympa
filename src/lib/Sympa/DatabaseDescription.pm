@@ -734,17 +734,18 @@ my %full_db_struct = (
     },
     'stat_counter_table' => {
         'fields' => {
-            'id_counter' => {
-                'struct'   => 'bigint(20)',
-                'doc'      => '',
-                'order'    => 1,
-                'primary'  => 1,
-                'not_null' => 1,
-            },
+            #'id_counter' => {
+            #    'struct'   => 'bigint(20)',
+            #    'doc'      => '',
+            #    'order'    => 1,
+            #    'primary'  => 1,
+            #    'not_null' => 1,
+            #},
             'beginning_date_counter' => {
                 'struct'   => 'int(11)',
                 'doc'      => '',
                 'order'    => 2,
+                'primary'  => 1,
                 'not_null' => 1,
             },
             'end_date_counter' => {
@@ -755,29 +756,37 @@ my %full_db_struct = (
             'data_counter' => {
                 'struct'   => 'varchar(50)',
                 'doc'      => '',
+                'primary'  => 1,
                 'not_null' => 1,
                 'order'    => 3,
             },
             'robot_counter' => {
                 'struct'   => $robot_struct,
                 'doc'      => '',
+                'primary'  => 1,
                 'not_null' => 1,
                 'order'    => 4,
             },
             'list_counter' => {
-                'struct' => $list_struct,
-                'doc'    => '',
-                'order'  => 5,
+                'struct'  => $list_struct,
+                'doc'     => '',
+                'primary' => 1,
+                'order'   => 5,
             },
-            'variation_counter' => {
+            #'variation_counter' => {
+            #    'struct' => 'int',
+            #    'doc'    => '',
+            #    'order'  => 6,
+            #},
+            #'total_counter' => {
+            #    'struct' => 'int',
+            #    'doc'    => '',
+            #    'order'  => 7,
+            #},
+            'count_counter' => {
                 'struct' => 'int',
                 'doc'    => '',
-                'order'  => 6,
-            },
-            'total_counter' => {
-                'struct' => 'int',
-                'doc'    => '',
-                'order'  => 7,
+                'order'  => 8,
             },
         },
         'doc'   => 'Use in conjunction with stat_table for users statistics',

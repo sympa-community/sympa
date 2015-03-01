@@ -22594,63 +22594,34 @@ sub do_stats {
         ) / 1024
     );
 
-    my $stats;
-    my @stats_to_display;
-    $stats->{'send_mail'}{'title'} = $language->gettext("Mail sending");
-    $stats->{'add_subscriber'}{'title'} =
-        $language->gettext("Subscription additions");
-    $stats->{'unsubscription'}{'title'} =
-        $language->gettext("Unsubscription");
-    $stats->{'deleted_by_admin'}{'title'} =
-        $language->gettext("Users deleted by admin");
+    my $stats = {
+        send_mail => {title => $language->gettext("Mail sending")},
+        add_subscriber =>
+            {title => $language->gettext("Subscription additions")},
+        unsubscription => {title => $language->gettext("Unsubscription")},
+        deleted_by_admin =>
+            {title => $language->gettext("Users deleted by admin")},
+        d_upload      => {title => $language->gettext("File uploading")},
+        d_create_file => {title => $language->gettext("File creation")},
+        d_create_directory =>
+            {title => $language->gettext("Directory creation")},
+    };
 
-    foreach my $operation (
-        (   'send_mail', 'add_subscriber', 'unsubscription',
-            'deleted_by_admin'
-        )
-        ) {
-        my $raw_data = Sympa::List::get_data($operation, $robot, $in{'list'});
-        my $data = Log::agregate_daily_data({'hourly_data' => $raw_data});
-        my @key_counter = keys %{$data};
-        if ($#key_counter > -1) {
-            $stats->{$operation}{'stats_values'} = "[";
-            foreach my $date (sort keys %{$data}) {
-                my $formatted_date =
-                    $language->gettext_strftime("%d %b %Y", localtime($date));
-                $stats->{$operation}{'stats_values'} .=
-                    "['$formatted_date'," . $data->{$date} . "],";
-            }
-            $stats->{$operation}{'stats_values'} =~ s/,$//;
-            $stats->{$operation}{'stats_values'} .= "]";
-            $stats->{$operation}{'stat_id'} = $operation;
+    foreach my $operation (keys $stats) {
+        my $data = Log::aggregate_daily_data($list, $operation);
+        if (%{$data || {}}) {
+            $stats->{$operation}{'stats_values'} = '[' . join(
+                ',',
+                map {
+                    my $formatted_date =
+                        $language->gettext_strftime('%d %b %Y', localtime $_);
+                    $formatted_date =~ s/([\\\'])/\\$1/g;
+                    sprintf "['%s',%d]", $formatted_date, $data->{$_}
+                    } sort keys %$data
+            ) . ']';
         }
-        push @stats_to_display, $stats->{$operation};
     }
-    $param->{'stats'} = \@stats_to_display;
-    #--------------------shared treatment-------------------------------------
-    ##in this case, we group uploading, directory creations and file creations
-    my $data_shared_up =
-        Sympa::List::get_data('d_upload', $robot, $in{'list'});
-    my $data_shared_di =
-        Sympa::List::get_data('d_create_directory', $robot, $in{'list'});
-    my $data_shared_fi =
-        Sympa::List::get_data('d_create_file', $robot, $in{'list'});
-
-    #we group the tree hashes.
-    my $data_shared = undef;
-    foreach my $key1 (keys(%$data_shared_up)) {
-        $data_shared->{$key1} = $data_shared_up->{$key1};
-    }
-
-    foreach my $key2 (keys(%$data_shared_di)) {
-        $data_shared->{$key2} = $data_shared_di->{$key2};
-    }
-
-    foreach my $key3 (keys(%$data_shared_fi)) {
-        $data_shared->{$key3} = $data_shared_fi->{$key3};
-    }
-
-    $param->{'stats_new_file_shared'} = $data_shared;
+    $param->{'stats'} = $stats;
 
     return 1;
 }

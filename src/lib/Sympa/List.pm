@@ -3080,15 +3080,15 @@ sub find_picture_filenames {
     my $self  = shift;
     my $email = shift;
 
-    my @ret   = ();
-	if ($email) {
-		my $login = Digest::MD5::md5_hex($email);
-		foreach my $ext (qw{gif jpg jpeg png}) {
-			if (-f $self->get_picture_path($login . '.' . $ext)) {
-				push @ret, $login . '.' . $ext;
-			}
-		}
-	}
+    my @ret = ();
+    if ($email) {
+        my $login = Digest::MD5::md5_hex($email);
+        foreach my $ext (qw{gif jpg jpeg png}) {
+            if (-f $self->get_picture_path($login . '.' . $ext)) {
+                push @ret, $login . '.' . $ext;
+            }
+        }
+    }
     return @ret;
 }
 
@@ -5210,19 +5210,27 @@ sub add_list_member {
         ## Update Subscriber Table
         unless (
             SDM::do_query(
-                "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, robot_subscriber, date_subscriber, update_subscriber, reception_subscriber, topics_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber,custom_attribute_subscriber,suspend_subscriber,suspend_start_date_subscriber,suspend_end_date_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                SDM::quote($who),
-                SDM::quote($new_user->{'gecos'}),
-                SDM::quote($name),
-                SDM::quote($self->{'domain'}),
+                q{INSERT INTO subscriber_table
+                  (user_subscriber, comment_subscriber,
+                   list_subscriber, robot_subscriber,
+                   date_subscriber, update_subscriber,
+                   reception_subscriber, topics_subscriber,
+                   visibility_subscriber, subscribed_subscriber,
+                   included_subscriber, include_sources_subscriber,
+                   custom_attribute_subscriber,
+                   suspend_subscriber,
+                   suspend_start_date_subscriber, suspend_end_date_subscriber,
+                   number_messages_subscriber)
+                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 0)},
+                SDM::quote($who),  SDM::quote($new_user->{'gecos'}),
+                SDM::quote($name), SDM::quote($self->{'domain'}),
                 SDM::get_canonical_write_date($new_user->{'date'}),
                 SDM::get_canonical_write_date($new_user->{'update_date'}),
                 SDM::quote($new_user->{'reception'}),
                 SDM::quote($new_user->{'topics'}),
                 SDM::quote($new_user->{'visibility'}),
                 $new_user->{'subscribed'},
-                $new_user->{'included'},
-                SDM::quote($new_user->{'id'}),
+                $new_user->{'included'}, SDM::quote($new_user->{'id'}),
                 SDM::quote($new_user->{'custom_attribute'}),
                 SDM::quote($new_user->{'suspend'}),
                 SDM::quote($new_user->{'startdate'}),
@@ -10158,7 +10166,8 @@ sub _load_list_config_file {
         }
 
         ## Required fields
-        if ($pinfo->{$p}{'occurrence'} && $pinfo->{$p}{'occurrence'} =~ /^1(-n)?$/) {
+        if (   $pinfo->{$p}{'occurrence'}
+            && $pinfo->{$p}{'occurrence'} =~ /^1(-n)?$/) {
             unless (defined $admin{$p}) {
                 Log::do_log('info', 'Missing parameter "%s" in %s',
                     $p, $config_file);
@@ -11649,23 +11658,9 @@ sub add_list_header {
     return 1;
 }
 
-##connect to stat_counter_table and extract data.
-sub get_data {
-    my ($data, $robotname, $listname) = @_;
-
-    unless (
-        $sth = SDM::do_query(
-            "SELECT * FROM stat_counter_table WHERE data_counter = '%s' AND robot_counter = '%s' AND list_counter = '%s'",
-            $data, $robotname, $listname
-        )
-        ) {
-        Log::do_log('err', 'Unable to get stat data %s for liste %s@%s',
-            $data, $listname, $robotname);
-        return undef;
-    }
-    my $res = $sth->fetchall_hashref('beginning_date_counter');
-    return $res;
-}
+# connect to stat_counter_table and extract data.
+# DEPRECATED: No longer used.
+#sub get_data;
 
 sub _update_list_db {
     my ($self) = shift;

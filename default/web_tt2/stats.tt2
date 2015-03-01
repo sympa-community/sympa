@@ -2,14 +2,19 @@
 <h1>[%|loc(listname)%]List %1 statistics[%END%]</h1>
 
 <p>[%|loc%]This page displays overall informations regarding the list activity[%END%]</p>
+
 <strong>[%|loc(shared_size)%]Shared document directory size: %1 kB[%END%]</strong><br />
 
 <strong>[%|loc(arc_size)%]Web archives size: %1 kB[%END%]</strong><br />
 
 <br>
-[% FOREACH o IN stats %]
-  [% SET chartid = "chartdiv" _ o.stat_id %]
-  [% SET chartcontainerid = "chartcontainer" _ o.stat_id %]
+
+[% FOREACH stat_id IN
+  [ 'send_mail', 'add_subscriber', 'unsubscription', 'deleted_by_admin' ]
+~%]
+  [% SET o = stats.$stat_id ~%]
+  [% SET chartid = "chartdiv" _ stat_id ~%]
+  [% SET chartcontainerid = "chartcontainer" _ stat_id ~%]
   <div id="[% chartcontainerid %]" style="width:500px;">
   <h2>[% o.title %]</h2>
   [% IF o.defined('stats_values') %]
@@ -51,47 +56,6 @@
   [% END %]
   </div>
 [% END %]
-[% IF stats_subscribers != NULL %]
-  <strong>[%|loc%]Subscriptions: [%END%]</strong>
-  [% FOREACH id = stats_subscriber %]
-    <p>[%|loc(id.value.beginning_date_counter,id.value.end_date_counter,id.value.variation_counter)%]from %1 to %2: +%3[%END%]</p>
-    <br>
-  [% END %]
-  <br>
-[% END %]
 
-[% IF stats_unsubscriber != NULL %]
-  <strong>[%|loc%]Unsubscriptions: [%END%]</strong>
-  [% FOREACH id = stats_unsubscriber %]
-    <p>[%|loc(id.value.beginning_date_counter,id.value.end_date_counter,id.value.variation_counter)%]from %1 to %2: -%3[%END%]</p>
-    <br>
-  [% END %]
-  <br>
-[% END %]
-
-[% IF stats_deleted != NULL %]
-  <strong>[%|loc%]Deleted by an admin: [%END%]</strong>
-  [% FOREACH id = stats_deleted %]
-    <p>[%|loc(id.value.beginning_date_counter,id.value.end_date_counter,id.value.variation_counter)%]from %1 to %2: -%3[%END%]</p>
-  [% END %]
-  <br>
-[% END %]
-<br>
-
-[% IF stats_bounced != NULL %]
-  <strong>[%|loc%]Deleted by bounce: [%END%]</strong>
-  [% FOREACH id = stats_bounced %]
-    <p>[%|loc(id.value.beginning_date_counter,id.value.end_date_counter,id.value.variation_counter)%]from %1 to %2: -%3[%END%]</p>
-    <br>
-  [% END %]
-[% END %]
-<br>
-
-[% IF stats_new_file_shared != NULL %]
-  <strong>{%|loc%]New files in shared: [%END%]</strong>
-  [% FOREACH id = stats_new_file_shared %]
-    <p>[%|loc(id.value.beginning_date_counter,id.value.end_date_counter,id.value.variation_counter)%]from %1 to %2: +%3[%END%]</p>
-    <br>
-  [% END %]
-[%# END %]
+[%# FIXME: "New files in shared" section should be shown. #%]
 <!-- end stats.tt2 -->
