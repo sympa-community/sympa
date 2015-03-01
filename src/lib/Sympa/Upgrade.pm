@@ -1545,6 +1545,12 @@ sub upgrade {
         Log::do_log('info', 'Upgrading stat_counter_table.');
         my $sdm = Sympa::DatabaseManager->instance;
 
+        # Clear unusable information.
+        if ($sdm) {
+            $sdm->do_prepared_query(q{DELETE FROM stat_table});
+            $sdm->do_prepared_query(q{DELETE FROM stat_counter_table});
+        }
+
         # As the field id_counter is no longer used but it has NOT NULL
         # constraint, it should be deleted.
         if ($sdm and $sdm->can('delete_field')) {
