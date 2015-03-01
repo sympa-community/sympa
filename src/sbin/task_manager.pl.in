@@ -1166,7 +1166,10 @@ sub delete_subs_cmd {
                 "error in delete_subs command : deletion of $email not allowed"
             );
         } else {
-            my $u = $list->delete_list_member(users => [$email]) unless $log;
+            my $u = $list->delete_list_member(
+                users     => [$email],
+                operation => 'auto_del'
+            ) unless $log;
             Log::do_log('notice', '--> %s deleted', $email);
             $selection{$email} = {};
         }

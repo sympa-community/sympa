@@ -1600,8 +1600,8 @@ sub signoff {
         unless (
             $list->delete_list_member(
                 'users'     => [$email],
-                'exclude'   => ' 1',
-                'parameter' => 'unsubscription'
+                'exclude'   => '1',
+                'operation' => 'signoff',
             )
             ) {
             my $error = "Unable to delete user $email from list $which";
@@ -2520,7 +2520,7 @@ sub del {
             $u = $list->delete_list_member(
                 'users'     => [$who],
                 'exclude'   => ' 1',
-                'parameter' => 'deleted_by_admin'
+                'operation' => 'del'
             )
             ) {
             my $error =

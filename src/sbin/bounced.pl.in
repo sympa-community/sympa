@@ -350,8 +350,9 @@ while (!$end) {
                 if ($action =~ /do_it/i) {
                     if ($list->is_list_member($who)) {
                         $list->delete_list_member(
-                            'users'   => [$who],
-                            'exclude' => ' 1'
+                            'users'     => [$who],
+                            'exclude'   => '1',
+                            'operation' => 'auto_del',
                         );
                         Log::do_log(
                             'notice',
@@ -821,8 +822,9 @@ while (!$end) {
                         if ($action =~ /do_it/i) {
                             if ($list->is_list_member($original_rcpt)) {
                                 $list->delete_list_member(
-                                    'users'   => [$original_rcpt],
-                                    'exclude' => ' 1'
+                                    'users'     => [$original_rcpt],
+                                    'exclude'   => ' 1',
+                                    'operation' => 'auto_del',
                                 );
 
                                 Log::do_log(

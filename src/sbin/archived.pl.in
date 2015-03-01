@@ -468,14 +468,15 @@ sub remove {
     Log::do_log('notice', 'Removing %s in list %s section %s',
         $msgid, $adrlist, $2);
 
-    Log::db_stat_log(
-        {   'robot'     => $robot,
-            'list'      => $adrlist,
-            'operation' => 'remove archive',
-            'parameter' => '',
-            'mail'      => 'test@cru.fr',
-        }
-    );
+    #FIXME: Assign right email.
+    #Log::db_stat_log(
+    #    {   'robot'     => $robot,
+    #        'list'      => $adrlist,
+    #        'operation' => 'remove archive',
+    #        'parameter' => '',
+    #        'mail'      => 'test@cru.fr',
+    #    }
+    #);
 
     unless (
         Log::db_log(

@@ -326,11 +326,9 @@ sub create_list_old {
         Log::db_stat_log(
             {   'robot'     => $robot,
                 'list'      => $param->{'listname'},
-                'operation' => 'create list',
+                'operation' => 'create_list',
                 'parameter' => '',
                 'mail'      => $user_mail,
-                'client'    => '',
-                'daemon'    => 'wwsympa.fcgi'
             }
         );
     }
@@ -523,8 +521,8 @@ sub create_list {
     # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and
     # EIMS:
     if (defined $param->{'description'}) {
-		$param->{'description'} =~ s/\r\n|\r/\n/g;
-	}
+        $param->{'description'} =~ s/\r\n|\r/\n/g;
+    }
 
     unless (open INFO, '>', "$list_dir/info") {
         Log::do_log('err', 'Impossible to create %s/info: %m', $list_dir);

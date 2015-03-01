@@ -1542,28 +1542,16 @@ sub upgrade {
 
     if (lower_version($previous_version, '6.2b.7')
         and not lower_version($previous_version, '6.2a.0')) {
-        # As the field id_counter is no longer used but it has NOT NULL
-        # constraint, it should be deleted.
         Log::do_log('info', 'Upgrading stat_counter_table.');
         my $sdm = Sympa::DatabaseManager->instance;
 
+        # As the field id_counter is no longer used but it has NOT NULL
+        # constraint, it should be deleted.
         if ($sdm and $sdm->can('delete_field')) {
             $sdm->delete_field('stat_counter_table', 'id_counter');
         } else {
             Log::do_log('err',
                 'Can\'t delete id_counter field in stat_counter_table.  You must delete it manually.'
-            );
-        }
-
-        # variation_counter was renamed to count_counter.
-        unless (
-            $sdm and $sdm->do_prepared_query(
-                q{UPDATE stat_counter_table
-                  SET count_counter = variation_counter}
-            )
-            ) {
-            Log::do_log('err',
-                'Can\'t update stat_counter_table.  You must update it manually.'
             );
         }
 
@@ -1577,29 +1565,6 @@ sub upgrade {
             ) {
             Log::do_log('err',
                 'Can\'t update number_messages_subscriber field of subscriber_table.  You must update it manually.'
-            );
-        }
-
-        my %tags = (
-            'add subscriber'   => 'add_subscriber',
-            'copy list'        => 'copy_list',
-            'del subscriber'   => 'del_subscriber',
-            'deletd by admin'  => 'deleted_by_admin',
-            'deleted by admin' => 'deleted_by_admin',
-            'purge list'       => 'purge_list',
-        );
-        foreach my $tag (keys %tags) {
-            $sdm and $sdm->do_prepared_query(
-                q{UPDATE stat_counter_table
-                  SET data_counter = ?
-                  WHERE data_counter = ?},
-                $tags{$tag}, $tag
-            );
-            $sdm and $sdm->do_prepared_query(
-                q{UPDATE stat_table
-                  SET operation_stat = ?
-                  WHERE operation_stat = ?},
-                $tags{$tag}, $tag
             );
         }
     }

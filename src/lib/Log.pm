@@ -525,103 +525,84 @@ sub get_log_level {
 
 # Aggregate data from stat_table to stat_counter_table.
 # Dates must be in epoch format.
+my @robot_operations = qw{close_list copy_list create_list list_rejected
+    login logout purge_list restore_list};
+
 sub aggregate_data {
     my ($begin_date, $end_date) = @_;
 
     # Store reslults in stat_counter_table.
+    my $cond;
 
     # Store data by each list.
-    foreach my $operation (
-        qw{send_mail add_subscriber reject
-        d_upload d_create_dir(directory) d_create_dir(file) arc}
-        ) {
-        my $data =
-              ($operation eq 'd_create_dir(directory)') ? 'd_create_directory'
-            : ($operation eq 'd_create_dir(file)')      ? 'd_create_file'
-            : ($operation eq 'arc')                     ? 'archive_visited'
-            :                                             $operation;
-        SDM::do_prepared_query(
+    $cond = join ' AND ', map {"operation_stat <> '$_'"} @robot_operations;
+    SDM::do_prepared_query(
+        sprintf(
             q{INSERT INTO stat_counter_table
               (beginning_date_counter, end_date_counter, data_counter,
                robot_counter, list_counter, count_counter)
-              SELECT ?, ?, ?,
-                     robot_stat, list_stat, COUNT(*)
+              SELECT ?, ?, operation_stat, robot_stat, list_stat, COUNT(*)
               FROM stat_table
-              WHERE ? <= date_stat AND date_stat < ? AND operation_stat = ?
-                    AND read_stat = 0
-              GROUP BY robot_stat, list_stat},
-            $begin_date, $end_date, $data,
-            $begin_date, $end_date, $operation
-        );
-    }
-
-    # Special treatment on "del_subscriber" operation: Use parameter_stat
-    # which is "deleted_by_admin" or "unsubscription" as data tag.
-    foreach my $operation (qw{del_subscriber}) {
-        SDM::do_prepared_query(
-            q{INSERT INTO stat_counter_table
-              (beginning_date_counter, end_date_counter, data_counter,
-               robot_counter, list_counter, count_counter)
-              SELECT ?, ?, parameter_stat,
-                     robot_stat, list_stat, COUNT(*)
-              FROM stat_table
-              WHERE ? <= date_stat AND date_stat < ? AND operation_stat = ?
-                    AND read_stat = 0
-                    AND parameter_stat IS NOT NULL
-              GROUP BY robot_stat, list_stat, parameter_stat},
-            $begin_date, $end_date,
-            $begin_date, $end_date, $operation
-        );
-    }
+              WHERE ? <= date_stat AND date_stat < ?
+                    AND list_stat IS NOT NULL AND list_stat <> ''
+                    AND read_stat = 0 AND %s
+              GROUP BY robot_stat, list_stat, operation_stat},
+            $cond
+        ),
+        $begin_date,
+        $end_date,
+        $begin_date,
+        $end_date
+    );
 
     # Store data by each robot.
-    foreach my $operation (
-        qw{create_list copy_list close_list purge_list list_rejected}) {
-        SDM::do_prepared_query(
+    $cond = join ' OR ', map {"operation_stat = '$_'"} @robot_operations;
+    SDM::do_prepared_query(
+        sprintf(
             q{INSERT INTO stat_counter_table
               (beginning_date_counter, end_date_counter, data_counter,
                robot_counter, list_counter, count_counter)
-              SELECT ?, ?, operation_stat,
-                     robot_stat, '', COUNT(*)
+              SELECT ?, ?, operation_stat, robot_stat, '', COUNT(*)
               FROM stat_table
-              WHERE ? <= date_stat AND date_stat < ? AND operation_stat = ?
-                    AND read_stat = 0
-              GROUP BY robot_stat},
-            $begin_date, $end_date,
-            $begin_date, $end_date, $operation
-        );
-    }
+              WHERE ? <= date_stat AND date_stat < ?
+                    AND read_stat = 0 AND (%s)
+              GROUP BY robot_stat, operation_stat},
+            $cond
+        ),
+        $begin_date,
+        $end_date,
+        $begin_date,
+        $end_date
+    );
 
     # Update subscriber_table about messages sent, upgrade field
     # number_messages_subscriber.
-    foreach my $operation (qw{send_mail}) {
-        my $sth;
-        my $row;
-        if ($sth = SDM::do_prepared_query(
-                q{SELECT COUNT(*) AS "count",
+    my $sth;
+    my $row;
+    if ($sth = SDM::do_prepared_query(
+            q{SELECT COUNT(*) AS "count",
                      robot_stat AS robot, list_stat AS list,
                      email_stat AS email
               FROM stat_table
-              WHERE ? <= date_stat AND date_stat < ? AND operation_stat = ?
-                    AND read_stat = 0
+              WHERE ? <= date_stat AND date_stat < ?
+                    AND read_stat = 0 AND operation_stat = 'send_mail'
               GROUP BY robot_stat, list_stat, email_stat},
-                $begin_date, $end_date, $operation
-            )
-            ) {
-            while ($row = $sth->fetchrow_hashref('NAME_lc')) {
-                SDM::do_prepared_query(
-                    q{UPDATE subscriber_table
+            $begin_date, $end_date
+        )
+        ) {
+        while ($row = $sth->fetchrow_hashref('NAME_lc')) {
+            SDM::do_prepared_query(
+                q{UPDATE subscriber_table
                       SET number_messages_subscriber =
                           number_messages_subscriber + ?
                       WHERE robot_subscriber = ? AND list_subscriber = ? AND
                             email_subscriber = ?},
-                    $row->{'count'},
-                    $row->{'robot'}, $row->{'list'},
-                    $row->{'email'}
-                );
-            }
-            $sth->finish;
+                $row->{'count'},
+                $row->{'robot'}, $row->{'list'},
+                $row->{'email'}
+            );
         }
+        $sth->finish;
     }
 
     # The rows were read, so update the read_stat from 0 to 1.
@@ -659,10 +640,13 @@ sub aggregate_daily_data {
     my $row;
     unless (
         $sth = SDM::do_prepared_query(
-            q{SELECT beginning_date_counter AS "date", count_counter AS "count"
-          FROM stat_counter_table
-          WHERE data_counter = ? AND robot_counter = ? AND list_counter = ?},
-            $operation, $list->{'domain'}, $list->{'name'}
+            q{SELECT beginning_date_counter AS "date",
+                     count_counter AS "count"
+              FROM stat_counter_table
+              WHERE data_counter = ? AND
+                    robot_counter = ? AND list_counter = ?},
+            $operation,
+            $list->{'domain'}, $list->{'name'}
         )
         ) {
         Log::do_log('err', 'Unable to get stat data %s for list %s',

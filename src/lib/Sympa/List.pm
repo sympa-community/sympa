@@ -3354,13 +3354,15 @@ sub send_probe_to_user {
 ## $list->delete_list_member('users' => \@u, 'exclude' => 1)
 ## $list->delete_list_member('users' => [$email], 'exclude' => 1)
 sub delete_list_member {
-    my $self      = shift;
-    my %param     = @_;
-    my @u         = @{$param{'users'}};
-    my $exclude   = $param{'exclude'};
-    my $parameter = $param{'parameter'
-        };    #case of deleting : bounce? manual signoff or deleted by admin?
-    my $daemon_name = $param{'daemon'};
+    my $self    = shift;
+    my %param   = @_;
+    my @u       = @{$param{'users'}};
+    my $exclude = $param{'exclude'};
+
+    # Case of deleting: "auto_del" (bounce management), "signoff" (manual
+    # signoff) or "del" (deleted by admin)?
+    my $operation = $param{'operation'};
+
     Log::do_log('debug2', '');
 
     my $name  = $self->{'name'};
@@ -3394,16 +3396,15 @@ sub delete_list_member {
         }
 
         #log in stat_table to make statistics
-        Log::db_stat_log(
-            {   'robot'     => $self->{'domain'},
-                'list'      => $name,
-                'operation' => 'del_subscriber',
-                'parameter' => $parameter,
-                'mail'      => $who,
-                'client'    => '',
-                'daemon'    => $daemon_name
-            }
-        );
+        if ($operation) {
+            Log::db_stat_log(
+                {   'robot'     => $self->{'domain'},
+                    'list'      => $name,
+                    'operation' => $operation,
+                    'mail'      => $who,
+                }
+            );
+        }
 
         $total--;
     }
@@ -5100,7 +5101,7 @@ sub update_list_admin {
 
 ## Adds a list member ; no overwrite.
 sub add_list_member {
-    my ($self, @new_users, $daemon) = @_;
+    my ($self, @new_users) = @_;
     Log::do_log('debug2', '%s', $self->{'name'});
 
     my $name = $self->{'name'};
@@ -5199,11 +5200,9 @@ sub add_list_member {
         Log::db_stat_log(
             {   'robot'     => $self->{'domain'},
                 'list'      => $self->{'name'},
-                'operation' => 'add_subscriber',
+                'operation' => 'add_or_subscribe',
                 'parameter' => '',
                 'mail'      => $new_user->{'email'},
-                'client'    => '',
-                'daemon'    => $daemon
             }
         );
 
@@ -11322,8 +11321,6 @@ sub purge {
             'operation' => 'purge_list',
             'parameter' => '',
             'mail'      => $email,
-            'client'    => '',
-            'daemon'    => 'daemon_name'
         }
     );
 
@@ -11379,8 +11376,13 @@ sub remove_bouncers {
             $self->{'name'}, $bouncer);
     }
 
-    unless ($self->delete_list_member('users' => $reftab, 'exclude' => ' 1'))
-    {
+    unless (
+        $self->delete_list_member(
+            'users'     => $reftab,
+            'exclude'   => '1',
+            'operation' => 'auto_del'
+        )
+        ) {
         Log::do_log('info', 'Error while calling sub delete_users');
         return undef;
     }

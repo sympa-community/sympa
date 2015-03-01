@@ -1018,8 +1018,13 @@ sub del {
 
     # Really delete and rewrite to disk.
     my $u;
-    unless ($u =
-        $list->delete_list_member('users' => [$email], 'exclude' => ' 1')) {
+    unless (
+        $u = $list->delete_list_member(
+            'users'     => [$email],
+            'exclude'   => '1',
+            'operation' => 'del'
+        )
+        ) {
         my $error =
             "Unable to delete user $email from list $listname for command 'del'";
         Log::do_log('info', 'DEL %s %s from %s failed, ' . $error);
@@ -1356,7 +1361,11 @@ sub signoff {
         }
 
         ## Really delete and rewrite to disk.
-        $list->delete_list_member('users' => [$sender], 'exclude' => ' 1');
+        $list->delete_list_member(
+            'users'     => [$sender],
+            'exclude'   => '1',
+            'operation' => 'signoff'
+        );
 
         ## Notify the owner
         if ($action =~ /notify/i) {

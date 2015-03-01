@@ -2045,8 +2045,9 @@ sub web_db_log {
 ###################################
 # log in stat_table via web interface
 sub web_db_stat_log {
+    my %options = @_;
 
-    my $data = shift;
+    my $data = {%options};
     $data->{'mail'} ||= $param->{'user'}{'email'}
         if defined $param->{'user'};
     $data->{'operation'} ||= $param->{'action'};
@@ -3850,12 +3851,7 @@ sub do_login {
         }
     );
 
-    web_db_stat_log(
-        {   'robot'     => $robot,
-            'operation' => $param->{'action'},
-            'mail'      => $param->{'user'}{'email'},
-        }
-    );
+    web_db_stat_log();
 
     do_redirect($session->{'redirect_url'});
     return;
@@ -4588,12 +4584,7 @@ sub do_logout {
         }
     );
 
-    web_db_stat_log(
-        {   'robot'     => $robot,
-            'operation' => $param->{'action'},
-            'mail'      => $param->{'user'}{'email'},
-        }
-    );
+    web_db_stat_log();
 
     if ($in{'previous_action'} eq 'referer') {
         $param->{'referer'} = tools::escape_chars($in{'previous_list'});
@@ -6682,8 +6673,9 @@ sub unsubscribe {
     } else {
         unless (
             $list->delete_list_member(
-                'users'   => [$authenticated_email_address],
-                'exclude' => ' 1'
+                'users'     => [$authenticated_email_address],
+                'exclude'   => ' 1',
+                'operation' => 'signoff',
             )
             ) {
             wwslog('info', 'Signoff failed');
@@ -8339,8 +8331,7 @@ sub do_del {
     $total = $list->delete_list_member(
         'users'     => \@removed_users,
         'exclude'   => '1',
-        'parameter' => 'deleted_by_admin',
-        'daemon'    => 'wwsympa.fcgi'
+        'operation' => 'del',
     );
 
     unless (defined $total) {
@@ -9026,14 +9017,7 @@ sub do_reject {
         }
     );
 
-    web_db_stat_log(
-        {   'robot'     => $robot,
-            'list'      => $list->{'name'},
-            "operation" => $param->{'action'},
-            'parameter' => "",
-            'mail'      => $param->{'user'}{'email'},
-        }
-    );
+    web_db_stat_log();
 
     Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
 
@@ -9958,14 +9942,7 @@ sub do_arc {
 
     #test pour différentier les action d'un robot et d'un simple abonné
 
-    web_db_stat_log(
-        {   'robot'     => $robot,
-            'list'      => $list->{'name'},
-            'operation' => $param->{'action'},
-            'parameter' => "",
-            'mail'      => $param->{'user'}{'email'},
-        }
-    );
+    web_db_stat_log();
 
     return 1;
 }
@@ -10271,13 +10248,7 @@ sub do_remove_arc {
         }
     );
 
-    #web_db_stat_log(
-    #    {   'robot'     => $robot,
-    #        'list'      => $list->{'name'},
-    #        'operation' => $param->{'action'},
-    #        'parameter' => "",
-    #    }
-    #);
+    #web_db_stat_log();
 
     $param->{'status'} = 'done';
 
@@ -11186,14 +11157,7 @@ sub do_install_pending_list {
     $param->{'status'} = $in{'status'};
 
     if ($in{'status'} eq 'closed') {
-        web_db_stat_log(
-            {   'robot'     => $robot,
-                'list'      => $list->{'name'},
-                'operation' => 'list_rejected',
-                'parameter' => '',
-                'mail'      => $param->{'user'}{'email'},
-            }
-        );
+        web_db_stat_log(operation => 'list_rejected');
     }
 
     $list = $param->{'list'} = $in{'list'} = undef;
@@ -13688,12 +13652,8 @@ sub do_copy_list {
     my $success = do_rename_list('copy');
     if ($success == 1) {
         web_db_stat_log(
-            {   'robot'     => $robot,
-                'list'      => $in{'new_listname'},
-                'operation' => 'copy_list',
-                'parameter' => '',
-                'mail'      => $param->{'user'}{'email'},
-            }
+            list      => $in{'new_listname'},
+            operation => 'copy_list',
         );
         return $success;
     }
@@ -13894,12 +13854,7 @@ sub do_close_list {
             $param->{'action'});
         web_db_log({'status' => 'success'});
 
-        web_db_stat_log(
-            {   'robot'     => $robot,
-                'list'      => $list->{'name'},
-                'operation' => $param->{'action'},
-            }
-        );
+        web_db_stat_log();
 
         return 'home';
     } else {
@@ -13971,12 +13926,7 @@ sub do_restore_list {
     Sympa::Report::notice_report_web('list_restored', {}, $param->{'action'});
     web_db_log({'status' => 'success'});
 
-    web_db_stat_log(
-        {   'robot'     => $robot,
-            'list'      => $list->{'name'},
-            'operation' => $param->{'action'},
-        }
-    );
+    web_db_stat_log();
 
     return 'admin';
 }
@@ -17521,14 +17471,7 @@ sub do_d_upload {
         }
     );
 
-    web_db_stat_log(
-        {   'robot'     => $robot,
-            'list'      => $list->{'name'},
-            'operation' => $param->{'action'},
-            'parameter' => $size,
-            'mail'      => $param->{'user'}{'email'},
-        }
-    );
+    web_db_stat_log(parameter => $size);
 
     return 'd_read';
 }
@@ -19188,14 +19131,7 @@ sub do_d_delete {
         }
     );
 
-    web_db_stat_log(
-        {   'robot'     => $robot,
-            'list'      => $list->{'name'},
-            'operation' => $param->{'action'},
-            'parameter' => "",
-            'mail'      => $param->{'user'}{'email'},
-        }
-    );
+    web_db_stat_log();
 
     $in{'list'} = $list_name;
     $in{'path'} = $current_directory;
@@ -19551,9 +19487,8 @@ sub do_d_create_dir {
         Sympa::Report::reject_report_web('user', 'incorrect_name',
             {'name' => $name_doc},
             $param->{'action'}, $list);
-        wwslog('err',
-            "do_d_create_dir : Unable to create directory $name_doc : incorrect name"
-        );
+        wwslog('err', 'Unable to create directory %s: incorrect name',
+            $name_doc);
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
@@ -19646,9 +19581,8 @@ sub do_d_create_dir {
         Sympa::Report::reject_report_web('user', 'doc_already_exist',
             {'name' => "$path/$name_doc"},
             $param->{'action'}, $list);
-        wwslog('err',
-            "do_d_create_dir : cannot create $path/$name_doc : file already exists"
-        );
+        wwslog('err', 'Can\'t create %s/%s: file already exists',
+            $path, $name_doc);
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
@@ -19687,8 +19621,10 @@ sub do_d_create_dir {
                 $param->{'action'},
                 $list
             );
-            wwslog('err',
-                "do_d_create_dir : Unable to create $doc_moderate : file already exists but not yet moderated"
+            wwslog(
+                'err',
+                'Unable to create %s: file already exists but not yet moderated',
+                $doc_moderate
             );
             web_db_log(
                 {   'robot'        => $robot,
@@ -19799,9 +19735,8 @@ sub do_d_create_dir {
                 $param->{'user'}{'email'},
                 $robot
             );
-            wwslog('err',
-                "do_d_create_dir : Failed to rename $path/$name_doc to $path/.$name_doc.moderate : $ERRNO"
-            );
+            wwslog('err', 'Failed to rename %s/%s to %s/.%s.moderate: %s',
+                $path, $name_doc, $path, $name_doc, $ERRNO);
             web_db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
@@ -19829,9 +19764,8 @@ sub do_d_create_dir {
                 $param->{'user'}{'email'},
                 $robot
             );
-            wwslog('err',
-                "do_d_create_dir : Failed to rename $desc_file to $path/.desc..$name_doc.moderate : $ERRNO"
-            );
+            wwslog('err', 'Failed to rename %s to %s/.desc..%s.moderate : %s',
+                $desc_file, $path, $name_doc, $ERRNO);
             web_db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
@@ -19871,26 +19805,12 @@ sub do_d_create_dir {
     );
 
     #web_db_stat_log : test before if the creation is a file or a directory
-    my $op;
     if ($type eq 'directory') {
-        $op = $param->{'action'} . '(directory)';
-        web_db_stat_log(
-            {   'robot'     => $robot,
-                'list'      => $list->{'name'},
-                'operation' => $op,
-                'parameter' => "",
-                'mail'      => $param->{'user'}{'email'},
-            }
-        );
+        web_db_stat_log(operation => 'd_create_dir');
     } else {
-        $op = $param->{'action'} . '(file)';
         web_db_stat_log(
-            {   'robot'     => $robot,
-                'list'      => $list->{'name'},
-                'operation' => $op,
-                'parameter' => $filesize,
-                'mail'      => $param->{'user'}{'email'},
-            }
+            operation => 'd_create_file',
+            parameter => $filesize,
         );
     }
 
@@ -22596,15 +22516,15 @@ sub do_stats {
 
     my $stats = {
         send_mail => {title => $language->gettext("Mail sending")},
-        add_subscriber =>
+        add_or_subscribe =>
             {title => $language->gettext("Subscription additions")},
-        unsubscription => {title => $language->gettext("Unsubscription")},
-        deleted_by_admin =>
-            {title => $language->gettext("Users deleted by admin")},
+        signoff => {title => $language->gettext("Unsubscription")},
+        del     => {title => $language->gettext("Users deleted by admin")},
+        auto_del =>
+            {title => $language->gettext("Users deleted automatically")},
         d_upload      => {title => $language->gettext("File uploading")},
         d_create_file => {title => $language->gettext("File creation")},
-        d_create_directory =>
-            {title => $language->gettext("Directory creation")},
+        d_create_dir  => {title => $language->gettext("Directory creation")},
     };
 
     foreach my $operation (keys $stats) {

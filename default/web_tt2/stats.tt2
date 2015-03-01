@@ -10,7 +10,7 @@
 <br>
 
 [% FOREACH stat_id IN
-  [ 'send_mail', 'add_subscriber', 'unsubscription', 'deleted_by_admin' ]
+  [ 'send_mail', 'add_or_subscribe', 'signoff', 'del', 'auto_del' ]
 ~%]
   [% SET o = stats.$stat_id ~%]
   [% SET chartid = "chartdiv" _ stat_id ~%]
