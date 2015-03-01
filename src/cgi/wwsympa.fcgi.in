@@ -23061,9 +23061,7 @@ sub do_viewlogs {
         }
 
         #display the number of rows of the query.
-        $param->{'total_results'} = $#{$param->{'log_entries'}} + 1;
-        $param->{'total_results'} = Log::return_rows_nb()
-            if (Log::return_rows_nb() != 0);
+        $param->{'total_results'} = scalar @{$param->{'log_entries'} || []};
 
         unless ($param->{'total_results'}) {
             #Sympa::Report::reject_report_web('user', 'no_logs', {},

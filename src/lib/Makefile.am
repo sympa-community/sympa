@@ -54,6 +54,7 @@ nobase_modules_DATA = \
 	Sympa/List.pm \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \
+	Sympa/Log.pm \
 	Log.pm \
 	Sympa/Mailer.pm \
 	Sympa/Marc.pm \
@@ -113,6 +114,7 @@ MAN3PM = \
 	Sympa/Language.pm \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \
+	Sympa/Log.pm \
 	Sympa/Mailer.pm \
 	Sympa/Message.pm \
 	Sympa/Message/Plugin.pm \
