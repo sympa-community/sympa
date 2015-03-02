@@ -1554,7 +1554,8 @@ sub upgrade {
         # As the field id_counter is no longer used but it has NOT NULL
         # constraint, it should be deleted.
         if ($sdm and $sdm->can('delete_field')) {
-            $sdm->delete_field('stat_counter_table', 'id_counter');
+            $sdm->delete_field(
+                {table => 'stat_counter_table', field => 'id_counter'});
         } else {
             Log::do_log('err',
                 'Can\'t delete id_counter field in stat_counter_table.  You must delete it manually.'
