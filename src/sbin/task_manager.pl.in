@@ -1300,9 +1300,10 @@ sub purge_logs_table {
 
 # delete logs in RDBMS
 sub _db_log_del {
-    my $exp = Conf::get_robot_conf('*', 'logs_expiration_period');
-    my $date = time - ($exp * 30 * 24 * 60 * 60);
+    my ($exp, $date);
 
+    $exp = Conf::get_robot_conf('*', 'logs_expiration_period');
+    $date = time - ($exp * 31 * 24 * 60 * 60);
     unless (
         SDM::do_prepared_query(
             q{DELETE FROM logs_table
@@ -1313,8 +1314,31 @@ sub _db_log_del {
         Log::do_log('err', 'Unable to delete db_log entry from the database');
         return undef;
     }
-    return 1;
 
+    $exp = Conf::get_robot_conf('*', 'stats_expiration_period');
+    $date = time - ($exp * 31 * 24 * 60 * 60);
+    unless (
+        SDM::do_prepared_query(
+            q{DELETE FROM stat_table
+              WHERE date_stat <= ?},
+            $date
+        )
+        ) {
+        Log::do_log('err', 'Unable to delete db_log entry from the database');
+        return undef;
+    }
+    unless (
+        SDM::do_prepared_query(
+            q{DELETE FROM stat_counter_table
+              WHERE end_date_counter <= ?},
+            $date
+        )
+        ) {
+        Log::do_log('err', 'Unable to delete db_log entry from the database');
+        return undef;
+    }
+
+    return 1;
 }
 
 ## remove sessions from session_table if older than $Conf::Conf{'session_table_ttl'}

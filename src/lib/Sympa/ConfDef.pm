@@ -1073,6 +1073,11 @@ our @params = (
         'default' => '3',
         'file'    => 'sympa.conf',
     },
+    {   'name' => 'stats_expiration_period',
+        'gettext_id' =>
+            'Number of months that elapse before statistics are expired',
+        'default' => '3',
+    },
     {   'name'    => 'purge_one_time_ticket_table_task',
         'default' => 'daily',
     },
