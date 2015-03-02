@@ -11511,9 +11511,7 @@ sub do_create_list_request {
 
     $allow_absolute_path = 1;
 
-    foreach my $template (keys %{$param->{'list_list_tpl'}}) {
-        $param->{'tpl_count'}++;
-    }
+    $param->{'tpl_count'} = scalar keys %{$param->{'list_list_tpl'} || {}};
 
     $param->{'list_list_tpl'}{$in{'template'}}{'selected'} = 1
         if ($in{'template'});
