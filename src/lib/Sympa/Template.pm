@@ -36,7 +36,6 @@ use Template;
 
 use Sympa::Constants;
 use Sympa::Language;
-use Sympa::Template::Compat;
 use tools;
 use Sympa::Tools::Text;
 
