@@ -73,6 +73,7 @@ nobase_modules_DATA = \
 	Sympa/SOAP.pm \
 	Sympa/SOAP/Transport.pm \
 	Sympa/Task.pm \
+	Sympa/Template.pm \
 	Sympa/Template/Compat.pm \
 	tools.pm \
 	Sympa/Tools/Daemon.pm \
@@ -121,6 +122,7 @@ MAN3PM = \
 	Sympa/Message/Plugin/FixEncoding.pm \
 	Sympa/ModDef.pm \
 	Sympa/Regexps.pm \
+	Sympa/Template.pm \
 	Sympa/User.pm
 
 EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
