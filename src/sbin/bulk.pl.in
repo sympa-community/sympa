@@ -64,7 +64,6 @@ unless (
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
-
 if ($main::options{'help'}) {
     pod2usage(0);
 } elsif ($main::options{'version'}) {
@@ -73,12 +72,12 @@ if ($main::options{'help'}) {
 }
 
 if ($main::options{'debug'}) {
-    $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
+    $main::options{'log_level'} = 2 unless $main::options{'log_level'};
+    $main::options{'foreground'} = 1;
 }
 
-$main::options{'foreground'} = 1 if ($main::options{'debug'});
-$main::options{'log_to_stderr'} = 1
-    if ($main::options{'debug'} || $main::options{'foreground'});
+my $log = Sympa::Log->instance;
+$log->{log_to_stderr} = 'all' if $main::options{'foreground'};
 
 # Load sympa.conf
 unless (Conf::load()) {

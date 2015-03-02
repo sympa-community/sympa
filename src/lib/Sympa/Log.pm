@@ -37,15 +37,9 @@ use base qw(Class::Singleton);
 
 # Constructor for Class::Singleton.
 sub _new_instance {
-    my $class   = shift;
-    my @options = @_;
+    my $class = shift;
 
-    my $self = bless {} => $class;
-    if (@options) {
-        return $self->openlog(@options);
-    } else {
-        return $self;
-    }
+    bless {} => $class;
 }
 
 # Old name: Log::do_openlog().
@@ -99,8 +93,8 @@ sub syslog {
     }
 
     # do not log if log level is too high regarding the log requested by user
-    return if defined $self->{_level}  and $levels{$level} > $self->{_level};
-    return if !defined $self->{_level} and $levels{$level} > 0;
+    return if defined $self->{level}  and $levels{$level} > $self->{level};
+    return if !defined $self->{level} and $levels{$level} > 0;
 
     ## Do not display variables which are references.
     my @param = ();
@@ -127,7 +121,7 @@ sub syslog {
 
     ## If in 'err' level, build a stack trace,
     ## except if syslog has not been setup yet.
-    if (defined $self->{_level} and $level eq 'err') {
+    if (defined $self->{level} and $level eq 'err') {
         my $go_back = 0;
         my @calls;
 
@@ -181,15 +175,15 @@ sub syslog {
     }
 
     ## Output to STDERR if needed
-    if (   !defined $self->{_level}
-        or ($main::options{'foreground'} and $main::options{'log_to_stderr'})
-        or (    $main::options{'foreground'}
-            and $main::options{'batch'}
-            and $level eq 'err')
+    if (not defined $self->{level}
+        or ($self->{log_to_stderr}
+            and ($self->{log_to_stderr} eq 'all'
+                or 0 <= index($self->{log_to_stderr}, $level))
+        )
         ) {
         print STDERR "$message\n";
     }
-    return unless defined $self->{_level};
+    return unless defined $self->{level};
 
     # Output to syslog
     # Note: Sys::Syslog <= 0.07 which are bundled in Perl <= 5.8.7 pass
@@ -453,17 +447,16 @@ sub get_first_db_log {
     );
 
     my $statement =
-        sprintf
-            q{SELECT date_logs, robot_logs AS robot, list_logs AS list,
-                     action_logs AS action,
-                     parameters_logs AS parameters,
-                     target_email_logs AS target_email,
-                     msg_id_logs AS msg_id, status_logs AS status,
-                     error_type_logs AS error_type,
-                     user_email_logs AS user_email,
-                     client_logs AS client, daemon_logs AS daemon
-              FROM logs_table
-              WHERE robot_logs = %s }, $sdm->quote($select->{'robot'});
+        sprintf q{SELECT date_logs, robot_logs AS robot, list_logs AS list,
+                         action_logs AS action,
+                         parameters_logs AS parameters,
+                         target_email_logs AS target_email,
+                         msg_id_logs AS msg_id, status_logs AS status,
+                         error_type_logs AS error_type,
+                         user_email_logs AS user_email,
+                         client_logs AS client, daemon_logs AS daemon
+                  FROM logs_table
+                  WHERE robot_logs = %s }, $sdm->quote($select->{'robot'});
 
     #if a type of target and a target are specified
     if (($select->{'target_type'}) && ($select->{'target_type'} ne 'none')) {
@@ -553,18 +546,18 @@ sub get_first_db_log {
     }
     $self->{_sth} = $sth;
 
-    my $log = $sth->fetchrow_hashref('NAME_lc');
+    my $row = $sth->fetchrow_hashref('NAME_lc');
 
     ## If no rows returned, return an empty hash
     ## Required to differenciate errors and empty results
-    unless ($log) {
+    unless ($row) {
         return {};
     }
 
     ## We can't use the "AS date" directive in the SELECT statement because
     ## "date" is a reserved keywork with Oracle
-    $log->{date} = $log->{date_logs} if defined($log->{date_logs});
-    return $log;
+    $row->{date} = $row->{date_logs} if defined $row->{date_logs};
+    return $row;
 
 }
 
@@ -574,25 +567,18 @@ sub get_next_db_log {
     my $sth = $self->{_sth};
     die 'Bug in logic.  Ask developer' unless $sth;
 
-    my $log = $sth->fetchrow_hashref('NAME_lc');
+    my $row = $sth->fetchrow_hashref('NAME_lc');
 
-    unless (defined $log) {
+    unless (defined $row) {
         $sth->finish;
         delete $self->{_sth};
     }
 
     ## We can't use the "AS date" directive in the SELECT statement because
     ## "date" is a reserved keywork with Oracle
-    $log->{date} = $log->{date_logs} if defined($log->{date_logs});
+    $row->{date} = $row->{date_logs} if defined $row->{date_logs};
 
-    return $log;
-}
-
-# Old name: Log::set_log_level().
-sub set_level {
-    my $self = shift;
-
-    $self->{_level} = shift;
+    return $row;
 }
 
 # Aggregate data from stat_table to stat_counter_table.
@@ -769,7 +755,12 @@ Sympa::Log - Logging facility of Sympa
 
 =head1 SYNOPSIS
 
-TBD.
+  use Sympa::Log;
+
+  my $log = Sympa::Log->instance;
+  $log->openlog($facility, 'inet');
+  $log->{level} = 0;
+  $log->syslog('info', '%s: Stat logging', $$);
 
 =head1 DESCRIPTION
 
@@ -779,11 +770,10 @@ TBD.
 
 =over
 
-=item instance ( [ $facility, $socket_type, [ options... ] ] )
+=item instance ( )
 
 I<Constructor>.
 Creates new singleton instance of L<Sympa::Log>.
-TBD.
 
 =item openlog ( $facility, $socket_type, [ options ... ] )
 
@@ -813,10 +803,6 @@ TBD.
 
 TBD.
 
-=item set_level
-
-TBD.
-
 =item aggregate_data
 
 TBD.
@@ -824,6 +810,23 @@ TBD.
 =item aggregate_daily_data
 
 TBD.
+
+=back
+
+=head2 Properties
+
+Instance of L<Sympa::Log> has following properties.
+
+=over
+
+=item {level}
+
+Logging level.  Integer or C<undef>.
+
+=item {log_to_stderr}
+
+If set, print logs by syslog() to standard error.
+Property value may be log level(s) to print or C<'all'>.
 
 =back
 

@@ -62,7 +62,6 @@ unless (
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
-
 if ($main::options{'help'}) {
     pod2usage(0);
 } elsif ($main::options{'version'}) {
@@ -71,12 +70,12 @@ if ($main::options{'help'}) {
 }
 
 if ($main::options{'debug'}) {
-    $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
+    $main::options{'log_level'} = 2 unless $main::options{'log_level'};
+    $main::options{'foreground'} = 1;
 }
-# Some option force foreground mode
-$main::options{'foreground'} = 1 if ($main::options{'debug'});
-$main::options{'log_to_stderr'} = 1
-    if ($main::options{'debug'} || $main::options{'foreground'});
+
+my $log = Sympa::Log->instance;
+$log->{log_to_stderr} = 'all' if $main::options{'foreground'};
 
 my $adrlist = {};
 
@@ -173,8 +172,8 @@ my $spool_task = $Conf::Conf{'queuetask'};
 my @tasks;    # list of tasks in the spool
 
 # won't execute send_msg and delete_subs commands if true, only log
-undef my $log;
-#$log = 1;
+undef my $log_only;
+#$log_only = 1;
 
 ## list of list task models
 #my @list_models = ('expire', 'remind', 'sync_include');
@@ -969,7 +968,7 @@ sub send_msg {
 
         foreach my $email (keys %{$Rvars->{$var}}) {
             Log::do_log('notice', '--> message sent to %s', $email);
-            if (!$log) {
+            unless ($log_only) {
                 unless (
                     tools::send_file(
                         '*', $template, $email, $Rvars->{$var}{$email}
@@ -985,7 +984,7 @@ sub send_msg {
 
         foreach my $email (keys %{$Rvars->{$var}}) {
             Log::do_log('notice', '--> message sent to %s', $email);
-            if (!$log) {
+            unless ($log_only) {
                 unless (
                     tools::send_file(
                         $list, $template, $email, $Rvars->{$var}{$email}
@@ -1169,7 +1168,7 @@ sub delete_subs_cmd {
             my $u = $list->delete_list_member(
                 users     => [$email],
                 operation => 'auto_del'
-            ) unless $log;
+            ) unless $log_only;
             Log::do_log('notice', '--> %s deleted', $email);
             $selection{$email} = {};
         }

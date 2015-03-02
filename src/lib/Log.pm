@@ -78,9 +78,9 @@ sub get_next_db_log {
     return Sympa::Log->instance->get_next_db_log(@_);
 }
 
-# OBSOLETED.  Use Sympa::Log::set_level().
+# OBSOLETED.  Use {level} property of Sympa::Log instance.
 sub set_log_level {
-    return Sympa::Log->instance->set_level(@_);
+    Sympa::Log->instance->{level} = shift;
 }
 
 #OBSOLETED: No longer used.
