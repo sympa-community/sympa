@@ -22527,7 +22527,7 @@ sub do_stats {
         d_create_dir  => {title => $language->gettext("Directory creation")},
     };
 
-    foreach my $operation (keys $stats) {
+    foreach my $operation (keys %$stats) {
         my $data = Log::aggregate_daily_data($list, $operation);
         if (%{$data || {}}) {
             $stats->{$operation}{'stats_values'} = '[' . join(
