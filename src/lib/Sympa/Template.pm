@@ -30,7 +30,7 @@ package Sympa::Template;
 use strict;
 use warnings;
 use CGI::Util;
-use English;    # FIXME: drop $MATCH usage
+use English qw(-no_match_vars);
 use MIME::EncWords;
 use Template;
 
@@ -61,44 +61,6 @@ sub qencode {
         Charset  => tools::lang2charset($language->get_lang),
         Field    => "message-id"
     );
-}
-
-sub escape_url {
-
-    my $string = shift;
-
-    $string =~ s/[\s+]/sprintf('%%%02x', ord($MATCH))/eg;
-    # Some MUAs aren't able to decode ``%40'' (escaped ``@'') in e-mail
-    # address of mailto: URL, or take ``@'' in query component for a
-    # delimiter to separate URL from the rest.
-    my ($body, $query) = split(/\?/, $string, 2);
-    if (defined $query) {
-        $query =~ s/\@/sprintf('%%%02x', ord($MATCH))/eg;
-        $string = $body . '?' . $query;
-    }
-
-    return $string;
-}
-
-sub escape_xml {
-    my $string = shift;
-
-    $string =~ s/&/&amp;/g;
-    $string =~ s/</&lt;/g;
-    $string =~ s/>/&gt;/g;
-    $string =~ s/\'/&apos;/g;
-    $string =~ s/\"/&quot;/g;
-
-    return $string;
-}
-
-sub escape_quote {
-    my $string = shift;
-
-    $string =~ s/\'/\\\'/g;
-    $string =~ s/\"/\\\"/g;
-
-    return $string;
 }
 
 sub encode_utf8 {
@@ -231,14 +193,14 @@ sub parse {
             loc      => [\&maketext, 1],
             helploc  => [\&maketext, 1],
             locdt    => [\&locdatetime, 1],
-            wrap         => [\&wrap,         1],
-            optdesc      => [\&optdesc,      1],
-            qencode      => [\&qencode,      0],
-            escape_xml   => [\&escape_xml,   0],
-            escape_url   => [\&escape_url,   0],
-            escape_quote => [\&escape_quote, 0],
-            decode_utf8  => [\&decode_utf8,  0],
-            encode_utf8  => [\&encode_utf8,  0]
+            wrap         => [\&wrap,                1],
+            optdesc      => [\&optdesc,             1],
+            qencode      => [\&qencode,             0],
+            escape_xml   => [\&tools::escape_xml,   0],
+            escape_url   => [\&tools::escape_url,   0],
+            escape_quote => [\&tools::escape_quote, 0],
+            decode_utf8  => [\&decode_utf8,         0],
+            encode_utf8  => [\&encode_utf8,         0]
         }
     };
 

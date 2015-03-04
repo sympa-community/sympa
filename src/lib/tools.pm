@@ -31,7 +31,7 @@ use DateTime;
 use Digest::MD5;
 use Encode qw();
 use Encode::MIME::Header;    # for 'MIME-Q' encoding
-use English qw(-no_match_vars);
+use English;                 # FIXME: drop $MATCH usage
 use MIME::EncWords;
 use POSIX qw();
 use Sys::Hostname qw();
@@ -51,7 +51,6 @@ use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
-use tt2;
 
 ## Returns an HTML::StripScripts::Parser object built with  the parameters
 ## provided as arguments.
@@ -589,6 +588,46 @@ sub unescape_html {
     return $s;
 }
 
+# Old name: tt2::escape_url().
+sub escape_url {
+    my $string = shift;
+
+    $string =~ s/[\s+]/sprintf('%%%02x', ord($MATCH))/eg;
+    # Some MUAs aren't able to decode ``%40'' (escaped ``@'') in e-mail
+    # address of mailto: URL, or take ``@'' in query component for a
+    # delimiter to separate URL from the rest.
+    my ($body, $query) = split(/\?/, $string, 2);
+    if (defined $query) {
+        $query =~ s/\@/sprintf('%%%02x', ord($MATCH))/eg;
+        $string = $body . '?' . $query;
+    }
+
+    return $string;
+}
+
+# Old name: tt2::escape_xml().
+sub escape_xml {
+    my $string = shift;
+
+    $string =~ s/&/&amp;/g;
+    $string =~ s/</&lt;/g;
+    $string =~ s/>/&gt;/g;
+    $string =~ s/\'/&apos;/g;
+    $string =~ s/\"/&quot;/g;
+
+    return $string;
+}
+
+# Old name: tt2::escape_quote().
+sub escape_quote {
+    my $string = shift;
+
+    $string =~ s/\'/\\\'/g;
+    $string =~ s/\"/\\\"/g;
+
+    return $string;
+}
+
 # Check sum used to authenticate communication from wwsympa to sympa
 # DEPRECATED: No longer used: This is moved to upgrade_send_spool.pl to be
 # used for migrating old spool.
@@ -817,7 +856,7 @@ sub request_auth {
             $data->{'type'}    = 'invite';
         }
 
-        $data->{'command_escaped'} = tt2::escape_url($data->{'command'});
+        $data->{'command_escaped'} = tools::escape_url($data->{'command'});
         $data->{'auto_submitted'}  = 'auto-replied';
         unless (tools::send_file($list, 'request_auth', $email, $data)) {
             Log::do_log('notice',
@@ -828,9 +867,10 @@ sub request_auth {
     } else {
         if ($cmd eq 'remind') {
             my $keyauth = tools::compute_auth('*', '', $cmd);
-            $data->{'command'}         = "auth $keyauth $cmd *";
-            $data->{'command_escaped'} = tt2::escape_url($data->{'command'});
-            $data->{'type'}            = 'remind';
+            $data->{'command'} = "auth $keyauth $cmd *";
+            $data->{'command_escaped'} =
+                tools::escape_url($data->{'command'});
+            $data->{'type'} = 'remind';
 
         }
         $data->{'auto_submitted'} = 'auto-replied';

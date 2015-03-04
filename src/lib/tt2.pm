@@ -65,9 +65,9 @@ sub get_error {
     return $last_error;
 }
 
-# OBSOLETED.  Use Sympa::Template::escape_url().
+# OBSOLETED.  Use tools::escape_url().
 sub escape_url {
-    return Sympa::Template::escape_url(@_);
+    return tools::escape_url(@_);
 }
 
 # OBSOLETED.  Use Sympa::Template::parse().
