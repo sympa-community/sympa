@@ -34,7 +34,7 @@ my @other_include_path;
 my $allow_absolute;
 
 ## To add a directory to the TT2 include_path
-# OBSOLETED.
+# OBSOLETED.  No longer used.
 sub add_include_path {
     my $path = shift;
 
@@ -42,13 +42,13 @@ sub add_include_path {
 }
 
 ## Get current INCLUDE_PATH
-# OBSOLETED.
+# OBSOLETED.  No longer used.
 sub get_include_path {
     return @other_include_path;
 }
 
 ## Clear current INCLUDE_PATH
-# OBSOLETED.
+# OBSOLETED.  No longer used.
 sub clear_include_path {
     @other_include_path = ();
 }
@@ -65,6 +65,11 @@ sub get_error {
     return $last_error;
 }
 
+# OBSOLETED.  Use Sympa::Template::escape_url().
+sub escape_url {
+    return Sympa::Template::escape_url(@_);
+}
+
 # OBSOLETED.  Use Sympa::Template::parse().
 sub parse_tt2 {
     my ($data, $tpl_string, $output, $include_path, $options) = @_;
@@ -75,9 +80,11 @@ sub parse_tt2 {
     push @{$include_path}, @other_include_path;
     clear_include_path();    # Reset it
 
-    my $template = Sympa::Template->new;
-    $template->{include_path}   = $include_path;
-    $template->{allow_absolute} = $allow_absolute;
+    my $template = Sympa::Template->new(
+        undef,
+        include_path   => $include_path,
+        allow_absolute => $allow_absolute
+    );
     undef $allow_absolute;
     my $ret =
         $template->parse($data, $tpl_string, $output, %{$options || {}});

@@ -84,6 +84,7 @@ use Sympa::Scenario;
 use SDM;
 use Sympa::Session;
 use Sympa::SharedDocument;
+use Sympa::Template;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -91,7 +92,6 @@ use Sympa::Tools::Password;
 use Sympa::Tools::Text;
 use Sympa::Tools::WWW;
 use Sympa::Tracking;
-use tt2;
 use Sympa::User;
 
 ## WWSympa librairies
@@ -114,6 +114,7 @@ my $rss;
 my $ajax;
 
 my $allow_absolute_path;    #FIXME: to be removed in the future.
+my @other_include_path;     #FIXME: ditto.
 
 ## Load sympa config
 unless (Conf::load()) {
@@ -1889,26 +1890,18 @@ while ($query = new_loop()) {
             $param->{'list_conf'} = $list->{'admin'};
         }
 
-        my $tt2_include_path = tools::get_search_path(
+        my $template = Sympa::Template->new(
             $list || $robot,
-            subdir => 'web_tt2',
-            lang   => $param->{'lang'}
+            plugins => $plugins,
+            subdir  => 'web_tt2',
+            lang    => $param->{'lang'}
         );
-
-        unshift @$tt2_include_path, $plugins->tt2Paths
-            if $plugins;
-
-        unless (
-            tt2::parse_tt2(
-                $param, 'rss.tt2', \*STDOUT, $tt2_include_path, {}
-            )
-            ) {
-            my $error = tt2::get_error();
+        unless ($template->parse($param, 'rss.tt2', \*STDOUT)) {
+            my $error = $template->{last_error};
             $param->{'tt2_error'} = $error;
             tools::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
         }
-
     } elsif ($ajax) {
         print "Cache-control: no-cache\n";
         print "Content-Type: text/html; charset=utf-8\n\n";
@@ -1924,21 +1917,14 @@ while ($query = new_loop()) {
             $param->{'list_conf'} = $list->{'admin'};
         }
 
-        my $tt2_include_path = tools::get_search_path(
+        my $template = Sympa::Template->new(
             $list || $robot,
-            subdir => 'web_tt2',
-            lang   => $param->{'lang'}
+            plugins => $plugins,
+            subdir  => 'web_tt2',
+            lang    => $param->{'lang'}
         );
-
-        unshift @$tt2_include_path, $plugins->tt2Paths
-            if $plugins;
-
-        unless (
-            tt2::parse_tt2(
-                $param, 'ajax.tt2', \*STDOUT, $tt2_include_path, {}
-            )
-            ) {
-            my $error = tt2::get_error();
+        unless ($template->parse($param, 'ajax.tt2', \*STDOUT)) {
+            my $error = $template->{last_error};
             $param->{'tt2_error'} = $error;
             tools::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
@@ -2832,38 +2818,28 @@ sub send_html {
     $param_copy->{plugins} =
         $plugins ? sub { $plugins->tt2Fragments(@_) } : sub { () };
 
-    ## Save special paths.
-    my @added_include_path = tt2::get_include_path();
-    tt2::clear_include_path();
-
     ## Custom CSSes.  They are stored to $param_copy so that they won't be
     ## escaped.
 
-    # Do not include locale paths.
-    # The css.tt2 by each locales will override styles in main CSS.
-    my $tt2_include_path =
-        tools::get_search_path($list || $robot, subdir => 'web_tt2');
-
-    unshift @$tt2_include_path, $plugins->tt2Paths
-        if $plugins;
-
     # testing custom CSS.
     if ($session->{'custom_css'}) {
-        my $custom_css;
-        unless (
-            tt2::parse_tt2(
-                $param, 'css.tt2', \$custom_css, $tt2_include_path
-            )
-            ) {
+        # Do not include locale paths (lang parameter).
+        # The css.tt2 by each locales will override styles in main CSS.
+        my $css;
+        my $css_template = Sympa::Template->new(
+            $list || $robot,
+            plugins => $plugins,
+            subdir  => 'web_tt2'
+        );
+        unless ($css_template->parse($param, 'css.tt2', \$css)) {
             wwslog('info', 'Error while parsing custom CSS');
             delete $param_copy->{'custom_css'};
         } else {
-            $param_copy->{'custom_css'} = $custom_css;
+            $param_copy->{'custom_css'} = $css;
         }
     }
 
     # per-locale CSS.
-    my $locale_css;
     if (tools::search_fullpath(
             $list || $robot, 'css.tt2',
             subdir    => 'web_tt2',
@@ -2871,50 +2847,39 @@ sub send_html {
             lang_only => 1
         )
         ) {
-        my $tt2_include_path = tools::get_search_path(
+        # Conversely, include only locale paths.
+        my $css;
+        my $css_template = Sympa::Template->new(
             $list || $robot,
             subdir    => 'web_tt2',
             lang      => $param->{'lang'},
             lang_only => 1
         );
-
-        unless (
-            tt2::parse_tt2(
-                $param, 'css.tt2', \$locale_css, $tt2_include_path
-            )
-            ) {
+        unless ($css_template->parse($param, 'css.tt2', \$css)) {
             wwslog('info', 'Error while parsing CSS css.tt2 for lang %s',
                 $param->{'lang'});
         } else {
-            $param_copy->{'locale_css'} = $locale_css;
+            $param_copy->{'locale_css'} = $css;
         }
     }
 
-    ## Now include locale paths.
-    $tt2_include_path = tools::get_search_path(
+    # Now include locale paths (lang parameter).
+    my $template = Sympa::Template->new(
         $list || $robot,
-        subdir => 'web_tt2',
-        lang   => $param->{'lang'}
+        allow_absolute => $allow_absolute_path,
+        plugins        => $plugins,
+        subdir         => 'web_tt2',
+        lang           => $param->{'lang'},
+        include_path   => [@other_include_path]
     );
-
-    ## Restore special paths and enable absolute path if neccesary.
-    foreach my $dir (@added_include_path) {
-        tt2::add_include_path($dir);
-    }
-    tt2::allow_absolute_path() if $allow_absolute_path;
+    # Reset additional settings.
     undef $allow_absolute_path;
+    @other_include_path = ();
 
-    unshift @$tt2_include_path, $plugins->tt2Paths
-        if $plugins;
-
-    ## Output the content.
+    # Then output the content.
     unless (
-        tt2::parse_tt2(
-            $param_copy, $tt2_file, \*STDOUT,
-            $tt2_include_path, {'has_header' => 1}
-        )
-        ) {
-        my $error = tt2::get_error();
+        $template->parse($param_copy, $tt2_file, \*STDOUT, has_header => 1)) {
+        my $error = $template->{last_error};
 
         if (    $param->{'action'} eq 'help'
             and ref $error
@@ -2930,8 +2895,8 @@ sub send_html {
             (ref $error ? $error->as_string : $error), '<>&"');
         $param->{'tt2_error'}      = $error_string;
         $param_copy->{'tt2_error'} = $error_string;
-        tt2::parse_tt2($param_copy, 'tt2_error.tt2', \*STDOUT,
-            $tt2_include_path, {'has_header' => 1});
+        $template->parse($param_copy, 'tt2_error.tt2', \*STDOUT,
+            has_header => 1);
         print "\n\n";    # when tt2 failed to parse
     }
 }
@@ -5225,7 +5190,7 @@ sub do_info {
         $param->{'info_content'} =~ s/\n/\<br\/\>/g;
     }
 
-    tt2::add_include_path($list->{'dir'});
+    push @other_include_path, $list->{'dir'};
 
     return 1;
 }
@@ -7867,10 +7832,9 @@ sub do_skinsedit {
     }
 
     if ($in{'subaction'} eq 'install' or $in{'installcss'}) {
-        ## Do not include locale subdirectories.
-        ## The css.tt2 by each locales will override styles in main CSS.
-        my $tt2_include_path =
-            tools::get_search_path($robot, subdir => 'web_tt2');
+        # Do not include locale subdirectories (lang parameter).
+        # The css.tt2 by each locale will override styles in main CSS.
+        my $css_template = Sympa::Template->new($robot, subdir => 'web_tt2');
 
         my $date = time;
         my $style_file;
@@ -7946,9 +7910,8 @@ sub do_skinsedit {
                 wwslog('err', 'Can\'t open file (write) %s', $css_file);
                 return undef;
             }
-            unless (
-                tt2::parse_tt2($param, 'css.tt2', \*CSS, $tt2_include_path)) {
-                my $error = tt2::get_error();
+            unless ($css_template->parse($param, 'css.tt2', \*CSS)) {
+                my $error = $css_template->{last_error};
                 $param->{'tt2_error'} = $error;
                 tools::send_notify_to_listmaster($robot, 'web_tt2_error',
                     [$error]);
@@ -9288,7 +9251,7 @@ sub do_viewmod {
         $param->{'file'}           = $html_dir . '/' . $in{'file'};
         $param->{'bypass'}         = 1;
     } else {
-        tt2::add_include_path($html_dir);
+        push @other_include_path, $html_dir;
     }
 
     $param->{'base'} = sprintf "%s/viewmod/%s/%s/",
@@ -9360,7 +9323,7 @@ sub do_viewmod_old {
         $param->{'file'}           = $tmp_dir . '/' . $in{'file'};
         $param->{'bypass'}         = 1;
     } else {
-        tt2::add_include_path($tmp_dir);
+        push @other_include_path, $tmp_dir;
     }
 
     $param->{'base'} = sprintf "%s/viewmod/%s/%s/",
@@ -9918,7 +9881,7 @@ sub do_arc {
         ## It allows to set the appropriate utf8 binmode on the FH
         open $param->{'file_handle'}, "<", $arc_file_path;
 
-        tt2::add_include_path($arc_month_path);
+        push @other_include_path, $arc_month_path;
     } else {
 
         if ($in{'arc_file'} =~ /\.(\w+)$/) {
@@ -11027,7 +10990,7 @@ sub do_set_pending_list_request {
     $param->{'list_serial'}       = $list->{'admin'}{'serial'};
     $param->{'list_status'}       = $list->{'admin'}{'status'};
 
-    tt2::add_include_path($list->{'dir'});
+    push @other_include_path, $list->{'dir'};
 
     return 1;
 }
@@ -21838,8 +21801,9 @@ sub do_send_mail {
     {
         my $new_message = $message->dup;
         unless (defined $new_message->personalize($list)) {
+            # FIXME: Get last_error of template object.
             Sympa::Report::reject_report_web('user', 'merge_failed',
-                {'error' => tt2::get_error()},
+                {'error' => 'Syntax error'},
                 $param->{'action'});
             return 'compose_mail';
         }
@@ -23440,13 +23404,11 @@ sub do_css {
     print "Content-type: text/css; charset=utf-8\n\n";
     $param->{'css'} = $in{'file'};
 
-    ## Do not include locale subdirectories.
-    ## The css.tt2 by each locales will override styles in main CSS.
-    my $tt2_include_path =
-        tools::get_search_path($robot, subdir => 'web_tt2');
-
-    unless (tt2::parse_tt2($param, 'css.tt2', \*STDOUT, $tt2_include_path)) {
-        my $error = tt2::get_error();
+    # Do not include locale subdirectories (lang parameter).
+    # The css.tt2 by each locale will override styles in main CSS.
+    my $css_template = Sympa::Template->new($robot, subdir => 'web_tt2');
+    unless ($css_template->parse($param, 'css.tt2', \*STDOUT)) {
+        my $error = $css_template->{last_error};
         $param->{'tt2_error'} = $error;
         tools::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
         wwslog('info', '/%s: error', $in{'file'});
@@ -23519,14 +23481,14 @@ sub do_rss_request {
 }
 
 sub do_wsdl {
-
     wwslog('info', '');
-    my $sympawsdl = tools::search_fullpath($robot, 'sympa.wsdl');
 
-    unless (-r $sympawsdl) {
+    my $sympawsdl;
+    unless ($sympawsdl = tools::search_fullpath($robot, 'sympa.wsdl')
+        and -r $sympawsdl) {
         Sympa::Report::reject_report_web('intern', 'err_404', {},
             $param->{'action'});
-        wwslog('err', 'Could not find $sympawsdl');
+        wwslog('err', 'Could not find sympa.wsdl');
         return undef;
     }
 
@@ -23544,19 +23506,9 @@ sub do_wsdl {
 
     $param->{'conf'}{'soap_url'} = $soap_url;
 
-    ## Get the directory path, without the file name
-    my $wsdl_path = $sympawsdl;
-    $wsdl_path =~ s/\/sympa.wsdl//;
+    my $template = Sympa::Template->new($robot);
+    $template->parse($param, 'sympa.wsdl', \*STDOUT);
 
-    tt2::parse_tt2($param, 'sympa.wsdl', \*STDOUT, [$wsdl_path]);
-
-#    unless (open (WSDL,$sympawsdl)) {
-# 	error_message('404');
-# 	wwslog('info','Could not open $sympawsdl');
-# 	return undef;
-#     }
-#    print <WSDL>;
-#     close WSDL;
     return 1;
 }
 
@@ -23629,7 +23581,7 @@ sub _ca_get_file {
 sub _ca_add_file_path_to_tt2_include_path {
     my $file = shift;
     $file =~ s/\/[^\/]+$//;
-    tt2::add_include_path($file);
+    push @other_include_path, $file;
 }
 
 # Process custom action

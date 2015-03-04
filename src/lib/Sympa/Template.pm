@@ -42,12 +42,13 @@ use Sympa::Tools::Text;
 my $language = Sympa::Language->instance;
 
 sub new {
-    my $class = shift;
+    my $class   = shift;
+    my $that    = shift;
+    my %options = @_;
 
-    bless {
-        include_path   => [],
-        allow_absolute => undef,
-    } => $class;
+    $options{include_path} ||= [];
+
+    bless {%options, context => $that} => $class;
 }
 
 sub qencode {
@@ -205,17 +206,21 @@ sub parse {
     my $output     = shift;
     my %options    = @_;
 
-    # An array can be used as a template (instead of a filename)
-    if (ref $tpl_string eq 'ARRAY') {
-        $tpl_string = \join('', @$tpl_string);
+    my @include_path;
+    if ($self->{plugins}) {
+        push @include_path, @{$self->{plugins}->tt2Paths || []};
     }
-
-    # Set language if possible: Must be restored later
-    $language->push_lang($data->{lang} || undef);
+    if (defined $self->{context}) {
+        push @include_path,
+            @{tools::get_search_path($self->{context}, %$self) || []};
+    }
+    if (@{$self->{include_path} || []}) {
+        push @include_path, @{$self->{include_path}};
+    }
 
     my $config = {
         ABSOLUTE => ($self->{allow_absolute} ? 1 : 0),
-        INCLUDE_PATH => $self->{include_path},
+        INCLUDE_PATH => [@include_path],
         PLUGIN_BASE  => 'Sympa::Template::Plugin',
         # PRE_CHOMP  => 1,
         UNICODE => 0,    # Prevent BOM auto-detection
@@ -240,7 +245,13 @@ sub parse {
     #unless ($options->{'is_not_template'}) {
     #    $config->{'INCLUDE_PATH'} = $self->{include_path};
     #}
-    if ($options{'has_header'}) {    # body is separated by an empty line.
+
+    # An array can be used as a template (instead of a filename)
+    if (ref $tpl_string eq 'ARRAY') {
+        $tpl_string = \join('', @$tpl_string);
+    }
+    # body is separated by an empty line.
+    if ($options{'has_header'}) {
         if (ref $tpl_string) {
             $tpl_string = \("\n" . $$tpl_string);
         } else {
@@ -250,6 +261,9 @@ sub parse {
 
     my $tt2 = Template->new($config)
         or die "Template error: " . Template->error();
+
+    # Set language if possible: Must be restored later
+    $language->push_lang($data->{lang} || undef);
 
     unless ($tt2->process($tpl_string, $data, $output)) {
         $self->{last_error} = $tt2->error();
@@ -286,10 +300,24 @@ Sympa::Template - Template parser
 
 =over
 
-=item new ( )
+=item new ( $that, [ property defaults ] )
 
 I<Constructor>.
 Creates new L<Sympa::Template> instance.
+
+Parameters:
+
+=over
+
+=item $that
+
+Context.  Site, Robot or List.
+
+=item property defaults
+
+Pairs to specify property defaults.
+
+=back
 
 =item parse ( $data, $tpl, $output, [ has_header => 1 ] )
 
@@ -318,6 +346,10 @@ A file descriptor or a reference to scalar for the output.
 If 1 is set, prepended header fields are assumed,
 i.e. one newline will be inserted at beginning of output.
 
+=item is_not_template =E<gt> 0|1
+
+This option was obsoleted.
+
 =back
 
 Returns:
@@ -339,12 +371,20 @@ If set, absolute paths in C<INCLUDE> directive are allowed.
 
 =item {include_path}
 
-Reference to array containing template search paths.
+Reference to array containing additional template search paths.
 
 =item {last_error}
 
 I<Read only>.
 Error occurred at the last execution of parse, or C<undef>.
+
+=item {plugins}
+
+TBD.
+
+=item {subdir}, {lang}, {lang_only}
+
+TBD.
 
 =back
 
