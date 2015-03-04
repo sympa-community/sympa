@@ -1204,10 +1204,10 @@ L<http://www.sympa.org/translating_sympa>.
 
 =head1 HISTORY
 
-L<Language> module appeared on Sympa 3.0.1 to handle NLS catalog in msgcat
-format.
+L<Language> module supporting multiple languages by single installation
+and using NLS catalog in msgcat format appeared on Sympa 3.0a.
 
-Sympa 4.1 adopted gettext portable object (PO) catalog and POSIX locale.
+Sympa 4.2b.3 adopted gettext portable object (PO) catalog and POSIX locale.
 
 On Sympa 6.2, rewritten module L<Sympa::Language> adopted BCP 47 language tag
 to determine language context, and installing POSIX locale became optional.

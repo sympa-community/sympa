@@ -545,6 +545,6 @@ TBD.
 
 =head1 SEE ALSO
 
-L<Sympa::DatabaseDriver>, L<Sympa::Datasource>, L<SDM>.
+L<Sympa::DatabaseDriver>, L<Sympa::Datasource>.
 
 =cut
