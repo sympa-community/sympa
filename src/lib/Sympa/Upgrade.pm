@@ -1540,7 +1540,7 @@ sub upgrade {
 
     }
 
-    if (lower_version($previous_version, '6.2b.7')
+    if (lower_version($previous_version, '6.2b.8')
         and not lower_version($previous_version, '6.2a.0')) {
         Log::do_log('info', 'Upgrading stat_counter_table.');
         my $sdm = Sympa::DatabaseManager->instance;

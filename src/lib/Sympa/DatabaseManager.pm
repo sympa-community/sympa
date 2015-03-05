@@ -422,18 +422,20 @@ sub _check_primary_key {
         my $list_of_keys = join ',', @{$primary{$t}};
         my $key_as_string = "$t [$list_of_keys]";
         if ($should_update->{'empty'}) {
-            Log::do_log('notice', 'Primary key %s is missing. Adding it',
-                $key_as_string);
-            ## Add primary key
-            my $rep = undef;
-            if ($may_update
-                and $rep = $sdm->set_primary_key(
-                    {'table' => $t, 'fields' => $primary{$t}}
-                )
-                ) {
-                push @{$report_ref}, $rep;
-            } else {
-                return undef;
+            if (@{$primary{$t}}) {
+                Log::do_log('notice', 'Primary key %s is missing. Adding it',
+                    $key_as_string);
+                ## Add primary key
+                my $rep = undef;
+                if ($may_update
+                    and $rep = $sdm->set_primary_key(
+                        {'table' => $t, 'fields' => $primary{$t}}
+                    )
+                    ) {
+                    push @{$report_ref}, $rep;
+                } else {
+                    return undef;
+                }
             }
         } elsif ($should_update->{'existing_key_correct'}) {
             Log::do_log('debug',
@@ -449,15 +451,17 @@ sub _check_primary_key {
                 return undef;
             }
             ## Add primary key
-            $rep = undef;
-            if ($may_update
-                and $rep = $sdm->set_primary_key(
-                    {'table' => $t, 'fields' => $primary{$t}}
-                )
-                ) {
-                push @{$report_ref}, $rep;
-            } else {
-                return undef;
+            if (@{$primary{$t}}) {
+                $rep = undef;
+                if ($may_update
+                    and $rep = $sdm->set_primary_key(
+                        {'table' => $t, 'fields' => $primary{$t}}
+                    )
+                    ) {
+                    push @{$report_ref}, $rep;
+                } else {
+                    return undef;
+                }
             }
         }
     } else {
