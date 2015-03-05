@@ -787,12 +787,14 @@ sub execute {
     return undef if ($label eq 'ERROR');
 
     Log::do_log('debug2', '* execution of the task %s', $task_file);
-    unless ($label eq '') {
+    if (length $label) {
         while (<TASK>) {
             chomp;
             $lnb++;
             chk_line($_, \%result);
-            last if ($result{'label'} eq $label);
+            next unless defined $result{'label'};
+
+            last if $result{'label'} eq $label;
         }
     }
 
