@@ -11533,8 +11533,16 @@ sub do_home {
             my $user = $the_list->get_list_member($param->{'user'}{'email'});
             $the_list->parse_list_member_bounce($user);
             # if there is bounces put it in errors_summary
-            $param->{'errors_summary'}{$the_list->{'name'}} = $user->{bounce_count}
-                if $user->{bounce_count};
+            if ($user->{bounce_count}) {
+                $param->{'errors_summary'}{$the_list->{'name'}} = {
+                    count => $user->{bounce_count},
+                    first => $language->gettext_strftime("%d %b %Y",
+                        localtime($user->{first_bounce})),
+                    last => $language->gettext_strftime("%d %b %Y",
+                        localtime($user->{last_bounce})),
+                    type => $user->{bounce_class},
+                };
+            }
         }
     }
 
