@@ -11530,12 +11530,11 @@ sub do_home {
 
             next if $param->{'errors_summary'}{$the_list->{'name'}};
 
-            # get the bounces of the subscriber
-            my $errors = $the_list->get_total_bouncing();
-
+            my $user = $the_list->get_list_member($param->{'user'}{'email'});
+            $the_list->parse_list_member_bounce($user);
             # if there is bounces put it in errors_summary
-            $param->{'errors_summary'}{$the_list->{'name'}} = $errors
-                if $errors;
+            $param->{'errors_summary'}{$the_list->{'name'}} = $user->{bounce_count}
+                if $user->{bounce_count};
         }
     }
 

@@ -4636,6 +4636,30 @@ sub get_next_bouncing_list_member {
     return $user;
 }
 
+sub parse_list_member_bounce {
+    my ($self,$user) = @_;
+    if ($user->{bounce}) {
+        $user->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
+        $user->{'first_bounce'} = $1;
+        $user->{'last_bounce'}  = $2;
+        $user->{'bounce_count'} = $3;
+        if ($5 =~ /^(\d+)\.\d+\.\d+$/) {
+            $user->{'bounce_class'} = $1;
+        }
+
+        ## Define color in function of bounce_score
+        if ($user->{'bounce_score'} <=
+            $self->{'admin'}{'bouncers_level1'}{'rate'}) {
+            $user->{'bounce_level'} = 0;
+        } elsif ($user->{'bounce_score'} <=
+            $self->{'admin'}{'bouncers_level2'}{'rate'}) {
+            $user->{'bounce_level'} = 1;
+        } else {
+            $user->{'bounce_level'} = 2;
+        }
+    }
+}
+
 sub get_info {
     my $self = shift;
 
