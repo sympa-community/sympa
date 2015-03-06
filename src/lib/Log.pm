@@ -86,10 +86,8 @@ sub set_log_level {
 #OBSOLETED: No longer used.
 #sub get_log_level;
 
-# OBSOLETED.  Use Sympa::Log::aggregate_data().
-sub aggregate_data {
-    return Sympa::Log->instance->aggregate_data(@_);
-}
+# DEPRECATED.  Use Sympa::Log::aggregate_stat().
+#sub aggregate_data;
 
 # Never used.
 #sub get_last_date_aggregation;

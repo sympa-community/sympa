@@ -30,6 +30,7 @@ use English qw(-no_match_vars);
 use POSIX qw();
 use Scalar::Util;
 use Sys::Syslog qw();
+use Time::Local qw();
 
 use Sympa::Tools::Time;
 
@@ -581,12 +582,65 @@ sub get_next_db_log {
     return $row;
 }
 
+# Data aggregation, to make statistics.
+sub aggregate_stat {
+    my $self = shift;
+
+    my $sdm;
+    unless ($self->{_database_backend}
+        and $sdm = $self->{_database_backend}->instance) {
+        $self->syslog('err', 'Database backend is not available');
+        return undef;
+    }
+
+    my (@time, $sth);
+
+    @time = localtime time;
+    $time[0] = $time[1] = 0;
+    my $date_end = Time::Local::timelocal(@time);
+
+    unless (
+        $sth = $sdm->do_prepared_query(
+            q{SELECT date_stat
+              FROM stat_table
+              WHERE read_stat = 0
+              ORDER BY date_stat ASC}
+        )
+        ) {
+        $self->syslog('err', 'Unable to retrieve oldest non processed stat');
+        return undef;
+    }
+    my @res = $sth->fetchrow_array;
+    $sth->finish;    # Fetch only the oldest row.
+
+    # If the array is emty, then we don't have anything to aggregate.
+    # Simply return and carry on.
+    unless (@res) {
+        return 0;
+    }
+    my $date_deb = $res[0] - ($res[0] % 3600);
+
+    # Hour to hour
+    my @slots;
+    for (my $i = $date_deb; $i <= $date_end; $i = $i + 3600) {
+        push @slots, $i;
+    }
+
+    for (my $j = 1; $j <= scalar(@slots); $j++) {
+        $self->_aggregate_data($slots[$j - 1] || $date_deb,
+            $slots[$j] || $date_end);
+    }
+
+    return 1;
+}
+
 # Aggregate data from stat_table to stat_counter_table.
 # Dates must be in epoch format.
 my @robot_operations = qw{close_list copy_list create_list list_rejected
     login logout purge_list restore_list};
 
-sub aggregate_data {
+# Old name: Log::aggregate_data().
+sub _aggregate_data {
     my $self = shift;
     my ($begin_date, $end_date) = @_;
 

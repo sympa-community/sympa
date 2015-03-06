@@ -31,7 +31,6 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 use Template;
-use Time::Local qw();
 
 use Sympa::Alarm;
 use Sympa::Bulk;
@@ -1242,65 +1241,28 @@ sub exec_cmd {
 }
 
 sub purge_logs_table {
-    # If a log is older than $list->get_latest_distribution_date() - $delay
-    # expire the log.
+    Log::do_log('debug2', '(%s, %s)', @_);
     my ($task, $context) = @_;
-    my $execution_date = $task->{'date'};
-    my @slots          = ();
 
-    Log::do_log('debug2', '');
+    #my $execution_date = $task->{'date'};
+
     unless (_db_log_del()) {
         Log::do_log('err', 'Failed to delete logs');
         return undef;
     }
 
-    #-----------Data aggregation, to make statistics-----------------
-    my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) =
-        localtime($execution_date);
-    $min = 0;
-    $sec = 0;
-    my $date_end =
-        Time::Local::timelocal($sec, $min, $hour, $mday, $mon, $year, $wday,
-        $yday, $isdst);
-
-    my $sth;
-    unless (
-        $sth = SDM::do_prepared_query(
-            q{SELECT date_stat
-              FROM stat_table
-              WHERE read_stat = 0
-              ORDER BY date_stat ASC}
-        )
-        ) {
-        Log::do_log('err', 'Unable to retrieve oldest non processed stat');
-        return undef;
-    }
-    my @res = $sth->fetchrow_array;
-    $sth->finish;    # Fetch only the oldest row.
-
-    # If the array is emty, then we don't have anything to aggregate.
-    # Simply return and carry on.
-    unless (@res) {
-        return 1;
-    }
-    my $date_deb = $res[0] - ($res[0] % 3600);
-
-    #hour to hour
-    for (my $i = $date_deb; $i <= $date_end; $i = $i + 3600) {
-        push(@slots, $i);
-    }
-
-    for (my $j = 1; $j <= scalar(@slots); $j++) {
-        Log::aggregate_data($slots[$j - 1] || $date_deb,
-            $slots[$j] || $date_end);
-    }
-    #-------------------------------------------------------------------
-
     Log::do_log('notice', 'Logs purged');
+
+    if ($log->aggregate_stat) {
+        Log::do_log('notice', 'Stats aggregated');
+    }
+
     return 1;
 }
 
-# delete logs in RDBMS
+# Deletes logs in RDBMS.
+# If a log is older than $list->get_latest_distribution_date() - $delay
+# expire the log.
 sub _db_log_del {
     my ($exp, $date);
 
