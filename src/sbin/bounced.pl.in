@@ -46,7 +46,7 @@ use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::List;
 use Sympa::LockedFile;
-use Log;
+use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message;
 use Sympa::Regexps;
@@ -132,7 +132,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     setpgrp 0, 0;
     my $child_pid = fork;
     if ($child_pid) {
-        Log::do_log('info', 'Starting bounced daemon, PID %s', $child_pid);
+        $log->syslog('info', 'Starting bounced daemon, PID %s', $child_pid);
         exit 0;
     } elsif (not defined $child_pid) {
         die sprintf 'Cannot fork: %s', $ERRNO;
@@ -150,15 +150,15 @@ unless ($options->{'stderr_to_tty'}) {
 }
 
 if ($main::options{'log_level'}) {
-    Log::set_log_level($main::options{'log_level'});
-    Log::do_log(
+    $log->{level} = $main::options{'log_level'};
+    $log->syslog(
         'info',
         'Configuration file read, log level set using options: %s',
         $main::options{'log_level'}
     );
 } else {
-    Log::set_log_level($Conf::Conf{'log_level'});
-    Log::do_log(
+    $log->{level} = $Conf::Conf{'log_level'};
+    $log->syslog(
         'info',
         'Configuration file read, default log level %s',
         $Conf::Conf{'log_level'}
@@ -166,7 +166,7 @@ if ($main::options{'log_level'}) {
 }
 
 my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
-Log::do_openlog($log_facility, $Conf::Conf{'log_socket_type'});
+$log->openlog($log_facility, $Conf::Conf{'log_socket_type'});
 
 ## Set the User ID & Group ID for the process
 $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
@@ -193,7 +193,7 @@ unless (chdir($Conf::Conf{'home'})) {
         $!;
 }
 
-Log::do_log('notice', 'Bounced %s Started', Sympa::Constants::VERSION());
+$log->syslog('notice', 'Bounced %s Started', Sympa::Constants::VERSION());
 
 ## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -202,7 +202,7 @@ my $end = 0;
 
 my $spool = $Conf::Conf{'queuebounce'};
 
-Log::do_log('debug', 'Starting infinite loop');
+$log->syslog('debug', 'Starting infinite loop');
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
     Sympa::List::init_list_cache();
@@ -244,19 +244,19 @@ while (!$end) {
         $numprocessed++;
 
         unless ($message) {
-            Log::do_log('notice', 'Ignoring malformed message %s', $message);
+            $log->syslog('notice', 'Ignoring malformed message %s', $message);
             quarantine($lock_fh);
             next;
         }
 
         unless (defined $message->{'message_id'}
             and length $message->{'message_id'}) {
-            Log::do_log('err', 'Message %s has no message ID', $message);
+            $log->syslog('err', 'Message %s has no message ID', $message);
             quarantine($lock_fh);
             next;
         }
 
-        Log::do_log(
+        $log->syslog(
             'notice',
             'Processing %s; envelope_sender=%s; message_id=%s; sender=%s',
             $message,
@@ -287,7 +287,7 @@ while (!$end) {
 
         my $who;
         my $distribution_id;
-        Log::do_log(
+        $log->syslog(
             'debug', 'Bounce for: %s: Conf{bounce_email_prefix}=%',
             $to,     $Conf::Conf{'bounce_email_prefix'}
         );
@@ -316,19 +316,19 @@ while (!$end) {
             $who      = $1;
             $listname = $2;
 
-            Log::do_log('notice',
+            $log->syslog('notice',
                 'VERP in use: bounce related to %s for list %s@%s',
                 $who, $listname, $robot);
 
             if ($unique and $unique =~ /[wr]/) {
                 # in this case the bounce result from a remind or a welcome
                 # message ;so try to remove the subscriber
-                Log::do_log('debug',
+                $log->syslog('debug',
                     "VERP for a service message, try to remove the subscriber"
                 );
                 my $list = Sympa::List->new($listname, $robot);
                 unless ($list) {
-                    Log::do_log('notice',
+                    $log->syslog('notice',
                         'Skipping bounce %s for unknown list %s@%s',
                         $message, $listname, $robot);
                     quarantine($lock_fh);
@@ -353,29 +353,27 @@ while (!$end) {
                             'exclude'   => '1',
                             'operation' => 'auto_del',
                         );
-                        Log::do_log(
+                        $log->syslog(
                             'notice',
                             '%s has been removed from %s because welcome message bounced',
                             $who,
                             $list
                         );
-                        Log::db_log(
-                            {   'robot'        => $list->{'domain'},
-                                'list'         => $list->{'name'},
-                                'action'       => 'del',
-                                'target_email' => $who,
-                                'status'       => 'error',
-                                'error_type'   => 'welcome_bounced',
-                            }
+                        $log->db_log(
+                            'robot'        => $list->{'domain'},
+                            'list'         => $list->{'name'},
+                            'action'       => 'del',
+                            'target_email' => $who,
+                            'status'       => 'error',
+                            'error_type'   => 'welcome_bounced'
                         );
 
-                        Log::db_stat_log(
-                            {   'robot'     => $list->{'domain'},
-                                'list'      => $list->{'name'},
-                                'operation' => 'auto_del',
-                                'parameter' => "",
-                                'mail'      => $who,
-                            }
+                        $log->add_stat(
+                            'robot'     => $list->{'domain'},
+                            'list'      => $list->{'name'},
+                            'operation' => 'auto_del',
+                            'parameter' => "",
+                            'mail'      => $who
                         );
 
                         if ($action =~ /notify/) {
@@ -390,7 +388,7 @@ while (!$end) {
                     }
                     remove($lock_fh);
                 } else {
-                    Log::do_log('notice',
+                    $log->syslog('notice',
                         "Unable to remove $who from $listname (welcome message bounced but del is closed)"
                     );
                     quarantine($lock_fh);
@@ -401,7 +399,7 @@ while (!$end) {
 
         my $list = Sympa::List->new($listname, $robot);
         unless ($list) {
-            Log::do_log('err', 'Skipping bounce %s for unknown list %s@%s',
+            $log->syslog('err', 'Skipping bounce %s for unknown list %s@%s',
                 $message, $listname, $robot);
             quarantine($lock_fh);
             next;
@@ -455,7 +453,7 @@ while (!$end) {
                     #     $distribution_id =
                     #         $fields[0]->get('Original-Envelope-Id', 0);
                     #     chomp $distribution_id;
-                    #     Log::do_log('debug2',
+                    #     $log->syslog('debug2',
                     #         "Original Envelope ID Detected, value: %s",
                     #         $distribution_id);
                     # }
@@ -503,7 +501,7 @@ while (!$end) {
 
             $original_rcpt = $who;
 
-            Log::do_log(
+            $log->syslog(
                 'debug2',
                 '%s: DSN detected: dsn_status=%s; original_rcpt=%s; final_rcpt=%s; arrival_date=%s',
                 $message,
@@ -517,10 +515,10 @@ while (!$end) {
                 # DSN with status "failed" should not be removed because they
                 # must be processed for classical bounce managment (not only
                 # for tracking feature)
-                Log::do_log('notice', 'Non failed DSN status %s',
+                $log->syslog('notice', 'Non failed DSN status %s',
                     $dsn_status);
                 unless ($distribution_id) {
-                    Log::do_log(
+                    $log->syslog(
                         'err',
                         'Envelope ID not found in to address %s of DSN %s, will ignore',
                         $to,
@@ -530,7 +528,7 @@ while (!$end) {
                     next;
                 }
                 unless ($original_rcpt) {
-                    Log::do_log(
+                    $log->syslog(
                         'err',
                         'Original recipient not found in DSN %s, will ignore',
                         $message
@@ -550,9 +548,9 @@ while (!$end) {
                     arrival_date => $arrival_date
                 )
                 ) {
-                Log::do_log('notice', "DSN Correctly treated...");
+                $log->syslog('notice', "DSN Correctly treated...");
             } else {
-                Log::do_log('err',
+                $log->syslog('err',
                     'Not able to fill database with notification data');
             }
             unless ($dsn_status =~ /failed/) {
@@ -637,7 +635,7 @@ while (!$end) {
             # let's use VERP
             $original_rcpt = $who;
 
-            Log::do_log(
+            $log->syslog(
                 'debug2',
                 '%s: MDN detected: mdn_status=%s; original_rcpt=%s; date=%s',
                 $message,
@@ -647,7 +645,7 @@ while (!$end) {
             );
 
             unless ($distribution_id) {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Envelope ID not found in to address %s of MDN %s, will ignore',
                     $to,
@@ -657,14 +655,14 @@ while (!$end) {
                 next;
             }
             unless ($original_rcpt) {
-                Log::do_log('err',
+                $log->syslog('err',
                     'Original recipient not found in MDN %s, will ignore',
                     $message);
                 remove($lock_fh);
                 next;
             }
             unless ($mdn_status) {
-                Log::do_log('err',
+                $log->syslog('err',
                     'MDN status not found in MDN %s, will ignore', $message);
                 remove($lock_fh);
                 next;
@@ -681,10 +679,10 @@ while (!$end) {
                     arrival_date => $date
                 )
                 ) {
-                Log::do_log('err',
+                $log->syslog('err',
                     'Not able to fill database with notification data');
             }
-            Log::do_log('notice', "MDN Correctly treated...");
+            $log->syslog('notice', "MDN Correctly treated...");
             remove($lock_fh);
             next;
         }
@@ -693,7 +691,7 @@ while (!$end) {
             and $report_type eq 'feedback-report') {
             # This case a report Email Feedback Reports (RFC5965) mainly used
             # by AOL.
-            Log::do_log('notice', 'Processing Email Feedback Report');
+            $log->syslog('notice', 'Processing Email Feedback Report');
             my @parts = $entity->parts();
             my $original_rcpt;
             my $user_agent;
@@ -742,15 +740,15 @@ while (!$end) {
                         }
                     }
                 } elsif ($eff_type eq 'message/rfc822') {
-                    # Log::do_log('notice',
+                    # $log->syslog('notice',
                     #     "xxx processing  Email Feedback Report : message/rfc822 part");
                     my @subparts = $p->parts();
                     foreach my $subp (@subparts) {
-                        # Log::do_log ('notice',"xxx subparts : subps");
+                        # $log->syslog ('notice',"xxx subparts : subps");
                         my $subph = $subp->head;
                         $listname = $subph->get('X-Loop');
                     }
-                    # Log::do_log('notice',
+                    # $log->syslog('notice',
                     #     "xxx processing  Email Feedback Report : extract listname $listname");
                 }
             }
@@ -766,11 +764,11 @@ while (!$end) {
                 and defined $version
                 and defined $user_agent) {
 
-                Log::do_log('debug',
+                $log->syslog('debug',
                     "Email Feedback Report: $listname feedback-type: $feedback_type"
                 );
                 if (defined $original_rcpt) {
-                    Log::do_log('debug', 'Recognized user: %s list',
+                    $log->syslog('debug', 'Recognized user: %s list',
                         $original_rcpt);
                     my @lists;
 
@@ -783,7 +781,7 @@ while (!$end) {
                         $robot    = $2;
                         my $list = Sympa::List->new($listname, $robot);
                         unless ($list) {
-                            Log::do_log(
+                            $log->syslog(
                                 'err',
                                 'Skipping Feedback Report %s for unknown list %s@%s',
                                 $message,
@@ -800,7 +798,7 @@ while (!$end) {
                             Sympa::List::get_which($original_rcpt, $robot,
                             'member');
                     } else {
-                        Log::do_log(
+                        $log->syslog(
                             'notice',
                             'Ignoring Feedback Report %s: Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',
                             $message,
@@ -826,7 +824,7 @@ while (!$end) {
                                     'operation' => 'auto_del',
                                 );
 
-                                Log::do_log(
+                                $log->syslog(
                                     'notice',
                                     '%s has been removed from %s because abuse feedback report',
                                     $original_rcpt,
@@ -839,7 +837,7 @@ while (!$end) {
                                     }
                                 );
                             } else {
-                                Log::do_log(
+                                $log->syslog(
                                     'err',
                                     'Ignore Feedback Report %s for list %s: user %s not subscribed',
                                     $message,
@@ -851,7 +849,7 @@ while (!$end) {
                             }
                         } else {
                             $forward = 'request';
-                            Log::do_log(
+                            $log->syslog(
                                 'err',
                                 'Ignore Feedback Report %s for list %s@%s: user %s is not allowed to unsubscribe',
                                 $message,
@@ -861,7 +859,7 @@ while (!$end) {
                         }
                     }
                 } else {
-                    Log::do_log(
+                    $log->syslog(
                         'err',
                         'Ignoring Feedback Report %s: Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',
                         $message,
@@ -880,7 +878,7 @@ while (!$end) {
                     );
                 }
             } else {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Ignoring Feedback Report %s: Unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',
                     $message,
@@ -909,7 +907,7 @@ while (!$end) {
         # else (not welcome or remind)
         $list = Sympa::List->new($listname, $robot);
         unless ($list) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Skipping bouncefile %s for unknown list %s@%s',
                 $message, $listname, $robot);
             quarantine($lock_fh);
@@ -918,7 +916,7 @@ while (!$end) {
         # Overwrite context.
         $message->{context} = $list;
 
-        Log::do_log('debug', 'Processing bounce %s for list %s',
+        $log->syslog('debug', 'Processing bounce %s for list %s',
             $message, $list);
 
         my (%hash, $from);
@@ -970,7 +968,7 @@ while (!$end) {
                     remove($lock_fh);
                 }
             } else {    # no VERP and no rcpt recognized
-                Log::do_log('info',
+                $log->syslog('info',
                     'No address found in message from %s for list %s',
                     $from, $list);
                 quarantine($lock_fh);
@@ -995,7 +993,7 @@ while (!$end) {
 # Purge grouped notifications
 Sympa::Alarm->instance->flush(purge => 1);
 
-Log::do_log('notice', 'Bounced exited normally due to signal');
+$log->syslog('notice', 'Bounced exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid('bounced', $PID);
 
 exit(0);
@@ -2054,7 +2052,7 @@ sub _update_subscriber_bounce_history {
     my $bouncefor = shift;
     my $status    = shift;
 
-    Log::do_log('debug', '(%s, %s, %s, %s)',
+    $log->syslog('debug', '(%s, %s, %s, %s)',
         $list->{'name'}, $rcpt, $bouncefor, $status);
 
     my $first = my $last = time;
@@ -2063,7 +2061,7 @@ sub _update_subscriber_bounce_history {
     my $user = $list->get_list_member($bouncefor);
 
     unless ($user) {
-        Log::do_log('notice', 'Subscriber not found in list %s: %s',
+        $log->syslog('notice', 'Subscriber not found in list %s: %s',
             $list->{'name'}, $bouncefor);
         return undef;
     }
@@ -2073,10 +2071,11 @@ sub _update_subscriber_bounce_history {
     }
     $count++;
     if ($rcpt ne $bouncefor) {
-        Log::do_log('notice',
+        $log->syslog('notice',
             'Bouncing address identified with VERP: %s / %s',
             $rcpt, $bouncefor);
-        Log::do_log('debug', '(%s, bounce-> %s %s %s %s, bounce_address->%s)',
+        $log->syslog('debug',
+            '(%s, bounce-> %s %s %s %s, bounce_address->%s)',
             $bouncefor, $first, $last, $count, $status, $rcpt);
         $list->update_list_member(
             $bouncefor,
@@ -2084,31 +2083,30 @@ sub _update_subscriber_bounce_history {
                 'bounce_address' => $rcpt
             }
         );
-        Log::db_log(
-            {   'robot'        => $list->{'domain'},
-                'list'         => $list->{'name'},
-                'action'       => 'get_bounce',
-                'parameters'   => "address=$rcpt",
-                'target_email' => $bouncefor,
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => $status,
-            }
+        $log->db_log(
+            'robot'        => $list->{'domain'},
+            'list'         => $list->{'name'},
+            'action'       => 'get_bounce',
+            'parameters'   => "address=$rcpt",
+            'target_email' => $bouncefor,
+            'msg_id'       => '',
+            'status'       => 'error',
+            'error_type'   => $status
         );
     } else {
         $list->update_list_member($bouncefor,
             {'bounce' => "$first $last $count $status"});
-        Log::do_log('notice', 'Received bounce for email address %s, list %s',
+        $log->syslog('notice',
+            'Received bounce for email address %s, list %s',
             $bouncefor, $list->{'name'});
-        Log::db_log(
-            {   'robot'        => $list->{'domain'},
-                'list'         => $list->{'name'},
-                'action'       => 'get_bounce',
-                'target_email' => $bouncefor,
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => $status,
-            }
+        $log->db_log(
+            'robot'        => $list->{'domain'},
+            'list'         => $list->{'name'},
+            'action'       => 'get_bounce',
+            'target_email' => $bouncefor,
+            'msg_id'       => '',
+            'status'       => 'error',
+            'error_type'   => $status
         );
     }
 }
@@ -2128,15 +2126,15 @@ sub quarantine {
                 'Unable to rename bad file %s to %s/%s: %s',
                 $filename, $bad_dir, $filename, $lock_fh->last_error;
         }
-        Log::do_log('notice', "Moving bad file %s to bad/", $filename);
+        $log->syslog('notice', "Moving bad file %s to bad/", $filename);
     } else {
-        Log::do_log('notice', 'Missing directory "%s"', $bad_dir);
+        $log->syslog('notice', 'Missing directory "%s"', $bad_dir);
         unless ($lock_fh->rename($spool . '/BAD-' . $filename)) {
             die sprintf
                 'Unable to rename bad file %s to BAD-%s: %s',
                 $filename, $filename, $lock_fh->last_error;
         }
-        Log::do_log('notice', "Renaming bad file %s to BAD-%s",
+        $log->syslog('notice', "Renaming bad file %s to BAD-%s",
             $filename, $filename);
     }
 }

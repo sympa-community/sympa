@@ -40,7 +40,7 @@ use Sympa::DatabaseManager;
 use Sympa::Family;
 use Sympa::List;
 use Sympa::LockedFile;
-use Log;
+use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message;
 use Sympa::Report;
@@ -100,7 +100,7 @@ unless ($main::options{'foreground'}) {
 
     my $child_pid = fork;
     if ($child_pid) {
-        Log::do_log('notice', 'Starting sympa/automatic daemon, PID %d',
+        $log->syslog('notice', 'Starting sympa/automatic daemon, PID %d',
             $child_pid);
         exit 0;
     } elsif (not defined $child_pid) {
@@ -111,7 +111,7 @@ unless ($main::options{'foreground'}) {
 
 my $pidfile = 'sympa_automatic';
 
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+$log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
 # If process is running in foreground, don't write STDERR to a
 # dedicated file
@@ -142,7 +142,7 @@ unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
 umask(oct($Conf::Conf{'umask'}));
 
 ## Most initializations have now been done.
-Log::do_log(
+$log->syslog(
     'notice',
     'Sympa/automatic %s Started',
     Sympa::Constants::VERSION()
@@ -153,14 +153,14 @@ sleep 1;    ## wait until main process has created required directories
 ## Do we have right access in the directory
 if ($main::options{'keepcopy'}) {
     if (!-d $main::options{'keepcopy'}) {
-        Log::do_log(
+        $log->syslog(
             'notice',
             'Cannot keep a copy of incoming messages: %s is not a directory',
             $main::options{'keepcopy'}
         );
         delete $main::options{'keepcopy'};
     } elsif (!-w $main::options{'keepcopy'}) {
-        Log::do_log(
+        $log->syslog(
             'notice',
             'Cannot keep a copy of incoming messages: no write access to %s',
             $main::options{'keepcopy'}
@@ -233,7 +233,7 @@ while ($signal ne 'term') {
         my $status = process_message($message);
 
         if (defined $status) {
-            Log::do_log('debug', "Finished %s", $message);
+            $log->syslog('debug', "Finished %s", $message);
 
             if ($main::options{'keepcopy'}) {
                 unless (
@@ -242,7 +242,7 @@ while ($signal ne 'term') {
                         $main::options{'keepcopy'} . '/' . $filename
                     )
                     ) {
-                    Log::do_log(
+                    $log->syslog(
                         'notice',
                         'Could not rename %s/%s to %s/%s: %m',
                         $spool,
@@ -262,16 +262,16 @@ while ($signal ne 'term') {
                         'Unable to rename bad file %s to %s/%s: %s',
                         $filename, $bad_dir, $filename, $lock_fh->last_error;
                 }
-                Log::do_log('notice', "Moving bad file %s to bad/",
+                $log->syslog('notice', "Moving bad file %s to bad/",
                     $filename);
             } else {
-                Log::do_log('notice', 'Missing directory "%s"', $bad_dir);
+                $log->syslog('notice', 'Missing directory "%s"', $bad_dir);
                 unless ($lock_fh->rename($spool . '/BAD-' . $filename)) {
                     die sprintf
                         'Unable to rename bad file %s to BAD-%s: %s',
                         $filename, $filename, $lock_fh->last_error;
                 }
-                Log::do_log('notice', "Renaming bad file %s to BAD-%s",
+                $log->syslog('notice', "Renaming bad file %s to BAD-%s",
                     $filename, $filename);
             }
         }
@@ -285,7 +285,7 @@ while ($signal ne 'term') {
         # Disconnect from Database
         Sympa::DatabaseManager->disconnect;
 
-        Log::do_log('notice', "Sympa %s reload config",
+        $log->syslog('notice', "Sympa %s reload config",
             Sympa::Constants::VERSION);
         _load();
         $signal = 0;
@@ -297,7 +297,7 @@ while ($signal ne 'term') {
     }
 }    #end of block while ($signal ne 'term'){
 
-Log::do_log('notice', 'Sympa/automatic exited normally due to signal');
+$log->syslog('notice', 'Sympa/automatic exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid($pidfile, $PID);
 
 exit(0);
@@ -312,7 +312,7 @@ sub _load {
     }
 
     ## Open the syslog and say we're read out stuff.
-    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+    $log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
     # Enable SMTP logging if required
     $mailer->{log_smtp} = $main::options{'mail'}
@@ -320,15 +320,15 @@ sub _load {
 
     # setting log_level using conf unless it is set by calling option
     if (defined $main::options{'log_level'}) {
-        Log::set_log_level($main::options{'log_level'});
-        Log::do_log(
+        $log->{level} = $main::options{'log_level'};
+        $log->syslog(
             'info',
             'Configuration file read, log level set using options: %s',
             $main::options{'log_level'}
         );
     } else {
-        Log::set_log_level($Conf::Conf{'log_level'});
-        Log::do_log(
+        $log->{level} = $Conf::Conf{'log_level'};
+        $log->syslog(
             'info',
             'Configuration file read, default log level %s',
             $Conf::Conf{'log_level'}
@@ -382,8 +382,8 @@ sub _load {
 ############################################################
 sub sigterm {
     my ($sig) = @_;
-    Log::do_log('notice', 'Signal %s received, still processing current task',
-        $sig);
+    $log->syslog('notice',
+        'Signal %s received, still processing current task', $sig);
     $signal = 'term';
 }
 
@@ -400,12 +400,12 @@ sub sigterm {
 ###########################################################
 sub sighup {
     if ($mailer->{log_smtp}) {
-        Log::do_log('notice',
+        $log->syslog('notice',
             'signal HUP received, switch of the "-mail" logging option and continue current task'
         );
         $mailer->{log_smtp} = undef;
     } else {
-        Log::do_log('notice',
+        $log->syslog('notice',
             'signal HUP received, switch on the "-mail" logging option and continue current task'
         );
         $mailer->{log_smtp} = 1;
@@ -429,51 +429,47 @@ sub sighup {
 #
 ##############################################################
 sub process_message {
-    Log::do_log('debug', '(%s)', @_);
+    $log->syslog('debug', '(%s)', @_);
     my $message = shift;
 
     my $status;
 
     unless (defined $message) {
-        Log::do_log('err', 'Unable to create Sympa::Message object');
-        Log::db_log(
-            {
-                #'robot'        => $robot,
-                #'list'         => $listname,
-                'action'       => 'process_message',
-                'parameters'   => '',
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'unable_create_message',
-                'user_email'   => '',
-            }
+        $log->syslog('err', 'Unable to create Sympa::Message object');
+        $log->db_log(
+            #'robot'        => $robot,
+            #'list'         => $listname,
+            'action'       => 'process_message',
+            'parameters'   => '',
+            'target_email' => "",
+            'msg_id'       => '',
+            'status'       => 'error',
+            'error_type'   => 'unable_create_message',
+            'user_email'   => ''
         );
         return undef;
     }
 
     unless (defined $message->{'message_id'}
         and length $message->{'message_id'}) {
-        Log::do_log('err', 'Message %s has no message ID', $message);
-        Log::db_log(
-            {
-                #'robot'        => $robot,
-                #'list'         => $listname,
-                'action'       => 'process_message',
-                'parameters'   => $message->get_id,
-                'target_email' => "",
-                'msg_id'       => "",
-                'status'       => 'error',
-                'error_type'   => 'no_message_id',
-                'user_email'   => $message->{'sender'},
-            }
+        $log->syslog('err', 'Message %s has no message ID', $message);
+        $log->db_log(
+            #'robot'        => $robot,
+            #'list'         => $listname,
+            'action'       => 'process_message',
+            'parameters'   => $message->get_id,
+            'target_email' => "",
+            'msg_id'       => "",
+            'status'       => 'error',
+            'error_type'   => 'no_message_id',
+            'user_email'   => $message->{'sender'}
         );
         return undef;
     }
 
     my $msg_id = $message->{message_id};
 
-    Log::do_log(
+    $log->syslog(
         'notice',
         'Processing %s; envelope_sender=%s; message_id=%s; sender=%s',
         $message,
@@ -494,39 +490,37 @@ sub process_message {
     ## Ignoring messages with no sender
     my $sender = $message->{'sender'};
     unless ($message->{'md5_check'} or $sender) {
-        Log::do_log('err', 'No sender found in message %s', $message);
-        Log::db_log(
-            {   'robot'        => $robot,
-                'list'         => $listname,
-                'action'       => 'process_message',
-                'parameters'   => "",
-                'target_email' => "",
-                'msg_id'       => $msg_id,
-                'status'       => 'error',
-                'error_type'   => 'no_sender',
-                'user_email'   => $sender,
-            }
+        $log->syslog('err', 'No sender found in message %s', $message);
+        $log->db_log(
+            'robot'        => $robot,
+            'list'         => $listname,
+            'action'       => 'process_message',
+            'parameters'   => "",
+            'target_email' => "",
+            'msg_id'       => $msg_id,
+            'status'       => 'error',
+            'error_type'   => 'no_sender',
+            'user_email'   => $sender
         );
         return undef;
     }
 
     ## Unknown robot
     unless ($message->{'md5_check'} or Conf::valid_robot($robot)) {
-        Log::do_log('err', 'Robot %s does not exist', $robot);
+        $log->syslog('err', 'Robot %s does not exist', $robot);
         Sympa::Report::reject_report_msg('user', 'list_unknown', $sender,
             {'listname' => $listname, 'message' => $message},
             '*', $message->as_string, '');
-        Log::db_log(
-            {   'robot'        => $robot,
-                'list'         => $listname,
-                'action'       => 'process_message',
-                'parameters'   => "",
-                'target_email' => "",
-                'msg_id'       => $msg_id,
-                'status'       => 'error',
-                'error_type'   => 'unknown_robot',
-                'user_email'   => $sender,
-            }
+        $log->db_log(
+            'robot'        => $robot,
+            'list'         => $listname,
+            'action'       => 'process_message',
+            'parameters'   => "",
+            'target_email' => "",
+            'msg_id'       => $msg_id,
+            'status'       => 'error',
+            'error_type'   => 'unknown_robot',
+            'user_email'   => $sender
         );
         return undef;
     }
@@ -549,8 +543,8 @@ sub process_message {
         || Conf::get_robot_conf($robot, 'log_smtp');
     # setting log_level using conf unless it is set by calling option
     unless (defined $main::options{'log_level'}) {
-        Log::set_log_level(Conf::get_robot_conf($robot, 'log_level'));
-        Log::do_log('debug',
+        $log->{level} = Conf::get_robot_conf($robot, 'log_level');
+        $log->syslog('debug',
             'Setting log level with %s configuration (or sympa.conf): %d',
             $robot, Conf::get_robot_conf($robot, 'log_level'));
     }
@@ -571,7 +565,7 @@ sub process_message {
     $dyn_list_family = $message->{'family'};
 
     unless (defined $dyn_list_family and length $dyn_list_family) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Internal server error: Automatic lists creation daemon should never proceed message %s without X-Sympa-Family header',
             $message
@@ -593,7 +587,7 @@ sub process_message {
         ## Automatic creation of a mailing list, based on a family
         my $dyn_family;
         unless ($dyn_family = Sympa::Family->new($dyn_list_family, $robot)) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Failed to process message %s: family %s does not exist, impossible to create the dynamic list',
                 $message,
@@ -639,7 +633,8 @@ sub process_message {
             $message->{context} = $list;
             $dyn_just_created = 1;
         } else {
-            Log::do_log('err', 'Unable to create list %s. Message %s ignored',
+            $log->syslog('err',
+                'Unable to create list %s. Message %s ignored',
                 $listname, $message);
             tools::send_notify_to_listmaster(
                 $dyn_family->{'robot'},
@@ -662,17 +657,16 @@ sub process_message {
                 $message->as_string,
                 ''
             );
-            Log::db_log(
-                {   'robot'        => $dyn_family->{'robot'},
-                    'list'         => $listname,
-                    'action'       => 'process_message',
-                    'parameters'   => $msg_id . "," . $dyn_family->{'robot'},
-                    'target_email' => '',
-                    'msg_id'       => $msg_id,
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $sender,
-                }
+            $log->db_log(
+                'robot'        => $dyn_family->{'robot'},
+                'list'         => $listname,
+                'action'       => 'process_message',
+                'parameters'   => $msg_id . "," . $dyn_family->{'robot'},
+                'target_email' => '',
+                'msg_id'       => $msg_id,
+                'status'       => 'error',
+                'error_type'   => 'internal',
+                'user_email'   => $sender
             );
             return undef;
         }
@@ -680,7 +674,7 @@ sub process_message {
 
     if ($dyn_just_created) {
         unless (defined $list->sync_include()) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Failed to synchronize list members of dynamic list %s from %s family',
                 $list,
@@ -696,17 +690,16 @@ sub process_message {
                 $message->as_string,
                 ''
             );
-            Log::db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => 'process_message',
-                    'parameters'   => "",
-                    'target_email' => "",
-                    'msg_id'       => $msg_id,
-                    'status'       => 'error',
-                    'error_type'   => 'dyn_cant_sync',
-                    'user_email'   => $sender,
-                }
+            $log->db_log(
+                'robot'        => $robot,
+                'list'         => $list->{'name'},
+                'action'       => 'process_message',
+                'parameters'   => "",
+                'target_email' => "",
+                'msg_id'       => $msg_id,
+                'status'       => 'error',
+                'error_type'   => 'dyn_cant_sync',
+                'user_email'   => $sender
             );
             # purge the unwanted empty automatic list
             if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
@@ -718,7 +711,7 @@ sub process_message {
                     {$list->{'name'}}) {    # test à virer si ok
                     delete $Sympa::List::list_of_lists{$list->{'domain'}}
                         {$list->{'name'}};
-                    Log::do_log('err',
+                    $log->syslog('err',
                         'La liste a été trouvée dans la list_of_lists',
                         $list, $dyn_list_family);
                 }
@@ -726,7 +719,7 @@ sub process_message {
             return undef;
         }
         unless ($list->get_total() > 0) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Dynamic list %s from %s family has ZERO subscribers',
                 $list, $dyn_list_family);
             # FIXME: send DSN.
@@ -742,17 +735,16 @@ sub process_message {
                 $message->as_string,
                 ''
             );
-            Log::db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => 'process_message',
-                    'parameters'   => "",
-                    'target_email' => "",
-                    'msg_id'       => $msg_id,
-                    'status'       => 'error',
-                    'error_type'   => 'list_unknown',
-                    'user_email'   => $sender,
-                }
+            $log->db_log(
+                'robot'        => $robot,
+                'list'         => $list->{'name'},
+                'action'       => 'process_message',
+                'parameters'   => "",
+                'target_email' => "",
+                'msg_id'       => $msg_id,
+                'status'       => 'error',
+                'error_type'   => 'list_unknown',
+                'user_email'   => $sender
             );
             # purge the unwanted empty automatic list
             if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
@@ -764,14 +756,15 @@ sub process_message {
                     {$list->{'name'}}) {    # test à virer si ok
                     delete $Sympa::List::list_of_lists{$list->{'domain'}}
                         {$list->{'name'}};
-                    Log::do_log('err',
+                    $log->syslog('err',
                         'La liste a été trouvée dans la list_of_lists',
                         $list, $dyn_list_family);
                 }
             }
             return undef;
         }
-        Log::do_log('info', 'Successfully create list %s with %s subscribers',
+        $log->syslog('info',
+            'Successfully create list %s with %s subscribers',
             $list, $list->get_total());
     }
 
@@ -783,11 +776,11 @@ sub process_message {
         original => 1
     );
     if ($marshalled) {
-        Log::do_log('notice',
+        $log->syslog('notice',
             'Message %s is stored into incoming spool as <%s>',
             $message, $marshalled);
     } else {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to move in spool for processing message %s to list %s (daemon_usage = creation)',
             $message,

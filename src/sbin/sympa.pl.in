@@ -44,7 +44,7 @@ use Sympa::DatabaseManager;
 use Sympa::Family;
 use Sympa::Language;
 use Sympa::List;
-use Log;
+use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Report;
 use tools;
@@ -100,9 +100,9 @@ if ($main::options{'debug'}) {
 my $log = Sympa::Log->instance;
 $log->{log_to_stderr} = 'notice,err'
     if $main::options{'upgrade'}
-    || $main::options{'reload_list_config'}
-    || $main::options{'test_database_message_buffer'}
-    || $main::options{'conf_2_db'};
+        || $main::options{'reload_list_config'}
+        || $main::options{'test_database_message_buffer'}
+        || $main::options{'conf_2_db'};
 
 if ($main::options{'upgrade_config_location'}) {
     my $config_file = Conf::get_sympa_conf();
@@ -175,7 +175,7 @@ if ($main::options{'upgrade_config_location'}) {
     }
 
     ## Open the syslog and say we're read out stuff.
-    Log::do_openlog(
+    $log->openlog(
         $Conf::Conf{'syslog'},
         $Conf::Conf{'log_socket_type'},
         service => 'sympa/health_check'
@@ -183,15 +183,15 @@ if ($main::options{'upgrade_config_location'}) {
 
     ## Setting log_level using conf unless it is set by calling option
     if ($main::options{'log_level'}) {
-        Log::set_log_level($main::options{'log_level'});
-        Log::do_log(
+        $log->{level} = $main::options{'log_level'};
+        $log->syslog(
             'info',
             'Configuration file read, log level set using options: %s',
             $main::options{'log_level'}
         );
     } else {
-        Log::set_log_level($Conf::Conf{'log_level'});
-        Log::do_log(
+        $log->{level} = $Conf::Conf{'log_level'};
+        $log->syslog(
             'info',
             'Configuration file read, default log level %s',
             $Conf::Conf{'log_level'}
@@ -241,7 +241,7 @@ my $mailer   = Sympa::Mailer->instance;
 
 _load();
 
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+$log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
 # Set the User ID & Group ID for the process
 $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
@@ -263,7 +263,7 @@ unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
 umask(oct($Conf::Conf{'umask'}));
 
 ## Most initializations have now been done.
-Log::do_log('notice', 'Sympa %s Started', Sympa::Constants::VERSION());
+$log->syslog('notice', 'Sympa %s Started', Sympa::Constants::VERSION());
 
 # Check for several files.
 #FIXME: This would be done in --health_check mode.
@@ -282,7 +282,7 @@ if ($main::options{'dump'}) {
 
         ## The parameter can be a list address
         unless ($main::options{'dump'} =~ /\@/) {
-            Log::do_log('err', 'Incorrect list address %s',
+            $log->syslog('err', 'Incorrect list address %s',
                 $main::options{'dump'});
 
             exit;
@@ -290,7 +290,7 @@ if ($main::options{'dump'}) {
 
         my $list = Sympa::List->new($main::options{'dump'});
         unless (defined $list) {
-            Log::do_log('err', 'Unknown list %s', $main::options{'dump'});
+            $log->syslog('err', 'Unknown list %s', $main::options{'dump'});
 
             exit;
         }
@@ -386,7 +386,7 @@ if ($main::options{'dump'}) {
 
     ## The parameter should be a list address
     unless ($main::options{'import'} =~ /\@/) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Incorrect list address %s',
             $main::options{'import'}
@@ -395,7 +395,7 @@ if ($main::options{'dump'}) {
     }
 
     unless ($list = Sympa::List->new($main::options{'import'})) {
-        Log::do_log('err', 'Unknown list name %s', $main::options{'import'});
+        $log->syslog('err', 'Unknown list name %s', $main::options{'import'});
         exit 1;
     }
 
@@ -774,29 +774,29 @@ if ($main::options{'dump'}) {
 ## Migration from one version to another
 } elsif ($main::options{'upgrade'}) {
 
-    Log::do_log('notice', "Upgrade process...");
+    $log->syslog('notice', "Upgrade process...");
 
     $main::options{'from'} ||= Sympa::Upgrade::get_previous_version();
     $main::options{'to'}   ||= Sympa::Constants::VERSION;
 
     if ($main::options{'from'} eq $main::options{'to'}) {
-        Log::do_log('err', 'Current version: %s; no upgrade is required',
+        $log->syslog('err', 'Current version: %s; no upgrade is required',
             $main::options{'to'});
         exit 0;
     } else {
-        Log::do_log('notice', "Upgrading from %s to %s...",
+        $log->syslog('notice', "Upgrading from %s to %s...",
             $main::options{'from'}, $main::options{'to'});
     }
 
     unless (
         Sympa::Upgrade::upgrade($main::options{'from'}, $main::options{'to'}))
     {
-        Log::do_log('err', "Migration from %s to %s failed",
+        $log->syslog('err', "Migration from %s to %s failed",
             $main::options{'from'}, $main::options{'to'});
         exit 1;
     }
 
-    Log::do_log('notice', 'Upgrade process finished');
+    $log->syslog('notice', 'Upgrade process finished');
     Sympa::Upgrade::update_version();
 
     exit 0;
@@ -805,20 +805,20 @@ if ($main::options{'dump'}) {
 ## versions
 } elsif ($main::options{'upgrade_shared'}) {
 
-    Log::do_log('notice', "Upgrade shared process...");
+    $log->syslog('notice', "Upgrade shared process...");
 
     my $listname;
     my $robot;
 
     unless (($main::options{'list'}) || ($main::options{'robot'})) {
-        Log::do_log('err',
+        $log->syslog('err',
             "listname and domain are required, use --list= --robot= options");
         exit 0;
     }
     $listname = $main::options{'list'};
     $robot    = $main::options{'robot'};
 
-    Log::do_log('notice', "Upgrading share for list=%s robot=%s",
+    $log->syslog('notice', "Upgrading share for list=%s robot=%s",
         $listname, $robot);
 
     my $list = Sympa::List->new($listname, $robot);
@@ -830,7 +830,7 @@ if ($main::options{'dump'}) {
     }
 
     if (-d $list->{'dir'} . '/shared') {
-        Log::do_log(
+        $log->syslog(
             'notice',
             'Processing list %s...',
             $list->get_list_address()
@@ -850,17 +850,17 @@ if ($main::options{'dump'}) {
             $list_encoding);
 
         if ($count) {
-            Log::do_log('notice', 'List %s: %d filenames has been changed',
+            $log->syslog('notice', 'List %s: %d filenames has been changed',
                 $list->{'name'}, $count);
         }
     }
-    Log::do_log('notice', 'Upgrade_shared process finished');
+    $log->syslog('notice', 'Upgrade_shared process finished');
 
     exit 0;
 
 } elsif ($main::options{'reload_list_config'}) {
     if ($main::options{'list'}) {
-        Log::do_log('notice', 'Loading list %s...', $main::options{'list'});
+        $log->syslog('notice', 'Loading list %s...', $main::options{'list'});
         my $list =
             Sympa::List->new($main::options{'list'}, '',
             {'reload_config' => 1});
@@ -870,10 +870,10 @@ if ($main::options{'dump'}) {
             exit 1;
         }
     } else {
-        Log::do_log('notice', "Loading ALL lists...");
+        $log->syslog('notice', "Loading ALL lists...");
         my $all_lists = Sympa::List::get_lists('*', 'reload_config' => 1);
     }
-    Log::do_log('notice', '...Done.');
+    $log->syslog('notice', '...Done.');
 
     exit 0;
 }
@@ -1009,7 +1009,7 @@ sub _load {
     }
 
     ## Open the syslog and say we're read out stuff.
-    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+    $log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
     # Enable SMTP logging if required
     $mailer->{log_smtp} = $main::options{'mail'}
@@ -1017,15 +1017,15 @@ sub _load {
 
     # setting log_level using conf unless it is set by calling option
     if (defined $main::options{'log_level'}) {
-        Log::set_log_level($main::options{'log_level'});
-        Log::do_log(
+        $log->{level} = $main::options{'log_level'};
+        $log->syslog(
             'info',
             'Configuration file read, log level set using options: %s',
             $main::options{'log_level'}
         );
     } else {
-        Log::set_log_level($Conf::Conf{'log_level'});
-        Log::do_log(
+        $log->{level} = $Conf::Conf{'log_level'};
+        $log->syslog(
             'info',
             'Configuration file read, default log level %s',
             $Conf::Conf{'log_level'}
@@ -1087,7 +1087,7 @@ sub _load {
 #
 ##############################################################
 sub SendDigest {
-    Log::do_log('debug', '(%s => %s, %s => %s)', @_);
+    $log->syslog('debug', '(%s => %s, %s => %s)', @_);
     my %options     = @_;
     my $keep_digest = $options{keep_digest};
     my $send_now    = $options{send_now};
@@ -1126,22 +1126,20 @@ sub SendDigest {
 
         unless ($metadata and ref($metadata->{context}) eq 'Sympa::List') {
             #FIXME: File would be kept in such as bad/ directory.
-            Log::do_log('info', 'Unknown list %s, deleting digest file',
+            $log->syslog('info', 'Unknown list %s, deleting digest file',
                 $listaddress);
-            Log::db_log(
-                {    #'robot'        => $robot,
-                    #'list'         => $list->{'name'},
-                    'action'       => 'SendDigest',
-                    'parameters'   => "$filename",
-                    'target_email' => '',
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'unknown_list',
-                    'user_email'   => '',
-                }
+            $log->db_log(    #'robot'        => $robot,
+                #'list'         => $list->{'name'},
+                'action'       => 'SendDigest',
+                'parameters'   => "$filename",
+                'target_email' => '',
+                'msg_id'       => '',
+                'status'       => 'error',
+                'error_type'   => 'unknown_list',
+                'user_email'   => ''
             );
             unlink $filename;
-            next;    # foreach my $listaddress
+            next;            # foreach my $listaddress
         }
         my $list     = $metadata->{context};
         my $robot_id = $list->{'domain'};
@@ -1154,23 +1152,22 @@ sub SendDigest {
 
         if ($send_now or $list->get_nextdigest()) {
             ## Blindly send the message to all users.
-            Log::do_log('info', "Sending digest to list %s", $listaddress);
+            $log->syslog('info', "Sending digest to list %s", $listaddress);
             my $start_time = time;
             $list->distribute_digest(keep_digest => $keep_digest);
 
-            Log::do_log('info', 'Digest of the list %s sent (%d seconds)',
+            $log->syslog('info', 'Digest of the list %s sent (%d seconds)',
                 $list, time - $start_time);
-            Log::db_log(
-                {   'robot'        => $robot_id,
-                    'list'         => $list->{'name'},
-                    'action'       => 'SendDigest',
-                    'parameters'   => "",
-                    'target_email' => '',
-                    'msg_id'       => '',
-                    'status'       => 'success',
-                    'error_type'   => '',
-                    'user_email'   => '',
-                }
+            $log->db_log(
+                'robot'        => $robot_id,
+                'list'         => $list->{'name'},
+                'action'       => 'SendDigest',
+                'parameters'   => "",
+                'target_email' => '',
+                'msg_id'       => '',
+                'status'       => 'success',
+                'error_type'   => '',
+                'user_email'   => ''
             );
         }
     }

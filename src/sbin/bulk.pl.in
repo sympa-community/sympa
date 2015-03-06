@@ -38,7 +38,7 @@ use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::DatabaseManager;
 use Sympa::List;
-use Log;
+use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message;
 use tools;
@@ -86,7 +86,7 @@ unless (Conf::load()) {
         Conf::get_sympa_conf();
 }
 
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+$log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
 my $mailer = Sympa::Mailer->instance;
 
@@ -99,16 +99,16 @@ $mailer->{log_smtp} = $default_log_smtp;
 my $default_log_level;
 if ($main::options{'log_level'}) {
     $default_log_level = $main::options{'log_level'};
-    Log::set_log_level($default_log_level);
-    Log::do_log(
+    $log->{level} = $default_log_level;
+    $log->syslog(
         'info',
         'Configuration file read, log level set using options: %s',
         $main::options{'log_level'}
     );
 } else {
     $default_log_level = $Conf::Conf{'log_level'};
-    Log::set_log_level($default_log_level);
-    Log::do_log(
+    $log->{level} = $default_log_level;
+    $log->syslog(
         'info',
         'Configuration file read, default log level %s',
         $Conf::Conf{'log_level'}
@@ -128,14 +128,14 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     setpgrp 0, 0;
     my $child_pid = fork;
     if ($child_pid) {
-        Log::do_log('info', 'Starting bulk master daemon, PID %s',
+        $log->syslog('info', 'Starting bulk master daemon, PID %s',
             $child_pid);
         exit 0;
     } elsif (not defined $child_pid) {
         die sprintf 'Cannot fork: %s', $ERRNO;
     }
 }
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+$log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
@@ -169,7 +169,7 @@ unless (chdir($Conf::Conf{'home'})) {
     die sprintf 'Can\'t chdir to %s: %s', $Conf::Conf{'home'}, $!;
 }
 
-Log::do_log('notice', 'Bulk %s Started', Sympa::Constants::VERSION);
+$log->syslog('notice', 'Bulk %s Started', Sympa::Constants::VERSION);
 
 ## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -189,7 +189,7 @@ while (!$end) {
     # Enable SMTP logging if required.
     $mailer->{log_smtp} = $default_log_smtp;
     # setting log_level using conf unless it is set by calling option
-    Log::set_log_level($default_log_level);
+    $log->{level} = $default_log_level;
 
     Sympa::List::init_list_cache();
     # Process grouped notifications
@@ -221,14 +221,14 @@ while (!$end) {
             my @pids_leftover = keys %dead_children;
             if ($#pids_leftover > -1) {
                 my @dc;
-                Log::do_log('debug2',
+                $log->syslog('debug2',
                     'Some childs of current process disappeared. Checking whether they shut down cleanly or not.'
                 );
                 my $pids_in_pfile =
                     Sympa::Tools::Daemon::get_pids_in_pid_file('bulk');
                 foreach my $fpid (@{$pids_in_pfile}) {
                     if (defined $dead_children{$fpid}) {
-                        Log::do_log(
+                        $log->syslog(
                             'err',
                             'The %s child exists in the PID file but is no longer running. Removing it and notyfying listmaster',
                             $fpid
@@ -263,7 +263,7 @@ while (!$end) {
                 Sympa::DatabaseManager->disconnect;
 
                 if ($Conf::Conf{'bulk_max_count'} > 1) {
-                    Log::do_log(
+                    $log->syslog(
                         'info',
                         'Important workload: %s packets to process. Creating %s child bulks to increase sending rate',
                         $r_packets,
@@ -273,10 +273,10 @@ while (!$end) {
                     for my $process_count (
                         1 .. $Conf::Conf{'bulk_max_count'} -
                         scalar(@remaining_children)) {
-                        Log::do_log('info', "Will fork: %s", $process_count);
+                        $log->syslog('info', "Will fork: %s", $process_count);
                         my $child_pid = fork;
                         if ($child_pid) {
-                            Log::do_log('info',
+                            $log->syslog('info',
                                 'Starting bulk child daemon, PID %s',
                                 $child_pid);
                             # Saves the pid number
@@ -285,7 +285,7 @@ while (!$end) {
                             $created_children{$child_pid} = 1;
                             sleep 1;
                         } elsif (not defined $child_pid) {
-                            Log::do_log('err', 'Cannot fork: %m');
+                            $log->syslog('err', 'Cannot fork: %m');
                             last;
                         } else {
                             ## We're in a child bulk process
@@ -294,9 +294,9 @@ while (!$end) {
                                 ('pid' => $PID));
                             $date_of_last_activity = time();
                             $main::daemon_usage = 'DAEMON_SLAVE'; # child bulk
-                            Log::do_openlog($Conf::Conf{'syslog'},
+                            $log->openlog($Conf::Conf{'syslog'},
                                 $Conf::Conf{'log_socket_type'}, 'bulk');
-                            Log::do_log('info',
+                            $log->syslog('info',
                                 'Bulk slave daemon started with PID %s',
                                 $PID);
                             last;
@@ -316,7 +316,7 @@ while (!$end) {
     if (    $main::daemon_usage eq 'DAEMON_SLAVE'
         and time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}
         and !(my $r_packets = $bulk->too_much_remaining_packets())) {
-        Log::do_log('info',
+        $log->syslog('info',
             'Process %s didn\'t send any message since %s seconds, exiting',
             $PID, $Conf::Conf{'bulk_lazytime'});
         last;
@@ -338,7 +338,7 @@ while (!$end) {
         }
 
         if ($message->{serial} eq '0' or $message->{serial} eq 's') {
-            Log::do_log(
+            $log->syslog(
                 'notice',
                 'Start sending message %s to %s (priority %s) (starting %s seconds after scheduled expedition date)',
                 $message,
@@ -354,8 +354,8 @@ while (!$end) {
             || Sympa::Tools::Data::smart_eq(
             Conf::get_robot_conf($robot, 'log_smtp'), 'on');
         # setting log_level using conf unless it is set by calling option
-        Log::set_log_level(
-            (defined $main::options{'log_level'})
+        $log->{level} = (
+            defined $main::options{'log_level'}
             ? $main::options{'log_level'}
             : Conf::get_robot_conf($robot, 'log_level')
         );
@@ -448,7 +448,7 @@ while (!$end) {
 
                 if ($new_message->{shelved}{merge}) {
                     unless ($new_message->personalize($list, $rcpt)) {
-                        Log::do_log('err', 'Erreur d appel personalize()');
+                        $log->syslog('err', 'Erreur d appel personalize()');
                         tools::send_notify_to_listmaster($list, 'bulk_failed',
                             {'message_id' => $message->get_id});
                         # Quarantine packet into bad spool.
@@ -465,7 +465,7 @@ while (!$end) {
 
                 if ($new_message->{shelved}{smime_encrypt}) {
                     unless ($new_message->smime_encrypt($rcpt)) {
-                        Log::do_log(
+                        $log->syslog(
                             'err',
                             'Unable to encrypt message %s from %s for recipient %s',
                             $new_message,
@@ -504,7 +504,7 @@ while (!$end) {
                         tag   => $new_message->{serial}
                     )
                     ) {
-                    Log::do_log('err',
+                    $log->syslog('err',
                         'Failed to store message %s into mailer',
                         $new_message);
                     $bulk->quarantine($handle);
@@ -553,7 +553,7 @@ while (!$end) {
                     $new_message, [@rcpts], tag => $new_message->{serial}
                 )
                 ) {
-                Log::do_log('err', 'Failed to store message %s into mailer',
+                $log->syslog('err', 'Failed to store message %s into mailer',
                     $new_message);
                 $bulk->quarantine($handle);
                 undef $handle;
@@ -563,14 +563,15 @@ while (!$end) {
         ## Remove packet once it has been processed
         if ($handle) {
             unless ($bulk->remove($handle)) {
-                Log::do_log('err', 'Failed to remove processed packet %s',
+                $log->syslog('err', 'Failed to remove processed packet %s',
                     $message);
             }
         }
 
         $date_of_last_activity = time();
     } elsif ($handle) {
-        Log::do_log('err', 'Cannot parse message <%s>', $handle->basename(1));
+        $log->syslog('err', 'Cannot parse message <%s>',
+            $handle->basename(1));
         $bulk->quarantine($handle);
         next;
     } else {
@@ -583,7 +584,7 @@ while (!$end) {
 # Purge grouped notifications
 Sympa::Alarm->instance->flush(purge => 1);
 
-Log::do_log('notice', 'Bulk exited normally due to signal');
+$log->syslog('notice', 'Bulk exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid('bulk', $PID, $options);
 
 exit(0);
@@ -592,8 +593,8 @@ exit(0);
 ## variable.
 sub sigterm {
     my ($sig) = @_;
-    Log::do_log('notice', 'Signal %s received, still processing current task',
-        $sig);
+    $log->syslog('notice',
+        'Signal %s received, still processing current task', $sig);
     $end = 1;
 }
 
@@ -605,9 +606,9 @@ sub trace_smime {
     return if defined $result and $result == 0;
 
     unless ($result) {
-        Log::do_log('debug', 'Signature S/MIME NOT OK (%s)', $where);
+        $log->syslog('debug', 'Signature S/MIME NOT OK (%s)', $where);
     } else {
-        Log::do_log('debug', 'Signature S/MIME OK (%s)', $where);
+        $log->syslog('debug', 'Signature S/MIME OK (%s)', $where);
     }
 }
 

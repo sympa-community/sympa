@@ -32,7 +32,7 @@ use Pod::Usage;
 
 use Conf;
 use Sympa::Crash;    # Show traceback.
-use Log;
+use Sympa::Log;
 
 # If this program was invoked by the other, throw standard output away so
 # that parent's output (e.g. via CGI) won't be stained.
@@ -67,12 +67,12 @@ my $robot_id = $options{'domain'};
 
 # Load configuration
 unless (Conf::load()) {
-    Log::do_log('err', 'The configuration file %s contains error',
+    $log->syslog('err', 'The configuration file %s contains error',
         Conf::get_sympa_conf());
     exit 1;
 }
 
-Log::do_openlog(
+$log->openlog(
     $Conf::Conf{'syslog'},
     $Conf::Conf{'log_socket_type'},
     database_backend => undef
@@ -80,15 +80,15 @@ Log::do_openlog(
 
 # setting log_level using conf unless it is set by calling option
 if (defined $main::options{'log_level'}) {
-    Log::set_log_level($main::options{'log_level'});
+    $log->{level} = $main::options{'log_level'};
 } else {
-    Log::set_log_level($Conf::Conf{'log_level'});
+    $log->{level} = $Conf::Conf{'log_level'};
 }
 
 my ($aliases_file, $aliases_program, $aliases_db_type);
 if ($robot_id) {
     unless (Conf::valid_robot($robot_id)) {
-        Log::do_log('err', 'Robot %s does not exist', $robot_id);
+        $log->syslog('err', 'Robot %s does not exist', $robot_id);
         exit 1;
     }
     $aliases_file    = Conf::get_robot_conf($robot_id, 'sendmail_aliases');
@@ -102,30 +102,30 @@ if ($robot_id) {
 if ($aliases_file eq 'none') {
     exit 0;    # do nothing
 } elsif (!-e $aliases_file) {
-    Log::do_log('err', 'The aliases file %s does not exist', $aliases_file);
+    $log->syslog('err', 'The aliases file %s does not exist', $aliases_file);
     exit 1;
 }
 unless ($aliases_db_type =~ /\A\w+\z/) {
-    Log::do_log('err', 'Invalid aliases_db_type "%s"', $aliases_db_type);
+    $log->syslog('err', 'Invalid aliases_db_type "%s"', $aliases_db_type);
     exit 1;
 }
 
 if ($aliases_program =~ m{\A/}) {
-    Log::do_log('debug2', 'Executing "%s %s"',
+    $log->syslog('debug2', 'Executing "%s %s"',
         $aliases_program, $aliases_file);
 
     exec $aliases_program, $aliases_file;
 } elsif ($aliases_program eq 'makemap') {
-    Log::do_log('debug2', 'Executing "%s %s %s < %s"',
+    $log->syslog('debug2', 'Executing "%s %s %s < %s"',
         q{--MAKEMAP--}, $aliases_db_type, $aliases_file, $aliases_file);
 
     unless (open STDIN, '<', $aliases_file) {
-        Log::do_log('err', 'Canot open %s', $aliases_file);
+        $log->syslog('err', 'Canot open %s', $aliases_file);
         exit 1;
     }
     exec q{--MAKEMAP--}, $aliases_db_type, $aliases_file;
 } elsif ($aliases_program eq 'newaliases') {
-    Log::do_log(
+    $log->syslog(
         'debug2',
         'Executing "%s"',
         q{--NEWALIASES-- --NEWALIASES_ARG--}
@@ -140,22 +140,22 @@ if ($aliases_program =~ m{\A/}) {
         exec q{--NEWALIASES--};
     }
 } elsif ($aliases_program eq 'postalias') {
-    Log::do_log('debug2', 'Executing "%s %s:%s"',
+    $log->syslog('debug2', 'Executing "%s %s:%s"',
         q{--POSTALIAS--}, $aliases_db_type, $aliases_file);
 
     exec q{--POSTALIAS--}, "$aliases_db_type:$aliases_file";
 } elsif ($aliases_program eq 'postmap') {
-    Log::do_log('debug2', 'Executing "%s %s:%s"',
+    $log->syslog('debug2', 'Executing "%s %s:%s"',
         q{--POSTMAP--}, $aliases_db_type, $aliases_file);
 
     exec q{--POSTMAP--}, "$aliases_db_type:$aliases_file";
 } else {
-    Log::do_log('err', 'Invalid aliases_program "%s"', $aliases_program);
+    $log->syslog('err', 'Invalid aliases_program "%s"', $aliases_program);
     exit 1;
 }
 
 my $errno = $ERRNO;
-Log::do_log('Cannot execute aliases_program "%s": %m', $aliases_program);
+$log->syslog('Cannot execute aliases_program "%s": %m', $aliases_program);
 exit($errno || 1);
 
 __END__
