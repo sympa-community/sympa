@@ -11788,24 +11788,7 @@ sub do_reviewbouncing {
         $i;
         $i = $list->get_next_bouncing_list_member()
         ) {
-        $i->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
-        $i->{'first_bounce'} = $1;
-        $i->{'last_bounce'}  = $2;
-        $i->{'bounce_count'} = $3;
-        if ($5 =~ /^(\d+)\.\d+\.\d+$/) {
-            $i->{'bounce_class'} = $1;
-        }
-
-        ## Define color in function of bounce_score
-        if ($i->{'bounce_score'} <=
-            $list->{'admin'}{'bouncers_level1'}{'rate'}) {
-            $i->{'bounce_level'} = 0;
-        } elsif ($i->{'bounce_score'} <=
-            $list->{'admin'}{'bouncers_level2'}{'rate'}) {
-            $i->{'bounce_level'} = 1;
-        } else {
-            $i->{'bounce_level'} = 2;
-        }
+        $list->parse_list_member_bounce($i);
         push @users, $i;
     }
 
