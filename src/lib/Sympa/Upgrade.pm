@@ -1393,17 +1393,27 @@ sub upgrade {
             $list->{'admin'}{'archive'} = {}
                 unless ref $list->{'admin'}{'archive'} eq 'HASH';
 
-            $list->{'admin'}{'archive'}{'mail_access'} =
-                $list->{'admin'}{'archive'}{'access'}
-                if $list->{'admin'}{'archive'}{'access'};
+			if ($list->{'admin'}{'archive'}{'access'}) {
+				my $scenario = Sympa::Scenario->new(
+					'function'  => 'archive_mail_access',
+					'robot'     => $list->{domain},
+					'name'      => $list->{'admin'}{'archive'}{'access'},
+					'directory' => $list->{dir}
+				);
+				$list->{'admin'}{'archive'}{'mail_access'} =
+					{
+						'file_path' => $scenario->{'file_path'},
+						'name'      => $scenario->{'name'}
+					};
+
+			}
+
             delete $list->{'admin'}{'archive'}{'access'};
 
             if (ref $list->{'admin'}{'web_archive'} eq 'HASH'
                 and $list->{'admin'}{'web_archive'}{'access'}) {
                 $list->{'admin'}{'process_archive'} = 'on';
                 delete $list->{'admin'}{'defaults'}{'process_archive'};
-                #} else {
-                #    $list->{'admin'}{'process_archive'} = 'off';
             }
             if (ref $list->{'admin'}{'web_archive'} eq 'HASH') {
                 $list->{'admin'}{'archive'}{'web_access'} =
