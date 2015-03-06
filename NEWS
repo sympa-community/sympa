@@ -3,6 +3,34 @@
 
 (See Changelog file for the full changes log)
 
+6.2b.8		March 06, 2015
+
+  Features:
+
+	[12026] default/web_tt2/home.tt2:  News about list activities and
+	potential user errors are displayed at the home page.
+
+
+
+  Changes:
+
+	[12029] default/web_tt2/news.tt2, src/cgi/wwsympa.fcgi.in:  Impoving
+	the details given to user when errors are reported to him.
+
+  Bug fixes:
+
+	[12027] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/List.pm:  When
+	displaying user errors; errors were displayed even if the user was not
+	concerned by the error. Fixed by getting the actual user data.
+
+	[12025] src/lib/Sympa/Upgrade.pm:  When upgrading from pre-beta
+	version, archives parameters are renamed. The upgrade process crashed
+	on mail_access sub-parameters because they were set as a string instead
+	of as a scenario. Simply setting them as a hash containing a 'name'
+	entry whose value was the scenarion name was not enough: it led to
+	totally messed up archive parameters. Finally fixed by loading the
+	mail_access scenario to initialize the mail_access sub-parameter.
+
 6.2b.7		March 04, 2015
 
   Changes:
