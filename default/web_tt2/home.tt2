@@ -3,6 +3,8 @@
 <h2>[%|loc%]Welcome[%END%]</h2>
 <p>[%|loc%]This server provides you access to your mailing list environment. Starting from this web page, you can perform subscription options, unsubscription, archive, list moderation, list configuration.[%END%]<p>
 
+[% PROCESS news.tt2 %]
+
 [% IF not user.email %]
 <div style="padding: 0 0 2em 0;">
 	<h2>[%|loc%]Logging In[%END%]</h2>
