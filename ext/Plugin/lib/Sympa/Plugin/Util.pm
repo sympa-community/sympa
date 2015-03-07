@@ -171,17 +171,17 @@ sub plugin($;$) { @_==2 ? ($plugins{$_[0]} = $_[1]) :  $plugins{$_[0]} }
 
 =cut
 
-sub log(@)   { goto &Log::do_log }
-sub fatal(@) { goto &Log::fatal_err }
+sub log(@)   { unshift @_, Sympa::Log->instance; goto &Sympa::Log::syslog; }
+sub fatal(@) { die @_; }
 
 sub trace_call(@)          # simplification of method logging
 {   my $sub = (caller 1)[3];
     local $" =  ',';
-    @_ = (debug2 => "$sub(@_)");
-    goto &Log::do_log;
+    @_ = (Sympa::Log->instance, debug2 => "$sub(@_)");
+    goto &Sympa::Log::syslog;
 }
 
-# These should (have been) modularized via Log::
+# These should (have been) modularized via Sympa::Log::
 *wwslog     = \&main::wwslog;
 *web_db_log = \&main::web_db_log;
 
