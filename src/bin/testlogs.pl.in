@@ -29,10 +29,12 @@ use warnings;
 use Getopt::Long;
 
 use Conf;
-use Log;
+use Sympa::Log;
 
 my %options;
 GetOptions(\%main::options, 'debug|d', 'log_level=s', 'config|f=s');
+
+my $log = Sympa::Log->instance;
 
 ## Load configuration file
 unless (Conf::load()) {
@@ -42,7 +44,7 @@ unless (Conf::load()) {
 }
 
 ## Open the syslog and say we're read out stuff.
-Log::do_openlog(
+$log->openlog(
     $Conf::Conf{'syslog'},
     $Conf::Conf{'log_socket_type'},
     service => 'sympa/testlogs'
@@ -50,12 +52,14 @@ Log::do_openlog(
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
-    Log::do_log('info',
-        "Logs seems OK, log level set using options : $main::options{'log_level'}"
+    $log->syslog(
+        'info',
+        'Logs seems OK, log level set using options: %s',
+        $main::options{'log_level'}
     );
 } else {
-    Log::set_log_level($Conf::Conf{'log_level'});
-    Log::do_log(
+    $log->{level} = $Conf::Conf{'log_level'};
+    $log->syslog(
         'info',
         'Logs seems OK, default log level %s',
         $Conf::Conf{'log_level'}

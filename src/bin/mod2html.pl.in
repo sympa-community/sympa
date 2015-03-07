@@ -12,14 +12,16 @@ use Sympa::Archive;
 use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
-use Log;
+use Sympa::Log;
 use Sympa::Message;
 use tools;
+
+my $log = Sympa::Log->instance;
 
 unless (Conf::load(Sympa::Constants::CONFIG)) {
     die "Can't load Sympa configuration file";
 }
-Log::do_openlog(
+$log->openlog(
     $Conf::Conf{'syslog'},
     $Conf::Conf{'log_socket_type'},
     service => 'sympa/mod2html'

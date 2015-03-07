@@ -34,7 +34,7 @@ use Pod::Usage;
 use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
-use Log;
+use Sympa::Log;
 use SDM;
 
 my %options;
@@ -47,6 +47,8 @@ if ($options{'help'}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 }
+
+my $log = Sympa::Log->instance;
 
 # Load sympa.conf
 unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
@@ -90,7 +92,7 @@ sub process {
     my ($row_mailer, $row_spool);
     while ($row_mailer = $sth->fetchrow_hashref('NAME_lc')) {
         if ($row_mailer->{lock_bulkmailer}) {
-            Log::do_log(
+            $log->syslog(
                 'info',
                 'Packet %s is locked.  Skipping',
                 $row_mailer->{packetid_bulkmailer}
@@ -127,7 +129,7 @@ sub process {
         $row_spool = $sth2->fetchrow_hashref('NAME_lc');
         $sth2->finish;
         unless ($row_spool) {
-            Log::do_log('err', '%s: No messages found.  Skipping',
+            $log->syslog('err', '%s: No messages found.  Skipping',
                 $messagekey);
             $sth2->finish;
             next;
@@ -199,7 +201,7 @@ sub process {
             );
         }
         unless ($marshalled) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Packet %s of message %s could not be migrated into new spool',
                 $row_mailer->{packetid_bulkmailer},
@@ -207,7 +209,7 @@ sub process {
             );
             next;
         } else {
-            Log::do_log(
+            $log->syslog(
                 'notice',
                 'Packet %s of message %s was migrated into new spool as <%s>',
                 $row_mailer->{packetid_bulkmailer},

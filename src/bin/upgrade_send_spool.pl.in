@@ -35,7 +35,7 @@ use Sympa::Bulk;
 use Sympa::Constants;
 use Conf;
 use Sympa::LockedFile;
-use Log;
+use Sympa::Log;
 
 my %options;
 unless (GetOptions(\%options, 'help|h', 'dry_run', 'version|v')) {
@@ -47,6 +47,8 @@ if ($options{'help'}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 }
+
+my $log = Sympa::Log->instance;
 
 unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
     die sprintf 'Configuration file %s has errors.\n', Conf::get_sympa_conf();
@@ -122,7 +124,8 @@ sub process {
     ## valid X-Sympa-Checksum prove the message comes from web interface with
     ## authenticated sender
     unless ($message->{'checksum'} eq sympa_checksum($message->{'rcpt'})) {
-        Log::do_log('err', '%s: Incorrect X-Sympa-Checksum header', $message);
+        $log->syslog('err', '%s: Incorrect X-Sympa-Checksum header',
+            $message);
         return undef;
     }
 
@@ -133,11 +136,11 @@ sub process {
         tools::store_spool($spool_dir, $message, '%s@%s.%ld.%ld,%d',
             [qw(localpart domainpart date pid RAND)])
             unless $options{dry_run};
-        Log::do_log('info', '%s: Moved to msg spool', $message);
+        $log->syslog('info', '%s: Moved to msg spool', $message);
     } else {
         $bulk->store($message, [split /\s*,\s*/, $message->{rcpt}])
             unless $options{dry_run};
-        Log::do_log('info', '%s: Moved to bulk spool', $message);
+        $log->syslog('info', '%s: Moved to bulk spool', $message);
     }
     return 1;
 }

@@ -39,7 +39,7 @@ use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::Language;
 use Sympa::LockedFile;
-use Log;
+use Sympa::Log;
 use tools;
 use tt2;
 
@@ -60,8 +60,9 @@ unless (defined Conf::load()) {
     exit 1;
 }
 
-Log::set_log_level($Conf::Conf{'log_level'});
-Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+my $log = Sympa::Log->instance;
+$log->{level} = $Conf::Conf{'log_level'};
+$log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
 my $tmp_alias_file = $Conf::Conf{'tmpdir'} . '/sympa_aliases.' . time;
 

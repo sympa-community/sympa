@@ -74,7 +74,7 @@ use Sympa::Family;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
 use Sympa::List;
-use Log;
+use Sympa::Log;
 use Sympa::Marc::Search;
 use Sympa::Message;
 use Sympa::Regexps;
@@ -124,11 +124,11 @@ unless (Conf::load()) {
     exit 1;
 }
 
-Log::set_log_level($Conf::Conf{'log_level'});
-
-## Open log
-my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
-Log::do_openlog($log_facility, $Conf::Conf{'log_socket_type'});
+# Open log
+my $log = Sympa::Log->instance;
+$log->{level} = $Conf::Conf{'log_level'};
+$log->openlog($Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'},
+    $Conf::Conf{'log_socket_type'});
 
 ## Start plugins
 if (eval "require Sympa::Plugin::Manager") {
@@ -968,7 +968,7 @@ $plugins->start if $plugins;
 my $maintenance_mode;
 unless (Conf::data_structure_uptodate()) {
     $maintenance_mode = 1;
-    Log::do_log('err',
+    $log->syslog('err',
         "Web interface set to maintenance mode ; you should run sympa.pl --upgrade"
     );
 }
@@ -984,7 +984,7 @@ my $birthday = time;
 
 my $bulk = Sympa::Bulk->new;
 
-Log::do_log('info', 'WWSympa started, process %d', $PID);
+$log->syslog('info', 'WWSympa started, process %d', $PID);
 
 # Now internal encoding is same as input/output.
 #XXX## Set output encoding
@@ -1011,7 +1011,7 @@ while ($query = new_loop()) {
     undef $ajax;
     undef $session;
 
-    Log::set_log_level($Conf::Conf{'log_level'});
+    $log->{level} = $Conf::Conf{'log_level'};
     $language->set_lang(tools::best_language('*'));
 
     ## Empty cache of the List.pm module
@@ -1042,7 +1042,7 @@ while ($query = new_loop()) {
     unless (SDM::check_db_connect()) {
         Sympa::Report::reject_report_web('system_quiet', 'no_database', {},
             '', '');
-        Log::do_log('info', 'WWSympa requires a RDBMS to run');
+        $log->syslog('info', 'WWSympa requires a RDBMS to run');
     }
 
     ## If in maintenance mode, check if the data structure is now uptodate
@@ -1050,7 +1050,7 @@ while ($query = new_loop()) {
         and Conf::data_structure_uptodate()
         and ($EUID eq (getpwnam(Sympa::Constants::USER))[2])) {
         $maintenance_mode = undef;
-        Log::do_log('notice',
+        $log->syslog('notice',
             "Data structure seem updated, setting OFF maintenance mode");
     }
 
@@ -1062,7 +1062,7 @@ while ($query = new_loop()) {
     %in = $query->Vars;
 
     foreach my $k (keys %::changed_params) {
-        Log::do_log('debug3', 'Changed Param: %s', $k);
+        $log->syslog('debug3', 'Changed Param: %s', $k);
     }
 
     ## Parse CGI parameters
@@ -1117,7 +1117,7 @@ while ($query = new_loop()) {
         );
         $param->{'cookie_domain'} = $http_host;
     }
-    Log::set_log_level(Conf::get_robot_conf($robot, 'log_level'));
+    $log->{level} = Conf::get_robot_conf($robot, 'log_level');
 
     ## Sympa parameters in $param->{'conf'}
     $param->{'conf'} = {};
@@ -1176,14 +1176,14 @@ while ($query = new_loop()) {
     }
 
     foreach my $auth (keys %{$Conf::Conf{'cas_id'}{$robot}}) {
-        Log::do_log('debug2', 'CAS authentication service %s', $auth);
+        $log->syslog('debug2', 'CAS authentication service %s', $auth);
         $param->{'sso'}{$auth} =
             $Conf::Conf{'cas_id'}{$robot}{$auth}
             {'auth_service_friendly_name'};
     }
 
     foreach my $auth (keys %{$Conf::Conf{'generic_sso_id'}{$robot}}) {
-        Log::do_log('debug', 'Generic SSO authentication service %s', $auth);
+        $log->syslog('debug', 'Generic SSO authentication service %s', $auth);
         $param->{'sso'}{$auth} =
             $Conf::Conf{'auth_services'}{$robot}
             [$Conf::Conf{'generic_sso_id'}{$robot}{$auth}]{'service_name'};
@@ -1329,7 +1329,7 @@ while ($query = new_loop()) {
 
     $param->{'session'} = $session->as_hashref();
 
-    Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
+    $log->{level} = $session->{'log_level'} if ($session->{'log_level'});
     $param->{'restore_email'}         = $session->{'restore_email'};
     $param->{'dumpvars'}              = $session->{'dumpvars'};
     $param->{'unauthenticated_email'} = $session->{'unauthenticated_email'};
@@ -1348,7 +1348,7 @@ while ($query = new_loop()) {
             and $in{'action'} ne 'sso_login') {
             # Do not check client certificate automatically if in sso_login
 
-            Log::do_log(
+            $log->syslog(
                 'debug2',
                 'SSL verified, S_EMAIL = %s, " . " S_DN_Email = %s',
                 $ENV{'SSL_CLIENT_S_EMAIL'},
@@ -1395,7 +1395,7 @@ while ($query = new_loop()) {
 
             # select the cas server that redirect the user to sympa and check
             # the ticket
-            Log::do_log('notice',
+            $log->syslog('notice',
                 "CAS ticket is detected. in{'ticket'}=$in{'ticket'} checked_cas=$session->{'checked_cas'}"
             );
 
@@ -1418,7 +1418,7 @@ while ($query = new_loop()) {
                 my $net_id = $cas_server->validateST($service_url, $ticket);
 
                 if (defined $net_id) {    # the ticket is valid net-id
-                    Log::do_log('notice', 'Login CAS OK server netid=%s',
+                    $log->syslog('notice', 'Login CAS OK server netid=%s',
                         $net_id);
                     $param->{'user'}{'email'} = lc(
                         Sympa::Auth::get_email_by_net_id(
@@ -1431,11 +1431,11 @@ while ($query = new_loop()) {
                     $session->{'cas_server'} = $cas_id;
 
                 } else {
-                    Log::do_log('err', 'CAS ticket validation failed: %s',
+                    $log->syslog('err', 'CAS ticket validation failed: %s',
                         AuthCAS::get_errors());
                 }
             } else {
-                Log::do_log('notice',
+                $log->syslog('notice',
                     "Internal error while receiving a CAS ticket $session->{'checked_cas'} "
                 );
             }
@@ -1460,7 +1460,7 @@ while ($query = new_loop()) {
                     ## the check below works fine as long as we
                     ## don't have more then 10 CAS servers (because we don't
                     ## properly split the list of values)
-                    Log::do_log('debug',
+                    $log->syslog('debug',
                         "check_cas checker_cas : $session->{'checked_cas'} current cas_id $Conf::Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}"
                     );
                     next
@@ -1488,11 +1488,11 @@ while ($query = new_loop()) {
 
                         last;
                     } elsif ($redirect_url == -1) {    # CAS server auth error
-                        Log::do_log('notice',
+                        $log->syslog('notice',
                             "CAS server auth error $auth_service->{'auth_service_name'}"
                         );
                     } else {
-                        Log::do_log('notice',
+                        $log->syslog('notice',
                             "Strange CAS ticket detected and validated check sympa code !"
                         );
                     }
@@ -1869,7 +1869,7 @@ while ($query = new_loop()) {
 
             } else {
                 print "Internal error content-type nor file defined\n";
-                Log::do_log('err',
+                $log->syslog('err',
                     'Internal error content-type nor file defined');
             }
         }
@@ -1931,7 +1931,7 @@ while ($query = new_loop()) {
         }
 # 	 close FILE;
     } elsif ($param->{'redirect_to'}) {
-        Log::do_log('notice', 'Redirecting to %s', $param->{'redirect_to'});
+        $log->syslog('notice', 'Redirecting to %s', $param->{'redirect_to'});
         print "Location: $param->{'redirect_to'}\n\n";
     } else {
         prepare_report_user();
@@ -1942,7 +1942,7 @@ while ($query = new_loop()) {
     if ($ENV{'SCRIPT_FILENAME'}
         and Sympa::Tools::File::get_mtime($ENV{'SCRIPT_FILENAME'}) >
         $birthday) {
-        Log::do_log('notice',
+        $log->syslog('notice',
             'Exiting because %s has changed since fastcgi server started',
             $ENV{'SCRIPT_FILENAME'});
         exit(0);
@@ -2003,24 +2003,26 @@ sub wwslog {
     }
 
     # Don't push caller stack.  Note that goto statement requires "&" prefix!
-    unshift @_, $facility, $msg;
-    goto &Log::do_log;
+    unshift @_, $log, $facility, $msg;
+    goto &Sympa::Log::syslog;
 }
 
 sub web_db_log {
     my $data = shift;
 
-    $data->{'client'} = $param->{'remote_addr'};
-    $data->{'daemon'} = 'wwsympa';
-    $data->{'robot'}      ||= $robot;
-    $data->{'list'}       ||= $list->{'name'} if ref $list eq 'Sympa::List';
-    $data->{'action'}     ||= $param->{'action'};
-    $data->{'user_email'} ||= $param->{'user'}{'email'}
+    my %options = %{$data || {}};
+
+    $options{'client'} = $param->{'remote_addr'};
+    $options{'daemon'} = 'wwsympa';
+    $options{'robot'}      ||= $robot;
+    $options{'list'}       ||= $list->{'name'} if ref $list eq 'Sympa::List';
+    $options{'action'}     ||= $param->{'action'};
+    $options{'user_email'} ||= $param->{'user'}{'email'}
         if defined $param->{'user'};
     # Default email is the user email
-    $data->{'target_email'} ||= $data->{'user_email'};
+    $options{'target_email'} ||= $options{'user_email'};
 
-    unless (Log::db_log($data)) {
+    unless ($log->db_log(%options)) {
         wwslog('err', 'Failed to log in database');
         return undef;
     }
@@ -2033,16 +2035,15 @@ sub web_db_log {
 sub web_db_stat_log {
     my %options = @_;
 
-    my $data = {%options};
-    $data->{'mail'} ||= $param->{'user'}{'email'}
+    $options{'mail'} ||= $param->{'user'}{'email'}
         if defined $param->{'user'};
-    $data->{'operation'} ||= $param->{'action'};
-    $data->{'list'} ||= $list->{'name'} if ref $list eq 'Sympa::List';
-    $data->{'daemon'} = 'wwsympa';
-    $data->{'client'} = $param->{'remote_addr'};
-    $data->{'robot'} ||= $robot;
+    $options{'operation'} ||= $param->{'action'};
+    $options{'list'} ||= $list->{'name'} if ref $list eq 'Sympa::List';
+    $options{'daemon'} = 'wwsympa';
+    $options{'client'} = $param->{'remote_addr'};
+    $options{'robot'} ||= $robot;
 
-    unless (Log::db_stat_log($data)) {
+    unless ($log->add_stat(%options)) {
         wwslog('err', 'Failed to log in database');
         return undef;
     }
@@ -2100,7 +2101,7 @@ sub get_header_field {
 sub _split_params {
     my $args_string = shift;
 
-    Log::do_log('debug', "PATH_INFO: %s", $ENV{'PATH_INFO'});
+    $log->syslog('debug', "PATH_INFO: %s", $ENV{'PATH_INFO'});
 
     $args_string =~ s+^/++;
 
@@ -2129,7 +2130,7 @@ sub _split_params {
     } else {
         $main::options{'debug_level'} = 0;
     }
-    Log::do_log('debug2', 'Debug level %s', $main::options{'debug_level'});
+    $log->syslog('debug2', 'Debug level %s', $main::options{'debug_level'});
 
     ## rss mode
     if ($params[0] eq 'rss') {
@@ -2199,7 +2200,7 @@ sub get_parameters {
             $in{'action'} = $in{'javascript_action'};
         }
         foreach my $p (keys %in) {
-            Log::do_log('debug2', 'POST key %s value %s', $p, $in{$p})
+            $log->syslog('debug2', 'POST key %s value %s', $p, $in{$p})
                 unless ($p =~ /passwd/);
             if ($p =~ /^((\w*)action)_(\w+)((\.\w+)*)$/) {
 
@@ -2253,7 +2254,7 @@ sub get_parameters {
         } elsif ($pname =~ /^custom_attribute(.*)$/) {
             my $key = $tokens[1];
             $regexp = $in_regexp{'custom_attribute'};
-            # Log::do_log('debug2', '() (%s)(%s) %s %s %s', $p, $key, $name,
+            # $log->syslog('debug2', '() (%s)(%s) %s %s %s', $p, $key, $name,
             #     $in{$p}, $Conf::Conf{$key}->{type});
             $custom_attribute->{$key} = {value => $in{$p}};
             undef $in{$p};
@@ -2268,7 +2269,7 @@ sub get_parameters {
         } elsif ($pname =~ /^custom_input(.*)$/) {
             my $key = $tokens[1];
             $regexp = $in_regexp{'custom_input'};
-            Log::do_log('debug2',
+            $log->syslog('debug2',
                 "get_parameters (custom_input) : ($p)($key) $pname $in{$p} $Conf::Conf{$key}{type}"
             );
             $custom_input->{$key} = $in{$p};
@@ -2298,7 +2299,8 @@ sub get_parameters {
             if (defined $tmpparam) {
                 $in{$p} = $tmpparam;
             } else {
-                Log::do_log('err', 'Unable to sanitize parameter %s', $pname);
+                $log->syslog('err', 'Unable to sanitize parameter %s',
+                    $pname);
             }
         }
         foreach my $one_p (split /\0/, $in{$p}) {
@@ -2406,7 +2408,7 @@ sub get_parameters_old {
 
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
         my $path_info = $ENV{'PATH_INFO'};
-        Log::do_log('debug', "PATH_INFO: %s", $ENV{'PATH_INFO'});
+        $log->syslog('debug', "PATH_INFO: %s", $ENV{'PATH_INFO'});
 
         $path_info =~ s+^/++;
 
@@ -2439,8 +2441,11 @@ sub get_parameters_old {
         } else {
             $main::options{'debug_level'} = 0;
         }
-        Log::do_log('debug2', 'Debug level %s',
-            $main::options{'debug_level'});
+        $log->syslog(
+            'debug2',
+            'Debug level %s',
+            $main::options{'debug_level'}
+        );
 
         ## rss mode
 ########### /^rss$/ ???
@@ -2483,7 +2488,7 @@ sub get_parameters_old {
             $in{'action'} = $in{'javascript_action'};
         }
         foreach my $p (keys %in) {
-            Log::do_log('debug2', 'POST key %s value %s', $p, $in{$p});
+            $log->syslog('debug2', 'POST key %s value %s', $p, $in{$p});
             if ($p =~ /^((\w*)action)_(\w+)((\.\w+)*)$/) {
 
                 $in{$1} = $3;
@@ -2533,7 +2538,7 @@ sub get_parameters_old {
         } elsif ($pname =~ /^custom_attribute(.*)$/) {
             my $key = $tokens[1];
             $regexp = $in_regexp{'custom_attribute'};
-            Log::do_log('debug2',
+            $log->syslog('debug2',
                 "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} $Conf::Conf{$key}{type}"
             );
             $custom_attribute->{$key} = {value => $in{$p}};
@@ -2564,7 +2569,8 @@ sub get_parameters_old {
             if (defined $tmpparam) {
                 $in{$p} = $tmpparam;
             } else {
-                Log::do_log('err', 'Unable to sanitize parameter %s', $pname);
+                $log->syslog('err', 'Unable to sanitize parameter %s',
+                    $pname);
             }
         }
 
@@ -2777,12 +2783,12 @@ sub send_html {
 
     ## undefined $list has been initialized to be hashref.
     if (ref $list eq 'HASH') {
-        Log::do_log('notice',
+        $log->syslog('notice',
             'Someone tried to access inside of List object directly.  Fix the codes'
         );
         local $Data::Dumper::Varname = 'list';
         local $Data::Dumper::Indent  = 0;
-        Log::do_log('notice', '%s', Dumper($list));
+        $log->syslog('notice', '%s', Dumper($list));
         undef $list;
     }
 
@@ -2809,7 +2815,7 @@ sub send_html {
                 'htmlToFilter'     => $param_copy->{'htmlToFilter'},
             )
             ) {
-            Log::do_log('err', 'Failed to sanitize $param in host %s',
+            $log->syslog('err', 'Failed to sanitize $param in host %s',
                 $robot);
         }
     }
@@ -3662,7 +3668,7 @@ sub do_login {
     my $data;
 
     unless ($ENV{'REQUEST_METHOD'} eq 'POST') {
-        Log::do_log(
+        $log->syslog(
             'notice',
             "Authentication failed, because do not use HTTP method POST but %s",
             $ENV{'REQUEST_METHOD'}
@@ -3679,7 +3685,7 @@ sub do_login {
 
     unless ($data =
         Sympa::Auth::check_auth($robot, $in{'email'}, $in{'passwd'})) {
-        Log::do_log('notice', 'Authentication failed');
+        $log->syslog('notice', 'Authentication failed');
         web_db_log(
             {   'parameters'   => $in{'email'},
                 'target_email' => $in{'email'},
@@ -4018,7 +4024,7 @@ sub do_sso_login {
 
                 #
                 # Check input parameters and verify ticket for email, stolen
-                # from Log::do_login()
+                # from do_login()
                 #
                 unless ($in{'email'}) {
                     Sympa::Report::reject_report_web('user', 'no_email', {},
@@ -4363,7 +4369,7 @@ sub is_ldap_user {
 
         my $db = Sympa::Database->new('LDAP', %$ldap);
         unless ($db and $db->connect) {
-            Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
+            $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
                 $ldap->{'host'});
             next;
         }
@@ -4560,7 +4566,7 @@ sub do_logout {
 
 sub sendssopasswd {
     my $email = shift;
-    Log::do_log('info', '(%s)', $email);
+    $log->syslog('info', '(%s)', $email);
 
     my ($passwd, $user);
 
@@ -6423,7 +6429,7 @@ sub do_auto_signoff {
                 $robot, 'user_notification', $in{'email'}, $tt2_param
             )
             ) {
-            Log::do_log('notice',
+            $log->syslog('notice',
                 "Unable to send template 'user_notification' to $in{'email'}"
             );
             return undef;
@@ -6461,7 +6467,7 @@ sub do_family_signoff_request {
             $robot, 'user_notification', $in{'email'}, $tt2_param
         )
         ) {
-        Log::do_log('notice',
+        $log->syslog('notice',
             'Unable to send template "user_notification" to %s',
             $in{'email'});
         return undef;
@@ -6728,7 +6734,7 @@ sub do_sigrequest {
                 $robot, 'user_notification', $in{'email'}, $tt2_param
             )
             ) {
-            Log::do_log('notice',
+            $log->syslog('notice',
                 "Unable to send template 'user_notification' to $in{'email'}"
             );
             return undef;
@@ -6976,7 +6982,7 @@ sub do_edit_config {
             # if the parameter is editable and if the is a change
             next unless $p->{'name'} eq $in{'conf_parameter_name'};
             unless ($p->{'edit'} and $p->{'edit'} eq '1') {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Ignoring change of parameter %s (value %s) because not editable',
                     $in{'conf_parameter_name'},
@@ -6985,7 +6991,7 @@ sub do_edit_config {
                 last;
             }
             if ($in{'conf_new_value'} eq $p->{'current_value'}) {
-                Log::do_log(
+                $log->syslog(
                     'notice',
                     'Ignoring change of parameter %s (value %s) because inchanged',
                     $in{'conf_parameter_name'},
@@ -6996,7 +7002,7 @@ sub do_edit_config {
                 $p->{'current_value'} = $in{'conf_new_value'};
                 Conf::set_robot_conf($robot, $in{'conf_parameter_name'},
                     $in{'conf_new_value'});
-                Log::do_log(
+                $log->syslog(
                     'notice',
                     'Setting parameter %s to value %s',
                     $in{'conf_parameter_name'},
@@ -7610,7 +7616,7 @@ sub do_manage_template {
         $in{'new_default'} =~ s/\s/_/g;
         my $absolute_file = $base . 'reject_' . $in{'new_default'} . '.tt2';
 
-        Log::do_log(
+        $log->syslog(
             'info',
             'Change default by linking %s 2 %s',
             $base . 'reject.tt2',
@@ -8917,7 +8923,7 @@ sub do_reject {
                     }
                 }
             } else {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'No sender found for message %s.  Unable to use her address to add to blacklist or send notification',
                     $message
@@ -8932,7 +8938,7 @@ sub do_reject {
                     open(SCRIPT, "|$Conf::Conf{'reporting_spam_script_path'}"
                     )
                     ) {
-                    Log::do_log('err',
+                    $log->syslog('err',
                         "could not execute $Conf::Conf{'reporting_spam_script_path'}"
                     );
                 }
@@ -8941,16 +8947,16 @@ sub do_reject {
                 print SCRIPT $message->as_string;
 
                 if (close(SCRIPT)) {
-                    Log::do_log('info',
+                    $log->syslog('info',
                         "message $file reported as spam by $param->{'user'}{'email'}"
                     );
                 } else {
-                    Log::do_log('err',
+                    $log->syslog('err',
                         "could not report message $file as spam (close failed)"
                     );
                 }
             } else {
-                Log::do_log('err',
+                $log->syslog('err',
                     "ignoring parameter reporting_spam_script_path, value $Conf::Conf{'reporting_spam_script_path'} because not an executable script"
                 );
             }
@@ -11536,10 +11542,12 @@ sub do_home {
             if ($user->{bounce_count}) {
                 $param->{'errors_summary'}{$the_list->{'name'}} = {
                     count => $user->{bounce_count},
-                    first => $language->gettext_strftime("%d %b %Y",
-                        localtime($user->{first_bounce})),
-                    last => $language->gettext_strftime("%d %b %Y",
-                        localtime($user->{last_bounce})),
+                    first => $language->gettext_strftime(
+                        "%d %b %Y", localtime($user->{first_bounce})
+                    ),
+                    last => $language->gettext_strftime(
+                        "%d %b %Y", localtime($user->{last_bounce})
+                    ),
                     type => $user->{bounce_class},
                 };
             }
@@ -13156,7 +13164,7 @@ sub _prepare_edit_form {
             foreach my $v (@{$p->{'value'}}) {
                 next unless ($v->{'name'} eq 'days');
                 if (ref($v->{'value'}) eq 'ARRAY') {
-                    Log::do_log('debug2',
+                    $log->syslog('debug2',
                         'Empty digest parameter. Putting a dummy value');
                     $v->{'value'} = undef;
                     $v->{'type'}  = 'enum';
@@ -17513,7 +17521,7 @@ sub creation_shared_file {
             print $fh $sanitized_html;
             close $fh;
         } else {
-            Log::do_log('err', 'Unable to sanitize file %s', $fname);
+            $log->syslog('err', 'Unable to sanitize file %s', $fname);
         }
     }
 
@@ -18737,7 +18745,7 @@ sub d_copy_file {
                 print $fh $sanitized_html;
                 close $fh;
             } else {
-                Log::do_log('err', 'Unable to sanitize file %s', $fname);
+                $log->syslog('err', 'Unable to sanitize file %s', $fname);
             }
         }
 
@@ -19259,7 +19267,7 @@ sub do_d_rename {
         return undef;
     }
     if ($moderate) {
-        Log::do_log('notice', '%s, %s/%s/%s', $doc, $shareddir,
+        $log->syslog('notice', '%s, %s/%s/%s', $doc, $shareddir,
             $current_directory, $in{'new_name'});
         unless (rename $doc,
             "$shareddir/$current_directory/.$in{'new_name'}.moderate") {
@@ -19293,7 +19301,7 @@ sub do_d_rename {
             return undef;
         }
     } else {
-        Log::do_log('notice', '%s, %s/%s/%s', $doc, $shareddir,
+        $log->syslog('notice', '%s, %s/%s/%s', $doc, $shareddir,
             $current_directory, $in{'new_name'});
         unless (rename $doc, "$shareddir/$current_directory/$in{'new_name'}")
         {
@@ -20757,11 +20765,11 @@ sub do_change_email_request {
         )
         ) {
 
-        Log::do_log('notice',
+        $log->syslog('notice',
             "Unable to create one_time_ticket for $in{'new_email'}, service do_change_email_request"
         );
     } else {
-        Log::do_log('notice', '%s', $param->{'one_time_ticket'});
+        $log->syslog('notice', '%s', $param->{'one_time_ticket'});
     }
 
     $param->{'new_email'} = $in{'new_email'};
@@ -20775,7 +20783,7 @@ sub do_change_email_request {
             $robot, 'user_notification', $in{'new_email'}, $tt2_param
         )
         ) {
-        Log::do_log('notice',
+        $log->syslog('notice',
             "Unable to send template 'user_notification' to $in{'new_email'}"
         );
         return undef;
@@ -22480,7 +22488,7 @@ sub do_stats {
     };
 
     foreach my $operation (keys %$stats) {
-        my $data = Log::aggregate_daily_data($list, $operation);
+        my $data = $log->aggregate_daily_data($list, $operation);
         if (%{$data || {}}) {
             $stats->{$operation}{'stats_values'} = '[' . join(
                 ',',
@@ -22980,7 +22988,7 @@ sub do_viewlogs {
 
     $param->{'total_results'} = 0;
 
-    my @date = Log::get_log_date();
+    my @date = $log->get_log_date();
     $param->{'date_from_formated'} =
         $language->gettext_strftime("%Y-%m-%d-%H-%M-%S", localtime($date[0]));
     $param->{'date_to_formated'} =
@@ -23001,7 +23009,7 @@ sub do_viewlogs {
 
     if ($in{'target_type'} or $in{'page'} or $in{'size'}) {
         #sending of search parameters for the query
-        my $line = Log::get_first_db_log($select);
+        my $line = $log->get_first_db_log($select);
         while (defined $line->{'date'}) {
             $line->{'date'} = $language->gettext_strftime("%d %b %Y %H:%M:%S",
                 localtime($line->{'date'}));
@@ -23009,7 +23017,7 @@ sub do_viewlogs {
             $line->{'parameters'} =~ s/,(?!\s)/, /g
                 if $line->{'parameters'};
             push @{$param->{'log_entries'}}, $line;
-            $line = Log::get_next_db_log();
+            $line = $log->get_next_db_log();
         }
 
         #display the number of rows of the query.
@@ -23031,7 +23039,7 @@ sub do_viewlogs {
             Sympa::Report::reject_report_web('user', 'no_page',
                 {'page' => $param->{'page'}},
                 $param->{'action'});
-            # Log::db_log('wwsympa', $param->{'user'}{'email'},
+            # $log->db_log('wwsympa', $param->{'user'}{'email'},
             #     $param->{'auth_method'}, $ip, 'review', $param->{'list'},
             #     $robot,'','out of pages');
             wwslog('info', 'No page %d', $param->{'page'});
@@ -23586,7 +23594,7 @@ sub _ca_process {
 
     eval { require "$file"; };
     if ($EVAL_ERROR) {
-        Log::do_log('err', 'Error requiring %s: %s (%s)',
+        $log->syslog('err', 'Error requiring %s: %s (%s)',
             $custom_action, "$EVAL_ERROR", ref($EVAL_ERROR));
         return undef;
     }
@@ -23595,7 +23603,7 @@ sub _ca_process {
     my $res;
     eval "\$res = " . $custom_action . "_plugin::process(\@{\$cap});";
     if ($EVAL_ERROR) {
-        Log::do_log('err', 'Error evaluating %s: %s (%s)',
+        $log->syslog('err', 'Error evaluating %s: %s (%s)',
             $custom_action, "$EVAL_ERROR", ref($EVAL_ERROR));
         return undef;
     }
@@ -23683,7 +23691,7 @@ sub do_ca {
     my $file = _ca_get_file($custom_action . '.tt2', $robot);
     return 1 if ($file);
 
-    Log::do_log('err', 'Plugin not found: %s', $custom_action);
+    $log->syslog('err', 'Plugin not found: %s', $custom_action);
     return undef;
 }
 
@@ -23776,7 +23784,7 @@ sub do_lca {
     my $file = _ca_get_file($custom_action . '.tt2', $robot, $list);
     return 1 if ($file);
 
-    Log::do_log('err', 'Plugin not found: %s', $custom_action);
+    $log->syslog('err', 'Plugin not found: %s', $custom_action);
     return undef;
 }
 
@@ -24289,7 +24297,7 @@ sub do_automatic_lists {
     unless (defined $list) {
         ## Automatic creation of a mailing list, based on a family
         unless ($family = Sympa::Family->new($family_name, $robot)) {
-            Log::do_log('err',
+            $log->syslog('err',
                 "Failed to create the dynamic list $listname: family $family_name does not exist."
             );
             tools::send_notify_to_listmaster(
@@ -24309,7 +24317,7 @@ sub do_automatic_lists {
                 )
             )
             ) {
-            Log::do_log('err', 'Failed to create the dynamic list %s',
+            $log->syslog('err', 'Failed to create the dynamic list %s',
                 $listname);
             tools::send_notify_to_listmaster(
                 $robot,

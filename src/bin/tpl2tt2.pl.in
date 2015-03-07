@@ -33,7 +33,7 @@ use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::List;
-use Log;
+use Sympa::Log;
 use Sympa::Tools::File;
 
 my %options;
@@ -46,6 +46,9 @@ $OUTPUT_AUTOFLUSH = 1;
 #    my $s = <STDIN>;
 #    die unless ($s =~ /^y$/i);
 #}
+
+# FIXME: Is logging required?
+my $log = Sympa::Log->instance;
 
 ## Load sympa config
 unless (Conf::load()) {
@@ -225,7 +228,7 @@ foreach my $tpl (@templates) {
                 mode  => 0755,
             )
             ) {
-            Log::do_log('err', 'Unable to set rights on %s',
+            $log->syslog('err', 'Unable to set rights on %s',
                 $Conf::Conf{'db_name'});
             next;
         }
@@ -281,7 +284,7 @@ sub convert {
             group => Sympa::Constants::GROUP
         )
         ) {
-        Log::do_log('err', 'Unable to set rights on %s',
+        $log->syslog('err', 'Unable to set rights on %s',
             $Conf::Conf{'db_name'});
         return undef;
     }
