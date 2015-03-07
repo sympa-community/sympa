@@ -295,7 +295,7 @@ while (!$end) {
                             $date_of_last_activity = time();
                             $main::daemon_usage = 'DAEMON_SLAVE'; # child bulk
                             $log->openlog($Conf::Conf{'syslog'},
-                                $Conf::Conf{'log_socket_type'}, 'bulk');
+                                $Conf::Conf{'log_socket_type'});
                             $log->syslog('info',
                                 'Bulk slave daemon started with PID %s',
                                 $PID);
