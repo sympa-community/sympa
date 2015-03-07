@@ -26,10 +26,16 @@ package Sympa::Tools::WWW;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 
 use Conf;
-use Sympa::Constants;
+use Sympa::ConfDef;
 use Log;
+use Sympa::Report;
+use Sympa::Template;
+use tools;
+use Sympa::Tools::File;
+use Sympa::User;
 
 # hash of the icons linked with a type of file
 # application file
@@ -547,4 +553,101 @@ sub _load_mime_types {
     return;
 }
 
+# Old name: Conf::update_css().
+sub update_css {
+    my %options = @_;
+
+    my $force = $options{force};
+
+    # create or update static CSS files
+    my $css_updated = undef;
+    my @robots = ('*', keys %{$Conf::Conf{'robots'}});
+    foreach my $robot (@robots) {
+        my $dir = Conf::get_robot_conf($robot, 'css_path');
+
+        ## Get colors for parsing
+        my $param = {};
+
+        foreach my $p (
+            map  { $_->{name} }
+            grep { $_->{name} } @Sympa::ConfDef::params
+            ) {
+            $param->{$p} = Conf::get_robot_conf($robot, $p)
+                if $p =~ /_color$/ or $p =~ /color_/;
+        }
+
+        ## Set TT2 path
+        my $css_template = Sympa::Template->new($robot, subdir => 'web_tt2');
+
+        ## Create directory if required
+        unless (-d $dir) {
+            unless (Sympa::Tools::File::mkdir_all($dir, 0755)) {
+                tools::send_notify_to_listmaster($robot, 'cannot_mkdir',
+                    ["Could not create directory $dir: $ERRNO"]);
+                Log::do_log('err', 'Failed to create directory %s: %m', $dir);
+                return undef;
+            }
+        }
+
+        foreach my $css ('style.css', 'print.css', 'fullPage.css',
+            'print-preview.css') {
+
+            $param->{'css'} = $css;
+            my $css_tt2_path = tools::search_fullpath($robot, 'css.tt2',
+                subdir => 'web_tt2');
+
+            ## Update the CSS if it is missing or if a new css.tt2 was
+            ## installed
+            if (   !-f $dir . '/' . $css
+                || (stat($css_tt2_path))[9] > (stat($dir . '/' . $css))[9]
+                || $force) {
+                Log::do_log('notice',
+                    "TT2 file $css_tt2_path has changed; updating static CSS file $dir/$css ; previous file renamed"
+                );
+
+                ## Keep copy of previous file
+                rename $dir . '/' . $css, $dir . '/' . $css . '.' . time;
+
+                unless (open(CSS, ">$dir/$css")) {
+                    tools::send_notify_to_listmaster($robot,
+                        'cannot_open_file',
+                        ["Could not open file $dir/$css: $ERRNO"]);
+                    Log::do_log(
+                        'err',
+                        'Failed to open (write) file %s: %m',
+                        $dir . '/' . $css
+                    );
+                    return undef;
+                }
+
+                unless ($css_template->parse($param, 'css.tt2', \*CSS)) {
+                    my $error = $css_template->{last_error};
+                    $param->{'tt2_error'} = $error;
+                    tools::send_notify_to_listmaster($robot, 'web_tt2_error',
+                        [$error]);
+                    Log::do_log('err', 'Error while installing %s/%s',
+                        $dir, $css);
+                }
+
+                $css_updated++;
+
+                close(CSS);
+
+                ## Make the CSS world-readable
+                chmod 0644, $dir . '/' . $css;
+            }
+        }
+    }
+    if ($css_updated) {
+        ## Notify main listmaster
+        tools::send_notify_to_listmaster(
+            '*',
+            'css_updated',
+            [   "Static CSS files have been updated ; check log file for details"
+            ]
+        );
+    }
+}
+
 1;
+__END__

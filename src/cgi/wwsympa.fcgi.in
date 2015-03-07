@@ -975,6 +975,9 @@ unless (Conf::data_structure_uptodate()) {
 
 Sympa::Tools::Password::ciphersaber_installed();
 
+# Update main CSS if required.
+Sympa::Tools::WWW::update_css();
+
 our %changed_params;
 
 our %in;

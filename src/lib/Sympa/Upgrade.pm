@@ -46,6 +46,7 @@ use Sympa::Message;
 use tools;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
+use Sympa::Tools::WWW;
 
 my $language = Sympa::Language->instance;
 
@@ -1449,7 +1450,7 @@ sub upgrade {
             }
         }
         #Used to regenerate CSS...
-        Conf::update_css((force => 1));
+        Sympa::Tools::WWW::update_css(force => 1);
         Log::do_log('info', 'Web interface colors defaulted to new values.');
     }
 
