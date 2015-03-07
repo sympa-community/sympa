@@ -27,15 +27,20 @@ package Sympa::Tools::WWW;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
+use File::Path qw();
 
 use Conf;
 use Sympa::ConfDef;
-use Log;
+use Sympa::Constants;
+use Sympa::LockedFile;
+use Sympa::Log;
 use Sympa::Report;
 use Sympa::Template;
 use tools;
 use Sympa::Tools::File;
 use Sympa::User;
+
+my $log = Sympa::Log->instance;
 
 # hash of the icons linked with a type of file
 # application file
@@ -195,7 +200,7 @@ sub init_passwd {
                 Sympa::Report::reject_report_web('intern',
                     'update_user_db_failed', {'user' => $email},
                     '', '', $email, $robot);
-                Log::do_log('info', 'Update failed');
+                $log->syslog('info', 'Update failed');
                 return undef;
             }
         }
@@ -213,7 +218,7 @@ sub init_passwd {
             Sympa::Report::reject_report_web('intern', 'add_user_db_failed',
                 {'user' => $email},
                 '', '', $email, $robot);
-            Log::do_log('info', 'Add failed');
+            $log->syslog('info', 'Add failed');
             return undef;
         }
     }
@@ -243,7 +248,7 @@ sub get_my_url {
 # Uploade source file to the destination on the server
 sub upload_file_to_server {
     my $param = shift;
-    Log::do_log(
+    $log->syslog(
         'debug',
         "Uploading file from field %s to destination %s",
         $param->{'file_field'},
@@ -251,7 +256,7 @@ sub upload_file_to_server {
     );
     my $fh;
     unless ($fh = $param->{'query'}->upload($param->{'file_field'})) {
-        Log::do_log(
+        $log->syslog(
             'debug',
             'Cannot upload file from field %s',
             $param->{'file_field'}
@@ -260,7 +265,7 @@ sub upload_file_to_server {
     }
 
     unless (open FILE, ">:bytes", $param->{'destination'}) {
-        Log::do_log(
+        $log->syslog(
             'debug',
             'Cannot open file %s: %m',
             $param->{'destination'}
@@ -559,6 +564,9 @@ sub update_css {
 
     my $force = $options{force};
 
+    # Set umask.
+    my $umask = umask 022;
+
     # create or update static CSS files
     my $css_updated = undef;
     my @robots = ('*', keys %{$Conf::Conf{'robots'}});
@@ -573,68 +581,89 @@ sub update_css {
             grep { $_->{name} } @Sympa::ConfDef::params
             ) {
             $param->{$p} = Conf::get_robot_conf($robot, $p)
-                if $p =~ /_color$/ or $p =~ /color_/;
+                if $p =~ /_color$/
+                    or $p =~ /color_/;
         }
 
-        ## Set TT2 path
-        my $css_template = Sympa::Template->new($robot, subdir => 'web_tt2');
-
-        ## Create directory if required
+        # Create directory if required
         unless (-d $dir) {
-            unless (Sympa::Tools::File::mkdir_all($dir, 0755)) {
+            my $error;
+            File::Path::make_path(
+                $dir,
+                {   mode  => 0755,
+                    owner => Sympa::Constants::USER(),
+                    group => Sympa::Constants::GROUP(),
+                    error => \$error
+                }
+            );
+            if (@$error) {
+                my ($target, $err) = %{$error->[-1] || {}};
+
                 tools::send_notify_to_listmaster($robot, 'cannot_mkdir',
-                    ["Could not create directory $dir: $ERRNO"]);
-                Log::do_log('err', 'Failed to create directory %s: %m', $dir);
+                    ["Could not create $target: $err"]);
+                $log->syslog('err', 'Failed to create %s: %s', $target, $err);
+
+                umask $umask;
                 return undef;
             }
         }
 
+        my $css_tt2_path =
+            tools::search_fullpath($robot, 'css.tt2', subdir => 'web_tt2');
+        my $css_tt2_mtime = Sympa::Tools::File::get_mtime($css_tt2_path);
+
         foreach my $css ('style.css', 'print.css', 'fullPage.css',
             'print-preview.css') {
+            # Lock file to prevent multiple processes from writing it.
+            my $lock_fh = Sympa::LockedFile->new($dir . '/' . $css, -1, '+');
+            next unless $lock_fh;
 
             $param->{'css'} = $css;
-            my $css_tt2_path = tools::search_fullpath($robot, 'css.tt2',
-                subdir => 'web_tt2');
 
-            ## Update the CSS if it is missing or if a new css.tt2 was
-            ## installed
-            if (   !-f $dir . '/' . $css
-                || (stat($css_tt2_path))[9] > (stat($dir . '/' . $css))[9]
-                || $force) {
-                Log::do_log('notice',
-                    "TT2 file $css_tt2_path has changed; updating static CSS file $dir/$css ; previous file renamed"
+            # Update the CSS if it is missing or if a new css.tt2 was
+            # installed
+            if (!-f $dir . '/' . $css
+                or $css_tt2_mtime >
+                Sympa::Tools::File::get_mtime($dir . '/' . $css)
+                or $force) {
+                $log->syslog(
+                    'notice',
+                    'TT2 file %s has changed; updating static CSS file %s/%s; previous file renamed',
+                    $css_tt2_path,
+                    $dir,
+                    $css
                 );
 
                 ## Keep copy of previous file
                 rename $dir . '/' . $css, $dir . '/' . $css . '.' . time;
 
-                unless (open(CSS, ">$dir/$css")) {
+                unless (open CSS, '>', $dir . '/' . $css) {
+                    my $errno = $ERRNO;
                     tools::send_notify_to_listmaster($robot,
                         'cannot_open_file',
-                        ["Could not open file $dir/$css: $ERRNO"]);
-                    Log::do_log(
-                        'err',
-                        'Failed to open (write) file %s: %m',
-                        $dir . '/' . $css
-                    );
+                        ["Could not open file $dir/$css: $errno"]);
+                    $log->syslog('err',
+                        'Failed to open (write) file %s/%s: %s',
+                        $dir, $css, $errno);
+
+                    umask $umask;
                     return undef;
                 }
 
+                my $css_template =
+                    Sympa::Template->new($robot, subdir => 'web_tt2');
                 unless ($css_template->parse($param, 'css.tt2', \*CSS)) {
                     my $error = $css_template->{last_error};
                     $param->{'tt2_error'} = $error;
                     tools::send_notify_to_listmaster($robot, 'web_tt2_error',
                         [$error]);
-                    Log::do_log('err', 'Error while installing %s/%s',
+                    $log->syslog('err', 'Error while installing %s/%s',
                         $dir, $css);
                 }
 
                 $css_updated++;
 
-                close(CSS);
-
-                ## Make the CSS world-readable
-                chmod 0644, $dir . '/' . $css;
+                close CSS;
             }
         }
     }
@@ -647,6 +676,9 @@ sub update_css {
             ]
         );
     }
+
+    umask $umask;
+    return 1;
 }
 
 1;
