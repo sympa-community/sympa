@@ -62,6 +62,7 @@ use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
 use Sympa::Task;
+use Sympa::Template;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -69,7 +70,6 @@ use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use Sympa::Tracking;
-use tt2;
 use Sympa::User;
 
 my @sources_providing_listmembers = qw/
@@ -93,8 +93,8 @@ my @more_data_sources = qw/
 my %config_in_admin_user_file = map +($_ => 1),
     @sources_providing_listmembers;
 
-# Language context
 my $language = Sympa::Language->instance;
+my $log      = Sympa::Log->instance;
 
 =encoding utf-8
 
@@ -168,7 +168,6 @@ Returns a default option of the list for subscription.
 =item get_total ()
 
 Returns the number of subscribers to the list.
-
 
 =item get_global_user ( USER )
 
@@ -1612,8 +1611,29 @@ sub distribute_msg {
         ## Virer eventuelle signature S/MIME
     }
 
-    ## Add Custom Subject
+    # Add Custom Subject
+
+    my $parsed_tag;
     if ($self->{'admin'}{'custom_subject'}) {
+        my $custom_subject = $self->{'admin'}{'custom_subject'};
+
+        # Check if custom_subject parameter is parsable.
+        my $data = {
+            list => {
+                name     => $self->{'name'},
+                sequence => $self->{'stats'}->[0],
+            },
+        };
+        my $template = Sympa::Template->new(undef);
+        unless ($template->parse($data, [$custom_subject], \$parsed_tag)) {
+            my $error = $template->{last_error};
+            Log::do_log('err', 'Can\'t parse custom_subject of list %s: %s',
+                $self, ($error and $error->info));
+
+            undef $parsed_tag;
+        }
+    }
+    if ($self->{'admin'}{'custom_subject'} and defined $parsed_tag) {
         my $subject_field = $message->{'decoded_subject'};
         $subject_field = '' unless defined $subject_field;
         ## Remove leading and trailing blanks
@@ -1642,19 +1662,7 @@ sub distribute_msg {
         ## Takes spaces into account
         $tag_regexp =~ s/\s+/\\s+/g;
 
-        ## Add subject tag
-        #FIXME: Check parse error
-        $message->delete_header('Subject');
-        my $parsed_tag;
-        tt2::parse_tt2(
-            {   'list' => {
-                    'name'     => $self->{'name'},
-                    'sequence' => $self->{'stats'}->[0]
-                }
-            },
-            [$custom_subject],
-            \$parsed_tag
-        );
+        # Add subject tag
 
         ## If subject is tagged, replace it with new tag
         ## Splitting the subject in two parts :
@@ -1671,7 +1679,7 @@ sub distribute_msg {
         # truncate multiple "Re:" and equivalents.
         my $re_regexp = Sympa::Regexps::re();
         if ($subject_field =~ /^\s*($re_regexp\s*)($re_regexp\s*)*/) {
-            ($before_tag, $after_tag) = ($1, $POSTMATCH);    #'
+            ($before_tag, $after_tag) = ($1, $POSTMATCH);
         } else {
             ($before_tag, $after_tag) = ('', $subject_field);
         }
@@ -1702,6 +1710,7 @@ sub distribute_msg {
                 . $after_tag;
         }
 
+        $message->delete_header('Subject');
         $message->add_header('Subject', $subject_field);
     }
 
@@ -1918,15 +1927,12 @@ sub distribute_msg {
         #ignore messages sent by robot
         unless ($message->{sender} =~ /($self->{name})-request/) {
             #ignore messages of requests
-            Log::db_stat_log(
-                {   'robot'     => $self->{'domain'},
-                    'list'      => $self->{'name'},
-                    'operation' => 'send_mail',
-                    'parameter' => $message->{size},
-                    'mail'      => $message->{sender},
-                    'client'    => '',
-                    'daemon'    => 'sympa_msg.pl'
-                }
+            $log->add_stat(
+                'robot'     => $self->{'domain'},
+                'list'      => $self->{'name'},
+                'operation' => 'send_mail',
+                'parameter' => $message->{size},
+                'mail'      => $message->{sender},
             );
         }
     }
@@ -2752,8 +2758,8 @@ sub send_confirm_to_sender {
         original => 1
     );
     unless ($marshalled) {
-        Log::do_log('err', 'Cannot create authkey %s for %s', $authkey,
-            $list);
+        Log::do_log('err', 'Cannot create authkey %s for %s',
+            $authkey, $list);
         return undef;
     }
     $authkey = ${
@@ -3246,7 +3252,8 @@ sub send_notify_to_editor {
 sub send_notify_to_user {
 
     my ($self, $operation, $user, $param) = @_;
-    Log::do_log('debug2', '(%s, %s, %s)', $self->{'name'}, $operation, $user);
+    Log::do_log('debug2', '(%s, %s, %s)', $self->{'name'}, $operation,
+        $user);
 
     my $host  = $self->{'admin'}->{'host'};
     my $robot = $self->{'domain'};
@@ -3397,12 +3404,11 @@ sub delete_list_member {
 
         #log in stat_table to make statistics
         if ($operation) {
-            Log::db_stat_log(
-                {   'robot'     => $self->{'domain'},
-                    'list'      => $name,
-                    'operation' => $operation,
-                    'mail'      => $who,
-                }
+            $log->add_stat(
+                'robot'     => $self->{'domain'},
+                'list'      => $name,
+                'operation' => $operation,
+                'mail'      => $who
             );
         }
 
@@ -4637,7 +4643,7 @@ sub get_next_bouncing_list_member {
 }
 
 sub parse_list_member_bounce {
-    my ($self,$user) = @_;
+    my ($self, $user) = @_;
     if ($user->{bounce}) {
         $user->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
         $user->{'first_bounce'} = $1;
@@ -4666,7 +4672,8 @@ sub get_info {
     my $info;
 
     unless (open INFO, "$self->{'dir'}/info") {
-        Log::do_log('err', 'Could not open %s: %m', $self->{'dir'} . '/info');
+        Log::do_log('err', 'Could not open %s: %m',
+            $self->{'dir'} . '/info');
         return undef;
     }
 
@@ -5221,13 +5228,12 @@ sub add_list_member {
         $new_user->{'included'}   ||= 0;
 
         #Log in stat_table to make staistics
-        Log::db_stat_log(
-            {   'robot'     => $self->{'domain'},
-                'list'      => $self->{'name'},
-                'operation' => 'add_or_subscribe',
-                'parameter' => '',
-                'mail'      => $new_user->{'email'},
-            }
+        $log->add_stat(
+            'robot'     => $self->{'domain'},
+            'list'      => $self->{'name'},
+            'operation' => 'add_or_subscribe',
+            'parameter' => '',
+            'mail'      => $new_user->{'email'}
         );
 
         ## Update Subscriber Table
@@ -6224,7 +6230,8 @@ sub _include_users_remote_sympa_list {
         my %u;
         ## Check if user has already been included
         if ($users->{$email}) {
-            Log::do_log('debug3', 'Ignore %s because already member', $email);
+            Log::do_log('debug3', 'Ignore %s because already member',
+                $email);
             if ($tied) {
                 %u = split "\n", $users->{$email};
             } else {
@@ -6347,12 +6354,13 @@ sub _include_users_list {
 
             # Run the test
             my $result;
-            unless (tt2::parse_tt2($variables, \($filter), \$result)) {
+            my $template = Sympa::Template->new(undef);
+            unless ($template->parse($variables, \($filter), \$result)) {
                 Log::do_log(
                     'err',
                     'Error while applying filter "%s" : %s, aborting include',
                     $filter,
-                    tt2::get_error()
+                    $template->{last_error}
                 );
                 return undef;
             }
@@ -6644,8 +6652,8 @@ sub _include_users_remote_file {
 
     #FIXME: Reset http credentials
 
-    Log::do_log('info', '%d included users from remote file %s', $total,
-        $url);
+    Log::do_log('info', '%d included users from remote file %s',
+        $total, $url);
     return $total;
 }
 
@@ -6729,7 +6737,8 @@ sub _include_users_voot_group {
         }
     }
 
-    Log::do_log('info', '%d included users from VOOT group %s at provider %s',
+    Log::do_log('info',
+        '%d included users from VOOT group %s at provider %s',
         $total, $param->{'group'}, $param->{'provider'});
 
     return $total;
@@ -7772,12 +7781,10 @@ sub _load_include_admin_user_file {
         my $vars = {'param' => \@data};
         my $output = '';
 
-        unless (
-            tt2::parse_tt2(
-                $vars, $parsing->{'template'},
-                \$output, [$parsing->{'include_path'}]
-            )
-            ) {
+        my $template =
+            Sympa::Template->new(undef,
+            include_path => [$parsing->{'include_path'}]);
+        unless ($template->parse($vars, $parsing->{'template'}, \$output)) {
             Log::do_log('err', 'Failed to parse %s', $parsing->{'template'});
             return undef;
         }
@@ -7842,16 +7849,16 @@ sub _load_include_admin_user_file {
 
         ## Look for first valid line
         unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-            Log::do_log('info', 'Bad paragraph "%s" in %s', @paragraph,
-                $file);
+            Log::do_log('info', 'Bad paragraph "%s" in %s',
+                @paragraph, $file);
             next;
         }
 
         $pname = $1;
 
         unless ($config_in_admin_user_file{$pname}) {
-            Log::do_log('info', 'Unknown parameter "%s" in %s', $pname,
-                $file);
+            Log::do_log('info', 'Unknown parameter "%s" in %s',
+                $pname, $file);
             next;
         }
 
@@ -8284,7 +8291,8 @@ sub sync_include {
         unless (defined($new_subscribers->{$email})) {
             ## User is also subscribed, update DB entry
             if ($old_subscribers{$email}{'subscribed'}) {
-                Log::do_log('debug', 'Updating %s to list %s', $email, $self);
+                Log::do_log('debug', 'Updating %s to list %s', $email,
+                    $self);
                 unless (
                     $self->update_list_member(
                         $email,
@@ -8330,7 +8338,8 @@ sub sync_include {
         }
     }
     if ($users_removed > 0) {
-        Log::do_log('notice', '(%s) %d users removed', $self, $users_removed);
+        Log::do_log('notice', '(%s) %d users removed', $self,
+            $users_removed);
     }
 
     ## Go through new users
@@ -8386,7 +8395,8 @@ sub sync_include {
                 ## User was already subscribed, update
                 ## include_sources_subscriber in DB
             } else {
-                Log::do_log('debug', 'Updating %s to list %s', $email, $self);
+                Log::do_log('debug', 'Updating %s to list %s', $email,
+                    $self);
                 unless (
                     $self->update_list_member(
                         $email,
@@ -8721,8 +8731,8 @@ sub sync_include_admin {
         if ($#add_tab >= 0) {
             unless ($admin_users_added =
                 $self->add_list_admin($role, @add_tab)) {
-                Log::do_log('err', '(%s) Failed to add new %ss', $role,
-                    $name);
+                Log::do_log('err', '(%s) Failed to add new %ss',
+                    $role, $name);
                 return undef;
             }
         }
@@ -9327,7 +9337,8 @@ sub get_lists {
                 push @keys_perl, sprintf '$a->{"total"} <=> $b->{"total"}';
             }
         } else {
-            Log::do_log('err', 'bug in logic.  Ask developer: $key=%s', $key);
+            Log::do_log('err', 'bug in logic.  Ask developer: $key=%s',
+                $key);
             return undef;
         }
 
@@ -10872,8 +10883,11 @@ sub store_subscription_request {
         . int(rand(1000));
 
     unless (opendir SUBSPOOL, "$Conf::Conf{'queuesubscribe'}") {
-        Log::do_log('err', 'Could not open %s',
-            $Conf::Conf{'queuesubscribe'});
+        Log::do_log(
+            'err',
+            'Could not open %s',
+            $Conf::Conf{'queuesubscribe'}
+        );
         return undef;
     }
 
@@ -11179,8 +11193,11 @@ sub remove_task {
     my $task = shift;
 
     unless (opendir(DIR, $Conf::Conf{'queuetask'})) {
-        Log::do_log('err', 'Can\'t open dir %s: %m',
-            $Conf::Conf{'queuetask'});
+        Log::do_log(
+            'err',
+            'Can\'t open dir %s: %m',
+            $Conf::Conf{'queuetask'}
+        );
         return undef;
     }
     my @tasks = grep !/^\.\.?$/, readdir DIR;
@@ -11282,15 +11299,12 @@ sub close_list {
     $self->remove_aliases();
 
     #log in stat_table to make staistics
-    Log::db_stat_log(
-        {   'robot'     => $self->{'domain'},
-            'list'      => $self->{'name'},
-            'operation' => 'close_list',
-            'parameter' => '',
-            'mail'      => $email,
-            'client'    => '',
-            'daemon'    => 'damon_name'
-        }
+    $log->add_stat(
+        'robot'     => $self->{'domain'},
+        'list'      => $self->{'name'},
+        'operation' => 'close_list',
+        'parameter' => '',
+        'mail'      => $email,
     );
 
     return 1;
@@ -11339,13 +11353,12 @@ sub purge {
     Sympa::Tools::File::remove_dir($self->{'dir'});
 
     #log ind stat table to make statistics
-    Log::db_stat_log(
-        {   'robot'     => $self->{'domain'},
-            'list'      => $self->{'name'},
-            'operation' => 'purge_list',
-            'parameter' => '',
-            'mail'      => $email,
-        }
+    $log->add_stat(
+        'robot'     => $self->{'domain'},
+        'list'      => $self->{'name'},
+        'operation' => 'purge_list',
+        'parameter' => '',
+        'mail'      => $email
     );
 
     return 1;

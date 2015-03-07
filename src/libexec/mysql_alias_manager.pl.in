@@ -19,8 +19,8 @@ use POSIX;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
+use Sympa::Template;
 use tools;
-use tt2;
 
 $ENV{'PATH'} = '';
 
@@ -65,7 +65,11 @@ my @aliases;
 my $tt2_include_path = tools::get_search_path($domain);
 
 my $aliases_dump;
-tt2::parse_tt2(\%data, 'list_aliases.tt2', \$aliases_dump, $tt2_include_path);
+my $template = Sympa::Template->new($domain);
+unless ($template->parse(\%data, 'list_aliases.tt2', \$aliases_dump)) {
+    print STDERR "Can't parse list_aliases.tt2\n";
+    exit 15;
+}
 
 @aliases = split /\n/, $aliases_dump;
 

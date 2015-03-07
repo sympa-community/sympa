@@ -33,8 +33,8 @@ use POSIX;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
+use Sympa::Template;
 use tools;
-use tt2;
 
 $ENV{'PATH'} = '';
 
@@ -133,10 +133,12 @@ $data{'return_path_suffix'} =
     Conf::get_robot_conf($domain, 'return_path_suffix');
 my @aliases;
 
-my $tt2_include_path = tools::get_search_path($domain);
-
 my $aliases_dump;
-tt2::parse_tt2(\%data, 'list_aliases.tt2', \$aliases_dump, $tt2_include_path);
+my $template = Sympa::Template->new($domain);
+unless ($template->parse(\%data, 'list_aliases.tt2', \$aliases_dump)) {
+    print STDERR "Can't parse list_aliases.tt2\n";
+    exit 15;
+}
 
 @aliases = split /\n/, $aliases_dump;
 
@@ -183,8 +185,11 @@ if ($operation eq 'add') {
         $data{'list'}{'alias'}    = $alias_value;
         $data{'list'}{'command'}  = $command_value;
         $data{'list'}{'maildrop'} = $maildrop;
-        tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2', \$ldif_dump,
-            $tt2_include_path);
+        unless ($template->parse(\%data, 'ldap_alias_entry.tt2', \$ldif_dump))
+        {
+            print STDERR "Can't parse ldap_alias_entry.tt2\n";
+            exit 15;
+        }
         my @attribute_lines = split /\n/, $ldif_dump;
 
         # We create the new LDAP entry.
@@ -243,8 +248,11 @@ elsif ($operation eq 'del') {
 
         my $ldif_dump;
         $data{'list'}{'alias'} = $alias_value;
-        tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2', \$ldif_dump,
-            $tt2_include_path);
+        unless ($template->parse(\%data, 'ldap_alias_entry.tt2', \$ldif_dump))
+        {
+            print STDERR "Can't parse ldap_alias_entry.tt2\n";
+            exit 15;
+        }
         my $value = (grep(/^dn:/, split(/\n/, $ldif_dump)))[0];
         $value =~ s/^dn:\s*//;
 

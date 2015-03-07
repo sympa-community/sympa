@@ -41,7 +41,6 @@ use warnings;
 use Encode qw();
 use English qw(-no_match_vars);
 use File::Copy qw();
-use IO::Scalar;
 
 use Conf;
 use Sympa::Constants;
@@ -53,12 +52,13 @@ use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
+use Sympa::Template;
 use tools;
 use Sympa::Tools::File;
-use tt2;
 use Sympa::User;
 
 my $language = Sympa::Language->instance;
+my $log      = Sympa::Log->instance;
 
 =head1 SUBFUNCTIONS 
 
@@ -90,7 +90,7 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 
 =back
 
-=item * I<$template>, a string containing the list creation template
+=item * I<$list_tpl>, a string containing the list creation template
 
 =item * I<$robot>, a string containing the name of the robot the list will be hosted by.
 
@@ -131,7 +131,7 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 #          array of hash,with key email obligatory
 #         $param->{'owner_include'} array of hash :
 #              with key source obligatory
-#       - $template : the create list template
+#       - $list_tpl : the create list template
 #       - $robot : the list's robot
 #       - $origin : the source of the command : web, soap or command_line
 #              no longer used
@@ -142,7 +142,7 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 #           are not installed or 1(in status open)
 #######################################################
 sub create_list_old {
-    my ($param, $template, $robot, $origin, $user_mail) = @_;
+    my ($param, $list_tpl, $robot, $origin, $user_mail) = @_;
     Log::do_log('debug', '(%s, %s)', $param->{'listname'}, $robot, $origin);
 
     ## obligatory list parameters
@@ -161,8 +161,8 @@ sub create_list_old {
     }
 
     # template
-    unless ($template) {
-        Log::do_log('err', 'Missing param "template"', $template);
+    unless ($list_tpl) {
+        Log::do_log('err', 'Missing param "template"', $list_tpl);
         return undef;
     }
     # robot
@@ -223,9 +223,9 @@ sub create_list_old {
 
     ## Check the template supposed to be used exist.
     my $template_file = tools::search_fullpath($robot, 'config.tt2',
-        subdir => 'create_list_templates/' . $template);
+        subdir => 'create_list_templates/' . $list_tpl);
     unless (defined $template_file) {
-        Log::do_log('err', 'No template %s found', $template);
+        Log::do_log('err', 'No template %s found', $list_tpl);
         return undef;
     }
 
@@ -235,9 +235,9 @@ sub create_list_old {
     # a virtual robot
     if (-d "$Conf::Conf{'home'}/$robot") {
         unless (-d $Conf::Conf{'home'} . '/' . $robot) {
-            unless (mkdir($Conf::Conf{'home'} . '/' . $robot, 0777)) {
+            unless (mkdir $Conf::Conf{'home'} . '/' . $robot, 0777) {
                 Log::do_log('err', 'Unable to create %s/%s: %s',
-                    $Conf::Conf{'home'}, $robot, $?);
+                    $Conf::Conf{'home'}, $robot, $ERRNO);
                 return undef;
             }
         }
@@ -248,9 +248,8 @@ sub create_list_old {
     }
 
     ## Check the privileges on the list directory
-    unless (mkdir($list_dir, 0777)) {
-        Log::do_log('err', 'Unable to create %s: %s', $list_dir,
-            $CHILD_ERROR);
+    unless (mkdir $list_dir, 0777) {
+        Log::do_log('err', 'Unable to create %s: %s', $list_dir, $ERRNO);
         return undef;
     }
 
@@ -272,21 +271,26 @@ sub create_list_old {
         unless ($param->{'creation_email'});
     $param->{'status'} = 'open' unless ($param->{'status'});
 
-    my $tt2_include_path = tools::get_search_path($robot,
-        subdir => 'create_list_templates/' . $template);
-
     ## Lock config before openning the config file
     my $lock_fh = Sympa::LockedFile->new($list_dir . '/config', 5, '>');
     unless ($lock_fh) {
         Log::do_log('err', 'Impossible to create %s/config: %m', $list_dir);
         return undef;
     }
-    ## Use an intermediate handler to encode to filesystem_encoding
+
     my $config = '';
-    my $fd     = IO::Scalar->new(\$config);
-    #FIXME: Check parse error
-    tt2::parse_tt2($param, 'config.tt2', $fd, $tt2_include_path);
-#    Encode::from_to($config, 'utf8', $Conf::Conf{'filesystem_encoding'});
+    my $template =
+        Sympa::Template->new($robot,
+        subdir => 'create_list_templates/' . $list_tpl);
+    unless ($template->parse($param, 'config.tt2', \$config)) {
+        my $error = $template->{last_error};
+        Log::do_log(
+            'err', 'Can\'t parse %s/config.tt2: %s',
+            $list_tpl, ($error and $error->info or 'Unknown error')
+        );
+        return undef;
+    }
+
     print $lock_fh $config;
 
     ## Unlock config file
@@ -323,13 +327,12 @@ sub create_list_old {
     #log in stat_table to make statistics
 
     if ($origin eq "web") {
-        Log::db_stat_log(
-            {   'robot'     => $robot,
-                'list'      => $param->{'listname'},
-                'operation' => 'create_list',
-                'parameter' => '',
-                'mail'      => $user_mail,
-            }
+        $log->add_stat(
+            'robot'     => $robot,
+            'list'      => $param->{'listname'},
+            'operation' => 'create_list',
+            'parameter' => '',
+            'mail'      => $user_mail
         );
     }
 
@@ -460,16 +463,18 @@ sub create_list {
         Conf::get_robot_conf($robot, 'automatic_list_families');
     $param->{'family_config'} = $family_config->{$family->{'name'}};
     my $conf;
-    my $tt_result =
-        tt2::parse_tt2($param, 'config.tt2', \$conf, [$family->{'dir'}]);
-    unless (defined $tt_result || !$abort_on_error) {
+    my $template =
+        Sympa::Template->new(undef, include_path => [$family->{'dir'}]);
+    my $tt_result = $template->parse($param, 'config.tt2', \$conf);
+    if (not $tt_result and $abort_on_error) {
+        my $error = $template->{last_error};
         Log::do_log(
             'err',
             'Abort on tt2 error. List %s from family %s@%s, file config.tt2 : %s',
             $param->{'listname'},
             $family->{'name'},
             $robot,
-            tt2::get_error()->info()
+            ($error and $error->info)
         );
         return undef;
     }
@@ -479,9 +484,9 @@ sub create_list {
 
     if (-d "$Conf::Conf{'home'}/$robot") {
         unless (-d $Conf::Conf{'home'} . '/' . $robot) {
-            unless (mkdir($Conf::Conf{'home'} . '/' . $robot, 0777)) {
+            unless (mkdir $Conf::Conf{'home'} . '/' . $robot, 0777) {
                 Log::do_log('err', 'Unable to create %s/%s: %s',
-                    $Conf::Conf{'home'}, $robot, $?);
+                    $Conf::Conf{'home'}, $robot, $ERRNO);
                 return undef;
             }
         }
@@ -491,9 +496,8 @@ sub create_list {
         $list_dir = $Conf::Conf{'home'} . '/' . $param->{'listname'};
     }
 
-    unless (-r $list_dir || mkdir($list_dir, 0777)) {
-        Log::do_log('err', 'Unable to create %s: %s', $list_dir,
-            $CHILD_ERROR);
+    unless (-r $list_dir or mkdir($list_dir, 0777)) {
+        Log::do_log('err', 'Unable to create %s: %s', $list_dir, $ERRNO);
         return undef;
     }
 
@@ -511,7 +515,6 @@ sub create_list {
         Log::do_log('err', 'Impossible to create %s/config: %m', $list_dir);
         return undef;
     }
-    #tt2::parse_tt2($param, 'config.tt2', $lock_fh, [$family->{'dir'}]);
     print $lock_fh $conf;
 
     ## Unlock config file
@@ -543,9 +546,13 @@ sub create_list {
         my $template_file = tools::search_fullpath($family, $file . ".tt2");
         if (defined $template_file) {
             my $file_content;
-            my $tt_result = tt2::parse_tt2($param, $file . ".tt2",
-                \$file_content, [$family->{'dir'}]);
+            my $template =
+                Sympa::Template->new(undef,
+                include_path => [$family->{'dir'}]);
+            my $tt_result =
+                $template->parse($param, $file . ".tt2", \$file_content);
             unless (defined $tt_result) {
+                my $error = $template->{last_error};
                 Log::do_log(
                     'err',
                     'Tt2 error. List %s from family %s@%s, file %s : %s',
@@ -553,7 +560,7 @@ sub create_list {
                     $family->{'name'},
                     $robot,
                     $file,
-                    tt2::get_error()->info()
+                    ($error and $error->info)
                 );
             }
             unless (open FILE, '>', "$list_dir/$file") {
@@ -665,11 +672,18 @@ sub update_list {
     my $lock_fh = Sympa::LockedFile->new($list->{'dir'} . '/config', 5, '>');
     unless ($lock_fh) {
         Log::do_log('err', 'Impossible to create %s/config: %s',
-            $list->{'dir'}, $!);
+            $list->{'dir'}, $ERRNO);
         return undef;
     }
-    #FIXME: Check parse error
-    tt2::parse_tt2($param, 'config.tt2', $lock_fh, [$family->{'dir'}]);
+
+    my $template =
+        Sympa::Template->new(undef, include_path => [$family->{'dir'}]);
+    unless ($template->parse($param, 'config.tt2', $lock_fh)) {
+        my $error = $template->{last_error};
+        Log::do_log('err', 'Can\'t parse %s/config.tt2: %s',
+            $family->{'dir'}, ($error and $error->info));
+        return undef;
+    }
     ## Unlock config file
     $lock_fh->close;
 
@@ -708,12 +722,24 @@ sub update_list {
         my $template_file = tools::search_fullpath($family, $file . ".tt2");
         if (defined $template_file) {
             my $file_content;
-            my $tt_result = tt2::parse_tt2($param, $file . ".tt2",
-                \$file_content, [$family->{'dir'}]);
-            unless (defined $tt_result) {
-                Log::do_log('err',
-                    'Tt2 error. List %s from family %s@%s, file %s',
-                    $param->{'listname'}, $family->{'name'}, $robot, $file);
+
+            my $template =
+                Sympa::Template->new(undef,
+                include_path => [$family->{'dir'}]);
+            my $tt_result =
+                $template->parse($param, $file . ".tt2", \$file_content);
+            unless ($tt_result) {
+                my $error = $template->{last_error};
+                Log::do_log(
+                    'err',
+                    'Template error. List %s from family %s@%s, file %s: %s',
+                    $param->{'listname'},
+                    $family->{'name'},
+                    $robot,
+                    $file,
+                    ($error and $error->info)
+                );
+                next;    #FIXME: Abort processing and rollback.
             }
             unless (open FILE, '>', "$list->{'dir'}/$file") {
                 Log::do_log('err', 'Impossible to create %s/%s: %s',
@@ -1299,7 +1325,8 @@ sub check_owner_defined {
         }
     } elsif (ref($owner) eq "HASH") {
         unless ($owner->{'email'}) {
-            Log::do_log('err', 'Missing sub param "email" for param "owner"');
+            Log::do_log('err',
+                'Missing sub param "email" for param "owner"');
             return undef;
         }
     } elsif (defined $owner) {
@@ -1435,7 +1462,8 @@ sub install_aliases {
         Log::do_log('err', 'Configuration file %s has errors',
             Conf::get_sympa_conf());
     } elsif ($status == 2) {
-        Log::do_log('err', 'Internal error: Incorrect call to alias_manager');
+        Log::do_log('err',
+            'Internal error: Incorrect call to alias_manager');
     } elsif ($status == 3) {
         # Won't occur
         Log::do_log('err',

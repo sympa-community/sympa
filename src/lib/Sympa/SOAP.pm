@@ -37,9 +37,9 @@ use Log;
 use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
+use Sympa::Template;
 use tools;
 use Sympa::Tools::Password;
-use tt2;
 use Sympa::User;
 
 ## Define types of SOAP type listType
@@ -55,6 +55,8 @@ my %types = (
         'gecos'        => 'string'
     }
 );
+
+my $log = Sympa::Log->instance;
 
 sub checkCookie {
     my $class = shift;
@@ -562,7 +564,7 @@ sub createList {
     my $class       = shift;
     my $listname    = shift;
     my $subject     = shift;
-    my $template    = shift;
+    my $list_tpl    = shift;
     my $description = shift;
     my $topics      = shift;
 
@@ -576,7 +578,7 @@ sub createList {
         $listname,
         $robot,
         $subject,
-        $template,
+        $list_tpl,
         $description,
         $topics,
         $sender,
@@ -617,7 +619,7 @@ sub createList {
     unless ($subject) {
         $reject .= 'subject';
     }
-    unless ($template) {
+    unless ($list_tpl) {
         $reject .= ', template';
     }
     unless ($description) {
@@ -641,7 +643,7 @@ sub createList {
         {   'sender'                  => $sender,
             'candidate_listname'      => $listname,
             'candidate_subject'       => $subject,
-            'candidate_template'      => $template,
+            'candidate_template'      => $list_tpl,
             'candidate_info'          => $description,
             'candidate_topics'        => $topics,
             'remote_host'             => $ENV{'REMOTE_HOST'},
@@ -689,7 +691,7 @@ sub createList {
 
     ## create liste
     my $resul =
-        Sympa::Admin::create_list_old($parameters, $template, $robot, "soap");
+        Sympa::Admin::create_list_old($parameters, $list_tpl, $robot, "soap");
     unless (defined $resul
         and $list = Sympa::List->new($listname, $robot)) {
         Log::do_log('info', 'Unable to create list %s@%s from %s',
@@ -1001,7 +1003,8 @@ sub del {
 
     unless ($action =~ /do_it/) {
         my $reason_string = get_reason_string($reason, $robot);
-        Log::do_log('info', 'Del %s@%s %s from %s by %srefused (not allowed)',
+        Log::do_log('info',
+            'Del %s@%s %s from %s by %srefused (not allowed)',
             $listname, $robot, $email, $sender,
             $ENV{'remote_application_name'});
         die SOAP::Fault->faultcode('Client')->faultstring('Not allowed')
@@ -1148,7 +1151,8 @@ sub review {
                     ->value($user->{'email'});
             }
         } while ($user = $list->get_next_list_member());
-        Log::do_log('info', 'Review %s from %s accepted', $listname, $sender);
+        Log::do_log('info', 'Review %s from %s accepted', $listname,
+            $sender);
         return SOAP::Data->name('return')->value(\@resultSoap);
     }
     Log::do_log('info',
@@ -1201,7 +1205,8 @@ sub fullReview {
     # Members list synchronization if include is in use
     if ($list->has_include_data_sources()) {
         unless ($list->on_the_fly_sync_include('use_ttl' => 1)) {
-            Log::do_log('notice', 'Unable to synchronize list %s', $listname);
+            Log::do_log('notice', 'Unable to synchronize list %s',
+                $listname);
         }
     }
 
@@ -1266,7 +1271,8 @@ sub fullReview {
         push @result, struct_to_soap($members->{$email});
     }
 
-    Log::do_log('info', 'FullReview %s from %s accepted', $listname, $sender);
+    Log::do_log('info', 'FullReview %s from %s accepted', $listname,
+        $sender);
     return SOAP::Data->name('return')->value(\@result);
 }
 
@@ -1480,7 +1486,8 @@ sub subscribe {
     if ($action =~ /request_auth/i) {
         my $cmd = 'subscribe';
         tools::request_auth($list, $sender, $cmd, $gecos);
-        Log::do_log('info', '%s from %s, auth requested', $listname, $sender);
+        Log::do_log('info', '%s from %s, auth requested', $listname,
+            $sender);
         return SOAP::Data->name('result')->type('boolean')->value(1);
     }
     if ($action =~ /do_it/i) {
@@ -1910,15 +1917,11 @@ sub get_reason_string {
 
     my $data = {'reason' => $reason};
     my $string;
-    my $tt2_include_path =
-        tools::get_search_path($robot, subdir => 'mail_tt2');   # FIXME: lang?
 
-    unless (
-        tt2::parse_tt2(
-            $data, 'authorization_reject.tt2', \$string, $tt2_include_path
-        )
-        ) {
-        my $error = tt2::get_error();
+    my $template =
+        Sympa::Template->new($robot, subdir => 'mail_tt2');    # FIXME: lang?
+    unless ($template->parse($data, 'authorization_reject.tt2', \$string)) {
+        my $error = $template->{last_error};
         tools::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
         Log::do_log('info', 'Error parsing');
         return '';
