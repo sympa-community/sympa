@@ -84,7 +84,6 @@ nobase_modules_DATA = \
 	Sympa/Tools/Time.pm \
 	Sympa/Tools/WWW.pm \
 	Sympa/Tracking.pm \
-	tt2.pm \
 	Sympa/Upgrade.pm \
 	Sympa/User.pm
 
