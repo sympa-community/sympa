@@ -488,7 +488,7 @@ Otherwise false value.
 
 I<Instance method>.
 Stores the message into message spool.
-Recipients will be splitted into multiple packets and
+Recipients will be split into multiple packets and
 stored into packet spool.
 
 Parameters:

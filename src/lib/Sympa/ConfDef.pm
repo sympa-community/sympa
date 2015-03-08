@@ -1654,7 +1654,7 @@ FIXME FIXME
 
 =item multiple =E<gt> 1|0
 
-If 1, the parameter can have mutiple values. Default is 0.
+If 1, the parameter can have multiple values. Default is 0.
 
 =item scenario =E<gt> 1|0
 

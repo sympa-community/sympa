@@ -29,7 +29,7 @@ use warnings;
 
 use Sympa::DatabaseManager;
 
-# OBSOLETED. Use $sdm->do_quert directly.
+# OBSOLETED. Use $sdm->do_query directly.
 sub do_query {
     if (my $sdm = Sympa::DatabaseManager->instance) {
         return $sdm->do_query(@_);

@@ -2722,7 +2722,7 @@ for the confirmation
 
 Parameter:
 
-=over;
+=over
 
 =item $message
 

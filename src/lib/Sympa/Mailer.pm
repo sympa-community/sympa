@@ -381,7 +381,7 @@ TBD
 
 Returns:
 
-Filehandle on opened pipe to ouput SMTP "DATA" field.
+Filehandle on opened pipe to output SMTP "DATA" field.
 Otherwise C<undef>.
 
 =back
@@ -394,12 +394,12 @@ L<Sympa::Mailer> instance may have following attributes:
 
 =item {log_smtp}
 
-If true value is set, each invokation of sendmail process will be logged.
+If true value is set, each invocation of sendmail process will be logged.
 
 =item {redundancy}
 
 Positive integer.
-If set, maximum number of invokation of sendmail is divided by this value.
+If set, maximum number of invocation of sendmail is divided by this value.
 
 =back
 
