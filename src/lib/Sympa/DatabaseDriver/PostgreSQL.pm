@@ -416,7 +416,7 @@ sub unset_primary_key {
 	  FROM information_schema.table_constraints AS tc
 	  WHERE tc.table_catalog = %s AND tc.table_name = %s AND
 		tc.constraint_type = 'PRIMARY KEY'},
-            SDM::quote($self->{'db_name'}), SDM::quote($param->{'table'})
+            $self->quote($self->{'db_name'}), $self->quote($param->{'table'})
         )
         ) {
         $log->syslog('err',
