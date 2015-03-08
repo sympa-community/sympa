@@ -34,6 +34,10 @@ use constant required_parameters => [qw(db_host db_name db_user)];
 use constant optional_parameters =>
     [qw(db_port db_passwd db_timeout db_options db_env)];
 
+sub translate_type {
+    return $_[1];
+}
+
 # For DOUBLE type.
 sub AS_DOUBLE {
     return $_[1] if scalar @_ > 1;
@@ -526,6 +530,13 @@ Returns:
 
 A character string report of the operation done or C<undef> if something
 went wrong.
+
+=item translate_type ( $generic_type )
+
+I<Required to probe and update database structure>.
+Get native field type corresponds to generic type.
+The generic type is based on MySQL:
+See L<Sympa::DatabaseDescription/full_db_struct>.
 
 =item do_operation ( $operation, $parameters, ...)
 

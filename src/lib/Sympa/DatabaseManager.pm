@@ -75,7 +75,6 @@ sub disconnect {
 }
 
 # db structure description has moved in Sympa::DatabaseDescription.
-my %db_struct     = Sympa::DatabaseDescription::db_struct();
 my %not_null      = Sympa::DatabaseDescription::not_null();
 my %primary       = Sympa::DatabaseDescription::primary();
 my %autoincrement = Sympa::DatabaseDescription::autoincrement();
@@ -100,7 +99,7 @@ sub probe_db {
         return undef;
     }
 
-    my $db_type = Conf::get_robot_conf('*', 'db_type');
+    my $db_struct = _db_struct($sdm);
     my $update_db_field_types =
         Conf::get_robot_conf('*', 'update_db_field_types') || 'off';
 
@@ -147,7 +146,7 @@ sub probe_db {
 
     my %real_struct;
     # Check required tables
-    foreach my $t1 (keys %{$db_struct{'mysql'}}) {
+    foreach my $t1 (keys %$db_struct) {
         my $found;
         foreach my $t2 (@tables) {
             $found = 1 if ($t1 eq $t2);
@@ -167,20 +166,20 @@ sub probe_db {
         }
     }
     ## Get fields
-    foreach my $t (keys %{$db_struct{'mysql'}}) {
+    foreach my $t (keys %$db_struct) {
         $real_struct{$t} = $sdm->get_fields({'table' => $t});
     }
     ## Check tables structure if we could get it
     ## Only performed with mysql , Pg and SQLite
     if (%real_struct) {
-        foreach my $t (keys %{$db_struct{'mysql'}}) {
+        foreach my $t (keys %$db_struct) {
             unless ($real_struct{$t}) {
                 $log->syslog(
                     'err',
                     'Table "%s" not found in database "%s"; you should create it with create_db.%s script',
                     $t,
                     Conf::get_robot_conf('*', 'db_name'),
-                    $db_type
+                    Conf::get_robot_conf('*', 'db_type')
                 );
                 return undef;
             }
@@ -257,7 +256,7 @@ sub probe_db {
                     and $sdm->set_autoinc(
                         {   'table'      => $table,
                             'field'      => $autoincrement{$table},
-                            'field_type' => $db_struct{$db_type}->{$table}
+                            'field_type' => $db_struct->{$table}
                                 ->{$autoincrement{$table}},
                         }
                     )
@@ -288,6 +287,28 @@ sub probe_db {
     return 1;
 }
 
+# Returns a hashref definition by all types of RDBMS Sympa supports.
+# Keys are table names and values are hashrefs with keys as field names and
+# values are their field types converted according to database driver.
+sub _db_struct {
+    my $sdm = shift;
+
+    my $db_struct;
+    my %full_db_struct = Sympa::DatabaseDescription::full_db_struct();
+
+    foreach my $table (keys %full_db_struct) {
+        foreach my $field (keys %{$full_db_struct{$table}{'fields'}}) {
+            my $trans =
+                $sdm->translate_type(
+                $full_db_struct{$table}{'fields'}{$field}{'struct'});
+
+            $db_struct->{$table} ||= {};
+            $db_struct->{$table}->{$field} = $trans;
+        }
+    }
+    return $db_struct;
+}
+
 sub _check_fields {
     my $sdm         = shift;
     my $param       = shift;
@@ -296,9 +317,9 @@ sub _check_fields {
     my $report_ref  = $param->{'report'};
     my $may_update  = $param->{'may_update'};
 
-    my $db_type = Conf::get_robot_conf('*', 'db_type');
+    my $db_struct = _db_struct($sdm);
 
-    foreach my $f (sort keys %{$db_struct{$db_type}{$t}}) {
+    foreach my $f (sort keys %{$db_struct->{$t}}) {
         unless ($real_struct{$t}{$f}) {
             push @{$report_ref},
                 sprintf(
@@ -317,7 +338,7 @@ sub _check_fields {
                 and $rep = $sdm->add_field(
                     {   'table'   => $t,
                         'field'   => $f,
-                        'type'    => $db_struct{$db_type}{$t}{$f},
+                        'type'    => $db_struct->{$t}->{$f},
                         'notnull' => $not_null{$f},
                         'autoinc' =>
                             ($autoincrement{$t} and $autoincrement{$t} eq $f),
@@ -342,7 +363,7 @@ sub _check_fields {
             unless (
                 _check_db_field_type(
                     effective_format => $real_struct{$t}{$f},
-                    required_format  => $db_struct{$db_type}{$t}{$f}
+                    required_format  => $db_struct->{$t}->{$f}
                 )
                 ) {
                 push @{$report_ref},
@@ -350,7 +371,7 @@ sub _check_fields {
                     "Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s). Attempting to change it...",
                     $f, $t,
                     Conf::get_robot_conf('*', 'db_name'),
-                    $db_struct{$db_type}{$t}{$f}
+                    $db_struct->{$t}->{$f}
                     );
 
                 $log->syslog(
@@ -359,7 +380,7 @@ sub _check_fields {
                     $f,
                     $t,
                     Conf::get_robot_conf('*', 'db_name'),
-                    $db_struct{$db_type}{$t}{$f},
+                    $db_struct->{$t}->{$f},
                     $real_struct{$t}{$f}
                 );
 
@@ -368,7 +389,7 @@ sub _check_fields {
                     and $rep = $sdm->update_field(
                         {   'table'   => $t,
                             'field'   => $f,
-                            'type'    => $db_struct{$db_type}{$t}{$f},
+                            'type'    => $db_struct->{$t}->{$f},
                             'notnull' => $not_null{$f},
                         }
                     )
@@ -381,14 +402,14 @@ sub _check_fields {
                 }
             }
         } else {
-            unless ($real_struct{$t}{$f} eq $db_struct{$db_type}{$t}{$f}) {
+            unless ($real_struct{$t}{$f} eq $db_struct->{$t}->{$f}) {
                 $log->syslog(
                     'err',
                     'Field "%s" (table "%s"; database "%s") does NOT have awaited type (%s)',
                     $f,
                     $t,
                     Conf::get_robot_conf('*', 'db_name'),
-                    $db_struct{$db_type}{$t}{$f}
+                    $db_struct->{$t}->{$f}
                 );
                 $log->syslog('err',
                     'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES'

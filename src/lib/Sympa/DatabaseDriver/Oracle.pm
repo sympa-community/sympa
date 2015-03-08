@@ -565,6 +565,27 @@ sub set_index {
 
 =cut
 
+sub translate_type {
+    my $self = shift;
+    my $type = shift;
+
+    return undef unless $type;
+
+    # Oracle
+    $type =~ s/^varchar/varchar2/g;
+    $type =~ s/^int.*/number/g;
+    $type =~ s/^bigint.*/number/g;
+    $type =~ s/^smallint.*/number/g;
+    $type =~ s/^tinyint.*/number/g;
+    $type =~ s/^double/number/g;
+    $type =~ s/^enum.*/varchar2(20)/g;
+    $type =~ s/^text.*/varchar2(500)/g;
+    $type =~ s/^longtext.*/long/g;
+    $type =~ s/^datetime.*/date/g;
+    $type =~ s/^mediumblob/blob/g;
+    return $type;
+}
+
 sub do_query {
     my $self = shift;
     my $ret  = $self->SUPER::do_query(@_);

@@ -596,6 +596,27 @@ sub set_index {
     return $report;
 }
 
+sub translate_type {
+    my $self = shift;
+    my $type = shift;
+
+    return undef unless $type;
+
+    # PostgreSQL
+    $type =~ s/^int(1)/smallint/g;
+    $type =~ s/^int\(?.*\)?/int4/g;
+    $type =~ s/^smallint.*/int4/g;
+    $type =~ s/^tinyint\(.*\)/int2/g;
+    $type =~ s/^bigint.*/int8/g;
+    $type =~ s/^double/float8/g;
+    $type =~ s/^text.*/varchar(500)/g;
+    $type =~ s/^longtext.*/text/g;
+    $type =~ s/^datetime.*/timestamptz/g;
+    $type =~ s/^enum.*/varchar(15)/g;
+    $type =~ s/^mediumblob/bytea/g;
+    return $type;
+}
+
 sub AS_DOUBLE {
     return ({'pg_type' => DBD::Pg::PG_FLOAT8()} => $_[1])
         if scalar @_ > 1;

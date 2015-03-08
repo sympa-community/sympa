@@ -458,6 +458,24 @@ sub set_index {
     return $report;
 }
 
+sub translate_type {
+    my $self = shift;
+    my $type = shift;
+
+    return undef unless $type;
+
+    # Sybase
+    $type =~ s/^int.*/numeric/g;
+    $type =~ s/^text.*/varchar(500)/g;
+    $type =~ s/^smallint.*/numeric/g;
+    $type =~ s/^bigint.*/numeric/g;
+    $type =~ s/^double/double precision/g;
+    $type =~ s/^longtext.*/text/g;
+    $type =~ s/^enum.*/varchar(15)/g;
+    $type =~ s/^mediumblob/long binary/g;
+    return $type;
+}
+
 1;
 __END__
 

@@ -52,6 +52,22 @@ sub get_formatted_date {
     die 'Not yet implemented: This is required by Sympa';
 }
 
+sub translate_type {
+    my $self = shift;
+    my $type = shift;
+
+    return undef unless $type;
+
+    # ODBC
+    $type =~ s/^double/real/g;
+    $type =~ s/^enum.*/varchar(20)/g;
+    $type =~ s/^text.*/varchar(500)/g;
+    $type =~ s/^longtext.*/text/g;
+    $type =~ s/^datetime/timestamp/g;
+    $type =~ s/^mediumblob/longvarbinary/g;
+    return $type;
+}
+
 sub AS_DOUBLE {
     return ({'TYPE' => DBI::SQL_DOUBLE()} => $_[1])
         if scalar @_ > 1;

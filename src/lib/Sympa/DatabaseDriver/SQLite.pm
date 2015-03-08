@@ -501,6 +501,27 @@ sub set_index {
     return $report;
 }
 
+sub translate_type {
+    my $self = shift;
+    my $type = shift;
+
+    return undef unless $type;
+
+    # SQLite
+    $type =~ s/^varchar.*/text/g;
+    $type =~ s/^.*int\(1\).*/numeric/g;
+    $type =~ s/^int.*/integer/g;
+    $type =~ s/^tinyint.*/integer/g;
+    $type =~ s/^bigint.*/integer/g;
+    $type =~ s/^smallint.*/integer/g;
+    $type =~ s/^double/real/g;
+    $type =~ s/^longtext.*/text/g;
+    $type =~ s/^datetime.*/numeric/g;
+    $type =~ s/^enum.*/text/g;
+    $type =~ s/^mediumblob/none/g;
+    return $type;
+}
+
 # Note:
 # To prevent "database is locked" error, acquire "immediate" lock
 # by each query.  Most queries excluding "SELECT" need to lock in this

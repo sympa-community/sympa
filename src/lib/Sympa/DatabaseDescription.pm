@@ -765,9 +765,9 @@ my %full_db_struct = (
                 'order'    => 4,
             },
             'list_counter' => {
-                'struct'  => $list_struct,
-                'doc'     => '',
-                'order'   => 5,
+                'struct' => $list_struct,
+                'doc'    => '',
+                'order'  => 5,
             },
             #'variation_counter' => {
             #    'struct' => 'int',
@@ -1034,102 +1034,8 @@ sub full_db_struct {
     return %full_db_struct;
 }
 
-## Conversion of column data types.  Basic definitions are based on MySQL.
-## Following types are recognized:
-## varchar(X)     : Text with length upto X.  X must be lower than 2^16 - 2.
-## int(1):        : Boolean, 1 or 0.
-## int(11)        : Unix time (a.k.a. "epoch").
-## int(X)         : Integer with columns upto X, -2^31 to 2^31 - 1.
-## tinyint        : Integer, -2^7 to 2^7 - 1.
-## smallint       : Integer, -2^15 to 2^15 - 1.
-## bigint         : Integer, -2^63 to 2^63 - 1.
-## double         : IEEE floating point number, 8 bytes.
-## enum           : Keyword with length upto 20 o.
-## text           : Text with length upto 500 o.
-## longtext       : Text with length upto 2^32 - 4 o.
-## datetime:      : Timestamp.
-## mediumblob     : Binary data with length upto 2^24 - 3 o.
-
-sub db_struct {
-    my %db_struct;
-    my %full_db_struct = full_db_struct();
-
-    foreach my $table (keys %full_db_struct) {
-        foreach my $field (keys %{$full_db_struct{$table}{'fields'}}) {
-            my $trans   = $full_db_struct{$table}{'fields'}{$field}{'struct'};
-            my $trans_o = $trans;
-            my $trans_pg  = $trans;
-            my $trans_syb = $trans;
-            my $trans_sq  = $trans;
-            my $trans_od  = $trans;
-
-            # Oracle
-            $trans_o =~ s/^varchar/varchar2/g;
-            $trans_o =~ s/^int.*/number/g;
-            $trans_o =~ s/^bigint.*/number/g;
-            $trans_o =~ s/^smallint.*/number/g;
-            $trans_o =~ s/^tinyint.*/number/g;
-            $trans_o =~ s/^double/number/g;
-            $trans_o =~ s/^enum.*/varchar2(20)/g;
-            $trans_o =~ s/^text.*/varchar2(500)/g;
-            $trans_o =~ s/^longtext.*/long/g;
-            $trans_o =~ s/^datetime.*/date/g;
-            $trans_o =~ s/^mediumblob/blob/g;
-
-            # PostgreSQL
-            $trans_pg =~ s/^int(1)/smallint/g;
-            $trans_pg =~ s/^int\(?.*\)?/int4/g;
-            $trans_pg =~ s/^smallint.*/int4/g;
-            $trans_pg =~ s/^tinyint\(.*\)/int2/g;
-            $trans_pg =~ s/^bigint.*/int8/g;
-            $trans_pg =~ s/^double/float8/g;
-            $trans_pg =~ s/^text.*/varchar(500)/g;
-            $trans_pg =~ s/^longtext.*/text/g;
-            $trans_pg =~ s/^datetime.*/timestamptz/g;
-            $trans_pg =~ s/^enum.*/varchar(15)/g;
-            $trans_pg =~ s/^mediumblob/bytea/g;
-
-            # Sybase
-            $trans_syb =~ s/^int.*/numeric/g;
-            $trans_syb =~ s/^text.*/varchar(500)/g;
-            $trans_syb =~ s/^smallint.*/numeric/g;
-            $trans_syb =~ s/^bigint.*/numeric/g;
-            $trans_syb =~ s/^double/double precision/g;
-            $trans_syb =~ s/^longtext.*/text/g;
-            $trans_syb =~ s/^enum.*/varchar(15)/g;
-            $trans_syb =~ s/^mediumblob/long binary/g;
-
-            # SQLite
-            $trans_sq =~ s/^varchar.*/text/g;
-            $trans_sq =~ s/^.*int\(1\).*/numeric/g;
-            $trans_sq =~ s/^int.*/integer/g;
-            $trans_sq =~ s/^tinyint.*/integer/g;
-            $trans_sq =~ s/^bigint.*/integer/g;
-            $trans_sq =~ s/^smallint.*/integer/g;
-            $trans_sq =~ s/^double/real/g;
-            $trans_sq =~ s/^longtext.*/text/g;
-            $trans_sq =~ s/^datetime.*/numeric/g;
-            $trans_sq =~ s/^enum.*/text/g;
-            $trans_sq =~ s/^mediumblob/none/g;
-
-            # ODBC
-            $trans_od =~ s/^double/real/g;
-            $trans_od =~ s/^enum.*/varchar(20)/g;
-            $trans_od =~ s/^text.*/varchar(500)/g;
-            $trans_od =~ s/^longtext.*/text/g;
-            $trans_od =~ s/^datetime/timestamp/g;
-            $trans_od =~ s/^mediumblob/longvarbinary/g;
-
-            $db_struct{'mysql'}{$table}{$field}  = $trans;
-            $db_struct{'Pg'}{$table}{$field}     = $trans_pg;
-            $db_struct{'Oracle'}{$table}{$field} = $trans_o;
-            $db_struct{'Sybase'}{$table}{$field} = $trans_syb;
-            $db_struct{'SQLite'}{$table}{$field} = $trans_sq;
-            $db_struct{'ODBC'}{$table}{$field}   = $trans_od;
-        }
-    }
-    return %db_struct;
-}
+# OBSOLETED.  Use Sympa::DatabaseManager::_db_struct().
+#sub db_struct;
 
 sub not_null {
     my %not_null;
@@ -1318,10 +1224,7 @@ Note that fields included in primary key always don't allow Null value.
 
 =item db_struct ()
 
-I<Function>.
-Returns a hashref definition by all types of RDBMS Sympa supports.
-Keys are types and values are definition with their field types
-converted according to types.
+This function was OBSOLETED.
 
 =item not_null ()
 
