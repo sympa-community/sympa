@@ -364,9 +364,13 @@ sub unset_primary_key {
     my $r =
         $self->_update_table($table, qr{,\s*PRIMARY\s+KEY\s+[(][^)]+[)]}, '');
     unless (defined $r) {
-        $log->syslog('err', 'Could not remove primary key from table %s',
-            $table);
-        return undef;
+        $r = $self->_update_table($table, qr{(?<=integer)\s+PRIMARY\s+KEY},
+            '');
+        unless (defined $r) {
+            $log->syslog('err', 'Could not remove primary key from table %s',
+                $table);
+            return undef;
+        }
     }
     $report = $r;
     $log->syslog('info', '%s', $r);
@@ -651,7 +655,7 @@ sub _update_table {
     my $statement_orig = $statement;
     $statement =~ s/$regex/$replacement/;
     if ($statement eq $statement_orig) {
-        $log->syslog('err', 'Table "%s" was not changed', $table);
+        $log->syslog('debug', 'Table "%s" was not changed', $table);
         return undef;
     }
     $statement =~ s/\btemporary\s+INT,\s*//;    # Omit "temporary" field.
