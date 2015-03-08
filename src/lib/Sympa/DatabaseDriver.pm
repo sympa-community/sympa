@@ -27,8 +27,6 @@ package Sympa::DatabaseDriver;
 use strict;
 use warnings;
 
-use Log;
-
 use base qw(Sympa::Database);
 
 use constant required_modules    => [];

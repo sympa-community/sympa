@@ -31,9 +31,11 @@ use Conf;
 use Sympa::Constants;
 use Sympa::Database;
 use Sympa::DatabaseDescription;
-use Log;
+use Sympa::Log;
 use tools;
 use Sympa::Tools::Data;
+
+my $log = Sympa::Log->instance;
 
 our $instance;
 
@@ -88,11 +90,11 @@ my %indexes = %Sympa::DatabaseDescription::indexes;
 my @former_indexes = @Sympa::DatabaseDescription::former_indexes;
 
 sub probe_db {
-    Log::do_log('debug3', 'Checking database structure');
+    $log->syslog('debug3', 'Checking database structure');
 
     my $sdm = __PACKAGE__->instance;
     unless ($sdm) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not check the database structure.  Make sure that database connection is available'
         );
         return undef;
@@ -106,7 +108,7 @@ sub probe_db {
     foreach my $method (
         qw(is_autoinc get_tables get_fields get_primary_key get_indexes)) {
         unless ($sdm->can($method)) {
-            Log::do_log('notice',
+            $log->syslog('notice',
                 'Could not check the database structure: required methods have not been implemented'
             );
             return 1;
@@ -155,7 +157,7 @@ sub probe_db {
             if (    $may_update
                 and $rep = $sdm->add_table({'table' => $t1})) {
                 push @report, $rep;
-                Log::do_log(
+                $log->syslog(
                     'notice', 'Table %s created in database %s',
                     $t1, Conf::get_robot_conf('*', 'db_name')
                 );
@@ -173,7 +175,7 @@ sub probe_db {
     if (%real_struct) {
         foreach my $t (keys %{$db_struct{'mysql'}}) {
             unless ($real_struct{$t}) {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Table "%s" not found in database "%s"; you should create it with create_db.%s script',
                     $t,
@@ -192,7 +194,7 @@ sub probe_db {
                     }
                 )
                 ) {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Unable to check the validity of fields definition for table %s. Aborting',
                     $t
@@ -219,7 +221,7 @@ sub probe_db {
                     }
                 )
                 ) {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Unable to check the validity of primary key for table %s. Aborting',
                     $t
@@ -236,7 +238,7 @@ sub probe_db {
                     }
                 )
                 ) {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Unable to check the valifity of indexes for table %s. Aborting',
                     $t
@@ -260,11 +262,11 @@ sub probe_db {
                         }
                     )
                     ) {
-                    Log::do_log('notice',
+                    $log->syslog('notice',
                         "Setting table $table field $autoincrement{$table} as autoincrement"
                     );
                 } else {
-                    Log::do_log('err',
+                    $log->syslog('err',
                         "Could not set table $table field $autoincrement{$table} as autoincrement"
                     );
                     return undef;
@@ -272,7 +274,7 @@ sub probe_db {
             }
         }
     } else {
-        Log::do_log('err',
+        $log->syslog('err',
             "Could not check the database structure. consider verify it manually before launching Sympa."
         );
         return undef;
@@ -302,7 +304,7 @@ sub _check_fields {
                 sprintf(
                 "Field '%s' (table '%s' ; database '%s') was NOT found. Attempting to add it...",
                 $f, $t, Conf::get_robot_conf('*', 'db_name'));
-            Log::do_log(
+            $log->syslog(
                 'notice',
                 'Field "%s" (table "%s"; database "%s") was NOT found. Attempting to add it...',
                 $f,
@@ -328,7 +330,7 @@ sub _check_fields {
                 ) {
                 push @{$report_ref}, $rep;
             } else {
-                Log::do_log('err',
+                $log->syslog('err',
                     'Addition of fields in database failed. Aborting');
                 return undef;
             }
@@ -351,7 +353,7 @@ sub _check_fields {
                     $db_struct{$db_type}{$t}{$f}
                     );
 
-                Log::do_log(
+                $log->syslog(
                     'notice',
                     'Field "%s" (table "%s"; database "%s") does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...',
                     $f,
@@ -373,14 +375,14 @@ sub _check_fields {
                     ) {
                     push @{$report_ref}, $rep;
                 } else {
-                    Log::do_log('err',
+                    $log->syslog('err',
                         'Fields update in database failed. Aborting');
                     return undef;
                 }
             }
         } else {
             unless ($real_struct{$t}{$f} eq $db_struct{$db_type}{$t}{$f}) {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Field "%s" (table "%s"; database "%s") does NOT have awaited type (%s)',
                     $f,
@@ -388,7 +390,7 @@ sub _check_fields {
                     Conf::get_robot_conf('*', 'db_name'),
                     $db_struct{$db_type}{$t}{$f}
                 );
-                Log::do_log('err',
+                $log->syslog('err',
                     'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES'
                 );
                 return undef;
@@ -407,7 +409,7 @@ sub _check_primary_key {
 
     my $list_of_keys = join ',', @{$primary{$t}};
     my $key_as_string = "$t [$list_of_keys]";
-    Log::do_log('debug',
+    $log->syslog('debug',
         'Checking primary keys for table %s expected_keys %s',
         $t, $key_as_string);
 
@@ -423,7 +425,7 @@ sub _check_primary_key {
         my $key_as_string = "$t [$list_of_keys]";
         if ($should_update->{'empty'}) {
             if (@{$primary{$t}}) {
-                Log::do_log('notice', 'Primary key %s is missing. Adding it',
+                $log->syslog('notice', 'Primary key %s is missing. Adding it',
                     $key_as_string);
                 ## Add primary key
                 my $rep = undef;
@@ -438,7 +440,7 @@ sub _check_primary_key {
                 }
             }
         } elsif ($should_update->{'existing_key_correct'}) {
-            Log::do_log('debug',
+            $log->syslog('debug',
                 "Existing key correct (%s) nothing to change",
                 $key_as_string);
         } else {
@@ -465,7 +467,7 @@ sub _check_primary_key {
             }
         }
     } else {
-        Log::do_log('err', 'Unable to evaluate table %s primary key', $t);
+        $log->syslog('err', 'Unable to evaluate table %s primary key', $t);
         return undef;
     }
     return 1;
@@ -477,18 +479,18 @@ sub _check_indexes {
     my $t          = $param->{'table'};
     my $report_ref = $param->{'report'};
     my $may_update = $param->{'may_update'};
-    Log::do_log('debug', 'Checking indexes for table %s', $t);
+    $log->syslog('debug', 'Checking indexes for table %s', $t);
 
     ## drop previous index if this index is not a primary key and was defined
     ## by a previous Sympa version
     my %index_columns = %{$sdm->get_indexes({'table' => $t})};
     foreach my $idx (keys %index_columns) {
-        Log::do_log('debug', 'Found index %s', $idx);
+        $log->syslog('debug', 'Found index %s', $idx);
         ## Remove the index if obsolete.
         foreach my $known_index (@former_indexes) {
             if ($idx eq $known_index) {
                 my $rep;
-                Log::do_log('notice', 'Removing obsolete index %s', $idx);
+                $log->syslog('notice', 'Removing obsolete index %s', $idx);
                 if (    $may_update
                     and $rep =
                     $sdm->unset_index({'table' => $t, 'index' => $idx})) {
@@ -504,7 +506,7 @@ sub _check_indexes {
         ## Add indexes
         unless ($index_columns{$idx}) {
             my $rep;
-            Log::do_log('notice',
+            $log->syslog('notice',
                 'Index %s on table %s does not exist. Adding it',
                 $idx, $t);
             if ($may_update
@@ -531,7 +533,7 @@ sub _check_indexes {
             if ($index_check->{'empty'}) {
                 ## Add index
                 my $rep = undef;
-                Log::do_log('notice', 'Index %s is missing. Adding it',
+                $log->syslog('notice', 'Index %s is missing. Adding it',
                     $index_as_string);
                 if ($may_update
                     and $rep = $sdm->set_index(
@@ -546,12 +548,12 @@ sub _check_indexes {
                     return undef;
                 }
             } elsif ($index_check->{'existing_key_correct'}) {
-                Log::do_log('debug',
+                $log->syslog('debug',
                     "Existing index correct (%s) nothing to change",
                     $index_as_string);
             } else {
                 ## drop previous index
-                Log::do_log('notice',
+                $log->syslog('notice',
                     'Index %s has not the right structure. Changing it',
                     $index_as_string);
                 my $rep = undef;
@@ -576,7 +578,7 @@ sub _check_indexes {
                 }
             }
         } else {
-            Log::do_log('err', 'Unable to evaluate index %s in table %s',
+            $log->syslog('err', 'Unable to evaluate index %s in table %s',
                 $idx, $t);
             return undef;
         }
@@ -612,7 +614,7 @@ sub _check_indexes {
 sub _check_key {
     my $sdm   = shift;
     my $param = shift;
-    Log::do_log('debug', 'Checking %s key structure for table %s',
+    $log->syslog('debug', 'Checking %s key structure for table %s',
         $param->{'key_name'}, $param->{'table'});
     my $keysFound;
     my $result;
@@ -638,7 +640,7 @@ sub _check_key {
         }
         foreach my $field (@{$param->{'expected_keys'}}) {
             unless ($keysFound->{$field}) {
-                Log::do_log('info',
+                $log->syslog('info',
                     'Table %s: Missing expected key part %s in %s key',
                     $param->{'table'}, $field, $param->{'key_name'});
                 $result->{'missing_key'}{$field} = 1;
@@ -647,7 +649,7 @@ sub _check_key {
         }
         foreach my $field (keys %{$keysFound}) {
             unless ($expected_keys{$field}) {
-                Log::do_log('info',
+                $log->syslog('info',
                     'Table %s: Found unexpected key part %s in %s key',
                     $param->{'table'}, $field, $param->{'key_name'});
                 $result->{'unexpected_key'}{$field} = 1;

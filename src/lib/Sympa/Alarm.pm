@@ -29,12 +29,14 @@ use warnings;
 
 use Sympa::Bulk;
 use Conf;
-use Log;
+use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message;
 use tools;
 
 use base qw(Class::Singleton);
+
+my $log = Sympa::Log->instance;
 
 # Constructor for Class::Singleton.
 sub _new_instance {
@@ -74,7 +76,7 @@ sub store {
         my @rcpts = ref $rcpt ? @$rcpt : ($rcpt);
 
         # stack if too much messages w/ same code
-        Log::do_log('info', 'Stacking message about "%s" for %s (%s)',
+        $log->syslog('info', 'Stacking message about "%s" for %s (%s)',
             $operation, join(', ', @rcpts), $robot_id)
             unless $operation eq 'logs_failed';
         foreach my $rcpt (@rcpts) {
@@ -119,7 +121,7 @@ sub flush {
 
             my %messages =
                 %{$self->{_stack}->{$robot_id}{$operation}{'messages'}};
-            Log::do_log(
+            $log->syslog(
                 'info', 'Got messages about "%s" (%s)',
                 $operation, join(', ', keys %messages)
             );
@@ -135,7 +137,7 @@ sub flush {
                         . tools::get_message_id($robot_id)
                 };
 
-                Log::do_log('info', 'Send messages to %s', $rcpt);
+                $log->syslog('info', 'Send messages to %s', $rcpt);
 
                 # Skip DB access because DB is not accessible
                 $rcpt = [$rcpt]
@@ -148,7 +150,7 @@ sub flush {
                     'listmaster_groupednotifications',
                     $rcpt, $param);
                 unless ($message) {
-                    Log::do_log(
+                    $log->syslog(
                         'notice',
                         'Unable to send template "listmaster_groupnotification" to %s listmaster %s',
                         $robot_id,
@@ -157,7 +159,7 @@ sub flush {
                     return undef;
                 }
                 unless (defined $mailer->store($message, $rcpt)) {
-                    Log::do_log(
+                    $log->syslog(
                         'notice',
                         'Unable to send template "listmaster_groupnotification" to %s listmaster %s',
                         $robot_id,
@@ -167,7 +169,7 @@ sub flush {
                 }
             }
 
-            Log::do_log('info', 'Cleaning stacked notifications');
+            $log->syslog('info', 'Cleaning stacked notifications');
             delete $self->{_stack}->{$robot_id}{$operation};
         }
     }

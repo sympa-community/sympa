@@ -27,9 +27,11 @@ package Sympa::DatabaseDriver::MySQL;
 use strict;
 use warnings;
 
-use Log;
+use Sympa::Log;
 
 use base qw(Sympa::DatabaseDriver);
+
+my $log = Sympa::Log->instance;
 
 use constant required_modules => [qw(DBD::mysql)];
 
@@ -58,7 +60,7 @@ sub connect {
     $self->__dbh->{'mysql_auto_reconnect'} = 0;
     unless (defined $self->__dbh->do("SET NAMES 'utf8mb4'")
         or defined $self->__dbh->do("SET NAMES 'utf8'")) {
-        Log::do_log('err', 'Cannot set client-side character set: %s',
+        $log->syslog('err', 'Cannot set client-side character set: %s',
             $self->error);
     }
 
@@ -68,7 +70,7 @@ sub connect {
 sub get_substring_clause {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Building substring caluse');
+    $log->syslog('debug', 'Building substring caluse');
     return
           "REVERSE(SUBSTRING("
         . $param->{'source_field'}
@@ -85,13 +87,13 @@ sub get_substring_clause {
 sub get_formatted_date {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Building SQL date formatting');
+    $log->syslog('debug', 'Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
         return sprintf 'UNIX_TIMESTAMP(%s)', $param->{'target'};
     } elsif (lc($param->{'mode'}) eq 'write') {
         return sprintf 'FROM_UNIXTIME(%d)', $param->{'target'};
     } else {
-        Log::do_log('err', "Unknown date format mode %s", $param->{'mode'});
+        $log->syslog('err', "Unknown date format mode %s", $param->{'mode'});
         return undef;
     }
 }
@@ -99,7 +101,7 @@ sub get_formatted_date {
 sub is_autoinc {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Checking whether field %s.%s is autoincremental',
+    $log->syslog('debug', 'Checking whether field %s.%s is autoincremental',
         $param->{'field'}, $param->{'table'});
     my $sth;
     unless (
@@ -109,7 +111,7 @@ sub is_autoinc {
             $param->{'field'}
         )
         ) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to gather autoincrement field named %s for table %s',
             $param->{'field'}, $param->{'table'});
         return undef;
@@ -125,7 +127,7 @@ sub set_autoinc {
         defined($param->{'field_type'})
         ? $param->{'field_type'}
         : 'BIGINT( 20 )';
-    Log::do_log('debug', 'Setting field %s.%s as autoincremental',
+    $log->syslog('debug', 'Setting field %s.%s as autoincremental',
         $param->{'field'}, $param->{'table'});
     unless (
         $self->do_query(
@@ -134,7 +136,7 @@ sub set_autoinc {
             $param->{'field'}, $field_type
         )
         ) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to set field %s in table %s as autoincrement',
             $param->{'field'}, $param->{'table'});
         return undef;
@@ -144,12 +146,12 @@ sub set_autoinc {
 
 sub get_tables {
     my $self = shift;
-    Log::do_log('debug', 'Retrieving all tables in database %s',
+    $log->syslog('debug', 'Retrieving all tables in database %s',
         $self->{'db_name'});
     my @raw_tables;
     my @result;
     unless (@raw_tables = $self->__dbh->tables()) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to retrieve the list of tables from database %s',
             $self->{'db_name'});
         return undef;
@@ -170,7 +172,7 @@ sub get_tables {
 sub add_table {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Adding table %s to database %s',
+    $log->syslog('debug', 'Adding table %s to database %s',
         $param->{'table'}, $self->{'db_name'});
     unless (
         $self->do_query(
@@ -178,7 +180,7 @@ sub add_table {
             $param->{'table'}
         )
         ) {
-        Log::do_log('err', 'Could not create table %s in database %s',
+        $log->syslog('err', 'Could not create table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
     }
@@ -189,13 +191,13 @@ sub add_table {
 sub get_fields {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Getting fields list from table %s in database %s',
+    $log->syslog('debug', 'Getting fields list from table %s in database %s',
         $param->{'table'}, $self->{'db_name'});
     my $sth;
     my %result;
     unless ($sth = $self->do_query("SHOW FIELDS FROM %s", $param->{'table'}))
     {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not get the list of fields from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
@@ -209,7 +211,7 @@ sub get_fields {
 sub update_field {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Updating field %s in table %s (%s, %s)',
+    $log->syslog('debug', 'Updating field %s in table %s (%s, %s)',
         $param->{'field'}, $param->{'table'}, $param->{'type'},
         $param->{'notnull'});
     my $options = '';
@@ -221,7 +223,7 @@ sub update_field {
         $param->{'table'}, $param->{'field'}, $param->{'field'},
         $param->{'type'},  $options
     );
-    Log::do_log('notice', "ALTER TABLE %s CHANGE %s %s %s %s",
+    $log->syslog('notice', "ALTER TABLE %s CHANGE %s %s %s %s",
         $param->{'table'}, $param->{'field'}, $param->{'field'},
         $param->{'type'}, $options);
     unless (
@@ -231,13 +233,13 @@ sub update_field {
             $param->{'type'},  $options
         )
         ) {
-        Log::do_log('err', 'Could not change field "%s" in table "%s"',
+        $log->syslog('err', 'Could not change field "%s" in table "%s"',
             $param->{'field'}, $param->{'table'});
         return undef;
     }
     $report .= sprintf("\nField %s in table %s, structure updated",
         $param->{'field'}, $param->{'table'});
-    Log::do_log('info', 'Field %s in table %s, structure updated',
+    $log->syslog('info', 'Field %s in table %s, structure updated',
         $param->{'field'}, $param->{'table'});
     return $report;
 }
@@ -245,7 +247,7 @@ sub update_field {
 sub add_field {
     my $self  = shift;
     my $param = shift;
-    Log::do_log(
+    $log->syslog(
         'debug',             'Adding field %s in table %s (%s, %s, %s, %s)',
         $param->{'field'},   $param->{'table'},
         $param->{'type'},    $param->{'notnull'},
@@ -269,7 +271,7 @@ sub add_field {
             $options
         )
         ) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not add field %s to table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
         return undef;
@@ -277,7 +279,7 @@ sub add_field {
 
     my $report = sprintf('Field %s added to table %s (options : %s)',
         $param->{'field'}, $param->{'table'}, $options);
-    Log::do_log('info', 'Field %s added to table %s (options: %s)',
+    $log->syslog('info', 'Field %s added to table %s (options: %s)',
         $param->{'field'}, $param->{'table'}, $options);
 
     return $report;
@@ -286,7 +288,7 @@ sub add_field {
 sub delete_field {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Deleting field %s from table %s',
+    $log->syslog('debug', 'Deleting field %s from table %s',
         $param->{'field'}, $param->{'table'});
 
     unless (
@@ -295,7 +297,7 @@ sub delete_field {
             $param->{'field'}
         )
         ) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
         return undef;
@@ -303,7 +305,7 @@ sub delete_field {
 
     my $report = sprintf('Field %s removed from table %s',
         $param->{'field'}, $param->{'table'});
-    Log::do_log('info', 'Field %s removed from table %s',
+    $log->syslog('info', 'Field %s removed from table %s',
         $param->{'field'}, $param->{'table'});
 
     return $report;
@@ -312,14 +314,14 @@ sub delete_field {
 sub get_primary_key {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Getting primary key for table %s',
+    $log->syslog('debug', 'Getting primary key for table %s',
         $param->{'table'});
 
     my %found_keys;
     my $sth;
     unless ($sth = $self->do_query("SHOW COLUMNS FROM %s", $param->{'table'}))
     {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not get field list from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
@@ -337,20 +339,20 @@ sub get_primary_key {
 sub unset_primary_key {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Removing primary key from table %s',
+    $log->syslog('debug', 'Removing primary key from table %s',
         $param->{'table'});
 
     my $sth;
     unless ($sth =
         $self->do_query("ALTER TABLE %s DROP PRIMARY KEY", $param->{'table'}))
     {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not drop primary key from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
     }
     my $report = "Table $param->{'table'}, PRIMARY KEY dropped";
-    Log::do_log('info', 'Table %s, PRIMARY KEY dropped', $param->{'table'});
+    $log->syslog('info', 'Table %s, PRIMARY KEY dropped', $param->{'table'});
 
     return $report;
 }
@@ -361,7 +363,7 @@ sub set_primary_key {
 
     my $sth;
     my $fields = join ',', @{$param->{'fields'}};
-    Log::do_log('debug', 'Setting primary key for table %s (%s)',
+    $log->syslog('debug', 'Setting primary key for table %s (%s)',
         $param->{'table'}, $fields);
     unless (
         $sth = $self->do_query(
@@ -369,7 +371,7 @@ sub set_primary_key {
             $fields
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Could not set fields %s as primary key for table %s in database %s',
             $fields,
@@ -379,7 +381,7 @@ sub set_primary_key {
         return undef;
     }
     my $report = "Table $param->{'table'}, PRIMARY KEY set on $fields";
-    Log::do_log('info', 'Table %s, PRIMARY KEY set on %s',
+    $log->syslog('info', 'Table %s, PRIMARY KEY set on %s',
         $param->{'table'}, $fields);
     return $report;
 }
@@ -387,12 +389,12 @@ sub set_primary_key {
 sub get_indexes {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Looking for indexes in %s', $param->{'table'});
+    $log->syslog('debug', 'Looking for indexes in %s', $param->{'table'});
 
     my %found_indexes;
     my $sth;
     unless ($sth = $self->do_query("SHOW INDEX FROM %s", $param->{'table'})) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Could not get the list of indexes from table %s in database %s',
             $param->{'table'},
@@ -414,7 +416,7 @@ sub get_indexes {
 sub unset_index {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Removing index %s from table %s',
+    $log->syslog('debug', 'Removing index %s from table %s',
         $param->{'index'}, $param->{'table'});
 
     my $sth;
@@ -424,13 +426,13 @@ sub unset_index {
             $param->{'index'}
         )
         ) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not drop index %s from table %s in database %s',
             $param->{'index'}, $param->{'table'}, $self->{'db_name'});
         return undef;
     }
     my $report = "Table $param->{'table'}, index $param->{'index'} dropped";
-    Log::do_log('info', 'Table %s, index %s dropped',
+    $log->syslog('info', 'Table %s, index %s dropped',
         $param->{'table'}, $param->{'index'});
 
     return $report;
@@ -442,7 +444,7 @@ sub set_index {
 
     my $sth;
     my $fields = join ',', @{$param->{'fields'}};
-    Log::do_log(
+    $log->syslog(
         'debug',
         'Setting index %s for table %s using fields %s',
         $param->{'index_name'},
@@ -454,7 +456,7 @@ sub set_index {
             $param->{'index_name'},             $fields
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Could not add index %s using field %s for table %s in database %s',
             $fields,
@@ -464,7 +466,7 @@ sub set_index {
         return undef;
     }
     my $report = "Table $param->{'table'}, index %s set using $fields";
-    Log::do_log('info', 'Table %s, index %s set using fields %s',
+    $log->syslog('info', 'Table %s, index %s set using fields %s',
         $param->{'table'}, $param->{'index_name'}, $fields);
     return $report;
 }

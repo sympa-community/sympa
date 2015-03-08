@@ -30,9 +30,11 @@ use DBI qw();
 use English qw(-no_match_vars);
 use POSIX qw();
 
-use Log;
+use Sympa::Log;
 
 use base qw(Sympa::DatabaseDriver);
+
+my $log = Sympa::Log->instance;
 
 use constant required_modules    => [qw(DBD::SQLite)];
 use constant required_parameters => [qw(db_name)];
@@ -80,11 +82,11 @@ sub get_substring_clause {
 sub get_formatted_date {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Building SQL date formatting');
+    $log->syslog('debug', 'Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read' or lc($param->{'mode'}) eq 'write') {
         return $param->{'target'};
     } else {
-        Log::do_log('err', "Unknown date format mode %s", $param->{'mode'});
+        $log->syslog('err', "Unknown date format mode %s", $param->{'mode'});
         return undef;
     }
 }
@@ -95,7 +97,7 @@ sub is_autoinc {
     my $table = $param->{'table'};
     my $field = $param->{'field'};
 
-    Log::do_log('debug', 'Checking whether field %s.%s is autoincremental',
+    $log->syslog('debug', 'Checking whether field %s.%s is autoincremental',
         $table, $field);
 
     my $type = $self->_get_field_type($table, $field);
@@ -109,7 +111,7 @@ sub set_autoinc {
     my $table = $param->{'table'};
     my $field = $param->{'field'};
 
-    Log::do_log('debug', 'Setting field %s.%s as autoincremental',
+    $log->syslog('debug', 'Setting field %s.%s as autoincremental',
         $table, $field);
 
     my $type = $self->_get_field_type($table, $field);
@@ -136,7 +138,7 @@ sub set_autoinc {
     }
 
     unless ($r) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to set field %s in table %s as autoincrement',
             $field, $table);
         return undef;
@@ -149,7 +151,7 @@ sub get_tables {
     my @raw_tables;
     my @result;
     unless (@raw_tables = $self->__dbh->tables()) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to retrieve the list of tables from database %s',
             $self->{'db_name'});
         return undef;
@@ -166,12 +168,12 @@ sub get_tables {
 sub add_table {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Adding table %s to database %s',
+    $log->syslog('debug', 'Adding table %s to database %s',
         $param->{'table'}, $self->{'db_name'});
     unless (
         $self->do_query("CREATE TABLE %s (temporary INT)", $param->{'table'}))
     {
-        Log::do_log('err', 'Could not create table %s in database %s',
+        $log->syslog('err', 'Could not create table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
     }
@@ -186,7 +188,7 @@ sub get_fields {
     my $sth;
     my %result;
     unless ($sth = $self->do_query(q{PRAGMA table_info('%s')}, $table)) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not get the list of fields from table %s in database %s',
             $table, $self->{'db_name'});
         return undef;
@@ -224,18 +226,18 @@ sub update_field {
     }
     my $report;
 
-    Log::do_log('debug', 'Updating field %s in table %s (%s%s)',
+    $log->syslog('debug', 'Updating field %s in table %s (%s%s)',
         $field, $table, $type, $options);
 
     my $r = $self->_update_table($table, qr(\b$field\s[^,]+),
         "$field\t$type$options");
     unless (defined $r) {
-        Log::do_log('err', 'Could not update field %s in table %s (%s%s)',
+        $log->syslog('err', 'Could not update field %s in table %s (%s%s)',
             $field, $table, $type, $options);
         return undef;
     }
     $report = $r;
-    Log::do_log('info', '%s', $r);
+    $log->syslog('info', '%s', $r);
 
     # Conversion between timestamp and number is not obvious.
     # So convert explicitly.
@@ -246,7 +248,7 @@ sub update_field {
     }
 
     $report .= "\nTable $table, field $field updated";
-    Log::do_log('info', 'Table %s, field %s updated', $table, $field);
+    $log->syslog('info', 'Table %s, field %s updated', $table, $field);
 
     return $report;
 }
@@ -257,7 +259,7 @@ sub add_field {
     my $table = $param->{'table'};
     my $field = $param->{'field'};
 
-    Log::do_log(
+    $log->syslog(
         'debug',             'Adding field %s in table %s (%s, %s, %s, %s)',
         $field,              $table,
         $param->{'type'},    $param->{'notnull'},
@@ -281,7 +283,7 @@ sub add_field {
         $report = $self->_update_table($table, qr{[(]\s*},
             "(\n\t $field\t$param->{'type'}$options,\n\t ");
         unless (defined $report) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Could not add field %s to table %s in database %s',
                 $field, $table, $self->{'db_name'});
             return undef;
@@ -293,7 +295,7 @@ sub add_field {
                 $table, $field, $param->{'type'}, $options
             )
             ) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Could not add field %s to table %s in database %s',
                 $field, $table, $self->{'db_name'});
             return undef;
@@ -303,7 +305,7 @@ sub add_field {
     $report .= "\n" if $report;
     $report .= sprintf 'Field %s added to table %s (%s%s)',
         $field, $table, $param->{'type'}, $options;
-    Log::do_log('info', 'Field %s added to table %s (%s%s)',
+    $log->syslog('info', 'Field %s added to table %s (%s%s)',
         $field, $table, $param->{'type'}, $options);
 
     return $report;
@@ -317,12 +319,12 @@ sub delete_field {
 
     return '' if $field eq 'temporary';
 
-    Log::do_log('debug', 'Deleting field %s from table %s', $field, $table);
+    $log->syslog('debug', 'Deleting field %s from table %s', $field, $table);
 
     ## SQLite does not support removal of columns
     my $report =
         "Could not remove field $field from table $table since SQLite does not support removal of columns";
-    Log::do_log('info', '%s', $report);
+    $log->syslog('info', '%s', $report);
 
     return $report;
 }
@@ -331,13 +333,13 @@ sub get_primary_key {
     my $self  = shift;
     my $param = shift;
     my $table = $param->{'table'};
-    Log::do_log('debug', 'Getting primary key for table %s', $table);
+    $log->syslog('debug', 'Getting primary key for table %s', $table);
 
     my %found_keys = ();
 
     my $sth;
     unless ($sth = $self->do_query(q{PRAGMA table_info('%s')}, $table)) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not get field list from table %s in database %s',
             $table, $self->{'db_name'});
         return undef;
@@ -358,18 +360,18 @@ sub unset_primary_key {
     my $table = $param->{'table'};
     my $report;
 
-    Log::do_log('debug', 'Removing primary key from table %s', $table);
+    $log->syslog('debug', 'Removing primary key from table %s', $table);
     my $r =
         $self->_update_table($table, qr{,\s*PRIMARY\s+KEY\s+[(][^)]+[)]}, '');
     unless (defined $r) {
-        Log::do_log('err', 'Could not remove primary key from table %s',
+        $log->syslog('err', 'Could not remove primary key from table %s',
             $table);
         return undef;
     }
     $report = $r;
-    Log::do_log('info', '%s', $r);
+    $log->syslog('info', '%s', $r);
     $report .= "\nTable $table, PRIMARY KEY dropped";
-    Log::do_log('info', 'Table %s, PRIMARY KEY dropped', $table);
+    $log->syslog('info', 'Table %s, PRIMARY KEY dropped', $table);
 
     return $report;
 }
@@ -381,19 +383,19 @@ sub set_primary_key {
     my $fields = join ',', @{$param->{'fields'}};
     my $report;
 
-    Log::do_log('debug', 'Setting primary key for table %s (%s)',
+    $log->syslog('debug', 'Setting primary key for table %s (%s)',
         $table, $fields);
     my $r = $self->_update_table($table, qr{\s*[)]\s*$},
         ",\n\t PRIMARY KEY ($fields)\n )");
     unless (defined $r) {
-        Log::do_log('debug', 'Could not set primary key for table %s (%s)',
+        $log->syslog('debug', 'Could not set primary key for table %s (%s)',
             $table, $fields);
         return undef;
     }
     $report = $r;
-    Log::do_log('info', '%s', $r);
+    $log->syslog('info', '%s', $r);
     $report .= "\nTable $table, PRIMARY KEY set on $fields";
-    Log::do_log('info', 'Table %s, PRIMARY KEY set on %s', $table, $fields);
+    $log->syslog('info', 'Table %s, PRIMARY KEY set on %s', $table, $fields);
 
     return $report;
 }
@@ -401,14 +403,14 @@ sub set_primary_key {
 sub get_indexes {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Looking for indexes in %s', $param->{'table'});
+    $log->syslog('debug', 'Looking for indexes in %s', $param->{'table'});
 
     my %found_indexes;
     my $sth;
     my $l;
     unless ($sth =
         $self->do_query(q{PRAGMA index_list('%s')}, $param->{'table'})) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Could not get the list of indexes from table %s in database %s',
             $param->{'table'},
@@ -425,7 +427,7 @@ sub get_indexes {
     foreach my $index_name (keys %found_indexes) {
         unless ($sth =
             $self->do_query(q{PRAGMA index_info('%s')}, $index_name)) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Could not get the list of indexes from table %s in database %s',
                 $param->{'table'},
@@ -445,18 +447,18 @@ sub get_indexes {
 sub unset_index {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Removing index %s from table %s',
+    $log->syslog('debug', 'Removing index %s from table %s',
         $param->{'index'}, $param->{'table'});
 
     my $sth;
     unless ($sth = $self->do_query(q{DROP INDEX "%s"}, $param->{'index'})) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not drop index %s from table %s in database %s',
             $param->{'index'}, $param->{'table'}, $self->{'db_name'});
         return undef;
     }
     my $report = "Table $param->{'table'}, index $param->{'index'} dropped";
-    Log::do_log('info', 'Table %s, index %s dropped',
+    $log->syslog('info', 'Table %s, index %s dropped',
         $param->{'table'}, $param->{'index'});
 
     return $report;
@@ -468,7 +470,7 @@ sub set_index {
 
     my $sth;
     my $fields = join ',', @{$param->{'fields'}};
-    Log::do_log(
+    $log->syslog(
         'debug',
         'Setting index %s for table %s using fields %s',
         $param->{'index_name'},
@@ -480,7 +482,7 @@ sub set_index {
             $param->{'table'},             $fields
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Could not add index %s using field %s for table %s in database %s',
             $fields,
@@ -490,7 +492,7 @@ sub set_index {
         return undef;
     }
     my $report = "Table $param->{'table'}, index %s set using $fields";
-    Log::do_log('info', 'Table %s, index %s set using fields %s',
+    $log->syslog('info', 'Table %s, index %s set using fields %s',
         $param->{'table'}, $param->{'index_name'}, $fields);
     return $report;
 }
@@ -511,7 +513,7 @@ sub do_query {
 
     ## acquire "immediate" lock
     unless (!$need_lock or $self->__dbh->begin_work) {
-        Log::do_log('err', 'Could not lock database: %s', $self->error);
+        $log->syslog('err', 'Could not lock database: %s', $self->error);
         return undef;
     }
 
@@ -528,7 +530,7 @@ sub do_query {
         }
     };
     if ($EVAL_ERROR or !$rc) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Could not unlock database: %s',
             $EVAL_ERROR || $self->error
@@ -551,7 +553,7 @@ sub do_prepared_query {
 
     ## acquire "immediate" lock
     unless (!$need_lock or $self->__dbh->begin_work) {
-        Log::do_log('err', 'Could not lock database: %s', $self->error);
+        $log->syslog('err', 'Could not lock database: %s', $self->error);
         return undef;
     }
 
@@ -568,7 +570,7 @@ sub do_prepared_query {
         }
     };
     if ($EVAL_ERROR or !$rc) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Could not unlock database: %s',
             $EVAL_ERROR || $self->error
@@ -595,7 +597,7 @@ sub _get_field_type {
 
     my $sth;
     unless ($sth = $self->do_query(q{PRAGMA table_info('%s')}, $table)) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not get the list of fields from table %s in database %s',
             $table, $self->{'db_name'});
         return undef;
@@ -613,7 +615,7 @@ sub _get_field_type {
     }
     $sth->finish;
 
-    Log::do_log(
+    $log->syslog(
         'err',
         'Could not gather information of field %s from table %s in database %s',
         $field,
@@ -639,7 +641,7 @@ sub _update_table {
     ## create temporary table with new structure
     $statement = $self->_get_create_table($table);
     unless (defined $statement) {
-        Log::do_log('err', 'Table "%s" does not exist', $table);
+        $log->syslog('err', 'Table "%s" does not exist', $table);
         return undef;
     }
 
@@ -649,7 +651,7 @@ sub _update_table {
     my $statement_orig = $statement;
     $statement =~ s/$regex/$replacement/;
     if ($statement eq $statement_orig) {
-        Log::do_log('err', 'Table "%s" was not changed', $table);
+        $log->syslog('err', 'Table "%s" was not changed', $table);
         return undef;
     }
     $statement =~ s/\btemporary\s+INT,\s*//;    # Omit "temporary" field.
@@ -657,15 +659,15 @@ sub _update_table {
     my $s = $statement;
     $s =~ s/\n\s*/ /g;
     $s =~ s/\t/ /g;
-    Log::do_log('info', '%s', $s);
+    $log->syslog('info', '%s', $s);
 
     unless ($self->do_query('%s', $statement)) {
-        Log::do_log('err', 'Could not create temporary table "%s_new"',
+        $log->syslog('err', 'Could not create temporary table "%s_new"',
             $table_saved);
         return undef;
     }
 
-    Log::do_log('info', 'Copy "%s" to "%s_new"', $table, $table_saved);
+    $log->syslog('info', 'Copy "%s" to "%s_new"', $table, $table_saved);
     ## save old table
     my $indexes = $self->get_indexes({'table' => $table});
     unless (defined $self->_copy_table($table, "${table_saved}_new")
@@ -708,7 +710,7 @@ sub _get_create_table {
             $table
         )
         ) {
-        Log::do_log('Could not get table \'%s\' on database \'%s\'',
+        $log->syslog('Could not get table \'%s\' on database \'%s\'',
             $table, $self->{'db_name'});
         return undef;
     }
@@ -737,7 +739,7 @@ sub _copy_table {
             $table_new, $fields, $fields, $table
         )
         ) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Could not copy talbe "%s" to temporary table "%s_new"',
             $table, $table_new);
         return undef;
@@ -759,7 +761,7 @@ sub _rename_table {
     }
     unless (
         $self->do_query(q{ALTER TABLE %s RENAME TO %s}, $table, $table_new)) {
-        Log::do_log('err', 'Could not rename table "%s" to "%s"',
+        $log->syslog('err', 'Could not rename table "%s" to "%s"',
             $table, $table_new);
         return undef;
     }
@@ -780,7 +782,7 @@ sub _rename_or_drop_table {
         return $r;
     } else {
         unless ($self->do_query(q{DROP TABLE "%s"}, $table)) {
-            Log::do_log('err', 'Could not drop table "%s"', $table);
+            $log->syslog('err', 'Could not drop table "%s"', $table);
             return undef;
         }
         return 0;

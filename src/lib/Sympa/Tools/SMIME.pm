@@ -29,7 +29,9 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Conf;
-use Log;
+use Sympa::Log;
+
+my $log = Sympa::Log->instance;
 
 =over
 
@@ -65,7 +67,7 @@ For 'decrypt', these are arrayrefs containing absolute filenames.
 
 # Old name: tools::smime_find_keys()
 sub find_keys {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $that = shift || '*';
     my $operation = shift;
 
@@ -96,7 +98,7 @@ sub find_keys {
         my $k = $c;
         $k =~ s/\/cert\.pem/\/private_key/;
         unless ($keys{$k}) {
-            Log::do_log('debug3', '%s exists, but matching %s doesn\'t',
+            $log->syslog('debug3', '%s exists, but matching %s doesn\'t',
                 $c, $k);
             delete $certs{$c};
         }
@@ -106,7 +108,7 @@ sub find_keys {
         my $c = $k;
         $c =~ s/\/private_key/\/cert\.pem/;
         unless ($certs{$c}) {
-            Log::do_log('debug3', '%s exists, but matching %s doesn\'t',
+            $log->syslog('debug3', '%s exists, but matching %s doesn\'t',
                 $k, $c);
             delete $keys{$k};
         }
@@ -124,13 +126,13 @@ sub find_keys {
             $certs = "$dir/cert.pem";
             $keys  = "$dir/private_key";
         } else {
-            Log::do_log('debug3', '%s: no certs/keys found for %s',
+            $log->syslog('debug3', '%s: no certs/keys found for %s',
                 $that, $operation);
             return undef;
         }
     }
 
-    Log::do_log('debug3', '%s: certs/keys for %s found', $that, $operation);
+    $log->syslog('debug3', '%s: certs/keys for %s found', $that, $operation);
     return ($certs, $keys);
 }
 
@@ -148,7 +150,7 @@ BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 #
 # Old name: tools::smime_parse_cert()
 sub parse_cert {
-    Log::do_log('debug3', '(%s => %s)', @_);
+    $log->syslog('debug3', '(%s => %s)', @_);
     my %arg = @_;
 
     ## Load certificate
@@ -158,36 +160,36 @@ sub parse_cert {
     } elsif ($arg{'file'}) {
         $x509 = eval { Crypt::OpenSSL::X509->new_from_file($arg{'file'}) };
     } else {
-        Log::do_log('err', 'Neither "text" nor "file" given');
+        $log->syslog('err', 'Neither "text" nor "file" given');
         return undef;
     }
     unless ($x509) {
-        Log::do_log('err', 'Cannot parse certificate');
+        $log->syslog('err', 'Cannot parse certificate');
         return undef;
     }
 
     my %res;
     $res{subject} = join '',
         map { '/' . $_->as_string } @{$x509->subject_name->entries};
-	my $extensions = $x509->extensions_by_name();
-	my %emails;
-	foreach my $extension_name (keys %$extensions) {
-		if ($extension_name eq 'subjectAltName') {
-			my $extension_value = $extensions->{$extension_name}->value();
-			my @addresses = split '\.{2,}', $extension_value;
-			shift @addresses;
-			foreach my $address (@addresses) {
-				$emails{$address} = 1;
-			}
-		}
-	}
-	if (%emails) {
-		foreach my $email (keys %emails) {
-			$res{email}{lc($email)} =1;
-		}
-	}elsif($x509->email) {
-		$res{email}{lc($x509->email)} = 1;
-	}
+    my $extensions = $x509->extensions_by_name();
+    my %emails;
+    foreach my $extension_name (keys %$extensions) {
+        if ($extension_name eq 'subjectAltName') {
+            my $extension_value = $extensions->{$extension_name}->value();
+            my @addresses = split '\.{2,}', $extension_value;
+            shift @addresses;
+            foreach my $address (@addresses) {
+                $emails{$address} = 1;
+            }
+        }
+    }
+    if (%emails) {
+        foreach my $email (keys %emails) {
+            $res{email}{lc($email)} = 1;
+        }
+    } elsif ($x509->email) {
+        $res{email}{lc($x509->email)} = 1;
+    }
     # Check key usage roughy.
     my %purposes = $x509->extensions_by_name->{keyUsage}->hash_bit_string;
     $res{purpose}->{sign} = $purposes{'Digital Signature'} ? 1 : '';
@@ -200,7 +202,7 @@ sub parse_cert {
 # can not (e.g. signature part not encoded by BASE64).
 sub smime_extract_certs {
     my ($mime, $outfile) = @_;
-    Log::do_log('debug2', '(%s)', $mime->mime_type);
+    $log->syslog('debug2', '(%s)', $mime->mime_type);
 
     if ($mime->mime_type =~ /application\/(x-)?pkcs7-/) {
         my $pipeout;
@@ -210,14 +212,14 @@ sub smime_extract_certs {
             '-inform' => 'der',
             '-out'    => $outfile
             ) {
-            Log::do_log('err', 'Unable to run openssl pkcs7: %m');
+            $log->syslog('err', 'Unable to run openssl pkcs7: %m');
             return 0;
         }
         print $pipeout $mime->bodyhandle->as_string;
         close $pipeout;
         my $status = $CHILD_ERROR >> 8;
         if ($status) {
-            Log::do_log('err', 'Openssl pkcs7 returned an error: %s',
+            $log->syslog('err', 'Openssl pkcs7 returned an error: %s',
                 $status);
             return 0;
         }

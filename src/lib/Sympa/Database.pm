@@ -29,9 +29,9 @@ use warnings;
 use DBI;
 use English qw(-no_match_vars);
 
-use Log;
+use Sympa::Log;
 
-#use base qw(Sympa::Datasource);
+my $log = Sympa::Log->instance;
 
 # Structure to keep track of active connections/connection status
 # Keys: unique ID of connection (includes type, server, port, dbname and user).
@@ -48,7 +48,7 @@ my %driver_aliases = (
 # Sympa::Database is the proxy class of Sympa::DatabaseDriver subclasses.
 # The constructor may be overridden by _new() method.
 sub new {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $class   = shift;
     my $db_type = shift;
     my %params  = @_;
@@ -58,7 +58,7 @@ sub new {
         unless $driver =~ /::/;
     unless (eval "require $driver"
         and $driver->isa('Sympa::DatabaseDriver')) {
-        Log::do_log('err', 'Unable to use %s module: %s',
+        $log->syslog('err', 'Unable to use %s module: %s',
             $driver, $EVAL_ERROR || 'Not a Sympa::DatabaseDriver class');
         return undef;
     }
@@ -96,12 +96,12 @@ sub _new {
 #
 ##############################################################
 sub connect {
-    Log::do_log('debug3', '(%s)', @_);
+    $log->syslog('debug3', '(%s)', @_);
     my $self = shift;
 
     # First check if we have an active connection with this server
     if ($self->ping) {
-        Log::do_log('debug3', 'Connection to database %s already available',
+        $log->syslog('debug3', 'Connection to database %s already available',
             $self);
         return 1;
     }
@@ -109,7 +109,7 @@ sub connect {
     # Do we have required parameters?
     foreach my $param (@{$self->required_parameters}) {
         unless (defined $self->{$param}) {
-            Log::do_log('info', 'Missing parameter %s for DBI connection',
+            $log->syslog('info', 'Missing parameter %s for DBI connection',
                 $param);
             return undef;
         }
@@ -118,7 +118,7 @@ sub connect {
     # Check if required module such as DBD is installed.
     foreach my $module (@{$self->required_modules}) {
         unless (eval "require $module") {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'A module for %s is not installed. You should download and install %s',
                 ref($self),
@@ -148,13 +148,13 @@ sub connect {
 
     unless ($self->ping) {
         unless ($persistent_connection_of{$self->{_id}}) {
-            Log::do_log('err', 'Can\'t connect to Database %s', $self);
+            $log->syslog('err', 'Can\'t connect to Database %s', $self);
             $self->{_status} = 'failed';
             return undef;
         }
 
         # Notify listmaster unless the 'failed' status was set earlier.
-        Log::do_log('err', 'Can\'t connect to Database %s, still trying...',
+        $log->syslog('err', 'Can\'t connect to Database %s, still trying...',
             $self);
         unless ($self->{_status} and $self->{_status} eq 'failed') {
             tools::send_notify_to_listmaster('*', 'no_db', {});
@@ -171,11 +171,11 @@ sub connect {
 
         delete $self->{_status};
 
-        Log::do_log('notice', 'Connection to Database %s restored', $self);
+        $log->syslog('notice', 'Connection to Database %s restored', $self);
         tools::send_notify_to_listmaster('*', 'db_restored', {});
     }
 
-    Log::do_log('debug2', 'Connected to Database %s', $self);
+    $log->syslog('debug2', 'Connected to Database %s', $self);
 
     return 1;
 }
@@ -220,13 +220,13 @@ sub do_query {
 
     my $s = $statement;
     $s =~ s/\n\s*/ /g;
-    Log::do_log('debug3', 'Will perform query "%s"', $s);
+    $log->syslog('debug3', 'Will perform query "%s"', $s);
 
     unless ($self->__dbh and $sth = $self->__dbh->prepare($statement)) {
         # Check connection to database in case it would be the cause of the
         # problem.
         unless ($self->connect()) {
-            Log::do_log('err', 'Unable to get a handle to %s database',
+            $log->syslog('err', 'Unable to get a handle to %s database',
                 $self->{'db_name'});
             return undef;
         } else {
@@ -234,7 +234,7 @@ sub do_query {
             {
                 my $trace_statement = sprintf $query,
                     @{$self->prepare_query_log_values(@params)};
-                Log::do_log('err', 'Unable to prepare SQL statement %s: %s',
+                $log->syslog('err', 'Unable to prepare SQL statement %s: %s',
                     $trace_statement, $self->error);
                 return undef;
             }
@@ -244,7 +244,7 @@ sub do_query {
         # Check connection to database in case it would be the cause of the
         # problem.
         unless ($self->connect()) {
-            Log::do_log('err', 'Unable to get a handle to %s database',
+            $log->syslog('err', 'Unable to get a handle to %s database',
                 $self->{'db_name'});
             return undef;
         } else {
@@ -252,7 +252,7 @@ sub do_query {
                 # Check connection to database in case it would be the cause
                 # of the problem.
                 unless ($self->connect()) {
-                    Log::do_log('err',
+                    $log->syslog('err',
                         'Unable to get a handle to %s database',
                         $self->{'db_name'});
                     return undef;
@@ -260,7 +260,7 @@ sub do_query {
                     unless ($sth = $self->__dbh->prepare($statement)) {
                         my $trace_statement = sprintf $query,
                             @{$self->prepare_query_log_values(@params)};
-                        Log::do_log('err',
+                        $log->syslog('err',
                             'Unable to prepare SQL statement %s: %s',
                             $trace_statement, $self->error);
                         return undef;
@@ -270,7 +270,8 @@ sub do_query {
             unless ($sth->execute) {
                 my $trace_statement = sprintf $query,
                     @{$self->prepare_query_log_values(@params)};
-                Log::do_log('err', 'Unable to execute SQL statement "%s": %s',
+                $log->syslog('err',
+                    'Unable to execute SQL statement "%s": %s',
                     $trace_statement, $self->error);
                 return undef;
             }
@@ -297,7 +298,7 @@ sub do_prepared_query {
             $types{$i} = $p;
             push @params, shift;
         } elsif (ref $p) {
-            Log::do_log('err', 'Unexpected %s object.  Ask developer',
+            $log->syslog('err', 'Unexpected %s object.  Ask developer',
                 ref $p);
             return undef;
         } else {
@@ -309,22 +310,22 @@ sub do_prepared_query {
     $query =~ s/^\s+//;
     $query =~ s/\s+$//;
     $query =~ s/\n\s*/ /g;
-    Log::do_log('debug3', 'Will perform query "%s"', $query);
+    $log->syslog('debug3', 'Will perform query "%s"', $query);
 
     if ($self->{'cached_prepared_statements'}{$query}) {
         $sth = $self->{'cached_prepared_statements'}{$query};
     } else {
-        Log::do_log('debug3',
+        $log->syslog('debug3',
             'Did not find prepared statement for %s. Doing it', $query);
         unless ($self->__dbh and $sth = $self->__dbh->prepare($query)) {
             unless ($self->connect()) {
-                Log::do_log('err', 'Unable to get a handle to %s database',
+                $log->syslog('err', 'Unable to get a handle to %s database',
                     $self->{'db_name'});
                 return undef;
             } else {
                 unless ($self->__dbh and $sth = $self->__dbh->prepare($query))
                 {
-                    Log::do_log('err', 'Unable to prepare SQL statement: %s',
+                    $log->syslog('err', 'Unable to prepare SQL statement: %s',
                         $self->error);
                     return undef;
                 }
@@ -343,19 +344,19 @@ sub do_prepared_query {
         # Check database connection in case it would be the cause of the
         # problem.
         unless ($self->connect()) {
-            Log::do_log('err', 'Unable to get a handle to %s database',
+            $log->syslog('err', 'Unable to get a handle to %s database',
                 $self->{'db_name'});
             return undef;
         } else {
             unless ($sth = $self->__dbh->prepare($query)) {
                 unless ($self->connect()) {
-                    Log::do_log('err',
+                    $log->syslog('err',
                         'Unable to get a handle to %s database',
                         $self->{'db_name'});
                     return undef;
                 } else {
                     unless ($sth = $self->__dbh->prepare($query)) {
-                        Log::do_log('err',
+                        $log->syslog('err',
                             'Unable to prepare SQL statement: %s',
                             $self->error);
                         return undef;
@@ -371,7 +372,8 @@ sub do_prepared_query {
 
             $self->{'cached_prepared_statements'}{$query} = $sth;
             unless ($sth->execute(@params)) {
-                Log::do_log('err', 'Unable to execute SQL statement "%s": %s',
+                $log->syslog('err',
+                    'Unable to execute SQL statement "%s": %s',
                     $query, $self->error);
                 return undef;
             }

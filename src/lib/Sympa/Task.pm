@@ -28,8 +28,10 @@ use strict;
 use warnings;
 
 use Sympa::List;
-use Log;
+use Sympa::Log;
 use Sympa::Regexps;
+
+my $log = Sympa::Log->instance;
 
 my @task_list;
 my %task_by_list;
@@ -39,7 +41,7 @@ my %task_by_model;
 sub new {
     my ($pkg, $file) = @_;
     my $task;
-    Log::do_log('debug2', '(%s)', $file);
+    $log->syslog('debug2', '(%s)', $file);
 
     $task->{'filepath'} = $file;
 
@@ -77,7 +79,7 @@ sub new {
             $task->{'domain'}      = $task->{'list_object'}{'domain'};
         }
     } else {
-        Log::do_log('err', 'Unknown format for task "%s"',
+        $log->syslog('err', 'Unknown format for task "%s"',
             $task->{'filename'});
         return undef;
     }
@@ -97,13 +99,13 @@ sub list_tasks {
 
     ## Create required tasks
     unless (opendir(DIR, $spool_task)) {
-        Log::do_log('err', 'Can\'t open dir %s: %m', $spool_task);
+        $log->syslog('err', 'Can\'t open dir %s: %m', $spool_task);
     }
     my @task_files =
         sort epoch_sort (grep !/^\.\.?$/, readdir DIR);    # @tasks updating
     closedir DIR;
 
-    Log::do_log('debug', "Listing all tasks");
+    $log->syslog('debug', "Listing all tasks");
     ## Reset the list of tasks
     undef @task_list;
     undef %task_by_list;
@@ -129,7 +131,7 @@ sub list_tasks {
 ## Return a list tasks for the given list
 sub get_tasks_by_list {
     my $list_id = shift;
-    Log::do_log('debug', 'Getting tasks for list "%s"', $list_id);
+    $log->syslog('debug', 'Getting tasks for list "%s"', $list_id);
     return () unless (defined $task_by_list{$list_id});
     return values %{$task_by_list{$list_id}};
 }
@@ -137,15 +139,15 @@ sub get_tasks_by_list {
 sub get_used_models {
     ## Optional list parameter
     my $list_id = shift;
-    Log::do_log('debug', 'Getting used models for list "%s"', $list_id);
+    $log->syslog('debug', 'Getting used models for list "%s"', $list_id);
 
     if (defined $list_id) {
         if (defined $task_by_list{$list_id}) {
-            Log::do_log('debug2', 'Found used models for list "%s"',
+            $log->syslog('debug2', 'Found used models for list "%s"',
                 $list_id);
             return keys %{$task_by_list{$list_id}};
         } else {
-            Log::do_log('debug2',
+            $log->syslog('debug2',
                 'Did not find any used models for list "%s"', $list_id);
             return ();
         }
@@ -156,7 +158,7 @@ sub get_used_models {
 }
 
 sub get_task_list {
-    Log::do_log('debug', "Getting tasks list");
+    $log->syslog('debug', "Getting tasks list");
     return @task_list;
 }
 

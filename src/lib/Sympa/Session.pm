@@ -31,7 +31,7 @@ use Digest::MD5;
 
 use Conf;
 use Sympa::Language;
-use Log;
+use Sympa::Log;
 use SDM;
 use tools;
 use Sympa::Tools::Data;
@@ -53,6 +53,8 @@ my %session_hard_attributes = (
     'new_session'  => 1,
 );
 
+my $log = Sympa::Log->instance;
+
 sub new {
     my $pkg     = shift;
     my $robot   = shift;
@@ -63,12 +65,12 @@ sub new {
     my $rss    = $context->{'rss'};
     #my $ajax = $context->{'ajax'};
 
-    Log::do_log('debug', '(%s, %s, %s)', $robot, $cookie, $action);
+    $log->syslog('debug', '(%s, %s, %s)', $robot, $cookie, $action);
     my $self = {'robot' => $robot};    # set current robot
     bless $self, $pkg;
 
     unless ($robot) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Missing robot parameter, cannot create session object');
         return undef;
     }
@@ -97,7 +99,7 @@ sub new {
         }
         if ($status eq 'not_found') {
             # Start a Sympa::Session->new(may be a fake cookie).
-            Log::do_log('info', 'Ignoring unknown session cookie "%s"',
+            $log->syslog('info', 'Ignoring unknown session cookie "%s"',
                 $cookie);
             return (Sympa::Session->new($robot));
         }
@@ -119,10 +121,10 @@ sub new {
 sub load {
     my $self   = shift;
     my $cookie = shift;
-    Log::do_log('debug', '(%s)', $cookie);
+    $log->syslog('debug', '(%s)', $cookie);
 
     unless ($cookie) {
-        Log::do_log('err', 'Internal error.  Undefined id_session');
+        $log->syslog('err', 'Internal error.  Undefined id_session');
         return undef;
     }
 
@@ -153,13 +155,13 @@ sub load {
                 $id_session
             )
             ) {
-            Log::do_log('err', 'Unable to load session %s', $id_session);
+            $log->syslog('err', 'Unable to load session %s', $id_session);
             return undef;
         }
     } else {
         $id_session = decrypt_session_id($cookie);
         unless ($id_session) {
-            Log::do_log('err', 'Internal error.  Undefined id_session');
+            $log->syslog('err', 'Internal error.  Undefined id_session');
             return undef;
         }
 
@@ -179,7 +181,7 @@ sub load {
                 $id_session, $id_session
             )
             ) {
-            Log::do_log('err', 'Unable to load session %s', $id_session);
+            $log->syslog('err', 'Unable to load session %s', $id_session);
             return undef;
         }
     }
@@ -189,7 +191,7 @@ sub load {
     my $counter     = 0;
     while ($new_session = $sth->fetchrow_hashref('NAME_lc')) {
         if ($counter > 0) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'The SQL statement did return more than one session');
             $session->{'email'} = '';
             last;
@@ -237,7 +239,7 @@ sub load {
 ## This method will both store the session information in the database
 sub store {
     my $self = shift;
-    Log::do_log('debug', '');
+    $log->syslog('debug', '');
 
     return undef unless ($self->{'id_session'});
     # do not create a session in session table for crawlers;
@@ -278,7 +280,7 @@ sub store {
                 $data_string
             )
             ) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Unable to add new information for session %s in database',
                 $self->{'id_session'});
             return undef;
@@ -296,7 +298,7 @@ sub store {
             $self->{'id_session'}
         );
         unless ($sth) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Unable to update session information in database');
             return undef;
         }
@@ -324,7 +326,7 @@ sub store {
                 $self->{'id_session'}
             )
             ) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Unable to update information for session %s in database',
                 $self->{'id_session'});
             return undef;
@@ -337,7 +339,7 @@ sub store {
 ## This method will renew the session ID
 sub renew {
     my $self = shift;
-    Log::do_log('debug', '(id_session=%s)', $self->{'id_session'});
+    $log->syslog('debug', '(id_session=%s)', $self->{'id_session'});
 
     return undef unless ($self->{'id_session'});
     # do not create a session in session table for crawlers;
@@ -364,7 +366,7 @@ sub renew {
         $self->{'id_session'}
     );
     unless ($sth) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to update information for session %s in database',
             $self->{'id_session'});
         return undef;
@@ -422,7 +424,7 @@ sub renew {
         SDM::quote($remote_addr), $refresh_term
     );
     unless ($sth) {
-        Log::do_log('err', 'Unable to renew session ID for session %s',
+        $log->syslog('err', 'Unable to renew session ID for session %s',
             $self->{'id_session'});
         return undef;
     }
@@ -444,7 +446,7 @@ sub renew {
     );
 
     ## Renew the session ID in order to prevent session hijacking
-    Log::do_log(
+    $log->syslog(
         'info',
         '[robot %s] [session %s] [client %s]%s new session %s',
         $self->{'robot'},
@@ -464,7 +466,7 @@ sub renew {
 ## remove old sessions from a particular robot or from all robots.
 ## delay is a parameter in seconds
 sub purge_old_sessions {
-    Log::do_log('debug2', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
     my $robot = shift;
 
     my $delay =
@@ -473,11 +475,11 @@ sub purge_old_sessions {
         $Conf::Conf{'anonymous_session_table_ttl'});
 
     unless ($delay) {
-        Log::do_log('info', '(%s) Exit with delay null', $robot);
+        $log->syslog('info', '(%s) Exit with delay null', $robot);
         return;
     }
     unless ($anonymous_delay) {
-        Log::do_log('info', '(%s) Exit with anonymous delay null', $robot);
+        $log->syslog('info', '(%s) Exit with anonymous delay null', $robot);
         return;
     }
 
@@ -509,33 +511,33 @@ sub purge_old_sessions {
         $anonymous_condition;
 
     unless ($sth = SDM::do_query($count_statement)) {
-        Log::do_log('err', 'Unable to count old session for robot %s',
+        $log->syslog('err', 'Unable to count old session for robot %s',
             $robot);
         return undef;
     }
 
     my $total = $sth->fetchrow;
     if ($total == 0) {
-        Log::do_log('debug', 'No sessions to expire');
+        $log->syslog('debug', 'No sessions to expire');
     } else {
         unless ($sth = SDM::do_query($statement)) {
-            Log::do_log('err', 'Unable to purge old sessions for robot %s',
+            $log->syslog('err', 'Unable to purge old sessions for robot %s',
                 $robot);
             return undef;
         }
     }
     unless ($sth = SDM::do_query($anonymous_count_statement)) {
-        Log::do_log('err', 'Unable to count anonymous sessions for robot %s',
+        $log->syslog('err', 'Unable to count anonymous sessions for robot %s',
             $robot);
         return undef;
     }
     my $anonymous_total = $sth->fetchrow;
     if ($anonymous_total == 0) {
-        Log::do_log('debug', 'No anonymous sessions to expire');
+        $log->syslog('debug', 'No anonymous sessions to expire');
         return $total;
     }
     unless ($sth = SDM::do_query($anonymous_statement)) {
-        Log::do_log('err', 'Unable to purge anonymous sessions for robot %s',
+        $log->syslog('err', 'Unable to purge anonymous sessions for robot %s',
             $robot);
         return undef;
     }
@@ -546,14 +548,14 @@ sub purge_old_sessions {
 ## delay is a parameter in seconds
 ##
 sub purge_old_tickets {
-    Log::do_log('debug2', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
     my $robot = shift;
 
     my $delay = Sympa::Tools::Time::duration_conv(
         $Conf::Conf{'one_time_ticket_table_ttl'});
 
     unless ($delay) {
-        Log::do_log('info', '(%s) Exit with delay null', $robot);
+        $log->syslog('info', '(%s) Exit with delay null', $robot);
         return;
     }
 
@@ -575,17 +577,17 @@ sub purge_old_tickets {
     my $statement = sprintf 'DELETE FROM one_time_ticket_table %s', $where;
 
     unless ($sth = SDM::do_query($count_statement)) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to count old one time tickets for robot %s', $robot);
         return undef;
     }
 
     my $total = $sth->fetchrow;
     if ($total == 0) {
-        Log::do_log('debug', 'No tickets to expire');
+        $log->syslog('debug', 'No tickets to expire');
     } else {
         unless ($sth = SDM::do_query($statement)) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Unable to delete expired one time tickets for robot %s',
                 $robot);
             return undef;
@@ -597,7 +599,7 @@ sub purge_old_tickets {
 # list sessions for $robot where last access is newer then $delay. List is
 # limited to connected users if $connected_only
 sub list_sessions {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    $log->syslog('debug3', '(%s, %s, %s)', @_);
     my $delay          = shift;
     my $robot          = shift;
     my $connected_only = shift;
@@ -620,10 +622,10 @@ sub list_sessions {
 		 start_date_session AS start_date_epoch, hit_session
 	  FROM session_table
 	  WHERE %s}, $condition;
-    Log::do_log('debug', 'Statement = %s', $statement);
+    $log->syslog('debug', 'Statement = %s', $statement);
 
     unless ($sth = SDM::do_query($statement)) {
-        Log::do_log('err', 'Unable to get the list of sessions for robot %s',
+        $log->syslog('err', 'Unable to get the list of sessions for robot %s',
             $robot);
         return undef;
     }
@@ -650,7 +652,7 @@ sub get_session_cookie {
 ## domain=(localhost|<a domain>)
 sub set_cookie {
     my ($self, $http_domain, $expires, $use_ssl) = @_;
-    Log::do_log('debug', '(%s, %s, secure= %s)',
+    $log->syslog('debug', '(%s, %s, secure= %s)',
         $http_domain, $expires, $use_ssl);
 
     my $expiration;
@@ -796,15 +798,15 @@ sub decrypt_session_id {
 sub _get_mac {
     my $email  = shift;
     my $secret = shift;
-    Log::do_log('debug3', '(%s, %s)', $email, $secret);
+    $log->syslog('debug3', '(%s, %s)', $email, $secret);
 
     unless ($secret) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Failure missing server secret for cookie MD5 digest');
         return undef;
     }
     unless ($email) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Failure missing email address or cookie MD5 digest');
         return undef;
     }
@@ -847,7 +849,7 @@ sub set_cookie_extern {
     );
     ## Send cookie to the client
     printf "Set-Cookie: %s\n", $cookie->as_string;
-    #Log::do_log('notice','%s',$cookie->as_string);
+    #$log->syslog('notice','%s',$cookie->as_string);
     return 1;
 }
 

@@ -97,11 +97,11 @@ sub _crash_handler {
 
     # Cleanup.
     # If any of corresponding modules have not been loaded, they are ignored.
-    eval { Log::do_log('err', 'DIED: %s', $mess); };
+    eval { Sympa::Log->instance->syslog('err', 'DIED: %s', $mess); };
     eval { Sympa::Alarm->instance->flush(purge => 1); };
     eval { Sympa::DatabaseManager->disconnect(); };    # unlock database
-    eval { Sys::Syslog::closelog(); };          # flush log
-    eval { Log::set_log_level(-1); };           # disable log
+    eval { Sys::Syslog::closelog(); };                 # flush log
+    eval { Sympa::Log->instance->{level} = -1; };      # disable log
 
     # Call hook
     ($hook || \&_default_hook)->($_[0], $longmess);

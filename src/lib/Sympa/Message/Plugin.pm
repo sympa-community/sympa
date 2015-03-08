@@ -35,6 +35,8 @@ sub execute {
     my $message   = shift;
     my @params    = @_;
 
+    my $log  = Sympa::Log->instance;
+
     my $list = $message->{context};
 
     my $hook_module;
@@ -53,13 +55,13 @@ sub execute {
     unless (exists $handlers{$hook_module . '->' . $hook_name}) {
         eval "use $hook_module;";
         if ($EVAL_ERROR) {
-            Log::do_log('err', 'Cannot load hook module %s: %s',
+            $log->syslog('err', 'Cannot load hook module %s: %s',
                 $hook_module, $EVAL_ERROR);
             return undef;
         }
         eval { $hook_handler = $hook_module->can($hook_name); };
         if ($EVAL_ERROR) {
-            Log::do_log('err', 'Cannot get hook handler %s->%s: %s',
+            $log->syslog('err', 'Cannot get hook handler %s->%s: %s',
                 $hook_module, $hook_name, $EVAL_ERROR);
             return undef;
         }
@@ -74,7 +76,7 @@ sub execute {
         $result = $hook_module->$hook_name($hook_name, $message, @params);
     };
     if ($EVAL_ERROR) {
-        Log::do_log('err', 'Error processing %s->%s on %s: %s',
+        $log->syslog('err', 'Error processing %s->%s on %s: %s',
             $hook_module, $hook_name, $list, $EVAL_ERROR);
         return undef;
     }

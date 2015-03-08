@@ -28,8 +28,10 @@ use strict;
 use warnings;
 use Digest::MD5 qw();
 
-use Log;
+use Sympa::Log;
 use Sympa::Regexps;
+
+my $log = Sympa::Log->instance;
 
 ############################################################
 #  constructor
@@ -47,7 +49,7 @@ use Sympa::Regexps;
 ##############################################################
 sub new {
     my ($pkg, $param) = @_;
-    Log::do_log('debug', '');
+    $log->syslog('debug', '');
     my $self = $param;
     ## Bless Message object
     bless $self, $pkg;
@@ -57,7 +59,7 @@ sub new {
 # Returns a unique ID for an include datasource
 sub _get_datasource_id {
     my ($source) = shift;
-    Log::do_log('debug2', 'Getting datasource id for source "%s"', $source);
+    $log->syslog('debug2', 'Getting datasource id for source "%s"', $source);
     # Not in case.
     #if (ref($source) eq 'Sympa::Datasource') {
     #    $source = shift;
@@ -95,7 +97,7 @@ sub is_allowed_to_sync {
     my $rsre = Sympa::Regexps::time_ranges();
     return 1 unless ($ranges =~ /^$rsre$/);
 
-    Log::do_log('debug', "Checking whether sync is allowed at current time");
+    $log->syslog('debug', "Checking whether sync is allowed at current time");
 
     my ($sec, $min, $hour) = localtime(time);
     my $now = 60 * int($hour) + int($min);
@@ -109,7 +111,7 @@ sub is_allowed_to_sync {
         my $end   = 60 * int($3) + int($4);
         $end += 24 * 60 if ($end < $start);
 
-        Log::do_log('debug',
+        $log->syslog('debug',
                   "Checking for range from "
                 . sprintf('%02d', $start / 60) . "h"
                 . sprintf('%02d', $start % 60) . " to "
@@ -119,14 +121,14 @@ sub is_allowed_to_sync {
         next if ($start == $end);
 
         if ($now >= $start && $now <= $end) {
-            Log::do_log('debug', 'Failed, sync not allowed');
+            $log->syslog('debug', 'Failed, sync not allowed');
             return 0;
         }
 
-        Log::do_log('debug', "Pass ...");
+        $log->syslog('debug', "Pass ...");
     }
 
-    Log::do_log('debug', "Sync allowed");
+    $log->syslog('debug', "Sync allowed");
     return 1;
 }
 

@@ -43,7 +43,9 @@ use File::Copy::Recursive;
 use File::Find qw();
 use POSIX qw();
 
-use Log;
+use Sympa::Log;
+
+my $log = Sympa::Log->instance;
 
 =head2 Functions
 
@@ -63,7 +65,7 @@ sub set_file_rights {
 
     if ($param{'user'}) {
         unless ($uid = (getpwnam($param{'user'}))[2]) {
-            Log::do_log('err', "User %s can't be found in passwd file",
+            $log->syslog('err', "User %s can't be found in passwd file",
                 $param{'user'});
             return undef;
         }
@@ -74,7 +76,7 @@ sub set_file_rights {
     }
     if ($param{'group'}) {
         unless ($gid = (getgrnam($param{'group'}))[2]) {
-            Log::do_log('err', "Group %s can't be found", $param{'group'});
+            $log->syslog('err', "Group %s can't be found", $param{'group'});
             return undef;
         }
     } else {
@@ -83,13 +85,13 @@ sub set_file_rights {
         $gid = -1;
     }
     unless (chown($uid, $gid, $param{'file'})) {
-        Log::do_log('err', "Can't give ownership of file %s to %s.%s: %m",
+        $log->syslog('err', "Can't give ownership of file %s to %s.%s: %m",
             $param{'file'}, $param{'user'}, $param{'group'});
         return undef;
     }
     if ($param{'mode'}) {
         unless (chmod($param{'mode'}, $param{'file'})) {
-            Log::do_log('err', "Can't change rights of file %s: %m",
+            $log->syslog('err', "Can't change rights of file %s: %m",
                 $Conf::Conf{'db_name'});
             return undef;
         }
@@ -110,10 +112,10 @@ Copy a directory and its content
 sub copy_dir {
     my $dir1 = shift;
     my $dir2 = shift;
-    Log::do_log('debug', 'Copy directory %s to %s', $dir1, $dir2);
+    $log->syslog('debug', 'Copy directory %s to %s', $dir1, $dir2);
 
     unless (-d $dir1) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Directory source "%s" doesn\'t exist. Copy impossible', $dir1);
         return undef;
     }
@@ -131,7 +133,7 @@ Delete a directory and its content
 =cut
 
 sub del_dir {
-    Log::do_log('debug3', '(%s)', @_);
+    $log->syslog('debug3', '(%s)', @_);
     my $dir = shift;
 
     if (opendir DIR, $dir) {
@@ -143,10 +145,10 @@ sub del_dir {
         }
         closedir DIR;
         unless (rmdir $dir) {
-            Log::do_log('err', 'Unable to delete directory %s: %m', $dir);
+            $log->syslog('err', 'Unable to delete directory %s: %m', $dir);
         }
     } else {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to open directory %s to delete the files it contains: %m',
             $dir
@@ -232,10 +234,10 @@ unlink others
 sub shift_file {
     my $file  = shift;
     my $count = shift;
-    Log::do_log('debug', '(%s, %s)', $file, $count);
+    $log->syslog('debug', '(%s, %s)', $file, $count);
 
     unless (-f $file) {
-        Log::do_log('info', 'Unknown file %s', $file);
+        $log->syslog('info', 'Unknown file %s', $file);
         return undef;
     }
 
@@ -243,7 +245,7 @@ sub shift_file {
     my $file_extention = POSIX::strftime("%Y:%m:%d:%H:%M:%S", @date);
 
     unless (rename($file, $file . '.' . $file_extention)) {
-        Log::do_log('err', 'Cannot rename file %s to %s.%s',
+        $log->syslog('err', 'Cannot rename file %s to %s.%s',
             $file, $file, $file_extention);
         return undef;
     }
@@ -252,7 +254,7 @@ sub shift_file {
         my $dir = $1;
 
         unless (opendir(DIR, $dir)) {
-            Log::do_log('err', 'Cannot read dir %s', $dir);
+            $log->syslog('err', 'Cannot read dir %s', $dir);
             return ($file . '.' . $file_extention);
         }
         my $i = 0;
@@ -261,9 +263,9 @@ sub shift_file {
             $i++;
             if ($count lt $i) {
                 if (unlink($oldfile)) {
-                    Log::do_log('info', 'Unlink %s', $oldfile);
+                    $log->syslog('info', 'Unlink %s', $oldfile);
                 } else {
-                    Log::do_log('info', 'Unable to unlink %s', $oldfile);
+                    $log->syslog('info', 'Unable to unlink %s', $oldfile);
                 }
             }
         }
@@ -402,7 +404,7 @@ It can be a list of directory or few direcoty paths.
 
 sub remove_dir {
 
-    Log::do_log('debug2', '');
+    $log->syslog('debug2', '');
 
     foreach my $current_dir (@_) {
         File::Find::finddepth({wanted => \&del, no_chdir => 1}, $current_dir);
@@ -413,11 +415,11 @@ sub remove_dir {
 
         if (!-l && -d _) {
             unless (rmdir($name)) {
-                Log::do_log('err', 'Error while removing dir %s', $name);
+                $log->syslog('err', 'Error while removing dir %s', $name);
             }
         } else {
             unless (unlink($name)) {
-                Log::do_log('err', 'Error while removing file %s', $name);
+                $log->syslog('err', 'Error while removing file %s', $name);
             }
         }
     }

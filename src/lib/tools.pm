@@ -46,11 +46,13 @@ use Sympa::Language;
 use Sympa::List;
 use Sympa::ListDef;
 use Sympa::LockedFile;
-use Log;
+use Sympa::Log;
 use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+
+my $log = Sympa::Log->instance;
 
 ## Returns an HTML::StripScripts::Parser object built with  the parameters
 ## provided as arguments.
@@ -114,7 +116,7 @@ sub checkcommand {
     ## Check for commands in the subject.
     my $subject = $msg->head->get('Subject');
 
-    Log::do_log('debug3', '(msg->head->get(subject) %s, %s)',
+    $log->syslog('debug3', '(msg->head->get(subject) %s, %s)',
         $subject, $sender);
 
     if ($subject) {
@@ -141,7 +143,7 @@ sub checkcommand {
 
 ## return a hash from the edit_list_conf file
 sub load_edit_list_conf {
-    Log::do_log('debug2', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
     my $list = shift;
 
     my $robot = $list->{'domain'};
@@ -152,7 +154,7 @@ sub load_edit_list_conf {
         unless $file = tools::search_fullpath($list, 'edit_list.conf');
 
     unless (open(FILE, $file)) {
-        Log::do_log('info', 'Unable to open config file %s', $file);
+        $log->syslog('info', 'Unable to open config file %s', $file);
         return undef;
     }
 
@@ -170,7 +172,7 @@ sub load_edit_list_conf {
                 $r =~ s/^\s*(\S+)\s*$/$1/;
                 if ($r eq 'default') {
                     $error_in_conf = 1;
-                    Log::do_log('notice', '"default" is no more recognised');
+                    $log->syslog('notice', '"default" is no more recognised');
                     foreach
                         my $set ('owner', 'privileged_owner', 'listmaster') {
                         $conf->{$param}{$set} = $priv;
@@ -180,7 +182,7 @@ sub load_edit_list_conf {
                 $conf->{$param}{$r} = $priv;
             }
         } else {
-            Log::do_log(
+            $log->syslog(
                 'info',
                 'Unknown parameter in %s (Ignored) %s',
                 "$Conf::Conf{'etc'}/edit_list.conf", $_
@@ -206,7 +208,7 @@ sub load_create_list_conf {
 
     $file = tools::search_fullpath($robot, 'create_list.conf');
     unless ($file) {
-        Log::do_log(
+        $log->syslog(
             'info',
             'Unable to read %s',
             Sympa::Constants::DEFAULTDIR . '/create_list.conf'
@@ -215,7 +217,7 @@ sub load_create_list_conf {
     }
 
     unless (open(FILE, $file)) {
-        Log::do_log('info', 'Unable to open config file %s', $file);
+        $log->syslog('info', 'Unable to open config file %s', $file);
         return undef;
     }
 
@@ -225,7 +227,7 @@ sub load_create_list_conf {
         if (/^\s*(\S+)\s+(read|hidden)\s*$/i) {
             $conf->{$1} = lc($2);
         } else {
-            Log::do_log(
+            $log->syslog(
                 'info',
                 'Unknown parameter in %s (Ignored) %s',
                 "$Conf::Conf{'etc'}/create_list.conf", $_
@@ -305,7 +307,7 @@ sub get_list_list_tpl {
 }
 
 sub get_templates_list {
-    Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
+    $log->syslog('debug3', '(%s, %s, %s, %s)', @_);
     my $type    = shift;
     my $robot   = shift;
     my $list    = shift;
@@ -314,7 +316,7 @@ sub get_templates_list {
     my $listdir;
 
     unless (($type eq 'web') || ($type eq 'mail')) {
-        Log::do_log('info', 'Internal error incorrect parameter');
+        $log->syslog('info', 'Internal error incorrect parameter');
     }
 
     my $distrib_dir = Sympa::Constants::DEFAULTDIR . '/' . $type . '_tt2';
@@ -392,7 +394,7 @@ sub get_templates_list {
 
 # return the path for a specific template
 sub get_template_path {
-    Log::do_log('debug2', '(%s, %s. %s, %s, %s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s. %s, %s, %s, %s)', @_);
     my $type  = shift;
     my $robot = shift;
     my $scope = shift;
@@ -407,21 +409,21 @@ sub get_template_path {
         unless ($oldlocale eq $lang) {
             $subdir = Sympa::Language::canonic_lang($lang);
             unless ($subdir) {
-                Log::do_log('info', 'Internal error incorrect parameter');
+                $log->syslog('info', 'Internal error incorrect parameter');
                 return undef;
             }
         }
     }
 
     unless ($type eq 'web' or $type eq 'mail') {
-        Log::do_log('info', 'Internal error incorrect parameter');
+        $log->syslog('info', 'Internal error incorrect parameter');
         return undef;
     }
 
     my $dir;
     if ($scope eq 'list') {
         unless (ref $list eq 'Sympa::List') {
-            Log::do_log('err', 'Missing parameter "list"');
+            $log->syslog('err', 'Missing parameter "list"');
             return undef;
         }
         $dir = $list->{'dir'};
@@ -642,7 +644,7 @@ sub cookie_changed {
     if (-f "$Conf::Conf{'etc'}/cookies.history") {
         my $fh;
         unless (open $fh, "$Conf::Conf{'etc'}/cookies.history") {
-            Log::do_log('err', 'Unable to read %s/cookies.history',
+            $log->syslog('err', 'Unable to read %s/cookies.history',
                 $Conf::Conf{'etc'});
             return undef;
         }
@@ -652,7 +654,7 @@ sub cookie_changed {
         $oldcook = '' unless defined $oldcook;
 
         if ($oldcook eq $current) {
-            Log::do_log('debug2', 'Cookie is stable');
+            $log->syslog('debug2', 'Cookie is stable');
             $changed = 0;
         }
         return $changed;
@@ -660,7 +662,7 @@ sub cookie_changed {
         my $umask = umask 037;
         unless (open COOK, ">$Conf::Conf{'etc'}/cookies.history") {
             umask $umask;
-            Log::do_log('err', 'Unable to create %s/cookies.history',
+            $log->syslog('err', 'Unable to create %s/cookies.history',
                 $Conf::Conf{'etc'});
             return undef;
         }
@@ -719,7 +721,7 @@ Authenticaton key.
 # Old name: List::compute_auth().
 # Note: this would be moved to Site package.
 sub compute_auth {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    $log->syslog('debug3', '(%s, %s, %s)', @_);
     my $that  = shift;
     my $email = shift;
     my $cmd   = shift;
@@ -801,7 +803,7 @@ C<1> or C<undef>.
 # Old name: List::request_auth().
 # Note: this would be moved to Site package.
 sub request_auth {
-    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
     my $that  = shift;
     my $email = shift;
     my $cmd   = shift;
@@ -859,7 +861,7 @@ sub request_auth {
         $data->{'command_escaped'} = tools::escape_url($data->{'command'});
         $data->{'auto_submitted'}  = 'auto-replied';
         unless (tools::send_file($list, 'request_auth', $email, $data)) {
-            Log::do_log('notice',
+            $log->syslog('notice',
                 'Unable to send template "request_auth" to %s', $email);
             return undef;
         }
@@ -875,7 +877,7 @@ sub request_auth {
         }
         $data->{'auto_submitted'} = 'auto-replied';
         unless (tools::send_file($robot, 'request_auth', $email, $data)) {
-            Log::do_log('notice',
+            $log->syslog('notice',
                 'Unable to send template "request_auth" to %s', $email);
             return undef;
         }
@@ -919,7 +921,7 @@ If C<lang_only> option is set, paths without I<lang> subdirectory is omitted.
 
 # Note: this would be moved to Site package.
 sub search_fullpath {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    $log->syslog('debug3', '(%s, %s, %s)', @_);
     my $that    = shift;
     my $name    = shift;
     my %options = @_;
@@ -948,7 +950,7 @@ sub search_fullpath {
 ##            next;
 ##        }
         next unless -r $f;
-        Log::do_log('debug3', 'Name: %s; file %s', $name, $f);
+        $log->syslog('debug3', 'Name: %s; file %s', $name, $f);
 
         if ($options{'order'} and $options{'order'} eq 'all') {
             push @result, $f;
@@ -1003,7 +1005,7 @@ rather than locale name.
 
 # Note: this would be moved to Site package.
 sub get_search_path {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    $log->syslog('debug3', '(%s, %s, %s)', @_);
     my $that    = shift;
     my %options = @_;
 
@@ -1202,7 +1204,7 @@ sub send_dsn {
     my $diag    = shift;
 
     unless (ref $message eq 'Sympa::Message') {
-        Log::do_log('err', 'object %s is not Message', $message);
+        $log->syslog('err', 'object %s is not Message', $message);
         return undef;
     }
 
@@ -1211,7 +1213,7 @@ sub send_dsn {
         ## Won't reply to message with null envelope sender.
         return 0 if $sender eq '<>';
     } elsif (!defined($sender = $message->{'sender'})) {
-        Log::do_log('err', 'No sender found');
+        $log->syslog('err', 'No sender found');
         return undef;
     }
 
@@ -1267,7 +1269,7 @@ sub send_dsn {
         $dsn_message->{envelope_sender} = '<>';
     }
     unless ($dsn_message and Sympa::Bulk->new->store($dsn_message, $sender)) {
-        Log::do_log('err', 'Unable to send DSN to %s', $sender);
+        $log->syslog('err', 'Unable to send DSN to %s', $sender);
         return undef;
     }
 
@@ -1303,7 +1305,7 @@ Note: List::send_global_file() was deprecated.
 # Old name: List::send_file(), List::send_global_file().
 # Note: this would be moved to Site package.
 sub send_file {
-    Log::do_log('debug2', '(%s, %s, %s, ...)', @_);
+    $log->syslog('debug2', '(%s, %s, %s, ...)', @_);
     my $that    = shift;
     my $tpl     = shift;
     my $who     = shift;
@@ -1315,7 +1317,7 @@ sub send_file {
         %options);
 
     unless ($message and defined Sympa::Bulk->new->store($message, $who)) {
-        Log::do_log('err', 'Could not send template %s to %s', $tpl, $who);
+        $log->syslog('err', 'Could not send template %s to %s', $tpl, $who);
         return undef;
     }
 
@@ -1366,7 +1368,7 @@ C<1> or C<undef>.
 # Old name: List::send_notify_to_listmaster()
 # Note: this would be moved to Site package.
 sub send_notify_to_listmaster {
-    Log::do_log('debug2', '(%s, %s, %s)', @_) unless $_[1] eq 'logs_failed';
+    $log->syslog('debug2', '(%s, %s, %s)', @_) unless $_[1] eq 'logs_failed';
     my $that      = shift;
     my $operation = shift;
     my $data      = shift;
@@ -1450,7 +1452,7 @@ sub send_notify_to_listmaster {
                 $notif_message, $email, operation => $operation
             )
             ) {
-            Log::do_log(
+            $log->syslog(
                 'notice',
                 'Unable to send template "listmaster_notification" to %s listmaster %s',
                 $robot_id,
@@ -1490,9 +1492,9 @@ sub qencode_hierarchy {
         my $new_f  = $f_struct->{'directory'} . '/' . $new_filename;
 
         ## Rename the file using utf8
-        Log::do_log('notice', "Renaming %s to %s", $orig_f, $new_f);
+        $log->syslog('notice', "Renaming %s to %s", $orig_f, $new_f);
         unless (rename $orig_f, $new_f) {
-            Log::do_log('err', 'Failed to rename %s to %s: %m',
+            $log->syslog('err', 'Failed to rename %s to %s: %m',
                 $orig_f, $new_f);
             next;
         }
@@ -1527,13 +1529,13 @@ sub valid_email {
 
     my $email_re = Sympa::Regexps::email();
     unless ($email =~ /^${email_re}$/) {
-        Log::do_log('err', 'Invalid email address "%s"', $email);
+        $log->syslog('err', 'Invalid email address "%s"', $email);
         return undef;
     }
 
     ## Forbidden characters
     if ($email =~ /[\|\$\*\?\!]/) {
-        Log::do_log('err', 'Invalid email address "%s"', $email);
+        $log->syslog('err', 'Invalid email address "%s"', $email);
         return undef;
     }
 
@@ -1615,28 +1617,28 @@ sub add_in_blacklist {
     my $robot = shift;
     my $list  = shift;
 
-    Log::do_log('info', '(%s, %s, %s)', $entry, $robot, $list->{'name'});
+    $log->syslog('info', '(%s, %s, %s)', $entry, $robot, $list->{'name'});
     $entry = lc($entry);
     chomp $entry;
 
     # robot blacklist not yet availible
     unless ($list) {
-        Log::do_log('info',
+        $log->syslog('info',
             "tools::add_in_blacklist: robot blacklist not yet availible, missing list parameter"
         );
         return undef;
     }
     unless (($entry) && ($robot)) {
-        Log::do_log('info', 'Missing parameters');
+        $log->syslog('info', 'Missing parameters');
         return undef;
     }
     if ($entry =~ /\*.*\*/) {
-        Log::do_log('info', 'Incorrect parameter %s', $entry);
+        $log->syslog('info', 'Incorrect parameter %s', $entry);
         return undef;
     }
     my $dir = $list->{'dir'} . '/search_filters';
     unless ((-d $dir) || mkdir($dir, 0755)) {
-        Log::do_log('info', 'Unable to create dir %s', $dir);
+        $log->syslog('info', 'Unable to create dir %s', $dir);
         return undef;
     }
     my $file = $dir . '/blacklist.txt';
@@ -1649,7 +1651,7 @@ sub add_in_blacklist {
             $regexp =~ s/\*/.*/;
             $regexp = '^' . $regexp . '$';
             if ($entry =~ /$regexp/i) {
-                Log::do_log('notice', '%s already in blacklist(%s)',
+                $log->syslog('notice', '%s already in blacklist(%s)',
                     $entry, $_);
                 return 0;
             }
@@ -1657,7 +1659,7 @@ sub add_in_blacklist {
         close BLACKLIST;
     }
     unless (open BLACKLIST, ">> $file") {
-        Log::do_log('info', 'Append to file %s', $file);
+        $log->syslog('info', 'Append to file %s', $file);
         return undef;
     }
     print BLACKLIST "$entry\n";
@@ -1743,22 +1745,22 @@ sub save_to_bad {
 
     if (!-d $queue . '/bad') {
         unless (mkdir $queue . '/bad', 0775) {
-            Log::do_log('notice', 'Unable to create %s/bad/ directory',
+            $log->syslog('notice', 'Unable to create %s/bad/ directory',
                 $queue);
             tools::send_notify_to_listmaster($robot_id,
                 'unable_to_create_dir', {'dir' => "$queue/bad"});
             return undef;
         }
-        Log::do_log('debug', 'mkdir %s/bad', $queue);
+        $log->syslog('debug', 'mkdir %s/bad', $queue);
     }
-    Log::do_log(
+    $log->syslog(
         'notice',
         "Saving file %s to %s",
         $queue . '/' . $file,
         $queue . '/bad/' . $file
     );
     unless (rename($queue . '/' . $file, $queue . '/bad/' . $file)) {
-        Log::do_log(
+        $log->syslog(
             'notice',
             'Could not rename %s to %s: %m',
             $queue . '/' . $file,
@@ -1921,10 +1923,10 @@ sub eval_in_time {
         $ret;
     };
     if ($EVAL_ERROR and $EVAL_ERROR eq "TIMEOUT\n") {
-        Log::do_log('err', 'Processing timeout');
+        $log->syslog('err', 'Processing timeout');
         return undef;
     } elsif ($EVAL_ERROR) {
-        Log::do_log('err', 'Processing failed: %m');
+        $log->syslog('err', 'Processing failed: %m');
         return undef;
     }
 
@@ -2164,7 +2166,7 @@ sub split_listname {
 # Old name: SympaspoolClassic::analyze_file_name().
 # NOTE: This should be moved to Spool class.
 sub unmarshal_metadata {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    $log->syslog('debug3', '(%s, %s, %s)', @_);
     my $spool_dir       = shift;
     my $marshalled      = shift;
     my $metadata_regexp = shift;
@@ -2173,7 +2175,7 @@ sub unmarshal_metadata {
     my $data;
     my @matches;
     unless (@matches = ($marshalled =~ /$metadata_regexp/)) {
-        Log::do_log('debug',
+        $log->syslog('debug',
             'File name %s does not have the proper format: %s',
             $marshalled, $metadata_regexp);
         return undef;
@@ -2223,7 +2225,7 @@ sub unmarshal_metadata {
     $data->{'listtype'} = $type     if defined $type;
     $data->{'priority'} = $priority if defined $priority;
 
-    Log::do_log('debug3', 'messagekey=%s, context=%s, priority=%s',
+    $log->syslog('debug3', 'messagekey=%s, context=%s, priority=%s',
         $marshalled, $data->{context}, $data->{'priority'});
 
     return $data;

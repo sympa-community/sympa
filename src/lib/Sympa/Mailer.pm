@@ -32,7 +32,9 @@ use English qw(-no_match_vars);
 use POSIX qw();
 
 use Conf;
-use Log;
+use Sympa::Log;
+
+my $log = Sympa::Log->instance;
 
 my $max_arg;
 eval { $max_arg = POSIX::sysconf(POSIX::_SC_ARG_MAX()); };
@@ -74,12 +76,12 @@ sub reaper {
     while (($pid = waitpid(-1, $block ? POSIX::WNOHANG() : 0)) > 0) {
         $block = 1;
         unless (exists $self->{_pids}->{$pid}) {
-            Log::do_log('debug2', 'Reaper waited %s, unknown process to me',
+            $log->syslog('debug2', 'Reaper waited %s, unknown process to me',
                 $pid);
             next;
         }
         if ($CHILD_ERROR & 127) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Child process %s for message <%s> was terminated by signal %d',
                 $pid,
@@ -87,7 +89,7 @@ sub reaper {
                 $CHILD_ERROR & 127
             );
         } elsif ($CHILD_ERROR) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Child process %s for message <%s> exited with status %s',
                 $pid,
@@ -98,7 +100,7 @@ sub reaper {
         $self->{_opensmtp}--;
         delete $self->{_pids}->{$pid};
     }
-    Log::do_log(
+    $log->syslog(
         'debug2',
         'Reaper unwaited PIDs: %s Open = %s',
         join(' ', sort { $a <=> $b } keys %{$self->{_pids}}),
@@ -171,14 +173,14 @@ sub store {
         # Get sendmail handle.
 
         unless ($return_path) {
-            Log::do_log('err', 'Missing Return-Path');
+            $log->syslog('err', 'Missing Return-Path');
         }
 
         # Check how many open smtp's we have, if too many wait for a few
         # to terminate and then do our job.
-        Log::do_log('debug3', 'Open = %s', $self->{_opensmtp});
+        $log->syslog('debug3', 'Open = %s', $self->{_opensmtp});
         while ($self->{_opensmtp} > $maxsmtp) {
-            Log::do_log('debug3', 'Too many open SMTP (%s), calling reaper',
+            $log->syslog('debug3', 'Too many open SMTP (%s), calling reaper',
                 $self->{_opensmtp});
             last if $self->reaper(0) == -1;    # Blocking call to the reaper.
         }
@@ -206,7 +208,7 @@ sub store {
         } else {
             # Parent
             if ($self->{log_smtp}) {
-                Log::do_log(
+                $log->syslog(
                     'notice',
                     'Forked process %d: %s %s -f \'%s\' -- %s',
                     $pid,
@@ -217,7 +219,8 @@ sub store {
                 );
             }
             unless (close $pipein) {
-                Log::do_log('err', 'Could not close forked process %d', $pid);
+                $log->syslog('err', 'Could not close forked process %d',
+                    $pid);
                 return undef;
             }
             $self->{_opensmtp}++;
@@ -229,7 +232,7 @@ sub store {
 
         print $pipeout $msg_string;
         unless (close $pipeout) {
-            Log::do_log('err', 'Failed to close pipe to process %d: %m',
+            $log->syslog('err', 'Failed to close pipe to process %d: %m',
                 $pid);
             return undef;
         }
@@ -237,7 +240,7 @@ sub store {
     }
 
     if ($logging) {
-        Log::do_log(
+        $log->syslog(
             'notice',
             'Done sending message %s for %s (priority %s) in %s seconds since scheduled expedition date',
             $message,
@@ -277,7 +280,7 @@ sub _safefork {
         return $pid if defined $pid;
 
         $err = $ERRNO;
-        Log::do_log('err', 'Cannot create new process: %s', $err);
+        $log->syslog('err', 'Cannot create new process: %s', $err);
         #FIXME:should send a mail to the listmaster
         sleep(10 * $i);
     }

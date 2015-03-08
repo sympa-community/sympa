@@ -47,9 +47,11 @@ use Sys::Hostname qw();
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::LockedFile;
-use Log;
+use Sympa::Log;
 use tools;
 use Sympa::Tools::File;
+
+my $log = Sympa::Log->instance;
 
 # Moved to Log::_daemon_name().
 #sub get_daemon_name;
@@ -75,7 +77,7 @@ sub remove_pid {
     # Lock pid file
     my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+<');
     unless ($lock_fh) {
-        Log::do_log('err', 'Could not open %s to remove PID %s',
+        $log->syslog('err', 'Could not open %s to remove PID %s',
             $pidfile, $pid);
         return undef;
     }
@@ -93,7 +95,7 @@ sub remove_pid {
         unless (@pids) {
             ## Release the lock
             unless (unlink $pidfile) {
-                Log::do_log('err', "Failed to remove %s: %m", $pidfile);
+                $log->syslog('err', "Failed to remove %s: %m", $pidfile);
                 $lock_fh->close;
                 return undef;
             }
@@ -104,14 +106,14 @@ sub remove_pid {
         }
     } else {
         unless (unlink $pidfile) {
-            Log::do_log('err', "Failed to remove %s: %m", $pidfile);
+            $log->syslog('err', "Failed to remove %s: %m", $pidfile);
             $lock_fh->close;
             return undef;
         }
         my $err_file = $Conf::Conf{'tmpdir'} . '/' . $pid . '.stderr';
         if (-f $err_file) {
             unless (unlink $err_file) {
-                Log::do_log('err', "Failed to remove %s: %m", $err_file);
+                $log->syslog('err', "Failed to remove %s: %m", $err_file);
                 $lock_fh->close;
                 return undef;
             }
@@ -182,7 +184,7 @@ sub write_pid {
         ## Send a notice to listmaster with STDERR of the previous process
         if (@pids) {
             my $other_pid = $pids[0];
-            Log::do_log('notice',
+            $log->syslog('notice',
                 'Previous process %s died suddenly; notifying listmaster',
                 $other_pid);
             my $pname = $0;
@@ -240,7 +242,7 @@ sub direct_stderr_to_file {
             group => Sympa::Constants::GROUP,
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to set rights on %s',
             $Conf::Conf{'tmpdir'} . '/' . $data{'pid'} . '.stderr'
@@ -261,9 +263,10 @@ Send content of $pid.stderr to listmaster for process whose pid is $pid.
 =cut
 
 sub send_crash_report {
+    $log->syslog('debug2', '(%s => %s, %s => %s)', @_);
     my %data = @_;
-    Log::do_log('debug', 'Sending crash report for process %s', $data{'pid'}),
-        my $err_file = $Conf::Conf{'tmpdir'} . '/' . $data{'pid'} . '.stderr';
+
+    my $err_file = $Conf::Conf{'tmpdir'} . '/' . $data{'pid'} . '.stderr';
 
     my $language = Sympa::Language->instance;
     my (@err_output, $err_date);
@@ -316,7 +319,7 @@ sub get_pids_in_pid_file {
 
     my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '<');
     unless ($lock_fh) {
-        Log::do_log('err', 'Unable to open PID file %s: %m', $pidfile);
+        $log->syslog('err', 'Unable to open PID file %s: %m', $pidfile);
         return undef;
     }
     my $l = <$lock_fh>;
@@ -336,7 +339,7 @@ TBD.
 =cut
 
 sub get_children_processes_list {
-    Log::do_log('debug3', '');
+    $log->syslog('debug3', '');
     my @children;
     for my $p (@{Proc::ProcessTable->new->table}) {
         if ($p->ppid == $PID) {

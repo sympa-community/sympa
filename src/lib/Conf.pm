@@ -35,11 +35,13 @@ use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::LockedFile;
-use Log;
+use Sympa::Log;
 use SDM;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+
+my $log = Sympa::Log->instance;
 
 =head1 NAME
 
@@ -188,7 +190,7 @@ sub load {
             $force_reload = 1;
         }
     } else {
-        Log::do_log('debug3',
+        $log->syslog('debug3',
             'File %s has changed since the last cache. Loading file',
             $config_file);
         # Will force the robot.conf reloading, as sympa.conf is the default.
@@ -236,7 +238,7 @@ sub load {
         _infer_robot_parameter_values({'config_hash' => \%Conf});
 
         if ($config_err) {
-            Log::do_log('err', 'Errors while parsing main config file %s',
+            $log->syslog('err', 'Errors while parsing main config file %s',
                 $config_file);
             return undef;
         }
@@ -248,7 +250,7 @@ sub load {
 
     if (my $missing_modules_count =
         _check_cpan_modules_required_by_config({'config_hash' => \%Conf,})) {
-        Log::do_log('err', 'Warning: %d required modules are missing',
+        $log->syslog('err', 'Warning: %d required modules are missing',
             $missing_modules_count);
     }
 
@@ -279,7 +281,7 @@ sub load_robots {
 
     my $robots_list_ref = get_robots_list();
     unless (defined $robots_list_ref) {
-        Log::do_log('err', 'Robots config loading failed');
+        $log->syslog('err', 'Robots config loading failed');
         return undef;
     } else {
         @robots = @{$robots_list_ref};
@@ -299,7 +301,7 @@ sub load_robots {
                 }
             )
             ) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'The config for robot %s contain errors: it could not be correctly loaded',
                 $robot
@@ -391,7 +393,7 @@ sub get_wwsympa_conf {
 
 # deletes all the *.conf.bin files.
 sub delete_binaries {
-    Log::do_log('debug2', '');
+    $log->syslog('debug2', '');
     my @files = (get_sympa_conf(), get_wwsympa_conf());
     foreach my $robot (@{get_robots_list()}) {
         push @files, "$Conf{'etc'}/$robot/robot.conf";
@@ -402,7 +404,7 @@ sub delete_binaries {
             if (-w $binary_file) {
                 unlink $binary_file;
             } else {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Could not remove file %s. You should remove it manually to ensure the configuration used is valid',
                     $binary_file
@@ -415,10 +417,10 @@ sub delete_binaries {
 # Return a reference to an array containing the names of the robots on the
 # server.
 sub get_robots_list {
-    Log::do_log('debug2', "Retrieving the list of robots on the server");
+    $log->syslog('debug2', "Retrieving the list of robots on the server");
     my @robots_list;
     unless (opendir DIR, $Conf{'etc'}) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to open directory %s for virtual robots config',
             $Conf{'etc'});
         return undef;
@@ -438,7 +440,7 @@ sub get_robots_list {
 ## context of the robot given as argument.
 sub get_parameters_group {
     my ($robot, $group) = @_;
-    Log::do_log('debug3', 'Getting parameters for group "%s"', $group);
+    $log->syslog('debug3', 'Getting parameters for group "%s"', $group);
     my $param_hash;
     foreach my $param_name (keys %{$params_by_categories->{$group}}) {
         $param_hash->{$param_name} = get_robot_conf($robot, $param_name);
@@ -464,7 +466,7 @@ sub get_db_conf {
             SDM::quote($label)
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable retrieve value of parameter %s for robot %s from the database',
             $label,
@@ -485,7 +487,7 @@ sub set_robot_conf {
     my $label = shift;
     my $value = shift;
 
-    Log::do_log('info', 'Set config for robot %s, %s="%s"',
+    $log->syslog('info', 'Set config for robot %s, %s="%s"',
         $robot, $label, $value);
 
     # set the current config before to update database.
@@ -503,7 +505,7 @@ sub set_robot_conf {
             SDM::quote($label)
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to check presence of parameter %s for robot %s in database',
             $label,
@@ -524,7 +526,7 @@ sub set_robot_conf {
                 SDM::quote($value)
             )
             ) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Unable add value %s for parameter %s in the robot %s DB conf',
                 $value,
@@ -544,7 +546,7 @@ sub set_robot_conf {
                 SDM::quote($label)
             )
             ) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Unable set parameter %s value to %s in the robot %s DB conf',
                 $label,
@@ -558,7 +560,7 @@ sub set_robot_conf {
 
 # Store configs to database
 sub conf_2_db {
-    Log::do_log('debug2', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
 
     my @conf_parameters = @Sympa::ConfDef::params;
 
@@ -568,7 +570,7 @@ sub conf_2_db {
     my $robots_conf = load_robots();
 
     unless (opendir DIR, $Conf{'etc'}) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to open directory %s for virtual robots config',
             $Conf{'etc'});
         return undef;
@@ -614,7 +616,7 @@ sub conf_2_db {
     my $global_conf;
     unless ($global_conf =
         Conf::load(Conf::get_sympa_conf(), 1, 'return_result')) {
-        Log::do_log('err', 'Configuration file %s has errors',
+        $log->syslog('err', 'Configuration file %s has errors',
             Conf::get_sympa_conf());
         return undef;
     }
@@ -640,7 +642,7 @@ sub checkfiles_as_root {
     unless (-f $Conf{'sendmail_aliases'}
         || ($Conf{'sendmail_aliases'} =~ /^none$/i)) {
         unless (open ALIASES, ">$Conf{'sendmail_aliases'}") {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 "Failed to create aliases file %s",
                 $Conf{'sendmail_aliases'}
@@ -653,7 +655,7 @@ sub checkfiles_as_root {
         print ALIASES
             "## You should edit your sendmail.mc or sendmail.cf file to declare it\n";
         close ALIASES;
-        Log::do_log(
+        $log->syslog(
             'notice',
             "Created missing file %s",
             $Conf{'sendmail_aliases'}
@@ -666,7 +668,7 @@ sub checkfiles_as_root {
                 mode  => 0644,
             )
             ) {
-            Log::do_log('err', 'Unable to set rights on %s',
+            $log->syslog('err', 'Unable to set rights on %s',
                 $Conf{'db_name'});
             return undef;
         }
@@ -678,7 +680,8 @@ sub checkfiles_as_root {
         my $dir = get_robot_conf($robot, 'static_content_path');
         if ($dir ne '' && !-d $dir) {
             unless (mkdir($dir, 0775)) {
-                Log::do_log('err', 'Unable to create directory %s: %m', $dir);
+                $log->syslog('err', 'Unable to create directory %s: %m',
+                    $dir);
                 $config_err++;
             }
 
@@ -689,7 +692,7 @@ sub checkfiles_as_root {
                     group => Sympa::Constants::GROUP,
                 )
                 ) {
-                Log::do_log('err', 'Unable to set rights on %s',
+                $log->syslog('err', 'Unable to set rights on %s',
                     $Conf{'db_name'});
                 return undef;
             }
@@ -709,7 +712,7 @@ sub data_structure_uptodate {
     if (-f $version_file) {
         my $fh;
         unless (open $fh, '<', $version_file) {
-            Log::do_log('err', 'Unable to open %s: %m', $version_file);
+            $log->syslog('err', 'Unable to open %s: %m', $version_file);
             return undef;
         }
         while (<$fh>) {
@@ -724,7 +727,7 @@ sub data_structure_uptodate {
 
     if (defined $data_structure_version
         and $data_structure_version ne Sympa::Constants::VERSION) {
-        Log::do_log('err',
+        $log->syslog('err',
             "Data structure (%s) is not uptodate for current release (%s)",
             $data_structure_version, Sympa::Constants::VERSION);
         return 0;
@@ -741,7 +744,7 @@ sub checkfiles {
         next unless $Conf{$p};
 
         unless (-x $Conf{$p}) {
-            Log::do_log('err', "File %s does not exist or is not executable",
+            $log->syslog('err', "File %s does not exist or is not executable",
                 $Conf{$p});
             $config_err++;
         }
@@ -756,9 +759,10 @@ sub checkfiles {
         'queuetask',      'tmpdir'
         ) {
         unless (-d $Conf{$qdir}) {
-            Log::do_log('info', 'Creating spool %s', $Conf{$qdir});
+            $log->syslog('info', 'Creating spool %s', $Conf{$qdir});
             unless (mkdir($Conf{$qdir}, 0775)) {
-                Log::do_log('err', 'Unable to create spool %s', $Conf{$qdir});
+                $log->syslog('err', 'Unable to create spool %s',
+                    $Conf{$qdir});
                 $config_err++;
             }
             unless (
@@ -768,7 +772,7 @@ sub checkfiles {
                     group => Sympa::Constants::GROUP,
                 )
                 ) {
-                Log::do_log('err', 'Unable to set rights on %s',
+                $log->syslog('err', 'Unable to set rights on %s',
                     $Conf{$qdir});
                 $config_err++;
             }
@@ -779,9 +783,9 @@ sub checkfiles {
     foreach my $qdir ('queue', 'queueautomatic') {
         my $subdir = $Conf{$qdir} . '/bad';
         unless (-d $subdir) {
-            Log::do_log('info', 'Creating spool %s', $subdir);
+            $log->syslog('info', 'Creating spool %s', $subdir);
             unless (mkdir($subdir, 0775)) {
-                Log::do_log('err', 'Unable to create spool %s', $subdir);
+                $log->syslog('err', 'Unable to create spool %s', $subdir);
                 $config_err++;
             }
             unless (
@@ -791,7 +795,7 @@ sub checkfiles {
                     group => Sympa::Constants::GROUP,
                 )
                 ) {
-                Log::do_log('err', 'Unable to set rights on %s', $subdir);
+                $log->syslog('err', 'Unable to set rights on %s', $subdir);
                 $config_err++;
             }
         }
@@ -800,7 +804,7 @@ sub checkfiles {
     ## Check cafile and capath access
     if (defined $Conf{'cafile'} && $Conf{'cafile'}) {
         unless (-f $Conf{'cafile'} && -r $Conf{'cafile'}) {
-            Log::do_log('err', 'Cannot access cafile %s', $Conf{'cafile'});
+            $log->syslog('err', 'Cannot access cafile %s', $Conf{'cafile'});
             tools::send_notify_to_listmaster('*', 'cannot_access_cafile',
                 [$Conf{'cafile'}]);
             $config_err++;
@@ -809,7 +813,7 @@ sub checkfiles {
 
     if (defined $Conf{'capath'} && $Conf{'capath'}) {
         unless (-d $Conf{'capath'} && -x $Conf{'capath'}) {
-            Log::do_log('err', 'Cannot access capath %s', $Conf{'capath'});
+            $log->syslog('err', 'Cannot access capath %s', $Conf{'capath'});
             tools::send_notify_to_listmaster('*', 'cannot_access_capath',
                 [$Conf{'capath'}]);
             $config_err++;
@@ -818,7 +822,7 @@ sub checkfiles {
 
     ## queuebounce and bounce_path pointing to the same directory
     if ($Conf{'queuebounce'} eq $Conf{'bounce_path'}) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Error in config: queuebounce and bounce_path parameters pointing to the same directory (%s)',
             $Conf{'queuebounce'}
@@ -834,7 +838,7 @@ sub checkfiles {
     ## automatic_list_creation enabled but queueautomatic pointing to queue
     if (($Conf{automatic_list_feature} eq 'on')
         && $Conf{'queue'} eq $Conf{'queueautomatic'}) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Error in config: queue and queueautomatic parameters pointing to the same directory (%s)',
             $Conf{'queue'}
@@ -851,7 +855,7 @@ sub checkfiles {
         if ($dir ne '' && -d $dir) {
             unless (-f $dir . '/index.html') {
                 unless (open(FF, ">$dir" . '/index.html')) {
-                    Log::do_log(
+                    $log->syslog(
                         'err',
                         'Unable to create %s/index.html as an empty file to protect directory: %m',
                         $dir
@@ -867,7 +871,7 @@ sub checkfiles {
                     . '/pictures';
                 unless (-d $pictures_dir) {
                     unless (mkdir($pictures_dir, 0775)) {
-                        Log::do_log('err', 'Unable to create directory %s',
+                        $log->syslog('err', 'Unable to create directory %s',
                             $pictures_dir);
                         $config_err++;
                     }
@@ -876,7 +880,7 @@ sub checkfiles {
                     my $index_path = $pictures_dir . '/index.html';
                     unless (-f $index_path) {
                         unless (open(FF, ">$index_path")) {
-                            Log::do_log(
+                            $log->syslog(
                                 'err',
                                 'Unable to create %s as an empty file to protect directory',
                                 $index_path
@@ -907,7 +911,7 @@ sub valid_robot {
 
     ## Missing etc directory
     unless (-d $Conf{'etc'} . '/' . $robot) {
-        Log::do_log(
+        $log->syslog(
             'err',  'Robot %s undefined; no %s directory',
             $robot, $Conf{'etc'} . '/' . $robot
         ) unless ($options->{'just_try'});
@@ -916,7 +920,7 @@ sub valid_robot {
 
     ## Missing expl directory
     unless (-d $Conf{'home'} . '/' . $robot) {
-        Log::do_log(
+        $log->syslog(
             'err',  'Robot %s undefined; no %s directory',
             $robot, $Conf{'home'} . '/' . $robot
         ) unless ($options->{'just_try'});
@@ -925,7 +929,7 @@ sub valid_robot {
 
     ## Robot not loaded
     unless (defined $Conf{'robots'}{$robot}) {
-        Log::do_log('err', 'Robot %s was not loaded by this Sympa process',
+        $log->syslog('err', 'Robot %s was not loaded by this Sympa process',
             $robot)
             unless ($options->{'just_try'});
         return undef;
@@ -944,7 +948,7 @@ sub get_sso_by_id {
     }
 
     foreach my $sso (@{$Conf{'auth_services'}{$param{'robot'}}}) {
-        Log::do_log('notice', 'SSO: %s', $sso->{'service_id'});
+        $log->syslog('notice', 'SSO: %s', $sso->{'service_id'});
         next unless ($sso->{'service_id'} eq $param{'service_id'});
 
         return $sso;
@@ -964,7 +968,7 @@ sub _load_auth {
     # find appropriate auth.conf file
     my $config_file =
         _get_config_file_name({'robot' => $robot, 'file' => "auth.conf"});
-    Log::do_log('debug', '(%s)', $config_file);
+    $log->syslog('debug', '(%s)', $config_file);
 
     $robot ||= $Conf{'domain'};
     my $line_num   = 0;
@@ -1051,7 +1055,7 @@ sub _load_auth {
 
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $config_file)) {
-        Log::do_log('notice', 'Unable to open %s: %m', $config_file);
+        $log->syslog('notice', 'Unable to open %s: %m', $config_file);
         return undef;
     }
 
@@ -1076,14 +1080,14 @@ sub _load_auth {
             unless (
                 defined $valid_keywords{$current_paragraph->{'auth_type'}}
                 {$keyword}) {
-                Log::do_log('err', 'Unknown keyword "%s" in %s line %d',
+                $log->syslog('err', 'Unknown keyword "%s" in %s line %d',
                     $keyword, $config_file, $line_num);
                 next;
             }
             unless ($value =~
                 /^$valid_keywords{$current_paragraph->{'auth_type'}}{$keyword}$/
                 ) {
-                Log::do_log('err',
+                $log->syslog('err',
                     'Unknown format "%s" for keyword "%s" in %s line %d',
                     $value, $keyword, $config_file, $line_num);
                 next;
@@ -1110,14 +1114,14 @@ sub _load_auth {
 
                 if ($current_paragraph->{'auth_type'} eq 'cas') {
                     unless (defined $current_paragraph->{'base_url'}) {
-                        Log::do_log('err',
+                        $log->syslog('err',
                             'Incorrect CAS paragraph in auth.conf');
                         next;
                     }
 
                     eval "require AuthCAS";
                     if ($EVAL_ERROR) {
-                        Log::do_log('err',
+                        $log->syslog('err',
                             'Failed to load AuthCAS perl module');
                         return undef;
                     }
@@ -1149,7 +1153,7 @@ sub _load_auth {
                     $current_paragraph->{'cas_server'} =
                         AuthCAS->new(%{$cas_param});
                     unless (defined $current_paragraph->{'cas_server'}) {
-                        Log::do_log(
+                        $log->syslog(
                             'err',
                             'Failed to create CAS object for %s: %s',
                             $current_paragraph->{'base_url'},
@@ -1231,7 +1235,7 @@ sub load_charset {
     return {} unless $config_file;
 
     unless (open CONFIG, $config_file) {
-        Log::do_log('err', 'Unable to read configuration file %s: %m',
+        $log->syslog('err', 'Unable to read configuration file %s: %m',
             $config_file);
         return {};
     }
@@ -1242,7 +1246,7 @@ sub load_charset {
         next unless /\S/;
         my ($lang, $cset) = split(/\s+/, $_);
         unless ($cset) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Charset name is missing in configuration file %s line %d',
                 $config_file, $NR);
             next;
@@ -1269,7 +1273,7 @@ sub load_nrcpt_by_domain {
 
     ## Open the configuration file or return and read the lines.
     unless (open IN, '<', $config_file) {
-        Log::do_log('err', 'Unable to open %s: %m', $config_file);
+        $log->syslog('err', 'Unable to open %s: %m', $config_file);
         return;
     }
     while (<IN>) {
@@ -1282,7 +1286,7 @@ sub load_nrcpt_by_domain {
             $nrcpt_by_domain->{$domain} = $value;
             $valid_dom += 1;
         } else {
-            Log::do_log('notice',
+            $log->syslog('notice',
                 'Error at configuration file %s line %d: %s',
                 $config_file, $line_num, $_);
             $config_err++;
@@ -1324,7 +1328,7 @@ sub load_sql_filter {
 sub load_automatic_lists_description {
     my $robot  = shift;
     my $family = shift;
-    Log::do_log('debug2', 'Starting: Robot %s family %s', $robot, $family);
+    $log->syslog('debug2', 'Starting: Robot %s family %s', $robot, $family);
 
     my %automatic_lists_params = (
         'class' => {
@@ -1485,7 +1489,7 @@ sub load_generic_conf_file {
     ## Split in paragraphs
     my $i = 0;
     unless (open(CONFIG, $config_file)) {
-        Log::do_log('err', 'Unable to read configuration file %s',
+        $log->syslog('err', 'Unable to read configuration file %s',
             $config_file);
         return undef;
     }
@@ -1526,7 +1530,7 @@ sub load_generic_conf_file {
 
         ## Look for first valid line
         unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-            Log::do_log('notice', 'Bad paragraph "%s" in %s, ignored',
+            $log->syslog('notice', 'Bad paragraph "%s" in %s, ignored',
                 $paragraph[0], $config_file);
             return undef if $on_error eq 'abort';
             next;
@@ -1534,7 +1538,7 @@ sub load_generic_conf_file {
 
         $pname = $1;
         unless (defined $structure{$pname}) {
-            Log::do_log('notice', 'Unknown parameter "%s" in %s, ignored',
+            $log->syslog('notice', 'Unknown parameter "%s" in %s, ignored',
                 $pname, $config_file);
             return undef if $on_error eq 'abort';
             next;
@@ -1543,7 +1547,7 @@ sub load_generic_conf_file {
         if (defined $admin{$pname}) {
             unless (($structure{$pname}{'occurrence'} eq '0-n')
                 or ($structure{$pname}{'occurrence'} eq '1-n')) {
-                Log::do_log('err', 'Multiple parameter "%s" in %s',
+                $log->syslog('err', 'Multiple parameter "%s" in %s',
                     $pname, $config_file);
                 return undef if $on_error eq 'abort';
             }
@@ -1553,7 +1557,7 @@ sub load_generic_conf_file {
         if (ref $structure{$pname}{'format'} eq 'HASH') {
             ## This should be a paragraph
             unless ($#paragraph > 0) {
-                Log::do_log(
+                $log->syslog(
                     'notice',
                     'Expecting a paragraph for "%s" parameter in %s, ignore it',
                     $pname,
@@ -1570,13 +1574,13 @@ sub load_generic_conf_file {
             for my $i (0 .. $#paragraph) {
                 next if ($paragraph[$i] =~ /^\s*\#/);
                 unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
-                    Log::do_log('notice', 'Bad line "%s" in %s',
+                    $log->syslog('notice', 'Bad line "%s" in %s',
                         $paragraph[$i], $config_file);
                     return undef if $on_error eq 'abort';
                 }
                 my $key = $1;
                 unless (defined $structure{$pname}{'format'}{$key}) {
-                    Log::do_log('notice',
+                    $log->syslog('notice',
                         'Unknown key "%s" in paragraph "%s" in %s',
                         $key, $pname, $config_file);
                     return undef if $on_error eq 'abort';
@@ -1586,7 +1590,7 @@ sub load_generic_conf_file {
                 unless ($paragraph[$i] =~
                     /^\s*$key\s+($structure{$pname}{'format'}{$key}{'format'})\s*$/i
                     ) {
-                    Log::do_log('notice',
+                    $log->syslog('notice',
                         'Bad entry "%s" in paragraph "%s" in %s',
                         $paragraph[$i], $key, $pname, $config_file);
                     return undef if $on_error eq 'abort';
@@ -1612,7 +1616,7 @@ sub load_generic_conf_file {
                 ## Required fields
                 if ($structure{$pname}{'format'}{$k}{'occurrence'} eq '1') {
                     unless (defined $hash{$k}) {
-                        Log::do_log('notice',
+                        $log->syslog('notice',
                             'Missing key %s in param %s in %s',
                             $k, $pname, $config_file);
                         return undef if $on_error eq 'abort';
@@ -1635,7 +1639,7 @@ sub load_generic_conf_file {
             ## This should be a single line
             my $xxxmachin = $structure{$pname}{'format'};
             unless ($#paragraph == 0) {
-                Log::do_log('err',
+                $log->syslog('err',
                     'Expecting a single line for %s parameter in %s %s',
                     $pname, $config_file, $xxxmachin);
                 return undef if $on_error eq 'abort';
@@ -1643,7 +1647,7 @@ sub load_generic_conf_file {
 
             unless ($paragraph[0] =~
                 /^\s*$pname\s+($structure{$pname}{'format'})\s*$/i) {
-                Log::do_log('err', 'Bad entry "%s" in %s',
+                $log->syslog('err', 'Bad entry "%s" in %s',
                     $paragraph[0], $config_file);
                 return undef if $on_error eq 'abort';
                 next;
@@ -1715,7 +1719,7 @@ sub _load_config_file_to_hash {
     my $line_num = 0;
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $param->{'path_to_config_file'})) {
-        Log::do_log(
+        $log->syslog(
             'notice',
             'Unable to open %s: %m',
             $param->{'path_to_config_file'}
@@ -1758,7 +1762,7 @@ sub _load_config_file_to_hash {
                 $result->{'numbered_config'}{$keyword} = [$value, $line_num];
             }
         } else {
-            Log::do_log('err', 'Error at line %d: %s',
+            $log->syslog('err', 'Error at line %d: %s',
                 $line_num, $param->{'path_to_config_file'}, $_);
             $result->{'errors'}++;
         }
@@ -1774,7 +1778,7 @@ sub _remove_unvalid_robot_entry {
     my $config_hash = $param->{'config_hash'};
     foreach my $keyword (keys %$config_hash) {
         unless ($valid_robot_key_words{$keyword}) {
-            Log::do_log('err', 'Removing unknown robot keyword %s', $keyword)
+            $log->syslog('err', 'Removing unknown robot keyword %s', $keyword)
                 unless ($param->{'quiet'});
             delete $config_hash->{$keyword};
         }
@@ -1789,7 +1793,7 @@ sub _detect_unknown_parameters_in_config {
         next if (exists $params{$parameter});
         if (defined $old_params{$parameter}) {
             if ($old_params{$parameter}) {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Line %d of sympa.conf, parameter %s is no more available, read documentation for new parameter(s) %s',
                     $param->{'config_file_line_numbering_reference'}
@@ -1798,7 +1802,7 @@ sub _detect_unknown_parameters_in_config {
                     $old_params{$parameter}
                 );
             } else {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Line %d of sympa.conf, parameter %s is now obsolete',
                     $param->{'config_file_line_numbering_reference'}
@@ -1808,7 +1812,7 @@ sub _detect_unknown_parameters_in_config {
                 next;
             }
         } else {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Line %d, unknown field: %s in sympa.conf',
                 $param->{'config_file_line_numbering_reference'}{$parameter}
@@ -1902,7 +1906,8 @@ sub _infer_server_specific_parameter_values {
         if ($log_condition =~ /^\s*(ip|email)\s*\=\s*(.*)\s*$/i) {
             $param->{'config_hash'}{'loging_condition'}{$1} = $2;
         } else {
-            Log::do_log('err', 'Unrecognized log_condition token %s; ignored',
+            $log->syslog('err',
+                'Unrecognized log_condition token %s; ignored',
                 $log_condition);
         }
     }
@@ -1937,7 +1942,7 @@ sub _load_server_specific_secondary_config_files {
 
     ## wwsympa.conf exists
     if (-f get_wwsympa_conf()) {
-        Log::do_log(
+        $log->syslog(
             'notice',
             '%s was found but it is no longer loaded.  Please run sympa.pl --upgrade to migrate it',
             get_wwsympa_conf()
@@ -2101,7 +2106,7 @@ sub _detect_missing_mandatory_parameters {
         unless (defined $param->{'config_hash'}{$parameter}
             or defined $params{$parameter}->{'default'}
             or defined $params{$parameter}->{'optional'}) {
-            Log::do_log('err', 'Required field not found in sympa.conf: %s',
+            $log->syslog('err', 'Required field not found in sympa.conf: %s',
                 $parameter);
             $number_of_errors++;
             next;
@@ -2126,7 +2131,7 @@ sub _check_cpan_modules_required_by_config {
     if ($param->{'config_hash'}{'dkim_feature'} eq 'on') {
         eval "require Mail::DKIM";
         if ($EVAL_ERROR) {
-            Log::do_log('notice',
+            $log->syslog('notice',
                 'Failed to load Mail::DKIM perl module ; setting "dkim_feature" to "off"'
             );
             $param->{'config_hash'}{'dkim_feature'} = 'off';
@@ -2142,7 +2147,8 @@ sub _dump_non_robot_parameters {
     foreach my $key (keys %{$param->{'config_hash'}}) {
         unless ($valid_robot_key_words{$key}) {
             delete $param->{'config_hash'}{$key};
-            Log::do_log('err', 'Robot %s config: unknown robot parameter: %s',
+            $log->syslog('err',
+                'Robot %s config: unknown robot parameter: %s',
                 $param->{'robot'}, $key);
         }
     }
@@ -2160,11 +2166,11 @@ sub _load_single_robot_config {
         $force_reload = 0;
     }
     if (!$force_reload) {
-        Log::do_log('debug3',
+        $log->syslog('debug3',
             'File %s has not changed since the last cache. Using cache',
             $config_file);
         unless (-r $config_file) {
-            Log::do_log('err', 'No read access on %s', $config_file);
+            $log->syslog('err', 'No read access on %s', $config_file);
             tools::send_notify_to_listmaster(
                 '*',
                 'cannot_access_robot_conf',
@@ -2189,7 +2195,7 @@ sub _load_single_robot_config {
             $robot_conf = $config_loading_result->{'config'};
             $config_err = $config_loading_result->{'errors'};
         } else {
-            Log::do_log('err', 'Unable to load %s. Aborting', $config_file);
+            $log->syslog('err', 'Unable to load %s. Aborting', $config_file);
             return undef;
         }
 
@@ -2247,7 +2253,7 @@ sub _set_listmasters_entry {
                     $lismaster_address;
                 $number_of_valid_email++;
             } else {
-                Log::do_log(
+                $log->syslog(
                     'err',
                     'Robot %s config: Listmaster address "%s" is not a valid email',
                     $param->{'config_hash'}{'host'},
@@ -2257,7 +2263,7 @@ sub _set_listmasters_entry {
         }
     } else {
         if ($param->{'main_config'}) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Robot %s config: No listmaster defined. This is the main config. It MUST define at least one listmaster. Stopping here'
             );
             return undef;
@@ -2269,7 +2275,7 @@ sub _set_listmasters_entry {
         }
     }
     if ($number_of_email_provided > $number_of_valid_email) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Robot %s config: All the listmasters addresses found were not valid. Out of %s addresses provided, %s only are valid email addresses',
             $param->{'config_hash'}{'host'},
@@ -2297,7 +2303,7 @@ sub _check_double_url_usage {
     ## Warn listmaster if another virtual host is defined with the same host
     ## +path
     if (defined $Conf{'robot_by_http_host'}{$host}{$path}) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Two virtual hosts (%s and %s) are mapped via a single URL "%s%s"',
             $Conf{'robot_by_http_host'}{$host}{$path},
@@ -2346,13 +2352,13 @@ sub _save_binary_cache {
     my $param = shift;
     my $lock_fh = Sympa::LockedFile->new($param->{'target_file'}, 2, '>');
     unless ($lock_fh) {
-        Log::do_log('err', 'Could not create new lock');
+        $log->syslog('err', 'Could not create new lock');
         return undef;
     }
 
     eval { Storable::store_fd($param->{'conf_to_save'}, $lock_fh); };
     if ($EVAL_ERROR) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Failed to save the binary config %s. error: %s',
             $param->{'target_file'}, $EVAL_ERROR
@@ -2370,7 +2376,7 @@ sub _save_binary_cache {
         );
     };
     if ($EVAL_ERROR) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Failed to change owner of the binary file %s. error: %s',
             $param->{'target_file'}, $EVAL_ERROR
@@ -2394,7 +2400,7 @@ sub _load_binary_cache {
 
     my $lock_fh = Sympa::LockedFile->new($param->{'config_file'}, 2, '<');
     unless ($lock_fh) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Could not create new lock, error was : %s',
             Sympa::LockedFile::last_error()
@@ -2404,7 +2410,7 @@ sub _load_binary_cache {
 
     eval { $result = Storable::fd_retrieve($lock_fh); };
     if ($EVAL_ERROR) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Failed to load the binary config %s. error: %s',
             $param->{'config_file'}, $EVAL_ERROR
@@ -2431,7 +2437,7 @@ sub _save_config_hash_to_binary {
             }
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Could not save main config %s',
             $param->{'config_hash'}{'source_file'}
@@ -2533,7 +2539,7 @@ sub _load_wwsconf {
 
     my $fh;
     unless (open $fh, '<', $config_file) {
-        Log::do_log('err', 'Unable to open %s', $config_file);
+        $log->syslog('err', 'Unable to open %s', $config_file);
         return undef;
     }
 
@@ -2546,10 +2552,11 @@ sub _load_wwsconf {
             if (exists $conf->{$k}) {
                 $conf->{$k} = $v;
             } elsif (defined $old_param{$k}) {
-                Log::do_log('err', 'Parameter %s in %s no more supported: %s',
+                $log->syslog('err',
+                    'Parameter %s in %s no more supported: %s',
                     $k, $config_file, $old_param{$k});
             } else {
-                Log::do_log('err', 'Unknown parameter %s in %s',
+                $log->syslog('err', 'Unknown parameter %s in %s',
                     $k, $config_file);
             }
         }
@@ -2560,12 +2567,12 @@ sub _load_wwsconf {
 
     ## Check binaries and directories
     if ($conf->{'arc_path'} && (!-d $conf->{'arc_path'})) {
-        Log::do_log('err', 'No web archives directory: %s',
+        $log->syslog('err', 'No web archives directory: %s',
             $conf->{'arc_path'});
     }
 
     if ($conf->{'bounce_path'} && (!-d $conf->{'bounce_path'})) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Missing directory "%s" (defined by "bounce_path" parameter)',
             $conf->{'bounce_path'}
@@ -2573,7 +2580,8 @@ sub _load_wwsconf {
     }
 
     if ($conf->{'mhonarc'} && (!-x $conf->{'mhonarc'})) {
-        Log::do_log('err', 'MHonArc is not installed or %s is not executable',
+        $log->syslog('err',
+            'MHonArc is not installed or %s is not executable',
             $conf->{'mhonarc'});
     }
 

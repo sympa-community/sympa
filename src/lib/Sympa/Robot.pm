@@ -30,13 +30,13 @@ use Encode qw();
 
 use Conf;
 use Sympa::Language;
-use Log;
+use Sympa::Log;
 use SDM;
 use tools;
 use Sympa::Tools::File;
 
-# Language context
 my $language = Sympa::Language->instance;
+my $log      = Sympa::Log->instance;
 
 ## Database and SQL statement handlers
 my ($sth, @sth_stack);
@@ -79,7 +79,7 @@ sub get_netidtoemail_db {
     my $robot   = shift;
     my $netid   = shift;
     my $idpname = shift;
-    Log::do_log('debug', '(%s, %s)', $netid, $idpname);
+    $log->syslog('debug', '(%s, %s)', $netid, $idpname);
 
     my ($l, %which, $email);
 
@@ -93,7 +93,7 @@ sub get_netidtoemail_db {
             SDM::quote($robot)
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to get email address from netidmap_table for id %s, service %s, robot %s',
             $netid,
@@ -118,7 +118,7 @@ sub set_netidtoemail_db {
     my $netid   = shift;
     my $idpname = shift;
     my $email   = shift;
-    Log::do_log('debug', '(%s, %s, %s)', $netid, $idpname, $email);
+    $log->syslog('debug', '(%s, %s, %s)', $netid, $idpname, $email);
 
     my ($l, %which);
 
@@ -131,7 +131,7 @@ sub set_netidtoemail_db {
             SDM::quote($robot)
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to set email address %s in netidmap_table for id %s, service %s, robot %s',
             $email,
@@ -152,7 +152,7 @@ sub update_email_netidmap_db {
     unless (defined $robot
         && defined $old_email
         && defined $new_email) {
-        Log::do_log('err', 'Missing parameter');
+        $log->syslog('err', 'Missing parameter');
         return undef;
     }
 
@@ -164,7 +164,7 @@ sub update_email_netidmap_db {
             SDM::quote($robot)
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to set new email address %s in netidmap_table to replace old address %s for robot %s',
             $new_email,
@@ -181,12 +181,12 @@ sub update_email_netidmap_db {
 ## FIXME: This might be moved to Robot package.
 sub load_topics {
     my $robot = shift;
-    Log::do_log('debug2', '(%s)', $robot);
+    $log->syslog('debug2', '(%s)', $robot);
 
     my $conf_file = tools::search_fullpath($robot, 'topics.conf');
 
     unless ($conf_file) {
-        Log::do_log('err', 'No topics.conf defined');
+        $log->syslog('err', 'No topics.conf defined');
         return undef;
     }
 
@@ -201,12 +201,12 @@ sub load_topics {
         %list_of_topics = ();
 
         unless (-r $conf_file) {
-            Log::do_log('err', 'Unable to read %s', $conf_file);
+            $log->syslog('err', 'Unable to read %s', $conf_file);
             return undef;
         }
 
         unless (open(FILE, "<", $conf_file)) {
-            Log::do_log('err', 'Unable to open config file %s', $conf_file);
+            $log->syslog('err', 'Unable to open config file %s', $conf_file);
             return undef;
         }
 
@@ -243,7 +243,7 @@ sub load_topics {
         $mtime{'topics'}{$robot} = Sympa::Tools::File::get_mtime($conf_file);
 
         unless ($#rough_data > -1) {
-            Log::do_log('notice', 'No topic defined in %s', $conf_file);
+            $log->syslog('notice', 'No topic defined in %s', $conf_file);
             return undef;
         }
 

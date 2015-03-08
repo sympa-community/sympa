@@ -28,9 +28,11 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 
-use Log;
+use Sympa::Log;
 
 use base qw(Sympa::DatabaseDriver);
+
+my $log = Sympa::Log->instance;
 
 use constant required_parameters => [qw(host)];
 use constant optional_parameters => [
@@ -88,11 +90,11 @@ sub _connect {
             clientkey  => $self->{'ssl_key'},
         );
     };
-    $self->{_error_code} = 0;
+    $self->{_error_code}   = 0;
     $self->{_error_string} = $EVAL_ERROR;
 
     unless ($connection) {
-        Log::do_log('err', 'Unable to connect to the LDAP server %s',
+        $log->syslog('err', 'Unable to connect to the LDAP server %s',
             $self->{host});
         return undef;
     }
@@ -134,18 +136,18 @@ sub _connect {
 
     unless ($mesg and $mesg->code() == 0) {
         if ($mesg) {
-            $self->{_error_code} = $mesg->code;
+            $self->{_error_code}   = $mesg->code;
             $self->{_error_string} = $mesg->error;
         } else {
-            $self->{_error_code} = 0;
+            $self->{_error_code}   = 0;
             $self->{_error_string} = 'Unknown';
         }
-        Log::do_log('err', 'Failed to bind to LDAP server %s: %s',
+        $log->syslog('err', 'Failed to bind to LDAP server %s: %s',
             $host_entry, $self->error);
         $connection->unbind;
         return undef;
     }
-    Log::do_log('debug3', 'Bound to LDAP host "%s"', $host_entry);
+    $log->syslog('debug3', 'Bound to LDAP host "%s"', $host_entry);
 
     delete $self->{_error_code};
     delete $self->{_error_string};
@@ -166,7 +168,7 @@ sub do_operation {
 
     my $mesg;
 
-    Log::do_log('debug3', 'Will perform operation "%s"', $operation);
+    $log->syslog('debug3', 'Will perform operation "%s"', $operation);
 
     $mesg = $self->__dbh->search(%params);
     if ($mesg->code) {
@@ -175,14 +177,14 @@ sub do_operation {
         # try connecting again.
         $self->disconnect;
         unless ($self->connect()) {
-            Log::do_log('err', 'Unable to get a handle to %s', $self);
+            $log->syslog('err', 'Unable to get a handle to %s', $self);
             return undef;
         } else {
             $mesg = $self->__dbh->search(%params);
             if ($mesg->code) {
-                $self->{_error_code} = $mesg->code;
+                $self->{_error_code}   = $mesg->code;
                 $self->{_error_string} = $mesg->error;
-                Log::do_log('err', 'Unable to perform LDAP operation: %s',
+                $log->syslog('err', 'Unable to perform LDAP operation: %s',
                     $mesg->error);
                 return undef;
             }

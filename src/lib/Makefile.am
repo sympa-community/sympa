@@ -55,7 +55,6 @@ nobase_modules_DATA = \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \
 	Sympa/Log.pm \
-	Log.pm \
 	Sympa/Mailer.pm \
 	Sympa/Marc.pm \
 	Sympa/Marc/Search.pm \

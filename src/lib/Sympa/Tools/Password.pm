@@ -31,7 +31,9 @@ use MIME::Base64 qw();
 BEGIN { eval 'use Crypt::CipherSaber'; }
 
 use Conf;
-use Log;
+use Sympa::Log;
+
+my $log = Sympa::Log->instance;
 
 sub tmp_passwd {
     my $email = shift;
@@ -71,14 +73,14 @@ sub crypt_password {
 ## decrypt a password
 sub decrypt_password {
     my $inpasswd = shift;
-    Log::do_log('debug2', '(%s)', $inpasswd);
+    $log->syslog('debug2', '(%s)', $inpasswd);
 
     return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/);
     $inpasswd = $1;
 
     ciphersaber_installed();
     unless ($cipher) {
-        Log::do_log('info',
+        $log->syslog('info',
             'Password seems crypted while CipherSaber is not installed !');
         return $inpasswd;
     }

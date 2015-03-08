@@ -31,10 +31,12 @@ use English qw(-no_match_vars);
 use Conf;
 use Sympa::Constants;
 use Sympa::LockedFile;
-use Log;
+use Sympa::Log;
 use Sympa::Message;
 use tools;
 use Sympa::Tools::File;
+
+my $log = Sympa::Log->instance;
 
 sub new {
     my $class = shift;
@@ -56,7 +58,7 @@ sub _create_spool {
     my $umask = umask oct $Conf::Conf{'umask'};
     foreach my $directory ($self->{directory}, $self->{bad_directory}) {
         unless (-d $directory) {
-            Log::do_log('info', 'Creating spool %s', $directory);
+            $log->syslog('info', 'Creating spool %s', $directory);
             unless (
                 mkdir($directory, 0755)
                 and Sympa::Tools::File::set_file_rights(
@@ -156,7 +158,7 @@ sub store {
         [qw(date TIME localpart domainpart PID RAND)], %options);
     return unless $marshalled;
 
-    Log::do_log('notice', 'Message %s is stored into archive spool as <%s>',
+    $log->syslog('notice', 'Message %s is stored into archive spool as <%s>',
         $message, $marshalled);
     return $marshalled;
 }

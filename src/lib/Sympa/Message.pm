@@ -72,7 +72,7 @@ use Sympa::Constants;
 use Sympa::HTML::FormatText;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
-use Log;
+use Sympa::Log;
 use Sympa::Scenario;
 use Sympa::Template;
 use tools;
@@ -123,14 +123,14 @@ A new <Sympa::Message> object, or I<undef>, if something went wrong.
 =cut 
 
 sub new {
-    Log::do_log('debug2', '(%s, ...)', @_);
+    $log->syslog('debug2', '(%s, ...)', @_);
     my $class      = shift;
     my $serialized = shift;
 
     my $self = bless {@_} => $class;
 
     unless (defined $serialized and length $serialized) {
-        Log::do_log('err', 'Empty message');
+        $log->syslog('err', 'Empty message');
         return undef;
     }
 
@@ -154,7 +154,7 @@ sub new {
             if ($v eq 'md5') {
                 $self->{'md5_check'} = 1;
             } else {
-                Log::do_log('err',
+                $log->syslog('err',
                     'Unknown authentication level "%s", ignored', $v);
             }
         } elsif ($k eq 'X-Sympa-Message-ID') {    # New in 6.2a.41
@@ -173,7 +173,7 @@ sub new {
         } elsif ($k eq 'X-Sympa-Spam-Status') {     # New in 6.2a.41
             $self->{'spam_status'} = $v;
         } else {
-            Log::do_log('err', 'Unknown attribute information: "%s: %s"',
+            $log->syslog('err', 'Unknown attribute information: "%s: %s"',
                 $k, $v);
         }
     }
@@ -205,7 +205,7 @@ sub new {
     $parser->output_to_core(1);
     my $entity = $parser->parse_data(\$serialized);
     unless ($entity) {
-        Log::do_log('err', 'Unable to parse message');
+        $log->syslog('err', 'Unable to parse message');
         return undef;
     }
     my $hdr = $entity->head;
@@ -337,11 +337,11 @@ sub _get_sender_email {
         last if defined $sender;
     }
     unless (defined $sender) {
-        #Log::do_log('debug3', 'No valid sender address');
+        #$log->syslog('debug3', 'No valid sender address');
         return;
     }
     unless (tools::valid_email($sender)) {
-        Log::do_log('err', 'Invalid sender address "%s"', $sender);
+        $log->syslog('err', 'Invalid sender address "%s"', $sender);
         return;
     }
 
@@ -442,7 +442,7 @@ New L<Sympa::Message> instance, or C<undef> if something went wrong.
 # Old names: (part of) mail::mail_file(), mail::parse_tt2_messageasstring(),
 # List::send_file(), List::send_global_file().
 sub new_from_template {
-    Log::do_log('debug2', '(%s, %s, %s, %s, %s, ...)', @_);
+    $log->syslog('debug2', '(%s, %s, %s, %s, %s, ...)', @_);
     my $class   = shift;
     my $that    = shift;
     my $tpl     = shift;
@@ -467,7 +467,7 @@ sub new_from_template {
 
     ## Any recipients
     if (not $who or (ref $who and !@$who)) {
-        Log::do_log('err', 'No recipient for sending %s', $tpl);
+        $log->syslog('err', 'No recipient for sending %s', $tpl);
         return undef;
     }
 
@@ -602,7 +602,7 @@ sub new_from_template {
         tools::marshal_metadata($self, '%s@%s.%ld.%ld,%d',
         [qw(localpart domainpart date PID RAND)]);
     $self->{messagekey} = $marshalled;
-    Log::do_log(
+    $log->syslog(
         'notice',
         'Processing %s; message_id=%s; recipients=%s; sender=%s; template=%s',
         $self,
@@ -617,7 +617,7 @@ sub new_from_template {
 
 #TODO: This would be merged in new_from_template() because used only by it.
 sub _new_from_template {
-    Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s, %s, %s, %s)', @_);
     my $class    = shift;
     my $that     = shift || '*';
     my $filename = shift;
@@ -657,7 +657,7 @@ sub _new_from_template {
     );
     unless ($template->parse($data, $filename, \$message_as_string)) {
         my $error = $template->{last_error};
-        Log::do_log(
+        $log->syslog(
             'err', 'Can\'t parse template %s: %s',
             $filename, ($error and $error->info)
         );
@@ -827,7 +827,7 @@ sub _new_from_template {
     return undef unless $self;
 
     unless ($self->reformat_utf8_message(\@msgs, $data->{'charset'})) {
-        Log::do_log('err', 'Failed to reformat message');
+        $log->syslog('err', 'Failed to reformat message');
     }
 
     return $self;
@@ -1072,7 +1072,7 @@ Adds DKIM signature to the message.
 
 # Old name: tools::dkim_sign() which took string and returned string.
 sub dkim_sign {
-    Log::do_log('debug', '(%s)', @_);
+    $log->syslog('debug', '(%s)', @_);
     my $self    = shift;
     my %options = @_;
 
@@ -1082,29 +1082,29 @@ sub dkim_sign {
     my $dkim_privatekey = $options{'dkim_privatekey'};
 
     unless ($dkim_selector) {
-        Log::do_log('err',
+        $log->syslog('err',
             "DKIM selector is undefined, could not sign message");
         return undef;
     }
     unless ($dkim_privatekey) {
-        Log::do_log('err',
+        $log->syslog('err',
             "DKIM key file is undefined, could not sign message");
         return undef;
     }
     unless ($dkim_d) {
-        Log::do_log('err',
+        $log->syslog('err',
             "DKIM d= tag is undefined, could not sign message");
         return undef;
     }
 
     unless (eval "require Mail::DKIM::Signer") {
-        Log::do_log('err',
+        $log->syslog('err',
             "Failed to load Mail::DKIM::Signer Perl module, ignoring DKIM signature"
         );
         return undef;
     }
     unless (eval "require Mail::DKIM::TextWrap") {
-        Log::do_log('err',
+        $log->syslog('err',
             "Failed to load Mail::DKIM::TextWrap Perl module, signature will not be pretty"
         );
     }
@@ -1114,7 +1114,7 @@ sub dkim_sign {
         grep { !/^---/ and $_ } split /\r\n|\r|\n/, $dkim_privatekey;
     my $privatekey = Mail::DKIM::PrivateKey->load(Data => $privatekey_string);
     unless ($privatekey) {
-        Log::do_log('err', 'Can\'t create Mail::DKIM::PrivateKey');
+        $log->syslog('err', 'Can\'t create Mail::DKIM::PrivateKey');
         return undef;
     }
     # create a signer object
@@ -1127,7 +1127,7 @@ sub dkim_sign {
         ($dkim_i ? (Identity => $dkim_i) : ()),
     );
     unless ($dkim) {
-        Log::do_log('err', 'Can\'t create Mail::DKIM::Signer');
+        $log->syslog('err', 'Can\'t create Mail::DKIM::Signer');
         return undef;
     }
     # $new_body will store the body as fed to Mail::DKIM to reuse it
@@ -1138,7 +1138,7 @@ sub dkim_sign {
     $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
     $dkim->PRINT($msg_as_string);
     unless ($dkim->CLOSE) {
-        Log::do_log('err', 'Cannot sign (DKIM) message');
+        $log->syslog('err', 'Cannot sign (DKIM) message');
         return undef;
     }
 
@@ -1184,7 +1184,7 @@ sub check_dkim_signature {
 
     my $dkim;
     unless ($dkim = Mail::DKIM::Verifier->new()) {
-        Log::do_log('err', 'Could not create Mail::DKIM::Verifier');
+        $log->syslog('err', 'Could not create Mail::DKIM::Verifier');
         return;
     }
 
@@ -1194,7 +1194,7 @@ sub check_dkim_signature {
     $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
     $dkim->PRINT($msg_as_string);
     unless ($dkim->CLOSE) {
-        Log::do_log('err', 'Cannot verify signature of (DKIM) message');
+        $log->syslog('err', 'Cannot verify signature of (DKIM) message');
         return;
     }
 
@@ -1223,14 +1223,14 @@ and if any of them are invalid, removes them.
 # Old name: tools::remove_invalid_dkim_signature() which takes a message as
 # string and outputs idem without signature if invalid.
 sub remove_invalid_dkim_signature {
-    Log::do_log('debug2', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
     my $self = shift;
 
     return unless $self->get_header('DKIM-Signature');
 
     $self->check_dkim_signature;
     unless ($self->{'dkim_pass'}) {
-        Log::do_log('info',
+        $log->syslog('info',
             'DKIM signature of message %s is invalid, removing', $self);
         $self->delete_header('DKIM-Signature');
     }
@@ -1667,7 +1667,7 @@ sub _fix_html_part {
 
         my $io = $bodyh->open("w");
         unless (defined $io) {
-            Log::do_log('err', 'Failed to save message: %m');
+            $log->syslog('err', 'Failed to save message: %m');
             return undef;
         }
         $io->print($filtered_body);
@@ -1704,7 +1704,7 @@ If decrypting succeeded, {smime_crypted} item is set.
 # Old name: tools::smime_decrypt() which took MIME::Entity object and list,
 # and won't modify Message object.
 sub smime_decrypt {
-    Log::do_log('debug2', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
     my $self = shift;
 
     return 0 unless $Crypt::SMIME::VERSION;
@@ -1729,7 +1729,7 @@ sub smime_decrypt {
     my ($certs, $keys) =
         Sympa::Tools::SMIME::find_keys($self->{context} || '*', 'decrypt');
     unless (defined $certs and @$certs) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to decrypt message: missing certificate file');
         return undef;
     }
@@ -1739,7 +1739,7 @@ sub smime_decrypt {
     # Try all keys/certs until one decrypts.
     while (my $certfile = shift @$certs) {
         my $keyfile = shift @$keys;
-        Log::do_log('debug', 'Trying decrypt with certificate %s, key %s',
+        $log->syslog('debug', 'Trying decrypt with certificate %s, key %s',
             $certfile, $keyfile);
 
         my ($cert, $key);
@@ -1765,14 +1765,14 @@ sub smime_decrypt {
     }
 
     unless (defined $msg_string) {
-        Log::do_log('err', 'Message could not be decrypted');
+        $log->syslog('err', 'Message could not be decrypted');
         return undef;
     }
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
     $entity = $parser->parse_data($msg_string);
     unless (defined $entity) {
-        Log::do_log('err', 'Message could not be decrypted');
+        $log->syslog('err', 'Message could not be decrypted');
         return undef;
     }
 
@@ -1811,7 +1811,7 @@ sub smime_decrypt {
     $self->{_head}                = $head;
     $self->{_body}                = $body_string;
     delete $self->{_entity_cache};    # Clear entity cache.
-    Log::do_log('debug', 'Message has been decrypted');
+    $log->syslog('debug', 'Message has been decrypted');
 
     return $self;
 }
@@ -1845,7 +1845,7 @@ True value if encryption succeeded, or C<undef>.
 
 # Old name: tools::smime_encrypt() which returns stringified message.
 sub smime_encrypt {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $self  = shift;
     my $email = shift;
 
@@ -1862,7 +1862,7 @@ sub smime_encrypt {
         $certfile = $base;
     }
     unless (-r $certfile) {
-        Log::do_log('notice',
+        $log->syslog('notice',
             'Unable to encrypt message to %s (missing certificate %s)',
             $email, $certfile);
         return undef;
@@ -1895,7 +1895,7 @@ sub smime_encrypt {
         $smime->encrypt($dup_head->as_string . "\n" . $self->body_as_string);
     };
     unless (defined $msg_string) {
-        Log::do_log('err', 'Unable to S/MIME encrypt message: %s',
+        $log->syslog('err', 'Unable to S/MIME encrypt message: %s',
             $EVAL_ERROR);
         return undef;
     }
@@ -1904,7 +1904,7 @@ sub smime_encrypt {
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
     unless ($entity = $parser->parse_data($msg_string)) {
-        Log::do_log('notice', 'Unable to parse message');
+        $log->syslog('notice', 'Unable to parse message');
         return undef;
     }
 
@@ -1955,7 +1955,7 @@ Otherwise false value.
 
 # Old name: tools::smime_sign().
 sub smime_sign {
-    Log::do_log('debug2', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
     my $self = shift;
 
     my $list       = $self->{context};
@@ -1999,14 +1999,14 @@ sub smime_sign {
         $smime->sign($dup_head->as_string . "\n" . $self->body_as_string);
     };
     unless (defined $msg_string) {
-        Log::do_log('err', 'Unable to S/MIME sign message: %s', $EVAL_ERROR);
+        $log->syslog('err', 'Unable to S/MIME sign message: %s', $EVAL_ERROR);
         return undef;
     }
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
     unless ($signed_msg = $parser->parse_data($msg_string)) {
-        Log::do_log('notice', 'Unable to parse message');
+        $log->syslog('notice', 'Unable to parse message');
         return undef;
     }
 
@@ -2061,7 +2061,7 @@ C<undef> if something went wrong.
 # Old name: tools::smime_sign_check() or Message::smime_sign_check()
 # which won't alter Message object.
 sub check_smime_signature {
-    Log::do_log('debug2', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
     my $self = shift;
 
     return 0 unless $Crypt::SMIME::VERSION;
@@ -2092,7 +2092,7 @@ sub check_smime_signature {
                 ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
     };
     unless (eval { $smime->check($self->as_string) }) {
-        Log::do_log('err', '%s: Unable to verify S/MIME signature: %s',
+        $log->syslog('err', '%s: Unable to verify S/MIME signature: %s',
             $self, $EVAL_ERROR);
         return undef;
     }
@@ -2111,18 +2111,18 @@ sub check_smime_signature {
 
         if ($parsed->{'purpose'}{'sign'} and $parsed->{'purpose'}{'enc'}) {
             $certs{'both'} = $cert;
-            Log::do_log('debug', 'Found a signing + encryption cert');
+            $log->syslog('debug', 'Found a signing + encryption cert');
         } elsif ($parsed->{'purpose'}{'sign'}) {
             $certs{'sign'} = $cert;
-            Log::do_log('debug', 'Found a signing cert');
+            $log->syslog('debug', 'Found a signing cert');
         } elsif ($parsed->{'purpose'}{'enc'}) {
             $certs{'enc'} = $cert;
-            Log::do_log('debug', 'Found an encryption cert');
+            $log->syslog('debug', 'Found an encryption cert');
         }
         last if $certs{'both'} or ($certs{'sign'} and $certs{'enc'});
     }
     unless ($certs{both} or $certs{sign} or $certs{enc}) {
-        Log::do_log('err', '%s: Could not extract certificate for %s',
+        $log->syslog('err', '%s: Could not extract certificate for %s',
             $self, $sender);
         return undef;
     }
@@ -2140,10 +2140,10 @@ sub check_smime_signature {
             unlink("$filename\@enc");
             unlink("$filename\@sign");
         }
-        Log::do_log('debug', 'Saving %s cert in %s', $c, $filename);
+        $log->syslog('debug', 'Saving %s cert in %s', $c, $filename);
         my $fh;
         unless (open $fh, '>', $filename) {
-            Log::do_log('err', 'Unable to create certificate file %s: %m',
+            $log->syslog('err', 'Unable to create certificate file %s: %m',
                 $filename);
             return undef;
         }
@@ -2154,7 +2154,7 @@ sub check_smime_signature {
     # TODO: Future version should check if the subject of certificate was part
     # of the SMIME signature.
     $self->{'smime_signed'} = 1;
-    Log::do_log('debug3', '%s is signed, signature is checked', $self);
+    $log->syslog('debug3', '%s is signed, signature is checked', $self);
     ## Il faudrait traiter les cas d'erreur (0 différent de undef)
     return 1;
 }
@@ -2251,7 +2251,7 @@ sub _merge_msg {
     if ($entity->parts) {
         foreach my $part ($entity->parts) {
             unless (_merge_msg($part, $list, $rcpt, $data)) {
-                Log::do_log('err', 'Failed to personalize message part');
+                $log->syslog('err', 'Failed to personalize message part');
                 return undef;
             }
         }
@@ -2293,7 +2293,7 @@ sub _merge_msg {
                     || 'NONE');
         }
         unless ($in_cset->decoder) {
-            Log::do_log('err', 'Unknown charset "%s"', $charset);
+            $log->syslog('err', 'Unknown charset "%s"', $charset);
             return undef;
         }
         $in_cset->encoder($in_cset);    # no charset conversion
@@ -2301,7 +2301,7 @@ sub _merge_msg {
         ## Only decodable bodies are allowed.
         eval { $utf8_body = Encode::encode_utf8($in_cset->decode($body, 1)); };
         if ($EVAL_ERROR) {
-            Log::do_log('err', 'Cannot decode by charset "%s"', $charset);
+            $log->syslog('err', 'Cannot decode by charset "%s"', $charset);
             return undef;
         }
 
@@ -2314,7 +2314,7 @@ sub _merge_msg {
                     personalize_text($utf8_body, $list, $rcpt, $data)
             )
             ) {
-            Log::do_log('err', 'Error merging message');
+            $log->syslog('err', 'Error merging message');
             return undef;
         }
         $utf8_body = $message_output;
@@ -2325,7 +2325,7 @@ sub _merge_msg {
             $in_cset->body_encode(Encode::decode_utf8($utf8_body),
             Replacement => 'FALLBACK');
         unless ($newcharset) {    # bug in MIME::Charset?
-            Log::do_log('err', 'Can\'t determine output charset');
+            $log->syslog('err', 'Can\'t determine output charset');
             return undef;
         } elsif ($newcharset ne $in_cset->as_string) {
             $entity->head->mime_attr('Content-Transfer-Encoding' => $newenc);
@@ -2345,7 +2345,7 @@ sub _merge_msg {
         unless ($io
             and $io->print($body)
             and $io->close) {
-            Log::do_log('err', 'Can\'t write in Entity: %m');
+            $log->syslog('err', 'Can\'t write in Entity: %m');
             return undef;
         }
         $entity->sync_headers(Length => 'COMPUTE')
@@ -2538,7 +2538,7 @@ sub prepare_message_according_to_mode {
         my $entity = $self->as_entity->dup;
 
         if (_as_singlepart($entity, 'text/plain')) {
-            Log::do_log('notice', 'Multipart message changed to singlepart');
+            $log->syslog('notice', 'Multipart message changed to singlepart');
         }
         ## Add a footer
         _decorate_parts($entity, $list);
@@ -2548,7 +2548,7 @@ sub prepare_message_according_to_mode {
         my $entity = $self->as_entity->dup;
 
         if (_as_singlepart($entity, 'text/html')) {
-            Log::do_log('notice', 'Multipart message changed to singlepart');
+            $log->syslog('notice', 'Multipart message changed to singlepart');
         }
         ## Add a footer
         _decorate_parts($entity, $list);
@@ -2601,7 +2601,7 @@ sub decorate {
 # Old name:
 # Sympa::List::add_parts() or Message::add_parts(), n.b. not add_part().
 sub _decorate_parts {
-    Log::do_log('debug3', '(%s, %s)');
+    $log->syslog('debug3', '(%s, %s)');
     my $entity = shift;
     my $list   = shift;
 
@@ -2623,7 +2623,7 @@ sub _decorate_parts {
         ) {
         if (-f $file) {
             unless (-r $file) {
-                Log::do_log('notice', 'Cannot read %s', $file);
+                $log->syslog('notice', 'Cannot read %s', $file);
                 next;
             }
             $header = $file;
@@ -2640,7 +2640,7 @@ sub _decorate_parts {
         ) {
         if (-f $file) {
             unless (-r $file) {
-                Log::do_log('notice', 'Cannot read %s', $file);
+                $log->syslog('notice', 'Cannot read %s', $file);
                 next;
             }
             $footer = $file;
@@ -2681,7 +2681,7 @@ sub _decorate_parts {
 
         if (   $eff_type =~ /^multipart\/alternative/i
             || $eff_type =~ /^multipart\/related/i) {
-            Log::do_log('debug3', 'Making message %s into multipart/mixed',
+            $log->syslog('debug3', 'Making message %s into multipart/mixed',
                 $entity);
             $entity->make_multipart("mixed", Force => 1);
         }
@@ -2694,7 +2694,7 @@ sub _decorate_parts {
                 eval { $header_part = $parser->parse($fh); };
                 close $fh;
                 if ($EVAL_ERROR) {
-                    Log::do_log('err', 'Failed to parse MIME data %s: %s',
+                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
                         $header, $parser->last_error);
                 } else {
                     $entity->make_multipart unless $entity->is_multipart;
@@ -2725,7 +2725,7 @@ sub _decorate_parts {
                 eval { $footer_part = $parser->parse($fh); };
                 close $fh;
                 if ($EVAL_ERROR) {
-                    Log::do_log('err', 'Failed to parse MIME data %s: %s',
+                    $log->syslog('err', 'Failed to parse MIME data %s: %s',
                         $footer, $parser->last_error);
                 } else {
                     $entity->make_multipart unless $entity->is_multipart;
@@ -2806,7 +2806,7 @@ sub _append_parts {
             # Save new body.
             $io = $bodyh->open('w');
             unless (defined $io) {
-                Log::do_log('err', 'Failed to save message: %m');
+                $log->syslog('err', 'Failed to save message: %m');
                 return undef;
             }
             $io->print($body);
@@ -2884,7 +2884,7 @@ sub _append_footer_header_to_part {
 
     my $new_body;
     if ($eff_type eq 'text/plain') {
-        Log::do_log('debug3', "Treating text/plain part");
+        $log->syslog('debug3', "Treating text/plain part");
 
         ## Add newlines.  For BASE64 encoding they also must be normalized.
         if (length $header_msg) {
@@ -2910,14 +2910,14 @@ sub _append_footer_header_to_part {
         ($body, $newcharset, $newenc) =
             $in_cset->body_encode($new_body, Replacement => 'FALLBACK');
         unless ($newcharset) {                        # bug in MIME::Charset?
-            Log::do_log('err', 'Can\'t determine output charset');
+            $log->syslog('err', 'Can\'t determine output charset');
             return undef;
         } elsif ($newcharset ne $in_cset->as_string) {
             $entity->head->mime_attr('Content-Transfer-Encoding' => $newenc);
             $entity->head->mime_attr('Content-Type.Charset' => $newcharset);
         }
     } elsif ($eff_type eq 'text/html') {
-        Log::do_log('debug3', "Treating text/html part");
+        $log->syslog('debug3', "Treating text/html part");
 
         # Escape special characters.
         $header_msg = HTML::Entities::encode_entities($header_msg, '<>&"');
@@ -2966,7 +2966,7 @@ sub _urlize_parts {
 
     my $expl = $list->{'dir'} . '/urlized';
     unless (-d $expl or mkdir $expl, 0775) {
-        Log::do_log('err', 'Unable to create urlized directory %s', $expl);
+        $log->syslog('err', 'Unable to create urlized directory %s', $expl);
         return undef;
     }
 
@@ -2974,7 +2974,7 @@ sub _urlize_parts {
     my $dir1 = tools::escape_chars($message_id);
     $dir1 = '/' . $dir1;
     unless (mkdir "$expl/$dir1", 0775) {
-        Log::do_log('err', 'Unable to create urlized directory %s/%s',
+        $log->syslog('err', 'Unable to create urlized directory %s/%s',
             $expl, $dir1);
         return 0;
     }
@@ -3030,7 +3030,7 @@ sub _urlize_one_part {
     # Store body in file
     my $fh;
     unless (open $fh, '>', $file) {
-        Log::do_log('err', 'Unable to open %s: %m', $file);
+        $log->syslog('err', 'Unable to open %s: %m', $file);
         return undef;
     }
     if ($entity->bodyhandle) {
@@ -3081,7 +3081,7 @@ sub _urlize_one_part {
     );
     unless ($template->parse($data, 'urlized_part.tt2', \$new_part)) {
         my $error = $template->{last_error};
-        Log::do_log(
+        $log->syslog(
             'err',
             'Can\'t parse template urlized_part.tt2: %s',
             ($error and $error->info)
@@ -3194,7 +3194,7 @@ sub _fix_utf8_parts {
         } elsif (ref $data eq 'SCALAR' or ref $data eq 'ARRAY') {
             eval { $data = $parser->parse_data($data); };
             if ($EVAL_ERROR) {
-                Log::do_log('notice', 'Failed to parse MIME data');
+                $log->syslog('notice', 'Failed to parse MIME data');
                 $data = $parser->parse_data('');
             }
             $entity->parts([$data]);
@@ -3206,7 +3206,7 @@ sub _fix_utf8_parts {
             } else {    # already stringified.
                 eval { $parser->parse_data($data); };    # check only.
                 if ($EVAL_ERROR) {
-                    Log::do_log('notice', 'Failed to parse MIME data');
+                    $log->syslog('notice', 'Failed to parse MIME data');
                     $data = '';
                 }
             }
@@ -3276,7 +3276,7 @@ sub _fix_utf8_parts {
         my $io = $bodyh->open("w");
 
         unless (defined $io) {
-            Log::do_log('err', 'Failed to save message: %m');
+            $log->syslog('err', 'Failed to save message: %m');
             return undef;
         }
 
@@ -3305,7 +3305,7 @@ The text will be converted to UTF-8.
 =cut
 
 sub get_plain_body {
-    Log::do_log('debug2', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
     my $self = shift;
 
     my $entity = $self->as_entity->dup;
@@ -3409,7 +3409,7 @@ otherwise C<0>.
 # Note: this would be moved to incoming pipeline package.
 # Old names: tools::virus_infected(), Sympa::Tools::Message::virus_infected().
 sub check_virus_infection {
-    Log::do_log('debug2', '%s)', @_);
+    $log->syslog('debug2', '%s)', @_);
     my $self = shift;
 
     my $robot_id;
@@ -3426,7 +3426,7 @@ sub check_virus_infection {
         (Conf::get_robot_conf($robot_id, 'antivirus_args') || '');
 
     unless ($antivirus_path) {
-        Log::do_log('debug',
+        $log->syslog('debug',
             'Sympa not configured to scan virus in message');
         return 0;
     }
@@ -3434,14 +3434,14 @@ sub check_virus_infection {
     my $subdir = [split /\//, $self->get_id]->[0];
     my $work_dir = join '/', $Conf::Conf{'tmpdir'}, 'antivirus', $subdir;
     unless (-d $work_dir or Sympa::Tools::File::mkdir_all($work_dir, 0755)) {
-        Log::do_log('err', 'Unable to create tmp antivirus directory %s: %m',
+        $log->syslog('err', 'Unable to create tmp antivirus directory %s: %m',
             $work_dir);
         return undef;
     }
 
     ## Call the procedure of splitting mail
     unless ($self->_split_mail($work_dir)) {
-        Log::do_log('err', 'Could not split mail %s', $self);
+        $log->syslog('err', 'Could not split mail %s', $self);
         return undef;
     }
 
@@ -3454,14 +3454,14 @@ sub check_virus_infection {
 
         # impossible to look for viruses with no option set
         unless (@antivirus_args) {
-            Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
+            $log->syslog('err', 'Missing "antivirus_args" in sympa.conf');
             return undef;
         }
 
         my $pipein;
         unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
             $work_dir) {
-            Log::do_log('err', 'Cannot open pipe: %m');
+            $log->syslog('err', 'Cannot open pipe: %m');
             return undef;
         }
         while (<$pipein>) {
@@ -3500,7 +3500,7 @@ sub check_virus_infection {
         my $pipein;
         unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
             $work_dir) {
-            Log::do_log('err', 'Cannot open pipe: %m');
+            $log->syslog('err', 'Cannot open pipe: %m');
             return undef;
         }
         while (<$pipein>) {
@@ -3521,7 +3521,7 @@ sub check_virus_infection {
 
         # impossible to look for viruses with no option set
         unless (@antivirus_args) {
-            Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
+            $log->syslog('err', 'Missing "antivirus_args" in sympa.conf');
             return undef;
         }
 
@@ -3531,7 +3531,7 @@ sub check_virus_infection {
             '--databasedirectory' => $dbdir,
             @antivirus_args, $work_dir
             ) {
-            Log::do_log('err', 'Cannot open pipe: %m');
+            $log->syslog('err', 'Cannot open pipe: %m');
             return undef;
         }
         while (<$pipein>) {
@@ -3550,7 +3550,7 @@ sub check_virus_infection {
         my $pipein;
         unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
             $work_dir) {
-            Log::do_log('err', 'Cannot open pipe: %m');
+            $log->syslog('err', 'Cannot open pipe: %m');
             return undef;
         }
         while (<$pipein>) {
@@ -3570,14 +3570,14 @@ sub check_virus_infection {
 
         # impossible to look for viruses with no option set
         unless (@antivirus_args) {
-            Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
+            $log->syslog('err', 'Missing "antivirus_args" in sympa.conf');
             return undef;
         }
 
         my $pipein;
         unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
             $work_dir) {
-            Log::do_log('err', 'Cannot open pipe: %m');
+            $log->syslog('err', 'Cannot open pipe: %m');
             return undef;
         }
         while (<$pipein>) {
@@ -3600,14 +3600,14 @@ sub check_virus_infection {
 
         # impossible to look for viruses with no option set
         unless (@antivirus_args) {
-            Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
+            $log->syslog('err', 'Missing "antivirus_args" in sympa.conf');
             return undef;
         }
 
         my $pipein;
         unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
             $work_dir) {
-            Log::do_log('err', 'Cannot open pipe: %m');
+            $log->syslog('err', 'Cannot open pipe: %m');
             return undef;
         }
         while (<$pipein>) {
@@ -3631,7 +3631,7 @@ sub check_virus_infection {
         my $pipein;
         unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
             $work_dir) {
-            Log::do_log('err', 'Cannot open pipe: %m');
+            $log->syslog('err', 'Cannot open pipe: %m');
             return undef;
         }
         while (<$pipein>) {
@@ -3708,7 +3708,7 @@ sub _split_mail {
         ## Store body in file
         my $fh;
         unless (open $fh, '>', sprintf('%s/msg%03d.%s', $dir, $i, $fileExt)) {
-            Log::do_log('err', 'Unable to create %s/msg%03d.%s: %m',
+            $log->syslog('err', 'Unable to create %s/msg%03d.%s: %m',
                 $dir, $i, $fileExt);
             return undef;
         }
@@ -4114,7 +4114,7 @@ sub dmarc_protect {
         unless $list->{'admin'}{'dmarc_protection'}
             and $list->{'admin'}{'dmarc_protection'}{'mode'};
 
-    Log::do_log('debug', 'DMARC protection on');
+    $log->syslog('debug', 'DMARC protection on');
     my $dkimdomain = $list->{'admin'}{'dmarc_protection'}{'domain_regex'};
     my $originalFromHeader = $self->get_header('From');
     my $anonaddr;
@@ -4126,7 +4126,7 @@ sub dmarc_protect {
 
     if (@addresses) {
         $origFrom = $addresses[0]->address;
-        Log::do_log('debug', 'From addresses: %s', $origFrom);
+        $log->syslog('debug', 'From addresses: %s', $origFrom);
     }
 
     # Will this message be processed?
@@ -4134,7 +4134,7 @@ sub dmarc_protect {
             $list->{'admin'}{'dmarc_protection'}{'mode'}, 'all'
         )
         ) {
-        Log::do_log('debug', 'Munging From for ALL messages');
+        $log->syslog('debug', 'Munging From for ALL messages');
         $mungeFrom = 1;
     }
     if (   !$mungeFrom
@@ -4144,7 +4144,7 @@ sub dmarc_protect {
             'dkim_signature'
         )
         ) {
-        Log::do_log('debug', 'Munging From for DKIM-signed messages');
+        $log->syslog('debug', 'Munging From for DKIM-signed messages');
         $mungeFrom = 1;
     }
     if (   !$mungeFrom
@@ -4155,7 +4155,7 @@ sub dmarc_protect {
             'domain_regex'
         )
         ) {
-        Log::do_log('debug',
+        $log->syslog('debug',
             'Munging From for messages based on domain regexp');
         $mungeFrom = 1 if ($origFrom =~ /$dkimdomain$/);
     }
@@ -4173,7 +4173,7 @@ sub dmarc_protect {
             )
         )
         ) {
-        Log::do_log('debug', 'Munging From for messages with strict policy');
+        $log->syslog('debug', 'Munging From for messages with strict policy');
         # Strict auto policy - is the sender domain policy to reject
         my $dom = $origFrom;
         $dom =~ s/^.*\@//;
@@ -4181,7 +4181,7 @@ sub dmarc_protect {
         my $res = Net::DNS::Resolver->new;
         my $packet = $res->query("_dmarc.$dom", "TXT");
         if ($packet) {
-            Log::do_log('debug', 'DMARC DNS entry found');
+            $log->syslog('debug', 'DMARC DNS entry found');
             foreach my $rr (grep { $_->type eq 'TXT' } $packet->answer) {
                 next if ($rr->string !~ /v=DMARC/);
                 if (!$mungeFrom
@@ -4190,9 +4190,9 @@ sub dmarc_protect {
                         'dmarc_reject'
                     )
                     ) {
-                    Log::do_log('debug', 'Will block if DMARC rejects');
+                    $log->syslog('debug', 'Will block if DMARC rejects');
                     if ($rr->string =~ /p=reject/) {
-                        Log::do_log('debug', 'DMARC reject policy found');
+                        $log->syslog('debug', 'DMARC reject policy found');
                         $mungeFrom = 1;
                     }
                 }
@@ -4202,9 +4202,9 @@ sub dmarc_protect {
                         'dmarc_quarantine'
                     )
                     ) {
-                    Log::do_log('debug', 'Will block if DMARC quarantine');
+                    $log->syslog('debug', 'Will block if DMARC quarantine');
                     if ($rr->string =~ /p=quarantine/) {
-                        Log::do_log('debug',
+                        $log->syslog('debug',
                             'DMARC quarantine  policy found');
                         $mungeFrom = 1;
                     }
@@ -4215,7 +4215,7 @@ sub dmarc_protect {
                         'dmarc_any'
                     )
                     ) {
-                    Log::do_log('debug',
+                    $log->syslog('debug',
                         'Will munge whatever DMARC policy is');
                     $mungeFrom = 1;
                 }
@@ -4229,13 +4229,13 @@ sub dmarc_protect {
     }
 
     if ($mungeFrom) {
-        Log::do_log('debug', 'Will munge From field');
+        $log->syslog('debug', 'Will munge From field');
         # Remove any DKIM signatures we find
         if ($dkimSignature) {
             $self->add_header('X-Original-DKIM-Signature', $dkimSignature);
             $self->delete_header('DKIM-Signature');
             $self->delete_header('DomainKey-Signature');
-            Log::do_log('debug',
+            $log->syslog('debug',
                 'Removing previous DKIM and DomainKey signatures');
         }
 
@@ -4249,7 +4249,7 @@ sub dmarc_protect {
         $anonaddr = $list->get_list_address()
             unless $anonaddr and $anonaddr =~ /\@/;
         @anonFrom = Mail::Address->parse($anonaddr);
-        Log::do_log('debug', 'Anonymous From: %s', $anonaddr);
+        $log->syslog('debug', 'Anonymous From: %s', $anonaddr);
 
         if (@addresses) {
             # We should always have a From address in reality, unless the

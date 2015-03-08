@@ -27,10 +27,13 @@ package Sympa::Fetch;
 use strict;
 use warnings;
 
-use Log;
+use Sympa::Log;
+
+my $log = Sympa::Log->instance;
 
 # request a document using https, return status and content
 sub get_https {
+    $log->syslog('debug2', '(%s, %s, %s, %s, %s, %s)', @_);
     my $host        = shift;
     my $port        = shift;
     my $path        = shift;
@@ -42,23 +45,15 @@ sub get_https {
     my $trusted_ca_file = $ssl_data->{'cafile'};
     my $trusted_ca_path = $ssl_data->{'capath'};
 
-    Log::do_log(
-        'debug',          '(%s, %s, %s, %s, %s, %s, %s, %s)',
-        $host,            $port,
-        $path,            $client_cert,
-        $client_key,      $key_passwd,
-        $trusted_ca_file, $trusted_ca_path
-    );
-
     unless (-r ($trusted_ca_file) || (-d $trusted_ca_path)) {
-        Log::do_log('err',
+        $log->syslog('err',
             "error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path"
         );
         return undef;
     }
 
     unless (eval "require IO::Socket::SSL") {
-        Log::do_log('err',
+        $log->syslog('err',
             "Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first"
         );
         return undef;
@@ -66,7 +61,7 @@ sub get_https {
     require IO::Socket::SSL;
 
     unless (eval "require LWP::UserAgent") {
-        Log::do_log('err',
+        $log->syslog('err',
             "Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first"
         );
         return undef;
@@ -90,38 +85,38 @@ sub get_https {
     );
 
     unless ($ssl_socket) {
-        Log::do_log('err', 'Error %s unable to connect https://%s:%s/',
+        $log->syslog('err', 'Error %s unable to connect https://%s:%s/',
             IO::Socket::SSL::errstr(), $host, $port);
         return undef;
     }
-    Log::do_log('debug', 'Connected to https://%s:%s/',
+    $log->syslog('debug', 'Connected to https://%s:%s/',
         IO::Socket::SSL::errstr(), $host, $port);
 
     if (ref($ssl_socket) eq "IO::Socket::SSL") {
         my $subject_name = $ssl_socket->peer_certificate("subject");
         my $issuer_name  = $ssl_socket->peer_certificate("issuer");
         my $cipher       = $ssl_socket->get_cipher();
-        Log::do_log('debug',
+        $log->syslog('debug',
             'Ssl peer certificat %s issued by %s. Cipher used %s',
             $subject_name, $issuer_name, $cipher);
     }
 
     print $ssl_socket "GET $path HTTP/1.0\nHost: $host\n\n";
 
-    Log::do_log('debug', 'Requested GET %s HTTP/1.1', $path);
+    $log->syslog('debug', 'Requested GET %s HTTP/1.1', $path);
     #my ($buffer) = $ssl_socket->getlines;
     # print STDERR $buffer;
-    #Log::do_log ('debug',"return");
+    #$log->syslog ('debug',"return");
     #return ;
 
-    Log::do_log('debug', 'Get_https reading answer');
+    $log->syslog('debug', 'Get_https reading answer');
     my @result;
     while (my $line = $ssl_socket->getline) {
         push @result, $line;
     }
 
     $ssl_socket->close(SSL_no_shutdown => 1);
-    Log::do_log('debug', 'Disconnected');
+    $log->syslog('debug', 'Disconnected');
 
     return (@result);
 }
@@ -139,18 +134,18 @@ sub get_https2 {
     my $trusted_ca_path = $ssl_data->{'capath'};
     $trusted_ca_path ||= $Conf::Conf{'capath'};
 
-    Log::do_log('debug', '(%s, %s, %s, %s, %s)',
+    $log->syslog('debug', '(%s, %s, %s, %s, %s)',
         $host, $port, $path, $trusted_ca_file, $trusted_ca_path);
 
     unless (-r ($trusted_ca_file) || (-d $trusted_ca_path)) {
-        Log::do_log('err',
+        $log->syslog('err',
             "error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path"
         );
         return undef;
     }
 
     unless (eval "require IO::Socket::SSL") {
-        Log::do_log('err',
+        $log->syslog('err',
             "Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first"
         );
         return undef;
@@ -158,7 +153,7 @@ sub get_https2 {
     require IO::Socket::SSL;
 
     unless (eval "require LWP::UserAgent") {
-        Log::do_log('err',
+        $log->syslog('err',
             "Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first"
         );
         return undef;
@@ -179,39 +174,39 @@ sub get_https2 {
     );
 
     unless ($ssl_socket) {
-        Log::do_log('err', 'Error %s unable to connect https://%s:%s/',
+        $log->syslog('err', 'Error %s unable to connect https://%s:%s/',
             IO::Socket::SSL::errstr(), $host, $port);
         return undef;
     }
-    Log::do_log('debug', 'Connected to https://%s:%s/', $host, $port);
+    $log->syslog('debug', 'Connected to https://%s:%s/', $host, $port);
 
-#	if( ref($ssl_socket) eq "IO::Socket::SSL") {
-#	   my $subject_name = $ssl_socket->peer_certificate("subject");
-#	   my $issuer_name = $ssl_socket->peer_certificate("issuer");
-#	   my $cipher = $ssl_socket->get_cipher();
-#	   Log::do_log
-#	   ('debug','ssl peer certificat %s issued by %s. Cipher used %s',
-#	   $subject_name,$issuer_name,$cipher);
-#	}
+    #if( ref($ssl_socket) eq "IO::Socket::SSL") {
+    #    my $subject_name = $ssl_socket->peer_certificate("subject");
+    #    my $issuer_name = $ssl_socket->peer_certificate("issuer");
+    #    my $cipher = $ssl_socket->get_cipher();
+    #    $log->syslog('debug',
+    #        'ssl peer certificat %s issued by %s. Cipher used %s',
+    #        $subject_name,$issuer_name,$cipher);
+    #}
 
     my $request = "GET $path HTTP/1.0\nHost: $host\n\n";
     print $ssl_socket "$request\n\n";
 
-    Log::do_log('debug', 'Requesting %s', $request);
+    $log->syslog('debug', 'Requesting %s', $request);
     #my ($buffer) = $ssl_socket->getlines;
-    # print STDERR $buffer;
-    #Log::do_log ('debug',"return");
+    #print STDERR $buffer;
+    #$log->syslog ('debug',"return");
     #return ;
 
-    Log::do_log('debug', 'Get_https reading answer returns:');
+    $log->syslog('debug', 'Get_https reading answer returns:');
     my @result;
     while (my $line = $ssl_socket->getline) {
-        Log::do_log('debug', '%s', $line);
+        $log->syslog('debug', '%s', $line);
         push @result, $line;
     }
 
     $ssl_socket->close(SSL_no_shutdown => 1);
-    Log::do_log('debug', 'Disconnected');
+    $log->syslog('debug', 'Disconnected');
 
     return (@result);
 }

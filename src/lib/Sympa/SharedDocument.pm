@@ -28,11 +28,13 @@ use strict;
 use warnings;
 use HTML::Entities qw();
 
-use Log;
+use Sympa::Log;
 use Sympa::Scenario;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+
+my $log = Sympa::Log->instance;
 
 ## Creates a new object
 sub new {
@@ -41,10 +43,10 @@ sub new {
     my $email = $param->{'user'}{'email'};
     #$email ||= 'nobody';
     my $document = {};
-    Log::do_log('debug2', '(%s, %s)', $list->{'name'}, $path);
+    $log->syslog('debug2', '(%s, %s)', $list->{'name'}, $path);
 
     unless (ref($list) =~ /List/i) {
-        Log::do_log('err', 'Incorrect list parameter');
+        $log->syslog('err', 'Incorrect list parameter');
         return undef;
     }
 
@@ -58,7 +60,7 @@ sub new {
 
     ### Document isn't a description file
     if ($document->{'path'} =~ /\.desc/) {
-        Log::do_log('err', '%s: description file', $document->{'path'});
+        $log->syslog('err', '%s: description file', $document->{'path'});
         return undef;
     }
 
@@ -78,7 +80,7 @@ sub new {
 
     ### Document exist ?
     unless (-r $document->{'absolute_path'}) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to read %s: no such file or directory',
             $document->{'absolute_path'}
@@ -88,7 +90,7 @@ sub new {
 
     ### Document has non-size zero?
     unless (-s $document->{'absolute_path'}) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to read %s: empty document',
             $document->{'absolute_path'}
@@ -155,7 +157,7 @@ sub new {
         if ($document->{'absolute_path'} =~ /^(([^\/]*\/)*)([^\/]+)$/) {
             $desc_file = $1 . '.desc.' . $3;
         } else {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Cannot determine desc file for %s',
                 $document->{'absolute_path'}
@@ -232,7 +234,7 @@ sub new {
 
         # listing of all the shared documents of the directory
         unless (opendir DIR, $document->{'absolute_path'}) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Cannot open %s: %m',
                 $document->{'absolute_path'}
@@ -324,7 +326,7 @@ sub check_access_control {
 
     my $list = $self->{'list'};
 
-    Log::do_log('debug', '(%s)', $self->{'path'});
+    $log->syslog('debug', '(%s)', $self->{'path'});
 
     # Control for editing
     my $may_read     = 1;

@@ -32,10 +32,12 @@ use Encode qw();
 use HTML::Entities qw();
 
 use Conf;
-use Log;
+use Sympa::Log;
 use Sympa::Message;
 use tools;
 use Sympa::Tools::File;
+
+my $log = Sympa::Log->instance;
 
 my $serial_number = 0;    # incremented on each archived mail
 
@@ -47,7 +49,7 @@ my $serial_number = 0;    # incremented on each archived mail
 sub store_last {
     my ($list, $msg) = @_;
 
-    Log::do_log('debug2', '');
+    $log->syslog('debug2', '');
 
     return unless $list->is_archived();
     my $dir = $list->{'dir'} . '/archives';
@@ -72,17 +74,17 @@ sub store_last {
 sub list {
     my $name = shift;
 
-    Log::do_log('debug', '(%s)', $name);
+    $log->syslog('debug', '(%s)', $name);
 
     my (@l, $i);
 
     unless (-d "$name") {
-        Log::do_log('err', '(%s) Failed, no directory %s', $name, $name);
+        $log->syslog('err', '(%s) Failed, no directory %s', $name, $name);
 #      @l = ($msg::no_archives_available);
         return @l;
     }
     unless (opendir(DIR, "$name")) {
-        Log::do_log('err', '(%s) Failed, cannot open directory %s',
+        $log->syslog('err', '(%s) Failed, cannot open directory %s',
             $name, $name);
 #	@l = ($msg::no_archives_available);
         return @l;
@@ -98,7 +100,7 @@ sub list {
 }
 
 sub scan_dir_archive {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    $log->syslog('debug3', '(%s, %s)', @_);
     my ($list, $month) = @_;
 
     my $dir =
@@ -106,7 +108,7 @@ sub scan_dir_archive {
         . $list->get_list_id();
 
     unless (opendir(DIR, "$dir/$month/arctxt")) {
-        Log::do_log('info', 'Unable to open dir %s/%s/arctxt', $dir, $month);
+        $log->syslog('info', 'Unable to open dir %s/%s/arctxt', $dir, $month);
         return undef;
     }
 
@@ -114,21 +116,21 @@ sub scan_dir_archive {
     my $i       = 0;
     foreach my $file (sort readdir(DIR)) {
         next unless ($file =~ /^\d+$/);
-        Log::do_log('debug', 'Start parsing message %s/%s/arctxt/%s',
+        $log->syslog('debug', 'Start parsing message %s/%s/arctxt/%s',
             $dir, $month, $file);
 
         my $message =
             Sympa::Message->new_from_file("$dir/$month/arctxt/$file",
             context => $list);
         unless ($message) {
-            Log::do_log('err', 'Unable to create Message object from file %s',
-                $file);
+            $log->syslog('err',
+                'Unable to create Message object from file %s', $file);
             return undef;
         }
         # Decrypt message if possible
         $message->smime_decrypt;
 
-        Log::do_log('debug', 'MAIL object: %s', $message);
+        $log->syslog('debug', 'MAIL object: %s', $message);
 
         $i++;
         my $msg = {};
@@ -140,7 +142,7 @@ sub scan_dir_archive {
 
         $msg->{'full_msg'} = $message->as_string;
 
-        Log::do_log('debug', 'Adding message %s in archive to send',
+        $log->syslog('debug', 'Adding message %s in archive to send',
             $msg->{'subject'});
 
         push @{$all_msg}, $msg;
@@ -166,18 +168,18 @@ sub search_msgid {
 
     my ($dir, $msgid) = @_;
 
-    Log::do_log('info', '(%s, %s)', $dir, $msgid);
+    $log->syslog('info', '(%s, %s)', $dir, $msgid);
 
     if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
-        Log::do_log('err', 'No message id found');
+        $log->syslog('err', 'No message id found');
         return undef;
     }
     unless ($dir =~ /\d\d\d\d\-\d\d\/arctxt/) {
-        Log::do_log('info', 'Dir %s look unproper', $dir);
+        $log->syslog('info', 'Dir %s look unproper', $dir);
         return undef;
     }
     unless (opendir(ARC, "$dir")) {
-        Log::do_log('info',
+        $log->syslog('info',
             "archive::scan_dir_archive($dir, $msgid): unable to open dir $dir"
         );
         return undef;
@@ -213,7 +215,7 @@ sub exist {
 
 # return path for latest message distributed in the list
 sub last_path {
-    Log::do_log('debug', '(%s)', @_);
+    $log->syslog('debug', '(%s)', @_);
     my $list = shift;
 
     return undef unless $list->is_archived();
@@ -229,11 +231,11 @@ sub last_path {
 sub load_html_message {
     my %parameters = @_;
 
-    Log::do_log('debug2', $parameters{'file_path'});
+    $log->syslog('debug2', $parameters{'file_path'});
     my %metadata;
 
     unless (open ARC, $parameters{'file_path'}) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Failed to load message "%s": %m',
             $parameters{'file_path'}
@@ -265,7 +267,7 @@ sub load_html_message {
 }
 
 sub clean_archive_directory {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $robot          = shift;
     my $dir_to_rebuild = shift;
 
@@ -279,7 +281,7 @@ sub clean_archive_directory {
             $answer->{'cleaned_dir'}
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling',
             $number_of_copies
@@ -299,13 +301,13 @@ sub clean_archive_directory {
         }
         closedir DIR;
         if ($files_left_uncleaned) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'HTML cleaning failed for %s files in the directory %s',
                 $files_left_uncleaned, $answer->{'dir_to_rebuild'});
         }
         $answer->{'dir_to_rebuild'} = $answer->{'cleaned_dir'};
     } else {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to open directory %s: %m',
             $answer->{'dir_to_rebuild'}
@@ -317,7 +319,7 @@ sub clean_archive_directory {
 }
 
 sub clean_archived_message {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s, %s)', @_);
     my $robot  = shift;
     my $list   = shift;
     my $input  = shift;
@@ -326,7 +328,7 @@ sub clean_archived_message {
     my $message =
         Sympa::Message->new_from_file($input, context => ($list || $robot),);
     unless ($message) {
-        Log::do_log('err', 'Unable to create a Message object with file %s',
+        $log->syslog('err', 'Unable to create a Message object with file %s',
             $input);
         return undef;
     }
@@ -337,7 +339,7 @@ sub clean_archived_message {
             close TMP;
             return 1;
         } else {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Unable to create a tmp file to write clean HTML to file %s',
                 $output
@@ -345,7 +347,7 @@ sub clean_archived_message {
             return undef;
         }
     } else {
-        Log::do_log('err', 'HTML cleaning in file %s failed', $output);
+        $log->syslog('err', 'HTML cleaning in file %s failed', $output);
         return undef;
     }
 }
@@ -395,20 +397,20 @@ sub convert_single_message {
     my $mhonarc_ressources =
         tools::search_fullpath($that, 'mhonarc-ressources.tt2');
     unless ($mhonarc_ressources) {
-        Log::do_log('notice', 'Cannot find any MhOnArc ressource file');
+        $log->syslog('notice', 'Cannot find any MhOnArc ressource file');
         return undef;
     }
 
     unless (-d $destination_dir) {
         unless (Sympa::Tools::File::mkdir_all($destination_dir, 0755)) {
-            Log::do_log('err', 'Unable to create %s', $destination_dir);
+            $log->syslog('err', 'Unable to create %s', $destination_dir);
             return undef;
         }
     }
 
     my $msg_file = $destination_dir . '/msg00000.txt';
     unless (open OUT, '>', $msg_file) {
-        Log::do_log('notice', 'Could Not open %s', $msg_file);
+        $log->syslog('notice', 'Could Not open %s', $msg_file);
         return undef;
     }
     print OUT $msg_as_string;
@@ -419,7 +421,7 @@ sub convert_single_message {
 
     ## generate HTML
     unless (chdir $destination_dir) {
-        Log::do_log('err', 'Could not change working directory to %s',
+        $log->syslog('err', 'Could not change working directory to %s',
             $destination_dir);
         return undef;
     }
@@ -446,7 +448,7 @@ sub convert_single_message {
     chdir $pwd;
 
     if ($exitcode) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Command %s failed with exit code %d',
             Conf::get_robot_conf($robot, 'mhonarc'), $exitcode

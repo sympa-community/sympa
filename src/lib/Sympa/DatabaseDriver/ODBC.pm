@@ -27,8 +27,6 @@ package Sympa::DatabaseDriver::ODBC;
 use strict;
 use warnings;
 
-use Log;
-
 use base qw(Sympa::DatabaseDriver);
 
 use constant required_modules    => [qw(DBD::ODBC)];

@@ -30,10 +30,12 @@ use DateTime::Format::Mail;
 use English qw(-no_match_vars);
 
 use Sympa::Constants;
-use Log;
+use Sympa::Log;
 use SDM;
 use tools;
 use Sympa::Tools::File;
+
+my $log = Sympa::Log->instance;
 
 sub new {
     my $class = shift;
@@ -58,7 +60,7 @@ sub _create_spool {
     my $umask = umask oct $Conf::Conf{'umask'};
     foreach my $directory (($self->{directory})) {
         unless (-d $directory) {
-            Log::do_log('info', 'Creating spool %s', $directory);
+            $log->syslog('info', 'Creating spool %s', $directory);
             unless (
                 mkdir($directory, 0755)
                 and Sympa::Tools::File::set_file_rights(
@@ -87,7 +89,7 @@ sub _create_spool {
 #
 ##############################################
 sub get_recipients_status {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s, %s)', @_);
     my $msgid    = shift;
     my $listname = shift;
     my $robot    = shift;
@@ -116,7 +118,7 @@ sub get_recipients_status {
             '<' . $msgid . '>'
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to retrieve tracking information for message %s, list %s@%s',
             $msgid,
@@ -149,7 +151,8 @@ sub register {
     my $reception_option = $params{'reception_option'};
     my @rcpt             = @{$rcpt || []};
 
-    Log::do_log('debug2', '(msgid = %s, listname = %s, reception_option = %s',
+    $log->syslog('debug2',
+        '(msgid = %s, listname = %s, reception_option = %s',
         $msgid, $listname, $reception_option);
 
     my $time = time;
@@ -167,7 +170,7 @@ sub register {
                 $msgid, $email, $reception_option, $listname, $robot, $time
             )
             ) {
-            Log::do_log(
+            $log->syslog(
                 'err',
                 'Unable to prepare notification table for user %s, message %s, list %s@%s',
                 $email,
@@ -184,7 +187,7 @@ sub register {
 # copy the bounce to the appropriate filename
 # Old name: store_bounce() in bounced.pl
 sub store {
-    Log::do_log('debug2', '(%s, %s, %s, %s, ...)', @_);
+    $log->syslog('debug2', '(%s, %s, %s, %s, ...)', @_);
     my $self    = shift;
     my $message = shift;
     my $rcpt    = shift;
@@ -203,7 +206,7 @@ sub store {
             $options{envid};
     }
     unless (open $ofh, '>', $bounce_dir . '/' . $filename) {
-        Log::do_log('err', 'Unable to write %s/%s', $bounce_dir, $filename);
+        $log->syslog('err', 'Unable to write %s/%s', $bounce_dir, $filename);
         return undef;
     }
     print $ofh $message->as_string;
@@ -248,7 +251,7 @@ sub store {
 sub _db_insert_notification {
     my ($notification_id, $type, $status, $arrival_date) = @_;
 
-    Log::do_log('debug2',
+    $log->syslog('debug2',
         'Notification_id: %s, type: %s, recipient: %s, status: %s',
         $notification_id, $type, $status);
 
@@ -271,7 +274,7 @@ sub _db_insert_notification {
             $notification_id
         )
         ) {
-        Log::do_log('err', 'Unable to update notification %s in database',
+        $log->syslog('err', 'Unable to update notification %s in database',
             $notification_id);
         return undef;
     }
@@ -290,7 +293,7 @@ sub _db_insert_notification {
 ##############################################
 
 sub find_notification_id_by_message {
-    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
     my $recipient = shift;
     my $msgid     = shift;
     my $listname  = shift;
@@ -316,7 +319,7 @@ sub find_notification_id_by_message {
             '<' . $msgid . '>'
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to retrieve the tracking information for user %s, message %s, list %s@%s',
             $recipient,
@@ -331,7 +334,7 @@ sub find_notification_id_by_message {
     $sth->finish;
 
     if (scalar @pk_notifications > 1) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Found more then one envelope ID maching (recipient=%s, msgis=%s, listname=%s, robot%s)',
             $recipient,
@@ -357,7 +360,7 @@ sub find_notification_id_by_message {
 #
 ##############################################
 sub remove_message_by_id {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s, %s)', @_);
     my $self  = shift;
     my $msgid = shift;
 
@@ -378,7 +381,7 @@ sub remove_message_by_id {
             $listname, $robot
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to search tracking information for message %s, list %s@%s',
             $msgid,
@@ -405,7 +408,7 @@ sub remove_message_by_id {
             $listname, $robot
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to remove the tracking information for message %s, list %s@%s',
             $msgid,
@@ -431,7 +434,7 @@ sub remove_message_by_id {
 #
 ##############################################
 sub remove_message_by_period {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s, %s)', @_);
     my $self   = shift;
     my $period = shift;
 
@@ -454,7 +457,7 @@ sub remove_message_by_period {
             $listname, $robot
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to search tracking information for older than %s days for list %s@%s',
             $limit,
@@ -481,7 +484,7 @@ sub remove_message_by_period {
             $listname, $robot
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to remove the tracking information older than %s days for list %s@%s',
             $limit,

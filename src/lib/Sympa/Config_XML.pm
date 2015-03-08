@@ -28,7 +28,9 @@ use strict;
 use warnings;
 use XML::LibXML;
 
-use Log;
+use Sympa::Log;
+
+my $log = Sympa::Log->instance;
 
 #########################################
 # new
@@ -42,7 +44,7 @@ use Log;
 sub new {
     my $class = shift;
     my $fh    = shift;
-    Log::do_log('debug2', '');
+    $log->syslog('debug2', '');
 
     my $self   = {};
     my $parser = XML::LibXML->new();
@@ -67,24 +69,24 @@ sub new {
 ################################################
 sub createHash {
     my $self = shift;
-    Log::do_log('debug2', '');
+    $log->syslog('debug2', '');
 
     unless ($self->{'root'}->nodeName eq 'list') {
-        Log::do_log('err',
+        $log->syslog('err',
             "Config_XML::createHash() : the root element must be called \"list\" "
         );
         return undef;
     }
 
     unless (defined $self->_getRequiredElements()) {
-        Log::do_log('err', 'Error in required elements');
+        $log->syslog('err', 'Error in required elements');
         return undef;
     }
 
     if ($self->{'root'}->hasChildNodes()) {
         my $hash = _getChildren($self->{'root'});
         unless (defined $hash) {
-            Log::do_log('err', 'Error in list elements');
+            $log->syslog('err', 'Error in list elements');
             return undef;
         }
         if (ref($hash) eq "HASH") {
@@ -97,7 +99,7 @@ sub createHash {
                 }
             }
         } elsif ($hash ne "") {    # a string
-            Log::do_log('err',
+            $log->syslog('err',
                 'Config_XML::createHash() : the list\'s children are not homogeneous'
             );
             return undef;
@@ -117,7 +119,7 @@ sub createHash {
 #########################################
 sub getHash {
     my $self = shift;
-    Log::do_log('debug2', '');
+    $log->syslog('debug2', '');
 
     my $hash = {};
 
@@ -142,7 +144,7 @@ sub getHash {
 # OUT : -1 or undef
 #################################################################
 sub _getRequiredElements {
-    Log::do_log('debug3', @_);
+    $log->syslog('debug3', @_);
     my $self = shift;
 
     # listname element is obligatory
@@ -167,7 +169,7 @@ sub _getMultipleAndRequiredChild {
     my $self      = shift;
     my $nodeName  = shift;
     my $childName = shift;
-    Log::do_log('debug3', '(%s, %s)', $nodeName, $childName);
+    $log->syslog('debug3', '(%s, %s)', $nodeName, $childName);
 
     my @nodes = $self->{'root'}->getChildrenByTagName($nodeName);
 
@@ -178,7 +180,7 @@ sub _getMultipleAndRequiredChild {
     foreach my $o (@nodes) {
         my @child = $o->getChildrenByTagName($childName);
         if ($#child < 0) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Element "%s" is required for element "%s", line: %s',
                 $childName, $nodeName, $o->line_number());
             return undef;
@@ -186,7 +188,7 @@ sub _getMultipleAndRequiredChild {
 
         my $hash = _getChildren($o);
         unless (defined $hash) {
-            Log::do_log('err', 'Error on _getChildren(%s)', $o->nodeName);
+            $log->syslog('err', 'Error on _getChildren(%s)', $o->nodeName);
             return undef;
         }
 
@@ -209,7 +211,7 @@ sub _getMultipleAndRequiredChild {
 sub _getRequiredSingle {
     my $self     = shift;
     my $nodeName = shift;
-    Log::do_log('debug3', '(%s)', $nodeName);
+    $log->syslog('debug3', '(%s)', $nodeName);
 
     my @nodes = $self->{'root'}->getChildrenByTagName($nodeName);
 
@@ -218,7 +220,7 @@ sub _getRequiredSingle {
     }
 
     if ($#nodes < 0) {
-        Log::do_log('err', 'Element "%s" is required for the list',
+        $log->syslog('err', 'Element "%s" is required for the list',
             $nodeName);
         return undef;
     }
@@ -228,7 +230,7 @@ sub _getRequiredSingle {
         foreach my $i (@nodes) {
             push(@error, $i->line_number());
         }
-        Log::do_log('err',
+        $log->syslog('err',
             'Only one element "%s" is allowed for the list, lines: %s',
             $nodeName, join(", ", @error));
         return undef;
@@ -237,7 +239,7 @@ sub _getRequiredSingle {
     my $node = shift(@nodes);
 
     if ($node->getAttribute('multiple')) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Attribute multiple=1 not allowed for the element "%s"',
             $nodeName);
         return undef;
@@ -254,7 +256,7 @@ sub _getRequiredSingle {
     } else {
         my $values = _getChildren($node);
         unless (defined $values) {
-            Log::do_log('err', 'Error on _getChildren(%s)', $node->nodeName);
+            $log->syslog('err', 'Error on _getChildren(%s)', $node->nodeName);
             return undef;
         }
 
@@ -287,7 +289,7 @@ sub _getRequiredSingle {
 ##############################################
 sub _getChildren {
     my $node = shift;
-    Log::do_log('debug3', '(%s)', $node->nodeName);
+    $log->syslog('debug3', '(%s)', $node->nodeName);
 
     # return value
     my $hash   = {};
@@ -311,7 +313,7 @@ sub _getChildren {
         if ($type == 1) {
             my $values = _getChildren($child);
             unless (defined $values) {
-                Log::do_log('err', 'Error on _getChildren(%s)', $childName);
+                $log->syslog('err', 'Error on _getChildren(%s)', $childName);
                 return undef;
             }
 
@@ -358,7 +360,7 @@ sub _getChildren {
 
         ## error
         if ($error) {
-            Log::do_log('err',
+            $log->syslog('err',
                 '(%s) The children are not homogeneous, line %s',
                 $node->nodeName, $node->line_number());
             return undef;
@@ -393,7 +395,7 @@ sub _getChildren {
 ##################################################
 sub _verify_single_nodes {
     my $nodeList = shift;
-    Log::do_log('debug3', '');
+    $log->syslog('debug3', '');
 
     my $error = 0;
     my %error_nodes;
@@ -411,7 +413,7 @@ sub _verify_single_nodes {
     }
     foreach my $node (keys %error_nodes) {
         my $lines = join ', ', @{$nodeLines->{$node}};
-        Log::do_log('err',
+        $log->syslog('err',
             'Element %s is not declared in multiple but it is: lines %s',
             $node, $lines);
         $error = 1;
@@ -434,7 +436,7 @@ sub _verify_single_nodes {
 ###############################################
 sub _find_lines {
     my $nodeList = shift;
-    Log::do_log('debug3', '');
+    $log->syslog('debug3', '');
     my $hash = {};
 
     foreach my $node (@$nodeList) {

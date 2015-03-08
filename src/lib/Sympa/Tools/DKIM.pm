@@ -29,11 +29,13 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Conf;
-use Log;
+use Sympa::Log;
+
+my $log = Sympa::Log->instance;
 
 # Old name: tools::get_dkim_parameters().
 sub get_dkim_parameters {
-    Log::do_log('debug2', '(%s)', @_);
+    $log->syslog('debug2', '(%s)', @_);
     my $that = shift;
 
     my ($robot_id, $list);
@@ -77,7 +79,7 @@ sub get_dkim_parameters {
 
     my $fh;
     unless (open $fh, '<', $keyfile) {
-        Log::do_log('err', 'Could not read dkim private key %s: %m',
+        $log->syslog('err', 'Could not read dkim private key %s: %m',
             $keyfile);
         return undef;
     }

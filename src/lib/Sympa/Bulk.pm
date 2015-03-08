@@ -34,10 +34,12 @@ use Time::HiRes qw();
 use Conf;
 use Sympa::Constants;
 use Sympa::LockedFile;
-use Log;
+use Sympa::Log;
 use Sympa::Message;
 use tools;
 use Sympa::Tools::File;
+
+my $log = Sympa::Log->instance;
 
 sub new {
     my $class = shift;
@@ -66,7 +68,7 @@ sub _create_spool {
         $self->{bad_msg_directory}, $self->{bad_pct_directory}
         ) {
         unless (-d $directory) {
-            Log::do_log('info', 'Creating spool %s', $directory);
+            $log->syslog('info', 'Creating spool %s', $directory);
             unless (
                 mkdir($directory, 0755)
                 and Sympa::Tools::File::set_file_rights(
@@ -253,7 +255,7 @@ sub store {
     return unless $marshalled;
 
     unless (mkdir($self->{pct_directory} . '/' . $marshalled)) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Cannot mkdir %s/%s: %m',
             $self->{pct_directory}, $marshalled
@@ -297,7 +299,7 @@ sub store {
         }
     }
 
-    Log::do_log('notice', 'Message %s is stored into bulk spool as <%s>',
+    $log->syslog('notice', 'Message %s is stored into bulk spool as <%s>',
         $message, $marshalled);
     return $marshalled;
 }
@@ -327,7 +329,7 @@ sub _get_recipient_tabs_by_domain {
             chomp $dom;
         }
         $rcpt_by_dom{$dom} += 1;
-        Log::do_log(
+        $log->syslog(
             'debug2',
             'Domain: %s; rcpt by dom: %s; limit for this domain: %s',
             $dom,

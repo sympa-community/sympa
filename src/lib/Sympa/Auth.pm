@@ -31,7 +31,7 @@ use POSIX qw();
 
 use Conf;
 use Sympa::Database;
-use Log;
+use Sympa::Log;
 use Sympa::Report;
 use Sympa::Robot;
 use SDM;
@@ -41,11 +41,13 @@ use Sympa::Tools::Data;
 use Sympa::Tools::Time;
 use Sympa::User;
 
+my $log = Sympa::Log->instance;
+
 ## return the password finger print (this proc allow futur replacement of md5
 ## by sha1 or ....)
 sub password_fingerprint {
 
-    Log::do_log('debug', '');
+    $log->syslog('debug', '');
 
     my $pwd = shift;
     if (Conf::get_robot_conf('*', 'password_case') eq 'insensitive') {
@@ -60,7 +62,7 @@ sub check_auth {
     my $robot = shift;
     my $auth  = shift;    ## User email or UID
     my $pwd   = shift;    ## Password
-    Log::do_log('debug', '(%s)', $auth);
+    $log->syslog('debug', '(%s)', $auth);
 
     my ($canonic, $user);
 
@@ -90,7 +92,7 @@ sub check_auth {
         } else {
             Sympa::Report::reject_report_web('user', 'incorrect_passwd', {})
                 unless ($ENV{'SYMPA_SOAP'});
-            Log::do_log('err', "Incorrect LDAP password");
+            $log->syslog('err', "Incorrect LDAP password");
             return undef;
         }
     }
@@ -127,7 +129,7 @@ sub may_use_sympa_native_auth {
 sub authentication {
     my ($robot, $email, $pwd) = @_;
     my ($user, $canonic);
-    Log::do_log('debug', '(%s)', $email);
+    $log->syslog('debug', '(%s)', $email);
 
     unless ($user = Sympa::User::get_global_user($email)) {
         $user = {'email' => $email};
@@ -143,7 +145,7 @@ sub authentication {
             {wrong_login_count => $user->{'wrong_login_count'} + 1});
         Sympa::Report::reject_report_web('user', 'too_many_wrong_login', {})
             unless ($ENV{'SYMPA_SOAP'});
-        Log::do_log('err',
+        $log->syslog('err',
             'Login is blocked: too many wrong password submission for %s',
             $email);
         return undef;
@@ -195,7 +197,7 @@ sub authentication {
 
     Sympa::Report::reject_report_web('user', 'incorrect_passwd', {})
         unless ($ENV{'SYMPA_SOAP'});
-    Log::do_log('err', 'Incorrect password for user %s', $email);
+    $log->syslog('err', 'Incorrect password for user %s', $email);
 
     my $param;    #FIXME FIXME: not used.
     $param->{'init_email'}         = $email;
@@ -206,8 +208,8 @@ sub authentication {
 sub ldap_authentication {
     my ($robot, $ldap, $auth, $pwd, $whichfilter) = @_;
     my $mesg;
-    Log::do_log('debug2', '(%s, %s, %s)', $auth, '****', $whichfilter);
-    Log::do_log('debug3', 'Password used: %s', $pwd);
+    $log->syslog('debug2', '(%s, %s, %s)', $auth, '****', $whichfilter);
+    $log->syslog('debug3', 'Password used: %s', $pwd);
 
     unless (tools::search_fullpath($robot, 'auth.conf')) {
         return undef;
@@ -215,7 +217,7 @@ sub ldap_authentication {
 
     ## No LDAP entry is defined in auth.conf
     if ($#{$Conf::Conf{'auth_services'}{$robot}} < 0) {
-        Log::do_log('notice', 'Skipping empty auth.conf');
+        $log->syslog('notice', 'Skipping empty auth.conf');
         return undef;
     }
 
@@ -238,7 +240,7 @@ sub ldap_authentication {
     my $db = Sympa::Database->new('LDAP', %$ldap);
 
     unless ($db and $db->connect()) {
-        Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
+        $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
             $ldap->{'host'});
         return undef;
     }
@@ -252,7 +254,7 @@ sub ldap_authentication {
     );
 
     unless ($mesg and $mesg->count()) {
-        Log::do_log('notice',
+        $log->syslog('notice',
             'No entry in the LDAP Directory Tree of %s for %s',
             $ldap->{'host'}, $auth);
         $db->disconnect();
@@ -274,7 +276,7 @@ sub ldap_authentication {
     );
 
     unless ($db and $db->connect()) {
-        Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
+        $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
             $ldap->{'host'});
         return undef;
     }
@@ -288,7 +290,7 @@ sub ldap_authentication {
     );
 
     unless ($mesg and $mesg->count()) {
-        Log::do_log('notice', "No entry in the LDAP Directory Tree of %s",
+        $log->syslog('notice', "No entry in the LDAP Directory Tree of %s",
             $ldap->{'host'});
         $db->disconnect();
         return undef;
@@ -326,8 +328,8 @@ sub ldap_authentication {
         $param->{'alt_emails'}{$alt} = $previous->{$alt};
     }
 
-    $db->disconnect() or Log::do_log('notice', 'Unable to unbind');
-    Log::do_log('debug3', 'Canonic: %s', $canonic_email[0]);
+    $db->disconnect() or $log->syslog('notice', 'Unable to unbind');
+    $log->syslog('debug3', 'Canonic: %s', $canonic_email[0]);
     ## If the identifier provided was a valid email, return the provided
     ## email.
     ## Otherwise, return the canonical email guessed after the login.
@@ -347,7 +349,7 @@ sub get_email_by_net_id {
     my $auth_id    = shift;
     my $attributes = shift;
 
-    Log::do_log('debug', '(%s, %s)', $auth_id, $attributes->{'uid'});
+    $log->syslog('debug', '(%s, %s)', $auth_id, $attributes->{'uid'});
 
     if (defined $Conf::Conf{'auth_services'}{$robot}[$auth_id]
         {'internal_email_by_netid'}) {
@@ -368,7 +370,7 @@ sub get_email_by_net_id {
     my $db = Sympa::Database->new('LDAP', %$ldap);
 
     unless ($db and $db->connect()) {
-        Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
+        $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
             $ldap->{'host'});
         return undef;
     }
@@ -388,7 +390,7 @@ sub get_email_by_net_id {
     );
 
     unless ($mesg and $mesg->count()) {
-        Log::do_log('notice', "No entry in the LDAP Directory Tree of %s",
+        $log->syslog('notice', "No entry in the LDAP Directory Tree of %s",
             $ldap->{'host'});
         $db->disconnect();
         return undef;
@@ -408,7 +410,7 @@ sub get_email_by_net_id {
 # undef;
 sub remote_app_check_password {
     my ($trusted_application_name, $password, $robot, $service) = @_;
-    Log::do_log('debug', '(%s, %s, %s)', $trusted_application_name, $robot,
+    $log->syslog('debug', '(%s, %s, %s)', $trusted_application_name, $robot,
         $service);
 
     my $md5 = Digest::MD5::md5_hex($password);
@@ -423,7 +425,7 @@ sub remote_app_check_password {
 
         if (lc($application->{'name'}) eq lc($trusted_application_name)) {
             if ($md5 eq $application->{'md5password'}) {
-                # Log::do_log('debug', 'Authentication succeed for %s',$application->{'name'});
+                # $log->syslog('debug', 'Authentication succeed for %s',$application->{'name'});
                 my %proxy_for_vars;
                 my %set_vars;
                 foreach my $varname (@{$application->{'proxy_for_variables'}})
@@ -439,7 +441,7 @@ sub remote_app_check_password {
                         return (\%proxy_for_vars, \%set_vars)
                             if $cmdname eq $service;
                     }
-                    Log::do_log(
+                    $log->syslog(
                         'info',   'Illegal command %s received from %s',
                         $service, $trusted_application_name
                     );
@@ -447,14 +449,14 @@ sub remote_app_check_password {
                 }
                 return (\%proxy_for_vars, \%set_vars);
             } else {
-                Log::do_log('info', 'Bad password from %s',
+                $log->syslog('info', 'Bad password from %s',
                     $trusted_application_name);
                 return;
             }
         }
     }
     # no matching application found
-    Log::do_log('info', 'Unknown application name %s',
+    $log->syslog('info', 'Unknown application name %s',
         $trusted_application_name);
     return;
 }
@@ -469,7 +471,7 @@ sub create_one_time_ticket {
     ## Value may be 'mail' if the IP address is not known
 
     my $ticket = Sympa::Session::get_random();
-    #Log::do_log('info', '(%s, %s, %s, %s) Value = %s',
+    #$log->syslog('info', '(%s, %s, %s, %s) Value = %s',
     #    $email, $robot, $data_string, $remote_addr, $ticket);
 
     my $date = time;
@@ -487,7 +489,7 @@ sub create_one_time_ticket {
             $remote_addr, 'open'
         )
         ) {
-        Log::do_log(
+        $log->syslog(
             'err',
             'Unable to insert new one time ticket for user %s, robot %s in the database',
             $email,
@@ -500,7 +502,7 @@ sub create_one_time_ticket {
 
 # read one_time_ticket from table and remove it
 sub get_one_time_ticket {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    $log->syslog('debug2', '(%s, %s, %s)', @_);
     my $robot         = shift;
     my $ticket_number = shift;
     my $addr          = shift;
@@ -521,7 +523,7 @@ sub get_one_time_ticket {
             $ticket_number, $robot
         )
         ) {
-        Log::do_log('err',
+        $log->syslog('err',
             'Unable to retrieve one time ticket %s from database',
             $ticket_number);
         return {'result' => 'error'};
@@ -531,7 +533,7 @@ sub get_one_time_ticket {
     $sth->finish;
 
     unless ($ticket) {
-        Log::do_log('info', 'Unable to find one time ticket %s', $ticket);
+        $log->syslog('info', 'Unable to find one time ticket %s', $ticket);
         return {'result' => 'not_found'};
     }
 
@@ -546,17 +548,17 @@ sub get_one_time_ticket {
 
     if ($lockout eq 'one_time' and $ticket->{'status'} ne 'open') {
         $result = 'closed';
-        Log::do_log('info', 'Ticket %s from %s has been used before (%s)',
+        $log->syslog('info', 'Ticket %s from %s has been used before (%s)',
             $ticket_number, $ticket->{'email'}, $printable_date);
     } elsif ($lockout eq 'remote_addr'
         and $ticket->{'status'} ne $addr
         and $ticket->{'status'} ne 'open') {
         $result = 'closed';
-        Log::do_log('info',
+        $log->syslog('info',
             'ticket %s from %s refused because accessed by the other (%s)',
             $ticket_number, $ticket->{'email'}, $printable_date);
     } elsif ($lifetime and $ticket->{'date'} + $lifetime < time) {
-        Log::do_log('info', 'Ticket %s from %s refused because expired (%s)',
+        $log->syslog('info', 'Ticket %s from %s refused because expired (%s)',
             $ticket_number, $ticket->{'email'}, $printable_date);
         $result = 'expired';
     } else {
@@ -573,18 +575,18 @@ sub get_one_time_ticket {
                 $addr, $ticket_number, $robot
             )
             ) {
-            Log::do_log('err',
+            $log->syslog('err',
                 'Unable to set one time ticket %s status to %s',
                 $ticket_number, $addr);
         } elsif (!$sth->rows) {
             # ticket may be removed by task.
-            Log::do_log('info', 'Unable to find one time ticket %s',
+            $log->syslog('info', 'Unable to find one time ticket %s',
                 $ticket_number);
             return {'result' => 'not_found'};
         }
     }
 
-    Log::do_log('info', 'Ticket: %s; Result: %s', $ticket_number, $result);
+    $log->syslog('info', 'Ticket: %s; Result: %s', $ticket_number, $result);
     return {
         'result'      => $result,
         'date'        => $ticket->{'date'},
