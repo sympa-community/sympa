@@ -3379,7 +3379,7 @@ sub delete_list_member {
         $who = tools::clean_email($who);
 
         ## Include in exclusion_table only if option is set.
-        if ($exclude == 1) {
+        if ($exclude) {
             ## Insert in exclusion_table if $user->{'included'} eq '1'
             $self->insert_delete_exclusion($who, 'insert');
 
@@ -8488,11 +8488,11 @@ sub on_the_fly_sync_include {
     my $pertinent_ttl = $self->{'admin'}{'distribution_ttl'}
         || $self->{'admin'}{'ttl'};
     $log->syslog('debug2', '(%s)', $pertinent_ttl);
-    if (   $options{'use_ttl'} != 1
-        || $self->{'last_sync'} < time - $pertinent_ttl) {
+    if (not $options{'use_ttl'}
+        or $self->{'last_sync'} < time - $pertinent_ttl) {
         $log->syslog('notice', "Synchronizing list members...");
         my $return_value = $self->sync_include();
-        if ($return_value == 1) {
+        if ($return_value) {
             $self->remove_task('sync_include');
             return 1;
         } else {
@@ -9908,7 +9908,7 @@ sub get_cert {
         my $state;
         while (<CERT>) {
             chomp;
-            if ($state == 1) {
+            if ($state) {
                 # convert to CRLF for windows clients
                 push(@cert, "$_\r\n");
                 if (/^-+END/) {
@@ -10969,7 +10969,7 @@ sub get_subscription_requests {
 
         my $user_entry = $self->get_list_member($email, probe => 1);
 
-        if (defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
+        if ($user_entry and $user_entry->{'subscribed'}) {
             $log->syslog(
                 'err',
                 'User %s is subscribed to %s already. Deleting subscription request',
