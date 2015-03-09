@@ -716,7 +716,7 @@ sub _aggregate_data {
                       SET number_messages_subscriber =
                           number_messages_subscriber + ?
                       WHERE robot_subscriber = ? AND list_subscriber = ? AND
-                            email_subscriber = ?},
+                            user_subscriber = ?},
                 $row->{'count'},
                 $row->{'robot'}, $row->{'list'},
                 $row->{'email'}
