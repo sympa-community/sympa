@@ -707,6 +707,7 @@ sub _check_db_field_type {
 }
 
 1;
+__END__
 
 =encoding utf-8
 
@@ -718,7 +719,11 @@ Sympa::DatabaseManager - Managing schema of Sympa core database
 
   use Sympa::DatabaseManager;
   
-  $sdm = Sympa::DatabaseManager->instance or die 'Cannot connect to database';
+  $sdm = Sympa::DatabaseManager->instance
+      or die 'Cannot connect to database';
+  $sth = $sdm->do_prepared_query('SELECT FROM ...', ...)
+      or die 'Cannot execute query';
+  Sympa::DatabaseManager->disconnect;
 
   Sympa::DatabaseManager::probe_db() or die 'Database is not up-to-date';
 
@@ -739,21 +744,21 @@ Gets singleton instance of Sympa::Database class managing Sympa core database.
 =item disconnect ( )
 
 I<Class method>.
-Disconnect from core database and destruct singleton instance.
+Disconnects from core database.
 
 =item probe_db ( )
 
 I<Function>.
-TBD.
+If possible, probes database structure and updates it.
 
 =back
 
 =head1 SEE ALSO
 
-L<Sympa::Database>, L<Sympa::DatabaseDriver>.
+L<Sympa::Database>, L<Sympa::DatabaseDescription>, L<Sympa::DatabaseDriver>.
 
 =head1 HISTORY
 
-Sympa Database Manager appeared on Sympa 6.2.
+Sympa Database Manager (SDM) appeared on Sympa 6.2.
 
 =cut

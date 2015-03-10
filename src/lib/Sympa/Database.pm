@@ -502,6 +502,7 @@ sub DESTROY {
 }
 
 1;
+__END__
 
 =encoding utf-8
 
@@ -511,7 +512,13 @@ Sympa::Database - Handling databases
 
 =head1 SYNOPSIS
 
-TBD.
+  use Sympa::Database;
+
+  $database = Sympa::Database->new('SQLite', db_name => '...');
+      or die 'Cannot connect to database';
+  $sth = $database->do_prepared_query('SELECT FROM ...', ...)
+      or die 'Cannot execute query';
+  $database->disconnect;
 
 =head1 DESCRIPTION
 
@@ -524,29 +531,46 @@ TBD.
 =item new ( $db_type, [ option => value, ... ] )
 
 I<Constructor>.
-TBD.
+Creates new database instance.
 
 =item do_operation ( $operation, options... )
 
 I<Instance method>, I<only for LDAP>.
-TBD.
+Performs LDAP search operation.
+About options see L<Net::LDAP/search>.
+
+Returns:
+
+Operation handle (L<LDAP::Search> object or such), or C<undef>.
 
 =item do_prepared_query ( $statement, parameters... )
 
 I<Instance method>, I<only for SQL>.
-TBD.
+Prepares and executes SQL query.
+$statement is an SQL statement that may contain placeholders C<?>.
+
+Returns:
+
+Statement handle (L<DBI::st> object or such), or C<undef>.
 
 =item do_query ( $statement, parameters... )
 
 I<Instance method>, I<only for SQL>.
-TBD.
+Executes SQL query.
+$statement and parameters will be fed to sprintf().
 
-TBD.
+Returns:
+
+Statement handle (L<DBI::st> object or such), or C<undef>.
 
 =back
 
 =head1 SEE ALSO
 
 L<Sympa::DatabaseDriver>, L<Sympa::Datasource>.
+
+=head1 HISTORY
+
+Sympa Database Manager (SDM) appeared on Sympa 6.2.
 
 =cut

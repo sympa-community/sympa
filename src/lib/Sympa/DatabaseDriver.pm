@@ -69,7 +69,7 @@ Sympa::DatabaseDriver - Base class of database drivers for Sympa
 L<Sympa::DatabaseDriver> is the base class of driver classes for
 Sympa Database Manager (SDM).
 
-=head2 Instance methods subclasses should implement.
+=head2 Instance methods subclasses should implement
 
 =over
 
@@ -83,13 +83,13 @@ By default, no packages are required.
 
 I<Overridable>.
 Returns an arrayref including names of required (not optional) parameters.
-By default, returns C<['db_host', 'db_name', 'db_user', 'db_passwd']>.
+By default, returns C<['db_host', 'db_name', 'db_user']>.
 
 =item optional_parameters ( )
 
 I<Overridable>.
 Returns an arrayref including all names of optional parameters.
-By default, returns C<'db_port'>, C<'db_options'> and so on.
+By default, returns C<'db_passwd'>, C<'db_port'>, C<'db_options'> and so on.
 
 =item build_connect_string ( )
 
@@ -151,7 +151,7 @@ Max length of result.
 
 Returns:
 
-Resulting substring.
+String representing the clause which results substring.
 
 =item get_limit_clause ( )
 
@@ -250,7 +250,7 @@ None.
 
 Returns:
 
-A ref to an array containing the list of the tables names in the
+A ref to an array containing the list of the table names in the
 database, C<undef> if something went wrong.
 
 =item add_table ( { table => $table } )
@@ -538,44 +538,24 @@ Get native field type corresponds to generic type.
 The generic type is based on MySQL:
 See L<Sympa::DatabaseDescription/full_db_struct>.
 
+=back
+
+Subclasses of L<Sympa::DatabaseDriver> class also can override methods
+provided by L<Sympa::Database> class:
+
+=over
+
 =item do_operation ( $operation, $parameters, ...)
 
 I<Overridable>, I<only for LDAP driver>.
-TBD.
-
-Parameters:
-
-TBD.
-
-Returns:
-
-Operation handle (L<LDAP::Search> object or such), or C<undef>.
 
 =item do_query ( $query, $parameters, ... )
 
 I<Overridable>, I<only for SQL driver>.
-TBD.
-
-Parameters:
-
-TBD.
-
-Returns:
-
-Statement handle (L<DBI::st> object or such), or C<undef>.
 
 =item do_prepared_query ( $query, $parameters, ... )
 
 I<Overridable>, I<only for SQL driver>.
-TBD.
-
-Parameters:
-
-TBD.
-
-Returns:
-
-Statement handle (L<DBI::st> object or such>, or C<undef>.
 
 =item AS_DOUBLE ( $value )
 
@@ -644,6 +624,6 @@ L<Sympa::Database>, L<Sympa::DatabaseManager>.
 
 =head1 HISTORY
 
-Sympa Database Manager appeared on Sympa 6.2.
+Sympa Database Manager (SDM) appeared on Sympa 6.2.
 
 =cut

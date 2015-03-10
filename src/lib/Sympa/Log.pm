@@ -857,7 +857,7 @@ TBD.
 
 TBD.
 
-=item aggregate_data
+=item aggregate_stat
 
 TBD.
 
