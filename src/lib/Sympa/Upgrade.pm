@@ -44,6 +44,7 @@ use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
+use Sympa::Spool;
 use tools;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
@@ -1364,7 +1365,7 @@ sub upgrade {
                 Sympa::LockedFile->new($spooldir . '/' . $filename, -1, '+<');
             next unless $lock_fh;
 
-            my $metadata = tools::unmarshal_metadata(
+            my $metadata = Sympa::Spool::unmarshal_metadata(
                 $spooldir, $filename,
                 qr{\A([^\s\@]+)\.(\d+)\.(\d+)\z},
                 [qw(list_or_family date rand)]
@@ -1376,7 +1377,7 @@ sub upgrade {
             next unless $message->{rcpt} and $message->{family};
 
             my $new_filename =
-                tools::marshal_metadata($message, '%s.%ld.%d',
+                Sympa::Spool::marshal_metadata($message, '%s.%ld.%d',
                 [qw(rcpt date rand)]);
             next unless $new_filename ne $filename;
 

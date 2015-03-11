@@ -36,6 +36,7 @@ use Conf;
 use Sympa::Constants;
 use Sympa::Log;
 use SDM;
+use Sympa::Spool;
 
 my %options;
 unless (GetOptions(\%options, 'help|h', 'dry_run', 'version|v')) {
@@ -193,7 +194,7 @@ sub process {
             $marshalled =
                 $bulk->store($message, $rcpt, tag => $message->{tag});
         } else {
-            $marshalled = tools::marshal_metadata(
+            $marshalled = Sympa::Spool::marshal_metadata(
                 $message,
                 '%s.%s.%d.%f.%s@%s_%s,?????,????',
                 [   qw(priority packet_priority date time localpart domainpart tag)

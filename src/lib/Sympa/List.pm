@@ -62,6 +62,7 @@ use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
+use Sympa::Spool;
 use Sympa::Task;
 use Sympa::Template;
 use tools;
@@ -2141,7 +2142,7 @@ sub distribute_digest {
         next unless $lock_fh;
 
         my $metadata =
-            tools::unmarshal_metadata($spool, $filename,
+            Sympa::Spool::unmarshal_metadata($spool, $filename,
             qr{\A(\d+)\.(\d+\.\d+)(?:,.*)?\z},
             [qw(date time)]);
         next unless $metadata;
@@ -2571,7 +2572,7 @@ sub send_confirm_to_editor {
         ## move message to spool  mod
         # If crypted, store the crypted form of the message (keep decrypted
         # form for HTML view).
-        my $marshalled = tools::store_spool(
+        my $marshalled = Sympa::Spool::store_spool(
             $modqueue, $message, '%s@%s_%s',
             [qw(localpart domainpart AUTHKEY)],
             original => 1
@@ -2584,7 +2585,7 @@ sub send_confirm_to_editor {
         $log->syslog('info', '%s is stored in mod spool as <%s>',
             $message, $marshalled);
         $modkey = ${
-            tools::unmarshal_metadata(
+            Sympa::Spool::unmarshal_metadata(
                 $modqueue, $marshalled,
                 qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_([^_]+)\z},
                 [qw(localpart domainpart authkey)]
@@ -2753,7 +2754,7 @@ sub send_confirm_to_sender {
 
     # If crypted, store the crypted form of the message.
     my $authkey;
-    my $marshalled = tools::store_spool(
+    my $marshalled = Sympa::Spool::store_spool(
         $authqueue, $message, '%s@%s_%s',
         [qw(localpart domainpart AUTHKEY)],
         original => 1
@@ -2764,7 +2765,7 @@ sub send_confirm_to_sender {
         return undef;
     }
     $authkey = ${
-        tools::unmarshal_metadata(
+        Sympa::Spool::unmarshal_metadata(
             $authqueue, $marshalled,
             qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_([^_]+)\z},
             [qw(localpart domainpart authkey)]
@@ -8950,7 +8951,7 @@ sub store_digest {
     }
     my $oldtime = Sympa::Tools::File::get_mtime($spool);
     my $marshalled =
-        tools::store_spool($spool, $message, '%ld.%f,%ld,%d',
+        Sympa::Spool::store_spool($spool, $message, '%ld.%f,%ld,%d',
         [qw(date TIME PID RAND)]);
     utime $oldtime, $oldtime, $spool;
 
@@ -11474,7 +11475,7 @@ sub has_include_data_sources {
 }
 
 # move a message to a queue or distribute spool
-#DEPRECATED: No longer used.  Use tools::store_spool() (and unlink()).
+#DEPRECATED: No longer used.  Use Sympa::Spool::store_spool() (and unlink()).
 sub move_message {
     my ($self, $file, $queue) = @_;
     $log->syslog('debug2', '(%s, %s, %s)', $file, $self->{'name'}, $queue);

@@ -47,6 +47,7 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Report;
+use Sympa::Spool;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::Password;
@@ -1117,7 +1118,7 @@ sub SendDigest {
     foreach my $listaddress (@dfile) {
         my $filename = $Conf::Conf{'queuedigest'} . '/' . $listaddress;
 
-        my $metadata = tools::unmarshal_metadata(
+        my $metadata = Sympa::Spool::unmarshal_metadata(
             $Conf::Conf{'queuedigest'},
             $listaddress,
             qr/\A([^\s\@]+)(?:\@([\w\.\-]+))?\z/,

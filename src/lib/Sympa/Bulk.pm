@@ -36,7 +36,7 @@ use Sympa::Constants;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
-use tools;
+use Sympa::Spool;
 use Sympa::Tools::File;
 
 my $log = Sympa::Log->instance;
@@ -119,7 +119,7 @@ sub next {
 
         # FIXME: The list or the robot that injected packet can no longer be
         # available.
-        $metadata = tools::unmarshal_metadata(
+        $metadata = Sympa::Spool::unmarshal_metadata(
             $self->{pct_directory},
             $marshalled,
             qr{\A(\w+)\.(\w+)\.(\d+)\.(\d+\.\d+)\.([^\s\@]*)\@([\w\.\-*]*)_(\w+),(\d+),(\d+)/(\w+)\z},
@@ -131,7 +131,7 @@ sub next {
             # Skip messages not yet to be delivered.
             next unless $metadata->{date} <= time;
 
-            my $msg_file = tools::marshal_metadata(
+            my $msg_file = Sympa::Spool::marshal_metadata(
                 $metadata,
                 '%s.%s.%d.%f.%s@%s_%s,%ld,%d',
                 [   qw(priority packet_priority date time localpart domainpart tag pid rand)
@@ -244,7 +244,7 @@ sub store {
     # First, store the message in bulk/msg spool, because as soon as packets
     # are created bulk.pl may distribute them.
 
-    my $marshalled = tools::store_spool(
+    my $marshalled = Sympa::Spool::store_spool(
         $self->{msg_directory},
         $message,
         '%s.%s.%d.%f.%s@%s_%s,%ld,%d',

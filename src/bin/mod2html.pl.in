@@ -14,7 +14,7 @@ use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::Log;
 use Sympa::Message;
-use tools;
+use Sympa::Spool;
 
 my $log = Sympa::Log->instance;
 
@@ -50,7 +50,7 @@ unless ($modspool and opendir SPOOL, $modspool) {
 foreach my $msg_file (sort grep(!/^\./, readdir SPOOL)) {
     next if $msg_file =~ /^\./;
 
-    my $metadata = tools::unmarshal_metadata(
+    my $metadata = Sympa::Spool::unmarshal_metadata(
         $modspool, $msg_file,
         qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_([^_]+)\z},
         [qw(localpart domainpart modkey)]

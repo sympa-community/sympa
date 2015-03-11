@@ -75,6 +75,7 @@ use Sympa::HTMLSanitizer;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Scenario;
+use Sympa::Spool;
 use Sympa::Template;
 use tools;
 use Sympa::Tools::Data;
@@ -600,7 +601,7 @@ sub new_from_template {
 
     # Assign unique ID and log it.
     my $marshalled =
-        tools::marshal_metadata($self, '%s@%s.%ld.%ld,%d',
+        Sympa::Spool::marshal_metadata($self, '%s@%s.%ld.%ld,%d',
         [qw(localpart domainpart date PID RAND)]);
     $self->{messagekey} = $marshalled;
     $log->syslog(

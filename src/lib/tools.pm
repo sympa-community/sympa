@@ -26,22 +26,16 @@ package tools;
 
 use strict;
 use warnings;
-use Digest::MD5;
 use Encode qw();
 use Encode::MIME::Header;    # for 'MIME-Q' encoding
 use English;                 # FIXME: drop $MATCH usage
 use MIME::EncWords;
-use POSIX qw();
-use Sys::Hostname qw();
-use Time::HiRes qw();
 
 use Sympa;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
-use Sympa::List;
 use Sympa::ListDef;
-use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Tools::Data;
@@ -933,78 +927,8 @@ sub get_regexp {
 
 }
 
-=pod 
-
-=head2 sub save_to_bad(HASH $param)
-
-Saves a message file to the "bad/" spool of a given queue. Creates this directory if not found.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<param> : a hash containing all the arguments, which means:
-
-=over 4
-
-=item * I<file> : the characters string of the path to the file to copy to bad;
-
-=item * I<hostname> : the characters string of the name of the virtual host concerned;
-
-=item * I<queue> : the characters string of the name of the queue.
-
-=back
-
-=back 
-
-=head3 Return 
-
-=over
-
-=item * 1 if the file was correctly saved to the "bad/" directory;
-
-=item * undef if something went wrong.
-
-=back 
-
-=cut 
-
-sub save_to_bad {
-
-    my $param = shift;
-
-    my $file     = $param->{'file'};
-    my $robot_id = $param->{'hostname'};
-    my $queue    = $param->{'queue'};
-
-    if (!-d $queue . '/bad') {
-        unless (mkdir $queue . '/bad', 0775) {
-            $log->syslog('notice', 'Unable to create %s/bad/ directory',
-                $queue);
-            Sympa::send_notify_to_listmaster($robot_id,
-                'unable_to_create_dir', {'dir' => "$queue/bad"});
-            return undef;
-        }
-        $log->syslog('debug', 'mkdir %s/bad', $queue);
-    }
-    $log->syslog(
-        'notice',
-        "Saving file %s to %s",
-        $queue . '/' . $file,
-        $queue . '/bad/' . $file
-    );
-    unless (rename($queue . '/' . $file, $queue . '/bad/' . $file)) {
-        $log->syslog(
-            'notice',
-            'Could not rename %s to %s: %m',
-            $queue . '/' . $file,
-            $queue . '/bad/' . $file
-        );
-        return undef;
-    }
-
-    return 1;
-}
+# OBSOLETED.  Moved to _save_to_bad() in archived.pl.
+#sub save_to_bad;
 
 ## Returns the counf of numbers found in the string given as argument.
 # DEPRECATED: No longer used.
@@ -1232,244 +1156,17 @@ sub lang2charset {
     return 'utf-8';              # the last resort
 }
 
-=over 4
-
-=item split_listname ( ROBOT_ID, MAILBOX )
-
-XXX @todo doc
-
-Note:
-For C<-request> and C<-owner> suffix, this function returns
-C<owner> and C<return_path> type, respectively.
-
-=back
-
-=cut
-
-#FIXME: This should be moved to such as Robot package.
-sub split_listname {
-    my $robot_id = shift || '*';
-    my $mailbox = shift;
-    return unless defined $mailbox and length $mailbox;
-
-    my $return_path_suffix =
-        Conf::get_robot_conf($robot_id, 'return_path_suffix');
-    my $regexp = join(
-        '|',
-        map { quotemeta $_ }
-            grep { $_ and length $_ }
-            split(
-            /[\s,]+/, Conf::get_robot_conf($robot_id, 'list_check_suffixes')
-            )
-    );
-
-    if (    $mailbox eq 'sympa'
-        and $robot_id eq $Conf::Conf{'domain'}) {    # compat.
-        return (undef, 'sympa');
-    } elsif ($mailbox eq Conf::get_robot_conf($robot_id, 'email')
-        or $robot_id eq $Conf::Conf{'domain'}
-        and $mailbox eq $Conf::Conf{'email'}) {
-        return (undef, 'sympa');
-    } elsif ($mailbox eq Conf::get_robot_conf($robot_id, 'listmaster_email')
-        or $robot_id eq $Conf::Conf{'domain'}
-        and $mailbox eq $Conf::Conf{'listmaster_email'}) {
-        return (undef, 'listmaster');
-    } elsif ($mailbox =~ /^(\S+)$return_path_suffix$/) {    # -owner
-        return ($1, 'return_path');
-    } elsif (!$regexp) {
-        return ($mailbox);
-    } elsif ($mailbox =~ /^(\S+)-($regexp)$/) {
-        my ($name, $suffix) = ($1, $2);
-        my $type;
-
-        if ($suffix eq 'request') {                         # -request
-            $type = 'owner';
-        } elsif ($suffix eq 'editor') {
-            $type = 'editor';
-        } elsif ($suffix eq 'subscribe') {
-            $type = 'subscribe';
-        } elsif ($suffix eq 'unsubscribe') {
-            $type = 'unsubscribe';
-        } else {
-            $name = $mailbox;
-            $type = 'UNKNOWN';
-        }
-        return ($name, $type);
-    } else {
-        return ($mailbox);
-    }
-}
+# Moved to Sympa::Spool::split_listname().
+#sub split_listname;
 
 # Old name: SympaspoolClassic::analyze_file_name().
-# NOTE: This should be moved to Spool class.
-sub unmarshal_metadata {
-    $log->syslog('debug3', '(%s, %s, %s)', @_);
-    my $spool_dir       = shift;
-    my $marshalled      = shift;
-    my $metadata_regexp = shift;
-    my $metadata_keys   = shift;
+# Moved to Sympa::Spool::unmarshal_metadata().
+#sub unmarshal_metadata;
 
-    my $data;
-    my @matches;
-    unless (@matches = ($marshalled =~ /$metadata_regexp/)) {
-        $log->syslog('debug',
-            'File name %s does not have the proper format: %s',
-            $marshalled, $metadata_regexp);
-        return undef;
-    }
-    $data = {
-        messagekey => $marshalled,
-        map {
-            my $value = shift @matches;
-            (defined $value and length $value) ? ($_ => $value) : ();
-            } @{$metadata_keys}
-    };
+# Moved to Sympa::Spool::marshal_metadata().
+#sub marshal_metadata;
 
-    my ($robot_id, $listname, $type, $list, $priority);
-
-    $robot_id = lc($data->{'domainpart'})
-        if defined $data->{'domainpart'}
-            and length $data->{'domainpart'}
-            and Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
-    ($listname, $type) =
-        tools::split_listname($robot_id || '*', $data->{'localpart'});
-
-    $list = Sympa::List->new($listname, $robot_id || '*', {'just_try' => 1})
-        if defined $listname;
-
-    ## Get priority
-    #FIXME: is this always needed?
-    if (exists $data->{'priority'}) {
-        # Priority was given by metadata.
-        ;
-    } elsif ($type and $type eq 'listmaster') {
-        ## highest priority
-        $priority = 0;
-    } elsif ($type and $type eq 'owner') {    # -request
-        $priority = Conf::get_robot_conf($robot_id, 'request_priority');
-    } elsif ($type and $type eq 'return_path') {    # -owner
-        $priority = Conf::get_robot_conf($robot_id, 'owner_priority');
-    } elsif ($type and $type eq 'sympa') {
-        $priority = Conf::get_robot_conf($robot_id, 'sympa_priority');
-    } elsif (ref $list eq 'Sympa::List') {
-        $priority = $list->{'admin'}{'priority'};
-    } else {
-        $priority = Conf::get_robot_conf($robot_id, 'default_list_priority');
-    }
-
-    $data->{context} = $list || $robot_id || '*';
-    $data->{'listname'} = $listname if $listname;
-    $data->{'listtype'} = $type     if defined $type;
-    $data->{'priority'} = $priority if defined $priority;
-
-    $log->syslog('debug3', 'messagekey=%s, context=%s, priority=%s',
-        $marshalled, $data->{context}, $data->{'priority'});
-
-    return $data;
-}
-
-# NOTE: This should be moved to Spool class.
-sub marshal_metadata {
-    my $message         = shift;
-    my $metadata_format = shift;
-    my $metadata_keys   = shift;
-
-    #FIXME: Currently only "sympa@DOMAIN" and "LISTNAME(-TYPE)@DOMAIN" are
-    # supported.
-    my ($localpart, $domainpart);
-    if (ref $message->{context} eq 'Sympa::List') {
-        ($localpart) = split /\@/,
-            $message->{context}->get_list_address($message->{listtype});
-        $domainpart = $message->{context}->{'domain'};
-    } else {
-        my $robot_id = $message->{context} || '*';
-        $localpart  = Conf::get_robot_conf($robot_id, 'email');
-        $domainpart = Conf::get_robot_conf($robot_id, 'domain');
-    }
-
-    my @args = map {
-        if ($_ eq 'localpart') {
-            $localpart;
-        } elsif ($_ eq 'domainpart') {
-            $domainpart;
-        } elsif ($_ eq 'PID') {
-            $PID;
-        } elsif ($_ eq 'AUTHKEY') {
-            Digest::MD5::md5_hex(time . (int rand 46656) . $domainpart);
-        } elsif ($_ eq 'RAND') {
-            int rand 10000;
-        } elsif ($_ eq 'TIME') {
-            Time::HiRes::time();
-        } elsif (exists $message->{$_}
-            and defined $message->{$_}
-            and !ref($message->{$_})) {
-            $message->{$_};
-        } else {
-            '';
-        }
-    } @{$metadata_keys};
-
-    # Set "C" locale so that decimal point for "%f" will be ".".
-    my $locale_numeric = POSIX::setlocale(POSIX::LC_NUMERIC());
-    POSIX::setlocale(POSIX::LC_NUMERIC(), 'C');
-    my $marshalled = sprintf $metadata_format, @args;
-    POSIX::setlocale(POSIX::LC_NUMERIC(), $locale_numeric);
-    return $marshalled;
-}
-
-# NOTE: This should be moved to Spool class.
-sub store_spool {
-    my $spool_dir       = shift;
-    my $message         = shift;
-    my $metadata_format = shift;
-    my $metadata_keys   = shift;
-    my %options         = @_;
-
-    # At first content is stored into temporary file that has unique name and
-    # is referred only by this function.
-    my $tmppath = sprintf '%s/T.sympa@_tempfile.%s.%ld.%ld',
-        $spool_dir, Sys::Hostname::hostname(), time, $PID;
-    my $fh;
-    unless (open $fh, '>', $tmppath) {
-        die sprintf 'Cannot create %s: %s', $tmppath, $ERRNO;
-    }
-    print $fh $message->to_string(original => $options{original});
-    close $fh;
-
-    # Rename temporary path to the file name including metadata.
-    # Will retry up to five times.
-    my $tries;
-    for ($tries = 0; $tries < 5; $tries++) {
-        my $marshalled = tools::marshal_metadata($message, $metadata_format,
-            $metadata_keys);
-        my $path = $spool_dir . '/' . $marshalled;
-
-        my $lock;
-        unless ($lock = Sympa::LockedFile->new($path, -1, '+')) {
-            next;
-        }
-        if (-e $path) {
-            $lock->close;
-            next;
-        }
-
-        unless (rename $tmppath, $path) {
-            die sprintf 'Cannot create %s: %s', $path, $ERRNO;
-        }
-        $lock->close;
-
-        # Set mtime to be {date} in metadata of the message.
-        my $mtime =
-              defined $message->{date} ? $message->{date}
-            : defined $message->{time} ? $message->{time}
-            :                            time;
-        utime $mtime, $mtime, $path;
-
-        return $marshalled;
-    }
-
-    unlink $tmppath;
-    return undef;
-}
+# Moved to Sympa::Spool::store_spool().
+#sub store_spool;
 
 1;

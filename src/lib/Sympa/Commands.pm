@@ -37,7 +37,7 @@ use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Scenario;
-use tools;
+use Sympa::Spool;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
@@ -2942,7 +2942,7 @@ sub confirm {
         $filename = $queueauth . '/' . $file;
         next unless -f $filename and -r $filename;
 
-        $metadata = tools::unmarshal_metadata(
+        $metadata = Sympa::Spool::unmarshal_metadata(
             $queueauth, $file,
             qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_(\w+)\z},
             [qw(localpart domainpart authkey)]

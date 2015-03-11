@@ -45,6 +45,7 @@ use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message;
 use Sympa::Report;
+use Sympa::Spool;
 use tools;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
@@ -213,7 +214,7 @@ while ($signal ne 'term') {
             Sympa::LockedFile->new($spool . '/' . $filename, -1, '+<');
         next unless $lock_fh;
 
-        my $metadata = tools::unmarshal_metadata(
+        my $metadata = Sympa::Spool::unmarshal_metadata(
             $spool, $filename,
             qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
             [qw(localpart domainpart date)]
@@ -771,7 +772,7 @@ sub process_message {
 
     # do not process messages in list creation only mode, move them to
     # main spool
-    my $marshalled = tools::store_spool(
+    my $marshalled = Sympa::Spool::store_spool(
         $Conf::Conf{'queue'}, $message, '%s@%s.%ld.%ld,%d',
         [qw(localpart domainpart date PID RAND)],
         original => 1

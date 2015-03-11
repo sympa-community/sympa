@@ -49,7 +49,6 @@ use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Robot;
 use SDM;
-use tools;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::File;
 use Sympa::Tools::Time;
@@ -405,7 +404,7 @@ while (!$end) {
                     $dd,   $hh,       $min,      $ss
                 )
                 ) {
-                tools::save_to_bad(
+                _save_to_bad(
                     {   'file'     => $file,
                         'hostname' => $robot_id,
                         'queue'    => $queue,
@@ -442,6 +441,43 @@ $log->syslog('notice', 'Archived exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid('archived', $PID);
 
 exit(0);
+
+# Old name: tools::save_to_bad().
+sub _save_to_bad {
+    my $param = shift;
+
+    my $file     = $param->{'file'};
+    my $robot_id = $param->{'hostname'};
+    my $queue    = $param->{'queue'};
+
+    if (!-d $queue . '/bad') {
+        unless (mkdir $queue . '/bad', 0775) {
+            $log->syslog('notice', 'Unable to create %s/bad/ directory',
+                $queue);
+            Sympa::send_notify_to_listmaster($robot_id,
+                'unable_to_create_dir', {'dir' => "$queue/bad"});
+            return undef;
+        }
+        $log->syslog('debug', 'mkdir %s/bad', $queue);
+    }
+    $log->syslog(
+        'notice',
+        "Saving file %s to %s",
+        $queue . '/' . $file,
+        $queue . '/bad/' . $file
+    );
+    unless (rename($queue . '/' . $file, $queue . '/bad/' . $file)) {
+        $log->syslog(
+            'notice',
+            'Could not rename %s to %s: %m',
+            $queue . '/' . $file,
+            $queue . '/bad/' . $file
+        );
+        return undef;
+    }
+
+    return 1;
+}
 
 ## When we catch signal, just change the value of the loop
 ## variable.

@@ -33,7 +33,7 @@ use Sympa::Constants;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
-use tools;
+use Sympa::Spool;
 use Sympa::Tools::File;
 
 my $log = Sympa::Log->instance;
@@ -106,7 +106,7 @@ sub next {
             -1, '+<');
         next unless $lock_fh;
 
-        $metadata = tools::unmarshal_metadata(
+        $metadata = Sympa::Spool::unmarshal_metadata(
             $self->{directory},
             $marshalled,
             qr{\A(\d+)\.(\d+\.\d+)\.([^\s\@]*)\@([\w\.\-*]*),(\d+),(\d+)},
@@ -154,7 +154,7 @@ sub store {
     $message->{date} = time unless defined $message->{date};
 
     my $marshalled =
-        tools::store_spool($self->{directory}, $message, '%d.%f.%s@%s,%ld,%d',
+        Sympa::Spool::store_spool($self->{directory}, $message, '%d.%f.%s@%s,%ld,%d',
         [qw(date TIME localpart domainpart PID RAND)], %options);
     return unless $marshalled;
 
