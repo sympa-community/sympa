@@ -345,8 +345,6 @@ sub add_stat {
     my $ip        = $options{'client'};
     my $robot     = $options{'robot'};
     my $parameter = $options{'parameter'};
-    my $random    = int(rand(1000000));
-    my $id        = $date . $random;
     my $read      = 0;
 
     if (ref $list eq 'Sympa::List') {
@@ -363,12 +361,12 @@ sub add_stat {
     unless (
         $sdm->do_prepared_query(
             q{INSERT INTO stat_table
-              (id_stat, date_stat, email_stat, operation_stat, list_stat,
+              (date_stat, email_stat, operation_stat, list_stat,
                daemon_stat, user_ip_stat, robot_stat, parameter_stat,
                read_stat)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-            $id,     $date, $mail,  $operation, $list,
-            $daemon, $ip,   $robot, $parameter,
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)},
+            $date,   $mail, $operation, $list,
+            $daemon, $ip,   $robot,     $parameter,
             $read
         )
         ) {

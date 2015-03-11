@@ -1590,6 +1590,22 @@ sub upgrade {
         }
     }
 
+    if (lower_version($previous_version, '6.2b.9')
+        and not lower_version($previous_version, '6.2a.0')) {
+        $log->syslog('info', 'Upgrading stat_table.');
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        # As the field id_stat is no longer used but it has NOT NULL
+        # constraint, it should be deleted.
+        if ($sdm and $sdm->can('delete_field')) {
+            $sdm->delete_field({table => 'stat_table', field => 'id_stat'});
+        } else {
+            $log->syslog('err',
+                'Can\'t delete id_stat field in stat_table.  You must delete it manually.'
+            );
+        }
+    }
+
     return 1;
 }
 
