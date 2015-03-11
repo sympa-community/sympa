@@ -36,6 +36,7 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
+use Sympa;
 use Sympa::Alarm;
 use Conf;
 use Sympa::Constants;
@@ -410,7 +411,7 @@ while (!$end) {
                         'queue'    => $queue,
                     }
                 );
-                tools::send_notify_to_listmaster($robot_id,
+                Sympa::send_notify_to_listmaster($robot_id,
                     'archiving_failed',
                     {'file' => "$file", 'bad' => "$queue/bad"});
             }
@@ -551,7 +552,7 @@ sub rebuild {
     my $tag = Sympa::Archive::get_tag($list);
 
     my $mhonarc_ressources =
-        tools::search_fullpath($list, 'mhonarc-ressources.tt2');
+        Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
 
     if (   ($list->{'admin'}{'web_archive_spam_protection'} ne 'none')
         && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
@@ -826,7 +827,7 @@ sub mail2arc {
         if (!-d $basedir) {
             unless (mkdir $basedir, 0775) {
                 $log->syslog('err', 'Cannot create directory %s', $basedir);
-                tools::send_notify_to_listmaster($robot,
+                Sympa::send_notify_to_listmaster($robot,
                     'unable_to_create_dir', {'dir' => "$basedir"});
             }
             $log->syslog('debug', 'mkdir %s', $basedir);
@@ -940,7 +941,7 @@ sub mail2arc {
         }
 
         my $mhonarc_ressources =
-            tools::search_fullpath($list, 'mhonarc-ressources.tt2');
+            Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
 
         $log->syslog(
             'debug',

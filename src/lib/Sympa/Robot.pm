@@ -28,11 +28,11 @@ use strict;
 use warnings;
 use Encode qw();
 
+use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
 use SDM;
-use tools;
 use Sympa::Tools::File;
 
 my $language = Sympa::Language->instance;
@@ -47,11 +47,11 @@ our %mtime;
 
 our %listmaster_messages_stack;
 
-# MOVED: Use tools::send_file(), or Sympa::Message::new_from_template() with
+# MOVED: Use Sympa::send_file(), or Sympa::Message::new_from_template() with
 # Sympa::Mailer::send_message().
 # sub send_global_file($tpl, $who, $robot, $context, $options);
 
-# MOVED: Use tools::send_notify_to_listmaster() or Sympa::Alarm::flush().
+# MOVED: Use Sympa::send_notify_to_listmaster() or Sympa::Alarm::flush().
 # sub send_notify_to_listmaster($operation, $robot, $data, $checkstack, $purge);
 
 ## Is the user listmaster
@@ -183,7 +183,7 @@ sub load_topics {
     my $robot = shift;
     $log->syslog('debug2', '(%s)', $robot);
 
-    my $conf_file = tools::search_fullpath($robot, 'topics.conf');
+    my $conf_file = Sympa::search_fullpath($robot, 'topics.conf');
 
     unless ($conf_file) {
         $log->syslog('err', 'No topics.conf defined');

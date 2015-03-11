@@ -32,6 +32,7 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
+use Sympa;
 use Sympa::Alarm;
 use Sympa::Commands;
 use Conf;
@@ -786,7 +787,7 @@ sub process_message {
         my $antivirus_notify =
             Conf::get_robot_conf($robot, 'antivirus_notify') || 'none';
         if ($antivirus_notify eq 'sender') {
-            tools::send_file(
+            Sympa::send_file(
                 $robot,
                 'your_infected_msg',
                 $sender,
@@ -797,7 +798,7 @@ sub process_message {
                 }
             );
         } elsif ($antivirus_notify eq 'delivery_status') {
-            tools::send_dsn(
+            Sympa::send_dsn(
                 $message->{context},
                 $message,
                 {   'virus_name' => $rc,
@@ -823,7 +824,7 @@ sub process_message {
         );
         return undef;
     } elsif (!defined($rc)) {
-        tools::send_notify_to_listmaster(
+        Sympa::send_notify_to_listmaster(
             $robot,
             'antivirus_failed',
             [   sprintf
@@ -876,7 +877,7 @@ sub process_message {
             if ($loop_info{$sender}{'count'} ==
                 $Conf::Conf{'loop_command_max'}) {
                 ## Notify listmaster
-                tools::send_notify_to_listmaster($robot, 'loop_command',
+                Sympa::send_notify_to_listmaster($robot, 'loop_command',
                     {'msg' => $message});
             }
 
@@ -981,7 +982,7 @@ sub DoForward {
             );
             my $sympa_email = Conf::get_robot_conf($robot, 'sympa');
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $robot,
                     'list_unknown',
                     $sender,
@@ -1219,7 +1220,7 @@ sub DoMessage {
         my $sympa_email = Conf::get_robot_conf($robot_id, 'sympa');
 
         unless (
-            tools::send_file(
+            Sympa::send_file(
                 $robot_id,
                 'list_unknown',
                 $sender,
@@ -1469,7 +1470,7 @@ sub DoMessage {
                 $message,
                 $list
             );
-            tools::send_dsn($list, $message, {}, '5.6.5');
+            Sympa::send_dsn($list, $message, {}, '5.6.5');
             return undef;
         }
 
@@ -1523,7 +1524,7 @@ sub DoMessage {
                 $message,
                 $list
             );
-            tools::send_dsn($list, $message, {}, '5.6.5');
+            Sympa::send_dsn($list, $message, {}, '5.6.5');
             return undef;
         }
 
@@ -1578,7 +1579,7 @@ sub DoMessage {
                 $message,
                 $list
             );
-            tools::send_dsn($list, $message, {}, '5.6.5');
+            Sympa::send_dsn($list, $message, {}, '5.6.5');
             return undef;
         }
 
@@ -1647,7 +1648,7 @@ sub DoMessage {
                 $message,
                 $list
             );
-            tools::send_dsn($list, $message, {}, '5.6.5');
+            Sympa::send_dsn($list, $message, {}, '5.6.5');
             return undef;
         }
 
@@ -1717,7 +1718,7 @@ sub DoMessage {
         unless ($quiet or $message->{'spam_status'} eq 'spam') {
             if (defined $result->{'tt2'}) {
                 unless (
-                    tools::send_file(
+                    Sympa::send_file(
                         $list, $result->{'tt2'},
                         $sender, {'auto_submitted' => 'auto-replied'}
                     )

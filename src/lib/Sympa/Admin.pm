@@ -42,6 +42,7 @@ use Encode qw();
 use English qw(-no_match_vars);
 use File::Copy qw();
 
+use Sympa;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
@@ -53,7 +54,6 @@ use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
 use Sympa::Template;
-use tools;
 use Sympa::Tools::File;
 use Sympa::User;
 
@@ -222,7 +222,7 @@ sub create_list_old {
     }
 
     ## Check the template supposed to be used exist.
-    my $template_file = tools::search_fullpath($robot, 'config.tt2',
+    my $template_file = Sympa::search_fullpath($robot, 'config.tt2',
         subdir => 'create_list_templates/' . $list_tpl);
     unless (defined $template_file) {
         $log->syslog('err', 'No template %s found', $list_tpl);
@@ -452,7 +452,7 @@ sub create_list {
     }
 
     ## template file
-    my $template_file = tools::search_fullpath($family, 'config.tt2');
+    my $template_file = Sympa::search_fullpath($family, 'config.tt2');
     unless (defined $template_file) {
         $log->syslog('err', 'No config template from family %s@%s',
             $family->{'name'}, $robot);
@@ -543,7 +543,7 @@ sub create_list {
         push @files_to_parse, $file;
     }
     for my $file (@files_to_parse) {
-        my $template_file = tools::search_fullpath($family, $file . ".tt2");
+        my $template_file = Sympa::search_fullpath($family, $file . ".tt2");
         if (defined $template_file) {
             my $file_content;
             my $template =
@@ -653,7 +653,7 @@ sub update_list {
     }
 
     ## template file
-    my $template_file = tools::search_fullpath($family, 'config.tt2');
+    my $template_file = Sympa::search_fullpath($family, 'config.tt2');
     unless (defined $template_file) {
         $log->syslog('err', 'No config template from family %s@%s',
             $family->{'name'}, $robot);
@@ -719,7 +719,7 @@ sub update_list {
         push @files_to_parse, $file;
     }
     for my $file (@files_to_parse) {
-        my $template_file = tools::search_fullpath($family, $file . ".tt2");
+        my $template_file = Sympa::search_fullpath($family, $file . ".tt2");
         if (defined $template_file) {
             my $file_content;
 
@@ -906,7 +906,7 @@ sub rename_list {
     # set list status to pending if creation list is moderated
     if ($r_action =~ /listmaster/) {
         $list->{'admin'}{'status'} = 'pending';
-        tools::send_notify_to_listmaster(
+        Sympa::send_notify_to_listmaster(
             $list,
             'request_list_renaming',
             {   'new_listname' => $param{'new_listname'},
@@ -1677,7 +1677,7 @@ sub change_user_email {
                 $list->get_list_admin($role, $in{'current_email'});
             if ($admin_user->{'included'}) {
                 ## Notify listmaster
-                tools::send_notify_to_listmaster(
+                Sympa::send_notify_to_listmaster(
                     $list,
                     'failed_to_change_included_admin',
                     {   'current_email' => $in{'current_email'},
@@ -1714,7 +1714,7 @@ sub change_user_email {
     }
     ## Notify listmasters that list owners/moderators email have changed
     if (keys %updated_lists) {
-        tools::send_notify_to_listmaster(
+        Sympa::send_notify_to_listmaster(
             $robot_id,
             'listowner_email_changed',
             {   'previous_email' => $in{'current_email'},

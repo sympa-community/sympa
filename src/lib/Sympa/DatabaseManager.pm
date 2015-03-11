@@ -27,12 +27,12 @@ package Sympa::DatabaseManager;
 use strict;
 use warnings;
 
+use Sympa;
 use Conf;
 use Sympa::Constants;
 use Sympa::Database;
 use Sympa::DatabaseDescription;
 use Sympa::Log;
-use tools;
 use Sympa::Tools::Data;
 
 my $log = Sympa::Log->instance;
@@ -280,7 +280,7 @@ sub probe_db {
     }
 
     ## Notify listmaster
-    tools::send_notify_to_listmaster('*', 'db_struct_updated',
+    Sympa::send_notify_to_listmaster('*', 'db_struct_updated',
         {'report' => \@report})
         if @report;
 

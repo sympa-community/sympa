@@ -27,10 +27,10 @@ package Sympa::Report;
 use strict;
 use warnings;
 
+use Sympa;
 use Sympa::Bulk;
 use Sympa::Log;
 use Sympa::Message;
-use tools;
 
 my $log = Sympa::Log->instance;
 
@@ -126,7 +126,7 @@ sub reject_report_msg {
         $param->{'who'}    = $user;
         $param->{'action'} = 'message diffusion';
         $param->{'msg_id'} = $param->{'msg_id'};
-        tools::send_notify_to_listmaster(($list || $robot),
+        Sympa::send_notify_to_listmaster(($list || $robot),
             'mail_intern_error', $param);
     }
     return 1;
@@ -416,7 +416,7 @@ sub global_report_cmd {
             $param->{'who'}    = $sender;
             $param->{'action'} = 'Command process';
 
-            tools::send_notify_to_listmaster($robot, 'mail_intern_error',
+            Sympa::send_notify_to_listmaster($robot, 'mail_intern_error',
                 $param);
         } else {
             $log->syslog('notice',
@@ -500,7 +500,7 @@ sub reject_report_cmd {
             $param->{'who'}      = $sender;
             $param->{'action'}   = 'Command process';
 
-            tools::send_notify_to_listmaster($robot, 'mail_intern_error',
+            Sympa::send_notify_to_listmaster($robot, 'mail_intern_error',
                 $param);
         } else {
             $log->syslog('notice',
@@ -792,7 +792,7 @@ sub reject_report_web {
             $param->{'who'}   = $user;
             $param->{'action'} ||= 'Command process';
 
-            tools::send_notify_to_listmaster(($list || $robot),
+            Sympa::send_notify_to_listmaster(($list || $robot),
                 'web_' . $type . '_error', $param);
         } else {
             $log->syslog('notice',

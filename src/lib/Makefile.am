@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nobase_modules_DATA = \
+	Sympa.pm \
 	Sympa/Admin.pm \
 	Sympa/Archive.pm \
 	Sympa/Auth.pm \
@@ -90,6 +91,7 @@ nobase_modules_DATA = \
 man3dir = $(mandir)/man3
 man3ext = 3Sympa
 MAN3PM = \
+	Sympa.pm \
 	Sympa/Alarm.pm \
 	Sympa/Bulk.pm \
 	Sympa/ConfDef.pm \

@@ -32,6 +32,7 @@ use Pod::Usage;
 use POSIX qw();
 use Template;
 
+use Sympa;
 use Sympa::Alarm;
 use Sympa::Bulk;
 use Conf;
@@ -272,7 +273,7 @@ while (!$end) {
 
     ## List all tasks
     unless (Sympa::Task::list_tasks($spool_task)) {
-        tools::send_notify_to_listmaster('*', 'intern_error',
+        Sympa::send_notify_to_listmaster('*', 'intern_error',
             {'error' => "Failed to list task files in $spool_task"});
         $log->syslog('err', "Failed to list task files in %s", $spool_task);
         exit -1;
@@ -352,7 +353,7 @@ while (!$end) {
     ## Execute existing tasks
     ## List all tasks
     unless (Sympa::Task::list_tasks($spool_task)) {
-        tools::send_notify_to_listmaster('*', 'intern_error',
+        Sympa::send_notify_to_listmaster('*', 'intern_error',
             {'error' => "Failed to list task files in $spool_task"});
         $log->syslog('err', "Failed to list task files in %s", $spool_task);
         exit -1;
@@ -471,7 +472,7 @@ sub create {
     # for global model
     if ($object eq '_global') {
         unless (
-            $model_file = tools::search_fullpath(
+            $model_file = Sympa::search_fullpath(
                 '*', $model_name, subdir => 'global_task_models'
             )
             ) {
@@ -488,7 +489,7 @@ sub create {
         $Rdata->{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
 
         unless (
-            $model_file = tools::search_fullpath(
+            $model_file = Sympa::search_fullpath(
                 $list, $model_name, subdir => 'list_task_models'
             )
             ) {
@@ -974,7 +975,7 @@ sub send_msg {
             $log->syslog('notice', '--> message sent to %s', $email);
             unless ($log_only) {
                 unless (
-                    tools::send_file(
+                    Sympa::send_file(
                         '*', $template, $email, $Rvars->{$var}{$email}
                     )
                     ) {
@@ -990,7 +991,7 @@ sub send_msg {
             $log->syslog('notice', '--> message sent to %s', $email);
             unless ($log_only) {
                 unless (
-                    tools::send_file(
+                    Sympa::send_file(
                         $list, $template, $email, $Rvars->{$var}{$email}
                     )
                     ) {
@@ -2008,7 +2009,7 @@ sub error {
     $log->syslog('err', '%s', $message);
     change_label($task_file, 'ERROR') unless $task_file eq '';
     #FIXME: Coresponding mail template would be added.
-    tools::send_notify_to_listmaster('*', 'error_in_task', \@param);
+    Sympa::send_notify_to_listmaster('*', 'error_in_task', \@param);
 }
 
 sub sync_include {

@@ -31,6 +31,7 @@ use warnings;
 use English qw(-no_match_vars);
 use Storable;
 
+use Sympa;
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
@@ -805,7 +806,7 @@ sub checkfiles {
     if (defined $Conf{'cafile'} && $Conf{'cafile'}) {
         unless (-f $Conf{'cafile'} && -r $Conf{'cafile'}) {
             $log->syslog('err', 'Cannot access cafile %s', $Conf{'cafile'});
-            tools::send_notify_to_listmaster('*', 'cannot_access_cafile',
+            Sympa::send_notify_to_listmaster('*', 'cannot_access_cafile',
                 [$Conf{'cafile'}]);
             $config_err++;
         }
@@ -814,7 +815,7 @@ sub checkfiles {
     if (defined $Conf{'capath'} && $Conf{'capath'}) {
         unless (-d $Conf{'capath'} && -x $Conf{'capath'}) {
             $log->syslog('err', 'Cannot access capath %s', $Conf{'capath'});
-            tools::send_notify_to_listmaster('*', 'cannot_access_capath',
+            Sympa::send_notify_to_listmaster('*', 'cannot_access_capath',
                 [$Conf{'capath'}]);
             $config_err++;
         }
@@ -827,7 +828,7 @@ sub checkfiles {
             'Error in config: queuebounce and bounce_path parameters pointing to the same directory (%s)',
             $Conf{'queuebounce'}
         );
-        tools::send_notify_to_listmaster(
+        Sympa::send_notify_to_listmaster(
             '*',
             'queuebounce_and_bounce_path_are_the_same',
             [$Conf{'queuebounce'}]
@@ -843,7 +844,7 @@ sub checkfiles {
             'Error in config: queue and queueautomatic parameters pointing to the same directory (%s)',
             $Conf{'queue'}
         );
-        tools::send_notify_to_listmaster('*',
+        Sympa::send_notify_to_listmaster('*',
             'queue_and_queueautomatic_are_the_same',
             [$Conf{'queue'}]);
         $config_err++;
@@ -1231,7 +1232,7 @@ sub _load_auth {
 sub load_charset {
     my $charset = {};
 
-    my $config_file = tools::search_fullpath('*', 'charset.conf');
+    my $config_file = Sympa::search_fullpath('*', 'charset.conf');
     return {} unless $config_file;
 
     unless (open CONFIG, $config_file) {
@@ -1263,7 +1264,7 @@ sub load_charset {
 
 ## load nrcpt file (limite receipient par domain
 sub load_nrcpt_by_domain {
-    my $config_file = tools::search_fullpath('*', 'nrcpt_by_domain.conf');
+    my $config_file = Sympa::search_fullpath('*', 'nrcpt_by_domain.conf');
     return unless $config_file;
 
     my $line_num        = 0;
@@ -2171,7 +2172,7 @@ sub _load_single_robot_config {
             $config_file);
         unless (-r $config_file) {
             $log->syslog('err', 'No read access on %s', $config_file);
-            tools::send_notify_to_listmaster(
+            Sympa::send_notify_to_listmaster(
                 '*',
                 'cannot_access_robot_conf',
                 [   "No read access on $config_file. you should change privileges on this file to activate this virtual host. "
@@ -2462,7 +2463,7 @@ sub _store_source_file_name {
     $param->{'config_hash'}{'source_file'} = $param->{'config_file'};
 }
 
-# FXIME:Use tools::search_fullpath().
+# FXIME:Use Sympa::search_fullpath().
 sub _get_config_file_name {
     my $param = shift;
     my $config_file;

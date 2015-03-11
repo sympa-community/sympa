@@ -27,6 +27,7 @@ package Sympa::Commands;
 use strict;
 use warnings;
 
+use Sympa;
 use Sympa::Archive;
 use Conf;
 use Sympa::Language;
@@ -193,7 +194,7 @@ sub help {
     $data->{'subject'}        = $language->gettext("User guide");
     $data->{'auto_submitted'} = 'auto-replied';
 
-    unless (tools::send_file($robot, "helpfile", $sender, $data)) {
+    unless (Sympa::send_file($robot, "helpfile", $sender, $data)) {
         $log->syslog('notice', 'Unable to send template "helpfile" to %s',
             $sender);
         Sympa::Report::reject_report_cmd('intern_quiet', '', {}, $cmd_line,
@@ -247,7 +248,7 @@ sub lists {
         unless (defined $action) {
             my $error =
                 "Unable to evaluate scenario 'visibility' for list $l";
-            tools::send_notify_to_listmaster(
+            Sympa::send_notify_to_listmaster(
                 $list,
                 'intern_error',
                 {   'error'          => $error,
@@ -269,7 +270,7 @@ sub lists {
     $data->{'lists'}          = $lists;
     $data->{'auto_submitted'} = 'auto-replied';
 
-    unless (tools::send_file($robot, 'lists', $sender, $data)) {
+    unless (Sympa::send_file($robot, 'lists', $sender, $data)) {
         $log->syslog('notice', 'Unable to send template "lists" to %s',
             $sender);
         Sympa::Report::reject_report_cmd('intern_quiet', '', {}, $cmd_line,
@@ -347,7 +348,7 @@ sub stats {
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $list, $result->{'tt2'},
                     $sender, {'auto_submitted' => 'auto-replied'}
                 )
@@ -375,7 +376,7 @@ sub stats {
         );
 
         unless (
-            tools::send_file(
+            Sympa::send_file(
                 $list,
                 'stats_report',
                 $sender,
@@ -483,7 +484,7 @@ sub getfile {
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $list, $result->{'tt2'},
                     $sender, {'auto_submitted' => 'auto-replied'}
                 )
@@ -609,7 +610,7 @@ sub last {
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $list, $result->{'tt2'},
                     $sender, {'auto_submitted' => 'auto-replied'}
                 )
@@ -709,7 +710,7 @@ sub index {
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $list, $result->{'tt2'},
                     $sender, {'auto_submitted' => 'auto-replied'}
                 )
@@ -738,7 +739,7 @@ sub index {
 
     my @l = $list->archive_ls();
     unless (
-        tools::send_file(
+        Sympa::send_file(
             $list, 'index_archive', $sender,
             {'archives' => \@l, 'auto_submitted' => 'auto-replied'}
         )
@@ -825,7 +826,7 @@ sub review {
 
     if ($action =~ /request_auth/i) {
         $log->syslog('debug2', 'Auth requested from %s', $sender);
-        unless (tools::request_auth($list, $sender, 'review')) {
+        unless (Sympa::request_auth($list, $sender, 'review')) {
             my $error =
                 'Unable to request authentication for command "review"';
             Sympa::Report::reject_report_cmd('intern', $error,
@@ -840,7 +841,7 @@ sub review {
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $list, $result->{'tt2'},
                     $sender, {'auto_submitted' => 'auto-replied'}
                 )
@@ -881,7 +882,7 @@ sub review {
             }
         } while ($user = $list->get_next_list_member());
         unless (
-            tools::send_file(
+            Sympa::send_file(
                 $list, 'review', $sender,
                 {   'users'   => \@users,
                     'total'   => $list->get_total(),
@@ -1053,7 +1054,7 @@ sub subscribe {
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $list, $result->{'tt2'},
                     $sender, {'auto_submitted' => 'auto-replied'}
                 )
@@ -1095,7 +1096,7 @@ sub subscribe {
             $list->send_notify_to_owner(
                 'subrequest',
                 {   'who'     => $sender,
-                    'keyauth' => tools::compute_auth($list, $sender, 'add'),
+                    'keyauth' => Sympa::compute_auth($list, $sender, 'add'),
                     'replyto' => Conf::get_robot_conf($robot, 'sympa'),
                     'gecos'   => $comment
                 }
@@ -1127,7 +1128,7 @@ sub subscribe {
     if ($action =~ /request_auth/i) {
         my $cmd = 'subscribe';
         $cmd = "quiet $cmd" if $quiet;
-        unless (tools::request_auth($list, $sender, $cmd, $comment)) {
+        unless (Sympa::request_auth($list, $sender, $cmd, $comment)) {
             my $error =
                 'Unable to request authentication for command "subscribe"';
             Sympa::Report::reject_report_cmd('intern', $error,
@@ -1297,7 +1298,7 @@ sub info {
 
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
-            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
+            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
                 $log->syslog('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
                 Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
@@ -1352,7 +1353,7 @@ sub info {
         my $wwsympa_url = Conf::get_robot_conf($robot, 'wwsympa_url');
         $data->{'url'} = $wwsympa_url . '/info/' . $list->{'name'};
 
-        unless (tools::send_file($list, 'info_report', $sender, $data)) {
+        unless (Sympa::send_file($list, 'info_report', $sender, $data)) {
             $log->syslog('notice',
                 'Unable to send template "info_report" to %s', $sender);
             Sympa::Report::reject_report_cmd('intern_quiet', '',
@@ -1434,7 +1435,7 @@ sub signoff {
             unless (defined $action) {
                 my $error =
                     "Unable to evaluate scenario 'visibility' for list $l";
-                tools::send_notify_to_listmaster(
+                Sympa::send_notify_to_listmaster(
                     $list,
                     'intern_error',
                     {   'error'  => $error,
@@ -1504,7 +1505,7 @@ sub signoff {
 
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
-            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
+            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
                 $log->syslog('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
                 Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
@@ -1527,7 +1528,7 @@ sub signoff {
         }
         my $cmd = 'signoff';
         $cmd = "quiet $cmd" if $quiet;
-        unless (tools::request_auth($list, $to, $cmd)) {
+        unless (Sympa::request_auth($list, $to, $cmd)) {
             my $error =
                 'Unable to request authentication for command "signoff"';
             Sympa::Report::reject_report_cmd('intern', $error,
@@ -1548,7 +1549,7 @@ sub signoff {
             $list->send_notify_to_owner(
                 'sigrequest',
                 {   'who'     => $sender,
-                    'keyauth' => tools::compute_auth($list, $sender, 'del')
+                    'keyauth' => Sympa::compute_auth($list, $sender, 'del')
                 }
             )
             ) {
@@ -1624,7 +1625,7 @@ sub signoff {
 
         unless ($quiet || ($action =~ /quiet/i)) {
             ## Send bye file to subscriber
-            unless (tools::send_file($list, 'bye', $email, {})) {
+            unless (Sympa::send_file($list, 'bye', $email, {})) {
                 $log->syslog('notice', 'Unable to send template "bye" to %s',
                     $email);
             }
@@ -1722,7 +1723,7 @@ sub add {
 
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
-            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
+            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
                 $log->syslog('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
                 Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
@@ -1740,7 +1741,7 @@ sub add {
     if ($action =~ /request_auth/i) {
         my $cmd = 'add';
         $cmd = "quiet $cmd" if $quiet;
-        unless (tools::request_auth($list, $sender, $cmd, $email, $comment)) {
+        unless (Sympa::request_auth($list, $sender, $cmd, $email, $comment)) {
             my $error = 'Unable to request authentication for command "add"';
             Sympa::Report::reject_report_cmd('intern', $error,
                 {'listname' => $which},
@@ -1915,7 +1916,7 @@ sub invite {
 
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
-            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
+            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
                 $log->syslog('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
                 Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
@@ -1932,7 +1933,7 @@ sub invite {
 
     if ($action =~ /request_auth/i) {
         unless (
-            tools::request_auth($list, $sender, 'invite', $email, $comment)) {
+            Sympa::request_auth($list, $sender, 'invite', $email, $comment)) {
             my $error =
                 'Unable to request authentication for command "invite"';
             Sympa::Report::reject_report_cmd('intern', $error,
@@ -1985,12 +1986,12 @@ sub invite {
             }
 
             if ($action =~ /request_auth/i) {
-                my $keyauth = tools::compute_auth($list, $email, 'subscribe');
+                my $keyauth = Sympa::compute_auth($list, $email, 'subscribe');
                 my $command = "auth $keyauth sub $which $comment";
                 $context{'subject'} = $command;
                 $context{'url'}     = "mailto:$sympa?subject=$command";
                 $context{'url'} =~ s/\s/%20/g;
-                unless (tools::send_file($list, 'invite', $email, \%context))
+                unless (Sympa::send_file($list, 'invite', $email, \%context))
                 {
                     $log->syslog('notice',
                         'Unable to send template "invite" to %s', $email);
@@ -2020,7 +2021,7 @@ sub invite {
                 $context{'subject'} = "sub $which $comment";
                 $context{'url'} = "mailto:$sympa?subject=$context{'subject'}";
                 $context{'url'} =~ s/\s/%20/g;
-                unless (tools::send_file($list, 'invite', $email, \%context))
+                unless (Sympa::send_file($list, 'invite', $email, \%context))
                 {
                     $log->syslog('notice',
                         'Unable to send template "invite" to %s', $email);
@@ -2058,7 +2059,7 @@ sub invite {
                 );
                 if (defined $result->{'tt2'}) {
                     unless (
-                        tools::send_file(
+                        Sympa::send_file(
                             $list, $result->{'tt2'}, $sender, {}
                         )
                         ) {
@@ -2204,7 +2205,7 @@ sub remind {
         $log->syslog('info', 'Remind for list %s from %s refused',
             $listname, $sender);
         if (defined $result->{'tt2'}) {
-            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
+            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
                 $log->syslog('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
 
@@ -2219,7 +2220,7 @@ sub remind {
     } elsif ($action =~ /request_auth/i) {
         $log->syslog('debug2', 'Auth requested from %s', $sender);
         if ($listname eq '*') {
-            unless (tools::request_auth('*', $sender, 'remind')) {
+            unless (Sympa::request_auth('*', $sender, 'remind')) {
                 my $error =
                     'Unable to request authentication for command "remind"';
                 Sympa::Report::reject_report_cmd('intern', $error,
@@ -2228,7 +2229,7 @@ sub remind {
                 return undef;
             }
         } else {
-            unless (tools::request_auth($list, $sender, 'remind')) {
+            unless (Sympa::request_auth($list, $sender, 'remind')) {
                 my $error =
                     'Unable to request authentication for command "remind"';
                 Sympa::Report::reject_report_cmd('intern', $error,
@@ -2321,7 +2322,7 @@ sub remind {
                     unless (defined $action) {
                         my $error =
                             "Unable to evaluate scenario 'visibility' for list $listname";
-                        tools::send_notify_to_listmaster(
+                        Sympa::send_notify_to_listmaster(
                             $list,
                             'intern_error',
                             {   'error'  => $error,
@@ -2365,7 +2366,7 @@ sub remind {
 
                 #FIXME: needs VERP?
                 unless (
-                    tools::send_file(
+                    Sympa::send_file(
                         $robot, 'global_remind', $email, \%context
                     )
                     ) {
@@ -2474,7 +2475,7 @@ sub del {
 
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
-            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
+            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
                 $log->syslog('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
                 Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
@@ -2491,7 +2492,7 @@ sub del {
     if ($action =~ /request_auth/i) {
         my $cmd = 'del';
         $cmd = "quiet $cmd" if $quiet;
-        unless (tools::request_auth($list, $sender, $cmd, $who)) {
+        unless (Sympa::request_auth($list, $sender, $cmd, $who)) {
             my $error = 'Unable to request authentication for command "del"';
             Sympa::Report::reject_report_cmd('intern', $error,
                 {'listname' => $which, 'list' => $list},
@@ -2535,7 +2536,7 @@ sub del {
         ## Send a notice to the removed user, unless the owner indicated
         ## quiet del.
         unless ($quiet || $action =~ /quiet/i) {
-            unless (tools::send_file($list, 'removed', $who, {})) {
+            unless (Sympa::send_file($list, 'removed', $who, {})) {
                 $log->syslog('notice',
                     'Unable to send template "removed" to %s', $who);
             }
@@ -2635,7 +2636,7 @@ sub set {
             unless (defined $action) {
                 my $error =
                     "Unable to evaluate scenario 'visibility' for list $l";
-                tools::send_notify_to_listmaster(
+                Sympa::send_notify_to_listmaster(
                     $list,
                     'intern_error',
                     {   'error'  => $error,
@@ -3099,7 +3100,7 @@ sub confirm {
         unless ($2 eq 'quiet') {
             if (defined $result->{'tt2'}) {
                 unless (
-                    tools::send_file($list, $result->{'tt2'}, $sender, {})) {
+                    Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
                     $log->syslog('notice',
                         "Commands::confirm(): Unable to send template '$result->{'tt2'}' to $sender"
                     );
@@ -3252,7 +3253,7 @@ sub reject {
         ## Notify author of message
         unless ($quiet) {
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $list, 'reject', $rejected_sender, \%context
                 )
                 ) {
@@ -3403,7 +3404,7 @@ sub modindex {
     }
 
     unless (
-        tools::send_file(
+        Sympa::send_file(
             $list,
             'modindex',
             $sender,
@@ -3471,7 +3472,7 @@ sub which {
         unless (defined $action) {
             my $error =
                 "Unable to evaluate scenario 'visibility' for list $listname";
-            tools::send_notify_to_listmaster(
+            Sympa::send_notify_to_listmaster(
                 $list,
                 'intern_error',
                 {   'error'  => $error,
@@ -3504,7 +3505,7 @@ sub which {
         $data->{'is_editor'} = 1;
     }
 
-    unless (tools::send_file($robot, 'which', $sender, $data)) {
+    unless (Sympa::send_file($robot, 'which', $sender, $data)) {
         $log->syslog('notice', 'Unable to send template "which" to %s',
             $sender);
         Sympa::Report::reject_report_cmd('intern_quiet', '',
@@ -3551,10 +3552,10 @@ sub get_auth_method {
 
         my $compute;
         if (ref $list eq 'Sympa::List') {
-            $compute = tools::compute_auth($list, $email, $cmd);
+            $compute = Sympa::compute_auth($list, $email, $cmd);
             $that = $list->{'domain'};    # Robot
         } else {
-            $compute = tools::compute_auth('*', $email, $cmd);
+            $compute = Sympa::compute_auth('*', $email, $cmd);
             $that = '*';    # Site
         }
         if ($auth eq $compute) {

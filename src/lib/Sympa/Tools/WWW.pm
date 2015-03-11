@@ -29,6 +29,7 @@ use warnings;
 use English qw(-no_match_vars);
 use File::Path qw();
 
+use Sympa;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -525,7 +526,7 @@ sub _load_mime_types {
     my %types = ();
 
     my @localisation = (
-        tools::search_fullpath('*', 'mime.types'),
+        Sympa::search_fullpath('*', 'mime.types'),
         '/etc/mime.types', '/usr/local/apache/conf/mime.types',
         '/etc/httpd/conf/mime.types',
     );
@@ -599,7 +600,7 @@ sub update_css {
             if (@$error) {
                 my ($target, $err) = %{$error->[-1] || {}};
 
-                tools::send_notify_to_listmaster($robot, 'cannot_mkdir',
+                Sympa::send_notify_to_listmaster($robot, 'cannot_mkdir',
                     ["Could not create $target: $err"]);
                 $log->syslog('err', 'Failed to create %s: %s', $target, $err);
 
@@ -609,7 +610,7 @@ sub update_css {
         }
 
         my $css_tt2_path =
-            tools::search_fullpath($robot, 'css.tt2', subdir => 'web_tt2');
+            Sympa::search_fullpath($robot, 'css.tt2', subdir => 'web_tt2');
         my $css_tt2_mtime = Sympa::Tools::File::get_mtime($css_tt2_path);
 
         foreach my $css ('style.css', 'print.css', 'fullPage.css',
@@ -639,7 +640,7 @@ sub update_css {
 
                 unless (open CSS, '>', $dir . '/' . $css) {
                     my $errno = $ERRNO;
-                    tools::send_notify_to_listmaster($robot,
+                    Sympa::send_notify_to_listmaster($robot,
                         'cannot_open_file',
                         ["Could not open file $dir/$css: $errno"]);
                     $log->syslog('err',
@@ -655,7 +656,7 @@ sub update_css {
                 unless ($css_template->parse($param, 'css.tt2', \*CSS)) {
                     my $error = $css_template->{last_error};
                     $param->{'tt2_error'} = $error;
-                    tools::send_notify_to_listmaster($robot, 'web_tt2_error',
+                    Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                         [$error]);
                     $log->syslog('err', 'Error while installing %s/%s',
                         $dir, $css);
@@ -669,7 +670,7 @@ sub update_css {
     }
     if ($css_updated) {
         ## Notify main listmaster
-        tools::send_notify_to_listmaster(
+        Sympa::send_notify_to_listmaster(
             '*',
             'css_updated',
             [   "Static CSS files have been updated ; check log file for details"

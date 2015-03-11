@@ -40,6 +40,7 @@ use MIME::Head;
 use Pod::Usage;
 use POSIX qw();
 
+use Sympa;
 use Sympa::Alarm;
 use Conf;
 use Sympa::Constants;
@@ -867,7 +868,7 @@ while (!$end) {
                         $listname
                     );
                     quarantine($lock_fh);
-                    tools::send_notify_to_listmaster(
+                    Sympa::send_notify_to_listmaster(
                         $robot,
                         'bounce_management_failed',
                         {   'file' => $lock_fh->basename,
@@ -887,7 +888,7 @@ while (!$end) {
                     $listname
                 );
                 quarantine($lock_fh);
-                tools::send_notify_to_listmaster(
+                Sympa::send_notify_to_listmaster(
                     $robot,
                     'bounce_management_failed',
                     {   'file' => $lock_fh->basename,

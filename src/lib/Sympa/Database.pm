@@ -29,6 +29,7 @@ use warnings;
 use DBI;
 use English qw(-no_match_vars);
 
+use Sympa;
 use Sympa::Log;
 
 my $log = Sympa::Log->instance;
@@ -124,7 +125,7 @@ sub connect {
                 ref($self),
                 $module
             );
-            tools::send_notify_to_listmaster('*', 'missing_dbd',
+            Sympa::send_notify_to_listmaster('*', 'missing_dbd',
                 {'db_type' => ref($self), 'db_module' => $module});
             return undef;
         }
@@ -157,7 +158,7 @@ sub connect {
         $log->syslog('err', 'Can\'t connect to Database %s, still trying...',
             $self);
         unless ($self->{_status} and $self->{_status} eq 'failed') {
-            tools::send_notify_to_listmaster('*', 'no_db', {});
+            Sympa::send_notify_to_listmaster('*', 'no_db', {});
         }
 
         # Loop until connect works
@@ -172,7 +173,7 @@ sub connect {
         delete $self->{_status};
 
         $log->syslog('notice', 'Connection to Database %s restored', $self);
-        tools::send_notify_to_listmaster('*', 'db_restored', {});
+        Sympa::send_notify_to_listmaster('*', 'db_restored', {});
     }
 
     $log->syslog('debug2', 'Connected to Database %s', $self);

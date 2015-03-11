@@ -20,7 +20,6 @@ use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::Template;
-use tools;
 
 $ENV{'PATH'} = '';
 
@@ -61,8 +60,6 @@ $data{'default_domain'} = $default_domain;
 $data{'is_default_domain'}  = 1;
 $data{'return_path_suffix'} = $return_path_suffix;
 my @aliases;
-
-my $tt2_include_path = tools::get_search_path($domain);
 
 my $aliases_dump;
 my $template = Sympa::Template->new($domain);

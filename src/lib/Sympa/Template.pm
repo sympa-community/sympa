@@ -34,6 +34,7 @@ use English qw(-no_match_vars);
 use MIME::EncWords;
 use Template;
 
+use Sympa;
 use Sympa::Constants;
 use Sympa::Language;
 use tools;
@@ -174,7 +175,7 @@ sub parse {
     }
     if (defined $self->{context}) {
         push @include_path,
-            @{tools::get_search_path($self->{context}, %$self) || []};
+            @{Sympa::get_search_path($self->{context}, %$self) || []};
     }
     if (@{$self->{include_path} || []}) {
         push @include_path, @{$self->{include_path}};

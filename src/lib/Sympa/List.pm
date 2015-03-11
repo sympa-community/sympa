@@ -41,6 +41,7 @@ use Time::Local qw();
 use URI::Escape qw();
 use XML::LibXML;
 
+use Sympa;
 use Sympa::Archive;
 use Sympa::Auth;
 use Sympa::Bulk;
@@ -659,7 +660,7 @@ sub set_status_error_config {
         $log->syslog('err',
             'The list %s is set in status error_config: %s(%s)',
             $self, $msg, join(', ', @param));
-        tools::send_notify_to_listmaster($self, $msg,
+        Sympa::send_notify_to_listmaster($self, $msg,
             [$self->{'name'}, @param]);
     }
 }
@@ -2314,10 +2315,10 @@ sub get_digest_recipients_per_mode {
 
 ###   TEMPLATE SENDING  ###
 
-# MOVED to tools::send_dsn().
+# MOVED to Sympa::send_dsn().
 #sub send_dsn;
 
-#MOVED: Use tools::send_file() or Sympa::List::send_probe_to_user().
+#MOVED: Use Sympa::send_file() or Sympa::List::send_probe_to_user().
 # sub send_file($self, $tpl, $who, $robot, $context);
 
 #DEPRECATED: Merged to List::distribute_msg().
@@ -2415,7 +2416,7 @@ sub get_recipients_per_mode {
             my $subject = $message->{'decoded_subject'};
             my $sender  = $message->{'sender'};
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $self,
                     'x509-user-cert-missing',
                     $user->{'email'},
@@ -2795,7 +2796,7 @@ sub send_confirm_to_sender {
     return $authkey;
 }
 
-#MOVED: Use tools::request_auth().
+#MOVED: Use Sympa::request_auth().
 #sub request_auth;
 
 ####################################################
@@ -2833,7 +2834,7 @@ sub archive_send {
     # Sympa::Tools::Data::dump_var($param, 0, \*TMP2);
     # close TMP2;
     $param->{'auto_submitted'} = 'auto-replied';
-    unless (tools::send_file($self, 'get_archive', $who, $param)) {
+    unless (Sympa::send_file($self, 'get_archive', $who, $param)) {
         $log->syslog('notice', 'Unable to send template "archive_send" to %s',
             $who);
         return undef;
@@ -2895,7 +2896,7 @@ sub archive_send_last {
     # Sympa::Tools::Data::dump_var($param, 0, \*TMP2);
     # close TMP2;
 
-    unless (tools::send_file($self, 'get_archive', $who, $param)) {
+    unless (Sympa::send_file($self, 'get_archive', $who, $param)) {
         $log->syslog('notice', 'Unable to send template "archive_send" to %s',
             $who);
         return undef;
@@ -2961,7 +2962,7 @@ sub send_notify_to_owner {
                     $param->{'ip'}
                     );
                 unless (
-                    tools::send_file(
+                    Sympa::send_file(
                         $self, 'listowner_notification', [$owner], $param
                     )
                     ) {
@@ -2987,7 +2988,7 @@ sub send_notify_to_owner {
                     'subindex/' . $self->{'name'},
                     $param->{'ip'});
                 unless (
-                    tools::send_file(
+                    Sympa::send_file(
                         $self, 'listowner_notification', [$owner], $param
                     )
                     ) {
@@ -3010,7 +3011,7 @@ sub send_notify_to_owner {
                 $param->{'rate'} = int($param->{'rate'} * 10) / 10;
             }
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $self, 'listowner_notification', \@to, $param
                 )
                 ) {
@@ -3034,7 +3035,7 @@ sub send_notify_to_owner {
             $data->{"param$i"} = $param->[$i];
         }
         unless (
-            tools::send_file($self, 'listowner_notification', \@to, $data)) {
+            Sympa::send_file($self, 'listowner_notification', \@to, $data)) {
             $log->syslog(
                 'notice',
                 'Unable to send template "listowner_notification" to %s list owner',
@@ -3194,7 +3195,7 @@ sub send_notify_to_editor {
         $param->{'type'} = $operation;
 
         unless (
-            tools::send_file($self, 'listeditor_notification', \@to, $param))
+            Sympa::send_file($self, 'listeditor_notification', \@to, $param))
         {
             $log->syslog(
                 'notice',
@@ -3215,7 +3216,7 @@ sub send_notify_to_editor {
             $data->{"param$i"} = $param->[$i];
         }
         unless (
-            tools::send_file($self, 'listeditor_notification', \@to, $data)) {
+            Sympa::send_file($self, 'listeditor_notification', \@to, $data)) {
             $log->syslog('notice',
                 'Unable to send template "listeditor_notification" to %s list editor'
             );
@@ -3273,7 +3274,7 @@ sub send_notify_to_user {
         if ($operation eq 'auto_notify_bouncers') {
         }
 
-        unless (tools::send_file($self, 'user_notification', $user, $param)) {
+        unless (Sympa::send_file($self, 'user_notification', $user, $param)) {
             $log->syslog('notice',
                 'Unable to send template "user_notification" to %s', $user);
             return undef;
@@ -3287,7 +3288,7 @@ sub send_notify_to_user {
         for my $i (0 .. $#{$param}) {
             $data->{"param$i"} = $param->[$i];
         }
-        unless (tools::send_file($self, 'user_notification', $user, $data)) {
+        unless (Sympa::send_file($self, 'user_notification', $user, $data)) {
             $log->syslog('notice',
                 'Unable to send template "user_notification" to %s', $user);
             return undef;
@@ -3344,7 +3345,7 @@ sub send_probe_to_user {
 
 ### END functions for sending messages ###
 
-#MOVED: Use tools::compute_auth().
+#MOVED: Use Sympa::compute_auth().
 #sub compute_auth;
 
 # DEPRECATED: Moved to Sympa::Message::_decorate_parts().
@@ -5585,7 +5586,7 @@ sub may_edit {
 
     # Load edit_list.conf: track by file, not domain (file may come from
     # server, robot, family or list context)
-    my $edit_conf_file = tools::search_fullpath($self, 'edit_list.conf');
+    my $edit_conf_file = Sympa::search_fullpath($self, 'edit_list.conf');
     if (!$edit_list_conf{$edit_conf_file}
         or Sympa::Tools::File::get_mtime($edit_conf_file) >
         $Sympa::Robot::mtime{'edit_list_conf'}{$edit_conf_file}) {
@@ -5938,7 +5939,7 @@ sub load_scenario_list {
     my %list_of_scenario;
     my %skip_scenario;
     my @list_of_scenario_dir =
-        @{tools::get_search_path($self, subdir => 'scenari')};
+        @{Sympa::get_search_path($self, subdir => 'scenari')};
     unshift @list_of_scenario_dir, $self->{'dir'} . '/scenari';    #FIXME
 
     foreach my $dir (@list_of_scenario_dir) {
@@ -5983,7 +5984,7 @@ sub load_task_list {
     my %list_of_task;
 
     foreach my $dir (
-        @{tools::get_search_path($self, subdir => 'list_task_models')}) {
+        @{Sympa::get_search_path($self, subdir => 'list_task_models')}) {
         next unless (-d $dir);
 
     LOOP_FOREACH_FILE:
@@ -6057,7 +6058,7 @@ sub load_data_sources_list {
     my %list_of_data_sources;
 
     foreach
-        my $dir (@{tools::get_search_path($self, subdir => 'data_sources')}) {
+        my $dir (@{Sympa::get_search_path($self, subdir => 'data_sources')}) {
 
         next unless (-d $dir);
 
@@ -6172,8 +6173,8 @@ sub _include_users_remote_sympa_list {
         $cert_file = $dir . '/cert.pem';
         $key_file  = $dir . '/private_key';
     } elsif ($cert eq 'robot') {
-        $cert_file = tools::search_fullpath($self, 'cert.pem');
-        $key_file  = tools::search_fullpath($self, 'private_key');
+        $cert_file = Sympa::search_fullpath($self, 'cert.pem');
+        $key_file  = Sympa::search_fullpath($self, 'private_key');
     }
     unless ((-r $cert_file) && (-r $key_file)) {
         $log->syslog(
@@ -7349,7 +7350,7 @@ sub _load_list_members_from_include {
 
         next unless (defined $entry);
 
-        my $include_file = tools::search_fullpath(
+        my $include_file = Sympa::search_fullpath(
             $self,
             $entry->{'source'} . '.incl',
             subdir => 'data_sources'
@@ -7610,7 +7611,7 @@ sub _load_list_admin_from_include {
         $option{'profile'} = $entry->{'profile'}
             if (defined $entry->{'profile'} && ($role eq 'owner'));
 
-        my $include_file = tools::search_fullpath(
+        my $include_file = Sympa::search_fullpath(
             $self,
             $entry->{'source'} . '.incl',
             subdir => 'data_sources'
@@ -8203,7 +8204,7 @@ sub sync_include {
                 $self
             );
             $errors_occurred = 1;
-            tools::send_notify_to_listmaster($self, 'sync_include_failed',
+            Sympa::send_notify_to_listmaster($self, 'sync_include_failed',
                 {'errors' => \@errors});
             foreach my $e (@errors) {
                 my $plugin = $self->isPlugin($e->{type}) or next;
@@ -8327,7 +8328,7 @@ sub sync_include {
                     if ($self->{'admin'}{'inclusion_notification_feature'} eq
                         'on') {
                         unless (
-                            tools::send_file($self, 'removed', $email, {})) {
+                            Sympa::send_file($self, 'removed', $email, {})) {
                             $log->syslog('err',
                                 "Unable to send template 'removed' to $email"
                             );
@@ -8536,7 +8537,7 @@ sub sync_include_admin {
                 $log->syslog('err',
                     'Could not get %ss from an include source for list %s',
                     $role, $self);
-                tools::send_notify_to_listmaster($self,
+                Sympa::send_notify_to_listmaster($self,
                     'sync_include_admin_failed', {});
                 return undef;
             }

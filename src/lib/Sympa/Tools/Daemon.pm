@@ -44,11 +44,11 @@ use English qw(no_match_vars);
 use Proc::ProcessTable;
 use Sys::Hostname qw();
 
+use Sympa;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::LockedFile;
 use Sympa::Log;
-use tools;
 use Sympa::Tools::File;
 
 my $log = Sympa::Log->instance;
@@ -285,7 +285,7 @@ sub send_crash_report {
     } else {
         $err_date = $language->gettext('(unknown date)');
     }
-    tools::send_notify_to_listmaster(
+    Sympa::send_notify_to_listmaster(
         '*', 'crash',
         {   'crashed_process' => $data{'pname'},
             'crash_err'       => \@err_output,

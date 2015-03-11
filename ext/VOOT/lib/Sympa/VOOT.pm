@@ -10,6 +10,7 @@ use JSON           qw/decode_json/;
 use List::Util     qw/first/;
 
 # Sympa modules
+use Sympa;
 use tools;
 use Sympa::Plugin::Util   qw/:log reporter/;
 use Sympa::VOOT::Consumer ();
@@ -86,7 +87,7 @@ sub init($)
     $args->{website}     ||= 'Sympa::VOOT::Website';
     $self->SUPER::init($args);
 
-    my $config = $args->{config} || tools::search_fullpath('*', 'voot.conf');
+    my $config = $args->{config} || Sympa::search_fullpath('*', 'voot.conf');
 
     if(ref $config eq 'HASH')
     {   $self->{SV_config}    = $config;

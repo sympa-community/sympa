@@ -29,6 +29,7 @@ use warnings;
 use Digest::MD5;
 use POSIX qw();
 
+use Sympa;
 use Conf;
 use Sympa::Database;
 use Sympa::Log;
@@ -211,7 +212,7 @@ sub ldap_authentication {
     $log->syslog('debug2', '(%s, %s, %s)', $auth, '****', $whichfilter);
     $log->syslog('debug3', 'Password used: %s', $pwd);
 
-    unless (tools::search_fullpath($robot, 'auth.conf')) {
+    unless (Sympa::search_fullpath($robot, 'auth.conf')) {
         return undef;
     }
 

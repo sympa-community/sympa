@@ -274,7 +274,7 @@ sub negotiate_lang {
 }
 
 ##sub GetSupportedLanguages {
-##DEPRECATED: use tools::get_supported_languages().
+##DEPRECATED: use Sympa::get_supported_languages().
 ## Supported languages are defined by 'supported_lang' sympa.conf parameter.
 
 ## Old name: PushLang()

@@ -67,6 +67,7 @@ use URI::Escape qw();
 
 BEGIN { eval 'use Crypt::SMIME'; }
 
+use Sympa;
 use Conf;
 use Sympa::Constants;
 use Sympa::HTML::FormatText;
@@ -3654,7 +3655,7 @@ sub check_virus_infection {
 
     ## Error while running antivir, notify listmaster
     if ($error_msg) {
-        tools::send_notify_to_listmaster(
+        Sympa::send_notify_to_listmaster(
             '*',
             'virus_scan_failed',
             {   'filename'  => $work_dir,

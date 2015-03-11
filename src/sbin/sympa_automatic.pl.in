@@ -32,6 +32,7 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
+use Sympa;
 use Sympa::Alarm;
 use Conf;
 use Sympa::Constants;
@@ -570,7 +571,7 @@ sub process_message {
             'Internal server error: Automatic lists creation daemon should never proceed message %s without X-Sympa-Family header',
             $message
         );
-        tools::send_notify_to_listmaster(
+        Sympa::send_notify_to_listmaster(
             '*',
             'intern_error',
             {   'error' =>
@@ -593,7 +594,7 @@ sub process_message {
                 $message,
                 $dyn_list_family
             );
-            tools::send_notify_to_listmaster(
+            Sympa::send_notify_to_listmaster(
                 $robot,
                 'automatic_list_creation_failed',
                 {   'family' => $dyn_list_family,
@@ -636,7 +637,7 @@ sub process_message {
             $log->syslog('err',
                 'Unable to create list %s. Message %s ignored',
                 $listname, $message);
-            tools::send_notify_to_listmaster(
+            Sympa::send_notify_to_listmaster(
                 $dyn_family->{'robot'},
                 'automatic_list_creation_failed',
                 {   'listname' => $listname,

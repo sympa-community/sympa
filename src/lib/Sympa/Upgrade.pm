@@ -33,6 +33,7 @@ use File::Path qw();
 use MIME::Base64 qw();
 use POSIX qw();
 
+use Sympa;
 use Sympa::Archive;
 use Conf;
 use Sympa::ConfDef;
@@ -287,7 +288,7 @@ sub upgrade {
                             'Unable to fille the robot_admin and robot_subscriber fields in database for robot %s',
                             $r
                         );
-                        tools::send_notify_to_listmaster('*',
+                        Sympa::send_notify_to_listmaster('*',
                             'upgrade_failed', {'error' => $sdm->error});
                         return undef;
                     }
@@ -550,7 +551,7 @@ sub upgrade {
                     $etc_dir . '/mhonarc-ressources.tt2',
                     $new_filename
                 );
-                tools::send_notify_to_listmaster('*', 'file_removed',
+                Sympa::send_notify_to_listmaster('*', 'file_removed',
                     [$etc_dir . '/mhonarc-ressources.tt2', $new_filename]);
             }
         }

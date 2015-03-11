@@ -31,6 +31,7 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
+use Sympa;
 use Sympa::Alarm;
 use Sympa::Bulk;
 use Conf;
@@ -449,7 +450,7 @@ while (!$end) {
                 if ($new_message->{shelved}{merge}) {
                     unless ($new_message->personalize($list, $rcpt)) {
                         $log->syslog('err', 'Erreur d appel personalize()');
-                        tools::send_notify_to_listmaster($list, 'bulk_failed',
+                        Sympa::send_notify_to_listmaster($list, 'bulk_failed',
                             {'message_id' => $message->get_id});
                         # Quarantine packet into bad spool.
                         $bulk->quarantine($handle);

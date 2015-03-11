@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Encode qw();
 
+use Sympa;
 use Sympa::Admin;
 use Sympa::Auth;
 use Conf;
@@ -703,7 +704,7 @@ sub createList {
 
     ## notify listmaster
     if ($param->{'create_action'} =~ /notify/) {
-        if (tools::send_notify_to_listmaster(
+        if (Sympa::send_notify_to_listmaster(
                 $list, 'request_list_creation', {'email' => $sender}
             )
             ) {
@@ -1040,7 +1041,7 @@ sub del {
     ## quiet del.
     unless ($quiet || $action =~ /quiet/i) {
         unless (
-            tools::send_file(
+            Sympa::send_file(
                 $list, 'removed',
                 $email, {'auto_submitted' => 'auto-generated'}
             )
@@ -1384,7 +1385,7 @@ sub signoff {
         }
 
         ## Send bye.tpl to sender
-        unless (tools::send_file($list, 'bye', $sender, {})) {
+        unless (Sympa::send_file($list, 'bye', $sender, {})) {
             $log->syslog('err', 'Unable to send template "bye" to %s',
                 $sender);
         }
@@ -1472,7 +1473,7 @@ sub subscribe {
         $list->send_notify_to_owner(
             'subrequest',
             {   'who'     => $sender,
-                'keyauth' => tools::compute_auth($list, $sender, 'add'),
+                'keyauth' => Sympa::compute_auth($list, $sender, 'add'),
                 'replyto' => Conf::get_robot_conf($robot, 'sympa'),
                 'gecos'   => $gecos
             }
@@ -1485,7 +1486,7 @@ sub subscribe {
     }
     if ($action =~ /request_auth/i) {
         my $cmd = 'subscribe';
-        tools::request_auth($list, $sender, $cmd, $gecos);
+        Sympa::request_auth($list, $sender, $cmd, $gecos);
         $log->syslog('info', '%s from %s, auth requested', $listname,
             $sender);
         return SOAP::Data->name('result')->type('boolean')->value(1);
@@ -1922,7 +1923,7 @@ sub get_reason_string {
         Sympa::Template->new($robot, subdir => 'mail_tt2');    # FIXME: lang?
     unless ($template->parse($data, 'authorization_reject.tt2', \$string)) {
         my $error = $template->{last_error};
-        tools::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
+        Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
         $log->syslog('info', 'Error parsing');
         return '';
     }

@@ -30,6 +30,7 @@ use English qw(-no_match_vars);
 use Mail::Address;
 use Net::CIDR;
 
+use Sympa;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -91,9 +92,9 @@ sub new {
         ($parameters{'function'}, $parameters{'name'}) = ($1, $2);
 
     } else {
-        ## We can't use tools::search_fullpath() because we
-        ## don't have a List object yet ; it's being constructed
-        ## FIXME: Give List object instead of 'directory' parameter.
+        # We couldn't use Sympa::search_fullpath() because we
+        # didn't have a List object yet; it's been constructed.
+        # FIXME FIXME: Give List object instead of 'directory' parameter.
         my @dirs = (
             $Conf::Conf{'etc'} . '/' . $parameters{'robot'},
             $Conf::Conf{'etc'}, Sympa::Constants::DEFAULTDIR
@@ -577,7 +578,7 @@ sub request_action {
                     return $return;
                 }
                 # FIXME: Add entry to listmaster_mnotification.tt2
-                tools::send_notify_to_listmaster($robot_id,
+                Sympa::send_notify_to_listmaster($robot_id,
                     'error_performing_condition',
                     [$context->{'listname'} . "  " . $rule->{'condition'}]);
                 return undef;
@@ -1427,7 +1428,7 @@ sub search {
 
     if ($filter_file =~ /\.sql$/) {
 
-        my $file = tools::search_fullpath($that, $filter_file,
+        my $file = Sympa::search_fullpath($that, $filter_file,
             subdir => 'search_filters');
 
         my $timeout = 3600;
@@ -1530,7 +1531,7 @@ sub search {
 
     } elsif ($filter_file =~ /\.ldap$/) {
         ## Determine full path of the filter file
-        my $file = tools::search_fullpath($that, $filter_file,
+        my $file = Sympa::search_fullpath($that, $filter_file,
             subdir => 'search_filters');
 
         unless ($file) {
@@ -1625,7 +1626,7 @@ sub search {
 
     } elsif ($filter_file =~ /\.txt$/) {
         # $log->syslog('info', 'Eval %s', $filter_file);
-        my @files = tools::search_fullpath(
+        my @files = Sympa::search_fullpath(
             $that, $filter_file,
             subdir  => 'search_filters',
             'order' => 'all'
@@ -1687,10 +1688,10 @@ sub verify_custom {
 
     # use this if your want per list customization (be sure you know what you
     # are doing)
-    # my $file = tools::search_fullpath(
+    # my $file = Sympa::search_fullpath(
     #     $list || $robot, $condition . '.pm',
     #     subdir => 'custom_conditions');
-    my $file = tools::search_fullpath(
+    my $file = Sympa::search_fullpath(
         $robot,
         $condition . '.pm',
         subdir => 'custom_conditions'

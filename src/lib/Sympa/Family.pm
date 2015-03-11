@@ -43,6 +43,7 @@ use File::Copy qw();
 use Term::ProgressBar;
 use XML::LibXML;
 
+use Sympa;
 use Sympa::Admin;
 use Conf;
 use Sympa::Config_XML;
@@ -52,7 +53,6 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Scenario;
-use tools;
 use Sympa::Tools::File;
 
 my $language = Sympa::Language->instance;
@@ -110,7 +110,7 @@ sub get_families {
     my @families;
 
     foreach my $dir (
-        reverse @{tools::get_search_path($robot_id, subdir => 'families')}) {
+        reverse @{Sympa::get_search_path($robot_id, subdir => 'families')}) {
         next unless -d $dir;
 
         unless (opendir FAMILIES, $dir) {
@@ -1745,7 +1745,7 @@ sub _get_directory {
     my $name  = $self->{'name'};
     $log->syslog('debug3', '(%s)', $name);
 
-    my @try = @{tools::get_search_path($robot, subdir => 'families')};
+    my @try = @{Sympa::get_search_path($robot, subdir => 'families')};
 
     foreach my $d (@try) {
         if (-d "$d/$name") {
@@ -2686,7 +2686,7 @@ sub _load_param_constraint_conf {
         }
     }
     if ($error) {
-        tools::send_notify_to_listmaster($self->{'robot'},
+        Sympa::send_notify_to_listmaster($self->{'robot'},
             'param_constraint_conf_error', [$file]);
     }
     close FILE;

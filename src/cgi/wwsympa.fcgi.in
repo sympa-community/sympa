@@ -60,6 +60,7 @@ use Time::Local qw();
 use Data::Dumper;    # tentative
 BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
+use Sympa;
 use Sympa::Admin;
 use Sympa::Alarm;
 use Sympa::Archive;
@@ -1015,7 +1016,7 @@ while ($query = new_loop()) {
     undef $session;
 
     $log->{level} = $Conf::Conf{'log_level'};
-    $language->set_lang(tools::best_language('*'));
+    $language->set_lang(Sympa::best_language('*'));
 
     ## Empty cache of the List.pm module
     Sympa::List::init_list_cache();
@@ -1295,7 +1296,7 @@ while ($query = new_loop()) {
     # affected to another anonymous session.
     undef $ENV{'HTTP_COOKIE'};
     unless (defined $session) {
-        tools::send_notify_to_listmaster($robot,
+        Sympa::send_notify_to_listmaster($robot,
             'failed_to_create_web_session', {});
         wwslog('info', 'Failed to create session');
         $session = Sympa::Session->new($robot, {});
@@ -1580,7 +1581,7 @@ while ($query = new_loop()) {
             my $lang_context = (ref $list eq 'Sympa::List') ? $list : $robot;
             $param->{'lang'} =
                 $language->set_lang($session->{'lang'}, $user_lang,
-                tools::best_language($lang_context));
+                Sympa::best_language($lang_context));
             # compatibility concern: old-style locale.
             $param->{'locale'} =
                 Sympa::Language::lang2oldlocale($param->{'lang'});
@@ -1675,7 +1676,7 @@ while ($query = new_loop()) {
     unless ($param->{'lang'}) {
         my $user_lang = $param->{'user'}{'lang'} if $param->{'user'};
         $param->{'lang'} =
-            $language->set_lang($user_lang, tools::best_language($robot));
+            $language->set_lang($user_lang, Sympa::best_language($robot));
         # compatibility: 6.1.
         $param->{'lang_tag'} = $param->{'lang'};
     }
@@ -1805,7 +1806,7 @@ while ($query = new_loop()) {
     ## Available languages
     $param->{'languages'} = {};
     $language->push_lang();
-    foreach my $lang (tools::get_supported_languages($robot)) {
+    foreach my $lang (Sympa::get_supported_languages($robot)) {
         next unless $lang = $language->set_lang($lang);
         $param->{'languages'}{$lang}{'complete'} = $language->native_name
             || $lang;
@@ -1902,7 +1903,7 @@ while ($query = new_loop()) {
         unless ($template->parse($param, 'rss.tt2', \*STDOUT)) {
             my $error = $template->{last_error};
             $param->{'tt2_error'} = $error;
-            tools::send_notify_to_listmaster($robot, 'web_tt2_error',
+            Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
         }
     } elsif ($ajax) {
@@ -1929,7 +1930,7 @@ while ($query = new_loop()) {
         unless ($template->parse($param, 'ajax.tt2', \*STDOUT)) {
             my $error = $template->{last_error};
             $param->{'tt2_error'} = $error;
-            tools::send_notify_to_listmaster($robot, 'web_tt2_error',
+            Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
         }
 # 	 close FILE;
@@ -2849,7 +2850,7 @@ sub send_html {
     }
 
     # per-locale CSS.
-    if (tools::search_fullpath(
+    if (Sympa::search_fullpath(
             $list || $robot, 'css.tt2',
             subdir    => 'web_tt2',
             lang      => $param->{'lang'},
@@ -2896,7 +2897,7 @@ sub send_html {
             # "Not Found" response for random help page.
             print "Status: 404 Not Found\n";
         } else {
-            tools::send_notify_to_listmaster($robot, 'web_tt2_error',
+            Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
         }
 
@@ -3777,7 +3778,7 @@ sub do_login {
         my $lang_context = (ref $list eq 'Sympa::List') ? $list : $robot;
         $param->{'lang'} =
             $language->set_lang($user->{'lang'},
-            tools::best_language($lang_context));
+            Sympa::best_language($lang_context));
         $session->{'lang'} = $param->{'lang'};
     }
     # compatibility: old-style locale.
@@ -4347,7 +4348,7 @@ sub is_ldap_user {
     my $auth = shift;    ## User email or UID
     wwslog('debug2', '(%s)', $auth);
 
-    unless (tools::search_fullpath($robot, 'auth.conf')) {
+    unless (Sympa::search_fullpath($robot, 'auth.conf')) {
         return undef;
     }
 
@@ -4651,7 +4652,7 @@ sub sendssopasswd {
         if ($param->{'user'}{'password'} =~ /^init/);
 
     #FIXME: check error
-    tools::send_file($robot, 'sendssopasswd', $email, $param);
+    Sympa::send_file($robot, 'sendssopasswd', $email, $param);
 
     $param->{'email'} = $email;
     web_db_log(
@@ -4766,7 +4767,7 @@ sub do_requestpasswd {
     }
     if ($param->{'one_time_ticket'}) {
         $param->{'login_error'} = 'ticket_sent';
-        unless (tools::send_file($robot, 'sendpasswd', $in{'email'}, $param))
+        unless (Sympa::send_file($robot, 'sendpasswd', $in{'email'}, $param))
         {
             wwslog('notice', 'Unable to send template "sendpasswd" to %s',
                 $in{'email'});
@@ -6019,7 +6020,7 @@ sub do_subscribe {
             $list->send_notify_to_owner(
                 'subrequest',
                 {   'who'     => $param->{'user'}{'email'},
-                    'keyauth' => tools::compute_auth(
+                    'keyauth' => Sympa::compute_auth(
                         $list, $param->{'user'}{'email'}, 'add'
                     ),
                     'replyto' => Conf::get_robot_conf($robot, 'sympa'),
@@ -6358,7 +6359,7 @@ sub do_subrequest {
             $param->{'newuser'}{'escaped_email'} =
                 tools::escape_chars($param->{'newuser'}{'email'});
         }
-        unless (tools::send_file($robot, 'sendpasswd', $in{'email'}, $param))
+        unless (Sympa::send_file($robot, 'sendpasswd', $in{'email'}, $param))
         {
             wwslog('notice', 'Unable to send template "sendpasswd" to %s',
                 $in{'email'});
@@ -6428,7 +6429,7 @@ sub do_auto_signoff {
             'ip'              => $ip,
         };
         unless (
-            tools::send_file(
+            Sympa::send_file(
                 $robot, 'user_notification', $in{'email'}, $tt2_param
             )
             ) {
@@ -6466,7 +6467,7 @@ sub do_family_signoff_request {
         'ip'              => $ip,
     };
     unless (
-        tools::send_file(
+        Sympa::send_file(
             $robot, 'user_notification', $in{'email'}, $tt2_param
         )
         ) {
@@ -6635,7 +6636,7 @@ sub unsubscribe {
         $list->send_notify_to_owner(
             'sigrequest',
             {   'who'     => $param->{'user'}{'email'},
-                'keyauth' => tools::compute_auth(
+                'keyauth' => Sympa::compute_auth(
                     $list, $param->{'user'}{'email'}, 'del'
                 )
             }
@@ -6677,7 +6678,7 @@ sub unsubscribe {
         }
 
         unless (
-            tools::send_file($list, 'bye', $authenticated_email_address, {}))
+            Sympa::send_file($list, 'bye', $authenticated_email_address, {}))
         {
             wwslog('notice',
                 "Unable to send template 'bye' to $authenticated_email_address"
@@ -6733,7 +6734,7 @@ sub do_sigrequest {
             'email'           => $in{'email'}
         };
         unless (
-            tools::send_file(
+            Sympa::send_file(
                 $robot, 'user_notification', $in{'email'}, $tt2_param
             )
             ) {
@@ -7441,7 +7442,7 @@ sub do_manage_template {
             'reject_' . $escaped_template_path . '.tt2',
             '', $list);
     }
-    my $default_file = tools::search_fullpath($list || $robot,
+    my $default_file = Sympa::search_fullpath($list || $robot,
         'reject.tt2', subdir => 'mail_tt2');
 
     if ($in{'subaction'} eq 'save') {
@@ -7551,7 +7552,7 @@ sub do_manage_template {
             return undef;
         }
 
-        my $default_file = tools::search_fullpath($list || $robot,
+        my $default_file = Sympa::search_fullpath($list || $robot,
             'reject.tt2', subdir => 'mail_tt2');
 
         unless (open(DEFAULT, $default_file)) {
@@ -7922,7 +7923,7 @@ sub do_skinsedit {
             unless ($css_template->parse($param, 'css.tt2', \*CSS)) {
                 my $error = $css_template->{last_error};
                 $param->{'tt2_error'} = $error;
-                tools::send_notify_to_listmaster($robot, 'web_tt2_error',
+                Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                     [$error]);
                 wwslog('info', 'Error while installing %s', $css_file);
             }
@@ -8288,7 +8289,7 @@ sub do_del {
             $email, $param->{'list'});
 
         unless ($in{'quiet'}) {
-            unless (tools::send_file($list, 'removed', $email, {})) {
+            unless (Sympa::send_file($list, 'removed', $email, {})) {
                 wwslog('notice', 'Unable to send template "removed" to %s',
                     $email);
             }
@@ -8725,7 +8726,7 @@ sub do_d_install_shared {
 
             my $sender = $desc_hash{'email'};
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $list, 'd_install_shared', $sender, \%context
                 )
                 ) {
@@ -8775,7 +8776,7 @@ sub do_d_reject_shared {
             $sender = $desc_hash{'email'};
 
             unless (
-                tools::send_file(
+                Sympa::send_file(
                     $list, 'd_reject_shared', $sender, \%context
                 )
                 ) {
@@ -8899,7 +8900,7 @@ sub do_reject {
                     $context{'rejected_by'}   = $param->{'user'}{'email'};
                     $context{'template_used'} = $in{'message_template'};
                     unless (
-                        tools::send_file(
+                        Sympa::send_file(
                             $list,            $in{'message_template'},  #FIXME
                             $rejected_sender, \%context
                         )
@@ -9460,7 +9461,7 @@ sub do_editfile {
 
         ## Look for the template
         $param->{'filepath'} =
-            tools::search_fullpath($list || $robot, $file, subdir => $subdir);
+            Sympa::search_fullpath($list || $robot, $file, subdir => $subdir);
 
         ## There might be no matching file if default template not provided
         ## with Sympa
@@ -9501,7 +9502,7 @@ sub do_editfile {
         ## Default for 'homepage' is 'info'
         if (($in{'file'} eq 'homepage')
             && !$param->{'filepath'}) {
-            $param->{'filepath'} = tools::search_fullpath($list || $robot,
+            $param->{'filepath'} = Sympa::search_fullpath($list || $robot,
                 'info', subdir => $subdir);
         }
     } else {
@@ -9525,12 +9526,12 @@ sub do_editfile {
         ## Look for the template
         if ($file eq 'list_aliases.tt2') {
             $param->{'filepath'} =
-                tools::search_fullpath($list || $robot, $file);
+                Sympa::search_fullpath($list || $robot, $file);
         } else {
             #my $lang = Conf::get_robot_conf($robot, 'lang');
             #$file =~ s/\.tpl$/\.$lang\.tpl/;
 
-            $param->{'filepath'} = tools::search_fullpath($list || $robot,
+            $param->{'filepath'} = Sympa::search_fullpath($list || $robot,
                 $file, subdir => $subdir);
         }
     }
@@ -11086,12 +11087,12 @@ sub do_install_pending_list {
     my @listmasters = split /\s*,\s*/,
         Conf::get_robot_conf($robot, 'listmaster');
     if ($in{'status'} eq 'open') {
-        unless (tools::send_file($list, 'list_created', \@listmasters, {})) {
+        unless (Sympa::send_file($list, 'list_created', \@listmasters, {})) {
             wwslog('notice',
                 'Unable to send template "list_created" to listmaster');
         }
     } elsif ($in{'status'} eq 'closed') {
-        unless (tools::send_file($list, 'list_rejected', \@listmasters, {})) {
+        unless (Sympa::send_file($list, 'list_rejected', \@listmasters, {})) {
             wwslog('notice',
                 'Unable to send template "list_rejected" to listmaster');
         }
@@ -11104,7 +11105,7 @@ sub do_install_pending_list {
             next unless ($i->{'email'});
             if ($in{'status'} eq 'open') {
                 unless (
-                    tools::send_file(
+                    Sympa::send_file(
                         $list, 'list_created', $i->{'email'}, {}
                     )
                     ) {
@@ -11114,7 +11115,7 @@ sub do_install_pending_list {
                 }
             } elsif ($in{'status'} eq 'closed') {
                 unless (
-                    tools::send_file(
+                    Sympa::send_file(
                         $list, 'list_rejected', $i->{'email'}, {}
                     )
                     ) {
@@ -11366,7 +11367,7 @@ sub do_create_list {
     if ($param->{'create_action'} =~ /notify/) {
         wwslog('info', 'Notify listmaster');
 
-        tools::send_notify_to_listmaster($list, 'request_list_creation',
+        Sympa::send_notify_to_listmaster($list, 'request_list_creation',
             {'email' => $param->{'user'}{'email'}});
     }
 
@@ -20782,7 +20783,7 @@ sub do_change_email_request {
         'to'              => $in{'new_email'},
     };
     unless (
-        tools::send_file(
+        Sympa::send_file(
             $robot, 'user_notification', $in{'new_email'}, $tt2_param
         )
         ) {
@@ -20911,7 +20912,7 @@ sub do_change_email {
             my $admin_user = $list->get_list_admin($role, $old_email);
             if ($admin_user->{'included'}) {
                 ## Notify listmaster
-                tools::send_notify_to_listmaster(
+                Sympa::send_notify_to_listmaster(
                     $list,
                     'failed_to_change_included_admin',
                     {   'current_email' => $old_email,
@@ -20955,7 +20956,7 @@ sub do_change_email {
     }
     ## Notify listmasters that list owners/moderators email have changed
     if (keys %updated_lists) {
-        tools::send_notify_to_listmaster(
+        Sympa::send_notify_to_listmaster(
             $robot,
             'listowner_email_changed',
             {   'list'           => $list,
@@ -23411,7 +23412,7 @@ sub do_css {
     unless ($css_template->parse($param, 'css.tt2', \*STDOUT)) {
         my $error = $css_template->{last_error};
         $param->{'tt2_error'} = $error;
-        tools::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
+        Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
         wwslog('info', '/%s: error', $in{'file'});
     }
 
@@ -23485,7 +23486,7 @@ sub do_wsdl {
     wwslog('info', '');
 
     my $sympawsdl;
-    unless ($sympawsdl = tools::search_fullpath($robot, 'sympa.wsdl')
+    unless ($sympawsdl = Sympa::search_fullpath($robot, 'sympa.wsdl')
         and -r $sympawsdl) {
         Sympa::Report::reject_report_web('intern', 'err_404', {},
             $param->{'action'});
@@ -23569,7 +23570,7 @@ sub _ca_get_file {
     my $robot         = shift;
     my $list          = shift;
 
-    my $file = tools::search_fullpath($list || $robot,
+    my $file = Sympa::search_fullpath($list || $robot,
         $custom_action, subdir => 'custom_actions');
     return undef unless ($file);
 
@@ -24242,7 +24243,7 @@ sub do_automatic_lists_request {
         wwslog('err',
             'Failed to instantiate family %s. This family does not exist',
             $in{'family'});
-        tools::send_notify_to_listmaster(
+        Sympa::send_notify_to_listmaster(
             $robot,
             'automatic_list_creation_failed',
             [   "Failed to instantiate family $in{'family'}. This family does not exist."
@@ -24303,7 +24304,7 @@ sub do_automatic_lists {
             $log->syslog('err',
                 "Failed to create the dynamic list $listname: family $family_name does not exist."
             );
-            tools::send_notify_to_listmaster(
+            Sympa::send_notify_to_listmaster(
                 $robot,
                 'automatic_list_creation_failed',
                 [   "Failed to create the dynamic list $listname: family $family_name does not exist."
@@ -24322,7 +24323,7 @@ sub do_automatic_lists {
             ) {
             $log->syslog('err', 'Failed to create the dynamic list %s',
                 $listname);
-            tools::send_notify_to_listmaster(
+            Sympa::send_notify_to_listmaster(
                 $robot,
                 'automatic_list_creation_failed',
                 ["Failed to create the dynamic list $listname."]

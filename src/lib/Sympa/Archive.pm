@@ -31,10 +31,10 @@ use Digest::MD5 qw();
 use Encode qw();
 use HTML::Entities qw();
 
+use Sympa;
 use Conf;
 use Sympa::Log;
 use Sympa::Message;
-use tools;
 use Sympa::Tools::File;
 
 my $log = Sympa::Log->instance;
@@ -395,7 +395,7 @@ sub convert_single_message {
     my $attachement_url = $opts{'attachement_url'};
 
     my $mhonarc_ressources =
-        tools::search_fullpath($that, 'mhonarc-ressources.tt2');
+        Sympa::search_fullpath($that, 'mhonarc-ressources.tt2');
     unless ($mhonarc_ressources) {
         $log->syslog('notice', 'Cannot find any MhOnArc ressource file');
         return undef;
