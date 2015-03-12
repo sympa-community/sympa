@@ -459,9 +459,7 @@ sub set_primary_key {
 
 =cut
 
-=begin comment
-
-#FIXME: Currently not works.
+# Note: We assume that indexes other than primary key are _not_ unique keys.
 sub get_indexes {
     my $self  = shift;
     my $param = shift;
@@ -469,7 +467,14 @@ sub get_indexes {
 
     my %found_indexes;
     my $sth;
-    unless ($sth = $self->do_query("SHOW INDEX FROM %s", $param->{'table'})) {
+    unless (
+        $sth = $self->do_prepared_query(
+            q{SELECT index_name, column_name
+              FROM all_indexes NATURAL JOIN all_ind_columns
+              WHERE generated = 'N' AND table_name = ?},
+            uc $param->{'table'}
+        )
+        ) {
         $log->syslog(
             'err',
             'Could not get the list of indexes from table %s in database %s',
@@ -480,18 +485,14 @@ sub get_indexes {
     }
     my $index_part;
     while ($index_part = $sth->fetchrow_hashref('NAME_lc')) {
-        if ($index_part->{'key_name'} ne "PRIMARY") {
-            my $index_name = $index_part->{'key_name'};
-            my $field_name = $index_part->{'column_name'};
-            $found_indexes{$index_name}{$field_name} = 1;
-        }
+        my $index_name = lc $index_part->{'index_name'};
+        my $field_name = lc $index_part->{'column_name'};
+        $found_indexes{$index_name}{$field_name} = 1;
     }
+    $sth->finish;
+
     return \%found_indexes;
 }
-
-=end comment
-
-=cut
 
 =begin comment
 
