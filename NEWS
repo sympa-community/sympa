@@ -3,6 +3,53 @@
 
 (See Changelog file for the full changes log)
 
+6.2b.9		March 13, 2015
+
+  Features:
+
+	[12050] src/lib/Sympa/DatabaseDriver/Oracle.pm:  Now Oracle driver can
+	check database structure.
+	However, you still must update structure manually.
+
+  Bug fixes:
+
+	[12059] default/web_tt2/d_control.tt2, src/cgi/wwsympa.fcgi.in:  Sympa
+	would issue an error when trying to edit access control to a file in
+	the shared repository. This was due to a mismatch in parameters between
+	list owenrs and document owners.
+
+	[12058] src/lib/Conf.pm: [Reported by P. Grzesina, univ. of Regina]
+	Sympa issued errors when trying to setupe a CAS server for SSO login.
+	This was due to Sympa setting a hash value to scalar and then trying to
+	use this value as a hash ref. Fixed by deleting affectation to scalar
+	value - which is immediately changed to a hash anyway.
+
+	[12055] src/cgi/wwsympa.fcgi.in, src/sbin/sympa.pl.in:	wwsympa and
+	sympa/health_check did not check change of "cookie" parameter.
+
+	[12053] default/web_tt2/list_menu.tt2:	Additional list menu links had
+	vanished when setting up the new skin.
+
+	[12052] src/lib/Sympa/List.pm, src/sbin/archived.pl.in,
+	src/sbin/bounced.pl.in, src/sbin/bulk.pl.in,
+	src/sbin/sympa_automatic.pl.in, src/sbin/sympa_msg.pl.in,
+	src/sbin/task_manager.pl.in:  (probably fixes bug[#6204])
+	task_manager.pl sometimes ignores signal to shutdown it.  If there are
+	large number of lists, calling get_lists() can take long time and the
+	process cannot deal with TERM signal.
+	Now get_lists() checks HUP, INT and TERM signals and returns
+	immediately when signal is raised.  As a side effect of this fix,
+	get_lists() may return undef.
+
+	[12047] src/bin/create_db.Oracle, src/bin/create_db.Sybase,
+	src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/Log.pm,
+	src/lib/Sympa/Upgrade.pm:  If multiple instances of sympa_msg.pl are
+	running, i.e. incoming_max_count parameter is greater than 1, adding
+	information to stat_table occasionally fails.  Probably because forked
+	instances can share random seed used to generate primary key.
+	Fixed by removing id_stat field from stat_table: It was not used
+	anyway.
+
 6.2b.8		March 06, 2015
 
   Features:
