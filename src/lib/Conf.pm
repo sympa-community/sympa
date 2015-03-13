@@ -737,6 +737,48 @@ sub data_structure_uptodate {
     return 1;
 }
 
+# Check if cookie parameter was changed.
+# Old name: tools::cookie_changed().
+sub cookie_changed {
+    my $current = $Conf::Conf{'cookie'};
+    $current = '' unless defined $current;
+
+    my $changed = 1;
+    if (-f "$Conf::Conf{'etc'}/cookies.history") {
+        my $fh;
+        unless (open $fh, "$Conf::Conf{'etc'}/cookies.history") {
+            $log->syslog('err', 'Unable to read %s/cookies.history',
+                $Conf::Conf{'etc'});
+            return undef;
+        }
+        my $oldcook = <$fh>;
+        close $fh;
+        ($oldcook) = reverse split /\s+/, $oldcook;
+        $oldcook = '' unless defined $oldcook;
+
+        if ($oldcook eq $current) {
+            $log->syslog('debug2', 'Cookie is stable');
+            $changed = 0;
+        }
+        return $changed;
+    } else {
+        my $umask = umask 037;
+        unless (open COOK, ">$Conf::Conf{'etc'}/cookies.history") {
+            umask $umask;
+            $log->syslog('err', 'Unable to create %s/cookies.history',
+                $Conf::Conf{'etc'});
+            return undef;
+        }
+        umask $umask;
+        chown [getpwnam(Sympa::Constants::USER)]->[2],
+            [getgrnam(Sympa::Constants::GROUP)]->[2],
+            "$Conf::Conf{'etc'}/cookies.history";
+        print COOK "$current ";
+        close COOK;
+        return (0);
+    }
+}
+
 ## Check a few files
 sub checkfiles {
     my $config_err = 0;
