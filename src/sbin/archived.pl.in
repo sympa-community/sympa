@@ -184,7 +184,7 @@ $log->syslog('notice', 'Archived %s Started', Sympa::Constants::VERSION);
 
 ## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
-$SIG{'INT'}  = \&sigterm;
+$SIG{'INT'}  = 'sigterm';
 my $end = 0;
 
 my $queue = $Conf::Conf{'queueoutgoing'};

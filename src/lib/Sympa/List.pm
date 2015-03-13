@@ -9109,6 +9109,16 @@ sub get_lists {
     my $that = shift || '*';
     my %options = @_;
 
+    # Set signal handler so that long call can be aborted by signal.
+    my $signalled;
+    my %sighandler = (HUP => $SIG{HUP}, INT => $SIG{INT}, TERM => $SIG{TERM});
+    local $SIG{HUP} = sub { $sighandler{HUP}->(@_); $signalled = 1; }
+        if ref $SIG{HUP} eq 'CODE';
+    local $SIG{INT} = sub { $sighandler{INT}->(@_); $signalled = 1; }
+        if ref $SIG{INT} eq 'CODE';
+    local $SIG{TERM} = sub { $sighandler{TERM}->(@_); $signalled = 1; }
+        if ref $SIG{TERM} eq 'CODE';
+
     my (@lists, @robot_ids, $family_name);
 
     if (ref $that and ref $that eq 'Sympa::Family') {
@@ -9361,6 +9371,9 @@ sub get_lists {
     my $limit = $options{'limit'} || undef;
     my $count = 0;
 
+    # Check signal at first.
+    return undef if $signalled;
+
     foreach my $robot_id (@robot_ids) {
         if (!Sympa::Tools::Data::smart_eq($Conf::Conf{'db_list_cache'}, 'on')
             or $options{'reload_config'}) {
@@ -9431,6 +9444,8 @@ sub get_lists {
 
             my @l = ();
             foreach my $listname (sort @requested_lists) {
+                return undef if $signalled;
+
                 ## create object
                 my $list = __PACKAGE__->new(
                     $listname,
@@ -9513,6 +9528,8 @@ sub get_lists {
             $sth = pop @sth_stack;
 
             foreach my $listname (@requested_lists) {
+                return undef if $signalled;
+
                 my $list = __PACKAGE__->new(
                     $listname,
                     $robot_id,

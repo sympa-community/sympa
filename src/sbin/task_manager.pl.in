@@ -159,7 +159,7 @@ unless (chdir($Conf::Conf{'home'})) {
 }
 
 ## Catch signals, in order to exit cleanly, whenever possible.
-$SIG{'TERM'} = 'sigterm';
+$SIG{'TERM'} = \&sigterm;
 $SIG{'INT'}  = \&sigterm;
 my $end = 0;
 
@@ -305,11 +305,12 @@ while (!$end) {
         }
     }
 
-    ## list tasks
+    # list tasks
     foreach my $robot (Sympa::List::get_robots()) {
         my $all_lists = Sympa::List::get_lists($robot);
-        foreach my $list (@$all_lists) {
+        last if $end;
 
+        foreach my $list (@{$all_lists || []}) {
             my %data = %default_data;
 
             $data{'list'} = {
@@ -350,6 +351,7 @@ while (!$end) {
             }
         }
     }
+    last if $end;
 
     ## Execute existing tasks
     ## List all tasks
@@ -416,7 +418,6 @@ while (!$end) {
     }
 
     sleep 60;
-    #$end = 1;
 
     ## Free zombie sendmail processes
     Sympa::Mailer->instance->reaper();
@@ -1336,6 +1337,7 @@ sub purge_spools {
             _clean_spool($directory, $clean_delay);
         }
     }
+
     # Expiring bad packets and messages in bulk spool.
     foreach my $subdir (qw(pct msg)) {
         my $directory   = $Conf::Conf{'queuebulk'} . '/bad/' . $subdir;
@@ -1344,6 +1346,7 @@ sub purge_spools {
             _clean_spool($directory, $clean_delay);
         }
     }
+
     # Expiring moderation spools, topic spool and temporary files.
     foreach my $queue (
         qw(queueauth queueautomatic queuemod queuesubscribe queuetopic tmpdir)
@@ -1354,6 +1357,7 @@ sub purge_spools {
             _clean_spool($directory, $clean_delay);
         }
     }
+
     # Expiring formatted held messages.
     my $all_lists = Sympa::List::get_lists('*');
     foreach my $list (@{$all_lists || []}) {
@@ -1363,6 +1367,8 @@ sub purge_spools {
             _clean_spool($directory, $clean_delay);
         }
     }
+
+    return 1;
 }
 
 # Old name: tools::CleanSpool(), Sympa::Tools::File::CleanDir().
@@ -1412,7 +1418,9 @@ sub purge_tables {
     $removed = 0;
     foreach my $robot (Sympa::List::get_robots()) {
         my $all_lists = Sympa::List::get_lists($robot);
-        foreach my $list (@$all_lists) {
+        return 1 if $end;
+
+        foreach my $list (@{$all_lists || []}) {
             my $tracking = Sympa::Tracking->new($list);
 
             $removed +=
@@ -1539,13 +1547,8 @@ sub purge_orphan_bounces {
 
     $log->syslog('info', '');
 
-    my $all_lists;
-    unless ($all_lists = Sympa::List::get_lists('*')) {
-        $log->syslog('notice', 'No list available');
-        return 1;
-    }
-
-    foreach my $list (@$all_lists) {
+    my $all_lists = Sympa::List::get_lists('*');
+    foreach my $list (@{$all_lists || []}) {
         # First time: loading DB entries into %bounced_users,
         # hash {'bounced address' => 1}
         my %bounced_users;
@@ -1601,19 +1604,18 @@ sub purge_orphan_bounces {
     return 1;
 }
 
+# If a bounce is older than $list->get_latest_distribution_date() - $delay
+# expire the bounce.
 sub expire_bounce {
-    # If a bounce is older than $list->get_latest_distribution_date() - $delay
-    # expire the bounce.
-    # May this variable be set in to task model ?
+    $log->syslog('debug2', '(%s, %s, %s)', @_);
+    #FXIME: May this variable be set in to task model ?
     my ($task, $Rarguments, $context) = @_;
 
     my @tab   = @{$Rarguments};
     my $delay = $tab[0];
 
-    $log->syslog('debug2', '(%d)', $delay);
     my $all_lists = Sympa::List::get_lists('*');
-    foreach my $list (@$all_lists) {
-
+    foreach my $list (@{$all_lists || []}) {
         my $listname = $list->{'name'};
 
         # the reference date is the date until which we expire bounces in
@@ -1705,8 +1707,7 @@ sub eval_bouncers {
     my ($task, $context) = @_;
 
     my $all_lists = Sympa::List::get_lists('*');
-    foreach my $list (@$all_lists) {
-
+    foreach my $list (@{$all_lists || []}) {
         my $listname     = $list->{'name'};
         my $list_traffic = {};
 
@@ -1754,14 +1755,8 @@ sub none {
     1;
 }
 
-## Routine for automatic bouncing users management
-##
-sub process_bouncers {
-###################
-    my ($task, $context) = @_;
-    $log->syslog('info', 'Processing automatic actions on bouncing users');
-
-###########################################################################
+# Routine for automatic bouncing users management
+#
 # This sub apply a treatment foreach category of bouncing-users
 #
 # The relation between possible actions and correponding subroutines
@@ -1773,7 +1768,9 @@ sub process_bouncers {
 # - the name of the current list
 # - a reference on users email list:
 # Look at the "remove_bouncers" sub in List.pm for an example
-###########################################################################
+sub process_bouncers {
+    my ($task, $context) = @_;
+    $log->syslog('info', 'Processing automatic actions on bouncing users');
 
     ## possible actions
     my %actions = (
@@ -1783,17 +1780,15 @@ sub process_bouncers {
     );
 
     my $all_lists = Sympa::List::get_lists('*');
-    foreach my $list (@$all_lists) {
+    foreach my $list (@{$all_lists || []}) {
         my $listname = $list->{'name'};
 
         my @bouncers;
-        # @bouncers = ( ['email1', 'email2', 'email3',....,],    There is one
-        # line
-        #               ['email1', 'email2', 'email3',....,],    foreach
-        #               bounce
-        #               ['email1', 'email2', 'email3',....,],)   level.
-
-        next unless ($list);
+        # @bouncers = (
+        #     ['email1', 'email2', 'email3',....,],    There is one line
+        #     ['email1', 'email2', 'email3',....,],    foreach bounce
+        #     ['email1', 'email2', 'email3',....,],    level.
+        # );
 
         my $max_level;
         for (
@@ -1967,6 +1962,9 @@ sub get_score {
 
 ## when we catch signal, just change the value of the loop variable.
 sub sigterm {
+    my ($sig) = @_;
+    $log->syslog('notice',
+        'Signal %s received, still processing current task', $sig);
     $end = 1;
 }
 

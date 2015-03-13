@@ -174,9 +174,9 @@ if ($main::options{'keepcopy'}) {
 # Catch signals, in order to exit cleanly, whenever possible.
 my $signal = 0;
 $SIG{'TERM'} = 'sigterm';
-$SIG{'INT'}  = \&sigterm;    # Interrupt from terminal.
+$SIG{'INT'}  = 'sigterm';    # Interrupt from terminal.
 $SIG{'HUP'}  = 'sighup';
-$SIG{'PIPE'} = 'IGNORE';     ## Ignore SIGPIPE ; prevents process from dying
+$SIG{'PIPE'} = 'IGNORE';     # Ignore SIGPIPE ; prevents process from dying
 
 # Main loop.
 # This loop is run foreach HUP signal received.
