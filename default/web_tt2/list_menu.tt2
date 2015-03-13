@@ -94,6 +94,10 @@
    [% IF action == 'stats' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
       <li class="[% class %]"><a href="[% path_cgi %]/stats/[% list %]">[%|loc%]Statistics[%END%]</a></li>
 [% END %]
+[% TRY %]
+    [% PROCESS additional_list_menu_links.tt2 %]
+    [% CATCH %]
+[% END %]
  </div>
 </div>
 <!-- end list_menu.tt2 -->
