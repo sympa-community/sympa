@@ -6,7 +6,7 @@
 
 <br /> 
 
-    [%|loc(owner)%]Owner: %1[%END%] <br />
+    [%|loc(doc_owner)%]Owner: %1[%END%] <br />
     [%|loc(doc_date)%]Last update: %1[%END%] <br />
     [%|loc(doc_title)%]Description: %1[%END%] <br /><br />
 
@@ -51,7 +51,7 @@
      <input type="hidden" name="path" value="[% path %]" />
      <input type="hidden" name="serial" value="[% serial_desc %]" />
      <input type="hidden" name="action" value="d_set_owner" />
-     <input maxlength="50" name="content" id="content" value="[% owner %]" size="30" />
+     <input maxlength="50" name="content" id="content" value="[% doc_owner %]" size="30" />
      <input class="MainMenuLinks" type="submit" name="action_d_set_owner" value="[%|loc%]Set owner[%END%]" />
      </P>
      </fieldset>

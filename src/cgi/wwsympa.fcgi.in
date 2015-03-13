@@ -19936,7 +19936,7 @@ sub do_d_control {
         $read = $desc_hash{'read'};
         $edit = $desc_hash{'edit'};
         # owner of the document
-        $param->{'owner'}     = $desc_hash{'email'};
+        $param->{'doc_owner'}     = $desc_hash{'email'};
         $param->{'doc_title'} = $desc_hash{'title'};
     } else {
         $read = $access{'scenario'}{'read'};
