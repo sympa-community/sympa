@@ -1206,9 +1206,6 @@ sub _load_auth {
                     }
 
                     $Conf{'cas_number'}{$robot}++;
-                    $Conf{'cas_id'}{$robot}
-                        {$current_paragraph->{'auth_service_name'}} =
-                        $#paragraphs + 1;
 
                     ## Default value for auth_service_friendly_name IS
                     ## auth_service_name
