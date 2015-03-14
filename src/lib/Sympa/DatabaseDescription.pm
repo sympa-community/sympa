@@ -552,7 +552,7 @@ my %full_db_struct = (
                 'doc'    => 'reception date of latest DSN or MDN',
                 'order'  => 6,
             },
-            'arrival_date_epoch_notification' => {
+            'arrival_epoch_notification' => {
                 'struct' => 'int(11)',
                 'doc'    => 'reception date of latest DSN or MDN',
                 'order'  => 7,

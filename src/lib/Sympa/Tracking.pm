@@ -106,7 +106,7 @@ sub get_recipients_status {
                      reception_option_notification AS reception_option,
                      status_notification AS status,
                      arrival_date_notification AS arrival_date,
-                     arrival_date_epoch_notification AS arrival_date_epoch,
+                     arrival_epoch_notification AS arrival_epoch,
                      type_notification AS "type",
                      pk_notification AS envid
               FROM notification_table
@@ -256,7 +256,7 @@ sub _db_insert_notification {
         $notification_id, $type, $status);
 
     chomp $arrival_date;
-    my $arrival_date_epoch = eval {
+    my $arrival_epoch = eval {
         DateTime::Format::Mail->new->loose->parse_datetime($arrival_date)
             ->epoch;
     };
@@ -266,11 +266,11 @@ sub _db_insert_notification {
             q{UPDATE notification_table
               SET status_notification = ?, type_notification = ?,
                   arrival_date_notification = ?,
-                  arrival_date_epoch_notification = ?
+                  arrival_epoch_notification = ?
               WHERE pk_notification = ?},
             $status, $type,
             $arrival_date,
-            $arrival_date_epoch,
+            $arrival_epoch,
             $notification_id
         )
         ) {

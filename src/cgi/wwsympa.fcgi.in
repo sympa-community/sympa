@@ -10545,8 +10545,8 @@ sub do_tracking {
     foreach my $info (@$tracking_info) {
         $info->{'arrival_date'} =
             $language->gettext_strftime('%d %b %Y at %H:%M:%S',
-            localtime $info->{'arrival_date_epoch'})
-            if defined $info->{'arrival_date_epoch'};
+            localtime $info->{'arrival_epoch'})
+            if defined $info->{'arrival_epoch'};
     }
 
     $param->{'tracking_info'} = $tracking_info;
