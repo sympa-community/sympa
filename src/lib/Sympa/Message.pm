@@ -63,6 +63,7 @@ use MIME::Parser;
 use MIME::Tools;
 use Net::DNS;
 use Scalar::Util qw();
+use Text::LineFold;
 use URI::Escape qw();
 
 BEGIN { eval 'use Crypt::SMIME'; }
@@ -3300,7 +3301,9 @@ sub _fix_utf8_parts {
 
 I<Instance method>.
 Gets decoded content of text/plain part.
+
 The text will be converted to UTF-8.
+Flowed text (see RFC 3676) will be conjuncted.
 
 =back
 
@@ -3315,7 +3318,7 @@ sub get_plain_body {
     return undef unless $entity->bodyhandle;
     my $body = $entity->bodyhandle->as_string;
 
-    ## Get charset
+    # Get charset
     my $cset =
         MIME::Charset->new($entity->head->mime_attr('Content-Type.Charset')
             || 'NONE');
@@ -3323,13 +3326,25 @@ sub get_plain_body {
         # Charset is unknown.  Detect 7-bit charset.
         $cset = MIME::Charset->new(MIME::Charset::detect_7bit_charset($body));
     }
-    if ($cset->decoder) {
-        $cset->encoder('UTF-8');
-    } else {
+    unless ($cset->decoder) {
         $cset = MIME::Charset->new('US-ASCII');
     }
 
-    return $cset->encode($body);
+    # Unfold flowed text if required.
+    my $format = lc($entity->head->mime_attr('Content-Type.Format') || '');
+    my $delsp  = lc($entity->head->mime_attr('Content-Type.DelSp')  || '');
+    if ($format eq 'flowed') {
+        my $linefold =
+            Text::LineFold->new(Charset => $cset, OutputCharset => 'UTF-8');
+        if ($delsp eq 'yes') {
+            return $linefold->unfold($body, 'FLOWED');
+        } else {
+            return $linefold->unfold($body, 'FLOWEDSP');
+        }
+    } else {
+        $cset->encoder('UTF-8');
+        return $cset->encode($body);
+    }
 }
 
 # Make multipart/alternative message to singlepart.

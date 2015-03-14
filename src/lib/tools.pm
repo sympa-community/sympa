@@ -82,53 +82,8 @@ sub by_date {
 # Moved to Sympa::Mailer::_safefork().
 #sub safefork ($i, $pid);
 
-####################################################
-# checkcommand
-####################################################
-# Checks for no command in the body of the message.
-# If there are some command in it, it return true
-# and send a message to $sender
-#
-# IN : -$msg (+): ref(MIME::Entity) - message to check
-#      -$sender (+): the sender of $msg
-#
-# OUT : -1 if there are some command in $msg
-#       -0 else
-#
-######################################################
-sub checkcommand {
-    my ($msg, $sender) = @_;
-
-    my $i;
-    my $hdr = $msg->head;
-
-    ## Check for commands in the subject.
-    my $subject = $msg->head->get('Subject');
-
-    $log->syslog('debug3', '(msg->head->get(subject) %s, %s)',
-        $subject, $sender);
-
-    if ($subject) {
-        if ($Conf::Conf{'misaddressed_commands_regexp'}
-            && ($subject =~ /^$Conf::Conf{'misaddressed_commands_regexp'}$/im)
-            ) {
-            return 1;
-        }
-    }
-
-    return 0 if ($#{$msg->body} >= 5);    ## More than 5 lines in the text.
-
-    foreach $i (@{$msg->body}) {
-        if ($Conf::Conf{'misaddressed_commands_regexp'}
-            && ($i =~ /^$Conf::Conf{'misaddressed_commands_regexp'}\b/im)) {
-            return 1;
-        }
-
-        ## Control is only applied to first non-blank line
-        last unless $i =~ /^\s*$/;
-    }
-    return 0;
-}
+# Moved to _check_command in sympa_msg.pl.
+#sub checkcommand;
 
 ## return a hash from the edit_list_conf file
 sub load_edit_list_conf {

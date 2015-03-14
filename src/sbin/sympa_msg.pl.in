@@ -49,7 +49,6 @@ use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Scenario;
 use Sympa::Spool;
-use tools;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -1278,9 +1277,10 @@ sub DoMessage {
 
     # Reject messages with commands
     if ($Conf::Conf{'misaddressed_commands'} =~ /reject/i) {
-        ## Check the message for commands and catch them.
-        if (tools::checkcommand($msg, $sender)) {
-            $log->syslog('err', 'Found command in message, ignoring message');
+        # Check the message for commands and catch them.
+        my $cmd = _check_command($message);
+        if (defined $cmd) {
+            $log->syslog('err', 'Found command "%s" in message, ignoring message', $cmd);
             Sympa::Report::reject_report_msg('user', 'routing_error', $sender,
                 {'message' => $message},
                 $robot_id, $msg_string, $list);
@@ -1779,6 +1779,49 @@ sub DoMessage {
         );
         return undef;
     }
+}
+
+# Checks command in the body of the message.
+# If there are any commands in it, returns string.
+#
+# IN : -$message (+): ref(Sympa::Message) - message to check
+#
+# OUT : -string: Command found
+#       -undef:  Else.
+#
+# Old name: tools::checkcommand().
+sub _check_command {
+    my $message = shift;
+
+    my $commands_re = $Conf::Conf{'misaddressed_commands_regexp'};
+    return undef unless defined $commands_re and length $commands_re;
+
+    # Check for commands in the subject.
+    my $subject_field = $message->{'decoded_subject'};
+    $subject_field = '' unless defined $subject_field;
+    $subject_field =~ s/\n//mg;    # multiline subjects
+    my $re_regexp = Sympa::Regexps::re();
+    $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
+
+    if ($subject_field =~ /^($commands_re)$/im) {
+        return $1;
+    }
+
+    my @body = map { s/\r\n|\n//; $_ } split /(?<=\n)/,
+        ($message->get_plain_body || '');
+
+    # More than 5 lines in the text.
+    return undef if scalar @body > 5;
+
+    foreach my $line (@body) {
+        if ($line =~ /^($commands_re)\b/im) {
+            return $1;
+        }
+
+        # Control is only applied to first non-blank line.
+        last unless $line =~ /\A\s*\z/;
+    }
+    return undef;
 }
 
 ############################################################
