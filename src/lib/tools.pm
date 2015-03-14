@@ -437,7 +437,7 @@ sub get_template_path {
 
 ## Escape characters before using a string within a regexp parameter
 ## Escaped characters are : @ $ [ ] ( ) ' ! '\' * . + ?
-# DEPRECATED: Use "s/([\x00-\x1F\s\w\x7F-\xFF])/\\$1/g;".
+# DEPRECATED: Use "s/([^\x00-\x1F\s\w\x7F-\xFF])/\\$1/g;".
 #sub escape_regexp ($s);
 
 # Escape weird characters
