@@ -502,9 +502,9 @@ sub get_tag {
         $name = '*';
     }
 
-    return
-        substr(Digest::MD5::md5_hex(join '/', $Conf::Conf{'cookie'}, $name),
-        -10);
+    my $cookie = $Conf::Conf{'cookie'};
+    $cookie = '' unless defined $cookie;
+    return substr(Digest::MD5::md5_hex(join '/', $cookie, $name), -10);
 }
 
 1;
