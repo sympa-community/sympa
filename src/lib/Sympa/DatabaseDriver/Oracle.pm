@@ -131,31 +131,34 @@ sub is_autoinc {
     return $sth->fetchrow_array;
 }
 
-=begin comment
-
-#FIXME: Currently not works.
 sub set_autoinc {
     my $self  = shift;
     my $param = shift;
     $log->syslog('debug', 'Setting field %s.%s as autoincremental',
         $param->{'field'}, $param->{'table'});
+
+    my $field = $param->{'field'};
+    my $table = $param->{'table'};
+
     unless (
-        $self->do_query(
-            "ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",
-            $param->{'table'}, $param->{'field'}, $param->{'field'}
+        $self->do_query(q{CREATE SEQUENCE seq_%s}, $field)
+        and $self->do_query(
+            q{CREATE OR REPLACE TRIGGER trg_%s
+              BEFORE INSERT ON %s
+              FOR EACH ROW BEGIN
+                SELECT seq_%s.nextval
+                INTO :new.%s
+                FROM dual;
+              END;}, $field, $table, $field, $field
         )
         ) {
         $log->syslog('err',
             'Unable to set field %s in table %s as autoincrement',
-            $param->{'field'}, $param->{'table'});
+            $field, $table);
         return undef;
     }
     return 1;
 }
-
-=end comment
-
-=cut
 
 sub get_tables {
     my $self = shift;
@@ -226,52 +229,52 @@ sub get_fields {
     return \%result;
 }
 
-=begin comment
-
-#FIXME: Currently not works.
 sub update_field {
     my $self  = shift;
     my $param = shift;
     $log->syslog('debug', 'Updating field %s in table %s (%s, %s)',
         $param->{'field'}, $param->{'table'}, $param->{'type'},
         $param->{'notnull'});
+
+    # Check NOT NULL constraint on current field.
+    # If new constraint in the query below is same as old one, query fails.
+    my $sth = $self->do_prepared_query(
+        q{SELECT nullable
+          FROM all_tab_columns
+          WHERE table_name = ? AND column_name = ?},
+        uc($param->{'table'}), uc($param->{'field'})
+    );
+    unless ($sth) {
+        return undef;
+    }
+    my ($nullable) = $sth->fetchrow_array;
+    $sth->finish;
+
     my $options = '';
     if ($param->{'notnull'}) {
-        $options .= ' NOT NULL ';
+        $options .= ' NOT NULL' unless $nullable and $nullable eq 'N';
+    } else {
+        $options .= ' NULL' if $nullable and $nullable eq 'N';
     }
-    my $report = sprintf(
-        "ALTER TABLE %s CHANGE %s %s %s %s",
-        $param->{'table'}, $param->{'field'}, $param->{'field'},
-        $param->{'type'},  $options
-    );
-    $log->syslog('notice', "ALTER TABLE %s CHANGE %s %s %s %s",
-        $param->{'table'}, $param->{'field'}, $param->{'field'},
-        $param->{'type'}, $options);
+
     unless (
         $self->do_query(
-            "ALTER TABLE %s CHANGE %s %s %s %s",
-            $param->{'table'}, $param->{'field'}, $param->{'field'},
-            $param->{'type'},  $options
+            q{ALTER TABLE %s
+              MODIFY (%s %s %s)},
+            $param->{'table'}, $param->{'field'}, $param->{'type'}, $options
         )
         ) {
         $log->syslog('err', 'Could not change field "%s" in table "%s"',
             $param->{'field'}, $param->{'table'});
         return undef;
     }
-    $report .= sprintf("\nField %s in table %s, structure updated",
-        $param->{'field'}, $param->{'table'});
+    my $report = sprintf 'Field %s in table %s, structure updated',
+        $param->{'field'}, $param->{'table'};
     $log->syslog('info', 'Field %s in table %s, structure updated',
         $param->{'field'}, $param->{'table'});
     return $report;
 }
 
-=end comment
-
-=cut
-
-=begin comment
-
-#FIXME: Currently not works.
 sub add_field {
     my $self  = shift;
     my $param = shift;
@@ -281,22 +284,17 @@ sub add_field {
         $param->{'type'},    $param->{'notnull'},
         $param->{'autoinc'}, $param->{'primary'}
     );
+
     my $options = '';
-    # To prevent "Cannot add a NOT NULL column with default value NULL" errors
     if ($param->{'notnull'}) {
-        $options .= 'NOT NULL ';
+        $options .= ' NOT NULL';
     }
-    if ($param->{'autoinc'}) {
-        $options .= ' AUTO_INCREMENT ';
-    }
-    if ($param->{'primary'}) {
-        $options .= ' PRIMARY KEY ';
-    }
+
     unless (
         $self->do_query(
-            "ALTER TABLE %s ADD %s %s %s", $param->{'table'},
-            $param->{'field'},             $param->{'type'},
-            $options
+            q{ALTER TABLE %s
+              ADD (%s %s %s)},
+            $param->{'table'}, $param->{'field'}, $param->{'type'}, $options
         )
         ) {
         $log->syslog('err',
@@ -305,21 +303,14 @@ sub add_field {
         return undef;
     }
 
-    my $report = sprintf('Field %s added to table %s (options : %s)',
-        $param->{'field'}, $param->{'table'}, $options);
+    my $report = sprintf 'Field %s added to table %s (options : %s)',
+        $param->{'field'}, $param->{'table'}, $options;
     $log->syslog('info', 'Field %s added to table %s (options: %s)',
         $param->{'field'}, $param->{'table'}, $options);
 
     return $report;
 }
 
-=end comment
-
-=cut
-
-=begin comment
-
-#FIXME: Currently not works.
 sub delete_field {
     my $self  = shift;
     my $param = shift;
@@ -328,7 +319,9 @@ sub delete_field {
 
     unless (
         $self->do_query(
-            "ALTER TABLE %s DROP COLUMN `%s`", $param->{'table'},
+            q{ALTER TABLE %s
+              DROP (%s)},
+            $param->{'table'},
             $param->{'field'}
         )
         ) {
@@ -345,10 +338,6 @@ sub delete_field {
 
     return $report;
 }
-
-=end comment
-
-=cut
 
 sub get_primary_key {
     my $self  = shift;
@@ -383,22 +372,17 @@ sub get_primary_key {
     return \%found_keys;
 }
 
-=begin comment
-
-# Currently not work
 sub unset_primary_key {
     my $self  = shift;
     my $param = shift;
     $log->syslog('debug', 'Removing primary key from table %s',
         $param->{'table'});
 
-    return undef;    # Currently disabled.
-
     my $sth;
     unless (
         $sth = $self->do_query(
             q{ALTER TABLE %s
-              DROP PRIMARY KEY CASCADE}, $param->{'table'}
+              DROP PRIMARY KEY}, $param->{'table'}
         )
         ) {
         $log->syslog('err',
@@ -406,19 +390,12 @@ sub unset_primary_key {
             $param->{'table'}, $self->{'db_name'});
         return undef;
     }
-    my $report = "Table $param->{'table'}, PRIMARY KEY dropped";
+    my $report = sprintf 'Table %s, PRIMARY KEY dropped', $param->{'table'};
     $log->syslog('info', 'Table %s, PRIMARY KEY dropped', $param->{'table'});
 
     return $report;
 }
 
-=end comment
-
-=cut
-
-=begin comment
-
-# Currently not work
 sub set_primary_key {
     my $self  = shift;
     my $param = shift;
@@ -431,13 +408,11 @@ sub set_primary_key {
     $pkname =~ s/_table\z//;
     $pkname = "ind_$pkname";
 
-    return undef;    # Currently disabled.
-
     unless (
         $sth = $self->do_query(
             q{ALTER TABLE %s
-              ADD CONSTRAINT %s PRIMARY KEY (%s)}, $param->{'table'},
-            $pkname,                               $fields
+              ADD CONSTRAINT %s PRIMARY KEY (%s)},
+            $param->{'table'}, $pkname, $fields
         )
         ) {
         $log->syslog(
@@ -449,15 +424,12 @@ sub set_primary_key {
         );
         return undef;
     }
-    my $report = "Table $param->{'table'}, PRIMARY KEY set on $fields";
+    my $report = sprintf 'Table %s, PRIMARY KEY set on %s', $param->{'table'},
+        $fields;
     $log->syslog('info', 'Table %s, PRIMARY KEY set on %s',
         $param->{'table'}, $fields);
     return $report;
 }
-
-=end comment
-
-=cut
 
 # Note: We assume that indexes other than primary key are _not_ unique keys.
 sub get_indexes {
@@ -494,9 +466,6 @@ sub get_indexes {
     return \%found_indexes;
 }
 
-=begin comment
-
-#FIXME: Currently not works.
 sub unset_index {
     my $self  = shift;
     my $param = shift;
@@ -504,12 +473,7 @@ sub unset_index {
         $param->{'index'}, $param->{'table'});
 
     my $sth;
-    unless (
-        $sth = $self->do_query(
-            "ALTER TABLE %s DROP INDEX %s", $param->{'table'},
-            $param->{'index'}
-        )
-        ) {
+    unless ($sth = $self->do_query(q{DROP INDEX %s}, $param->{'index'})) {
         $log->syslog('err',
             'Could not drop index %s from table %s in database %s',
             $param->{'index'}, $param->{'table'}, $self->{'db_name'});
@@ -522,13 +486,6 @@ sub unset_index {
     return $report;
 }
 
-=end comment
-
-=cut
-
-=begin comment
-
-#FIXME: Currently not works.
 sub set_index {
     my $self  = shift;
     my $param = shift;
@@ -543,8 +500,9 @@ sub set_index {
     );
     unless (
         $sth = $self->do_query(
-            "ALTER TABLE %s ADD INDEX %s (%s)", $param->{'table'},
-            $param->{'index_name'},             $fields
+            q{CREATE INDEX %s
+              ON %s (%s)},
+            $param->{'index_name'}, $param->{'table'}, $fields
         )
         ) {
         $log->syslog(
@@ -556,15 +514,12 @@ sub set_index {
         );
         return undef;
     }
-    my $report = "Table $param->{'table'}, index %s set using $fields";
+    my $report = sprintf 'Table %s, index %s set using fields %s',
+        $param->{'table'}, $param->{'index_name'}, $fields;
     $log->syslog('info', 'Table %s, index %s set using fields %s',
         $param->{'table'}, $param->{'index_name'}, $fields);
     return $report;
 }
-
-=end comment
-
-=cut
 
 sub translate_type {
     my $self = shift;
