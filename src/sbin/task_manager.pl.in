@@ -1368,6 +1368,26 @@ sub purge_spools {
         }
     }
 
+    # Removing messages in bulk spool with no more packet.
+    my $pct_directory = $Conf::Conf{'queuebulk'} . '/pct';
+    my $msg_directory = $Conf::Conf{'queuebulk'} . '/msg';
+    my $dh;
+    if (opendir $dh, $pct_directory) {
+        my $msgpath;
+        while ($msgpath = readdir $dh) {
+            next if $msgpath =~ /\A\./;
+            next unless -d $pct_directory . '/' . $msgpath;
+            next
+                if time - 3600 < Sympa::Tools::File::get_mtime(
+                $pct_directory . '/' . $msgpath);
+
+            # If packet directory is empty, remove message also.
+            unlink($msg_directory . '/' . $msgpath)
+                if rmdir($pct_directory . '/' . $msgpath);
+        }
+        closedir $dh;
+    }
+
     return 1;
 }
 
