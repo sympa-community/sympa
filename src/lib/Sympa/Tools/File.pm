@@ -292,7 +292,8 @@ Full path of file.
 Returns:
 
 Modification time as UNIX time.
-If the file is not found or is not readable, returns C<POSIX::INT_MIN>.
+If the file is not found (including the case that the file vanishes during
+execution of this function) or is not readable, returns C<POSIX::INT_MIN>.
 In case of other error, returns C<undef>.
 
 =back
@@ -303,10 +304,8 @@ sub get_mtime {
     my $file = shift;
     die 'Missing parameter $file' unless $file;
 
-    return POSIX::INT_MIN() unless -e $file and -r $file;
-
     my @stat = stat $file;
-    return $stat[9];
+    return (-e $file and -r $file) ? $stat[9] : POSIX::INT_MIN();
 }
 
 ## Find a file in an ordered list of directories
