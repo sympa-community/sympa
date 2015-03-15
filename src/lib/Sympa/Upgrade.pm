@@ -1608,6 +1608,21 @@ sub upgrade {
         }
     }
 
+    # arrival_date_epoch_notification field was renamed to
+    # arrival_epoch_notification.
+    if (lower_version($previous_version, '6.2b.10')
+        and not lower_version($previous_version, '6.2b.3')) {
+        $log->syslog('info', 'Upgrading notification_table.');
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        $sdm
+            and $sdm->do_prepared_query(
+            q{UPDATE notification_table
+              SET arrival_epoch_notification = arrival_date_epoch_notification
+              WHERE arrival_date_epoch_notification IS NOT NULL}
+            );
+    }
+
     return 1;
 }
 
