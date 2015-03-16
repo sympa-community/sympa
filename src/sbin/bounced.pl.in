@@ -999,9 +999,11 @@ Sympa::Tools::Daemon::remove_pid('bounced', $PID);
 
 exit(0);
 
-## When we catch signal, just change the value of the loop
-## variable.
+# When we catch signal, just change the value of the loop variable.
 sub sigterm {
+    my ($sig) = @_;
+    $log->syslog('notice',
+        'Signal %s received, still processing current task', $sig);
     $end = 1;
 }
 
