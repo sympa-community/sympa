@@ -140,8 +140,22 @@ sub set_autoinc {
     my $field = $param->{'field'};
     my $table = $param->{'table'};
 
+    # Check if sequence already exists.
+    my $seq_exists;
+    my $sth = $self->do_query(
+        q{SELECT COUNT(*)
+          FROM all_objects
+          WHERE object_type = 'SEQUENCE' AND object_name = '%s'},
+        uc sprintf('seq_%s', $field)
+    );
+    if ($sth) {
+        ($seq_exists) = $sth->fetchrow_array;
+        $sth->finish;
+    }
+
+    # (Re-)create trigger.
     unless (
-        $self->do_query(q{CREATE SEQUENCE seq_%s}, $field)
+        ($seq_exists or $self->do_query(q{CREATE SEQUENCE seq_%s}, $field))
         and $self->do_query(
             q{CREATE OR REPLACE TRIGGER trg_%s
               BEFORE INSERT ON %s
