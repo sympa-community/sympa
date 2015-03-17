@@ -73,6 +73,7 @@ nobase_modules_DATA = \
 	Sympa/SOAP.pm \
 	Sympa/SOAP/Transport.pm \
 	Sympa/Spool.pm \
+	Sympa/Spool/Archive.pm \
 	Sympa/Task.pm \
 	Sympa/Template.pm \
 	tools.pm \
@@ -123,6 +124,7 @@ MAN3PM = \
 	Sympa/ModDef.pm \
 	Sympa/Regexps.pm \
 	Sympa/Spool.pm \
+	Sympa/Spool/Archive.pm \
 	Sympa/Template.pm \
 	Sympa/Tools/Daemon.pm \
 	Sympa/Tools/File.pm \

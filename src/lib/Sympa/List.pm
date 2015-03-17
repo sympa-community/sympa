@@ -63,6 +63,7 @@ use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
 use Sympa::Spool;
+use Sympa::Spool::Archive;
 use Sympa::Task;
 use Sympa::Template;
 use tools;
@@ -5794,13 +5795,9 @@ sub archive_ls {
     Sympa::Archive::list($dir) if ($self->is_archived());
 }
 
-## Archive
-
-our $serial_number = 0;    # incremented on each archived mail
-
 sub archive_msg {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my ($self, $message) = @_;
-    $log->syslog('debug2', 'For %s', $self->{'name'});
 
     if ($self->is_archiving_enabled) {
         my $msg_string = $message->to_string(
@@ -5808,13 +5805,9 @@ sub archive_msg {
                 $self->{admin}{archive_crypted_msg}, 'original'
             )
         );
-
         Sympa::Archive::store_last($self, $msg_string);
 
-        ## copie a message in outgoing spool using a unique file name based on
-        ## listname
-
-        ## ignoring message with a no-archive flag
+        # Ignoring message with a no-archive flag
         if (!Sympa::Tools::Data::smart_eq(
                 $Conf::Conf{'ignore_x_no_archive_header_feature'}, 'on')
             and (  grep {/yes/i} $message->get_header('X-no-archive')
@@ -5827,31 +5820,13 @@ sub archive_msg {
             return 1;
         }
 
-        ## Create the archive directory if needed
-        my $queue = $Conf::Conf{'queueoutgoing'};
-        unless (-d $queue) {
-            mkdir($queue, 0775);
-            chmod 0774, $queue;
-            $log->syslog('info', 'Creating %s', $queue);
-        }
-
-        my @now = localtime(time);
-
-        # my $prefix = sprintf("%04d-%02d-%02d-%02d-%02d-%02d",
-        #     1900+$now[5],$now[4]+1,$now[3],$now[2],$now[1],$now[0]);
-        # my $filename = "$queue"."/"."$prefix-$list_id";
-        my $filename = sprintf '%s/%s.%d.%d.%d',
-            $queue, $self->get_list_id, time, $$, $serial_number;
-        $serial_number = ($serial_number + 1) % 100000;
-        unless (open(OUT, "> $filename")) {
-            $log->syslog('info',
-                'Error unable open outgoing dir %s for list %s',
-                $queue, $self->get_list_id);
-            return undef;
-        }
-        $log->syslog('debug', 'Put message in %s', $filename);
-        print OUT $msg_string;
-        close OUT;
+        my $spool = Sympa::Spool::Archive->new;
+        return $spool->store(
+            $message,
+            original => Sympa::Tools::Data::smart_eq(
+                $self->{admin}{archive_crypted_msg}, 'original'
+            )
+        );
     }
 }
 

@@ -33,6 +33,8 @@ use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::List;
+use Sympa::Message;
+use Sympa::Spool::Archive;
 
 my %month_idx = qw(jan 1
     fev 2
@@ -182,10 +184,15 @@ if ($opt{'input-directory'}) {
 
 print STDERR "\nFound $msg_count messages\n";
 
-## Rebuild web archives
+# Rebuild web archives
 print STDERR "Rebuilding HTML\n";
-my $list_id = $list->get_list_id();
-`touch $Conf::Conf{'queueoutgoing'}/.rebuild.$list_id`;
+my $arc_message = Sympa::Message->new(
+    sprintf("\nrebuildarc %s *\n\n", $list->{'name'}),
+    context => $list->{'domain'},
+    sender  => sprintf('listmaster@%s', $list->{'domain'}),
+    date    => time
+);
+Sympa::Spool::Archive->new->store($arc_message);
 
 print STDERR "\nHave a look in $dest_dir/-/ directory for messages dateless
 Now, you should add a web_archive parameter in the config file to make it accessible from the web\n";

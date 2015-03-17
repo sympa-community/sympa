@@ -154,8 +154,9 @@ sub store {
     $message->{date} = time unless defined $message->{date};
 
     my $marshalled =
-        Sympa::Spool::store_spool($self->{directory}, $message, '%d.%f.%s@%s,%ld,%d',
-        [qw(date TIME localpart domainpart PID RAND)], %options);
+        Sympa::Spool::store_spool($self->{directory}, $message,
+        '%d.%f.%s@%s,%ld,%d', [qw(date TIME localpart domainpart PID RAND)],
+        %options);
     return unless $marshalled;
 
     $log->syslog('notice', 'Message %s is stored into archive spool as <%s>',
@@ -296,7 +297,7 @@ Otherwise C<undef>.
 
 =head1 SEE ALSO
 
-L<archived(8)>, L<Sympa::Message>.
+L<sympa_msg(8)>, L<archived(8)>, L<Sympa::Message>.
 
 =head1 HISTORY
 

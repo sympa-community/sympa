@@ -71,6 +71,7 @@ use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Crash Hook => \&_crash_handler;    # Show traceback.
 use Sympa::Database;
+use Sympa::DatabaseManager;
 use Sympa::Family;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
@@ -82,10 +83,10 @@ use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Robot;
 use Sympa::Scenario;
-use SDM;
 use Sympa::Session;
 use Sympa::SharedDocument;
 use Sympa::Spool;
+use Sympa::Spool::Archive;
 use Sympa::Template;
 use tools;
 use Sympa::Tools::Data;
@@ -957,9 +958,10 @@ my %filtering = (
 my $language = Sympa::Language->instance;
 $language->set_lang($Conf::Conf{'lang'}, 'en');
 
-## Important to leave this there because it defined defaults for
-## user_data_source
-SDM::check_db_connect();
+# Important to leave this there because it defined defaults for
+# user_data_source
+#FIXME: Is it really required?
+Sympa::DatabaseManager->instance;
 
 # Now, load all components which are implemented as plugins.  Those will
 # add fields to above configuration and may do database upgrades.
@@ -971,12 +973,12 @@ my $maintenance_mode;
 unless (Conf::data_structure_uptodate()) {
     $maintenance_mode = 1;
     $log->syslog('err',
-        'WWSympa set to maintenance mode; you should run sympa.pl --upgrade'
-    );
+        'WWSympa set to maintenance mode; you should run sympa.pl --upgrade');
 } elsif (Conf::cookie_changed()) {
     $maintenance_mode = 1;
     $log->syslog('err',
-        'WWSympa set to maintenance mode; sympa.conf/cookie parameter has changed.');
+        'WWSympa set to maintenance mode; sympa.conf/cookie parameter has changed.'
+    );
 }
 
 Sympa::Tools::Password::ciphersaber_installed();
@@ -1048,7 +1050,7 @@ while ($query = new_loop()) {
     $UID = $EUID;    ## UID
     $GID = $EGID;    ## GID
 
-    unless (SDM::check_db_connect()) {
+    unless (Sympa::DatabaseManager->instance) {
         Sympa::Report::reject_report_web('system_quiet', 'no_database', {},
             '', '');
         $log->syslog('info', 'WWSympa requires a RDBMS to run');
@@ -10151,15 +10153,7 @@ sub do_remove_arc {
     wwslog('info', 'List %s, yyyy %s, mm %s, #message %s',
         $in{'list'}, $in{'yyyy'}, $in{'month'});
 
-    my $arcpath =
-          Conf::get_robot_conf($robot, 'arc_path') . '/'
-        . $list->get_list_id() . '/'
-        . $in{'yyyy'} . '-'
-        . $in{'month'};
-
-    ## Access control
-
-#    $in{'msgid'} = tools::unescape_chars($in{'msgid'});
+    # $in{'msgid'} = tools::unescape_chars($in{'msgid'});
     my @msgids = split /\0/, $in{'msgid'};
 
     unless (@msgids) {
@@ -10177,18 +10171,30 @@ sub do_remove_arc {
         return undef;
     }
 
-    my $file =
-          $Conf::Conf{'queueoutgoing'}
-        . '/.remove.'
-        . $list->get_list_id() . '.'
-        . $in{'yyyy'} . '-'
-        . $in{'month'} . '.'
-        . time;
-    unless (open REBUILD, ">$file") {
-        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-            {'file' => $file},
+    my $msg_string = "\n\n";
+    my $tracking   = Sympa::Tracking->new($list);
+    foreach my $msgid (@msgids) {
+        chomp $msgid;
+        $msg_string .= sprintf "remove_arc %s %s-%s %s\n", $list->{'name'},
+            $in{'yyyy'}, $in{'month'}, $msgid;
+
+        #FIXME: Removing tracking should be done by archived.
+        $tracking->remove_message_by_id($msgid);
+    }
+    my $arc_message = Sympa::Message->new(
+        $msg_string,
+        context => $robot,
+        sender  => $param->{'user'}{'email'},
+        date    => time
+    );
+    my $marshalled = Sympa::Spool::Archive->new->store($arc_message);
+    unless ($marshalled) {
+        Sympa::Report::reject_report_web('intern', 'cannot_store_command',
+            {'command' => 'remove'},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-        wwslog('info', 'Cannot create %s', $file);
+        wwslog('info',
+            'Cannot store command to remove archive %s-%s of list %s',
+            $in{'yyyy'}, $in{'month'}, $list);
         web_db_log(
             {   'parameters' => $in{'msgid'},
                 'msg_id'     => $in{'msgid'},
@@ -10196,25 +10202,9 @@ sub do_remove_arc {
                 'error_type' => 'internal'
             }
         );
-        closedir ARC;
         return undef;
     }
 
-    my $tracking = Sympa::Tracking->new($list);
-
-    foreach my $msgid (@msgids) {
-        chomp $msgid;
-        $msgid = tools::clean_msg_id($msgid);
-        next unless $msgid;
-
-        printf REBUILD "%s||%s\n", $msgid, $param->{'user'}{'email'};
-        ######################################################################
-        # Tracking
-        # Removing tracking should be done by archived.
-        $tracking->remove_message_by_id($msgid);
-        ######################################################################
-    }
-    close REBUILD;
     wwslog(
         'info',
         '%d messages marked to be removed by archived',
@@ -11931,27 +11921,9 @@ sub do_resetbounce {
 sub do_rebuildarc {
     wwslog('info', '(%s, %s)', $param->{'list'}, $in{'month'});
 
-    my $file =
-        $Conf::Conf{'queueoutgoing'} . '/.rebuild.' . $list->get_list_id();
-
-    unless (open REBUILD, ">$file") {
-        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-            {'file' => $file},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-        wwslog('info', 'Cannot create %s', $file);
-        web_db_log(
-            {   'parameters' => $in{'month'},
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
+    unless (_rebuildarc($list)) {
         return undef;
     }
-
-    wwslog('info', '%s', $file);
-
-    print REBUILD ' ';
-    close REBUILD;
 
     Sympa::Report::notice_report_web('performed_soon', {},
         $param->{'action'});
@@ -11963,36 +11935,47 @@ sub do_rebuildarc {
     return 'admin';
 }
 
-## Rebuild all archives using arctxt/
+sub _rebuildarc {
+    my $that = shift;
+
+    my $listname;
+    if (ref $list eq 'Sympa::List') {
+        $listname = $list->{'name'};
+    } else {
+        $listname = '*';
+    }
+
+    my $arc_message = Sympa::Message->new(
+        sprintf("\nrebuildarc %s *\n\n", $listname),
+        context => $robot,
+        sender  => $param->{'user'}{'email'},
+        date    => time
+    );
+    my $marshalled = Sympa::Spool::Archive->new->store($arc_message);
+    unless ($marshalled) {
+        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
+            {'command' => 'rebuild'},
+            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+        wwslog('info', 'Cannot store command to rebuild archive of list %s',
+            $list);
+        web_db_log(
+            {   'parameters' => $in{'month'},
+                'status'     => 'error',
+                'error_type' => 'internal'
+            }
+        );
+        return undef;
+    }
+
+    return 1;
+}
+
+# Rebuild all archives using arctxt/
 sub do_rebuildallarc {
     wwslog('info', '');
 
-    my $all_lists = Sympa::List::get_lists($robot);
-    foreach my $list (@$all_lists) {
-        next unless defined $list->{'admin'}{'archive'};
-        my $file =
-              $Conf::Conf{'queueoutgoing'}
-            . '/.rebuild.'
-            . $list->get_list_id();
-
-        unless (open REBUILD, ">$file") {
-            Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-                {'file' => $file},
-                $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
-            wwslog('info', 'Cannot create %s', $file);
-            web_db_log(
-                {   'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-
-        wwslog('info', '%s', $file);
-
-        print REBUILD ' ';
-        close REBUILD;
-
+    unless (_rebuildarc($robot)) {
+        return undef;
     }
     Sympa::Report::notice_report_web('performed_soon', {},
         $param->{'action'});
@@ -19936,7 +19919,7 @@ sub do_d_control {
         $read = $desc_hash{'read'};
         $edit = $desc_hash{'edit'};
         # owner of the document
-        $param->{'doc_owner'}     = $desc_hash{'email'};
+        $param->{'doc_owner'} = $desc_hash{'email'};
         $param->{'doc_title'} = $desc_hash{'title'};
     } else {
         $read = $access{'scenario'}{'read'};

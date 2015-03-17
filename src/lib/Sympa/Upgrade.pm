@@ -32,6 +32,7 @@ use File::Find qw();
 use File::Path qw();
 use MIME::Base64 qw();
 use POSIX qw();
+use Time::Local qw();
 
 use Sympa;
 use Sympa::Archive;
@@ -45,6 +46,7 @@ use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
 use Sympa::Spool;
+use Sympa::Spool::Archive;
 use tools;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
@@ -157,17 +159,18 @@ sub upgrade {
             next
                 unless defined $list->{'admin'}{'web_archive'}
                     or defined $list->{'admin'}{'archive'};
-            my $file =
-                  $Conf::Conf{'queueoutgoing'}
-                . '/.rebuild.'
-                . $list->get_list_id();
 
-            unless (open REBUILD, ">$file") {
-                $log->syslog('err', 'Cannot create %s', $file);
+            my $arc_message = Sympa::Message->new(
+                sprintf("\nrebuildarc %s *\n\n", $list->{'name'}),
+                context => $list->{'domain'},
+                sender  => sprintf('listmaster@%s', $list->{'domain'}),
+                date    => time
+            );
+            unless (Sympa::Spool::Archive->new->store($arc_message)) {
+                $log->syslog('err', 'Cannot rebuild web archive of %s',
+                    $list);
                 next;
             }
-            print REBUILD ' ';
-            close REBUILD;
         }
     }
 
@@ -564,17 +567,18 @@ sub upgrade {
             next
                 unless defined $list->{'admin'}{'web_archive'}
                     or defined $list->{'admin'}{'archive'};
-            my $file =
-                  $Conf::Conf{'queueoutgoing'}
-                . '/.rebuild.'
-                . $list->get_list_id();
 
-            unless (open REBUILD, ">$file") {
-                $log->syslog('err', 'Cannot create %s', $file);
+            my $arc_message = Sympa::Message->new(
+                sprintf("\nrebuildarc %s *\n\n", $list->{'name'}),
+                context => $list->{'domain'},
+                sender  => sprintf('listmaster@%s', $list->{'domain'}),
+                date    => time
+            );
+            unless (Sympa::Spool::Archive->new->store($arc_message)) {
+                $log->syslog('err', 'Cannot rebuild web archive of %s',
+                    $list);
                 next;
             }
-            print REBUILD ' ';
-            close REBUILD;
         }
 
     }
@@ -1621,6 +1625,148 @@ sub upgrade {
               SET arrival_epoch_notification = arrival_date_epoch_notification
               WHERE arrival_date_epoch_notification IS NOT NULL}
             );
+    }
+
+    # As of 6.2, format of archive spool was changed.
+    if (lower_version($previous_version, '6.2b.10')) {
+        $log->syslog('info', 'Upgrading archive spool.');
+        my $spool = Sympa::Spool::Archive->new;
+
+        mkdir($spool->{directory} . '/migrated/')
+            unless -d $spool->{directory} . '/migrated/';
+
+        my $dh;
+        unless (opendir $dh, $spool->{directory}) {
+            $log->syslog('err', 'Can\'t open directory %s: %m',
+                $spool->{directory});
+            return undef;
+        }
+        my @files =
+            sort grep {/(^[^\.]|^\.(remove|rebuild)\.(.*))/} readdir $dh;
+        closedir $dh;
+
+        foreach my $file (@files) {
+            next unless -f $spool->{directory} . '/' . $file;
+            my $lock_fh =
+                Sympa::LockedFile->new($spool->{directory} . '/' . $file,
+                5, '+<');
+            next unless $lock_fh;
+
+            my ($metadata, $message);
+            if ($metadata = Sympa::Spool::unmarshal_metadata(
+                    $spool->{directory},
+                    $file,
+                    qr/\A\.remove\.([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d\d\d\d\-\d\d)\.(\d+)\z/,
+                    [qw(localpart domainpart arc date)]
+                )
+                ) {
+                my $arc  = $metadata->{arc};
+                my $date = $metadata->{date};
+                my $list = $metadata->{context};
+                next unless ref $list eq 'Sympa::List';
+
+                my $old_string = do { local $RS; <$lock_fh> };
+                foreach my $line (split /\n+/, $old_string) {
+                    next unless $line =~ /\S/;
+                    $line =~ s/\s*$//;
+                    my ($msgid, $sender) = split /\|\|/, $line;
+                    next unless $msgid and $sender;
+
+                    my $msg_string = sprintf "\n\nremove_arc %s %s %s\n",
+                        $list->{'name'}, $arc, $msgid;
+                    my $message = Sympa::Message->new(
+                        $msg_string,
+                        context => $list->{'domain'},
+                        sender  => $sender,
+                        date    => $date
+                    );
+                    if ($message) {
+                        $spool->store($message);
+                    }
+                }
+                $lock_fh->rename(
+                    $spool->{directory} . '/migrated/' . $lock_fh->basename);
+            } elsif (
+                $metadata = Sympa::Spool::unmarshal_metadata(
+                    $spool->{directory},
+                    $file,
+                    qr/\A\.rebuild\.([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d{4}-\d{2})\z/,
+                    [qw(localpart domainpart arc)]
+                )
+                or $metadata = Sympa::Spool::unmarshal_metadata(
+                    $spool->{directory}, $file,
+                    qr/\A\.rebuild\.([^\s\@]+)(?:\@([\w\.\-]+))?\z/,
+                    [qw(localpart domainpart)]
+                )
+                ) {
+                my $list = $metadata->{context};
+                next unless ref $list eq 'Sympa::List';
+
+                my $date = Sympa::Tools::File::get_mtime(
+                    $spool->{directory} . '/' . $file);
+                my $arc = $metadata->{arc} || '*';
+
+                my $msg_string = sprintf "\n\nrebuildarc %s %s\n",
+                    $list->{'name'}, $arc;
+                my $message = Sympa::Message->new(
+                    $msg_string,
+                    context => $list->{'domain'},
+                    sender  => sprintf('listmaster@%s', $list->{'domain'}),
+                    date    => $date
+                );
+                if ($message) {
+                    $spool->store($message);
+                }
+
+                $lock_fh->rename(
+                    $spool->{directory} . '/migrated/' . $lock_fh->basename);
+            } else {
+                if ($file =~
+                    /^(\d{4})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(.*)$/)
+                {
+                    my @localtime = ($1, $2, $3, $4, $5, $6);
+                    my $list_id = $7;
+
+                    $localtime[1]--;
+                    my $date = Time::Local::timelocal(reverse @localtime);
+                    $file = sprintf '%s.%ld.0', $list_id, $date;
+                }
+
+                if ($metadata = Sympa::Spool::unmarshal_metadata(
+                        $spool->{directory},
+                        $file,
+                        qr/\A([^\s\@]+)\@([\w\.\-]+)\.(\d+)\.(\d+)\.(\d+)\z/,
+                        [qw(localpart domainpart date)]
+                    )
+                    or $metadata = Sympa::Spool::unmarshal_metadata(
+                        $spool->{directory},
+                        $file,
+                        qr/\A([^\s\@]+)\@([\w\.\-]+)\.(\d+)\.(\d+)\z/,
+                        [qw(localpart domainpart date)]
+                    )
+                    ) {
+                    my $list = $metadata->{context};
+                    next unless ref $list eq 'Sympa::List';
+
+                    my $date = $metadata->{date};
+
+                    my $msg_string = do { local $RS; <$lock_fh> };
+                    my $message = Sympa::Message->new(
+                        $msg_string,
+                        context => $list,
+                        date    => $date
+                    );
+                    if ($message) {
+                        $spool->store($message);
+                    }
+                    $lock_fh->rename($spool->{directory}
+                            . '/migrated/'
+                            . $lock_fh->basename);
+                } else {
+                    next;
+                }
+            }
+        }    # End foreach my $file
     }
 
     return 1;
