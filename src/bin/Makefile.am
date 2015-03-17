@@ -22,7 +22,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 dbscripts = \
-	create_db.Oracle \
 	create_db.Sybase
 
 perlscripts = \
