@@ -264,7 +264,7 @@ sub process_message {
     if ($type eq 'sympa') {
         return do_command($robot_id, $message);
     } elsif (not $type and $list) {
-        $log->do_log('notice', 'Archiving %s for list %s', $message, $list);
+        $log->syslog('notice', 'Archiving %s for list %s', $message, $list);
         if ($Conf::Conf{'custom_archiver'}) {
             my $status = system($Conf::Conf{'custom_archiver'},
                 '--list=' . $list->get_list_id,
