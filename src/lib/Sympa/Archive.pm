@@ -29,182 +29,497 @@ use warnings;
 use Cwd qw();
 use Digest::MD5 qw();
 use Encode qw();
+use English qw(-no_match_vars);
+use File::Path qw();
 use HTML::Entities qw();
+use POSIX qw();
 
 use Sympa;
 use Conf;
+use Sympa::Constants;
+use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
+use Sympa::Spool;
+use tools;
 use Sympa::Tools::File;
 
 my $log = Sympa::Log->instance;
 
-my $serial_number = 0;    # incremented on each archived mail
+sub new {
+    my $class = shift;
+    my $list  = shift;
 
-## RCS identification.
+    die 'Bug in logic.  Ask developer' unless ref $list eq 'Sympa::List';
+    my $robot_id = $list->{'domain'};
+    my $arc_path = Conf::get_robot_conf($robot_id, 'arc_path');
+    die sprintf
+        'Robot %s has no archives directory. Check arc_path parameter in this robot.conf and in sympa.conf',
+        $robot_id
+        unless $arc_path;
+    my $base_directory = $arc_path . '/' . $list->get_id;
 
-## Does the real job : stores the message given as an argument into
-## the indicated directory.
+    my $self = bless {
+        context           => $list,
+        base_directory    => $base_directory,
+        arc_directory     => undef,
+        directory         => undef,
+        deleted_directory => undef,
+        _metadatas        => undef,
+    } => $class;
+
+    $self->_create_spool();
+
+    return $self;
+}
+
+sub _create_spool {
+    my $self = shift;
+
+    my $umask = umask oct $Conf::Conf{'umask'};
+    foreach my $directory ($Conf::Conf{'arc_path'}, $self->{base_directory}) {
+        unless (-d $directory) {
+            $log->syslog('info', 'Creating spool %s', $directory);
+            unless (
+                mkdir($directory, 0755)
+                and Sympa::Tools::File::set_file_rights(
+                    file  => $directory,
+                    user  => Sympa::Constants::USER(),
+                    group => Sympa::Constants::GROUP()
+                )
+                ) {
+                die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
+            }
+        }
+    }
+    umask $umask;
+}
+
+sub add_archive {
+    my $self = shift;
+    my $arc  = shift;
+
+    return undef unless $arc;
+    return undef unless $arc =~ /\A\d{4}-\d{2}\z/;
+
+    my $umask = umask oct $Conf::Conf{'umask'};
+    my $error;
+    File::Path::make_path(
+        $self->{base_directory} . '/' . $arc . '/arctxt',
+        {   mode  => 0775,
+            owner => Sympa::Constants::USER(),
+            group => Sympa::Constants::GROUP(),
+            error => \$error
+        }
+    );
+    umask $umask;
+
+    if (@$error) {
+        return undef;
+    }
+    return 1;
+}
+
+sub purge_archive {
+    my $self = shift;
+    my $arc  = shift;
+
+    return undef unless $arc;
+    return undef unless $arc =~ /\A\d{4}-\d{2}\z/;
+
+    my $error;
+    File::Path::remove_tree($self->{base_directory} . '/' . $arc,
+        {error => \$error});
+
+    if (@$error) {
+        return undef;
+    }
+    return 1;
+}
+
+sub select_archive {
+    my $self    = shift;
+    my $arc     = shift;
+    my %options = @_;
+
+    return undef unless $arc;
+    return undef unless $arc =~ /\A\d{4}-\d{2}\z/;
+
+    my $arc_directory     = $self->{base_directory} . '/' . $arc;
+    my $directory         = $arc_directory . '/arctxt';
+    my $deleted_directory = $arc_directory . '/deleted';
+
+    my $dh;
+    return undef unless opendir $dh, $directory;
+    closedir $dh;
+
+    undef $self->{_metadatas};
+    $self->{arc_directory}     = $arc_directory;
+    $self->{directory}         = $directory;
+    $self->{deleted_directory} = $deleted_directory;
+
+    if ($options{info}) {
+        my @s = stat $arc_directory;    #FIXME: arctxt would be checked.
+        return {
+            size  => $s[7],
+            mtime => $s[9],
+        };
+    } else {
+        return $arc;
+    }
+}
+
+sub fetch {
+    my $self    = shift;
+    my %options = @_;
+
+    undef $self->{_metadatas};    # Rewind cache.
+    while (1) {
+        my ($message, $handle) = $self->next;
+        last unless $handle;      # No more messages.
+        next unless $message;     # Malformed message.
+
+        if ($options{message_id}) {
+            my $message_id =
+                tools::clean_msg_id($message->get_header('Message-Id')) || '';
+            if ($message_id eq $options{message_id}) {
+                undef $self->{_metadatas};    # Rewind cache.
+                return ($message, $handle);
+            }
+        }
+    }
+
+    return;
+}
+
+sub next {
+    my $self = shift;
+
+    return unless $self->{directory};
+
+    unless ($self->{_metadatas}) {
+        my $dh;
+        unless (opendir $dh, $self->{directory}) {
+            die sprintf 'Cannot open dir %s: %s', $self->{directory}, $ERRNO;
+        }
+        $self->{_metadatas} = [
+            sort _cmp_numeric grep {
+                        !/,lock/
+                    and !m{(?:\A|/)(?:\.|T\.|BAD-)}
+                    and -f ($self->{directory} . '/' . $_)
+                } readdir $dh
+        ];
+        closedir $dh;
+    }
+    unless (@{$self->{_metadatas}}) {
+        undef $self->{_metadatas};
+        return;
+    }
+
+    while (my $marshalled = shift @{$self->{_metadatas}}) {
+        my ($lock_fh, $metadata, $message);
+
+        # Try locking message.  Those locked or removed by other process will
+        # be skipped.
+        $lock_fh =
+            Sympa::LockedFile->new($self->{directory} . '/' . $marshalled,
+            -1, '+<');
+        next unless $lock_fh;
+
+        $metadata =
+            Sympa::Spool::unmarshal_metadata($self->{directory}, $marshalled,
+            qr{\A(\d+)\z}, [qw(serial)]);
+
+        if ($metadata) {
+            my $msg_string = do { local $RS; <$lock_fh> };
+            $message = Sympa::Message->new($msg_string, %$metadata);
+        }
+
+        # Though message might not be deserialized, anyway return the result.
+        return ($message, $lock_fh);
+    }
+    return;
+}
+
+sub _cmp_numeric {
+    if (    defined $a
+        and $a =~ /\A\d+\z/
+        and defined $b
+        and $b =~ /\A\d+\z/) {
+        return $a <=> $b;
+    } else {
+        return $a cmp $b;
+    }
+}
+
+sub remove {
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $self   = shift;
+    my $handle = shift;
+
+    return undef unless $self->{arc_directory};
+
+    my $list = $self->{context};
+
+    # Move text message to deleted/ directory.
+    unless (-d $self->{deleted_directory}) {
+        my $umask = umask oct $Conf::Conf{'umask'};
+        unless (mkdir $self->{deleted_directory}, 0777) {
+            die sprintf 'Unable to create %s: %s',
+                $self->{deleted_directory}, $ERRNO;
+        }
+        umask $umask;
+    }
+    unless (
+        $handle->rename($self->{deleted_directory} . '/' . $handle->basename))
+    {
+        $log->syslog('info', 'Unable to rename message %s in archive %s: %s',
+            $handle->basename, $self, Sympa::LockedFile->last_error);
+        return undef;
+    }
+
+    # Remove directory if empty arctxt.
+    rmdir $self->{directory};
+
+    return 1;
+}
+
+# Old name: remove() in archived.pl.
+sub remove_html {
+    my $self  = shift;
+    my $msgid = shift;
+
+    return undef unless $self->{arc_directory};
+    return undef unless $msgid and $msgid !~ /NO-ID-FOUND\.mhonarc\.org/;
+
+    my $list = $self->{context};
+
+    # Remove message from HTML archive.
+    system(
+        Conf::get_robot_conf($list->{'domain'}, 'mhonarc'),
+        '-outdir' => $self->{arc_directory},
+        '-rmm'    => $msgid
+    );
+
+    # Remomve urlized message.
+    my $url_dir = $list->{'dir'} . '/urlized/' . tools::escape_chars($msgid);
+    my $error;
+    File::Path::remove_tree($url_dir, {error => \$error});
+
+    return 1;
+}
+
+# Does the real job : stores the message given as an argument into
+# the indicated directory.
+# Old name: (part of) mail2arc() in archived.pl.
+sub store {
+    my $self    = shift;
+    my $message = shift;
+
+    my $list = $self->{context};
+    my $arc = POSIX::strftime('%Y-%m', localtime $message->{date});
+    my $newfile;
+
+    unless ($self->select_archive($arc)) {
+        $self->add_archive($arc);
+        unless ($self->select_archive($arc)) {
+            $log->syslog('err', 'Cannot create directory %s in archive %s',
+                $arc, $self);
+            return undef;
+        }
+    }
+
+    # Copy the file in the arctxt.
+    if (-f $self->{arc_directory} . "/index") {
+        open my $fh, '<', $self->{arc_directory} . '/index'
+            or die sprintf 'Can\'t read index of %s in %s: %s', $arc, $self,
+            $ERRNO;
+        $newfile = <$fh>;
+        chomp $newfile;
+        $newfile++;
+        close $fh;
+    } else {
+        # recreate index file if needed and update it
+        $newfile = _create_idx($self->{arc_directory}) + 1;
+    }
+
+    # Save arctxt dump of original message.
+    open my $fh, '>', $self->{directory} . '/' . $newfile
+        or die sprintf 'Can\'t open file %s/%s: %s', $self->{directory},
+        $newfile, $ERRNO;
+    print $fh $message->as_string;
+    close $fh;
+
+    _save_idx($self->{arc_directory} . '/index', $newfile);
+
+    $log->syslog('notice', 'Message %s is stored into archive %s as <%s>',
+        $message, $self, $newfile);
+    return $newfile;
+}
+
+# Old name: (part of) mail2arc in archived.pl.
+sub store_html {
+    my $self    = shift;
+    my $message = shift->dup;
+
+    my $list = $self->{context};
+    my $arc  = POSIX::strftime('%Y-%m', localtime $message->{date});
+    my $yyyy = POSIX::strftime('%Y', localtime $message->{date});
+    my $mm   = POSIX::strftime('%m', localtime $message->{date});
+
+    unless ($self->select_archive($arc)) {
+        $self->add_archive($arc);
+        unless ($self->select_archive($arc)) {
+            $log->syslog('err', 'Cannot create directory %s in archive %s',
+                $arc, $self);
+            return undef;
+        }
+    }
+
+    # Prepare clean message content (HTML parts are cleaned)
+    unless ($message->clean_html) {
+        $log->syslog('err', "Could not clean message, ignoring message");
+        return undef;
+    }
+
+    my $mhonarc_ressources =
+        Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
+
+    $log->syslog(
+        'debug',
+        'Calling %s for list %s',
+        Conf::get_robot_conf($list->{'domain'}, 'mhonarc'), $list
+    );
+
+    my $tag = _get_tag($list);
+    if (    $list->{'admin'}{'web_archive_spam_protection'} ne 'none'
+        and $list->{'admin'}{'web_archive_spam_protection'} ne 'cookie') {
+        _set_hidden_mode($tag);
+    } else {
+        _unset_hidden_mode();
+    }
+
+    # Call mhonarc on cleaned message source to make clean htlm view of
+    # message.
+    my @cmd = (
+        Conf::get_robot_conf($list->{'domain'}, 'mhonarc'),
+        '-add',
+        '-modifybodyaddresses',
+        '-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
+        '-rcfile'            => $mhonarc_ressources,
+        '-outdir'            => $self->{arc_directory},
+        '-definevars'        => sprintf(
+            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s",
+            $list->{'name'},
+            $list->{'domain'},
+            $yyyy,
+            $mm,
+            $yyyy,
+            $mm,
+            Conf::get_robot_conf($list->{'domain'}, 'arc_path'),
+            Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url'),
+            $tag
+        ),
+        '-umask' => $Conf::Conf{'umask'}
+    );
+
+    $log->syslog('debug', 'System call: %s', join(' ', @cmd));
+
+    my $pipeout;
+    unless (open $pipeout, '|-', @cmd) {
+        $log->syslog('err', 'Could not open pipe: %m');
+        return undef;
+    }
+    print $pipeout $message->as_string;
+    close $pipeout;
+    my $status = $? >> 8;
+
+    ## Remove lock if required
+    if ($status == 75) {
+        $log->syslog(
+            'notice',
+            'Removing lock directory %s',
+            $self->{arc_directory} . '/.mhonarc.lck'
+        );
+        rmdir $self->{arc_directory} . '/.mhonarc.lck';
+
+        my $pipeout;
+        unless (open $pipeout, '|-', @cmd) {
+            $log->syslog('err', 'Could not open pipe: %m');
+            return undef;
+        }
+        print $pipeout $message->as_string;
+        close $pipeout;
+        $status = $? >> 8;
+    }
+    if ($status) {
+        $log->syslog(
+            'err',
+            'Command %s failed with exit code %s',
+            join(' ', @cmd), $status
+        );
+    }
+
+    return 1;
+}
 
 sub store_last {
-    my ($list, $msg) = @_;
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $self    = shift;
+    my $message = shift;
+    my %options = @_;
 
-    $log->syslog('debug2', '');
+    my $list = $self->{context};
 
     return unless $list->is_archived();
     my $dir = $list->{'dir'} . '/archives';
 
-    ## Create the archive directory if needed
-    mkdir($dir, "0775") if !(-d $dir);
+    # Create the archive directory if needed
+    mkdir $dir, 0774 unless -d $dir;
     chmod 0774, $dir;
 
-    ## erase the last  message and replace it by the current one
-    open(OUT, "> $dir/last_message");
-    if (ref($msg)) {
-        $msg->print(\*OUT);
-    } else {
-        print OUT $msg;
-    }
-    close(OUT);
-
+    # erase the last  message and replace it by the current one
+    open my $fh, '>', $dir . '/last_message';
+    print $fh $message->to_string(%options);
+    close $fh;
 }
 
-## Lists the files included in the archive, preformatted for printing
-## Returns an array.
-sub list {
-    my $name = shift;
+# DEPRECATED.  Use get_archives() and select_archive().
+#sub list;
 
-    $log->syslog('debug', '(%s)', $name);
+# Lists the files included in the archive, preformatted for printing
+# Returns an array.
+sub get_archives {
+    $log->syslog('debug2', '(%s)', @_);
+    my $self = shift;
 
-    my (@l, $i);
+    my $base_directory = $self->{base_directory};
 
-    unless (-d "$name") {
-        $log->syslog('err', '(%s) Failed, no directory %s', $name, $name);
-#      @l = ($msg::no_archives_available);
-        return @l;
+    my $dh;
+    unless ($base_directory and opendir $dh, $base_directory) {
+        $log->syslog('err', 'Cannot open directory %s: %m', $base_directory);
+        return;
     }
-    unless (opendir(DIR, "$name")) {
-        $log->syslog('err', '(%s) Failed, cannot open directory %s',
-            $name, $name);
-#	@l = ($msg::no_archives_available);
-        return @l;
-    }
-    foreach $i (sort readdir(DIR)) {
-        next if ($i =~ /^\./o);
-        next unless ($i =~ /^\d\d\d\d\-\d\d$/);
-        my (@s) = stat("$name/$i");
-        my $a = localtime($s[9]);
-        push(@l, sprintf("%-40s %7d   %s\n", $i, $s[7], $a));
-    }
-    return @l;
-}
-
-sub scan_dir_archive {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my ($list, $month) = @_;
-
-    my $dir =
-        Conf::get_robot_conf($list->{'domain'}, 'arc_path') . '/'
-        . $list->get_list_id();
-
-    unless (opendir(DIR, "$dir/$month/arctxt")) {
-        $log->syslog('info', 'Unable to open dir %s/%s/arctxt', $dir, $month);
-        return undef;
-    }
-
-    my $all_msg = [];
-    my $i       = 0;
-    foreach my $file (sort readdir(DIR)) {
-        next unless ($file =~ /^\d+$/);
-        $log->syslog('debug', 'Start parsing message %s/%s/arctxt/%s',
-            $dir, $month, $file);
-
-        my $message =
-            Sympa::Message->new_from_file("$dir/$month/arctxt/$file",
-            context => $list);
-        unless ($message) {
-            $log->syslog('err',
-                'Unable to create Message object from file %s', $file);
-            return undef;
+    my @arcs =
+        grep {
+        /\A\d\d\d\d\-\d\d\z/
+            and -d $base_directory . '/' 
+            . $_
+            . '/arctxt'
         }
-        # Decrypt message if possible
-        $message->smime_decrypt;
+        sort readdir $dh;
+    closedir $dh;
 
-        $log->syslog('debug', 'MAIL object: %s', $message);
-
-        $i++;
-        my $msg = {};
-        $msg->{'id'} = $i;
-
-        $msg->{'subject'} = $message->{'decoded_subject'};
-        $msg->{'from'}    = $message->get_decoded_header('From');
-        $msg->{'date'}    = $message->get_decoded_header('Date');
-
-        $msg->{'full_msg'} = $message->as_string;
-
-        $log->syslog('debug', 'Adding message %s in archive to send',
-            $msg->{'subject'});
-
-        push @{$all_msg}, $msg;
-    }
-    closedir DIR;
-
-    return $all_msg;
+    return @arcs;
 }
 
-#####################################################
-#  search_msgid
-####################################################
-#
-# find a message in archive specified by arcpath and msgid
-#
-# IN : arcpath and msgid
-#
-# OUT : undef | #message in arctxt
-#
-####################################################
+# DEPRECATED.  Use select_archive() and next().
+#sub scan_dir_archive;
 
-sub search_msgid {
+# DEPRECATED.  Use select_archive() and fetch().
+#sub search_msgid;
 
-    my ($dir, $msgid) = @_;
-
-    $log->syslog('info', '(%s, %s)', $dir, $msgid);
-
-    if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
-        $log->syslog('err', 'No message id found');
-        return undef;
-    }
-    unless ($dir =~ /\d\d\d\d\-\d\d\/arctxt/) {
-        $log->syslog('info', 'Dir %s look unproper', $dir);
-        return undef;
-    }
-    unless (opendir(ARC, "$dir")) {
-        $log->syslog('info',
-            "archive::scan_dir_archive($dir, $msgid): unable to open dir $dir"
-        );
-        return undef;
-    }
-    chomp $msgid;
-
-    foreach my $file (grep (!/\./, readdir ARC)) {
-        next unless (open MAIL, "$dir/$file");
-        while (<MAIL>) {
-            last if /^$/;    #stop parse after end of headers
-            if (/^Message-id:\s?<?([^>\s]+)>?\s?/i) {
-                my $id = $1;
-                if ($id eq $msgid) {
-                    close MAIL;
-                    closedir ARC;
-                    return $file;
-                }
-            }
-        }
-        close MAIL;
-    }
-    closedir ARC;
-    return undef;
-}
-
+# OBSOLETED.  No longer used.
 sub exist {
     my ($name, $file) = @_;
     my $fn = "$name/$file";
@@ -266,15 +581,176 @@ sub load_html_message {
     return \%metadata;
 }
 
-sub clean_archive_directory {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my $robot          = shift;
-    my $dir_to_rebuild = shift;
+# Old name: rebuild() in archived.pl.
+sub rebuild_html {
+    my $self = shift;
+    my $arc  = shift;
 
-    my $arc_root = Conf::get_robot_conf($robot, 'arc_path');
+    $arc =~ /^(\d{4})-(\d{2})$/;
+    my $yyyy = $1;
+    my $mm   = $2;
+
+    return unless $self->select_archive($arc);
+
+    my $list          = $self->{context};
+    my $listname      = $list->{'name'};
+    my $robot_id      = $list->{'domain'};
+    my $arc_directory = $self->{arc_directory};
+
+    my $tag = _get_tag($list);
+    my $mhonarc_ressources =
+        Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
+
+    if (    $list->{'admin'}{'web_archive_spam_protection'} ne 'none'
+        and $list->{'admin'}{'web_archive_spam_protection'} ne 'cookie') {
+        _set_hidden_mode($tag);
+    } else {
+        _unset_hidden_mode();
+    }
+
+    # Remove existing HTML files and .mhonarc.db.
+    my $dh;
+    opendir $dh, $arc_directory;
+    unlink map { $arc_directory . '/' . $_ }
+        grep {
+                $_ ne 'arctxt'
+            and $_ ne 'index'
+            and $_ ne 'deleted'
+            and !/\A\.+\z/
+        } readdir $dh;
+    closedir $dh;
+
+    my $dir_to_rebuild = $self->{directory};
+    my $arcs_dir       = $self->_clean_archive_directory($arc);
+    if ($arcs_dir) {
+        $dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'};
+    }
+
+    # recreate index file if needed
+    unless (-f $arc_directory . '/index') {
+        _create_idx($arc_directory);
+    }
+
+    my @cmd = (
+        Conf::get_robot_conf($robot_id, 'mhonarc'),
+        '-modifybodyaddresses',
+        '-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
+        '-rcfile'            => $mhonarc_ressources,
+        '-outdir'            => $arc_directory,
+        '-definevars'        => sprintf(
+            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s",
+            $listname,
+            $robot_id,
+            $yyyy,
+            $mm,
+            $yyyy,
+            $mm,
+            Conf::get_robot_conf($robot_id, 'arc_path'),
+            Conf::get_robot_conf($robot_id, 'wwsympa_url'),
+            $tag
+        ),
+        '-umask' => $Conf::Conf{'umask'},
+        $dir_to_rebuild
+    );
+    my $exitcode = system(@cmd) >> 8;
+
+    # Delete temporary directory containing files with escaped HTML.
+    if ($arcs_dir and -d $arcs_dir->{'cleaned_dir'}) {
+        my $error;
+        File::Path::remove_tree($arcs_dir->{'cleaned_dir'},
+            {error => \$error});
+    }
+
+    ## Remove lock if required
+    if ($exitcode == 75) {
+        $log->syslog(
+            'notice',
+            'Removing lock directory %s',
+            $arc_directory . '/.mhonarc.lck'
+        );
+        rmdir $arc_directory . '/.mhonarc.lck';
+
+        $exitcode = system(@cmd) >> 8;
+    }
+    if ($exitcode) {
+        $log->syslog(
+            'err',
+            'Command %s failed with exit code %s',
+            join(' ', @cmd), $exitcode
+        );
+    }
+}
+
+# Sets the value of $ENV{'M2H_ADDRESSMODIFYCODE'} and
+# $ENV{'M2H_MODIFYBODYADDRESSES'}.
+#* $tag a character string (containing the result of _get_tag($list))
+sub _set_hidden_mode {
+    # Tag is used as variable elements in tags to prevent message contents to
+    # be parsed
+    my $tag = shift;
+
+    # $ENV{'M2H_MODIFYBODYADDRESSES'} à positionner si le corps du message est
+    # parse.
+    $ENV{'M2H_ADDRESSMODIFYCODE'} =
+        "s|^([^\@]+)\@([^\@]+)\$|\($tag\%hidden_head\%$tag\)\$1\($tag\%hidden_at\%$tag\)\$2\($tag\%hidden_end\%$tag\)|g";
+    $ENV{'M2H_MODIFYBODYADDRESSES'} = 1;
+}
+
+# Empties $ENV{'M2H_ADDRESSMODIFYCODE'}.
+sub _unset_hidden_mode {
+    # Be careful, the .mhonarc.db file keeps track of previous
+    # M2H_ADDRESSMODIFYCODE setup.
+    $ENV{'M2H_ADDRESSMODIFYCODE'} = '';
+}
+
+# Saves the archives index file
+#* $index, a string corresponding to the file name to which save an index.
+#* $lst, a character string
+# Old name: save_idx() in archived.pl.
+sub _save_idx {
+    my ($index, $lst) = @_;
+
+    return unless $lst;
+
+    open INDEXF, '>', $index
+        or die sprintf 'Couldn\'t overwrite index %s: %s', $index, $!;
+    print INDEXF "$lst\n";
+    close INDEXF;
+}
+
+# Create the 'index' file for one archive subdir
+# Old name: create_idx() in archived.pl.
+sub _create_idx {
+    my $arc_dir = shift;    ## corresponds to the yyyy-mm directory
+
+    my $arc_txt_dir = $arc_dir . '/arctxt';
+
+    unless (opendir(DIR, $arc_txt_dir)) {
+        $log->syslog('err', 'Failed to open directory "%s"', $arc_txt_dir);
+        return undef;
+    }
+
+    my @files = (sort { $a <=> $b; } grep(/^\d+$/, (readdir DIR)));
+    my $index = $files[$#files] || 0;
+    _save_idx($arc_dir . '/index', $index);
+
+    closedir DIR;
+
+    return $index;
+}
+
+# Old name: clean_archive_directory().
+sub _clean_archive_directory {
+    $log->syslog('debug3', '(%s, %s)', @_);
+    my $self = shift;
+    my $arc  = shift;
+
+    return undef unless $self->select_archive($arc);
+
     my $answer;
-    $answer->{'dir_to_rebuild'} = $arc_root . '/' . $dir_to_rebuild;
-    $answer->{'cleaned_dir'} = $Conf::Conf{'tmpdir'} . '/' . $dir_to_rebuild;
+    $answer->{'dir_to_rebuild'} = $self->{directory};
+    $answer->{'cleaned_dir'}    = sprintf '%s/%s/%s/arctxt',
+        $Conf::Conf{'tmpdir'}, $self->{context}->get_id, $arc;
     unless (
         my $number_of_copies = Sympa::Tools::File::copy_dir(
             $answer->{'dir_to_rebuild'},
@@ -293,13 +769,13 @@ sub clean_archive_directory {
         foreach my $file (readdir(ARCDIR)) {
             next if ($file =~ /^\./);
             $files_left_uncleaned++
-                unless clean_archived_message(
-                $robot, undef,
+                unless _clean_archived_message(
+                $self->{context}->{'domain'},    #FIXME
                 $answer->{'cleaned_dir'} . '/' . $file,
                 $answer->{'cleaned_dir'} . '/' . $file
                 );
         }
-        closedir DIR;
+        closedir ARCDIR;
         if ($files_left_uncleaned) {
             $log->syslog('err',
                 'HTML cleaning failed for %s files in the directory %s',
@@ -318,15 +794,14 @@ sub clean_archive_directory {
     return $answer;
 }
 
-sub clean_archived_message {
+# Old name: clean_archived_message().
+sub _clean_archived_message {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
     my $robot  = shift;
-    my $list   = shift;
     my $input  = shift;
     my $output = shift;
 
-    my $message =
-        Sympa::Message->new_from_file($input, context => ($list || $robot),);
+    my $message = Sympa::Message->new_from_file($input, context => $robot);
     unless ($message) {
         $log->syslog('err', 'Unable to create a Message object with file %s',
             $input);
@@ -426,7 +901,7 @@ sub convert_single_message {
         return undef;
     }
 
-    my $tag      = get_tag($that);
+    my $tag      = _get_tag($that);
     my $exitcode = system(
         Conf::get_robot_conf($robot, 'mhonarc'),
         '-single',
@@ -458,39 +933,8 @@ sub convert_single_message {
     return 1;
 }
 
-=head2 sub get_tag(OBJECT $that)
-
-Returns a tag derived from the listname.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$that>, a List or Robot object.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<a character string>, corresponding to the 10 last characters of a 32 bytes string containing the MD5 digest of the concatenation of the following strings (in this order):
-
-=over 4
-
-=item - the cookie config parameter
-
-=item - a slash: "/"
-
-=item - name attribute of the I<$that> argument
-
-=back 
-
-=back
-
-=cut 
-
-sub get_tag {
+# Old name: Sympa::Archive::get_tag(), get_tag() in archived.pl.
+sub _get_tag {
     my $that = shift;
 
     my $name;
@@ -507,4 +951,236 @@ sub get_tag {
     return substr(Digest::MD5::md5_hex(join '/', $cookie, $name), -10);
 }
 
+sub get_id {
+    my $self = shift;
+
+    my $context = $self->{context};
+    unless (ref $context eq 'Sympa::List') {
+        return '';
+    } elsif ($self->{arc_directory}) {
+        return sprintf '%s/%s', $context->get_id,
+            [split '/', $self->{arc_directory}]->[-1];
+    } else {
+        return $context->get_id;
+    }
+}
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Archive - Archives of Sympa
+
+=head1 SYNOPSIS
+
+  use Sympa::Archive;
+  $archive = Sympa::Archive->new($list);
+
+  @arcs = $archive->get_archives;
+
+  $archive->store($message);
+  $archive->store_html($message);
+
+  $archive->select_archive('2015-04');
+  ($message, $handle) = $archive->next;
+
+  $archive->select_archive('2015-04');
+  ($message, $handle) = $archive->fetch(message_id => $message_id);
+  $archive->remove_html($message_id);
+  $archive->remove($handle);
+
+  $archive->rebuild_html('2015-04');
+
+=head1 DESCRIPTION
+
+L<Sympa::Archive> implements the interface to handle archives.
+
+=head2 Methods and functions
+
+=over
+
+=item new ( )
+
+I<Constructor>.
+Creates new instance of L<Sympa::Archive>.
+
+=item add_archive ( $arc )
+
+I<Instance method>.
+Adds archive directory named $arc.
+Currently, archive directory must have the form C<YYYY-MM>.
+
+=item purge_archive ( $arc )
+
+I<Instance method>.
+Removes archive directory and its content entirely.
+removed content can not be recovered.
+
+=item select_archive ( $arc, [ info =E<gt> 1 ] )
+
+I<Instance method>.
+Selects an archive directory.
+It will be referred by consequent operations.
+
+=item fetch ( message_id =E<gt> $message_id )
+
+I<Instance method>.
+Gets a message from archive.
+select_archive() must be called in advance.
+
+Message will be locked to prevent multiple proccessing of a single message.
+
+Parameter:
+
+=over
+
+=item message_id =E<gt> $message_id
+
+Message ID of the message to be feteched.
+
+=back
+
+Returns:
+
+Two-elements list of L<Sympa::Message> instance and filehandle locking
+a message.
+
+=item next ( )
+
+I<Instance method>.
+Gets next message in archive.
+select_archive() must be called in advance.
+
+Message will be locked to prevent multiple proccessing of a single message.
+
+Parameters:
+
+None.
+
+Returns:
+
+Two-elements list of L<Sympa::Message> instance and filehandle locking
+a message.
+
+=item remove ( $handle )
+
+I<Instance method>.
+Removes a message from archive.
+
+Parameter:
+
+=over
+
+=item $handle
+
+Filehandle, L<Sympa::LockedFile> instance, locking message.
+It is returned by L</fetch>() or L</next>().
+
+=back
+
+Returns:
+
+True value if message could be removed.
+Otherwise false value.
+
+=item remove_html ( $message_id )
+
+I<Instance method>.
+TBD.
+
+=item store ( $message )
+
+I<Instance method>.
+Stores the message into archive.
+
+Parameters:
+
+=over
+
+=item $message
+
+A L<Sympa::Message> instance to be stored.
+Following attributes and metadata are referred:
+
+=over
+
+=item {date}
+
+Unix time when the message would be delivered.
+
+=back
+
+=back
+
+Returns:
+
+If storing succeeded, marshalled metadata (file name) of the message.
+Otherwise C<undef>.
+
+=item store_html ( $message )
+
+I<Instance method>.
+TBD.
+
+=item store_last
+
+TBD.
+
+=item get_archives ( )
+
+I<Instance method>.
+Gets a list of archive directories this archive contains.
+Items of returned value may be fed to select_archive() and so on.
+
+=item last_path
+
+TBD.
+
+=item load_html_message
+
+TBD.
+
+=item rebuild_html ( $arc )
+
+I<Instance method>.
+Rebuilds archives for the list the name of which is given in the argument
+$arc.
+
+Parameters:
+
+=over
+
+=item $arc
+
+A character string containing the name of archive directory in the list
+which we want to rebuild.
+
+=back
+
+Returns:
+
+I<undef> if something goes wrong.
+
+=item convert_single_message
+
+TBD.
+
+=item get_id ( )
+
+I<Instance method>.
+Gets unique identifier of instance.
+
+=back
+
+=head1 SEE ALSO
+
+L<archived(8)>, L<mhonarc(1)>, L<wwsympa(8)>, L<Sympa::Message>.
+
+=head1 HISTORY
+
+TBD.
+
+=cut

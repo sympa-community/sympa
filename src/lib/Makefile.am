@@ -95,6 +95,7 @@ man3ext = 3Sympa
 MAN3PM = \
 	Sympa.pm \
 	Sympa/Alarm.pm \
+	Sympa/Archive.pm \
 	Sympa/Bulk.pm \
 	Sympa/ConfDef.pm \
 	Sympa/Constants.pm \

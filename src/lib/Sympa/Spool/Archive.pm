@@ -77,6 +77,8 @@ sub _create_spool {
 sub next {
     my $self = shift;
 
+    return unless $self->{directory};
+
     unless ($self->{_metadatas}) {
         my $dh;
         unless (opendir $dh, $self->{directory}) {

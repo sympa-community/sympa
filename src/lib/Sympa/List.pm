@@ -249,6 +249,7 @@ Returns true if the list is moderated.
 
 =item archive_exist ( FILE )
 
+DEPRECATED.
 Returns true if the indicated file exists.
 
 =item archive_send ( WHO, FILE )
@@ -257,6 +258,7 @@ Send the indicated archive file to the user, if it exists.
 
 =item archive_ls ()
 
+DEPRECATED.
 Returns the list of available files, if any.
 
 =item archive_msg ( MSG )
@@ -2814,27 +2816,46 @@ sub send_confirm_to_sender {
 #
 ######################################################
 sub archive_send {
-    my ($self, $who, $file) = @_;
-    $log->syslog('debug', '(%s, %s)', $who, $file);
+    my ($self, $who, $arc) = @_;
+    $log->syslog('debug', '(%s, %s)', $who, $arc);
 
-    return unless ($self->is_archived());
+    return unless $self->is_archived();
 
-    my $msg_list = Sympa::Archive::scan_dir_archive($self, $file);
+    my $archive = Sympa::Archive->new($self);
+    my @msg_list;
+    if ($archive->select_archive($arc)) {
+        while (1) {
+            my ($message, $handle) = $archive->next;
+            last unless $handle;     # No more messages.
+            next unless $message;    # Malformed message.
 
-    my $subject = 'File ' . $self->{'name'} . ' ' . $file;
+            # Decrypt message if possible
+            $message->smime_decrypt;
+
+            $log->syslog('debug', 'MAIL object: %s', $message);
+
+            push @msg_list,
+                {
+                id       => $message->{serial},
+                subject  => $message->{decoded_subject},
+                from     => $message->get_decoded_header('From'),
+                date     => $message->get_decoded_header('Date'),
+                full_msg => $message->as_string
+                };
+        }
+    }
+
+    my $subject = 'File ' . $self->{'name'} . ' ' . $arc;
     my $param   = {
         'to'       => $who,
         'subject'  => $subject,
-        'msg_list' => $msg_list
+        'msg_list' => [@msg_list]
     };
 
     $param->{'boundary1'} = tools::get_message_id($self->{'domain'});
     $param->{'boundary2'} = tools::get_message_id($self->{'domain'});
     $param->{'from'}      = Conf::get_robot_conf($self->{'domain'}, 'sympa');
 
-    # open TMP2, ">/tmp/digdump";
-    # Sympa::Tools::Data::dump_var($param, 0, \*TMP2);
-    # close TMP2;
     $param->{'auto_submitted'} = 'auto-replied';
     unless (Sympa::send_file($self, 'get_archive', $who, $param)) {
         $log->syslog('notice', 'Unable to send template "archive_send" to %s',
@@ -5771,41 +5792,24 @@ sub is_digest {
 }
 
 ## Does the file exist?
-sub archive_exist {
-    my ($self, $file) = @_;
-    $log->syslog('debug', '(%s)', $file);
-
-    return undef unless ($self->is_archived());
-    my $dir =
-        Conf::get_robot_conf($self->{'domain'}, 'arc_path') . '/'
-        . $self->get_list_id();
-    Sympa::Archive::exist($dir, $file);
-
-}
+# DEPRECATED.  No longer used.
+#sub archive_exist;
 
 ## List the archived files
-sub archive_ls {
-    my $self = shift;
-    $log->syslog('debug2', '');
-
-    my $dir =
-        Conf::get_robot_conf($self->{'domain'}, 'arc_path') . '/'
-        . $self->get_list_id();
-
-    Sympa::Archive::list($dir) if ($self->is_archived());
-}
+# DEPRECATED.  Use Sympa::Archive::get_archives().
+#sub archive_ls;
 
 sub archive_msg {
     $log->syslog('debug2', '(%s, %s)', @_);
     my ($self, $message) = @_;
 
     if ($self->is_archiving_enabled) {
-        my $msg_string = $message->to_string(
+        Sympa::Archive->new($self)->store_last(
+            $message,
             original => Sympa::Tools::Data::smart_eq(
                 $self->{admin}{archive_crypted_msg}, 'original'
             )
         );
-        Sympa::Archive::store_last($self, $msg_string);
 
         # Ignoring message with a no-archive flag
         if (!Sympa::Tools::Data::smart_eq(

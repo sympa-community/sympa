@@ -502,14 +502,6 @@ sub getfile {
             $which, $file, $sender);
         return 'not_allowed';
     }
-#    unless ($list->archive_exist($file)) {
-#        Sympa::Report::reject_report_cmd('user', 'no_required_file', {},
-#            $cmd_line);
-# 	 $log->syslog('info',
-#            'GET %s %s from %s refused, archive not found for list %s',
-#            $which, $file, $sender, $which);
-#        return 'no_archive';
-#    }
 
     unless ($list->archive_send($sender, $file)) {
         Sympa::Report::reject_report_cmd(
@@ -737,11 +729,23 @@ sub index {
         return 'no_archive';
     }
 
-    my @l = $list->archive_ls();
+    my @arcs;
+    if ($list->is_archived) {
+        my $archive = Sympa::Archive->new($list);
+        foreach my $arc ($archive->get_archives) {
+            my $info = $archive->select_archive($arc, info => 1);
+            next unless $info;
+
+            push @arcs, sprintf "%-40s %7d   %s\n", $arc, $info->{size},
+                $language->gettext_strftime('%a, %d %b %Y %H:%M:%S',
+                localtime $info->{mtime});
+        }
+    }
+
     unless (
         Sympa::send_file(
             $list, 'index_archive', $sender,
-            {'archives' => \@l, 'auto_submitted' => 'auto-replied'}
+            {'archives' => \@arcs, 'auto_submitted' => 'auto-replied'}
         )
         ) {
         $log->syslog('notice',
