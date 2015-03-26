@@ -159,10 +159,9 @@ sub select_archive {
     $self->{deleted_directory} = $deleted_directory;
 
     if ($options{info}) {
-        my @s = stat $arc_directory;    #FIXME: arctxt would be checked.
         return {
-            size  => $s[7],
-            mtime => $s[9],
+            size  => Sympa::Tools::File::get_dir_size($directory),
+            mtime => Sympa::Tools::File::get_mtime($directory),
         };
     } else {
         return $arc;

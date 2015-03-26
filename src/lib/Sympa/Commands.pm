@@ -736,9 +736,16 @@ sub index {
             my $info = $archive->select_archive($arc, info => 1);
             next unless $info;
 
-            push @arcs, sprintf "%-40s %7d   %s\n", $arc, $info->{size},
-                $language->gettext_strftime('%a, %d %b %Y %H:%M:%S',
-                localtime $info->{mtime});
+            push @arcs,
+                $language->gettext_sprintf(
+                '%-37s %5.1f kB   %s',
+                $arc,
+                $info->{size} / 1024.0,
+                $language->gettext_strftime(
+                    '%a, %d %b %Y %H:%M:%S',
+                    localtime $info->{mtime}
+                )
+                ) . "\n";
         }
     }
 
