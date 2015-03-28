@@ -1,6 +1,6 @@
 From: [% from %]
 To: [% to %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Archive of %1, file %2[%END%][%END%]
+Subject: [% FILTER qencode %][%subject%][%END%]
 Content-Type: multipart/mixed; boundary="[% boundary1 %]"
 
 --[% boundary1 %]

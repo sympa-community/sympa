@@ -557,15 +557,6 @@ sub last {
             $which, $sender);
         return 'no_archive';
     }
-    my $file;
-    unless ($file = Sympa::Archive::last_path($list)) {
-        Sympa::Report::reject_report_cmd('user', 'no_required_file', {},
-            $cmd_line);
-        $log->syslog('info',
-            'LAST %s from %s refused, archive file %s not found',
-            $which, $sender, $file);
-        return 'no_archive';
-    }
 
     my $auth_method = get_auth_method(
         'last', $sender,

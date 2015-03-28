@@ -263,6 +263,7 @@ Returns the list of available files, if any.
 
 =item archive_msg ( MSG )
 
+DEPRECATED.
 Archives the Mail::Internet message given as argument.
 
 =item is_archived ()
@@ -1752,9 +1753,32 @@ sub distribute_msg {
         }
     }
 
-    ## Archives
-    if ($self->is_archiving_enabled) {
-        $self->archive_msg($message);
+    # Archives
+    unless ($self->is_archiving_enabled) {
+        # Archiving is disabled.
+    } elsif (
+        !Sympa::Tools::Data::smart_eq(
+            $Conf::Conf{'ignore_x_no_archive_header_feature'}, 'on')
+        and (
+            grep {
+                /yes/i
+            } $message->get_header('X-no-archive')
+            or grep {
+                /no\-external\-archive/i
+            } $message->get_header('Restrict')
+        )
+        ) {
+        # Ignoring message with a no-archive flag.
+        $log->syslog('info',
+            "Do not archive message with no-archive flag for list %s", $self);
+    } else {
+        my $spool = Sympa::Spool::Archive->new;
+        return $spool->store(
+            $message,
+            original => Sympa::Tools::Data::smart_eq(
+                $self->{admin}{archive_crypted_msg}, 'original'
+            )
+        );
     }
 
     # Transformation of message after archiving.
@@ -2816,10 +2840,10 @@ sub send_confirm_to_sender {
 #
 ######################################################
 sub archive_send {
+    $log->syslog('debug2', '(%s, %s, %s)', @_);
     my ($self, $who, $arc) = @_;
-    $log->syslog('debug', '(%s, %s)', $who, $arc);
 
-    return unless $self->is_archived();
+    return undef unless $self->is_archived;
 
     my $archive = Sympa::Archive->new($self);
     my @msg_list;
@@ -2845,24 +2869,26 @@ sub archive_send {
         }
     }
 
-    my $subject = 'File ' . $self->{'name'} . ' ' . $arc;
-    my $param   = {
-        'to'       => $who,
-        'subject'  => $subject,
-        'msg_list' => [@msg_list]
+    my $param = {
+        to      => $who,
+        subject => $language->gettext_sprintf(
+            'Archive of %s, file %s',
+            $self->{'name'}, $arc
+        ),
+        msg_list       => [@msg_list],
+        boundary1      => tools::get_message_id($self->{'domain'}),
+        boundary2      => tools::get_message_id($self->{'domain'}),
+        from           => Conf::get_robot_conf($self->{'domain'}, 'sympa'),
+        auto_submitted => 'auto-replied'
     };
 
-    $param->{'boundary1'} = tools::get_message_id($self->{'domain'});
-    $param->{'boundary2'} = tools::get_message_id($self->{'domain'});
-    $param->{'from'}      = Conf::get_robot_conf($self->{'domain'}, 'sympa');
-
-    $param->{'auto_submitted'} = 'auto-replied';
     unless (Sympa::send_file($self, 'get_archive', $who, $param)) {
         $log->syslog('notice', 'Unable to send template "archive_send" to %s',
             $who);
         return undef;
     }
 
+    return 1;
 }
 
 ####################################################
@@ -2876,48 +2902,44 @@ sub archive_send {
 #
 ######################################################
 sub archive_send_last {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my ($self, $who) = @_;
-    $log->syslog('debug', '(%s, %s)', $self->{'listname'}, $who);
 
-    return unless ($self->is_archived());
-    my $dir = $self->{'dir'} . '/archives';
+    return undef unless $self->is_archived;
 
-    my $message = Sympa::Message->new_from_file($dir . '/last_message',
-        context => $self);
-    unless (defined $message) {
-        $log->syslog('err', 'Unable to create Message object %s',
-            "$dir/last_message");
-        return undef;
+    my ($message, $handle);
+    my $archive = Sympa::Archive->new($self);
+    foreach my $arc (reverse $archive->get_archives) {
+        next unless $archive->select_archive($arc);
+        ($message, $handle) = $archive->next(reverse => 1);
+        last if $message;
     }
-    # Decrypt message if possible
+    return undef unless $message;
+
+    # Decrypt message if possible.
     $message->smime_decrypt;
 
-    my @msglist;
-    my $msg = {};
-    $msg->{'id'} = 1;
+    my @msglist = (
+        {   id       => 1,
+            subject  => $message->{'decoded_subject'},
+            from     => $message->get_decoded_header('From'),
+            date     => $message->get_decoded_header('Date'),
+            full_msg => $message->as_string
+        }
+    );
 
-    $msg->{'subject'} = $message->{'decoded_subject'};
-    $msg->{'from'}    = $message->get_decoded_header('From');
-    $msg->{'date'}    = $message->get_decoded_header('Date');
-
-    $msg->{'full_msg'} = $message->as_string;
-
-    push @msglist, $msg;
-
-    my $subject = 'File ' . $self->{'name'} . '.last_message';
-    my $param   = {
-        'to'       => $who,
-        'subject'  => $subject,
-        'msg_list' => \@msglist
+    my $param = {
+        to      => $who,
+        subject => $language->gettext_sprintf(
+            'Archive of %s, last message',
+            $self->{'name'}
+        ),
+        msg_list       => [@msglist],
+        boundary1      => tools::get_message_id($self->{'domain'}),
+        boundary2      => tools::get_message_id($self->{'domain'}),
+        from           => Conf::get_robot_conf($self->{'domain'}, 'sympa'),
+        auto_submitted => 'auto-replied'
     };
-
-    $param->{'boundary1'} = tools::get_message_id($self->{'domain'});
-    $param->{'boundary2'} = tools::get_message_id($self->{'domain'});
-    $param->{'from'}      = Conf::get_robot_conf($self->{'domain'}, 'sympa');
-    $param->{'auto_submitted'} = 'auto-replied';
-    # open TMP2, ">/tmp/digdump";
-    # Sympa::Tools::Data::dump_var($param, 0, \*TMP2);
-    # close TMP2;
 
     unless (Sympa::send_file($self, 'get_archive', $who, $param)) {
         $log->syslog('notice', 'Unable to send template "archive_send" to %s',
@@ -2925,6 +2947,7 @@ sub archive_send_last {
         return undef;
     }
 
+    return 1;
 }
 
 ###   NOTIFICATION SENDING  ###
@@ -5799,40 +5822,8 @@ sub is_digest {
 # DEPRECATED.  Use Sympa::Archive::get_archives().
 #sub archive_ls;
 
-sub archive_msg {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my ($self, $message) = @_;
-
-    if ($self->is_archiving_enabled) {
-        Sympa::Archive->new($self)->store_last(
-            $message,
-            original => Sympa::Tools::Data::smart_eq(
-                $self->{admin}{archive_crypted_msg}, 'original'
-            )
-        );
-
-        # Ignoring message with a no-archive flag
-        if (!Sympa::Tools::Data::smart_eq(
-                $Conf::Conf{'ignore_x_no_archive_header_feature'}, 'on')
-            and (  grep {/yes/i} $message->get_header('X-no-archive')
-                or grep {/no\-external\-archive/i}
-                $message->get_header('Restrict'))
-            ) {
-            $log->syslog('info',
-                "Do not archive message with no-archive flag for list %s",
-                $self);
-            return 1;
-        }
-
-        my $spool = Sympa::Spool::Archive->new;
-        return $spool->store(
-            $message,
-            original => Sympa::Tools::Data::smart_eq(
-                $self->{admin}{archive_crypted_msg}, 'original'
-            )
-        );
-    }
-}
+# Merged into distribute_msg().
+#sub archive_msg;
 
 ## Is the list moderated?
 sub is_moderated {

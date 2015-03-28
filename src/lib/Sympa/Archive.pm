@@ -192,7 +192,8 @@ sub fetch {
 }
 
 sub next {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     return unless $self->{directory};
 
@@ -209,6 +210,10 @@ sub next {
                 } readdir $dh
         ];
         closedir $dh;
+
+        # The "reverse" option specific to this class is set.
+        $self->{_metadatas} = [reverse @{$self->{_metadatas}}]
+            if $options{reverse};
     }
     unless (@{$self->{_metadatas}}) {
         undef $self->{_metadatas};
@@ -462,26 +467,8 @@ sub store_html {
     return 1;
 }
 
-sub store_last {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my $self    = shift;
-    my $message = shift;
-    my %options = @_;
-
-    my $list = $self->{context};
-
-    return unless $list->is_archived();
-    my $dir = $list->{'dir'} . '/archives';
-
-    # Create the archive directory if needed
-    mkdir $dir, 0774 unless -d $dir;
-    chmod 0774, $dir;
-
-    # erase the last  message and replace it by the current one
-    open my $fh, '>', $dir . '/last_message';
-    print $fh $message->to_string(%options);
-    close $fh;
-}
+# DEPRECATED.  No longer used.
+#sub store_last;
 
 # DEPRECATED.  Use get_archives() and select_archive().
 #sub list;
@@ -528,17 +515,8 @@ sub exist {
 }
 
 # return path for latest message distributed in the list
-sub last_path {
-    $log->syslog('debug', '(%s)', @_);
-    my $list = shift;
-
-    return undef unless $list->is_archived();
-
-    my $file = $list->{'dir'} . '/archives/last_message';
-    return $file if -f $file;
-
-    return undef;
-}
+# DEPRECATED.  No longer used.
+#sub last_path;
 
 ## Load an archived message, returns the mhonarc metadata
 ## IN : file_path
@@ -1047,7 +1025,7 @@ Returns:
 Two-elements list of L<Sympa::Message> instance and filehandle locking
 a message.
 
-=item next ( )
+=item next ( [ reverse =E<gt> 1 ] )
 
 I<Instance method>.
 Gets next message in archive.
@@ -1124,19 +1102,11 @@ Otherwise C<undef>.
 I<Instance method>.
 TBD.
 
-=item store_last
-
-TBD.
-
 =item get_archives ( )
 
 I<Instance method>.
 Gets a list of archive directories this archive contains.
 Items of returned value may be fed to select_archive() and so on.
-
-=item last_path
-
-TBD.
 
 =item load_html_message
 
