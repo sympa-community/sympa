@@ -418,7 +418,7 @@ sub getfile {
     my $sign_mod = shift;
     my $message  = shift;
 
-    my ($which, $file) = split /\s+/, $args;
+    my ($which, $arc) = split /\s+/, $args, 2;
 
     my $list = Sympa::List->new($which, $robot);
     unless ($list) {
@@ -426,7 +426,7 @@ sub getfile {
             {'listname' => $which}, $cmd_line);
         $log->syslog('info',
             'GET %s %s from %s refused, list unknown for robot %s',
-            $which, $file, $sender, $robot);
+            $which, $arc, $sender, $robot);
         return 'unknownlist';
     }
 
@@ -437,15 +437,7 @@ sub getfile {
             $cmd_line);
         $log->syslog('info',
             'GET %s %s from %s refused, no archive for list %s',
-            $which, $file, $sender, $which);
-        return 'no_archive';
-    }
-    ## Check file syntax
-    if ($file =~ /(\.\.|\/)/) {
-        Sympa::Report::reject_report_cmd('user', 'no_required_file', {},
-            $cmd_line);
-        $log->syslog('info', 'GET %s %s from %s, incorrect filename',
-            $which, $file, $sender);
+            $which, $arc, $sender, $which);
         return 'no_archive';
     }
 
@@ -453,7 +445,7 @@ sub getfile {
         'get', $sender,
         {   'type' => 'auth_failed',
             'data' => {},
-            'msg'  => "GET $which $file from $sender"
+            'msg'  => "GET $which $arc from $sender"
         },
         $sign_mod,
         $list
@@ -499,11 +491,54 @@ sub getfile {
                 $cmd_line);
         }
         $log->syslog('info', 'GET %s %s from %s refused (not allowed)',
-            $which, $file, $sender);
+            $which, $arc, $sender);
         return 'not_allowed';
     }
 
-    unless ($list->archive_send($sender, $file)) {
+    my $archive = Sympa::Archive->new($list);
+    my @msg_list;
+    unless ($archive->select_archive($arc)) {
+        Sympa::Report::reject_report_cmd('user', 'no_required_file', {},
+            $cmd_line);
+        $log->syslog('info', 'GET %s %s from %s, no such archive',
+            $which, $arc, $sender);
+        return 'no_archive';
+    }
+
+    while (1) {
+        my ($arc_message, $arc_handle) = $archive->next;
+        last unless $arc_handle;     # No more messages.
+        next unless $arc_message;    # Malformed message.
+        $arc_handle->close;          # Unlock.
+
+        # Decrypt message if possible
+        $arc_message->smime_decrypt;
+
+        $log->syslog('debug', 'MAIL object: %s', $arc_message);
+
+        push @msg_list,
+            {
+            id       => $arc_message->{serial},
+            subject  => $arc_message->{decoded_subject},
+            from     => $arc_message->get_decoded_header('From'),
+            date     => $arc_message->get_decoded_header('Date'),
+            full_msg => $arc_message->as_string
+            };
+    }
+
+    my $param = {
+        to      => $sender,
+        subject => $language->gettext_sprintf(
+            'Archive of %s, file %s',
+            $list->{'name'}, $arc
+        ),
+        msg_list       => [@msg_list],
+        boundary1      => tools::get_message_id($list->{'domain'}),
+        boundary2      => tools::get_message_id($list->{'domain'}),
+        from           => Conf::get_robot_conf($list->{'domain'}, 'sympa'),
+        auto_submitted => 'auto-replied'
+    };
+    unless (Sympa::send_file($list, 'get_archive', $sender, $param)) {
         Sympa::Report::reject_report_cmd(
             'intern',
             "Unable to send archive to $sender",
@@ -514,7 +549,7 @@ sub getfile {
     }
 
     $log->syslog('info', 'GET %s %s from %s accepted (%d seconds)',
-        $which, $file, $sender, time - $time_command);
+        $which, $arc, $sender, time - $time_command);
 
     return 1;
 }
@@ -612,7 +647,48 @@ sub last {
         return 'not_allowed';
     }
 
-    unless ($list->archive_send_last($sender)) {
+    my ($arc_message, $arc_handle);
+    my $archive = Sympa::Archive->new($list);
+    foreach my $arc (reverse $archive->get_archives) {
+        next unless $archive->select_archive($arc);
+        ($arc_message, $arc_handle) = $archive->next(reverse => 1);
+        last if $arc_message;
+    }
+    unless ($arc_message) {
+        Sympa::Report::reject_report_cmd('user', 'no_required_file', {},
+            $cmd_line);
+        $log->syslog('info', 'LAST %s from %s, no such archive',
+            $which, $sender);
+        return 'no_archive';
+    }
+    $arc_handle->close;    # Unlock.
+
+    # Decrypt message if possible.
+    $arc_message->smime_decrypt;
+
+    my @msglist = (
+        {   id       => 1,
+            subject  => $arc_message->{'decoded_subject'},
+            from     => $arc_message->get_decoded_header('From'),
+            date     => $arc_message->get_decoded_header('Date'),
+            full_msg => $arc_message->as_string
+        }
+    );
+    my $param = {
+        to      => $sender,
+        subject => $language->gettext_sprintf(
+            'Archive of %s, last message',
+            $list->{'name'}
+        ),
+        msg_list       => [@msglist],
+        boundary1      => tools::get_message_id($list->{'domain'}),
+        boundary2      => tools::get_message_id($list->{'domain'}),
+        from           => Conf::get_robot_conf($list->{'domain'}, 'sympa'),
+        auto_submitted => 'auto-replied'
+    };
+    unless (Sympa::send_file($list, 'get_archive', $sender, $param)) {
+        $log->syslog('notice', 'Unable to send template "get_archive" to %s',
+            $sender);
         Sympa::Report::reject_report_cmd(
             'intern',
             "Unable to send archive to $sender",

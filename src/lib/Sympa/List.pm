@@ -254,6 +254,7 @@ Returns true if the indicated file exists.
 
 =item archive_send ( WHO, FILE )
 
+DEPRECATED.
 Send the indicated archive file to the user, if it exists.
 
 =item archive_ls ()
@@ -2827,128 +2828,11 @@ sub send_confirm_to_sender {
 #MOVED: Use Sympa::request_auth().
 #sub request_auth;
 
-####################################################
-# archive_send
-####################################################
-# sends an archive file to someone (text archive
-# file : independant from web archives)
-#
-# IN : -$self(+) : ref(List)
-#      -$who(+) : recepient
-#      -file(+) : name of the archive file to send
-# OUT : - | undef
-#
-######################################################
-sub archive_send {
-    $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my ($self, $who, $arc) = @_;
+# Merged into Sympa::Commands::getfile().
+#sub archive_send;
 
-    return undef unless $self->is_archived;
-
-    my $archive = Sympa::Archive->new($self);
-    my @msg_list;
-    if ($archive->select_archive($arc)) {
-        while (1) {
-            my ($message, $handle) = $archive->next;
-            last unless $handle;     # No more messages.
-            next unless $message;    # Malformed message.
-
-            # Decrypt message if possible
-            $message->smime_decrypt;
-
-            $log->syslog('debug', 'MAIL object: %s', $message);
-
-            push @msg_list,
-                {
-                id       => $message->{serial},
-                subject  => $message->{decoded_subject},
-                from     => $message->get_decoded_header('From'),
-                date     => $message->get_decoded_header('Date'),
-                full_msg => $message->as_string
-                };
-        }
-    }
-
-    my $param = {
-        to      => $who,
-        subject => $language->gettext_sprintf(
-            'Archive of %s, file %s',
-            $self->{'name'}, $arc
-        ),
-        msg_list       => [@msg_list],
-        boundary1      => tools::get_message_id($self->{'domain'}),
-        boundary2      => tools::get_message_id($self->{'domain'}),
-        from           => Conf::get_robot_conf($self->{'domain'}, 'sympa'),
-        auto_submitted => 'auto-replied'
-    };
-
-    unless (Sympa::send_file($self, 'get_archive', $who, $param)) {
-        $log->syslog('notice', 'Unable to send template "archive_send" to %s',
-            $who);
-        return undef;
-    }
-
-    return 1;
-}
-
-####################################################
-# archive_send_last
-####################################################
-# sends last archive file
-#
-# IN : -$self(+) : ref(List)
-#      -$who(+) : recepient
-# OUT : - | undef
-#
-######################################################
-sub archive_send_last {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my ($self, $who) = @_;
-
-    return undef unless $self->is_archived;
-
-    my ($message, $handle);
-    my $archive = Sympa::Archive->new($self);
-    foreach my $arc (reverse $archive->get_archives) {
-        next unless $archive->select_archive($arc);
-        ($message, $handle) = $archive->next(reverse => 1);
-        last if $message;
-    }
-    return undef unless $message;
-
-    # Decrypt message if possible.
-    $message->smime_decrypt;
-
-    my @msglist = (
-        {   id       => 1,
-            subject  => $message->{'decoded_subject'},
-            from     => $message->get_decoded_header('From'),
-            date     => $message->get_decoded_header('Date'),
-            full_msg => $message->as_string
-        }
-    );
-
-    my $param = {
-        to      => $who,
-        subject => $language->gettext_sprintf(
-            'Archive of %s, last message',
-            $self->{'name'}
-        ),
-        msg_list       => [@msglist],
-        boundary1      => tools::get_message_id($self->{'domain'}),
-        boundary2      => tools::get_message_id($self->{'domain'}),
-        from           => Conf::get_robot_conf($self->{'domain'}, 'sympa'),
-        auto_submitted => 'auto-replied'
-    };
-
-    unless (Sympa::send_file($self, 'get_archive', $who, $param)) {
-        $log->syslog('notice', 'Unable to send template "archive_send" to %s',
-            $who);
-        return undef;
-    }
-
-    return 1;
-}
+# Merged into Sympa::Commands::last().
+#sub archive_send_last;
 
 ###   NOTIFICATION SENDING  ###
 
