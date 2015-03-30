@@ -28,7 +28,7 @@ use strict;
 use warnings;
 use Text::LineFold;
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
-use if (5.016 < $]), qw(feature fc);
+use if (5.016 <= $]), qw(feature fc);
 
 #*******************************************
 # Function : wrap_text
