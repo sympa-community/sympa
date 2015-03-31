@@ -129,6 +129,7 @@ MAN3PM = \
 	Sympa/Template.pm \
 	Sympa/Tools/Daemon.pm \
 	Sympa/Tools/File.pm \
+	Sympa/Tools/Text.pm \
 	Sympa/User.pm
 
 EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)

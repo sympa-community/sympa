@@ -30,11 +30,6 @@ use Text::LineFold;
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 
-#*******************************************
-# Function : wrap_text
-# Description : return line-wrapped text.
-## IN : text, init, subs, cols
-#*******************************************
 sub wrap_text {
     my $text = shift;
     my $init = shift;
@@ -53,12 +48,6 @@ sub wrap_text {
     return $text;
 }
 
-#*******************************************
-## Function : foldcase
-## Description : returns "fold-case" string suitable for case-insensitive
-## match.
-### IN : str
-##*******************************************
 sub foldcase {
     my $str = shift;
     return '' unless defined $str and length $str;
@@ -73,3 +62,75 @@ sub foldcase {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Tools::Text - Text-related functions
+
+=head1 DESCRIPTION
+
+This package provides some text-related functions.
+
+=head2 Functions
+
+=over
+
+=item wrap_text ( $text, [ $init_tab, [ $subsequent_tab, [ $cols ] ] ] )
+
+I<Function>.
+Returns line-wrapped text.
+
+Parameters:
+
+=over
+
+=item $text
+
+The text to be folded.
+
+=item $init_tab
+
+Indentation prepended to the first line of paragraph.
+Default is C<''>, no indentation.
+
+=item $subsequent_tab
+
+Indentation prepended to each subsequent line of folded paragraph.
+Default is C<''>, no indentation.
+
+=item $cols
+
+Max number of columns of folded text.
+Default is C<78>.
+
+=back
+
+=item foldcase ( $str )
+
+I<Function>.
+Returns "fold-case" string suitable for case-insensitive match.
+For example, a code below looks for a needle in haystack not regarding case,
+even if they are non-ASCII UTF-8 strings.
+
+  $haystack = Sympa::Tools::Text::foldcase($HayStack);
+  $needle   = Sympa::Tools::Text::foldcase($NeedLe);
+  if (index $haystack, $needle >= 0) {
+      ...
+  }
+
+Parameter:
+
+=over
+
+=item $str
+
+A string.
+
+=back
+
+=back
+
+=cut
