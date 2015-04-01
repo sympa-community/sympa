@@ -64,7 +64,7 @@
 	<th colspan="3">[%|loc%]Details[%END%]</th>
       </tr>
       <tr>
-	<th>[%|loc%]# of bounces[%END%]</th>
+	<th>[%|loc%]Number of bounces[%END%]</th>
 	<th>[%|loc%]First bounce[%END%]</th>
 	<th>[%|loc%]Last bounce[%END%]</th>
       </tr>
@@ -125,7 +125,7 @@
   [% IF is_owner %]
   <br />
   <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
-  <input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%] </label><br />
+  <label for="quiet">[%|loc%]quiet[%END%]</label> <input id="quiet" type="checkbox" name="quiet" /><br />
   <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors for selected users[%END%]" /><br />
         [% END %]
 

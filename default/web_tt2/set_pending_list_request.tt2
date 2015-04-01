@@ -20,11 +20,11 @@
 <input type="hidden" name="serial" value="[% list_serial %]" />
 
 <ul id="set_pending_radio">
-<li><input id="status" type="radio" name="status" value="closed" /><label for="status">[%|loc%]Close it[%END%]</label></li>
-<li><input id="status2" type="radio" name="status" value="open" /><label for="status2">[%|loc%]Install it[%END%]</label></li>
+<li><label for="status">[%|loc%]Close it[%END%]</label> <input id="status" type="radio" name="status" value="closed" /></li>
+<li><label for="status2">[%|loc%]Install it[%END%]</label> <input id="status2" type="radio" name="status" value="open" /></li>
 </ul>
 <input class="MainMenuLinks" type="submit" name="action_install_pending_list" value="[%|loc%]submit[%END%]" />
-<input id="notify" type="checkbox" name="notify" checked="checked" /><label for="notify">[%|loc%]notify owner[%END%]</label>
+<label for="notify">[%|loc%]notify owner[%END%]</label> <input id="notify" type="checkbox" name="notify" checked="checked" />
 </fieldset>
 </form>
 </div>

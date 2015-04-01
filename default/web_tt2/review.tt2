@@ -42,7 +42,7 @@
    <input type="hidden" name="action" value="add" />
    <label for="email_search">[%|loc%]Email address:[%END%]</label>
    <input id="email_search" type="text" name="email" size="35" />
-   <div class="form_row"><input id="quietly" type="checkbox" name="quiet" /><label for="quietly">[%|loc%]Quiet (don't send welcome email)[%END%]</label></div>
+   <div class="form_row"><label for="quietly">[%|loc%]Quiet (don't send welcome email)[%END%]</label> <input id="quietly" type="checkbox" name="quiet" /></div>
    <div class="form_row"><input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" /></div>
   </div>
   </fieldset>
@@ -99,7 +99,7 @@
         <!--input type="button" name="action_del" value="Delete selected email addresses" onclick="return request_confirm('[%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]')" /-->
         <p><input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
 	<p><input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
-        <p><input type="checkbox" name="quiet" /> [%|loc%]Quiet (don't send deletion email)[%END%]
+        <p><label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label> <input type="checkbox" id="quiet" name="quiet" /></p>
       [% END %]
 <hr>
 
