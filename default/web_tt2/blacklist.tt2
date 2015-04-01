@@ -10,9 +10,9 @@ blacklist is in use for the following operation:[%END%] [% conf.use_blacklist %]
 [%|loc%]Syntax:[%END%]
 <ul>
   <li>[%|loc%]only one email or expression by line[%END%]</li>
-  <li>[%|loc%]char # introduce a comment[%END%]</li>
-  <li>[%|loc%]char * match any string. Example: "*@spammer-domain.com" match any sender from that exact domain[%END%]</li>
-  <li>[%|loc%]only one char * is autorized in a line[%END%]</li>
+  <li>[%|loc%]number sign (#) introduces a comment[%END%]</li>
+  <li>[%|loc%]asterisk (*) matches any string. Example: "*@spammer-domain.com" matchs any sender from that exact domain[%END%]</li>
+  <li>[%|loc%]only one asterisk is allowed in a line[%END%]</li>
 </ul>
 [%end%]
 <p>
