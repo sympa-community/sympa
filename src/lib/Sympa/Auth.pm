@@ -139,7 +139,7 @@ sub authentication {
         $user->{'password'} = '';
     }
 
-    if ($user->{'wrong_login_count'} >
+    if (($user->{'wrong_login_count'} || 0) >
         Conf::get_robot_conf($robot, 'max_wrong_password')) {
         # too many wrong login attemp
         Sympa::User::update_global_user($email,
@@ -229,12 +229,15 @@ sub ldap_authentication {
     # and this email address does not match the corresponding regexp
     return undef if ($auth =~ /@/ && $auth !~ /$ldap->{'regexp'}/i);
 
-    my @alternative_conf = split(/,/, $ldap->{'alternative_email_attribute'});
-    my $attrs            = $ldap->{'email_attribute'};
-    my $filter           = $ldap->{'get_dn_by_uid_filter'}
-        if ($whichfilter eq 'uid_filter');
-    $filter = $ldap->{'get_dn_by_email_filter'}
-        if ($whichfilter eq 'email_filter');
+    my @alt_attrs =
+        split /\s*,\s*/, ($ldap->{'alternative_email_attribute'} || '');
+    my $attr = $ldap->{'email_attribute'};
+    my $filter;
+    if ($whichfilter eq 'uid_filter') {
+        $filter = $ldap->{'get_dn_by_uid_filter'};
+    } elsif ($whichfilter eq 'email_filter') {
+        $filter = $ldap->{'get_dn_by_email_filter'};
+    }
     $filter =~ s/\[sender\]/$auth/ig;
 
     ## bind in order to have the user's DN
@@ -298,8 +301,9 @@ sub ldap_authentication {
     }
 
     ## To get the value of the canonic email and the alternative email
-    my (@canonic_email, @alternative);
+    my (@emails, @alt_emails);
 
+    #FIXME FIXME: After all, $param->{'alt_emails'} is never used!
     my $param = Sympa::Tools::Data::dup_var($ldap);
     ## Keep previous alt emails not from LDAP source
     my $previous = {};
@@ -310,20 +314,20 @@ sub ldap_authentication {
     $param->{'alt_emails'} = {};
 
     my $entry = $mesg->entry(0);
-    #FIXME: alloptions would be used.
-    @canonic_email = $entry->get_value($attrs);
-    foreach my $email (@canonic_email) {
-        my $e = lc($email);
-        $param->{'alt_emails'}{$e} = 'ldap' if ($e);
-    }
 
-    foreach my $attribute_value (@alternative_conf) {
-        #FIXME: alloptions would be used.
-        @alternative = $entry->get_value($attribute_value);
-        foreach my $alter (@alternative) {
-            my $a = lc($alter);
-            $param->{'alt_emails'}{$a} = 'ldap' if ($a);
-        }
+    my $values = $entry->get_value($attr, alloptions => 1);
+    @emails =
+        map { lc $_ }
+        grep {$_} map { @{$values->{$_}} } sort keys %{$values || {}};
+
+    @alt_emails = map {
+        my $values = $entry->get_value($_, alloptions => 1);
+        map { lc $_ }
+            grep {$_} map { @{$values->{$_}} } sort keys %{$values || {}};
+    } @alt_attrs;
+
+    foreach my $email (@emails, @alt_emails) {
+        $param->{'alt_emails'}{$email} = 'ldap';
     }
 
     ## Restore previous emails
@@ -332,15 +336,15 @@ sub ldap_authentication {
     }
 
     $db->disconnect() or $log->syslog('notice', 'Unable to unbind');
-    $log->syslog('debug3', 'Canonic: %s', $canonic_email[0]);
+    $log->syslog('debug3', 'Canonic: %s', $emails[0]);
     ## If the identifier provided was a valid email, return the provided
     ## email.
     ## Otherwise, return the canonical email guessed after the login.
     if (tools::valid_email($auth)
-        && !Conf::get_robot_conf($robot, 'ldap_force_canonical_email')) {
-        return ($auth);
+        and not Conf::get_robot_conf($robot, 'ldap_force_canonical_email')) {
+        return $auth;
     } else {
-        return lc($canonic_email[0]);
+        return $emails[0];
     }
 }
 
@@ -381,7 +385,8 @@ sub get_email_by_net_id {
     my $filter = $ldap->{'get_email_by_uid_filter'};
     $filter =~ s/\[([\w-]+)\]/$attributes->{$1}/ig;
 
-    # my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
+    # my @alt_attrs =
+    #     split /\s*,\s*/, $ldap->{'alternative_email_attribute'} || '';
 
     my $mesg = $db->do_operation(
         'search',
