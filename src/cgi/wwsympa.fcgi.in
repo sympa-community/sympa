@@ -1931,10 +1931,15 @@ while ($query = new_loop()) {
 
         my $template = Sympa::Template->new(
             $list || $robot,
-            plugins => $plugins,
-            subdir  => 'web_tt2',
-            lang    => $param->{'lang'}
+            plugins      => $plugins,
+            subdir       => 'web_tt2',
+            lang         => $param->{'lang'},
+            include_path => [@other_include_path]
         );
+        # Reset additional settings.
+        undef $allow_absolute_path;
+        @other_include_path = ();
+
         unless ($template->parse($param, 'ajax.tt2', \*STDOUT)) {
             my $error = $template->{last_error};
             $param->{'tt2_error'} = $error;
@@ -2198,7 +2203,7 @@ sub get_parameters {
         $param->{'use_ssl'} = 0;
     }
 
-    $param->{'path_info'}   = $ENV{'PATH_INFO'};
+    $param->{'path_info'} = $ENV{'PATH_INFO'};
     # Useful to skip previous_action when using POST.
     $param->{'http_method'} = $ENV{'REQUEST_METHOD'};
 
