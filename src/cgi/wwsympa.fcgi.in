@@ -1906,7 +1906,8 @@ while ($query = new_loop()) {
             $list || $robot,
             plugins => $plugins,
             subdir  => 'web_tt2',
-            lang    => $param->{'lang'}
+            lang    => $param->{'lang'},
+			include_path   => [@other_include_path]
         );
         unless ($template->parse($param, 'rss.tt2', \*STDOUT)) {
             my $error = $template->{last_error};
