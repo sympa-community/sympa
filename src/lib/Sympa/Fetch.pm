@@ -97,7 +97,7 @@ sub get_https {
         my $issuer_name  = $ssl_socket->peer_certificate("issuer");
         my $cipher       = $ssl_socket->get_cipher();
         $log->syslog('debug',
-            'Ssl peer certificat %s issued by %s. Cipher used %s',
+            'SSL peer certificate %s issued by %s. Cipher used %s',
             $subject_name, $issuer_name, $cipher);
     }
 
@@ -185,7 +185,7 @@ sub get_https2 {
     #    my $issuer_name = $ssl_socket->peer_certificate("issuer");
     #    my $cipher = $ssl_socket->get_cipher();
     #    $log->syslog('debug',
-    #        'ssl peer certificat %s issued by %s. Cipher used %s',
+    #        'SSL peer certificate %s issued by %s. Cipher used %s',
     #        $subject_name,$issuer_name,$cipher);
     #}
 

@@ -1022,7 +1022,7 @@ sub verify {
 
     if ($sign_mod) {
         $log->syslog(
-            'info',  'VERIFY successfull from %s',
+            'info',  'VERIFY successful from %s',
             $sender, time - $time_command
         );
         if ($sign_mod eq 'smime') {

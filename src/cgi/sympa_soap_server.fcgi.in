@@ -57,7 +57,7 @@ $log->openlog(
 $log->syslog('info', 'SympaSOAP started');
 
 ## We set the real UID with the effective UID value
-## It is usefull to allow execution of scripts like alias_manager
+## It is useful to allow execution of scripts like alias_manager
 ## that otherwise might loose the benefit of SetUID
 $UID = $EUID;    ## UID
 $GID = $EGID;    ## GID

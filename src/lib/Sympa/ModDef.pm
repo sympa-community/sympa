@@ -299,7 +299,7 @@ our %cpan_modules = (
         package_name     => 'Net-CIDR',
         mandatory        => 1,
         'gettext_id' =>
-            'used to check netmask within Sympa autorization scenario rules',
+            'used to check netmask within Sympa authorization scenario rules',
     },
     'Net::DNS' => {
         required_version => '0.65',

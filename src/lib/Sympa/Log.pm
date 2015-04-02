@@ -217,8 +217,8 @@ sub _connect {
     if ($self->{_socket_type} =~ /^(unix|inet)$/i) {
         Sys::Syslog::setlogsock(lc($self->{_socket_type}));
     }
-    # close log may be usefull : if parent processus did open log child
-    # process inherit the openlog with parameters from parent process
+    # Close log may be useful: If parent processus did open log child
+    # process inherit the openlog with parameters from parent process.
     Sys::Syslog::closelog;
     eval {
         Sys::Syslog::openlog(sprintf('%s[%s]', $self->{_service}, $PID),

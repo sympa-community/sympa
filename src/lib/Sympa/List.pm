@@ -2071,7 +2071,7 @@ sub post_archive {
 # distribute a message to a list, Crypting if needed
 #
 # IN : -$message(+) : ref(Sympa::Message)
-#      -\@rcpt(+) : recepients
+#      -\@rcpt(+) : recipients
 # OUT : -$numsmtp : number of sendmail process | undef
 #
 # Old name: Sympa::Mail::mail_message()
@@ -9755,7 +9755,7 @@ sub _load_list_param {
 
 BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
-## Load the certificat file
+# Load the certificate file.
 sub get_cert {
     $log->syslog('debug2', '(%s)', @_);
     my $self   = shift;
@@ -11299,8 +11299,7 @@ sub remove_bouncers {
     return 1;
 }
 
-#Sub for notifying users : "Be carefull,You're bouncing"
-#
+# Sub for notifying users: "Be careful, you're bouncing".
 sub notify_bouncers {
     my $self   = shift;
     my $reftab = shift;

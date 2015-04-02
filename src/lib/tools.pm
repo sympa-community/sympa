@@ -611,7 +611,7 @@ sub escape_quote {
 #sub send_notify_to_listmaster;
 
 ## Q-encode a complete file hierarchy
-## Usefull to Q-encode subshared documents
+## Useful to Q-encode subshared documents
 sub qencode_hierarchy {
     my $dir               = shift; ## Root directory
     my $original_encoding = shift; ## Suspected original encoding of filenames

@@ -121,7 +121,7 @@ sub new {
         and defined $all_scenarios{$scenario->{'file_path'}}) {
 
         ## Option 'dont_reload_scenario' prevents scenario reloading
-        ## Usefull for performances reasons
+        ## Useful for performances reasons
         if ($parameters{'options'}{'dont_reload_scenario'}) {
             return $all_scenarios{$scenario->{'file_path'}};
         }

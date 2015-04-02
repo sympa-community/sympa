@@ -372,7 +372,7 @@ sub create_list_old {
 #       - $family : the family object
 #       - $robot : the list's robot  ** No longer used.
 #       - $abort_on_error : won't create the list directory on
-#          tt2 process error (usefull for dynamic lists that
+#          tt2 process error (useful for dynamic lists that
 #          throw exceptions)
 # OUT : - hash with keys :
 #          -list :$list

@@ -66,7 +66,7 @@ sub checkCookie {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 
@@ -88,7 +88,7 @@ sub lists {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 
@@ -190,7 +190,7 @@ sub login {
     unless ($user) {
         $log->syslog('notice', 'Login authentication failed');
         die SOAP::Fault->faultcode('Server')
-            ->faultstring('Authentification failed')
+            ->faultstring('Authentication failed')
             ->faultdetail("Incorrect password for user $email or bad login");
     }
 
@@ -269,7 +269,7 @@ sub casLogin {
     unless ($user) {
         $log->syslog('notice', 'Login authentication failed');
         die SOAP::Fault->faultcode('Server')
-            ->faultstring('Authentification failed')
+            ->faultstring('Authentication failed')
             ->faultdetail("Proxy ticket could not be validated");
     }
 
@@ -279,7 +279,7 @@ sub casLogin {
         $log->syslog('err',
             'Could not get email address from LDAP for user %s', $user);
         die SOAP::Fault->faultcode('Server')
-            ->faultstring('Authentification failed')
+            ->faultstring('Authentication failed')
             ->faultdetail("Could not get email address from LDAP directory");
     }
 
@@ -396,7 +396,7 @@ sub authenticateRemoteAppAndRun {
     unless (defined $proxy_vars) {
         $log->syslog('notice', 'Authentication failed');
         die SOAP::Fault->faultcode('Server')
-            ->faultstring('Authentification failed')
+            ->faultstring('Authentication failed')
             ->faultdetail("Authentication failed for application $appname");
     }
     $ENV{'remote_application_name'} = $appname;
@@ -476,7 +476,7 @@ sub info {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 
@@ -1075,7 +1075,7 @@ sub review {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 
@@ -1175,7 +1175,7 @@ sub fullReview {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 
@@ -1287,7 +1287,7 @@ sub signoff {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 
@@ -1415,7 +1415,7 @@ sub subscribe {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 
@@ -1601,7 +1601,7 @@ sub which {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 
@@ -1699,7 +1699,7 @@ sub getDetails {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 
@@ -1758,7 +1758,7 @@ sub setDetails {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 
@@ -1833,7 +1833,7 @@ sub setCustom {
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
-            ->faultstring('User not authentified')
+            ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
 

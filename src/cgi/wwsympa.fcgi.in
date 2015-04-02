@@ -1045,7 +1045,7 @@ while ($query = new_loop()) {
     }
 
     ## We set the real UID with the effective UID value
-    ## It is usefull to allow execution of scripts like alias_manager
+    ## It is useful to allow execution of scripts like alias_manager
     ## that otherwise might loose the benefit of SetUID
     $UID = $EUID;    ## UID
     $GID = $EGID;    ## GID
@@ -1253,7 +1253,7 @@ while ($query = new_loop()) {
     umask(oct($Conf::Conf{'umask'}));
 
     ## Authentication
-    ## use https client certificat information if define.
+    ## use https client certificate information if define.
 
     ## Default auth method (for scenarios)
     $param->{'auth_method'} = 'md5';
@@ -1875,7 +1875,7 @@ while ($query = new_loop()) {
                 }
                 if (ref($auth) eq 'ARRAY') {
                     foreach my $err (@$auth) {
-                        printf "AUTHORISATION FAILED : %s\n", $err;
+                        printf "AUTHORIZATION FAILED : %s\n", $err;
                     }
                 }
 
@@ -2199,8 +2199,8 @@ sub get_parameters {
     }
 
     $param->{'path_info'}   = $ENV{'PATH_INFO'};
-    $param->{'http_method'} = $ENV{
-        'REQUEST_METHOD'};  ## Usefull to skip previous_action when using POST
+    # Useful to skip previous_action when using POST.
+    $param->{'http_method'} = $ENV{'REQUEST_METHOD'};
 
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
         _split_params($ENV{'PATH_INFO'});
@@ -9757,7 +9757,7 @@ sub do_arc {
         return undef;
     }
 
-    ## check autorization for tracking
+    # Check authorization for tracking.
     my $result = Sympa::Scenario::request_action(
         $list,
         'tracking.tracking',
@@ -15372,7 +15372,7 @@ sub do_d_editfile {
         web_db_log(
             {   'parameters' => $in{'path'},
                 'status'     => 'error',
-                'error_type' => 'autorization'
+                'error_type' => 'authorization'
             }
         );
         return undef;
@@ -20577,7 +20577,7 @@ sub do_remind {
     return 'admin';
 }
 
-## Load list certificat
+# Load list certificate.
 sub do_load_cert {
     wwslog('info', '(%s)', $param->{'list'});
 
@@ -20729,7 +20729,7 @@ sub do_delete_pictures {
         );
         return undef;
     } else {
-        wwslog('notice', 'File deleted successfull');
+        wwslog('notice', 'File deleted successfully');
         return 'suboptions';
     }
 }

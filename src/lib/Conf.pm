@@ -889,7 +889,7 @@ sub checkfiles {
         $config_err++;
     }
 
-    #  create pictures dir if usefull for each robot
+    # Create pictures dir if useful for each robot.
     foreach my $robot (keys %{$Conf{'robots'}}) {
         my $dir = get_robot_conf($robot, 'static_content_path');
         if ($dir ne '' && -d $dir) {
@@ -1720,7 +1720,7 @@ sub _load_a_param {
     if ($value eq 'default') {
         $value = $p->{'default'};
     }
-    ## lower case if usefull
+    # Lower case if useful.
     $value = lc($value)
         if (defined $p->{'case'} && $p->{'case'} eq 'insensitive');
 

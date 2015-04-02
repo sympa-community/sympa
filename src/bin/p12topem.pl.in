@@ -103,11 +103,11 @@ if (   ($main::options{'help'} ne '')
     }
 
     if (-r "$cert") {
-        printf "$cert certificat already exist\n";
+        printf "$cert certificate already exists\n";
         die;
     }
     if (-r "$privatekey") {
-        printf "$privatekey already exist\n";
+        printf "$privatekey already exists\n";
         die;
     }
 
@@ -158,14 +158,14 @@ Usage p12topem.pl --pkcs12 <pkcs#12_cert_file> --listname <listname> or
       p12topem.pl --pkcs12 <pkcs#12_cert_file> --robot <robot>
 
 This script is intended to convert a PKCS#12 certificates in PEM format
-using Openssl. This is usefull because most PKI providerd deliver certificates
-using a web interface so the certificat is stored in your browser.
+using Openssl. This is useful because most PKI providerd deliver certificates
+using a web interface so the certificate is stored in your browser.
 
 When exporting a certificate from a browser (Netscape, IE, Mozilla etc)
 the result is stored using PKCS#12 format.Sympa requires a pair of PEM
-certificat and private key. You must then convert your pkcs#12 into PEM. 
+certificate and private key. You must then convert your pkcs#12 into PEM. 
 
-For a list certificat, the file will be installed in
+For a list certificate, the file will be installed in
 $home_sympa/<listname>/cert.pem and $home_sympa/<listname>/private_key
 
 For Sympa itself a certificate will be installed in 

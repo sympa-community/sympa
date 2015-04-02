@@ -664,7 +664,7 @@ sub get_user_error_web {
 #########################################################
 # get_auth_reject_web
 #########################################################
-#  return array of web authorisation reject
+#  return array of web authorization rejects
 #
 # IN : -
 #

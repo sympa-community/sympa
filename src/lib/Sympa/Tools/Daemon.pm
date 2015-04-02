@@ -232,7 +232,7 @@ TBD.
 sub direct_stderr_to_file {
     my %data = @_;
     ## Error output is stored in a file with PID-based name
-    ## Usefull if process crashes
+    ## Useful if process crashes
     open(STDERR, '>>',
         $Conf::Conf{'tmpdir'} . '/' . $data{'pid'} . '.stderr');
     unless (

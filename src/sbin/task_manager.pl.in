@@ -143,7 +143,7 @@ $UID = $EUID = (getpwnam(Sympa::Constants::USER))[2];
 POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
 POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 
-## Check if the UID has correctly been set (usefull on OS X)
+# Check if the UID has correctly been set (useful on OS X)
 unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
     && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
     die
@@ -1914,7 +1914,7 @@ sub get_score {
     my $min_period    = $Conf::Conf{'minimum_bouncing_period'};
     my $min_msg_count = $Conf::Conf{'minimum_bouncing_count'};
 
-    # Analizing bounce_subscriber_field and keep usefull infos for notation
+    # Analizing bounce_subscriber_field and keep useful infos for notation
     $user_ref->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
 
     my $BO_period    = int($1 / 86400) - $Conf::Conf{'bounce_delay'};

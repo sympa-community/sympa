@@ -539,7 +539,7 @@ my %full_db_struct = (
             'reception_option_notification' => {
                 'struct' => 'varchar(20)',
                 'doc' =>
-                    'The subscription option of the subscriber when the related message was sent to the list. Ussefull because some recipient may have option such as //digest// or //nomail//',
+                    'The subscription option of the subscriber when the related message was sent to the list. Usseful because some recipient may have option such as //digest// or //nomail//',
                 'order' => 4,
             },
             'status_notification' => {

@@ -503,7 +503,7 @@ our %pinfo = (
 
     'merge_feature' => {
         'group'      => 'sending',
-        'gettext_id' => "Allow message personnalization",
+        'gettext_id' => "Allow message personalization",
         'format'     => ['on', 'off'],
         'occurrence' => '0-1',
         'default'    => {'conf' => 'merge_feature'}
