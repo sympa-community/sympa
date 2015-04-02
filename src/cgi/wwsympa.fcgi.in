@@ -1910,9 +1910,14 @@ while ($query = new_loop()) {
         );
         unless ($template->parse($param, 'rss.tt2', \*STDOUT)) {
             my $error = $template->{last_error};
+            $error = $error->as_string if ref $error;
             $param->{'tt2_error'} = $error;
+
             Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
+            wwslog('err', '/rss: error: %s', $error);
+            printf STDOUT "\n<!-- %s -->\n",
+                HTML::Entities::encode_entities($error, '<>&"');
         }
     } elsif ($ajax) {
         print "Cache-control: no-cache\n";
@@ -1942,9 +1947,14 @@ while ($query = new_loop()) {
 
         unless ($template->parse($param, 'ajax.tt2', \*STDOUT)) {
             my $error = $template->{last_error};
+            $error = $error->as_string if ref $error;
             $param->{'tt2_error'} = $error;
+
             Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
+            wwslog('err', '/ajax/%s: error: %s', $param->{'action'}, $error);
+            printf "\n<!-- %s -->\n",
+                HTML::Entities::encode_entities($error, '<>&"');
         }
 # 	 close FILE;
     } elsif ($param->{'redirect_to'}) {
@@ -2909,18 +2919,22 @@ sub send_html {
             and $error->type eq 'file') {
             # "Not Found" response for random help page.
             print "Status: 404 Not Found\n";
+
+            $error = $error->as_string;
         } else {
+            $error = $error->as_string if ref $error;
+
             Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
+            wwslog('err', '/%s: error: %s', $param->{'action'}, $error);
         }
 
-        my $error_string = HTML::Entities::encode_entities(
-            (ref $error ? $error->as_string : $error), '<>&"');
-        $param->{'tt2_error'}      = $error_string;
-        $param_copy->{'tt2_error'} = $error_string;
+        my $error_escaped = HTML::Entities::encode_entities($error, '<>&"');
+        $param->{'tt2_error'}      = $error_escaped;
+        $param_copy->{'tt2_error'} = $error_escaped;
         $template->parse($param_copy, 'tt2_error.tt2', \*STDOUT,
             has_header => 1);
-        print "\n\n";    # when tt2 failed to parse
+        print STDOUT "\n\n";    # when tt2 failed to parse
     }
 }
 
@@ -7935,10 +7949,13 @@ sub do_skinsedit {
             }
             unless ($css_template->parse($param, 'css.tt2', \*CSS)) {
                 my $error = $css_template->{last_error};
+                $error = $error->as_string if ref $error;
                 $param->{'tt2_error'} = $error;
+
                 Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                     [$error]);
-                wwslog('info', 'Error while installing %s', $css_file);
+                wwslog('info', 'Error while installing %s: %s',
+                    $css_file, $error);
             }
             close(CSS);
 
@@ -23405,9 +23422,13 @@ sub do_css {
     my $css_template = Sympa::Template->new($robot, subdir => 'web_tt2');
     unless ($css_template->parse($param, 'css.tt2', \*STDOUT)) {
         my $error = $css_template->{last_error};
+        $error = $error->as_string if ref $error;
         $param->{'tt2_error'} = $error;
+
         Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
-        wwslog('info', '/%s: error', $in{'file'});
+        wwslog('info', '/%s: error: %s', $in{'file'}, $error);
+        printf STDOUT "\n/* %s */\n",
+            HTML::Entities::encode_entities($error, '&/');
     }
 
     return;
