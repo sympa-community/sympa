@@ -1234,6 +1234,7 @@ while ($query = new_loop()) {
         'template_content'     => 1,
         'html_dumpvars'        => 1,
         'html_editor_init'     => 1,
+        'html_description'     => 1,
     };
     ## Hash defining the parameters where HTML must be filtered.
     $param->{'htmlToFilter'} = {
@@ -11501,12 +11502,12 @@ sub do_create_list_request {
             {}, $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
     }
 
-    $allow_absolute_path = 1;
+    #XXX$allow_absolute_path = 1;
 
     $param->{'tpl_count'} = scalar keys %{$param->{'list_list_tpl'} || {}};
 
     $param->{'list_list_tpl'}{$in{'template'}}{'selected'} = 1
-        if ($in{'template'});
+        if $in{'template'};
 
     return 1;
 

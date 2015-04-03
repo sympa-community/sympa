@@ -184,22 +184,13 @@ sub load_create_list_conf {
     return $conf;
 }
 
-sub _add_topic {
-    my ($name, $title) = @_;
-    my $topic = {};
-
-    my @tree = split '/', $name;
-    if ($#tree == 0) {
-        return {'title' => $title};
-    } else {
-        $topic->{'sub'}{$name} =
-            _add_topic(join('/', @tree[1 .. $#tree]), $title);
-        return $topic;
-    }
-}
+#Moved to Sympa::Robot::_add_topic().
+#sub _add_topic;
 
 sub get_list_list_tpl {
     my $robot = shift;
+
+    my $language = Sympa::Language->instance;
 
     my $list_conf;
     my $list_templates;
@@ -207,47 +198,87 @@ sub get_list_list_tpl {
         return undef;
     }
 
-    foreach my $dir (
-        reverse
-        @{Sympa::get_search_path($robot, subdir => 'create_list_templates')})
-    {
-        if (opendir(DIR, $dir)) {
-        LOOP_FOREACH_TEMPLATE:
-            foreach my $template (sort grep (!/^\./, readdir(DIR))) {
-                my $status = $list_conf->{$template}
-                    || $list_conf->{'default'};
-                next if $status eq 'hidden';
+    my %tpl_names;
+    foreach my $directory (
+        @{  Sympa::get_search_path(
+                $robot,
+                subdir => 'create_list_templates',
+                lang   => $language->get_lang
+            )
+        }
+        ) {
+        my $dh;
+        if (opendir $dh, $directory) {
+            foreach my $tpl_name (readdir $dh) {
+                next if $tpl_name =~ /\A\./;
+                next unless -d $directory . '/' . $tpl_name;
 
-                $list_templates->{$template}{'path'} = $dir;
-
-                # Look for a comment.tt2.
-                # Check old style locale first then canonic language and its
-                # fallbacks.
-                my $lang = Sympa::Language->instance->get_lang;
-                my $comment_tt2;
-                foreach my $l (
-                    Sympa::Language::lang2oldlocale($lang),
-                    Sympa::Language::implicated_langs($lang)
-                    ) {
-                    next unless $l;
-                    $comment_tt2 =
-                        $dir . '/' . $template . '/' . $l . '/comment.tt2';
-                    if (-r $comment_tt2) {
-                        $list_templates->{$template}{'comment'} =
-                            $comment_tt2;
-                        next LOOP_FOREACH_TEMPLATE;
-                    }
-                }
-                $comment_tt2 = $dir . '/' . $template . '/comment.tt2';
-                if (-r $comment_tt2) {
-                    $list_templates->{$template}{'comment'} = $comment_tt2;
-                }
+                $tpl_names{$tpl_name} = 1;
             }
-            closedir(DIR);
+            closedir $dh;
         }
     }
 
-    return ($list_templates);
+LOOP_FOREACH_TPL_NAME:
+    foreach my $tpl_name (keys %tpl_names) {
+        my $status = $list_conf->{$tpl_name}
+            || $list_conf->{'default'};
+        next if $status eq 'hidden';
+
+        # Look for a comment.tt2.
+        # Check old style locale first then canonic language and its
+        # fallbacks.
+        my $comment_tt2 = Sympa::search_fullpath(
+            $robot, 'comment.tt2',
+            subdir => 'create_list_templates/' . $tpl_name,
+            lang   => $language->get_lang
+        );
+        next unless $comment_tt2;
+
+        open my $fh, '<', $comment_tt2 or next;
+        my $tpl_string = do { local $RS; <$fh> };
+        close $fh;
+
+        pos $tpl_string = 0;
+        my %titles;
+        while ($tpl_string =~ /\G(title(?:[.][-\w]+)?[ \t]+(?:.*))(\n|\z)/cgi
+            or $tpl_string =~ /\G(\s*)(\n|\z)/cg) {
+            my $line = $1;
+            last if $line =~ /\A\s*\z/;
+
+            if ($line =~ /^title\.gettext\s+(.*)\s*$/i) {
+                $titles{'gettext'} = $1;
+            } elsif ($line =~ /^title\.(\S+)\s+(.*)\s*$/i) {
+                my ($lang, $title) = ($1, $2);
+                # canonicalize lang if possible.
+                $lang = Sympa::Language::canonic_lang($lang) || $lang;
+                $titles{$lang} = $title;
+            } elsif (/^title\s+(.*)\s*$/i) {
+                $titles{'default'} = $1;
+            }
+        }
+
+        $list_templates->{$tpl_name}{'html_description'} = substr $tpl_string,
+            pos $tpl_string;
+
+        # Set the title in the current language
+        foreach
+            my $lang (Sympa::Language::implicated_langs($language->get_lang))
+        {
+            if (exists $titles{$lang}) {
+                $list_templates->{$tpl_name}{'title'} = $titles{$lang};
+                next LOOP_FOREACH_TPL_NAME;
+            }
+        }
+        if ($titles{'gettext'}) {
+            $list_templates->{$tpl_name}{'title'} =
+                $language->gettext($titles{'gettext'});
+        } elsif ($titles{'default'}) {
+            $list_templates->{$tpl_name}{'title'} = $titles{'default'};
+        }
+    }
+
+    return $list_templates;
 }
 
 sub get_templates_list {
