@@ -1474,11 +1474,11 @@ while ($query = new_loop()) {
                     ## don't have more then 10 CAS servers (because we don't
                     ## properly split the list of values)
                     $log->syslog('debug',
-                        "check_cas checker_cas : $session->{'checked_cas'} current cas_id $Conf::Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}"
+                        "check_cas checker_cas : $session->{'checked_cas'} current cas_id $Conf::Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}{'casnum'}"
                     );
                     next
                         if ($session->{'checked_cas'} =~
-                        /$Conf::Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}/
+                        /$Conf::Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}{'casnum'}/
                         );
 
                     # before redirect update the list of already checked cas
@@ -1490,7 +1490,7 @@ while ($query = new_loop()) {
                     ## CAS servers
                     $session->{'checked_cas'} .=
                         $Conf::Conf{'cas_id'}{$robot}
-                        {$auth_service->{'auth_service_name'}};
+                        {$auth_service->{'auth_service_name'}}{'casnum'};
 
                     my $redirect_url =
                         $cas_server->getServerLoginGatewayURL($return_url);
@@ -3900,7 +3900,7 @@ sub do_sso_login {
     ## This is a CAS service
     if (defined(
             my $cas_id =
-                $Conf::Conf{'cas_id'}{$robot}{$in{'auth_service_name'}}
+                $Conf::Conf{'cas_id'}{$robot}{$in{'auth_service_name'}}{'casnum'}
         )
         ) {
         my $cas_server =
