@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
 <div class="navBar printNone">
-	<ul id="MainMenuLinks">	
+	<ul class="MainMenu">	
 		[% IF action == 'home' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
 		<li><a class="[% class %]" href="[% path_cgi %]/home">[%|loc%]Home[%END%]</a></li>
 		
