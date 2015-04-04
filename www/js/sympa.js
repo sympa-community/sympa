@@ -1018,3 +1018,15 @@ $(function() {
 		if(event.target !== button[0] && button.is(':visible')) button.removeClass('active');
 	});
 });
+
+// WAI-ARIA Concerns.
+$(function() {
+    // Add langmark roles to regions of the page.
+    $('.sidebar').attr('role', 'navigation');
+    $('h1').attr('role', 'banner');
+    $('.nav').attr('role', 'navigation');
+    $('.ContentBlock').attr('role', 'main');
+    $('.clearfooter').attr('role', 'contentinfo');
+    $('#Footer').attr('role', 'contentinfo');
+});
+
