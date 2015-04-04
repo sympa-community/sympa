@@ -33,6 +33,7 @@ use Sympa;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
+use Sympa::Language;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Report;
@@ -557,6 +558,143 @@ sub _load_mime_types {
     }
 
     return;
+}
+
+## return a hash from the edit_list_conf file
+# Old name: tools::load_create_list_conf().
+sub _load_create_list_conf {
+    my $robot = shift;
+
+    my $file;
+    my $conf;
+
+    $file = Sympa::search_fullpath($robot, 'create_list.conf');
+    unless ($file) {
+        $log->syslog(
+            'info',
+            'Unable to read %s',
+            Sympa::Constants::DEFAULTDIR . '/create_list.conf'
+        );
+        return undef;
+    }
+
+    unless (open(FILE, $file)) {
+        $log->syslog('info', 'Unable to open config file %s', $file);
+        return undef;
+    }
+
+    while (<FILE>) {
+        next if /^\s*(\#.*|\s*)$/;
+
+        if (/^\s*(\S+)\s+(read|hidden)\s*$/i) {
+            $conf->{$1} = lc($2);
+        } else {
+            $log->syslog(
+                'info',
+                'Unknown parameter in %s (Ignored) %s',
+                "$Conf::Conf{'etc'}/create_list.conf", $_
+            );
+            next;
+        }
+    }
+
+    close FILE;
+    return $conf;
+}
+
+# Old name: tools::get_list_list_tpl().
+sub get_list_list_tpl {
+    my $robot = shift;
+
+    my $language = Sympa::Language->instance;
+
+    my $list_conf;
+    my $list_templates;
+    unless ($list_conf = _load_create_list_conf($robot)) {
+        return undef;
+    }
+
+    my %tpl_names;
+    foreach my $directory (
+        @{  Sympa::get_search_path(
+                $robot,
+                subdir => 'create_list_templates',
+                lang   => $language->get_lang
+            )
+        }
+        ) {
+        my $dh;
+        if (opendir $dh, $directory) {
+            foreach my $tpl_name (readdir $dh) {
+                next if $tpl_name =~ /\A\./;
+                next unless -d $directory . '/' . $tpl_name;
+
+                $tpl_names{$tpl_name} = 1;
+            }
+            closedir $dh;
+        }
+    }
+
+LOOP_FOREACH_TPL_NAME:
+    foreach my $tpl_name (keys %tpl_names) {
+        my $status = $list_conf->{$tpl_name}
+            || $list_conf->{'default'};
+        next if $status eq 'hidden';
+
+        # Look for a comment.tt2.
+        # Check old style locale first then canonic language and its
+        # fallbacks.
+        my $comment_tt2 = Sympa::search_fullpath(
+            $robot, 'comment.tt2',
+            subdir => 'create_list_templates/' . $tpl_name,
+            lang   => $language->get_lang
+        );
+        next unless $comment_tt2;
+
+        open my $fh, '<', $comment_tt2 or next;
+        my $tpl_string = do { local $RS; <$fh> };
+        close $fh;
+
+        pos $tpl_string = 0;
+        my %titles;
+        while ($tpl_string =~ /\G(title(?:[.][-\w]+)?[ \t]+(?:.*))(\n|\z)/cgi
+            or $tpl_string =~ /\G(\s*)(\n|\z)/cg) {
+            my $line = $1;
+            last if $line =~ /\A\s*\z/;
+
+            if ($line =~ /^title\.gettext\s+(.*)\s*$/i) {
+                $titles{'gettext'} = $1;
+            } elsif ($line =~ /^title\.(\S+)\s+(.*)\s*$/i) {
+                my ($lang, $title) = ($1, $2);
+                # canonicalize lang if possible.
+                $lang = Sympa::Language::canonic_lang($lang) || $lang;
+                $titles{$lang} = $title;
+            } elsif (/^title\s+(.*)\s*$/i) {
+                $titles{'default'} = $1;
+            }
+        }
+
+        $list_templates->{$tpl_name}{'html_description'} = substr $tpl_string,
+            pos $tpl_string;
+
+        # Set the title in the current language
+        foreach
+            my $lang (Sympa::Language::implicated_langs($language->get_lang))
+        {
+            if (exists $titles{$lang}) {
+                $list_templates->{$tpl_name}{'title'} = $titles{$lang};
+                next LOOP_FOREACH_TPL_NAME;
+            }
+        }
+        if ($titles{'gettext'}) {
+            $list_templates->{$tpl_name}{'title'} =
+                $language->gettext($titles{'gettext'});
+        } elsif ($titles{'default'}) {
+            $list_templates->{$tpl_name}{'title'} = $titles{'default'};
+        }
+    }
+
+    return $list_templates;
 }
 
 # Old name: Conf::update_css().

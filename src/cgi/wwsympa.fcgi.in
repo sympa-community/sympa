@@ -1905,10 +1905,10 @@ while ($query = new_loop()) {
 
         my $template = Sympa::Template->new(
             $list || $robot,
-            plugins => $plugins,
-            subdir  => 'web_tt2',
-            lang    => $param->{'lang'},
-			include_path   => [@other_include_path]
+            plugins      => $plugins,
+            subdir       => 'web_tt2',
+            lang         => $param->{'lang'},
+            include_path => [@other_include_path]
         );
         unless ($template->parse($param, 'rss.tt2', \*STDOUT)) {
             my $error = $template->{last_error};
@@ -3900,7 +3900,8 @@ sub do_sso_login {
     ## This is a CAS service
     if (defined(
             my $cas_id =
-                $Conf::Conf{'cas_id'}{$robot}{$in{'auth_service_name'}}{'casnum'}
+                $Conf::Conf{'cas_id'}{$robot}{$in{'auth_service_name'}}
+                {'casnum'}
         )
         ) {
         my $cas_server =
@@ -11496,7 +11497,8 @@ sub do_create_list_request {
         }
     }
 
-    unless ($param->{'list_list_tpl'} = tools::get_list_list_tpl($robot)) {
+    unless ($param->{'list_list_tpl'} =
+        Sympa::Tools::WWW::get_list_list_tpl($robot)) {
         Sympa::Report::reject_report_web('intern',
             'unable_to_load_create_list_templates',
             {}, $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
