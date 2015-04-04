@@ -183,7 +183,7 @@
                           [% IF p.type == 'scenario' %]
                             <!-- Scenario -->
                             [% IF p.may_edit == 'write' %]
-                              <select name="single_param.[% p.name %].name" id="single_param.[% p.name %].name" onchange="this.form.submit();">
+                              <select name="single_param.[% p.name %].name" id="single_param.[% p.name %].name" >
                                 [% FOREACH scenario = p.value %]
                                   [% UNLESS scenario.value.name.match('(default)\s*$') %]
                                     <option value="[% scenario.value.name %]"
