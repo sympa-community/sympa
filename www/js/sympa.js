@@ -1021,7 +1021,7 @@ $(function() {
 
 // WAI-ARIA Concerns.
 $(function() {
-    // Add langmark roles to regions of the page.
+    // Add landmark roles to regions of the page.
     $('.sidebar').attr('role', 'navigation');
     $('h1').attr('role', 'banner');
     $('.nav').attr('role', 'navigation');
