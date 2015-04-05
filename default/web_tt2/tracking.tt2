@@ -33,7 +33,7 @@
     <td>[% u.arrival_date %]</td>
     <td>
     [% IF u.status %]
-      <a href="[% path_cgi %]/viewbounce/[% list %]/[% u.recipient.replace('/','%2F') %]/[% u.envid %]">[%|loc%]View[%END%]</a>
+      <a href="[% path_cgi %]/viewbounce/[% list %]/[% u.recipient | uri %]?envid=[% u.envid %]">[%|loc%]View[%END%]</a>
     [% ELSE %]
       &nbsp;
     [% END %]

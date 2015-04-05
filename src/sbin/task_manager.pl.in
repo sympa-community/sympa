@@ -1359,20 +1359,23 @@ sub purge_spools {
     }
 
     # Expiring formatted held messages.
-    my $all_lists = Sympa::List::get_lists('*');
-    foreach my $list (@{$all_lists || []}) {
-        my $directory = $Conf::Conf{'viewmail_dir'} . '/mod/' . $list->get_id;
-        my $clean_delay = $Conf::Conf{'clean_delay_queuemod'};
-        if (-e $directory) {
-            _clean_spool($directory, $clean_delay);
+    if (opendir my $dh, $Conf::Conf{'viewmail_dir'} . '/mod') {
+        my $base_dir = $Conf::Conf{'viewmail_dir'} . '/mod';
+        my @dirs = grep {!/\A\./ and -d $base_dir . '/' . $_ } readdir $dh;
+        closedir $dh;
+        foreach my $list_id (@dirs) {
+            my $directory = $base_dir . '/' . $list_id;
+            my $clean_delay = $Conf::Conf{'clean_delay_queuemod'};
+            if (-e $directory) {
+                _clean_spool($directory, $clean_delay);
+            }
         }
     }
 
     # Removing messages in bulk spool with no more packet.
     my $pct_directory = $Conf::Conf{'queuebulk'} . '/pct';
     my $msg_directory = $Conf::Conf{'queuebulk'} . '/msg';
-    my $dh;
-    if (opendir $dh, $pct_directory) {
+    if (opendir my $dh, $pct_directory) {
         my $msgpath;
         while ($msgpath = readdir $dh) {
             next if $msgpath =~ /\A\./;
@@ -1707,6 +1710,19 @@ sub expire_bounce {
                         "%Y-%m-%d", localtime($u->{'last_bounce'})
                     )
                 );
+            }
+        }
+    }
+
+    # Expiring formatted bounce messages.
+    if (opendir my $dh, $Conf::Conf{'viewmail_dir'} . '/bounce') {
+        my $base_dir = $Conf::Conf{'viewmail_dir'} . '/bounce';
+        my @dirs = grep {!/\A\./ and -d $base_dir . '/' . $_ } readdir $dh;
+        closedir $dh;
+        foreach my $list_id (@dirs) {
+            my $directory = $base_dir . '/' . $list_id;
+            if (-e $directory) {
+                _clean_spool($directory, $delay));
             }
         }
     }

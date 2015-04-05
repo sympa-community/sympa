@@ -379,7 +379,7 @@ our %action_args = (
     'editsubscriber' =>
         ['list', 'email', 'previous_action', 'custom_attribute'],
 #		'editsubscriber' => ['list','email','previous_action'],
-    'viewbounce'  => ['list', 'email', 'envid'],
+    'viewbounce'  => ['list', 'email', '@file'],
     'resetbounce' => ['list', 'email'],
     'review'         => ['list', 'page',  'size', 'sortby'],
     'reviewbouncing' => ['list', 'page',  'size'],
@@ -9262,6 +9262,9 @@ sub do_add_frommod {
 sub do_viewmod {
     wwslog('info', '(%s, %s)', $in{'id'}, $in{'file'});
 
+    # Prevent directory traversal.
+    delete $in{'file'} if $in{'file'} and $in{'file'} =~ m{/};
+
     my $msg;
     my $tmp_dir;
 
@@ -9288,7 +9291,7 @@ sub do_viewmod {
         return undef;
     }
 
-    if ($in{'file'}) {
+    if ($in{'file'} and $in{'file'} ne 'msg00000.html') {
         $in{'file'} =~ /\.(\w+)$/;
         $param->{'file_extension'} = $1;
         $param->{'file'}           = $html_dir . '/' . $in{'file'};
@@ -9501,7 +9504,8 @@ sub do_editfile {
         if (defined $param->{'filepath'}) {
             ## open file and provide filecontent to the parser
             ## It allows to us the correct file encoding
-            unless (open FILE, "<", $param->{'filepath'}) {
+            my $fh;
+            unless (open $fh, '<', $param->{'filepath'}) {
                 Sympa::Report::reject_report_web(
                     'intern',
                     'cannot_open_file',
@@ -9522,12 +9526,11 @@ sub do_editfile {
                 return undef;
             }
 
-            while (<FILE>) {
-                Encode::from_to($_, $Conf::Conf{'filesystem_encoding'},
-                    'utf8');
-                $param->{'filecontent'} .= $_;
-            }
-            close FILE;
+            my $file_content = do { local $RS; <$fh> };
+            close $fh;
+            Encode::from_to($file_content, $Conf::Conf{'filesystem_encoding'},
+                'utf8');
+            $param->{'filecontent'} = $file_content;
         } else {
             $param->{'filepath'} = $list->{'dir'} . '/' . $subdir . $file;
         }
@@ -9587,6 +9590,8 @@ sub do_editfile {
             'status'     => 'success'
         }
     );
+
+    #FIXME: Required?
     $allow_absolute_path = 1;
 
     return 1;
@@ -11504,8 +11509,6 @@ sub do_create_list_request {
             {}, $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
     }
 
-    #XXX$allow_absolute_path = 1;
-
     $param->{'tpl_count'} = scalar keys %{$param->{'list_list_tpl'} || {}};
 
     $param->{'list_list_tpl'}{$in{'template'}}{'selected'} = 1
@@ -11703,17 +11706,21 @@ sub do_editsubscriber {
 }
 
 sub do_viewbounce {
-    wwslog('info', '(%s, %s)', $in{'email'}, $in{'envid'});
+    wwslog('info', '(%s, %s, envid=%s)',
+        $in{'email'}, $in{'file'}, $in{'envid'});
+
+    # Prevent directory traversal.
+    delete $in{'file'} if $in{'file'} and $in{'file'} =~ m{/};
 
     my $escaped_email = tools::escape_chars($in{'email'});
 
-    $param->{'lastbounce_path'} =
+    my $bounce_path =
         $in{'envid'}
         ? sprintf('%s/%s_%08s',
         $list->get_bounce_dir(), $escaped_email, $in{'envid'})
         : $list->get_bounce_dir() . '/' . $escaped_email;
 
-    unless (-r $param->{'lastbounce_path'}) {
+    unless (-r $bounce_path) {
         Sympa::Report::reject_report_web('user', 'no_bounce_user',
             {'email' => $in{'email'}},
             $param->{'action'}, $list);
@@ -11721,7 +11728,42 @@ sub do_viewbounce {
         return undef;
     }
 
-    $allow_absolute_path = 1;
+    my $html_relpath =
+        $in{'envid'}
+        ? sprintf('%s/%s_%08s',
+        $list->get_list_id(), $escaped_email, $in{'envid'})
+        : sprintf('%s/%s', $list->get_list_id(), $escaped_email);
+    my $html_dir = $Conf::Conf{'viewmail_dir'} . '/bounce/' . $html_relpath;
+
+    unless (-d $html_dir) {
+        my $bounce_message =
+            Sympa::Message->new_from_file($bounce_path,
+            context => ($list || $robot));
+        Sympa::Archive::convert_single_message(
+            ($list || $robot),
+            $bounce_message,
+            'destination_dir' => $html_dir,
+            'attachement_url' => '../viewbounce/' . $html_relpath
+        ) if $bounce_message;
+    }
+
+    unless (-d $html_dir) {
+        Sympa::Report::reject_report_web('intern',
+            'no_html_message_available', {'dir' => $html_dir},
+            $param->{'action'});
+        wwslog('err', 'No HTML version of the message available in %s',
+            $html_dir);
+        return undef;
+    }
+
+    if ($in{'file'} and $in{'file'} ne 'msg00000.html') {
+        $in{'file'} =~ /\.(\w+)$/;
+        $param->{'file_extension'} = $1;
+        $param->{'file'}           = $html_dir . '/' . $in{'file'};
+        $param->{'bypass'}         = 1;
+    } else {
+        push @other_include_path, $html_dir;
+    }
 
     return 1;
 }
@@ -15454,6 +15496,7 @@ sub do_d_editfile {
     $param->{'doc_date'} =
         $language->gettext_strftime("%d %b %y  %H:%M", localtime $date_epoch);
 
+    #FIXME: Required?
     $allow_absolute_path = 1;
 
     $param->{'father_icon'} = Sympa::Tools::WWW::get_icon($robot, 'father');
@@ -15613,6 +15656,7 @@ sub do_d_properties {
     $param->{'doc_date'} =
         $language->gettext_strftime("%d %b %y  %H:%M", localtime $date_epoch);
 
+    #FIXME: Required?
     $allow_absolute_path = 1;
 
     $param->{'father_icon'} = Sympa::Tools::WWW::get_icon($robot, 'father');
