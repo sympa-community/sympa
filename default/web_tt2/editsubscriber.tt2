@@ -122,7 +122,21 @@
     [%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]
     </div>
 
-    <p><a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.email | uri %]">[%|loc%]View last bounce[%END%]</a></p>
+    <div id="mainviewbounce" class="viewmod">
+    <input style="float:right" type="button" value="X"
+      onclick="return hideform('mainviewbounce')"/>
+    <p>
+    <div id="viewbounce">
+      [%|loc%]loading message...[%END%]
+      <!-- empty div that will display a content by AJAX -->
+     </div>
+    </p>
+    </div>
+
+    <div class="form_row">
+    <a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.email | uri %]"
+      onclick="$('.viewmod').hide();$('#viewbounce').load('[% path_cgi%]/ajax/viewbounce/[% list %]/[% current_subscriber.email | uri %]').parent().show(); return false">[%|loc%]View last bounce[%END%]</a>
+    </div>
 
     <div class="form_row">
     <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" />
