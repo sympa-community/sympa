@@ -1722,7 +1722,7 @@ sub expire_bounce {
         foreach my $list_id (@dirs) {
             my $directory = $base_dir . '/' . $list_id;
             if (-e $directory) {
-                _clean_spool($directory, $delay));
+                _clean_spool($directory, $delay);
             }
         }
     }
