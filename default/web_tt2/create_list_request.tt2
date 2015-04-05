@@ -30,9 +30,9 @@
 
     [% IF tpl_info.value.html_description ~%]
       [% TRY ~%]
-        [%|eval%][% tpl_info.value.html_description %][%END ~%]
-      [% CATCH ~%]
-        <!-- [% error %] -->
+        [% tpl_info.value.html_description | eval %]
+      [%~ CATCH ~%]
+        <!-- [% error | html %] -->
       [%~ END ~%]
     [% END %]
     </li>

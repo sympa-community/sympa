@@ -40,6 +40,9 @@
 </fieldset>
 </form>
 [%- END -%]
-[% PROCESS 'msg00000.html' %]
-
+[% TRY ~%]
+  [% PROCESS 'msg00000.html' %]
+[%~ CATCH ~%]
+  <!-- [% error | html %] -->
+[%~ END %]
 <!-- end viewmod.tt2 -->
