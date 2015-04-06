@@ -976,6 +976,8 @@ sub upgrade {
 
     ## We have obsoleted wwsympa.conf.  It would be migrated to sympa.conf.
     if (lower_version($previous_version, '6.2b.1')) {
+        $log->syslog('notice', 'Migrating wwsympa.conf...');
+
         my $sympa_conf   = Conf::get_sympa_conf();
         my $wwsympa_conf = Conf::get_wwsympa_conf();
         my $fh;
@@ -1221,23 +1223,31 @@ sub upgrade {
             close $fh;
 
             ## Keep old config file
-            printf
-                "%s has been updated.\nPrevious version has been saved as %s.\n",
-                $sympa_conf, "$sympa_conf.$date";
+            $log->syslog(
+                'notice',
+                '%s has been updated.  Previous version has been saved as %s',
+                $sympa_conf,
+                "$sympa_conf.$date"
+            );
         }
 
         if (-r $wwsympa_conf) {
             ## Keep old config file
             warn sprintf 'Unable to rename %s: %s', $wwsympa_conf, $ERRNO
                 unless rename $wwsympa_conf, "$wwsympa_conf.$date";
-            printf
-                "%s will NO LONGER be used.\nPrevious version has been saved as %s.\n",
-                $wwsympa_conf, "$wwsympa_conf.$date";
+            $log->syslog(
+                'notice',
+                '%s will NO LONGER be used.  Previous version has been saved as %s',
+                $wwsympa_conf,
+                "$wwsympa_conf.$date"
+            );
         }
     }
 
     # Create HTML view of pending messages
     if (lower_version($previous_version, '6.2b.1')) {
+        $log->syslog('notice', 'Creating HTML view of moderation spool...');
+
         my $spooldir     = $Conf::Conf{'queuemod'};
         my $viewmail_dir = $Conf::Conf{'viewmail_dir'};
         my @ignored      = ();
@@ -1334,10 +1344,11 @@ sub upgrade {
         # Restore umask
         umask $umask;
 
-        $log->syslog('info', 'Upgrade process for spool %s: ignored files %s',
+        $log->syslog('notice',
+            'Upgrade process for spool %s: ignored files %s',
             $spooldir, join(', ', @ignored))
             if @ignored;
-        $log->syslog('info',
+        $log->syslog('notice',
             'Upgrade process for spool %s: performed files %s',
             $spooldir, join(', ', @performed))
             if @performed;
@@ -1347,6 +1358,8 @@ sub upgrade {
     # sympa-milter 0.6 or earlier: <family_name>.<date>.<rand> to
     # <localpart>@<domainpart>.<date>.<rand>.
     if (lower_version($previous_version, '6.2b.1')) {
+        $log->syslog('notice', 'Upgrading automatic spool...');
+
         my $spooldir = $Conf::Conf{'queueautomatic'};
 
         my $dh;
@@ -1442,7 +1455,8 @@ sub upgrade {
         }
     }
     if (lower_version($previous_version, '6.2b.1')) {
-        $log->syslog('info', 'Setting web interface colors to new defaults.');
+        $log->syslog('notice',
+            'Setting web interface colors to new defaults.');
         fix_colors(Sympa::Constants::CONFIG);
         $log->syslog('info', 'Saving main web_tt2 directory');
         save_web_tt2("$Conf::Conf{'etc'}/web_tt2");
@@ -1460,13 +1474,14 @@ sub upgrade {
         }
         #Used to regenerate CSS...
         Sympa::Tools::WWW::update_css(force => 1);
-        $log->syslog('info', 'Web interface colors defaulted to new values.');
+        $log->syslog('notice',
+            'Web interface colors defaulted to new values.');
     }
 
     # notification_table no longer keeps DSN/MDN.
     if (lower_version($previous_version, '6.2b.3')
         and not lower_version($previous_version, '6.2a.7')) {
-        $log->syslog('info', 'Upgrading tracking spool.');
+        $log->syslog('notice', 'Upgrading tracking spool.');
         my $sdm = Sympa::DatabaseManager->instance;
         my $sth;
         unless ($sdm
@@ -1510,7 +1525,7 @@ sub upgrade {
         '------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------';
 
     if (lower_version($previous_version, '6.2b.5')) {
-        $log->syslog('info', 'Upgrading digest spool.');
+        $log->syslog('notice', 'Upgrading digest spool.');
 
         my $dh;
         my @dfile;
@@ -1562,7 +1577,7 @@ sub upgrade {
 
     if (lower_version($previous_version, '6.2b.8')
         and not lower_version($previous_version, '6.2a.0')) {
-        $log->syslog('info', 'Upgrading stat_counter_table.');
+        $log->syslog('notice', 'Upgrading stat_counter_table.');
         my $sdm = Sympa::DatabaseManager->instance;
 
         # Clear unusable information.
@@ -1598,7 +1613,7 @@ sub upgrade {
 
     if (lower_version($previous_version, '6.2b.9')
         and not lower_version($previous_version, '6.2a.0')) {
-        $log->syslog('info', 'Upgrading stat_table.');
+        $log->syslog('notice', 'Upgrading stat_table.');
         my $sdm = Sympa::DatabaseManager->instance;
 
         # As the field id_stat is no longer used but it has NOT NULL
@@ -1616,7 +1631,7 @@ sub upgrade {
     # arrival_epoch_notification.
     if (lower_version($previous_version, '6.2b.10')
         and not lower_version($previous_version, '6.2b.3')) {
-        $log->syslog('info', 'Upgrading notification_table.');
+        $log->syslog('notice', 'Upgrading notification_table.');
         my $sdm = Sympa::DatabaseManager->instance;
 
         $sdm
@@ -1629,7 +1644,7 @@ sub upgrade {
 
     # As of 6.2, format of archive spool was changed.
     if (lower_version($previous_version, '6.2b.10')) {
-        $log->syslog('info', 'Upgrading archive spool.');
+        $log->syslog('notice', 'Upgrading archive spool.');
         my $spool = Sympa::Spool::Archive->new;
 
         mkdir($spool->{directory} . '/migrated/')
