@@ -2049,14 +2049,11 @@ sub _canonicalize_status {
 # $rcpt : the email address recognized in the bounce itself. In most case
 #         $rcpt eq $bouncefor
 sub _update_subscriber_bounce_history {
-
+    $log->syslog('debug', '(%s, %s, %s, %s)', @_);
     my $list      = shift;
     my $rcpt      = shift;
     my $bouncefor = shift;
-    my $status    = shift;
-
-    $log->syslog('debug', '(%s, %s, %s, %s)',
-        $list->{'name'}, $rcpt, $bouncefor, $status);
+    my $status    = shift || '';
 
     my $first = my $last = time;
     my $count = 0;
@@ -2082,7 +2079,8 @@ sub _update_subscriber_bounce_history {
             $bouncefor, $first, $last, $count, $status, $rcpt);
         $list->update_list_member(
             $bouncefor,
-            {   'bounce'         => "$first $last $count $status",
+            {   'bounce' =>
+                    sprintf('%s %s %s %s', $first, $last, $count, $status),
                 'bounce_address' => $rcpt
             }
         );
@@ -2097,8 +2095,12 @@ sub _update_subscriber_bounce_history {
             'error_type'   => $status
         );
     } else {
-        $list->update_list_member($bouncefor,
-            {'bounce' => "$first $last $count $status"});
+        $list->update_list_member(
+            $bouncefor,
+            {   'bounce' =>
+                    sprintf('%s %s %s %s', $first, $last, $count, $status)
+            }
+        );
         $log->syslog('notice',
             'Received bounce for email address %s, list %s',
             $bouncefor, $list->{'name'});

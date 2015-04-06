@@ -1633,14 +1633,14 @@ sub _fix_html_part {
     my $robot  = shift;
     return $entity unless $entity;
 
-    my $eff_type = $entity->head->mime_attr("Content-Type");
+    my $eff_type = $entity->head->mime_type || '';    # Use real content-type.
     if ($entity->parts) {
         my @newparts = ();
         foreach my $part ($entity->parts) {
             push @newparts, _fix_html_part($part, $robot);
         }
         $entity->parts(\@newparts);
-    } elsif ($eff_type =~ /^text\/html/i) {
+    } elsif ($eff_type eq 'text/html') {
         my $bodyh = $entity->bodyhandle;
         # Encoded body or null body won't be modified.
         return $entity if !$bodyh or $bodyh->is_encoded;
