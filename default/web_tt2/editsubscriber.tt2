@@ -109,7 +109,14 @@
 
     <div class="form_row">
     <label>[%|loc%]Status:[%END%] </label>
-    [% current_subscriber.bounce_status %] ([% current_subscriber.bounce_code %])
+    [% IF current_subscriber.bounce_status ~%]
+      [% current_subscriber.bounce_status %]
+    [%~ ELSE ~%]
+      [%|loc%]Unknown[%END%]
+    [%~ END %]
+    [% IF current_subscriber.bounce_code ~%]
+      ([% current_subscriber.bounce_code %])
+    [%~ END %]
     </div>
 
     <div class="form_row">
