@@ -413,7 +413,7 @@ sub store_html {
         '-rcfile'            => $mhonarc_ressources,
         '-outdir'            => $self->{arc_directory},
         '-definevars'        => sprintf(
-            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s",
+            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s with_tslice=1 with_powered_by=1",
             $list->{'name'},
             $list->{'domain'},
             $yyyy,
@@ -615,7 +615,7 @@ sub rebuild_html {
         '-rcfile'            => $mhonarc_ressources,
         '-outdir'            => $arc_directory,
         '-definevars'        => sprintf(
-            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s",
+            "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s with_tslice=1 with_powered_by=1",
             $listname,
             $robot_id,
             $yyyy,
@@ -884,7 +884,7 @@ sub convert_single_message {
         '-single',
         '-rcfile'     => $mhonarc_ressources,
         '-definevars' => sprintf(
-            "listname='%s' hostname=%s yyyy='' mois='' tag=%s",
+            "listname='%s' hostname=%s yyyy='' mois='' tag=%s with_tslice='' with_powered_by=''",
             $listname, $hostname, $tag
         ),
         '-outdir'        => $destination_dir,

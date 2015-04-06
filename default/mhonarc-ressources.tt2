@@ -81,10 +81,12 @@ $PRINTABLE_MONTH$
 
 <DefineVar>
 POWERED_BY
+($tag$% IF '$with_powered_by$' -%$tag$)
 <hr size="1" noshade>
 <p><font size="-1">
 ($tag$%|loc%$tag$)Archive powered by($tag$%END%$tag$) <a href="$DOCURL$">MHonArc $VERSION$</a>.
 </font></p>
+($tag$%- END %$tag$)
 </DefineVar>
 
 <!-- ============================================================== -->
@@ -423,9 +425,11 @@ MSGPGEND
 </HEADBODYSEP>
 
 <MSGBODYEND>
+($tag$% IF '$with_tslice$' -%$tag$)
 <br clear="all" />
 <hr size="1" noshade>
 $TSLICE(10;10;1)$
+($tag$%- END %$tag$)
 </MSGBODYEND>
 
 <BOTLINKS>
