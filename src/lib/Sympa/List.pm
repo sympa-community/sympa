@@ -5914,19 +5914,20 @@ sub load_data_sources_list {
 
     foreach
         my $dir (@{Sympa::get_search_path($self, subdir => 'data_sources')}) {
+        next unless -d $dir;
 
-        next unless (-d $dir);
+        while (my $file = <$dir/*.incl>) {
+            next unless $file =~ m{(?<=/)([^./][^/]*)\.incl\z};
+            my $name = $1;    # FIXME: Escape or omit hostile characters.
 
-        while (my $f = <$dir/*.incl>) {
+            next if defined $list_of_data_sources{$name};
 
-            next unless ($f =~ /([\w\-]+)\.incl$/);
+            open my $fh, '<', $file or next;
+            my ($title) = grep {s/\A\s*name\s+(.+)/$1/} <$fh>;
+            close $fh;
+            $list_of_data_sources{$name}{'title'} = $title || $name;
 
-            my $name = $1;
-
-            next if (defined $list_of_data_sources{$name});
-
-            $list_of_data_sources{$name}{'title'} = $name;
-            $list_of_data_sources{$name}{'name'}  = $name;
+            $list_of_data_sources{$name}{'name'} = $name;
         }
     }
 
