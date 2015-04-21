@@ -1774,7 +1774,7 @@ sub distribute_msg {
             "Do not archive message with no-archive flag for list %s", $self);
     } else {
         my $spool = Sympa::Spool::Archive->new;
-        return $spool->store(
+        $spool->store(
             $message,
             original => Sympa::Tools::Data::smart_eq(
                 $self->{admin}{archive_crypted_msg}, 'original'
