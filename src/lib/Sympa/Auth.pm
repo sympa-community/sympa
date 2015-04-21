@@ -194,10 +194,10 @@ sub authentication {
 
     # increment wrong login count.
     Sympa::User::update_global_user($email,
-        {wrong_login_count => $user->{'wrong_login_count'} + 1});
+        {wrong_login_count => ($user->{'wrong_login_count'} || 0) + 1});
 
     Sympa::Report::reject_report_web('user', 'incorrect_passwd', {})
-        unless ($ENV{'SYMPA_SOAP'});
+        unless $ENV{'SYMPA_SOAP'};
     $log->syslog('err', 'Incorrect password for user %s', $email);
 
     my $param;    #FIXME FIXME: not used.

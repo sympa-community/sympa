@@ -38,12 +38,11 @@ my $log = Sympa::Log->instance;
 sub tmp_passwd {
     my $email = shift;
 
+    my $cookie = $Conf::Conf{'cookie'};
+    $cookie = '' unless defined $cookie;
+
     return (
-        'init'
-            . substr(
-            Digest::MD5::md5_hex(join('/', $Conf::Conf{'cookie'}, $email)), -8
-            )
-    );
+        'init' . substr(Digest::MD5::md5_hex(join '/', $cookie, $email), -8));
 }
 
 # global var to store a CipherSaber object

@@ -4803,13 +4803,13 @@ sub update_list_member {
             if ($map_table{$field} eq $table) {
                 if ($field eq 'date' || $field eq 'update_date') {
                     $value = SDM::get_canonical_write_date($value);
-                } elsif ($value eq 'NULL') {    ## get_null_value?
+                } elsif ($value and $value eq 'NULL') {    # get_null_value?
                     if ($Conf::Conf{'db_type'} eq 'mysql') {
                         $value = '\N';
                     }
                 } else {
                     if ($numeric_field{$map_field{$field}}) {
-                        $value ||= 0;           ## Can't have a null value
+                        $value ||= 0;    ## Can't have a null value
                     } else {
                         $value = SDM::quote($value);
                     }
@@ -4965,13 +4965,13 @@ sub update_list_admin {
             if ($map_table{$field} eq $table) {
                 if ($field eq 'date' || $field eq 'update_date') {
                     $value = SDM::get_canonical_write_date($value);
-                } elsif ($value eq 'NULL') {    #get_null_value?
+                } elsif ($value and $value eq 'NULL') {    # get_null_value?
                     if ($Conf::Conf{'db_type'} eq 'mysql') {
                         $value = '\N';
                     }
                 } else {
                     if ($numeric_field{$map_field{$field}}) {
-                        $value ||= 0;           ## Can't have a null value
+                        $value ||= 0;    ## Can't have a null value
                     } else {
                         $value = SDM::quote($value);
                     }
@@ -5472,7 +5472,10 @@ sub am_i {
         }
     } elsif ($function =~ /^privileged_owner$/i) {
         my $privileged = $self->get_list_admin('owner', $who);
-        if ($privileged->{'profile'} eq 'privileged') {
+        if (Sympa::Tools::Data::smart_eq(
+                $privileged->{'profile'}, 'privileged'
+            )
+            ) {
 
             ## Update cache
             $list_cache{'am_i'}{'privileged_owner'}{$self->{'domain'}}

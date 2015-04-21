@@ -229,11 +229,10 @@ sub init_passwd {
 }
 
 sub get_my_url {
-
     my $return_url;
 
-    ## Mod_ssl sets SSL_PROTOCOL ; apache-ssl sets SSL_PROTOCOL_VERSION
-    if ($ENV{'HTTPS'} eq 'on') {
+    # mod_ssl sets SSL_PROTOCOL; Apache-SSL sets SSL_PROTOCOL_VERSION.
+    if ($ENV{'HTTPS'} and $ENV{'HTTPS'} eq 'on') {
         $return_url = 'https';
     } else {
         $return_url = 'http';
@@ -241,8 +240,8 @@ sub get_my_url {
 
     $return_url .= '://' . &main::get_header_field('HTTP_HOST');
     $return_url .= ':' . $ENV{'SERVER_PORT'}
-        unless (($ENV{'SERVER_PORT'} eq '80')
-        || ($ENV{'SERVER_PORT'} eq '443'));
+        unless $ENV{'SERVER_PORT'} eq '80'
+            or $ENV{'SERVER_PORT'} eq '443';
     $return_url .= $ENV{'REQUEST_URI'};
     return ($return_url);
 }

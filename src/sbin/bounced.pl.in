@@ -2066,7 +2066,7 @@ sub _update_subscriber_bounce_history {
         return undef;
     }
 
-    if ($user->{'bounce'} =~ /^(\d+)\s\d+\s+(\d+)/) {
+    if ($user->{'bounce'} and $user->{'bounce'} =~ /^(\d+)\s\d+\s+(\d+)/) {
         ($first, $count) = ($1, $2);
     }
     $count++;
