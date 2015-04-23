@@ -238,12 +238,24 @@ sub get_my_url {
         $return_url = 'http';
     }
 
-    $return_url .= '://' . &main::get_header_field('HTTP_HOST');
+    $return_url .= '://' . Sympa::Tools::WWW::get_http_host();
     $return_url .= ':' . $ENV{'SERVER_PORT'}
         unless $ENV{'SERVER_PORT'} eq '80'
             or $ENV{'SERVER_PORT'} eq '443';
     $return_url .= $ENV{'REQUEST_URI'};
     return ($return_url);
+}
+
+# Old name: (part of) get_header_field() in wwsympa.fcgi.
+sub get_server_name {
+    # HTTP_X_ header fields set when using a proxy
+    return $ENV{'HTTP_X_FORWARDED_SERVER'} || $ENV{'SERVER_NAME'};
+}
+
+# Old name: (part of) get_header_field() in wwsympa.fcgi.
+sub get_http_host {
+    # HTTP_X_ header fields set when using a proxy
+    return $ENV{'HTTP_X_FORWARDED_HOST'} || $ENV{'HTTP_HOST'};
 }
 
 # Uploade source file to the destination on the server

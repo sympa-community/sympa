@@ -1081,13 +1081,13 @@ while ($query = new_loop()) {
     #    &CGI::ReadParse();
 
     if (defined $Conf::Conf{'robot_by_http_host'}
-        {get_header_field('SERVER_NAME')}) {
+        {Sympa::Tools::WWW::get_server_name()}) {
         my ($selected_robot, $selected_path);
         my ($k,              $v);
         while (
             ($k, $v) = each %{
                 $Conf::Conf{'robot_by_http_host'}
-                    {get_header_field('SERVER_NAME')}
+                    {Sympa::Tools::WWW::get_server_name()}
             }
             ) {
             if ($ENV{'REQUEST_URI'} =~ /^$k/) {
@@ -1118,7 +1118,7 @@ while ($query = new_loop()) {
     $ip = $ENV{'REMOTE_ADDR'} unless ($ip);
     $ip = 'undef' unless ($ip);
     ## In case HTTP_HOST does not match cookie_domain
-    my $http_host = get_header_field('HTTP_HOST');
+    my $http_host = Sympa::Tools::WWW::get_http_host();
     $http_host =~ s/:\d+$//;    ## suppress port
     unless (($http_host =~ /$param->{'cookie_domain'}$/)
         || ($param->{'cookie_domain'} eq 'localhost')) {
@@ -2109,6 +2109,8 @@ sub new_loop {
     return $query;
 }
 
+# OBSOLETED.  Use Sympa::Tools::WWW::get_server_name() or
+# Sympa::Tools::WWW::get_http_host().
 sub get_header_field {
     my $field = shift;
 
@@ -2207,11 +2209,11 @@ sub get_parameters {
     ## CGI URL
     if ($ENV{'HTTPS'} eq 'on') {
         $param->{'base_url'} = sprintf 'https://%s',
-            get_header_field('HTTP_HOST');
+            Sympa::Tools::WWW::get_http_host();
         $param->{'use_ssl'} = 1;
     } else {
         $param->{'base_url'} = sprintf 'http://%s',
-            get_header_field('HTTP_HOST');
+            Sympa::Tools::WWW::get_http_host();
         $param->{'use_ssl'} = 0;
     }
 
@@ -2425,11 +2427,11 @@ sub get_parameters_old {
     ## CGI URL
     if ($ENV{'HTTPS'} eq 'on') {
         $param->{'base_url'} = sprintf 'https://%s',
-            get_header_field('HTTP_HOST');
+            Sympa::Tools::WWW::get_http_host();
         $param->{'use_ssl'} = 1;
     } else {
         $param->{'base_url'} = sprintf 'http://%s',
-            get_header_field('HTTP_HOST');
+            Sympa::Tools::WWW::get_http_host();
         $param->{'use_ssl'} = 0;
     }
 
