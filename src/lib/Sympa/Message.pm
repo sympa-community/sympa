@@ -206,6 +206,7 @@ sub new {
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
+    $parser->tmp_to_core(1);
     my $entity = $parser->parse_data(\$serialized);
     unless ($entity) {
         $log->syslog('err', 'Unable to parse message');
@@ -1268,6 +1269,7 @@ sub as_entity {
 
         my $parser = MIME::Parser->new();
         $parser->output_to_core(1);
+        $parser->tmp_to_core(1);
         $self->{_entity_cache} = $parser->parse_data(\$string);
     }
     return $self->{_entity_cache};
@@ -1773,6 +1775,7 @@ sub smime_decrypt {
     }
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
+    $parser->tmp_to_core(1);
     $entity = $parser->parse_data($msg_string);
     unless (defined $entity) {
         $log->syslog('err', 'Message could not be decrypted');
@@ -1906,6 +1909,7 @@ sub smime_encrypt {
     ## Get as MIME object
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
+    $parser->tmp_to_core(1);
     unless ($entity = $parser->parse_data($msg_string)) {
         $log->syslog('notice', 'Unable to parse message');
         return undef;
@@ -2008,6 +2012,7 @@ sub smime_sign {
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
+    $parser->tmp_to_core(1);
     unless ($signed_msg = $parser->parse_data($msg_string)) {
         $log->syslog('notice', 'Unable to parse message');
         return undef;
@@ -2563,6 +2568,7 @@ sub prepare_message_according_to_mode {
         $parser->extract_nested_messages(0);
         $parser->extract_uuencode(1);
         $parser->output_to_core(1);
+        $parser->tmp_to_core(1);
 
         my $msg_string = $self->as_string;
         $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
@@ -2681,6 +2687,7 @@ sub _decorate_parts {
         ## MIME footer/header
         my $parser = MIME::Parser->new;
         $parser->output_to_core(1);
+        $parser->tmp_to_core(1);
 
         if (   $eff_type =~ /^multipart\/alternative/i
             || $eff_type =~ /^multipart\/related/i) {
@@ -3067,6 +3074,7 @@ sub _urlize_one_part {
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
+    $parser->tmp_to_core(1);
     my $new_part;
 
     my $charset = tools::lang2charset($language->get_lang);
@@ -3163,6 +3171,7 @@ sub reformat_utf8_message {
 
     my $parser = MIME::Parser->new();
     $parser->output_to_core(1);
+    $parser->tmp_to_core(1);
 
     $entity->head->delete('X-Mailer');
     _fix_utf8_parts($entity, $parser, $attachments, $defcharset);
@@ -3812,6 +3821,7 @@ sub get_plaindigest_body {
     # Reparse message to extract UUEncode.
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
+    $parser->tmp_to_core(1);
     $parser->extract_uuencode(1);
     $parser->extract_nested_messages(1);
     my $topent = $parser->parse_data($self->as_string);
