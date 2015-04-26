@@ -1320,7 +1320,7 @@ C<--quiet> is specified.
 
 Lowercases email addresses in database.
 
-=item B<--make_alias_file>
+=item B<--make_alias_file> [ B<--robot> robot ]
 
 Create an aliases file in /tmp/ with all list aliases. It uses the
 F<list_aliases.tt2> template  (useful when list_aliases.tt2 was changed).
@@ -1330,7 +1330,7 @@ F<list_aliases.tt2> template  (useful when list_aliases.tt2 was changed).
 Rewrite password in C<user_table> of database using MD5 fingerprint.
 YOU CAN'T UNDO unless you save this table first.
 
-Note that this option was obsoleted.
+B<Note> that this option was obsoleted.
 Use L<upgrade_sympa_password(1)>.
 
 =item B<--modify_list=>I<family_name> B<--robot=>I<robot_name>
@@ -1453,7 +1453,7 @@ L<sympa.conf(5)>, L<sympa_wizard(1)>.
 L<archived(8)>, L<bulk(8)>, L<bounced(8)>, L<sympa_automatic(8)>,
 L<sympa_msg(8)>, L<task_manager(8)>.
 
-L<sendmail(8)>, L<alias_manager(8)>.
+L<sendmail(8)>, L<sympa_newaliases(1)>.
 
 L<wwsympa(8)>, L<sympa_soap_server(8)>.
 
