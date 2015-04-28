@@ -23,9 +23,9 @@
 nobase_modules_DATA = \
 	Sympa.pm \
 	Sympa/Admin.pm \
+	Sympa/Alarm.pm \
 	Sympa/Archive.pm \
 	Sympa/Auth.pm \
-	Sympa/Alarm.pm \
 	Sympa/Bulk.pm \
 	Sympa/Commands.pm \
 	Conf.pm \
@@ -43,7 +43,7 @@ nobase_modules_DATA = \
 	Sympa/DatabaseDriver/Oracle.pm \
 	Sympa/DatabaseDriver/Oracle/St.pm \
 	Sympa/DatabaseDriver/PostgreSQL.pm \
-	Sympa/DatabaseDriver/SQLite.pm\
+	Sympa/DatabaseDriver/SQLite.pm \
 	Sympa/DatabaseDriver/Sybase.pm \
 	Sympa/DatabaseManager.pm \
 	Sympa/Datasource.pm \
@@ -130,6 +130,7 @@ MAN3PM = \
 	Sympa/Tools/Daemon.pm \
 	Sympa/Tools/File.pm \
 	Sympa/Tools/Text.pm \
+	Sympa/Tracking.pm \
 	Sympa/User.pm
 
 EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
