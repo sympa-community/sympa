@@ -192,7 +192,7 @@ my %full_db_struct = (
             'wrong_login_count_user' => {
                 'struct' => 'int(11)',
                 'doc' =>
-                    'login attempt count, used to prevent brut force attack',
+                    'login attempt count, used to prevent brute force attack',
                 'order' => 6,
             },
             'last_active_date_user' => {
@@ -524,7 +524,7 @@ my %full_db_struct = (
             },
         },
         'doc' =>
-            'One time ticket are random value use for authentication chalenge. A ticket is associated with a context which look like a session.',
+            'One time ticket are random value used for authentication challenge. A ticket is associated with a context which look like a session.',
         'order' => 7,
     },
     'notification_table' => {
@@ -593,7 +593,7 @@ my %full_db_struct = (
             },
         },
         'doc' =>
-            'Used for message tracking feature. If the list is configured for tracking, outgoing messages include a delivery status notification request and optionnaly a message disposition notification request. When DSN and MDN are received by Sympa, they are stored in this table in relation with the related list and message ID.',
+            'Used for message tracking feature. If the list is configured for tracking, outgoing messages include a delivery status notification request and optionally a message disposition notification request. When DSN and MDN are received by Sympa, they are stored in this table in relation with the related list and message ID.',
         'order' => 8,
     },
     'logs_table' => {
@@ -663,7 +663,7 @@ my %full_db_struct = (
             'error_type_logs' => {
                 'struct' => 'varchar(150)',
                 'doc' =>
-                    'name of the error string – if any – issued by the subroutine',
+                    'name of the error string - if any - issued by the subroutine',
                 'order' => 11,
             },
             'client_logs' => {
@@ -893,7 +893,7 @@ my %full_db_struct = (
 
         },
         'doc' =>
-            'This table is a internal cash where list admin roles are stored. It is just a cash and and it does not need to saved. You may remove its content if needed. It will just make next Sympa start slower.',
+            'This table is a internal cash where list admin roles are stored. It is just a cash and it does not need to saved. You may remove its content if needed. It will just make next Sympa start slower.',
         'order' => 12,
     },
     'netidmap_table' => {
