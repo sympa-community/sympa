@@ -6596,7 +6596,7 @@ sub do_signoff {
         Sympa::Report::reject_report_web(
             $result{'category_error'},
             $result{'reason_error'},
-            {%{$result{'reason_error'}}, 'list' => $list->{'name'}},
+            {'list' => $list->{'name'}},
             $param->{'action'},
             $list
         );
