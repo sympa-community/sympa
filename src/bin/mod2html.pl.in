@@ -71,8 +71,8 @@ foreach my $msg_file (sort grep(!/^\./, readdir SPOOL)) {
           $Conf::Conf{'viewmail_dir'} . '/mod/'
         . $list->get_list_id() . '/'
         . $metadata->{'modkey'};
-    Sympa::Archive::convert_single_message(
-        $list, $message,
+    Sympa::Archive::html_format(
+        $message,
         'destination_dir' => $destination_dir,
         'attachement_url' => join(
             '/', '..', 'viewmod', $list->{'name'}, $metadata->{'modkey'}

@@ -2627,8 +2627,8 @@ sub send_confirm_to_editor {
               $Conf::Conf{'viewmail_dir'} . '/mod/'
             . $list->get_list_id() . '/'
             . $modkey;
-        Sympa::Archive::convert_single_message(
-            $list, $message,
+        Sympa::Archive::html_format(
+            $message,
             'destination_dir' => $destination_dir,
             'attachement_url' =>
                 join('/', '..', 'viewmod', $list->{'name'}, $modkey),
@@ -11205,9 +11205,12 @@ sub purge {
     $self->close_list();
 
     if ($self->{'name'}) {
-        my $arc_dir = Conf::get_robot_conf($self->{'domain'}, 'arc_path');
-        Sympa::Tools::File::remove_dir($arc_dir . '/' . $self->get_list_id());
-        Sympa::Tools::File::remove_dir($self->get_bounce_dir());
+        my $archive  = Sympa::Archive->new($self);
+        my $tracking = Sympa::Tracking->new($self);
+        my $error;
+        File::Path::remove_tree($archive->{base_directory},
+            {error => \$error});
+        File::Path::remove_tree($tracking->{directory}, {error => \$error});
     }
 
     ## Clean list table if needed

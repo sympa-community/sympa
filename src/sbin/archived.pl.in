@@ -354,7 +354,7 @@ sub do_command {
     return 1;
 }
 
-# Moved to Sympa::Archive::remove_html().  Use do_remove_arc() instead.
+# Moved to Sympa::Archive::html_remove().  Use do_remove_arc() instead.
 #sub remove;
 
 # Note: Though namings "remove_arc" and "rebuildarc" are inconsistent, they
@@ -399,7 +399,7 @@ sub do_remove_arc {
     $log->syslog('notice', 'Removing %s in %s of archive %s',
         $msgid, $arc, $archive);
 
-    unless ($archive->remove_html($msgid) and $archive->remove($arc_handle)) {
+    unless ($archive->html_remove($msgid) and $archive->remove($arc_handle)) {
         return undef;
     }
 
@@ -422,7 +422,7 @@ sub do_remove_arc {
     return 1;
 }
 
-# Moved to Sympa::Archive::rebuild_html().  Use do_rebuildarc() instead.
+# Moved to Sympa::Archive::html_rebuild().  Use do_rebuildarc() instead.
 #sub rebuild;
 
 sub do_rebuildarc {
@@ -434,11 +434,11 @@ sub do_rebuildarc {
 
     if ($arc and $arc ne '*') {
         $log->syslog('notice', 'Rebuilding %s of %s', $arc, $archive);
-        $archive->rebuild_html($arc);
+        $archive->html_rebuild($arc);
     } else {
         $log->syslog('notice', 'Rebuilding archive of %s completely', $list);
         foreach my $arc ($archive->get_archives) {
-            $archive->rebuild_html($arc);
+            $archive->html_rebuild($arc);
         }
         $log->syslog('notice', 'Rebuild of %s archives completed', $list);
     }
@@ -513,7 +513,7 @@ sub mail2arc {
         }
     }
 
-    unless ($archive->store($message) and $archive->store_html($message)) {
+    unless ($archive->store($message) and $archive->html_store($message)) {
         return undef;
     }
     return 1;

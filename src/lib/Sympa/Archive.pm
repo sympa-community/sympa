@@ -154,6 +154,7 @@ sub select_archive {
     closedir $dh;
 
     undef $self->{_metadatas};
+    undef $self->{_html_metadatas};
     $self->{arc_directory}     = $arc_directory;
     $self->{directory}         = $directory;
     $self->{deleted_directory} = $deleted_directory;
@@ -163,6 +164,14 @@ sub select_archive {
             size  => Sympa::Tools::File::get_dir_size($directory),
             mtime => Sympa::Tools::File::get_mtime($directory),
         };
+    } elsif ($options{count}) {
+        my $count;
+        if (open my $fh, '<', $self->{arc_directory} . '/index') {
+            $count = <$fh>;
+            chomp $count;
+            close $fh;
+        }
+        return {count => ($count || 0)};
     } else {
         return $arc;
     }
@@ -189,6 +198,44 @@ sub fetch {
     }
 
     return;
+}
+
+sub html_fetch {
+    $log->syslog('debug2', '(%s, %s => %s)', @_);
+    my $self    = shift;
+    my %options = @_;
+
+    return undef unless $self->{arc_directory};
+    return undef unless $options{file};
+
+    my $handle =
+        IO::File->new($self->{arc_directory} . '/' . $options{file}, '<');
+    return undef unless $handle;
+
+    my $metadata = {};    # May be empty.
+    while (<$handle>) {
+        last if /^\s*$/;    ## Metadata end with an emtpy line
+
+        if (/^<!--(\S+): (.*) -->$/) {
+            my ($key, $value) = ($1, $2);
+            $value =
+                Encode::encode_utf8(
+                HTML::Entities::decode_entities(Encode::decode_utf8($value)));
+            if ($key eq 'X-From-R13') {
+                $metadata->{'X-From'} = $value;
+                # MHonArc protection of email addresses.
+                $metadata->{'X-From'} =~ tr/N-Z[@A-Mn-za-m/@A-Z[a-z/;
+                # Remove the gecos.
+                $metadata->{'X-From'} =~ s/^.*<(.*)>/$1/g;
+            }
+            $metadata->{$key} = $value;
+        }
+    }
+    seek $handle, 0, 0;
+    $metadata->{html_content} = do { local $RS; <$handle> };
+    $metadata->{filename} = $options{file};
+
+    return $metadata;
 }
 
 sub next {
@@ -239,18 +286,56 @@ sub next {
             $message = Sympa::Message->new($msg_string, %$metadata);
         }
 
+        # Metadata doesn't contain context; add it.
+        $message->{context} = $self->{context} if $message;
+
         # Though message might not be deserialized, anyway return the result.
         return ($message, $lock_fh);
     }
     return;
 }
 
+sub html_next {
+    my $self    = shift;
+    my %options = @_;
+
+    return undef unless $self->{arc_directory};
+
+    unless ($self->{_html_metadatas}) {
+        my $dh;
+        unless (opendir $dh, $self->{arc_directory}) {
+            die sprintf 'Cannot open dir %s: %s', $self->{arc_directory},
+                $ERRNO;
+        }
+        $self->{_html_metadatas} = [
+            sort _cmp_numeric grep {
+                        !/,lock/
+                    and !m{(?:\A|/)(?:\.|T\.|BAD-)}
+                    and -f ($self->{arc_directory} . '/' . $_)
+                } readdir $dh
+        ];
+        closedir $dh;
+
+        # The "reverse" option specific to this class is set.
+        $self->{_html_metadatas} = [reverse @{$self->{_html_metadatas}}]
+            if $options{reverse};
+    }
+    unless (@{$self->{_html_metadatas}}) {
+        undef $self->{_html_metadatas};
+        return undef;
+    }
+
+    while (my $marshalled = shift @{$self->{_html_metadatas}}) {
+        return $self->html_fetch(file => $marshalled);
+    }
+    return undef;
+}
+
 sub _cmp_numeric {
-    if (    defined $a
-        and $a =~ /\A\d+\z/
-        and defined $b
-        and $b =~ /\A\d+\z/) {
-        return $a <=> $b;
+    my $a_num = $1 if defined $a and $a =~ /(\d+)/;
+    my $b_num = $1 if defined $b and $b =~ /(\d+)/;
+    if (defined $a_num and defined $b_num) {
+        return $a_num <=> $b_num || $a cmp $b;
     } else {
         return $a cmp $b;
     }
@@ -289,7 +374,7 @@ sub remove {
 }
 
 # Old name: remove() in archived.pl.
-sub remove_html {
+sub html_remove {
     my $self  = shift;
     my $msgid = shift;
 
@@ -362,7 +447,7 @@ sub store {
 }
 
 # Old name: (part of) mail2arc in archived.pl.
-sub store_html {
+sub html_store {
     my $self    = shift;
     my $message = shift->dup;
 
@@ -520,46 +605,11 @@ sub exist {
 
 ## Load an archived message, returns the mhonarc metadata
 ## IN : file_path
-sub load_html_message {
-    my %parameters = @_;
-
-    $log->syslog('debug2', $parameters{'file_path'});
-    my %metadata;
-
-    unless (open ARC, $parameters{'file_path'}) {
-        $log->syslog(
-            'err',
-            'Failed to load message "%s": %m',
-            $parameters{'file_path'}
-        );
-        return undef;
-    }
-
-    while (<ARC>) {
-        last if /^\s*$/;    ## Metadata end with an emtpy line
-
-        if (/^<!--(\S+): (.*) -->$/) {
-            my ($key, $value) = ($1, $2);
-            $value =
-                Encode::encode_utf8(
-                HTML::Entities::decode_entities(Encode::decode_utf8($value)));
-            if ($key eq 'X-From-R13') {
-                $metadata{'X-From'} = $value;
-                ## Mhonarc protection of email addresses
-                $metadata{'X-From'} =~ tr/N-Z[@A-Mn-za-m/@A-Z[a-z/;
-                $metadata{'X-From'} =~ s/^.*<(.*)>/$1/g;   ## Remove the gecos
-            }
-            $metadata{$key} = $value;
-        }
-    }
-
-    close ARC;
-
-    return \%metadata;
-}
+# DEPRECATED.  Use html_fetch() or html_next().
+#sub load_html_message;
 
 # Old name: rebuild() in archived.pl.
-sub rebuild_html {
+sub html_rebuild {
     my $self = shift;
     my $arc  = shift;
 
@@ -804,18 +854,13 @@ sub _clean_archived_message {
     }
 }
 
-###########################
-# convert a message to HTML.
-#    result is stored in $destination_dir
-#    attachement_url is used to link attachement
-#
-# NOTE: This might be moved to Site package as a mutative method.
-# NOTE: convert_single_msg_2_html() was deprecated.
-sub convert_single_message {
-    my $that    = shift;    # List or Robot object
-    my $message = shift;    # Message object or hashref
+# Old names archive::convert_single_msg_2_html(),
+# Sympa::Archive::convert_single_message().
+sub html_format {
+    my $message = shift;
     my %opts    = @_;
 
+    my $that = $message->{context};
     my $list;
     my $robot;
     my $listname;
@@ -834,14 +879,7 @@ sub convert_single_message {
         die 'bug in logic.  Ask developer';
     }
 
-    my $msg_as_string;
-    if (ref $message eq 'Sympa::Message') {
-        $msg_as_string = $message->as_string;
-    } elsif (ref $message eq 'HASH') {
-        $msg_as_string = $message->{'messageasstring'};
-    } else {
-        die 'bug in logic.  Ask developer';
-    }
+    my $msg_as_string = $message->as_string;
 
     my $destination_dir = $opts{'destination_dir'};
     my $attachement_url = $opts{'attachement_url'};
@@ -862,7 +900,7 @@ sub convert_single_message {
 
     my $msg_file = $destination_dir . '/msg00000.txt';
     unless (open OUT, '>', $msg_file) {
-        $log->syslog('notice', 'Could Not open %s', $msg_file);
+        $log->syslog('notice', 'Can\'t open %s', $msg_file);
         return undef;
     }
     print OUT $msg_as_string;
@@ -959,17 +997,17 @@ Sympa::Archive - Archives of Sympa
   @arcs = $archive->get_archives;
 
   $archive->store($message);
-  $archive->store_html($message);
+  $archive->html_store($message);
 
   $archive->select_archive('2015-04');
   ($message, $handle) = $archive->next;
 
   $archive->select_archive('2015-04');
   ($message, $handle) = $archive->fetch(message_id => $message_id);
-  $archive->remove_html($message_id);
+  $archive->html_remove($message_id);
   $archive->remove($handle);
 
-  $archive->rebuild_html('2015-04');
+  $archive->html_rebuild('2015-04');
 
 =head1 DESCRIPTION
 
@@ -979,10 +1017,20 @@ L<Sympa::Archive> implements the interface to handle archives.
 
 =over
 
-=item new ( )
+=item new ( $list )
 
 I<Constructor>.
 Creates new instance of L<Sympa::Archive>.
+
+Parameter:
+
+=over
+
+=item $list
+
+Context of object, a L<Sympa::List> instance.
+
+=back
 
 =item add_archive ( $arc )
 
@@ -1025,6 +1073,27 @@ Returns:
 Two-elements list of L<Sympa::Message> instance and filehandle locking
 a message.
 
+=item html_fetch ( file =E<gt> $filename )
+
+I<Instance method>.
+Gets a metadata of formatted message from HTML archive.
+select_archive() must be called in advance.
+
+Parameter:
+
+=over
+
+=item file =E<gt> $filename
+
+File name of the message to be feteched.
+
+=back
+
+Returns:
+
+Hashref.
+Note that message won't be locked.
+
 =item next ( [ reverse =E<gt> 1 ] )
 
 I<Instance method>.
@@ -1041,6 +1110,21 @@ Returns:
 
 Two-elements list of L<Sympa::Message> instance and filehandle locking
 a message.
+
+=item html_next ( [ reverse =E<gt> 1 ] )
+
+I<Instance method>.
+Gets next metadata of formatted message in archive.
+select_archive() must be called in advance.
+
+Parameters:
+
+None.
+
+Returns:
+
+Hashref.
+Note that message will not be locked.
 
 =item remove ( $handle )
 
@@ -1063,7 +1147,7 @@ Returns:
 True value if message could be removed.
 Otherwise false value.
 
-=item remove_html ( $message_id )
+=item html_remove ( $message_id )
 
 I<Instance method>.
 TBD.
@@ -1097,7 +1181,7 @@ Returns:
 If storing succeeded, marshalled metadata (file name) of the message.
 Otherwise C<undef>.
 
-=item store_html ( $message )
+=item html_store ( $message )
 
 I<Instance method>.
 TBD.
@@ -1108,11 +1192,7 @@ I<Instance method>.
 Gets a list of archive directories this archive contains.
 Items of returned value may be fed to select_archive() and so on.
 
-=item load_html_message
-
-TBD.
-
-=item rebuild_html ( $arc )
+=item html_rebuild ( $arc )
 
 I<Instance method>.
 Rebuilds archives for the list the name of which is given in the argument
@@ -1133,9 +1213,31 @@ Returns:
 
 I<undef> if something goes wrong.
 
-=item convert_single_message
+=item html_format ( $message,
+destination_dir =E<gt> $destination_dir,
+attachement_url =E<gt> $attachement_url )
 
-TBD.
+I<Function>.
+Converts a message to HTML.
+
+Parameters:
+
+=over
+
+=item $message
+
+Message to be formatted.
+L<Sympa::Message> instance.
+
+=item $destination_dir
+
+The directory result is stored in.
+
+=item $attachment_url
+
+Base URL used to link attachements.
+
+=back
 
 =item get_id ( )
 
@@ -1150,6 +1252,6 @@ L<archived(8)>, L<mhonarc(1)>, L<wwsympa(8)>, L<Sympa::Message>.
 
 =head1 HISTORY
 
-TBD.
+L<Archive> was renamed to L<Sympa::Archive> on Sympa 6.2.
 
 =cut

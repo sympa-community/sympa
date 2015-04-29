@@ -1321,8 +1321,8 @@ sub upgrade {
                 }
             }
 
-            Sympa::Archive::convert_single_message(
-                $list, $message,
+            Sympa::Archive::html_format(
+                $message,
                 'destination_dir' => $destination_dir,
                 'attachement_url' =>
                     join('/', '..', 'viewmod', $listname, $modkey),

@@ -1234,6 +1234,7 @@ while ($query = new_loop()) {
         'template_content'     => 1,
         'html_dumpvars'        => 1,
         'html_editor_init'     => 1,
+        'html_content'         => 1,
         'html_description'     => 1,
     };
     ## Hash defining the parameters where HTML must be filtered.
@@ -6595,10 +6596,8 @@ sub do_signoff {
     } else {
         Sympa::Report::reject_report_web(
             $result{'category_error'},
-            $result{'reason_error'},
-            {'list' => $list->{'name'}},
-            $param->{'action'},
-            $list
+            $result{'reason_error'}, {'list' => $list->{'name'}},
+            $param->{'action'}, $list
         );
     }
     return Conf::get_robot_conf($robot, 'default_home');
@@ -9818,71 +9817,64 @@ sub do_arc {
             unless ($session->{'archive_sniffer'} eq 'false');
     }
 
-    my $arc_path =
-        Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id();
-    ## Calendar
-    unless (opendir ARC, $arc_path) {
+    my $archive = Sympa::Archive->new($list);
+    # Calendar
+    my @arcs = $archive->get_archives;
+    unless (@arcs) {
         Sympa::Report::reject_report_web('user', 'empty_archives', {},
             $param->{'action'}, $list);
-        wwslog('err', 'No directory %s', $arc_path);
+        wwslog('err', 'Empty archive %s', $archive);
         return undef;
     }
-    foreach my $dir (sort grep(!/^\./, readdir ARC)) {
-        if ($dir =~ /^(\d{4})-(\d{2})$/
-            && -d $arc_path . '/' . $dir . '/arctxt') {
-            $param->{'calendar'}{$1}{$2} = '???';
-            if (open(IDX, $arc_path . '/' . $dir . '/index')) {
-                my ($msgs) = <IDX>;
-                chomp($msgs);
-                close IDX;
-                $param->{'calendar'}{$1}{$2} = $msgs if ($msgs);
-            }
-            $latest = $dir;
+    foreach my $arc (@arcs) {
+        my $info;
+        if (    $info = $archive->select_archive($arc, count => 1)
+            and $info->{count}) {
+            my ($yyyy, $mm) = split /-/, $arc;
+            $param->{'calendar'}{$yyyy}{$mm} = $info->{count};
+            $latest = $arc;
         }
     }
-    closedir ARC;
 
-    ## Read html file
+    # Read HTML file
     $in{'month'} ||= $latest;
-    my $arc_month_path = $arc_path . '/' . $in{'month'};
-
-    unless ($in{'arc_file'}) {
-        undef $latest;
-        unless (opendir ARC, $arc_month_path) {
-            wwslog('err', 'Unable to readdir %s', $arc_month_path);
-            Sympa::Report::reject_report_web(
-                'user',
-                'month_not_found',
-                {   'month'    => $in{'month'},
-                    'dir'      => $arc_month_path,
-                    'listname' => $param->{'list'}
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-        }
-        foreach my $file (grep(/^$index/, readdir ARC)) {
-            if ($file =~ /^$index(\d+)\.html$/) {
-                $latest = $1 if ($latest < $1);
-            }
-        }
-        closedir ARC;
-
-        $in{'arc_file'} = $index . $latest . ".html";
-    }
-
-    ## File exist ?
-    my $arc_file_path = $arc_month_path . '/' . $in{'arc_file'};
-
-    unless (-r $arc_file_path) {
-        wwslog('err', 'Unable to read %s', $arc_file_path);
+    unless ($archive->select_archive($in{'month'})) {
+        wwslog('err', 'Unable to find month "%s" in %s',
+            $in{'month'}, $archive);
         Sympa::Report::reject_report_web(
             'user',
-            'arc_not_found',
+            'month_not_found',
+            {   'month'    => $in{'month'},
+                'listname' => $param->{'list'}
+            },
+            $param->{'action'},
+            $list,
+            $param->{'user'}{'email'},
+            $robot
+        );
+
+        $archive->select_archive($latest);
+    }
+
+    # File exists?
+    my $html_metadata;
+    unless ($in{'arc_file'}) {
+        while ($html_metadata = $archive->html_next(reverse => 1)) {
+            next unless %$html_metadata;
+            next unless $html_metadata->{filename} =~ /\A$index(\d+)\.html\z/;
+            last;
+        }
+        $in{'arc_file'} = $html_metadata->{filename} if $html_metadata;
+    } else {
+        $html_metadata = $archive->html_fetch(file => $in{'arc_file'});
+    }
+    unless ($html_metadata) {
+        wwslog('err', 'Unable to read HTML message <%s>', $in{'arc_file'});
+        Sympa::Report::reject_report_web(
+            'user',
+            'arc_not_found',    #FIXME: Not implemented.
             {   'arc_file' => $in{'arc_file'},
-                'path'     => $arc_file_path,
+                'month'    => $in{'month'},
                 'listname' => $param->{'list'}
             },
             $param->{'action'},
@@ -9895,7 +9887,6 @@ sub do_arc {
 
     ## File type
     if ($in{'arc_file'} =~ /^(mail\d+|msg\d+|thrd\d+)\.html$/) {
-
         if ($in{'arc_file'} =~ /^(thrd|mail)\d+\.html/) {
             $session->{'arc_mode'} = $1;
         }
@@ -9917,33 +9908,30 @@ sub do_arc {
         }
 
         if ($in{'arc_file'} =~ /^(msg\d+)\.html$/) {
-            ## If the file is a message, load the metadata to find out who is
-            ## the author of the message
-            my $metadata = Sympa::Archive::load_html_message(
-                'file_path' => $arc_file_path);
+            # If the file is a message, load the metadata to find out who is
+            # the author of the message.
             $param->{'include_picture'} =
-                $list->find_picture_url($metadata->{'X-From'});
-            $param->{'subtitle'} = $metadata->{'X-Subject'};
+                $list->find_picture_url($html_metadata->{'X-From'});
+            $param->{'subtitle'} = $html_metadata->{'X-Subject'};
         }
 
-        ## Provide a filehandle to the TT2 parser (instead of a filename
-        ## previously)
-        ## It allows to set the appropriate utf8 binmode on the FH
-        open $param->{'file_handle'}, "<", $arc_file_path;
+        # Provide a file content to the TT2 parser (instead of a filename
+        # previously).
+        $param->{'html_content'} = $html_metadata->{html_content};
 
-        push @other_include_path, $arc_month_path;
+        #FIME: Is this required?
+        push @other_include_path, $archive->{arc_directory};
     } else {
-
         if ($in{'arc_file'} =~ /\.(\w+)$/) {
             $param->{'file_extension'} = $1;
         }
 
         $param->{'bypass'} = 1;
-
-        $param->{'file'} = $arc_file_path;
+        $param->{'file'} = $archive->{arc_directory} . '/' . $in{'arc_file'};
     }
 
-    $param->{'date'} = Sympa::Tools::File::get_mtime($arc_file_path);
+    $param->{'date'} = Sympa::Tools::File::get_mtime(
+        $archive->{arc_directory} . '/' . $in{'arc_file'});
     # send page as static if client is a bot. That's prevent crawling all
     # archices every weeks by google, yahoo and others bots
     if ($session->{'is_a_crawler'}) {
@@ -9995,154 +9983,108 @@ sub do_latest_arc {
         $nb_arc = $NB_ARC_MAX;
     }
 
-    my $arc_path =
-        Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id();
-    unless (opendir ARC_DIR, $arc_path) {
-        Sympa::Report::reject_report_web('user', 'empty_archives', {},
-            $param->{'action'}, $list);
-        wwslog('err', 'No directory %s', $arc_path);
-        return undef;
-    }
-
-    my @months;
-    my $latest;
-    foreach my $dir (sort grep(!/^\./, readdir ARC_DIR)) {
-        if ($dir =~ /^(\d{4})-(\d{2})$/) {
-            push @months, $dir;
-            $latest = $dir;
-        }
-    }
-    closedir ARC_DIR;
-
-    @months = reverse @months;
+    my $archive = Sympa::Archive->new($list);
+    my @arcs    = reverse $archive->get_archives;
     my $stop_search;
-
     my @archives;
 
-    ## year-month directory
-    foreach my $year_month (@months) {
+    # year-month directory
+    foreach my $arc (@arcs) {
         if ($nb_arc <= 0) {
             last;
         }
 
         last if $stop_search;
 
-        my $arc_month_path = $arc_path . '/' . $year_month . '/arctxt';
-        unless (opendir MONTH, $arc_month_path) {
+        unless ($archive->select_archive($arc)) {
             Sympa::Report::reject_report_web(
                 'intern',
                 'inaccessible_archive',
-                {   'path'     => $arc_month_path,
-                    'listname' => $list->{'name'}
+                {   'year_month' => $arc,
+                    'listname'   => $list->{'name'}
                 },
                 $param->{'action'},
                 $list,
                 $param->{'user'}{'email'},
                 $robot
             );
-            wwslog('err', 'Unable to open directory %s', $arc_month_path);
+            wwslog('err', 'Unable to open directory %s in %s', $arc,
+                $archive);
             next;
         }
 
-        ## mails in the year-month directory
-        foreach my $arc (sort { $b <=> $a } grep(!/^\./, readdir MONTH)) {
-            last if ($nb_arc <= 0);
+        # Messages in the year-month directory
+        while (1) {
+            my ($message, $handle) = $archive->next(reverse => 1);
+            last unless $handle;
+            next unless $message;
 
-            if ($arc =~ /^(\d)+$/) {
-                my %msg_info;
+            last if $nb_arc <= 0;
 
-                my $parser = MIME::Parser->new;
-                $parser->output_to_core(1);
+            my %msg_info;
 
-                my $arc_file = $arc_month_path . '/' . $arc;
+            foreach my $field ('message-id', 'subject', 'from') {
 
-                unless (open(FILE, $arc_file)) {
-                    wwslog('err', 'Unable to open file %s', $arc_file);
-                }
+                my $var = $field;
+                $var =~ s/-/_/g;
 
-                my $message;
-                unless ($message = $parser->read(\*FILE)) {
-                    wwslog('err', 'Unable to parse message %s', $arc_file);
-                    next;
-                }
+                $msg_info{$var} = $message->get_header($field);
 
-                my $hdr = $message->head;
-
-                unless (defined $hdr) {
-                    wwslog('err', 'Unable to parse header of message %s',
-                        $arc_file);
-                    next;
-                }
-
-                foreach my $field ('message-id', 'subject', 'from') {
-
-                    my $var = $field;
-                    $var =~ s/-/_/g;
-
-                    $msg_info{$var} = $hdr->get($field);
-
-                    if (ref $msg_info{$var} eq 'ARRAY') {
-                        $msg_info{$var} = $msg_info{$var}->[0];
-                    }
-
-                    ## Hide full email address
-                    if ($field eq 'from') {
-                        if ($msg_info{$var} =~ /(.+)\<.+\>/) {
-                            $msg_info{$var} = $1;
-                        } else {
-                            my @email = split /\@/, $msg_info{$var};
-                            $msg_info{$var} = $email[0];
-                        }
-                    }
-
-                    if ($field eq 'message-id') {
-                        $msg_info{$var} =
-                            tools::clean_msg_id($msg_info{'message_id'});
-                        $msg_info{$var} =
-                            tools::escape_chars($msg_info{$var});
-
-                        $msg_info{'year_month'} = $year_month;
+                # Hide full email address
+                if ($field eq 'from') {
+                    if ($msg_info{$var} =~ /(.+)\<.+\>/) {
+                        $msg_info{$var} = $1;
                     } else {
-                        $msg_info{$var} =
-                            MIME::EncWords::decode_mimewords($msg_info{$var},
-                            Charset => 'utf8');
-                        $msg_info{$var} = tools::escape_html($msg_info{$var});
+                        my @email = split /\@/, $msg_info{$var};
+                        $msg_info{$var} = $email[0];
                     }
                 }
 
-                my $date = $hdr->get('Date');
+                if ($field eq 'message-id') {
+                    $msg_info{$var} =
+                        tools::clean_msg_id($msg_info{'message_id'});
+                    #FIXME: Required?
+                    $msg_info{$var} = tools::escape_chars($msg_info{$var});
 
-                unless (defined $date) {
-                    wwslog('err', 'No date found in message %s', $arc_file);
-                    next;
+                    $msg_info{'year_month'} = $arc;
+                } else {
+                    $msg_info{$var} =
+                        MIME::EncWords::decode_mimewords($msg_info{$var},
+                        Charset => 'utf8');
+                    #FIXME: Required?
+                    $msg_info{$var} = tools::escape_html($msg_info{$var});
                 }
-
-                $msg_info{'date_smtp'} = $date;
-                my $date_epoch = eval {
-                    DateTime::Format::Mail->new->loose->parse_datetime($date)
-                        ->epoch;
-                };
-                if (defined $date_epoch) {
-                    $msg_info{'date_epoch'} = $date_epoch;
-                    $msg_info{'date'} =
-                        $language->gettext_strftime("%d %b %Y",
-                        localtime $date_epoch);
-
-                    if ($date_epoch < $oldest_day) {
-                        $stop_search = 1;
-                        last;
-                    }
-                }
-                foreach my $key (keys %msg_info) {
-                    chomp($msg_info{$key});
-                }
-
-                push @archives, \%msg_info;
-                $nb_arc--;
             }
-        }
-        closedir MONTH;
 
+            my $date = $message->get_header('Date');
+
+            unless (defined $date) {
+                wwslog('err', 'No date found in message %s', $message);
+                next;
+            }
+
+            $msg_info{'date_smtp'} = $date;
+            my $date_epoch = eval {
+                DateTime::Format::Mail->new->loose->parse_datetime($date)
+                    ->epoch;
+            };
+            if (defined $date_epoch) {
+                $msg_info{'date_epoch'} = $date_epoch;
+                $msg_info{'date'} = $language->gettext_strftime("%d %b %Y",
+                    localtime $date_epoch);
+
+                if ($date_epoch < $oldest_day) {
+                    $stop_search = 1;
+                    last;
+                }
+            }
+            foreach my $key (keys %msg_info) {
+                chomp($msg_info{$key});
+            }
+
+            push @archives, \%msg_info;
+            $nb_arc--;
+        }
     }
 
     @{$param->{'archives'}} =
@@ -10268,58 +10210,24 @@ sub do_remove_arc {
 #
 ####################################################
 sub do_send_me {
-    wwslog('info', '(%s, %s, %s, %s',
+    wwslog('info', '(%s, %s, %s, %s)',
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
-    if (  !$in{'msgid'}
-        || $in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
+    unless ($in{'msgid'}
+        and $in{'msgid'} !~ /NO-ID-FOUND\.mhonarc\.org/) {
         Sympa::Report::reject_report_web('intern', 'may_not_send_me', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'No message id found');
         $param->{'status'} = 'no_msgid';
         return undef;
     }
-    ##
-    my $arcpath =
-          Conf::get_robot_conf($robot, 'arc_path') . '/'
-        . $list->get_list_id() . '/'
-        . $in{'yyyy'} . '-'
-        . $in{'month'};
 
-    opendir ARC, "$arcpath/arctxt";
-    my $msgfile;
-    foreach my $file (grep (!/\./, readdir ARC)) {
-        wwslog('debug', 'Scanning %s', $file);
-        next unless (open MAIL, "$arcpath/arctxt/$file");
-        while (<MAIL>) {
-            last if /^$/;
-            my $idline = $_;
-            if (/^Message-id\s*:\s*$/i) {
-                chomp $idline;
-                $idline .= <MAIL>;
-            }
-            if ($idline =~ /^Message-id\s*:\s*<?([^>\s]+)>?\s?/i) {
-                my $id = $1;
-                if ($id eq $in{'msgid'}) {
-                    $msgfile = $file;
-                }
-                last;
-            }
-        }
-        close MAIL;
+    my $archive = Sympa::Archive->new($list);
+    my ($message, $handle);
+    if ($archive->select_archive("$in{'yyyy'}-$in{'month'}")) {
+        ($message, $handle) = $archive->fetch(message_id => $in{'msgid'});
     }
-
-    my $message;
-    if ($msgfile) {
-        $message =
-            Sympa::Message->new_from_file("$arcpath/arctxt/$msgfile",
-            context => $list);
-        unless ($message) {
-            $param->{'status'} = 'message_err';
-            wwslog('info', 'Could not read file %s',
-                "$arcpath/arctxt/$msgfile");
-            return undef;
-        }
+    if ($message) {
         # Decrypt message if possible
         $message->smime_decrypt;
 
@@ -10373,12 +10281,13 @@ sub do_send_me {
             );
             return undef;
         }
-        wwslog('info', 'Message %s spooled for %s',
-            "$arcpath/arctxt/$msgfile", $param->{'user'}{'email'});
+        wwslog(
+            'info',   'Message %s spooled for %s',
+            $message, $param->{'user'}{'email'}
+        );
         Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
         $in{'month'} = $in{'yyyy'} . "-" . $in{'month'};
         return 'arc';
-
     } else {
         wwslog('info', 'No file match msgid');
         $param->{'status'} = 'not_found';
@@ -10409,57 +10318,24 @@ sub do_view_source {
         return undef;
     }
 
-    if (  !$in{'msgid'}
-        || $in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
+    unless ($in{'msgid'}
+        and $in{'msgid'} !~ /NO-ID-FOUND\.mhonarc\.org/) {
         Sympa::Report::reject_report_web('intern', 'may_not_view_source', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'No message id found');
         $param->{'status'} = 'no_msgid';
         return undef;
     }
-    ##
-    my $arcpath =
-          Conf::get_robot_conf($robot, 'arc_path') . '/'
-        . $list->get_list_id() . '/'
-        . $in{'yyyy'} . '-'
-        . $in{'month'};
 
-    opendir ARC, "$arcpath/arctxt";
-    my $msgfile;
-    foreach my $file (grep (!/\./, readdir ARC)) {
-        wwslog('debug', 'Scanning %s', $file);
-        next unless (open MAIL, "$arcpath/arctxt/$file");
-        while (<MAIL>) {
-            last if /^$/;
-            my $idline = $_;
-            if (/^Message-id\s*:\s*$/i) {
-                chomp $idline;
-                $idline .= <MAIL>;
-            }
-            if ($idline =~ /^Message-id\s*:\s*<?([^>\s]+)>?\s?/i) {
-                my $id = $1;
-                if ($id eq $in{'msgid'}) {
-                    $msgfile = $file;
-                }
-                last;
-            }
-        }
-        close MAIL;
+    my $archive = Sympa::Archive->new($list);
+    my ($message, $handle);
+    if ($archive->select_archive("$in{'yyyy'}-$in{'month'}")) {
+        ($message, $handle) = $archive->fetch(message_id => $in{'msgid'});
     }
-    if ($msgfile) {
-        unless (open MSG, "$arcpath/arctxt/$msgfile") {
-            $param->{'status'} = 'message_err';
-            wwslog('info', 'Could not read file %s',
-                "$arcpath/arctxt/$msgfile");
-        }
-
+    if ($message) {
         $param->{'bypass'} = 'extreme';
         print "Content-Type: text/plain\n\n";
-        while (<MSG>) {
-            print $_;
-        }
-        close MSG;
-
+        print $message->as_string;
     } else {
         wwslog('info', 'No file match msgid');
         $param->{'status'} = 'not_found';
@@ -10584,16 +10460,8 @@ sub do_arcsearch_form {
         unless (
         defined check_authz('do_arcsearch_form', 'archive.web_access'));
 
-    my $search_base =
-        Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id();
-    opendir ARC, "$search_base";
-    foreach my $dir (sort { $b cmp $a } grep(!/^\./, readdir ARC)) {
-        if ($dir =~ /^(\d{4})-(\d{2})$/) {
-            push @{$param->{'yyyymm'}}, $dir;
-        }
-    }
-    closedir ARC;
-
+    my $archive = Sympa::Archive->new($list);
+    $param->{'yyyymm'}       = [reverse $archive->get_archives];
     $param->{'key_word'}     = $in{'key_word'};
     $param->{'archive_name'} = $in{'archive_name'};
 
@@ -10604,13 +10472,13 @@ sub do_arcsearch_form {
 sub do_arcsearch {
     wwslog('info', '(%s)', $param->{'list'});
 
-    ## Access control
+    # Access control
     return undef
-        unless (defined check_authz('do_arcsearch', 'archive.web_access'));
+        unless defined check_authz('do_arcsearch', 'archive.web_access');
 
-    my $search = Sympa::Marc::Search->new;
-    $search->search_base(Conf::get_robot_conf($robot, 'arc_path') . '/'
-            . $list->get_list_id());
+    my $search  = Sympa::Marc::Search->new;
+    my $archive = Sympa::Archive->new($list);
+    $search->search_base($archive->{base_directory});
     $search->base_href(Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/'
             . $param->{'list'});
     $search->archive_name($in{'archive_name'});
@@ -10621,20 +10489,13 @@ sub do_arcsearch {
         $archive_name = POSIX::strftime('%Y-%m', localtime time)
             unless $archive_name =~ /^\d{4}-\d{2}$/;
         my @directories = ();
-        my $search_base =
-            Conf::get_robot_conf($robot, 'arc_path') . '/'
-            . $list->get_list_id();
-        opendir ARC, "$search_base";
-        foreach my $dir (sort { $b cmp $a } grep(!/^\./, readdir ARC)) {
-            if ($dir =~ /^(\d{4})-(\d{2})$/) {
-                if ($archive_name) {
-                    push @directories, $dir if $dir le $archive_name;
-                    $archive_name = '' if $dir lt $archive_name;
-                }
-                push @{$param->{'yyyymm'}}, $dir;
+        foreach my $arc (reverse $archive->get_archives) {
+            if ($archive_name) {
+                push @directories, $arc if $arc le $archive_name;
+                $archive_name = '' if $arc lt $archive_name;
             }
+            push @{$param->{'yyyymm'}}, $arc;
         }
-        closedir ARC;
         $in{'directories'} = join "\0", @directories;
     }
 
@@ -10750,13 +10611,13 @@ sub do_arcsearch_id {
     wwslog('info', '(%s, %s, %s)', $param->{'list'}, $in{'archive_name'},
         $in{'msgid'});
 
-    ## Access control
+    # Access control
     return undef
-        unless (defined check_authz('do_arcsearch_id', 'archive.web_access'));
+        unless defined check_authz('do_arcsearch_id', 'archive.web_access');
 
-    my $search = Sympa::Marc::Search->new;
-    $search->search_base(Conf::get_robot_conf($robot, 'arc_path') . '/'
-            . $list->get_list_id());
+    my $search  = Sympa::Marc::Search->new;
+    my $archive = Sympa::Archive->new($list);
+    $search->search_base($archive->{base_directory});
     $search->base_href(Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/'
             . $param->{'list'});
 
@@ -10765,15 +10626,12 @@ sub do_arcsearch_id {
     # search in current month and in the previous none empty one
     my $search_base = $search->search_base;
     my $previous_active_dir;
-    opendir ARC, "$search_base";
-    foreach my $dir (sort { $b cmp $a } grep(!/^\./, readdir ARC)) {
-        if (($dir =~ /^(\d{4})-(\d{2})$/) && ($dir lt $search->archive_name))
-        {
-            $previous_active_dir = $dir;
+    foreach my $arc (reverse $archive->get_archives) {
+        if ($arc =~ /^(\d{4})-(\d{2})$/ and $arc lt $search->archive_name) {
+            $previous_active_dir = $arc;
             last;
         }
     }
-    closedir ARC;
     $in{'archive_name'} = $search->archive_name . "\0" . $previous_active_dir;
 
     $search->directories($in{'archive_name'});
@@ -11743,8 +11601,7 @@ sub do_viewbounce {
         my $bounce_message =
             Sympa::Message->new_from_file($bounce_path,
             context => ($list || $robot));
-        Sympa::Archive::convert_single_message(
-            ($list || $robot),
+        Sympa::Archive::html_format(
             $bounce_message,
             'destination_dir' => $html_dir,
             'attachement_url' => '../viewbounce/' . $html_relpath
@@ -23140,20 +22997,12 @@ sub do_viewlogs {
 sub do_arc_manage {
     wwslog('info', '(%s)', $in{'list'});
 
-    ## Access control
-    unless (defined check_authz('do_arc', 'archive.web_access')) {
-        return undef;
-    }
+    # Access control
+    return undef
+        unless defined check_authz('do_arc', 'archive.web_access');
 
-    my $search_base =
-        Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id();
-    opendir ARC, "$search_base";
-    foreach my $dir (sort { $b cmp $a } grep(!/^\./, readdir ARC)) {
-        if ($dir =~ /^(\d{4})-(\d{2})$/) {
-            push @{$param->{'yyyymm'}}, $dir;
-        }
-    }
-    closedir ARC;
+    my $archive = Sympa::Archive->new($list);
+    $param->{'yyyymm'} = [reverse $archive->get_archives];
 
     return 1;
 }
@@ -23193,33 +23042,24 @@ sub do_arc_download {
         return 'arc_manage';
     }
 
-    #for each selected month
-    foreach my $dir (split /\0/, $in{'directories'}) {
-        ## Tainted vars problem
-        if ($dir =~ /^(\d+\-\d+)$/) {
-            $dir = $1;
-        }
+    my $archive = Sympa::Archive->new($list);
 
-        my $abs_dir =
-              Conf::get_robot_conf($robot, 'arc_path') . '/'
-            . $list->get_list_id() . '/'
-            . $dir
-            . '/arctxt';
-        ##check arc directory
-        unless (-d $abs_dir) {
+    # For each selected month
+    foreach my $arc (split /\0/, $in{'directories'}) {
+        # Check arc directory
+        unless ($archive->select_archive($arc)) {
             Sympa::Report::reject_report_web(
                 'intern',
-                'arc_not_found',
-                {   'arc_file' => $dir,
+                'arc_not_found',    #FIXME: Not implemented.
+                {   'month'    => $arc,
                     'listname' => $in{'list'},
-                    'path'     => $abs_dir
                 },
                 $param->{'action'},
                 '',
                 $param->{'user'}{'email'},
                 $robot
             );
-            wwslog('info', 'Archive %s not found', $dir);
+            wwslog('info', 'Archive %s not found', $arc);
             web_db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
@@ -23235,46 +23075,30 @@ sub do_arc_download {
             next;
         }
 
-        $zip->addDirectory($abs_dir, $in{'list'} . '_' . $dir);
+        $zip->addDirectory($archive->{directory}, $in{'list'} . '_' . $arc);
 
-        unless (opendir SPOOL, $abs_dir) {
-            Sympa::Report::reject_report_web('intern', 'cannot_open_dir',
-                {'dir' => $abs_dir},
-                $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
-            wwslog('info', 'Unable to open %s', $abs_dir);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'list'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
+        while (1) {
+            my ($message, $handle) = $archive->next;
+            last unless $handle;
+            next unless $message;
 
-        foreach my $msg (sort grep(!/^\./, readdir SPOOL)) {
             unless (
-                $zip->addFile(
-                    $abs_dir . '/' . $msg,
-                    $in{'list'} . '_' . $dir . '/' . $msg
+                $zip->addString(
+                    $message->as_string,
+                    $in{'list'} . '_' . $arc . '/' . $handle->basename
                 )
                 ) {
                 Sympa::Report::reject_report_web(
-                    'intern', 'add_file_zip',
-                    {'file' => "$abs_dir/$msg"}, $param->{'action'},
-                    '', $param->{'user'}{'email'},
+                    'intern',
+                    'add_file_zip',
+                    {'file' => $arc . '/' . $handle->basename},
+                    $param->{'action'},
+                    '',
+                    $param->{'user'}{'email'},
                     $robot
                 );
-                wwslog(
-                    'info',
-                    'Failed to add %s file to archive',
-                    $abs_dir . '/' . $msg
-                );
+                wwslog('info', 'Failed to add %s file in %s to archive',
+                    $handle->basename, $archive);
                 web_db_log(
                     {   'robot'        => $robot,
                         'list'         => $list->{'name'},
@@ -23290,8 +23114,6 @@ sub do_arc_download {
                 return undef;
             }
         }
-
-        closedir SPOOL;
 
         ## create and fill a new folder in zip
         #$zip->addTree ($abs_dir, $in{'list'}.'_'.$dir);
@@ -23401,15 +23223,11 @@ sub do_arc_download {
 }
 
 sub do_arc_delete {
-
-    my @abs_dirs;
-
     wwslog('info', '(%s)', $in{'list'});
 
-    ## Access control
-    unless (defined check_authz('do_arc', 'archive.web_access')) {
-        return undef;
-    }
+    # Access control
+    return undef
+        unless defined check_authz('do_arc', 'archive.web_access');
 
     unless (defined $in{'directories'}) {
         Sympa::Report::reject_report_web('user', 'select_month', {},
@@ -23436,15 +23254,12 @@ sub do_arc_delete {
         do_arc_download();
     }
 
-    foreach my $dir (split /\0/, $in{'directories'}) {
-        push(@abs_dirs,
-                  Conf::get_robot_conf($robot, 'arc_path') . '/'
-                . $list->get_list_id() . '/'
-                . $dir);
-    }
-
-    unless (Sympa::Tools::File::remove_dir(@abs_dirs)) {
-        wwslog('info', 'Error while Calling Sympa::Tools::File::remove_dir');
+    my $archive = Sympa::Archive->new($list);
+    foreach my $arc (split /\0/, $in{'directories'}) {
+        unless ($archive->purge_archive($arc)) {
+            wwslog('info', 'Error while purging archive %s in %s',
+                $arc, $archive);
+        }
     }
 
     Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
