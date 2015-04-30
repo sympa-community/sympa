@@ -48,6 +48,7 @@ sub _new {
     my %params  = @_;
 
     # Canonicalize host parameter to be "scheme://host:port".
+    # Note: Net::LDAP >= 0.40 is required to use ldaps: scheme.
     my @hosts =
         (ref $params{host})
         ? @{$params{host}}
