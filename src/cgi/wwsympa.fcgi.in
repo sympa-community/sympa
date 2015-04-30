@@ -51,10 +51,9 @@ use DateTime;
 use DateTime::Format::Mail;
 use Digest::MD5;
 use Encode qw();
-use English;    # FIXME: drop $MATCH usage
+use English;    # FIXME: drop $PREMATCH usage
 use MIME::EncWords;
 use MIME::Lite::HTML;
-use MIME::Parser;
 use POSIX qw();
 use Time::Local qw();
 use Data::Dumper;    # tentative
