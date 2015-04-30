@@ -685,7 +685,7 @@ LOOP_FOREACH_TPL_NAME:
             }
         }
 
-        $list_templates->{$tpl_name}{'html_description'} = substr $tpl_string,
+        $list_templates->{$tpl_name}{'html_content'} = substr $tpl_string,
             pos $tpl_string;
 
         # Set the title in the current language

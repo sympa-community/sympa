@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 [% TRY ~%]
-  [% PROCESS 'msg00000.html' %]
+  [% html_content | eval %]
 [%~ CATCH ~%]
   <!-- [% error | html %] -->
 [%~ END %]

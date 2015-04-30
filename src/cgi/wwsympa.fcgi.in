@@ -1234,7 +1234,6 @@ while ($query = new_loop()) {
         'html_dumpvars'        => 1,
         'html_editor_init'     => 1,
         'html_content'         => 1,
-        'html_description'     => 1,
     };
     ## Hash defining the parameters where HTML must be filtered.
     $param->{'htmlToFilter'} = {
@@ -9297,6 +9296,12 @@ sub do_viewmod {
         $param->{'file'}           = $html_dir . '/' . $in{'file'};
         $param->{'bypass'}         = 1;
     } else {
+        if (open my $fh, '<', $html_dir . '/msg00000.html') {
+            $param->{'html_content'} = do { local $RS; <$fh> };
+            close $fh;
+        }
+
+        #FIXME: Is this required?
         push @other_include_path, $html_dir;
     }
 
@@ -9309,79 +9314,6 @@ sub do_viewmod {
         $param->{'request_topic'} = 1;
 
         foreach my $top (@{$list->{'admin'}{'msg_topic'} || []}) {
-            if ($top->{'name'}) {
-                push(@{$param->{'available_topics'}}, $top);
-            }
-        }
-        $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
-    }
-
-    return 1;
-}
-
-####################################################
-#  do_viewmod
-####################################################
-#  Web page for an editor to moderate a mail and/or
-#  to tag it in message topic context
-#
-# IN : -
-#
-# OUT : 'login,request' | '1' | undef
-#
-####################################################
-sub do_viewmod_old {
-    wwslog('info', '(%s, %s)', $in{'id'}, $in{'file'});
-
-    my $msg;
-    my $tmp_dir;
-
-    my $available_files =
-        tools::get_templates_list('mail', '', $list, {'ignore_global' => 1});
-    foreach my $file (keys %$available_files) {
-        next unless ($file =~ /^reject_/);
-        $file =~ s/^reject_//;
-        $file =~ s/.tt2$//;
-        push(@{$param->{'available_files'}}, $file);
-    }
-
-    ## For compatibility concerns
-    foreach my $list_id ($list->get_list_id(), $list->{'name'}) {
-        $tmp_dir =
-            $Conf::Conf{'queuemod'} . '/.' . $list_id . '_' . $in{'id'};
-        if (-d $tmp_dir) {
-            last;
-        }
-    }
-
-    unless (-d $tmp_dir) {
-        Sympa::Report::reject_report_web('intern',
-            'no_html_message_available', {'dir' => $tmp_dir},
-            $param->{'action'});
-        wwslog('err', 'No HTML version of the message available in %s',
-            $tmp_dir);
-        return undef;
-    }
-
-    if ($in{'file'}) {
-        $in{'file'} =~ /\.(\w+)$/;
-        $param->{'file_extension'} = $1;
-        $param->{'file'}           = $tmp_dir . '/' . $in{'file'};
-        $param->{'bypass'}         = 1;
-    } else {
-        push @other_include_path, $tmp_dir;
-    }
-
-    $param->{'base'} = sprintf "%s/viewmod/%s/%s/",
-        Conf::get_robot_conf($robot, 'wwsympa_url'), $param->{'list'},
-        $in{'id'};
-    $param->{'id'} = $in{'id'};
-
-    if ($list->is_there_msg_topic()) {
-
-        $param->{'request_topic'} = 1;
-
-        foreach my $top (@{$list->{'admin'}{'msg_topic'}}) {
             if ($top->{'name'}) {
                 push(@{$param->{'available_topics'}}, $top);
             }
@@ -9918,7 +9850,7 @@ sub do_arc {
         # previously).
         $param->{'html_content'} = $html_metadata->{html_content};
 
-        #FIME: Is this required?
+        #FIXME: Is this required?
         push @other_include_path, $archive->{arc_directory};
     } else {
         if ($in{'arc_file'} =~ /\.(\w+)$/) {
@@ -11622,6 +11554,12 @@ sub do_viewbounce {
         $param->{'file'}           = $html_dir . '/' . $in{'file'};
         $param->{'bypass'}         = 1;
     } else {
+        if (open my $fh, '<', $html_dir . '/msg00000.html') {
+            $param->{'html_content'} = do { local $RS; <$fh> };
+            close $fh;
+        }
+
+        #FIXME: Is this required?
         push @other_include_path, $html_dir;
     }
 
