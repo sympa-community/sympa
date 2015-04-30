@@ -322,6 +322,8 @@ sub my_mkdir {
     return 1;
 }
 
+# Old name: Sympa::Template::Compat::_translate() which was originally a part
+# of tt2.pm.
 sub _translate {
     local $_ = join('', @_);
 

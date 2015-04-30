@@ -1012,6 +1012,7 @@ sub sigterm {
 #sub store_bounce;
 
 # RFC3464 compliance check
+# Old name: Bounce::rfc1891().
 sub _parse_dsn {
     my $message = shift;
     my $result  = shift;
@@ -1080,6 +1081,7 @@ sub _parse_dsn {
 }
 
 ## Corrige une adresse SMTP
+# Old name: Bounce::corrige().
 sub _corrige {
 
     my ($adr, $from) = @_;
@@ -1130,6 +1132,7 @@ sub _corrige {
 # //    2 : reference d'un hash pour retourner @ en erreur
 # //    3 : reference d'un tableau pour retourner des stats
 # //    4 : reference d'un tableau pour renvoyer le bounce
+# Old name: Bounce::anabounce().
 sub _anabounce {
     my $message = shift;
     my $result  = shift;
