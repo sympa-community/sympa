@@ -1038,7 +1038,8 @@ sub rename_list {
             'queueauth',      'queuemod',
             'queuetask',      'queuebounce',
             'queue',          'queueoutgoing',
-            'queuesubscribe', 'queueautomatic'
+            'queuesubscribe', 'queueautomatic',
+            'queuedigest'
             ) {
             unless (opendir(DIR, $Conf::Conf{$spool})) {
                 $log->syslog('err', 'Unable to open "%s" spool: %m',
@@ -1048,6 +1049,7 @@ sub rename_list {
             foreach my $file (sort readdir(DIR)) {
                 next
                     unless ($file =~ /^$old_listname\_/
+                    || $file =~ /^$old_listname/
                     || $file =~ /^$old_listname\./
                     || $file =~ /^$old_listname\@$robot\./
                     || $file =~ /^\.$old_listname\@$robot\_/
@@ -1057,9 +1059,11 @@ sub rename_list {
                 my $newfile = $file;
                 if ($file =~ /^$old_listname\_/) {
                     $newfile =~ s/^$old_listname\_/$param{'new_listname'}\_/;
-                } elsif ($file =~ /^$old_listname\./) {
+                } elsif ($file =~ /^$old_listname/) {
+                    $newfile =~ s/^$old_listname/$param{'new_listname'}/;
+                 } elsif ($file =~ /^$old_listname\./) {
                     $newfile =~ s/^$old_listname\./$param{'new_listname'}\./;
-                } elsif ($file =~ /^$old_listname\@$robot\./) {
+               } elsif ($file =~ /^$old_listname\@$robot\./) {
                     $newfile =~
                         s/^$old_listname\@$robot\./$param{'new_listname'}\@$param{'new_robot'}\./;
                 } elsif ($file =~ /^$old_listname\@$robot\_/) {
