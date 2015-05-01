@@ -1,0 +1,69 @@
+# $Id$
+
+use strict;
+use warnings;
+
+use Sympa::DatabaseDescription;
+
+my %full_db_struct = Sympa::DatabaseDescription::full_db_struct();
+my %indexes        = %Sympa::DatabaseDescription::indexes;
+
+print <<EOF;
+=encoding utf-8
+
+=head1 NAME
+
+sympa_database - Strutcure of Sympa core database
+
+=head1 DECRIPTION
+
+Core database of Sympa is based on SQL.
+In following list of tables and indexes, data types are based on
+MySQL/MariaDB.  Corresponding types are used by other platforms
+(PostgreSQL, SQLite, ...).
+
+=head2 Tables
+
+EOF
+
+my @tables =
+    sort { $a->{order} <=> $b->{order} }
+    map { {name => $_, %{$full_db_struct{$_}},} } keys %full_db_struct;
+
+foreach my $tbl (@tables) {
+    my @fields =
+        sort { $a->{order} <=> $b->{order} }
+        map { {name => $_, %{$tbl->{fields}->{$_}},} } keys %{$tbl->{fields}};
+
+    printf "=head3 %s\n\n", $tbl->{name};
+    printf "%s\n\n",        $tbl->{doc};
+
+    print "Fields:\n\n=over\n\n";
+    foreach my $fld (@fields) {
+        printf "=item %s %s%s%s\n\n", $fld->{name}, $fld->{struct},
+            (($fld->{not_null} and not $fld->{primary}) ? ' not null' : ''),
+            ($fld->{autoincrement} ? ' auto_increment' : '');
+        print "(Primary key)\n\n" if $fld->{primary};
+        printf "%s\n\n", $fld->{doc} if $fld->{doc};
+    }
+    print "=back\n\n";
+
+    if (exists $indexes{$tbl->{name}}) {
+        print "Indexes:\n\n=over\n\n";
+        my $indexes = $indexes{$tbl->{name}};
+        foreach my $name (sort keys %$indexes) {
+            printf "=item %s\n\n", $name;
+            printf "%s\n\n", join ', ', @{$indexes->{$name}};
+        }
+        print "=back\n\n";
+    }
+}
+
+print <<EOF;
+=head1 SEE ALSO
+
+I<Sympa and its database>.
+L<https://www.sympa.org/manual/database>.
+
+=cut
+EOF

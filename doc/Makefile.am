@@ -40,9 +40,14 @@ man5dir = $(mandir)/man5
 man5ext = 5Sympa
 MAN5POD = \
 	charset.conf.pod \
-	sympa.conf.pod
+	sympa.conf.pod \
+	sympa_database.pod
 
-EXTRA_DIST = $(nobase_doc_DATA) charset.conf.podin sympa.conf.podpl
+EXTRA_DIST = $(nobase_doc_DATA) \
+	charset.conf.podin \
+	sympa.conf.podpl \
+	sympa_database.podpl
+
 CLEANFILES = $(MAN5POD) *.$(man5ext)
 
 .podin.pod: Makefile
