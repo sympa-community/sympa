@@ -1280,7 +1280,8 @@ sub DoMessage {
         # Check the message for commands and catch them.
         my $cmd = _check_command($message);
         if (defined $cmd) {
-            $log->syslog('err', 'Found command "%s" in message, ignoring message', $cmd);
+            $log->syslog('err',
+                'Found command "%s" in message, ignoring message', $cmd);
             Sympa::Report::reject_report_msg('user', 'routing_error', $sender,
                 {'message' => $message},
                 $robot_id, $msg_string, $list);

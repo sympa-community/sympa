@@ -161,4 +161,3 @@ This module was OBSOLETED.
 Use L<Sympa::DatabaseManager> instead.
 
 =cut
-

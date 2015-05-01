@@ -71,8 +71,7 @@ my %full_db_struct = (
             },
             'suspend_start_date_subscriber' => {
                 'struct' => 'int(11)',
-                'doc' =>
-                    'the Unix time when message reception is suspended',
+                'doc' => 'the Unix time when message reception is suspended',
                 'order' => 6,
             },
             'suspend_end_date_subscriber' => {
@@ -799,7 +798,7 @@ my %full_db_struct = (
                 'order'  => 8,
             },
         },
-        'doc'   => 'Used in conjunction with stat_table for users statistics.',
+        'doc' => 'Used in conjunction with stat_table for users statistics.',
         'order' => 11,
     },
 

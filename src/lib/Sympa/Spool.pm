@@ -229,7 +229,8 @@ sub store_spool {
     # Will retry up to five times.
     my $tries;
     for ($tries = 0; $tries < 5; $tries++) {
-        my $marshalled = Sympa::Spool::marshal_metadata($message, $metadata_format,
+        my $marshalled =
+            Sympa::Spool::marshal_metadata($message, $metadata_format,
             $metadata_keys);
         my $path = $spool_dir . '/' . $marshalled;
 
@@ -319,4 +320,3 @@ TBD.
 L<Sympa::Message>, especially L<Serialization|Sympa::Message/"Serialization">.
 
 =cut
-

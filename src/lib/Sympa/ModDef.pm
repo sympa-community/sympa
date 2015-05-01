@@ -338,8 +338,8 @@ our %cpan_modules = (
     },
     'Template' => {
         required_version => '2.15',
-        package_name => 'Template-Toolkit',
-        mandatory    => 1,
+        package_name     => 'Template-Toolkit',
+        mandatory        => 1,
         'gettext_id' =>
             'Sympa template format, used for web pages and other mail, config file templates. See http://template-toolkit.org/.',
     },

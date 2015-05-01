@@ -970,4 +970,3 @@ L<Sympa::Family>,
 L<Sympa::List>.
 
 =cut
-

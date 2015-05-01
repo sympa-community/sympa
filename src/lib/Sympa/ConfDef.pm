@@ -592,7 +592,7 @@ our @params = (
     },
     {   'name'    => 'urlize_min_size',
         'default' => 10240,               ## 10 kiB,
-        'vhost' => '1',
+        'vhost'   => '1',
     },
     {   'name'    => 'sender_headers',
         'default' => 'From',

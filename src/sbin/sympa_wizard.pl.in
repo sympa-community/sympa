@@ -571,17 +571,15 @@ sub install_module {
     $CPAN::Config->{'tar_verbosity'} =
         'none';      ## minimum verbosity with tar command
 
-    #CPAN::Shell->clean($module) if ($options->{'force'});
+    # CPAN::Shell->clean($module) if ($options->{'force'});
 
-    ##CPAN::Shell->make($module);
-##
-    ##if ($options->{'force'}) {
-        ##CPAN::Shell->force('test', $module);
-    ##} else {
-        ##CPAN::Shell->test($module);
-    ##}
-##
-    ## Could use CPAN::Shell->force('install') if make test failed
+    # CPAN::Shell->make($module);
+    # if ($options->{'force'}) {
+    #     CPAN::Shell->force('test', $module);
+    # } else {
+    #     CPAN::Shell->test($module);
+    # }
+    # # Could use CPAN::Shell->force('install') if make test failed
     CPAN::Shell->install($module);
 
     ## Check if module has been successfuly installed

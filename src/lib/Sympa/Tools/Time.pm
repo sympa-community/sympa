@@ -83,7 +83,7 @@ sub date_conv {
         return time;
     }
 
-    if ($arg =~ /^\d+$/) {               # already an epoch date
+    if ($arg =~ /^\d+$/) {             # already an epoch date
         return $arg;
     }
 

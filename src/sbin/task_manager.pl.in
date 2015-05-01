@@ -1361,10 +1361,10 @@ sub purge_spools {
     # Expiring formatted held messages.
     if (opendir my $dh, $Conf::Conf{'viewmail_dir'} . '/mod') {
         my $base_dir = $Conf::Conf{'viewmail_dir'} . '/mod';
-        my @dirs = grep {!/\A\./ and -d $base_dir . '/' . $_ } readdir $dh;
+        my @dirs = grep { !/\A\./ and -d $base_dir . '/' . $_ } readdir $dh;
         closedir $dh;
         foreach my $list_id (@dirs) {
-            my $directory = $base_dir . '/' . $list_id;
+            my $directory   = $base_dir . '/' . $list_id;
             my $clean_delay = $Conf::Conf{'clean_delay_queuemod'};
             if (-e $directory) {
                 _clean_spool($directory, $clean_delay);
@@ -1717,7 +1717,7 @@ sub expire_bounce {
     # Expiring formatted bounce messages.
     if (opendir my $dh, $Conf::Conf{'viewmail_dir'} . '/bounce') {
         my $base_dir = $Conf::Conf{'viewmail_dir'} . '/bounce';
-        my @dirs = grep {!/\A\./ and -d $base_dir . '/' . $_ } readdir $dh;
+        my @dirs = grep { !/\A\./ and -d $base_dir . '/' . $_ } readdir $dh;
         closedir $dh;
         foreach my $list_id (@dirs) {
             my $directory = $base_dir . '/' . $list_id;

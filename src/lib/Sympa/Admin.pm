@@ -1061,9 +1061,9 @@ sub rename_list {
                     $newfile =~ s/^$old_listname\_/$param{'new_listname'}\_/;
                 } elsif ($file =~ /^$old_listname/) {
                     $newfile =~ s/^$old_listname/$param{'new_listname'}/;
-                 } elsif ($file =~ /^$old_listname\./) {
+                } elsif ($file =~ /^$old_listname\./) {
                     $newfile =~ s/^$old_listname\./$param{'new_listname'}\./;
-               } elsif ($file =~ /^$old_listname\@$robot\./) {
+                } elsif ($file =~ /^$old_listname\@$robot\./) {
                     $newfile =~
                         s/^$old_listname\@$robot\./$param{'new_listname'}\@$param{'new_robot'}\./;
                 } elsif ($file =~ /^$old_listname\@$robot\_/) {

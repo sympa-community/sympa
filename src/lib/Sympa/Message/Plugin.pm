@@ -35,7 +35,7 @@ sub execute {
     my $message   = shift;
     my @params    = @_;
 
-    my $log  = Sympa::Log->instance;
+    my $log = Sympa::Log->instance;
 
     my $list = $message->{context};
 
