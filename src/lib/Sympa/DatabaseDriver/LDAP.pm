@@ -50,9 +50,10 @@ sub _new {
     # Canonicalize host parameter to be "scheme://host:port".
     # Note: Net::LDAP >= 0.40 is required to use ldaps: scheme.
     my @hosts =
-        (ref $params{host})
-        ? @{$params{host}}
-        : (split /\s*,\s*/, $params{host});
+          (ref $params{host}) ? @{$params{host}}
+        : (defined $params{host} and length $params{host})
+        ? (split /\s*,\s*/, $params{host})
+        : ();
     foreach my $host (@hosts) {
         $host .= ':' . $params{port}
             if $params{port} and $host !~ m{:[-\w]+\z};
@@ -75,6 +76,21 @@ sub _new {
 
 sub _connect {
     my $self = shift;
+
+    # Earlier releases of IO::Socket::SSL would fallback SSL_verify_mode to
+    # SSL_VERIFY_NONE when there are no usable CAfile nor CApath.  However,
+    # recent releases won't: They simply deny connection.
+    # As a workaround, make ca_file or ca_path parameter mandatory unless
+    # "none" is explicitly assigned to ca_verify parameter.
+    if ($self->{host} =~ m{\bldaps://} or $self->{use_start_tls}) {
+        unless ($self->{ca_verify} and $self->{ca_verify} eq 'none') {
+            unless ($self->{ca_file} or $self->{ca_path}) {
+                $log->syslog('err',
+                    'Neither ca_file nor ca_path parameter is specified');
+                return undef;
+            }
+        }
+    }
 
     # new() with multiple alternate hosts needs perl-ldap >= 0.27.
     # It may die if depending module is missing (e.g. for SSL).
