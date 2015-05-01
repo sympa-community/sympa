@@ -4085,9 +4085,7 @@ sub do_sso_login {
                     Sympa::Report::reject_report_web('user', 'missing_arg',
                         {'argument' => 'ticket'},
                         $param->{'action'});
-                    wwslog('info',
-                        'do_sso_login: confirmemail: missing parameter ticket'
-                    );
+                    wwslog('info', 'Confirmemail: missing parameter ticket');
                     web_db_log(
                         {   'parameters'   => $in{'auth_service_name'},
                             'target_email' => $in{'email'},
@@ -4191,7 +4189,7 @@ sub do_sso_login {
                         'auth_conf_no_identified_user',
                         {}, $param->{'action'}, '', '', $robot);
                     wwslog('err',
-                        'do_sso_login: auth.conf error : either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined'
+                        'auth.conf error: Either email_http_header or host/get_email_by_uid_filter entries should be defined'
                     );
                     web_db_log(
                         {   'parameters'   => $in{'auth_service_name'},
@@ -6109,7 +6107,7 @@ sub do_subscribe {
                     Sympa::Report::reject_report_web('user',
                         'passwd_validation', {'reason' => $reason},
                         $param->{'action'});
-                    wwslog('info', 'do_setpasswd: password validation');
+                    wwslog('info', 'Password validation');
                     web_db_log(
                         {   'status'     => 'error',
                             'error_type' => 'bad_parameter'
@@ -6815,7 +6813,7 @@ sub do_setpasswd {
         Sympa::Report::reject_report_web('user', 'passwd_validation',
             {'reason' => $reason},
             $param->{'action'});
-        wwslog('info', 'do_setpasswd: password validation');
+        wwslog('info', 'Password validation');
         web_db_log({'status' => 'error', 'error_type' => 'bad_parameter'});
         return undef;
     }
@@ -8143,7 +8141,7 @@ sub do_add {
             Sympa::Report::reject_report_web('user', 'passwd_validation',
                 {'reason' => $reason},
                 $param->{'action'});
-            wwslog('info', 'do_setpasswd: password validation');
+            wwslog('info', 'Password validation');
             web_db_log(
                 {   'status'     => 'error',
                     'error_type' => 'bad_parameter'
@@ -10844,9 +10842,7 @@ sub do_install_pending_list {
     if ($list->{'admin'}{'status'} eq $in{'status'}) {
         Sympa::Report::reject_report_web('user', 'didnt_change_anything', {},
             $param->{'action'});
-        wwslog('info',
-            'view_pending_list: didn t change really the status, nothing to do'
-        );
+        wwslog('info', 'Didn\'t change really the status, nothing to do');
         web_db_log(
             {   'parameters' => "$in{'status'},$in{'notify'}",
                 'status'     => 'error',
@@ -12452,7 +12448,7 @@ sub do_edit_list {
                 Sympa::Report::reject_report_web('user', 'incorrect_email',
                     {'email' => $owner->{'email'}},
                     $param->{'action'}, $list);
-                wwslog('info', 'do_edit_list: Reserved email address %s',
+                wwslog('info', 'Reserved email address %s',
                     $owner->{'email'});
                 web_db_log(
                     {   'status'     => 'error',
@@ -21101,8 +21097,7 @@ sub do_suspend_request_action {
                 $param->{'action'}
             );
             wwslog('info',
-                'suspend_request: must picked one or more list(s) you are subscribed'
-            );
+                'Must picked one or more list(s) you are subscribed');
             return $previous_action;
         }
 
@@ -21175,8 +21170,7 @@ sub do_suspend_request_action {
                         $param->{'action'}
                     );
                     wwslog('info',
-                        'suspend_request: The start date must be less than the end date.'
-                    );
+                        'The start date must be less than the end date.');
                     return $previous_action;
                 }
                 ## Case 2 : Start date & without indefinite (without end date)
@@ -21192,7 +21186,7 @@ sub do_suspend_request_action {
                     $param->{'action'}
                 );
                 wwslog('info',
-                    'suspend_request: missing argument for the end date or syntax error : dd/mm/yyyy or must choose a end date or indefinite end date'
+                    'Missing argument for the end date or syntax error : dd/mm/yyyy or must choose a end date or indefinite end date'
                 );
                 return $previous_action;
             }
@@ -21201,7 +21195,7 @@ sub do_suspend_request_action {
                 {'argument' => 'Miss start date (dd/mm/yyyy)'},
                 $param->{'action'});
             wwslog('info',
-                'suspend_request: missing argument for the start date or syntax error : dd/mm/yyyy'
+                'Missing argument for the start date or syntax error : dd/mm/yyyy'
             );
             return $previous_action;
         }
@@ -21939,9 +21933,7 @@ sub do_tag_topic_by_sender {
     if (!$list_topics && $list->is_msg_topic_tagging_required()) {
         Sympa::Report::reject_report_web('user', 'msg_topic_missing', {},
             $param->{'action'}, $list);
-        wwslog('info',
-            'do_tag_topic_by_sender: message without topic but in a required list'
-        );
+        wwslog('info', 'Message without topic but in a required list');
         return undef;
     }
 
