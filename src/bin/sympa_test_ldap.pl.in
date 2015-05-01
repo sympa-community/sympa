@@ -42,9 +42,9 @@ unless (
         \%options,
         (   map {"$_=s"} @{Sympa::DatabaseDriver::LDAP->required_parameters},
             @{Sympa::DatabaseDriver::LDAP->optional_parameters},
-            qw(suffix filter scope)
+            qw(filter scope)
         ),
-        'attrs:s',
+        qw(suffix:s attrs:s),
         qw(help version)
     )
     ) {
@@ -146,3 +146,10 @@ driver of Sympa.
 =head1 SEE ALSO
 
 L<Sympa::DatabaseDriver::LDAP>.
+
+=head1 HISTORY
+
+testldap.pl was renamed to sympa_test_ldap.pl on Sympa 6.2.
+
+=cut
+
