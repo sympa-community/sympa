@@ -39,9 +39,10 @@ nobase_doc_DATA = \
 man5dir = $(mandir)/man5
 man5ext = 5Sympa
 MAN5POD = \
-	charset.conf.pod
+	charset.conf.pod \
+	sympa.conf.pod
 
-EXTRA_DIST = $(nobase_doc_DATA) charset.conf.podin
+EXTRA_DIST = $(nobase_doc_DATA) charset.conf.podin sympa.conf.podpl
 CLEANFILES = $(MAN5POD) *.$(man5ext)
 
 .podin.pod: Makefile
@@ -51,6 +52,10 @@ CLEANFILES = $(MAN5POD) *.$(man5ext)
 		-e 's|--sysconfdir--|$(sysconfdir)|' \
 		-e 's|--CONFIG--|$(CONFIG)|' \
 		< $(srcdir)/$< > $@
+.podpl.pod: Makefile
+	@rm -f $@
+	$(AM_V_GEN)PERL5LIB=$(top_srcdir)/src/lib; export PERL5LIB; \
+	$(PERL) $(srcdir)/$< > $@
 
 man5pod: $(MAN5POD) Makefile
 	@test -n "$(man5ext)" || exit 0; \
