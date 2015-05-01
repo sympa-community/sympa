@@ -1033,8 +1033,14 @@ sub _load_auth {
             'scope'                       => 'base|one|sub',
             'authentication_info_url'     => 'http(s)?:/.*',
             'use_ssl'                     => '1',
+            'use_start_tls'               => '1',
             'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
-            'ssl_ciphers' => '[\w:]+'
+            'ssl_ciphers' => '[\w:]+',
+            'ssl_cert'    => '.+',
+            'ssl_key'     => '.+',
+            'ca_verify'   => '\w+',
+            'ca_path'     => '.+',
+            'ca_file'     => '.+',
         },
 
         'user_table' => {
@@ -1042,7 +1048,6 @@ sub _load_auth {
             'negative_regexp' => '.*'
         },
 
-        # Note: prefixes "ldap_" will be stripped.  See below.
         'cas' => {
             'base_url'                   => 'http(s)?:/.*',
             'non_blocking_redirection'   => 'on|off',
@@ -1054,19 +1059,24 @@ sub _load_auth {
             'auth_service_name'          => '[\w\-\.]+',
             'auth_service_friendly_name' => '.*',
             'authentication_info_url'    => 'http(s)?:/.*',
-            'ldap_host'    => '[\w\.\-]+(:\d+)?(\s*,\s*[\w\.\-]+(:\d+)?)*',
-            'ldap_bind_dn' => '.+',
-            'ldap_bind_password'           => '.+',
-            'ldap_timeout'                 => '\d+',
-            'ldap_suffix'                  => '.+',
-            'ldap_scope'                   => 'base|one|sub',
-            'ldap_get_email_by_uid_filter' => '.+',
-            'ldap_email_attribute'         => '\w+',
-            'ldap_use_ssl'                 => '1',
-            'ldap_ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
-            'ldap_ssl_ciphers' => '[\w:]+'
+            'host'    => '[\w\.\-]+(:\d+)?(\s*,\s*[\w\.\-]+(:\d+)?)*',
+            'bind_dn' => '.+',
+            'bind_password'           => '.+',
+            'timeout'                 => '\d+',
+            'suffix'                  => '.+',
+            'scope'                   => 'base|one|sub',
+            'get_email_by_uid_filter' => '.+',
+            'email_attribute'         => '\w+',
+            'use_ssl'                 => '1',
+            'use_start_tls'                => '1',
+            'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
+            'ssl_ciphers' => '[\w:]+',
+            'ssl_cert'         => '.+',
+            'ssl_key'          => '.+',
+            'ca_verify'        => '\w+',
+            'ca_path'          => '.+',
+            'ca_file'          => '.+',
         },
-        # Note: prefixes "ldap_" will be stripped.  See below.
         'generic_sso' => {
             'service_name'                => '.+',
             'service_id'                  => '\S+',
@@ -1075,17 +1085,23 @@ sub _load_auth {
             'email_http_header'           => '\w+',
             'http_header_value_separator' => '.+',
             'logout_url'                  => '.+',
-            'ldap_host'    => '[\w\.\-]+(:\d+)?(\s*,\s*[\w\.\-]+(:\d+)?)*',
-            'ldap_bind_dn' => '.+',
-            'ldap_bind_password'           => '.+',
-            'ldap_timeout'                 => '\d+',
-            'ldap_suffix'                  => '.+',
-            'ldap_scope'                   => 'base|one|sub',
-            'ldap_get_email_by_uid_filter' => '.+',
-            'ldap_email_attribute'         => '\w+',
-            'ldap_use_ssl'                 => '1',
-            'ldap_ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
-            'ldap_ssl_ciphers' => '[\w:]+',
+            'host'    => '[\w\.\-]+(:\d+)?(\s*,\s*[\w\.\-]+(:\d+)?)*',
+            'bind_dn' => '.+',
+            'bind_password'           => '.+',
+            'timeout'                 => '\d+',
+            'suffix'                  => '.+',
+            'scope'                   => 'base|one|sub',
+            'get_email_by_uid_filter' => '.+',
+            'email_attribute'         => '\w+',
+            'use_ssl'                 => '1',
+            'use_start_tls'                => '1',
+            'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
+            'ssl_ciphers' => '[\w:]+',
+            'ssl_cert'         => '.+',
+            'ssl_key'          => '.+',
+            'ca_verify'        => '\w+',
+            'ca_path'          => '.+',
+            'ca_file'          => '.+',
             'force_email_verify'      => '1',
             'internal_email_by_netid' => '1',
             'netid_http_header'       => '[\w\-\.]+',
@@ -1117,6 +1133,12 @@ sub _load_auth {
             $current_paragraph->{'auth_type'} = lc($1);
         } elsif (/^\s*(\S+)\s+(.*\S)\s*$/o) {
             my ($keyword, $value) = ($1, $2);
+
+            # Workaround: Some parameters required by cas and generic_sso auth
+            # types may be prefixed by "ldap_", but LDAP database driver
+            # requires those not prefixed.
+            $keyword =~ s/\Aldap_//;
+
             unless (
                 defined $valid_keywords{$current_paragraph->{'auth_type'}}
                 {$keyword}) {
@@ -1138,14 +1160,7 @@ sub _load_auth {
                 $value =~ s/\s//g;
             }
 
-            # Workaround: cas and generic_sso auth types require parameters
-            # prefixed by "ldap_", but LDAP datasource requires those not
-            # prefixed.
-            if ($keyword =~ /\Aldap_(\w+)\z/) {
-                $current_paragraph->{$1} = $value;
-            } else {
-                $current_paragraph->{$keyword} = $value;
-            }
+            $current_paragraph->{$keyword} = $value;
         }
 
         ## process current paragraph
@@ -1202,7 +1217,9 @@ sub _load_auth {
                         next;
                     }
 
-                    $Conf{'cas_id'}{$robot}{$current_paragraph->{'auth_service_name'}}{'casnum'} =  $#paragraphs+1 ;
+                    $Conf{'cas_id'}{$robot}
+                        {$current_paragraph->{'auth_service_name'}}
+                        {'casnum'} = scalar @paragraphs;
 
                     ## Default value for auth_service_friendly_name IS
                     ## auth_service_name
