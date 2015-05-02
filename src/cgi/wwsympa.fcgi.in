@@ -11459,19 +11459,24 @@ sub do_editsubscriber {
 
         my %data;
 
+        my $sdm = Sympa::DatabaseManager->instance;
         foreach my $field (@additional_fields) {
-
-            ## Is the Database defined
-            unless ($Conf::Conf{'db_name'}) {
-                wwslog('info', 'No db_name defined in configuration file');
+            # Is the Database defined
+            unless ($sdm) {
+                wwslog('err', 'Unavailable database connection');
                 return undef;
             }
 
-            ## Check field type (enum or not) with MySQL
-            $data{$field}{'type'} =
-                Sympa::List::get_db_field_type('subscriber_table', $field);
-            if ($data{$field}{'type'} =~ /^enum\((\S+)\)$/) {
-                my @enum = split /,/, $1;
+            # Check field type (enum or not).
+            #FIXME FIXME: ENUM data type is not supported by at least SQLite;
+            # types might be better to be defined by configuration.
+            my $field_type;
+            if ($sdm->can('get_fields')) {
+                my $fields = $sdm->get_fields({table => 'subscriber_table'});
+                $field_type = ($fields || {})->{$field};
+            }
+            if ($field_type and $field_type =~ /^enum[(](.+)[)]$/) {
+                my @enum = split /\s*,\s*/, $1;
                 foreach my $e (@enum) {
                     $e =~ s/^\'([^\']+)\'$/$1/;
                     $data{$field}{'enum'}{$e} = '';

@@ -9558,6 +9558,8 @@ sub sort_dir_to_get_mod {
 }
 
 ## Get the type of a DB field
+#OBSOLETED: No longer used. This is specific to MySQL: Use $sdm->get_fields()
+# instead.
 sub get_db_field_type {
     my ($table, $field) = @_;
 
