@@ -443,12 +443,12 @@ if ($main::options{'dump'}) {
     exit 0;
 } elsif ($main::options{'lowercase'}) {
     print STDERR "Working on user_table...\n";
-    my $total = Sympa::List::lowercase_field('user_table', 'email_user');
+    my $total = _lowercase_field('user_table', 'email_user');
 
     if (defined $total) {
         print STDERR "Working on subscriber_table...\n";
-        my $total_sub = Sympa::List::lowercase_field('subscriber_table',
-            'user_subscriber');
+        my $total_sub =
+            _lowercase_field('subscriber_table', 'user_subscriber');
         if (defined $total_sub) {
             $total += $total_sub;
         }
@@ -1180,6 +1180,50 @@ sub SendDigest {
     }
 
     return 1;
+}
+
+# Lowercase field from database.
+# Old names: List::lowercase_field(), Sympa::List::lowercase_field().
+sub _lowercase_field {
+    my ($table, $field) = @_;
+
+    my $sth;
+    my $sdm   = Sympa::DatabaseManager->instance;
+    my $total = 0;
+
+    unless ($sdm
+        and $sth = $sdm->do_query(q{SELECT %s FROM %s}, $field, $table)) {
+        $log->syslog('err', 'Unable to get values of field %s for table %s',
+            $field, $table);
+        return undef;
+    }
+
+    while (my $user = $sth->fetchrow_hashref('NAME_lc')) {
+        my $lower_cased = lc($user->{$field});
+        next if $lower_cased eq $user->{$field};
+
+        $total++;
+
+        ## Updating database.
+        unless (
+            $sth = $sdm->do_prepared_query(
+                sprintf(
+                    q{UPDATE %s SET %s = ? WHERE %s = ?},
+                    $table, $field, $field
+                ),
+                $lower_cased,
+                $user->{$field}
+            )
+            ) {
+            $log->syslog('err',
+                'Unable to set field % from table %s to value %s',
+                $field, $lower_cased, $table);
+            next;
+        }
+    }
+    $sth->finish();
+
+    return $total;
 }
 
 __END__

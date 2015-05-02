@@ -9577,42 +9577,8 @@ sub get_db_field_type {
     return undef;
 }
 
-## Lowercase field from database
-sub lowercase_field {
-    my ($table, $field) = @_;
-
-    my $total = 0;
-
-    unless ($sth = SDM::do_query("SELECT $field from $table")) {
-        $log->syslog('err', 'Unable to get values of field %s for table %s',
-            $field, $table);
-        return undef;
-    }
-
-    while (my $user = $sth->fetchrow_hashref('NAME_lc')) {
-        my $lower_cased = lc($user->{$field});
-        next if ($lower_cased eq $user->{$field});
-
-        $total++;
-
-        ## Updating Db
-        unless (
-            $sth = SDM::do_query(
-                "UPDATE $table SET $field=%s WHERE ($field=%s)",
-                SDM::quote($lower_cased),
-                SDM::quote($user->{$field})
-            )
-            ) {
-            $log->syslog('err',
-                'Unable to set field % from table %s to value %s',
-                $field, $lower_cased, $table);
-            next;
-        }
-    }
-    $sth->finish();
-
-    return $total;
-}
+# Moved to _lowercase_field() in sympa.pl.
+#sub lowercase_field;
 
 ############ THIS IS RELATED TO NEW LOAD_ADMIN_FILE #############
 
