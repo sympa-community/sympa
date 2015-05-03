@@ -75,7 +75,7 @@ sub attempt_parallel_lock {
 
     my $code = <<EOF;
 my \$lock = Sympa::LockedFile->new("$file", -1, "$mode");
-exit \$lock + 0;
+exit !!\$lock;
 EOF
     my @command = ($EXECUTABLE_NAME, "-MSympa::LockedFile", "-e", $code);
     system(@command);
