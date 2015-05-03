@@ -151,10 +151,6 @@ sub AS_BLOB {
 
 =encoding utf-8
 
-=head1 NAME
-
-SDM
-
 =head1 NOTICE
 
 This module was OBSOLETED.

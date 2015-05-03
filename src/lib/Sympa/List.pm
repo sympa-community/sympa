@@ -101,9 +101,9 @@ my $log      = Sympa::Log->instance;
 
 =encoding utf-8
 
-=head1 NAME
-
-List - Mailing list
+#=head1 NAME
+#
+#List - Mailing list
 
 =head1 CONSTRUCTOR
 
@@ -147,7 +147,7 @@ wanted to subscribe to the list.
 =item delete_list_member ( ARRAY )
 
 Delete the indicated users from the list.
- 
+
 =item delete_list_admin ( ROLE, ARRAY )
 
 Delete the indicated admin user with the predefined role from the list.
@@ -224,7 +224,7 @@ entries.
 =item is_list_member ( USER )
 
 Returns true if the indicated user is member of the list.
- 
+
 =item am_i ( FUNCTION, USER )
 
 Returns true is USER has FUNCTION (owner, editor) on the

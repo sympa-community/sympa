@@ -44,9 +44,11 @@ use Sympa::Tools::File;
 
 my $log = Sympa::Log->instance;
 
-=head1 NAME
+=encoding utf-8
 
-Conf - Sympa configuration
+#=head1 NAME
+#
+#Conf - Sympa configuration
 
 =head1 DESCRIPTION
 

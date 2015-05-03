@@ -22,11 +22,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=pod 
+=encoding utf-8
 
-=head1 NAME 
-
-I<Family.pm> - Handles list families
+#=head1 NAME 
+#
+#I<Family.pm> - Handles list families
 
 =head1 DESCRIPTION 
 

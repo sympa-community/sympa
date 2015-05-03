@@ -22,11 +22,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=pod 
+=encoding utf-8
 
-=head1 NAME 
-
-I<admin.pm> - This module includes administrative function for the lists.
+#=head1 NAME 
+#
+#I<admin.pm> - This module includes administrative function for the lists.
 
 =head1 DESCRIPTION 
 

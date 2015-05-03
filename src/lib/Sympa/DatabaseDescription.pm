@@ -1120,7 +1120,7 @@ __END__
 
 =head1 NAME
 
-Sympa::DatabaseDescription
+Sympa::DatabaseDescription - Dafinition of core database structure
 
 =head1 DESCRIPTION
 
@@ -1258,6 +1258,7 @@ TBD.
 
 =head1 SEE ALSO
 
+L<sympa_database(5)>,
 L<Sympa::DatabaseManager>.
 
 =head1 HISTORY
