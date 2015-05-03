@@ -22,30 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=encoding utf-8
-
-=head1 NAME 
-
-Message - Mail message embedding for internal use in Sympa
-
-=head1 SYNOPSYS
-
-  use Sympa::Message;
-  my $message = Sympa::Message->new($serialized, context => $list);
-
-=head1 DESCRIPTION 
-
-While processing a message in Sympa, we need to link information to the
-message, modify headers and such.  This was quite a problem when a message was
-signed, as modifying anything in the message body would alter its MD5
-footprint. And probably make the message to be rejected by clients verifying
-its identity (which is somehow a good thing as it is the reason why people use
-MD5 after all). With such messages, the process was complex. We then decided
-to embed any message treated in a "Message" object, thus making the process
-easier.
-
-=cut 
-
 package Sympa::Message;
 
 use strict;
@@ -89,41 +65,6 @@ use Sympa::User;
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
-
-=head2 Methods and functions
-
-=over
-
-=item new ( $serialized, context =E<gt> $that, KEY =E<gt> value, ... )
-
-I<Constructor>.
-Creates a new L<Sympa::Message> object.
-
-Parameters:
-
-=over 
-
-=item $serialized
-
-Serialized message.
-
-=item context =E<gt> object
-
-Context.  L<Sympa::List> object, Robot or C<'*'>.
-
-=item key =E<gt> value, ...
-
-Metadata.
-
-=back 
-
-Returns:
-
-A new <Sympa::Message> object, or I<undef>, if something went wrong. 
-
-=back
-
-=cut 
 
 sub new {
     $log->syslog('debug2', '(%s, ...)', @_);
@@ -359,89 +300,6 @@ sub _get_message_id {
 
     return tools::clean_msg_id($self->{_head}->get('Message-Id', 0));
 }
-
-=over
-
-=item new_from_template ( $that, $filename, $rcpt, $data )
-
-I<Constructor>.
-Creates L<Sympa::Message> object from template.
-
-Parameters:
-
-=over
-
-=item $that
-
-Content: Sympa::List, robot or '*'.
-
-=item $filename
-
-Template filename (without extension).
-
-=item $rcpt
-
-Scalar or arrayref: SMTP "RCPT TO:" field.
-
-If it is a scalar, trys to retrieve information of the user
-(See also L<Sympa::User>.
-
-=item $data
-
-Hashref used to parse template file, with keys:
-
-=over
-
-=item return_path
-
-SMTP "MAIL FROM:" field if sent by SMTP (see L<Sympa::Mailer>),
-"Return-Path:" field if sent by spool.
-
-Note: This parameter is obsoleted.  Currently, {envelope_sender} attribute of
-object is taken from the context.
-
-=item to
-
-"To:" header field
-
-=item lang
-
-Language tag used for parsing template.
-See also L<Sympa::Language>.
-
-=item from
-
-"From:" field if not a full msg
-
-=item subject
-
-"Subject:" field if not a full msg
-
-=item replyto
-
-"Reply-To:" field if not a full msg
-
-=item body
-
-Body message if $filename is C<''>.
-
-Note: This feature has been deprecated.
-
-=item headers
-
-Additional headers, hashref with keys are field names.
-
-=back
-
-=back
-
-Returns:
-
-New L<Sympa::Message> instance, or C<undef> if something went wrong.
-
-=back
-
-=cut
 
 # Old names: (part of) mail::mail_file(), mail::parse_tt2_messageasstring(),
 # List::send_file(), List::send_global_file().
@@ -837,17 +695,6 @@ sub _new_from_template {
     return $self;
 }
 
-=over
-
-=item dup ( )
-
-I<Copy constructor>.
-Gets deep copy of instance.
-
-=back
-
-=cut
-
 sub dup {
     my $self = shift;
 
@@ -867,32 +714,6 @@ sub dup {
 
     return bless $clone => ref($self);
 }
-
-=over 4
-
-=item to_string ( [ original =E<gt> 0|1 ] )
-
-I<Serializer>.
-Returns serialized data of Message object.
-
-Parameter:
-
-=over
-
-=item original =E<gt> 0|1
-
-If set to 1 and content has been decrypted, returns original content.
-Default is 0.
-
-=back
-
-Returns:
-
-Serialized representation of Message object.
-
-=back
-
-=cut
 
 sub to_string {
     my $self    = shift;
@@ -953,35 +774,11 @@ sub to_string {
     return $serialized;
 }
 
-=over
-
-=item add_header ( $field, $value, [ $index ] )
-
-I<Instance method>.
-Adds a header field named $field with body $value.
-If $index is given, the field will be inserted at the place it indicates:
-If it is C<0>, the field will be prepended.
-
-=back
-
-=cut
-
 sub add_header {
     my $self = shift;
     $self->{_head}->add(@_);
     delete $self->{_entity_cache};    # Clear entity cache.
 }
-
-=over
-
-=item delete_header ( $field, [ $index ] )
-
-I<Instance method>.
-Deletes all occurences of the header field named $field.
-
-=back
-
-=cut
 
 sub delete_header {
     my $self = shift;
@@ -989,54 +786,15 @@ sub delete_header {
     delete $self->{_entity_cache};    # Clear entity cache.
 }
 
-=over
-
-=item replace_header ( $field, $value, [ $index ] )
-
-I<Instance method>.
-Replaces header fields named $field with $value.
-
-=back
-
-=cut
-
 sub replace_header {
     my $self = shift;
     $self->{_head}->replace(@_);
     delete $self->{_entity_cache};    # Clear entity cache.
 }
 
-=over
-
-=item head
-
-I<Instance method>.
-Gets header of the message as L<MIME::Head> instance.
-
-Note that returned value is real reference to internal data structure.
-Even if it was changed, string representaion of message may not be updated.
-Alternatively, use L</add_header>(), L</delete_header>() or
-L</replace_header>() to modify header.
-
-=back
-
-=cut
-
 sub head {
     shift->{_head};
 }
-
-=over
-
-=item check_spam_status ( )
-
-I<Instance method>.
-Gets spam status according to spam_status scenario
-and sets it as {smap_status} attribute.
-
-=back
-
-=cut
 
 # NOTE: As this processes is needed for incoming messages only, it would be
 # moved to incoming pipeline class..
@@ -1061,18 +819,6 @@ sub check_spam_status {
         $self->{'spam_status'} = 'unknown';
     }
 }
-
-=over
-
-=item dkim_sign ( dkim_d =E<gt> $d, [ dkim_i =E<gt> $i ],
-dkim_selector =E<gt> $selector, dkim_privatekey =E<gt> $privatekey )
-
-I<Instance method>.
-Adds DKIM signature to the message.
-
-=back
-
-=cut
 
 # Old name: tools::dkim_sign() which took string and returned string.
 sub dkim_sign {
@@ -1159,18 +905,6 @@ sub dkim_sign {
     return $self;
 }
 
-=over
-
-=item check_dkim_signature ( )
-
-I<Instance method>.
-Checks DKIM signature of the message
-and sets or clears {dkim_pass} item of the message object.
-
-=back
-
-=cut
-
 BEGIN { eval 'use Mail::DKIM::Verifier'; }
 
 sub check_dkim_signature {
@@ -1212,18 +946,6 @@ sub check_dkim_signature {
     delete $self->{'dkim_pass'};
 }
 
-=over
-
-=item remove_invalid_dkim_signature ( )
-
-I<Instance method>.
-Verifys DKIM signatures included in the message,
-and if any of them are invalid, removes them.
-
-=back
-
-=cut
-
 # Old name: tools::remove_invalid_dkim_signature() which takes a message as
 # string and outputs idem without signature if invalid.
 sub remove_invalid_dkim_signature {
@@ -1239,25 +961,6 @@ sub remove_invalid_dkim_signature {
         $self->delete_header('DKIM-Signature');
     }
 }
-
-=over
-
-=item as_entity ( )
-
-I<Instance method>.
-Gets message content as MIME entity (L<MIME::Entity> instance).
-
-Note that returned value is real reference to internal data structure.
-Even if it was changed, string representaion of message may not be updated.
-Below is better way to modify message.
-
-    my $entity = $message->as_entity->dup;
-    # ... Modify $entity...
-    $message->set_entity($entity);
-
-=back
-
-=cut
 
 sub as_entity {
     my $self = shift;
@@ -1275,18 +978,6 @@ sub as_entity {
     return $self->{_entity_cache};
 }
 
-=over
-
-=item set_entity ( $entity )
-
-I<Instance method>.
-Updates message with MIME entity (L<MIME::Entity> instance).
-String representation will be automatically updated.
-
-=back
-
-=cut
-
 sub set_entity {
     my $self   = shift;
     my $entity = shift;
@@ -1303,32 +994,6 @@ sub set_entity {
 
     return $entity;
 }
-
-=over
-
-=item as_string ( )
-
-I<Instance method>.
-Gets a string representation of message.
-
-Parameter:
-
-=over
-
-=item original =E<gt> 0|1
-
-If set to 1 and content has been decrypted, returns original content.
-Default is 0.
-
-=back
-
-Note that method like "set_string()" does not exist:
-You would be better to create new instance rather than replacing entire
-content.
-
-=back
-
-=cut
 
 sub as_string {
     my $self    = shift;
@@ -1351,59 +1016,15 @@ sub as_string {
         . (defined $self->{_body} ? $self->{_body} : '');
 }
 
-=over
-
-=item body_as_string ( )
-
-I<Instance method>.
-Gets body of the message as string.
-
-Note that the result won't be decoded.
-
-=back
-
-=cut
-
 sub body_as_string {
     my $self = shift;
     return $self->{_body};
 }
 
-=over
-
-=item header_as_string ( )
-
-I<Instance method>.
-Gets header part of the message as string.
-
-Note that the result won't be decoded nor unfolded.
-
-=back
-
-=cut
-
 sub header_as_string {
     my $self = shift;
     return $self->{_head}->as_string;
 }
-
-=over 4
-
-=item get_header ( $field, [ $sep ] )
-
-I<Instance method>.
-Gets value(s) of header field $field, stripping trailing newline.
-
-B<In scalar context> without $sep, returns first occurrence or C<undef>.
-If $sep is defined, returns all occurrences joined by it, or C<undef>.
-Otherwise B<in array context>, returns an array of all occurrences or C<()>.
-
-Note:
-Folding newlines will not be removed.
-
-=back
-
-=cut
 
 sub get_header {
     my $self  = shift;
@@ -1428,19 +1049,6 @@ sub get_header {
         return $value;
     }
 }
-
-=over
-
-=item get_decoded_header ( $tag, [ $sep ] )
-
-I<Instance method>.
-Returns header value decoded to UTF-8 or undef.
-Trailing newline will be removed.
-If $sep is given, returns all occurrences joined by it.
-
-=back
-
-=cut
 
 # Old name: tools::decode_header() which can take Message, MIME::Entity,
 # MIME::Head or Mail::Header object as argument.
@@ -1468,42 +1076,11 @@ sub get_decoded_header {
     }
 }
 
-=over
-
-=item dump ( $output )
-
-I<Instance method>.
-Dumps a Message object to a stream.
-
-Parameters:
-
-=over 
-
-=item $output
-
-the stream to which dump the object
-
-=back 
-
-Returns:
-
-=over 
-
-=item 1
-
-if everything's alright
-
-=back 
-
-=back
-
-=cut 
-
 # Dump the Message object
 # Currently not used.
 sub dump {
     my ($self, $output) = @_;
-#    my $output ||= \*STDERR;
+    # my $output ||= \*STDERR;
 
     my $old_output = select;
     select $output;
@@ -1522,37 +1099,6 @@ sub dump {
     return 1;
 }
 
-=over
-
-=item add_topic ( $output )
-
-I<Instance method>.
-Adds topic and puts header X-Sympa-Topic.
-
-Parameters:
-
-=over 
-
-=item $output
-
-the string containing the topic to add
-
-=back 
-
-Returns:
-
-=over 
-
-=item 1
-
-if everything's alright
-
-=back 
-
-=back
-
-=cut 
-
 ## Add topic and put header X-Sympa-Topic
 sub add_topic {
     my ($self, $topic) = @_;
@@ -1560,35 +1106,6 @@ sub add_topic {
     $self->{'topic'} = $topic;
     $self->add_header('X-Sympa-Topic', $topic);
 }
-
-=over
-
-=item get_topic ( )
-
-I<Instance method>.
-Gets topic of message.
-
-Parameters:
-
-None.
-
-Returns:
-
-=over 
-
-=item the topic
-
-if it exists
-
-=item empty string
-
-otherwise
-
-=back 
-
-=back
-
-=cut 
 
 ## Get topic
 sub get_topic {
@@ -1601,18 +1118,6 @@ sub get_topic {
         return '';
     }
 }
-
-=over
-
-=item clean_html ( )
-
-I<Instance method>.
-Encodes HTML parts of the message by UTF-8 and strips scripts included in
-them.
-
-=back
-
-=cut
 
 sub clean_html {
     my $self = shift;
@@ -1682,29 +1187,6 @@ sub _fix_html_part {
     }
     return $entity;
 }
-
-=over
-
-=item smime_decrypt ( )
-
-I<Instance method>.
-Decrypts message using private key of user.
-
-Note that this method modifys Message object.
-
-Parameters:
-
-None.
-
-Returns:
-
-True value if message was decrypted.  Otherwise false value.
-
-If decrypting succeeded, {smime_crypted} item is set.
-
-=back
-
-=cut
 
 # Old name: tools::smime_decrypt() which took MIME::Entity object and list,
 # and won't modify Message object.
@@ -1822,33 +1304,6 @@ sub smime_decrypt {
     return $self;
 }
 
-=over
-
-=item smime_encrypt ( $email )
-
-I<Instance method>.
-Encrypts message using certificate of user.
-
-Note that this method modifys Message object.
-
-Parameters:
-
-=over
-
-=item $email
-
-E-mail address of user.
-
-=back
-
-Returns:
-
-True value if encryption succeeded, or C<undef>.
-
-=back
-
-=cut
-
 # Old name: tools::smime_encrypt() which returns stringified message.
 sub smime_encrypt {
     $log->syslog('debug2', '(%s, %s)', @_);
@@ -1938,28 +1393,6 @@ sub smime_encrypt {
     return $self;
 }
 
-=over
-
-=item smime_sign ( )
-
-I<Instance method>.
-Adds S/MIME signature to the message.
-
-Signing key is taken from what stored in list directory.
-
-Parameters:
-
-None.
-
-Returns:
-
-True value if message was successfully signed.
-Otherwise false value.
-
-=back
-
-=cut
-
 # Old name: tools::smime_sign().
 sub smime_sign {
     $log->syslog('debug2', '(%s)', @_);
@@ -2043,28 +1476,6 @@ sub smime_sign {
 
     return $self;
 }
-
-=over
-
-=item check_smime_signature ( )
-
-I<Instance method>.
-Verifys S/MIME signature of the message,
-and if verification succeeded, sets {smime_signed} item true.
-
-Parameters:
-
-None
-
-Returns:
-
-1 if signature is successfully verified.
-0 otherwise.
-C<undef> if something went wrong.
-
-=back
-
-=cut
 
 # Old name: tools::smime_sign_check() or Message::smime_sign_check()
 # which won't alter Message object.
@@ -2166,39 +1577,6 @@ sub check_smime_signature {
     ## Il faudrait traiter les cas d'erreur (0 différent de undef)
     return 1;
 }
-
-=over
-
-=item personalize ( $list, [ $rcpt ], [ $data ] )
-
-I<Instance method>.
-Personalizes a message with custom attributes of a user.
-
-Parameters:
-
-=over
-
-=item $list
-
-L<List> object.
-
-=item $rcpt
-
-Recipient.
-
-=item $data
-
-Hashref.  Additional data to be interpolated into personalized message.
-
-=back
-
-Returns:
-
-Modified message itself, or C<undef> if error occurred.
-
-=back
-
-=cut
 
 # Old name: Bulk::merge_msg()
 sub personalize {
@@ -2365,24 +1743,6 @@ sub _merge_msg {
     return $entity;
 }
 
-=over 4
-
-=item test_personalize ( $list )
-
-I<Instance method>.
-Tests if personalization can be performed successfully over all subscribers
-of list.
-
-Parameters:
-
-Returns:
-
-C<1> if succeed, or C<undef>.
-
-=back
-
-=cut
-
 sub test_personalize {
     my $self = shift;
     my $list = shift;
@@ -2415,45 +1775,6 @@ sub test_personalize {
     }
     return 1;
 }
-
-=over
-
-=item personalize_text ( $body, $list, [ $rcpt ], [ $data ] )
-
-I<Function>.
-Retrieves the customized data of the
-users then parses the text. It returns the
-personalized text.
-
-Parameters:
-
-=over
-
-=item $body
-
-Message body with the TT2.
-
-=item $list
-
-L<List> object.
-
-=item $rcpt
-
-The recipient email.
-
-=item $data
-
-Hashref.  Additional data to be interpolated into personalized message.
-
-=back
-
-Returns:
-
-Customized text, or C<undef> if error occurred.
-
-=back
-
-=cut
 
 # Old name: Bulk::merge_data()
 sub personalize_text {
@@ -2497,21 +1818,6 @@ sub personalize_text {
 
     return $message_output;
 }
-
-=over
-
-=item prepare_message_according_to_mode ( $mode, $list )
-
-I<Instance method>.
-Transforms the message according to reception mode:
-C<'mail'>, C<'notice'>, C<'txt'> or C<'html'>.
-
-By C<'nomail'>, C<'digest'>, C<'digestplain'> or C<'summary'> mode,
-the message is not modified.
-
-=back
-
-=cut
 
 sub prepare_message_according_to_mode {
     my $self = shift;
@@ -2584,17 +1890,6 @@ sub prepare_message_according_to_mode {
 
     return $self;
 }
-
-=over
-
-=item decorate ( )
-
-I<Instance method>.
-Adds footer/header to a message.
-
-=back
-
-=cut
 
 sub decorate {
     my $self = shift;
@@ -3105,35 +2400,6 @@ sub _urlize_one_part {
     return $entity;
 }
 
-=over
-
-=item reformat_utf8_message ( )
-
-I<Instance method>.
-Reformats bodies of text parts contained in the message using
-recommended encoding schema and/or charsets defined by MIME::Charset.
-
-MIME-compliant headers are appended / modified.  And custom X-Mailer:
-header is appended :).
-
-Parameters:
-
-=over
-
-=item $attachments
-
-ref(ARRAY) - messages to be attached as subparts.
-
-=back
-
-Returns:
-
-string
-
-=back
-
-=cut
-
 # Some paths of message processing in Sympa can't recognize Unicode strings.
 # At least MIME::Parser::parse_data() and Template::proccess(): these
 # methods occationalily break strings containing Unicode characters.
@@ -3304,20 +2570,6 @@ sub _fix_utf8_parts {
     return $entity;
 }
 
-=over
-
-=item get_plain_body ( )
-
-I<Instance method>.
-Gets decoded content of text/plain part.
-
-The text will be converted to UTF-8.
-Flowed text (see RFC 3676) will be conjuncted.
-
-=back
-
-=cut
-
 sub get_plain_body {
     $log->syslog('debug2', '(%s)', @_);
     my $self = shift;
@@ -3413,24 +2665,6 @@ sub _as_singlepart {
 
     return $done;
 }
-
-=over
-
-=item check_virus_infection ()
-
-I<Instance method>.
-Checks the message using anti-virus plugin, if configuration requests it.
-
-Returns:
-
-The name of malware the message contains, if any;
-C<"unknown"> for unidentified malware;
-C<undef> if checking failed;
-otherwise C<0>.
-
-=back
-
-=cut
 
 # Note: this would be moved to incoming pipeline package.
 # Old names: tools::virus_infected(), Sympa::Tools::Message::virus_infected().
@@ -3747,57 +2981,6 @@ sub _split_mail {
     return 1;
 }
 
-=over
-
-=item get_plaindigest_body ( )
-
-I<Instance method>.
-Returns a plain text version of message, suitable for use in plain text
-digests.
-
-=over
-
-=item *
-
-Most attachments are stripped out and replaced with a
-note that they've been stripped. text/plain parts are
-retained.
-
-=item *
-
-An attempt to convert text/html parts to plain text is made
-if there is no text/plain alternative.
-
-=item *
-
-All messages are converted from their original character
-set to UTF-8.
-
-=item *
-
-Parts of type message/rfc822 are recursed
-through in the same way, with brief headers included.
-
-=item *
-
-Any line consisting only of 30 hyphens has the first
-character changed to space (see RFC 1153). Lines are
-wrapped at 76 columns.
-
-=back
-
-Parameters:
-
-None.
-
-Returns:
-
-String.
-
-=back
-
-=cut
-
 # Old name: PlainDigest::plain_body_as_string(),
 #   Sympa::Tools::Message::plain_body_as_string().
 #
@@ -4111,26 +3294,6 @@ sub _getCharset {
     return MIME::Charset->new($charset);
 }
 
-=over
-
-=item dmarc_protect ( )
-
-I<Instance method>.
-Munges the C<From:> header field if we are using DMARC Protection mode.
-
-Parameters:
-
-None.
-
-Returns:
-
-None.
-C<From:> field of the message may be modified.
-
-=back
-
-=cut
-
 sub dmarc_protect {
     my $self = shift;
 
@@ -4331,17 +3494,6 @@ sub dmarc_protect {
     }
 }
 
-=over
-
-=item get_id ( )
-
-I<Instance method>.
-Gets unique identifier of instance.
-
-=back
-
-=cut
-
 sub get_id {
     my $self = shift;
 
@@ -4375,6 +3527,628 @@ sub get_id {
 
 1;
 __END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Message - Mail message embedding for internal use in Sympa
+
+=head1 SYNOPSYS
+
+  use Sympa::Message;
+  my $message = Sympa::Message->new($serialized, context => $list);
+
+=head1 DESCRIPTION
+
+While processing a message in Sympa, we need to link information to the
+message, modify headers and such.  This was quite a problem when a message was
+signed, as modifying anything in the message body would alter its MD5
+footprint. And probably make the message to be rejected by clients verifying
+its identity (which is somehow a good thing as it is the reason why people use
+MD5 after all). With such messages, the process was complex. We then decided
+to embed any message treated in a "Message" object, thus making the process
+easier.
+
+=head2 Methods and functions
+
+=over
+
+=item new ( $serialized, context =E<gt> $that, KEY =E<gt> value, ... )
+
+I<Constructor>.
+Creates a new L<Sympa::Message> object.
+
+Parameters:
+
+=over
+
+=item $serialized
+
+Serialized message.
+
+=item context =E<gt> object
+
+Context.  L<Sympa::List> object, Robot or C<'*'>.
+
+=item key =E<gt> value, ...
+
+Metadata.
+
+=back
+
+Returns:
+
+A new L<Sympa::Message> object, or I<undef>, if something went wrong.
+
+=item new_from_template ( $that, $filename, $rcpt, $data )
+
+I<Constructor>.
+Creates L<Sympa::Message> object from template.
+
+Parameters:
+
+=over
+
+=item $that
+
+Content: Sympa::List, robot or '*'.
+
+=item $filename
+
+Template filename (without extension).
+
+=item $rcpt
+
+Scalar or arrayref: SMTP "RCPT TO:" field.
+
+If it is a scalar, trys to retrieve information of the user
+(See also L<Sympa::User>.
+
+=item $data
+
+Hashref used to parse template file, with keys:
+
+=over
+
+=item return_path
+
+SMTP "MAIL FROM:" field if sent by SMTP (see L<Sympa::Mailer>),
+"Return-Path:" field if sent by spool.
+
+Note: This parameter is obsoleted.  Currently, {envelope_sender} attribute of
+object is taken from the context.
+
+=item to
+
+"To:" header field
+
+=item lang
+
+Language tag used for parsing template.
+See also L<Sympa::Language>.
+
+=item from
+
+"From:" field if not a full msg
+
+=item subject
+
+"Subject:" field if not a full msg
+
+=item replyto
+
+"Reply-To:" field if not a full msg
+
+=item body
+
+Body message if $filename is C<''>.
+
+Note: This feature has been deprecated.
+
+=item headers
+
+Additional headers, hashref with keys are field names.
+
+=back
+
+=back
+
+Returns:
+
+New L<Sympa::Message> instance, or C<undef> if something went wrong.
+
+=item dup ( )
+
+I<Copy constructor>.
+Gets deep copy of instance.
+
+=item to_string ( [ original =E<gt> 0|1 ] )
+
+I<Serializer>.
+Returns serialized data of Message object.
+
+Parameter:
+
+=over
+
+=item original =E<gt> 0|1
+
+If set to 1 and content has been decrypted, returns original content.
+Default is 0.
+
+=back
+
+Returns:
+
+Serialized representation of Message object.
+
+=item add_header ( $field, $value, [ $index ] )
+
+I<Instance method>.
+Adds a header field named $field with body $value.
+If $index is given, the field will be inserted at the place it indicates:
+If it is C<0>, the field will be prepended.
+
+=item delete_header ( $field, [ $index ] )
+
+I<Instance method>.
+Deletes all occurences of the header field named $field.
+
+=item replace_header ( $field, $value, [ $index ] )
+
+I<Instance method>.
+Replaces header fields named $field with $value.
+
+=item head
+
+I<Instance method>.
+Gets header of the message as L<MIME::Head> instance.
+
+Note that returned value is real reference to internal data structure.
+Even if it was changed, string representaion of message may not be updated.
+Alternatively, use L</add_header>(), L</delete_header>() or
+L</replace_header>() to modify header.
+
+=item check_spam_status ( )
+
+I<Instance method>.
+Gets spam status according to spam_status scenario
+and sets it as {smap_status} attribute.
+
+=item dkim_sign ( dkim_d =E<gt> $d, [ dkim_i =E<gt> $i ],
+dkim_selector =E<gt> $selector, dkim_privatekey =E<gt> $privatekey )
+
+I<Instance method>.
+Adds DKIM signature to the message.
+
+=item check_dkim_signature ( )
+
+I<Instance method>.
+Checks DKIM signature of the message
+and sets or clears {dkim_pass} item of the message object.
+
+=item remove_invalid_dkim_signature ( )
+
+I<Instance method>.
+Verifys DKIM signatures included in the message,
+and if any of them are invalid, removes them.
+
+=item as_entity ( )
+
+I<Instance method>.
+Gets message content as MIME entity (L<MIME::Entity> instance).
+
+Note that returned value is real reference to internal data structure.
+Even if it was changed, string representaion of message may not be updated.
+Below is better way to modify message.
+
+    my $entity = $message->as_entity->dup;
+    # ... Modify $entity...
+    $message->set_entity($entity);
+
+=item set_entity ( $entity )
+
+I<Instance method>.
+Updates message with MIME entity (L<MIME::Entity> instance).
+String representation will be automatically updated.
+
+=item as_string ( )
+
+I<Instance method>.
+Gets a string representation of message.
+
+Parameter:
+
+=over
+
+=item original =E<gt> 0|1
+
+If set to 1 and content has been decrypted, returns original content.
+Default is 0.
+
+=back
+
+Note that method like "set_string()" does not exist:
+You would be better to create new instance rather than replacing entire
+content.
+
+=item body_as_string ( )
+
+I<Instance method>.
+Gets body of the message as string.
+
+Note that the result won't be decoded.
+
+=item header_as_string ( )
+
+I<Instance method>.
+Gets header part of the message as string.
+
+Note that the result won't be decoded nor unfolded.
+
+=item get_header ( $field, [ $sep ] )
+
+I<Instance method>.
+Gets value(s) of header field $field, stripping trailing newline.
+
+B<In scalar context> without $sep, returns first occurrence or C<undef>.
+If $sep is defined, returns all occurrences joined by it, or C<undef>.
+Otherwise B<in array context>, returns an array of all occurrences or C<()>.
+
+Note:
+Folding newlines will not be removed.
+
+=item get_decoded_header ( $tag, [ $sep ] )
+
+I<Instance method>.
+Returns header value decoded to UTF-8 or undef.
+Trailing newline will be removed.
+If $sep is given, returns all occurrences joined by it.
+
+=item dump ( $output )
+
+I<Instance method>.
+Dumps a Message object to a stream.
+
+Parameters:
+
+=over
+
+=item $output
+
+the stream to which dump the object
+
+=back
+
+Returns:
+
+=over
+
+=item 1
+
+if everything's alright
+
+=back
+
+=item add_topic ( $output )
+
+I<Instance method>.
+Adds topic and puts header X-Sympa-Topic.
+
+Parameters:
+
+=over
+
+=item $output
+
+the string containing the topic to add
+
+=back
+
+Returns:
+
+=over
+
+=item 1
+
+if everything's alright
+
+=back
+
+=item get_topic ( )
+
+I<Instance method>.
+Gets topic of message.
+
+Parameters:
+
+None.
+
+Returns:
+
+=over
+
+=item the topic
+
+if it exists
+
+=item empty string
+
+otherwise
+
+=back
+
+=item clean_html ( )
+
+I<Instance method>.
+Encodes HTML parts of the message by UTF-8 and strips scripts included in
+them.
+
+=item smime_decrypt ( )
+
+I<Instance method>.
+Decrypts message using private key of user.
+
+Note that this method modifys Message object.
+
+Parameters:
+
+None.
+
+Returns:
+
+True value if message was decrypted.  Otherwise false value.
+
+If decrypting succeeded, {smime_crypted} item is set.
+
+=item smime_encrypt ( $email )
+
+I<Instance method>.
+Encrypts message using certificate of user.
+
+Note that this method modifys Message object.
+
+Parameters:
+
+=over
+
+=item $email
+
+E-mail address of user.
+
+=back
+
+Returns:
+
+True value if encryption succeeded, or C<undef>.
+
+=item smime_sign ( )
+
+I<Instance method>.
+Adds S/MIME signature to the message.
+
+Signing key is taken from what stored in list directory.
+
+Parameters:
+
+None.
+
+Returns:
+
+True value if message was successfully signed.
+Otherwise false value.
+
+=item check_smime_signature ( )
+
+I<Instance method>.
+Verifys S/MIME signature of the message,
+and if verification succeeded, sets {smime_signed} item true.
+
+Parameters:
+
+None
+
+Returns:
+
+1 if signature is successfully verified.
+0 otherwise.
+C<undef> if something went wrong.
+
+=item personalize ( $list, [ $rcpt ], [ $data ] )
+
+I<Instance method>.
+Personalizes a message with custom attributes of a user.
+
+Parameters:
+
+=over
+
+=item $list
+
+L<List> object.
+
+=item $rcpt
+
+Recipient.
+
+=item $data
+
+Hashref.  Additional data to be interpolated into personalized message.
+
+=back
+
+Returns:
+
+Modified message itself, or C<undef> if error occurred.
+
+=item test_personalize ( $list )
+
+I<Instance method>.
+Tests if personalization can be performed successfully over all subscribers
+of list.
+
+Parameters:
+
+Returns:
+
+C<1> if succeed, or C<undef>.
+
+=item personalize_text ( $body, $list, [ $rcpt ], [ $data ] )
+
+I<Function>.
+Retrieves the customized data of the
+users then parses the text. It returns the
+personalized text.
+
+Parameters:
+
+=over
+
+=item $body
+
+Message body with the TT2.
+
+=item $list
+
+L<List> object.
+
+=item $rcpt
+
+The recipient email.
+
+=item $data
+
+Hashref.  Additional data to be interpolated into personalized message.
+
+=back
+
+Returns:
+
+Customized text, or C<undef> if error occurred.
+
+=item prepare_message_according_to_mode ( $mode, $list )
+
+I<Instance method>.
+Transforms the message according to reception mode:
+C<'mail'>, C<'notice'>, C<'txt'> or C<'html'>.
+
+By C<'nomail'>, C<'digest'>, C<'digestplain'> or C<'summary'> mode,
+the message is not modified.
+
+=item decorate ( )
+
+I<Instance method>.
+Adds footer/header to a message.
+
+=item reformat_utf8_message ( )
+
+I<Instance method>.
+Reformats bodies of text parts contained in the message using
+recommended encoding schema and/or charsets defined by MIME::Charset.
+
+MIME-compliant headers are appended / modified.  And custom X-Mailer:
+header is appended :).
+
+Parameters:
+
+=over
+
+=item $attachments
+
+ref(ARRAY) - messages to be attached as subparts.
+
+=back
+
+Returns:
+
+string
+
+=item get_plain_body ( )
+
+I<Instance method>.
+Gets decoded content of text/plain part.
+
+The text will be converted to UTF-8.
+Flowed text (see RFC 3676) will be conjuncted.
+
+=item check_virus_infection ()
+
+I<Instance method>.
+Checks the message using anti-virus plugin, if configuration requests it.
+
+Returns:
+
+The name of malware the message contains, if any;
+C<"unknown"> for unidentified malware;
+C<undef> if checking failed;
+otherwise C<0>.
+
+=item get_plaindigest_body ( )
+
+I<Instance method>.
+Returns a plain text version of message, suitable for use in plain text
+digests.
+
+=over
+
+=item *
+
+Most attachments are stripped out and replaced with a
+note that they've been stripped. text/plain parts are
+retained.
+
+=item *
+
+An attempt to convert text/html parts to plain text is made
+if there is no text/plain alternative.
+
+=item *
+
+All messages are converted from their original character
+set to UTF-8.
+
+=item *
+
+Parts of type message/rfc822 are recursed
+through in the same way, with brief headers included.
+
+=item *
+
+Any line consisting only of 30 hyphens has the first
+character changed to space (see RFC 1153). Lines are
+wrapped at 76 columns.
+
+=back
+
+Parameters:
+
+None.
+
+Returns:
+
+String.
+
+=item dmarc_protect ( )
+
+I<Instance method>.
+Munges the C<From:> header field if we are using DMARC Protection mode.
+
+Parameters:
+
+None.
+
+Returns:
+
+None.
+C<From:> field of the message may be modified.
+
+=item get_id ( )
+
+I<Instance method>.
+Gets unique identifier of instance.
+
+=back
 
 =head2 Context and Metadata
 
@@ -4429,7 +4203,7 @@ These are accessible as hash elements of objects.
 =item {checksum}
 
 No longer used.  It is kept for compatibility with Sympa 6.1.x or earlier.
-See also L<upgrade_send_spool(1)>.
+See also upgrade_send_spool(1).
 
 =item {envelope_sender}
 
@@ -4442,7 +4216,7 @@ C<'E<lt>E<gt>'> will be used for "null envelope sender".
 =item {family}
 
 Name of family (see L<Sympa::Family>) the message corresponds to.
-This is given by L<familyqueue(8)> program.
+This is given by familyqueue(8) program.
 
 =item {gecos}
 
@@ -4632,13 +4406,13 @@ seems to ignore any text after a UUencoded attachment.
 L<Message> module appeared on Sympa 3.3.6.
 It was initially written by:
 
-=over 
+=over
 
-=item * Serge Aumont <sa AT cru.fr> 
+=item * Serge Aumont <sa AT cru.fr>
 
-=item * Olivier SalaE<252>n <os AT cru.fr> 
+=item * Olivier SalaE<252>n <os AT cru.fr>
 
-=back 
+=back
 
 L<get_plaindigest_body>, ex. L<PlainDigest/plain_body_as_string>,
 was initially written by Chris Hastie.  It appeared on Sympa 4.2b.1.
@@ -4647,4 +4421,4 @@ was initially written by Chris Hastie.  It appeared on Sympa 4.2b.1.
 
 Renamed and merged L<Sympa::Message> appeard on Sympa 6.2.
 
-=cut 
+=cut
