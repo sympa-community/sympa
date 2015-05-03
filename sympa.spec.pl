@@ -77,7 +77,7 @@ encryption.
 ./configure \
     --enable-fhs \
     --prefix=%{_prefix} \
-    --docdir=%{_docdir}/${name} \
+    --docdir=%{_docdir}/%{name} \
     --libdir=%{_libdir} \
     --sysconfdir=%{_sysconfdir}/sympa \
     --localstatedir=%{_localstatedir} \
@@ -94,6 +94,7 @@ rm -rf %{buildroot}%{_docdir}/%{name}/*
 
 %check
 make check
+make authorcheck || true
 
 %clean
 rm -rf %{buildroot}
@@ -122,6 +123,7 @@ fi
 %{_libdir}/sympa
 %{_mandir}/man1/*
 %{_mandir}/man3/*
+%{_mandir}/man5/*
 %{_mandir}/man8/*
 %{_datadir}/sympa
 %{_datadir}/locale/*/*/*
