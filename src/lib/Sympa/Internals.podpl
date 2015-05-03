@@ -1,0 +1,66 @@
+# $Id$
+
+use strict;
+use warnings;
+use English qw(-no_match_vars);
+
+my $module_description = '';
+
+foreach my $pm (sort { lc $a cmp lc $b } @ARGV) {
+    next unless $pm eq 'Sympa.pm' || index($pm, 'Sympa/') == 0;
+    next unless $pm =~ /\.pm\z/;
+
+    my $fh;
+    next unless open $fh, '<', $pm;
+    my $source = do { local $RS; <$fh> };
+    close $fh;
+
+    my $name = $pm;
+    $name =~ s/\.pm\z//;
+    $name =~ s|/|::|g;
+
+    my $desc;
+    if (    $source =~ /\n=encoding utf-8/i
+        and $source =~ /\n=head1 NAME\n\s*([:\w]+)\s+-\s+([^\n]+)/) {
+        $desc = $2;
+        warn "$1 is deffer from $name\n" unless $1 eq $name;
+    } else {
+        $desc = 'TBD';
+    }
+
+    $module_description .= sprintf "=item L<%s>\n\n%s\n\n", $name, $desc;
+}
+
+printf do { local $RS; <DATA> }, $module_description;
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Internals - List of Sympa internal modules
+
+=head1 DESCRIPTION
+
+Below is the list of Sympa internal modules.
+To know details of each module, run:
+
+  man Sympa::ModuleName
+
+=head2 Modules
+
+=over
+
+%s
+
+=back
+
+=head1 SEE ALSO
+
+L<sympa(1)>.
+
+I<Sympa, Mailing List Management Software - Reference Manual>.
+L<https://www.sympa.org/manual/>.
+
+=cut

@@ -92,49 +92,14 @@ nobase_modules_DATA = \
 
 man3dir = $(mandir)/man3
 man3ext = 3Sympa
-MAN3PM = \
-	Sympa.pm \
-	Sympa/Alarm.pm \
-	Sympa/Archive.pm \
-	Sympa/Bulk.pm \
-	Sympa/ConfDef.pm \
-	Sympa/Constants.pm \
-	Sympa/Crash.pm \
-	Sympa/Database.pm \
-	Sympa/DatabaseDescription.pm \
-	Sympa/DatabaseDriver.pm \
-	Sympa/DatabaseDriver/CSV.pm \
-	Sympa/DatabaseDriver/LDAP.pm \
-	Sympa/DatabaseDriver/MySQL.pm \
-	Sympa/DatabaseDriver/ODBC.pm \
-	Sympa/DatabaseDriver/Oracle.pm \
-	Sympa/DatabaseDriver/Oracle/St.pm \
-	Sympa/DatabaseDriver/PostgreSQL.pm \
-	Sympa/DatabaseDriver/SQLite.pm\
-	Sympa/DatabaseDriver/Sybase.pm \
-	Sympa/DatabaseManager.pm \
-	Sympa/HTMLSanitizer.pm \
-	Sympa/Language.pm \
-	Sympa/ListDef.pm \
-	Sympa/LockedFile.pm \
-	Sympa/Log.pm \
-	Sympa/Mailer.pm \
-	Sympa/Message.pm \
-	Sympa/Message/Plugin.pm \
-	Sympa/Message/Plugin/FixEncoding.pm \
-	Sympa/ModDef.pm \
-	Sympa/Regexps.pm \
-	Sympa/Spool.pm \
-	Sympa/Spool/Archive.pm \
-	Sympa/Template.pm \
-	Sympa/Tools/Daemon.pm \
-	Sympa/Tools/File.pm \
-	Sympa/Tools/Text.pm \
-	Sympa/Tracking.pm \
-	Sympa/User.pm
+MAN3PM = $(nobase_modules_DATA)
+MAN3POD = Sympa/Internals.pod
 
-EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
-CLEANFILES = Sympa/Constants.pm *.$(man3ext)
+EXTRA_DIST = \
+	Sympa/Constants.pm.in \
+	Sympa/Internals.podpl \
+	$(nobase_modules_DATA)
+CLEANFILES = Sympa/Constants.pm Sympa/Internals.pod *.$(man3ext)
 
 Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 	if [ -f $(DESTDIR)$(modulesdir)/Sympa/Constants.pm ]; then \
@@ -169,15 +134,22 @@ Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 		-e 's|--bouncedir--|$(bouncedir)|' \
 		< $(srcdir)/$@.in > $@
 
-man3pm: $(MAN3PM) Makefile
+Sympa/Internals.pod: Sympa/Internals.podpl Makefile
+	$(AM_V_GEN)$(PERL) $< $(MAN3PM) > $@
+
+man3pm: $(MAN3PM) $(MAN3POD) Makefile
 	@test -n "$(man3ext)" || exit 0; \
-	for pm in $(MAN3PM); do \
-		echo "$$pm" | $(SED) -e 's/\.pm$$//' -e 's/\//::/g' \
+	for pm in $(MAN3PM) $(MAN3POD); do \
+		echo "$$pm" | $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
 		| while read pod; do \
-		rm -f $$pod.$(man3ext); \
-		echo "GEN $$pod.$(man3ext)"; \
-		$(POD2MAN) --section=$(man3ext) --center="sympa $(VERSION)" \
-			--lax --release="$(VERSION)" $$pm $$pod.$(man3ext); \
+			rm -f $$pod.$(man3ext); \
+			if grep '^=head1 NAME$$' $$pm > /dev/null; then \
+				echo "GEN $$pod.$(man3ext)"; \
+				$(POD2MAN) --section=$(man3ext) \
+					--center="sympa $(VERSION)" \
+					--lax --release="$(VERSION)" \
+					$$pm $$pod.$(man3ext); \
+			fi; \
 		done; \
 	done
 
@@ -185,12 +157,14 @@ install-data-hook: man3pm
 	@test -n "$(man3ext)" || exit 0; \
 	test -n "$(man3dir)" || exit 0; \
 	$(mkdir_p) "$(DESTDIR)$(man3dir)" || exit 1; \
-	for pm in $(MAN3PM); do \
-		echo "$$pm" | $(SED) -e 's/\.pm$$//' -e 's/\//::/g' \
+	for pm in $(MAN3PM) $(MAN3POD); do \
+		echo "$$pm" | $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
 		| while read pod; do \
-		echo "installing $$pod.$(man3ext)"; \
-		$(INSTALL_DATA) "$$pod.$(man3ext)" "$(DESTDIR)$(man3dir)" \
-		|| exit $$?; \
+			if grep '^=head1 NAME$$' $$pm > /dev/null; then \
+				echo "installing $$pod.$(man3ext)"; \
+				$(INSTALL_DATA) "$$pod.$(man3ext)" "$(DESTDIR)$(man3dir)" \
+				|| exit $$?; \
+			fi; \
 		done; \
 	done
 
