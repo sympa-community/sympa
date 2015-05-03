@@ -32,10 +32,18 @@ check_SCRIPTS = t/Language.t \
 		t/tools_file.t \
 		t/Tools_SMIME.t \
 		t/tools_time.t
-check_DATA = t/locale/cs/LC_MESSAGES/sympa.mo \
-	     t/locale/cs/LC_MESSAGES/web_help.mo \
-	     t/locale/zh_TW/LC_MESSAGES/sympa.mo \
-	     t/stub/Sympa/Constants.pm
+check_DATA = \
+	t/locale/cs/LC_MESSAGES/sympa.mo \
+	t/locale/cs/LC_MESSAGES/web_help.mo \
+	t/locale/zh_TW/LC_MESSAGES/sympa.mo \
+	t/pki/cnf/ca.cnf \
+	t/pki/cnf/rousse.cnf \
+	t/pki/crt/ca.pem \
+	t/pki/crt/rousse.pem \
+	t/pki/key/ca.pem \
+	t/pki/key/rousse_nopassword.pem \
+	t/pki/key/rousse_password.pem \
+	t/stub/Sympa/Constants.pm
 noinst_SCRIPTS = \
 	xt/pod-coverage.t \
 	xt/pod-spelling.t \
