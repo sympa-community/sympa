@@ -78,9 +78,10 @@ encryption.
     --enable-fhs \
     --prefix=%{_prefix} \
     --docdir=%{_docdir}/%{name} \
-    --libdir=%{_libdir} \
-    --sysconfdir=%{_sysconfdir}/sympa \
+    --libexecdir=%{_libexecdir}/sympa \
     --localstatedir=%{_localstatedir} \
+    --sysconfdir=%{_sysconfdir}/sympa \
+    --with-cgidir=%{_libexecdir}/sympa \
     --with-confdir=%{_sysconfdir}/sympa \
     --with-initdir=%{_initrddir} \
     --with-smrshdir=%{_sysconfdir}/smrsh
@@ -116,11 +117,9 @@ fi
 %files
 %defattr(-,root,root)
 %doc AUTHORS COPYING dot.perltidyrc NEWS README* samples sympa.pdf
-%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa
-%attr(-,sympa,sympa) %{_localstatedir}/spool/sympa
+%attr(-,sympa,sympa) %{_localstatedir}/*/sympa
 %{_sbindir}/*
-%{_libexecdir}/*
-%{_libdir}/sympa
+%{_libexecdir}/sympa
 %{_mandir}/man1/*
 %{_mandir}/man3/*
 %{_mandir}/man5/*
