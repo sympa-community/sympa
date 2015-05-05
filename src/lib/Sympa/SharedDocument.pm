@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package SharedDocument;
+package Sympa::SharedDocument;
 
 use strict;
 use warnings;
@@ -38,7 +38,7 @@ my $log = Sympa::Log->instance;
 
 ## Creates a new object
 sub new {
-    my ($pkg, $list, $path, $param) = @_;
+    my ($class, $list, $path, $param) = @_;
 
     my $email = $param->{'user'}{'email'};
     #$email ||= 'nobody';
@@ -253,18 +253,15 @@ sub new {
         foreach my $d (@{$dir}) {
 
             my $sub_document =
-                SharedDocument->new($list, $document->{'path'} . '/' . $d,
-                $param);
+                $class->new($list, $document->{'path'} . '/' . $d, $param);
             push @{$document->{'subdir'}}, $sub_document;
         }
     }
 
     $document->{'list'} = $list;
 
-    ## Bless Message object
-    bless $document, $pkg;
-
-    return $document;
+    # Bless Message object
+    return bless $document => $class;
 }
 
 sub dump {
