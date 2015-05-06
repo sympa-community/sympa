@@ -337,7 +337,7 @@ our %cpan_modules = (
             'required if you want to run the Sympa SOAP server that provides ML services via a "web service"',
     },
     'Template' => {
-        required_version => '2.15',
+        required_version => '2.21',
         package_name     => 'Template-Toolkit',
         mandatory        => 1,
         'gettext_id' =>

@@ -454,6 +454,7 @@ sub escape_url {
 }
 
 # Old name: tt2::escape_xml().
+# OBSOLETED: No longer used.
 sub escape_xml {
     my $string = shift;
 
