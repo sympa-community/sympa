@@ -131,9 +131,12 @@ sub create_configuration {
         exit 1;
     }
 
+    my $umask = umask 037;
     unless (open NEWF, '>', $conf) {
+        umask $umask;
         die "Unable to open $conf: $ERRNO";
     }
+    umask $umask;
 
     if ($options{create} eq 'sympa.conf') {
 #        print NEWF <<EOF
@@ -222,8 +225,7 @@ sub edit_configuration {
         exit 1;
     }
 
-    my $new_sympa_conf = '/tmp/sympa.conf';
-    my $somechange     = 0;
+    my $somechange = 0;
 
     my @new_sympa_conf;
     my $title = undef;

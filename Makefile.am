@@ -118,6 +118,8 @@ installconfig: installdir sympa_wizard.pl.inst
 			--create sympa.conf \
 			--target $(DESTDIR)$(confdir)/sympa.conf \
 			|| /bin/true; \
+		chown $(USER) $(DESTDIR)$(confdir)/sympa.conf || /bin/true; \
+		chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf || /bin/true; \
 	fi; \
 	if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
 		cd $(DESTDIR)$(sysconfdir); \
