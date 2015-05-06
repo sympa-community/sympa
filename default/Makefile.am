@@ -20,6 +20,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+nobase_nodist_default_DATA = \
+	list_aliases.tt2
 nobase_default_DATA = \
 	auth.conf \
 	ca-bundle.crt \
@@ -29,7 +31,6 @@ nobase_default_DATA = \
 	edit_list.conf \
 	ldap_alias_entry.tt2 \
 	ldap_alias_manager.conf \
-	list_aliases.tt2 \
 	mhonarc-ressources.tt2 \
 	mime.types \
 	nrcpt_by_domain.conf \
@@ -390,7 +391,7 @@ DEFAULT_SCENARIOS = \
 	visibility.conceal
 
 list_aliases.tt2: Makefile list_aliases.tt2.in
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--libexecdir--|$(libexecdir)|' \
 		< $(srcdir)/$@.in > $@
