@@ -68,7 +68,7 @@ install-exec-hook:
 	chmod 4755 $(DESTDIR)$(libexecdir)/familyqueue
 if SMRSH
 	@echo 'Installing symbolic links for Sendmail smrsh'
-	install -d -m 755 $(DESTDIR)$(smrshdir)
+	$(INSTALL) -d -m 755 $(DESTDIR)$(smrshdir)
 	-rm -f $(DESTDIR)$(smrshdir)/queue
 	$(LN_S) $(libexecdir)/queue $(DESTDIR)$(smrshdir)/queue
 	-rm -f $(DESTDIR)$(smrshdir)/bouncequeue
@@ -81,7 +81,7 @@ endif
 	chmod 4750 $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper
 
 alias_manager.pl ldap_alias_manager.pl mysql_alias_manager.pl: Makefile
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
 		-e 's|--defaultdir--|$(defaultdir)|' \
@@ -95,14 +95,14 @@ alias_manager.pl ldap_alias_manager.pl mysql_alias_manager.pl: Makefile
 		-e 's|--CONFIG--|$(CONFIG)|' \
 		-e 's|--SENDMAIL_ALIASES--|$(SENDMAIL_ALIASES)|' \
 		< $(srcdir)/$@.in > $@
-	chmod +x $@
+	@chmod +x $@
 
 alias_manager.pl: $(srcdir)/alias_manager.pl.in
 ldap_alias_manager.pl: $(srcdir)/ldap_alias_manager.pl.in
 mysql_alias_manager.pl: $(srcdir)/mysql_alias_manager.pl.in
 
 .pl.8: Makefile
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(POD2MAN) --section=8 --center="sympa $(VERSION)" \
 		--lax --release="$(VERSION)" $*.pl $@
 

@@ -81,7 +81,7 @@ installdir:
 	@for dir in $(modulesdir)/Sympa/Template/Plugin; do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
-			install -d -m 755 $(DESTDIR)$$dir; \
+			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
 		fi; \
 	done
 	@echo "Creating writable directories"
@@ -92,7 +92,7 @@ installdir:
 		$(bouncedir) $(arcdir) $(piddir) $(staticdir) $(staticdir)/js $(sysconfdir); do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
-			install -d -m 755 $(DESTDIR)$$dir; \
+			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
 		fi; \
 		chown $(USER) $(DESTDIR)$$dir || /bin/true; \
 		chgrp $(GROUP) $(DESTDIR)$$dir || /bin/true; \
@@ -134,7 +134,7 @@ installconfig: installdir sympa_wizard.pl.inst
 		mail_tt2 scenari search_filters web_tt2; do \
 		if [ ! -d $(DESTDIR)$(sysconfdir)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(sysconfdir)/$$dir"; \
-			install -d -m 755 $(DESTDIR)$(sysconfdir)/$$dir; \
+			$(INSTALL) -d -m 755 $(DESTDIR)$(sysconfdir)/$$dir; \
 		fi; \
 		chown $(USER) $(DESTDIR)$(sysconfdir)/$$dir || /bin/true; \
 		chgrp $(GROUP) $(DESTDIR)$(sysconfdir)/$$dir || /bin/true; \

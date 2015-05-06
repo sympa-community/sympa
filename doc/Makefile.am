@@ -68,7 +68,7 @@ man5pod: $(MAN5POD) Makefile
 		echo "$$pod" | $(SED) -e 's/\.pod$$//' \
 		| while read tmp; do \
 		rm -f $$tmp.$(man5ext); \
-		echo "GEN $$tmp.$(man5ext)"; \
+		echo "  GEN   " $$tmp.$(man5ext); \
 		$(POD2MAN) --section=$(man5ext) --center="sympa $(VERSION)" \
 			--lax --release="$(VERSION)" $$pod $$tmp.$(man5ext); \
 		done; \
@@ -77,7 +77,7 @@ man5pod: $(MAN5POD) Makefile
 install-data-hook: man5pod
 	@test -n "$(man5ext)" || exit 0; \
 	test -n "$(man5dir)" || exit 0; \
-	$(mkdir_p) "$(DESTDIR)$(man5dir)" || exit 1; \
+	$(MKDIR_P) "$(DESTDIR)$(man5dir)" || exit 1; \
 	for pod in $(MAN5POD); do \
 		echo "$$pod" | $(SED) -e 's/\.pod$$//' \
 		| while read tmp; do \
