@@ -43,7 +43,7 @@ __END__
 
 %define name    sympa
 %define version @VERSION@
-%define release 1
+%define release 1%{?dist}
 
 Name:     %{name}
 Version:  %{version}
@@ -57,8 +57,8 @@ Source:   http://www.sympa.org/distribution/%{name}-%{version}.tar.gz
 Requires: smtpdaemon
 @REQUIRES@
 Requires: webserver
-Prereq: /usr/sbin/useradd
-Prereq: /usr/sbin/groupadd
+Requires(pre): /usr/sbin/useradd
+Requires(pre): /usr/sbin/groupadd
 BuildRoot: %{_tmppath}/%{name}-%{version}
 
 %description
@@ -74,7 +74,9 @@ encryption.
 %setup -q
 
 %build
-./configure \
+# Give install "-p" preserving mtime to prevent unexpected update of CSS.
+# Give DESTDIR to cancel workaround in Makefile getting previous version.
+%configure \
     --enable-fhs \
     --prefix=%{_prefix} \
     --docdir=%{_docdir}/%{name} \
@@ -84,7 +86,8 @@ encryption.
     --with-cgidir=%{_libexecdir}/sympa \
     --with-confdir=%{_sysconfdir}/sympa \
     --with-initdir=%{_initrddir} \
-    --with-smrshdir=%{_sysconfdir}/smrsh
+    --with-smrshdir=%{_sysconfdir}/smrsh \
+    INSTALL_DATA='install -c -p -m 644'
 make DESTDIR=%{buildroot}
 
 %install
@@ -94,8 +97,10 @@ cp -rp %{buildroot}%{_docdir}/%{name}/* ./
 rm -rf %{buildroot}%{_docdir}/%{name}/*
 
 %check
+%if 0%{?do_check}
 make check
 make authorcheck || true
+%endif
 
 %clean
 rm -rf %{buildroot}
@@ -107,7 +112,7 @@ if ! getent group sympa > /dev/null 2>&1; then
 fi
 
 # Create "sympa" user if it does not exists
-if ! getent user sympa > /dev/null 2>&1; then
+if ! getent passwd sympa > /dev/null 2>&1; then
   /usr/sbin/useradd -r -g sympa \
       -d %{_localstatedir}/lib/sympa \
       -c "system user for sympa" \
@@ -119,7 +124,15 @@ fi
 %doc AUTHORS COPYING dot.perltidyrc NEWS README* samples sympa.pdf
 %attr(-,sympa,sympa) %{_localstatedir}/*/sympa
 %{_sbindir}/*
-%{_libexecdir}/sympa
+%dir %{_libexecdir}/sympa
+%attr(-,sympa,sympa) %{_libexecdir}/sympa/bouncequeue
+%attr(-,sympa,sympa) %{_libexecdir}/sympa/familyqueue
+%attr(-,sympa,sympa) %{_libexecdir}/sympa/queue
+%attr(-,root,sympa) %{_libexecdir}/sympa/sympa_newaliases-wrapper
+%attr(-,sympa,sympa) %{_libexecdir}/sympa/sympa_soap_server-wrapper.fcgi
+%{_libexecdir}/sympa/sympa_soap_server.fcgi
+%attr(-,sympa,sympa) %{_libexecdir}/sympa/wwsympa-wrapper.fcgi
+%{_libexecdir}/sympa/wwsympa.fcgi
 %{_mandir}/man1/*
 %{_mandir}/man3/*
 %{_mandir}/man5/*
@@ -127,6 +140,6 @@ fi
 %{_datadir}/sympa
 %{_datadir}/locale/*/*/*
 %{_sysconfdir}/smrsh/*
-%config(noreplace) %{_sysconfdir}/sympa/sympa.conf
-%config(noreplace) %{_sysconfdir}/sympa
+%dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa
+%config(noreplace,missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/*
 %{_initrddir}/sympa
