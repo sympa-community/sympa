@@ -77,7 +77,7 @@ man5pod: $(MAN5POD) Makefile
 install-data-hook: man5pod
 	@test -n "$(man5ext)" || exit 0; \
 	test -n "$(man5dir)" || exit 0; \
-	$(MKDIR_P) "$(DESTDIR)$(man5dir)" || exit 1; \
+	$(INSTALL) -d "$(DESTDIR)$(man5dir)" || exit 1; \
 	for pod in $(MAN5POD); do \
 		echo "$$pod" | $(SED) -e 's/\.pod$$//' \
 		| while read tmp; do \
