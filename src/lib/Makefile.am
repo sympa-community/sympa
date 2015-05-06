@@ -20,6 +20,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+nobase_nodist_modules_DATA = \
+	Sympa/Constants.pm
+nobase_dist_modules_DATA = \
+        Sympa/Internals.pod
 nobase_modules_DATA = \
 	Sympa.pm \
 	Sympa/Admin.pm \
@@ -31,7 +35,6 @@ nobase_modules_DATA = \
 	Conf.pm \
 	Sympa/ConfDef.pm \
 	Sympa/Config_XML.pm \
-	Sympa/Constants.pm \
 	Sympa/Crash.pm \
 	Sympa/Database.pm \
 	Sympa/DatabaseDescription.pm \
@@ -92,14 +95,17 @@ nobase_modules_DATA = \
 
 man3dir = $(mandir)/man3
 man3ext = 3Sympa
-MAN3PM = $(nobase_modules_DATA)
-MAN3POD = Sympa/Internals.pod
+MAN3POD = \
+	$(nobase_nodist_modules_DATA) \
+	$(nobase_dist_modules_DATA) \
+	$(nobase_modules_DATA)
 
 EXTRA_DIST = \
 	Sympa/Constants.pm.in \
 	Sympa/Internals.podpl \
 	$(nobase_modules_DATA)
-CLEANFILES = Sympa/Constants.pm Sympa/Internals.pod *.$(man3ext)
+
+CLEANFILES = Sympa/Constants.pm *.$(man3ext)
 
 Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 	if [ -f $(DESTDIR)$(modulesdir)/Sympa/Constants.pm ]; then \
@@ -111,7 +117,7 @@ Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 	fi; \
 	echo $${PREVIOUS} > $(top_srcdir)/previous_sympa_version;
 	[ -d Sympa ] || mkdir Sympa
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--VERSION--|$(VERSION)|' \
 		-e 's|--USER--|$(USER)|' \
@@ -134,17 +140,19 @@ Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 		-e 's|--bouncedir--|$(bouncedir)|' \
 		< $(srcdir)/$@.in > $@
 
-Sympa/Internals.pod: Sympa/Internals.podpl Makefile
-	$(AM_V_GEN)$(PERL) $< $(MAN3PM) > $@
+Sympa/Internals.pod: Sympa/Internals.podpl Sympa/Constants.pm.in $(nobase_modules_DATA)
+	@rm -f $@
+	$(AM_V_GEN)$(PERL) $< Sympa/Constants.pm.in $(nobase_modules_DATA) > $@
 
-man3pm: $(MAN3PM) $(MAN3POD) Makefile
+man3pm: $(MAN3POD) Makefile
 	@test -n "$(man3ext)" || exit 0; \
-	for pm in $(MAN3PM) $(MAN3POD); do \
-		echo "$$pm" | $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
+	for pm in $(MAN3POD); do \
+		echo "$$pm" \
+		| $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
 		| while read pod; do \
 			rm -f $$pod.$(man3ext); \
 			if grep '^=head1 NAME$$' $$pm > /dev/null; then \
-				echo "GEN $$pod.$(man3ext)"; \
+				echo "  GEN   " $$pod.$(man3ext); \
 				$(POD2MAN) --section=$(man3ext) \
 					--center="sympa $(VERSION)" \
 					--lax --release="$(VERSION)" \
@@ -157,8 +165,9 @@ install-data-hook: man3pm
 	@test -n "$(man3ext)" || exit 0; \
 	test -n "$(man3dir)" || exit 0; \
 	$(mkdir_p) "$(DESTDIR)$(man3dir)" || exit 1; \
-	for pm in $(MAN3PM) $(MAN3POD); do \
-		echo "$$pm" | $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
+	for pm in $(MAN3POD); do \
+		echo "$$pm" \
+		| $(SED) -e 's/\.pm$$//' -e 's/\.pod$$//' -e 's/\//::/g' \
 		| while read pod; do \
 			if grep '^=head1 NAME$$' $$pm > /dev/null; then \
 				echo "installing $$pod.$(man3ext)"; \
