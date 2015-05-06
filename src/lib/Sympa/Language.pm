@@ -1171,7 +1171,7 @@ Translated and replaced string.
 B<Note>:
 
 Calls of L</gettext>(), L</gettext_sprintf>() and L</gettext_strftime>() are 
-extracted during build process and are added to translation catalog.
+extracted during packaging process and are added to translation catalog.
 
 =head1 CAVEATS
 

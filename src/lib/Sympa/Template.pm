@@ -376,7 +376,7 @@ Escape URL.
 
 =item escape_xml
 
-Escape XML.
+OBSOLETED.  Use L<Template::Manual::Filters/"xml">.
 
 =item helploc ( parameters )
 
@@ -429,7 +429,7 @@ If parameter value is added to the description.  False by default.
 
 Encode string by MIME header encoding.
 Despite its name, appropriate encoding scheme
-(quoted-printable or base64) will be chosen.
+(C<Q> or C<B>) will be chosen.
 
 =item unescape
 
@@ -460,7 +460,7 @@ Line width, defaults to 78.
 B<Note>:
 
 Calls of L</helploc>, L</loc> and L</locdt> in template files are
-extracted during build process and are added to translation catalog.
+extracted during packaging process and are added to translation catalog.
 
 =head2 Plugins
 
