@@ -41,7 +41,7 @@ install-exec-hook:
 	chmod 6755 $(DESTDIR)$(execcgidir)/sympa_soap_server-wrapper.fcgi
 
 wwsympa.fcgi sympa_soap_server.fcgi: Makefile
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
 		-e 's|--defaultdir--|$(defaultdir)|' \
@@ -52,7 +52,7 @@ wwsympa.fcgi sympa_soap_server.fcgi: Makefile
 		-e 's|--spooldir--|$(spooldir)|' \
 		-e 's|--CONFIG--|$(CONFIG)|' \
 		< $(srcdir)/$@.in > $@
-	chmod +x $@
+	@chmod +x $@
 
 wwsympa.fcgi: $(srcdir)/wwsympa.fcgi.in
 sympa_soap_server.fcgi: $(srcdir)/sympa_soap_server.fcgi.in

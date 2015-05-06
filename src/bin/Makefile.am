@@ -61,7 +61,7 @@ EXTRA_DIST = $(dbscripts) \
 CLEANFILES = $(perlscripts) $(bin_SCRIPTS) $(man1_MANS)
 
 arc2webarc.pl init_comment.pl mod2html.pl p12topem.pl sympa_test_ldap.pl testlogs.pl tpl2tt2.pl sympa_soap_client.pl upgrade_bulk_spool.pl upgrade_send_spool.pl upgrade_sympa_password.pl: Makefile
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
 		-e 's|--defaultdir--|$(defaultdir)|' \
@@ -75,7 +75,7 @@ arc2webarc.pl init_comment.pl mod2html.pl p12topem.pl sympa_test_ldap.pl testlog
 		-e 's|--CONFIG--|$(CONFIG)|' \
 		-e 's|--SENDMAIL_ALIASES--|$(SENDMAIL_ALIASES)|' \
 		< $(srcdir)/$@.in > $@
-	chmod +x $@
+	@chmod +x $@
 
 arc2webarc.pl: $(srcdir)/arc2webarc.pl.in
 init_comment.pl: $(srcdir)/init_comment.pl.in
@@ -90,6 +90,6 @@ upgrade_send_spool.pl: $(srcdir)/upgrade_send_spool.pl.in
 upgrade_sympa_password.pl: $(srcdir)/upgrade_sympa_password.pl.in
 
 .pl.1: Makefile
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(POD2MAN) --section=1 --center="sympa $(VERSION)" \
 		--lax --release="$(VERSION)" $< $@

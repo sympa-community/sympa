@@ -56,7 +56,7 @@ EXTRA_DIST = \
 CLEANFILES = $(sbin_SCRIPTS) $(man1_MANS) $(man8_MANS)
 
 archived.pl bounced.pl bulk.pl sympa.pl sympa_automatic.pl sympa_msg.pl task_manager.pl: Makefile
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
 		-e 's|--defaultdir--|$(defaultdir)|' \
@@ -69,7 +69,7 @@ archived.pl bounced.pl bulk.pl sympa.pl sympa_automatic.pl sympa_msg.pl task_man
 		-e 's|--spooldir--|$(spooldir)|' \
 		-e 's|--CONFIG--|$(CONFIG)|' \
 		< $(srcdir)/$@.in > $@
-	chmod +x $@
+	@chmod +x $@
 
 archived.pl: $(srcdir)/archived.pl.in
 bounced.pl: $(srcdir)/bounced.pl.in
@@ -80,7 +80,7 @@ sympa_msg.pl: $(srcdir)/sympa_msg.pl.in
 task_manager.pl: $(srcdir)/task_manager.pl.in
 
 sympa_newaliases.pl sympa_wizard.pl: Makefile
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
 		-e 's|--defaultdir--|$(defaultdir)|' \
@@ -99,21 +99,21 @@ sympa_newaliases.pl sympa_wizard.pl: Makefile
 		-e 's|--POSTALIAS--|$(POSTALIAS)|' \
 		-e 's|--POSTMAP--|$(POSTMAP)|' \
 		< $(srcdir)/$@.in > $@
-	chmod +x $@
+	@chmod +x $@
 
 sympa_newaliases.pl: $(srcdir)/sympa_newaliases.pl.in
 sympa_wizard.pl: $(srcdir)/sympa_wizard.pl.in
 
 .pl.1:
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(POD2MAN) --section=1 --center="sympa $(VERSION)" \
 		--lax --release="$(VERSION)" $< $@
 .pl.8:
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(POD2MAN) --section=8 --center="sympa $(VERSION)" \
 		--lax --release="$(VERSION)" $*.pl $@
 
 # Remove old sympa.8 manpage.
 install-data-hook:
-	rm -f $(DESTDIR)$(man8dir)/sympa.8
+	@rm -f $(DESTDIR)$(man8dir)/sympa.8
 

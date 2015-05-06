@@ -27,7 +27,7 @@ EXTRA_DIST = sympa.in
 CLEANFILES = $(init_SCRIPTS)
 
 sympa: Makefile
-	rm -f $@
+	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--CONFIG--|$(CONFIG)|' \
 		-e 's|--WWSCONFIG--|$(WWSCONFIG)|' \
@@ -36,6 +36,6 @@ sympa: Makefile
 		-e 's|--piddir--|$(piddir)|' \
 		-e 's|--lockdir--|$(lockdir)|' \
 		< $(srcdir)/$@.in > $@
-	chmod +x $@
+	@chmod +x $@
 
 sympa: sympa.in
