@@ -480,7 +480,7 @@ my %full_db_struct = (
                 'order' => 10,
             },
         },
-        'doc'   => 'Managment of HTTP session.',
+        'doc'   => 'Management of HTTP session.',
         'order' => 6,
     },
     'one_time_ticket_table' => {
@@ -539,7 +539,7 @@ my %full_db_struct = (
             'message_id_notification' => {
                 'struct' => 'varchar(100)',
                 'doc' =>
-                    'initial message-id. This feild is used to search DSN and MDN related to a particular message',
+                    'initial message-id. This field is used to search DSN and MDN related to a particular message',
                 'order' => 2,
             },
             'recipient_notification' => {
@@ -551,7 +551,7 @@ my %full_db_struct = (
             'reception_option_notification' => {
                 'struct' => 'varchar(20)',
                 'doc' =>
-                    'the subscription option of the subscriber when the related message was sent to the list. Usseful because some recipient may have option such as //digest// or //nomail//',
+                    'the subscription option of the subscriber when the related message was sent to the list. Useful because some recipient may have option such as //digest// or //nomail//',
                 'order' => 4,
             },
             'status_notification' => {
@@ -576,7 +576,7 @@ my %full_db_struct = (
             },
             'list_notification' => {
                 'struct' => $list_struct,
-                'doc'    => 'the listname the messaage was issued for',
+                'doc'    => 'the listname the message was issued for',
                 'order'  => 9,
             },
             'robot_notification' => {
@@ -852,7 +852,8 @@ my %full_db_struct = (
             },
             'reception_admin' => {
                 'struct' => 'varchar(20)',
-                'doc' => 'email reception option for list managment messages',
+                'doc' =>
+                    'email reception option for list management messages',
                 'order' => 8,
             },
             'visibility_admin' => {
@@ -892,7 +893,7 @@ my %full_db_struct = (
 
         },
         'doc' =>
-            'This table is a internal cash where list admin roles are stored. It is just a cash and it does not need to saved. You may remove its content if needed. It will just make next Sympa start slower.',
+            'This table is an internal cash where list admin roles are stored. It is just a cash and it does not need to be saved. You may remove its content if needed. It will just make next Sympa startup slower.',
         'order' => 12,
     },
     'netidmap_table' => {
