@@ -33,8 +33,7 @@ nobase_doc_DATA = \
 	samples/test/web_tt2/welcome.tt2 \
 	samples/sampleClient.php \
 	samples/families/sample-auto/config.tt2 \
-	samples/families/sample-auto/param_constraint.conf \
-	sympa.pdf
+	samples/families/sample-auto/param_constraint.conf
 
 man5dir = $(mandir)/man5
 man5ext = 5Sympa

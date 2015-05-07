@@ -1,11 +1,9 @@
-Please refer to the documentation for full installation notes : doc/sympa.pdf
-
 Reference manual
-===============
+================
 This document is only a quick start.
 For detailed installation / setup information, refer to the reference manual :
 
-	http://www.sympa.org/wiki/manual
+	https://www.sympa.org/manual/
 
 
 Installing Sympa from sources
@@ -13,16 +11,20 @@ Installing Sympa from sources
 
 (If you get sources from cvs tree first run: autoreconf -i)
 
-Create a dedicated user sympa.sympa (and it's home directory) and  run 
+Create a dedicated user sympa:sympa (and it's home directory) and run 
 
 ./configure; make; make install.  (you may have to use Gnu make).
 
-If usefull, the make will propose that you upgrade some CPAN module.
+Then check dependent modules
+
+sympa_wizard.pl --check
+
+This wizard will propose that you upgrade some CPAN module.
 In this case you'll need to be root.
-   
+
 
 Requirements
-=============================
+============
 
 Sympa requires other applications to run :
   * perl and gcc
@@ -38,7 +40,7 @@ Sympa requires other applications to run :
     - Net::SSLeay requires openssl sources
 
 Setup
-==========
+=====
 
 1/ Sympa setup
 You can edit sympa.conf (and wwsympa.conf) manually or run sympa_wizard.pl that will help

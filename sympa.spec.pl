@@ -154,7 +154,7 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS COPYING dot.perltidyrc NEWS README* samples sympa.pdf
+%doc AUTHORS COPYING dot.perltidyrc NEWS README* samples
 %attr(-,sympa,sympa) %{_localstatedir}/*/sympa
 %{_sbindir}/*
 %dir %{_libexecdir}/sympa
