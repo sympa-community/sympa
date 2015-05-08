@@ -35,54 +35,34 @@ nobase_doc_DATA = \
 	samples/families/sample-auto/config.tt2 \
 	samples/families/sample-auto/param_constraint.conf
 
-man5dir = $(mandir)/man5
-man5ext = 5Sympa
-MAN5POD = \
-	charset.conf.pod \
-	sympa.conf.pod \
-	sympa_database.pod
+man5_MANS = \
+	charset.conf.5 \
+	sympa.conf.5 \
+	sympa_database.5
 
 EXTRA_DIST = $(nobase_doc_DATA) \
 	charset.conf.podin \
 	sympa.conf.podpl \
 	sympa_database.podpl
 
-CLEANFILES = $(MAN5POD) *.$(man5ext)
+CLEANFILES = $(man5_MANS)
 
-.podin.pod: Makefile
-	@rm -f $@
-	$(AM_V_GEN)$(SED) \
+.podin.5:
+	$(AM_V_GEN)rm -f $*.pod
+	@$(SED) \
 		-e 's|--defaultdir--|$(defaultdir)|' \
 		-e 's|--sysconfdir--|$(sysconfdir)|' \
 		-e 's|--CONFIG--|$(CONFIG)|' \
-		< $(srcdir)/$< > $@
-.podpl.pod: Makefile
+		< $(srcdir)/$< > $*.pod
 	@rm -f $@
-	$(AM_V_GEN)PERL5LIB=$(top_srcdir)/src/lib; export PERL5LIB; \
-	$(PERL) $(srcdir)/$< > $@
-
-man5pod: $(MAN5POD) Makefile
-	@test -n "$(man5ext)" || exit 0; \
-	for pod in $(MAN5POD); do \
-		echo "$$pod" | $(SED) -e 's/\.pod$$//' \
-		| while read tmp; do \
-		rm -f $$tmp.$(man5ext); \
-		echo "  GEN   " $$tmp.$(man5ext); \
-		$(POD2MAN) --section=$(man5ext) --center="sympa $(VERSION)" \
-			--lax --release="$(VERSION)" $$pod $$tmp.$(man5ext); \
-		done; \
-	done
-
-install-data-hook: man5pod
-	@test -n "$(man5ext)" || exit 0; \
-	test -n "$(man5dir)" || exit 0; \
-	$(INSTALL) -d "$(DESTDIR)$(man5dir)" || exit 1; \
-	for pod in $(MAN5POD); do \
-		echo "$$pod" | $(SED) -e 's/\.pod$$//' \
-		| while read tmp; do \
-		echo "installing $$tmp.$(man5ext)"; \
-		$(INSTALL_DATA) "$$tmp.$(man5ext)" "$(DESTDIR)$(man5dir)" \
-		|| exit $$?; \
-		done; \
-	done
-
+	@$(POD2MAN) --section=5 --center="sympa $(VERSION)" \
+		--lax --release="$(VERSION)" $*.pod $@
+	@rm -f $*.pod
+.podpl.5:
+	$(AM_V_GEN)rm -f $*.pod
+	@PERL5LIB=$(top_srcdir)/src/lib; export PERL5LIB; \
+	$(PERL) $(srcdir)/$< > $*.pod
+	@rm -f $@
+	@$(POD2MAN) --section=5 --center="sympa $(VERSION)" \
+		--lax --release="$(VERSION)" $*.pod $@
+	@rm -f $*.pod
