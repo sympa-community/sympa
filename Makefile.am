@@ -43,8 +43,10 @@ check_DATA = \
 	t/pki/key/ca.pem \
 	t/pki/key/rousse_nopassword.pem \
 	t/pki/key/rousse_password.pem \
-	t/stub/Sympa/Constants.pm
+	t/stub/Sympa/Constants.pm \
+	xt/perlcriticrc
 noinst_SCRIPTS = \
+	xt/critic.t \
 	xt/pod-coverage.t \
 	xt/pod-spelling.t \
 	xt/pod-syntax.t
@@ -71,8 +73,9 @@ check-local:
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
 authorcheck:
+	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(noinst_SCRIPTS)"; \
 	PERL5LIB=src/lib; export PERL5LIB; \
-	$(PERL) -MTest::Harness -e 'runtests @ARGV' $(noinst_SCRIPTS)
+	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
 install-data-hook: installdir installconfig nextstep importantchanges
 
