@@ -1,6 +1,5 @@
-#!/usr/bin/perl
-# -*- indent-tabs-mode: t; -*-
-# vim:ft=perl:noet:sw=8:textwidth=78
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
 # $Id$
 
 use strict;
@@ -8,18 +7,14 @@ use warnings;
 use English qw(-no_match_vars);
 use Test::More;
 
-eval {
-    require Test::Pod;
-    Test::Pod->import();
-};
-plan(skip_all => 'Test::Pod required') if $EVAL_ERROR;
+BEGIN {
+    eval 'use Test::Pod';
+    eval 'use Test::Pod::Spelling::CommonMistakes';
+}
+plan(skip_all => 'Test::Pod required') unless $Test::Pod::VERSION;
+plan(skip_all => 'Test::Pod::Spelling::CommonMistakes required')
+    unless $Test::Pod::Spelling::CommonMistakes::VERSION;
 
-eval {
-    require Test::Pod::Spelling::CommonMistakes;
-    Test::Pod::Spelling::CommonMistakes->import();
-};
-plan(skip_all => 'Test::Pod::Spelling::CommonMistakes required') if $EVAL_ERROR;
-
-my @files = all_pod_files('src/lib');
+my @files = (all_pod_files('src'), glob('doc/*.podin'), glob('doc/*.podpl'));
 
 all_pod_files_ok(@files);
