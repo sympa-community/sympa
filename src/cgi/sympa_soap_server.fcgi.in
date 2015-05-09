@@ -84,3 +84,24 @@ $server->dispatch_with({'urn:sympasoap' => 'Sympa::SOAP'});
 #$server->dispatch_to('--modulesdir--', 'Sympa::SOAP');
 
 $server->handle($birthday);
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa_soap_server, sympa_soap_server.fcgi - Sympa SOAP server
+
+=head1 DESCRIPTION
+
+Sympa SOAP server allows to access Sympa service though SOAP.
+
+To know details on Sympa SOAP server, see Reference Manual:
+L<https://www.sympa.org/manual/soap>.
+
+=head1 HISTORY
+
+Sympa SOAP server appeared on Sympa 4.0.
+
+=cut

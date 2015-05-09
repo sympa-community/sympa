@@ -28,9 +28,13 @@ sympa_soap_server_wrapper_fcgi_SOURCES = sympa_soap_server-wrapper.fcgi.c
 sympa_soap_server_wrapper_fcgi_CPPFLAGS = \
 			-DSYMPASOAP=\"$(execcgidir)/sympa_soap_server.fcgi\"
 
+man8_MANS = \
+	wwsympa.8 \
+	sympa_soap_server.8
+
 EXTRA_DIST = wwsympa.fcgi.in sympa_soap_server.fcgi.in
 
-CLEANFILES = $(execcgi_SCRIPTS)
+CLEANFILES = $(execcgi_SCRIPTS) $(man8_MANS)
 
 install-exec-hook:
 	-chown $(USER) $(DESTDIR)$(execcgidir)/wwsympa-wrapper.fcgi
@@ -56,3 +60,9 @@ wwsympa.fcgi sympa_soap_server.fcgi: Makefile
 
 wwsympa.fcgi: $(srcdir)/wwsympa.fcgi.in
 sympa_soap_server.fcgi: $(srcdir)/sympa_soap_server.fcgi.in
+
+.fcgi.8:
+	@rm -f $@
+	$(AM_V_GEN)$(POD2MAN) --section=8 --center="sympa $(VERSION)" \
+		--lax --release="$(VERSION)" $< $@
+

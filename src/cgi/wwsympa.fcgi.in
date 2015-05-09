@@ -30,18 +30,6 @@
 ##           Serge Aumont <sa AT cru.fr>
 ##           Olivier Salaün <os AT cru.fr>
 
-=encoding utf-8
-
-=head1 NAME 
-
-wwsympa, wwsympa.fcgi - Sympa web interface 
-
-=head1 DESCRIPTION 
-
-This fcgi script completely handles all aspects of the Sympa web interface
-
-=cut 
-
 use strict;
 ##use warnings;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
@@ -2950,32 +2938,30 @@ sub prepare_report_user {
     $param->{'errors'} = Sympa::Report::is_there_any_reject_report_web();
 }
 
-=pod 
-
-=head2 sub check_param_in
-
-Checks parameters contained in the global variable $in. It is the process used to analyze the incoming parameters.
-Use it to create a List object and initialize output parameters.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<None>
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<undef> if the process encounters problems.
-
-=item * I<1> if everything goes well
-
-=back 
-
-=cut 
+#=head2 sub check_param_in
+#
+#Checks parameters contained in the global variable $in. It is the process used to analyze the incoming parameters.
+#Use it to create a List object and initialize output parameters.
+#
+#=head3 Arguments
+#
+#=over
+#
+#=item * I<None>
+#
+#=back
+#
+#=head3 Return
+#
+#=over
+#
+#=item * I<undef> if the process encounters problems.
+#
+#=item * I<1> if everything goes well
+#
+#=back
+#
+#=cut
 
 ## Analysis of incoming parameters
 sub check_param_in {
@@ -10956,33 +10942,31 @@ sub do_install_pending_list {
     return 1;
 }
 
-=pod 
-
-=head2 sub do_create_list
-
-Creates a list using a list template
-
-=head3 Arguments 
-
-=over 
-
-=item * I<None>
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<1>, if no problem is encountered
-
-=item * I<undef>, if anything goes wrong
-
-=item * I<'loginrequest'> if no user is logged in at the time the function is called.
-
-=back 
-
-=cut 
+#=head2 sub do_create_list
+#
+#Creates a list using a list template
+#
+#=head3 Arguments
+#
+#=over
+#
+#=item * I<None>
+#
+#=back
+#
+#=head3 Return
+#
+#=over
+#
+#=item * I<1>, if no problem is encountered
+#
+#=item * I<undef>, if anything goes wrong
+#
+#=item * I<'loginrequest'> if no user is logged in at the time the function is called.
+#
+#=back
+#
+#=cut
 
 # create a list using a list template.
 sub do_create_list {
@@ -11198,33 +11182,31 @@ sub do_create_list {
     return 1;
 }
 
-=pod 
-
-=head2 sub do_create_list_request 
-
-Sends back the list creation edition form. 
-
-=head3 Arguments 
-
-=over 
-
-=item * I<None>
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<1>, if no problem is encountered
-
-=item * I<undef>, if anything goes wrong
-
-=item * I<'loginrequest'> if no user is logged in at the time the function is called.
-
-=back 
-
-=cut 
+#=head2 sub do_create_list_request
+#
+#Sends back the list creation edition form.
+#
+#=head3 Arguments
+#
+#=over
+#
+#=item * I<None>
+#
+#=back
+#
+#=head3 Return
+#
+#=over
+#
+#=item * I<1>, if no problem is encountered
+#
+#=item * I<undef>, if anything goes wrong
+#
+#=item * I<'loginrequest'> if no user is logged in at the time the function is called.
+#
+#=back
+#
+#=cut
 
 ## Return the creation form
 sub do_create_list_request {
@@ -12736,33 +12718,31 @@ sub _shift_var {
     return $newvar;
 }
 
-=pod 
-
-=head2 sub do_edit_list_request 
-
-Sends back the list config edition form. 
-
-=head3 Arguments 
-
-=over 
-
-=item * I<None>
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<1>, if no problem is encountered
-
-=item * I<undef>, if anything goes wrong
-
-=item * I<'loginrequest'> if no user is logged in at the time the function is called.
-
-=back 
-
-=cut 
+#=head2 sub do_edit_list_request
+#
+#Sends back the list config edition form.
+#
+#=head3 Arguments
+#
+#=over
+#
+#=item * I<None>
+#
+#=back
+#
+#=head3 Return
+#
+#=over
+#
+#=item * I<1>, if no problem is encountered
+#
+#=item * I<undef>, if anything goes wrong
+#
+#=item * I<'loginrequest'> if no user is logged in at the time the function is called.
+#
+#=back
+#
+#=cut
 
 ## Send back the list config edition form
 sub do_edit_list_request {
@@ -12900,31 +12880,29 @@ sub _check_new_values {
     }
 }
 
-=pod 
-
-=head2 sub _prepare_edit_form(LIST)
-
-Prepares config data to be sent in the edition form. Adds to the parameters array a hash for each parameter to be edited.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$list>, a List object
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<1>, if no problem is encountered
-
-=item * I<undef>, if anything goes wrong
-
-=back 
-
-=cut
+#=head2 sub _prepare_edit_form(LIST)
+#
+#Prepares config data to be sent in the edition form. Adds to the parameters array a hash for each parameter to be edited.
+#
+#=head3 Arguments
+#
+#=over
+#
+#=item * I<$list>, a List object
+#
+#=back
+#
+#=head3 Return
+#
+#=over
+#
+#=item * I<1>, if no problem is encountered
+#
+#=item * I<undef>, if anything goes wrong
+#
+#=back
+#
+#=cut
 
 ## Prepare config data to be sent in the
 ## edition form
@@ -13098,39 +13076,37 @@ sub _prepare_edit_form {
     return 1;
 }
 
-=pod 
-
-=head2 sub _prepare_data(STRING $name, HASH_Ref $struct, SCALAR $data, STRING $may_edit, FAMILY $family, STRING $main_p)
-
-Returns a reference to a hash containing the data used to edit the parameter (of name $name, corresponding to the structure $struct in pinfo, with the $may_edit editing status) containing the data in the Sympa web interface.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$name> (STRING), the name of the parameter processed
-
-=item * I<$struct> (HASH_Ref), a ref to the hash describing this parameter in %Sympa::ListDef::pinfo
-
-=item * I<$data> (), the value(s) taken by this parameter in the current list. Can be a reference to a list or the value of a single parameter.
-
-=item * I<$may_edit> (STRING), the editing status of this parameter in the current context.
-
-=item * I<$family> (FAMILY), the family the list belongs to.
-
-=item * I<$main_p> (STRING), the prefix composing the complete name of the parameter.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<$p_glob>, a reference to a hash containing the data used to edit the parameter.
-
-=back 
-
-=cut
+#=head2 sub _prepare_data(STRING $name, HASH_Ref $struct, SCALAR $data, STRING $may_edit, FAMILY $family, STRING $main_p)
+#
+#Returns a reference to a hash containing the data used to edit the parameter (of name $name, corresponding to the structure $struct in pinfo, with the $may_edit editing status) containing the data in the Sympa web interface.
+#
+#=head3 Arguments
+#
+#=over
+#
+#=item * I<$name> (STRING), the name of the parameter processed
+#
+#=item * I<$struct> (HASH_Ref), a ref to the hash describing this parameter in %Sympa::ListDef::pinfo
+#
+#=item * I<$data> (), the value(s) taken by this parameter in the current list. Can be a reference to a list or the value of a single parameter.
+#
+#=item * I<$may_edit> (STRING), the editing status of this parameter in the current context.
+#
+#=item * I<$family> (FAMILY), the family the list belongs to.
+#
+#=item * I<$main_p> (STRING), the prefix composing the complete name of the parameter.
+#
+#=back
+#
+#=head3 Return
+#
+#=over
+#
+#=item * I<$p_glob>, a reference to a hash containing the data used to edit the parameter.
+#
+#=back
+#
+#=cut
 
 sub _prepare_data {
     my ($name, $struct, $data, $may_edit, $family, $main_p) = @_;
@@ -24195,9 +24171,24 @@ sub purely_closed {
     return $scenario->is_purely_closed;
 }
 
-=pod 
+__END__
 
-=head1 AUTHORS 
+=encoding utf-8
+
+=head1 NAME 
+
+wwsympa, wwsympa.fcgi - WWSympa, Sympa's web interface 
+
+=head1 DESCRIPTION 
+
+This CGI/FastCGI script completely handles all aspects of the Sympa web interface.
+
+To know details on WWSympa, see Reference Manual:
+L<https://www.sympa.org/manual/web-interface>.
+
+=head1 HISTORY
+
+WWSympa was initially written by:
 
 =over 
 
@@ -24206,5 +24197,7 @@ sub purely_closed {
 =item * Olivier SalaE<252>n <os AT cru.fr> 
 
 =back 
+
+The first alpha version of WWSympa appeared on Sympa 2.3.4.
 
 =cut 
