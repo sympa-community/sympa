@@ -1119,14 +1119,22 @@ sub DoForward {
     }
 
     # Add or remove several headers to forward message safely.
-    # The Sender: field should be added (overwritten) at least for Sender ID
-    # (a.k.a. SPF 2.0) compatibility.  Note that Resent-Sender: field will be
-    # removed.
+    # - Add X-Loop: field to mitigate mail looping.
+    # - The Sender: field should be added (overwritten) at least for Sender ID
+    #   (a.k.a. SPF 2.0) compatibility.  Note that Resent-Sender: field will
+    #   be removed.
+    # - Apply DMARC protection if needed.
     #FIXME: Existing DKIM signature depends on these headers will be broken.
+    #FIXME: Currently messages via -request and -editor addresses will be
+    #       protected against DMARC if neccessary.  The listmaster address
+    #       would be protected, too.
     $message->add_header('X-Loop', $recipient);
     $message->replace_header('Sender',
         Conf::get_robot_conf($robot, 'request'));
     $message->delete_header('Resent-Sender');
+    if ($function eq 'owner' or $function eq 'editor') {
+        $message->dmarc_protect if $list;
+    }
 
     # Overwrite envelope sender.  It is REQUIRED for delivery.
     $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');

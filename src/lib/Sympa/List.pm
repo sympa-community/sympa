@@ -2087,7 +2087,7 @@ sub _mail_message {
 
     my $list = $message->{context};
 
-    # Shelve DMARC protection.
+    # Shelve DMARC protection, unless anonymization feature is enabled.
     $message->{shelved}{dmarc_protect} = 1
         if $list->{'admin'}{'dmarc_protection'}
             and $list->{'admin'}{'dmarc_protection'}{'mode'}
