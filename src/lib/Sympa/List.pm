@@ -7249,11 +7249,14 @@ sub _load_list_members_from_include {
                 _load_include_admin_user_file($self->{'domain'},
                 $include_file);
         }
-        my @types = keys %{$include_member};
-        my $type  = $types[0];
-        my @defs  = @{$include_member->{$type}};
-        my $def   = $defs[0];
-        push @{$admin->{$type}}, $def;
+
+        if ($include_member and %$include_member) {
+            my @types = keys %{$include_member};
+            my $type  = $types[0];                  #FIXME: Gets random key?
+            my @defs  = @{$include_member->{$type}};
+            my $def   = $defs[0];
+            push @{$admin->{$type}}, $def;
+        }
     }
 
     foreach my $type (@sources_providing_listmembers) {
