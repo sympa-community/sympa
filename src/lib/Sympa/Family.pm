@@ -1370,11 +1370,11 @@ sub check_param_constraint {
     my $list = shift;
     $log->syslog('debug2', '(%s, %s)', $self->{'name'}, $list->{'name'});
 
-    if ($self->{'state'} eq 'no_check') {
-        return 1;
+    if ($self->{'state'} and $self->{'state'} eq 'no_check') {
         # because called by load(called by new that is called by instantiate)
         # it is not yet the time to check param constraint,
         # it will be called later by instantiate
+        return 1;
     }
 
     my @error;
