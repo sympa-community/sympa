@@ -2351,6 +2351,7 @@ sub _check_double_url_usage {
             qr/^([^\/]+)(\/.*)$/
         )
         ) {
+        $param->{'config_hash'}{'http_host'} =~ qr/^([^\/]+)(\/.*)$/;
         ($host, $path) = ($1, $2);
     } else {
         ($host, $path) = ($param->{'config_hash'}{'http_host'}, '/');
