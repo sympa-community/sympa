@@ -583,4 +583,5 @@ AC_CONFIG_FILES([
     src/sbin/Makefile
     www/Makefile
 ])
+AC_CONFIG_SUBDIRS([src/smtpc])
 AC_OUTPUT
