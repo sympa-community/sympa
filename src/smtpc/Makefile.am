@@ -9,8 +9,9 @@ smtpc_SOURCES = \
 	sockstr.h \
 	utf8.c \
 	utf8.h
-dist_man1_MANS = smtpc.1
+man1_MANS = smtpc.1
 
+EXTRA_DIST = smtpc.1.in
 CLEANFILES = $(sbin_PROGRAMS) *~ *.bak core.*
 
 smtpc.o: sockstr.h utf8.h

@@ -60,6 +60,15 @@ static const unsigned char utf8_sequence_len[0x100] = {
     4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* 0xF0-0xFF */
 };
 
+/** Check string
+ * Check if the string consists of valid UTF-8 sequence.
+ * @param[in] s Buffer.
+ * @param[in] len Length of buffer.
+ * @returns If the buffer contains only ASCII characters, -1.
+ * Else if the buffer contains non-ASCII sequence not forming valid UTF-8,
+ * index of the first position such sequence appears.
+ * Otherwise, length of the buffer.
+ */
 ssize_t utf8_check(const unsigned char *s, const size_t len)
 {
     const unsigned char *p = s;

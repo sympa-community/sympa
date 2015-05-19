@@ -34,6 +34,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sysexits.h>
 #include "sockstr.h"
 #include "utf8.h"
 
@@ -42,13 +43,14 @@
 #define SMTPC_ERR_SOCKET (-1)
 #define SMTPC_ERR_PROTOCOL (-2)
 #define SMTPC_ERR_SUBMISSION (-3)
+#define SMTPC_ERR_UNKNOWN (-4)
 
 #define SMTPC_7BIT (0)
 #define SMTPC_8BIT (1)
 #define SMTPC_UTF8 (2)
 
 #define SMTPC_PROTO_ESMTP (1)
-#define SMTPC_PROTO_LMTP (2)
+#define SMTPC_PROTO_LMTP (1 << 1)
 
 #define SMTPC_EXT_8BITMIME (1)
 #define SMTPC_EXT_AUTH (1 << 1)
@@ -65,13 +67,11 @@
 
 static char buf[SMTPC_BUFSIZ];
 static sockstr_t *sockstr;
-static char *respbuf = NULL;
-static size_t resplen = 0;
 
 static struct {
     int dump;
     int verbose;
-    int protocol;
+    unsigned int protocol;
     char *myname;
     char *nodename;
     char *servname;
@@ -88,6 +88,7 @@ static struct {
     int recipnum;
     char *buf;
     size_t buflen;
+    size_t size;
     int envfeature;
     int headfeature;
     int bodyfeature;
@@ -95,9 +96,11 @@ static struct {
 NULL, 0, NULL, 0, 0, 0, 0};
 
 static struct {
+    char *buf;
+    size_t buflen;
     unsigned long extensions;
 } server = {
-0};
+NULL, 0, 0};
 
 static char *encode_xtext(unsigned char *str)
 {
@@ -136,10 +139,13 @@ static char *encode_xtext(unsigned char *str)
     return encbuf;
 }
 
-static ssize_t parse_options(int argc, char *argv[])
+static int parse_options(int *argcptr, char ***argvptr)
 {
-    int i;
-    char *arg, *relaystr, *p;
+    int argc = *argcptr;
+    char **argv = *argvptr;
+
+    size_t i;
+    char *arg, *p;
 
     options.dump = 0;
     options.verbose = 0;
@@ -152,7 +158,7 @@ static ssize_t parse_options(int argc, char *argv[])
     options.envid = NULL;
     options.smtputf8 = 0;
 
-    for (i = 1; i < argc; i++) {
+    for (i = 1; i < argc && argv[i] != NULL; i++) {
 	arg = argv[i];
 
 	if (arg[0] != '-')
@@ -161,10 +167,13 @@ static ssize_t parse_options(int argc, char *argv[])
 	    if (arg[2] == '\0') {
 		i++;
 		break;
-	    } else if (strcmp(arg, "--dump") == 0) {
-		options.dump = 1;
-		continue;
-	    } else if (strcmp(arg, "--esmtp") == 0 && i + 1 < argc) {
+	    } else if (strcmp(arg, "--dump") == 0)
+		options.dump++;
+	    else if (strcmp(arg, "--esmtp") == 0 && i + 1 < argc) {
+		if (options.protocol != 0) {
+		    fprintf(stderr, "Multiple servers are specified\n");
+		    return -1;
+		}
 		options.protocol = SMTPC_PROTO_ESMTP;
 		arg = argv[++i];
 		if (arg[0] == '[') {
@@ -174,12 +183,16 @@ static ssize_t parse_options(int argc, char *argv[])
 		    if (*p == ']' && options.nodename < p)
 			*p++ = '\0';
 		    else {
-			fprintf(stderr, "Malformed host %s\n", arg);
+			fprintf(stderr, "Malformed host \"%s\"\n", arg);
 			return -1;
 		    }
 
-		    if (*p != '\0')
+		    if (*p == ':' && ++p != '\0')
 			options.servname = p;
+		    else if (*p != '\0') {
+			fprintf(stderr, "Malformed port \"%s\"\n", p);
+			return -1;
+		    }
 		} else {
 		    p = options.nodename = arg;
 		    while (*p != '\0' && *p != ':')
@@ -190,28 +203,27 @@ static ssize_t parse_options(int argc, char *argv[])
 		    if (*p != '\0')
 			options.servname = p;
 		}
-		continue;
-	    } else if (strcmp(arg, "--iam") == 0 && i + 1 < argc) {
+	    } else if (strcmp(arg, "--iam") == 0 && i + 1 < argc)
 		options.myname = argv[++i];
-		continue;
-	    } else if (strcmp(arg, "--lmtp") == 0 && i + 1 < argc) {
+	    else if (strcmp(arg, "--lmtp") == 0 && i + 1 < argc) {
+		if (options.protocol != 0) {
+		    fprintf(stderr, "Multiple servers are specified\n");
+		    return -1;
+		}
 		options.protocol = SMTPC_PROTO_LMTP;
 		options.path = argv[++i];
-		continue;
-	    } else if (strcmp(arg, "--smtputf8") == 0) {
+	    } else if (strcmp(arg, "--smtputf8") == 0)
 		options.smtputf8 = 1;
-		continue;
-	    } else if (strcmp(arg, "--verbose") == 0) {
-		options.verbose = 1;
-		continue;
-	    } else {
-		fprintf(stderr, "Unknown option %s\n", arg);
-		return -1;
-	    }
+	    else if (strcmp(arg, "--verbose") == 0)
+		options.verbose++;
 	}
 
 	switch (arg[1]) {
 	case 'f':
+	    if (options.sender != NULL) {
+		fprintf(stderr, "Multiple senders are specified\n");
+		return -1;
+	    }
 	    if (arg[2] == '\0' && i + 1 < argc)
 		options.sender = argv[++i];
 	    else if (arg[2] != '\0')
@@ -258,14 +270,15 @@ static ssize_t parse_options(int argc, char *argv[])
 		else if (strcmp(word, "DELAY") == 0)
 		    options.notify |= SMTPC_NOTIFY_DELAY;
 		else {
-		    fprintf(stderr, "Unknown NOTIFY keyword %s\n", word);
+		    fprintf(stderr, "Unknown NOTIFY keyword \"%s\"\n",
+			    word);
 		    return -1;
 		}
 
 		if (options.notify & SMTPC_NOTIFY_NEVER &&
 		    options.notify & ~SMTPC_NOTIFY_NEVER) {
 		    fprintf(stderr,
-			    "NEVER keyword must not appear with other(s)\n");
+			    "NEVER keyword must not appear with other keywords\n");
 		    return -1;
 		}
 	    }
@@ -296,32 +309,29 @@ static ssize_t parse_options(int argc, char *argv[])
 	    break;
 
 	  parse_options_novalue:
-	    fprintf(stderr, "No value for option %s\n", arg);
+	    fprintf(stderr, "No value for option \"%s\"\n", arg);
 	    return -1;
 	}
     }
-    message.recipnum = argc - i;
-    message.recips = argv + i;
 
-    if (options.protocol == 0) {
-	fprintf(stderr,
-		"Either --esmtp or --lmtp option must be given.\n");
+    if (options.protocol & (SMTPC_PROTO_ESMTP | SMTPC_PROTO_LMTP) == 0) {
+	fprintf(stderr, "Either --esmtp or --lmtp option must be given\n");
 	return -1;
     }
-    if (options.protocol == SMTPC_PROTO_ESMTP && options.nodename == NULL
-	|| options.protocol == SMTPC_PROTO_LMTP && options.path == NULL) {
-	fprintf(stderr, "Server socket is not specified.\n");
+    if (options.protocol & SMTPC_PROTO_ESMTP && options.nodename == NULL
+	|| options.protocol & SMTPC_PROTO_LMTP && options.path == NULL) {
+	fprintf(stderr, "Nodename nor path is not specified\n");
 	return -1;
     }
     if (options.sender == NULL) {
-	fprintf(stderr, "Envelope sender is not specified.\n");
+	fprintf(stderr, "Envelope sender is not specified\n");
 	return -1;
     }
-    if (message.recipnum <= 0) {
-	fprintf(stderr, "No recipients are specified.\n");
-	return -1;
-    }
-    return message.recipnum;
+
+    *argcptr -= i;
+    *argvptr += i;
+
+    return 0;
 }
 
 static int check_utf8_address(char *addrbuf)
@@ -342,15 +352,30 @@ static int check_utf8_address(char *addrbuf)
 	return SMTPC_UTF8;
 }
 
-static void check_message_features(void)
+static int read_envelope(char *sender, size_t recipnum, char **recips)
 {
-    size_t i;
-    ssize_t rs;
+    char **pp, **end;
 
-    message.envfeature = check_utf8_address(options.sender);
-    for (i = 0; message.envfeature != SMTPC_8BIT && i < message.recipnum;
-	 i++)
-	switch (check_utf8_address(message.recips[i])) {
+    if (recipnum <= 0) {
+	fprintf(stderr, "No recipients are specified\n");
+	return -1;
+    }
+
+    message.recipnum = recipnum;
+    message.recips = recips;
+
+    /*
+     * Check feature of sender.
+     */
+    message.envfeature = check_utf8_address(sender);
+
+    /*
+     * Check feature of recipients.
+     */
+    end = recips + recipnum;
+    for (pp = recips;
+	 message.envfeature != SMTPC_8BIT && pp < end && *pp != NULL; pp++)
+	switch (check_utf8_address(*pp)) {
 	case SMTPC_8BIT:
 	    message.envfeature = SMTPC_8BIT;
 	    break;
@@ -361,37 +386,14 @@ static void check_message_features(void)
 	    break;
 	}
 
-    message.headfeature = SMTPC_7BIT;
-    message.bodyfeature = SMTPC_7BIT;
-    if (0 < message.buflen) {
-	for (i = 0; i < message.buflen; i++)
-	    if (message.buf[i] == '\n') {
-		if (message.buf[i + 1] == '\n' ||
-		    message.buf[i + 1] == '\r'
-		    && message.buf[i + 2] == '\n')
-		    break;
-	    }
-	rs = utf8_check((unsigned char *) message.buf, i);
-	if (rs < 0)
-	    message.headfeature = SMTPC_7BIT;
-	else if (rs < i)
-	    message.headfeature = SMTPC_8BIT;
-	else
-	    message.headfeature = SMTPC_UTF8;
-
-	if (i < message.buflen)
-	    for (; i < message.buflen; i++)
-		if (message.buf[i] & 0x80) {
-		    message.bodyfeature = SMTPC_8BIT;
-		    break;
-		}
-    }
+    return 0;
 }
 
 static ssize_t read_message(void)
 {
-    size_t rs;
-    char *newbuf;
+    size_t cr;
+    ssize_t rs;
+    char *newbuf, *p, *end;
 
     while (1) {
 	rs = fread(buf, 1, SMTPC_BUFSIZ, stdin);
@@ -408,7 +410,6 @@ static ssize_t read_message(void)
 		return -1;
 	    message.buf = newbuf;
 	}
-
 	memcpy(message.buf + message.buflen, buf, rs);
 	message.buflen += rs;
 	message.buf[message.buflen] = '\0';
@@ -424,7 +425,55 @@ static ssize_t read_message(void)
 	return -1;
     }
 
-    check_message_features();
+    /*
+     * Check message features:
+     * - Feature of message header.
+     * - Feature of message body.
+     * - Estimated size of the message considering newlines.
+     */
+
+    cr = 0;
+    message.headfeature = SMTPC_7BIT;
+    message.bodyfeature = SMTPC_7BIT;
+    if (0 < message.buflen) {
+	end = message.buf + message.buflen;
+
+	for (p = message.buf; p < end; p++)
+	    if (*p == '\n') {
+		if (p == message.buf || p[-1] != '\r')
+		    cr++;
+
+		if (p[1] == '\n' || p[1] == '\r' && p[2] == '\n') {
+		    p++;
+		    break;
+		}
+	    }
+	rs = utf8_check((unsigned char *) message.buf, p - message.buf);
+	if (rs < 0)
+	    message.headfeature = SMTPC_7BIT;
+	else if (rs < p - message.buf)
+	    message.headfeature = SMTPC_8BIT;
+	else
+	    message.headfeature = SMTPC_UTF8;
+
+	for (; p < end; p++)
+	    if (*p & 0x80) {
+		message.bodyfeature = SMTPC_8BIT;
+		p++;
+		break;
+	    } else if (*p == '\n' && p[-1] != '\r')
+		cr++;
+	for (; p < end; p++)
+	    if (*p == '\n' && p[-1] != '\r')
+		cr++;
+
+	if (end[-1] == '\r')
+	    cr++;
+	else if (end[-1] != '\n')
+	    cr += 2;
+    } else
+	cr = 2;
+    message.size = message.buflen + cr;
 
     return message.buflen;
 }
@@ -450,13 +499,13 @@ static int dialog(int timeout, const char *format, ...)
 	    return -1;
     }
 
-    rs = sockstr_getstatus(sockstr, &respbuf, &resplen);
+    rs = sockstr_getstatus(sockstr, &server.buf, &server.buflen);
     if (rs <= 0)
 	return -1;
 
     if (options.dump)
-	fprintf(stderr, "%s", respbuf);
-    return *respbuf;
+	fprintf(stderr, "%s", server.buf);
+    return server.buf[0];
 }
 
 static int datasend(int timeout)
@@ -471,19 +520,19 @@ static int datasend(int timeout)
 	(sockstr, message.buf, message.buflen, ".\r\n", 1, 1) < 0)
 	return -1;
 
-    rs = sockstr_getstatus(sockstr, &respbuf, &resplen);
+    rs = sockstr_getstatus(sockstr, &server.buf, &server.buflen);
     if (rs <= 0)
 	return -1;
 
     if (options.dump)
-	fprintf(stderr, "%s", respbuf);
-    return *respbuf;
+	fprintf(stderr, "%s", server.buf);
+    return server.buf[0];
 }
 
-static long parse_extensions(void)
+static void parse_extensions(void)
 {
-    char *p = respbuf;
-    long extensions = 0;
+    char *p = server.buf;
+    unsigned long extensions = 0L;
     char word[512], *wp;
 
     while (*p != '\n' && *p != '\0')
@@ -529,7 +578,7 @@ static long parse_extensions(void)
 	    p++;
     }
 
-    return extensions;
+    server.extensions = extensions;
 }
 
 static ssize_t transaction(void)
@@ -546,12 +595,12 @@ static ssize_t transaction(void)
     *ext_size = '\0';
     ext_smtputf8 = "";
 
-    if (options.protocol == SMTPC_PROTO_ESMTP)
+    if (options.protocol & SMTPC_PROTO_ESMTP)
 	hello = "EHLO";
-    else if (options.protocol == SMTPC_PROTO_LMTP)
+    else if (options.protocol & SMTPC_PROTO_LMTP)
 	hello = "LHLO";
     else
-	return SMTPC_ERR_SUBMISSION;
+	return SMTPC_ERR_UNKNOWN;
     switch (dialog(300, "%s %s\r\n", hello, options.myname)) {
     case '2':
 	break;
@@ -563,7 +612,7 @@ static ssize_t transaction(void)
     default:
 	return SMTPC_ERR_PROTOCOL;
     }
-    server.extensions = parse_extensions();
+    parse_extensions();
 
     if (server.extensions & SMTPC_EXT_8BITMIME &&
 	(message.headfeature != SMTPC_7BIT
@@ -575,8 +624,10 @@ static ssize_t transaction(void)
 	    unsigned char *encbuf;
 
 	    encbuf = encode_xtext((unsigned char *) options.envid);
-	    if (encbuf == NULL)
-		return SMTPC_ERR_SOCKET;
+	    if (encbuf == NULL) {
+		perror("transaction");
+		return SMTPC_ERR_UNKNOWN;
+	    }
 	    snprintf(ext_envid, sizeof(ext_envid), " ENVID=%s", encbuf);
 	    free(encbuf);
 	}
@@ -612,7 +663,7 @@ static ssize_t transaction(void)
 
     if (server.extensions & SMTPC_EXT_SIZE)
 	snprintf(ext_size, sizeof(ext_size), " SIZE=%lu",
-		 (unsigned long) message.buflen);
+		 (unsigned long) message.size);
 
     if (server.extensions & SMTPC_EXT_SMTPUTF8 &&
 	options.smtputf8 &&
@@ -622,7 +673,7 @@ static ssize_t transaction(void)
 	 && message.headfeature == SMTPC_UTF8))
 	ext_smtputf8 = " SMTPUTF8";
 
-    switch (dialog(300, "MAIL FROM: <%s>%s%s%s%s\r\n", options.sender,
+    switch (dialog(300, "MAIL FROM:<%s>%s%s%s%s\r\n", options.sender,
 		   ext_8bitmime, ext_envid, ext_size, ext_smtputf8)) {
     case '2':
 	break;
@@ -637,7 +688,7 @@ static ssize_t transaction(void)
 
     for (i = 0; i < message.recipnum; i++)
 	switch (dialog
-		(300, "RCPT TO: <%s>%s\r\n", message.recips[i],
+		(300, "RCPT TO:<%s>%s\r\n", message.recips[i],
 		 ext_notify)) {
 	case '2':
 	    sent++;
@@ -684,7 +735,6 @@ static ssize_t session()
 	break;
     case '4':
     case '5':
-	sockstr_printf(sockstr, "QUIT\r\n");
 	return SMTPC_ERR_SUBMISSION;
     case -1:
 	return SMTPC_ERR_SOCKET;
@@ -693,37 +743,37 @@ static ssize_t session()
     }
 
     rs = transaction();
-    if (rs < 0)
-	return rs;
-
-    sockstr_printf(sockstr, "QUIT\r\n");
-
     if (rs == 0)
 	return SMTPC_ERR_SUBMISSION;
-    else
-	return rs;
+    return rs;
 }
 
 int main(int argc, char *argv[])
 {
     ssize_t rs;
 
-    if (parse_options(argc, argv) < 0)
-	exit(1);
+    if (parse_options(&argc, &argv) < 0)
+	exit(EX_USAGE);
+    if (read_envelope(options.sender, argc, argv) < 0)
+	exit(EX_USAGE);
     if (read_message() < 0) {
 	perror("read_message");
-	exit(1);
+	if (message.buf != NULL)
+	    free(message.buf);
+	exit(EX_OSERR);
     }
 
-    if (options.protocol == SMTPC_PROTO_ESMTP)
+    if (options.protocol & SMTPC_PROTO_ESMTP)
 	sockstr = sockstr_new(options.nodename, options.servname, NULL);
-    else if (options.protocol == SMTPC_PROTO_LMTP)
+    else if (options.protocol & SMTPC_PROTO_LMTP)
 	sockstr = sockstr_new(NULL, NULL, options.path);
     else
 	sockstr = NULL;
     if (sockstr == NULL) {
 	perror("sockstr_new");
-	exit(1);
+	if (message.buf != NULL)
+	    free(message.buf);
+	exit(EX_OSERR);
     }
     sockstr->timeout = 300;
 
@@ -731,40 +781,44 @@ int main(int argc, char *argv[])
 
     if (sockstr_connect(sockstr) < 0) {
 	fprintf(stderr, "error: %s\n", sockstr_errstr(sockstr));
-	if (respbuf != NULL)
-	    free(respbuf);
-	exit(2);
+	sockstr_destroy(sockstr);
+	if (message.buf != NULL)
+	    free(message.buf);
+	exit(EX_IOERR);
     }
 
     rs = session();
-
-    sockstr_destroy(sockstr);
-
     if (message.buf != NULL)
 	free(message.buf);
 
-    switch (rs) {
-    case SMTPC_ERR_SOCKET:
-	fprintf(stderr, "Socket error: %s\n", sockstr_errstr(sockstr));
-	if (respbuf != NULL)
-	    free(respbuf);
+    if (options.verbose && server.buf != NULL && 0 < server.buflen)
+	fputs(server.buf, stdout);
+
+    if (rs < 0) {
+	switch (rs) {
+	case SMTPC_ERR_SOCKET:
+	    fprintf(stderr, "Socket error: %s\n", sockstr_errstr(sockstr));
+	    break;
+	case SMTPC_ERR_PROTOCOL:
+	    fprintf(stderr, "Unexpected response: %s", server.buf);
+	    break;
+	case SMTPC_ERR_SUBMISSION:
+	    dialog(10, "QUIT\r\n");
+	    break;
+	default:
+	    fprintf(stderr, "Unknown error %ld\n", (long) rs);
+	    break;
+	}
+
+	sockstr_destroy(sockstr);
+	if (server.buf != NULL)
+	    free(server.buf);
 	exit(rs);
-    case SMTPC_ERR_PROTOCOL:
-	fprintf(stderr, "Illegal response: %s", respbuf);
-	if (respbuf != NULL)
-	    free(respbuf);
-	exit(rs);
-    case 0:
-	/* not sent at all */
-	if (options.verbose)
-	    fputs(respbuf, stdout);
-	if (respbuf != NULL)
-	    free(respbuf);
-	exit(SMTPC_ERR_SUBMISSION);
-    default:
-	/* entirely or partially sent */
-	break;
     }
 
-    exit(0);
+    /* entirely or partially sent */
+    dialog(10, "QUIT\r\n");
+    sockstr_destroy(sockstr);
+    free(server.buf);
+    exit(EX_OK);
 }

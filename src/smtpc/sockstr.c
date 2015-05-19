@@ -102,8 +102,10 @@ void sockstr_destroy(sockstr_t * self)
     if (self == NULL)
 	return;
 
-    if (0 <= self->_sock)
+    if (0 <= self->_sock) {
+	shutdown(self->_sock, SHUT_RDWR);
 	close(self->_sock);
+    }
     if (self->nodename != NULL)
 	free(self->nodename);
     if (self->servname != NULL)

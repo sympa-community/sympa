@@ -1,4 +1,4 @@
-.TH SMTPC 1 "17 May 2015" 0.1a.1 "smtpc 0.1a.1"
+.TH SMTPC 1 "" "@VERSION@" "@PACKAGE_STRING@"
 
 .SH NAME
 smtpc \- SMTP / LMTP client
@@ -11,8 +11,8 @@ smtpc --lmtp \fIpath\fR -f \fIenvelope@sen.der\fR
 [ \fIoptions\fR... ] [ -- ] \fIrecipient@add.ress\fR ...
 
 .SH DESCRIPTION
-\fBsmtpc\fP is a mail client.
-It reads a message from standart input and submits it to mail server through
+\fBsmtpc\fP is an email client.
+It reads a message from standard input and submits it to mail server through
 socket.
 
 .SS Options
@@ -124,7 +124,7 @@ See \fB--smtputf8\fR option.
 \fBsmtpc\fR provides the feature of SMTP / LMTP client submitting messages
 to particular server.
 It will never provide extensive feature such as message queuing, retry after
-temporary failure, mail routing using MX DNS record and so on.
+temporary failure, routing using MX DNS record and so on.
 Once the server rejects delivery, \fBsmtpc\fR exits and message is discarded.
 
 .SH KNOWN BUGS
