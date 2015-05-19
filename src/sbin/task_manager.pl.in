@@ -38,12 +38,12 @@ use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
+use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message;
 use Sympa::Scenario;
-use SDM;
 use Sympa::Session;
 use Sympa::Spool;
 use Sympa::Task;
@@ -1067,9 +1067,9 @@ sub next_cmd {
     my $human_date = POSIX::strftime('%Y-%m-%d %H:%M:%S', localtime $date);
 #    my $new_task_file = "$spool_task/$new_task";
 #    unless (rename ($filename, $new_task_file)) {
-#	error ($filename,
-#	"error in next command : unable to rename task file into $new_task");
-#	return undef;
+#        error ($filename,
+#        "error in next command : unable to rename task file into $new_task");
+#        return undef;
 #    }
     unless (unlink($filename)) {
         error($filename,
@@ -1272,10 +1272,13 @@ sub purge_logs_table {
 sub _db_log_del {
     my ($exp, $date);
 
+    my $sdm = Sympa::DatabaseManager->instance;
+
     $exp = Conf::get_robot_conf('*', 'logs_expiration_period');
     $date = time - ($exp * 31 * 24 * 60 * 60);
     unless (
-        SDM::do_prepared_query(
+        $sdm
+        and $sdm->do_prepared_query(
             q{DELETE FROM logs_table
               WHERE date_logs <= ?},
             $date
@@ -1289,7 +1292,7 @@ sub _db_log_del {
     $exp = Conf::get_robot_conf('*', 'stats_expiration_period');
     $date = time - ($exp * 31 * 24 * 60 * 60);
     unless (
-        SDM::do_prepared_query(
+        $sdm->do_prepared_query(
             q{DELETE FROM stat_table
               WHERE date_stat <= ?},
             $date
@@ -1300,7 +1303,7 @@ sub _db_log_del {
         return undef;
     }
     unless (
-        SDM::do_prepared_query(
+        $sdm->do_prepared_query(
             q{DELETE FROM stat_counter_table
               WHERE end_date_counter <= ?},
             $date
@@ -1474,12 +1477,15 @@ sub purge_user_table {
     my ($task, $Rarguments, $context) = @_;
     $log->syslog('debug2', '');
 
+    my $sdm = Sympa::DatabaseManager->instance;
+
     my $time = time;
 
     # Marking super listmasters
     foreach my $l (@{$Conf::Conf{'listmasters'}}) {
         unless (
-            SDM::do_prepared_query(
+            $sdm
+            and $sdm->do_prepared_query(
                 q{UPDATE user_table
                   SET last_active_date_user = ?
                   WHERE email_user = ?},
@@ -1494,7 +1500,7 @@ sub purge_user_table {
     foreach my $robot_id (Sympa::List::get_robots()) {
         foreach my $l (@{Conf::get_robot_conf($robot_id, 'listmasters')}) {
             unless (
-                SDM::do_prepared_query(
+                $sdm->do_prepared_query(
                     q{UPDATE user_table
                       SET last_active_date_user = ?
                       WHERE email_user = ?},
@@ -1508,7 +1514,7 @@ sub purge_user_table {
     }
     # Marking new users, owners/editors and subscribers.
     unless (
-        SDM::do_prepared_query(
+        $sdm->do_prepared_query(
             q{UPDATE user_table
               SET last_active_date_user = ?
               WHERE last_active_date_user IS NULL
@@ -1533,7 +1539,7 @@ sub purge_user_table {
     my @purged_users;
     my $sth;
     unless (
-        $sth = SDM::do_prepared_query(
+        $sth = $sdm->do_prepared_query(
             q{SELECT email_user
               FROM user_table
               WHERE last_active_date_user IS NOT NULL AND

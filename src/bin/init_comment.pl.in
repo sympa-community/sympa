@@ -23,22 +23,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib '--modulesdir--';
+use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
 
 use Conf;
 use Sympa::Constants;
-use SDM;
+use Sympa::DatabaseManager;
 
 ## Load sympa config
 Conf::load(Sympa::Constants::CONFIG) or die 'config_error';
 
 chdir $Conf::Conf{'home'};
 
-SDM::check_db_connect('just_try') or die "Can't connect to database";
+my $sdm = Sympa::DatabaseManager->instance
+    or die 'Can\'t connect to database';
 
-my $sth = SDM::do_query(
+my $sth = $sdm->do_query(
     q{SELECT user_subscriber, comment_subscriber
       FROM subscriber_table}
 ) or die 'Unable to execute SQL statement';
@@ -49,7 +50,7 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
     printf "\nUser: %s", $user->{'user_subscriber'};
 
     unless ($user->{'comment_subscriber'}) {
-        my $sth2 = SDM::do_prepared_query(
+        my $sth2 = $sdm->do_prepared_query(
             q{SELECT gecos_user
               FROM user_table
               WHERE email_user = ?},
@@ -61,7 +62,7 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
 
         if ($gecos) {
             printf " =>%s", $gecos;
-            my $sth2 = SDM::do_prepared_query(
+            my $sth2 = $sdm->do_prepared_query(
                 q{UPDATE subscriber_table
                   SET comment_subscriber = ?
                   WHERE user_subscriber = ?},
@@ -76,4 +77,4 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
 $sth->finish();
 
 ## Disconnect from Database
-SDM::db_disconnect();
+Sympa::DatabaseManager->disconnect();

@@ -30,8 +30,8 @@ use DateTime::Format::Mail;
 use English qw(-no_match_vars);
 
 use Sympa::Constants;
+use Sympa::DatabaseManager;
 use Sympa::Log;
-use SDM;
 use tools;
 use Sympa::Tools::File;
 
@@ -97,11 +97,13 @@ sub get_recipients_status {
     $msgid = tools::clean_msg_id($msgid);
 
     my $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
 
     # the message->head method return message-id including <blabla@dom> where
     # mhonarc return blabla@dom that's why we test both of them
     unless (
-        $sth = SDM::do_prepared_query(
+        $sdm
+        and $sth = $sdm->do_prepared_query(
             q{SELECT recipient_notification AS recipient,
                      reception_option_notification AS reception_option,
                      status_notification AS status,
@@ -157,11 +159,13 @@ sub register {
 
     my $time = time;
 
+    my $sdm = Sympa::DatabaseManager->instance;
     foreach my $email (@rcpt) {
         my $email = lc($email);
 
         unless (
-            SDM::do_prepared_query(
+            $sdm
+            and $sdm->do_prepared_query(
                 q{INSERT INTO notification_table
                   (message_id_notification, recipient_notification,
                    reception_option_notification,
@@ -261,8 +265,10 @@ sub _db_insert_notification {
             ->epoch;
     };
 
+    my $sdm = Sympa::DatabaseManager->instance;
     unless (
-        SDM::do_prepared_query(
+        $sdm
+        and $sdm->do_prepared_query(
             q{UPDATE notification_table
               SET status_notification = ?, type_notification = ?,
                   arrival_date_notification = ?,
@@ -302,11 +308,13 @@ sub find_notification_id_by_message {
     $msgid = tools::clean_msg_id($msgid);
 
     my $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
 
     # the message->head method return message-id including <blabla@dom> where
     # mhonarc return blabla@dom that's why we test both of them
     unless (
-        $sth = SDM::do_prepared_query(
+        $sdm
+        and $sth = $sdm->do_prepared_query(
             q{SELECT pk_notification
               FROM notification_table
               WHERE recipient_notification = ? AND
@@ -368,10 +376,12 @@ sub remove_message_by_id {
     my $robot    = $self->{context}->{'domain'};
 
     my $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
 
     # Remove messages in bounce directory.
     unless (
-        $sth = SDM::do_prepared_query(
+        $sdm
+        and $sth = $sdm->do_prepared_query(
             q{SELECT recipient_notification AS recipient,
                      pk_notification AS envid
               FROM notification_table
@@ -400,7 +410,7 @@ sub remove_message_by_id {
 
     # Remove row in notification table.
     unless (
-        $sth = SDM::do_prepared_query(
+        $sth = $sdm->do_prepared_query(
             q{DELETE FROM notification_table
               WHERE message_id_notification = ? AND
                     list_notification = ? AND robot_notification = ?},
@@ -446,8 +456,10 @@ sub remove_message_by_period {
     my $limit = time - ($period * 24 * 60 * 60);
 
     # Remove messages in bounce directory.
+    my $sdm = Sympa::DatabaseManager->instance;
     unless (
-        $sth = SDM::do_prepared_query(
+        $sdm
+        and $sth = $sdm->do_prepared_query(
             q{SELECT recipient_notification AS recipient,
                      pk_notification AS envid
               FROM notification_table
@@ -476,7 +488,7 @@ sub remove_message_by_period {
 
     # Remove rows in notification table.
     unless (
-        $sth = SDM::do_prepared_query(
+        $sth = $sdm->do_prepared_query(
             q{DELETE FROM notification_table
               WHERE date_notification < ? AND
               list_notification = ? AND robot_notification = ?},

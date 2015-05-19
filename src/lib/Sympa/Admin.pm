@@ -45,6 +45,7 @@ use File::Copy qw();
 use Sympa;
 use Conf;
 use Sympa::Constants;
+use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::List;
 use Sympa::LockedFile;
@@ -52,7 +53,6 @@ use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
-use SDM;
 use Sympa::Template;
 use Sympa::Tools::File;
 use Sympa::User;
@@ -963,14 +963,18 @@ sub rename_list {
         Sympa::List::rename_list_db($list, $param{'new_listname'},
             $param{'new_robot'});
     }
-    ## Move stats
+
+    my $sdm = Sympa::DatabaseManager->instance;
+
+    # Move stats
     unless (
-        SDM::do_query(
-            "UPDATE stat_table SET list_stat=%s, robot_stat=%s WHERE (list_stat = %s AND robot_stat = %s )",
-            SDM::quote($param{'new_listname'}),
-            SDM::quote($param{'new_robot'}),
-            SDM::quote($list->{'name'}),
-            SDM::quote($robot)
+        $sdm
+        and $sdm->do_prepared_query(
+            q{UPDATE stat_table
+              SET list_stat = ?, robot_stat = ?
+              WHERE list_stat = ? AND robot_stat = ?},
+            $param{'new_listname'}, $param{'new_robot'},
+            $list->{'name'},        $robot
         )
         ) {
         $log->syslog(
@@ -983,14 +987,14 @@ sub rename_list {
         );
     }
 
-    ## Move stat counters
+    # Move stat counters
     unless (
-        SDM::do_query(
-            "UPDATE stat_counter_table SET list_counter=%s, robot_counter=%s WHERE (list_counter = %s AND robot_counter = %s )",
-            SDM::quote($param{'new_listname'}),
-            SDM::quote($param{'new_robot'}),
-            SDM::quote($list->{'name'}),
-            SDM::quote($robot)
+        $sdm->do_prepared_query(
+            q{UPDATE stat_counter_table
+              SET list_counter = ?, robot_counter = ?
+              WHERE list_counter = ? AND robot_counter = ?},
+            $param{'new_listname'}, $param{'new_robot'},
+            $list->{'name'},        $robot
         )
         ) {
         $log->syslog(

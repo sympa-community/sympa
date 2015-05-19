@@ -30,9 +30,9 @@ use Encode qw();
 
 use Sympa;
 use Conf;
+use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::Log;
-use SDM;
 use Sympa::Tools::File;
 
 my $language = Sympa::Language->instance;
@@ -85,12 +85,16 @@ sub get_netidtoemail_db {
 
     push @sth_stack, $sth;
 
+    my $sdm = Sympa::DatabaseManager->instance;
     unless (
-        $sth = SDM::do_query(
-            "SELECT email_netidmap FROM netidmap_table WHERE netid_netidmap = %s and serviceid_netidmap = %s and robot_netidmap = %s",
-            SDM::quote($netid),
-            SDM::quote($idpname),
-            SDM::quote($robot)
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT email_netidmap
+              FROM netidmap_table
+              WHERE netid_netidmap = ? and serviceid_netidmap = ? and
+                    robot_netidmap = ?},
+            $netid, $idpname,
+            $robot
         )
         ) {
         $log->syslog(
@@ -122,13 +126,15 @@ sub set_netidtoemail_db {
 
     my ($l, %which);
 
+    my $sdm = Sympa::DatabaseManager->instance;
     unless (
-        SDM::do_query(
-            "INSERT INTO netidmap_table (netid_netidmap,serviceid_netidmap,email_netidmap,robot_netidmap) VALUES (%s, %s, %s, %s)",
-            SDM::quote($netid),
-            SDM::quote($idpname),
-            SDM::quote($email),
-            SDM::quote($robot)
+        $sdm
+        and $sdm->do_prepared_query(
+            q{INSERT INTO netidmap_table
+              (netid_netidmap, serviceid_netidmap, email_netidmap,
+               robot_netidmap)
+              VALUES (?, ?, ?, ?)},
+            $netid, $idpname, $email, $robot
         )
         ) {
         $log->syslog(
@@ -156,12 +162,15 @@ sub update_email_netidmap_db {
         return undef;
     }
 
+    my $sdm = Sympa::DatabaseManager->instance;
     unless (
-        SDM::do_query(
-            "UPDATE netidmap_table SET email_netidmap = %s WHERE (email_netidmap = %s AND robot_netidmap = %s)",
-            SDM::quote($new_email),
-            SDM::quote($old_email),
-            SDM::quote($robot)
+        $sdm
+        and $sdm->do_prepared_query(
+            q{UPDATE netidmap_table
+              SET email_netidmap = ?
+              WHERE email_netidmap = ? AND robot_netidmap = ?},
+            $new_email,
+            $old_email, $robot
         )
         ) {
         $log->syslog(

@@ -23,7 +23,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib '--modulesdir--';
+use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
 use English qw(-no_match_vars);
@@ -34,8 +34,8 @@ use Pod::Usage;
 use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
+use Sympa::DatabaseManager;
 use Sympa::Log;
-use SDM;
 use Sympa::Spool;
 
 my %options;
@@ -81,10 +81,13 @@ exit 0;
 sub process {
     my $bulk = Sympa::Bulk->new;
 
-    my $sth = SDM::do_prepared_query(
+    my $sdm = Sympa::DatabaseManager->instance
+        or die 'Can\'t connect to database';
+
+    my $sth = $sdm->do_prepared_query(
         q{SELECT *
-	  FROM bulkmailer_table
-	  WHERE returnpath_bulkmailer IS NOT NULL}
+          FROM bulkmailer_table
+          WHERE returnpath_bulkmailer IS NOT NULL}
     );
     unless ($sth) {
         die
@@ -118,10 +121,10 @@ sub process {
 
         # Fetch message
         my $messagekey = $row_mailer->{messagekey_bulkmailer};
-        my $sth2       = SDM::do_prepared_query(
+        my $sth2       = $sdm->do_prepared_query(
             q{SELECT *
-	      FROM bulkspool_table
-	      WHERE messagekey_bulkspool = ?},
+              FROM bulkspool_table
+              WHERE messagekey_bulkspool = ?},
             $messagekey
         );
         unless ($sth2) {

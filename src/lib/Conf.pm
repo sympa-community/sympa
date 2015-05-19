@@ -34,10 +34,10 @@ use Storable;
 use Sympa;
 use Sympa::ConfDef;
 use Sympa::Constants;
+use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::LockedFile;
 use Sympa::Log;
-use SDM;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -453,7 +453,6 @@ sub get_parameters_group {
 
 ## fetch the value from parameter $label of robot $robot from conf_table
 sub get_db_conf {
-
     my $robot = shift;
     my $label = shift;
 
@@ -462,11 +461,14 @@ sub get_db_conf {
     $robot = '*' unless (-f $Conf{'etc'} . '/' . $robot . '/robot.conf');
     unless ($robot) { $robot = '*' }
 
+    my $sdm = Sympa::DatabaseManager->instance;
     unless (
-        $sth = SDM::do_query(
-            "SELECT value_conf AS value FROM conf_table WHERE (robot_conf =%s AND label_conf =%s)",
-            SDM::quote($robot),
-            SDM::quote($label)
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT value_conf AS value
+              FROM conf_table
+              WHERE robot_conf = ? AND label_conf = ?},
+            $robot, $label
         )
         ) {
         $log->syslog(
@@ -501,11 +503,14 @@ sub set_robot_conf {
         $robot = '*';
     }
 
+    my $sdm = Sympa::DatabaseManager->instance;
     unless (
-        $sth = SDM::do_query(
-            "SELECT count(*) FROM conf_table WHERE (robot_conf=%s AND label_conf =%s)",
-            SDM::quote($robot),
-            SDM::quote($label)
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT COUNT(*)
+              FROM conf_table
+              WHERE robot_conf = ? AND label_conf = ?},
+            $robot, $label
         )
         ) {
         $log->syslog(
@@ -522,11 +527,11 @@ sub set_robot_conf {
 
     if ($count == 0) {
         unless (
-            $sth = SDM::do_query(
-                "INSERT INTO conf_table (robot_conf, label_conf, value_conf) VALUES (%s,%s,%s)",
-                SDM::quote($robot),
-                SDM::quote($label),
-                SDM::quote($value)
+            $sth = $sdm->do_prepared_query(
+                q{INSERT INTO conf_table
+                  (robot_conf, label_conf, value_conf)
+                  VALUES (?, ?, ?)},
+                $robot, $label, $value
             )
             ) {
             $log->syslog(
@@ -540,13 +545,12 @@ sub set_robot_conf {
         }
     } else {
         unless (
-            $sth = SDM::do_query(
-                "UPDATE conf_table SET robot_conf=%s, label_conf=%s, value_conf=%s WHERE ( robot_conf  =%s AND label_conf =%s)",
-                SDM::quote($robot),
-                SDM::quote($label),
-                SDM::quote($value),
-                SDM::quote($robot),
-                SDM::quote($label)
+            $sth = $sdm->do_prepared_query(
+                q{UPDATE conf_table
+                  SET robot_conf = ?, label_conf = ?, value_conf = ?
+                  WHERE robot_conf = ? AND label_conf = ?},
+                $robot, $label, $value,
+                $robot, $label
             )
             ) {
             $log->syslog(

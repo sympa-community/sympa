@@ -45,6 +45,7 @@ use Sympa::Alarm;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
+use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
@@ -52,7 +53,6 @@ use Sympa::Mailer;
 use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Scenario;
-use SDM;
 use Sympa::Spool;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
@@ -116,7 +116,7 @@ unless (Conf::load()) {
 }
 
 ## Check databse connectivity
-unless (SDM::check_db_connect()) {
+unless (Sympa::DatabaseManager->instance) {
     die sprintf
         "Database %s defined in sympa.conf has not the right structure or is unreachable.\n",
         $Conf::Conf{'db_name'};

@@ -48,6 +48,7 @@ use Sympa::Admin;
 use Conf;
 use Sympa::Config_XML;
 use Sympa::Constants;
+use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
@@ -594,25 +595,26 @@ sub modify_list {
     }
 
     ## rename forbidden files
-#    foreach my $f (@{$custom->{'forbidden'}{'file'}}) {
-#	unless (rename ("$list->{'dir'}"."/"."info","$list->{'dir'}"."/"."info.orig")) {
-    ################
-#	}
-#	if ($f eq 'info') {
-#	    $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
-#	    unless (open INFO, '>', "$list_dir/info") {
-    ################
-#	    }
-#	    print INFO $hash_list->{'config'}{'description'};
-#	    close INFO;
-#	}
-#    }
+    #foreach my $f (@{$custom->{'forbidden'}{'file'}}) {
+    #    unless (rename "$list->{'dir'}"."/"."info",
+    #        "$list->{'dir'}"."/"."info.orig") {
+    #        ###############
+    #    }
+    #    if ($f eq 'info') {
+    #        $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
+    #        unless (open INFO, '>', "$list_dir/info") {
+    #            ###############
+    #        }
+    #        print INFO $hash_list->{'config'}{'description'};
+    #        close INFO;
+    #    }
+    #}
 
     ## notify owner for forbidden customizing
     if (    #(scalar $custom->{'forbidden'}{'file'}) ||
         (scalar @{$custom->{'forbidden'}{'param'}})
         ) {
-#	my $forbidden_files = join(',',@{$custom->{'forbidden'}{'file'}});
+        #my $forbidden_files = join(',',@{$custom->{'forbidden'}{'file'}});
         my $forbidden_param = join(',', @{$custom->{'forbidden'}{'param'}});
         $log->syslog('notice',
             "These parameters aren't allowed in the new family definition, they are erased by a new instantiation family : \n $forbidden_param"
@@ -1064,12 +1066,12 @@ sub instantiate {
 
         my $answer;
         unless ($close_unknown) {
-#	while (($answer ne 'y') && ($answer ne 'n')) {
+            #while (($answer ne 'y') && ($answer ne 'n')) {
             print STDOUT
                 "The list $l isn't defined in the new instantiation family, do you want to close it ? (y or n)";
             $answer = <STDIN>;
             chomp($answer);
-#######################
+            #######################
             $answer ||= 'y';
             #}
         }
@@ -2127,25 +2129,26 @@ sub _update_existing_list {
     }
 
     ## rename forbidden files
-#    foreach my $f (@{$custom->{'forbidden'}{'file'}}) {
-#	unless (rename ("$list->{'dir'}"."/"."info","$list->{'dir'}"."/"."info.orig")) {
-    ################
-#	}
-#	if ($f eq 'info') {
-#	    $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
-#	    unless (open INFO, '>', "$list_dir/info") {
-    ################
-#	    }
-#	    print INFO $hash_list->{'config'}{'description'};
-#	    close INFO;
-#	}
-#    }
+    #foreach my $f (@{$custom->{'forbidden'}{'file'}}) {
+    #    unless (rename "$list->{'dir'}"."/"."info",
+    #        "$list->{'dir'}"."/"."info.orig") {
+    #        ###############
+    #    }
+    #    if ($f eq 'info') {
+    #        $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
+    #        unless (open INFO, '>', "$list_dir/info") {
+    #            ###############
+    #        }
+    #        print INFO $hash_list->{'config'}{'description'};
+    #        close INFO;
+    #    }
+    #}
 
     ## notify owner for forbidden customizing
     if (    #(scalar $custom->{'forbidden'}{'file'}) ||
         (scalar @{$custom->{'forbidden'}{'param'}})
         ) {
-#	my $forbidden_files = join(',',@{$custom->{'forbidden'}{'file'}});
+        #my $forbidden_files = join(',',@{$custom->{'forbidden'}{'file'}});
         my $forbidden_param = join(',', @{$custom->{'forbidden'}{'param'}});
         $log->syslog('notice',
             "These parameters aren't allowed in the new family definition, they are erased by a new instantiation family : \n $forbidden_param"
@@ -2261,14 +2264,13 @@ sub _get_customizing {
     }
 
     ## FILES
-#    foreach my $f (keys %{$config_changes->{'file'}}) {
-
-#	my $privilege; # =may_edit($f)
-
-#	unless ($privilege eq 'write') {
-#	    push @{$result->{'forbidden'}{'file'}},$f;
-#	}
-#    }
+    #foreach my $f (keys %{$config_changes->{'file'}}) {
+    #    my $privilege; # =may_edit($f)
+    #
+    #    unless ($privilege eq 'write') {
+    #        push @{$result->{'forbidden'}{'file'}},$f;
+    #    }
+    #}
 
     ## PARAMETERS
 
@@ -2412,25 +2414,24 @@ sub _set_status_changes {
             Sympa::Admin::remove_aliases($list, $self->{'robot'});
     }
 
-##    ## subscribers
-##    if (($old_status ne 'pending') && ($old_status ne 'open')) {
-##
-##	if ($list->{'admin'}{'user_data_source'} eq 'file') {
-##	    $list->{'users'} = Sympa::List::_load_list_members_file(
-##              $list->{'dir'} . '/subscribers.closed.dump');
-##	} elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
-##	    unless (-f $list->{'dir'} . '/subscribers.closed.dump') {
-##		$log->syslog('notice', 'No subscribers to restore');
-##	    }
-##	    my @users = Sympa::List::_load_list_members_file(
-##              $list->{'dir'} . '/subscribers.closed.dump');
-##
-##	    ## Insert users in database
-##	    foreach my $user (@users) {
-##		$list->add_list_member($user);
-##	    }
-##	}
-##    }
+    ### subscribers
+    #if (($old_status ne 'pending') && ($old_status ne 'open')) {
+    #    if ($list->{'admin'}{'user_data_source'} eq 'file') {
+    #        $list->{'users'} = Sympa::List::_load_list_members_file(
+    #            $list->{'dir'} . '/subscribers.closed.dump');
+    #    } elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
+    #        unless (-f $list->{'dir'} . '/subscribers.closed.dump') {
+    #            $log->syslog('notice', 'No subscribers to restore');
+    #        }
+    #        my @users = Sympa::List::_load_list_members_file(
+    #            $list->{'dir'} . '/subscribers.closed.dump');
+    #
+    #        ## Insert users in database
+    #        foreach my $user (@users) {
+    #            $list->add_list_member($user);
+    #        }
+    #    }
+    #}
 
     return $result;
 }
@@ -2806,8 +2807,10 @@ sub insert_delete_exclusion {
 
         ## Insert: family, user and date
         ## Add dummy list_exclusion column to satisfy constraint.
+        my $sdm;
         unless (
-            SDM::do_prepared_query(
+            $sdm = Sympa::DatabaseManager->instance
+            and $sdm->do_prepared_query(
                 q{INSERT INTO exclusion_table
                   (list_exclusion, family_exclusion, robot_exclusion,
                    user_exclusion, date_exclusion)

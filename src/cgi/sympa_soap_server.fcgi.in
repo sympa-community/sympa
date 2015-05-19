@@ -31,6 +31,7 @@ use SOAP::Lite;
 
 ## Sympa API
 use Conf;
+use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::SOAP;
@@ -62,7 +63,7 @@ $log->syslog('info', 'SympaSOAP started');
 $UID = $EUID;    ## UID
 $GID = $EGID;    ## GID
 
-unless (SDM::check_db_connect()) {
+unless (Sympa::DatabaseManager->instance) {
     $log->syslog('err', 'SympaSOAP requires a RDBMS to run');
 }
 

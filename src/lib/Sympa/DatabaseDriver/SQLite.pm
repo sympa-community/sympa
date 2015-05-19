@@ -730,8 +730,8 @@ sub _get_create_table {
     unless (
         $sth = $self->do_query(
             q{SELECT sql
-	  FROM sqlite_master
-	  WHERE type = 'table' AND name = '%s'},
+              FROM sqlite_master
+              WHERE type = 'table' AND name = '%s'},
             $table
         )
         ) {

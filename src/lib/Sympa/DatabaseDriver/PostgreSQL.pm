@@ -413,9 +413,9 @@ sub unset_primary_key {
     unless (
         $sth = $self->do_query(
             q{SELECT tc.constraint_name
-	  FROM information_schema.table_constraints AS tc
-	  WHERE tc.table_catalog = %s AND tc.table_name = %s AND
-		tc.constraint_type = 'PRIMARY KEY'},
+              FROM information_schema.table_constraints AS tc
+              WHERE tc.table_catalog = %s AND tc.table_name = %s AND
+                    tc.constraint_type = 'PRIMARY KEY'},
             $self->quote($self->{'db_name'}), $self->quote($param->{'table'})
         )
         ) {

@@ -30,9 +30,9 @@ use CGI::Cookie;
 use Digest::MD5;
 
 use Conf;
+use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::Log;
-use SDM;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::Password;
@@ -133,6 +133,8 @@ sub load {
     my $id_session;
     my $is_old_session = 0;
 
+    my $sdm = Sympa::DatabaseManager->instance;
+
     ## Load existing session.
     if ($cookie and $cookie =~ /^\d{,16}$/) {
         ## Compatibility: session by older releases of Sympa.
@@ -141,17 +143,18 @@ sub load {
 
         ## Session by older releases of Sympa doesn't have refresh_date.
         unless (
-            $sth = SDM::do_prepared_query(
+            $sdm
+            and $sth = $sdm->do_prepared_query(
                 q{SELECT id_session AS id_session, id_session AS prev_id,
-		     date_session AS "date",
-		     remote_addr_session AS remote_addr,
-		     email_session AS email,
-		     data_session AS data, hit_session AS hit,
-		     start_date_session AS start_date,
-		     date_session AS refresh_date
-	      FROM session_table
-	      WHERE id_session = ? AND
-		    refresh_date_session IS NULL},
+                         date_session AS "date",
+                         remote_addr_session AS remote_addr,
+                         email_session AS email,
+                         data_session AS data, hit_session AS hit,
+                         start_date_session AS start_date,
+                         date_session AS refresh_date
+                  FROM session_table
+                  WHERE id_session = ? AND
+                        refresh_date_session IS NULL},
                 $id_session
             )
             ) {
@@ -167,17 +170,18 @@ sub load {
 
         ## Cookie may contain current or previous session ID.
         unless (
-            $sth = SDM::do_prepared_query(
+            $sdm
+            and $sth = $sdm->do_prepared_query(
                 q{SELECT id_session AS id_session, prev_id_session AS prev_id,
-		     date_session AS "date",
-		     remote_addr_session AS remote_addr,
-		     email_session AS email,
-		     data_session AS data, hit_session AS hit,
-		     start_date_session AS start_date,
-		     refresh_date_session AS refresh_date
-	      FROM session_table
-	      WHERE id_session = ? AND prev_id_session IS NOT NULL OR
-		    prev_id_session = ?},
+                         date_session AS "date",
+                         remote_addr_session AS remote_addr,
+                         email_session AS email,
+                         data_session AS data, hit_session AS hit,
+                         start_date_session AS start_date,
+                         refresh_date_session AS refresh_date
+                  FROM session_table
+                  WHERE id_session = ? AND prev_id_session IS NOT NULL OR
+                        prev_id_session = ?},
                 $id_session, $id_session
             )
             ) {
@@ -206,11 +210,11 @@ sub load {
 
     ## Compatibility: Upgrade session by older releases of Sympa.
     if ($is_old_session) {
-        SDM::do_prepared_query(
+        $sdm->do_prepared_query(
             q{UPDATE session_table
-	      SET prev_id_session = id_session
-	      WHERE id_session = ? AND prev_id_session IS NULL AND
-		    refresh_date_session IS NULL},
+              SET prev_id_session = id_session
+              WHERE id_session = ? AND prev_id_session IS NULL AND
+                    refresh_date_session IS NULL},
             $id_session
         );
     }
@@ -259,20 +263,22 @@ sub store {
     my $data_string = Sympa::Tools::Data::hash_2_string(\%hash);
     my $time        = time;
 
+    my $sdm = Sympa::DatabaseManager->instance;
+
     ## If this is a new session, then perform an INSERT
     if ($self->{'new_session'}) {
-
-        ## Store the new session ID in the DB
-        ## Previous session ID is set to be same as new session ID.
+        # Store the new session ID in the DB
+        # Previous session ID is set to be same as new session ID.
         unless (
-            SDM::do_prepared_query(
+            $sdm
+            and $sdm->do_prepared_query(
                 q{INSERT INTO session_table
-	      (id_session, prev_id_session,
-	       date_session, refresh_date_session,
-	       remote_addr_session, robot_session,
-	       email_session, start_date_session, hit_session,
-	       data_session)
-	      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+                  (id_session, prev_id_session,
+                   date_session, refresh_date_session,
+                   remote_addr_session, robot_session,
+                   email_session, start_date_session, hit_session,
+                   data_session)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
                 $self->{'id_session'}, $self->{'id_session'},
                 $time,                 $time,
                 $ENV{'REMOTE_ADDR'},   $self->{'robot'},
@@ -291,13 +297,16 @@ sub store {
         ## If the session already exists in DB, then perform an UPDATE
 
         ## Cookie may contain previous session ID.
-        my $sth = SDM::do_prepared_query(
-            q{SELECT id_session
-	      FROM session_table
-	      WHERE prev_id_session = ?},
-            $self->{'id_session'}
-        );
-        unless ($sth) {
+        my $sth;
+        unless (
+            $sdm
+            and $sth = $sdm->do_prepared_query(
+                q{SELECT id_session
+                  FROM session_table
+                  WHERE prev_id_session = ?},
+                $self->{'id_session'}
+            )
+            ) {
             $log->syslog('err',
                 'Unable to update session information in database');
             return undef;
@@ -312,13 +321,13 @@ sub store {
 
         ## Update the new session in the DB
         unless (
-            SDM::do_prepared_query(
+            $sdm->do_prepared_query(
                 q{UPDATE session_table
-	      SET date_session = ?, remote_addr_session = ?,
-		  robot_session = ?, email_session = ?,
-		  start_date_session = ?, hit_session = ?, data_session = ?
-	      WHERE id_session = ? AND prev_id_session IS NOT NULL OR
-		    prev_id_session = ?},
+                  SET date_session = ?, remote_addr_session = ?,
+                      robot_session = ?, email_session = ?,
+                      start_date_session = ?, hit_session = ?, data_session = ?
+                  WHERE id_session = ? AND prev_id_session IS NOT NULL OR
+                        prev_id_session = ?},
                 $time,            $ENV{'REMOTE_ADDR'},
                 $self->{'robot'}, $self->{'email'},
                 $self->{'start_date'}, $self->{'hit'}, $data_string,
@@ -358,14 +367,18 @@ sub renew {
     }
 
     my $sth;
-    ## Cookie may contain previous session ID.
-    $sth = SDM::do_prepared_query(
-        q{SELECT id_session
-	  FROM session_table
-	  WHERE prev_id_session = ?},
-        $self->{'id_session'}
-    );
-    unless ($sth) {
+    my $sdm = Sympa::DatabaseManager->instance;
+
+    # Cookie may contain previous session ID.
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT id_session
+              FROM session_table
+              WHERE prev_id_session = ?},
+            $self->{'id_session'}
+        )
+        ) {
         $log->syslog('err',
             'Unable to update information for session %s in database',
             $self->{'id_session'});
@@ -401,27 +414,29 @@ sub renew {
     }
 
     ## First insert DB entry with new session ID,
-    $sth = SDM::do_query(
+    # Note: prepared query cannot be used, because use of placeholder (?) as
+    # selected value is not portable.
+    $sth = $sdm->do_query(
         q{INSERT INTO session_table
-	  (id_session, prev_id_session,
-	   start_date_session, date_session, refresh_date_session,
-	   remote_addr_session, robot_session, email_session,
-	   hit_session, data_session)
-	  SELECT %s, id_session,
-		 start_date_session, date_session, %d,
-		 %s, %s, email_session,
-		 hit_session, data_session
-	  FROM session_table
-	  WHERE (id_session = %s AND prev_id_session IS NOT NULL OR
-		 prev_id_session = %s) AND
-		(remote_addr_session <> %s OR refresh_date_session <= %d)},
-        SDM::quote($new_id),
+          (id_session, prev_id_session,
+           start_date_session, date_session, refresh_date_session,
+           remote_addr_session, robot_session, email_session,
+           hit_session, data_session)
+          SELECT %s, id_session,
+                 start_date_session, date_session, %d,
+                 %s, %s, email_session,
+                 hit_session, data_session
+          FROM session_table
+          WHERE (id_session = %s AND prev_id_session IS NOT NULL OR
+                 prev_id_session = %s) AND
+                (remote_addr_session <> %s OR refresh_date_session <= %d)},
+        $sdm->quote($new_id),
         $time,
-        SDM::quote($remote_addr),
-        SDM::quote($self->{'robot'}),
-        SDM::quote($self->{'id_session'}),
-        SDM::quote($self->{'id_session'}),
-        SDM::quote($remote_addr), $refresh_term
+        $sdm->quote($remote_addr),
+        $sdm->quote($self->{'robot'}),
+        $sdm->quote($self->{'id_session'}),
+        $sdm->quote($self->{'id_session'}),
+        $sdm->quote($remote_addr), $refresh_term
     );
     unless ($sth) {
         $log->syslog('err', 'Unable to renew session ID for session %s',
@@ -432,14 +447,14 @@ sub renew {
         return 0;
     }
     ## Keep previous ID to prevent crosstalk, clearing grand-parent ID.
-    SDM::do_prepared_query(
+    $sdm->do_prepared_query(
         q{UPDATE session_table
-	  SET prev_id_session = NULL
-	  WHERE id_session = ?},
+          SET prev_id_session = NULL
+          WHERE id_session = ?},
         $self->{'id_session'}
     );
     ## Remove record of grand-parent ID.
-    SDM::do_prepared_query(
+    $sdm->do_prepared_query(
         q{DELETE FROM session_table
           WHERE id_session = ? AND prev_id_session IS NULL},
         $self->{'prev_id'}
@@ -485,9 +500,14 @@ sub purge_old_sessions {
 
     my @sessions;
     my $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
+    unless ($sdm) {
+        $log->syslog('err', 'Unavailable database connection');
+        return;
+    }
 
     my (@conditions, @anonymous_conditions);
-    push @conditions, sprintf('robot_session = %s', SDM::quote($robot))
+    push @conditions, sprintf('robot_session = %s', $sdm->quote($robot))
         if $robot and $robot ne '*';
     @anonymous_conditions = @conditions;
 
@@ -501,16 +521,16 @@ sub purge_old_sessions {
         "email_session = 'nobody'", 'hit_session = 1';
 
     my $count_statement =
-        sprintf q{SELECT count(*) FROM session_table WHERE %s}, $condition;
+        sprintf q{SELECT COUNT(*) FROM session_table WHERE %s}, $condition;
     my $anonymous_count_statement =
-        sprintf q{SELECT count(*) FROM session_table WHERE %s},
+        sprintf q{SELECT COUNT(*) FROM session_table WHERE %s},
         $anonymous_condition;
 
     my $statement = sprintf q{DELETE FROM session_table WHERE %s}, $condition;
     my $anonymous_statement = sprintf q{DELETE FROM session_table WHERE %s},
         $anonymous_condition;
 
-    unless ($sth = SDM::do_query($count_statement)) {
+    unless ($sth = $sdm->do_query($count_statement)) {
         $log->syslog('err', 'Unable to count old session for robot %s',
             $robot);
         return undef;
@@ -520,13 +540,13 @@ sub purge_old_sessions {
     if ($total == 0) {
         $log->syslog('debug', 'No sessions to expire');
     } else {
-        unless ($sth = SDM::do_query($statement)) {
+        unless ($sth = $sdm->do_query($statement)) {
             $log->syslog('err', 'Unable to purge old sessions for robot %s',
                 $robot);
             return undef;
         }
     }
-    unless ($sth = SDM::do_query($anonymous_count_statement)) {
+    unless ($sth = $sdm->do_query($anonymous_count_statement)) {
         $log->syslog('err', 'Unable to count anonymous sessions for robot %s',
             $robot);
         return undef;
@@ -536,7 +556,7 @@ sub purge_old_sessions {
         $log->syslog('debug', 'No anonymous sessions to expire');
         return $total;
     }
-    unless ($sth = SDM::do_query($anonymous_statement)) {
+    unless ($sth = $sdm->do_query($anonymous_statement)) {
         $log->syslog('err', 'Unable to purge anonymous sessions for robot %s',
             $robot);
         return undef;
@@ -561,10 +581,15 @@ sub purge_old_tickets {
 
     my @tickets;
     my $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
+    unless ($sdm) {
+        $log->syslog('err', 'Unavailable database connection');
+        return;
+    }
 
     my @conditions;
     push @conditions,
-        sprintf('robot_one_time_ticket = %s', SDM::quote($robot))
+        sprintf('robot_one_time_ticket = %s', $sdm->quote($robot))
         if $robot and $robot ne '*';
     push @conditions, sprintf('%d > date_one_time_ticket', time - $delay)
         if $delay;
@@ -573,10 +598,10 @@ sub purge_old_tickets {
     my $where = "WHERE $condition" if $condition;
 
     my $count_statement =
-        sprintf 'SELECT count(*) FROM one_time_ticket_table %s', $where;
+        sprintf 'SELECT COUNT(*) FROM one_time_ticket_table %s', $where;
     my $statement = sprintf 'DELETE FROM one_time_ticket_table %s', $where;
 
-    unless ($sth = SDM::do_query($count_statement)) {
+    unless ($sth = $sdm->do_query($count_statement)) {
         $log->syslog('err',
             'Unable to count old one time tickets for robot %s', $robot);
         return undef;
@@ -586,7 +611,7 @@ sub purge_old_tickets {
     if ($total == 0) {
         $log->syslog('debug', 'No tickets to expire');
     } else {
-        unless ($sth = SDM::do_query($statement)) {
+        unless ($sth = $sdm->do_query($statement)) {
             $log->syslog('err',
                 'Unable to delete expired one time tickets for robot %s',
                 $robot);
@@ -606,9 +631,14 @@ sub list_sessions {
 
     my @sessions;
     my $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
+    unless ($sdm) {
+        $log->syslog('err', 'Unavailable database connection');
+        return undef;
+    }
 
     my @conditions;
-    push @conditions, sprintf('robot_session = %s', SDM::quote($robot))
+    push @conditions, sprintf('robot_session = %s', $sdm->quote($robot))
         if $robot and $robot ne '*';
     push @conditions, sprintf('%d < date_session ', time - $delay) if $delay;
     push @conditions, " email_session <> 'nobody' "
@@ -618,13 +648,13 @@ sub list_sessions {
 
     my $statement =
         sprintf q{SELECT remote_addr_session, email_session, robot_session,
-		 date_session AS date_epoch,
-		 start_date_session AS start_date_epoch, hit_session
-	  FROM session_table
-	  WHERE %s}, $condition;
+                         date_session AS date_epoch,
+                         start_date_session AS start_date_epoch, hit_session
+                  FROM session_table
+                  WHERE %s}, $condition;
     $log->syslog('debug', 'Statement = %s', $statement);
 
-    unless ($sth = SDM::do_query($statement)) {
+    unless ($sth = $sdm->do_query($statement)) {
         $log->syslog('err', 'Unable to get the list of sessions for robot %s',
             $robot);
         return undef;

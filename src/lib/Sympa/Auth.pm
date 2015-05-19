@@ -32,10 +32,10 @@ use POSIX qw();
 use Sympa;
 use Conf;
 use Sympa::Database;
+use Sympa::DatabaseManager;
 use Sympa::Log;
 use Sympa::Report;
 use Sympa::Robot;
-use SDM;
 use Sympa::Session;
 use tools;
 use Sympa::Tools::Data;
@@ -483,17 +483,20 @@ sub create_one_time_ticket {
     #    $email, $robot, $data_string, $remote_addr, $ticket);
 
     my $date = time;
-    my $sth;
 
+    my $sdm = Sympa::DatabaseManager->instance;
     unless (
-        SDM::do_prepared_query(
+        $sdm
+        and $sdm->do_prepared_query(
             q{INSERT INTO one_time_ticket_table
-          (ticket_one_time_ticket, robot_one_time_ticket,
-           email_one_time_ticket, date_one_time_ticket, data_one_time_ticket,
-           remote_addr_one_time_ticket, status_one_time_ticket)
-          VALUES (?, ?, ?, ?, ?, ?, ?)},
+              (ticket_one_time_ticket, robot_one_time_ticket,
+               email_one_time_ticket, date_one_time_ticket,
+               data_one_time_ticket,
+               remote_addr_one_time_ticket, status_one_time_ticket)
+              VALUES (?, ?, ?, ?, ?, ?, ?)},
             $ticket, $robot,
-            $email,       time, $data_string,
+            $email,  time,
+            $data_string,
             $remote_addr, 'open'
         )
         ) {
@@ -516,18 +519,19 @@ sub get_one_time_ticket {
     my $addr          = shift;
 
     my $sth;
-
+    my $sdm = Sympa::DatabaseManager->instance;
     unless (
-        $sth = SDM::do_prepared_query(
+        $sdm
+        and $sth = $sdm->do_prepared_query(
             q{SELECT ticket_one_time_ticket AS ticket,
-                 robot_one_time_ticket AS robot,
-                 email_one_time_ticket AS email,
-                 date_one_time_ticket AS "date",
-                 data_one_time_ticket AS data,
-                 remote_addr_one_time_ticket AS remote_addr,
-                 status_one_time_ticket as status
-          FROM one_time_ticket_table
-          WHERE ticket_one_time_ticket = ? AND robot_one_time_ticket = ?},
+                     robot_one_time_ticket AS robot,
+                     email_one_time_ticket AS email,
+                     date_one_time_ticket AS "date",
+                     data_one_time_ticket AS data,
+                     remote_addr_one_time_ticket AS remote_addr,
+                     status_one_time_ticket as status
+              FROM one_time_ticket_table
+              WHERE ticket_one_time_ticket = ? AND robot_one_time_ticket = ?},
             $ticket_number, $robot
         )
         ) {
@@ -575,7 +579,7 @@ sub get_one_time_ticket {
 
     if ($result eq 'success') {
         unless (
-            $sth = SDM::do_prepared_query(
+            $sth = $sdm->do_prepared_query(
                 q{UPDATE one_time_ticket_table
                   SET status_one_time_ticket = ?
                   WHERE ticket_one_time_ticket = ? AND

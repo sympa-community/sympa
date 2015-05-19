@@ -30,9 +30,9 @@ use Carp qw();
 
 use Sympa::Auth;
 use Sympa::DatabaseDescription;
+use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::Log;
-use SDM;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::Password;
@@ -164,8 +164,8 @@ sub moveto {
     unless (
         $sth = do_prepared_query(
             q{UPDATE user_table
-	      SET email_user = ?
-	      WHERE email_user = ?},
+              SET email_user = ?
+              WHERE email_user = ?},
             $newemail, $self->email
         )
         and $sth->rows
@@ -311,12 +311,14 @@ sub delete_global_user {
 
     return undef unless ($#users >= 0);
 
+    my $sdm = Sympa::DatabaseManager->instance;
     foreach my $who (@users) {
         $who = tools::clean_email($who);
         ## Update field
 
         unless (
-            SDM::do_prepared_query(
+            $sdm
+            and $sdm->do_prepared_query(
                 q{DELETE FROM user_table WHERE email_user = ?}, $who
             )
             ) {
@@ -340,19 +342,21 @@ sub get_global_user {
     }
 
     push @sth_stack, $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
 
     unless (
-        $sth = SDM::do_prepared_query(
+        $sdm
+        and $sth = $sdm->do_prepared_query(
             sprintf(
                 q{SELECT email_user AS email, gecos_user AS gecos,
-			 password_user AS password,
-			 cookie_delay_user AS cookie_delay, lang_user AS lang,
-			 attributes_user AS attributes, data_user AS data,
-			 last_login_date_user AS last_login_date,
-			 wrong_login_count_user AS wrong_login_count,
-			 last_login_host_user AS last_login_host%s
-		  FROM user_table
-		  WHERE email_user = ?},
+                         password_user AS password,
+                         cookie_delay_user AS cookie_delay, lang_user AS lang,
+                         attributes_user AS attributes, data_user AS data,
+                         last_login_date_user AS last_login_date,
+                         wrong_login_count_user AS wrong_login_count,
+                         last_login_host_user AS last_login_host%s
+                  FROM user_table
+                  WHERE email_user = ?},
                 $additional
             ),
             $who
@@ -412,9 +416,11 @@ sub get_all_global_user {
     my @users;
 
     push @sth_stack, $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
 
-    unless ($sth =
-        SDM::do_prepared_query('SELECT email_user FROM user_table')) {
+    unless ($sdm
+        and $sth =
+        $sdm->do_prepared_query('SELECT email_user FROM user_table')) {
         $log->syslog('err', 'Unable to gather all users in DB');
         $sth = pop @sth_stack;
         return undef;
@@ -438,11 +444,13 @@ sub is_global_user {
     return undef unless ($who);
 
     push @sth_stack, $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
 
     ## Query the Database
     unless (
-        $sth = SDM::do_prepared_query(
-            q{SELECT count(*) FROM user_table WHERE email_user = ?}, $who
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT COUNT(*) FROM user_table WHERE email_user = ?}, $who
         )
         ) {
         $log->syslog('err',
@@ -482,6 +490,12 @@ sub update_global_user {
         || $values->{'lang'}
         if $values->{'lang'};
 
+    my $sdm = Sympa::DatabaseManager->instance;
+    unless ($sdm) {
+        $log->syslog('err', 'Unavailable database connection');
+        return undef;
+    }
+
     my ($field, $value);
 
     ## Update each table
@@ -499,7 +513,7 @@ sub update_global_user {
             $value ||= 0;    ## Can't have a null value
             $set = sprintf '%s=%s', $map_field{$field}, $value;
         } else {
-            $set = sprintf '%s=%s', $map_field{$field}, SDM::quote($value);
+            $set = sprintf '%s=%s', $map_field{$field}, $sdm->quote($value);
         }
         push @set_list, $set;
     }
@@ -510,10 +524,10 @@ sub update_global_user {
 
     push @sth_stack, $sth;
 
-    $sth = SDM::do_query(
+    $sth = $sdm->do_query(
         "UPDATE user_table SET %s WHERE (email_user=%s)",
         join(',', @set_list),
-        SDM::quote($who)
+        $sdm->quote($who)
     );
     unless (defined $sth) {
         $log->syslog('err',
@@ -539,6 +553,12 @@ sub add_global_user {
         $values = {%$values};
     } else {
         $values = {@_};
+    }
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    unless ($sdm) {
+        $log->syslog('err', 'Unavailable databse connection');
+        return undef;
     }
 
     my ($field, $value);
@@ -567,7 +587,7 @@ sub add_global_user {
             $value ||= 0;    ## Can't have a null value
             $insert = $value;
         } else {
-            $insert = sprintf "%s", SDM::quote($value);
+            $insert = $sdm->quote($value);
         }
         push @insert_value, $insert;
         push @insert_field, $map_field{$field};
@@ -585,7 +605,7 @@ sub add_global_user {
     push @sth_stack, $sth;
 
     ## Update field
-    $sth = SDM::do_query(
+    $sth = $sdm->do_query(
         "INSERT INTO user_table (%s) VALUES (%s)",
         join(',', @insert_field),
         join(',', @insert_value)
