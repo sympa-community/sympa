@@ -20,7 +20,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = src default doc po www src/smtpc
+SUBDIRS = src default doc po www
+if SMTPC
+SUBDIRS += src/smtpc
+endif
 
 check_SCRIPTS = t/Language.t \
 		t/LockedFile.t \

@@ -112,6 +112,22 @@ AC_SUBST(localedir)
 AC_SUBST(confdir)
 AC_SUBST(docdir)
 
+## Disable smtpc command line utility
+AC_ARG_ENABLE(
+    smtpc,
+    AS_HELP_STRING(
+        [--disable-smtpc],
+        [do not install smtpc command line utility (default is yes)]
+    ),
+    [case "$enableval" in
+     yes) smtpc=true;;
+     no) smtpc=false;;
+     *) smtpc=true;;
+     esac],
+    [smtpc=true]
+)
+AM_CONDITIONAL([SMTPC], [test x$smtpc = xtrue])
+
 # allow user to redefine some of them
 AC_ARG_WITH(
     confdir,
