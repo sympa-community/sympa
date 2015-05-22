@@ -2,7 +2,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-sbin_PROGRAMS = smtpc
+bin_PROGRAMS = smtpc
 smtpc_SOURCES = \
 	smtpc.c \
 	sockstr.c \
@@ -11,8 +11,8 @@ smtpc_SOURCES = \
 	utf8.h
 man1_MANS = smtpc.1
 
-EXTRA_DIST = smtpc.1.in
-CLEANFILES = $(sbin_PROGRAMS) *~ *.bak core.*
+EXTRA_DIST = configure.gnu smtpc.1.in
+CLEANFILES = $(bin_PROGRAMS) *~ *.bak core.*
 
 smtpc.o: sockstr.h utf8.h
 

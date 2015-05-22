@@ -81,6 +81,11 @@ authorcheck:
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
 install-data-hook: installdir installconfig nextstep importantchanges
+if SMTPC
+	-chown $(USER) $(DESTDIR)$(libexecdir)/sympa_smtpc
+	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/sympa_smtpc
+	-chmod 750 $(DESTDIR)$(libexecdir)/sympa_smtpc
+endif
 
 installdir:
 	@echo "Creating plugin directory"

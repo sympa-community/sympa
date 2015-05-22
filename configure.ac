@@ -599,5 +599,9 @@ AC_CONFIG_FILES([
     src/sbin/Makefile
     www/Makefile
 ])
+
 AC_CONFIG_SUBDIRS([src/smtpc])
+SMTPC_CONFIGURE_OPTIONS="--bindir=$libexecdir --program-prefix=sympa_"
+export SMTPC_CONFIGURE_OPTIONS
+
 AC_OUTPUT
