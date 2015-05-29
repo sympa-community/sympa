@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2015-03-05 20:44+0000\n"
+"PO-Revision-Date: 2015-03-18 11:55+0000\n"
 "Last-Translator: shagi <shagi@gisa-elkartea.org>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "Language: eu\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Export-Date: 2006-12-11 09:58+0000\n"
-"X-POOTLE-MTIME: 1425588241.000000\n"
+"X-POOTLE-MTIME: 1426679752.000000\n"
 
 #: default/web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
@@ -382,9 +382,9 @@ msgid ""
 "To learn how to configure the list, please refer to the <a href=\"%1/help/"
 "listconfig\"><strong>documentation about list configuration</strong></a>."
 msgstr ""
-"Zerrenda nola konfiguratu ikasteko <a href=\"%1/help/\" \"listconfig\""
-"><strong>zerrenda konfigurazioari buruzko dokumentazioan</strong></a> "
-"begiratu mesedez."
+"Zerrenda nola konfiguratu ikasteko <a href=\"%1/help/listconfig\"><strong>"
+"zerrenda konfigurazioari buruzko dokumentazioan</strong></a> begiratu "
+"mesedez."
 
 #: default/web_tt2/help_admin.tt2:80
 msgid "Customizing the list"
@@ -1973,7 +1973,7 @@ msgstr ""
 "botoiarekin. Firefox bezalako nabigatzaile moderno bat erabiltzea "
 "gomendatzen dizugu. Ezin baduzu Internet Explorer ez den nabigatzailerik "
 "erabili, bilaketa emaitzak mantentzeko, mezuak leiho berrian irekitzea "
-"gomendatzen dizugu (eskuin klikatu \" \"esteketan eta 'Ireki leiho berrian' "
+"gomendatzen dizugu (eskuin klikatu esteketan eta 'Ireki leiho berrian' "
 "aukeratu) "
 
 #: default/web_tt2/help_editfile.tt2:3
@@ -2102,6 +2102,11 @@ msgid ""
 "the list, sympa uses the mode specified in the default_user_options "
 "paragraph."
 msgstr ""
+"<em>modelist</em> komaz bereiztutako modu lista bat da (mail, notice, "
+"digest, digestplain, summary, nomail). Zerrenda honetako harpidedunek modu "
+"hauek bakarrik erabili ahalko dituzte. Harpidedun batek zerrendan ez dagoen "
+"jasoera mota bat badu sympak default_user_options-en zehaztutakoa erabiliko "
+"du."
 
 #: default/web_tt2/help_editlist.tt2:22
 msgid "This paragraph defines bounce management parameters:"
@@ -2230,6 +2235,10 @@ msgid ""
 "concealed, even for owners. The cookie is applied to all list owners, and is "
 "only taken into account when the owner has the auth parameter."
 msgstr ""
+"Parametro hau kudeaketa komandoetarako (ADD, DELETE, etab.) autentifikazio "
+"giltzak sortzeko elementu pribatua da. Parametro hau ezkutatuta egon beharko "
+"luke, baita jabeengandik ere. Cookie-a jabe guztiei aplikatzen zaie, eta "
+"jabeak auth parametroa duenean bakarrik hartzen da kontutan."
 
 #: default/web_tt2/help_editlist.tt2:69
 msgid ""
@@ -2378,6 +2387,10 @@ msgid ""
 "second-level queries convert the DNs into e-mail addresses. This feature "
 "requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
+"Hemen harpidedunen zerrenda ematen duten bi mailetako galderarentzako "
+"parametroak definitzen dira. Normalean lehen mailako galderak DN-en zerrenda "
+"bat ematen du eta bigarren mailako galderak DNak eposta bihurtzen ditu. "
+"Honek Net::LDAP (perlldap) PERL modulua behar du."
 
 #: default/web_tt2/help_editlist.tt2:105
 msgid ""
@@ -2458,6 +2471,11 @@ msgid ""
 "owner of the list, you can choose other owners for the mailing list. "
 "Privileged owners may edit a few more options than other owners. "
 msgstr ""
+"Jabeek zerrendakoharpidedunak kudeatzen dituzte. Harpidedunak berrikusi "
+"ditzakete eta eposta zerrendatik eposta helbideak gehitu edo kendu. "
+"Zerrendako jabe berezia baldin bazara eposta zerrendarako beste jabeak "
+"hautatu ditzakezu. Jabe bereziak beste jabeak baino aukera gutxi batzuk "
+"gehiago editatu ditzakete."
 
 #: default/web_tt2/help_editlist.tt2:120
 msgid ""
@@ -3597,6 +3615,9 @@ msgid ""
 "strong> is reserved to the list's creator; other owners have a 'Normal' "
 "profile, which has fewer prerogatives."
 msgstr ""
+"Zerrenda batek jabe bat baino gehiago izan ditzake. Hala ere <strong>"
+"'Berezia' profila</strong> zerrendaren sortzailearentzat erreserbtuta dago; "
+"beste jabeek profil 'Normala' dute, murritzagoa."
 
 #: default/web_tt2/help_introduction.tt2:108
 msgid "Moderators"
@@ -3635,7 +3656,7 @@ msgstr "Moderatutako zerrendetan bakarrik gertatzen da."
 
 #: default/web_tt2/help_introduction.tt2:114
 msgid "Regulatory framework"
-msgstr ""
+msgstr "Araugintza esparrua"
 
 #: default/web_tt2/help_introduction.tt2:115
 msgid "The use of a mailing list service means respecting a number of rules:"
@@ -3664,6 +3685,8 @@ msgid ""
 "The use of mailing lists naturally means respecting the rules of good "
 "practices as regards to email."
 msgstr ""
+"Eposta zerrenden erabilpena naturalki epostarekin erlazionatutako praktika "
+"onen legeak errespetatzea dakar."
 
 #. (path_cgi)
 #: default/web_tt2/help_introduction.tt2:121
@@ -3673,6 +3696,10 @@ msgid ""
 "about <a href=\"%1/help/admin#rulesadmin\">good practices for owners and "
 "moderators</a>."
 msgstr ""
+"Gehiago jakiteko irakurri <a href=\"%1/help/sendmsg#rulesuser\">"
+"harpidedunentzako ohitura onak</a> lantzen dituen atala eta <a href=\""
+"%1/help/admin#rulesadmin\">jabe eta moderatzaileentzako praktika onak</a> "
+"lantzen dituena."
 
 #: default/web_tt2/help_listconfig.tt2:4
 msgid ""
@@ -3830,6 +3857,9 @@ msgid ""
 "profile</strong> is reserved to the list creator (other owners have a "
 "'Normal' profile)."
 msgstr ""
+"'Profila' parametroa ezin da aldatu: <strong>'Berezia' profila</strong> "
+"zerrendaren sortzailearentzat erreserbatuta dago (beste jabeek profil "
+"'Normala' dute)."
 
 #: default/web_tt2/help_listconfig.tt2:33
 msgid ""
@@ -3901,6 +3931,11 @@ msgid ""
 "to be sent. Then choose a <strong>delivery time</strong> for digests (please "
 "avoid choosing a time between 11 p.m. and midnight)."
 msgstr ""
+"'<strong>Bilduma maiztasuna</strong>' arean konpilatutako mezuak (Bilduma "
+"eta laburpen modual) zein maiztasunarekin bidaltzen diren definitu ahal duzu:"
+" zerrendan, hautatu bilduma bidali nahi duzun <strong>egun</strong> guztiak. "
+"Gero bildumentzako <strong>bidalketa ordua</strong> hautatu (mesedez ez "
+"hautatu 23:00 eta gauerdi harteko ordurik)."
 
 #: default/web_tt2/help_listconfig.tt2:42
 msgid ""
@@ -3989,6 +4024,13 @@ msgid ""
 "brackets</strong> (the square brackets are automatically added by the "
 "system, thus it is useless that you add them yourself)."
 msgstr ""
+"Azkenik, '<strong>Gaiaren etiketatzea</strong>' aukerak zerrendara "
+"bidalitako <strong>mezu guztien gaiaren aurrean txertatuko den "
+"testua</strong> hautatzen uzten dizu: honek harpidedunei mezuak errazago "
+"ordenatzea ahalbidetzen die, mezuak automatikoki prozesatzeko iragazkiak "
+"erabili, etab. Defektuz testu hau <strong>zerrendaren izena kortxeteen "
+"artean</strong> da (kortxeteak sistemak gehitzen ditu automatikoki, ez "
+"dituzu zuk bertan zehaztu behar)."
 
 #: default/web_tt2/help_listconfig.tt2:55
 msgid "Privileges"
@@ -4206,6 +4248,10 @@ msgid ""
 "list, accessible through a link in the left menu). You can define both the "
 "read and write access rights for the documents: "
 msgstr ""
+"Orri honetatik <strong>partekatutako dokumentuen web atalera aplikatuko "
+"diren baimenak definitu </strong> daitezke baita ere ('Partekatutako "
+"dokumentuak' atala, ezkerreko menuko menuan atzigarri). Dokumentuen irakurri "
+"eta idazteko baimenak definitu ahal dituzu:"
 
 #: default/web_tt2/help_listconfig.tt2:108
 msgid ""
@@ -6309,8 +6355,8 @@ msgid ""
 "\">How the mailing list service works</a> section."
 msgstr ""
 "Denbora apur bat aurrezteko, komando multzoa bidali ahal duzu mezu "
-"bakarrean. \" \"Horretarako, jarraitu <a href=\"#howitworks\">Nola dabil "
-"eposta zerrenden zerbitzua</a> ataleko instrukzioak."
+"bakarrean. Horretarako, jarraitu <a href=\"#howitworks\">Nola dabil eposta "
+"zerrenden zerbitzua</a> ataleko instrukzioak."
 
 #. (conf.host)
 #: default/web_tt2/help_user.tt2:38
@@ -7007,6 +7053,8 @@ msgid ""
 "click on the '<a href=\"%1/lists\">List of lists</a>' tab on top of page to "
 "<strong>display all available lists</strong>."
 msgstr ""
+"klikatu orriko goialdean dagoen '<a href=\"%1/lists\">Zerrenden zerrenda</a>"
+"' <strong> eskuragarri dauden zerrenda guztiak ikusteko</strong>"
 
 #: default/web_tt2/help_user.tt2:153
 msgid ""
@@ -7016,10 +7064,15 @@ msgid ""
 "However you can subscribe to a list that does not display if you know its "
 "name. To do this, <a href=\"#subscribe\">use your email client</a>."
 msgstr ""
+"Zure epostaren domeinuaren arabera (adibidez: <em class=\"example\""
+">cru.fr</em>, <em class=\"example\">fai.com</em>, etab.) eta izena ematen "
+"duzun kokapenaren arabera ikusten duzun zerrenda ezberdina izango da. "
+"Agertzen ez den zerrenda batera harpidetu zaitezke bere izena badakizu. "
+"Horretarako <a href=\"#subscribe\">erabili zure posta bezeroa</a>."
 
 #: default/web_tt2/help_user.tt2:155
 msgid "Reading a list archive online"
-msgstr ""
+msgstr "Zerrendako artxiboa webean irakurtzen"
 
 #. (path_cgi)
 #: default/web_tt2/help_user.tt2:156
@@ -7027,6 +7080,8 @@ msgid ""
 "Please refer to the <a href=\"%1/help/arc\"><strong>archive documentation</"
 "strong></a>."
 msgstr ""
+"Irakurri <a href=\"%1/help/arc\"><strong>artxiboaren "
+"dokumentazioa</strong></a> mesedez."
 
 #. (path_cgi)
 #: default/web_tt2/help_user.tt2:159
@@ -7034,6 +7089,8 @@ msgid ""
 "Please refer to the <a href=\"%1/help/sendmsg\"><strong>documentation about "
 "sending messages</strong></a>."
 msgstr ""
+"Irakurri <a href=\"%1/help/sendmsg\"><strong>mezuen bidalketarako "
+"dokumentazioa</strong></a> mesedez."
 
 #. (path_cgi)
 #: default/web_tt2/help_user.tt2:162
@@ -7041,10 +7098,12 @@ msgid ""
 "Please refer to the <a href=\"%1/help/shared\"><strong>shared document web "
 "space documentation</strong></a>."
 msgstr ""
+"Irakurri <a href=\"%1/help/shared\"><strong>partekatutako dokumentuen web "
+"atalaren dokumentazioa</strong></a> mesedez."
 
 #: default/web_tt2/help_user.tt2:164
 msgid "Suspending or resuming your subscription of each list"
-msgstr ""
+msgstr "Zerrenda bakoitzaren harpidetza baja edo alta ematen"
 
 #. (path_cgi)
 #: default/web_tt2/help_user.tt2:165
@@ -7052,6 +7111,8 @@ msgid ""
 "Please refer to the <a href=\"%1/help/suspend\"><strong>subscription "
 "management documentation</strong></a>."
 msgstr ""
+"Irakurri <a href=\"%1/help/suspend\"><strong>harpidetzen kudeaketaren "
+"dokumentazioa</strong></a> mesedez."
 
 #: default/web_tt2/help_user.tt2:167
 msgid "Unsubscribing from lists"
