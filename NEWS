@@ -3,304 +3,77 @@
 
 (See Changelog file for the full changes log)
 
-6.2b.9		March 13, 2015
+6.2		June 10, 2015
 
   Features:
+
+	[12174] Makefile.am, configure.ac:  (addition to r12172) If you don't
+	wish to install smtpc utility, use "--disable-smtpc" configure option.
+
+	[12172] Makefile.am, configure.ac, src/smtpc, src/smtpc/Makefile.am,
+	src/smtpc/configure.ac, src/smtpc/m4, src/smtpc/m4/ac_func_snprintf.m4,
+	src/smtpc/smtpc.1, src/smtpc/smtpc.c, src/smtpc/sockstr.c,
+	src/smtpc/sockstr.h, src/smtpc/utf8.c, src/smtpc/utf8.h: 
+	[experimental] "smtpc" is a command line utility aiming to be an
+	alternative to sendmail(1) utility and its clones with smaller
+	footprint. (Note that this utility needs SMTP/LMTP server realying
+	submitted messages).
+	It also supports some SMTP extensions several clones (and partly
+	original one) have not been supported:
+	- DSN extension - As of Sympa 6.2, message tracking feature requires
+	it.
+	- SMTPUTF8 extension - As of planned Sympa 7.0, email address
+	internalization (eai) feature presumes it.
+	To use smtpc as replacement of sendmail, add sympa.conf the lines:
+	sendmail      /path/to/smtpc
+	sendmail_args --esmtp <host name of relaying server>
+	or with LMTP server:
+	sendmail      /path/to/smtpc
+	sendmail_args --lmtp <socket path of relaying server>
+
+	[12151] sympa.spec.pl:	Source tarball will be distributed with
+	sympa.spec file.  It provides alternative way to build Sympa software
+	on platforms adopting RPM package management system.
+	In place of "configure; make; make install", you can do:
+	1. rpmbuild -tb sympa-X.X.tar.gz
+	2. Install dependent packages.
+	3. rpm --install sympa-X.X-1.xxxx.rpm
+	At once installation succeeded, you can upgrade it by doing:
+	1. rpmbuild -tb sympa-Y.Y.tar.gz
+	2. rpm --upgrade sympa-Y.Y-1.xxxx.rpm
+	3. sympa.pl --upgrade
+	Note:
+	- rpmbuild package has to be installed.
+	- Dependent packages are not always provided on your platform.	You
+	might want to add appropriate third-party repositories.
+
+	[12131] src/lib/Conf.pm:  Authentication methods ldap, cas and
+	generic_sso support full feature of LDAPS and LDAP/STARTSSL.  These
+	additional parameters may be put in auth.conf: use_start_ssl,
+	ssl_ciphers, ssl_cert, ssl_key, ca_verify, ca_path, ca_file.
+
+	[12098] www/js/sympa.js:  (r12097) Typo.
+
+	[12097] www/js/sympa.js:  [experimental] Adding langmark roles to
+	regions of the page.  These may improve experience with browsers
+	supporting WAI-ARIA.
+	cf. http://www.w3.org/TR/wai-aria/roles
+
+	[12065] src/lib/Sympa/DatabaseDriver/Oracle.pm:  Now Oracle driver can
+	update database structure automatically.
 
 	[12050] src/lib/Sympa/DatabaseDriver/Oracle.pm:  Now Oracle driver can
 	check database structure.
 	However, you still must update structure manually.
 
-  Bug fixes:
-
-	[12059] default/web_tt2/d_control.tt2, src/cgi/wwsympa.fcgi.in:  Sympa
-	would issue an error when trying to edit access control to a file in
-	the shared repository. This was due to a mismatch in parameters between
-	list owenrs and document owners.
-
-	[12058] src/lib/Conf.pm: [Reported by P. Grzesina, univ. of Regina]
-	Sympa issued errors when trying to setupe a CAS server for SSO login.
-	This was due to Sympa setting a hash value to scalar and then trying to
-	use this value as a hash ref. Fixed by deleting affectation to scalar
-	value - which is immediately changed to a hash anyway.
-
-	[12055] src/cgi/wwsympa.fcgi.in, src/sbin/sympa.pl.in:	wwsympa and
-	sympa/health_check did not check change of "cookie" parameter.
-
-	[12053] default/web_tt2/list_menu.tt2:	Additional list menu links had
-	vanished when setting up the new skin.
-
-	[12052] src/lib/Sympa/List.pm, src/sbin/archived.pl.in,
-	src/sbin/bounced.pl.in, src/sbin/bulk.pl.in,
-	src/sbin/sympa_automatic.pl.in, src/sbin/sympa_msg.pl.in,
-	src/sbin/task_manager.pl.in:  (probably fixes bug[#6204])
-	task_manager.pl sometimes ignores signal to shutdown it.  If there are
-	large number of lists, calling get_lists() can take long time and the
-	process cannot deal with TERM signal.
-	Now get_lists() checks HUP, INT and TERM signals and returns
-	immediately when signal is raised.  As a side effect of this fix,
-	get_lists() may return undef.
-
-	[12047] src/bin/create_db.Oracle, src/bin/create_db.Sybase,
-	src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/Log.pm,
-	src/lib/Sympa/Upgrade.pm:  If multiple instances of sympa_msg.pl are
-	running, i.e. incoming_max_count parameter is greater than 1, adding
-	information to stat_table occasionally fails.  Probably because forked
-	instances can share random seed used to generate primary key.
-	Fixed by removing id_stat field from stat_table: It was not used
-	anyway.
-
-6.2b.8		March 06, 2015
-
-  Features:
-
 	[12026] default/web_tt2/home.tt2:  News about list activities and
 	potential user errors are displayed at the home page.
-
-
-
-  Changes:
-
-	[12029] default/web_tt2/news.tt2, src/cgi/wwsympa.fcgi.in:  Impoving
-	the details given to user when errors are reported to him.
-
-  Bug fixes:
-
-	[12027] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/List.pm:  When
-	displaying user errors; errors were displayed even if the user was not
-	concerned by the error. Fixed by getting the actual user data.
-
-	[12025] src/lib/Sympa/Upgrade.pm:  When upgrading from pre-beta
-	version, archives parameters are renamed. The upgrade process crashed
-	on mail_access sub-parameters because they were set as a string instead
-	of as a scenario. Simply setting them as a hash containing a 'name'
-	entry whose value was the scenarion name was not enough: it led to
-	totally messed up archive parameters. Finally fixed by loading the
-	mail_access scenario to initialize the mail_access sub-parameter.
-
-6.2b.7		March 04, 2015
-
-  Changes:
-
-	[12004] src/lib/Sympa/Upgrade.pm:  If you upgrade from Sympa 6.2a or
-	6.2b, statistics are cleared, because older information is no longer
-	usable.
-
-6.2b.6		February 27, 2015
-
-  Changes:
-
-	[11995] src/lib/Sympa/Scenario.pm:  When scenario debug log is
-	activated, the scenario file used is also logged.
-
-	[11985] src/lib/Sympa/ListDef.pm, src/libexec/ldap_alias_manager.pl.in:
-	 Default cryptographic protocol of LDAP over SSL/TLS became TLSv1. 
-	Note that SSLv2 and SSLv3 are no longer recommended due to their
-	weakness.
-	- List config: The default of "ssl_version" parameters in
-	"include_ldap" paragraph and so on became "tlsv1".
-	- ldap_alias_manager.pl: New parameter "ldap_ssl_version" to specify
-	protocol version which defaults to "tlsv1" was introduced.  On earlier
-	releases it was fixed to "sslv3".
-
-  Bug fixes:
-
-	[11994] src/lib/Sympa/Family.pm:  When instantiating a family, Sympa
-	would crash if no list is found in the XML file. Preventing it by
-	setting the list of lists to create as an empty list. Having an empty
-	XML file can be a reasonnable (yet crude) mean to close all lists in a
-	family.
-
-	[11989] src/lib/Sympa/Family.pm:  Several bugs made family
-	instantiation crash sympa.
-
-	[11988] src/lib/Sympa/List.pm:	When using DB list cache, all lists
-	would be returned when queryinf the lists from a family, leading to the
-	possibility that ALL lists not belonging to a family would be closed if
-	close_unkown option was used.
-
-6.2b.5		February 25, 2015
-
-  Features:
 
 	[11969] src/lib/Sympa/ConfDef.pm, src/sbin/sympa_msg.pl.in: 
 	[experimental] Multiple instances of sympa_msg.pl, daemon processing
 	incoming message spool, may be run.  Multiplicity is controlled by
 	"incoming_max_count" config parameter: By default single instance will
 	run.
-
-
-
-  Changes:
-
-	[11978] src/bin/mod2html.pl.in, src/bin/testlogs.pl.in,
-	src/cgi/sympa_soap_server.fcgi.in, src/cgi/wwsympa.fcgi.in,
-	src/lib/Log.pm, src/libexec/alias_manager.pl.in,
-	src/sbin/archived.pl.in, src/sbin/bounced.pl.in, src/sbin/bulk.pl.in,
-	src/sbin/sympa.pl.in, src/sbin/sympa_automatic.pl.in,
-	src/sbin/sympa_msg.pl.in, src/sbin/sympa_newaliases.pl.in,
-	src/sbin/task_manager.pl.in:  A few service names in system log and
-	database logs were changed.  Now they are taken from the name of each
-	program:
-	- sympa_automatic.pl : "sympa_automatic" (formerley "sympa")
-	- sympa_msg.pl : "sympa_msg" (formerly "sympa")
-	Exception:
-	- sympa_soap_server.fcgi : "sympasoap" (formerly "soap")
-	ToDo: sympa_soap_server.fcgi would be renamed.
-
-	[11970] src/lib/Sympa/List.pm, src/lib/Sympa/Upgrade.pm,
-	src/lib/tools.pm, src/sbin/sympa.pl.in, src/sbin/sympa_msg.pl.in:  Now
-	digest spool will keep messages as separate files by each, instead of
-	accumulating messages in single file with RFC934 format.  This change
-	is desirable because messages may be locked and handled safely.
-
-  Bug fixes:
-
-	[11980] src/lib/Conf.pm, src/lib/Sympa/List.pm,
-	src/lib/Sympa/ListDef.pm: [#9665] [Reported by L. Einarsen, Norges
-	teknisk-naturvitenskapelige universitet] Invalid SSL_version "tls"
-	specified in include_ldap_query.  Recent versions of IO::Socket::SSL
-	(though it is not explicitly documented that which version changed the
-	syntax) accepts "tlsv1" and so on.
-	Fixed by treating "tls" as synonim of "tlsv1".	Additionally, "tlsv1_1"
-	and "tlsv1_2" are also supported now.
-
-	[11979] src/cgi/wwsympa.fcgi.in, src/lib/Log.pm,
-	src/lib/Sympa/Commands.pm, src/lib/Sympa/List.pm:  Statistics: Some
-	action weren't recorded correctly and were omitted.  Fixed by
-	correcting typos.
-
-6.2b.4		February 13, 2015
-
-  Changes:
-
-	[11912] src/etc/script/sympa.generic, src/etc/script/sympa.in,
-	src/libexec/alias_manager.pl.in, src/sbin/Makefile.am,
-	src/sbin/archived.pl.in, src/sbin/bounced.pl.in, src/sbin/bulk.pl.in,
-	src/sbin/sympa.pl.in, src/sbin/sympa.pl.in:11903),
-	src/sbin/sympa.pl.in:11903), src/sbin/task_manager.pl.in:  sympa.pl was
-	splitted to three programs: sympa.pl command-line utility, sympa_msg.pl
-	daemon and sympa_automatic.pl daemon.
-
-  Bug fixes:
-
-	[11949] src/lib/Sympa/Tools/SMIME.pm:  Crypt::OpenSSL::X509->email has
-	a bug: when email comes from subjectAltName certificate field, it
-	return the whole field as a string. Consequently, if several addresses
-	are defined in this field, it returns
-	address1@domain.tldaddress2@domain.tld... Fixed by explicitely parsing
-	subjectAltName before deciding how to set the email. A bug report has
-	been made to the module maintainer:
-	https://github.com/dsully/perl-crypt-openssl-x509/issues/40
-
-	[11946] src/sbin/sympa_wizard.pl.in:  In some cases, module install
-	would fall in a recursive infintie llop. It was because we first called
-	CAPN::Shell::make, then force or test, then only install. It looks like
-	make would not actually install dependencies, but only build them.
-	Consequently, dependencies reuired to build a module would never be
-	available forerequire, leading to the infinite loop. Fixed by simply
-	skipping all the make, force and test to directly go to the install
-	call. It performs make and test anyway.
-
-	[11942] default/Makefile.am, default/mail_tt2/authorization_reject.tt2,
-	default/scenari/access_web_archive.closed:11920),
-	default/scenari/access_web_archive.owner:11920),
-	default/scenari/access_web_archive.private:11920),
-	default/scenari/access_web_archive.public:11920),
-	src/lib/Sympa/Commands.pm, src/lib/Sympa/ListDef.pm:  Blacklist was not
-	applied to GET, INDEX and LAST email commands.
-	New scenario archive_mail_access (archive.mail_access in list config)
-	is intrduced, and it will perform authorization.
-
-	[11920] src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/List.pm: 
-	Stat for mail sending had disappeared.
-
-	[11919] src/lib/Sympa/ModDef.pm:  DBD::mysql module was mandatory. It
-	should not.
-
-	[11914] src/lib/Sympa/ConfDef.pm:  Bad defaults and examples were set
-	for the http_host parameter: it must not start by http:// or https://.
-	Protocol is irrelevant. Only the domain part is usefull.
-
-	[11910] src/sbin/sympa.pl.in:  Fix "constant" getter to satisfy "strict
-	subs".
-
-6.2b.3		January 30, 2015
-
-  Changes:
-
-	[11881] src/bin/Makefile.am:  create_db scripts for MySQL, PostgreSQL
-	and SQLite were dropped.
-	Use sympa.pl --health_check instead.
-
-	[11880] default/web_tt2/editsubscriber.tt2,
-	default/web_tt2/tracking.tt2, src/cgi/wwsympa.fcgi.in,
-	src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/Tracking.pm,
-	src/sbin/bounced.pl.in, src/sbin/task_manager.pl.in:  Tracking: DSN and
-	MDN are no longer stored into database table: They are stored into
-	bounce directory by each list.
-	Additionally, notifications may be shown in separate viewbounce page,
-	instead of loading all notifications at the time of showing tracking
-	index page.
-
-  Bug fixes:
-
-	[11898] src/cgi/wwsympa.fcgi.in, src/sbin/sympa.pl.in,
-	src/sbin/task_manager.pl.in:  Default robot was ignored and its lists
-	won't be processed in some cases,
-	if no virtual robot setting with the same domain as default robot.
-	sympa.pl:
-	- --change_user_email omits lists in default robot.
-	task_manager.pl:
-	- List tasks in default robot aren't loaded. 
-	- purge_user_table task: Users subscribing only to the lists in default
-	robot will be purged.
-
-	[11884] src/libexec/Makefile.am: [Reported by B. Eliassen] An option
-	given to install(1) terminates installation.  This utility at least of
-	Solaris needs the space between "-m" and argument.
-
-	[11877] src/lib/Sympa/Mailer.pm:  Postfix: If tracking feature is
-	enabled, distribution of messages will be denied when Envelope-Id is
-	"10" to "99".  Postfix (2.3 or later) clone of sendmail interprets -V
-	option with two characters as -XV option and rejects it because
-	argument is incorrect.
-	Fixed by padding "0" to make length of envid at least eight.
-
-	[11863] default/web_tt2/crash.tt2, default/web_tt2/main.tt2,
-	default/web_tt2/tt2_error.tt2, src/cgi/wwsympa.fcgi.in:  WWSympa: When
-	TT2 parse error occurs and tt2_error.tt2 has error again, no content is
-	sent and HTTP server will report error status (e.g. 503 with nginx).
-	To prevent such situation, wrap PROCESS directives in this template
-	with TRY...CATCH.  The same measure is taken for crash.tt2.
-
-6.2b.2		January 16, 2015
-
-  Changes:
-
-*****	[11848] src/lib/Conf.pm, src/lib/Sympa/Upgrade.pm:  Improved upgrade
-*****	process:
-*****	- Now CSS files and colors are automatically forced to be defaulted to
-*****	Sympa default values
-*****	- templates are reinitialized to match the new Sympa skin
-*****	The following files and directories are copies:
-*****	- sympa.conf
-*****	- robot.conf
-*****	- web_tt2 for etc and each robot
-*****	Users should see how their customization can be reinserted into the new
-*****	Sympa skin.
-
-  Bug fixes:
-
-	[11847] src/lib/Sympa/List.pm:	Lists typed with upper-case by end
-	users were considered as not existing on the server. This was because
-	the name typed by the user was compared to the list folder name, which
-	iw always lower-cased. Fixed by lower-casing the list name before
-	creating a new List object.
-
-6.2b.1		January 12, 2015
-
-  Features:
 
 	[11806] default/Makefile.am, default/web_tt2/admin.tt2,
 	default/web_tt2/arcsearch_form.tt2,
@@ -1056,6 +829,138 @@
 
   Changes:
 
+	[12182] default/Makefile.am, default/web_tt2/active_lists.tt2,
+	[Submitted by O. Lumineau, RENATER] Improved web skin with responsive design and several
+	skins bug fixes. You'll note that the Sympa top menu is back. For those
+	of you who preferred the original Massey side menu, you can switch the
+	menu position by simply editing the main.tt2 template. At the
+	beginning, you'll see this: [% top_menu = 1 %]. Simply set this
+	variable value to 0 and the menu will go back on the side and clear up
+	the top window area.
+
+	[12180] Makefile.am, configure.ac, src/smtpc/Makefile.am,
+	src/smtpc/configure.gnu, sympa.spec.pl:  (r12172) Move $sbindir/smtpc
+	to $libexecdir/sympa_smtpc and restrict access permission only to sympa
+	user.  Below is revised commit log message.
+
+	[12132] src/lib/Sympa/DatabaseDriver/LDAP.pm:  Now "ca_verify none"
+	must be specified explicitly to disable certificate verification in
+	LDAP data sources and LDAP authentication service including cas and
+	generic_sso.
+	Background: Earlier releases of IO::Socket::SSL would fallback
+	SSL_verify_mode to SSL_VERIFY_NONE when there are no usable CAfile nor
+	CApath.  However, recent releases won't: They simply deny connection. 
+	As a workaround, make ca_file or ca_path parameter mandatory unless
+	"none" is explicitly assigned to ca_verify parameter (its default is
+	"optional").
+
+	[12129] src/bin/Makefile.am, src/bin/testldap.pl.in:12113),
+	src/bin/testldap.pl.in:  testldap.pl was renamed to sympa_test_ldap.pl
+	and uses LDAP database driver.
+
+	[12127] src/lib/Sympa/ConfDef.pm:  Making urlize_min_size definable at
+	the virtual host level.
+
+	[12093] default/create_list_templates/confidential/comment.tt2,
+	default/create_list_templates/discussion_list/comment.tt2,
+	default/create_list_templates/hotline/comment.tt2,
+	default/create_list_templates/html-news-letter/comment.tt2,
+	default/create_list_templates/intranet_list/comment.tt2,
+	default/create_list_templates/news-letter/comment.tt2,
+	default/create_list_templates/private_working_group/comment.tt2,
+	default/create_list_templates/public_web_forum/comment.tt2,
+	default/web_tt2/create_list_request.tt2, src/cgi/wwsympa.fcgi.in,
+	src/lib/tools.pm:  Format of create list templates was changed. 
+	comment.tt2 may have title line.  "title.gettext" and "title.<lang>"
+	are allowed.  Customized templates for earlier releases should be
+	modified.
+
+	[12075] src/bin/arc2webarc.pl.in, src/cgi/wwsympa.fcgi.in,
+	src/lib/Conf.pm, src/lib/Makefile.am, src/lib/Sympa/List.pm,
+	src/lib/Sympa/Spool/Archive.pm, src/lib/Sympa/Upgrade.pm,
+	src/sbin/archived.pl.in:  Format of messages in archiving spool
+	("outgoing" spool) are changed.  By this change, messages will be
+	handled safer and archiving will be done a bit faster.
+	Messages in the spool with older format will be automatically migrated
+	during upgrading process.
+
+	[12074] src/bin/Makefile.am:  create_db script for Oracle was dropped.
+	Use sympa.pl --health_check instead.
+
+	[12029] default/web_tt2/news.tt2, src/cgi/wwsympa.fcgi.in:  Impoving
+	the details given to user when errors are reported to him.
+
+	[12004] src/lib/Sympa/Upgrade.pm:  If you upgrade from Sympa 6.2a or
+	6.2b, statistics are cleared, because older information is no longer
+	usable.
+
+	[11995] src/lib/Sympa/Scenario.pm:  When scenario debug log is
+	activated, the scenario file used is also logged.
+
+	[11985] src/lib/Sympa/ListDef.pm, src/libexec/ldap_alias_manager.pl.in:
+	 Default cryptographic protocol of LDAP over SSL/TLS became TLSv1. 
+	Note that SSLv2 and SSLv3 are no longer recommended due to their
+	weakness.
+	- List config: The default of "ssl_version" parameters in
+	"include_ldap" paragraph and so on became "tlsv1".
+	- ldap_alias_manager.pl: New parameter "ldap_ssl_version" to specify
+	protocol version which defaults to "tlsv1" was introduced.  On earlier
+	releases it was fixed to "sslv3".
+	[11978] src/bin/mod2html.pl.in, src/bin/testlogs.pl.in,
+	src/cgi/sympa_soap_server.fcgi.in, src/cgi/wwsympa.fcgi.in,
+	src/lib/Log.pm, src/libexec/alias_manager.pl.in,
+	src/sbin/archived.pl.in, src/sbin/bounced.pl.in, src/sbin/bulk.pl.in,
+	src/sbin/sympa.pl.in, src/sbin/sympa_automatic.pl.in,
+	src/sbin/sympa_msg.pl.in, src/sbin/sympa_newaliases.pl.in,
+	src/sbin/task_manager.pl.in:  A few service names in system log and
+	database logs were changed.  Now they are taken from the name of each
+	program:
+	- sympa_automatic.pl : "sympa_automatic" (formerley "sympa")
+	- sympa_msg.pl : "sympa_msg" (formerly "sympa")
+	Exception:
+	- sympa_soap_server.fcgi : "sympasoap" (formerly "soap")
+	ToDo: sympa_soap_server.fcgi would be renamed.
+
+	[11970] src/lib/Sympa/List.pm, src/lib/Sympa/Upgrade.pm,
+	src/lib/tools.pm, src/sbin/sympa.pl.in, src/sbin/sympa_msg.pl.in:  Now
+	digest spool will keep messages as separate files by each, instead of
+	accumulating messages in single file with RFC934 format.  This change
+	is desirable because messages may be locked and handled safely.
+
+	[11912] src/etc/script/sympa.generic, src/etc/script/sympa.in,
+	src/libexec/alias_manager.pl.in, src/sbin/Makefile.am,
+	src/sbin/archived.pl.in, src/sbin/bounced.pl.in, src/sbin/bulk.pl.in,
+	src/sbin/sympa.pl.in, src/sbin/sympa.pl.in:11903),
+	src/sbin/sympa.pl.in:11903), src/sbin/task_manager.pl.in:  sympa.pl was
+	splitted to three programs: sympa.pl command-line utility, sympa_msg.pl
+	daemon and sympa_automatic.pl daemon.
+
+	[11881] src/bin/Makefile.am:  create_db scripts for MySQL, PostgreSQL
+	and SQLite were dropped.
+	Use sympa.pl --health_check instead.
+
+	[11880] default/web_tt2/editsubscriber.tt2,
+	default/web_tt2/tracking.tt2, src/cgi/wwsympa.fcgi.in,
+	src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/Tracking.pm,
+	src/sbin/bounced.pl.in, src/sbin/task_manager.pl.in:  Tracking: DSN and
+	MDN are no longer stored into database table: They are stored into
+	bounce directory by each list.
+	Additionally, notifications may be shown in separate viewbounce page,
+	instead of loading all notifications at the time of showing tracking
+	index page.
+
+*****	[11848] src/lib/Conf.pm, src/lib/Sympa/Upgrade.pm:  Improved upgrade
+*****	process:
+*****	- Now CSS files and colors are automatically forced to be defaulted to
+*****	Sympa default values
+*****	- templates are reinitialized to match the new Sympa skin
+*****	The following files and directories are copies:
+*****	- sympa.conf
+*****	- robot.conf
+*****	- web_tt2 for etc and each robot
+*****	Users should see how their customization can be reinserted into the new
+*****	Sympa skin.
+
 	[11804] src/bin/Makefile.am, src/bin/crypt_passwd.pl.in,
 	src/bin/crypt_passwd.pl.in:11797), src/lib/Sympa/Upgrade.pm,
 	src/sbin/sympa.pl.in:  "sympa.pl --md5_encode_password" was obsoleted:
@@ -1807,6 +1712,236 @@
 	performed by task_manager (purge_tables task)
 
   Bug fixes:
+
+	[12170] src/lib/Sympa/List.pm, src/lib/Sympa/Message.pm,
+	src/sbin/sympa_msg.pl.in:  [Reported by R. Klorese, QueerNet] Despite
+	that posts to the list are protected against DMARC aggressive policy,
+	messages sent to owners or editors of the list are not.  Now such
+	messages will also be protected.
+	More known bug: Messages sent to listmaster would also be protected.
+	ToDo: Test.
+
+	[12169] src/lib/Sympa/List.pm:	If an inclusion setting (*.incl) is
+	malformed, task_manager.pl running sync_include task crashes.
+	Fixed by checking if *.incl file is successfully parsed.
+
+	[12149] Makefile.am, src/sbin/sympa_wizard.pl.in:  sympa.conf should be
+	writable by sympa user and should not be world-readable.  Because it
+	may be edited via web interface, and it contains secure "cookie"
+	parameter.  This file generated by initial "make install" was owned by
+	installing user (root) and was world readable.	Fixed by make
+	sympa_wizard.pl to set appropriate umask and makefile to set owner.
+
+	[12126] src/lib/Sympa/Admin.pm:  When renaming a list, digest spool was
+	not renamed.
+
+	[12120] src/cgi/wwsympa.fcgi.in:  If signoff action failed, WWSympa
+	crashes.
+	Fixed by removing a hash dereference on scalar.
+
+	[12094] src/cgi/wwsympa.fcgi.in, src/lib/Conf.pm: [Submitted by P.
+	Grzesina, univ. Regina] When CAS was enabled, if you weren't already
+	authenticated against CAS, the browser would go into a redirect loop
+	when you went to Sympa. If you were authenticated, Sympa would not get
+	the user information.
+
+	[12092] src/cgi/wwsympa.fcgi.in:  Missing @other_include_path for RSS
+	too.
+
+	[12087] default/mhonarc-ressources.tt2,
+	default/web_tt2/add_request.tt2, default/web_tt2/arcsearch_form.tt2,
+	default/web_tt2/compose_mail.tt2, default/web_tt2/editsubscriber.tt2,
+	default/web_tt2/exclusion_table.tt2, default/web_tt2/modform.tt2,
+	default/web_tt2/request_topic.tt2, default/web_tt2/review.tt2,
+	default/web_tt2/reviewbouncing.tt2, default/web_tt2/search_user.tt2,
+	default/web_tt2/set_pending_list_request.tt2,
+	default/web_tt2/viewmod.tt2: [#9735][Reported by Y. Baouchi, Univ. of
+	Colorado] In the screen, label should precede to checkbox.  If it was
+	not, "quiet" checkbox is read first by screen readers and user doesn't
+	know what the checkbox is related to.  So they have to continue on,
+	find a label "quiet" then go back to the checkbox to check it if
+	desired.
+	Note: mhonarc-ressources.tt2 was changed: Past archives can need to be
+	rebuilt.
+
+	[12086] default/web_tt2/blacklist.tt2: [#9740][Reported by Y. Baouchi,
+	Univ. of Colorado] Character should be read by its name, for example
+	"number sign" instead of "#".  Latter may often not be read properly by
+	e.g. screen readers.
+	Also in a few other templates, using "#" as abbreviation of the word
+	"number" is inappropriate.
+
+	[12085] default/web_tt2/footer.tt2: [#9727][Reported by Y. Baouchi,
+	Univ. of Colorado] Missing alt attribute in <img> element.
+
+	[12081] src/lib/Sympa/Auth.pm:	LDAP authentication fails to get email.
+	 The "alloptions" feature of Net::LDAP::Entry returns an array of
+	hashrefs, not of scalars.
+	As a quick fix, alloptions was disabled, while it is desired.
+
+	[12078] src/lib/Sympa/Archive.pm, src/lib/Sympa/Commands.pm:  INDEX
+	mail command returned wrong dates and sizes of archives.
+	Fixed by getting them of arctxt directories.  Additionally, now sizes
+	are shown in kilobytes.
+
+	[12064] src/lib/Sympa/Message.pm, src/lib/tools.pm,
+	src/sbin/sympa_msg.pl.in:  A few bugs on email command processing:
+	- Long lines folded by flowed format (RFC 3676) were not handled
+	correctly.
+	- mesaddressed_commands feature checked encoded body.
+
+	[12059] default/web_tt2/d_control.tt2, src/cgi/wwsympa.fcgi.in:  Sympa
+	would issue an error when trying to edit access control to a file in
+	the shared repository. This was due to a mismatch in parameters between
+	list owenrs and document owners.
+
+	[12058] src/lib/Conf.pm: [Reported by P. Grzesina, univ. of Regina]
+	Sympa issued errors when trying to setupe a CAS server for SSO login.
+	This was due to Sympa setting a hash value to scalar and then trying to
+	use this value as a hash ref. Fixed by deleting affectation to scalar
+	value - which is immediately changed to a hash anyway.
+
+	[12055] src/cgi/wwsympa.fcgi.in, src/sbin/sympa.pl.in:	wwsympa and
+	sympa/health_check did not check change of "cookie" parameter.
+
+	[12053] default/web_tt2/list_menu.tt2:	Additional list menu links had
+	vanished when setting up the new skin.
+
+	[12052] src/lib/Sympa/List.pm, src/sbin/archived.pl.in,
+	src/sbin/bounced.pl.in, src/sbin/bulk.pl.in,
+	src/sbin/sympa_automatic.pl.in, src/sbin/sympa_msg.pl.in,
+	src/sbin/task_manager.pl.in:  (probably fixes bug[#6204])
+	task_manager.pl sometimes ignores signal to shutdown it.  If there are
+	large number of lists, calling get_lists() can take long time and the
+	process cannot deal with TERM signal.
+	Now get_lists() checks HUP, INT and TERM signals and returns
+	immediately when signal is raised.  As a side effect of this fix,
+	get_lists() may return undef.
+
+	[12047] src/bin/create_db.Oracle, src/bin/create_db.Sybase,
+	src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/Log.pm,
+	src/lib/Sympa/Upgrade.pm:  If multiple instances of sympa_msg.pl are
+	running, i.e. incoming_max_count parameter is greater than 1, adding
+	information to stat_table occasionally fails.  Probably because forked
+	instances can share random seed used to generate primary key.
+	Fixed by removing id_stat field from stat_table: It was not used
+	anyway.
+
+	[12027] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/List.pm:  When
+	displaying user errors; errors were displayed even if the user was not
+	concerned by the error. Fixed by getting the actual user data.
+
+	[12025] src/lib/Sympa/Upgrade.pm:  When upgrading from pre-beta
+	version, archives parameters are renamed. The upgrade process crashed
+	on mail_access sub-parameters because they were set as a string instead
+	of as a scenario. Simply setting them as a hash containing a 'name'
+	entry whose value was the scenarion name was not enough: it led to
+	totally messed up archive parameters. Finally fixed by loading the
+	mail_access scenario to initialize the mail_access sub-parameter.
+
+	[11994] src/lib/Sympa/Family.pm:  When instantiating a family, Sympa
+	would crash if no list is found in the XML file. Preventing it by
+	setting the list of lists to create as an empty list. Having an empty
+	XML file can be a reasonnable (yet crude) mean to close all lists in a
+	family.
+
+	[11989] src/lib/Sympa/Family.pm:  Several bugs made family
+	instantiation crash sympa.
+
+	[11988] src/lib/Sympa/List.pm:	When using DB list cache, all lists
+	would be returned when queryinf the lists from a family, leading to the
+	possibility that ALL lists not belonging to a family would be closed if
+	close_unkown option was used.
+
+	[11980] src/lib/Conf.pm, src/lib/Sympa/List.pm,
+	src/lib/Sympa/ListDef.pm: [#9665] [Reported by L. Einarsen, Norges
+	teknisk-naturvitenskapelige universitet] Invalid SSL_version "tls"
+	specified in include_ldap_query.  Recent versions of IO::Socket::SSL
+	(though it is not explicitly documented that which version changed the
+	syntax) accepts "tlsv1" and so on.
+	Fixed by treating "tls" as synonim of "tlsv1".	Additionally, "tlsv1_1"
+	and "tlsv1_2" are also supported now.
+
+	[11979] src/cgi/wwsympa.fcgi.in, src/lib/Log.pm,
+	src/lib/Sympa/Commands.pm, src/lib/Sympa/List.pm:  Statistics: Some
+	action weren't recorded correctly and were omitted.  Fixed by
+	correcting typos.
+
+	[11949] src/lib/Sympa/Tools/SMIME.pm:  Crypt::OpenSSL::X509->email has
+	a bug: when email comes from subjectAltName certificate field, it
+	return the whole field as a string. Consequently, if several addresses
+	are defined in this field, it returns
+	address1@domain.tldaddress2@domain.tld... Fixed by explicitely parsing
+	subjectAltName before deciding how to set the email. A bug report has
+	been made to the module maintainer:
+	https://github.com/dsully/perl-crypt-openssl-x509/issues/40
+
+	[11946] src/sbin/sympa_wizard.pl.in:  In some cases, module install
+	would fall in a recursive infintie llop. It was because we first called
+	CAPN::Shell::make, then force or test, then only install. It looks like
+	make would not actually install dependencies, but only build them.
+	Consequently, dependencies reuired to build a module would never be
+	available forerequire, leading to the infinite loop. Fixed by simply
+	skipping all the make, force and test to directly go to the install
+	call. It performs make and test anyway.
+
+	[11942] default/Makefile.am, default/mail_tt2/authorization_reject.tt2,
+	default/scenari/access_web_archive.closed:11920),
+	default/scenari/access_web_archive.owner:11920),
+	default/scenari/access_web_archive.private:11920),
+	default/scenari/access_web_archive.public:11920),
+	src/lib/Sympa/Commands.pm, src/lib/Sympa/ListDef.pm:  Blacklist was not
+	applied to GET, INDEX and LAST email commands.
+	New scenario archive_mail_access (archive.mail_access in list config)
+	is intrduced, and it will perform authorization.
+
+	[11920] src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/List.pm: 
+	Stat for mail sending had disappeared.
+
+	[11919] src/lib/Sympa/ModDef.pm:  DBD::mysql module was mandatory. It
+	should not.
+
+	[11914] src/lib/Sympa/ConfDef.pm:  Bad defaults and examples were set
+	for the http_host parameter: it must not start by http:// or https://.
+	Protocol is irrelevant. Only the domain part is usefull.
+
+	[11910] src/sbin/sympa.pl.in:  Fix "constant" getter to satisfy "strict
+	subs".
+
+	[11898] src/cgi/wwsympa.fcgi.in, src/sbin/sympa.pl.in,
+	src/sbin/task_manager.pl.in:  Default robot was ignored and its lists
+	won't be processed in some cases,
+	if no virtual robot setting with the same domain as default robot.
+	sympa.pl:
+	- --change_user_email omits lists in default robot.
+	task_manager.pl:
+	- List tasks in default robot aren't loaded. 
+	- purge_user_table task: Users subscribing only to the lists in default
+	robot will be purged.
+
+	[11884] src/libexec/Makefile.am: [Reported by B. Eliassen] An option
+	given to install(1) terminates installation.  This utility at least of
+	Solaris needs the space between "-m" and argument.
+
+	[11877] src/lib/Sympa/Mailer.pm:  Postfix: If tracking feature is
+	enabled, distribution of messages will be denied when Envelope-Id is
+	"10" to "99".  Postfix (2.3 or later) clone of sendmail interprets -V
+	option with two characters as -XV option and rejects it because
+	argument is incorrect.
+	Fixed by padding "0" to make length of envid at least eight.
+
+	[11863] default/web_tt2/crash.tt2, default/web_tt2/main.tt2,
+	default/web_tt2/tt2_error.tt2, src/cgi/wwsympa.fcgi.in:  WWSympa: When
+	TT2 parse error occurs and tt2_error.tt2 has error again, no content is
+	sent and HTTP server will report error status (e.g. 503 with nginx).
+	To prevent such situation, wrap PROCESS directives in this template
+	with TRY...CATCH.  The same measure is taken for crash.tt2.
+
+	[11847] src/lib/Sympa/List.pm:	Lists typed with upper-case by end
+	users were considered as not existing on the server. This was because
+	the name typed by the user was compared to the list folder name, which
+	iw always lower-cased. Fixed by lower-casing the list name before
+	creating a new List object.
 
 	[11749] default/mail_tt2/removed.tt2: [#7245] When a list owner deletes
 	a user, a message suggesting that unsubscription was due to automatic
