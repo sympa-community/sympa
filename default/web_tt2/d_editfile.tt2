@@ -3,15 +3,15 @@
 <div class="block">
 
   <div class="search_form">
-     <a class="input"  href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"><img src="[% father_icon %]" alt="up to higher level directory"> [%|loc%]Up to higher level directory[%END%] </a>
+     <a   href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"><img src="[% father_icon %]" alt="up to higher level directory"> [%|loc%]Up to higher level directory[%END%] </a>
   </div>
 <br/>
 
 
   [% IF url %]
-  <h1>[%|loc(visible_path)%]Edition of the bookmark %1[%END%]  <a class="input" href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h1>
+  <h1>[%|loc(visible_path)%]Edition of the bookmark %1[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h1>
   [% ELSE %]
-  <h1>[%|loc(visible_path)%]Edition of the file %1[%END%]  <a class="input" href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h1>
+  <h1>[%|loc(visible_path)%]Edition of the file %1[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h1>
   [% END %]
 
     [%|loc(doc_owner)%]Owner: %1[%END%] <br />
@@ -57,7 +57,7 @@
   <fieldset>
   <label for="content"><strong> [%|loc(visible_path)%]Edit the file %1[%END%]</strong></label><br />
   <textarea id="content" name="content" cols="90" rows="25">
-    [%~ INSERT $filepath IF filepath ~%]
+[% INSERT $filepath IF filepath %]
   </textarea><br />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />

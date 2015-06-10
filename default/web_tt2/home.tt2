@@ -1,46 +1,44 @@
 <!-- $Id$ -->
 
-<h2>[%|loc%]Welcome[%END%]</h2>
+<h1>[%|loc%]Welcome[%END%]</h1>
 <p>[%|loc%]This server provides you access to your mailing list environment. Starting from this web page, you can perform subscription options, unsubscription, archive, list moderation, list configuration.[%END%]<p>
 
-[% PROCESS news.tt2 %]
-
 [% IF not user.email %]
-<div style="padding: 0 0 2em 0;">
-	<h2>[%|loc%]Logging In[%END%]</h2>
-	
-	<p>[%|loc%]Many functions in Sympa require you to identify yourself to the system by logging in, using the login form to the left.[%END%]<p>
-	
-</div>
+<h2>[%|loc%]Logging In[%END%]</h2>
+<p>[%|loc%]Many functions in Sympa require you to identify yourself to the system by logging in, using the login form to the left.[%END%]<p>
 
-[% ELSE %]
-
-<h3>[%|loc%]What would you like to do ?[%END%]</h3>
-
-<div class="item_list">
-	<div class="item">
-		<img class="item_icon" src="[% static_content_url %]/icons/search.png" />
-		<div class="item_content">
-			<a class="item_title" href="[% path_cgi %]/search_list_request">[%|loc%]Search lists[%END%]</a>
-			[%|loc%]Search for a list given its name (or a part thereof).[%END%]
-		</div>
-	</div>
-	<div class="item">
-		<img class="item_icon" src="[% static_content_url %]/icons/new_list.png" />
-		<div class="item_content">
-			<a class="item_title" href="[% path_cgi %]/create_list_request" onclick="show('loading'); hide('content-inner');">[%|loc%]Create list[%END%]</a>
-			[%|loc%]Submit a mailing list creation request.[%END%]
-		</div>
-	</div>
-</div>
-
-<b>[%|loc%]Note:[%END%]</b> [%|loc%]Additional options are available in the left navigation menu.[%END%]
-
+[%# ELSE %]
 [% END %]
 
-<h3>[%|loc%]Browse lists by categories[%END%]</h3>
- <div id="global_mailing_lists">
- 
+<h2>[%|loc%]What would you like to do ?[%END%]</h2>
+
+<article class="small-12 medium-4 columns home">
+<div>
+[% PROCESS search_list_request.tt2 %]
+</div>
+</article>
+[% IF user.email %]
+<article class="small-12 medium-4 columns home">
+<div>
+<h2><i class="fa fa-plus"></i> [%|loc%]Create list[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#create_list" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+
+<a class="button" href="/sympa/create_list_request" title="[%|loc%]Create list[%END%]">[%|loc%]Go[%END%]</a>
+
+[%# PROCESS create_list_request.tt2 %]
+</div>
+</article><article class="small-12 medium-4 columns home">
+<div>
+<h2><i class="fa fa-envelope-square"></i> [%|loc%]My lists[%END%]</h2>
+<a class="button" href="/sympa/my" title="[%|loc%]My lists[%END%]">[%|loc%]Go[%END%]</a>
+[%# PROCESS my.tt2 %]
+</div>
+</article><article class="small-12 medium-4 columns home">
+<div>
+[% PROCESS pref.tt2 %]
+</div>
+</article>[% END %]<article class="small-12 medium-4 columns home">
+<div>
+<h2><i class="fa fa-sitemap"></i> [%|loc%]Browse lists by categories[%END%]</h2>
   [% SET single_topic = "other" %]
   [% FOREACH topic = topics %]
     [% IF topic.id && topic.id != "other" && topic.id != "topicsless" %]
@@ -86,6 +84,12 @@
     [% END %]
       </ul>
   [% END %]
+<div>
+</article><article class="small-12 medium-4 columns home">
+<div>
+[% PROCESS help.tt2 %]
+</div>
+</article>
 
-  </div>
+
 <!-- end home.tt2 -->

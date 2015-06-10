@@ -1,13 +1,11 @@
 <!-- $Id$ -->
-<h1>[%|loc(listname)%]List %1 statistics[%END%]</h1>
+<h2>[%|loc(listname)%]List %1 statistics[%END%]</h2>
 
 <p>[%|loc%]This page displays overall informations regarding the list activity[%END%]</p>
 
-<strong>[%|loc(shared_size)%]Shared document directory size: %1 kB[%END%]</strong><br />
+<p><strong>[%|loc(shared_size)%]Shared document directory size: %1 kB[%END%]</strong><br />
+<strong>[%|loc(arc_size)%]Web archives size: %1 kB[%END%]</strong></p>
 
-<strong>[%|loc(arc_size)%]Web archives size: %1 kB[%END%]</strong><br />
-
-<br>
 
 [% FOREACH stat_id IN
   [ 'send_mail', 'add_or_subscribe', 'signoff', 'del', 'auto_del' ]
@@ -15,7 +13,7 @@
   [% SET o = stats.$stat_id ~%]
   [% SET chartid = "chartdiv" _ stat_id ~%]
   [% SET chartcontainerid = "chartcontainer" _ stat_id ~%]
-  <div id="[% chartcontainerid %]" style="width:500px;">
+  <div id="[% chartcontainerid %]">
   <h2>[% o.title %]</h2>
   [% IF o.defined('stats_values') %]
     <div id="[% chartid %]" style="height:400px;">

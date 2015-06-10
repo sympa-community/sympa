@@ -1,10 +1,9 @@
 <!-- $Id$ -->
 
-<div class="block">
-<form action="[% path_cgi %]" method="post">
+<form name="myform" action="[% path_cgi %]" method="post">
 <fieldset>
-<strong>[%|loc%]Pending lists[%END%]</strong>
-<table summary="[%|loc%]Pending lists[%END%]" class="table_style">
+<h2>[%|loc%]Pending lists[%END%]</h2>
+<table summary="[%|loc%]Pending lists[%END%]" class="responsive table_style">
  <tr class="color_light">
    <th>[%|loc%]list name[%END%]</th>
    <th>[%|loc%]list subject[%END%]</th>
@@ -28,6 +27,5 @@
 </table>
 </fieldset>
 </form>
-</div>
 
 <!-- end get_pending_lists.tt2 -->

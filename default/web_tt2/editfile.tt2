@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 <div class="block">
 
-<h2>[%|loc%]Edit list templates[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#customize" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
+<h2>[%|loc%]Edit list templates[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#customize" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 [% IF file %]
 <form class="noborder" action="[% path_cgi %]" method="post">
@@ -10,9 +10,9 @@
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="file" value="[% file %]" />
   <input type="hidden" name="previous_action" value="[% previous_action %]" />
-  <textarea name="content" cols="80" rows="25">
-    [%~ filecontent ~%]
-  </textarea><br />
+<textarea name="content" cols="80" rows="25">
+[% filecontent %]</textarea>
+<br />
   <input class="MainMenuLinks" type="submit" name="action_savefile" value="[%|loc%]Save[%END%]" />
 </fieldset>
 </form>	

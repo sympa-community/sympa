@@ -8,7 +8,6 @@
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="action" value="viewlogs" />
 
-  <div class="form_row">
     <label for="target_type">[%|loc%]Search by:[%END%]</label>
     <select id="target_type" name="target_type">
 
@@ -27,18 +26,13 @@
        <option value="none">-----------</option>
     </select>
        
-    <input id="target" type="text" name="target" value="[% target %]" size ="20"/><br />
-  </div>[%# class="form_row" #%]
+    <input id="target" type="text" name="target" value="[% target %]" size ="20"/>
 
-  <div class="form_row">
     <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
     <input type="text" id="date_from" name="date_from" maxlength="10" size="10" value="[% date_from %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" >
-    <label for="date_to" class="inlineLabel">[%|loc%]to:[%END%]</label>
+    <label for="date_to">[%|loc%]to:[%END%]</label>
     <input type="text" id="date_to" name="date_to" maxlength="10" size="10" value="[% date_to %]" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" ><noscript><em>[%|loc%]ex: 24-05-2006[%END%]</em></noscript>
-    <br />
-  </div>[%# class="form_row" #%]
 
-  <div class="form_row">
     <label for="type">[%|loc%]Search by type:[%END%]</label>
     <select id="type" name="type">
        [% IF type %]
@@ -60,22 +54,17 @@
        <option value="subscription">[%|loc%]User management[%END%]</option>
        <option value="shared">[%|loc%]Web documents management[%END%]</option>
        <option value="none">------------</option>
-    </select><br />
-  </div>[%# class="form_row" #%]
+    </select>
 
   [% IF is_listmaster %]
-    <div class="form_row">
       <label for="ip">[%|loc%]Search by IP:[%END%]</label>
-      <input id="ip" type="text" name="ip" value="[% ip %]"/><br />
-    </div>[%# class="form_row" #%]
+      <input id="ip" type="text" name="ip" value="[% ip %]"/>
   [% END %]
 
-  <div class="form_row">
     <label for="submit"></label>
     <input  class="MainMenuLinks" id="btnsubmit" type="submit" name="action_viewlogs" value="[%|loc%]View[%END%]" />
     &nbsp;&nbsp;
     <input  class="MainMenuLinks" id="btnreset" type="button" value="[%|loc%]Reset[%END%]" onclick="javascript:clear_log_form()"/>
-  </div>[%# class="form_row" #%]
 </fieldset>
 </form>
 
@@ -87,7 +76,7 @@
 <br />
 <em>[%|loc(total_results)%]%1 results[%END%].</em>
 <div id="table_container">
-<table class="listOfItems" summary="logs table">
+<table class="responsive listOfItems" summary="logs table">
       <tr>
 	[% IF sortby == 'date' %]
   	    <th class="sortby">
@@ -215,7 +204,6 @@
 
 [% IF action != 'search' %]
   <div id="page_size">
-  [%|loc%]Page size[%END%]
   <form action="[% path_cgi %]">
   <fieldset>
   <input type="hidden" name="sortby" value="[% sortby %]" />
@@ -227,6 +215,7 @@
   <input type="hidden" name="date_to" value="[% date_to %]" />
   <input type="hidden" name="type" value="[% type %]" />
   <input type="hidden" name="ip" value="[% ip %]" />
+  <label>[%|loc%]Page size[%END%]</label>
   <select name="size" onchange="this.form.submit();">
           <option value="[% size %]" selected="selected">[% size %]</option>
 	  <option value="25">25</option>

@@ -3,7 +3,7 @@
 
 [% IF mod_total %]
 
-<h2>[%|loc%]Listing messages to moderate[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
+<h2>[%|loc%]Listing messages to moderate[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 <p>
 
 <!-- moderation of messages -->
@@ -28,7 +28,7 @@
 
 [% mod_display_message = 0 %]
 
- <table summary="[%|loc%]Listing messages to moderate[%END%]" class="listOfItems">
+ <table summary="[%|loc%]Listing messages to moderate[%END%]" class="responsive listOfItems">
       <tr>
      [%- IF conf.antispam_feature == 'on' -%]
 	<th>[%|loc%]Spam[%END%]</th>	
@@ -125,7 +125,7 @@
   <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />
   <input class="MainMenuLinks" type="submit" name="action_d_reject_shared" value="[%|loc%]Notified reject[%END%]" />
   <br />
-    <table summary="[%|loc%]Listing of documents shared to moderate[%END%]" class="listOfItems">
+    <table summary="[%|loc%]Listing of documents shared to moderate[%END%]" class="responsive listOfItems">
       <tr>
 	<th>X</span></th>
         <th>[%|loc%]Date[%END%]</th>
@@ -168,7 +168,7 @@
 
 [% END %]
 
-<h2>[%|loc%]Moderation management[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
+<h2>[%|loc%]Moderation management[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 <p>
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderation_management">

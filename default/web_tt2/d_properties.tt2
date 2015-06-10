@@ -3,11 +3,11 @@
 <span class="search_form"><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]">[%|loc%]Up to higher level directory[%END%]</a></span>
 
   [% IF url %]
-  <h2>[%|loc(visible_path)%]Properties of the bookmark %1[%END%]  <a class="input" href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
+  <h2>[%|loc(visible_path)%]Properties of the bookmark %1[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
   [% ELSIF directory %]
-  <h2>[%|loc(visible_path)%]Properties of the directory %1[%END%]  <a class="input" href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
+  <h2>[%|loc(visible_path)%]Properties of the directory %1[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
   [% ELSE %]
-  <h2>[%|loc(visible_path)%]Properties of the file %1[%END%]  <a class="input" href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
+  <h2>[%|loc(visible_path)%]Properties of the file %1[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
   [% END %]
 
 <br />

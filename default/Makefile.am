@@ -190,6 +190,7 @@ nobase_default_DATA = \
 	web_tt2/arcsearch_form.tt2 \
 	web_tt2/arcsearch.tt2 \
 	web_tt2/arc.tt2 \
+	web_tt2/aside_menu.tt2 \
 	web_tt2/auto_signoff.tt2 \
 	web_tt2/automatic_lists_management_request.tt2 \
 	web_tt2/automatic_lists_request.tt2 \
@@ -233,6 +234,9 @@ nobase_default_DATA = \
 	web_tt2/get_latest_lists.tt2 \
 	web_tt2/get_biggest_lists.tt2 \
 	web_tt2/get_pending_lists.tt2 \
+	web_tt2/header.tt2 \
+	web_tt2/head_ui.tt2 \
+	web_tt2/head_javascript.tt2 \
 	web_tt2/help_admin.tt2 \
 	web_tt2/help_arc.tt2 \
 	web_tt2/help_editfile.tt2 \
@@ -290,6 +294,7 @@ nobase_default_DATA = \
 	web_tt2/rss_request.tt2 \
 	web_tt2/rss.tt2 \
 	web_tt2/scenario_test.tt2 \
+	web_tt2/search.tt2 \
 	web_tt2/search_list.tt2 \
 	web_tt2/search_list_request.tt2 \
 	web_tt2/search_user.tt2 \
@@ -308,6 +313,7 @@ nobase_default_DATA = \
 	web_tt2/subrequest.tt2 \
 	web_tt2/subscriber_table.tt2 \
 	web_tt2/suspend_request.tt2 \
+	web_tt2/sympa_menu.tt2 \
 	web_tt2/ticket.tt2 \
 	web_tt2/title.tt2 \
 	web_tt2/tracking.tt2 \
@@ -317,6 +323,7 @@ nobase_default_DATA = \
 	web_tt2/viewmod.tt2 \
 	web_tt2/view_template.tt2 \
 	web_tt2/your_lists.tt2 \
+	web_tt2/which.tt2 \
 	web_tt2/ja/css.tt2 \
 	web_tt2/ko/css.tt2 \
 	web_tt2/zh-CN/css.tt2 \

@@ -1,0 +1,56 @@
+<!-- $Id: header.tt2 11846 2015-05-19 04:15:17Z lumineau $ -->
+<header>
+
+<nav class="top-bar" data-topbar role="navigation">
+    <ul class="title-area large-2 columns show-for-large-up">
+        <li class="name">
+                [% IF  conf.logo_html_definition %]
+                  [% conf.logo_html_definition %]
+                [% ELSE %]
+                  <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
+                [% END %]
+        </li>
+        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Sympa Menu</span></a></li>
+    </ul>
+
+    <ul class="title-area hide-for-large-up">
+        <li class="name">
+                [% IF  conf.logo_html_definition %]
+                  [% conf.logo_html_definition %]
+                [% ELSE %]
+                  <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
+                [% END %]
+        </li>
+        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Sympa Menu</span></a></li>
+    </ul>
+<section class="top-bar-section">
+  <ul class="right">
+        <!-- sympa menu start --> 
+          [% PROCESS 'sympa_menu.tt2' %]
+        <!-- end of sympa menu-->
+        [% IF user.email %]
+        <li class="has-dropdown">
+            <a href="#"><i class="fa fa-user"></i> [% IF user.gecos %] [% user.gecos %][% ELSE %] [% user.email %] [% END %]</a>
+            <ul class="dropdown">
+        [% END %]
+        <!-- login banner start -->
+          [% PROCESS 'loginbanner.tt2' %]
+        <!-- end of login banner-->
+            </ul>
+        </li>
+    </ul>
+</section>
+</nav>
+[% IF top_menu %]
+[% IF not list %]
+<h1 class="row">[% main_title %]</h1>
+[% ELSE %]
+<h1 class="medium-offset-3 medium-9 columns">[% main_title %]</h1>
+[% END %]
+[% ELSE %]
+<h1 class="medium-offset-3 medium-9 columns">[% main_title %]</h1>
+[% END %]
+</header>
+<!-- end header.tt2 -->

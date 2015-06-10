@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
  <channel>
-  <title>[% title_clear_txt | xml %][%|loc%]:[%END%]
+  <title>[% FILTER escape_xml %][% title_clear_txt %][%END%][%|loc%]:[%END%]
 [%- IF errors %] [%|loc%]Server error[%END%] [% END -%]
 [%- IF action == 'latest_lists' -%][%|loc%] new lists [%END%]
 [%- ELSIF action == 'active_lists' -%][%|loc%] active lists [%END%]
@@ -62,7 +62,7 @@
 [% IF action == 'latest_lists' -%]
  [% FOREACH l = latest_lists -%]
   <item>
-    <title>[% l.name %]@[% l.host %] - [% l.subject | xml %]</title>
+    <title>[% l.name %]@[% l.host %] - [% FILTER escape_xml %][% l.subject %][%END%]</title>
     <link>[% base_url %][% path_cgi %]/info/[% l.name %]</link>
   </item>
  [% END -%]
@@ -76,7 +76,7 @@
 [% ELSIF action == 'latest_arc' -%]
  [% FOREACH a = archives -%]
   <item>
-    <title>[% a.subject | xml %] - [% a.from | xml %]</title>
+    <title>[% FILTER escape_xml %][% a.subject %] - [% a.from %][%END%]</title>
     <link>[% conf.wwsympa_url %]/arcsearch_id/[% list %]/[% a.year_month %]/[% a.message_id %]</link>
     <pubDate>[% a.date_smtp %]</pubDate>
   </item>
@@ -89,7 +89,7 @@
     <link>[% d.url %]</link>
     [% ELSE -%]
      <title>[% d.name %]</title>
-    <link>[%|xml%][% base_url %][% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %][%END%]</link>
+    <link>[% FILTER escape_xml %][% base_url %][% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %][%END%]</link>
     [% END -%]
   </item>
   [% END -%]

@@ -2,7 +2,7 @@
 <div class="block">
 
 [% IF is_owner %]
-<h2>[%|loc%]Manage list members[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
+<h2>[%|loc%]Manage list members[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
   <h3>[%|loc%]Administrative Options[%END%]</h3>
   <a class="actionMenuLinks" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Pending subscriptions[%END%]</a> 
@@ -36,20 +36,18 @@
   <form action="[% path_cgi %]" method="post">
   <p>&bull; <u>[%|loc%]To add an individual user:[%END%]</u>
   <fieldset>
-  <div class="form_row">
    <input type="hidden" name="previous_action" value="review" />
    <input type="hidden" name="list" value="[% list %]" />
    <input type="hidden" name="action" value="add" />
    <label for="email_search">[%|loc%]Email address:[%END%]</label>
    <input id="email_search" type="text" name="email" size="35" />
-   <div class="form_row"><label for="quietly">[%|loc%]Quiet (don't send welcome email)[%END%]</label> <input id="quietly" type="checkbox" name="quiet" /></div>
-   <div class="form_row"><input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" /></div>
-  </div>
+	<input id="quietly" type="checkbox" name="quiet" /><label for="quietly">[%|loc%]Quiet (don't send welcome email)[%END%]</label>
+	<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" />
   </fieldset>
   </form>
   <p>&bull; <u>[%|loc%]To add multiple users:[%END%]</u>
   <p>[%|loc%]Click the Multiple Add button below to bulk-add users using a form.  (Alternatively, consider using a data-source such as SQL or an Active Directory Group).[%END%]
-  <div class="form_row" style="margin-top: 0;"><a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a></div>&nbsp;
+  <a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a>
 [% END %]
 
 <hr>
@@ -59,12 +57,10 @@
 <input type="hidden" name="previous_action" value="review" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="action" value="search" />
-<div class="form_row">
    <label for="filter">[%|loc%]Search for a user by email address, name or part of them: [%END%]</label>
    <input alt="[%|loc%]Search for a user[%END%]" type="text" size="18" id="filter" name="filter" value="[% filter %]" />
-</div>
-<div class="form_row"><input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" /></div>
-<br />
+<input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" />
+
 [% IF action == 'search' %]
 [% IF too_many_select %]
 [%|loc%]Selection too wide, can not show selection[%END%]
@@ -99,7 +95,7 @@
         <!--input type="button" name="action_del" value="Delete selected email addresses" onclick="return request_confirm('[%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]')" /-->
         <p><input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
 	<p><input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
-        <p><label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label> <input type="checkbox" id="quiet" name="quiet" /></p>
+        <p><input type="checkbox" name="quiet" /> [%|loc%]Quiet (don't send deletion email)[%END%]
       [% END %]
 <hr>
 
@@ -109,7 +105,7 @@
 
    [% IF action == 'search' %]
      <h4>[%|loc%]Excluded users[%END%]</h4>
-     <table summary="[%|loc%]List of exclude[%END%]" class="listOfItems">
+     <table summary="[%|loc%]List of exclude[%END%]" class="responsive listOfItems">
       <tr>
 	<th>[%|loc%]Email[%END%]</th>
         <th>[%|loc%]Since[%END%]</th>

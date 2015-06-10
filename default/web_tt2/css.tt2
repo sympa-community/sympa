@@ -62,8 +62,24 @@ q:before, q:after {
  * UI root
  */
 
+/* Fonts */
+@font-face {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: normal;
+    src: url("[% static_content_url %]/fonts/Raleway/Raleway-Regular.ttf") format("truetype");
+}
+
+/****/
+
+
+* {		/* Proportional fonts */
+    font-family: 'Raleway', sans-serif;
+    font-size: 1em;
+}
+
 body {
-	font-family: sans-serif;
+        font-family: 'Raleway', sans-serif;
 	font-size: 1em;
 	line-height: 1.4;
 	color: [% color_1 %];
@@ -190,14 +206,10 @@ sub {
 
 ul, ol {
 	margin: 1em 0;
-	padding: 0 0 0 30px;
+	padding: 0 0 0 1rem;
 	font-size: 13px;
 	color: [% color_3 %];
 	list-style-position: outside;
-}
-
-dd {
-	margin: 0 0 0 40px;
 }
 
 nav ul, nav ol {
@@ -215,7 +227,6 @@ address {
 }
 
 p {
-	font-size: 13px;
 	color: [% color_3 %];
 	line-height: 1.6em;
 	margin: 0.5em 0px 1em;
@@ -223,10 +234,16 @@ p {
 }
 
 /* Forms */
+form{
+    margin:0.5rem 0 1rem 0;
+}
 
 label {
+	color: [% color_4 %];
+	margin-top:0.5rem;
+	/*display: inline-block;*/    padding-left:0!important;
+	font-weight:700;
 	cursor: pointer;
-	padding-left: 0.5em;
 }
 
 label.inlineLabel {
@@ -236,6 +253,43 @@ label.inlineLabel {
 	line-height: normal;
 	width: auto !important;
 	float: none !important;
+}
+label[for="connected_only"] {
+	display: inline;
+}
+ 
+input {
+	/*border: 1px solid [% color_12 %];
+	border-radius: 3px;
+	font-size: 16px;
+	padding: 10px 9px;
+	margin-right: 10px;
+	outline:none;*/
+}
+
+input[type="checkbox"], input[type="radio"] {
+	border: none;
+}
+
+select {
+	/*border: 1px solid [% color_12 %];
+	border-radius: 3px;
+	font-size: 16px;
+	padding: 6px 4px;
+	margin-right: 10px;
+	outline:none;*/
+}
+
+textarea {
+	/*font-size: 13px;
+	color: [% color_4 %];
+	min-height: 60px;
+	padding: 6px 9px;
+	border: 1px solid [% color_12 %];
+	border-radius: 3px;
+	width: 94%;
+	line-height: 20px;
+	outline:none;*/
 }
 
 legend {
@@ -253,17 +307,15 @@ button, input {
 	line-height: normal;
 }
 
-button, input[type="button"], input[type="reset"], input[type="submit"] {
+button, input[type="button"], input[type="reset"], input[type="submit"], a.button{
 	cursor: pointer;
-	-webkit-appearance: button;
-	-moz-appearance: button;
 	*overflow: visible;
 	display: inline-block;
 	color: [% color_7 %];
-	border-radius: 3px;
+	border-radius: 4px;
 	background: [% color_6 %] none no-repeat scroll top left;
 	font-size: 12px;
-	font-weight: 100;
+	font-weight: 200;
 	padding: 5px 9px;
 	border: 0;
 	margin: 0.25em;
@@ -311,87 +363,163 @@ input:invalid, textarea:invalid {
 }
 
 /* Titles */
-
+h1,h2,h3,h4,h5,h6{
+    font-family: 'Raleway', sans-serif;
+}
 h1 {
 	color: [% color_2 %];
 	font-weight: 100;
-	font-size: 34px;
+	font-size: 2rem;
 	margin: 0px 0px 0.6em;
 }
-
 h2 {
 	color: [% color_2 %];
-	font-size: 24px;
+	font-size: 1.7rem;
 	font-weight: 100;
-	margin: 1.2em 0px 0.2em;
+	margin: 1rem 0px 0.2rem;
 }
-
 h3 {
 	margin: 0px 0px 0.6em;
 	color: [% color_3 %];
 	font-weight: 100;
-	font-size: 20px;
+	font-size: 1.4rem;
 }
-
 h4 {
 	color: [% color_2 %];
-	font-size: 16px;
-	margin: 1.3em 0px 0px;
+	font-size: 1.2rem;
+	margin: 1em 0px 0px;
 	font-weight: 100;
-	text-transform: uppercase;
 }
-
 h5 {
 	color: [% color_3 %];
-	font-size: 14px;
+	font-size: 1.1rem;
 	margin: 2em 0px 0.2em;
 	font-weight: 100;
 }
-
+h6 {
+    font-size: 1rem;
+}
 h1 a, h2 a, h3 a {
 	color:[% color_2 %];
 }
+main h1, main h2, main h3, main h4, main h5, main h6, main article, main p, main form {
+    padding:0 1rem!important;
+}
+main form[name="myform"] {
+    padding:0!important;
+}
+main form h1, main form h2, main form h3, main form h4, main form h5, main form h6, main form p{
+    padding-left:0!important;
+    margin-left:0!important;
+}
+article.home {
+    margin:1rem 0;
+}
+article.home > div{
+    margin:0;
+    padding:0;
+    display:block;
+    height:200px;
+    background-color:[% color_8 %];
+    border:1px solid [% color_9 %];
+    border-radius:4px;
+    overflow-y:auto;
+    word-wrap:break-word;
+}
+article.home div > h2{
+    margin-top:0.5rem;
+    font-size:1.3rem;
+}
+article.home div h1, article.home div h2, article.home div h3, article.home div h4, article.home div h5, article.home div h6, article.home div article, article.home div p, article.home div form {
+    padding:0 0.5rem!important;
+}
+article.home div input {
+    height:1.8rem;
+}
+article.home div #list_create form textarea.desc{
+    width:95%;
+}
+article.home a.button{
+    display:block;
+    width:35%;
+    margin:3.5rem auto 0 auto;
+}
+
+
 
 /* Tables */
-
 table {
-	position:relative;
-	left:1px;
-	width:99%;
-	border:1px solid [% color_9 %];
-	border-collapse:none;
-	border-spacing: 0;
-	border-radius:5px;
+    background-color: [% color_7 %];
+    margin: 0px 0px 18px;
+    word-wrap: break-word;
+    border-collapse:separate;
+    border-spacing: 0;
+    box-shadow: 0 1px 1px #ccc;
 }
 
-td {
-	vertical-align: top;
-	background:[% color_7 %];
+table.ls_template th{ 
+    border-right: 1px solid [% color_7 %];
+}
+table.ls_template th[colspan]{ 
+    border-bottom: 1px solid [% color_7 %];
+}
+table.ls_template td{ 
+    border-right: 1px solid [% color_9 %];
 }
 
-th, td {
-	border:1px solid [% color_9 %];
-	padding:0.2em;
+/*
+table th:first-child {
+    border-radius: 4px 0 0 0;
+}
+table th:last-child {
+    border-radius: 0 4px 0 0;
+}
+table th:only-child{
+    border-radius: 4px 4px 0 0;
+}
+*/
+table tr.even, table tr.alt, table tr:nth-of-type(odd) {
+  background: [% color_8 %];
+}
+table tr.even, table tr.alt, table tr:nth-of-type(even) {
+  background: [% color_7 %];
 }
 
-thead td, th {
-	text-align:left;
-	font-weight:normal;
-	width:240px;
-	background:[% color_8 %];
+table tr th {
+    background-color: [% color_4 %];
+    color: [% color_7 %];
+}
+table tr th a{
+    color: [% color_7 %];
 }
 
+.table-wrapper table {
+  table-layout: auto;
+}
 
-
+#loading {
+    width:100%;
+    height:100%;
+    background-color:[% color_7 %];
+    overflow: hidden;
+    display: none;
+}
+#loading h1{
+    width:100%;
+    text-align:center;
+    padding-top:10rem;
+}
 
 #logo {
-	margin-bottom:1.5rem;
-        }
+    display: block;
+    margin: 1rem auto;
+    width: 50%;
+    text-align: center;
+}
 
-#logo img {
+#logo img{
 	max-width: 100%;
-
-        }
+}
 
 #nav {
 	position:relative;
@@ -428,117 +556,148 @@ p {
 	word-wrap:break-word;
 }
 
-input {
-	border: 1px solid [% color_12 %];
-	border-radius: 3px;
-	font-size: 16px;
-	padding: 10px 9px;
-	margin-right: 10px;
-	outline:none;
+/* header */
+header {
+
+}
+header h1{
+    width:100%;
+    text-align:center;
+    padding:0.5rem 0 2rem 0;
+    margin:0;
+    background-color:[% color_7 %];
 }
 
-input[type="checkbox"], input[type="radio"] {
-	border: none;
-}
+/* main element */
+main{
+    background-color:[% color_7 %];
+    padding-bottom:2rem;
+    [% IF top_menu %]
+    min-height:450px;
+    [% ELSE %]
+    min-height:550px;
+    [% END %]
+}  
 
-label {
-	font-size: 13px;
-	color: [% color_4 %];
-	margin: 0px 0px 5px;
-	display: inline-block;
-	line-height: 18px;
-}
-
-select {
-	border: 1px solid [% color_12 %];
-	border-radius: 3px;
-	font-size: 16px;
-	padding: 6px 4px;
-	margin-right: 10px;
-	outline:none;
-}
-
-textarea {
-	font-size: 13px;
-	color: [% color_4 %];
-	min-height: 60px;
-	padding: 6px 9px;
-	border: 1px solid [% color_12 %];
-	border-radius: 3px;
-	width: 94%;
-	line-height: 20px;
-	outline:none;
-}
-
-#content-inner {
-    overflow: hidden;
-}
-
-#content-inner h1 {
-    font-size: 2.33em;
-}
-
-#content-inner h2 {
-    font-size: 2em;
-    margin-top: 0;
-}
-
-#content-inner h3 {
-    font-size: 1.75em;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-}
-
-#content-inner h4 {
-    font-size: 1.58em;
-}
-
-#content-inner h5 {
-    font-size: 1.42em;
-}
-
-#content-inner h6 {
-    font-size: 1.25em;
-}
-
-.sidebar {
-    float: left;
-    margin-left: 20px;
-    margin-right: 30px;
-    width: 20%;
+/* aside menu */
+aside {
     font-size: 0.9em;
-      word-wrap: break-word;
+    word-wrap: break-word;
 }
 
-.sidebar li {
+aside li {
     border: none;
+    line-height: 1.7em;
+    list-style-type:none;
 }
 
-.sidebar li a {
+aside li a {
     padding-bottom: 0.5em;
     padding-top: 0.5em;
     display: inline;
 }
 
-.sidebar h1 {
-    border-bottom: 1px solid [% color_9 %];
-    color: [% color_4 %];
-    font-size: 5em;
-    margin: 0;
-    padding-bottom: 0.2em;
+aside menu.connect{
+    border: 1px solid [% color_9 %];
+    background-color: [% color_7 %]!important;
 }
 
-.sidebar h2 {
-    border-bottom: 1px solid [% color_9 %];
-    color: [% color_4 %];
-    font-size: 1.8em;
-    margin: 0;
-    padding-bottom: 0.2em;
+aside menu.connect li{
+    background-color: transparent!important;
 }
 
-.sidebar h3 {
-    border-bottom: 1px solid [% color_9 %];
+aside menu.connect ul li.has-dropdown ul{
+    margin: 0;
+    padding: 0;
+    width:90%;
 }
+aside menu.connect ul li.has-dropdown ul li{
+    margin: 0;
+    padding: 0;
+    line-height:1;
+}
+aside menu.connect ul li.has-dropdown ul li label{
+    padding: 0;
+    font-size: inherit;
+}
+aside menu.connect ul li.has-dropdown ul li input{
+    height:1.5rem;
+}
+aside menu li.divider, aside menu [role="separator"] {
+    display:block;
+    margin: 0.5rem 0!important;
+    border-bottom: 1px solid #4E4E4E;
+}
+aside menu li.divider:before, aside menu [role="separator"]:before {
+
+}
+aside menu li.divider:after, aside menu [role="separator"]:after {
+
+}
+aside menu{
+    width:98%;
+    max-width:250px;
+    margin: 0 auto 1rem auto ;
+    border-radius: 5px;
+}
+
+aside menu.user,aside menu.list,aside menu.sympa{
+    background-color:[% color_8 %];
+    border:1px solid [% color_6 %];
+}
+
+aside menu a{
+    color:[% color_6 %];
+}
+aside menu a:hover{
+    color:[% color_5 %];
+}
+
+aside menu label{
+    margin-top:0;
+}
+
+aside menu ul {
+    padding-left:0;
+}
+
+aside menu ul li {
+    padding-left:10px;
+}
+
+aside menu ul li:nth-child(even){
+    background-color:[% color_7%];
+}
+aside menu ul li ul li{
+    background-color:inherit!important;
+}
+aside menu ul li ul{
+    margin-top: 0;
+    padding-left: 0.5rem;
+}
+
+aside menu ul#MainMenuLinks li ul li.menuLinks{
+    line-height: 1.2rem;
+}
+
+aside menu ul li label{
+    padding-left: 0;
+    padding-bottom: 0.5rem;
+    font-size:110%;
+}
+
+aside menu ul li.active, aside menu ul li ul li.active{
+    background-color:[% color_6%]!important;
+}
+aside menu ul li.active a{
+    color:[% color_7 %];
+}
+
+dd {
+	margin: 0 0 0 40px;
+}
+
+/* end aside */
 
 .remember{
    line-height: 2em;
@@ -601,7 +760,7 @@ textarea {
     margin-bottom: 0.5em;
 }
 
-.form_row {
+/*.form_row {
     margin-top: 1em;
     float: left;
     clear: left;
@@ -612,17 +771,32 @@ textarea {
     display: block;
     float: left;
     width: 150px;
-}
+}*/
 
+#list_create form label[for="owner"]{
+
+}
+#list_type  {
+    margin-top:0
+}
 #list_type ul {
-    padding-left: 50px;
+    margin-top:0
+}
+#list_type ul li{
+    margin-bottom:0;
+}
+#list_type li{
+    margin-bottom:0.5rem;
+}
+#list_type input[type="radio"], select {
+    margin: 0;
 }
 
 .navBar li {
     line-height: 2em;
 }
 
-select {
+select, input {
    max-width: 550px;
 }
 
@@ -635,18 +809,8 @@ select {
    font-style: normal;
 }
 
-table tr th {
-   background-color: [% color_8 %];
-   border: 1px solid [% color_12 %];
-   color: black;
-   font-weight: normal;
-}
-
 form#logs_form label,
 form.bold_label label { 
-   display:block;
-   float:left;
-   width:200px;
 }
 #Canvas {
 	min-height: 95%;
@@ -684,8 +848,8 @@ form.bold_label label {
 	font-weight:normal;
 }
 
-ul.MainMenu li {
-   line-height: 2em;
+ul#MainMenuLinks li {
+   line-height: 1.7em;
 }
 
 #toggleMenu {
@@ -790,18 +954,40 @@ td.review_cels_mail {
 	border-radius:4px;
 }
 
+.home_page_list{
+    width:100%;
+}
+.home_page_list li{
+    padding-bottom: 1rem;
+    line-height:2.5rem;
+}
+.home_page_list li a span:nth-of-type(2){
+    padding:0 0.5rem;
+    font-size:1.5rem;
+}
+.home_page_list li > span:nth-of-type(1){
+    display: block;
+    margin-top: -1rem;
+    font-size:1rem;
+}
+
 .edit_list_request_enum{ 
-	margin: 1em;
+	margin: 0 0 1rem;
 	padding-left: 1em;
 	text-align: left;
 	font-size: 1em;
 }
 
-.edit_list_request_enum label{
+.edit_list_request_enum span.divider:first-child { 
+	display:none;
+}
+
+ /*.edit_list_request_enum label{
 	display: block;
 	float: left;
 	width: 150px;
 }
+*/
                          
 .list_admin { 
 	font-size: 1em;
@@ -835,6 +1021,8 @@ ul.no_style {
 	margin: 2px;
 }
 
+/*
+/*
 #color_table { 
 	border: 1px dotted;
 	padding-top: 3px;
@@ -851,6 +1039,10 @@ ul.no_style {
 #color_table td { 
 	border: 1px solid;
 	padding-left: 10px;
+}
+*/
+#color_table tr { 
+    background-color: [% color_7 %]!important;
 }
 
 #help {
@@ -891,7 +1083,7 @@ form#bold_label input {
 
 form input[type="radio"],
 form input[type="checkbox"] {
-	vertical-align: middle;
+	vertical-align: inherit;
 	border:none;
 }
 
@@ -936,30 +1128,26 @@ pre.code {
 	font-family: monospace;
 }
 
-#Footer {
+footer {
 	border-top: 1px solid [% color_9 %];
-	width:98%;
+	width:100%;
 	height:1.5em;
-	margin: 0 0.8em;
+	margin: 0;
 	font-size: 1.1em;
 	text-align: center;
-	padding-top:0.5em;
-	padding-bottom:0.5em;
+	padding-top:0.5rem;
+	padding-bottom:2.5rem;
+        clear:both;
 }
 
-#Footer a {
+footer a {
 	font-weight: normal;
 	font-size: 11px;
 }
 
-#Footer img {
+footer img {
 	margin:0 0.5em 0 0;
 	vertical-align:middle;
-}
-
-.clearfooter {
-	height: 1em;
-	clear: both;
 }
 
 #Identity {
@@ -979,20 +1167,21 @@ pre.code {
 }
 
 #page_size {
-	float: right;
-	margin-bottom: 20px;
+	margin: 2rem 0;
 	padding-bottom: 20px;
+}
+#page_size select{
+	width:100px;
 }
 
 .ContentBlock {
-	margin-right: 1em;
-	text-align: left;
-	float: left;
-	width: 90%;
+    margin-top:1rem; 
+    text-align: left;
 }
 
 .nomenu{
-	width:100%;
+    width:100%;
+    padding:0.5rem;
 }
 
 .nomenu .ContentBlock {
@@ -1005,14 +1194,8 @@ pre.code {
 	margin-top:0;
 }
 
-.ContentBlock p {
-	font-size: 1.1em;
-}
-
 .ContentBlock > * {
-	padding: 0px;
-	border-bottom: 0px dotted;
-	text-align: left;
+
 }
 
 .ContentBlock * a {
@@ -1052,12 +1235,14 @@ a img.Pictures {
 	width:0px;
 }
 
+/*
 .title {
 	position: absolute;
 	top: 60px;
 	font-size: 1.6em;
 	text-indent: 30px;
 }
+*/
 
 .customMenu {
 	text-indent: 0px;
@@ -1114,6 +1299,11 @@ a.actionMenuLinksInactive {
 	border: 1px solid;
 	text-decoration: none;
 	padding: 0px 10px;
+}
+
+#actionnuLinksInactive {
+	text-decoration: none;
+	padding-left: 3px;
 }
 
 a.ArcMenuLinks,
@@ -1175,6 +1365,12 @@ a.ArcMenuLinksSortInactive {
 	-KHTML-border-radius:5px;
 	-icab-border-radius:5px;
 	border-radius:5px;
+}
+
+#ArcMenuLinksInactive {
+	border: 0px solid;
+	text-decoration: none;
+	padding-left: 3px;
 }
 
 h7 {
@@ -1272,26 +1468,30 @@ h7 strong {
 }
 
 p.listenum {
-	margin-bottom: 0.5em;
-	padding-bottom: 5px;
+	margin-top: 0;
+	padding-top: 0;
+	margin-bottom: 0;
+	padding-bottom: 0;
 	font-size:0.9em;
 }
 
 ul.listenum {
-	list-style: none;
+    margin:0 0 0 1rem;
 }
 
 ul.listenum li {
-	padding-top: 10px;
+    padding-top: 10px;
 }
 
 ul.listenum li a {
-	font-size: 1.1em;
+    font-size: 1.1em;
 }
-
-ul.listenum li a.actionMenuLinks {
-	font-size:1.1em;
-	padding:0em 0.4em!important;
+span.divider{
+    display: block;.
+    width: 100%;
+    border-bottom: 1px solid [% color_9 %];
+    padding-top:1.5rem;
+    padding-bottom:0.5rem;
 }
 
 div.admin_cmd {
@@ -1407,13 +1607,14 @@ h2 a.input {
 }
 
 textarea {
-	border: 1px solid; 
-	padding: 3px;
+    border: 1px solid; 
+    padding: 3px;
+    border-radius: 4px;
 }
 
 textarea.desc {
-	width: 75%;
-	max-width: 500px;
+    width: 75%;
+    max-width: 500px;
 }
 
 textarea.textbox {
@@ -1432,6 +1633,7 @@ input.button {
 	margin:2px; 
 }
 
+/*
 table.table_style,
 table.listOfItems,
 table.ls_template { 
@@ -1463,7 +1665,7 @@ table.listOfItems th {
 	padding:0 2px;
 	border: 1px solid black;
 	text-align: center;
-	white-space: nowrap;
+	white-space: normal;
 }
 
 table.pending_lists { 
@@ -1497,68 +1699,12 @@ table.preferences th {
 	font-weight: normal;
 	white-space: nowrap;
 }
-             
+
+            
 #table_container { 
 	overflow: auto;
 }
-
-#bandeau_top {
-	padding-bottom: 1em; 
-}
-
-#nav {
-	float:left;
-	width:100%;
-	border-bottom: 1px solid [% color_9 %];
-	padding-bottom: 0.5em;
-	overflow: hidden;
-}
- 
-#nav ul {
-	height:1.4em;
-	padding: 0 1em 1em 0;
-	list-style:none;
-}
-
-#nav ul li {
-	float:left;
-	min-width:1.2em;
-	display:inline;
-	margin: 0.2em;
-	padding: 0.25em 0.5em 0.25em 0.5em;
-	text-align: center;
-}
-
-#nav li.MainMenuLinks {
-	background: none repeat scroll 0 0 [% color_2 %];
-	color: [% color_7 %];
-	padding-top:0.2em;
-}
-
-#nav li.MainMenuLinksCurrentPage {
-	font-weight:normal;
-	background: none repeat scroll 0 0 [% color_11 %];
-	color: [% color_7 %];
-	padding-top: 0.2em;
-}
-
-#nav li.MainMenuLinksCurrentPage a{
-	padding:0.1em 0.4em; 
-	background-color: transparent;
-}
-
-#nav li.nolink{
-	background: none repeat scroll 0 0 [% color_11 %];
-	padding-top: 0.2em;
-	color: [% color_7 %];
-}
-
-#nav > ul a {
-	width:auto;
-}
-#nav a {
-	float:none;
-}
+*/
 
 #subnav {
 	float:left;
@@ -1596,9 +1742,9 @@ table.preferences th {
 	color: [% color_7 %];
 }
 
-span.bottom_page { 
-	font-size: 0.8em;
-	font-weight:bold;
+span.bottom_page, p.bottom_page{ 
+    font-size: 0.8em;
+    font-weight:bold;
 }
 
 .top { 
@@ -1685,7 +1831,7 @@ span.bottom_page {
 	background-color: [% color_0 %];
 	border: 1px solid [% color_1 %];
 	padding: 1em;
-	max-width: 80%;
+	width: 80%;
 }
 
 /* Font family to cover languages as much as possible rather than quality */
@@ -1694,652 +1840,217 @@ span.bottom_page {
 	font-family: arial, sans-serif;
 }
 
+
+/*top-bar*/
+.top-bar form{
+    margin:0;
+    padding:0;
+}
+.top-bar ul li{
+    font-family: 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;
+    font-size:13px;
+    color:#fff;
+}
+
+.top-bar, .top-bar-section ul li, .top-bar-section li:not(.has-form) a:not(.button){
+    background-color: [% color_6 %];
+}
+.top-bar .top-bar-section li:not(.has-form) a:not(.button):hover{
+    background-color: [% color_5%];
+}
+.top-bar button{
+    top:0;
+    background-color:[% color_7 %];
+    color:[% color_6 %];
+    font-family: 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;
+    font-size:13px;
+}
+
+.top-bar-section ul li > a {
+  padding: 0;
+  padding-left: 15px;
+}
+.top-bar ul.right li label {
+    margin-top:0;
+    display:inline;
+    color:[% color_7 %];
+    font-weight:normal;
+}
+
+.top-bar .top-bar-section ul.right li.has-dropdown ul.dropdown li label {
+    display:block;
+    color:[% color_7 %];
+    background-color: transparent;
+    margin:0.3rem 0 0 0;
+    padding-top:0;
+    padding-bottom:0;
+    padding-left: 10px !important;
+    line-height:1.2;
+}
+
+.top-bar .top-bar-section ul.right li.has-dropdown ul.dropdown li input{
+    height:1.5rem;
+    padding-top:0;
+    padding-bottom:0;
+    width:15rem;
+}
+
+.top-bar .title-area {
+    text-align:right;
+}
+
+/* main top-bar*/
+ main .top-bar, main .top-bar .title-area, main .top-bar .active{
+    height:30px;
+}
+ main .top-bar .title-area{
+    padding:0;
+}
+main .top-bar-section li.active:not(.has-form) a:not(.button){
+    line-height:30px;
+    background-color: [% color_13 %];
+}
+main .top-bar-section ul li, main .top-bar-section li:not(.has-form) a:not(.button){
+    background-color: [% color_10%];
+    line-height: 30px;
+    font-size:0.8rem;
+}
+main .top-bar-section li:not(.has-form) a:not(.button):hover{
+    background-color: [% color_13%]!important;
+}
+
+main .top-bar-section > ul > .divider, main .top-bar-section > ul > [role="separator"] {
+    border-right: solid 1px [% color_5%];
+}
+
+main .top-bar-section .has-dropdown > a:after {
+    top: 18px;
+}
+
+main .top-bar-section > ul > .divider, main .top-bar-section > ul > [role="separator"] {
+    border-right: solid 1px [% color_13 %];
+    height: 30px;
+}
+
+main .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
+    background-color: [% color_10 %];
+}
+main .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button):hover {
+    background-color: [% color_13 %];
+}
+
+main .top-bar-section li.nolink{
+    padding: 0 10px;
+    color: [% color_3 %];
+    background-color: [% color_8 %];
+}
+
+/*font-awesome specificity*/
+/* home page */
+span.fa-stack i.fa-plus-circle {
+  top: 0.65rem;
+  left: 0.8rem;
+}
+
 @media screen and (min-width: 0px) and (max-width: 419px) {
-
-	h2 {
-		font-size:24px;
-	}
-
-	h3 {
-		font-size:20px;
-	}
-
-	#content-inner h1 {
+	h1 {
 		font-size: 1.8em;
 	}
-
-	#content-inner h2 {
+	h2 {
 		font-size: 1.5em;
 		margin-top: 0;
 	}
-
-	#content-inner h3 {
+	h3 {
 		font-size: 1.2em;
 		margin-top: 0.5em;
 		margin-bottom: 0.5em;
 	}
-
-	#content-inner h4 {
+	h4 {
 		font-size: 1em;
 	}
-
-	#content-inner h5 {
+	h5 {
 		font-size: 0.95em;
 	}
-
-	#content-inner h6 {
+	h6 {
 		font-size: 0.9em;
-	}
-
-	.sidebar h1 {
-		font-size:2em;
-		text-align:center;
-	}
-
-	.sidebar h2 {
-		font-size: 1.1em;
-		text-align:center;
-	}
-
-	ul.MainMenu {
-	   padding-left: 0;
 	}
 
 }
 
 @media screen and (min-width: 420px) and (max-width: 779px) {
-	h2 {
-		font-size:24px;
-	}
-	
-	h3 {
-		font-size:20px;
-	}
-	
-	#content-inner h1 {
+        h1 {
 		font-size: 1.8em;
 	}
-
-	#content-inner h2 {
+        h2 {
 		font-size: 1.5em;
 		margin-top: 0;
 	}
-
-	#content-inner h3 {
+	h3 {
 		font-size: 1.2em;
 		margin-top: 0.5em;
 		margin-bottom: 0.5em;
 	}
-
-	#content-inner h4 {
+	h4 {
 		font-size: 1em;
 	}
-
-	#content-inner h5 {
+	h5 {
 		font-size: 0.95em;
 	}
-
-	#content-inner h6 {
+	h6 {
 		font-size: 0.9em;
 	}
-
-	.sidebar h1 {
-		font-size:2em;
-		text-align:center;
-	}
-
-	.sidebar h2 {
-		font-size: 1.1em;
-		text-align:center;
-	}
-
-	ul.MainMenu {
-	   padding-left: 0;
-	}
-
-
 }
 
-@media screen and (min-width: 780px) and (max-width: 959px) {
-	h2 {
-		font-size:24px;
-	}
-	
-	h3 {
-		font-size:20px;
-	}
-	
-	.sidebar h1 {
-		font-size:3em;
-		text-align:center;
-	}
-
-	.sidebar h2 {
-		font-size: 1.5em;
-		text-align:center;
-	}
-
+@media only screen and (min-width: 641px){
+    .top-bar-section li:not(.has-form) a:not(.button) {
+      padding: 0 10px;
+    }
+    .top-bar-section ul.dropdown li span {
+      padding-left: 10px;
+    }
+    .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
+        background-color: [% color_6 %];
+    }
+    .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button):hover {
+        background-color: [% color_5 %];
+    }
+    main .top-bar{
+        background-color:[% color_10 %];
+    }
+}
+@media only screen and (max-width: 640px){
+    main .top-bar{
+        background-color: [% color_10%];
+    }
+    .top-bar ul.right li span {
+      padding-left: 10px;
+    }
+    .top-bar ul.right li label {
+      padding-left: 10px;
+      color:[% color_6%];
+      background-color:[% color_7%];
+    }
+    .top-bar-section ul li a {
+      color: [% color_7%];
+    }
 }
 
-@media screen and (min-width: 960px) and (max-width: 1599px) {
-	h2 {
-		font-size:24px;
-	}
-	
-	h3 {
-		font-size:20px;
-	}
+@media only screen and (max-width: 1025px){
+    .top-bar .title-area img {
+      height: 45px;
+    }
+    .top-bar .title-area {
+        text-align:left;
+    }
 }
-
-@media screen and (min-width: 1300px) {
-	h2 {
-		font-size:24px;
-	}
-	
-	h3 {
-		font-size:20px;
-	}          
-}
-
-
-
-/*test menu*/
 
 a, li {
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 
-
-
-/* Global CSS that are applied for all screen sizes */
-
-.nav ul {
-	max-width: 1240px;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	font-weight: 300;
-}
-
-.nav ul li {
-	margin: 0.2em;
-	padding: 0.25em 0.5em 0.25em 0.5em;
-	text-align: center;
-}
-
-.nav li.MainMenuLinks {
-	background: none repeat scroll 0 0 [% color_2 %];
-	color: [% color_7 %];
-	padding-top:0.2em;
-}
-
-.nav li.MainMenuLinksCurrentPage {
-	font-weight:normal;
-	background: none repeat scroll 0 0 [% color_11 %];
-	color: [% color_7 %];
-	padding-top: 0.2em;
-}
-
-.nav li.MainMenuLinksCurrentPage a{
-	background-color: transparent;
-}
-
-.nav li.nolink{
-	background: none repeat scroll 0 0 [% color_11 %];
-	padding-top: 0.2em;
-	color: [% color_7 %];
-}
-
-.nav .letter a, .nav .nolink.letter{
-	height:1.5em;
-}
-.nav li.letter {
-	min-width:5%;
-}
-
-.nav li span {
-	display: block;
-}
-
-.nav a {
-	display: block;
-	color: rgba(249, 249, 249, .9);
-	text-decoration: none;
-/*	-webkit-transition: color .5s, background .5s, height .5s;
-	-moz-transition: color .5s, background .5s, height .5s;
-	-o-transition: color .5s, background .5s, height .5s;
-	-ms-transition: color .5s, background .5s, height .5s;
-	transition: color .5s, background .5s, height .5s;*/
-}
-
-.nav i{
-	/* Make the font smoother for Chrome */
-/*	-webkit-transform: translate3d(0, 0, 0);
-	-moz-transform: translate3d(0, 0, 0);
-	-o-transform: translate3d(0, 0, 0);
-	-ms-transform: translate3d(0, 0, 0);
-	transform: translate3d(0, 0, 0);*/
-}
-
-/* Remove the blue Webkit background when element is tapped */
-
-a, button {
-	-webkit-tap-highlight-color: rgba(0,0,0,0);
-}
-
-/* Hover effect for the whole navigation to make the hovered item stand out */
-
-.no-touch .nav ul:hover a {
-	color: rgba(249, 249, 249, .5);
-}
-
-.no-touch .nav ul:hover a:hover {
-	color: rgba(249, 249, 249, 0.99);
-}
-
-/* Adding some background color to the different menu items */
-
-/*
-.nav li:nth-child(6n+1) {
-	background: rgb(208, 101, 3);
-}
-
-.nav li:nth-child(6n+2) {
-	background: rgb(233, 147, 26);
-}
-
-.nav li:nth-child(6n+3) {
-	background: rgb(22, 145, 190);
-}
-
-.nav li:nth-child(6n+4) {
-	background: rgb(22, 107, 162);
-}
-
-.nav li:nth-child(6n+5) {
-	background: rgb(27, 54, 71);
-}
-
-.nav li:nth-child(6n+6) {
-	background: rgb(21, 40, 54);
-}
-*/
-
-/* For screen bigger than 800px */
-@media (min-width: 50em) {
-
-	/* Transforms the list into a horizontal navigation */
-	.nav li {
-		float: left;
-		min-width: 13%;
-		text-align: center;
-/*		-webkit-transition: border .5s;
-		-moz-transition: border .5s;
-		-o-transition: border .5s;
-		-ms-transition: border .5s;
-		transition: border .5s;
-*/
-	}
-
-	.nav a {
-		display: block;
-		width: auto;
-	}
-
-	/* hover, focused and active effects that add a little colored border to the different items */
-/*	.no-touch .nav li:nth-child(6n+1) a:hover,
-	.no-touch .nav li:nth-child(6n+1) a:active,
-	.no-touch .nav li:nth-child(6n+1) a:focus {
-		border-bottom: 4px solid rgb(174, 78, 1);
-	}
-
-	.no-touch .nav li:nth-child(6n+2) a:hover,
-	.no-touch .nav li:nth-child(6n+2) a:active,
-	.no-touch .nav li:nth-child(6n+2) a:focus {
-		border-bottom: 4px solid rgb(191, 117, 20);
-	}
-
-	.no-touch .nav li:nth-child(6n+3) a:hover,
-	.no-touch .nav li:nth-child(6n+3) a:active,
-	.no-touch .nav li:nth-child(6n+3) a:focus {
-		border-bottom: 4px solid rgb(12, 110, 149);
-	}
-
-	.no-touch .nav li:nth-child(6n+4) a:hover,
-	.no-touch .nav li:nth-child(6n+4) a:active,
-	.no-touch .nav li:nth-child(6n+4) a:focus {
-		border-bottom: 4px solid rgb(10, 75, 117);
-	}
-
-	.no-touch .nav li:nth-child(6n+5) a:hover,
-	.no-touch .nav li:nth-child(6n+5) a:active,
-	.no-touch .nav li:nth-child(6n+5) a:focus {
-		border-bottom: 4px solid rgb(16, 34, 44);
-	}
-
-	.no-touch .nav li:nth-child(6n+6) a:hover,
-	.no-touch .nav li:nth-child(6n+6) a:active,
-	.no-touch .nav li:nth-child(6n+6) a:focus {
-		border-bottom: 4px solid rgb(9, 18, 25);
-	}
-*/
-
-	/* Placing the icon */
-	
-	.icon {
-		padding-top: 1.4em;
-	}
-
-	.icon + span {
-		margin-top: 2.1em;
-		-webkit-transition: margin .5s;
-		-moz-transition: margin .5s;
-		-o-transition: margin .5s;
-		-ms-transition: margin .5s;
-		transition: margin .5s;
-	}
-
-	/* Animating the height of the element*/
-	.nav a {
-		height: 2.5em;
-	}
-
-	.no-touch .nav a:hover ,
-	.nav a:active ,
-	.nav a:focus {
-		height: 2.5em;
-	}	
-
-	/* Making the text follow the height animation */
-	.no-touch .nav a:hover .icon + span {
-		margin-top: 3.2em;
-		-webkit-transition: margin .5s;
-		-moz-transition: margin .5s;
-		-o-transition: margin .5s;
-		-ms-transition: margin .5s;
-		transition: margin .5s;
-	}
-
-	/* Positioning the icons and preparing for the animation*/
-	.nav i {
-		position: relative;
-		display: inline-block;
-		margin: 0 auto;
-		padding: 0.4em;
-		border-radius: 50%;
-		box-shadow: 0 0 0 30px transparent;
-		background: rgba(255,255,255,0.1);
-		-webkit-transform: translate3d(0, 0, 0);
-		-moz-transform: translate3d(0, 0, 0);
-		-o-transform: translate3d(0, 0, 0);
-		-ms-transform: translate3d(0, 0, 0);
-		transform: translate3d(0, 0, 0);
-		-webkit-transition: box-shadow .6s ease-in-out;
-		-moz-transition: box-shadow .6s ease-in-out;
-		-o-transition: box-shadow .6s ease-in-out;
-		-ms-transition: box-shadow .6s ease-in-out;
-		transition: box-shadow .6s ease-in-out;
-	}	
-	
-	/* Animate the box-shadow to create the effect */
-	.no-touch .nav a:hover i,
-	.no-touch .nav a:active i,
-	.no-touch .nav a:focus i {		
-		box-shadow: 0 0 0 0 rgba(255,255,255,0.2);
-		-webkit-transition: box-shadow .4s ease-in-out;
-		-moz-transition: box-shadow .4s ease-in-out;
-		-o-transition: box-shadow .4s ease-in-out;
-		-ms-transition: box-shadow .4s ease-in-out;
-		transition: box-shadow .4s ease-in-out;
-	}
-		
-}
-
-@media (min-width: 50em) and (max-width: 61.250em) {
-
-	/* Size and font adjustments to make it fit into the screen*/
-	.nav ul {
-
-	}
-
-}
-
-/* The "tablet" and "mobile" version */
-
-@media (max-width: 49.938em) {		
-	
-	/* Instead of adding a border, we transition the background color */
-/*	.no-touch .nav ul li:nth-child(6n+1) a:hover,
-	.no-touch .nav ul li:nth-child(6n+1) a:active,
-	.no-touch .nav ul li:nth-child(6n+1) a:focus {
-		background: rgb(227, 119, 20);
-	}
-
-	.no-touch .nav li:nth-child(6n+2) a:hover,
-	.no-touch .nav li:nth-child(6n+2) a:active,
-	.no-touch .nav li:nth-child(6n+2) a:focus {
-		background: rgb(245, 160, 41);
-	}
-
-	.no-touch .nav li:nth-child(6n+3) a:hover,
-	.no-touch .nav li:nth-child(6n+3) a:active,
-	.no-touch .nav li:nth-child(6n+3) a:focus {
-		background: rgb(44, 168, 219);
-	}
-
-	.no-touch .nav li:nth-child(6n+4) a:hover,
-	.no-touch .nav li:nth-child(6n+4) a:active,
-	.no-touch .nav li:nth-child(6n+4) a:focus {
-		background: rgb(31, 120, 176);
-	}
-
-	.no-touch .nav li:nth-child(6n+5) a:hover,
-	.no-touch .nav li:nth-child(6n+5) a:active,
-	.no-touch .nav li:nth-child(6n+5) a:focus {
-		background: rgb(39, 70, 90);
-	}
-
-	.no-touch .nav li:nth-child(6n+6) a:hover,
-	.no-touch .nav li:nth-child(6n+6) a:active,
-	.no-touch .nav li:nth-child(6n+6) a:focus {
-		background: rgb(32, 54, 68);
-	}
-*/
-	.nav ul li {
-		-webkit-transition: background 0.5s;
-		-moz-transition: background 0.5s;
-		-o-transition: background 0.5s;
-		-ms-transition: background 0.5s;
-		transition: background 0.5s;
-	}	
-
-}
-
-/* CSS specific to the 2x3 columns version */
-@media (min-width:32.5em) and (max-width: 49.938em) {
-	
-	/* Creating the 2 column layout using floating elements once again */
-	.nav li {
-		display: block;
-		float: left;
-
-	}
-	
-	/* Adding some padding to make the elements look nicer*/
-	.nav a {
-		padding: 0.8em;		
-	}
-
-	/* Displaying the icons on the left, and the text on the right side using inlin-block*/
-	.nav li span, 
-	.nav li span.icon {
-		display: inline-block;
-	}
-
-	.nav li span.icon {
-		width: 50%;
-	}
-
-	.nav li .icon + span {
-		font-size: 1em;
-	}
-
-	.icon + span {
-		position: relative;
-		top: -0.2em;
-	}
-
-	/* Adaptating to the icons to animate the size and border of the rounded background in a more discreet way */
-	.nav li i {
-		display: inline-block;
-		padding: 8% 9%;
-		border: 4px solid transparent;
-		border-radius: 50%;
-
-		background: rgba(255,255,255,0.1);
-		-webkit-transition: border .5s;
-		-moz-transition: border .5s;
-		-o-transition: border .5s;
-		-ms-transition: border .5s;
-		transition: border .5s;
-	}
-
-	/* Transition effect on the border color */
-	.no-touch .nav li:hover i,
-	.no-touch .nav li:active i,
-	.no-touch .nav li:focus i {
-		border: 4px solid rgba(255,255,255,0.1);
-	}
-	
-}
-
-/* Adapting the font size and width for smaller screns*/
-@media (min-width: 32.5em) and (max-width: 38.688em) {
-	
-	.nav li span.icon {
-		width: 50%;
-	}
-
-	.nav li .icon + span {
-		font-size: 0.9em;
-	}
-}
-
-/* Styling the toggle menu link and hiding it */
-.nav .navtoogle{
-	display: none;	
-	width: 100%;
-	padding: 0.5em 0.5em 0.8em;
-	font-family: 'Lato',Calibri,Arial,sans-serif;
-	font-weight: normal;
-	text-align: left;
-	color: rgb(7, 16, 15);
-
-	background: none;	
-	border: none;
-	border-bottom: 4px solid rgb(221, 221, 221);
-	cursor: pointer;
-}
-
-.navtoogle i{
-	z-index:-1;
-}
-
-.icon-menu {
-	position: relative;
-	top: 3px;
-	line-height: 0;
-	font-size: 1.6em;
-}
-
-@media (max-width: 32.438em) {
-
-	/* Unhiding the styled menu link */
-	.nav .navtoogle{
-		margin: 0;
-		display: block;
-	}
-	
-	/* Animating the height of the navigation when the button is clicked */
-	
-	/* When JavaScript is disabled, we hide the menu */
-	.no-js .nav ul {
-		max-height: 50em;
-		overflow: hidden;
-	}
-	
-	/* When JavaScript is enabled, we hide the menu */
-	.js .nav ul {
-		max-height: 0em;
-		overflow: hidden;
-	}
-	
-	/* Displaying the menu when the user has clicked on the button*/
-	.js .nav .active + ul {		
-		max-height: 50em;
-		overflow: hidden;
-		-webkit-transition: max-height .4s;
-		-moz-transition: max-height .4s;
-		-o-transition: max-height .4s;
-		-ms-transition: max-height .4s;
-		transition: max-height .4s;
-	}
-
-	/* Adapting the layout of the menu for smaller screens : icon on the left and text on the right*/
-	
-	.nav li span {
-		display: inline-block;
-		height: 100%;
-	}
-
-	.nav a {
-		padding: 0.5em;		
-	}
-	
-	.icon + span {
-		margin-left: 1em;
-		font-size: 0.8em;
-	}
-	
-	/* Adding a left border of 8 px with a different color for each menu item*/
-/*	.nav li:nth-child(6n+1) {
-		border-left: 8px solid rgb(174, 78, 1);
-	}
-
-	.nav li:nth-child(6n+2) {
-		border-left: 8px solid rgb(191, 117, 20);
-	}
-
-	.nav li:nth-child(6n+3) {
-		border-left: 8px solid rgb(13, 111, 150);
-	}
-
-	.nav li:nth-child(6n+4) {
-		border-left: 8px solid rgb(10, 75, 117);
-	}
-
-	.nav li:nth-child(6n+5) {
-		border-left: 8px solid rgb(16, 34, 44);
-	}
-
-	.nav li:nth-child(6n+6) {
-		border-left: 8px solid rgb(9, 18, 25);
-	}
-*/
-	.nav li.MainMenuLinks {
-		border-left: 8px solid [% color_11 %];
-	}
-	.nav li.MainMenuLinksCurrentPage {
-		border-left: 8px solid [% color_2 %];
-	}
-	
-	/* make the nav bigger on touch screens */
-	.touch .nav a {
-		padding: 0.8em;
-	}
-}
-
-
+[%# PROCESS css_universalistes.tt2 %]
 
 [% END %]
+
+

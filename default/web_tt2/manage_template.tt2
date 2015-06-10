@@ -6,7 +6,7 @@
 [% IF available_files %]
 
 <table border="1">
-<table summary="[%|loc%]Listing rejection messages[%END%]" class="listOfItems">
+<table summary="[%|loc%]Listing rejection messages[%END%]" class="responsive listOfItems">
 	<tr><th colspan="4">[%|loc%]Listing rejection messages[%END%]</th></tr>
 	<tr><th>[%|loc%]Use as default[%END%]</th><th>[%|loc%]Message name[%END%]</th><th colspan="2">[%|loc%]Operation[%END%]</th></tr>
 
@@ -60,8 +60,7 @@
 <!-- <input class="MainMenuLinks" type="submit" name="subaction_default" value="[%|loc%]Default Message[%END%]" /> -->
 
 <textarea name="template_content" cols="50" rows="10" wrap="soft">
-  [%~ content ~%]
-</textarea>
+[% content %]</textarea>
 </p>
 <p>
 <input class="MainMenuLinks" type="submit" name="subaction_save" value="[%|loc%]Save Message[%END%]" />

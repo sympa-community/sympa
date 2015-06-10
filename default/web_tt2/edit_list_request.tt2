@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 <div class="block">
 
-<h2>[%|loc%]Edit List Configuration[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/listconfig" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
+<h2>[%|loc%]Edit List Configuration[%END%] <a  href="[% path_cgi %]/nomenu/help/listconfig" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 [% IF !group %]
   [% IF GROUP == 'description' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
@@ -40,7 +40,7 @@
               &nbsp;<a class="input" href="[% path_cgi %]/dump_scenario/[% list %]/[% p.name %]" title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END%]</a>
             [% END %]
           [% END %]
-          <a class="input" href="[% path_cgi %]/nomenu/help/editlist#[% p.name %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help">[%|loc%]Help[%END%]</a>
+          <a  href="[% path_cgi %]/nomenu/help/editlist#[% p.name %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
           </span>
           </h4>
 
@@ -85,9 +85,11 @@
 
                             [% IF p.type == 'paragraph' %]
                               <!-- ParagrapH -->
+                                 <span class="divider"></span>
                               [% FOREACH key = o.value %]
-                                [% IF key.may_edit != 'hidden' %]
-                                  <div class="form_row">
+
+                                [% IF key.may_edit != 'hidden' %] 
+
                                       <label for="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
                                         [% IF key.title %]
                                           [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
@@ -98,7 +100,7 @@
 
                                       [% IF key.type == 'enum' %]
                                         <!-- Enum -->
-                                        <div>
+                                        
                                         [% IF key.may_edit == 'write' %]
                                           <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
                                             [% FOREACH enum = key.value %]
@@ -119,11 +121,11 @@
                                           [% END %]
                                         [% END %]
 
-                                        </div>
+                                        
                                       [% ELSIF key.type == 'datasource' %]
                                         <!-- Datasource -->
                                         [% IF key.may_edit == 'write' %]
-                                          <div><select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
+                                          <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
                                             [% FOREACH source = key.value %]
                                               <option value="[% source.value.name %]"
                                               [% IF source.value.selected == '1' %]
@@ -131,7 +133,7 @@
                                               [% END %]
                                               >[% source.value.title %]</option>
                                             [% END %]
-                                          </select></div>
+                                          </select>
 
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH source = key.value %]
@@ -147,7 +149,7 @@
                                           [% IF key.field_type == 'password' %]
                                             <input type="password" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
                                           [% ELSE %]
-                                            <div><input type="text" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" /></div>
+                                            <input type="text" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
                                           [% END %]
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% IF key.field_type == 'password' %]
@@ -159,7 +161,7 @@
                                         [% END %]
                                         [% key.unit %]
                                       [% END %]
-                                  </div>[%# class="form_row" #%]
+                                  
                                 [% END %]
                               [% END %]
                             [% ELSE %]
@@ -183,7 +185,7 @@
                           [% IF p.type == 'scenario' %]
                             <!-- Scenario -->
                             [% IF p.may_edit == 'write' %]
-                              <select name="single_param.[% p.name %].name" id="single_param.[% p.name %].name" >
+                              <select name="single_param.[% p.name %].name" id="single_param.[% p.name %].name" onchange="this.form.submit();">
                                 [% FOREACH scenario = p.value %]
                                   [% UNLESS scenario.value.name.match('(default)\s*$') %]
                                     <option value="[% scenario.value.name %]"
@@ -244,8 +246,7 @@
                           [% ELSIF p.type == 'paragraph' %]
                               <!-- Paragraph -->
                               [% FOREACH key = p.value %]
-                                [% IF key.may_edit != 'hidden' %]
-                                  <div class="form_row">
+                                [% IF key.may_edit != 'hidden' %] 
                                       <label for="single_param.[% p.name %].[% key.name %].name">
                                         [% IF key.title %]
                                           [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
@@ -317,9 +318,9 @@
                                         <!-- Enum -->
                                         [% IF key.may_edit == 'write' %]
                                           [% IF key.occurrence == 'multiple' %]
-                                            <div><select name="multiple_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" multiple="multiple">
+                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" multiple="multiple">
                                           [% ELSE %]
-                                            <div><select name="single_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" class="neutral">
+                                            <select name="single_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" class="neutral">
                                           [% END %]
                                           [% FOREACH enum = key.value %]
                                             <option value="[% enum.key %]"
@@ -336,7 +337,7 @@
                                                 >[%|optdesc('',is_listmaster)%][% enum.key %][%END%]</option>
                                               [% END %]
                                           [% END %]
-                                          </select></div>
+                                          </select>
 
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH enum = key.value %]
@@ -367,7 +368,6 @@
                                         [% key.unit %]
 
                                       [% END %]
-                                  </div>[%# class="form_row" #%]
                               [% END %]
                             [% END %]
                           [% ELSIF p.type == 'enum' %]

@@ -1,0 +1,45 @@
+<!-- $Id: head_ui.tt2 11868 2015-05-21 12:36:46Z olivierlumineau $ -->
+<!-- Jquery-ui -->
+<link rel="stylesheet" href="[% static_content_url %]/external/jquery-ui.css" />
+
+<!-- Jqplot -->
+<link rel="stylesheet" href="[% static_content_url %]/external/jquery.jqplot.css" />
+
+<!-- Font css -->
+<link rel="stylesheet" href="[% static_content_url %]/external/font-awesome/css/font-awesome.css" />
+<link rel="stylesheet" href="[% static_content_url %]/fonts/foundation-icons/foundation-icons.css" />
+
+<!-- Foundation -->
+<link rel="stylesheet" href="[% static_content_url %]/external/foundation/css/foundation.css" />
+<link rel="stylesheet" href="[% static_content_url %]/external/foundation/css/normalize.css" />
+<link rel="stylesheet" href="[% static_content_url %]/external/foundation/css/responsive-tables.css" />
+
+
+[% IF custom_css %]
+<style>
+[% custom_css %]
+</style>
+[% ELSE %]
+<link rel="stylesheet" href="[% css_url %]/style.css" media="screen" title="Sympa CSS" />
+[% END %]
+
+[% PROCESS css_ie.tt2 %]
+
+[% IF locale_css %]
+<style>
+[% locale_css %]
+</style>
+[% END %]
+
+<!-- the following CSS have to be improved before to be used -->
+<!-- <link rel="stylesheet" href="[% css_url %]/print.css" media="print" /> -->
+<!-- <link rel="alternative stylesheet" href="[% css_url %]/fullPage.css" media="screen" title="View Full Page" /> -->
+<!-- <link rel="alternative stylesheet" href="[% css_url %]/print-preview.css" media="screen" title="Print Preview" /> -->
+
+[% IF conf.favicon_url %]
+<link rel="shortcut icon" href="[% conf.favicon_url %]" />
+[% ELSE %]
+<link rel="shortcut icon" href="[% icons_url %]/favicon_sympa.png" />
+[% END %]
+
+<!-- end head_ui.tt2 -->

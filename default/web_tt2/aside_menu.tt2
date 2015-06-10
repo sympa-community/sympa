@@ -1,0 +1,91 @@
+<!-- $Id: aside_menu.tt2 11846 2015-01-15 04:15:17Z sikeda $ -->
+<div id="top"><a class="displayNone" href="#content-inner">[%|loc%]Skip to Content.[%END%]</a></div>
+<aside class="medium-3 columns show-for-medium-up">
+[% IF not top_menu %]
+[% IF  conf.logo_html_definition %]
+  <div id="logo" >[% conf.logo_html_definition %]</div>
+[% ELSE %]
+  <div id="logo" ><a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a></div>
+[% END %]
+[% END %]
+
+[% IF not top_menu %]
+[% IF user.email %]
+<menu class="user">
+    <ul> 
+      [% PROCESS login_menu.tt2 %]
+    </ul>
+</menu>
+[% ELSE %]
+<menu class="connect">
+    <ul> 
+      [% PROCESS loginbanner.tt2 %]
+    </ul>
+</menu>
+[% END %]
+[% END %]
+[% IF list %]
+<menu class="list">
+    <ul> 
+      [% PROCESS list_menu.tt2 %]
+    </ul>
+</menu>
+[% END %]
+[% IF not top_menu %]
+<menu class="sympa">
+    <ul>
+        [% PROCESS 'sympa_menu.tt2' %]
+    </ul>
+</menu>
+[% END %]
+</aside>
+
+
+<!-- for responsive view -->
+[% IF top_menu %]
+    [% IF list %]
+        <nav class="top-bar hide-for-medium-up" data-topbar role="navigation">
+            <ul class="title-area">
+                <li class="name">
+                </li>
+                <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+                <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]List Options[%END%] Menu</span></a></li>
+            </ul>
+        <section class="top-bar-section  hide-for-medium-up">
+          <ul class="right">
+            [% PROCESS list_menu.tt2 %]
+            </ul>
+        </section>
+    </nav>
+    [% END %]
+[% ELSE %]
+        <nav class="top-bar hide-for-medium-up" data-topbar role="navigation">
+            <ul class="title-area">
+                <li class="name">
+                [% IF  conf.logo_html_definition %]
+                  [% conf.logo_html_definition %]
+                [% ELSE %]
+                  <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
+                [% END %]
+                </li>
+                <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+                <li class="toggle-topbar menu-icon"><a href="#"><span>General Menu</span></a></li>
+            </ul>
+        <section class="top-bar-section  hide-for-medium-up">
+          <ul class="right">
+        [% IF user.email %]
+            [% PROCESS login_menu.tt2 %]
+        [% ELSE %]
+            <li>   [% PROCESS loginbanner.tt2 %]</li>
+        [% END %]
+        [% IF list %]
+            [% PROCESS list_menu.tt2 %]
+        [% END %]
+            [% PROCESS 'sympa_menu.tt2' %]
+            </ul>
+        </section>
+    </nav>
+[% END %]
+
+<!-- end aside_menu.tt2 -->
+

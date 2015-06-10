@@ -24,18 +24,14 @@
 	<fieldset>
 	<input type="hidden" name="referer" value="[% referer %]" />
 	<input type="hidden" name="action" value="sendpasswd" />
-        <div class="form_row">
            <label for="email">[%|loc%]Your e-mail address:[%END%] </label>
-        </div>
            <input id="email" type="text" name="email" size="20" value="[% unauthenticated_email %]" />
-        <div class="form_row">
            <input class="MainMenuLinks" type="submit" name="action_requestpasswd" 
 [% IF requestpasswd_context == 'firstpasswd' %]
 value="[%|loc%]Request first password[%END%]" />
 [% ELSE %]
 value="[%|loc%]Request new password[%END%]" />
 [% END %]
-        </div>
 	</fieldset>
       </form>
 [% END %]

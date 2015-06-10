@@ -12,25 +12,9 @@
     <li>[%|loc(msgid)%]Message-Id: %1[%END%]</li>
 </ul>
 
-[% FOREACH u = tracking_info %]
-  <div id="mainviewbounce[% u.envid %]" class="viewmod">
-  <input style="float:right" type="button" value="X"
-    onclick="return hideform('mainviewbounce[% u.envid %]')"/>
-  <p>[%|loc(u.recipient)%]Recipient Email: %1[%END%]<br />
-  [%|loc(u.status)%]Delivery Status: %1[%END%]<br />
-  [%|loc(u.arrival_date)%]Notification Date: %1[%END%]</p>
-  <p>
-  <div id="viewbounce[% u.envid %]">
-    [%|loc%]loading message...[%END%]
-    <!-- empty div that will display a content by AJAX -->
-  </div>
-  </p>
-  </div>
-[% END %]
-
-<table summary="[%|loc%]Message tracking[%END%]" class="listOfItems text_center">
+<table summary="[%|loc%]Message tracking[%END%]" class="responsive listOfItems text_center">
   <tr><th>[%|loc%]Recipient Email[%END%]</th><th>[%|loc%]Reception Option[%END%]</th>
-     <th>[%|loc%]Delivery Status[%END%]</th>
+     <th>[%|loc%]Delivery status[%END%]</th>
      <th>[%|loc%]Notification Date[%END%]</th>
      <th>[%|loc%]Notification[%END%]</th>
   </tr>
@@ -49,16 +33,7 @@
     <td>[% u.arrival_date %]</td>
     <td>
     [% IF u.status %]
-      <form class="noborder" style="display:inline"
-        action="[% path_cgi %]" method="post">
-      <input type="hidden" name="action" value="viewbounce" />
-      <input type="hidden" name="list" value="[% list %]" />
-      <input type="hidden" name="email" value="[% u.recipient %]" />
-      <input type="hidden" name="envid" value="[% u.envid %]" />
-      <input type="submit" class="MainMenuLinks"
-        value="[%|loc%]view[%END%]"
-        onclick="$('.viewmod').hide();$('#viewbounce[% u.envid %]').load('[% path_cgi %]/ajax/viewbounce/[% list %]/[% u.recipient %]?envid=[% u.envid %]').parent().show(); return false" />
-      </form>
+      <a href="[% path_cgi %]/viewbounce/[% list %]/[% u.recipient.replace('/','%2F') %]/[% u.envid %]">[%|loc%]View[%END%]</a>
     [% ELSE %]
       &nbsp;
     [% END %]

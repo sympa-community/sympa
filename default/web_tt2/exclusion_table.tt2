@@ -3,10 +3,10 @@
 <fieldset>
   <input type="hidden" name="previous_list" value="[% list %]" />
   <input type="hidden" name="list" value="[% list %]" />
-<table summary="[%|loc%]List of exclude[%END%]" class="listOfItems">
+<table summary="[%|loc%]List of exclude[%END%]" class="responsive listOfItems">
       <tr>
 	[% IF is_listmaster || is_owner  || may_add %]
-	   <th><a href="#" onclick="toggle_selection(document.show_exclude.email);return false;" title="[%|loc%]Toggle Selection[%END%]">&laquo;&raquo;</a></th>
+	   <th><a href="#" onclick="toggle_selection(document.show_exclude.email);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></th>
 	[% END %]
 	<th>[%|loc%]Email[%END%]</th>
         <th>[%|loc%]Since[%END%]</th>
@@ -33,7 +33,7 @@
      [% IF may_add %]
         <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.show_exclude.email)" /><br />
 	<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Restore selected email addresses[%END%]"  onclick="return request_confirm('[%|loc%]Do you really want to restore subscription for ALL selected addresses?[%END%]')" />
-        <label for="quiet_exclusion">[%|loc%]quiet[%END%]</label> <input id="quiet_exclusion" type="checkbox" name="quiet"/>
+        <input id="quiet_exclusion" type="checkbox" name="quiet"/> <label for="quiet_exclusion">[%|loc%]quiet[%END%] </label>
       [% END %]
 
    </fieldset>

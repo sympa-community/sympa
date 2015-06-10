@@ -5,9 +5,9 @@
 <form class="noborder" action="[% path_cgi %]" method="post" name="myform"> 
 <fieldset>
 <input type="hidden" name="list" value="[% list %]" />
-    <table summary="[%|loc%]Listing subscription to moderate[%END%]" class="listOfItems">
+    <table summary="[%|loc%]Listing subscription to moderate[%END%]" class="responsive listOfItems">
       <tr>
-          <th><a href="#" onclick="toggle_selection(document.myform.pending_email);return false;" title="[%|loc%]Toggle Selection[%END%]">&laquo;&raquo;</a></strong></th>
+          <th><a href="#" onclick="toggle_selection(document.myform.pending_email);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></strong></th>
           <th colspan="2">[%|loc%]Email[%END%]</th>
           <th>[%|loc%]Name[%END%]</th>
           <th>[%|loc%]Date[%END%]</th>

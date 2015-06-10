@@ -9,21 +9,9 @@
 
 <title> [% main_title %] - [% action %] </title>
 
-[% IF custom_css %]
-<style>
-[% custom_css %]
-</style>
-[% ELSE %]
-<link rel="stylesheet" href="[% css_url %]/style.css" media="screen" title="Sympa CSS" />
-[% END %]
+[% PROCESS head_ui.tt2 %]
 
-[% PROCESS css_ie.tt2 %]
-
-[% IF locale_css %]
-<style>
-[% locale_css %]
-</style>
-[% END %]
+[% PROCESS head_javascript.tt2 %]
 
 <!-- RSS chanel -->
    [% IF list -%] 
@@ -39,25 +27,13 @@
      [% END -%]
    [% END -%]
 
-
-<!-- the following CSS have to be improved before to be used -->
-<!-- <link rel="stylesheet" href="[% css_url %]/print.css" media="print" /> -->
-<!-- <link rel="alternative stylesheet" href="[% css_url %]/fullPage.css" media="screen" title="View Full Page" /> -->
-<!-- <link rel="alternative stylesheet" href="[% css_url %]/print-preview.css" media="screen" title="Print Preview" /> -->
-
-[% IF conf.favicon_url %]
-<link rel="shortcut icon" href="[% conf.favicon_url %]" />
-[% ELSE %]
-<link rel="shortcut icon" href="[% icons_url %]/favicon_sympa.png" />
-[% END %]
-
-[% PROCESS javascript.tt2 %]
-
 [% IF base %] <base href="[% base %]" /> [% END %]
 
 </head>
 
 <body onload="[% IF use_htmlarea %] HTMLArea.replaceAll();[% END %][% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]">
+
+[% top_menu = 1 %]
 
 <a name="top"></a>
 
@@ -66,47 +42,55 @@
 [% IF nomenu %]
       [% PROCESS error.tt2 IF errors %]
       <div class="nomenu">
-		<div class="ContentBlock">
+		<!--<div class="ContentBlock">-->
 			[% PROCESS notice.tt2 IF notices %]
 			[% PROCESS "${action}.tt2" IF action %]
-		</div>
+		<!--</div>-->
       </div>
 [% ELSE %]
 
-      [% PROCESS error.tt2 IF errors %]
-   <div class="sidebar" style="padding-top: 10px;">
-      [% PROCESS login_menu.tt2 %]
-      [% PROCESS list_menu.tt2 IF list %]
-      <h2>[%|loc%]Sympa Menu[%END%]</h2>
-      [% PROCESS menu.tt2 %]
-   </div>
+    [% PROCESS error.tt2 IF errors %]
 
-<div id="loading" style="overflow: hidden; display: none;">
-   <div style="position:relative;float:left;"><img src="[% static_content_url %]/icons/spinner.gif"></div>
-   <div style="position:relative;width:50%;"><h1 id="loadingText">[%|loc%]Please Wait...[%END%]</h1></div>
+[% IF top_menu %]
+    [% PROCESS header.tt2 %]
+[% END %]
+
+[% IF top_menu %][% IF not list %]<div id="loading" class="row">
+[% ELSE %]<div id="loading" class="medium-9 columns">[% END %][% ELSE %]<div id="loading" class="medium-9 columns">[% END %]
+   <h1 id="loadingText"><i class="fa fa-spinner fa-pulse"></i> [%|loc%]Please Wait...[%END%]</h1></div>
 </div>
 
-<div id="content-inner">
-    [% PROCESS title.tt2 %]
+    [% PROCESS aside_menu.tt2 %]
+    [% IF top_menu %][% IF not list %]<main id="content-inner" class="row">
+[% ELSE %]<main id="content-inner" class="medium-9 columns">[% END %][% ELSE %]<main id="content-inner" class="medium-9 columns">[% END %]
+
+      [% IF not top_menu %]
+        <h1>[% main_title %]</h1>
+      [% END %]
       [% IF list %]
-       [% IF list_title %]<p><b>[%|loc%]Subject:[%END%]</b> [% IF is_owner %]<a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%](Edit)[%END%]</a>[% END %] [% list_title %]</p>[% END %]
+       [% PROCESS title.tt2 %]
+       [% IF list_title %]<p><b>[%|loc%]Subject:[%END%]</b> [% list_title %] [% IF is_owner %]<a href="[% path_cgi %]/edit_list_request/[% list %]/description"><i class="fa fa-pencil-square" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>[% END %]
       [% END %]
 
         [% PROCESS nav.tt2 %]
 
-       <div class="ContentBlock">
+<!--       <div class="ContentBlock">-->
         [% PROCESS notice.tt2 IF notices %]
-        [% IF action == 'edit_list_request' %]<br /><br />[% END %]
+        [% IF action == 'edit_list_request' %][% END %]
         [% PROCESS "${action}.tt2" IF action %]
-      </div><!-- End div ContentBlock -->
+      <!--</div>--><!-- End div ContentBlock -->
 
 
  [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
-</div><!-- End content-inner -->
 
- [% PROCESS footer.tt2 %]
+[% IF top_menu %][% IF not list %][% END %][% END %]
+</main><!-- End content-inner -->
+
+
+[% PROCESS footer.tt2 %]
 [% END %]
 
 </body>
+
 <!-- end main.tt2 -->
 </html>
