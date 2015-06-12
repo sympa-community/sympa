@@ -1820,6 +1820,12 @@ sub distribute_msg {
     my $rate = $self->get_total_bouncing() * 100 / $total;
     if ($rate > $self->{'admin'}{'bounce'}{'warn_rate'}) {
         $self->send_notify_to_owner('bounce_rate', {'rate' => $rate});
+        if ($rate == 100) {
+           $self->send_notify_to_user('hundred_percent_error',$message->{'sender'});
+		   Sympa::send_notify_to_listmaster($self->{'domain'}, 'hundred_percent_error',
+        {'listname' => $self->{'name'},'listdomain' => $self->{'domain'}, 'sender' => $message->{'sender'}})
+
+	   }
     }
 
     #save the message before modifying it

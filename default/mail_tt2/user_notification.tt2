@@ -65,6 +65,14 @@ To confirm and get removed from all the lists of this family, please click the l
   [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
 
 
+[% ELSIF type == 'hundred_percent_error' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]No valid receipient in list %1[%END%][%END%]
+
+[%|loc(list.name, conf.listmaster_email, list.domain) %]
+You message to list %1 could not be delivered. All the subscribers to this list have their address in error.
+Please contact the listmaster (%2@%3) to fix this probem before re-posting your message.
+[% END %]
+
 [% ELSE -%]
 Subject: [% FILTER qencode %][%list.name%] / [%type%][%END%]
 
