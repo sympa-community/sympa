@@ -21,10 +21,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nobase_static_DATA = \
-	external/font-awesome \
-	external/foundation \
-	external/html5shiv \
-	external/images \
 	external/jqplot.barRenderer.min.js \
 	external/jqplot.CanvasAxisTickRenderer.js \
 	external/jqplot.canvasAxisTickRenderer.min.js \
@@ -386,7 +382,6 @@ nobase_static_DATA = \
 	fonts/Raleway/Raleway-Regular.ttf \
 	fonts/Raleway/Raleway-SemiBold.ttf \
 	fonts/Raleway/Raleway-Thin.ttf \
-	fonts/Raleway/ \
 	icons/arc.png \
 	icons/back.png \
 	icons/begin.png \
