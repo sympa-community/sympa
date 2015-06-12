@@ -1179,6 +1179,7 @@ sub _load_auth {
                             'Incorrect CAS paragraph in auth.conf');
                         next;
                     }
+                    $Conf{'cas_number'}{$robot}++;
 
                     eval "require AuthCAS";
                     if ($EVAL_ERROR) {
