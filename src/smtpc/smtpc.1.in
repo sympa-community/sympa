@@ -12,11 +12,11 @@ smtpc --lmtp \fIpath\fR -f \fIenvelope@sen.der\fR
 
 .SH DESCRIPTION
 \fBsmtpc\fP is an email client.
-It reads a message from standard input and submits it to mail server through
+It reads a message from standard input and submits it to email server through
 socket.
 
 .SS Options
-Any options not listed here are simply ignored.
+Any options not listed here are silently ignored.
 
 .TP
 \fB--dump\fP
@@ -64,7 +64,7 @@ Enables support for SMTPUTF8 extension.
 then requests this extension as neccessity.
 
 .TP
-\fB-V\fP \fIenvid\fR, \fB-N\fP\fIenvid\fR
+\fB-V\fP \fIenvid\fR, \fB-V\fP\fIenvid\fR
 Specifys envelope ID.
 
 .TP
@@ -73,12 +73,14 @@ Output the last response from the server to standard output.
 
 .TP
 \fB--\fP
-Ends options.
-Remainder of command line arguments are concidered to be recipient addresses.
+Terminates options.
+Remainder of command line arguments are considered to be recipient addresses,
+even if any of them begin with "-".
 
 .TP
 \fIrecipent@add.ress\fR ...
 Recipients to whom the message would be delivered.
+At least one recipient is required.
 
 .SS Exit status
 
@@ -111,19 +113,19 @@ Network error occurred.
 See \fB-N\fR and \fB-V\fR options.
 
 .TP
-\fBMessage Size Declaration\fR (RFC 1870)
-Estimated size of the message is informed to the server.
-
-.TP
 \fBInternationalized Email\fR (RFC 6531)
 Experimentally supported.
 See \fB--smtputf8\fR option.
+
+.TP
+\fBMessage Size Declaration\fR (RFC 1870)
+Estimated size of the message is informed to the server.
 
 .SH LIMITATIONS
 
 \fBsmtpc\fR provides the feature of SMTP / LMTP client submitting messages
 to particular server.
-It will never provide extensive feature such as message queuing, retry after
+It will never provide extensive features such as message queuing, retry after
 temporary failure, routing using MX DNS record and so on.
 Once the server rejects delivery, \fBsmtpc\fR exits and message is discarded.
 
