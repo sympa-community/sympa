@@ -11244,14 +11244,15 @@ sub do_create_list_request {
     }
 
     # load lists the user is administoring
-    if ($param->{'is_listmaster'}) {
-        $param->{'all_lists'} = Sympa::List::get_lists($robot) || [];
-    } else {
-        $param->{'all_lists'} =
-            Sympa::List::get_lists($robot,
-            filter => ['owner' => $param->{'user'}{'email'}])
-            || [];
-    }
+    #XXX# Slow on the host with large number of lists.
+    #XXXif ($param->{'is_listmaster'}) {
+    #XXX    $param->{'all_lists'} = Sympa::List::get_lists($robot) || [];
+    #XXX} else {
+    $param->{'all_lists'} =
+        Sympa::List::get_lists($robot,
+        filter => ['owner' => $param->{'user'}{'email'}])
+        || [];
+    #XXX}
 
     my %topics;
     unless (%topics = Sympa::Robot::load_topics($robot)) {
