@@ -22,9 +22,7 @@
 
 nobase_static_DATA = \
 	external/jqplot.barRenderer.min.js \
-	external/jqplot.CanvasAxisTickRenderer.js \
 	external/jqplot.canvasAxisTickRenderer.min.js \
-	external/jqplot.CanvasTextRenderer.js \
 	external/jqplot.canvasTextRenderer.min.js \
 	external/jqplot.categoryAxisRenderer.min.js \
 	external/jquery.jqplot.css \
