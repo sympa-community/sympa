@@ -1,15 +1,13 @@
 <!-- $Id$ -->
 
 [% IF user.email %]
-            [% IF user.gecos %] 
-            <li><span>[% user.email %]</span></li>
-            [% END %]
+  [% IF user.gecos %]
+    <li><span>[% user.email %]</span></li>
+  [% END %]
 
-            [% IF is_listmaster || is_privileged_owner || is_owner || is_editor || is_subscriber %]
-                <li><span>[%|loc%]Role:&nbsp;[%END%][% IF is_listmaster ~%]
-                [%|loc%]Listmaster[%END%][% IF is_privileged_owner || is_owner || is_editor || is_subscriber %][%|loc%], [%END%][% END ~%]<span></li>
-            [% END ~%]
-            [% END %]
+  [% IF is_listmaster %]
+    <li><span>[%|loc%]Role:&nbsp;[%END%][%|loc%]Listmaster[%END%]</span></li>
+  [% END %]
 
             [% IF restore_email %]
               <li>
