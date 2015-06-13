@@ -30,16 +30,18 @@
   <br /><br />
  [%|loc%]This list is configured to require topic(s).[%END%]
   <br />
- <label>[%|loc%]Please select one or more topic(s) that corresponds to your message below:[%END%] 
-  <br /><br />
+ <label for="topics">[%|loc%]Please select one or more topic(s) that corresponds to your message below:[%END%]</label>
+ <ul id="topics">
  [% FOREACH t = available_topics %]
-   <input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1" /> <label for="topic_[%t.name%]">[% t.title %] </label>
-  <br />
+   <li><input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1" /> <label for="topic_[%t.name%]">[% t.title %] </label></li>
  [%- END- %]
- <br />
+ </ul>
 </fieldset>
 </form>
 [%- END -%]
-[% PROCESS 'msg00000.html' %]
-
+[% TRY ~%]
+  [% html_content | eval %]
+[%~ CATCH ~%]
+  <!-- [% error | html %] -->
+[%~ END %]
 <!-- end viewmod.tt2 -->

@@ -60,7 +60,8 @@
 <!-- <input class="MainMenuLinks" type="submit" name="subaction_default" value="[%|loc%]Default Message[%END%]" /> -->
 
 <textarea name="template_content" cols="50" rows="10" wrap="soft">
-[% content %]</textarea>
+  [%~ content ~%]
+</textarea>
 </p>
 <p>
 <input class="MainMenuLinks" type="submit" name="subaction_save" value="[%|loc%]Save Message[%END%]" />

@@ -57,7 +57,7 @@
   <fieldset>
   <label for="content"><strong> [%|loc(visible_path)%]Edit the file %1[%END%]</strong></label><br />
   <textarea id="content" name="content" cols="90" rows="25">
-[% INSERT $filepath IF filepath %]
+    [%~ INSERT $filepath IF filepath ~%]
   </textarea><br />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />

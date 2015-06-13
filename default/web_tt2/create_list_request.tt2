@@ -7,33 +7,37 @@
 
 <form action="[% path_cgi %]" method="post">
 <fieldset>
-   <label for="listname">[%|loc%]List name:[%END%]</label><input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" />
-   <label for="owner">[%|loc%]Owner:[%END%]</label> <span>[% user.email %]</span>    
-   <label for="list_type">[%|loc%]List type:[%END%]</label><ul id="list_type">
-      [% FOREACH template = list_list_tpl %]
-         [% IF template.value.comment %]
-         <li>
-         <input type="radio" name="template" value="[% template.key %]"
-         [% IF template.value.selected || loop.size == 1 %]
-         checked="checked"
-         [% END %]
-         id="template.[% template.key %]"
-         />
-         [% PROCESS $template.value.comment %]
-         </li>
-         [% ELSE %]
-         <li>
-         <input type="radio" name="template" value="[% template.key %]"
-         [% IF template.value.selected %]
-         checked="checked"
-         [% END %]
-         id="template.[% template.key %]"
-         /> <label for="template.[% template.key %]">[% template.key %]</label>
-         </li>
-         [% END %]
+  <label for="listname">[%|loc%]List name:[%END%]</label><input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" />
+  <label for="owner">[%|loc%]Owner:[%END%]</label> <span>[% user.email %]</span>    
+  <label for="list_type">[%|loc%]List type:[%END%]</label>
+  <ul id="list_type">
+  [%~ FOREACH tpl_info = list_list_tpl %]
+    <li>
+    <input type="radio" name="template" value="[% tpl_info.key %]"
+      [% IF tpl_info.value.selected || loop.size == 1 %]
+        checked="checked"
       [% END %]
-   </ul>
-   <label for="subject">[%|loc%]Subject:[%END%]</label><input type="text" name="subject" id="subject" size="60" value="[% saved.subject %]" />
+      id="template.[% tpl_info.key %]"
+    />
+    <label for="template.[% tpl_info.key %]">
+    [% IF tpl_info.value.title ~%]
+      [% tpl_info.value.title %]
+    [%~ ELSE ~%]
+      [% tpl_info.key %]
+    [%~ END %]
+    </label>
+    [%~ IF tpl_info.value.html_description ~%]
+      [% TRY ~%]
+        [% tpl_info.value.html_description | eval %]
+      [%~ CATCH ~%]
+        <!-- [% error | html %] -->
+      [%~ END %]
+    [%~ END %]
+    </li>
+  [%~ END %]
+  </ul>
+
+  <label for="subject">[%|loc%]Subject:[%END%]</label> <input type="text" name="subject" id="subject" size="60" value="[% saved.subject %]" />
 
 [% SET single_topic = "other" %]
 [% FOREACH topic = list_of_topics %]

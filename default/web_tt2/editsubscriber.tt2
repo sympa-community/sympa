@@ -74,7 +74,7 @@
   </div>
 
   <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Unsubscribe the User[%END%]" />
-  <p><input id="quiet" type="checkbox" name="quiet" /> [%|loc%]Quiet (don't send deletion email)[%END%]</p>
+  <p><input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label></p>
 
   [% IF current_subscriber.bounce %]
     <h3 class="bg_color_error">[%|loc%]Bouncing address[%END%]</h3>
@@ -85,7 +85,15 @@
     [% END %]
 
     <label>[%|loc%]Status:[%END%] </label>
-    [% current_subscriber.bounce_status %] ([% current_subscriber.bounce_code %])
+    [% IF current_subscriber.bounce_status ~%]
+      [% current_subscriber.bounce_status %]
+    [%~ ELSE ~%]
+      [%|loc%]Unknown[%END%]
+    [%~ END %]
+    [% IF current_subscriber.bounce_code ~%]
+      ([% current_subscriber.bounce_code %])
+    [%~ END %]
+    </div>
 
     <label>[%|loc%]Bounce count:[%END%] </label>
     [% current_subscriber.bounce_count %]
@@ -93,7 +101,19 @@
     <label>[%|loc%]Period:[%END%] </label>
     [%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]
 
-    <p><a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.email.replace('/','%2F') %]">[%|loc%]View last bounce[%END%]</a></p>
+    <div id="mainviewbounce" class="viewmod">
+    <input style="float:right" type="button" value="X"
+      onclick="return hideform('mainviewbounce')"/>
+    <p>
+    <div id="viewbounce">
+      [%|loc%]loading message...[%END%]
+      <!-- empty div that will display a content by AJAX -->
+     </div>
+    </p>
+    </div>
+
+    <a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.email | uri %]"
+      onclick="$('.viewmod').hide();$('#viewbounce').load('[% path_cgi%]/ajax/viewbounce/[% list %]/[% current_subscriber.email | uri %]').parent().show(); return false">[%|loc%]View last bounce[%END%]</a>
 
     <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" />
 

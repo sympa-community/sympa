@@ -1,8 +1,7 @@
 <!-- $Id$ -->
-
-<pre>
-[% FILTER html_entity %]
-[% INSERT $lastbounce_path IF lastbounce_path %]
-[% END %]
-</pre>
+[% TRY ~%]
+  [% html_content | eval %]
+[%~ CATCH ~%]
+  <!-- [% error | html %] -->
+[%~ END %]
 <!-- end viewbounce.tt2 -->

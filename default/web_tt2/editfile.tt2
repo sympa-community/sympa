@@ -10,9 +10,10 @@
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="file" value="[% file %]" />
   <input type="hidden" name="previous_action" value="[% previous_action %]" />
-<textarea name="content" cols="80" rows="25">
-[% filecontent %]</textarea>
-<br />
+  <textarea name="content" cols="80" rows="25">
+    [%~ filecontent ~%]
+  </textarea>
+  <br />
   <input class="MainMenuLinks" type="submit" name="action_savefile" value="[%|loc%]Save[%END%]" />
 </fieldset>
 </form>	
