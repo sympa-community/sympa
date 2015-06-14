@@ -53,7 +53,7 @@
                         <!-- Multiple Enum -->
 
                           [% IF p.may_edit == 'write' %]
-                            <select name="multiple_param.[% p.name %]" multiple="multiple">
+                            <select name="multiple_param.[% p.name %]" multiple="multiple" size="[% p.value.size %]">
                               [% FOREACH enum = p.value %]
                                 <option value="[% enum.key %]"
                                 [% IF enum.value.selected == '1' %]
@@ -318,7 +318,7 @@
                                         <!-- Enum -->
                                         [% IF key.may_edit == 'write' %]
                                           [% IF key.occurrence == 'multiple' %]
-                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" multiple="multiple">
+                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" multiple="multiple" size="[% key.value.size %]">
                                           [% ELSE %]
                                             <select name="single_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" class="neutral">
                                           [% END %]
