@@ -78,43 +78,5 @@
 [% END %]
 [% END %]
 
-[% IF is_privileged_owner %]
-	[% TRY %]
-		[% USE Dokuwiki("groupware_wikis") %]
-<div>
-	<form name="manage_list_wiki" action="[% path_cgi %]" method="post">
-		<input type="hidden" name="action" value="admin" />
-		<input type="hidden" name="list" value="[% list %]" />
-		<input type="hidden" name="plugin.dokuwiki.wikiname" value="[% list %]@[% robot %]" />
-		<input type="hidden" name="plugin.dokuwiki.template" value="_template_" />
-		<fieldset>
-			[% TRY %]
-				[% done = Dokuwiki.handleform("${list}@${robot}", "${list}") %]
-				[% IF done %]
-					[% IF done == 'created' %]
-			<p class="success">The wiki has been created.</p>
-					[% END %]
-					
-					[% IF done == 'deleted' %]
-			<p class="success">The wiki has been deleted.</p>
-					[% END %]
-				[% END %]
-				[% IF Dokuwiki.exists("${list}@${robot}") %]
-			<input class="MainMenuLinks" type="submit" name="plugin.dokuwiki.delete_wiki" value="[%|loc%]Delete wiki[%END%]" onClick="return request_confirm('[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to delete this list's wiki ?[%END%][%END%]');"/> [%|loc%]Warning : deletion is final, data recovery is not possible once done.[%END%]
-				[% ELSE %]
-			<input class="MainMenuLinks" type="submit" name="plugin.dokuwiki.create_wiki" value="[%|loc%]Create wiki[%END%]" /> [%|loc%]Please check out <a href="#">the wiki service terms and conditions</a>[%END%]
-				[% END %]
-			[% CATCH %]
-			<p class="error">[% error.info %]</p>
-			[% END %]
-		</fieldset>
-	</form>
-</div>
-<br/>
-	[% CATCH %]
-	<p class="error">[% error.info %]</p>
-	[% END %]
-[% END %]
-
 </div>
 <!-- end admin.tt2 -->
