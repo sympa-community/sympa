@@ -6,7 +6,9 @@ So this may be used for locale-specific customization.
 /* begin zh-CN/css.tt2 */
 @media screen {  }
 [%# Overriding default font family. %]
-body {
+*,
+body,
+h1,h2,h3,h4,h5,h6 {
     font-family:"儷黑 Pro", "LiHei Pro Medium", "华文黑体", STHeiti, Hei, "微软雅黑", "Microsoft YaHei", "MS Hei", "黑体", SimHei, "文泉驿微米黑", "WenQuanYi Micro Hei", sans-serif;
 }
 [%# Overriding "monospace, serif". %]
