@@ -34,7 +34,9 @@
 </div>
 </article><article class="small-12 medium-4 columns home">
 <div>
-[% PROCESS pref.tt2 %]
+<h2><i class="fa fa-user"></i> [%|loc%]User preferences[%END%]</h2>
+<a class="button" href="[% path_cgi %]/pref" title="[%|loc%]User preferences[%END%]">[%|loc%]Go[%END%]</a>
+[%# PROCESS pref.tt2 %]
 </div>
 </article>[% END %]<article class="small-12 medium-4 columns home">
 <div>
