@@ -13,7 +13,10 @@
 <link rel="stylesheet" href="[% static_content_url %]/external/foundation/css/foundation.css" />
 <link rel="stylesheet" href="[% static_content_url %]/external/foundation/css/normalize.css" />
 <link rel="stylesheet" href="[% static_content_url %]/external/foundation/css/responsive-tables.css" />
-
+[%# Workaround for select size bug of Foundation. #%]
+<style>
+  select[multiple], select[size] { height: auto; background-image: none; }
+</style>
 
 [% IF custom_css %]
 <style>
