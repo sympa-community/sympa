@@ -6,16 +6,22 @@
   <fieldset>
   <label>[%|loc%]Email:[%END%]  </label>[% user.email %]
   <label for="gecos">[%|loc%]Name:[%END%]  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" />
-  <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label><select id="lang" name="lang" class="neutral">
+  <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label>
+  <div>
+  <select id="lang" name="lang" class="neutral">
     [% FOREACH l = languages %]
       <option value="[% l.key %]" lang="[% l.key %]" xml:lang="[% l.key %]" [% l.value.selected %]>[% l.value.complete %]</option>
     [% END %]
-    </select>
-  <label for="cookie_delay">[%|loc%]Connection expiration period:[%END%]  </label><select name="cookie_delay" id="cookie_delay">
+  </select>
+  </div>
+  <label for="cookie_delay">[%|loc%]Connection expiration period:[%END%]  </label>
+  <div>
+  <select name="cookie_delay" id="cookie_delay">
     [% FOREACH period = cookie_periods %]
       <option value="[% period.value %]" [% period.selected %]>[% period.desc %]</option>
     [% END %]
-    </select>
+  </select>
+  </div>
 
   <input class="MainMenuLinks" type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" />
 
