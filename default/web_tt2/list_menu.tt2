@@ -1,4 +1,62 @@
 <!-- $Id$ -->
+
+[%# Note: When is_listmaster is set, is_privileged_owner is also set. %]
+[%~ SET owner_item = owner.item(user.email) %]
+[%~ SET editor_item = editor.item(user.email) %]
+[% IF is_listmaster || owner_item || is_editor || is_subscriber %]
+  <li><span>
+  [%# Show picture and higher privilege of user on this list. %]
+  [%~ IF is_subscriber && pictures_display && pictures_url ~%]
+    <img class="Pictures" src="[% pictures_url %]"
+      alt="[%|loc%]Your picture[%END%]" />
+  [%~ ELSIF owner_item || is_editor || is_subscriber ~%]
+    <i class="fa fa-user"></i>
+  [%~ END %]
+  [%~ IF is_listmaster ~%]
+    <span title="[%|loc%]You are listmaster.[%END%]"
+    ><i class="fa fa-star" style="color: #669900;"></i></span>
+  [%~ ELSIF owner_item ~%]
+    <span title="[%|loc%]You are owner.[%END%]"
+    ><i class="fa fa-star"></i></span>
+  [%~ ELSIF is_editor ~%]
+    <span title="[%|loc%]You are editor.[%END%]"
+    ><i class="fa fa-star-o"></i></span>
+  [%~ END %]
+
+  [%# Show display name of user specific to this list. %]
+  [%~ IF top_menu ~%]
+    [%~ IF is_subscriber ~%]
+      [% subscriber.gecos || user.gecos || user.email %]<br/>
+    [%~ ELSIF owner_item ~%]
+      [% owner_item.gecos || user.gecos || user.email %]<br/>
+    [%~ ELSIF is_editor ~%]
+      [% editor_item.gecos || user.gecos || user.email %]<br/>
+    [%~ END %]
+  [%~ END ~%]
+
+  [%# Show roles on this list. %]
+  [%~ IF is_listmaster ~%]
+    [%|loc%]Listmaster[%END%]
+    [%~ IF owner_item || is_editor || is_subscriber %][%|loc%], [%END%][% END %]
+  [%~ END %]
+  [%~ IF owner_item || is_editor %]
+    [%~ IF is_privileged_owner ~%]
+      [%|loc%]Privileged owner[%END%]
+      [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
+    [%~ ELSIF is_owner ~%]
+      [%|loc%]Owner[%END%]
+      [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
+    [%~ ELSIF is_editor ~%]
+      [%|loc%]Editor[%END%]
+      [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
+    [%~ END %]
+  [%~ END %]
+  [%~ IF is_subscriber ~%]
+    [%|loc%]Subscriber[%END%]
+  [%~ END %]
+  </span></li>
+[%~ END %]
+
     <li><label><i class="fa fa-envelope-square"></i> [%|loc%]List Options[%END%]</label></li>
     [% PROCESS 'list_panel.tt2' %]
 

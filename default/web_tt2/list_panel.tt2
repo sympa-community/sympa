@@ -8,24 +8,6 @@
   <li class="menuLinks"><span class="bg_color_error">[%|loc%]Erroneous configuration[%END%]</span></li>
 [% END %]
 
-[% IF is_privileged_owner || is_owner || is_editor || is_subscriber %]
-  <li><span>
-  [%~ IF is_privileged_owner ~%]
-    [%|loc%]Privileged owner[%END%]
-    [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
-  [%~ ELSIF is_owner ~%]
-    [%|loc%]Owner[%END%]
-    [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
-  [%~ ELSIF is_editor ~%]
-    [%|loc%]Editor[%END%]
-    [%~ IF is_subscriber %][%|loc%], [%END%][% END %]
-  [%~ END %]
-  [%~ IF is_subscriber ~%]
-    [%|loc%]Subscriber[%END%]
-  [%~ END %]
-  </span></li>
-[% END %]
-
 <li class="menuLinks">
   <span>[%|loc%]Subscribers:[%END%] [% total %]
   [% IF may_review %]
