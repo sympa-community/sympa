@@ -96,7 +96,7 @@
 [% END %] 
 
 [% IF subaction == 'logs' %]
-<h2>[%|loc%]Logs[%END%]</h2>
+<h2>[%|loc%]System log[%END%]</h2>
 <h3>[%|loc%]Sympa log level[%END%]</h3>
 <p>[%|loc%]Set debug level for logs written to disk.  This setting is temporary, applying only for the lifetime of the fastcgi session hosting this interface.[%END%]</p>
 <form class="bold_label" action="[% path_cgi %]" method="post">
