@@ -82,7 +82,11 @@ var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI
 $(
 function () {
 // Loading foundation
-$(document).foundation();
+$(document).foundation({
+    topbar: {
+        back_text: '<i class="fa fa-undo"></i> [%|loc%]Back[%END%]'
+    }
+});
 
 });
 

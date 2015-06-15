@@ -1,6 +1,8 @@
 <!-- $Id: header.tt2 11846 2015-05-19 04:15:17Z lumineau $ -->
 <header>
 
+[%# Remove the class "menu-icon" to get rid of menu icon.
+    Take out inner text of span element to just have icon alone. ~%]
 <nav class="top-bar" data-topbar role="navigation">
     <ul class="title-area large-2 columns show-for-large-up">
         <li class="name">
@@ -10,8 +12,7 @@
                   <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
                 [% END %]
         </li>
-        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-        <li class="toggle-topbar menu-icon"><a href="#"><span>Sympa Menu</span></a></li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Sympa Menu[%END%]</span></a></li>
     </ul>
 
     <ul class="title-area hide-for-large-up">
@@ -22,8 +23,7 @@
                   <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
                 [% END %]
         </li>
-        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-        <li class="toggle-topbar menu-icon"><a href="#"><span>Sympa Menu</span></a></li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Sympa Menu[%END%]</span></a></li>
     </ul>
 <section class="top-bar-section">
   <ul class="right">

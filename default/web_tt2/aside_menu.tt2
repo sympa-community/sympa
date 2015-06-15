@@ -42,14 +42,15 @@
 
 
 <!-- for responsive view -->
-[% IF top_menu %]
+[%# Remove the class "menu-icon" to get rid of menu icon.
+    Take out inner text of span element to just have icon alone. %]
+[%~ IF top_menu %]
     [% IF list %]
         <nav class="top-bar hide-for-medium-up" data-topbar role="navigation">
             <ul class="title-area">
                 <li class="name">
                 </li>
-                <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-                <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]List Options[%END%] Menu</span></a></li>
+                <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]List Options Menu[%END%]</span></a></li>
             </ul>
         <section class="top-bar-section  hide-for-medium-up">
           <ul class="right">
@@ -68,8 +69,7 @@
                   <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
                 [% END %]
                 </li>
-                <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-                <li class="toggle-topbar menu-icon"><a href="#"><span>General Menu</span></a></li>
+                <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]General Menu[%END%]</span></a></li>
             </ul>
         <section class="top-bar-section  hide-for-medium-up">
           <ul class="right">

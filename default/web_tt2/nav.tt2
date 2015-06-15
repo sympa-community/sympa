@@ -1,11 +1,12 @@
 <!-- $Id$ -->
 [% IF action == 'create_list_request' %]
+[%# Remove the class "menu-icon" to get rid of menu icon.
+    Take out inner text of span element to just have icon alone. ~%]
 <nav class="top-bar" data-topbar role="navigation">
     <ul class="title-area">
         <li class="name">
         </li>
-        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-        <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Create List[%END%] Menu</span></a></li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Create List Menu[%END%]</span></a></li>
     </ul>
 <section class="top-bar-section">
     <ul class="left">
@@ -18,12 +19,13 @@
 [% END %]
 
 [% IF action == 'serveradmin' or action == 'skinsedit'  or action == 'edit_config' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' %]
+[%# Remove the class "menu-icon" to get rid of menu icon.
+    Take out inner text of span element to just have icon alone. ~%]
 <nav class="top-bar" data-topbar role="navigation">
     <ul class="title-area">
         <li class="name">
         </li>
-        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-        <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Listmaster Admin[%END%] Menu</span></a></li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Listmaster Admin Menu[%END%]</span></a></li>
     </ul>
 <section class="top-bar-section">
   <ul class="left">
@@ -67,12 +69,13 @@
 
 [% IF action == 'lists' %]
 <h2>[%|loc%]Index of lists[%END%]</h2>
+[%# Remove the class "menu-icon" to get rid of menu icon.
+    Take out inner text of span element to just have icon alone. ~%]
 [% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] %]
 <nav class="top-bar" data-topbar role="navigation">
     <ul class="title-area">
         <li class="name">
         </li>
-        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
         <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Index of lists[%END%]</span></a></li>
     </ul>
 <section class="top-bar-section">
@@ -93,12 +96,13 @@
 
 [% IF action == 'admin' || action_type == 'admin' || action == 'editfile' %]
 <h2>[%|loc%]Basic Operations[%END%]</h2>
+[%# Remove the class "menu-icon" to get rid of menu icon.
+    Take out inner text of span element to just have icon alone. ~%]
 <nav class="top-bar" data-topbar role="navigation">
     <ul class="title-area">
         <li class="name">
         </li>
-        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Menu[%END%]</span></a></li>
     </ul>
 <section class="top-bar-section">
   <ul class="left">
@@ -182,12 +186,13 @@
 [% END %]
 
 [% IF action == 'compose_mail' %]
+[%# Remove the class "menu-icon" to get rid of menu icon.
+    Take out inner text of span element to just have icon alone. ~%]
 <nav class="top-bar" data-topbar role="navigation">
     <ul class="title-area">
         <li class="name">
         </li>
-        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Menu[%END%]</span></a></li>
     </ul>
 <section class="top-bar-section">
   <ul class="left">
