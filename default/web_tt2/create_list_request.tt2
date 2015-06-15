@@ -26,9 +26,9 @@
       [% tpl_info.key %]
     [%~ END %]
     </label>
-    [%~ IF tpl_info.value.html_description ~%]
+    [%~ IF tpl_info.value.html_content ~%]
       [% TRY ~%]
-        [% tpl_info.value.html_description | eval %]
+        [% tpl_info.value.html_content | eval %]
       [%~ CATCH ~%]
         <!-- [% error | html %] -->
       [%~ END %]
