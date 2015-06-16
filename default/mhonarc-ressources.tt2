@@ -474,24 +474,24 @@ $POWERED_BY$
       ($tag$% END %$tag$)
   ($tag$% ELSE %$tag$)
       ($tag$%|loc%$tag$)Reply to($tag$%END%$tag$)
-      <label class="inlineLabel" for="to_sender">($tag$%|loc%$tag$)sender($tag$%END%$tag$)</label>
       <input id="to_sender" type="radio" name="to"
        value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$"
        ($tag$% IF list_conf.reply_to_header.value == 'sender' %$tag$)
 	checked
 	($tag$%END%$tag$) />
-      <label class="inlineLabel" for="to_list">($tag$%|loc%$tag$)list($tag$%END%$tag$)</label>
+      <label class="inlineLabel" for="to_sender">($tag$%|loc%$tag$)sender($tag$%END%$tag$)</label>
       <input id="to_list" type="radio" name="to"
        value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)"
        ($tag$% IF list_conf.reply_to_header.value == 'list' %$tag$)
 	checked
 	($tag$%END%$tag$) />
-      <label class="inlineLabel" for="to_both">($tag$%|loc%$tag$)both($tag$%END%$tag$)</label>
+      <label class="inlineLabel" for="to_list">($tag$%|loc%$tag$)list($tag$%END%$tag$)</label>
       <input id="to_both" type="radio" name="to"
        value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)"
        ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
 	checked
 	($tag$%END%$tag$) />
+      <label class="inlineLabel" for="to_both">($tag$%|loc%$tag$)both($tag$%END%$tag$)</label>
   ($tag$% END %$tag$)
   <input class="MainMenuLinks" type="submit" name="action_compose_mail" value="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
   <input class="MainMenuLinks" type="submit" name="action_send_me" value="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)" /><br />
