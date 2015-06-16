@@ -522,7 +522,7 @@ sub get_icon {
     return undef unless defined $icons{$type};
     return
           Conf::get_robot_conf($robot, 'static_content_url')
-        . '/icons.'
+        . '/icons/'
         . $icons{$type};
 }
 
