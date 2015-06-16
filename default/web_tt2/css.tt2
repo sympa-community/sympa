@@ -2031,6 +2031,10 @@ span.fa-stack i.fa-plus-circle {
     .top-bar-section ul li a {
       color: [% color_7%];
     }
+    /* Nonexisting item in list of lists. */
+    .top-bar-section ul li.nolink {
+      display: none;
+    }
 }
 
 @media only screen and (max-width: 1025px){
