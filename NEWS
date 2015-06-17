@@ -3,6 +3,63 @@
 
 (See Changelog file for the full changes log)
 
+6.2.1		June 17, 2015
+
+  Changes:
+
+	[12221] default/web_tt2/home.tt2:  Making the text inviting to log in
+	in the home page change according to where the login form is supposed
+	to be, depending on the top_menu TT2 variable value.
+
+  Bug fixes:
+
+	[12215] default/web_tt2/d_control.tt2:	d_control: Owner is not shown
+	correctly.
+
+	[12214] src/lib/Sympa/Tools/WWW.pm:  Shared folders: File icons were
+	not shown due to a typo in code.
+
+	[12199] default/web_tt2/blacklist.tt2,
+	default/web_tt2/create_list_request.tt2,
+	default/web_tt2/d_editfile.tt2, default/web_tt2/edit_template.tt2,
+	default/web_tt2/editfile.tt2, default/web_tt2/editsubscriber.tt2,
+	default/web_tt2/footer.tt2, default/web_tt2/help_user_options.tt2,
+	default/web_tt2/manage_template.tt2, default/web_tt2/news.tt2,
+	default/web_tt2/reviewbouncing.tt2, default/web_tt2/rss.tt2,
+	default/web_tt2/tracking.tt2, default/web_tt2/viewbounce.tt2,
+	default/web_tt2/viewmod.tt2:  Restoring past changes omitted by new
+	skin.
+	ToDo: Test.
+
+	[12197] src/cgi/wwsympa.fcgi.in:  If the user is listmaster of the host
+	with large number of lists, loading create_list_request page will slow
+	down.  Fixed by not getting all lists but only owned lists.
+
+	[12195] default/web_tt2/css.tt2: [Fixed by O. Lumineau, RENATER] The
+	calendar javascript popup appeared with a bad style.
+
+	[12194] src/lib/Conf.pm:  Reported by P. Grzesina, univ. Regina] The
+	CAS button was not showed because the cas_number value in conf was
+	never updated.
+
+	[12193] default/web_tt2/lists.tt2: [Reported by P. Grzesina, univ.
+	Regina] While retrieving updated web skin, an old version of lists.tt2
+	had been restored, breaking selection by first letter in the lists
+	index.
+
+	[12192] default/mail_tt2/listmaster_notification.tt2,
+	default/mail_tt2/user_notification.tt2, src/lib/Sympa/List.pm:
+	[Reported by D. Lalot, univ. Aix Marseille] When a list is at 100 %
+	erro, nobody receives the message, and nobody was warned that the
+	message had been lost. Fixed by warning the message sender, the list
+	owners and the listmaster when the bounce rate is at 100%.
+
+	[12191] www/Makefile.am:  "make install" fails when install(1) omitting
+	directory arguments.
+
+	[12190] default/web_tt2/home.tt2:  Fixing bad link having hard-coded
+	sympa string.
+
 6.2		June 10, 2015
 
   Features:
