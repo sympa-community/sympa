@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2014-05-30 17:27+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"PO-Revision-Date: 2015-06-17 14:27+0000\n"
+"Last-Translator: David Verdin <david.verdin@cru.fr>\n"
 "Language-Team: Français\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "Projct-Id-Version: fr\n"
-"X-POOTLE-MTIME: 1401470829.000000\n"
+"X-POOTLE-MTIME: 1434551233.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -4407,14 +4407,12 @@ msgid "SYMPA logo"
 msgstr "Logo SYMPA"
 
 #: default/web_tt2/aside_menu.tt2:53
-#, fuzzy
 msgid "List Options Menu"
 msgstr "Options de liste"
 
 #: default/web_tt2/aside_menu.tt2:72
-#, fuzzy
 msgid "General Menu"
-msgstr "Définition de la liste"
+msgstr "Menu général"
 
 # nlsref 16,7
 #: default/web_tt2/automatic_lists_management_request.tt2:3
@@ -4467,14 +4465,13 @@ msgstr "Gestion de la liste noire"
 
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:7
-#, fuzzy
 msgid ""
 "Operation requested by users which email is listed in the blacklist file are "
 "rejected. The blacklist is in use for the following operation: %1."
 msgstr ""
 "Les opérations effectuées par les personnes listées dans la liste noire "
 "seront rejetées.\n"
-"La liste noire est active pour les opérations suivantes :"
+"La liste noire est active pour les opérations suivantes : %1."
 
 #: default/web_tt2/blacklist.tt2:9
 msgid "Syntax:"
@@ -4485,22 +4482,19 @@ msgid "only one email or expression by line"
 msgstr "une seule adresse email par ligne"
 
 #: default/web_tt2/blacklist.tt2:12
-#, fuzzy
 msgid "number sign (#) introduces a comment"
 msgstr "le caractère # définit un commentaire"
 
 #: default/web_tt2/blacklist.tt2:13
-#, fuzzy
 msgid ""
 "asterisk (*) matches any string. Example: \"*@spammer-domain.com\" match any "
 "sender from that exact domain"
 msgstr ""
-"le caractère * correspond à un ensemble de caractères non définis. \n"
+"le caractère * correspond à tout chaîone de caractère. \n"
 "Exemple : \"*@spammer-domain.com\" correspond à n'importe quelle adresse\n"
 "email de ce domaine"
 
 #: default/web_tt2/blacklist.tt2:14
-#, fuzzy
 msgid "only one asterisk is allowed in a line"
 msgstr "Un seul caractère * est autorisé par ligne"
 
@@ -6400,9 +6394,8 @@ msgid "End date"
 msgstr "Date de fin"
 
 #: default/web_tt2/head_javascript.tt2:81
-#, fuzzy
 msgid "Back"
-msgstr "Liste noire"
+msgstr "Retour"
 
 #: default/web_tt2/home.tt2:3
 msgid "Welcome"
@@ -6424,14 +6417,13 @@ msgid "Logging In"
 msgstr "Connexion"
 
 #: default/web_tt2/home.tt2:9
-#, fuzzy
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form in the top right menu."
 msgstr ""
 "De nombreuses fonctionnalités de Sympa requièrent que vous vous "
 "authentifiiez auprès du système en vous connectant, par le biais du "
-"formulaire à gauche."
+"formulaire du menu en haut à droite."
 
 #: default/web_tt2/home.tt2:11
 msgid ""
@@ -6648,21 +6640,18 @@ msgid "Your picture"
 msgstr "Votre avatar"
 
 #: default/web_tt2/list_menu.tt2:16
-#, fuzzy
 msgid "You are listmaster."
-msgstr "seulement pour le listmaster"
+msgstr "Vous êtes listmaster."
 
 # nlsref 6,72
 #: default/web_tt2/list_menu.tt2:19
-#, fuzzy
 msgid "You are owner."
-msgstr "Voici les listes dont vous êtes propriétaire :"
+msgstr "Vous êtes propriétaire."
 
 # nlsref 6,73
 #: default/web_tt2/list_menu.tt2:22
-#, fuzzy
 msgid "You are editor."
-msgstr "Voici les listes dont vous êtes modérateur :"
+msgstr "Vous êtes modérateur(trice)."
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
@@ -7261,9 +7250,8 @@ msgid "You need to be logged in to access this page."
 msgstr "Vous devez être authentifié pour accéder à cette page."
 
 #: default/web_tt2/nav.tt2:9
-#, fuzzy
 msgid "Create List Menu"
-msgstr "Créer une liste"
+msgstr "Menu de création de liste"
 
 # nlsref 15,18
 #: default/web_tt2/nav.tt2:13
@@ -7271,9 +7259,8 @@ msgid "Create a list using a template"
 msgstr "Créer une liste à partir d'un modèle"
 
 #: default/web_tt2/nav.tt2:28
-#, fuzzy
 msgid "Listmaster Admin Menu"
-msgstr "Administrateur des listes"
+msgstr "Menu admin listmaster"
 
 #: default/web_tt2/nav.tt2:33 default/web_tt2/serveradmin.tt2:4
 msgid "Lists"
@@ -7869,9 +7856,8 @@ msgid "Details"
 msgstr "Détails"
 
 #: default/web_tt2/reviewbouncing.tt2:67
-#, fuzzy
 msgid "Number of bounces"
-msgstr "# d'erreurs"
+msgstr "Nombre d'erreurs"
 
 #: default/web_tt2/reviewbouncing.tt2:68
 msgid "First bounce"
@@ -9131,7 +9117,6 @@ msgstr ""
 " votre mot de passe ci-dessous"
 
 #: default/web_tt2/subrequest.tt2:53
-#, fuzzy
 msgid ", in addition to the personal information requested."
 msgstr ", en sus des informations personnelles demandées."
 
@@ -9328,21 +9313,18 @@ msgstr "Message-id : %1"
 
 #. (u.recipient)
 #: default/web_tt2/tracking.tt2:19
-#, fuzzy
 msgid "Recipient Email: %1"
-msgstr "Email du destinataire"
+msgstr "Email du destinataire : %1"
 
 #. (u.status)
 #: default/web_tt2/tracking.tt2:20
-#, fuzzy
 msgid "Delivery Status: %1"
-msgstr "État de la diffusion"
+msgstr "État de la diffusion : %1"
 
 #. (u.arrival_date)
 #: default/web_tt2/tracking.tt2:21
-#, fuzzy
 msgid "Notification Date: %1"
-msgstr "Date de notification"
+msgstr "Date de notification : %1"
 
 #: default/web_tt2/tracking.tt2:32
 msgid "Recipient Email"
@@ -9353,7 +9335,6 @@ msgid "Reception Option"
 msgstr "Option de réception"
 
 #: default/web_tt2/tracking.tt2:33
-#, fuzzy
 msgid "Delivery Status"
 msgstr "État de la diffusion"
 
@@ -11234,9 +11215,8 @@ msgstr ""
 
 #. (listname, listdomain)
 #: default/mail_tt2/listmaster_notification.tt2:274
-#, fuzzy
 msgid "Listmaster: list %1@%2 at 100 percents error "
-msgstr "Listmaster : erreur du serveur."
+msgstr "Listmaster : la liste %1@%2 est à 100% d'erreur"
 
 #. (listname, listdomain)
 #: default/mail_tt2/listmaster_notification.tt2:276
@@ -11244,6 +11224,8 @@ msgid ""
 "The list %1@%2 has 100 percents of its users in error. Something unusual "
 "must have happened."
 msgstr ""
+"La liste %1@%2 a 100 pourcents de ses abonnés en erreur. Quelque chose "
+"d'inhabituel a dû se passer."
 
 #. (sender)
 #: default/mail_tt2/listmaster_notification.tt2:278
@@ -11251,11 +11233,12 @@ msgid ""
 "The user %1, who tried to send a mail to this list, has been warned, as well "
 "as the list owners."
 msgstr ""
+"L'utilisateur %1, qui vient d'essayer d'envoyer un mail à la liste, a été "
+"informé ainsi que les propriétaires de la liste."
 
 #: default/mail_tt2/listmaster_notification.tt2:282
-#, fuzzy
 msgid "Check the bounces in this list:"
-msgstr "Pour tout savoir sur cette liste :"
+msgstr "Vérifiez les erreurs pour cette liste :"
 
 #. (listname,family,robot,msg_id)
 #: default/mail_tt2/listmaster_notification.tt2:288
@@ -12531,9 +12514,8 @@ msgstr ""
 # nlsref 8,29
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:69
-#, fuzzy
 msgid "No valid receipient in list %1"
-msgstr "Mise à jour des thèmes pour la liste %1"
+msgstr "Aucun destinataire valide dans la liste %1"
 
 #. (list.name, conf.listmaster_email, list.domain)
 #: default/mail_tt2/user_notification.tt2:74
@@ -12544,6 +12526,10 @@ msgid ""
 "Please contact the listmaster (%2@%3) to fix this probem before re-posting "
 "your message.\n"
 msgstr ""
+"Votre message à la liste %1 n'a pas pu être distribué. Tous les abonnés à "
+"cette liste ont leur adresse en erreur.Contactez le listmaster (%2@%3) pour "
+"que le problème soit corrigé avant de retenter d'expédier votre message à la "
+"liste."
 
 #. (list.name)
 #: default/mail_tt2/welcome.tt2:2
