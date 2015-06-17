@@ -38,8 +38,10 @@
         <!-- login banner start -->
           [% PROCESS 'loginbanner.tt2' %]
         <!-- end of login banner-->
+        [% IF user.email %]
             </ul>
         </li>
+        [% END %]
     </ul>
 </section>
 </nav>
