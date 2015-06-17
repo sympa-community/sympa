@@ -5,7 +5,11 @@
 
 [% IF not user.email %]
 <h2>[%|loc%]Logging In[%END%]</h2>
+[% IF top_menu -%]
+<p>[%|loc%]Many functions in Sympa require you to identify yourself to the system by logging in, using the login form in the top right menu.[%END%]<p>
+[% ELSE -%]
 <p>[%|loc%]Many functions in Sympa require you to identify yourself to the system by logging in, using the login form to the left.[%END%]<p>
+[% END -%]
 
 [%# ELSE %]
 [% END %]
