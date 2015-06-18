@@ -62,35 +62,31 @@
       <li><a href="[% path_cgi %]/lists" onclick="show('loading'); hide('content-inner');"><strong>[%|loc%]List of lists[%END%]</strong></a></li>
     </ul>
   [% ELSE %]
-      <ul class="mailing_lists_menu">
+    <ul class="mailing_lists_menu">
     [% SET topic_other = 0 %]
     [% FOREACH topic = topics %]
       [% IF topic.id == 'other' || topic.id == 'topicsless' %]
 	[% UNLESS topic_other %]
-          <li><a href="[% path_cgi %]/lists/[% topic.id %]" onclick="show('loading'); hide('content-inner');"><strong>[% IF topic.current_title %][% topic.current_title %][% ELSE %][%|loc%]Others[%END%][% END %]</strong></a></li>
+          <li><a href="[% path_cgi %]/lists/[% topic.id %]" onclick="show('loading'); hide('content-inner');"><strong>[% IF topic.current_title %][% topic.current_title %][% ELSE %][%|loc%]Others[%END%][% END %]</strong></a>
 	  [% SET topic_other = 1 %]
 	[% END %]
       [% ELSE %]
-       <li><a href="[% path_cgi %]/lists/[% topic.id %]" onclick="show('loading'); hide('content-inner');"><strong>[% topic.current_title %]</strong></a></li>
+        <li><a href="[% path_cgi %]/lists/[% topic.id %]" onclick="show('loading'); hide('content-inner');"><strong>[% topic.current_title %]</strong></a>
       [% END %]
 
       [% IF topic.sub.size %]
-            <ul class="no_style">
-      [% FOREACH subtopic = topic.sub %]
-              <li class="smaller"><a href="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]" onclick="show('loading'); hide('content-inner');">[% subtopic.value.current_title %]</a></li>
+        <ul class="no_style">
+        [% FOREACH subtopic = topic.sub %]
+          <li class="smaller"><a href="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]" onclick="show('loading'); hide('content-inner');">[% subtopic.value.current_title %]</a></li>
+        [% END %]
+        </ul>
       [% END %]
-      </ul>
-      [% END %]
-      [% IF topic.next %]
-       </ul>
-   
-   
-      <ul class="mailing_lists_menu">
-      [% END %]
+
+      </li>
     [% END %]
-      </ul>
+    </ul>
   [% END %]
-<div>
+</div>
 </article><article class="small-12 medium-4 columns home">
 <div>
 [% PROCESS help.tt2 %]
