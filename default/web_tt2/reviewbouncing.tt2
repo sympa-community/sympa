@@ -56,7 +56,8 @@
 <fieldset>
      <input type="hidden" name="list" value="[% list %]" /> 	 
      <input type="hidden" name="previous_action" value="reviewbouncing" /> 	 
-  <table summary="[%|loc%]Table which display list bounces[%END%]" class="responsive listOfItems">
+  <table  class="responsive listOfItems">
+  <caption>[%|loc%]Table which display list bounces[%END%]</caption>
       <tr>
 	<th rowspan="2"><a href="#" onclick="toggle_selection(document.myform.email);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></th>
         <th rowspan="2">[%|loc%]Email[%END%]</th>

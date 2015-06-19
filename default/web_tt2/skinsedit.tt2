@@ -7,7 +7,6 @@
 
 [%|loc%]When not using css_url parameters, sympa deliver a dynamic CSS which is created using a template name css.tt2. Usually this template is comming from Sympa distribution tar. Using this CSS is not a good solution because for each clic, Sympa fcgi server is requested twice. If you use  css_url parameters the style sheet are delivered by your http server. When you install a new Sympa version and start it at the first time, the different CSS files are installed in the directory specified by css_path parameter. So if you want to preserve some site customization from being overwriten when starting a new sympa version, css_path and css_url should not point to the same directory .[%END%] 
 
-
 [% IF css_result %]
 <strong>[%|loc%]static css installation succeed. Reload the current page and/or check sympa logs  to be sure that static css a really in use.[%END%]</strong><br /><br />
 [% END %]
@@ -76,7 +75,8 @@ Be careful: the CSS file is overwritten using css.tt2 template, usually this fil
 
 <p>[%|loc%]Please note that these indications don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well all that works.[%END%]</p>
 
-<table summary="[%|loc%]This table display every colors used in Sympa, with their hexadecimal code [%END%]" id="color_table" class="responsive">
+<table  id="color_table" class="responsive">
+<caption>[%|loc%]This table display every colors used in Sympa, with their hexadecimal code [%END%]</caption>
 <tr id="color_table_title">
 <th>[%|loc%]parameter[%END%]</th>
 <th>[%|loc%]parameter value[%END%]</th>

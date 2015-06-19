@@ -99,13 +99,10 @@
       [% END %]
 <hr>
 
-
-
-
-
    [% IF action == 'search' %]
      <h4>[%|loc%]Excluded users[%END%]</h4>
-     <table summary="[%|loc%]List of exclude[%END%]" class="responsive listOfItems">
+     <table  class="responsive listOfItems">
+     <caption>[%|loc%]List of exclude[%END%]</caption>
       <tr>
 	<th>[%|loc%]Email[%END%]</th>
         <th>[%|loc%]Since[%END%]</th>
@@ -125,7 +122,6 @@
    [% END %]
    </fieldset>
    </form>
-
 
 [% IF action != 'search' %]
 <div class="search_form">
@@ -156,9 +152,6 @@
    [% END %]
 </div>
 [% END %]
-
-
-
 
 </div>
 

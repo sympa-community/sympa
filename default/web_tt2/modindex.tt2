@@ -28,7 +28,8 @@
 
 [% mod_display_message = 0 %]
 
- <table summary="[%|loc%]Listing messages to moderate[%END%]" class="responsive listOfItems">
+ <table  class="responsive listOfItems">
+ <caption>[%|loc%]Listing messages to moderate[%END%]</caption>
       <tr>
      [%- IF conf.antispam_feature == 'on' -%]
 	<th>[%|loc%]Spam[%END%]</th>	
@@ -111,7 +112,6 @@
       [% END %] 
     </table>
 
-
 [%END%]
 <br />
 <!-- moderation of document shared -->
@@ -125,7 +125,8 @@
   <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />
   <input class="MainMenuLinks" type="submit" name="action_d_reject_shared" value="[%|loc%]Notified reject[%END%]" />
   <br />
-    <table summary="[%|loc%]Listing of documents shared to moderate[%END%]" class="responsive listOfItems">
+    <table  class="responsive listOfItems">
+    <caption>[%|loc%]Listing of documents shared to moderate[%END%]</caption>
       <tr>
 	<th>X</span></th>
         <th>[%|loc%]Date[%END%]</th>

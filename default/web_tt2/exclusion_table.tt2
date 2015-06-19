@@ -3,7 +3,8 @@
 <fieldset>
   <input type="hidden" name="previous_list" value="[% list %]" />
   <input type="hidden" name="list" value="[% list %]" />
-<table summary="[%|loc%]List of exclude[%END%]" class="responsive listOfItems">
+<table  class="responsive listOfItems">
+<caption>[%|loc%]List of exclude[%END%]</caption>
       <tr>
 	[% IF is_listmaster || is_owner  || may_add %]
 	   <th><a href="#" onclick="toggle_selection(document.show_exclude.email);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></th>

@@ -3,7 +3,8 @@
 <form name="myform" action="[% path_cgi %]" method="post">
 <fieldset>
 <h2>[%|loc%]Closed lists[%END%]</h2>
-<table summary="[%|loc%]Closed lists[%END%]" class="responsive table_style">
+<table  class="responsive table_style">
+<caption>[%|loc%]Closed lists[%END%]</caption>
  <tr class="color_light">
    <th><a href="#" onclick="toggle_selection(document.myform.selected_lists);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></th>
    <th>[%|loc%]list name[%END%]</th>

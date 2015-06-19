@@ -5,7 +5,8 @@
   [%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists:[%END%]
 
 [% IF which %] 
-<table summary="[%|loc(email)%]Lists which %1 is subscribed [%END%]" class="responsive listOfItems">
+<table  class="responsive listOfItems">
+<caption>[%|loc(email)%]Lists which %1 is subscribed [%END%]</caption>
   <tr>
    <th>[%|loc%]list[%END%]
    </th>

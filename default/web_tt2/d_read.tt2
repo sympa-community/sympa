@@ -47,7 +47,8 @@
   <h2>[%|loc%]Listing of root folder[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
   [% END %]   
 
-  <table summary="[%|loc%]Listing of folder[%END%] [% visible_path %]" class="responsive listOfItems">
+  <table  class="responsive listOfItems">
+  <caption>[%|loc%]Listing of folder[%END%] [% visible_path %]</caption>
   <tr>
   
   [% IF order_by != 'order_by_doc' %]  

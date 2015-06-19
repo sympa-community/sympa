@@ -1,6 +1,5 @@
 <!-- $Id$ -->
 
-
 <h2>
  [% IF count %]
    [%|loc(count)%] The %1 most recent messages [%END%] 
@@ -14,7 +13,8 @@
 </h2> 	
 <br /> 
  
-<table summary="[%|loc%] The most recent messages for this list [%END%]" class="responsive table_style">
+<table  class="responsive table_style">
+<caption>[%|loc%] The most recent messages for this list [%END%]</caption>
  <tr class="color_light">
    <th>[%|loc%]Date[%END%]</th>
    <th>[%|loc%]Subject[%END%]</th>

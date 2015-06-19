@@ -68,15 +68,14 @@
 </fieldset>
 </form>
 
-
-
 <em>[%|loc%]Search period: [%END%]<strong>[%|locdt(date_from_formated)%]%d %b %Y %H:%M:%S[%END%]</strong> [%|loc%]to[%END%] <strong>[%|locdt(date_to_formated)%]%d %b %Y %H:%M:%S[%END%]</strong></em><br />
 [% IF total_results %]
 <em>[%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]</em><br />
 <br />
 <em>[%|loc(total_results)%]%1 results[%END%].</em>
 <div id="table_container">
-<table class="responsive listOfItems" summary="logs table">
+<table class="responsive listOfItems" >
+<caption>[%|loc%]Logs table[%END%]</caption>
       <tr>
 	[% IF sortby == 'date' %]
   	    <th class="sortby">
