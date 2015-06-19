@@ -118,7 +118,13 @@ sub maketext {
     my $template_name = $context->stash->get('component')->{'name'};
     my $textdomain = $template2textdomain{$template_name} || '';
 
-    return sub { $language->maketext($textdomain, $_[0], @arg); };
+    return sub {
+        my $ret = $language->maketext($textdomain, $_[0], @arg);
+        # <acronym> was deprecated: Use <abbr> instead.
+        $ret =~ s/(<\/?)acronym\b/${1}abbr/g
+            if $ret and $textdomain eq 'web_help';
+        return $ret;
+    };
 }
 
 sub locdatetime {
