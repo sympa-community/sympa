@@ -19,7 +19,7 @@
 [% ELSE %]
 [% subscriber.custom_attribute.item(k.id).value %]
 [% END %] [% IF k.optional == 'required' %]*[% END %]
-<!--(k.id[% k.id %]) (m[% m %]) (k.type[% k.type %])--></td></tr>[% END %]
+<!-- (k.id:[% k.id %]) (m:[% m | html %]) (k.type:[% k.type %]) --></td></tr>[% END %]
 </table>
 <i>[%|loc%]*: Required element[%END%]</i>
 </div>
