@@ -85,8 +85,10 @@
     [% IF action == 'info'%][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/info/[% list %]">[%|loc%]List Home[%END%]</a></li>
 
-    [% IF action == 'admin' || action_type == 'admin' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/admin/[% list %]">[%|loc%]Admin[%END%]</a></li>
+    [% IF is_owner || is_editor %]
+      [% IF action == 'admin' || action_type == 'admin' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+      <li class="[% class %]"><a href="[% path_cgi %]/admin/[% list %]">[%|loc%]Admin[%END%]</a></li>
+    [% END %]
 
     [% IF is_owner ||  is_editor %]
     <li class="has-dropdown" ><a href="#">[%|loc%]Moderate[% END %]</a>
