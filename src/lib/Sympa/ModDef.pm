@@ -49,7 +49,12 @@ our %cpan_modules = (
         'gettext_id'     => 'required to run Sympa web interface',
     },
     # CGI::Cookie is included in CGI.
-    # CGI::Fast is included in CGI.
+    'CGI::Fast' => {
+        required_version => '1.08',        # At least version with CGI 3.51
+        package_name     => 'CGI-Fast',    # Module name as of 2.xx.
+        'gettext_id' =>
+            "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install FCGI module",
+    },
     'Class::Singleton' => {
         required_version => '1.03',
         package_name     => 'Class-Singleton',
@@ -164,9 +169,11 @@ our %cpan_modules = (
         'gettext_id' =>
             'Useful when running command line utilities in the console not supporting UTF-8 encoding',
     },
+    # CGI::Fast was included in core of Perl < 5.22 so that
+    # dependency upon FCGI might not be enforced.
     'FCGI' => {
         required_version => '0.67',
-        package_name     => 'FCGI',
+        package_name     => 'CGI-Fast',    # Parent module name
         'gettext_id' =>
             "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install the associated FastCGI frontend, e.g. mod_fcgid for Apache.",
     },

@@ -53,14 +53,10 @@ sub optional_features {
         my $def = $Sympa::ModDef::cpan_modules{$mod};
         next if $mod eq 'perl' or $def->{mandatory};
 
-        $features{$def->{package_name}} = {
-            ($def->{gettext_id} ? (description => $def->{gettext_id}) : ()),
-            prereqs => {
-                runtime => {
-                    requires => {$mod => ($def->{required_version} || '0'),},
-                },
-            },
-        };
+        $features{$def->{package_name}}{description} = $def->{gettext_id}
+            if $def->{gettext_id};
+        $features{$def->{package_name}}{prereqs}{runtime}{requires}{$mod} =
+            $def->{required_version} || '0';
     }
     return %features;
 }
