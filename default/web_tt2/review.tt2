@@ -92,9 +92,8 @@
 [% END %]
 
       [% IF is_owner %]
-        <!--input type="button" name="action_del" value="Delete selected email addresses" onclick="return request_confirm('[%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]')" /-->
         <p><input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
-	<p><input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
+	<p><input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" onclick="return request_confirm('[%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]')" />
         <p><input type="checkbox" name="quiet" /> [%|loc%]Quiet (don't send deletion email)[%END%]
       [% END %]
 <hr>
@@ -155,4 +154,4 @@
 
 </div>
 
-<!-- end review.tt2 (distrib) -->
+<!-- end review.tt2 -->
