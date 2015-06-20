@@ -106,11 +106,11 @@
 
 
     [% IF is_archived %]
-       [% IF arc_access %]
+       [% IF user.email && arc_access || !user.email && arc_public_access %]
           [% IF action == 'arc' || action == 'arcsearch_form' || action == 'arcsearch' ||  action == 'arc_protect' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/arc/[% list %]" >[%|loc%]Archive[%END%]</a></li>
        [% ELSE %]
-          <!--<li class="[% class %]">[%|loc%]Archive[%END%]</li>-->
+          <li class="[% class %]">[%|loc%]Archive[%END%]</li>
        [% END %]
     [% END %]
 
@@ -136,12 +136,10 @@
         [% END %]
     [% END %]
 
-    <!--
-    [%# IF may_review %]
-    [%# IF action == 'review' %][%# SET class = 'menuLinksCurrentPage' %][%# ELSE %][%# SET class = 'menuLinks' %][%# END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/review/[% list %]" >[%|loc%]Review members[%END%]</a></li>
-    [%# END %]
-    -->
+    [% IF may_review %]
+        [% IF action == 'review' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+        <li class="[% class %]"><a href="[% path_cgi %]/review/[% list %]">[%|loc%]Review members[%END%]</a></li>
+    [% END %]
 
     [% IF is_owner %]
        [% IF action == 'stats' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
