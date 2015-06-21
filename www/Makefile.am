@@ -38,6 +38,7 @@ nobase_static_DATA = \
 	external/font-awesome/fonts/fontawesome-webfont.svg \
 	external/font-awesome/fonts/fontawesome-webfont.ttf \
 	external/font-awesome/fonts/fontawesome-webfont.woff \
+	external/font-awesome/fonts/fontawesome-webfont.woff2 \
 	external/foundation/css/foundation.css \
 	external/foundation/css/foundation.min.css \
 	external/foundation/css/normalize.css \
