@@ -16,7 +16,7 @@
   [% FOREACH letter IN letters %]
     [% IF orderedlist.$letter.0 %]
     <article id="[% letter %]" >
-      <h4>[% IF letter == "others" %][%|loc%]Others[%END%][% ELSE %][% letter %][% END %]</h4>
+      <h4 class="letter">[% IF letter == "others" %][%|loc%]Others[%END%][% ELSE %][% letter %][% END %]</h4>
 
       <ul class="listenum">
       [% FOREACH listname IN  orderedlist.$letter %]

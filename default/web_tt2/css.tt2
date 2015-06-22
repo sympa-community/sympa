@@ -1949,6 +1949,13 @@ main .top-bar-section li.nolink{
     background-color: [% color_8 %];
 }
 
+/* Initials in list of lists */
+main .top-bar-section li.letter,
+main .top-bar-section li.letter a,
+h4.letter {
+    text-transform: capitalize;
+}
+
 /*font-awesome specificity*/
 /* home page */
 span.fa-stack i.fa-plus-circle {
