@@ -6,10 +6,13 @@
 [% all_letters = [] %]
 
 [% IF action == 'search_list' %]
-  <p>[%|loc(occurrence)%]%1 occurrence(s) found[%END%]</p>
-[% ELSIF action == 'search_user' %]
+  [%~ PROCESS search_list.tt2 %]
+  [% IF occurrence ~%]
+    <p>[%|loc(occurrence)%]%1 occurrence(s) found[%END%]</p>
+  [%~ END %]
+[%~ ELSIF action == 'search_user' ~%]
   <p>[%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%]</p>
-[% END %]
+[%~ END %]
 
 [% IF which && which.size %]
 
