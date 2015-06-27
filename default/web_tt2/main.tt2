@@ -35,7 +35,7 @@
 
 [% top_menu = 1 %]
 
-<a name="top"></a>
+<div id="top"><a class="displayNone" name="top" href="#content-inner">[%|loc%]Skip to Content.[%END%]</a></div>
 
 <noscript><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></noscript>
 
@@ -60,8 +60,16 @@
    <div id="loadingText"><i class="fa fa-spinner fa-pulse"></i> <span></span></div></div>
 
     [% PROCESS aside_menu.tt2 %]
-    [% IF top_menu %][% IF not list %]<main id="content-inner" class="row">
-[% ELSE %]<main id="content-inner" class="medium-9 columns">[% END %][% ELSE %]<main id="content-inner" class="medium-9 columns">[% END %]
+    [% IF top_menu %]
+      [%~ IF not list ~%]
+        <main id="content-inner" class="row">
+      [%~ ELSE ~%]
+        <main id="content-inner" class="medium-9 columns">
+      [%~ END %]
+    [%~ ELSE ~%]
+      <main id="content-inner" class="medium-9 columns">
+    [%~ END ~%]
+    <a name="content-inner"></a>
 
       [% IF not top_menu %]
         <h1>[% main_title %]</h1>
@@ -85,6 +93,7 @@
 [% IF top_menu %][% IF not list %][% END %][% END %]
 </main><!-- End content-inner -->
 
+<div class="displayNone"><a href="#top">[%|loc%]Top of Page[%END%]</a></div>
 
 [% PROCESS footer.tt2 %]
 [% END %]
