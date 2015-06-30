@@ -245,7 +245,7 @@ int socktcp_connect(sockstr_t * self)
 
 int sockunix_connect(sockstr_t * self)
 {
-    struct sockaddr_un sun;
+    struct sockaddr_un sa_un;	/* The name "sun" messes Solaris. */
     size_t sunlen;
     int sock = -1;
 
@@ -259,14 +259,14 @@ int sockunix_connect(sockstr_t * self)
     }
 
     sunlen = strlen(self->path);
-    if (sizeof(sun.sun_path) < sunlen + 1) {
+    if (sizeof(sa_un.sun_path) < sunlen + 1) {
 	sockstr_set_error(self, ENAMETOOLONG, NULL);
 	return -1;
     }
 
-    memset(&sun, 0, sizeof(sun));
-    sun.sun_family = PF_UNIX;
-    memcpy(sun.sun_path, self->path, sunlen + 1);
+    memset(&sa_un, 0, sizeof(sa_un));
+    sa_un.sun_family = PF_UNIX;
+    memcpy(sa_un.sun_path, self->path, sunlen + 1);
     /* I don't know any platforms need to set .sun_len member. */
 
     sock = socket(AF_UNIX, SOCK_STREAM, 0);
@@ -276,7 +276,7 @@ int sockunix_connect(sockstr_t * self)
     }
 
     if (_connect_socket
-	(self, sock, (struct sockaddr *) &sun, sizeof(sun), 0) < 0) {
+	(self, sock, (struct sockaddr *) &sa_un, sizeof(sa_un), 0) < 0) {
 	close(sock);
 	return -1;
     }
