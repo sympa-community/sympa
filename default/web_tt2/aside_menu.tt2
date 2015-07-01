@@ -1,49 +1,57 @@
 <!-- $Id: aside_menu.tt2 11846 2015-01-15 04:15:17Z sikeda $ -->
-<aside class="medium-3 columns show-for-medium-up">
 [% IF not top_menu %]
-[% IF  conf.logo_html_definition %]
-  <div id="logo" >[% conf.logo_html_definition %]</div>
-[% ELSE %]
-  <div id="logo" ><a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a></div>
-[% END %]
-[% END %]
+  <aside class="medium-3 columns show-for-medium-up">
+  [% IF  conf.logo_html_definition %]
+    <div id="logo" >[% conf.logo_html_definition %]</div>
+  [% ELSE %]
+    <div id="logo" ><a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a></div>
+  [% END %]
 
-[% IF not top_menu %]
-[% IF user.email %]
-<menu class="user">
+  [% IF user.email %]
+    <menu class="user">
     <ul> 
       [% PROCESS login_menu.tt2 %]
     </ul>
-</menu>
-[% ELSE %]
-<menu class="connect">
+    </menu>
+  [% ELSE %]
+    <menu class="connect">
     <ul> 
       [% PROCESS loginbanner.tt2 %]
     </ul>
-</menu>
-[% END %]
-[% END %]
-[% IF list %]
-<menu class="list">
+    </menu>
+  [% END %]
+
+  [% IF list %]
+    <menu class="list">
     <ul> 
       [% PROCESS list_menu.tt2 %]
     </ul>
-</menu>
-[% END %]
-[% IF not top_menu %]
-<menu class="sympa">
-    <ul>
-        [% PROCESS 'sympa_menu.tt2' %]
-    </ul>
-</menu>
-[% END %]
-</aside>
+    </menu>
+  [% END %]
 
+  <menu class="sympa">
+    <ul>
+      [% PROCESS 'sympa_menu.tt2' %]
+    </ul>
+  </menu>
+  </aside>
+[% ELSE %]
+  <aside class="medium-3 columns show-for-medium-up">
+  [% IF list %]
+    <menu class="list">
+    <ul>
+      [% PROCESS list_menu.tt2 %]
+    </ul>
+    </menu>
+  [% END %]
+  </aside>
+[% END %]
 
 <!-- for responsive view -->
 [%# Remove the class "menu-icon" to get rid of menu icon.
-    Take out inner text of span element to just have icon alone. %]
+    Take out inner text of span element to just have icon alone. ~%]
 [%~ IF top_menu %]
+    <aside class="medium-3 columns hide-for-medium-up">
     [% IF list %]
         <nav class="top-bar hide-for-medium-up" data-topbar role="navigation">
             <ul class="title-area">
@@ -58,7 +66,9 @@
         </section>
     </nav>
     [% END %]
+    </aside>
 [% ELSE %]
+    <aside class="medium-3 columns hide-for-medium-up">
         <nav class="top-bar hide-for-medium-up" data-topbar role="navigation">
             <ul class="title-area">
                 <li class="name">
@@ -84,7 +94,7 @@
             </ul>
         </section>
     </nav>
+    </aside>
 [% END %]
-
 <!-- end aside_menu.tt2 -->
 
