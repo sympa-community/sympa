@@ -8,18 +8,18 @@ msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2014-05-19 13:37+0000\n"
-"Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
+"PO-Revision-Date: 2015-06-21 01:51+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Português do Brasil\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Version: 0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-POOTLE-MTIME: 1400506672.000000\n"
+"X-POOTLE-MTIME: 1434851517.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -40,9 +40,8 @@ msgstr ""
 #: src/cgi/wwsympa.fcgi.in:8551 src/cgi/wwsympa.fcgi.in:9988
 #: src/lib/Sympa/Message.pm:349 src/lib/Sympa/Message.pm:352
 #: src/lib/Sympa/Message.pm:359 src/libexec/alias_manager.pl.in:101
-#, fuzzy
 msgid "%d %b %Y"
-msgstr "%d/%b/%Y"
+msgstr "%d %b %Y"
 
 #: src/libexec/ldap_alias_manager.pl.in:42
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -50,14 +49,12 @@ msgid "The configuration file contains errors.\n"
 msgstr "O arquivo de configuração contém erros.\n"
 
 #: src/sbin/sympa_wizard.pl.in:180
-#, fuzzy
 msgid "Example: "
-msgstr "Exemplo"
+msgstr "Exemplo:"
 
 #: src/sbin/sympa_wizard.pl.in:190
-#, fuzzy
 msgid "(You must define this parameter)"
-msgstr "%s\t(Você deve definir este parâmetro)"
+msgstr "(Você precisa definir este parâmetro)"
 
 #: src/sbin/sympa_wizard.pl.in:276
 msgid "%s [%s] : "
@@ -72,7 +69,7 @@ msgstr "Definição incorreta de parâmetro: %s\n"
 #: src/lib/Sympa/Upgrade.pm:1031 src/lib/Sympa/Upgrade.pm:1987
 #: src/lib/Sympa/Upgrade.pm:2031 src/sbin/sympa_wizard.pl.in:329
 msgid "%d.%b.%Y-%H.%M.%S"
-msgstr "%d %b %Y %H:%M:%S"
+msgstr "%d.%b.%Y-%H.%M.%S"
 
 #: src/sbin/sympa_wizard.pl.in:333
 msgid "Unable to rename %s : %s"
@@ -91,7 +88,6 @@ msgstr ""
 "Versões anteriores foram salvas como %s.\n"
 
 #: src/sbin/sympa_wizard.pl.in:359
-#, fuzzy
 msgid ""
 "##############################################################################\n"
 "# This process will help you install all Perl (CPAN) modules required by "
@@ -109,47 +105,49 @@ msgid ""
 "##############################################################################\n"
 "Press the Enter key to continue..."
 msgstr ""
-"##############################################################################\n"
-"#Este processo irá ajudá-lo a instalar todos os módulos Perl (CPAN) "
-"requeridos pelo Sympa\n"
+"#############################################################################"
+"#\n"
+"# Esse processo vai te ajudar a instalar todos os módulos Perl (CPAN) "
+"requeridos pelo programa\n"
+"# Sympa.\n"
 "# Sympa requer cerca de 50 a 65 módulos Perl adicionais para funcionar "
 "corretamente. \n"
 "# Todo o processo de instalação deve demorar cerca de 15 minutos.\n"
-"# Você deve primeiramente configurar o CPAN shell, e selecionar o seu\n"
-"servidor CPAN favorito.\n"
-"# Note que você preferirá instalar os módulos Perl requeridos utilizando o "
-"seu \n"
-"# preditelo mecanismo DEB/RPM.\n"
-"# Sinta-se à vontade para interromper o processo, caso necessário; poderá "
-"reiniciá-lo seguramente\n"
-" em seguida.\n"
-"##############################################################################\n"
+"# Primeiro você terá que configurar o shell CPAN e selecionar o seu\n"
+"# servidor CPAN preferido.\n"
+"# Note que você talvez você prefira instalar os módulos Perl requeridos "
+"usando o seu \n"
+"# mecanismo DEB/RPM preferido.\n"
+"# Sinta-se à vontade para interromper o processo, caso necessário; você\n"
+"# poderá reiniciá-lo seguramente posteriormente.\n"
+"#############################################################################"
+"#\n"
 "Aperte a tecla Enter para continuar..."
 
 #: src/sbin/sympa_wizard.pl.in:401
+#, fuzzy
 msgid "Which RDBMS will you use for core database:"
-msgstr ""
+msgstr "Quais RDBMS você vai usar para o banco de dados núcleo:"
 
 #: src/sbin/sympa_wizard.pl.in:406
 msgid "-> Select RDBMS [1-%d] "
-msgstr ""
+msgstr "-> Selecione RDBMS [1-%d]"
 
 #: src/sbin/sympa_wizard.pl.in:419
-#, fuzzy
 msgid "Checking for PERL version:"
 msgstr "Verificando a versão do PERL:"
 
 #: src/sbin/sympa_wizard.pl.in:422
 msgid "Your version of perl is OK (%s  >= %s)"
-msgstr "Sua versão do perl está OK(%s  >= %s)"
+msgstr "Sua versão do perl está OK (%s  >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:426
 msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
 msgstr ""
-"Sua versão do perl é ANTIGA(%s  < %s)\n"
-"Por favor, INSTALE a mais recente!"
+"Sua versão do perl é MUITO ANTIGA (%s  < %s)\n"
+"Por favor, INSTALE uma nova!"
 
 #: src/sbin/sympa_wizard.pl.in:430
 msgid "Checking for REQUIRED modules:"
@@ -157,7 +155,7 @@ msgstr "Verificando módulos REQUERIDOS:"
 
 #: src/sbin/sympa_wizard.pl.in:432
 msgid "Checking for OPTIONAL modules:"
-msgstr "Verficando por módulos OPICIONAIS:"
+msgstr "Verficando por módulos OPCIONAIS:"
 
 #: src/sbin/sympa_wizard.pl.in:436
 msgid ""
@@ -165,58 +163,57 @@ msgid ""
 "You can retrieve all theses modules from any CPAN server\n"
 "(for example ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 msgstr ""
+"******* NOTE *******\n"
+"Você pode recuperar todos esses módulos de qualquer servidor CPAN\n"
+"(por exemplo ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 
 #: src/sbin/sympa_wizard.pl.in:451
-#, fuzzy
 msgid "perl module"
 msgstr "Módulo perl"
 
 #: src/sbin/sympa_wizard.pl.in:451
 msgid "from CPAN"
-msgstr "sobre CPAN"
+msgstr "do CPAN"
 
 #: src/sbin/sympa_wizard.pl.in:452
 msgid "STATUS"
-msgstr "SITUAÇÃO"
+msgstr "STATUS"
 
 #: src/sbin/sympa_wizard.pl.in:453
 msgid "-----------"
-msgstr ""
+msgstr "-----------"
 
 #: src/sbin/sympa_wizard.pl.in:453
 msgid "---------"
-msgstr ""
+msgstr "---------"
 
 #: src/sbin/sympa_wizard.pl.in:454
 msgid "------"
-msgstr ""
+msgstr "------"
 
 #: src/sbin/sympa_wizard.pl.in:473
 msgid "was not found on this system."
-msgstr "não foi encontrado no sistema"
+msgstr "não foi encontrado nesse sistema."
 
 #: src/sbin/sympa_wizard.pl.in:495
 msgid "OK (%-6s >= %s)"
-msgstr ""
+msgstr "OK (%-6s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:498
-#, fuzzy
 msgid "version is too old (%s < %s)"
 msgstr "versão muito antiga (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:501
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
-msgstr ""
-">>>>>>> Você precisa atualizar da versão \"%s\" para a versão \"%s\" <<<<<<."
+msgstr ">>>>>>> Você precisa atualizar \"%s\" para a versão \"%s\" <<<<<<."
 
 #: src/sbin/sympa_wizard.pl.in:533
-#, fuzzy
 msgid "## You need root privileges to install %s module. ##"
-msgstr "## Você necessita de privilégios root para instalar %s módulo ##"
+msgstr "## Você precisa de privilégios de root para instalar o módulo %s. ##"
 
 #: src/sbin/sympa_wizard.pl.in:536
 msgid "## Press the Enter key to continue checking modules. ##"
-msgstr "## Pressione a tecla Enter para continuar verificando módulos. ##"
+msgstr "## Aperte a tecla Enter para continuar verificando módulos. ##"
 
 #: src/sbin/sympa_wizard.pl.in:545
 msgid "-> Usage of this module: %s"
@@ -228,14 +225,14 @@ msgstr "-> Pré-requisitos: %s"
 
 #: src/sbin/sympa_wizard.pl.in:557
 msgid "-> Install module %s ? [%s] "
-msgstr "-> Instalar módulo %s? [%s]  "
+msgstr "-> Instalar o módulo %s? [%s]  "
 
 #: src/sbin/sympa_wizard.pl.in:593
 msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
 msgstr ""
-"Instalação de %s falhou. Você deve baixar o arquivo com extensão tar.gz de "
+"A instalação de %s FALHOU novamente. Você deveria baixar o arquivo tar.gz de "
 "http://search.cpan.org e instalá-lo manualmente."
 
 #: src/sbin/sympa_wizard.pl.in:598
@@ -243,36 +240,38 @@ msgid ""
 "Installation of %s FAILED. Do you want to force the installation of this "
 "module? (y/N) "
 msgstr ""
-"Instalação de %s FALHOU. Você gostaria de forçar a instalação deste módulo? "
-"(y/N)"
+"A instalação de %s FALHOU. Você gostaria de forçar a instalação deste "
+"módulo? (y/N)"
 
 #: src/lib/tools.pm:817
 msgid "contains the dictionary word '%s'"
-msgstr "contém a palavra do dicionário:  '%s'"
+msgstr "contém a palavra de dicionário '%s'"
 
 #: src/lib/tools.pm:811
 msgid "Not between %d and %d characters"
-msgstr "Não entre os caractéres: %d e %d"
+msgstr "Não entre os caractéres %d e %d"
 
 #: src/lib/tools.pm:812
 msgid "Not %d characters or greater"
-msgstr "Não para caracteres maiores ou iguais a %d"
+msgstr "Não %d caractéres ou maior"
 
 #: src/lib/tools.pm:813
 msgid "Not less than or equal to %d characters"
-msgstr "Não menor ou igual a %d caracteres"
+msgstr "Não menor ou igual a %d caractéres"
 
 #: src/lib/tools.pm:814
+#, fuzzy
 msgid "contains bad characters"
-msgstr "contém caracteres irreconhecíveis"
+msgstr "contém caractéres irreconhecíveis"
 
 #: src/lib/tools.pm:815
 msgid "contains less than %d character groups"
-msgstr "contém menos que %d grupos de caracteres"
+msgstr "contém menos que %d grupos de caractéres"
 
 #: src/lib/tools.pm:816
+#, fuzzy
 msgid "contains over %d leading characters in sequence"
-msgstr ""
+msgstr "contém mais de %d caractéres em sequência"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -290,9 +289,8 @@ msgstr "%d %b %Y às %H:%M:%S"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/lib/Sympa/Admin.pm:1264
-#, fuzzy
 msgid "%d %b %y at %H:%M:%S"
-msgstr "%d %b %Y às %H:%M:%S"
+msgstr "%d %b %y às %H:%M:%S"
 
 #: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:194
 msgid "User guide"
@@ -301,22 +299,20 @@ msgstr "Guia do usuário"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Commands.pm:532
-#, fuzzy
 msgid "Archive of %s, file %s"
-msgstr "Arquivo de '%1', documento %2"
+msgstr "Arquivo de %s, documento %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Commands.pm:680
-#, fuzzy
 msgid "Archive of %s, last message"
-msgstr "Arquivo de '%1', documento %2"
+msgstr "Arquivo de %s, última mensagem"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Commands.pm:808
 msgid "%-37s %5.1f kB   %s"
-msgstr ""
+msgstr "%-37s %5.1f kB   %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -332,6 +328,7 @@ msgid "%A"
 msgstr "%A"
 
 #: default/mail_tt2/global_remind.tt2:1 src/lib/Sympa/Commands.pm:2378
+#, fuzzy
 msgid "Subscription summary"
 msgstr "Sumário de inscrições"
 
@@ -340,8 +337,8 @@ msgid ""
 "The number of seconds a bulk sleeps between starting a new loop if it didn't "
 "find a message to send."
 msgstr ""
-"O número de segundos que o processo de envio em massa dorme (sleeps) entre "
-"começar um novo loop caso não encontre mensagens a enviar."
+"O número de segundos que o processo de envio em massa dorme (sleeps) antes "
+"de começar um novo loop caso não encontre mensagens para enviar."
 
 #: src/lib/Sympa/ConfDef.pm:811
 msgid ""
@@ -349,15 +346,16 @@ msgid ""
 "Sympa GUI. Don't select a language if you don't have the proper locale "
 "packages installed."
 msgstr ""
-"Este é o conjunto de idiomas que será apresentado aos usuários do Sympa pela "
-"interface WEB. Não selecione um idioma se você não tem os pacotes de "
-"internacionalização devidamente instalados."
+"Este é o conjunto de idiomas que será apresentado aos seus usuários para a "
+"interface gráfica de usuário (GUI) do Sympa. Não selecione um idioma se você "
+"não tiver os pacotes do lugar devidamente instalados."
 
 #: src/lib/Sympa/ConfDef.pm:33
 msgid "Site customization"
 msgstr "Personalização do site"
 
 #: src/lib/Sympa/ConfDef.pm:36
+#, fuzzy
 msgid "Main robot hostname"
 msgstr "Endereço de host do robô principal"
 
@@ -367,63 +365,63 @@ msgstr "Parte local do endereço de e-mail do sympa"
 
 #: src/lib/Sympa/ConfDef.pm:52
 msgid "Effective address will be [EMAIL]@[HOST]"
-msgstr "Endereço efetivo será [EMAIL]@[HOST]"
+msgstr "O endereço efetivo será [EMAIL]@[HOST]"
 
 #: src/lib/Sympa/ConfDef.pm:56
+#, fuzzy
 msgid "Gecos for service mail sent by Sympa itself"
 msgstr "Nome para serviço de e-mail enviado pelo próprio Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:61
 msgid "This parameter is used for display name in the \"From:\" header"
-msgstr ""
+msgstr "Esse parâmetro é usado para o nome exibido no cabeçalho \"De:\""
 
 #: src/lib/Sympa/ConfDef.pm:65
 msgid "Listmasters email list comma separated"
-msgstr "Endereços de e-mail dos Gerentes Gerais de Lista separados por vírgula"
+msgstr "Endereços de e-mail dos listmasters separados por vírgula"
 
 #: src/lib/Sympa/ConfDef.pm:70
 msgid ""
 "Sympa will associate listmaster privileges to these email addresses (mail "
 "and web interfaces). Some error reports may also be sent to these addresses."
 msgstr ""
-"Sympa irá associar os privilégios do gerente geral de listas para estes "
-"endereços de e-mail (interfaces web e e-mail). Algumas notificações de erros "
-"podem também serem enviadas a estes endereços."
+"Sympa irá associar os privilégios de lismaster com estes endereços de e-mail "
+"(emails e interfaces web). Algumas notificações de erros também podem ser "
+"enviadas a estes endereços."
 
 #: src/lib/Sympa/ConfDef.pm:74
 msgid "Local part of listmaster email address"
-msgstr "Parte local do endereço de e-mail do gerente geral de listas"
+msgstr "Parte local do endereço de e-mail do listmaster"
 
 #: src/lib/Sympa/ConfDef.pm:79
 msgid "URL of main Web page"
 msgstr "URL da página Web principal"
 
 #: src/lib/Sympa/ConfDef.pm:90 src/lib/Sympa/ListDef.pm:645
-#, fuzzy
 msgid "Store distributed messages into archive"
-msgstr "Adicionado às mensagens distribuidas"
+msgstr "Guarde no arquivo as mensagens distribuidas"
 
 #: src/lib/Sympa/ConfDef.pm:91
 msgid "This setting can be overridden by each list"
-msgstr ""
+msgstr "Esta configuração pode ser suprimida por cada lista"
 
 #: src/lib/Sympa/ConfDef.pm:284
 msgid ""
 "Directory for storing static contents (CSS, members pictures, documentation) "
 "directly delivered by Apache"
 msgstr ""
-"Diretório para armazenar conteúdos estáticos (CSS, membros, imagens, "
+"Diretório para armazenamento de conteúdos estáticos (CSS, fotos de membros, "
 "documentação) diretamente entregues pelo Apache"
 
 #: src/lib/Sympa/ConfDef.pm:292
 msgid "URL mapped with the static_content_path directory defined above"
-msgstr "URL mapeada para a pasta static_content_path definida acima"
+msgstr "URL mapeada pelo diretório static_content_path definido acima"
 
 #: src/lib/Sympa/ConfDef.pm:307
 msgid "Secret used by Sympa to make MD5 fingerprint in web cookies secure"
 msgstr ""
-"Segredo usado pelo Sympa para tornar a assinatura MD5 dos cookies contidos "
-"nas páginas web seguros"
+"Segredo utilizado pelo Sympa para tornar seguras as impressões digitais MD5 "
+"dos cookies de rede"
 
 #: src/lib/Sympa/ConfDef.pm:1452 src/lib/Sympa/ConfDef.pm:310
 msgid "Should not be changed ! May invalid all user password"
@@ -431,7 +429,7 @@ msgstr "Não deve ser alterado ! Pode invalidar a senha de todos os usuários"
 
 #: src/lib/Sympa/ConfDef.pm:315
 msgid "Who is able to create lists"
-msgstr "Quem possui permissão para criar listas"
+msgstr "Quem pode criar listas"
 
 #: src/lib/Sympa/ConfDef.pm:320
 msgid ""
@@ -446,8 +444,8 @@ msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the param name and the param value."
 msgstr ""
-"Usado para definir um parâmetro customizado para seu servidor. Não se "
-"esqueça de da semi-coluna entre o nome do parâmetro e seu respectivo valor."
+"Usado para definir um parâmetro personalizado para o seu servidor. Não "
+"esqueça do ponto-e-vírgula entre o nome do parâmetro e o valor do parâmetro."
 
 #: src/lib/Sympa/ConfDef.pm:340
 msgid "Directories"
@@ -462,24 +460,26 @@ msgid ""
 "Directory for configuration files; it also contains scenari/ and templates/ "
 "directories"
 msgstr ""
-"Diretório para arquivos de configuração; contém também os diretórios: "
-"scenari/ e templates/"
+"Diretório para arquivos de configuração; também contém os diretórios scenari/"
+" e templates/"
 
 #: src/lib/Sympa/ConfDef.pm:355
 msgid "System related"
-msgstr "Relacionado ao sistema"
+msgstr "Relativo ao sistema"
 
 #: src/lib/Sympa/ConfDef.pm:359
+#, fuzzy
 msgid "Syslog facility for sympa"
-msgstr "Ambiente Syslog para o Sympa"
+msgstr "Ambiente syslog para o Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:362
 msgid "Do not forget to edit syslog.conf"
-msgstr "Não se esqueça de editar syslog.conf"
+msgstr "Não se esqueça de editar o syslog.conf"
 
 #: src/lib/Sympa/ConfDef.pm:366
+#, fuzzy
 msgid "Log verbosity"
-msgstr "Nível de log"
+msgstr "Verbosidade do log"
 
 #: src/lib/Sympa/ConfDef.pm:369
 msgid "0: normal, 2,3,4: for debug"
@@ -491,31 +491,33 @@ msgstr "Tipo de comunicação com o syslogd (unix | inet)"
 
 #: src/lib/Sympa/ConfDef.pm:380
 msgid "File containing Sympa PID while running"
-msgstr "Arquivo que contém o PID do Sympa enquanto é executado"
+msgstr "Arquivo que contém o PID do Sympa durante execução"
 
 #: src/lib/Sympa/ConfDef.pm:398
 msgid "File containing task_manager PID while running"
-msgstr "Arquivo contendo o task_manager PID enquanto é executado"
+msgstr "Arquivo contendo o task_manager PID durante execução"
 
 #: src/lib/Sympa/ConfDef.pm:413
 msgid "Umask used for file creation by Sympa"
-msgstr "Umask usado para criação de arquivo do Sympa"
+msgstr "Umask usado para criação de arquivo pelo Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:417
 msgid "Sending related"
-msgstr "Relacionado ao envio"
+msgstr "Relativo ao envio"
 
 #: src/lib/Sympa/ConfDef.pm:421
+#, fuzzy
 msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
 msgstr "Caminho para o MTA (sendmail, postfix, exim ou qmail)"
 
 #: src/lib/Sympa/ConfDef.pm:425
+#, fuzzy
 msgid ""
 "should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
 "\" is distributed with Postfix)"
 msgstr ""
-"deve apontar para o binário compatível do sendmail (ex. um binário nomeado "
-"\"sendmail\" ou \"sendmail.postfix\" instalado com o Postfix)"
+"deve apontar para o binário compatível com o sendmail (ex. um binário "
+"nomeado \"sendmail\" ou \"sendmail.postfix\" instalado com o Postfix)"
 
 #: src/lib/Sympa/ConfDef.pm:436
 msgid ""
@@ -525,44 +527,48 @@ msgstr ""
 "simultaneamente."
 
 #: src/lib/Sympa/ConfDef.pm:439
-#, fuzzy
 msgid ""
 "Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
 "powerful systems."
 msgstr ""
-"Valor proposto é um tanto baixo, você pode aumentá-lo para 100, 200 ou até "
-"300 com sistemas mais robustos."
+"O valor proposto é um tanto baixo, você pode aumentá-lo para 100, 200 ou até "
+"300 com sistemas mais potentes."
 
 #: src/lib/Sympa/ConfDef.pm:459
 msgid "Defines the name of the family the automatic lists are based on."
-msgstr ""
+msgstr "Define o nome da família em que as listas automáticas estão baseadas."
 
 #: src/lib/Sympa/ConfDef.pm:467
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr ""
+"Define o prefixo que permite o reconhecimento de uma lista como lista "
+"automática."
 
 #: src/lib/Sympa/ConfDef.pm:478
+#, fuzzy
 msgid ""
 "comma separated list of operations for which blacklist filter is applied"
 msgstr ""
-"lista separada por vírgulas de operações de lista para as quais o filtro de "
-"lista negra é aplicado"
+"lista separada por vírgulas de operações para as quais o filtro blacklist é "
+"aplicado"
 
 #: src/lib/Sympa/ConfDef.pm:484
+#, fuzzy
 msgid "Setting this parameter to \"none\" will hide the blacklist feature"
 msgstr ""
-"Atribuindo aos parâmetros do valor \"none\" irá esconder a funcionalidade de "
-"lista negra (blacklist)"
+"Definindo este parâmetro como\"none\" irá esconder o recurso de lista negra "
+"(blacklist)"
 
 #: src/lib/Sympa/ConfDef.pm:489
+#, fuzzy
 msgid ""
 "If set, when a list editor report a spam, this external script is run by "
 "wwsympa or sympa, the spam is sent into script stdin"
 msgstr ""
-"Se atribuído, quando o editor de lista reportar um SPAM, este script será "
-"executado pelo wwsympa ou sympa, o SPAM é inserido à entrada padrão (STDIN) "
-"do script."
+"Se atribuído, quando um editor da lista reportar um spam, este script "
+"externo é executado pelo wwsympa ou pelo sympa, o spam é inserido à entrada "
+"padrão (STDIN) do script"
 
 #: src/lib/Sympa/ConfDef.pm:495
 msgid ""
@@ -577,9 +583,8 @@ msgid ""
 "Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf "
 "file allows a different tuning per destination domain."
 msgstr ""
-"Quantidade máxima de destinatários por chamada do Sendmail. O arquivo "
-"nrcpt_by_domain.conf permite um ajuste diferente para cada domínio de "
-"destino."
+"Tamanho máximo padrão (em bytes) para mensagens (pode ser re-definido para "
+"cada lista)"
 
 #: src/lib/Sympa/ConfDef.pm:517
 msgid "Max. number of different domains per call to Sendmail"
@@ -591,7 +596,7 @@ msgstr "Se deve ou não efetuar cache de listas no banco de dados"
 
 #: src/lib/Sympa/ConfDef.pm:530
 msgid "Path of the file that contains all list related aliases"
-msgstr ""
+msgstr "Caminho do arquivo que contém todos os alias de listas"
 
 #: src/lib/Sympa/ConfDef.pm:536
 msgid ""

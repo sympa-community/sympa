@@ -12,16 +12,16 @@ msgstr ""
 "Project-Id-Version: Sympa-6.1.20+, 6.2a.38\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2014-10-03 11:49+0000\n"
+"PO-Revision-Date: 2015-06-18 04:02+0000\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1\n"
-"X-POOTLE-MTIME: 1412336963.000000\n"
+"X-POOTLE-MTIME: 1434600144.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -4091,13 +4091,12 @@ msgid "SYMPA logo"
 msgstr "Sympaロゴ"
 
 #: default/web_tt2/aside_menu.tt2:53
-#, fuzzy
 msgid "List Options Menu"
 msgstr "リストのオプション"
 
 #: default/web_tt2/aside_menu.tt2:72
 msgid "General Menu"
-msgstr ""
+msgstr "一般"
 
 #: default/web_tt2/automatic_lists_management_request.tt2:3
 msgid "Automatic lists management"
@@ -4152,13 +4151,10 @@ msgstr "ブラックリスト管理"
 
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:7
-#, fuzzy
 msgid ""
 "Operation requested by users which email is listed in the blacklist file are "
 "rejected. The blacklist is in use for the following operation: %1."
-msgstr ""
-"ブラックリストに載っているメール アドレスでの操作は拒否します。次の操作にブ"
-"ラックリストを使います: "
+msgstr "ブラックリストに載っているメール アドレスでの操作は拒否します。次の操作にブラックリストを使います: %1。"
 
 #: default/web_tt2/blacklist.tt2:9
 msgid "Syntax:"
@@ -4169,23 +4165,20 @@ msgid "only one email or expression by line"
 msgstr "メール アドレスや正規表現はひとつの行にひとつしか入れられません"
 
 #: default/web_tt2/blacklist.tt2:12
-#, fuzzy
 msgid "number sign (#) introduces a comment"
-msgstr "# で始まる行はコメントです"
+msgstr "番号記号 (#) で始まる行はコメントです"
 
 #: default/web_tt2/blacklist.tt2:13
-#, fuzzy
 msgid ""
 "asterisk (*) matches any string. Example: \"*@spammer-domain.com\" match any "
 "sender from that exact domain"
 msgstr ""
-"文字 * はどんな文字列にも一致します。例えば \"*@spammer-domain.com\" は "
-"\"spammer-domain.com\" ドメインのあらゆる送信者に一致します"
+"アスタリスク (*) はどんな文字列にも一致します。例えば \"*@spammer-domain.com\" は \"spammer-domain."
+"com\" ドメインのあらゆる送信者に一致します"
 
 #: default/web_tt2/blacklist.tt2:14
-#, fuzzy
 msgid "only one asterisk is allowed in a line"
-msgstr "文字 * は 1 行に 1 つしか入れられません"
+msgstr "アスタリスクは 1 行に 1 つしか入れられません"
 
 #: default/web_tt2/blacklist.tt2:19
 msgid "The current blacklist is empty"
@@ -6037,9 +6030,8 @@ msgid "End date"
 msgstr "終了日"
 
 #: default/web_tt2/head_javascript.tt2:81
-#, fuzzy
 msgid "Back"
-msgstr "ブラックリスト"
+msgstr "もどる"
 
 #: default/web_tt2/home.tt2:3
 msgid "Welcome"
@@ -6060,13 +6052,10 @@ msgid "Logging In"
 msgstr "ログインしましょう"
 
 #: default/web_tt2/home.tt2:9
-#, fuzzy
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form in the top right menu."
-msgstr ""
-"Sympaの多くの機能を利用するには、ログインによって本人確認する必要があります。"
-"左のログインフォームをお使いください。"
+msgstr "Sympaの多くの機能を利用するには、ログインによって本人確認する必要があります。右上のログインフォームをお使いください。"
 
 #: default/web_tt2/home.tt2:11
 msgid ""
@@ -6272,19 +6261,16 @@ msgid "Your picture"
 msgstr "ピクチャ"
 
 #: default/web_tt2/list_menu.tt2:16
-#, fuzzy
 msgid "You are listmaster."
-msgstr "リスト システム管理者のみ"
+msgstr "リスト システム管理者です。"
 
 #: default/web_tt2/list_menu.tt2:19
-#, fuzzy
 msgid "You are owner."
-msgstr "あなたがオーナーになっているリストは次のとおり:"
+msgstr "オーナーです。"
 
 #: default/web_tt2/list_menu.tt2:22
-#, fuzzy
 msgid "You are editor."
-msgstr "あなたがモデレータになっているリストは次のとおり:"
+msgstr "モデレータです。"
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
@@ -6865,7 +6851,6 @@ msgid "You need to be logged in to access this page."
 msgstr "このページにアクセスするにはログインする必要があります。"
 
 #: default/web_tt2/nav.tt2:9
-#, fuzzy
 msgid "Create List Menu"
 msgstr "リストの作成"
 
@@ -6874,7 +6859,6 @@ msgid "Create a list using a template"
 msgstr "雛型を使ってリストを作成"
 
 #: default/web_tt2/nav.tt2:28
-#, fuzzy
 msgid "Listmaster Admin Menu"
 msgstr "リスト システム管理"
 
@@ -7446,7 +7430,6 @@ msgid "Details"
 msgstr "詳細"
 
 #: default/web_tt2/reviewbouncing.tt2:67
-#, fuzzy
 msgid "Number of bounces"
 msgstr "配送エラー数"
 
@@ -8650,7 +8633,6 @@ msgstr ""
 "スワードを入力してください"
 
 #: default/web_tt2/subrequest.tt2:53
-#, fuzzy
 msgid ", in addition to the personal information requested."
 msgstr " (パスワード以外にも個人情報を入力しなければならない場合があります)。"
 
@@ -8842,21 +8824,18 @@ msgstr ""
 
 #. (u.recipient)
 #: default/web_tt2/tracking.tt2:19
-#, fuzzy
 msgid "Recipient Email: %1"
-msgstr "宛先の電子メールアドレス"
+msgstr "宛先の電子メールアドレス: %1"
 
 #. (u.status)
 #: default/web_tt2/tracking.tt2:20
-#, fuzzy
 msgid "Delivery Status: %1"
-msgstr "配送状況"
+msgstr "配送状況: %1"
 
 #. (u.arrival_date)
 #: default/web_tt2/tracking.tt2:21
-#, fuzzy
 msgid "Notification Date: %1"
-msgstr "通知日"
+msgstr "通知日: %1"
 
 #: default/web_tt2/tracking.tt2:32
 msgid "Recipient Email"
@@ -8867,7 +8846,6 @@ msgid "Reception Option"
 msgstr "受け取りかた"
 
 #: default/web_tt2/tracking.tt2:33
-#, fuzzy
 msgid "Delivery Status"
 msgstr "配送状況"
 
@@ -10708,28 +10686,26 @@ msgstr "配送エラーの処理中につぎの失敗がありました。%1"
 
 #. (listname, listdomain)
 #: default/mail_tt2/listmaster_notification.tt2:274
-#, fuzzy
 msgid "Listmaster: list %1@%2 at 100 percents error "
-msgstr "リスト システム管理者: サーバ内部のエラー"
+msgstr "リスト システム管理者: %1@%2メーリングリストはエラー率100パーセントです"
 
 #. (listname, listdomain)
 #: default/mail_tt2/listmaster_notification.tt2:276
 msgid ""
 "The list %1@%2 has 100 percents of its users in error. Something unusual "
 "must have happened."
-msgstr ""
+msgstr "%1@%2メーリングリストのエラー率は100パーセントです。なにか問題が起きているのかもしれません。"
 
 #. (sender)
 #: default/mail_tt2/listmaster_notification.tt2:278
 msgid ""
 "The user %1, who tried to send a mail to this list, has been warned, as well "
 "as the list owners."
-msgstr ""
+msgstr "このリストにメッセージを送った人 <%1> とリストのオーナーにも警告を送りました。"
 
 #: default/mail_tt2/listmaster_notification.tt2:282
-#, fuzzy
 msgid "Check the bounces in this list:"
-msgstr "このリストの案内はこちら: "
+msgstr "このリストの配送エラー: "
 
 #. (listname,family,robot,msg_id)
 #: default/mail_tt2/listmaster_notification.tt2:288
@@ -11949,9 +11925,8 @@ msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:69
-#, fuzzy
 msgid "No valid receipient in list %1"
-msgstr "%1 メーリングリストのトピックを更新"
+msgstr "%1 メーリングリストには配送できる受信者がいません"
 
 #. (list.name, conf.listmaster_email, list.domain)
 #: default/mail_tt2/user_notification.tt2:74
@@ -11962,6 +11937,8 @@ msgid ""
 "Please contact the listmaster (%2@%3) to fix this probem before re-posting "
 "your message.\n"
 msgstr ""
+"あなたが %1 メーリングリストに送ったメッセージは配送されませんでした。このリストの全ての読者に配送上の問題があります。メッセージを送りなおす前に、"
+"リストシステム管理者 <%2@%3> に連絡して問題を解消してください。"
 
 #. (list.name)
 #: default/mail_tt2/welcome.tt2:2

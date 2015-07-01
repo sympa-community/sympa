@@ -10,17 +10,17 @@ msgstr ""
 "Project-Id-Version: nb\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2012-05-17 15:50+0000\n"
-"Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
+"PO-Revision-Date: 2015-07-01 10:16+0000\n"
+"Last-Translator: svala <marte.svalastoga@usit.uio.no>\n"
 "Language-Team: Bokmål <en@li.org>\n"
+"Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Version: 0.1\n"
-"X-POOTLE-MTIME: 1337269828.000000\n"
+"X-POOTLE-MTIME: 1435745798.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -46,52 +46,50 @@ msgstr "%d %b %Y"
 
 #: src/libexec/ldap_alias_manager.pl.in:42
 #: src/libexec/mysql_alias_manager.pl.in:28
-#, fuzzy
 msgid "The configuration file contains errors.\n"
-msgstr "Konfigurasjonsfilen --CONFIG-- inneholder feil.\n"
+msgstr "Oppsettfila --CONFIG-- inneholder feil.\n"
 
 #: src/sbin/sympa_wizard.pl.in:180
-#, fuzzy
 msgid "Example: "
-msgstr "Navn :"
+msgstr "Eksempel:"
 
 #: src/sbin/sympa_wizard.pl.in:190
 msgid "(You must define this parameter)"
-msgstr ""
+msgstr "(Du må definere dette parameteret)"
 
 #: src/sbin/sympa_wizard.pl.in:276
 msgid "%s [%s] : "
-msgstr ""
+msgstr "%s [%s] :"
 
 #: src/sbin/sympa_wizard.pl.in:295
 msgid "Incorrect parameter definition: %s\n"
-msgstr ""
+msgstr "Feil definisjon av parameter: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/lib/Sympa/Upgrade.pm:1031 src/lib/Sympa/Upgrade.pm:1987
 #: src/lib/Sympa/Upgrade.pm:2031 src/sbin/sympa_wizard.pl.in:329
-#, fuzzy
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%d %b %Y %H:%M:%S"
 
 #: src/sbin/sympa_wizard.pl.in:333
-#, fuzzy
 msgid "Unable to rename %s : %s"
-msgstr "Kunne ikke lese filen : '%1'."
+msgstr "Kunne ikke gi nytt navn til %s : %s"
 
 #: src/sbin/sympa_wizard.pl.in:341
-#, fuzzy
 msgid "Unable to open %s : %s"
-msgstr "Kunne ikke åpne filen '%1'."
+msgstr "Kan ikke åpne %s : %s"
 
 #: src/sbin/sympa_wizard.pl.in:352
 msgid ""
 "%s have been updated.\n"
 "Previous versions have been saved as %s.\n"
 msgstr ""
+"%s har blitt oppdatert.\n"
+"Forrige versjon har blitt lagret som %s.\n"
 
 #: src/sbin/sympa_wizard.pl.in:359
+#, fuzzy
 msgid ""
 "##############################################################################\n"
 "# This process will help you install all Perl (CPAN) modules required by "
@@ -109,36 +107,52 @@ msgid ""
 "##############################################################################\n"
 "Press the Enter key to continue..."
 msgstr ""
+"#############################################################################"
+"#\n"
+"# Denne prosessen vil bistå deg med å installere alle Perlmoduler (CPAN) "
+"som\n"
+"# er påkrevd av Sympa.\n"
+"# Sympa krever fra 50 til 65 ekstra Perlmoduler for å kjøre.\n"
+"# Hele installasjonsprosessen burde ta rundt 15 minutter.\n"
+"# Du må først konfigurere CPAN-shellet og velge en CPAN-server.\n"
+"# Merk at du kanskje vil ønske å installere de påkrevde PERLmodulene ved å\n"
+"# bruke DEB/RPM.\n"
+"# Prosessen kan avbrytes ved behov, og trygt startes på nytt senere.\n"
+"#############################################################################"
+"#\n"
+"Trykk Enter for å fortsette…"
 
 #: src/sbin/sympa_wizard.pl.in:401
 msgid "Which RDBMS will you use for core database:"
-msgstr ""
+msgstr "Hvilken RDBMS vil du bruke for kjernedatabasen:"
 
 #: src/sbin/sympa_wizard.pl.in:406
 msgid "-> Select RDBMS [1-%d] "
-msgstr ""
+msgstr "-> Velg RDBMS [1-%d]"
 
 #: src/sbin/sympa_wizard.pl.in:419
 msgid "Checking for PERL version:"
-msgstr ""
+msgstr "Sjekker for versjon av PERL:"
 
 #: src/sbin/sympa_wizard.pl.in:422
 msgid "Your version of perl is OK (%s  >= %s)"
-msgstr ""
+msgstr "Perlversjonen din er OK (%s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:426
 msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
 msgstr ""
+"Perlversjonen din er for gammel (%s >= %s)\n"
+"Du må installere en nyere versjon!"
 
 #: src/sbin/sympa_wizard.pl.in:430
 msgid "Checking for REQUIRED modules:"
-msgstr ""
+msgstr "Sjekker obligatoriske moduler:"
 
 #: src/sbin/sympa_wizard.pl.in:432
 msgid "Checking for OPTIONAL modules:"
-msgstr ""
+msgstr "Sjekker valgfrie moduler:"
 
 #: src/sbin/sympa_wizard.pl.in:436
 msgid ""
@@ -146,60 +160,61 @@ msgid ""
 "You can retrieve all theses modules from any CPAN server\n"
 "(for example ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 msgstr ""
+"******* MERK ******\n"
+"Du kan hente alle disse modulene fra hvilken som helst CPAN-server\n"
+"(for eksempel ftp://ftp.uninett.no/pub/languages/perl/CPAN/)"
 
 #: src/sbin/sympa_wizard.pl.in:451
-#, fuzzy
 msgid "perl module"
-msgstr "urlize-modus"
+msgstr "perlmodul"
 
 #: src/sbin/sympa_wizard.pl.in:451
 msgid "from CPAN"
-msgstr ""
+msgstr "fra CPAN"
 
 #: src/sbin/sympa_wizard.pl.in:452
 msgid "STATUS"
-msgstr ""
+msgstr "STATUS"
 
 #: src/sbin/sympa_wizard.pl.in:453
 msgid "-----------"
-msgstr ""
+msgstr "-----------"
 
 #: src/sbin/sympa_wizard.pl.in:453
 msgid "---------"
-msgstr ""
+msgstr "---------"
 
 #: src/sbin/sympa_wizard.pl.in:454
 msgid "------"
-msgstr ""
+msgstr "------"
 
 #: src/sbin/sympa_wizard.pl.in:473
 msgid "was not found on this system."
-msgstr ""
+msgstr "ble ikke funnet i systemet."
 
 #: src/sbin/sympa_wizard.pl.in:495
 msgid "OK (%-6s >= %s)"
-msgstr ""
+msgstr "OK (%-6s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:498
-#, fuzzy
 msgid "version is too old (%s < %s)"
-msgstr "Perioden er for lang (%1 dager)"
+msgstr "for gammel versjon (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:501
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
-msgstr ""
+msgstr ">>>>>>> Du må oppgradere \"%s\" til versjon \"%s\" <<<<<<."
 
 #: src/sbin/sympa_wizard.pl.in:533
 msgid "## You need root privileges to install %s module. ##"
-msgstr ""
+msgstr "## Du trenger rettigheter som root for å legge inn modulen %s. ##"
 
 #: src/sbin/sympa_wizard.pl.in:536
 msgid "## Press the Enter key to continue checking modules. ##"
-msgstr ""
+msgstr "## Trykk på enterknappen for å fortsette å sjekke moduler. ##"
 
 #: src/sbin/sympa_wizard.pl.in:545
 msgid "-> Usage of this module: %s"
-msgstr ""
+msgstr "-> Bruk av denne modulen: %s"
 
 #: src/sbin/sympa_wizard.pl.in:552
 msgid "-> Prerequisites: %s"
@@ -207,43 +222,49 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:557
 msgid "-> Install module %s ? [%s] "
-msgstr ""
+msgstr "-> Installer modul %s ? [%s]"
 
 #: src/sbin/sympa_wizard.pl.in:593
 msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
 msgstr ""
+"Installasjonen av %s feilet igjen. Du kan laste ned tar.gz-versjonen fra "
+"http://search.cpan.org og legge den inn manuelt."
 
 #: src/sbin/sympa_wizard.pl.in:598
 msgid ""
 "Installation of %s FAILED. Do you want to force the installation of this "
 "module? (y/N) "
 msgstr ""
+"Installasjonen av %s feilet. Vil du tvinge gjennom installasjon av denne "
+"modulen? (y/N)"
 
 #: src/lib/tools.pm:817
 msgid "contains the dictionary word '%s'"
-msgstr ""
+msgstr "inneholder ord fra ordboken: '%s'"
 
 #: src/lib/tools.pm:811
+#, fuzzy
 msgid "Not between %d and %d characters"
-msgstr ""
+msgstr "Ikke mellom %d og %d tegn langt"
 
 #: src/lib/tools.pm:812
 msgid "Not %d characters or greater"
-msgstr ""
+msgstr "Ikke %d eller flere tegn"
 
 #: src/lib/tools.pm:813
+#, fuzzy
 msgid "Not less than or equal to %d characters"
-msgstr ""
+msgstr "Ikke flere eller lik %d tegn"
 
 #: src/lib/tools.pm:814
 msgid "contains bad characters"
-msgstr ""
+msgstr "inneholder ugyldige tegn"
 
 #: src/lib/tools.pm:815
 msgid "contains less than %d character groups"
-msgstr ""
+msgstr "inneholder færre enn %d tegngrupper"
 
 #: src/lib/tools.pm:816
 msgid "contains over %d leading characters in sequence"
@@ -271,26 +292,25 @@ msgstr "%d %b %Y at %H:%M:%S"
 
 #: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:194
 msgid "User guide"
-msgstr ""
+msgstr "Brukerguide"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Commands.pm:532
 msgid "Archive of %s, file %s"
-msgstr ""
+msgstr "Arkiv av %s, fil %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Commands.pm:680
-#, fuzzy
 msgid "Archive of %s, last message"
-msgstr "påminnelsesmelding"
+msgstr "Arkiv av de siste %s meldingene"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Commands.pm:808
 msgid "%-37s %5.1f kB   %s"
-msgstr ""
+msgstr "%-37s %5.1f kB         %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -307,7 +327,7 @@ msgstr "%A"
 
 #: default/mail_tt2/global_remind.tt2:1 src/lib/Sympa/Commands.pm:2378
 msgid "Subscription summary"
-msgstr ""
+msgstr "Abonnementsoversikt"
 
 #: src/lib/Sympa/ConfDef.pm:643
 msgid ""
@@ -316,11 +336,15 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:811
+#, fuzzy
 msgid ""
 "This is the set of language that will be proposed to your users for the "
 "Sympa GUI. Don't select a language if you don't have the proper locale "
 "packages installed."
 msgstr ""
+"Dette er en liste over språkene som brukerne av ditt Sympa-brukergrensesnitt "
+"kan velge mellom. Ikke velg et språk med mindre du har de riktige locale-"
+"pakkene installert."
 
 #: src/lib/Sympa/ConfDef.pm:33
 #, fuzzy
@@ -334,23 +358,26 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:48
 #, fuzzy
 msgid "Local part of sympa email address"
-msgstr "Vennligst skriv inn e-postadresse"
+msgstr "Lokal del av Sympa-e-postadressen"
 
 #: src/lib/Sympa/ConfDef.pm:52
+#, fuzzy
 msgid "Effective address will be [EMAIL]@[HOST]"
-msgstr ""
+msgstr "Den effektive adressen blir [EMAIL]@[HOST]"
 
 #: src/lib/Sympa/ConfDef.pm:56
 msgid "Gecos for service mail sent by Sympa itself"
-msgstr ""
+msgstr "Gecos for service-e-post sendt av Sympa selv"
 
 #: src/lib/Sympa/ConfDef.pm:61
+#, fuzzy
 msgid "This parameter is used for display name in the \"From:\" header"
-msgstr ""
+msgstr "Dette parameteret brukes for navnet som skal vises i «From:»-headeren. "
 
 #: src/lib/Sympa/ConfDef.pm:65
+#, fuzzy
 msgid "Listmasters email list comma separated"
-msgstr ""
+msgstr "E-postadresser til listesjefer som en kommaseparert liste"
 
 #: src/lib/Sympa/ConfDef.pm:70
 msgid ""
@@ -361,27 +388,28 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:74
 #, fuzzy
 msgid "Local part of listmaster email address"
-msgstr "Vennligst skriv inn e-postadresse"
+msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:79
 #, fuzzy
 msgid "URL of main Web page"
-msgstr "%1 administrasjonsside"
+msgstr "URL til hovedside"
 
 #: src/lib/Sympa/ConfDef.pm:90 src/lib/Sympa/ListDef.pm:645
-#, fuzzy
 msgid "Store distributed messages into archive"
-msgstr "Hvem kan sende meldinger"
+msgstr "Lagre distribuerte meldinger i arkivet"
 
 #: src/lib/Sympa/ConfDef.pm:91
 msgid "This setting can be overridden by each list"
-msgstr ""
+msgstr "Hver liste kan overstyre denne innstillingen"
 
 #: src/lib/Sympa/ConfDef.pm:284
 msgid ""
 "Directory for storing static contents (CSS, members pictures, documentation) "
 "directly delivered by Apache"
 msgstr ""
+"Katalog for lagring av statis innhold (CSS, medlemmers bilder, dokumentasjon)"
+" levert direkte av Apache"
 
 #: src/lib/Sympa/ConfDef.pm:292
 msgid "URL mapped with the static_content_path directory defined above"
@@ -393,64 +421,73 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1452 src/lib/Sympa/ConfDef.pm:310
 msgid "Should not be changed ! May invalid all user password"
-msgstr ""
+msgstr "Bør ikke byttes! Kan gjøre alle brukerpassord ugyldige"
 
 #: src/lib/Sympa/ConfDef.pm:315
-#, fuzzy
 msgid "Who is able to create lists"
-msgstr "Kunne ikke relaste listen"
+msgstr "Hvem som kan lage lister"
 
 #: src/lib/Sympa/ConfDef.pm:320
+#, fuzzy
 msgid ""
 "This parameter is a scenario, check sympa documentation about scenarios if "
 "you want to define one"
 msgstr ""
+"Dette parameteret er et scenario. Se Sympa-dokumentasjonen for scenarioer "
+"dersom du ønsker å definere et. "
 
 #: src/lib/Sympa/ConfDef.pm:333
+#, fuzzy
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the param name and the param value."
 msgstr ""
+"Brukes for å definere et selvvalgt parameter for din tjener. Ikke glem "
+"semikolon mellom parameternavn og parameterverdi. "
 
 #: src/lib/Sympa/ConfDef.pm:340
-#, fuzzy
 msgid "Directories"
-msgstr "Folder"
+msgstr "Kataloger"
 
 #: src/lib/Sympa/ConfDef.pm:344
+#, fuzzy
 msgid "Directory containing mailing lists subdirectories"
-msgstr ""
+msgstr "Katalog som inneholder underkataloger for e-postlister"
 
 #: src/lib/Sympa/ConfDef.pm:351
+#, fuzzy
 msgid ""
 "Directory for configuration files; it also contains scenari/ and templates/ "
 "directories"
 msgstr ""
+"Katalog for konfigurasjonsfiler – den inneholder også scenario/ og "
+"templates/-kataloger"
 
 #: src/lib/Sympa/ConfDef.pm:355
 #, fuzzy
 msgid "System related"
-msgstr "Maler"
+msgstr "Systemrelatert"
 
 #: src/lib/Sympa/ConfDef.pm:359
 msgid "Syslog facility for sympa"
-msgstr ""
+msgstr "Syslog-fasiliteter for Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:362
 msgid "Do not forget to edit syslog.conf"
-msgstr ""
+msgstr "Ikke glem å redigere syslog.conf"
 
 #: src/lib/Sympa/ConfDef.pm:366
 msgid "Log verbosity"
-msgstr ""
+msgstr "Detaljnivå i logg"
 
 #: src/lib/Sympa/ConfDef.pm:369
 msgid "0: normal, 2,3,4: for debug"
-msgstr ""
+msgstr "0: normal, 2,3,4: for debugging"
 
 #: src/lib/Sympa/ConfDef.pm:373
+#, fuzzy
 msgid "Communication mode with syslogd (unix | inet)"
-msgstr ""
+msgstr "Kommunikasjonsmodus med syslogd (unix | inet)"
 
 #: src/lib/Sympa/ConfDef.pm:380
 msgid "File containing Sympa PID while running"
@@ -465,39 +502,45 @@ msgid "Umask used for file creation by Sympa"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:417
-#, fuzzy
 msgid "Sending related"
-msgstr "Lister som venter på godkjennelse"
+msgstr "Sendingsrelatert"
 
 #: src/lib/Sympa/ConfDef.pm:421
 msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
-msgstr ""
+msgstr "Sti til MTA (sendmail, postfix, exim eller qmail)"
 
 #: src/lib/Sympa/ConfDef.pm:425
+#, fuzzy
 msgid ""
 "should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
 "\" is distributed with Postfix)"
 msgstr ""
+"burde peke til en sendmail-kompatibel binærfil (f.eks. en binærfil ved navn "
+"«sendmail» er distribuert ved hjelp av Postfox)"
 
 #: src/lib/Sympa/ConfDef.pm:436
+#, fuzzy
 msgid ""
 "Max. number of Sendmail processes (launched by Sympa) running simultaneously"
-msgstr ""
+msgstr "Maks antall samtidige Sendmail-prosesser (startet av Sympa)"
 
 #: src/lib/Sympa/ConfDef.pm:439
 msgid ""
 "Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
 "powerful systems."
 msgstr ""
+"Den foreslåtte verdien er ganske lav, du kan øke den til 100, 200 eller til "
+"og med 300 på et kraftig system. "
 
 #: src/lib/Sympa/ConfDef.pm:459
 msgid "Defines the name of the family the automatic lists are based on."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:467
+#, fuzzy
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
-msgstr ""
+msgstr "Definerer prefikset som brukes for å gjenkjenne som automatisk."
 
 #: src/lib/Sympa/ConfDef.pm:478
 msgid ""
@@ -505,8 +548,11 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:484
+#, fuzzy
 msgid "Setting this parameter to \"none\" will hide the blacklist feature"
 msgstr ""
+"Om dette parameteret blir satt til «ingen» vil svartelistefunksjonaliteten "
+"skjules."
 
 #: src/lib/Sympa/ConfDef.pm:489
 msgid ""
@@ -515,10 +561,13 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:495
+#, fuzzy
 msgid ""
 "Default maximum size (in bytes) for messages (can be re-defined for each "
 "list)"
 msgstr ""
+"Standard maksimumsstørrelse (i byte) for meldinger (kan endres for hver "
+"enkelt liste)"
 
 #: src/lib/Sympa/ConfDef.pm:511
 msgid ""
@@ -528,15 +577,16 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:517
 msgid "Max. number of different domains per call to Sendmail"
-msgstr ""
+msgstr "Maksimalt antall forskjellige domener per kall til Sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:525
+#, fuzzy
 msgid "Whether or not to cache lists in the database"
-msgstr ""
+msgstr "Hvorvidt lister skal hurtiglagres (caches) i databasen"
 
 #: src/lib/Sympa/ConfDef.pm:530
 msgid "Path of the file that contains all list related aliases"
-msgstr ""
+msgstr "Sti til filen som inneholder alle listerelaterte aliaser"
 
 #: src/lib/Sympa/ConfDef.pm:536
 msgid ""
@@ -551,16 +601,23 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:546
+#, fuzzy
 msgid "Specify which rfc2369 mailing list headers to add"
 msgstr ""
+"Spesifiser hvilke e-postliste-meldingshoder i henhold til rfc2369 som skal "
+"legges til"
 
 #: src/lib/Sympa/ConfDef.pm:552
+#, fuzzy
 msgid "Specify header fields to be removed before message distribution"
 msgstr ""
+"Spesifiser felt i meldingshode som skal fjernes før distribuering av "
+"meldingen"
 
 #: src/lib/Sympa/ConfDef.pm:562
 msgid "Reject mail from automates (crontab, etc) sent to a list?"
 msgstr ""
+"Avvis e-post fra automatiske prosesser (crontab, osv) sendt til en liste?"
 
 #: src/lib/Sympa/ConfDef.pm:576
 msgid ""
@@ -576,15 +633,16 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:588
 msgid "SMTP HELO (EHLO) parameter used for alias verification"
-msgstr ""
+msgstr "SMTP HELO (EHLO)-parameter brukt for aliasverifisering"
 
 #: src/lib/Sympa/ConfDef.pm:591
 msgid "Default value is the host part of list_check_smtp parameter."
-msgstr ""
+msgstr "Standardverdi er tjenerdelen av list_check_smtp-parameteret."
 
 #: src/lib/Sympa/ConfDef.pm:601
+#, fuzzy
 msgid "Header field name(s) used to determine sender of the messages"
-msgstr ""
+msgstr "Navn på felt i meldingshode brukt for å bestemme meldingenes avsender. "
 
 #: src/lib/Sympa/ConfDef.pm:603
 msgid ""
@@ -599,8 +657,9 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:606
+#, fuzzy
 msgid "Bulk mailer"
-msgstr ""
+msgstr "Masseutsender"
 
 #: src/lib/Sympa/ConfDef.pm:614
 msgid "Default priority for a packet to be sent by bulk."
@@ -637,22 +696,20 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:657
-#, fuzzy
 msgid "Quotas"
-msgstr "kvote"
+msgstr "Kvoter"
 
 #: src/lib/Sympa/ConfDef.pm:663
 msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr ""
+msgstr "Standardgrense for antall medlemmer per liste (0 betyr ingen grense)"
 
 #: src/lib/Sympa/ConfDef.pm:670
 msgid "Default disk quota for shared repository"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:679
-#, fuzzy
 msgid "Spool related"
-msgstr "Maler"
+msgstr "Kørelatert"
 
 #: src/lib/Sympa/ConfDef.pm:683
 msgid "Directory containing various specialized spools"
@@ -678,9 +735,8 @@ msgid "Directory for digest spool"
 msgstr "katalog med lister"
 
 #: src/lib/Sympa/ConfDef.pm:708
-#, fuzzy
 msgid "Directory for authentication spool"
-msgstr "begrenset til autentisert eier"
+msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:713
 #, fuzzy
@@ -693,35 +749,32 @@ msgid "Directory for subscription spool"
 msgstr "Påminnelse om ditt abonnement på %1"
 
 #: src/lib/Sympa/ConfDef.pm:723
-#, fuzzy
 msgid "Directory for topic spool"
-msgstr "katalog med lister"
+msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:729
 msgid "Directory for bounce incoming spool"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:734
-#, fuzzy
 msgid "Directory for task spool"
-msgstr "katalog med lister"
+msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:739
 msgid "Directory for automatic list creation spool"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:744
-#, fuzzy
 msgid "Directory for message outgoing spool"
-msgstr "Filen %1 venter på moderering"
+msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:749
 msgid "Must not be 0."
-msgstr ""
+msgstr "Kan ikke være 0."
 
 #: src/lib/Sympa/ConfDef.pm:754
 msgid "Temporary directory used by antivirus plugins, MHonArc etc."
-msgstr ""
+msgstr "Midlertidig katalog brukt av antivirusplugins, MHonArc osv."
 
 #: src/lib/Sympa/ConfDef.pm:759
 msgid ""
@@ -731,20 +784,20 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:794
 msgid "Internationalization related"
-msgstr ""
+msgstr "Relatert til internasjonalisering"
 
 #: src/lib/Sympa/ConfDef.pm:806
 #, fuzzy
 msgid "Supported languages"
-msgstr "Sett språk"
+msgstr "Støttede språk"
 
 #: src/lib/Sympa/ConfDef.pm:815
 msgid "Default language (one of supported languages)"
-msgstr ""
+msgstr "Standardspråk (et av de støttede språkene)"
 
 #: src/lib/Sympa/ConfDef.pm:819
 msgid "This is the default language used by Sympa"
-msgstr ""
+msgstr "Dette er standardspråket brukt av Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:824
 msgid "If set to \"on\", enables support of legacy character set"
@@ -752,12 +805,11 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:827
 msgid "See also charset.conf(5) manpage"
-msgstr ""
+msgstr "Se også manualsiden til charset.conf(5)"
 
 #: src/lib/Sympa/ConfDef.pm:833
-#, fuzzy
 msgid "Bounce related"
-msgstr "Returer"
+msgstr "Returmeldingrelatert"
 
 #: src/lib/Sympa/ConfDef.pm:841
 msgid "Welcome message return-path ( unique | owner )"
@@ -766,6 +818,8 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:844
 msgid "If set to unique, new subcriber is removed if welcome message bounce"
 msgstr ""
+"Hvis satt til «unique» blir nye abonnenter fjernet dersom velkomstmeldingen "
+"kommer i retur"
 
 #: src/lib/Sympa/ConfDef.pm:848
 msgid "Remind message return-path ( unique | owner )"
@@ -779,7 +833,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:858
 msgid "Directory for storing bounces"
-msgstr ""
+msgstr "Katalog for oppbevaring av returmeldinger"
 
 #: src/lib/Sympa/ConfDef.pm:1356 src/lib/Sympa/ConfDef.pm:860
 msgid "Better if not in a critical partition"
@@ -803,12 +857,12 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:913
 msgid "Not yet used in current version, Default is 50"
-msgstr ""
+msgstr "Ikke tatt i bruk ennå i nåværende versjon, standard er 50"
 
 #: src/lib/Sympa/ConfDef.pm:928
 #, fuzzy
 msgid "Tuning"
-msgstr "kommer i retur"
+msgstr "Fininnstilling"
 
 #: src/lib/Sympa/ConfDef.pm:933
 msgid ""
@@ -828,18 +882,19 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:945
 msgid "Sympa commands priority"
-msgstr ""
+msgstr "Prioritering av Sympakommandoer"
 
 #: src/lib/Sympa/ConfDef.pm:961
-#, fuzzy
 msgid "Default priority for list messages"
-msgstr "slettebeskjed"
+msgstr "Standardprioritet for listemeldinger"
 
 #: src/lib/Sympa/ConfDef.pm:968
 msgid ""
 "comma-separated list of files that will be parsed by Sympa when "
 "instantiating a family (no space allowed in file names)"
 msgstr ""
+"Kommaseparert liste av filer som blir parset av Sympa når en familie blir "
+"instansiert (ikke tillatt med mellomrom i filnavn)"
 
 #: src/lib/Sympa/ConfDef.pm:977
 msgid ""
@@ -848,9 +903,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:980
-#, fuzzy
 msgid "Database related"
-msgstr "Databasestrukturen er oppdatert"
+msgstr "Databaserelatert"
 
 #: src/lib/Sympa/ConfDef.pm:988
 msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
@@ -863,7 +917,7 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:995
 #, fuzzy
 msgid "Name of the database"
-msgstr "Kunne ikke oppdatere databasen."
+msgstr "Navn på databasen"
 
 #: src/lib/Sympa/ConfDef.pm:999
 msgid "With SQLite, the name of the DB corresponds to the DB file"
@@ -875,17 +929,15 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1010
 msgid "Port of the database server"
-msgstr ""
+msgstr "Databasetjenerens port"
 
 #: src/lib/Sympa/ConfDef.pm:1017
-#, fuzzy
 msgid "User for the database connection"
-msgstr "omgivelsesvariable for databasetilkobling"
+msgstr "Bruker for databasetilkoblingen"
 
 #: src/lib/Sympa/ConfDef.pm:1024
-#, fuzzy
 msgid "Password for the database connection"
-msgstr "omgivelsesvariable for databasetilkobling"
+msgstr "Passord for databasetilkoblingen"
 
 #: src/lib/Sympa/ConfDef.pm:1029
 msgid ""
@@ -896,11 +948,11 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1038
 #, fuzzy
 msgid "Environment variables setting for database"
-msgstr "omgivelsesvariable for databasetilkobling"
+msgstr "Omgivelsesvariable for database"
 
 #: src/lib/Sympa/ConfDef.pm:1040
 msgid "This is useful for defining ORACLE_HOME "
-msgstr ""
+msgstr "Dette er nyttig for å definere ORACLE_HOME"
 
 #: src/lib/Sympa/ConfDef.pm:1045
 msgid "Database private extention to subscriber table"
@@ -908,7 +960,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1048 src/lib/Sympa/ConfDef.pm:1056
 msgid "You need to extend the database format with these fields"
-msgstr ""
+msgstr "Du må utvide databaseformatet med disse feltene"
 
 #: src/lib/Sympa/ConfDef.pm:1053
 msgid "Database private extention to user table"
@@ -916,11 +968,11 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1073
 msgid "Number of months that elapse before a log is expired"
-msgstr ""
+msgstr "Antall måneder før en logg utløper"
 
 #: src/lib/Sympa/ConfDef.pm:1079
 msgid "Number of months that elapse before statistics are expired"
-msgstr ""
+msgstr "Antall måneder før statistikk utløper"
 
 #: src/lib/Sympa/ConfDef.pm:1106
 msgid ""
@@ -940,16 +992,15 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1123
 msgid "Loop prevention"
-msgstr ""
+msgstr "Løkkeforebygging"
 
 #: src/lib/Sympa/ConfDef.pm:1146
-#, fuzzy
 msgid "S/MIME configuration"
-msgstr "Konfigurasjonsfil"
+msgstr "S/MIME-konfigurering"
 
 #: src/lib/Sympa/ConfDef.pm:1150
 msgid "Path to OpenSSL"
-msgstr ""
+msgstr "Sti til OpenSSL"
 
 #: src/lib/Sympa/ConfDef.pm:1160
 msgid "Directory containing trusted CA certificates"
@@ -4073,7 +4124,7 @@ msgstr "Maler"
 #: default/web_tt2/footer.tt2:4 default/web_tt2/header.tt2:12
 #: default/web_tt2/header.tt2:23
 msgid "SYMPA logo"
-msgstr ""
+msgstr "SYMPA-logo"
 
 #: default/web_tt2/aside_menu.tt2:53
 #, fuzzy
@@ -4367,7 +4418,7 @@ msgstr ""
 
 #: default/web_tt2/compose_mail.tt2:77
 msgid "OR"
-msgstr ""
+msgstr "ELLER"
 
 #: default/web_tt2/compose_mail.tt2:78
 msgid "<strong>Send an HTML file from your computer:"
@@ -4414,7 +4465,7 @@ msgstr ""
 #: default/web_tt2/edit_template.tt2:15 default/web_tt2/ls_templates.tt2:41
 #: default/web_tt2/view_template.tt2:18
 msgid "site"
-msgstr ""
+msgstr "side"
 
 #: default/web_tt2/copy_template.tt2:13 default/web_tt2/edit_template.tt2:16
 #: default/web_tt2/view_template.tt2:19
@@ -4482,7 +4533,7 @@ msgstr "Utfør"
 #: default/web_tt2/crash.tt2:30 default/web_tt2/main.tt2:60
 #: default/web_tt2/tt2_error.tt2:30
 msgid "Please Wait..."
-msgstr ""
+msgstr "Vennligst vent..."
 
 #: default/web_tt2/crash.tt2:42 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:52 default/web_tt2/list_panel.tt2:87
@@ -4559,7 +4610,7 @@ msgstr "Send inn din forespørsel om opprettelse av liste"
 
 #: default/web_tt2/create_list_request.tt2:90 default/web_tt2/nav.tt2:15
 msgid "Copy an existing list."
-msgstr ""
+msgstr "Kopier en eksisterende liste."
 
 #: default/web_tt2/create_list_request.tt2:93
 msgid ""
@@ -4570,9 +4621,10 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/create_list_request.tt2:94
+#, fuzzy
 msgid ""
 "After the list is created, you will be able to adjust it's configuration."
-msgstr ""
+msgstr "Etter at listen er opprettet vil du kunne justere listens innstillinger"
 
 #: default/web_tt2/create_list_request.tt2:102
 #: default/web_tt2/rename_list_request.tt2:8
@@ -4581,7 +4633,7 @@ msgstr "Nytt listenavn:"
 
 #: default/web_tt2/create_list_request.tt2:104
 msgid "copy list configuration"
-msgstr ""
+msgstr "Kopier en liste konfigurasjon"
 
 #: default/web_tt2/create_list.tt2:6
 msgid "Your list is created."
@@ -5057,7 +5109,7 @@ msgstr "Du kan redigere flere beskjeder/filer knyttet til listen din :"
 
 #: default/web_tt2/editfile.tt2:33
 msgid "HTML pages"
-msgstr ""
+msgstr "HTML-side"
 
 #: default/web_tt2/editfile.tt2:36
 msgid ""
@@ -5122,10 +5174,13 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/editfile.tt2:77
+#, fuzzy
 msgid ""
 "Message header: If this file is not empty, it is added as a MIME attachment "
 "at the beginning of each message distributed to the list."
 msgstr ""
+"Meldingshode: Hvis denne filen ikke er tom vil den blir lagt til melding som "
+"et MIME-vedlegg (vedlegget blir lagt til først i e-posten)."
 
 #: default/web_tt2/editfile.tt2:86
 #, fuzzy
@@ -5167,13 +5222,13 @@ msgid "Edit List Configuration"
 msgstr "Rediger listekonfigurasjon"
 
 #: default/web_tt2/edit_list_request.tt2:8
+#, fuzzy
 msgid "Here you can edit your list's configuration parameters."
-msgstr ""
+msgstr "Her kan du endre på konfigurasjonen til listen din"
 
 #: default/web_tt2/edit_list_request.tt2:34
-#, fuzzy
 msgid "(default)"
-msgstr "standard"
+msgstr "(standardverdi)"
 
 #: default/web_tt2/edit_list_request.tt2:40
 msgid "scenario source"
@@ -5192,27 +5247,24 @@ msgstr "scenariokilde"
 #: default/web_tt2/error.tt2:112 default/web_tt2/rss.tt2:4
 #: default/web_tt2/subindex.tt2:39
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #: default/web_tt2/editsubscriber.tt2:2
 msgid "Subscriber information"
 msgstr "Medlemsinformasjon"
 
 #: default/web_tt2/editsubscriber.tt2:11 default/web_tt2/pref.tt2:7
-#, fuzzy
 msgid "Email:"
-msgstr "E-post :"
+msgstr "E-post:"
 
 #: default/web_tt2/editsubscriber.tt2:14 default/web_tt2/pref.tt2:8
 #: default/web_tt2/suboptions.tt2:5
-#, fuzzy
 msgid "Name:"
-msgstr "Navn :"
+msgstr "Navn:"
 
 #: default/web_tt2/editsubscriber.tt2:22
-#, fuzzy
 msgid "Subscribed since:"
-msgstr "Medlem siden :"
+msgstr "Medlem siden:"
 
 #: default/web_tt2/editsubscriber.tt2:25 default/web_tt2/suboptions.tt2:9
 msgid "Last update:"
@@ -5243,13 +5295,15 @@ msgid "Changing your picture for this list"
 msgstr "Endre bildet ditt for denne listen"
 
 #: default/web_tt2/editsubscriber.tt2:76
+#, fuzzy
 msgid "Unsubscribe the User"
-msgstr "Meld ut brukeren"
+msgstr "Meld brukeren av listen"
 
 #: default/web_tt2/editsubscriber.tt2:77 default/web_tt2/review.tt2:98
 #: default/web_tt2/search.tt2:98
+#, fuzzy
 msgid "Quiet (don't send deletion email)"
-msgstr ""
+msgstr "Stille (ikke send e-post om sletting)"
 
 # If I have understood the setting in which this phrase is used
 #: default/web_tt2/editsubscriber.tt2:80
@@ -5263,7 +5317,7 @@ msgstr "Adresse funnet via VERP-teknologi"
 #: default/web_tt2/editsubscriber.tt2:87
 #, fuzzy
 msgid "Status:"
-msgstr "Status :"
+msgstr "Status:"
 
 #: default/web_tt2/editsubscriber.tt2:98
 #, fuzzy
@@ -5307,7 +5361,7 @@ msgstr "Type :"
 #: default/web_tt2/edit_template.tt2:8 default/web_tt2/ls_templates.tt2:23
 #: default/web_tt2/view_template.tt2:9
 msgid "web"
-msgstr ""
+msgstr "nett"
 
 #: default/web_tt2/edit_template.tt2:9 default/web_tt2/ls_templates.tt2:24
 #: default/web_tt2/view_template.tt2:10
@@ -6268,8 +6322,9 @@ msgid "Data Sources Configuration"
 msgstr "Konfigurasjonsfil"
 
 #: default/web_tt2/info.tt2:75
+#, fuzzy
 msgid "Configure data sources (SQL, LDAP, text file) for list membership"
-msgstr ""
+msgstr "Konfigurasjon av datakilder for medlemskap (SQL, LDAP, tekstfil) "
 
 #: default/web_tt2/info.tt2:76
 msgid "Include (nest) Sympa lists"
@@ -6379,7 +6434,7 @@ msgstr "Listesjef"
 #: default/web_tt2/my.tt2:24 default/web_tt2/my.tt2:27
 #: default/web_tt2/which.tt2:29 default/web_tt2/which.tt2:32
 msgid ", "
-msgstr ""
+msgstr ","
 
 #: default/web_tt2/list_menu.tt2:44
 #, fuzzy
@@ -6511,7 +6566,7 @@ msgstr "Moderatorer"
 
 #: default/web_tt2/list_panel.tt2:81
 msgid "(same as owners)"
-msgstr ""
+msgstr "(samme som eier)"
 
 #: default/web_tt2/list_panel.tt2:95
 msgid "Load certificate"
@@ -6757,8 +6812,9 @@ msgid "Do you really want to delete message %1?"
 msgstr "Ønsker du virkelig å slette denne meldingen ?"
 
 #: default/web_tt2/manage_template.tt2:46
+#, fuzzy
 msgid "There are currently no Rejection Messages available"
-msgstr ""
+msgstr "Det er ingen avvisningsmelding tilgjengelig"
 
 #: default/web_tt2/manage_template.tt2:59
 #, fuzzy
@@ -6891,7 +6947,7 @@ msgstr ""
 
 #: default/web_tt2/modform.tt2:61
 msgid "hide"
-msgstr ""
+msgstr "skjul"
 
 #: default/web_tt2/modindex.tt2:31 default/web_tt2/modindex.tt2:6
 msgid "Listing messages to moderate"
@@ -6913,7 +6969,7 @@ msgstr "Størrelse"
 
 #: default/web_tt2/modindex.tt2:55
 msgid "junk"
-msgstr ""
+msgstr "søppel"
 
 #. (msg.value.from)
 #: default/web_tt2/modindex.tt2:86
@@ -6983,7 +7039,7 @@ msgstr "Temaabonnement :"
 
 #: default/web_tt2/my.tt2:66 default/web_tt2/suspend_request.tt2:93
 msgid "You need to be logged in to access this page."
-msgstr ""
+msgstr "Du må være logget inn for å få tilgang til denne siden."
 
 #: default/web_tt2/nav.tt2:9
 #, fuzzy
@@ -7074,7 +7130,7 @@ msgstr "privat informasjon"
 
 #: default/web_tt2/nav.tt2:105 default/web_tt2/nav.tt2:195
 msgid "Menu"
-msgstr ""
+msgstr "Meny"
 
 #: default/web_tt2/nav.tt2:113 default/web_tt2/nav.tt2:163
 msgid "List definition"
@@ -7118,7 +7174,7 @@ msgstr "påminnelsesmelding"
 
 #: default/web_tt2/nav.tt2:202
 msgid "Send an html page"
-msgstr ""
+msgstr "Send en html-side"
 
 #: default/web_tt2/news.tt2:9
 #, fuzzy
@@ -7174,7 +7230,7 @@ msgstr "liste %1"
 #. (user_with_errors.value.count)
 #: default/web_tt2/news.tt2:35
 msgid " %1 error(s)"
-msgstr ""
+msgstr "%1 feil"
 
 #: default/web_tt2/news.tt2:36
 #, fuzzy
@@ -7653,7 +7709,7 @@ msgstr "Abonnementer som venter på godkjennelse"
 
 #: default/web_tt2/review.tt2:18 default/web_tt2/search.tt2:18
 msgid "Exclude"
-msgstr ""
+msgstr "Utelat"
 
 #: default/web_tt2/review.tt2:24 default/web_tt2/search.tt2:24
 msgid "Synchronize members with data sources"
@@ -7670,7 +7726,7 @@ msgstr "Legg til abonnenter"
 
 #: default/web_tt2/review.tt2:37 default/web_tt2/search.tt2:37
 msgid "To add an individual user:"
-msgstr ""
+msgstr "For å legge til en individuell bruker:"
 
 #: default/web_tt2/review.tt2:42 default/web_tt2/search.tt2:42
 #, fuzzy
@@ -7679,7 +7735,7 @@ msgstr "e-postadresse"
 
 #: default/web_tt2/review.tt2:44 default/web_tt2/search.tt2:44
 msgid "Quiet (don't send welcome email)"
-msgstr ""
+msgstr "Stille (ikke send velkomst e-post)"
 
 #: default/web_tt2/review.tt2:48 default/web_tt2/search.tt2:48
 msgid "To add multiple users:"
@@ -7948,9 +8004,8 @@ msgid "bounce"
 msgstr "returmelding"
 
 #: default/web_tt2/search_user.tt2:36
-#, fuzzy
 msgid "member"
-msgstr "Listemedlemmer"
+msgstr "medlem"
 
 #: default/web_tt2/search_user.tt2:38
 msgid "editor"
@@ -11070,7 +11125,7 @@ msgstr ""
 #. (path)
 #: default/mail_tt2/listmaster_notification.tt2:347
 msgid "Cannot upload file '%1'."
-msgstr ""
+msgstr "Kunne ikke laste opp fil '%1'."
 
 #. (name)
 #: default/mail_tt2/listmaster_notification.tt2:349
@@ -12430,7 +12485,9 @@ msgstr "krever autentisering og deretter godkjennelse fra eier"
 #, fuzzy
 msgid ""
 "requires authentication unless DKIM signature is OK, then owner approval"
-msgstr "krever autentisering og deretter godkjennelse fra eier"
+msgstr ""
+"krever autentisering hvis ikke DKIM signatur er OK, deretter godkjennelse "
+"fra eier"
 
 #: default/scenari/subscribe.closed:1
 msgid "subscribe is impossible"
@@ -12454,15 +12511,15 @@ msgstr ""
 
 #: default/scenari/subscribe.owner:1 default/scenari/unsubscribe.owner:1
 msgid "owners approval"
-msgstr ""
+msgstr "eiers godkjenning"
 
 #: default/scenari/subscribe.smime:1
 msgid "requires S/MIME signed"
-msgstr ""
+msgstr "krever S/MIME-signatur"
 
 #: default/scenari/subscribe.smimeorowner:1
 msgid "requires S/MIME signed or owner approval"
-msgstr ""
+msgstr "krever S/MIME-signatur eller eiers godkjenning"
 
 #: default/scenari/topics_visibility.conceal:1
 msgid "conceal unless for listmaster"
@@ -12474,17 +12531,17 @@ msgstr "skjul med unntak for innloggede brukere"
 
 #: default/scenari/topics_visibility.noconceal:1
 #: default/scenari/visibility.noconceal:1
+#, fuzzy
 msgid "no conceal"
-msgstr ""
+msgstr "synlig"
 
 #: default/scenari/unsubscribe.auth:1
 msgid "need authentication"
 msgstr "krever autentisering"
 
 #: default/scenari/unsubscribe.authdkim:1
-#, fuzzy
 msgid "need authentication unless DKIM signature is OK"
-msgstr "krever autentisering og deretter godkjennelse fra eier"
+msgstr "krever autentisering hvis ikke DKIM signatur er OK"
 
 #: default/scenari/unsubscribe.auth_notify:1
 msgid "authentication requested, notification sent to owner"
@@ -13555,7 +13612,7 @@ msgstr ""
 
 #: ../src/lib/confdef.pm:777
 msgid "Temporary directory used by OpenSSL and antivirus plugins"
-msgstr ""
+msgstr "Midlertidig mappe for OpenSSL og antivirusprogramtillegg"
 
 #: ../src/lib/confdef.pm:1400
 msgid "Virtual host specific parameters"
@@ -13571,6 +13628,8 @@ msgid ""
 "You have requested to removed from list %1. To confirm and get removed from "
 "the list, please click the link below: "
 msgstr ""
+"Du har bedt om å bli fjernet fra listen %1. For å bekrefte, trykk på lenken "
+"under:"
 
 #: ../src/lib/confdef.pm:1197
 msgid "List of headers to be included into the message for signature"
@@ -13592,19 +13651,20 @@ msgstr ""
 
 #: ../web_tt2/edit_config.tt2:16
 msgid "[% confparam.title %]"
-msgstr ""
+msgstr "[%confparam.title%]"
 
 #: ../web_tt2/edit_config.tt2:28
 msgid "[% confparam.query %]"
-msgstr ""
+msgstr "[% confparam.query %]"
 
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
-msgstr ""
+msgstr "Mappe- og filplassering "
 
+# Egennavn 
 #: ../src/lib/confdef.pm:234
 msgid "Syslog"
-msgstr ""
+msgstr "Syslog"
 
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
@@ -13612,7 +13672,7 @@ msgstr ""
 
 #: ../src/lib/confdef.pm:573
 msgid "Internationalization"
-msgstr ""
+msgstr "Internasjonalisering"
 
 #: ../mail_tt2/sendssopasswd.tt2:7
 msgid ""
