@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: nb\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2015-07-01 10:16+0000\n"
+"PO-Revision-Date: 2015-07-01 11:16+0000\n"
 "Last-Translator: svala <marte.svalastoga@usit.uio.no>\n"
 "Language-Team: Bokmål <en@li.org>\n"
 "Language: nb_NO\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Version: 0.1\n"
-"X-POOTLE-MTIME: 1435745798.000000\n"
+"X-POOTLE-MTIME: 1435749368.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -386,7 +386,6 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:74
-#, fuzzy
 msgid "Local part of listmaster email address"
 msgstr ""
 
@@ -1003,8 +1002,9 @@ msgid "Path to OpenSSL"
 msgstr "Sti til OpenSSL"
 
 #: src/lib/Sympa/ConfDef.pm:1160
+#, fuzzy
 msgid "Directory containing trusted CA certificates"
-msgstr ""
+msgstr "Katalog som inneholder pålitelige (trusted) CA-sertifikat"
 
 #: src/lib/Sympa/ConfDef.pm:1167
 msgid "File containing bundled trusted CA certificates"
@@ -1012,16 +1012,16 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1179
 msgid "Directory containing user certificates"
-msgstr ""
+msgstr "Katalog som inneholder brukersertifikater"
 
 #: src/lib/Sympa/ConfDef.pm:1184
 msgid "Password used to crypt lists private keys"
-msgstr ""
+msgstr "Passord brukt til å kryptere listers private nøkler"
 
 #: default/web_tt2/nav.tt2:125 default/web_tt2/nav.tt2:175
 #: src/lib/Sympa/ConfDef.pm:1190
 msgid "DKIM"
-msgstr ""
+msgstr "DKIM"
 
 #: src/lib/Sympa/ConfDef.pm:1200
 #, fuzzy
@@ -1039,99 +1039,129 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1215
+#, fuzzy
 msgid "Location of the file where DKIM private key is stored"
-msgstr ""
+msgstr "Plassering av fil der den private DKIM-nøkkelen er lagret"
 
 #: src/lib/Sympa/ConfDef.pm:1222
 msgid ""
 "The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
 msgstr ""
+"\"d=\"-taggen som definert i rfc 4781, standard er domenenavnet til den "
+"virtuelle tjeneren"
 
 #: src/lib/Sympa/ConfDef.pm:1228
-#, fuzzy
 msgid "The selector"
-msgstr "Språkvalg"
+msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1235
 msgid "The \"i=\" tag as defined in rfc 4871, default is null"
-msgstr ""
+msgstr "\"i=\"-taggen som definert i rfc 4871, standard er null"
 
 #: src/lib/Sympa/ConfDef.pm:1250
+#, fuzzy
 msgid "Test mode(s) for DMARC Protection"
-msgstr ""
+msgstr "Testmodus for DMARC-beskyttelse"
 
 #: src/lib/Sympa/ConfDef.pm:1256
+#, fuzzy
 msgid ""
 "Do not set unless you want to use DMARC protection.  This is a comma "
 "separated list of test modes; if multiple are selected then protection is "
 "activated if ANY match.  Do not use dmarc_* modes unless you have a local "
 "DNS cache as they do a DNS lookup for each received message."
 msgstr ""
+"Ikke sett med mindre du ønsker å bruke DMARC-beskyttelse. Dette er en "
+"kommaseparert liste over testmodus: dersom flere er valgt, blir beskyttelsen "
+"akivert om minst én treffer. Ikke bruk dmarc_*-modus med mindre du har en "
+"lokal DNS-hurtiglagring siden de gjør et DNS-oppslag for hver motatte "
+"beskjed. "
 
 #: src/lib/Sympa/ConfDef.pm:1259
+#, fuzzy
 msgid "Regexp for domain name match"
-msgstr ""
+msgstr "Regexp for domenenavn-samsvar"
 
 #: src/lib/Sympa/ConfDef.pm:1264
 msgid "This is used for the \"domain_regex\" protection mode."
-msgstr ""
+msgstr "Dette brukes for «domain_regex»-beskyttelsesmodus."
 
 #: src/lib/Sympa/ConfDef.pm:1267
+#, fuzzy
 msgid "Pattern used to create new From header phrase"
-msgstr ""
+msgstr "Mønster brukt for å lage ny «From»-frase i meldingshode"
 
 #: src/lib/Sympa/ConfDef.pm:1274
+#, fuzzy
 msgid "Email to use for replacement From header"
-msgstr ""
+msgstr "E-post til bruk for erstatnings-«From»-felt i meldingshode"
 
 #: src/lib/Sympa/ConfDef.pm:1280
 msgid "Antivirus plug-in"
-msgstr ""
+msgstr "Antivirusprogramtillegg"
 
 #: src/lib/Sympa/ConfDef.pm:1285
+#, fuzzy
 msgid "Path to the antivirus scanner engine"
-msgstr ""
+msgstr "Sti til antivirusmotoren"
 
 #: src/lib/Sympa/ConfDef.pm:1290
+#, fuzzy
 msgid ""
 "supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
 "Micro/VirusWall"
 msgstr ""
+"støttede antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP og Trend "
+"Micro/VirusWall"
 
 #: src/lib/Sympa/ConfDef.pm:1295
+#, fuzzy
 msgid "Antivirus plugin command argument"
-msgstr ""
+msgstr "Kommandolinjeargument for antivirusprogramtillegg"
 
 #: src/lib/Sympa/ConfDef.pm:1302
 msgid "Notify sender if virus checker detects malicious content"
-msgstr ""
+msgstr "Informer avsender dersom virussjekkeren oppdager ondsinnet innhold"
 
 #: src/lib/Sympa/ConfDef.pm:1306
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
+"«sender» for å informere opphavet til meldingen, «delivery_status» for å "
+"sende leveringsstatus, eller «none»"
 
 #: src/lib/Sympa/ConfDef.pm:1309
 msgid "Tag based spam filtering"
-msgstr ""
+msgstr "Merkelappbasert spamfiltrering"
 
 #: src/lib/Sympa/ConfDef.pm:1318
+#, fuzzy
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
 "spams, name of this header (example X-Spam-Status)"
 msgstr ""
+"Hvis et spamfilter (slik som SpamAssassin eller j-chkmail) legger til et "
+"smtp-meldingshode for å markere spam, navngi dette meldingshodet (for "
+"eksempel X-Spam-Status)"
 
 #: src/lib/Sympa/ConfDef.pm:1326
+#, fuzzy
 msgid "Regexp applied on this header to verify message is a spam (example Yes)"
 msgstr ""
+"Regexp anvendes på dette meldingshodet for å bekrefte at meldingen er spam ("
+"eksempel Yes)"
 
 #: src/lib/Sympa/ConfDef.pm:1334
+#, fuzzy
 msgid ""
 "Regexp applied on this header to verify message is NOT a spam (example No)"
 msgstr ""
+"Regexp anvendes på dette meldingshodet for å bekrefte at meldingen IKKE er "
+"spam (eksempel No)"
 
 #: src/lib/Sympa/ConfDef.pm:1342
+#, fuzzy
 msgid ""
 "Messages are supposed to be filtered by an antispam that add one more "
 "headers to messages. This parameter is used to select a special scenario in "
@@ -1139,15 +1169,20 @@ msgid ""
 "replace antispam_tag_header_name, antispam_tag_header_spam_regexp and "
 "antispam_tag_header_ham_regexp."
 msgstr ""
+"Meldinger skal filtreres av antispam som legger til ett eller flere "
+"meldingshoder til medlingene. Dette parameteret brukes for å velge et "
+"spesielt scenario for å bestemme meldingsstatus: ham (ikke-spam), spam eller "
+"usikker. Dette parameteret erstatter  antispam_tag_header_name, "
+"antispam_tag_header_spam_regexp og antispam_tag_header_ham_regexp."
 
 #: src/lib/Sympa/ConfDef.pm:1349
 #, fuzzy
 msgid "Web interface parameters"
-msgstr "Webgrensesnitt"
+msgstr "Vevgrensesnittparametre"
 
 #: src/lib/Sympa/ConfDef.pm:1353
 msgid "Directory for storing HTML archives"
-msgstr ""
+msgstr "Katalog for lagring av HTML-arkiv"
 
 #: src/lib/Sympa/ConfDef.pm:1362
 msgid ""
@@ -1204,11 +1239,11 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1426
 msgid "This is required for HTML mail archiving"
-msgstr ""
+msgstr "Dette er påkrevd for arkivering av HTML-e-post"
 
 #: src/lib/Sympa/ConfDef.pm:1437
 msgid "duration before the one time tickets are expired"
-msgstr ""
+msgstr "tid før engangsbillettene uløper"
 
 #: src/lib/Sympa/ConfDef.pm:1442
 msgid ""
@@ -1227,19 +1262,23 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1463
 msgid "Title of main Web page"
-msgstr ""
+msgstr "Tittel til hovedsiden"
 
 #: src/lib/Sympa/ConfDef.pm:1470
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
 msgstr ""
+"Hvis satt til «on» får brukere lov til å sende meldinger i HTML ved å bruke "
+"en WYSIWYG-editor."
 
 #: src/lib/Sympa/ConfDef.pm:1478
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path"
 msgstr ""
+"URL-sti til javascriptfilen som gjør WYSIWYG-HTML-editoren tilgjengelig. "
+"Relativ sti under <static_content_url> eller absolutt sti"
 
 #: src/lib/Sympa/ConfDef.pm:1480
 msgid ""
