@@ -605,11 +605,11 @@ sub new {
     my $pertinent_ttl = $list->{'admin'}{'distribution_ttl'}
         || $list->{'admin'}{'ttl'};
     if ($status
-        && (!$options->{'skip_sync_admin'}
-            || (   $options->{'optional_sync_admin'}
+        && (
+            (!$options->{'skip_sync_admin'}
                 && $list->{'last_sync'} < time - $pertinent_ttl)
             || $options->{'force_sync_admin'}
-        )
+           )
         ) {
         ## Update admin_table
         unless (defined $list->sync_include_admin()) {
