@@ -3,6 +3,24 @@
 
 (See Changelog file for the full changes log)
 
+6.2.2		July 01, 2015
+
+  Changes:
+
+	[12260] default/edit_list.conf:  Hiding include_<datasource>_ca
+	parameters to owners by default.
+
+  Bug fixes:
+
+	[12254] src/lib/Sympa/List.pm: [Reported by J.L. Marrion, univ.
+	Louvain] when testing if list admins needed to be synced, all the test
+	cases returned true because the test was badly formed. Alose removed
+	optional_sync_admin option which was never used.
+
+	[12250] src/smtpc/configure.ac, src/smtpc/sockstr.c:  "make" fails on
+	Solaris.  A variable name conflicted with a predefined preprocessor
+	macro.
+
 6.2.1		June 17, 2015
 
   Changes:
