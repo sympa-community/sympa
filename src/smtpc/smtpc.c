@@ -314,7 +314,7 @@ static int parse_options(int *argcptr, char ***argvptr)
 	}
     }
 
-    if (options.protocol & (SMTPC_PROTO_ESMTP | SMTPC_PROTO_LMTP) == 0) {
+    if ((options.protocol & (SMTPC_PROTO_ESMTP | SMTPC_PROTO_LMTP)) == 0) {
 	fprintf(stderr, "Either --esmtp or --lmtp option must be given\n");
 	return -1;
     }
@@ -621,7 +621,7 @@ static ssize_t transaction(void)
 
     if (server.extensions & SMTPC_EXT_DSN) {
 	if (options.envid != NULL && options.envid[0] != '\0') {
-	    unsigned char *encbuf;
+	    char *encbuf;
 
 	    encbuf = encode_xtext((unsigned char *) options.envid);
 	    if (encbuf == NULL) {
@@ -779,7 +779,7 @@ int main(int argc, char *argv[])
 
     signal(SIGPIPE, SIG_IGN);
 
-    if (sockstr_connect(sockstr) < 0) {
+    if (sockstr_client_connect(sockstr) < 0) {
 	fprintf(stderr, "error: %s\n", sockstr_errstr(sockstr));
 	sockstr_destroy(sockstr);
 	if (message.buf != NULL)

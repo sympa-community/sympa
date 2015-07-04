@@ -29,16 +29,17 @@
  */
 
 #include "config.h"
+#include <sys/types.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/socket.h>
 #include <netdb.h>
+#include <sys/un.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/select.h>
-#include <sys/socket.h>
-#include <sys/un.h>
 #include "sockstr.h"
 
 /** Constructor
@@ -290,7 +291,7 @@ int sockunix_connect(sockstr_t * self)
  * @returns 1 if success, otherwise 0.
  * Description of error can be got by sockstr_errstr().
  */
-int sockstr_connect(sockstr_t * self)
+int sockstr_client_connect(sockstr_t * self)
 {
     if (self->path != NULL)
 	return sockunix_connect(self);
