@@ -13,14 +13,12 @@
     <i class="fa fa-user"></i>
   [%~ END %]
   [%~ IF is_listmaster ~%]
-    <span title="[%|loc%]You are listmaster.[%END%]"
-    ><i class="fa fa-star" style="color: #669900;"></i></span>
+    <i class="fa fa-star" style="color: #669900;"
+    title="[%|loc%]You are listmaster.[%END%]"></i>
   [%~ ELSIF owner_item ~%]
-    <span title="[%|loc%]You are owner.[%END%]"
-    ><i class="fa fa-star"></i></span>
+    <i class="fa fa-star" title="[%|loc%]You are owner.[%END%]"></i>
   [%~ ELSIF is_editor ~%]
-    <span title="[%|loc%]You are editor.[%END%]"
-    ><i class="fa fa-star-o"></i></span>
+    <i class="fa fa-star-o" title="[%|loc%]You are editor.[%END%]"></i>
   [%~ END %]
 
   [%# Show display name of user specific to this list. %]
