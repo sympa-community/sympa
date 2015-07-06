@@ -2,7 +2,7 @@
 # $Id$
 
 AC_PREREQ([2.59])
-AC_INIT([smtpc], [0.1a.2], [sympa-authors@listes.renater.fr])
+AC_INIT([smtpc], [0.1a.3], [sympa-authors@listes.renater.fr])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror 1.9 tar-pax])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CONFIG_HEADERS([config.h])
@@ -40,6 +40,9 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memset select socket strdup strerror])
 AC_FUNC_SNPRINTF
+AC_CHECK_FUNC([getaddrinfo], [],
+  [AC_CHECK_LIB([socket], [getaddrinfo], [LIBS="-lsocket -lnsl $LIBS"], [],
+    [-lnsl])])
 
 fi
 
