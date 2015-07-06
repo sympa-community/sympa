@@ -6,7 +6,7 @@
 [% all_letters = [] %]
 
 [% IF action == 'search_list' %]
-  [%~ PROCESS search_list.tt2 %]
+  [%~ PROCESS search_list_request.tt2 %]
   [% IF occurrence ~%]
     <p>[%|loc(occurrence)%]%1 occurrence(s) found[%END%]</p>
   [%~ END %]
