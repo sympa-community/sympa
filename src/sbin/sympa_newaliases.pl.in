@@ -155,7 +155,8 @@ if ($aliases_program =~ m{\A/}) {
 }
 
 my $errno = $ERRNO;
-$log->syslog('Cannot execute aliases_program "%s": %m', $aliases_program);
+$log->syslog('err', 'Cannot execute aliases_program "%s": %m',
+    $aliases_program);
 exit($errno || 1);
 
 __END__
