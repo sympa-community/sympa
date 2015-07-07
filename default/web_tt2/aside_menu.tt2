@@ -51,9 +51,8 @@
 [%# Remove the class "menu-icon" to get rid of menu icon.
     Take out inner text of span element to just have icon alone. ~%]
 [%~ IF top_menu %]
-    <aside class="medium-3 columns hide-for-medium-up">
-    [% IF list %]
-        <nav class="top-bar hide-for-medium-up" data-topbar role="navigation">
+  [% IF list %]
+    <nav class="top-bar row hide-for-medium-up" data-topbar role="navigation">
             <ul class="title-area">
                 <li class="name">
                 </li>
@@ -65,11 +64,9 @@
             </ul>
         </section>
     </nav>
-    [% END %]
-    </aside>
+  [% END %]
 [% ELSE %]
-    <aside class="medium-3 columns hide-for-medium-up">
-        <nav class="top-bar hide-for-medium-up" data-topbar role="navigation">
+  <nav class="top-bar row hide-for-medium-up" data-topbar role="navigation">
             <ul class="title-area">
                 <li class="name">
                 [% IF  conf.logo_html_definition %]
@@ -93,8 +90,7 @@
             [% PROCESS 'sympa_menu.tt2' %]
             </ul>
         </section>
-    </nav>
-    </aside>
+  </nav>
 [% END %]
 <!-- end aside_menu.tt2 -->
 
