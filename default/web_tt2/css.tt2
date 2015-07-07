@@ -1871,6 +1871,7 @@ span.bottom_page, p.bottom_page{
 }
 
 .top-bar-section ul li > a {
+  /* display: block; *//* by Foundation */
   padding: 0;
   padding-left: 15px;
 }
@@ -2016,7 +2017,8 @@ span.fa-stack i.fa-plus-circle {
     .top-bar-section li:not(.has-form) a:not(.button) {
       padding: 0 10px;
     }
-    .top-bar-section ul.dropdown li {
+    .top-bar-section ul.dropdown li > span {
+      display: block;
       padding-left: 10px;
     }
     .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
@@ -2033,10 +2035,12 @@ span.fa-stack i.fa-plus-circle {
     main .top-bar{
         background-color: [% color_10%];
     }
-    .top-bar ul.right li {
-      padding-left: 10px;
+    .top-bar ul.right li > span {
+      display: block;
+      padding-left: 15px;
     }
     .top-bar ul.right li label {
+      padding-left: 10px;
       color:[% color_6%];
       background-color:[% color_7%];
     }
