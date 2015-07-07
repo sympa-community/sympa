@@ -294,8 +294,6 @@ nobase_default_DATA = \
 	web_tt2/rss_request.tt2 \
 	web_tt2/rss.tt2 \
 	web_tt2/scenario_test.tt2 \
-	web_tt2/search.tt2 \
-	web_tt2/search_list.tt2 \
 	web_tt2/search_list_request.tt2 \
 	web_tt2/search_user.tt2 \
 	web_tt2/serveradmin.tt2 \
@@ -323,7 +321,6 @@ nobase_default_DATA = \
 	web_tt2/viewmod.tt2 \
 	web_tt2/view_template.tt2 \
 	web_tt2/your_lists.tt2 \
-	web_tt2/which.tt2 \
 	web_tt2/ja/css.tt2 \
 	web_tt2/ko/css.tt2 \
 	web_tt2/zh-CN/css.tt2 \
