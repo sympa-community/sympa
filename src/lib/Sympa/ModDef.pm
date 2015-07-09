@@ -343,6 +343,12 @@ our %cpan_modules = (
         'gettext_id' =>
             'required if you want to run the Sympa SOAP server that provides ML services via a "web service"',
     },
+    'Sys::Syslog' => {
+        required_version => '0.03',
+        package_name     => 'Sys-Syslog',
+        mandatory        => 1,
+        gettext_id       => 'used to record system log via syslog',
+    },
     'Template' => {
         required_version => '2.21',
         package_name     => 'Template-Toolkit',
