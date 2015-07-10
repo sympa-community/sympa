@@ -15,10 +15,10 @@ msgstr ""
 "PO-Revision-Date: 2014-10-03 11:49+0000\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1412336963.000000\n"
@@ -1350,9 +1350,8 @@ msgstr "リストの件名"
 msgid "Visibility of the list"
 msgstr "リストの見えかた"
 
-#: default/web_tt2/list_menu.tt2:47 default/web_tt2/lists.tt2:31
-#: default/web_tt2/my.tt2:23 default/web_tt2/search_list.tt2:21
-#: default/web_tt2/suspend_request.tt2:30 default/web_tt2/which.tt2:31
+#: default/web_tt2/list_menu.tt2:45 default/web_tt2/lists.tt2:31
+#: default/web_tt2/my.tt2:23 default/web_tt2/suspend_request.tt2:30
 #: src/lib/Sympa/ListDef.pm:85
 msgid "Owner"
 msgstr "オーナー"
@@ -1554,7 +1553,7 @@ msgstr "登録確認処理を開始できるのは"
 msgid "Who can review subscribers"
 msgstr "読者一覧を見ることができるのは"
 
-#: default/web_tt2/list_menu.tt2:133 default/web_tt2/list_menu.tt2:135
+#: default/web_tt2/list_menu.tt2:131 default/web_tt2/list_menu.tt2:133
 #: src/lib/Sympa/ListDef.pm:618
 msgid "Shared documents"
 msgstr "共有文書置き場"
@@ -1587,8 +1586,8 @@ msgstr "投稿保管庫に保管する最大月数"
 
 #: default/web_tt2/admin_menu.tt2:151 default/web_tt2/my.tt2:49
 #: default/web_tt2/nav.tt2:119 default/web_tt2/nav.tt2:44
-#: default/web_tt2/search_list.tt2:37 default/web_tt2/serveradmin.tt2:81
-#: default/web_tt2/suspend_request.tt2:59 src/lib/Sympa/ListDef.pm:680
+#: default/web_tt2/serveradmin.tt2:81 default/web_tt2/suspend_request.tt2:59
+#: src/lib/Sympa/ListDef.pm:680
 msgid "Archives"
 msgstr "投稿保管庫"
 
@@ -3192,7 +3191,11 @@ msgstr ""
 "SympaのSOAPサーバ (ウェブAPIによるメーリングリストサービスを提供) を動作させ"
 "るのに必要"
 
-#: src/lib/Sympa/ModDef.pm:351
+#: src/lib/Sympa/ModDef.pm:350
+msgid "used to record system log via syslog"
+msgstr ""
+
+#: src/lib/Sympa/ModDef.pm:357
 msgid ""
 "Sympa template format, used for web pages and other mail, config file "
 "templates. See http://template-toolkit.org/."
@@ -3200,34 +3203,34 @@ msgstr ""
 "ウェブページ、電子メールメッセージ、設定ファイルをテンプレートから作成。"
 "http://template-toolkit.org/ を参照"
 
-#: src/lib/Sympa/ModDef.pm:357
+#: src/lib/Sympa/ModDef.pm:363
 msgid "used to show progress bar by command line utilities"
 msgstr "コマンドラインツールで処理の進捗状況を表示"
 
-#: src/lib/Sympa/ModDef.pm:364
+#: src/lib/Sympa/ModDef.pm:370
 msgid ""
 "used to fold lines in HTML mail composer and system messages, prior to Text::"
 "Wrap"
 msgstr "システムメッセージなどの行折りに使う"
 
-#: src/lib/Sympa/ModDef.pm:370
+#: src/lib/Sympa/ModDef.pm:376
 msgid "used to get time with sub-second precision"
 msgstr "秒未満の精度の時刻を得る"
 
-#: src/lib/Sympa/ModDef.pm:377
+#: src/lib/Sympa/ModDef.pm:383
 msgid "Used to create URI containing non URI-canonical characters."
 msgstr "URI用に文字列をエンコードする"
 
-#: src/lib/Sympa/ModDef.pm:380
+#: src/lib/Sympa/ModDef.pm:386
 msgid "libxml2-devel is needed to build the Perl code"
 msgstr "このモジュールをビルドするにはLibXML 2の開発パッケージが必要です"
 
-#: src/lib/Sympa/ModDef.pm:384
+#: src/lib/Sympa/ModDef.pm:390
 msgid ""
 "used to parse list configuration templates and instanciate list families"
 msgstr "リストの設定テンプレートなどを解析する"
 
-#: src/lib/Sympa/ModDef.pm:392
+#: src/lib/Sympa/ModDef.pm:398
 msgid "used to compute case-folding search keys"
 msgstr "大文字小文字を区別しない検索キーを得る"
 
@@ -3433,7 +3436,7 @@ msgid "%s / %s"
 msgstr "%s / %s"
 
 #: default/web_tt2/home.tt2:70 default/web_tt2/lists.tt2:22
-#: default/web_tt2/which.tt2:22 src/cgi/wwsympa.fcgi.in:4899
+#: src/cgi/wwsympa.fcgi.in:4899
 msgid "Others"
 msgstr "その他"
 
@@ -3617,7 +3620,7 @@ msgid "Edit List Config"
 msgstr "リストの設定変更"
 
 #: default/web_tt2/admin_menu.tt2:35 default/web_tt2/admin_menu.tt2:41
-#: default/web_tt2/admin_menu.tt2:45 default/web_tt2/list_menu.tt2:94
+#: default/web_tt2/admin_menu.tt2:45 default/web_tt2/list_menu.tt2:92
 #: default/web_tt2/modindex.tt2:37
 msgid "Moderate"
 msgstr "モデレーション"
@@ -3633,7 +3636,7 @@ msgstr "投稿保管庫の管理"
 
 #: default/web_tt2/admin_menu.tt2:81 default/web_tt2/admin_menu.tt2:87
 #: default/web_tt2/nav.tt2:121 default/web_tt2/nav.tt2:148
-#: default/web_tt2/review.tt2:12 default/web_tt2/search.tt2:12
+#: default/web_tt2/review.tt2:12
 msgid "Bounces"
 msgstr "配送エラー"
 
@@ -3839,8 +3842,8 @@ msgstr "投稿保管庫の管理"
 #: default/web_tt2/modindex.tt2:172 default/web_tt2/modindex.tt2:6
 #: default/web_tt2/picture_upload.tt2:21 default/web_tt2/pref.tt2:3
 #: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:5
-#: default/web_tt2/reviewbouncing.tt2:4 default/web_tt2/search.tt2:5
-#: default/web_tt2/suboptions.tt2:17 default/web_tt2/subscriber_table.tt2:119
+#: default/web_tt2/reviewbouncing.tt2:4 default/web_tt2/suboptions.tt2:17
+#: default/web_tt2/subscriber_table.tt2:119
 msgid "Open in a new window"
 msgstr "別ウィンドウで開く"
 
@@ -3857,9 +3860,9 @@ msgstr "別ウィンドウで開く"
 #: default/web_tt2/modindex.tt2:172 default/web_tt2/modindex.tt2:6
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:5 default/web_tt2/reviewbouncing.tt2:4
-#: default/web_tt2/search.tt2:5 default/web_tt2/suboptions.tt2:18
-#: default/web_tt2/suboptions.tt2:73 default/web_tt2/suboptions.tt2:94
-#: default/web_tt2/suspend_request.tt2:5 default/web_tt2/sympa_menu.tt2:23
+#: default/web_tt2/suboptions.tt2:18 default/web_tt2/suboptions.tt2:73
+#: default/web_tt2/suboptions.tt2:94 default/web_tt2/suspend_request.tt2:5
+#: default/web_tt2/sympa_menu.tt2:23
 msgid "Help"
 msgstr "ヘルプ"
 
@@ -3913,7 +3916,6 @@ msgstr "検索する範囲:"
 
 #: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:16
 #: default/web_tt2/review.tt2:62 default/web_tt2/reviewbouncing.tt2:14
-#: default/web_tt2/search.tt2:62
 msgid "Search"
 msgstr "探す"
 
@@ -4086,17 +4088,17 @@ msgstr ""
 msgid "Return to archive %1"
 msgstr "%1 の投稿保管庫へ戻る"
 
-#: default/web_tt2/aside_menu.tt2:68 default/web_tt2/aside_menu.tt2:7
+#: default/web_tt2/aside_menu.tt2:7 default/web_tt2/aside_menu.tt2:75
 #: default/web_tt2/footer.tt2:4 default/web_tt2/header.tt2:12
 #: default/web_tt2/header.tt2:23
 msgid "SYMPA logo"
 msgstr "Sympaロゴ"
 
-#: default/web_tt2/aside_menu.tt2:52
+#: default/web_tt2/aside_menu.tt2:59
 msgid "List Options Menu"
 msgstr "リストのオプション"
 
-#: default/web_tt2/aside_menu.tt2:71
+#: default/web_tt2/aside_menu.tt2:78
 msgid "General Menu"
 msgstr "一般"
 
@@ -4786,7 +4788,7 @@ msgid "Listing of root folder"
 msgstr "ルートフォルダ内の一覧"
 
 #: default/web_tt2/d_read.tt2:55 default/web_tt2/d_read.tt2:57
-#: default/web_tt2/list_menu.tt2:99
+#: default/web_tt2/list_menu.tt2:97
 msgid "Document"
 msgstr "文書"
 
@@ -4908,7 +4910,6 @@ msgid "URL"
 msgstr "URL"
 
 #: default/web_tt2/d_read.tt2:353 default/web_tt2/review.tt2:45
-#: default/web_tt2/search.tt2:45
 msgid "Add"
 msgstr "追加"
 
@@ -5223,7 +5224,6 @@ msgid "Unsubscribe the User"
 msgstr "この人を登録解除"
 
 #: default/web_tt2/editsubscriber.tt2:77 default/web_tt2/review.tt2:97
-#: default/web_tt2/search.tt2:97
 msgid "Quiet (don't send deletion email)"
 msgstr "非通知 (削除を知らせるメッセージを送らない)"
 
@@ -5853,7 +5853,6 @@ msgstr ""
 "     新しいほうのアドレスが、読者登録/登録解除できないものであるためです:"
 
 #: default/web_tt2/exclusion_table.tt2:7 default/web_tt2/review.tt2:104
-#: default/web_tt2/search.tt2:104
 msgid "List of exclude"
 msgstr "除外一覧"
 
@@ -5863,22 +5862,20 @@ msgstr "除外一覧"
 #: default/web_tt2/get_closed_lists.tt2:29
 #: default/web_tt2/get_closed_lists.tt2:9 default/web_tt2/modindex.tt2:162
 #: default/web_tt2/review.tt2:95 default/web_tt2/reviewbouncing.tt2:133
-#: default/web_tt2/reviewbouncing.tt2:62 default/web_tt2/search.tt2:95
-#: default/web_tt2/subindex.tt2:11 default/web_tt2/subindex.tt2:59
-#: default/web_tt2/subscriber_table.tt2:10
+#: default/web_tt2/reviewbouncing.tt2:62 default/web_tt2/subindex.tt2:11
+#: default/web_tt2/subindex.tt2:59 default/web_tt2/subscriber_table.tt2:10
 msgid "Toggle Selection"
 msgstr "選択を逆転"
 
 #: default/web_tt2/exclusion_table.tt2:12 default/web_tt2/review.tt2:106
-#: default/web_tt2/reviewbouncing.tt2:63 default/web_tt2/search.tt2:106
-#: default/web_tt2/subindex.tt2:12 default/web_tt2/subscriber_table.tt2:16
+#: default/web_tt2/reviewbouncing.tt2:63 default/web_tt2/subindex.tt2:12
+#: default/web_tt2/subscriber_table.tt2:16
 #: default/web_tt2/subscriber_table.tt2:19 default/web_tt2/viewlogs.tt2:15
 #: default/web_tt2/viewlogs.tt2:24
 msgid "Email"
 msgstr "メール"
 
 #: default/web_tt2/exclusion_table.tt2:13 default/web_tt2/review.tt2:107
-#: default/web_tt2/search.tt2:107
 msgid "Since"
 msgstr "開始"
 
@@ -6110,7 +6107,6 @@ msgid "List of lists"
 msgstr "リスト一覧"
 
 #: default/web_tt2/info.tt2:11 default/web_tt2/review.tt2:7
-#: default/web_tt2/search.tt2:7
 msgid "Administrative Options"
 msgstr "運営オプション"
 
@@ -6276,7 +6272,7 @@ msgstr " このロボットの最新のリスト "
 msgid "Your picture"
 msgstr "ピクチャ"
 
-#: default/web_tt2/list_menu.tt2:16
+#: default/web_tt2/list_menu.tt2:17
 msgid "You are listmaster."
 msgstr "リスト システム管理者です。"
 
@@ -6284,102 +6280,100 @@ msgstr "リスト システム管理者です。"
 msgid "You are owner."
 msgstr "オーナーです。"
 
-#: default/web_tt2/list_menu.tt2:22
+#: default/web_tt2/list_menu.tt2:21
 msgid "You are editor."
 msgstr "モデレータです。"
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
-#: default/web_tt2/list_menu.tt2:39 default/web_tt2/loginbanner.tt2:9
+#: default/web_tt2/list_menu.tt2:37 default/web_tt2/loginbanner.tt2:9
 msgid "Listmaster"
 msgstr "リスト システム管理者"
 
 #: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
-#: default/web_tt2/list_menu.tt2:40 default/web_tt2/list_menu.tt2:45
-#: default/web_tt2/list_menu.tt2:48 default/web_tt2/list_menu.tt2:51
+#: default/web_tt2/list_menu.tt2:38 default/web_tt2/list_menu.tt2:43
+#: default/web_tt2/list_menu.tt2:46 default/web_tt2/list_menu.tt2:49
 #: default/web_tt2/list_panel.tt2:39 default/web_tt2/list_panel.tt2:71
 #: default/web_tt2/lists.tt2:32 default/web_tt2/lists.tt2:35
 #: default/web_tt2/my.tt2:24 default/web_tt2/my.tt2:27
-#: default/web_tt2/which.tt2:32 default/web_tt2/which.tt2:35
 msgid ", "
 msgstr "、"
 
-#: default/web_tt2/list_menu.tt2:44
+#: default/web_tt2/list_menu.tt2:42
 msgid "Privileged owner"
 msgstr "特権オーナー"
 
-#: default/web_tt2/list_menu.tt2:50 default/web_tt2/lists.tt2:34
-#: default/web_tt2/my.tt2:26 default/web_tt2/which.tt2:34
+#: default/web_tt2/list_menu.tt2:48 default/web_tt2/lists.tt2:34
+#: default/web_tt2/my.tt2:26
 msgid "Editor"
 msgstr "モデレータ"
 
-#: default/web_tt2/list_menu.tt2:55 default/web_tt2/lists.tt2:37
-#: default/web_tt2/my.tt2:29 default/web_tt2/which.tt2:37
+#: default/web_tt2/list_menu.tt2:53 default/web_tt2/lists.tt2:37
+#: default/web_tt2/my.tt2:29
 msgid "Subscriber"
 msgstr "読者"
 
-#: default/web_tt2/list_menu.tt2:60
+#: default/web_tt2/list_menu.tt2:58
 msgid "List Options"
 msgstr "リストのオプション"
 
-#: default/web_tt2/list_menu.tt2:66
+#: default/web_tt2/list_menu.tt2:64
 msgid "Subscriber Options"
 msgstr "読者登録のオプション"
 
 #. (list)
-#: default/web_tt2/list_menu.tt2:70
+#: default/web_tt2/list_menu.tt2:68
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "本当に %1 メーリングリストの登録解除をしてよいのですか。"
 
-#: default/web_tt2/list_menu.tt2:70 default/web_tt2/list_menu.tt2:80
+#: default/web_tt2/list_menu.tt2:68 default/web_tt2/list_menu.tt2:78
 #: default/web_tt2/suspend_request.tt2:90
 msgid "Unsubscribe"
 msgstr "登録解除"
 
 #. (list)
-#: default/web_tt2/list_menu.tt2:75
+#: default/web_tt2/list_menu.tt2:73
 msgid "Do you really want to subscribe to list %1?"
 msgstr "本当に %1 メーリングリストに読者登録してよいのですか。"
 
-#: default/web_tt2/list_menu.tt2:75 default/web_tt2/subrequest.tt2:68
+#: default/web_tt2/list_menu.tt2:73 default/web_tt2/subrequest.tt2:68
 msgid "Subscribe"
 msgstr "読者登録"
 
-#: default/web_tt2/list_menu.tt2:86
+#: default/web_tt2/list_menu.tt2:84
 msgid "List Home"
 msgstr "リスト ホーム"
 
-#: default/web_tt2/list_menu.tt2:90
+#: default/web_tt2/list_menu.tt2:88
 msgid "Admin"
 msgstr "運営"
 
-#: default/web_tt2/list_menu.tt2:98 default/web_tt2/viewlogs.tt2:52
+#: default/web_tt2/list_menu.tt2:96 default/web_tt2/viewlogs.tt2:52
 msgid "Message"
 msgstr "メッセージ"
 
-#: default/web_tt2/list_menu.tt2:103
+#: default/web_tt2/list_menu.tt2:101
 msgid "Subscriptions"
 msgstr "読者登録"
 
-#: default/web_tt2/list_menu.tt2:112 default/web_tt2/list_menu.tt2:114
+#: default/web_tt2/list_menu.tt2:110 default/web_tt2/list_menu.tt2:112
 msgid "Archive"
 msgstr "投稿保管庫"
 
-#: default/web_tt2/list_menu.tt2:120 default/web_tt2/list_menu.tt2:122
+#: default/web_tt2/list_menu.tt2:118 default/web_tt2/list_menu.tt2:120
 msgid "Post"
 msgstr "投稿"
 
-#: default/web_tt2/list_menu.tt2:127
+#: default/web_tt2/list_menu.tt2:125
 msgid "RSS"
 msgstr "RSS"
 
-#: default/web_tt2/list_menu.tt2:141 default/web_tt2/list_panel.tt2:15
-#: default/web_tt2/my.tt2:45 default/web_tt2/search_list.tt2:33
-#: default/web_tt2/suspend_request.tt2:55
+#: default/web_tt2/list_menu.tt2:139 default/web_tt2/list_panel.tt2:15
+#: default/web_tt2/my.tt2:45 default/web_tt2/suspend_request.tt2:55
 msgid "Review members"
 msgstr "読者一覧"
 
-#: default/web_tt2/list_menu.tt2:146
+#: default/web_tt2/list_menu.tt2:144
 msgid "Statistics"
 msgstr "統計"
 
@@ -6436,25 +6430,22 @@ msgstr "オーナーに連絡"
 
 #. (occurrence)
 #: default/web_tt2/lists.tt2:11 default/web_tt2/review.tt2:80
-#: default/web_tt2/search.tt2:80 default/web_tt2/search_list.tt2:11
-#: default/web_tt2/which.tt2:11
 msgid "%1 occurrence(s) found"
 msgstr "%1 件見つかりました"
 
 #. (email)
-#: default/web_tt2/lists.tt2:14 default/web_tt2/which.tt2:14
+#: default/web_tt2/lists.tt2:14
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong>%1</strong> は以下のメーリングリストに読者登録しています"
 
 #. (user.email)
-#: default/web_tt2/lists.tt2:56 default/web_tt2/which.tt2:56
+#: default/web_tt2/lists.tt2:56
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr ""
 "<strong>%1</strong> というアドレスで読者登録しているメーリングリストはありま"
 "せんね"
 
-#: default/web_tt2/lists.tt2:61 default/web_tt2/search_list.tt2:48
-#: default/web_tt2/search_user.tt2:79 default/web_tt2/which.tt2:61
+#: default/web_tt2/lists.tt2:61 default/web_tt2/search_user.tt2:79
 #: default/web_tt2/your_lists.tt2:34
 msgid "No mailing list available."
 msgstr "ご利用になれるメーリングリストはありません。"
@@ -6972,7 +6963,6 @@ msgid "Manage Subscribers"
 msgstr "読者管理"
 
 #: default/web_tt2/nav.tt2:140 default/web_tt2/review.tt2:10
-#: default/web_tt2/search.tt2:10
 msgid "Blacklist"
 msgstr "ブラックリスト"
 
@@ -7395,8 +7385,7 @@ msgid "Manage bouncing list members"
 msgstr "配送エラーを起こしている読者の管理"
 
 #: default/web_tt2/review.tt2:14 default/web_tt2/review.tt2:16
-#: default/web_tt2/reviewbouncing.tt2:7 default/web_tt2/search.tt2:14
-#: default/web_tt2/search.tt2:16
+#: default/web_tt2/reviewbouncing.tt2:7
 msgid "Dump"
 msgstr "テキストデータとしてダウンロード"
 
@@ -7406,15 +7395,13 @@ msgstr "すべての読者に登録確認を送付"
 
 #. (total)
 #: default/web_tt2/review.tt2:30 default/web_tt2/reviewbouncing.tt2:20
-#: default/web_tt2/search.tt2:30
 msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
 "subscribers?"
 msgstr "本当に %1 名の読者に登録確認メッセージを送付してよいのですか。"
 
 #: default/web_tt2/review.tt2:144 default/web_tt2/reviewbouncing.tt2:117
-#: default/web_tt2/reviewbouncing.tt2:45 default/web_tt2/search.tt2:144
-#: default/web_tt2/viewlogs.tt2:229
+#: default/web_tt2/reviewbouncing.tt2:45 default/web_tt2/viewlogs.tt2:229
 msgid "Previous page"
 msgstr "前ページ"
 
@@ -7422,14 +7409,12 @@ msgstr "前ページ"
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:299
 #: default/web_tt2/review.tt2:147 default/web_tt2/reviewbouncing.tt2:120
-#: default/web_tt2/reviewbouncing.tt2:48 default/web_tt2/search.tt2:147
-#: default/web_tt2/viewlogs.tt2:232
+#: default/web_tt2/reviewbouncing.tt2:48 default/web_tt2/viewlogs.tt2:232
 msgid "page %1 / %2"
 msgstr "%2 ページ中 %1 ページ目"
 
 #: default/web_tt2/review.tt2:150 default/web_tt2/reviewbouncing.tt2:123
-#: default/web_tt2/reviewbouncing.tt2:51 default/web_tt2/search.tt2:150
-#: default/web_tt2/viewlogs.tt2:235
+#: default/web_tt2/reviewbouncing.tt2:51 default/web_tt2/viewlogs.tt2:235
 msgid "Next page"
 msgstr "次ページ"
 
@@ -7462,7 +7447,6 @@ msgid "no score"
 msgstr "点数なし"
 
 #: default/web_tt2/review.tt2:96 default/web_tt2/reviewbouncing.tt2:128
-#: default/web_tt2/search.tt2:96
 msgid "Delete selected email addresses"
 msgstr "選択したメール アドレスを削除"
 
@@ -7482,47 +7466,47 @@ msgstr "状況"
 msgid "Instantiation date"
 msgstr "設定族に入れた日"
 
-#: default/web_tt2/review.tt2:5 default/web_tt2/search.tt2:5
+#: default/web_tt2/review.tt2:5
 msgid "Manage list members"
 msgstr "読者の管理"
 
-#: default/web_tt2/review.tt2:8 default/web_tt2/search.tt2:8
+#: default/web_tt2/review.tt2:8
 msgid "Pending subscriptions"
 msgstr "承認待ち読者"
 
-#: default/web_tt2/review.tt2:18 default/web_tt2/search.tt2:18
+#: default/web_tt2/review.tt2:18
 msgid "Exclude"
 msgstr "除外"
 
-#: default/web_tt2/review.tt2:24 default/web_tt2/search.tt2:24
+#: default/web_tt2/review.tt2:24
 msgid "Synchronize members with data sources"
 msgstr "データソースと読者情報の同期"
 
-#: default/web_tt2/review.tt2:30 default/web_tt2/search.tt2:30
+#: default/web_tt2/review.tt2:30
 msgid "Remind all"
 msgstr "すべてに登録確認を送る"
 
-#: default/web_tt2/review.tt2:35 default/web_tt2/search.tt2:35
+#: default/web_tt2/review.tt2:35
 msgid "Add Subscribers"
 msgstr "読者を追加"
 
-#: default/web_tt2/review.tt2:37 default/web_tt2/search.tt2:37
+#: default/web_tt2/review.tt2:37
 msgid "To add an individual user:"
 msgstr "一人だけ追加: "
 
-#: default/web_tt2/review.tt2:42 default/web_tt2/search.tt2:42
+#: default/web_tt2/review.tt2:42
 msgid "Email address:"
 msgstr "電子メール アドレス:"
 
-#: default/web_tt2/review.tt2:44 default/web_tt2/search.tt2:44
+#: default/web_tt2/review.tt2:44
 msgid "Quiet (don't send welcome email)"
 msgstr "非通知 (歓迎メッセージを送らない)"
 
-#: default/web_tt2/review.tt2:48 default/web_tt2/search.tt2:48
+#: default/web_tt2/review.tt2:48
 msgid "To add multiple users:"
 msgstr "まとめて追加: "
 
-#: default/web_tt2/review.tt2:49 default/web_tt2/search.tt2:49
+#: default/web_tt2/review.tt2:49
 msgid ""
 "Click the Multiple Add button below to bulk-add users using a form.  "
 "(Alternatively, consider using a data-source such as SQL or an Active "
@@ -7531,46 +7515,45 @@ msgstr ""
 "大勢の人を追加するには「まとめて追加」ボタンをクリックします (なお、SQLや"
 "Active Directoryグループをデータソースとして利用することもできます)。"
 
-#: default/web_tt2/review.tt2:50 default/web_tt2/search.tt2:50
+#: default/web_tt2/review.tt2:50
 msgid "Multiple add"
 msgstr "まとめて追加"
 
-#: default/web_tt2/review.tt2:54 default/web_tt2/search.tt2:54
+#: default/web_tt2/review.tt2:54
 msgid "Search for a User"
 msgstr "人を探す"
 
-#: default/web_tt2/review.tt2:60 default/web_tt2/search.tt2:60
+#: default/web_tt2/review.tt2:60
 msgid "Search for a user by email address, name or part of them: "
 msgstr "メール アドレスや名前の一部から人を探します: "
 
-#: default/web_tt2/review.tt2:61 default/web_tt2/search.tt2:61
+#: default/web_tt2/review.tt2:61
 #, fuzzy
 msgid "Enter a name, email or part of them"
 msgstr "メール アドレスや名前の一部から人を探します: "
 
-#: default/web_tt2/review.tt2:66 default/web_tt2/search.tt2:66
+#: default/web_tt2/review.tt2:66
 msgid "Selection too wide, can not show selection"
 msgstr "探す範囲が広すぎて表示することができません"
 
-#: default/web_tt2/review.tt2:73 default/web_tt2/search.tt2:73
+#: default/web_tt2/review.tt2:73
 msgid "Subscriber Table"
 msgstr "読者一覧"
 
 #. (similar_subscribers_occurence)
-#: default/web_tt2/review.tt2:88 default/web_tt2/search.tt2:88
+#: default/web_tt2/review.tt2:88
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr "メール アドレスが条件に近い読者 (%1名)"
 
-#: default/web_tt2/review.tt2:96 default/web_tt2/search.tt2:96
+#: default/web_tt2/review.tt2:96
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "本当に選択したアドレスすべての登録を解除してよいのですか。"
 
-#: default/web_tt2/review.tt2:102 default/web_tt2/search.tt2:102
+#: default/web_tt2/review.tt2:102
 msgid "Excluded users"
 msgstr "除外するユーザ"
 
-#: default/web_tt2/review.tt2:129 default/web_tt2/search.tt2:129
-#: default/web_tt2/viewlogs.tt2:217
+#: default/web_tt2/review.tt2:129 default/web_tt2/viewlogs.tt2:217
 msgid "Page size"
 msgstr "一度に表示する数"
 
@@ -7730,14 +7713,6 @@ msgstr "リストを探す"
 #: default/web_tt2/search_list_request.tt2:6
 msgid "Enter a list name"
 msgstr "リスト名を入力"
-
-#: default/web_tt2/search_list.tt2:7
-msgid "Results"
-msgstr "結果"
-
-#: default/web_tt2/search_list.tt2:29
-msgid "Request subscription"
-msgstr "読者登録の申込"
 
 #: default/web_tt2/search_user.tt2:3
 msgid "User search result:"
@@ -12837,6 +12812,12 @@ msgid ""
 "be encrypted again.  Probably because they have not sent certificates of "
 "their own."
 msgstr ""
+
+#~ msgid "Results"
+#~ msgstr "結果"
+
+#~ msgid "Request subscription"
+#~ msgstr "読者登録の申込"
 
 #~ msgid "Search for a user"
 #~ msgstr "人を探す"

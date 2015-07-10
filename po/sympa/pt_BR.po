@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: 2014-05-19 13:37+0000\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: Português do Brasil\n"
-"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Version: 0.1\n"
@@ -1387,9 +1387,8 @@ msgstr "Assunto da lista"
 msgid "Visibility of the list"
 msgstr "Visibilidade da lista"
 
-#: default/web_tt2/list_menu.tt2:47 default/web_tt2/lists.tt2:31
-#: default/web_tt2/my.tt2:23 default/web_tt2/search_list.tt2:21
-#: default/web_tt2/suspend_request.tt2:30 default/web_tt2/which.tt2:31
+#: default/web_tt2/list_menu.tt2:45 default/web_tt2/lists.tt2:31
+#: default/web_tt2/my.tt2:23 default/web_tt2/suspend_request.tt2:30
 #: src/lib/Sympa/ListDef.pm:85
 msgid "Owner"
 msgstr "Proprietário"
@@ -1593,7 +1592,7 @@ msgstr "Quem pode iniciar um processo de lembretes"
 msgid "Who can review subscribers"
 msgstr "Quem pode revisar membros"
 
-#: default/web_tt2/list_menu.tt2:133 default/web_tt2/list_menu.tt2:135
+#: default/web_tt2/list_menu.tt2:131 default/web_tt2/list_menu.tt2:133
 #: src/lib/Sympa/ListDef.pm:618
 msgid "Shared documents"
 msgstr "Documentos compartilhados"
@@ -1626,8 +1625,8 @@ msgstr "Número máximo de meses arquivados"
 
 #: default/web_tt2/admin_menu.tt2:151 default/web_tt2/my.tt2:49
 #: default/web_tt2/nav.tt2:119 default/web_tt2/nav.tt2:44
-#: default/web_tt2/search_list.tt2:37 default/web_tt2/serveradmin.tt2:81
-#: default/web_tt2/suspend_request.tt2:59 src/lib/Sympa/ListDef.pm:680
+#: default/web_tt2/serveradmin.tt2:81 default/web_tt2/suspend_request.tt2:59
+#: src/lib/Sympa/ListDef.pm:680
 msgid "Archives"
 msgstr "Arquivos"
 
@@ -3242,40 +3241,44 @@ msgid ""
 "via a \"web service\""
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:351
+#: src/lib/Sympa/ModDef.pm:350
+msgid "used to record system log via syslog"
+msgstr ""
+
+#: src/lib/Sympa/ModDef.pm:357
 msgid ""
 "Sympa template format, used for web pages and other mail, config file "
 "templates. See http://template-toolkit.org/."
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:357
+#: src/lib/Sympa/ModDef.pm:363
 msgid "used to show progress bar by command line utilities"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:364
+#: src/lib/Sympa/ModDef.pm:370
 msgid ""
 "used to fold lines in HTML mail composer and system messages, prior to Text::"
 "Wrap"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:370
+#: src/lib/Sympa/ModDef.pm:376
 msgid "used to get time with sub-second precision"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:377
+#: src/lib/Sympa/ModDef.pm:383
 msgid "Used to create URI containing non URI-canonical characters."
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:380
+#: src/lib/Sympa/ModDef.pm:386
 msgid "libxml2-devel is needed to build the Perl code"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:384
+#: src/lib/Sympa/ModDef.pm:390
 msgid ""
 "used to parse list configuration templates and instanciate list families"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:392
+#: src/lib/Sympa/ModDef.pm:398
 msgid "used to compute case-folding search keys"
 msgstr ""
 
@@ -3471,7 +3474,7 @@ msgid "%s / %s"
 msgstr ""
 
 #: default/web_tt2/home.tt2:70 default/web_tt2/lists.tt2:22
-#: default/web_tt2/which.tt2:22 src/cgi/wwsympa.fcgi.in:4899
+#: src/cgi/wwsympa.fcgi.in:4899
 msgid "Others"
 msgstr "Outros"
 
@@ -3662,7 +3665,7 @@ msgid "Edit List Config"
 msgstr "Configurar a Lista"
 
 #: default/web_tt2/admin_menu.tt2:35 default/web_tt2/admin_menu.tt2:41
-#: default/web_tt2/admin_menu.tt2:45 default/web_tt2/list_menu.tt2:94
+#: default/web_tt2/admin_menu.tt2:45 default/web_tt2/list_menu.tt2:92
 #: default/web_tt2/modindex.tt2:37
 msgid "Moderate"
 msgstr "Moderar"
@@ -3678,7 +3681,7 @@ msgstr "Gerenciar Arquivos"
 
 #: default/web_tt2/admin_menu.tt2:81 default/web_tt2/admin_menu.tt2:87
 #: default/web_tt2/nav.tt2:121 default/web_tt2/nav.tt2:148
-#: default/web_tt2/review.tt2:12 default/web_tt2/search.tt2:12
+#: default/web_tt2/review.tt2:12
 msgid "Bounces"
 msgstr "Retornos de mensagem"
 
@@ -3890,8 +3893,8 @@ msgstr "Gerenciamento de Arquivo"
 #: default/web_tt2/modindex.tt2:172 default/web_tt2/modindex.tt2:6
 #: default/web_tt2/picture_upload.tt2:21 default/web_tt2/pref.tt2:3
 #: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:5
-#: default/web_tt2/reviewbouncing.tt2:4 default/web_tt2/search.tt2:5
-#: default/web_tt2/suboptions.tt2:17 default/web_tt2/subscriber_table.tt2:119
+#: default/web_tt2/reviewbouncing.tt2:4 default/web_tt2/suboptions.tt2:17
+#: default/web_tt2/subscriber_table.tt2:119
 msgid "Open in a new window"
 msgstr "Abrir em nova janela"
 
@@ -3908,9 +3911,9 @@ msgstr "Abrir em nova janela"
 #: default/web_tt2/modindex.tt2:172 default/web_tt2/modindex.tt2:6
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:5 default/web_tt2/reviewbouncing.tt2:4
-#: default/web_tt2/search.tt2:5 default/web_tt2/suboptions.tt2:18
-#: default/web_tt2/suboptions.tt2:73 default/web_tt2/suboptions.tt2:94
-#: default/web_tt2/suspend_request.tt2:5 default/web_tt2/sympa_menu.tt2:23
+#: default/web_tt2/suboptions.tt2:18 default/web_tt2/suboptions.tt2:73
+#: default/web_tt2/suboptions.tt2:94 default/web_tt2/suspend_request.tt2:5
+#: default/web_tt2/sympa_menu.tt2:23
 msgid "Help"
 msgstr "Ajuda"
 
@@ -3965,7 +3968,6 @@ msgstr "Campo de procura:"
 
 #: default/mhonarc-ressources.tt2:52 default/web_tt2/arcsearch_form.tt2:16
 #: default/web_tt2/review.tt2:62 default/web_tt2/reviewbouncing.tt2:14
-#: default/web_tt2/search.tt2:62
 msgid "Search"
 msgstr "Procura"
 
@@ -4139,18 +4141,18 @@ msgstr ""
 msgid "Return to archive %1"
 msgstr "Voltar ao arquivo %1"
 
-#: default/web_tt2/aside_menu.tt2:68 default/web_tt2/aside_menu.tt2:7
+#: default/web_tt2/aside_menu.tt2:7 default/web_tt2/aside_menu.tt2:75
 #: default/web_tt2/footer.tt2:4 default/web_tt2/header.tt2:12
 #: default/web_tt2/header.tt2:23
 msgid "SYMPA logo"
 msgstr ""
 
-#: default/web_tt2/aside_menu.tt2:52
+#: default/web_tt2/aside_menu.tt2:59
 #, fuzzy
 msgid "List Options Menu"
 msgstr "Suas opções de lista"
 
-#: default/web_tt2/aside_menu.tt2:71
+#: default/web_tt2/aside_menu.tt2:78
 #, fuzzy
 msgid "General Menu"
 msgstr "Definição da Lista"
@@ -4865,7 +4867,7 @@ msgid "Listing of root folder"
 msgstr "Listagem da pasta raiz"
 
 #: default/web_tt2/d_read.tt2:55 default/web_tt2/d_read.tt2:57
-#: default/web_tt2/list_menu.tt2:99
+#: default/web_tt2/list_menu.tt2:97
 msgid "Document"
 msgstr "Documento"
 
@@ -4987,7 +4989,6 @@ msgid "URL"
 msgstr "URL"
 
 #: default/web_tt2/d_read.tt2:353 default/web_tt2/review.tt2:45
-#: default/web_tt2/search.tt2:45
 msgid "Add"
 msgstr "Adicionar"
 
@@ -5301,7 +5302,6 @@ msgid "Unsubscribe the User"
 msgstr "Cancelar a inscrição do usuário"
 
 #: default/web_tt2/editsubscriber.tt2:77 default/web_tt2/review.tt2:97
-#: default/web_tt2/search.tt2:97
 msgid "Quiet (don't send deletion email)"
 msgstr ""
 
@@ -5928,7 +5928,6 @@ msgstr ""
 "inscrição:"
 
 #: default/web_tt2/exclusion_table.tt2:7 default/web_tt2/review.tt2:104
-#: default/web_tt2/search.tt2:104
 msgid "List of exclude"
 msgstr "Lista de exclusão"
 
@@ -5938,22 +5937,20 @@ msgstr "Lista de exclusão"
 #: default/web_tt2/get_closed_lists.tt2:29
 #: default/web_tt2/get_closed_lists.tt2:9 default/web_tt2/modindex.tt2:162
 #: default/web_tt2/review.tt2:95 default/web_tt2/reviewbouncing.tt2:133
-#: default/web_tt2/reviewbouncing.tt2:62 default/web_tt2/search.tt2:95
-#: default/web_tt2/subindex.tt2:11 default/web_tt2/subindex.tt2:59
-#: default/web_tt2/subscriber_table.tt2:10
+#: default/web_tt2/reviewbouncing.tt2:62 default/web_tt2/subindex.tt2:11
+#: default/web_tt2/subindex.tt2:59 default/web_tt2/subscriber_table.tt2:10
 msgid "Toggle Selection"
 msgstr "Inverter Seleção"
 
 #: default/web_tt2/exclusion_table.tt2:12 default/web_tt2/review.tt2:106
-#: default/web_tt2/reviewbouncing.tt2:63 default/web_tt2/search.tt2:106
-#: default/web_tt2/subindex.tt2:12 default/web_tt2/subscriber_table.tt2:16
+#: default/web_tt2/reviewbouncing.tt2:63 default/web_tt2/subindex.tt2:12
+#: default/web_tt2/subscriber_table.tt2:16
 #: default/web_tt2/subscriber_table.tt2:19 default/web_tt2/viewlogs.tt2:15
 #: default/web_tt2/viewlogs.tt2:24
 msgid "Email"
 msgstr "Email"
 
 #: default/web_tt2/exclusion_table.tt2:13 default/web_tt2/review.tt2:107
-#: default/web_tt2/search.tt2:107
 msgid "Since"
 msgstr "Desde"
 
@@ -6191,7 +6188,6 @@ msgid "List of lists"
 msgstr "Lista de listas"
 
 #: default/web_tt2/info.tt2:11 default/web_tt2/review.tt2:7
-#: default/web_tt2/search.tt2:7
 #, fuzzy
 msgid "Administrative Options"
 msgstr "Administração de Tarefas"
@@ -6369,7 +6365,7 @@ msgstr " As últimas listas deste robô"
 msgid "Your picture"
 msgstr "Sua foto"
 
-#: default/web_tt2/list_menu.tt2:16
+#: default/web_tt2/list_menu.tt2:17
 #, fuzzy
 msgid "You are listmaster."
 msgstr "apenas para o Gerente Geral de Listas"
@@ -6379,106 +6375,104 @@ msgstr "apenas para o Gerente Geral de Listas"
 msgid "You are owner."
 msgstr "Listas que você é proprietário:"
 
-#: default/web_tt2/list_menu.tt2:22
+#: default/web_tt2/list_menu.tt2:21
 #, fuzzy
 msgid "You are editor."
 msgstr "Listas que você é editor:"
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
-#: default/web_tt2/list_menu.tt2:39 default/web_tt2/loginbanner.tt2:9
+#: default/web_tt2/list_menu.tt2:37 default/web_tt2/loginbanner.tt2:9
 msgid "Listmaster"
 msgstr "Administrador geral de listas"
 
 #: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
-#: default/web_tt2/list_menu.tt2:40 default/web_tt2/list_menu.tt2:45
-#: default/web_tt2/list_menu.tt2:48 default/web_tt2/list_menu.tt2:51
+#: default/web_tt2/list_menu.tt2:38 default/web_tt2/list_menu.tt2:43
+#: default/web_tt2/list_menu.tt2:46 default/web_tt2/list_menu.tt2:49
 #: default/web_tt2/list_panel.tt2:39 default/web_tt2/list_panel.tt2:71
 #: default/web_tt2/lists.tt2:32 default/web_tt2/lists.tt2:35
 #: default/web_tt2/my.tt2:24 default/web_tt2/my.tt2:27
-#: default/web_tt2/which.tt2:32 default/web_tt2/which.tt2:35
 msgid ", "
 msgstr ""
 
-#: default/web_tt2/list_menu.tt2:44
+#: default/web_tt2/list_menu.tt2:42
 msgid "Privileged owner"
 msgstr "Proprietário com privilégios"
 
 # its the same word in portuguese
-#: default/web_tt2/list_menu.tt2:50 default/web_tt2/lists.tt2:34
-#: default/web_tt2/my.tt2:26 default/web_tt2/which.tt2:34
+#: default/web_tt2/list_menu.tt2:48 default/web_tt2/lists.tt2:34
+#: default/web_tt2/my.tt2:26
 msgid "Editor"
 msgstr "Editor"
 
-#: default/web_tt2/list_menu.tt2:55 default/web_tt2/lists.tt2:37
-#: default/web_tt2/my.tt2:29 default/web_tt2/which.tt2:37
+#: default/web_tt2/list_menu.tt2:53 default/web_tt2/lists.tt2:37
+#: default/web_tt2/my.tt2:29
 msgid "Subscriber"
 msgstr "Assinante"
 
-#: default/web_tt2/list_menu.tt2:60
+#: default/web_tt2/list_menu.tt2:58
 #, fuzzy
 msgid "List Options"
 msgstr "Suas opções de lista"
 
-#: default/web_tt2/list_menu.tt2:66
+#: default/web_tt2/list_menu.tt2:64
 msgid "Subscriber Options"
 msgstr "Opções de Inscrição"
 
 #. (list)
-#: default/web_tt2/list_menu.tt2:70
+#: default/web_tt2/list_menu.tt2:68
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "Você realmente deseja cancelar sua inscrição na lista %1?"
 
-#: default/web_tt2/list_menu.tt2:70 default/web_tt2/list_menu.tt2:80
+#: default/web_tt2/list_menu.tt2:68 default/web_tt2/list_menu.tt2:78
 #: default/web_tt2/suspend_request.tt2:90
 msgid "Unsubscribe"
 msgstr "Cancelar inscrição"
 
 #. (list)
-#: default/web_tt2/list_menu.tt2:75
+#: default/web_tt2/list_menu.tt2:73
 msgid "Do you really want to subscribe to list %1?"
 msgstr "Tem certeza que deseja se inscrever na lista %1?"
 
-#: default/web_tt2/list_menu.tt2:75 default/web_tt2/subrequest.tt2:68
+#: default/web_tt2/list_menu.tt2:73 default/web_tt2/subrequest.tt2:68
 msgid "Subscribe"
 msgstr "Inscrever"
 
-#: default/web_tt2/list_menu.tt2:86
+#: default/web_tt2/list_menu.tt2:84
 #, fuzzy
 msgid "List Home"
 msgstr "Nome da lista"
 
-#: default/web_tt2/list_menu.tt2:90
+#: default/web_tt2/list_menu.tt2:88
 msgid "Admin"
 msgstr "Administrar"
 
-#: default/web_tt2/list_menu.tt2:98 default/web_tt2/viewlogs.tt2:52
+#: default/web_tt2/list_menu.tt2:96 default/web_tt2/viewlogs.tt2:52
 msgid "Message"
 msgstr "Mensagem"
 
-#: default/web_tt2/list_menu.tt2:103
+#: default/web_tt2/list_menu.tt2:101
 msgid "Subscriptions"
 msgstr "Inscrições"
 
-#: default/web_tt2/list_menu.tt2:112 default/web_tt2/list_menu.tt2:114
+#: default/web_tt2/list_menu.tt2:110 default/web_tt2/list_menu.tt2:112
 msgid "Archive"
 msgstr "Arquivo"
 
-#: default/web_tt2/list_menu.tt2:120 default/web_tt2/list_menu.tt2:122
+#: default/web_tt2/list_menu.tt2:118 default/web_tt2/list_menu.tt2:120
 msgid "Post"
 msgstr "Enviar"
 
-#: default/web_tt2/list_menu.tt2:127
+#: default/web_tt2/list_menu.tt2:125
 msgid "RSS"
 msgstr "RSS"
 
-#: default/web_tt2/list_menu.tt2:141 default/web_tt2/list_panel.tt2:15
-#: default/web_tt2/my.tt2:45 default/web_tt2/search_list.tt2:33
-#: default/web_tt2/suspend_request.tt2:55
+#: default/web_tt2/list_menu.tt2:139 default/web_tt2/list_panel.tt2:15
+#: default/web_tt2/my.tt2:45 default/web_tt2/suspend_request.tt2:55
 msgid "Review members"
 msgstr "Revisar membros"
 
-#: default/web_tt2/list_menu.tt2:146
+#: default/web_tt2/list_menu.tt2:144
 msgid "Statistics"
 msgstr "Estatísticas"
 
@@ -6540,23 +6534,20 @@ msgstr "Contatar os proprietários"
 # portuguese need more brackets to make it plural
 #. (occurrence)
 #: default/web_tt2/lists.tt2:11 default/web_tt2/review.tt2:80
-#: default/web_tt2/search.tt2:80 default/web_tt2/search_list.tt2:11
-#: default/web_tt2/which.tt2:11
 msgid "%1 occurrence(s) found"
 msgstr "%1 ocorrência(s) encontrada(s)"
 
 #. (email)
-#: default/web_tt2/lists.tt2:14 default/web_tt2/which.tt2:14
+#: default/web_tt2/lists.tt2:14
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong>%1</strong> está inscrito nas seguintes listas de e-mails"
 
 #. (user.email)
-#: default/web_tt2/lists.tt2:56 default/web_tt2/which.tt2:56
+#: default/web_tt2/lists.tt2:56
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Não há inscrições com o endereço <strong>%1</strong>!"
 
-#: default/web_tt2/lists.tt2:61 default/web_tt2/search_list.tt2:48
-#: default/web_tt2/search_user.tt2:79 default/web_tt2/which.tt2:61
+#: default/web_tt2/lists.tt2:61 default/web_tt2/search_user.tt2:79
 #: default/web_tt2/your_lists.tt2:34
 msgid "No mailing list available."
 msgstr "Nenhuma lista disponível."
@@ -7096,7 +7087,6 @@ msgid "Manage Subscribers"
 msgstr "Gerenciar Assinantes"
 
 #: default/web_tt2/nav.tt2:140 default/web_tt2/review.tt2:10
-#: default/web_tt2/search.tt2:10
 msgid "Blacklist"
 msgstr "Lista de proibições"
 
@@ -7528,8 +7518,7 @@ msgid "Manage bouncing list members"
 msgstr "Gerenciar membros com problema de recebimento:"
 
 #: default/web_tt2/review.tt2:14 default/web_tt2/review.tt2:16
-#: default/web_tt2/reviewbouncing.tt2:7 default/web_tt2/search.tt2:14
-#: default/web_tt2/search.tt2:16
+#: default/web_tt2/reviewbouncing.tt2:7
 msgid "Dump"
 msgstr "Descarregar"
 
@@ -7539,7 +7528,6 @@ msgstr "Enviar lembrete para assinantes"
 
 #. (total)
 #: default/web_tt2/review.tt2:30 default/web_tt2/reviewbouncing.tt2:20
-#: default/web_tt2/search.tt2:30
 msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
 "subscribers?"
@@ -7547,8 +7535,7 @@ msgstr ""
 "Tem certeza que deseja enviar um lembrete de inscrição para os %1 assinantes?"
 
 #: default/web_tt2/review.tt2:144 default/web_tt2/reviewbouncing.tt2:117
-#: default/web_tt2/reviewbouncing.tt2:45 default/web_tt2/search.tt2:144
-#: default/web_tt2/viewlogs.tt2:229
+#: default/web_tt2/reviewbouncing.tt2:45 default/web_tt2/viewlogs.tt2:229
 msgid "Previous page"
 msgstr "Página anterior"
 
@@ -7556,14 +7543,12 @@ msgstr "Página anterior"
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:299
 #: default/web_tt2/review.tt2:147 default/web_tt2/reviewbouncing.tt2:120
-#: default/web_tt2/reviewbouncing.tt2:48 default/web_tt2/search.tt2:147
-#: default/web_tt2/viewlogs.tt2:232
+#: default/web_tt2/reviewbouncing.tt2:48 default/web_tt2/viewlogs.tt2:232
 msgid "page %1 / %2"
 msgstr "página %1 / %2"
 
 #: default/web_tt2/review.tt2:150 default/web_tt2/reviewbouncing.tt2:123
-#: default/web_tt2/reviewbouncing.tt2:51 default/web_tt2/search.tt2:150
-#: default/web_tt2/viewlogs.tt2:235
+#: default/web_tt2/reviewbouncing.tt2:51 default/web_tt2/viewlogs.tt2:235
 msgid "Next page"
 msgstr "Próxima página"
 
@@ -7597,7 +7582,6 @@ msgid "no score"
 msgstr "sem contagem"
 
 #: default/web_tt2/review.tt2:96 default/web_tt2/reviewbouncing.tt2:128
-#: default/web_tt2/search.tt2:96
 msgid "Delete selected email addresses"
 msgstr "Excluir os endereços de e-mail selecionados"
 
@@ -7617,99 +7601,98 @@ msgstr "Estado"
 msgid "Instantiation date"
 msgstr "Data de criação"
 
-#: default/web_tt2/review.tt2:5 default/web_tt2/search.tt2:5
+#: default/web_tt2/review.tt2:5
 msgid "Manage list members"
 msgstr "Gerenciar membros da lista"
 
-#: default/web_tt2/review.tt2:8 default/web_tt2/search.tt2:8
+#: default/web_tt2/review.tt2:8
 msgid "Pending subscriptions"
 msgstr "Inscrições pendentes"
 
-#: default/web_tt2/review.tt2:18 default/web_tt2/search.tt2:18
+#: default/web_tt2/review.tt2:18
 msgid "Exclude"
 msgstr "Excluir"
 
-#: default/web_tt2/review.tt2:24 default/web_tt2/search.tt2:24
+#: default/web_tt2/review.tt2:24
 msgid "Synchronize members with data sources"
 msgstr "Sincronizar membros com as fontes de dados"
 
-#: default/web_tt2/review.tt2:30 default/web_tt2/search.tt2:30
+#: default/web_tt2/review.tt2:30
 msgid "Remind all"
 msgstr "Enviar lembrete a todos"
 
-#: default/web_tt2/review.tt2:35 default/web_tt2/search.tt2:35
+#: default/web_tt2/review.tt2:35
 #, fuzzy
 msgid "Add Subscribers"
 msgstr "Adicionar assinantes"
 
-#: default/web_tt2/review.tt2:37 default/web_tt2/search.tt2:37
+#: default/web_tt2/review.tt2:37
 msgid "To add an individual user:"
 msgstr ""
 
-#: default/web_tt2/review.tt2:42 default/web_tt2/search.tt2:42
+#: default/web_tt2/review.tt2:42
 #, fuzzy
 msgid "Email address:"
 msgstr "E-mail:"
 
-#: default/web_tt2/review.tt2:44 default/web_tt2/search.tt2:44
+#: default/web_tt2/review.tt2:44
 msgid "Quiet (don't send welcome email)"
 msgstr ""
 
-#: default/web_tt2/review.tt2:48 default/web_tt2/search.tt2:48
+#: default/web_tt2/review.tt2:48
 msgid "To add multiple users:"
 msgstr ""
 
-#: default/web_tt2/review.tt2:49 default/web_tt2/search.tt2:49
+#: default/web_tt2/review.tt2:49
 msgid ""
 "Click the Multiple Add button below to bulk-add users using a form.  "
 "(Alternatively, consider using a data-source such as SQL or an Active "
 "Directory Group)."
 msgstr ""
 
-#: default/web_tt2/review.tt2:50 default/web_tt2/search.tt2:50
+#: default/web_tt2/review.tt2:50
 msgid "Multiple add"
 msgstr "Inscrever vários"
 
-#: default/web_tt2/review.tt2:54 default/web_tt2/search.tt2:54
+#: default/web_tt2/review.tt2:54
 #, fuzzy
 msgid "Search for a User"
 msgstr "Procurar Usuário"
 
-#: default/web_tt2/review.tt2:60 default/web_tt2/search.tt2:60
+#: default/web_tt2/review.tt2:60
 msgid "Search for a user by email address, name or part of them: "
 msgstr ""
 
-#: default/web_tt2/review.tt2:61 default/web_tt2/search.tt2:61
+#: default/web_tt2/review.tt2:61
 msgid "Enter a name, email or part of them"
 msgstr ""
 
-#: default/web_tt2/review.tt2:66 default/web_tt2/search.tt2:66
+#: default/web_tt2/review.tt2:66
 msgid "Selection too wide, can not show selection"
 msgstr "Seleção muito extensa, não pode ser exibida"
 
-#: default/web_tt2/review.tt2:73 default/web_tt2/search.tt2:73
+#: default/web_tt2/review.tt2:73
 #, fuzzy
 msgid "Subscriber Table"
 msgstr "Assinante"
 
 # more brackets to make plural in portuguese
 #. (similar_subscribers_occurence)
-#: default/web_tt2/review.tt2:88 default/web_tt2/search.tt2:88
+#: default/web_tt2/review.tt2:88
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr " Outro(s) email(s) de assinante parecidos (%1)"
 
-#: default/web_tt2/review.tt2:96 default/web_tt2/search.tt2:96
+#: default/web_tt2/review.tt2:96
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr ""
 "Tem certeza que deseja cancelar a inscrição de TODOS os assinantes "
 "selecionados?"
 
-#: default/web_tt2/review.tt2:102 default/web_tt2/search.tt2:102
+#: default/web_tt2/review.tt2:102
 msgid "Excluded users"
 msgstr "Usuários excluídos"
 
-#: default/web_tt2/review.tt2:129 default/web_tt2/search.tt2:129
-#: default/web_tt2/viewlogs.tt2:217
+#: default/web_tt2/review.tt2:129 default/web_tt2/viewlogs.tt2:217
 msgid "Page size"
 msgstr "Tamanho da página"
 
@@ -7871,16 +7854,6 @@ msgstr "Procurar listas"
 #: default/web_tt2/search_list_request.tt2:6
 msgid "Enter a list name"
 msgstr "Digite um nome para a lista"
-
-#: default/web_tt2/search_list.tt2:7
-#, fuzzy
-msgid "Results"
-msgstr "%1 resultados"
-
-#: default/web_tt2/search_list.tt2:29
-#, fuzzy
-msgid "Request subscription"
-msgstr "Reativar minhas inscrições"
 
 #: default/web_tt2/search_user.tt2:3
 msgid "User search result:"
@@ -13119,6 +13092,14 @@ msgstr ""
 #: ../src/sympa_wizard.pl.in:453
 msgid "used to compute MD5 digests for passwords, etc"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Results"
+#~ msgstr "%1 resultados"
+
+#, fuzzy
+#~ msgid "Request subscription"
+#~ msgstr "Reativar minhas inscrições"
 
 #, fuzzy
 #~ msgid "Search for a user"
