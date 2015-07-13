@@ -423,12 +423,8 @@ sub new_from_template {
         } else {
             $data->{'fromlist'} = $list->get_list_address('owner');
         }
-
-        $data->{'from'} ||= $data->{'fromlist'};
     } else {
         $data->{'robot_domain'} = Conf::get_robot_conf($robot_id, 'domain');
-
-        $data->{'from'} ||= Conf::get_robot_conf($robot_id, 'sympa');
     }
     $data->{'boundary'} = '----------=_' . tools::get_message_id($robot_id)
         unless $data->{'boundary'};
@@ -590,9 +586,16 @@ sub _new_from_template {
         $headers .= "To: $to\n";
     }
     unless ($header_ok{'from'}) {
-        if (   !defined $data->{'from'}
-            or $data->{'from'} eq 'sympa'
+        unless (defined $data->{'from'}) {
+            $headers .= sprintf "From: %s\n",
+                tools::addrencode(
+                Conf::get_robot_conf($robot_id, 'sympa'),
+                Conf::get_robot_conf($robot_id, 'gecos'),
+                $data->{'charset'}
+                );
+        } elsif ($data->{'from'} eq 'sympa'
             or $data->{'from'} eq $data->{'conf'}{'sympa'}) {
+            #XXX NOTREACHED: $data->{'from'} was obsoleted.
             $headers .= 'From: '
                 . tools::addrencode(
                 $data->{'conf'}{'sympa'},
@@ -600,6 +603,7 @@ sub _new_from_template {
                 $data->{'charset'}
                 ) . "\n";
         } else {
+            #XXX NOTREACHED: $data->{'from'} was obsoleted.
             $headers .= "From: "
                 . MIME::EncWords::encode_mimewords(
                 Encode::decode('utf8', $data->{'from'}),
@@ -3662,6 +3666,10 @@ See also L<Sympa::Language>.
 =item from
 
 "From:" field if not a full msg
+
+Note:
+This parameter is obsoleted.
+The "From:" field will be filled in by "sympa" address if it is not found.
 
 =item subject
 

@@ -535,7 +535,6 @@ sub getfile {
         msg_list       => [@msg_list],
         boundary1      => tools::get_message_id($list->{'domain'}),
         boundary2      => tools::get_message_id($list->{'domain'}),
-        from           => Conf::get_robot_conf($list->{'domain'}, 'sympa'),
         auto_submitted => 'auto-replied'
     };
     unless (Sympa::send_file($list, 'get_archive', $sender, $param)) {
@@ -683,7 +682,6 @@ sub last {
         msg_list       => [@msglist],
         boundary1      => tools::get_message_id($list->{'domain'}),
         boundary2      => tools::get_message_id($list->{'domain'}),
-        from           => Conf::get_robot_conf($list->{'domain'}, 'sympa'),
         auto_submitted => 'auto-replied'
     };
     unless (Sympa::send_file($list, 'get_archive', $sender, $param)) {
