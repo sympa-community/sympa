@@ -50,7 +50,7 @@ Note: Because binary files have to be encoded in less-efficient ASCII format bef
 [%   ELSIF status == '5.7.0' -%]
     [%|loc%]***** V I R U S    A L E R T *****[%END%]
 
-[%|loc(virus_name,recipient,from)%]Our viruschecker found a virus named %1 in a message addressed to %2 and that seems to be yours (From: %3).[%END%]
+[%|loc(virus_name,recipient,sender)%]Our viruschecker found a virus named %1 in a message addressed to %2 and that seems to be yours (From: %3).[%END%]
 
 [%|loc%]We stopped delivery of this email.[%END%]
 

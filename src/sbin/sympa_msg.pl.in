@@ -793,6 +793,7 @@ sub process_message {
                 $sender,
                 {   'virus_name'     => $rc,
                     'recipient'      => $list_address,
+                    'sender'         => $message->{sender},
                     'lang'           => Conf::get_robot_conf($robot, 'lang'),
                     'auto_submitted' => 'auto-replied'
                 }
@@ -803,7 +804,7 @@ sub process_message {
                 $message,
                 {   'virus_name' => $rc,
                     'recipient'  => $list_address,
-                    'from'       => $message->{sender}
+                    'sender'     => $message->{sender}
                 },
                 '5.7.0'
             );
