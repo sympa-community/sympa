@@ -605,11 +605,11 @@ sub new {
     my $pertinent_ttl = $list->{'admin'}{'distribution_ttl'}
         || $list->{'admin'}{'ttl'};
     if ($status
-        && (
-            (!$options->{'skip_sync_admin'}
-                && $list->{'last_sync'} < time - $pertinent_ttl)
+        && ((     !$options->{'skip_sync_admin'}
+                && $list->{'last_sync'} < time - $pertinent_ttl
+            )
             || $options->{'force_sync_admin'}
-           )
+        )
         ) {
         ## Update admin_table
         unless (defined $list->sync_include_admin()) {
@@ -1821,11 +1821,18 @@ sub distribute_msg {
     if ($rate > $self->{'admin'}{'bounce'}{'warn_rate'}) {
         $self->send_notify_to_owner('bounce_rate', {'rate' => $rate});
         if ($rate == 100) {
-           $self->send_notify_to_user('hundred_percent_error',$message->{'sender'});
-		   Sympa::send_notify_to_listmaster($self->{'domain'}, 'hundred_percent_error',
-        {'listname' => $self->{'name'},'listdomain' => $self->{'domain'}, 'sender' => $message->{'sender'}})
+            $self->send_notify_to_user('hundred_percent_error',
+                $message->{'sender'});
+            Sympa::send_notify_to_listmaster(
+                $self->{'domain'},
+                'hundred_percent_error',
+                {   'listname'   => $self->{'name'},
+                    'listdomain' => $self->{'domain'},
+                    'sender'     => $message->{'sender'}
+                }
+                )
 
-	   }
+        }
     }
 
     #save the message before modifying it
@@ -7258,7 +7265,7 @@ sub _load_list_members_from_include {
 
         if ($include_member and %$include_member) {
             my @types = keys %{$include_member};
-            my $type  = $types[0];                  #FIXME: Gets random key?
+            my $type  = $types[0];                    #FIXME: Gets random key?
             my @defs  = @{$include_member->{$type}};
             my $def   = $defs[0];
             push @{$admin->{$type}}, $def;
