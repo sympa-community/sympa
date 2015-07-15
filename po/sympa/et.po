@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2012-05-17 16:09+0000\n"
-"Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
+"PO-Revision-Date: 2015-07-12 21:40+0000\n"
+"Last-Translator: Urmas <urmas@tamme.tartu.ee>\n"
 "Language-Team: Eesti\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-POOTLE-MTIME: 1337270968.000000\n"
+"X-POOTLE-MTIME: 1436737208.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -130,6 +130,8 @@ msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
 msgstr ""
+"Perli versioon on liiga vana (%s < %s)\n"
+"Palun installeerige uuem versioon!"
 
 #: src/sbin/sympa_wizard.pl.in:430
 msgid "Checking for REQUIRED modules:"
@@ -147,9 +149,8 @@ msgid ""
 msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:451
-#, fuzzy
 msgid "perl module"
-msgstr "Asjatundja režiim"
+msgstr "perli moodul"
 
 #: src/sbin/sympa_wizard.pl.in:451
 msgid "from CPAN"
@@ -869,7 +870,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:980
 msgid "Database related"
-msgstr "Andmebaasiga seotud "
+msgstr "Andmebaasiga seotud"
 
 #: src/lib/Sympa/ConfDef.pm:988
 msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
@@ -2485,9 +2486,8 @@ msgid "TLS version 1.2"
 msgstr "SSL versioon"
 
 #: src/lib/Sympa/List.pm:389
-#, fuzzy
 msgid "receive notification email"
-msgstr "Teavitus "
+msgstr "Teavitus"
 
 #: src/lib/Sympa/List.pm:390
 #, fuzzy
@@ -6202,7 +6202,7 @@ msgstr "Must nimekiri"
 
 #: default/web_tt2/head_ui.tt2:32
 msgid "Please Wait..."
-msgstr ""
+msgstr "Palun oota..."
 
 #: default/web_tt2/home.tt2:3
 #, fuzzy
@@ -6891,25 +6891,21 @@ msgid "Home"
 msgstr "Esilehele"
 
 #: default/web_tt2/menu.tt2:10 default/web_tt2/sympa_menu.tt2:9
-#, fuzzy
 msgid "Request a List"
-msgstr "Taotluse kuupäev"
+msgstr "Listi taotlemine"
 
 #: default/web_tt2/menu.tt2:15 default/web_tt2/sympa_menu.tt2:14
-#, fuzzy
 msgid "Listmaster Admin"
 msgstr "Listiülem"
 
 # nlsref 8,1
 #: default/web_tt2/menu.tt2:19 default/web_tt2/sympa_menu.tt2:18
-#, fuzzy
 msgid "Index of Lists"
-msgstr "Listi %s omanikud"
+msgstr "Listide loetelu"
 
 #: default/web_tt2/menu.tt2:21 default/web_tt2/sympa_menu.tt2:20
-#, fuzzy
 msgid "Search for List(s)"
-msgstr "Otsi liste"
+msgstr "Listi(de) otsing"
 
 #: default/web_tt2/modform.tt2:17 default/web_tt2/modform.tt2:23
 #: default/web_tt2/modform.tt2:6 default/web_tt2/viewmod.tt2:10
@@ -7072,9 +7068,8 @@ msgid "Create a list using a template"
 msgstr "Uue listi loomine malli järgi"
 
 #: default/web_tt2/nav.tt2:28
-#, fuzzy
 msgid "Listmaster Admin Menu"
-msgstr "Listiülem"
+msgstr "Listiülema menüü"
 
 #: default/web_tt2/nav.tt2:33 default/web_tt2/serveradmin.tt2:4
 msgid "Lists"
@@ -10237,26 +10232,30 @@ msgstr ""
 
 #: default/mail_tt2/helpfile.tt2:25
 msgid "UNSubscribe * <EMAIL>       * To quit all lists."
-msgstr "UNSubscribe * <EMAIL> * Lahkuda kõigist listidest."
+msgstr ""
+"UNSubscribe * <EMAIL>                                 * Lahkuda kõigist "
+"listidest."
 
 #: default/mail_tt2/helpfile.tt2:27
 msgid ""
 "SET <list>|* NOMAIL         * To suspend the message reception for <list>"
 msgstr ""
-"SET <list>|* NOMAIL * Peatab ajutiselt listist kirjade tulemise listist "
-"<list>"
+"SET <list>|* NOMAIL                                         * Peatab "
+"ajutiselt listist kirjade tulemise listist <list>"
 
 #: default/mail_tt2/helpfile.tt2:28
 msgid "SET <list>|* DIGEST         * Message reception in compilation mode"
 msgstr ""
-"SET <list>|* DIGEST * Listi kirjad saadetakse kokkuvõtetena päeva lõpus"
+"SET <list>|* DIGEST                                          * Listi kirjad "
+"saadetakse kokkuvõtetena päeva lõpus"
 
 #: default/mail_tt2/helpfile.tt2:29
 msgid ""
 "SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as "
 "a plain text email with all attachments"
 msgstr ""
-"SET <list|*> DIGESTPLAIN    * Kirjad saadetakse tekstiliste kokkuvõtetena"
+"SET <list|*> DIGESTPLAIN                  * Kirjad saadetakse tekstiliste "
+"kokkuvõtetena"
 
 #: default/mail_tt2/helpfile.tt2:30
 msgid "SET <list>|* SUMMARY        * Receiving the message index only"
