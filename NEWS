@@ -3,6 +3,29 @@
 
 (See Changelog file for the full changes log)
 
+6.2.3		July 16, 2015
+
+  Bug fixes:
+
+	[12282] src/lib/Sympa/List.pm:	Inclusion of member/owner/editor using
+	LDAP with SSL did not work.  Fixed by adding CA certificate defined in
+	sympa.conf (cafile and/or capath) to filter definition when database is
+	opened.
+
+	[12276] default/mail_tt2/get_archive.tt2, src/lib/Sympa/Commands.pm,
+	src/lib/Sympa/Message.pm:  [Reported by J. Kirkland] Messages sent by
+	Sympa robot uses list owner addresses and so on by default.  They
+	should be "sympa" addresses.  This bug was injected by commit r10223.
+
+	[12267] src/smtpc/configure.ac:  [Reported by B. Eliassen] "make" fails
+	with Solaris, again.
+	Fixed by taking care of additional libraries.  This fix probably may
+	work with Solaris 8 or later.
+
+	[12263] default/web_tt2/aside_menu.tt2, default/web_tt2/list_menu.tt2: 
+	WWSympa: On mobile mode, List Options Menu was not shown (at least by
+	Safari on iOS).
+
 6.2.2		July 01, 2015
 
   Changes:
