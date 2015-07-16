@@ -7278,7 +7278,19 @@ sub _load_list_members_from_include {
 
             # Work with a copy of admin hash branch to avoid including
             # temporary variables into the actual admin hash.[bug #3182]
-            my $incl      = Sympa::Tools::Data::dup_var($tmp_incl);
+            my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
+
+            # As CA certificate is required, take it from site config.
+            if (    $incl->{use_ssl}
+                and $incl->{use_ssl} eq 'yes'
+                and not $incl->{ca_file}
+                and not $incl->{ca_path}) {
+                $incl->{ca_file} = $Conf::Conf{'cafile'}
+                    if $Conf::Conf{'cafile'};
+                $incl->{ca_path} = $Conf::Conf{'capath'}
+                    if $Conf::Conf{'capath'};
+            }
+
             my $source_id = Sympa::Datasource::_get_datasource_id($tmp_incl);
             my $source_is_new = defined $old_subs->{$source_id};
 
@@ -7535,6 +7547,17 @@ sub _load_list_admin_from_include {
                 # Work with a copy of admin hash branch to avoid including
                 # temporary variables into the actual admin hash. [bug #3182]
                 my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
+
+                # As CA certificate is required, take it from site config.
+                if (    $incl->{use_ssl}
+                    and $incl->{use_ssl} eq 'yes'
+                    and not $incl->{ca_file}
+                    and not $incl->{ca_path}) {
+                    $incl->{ca_file} = $Conf::Conf{'cafile'}
+                        if $Conf::Conf{'cafile'};
+                    $incl->{ca_path} = $Conf::Conf{'capath'}
+                        if $Conf::Conf{'capath'};
+                }
 
                 # get the list of admin users
                 # does it need to define a 'default_admin_user_option'?
@@ -7904,6 +7927,18 @@ sub sync_include_ca {
             ## Work with a copy of admin hash branch to avoid including
             ## temporary variables into the actual admin hash.[bug #3182]
             my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
+
+            # As CA certificate is required, take it from site config.
+            if (    $incl->{use_ssl}
+                and $incl->{use_ssl} eq 'yes'
+                and not $incl->{ca_file}
+                and not $incl->{ca_path}) {
+                $incl->{ca_file} = $Conf::Conf{'cafile'}
+                    if $Conf::Conf{'cafile'};
+                $incl->{ca_path} = $Conf::Conf{'capath'}
+                    if $Conf::Conf{'capath'};
+            }
+
             my $db;
             my $srcca = undef;
             if ($type eq 'include_sql_ca') {
