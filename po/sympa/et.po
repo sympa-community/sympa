@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2015-07-12 21:40+0000\n"
+"PO-Revision-Date: 2015-07-16 13:49+0000\n"
 "Last-Translator: Urmas <urmas@tamme.tartu.ee>\n"
 "Language-Team: Eesti\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-POOTLE-MTIME: 1436737208.000000\n"
+"X-POOTLE-MTIME: 1437054548.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -44,18 +44,16 @@ msgstr "%d. %b %Y"
 # nlsref 1,1
 #: src/libexec/ldap_alias_manager.pl.in:42
 #: src/libexec/mysql_alias_manager.pl.in:28
-#, fuzzy
 msgid "The configuration file contains errors.\n"
-msgstr "Seadete fail sisaldab vigu.\n"
+msgstr "Häälestusfail sisaldab vigu.\n"
 
 #: src/sbin/sympa_wizard.pl.in:180
-#, fuzzy
 msgid "Example: "
-msgstr "Nimi: "
+msgstr "Näide: "
 
 #: src/sbin/sympa_wizard.pl.in:190
 msgid "(You must define this parameter)"
-msgstr ""
+msgstr "(Peate selle parameetri defineerima)"
 
 #: src/sbin/sympa_wizard.pl.in:276
 msgid "%s [%s] : "
@@ -82,13 +80,12 @@ msgid "Unable to open %s : %s"
 msgstr "Ei saa avada %s: %s"
 
 #: src/sbin/sympa_wizard.pl.in:352
-#, fuzzy
 msgid ""
 "%s have been updated.\n"
 "Previous versions have been saved as %s.\n"
 msgstr ""
-"%s ja %s on uuendatud.\n"
-"Eelmised versioonid salvestati kui %s ja %s.\n"
+"%s on uuendatud.\n"
+"Eelmised versioonid salvestati kui %s .\n"
 
 #: src/sbin/sympa_wizard.pl.in:359
 msgid ""
@@ -111,19 +108,19 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:401
 msgid "Which RDBMS will you use for core database:"
-msgstr ""
+msgstr "Millist RDBMS anmdebaasi kasutate põhiliselt:"
 
 #: src/sbin/sympa_wizard.pl.in:406
 msgid "-> Select RDBMS [1-%d] "
-msgstr ""
+msgstr "-> Vali  RDBMS [1-%d]  "
 
 #: src/sbin/sympa_wizard.pl.in:419
 msgid "Checking for PERL version:"
-msgstr ""
+msgstr "Kontrollin PERL versiooni:"
 
 #: src/sbin/sympa_wizard.pl.in:422
 msgid "Your version of perl is OK (%s  >= %s)"
-msgstr ""
+msgstr "Teie perl on OK (%s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:426
 msgid ""
@@ -135,11 +132,11 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:430
 msgid "Checking for REQUIRED modules:"
-msgstr ""
+msgstr "Kontrollin KOHUSTUSLIKKE mooduleid:"
 
 #: src/sbin/sympa_wizard.pl.in:432
 msgid "Checking for OPTIONAL modules:"
-msgstr ""
+msgstr "Kontrollin VALIKULISI mooduleid:"
 
 #: src/sbin/sympa_wizard.pl.in:436
 msgid ""
@@ -147,6 +144,9 @@ msgid ""
 "You can retrieve all theses modules from any CPAN server\n"
 "(for example ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 msgstr ""
+"******* TÄHELEPANU *******\n"
+"Saate moodulid alla tõmmata kõigist CPAN serveritest\n"
+"(näiteks ftp://ftp.pasteur.fr/pub/computing/CPAN/CPAN.html)"
 
 #: src/sbin/sympa_wizard.pl.in:451
 msgid "perl module"
@@ -154,7 +154,7 @@ msgstr "perli moodul"
 
 #: src/sbin/sympa_wizard.pl.in:451
 msgid "from CPAN"
-msgstr ""
+msgstr "CPAN serverist"
 
 #: src/sbin/sympa_wizard.pl.in:452
 msgid "STATUS"
@@ -178,28 +178,27 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:495
 msgid "OK (%-6s >= %s)"
-msgstr ""
+msgstr "KORRAS (%-6s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:498
-#, fuzzy
 msgid "version is too old (%s < %s)"
-msgstr "Periood on liiga pikk (%1 päeva)"
+msgstr "versioon on liiga vana (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:501
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
-msgstr ""
+msgstr ">>>>>>> Peate uuendama \"%s\" versioonile \"%s\" <<<<<<"
 
 #: src/sbin/sympa_wizard.pl.in:533
 msgid "## You need root privileges to install %s module. ##"
-msgstr ""
+msgstr "## Vajate root kasutaja õigusi mooduli %s installeerimiseks. ##"
 
 #: src/sbin/sympa_wizard.pl.in:536
 msgid "## Press the Enter key to continue checking modules. ##"
-msgstr ""
+msgstr "## Vajuta klahvi Enter moodulite kontrolli jätkamiseks. ##"
 
 #: src/sbin/sympa_wizard.pl.in:545
 msgid "-> Usage of this module: %s"
-msgstr ""
+msgstr "-> Selle mooduli kastutamine: %s"
 
 #: src/sbin/sympa_wizard.pl.in:552
 msgid "-> Prerequisites: %s"
@@ -227,24 +226,23 @@ msgstr ""
 
 #: src/lib/tools.pm:811
 msgid "Not between %d and %d characters"
-msgstr ""
+msgstr "Pikkus pole vahemikus  %d kuni %d märki"
 
 #: src/lib/tools.pm:812
 msgid "Not %d characters or greater"
-msgstr ""
+msgstr "Pole %d või rohkem märki"
 
 #: src/lib/tools.pm:813
 msgid "Not less than or equal to %d characters"
-msgstr ""
+msgstr "Pole vähem või võrdne kui %d  märki"
 
 #: src/lib/tools.pm:814
-#, fuzzy
 msgid "contains bad characters"
-msgstr "@ märkide asendamine"
+msgstr "sisaldab imelike märke"
 
 #: src/lib/tools.pm:815
 msgid "contains less than %d character groups"
-msgstr ""
+msgstr "sisaldab vähem kui % märgigruppi"
 
 #: src/lib/tools.pm:816
 msgid "contains over %d leading characters in sequence"
@@ -266,9 +264,8 @@ msgstr "%d. %b %Y at %H:%M:%S"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/lib/Sympa/Admin.pm:1264
-#, fuzzy
 msgid "%d %b %y at %H:%M:%S"
-msgstr "%d. %b %Y at %H:%M:%S"
+msgstr "%d.%m.%Y kell %H:%M:%S"
 
 # nlsref 6,81
 #: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:194
@@ -278,16 +275,14 @@ msgstr "Kasutajajuhend"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Commands.pm:532
-#, fuzzy
 msgid "Archive of %s, file %s"
-msgstr "Arhiiv %1, fail %2"
+msgstr "Arhiiv %s, fail %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Commands.pm:679
-#, fuzzy
 msgid "Archive of %s, last message"
-msgstr "Arhiiv %1, fail %2"
+msgstr "Arhiivi %s viimane kiri "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -372,9 +367,8 @@ msgstr "põhilehe URL"
 
 # nlsref 16,68
 #: src/lib/Sympa/ConfDef.pm:90 src/lib/Sympa/ListDef.pm:645
-#, fuzzy
 msgid "Store distributed messages into archive"
-msgstr "Lisati edasisaadetud kirjade hulka"
+msgstr "Edastatud kirjad salvestatakse arhiivi"
 
 #: src/lib/Sympa/ConfDef.pm:91
 msgid "This setting can be overridden by each list"
@@ -415,7 +409,6 @@ msgstr ""
 "seda kasutada"
 
 #: src/lib/Sympa/ConfDef.pm:333
-#, fuzzy
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the param name and the param value."
@@ -487,6 +480,8 @@ msgid ""
 "should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
 "\" is distributed with Postfix)"
 msgstr ""
+"peab viitama sendmailiga kokkusobivale binaarfailile (näiteks Postfix "
+"distrubutsioonis on  fail \"sendmail\")"
 
 #: src/lib/Sympa/ConfDef.pm:436
 msgid ""
@@ -496,7 +491,6 @@ msgstr ""
 "protsesside arv"
 
 #: src/lib/Sympa/ConfDef.pm:439
-#, fuzzy
 msgid ""
 "Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
 "powerful systems."
@@ -506,7 +500,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:459
 msgid "Defines the name of the family the automatic lists are based on."
-msgstr ""
+msgstr "Defineerib automaatsete listide perekonna."
 
 #: src/lib/Sympa/ConfDef.pm:467
 msgid ""
@@ -688,9 +682,8 @@ msgid "All spool are created at runtime by sympa.pl"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:689
-#, fuzzy
 msgid "Directory for message incoming spool"
-msgstr "Modereerimise spuuli kaust"
+msgstr "Sissetulevate kirjade spuuli kaust"
 
 #: src/lib/Sympa/ConfDef.pm:698
 msgid "Directory for moderation spool"
@@ -707,9 +700,8 @@ msgstr "Autoriseerimise spuuli kaust"
 
 # nlsref 15,10
 #: src/lib/Sympa/ConfDef.pm:713
-#, fuzzy
 msgid "Directory for archive spool"
-msgstr "Kokkuvõtete spuuli kaust"
+msgstr "Arhiivide spuuli kaust"
 
 #: src/lib/Sympa/ConfDef.pm:718
 msgid "Directory for subscription spool"
@@ -734,9 +726,8 @@ msgid "Directory for automatic list creation spool"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:744
-#, fuzzy
 msgid "Directory for message outgoing spool"
-msgstr "Modereerimise spuuli kaust"
+msgstr "Väljaminevate kirjade spuuli kaust"
 
 #: src/lib/Sympa/ConfDef.pm:749
 msgid "Must not be 0."
@@ -763,11 +754,11 @@ msgstr "Toetatud keeled"
 
 #: src/lib/Sympa/ConfDef.pm:815
 msgid "Default language (one of supported languages)"
-msgstr ""
+msgstr "Vaikekeel (üks toetatud keeltest)"
 
 #: src/lib/Sympa/ConfDef.pm:819
 msgid "This is the default language used by Sympa"
-msgstr ""
+msgstr "See on Sympa vaikekeel"
 
 #: src/lib/Sympa/ConfDef.pm:824
 msgid "If set to \"on\", enables support of legacy character set"
@@ -775,7 +766,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:827
 msgid "See also charset.conf(5) manpage"
-msgstr ""
+msgstr "Vaata ka charset.conf(5) manuaali"
 
 #: src/lib/Sympa/ConfDef.pm:833
 msgid "Bounce related"
@@ -874,11 +865,11 @@ msgstr "Andmebaasiga seotud"
 
 #: src/lib/Sympa/ConfDef.pm:988
 msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
-msgstr ""
+msgstr "Andmebaasi tüüp (mysql|Pg|Oracle|Sybase|SQLite)"
 
 #: src/lib/Sympa/ConfDef.pm:991
 msgid "Be careful to the case"
-msgstr ""
+msgstr "Ole tähelepanelik suur- ja väiketähtedega"
 
 #: src/lib/Sympa/ConfDef.pm:995
 msgid "Name of the database"
@@ -890,11 +881,11 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1004
 msgid "Hostname of the database server"
-msgstr ""
+msgstr "Andmebaasiserveri masinanimi"
 
 #: src/lib/Sympa/ConfDef.pm:1010
 msgid "Port of the database server"
-msgstr ""
+msgstr "Andmebaasiserveri port"
 
 # nlsref 16,148
 #: src/lib/Sympa/ConfDef.pm:1017
@@ -1050,7 +1041,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1280
 msgid "Antivirus plug-in"
-msgstr ""
+msgstr "Antiviiruse plugin"
 
 #: src/lib/Sympa/ConfDef.pm:1285
 msgid "Path to the antivirus scanner engine"
@@ -1105,9 +1096,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1349
-#, fuzzy
 msgid "Web interface parameters"
-msgstr "Veebileht"
+msgstr "Veebilehe sätted"
 
 #: src/lib/Sympa/ConfDef.pm:1353
 msgid "Directory for storing HTML archives"
@@ -1909,18 +1899,16 @@ msgstr "Kaust andmebaasi salvestamiseks (kasutatakse vaid DBD::CSV puhul)"
 #: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1358
 #, fuzzy
 msgid "VOOT group inclusion"
-msgstr "SQL päringuga kasutajate lisamine"
+msgstr "VOOT grupi lisamine"
 
 #: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1368
-#, fuzzy
 msgid "user"
-msgstr "Kasutajad"
+msgstr "kasutaja"
 
 # nlsref 16,62
 #: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1374
-#, fuzzy
 msgid "provider"
-msgstr "profiiil"
+msgstr "teenusepakkuja"
 
 #: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1380
 msgid "group"
@@ -1938,9 +1926,8 @@ msgstr "Kirjadele ajapiirangute lisamine"
 
 # nlsref 16,35
 #: src/lib/Sympa/ListDef.pm:1407
-#, fuzzy
 msgid "LDAP query custom attribute"
-msgstr "LDAP päringuga kasutajate lisamine"
+msgstr "LDAP päringu kohaldatud sätted"
 
 #: src/lib/Sympa/ListDef.pm:1494 src/lib/Sympa/ListDef.pm:1660
 #: src/lib/Sympa/ListDef.pm:1745
@@ -1949,9 +1936,8 @@ msgstr ""
 
 # nlsref 16,135
 #: src/lib/Sympa/ListDef.pm:1516
-#, fuzzy
 msgid "LDAP 2-level query custom attribute"
-msgstr "LDAPi 2-tasemelise päringu lisamine"
+msgstr "LDAPi 2-taseme päringu kohandatud sätted"
 
 #: src/lib/Sympa/ListDef.pm:1676
 #, fuzzy
@@ -2194,7 +2180,7 @@ msgstr "Kirja edastamine"
 #: src/lib/Sympa/ListDef.pm:559
 #, fuzzy
 msgid "A hook on the messages just after archiving"
-msgstr "kes saab vaadata sõnumite jälgimisteateid"
+msgstr "Konks kirja koheseks kättesaamiseks pärast arhiveerimist"
 
 #: src/lib/Sympa/ListDef.pm:633 src/lib/Sympa/ListDef.pm:663
 #: src/lib/Sympa/ListDef.pm:710
@@ -2202,9 +2188,8 @@ msgid "Kbytes"
 msgstr "kB"
 
 #: src/lib/Sympa/ListDef.pm:718
-#, fuzzy
 msgid "months"
-msgstr "punkte"
+msgstr "kuud"
 
 #: src/lib/Sympa/ListDef.pm:748 src/lib/Sympa/ListDef.pm:756
 msgid "%"
@@ -2223,9 +2208,8 @@ msgid "seconds"
 msgstr "sekundit"
 
 #: src/lib/Sympa/ListDef.pm:1001
-#, fuzzy
 msgid "Users included from parameterizable data sources"
-msgstr "Välises andmeallikas määratud omanikud"
+msgstr "Välises andmeallikas määratud kasutajad"
 
 #: src/lib/Sympa/ListDef.pm:1044 src/lib/Sympa/ListDef.pm:1147
 #: src/lib/Sympa/ListDef.pm:1430 src/lib/Sympa/ListDef.pm:1539
@@ -2345,14 +2329,12 @@ msgstr ""
 
 # nlsref 16,93
 #: src/lib/Sympa/List.pm:316
-#, fuzzy
 msgid "preserve existing header field"
-msgstr "usutakse olemasolevat päiserida"
+msgstr "säilitada olemasolev kirjapäis"
 
 #: default/mhonarc-ressources.tt2:482 src/lib/Sympa/List.pm:319
-#, fuzzy
 msgid "sender"
-msgstr "Saatja"
+msgstr "saatja"
 
 #: default/mhonarc-ressources.tt2:488 default/web_tt2/copy_template.tt2:16
 #: default/web_tt2/copy_template.tt2:39 default/web_tt2/edit_template.tt2:19
@@ -2399,14 +2381,12 @@ msgid "remove bouncing users"
 msgstr "kaugkasutaja"
 
 #: src/lib/Sympa/List.pm:352
-#, fuzzy
 msgid "send notify to bouncing users"
-msgstr "teavitage omanikku"
+msgstr "teavitage kättetoimetamisvigadega kasutajaid"
 
 #: src/lib/Sympa/List.pm:357
-#, fuzzy
 msgid "enabled"
-msgstr "varjatud"
+msgstr "lubatud"
 
 #: src/lib/Sympa/List.pm:358
 msgid "disabled"
@@ -2420,20 +2400,17 @@ msgid "robot"
 msgstr "saatja"
 
 #: src/lib/Sympa/List.pm:365
-#, fuzzy
 msgid "first entry"
-msgstr "Kaust"
+msgstr "esimene kirje"
 
 # nlsref 16,201
 #: src/lib/Sympa/List.pm:368
-#, fuzzy
 msgid "entries matching regular expression"
-msgstr "esimese taseme regulaaravaldis"
+msgstr "regulaaravaldist rahuldavad "
 
 #: src/lib/Sympa/List.pm:372
-#, fuzzy
 msgid "base"
-msgstr "Suur ja väiketähed:"
+msgstr "alus"
 
 #: src/lib/Sympa/List.pm:373
 #, fuzzy
@@ -2457,42 +2434,36 @@ msgstr "Informatsioon"
 
 # nlsref 16,45
 #: src/lib/Sympa/List.pm:381
-#, fuzzy
 msgid "SSL version 2"
-msgstr "SSL versioon"
+msgstr "SSL versioon 2"
 
 # nlsref 16,45
 #: src/lib/Sympa/List.pm:382
-#, fuzzy
 msgid "SSL version 3"
-msgstr "SSL versioon"
+msgstr "SSL versioon 3"
 
 # nlsref 16,45
 #: src/lib/Sympa/List.pm:383
-#, fuzzy
 msgid "TLS version 1"
-msgstr "SSL versioon"
+msgstr "TLS versioon 1"
 
 # nlsref 16,45
 #: src/lib/Sympa/List.pm:384
-#, fuzzy
 msgid "TLS version 1.1"
-msgstr "SSL versioon"
+msgstr "TLS versioon 1.1"
 
 # nlsref 16,45
 #: src/lib/Sympa/List.pm:385
-#, fuzzy
 msgid "TLS version 1.2"
-msgstr "SSL versioon"
+msgstr "TLS versioon 1.2"
 
 #: src/lib/Sympa/List.pm:389
 msgid "receive notification email"
 msgstr "Teavitus"
 
 #: src/lib/Sympa/List.pm:390
-#, fuzzy
 msgid "no notifications"
-msgstr "Pole teavitusi"
+msgstr "teavitusi pole"
 
 #: src/lib/Sympa/List.pm:394
 #, fuzzy
@@ -2528,9 +2499,8 @@ msgid "9 - lowest priority"
 msgstr ""
 
 #: src/lib/Sympa/List.pm:407
-#, fuzzy
 msgid "queue messages only"
-msgstr " Viimased kirjad "
+msgstr "ootejärjekorras olevad kirjad"
 
 #: src/lib/Sympa/List.pm:410
 msgid "replace @ characters"
@@ -2542,29 +2512,25 @@ msgstr "JavaScripti kasutamine"
 
 # nlsref 15,6
 #: src/lib/Sympa/List.pm:414
-#, fuzzy
 msgid "required to post message"
-msgstr "meeldetuletuskiri"
+msgstr "kohustuslik kirja saatmiseks"
 
 # nlsref 16,68
 #: src/lib/Sympa/List.pm:416
-#, fuzzy
 msgid "required to distribute message"
-msgstr "Lisati edasisaadetud kirjade hulka"
+msgstr "kohustuslik kirja edastamiseks"
 
 #: src/lib/Sympa/List.pm:419
 msgid "optional"
 msgstr "mittekohustuslik"
 
 #: src/lib/Sympa/List.pm:422
-#, fuzzy
 msgid "required"
-msgstr "teavituseta"
+msgstr "kohustuslik"
 
 #: src/lib/Sympa/List.pm:425
-#, fuzzy
 msgid "string"
-msgstr "väljaandja"
+msgstr "sõne"
 
 #: src/lib/Sympa/List.pm:426
 msgid "multi-line text"
@@ -2585,9 +2551,8 @@ msgid "add a new MIME part"
 msgstr ""
 
 #: src/lib/Sympa/List.pm:432
-#, fuzzy
 msgid "append to message body"
-msgstr "%1 vastet kirja sisust"
+msgstr "lisada  kirja sisusle"
 
 #: default/scenari/unsubscribe.open:1 src/lib/Sympa/List.pm:435
 msgid "open"
@@ -2636,30 +2601,25 @@ msgid "help"
 msgstr "Abi"
 
 #: src/lib/Sympa/List.pm:448
-#, fuzzy
 msgid "subscription"
-msgstr "Listist lahkumine"
+msgstr "liitumine"
 
 #: src/lib/Sympa/List.pm:449
-#, fuzzy
 msgid "unsubscription"
-msgstr "Listist lahkumine"
+msgstr "listist lahkumine"
 
 #: src/lib/Sympa/List.pm:450
-#, fuzzy
 msgid "posting address"
-msgstr "Vigane aadress"
+msgstr "postiaadress"
 
 # nlsref 16,4
 #: src/lib/Sympa/List.pm:451
-#, fuzzy
 msgid "list archive"
-msgstr "Arhiiv"
+msgstr "listi arhiiv"
 
 #: src/lib/Sympa/List.pm:455
-#, fuzzy
 msgid "authenticated by password"
-msgstr "Saatke mulle parool"
+msgstr "parooliga audenditud"
 
 #: src/lib/Sympa/List.pm:457
 #, fuzzy
@@ -2719,14 +2679,12 @@ msgstr ""
 
 # nlsref 15,6
 #: src/lib/Sympa/List.pm:478
-#, fuzzy
 msgid "original messages"
-msgstr "meeldetuletuskiri"
+msgstr "originaalkirjad"
 
 #: src/lib/Sympa/List.pm:479
-#, fuzzy
 msgid "decrypted messages"
-msgstr "vanemad kirjad eespool"
+msgstr "lahtikrüptitud kirjad"
 
 #: src/lib/Sympa/List.pm:482
 msgid "on demand"
@@ -2750,24 +2708,22 @@ msgstr ""
 
 # nlsref 16,201
 #: src/lib/Sympa/List.pm:490
-#, fuzzy
 msgid "domain matching regular expression"
-msgstr "esimese taseme regulaaravaldis"
+msgstr "domeen vastab regulaaravaldisele"
 
 # nlsref 8,7
 #: src/lib/Sympa/List.pm:493
 #, fuzzy
 msgid "display name"
-msgstr "Grupi nimi"
+msgstr "näidatav nimi"
 
 #: src/lib/Sympa/List.pm:494
 msgid "display name and e-mail"
 msgstr ""
 
 #: src/lib/Sympa/List.pm:495
-#, fuzzy
 msgid "name \"via Mailing List\""
-msgstr "Tehnilise toe listid"
+msgstr "nimi \"Maililist\""
 
 #: src/lib/Sympa/List.pm:496
 msgid "e-mail \"via Mailing List\""
@@ -2846,9 +2802,8 @@ msgid "closed family instance"
 msgstr "Viimati loodud grupp"
 
 #: src/lib/Sympa/List.pm:525
-#, fuzzy
 msgid "closed list"
-msgstr "Suletud listid"
+msgstr "suletud list"
 
 #: default/mail_tt2/digest.tt2:12 default/mail_tt2/digestplain.tt2:9
 #: default/mail_tt2/get_archive.tt2:8 src/lib/Sympa/List.pm:2233
@@ -2904,7 +2859,7 @@ msgid ""
 msgstr ""
 "\n"
 "[Järgneb manus]\n"
-"--- Originaalkiri ---\n"
+"-----Originaalkiri------\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -3000,16 +2955,14 @@ msgstr "[ HTML'ist teisendatud tekst ]\n"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3481
-#, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
-msgstr "Tehnilise toe listid"
+msgstr "%s  listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3485
-#, fuzzy
 msgid "%s via Editor Address of %s Mailing List"
-msgstr "Tehnilise toe listid"
+msgstr "%s listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -3020,29 +2973,25 @@ msgstr ""
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3495
-#, fuzzy
 msgid "via Owner Address of %s Mailing List"
-msgstr "Tehnilise toe listid"
+msgstr "listi %s omaniku aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3499
-#, fuzzy
 msgid "via Editor Address of %s Mailing List"
-msgstr "Tehnilise toe listid"
+msgstr "listi %s muutja aadressil"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3503
-#, fuzzy
 msgid "via %s Mailing List"
-msgstr "Tehnilise toe listid"
+msgstr "listi %s kaudu"
 
 # nlsref 16,3
 #: src/lib/Sympa/Message.pm:3520
-#, fuzzy
 msgid "Anonymous"
-msgstr "Anonüümne saatja"
+msgstr "Anonüümne"
 
 #: src/lib/Sympa/ModDef.pm:56
 msgid ""
@@ -3161,9 +3110,8 @@ msgid "used to compute MD5 digests for passwords, etc."
 msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:159
-#, fuzzy
 msgid "Used for email tracking"
-msgstr "Kasutaja e-post"
+msgstr "Kasutatakse emaili järgimiseks"
 
 #: src/lib/Sympa/ModDef.pm:164
 msgid "module for character encoding processing"
@@ -3204,9 +3152,8 @@ msgid "internal use for string processing"
 msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:231 src/lib/Sympa/ModDef.pm:251
-#, fuzzy
 msgid "required when including members of a remote list"
-msgstr "Ei saanud lisada kasutajaid listile '%1'"
+msgstr "kohustuslik väliste listide tellijate olemasolul"
 
 #: src/lib/Sympa/ModDef.pm:240
 msgid "set of various subroutines to handle scalar"
@@ -3214,9 +3161,8 @@ msgstr ""
 
 # nlsref 16,33
 #: src/lib/Sympa/ModDef.pm:246
-#, fuzzy
 msgid "internationalization functions"
-msgstr "Interneti domeeninimi"
+msgstr "rahvusvahelistumise funktsioonid"
 
 #: src/lib/Sympa/ModDef.pm:257
 msgid "used to parse or build mailboxes in message headers"
@@ -3337,9 +3283,8 @@ msgid "(unknown date)"
 msgstr "(tundamtu kuupäev)"
 
 #: src/lib/Sympa/Upgrade.pm:1109
-#, fuzzy
 msgid "Unknown parameter"
-msgstr "Valed parameetrid"
+msgstr "Tundmatu parameeter"
 
 #: src/lib/Sympa/Upgrade.pm:1127
 msgid "Migration from wwsympa.conf"
@@ -3388,9 +3333,8 @@ msgid "[Image:%s]"
 msgstr "[ Pilt %s ]"
 
 #: src/lib/Sympa/HTML/FormatText.pm:47
-#, fuzzy
 msgid "[Image]"
-msgstr "[ Pilt %s ]"
+msgstr "[Pilt]"
 
 # nlsref 15,4
 #: src/lib/Sympa/Message/Plugin.pm:147
@@ -3435,9 +3379,8 @@ msgstr "1 nädal"
 
 # nlsref 16,23
 #: src/lib/Sympa/Tools/WWW.pm:78
-#, fuzzy
 msgid "30 days"
-msgstr "päevi"
+msgstr "30 päeva"
 
 # nlsref 15,1
 #: src/lib/Sympa/Tools/WWW.pm:83
@@ -3547,9 +3490,8 @@ msgstr "Teie listid"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/cgi/wwsympa.fcgi.in:4891
-#, fuzzy
 msgid "%s / %s"
-msgstr "lk %1 / %2"
+msgstr "%s / %s"
 
 #: default/web_tt2/home.tt2:70 default/web_tt2/lists.tt2:22
 #: src/cgi/wwsympa.fcgi.in:4899
@@ -3580,9 +3522,8 @@ msgstr "%d %b %y  %H:%M"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/cgi/wwsympa.fcgi.in:12996
-#, fuzzy
 msgid "Unknown (%s)"
-msgstr "Autor teadmata"
+msgstr "Tundmatu (%s)"
 
 # nlsref 6,18
 #. This entry is a sprintf format
@@ -3630,9 +3571,8 @@ msgid "Users deleted by admin"
 msgstr "Administraator kustutas kasutajad"
 
 #: src/cgi/wwsympa.fcgi.in:22317
-#, fuzzy
 msgid "Users deleted automatically"
-msgstr "Administraator kustutas kasutajad"
+msgstr "Automaatselt kustutatud kasutajad"
 
 #: src/cgi/wwsympa.fcgi.in:22318
 msgid "File uploading"
@@ -3640,20 +3580,18 @@ msgstr ""
 
 # nlsref 16,34
 #: src/cgi/wwsympa.fcgi.in:22319
-#, fuzzy
 msgid "File creation"
-msgstr "Failist lisamine"
+msgstr "Faili loomine"
 
 #: src/cgi/wwsympa.fcgi.in:22320
-#, fuzzy
 msgid "Directory creation"
-msgstr "Modereerimise spuuli kaust"
+msgstr "Kataloogi loomine"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/cgi/wwsympa.fcgi.in:22826 src/cgi/wwsympa.fcgi.in:22828
 msgid "%Y-%m-%d-%H-%M-%S"
-msgstr "%d/%m/%Y-%H%:M:%S"
+msgstr "%d.%m.%Y-%H%:M:%S"
 
 #. (date_from_formated)
 #. (date_to_formated)
@@ -3666,9 +3604,8 @@ msgstr "%d %b %Y %H:%M:%S"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/cgi/wwsympa.fcgi.in:23604
-#, fuzzy
 msgid "topic (%s)"
-msgstr "teemad"
+msgstr "teema (%s)"
 
 #. (count)
 #: default/web_tt2/active_lists.tt2:18 default/web_tt2/active_lists.tt2:5
@@ -4220,14 +4157,12 @@ msgid "SYMPA logo"
 msgstr ""
 
 #: default/web_tt2/aside_menu.tt2:59
-#, fuzzy
 msgid "List Options Menu"
-msgstr "Teie listi seaded"
+msgstr "Listi sätete menüü"
 
 #: default/web_tt2/aside_menu.tt2:78
-#, fuzzy
 msgid "General Menu"
-msgstr "Listi kirjeldus"
+msgstr "Üldine"
 
 #: default/web_tt2/automatic_lists_management_request.tt2:3
 #, fuzzy
@@ -4279,13 +4214,12 @@ msgstr "Mustanimekirja haldus"
 
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:7
-#, fuzzy
 msgid ""
 "Operation requested by users which email is listed in the blacklist file are "
 "rejected. The blacklist is in use for the following operation: %1."
 msgstr ""
-"Tegevustest, mille sooritaja e-post on mustas nimekirjas, keeldutakse. \n"
-"Musta nimekirja kasutatakse järgmisteks tegevusteks:"
+"Tegevustest, mille sooritaja e-post on mustas nimekirjas, keeldutakse. Must "
+"nimekiri on kasutusel järgmisteks tegevusteks: %1."
 
 #: default/web_tt2/blacklist.tt2:9
 msgid "Syntax:"
@@ -4310,7 +4244,6 @@ msgstr ""
 "kasutajad sellest konkreetsest domeenist"
 
 #: default/web_tt2/blacklist.tt2:14
-#, fuzzy
 msgid "only one asterisk is allowed in a line"
 msgstr "reas võib kasutada vaid ühte * märki"
 
@@ -4544,11 +4477,8 @@ msgid "default"
 msgstr "vaikeseade"
 
 #: default/web_tt2/copy_template.tt2:11 default/web_tt2/view_template.tt2:17
-#, fuzzy
 msgid "(this template is the default included in the distribution)"
-msgstr ""
-"( see on vaikimisi blankett kõikidele robotitele, kui ei ole mõne "
-"spetsiifilise roboti juures teisiti määratletud )"
+msgstr "( see on vaikimisi mall)"
 
 #: default/web_tt2/copy_template.tt2:12 default/web_tt2/copy_template.tt2:37
 #: default/web_tt2/edit_template.tt2:15 default/web_tt2/ls_templates.tt2:42
@@ -4558,31 +4488,28 @@ msgstr "server"
 
 #: default/web_tt2/copy_template.tt2:13 default/web_tt2/edit_template.tt2:16
 #: default/web_tt2/view_template.tt2:19
-#, fuzzy
 msgid ""
 "(this template is the default used by all robots unless redefined for a "
 "specific robot)"
 msgstr ""
-"( see on vaikimisi blankett kõikidele robotitele, kui ei ole mõne "
-"spetsiifilise roboti juures teisiti määratletud )"
+"( see on vaikimisi mall kõikidele robotitele, kui ei ole mõne spetsiifilise "
+"roboti juures teisiti määratletud )"
 
 #. (robot)
 #: default/web_tt2/copy_template.tt2:15 default/web_tt2/edit_template.tt2:18
 #: default/web_tt2/view_template.tt2:21
-#, fuzzy
 msgid ""
 "(this template is the default for all lists of robot %1 unless it is "
 "redefined for a specific list)"
 msgstr ""
-"(see on vaikimisi mall kõikidele roboti listidele kui %1 ei ole valinud "
-"mõneda teist listi)"
+"(see on vaikimisi mall kõikidele robotitele %1,  kui kindla listi sätetes ei "
+"ole määratud teisiti)"
 
 #. (list,robot)
 #: default/web_tt2/copy_template.tt2:17 default/web_tt2/edit_template.tt2:20
 #: default/web_tt2/view_template.tt2:23
-#, fuzzy
 msgid "(this template is defined for list %1@%2)"
-msgstr "( blankett ei ole defineeritud listi %1@%2 jaoks )"
+msgstr "(see mall on defineeritud listile %1@%2)"
 
 #: default/web_tt2/copy_template.tt2:21 default/web_tt2/copy_template.tt2:41
 #: default/web_tt2/edit_template.tt2:23 default/web_tt2/view_template.tt2:26
@@ -4634,9 +4561,8 @@ msgid "Internal Server Error"
 msgstr "Serveri viga"
 
 #: default/web_tt2/crash.tt2:58
-#, fuzzy
 msgid "Sympa encountered an internal error."
-msgstr " Kasutajal %1 tekkis serveri viga"
+msgstr "Sympa serveri sisemine viga."
 
 #: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
 msgid "Please contact the listmaster."
@@ -5195,13 +5121,12 @@ msgstr ""
 "paremale paneelile. (vaikeväärtuseks listi kirjeldus)"
 
 #: default/web_tt2/editfile.tt2:39
-#, fuzzy
 msgid ""
 "List description: This text is sent as an answer to the mail command INFO. "
 "It can also be included in the <em>Welcome message</em>."
 msgstr ""
-"Listi kirjeldus: Tekst mis saadetakse vastuseks e-mailiga saadetud käsule \n"
-"INFO. Seda teksti võib lisada ka <em>tervituskirjale</em>."
+"Listi kirjeldus: Tekst mis saadetakse vastuseks e-mailiga saadetud käsule "
+"INFO. Seda teksti võib kasutada ka <em>tervituskirjas</em>."
 
 #: default/web_tt2/editfile.tt2:49
 msgid "Automatic messages"
@@ -5233,8 +5158,9 @@ msgid ""
 "unsubscribe themselves."
 msgstr ""
 "Meeldetuletuskiri: Teade, mis saadetakse kõigile tellijatele käsu REMIND "
-"peale. On väga kasulik aidatamaks inimestele, kes on segaduses oma "
-"tellimustest või kes ei oska listist iseseisvalt lahkuda."
+"täitmisel.\n"
+"On kasulik inimestele, kes on segaduses oma tellimustest või kes ei saa "
+"listist iseseisvalt lahkuda."
 
 #: default/web_tt2/editfile.tt2:63
 msgid ""
@@ -5284,15 +5210,13 @@ msgstr ""
 "kui kustutad nad listist DEL käsuga (kui ei vajuta just Quiet nuppu)."
 
 #: default/web_tt2/editfile.tt2:96
-#, fuzzy
 msgid ""
 "Virus infection message: This message is sent to the sender of a message in "
 "which a virus was found."
 msgstr ""
-"Lahkumise kiri: See teade saadetakse kui kasutaja lõpetab listi tellimuse."
+"Viituse teade: selline teade saadatakse tuvastatud viirusega kirja autorile."
 
 #: default/web_tt2/edit_list_request.tt2:4
-#, fuzzy
 msgid "Edit List Configuration"
 msgstr "Muuda listi seadeid"
 
@@ -5301,9 +5225,8 @@ msgid "Here you can edit your list's configuration parameters."
 msgstr ""
 
 #: default/web_tt2/edit_list_request.tt2:34
-#, fuzzy
 msgid "(default)"
-msgstr "vaikeseade"
+msgstr "(vaikimisi)"
 
 #: default/web_tt2/edit_list_request.tt2:40
 msgid "scenario source"
@@ -5429,9 +5352,8 @@ msgstr "veeb"
 
 #: default/web_tt2/edit_template.tt2:9 default/web_tt2/ls_templates.tt2:24
 #: default/web_tt2/view_template.tt2:10
-#, fuzzy
 msgid "mail"
-msgstr "E-post"
+msgstr "meil"
 
 #: default/web_tt2/edit_template.tt2:12 default/web_tt2/view_template.tt2:13
 msgid "Path: "
@@ -5534,9 +5456,8 @@ msgstr ""
 #. (list.name,new_listname)
 #: default/mail_tt2/listmaster_notification.tt2:360
 #: default/web_tt2/error.tt2:26
-#, fuzzy
 msgid "Unable to rename list '%1' to '%2'."
-msgstr "Ei saa faili '%1' ümber nimetada failiks '%2'."
+msgstr "Ei saa listi '%1' ümber nimetada listiks '%2'."
 
 #. (s_err.action)
 #: default/web_tt2/error.tt2:37
@@ -6064,13 +5985,11 @@ msgstr "Listiga liitumise soove ei ole"
 
 #. (signing_off_email,family)
 #: default/web_tt2/family_signoff_request.tt2:2
-#, fuzzy
 msgid "You clicked a link to unsubscribe the address %1 from family %2."
-msgstr "Te soovisite eemaldada aadressi %1 listist %2."
+msgstr "Te soovisite eemaldada aadressi %1 perekonnast %2."
 
 #. (family)
 #: default/web_tt2/family_signoff_request.tt2:3
-#, fuzzy
 msgid ""
 "A confirmation was just sent to this address. By clicking the link it "
 "contains, you will be definitively unsubscribed from all the lists from "
@@ -6080,9 +5999,8 @@ msgstr ""
 "lõpetatakse  listi %1 tellimus"
 
 #: default/web_tt2/get_biggest_lists.tt2:4
-#, fuzzy
 msgid "Biggests Lists"
-msgstr "Uusimad listid"
+msgstr "Suurimad listid"
 
 #: default/web_tt2/get_biggest_lists.tt2:7
 #: default/web_tt2/get_inactive_lists.tt2:9
@@ -6117,7 +6035,6 @@ msgstr "Eemalda valitud listid"
 
 #: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:38
 #: default/web_tt2/serveradmin.tt2:11
-#, fuzzy
 msgid "View Lists sorted by Last Message Date"
 msgstr "Listid sorteeritult viimase kirja aja järgi"
 
@@ -6156,9 +6073,8 @@ msgstr "seni veel mitte ühtegi"
 
 #: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:37
 #: default/web_tt2/serveradmin.tt2:10
-#, fuzzy
 msgid "View Lists sorted by Creation Date"
-msgstr "Listid sorteeritult tegemise aja järgi"
+msgstr "Listid sorteeritult loomise aja järgi"
 
 #: default/web_tt2/get_latest_lists.tt2:6
 msgid "Latests Lists"
@@ -6258,9 +6174,8 @@ msgid "User preferences"
 msgstr "Eelistused"
 
 #: default/web_tt2/home.tt2:47
-#, fuzzy
 msgid "Browse lists by categories"
-msgstr "E-posti listide kategooriad"
+msgstr "Vaata listide kategooriate kaupa"
 
 # nlsref 15,10
 #: default/web_tt2/home.tt2:62
@@ -6268,26 +6183,22 @@ msgid "List of lists"
 msgstr "Listide nimekiri"
 
 #: default/web_tt2/info.tt2:11 default/web_tt2/review.tt2:7
-#, fuzzy
 msgid "Administrative Options"
 msgstr "Admistreerimine"
 
 #. (mod_message)
 #: default/web_tt2/info.tt2:16
-#, fuzzy
 msgid "There are %1 message(s) awaiting moderation."
 msgstr "Modereerimist ootab %1 kirja."
 
 #: default/web_tt2/info.tt2:16 default/web_tt2/info.tt2:24
-#, fuzzy
 msgid "(Review)"
-msgstr "vaatan"
+msgstr "(ülevaade)"
 
 #. (mod_subscription)
 #: default/web_tt2/info.tt2:24
-#, fuzzy
 msgid "There are %1 subscription(s) awaiting moderation."
-msgstr "Modereerimist ootab %1 kirja."
+msgstr "Modereerimist ootab %1 tellimust."
 
 #: default/web_tt2/info.tt2:31
 msgid ""
@@ -6331,35 +6242,30 @@ msgstr ""
 
 # nlsref 16,74
 #: default/web_tt2/info.tt2:52
-#, fuzzy
 msgid "Change who can post to this list"
-msgstr "Muudame sinu pilti selles listis"
+msgstr "Siia listi võivad postitada"
 
 # nlsref 16,53
 #: default/web_tt2/info.tt2:53
-#, fuzzy
 msgid "Change who can (un)subscribe and view list information"
-msgstr "Kes saab näha infot listi kohta"
+msgstr "Kes saab tellijaid hallata ja näha listi infot"
 
 #: default/web_tt2/info.tt2:54
-#, fuzzy
 msgid "Close this list"
-msgstr "Suletud listid"
+msgstr "Sulge see list"
 
 # nlsref 16,4
 #: default/web_tt2/info.tt2:62
-#, fuzzy
 msgid "List Archives"
-msgstr "Arhiiv"
+msgstr "Arhiivid"
 
 #: default/web_tt2/info.tt2:64
 msgid "Change settings for who can view archives"
 msgstr ""
 
 #: default/web_tt2/info.tt2:65
-#, fuzzy
 msgid "Download archives"
-msgstr "Arhiive haldus:"
+msgstr "Arhiive allalaadimine"
 
 #: default/web_tt2/info.tt2:73
 #, fuzzy
@@ -6527,9 +6433,8 @@ msgid "Subscribe"
 msgstr "Liitu listiga"
 
 #: default/web_tt2/list_menu.tt2:84
-#, fuzzy
 msgid "List Home"
-msgstr "Listi nimi"
+msgstr "Listi koduleht"
 
 #: default/web_tt2/list_menu.tt2:88
 msgid "Admin"
@@ -6573,9 +6478,8 @@ msgid "List not yet activated"
 msgstr "List ei ole veel aktiveeritud"
 
 #: default/web_tt2/list_panel.tt2:8
-#, fuzzy
 msgid "Erroneous configuration"
-msgstr "S/MIME seaded"
+msgstr "Ekslikud seaded"
 
 #: default/web_tt2/list_panel.tt2:12
 msgid "Subscribers:"
@@ -6587,26 +6491,22 @@ msgid "Error rate:"
 msgstr "Vigade osakaal:"
 
 #: default/web_tt2/list_panel.tt2:28
-#, fuzzy
 msgid "Owners:"
-msgstr "Omanikud"
+msgstr "Omanikud:"
 
 #. (concealed)
 #: default/web_tt2/list_panel.tt2:46
-#, fuzzy
 msgid "(%1 owners)"
-msgstr "Omanik"
+msgstr "(%1 omanikud)"
 
 #: default/web_tt2/list_panel.tt2:59
-#, fuzzy
 msgid "Moderators:"
-msgstr "Moderaatorid"
+msgstr "Moderaatorid:"
 
 #. (concealed)
 #: default/web_tt2/list_panel.tt2:78
-#, fuzzy
 msgid "(%1 moderators)"
-msgstr "Moderaatorid"
+msgstr "(%1 moderaatorid)"
 
 #: default/web_tt2/list_panel.tt2:81
 msgid "(same as owners)"
@@ -6654,9 +6554,8 @@ msgid "last login from %1"
 msgstr "viimati sisse logitud arvutist %1"
 
 #: default/web_tt2/loginbanner.tt2:26
-#, fuzzy
 msgid "My preferences"
-msgstr "Eelistused"
+msgstr "Minu eelistused"
 
 #: default/web_tt2/loginbanner.tt2:38
 msgid "Logout"
@@ -6978,9 +6877,8 @@ msgid "Current message"
 msgstr "meeldetuletuskiri"
 
 #: default/web_tt2/modindex.tt2:35
-#, fuzzy
 msgid "Spam"
-msgstr "L"
+msgstr "Rämpspost"
 
 #: default/web_tt2/modindex.tt2:135 default/web_tt2/modindex.tt2:41
 msgid "Size"
@@ -6992,9 +6890,8 @@ msgstr ""
 
 #. (msg.value.from)
 #: default/web_tt2/modindex.tt2:87
-#, fuzzy
 msgid "Dou you really want to add %1?"
-msgstr "Olete kindel, et soovite kustutada %1?"
+msgstr "Olete kindel, et soovite lisada %1?"
 
 #: default/web_tt2/modindex.tt2:96
 msgid "No subject"
@@ -7034,21 +6931,18 @@ msgid "Manage rejection messages"
 msgstr "Äraütlemiskirjade haldus"
 
 #: default/web_tt2/my.tt2:6
-#, fuzzy
 msgid "You are subscribed to or managing the following lists."
-msgstr "Te olete juba listi %1 liige"
+msgstr "Te olete listi liige või moderaator."
 
 #. (l.value.liststartdate,l.value.listenddate)
 #: default/web_tt2/my.tt2:37
-#, fuzzy
 msgid "Suspended from %1 to %2"
-msgstr "Peatatud alates"
+msgstr "Peatatud alates %1 kuni %2"
 
 #. (l.value.liststartdate)
 #: default/web_tt2/my.tt2:39
-#, fuzzy
 msgid "Suspended from %1 to indefinite end date"
-msgstr "Peatatud alates"
+msgstr "Peatatud alates %1 lõplikult"
 
 #: default/web_tt2/my.tt2:59 default/web_tt2/suspend_request.tt2:69
 msgid "No subscription."
@@ -7059,9 +6953,8 @@ msgid "You need to be logged in to access this page."
 msgstr ""
 
 #: default/web_tt2/nav.tt2:9
-#, fuzzy
 msgid "Create List Menu"
-msgstr "Uus list"
+msgstr "Uue listi loomine"
 
 #: default/web_tt2/nav.tt2:13
 msgid "Create a list using a template"
@@ -7076,12 +6969,10 @@ msgid "Lists"
 msgstr "Listid"
 
 #: default/web_tt2/nav.tt2:35 default/web_tt2/serveradmin.tt2:8
-#, fuzzy
 msgid "View Pending (Requested) lists"
-msgstr "Tegemisel listid"
+msgstr "Tegemisel (soovitud) listid"
 
 #: default/web_tt2/nav.tt2:36 default/web_tt2/serveradmin.tt2:9
-#, fuzzy
 msgid "View Closed Lists"
 msgstr "Suletud listid"
 
@@ -7090,9 +6981,8 @@ msgid "Users"
 msgstr "Kasutajad"
 
 #: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:99
-#, fuzzy
 msgid "System log"
-msgstr "Syslog"
+msgstr "Süsteemne logi"
 
 #: default/web_tt2/nav.tt2:48 default/web_tt2/serveradmin.tt2:116
 msgid "Templates"
@@ -7125,9 +7015,8 @@ msgstr "Teavita vigadest või uute võimaluste soovist"
 
 # nlsref 8,1
 #: default/web_tt2/nav.tt2:71 default/web_tt2/nav.tt2:79
-#, fuzzy
 msgid "Index of lists"
-msgstr "Listi %s omanikud"
+msgstr "Listide loetelu"
 
 #: default/web_tt2/nav.tt2:85 default/web_tt2/nav.tt2:87
 #, fuzzy
@@ -7255,21 +7144,19 @@ msgstr "Palun kontakteeru listmasteriga."
 
 #. (user_with_errors.value.first)
 #: default/web_tt2/news.tt2:38
-#, fuzzy
 msgid "first bounce: %1"
-msgstr "Esimene veateade"
+msgstr "Esimene veateade: %1"
 
 #. (user_with_errors.value.last)
 #: default/web_tt2/news.tt2:39
-#, fuzzy
 msgid "last bounce: %1"
-msgstr "Viimane veateade"
+msgstr "Viimane veateade: %1"
 
 #. (user_with_errors.value.type)
 #: default/web_tt2/news.tt2:40
 #, fuzzy
 msgid "Last bounce category: %1"
-msgstr "Viimane uuendus: %1"
+msgstr "Viimane bounce teema: %1"
 
 #. (last_login_host,last_login_date)
 #: default/web_tt2/notice.tt2:5
@@ -7286,9 +7173,8 @@ msgid "%1 subscribers added"
 msgstr "lisatud %1 liiget"
 
 #: default/web_tt2/notice.tt2:16
-#, fuzzy
 msgid "You're not allowed to make sync, time limit in action"
-msgstr "teil ei ole lubatud seda tegevust sooritada."
+msgstr "Teil ei ole lubatud sünkroniseerida,  ajalimiidi tõttu"
 
 #. (notice.total)
 #: default/web_tt2/notice.tt2:19
@@ -7528,9 +7414,8 @@ msgid "You will receive an email that will allow you to choose your password."
 msgstr "Teile saadetakse kiri, mis lubab teil valida uue salasõna."
 
 #: default/web_tt2/renewpasswd.tt2:17
-#, fuzzy
 msgid "Please enter your email address to begin the registration process."
-msgstr "Ei õnnestunud saada teie e-posti aadressi autoriseerimisteenuselt."
+msgstr "Sisestage oma email registreerimise alustamiseks."
 
 #: default/web_tt2/renewpasswd.tt2:19
 msgid "You forgot your password, so you have to renew it."
@@ -7651,9 +7536,8 @@ msgid "Details"
 msgstr "Detailid"
 
 #: default/web_tt2/reviewbouncing.tt2:68
-#, fuzzy
 msgid "Number of bounces"
-msgstr "vigade arv"
+msgstr "Vigade arv"
 
 #: default/web_tt2/reviewbouncing.tt2:69
 msgid "First bounce"
@@ -7708,7 +7592,6 @@ msgid "Remind all"
 msgstr "Saada meeldetuletuskiri kõigile"
 
 #: default/web_tt2/review.tt2:35
-#, fuzzy
 msgid "Add Subscribers"
 msgstr "Lisa tellijaid"
 
@@ -7761,9 +7644,8 @@ msgid "Selection too wide, can not show selection"
 msgstr "Liiga palju vastuseid, ei saa näidata"
 
 #: default/web_tt2/review.tt2:73
-#, fuzzy
 msgid "Subscriber Table"
-msgstr "Tellija"
+msgstr "Tellijate loend"
 
 #. (similar_subscribers_occurence)
 #: default/web_tt2/review.tt2:88
@@ -7938,7 +7820,6 @@ msgid "get matched rule"
 msgstr "leidge vastav reegel"
 
 #: default/web_tt2/search_list_request.tt2:2
-#, fuzzy
 msgid "Search for list(s)"
 msgstr "Otsi liste"
 
@@ -7987,9 +7868,8 @@ msgid "editor"
 msgstr "moderaator"
 
 #: default/web_tt2/serveradmin.tt2:6
-#, fuzzy
 msgid "Information"
-msgstr "Infofail:"
+msgstr "Teave"
 
 #: default/web_tt2/serveradmin.tt2:19
 msgid "The following virtual robots are running on this server:"
@@ -8026,9 +7906,8 @@ msgstr "Kasutajate otsimine"
 
 # nlsref 17,1
 #: default/web_tt2/serveradmin.tt2:58
-#, fuzzy
 msgid "Sessions"
-msgstr "sessioon"
+msgstr "Sessioonid"
 
 #: default/web_tt2/serveradmin.tt2:61
 msgid "View session information for users connected to this web interface:"
@@ -8039,9 +7918,8 @@ msgid "Delay for active sessions (minutes)"
 msgstr "Aktiivsete sessioonide viivituse pikkus (minutites)"
 
 #: default/web_tt2/serveradmin.tt2:64
-#, fuzzy
 msgid "Show only currently connected users"
-msgstr "Näita vaid sisse logitud kasutajaid"
+msgstr "Näita hetkel sisse logitud kasutajaid"
 
 # nlsref 17,1
 #: default/web_tt2/serveradmin.tt2:65
@@ -8127,12 +8005,10 @@ msgid "Set log level"
 msgstr "Sea logimise tase"
 
 #: default/web_tt2/serveradmin.tt2:119
-#, fuzzy
 msgid "Edit default list template"
 msgstr "Listimallidele vaikeväärtuste kohandamine"
 
 #: default/web_tt2/serveradmin.tt2:129
-#, fuzzy
 msgid "Edit site-wide templates"
 msgstr "Veebimallide kohandamine"
 
@@ -8157,14 +8033,12 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/serveradmin.tt2:149
-#, fuzzy
 msgid "Disable template variables dump"
-msgstr "Muutujate tõmmise tegemise välja lülitamine"
+msgstr "Malli muutujate tõmmise tegemise keelamine"
 
 #: default/web_tt2/serveradmin.tt2:151
-#, fuzzy
 msgid "Enable template variables dump"
-msgstr "Muutujate tõmmise tegemise välja lülitamine"
+msgstr "Malli muutujate tõmmise tegemise lubamine"
 
 #: default/web_tt2/serveradmin.tt2:162
 msgid "Skins administration page"
@@ -8270,9 +8144,8 @@ msgid "Cipher key size used"
 msgstr "Võtme suurus"
 
 #: default/web_tt2/show_exclude.tt2:3
-#, fuzzy
 msgid "Exclusion table"
-msgstr "Näita erandite tabelit"
+msgstr "Erandite loend"
 
 #: default/web_tt2/show_exclude.tt2:8
 msgid ""
@@ -8423,9 +8296,8 @@ msgid "the current definition for css location (css_url parameter) is"
 msgstr "praegune ccs asukoht (muutuja css_url väärtus) on"
 
 #: default/web_tt2/skinsedit.tt2:24
-#, fuzzy
 msgid "Install Static CSS"
-msgstr "seadista staatiline CSS"
+msgstr "Seadista staatiline CSS"
 
 #. (cssurl)
 #: default/web_tt2/skinsedit.tt2:30
@@ -8549,9 +8421,8 @@ msgid "background color of:"
 msgstr "taustavärv:"
 
 #: default/web_tt2/skinsedit.tt2:90
-#, fuzzy
 msgid "Text background color"
-msgstr "taustavärv:"
+msgstr "Teksti taustavärv"
 
 #: default/web_tt2/skinsedit.tt2:96
 msgid "Miscelaneous texts font color"
@@ -8574,9 +8445,8 @@ msgid "form labels;"
 msgstr ""
 
 #: default/web_tt2/skinsedit.tt2:116
-#, fuzzy
 msgid "side menu titles;"
-msgstr "külgmenüü."
+msgstr "külgmenüüd;"
 
 #: default/web_tt2/skinsedit.tt2:117
 msgid "text areas in forms."
@@ -8587,14 +8457,12 @@ msgid "HTTP links"
 msgstr ""
 
 #: default/web_tt2/skinsedit.tt2:124
-#, fuzzy
 msgid "hovered buttons"
-msgstr "linkidel, millel on parajasti hiirekursor."
+msgstr "hiirekursori all olev nupp"
 
 #: default/web_tt2/skinsedit.tt2:130
-#, fuzzy
 msgid "text color of hovered links;"
-msgstr "viited, millel peatub hiir;"
+msgstr "hiirekursori all oleva viite värv;"
 
 #: default/web_tt2/skinsedit.tt2:130
 #, fuzzy
@@ -8641,23 +8509,20 @@ msgid "border color of form elements;"
 msgstr "vormide äärejoone värv."
 
 #: default/web_tt2/skinsedit.tt2:166
-#, fuzzy
 msgid "background color of disabled form elements"
-msgstr "aktiivsete nuppude taustavärv."
+msgstr "veebivormi keelatud elementide taustavärv"
 
 #: default/web_tt2/skinsedit.tt2:172
 msgid "invalid form elements"
 msgstr ""
 
 #: default/web_tt2/skinsedit.tt2:178
-#, fuzzy
 msgid "Background color of ins and mark elements."
-msgstr "Tabelite vaikimisi taustavärv."
+msgstr "Lisatud  ja märgitud elementide taustavärv."
 
 #: default/web_tt2/skinsedit.tt2:184
-#, fuzzy
 msgid "Selected text background color"
-msgstr "taustavärv:"
+msgstr "Märgistatud teksti taustavärv"
 
 #: default/web_tt2/skinsedit.tt2:190 default/web_tt2/skinsedit.tt2:196
 #: default/web_tt2/skinsedit.tt2:202 default/web_tt2/skinsedit.tt2:208
@@ -8750,7 +8615,6 @@ msgid "Your list options"
 msgstr "Teie listi seaded"
 
 #: default/web_tt2/suboptions.tt2:8
-#, fuzzy
 msgid "Member since:"
 msgstr "Liitumise algus:"
 
@@ -8776,14 +8640,12 @@ msgstr "Võimalik vaid otsete vastuvõtuviiside jaoks."
 
 # nlsref 6,76
 #: default/web_tt2/suboptions.tt2:72
-#, fuzzy
 msgid "Restore subscription"
 msgstr "Taasta minu tellimused"
 
 #: default/web_tt2/suboptions.tt2:75
-#, fuzzy
 msgid "Your subscription is suspended."
-msgstr "Te liitusite aadressilt %1"
+msgstr "Teie tellimus on peatatud."
 
 #: default/web_tt2/suboptions.tt2:77 default/web_tt2/suboptions.tt2:98
 #: default/web_tt2/suspend_request.tt2:80
@@ -8943,9 +8805,8 @@ msgstr "%1 pilt"
 # Peab olema erinev välja logimisest
 #: default/web_tt2/subscriber_table.tt2:138
 #: default/web_tt2/subscriber_table.tt2:140
-#, fuzzy
 msgid "subscribed"
-msgstr "Tühista tellimus"
+msgstr "tellitud"
 
 # nlsref 6,76
 #: default/web_tt2/suspend_request.tt2:5 default/web_tt2/your_lists.tt2:9
@@ -8953,15 +8814,13 @@ msgid "Manage your subscriptions"
 msgstr "Liitumiste haldamine"
 
 #: default/web_tt2/suspend_request.tt2:7
-#, fuzzy
 msgid "You are subscribed to the following lists"
-msgstr "Te olete juba listi %1 liige"
+msgstr "Te olete järgmiste listide liige"
 
 #. (sub.liststartdate)
 #: default/web_tt2/suspend_request.tt2:35
-#, fuzzy
 msgid "Suspended from %1 to"
-msgstr "Peatatud alates"
+msgstr "Peatatud alates %1"
 
 #: default/web_tt2/suspend_request.tt2:39
 msgid "indefinite end date"
@@ -8969,22 +8828,19 @@ msgstr "määramatu lõpukuupäev"
 
 #. (l.key)
 #: default/web_tt2/suspend_request.tt2:42
-#, fuzzy
 msgid "Check to restore reception from list %1"
-msgstr "Soovisite lahkuda listist %1."
+msgstr "Vali  listi %1 kirjade saamise taastamiseks"
 
 #. (l.key)
 #: default/web_tt2/suspend_request.tt2:45
-#, fuzzy
 msgid "Check to suspend or unsubscribe from list %1"
-msgstr "Te soovisite lahkuda listist %1"
+msgstr "Vali listi %1 tellimuse peatamiseks või tühistamiseks"
 
 #: default/web_tt2/suspend_request.tt2:48
-#, fuzzy
 msgid ""
 "You are not allowed to suspend your subscription / unsusbscribe from this "
 "list."
-msgstr "Teil ei ole luba listiga liitumiseks."
+msgstr "Teil ei ole õigusi listi tellimuse peatamiseks / tühistamiseks."
 
 #: default/web_tt2/suspend_request.tt2:73
 msgid ""
@@ -8994,7 +8850,6 @@ msgid ""
 msgstr ""
 
 #: default/web_tt2/suspend_request.tt2:75
-#, fuzzy
 msgid "Toggle selection"
 msgstr "Pööra valik ringi"
 
@@ -9074,27 +8929,23 @@ msgstr "Kiri aadressilt %1 %2 listi %3 "
 
 #. (msgid)
 #: default/web_tt2/tracking.tt2:12
-#, fuzzy
 msgid "Message-Id: %1"
-msgstr "Kirja ID"
+msgstr "Kirja ID: %1"
 
 #. (u.recipient)
 #: default/web_tt2/tracking.tt2:19
-#, fuzzy
 msgid "Recipient Email: %1"
-msgstr "Saaja e-post"
+msgstr "Saaja e-post: %1"
 
 #. (u.status)
 #: default/web_tt2/tracking.tt2:20
-#, fuzzy
 msgid "Delivery Status: %1"
-msgstr "Staatus"
+msgstr "Saatmise staatus: %1"
 
 #. (u.arrival_date)
 #: default/web_tt2/tracking.tt2:21
-#, fuzzy
 msgid "Notification Date: %1"
-msgstr "Teavituse kuupäev"
+msgstr "Teavituse kuupäev: %1"
 
 #: default/web_tt2/tracking.tt2:33
 msgid "Recipient Email"
@@ -9279,7 +9130,6 @@ msgid "Archives are restricted to list owners."
 msgstr "Veebiarhiivid piiratud vaid listiomanikele."
 
 #: default/mail_tt2/authorization_reject.tt2:11
-#, fuzzy
 msgid "Archives are restricted to list subscribers."
 msgstr "Veebiarhiivid piiratud vaid tellijatele."
 
@@ -9375,13 +9225,12 @@ msgid "Shared document reading is restricted to list subscribers."
 msgstr "Jagatud dokumentide lugemine on piiratud listi tellijatele."
 
 #: default/mail_tt2/authorization_reject.tt2:68
-#, fuzzy
 msgid ""
 "Shared document reading is restricted to list subscribers authenticated with "
 "user certificate."
 msgstr ""
-"Jagatud dokumentide lugemine on piiratud listi tellijatele, kes on "
-"autoriseeritud kasutaja sertifikaadiga."
+"Jagatud dokumentide lugemine on piiratud listi sertifikaadiga autoriseeritud "
+"tellijatele."
 
 #: default/mail_tt2/authorization_reject.tt2:71
 msgid "you are not allowed to edit list parameters."
@@ -9647,7 +9496,6 @@ msgstr "teie sertifikaat aegub peagi"
 
 #. (expiration_date)
 #: default/mail_tt2/certif_warning.tt2:3
-#, fuzzy
 msgid "Your authentication certificate will expire on %1."
 msgstr "Teie sertifikaat aegub: %1."
 
@@ -9668,10 +9516,10 @@ msgid ""
 "or\n"
 "click: "
 msgstr ""
-"Saamaks nad uuesti, uuendage oma sertifikaati\n"
-"ja saatke allkirjastatud kiri aadressil %1@&2\n"
+"Saamakskirju ka edaspidi, uuendage oma sertifikaati\n"
+"ja saatke allkirjastatud kiri aadressil %1@%2\n"
 "või\n"
-"vajutage: "
+"vajutage:  "
 
 # nlsref 4,17
 #: default/mail_tt2/command_report.tt2:2
@@ -9705,8 +9553,8 @@ msgid ""
 "been subscribed (or unsubscribed) to the list."
 msgstr ""
 "Teie liitumise/lahkumise soov saadeti edasi listi omanikule kinnitamiseks.\n"
-"Peale kinnituse saamist teavitatakse teid listiga liitumisest (või listist "
-"lahkumisest)."
+"Peale omanikult kinnituse saamist teavitatakse teid \n"
+"listiga liitumisest (või listist lahkumisest)."
 
 # nlsref 6,36
 #. (notice.email,notice.listname)
@@ -9735,7 +9583,7 @@ msgstr "Meeldetuletus saadeti kõikidele %1-le listi %2 tellijatele."
 #. (notice.count)
 #: default/mail_tt2/command_report.tt2:42
 msgid "The Reminder has been sent to %1 users."
-msgstr "Meeldetuletus on saadetud % kasutajale."
+msgstr "Meeldetuletus on saadetud %1 kasutajale."
 
 # nlsref 6,38
 #. (notice.email,notice.listname)
@@ -9845,9 +9693,8 @@ msgstr ""
 # nlsref 6,90
 #. (u_err.listname)
 #: default/mail_tt2/command_report.tt2:120
-#, fuzzy
 msgid "List %1 allows only these reception modes: "
-msgstr "Listis %1 on lubatud vaid need vastuvõtuviisid: %2"
+msgstr "Listis %1 on lubatud vaid need vastuvõtuviisid: "
 
 #: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
 msgid ", and "
@@ -9925,15 +9772,13 @@ msgstr "%1 Kokkuvõte %2"
 
 #. (current_group,total_group)
 #: default/mail_tt2/digest.tt2:4 default/mail_tt2/digestplain.tt2:4
-#, fuzzy
 msgid " (%1/%2)"
-msgstr "lk %1 / %2"
+msgstr " (%1/%2)"
 
 #. (list.name,date)
 #: default/mail_tt2/digestplain.tt2:7
-#, fuzzy
 msgid "%1 digest %2"
-msgstr "%1 Kokkuvõte %2"
+msgstr "%1 kokkuvõte %2"
 
 #. (list.name,date)
 #: default/mail_tt2/digest.tt2:38 default/mail_tt2/digestplain.tt2:28
@@ -9980,9 +9825,8 @@ msgid "Message was successfully delivered"
 msgstr "Teie kirja S/MIME signatuur kontroll õnnestus."
 
 #: default/mail_tt2/dsn.tt2:6
-#, fuzzy
 msgid "List could not be created"
-msgstr "Listi %1 ei saa luua."
+msgstr "Listi ei saa luua"
 
 #: default/mail_tt2/dsn.tt2:10 default/mail_tt2/dsn.tt2:8
 #: default/mail_tt2/list_unknown.tt2:2
@@ -10006,9 +9850,8 @@ msgstr "Teie kirjas on viirus"
 
 #. (action)
 #: default/mail_tt2/dsn.tt2:18
-#, fuzzy
 msgid "Delivery Status Notification: %1"
-msgstr "jälitussõnum tarneseisust"
+msgstr "Kohalejõudmise teavitus: %1"
 
 #: default/mail_tt2/dsn.tt2:24 default/mail_tt2/list_unknown.tt2:9
 msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
@@ -10056,14 +9899,12 @@ msgstr "*****VIIRUSEHOIATUS*****"
 
 #. (virus_name,recipient,sender)
 #: default/mail_tt2/dsn.tt2:53 default/mail_tt2/your_infected_msg.tt2:5
-#, fuzzy
 msgid ""
 "Our viruschecker found a virus named %1 in a message addressed to %2 and "
 "that seems to be yours (From: %3)."
 msgstr ""
-"Meie viirusetõrje programm leidis viiruse nimega %1 kirjast,\n"
-"mis saadeti aadressile %2. Tundub, et teie olite saatja\n"
-" (From: %3)."
+"Meie viirusetõrje programm leidis viiruse nimega %1 kirjast, mis saadeti "
+"aadressile %2. Tundub, et teie olite saatja  (From: %3)."
 
 #: default/mail_tt2/dsn.tt2:55 default/mail_tt2/your_infected_msg.tt2:7
 msgid "We stopped delivery of this email."
@@ -10128,7 +9969,7 @@ msgstr "listi %1 taastellimine"
 #: default/mail_tt2/expire_warning2.tt2:4
 msgid ""
 "You have been subscriber of list %1@%2 with email %3 for 1 year or more;"
-msgstr "Te olete listi %1@%2 liige aadressiga %3 juba üle aasta;"
+msgstr "Te olete listi %1@%2 liige aadressiga %3 juba 1 aasta või rohkem;"
 
 #: default/mail_tt2/expire_warning1.tt2:6
 #: default/mail_tt2/expire_warning2.tt2:7 default/mail_tt2/remind.tt2:6
@@ -10165,7 +10006,10 @@ msgstr "                       (Automaatne Mailide Süsteem)"
 
 #: default/mail_tt2/helpfile.tt2:6
 msgid "                                User's Guide"
-msgstr "Kasutajajuhend"
+msgstr ""
+"                                                                             "
+"                                                                       "
+"Kasutajajuhend"
 
 #: default/mail_tt2/helpfile.tt2:9
 msgid ""
@@ -10319,12 +10163,13 @@ msgstr ""
 
 #: default/mail_tt2/helpfile.tt2:48
 msgid "ADD <list> user@host Full name  * To add a user to a list"
-msgstr ""
-"ADD <list> kasutaja@host Täielik nimi * Lisada kasutaja listi tellijaks"
+msgstr "ADD <list> kasutaja@host Täisnimi    * Lisada kasutaja listi tellijaks"
 
 #: default/mail_tt2/helpfile.tt2:49
 msgid "DEL <list> user@host            * To delete a user from a list"
-msgstr "DEL <list> kasutaja@arvuti *Kasutaja kustutamiseks listist"
+msgstr ""
+"DEL <list> kasutaja@host                                               * "
+"Kasutaja kustutamiseks listist"
 
 #: default/mail_tt2/helpfile.tt2:50
 msgid "STATS <list>                    * To consult the statistics for <list>"
@@ -10580,25 +10425,22 @@ msgstr "Pole andmebaasi draiverit %1"
 
 #. (db_type,db_module)
 #: default/mail_tt2/listmaster_notification.tt2:37
-#, fuzzy
 msgid ""
 "No Database Driver installed for %1; you should download and install %2 from "
 "CPAN."
 msgstr ""
 "Andmebaasi draiverit %1 pole installeeritud; te peaksite alla laadima ja "
-"installeerima CPAN mooduli DBD::%1."
+"installeerima CPAN  mooduli %2."
 
 #. (crashed_process)
 #: default/mail_tt2/listmaster_notification.tt2:40
-#, fuzzy
 msgid "Previous process %1 crashed"
-msgstr "Eelmine protsess jooksis kokku"
+msgstr "Eelmine protsess %1 jooksis kokku"
 
 #. (crashed_process,pid)
 #: default/mail_tt2/listmaster_notification.tt2:43
-#, fuzzy
 msgid "Previous process %1 (with PID %2) has died unexpectedly."
-msgstr "Eelmine tegevus suri ootamatult."
+msgstr "Eelmine tegevus %1 (PID %2) suri ootamatult."
 
 #. (crash_date)
 #: default/mail_tt2/listmaster_notification.tt2:44
@@ -10641,10 +10483,10 @@ msgid "CSS files have been updated"
 msgstr "Uuendati seadetefaili"
 
 #: default/mail_tt2/listmaster_notification.tt2:74
-#, fuzzy
 msgid "Static CSS files have been updated.  Check log file for details."
 msgstr ""
-"Andmebaasi struktuur uuendati; vaadake logifaile täpsemate detailide jaoks: "
+"Staatilised CSS failid uuendati.                     Vaadake logifaile "
+"täpsema info saamiseks."
 
 #: default/mail_tt2/listmaster_notification.tt2:78
 msgid "DataBase connection restored"
@@ -10662,21 +10504,18 @@ msgstr "Bulk maileri viga"
 
 #. (message_id)
 #: default/mail_tt2/listmaster_notification.tt2:85
-#, fuzzy
 msgid ""
 "Sympa failed to store a message <%1> in the bulk mailer. You should check "
 "log files !!"
 msgstr ""
-"Sympa ei suutnud salvestada kirja listi %1 maileris. Vaadake logifaile !!"
+"Sympa ei suutnud salvestada kirja listi <%1> maileris. Vaadake logifaile !!"
 
 #. (message_id)
 #: default/mail_tt2/listmaster_notification.tt2:90
-#, fuzzy
 msgid ""
 "Sympa failed to process a message <%1> in the bulk spool. You should check "
 "log files!!"
-msgstr ""
-"Sympa ei suutnud salvestada kirja listi %1 maileris. Vaadake logifaile !!"
+msgstr "Sympa ei suutnud töödelda kirja  <%1> maileris. Vaadake logifaile !!"
 
 #: default/mail_tt2/listmaster_notification.tt2:93
 msgid "Loop detected"
@@ -10944,15 +10783,13 @@ msgstr " Kasutajal %1 tekkis serveri viga"
 
 #. (error)
 #: default/mail_tt2/listmaster_notification.tt2:269
-#, fuzzy
 msgid "The following error occurred while managing bounces: %1"
-msgstr "Kohalejõudmate kirjade töötlemisel juhtus järgmine viga: %&"
+msgstr "Kohalejõudmate kirjade töötlemisel juhtus järgmine viga: %1"
 
 #. (listname, listdomain)
 #: default/mail_tt2/listmaster_notification.tt2:274
-#, fuzzy
 msgid "Listmaster: list %1@%2 at 100 percents error "
-msgstr "Listiülem: sisemine serveri viga "
+msgstr "Listiülem:  list %1@%2 100% vigu  "
 
 #. (listname, listdomain)
 #: default/mail_tt2/listmaster_notification.tt2:276
@@ -10969,9 +10806,8 @@ msgid ""
 msgstr ""
 
 #: default/mail_tt2/listmaster_notification.tt2:282
-#, fuzzy
 msgid "Check the bounces in this list:"
-msgstr "Pikem info listi kohta:"
+msgstr "Vaata selle listi saatamata kirjade loendit:"
 
 #. (listname,family,robot,msg_id)
 #: default/mail_tt2/listmaster_notification.tt2:288
@@ -11552,9 +11388,8 @@ msgstr "List %1 / %2"
 
 #. (list.name)
 #: default/mail_tt2/list_rejected.tt2:1
-#, fuzzy
 msgid "Rejected mailing list %1 creation"
-msgstr "loodi list %1"
+msgstr "Listi %1 loomine tagasi lükatud"
 
 #. (list.name,list.host)
 #: default/mail_tt2/list_rejected.tt2:3
@@ -12059,9 +11894,8 @@ msgstr ""
 # nlsref 15,12
 #. (list.name,date)
 #: default/mail_tt2/summary.tt2:5
-#, fuzzy
 msgid "%1 summary %2"
-msgstr "kokkuvõtte laad"
+msgstr "%1 kokkuvõtte %2"
 
 #. (file_name)
 #: default/mail_tt2/urlized_part.tt2:4
@@ -12105,7 +11939,7 @@ msgid ""
 "Deleted topic(s) is(are):"
 msgstr ""
 "Mõned teemad listis '%1' on kustutatud.\n"
-"Kustutatud teemad on:"
+"Kustutatud teema(d):"
 
 # nlsref 6,69
 #. (url)
@@ -12124,19 +11958,17 @@ msgstr "Listi %1 haldus"
 
 #. (delegator,list.name,list.host)
 #: default/mail_tt2/user_notification.tt2:29
-#, fuzzy
 msgid ""
 "You have been delegated the responsability of list owner by %1 for list %2@%"
 "3."
-msgstr "%1 delegeeris teile listiomaniku õigused listis %2@%3."
+msgstr "Kasutaja %1 delegeeris teile listiomaniku õigused listis %2@%3."
 
 #. (delegator,list.name,list.host)
 #: default/mail_tt2/user_notification.tt2:31
-#, fuzzy
 msgid ""
 "You have been delegated the responsability of list moderator by %1 for list %"
 "2@%3."
-msgstr "%1 delegeeris teile moderaatori õigused listis %2@%3."
+msgstr "Kasutaja %1 delegeeris teile moderaatori õigused listis %2@%3."
 
 # nlsref 15,14
 #: default/mail_tt2/user_notification.tt2:34 default/mail_tt2/welcome.tt2:12
@@ -12381,12 +12213,10 @@ msgid "picture"
 msgstr "pilt"
 
 #: default/mhonarc-ressources.tt2:476
-#, fuzzy
 msgid "Reply to"
 msgstr "Vastus"
 
 #: default/mhonarc-ressources.tt2:494
-#, fuzzy
 msgid "both"
 msgstr "mõlemale"
 
@@ -12412,9 +12242,8 @@ msgid "view source"
 msgstr "lähtetekst"
 
 #: default/mhonarc-ressources.tt2:511
-#, fuzzy
 msgid "mail tracking"
-msgstr "Kasutaja e-post"
+msgstr "meili jälgimine"
 
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
@@ -12846,7 +12675,7 @@ msgstr "aegumisi kontrollitakse aastas kord"
 
 #: default/list_task_models/remind.2month.task:1
 msgid "remind message sent to subscribers every 2 month"
-msgstr "Meeldetuletuskiri saadetakse tellijatele iga kahe kuu tagant"
+msgstr "meeldetuletuskiri saadetakse tellijatele iga 2 kuu tagant"
 
 #: default/list_task_models/remind.monthly.task:1
 msgid "remind message sent to subscribers every month"
@@ -12998,15 +12827,13 @@ msgid "your&nbsp;role"
 msgstr ""
 
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:21
-#, fuzzy
 msgid "description"
-msgstr "Kirjeldus:"
+msgstr "kirjeldus"
 
 # nlsref 16,81
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:30
-#, fuzzy
 msgid "Set as source"
-msgstr "andmeallikas"
+msgstr "Sea andmeallikas"
 
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:36
 msgid "You have no group memberships in VOOT."
@@ -13035,19 +12862,16 @@ msgstr ""
 
 #. (consumer_key)
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_authorize.tt2:7
-#, fuzzy
 msgid "Authorize %1 ?"
-msgstr "Autor"
+msgstr "Autentida %1?"
 
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_authorize.tt2:12
-#, fuzzy
 msgid "Authorize"
-msgstr "Autor"
+msgstr "Autoriseeri"
 
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_authorize.tt2:13
-#, fuzzy
 msgid "Don't authorize"
-msgstr "Sorteeri autori järgi"
+msgstr "Ära autoriseeri"
 
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:4
 msgid "OAuth check"
@@ -13058,9 +12882,8 @@ msgid "Got new access token, everything is alright."
 msgstr ""
 
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:12
-#, fuzzy
 msgid "Everything is alright."
-msgstr "Pikem info listi kohta:"
+msgstr "Kõik on korras."
 
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:15
 msgid ""
@@ -13073,9 +12896,8 @@ msgid "Unable to load consumer, configuration may be erroneous."
 msgstr ""
 
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
-#, fuzzy
 msgid "Unknown provider."
-msgstr "Tundmatu viga."
+msgstr "Tundmatu teenusepakkuja."
 
 #: default/web_tt2/admin.tt2:103
 msgid "Warning : deletion is final, data recovery is not possible once done."
