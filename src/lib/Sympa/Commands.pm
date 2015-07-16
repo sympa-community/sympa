@@ -2687,7 +2687,7 @@ sub set {
         return 'syntax_error';
     }
 
-    ## SET EACH is a synonim for SET MAIL
+    ## SET EACH is a synonym for SET MAIL
     $mode = 'mail' if ($mode =~ /^(each|eachmail|nodigest|normal)$/i);
 
     ## Recursive call to subroutine

@@ -1048,9 +1048,8 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' =>
-                    ['sslv2', 'sslv3', 'tls', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
-                'synonim' => {'tls' => 'tlsv1'},
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'synonym' => {'tls' => 'tlsv1'},
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1151,9 +1150,8 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' =>
-                    ['sslv2', 'sslv3', 'tls', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
-                'synonim' => {'tls' => 'tlsv1'},
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'synonym' => {'tls' => 'tlsv1'},
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1434,9 +1432,8 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' =>
-                    ['sslv2', 'sslv3', 'tls', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
-                'synonim' => {'tls' => 'tlsv1'},
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'synonym' => {'tls' => 'tlsv1'},
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1543,9 +1540,8 @@ our %pinfo = (
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
-                'format' =>
-                    ['sslv2', 'sslv3', 'tls', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
-                'synonim' => {'tls' => 'tlsv1'},
+                'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
+                'synonym' => {'tls' => 'tlsv1'},
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
