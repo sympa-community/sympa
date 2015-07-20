@@ -50,6 +50,8 @@ check_DATA = \
 	xt/perlcriticrc
 noinst_SCRIPTS = \
 	xt/critic.t \
+	xt/fixme.t \
+	xt/fixme-todo.t \
 	xt/pod-coverage.t \
 	xt/pod-spelling.t \
 	xt/pod-syntax.t
