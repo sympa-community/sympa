@@ -41,6 +41,7 @@ use constant optional_parameters => [
         ssl_cert ssl_key ca_verify ca_path ca_file)
 ];
 use constant required_modules => [qw(Net::LDAP)];
+use constant optional_modules => [qw(IO::Socket::SSL)];
 
 sub _new {
     my $class   = shift;
@@ -78,10 +79,8 @@ sub _connect {
     my $self = shift;
 
     if ($self->{host} =~ m{\bldaps://} or $self->{use_start_tls}) {
-        # LDAPS and start_tls require IO::Socket::SSL.  If it is not
-        # available, new() or start_tls() will die.
-        eval 'require IO::Socket::SSL';
-        if ($EVAL_ERROR) {
+        # LDAPS and start_tls require IO::Socket::SSL.
+        unless ($IO::Socket::SSL::VERSION) {
             $log->syslog('err', 'Can\'t load IO::Socket::SSL');
             return undef;
         }

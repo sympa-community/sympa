@@ -31,6 +31,7 @@ use base qw(Sympa::Database);
 
 use constant required_modules    => [];
 use constant required_parameters => [qw(db_host db_name db_user)];
+use constant optional_modules    => [];
 use constant optional_parameters =>
     [qw(db_port db_passwd db_timeout db_options db_env)];
 
@@ -84,6 +85,14 @@ By default, no packages are required.
 I<Overridable>.
 Returns an arrayref including names of required (not optional) parameters.
 By default, returns C<['db_host', 'db_name', 'db_user']>.
+
+=item optional_modules ( )
+
+I<Overridable>.
+Returns an arrayref including all name(s) of optional packages.
+By default, there are no optional packages.
+
+This method was introduced by Sympa 6.2.4.
 
 =item optional_parameters ( )
 

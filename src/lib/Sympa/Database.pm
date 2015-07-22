@@ -130,6 +130,9 @@ sub connect {
             return undef;
         }
     }
+    foreach my $module (@{$self->optional_modules}) {
+        eval "require $module";
+    }
 
     # Set unique ID to determine connection.
     $self->{_id} = $self->get_id;
