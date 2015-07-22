@@ -77,12 +77,20 @@ sub _new {
 sub _connect {
     my $self = shift;
 
-    # Earlier releases of IO::Socket::SSL would fallback SSL_verify_mode to
-    # SSL_VERIFY_NONE when there are no usable CAfile nor CApath.  However,
-    # recent releases won't: They simply deny connection.
-    # As a workaround, make ca_file or ca_path parameter mandatory unless
-    # "none" is explicitly assigned to ca_verify parameter.
     if ($self->{host} =~ m{\bldaps://} or $self->{use_start_tls}) {
+        # LDAPS and start_tls require IO::Socket::SSL.  If it is not
+        # available, new() or start_tls() will die.
+        eval 'require IO::Socket::SSL';
+        if ($EVAL_ERROR) {
+            $log->syslog('err', 'Can\'t load IO::Socket::SSL');
+            return undef;
+        }
+
+        # Earlier releases of IO::Socket::SSL would fallback SSL_verify_mode
+        # to SSL_VERIFY_NONE when there are no usable CAfile nor CApath.
+        # However, recent releases won't: They simply deny connection.
+        # As a workaround, make ca_file or ca_path parameter mandatory unless
+        # "none" is explicitly assigned to ca_verify parameter.
         unless ($self->{ca_verify} and $self->{ca_verify} eq 'none') {
             unless ($self->{ca_file} or $self->{ca_path}) {
                 $log->syslog('err',
@@ -93,20 +101,17 @@ sub _connect {
     }
 
     # new() with multiple alternate hosts needs perl-ldap >= 0.27.
-    # It may die if depending module is missing (e.g. for SSL).
-    my $connection = eval {
-        Net::LDAP->new(
-            $self->{_hosts},
-            timeout => ($self->{'timeout'}   || 3),
-            verify  => ($self->{'ca_verify'} || 'optional'),
-            capath  => $self->{'ca_path'},
-            cafile  => $self->{'ca_file'},
-            sslversion => $self->{'ssl_version'},
-            ciphers    => $self->{'ssl_ciphers'},
-            clientcert => $self->{'ssl_cert'},
-            clientkey  => $self->{'ssl_key'},
-        );
-    };
+    my $connection = Net::LDAP->new(
+        $self->{_hosts},
+        timeout => ($self->{'timeout'}   || 3),
+        verify  => ($self->{'ca_verify'} || 'optional'),
+        capath  => $self->{'ca_path'},
+        cafile  => $self->{'ca_file'},
+        sslversion => $self->{'ssl_version'},
+        ciphers    => $self->{'ssl_ciphers'},
+        clientcert => $self->{'ssl_cert'},
+        clientkey  => $self->{'ssl_key'},
+    );
     $self->{_error_code}   = 0;
     $self->{_error_string} = $EVAL_ERROR;
 
@@ -119,25 +124,31 @@ sub _connect {
     # scheme() and uri() need perl-ldap >= 0.34.
     my $host_entry = sprintf '%s://%s', $connection->scheme, $connection->uri;
 
-    # Using start_tls() will convert the existing connection to using
-    # Transport Layer Security (TLS), which provides an encrypted connection.
-    # FIXME: This is only possible if the connection uses LDAPv3, and requires
-    # that the server advertises support for LDAP_EXTENSION_START_TLS. Use
-    # "supported_extension" in Net::LDAP::RootDSE to check this.
+    # START_TLS if requested.
     if ($self->{'use_start_tls'}) {
-        # new() may die if depending module for SSL/TLS is missing.
-        # FIXME: Result should be checked.
-        eval {
-            $connection->start_tls(
-                verify => ($self->{'ca_verify'} || 'optional'),
-                capath => $self->{'ca_path'},
-                cafile => $self->{'ca_file'},
-                sslversion => $self->{'ssl_version'},
-                ciphers    => $self->{'ssl_ciphers'},
-                clientcert => $self->{'ssl_cert'},
-                clientkey  => $self->{'ssl_key'},
-            );
-        };
+        my $mesg = $connection->start_tls(
+            verify => ($self->{'ca_verify'} || 'optional'),
+            capath => $self->{'ca_path'},
+            cafile => $self->{'ca_file'},
+            sslversion => $self->{'ssl_version'},
+            ciphers    => $self->{'ssl_ciphers'},
+            clientcert => $self->{'ssl_cert'},
+            clientkey  => $self->{'ssl_key'},
+        );
+
+        unless ($mesg and $mesg->code() == 0) {
+            if ($mesg) {
+                $self->{_error_code}   = $mesg->code;
+                $self->{_error_string} = $mesg->error;
+            } else {
+                $self->{_error_code}   = 0;
+                $self->{_error_string} = 'Unknown';
+            }
+            $log->syslog('err', 'Failed to start TLS with LDAP server %s: %s',
+                $host_entry, $self->error);
+            $connection->unbind;
+            return undef;
+        }
     }
 
     my $mesg;

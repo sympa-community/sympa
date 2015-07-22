@@ -82,7 +82,7 @@ if ($options{'bind_dn'} and not $options{'bind_password'}) {
 
 my ($mesg, $res);
 
-$db->connect or die "Connect impossible\n";
+$db->connect or die sprintf "Connect impossible: %s\n", ($db->error || '');
 $mesg = $db->do_operation(
     'search',
     base   => $options{'suffix'},
