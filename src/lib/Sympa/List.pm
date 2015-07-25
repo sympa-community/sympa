@@ -7281,9 +7281,8 @@ sub _load_list_members_from_include {
             my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
 
             # As CA certificate is required, take it from site config.
-            if ( ref $incl 
-				and ref $incl eq 'HASH'
-				and $incl->{use_ssl}
+            if (    ref $incl eq 'HASH'
+                and $incl->{use_ssl}
                 and $incl->{use_ssl} eq 'yes'
                 and not $incl->{ca_file}
                 and not $incl->{ca_path}) {
@@ -7551,8 +7550,7 @@ sub _load_list_admin_from_include {
                 my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
 
                 # As CA certificate is required, take it from site config.
-                if ( ref $incl 
-                    and ref $incl eq 'HASH'
+                if (    ref $incl eq 'HASH'
                     and $incl->{use_ssl}
                     and $incl->{use_ssl} eq 'yes'
                     and not $incl->{ca_file}
@@ -7933,9 +7931,8 @@ sub sync_include_ca {
             my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
 
             # As CA certificate is required, take it from site config.
-            if ( ref $incl 
-				and ref $incl eq 'HASH'
-				and $incl->{use_ssl}
+            if (    ref $incl eq 'HASH'
+                and $incl->{use_ssl}
                 and $incl->{use_ssl} eq 'yes'
                 and not $incl->{ca_file}
                 and not $incl->{ca_path}) {
