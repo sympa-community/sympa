@@ -1001,6 +1001,12 @@ sub get_listmasters_email {
 
     my @listmasters =
         grep { tools::valid_email($_) } split /\s*,\s*/, $listmaster;
+    # If no valid adresses found, use listmaster of site config.
+    unless (@listmasters or (not ref $that and $that eq '*')) {
+        $log->syslog('notice', 'Warning: No listmasters found for %s', $that);
+        @listmasters = Sympa::get_listmasters_email('*');
+    }
+
     return wantarray ? @listmasters : [@listmasters];
 }
 
