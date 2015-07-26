@@ -10883,18 +10883,12 @@ sub do_install_pending_list {
     }
 
     ## Notify listmasters
-    my @listmasters = split /\s*,\s*/,
-        Conf::get_robot_conf($robot, 'listmaster');
     if ($in{'status'} eq 'open') {
-        unless (Sympa::send_file($list, 'list_created', \@listmasters, {})) {
-            wwslog('notice',
-                'Unable to send template "list_created" to listmaster');
-        }
+        Sympa::send_notify_to_listmaster($list, 'list_created',
+            [$list->{'name'}]);
     } elsif ($in{'status'} eq 'closed') {
-        unless (Sympa::send_file($list, 'list_rejected', \@listmasters, {})) {
-            wwslog('notice',
-                'Unable to send template "list_rejected" to listmaster');
-        }
+        Sympa::send_notify_to_listmaster($list, 'list_rejected',
+            [$list->{'name'}]);
     }
 
     if ($in{'notify'}) {

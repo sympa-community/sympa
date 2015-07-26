@@ -770,8 +770,7 @@ sub send_notify_to_listmaster {
         $robot_id = '*';
     }
 
-    my $listmaster =
-        [split /\s*,\s*/, Conf::get_robot_conf($robot_id, 'listmaster')];
+    my @listmasters = Sympa::get_listmasters_email($that);
     my $to =
           Conf::get_robot_conf($robot_id, 'listmaster_email') . '@'
         . Conf::get_robot_conf($robot_id, 'host');
@@ -801,7 +800,7 @@ sub send_notify_to_listmaster {
 
     if (   $operation eq 'request_list_creation'
         or $operation eq 'request_list_renaming') {
-        foreach my $email (@$listmaster) {
+        foreach my $email (@listmasters) {
             my $cdata = Sympa::Tools::Data::dup_var($data);
             $cdata->{'one_time_ticket'} =
                 Sympa::Auth::create_one_time_ticket($email, $robot_id,
@@ -815,7 +814,7 @@ sub send_notify_to_listmaster {
     } else {
         push @tosend,
             {
-            email => $listmaster,
+            email => [@listmasters],
             data  => $data
             };
     }
@@ -843,7 +842,7 @@ sub send_notify_to_listmaster {
                 'notice',
                 'Unable to send template "listmaster_notification" to %s listmaster %s',
                 $robot_id,
-                $listmaster
+                $ts->{'email'}
             ) unless $operation eq 'logs_failed';
             return undef;
         }
@@ -957,6 +956,52 @@ sub get_supported_languages {
     @lang_list = ('en') unless @lang_list;
     return @lang_list if wantarray;
     return \@lang_list;
+}
+
+=head3 Users
+
+These are accessors derived from configuration parameters.
+
+=over
+
+=item get_listmasters_email ( $that )
+
+    # To get addresses of super-listmasters.
+    @addrs = Sympa::get_listmasters_email('*');
+    # To get addresses of normal listmasters of a robot.
+    @addrs = Sympa::get_listmasters_email($robot);
+    # To get addresses of normal listmasters of the robot of a family.
+    @addrs = Sympa::get_listmasters_email($family);
+    # To get addresses of normal listmasters of the robot of a list.
+    @addrs = Sympa::get_listmasters_email($list);
+
+Gets valid email addresses of listmasters. In array context, returns array of
+addresses. In scalar context, returns arrayref to them.
+
+=back
+
+=cut
+
+# Old names:
+# [6.2b] Conf::get_robot_conf(..., 'listmasters'), $Conf::Conf{'listmasters'}.
+# [trunk] Site::listmasters().
+sub get_listmasters_email {
+    my $that = shift;
+
+    my $listmaster;
+    if (ref $that eq 'Sympa::List') {
+        $listmaster = Conf::get_robot_conf($that->{'domain'}, 'listmaster');
+    } elsif (ref $that eq 'Sympa::Family') {
+        $listmaster = Conf::get_robot_conf($that->{'robot'}, 'listmaster');
+    } elsif (not ref($that) and $that and $that ne '*') {
+        $listmaster = Conf::get_robot_conf($that, 'listmaster');
+    } else {
+        $listmaster = Conf::get_robot_conf('*', 'listmaster');
+    }
+
+    my @listmasters =
+        grep { tools::valid_email($_) } split /\s*,\s*/, $listmaster;
+    return wantarray ? @listmasters : [@listmasters];
 }
 
 1;

@@ -1019,11 +1019,9 @@ sub DoForward {
     delete $message->{'family'};
 
     if ($function eq "listmaster") {
-        my $listmasters = Conf::get_robot_conf($robot, 'listmasters');
-        @rcpt = @{$listmasters};
+        @rcpt = Sympa::get_listmasters_email($robot);
         $log->syslog('notice', 'Warning: No listmaster defined in sympa.conf')
             unless @rcpt;
-
     } elsif ($function eq "owner") {    # -request
         @rcpt = $list->get_owners_email();
 

@@ -2877,7 +2877,7 @@ sub send_notify_to_owner {
             'No owner defined or all of them use nomail option in list %s; using listmasters as default',
             $self->{'name'}
         );
-        @to = split /,/, Conf::get_robot_conf($robot, 'listmaster');
+        @to = Sympa::get_listmasters_email($self);
     }
     unless (defined $operation) {
         die 'missing incoming parameter "$operation"';

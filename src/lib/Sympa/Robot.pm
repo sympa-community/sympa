@@ -63,14 +63,8 @@ sub is_listmaster {
 
     $who =~ y/A-Z/a-z/;
 
-    foreach my $listmaster (@{Conf::get_robot_conf($robot, 'listmasters')}) {
-        return 1 if (lc($listmaster) eq lc($who));
-    }
-
-    foreach my $listmaster (@{Conf::get_robot_conf('*', 'listmasters')}) {
-        return 1 if (lc($listmaster) eq lc($who));
-    }
-
+    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email($robot);
+    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email('*');
     return 0;
 }
 

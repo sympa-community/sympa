@@ -11,6 +11,12 @@ Subject: [% FILTER qencode %][%|loc(list.name,list.host,email)%]List "%1@%2" cre
 [%|loc%]To activate/delete this mailing list:[%END%]
 [% conf.wwsympa_url %]/ticket/[%one_time_ticket%]
 
+[%- ELSIF type == 'list_created' -%]
+[% PROCESS 'list_created.tt2' -%]
+
+[%- ELSIF type == 'list_rejected' -%]
+[% PROCESS 'list_rejected.tt2' -%]
+
 [%- ELSIF type == 'request_list_renaming' -%]
 [%- IF mode == 'copy' -%]
 Subject: [% FILTER qencode %][%|loc(new_listname)%]%1 mailing list creation[%END%][%END%]

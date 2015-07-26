@@ -340,7 +340,7 @@ while (!$end) {
 
                 my $result = Sympa::Scenario::request_action(
                     $list, 'del', 'smtp',
-                    {   'sender' => $Conf::Conf{'listmasters'}[0],
+                    {   'sender' => $Conf::Conf{'listmaster'},    #FIXME
                         'email'  => $who
                     }
                 );

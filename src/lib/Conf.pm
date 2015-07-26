@@ -2310,6 +2310,7 @@ sub _set_listmasters_entry {
         $number_of_email_provided = $#emails_provided + 1;
         foreach my $lismaster_address (@emails_provided) {
             if (tools::valid_email($lismaster_address)) {
+                # Note: 'listmasters' was obsoleted.
                 push @{$param->{'config_hash'}{'listmasters'}},
                     $lismaster_address;
                 $number_of_valid_email++;
@@ -2329,6 +2330,7 @@ sub _set_listmasters_entry {
             );
             return undef;
         } else {
+            # Note: 'listmasters' was obsoleted.
             $param->{'config_hash'}{'listmasters'} = $Conf{'listmasters'};
             $param->{'config_hash'}{'listmaster'}  = $Conf{'listmaster'};
             $number_of_valid_email =

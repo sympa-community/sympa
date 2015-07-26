@@ -1157,11 +1157,10 @@ sub delete_subs_cmd {
     my %selection;    # hash of subscriber emails who are successfully deleted
 
     foreach my $email (keys %{$Rvars->{$var}}) {
-
         $log->syslog('notice', '%s', $email);
         my $result = Sympa::Scenario::request_action(
             $list, 'del', 'smime',
-            {   'sender' => $Conf::Conf{'listmaster'},
+            {   'sender' => $Conf::Conf{'listmaster'},    #FIXME
                 'email'  => $email,
             }
         );
@@ -1482,7 +1481,7 @@ sub purge_user_table {
     my $time = time;
 
     # Marking super listmasters
-    foreach my $l (@{$Conf::Conf{'listmasters'}}) {
+    foreach my $l (Sympa::get_listmasters_email('*')) {
         unless (
             $sdm
             and $sdm->do_prepared_query(
@@ -1498,7 +1497,7 @@ sub purge_user_table {
     }
     # Marking per-robot listmasters.
     foreach my $robot_id (Sympa::List::get_robots()) {
-        foreach my $l (@{Conf::get_robot_conf($robot_id, 'listmasters')}) {
+        foreach my $l (Sympa::get_listmasters_email($robot_id)) {
             unless (
                 $sdm->do_prepared_query(
                     q{UPDATE user_table
@@ -1888,10 +1887,7 @@ sub process_bouncers {
                     $rcpt = [$list->get_owners_email];
                     $to   = $list->get_list_address('owner');
                 } elsif ($notification eq 'listmaster') {
-                    $rcpt = [
-                        split /\s*,\s*/,
-                        Conf::get_robot_conf($robot_id, 'listmaster')
-                    ];
+                    $rcpt = Sympa::get_listmasters_email($robot_id);
                     $to =
                           Conf::get_robot_conf($robot_id, 'listmaster_email')
                         . '@'
