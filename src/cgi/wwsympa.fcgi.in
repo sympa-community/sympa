@@ -2988,7 +2988,7 @@ sub check_param_in {
     }
 
     ## listmaster has owner and editor privileges for the list
-    if (Sympa::Robot::is_listmaster($param->{'user'}{'email'}, $robot)) {
+    if (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
         $param->{'is_listmaster'} = 1;
     }
 
@@ -3185,7 +3185,7 @@ sub check_param_out {
     $param->{'process_id'} = $PID;
 
     ## listmaster has owner and editor privileges for the list
-    if (Sympa::Robot::is_listmaster($param->{'user'}{'email'}, $robot)) {
+    if (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
         $param->{'is_listmaster'} = 1;
     } else {
         undef $param->{'is_listmaster'};
@@ -9458,8 +9458,7 @@ sub do_editfile {
                 'info', subdir => $subdir);
         }
     } else {
-        unless (
-            Sympa::Robot::is_listmaster($param->{'user'}{'email'}, $robot)) {
+        unless (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
             Sympa::Report::reject_report_web('user', 'missing_arg',
                 {'argument' => 'list'},
                 $param->{'action'});
@@ -9561,8 +9560,7 @@ sub do_savefile {
 
         }
     } else {
-        unless (Sympa::Robot::is_listmaster($param->{'user'}{'email'}),
-            $robot) {
+        unless (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
             Sympa::Report::reject_report_web('user', 'missing_arg',
                 {'argument' => 'list'},
                 $param->{'action'});
@@ -13005,8 +13003,8 @@ sub _prepare_edit_form {
                             $language->gettext_strftime("%A",
                             gmtime(0 + ($day + 3) * (3600 * 24)));
                         $t = sprintf '%s (%s)', $t, $day
-                            if Sympa::Robot::is_listmaster(
-                            $param->{'user'}{'email'}, $robot);
+                            if Sympa::is_listmaster($list,
+                            $param->{'user'}{'email'});
                         $v->{'value'}{$day}{'title'} = $t;
                     }
                 }
@@ -13017,8 +13015,7 @@ sub _prepare_edit_form {
                 $language->set_lang($lang);
                 my $t = $language->native_name || $lang;
                 $t = sprintf '%s (%s)', $t, $lang
-                    if Sympa::Robot::is_listmaster($param->{'user'}{'email'},
-                    $robot);
+                    if Sympa::is_listmaster($list, $param->{'user'}{'email'});
                 $p->{'value'}{$lang}{'title'} = $t;
                 # compatibility: 6.1.
                 $p->{'value'}{$lang}{'lang_tag'} = $lang;
@@ -13032,8 +13029,8 @@ sub _prepare_edit_form {
                         $v->{'value'}{$x}{'title'} = $list->get_option_title(
                             $x,
                             'reception',
-                            Sympa::Robot::is_listmaster(
-                                $param->{'user'}{'email'}, $robot
+                            Sympa::is_listmaster(
+                                $list, $param->{'user'}{'email'}
                             )
                         );
                     }
@@ -13042,8 +13039,8 @@ sub _prepare_edit_form {
                         $v->{'value'}{$x}{'title'} = $list->get_option_title(
                             $x,
                             'visibility',
-                            Sympa::Robot::is_listmaster(
-                                $param->{'user'}{'email'}, $robot
+                            Sympa::is_listmaster(
+                                $list, $param->{'user'}{'email'}
                             )
                         );
                     }
@@ -13051,12 +13048,9 @@ sub _prepare_edit_form {
             }
         } elsif ($pname eq 'status') {
             foreach my $x (keys %{$p->{'value'}}) {
-                $p->{'value'}{$x}{'title'} = $list->get_option_title(
-                    $x, 'status',
-                    Sympa::Robot::is_listmaster(
-                        $param->{'user'}{'email'}, $robot
-                    )
-                );
+                $p->{'value'}{$x}{'title'} =
+                    $list->get_option_title($x, 'status',
+                    Sympa::is_listmaster($list, $param->{'user'}{'email'}));
             }
         }
 
@@ -13419,7 +13413,7 @@ sub do_rename_list_request {
     }
 
     ## Super listmaster can move a list to another robot
-    if (Sympa::Robot::is_listmaster($param->{'user'}{'email'}, '*')) {
+    if (Sympa::is_listmaster('*', $param->{'user'}{'email'})) {
         $param->{'robots'} = {};
         foreach my $r (Sympa::List::get_robots()) {
             if ($r eq $robot) {
@@ -20665,8 +20659,7 @@ sub do_change_email {
         ## page
         ## instead of the preferences page
         $edited_by_listmaster = 1;
-        unless (
-            Sympa::Robot::is_listmaster($param->{'user'}{'email'}, $robot)) {
+        unless (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
             Sympa::Report::reject_report_web('auth', 'User is not Listmaster',
                 {}, $param->{'action'});
             wwslog('err', 'Not listmaster');
@@ -23959,7 +23952,7 @@ sub check_authz {
 
 sub get_server_details {
     ## All Robots are shown to super listmaster
-    if (Sympa::Robot::is_listmaster($param->{'user'}{'email'}, '*')) {
+    if (Sympa::is_listmaster('*', $param->{'user'}{'email'})) {
         $param->{'main_robot'} = 1;
         #FIXME: Entry for main robot is missing.
         $param->{'robots'} = $Conf::Conf{'robots'};

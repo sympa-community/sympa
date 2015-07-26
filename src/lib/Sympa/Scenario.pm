@@ -1047,7 +1047,7 @@ sub verify {
                 grep {$_} Mail::Address->parse($args[0]);
         }
         foreach my $arg (@arg) {
-            if (Sympa::Robot::is_listmaster($arg, $robot)) {
+            if (Sympa::is_listmaster($robot, $arg)) {
                 $ok = $arg;
                 last;
             }

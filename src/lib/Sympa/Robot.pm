@@ -55,18 +55,8 @@ our %listmaster_messages_stack;
 # sub send_notify_to_listmaster($operation, $robot, $data, $checkstack, $purge);
 
 ## Is the user listmaster
-sub is_listmaster {
-    my $who   = shift;
-    my $robot = shift;
-
-    return unless $who;
-
-    $who =~ y/A-Z/a-z/;
-
-    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email($robot);
-    return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email('*');
-    return 0;
-}
+# MOVED: Use Sympa::is_listmaster().
+#sub is_listmaster;
 
 ## get idp xref to locally validated email address
 sub get_netidtoemail_db {

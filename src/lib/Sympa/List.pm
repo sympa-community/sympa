@@ -5415,7 +5415,7 @@ sub am_i {
         ## Listmaster has all privileges except editor
         # sa contestable.
         if (($function eq 'owner' || $function eq 'privileged_owner')
-            and Sympa::Robot::is_listmaster($who, $self->{'domain'})) {
+            and Sympa::is_listmaster($self, $who)) {
             return 1;
         }
     }
@@ -5545,7 +5545,7 @@ sub may_edit {
     }
 
     ## What privilege?
-    if (Sympa::Robot::is_listmaster($who, $self->{'domain'})) {
+    if (Sympa::is_listmaster($self, $who)) {
         $role = 'listmaster';
     } elsif ($self->am_i('privileged_owner', $who)) {
         $role = 'privileged_owner';
@@ -5602,7 +5602,7 @@ sub may_create_parameter {
     my ($self, $parameter, $who, $robot) = @_;
     $log->syslog('debug3', '(%s, %s, %s)', $parameter, $who, $robot);
 
-    if (Sympa::Robot::is_listmaster($who, $robot)) {
+    if (Sympa::is_listmaster($robot, $who)) {
         return 1;
     }
     my $edit_conf = tools::load_edit_list_conf($self);

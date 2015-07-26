@@ -385,7 +385,7 @@ sub do_remove_arc {
     unless ($list->am_i('privileged_owner', $sender)
         or $list->am_i('owner',  $sender)
         or $list->am_i('editor', $sender)
-        or Sympa::Robot::is_listmaster($sender, $list->{'domain'})) {
+        or Sympa::is_listmaster($list, $sender)) {
         unless (lc $sender eq lc($arc_message->{sender} || '')) {
             $log->syslog('err',
                 'Remove command for %s by unauthorized sender: %s',

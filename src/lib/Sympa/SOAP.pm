@@ -749,8 +749,8 @@ sub closeList {
     }
 
     # check authorization
-    unless (($list->am_i('owner', $sender))
-        || (Sympa::Robot::is_listmaster($sender))) {
+    unless ($list->am_i('owner', $sender)
+        or Sympa::is_listmaster($list, $sender)) {
         $log->syslog('info', 'CloseList %s from %s not allowed',
             $listname, $sender);
         die SOAP::Fault->faultcode('Client')->faultstring('Not allowed')
@@ -1196,8 +1196,8 @@ sub fullReview {
             ->faultdetail("List $listname unknown");
     }
 
-    unless (Sympa::Robot::is_listmaster($sender, $robot)
-        || $list->am_i('owner', $sender)) {
+    unless (Sympa::is_listmaster($list, $sender)
+        or $list->am_i('owner', $sender)) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Not enough privileges')
             ->faultdetail('Listmaster or listowner required');
