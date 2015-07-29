@@ -970,9 +970,10 @@ sub as_entity {
     my $self = shift;
 
     unless (defined $self->{_entity_cache}) {
-        die 'Bug in logic.  Ask developer'
-            unless $self->{_head} and defined $self->{_body};
-        my $string = $self->{_head}->as_string . "\n" . $self->{_body};
+        die 'Bug in logic.  Ask developer' unless $self->{_head};
+        my $string =
+            $self->{_head}->as_string . "\n"
+            . (defined $self->{_body} ? $self->{_body} : '');
 
         my $parser = MIME::Parser->new();
         $parser->output_to_core(1);
