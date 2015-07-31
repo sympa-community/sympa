@@ -832,11 +832,11 @@ sub verify {
                 return undef;
             }
         } elsif ($value =~ /\[env\-\>([\w\-]+)\]/i) {
-
-            $value =~ s/\[env\-\>([\w\-]+)\]/$ENV{$1}/;
-
-            ## Sender's user/subscriber attributes (if subscriber)
+            my $env = $ENV{$1};
+            $env = '' unless defined $env;
+            $value =~ s/\[env\-\>([\w\-]+)\]/$env/;
         } elsif ($value =~ /\[user\-\>([\w\-]+)\]/i) {
+            # Sender's user/subscriber attributes (if subscriber)
 
             $context->{'user'} ||=
                 Sympa::User::get_global_user($context->{'sender'});

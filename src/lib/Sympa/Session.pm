@@ -75,13 +75,9 @@ sub new {
         return undef;
     }
 
-#   passive_session are session not stored in the database, they are used for
-#   crawler bots and action such as css, wsdl, ajax and rss
-
-    if (_is_a_crawler(
-            $robot, {'user_agent_string' => $ENV{'HTTP_USER_AGENT'}}
-        )
-        ) {
+    # passive_session are session not stored in the database, they are used
+    # for crawler bots and action such as css, wsdl, ajax and rss
+    if (_is_a_crawler($robot)) {
         $self->{'is_a_crawler'}    = 1;
         $self->{'passive_session'} = 1;
     }
@@ -937,12 +933,13 @@ sub check_cookie_extern {
 # input user agent string and IP. return 1 if suspected to be a crawler.
 # initial version based on rawlers_dtection.conf file only
 # later : use Session table to identify those who create a lot of sessions
+#FIXME: Robot context is ignored.
 sub _is_a_crawler {
     my $robot   = shift;
-    my $context = shift;
 
-    return $Conf::Conf{'crawlers_detection'}{'user_agent_string'}
-        {$context->{'user_agent_string'}};
+    my $ua = $ENV{'HTTP_USER_AGENT'};
+    return undef unless defined $ua;
+    return $Conf::Conf{'crawlers_detection'}{'user_agent_string'}{$ua};
 }
 
 1;

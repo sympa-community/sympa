@@ -184,9 +184,11 @@ sub _find_match {
             my $i;
         BODY: for $i (0 .. $#body) {
                 if (($_ = $body[$i]) && (&{$self->{function2}})) {
-                    ($body_string =
-                            $body[($i - 1)] . $body[$i] . $body[($i + 1)]) =~
-                        s,($self->{key_word}),\001$1\002,g;
+                    $body_string =
+                          ($i == 0 ? '' : $body[$i - 1])
+                        . $body[$i]
+                        . ($i == $#body ? '' : $body[$i + 1]);
+                    $body_string =~ s,($self->{key_word}),\001$1\002,g;
                     $self->body_count(1);
                     $match = 1;
                     last BODY;
@@ -273,9 +275,11 @@ sub search {
     $limit += $previous;
     foreach $file (@MSGFILES) {
         my ($subj, $from, $date, $id, $body_ref);
-        unless (open FH, '<:encoding(utf8)', $file) {
-            # $self->error("Couldn't open file $file, $ERRNO");
-        }
+        my $fh;
+
+        # Use encoding(utf8) input layer to perform Unicode case-insensitive
+        # match.
+        next unless open $fh, '<:encoding(utf8)', $file;
 
         # Need this loop because newer versions of MHonArc put a version
         # number on the first line of the message.  Just in case Earl
@@ -285,7 +289,7 @@ sub search {
         # solution (though ultimately not the one in place here).  That
         # DGS was able to contribute to this modest little program is, I
         # think, a good argument in favor of open source code!
-        while (<FH>) {
+        while (<$fh>) {
             ## Next line is appended to the subject
             if (defined $subj) {
                 $subj .= $1 if (/\s(.*)( -->|$)/);
@@ -302,26 +306,26 @@ sub search {
         }
         $subj =~ s/ *-->$//;
 
-        ($from = <FH>) =~ s/^<!--X-From-R13: (.*) -->/$1/;
+        ($from = <$fh>) =~ s/^<!--X-From-R13: (.*) -->/$1/;
 
         ## No more need to decode header fields
         #$from = &MIME::Words::decode_mimewords($from);
 
         $from =~ tr/N-Z[@A-Mn-za-m/@A-Z[a-z/;
 
-        ($date = <FH>) =~ s/^<!--X-Date: (.*) -->/$1/;
+        ($date = <$fh>) =~ s/^<!--X-Date: (.*) -->/$1/;
 
-        ($id = <FH>) =~ s/^<!--X-Message-Id: (.*) -->/$1/;
+        ($id = <$fh>) =~ s/^<!--X-Message-Id: (.*) -->/$1/;
 
         if ($body) {
             my $lines = '';
-            while (<FH>) {
+            while (<$fh>) {
                 # Messages are contained between Body-of-Message tags
                 next unless (/^<!--X-Body-of-Message-->/);
-                $_ = <FH>;
+                $_ = <$fh>;
                 while (!eof && ($_ !~ /^<!--X-MsgBody-End-->/)) {
                     $lines .= $_;
-                    $_ = <FH>;
+                    $_ = <$fh>;
                 }
                 last;
             }
@@ -342,9 +346,7 @@ sub search {
             # Split lines
             $body_ref = [split /(?<=\n)/, $lines];
         }
-        unless (close FH) {
-            # $self->error("Couldn't close file $file, $ERRNO");
-        }
+        close $fh;
 
         # Decode entities
         if ($subj) {
