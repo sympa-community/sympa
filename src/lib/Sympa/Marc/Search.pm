@@ -477,3 +477,26 @@ sub match_this {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Marc::Search - Search archives of Sympa
+
+=head1 SYNOPSIS
+
+TBD.
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 HISTORY
+
+L<Sympa::Marc::Search> was originally taken from
+L<Marc::Search> in MHonArc Search Engine by Eric D. Friedman:
+L<http://www.mhonarc.org/contrib/marc-search/>.
+
+=cut
