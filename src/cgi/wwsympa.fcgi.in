@@ -4800,7 +4800,7 @@ sub do_requestpasswd {
 }
 
 sub do_my {
-    wwslog('info', '', $in{'action'});
+    wwslog('info', '');
 
     # Sets the date of the field "start date" to "today"
     $param->{'d_day'} = POSIX::strftime('%d-%m-%Y', localtime time);
@@ -4990,9 +4990,8 @@ sub do_lists {
 
 ## The list of latest created lists
 sub do_latest_lists {
-    wwslog('info',
-        "do_latest_lists($in{'for'}, $in{'count'},$in{'topic'}, $in{'subtopic'})"
-    );
+    wwslog('info', '(for=%s, count=%s, topic=%s, subtopic=%s)',
+        $in{'for'}, $in{'count'}, $in{'topic'}, $in{'subtopic'});
 
     unless (do_lists()) {
         wwslog('err', 'Error while calling do_lists');
@@ -5058,9 +5057,8 @@ sub do_latest_lists {
 
 ## The list of the most active lists
 sub do_active_lists {
-    wwslog('info',
-        "do_active_lists($in{'for'}, $in{'count'},$in{'topic'}, $in{'subtopic'})"
-    );
+    wwslog('info', '(for=%s, count=%s, topic=%s, subtopic=%s)',
+        $in{'for'}, $in{'count'}, $in{'topic'}, $in{'subtopic'});
 
     unless (do_lists()) {
         wwslog('err', 'Error while calling do_lists');
@@ -7237,8 +7235,15 @@ sub do_remove_template {
 
 # show a template, used by copy_template and edit_emplate
 sub do_view_template {
-    wwslog('info',
-        "do_view_template(type=$in{'webormail'},template-name=$in{'template_name'},listname=$in{'list'},path=$in{'template_path'},scope=$in{'scope'},lang=$in{'tpl_lang'})"
+    wwslog(
+        'info',
+        '(type=%s, template-name=%s, listname=%s, path=%s, scope=%s, lang=%s)',
+        $in{'webormail'},
+        $in{'template_name'},
+        $in{'list'},
+        $in{'template_path'},
+        $in{'scope'},
+        $in{'tpl_lang'}
     );
 
     my $template_path;
@@ -7743,8 +7748,15 @@ sub do_edit_template {
 
     $in{'subdir'} ||= 'default';
 
-    wwslog('info',
-        "do_edit_template(type=$in{'webormail'},template-name=$in{'template_name'},listname=$in{'list'},path=$in{'template_path'},scope=$in{'scope'},lang=$in{'tpl_lang'})"
+    wwslog(
+        'info',
+        '(type=%s, template-name=%s, listname=%s, path=%s, scope=%s, lang=%s)',
+        $in{'webormail'},
+        $in{'template_name'},
+        $in{'list'},
+        $in{'template_path'},
+        $in{'scope'},
+        $in{'tpl_lang'}
     );
 
     ## Load original template
@@ -10221,7 +10233,7 @@ sub do_send_me {
 #
 ####################################################
 sub do_view_source {
-    wwslog('info', '(%s, %s, %s, %s',
+    wwslog('info', '(%s, %s, %s, %s)',
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
     ## Access control
@@ -10269,7 +10281,7 @@ sub do_view_source {
 #
 ####################################################
 sub do_tracking {
-    wwslog('info', '(%s, %s, %s, %s',
+    wwslog('info', '(%s, %s, %s, %s)',
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
     if (    $in{'yyyy'}
@@ -20890,8 +20902,7 @@ sub do_suspend {
 # reception : - nomail/digest/mail ||
 #             - . suspended  From XX-XX-XXXX To XX-XX-XXXX
 sub do_suspend_request {
-    # Action = suspend_request
-    wwslog('info', '', $in{'action'});
+    wwslog('info', '');
 
     ## Sets the date of the field "start date" to "today"
     $param->{'d_day'} = POSIX::strftime('%d-%m-%Y', localtime time);
@@ -21029,8 +21040,7 @@ sub _set_my_lists_info {
 #      | 'info' | undef                            #
 ####################################################
 sub do_suspend_request_action {
-
-    wwslog('info', '', $in{'action'});
+    wwslog('info', '');
 
     my $day1;
     my $month1;
@@ -21268,8 +21278,7 @@ sub do_suspend_request_action {
 #  do_compose_mail
 ####################################################
 sub do_compose_mail {
-
-    wwslog('info', '', $in{'subaction'});
+    wwslog('info', '(subaction=%s)', $in{'subaction'});
 
     unless ($param->{'may_post'}) {
         Sympa::Report::reject_report_web('auth', $param->{'may_post_reason'},
@@ -22551,7 +22560,7 @@ sub do_blacklist {
 
 # output in text/plain format a scenario
 sub do_dump_scenario {
-    wwslog('info', '(%s) , %s', $param->{'list'}, $in{'pname'});
+    wwslog('info', '(%s, %s)', $param->{'list'}, $in{'pname'});
 
     my $scenario = Sympa::Scenario->new(
         'function'  => $in{'pname'},
