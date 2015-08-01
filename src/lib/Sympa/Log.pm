@@ -97,6 +97,9 @@ sub syslog {
     return if defined $self->{level}  and $levels{$level} > $self->{level};
     return if !defined $self->{level} and $levels{$level} > 0;
 
+    # Skip stack frame when warnings are issued.
+    local $SIG{__WARN__} = \&_warn_handler;
+
     ## Do not display variables which are references.
     my @param = ();
     foreach my $fstring (($message =~ /(%.)/g)) {
@@ -231,6 +234,16 @@ sub _connect {
     }
 
     return $self;
+}
+
+sub _warn_handler {
+    my $message = shift;
+
+    my $go_back = 0;
+    my @f;
+    do { @f = caller(++$go_back) } while @f and $f[0] eq __PACKAGE__;
+    $message =~ s/ at \S+ line \S+\n*\z/ at $f[1] line $f[2]\n/ if @f;
+    print STDERR $message;
 }
 
 sub get_log_date {
