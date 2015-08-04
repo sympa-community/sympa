@@ -5304,13 +5304,14 @@ sub do_review {
 
     ## Members list synchronization if list has included data sources.
     if ($list->has_include_data_sources()) {
-        if ($list->on_the_fly_sync_include('use_ttl' => 1)) {
-            Sympa::Report::notice_report_web('subscribers_updated', {},
-                $param->{'action'});
-        } else {
+        my $sync_result = $list->on_the_fly_sync_include(use_ttl => 1);
+        unless (defined $sync_result) {
             Sympa::Report::reject_report_web('intern', 'sync_include_failed',
                 {}, $param->{'action'}, $list, $param->{'user'}{'email'},
                 $robot);
+        } elsif ($sync_result) {
+            Sympa::Report::notice_report_web('subscribers_updated', {},
+                $param->{'action'});
         }
     }
 

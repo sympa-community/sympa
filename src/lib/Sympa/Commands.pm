@@ -868,7 +868,10 @@ sub review {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    $list->on_the_fly_sync_include('use_ttl' => 1);
+    unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
+        $log->syslog('notice', 'Unable to synchronize list %s', $list);
+        #FIXME: Abort if synchronization failed.
+    }
 
     my $auth_method = get_auth_method(
         'review', '',

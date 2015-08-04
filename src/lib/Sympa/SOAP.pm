@@ -1127,9 +1127,9 @@ sub review {
 
         ## Members list synchronization if include is in use
         if ($list->has_include_data_sources()) {
-            unless ($list->on_the_fly_sync_include('use_ttl' => 1)) {
+            unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
                 $log->syslog('notice', 'Unable to synchronize list %s',
-                    $listname);
+                    $list);
             }
         }
         unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
@@ -1205,9 +1205,9 @@ sub fullReview {
 
     # Members list synchronization if include is in use
     if ($list->has_include_data_sources()) {
-        unless ($list->on_the_fly_sync_include('use_ttl' => 1)) {
+        unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
             $log->syslog('notice', 'Unable to synchronize list %s',
-                $listname);
+                $list);
         }
     }
 

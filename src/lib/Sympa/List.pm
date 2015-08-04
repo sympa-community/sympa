@@ -1799,7 +1799,10 @@ sub distribute_msg {
     ## Synchronize list members, required if list uses include sources
     ## unless sync_include has been performed recently.
     if ($self->has_include_data_sources()) {
-        $self->on_the_fly_sync_include('use_ttl' => 1);
+        unless (defined $self->on_the_fly_sync_include(use_ttl => 1)) {
+            $log->syslog('notice', 'Unable to synchronize list %s', $self);
+            #FIXME: Might be better to abort if synchronization failed.
+        }
     }
 
     ##
@@ -8395,6 +8398,7 @@ sub sync_include {
 ## disturb
 ## the normal task_manager.pl functionning.
 
+# 6.2.4: Returns 0 if synchronization is not needed.
 sub on_the_fly_sync_include {
     my $self    = shift;
     my %options = @_;
@@ -8413,7 +8417,7 @@ sub on_the_fly_sync_include {
             return $return_value;
         }
     }
-    return 1;
+    return 0;
 }
 
 sub sync_include_admin {
