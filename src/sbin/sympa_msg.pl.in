@@ -52,7 +52,6 @@ use Sympa::Spool;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
-use Sympa::Tools::Password;
 
 ## Internal tuning
 # delay between each read of the digestqueue
@@ -456,8 +455,6 @@ sub _load {
             $Conf::Conf{'log_level'}
         );
     }
-
-    Sympa::Tools::Password::ciphersaber_installed();
 
     if (Conf::cookie_changed()) {
         die sprintf
