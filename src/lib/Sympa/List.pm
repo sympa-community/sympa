@@ -7208,12 +7208,16 @@ sub _include_users_sql {
 
 ## Loads the list of subscribers from an external include source
 sub _load_list_members_from_include {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $self     = shift;
     my $old_subs = shift;
-    my $name     = $self->{'name'};
-    my $admin    = $self->{'admin'};
-    my $dir      = $self->{'dir'};
-    $log->syslog('debug2', '(%s)', $name);
+
+    # To prevent overwriting actual list config.
+    my $sources = {
+        map {
+            ($_ => (Sympa::Tools::Data::dup_var($self->{'admin'}{$_}) || []))
+            } @sources_providing_listmembers
+    };
 
     my (%users, $depend_on);
     my $total = 0;
@@ -7221,9 +7225,8 @@ sub _load_list_members_from_include {
     my $result;
     my @ex_sources;
 
-    foreach my $entry (@{$admin->{'member_include'}}) {
-
-        next unless (defined $entry);
+    foreach my $entry (@{$self->{'admin'}{'member_include'}}) {
+        next unless $entry;
 
         my $include_file = Sympa::search_fullpath(
             $self,
@@ -7271,14 +7274,12 @@ sub _load_list_members_from_include {
             my $type  = $types[0];                    #FIXME: Gets random key?
             my @defs  = @{$include_member->{$type}};
             my $def   = $defs[0];
-            push @{$admin->{$type}}, $def;
+            push @{$sources->{$type}}, $def;
         }
     }
 
     foreach my $type (@sources_providing_listmembers) {
-
-        foreach my $tmp_incl (@{$admin->{$type}}) {
-
+        foreach my $tmp_incl (@{$sources->{$type}}) {
             # Work with a copy of admin hash branch to avoid including
             # temporary variables into the actual admin hash.[bug #3182]
             my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
@@ -7334,10 +7335,13 @@ sub _load_list_members_from_include {
                     $log->syslog('debug', 'Is_new %d, syncing',
                         $source_is_new);
                     $included = _include_users_sql(
-                        \%users,                          $source_id,
-                        $incl,                            $db,
-                        $admin->{'default_user_options'}, 'untied',
-                        $admin->{'sql_fetch_timeout'}
+                        \%users,
+                        $source_id,
+                        $incl,
+                        $db,
+                        $self->{'admin'}{'default_user_options'},
+                        'untied',
+                        $self->{'admin'}{'sql_fetch_timeout'}
                     );
                     unless (defined $included) {
                         push @errors,
@@ -7365,7 +7369,7 @@ sub _load_list_members_from_include {
                     ) {
                     $included =
                         _include_users_ldap(\%users, $source_id, $incl, $db,
-                        $admin->{'default_user_options'});
+                        $self->{'admin'}{'default_user_options'});
                     unless (defined $included) {
                         push @errors,
                             {'type' => $type, 'name' => $incl->{'name'}};
@@ -7393,7 +7397,7 @@ sub _load_list_members_from_include {
                     ) {
                     my $result =
                         _include_users_ldap_2level(\%users, $source_id, $incl,
-                        $db, $admin->{'default_user_options'});
+                        $db, $self->{'admin'}{'default_user_options'});
                     if (defined $result) {
                         $included = $result->{'total'};
                         if (defined $result->{'errors'}) {
@@ -7419,26 +7423,26 @@ sub _load_list_members_from_include {
             } elsif ($type eq 'include_remote_sympa_list') {
                 $included =
                     $self->_include_users_remote_sympa_list(\%users, $incl,
-                    $dir, $self->{'domain'},
-                    $admin->{'default_user_options'});
+                    $self->{'dir'}, $self->{'domain'},
+                    $self->{'admin'}{'default_user_options'});
                 unless (defined $included) {
                     push @errors,
                         {'type' => $type, 'name' => $incl->{'name'}};
                 }
             } elsif ($type eq 'include_list') {
-                $depend_on->{$name} = 1;
-                if (_inclusion_loop($name, $incl, $depend_on)) {
+                $depend_on->{$self->{'name'}} = 1;
+                if (_inclusion_loop($self->{'name'}, $incl, $depend_on)) {
                     $log->syslog(
                         'err',
-                        'Loop detection in list inclusion: could not include again %s in %s',
+                        'Loop detection in list inclusion: could not include again %s in list %s',
                         $incl,
-                        $name
+                        $self
                     );
                 } else {
                     $depend_on->{$incl} = 1;
                     $included =
                         _include_users_list(\%users, $incl, $self->{'domain'},
-                        $admin->{'default_user_options'});
+                        $self->{'admin'}{'default_user_options'});
                     unless (defined $included) {
                         push @errors, {'type' => $type, 'name' => $incl};
                     }
@@ -7446,14 +7450,14 @@ sub _load_list_members_from_include {
             } elsif ($type eq 'include_file') {
                 $included =
                     _include_users_file(\%users, $incl,
-                    $admin->{'default_user_options'});
+                    $self->{'admin'}{'default_user_options'});
                 unless (defined $included) {
                     push @errors, {'type' => $type, 'name' => $incl};
                 }
             } elsif ($type eq 'include_remote_file') {
                 $included =
                     _include_users_remote_file(\%users, $incl,
-                    $admin->{'default_user_options'});
+                    $self->{'admin'}{'default_user_options'});
                 unless (defined $included) {
                     push @errors,
                         {'type' => $type, 'name' => $incl->{'name'}};
@@ -7462,7 +7466,7 @@ sub _load_list_members_from_include {
 
             unless (defined $included) {
                 $log->syslog('err', 'Inclusion %s failed in list %s',
-                    $type, $name);
+                    $type, $self);
                 next;
             }
             $total += $included;
