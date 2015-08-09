@@ -1633,9 +1633,8 @@ sub distribute_msg {
         };
         my $template = Sympa::Template->new(undef);
         unless ($template->parse($data, [$custom_subject], \$parsed_tag)) {
-            my $error = $template->{last_error};
             $log->syslog('err', 'Can\'t parse custom_subject of list %s: %s',
-                $self, ($error and $error->info));
+                $self, $template->{last_error});
 
             undef $parsed_tag;
         }
@@ -8653,8 +8652,8 @@ sub sync_include_admin {
         if ($#add_tab >= 0) {
             unless ($admin_users_added =
                 $self->add_list_admin($role, @add_tab)) {
-                $log->syslog('err', '(%s) Failed to add new %ss',
-                    $role, $name);
+                $log->syslog('err', 'Failed to add new %s(s) to list %s',
+                    $role, $self);
                 return undef;
             }
         }

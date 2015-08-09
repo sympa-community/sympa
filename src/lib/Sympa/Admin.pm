@@ -283,10 +283,9 @@ sub create_list_old {
         Sympa::Template->new($robot,
         subdir => 'create_list_templates/' . $list_tpl);
     unless ($template->parse($param, 'config.tt2', \$config)) {
-        my $error = $template->{last_error};
         $log->syslog(
-            'err', 'Can\'t parse %s/config.tt2: %s',
-            $list_tpl, ($error and $error->info or 'Unknown error')
+            'err',     'Can\'t parse %s/config.tt2: %s',
+            $list_tpl, $template->{last_error}
         );
         return undef;
     }
@@ -467,14 +466,13 @@ sub create_list {
         Sympa::Template->new(undef, include_path => [$family->{'dir'}]);
     my $tt_result = $template->parse($param, 'config.tt2', \$conf);
     if (not $tt_result and $abort_on_error) {
-        my $error = $template->{last_error};
         $log->syslog(
             'err',
-            'Abort on tt2 error. List %s from family %s@%s, file config.tt2 : %s',
+            'Abort on template error. List %s from family %s@%s, file config.tt2 : %s',
             $param->{'listname'},
             $family->{'name'},
             $robot,
-            ($error and $error->info)
+            $template->{last_error}
         );
         return undef;
     }
@@ -552,15 +550,14 @@ sub create_list {
             my $tt_result =
                 $template->parse($param, $file . ".tt2", \$file_content);
             unless (defined $tt_result) {
-                my $error = $template->{last_error};
                 $log->syslog(
                     'err',
-                    'Tt2 error. List %s from family %s@%s, file %s : %s',
+                    'Template error. List %s from family %s@%s, file %s : %s',
                     $param->{'listname'},
                     $family->{'name'},
                     $robot,
                     $file,
-                    ($error and $error->info)
+                    $template->{last_error}
                 );
             }
             unless (open FILE, '>', "$list_dir/$file") {
@@ -679,9 +676,8 @@ sub update_list {
     my $template =
         Sympa::Template->new(undef, include_path => [$family->{'dir'}]);
     unless ($template->parse($param, 'config.tt2', $lock_fh)) {
-        my $error = $template->{last_error};
         $log->syslog('err', 'Can\'t parse %s/config.tt2: %s',
-            $family->{'dir'}, ($error and $error->info));
+            $family->{'dir'}, $template->{last_error});
         return undef;
     }
     ## Unlock config file
@@ -729,7 +725,6 @@ sub update_list {
             my $tt_result =
                 $template->parse($param, $file . ".tt2", \$file_content);
             unless ($tt_result) {
-                my $error = $template->{last_error};
                 $log->syslog(
                     'err',
                     'Template error. List %s from family %s@%s, file %s: %s',
@@ -737,7 +732,7 @@ sub update_list {
                     $family->{'name'},
                     $robot,
                     $file,
-                    ($error and $error->info)
+                    $template->{last_error}
                 );
                 next;    #FIXME: Abort processing and rollback.
             }

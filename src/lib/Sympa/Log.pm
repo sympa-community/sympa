@@ -109,6 +109,8 @@ sub syslog {
         unless (defined $p) {
             # prevent 'Use of uninitialized value' warning
             push @param, '';
+        } elsif (ref $p eq 'Template::Exception') {
+            push @param, $p->as_string;
         } elsif (Scalar::Util::blessed($p) and $p->can('get_id')) {
             push @param, sprintf('%s <%s>', ref $p, $p->get_id);
         } elsif (ref $p eq 'Regexp') {

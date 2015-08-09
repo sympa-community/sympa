@@ -804,6 +804,7 @@ sub update_css {
                     Sympa::Template->new($robot, subdir => 'web_tt2');
                 unless ($css_template->parse($param, 'css.tt2', \*CSS)) {
                     my $error = $css_template->{last_error};
+                    $error = $error->as_string if ref $error;
                     $param->{'tt2_error'} = $error;
                     Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                         [$error]);

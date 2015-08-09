@@ -1206,8 +1206,7 @@ sub fullReview {
     # Members list synchronization if include is in use
     if ($list->has_include_data_sources()) {
         unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-            $log->syslog('notice', 'Unable to synchronize list %s',
-                $list);
+            $log->syslog('notice', 'Unable to synchronize list %s', $list);
         }
     }
 
@@ -1923,6 +1922,7 @@ sub get_reason_string {
         Sympa::Template->new($robot, subdir => 'mail_tt2');    # FIXME: lang?
     unless ($template->parse($data, 'authorization_reject.tt2', \$string)) {
         my $error = $template->{last_error};
+        $error = $error->as_string if ref $error;
         Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
         $log->syslog('info', 'Error parsing');
         return '';

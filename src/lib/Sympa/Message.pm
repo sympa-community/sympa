@@ -514,10 +514,9 @@ sub _new_from_template {
             ($list ? [$list->{'dir'}, $list->{'dir'} . '/archives'] : [])
     );
     unless ($template->parse($data, $filename, \$message_as_string)) {
-        my $error = $template->{last_error};
         $log->syslog(
-            'err', 'Can\'t parse template %s: %s',
-            $filename, ($error and $error->info)
+            'err',     'Can\'t parse template %s: %s',
+            $filename, $template->{last_error}
         );
         return undef;
     }
@@ -2391,11 +2390,10 @@ sub _urlize_one_part {
         lang   => $language->get_lang
     );
     unless ($template->parse($data, 'urlized_part.tt2', \$new_part)) {
-        my $error = $template->{last_error};
         $log->syslog(
             'err',
             'Can\'t parse template urlized_part.tt2: %s',
-            ($error and $error->info)
+            $template->{last_error}
         );
         return undef;
     }
