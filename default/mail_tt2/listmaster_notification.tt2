@@ -162,6 +162,19 @@ Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%
 [%|loc(param0)%]Until then we recommend your remove %1;
 default configuration will be used.[%END%]
 
+[% ELSIF type == 'sync_include_failed' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Failed to inlude members for list '%1'[%END%][%END%]
+
+[%|loc%]Sympa could not include members from external data sources; the database or LDAP directory might be unreachable.[%END%]
+
+[%IF errors -%]
+[% FOREACH e = errors -%]
+[%|loc(e.type,e.name)%]- Datasource '%2' (type %1)[%END%]
+[% END %]
+
+[%END -%]
+[%|loc%]Check Sympa log files for more precise information[%END%]
+
 [% ELSIF type == 'sync_include_admin_failed' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]admins update failed for list %1[%END%][%END%]
 
