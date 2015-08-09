@@ -462,12 +462,15 @@ sub new_from_template {
     $self->{messagekey} = $marshalled;
     $log->syslog(
         'notice',
-        'Processing %s; message_id=%s; recipients=%s; sender=%s; template=%s',
+        'Processing %s; message_id=%s; recipients=%s; sender=%s; template=%s; %s',
         $self,
         $self->{message_id},
         $who,
         $self->{sender},
-        $tpl
+        $tpl,
+        join('; ',
+            map { $data->{$_} ? ("$_=$data->{$_}") : () }
+                qw(type action reason status))
     );
 
     return $self;
