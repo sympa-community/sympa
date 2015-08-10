@@ -1846,9 +1846,8 @@ sub process_bouncers {
             $user_ref;
             $user_ref = $list->get_next_bouncing_list_member()
             ) {
-
-            ## Skip included users (cannot be removed)
-            next if $user_ref->{'is_included'};  #FIXME: there is no such key.
+            # Skip included users (cannot be removed)
+            next if $user_ref->{'included'};
 
             for (my $level = $max_level; ($level >= 1); $level--) {
 
