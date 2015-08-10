@@ -270,6 +270,13 @@ Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
+[% ELSIF type == 'web_tt2_error' -%]
+Subject: [% FILTER qencode %][%|loc%]Failed to parse web template[%END%][%END%]
+
+[%|loc%]Sympa could not deliver the requested page for the following reason: [%END%]
+[%|loc(param0)%]Error: %1[%END%]
+[%|loc%]Check Sympa log files for more precise information.[%END%]
+
 [%# INTERNAL SERVER ERROR  : MAIL -%]
 [% ELSIF type == 'mail_intern_error' -%]
 Subject: [% FILTER qencode %][%|loc%]Listmaster: internal server error [%END%][%END%]
