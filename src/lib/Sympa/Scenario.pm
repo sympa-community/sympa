@@ -1190,7 +1190,8 @@ sub verify {
 
         } elsif ($condition_key eq 'is_owner') {
             foreach my $arg (@arg) {
-                if ($list2->am_i('owner', $arg)) {
+                if ($list2->is_admin('owner', $arg)
+                    or Sympa::is_listmaster($list2, $arg)) {
                     $ok = $arg;
                     last;
                 }
@@ -1209,7 +1210,7 @@ sub verify {
 
         } elsif ($condition_key eq 'is_editor') {
             foreach my $arg (@arg) {
-                if ($list2->am_i('editor', $arg)) {
+                if ($list2->is_admin('actual_editor', $arg)) {
                     $ok = $arg;
                     last;
                 }

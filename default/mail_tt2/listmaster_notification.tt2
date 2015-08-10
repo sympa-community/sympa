@@ -144,6 +144,9 @@ Subject: [% FILTER qencode %][%|loc%]A message archiving failed[%END%][%END%]
 [%|loc(file,bad)%]Sympa could not archive message '%1'. Moving it into directory '%2'.[%END%]
 [%|loc%]See logs for more details.[%END%]
 
+[% ELSIF type == 'automatic_bounce_management' -%]
+[% PROCESS 'automatic_bounce_management.tt2' -%]
+
 [% ELSIF type == 'bounce_management_failed' -%]
 Subject: [% FILTER qencode %][%|loc%]A bounce management failed[%END%][%END%]
 

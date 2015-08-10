@@ -942,7 +942,8 @@ sub review {
     my @users;
 
     if ($action =~ /do_it/i) {
-        my $is_owner = $list->am_i('owner', $sender);
+        my $is_owner = $list->is_admin('owner', $sender)
+            || Sympa::is_listmaster($list, $sender);
         unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
             Sympa::Report::reject_report_cmd('user', 'no_subscriber',
                 {'listname' => $listname}, $cmd_line);
@@ -3406,7 +3407,7 @@ sub modindex {
 
     my $i;
 
-    unless ($list->am_i('editor', $sender)) {
+    unless ($list->is_admin('actual_editor', $sender)) {
         Sympa::Report::reject_report_cmd('auth', 'restricted_modindex', {},
             $cmd_line);
         $log->syslog('info', 'MODINDEX %s from %s refused, not allowed',

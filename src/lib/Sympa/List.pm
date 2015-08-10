@@ -49,6 +49,7 @@ use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Database;
+use Sympa::DatabaseManager;
 use Sympa::Datasource;
 use Sympa::Family;
 use Sympa::Fetch;
@@ -140,10 +141,6 @@ Saves updates the statistics file on disk.
 Updates the stats, argument is number of bytes, returns the next
 sequence number. Does nothing if no stats.
 
-=item send_sub_to_owner ( WHO, COMMENT )
-Send a message to the list owners telling that someone
-wanted to subscribe to the list.
-
 =item delete_list_member ( ARRAY )
 
 Delete the indicated users from the list.
@@ -185,13 +182,17 @@ Returns a subscriber of the list.
 
 Return an admin user of the list with predefined role
 
+OBSOLETED.
+Use get_admins().
+
 =item get_first_list_member ()
 
 Returns a hash to the first user on the list.
 
 =item get_first_list_admin ( ROLE )
 
-Returns a hash to the first admin user with predefined role on the list.
+OBSOLETED.
+Use get_admins().
 
 =item get_next_list_member ()
 
@@ -200,8 +201,8 @@ the list.
 
 =item get_next_list_admin ()
 
-Returns a hash to the next admin users, until we reach the end of
-the list.
+OBSOLETED.
+Use get_admins().
 
 =item update_list_member ( USER, HASHPTR )
 
@@ -225,10 +226,9 @@ entries.
 
 Returns true if the indicated user is member of the list.
 
-=item am_i ( FUNCTION, USER )
+=item am_i ( ROLE, USER )
 
-Returns true is USER has FUNCTION (owner, editor) on the
-list.
+DEPRECATED. Use is_admin().
 
 =item get_state ( FLAG )
 
@@ -616,8 +616,8 @@ sub new {
             $log->syslog('err', '')
                 unless ($options->{'just_try'});
         }
-        if (   $list->get_nb_owners() < 1
-            && $list->{'admin'}{'status'} ne 'error_config') {
+        if (not @{$list->get_admins('owner') || []}
+            and $list->{'admin'}{'status'} ne 'error_config') {
             $log->syslog('err', 'The list "%s" has got no owner defined',
                 $list->{'name'});
             $list->set_status_error_config('no_owner_defined');
@@ -1180,113 +1180,72 @@ sub load {
 }
 
 ## Return a list of hash's owners and their param
+#OBSOLETED.  Use get_admins().
 sub get_owners {
-    my ($self) = @_;
-    $log->syslog('debug3', '(%s)', $self->{'name'});
-
-    my $owners = ();
+    $log->syslog('debug3', '(%s)', @_);
+    my $self = shift;
 
     # owners are in the admin_table ; they might come from an include data
     # source
-    for (
-        my $owner = $self->get_first_list_admin('owner');
-        $owner;
-        $owner = $self->get_next_list_admin()
-        ) {
-        push(@{$owners}, $owner);
-    }
-
-    return $owners;
+    return [$self->get_admins('owner')];
 }
 
+# OBSOLETED: No longer used.
 sub get_nb_owners {
-    my ($self) = @_;
-    $log->syslog('debug3', '(%s)', $self->{'name'});
+    $log->syslog('debug3', '(%s)', @_);
+    my $self = shift;
 
-    my $resul  = 0;
-    my $owners = $self->get_owners;
-
-    if (defined $owners) {
-        $resul = $#{$owners} + 1;
-    }
-    return $resul;
+    return scalar @{$self->get_admins('owner')};
 }
 
 ## Return a hash of list's editors and their param(empty if there isn't any
 ## editor)
+#OBSOLETED. Use get_admins().
 sub get_editors {
-    my ($self) = @_;
-    $log->syslog('debug3', '(%s)', $self->{'name'});
-
-    my $editors = ();
+    $log->syslog('debug3', '(%s)', @_);
+    my $self = shift;
 
     # editors are in the admin_table ; they might come from an include data
     # source
-    for (
-        my $editor = $self->get_first_list_admin('editor');
-        $editor;
-        $editor = $self->get_next_list_admin()
-        ) {
-        push(@{$editors}, $editor);
-    }
-
-    return $editors;
+    return [$self->get_admins('editor')];
 }
 
 ## Returns an array of owners' email addresses
+#OBSOLETED: Use get_admins_email('receptive_owner') or
+#           get_admins_email('owner').
 sub get_owners_email {
-    my ($self, $param) = @_;
-    $log->syslog('debug3', '(%s, %s)', $self->{'name'},
-        $param->{'ignore_nomail'});
+    $log->syslog('debug3', '(%s, %s)', @_);
+    my $self  = shift;
+    my $param = shift;
 
     my @rcpt;
-    my $owners = ();
-
-    $owners = $self->get_owners();
 
     if ($param->{'ignore_nomail'}) {
-        foreach my $o (@{$owners}) {
-            push(@rcpt, lc($o->{'email'}));
-        }
+        @rcpt = map { $_->{'email'} } $self->get_admins('owner');
     } else {
-        foreach my $o (@{$owners}) {
-            next if ($o->{'reception'} eq 'nomail');
-            push(@rcpt, lc($o->{'email'}));
-        }
+        @rcpt = map { $_->{'email'} } $self->get_admins('receptive_owner');
     }
     unless (@rcpt) {
-        $log->syslog('notice', 'Warning: No owner found for list %s',
-            $self->{'name'});
+        $log->syslog('notice', 'Warning: No owner found for list %s', $self);
     }
     return @rcpt;
 }
 
 ## Returns an array of editors' email addresses
 #  or owners if there isn't any editors' email addresses
+#OBSOLETED: Use get_admins_email('receptive_editor') or
+#           get_admins_email('actual_editor').
 sub get_editors_email {
-    my ($self, $param) = @_;
-    $log->syslog('debug3', '(%s, %s)', $self->{'name'},
-        $param->{'ignore_nomail'});
+    $log->syslog('debug3', '(%s, %s)', @_);
+    my $self  = shift;
+    my $param = shift;
 
     my @rcpt;
-    my $editors = ();
-
-    $editors = $self->get_editors();
 
     if ($param->{'ignore_nomail'}) {
-        foreach my $e (@{$editors}) {
-            push(@rcpt, lc($e->{'email'}));
-        }
+        @rcpt = map { $_->{'email'} } $self->get_admins('actual_editor');
     } else {
-        foreach my $e (@{$editors}) {
-            next if ($e->{'reception'} eq 'nomail');
-            push(@rcpt, lc($e->{'email'}));
-        }
-    }
-    unless (@rcpt) {
-        $log->syslog('debug3', 'No editors found for list %s, getting owners',
-            $self);
-        @rcpt = $self->get_owners_email($param);
+        @rcpt = map { $_->{'email'} } $self->get_admins('receptive_editor');
     }
     return @rcpt;
 }
@@ -2650,38 +2609,21 @@ sub send_confirm_to_editor {
         );
     }
 
-    @rcpt = $list->get_editors_email();
+    @rcpt = $list->get_admins_email('receptive_editor');
+    @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
+    $log->syslog('notice',
+        'Warning: No owner and editor defined at all in list %s', $list)
+        unless @rcpt;
 
-    ## Did we find a recipient?
+    # Did we find a recipient?
     unless (@rcpt) {
         $log->syslog(
-            'notice',
-            "No editor found for list %s. Trying to proceed ignoring nomail option",
+            'err',
+            'Impossible to send the moderation request for message %s to editors of list %s. Neither editor nor owner defined!',
+            $message,
             $list
         );
-
-        @rcpt = $list->get_editors_email({'ignore_nomail', 1});
-        $log->syslog('notice',
-            'Warning: No owner and editor defined at all in list %s', $list)
-            unless @rcpt;
-
-        ## Could we find a recipient by ignoring the "nomail" option?
-        if (@rcpt) {
-            $log->syslog(
-                'notice',
-                'All the intended recipients of message %s in list %s have set the "nomail" option. Ignoring it and sending it to all of them',
-                $message,
-                $list
-            );
-        } else {
-            $log->syslog(
-                'err',
-                'Impossible to send the moderation request for message %s to editors of list %s. Neither editor nor owner defined!',
-                $message,
-                $list
-            );
-            return undef;
-        }
+        return undef;
     }
 
     my $param = {
@@ -2870,16 +2812,16 @@ sub send_notify_to_owner {
     my ($self, $operation, $param) = @_;
 
     my $host  = $self->{'admin'}{'host'};
-    my @to    = $self->get_owners_email();
+    my @rcpt  = $self->get_admins_email('receptive_owner');
     my $robot = $self->{'domain'};
 
-    unless (@to) {
+    unless (@rcpt) {
         $log->syslog(
             'notice',
             'No owner defined or all of them use nomail option in list %s; using listmasters as default',
-            $self->{'name'}
+            $self
         );
-        @to = Sympa::get_listmasters_email($self);
+        @rcpt = Sympa::get_listmasters_email($self);
     }
     unless (defined $operation) {
         die 'missing incoming parameter "$operation"';
@@ -2888,7 +2830,7 @@ sub send_notify_to_owner {
     if (ref($param) eq 'HASH') {
 
         $param->{'auto_submitted'} = 'auto-generated';
-        $param->{'to'}             = join(',', @to);
+        $param->{'to'}             = join(',', @rcpt);
         $param->{'type'}           = $operation;
 
         if ($operation eq 'warn-signoff') {
@@ -2896,7 +2838,7 @@ sub send_notify_to_owner {
             $param->{'escaped_gecos'} =~ s/\s/\%20/g;
             $param->{'escaped_who'} = $param->{'who'};
             $param->{'escaped_who'} =~ s/\s/\%20/g;
-            foreach my $owner (@to) {
+            foreach my $owner (@rcpt) {
                 $param->{'one_time_ticket'} =
                     Sympa::Auth::create_one_time_ticket(
                     $owner,
@@ -2927,7 +2869,7 @@ sub send_notify_to_owner {
             }
             $param->{'escaped_who'} = $param->{'who'};
             $param->{'escaped_who'} =~ s/\s/\%20/g;
-            foreach my $owner (@to) {
+            foreach my $owner (@rcpt) {
                 $param->{'one_time_ticket'} =
                     Sympa::Auth::create_one_time_ticket($owner, $robot,
                     'subindex/' . $self->{'name'},
@@ -2957,7 +2899,7 @@ sub send_notify_to_owner {
             }
             unless (
                 Sympa::send_file(
-                    $self, 'listowner_notification', \@to, $param
+                    $self, 'listowner_notification', \@rcpt, $param
                 )
                 ) {
                 $log->syslog(
@@ -2972,7 +2914,7 @@ sub send_notify_to_owner {
     } elsif (ref($param) eq 'ARRAY') {
 
         my $data = {
-            'to'   => join(',', @to),
+            'to'   => join(',', @rcpt),
             'type' => $operation
         };
 
@@ -2980,7 +2922,8 @@ sub send_notify_to_owner {
             $data->{"param$i"} = $param->[$i];
         }
         unless (
-            Sympa::send_file($self, 'listowner_notification', \@to, $data)) {
+            Sympa::send_file($self, 'listowner_notification', \@rcpt, $data))
+        {
             $log->syslog(
                 'notice',
                 'Unable to send template "listowner_notification" to %s list owner',
@@ -3119,11 +3062,11 @@ sub send_notify_to_editor {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
     my ($self, $operation, $param) = @_;
 
-    my @to    = $self->get_editors_email();
+    my @rcpt  = $self->get_admins_email('receptive_editor');
     my $robot = $self->{'domain'};
     $param->{'auto_submitted'} = 'auto-generated';
 
-    unless (@to) {
+    unless (@rcpt) {
         $log->syslog(
             'notice',
             'Warning: No editor or owner defined or all of them use nomail option in list %s',
@@ -3136,12 +3079,14 @@ sub send_notify_to_editor {
     }
     if (ref($param) eq 'HASH') {
 
-        $param->{'to'} = join(',', @to);
+        $param->{'to'} = join(',', @rcpt);
         $param->{'type'} = $operation;
 
         unless (
-            Sympa::send_file($self, 'listeditor_notification', \@to, $param))
-        {
+            Sympa::send_file(
+                $self, 'listeditor_notification', \@rcpt, $param
+            )
+            ) {
             $log->syslog(
                 'notice',
                 'Unable to send template "listeditor_notification" to %s list editor',
@@ -3153,7 +3098,7 @@ sub send_notify_to_editor {
     } elsif (ref($param) eq 'ARRAY') {
 
         my $data = {
-            'to'   => join(',', @to),
+            'to'   => join(',', @rcpt),
             'type' => $operation
         };
 
@@ -3161,7 +3106,8 @@ sub send_notify_to_editor {
             $data->{"param$i"} = $param->[$i];
         }
         unless (
-            Sympa::send_file($self, 'listeditor_notification', \@to, $data)) {
+            Sympa::send_file($self, 'listeditor_notification', \@rcpt, $data))
+        {
             $log->syslog('notice',
                 'Unable to send template "listeditor_notification" to %s list editor'
             );
@@ -3376,23 +3322,28 @@ sub delete_list_admin {
     my $name  = $self->{'name'};
     my $total = 0;
 
+    $self->{_admin_cache} ||= {};
+    delete $self->{_admin_cache}{$role};    # Reset cache
+
     foreach my $who (@u) {
         $who = tools::clean_email($who);
         my $statement;
 
-        $list_cache{'is_admin_user'}{$self->{'domain'}}{$name}{$who} = undef;
+        my $sdm = Sympa::DatabaseManager->instance;
 
-        ## Delete record in ADMIN
+        # Delete record in ADMIN
         unless (
-            SDM::do_query(
-                "DELETE FROM admin_table WHERE (user_admin=%s AND list_admin=%s AND robot_admin=%s AND role_admin=%s)",
-                SDM::quote($who),
-                SDM::quote($name),
-                SDM::quote($self->{'domain'}),
-                SDM::quote($role)
+            $sdm
+            and $sdm->do_prepared_query(
+                q{DELETE FROM admin_table
+                  WHERE user_admin = ? AND list_admin = ? AND
+                        robot_admin = ? AND role_admin = ?},
+                $who,              $self->{'name'},
+                $self->{'domain'}, $role
             )
             ) {
-            $log->syslog('err', 'Unable to remove list admin %s', $who);
+            $log->syslog('err', 'Unable to remove admin %s of list %s',
+                $who, $self);
             next;
         }
 
@@ -3406,8 +3357,12 @@ sub delete_list_admin {
 sub delete_all_list_admin {
     $log->syslog('debug2', '');
 
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
     ## Delete record in ADMIN
-    unless ($sth = SDM::do_query("DELETE FROM admin_table")) {
+    unless ($sdm
+        and $sth = $sdm->do_prepared_query(q{DELETE FROM admin_table})) {
         $log->syslog('err', 'Unable to remove all admin from database');
         return undef;
     }
@@ -4108,57 +4063,17 @@ sub get_list_member_no_object {
 }
 
 ## Returns an admin user of the list.
+# OBSOLETED.  Use get_admins().
 sub get_list_admin {
+    $log->syslog('debug2', '(%s, %s, %s)', @_);
     my $self  = shift;
     my $role  = shift;
-    my $email = tools::clean_email(shift);
+    my $email = shift;
 
-    $log->syslog('debug2', '(%s, %s)', $role, $email);
-
-    my $name = $self->{'name'};
-
-    push @sth_stack, $sth;
-
-    ## Use session cache
-    if (defined $list_cache{'get_list_admin'}{$self->{'domain'}}{$name}{$role}
-        {$email}) {
-        return $list_cache{'get_list_admin'}{$self->{'domain'}}{$name}{$role}
-            {$email};
-    }
-
-    unless (
-        $sth = SDM::do_query(
-            'SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS "date", %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id FROM admin_table WHERE (user_admin = %s AND list_admin = %s AND robot_admin = %s AND role_admin = %s)',
-            SDM::get_canonical_read_date('date_admin'),
-            SDM::get_canonical_read_date('update_admin'),
-            SDM::quote($email),
-            SDM::quote($name),
-            SDM::quote($self->{'domain'}),
-            SDM::quote($role)
-        )
-        ) {
-        $log->syslog('err', 'Unable to get admin %s for list %s@%s',
-            $email, $name, $self->{'domain'});
-        return undef;
-    }
-
-    my $admin_user = $sth->fetchrow_hashref('NAME_lc');
-
-    if (defined $admin_user) {
-        $admin_user->{'reception'}   ||= 'mail';
-        $admin_user->{'update_date'} ||= $admin_user->{'date'};
-    }
-
-    $sth->finish();
-
-    $sth = pop @sth_stack;
-
-    ## Set session cache
-    $list_cache{'get_list_admin'}{$self->{'domain'}}{$name}{$role}{$email} =
-        $admin_user;
+    my ($admin_user) =
+        @{$self->get_admins($role, filter => [email => $email])};
 
     return $admin_user;
-
 }
 
 ## Returns the first user for the list.
@@ -4343,94 +4258,8 @@ sub createXMLCustomAttribute {
 }
 
 ## Returns the first admin_user with $role for the list.
-
-sub get_first_list_admin {
-    my ($self, $role, $data) = @_;
-
-    my ($sortby, $sql_regexp);
-    $sortby = $data->{'sortby'};
-    ## Sort may be domain, email, date
-    $sortby ||= 'domain';
-    $sql_regexp = $data->{'sql_regexp'};
-
-    $log->syslog('debug2', '(%s, %s, %s, %s, %s)',
-        $self->{'name'}, $role, $sortby);
-
-    my $name = $self->{'name'};
-    my $statement;
-
-    ## SQL regexp
-    my $selection;
-    if ($sql_regexp) {
-        $selection =
-            sprintf " AND (user_admin LIKE %s OR comment_admin LIKE %s)",
-            SDM::quote($sql_regexp), SDM::quote($sql_regexp);
-    }
-    push @sth_stack, $sth;
-
-    $statement =
-        sprintf
-        'SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS "date", %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)',
-        SDM::get_canonical_read_date('date_admin'),
-        SDM::get_canonical_read_date('update_admin'),
-        SDM::quote($name),
-        SDM::quote($self->{'domain'}),
-        ($selection || ''),
-        SDM::quote($role);
-
-    ## SORT BY
-    if ($sortby eq 'domain') {
-        ## Redefine query to set "dom"
-
-        $statement =
-            sprintf
-            'SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS "date", %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, %s AS dom  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s) ORDER BY dom',
-            SDM::get_canonical_read_date('date_admin'),
-            SDM::get_canonical_read_date('update_admin'),
-            SDM::get_substring_clause(
-            {   'source_field'     => 'user_admin',
-                'separator'        => '\@',
-                'substring_length' => '50'
-            }
-            ),
-            SDM::quote($name),
-            SDM::quote($self->{'domain'}),
-            SDM::quote($role);
-    } elsif ($sortby eq 'email') {
-        $statement .= ' ORDER BY email';
-
-    } elsif ($sortby eq 'date') {
-        $statement .= ' ORDER BY date DESC';
-
-    } elsif ($sortby eq 'sources') {
-        $statement .= " ORDER BY subscribed DESC,id";
-
-    } elsif ($sortby eq 'email') {
-        $statement .= ' ORDER BY gecos';
-    }
-
-    unless ($sth = SDM::do_query($statement)) {
-        $log->syslog('err',
-            'Unable to get admins having role %s for list %s@%s',
-            $role, $name, $self->{'domain'});
-        return undef;
-    }
-
-    my $admin_user = $sth->fetchrow_hashref('NAME_lc');
-    if (defined $admin_user) {
-        $log->syslog('err',
-            'Warning: Entry with empty email address in list %s',
-            $self->{'name'})
-            if (!$admin_user->{'email'});
-        $admin_user->{'reception'}   ||= 'mail';
-        $admin_user->{'update_date'} ||= $admin_user->{'date'};
-    } else {
-        $sth->finish;
-        $sth = pop @sth_stack;
-    }
-
-    return $admin_user;
-}
+#DEPRECATED: Merged into _get_basic_admins().  Use get_admins() instead.
+#sub get_first_list_admin;
 
 ## Loop for all subsequent users.
 sub get_next_list_member {
@@ -4482,33 +4311,215 @@ sub get_next_list_member {
 
 ## Loop for all subsequent admin users with the role defined in
 ## get_first_list_admin.
-sub get_next_list_admin {
-    my $self = shift;
-    $log->syslog('debug2', '');
+#DEPRECATED: Merged into _get_basic_admins().  Use get_admins() instead.
+#sub get_next_list_admin;
 
-    unless (defined $sth) {
-        $log->syslog(
-            'err',
-            'Statement handle not defined in get_next_list_admin for list %s',
-            $self->{'name'}
-        );
+=over
+
+=item get_admins ( $role, [ filter => \@filters ] )
+
+I<Instance method>.
+Gets users of the list with one of following roles.
+
+=over
+
+=item C<actual_editor>
+
+Editors belonging to the list.
+If there are no such users, owners of the list.
+
+=item C<editor>
+
+Editors belonging to the list.
+
+=item C<owner>
+
+Owners of the list.
+
+=item C<privileged_owner>
+
+Owners whose C<profile> attribute is C<privileged>.
+
+=item C<receptive_editor>
+
+Editors belonging to the list and whose reception mode is C<mail>.
+If there are no such users, owners whose reception mode is C<mail>.
+
+=item C<receptive_owner>
+
+Owners whose reception mode is C<mail>.
+
+=back
+
+Optional filter may be:
+
+=over
+
+=item [email =E<gt> $email]
+
+Limit result to the user with their e-mail $email.
+
+=back
+
+Returns:
+
+In array context, returns (possiblly empty or single-item) array of users.
+In scalar context, returns reference to it.
+In case of database error, returns empty array or undefined value.
+
+=back
+
+=cut
+
+sub get_admins {
+    $log->syslog('debug2', '(%s, %s, %s => %s)', @_);
+    my $self    = shift;
+    my $role    = lc(shift || '');
+    my %options = @_;
+
+    my %query = @{$options{filter} || []};
+    $query{email} = tools::clean_email($query{email})
+        if defined $query{email};
+
+    # Fill caches.
+    $self->{_admin_cache} ||= {};
+    if ($role eq 'editor') {
+        unless ($self->{_admin_cache}{$role}) {
+            delete $self->{_admin_cache}{actual_editor};
+            delete $self->{_admin_cache}{receptive_editor};
+            $self->{_admin_cache}{$role} = $self->_get_basic_admins($role);
+        }
+    } elsif ($role eq 'owner') {
+        unless ($self->{_admin_cache}{$role}) {
+            delete $self->{_admin_cache}{actual_editor};
+            delete $self->{_admin_cache}{privileged_owner};
+            delete $self->{_admin_cache}{receptive_editor};
+            delete $self->{_admin_cache}{receptive_owner};
+            $self->{_admin_cache}{$role} = $self->_get_basic_admins($role);
+        }
+    } elsif ($role eq 'actual_editor') {
+        $self->get_admins('owner');
+        $self->get_admins('editor');
+        unless ($self->{_admin_cache}{$role}) {
+            if (@{$self->{_admin_cache}{editor} || []}) {
+                $self->{_admin_cache}{$role} = $self->{_admin_cache}{editor};
+            } else {
+                $self->{_admin_cache}{$role} = $self->{_admin_cache}{owner};
+            }
+        }
+    } elsif ($role eq 'privileged_owner') {
+        $self->get_admins('owner');
+        unless ($self->{_admin_cache}{$role}) {
+            $self->{_admin_cache}{$role} =
+                [grep { $_->{profile} and $_->{profile} eq 'privileged' }
+                    @{$self->{_admin_cache}{owner} || []}];
+        }
+    } elsif ($role eq 'receptive_editor') {
+        $self->get_admins('owner');
+        $self->get_admins('editor');
+        unless ($self->{_admin_cache}{$role}) {
+            my @users =
+                grep { ($_->{reception} || 'mail') ne 'nomail' }
+                @{$self->{_admin_cache}{editor} || []};
+            @users =
+                grep { ($_->{reception} || 'mail') ne 'nomail' }
+                @{$self->{_admin_cache}{owner} || []}
+                unless @users;
+            $self->{_admin_cache}{$role} = [@users];
+        }
+    } elsif ($role eq 'receptive_owner') {
+        $self->get_admins('owner');
+        unless ($self->{_admin_cache}{$role}) {
+            $self->{_admin_cache}{$role} =
+                [grep { ($_->{reception} || 'mail') ne 'nomail' }
+                    @{$self->{_admin_cache}{owner}}];
+        }
+    } else {
+        die sprintf 'Unknown role "%s"', $role;
+    }
+
+    my $admin_user = $self->{_admin_cache}{$role};
+    return unless $admin_user;    # Returns void.
+
+    if (defined $query{email}) {
+        $admin_user =
+            [grep { ($_->{email} || '') eq $query{email} } @$admin_user];
+    }
+
+    return wantarray ? @$admin_user : $admin_user;
+}
+
+# Old name: Sympa::List::get_first_list_admin() and
+# Sympa::List::get_next_list_admin().
+sub _get_basic_admins {
+    my $self = shift;
+    my $role = shift;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    unless (
+        $sdm and $sth = $sdm->do_prepared_query(
+            sprintf(
+                q{SELECT user_admin AS email, comment_admin AS gecos,
+                         reception_admin AS reception,
+                         visibility_admin AS visibility,
+                         %s AS "date", %s AS update_date,
+                         info_admin AS info, profile_admin AS profile,
+                         subscribed_admin AS subscribed,
+                         included_admin AS included,
+                         include_sources_admin AS id
+                  FROM admin_table
+                  WHERE list_admin = ? AND robot_admin = ? AND role_admin = ?
+                  ORDER BY user_admin},
+                $sdm->get_canonical_read_date('date_admin'),
+                $sdm->get_canonical_read_date('update_admin'),
+            ),
+            $self->{'name'},
+            $self->{'domain'},
+            $role
+        )
+        ) {
+        $log->syslog('err', 'Unable to get admins having role %s for list %s',
+            $role, $self);
         return undef;
     }
 
-    my $admin_user = $sth->fetchrow_hashref('NAME_lc');
+    my $admin_user = $sth->fetchall_arrayref({}) || [];
+    $sth->finish;
 
-    if (defined $admin_user) {
+    foreach my $user (@$admin_user) {
+        $user->{'email'} = tools::clean_email($user->{'email'})
+            if defined $user->{'email'};
         $log->syslog('err',
-            'Warning: Entry with empty email address in list %s',
-            $self->{'name'})
-            if (!$admin_user->{'email'});
-        $admin_user->{'reception'}   ||= 'mail';
-        $admin_user->{'update_date'} ||= $admin_user->{'date'};
-    } else {
-        $sth->finish;
-        $sth = pop @sth_stack;
+            'Warning: Entry with empty email address in list %s', $self)
+            unless defined $user->{'email'} and length $user->{'email'};
+        $user->{'reception'}   ||= 'mail';
+        $user->{'update_date'} ||= $user->{'date'};
     }
+
     return $admin_user;
+}
+
+=over
+
+=item get_admins_email ( $role )
+
+I<Instance method>.
+Gets an array of emails of list admins with role
+C<receptive_editor>, C<actual_editor>, C<receptive_owner> or C<owner>.
+
+=back
+
+=cut
+
+sub get_admins_email {
+    my $self = shift;
+    my $role = lc(shift || '');
+
+    return unless $role;    # Returns void.
+
+    return map { $_->{email} } @{$self->get_admins($role) || []};
 }
 
 ## Returns the first bouncing user
@@ -4663,6 +4674,35 @@ sub get_total_bouncing {
     $sth = pop @sth_stack;
 
     return $total;
+}
+
+=over
+
+=item is_admin ( $role, $user )
+
+I<Instance method>.
+Returns true if $user has $role
+(C<privileged_owner>, C<owner>, C<actual_editor> or C<editor>) on the list.
+
+=back
+
+=cut
+
+## Does the user have a particular function in the list?
+# Old name: [<=6.2.3] am_i().
+sub is_admin {
+    $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
+    my $self = shift;
+    my $role = lc(shift || '');
+    my $who  = shift;
+
+    return undef unless defined $who and length $who;
+
+    if (@{$self->get_admins($role, filter => [email => $who])}) {
+        return 1;
+    } else {
+        return undef;
+    }
 }
 
 ## Is the person in user table (db only)
@@ -5062,8 +5102,8 @@ sub update_list_admin {
     }
 
     ## Reset session cache
-    $list_cache{'get_list_admin'}{$self->{'domain'}}{$name}{$role}{$who} =
-        undef;
+    $self->{_admin_cache} ||= {};
+    delete $self->{_admin_cache}{$role};
 
     return 1;
 }
@@ -5263,6 +5303,9 @@ sub add_list_admin {
     my $name  = $self->{'name'};
     my $total = 0;
 
+    $self->{_admin_cache} ||= {};
+    delete $self->{_admin_cache}{$role};    # Reset cache
+
     foreach my $new_admin_user (@new_admin_users) {
         my $who = tools::clean_email($new_admin_user->{'email'});
 
@@ -5270,8 +5313,6 @@ sub add_list_admin {
 
         $new_admin_user->{'date'} ||= time;
         $new_admin_user->{'update_date'} ||= $new_admin_user->{'date'};
-
-        $list_cache{'is_admin_user'}{$self->{'domain'}}{$name}{$who} = undef;
 
         ##  either is_included or is_subscribed must be set
         ## default is is_subscriber for backward compatibility reason
@@ -5299,34 +5340,45 @@ sub add_list_admin {
         $new_admin_user->{'subscribed'} ||= 0;
         $new_admin_user->{'included'}   ||= 0;
 
-        ## Update Admin Table
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        # Update Admin Table
         unless (
-            SDM::do_query(
-                "INSERT INTO admin_table (user_admin, comment_admin, list_admin, robot_admin, date_admin, update_admin, reception_admin, visibility_admin, subscribed_admin,included_admin,include_sources_admin, role_admin, info_admin, profile_admin) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                SDM::quote($who),
-                SDM::quote($new_admin_user->{'gecos'}),
-                SDM::quote($name),
-                SDM::quote($self->{'domain'}),
-                SDM::get_canonical_write_date($new_admin_user->{'date'}),
-                SDM::get_canonical_write_date(
-                    $new_admin_user->{'update_date'}
+            $sdm
+            and $sdm->do_prepared_query(
+                sprintf(
+                    q{INSERT INTO admin_table
+                      (user_admin, comment_admin, list_admin, robot_admin,
+                       date_admin, update_admin, reception_admin,
+                       visibility_admin,
+                       subscribed_admin,
+                       included_admin, include_sources_admin,
+                       role_admin, info_admin, profile_admin)
+                      VALUES (?, ?, ?, ?, %s, %s, ?, ?, ?, ?, ?, ?, ?, ?)},
+                    $sdm->get_canonical_write_date($new_admin_user->{'date'}),
+                    $sdm->get_canonical_write_date(
+                        $new_admin_user->{'update_date'}
+                    )
                 ),
-                SDM::quote($new_admin_user->{'reception'}),
-                SDM::quote($new_admin_user->{'visibility'}),
+                $who,
+                $new_admin_user->{'gecos'},
+                $name,
+                $self->{'domain'},
+                $new_admin_user->{'reception'},
+                $new_admin_user->{'visibility'},
                 $new_admin_user->{'subscribed'},
                 $new_admin_user->{'included'},
-                SDM::quote($new_admin_user->{'id'}),
-                SDM::quote($role),
-                SDM::quote($new_admin_user->{'info'}),
-                SDM::quote($new_admin_user->{'profile'})
+                $new_admin_user->{'id'},
+                $role,
+                $new_admin_user->{'info'},
+                $new_admin_user->{'profile'}
             )
             ) {
             $log->syslog(
                 'err',
-                'Unable to add admin %s to table admin_table for list %s@%s %s',
+                'Unable to add admin %s to table admin_table for list %s: %s',
                 $who,
-                $name,
-                $self->{'domain'}
+                $self
             );
             next;
         }
@@ -5401,113 +5453,6 @@ sub rename_list_db {
     return 1;
 }
 
-## Does the user have a particular function in the list?
-sub am_i {
-    my ($self, $function, $who, $options) = @_;
-    $log->syslog('debug2', '(%s, %s, %s)', $function, $self->{'name'}, $who);
-
-    return undef unless ($self && $who);
-    $function =~ y/A-Z/a-z/;
-    $who      =~ y/A-Z/a-z/;
-    chomp($who);
-
-    ## If 'strict' option is given, then listmaster does not inherit
-    ## privileged
-    unless (defined $options and $options->{'strict'}) {
-        ## Listmaster has all privileges except editor
-        # sa contestable.
-        if (($function eq 'owner' || $function eq 'privileged_owner')
-            and Sympa::is_listmaster($self, $who)) {
-            return 1;
-        }
-    }
-
-    ## Use cache
-    if (defined $list_cache{'am_i'}{$function}{$self->{'domain'}}
-        {$self->{'name'}}{$who}
-        && $function ne 'editor') {    ## Defaults for editor may be owners) {
-        # $log->syslog('debug3', 'Use cache(%s, %s): %s', $name, $who, $list_cache{'is_list_member'}{$self->{'domain'}}{$name}{$who});
-        return $list_cache{'am_i'}{$function}{$self->{'domain'}}
-            {$self->{'name'}}{$who};
-    }
-
-    ##Check editors
-    if ($function =~ /^editor$/i) {
-
-        ## Check cache first
-        if ($list_cache{'am_i'}{$function}{$self->{'domain'}}{$self->{'name'}}
-            {$who}) {
-            return 1;
-        }
-
-        my $editor = $self->get_list_admin('editor', $who);
-
-        if (defined $editor) {
-            return 1;
-        } else {
-            ## Check if any editor is defined ; if not owners are editors
-            my $editors = $self->get_editors();
-            if ($#{$editors} < 0) {
-
-                # if no editor defined, owners has editor privilege
-                $editor = $self->get_list_admin('owner', $who);
-                if (defined $editor) {
-                    ## Update cache
-                    $list_cache{'am_i'}{'editor'}{$self->{'domain'}}
-                        {$self->{'name'}}{$who} = 1;
-
-                    return 1;
-                }
-            } else {
-
-                ## Update cache
-                $list_cache{'am_i'}{'editor'}{$self->{'domain'}}
-                    {$self->{'name'}}{$who} = 0;
-
-                return undef;
-            }
-        }
-    }
-    ## Check owners
-    if ($function =~ /^owner$/i) {
-        my $owner = $self->get_list_admin('owner', $who);
-        if (defined $owner) {
-            ## Update cache
-            $list_cache{'am_i'}{'owner'}{$self->{'domain'}}{$self->{'name'}}
-                {$who} = 1;
-
-            return 1;
-        } else {
-
-            ## Update cache
-            $list_cache{'am_i'}{'owner'}{$self->{'domain'}}{$self->{'name'}}
-                {$who} = 0;
-
-            return undef;
-        }
-    } elsif ($function =~ /^privileged_owner$/i) {
-        my $privileged = $self->get_list_admin('owner', $who);
-        if (Sympa::Tools::Data::smart_eq(
-                $privileged->{'profile'}, 'privileged'
-            )
-            ) {
-
-            ## Update cache
-            $list_cache{'am_i'}{'privileged_owner'}{$self->{'domain'}}
-                {$self->{'name'}}{$who} = 1;
-
-            return 1;
-        } else {
-
-            ## Update cache
-            $list_cache{'am_i'}{'privileged_owner'}{$self->{'domain'}}
-                {$self->{'name'}}{$who} = 0;
-
-            return undef;
-        }
-    }
-}
-
 ## Check list authorizations
 ## Higher level sub for request_action
 # DEPRECATED; Use Sympa::Scenario::request_action();
@@ -5549,18 +5494,14 @@ sub may_edit {
     ## What privilege?
     if (Sympa::is_listmaster($self, $who)) {
         $role = 'listmaster';
-    } elsif ($self->am_i('privileged_owner', $who)) {
+    } elsif ($self->is_admin('privileged_owner', $who)) {
         $role = 'privileged_owner';
-
-    } elsif ($self->am_i('owner', $who)) {
+    } elsif ($self->is_admin('owner', $who)) {
         $role = 'owner';
-
-    } elsif ($self->am_i('editor', $who)) {
+    } elsif ($self->is_admin('editor', $who)) {
         $role = 'editor';
-
-#    }elsif ( $self->am_i('subscriber',$who) ) {
+#    }elsif ( $self->is_admin('subscriber',$who) ) {
 #	$role = 'subscriber';
-#
     } else {
         return ('user', 'hidden');
     }
@@ -5646,10 +5587,12 @@ sub may_do {
         if ($arc_access =~ /^public$/io) {
             return 1;
         } elsif ($arc_access =~ /^private$/io) {
-            return 1 if ($self->is_list_member($who));
-            return $self->am_i('owner', $who);
+            return 1 if $self->is_list_member($who);
+            return 1 if $self->is_admin('owner', $who);
+            return Sympa::is_listmaster($self, $who);
         } elsif ($arc_access =~ /^owner$/io) {
-            return $self->am_i('owner', $who);
+            return 1 if $self->is_admin('owner', $who);
+            return Sympa::is_listmaster($self, $who);
         }
         return undef;
     }
@@ -5659,10 +5602,11 @@ sub may_do {
             if ($i =~ /^public$/io) {
                 return 1;
             } elsif ($i =~ /^private$/io) {
-                return 1 if ($self->is_list_member($who));
-                return $self->am_i('owner', $who);
+                return 1 if $self->is_list_member($who);
+                return $self->is_admin('owner', $who);
             } elsif ($i =~ /^owner$/io) {
-                return $self->am_i('owner', $who);
+                return 1 if Sympa::is_listmaster($self, $who);
+                return $self->is_admin('owner', $who);
             }
             return undef;
         }
@@ -5673,11 +5617,11 @@ sub may_do {
             /^(private|privateorpublickey|privateoreditorkey)$/i) {
 
             return undef
-                unless ($self->is_list_member($who)
-                || $self->am_i('owner', $who));
+                unless $self->is_list_member($who)
+                    or $self->is_admin('owner', $who);
         } elsif (
             $admin->{'send'} =~ /^(editor|editorkey|privateoreditorkey)$/i) {
-            return undef unless ($self->am_i('editor', $who));
+            return undef unless $self->is_admin('actual_editor', $who);
         } elsif (
             $admin->{'send'} =~ /^(editorkeyonly|publickey|privatekey)$/io) {
             return undef;
@@ -5686,23 +5630,26 @@ sub may_do {
     }
 
     if ($action =~ /^(add|del|remind|reconfirm|purge)$/io) {
-        return $self->am_i('owner', $who);
+        return $self->is_admin('owner', $who)
+            || Sympa::is_listmaster($self, $who);
     }
 
     if ($action =~ /^(modindex)$/io) {
-        return undef unless ($self->am_i('editor', $who));
+        return undef unless $self->is_admin('actual_editor', $who);
         return 1;
     }
 
     if ($action =~ /^auth$/io) {
         if ($admin->{'send'} =~ /^(privatekey)$/io) {
             return 1
-                if ($self->is_list_member($who)
-                || $self->am_i('owner', $who));
+                if $self->is_list_member($who)
+                    or $self->is_admin('owner', $who)
+                    or Sympa::is_listmaster($self, $who);
         } elsif ($admin->{'send'} =~ /^(privateorpublickey)$/io) {
             return 1
-                unless ($self->is_list_member($who)
-                || $self->am_i('owner', $who));
+                unless $self->is_list_member($who)
+                    or $self->is_admin('owner', $who)
+                    or Sympa::is_listmaster($self, $who);
         } elsif ($admin->{'send'} =~ /^(publickey)$/io) {
             return 1;
         }
@@ -6216,14 +6163,17 @@ sub _include_users_list {
             };
             $variables->{isEditorOf} = sub {
                 my $list = Sympa::List->new(shift, $robot);
-                return defined $list
-                    ? $list->am_i('editor', $user->{email})
+                return
+                    defined $list
+                    ? $list->is_admin('actual_editor', $user->{email})
                     : undef;
             };
             $variables->{isOwnerOf} = sub {
                 my $list = Sympa::List->new(shift, $robot);
-                return defined $list
-                    ? $list->am_i('owner', $user->{email})
+                return
+                    defined $list
+                    ? ($list->is_admin('owner', $user->{email})
+                        || Sympa::is_listmaster($list, $user->{email}))
                     : undef;
             };
 
@@ -8432,15 +8382,9 @@ sub sync_include_admin {
 
     ## don't care about listmaster role
     foreach my $role ('owner', 'editor') {
-        my $old_admin_users = {};
         ## Load a hash with the old admin users
-        for (
-            my $admin_user = $self->get_first_list_admin($role);
-            $admin_user;
-            $admin_user = $self->get_next_list_admin()
-            ) {
-            $old_admin_users->{lc($admin_user->{'email'})} = $admin_user;
-        }
+        my $old_admin_users =
+            {map { ($_->{'email'} => $_) } $self->get_admins($role)};
 
         ## Load a hash with the new admin user list from an include source(s)
         my $new_admin_users_include;
@@ -8699,7 +8643,7 @@ sub sync_include_admin {
     $self->{'last_sync_admin_user'} = time;
     $self->savestats();
 
-    return $self->get_nb_owners;
+    return scalar @{$self->get_admins('owner')};
 }
 
 ## Load param admin users from the config of the list
@@ -11173,16 +11117,8 @@ sub close_list {
     $self->delete_list_member('users' => \@users);
 
     ## Remove entries from admin_table
-    foreach my $role ('owner', 'editor') {
-        my @admin_users;
-        for (
-            my $user = $self->get_first_list_admin($role);
-            $user;
-            $user = $self->get_next_list_admin()
-            ) {
-            push @admin_users, $user->{'email'};
-        }
-        $self->delete_list_admin($role, @admin_users);
+    foreach my $role (qw(editor owner)) {
+        $self->delete_list_admin($role, $self->get_admins_email($role));
     }
 
     ## Change status & save config

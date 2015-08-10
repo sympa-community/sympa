@@ -1,5 +1,11 @@
 To: [% to %]
-[% IF type == 'arc_quota_exceeded' -%]
+[% IF type == 'list_created' -%]
+[% PROCESS 'list_created.tt2' -%]
+
+[% IF type == 'list_rejected' -%]
+[% PROCESS 'list_rejected.tt2' -%]
+
+[% ELSIF type == 'arc_quota_exceeded' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 archive quota exceeded[%END%][%END%]
 
 [%|loc(list.name,list.host,size,conf.host,conf.listmaster_email)%]%1 archive quota exceeded. 
@@ -76,6 +82,8 @@ or send an email to %1 with the following subject:
 [%END%]
 AUTH [%keyauth%] DEL [%list.name%] [%who%]
 
+[% ELSIF type == 'automatic_bounce_management' -%]
+[% PROCESS 'automatic_bounce_management.tt2' -%]
 
 [% ELSIF type == 'bounce_rate' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]WARNING: bounce rate too high in list %1[%END%][%END%]

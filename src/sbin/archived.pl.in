@@ -382,9 +382,8 @@ sub do_remove_arc {
     # If not list owner, list editor nor listmaster, check if
     # sender of remove order is sender of the message to be
     # removed.
-    unless ($list->am_i('privileged_owner', $sender)
-        or $list->am_i('owner',  $sender)
-        or $list->am_i('editor', $sender)
+    unless ($list->is_admin('owner', $sender)
+        or $list->is_admin('editor', $sender)
         or Sympa::is_listmaster($list, $sender)) {
         unless (lc $sender eq lc($arc_message->{sender} || '')) {
             $log->syslog('err',

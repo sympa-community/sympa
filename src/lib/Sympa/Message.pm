@@ -405,7 +405,7 @@ sub new_from_template {
         $data->{'list'}{'domain'}  = $data->{'robot_domain'} = $robot_id;
         $data->{'list'}{'host'}    = $list->{'admin'}{'host'};
         $data->{'list'}{'subject'} = $list->{'admin'}{'subject'};
-        $data->{'list'}{'owner'}   = $list->get_owners();
+        $data->{'list'}{'owner'}   = [$list->get_admins('owner')];
         $data->{'list'}{'dir'} = $list->{'dir'};    #FIXME: Required?
     }
 

@@ -3036,12 +3036,14 @@ sub check_param_in {
             $param->{'subscriber'} =
                 $list->get_list_member($param->{'user'}{'email'})
                 if $param->{'is_subscriber'};
-            $param->{'is_privileged_owner'} = $param->{'is_listmaster'}
-                || $list->am_i('privileged_owner', $param->{'user'}{'email'});
-            $param->{'is_owner'} = $param->{'is_privileged_owner'}
-                || $list->am_i('owner', $param->{'user'}{'email'});
+            $param->{'is_privileged_owner'} =
+                $list->is_admin('privileged_owner', $param->{'user'}{'email'})
+                || Sympa::is_listmaster($list, $param->{'user'}{'email'});
+            $param->{'is_owner'} =
+                $list->is_admin('owner', $param->{'user'}{'email'})
+                || Sympa::is_listmaster($list, $param->{'user'}{'email'});
             $param->{'is_editor'} =
-                $list->am_i('editor', $param->{'user'}{'email'});
+                $list->is_admin('actual_editor', $param->{'user'}{'email'});
             $param->{'is_priv'} = $param->{'is_owner'}
                 || $param->{'is_editor'};
             $param->{'pictures_url'} =
@@ -3292,42 +3294,26 @@ sub check_param_out {
             }
         }
 
-        ## Owners
-        my $owners = $list->get_owners();
-        foreach my $o (@{$owners}) {
-            next unless $o->{'email'};
-            $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'};
-            $param->{'owner'}{$o->{'email'}}{'visibility'} =
-                $o->{'visibility'};
-            $param->{'owner'}{$o->{'email'}}{'mailto'} =
-                Sympa::Tools::WWW::mailto($list, $o->{'email'},
-                $o->{'gecos'});
-            (   $param->{'owner'}{$o->{'email'}}{'local'},
-                $param->{'owner'}{$o->{'email'}}{'domain'}
-            ) = split('@', $o->{'email'});
-            my $masked_email = $o->{'email'};
-            $masked_email =~ s/\@/ AT /;
-            $param->{'owner'}{$o->{'email'}}{'masked_email'} = $masked_email;
-        }
+        # Owners and editors
+        foreach my $role (qw(owner editor)) {
+            foreach my $u ($list->get_admins($role)) {
+                next unless $u->{'email'};
 
-        ## Editors
-        if (defined $list->{'admin'}{'editor'}) {
-            my $editors = $list->get_editors();
-            foreach my $e (@{$editors}) {
-                next unless $e->{'email'};
-                $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'};
-                $param->{'editor'}{$e->{'email'}}{'visibility'} =
-                    $e->{'visibility'};
-                $param->{'editor'}{$e->{'email'}}{'mailto'} =
-                    Sympa::Tools::WWW::mailto($list, $e->{'email'},
-                    $e->{'gecos'});
-                (   $param->{'editor'}{$e->{'email'}}{'local'},
-                    $param->{'editor'}{$e->{'email'}}{'domain'}
-                ) = split('@', $e->{'email'});
-                my $masked_email = $e->{'email'};
+                my $mailto =
+                    Sympa::Tools::WWW::mailto($list, $u->{'email'},
+                    $u->{'gecos'});
+                my ($local, $domain) = split /\@/, $u->{'email'};
+                my $masked_email = $u->{'email'};
                 $masked_email =~ s/\@/ AT /;
-                $param->{'editor'}{$e->{'email'}}{'masked_email'} =
-                    $masked_email;
+
+                $param->{$role}{$u->{'email'}} = {
+                    gecos        => $u->{gecos},
+                    visibility   => $u->{visibility},
+                    mailto       => $mailto,
+                    local        => $local,
+                    domain       => $domain,
+                    masked_email => $masked_email
+                };
             }
         }
 
@@ -3342,12 +3328,14 @@ sub check_param_out {
             $param->{'subscriber'} =
                 $list->get_list_member($param->{'user'}{'email'})
                 if $param->{'is_subscriber'};
-            $param->{'is_privileged_owner'} = $param->{'is_listmaster'}
-                || $list->am_i('privileged_owner', $param->{'user'}{'email'});
-            $param->{'is_owner'} = $param->{'is_privileged_owner'}
-                || $list->am_i('owner', $param->{'user'}{'email'});
+            $param->{'is_privileged_owner'} =
+                $list->is_admin('privileged_owner', $param->{'user'}{'email'})
+                || Sympa::is_listmaster($list, $param->{'user'}{'email'});
+            $param->{'is_owner'} =
+                $list->is_admin('owner', $param->{'user'}{'email'})
+                || Sympa::is_listmaster($list, $param->{'user'}{'email'});
             $param->{'is_editor'} =
-                $list->am_i('editor', $param->{'user'}{'email'});
+                $list->is_admin('actual_editor', $param->{'user'}{'email'});
             $param->{'is_priv'} = $param->{'is_owner'}
                 || $param->{'is_editor'};
 
@@ -4944,11 +4932,8 @@ sub do_lists {
         $list_info->{'date'}   = $list->{'admin'}{'creation'}{'date'};
         $list_info->{'topics'} = $list->{'admin'}{'topics'};
 
-        if ($param->{'user'}{'email'}
-            and $list->am_i(
-                'privileged_owner', $param->{'user'}{'email'},
-                {strict => 1}
-            )
+        if (    $param->{'user'}{'email'}
+            and $list->is_admin('privileged_owner', $param->{'user'}{'email'})
             ) {
             $list_info->{'is_privileged_owner'} = 1;
             $list_info->{'is_owner'}            = 1;
@@ -4956,14 +4941,13 @@ sub do_lists {
             $list_info->{'admin'} = 1;
         }
         if (    $param->{'user'}{'email'}
-            and $list->am_i('owner', $param->{'user'}{'email'}, {strict => 1})
-            ) {
+            and $list->is_admin('owner', $param->{'user'}{'email'})) {
             $list_info->{'is_owner'} = 1;
             # Compat. < 6.2b.2.
             $list_info->{'admin'} = 1;
         }
         if (    $param->{'user'}{'email'}
-            and $list->am_i('editor', $param->{'user'}{'email'})) {
+            and $list->is_admin('actual_editor', $param->{'user'}{'email'})) {
             $list_info->{'is_editor'} = 1;
             # Compat. < 6.2b.2.
             $list_info->{'admin'} = 1;
@@ -9532,7 +9516,8 @@ sub do_savefile {
     $param->{'subtitle'} = sprintf $param->{'subtitle'}, $in{'file'};
 
     if ($param->{'list'}) {
-        unless ($list->am_i('owner', $param->{'user'}{'email'})) {
+        unless ($list->is_admin('owner', $param->{'user'}{'email'})
+            or Sympa::is_listmaster($list, $param->{'user'}->{'email'})) {
             Sympa::Report::reject_report_web('auth', 'action_owner', {},
                 $param->{'action'}, $list);
             wwslog('err', 'Not allowed');
@@ -10891,42 +10876,17 @@ sub do_install_pending_list {
 
     }
 
-    ## Notify listmasters
+    # Notify listmasters and (optionally) owners
     if ($in{'status'} eq 'open') {
         Sympa::send_notify_to_listmaster($list, 'list_created',
             [$list->{'name'}]);
+        $list->send_notify_to_owner('list_created', [$list->{'name'}])
+            if $in{'notify'};
     } elsif ($in{'status'} eq 'closed') {
         Sympa::send_notify_to_listmaster($list, 'list_rejected',
             [$list->{'name'}]);
-    }
-
-    if ($in{'notify'}) {
-        my $owners = $list->get_owners();
-        foreach my $i (@{$owners}) {
-            ## Notify all listowners, even if reception is nomail
-            next unless ($i->{'email'});
-            if ($in{'status'} eq 'open') {
-                unless (
-                    Sympa::send_file(
-                        $list, 'list_created', $i->{'email'}, {}
-                    )
-                    ) {
-                    wwslog('notice',
-                        "Unable to send template 'list_created' to $i->{'email'}"
-                    );
-                }
-            } elsif ($in{'status'} eq 'closed') {
-                unless (
-                    Sympa::send_file(
-                        $list, 'list_rejected', $i->{'email'}, {}
-                    )
-                    ) {
-                    wwslog('notice',
-                        "Unable to send template 'list_rejected' to $i->{'email'}"
-                    );
-                }
-            }
-        }
+        $list->send_notify_to_owner('list_rejected', [$list->{'name'}])
+            if $in{'notify'};
     }
 
     $param->{'status'} = $in{'status'};
@@ -11883,17 +11843,8 @@ sub do_search_list {
         next unless ($r_action eq 'do_it');
 
         if ($param->{'user'}{'email'}
-            && ($list->am_i(
-                    'owner',
-                    $param->{'user'}{'email'},
-                    {'strict' => 1}
-                )
-                || $list->am_i(
-                    'editor',
-                    $param->{'user'}{'email'},
-                    {'strict' => 1}
-                )
-            )
+            and (  $list->is_admin('owner', $param->{'user'}{'email'})
+                or $list->is_admin('editor', $param->{'user'}{'email'}))
             ) {
             $is_admin = 1;
         }
@@ -20740,8 +20691,9 @@ sub do_change_email {
         foreach my $list (Sympa::List::get_which($old_email, $robot, $role)) {
 
             ## Check if admin is include via an external datasource
-            my $admin_user = $list->get_list_admin($role, $old_email);
-            if ($admin_user->{'included'}) {
+            my ($admin_user) =
+                @{$list->get_admins($role, filter => [email => $old_email])};
+            if ($admin_user and $admin_user->{'included'}) {
                 ## Notify listmaster
                 Sympa::send_notify_to_listmaster(
                     $list,
@@ -21995,10 +21947,9 @@ sub do_search_user {
             $param->{'which'}{$l}{'host'}    = $list->{'admin'}{'host'};
 
             # show the requestor role not the requested one
-            if ((      $list->am_i('owner',  $param->{'user'}{'email'})
-                    || $list->am_i('editor', $param->{'user'}{'email'})
-                )
-                ) {
+            if (   $list->is_admin('owner', $param->{'user'}{'email'})
+                or $list->is_admin('editor', $param->{'user'}{'email'})
+                or Sympa::is_listmaster($list, $param->{'user'}{'email'})) {
                 $param->{'which'}{$l}{'admin'} = 1;
             }
 

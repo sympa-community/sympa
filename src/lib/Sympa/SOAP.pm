@@ -452,9 +452,13 @@ sub amI {
         if ($function eq 'subscriber') {
             return SOAP::Data->name('result')->type('boolean')
                 ->value($list->is_list_member($user));
-        } elsif ($function =~ /^owner|editor$/) {
+        } elsif ($function eq 'editor') {
             return SOAP::Data->name('result')->type('boolean')
-                ->value($list->am_i($function, $user));
+                ->value($list->is_admin('actual_editor', $user));
+        } elsif ($function eq 'owner') {
+            return SOAP::Data->name('result')->type('boolean')
+                ->value($list->is_admin('owner', $user)
+                    || Sympa::is_listmaster($list, $user));
         } else {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Unknown function.')
@@ -531,15 +535,12 @@ sub info {
                 . $listname);
 
         ## determine status of user
-        if (($list->am_i('owner', $sender) || $list->am_i('owner', $sender)))
-        {
+        if ($list->is_admin('owner', $sender)
+            or Sympa::is_listmaster($list, $sender)) {
             $result_item->{'isOwner'} =
                 SOAP::Data->name('isOwner')->type('boolean')->value(1);
         }
-        if ((      $list->am_i('editor', $sender)
-                || $list->am_i('editor', $sender)
-            )
-            ) {
+        if ($list->is_admin('actual_editor', $sender)) {
             $result_item->{'isEditor'} =
                 SOAP::Data->name('isEditor')->type('boolean')->value(1);
         }
@@ -749,7 +750,7 @@ sub closeList {
     }
 
     # check authorization
-    unless ($list->am_i('owner', $sender)
+    unless ($list->is_admin('owner', $sender)
         or Sympa::is_listmaster($list, $sender)) {
         $log->syslog('info', 'CloseList %s from %s not allowed',
             $listname, $sender);
@@ -1123,7 +1124,8 @@ sub review {
             ->faultdetail($reason_string);
     }
     if ($action =~ /do_it/i) {
-        my $is_owner = $list->am_i('owner', $sender);
+        my $is_owner = $list->is_admin('owner', $sender)
+            || Sympa::is_listmaster($list, $sender);
 
         ## Members list synchronization if include is in use
         if ($list->has_include_data_sources()) {
@@ -1197,7 +1199,7 @@ sub fullReview {
     }
 
     unless (Sympa::is_listmaster($list, $sender)
-        or $list->am_i('owner', $sender)) {
+        or $list->is_admin('owner', $sender)) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Not enough privileges')
             ->faultdetail('Listmaster or listowner required');
@@ -1230,39 +1232,21 @@ sub fullReview {
         } while ($user = $list->get_next_list_member());
     }
 
-    my $editors = $list->get_editors();
-    if ($editors) {
-        foreach my $user (@$editors) {
+    foreach my $role (qw(owner editor)) {
+        foreach my $user ($list->get_admins($role)) {
             $user->{'email'} =~ y/A-Z/a-z/;
-            if (defined $members->{$user->{'email'}}) {
-                $members->{$user->{'email'}}{'isEditor'} = 1;
-            } else {
-                my $res;
-                $res->{'email'}              = $user->{'email'};
-                $res->{'gecos'}              = $user->{'gecos'};
-                $res->{'isOwner'}            = 0;
-                $res->{'isEditor'}           = 1;
-                $res->{'isSubscriber'}       = 0;
-                $members->{$user->{'email'}} = $res;
-            }
-        }
-    }
 
-    my $owners = $list->get_owners();
-    if ($owners) {
-        foreach my $user (@$owners) {
-            $user->{'email'} =~ y/A-Z/a-z/;
-            if (defined $members->{$user->{'email'}}) {
-                $members->{$user->{'email'}}{'isOwner'} = 1;
-            } else {
-                my $res;
-                $res->{'email'}              = $user->{'email'};
-                $res->{'gecos'}              = $user->{'gecos'};
-                $res->{'isOwner'}            = 1;
-                $res->{'isEditor'}           = 0;
-                $res->{'isSubscriber'}       = 0;
-                $members->{$user->{'email'}} = $res;
+            unless (defined $members->{$user->{'email'}}) {
+                $members->{$user->{'email'}} = {
+                    email        => $user->{'email'},
+                    gecos        => $user->{'gecos'},
+                    isOwner      => 0,
+                    isEditor     => 0,
+                    isSubscriber => 0,
+                };
             }
+            $members->{$user->{'email'}}{'isOwner'}  = 1 if $role eq 'owner';
+            $members->{$user->{'email'}}{'isEditor'} = 1 if $role eq 'editor';
         }
     }
 
@@ -1639,15 +1623,12 @@ sub which {
 
         ## determine status of user
         $result_item->{'isOwner'} = 0;
-        if (($list->am_i('owner', $sender) || $list->am_i('owner', $sender)))
-        {
+        if ($list->is_admin('owner', $sender)
+            or Sympa::is_listmaster($list, $sender)) {
             $result_item->{'isOwner'} = 1;
         }
         $result_item->{'isEditor'} = 0;
-        if ((      $list->am_i('editor', $sender)
-                || $list->am_i('editor', $sender)
-            )
-            ) {
+        if ($list->is_admin('actual_editor', $sender)) {
             $result_item->{'isEditor'} = 1;
         }
         $result_item->{'isSubscriber'} = 0;

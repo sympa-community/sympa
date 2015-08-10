@@ -1675,11 +1675,13 @@ sub change_user_email {
     foreach my $role ('owner', 'editor') {
         foreach my $list (
             Sympa::List::get_which($in{'current_email'}, $robot_id, $role)) {
-            ## Check if admin is include via an external datasource
-            my $admin_user =
-                $list->get_list_admin($role, $in{'current_email'});
-            if ($admin_user->{'included'}) {
-                ## Notify listmaster
+            # Check if admin is included via an external datasource
+            my ($admin_user) = @{
+                $list->get_admins($role,
+                    filter => [email => $in{'current_email'}])
+                };
+            if ($admin_user and $admin_user->{'included'}) {
+                # Notify listmaster
                 Sympa::send_notify_to_listmaster(
                     $list,
                     'failed_to_change_included_admin',

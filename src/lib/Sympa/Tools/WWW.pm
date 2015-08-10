@@ -487,9 +487,10 @@ sub get_directory_content {
     my @moderate_dir = grep (/(\.moderate)$/, @$tmpdir);
     @moderate_dir = grep (!/^\.desc\./, @moderate_dir);
 
-    # the editor can see file not yet moderated
-    # a user can see file not yet moderated if he is th owner of these files
-    if ($list->am_i('editor', $user)) {
+    # The editor can see file not yet moderated.
+    # A user can see file not yet moderated if they are the owner of these
+    # files.
+    if ($list->is_admin('actual_editor', $user)) {
         push(@dir, @moderate_dir);
     } else {
         my @privatedir = select_my_files($user, $doc, \@moderate_dir);

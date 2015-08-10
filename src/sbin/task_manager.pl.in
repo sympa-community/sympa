@@ -1880,41 +1880,19 @@ sub process_bouncers {
                     return undef;
                 }
 
-                ## calling notification subroutine with (list,action, email
-                ## list) in parameter
-                my ($rcpt, $to);
-                if ($notification eq 'owner') {
-                    $rcpt = [$list->get_owners_email];
-                    $to   = $list->get_list_address('owner');
-                } elsif ($notification eq 'listmaster') {
-                    $rcpt = Sympa::get_listmasters_email($robot_id);
-                    $to =
-                          Conf::get_robot_conf($robot_id, 'listmaster_email')
-                        . '@'
-                        . Conf::get_robot_conf($robot_id, 'host');
-                }
-                next unless $to;
+                # Notify owner or listmaster with list, action, email list.
                 my $param = {
-                    auto_submitted => 'auto-generated',
-                    list           => {
-                        name => $list->{'name'},
-                        host => $list->{'domain'},    #FIXME: Use 'host'
-                        subject => $list->{'admin'}{'subject'},
-                    },
                     #'listname'  => $listname, # No longer used (<=6.1)
                     'action'    => $action,
                     'user_list' => \@{$bouncers[$level]},
-                    'total'     => $#{$bouncers[$level]} + 1
+                    'total'     => scalar(@{$bouncers[$level]}),
                 };
-                my $message = Sympa::Message->new_from_template($list,
-                    'automatic_bounce_management', $to, $param);
-                unless ($message and defined $bulk->store($message, $rcpt)) {
-                    $log->syslog(
-                        'err',
-                        'Unable to send template "automatic_bounce_management" to %s',
-                        $to
-                    );
-                    #XXXreturn undef;
+                if ($notification eq 'owner') {
+                    $list->send_notify_to_owner('automatic_bounce_management',
+                        $param);
+                } elsif ($notification eq 'listmaster') {
+                    Sympa::send_notfy_to_listmaster($list,
+                        'automatic_bounce_management', $param);
                 }
             }
         }
