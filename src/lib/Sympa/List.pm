@@ -4084,7 +4084,7 @@ sub get_first_list_member {
     my ($sortby, $offset, $sql_regexp);
     $sortby = $data->{'sortby'};
     ## Sort may be domain, email, date
-    $sortby ||= 'domain';
+    $sortby ||= 'email';
     $offset     = $data->{'offset'};
     $sql_regexp = $data->{'sql_regexp'};
 
@@ -4113,23 +4113,7 @@ sub get_first_list_member {
         ($selection || '');
 
     ## SORT BY
-    if ($sortby eq 'domain') {
-        # Redefine query to set "dom"
-        # Note: "dom" is reserved keyword of some RDBMS (Oracle, ...).
-        $statement = sprintf q{SELECT %s, %s AS "dom"
-              FROM subscriber_table
-              WHERE list_subscriber = %s AND robot_subscriber = %s
-              ORDER BY "dom"}, _list_member_cols(),
-            SDM::get_substring_clause(
-            {   'source_field'     => 'user_subscriber',
-                'separator'        => '\@',
-                'substring_length' => '50',
-            }
-            ),
-            SDM::quote($name),
-            SDM::quote($self->{'domain'});
-
-    } elsif ($sortby eq 'email') {
+    if ($sortby eq 'email') {
         ## Default SORT
         $statement .= ' ORDER BY email';
 
@@ -4621,6 +4605,163 @@ sub parse_list_member_bounce {
             $user->{'bounce_level'} = 2;
         }
     }
+}
+
+=over
+
+=item get_members ( $role, [ offset => $offset ], [ order => $order ],
+[ limit => $limit ])
+
+I<Instance method>.
+Gets users of the list with one of following roles.
+
+=over
+
+=item C<member>
+
+Members of the list, either subscribed or included.
+
+=item C<unconcealed_member>
+
+Members whose C<visibility> property is not C<conceal>.
+
+=back
+
+Optional parameters:
+
+=over
+
+=item limit => $limit
+
+=item offset => $offset
+
+=item order => $order
+
+TBD.
+
+=back
+
+Returns:
+
+In array context, returns (possiblly empty or single-item) array of users.
+In scalar context, returns reference to it.
+In case of database error, returns empty array or undefined value.
+
+=back
+
+=cut
+
+# Old names: get_first_list_member() and get_next_list_member().
+sub get_members {
+    $log->syslog('debug2', '(%s, %s, %s => %s, %s => %s, %s => %s)', @_);
+    my $self    = shift;
+    my $role    = shift;
+    my %options = @_;
+
+    my $limit  = $options{limit};
+    my $offset = $options{offset};
+    my $order  = $options{order};
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    # Filters
+    my $filter = '';
+    if ($role eq 'member') {
+        $filter = '';
+    } elsif ($role eq 'unconcealed_member') {
+        $filter = " AND visibility <> 'conceal'";
+    } else {
+        die sprintf 'Unknown role "%s"', $role;
+    }
+
+    # SORT BY
+    my $order_by = '';
+    if ($order) {
+        $order_by = 'ORDER BY '
+            . (
+            {   email   => 'email',
+                date    => 'date DESC',
+                sources => 'subscribed DESC, id ASC',
+                name    => 'gecos',
+            }->{$order}
+                || 'email'
+            );
+    }
+
+    unless (
+        $sdm
+        and $sth = SDM::do_prepared_query(
+            sprintf(
+                q{SELECT %s
+                  FROM subscriber_table
+                  WHERE list_subscriber = ? AND robot_subscriber = ?%s
+                  %s},
+                _list_member_cols(), $filter, $order_by
+            ),
+            $self->{'name'},
+            $self->{'domain'}
+        )
+        ) {
+        $log->syslog('err', 'Unable to get members of list %s', $self);
+        return;    # Returns void.
+    }
+
+    # Offset
+    # Note: Several RDBMSs don't support nonstandard OFFSET clause, OTOH
+    # some others don't support standard ROW_NUMBER function.
+    # Instead, fetch unneccessary rows and discard them.
+    if (defined $offset) {
+        my $remainder = $offset;
+        while (1000 < $remainder) {
+            $remainder -= 1000;
+            my $rows = $sth->fetchall_arrayref([qw(email)], 1000);
+            last unless $rows and @$rows;
+        }
+        if (0 < $remainder) {
+            $sth->fetchall_arrayref([qw(email)], $remainder);
+        }
+    }
+
+    my $users = $sth->fetchall_arrayref({}, ($limit || undef));
+    $sth->finish;
+
+    foreach my $user (@{$users || []}) {
+        $log->syslog('err',
+            'Warning: Entry with empty email address in list %s',
+            $self->{'name'})
+            unless $user->{email};
+
+        $user->{reception} ||= 'mail';
+        $user->{reception} =
+            $self->{'admin'}{'default_user_options'}{'reception'}
+            unless $self->is_available_reception_mode($user->{reception});
+        $user->{update_date} ||= $user->{date};
+
+        if (defined $user->{custom_attribute}) {
+            my $custom_attr = parseCustomAttribute($user->{custom_attribute});
+            unless (defined $custom_attr) {
+                $log->syslog(
+                    'err',
+                    "Failed to parse custom attributes for user %s, list %s",
+                    $user->{email},
+                    $self
+                );
+            }
+            $user->{custom_attribute} = $custom_attr;
+        }
+    }
+
+    # If no offset nor limit was used, update total of subscribers.
+    if ($role eq 'member' and not $offset and not $limit) {
+        my $total = $self->_load_total_db('nocache');
+        if ($total != $self->{'total'}) {
+            $self->{'total'} = $total;
+            $self->savestats();
+        }
+    }
+
+    return wantarray ? @$users : $users;
 }
 
 sub get_info {

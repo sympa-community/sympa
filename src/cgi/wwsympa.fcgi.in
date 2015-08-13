@@ -5223,7 +5223,7 @@ sub do_review {
     my $record;
     my @users;
     my $size;
-    my $sortby = $in{'sortby'} || 'email';
+    my $sortby = lc($in{'sortby'} || 'email');
     my %sources;
 
     ## Access control
@@ -5297,25 +5297,33 @@ sub do_review {
         }
     }
 
-    ## Members list
-    my $count = 0;
-    for (
-        my $i = $list->get_first_list_member(
-            {   'sortby' => $sortby,
-                'offset' => $offset,
-            }
-        );
-        $i;
-        $i = $list->get_next_list_member()
-        ) {
-        ## some review pages may be empty while viewed by subscribers
-        next if $i->{'visibility'} eq 'conceal' and not $param->{'is_priv'};
-
-        ## Add user
+    # Members list
+    # Some review pages may be empty while viewed by subscribers.
+    my @members = $list->get_members(
+        ($param->{'is_priv'} ? 'member' : 'unconcealed_member'),
+        (     ($sortby eq 'domain')
+            ? (order => 'email')
+            : (offset => $offset, order => $sortby, limit => $size)
+        )
+    );
+    # Special treatment of key "domain".
+    if ($sortby eq 'domain') {
+        # Sort
+        foreach my $u (@members) {
+            $u ||= {};
+            my ($local, $dom) = split /\@/, ($u->{email} || '');
+            $u->{_dom} = join '.', reverse split(/[.]/, $dom);
+        }
+        @members = sort { $a->{_dom} cmp $b->{_dom} } @members;
+        # Offset
+        splice @members, 0, $offset if $offset and @members;
+        # Size
+        @members = splice @members, 0, $size if $size and @members;
+    }
+    foreach my $i (@members) {
+        # Add user
         _prepare_subscriber($i, \@additional_fields, \%sources);
         push @{$param->{'members'}}, $i;
-
-        last if $size <= ++$count;
     }
 
     if ($param->{'page'} > 1) {

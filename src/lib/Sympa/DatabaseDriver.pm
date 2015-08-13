@@ -136,31 +136,7 @@ The default implementation is for L<DBI> database handle.
 =item get_substring_clause ( { source_field => $source_field,
 separator => $separator, substring_length => $substring_length } )
 
-I<Mandatory for SQL driver used for Sympa core database>.
-Returns an SQL clause to be inserted in a query.
-This clause will compute a substring of max length
-
-Parameters:
-
-=over
-
-=item $separator
-
-Substring starts from the first character equal to this parameter.
-
-=item $source_field
-
-Search separator in the value of this field.
-
-=item $substring_length
-
-Max length of result.
-
-=back
-
-Returns:
-
-String representing the clause which results substring.
+This method was deprecated by Sympa 6.2.4.
 
 =item get_limit_clause ( )
 

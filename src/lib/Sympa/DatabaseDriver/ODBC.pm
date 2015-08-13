@@ -38,13 +38,6 @@ sub build_connect_string {
     return 'DBI:ODBC:' . $self->{'db_name'};
 }
 
-sub get_substring_clause {
-    my $self  = shift;
-    my $param = shift;
-
-    die 'not yet implemented: This is required by Sympa';
-}
-
 sub get_formatted_date {
     my $self  = shift;
     my $param = shift;
