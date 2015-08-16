@@ -5471,15 +5471,14 @@ sub do_search {
     $param->{'similar_subscribers_occurrence'} = 0;
     if ($param->{'filter'} !~ /^\@[\w-]+\./) {
         foreach my $user (
-            @{  Sympa::List::get_resembling_list_members_no_object(
-                    {   'name'   => $list->{'name'},
-                        'domain' => $robot,
-                        'email'  => $in{'filter'}
-                    }
-                )
-            }
+            $list->get_resembling_members(
+                ($param->{'is_owner'} ? 'member' : 'unconcealed_member'),
+                $in{'filter'}
+            )
             ) {
-            next if ($emails{$user->{'email'}});
+            next unless $user and $user->{email};
+
+            next if $emails{$user->{email}};
             push @{$param->{'similar_subscribers'}}, $user;
             last if ($#{$param->{'similar_subscribers'}} + 1 > $max_select);
         }

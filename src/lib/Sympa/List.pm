@@ -3726,243 +3726,6 @@ sub get_list_member {
     return $user;
 }
 
-#######################################################################
-# IN
-#   - a single reference to a hash with the following keys:          #
-#     * email : the subscriber email                                 #
-#     * name: the name of the list                                   #
-#     * domain: the virtual host under which the list is installed.  #
-#
-# OUT : undef if something wrong
-#       a hash of tab of ressembling emails
-#
-# Note that the name of this function in 6.2a.32 or earlier is
-# "get_ressembling_list_members_no_object" (look at doubled "s").
-#
-sub get_resembling_list_members_no_object {
-    my $options = shift;
-    $log->syslog('debug2', '(%s, %s, %s)', $options->{'name'},
-        $options->{'email'}, $options->{'domain'});
-    my @output;
-
-    my $email    = tools::clean_email($options->{'email'});
-    my $robot    = $options->{'domain'};
-    my $listname = $options->{'name'};
-
-    $email =~ /^(.*)\@(.*)$/;
-    my $local_part        = $1;
-    my $subscriber_domain = $2;
-    my %subscribers_email;
-
-    ##### plused
-    # is subscriber a plused email ?
-    if ($local_part =~ /^(.*)\+(.*)$/) {
-
-        foreach my $subscriber (
-            find_list_member_by_pattern_no_object(
-                {   'email_pattern' => $1 . '@' . $subscriber_domain,
-                    'name'          => $listname,
-                    'domain'        => $robot
-                }
-            )
-            ) {
-            next if ($subscribers_email{$subscriber->{'email'}});
-            $subscribers_email{$subscriber->{'email'}} = 1;
-            push @output, $subscriber;
-        }
-    }
-    # is some subscriber ressembling with a plused email ?
-    foreach my $subscriber (
-        find_list_member_by_pattern_no_object(
-            {   'email_pattern' => $local_part . '+%@' . $subscriber_domain,
-                'name'          => $listname,
-                'domain'        => $robot
-            }
-        )
-        ) {
-        next if ($subscribers_email{$subscriber->{'email'}});
-        $subscribers_email{$subscriber->{'email'}} = 1;
-        push @output, $subscriber;
-    }
-
-    # ressembling local part
-    # try to compare firstname.name@domain with name@domain
-    foreach my $subscriber (
-        find_list_member_by_pattern_no_object(
-            {   'email_pattern' => '%'
-                    . $local_part . '@'
-                    . $subscriber_domain,
-                'name'   => $listname,
-                'domain' => $robot
-            }
-        )
-        ) {
-        next if ($subscribers_email{$subscriber->{'email'}});
-        $subscribers_email{$subscriber->{'email'}} = 1;
-        push @output, $subscriber;
-    }
-
-    if ($local_part =~ /^(.*)\.(.*)$/) {
-        foreach my $subscriber (
-            find_list_member_by_pattern_no_object(
-                {   'email_pattern' => $2 . '@' . $subscriber_domain,
-                    'name'          => $listname,
-                    'domain'        => $robot
-                }
-            )
-            ) {
-            next if ($subscribers_email{$subscriber->{'email'}});
-            $subscribers_email{$subscriber->{'email'}} = 1;
-            push @output, $subscriber;
-        }
-    }
-
-    #### Same local_part and ressembling domain
-    #
-    # compare host.domain.tld with domain.tld
-    if ($subscriber_domain =~ /^[^\.]\.(.*)$/) {
-        my $upperdomain = $1;
-        if ($upperdomain =~ /\./) {
-            # remove first token if there is still at least 2 tokens try to
-            # find a subscriber with that domain
-            foreach my $subscriber (
-                find_list_member_by_pattern_no_object(
-                    {   'email_pattern' => $local_part . '@' . $upperdomain,
-                        'name'          => $listname,
-                        'domain'        => $robot
-                    }
-                )
-                ) {
-                next if ($subscribers_email{$subscriber->{'email'}});
-                $subscribers_email{$subscriber->{'email'}} = 1;
-                push @output, $subscriber;
-            }
-        }
-    }
-    foreach my $subscriber (
-        find_list_member_by_pattern_no_object(
-            {   'email_pattern' => $local_part . '@%' . $subscriber_domain,
-                'name'          => $listname,
-                'domain'        => $robot
-            }
-        )
-        ) {
-        next if ($subscribers_email{$subscriber->{'email'}});
-        $subscribers_email{$subscriber->{'email'}} = 1;
-        push @output, $subscriber;
-    }
-
-    # looking for initial
-    if ($local_part =~ /^(.*)\.(.*)$/) {
-        my $givenname = $1;
-        my $name      = $2;
-        my $initial   = '';
-        if ($givenname =~ /^([a-z])/) {
-            $initial = $1;
-        }
-        if ($name =~ /^([a-z])/) {
-            $initial = $initial . $1;
-        }
-        foreach my $subscriber (
-            find_list_member_by_pattern_no_object(
-                {   'email_pattern' => $initial . '@' . $subscriber_domain,
-                    'name'          => $listname,
-                    'domain'        => $robot
-                }
-            )
-            ) {
-            next if ($subscribers_email{$subscriber->{'email'}});
-            $subscribers_email{$subscriber->{'email'}} = 1;
-            push @output, $subscriber;
-        }
-    }
-
-    #### users in the same local part in any other domain
-    #
-    foreach my $subscriber (
-        find_list_member_by_pattern_no_object(
-            {   'email_pattern' => $local_part . '@%',
-                'name'          => $listname,
-                'domain'        => $robot
-            }
-        )
-        ) {
-        next if ($subscribers_email{$subscriber->{'email'}});
-        $subscribers_email{$subscriber->{'email'}} = 1;
-        push @output, $subscriber;
-    }
-
-    return \@output;
-
-}
-
-######################################################################
-###  find_list_member_by_pattern_no_object                            #
-## Get details regarding a subscriber.                               #
-# IN:                                                                #
-#   - a single reference to a hash with the following keys:          #
-#     * email pattern : the subscriber email patern looking for      #
-#     * name: the name of the list                                   #
-#     * domain: the virtual host under which the list is installed.  #
-# OUT:                                                               #
-#   - undef if something went wrong.                                 #
-#   - a hash containing the user details otherwise                   #
-######################################################################
-
-sub find_list_member_by_pattern_no_object {
-    my $options = shift;
-
-    my $name          = $options->{'name'};
-    my $email_pattern = tools::clean_email($options->{'email_pattern'});
-    my @ressembling_users;
-
-    push @sth_stack, $sth;
-
-    unless (
-        $sth = SDM::do_prepared_query(
-            sprintf(
-                q{SELECT %s
-                FROM subscriber_table
-                WHERE user_subscriber LIKE ? AND
-                      list_subscriber = ? AND robot_subscriber = ?},
-                _list_member_cols()
-            ),
-            $email_pattern,
-            $name,
-            $options->{'domain'}
-        )
-        ) {
-        $log->syslog(
-            'err',
-            'Unable to gather information corresponding to pattern %s for list %s@%s',
-            $email_pattern,
-            $name,
-            $options->{'domain'}
-        );
-        return undef;
-    }
-
-    while (my $user = $sth->fetchrow_hashref('NAME_lc')) {
-        if (defined $user) {
-
-            $user->{'reception'} ||= 'mail';
-            $user->{'escaped_email'} = tools::escape_chars($user->{'email'});
-            $user->{'update_date'} ||= $user->{'date'};
-            if (defined $user->{custom_attribute}) {
-                $user->{'custom_attribute'} =
-                    parseCustomAttribute($user->{'custom_attribute'});
-            }
-            push @ressembling_users, $user;
-        }
-    }
-    $sth->finish();
-
-    $sth = pop @sth_stack;
-    ## Set session cache
-
-    return @ressembling_users;
-}
-
 sub _list_member_cols {
     my $additional = '';
     if ($Conf::Conf{'db_additional_subscriber_fields'}) {
@@ -4661,6 +4424,7 @@ sub get_members {
     my $limit  = $options{limit};
     my $offset = $options{offset};
     my $order  = $options{order};
+    my $cond   = $options{othercondition};
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
@@ -4673,6 +4437,10 @@ sub get_members {
         $filter = " AND visibility <> 'conceal'";
     } else {
         die sprintf 'Unknown role "%s"', $role;
+    }
+
+    if ($cond) {
+        $filter .= " AND ($cond)";
     }
 
     # SORT BY
@@ -4753,7 +4521,10 @@ sub get_members {
     }
 
     # If no offset nor limit was used, update total of subscribers.
-    if ($role eq 'member' and not $offset and not $limit) {
+    if (    $role eq 'member'
+        and not $offset
+        and not $limit
+        and not $cond) {
         my $total = $self->_load_total_db('nocache');
         if ($total != $self->{'total'}) {
             $self->{'total'} = $total;
@@ -4763,6 +4534,70 @@ sub get_members {
 
     return wantarray ? @$users : $users;
 }
+
+=over
+
+=item get_resembling_members ( $role, $searchkey )
+
+I<instance method>.
+TBD.
+
+=back
+
+=cut
+
+# Old name: get_resembling_list_members_no_object().
+# Note that the name of this function in 6.2a.32 or earlier is
+# "get_ressembling_list_members_no_object" (look at doubled "s").
+sub get_resembling_members {
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $self      = shift;
+    my $role      = shift;
+    my $searchkey = tools::clean_email(shift || '');
+
+    return unless $searchkey;
+    $searchkey =~ s/(['%_\\])/\\$1/g;
+
+    my ($local, $domain) = split /\@/, $searchkey;
+    return unless $local and $domain;
+    my ($account, $ext)  = ($local =~ /\A(.*)[+](.*)\z/);
+    my ($first,   $name) = ($local =~ /\A(.*)[.](.*)\z/);
+    my $initial = $1 if defined $first and $first =~ /\A([a-z])/;
+    $initial .= $1
+        if defined $initial
+            and defined $name
+            and $name =~ /\A([a-z])/;
+    my ($top, $upperdomain) = split /[.]/, $domain, 2;
+
+    my @cond;
+    ##### plused
+    # is subscriber a plused email ?
+    push @cond, $account . '@' . $domain if defined $ext;
+    # is some subscriber ressembling with a plused email ?
+    push @cond, $local . '+%@' . $domain;
+    # ressembling local part
+    # try to compare firstname.name@domain with name@domain
+    push @cond, '%' . $local . '@' . $domain;
+    push @cond, $name . '@' . $domain if defined $name;
+    #### Same local_part and ressembling domain
+    # compare host.domain.tld with domain.tld
+    # remove first token if there is still at least 2 tokens try to
+    # find a subscriber with that domain
+    push @cond, $local . '@' . $upperdomain if defined $upperdomain;
+    push @cond, $local . '@%' . $domain;
+    # looking for initial
+    push @cond, $initial . '@' . $domain if defined $initial;
+    #XXX#### users in the same local part in any other domain
+    #XXXpush @cond, $local . '@%';
+    my $cond = join ' OR ', map {"user_subscriber LIKE '$_'"} @cond;
+    return unless $cond;
+
+    my $users = [$self->get_members($role, othercondition => $cond)];
+    return wantarray ? @$users : $users;
+}
+
+#DEPRECATED.  Merged into get_resembling_members().
+#sub find_list_member_by_pattern_no_object;
 
 sub get_info {
     my $self = shift;
