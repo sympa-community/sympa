@@ -426,7 +426,8 @@ while (!$end) {
 
         if (    $eff_type eq 'multipart/report'
             and $report_type eq 'delivery-status'
-            and $tracking_in_use) {
+            and $tracking_in_use
+            and $who) {
             my @parts = $entity->parts();
             my $original_rcpt;
             my $final_rcpt;
@@ -569,7 +570,7 @@ while (!$end) {
                     {'message_disposition_notification'},
                 qr/\A(on|on_demand)\z/
             )
-            ) {
+            and $who) {
 
             my @parts = $entity->parts();
             my $original_rcpt;
