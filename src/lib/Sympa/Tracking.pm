@@ -203,11 +203,19 @@ sub store {
     my $ofh;
 
     my $filename;
-    unless (defined $options{envid} and length $options{envid}) {
-        $filename = tools::escape_chars($rcpt);
-    } else {
+    if (defined $options{envid} and length $options{envid}) {
+        unless (_db_insert_notification($rcpt, %options)) {
+            return undef;
+        }
         $filename = sprintf '%s_%08s', tools::escape_chars($rcpt),
             $options{envid};
+    } else {
+        unless ($self->{context}->is_list_member($rcpt)) {
+            $log->syslog('err', 'No user %s to be updated in list %s',
+                $rcpt, $self->{context});
+            return undef;
+        }
+        $filename = tools::escape_chars($rcpt);
     }
     unless (open $ofh, '>', $bounce_dir . '/' . $filename) {
         $log->syslog('err', 'Unable to write %s/%s', $bounce_dir, $filename);
@@ -215,17 +223,6 @@ sub store {
     }
     print $ofh $message->as_string;
     close $ofh;
-
-    if (defined $options{envid} and length $options{envid}) {
-        unless (
-            _db_insert_notification(
-                $options{envid},  $options{type},
-                $options{status}, $options{arrival_date}
-            )
-            ) {
-            return undef;
-        }
-    }
 
     return 1;
 }
@@ -242,7 +239,8 @@ sub store {
 # correspond to the received report. Finally it
 # update the recipient entry concerned by the report.
 #
-# IN :-$id (+): the identifiant entry of the initial mail
+# IN :-$rcpt (+): original recipient of the initial mail
+#     -$id (+): the identifiant entry of the initial mail
 #     -$type (+): the notification entry type (DSN|MDN)
 #     -$recipient (+): the list subscriber who correspond to this entry
 #     -$status (+): the new state of the recipient entry depending of the
@@ -253,12 +251,13 @@ sub store {
 #
 ##############################################
 sub _db_insert_notification {
-    my ($notification_id, $type, $status, $arrival_date) = @_;
+    $log->syslog('debug3', '(%s, %s => %s, %s => %s, %s => %s, %s => %s)',
+        @_);
+    my $rcpt    = shift;
+    my %options = @_;
 
-    $log->syslog('debug2',
-        'Notification_id: %s, type: %s, recipient: %s, status: %s',
-        $notification_id, $type, $status);
-
+    my ($notification_id, $type, $status, $arrival_date) =
+        @options{qw(envid type status arrival_date)};
     chomp $arrival_date;
     my $arrival_epoch = eval {
         DateTime::Format::Mail->new->loose->parse_datetime($arrival_date)
@@ -266,23 +265,31 @@ sub _db_insert_notification {
     };
 
     my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
     unless (
         $sdm
-        and $sdm->do_prepared_query(
+        and $sth = $sdm->do_prepared_query(
             q{UPDATE notification_table
               SET status_notification = ?, type_notification = ?,
                   arrival_date_notification = ?,
                   arrival_epoch_notification = ?
-              WHERE pk_notification = ?},
+              WHERE recipient_notification = ? AND pk_notification = ?},
             $status, $type,
             $arrival_date,
             $arrival_epoch,
-            $notification_id
+            $rcpt, $notification_id
         )
         ) {
-        $log->syslog('err', 'Unable to update notification %s in database',
+        $log->syslog('err', 'Unable to update notification <%s> in database',
             $notification_id);
         return undef;
+    }
+    # Unknown combination of rcpt and envid.
+    unless ($sth->rows) {
+        $log->syslog('err', 'No notification <%s> for <%s> to be updated',
+            $rcpt, $notification_id);
+        return 0;
     }
 
     return 1;
