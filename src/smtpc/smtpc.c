@@ -139,6 +139,43 @@ static char *encode_xtext(unsigned char *str)
     return encbuf;
 }
 
+static char *encode_unitext(unsigned char *str)
+{
+    unsigned char *p;
+    char *encbuf, *q;
+    size_t enclen = 0;
+
+    p = str;
+    while (*p != '\0') {
+	if (*p == '\\' || *p == '+' || *p == '=')
+	    enclen += 6;
+	else if (33 <= *p && *p <= 126 || 128 <= *p)
+	    enclen++;
+	else
+	    enclen += 6;
+	p++;
+    }
+
+    encbuf = malloc(enclen + 1);
+    if (encbuf == NULL)
+	return NULL;
+
+    p = str;
+    q = encbuf;
+    while (*p != '\0') {
+	if (*p == '\\' || *p == '+' || *p == '=')
+	    q += sprintf(q, "\\x{%02X}", (unsigned int) *p);
+	else if (33 <= *p && *p <= 126 || 128 <= *p)
+	    *q++ = *p;
+	else
+	    q += sprintf(q, "\\x{%02X}", (unsigned int) *p);
+	p++;
+    }
+    *q = '\0';
+
+    return encbuf;
+}
+
 static int parse_options(int *argcptr, char ***argvptr)
 {
     int argc = *argcptr;
@@ -585,13 +622,14 @@ static ssize_t transaction(void)
 {
     ssize_t sent = 0;
     char *hello;
-    char *ext_8bitmime, ext_envid[108], ext_notify[37], ext_size[27],
-	*ext_smtputf8;
+    char *ext_8bitmime, ext_envid[108], ext_notify[37], ext_orcpt[508],
+	ext_size[27], *ext_smtputf8;
     int i;
 
     ext_8bitmime = "";
     *ext_envid = '\0';
     *ext_notify = '\0';
+    *ext_orcpt = '\0';
     *ext_size = '\0';
     ext_smtputf8 = "";
 
@@ -686,10 +724,34 @@ static ssize_t transaction(void)
 	return SMTPC_ERR_PROTOCOL;
     }
 
-    for (i = 0; i < message.recipnum; i++)
+    for (i = 0; i < message.recipnum; i++) {
+	if (server.extensions & SMTPC_EXT_DSN) {
+	    char *encbuf;
+
+	    if (*ext_smtputf8) {
+		encbuf =
+		    encode_unitext((unsigned char *) message.recips[i]);
+		if (encbuf == NULL) {
+		    perror("transaction");
+		    return SMTPC_ERR_UNKNOWN;
+		}
+		snprintf(ext_orcpt, sizeof(ext_orcpt), " ORCPT=utf-8;%s",
+			 encbuf);
+	    } else {
+		encbuf = encode_xtext((unsigned char *) message.recips[i]);
+		if (encbuf == NULL) {
+		    perror("transaction");
+		    return SMTPC_ERR_UNKNOWN;
+		}
+		snprintf(ext_orcpt, sizeof(ext_orcpt), " ORCPT=rfc822;%s",
+			 encbuf);
+	    }
+	    free(encbuf);
+	}
+
 	switch (dialog
-		(300, "RCPT TO:<%s>%s\r\n", message.recips[i],
-		 ext_notify)) {
+		(300, "RCPT TO:<%s>%s%s\r\n", message.recips[i],
+		 ext_notify, ext_orcpt)) {
 	case '2':
 	    sent++;
 	    break;
@@ -701,6 +763,7 @@ static ssize_t transaction(void)
 	default:
 	    return SMTPC_ERR_PROTOCOL;
 	}
+    }				/* for (i ...) */
 
     switch (dialog(120, "DATA\r\n")) {
     case '3':

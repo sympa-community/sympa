@@ -29,7 +29,7 @@ Either this option or \fB--lmtp\fP option is required.
 
 If \fIhost\fR is the IPv6 address, it must be enclosed in [...]
 to avoid confusion with colon separating \fIhost\fR and \fIport\fR,
-e.g. "[::1]".
+e.g. "[::1]", "[::1]:25".
 
 .TP
 \fB-f\fP \fIenvelope@sen.der\fR, \fB-f\fP\fIenvelope@sen.der\fR
@@ -40,7 +40,7 @@ To specify "null envelope sender", use a separate empty argument or "<>".
 
 .TP
 \fB--iam\fP \fIhost.name\fR
-Specifys host name or IP address literal used in EHLO request.
+Specifys host name or IP address literal used in EHLO or LHLO request.
 Default is "localhost".
 
 .TP
@@ -110,7 +110,8 @@ Network error occurred.
 
 .TP
 \fBDelivery Status Notification\fR (RFC 3461)
-See \fB-N\fR and \fB-V\fR options.
+\fBsmtpc\fR issues ORCPT parameters.
+See also \fB-N\fR and \fB-V\fR options.
 
 .TP
 \fBInternationalized Email\fR (RFC 6531)
