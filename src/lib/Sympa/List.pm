@@ -141,6 +141,8 @@ Saves updates the statistics file on disk.
 Updates the stats, argument is number of bytes, returns the next
 sequence number. Does nothing if no stats.
 
+This method was DEPRECATED.
+
 =item delete_list_member ( ARRAY )
 
 Delete the indicated users from the list.
@@ -730,7 +732,8 @@ sub savestats {
 }
 
 ## msg count.
-sub increment_msg_count {
+# Old name: increment_msg_count().
+sub _increment_msg_count {
     $log->syslog('debug2', '(%s)', @_);
     my $self = shift;
 
@@ -817,52 +820,16 @@ sub get_latest_distribution_date {
 ## Update the stats struct
 ## Input  : num of bytes of msg
 ## Output : num of msgs sent
-sub update_stats {
-    my ($self, $bytes) = @_;
-    $log->syslog('debug2', '(%d)', $bytes);
-
-    # We need to know the actual number of immediate-delivery subscribers,
-    # not the total number on the list.
-    my $numsent = 0;
-    for (
-        my $user = $self->get_first_list_member();
-        $user;
-        $user = $self->get_next_list_member()
-        ) {
-        unless ($user->{'email'}) {
-            $log->syslog('err',
-                'Skipping user with no email address in list %s',
-                $self->{'name'});
-            next;
-        }
-        my $options;
-        $options->{'email'}  = $user->{'email'};
-        $options->{'name'}   = $self->{'name'};
-        $options->{'domain'} = $self->{'domain'};
-
-        my $user_data = get_list_member_no_object($options);
-        ## test to know if the rcpt suspended her subscription for this list
-        if ($user_data->{'suspend'} eq '1') {
-            if (($user_data->{'startdate'} <= time)
-                && (   (time <= $user_data->{'enddate'})
-                    || (!$user_data->{'enddate'}))
-                ) {
-                next;
-            }
-        }
-        $numsent++
-            if (
-            $user->{'reception'} !~ /^(digest|digestplain|summary|nomail)$/i);
-    }
+# Old name: update_stats().
+sub _get_next_sequence {
+    $log->syslog('debug3', '(%s)', @_);
+    my $self = shift;
 
     my $stats = $self->{'stats'};
     $stats->[0]++;
-    $stats->[1] += $numsent;
-    $stats->[2] += $bytes;
-    $stats->[3] += $bytes * $numsent;
 
     ## Update 'msg_count' file, used for bounces management
-    $self->increment_msg_count();
+    $self->_increment_msg_count();
 
     return $stats->[0];
 }
@@ -1569,8 +1536,8 @@ sub distribute_msg {
 
     my $robot = $self->{'domain'};
 
-    # Update the stats, and returns the new X-Sequence, if any.
-    my $sequence = $self->update_stats($message->{'size'});
+    # Update msg_count, and returns the new X-Sequence, if any.
+    my $sequence = $self->_get_next_sequence;
 
     ## Loading info msg_topic file if exists, add X-Sympa-Topic
     my $info_msg_topic;
@@ -1914,6 +1881,13 @@ sub distribute_msg {
             }
             $tags_to_use->{'tag_noverp'} = '0' if $result;
             $nbr_smtp++;
+
+            # Add number and size of messages sent to total in stats file.
+            my $numsent = scalar @selected_tabrcpt;
+            my $bytes   = length $new_message->as_string;
+            $self->{'stats'}->[1] += $numsent;
+            $self->{'stats'}->[2] += $bytes;
+            $self->{'stats'}->[3] += $bytes * $numsent;
         } else {
             $log->syslog(
                 'notice',
@@ -1953,6 +1927,13 @@ sub distribute_msg {
             }
             $tags_to_use->{'tag_verp'} = '0' if $result;
             $nbr_smtp++;
+
+            # Add number and size of messages sent to total in stats file.
+            my $numsent = scalar @verp_selected_tabrcpt;
+            my $bytes   = length $new_message->as_string;
+            $self->{'stats'}->[1] += $numsent;
+            $self->{'stats'}->[2] += $bytes;
+            $self->{'stats'}->[3] += $bytes * $numsent;
         } else {
             $log->syslog('notice',
                 'No VERP subscribers left to distribute message to list %s',
@@ -2281,16 +2262,18 @@ sub distribute_digest {
                 $log->syslog('notice',
                     'Unable to send template "%s" to %s list subscribers',
                     $mode, $self);
+                next;
             }
+
+            # Add number and size of digests sent to total in stats file.
+            my $numsent = scalar @{$available_recipients->{$mode}};
+            my $bytes   = length $digest_message->as_string;
+            $self->{'stats'}[1] += $numsent;
+            $self->{'stats'}[2] += $bytes;
+            $self->{'stats'}[3] += $bytes * $numsent;
         }
     }
 
-    # Add number of digests sent to total message sent count in stats file.
-    my $numsent =
-        scalar @{$available_recipients->{digest}      || []} +
-        scalar @{$available_recipients->{digestplain} || []} +
-        scalar @{$available_recipients->{summary}     || []};
-    $self->{'stats'}[1] += $numsent;
     $self->savestats();
 
     return 1;
