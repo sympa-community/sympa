@@ -821,11 +821,45 @@ sub update_stats {
     my ($self, $bytes) = @_;
     $log->syslog('debug2', '(%d)', $bytes);
 
+    # We need to know the actual number of immediate-delivery subscribers,
+    # not the total number on the list.
+    my $numsent = 0;
+    for (
+        my $user = $self->get_first_list_member();
+        $user;
+        $user = $self->get_next_list_member()
+        ) {
+        unless ($user->{'email'}) {
+            $log->syslog('err',
+                'Skipping user with no email address in list %s',
+                $self->{'name'});
+            next;
+        }
+        my $options;
+        $options->{'email'}  = $user->{'email'};
+        $options->{'name'}   = $self->{'name'};
+        $options->{'domain'} = $self->{'domain'};
+
+        my $user_data = get_list_member_no_object($options);
+        ## test to know if the rcpt suspended her subscription for this list
+        if ($user_data->{'suspend'} eq '1') {
+            if (($user_data->{'startdate'} <= time)
+                && (   (time <= $user_data->{'enddate'})
+                    || (!$user_data->{'enddate'}))
+                ) {
+                next;
+            }
+        }
+        $numsent++
+            if (
+            $user->{'reception'} !~ /^(digest|digestplain|summary|nomail)$/i);
+    }
+
     my $stats = $self->{'stats'};
     $stats->[0]++;
-    $stats->[1] += $self->{'total'};
+    $stats->[1] += $numsent;
     $stats->[2] += $bytes;
-    $stats->[3] += $bytes * $self->{'total'};
+    $stats->[3] += $bytes * $numsent;
 
     ## Update 'msg_count' file, used for bounces management
     $self->increment_msg_count();
@@ -2250,6 +2284,14 @@ sub distribute_digest {
             }
         }
     }
+
+    # Add number of digests sent to total message sent count in stats file.
+    my $numsent =
+        scalar @{$available_recipients->{digest}      || []} +
+        scalar @{$available_recipients->{digestplain} || []} +
+        scalar @{$available_recipients->{summary}     || []};
+    $self->{'stats'}[1] += $numsent;
+    $self->savestats();
 
     return 1;
 }
