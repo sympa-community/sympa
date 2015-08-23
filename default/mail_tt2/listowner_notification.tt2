@@ -104,26 +104,28 @@ Subject: [% FILTER qencode %][%|loc(command,list.name,who,gecos)%]FYI: %1 list %
 
 [% ELSIF type == 'automatic_del' -%]
 Subject: [% FILTER qencode %][%|loc(who)%]FYI: automatic removal of user %1[%END%][%END%]
+Content-Type: multipart/mixed; boundary="[% boundary %]"
 
-[%|loc(who,list.name)%]User "%1" has been automatically removed from list %2. [%END%]
+--[% boundary %]
+Content-Disposition: inline
+
+[%|loc(who,list.name)%]User <%1> has been automatically removed from list %2.[%END%]
 [% IF reason == 'arf' -%]
- The user complain to abuse service about a message from the list using email feedback reports format.
+[%|loc%]The user complain to abuse service about a message from the list using email feedback report.[%END%]
 [% ELSIF  reason == 'welcome' -%]
- The welcome message (or a subscription remind) sent to the user has triggered a non-delivery report. The user email address might be incorrect.
+[%|loc%]The welcome message (or a subscription remind) sent to the user has triggered a non-delivery report. The user email address might be incorrect.[%END%]
 [%END%]
-(no action needed)
+[%|loc%](no action needed)[%END%]
 
+--[% boundary %]
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+X-Sympa-Attach: yes
 
-[% ELSIF type == 'automatic_del' -%]
-Subject: [% FILTER qencode %][%|loc(who)%]FYI: automatic removal of user %1[%END%][%END%]
+[%# msg #%]
 
-[%|loc(who,list.name)%]User "%1" has been automatically removed from list %2. [%END%]
-[% IF reason == 'arf' -%]
- The user complain to abuse service about a message from the list using email feedback reports format.
-[% ELSIF  reason == 'welcome' -%]
- The welcome message (or a subscription remind) sent to the user has triggered a non-delivery report. The user email address might be incorrect.
-[%END%]
-(no action needed)
+--[% boundary %]--
 
 [% ELSIF type == 'failed_to_change_included_member' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to change member email address[%END%][%END%]

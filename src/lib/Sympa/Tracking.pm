@@ -210,7 +210,9 @@ sub store {
         $filename = sprintf '%s_%08s', tools::escape_chars($rcpt),
             $options{envid};
     } else {
-        unless ($self->{context}->is_list_member($rcpt)) {
+        unless (
+            $self->_update_subscriber_bounce_history($rcpt, $options{status}))
+        {
             $log->syslog('err', 'No user %s to be updated in list %s',
                 $rcpt, $self->{context});
             return undef;
@@ -292,6 +294,48 @@ sub _db_insert_notification {
         return 0;
     }
 
+    return 1;
+}
+
+# update subscriber information
+# $bouncefor : the email address the bounce is related for (may be extracted
+#              using VERP)
+# $status : delivery status in format /\d+[.]\d+[.]\d+/.
+# Old name: _update_subscriber_bounce_history() in bounced.pl.
+sub _update_subscriber_bounce_history {
+    $log->syslog('debug', '(%s, %s, %s, %s)', @_);
+    my $self      = shift;
+    my $bouncefor = shift;
+    my $status    = shift || '';
+
+    if ($status =~ /(\d+[.]\d+[.]\d+)/) {
+        $status = $1;
+    } else {
+        $status = '';
+    }
+
+    my $user = $self->{context}->get_list_member($bouncefor);
+    return undef unless $user;
+
+    if ($status =~ /\A[45]/) {
+        my ($first, $last, $count);
+
+        $last = time;
+        if (    $user->{'bounce'}
+            and $user->{'bounce'} =~ /^(\d+)\s\d+\s+(\d+)/) {
+            ($first, $count) = ($1, $2);
+        } else {
+            ($first, $count) = ($last, 0);
+        }
+        $count++;
+
+        $self->{context}->update_list_member(
+            $bouncefor,
+            {   'bounce' =>
+                    sprintf('%s %s %s %s', $first, $last, $count, $status)
+            }
+        );
+    }
     return 1;
 }
 

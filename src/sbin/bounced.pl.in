@@ -37,6 +37,7 @@ use Getopt::Long;
 use IO::Scalar;
 use Mail::Address;
 use MIME::Head;
+use MIME::Parser;
 use Pod::Usage;
 use POSIX qw();
 
@@ -58,30 +59,6 @@ use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tracking;
-
-## Equivalents relative to RFC 1893
-my %equiv = (
-    "user unknown"                                                => '5.1.1',
-    "receiver not found"                                          => '5.1.1',
-    "the recipient name is not recognized"                        => '5.1.1',
-    "sorry, no mailbox here by that name"                         => '5.1.1',
-    "utilisateur non recens\xE9 dans le carnet d'adresses public" => '5.1.1',
-    "unknown address"                                             => '5.1.1',
-    "unknown user"                                                => '5.1.1',
-    "550"                                                         => '5.1.1',
-    "le nom du destinataire n'est pas reconnu"                    => '5.1.1',
-    "user not listed in public name & address book"               => '5.1.1',
-    "no such address"                                             => '5.1.1',
-    "not known at this site."                                     => '5.1.1',
-    "user not known"                                              => '5.1.1',
-
-    "user is over the quota. you can try again later." => '4.2.2',
-    "quota exceeded"                                   => '4.2.2',
-    "write error to mailbox, disk quota exceeded"      => '4.2.2',
-    "user mailbox exceeds allowed size"                => '4.2.2',
-    "insufficient system storage"                      => '4.2.2',
-    "User's Disk Quota Exceeded:"                      => '4.2.2'
-);
 
 ## Check options
 my %options;
@@ -244,742 +221,12 @@ while (!$end) {
 
         $numprocessed++;
 
-        unless ($message) {
-            $log->syslog('notice', 'Ignoring malformed message %s', $message);
-            quarantine($lock_fh);
-            next;
-        }
+        my $status = process_message($message);
 
-        unless (defined $message->{'message_id'}
-            and length $message->{'message_id'}) {
-            $log->syslog('err', 'Message %s has no message ID', $message);
-            quarantine($lock_fh);
-            next;
-        }
-
-        $log->syslog(
-            'notice',
-            'Processing %s; envelope_sender=%s; message_id=%s; sender=%s',
-            $message,
-            $message->{envelope_sender},
-            $message->{message_id},
-            $message->{sender}
-        );
-
-        my ($listname, $robot);
-        if (ref $message->{context} eq 'Sympa::List') {
-            $listname = $message->{context}->{'name'};
-            $robot    = $message->{context}->{'domain'};
-        }
-
-        my $entity = $message->as_entity;
-        my $head   = $entity->head;
-
-        ## Some MTAs decorate To: field of DSN as "mailbox <address>".
-        ## Pick address only.
-        my $to;
-        my $to_header = $head->get('To', 0);
-        if ($to_header) {
-            my @to = Mail::Address->parse($to_header);
-            if (@to and $to[0] and $to[0]->address) {
-                $to = lc($to[0]->address);
-            }
-        }
-
-        my $who;
-        my $distribution_id;
-        $log->syslog(
-            'debug', 'Bounce for: %s: Conf{bounce_email_prefix}=%',
-            $to,     $Conf::Conf{'bounce_email_prefix'}
-        );
-
-        my $to_re = '^'
-            . quotemeta($Conf::Conf{'bounce_email_prefix'})
-            . '[+](.*)\@(.*)$';
-        if ($to and $to =~ $to_re) {
-            # VERP in use.
-            my $local_part = $1;
-            my $robot      = $2;
-            my $unique;
-            if ($local_part =~ /^(.*)(\=\=([wr]))$/) {
-                # VERP for welcome/remind probe in use.
-                $local_part = $1;
-                $unique     = $2;
-            } elsif ($local_part =~ /^(.*)\=\=a\=\=(.*)\=\=(.*)\=\=(.*)$/) {
-                # Tracking in use.
-                $distribution_id = $4;
-                $local_part =~ /^(.*)\=\=(.*)$/;
-                $local_part = $1;
-            }
-
-            $local_part =~ s/\=\=a\=\=/\@/;
-            $local_part =~ /^(.*)\=\=(.*)$/;
-            $who      = $1;
-            $listname = $2;
-
-            $log->syslog('notice',
-                'VERP in use: bounce related to %s for list %s@%s',
-                $who, $listname, $robot);
-
-            if ($unique and $unique =~ /[wr]/) {
-                # in this case the bounce result from a remind or a welcome
-                # message ;so try to remove the subscriber
-                $log->syslog('debug',
-                    "VERP for a service message, try to remove the subscriber"
-                );
-                my $list = Sympa::List->new($listname, $robot);
-                unless ($list) {
-                    $log->syslog('notice',
-                        'Skipping bounce %s for unknown list %s@%s',
-                        $message, $listname, $robot);
-                    quarantine($lock_fh);
-                    next;
-                }
-                # Overwrite context.
-                $message->{context} = $list;
-
-                my $result = Sympa::Scenario::request_action(
-                    $list, 'del', 'smtp',
-                    {   'sender' => $Conf::Conf{'listmaster'},    #FIXME
-                        'email'  => $who
-                    }
-                );
-                my $action;
-                $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-                if ($action =~ /do_it/i) {
-                    if ($list->is_list_member($who)) {
-                        $list->delete_list_member(
-                            'users'     => [$who],
-                            'exclude'   => '1',
-                            'operation' => 'auto_del',
-                        );
-                        $log->syslog(
-                            'notice',
-                            '%s has been removed from %s because welcome message bounced',
-                            $who,
-                            $list
-                        );
-                        $log->db_log(
-                            'robot'        => $list->{'domain'},
-                            'list'         => $list->{'name'},
-                            'action'       => 'del',
-                            'target_email' => $who,
-                            'status'       => 'error',
-                            'error_type'   => 'welcome_bounced'
-                        );
-
-                        $log->add_stat(
-                            'robot'     => $list->{'domain'},
-                            'list'      => $list->{'name'},
-                            'operation' => 'auto_del',
-                            'parameter' => "",
-                            'mail'      => $who
-                        );
-
-                        if ($action =~ /notify/) {
-                            $list->send_notify_to_owner(
-                                'automatic_del',
-                                {   'who'    => $who,
-                                    'by'     => 'bounce manager',
-                                    'reason' => 'welcome'
-                                }
-                            );
-                        }
-                    }
-                    remove($lock_fh);
-                } else {
-                    $log->syslog('notice',
-                        "Unable to remove $who from $listname (welcome message bounced but del is closed)"
-                    );
-                    quarantine($lock_fh);
-                }
-                next;
-            }    # close VERP + remind or welcome block
-        }    # close VERP in use block
-
-        my $list = Sympa::List->new($listname, $robot);
-        unless ($list) {
-            $log->syslog('err', 'Skipping bounce %s for unknown list %s@%s',
-                $message, $listname, $robot);
-            quarantine($lock_fh);
-            next;
-        }
-        # Overwrite context.
-        $message->{context} = $list;
-
-        # ---
-        # If the DSN notification is correct and the tracking mode is enable,
-        # it will be inserted in the database
-        my $tracking_in_use = 1
-            if Sympa::Tools::Data::smart_eq(
-            $list->{'admin'}{'tracking'}{'delivery_status_notification'},
-            'on')
-            or Sympa::Tools::Data::smart_eq(
-            $list->{'admin'}{'tracking'}{'message_disposition_notification'},
-            qr/\A(on|on_demand)\z/
-            );
-
-        my $eff_type = $entity->effective_type || '';
-        my $report_type =
-            lc($head->mime_attr('Content-Type.Report-Type') || '');
-
-        if (    $eff_type eq 'multipart/report'
-            and $report_type eq 'delivery-status'
-            and $tracking_in_use
-            and $who) {
-            my @parts = $entity->parts();
-            my $original_rcpt;
-            my $final_rcpt;
-            my $dsn_status;
-            my $listname;
-            my $arrival_date;
-
-            foreach my $p (@parts) {
-                my $eff_type = $p->effective_type || '';
-
-                if ($eff_type eq 'message/delivery-status') {
-                    next unless $p->bodyhandle;
-
-                    my @fields = grep {$_} map {
-                        my $str = $_ . "\n\n";
-                        MIME::Head->read(IO::Scalar->new(\$str));
-                        } split /(?:\A|\r\n|\n)[\r\n]+/,
-                        $p->bodyhandle->as_string;
-                    next unless @fields;
-
-                    # Per-message fields.
-
-                    #XXX $distribution_id is set using VERP nothing else.
-                    # if ($fields[0]->get('Original-Envelope-Id')) {
-                    #     $distribution_id =
-                    #         $fields[0]->get('Original-Envelope-Id', 0);
-                    #     chomp $distribution_id;
-                    #     $log->syslog('debug2',
-                    #         "Original Envelope ID Detected, value: %s",
-                    #         $distribution_id);
-                    # }
-                    if ($fields[0]->get('Arrival-Date')) {
-                        $arrival_date = $fields[0]->get('Arrival-Date', 0);
-                        chomp $arrival_date;
-                    }
-
-                    # Per-recipient fields.
-
-                    foreach my $fields (@fields) {
-                        # Action Field MUST be present in a DSN report.
-                        # Possible values: failed, delayed, delivered,
-                        # relayed, expanded (RFC3464).
-                        if ($fields->get('Action')) {
-                            $dsn_status = lc($fields->get('Action', 0));
-                            chomp $dsn_status;
-                        }
-
-                        #FIXME: Only the first occurrence is recognized.
-                        if ($fields->get('Final-Recipient')
-                            and not $final_rcpt) {
-                            $final_rcpt =
-                                lc($fields->get('Final-Recipient', 0));
-                            chomp $final_rcpt;
-                            my @rcpt;
-                            if ($final_rcpt =~ /.*;.*/) {
-                                @rcpt = split /;\s*/, $final_rcpt;
-                                foreach my $rcpt (@rcpt) {
-                                    if ($rcpt =~ /(\S+\@\S+)/) {
-                                        ($rcpt) = $rcpt =~ /(\S+\@\S+)/;
-                                        $final_rcpt = $rcpt;
-                                    }
-                                }
-                            } else {
-                                ($final_rcpt) = $final_rcpt =~ /(\S+\@\S+)/;
-                            }
-                            if ($final_rcpt =~ /<(\S+\@\S+)>/) {
-                                ($final_rcpt) = $final_rcpt =~ /<(\S+\@\S+)>/;
-                            }
-                        }
-                    }
-                }
-            }
-
-            $original_rcpt = $who;
-
-            $log->syslog(
-                'debug2',
-                '%s: DSN detected: dsn_status=%s; original_rcpt=%s; final_rcpt=%s; arrival_date=%s',
-                $message,
-                $dsn_status,
-                $original_rcpt,
-                $final_rcpt,
-                $arrival_date
-            );
-
-            unless ($dsn_status =~ /failed/) {
-                # DSN with status "failed" should not be removed because they
-                # must be processed for classical bounce managment (not only
-                # for tracking feature)
-                $log->syslog('notice', 'Non failed DSN status %s',
-                    $dsn_status);
-                unless ($distribution_id) {
-                    $log->syslog(
-                        'err',
-                        'Envelope ID not found in to address %s of DSN %s, will ignore',
-                        $to,
-                        $message
-                    );
-                    remove($lock_fh);
-                    next;
-                }
-                unless ($original_rcpt) {
-                    $log->syslog(
-                        'err',
-                        'Original recipient not found in DSN %s, will ignore',
-                        $message
-                    );
-                    remove($lock_fh);
-                    next;
-                }
-            }
-
-            my $tracking = Sympa::Tracking->new($list);
-
-            if ($tracking->store(
-                    $message, $who,
-                    envid        => $distribution_id,
-                    type         => 'DSN',
-                    status       => $dsn_status,
-                    arrival_date => $arrival_date
-                )
-                ) {
-                $log->syslog('notice', "DSN Correctly treated...");
-            } else {
-                $log->syslog('err',
-                    'Not able to fill database with notification data');
-            }
-            unless ($dsn_status =~ /failed/) {
-                remove($lock_fh);
-                next;
-            }
-        }
-        # ---
-        # If the MDN notification is correct and the tracking mode is enabled,
-        # it will be inserted in the database
-        if (    $eff_type eq 'multipart/report'
-            and $report_type eq 'disposition-notification'
-            and Sympa::Tools::Data::smart_eq(
-                $list->{'admin'}{'tracking'}
-                    {'message_disposition_notification'},
-                qr/\A(on|on_demand)\z/
-            )
-            and $who) {
-
-            my @parts = $entity->parts();
-            my $original_rcpt;
-            my $final_rcpt;
-            my $user_agent;
-            my $version;
-            my $dsn_status;
-            my $listname;
-            my $date;
-            my $mdn_status;
-
-            $date = $head->get('Date');
-
-            foreach my $p (@parts) {
-                my $eff_type = $p->effective_type || '';
-
-                if ($eff_type eq 'message/disposition-notification') {
-                    next unless $p->bodyhandle;
-
-                    my @fields = grep {$_} map {
-                        my $str = $_ . "\n\n";
-                        MIME::Head->read(IO::Scalar->new(\$str));
-                        } split /(?:\A|\r\n|\n)[\r\n]+/,
-                        $p->bodyhandle->as_string;
-                    next unless @fields;
-
-                    foreach my $fields (@fields) {
-                        # Disposition Field MUST be present in a MDN report.
-                        # Possible values: displayed, deleted (RFC3798).
-                        if ($fields->get('Disposition')) {
-                            $mdn_status = lc($fields->get('Disposition', 0));
-                            chomp $mdn_status;
-                            if ($mdn_status =~ /.*\/.*/) {
-                                my @results = split /\/\s*/, $mdn_status;
-                                $mdn_status = $results[0];
-                            }
-                            $mdn_status = lc $mdn_status;
-                        }
-                        if ($fields->get('Final-Recipient')
-                            and not $final_rcpt) {
-                            $final_rcpt =
-                                lc($fields->get('Final-Recipient', 0));
-                            chomp $final_rcpt;
-                            my @rcpt;
-                            if ($final_rcpt =~ /.*;.*/) {
-                                @rcpt = split /;\s*/, $final_rcpt;
-                                foreach my $rcpt (@rcpt) {
-                                    if ($rcpt =~ /(\S+\@\S+)/) {
-                                        ($rcpt) = $rcpt =~ /(\S+\@\S+)/;
-                                        $final_rcpt = $rcpt;
-                                    }
-                                }
-                            } else {
-                                ($final_rcpt) = $final_rcpt =~ /(\S+\@\S+)/;
-                            }
-                            if ($final_rcpt =~ /<(\S+\@\S+)>/) {
-                                ($final_rcpt) = $final_rcpt =~ /<(\S+\@\S+)>/;
-                            }
-                        }
-                    }
-                }
-            }
-
-            # let's use VERP
-            $original_rcpt = $who;
-
-            $log->syslog(
-                'debug2',
-                '%s: MDN detected: mdn_status=%s; original_rcpt=%s; date=%s',
-                $message,
-                $mdn_status,
-                $original_rcpt,
-                $date
-            );
-
-            unless ($distribution_id) {
-                $log->syslog(
-                    'err',
-                    'Envelope ID not found in to address %s of MDN %s, will ignore',
-                    $to,
-                    $message
-                );
-                remove($lock_fh);
-                next;
-            }
-            unless ($original_rcpt) {
-                $log->syslog('err',
-                    'Original recipient not found in MDN %s, will ignore',
-                    $message);
-                remove($lock_fh);
-                next;
-            }
-            unless ($mdn_status) {
-                $log->syslog('err',
-                    'MDN status not found in MDN %s, will ignore', $message);
-                remove($lock_fh);
-                next;
-            }
-
-            my $tracking = Sympa::Tracking->new($list);
-
-            unless (
-                $tracking->store(
-                    $message, $who,
-                    envid        => $distribution_id,
-                    type         => 'MDN',
-                    status       => $mdn_status,
-                    arrival_date => $date
-                )
-                ) {
-                $log->syslog('err',
-                    'Not able to fill database with notification data');
-            }
-            $log->syslog('notice', "MDN Correctly treated...");
+        if ($status) {
             remove($lock_fh);
-            next;
-        }
-
-        if (    $eff_type eq 'multipart/report'
-            and $report_type eq 'feedback-report') {
-            # This case a report Email Feedback Reports (RFC5965) mainly used
-            # by AOL.
-            $log->syslog('notice', 'Processing Email Feedback Report');
-            my @parts = $entity->parts();
-            my $original_rcpt;
-            my $user_agent;
-            my $version;
-            my $feedback_type = '';
-            my $listname;
-            my $robot;
-
-            foreach my $p (@parts) {
-                my $eff_type = $p->effective_type || '';
-
-                if ($eff_type eq 'message/feedback-report') {
-                    next unless $p->bodyhandle;
-
-                    my @fields = grep {$_} map {
-                        my $str = $_ . "\n\n";
-                        MIME::Head->read(IO::Scalar->new(\$str));
-                        } split /(?:\A|\r\n|\n)[\r\n]+/,
-                        $p->bodyhandle->as_string;
-                    next unless @fields;
-
-                    foreach my $fields (@fields) {
-                        if ($fields->get('Feedback-Type')) {
-                            $feedback_type =
-                                lc($fields->get('Feedback-Type', 0));
-                            chomp $feedback_type;
-                            $feedback_type = 'abuse'
-                                if $feedback_type =~ /\A\s*abuse/i;
-                        }
-
-                        if ($fields->get('User-Agent')) {
-                            $user_agent = $fields->get('User-Agent', 0);
-                            chomp $user_agent;
-                        }
-                        if ($fields->get('Version')) {
-                            $version = fields->get('Version', 0);
-                            chomp $version;
-                        }
-                        my $email_regexp = Sympa::Regexps::email();
-                        if (    $fields->get('Original-Rcpt-To')
-                            and $fields->get('Original-Rcpt-To', 0) =~
-                            /\A\s*$email_regexp\s*\z/i) {
-                            $original_rcpt =
-                                lc($fields->get('Original-Rcpt-To', 0));
-                            chomp $original_rcpt;
-                        }
-                    }
-                } elsif ($eff_type eq 'message/rfc822') {
-                    # $log->syslog('notice',
-                    #     "xxx processing  Email Feedback Report : message/rfc822 part");
-                    my @subparts = $p->parts();
-                    foreach my $subp (@subparts) {
-                        # $log->syslog ('notice',"xxx subparts : subps");
-                        my $subph = $subp->head;
-                        $listname = $subph->get('X-Loop');
-                    }
-                    # $log->syslog('notice',
-                    #     "xxx processing  Email Feedback Report : extract listname $listname");
-                }
-            }
-            my $forward;
-            ## RFC compliance remark: We do something if there is an abuse or
-            ## an unsubscribe request.
-            ## We don't throw an error if we find another kind of feedback
-            ## (fraud, miscategorized, not-spam, virus or other)
-            ## but we don't take action if we meet them yet. This is to be
-            ## done, if relevant.
-            if ($feedback_type =~
-                /(abuse|opt-out|opt-out-list|fraud|miscategorized|not-spam|virus|other)/i
-                and defined $version
-                and defined $user_agent) {
-
-                $log->syslog('debug',
-                    "Email Feedback Report: $listname feedback-type: $feedback_type"
-                );
-                if (defined $original_rcpt) {
-                    $log->syslog('debug', 'Recognized user: %s list',
-                        $original_rcpt);
-                    my @lists;
-
-                    if ($feedback_type =~ /(opt-out-list|abuse)/i
-                        and defined $listname) {
-                        $listname = lc($listname);
-                        chomp $listname;
-                        $listname =~ /(.*)\@(.*)/;
-                        $listname = $1;
-                        $robot    = $2;
-                        my $list = Sympa::List->new($listname, $robot);
-                        unless ($list) {
-                            $log->syslog(
-                                'err',
-                                'Skipping Feedback Report %s for unknown list %s@%s',
-                                $message,
-                                $listname,
-                                $robot
-                            );
-                            quarantine($lock_fh);
-                            next;
-                        }
-                        push @lists, $list;
-                    } elsif ($feedback_type =~ /opt-out/
-                        and defined $original_rcpt) {
-                        @lists =
-                            Sympa::List::get_which($original_rcpt, $robot,
-                            'member');
-                    } else {
-                        $log->syslog(
-                            'notice',
-                            'Ignoring Feedback Report %s: Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',
-                            $message,
-                            $feedback_type,
-                            $original_rcpt,
-                            $listname
-                        );
-                        quarantine($lock_fh);
-                    }
-                    foreach my $list (@lists) {
-                        my $result =
-                            Sympa::Scenario::request_action($list,
-                            'unsubscribe', 'smtp',
-                            {'sender' => $original_rcpt});
-                        my $action;
-                        $action = $result->{'action'}
-                            if (ref($result) eq 'HASH');
-                        if ($action =~ /do_it/i) {
-                            if ($list->is_list_member($original_rcpt)) {
-                                $list->delete_list_member(
-                                    'users'     => [$original_rcpt],
-                                    'exclude'   => ' 1',
-                                    'operation' => 'auto_del',
-                                );
-
-                                $log->syslog(
-                                    'notice',
-                                    '%s has been removed from %s because abuse feedback report',
-                                    $original_rcpt,
-                                    $list
-                                );
-                                $list->send_notify_to_owner(
-                                    'automatic_del',
-                                    {   'who' => $original_rcpt,
-                                        'by'  => 'listmaster'
-                                    }
-                                );
-                            } else {
-                                $log->syslog(
-                                    'err',
-                                    'Ignore Feedback Report %s for list %s: user %s not subscribed',
-                                    $message,
-                                    $list,
-                                    $original_rcpt
-                                );
-                                $list->send_notify_to_owner('warn-signoff',
-                                    {'who' => $original_rcpt});
-                            }
-                        } else {
-                            $forward = 'request';
-                            $log->syslog(
-                                'err',
-                                'Ignore Feedback Report %s for list %s@%s: user %s is not allowed to unsubscribe',
-                                $message,
-                                $list,
-                                $original_rcpt
-                            );
-                        }
-                    }
-                } else {
-                    $log->syslog(
-                        'err',
-                        'Ignoring Feedback Report %s: Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',
-                        $message,
-                        $feedback_type,
-                        $listname
-                    );
-                    quarantine($lock_fh);
-                    Sympa::send_notify_to_listmaster(
-                        $robot,
-                        'bounce_management_failed',
-                        {   'file' => $lock_fh->basename,
-                            'bad'  => "$spool/bad",
-                            'error' =>
-                                "Unknown Original-Rcpt-To field (feedback_type:$feedback_type, listname:$listname)",
-                        }
-                    );
-                }
-            } else {
-                $log->syslog(
-                    'err',
-                    'Ignoring Feedback Report %s: Unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',
-                    $message,
-                    $feedback_type,
-                    $original_rcpt,
-                    $listname
-                );
-                quarantine($lock_fh);
-                Sympa::send_notify_to_listmaster(
-                    $robot,
-                    'bounce_management_failed',
-                    {   'file' => $lock_fh->basename,
-                        'bad'  => "$spool/bad",
-                        'error' =>
-                            "Unknown format (feedback_type:$feedback_type, original_rcpt:$original_rcpt, listname:$listname)",
-                    }
-                );
-            }
-            if (-f "$spool/$filename") {
-                remove($lock_fh);
-            }
-            next;
-        }
-
-        # Fin section feedback report
-        # else (not welcome or remind)
-        $list = Sympa::List->new($listname, $robot);
-        unless ($list) {
-            $log->syslog('err',
-                'Skipping bouncefile %s for unknown list %s@%s',
-                $message, $listname, $robot);
+        } else {
             quarantine($lock_fh);
-            next;
-        }
-        # Overwrite context.
-        $message->{context} = $list;
-
-        $log->syslog('debug', 'Processing bounce %s for list %s',
-            $message, $list);
-
-        my (%hash, $from);
-
-        # RFC3464 compliance check
-        my $bounce_count = _parse_dsn($message, \%hash, \$from);
-
-        unless ($bounce_count) {
-            # Analysis of bounced message
-            _anabounce($message, \%hash, \$from);
-            # Voir pour appeler une methode de parsing des dsn qui maj la
-            # bdd
-            # updatedatabase(%hash);
-        }
-
-        my $tracking = Sympa::Tracking->new($list);
-
-        my $adr_count;
-        ## Bouncing addresses
-        # Voir si pas mettre un test conditionnel sur le status code pour
-        # detecter les dsn positifs et ne pas fausser les statistiques de
-        # l'abonné.
-        # Peut être possibilité de lancer la maj des tables pour chaque
-        # recipient ici a condition d'avoir approfondi le parsing en
-        # amont.
-        while (my ($rcpt, $status) = each %hash) {
-            $adr_count++;
-            my $bouncefor = $who;
-            $bouncefor ||= $rcpt;
-
-            unless ($tracking->store($message, $bouncefor)) {
-                quarantine($lock_fh);
-                next;
-            }
-            next
-                unless _update_subscriber_bounce_history($list, $rcpt,
-                $bouncefor, _canonicalize_status($status));
-        }
-
-        ## No address found in the bounce itself
-        unless ($adr_count) {
-            if ($who) {
-                # rcpt not recognized in the bounce but VERP was used
-                # Status is undefined.
-                _update_subscriber_bounce_history($list, 'unknown', $who);
-                unless ($tracking->store($message, $who)) {
-                    quarantine($lock_fh);
-                } else {
-                    remove($lock_fh);
-                }
-            } else {    # no VERP and no rcpt recognized
-                $log->syslog('info',
-                    'No address found in message from %s for list %s',
-                    $from, $list);
-                quarantine($lock_fh);
-                next;
-            }
-        }
-
-        if (-f "$spool/$filename") {    #FIXME
-            remove($lock_fh);
         }
     }
 
@@ -1012,74 +259,606 @@ sub sigterm {
 # Moved: Use Sympa::Tracking::store().
 #sub store_bounce;
 
-# RFC3464 compliance check
-# Old name: Bounce::rfc1891().
-sub _parse_dsn {
+sub process_message {
     my $message = shift;
-    my $result  = shift;
-    my $from    = shift;
 
-    local $RS = "\n";
-
-    my $nbrcpt;
-    my $entity = $message->as_entity;
-
-    unless ($entity) {
+    unless ($message) {
+        $log->syslog('notice', 'Ignoring malformed message %s', $message);
         return undef;
     }
 
-    my @addrs = Mail::Address->parse($entity->head->get('From', 0));
-    $$from = $addrs[0]->address if @addrs;
+    unless (defined $message->{'message_id'}
+        and length $message->{'message_id'}) {
+        $log->syslog('err', 'Message %s has no message ID', $message);
+        return undef;
+    }
 
-    foreach my $part ($entity->parts) {
-        my $eff_type = $part->effective_type || '';
-        next unless $eff_type eq 'message/delivery-status';
-        next unless $part->bodyhandle;
+    $log->syslog(
+        'notice',
+        'Processing %s; envelope_sender=%s; message_id=%s; sender=%s',
+        $message,
+        $message->{envelope_sender},
+        $message->{message_id},
+        $message->{sender}
+    );
 
-        my @fields = grep {$_} map {
-            my $str = $_ . "\n\n";
-            MIME::Head->read(IO::Scalar->new(\$str));
-        } split /(?:\A|\r\n|\n)[\r\n]+/, $part->bodyhandle->as_string;
-        next unless @fields;
+    my $numreported = 0;
 
-        foreach my $fields (@fields) {
-            if (    $fields->get('Status')
-                and $fields->get('Status', 0) =~
-                /\A\s*(\d+\.\d+\.\d+)\s*\z/mi) {
-                my $status = $1;
-                my $recipient;
-                if (    $fields->get('Original-Recipient')
-                    and $fields->get('Original-Recipient', 0) =~
-                    /\A\s*rfc822\s*;\s*(.*)\z/mi) {
-                    $recipient = $1;
-                    $recipient =~ s/\s+\z//;
-                    if ($recipient =~ /\@.+:(.+)$/) {
-                        $recipient = $1;
-                    }
-                    $recipient =~ s/^<(.*)>$/$1/;
-                    $recipient = lc $recipient;
-                } elsif ($fields->get('Final-Recipient')
-                    and $fields->get('Final-Recipient', 0) =~
-                    /\A\s*rfc822\s*;\s*(.*)\z/mi) {
-                    $recipient = $1;
-                    $recipient =~ s/\s+\z//;
-                    if ($recipient =~ /\@.+:(.+)$/) {
-                        $recipient = $1;
-                    }
-                    $recipient =~ s/^<(.*)>$/$1/;
-                    $recipient = lc $recipient;
+    # Get metadata.
+    my ($list, $robot);
+    if (ref $message->{context} eq 'Sympa::List') {
+        $list  = $message->{context};
+        $robot = $message->{context}->{'domain'};
+    } elsif ($robot and $robot ne '*') {
+        $robot = $message->{context};
+    } else {
+        $robot = $Conf::Conf{'domain'};
+    }
+
+    # Parse VERP address.
+    # Since RFC 3464 states that DSN must be addressed in message header to
+    # the envelope return address of original message, we seek To header
+    # field.
+    my $who;
+    my $distribution_id;
+    my $unique;
+
+    my $to = $message->get_header('To');
+    if ($to) {
+        # Some MTAs decorate To: field of DSN as "mailbox <address>".
+        # Pick address only.
+        my @to = Mail::Address->parse($to);
+        if (@to and $to[0] and $to[0]->address) {
+            $to = lc($to[0]->address);
+        } else {
+            undef $to;
+        }
+        $log->syslog('debug', 'Bounce to: <%s>', $to);
+    }
+    if ($to and 0 == index($to, $Conf::Conf{'bounce_email_prefix'} . '+')) {
+        # VERP in use.
+        my ($local_part, $robot) = split /\@/,
+            substr($to, length($Conf::Conf{'bounce_email_prefix'} . '+')),
+            2;
+        $local_part =~ s/==a==/\@/;
+
+        if ($local_part =~ s/==([wr])\z/$1/) {
+            # VERP for welcome/remind probe in use.
+            $unique = $1;
+        } elsif ($local_part =~ s/==(\w+)\z/$1/) {
+            # Tracking in use.
+            $distribution_id = $1;
+        }
+
+        my $listname;
+        ($who, $listname) = ($local_part =~ /\A(.*)==(.*)\z/);
+
+        if ($who and $listname) {
+            unless ($list =
+                Sympa::List->new($listname, $robot, {just_try => 1})) {
+                $log->syslog('notice',
+                    'Skipping bounce %s for unknown list %s@%s',
+                    $message, $listname, $robot);
+                return undef;
+            }
+            # Overwrite context.
+            $message->{context} = $list;
+
+            $log->syslog('notice',
+                'VERP in use: bounce %s related to <%s> for list %s',
+                $message, $who, $list);
+        }
+    }
+
+    my ($tracking_by_mdn_in_use, $tracking_by_dsn_in_use);
+    if ($list) {
+        $tracking_by_mdn_in_use = 1
+            if Sympa::Tools::Data::smart_eq(
+            $list->{'admin'}{'tracking'}{'message_disposition_notification'},
+            qr/\A(on|on_demand)\z/
+            );
+        $tracking_by_dsn_in_use = 1
+            if Sympa::Tools::Data::smart_eq(
+            $list->{'admin'}{'tracking'}{'delivery_status_notification'},
+            'on')
+            or $tracking_by_mdn_in_use;
+    }
+
+    my $eff_type = $message->as_entity->effective_type || '';
+    my $report_type =
+        lc($message->as_entity->head->mime_attr('Content-Type.Report-Type')
+            || '');
+
+    # ---
+    # If the DSN (RFC 3464) is correct and the tracking mode is enable,
+    # it will be inserted in the database.
+    if (    $eff_type eq 'multipart/report'
+        and $report_type eq 'delivery-status'
+        and $tracking_by_dsn_in_use
+        and $who
+        and $distribution_id) {
+        my $dsn_status;
+        my $arrival_date;
+
+        my @reports =
+            _parse_multipart_report($message, 'message/delivery-status');
+
+        $arrival_date = $reports[0]->{arrival_date}->[0]
+            if @reports and $reports[0]->{arrival_date};
+
+        # Action Field MUST be present in a DSN report.
+        # Possible values: failed, delayed, delivered, relayed, expanded.
+        #FIXME: Only the first occurrence is recognized.
+        foreach my $report (@reports) {
+            next unless $report->{action};
+            $dsn_status = lc($report->{action}->[0] || '');
+            last if $dsn_status and $dsn_status =~ /\S/;
+        }
+        if ($arrival_date and $dsn_status) {
+            $log->syslog('debug3',
+                '%s: DSN detected: dsn_status=%s; rcpt=%s; arrival_date=%s',
+                $message, $dsn_status, $who, $arrival_date);
+
+            my $tracking = Sympa::Tracking->new($list);
+            if ($tracking->store(
+                    $message, $who,
+                    envid        => $distribution_id,
+                    type         => 'DSN',
+                    status       => $dsn_status,
+                    arrival_date => $arrival_date
+                )
+                ) {
+                $log->syslog('notice', 'DSN %s correctly treated', $message);
+                $numreported++;
+            } else {
+                $log->syslog(
+                    'err',
+                    'Not able to fill database with notification data of %s',
+                    $message
+                );
+            }
+        }
+    }    # if (... $report_type eq 'delivery-status' ...)
+
+    # ---
+    # If the MDN (RFC 3798) is correct and the tracking mode is enabled,
+    # it will be inserted in the database.
+    if (    $eff_type eq 'multipart/report'
+        and $report_type eq 'disposition-notification'
+        and $tracking_by_mdn_in_use
+        and $who
+        and $distribution_id) {
+        my $date;
+        my $mdn_status;
+
+        my @reports = _parse_multipart_report($message,
+            'message/disposition-notification');
+
+        # Disposition Field MUST be present in a MDN report.
+        # Possible values: displayed, deleted.
+        foreach my $report (@reports) {
+            next unless $report->{disposition};
+            $mdn_status = lc($report->{disposition}->[0] || '');
+            ($mdn_status) = split /\s*[\/]\s*/, $mdn_status
+                if $mdn_status;
+            last if $mdn_status and $mdn_status =~ /\S/;
+        }
+        if ($mdn_status) {
+            $date = $message->get_header('Date');
+
+            $log->syslog(
+                'debug2',
+                '%s: MDN detected: mdn_status=%s; original_rcpt=%s; date=%s',
+                $message,
+                $mdn_status,
+                $who,
+                $date
+            );
+
+            my $tracking = Sympa::Tracking->new($list);
+            if ($tracking->store(
+                    $message, $who,
+                    envid        => $distribution_id,
+                    type         => 'MDN',
+                    status       => $mdn_status,
+                    arrival_date => $date
+                )
+                ) {
+                $log->syslog('notice', 'MDN %s correctly treated', $message);
+                $numreported++;
+            } else {
+                $log->syslog(
+                    'err',
+                    'Not able to fill database with notification data of %s',
+                    $message
+                );
+            }
+        }
+    }    # if (... $report_type eq 'disposition-notification' ...)
+
+    # ---
+    # This case a report Email Feedback Reports (RFC 5965) mainly used by
+    # AOL.
+    if (    $eff_type eq 'multipart/report'
+        and $report_type eq 'feedback-report') {
+        # Prepare entity to analyze.
+        # Not extract message/* parts.
+        my $parser = MIME::Parser->new;
+        $parser->extract_nested_messages(0);
+        $parser->output_to_core(1);
+        $parser->tmp_to_core(1);
+        my $entity = $parser->parse_data($message->as_string);
+
+        # Get list context from List-Id: field in the third part of report.
+        my $list;
+        foreach my $part ($entity->parts) {
+            my $etype = $part->effective_type || '';
+            next
+                unless $etype eq 'message/rfc822'
+                    or $etype eq 'text/rfc822-headers';
+            next unless $part->bodyhandle;
+
+            my $str  = $part->bodyhandle->as_string . "\n\n";
+            my $head = MIME::Head->read(IO::Scalar->new(\$str));
+
+            foreach my $list_id ($head->get('List-Id')) {
+                $list_id = tools::clean_msg_id($list_id);
+
+                if (0 == index(
+                        scalar reverse($list_id),
+                        scalar reverse('.', $robot)
+                    )
+                    ) {
+                    my $listname = substr $list_id, 0, -length($robot) - 1;
+                    $list =
+                        Sympa::List->new($listname, $robot, {just_try => 1});
+                    last if $list;
                 }
+            }
+            last if $list;
+        }
+        unless ($list) {
+            $log->syslog('notice',
+                'Skipping email feedback report %s on unknown list',
+                $message);
+            return undef;
+        }
+        # Overwrite context.
+        $message->{context} = $list;
 
-                if ($recipient) {
-                    $result->{$recipient} = $status;
-                    $nbrcpt++;
+        my $email_regexp = Sympa::Regexps::email();
+        my @reports =
+            _parse_multipart_report($message, 'message/feedback-report');
+        foreach my $report (@reports) {
+            # Skip malformed report.
+            next unless $report->{feedback_type};
+            next unless $report->{user_agent};
+            next unless $report->{version};
+            next if $report->{arrival_date} and $report->{received_date};
+
+            my $feedback_type = lc($report->{feedback_type}->[0] || '');
+            my @original_rcpts =
+                grep {m/$email_regexp/}
+                map { lc($_ || '') } @{$report->{original_rcpt_to} || []};
+
+            foreach my $original_rcpt (@original_rcpts) {
+                $log->syslog('debug',
+                    'Email Feedback Report: %s feedback-type: %s; user: %s',
+                    $list, $feedback_type, $original_rcpt);
+
+                # RFC compliance remark: We do something if there is an
+                # abuse.  We don't throw an error if we find another kind of
+                # feedback (fraud, not-spam, virus or other) but we don't
+                # take action if we meet them yet.  This is to be done, if
+                # relevant.
+                # n.b. The feedback types miscategorized, opt-out and
+                # opt-out-list are abandoned.
+                if ($feedback_type =~ /\babuse\b/) {
+                    my $result =
+                        Sympa::Scenario::request_action($list, 'unsubscribe',
+                        'smtp', {'sender' => $original_rcpt});
+                    my $action = $result->{'action'}
+                        if ref $result eq 'HASH';
+                    if ($action and $action =~ /do_it/i) {
+                        if ($list->is_list_member($original_rcpt)) {
+                            $list->delete_list_member(
+                                'users'     => [$original_rcpt],
+                                'exclude'   => ' 1',
+                                'operation' => 'auto_del',
+                            );
+
+                            $log->syslog(
+                                'notice',
+                                '%s has been removed from %s because abuse feedback report %s',
+                                $original_rcpt,
+                                $list,
+                                $message
+                            );
+                            $list->send_notify_to_owner(
+                                'automatic_del',
+                                {   'who'    => $original_rcpt,
+                                    'reason' => 'arf',
+                                    'msg'    => $message,
+                                }
+                            );
+
+                            $numreported++;
+                        } else {
+                            $log->syslog(
+                                'err',
+                                'Ignore Feedback Report %s for list %s: user %s not subscribed',
+                                $message,
+                                $list,
+                                $original_rcpt
+                            );
+                            $list->send_notify_to_owner('warn-signoff',
+                                {'who' => $original_rcpt});
+                        }
+                    } else {
+                        $log->syslog(
+                            'err',
+                            'Ignore Feedback Report %s for list %s: user %s is not allowed to unsubscribe',
+                            $message,
+                            $list,
+                            $original_rcpt
+                        );
+                    }
+                } else {
+                    $log->syslog(
+                        'notice',
+                        'Ignoring Feedback Report %s: Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',
+                        $message,
+                        $feedback_type,
+                        $original_rcpt,
+                        $list
+                    );
                 }
+            }
+        }
+    }    # if (... $report_type eq 'feedback-report')
+
+    $log->syslog('debug', 'Processing bounce %s for list %s', $message,
+        $list);
+
+    # Bouncing addresses
+
+    # RFC 3464 compliance check, or analysis of bounced message.
+    my (%hash, $from);
+    if ($list) {
+        _parse_dsn($message, \%hash) or _anabounce($message, \%hash, \$from);
+    }
+
+    if (%hash and $who and $unique) {
+        # In this case the bounce result from a remind or a welcome
+        # message; so try to remove the subscriber.
+        $log->syslog('debug',
+            "VERP for a service message, try to remove the subscriber");
+
+        my $result = Sympa::Scenario::request_action(
+            $list, 'del', 'smtp',
+            {   'sender' => $Conf::Conf{'listmaster'},    #FIXME
+                'email'  => $who
+            }
+        );
+        my $action = $result->{'action'} if ref $result eq 'HASH';
+
+        if ($action and $action =~ /do_it/i) {
+            if ($list->is_list_member($who)) {
+                $list->delete_list_member(
+                    'users'     => [$who],
+                    'exclude'   => '1',
+                    'operation' => 'auto_del',
+                );
+                $log->syslog(
+                    'notice',
+                    '%s has been removed from %s because welcome message bounced',
+                    $who,
+                    $list
+                );
+                $log->db_log(
+                    'robot'        => $list->{'domain'},
+                    'list'         => $list->{'name'},
+                    'action'       => 'del',
+                    'target_email' => $who,
+                    'status'       => 'error',
+                    'error_type'   => 'welcome_bounced'
+                );
+
+                $log->add_stat(
+                    'robot'     => $list->{'domain'},
+                    'list'      => $list->{'name'},
+                    'operation' => 'auto_del',
+                    'parameter' => "",
+                    'mail'      => $who
+                );
+
+                if ($action =~ /notify/) {
+                    $list->send_notify_to_owner(
+                        'automatic_del',
+                        {   'who'    => $who,
+                            'reason' => 'welcome',
+                            'msg'    => $message,
+                        }
+                    );
+                }
+            }
+            $numreported++;
+        } else {
+            $log->syslog(
+                'notice',
+                'Unable to remove <%s> from %s (welcome or remind message bounced but del is closed)',
+                $who,
+                $list
+            );
+        }
+    } elsif (%hash and $who) {
+        # VERP in use.
+        my $tracking = Sympa::Tracking->new($list);
+        my ($status) = values %hash;
+
+        if ($tracking->store($message, $who, status => $status)) {
+            $log->syslog('notice',
+                'Received bounce for email address %s, list %s',
+                $who, $list);
+            $log->db_log(
+                'robot'        => $list->{'domain'},
+                'list'         => $list->{'name'},
+                'action'       => 'get_bounce',
+                'target_email' => $who,
+                'msg_id'       => '',
+                'status'       => 'error',
+                'error_type'   => $status
+            );
+
+            $numreported++;
+        }
+    } elsif (%hash) {
+        my $tracking = Sympa::Tracking->new($list);
+
+        while (my ($rcpt, $status) = each %hash) {
+            if ($tracking->store($message, $rcpt, status => $status)) {
+                $log->syslog('notice',
+                    'Received bounce for email address <%s>, list %s',
+                    $rcpt, $list);
+                $log->db_log(
+                    'robot'        => $list->{'domain'},
+                    'list'         => $list->{'name'},
+                    'action'       => 'get_bounce',
+                    'target_email' => $rcpt,
+                    'msg_id'       => '',
+                    'status'       => 'error',
+                    'error_type'   => $status
+                );
+
+                $numreported++;
             }
         }
     }
 
-    return $nbrcpt;
+    unless ($numreported) {
+        # No address found in the bounce itself.
+        # No VERP and no rcpt recognized.
+        $log->syslog('info', 'No address found in message %s', $message);
+        return undef;
+    }
+    return 1;
 }
+
+# RFC 3464 compliance check
+# Old name: Bounce::rfc1891().
+sub _parse_dsn {
+    my $message = shift;
+    my $result  = shift;
+
+    foreach my $report (
+        _parse_multipart_report($message, 'message/delivery-status')) {
+        next unless $report->{status};
+        my $status = $report->{status}->[0];
+        if ($status and $status =~ /\b(\d+[.]\d+[.]\d+)\b/) {
+            $status = $1;
+        } else {
+            next;
+        }
+
+        my $rcpt =
+            (      $report->{original_recipient}
+                || $report->{final_recipient}
+                || [])->[0];
+        next unless $rcpt;
+        $rcpt = $1 if $rcpt =~ /\@.+:\s*(.+)\z/;
+        $rcpt = $1 if $rcpt =~ /<(.+)>/;
+        $rcpt = tools::clean_email($rcpt);
+        next unless $rcpt;
+
+        $result->{$rcpt} = $status;
+    }
+
+    return scalar keys %$result;
+}
+
+sub _parse_multipart_report {
+    my $message       = shift;
+    my @subpart_types = @_;
+
+    # Prepare entity to analyze.
+    # Not extract message/* parts.
+    my $parser = MIME::Parser->new;
+    $parser->extract_nested_messages(0);
+    $parser->output_to_core(1);
+    $parser->tmp_to_core(1);
+    my $entity = $parser->parse_data($message->as_string);
+
+    return
+        unless ($entity->effective_type || '') eq 'multipart/report'
+        and $entity->parts;
+
+    my @results;
+    foreach my $p ($entity->parts) {
+        # Get only possible types of subpart.
+        my $eff_type = $p->effective_type || '';
+        next unless grep { $_ eq $eff_type } @subpart_types;
+        next unless $p->bodyhandle;
+
+        my @fields = grep {$_} map {
+            my $str = $_ . "\n\n";
+            MIME::Head->read(IO::Scalar->new(\$str));
+        } split /(?:\A|\r\n|\n)[\r\n]+/, $p->bodyhandle->as_string;
+        next unless @fields;
+
+        foreach my $fields (@fields) {
+            my %item;
+            foreach my $key ($fields->tags) {
+                my $hashkey = lc $key;
+                $hashkey =~ s/\W/_/g;
+
+                foreach my $val ($fields->get($key)) {
+                    chomp $val;
+                    # Strip comment.
+                    1 while $val =~ s/\s*[(][^)]*[)]\s*/ /gs;
+                    # Strip type.
+                    $val =~ s/\A[-\w\s]*;\s*//;
+                    # Unfold and strip spaces.
+                    $val =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;
+                    $val =~ s/\A\s+//;
+                    $val =~ s/\s+\z//;
+
+                    $item{$hashkey} ||= [];
+                    push @{$item{$hashkey}}, $val;
+                }
+            }
+            push @results, {%item} if %item;
+        }
+
+        # Get only the first report.
+        last if @results;
+    }
+
+    return @results;
+}
+
+# Equivalents relative to RFC 1893
+my %equiv = (
+    "user unknown"                                                => '5.1.1',
+    "receiver not found"                                          => '5.1.1',
+    "the recipient name is not recognized"                        => '5.1.1',
+    "sorry, no mailbox here by that name"                         => '5.1.1',
+    "utilisateur non recens\xE9 dans le carnet d'adresses public" => '5.1.1',
+    "unknown address"                                             => '5.1.1',
+    "unknown user"                                                => '5.1.1',
+    "550"                                                         => '5.1.1',
+    "le nom du destinataire n'est pas reconnu"                    => '5.1.1',
+    "user not listed in public name & address book"               => '5.1.1',
+    "no such address"                                             => '5.1.1',
+    "not known at this site."                                     => '5.1.1',
+    "user not known"                                              => '5.1.1',
+
+    "user is over the quota. you can try again later." => '4.2.2',
+    "quota exceeded"                                   => '4.2.2',
+    "write error to mailbox, disk quota exceeded"      => '4.2.2',
+    "user mailbox exceeds allowed size"                => '4.2.2',
+    "insufficient system storage"                      => '4.2.2',
+    "User's Disk Quota Exceeded:"                      => '4.2.2'
+);
 
 ## Corrige une adresse SMTP
 # Old name: Bounce::corrige().
@@ -2026,13 +1805,17 @@ sub _anabounce {
         $a3 = _corrige($a2, $$from);
         $a3 =~ y/[A-Z]/[a-z]/;
         $a3 =~ s/^<(.*)>$/$1/;
-        $result->{$a3} = lc($info{$a1}{error}) if $info{$a1}{error};
+
+        if ($info{$a1}{error}) {
+            my $status = _canonicalize_status(lc($info{$a1}{error}));
+            $result->{$a3} = $status if $status;
+        }
     }
 
     return $count;
 }
 
-# Set error message to a status RFC1893 compliant
+# Set error message to a status RFC 1893 compliant
 sub _canonicalize_status {
 
     my $status = shift;
@@ -2047,78 +1830,8 @@ sub _canonicalize_status {
     return $status;
 }
 
-## update subscriber information
-# $bouncefor : the email address the bounce is related for (may be extracted
-#              using VERP)
-# $rcpt : the email address recognized in the bounce itself. In most case
-#         $rcpt eq $bouncefor
-sub _update_subscriber_bounce_history {
-    $log->syslog('debug', '(%s, %s, %s, %s)', @_);
-    my $list      = shift;
-    my $rcpt      = shift;
-    my $bouncefor = shift;
-    my $status    = shift || '';
-
-    my $first = my $last = time;
-    my $count = 0;
-
-    my $user = $list->get_list_member($bouncefor);
-
-    unless ($user) {
-        $log->syslog('notice', 'Subscriber not found in list %s: %s',
-            $list->{'name'}, $bouncefor);
-        return undef;
-    }
-
-    if ($user->{'bounce'} and $user->{'bounce'} =~ /^(\d+)\s\d+\s+(\d+)/) {
-        ($first, $count) = ($1, $2);
-    }
-    $count++;
-    if ($rcpt ne $bouncefor) {
-        $log->syslog('notice',
-            'Bouncing address identified with VERP: %s / %s',
-            $rcpt, $bouncefor);
-        $log->syslog('debug',
-            '(%s, bounce-> %s %s %s %s, bounce_address->%s)',
-            $bouncefor, $first, $last, $count, $status, $rcpt);
-        $list->update_list_member(
-            $bouncefor,
-            {   'bounce' =>
-                    sprintf('%s %s %s %s', $first, $last, $count, $status),
-                'bounce_address' => $rcpt
-            }
-        );
-        $log->db_log(
-            'robot'        => $list->{'domain'},
-            'list'         => $list->{'name'},
-            'action'       => 'get_bounce',
-            'parameters'   => "address=$rcpt",
-            'target_email' => $bouncefor,
-            'msg_id'       => '',
-            'status'       => 'error',
-            'error_type'   => $status
-        );
-    } else {
-        $list->update_list_member(
-            $bouncefor,
-            {   'bounce' =>
-                    sprintf('%s %s %s %s', $first, $last, $count, $status)
-            }
-        );
-        $log->syslog('notice',
-            'Received bounce for email address %s, list %s',
-            $bouncefor, $list->{'name'});
-        $log->db_log(
-            'robot'        => $list->{'domain'},
-            'list'         => $list->{'name'},
-            'action'       => 'get_bounce',
-            'target_email' => $bouncefor,
-            'msg_id'       => '',
-            'status'       => 'error',
-            'error_type'   => $status
-        );
-    }
-}
+# Moved: Now a subroutine of Sympa::Tracking::store().
+#sub _update_subscriber_bounce_history;
 
 # If bounce can't be handled correctly, saves it to the "bad" subdirectory of
 # the bounce spool.
