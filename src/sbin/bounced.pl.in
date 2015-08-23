@@ -32,6 +32,7 @@
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
+use Encode qw();
 use English qw(-no_match_vars);
 use Getopt::Long;
 use IO::Scalar;
@@ -380,8 +381,8 @@ sub process_message {
         my $dsn_status;
         my $arrival_date;
 
-        my @reports =
-            _parse_multipart_report($message, 'message/delivery-status');
+        my @reports = _parse_multipart_report($message,
+            qw(message/delivery-status message/global-delivery-status));
 
         $arrival_date = $reports[0]->{arrival_date}->[0]
             if @reports and $reports[0]->{arrival_date};
@@ -431,8 +432,11 @@ sub process_message {
         my $date;
         my $mdn_status;
 
-        my @reports = _parse_multipart_report($message,
-            'message/disposition-notification');
+        my @reports = _parse_multipart_report(
+            $message,
+            qw(message/disposition-notification
+                message/global-disposition-notification)
+        );
 
         # Disposition Field MUST be present in a MDN report.
         # Possible values: displayed, deleted.
@@ -495,7 +499,9 @@ sub process_message {
             my $etype = $part->effective_type || '';
             next
                 unless $etype eq 'message/rfc822'
-                    or $etype eq 'text/rfc822-headers';
+                    or $etype eq 'text/rfc822-headers'
+                    or $etype eq 'message/global'
+                    or $etype eq 'message/global-headers';
             next unless $part->bodyhandle;
 
             my $str  = $part->bodyhandle->as_string . "\n\n";
@@ -751,7 +757,11 @@ sub _parse_dsn {
     my $result  = shift;
 
     foreach my $report (
-        _parse_multipart_report($message, 'message/delivery-status')) {
+        _parse_multipart_report(
+            $message,
+            qw(message/delivery-status message/global-delivery-status)
+        )
+        ) {
         next unless $report->{status};
         my $status = $report->{status}->[0];
         if ($status and $status =~ /\b(\d+[.]\d+[.]\d+)\b/) {
@@ -816,7 +826,11 @@ sub _parse_multipart_report {
                     # Strip comment.
                     1 while $val =~ s/\s*[(][^)]*[)]\s*/ /gs;
                     # Strip type.
-                    $val =~ s/\A[-\w\s]*;\s*//;
+                    if ($val =~ s/\A\s*utf-8\s*;\s*//i) {
+                        $val = _decode_utf_8_addr_xtext($val);
+                    } else {
+                        $val =~ s/\A[-\w\s]*;\s*//;
+                    }
                     # Unfold and strip spaces.
                     $val =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;
                     $val =~ s/\A\s+//;
@@ -834,6 +848,32 @@ sub _parse_multipart_report {
     }
 
     return @results;
+}
+
+# Decode utf-8-addr-xtext or utf-8-addr-unitext.  cf. RFC 6533 section 3.
+sub _decode_utf_8_addr_xtext {
+    my $str = shift;
+    return $str unless defined $str and length $str;
+
+    my $dec = Encode::decode_utf8($str);
+    $dec =~ s<
+        \\x[{]
+        (
+            [01][1-9] | 10 | 20 | 2B | 3D | 7F | 5C |
+            [8-9A-F][0-9A-F] |
+            [1-9A-F][0-9A-F]{2} |
+            [1-9A-CE-F][0-9A-F]{3} |
+            D[0-7][0-9A-F]{2} |
+            [1-9A-F][0-9A-F]{4} |
+            10[0-9A-F]{4}
+        )
+        [}]
+    ><
+        pack 'U', hex "0x$1"
+    >egx;
+    $str = Encode::encode_utf8($dec);
+
+    return $str;
 }
 
 # Equivalents relative to RFC 1893
