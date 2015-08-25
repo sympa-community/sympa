@@ -547,8 +547,49 @@ sub process_message {
                 grep {m/$email_regexp/}
                 map { lc($_ || '') } @{$report->{original_rcpt_to} || []};
 
+            # Malformed reports are forwarded to listmaster.
+            unless (@original_rcpts) {
+                $log->syslog(
+                    'err',
+                    'Ignoring Feedback Report %s for list %s: Unknown Original-Rcpt-To field. Can\'t do anything; feedback_type=%s',
+                    $message,
+                    $list,
+                    $feedback_type
+                );
+                Sympa::send_notify_to_listmaster(
+                    $list,
+                    'arf_processing_failed',
+                    {   error         => 'Unknown Original-Rcpt-To field',
+                        feedback_type => $feedback_type,
+                        msg           => $message,
+                    }
+                );
+                return undef;
+            }
+            unless ($feedback_type
+                and $feedback_type =~
+                /b(?:abuse|fraud|not-spam|virus|other)\b/) {
+                $log->syslog(
+                    'err',
+                    'Ignoring Feedback Report %s for list %s: Unknown format; feedback_type=%s',
+                    $message,
+                    $list,
+                    $feedback_type
+                );
+                Sympa::send_notify_to_listmaster(
+                    $list,
+                    'arf_processing_failed',
+                    {   error         => 'Unknown feedback type',
+                        feedback_type => $feedback_type,
+                        msg           => $message,
+                    }
+                );
+                return undef;
+            }
+
+            # Process report.
             foreach my $original_rcpt (@original_rcpts) {
-                $log->syslog('debug',
+                $log->syslog('debug3',
                     'Email Feedback Report: %s feedback-type: %s; user: %s',
                     $list, $feedback_type, $original_rcpt);
 
@@ -612,15 +653,17 @@ sub process_message {
                 } else {
                     $log->syslog(
                         'notice',
-                        'Ignoring Feedback Report %s: Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',
+                        'Ignoring Feedback Report %s for list %s: Nothing to do for this feedback type; feedback_type=%s; original_rcpt=%s',
                         $message,
+                        $list,
                         $feedback_type,
-                        $original_rcpt,
-                        $list
+                        $original_rcpt
                     );
                 }
             }
-        }
+
+            last;    # feedback report may have only one block.
+        }    # foreach my $report
     }    # if (... $report_type eq 'feedback-report')
 
     $log->syslog('debug', 'Processing bounce %s for list %s', $message,

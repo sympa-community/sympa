@@ -147,13 +147,29 @@ Subject: [% FILTER qencode %][%|loc%]A message archiving failed[%END%][%END%]
 [% ELSIF type == 'automatic_bounce_management' -%]
 [% PROCESS 'automatic_bounce_management.tt2' -%]
 
-[% ELSIF type == 'bounce_management_failed' -%]
-Subject: [% FILTER qencode %][%|loc%]A bounce management failed[%END%][%END%]
+[% ELSIF type == 'arf_processing_failed' -%]
+Subject: [% FILTER qencode %][%|loc%]Processing email feedback report failed[%END%][%END%]
+Content-Type: multipart/mixed; boundary="[%boundary%]"
 
-[%|loc(file,bad)%]Sympa could not handle bounce message '%1'. Moving it into directory '%2'.[%END%]
+--[%boundary%]
+Content-Disposition: inline
 
+[%|loc%]Sympa could not handle email feedback report.[%END%]
+
+[%|loc(list.name,list.host)%]List: %1@%2[%END%]
 [%|loc(error)%]Error: %1[%END%]
+[%|loc(feedback_type)%]Feedback type: %1[%END%]
 [%|loc%]See logs for more details.[%END%]
+
+--[%boundary%]
+Content-Disposition: inline
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 8bit
+X-Sympa-Attach: yes
+
+[%# msg #%]
+
+--[%boundary%]--
 
 [% ELSIF type == 'edit_list_error' -%]
 Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%END%]
