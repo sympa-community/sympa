@@ -290,7 +290,7 @@ sub process_message {
     if (ref $message->{context} eq 'Sympa::List') {
         $list  = $message->{context};
         $robot = $message->{context}->{'domain'};
-    } elsif ($robot and $robot ne '*') {
+    } elsif ($message->{context} and $message->{context} ne '*') {
         $robot = $message->{context};
     } else {
         $robot = $Conf::Conf{'domain'};
