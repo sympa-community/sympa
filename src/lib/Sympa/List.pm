@@ -2718,7 +2718,7 @@ sub send_confirm_to_editor {
             return undef;
         }
     }
-    return $modkey;
+    return $modkey || 1;
 }
 
 =over
