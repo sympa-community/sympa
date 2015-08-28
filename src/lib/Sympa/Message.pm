@@ -658,12 +658,12 @@ sub _new_from_template {
         $headers .= "Content-Transfer-Encoding: 8bit\n";
     }
 
-    ## Determine what value the Auto-Submitted header field should take
-    ## See http://www.tools.ietf.org/html/draft-palme-autosub-01
-    ## the header field can have one of the following values:
-    ## auto-generated, auto-replied, auto-forwarded.
-    ## The header should not be set when WWSympa sends a command to
-    ## sympa.pl through its spool
+    # Determine what value the Auto-Submitted header field should take.
+    # See RFC 3834.  The header field can have one of the following keywords:
+    # "auto-generated", "auto-replied".
+    # The header should not be set when WWSympa sends a command to sympa.pl
+    # through its spool.
+    # n.b. The keyword "auto-forwarded" was abandoned.
     unless ($data->{'not_auto_submitted'} || $header_ok{'auto_submitted'}) {
         ## Default value is 'auto-generated'
         my $header_value = $data->{'auto_submitted'} || 'auto-generated';

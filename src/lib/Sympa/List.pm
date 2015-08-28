@@ -2232,7 +2232,7 @@ sub distribute_digest {
     foreach my $group (@group_of_msg) {
         $param->{'current_group'}++;
         $param->{'msg_list'}       = $group;
-        $param->{'auto_submitted'} = 'auto-forwarded';
+        $param->{'auto_submitted'} = 'auto-generated';
 
         # Prepare and send MIME digest, plain digest and summary.
         foreach my $mode (qw{digest digestplain summary}) {
@@ -2659,7 +2659,7 @@ sub send_confirm_to_editor {
         'mod_spool_size' => $list->get_mod_spool_size,
         'method'         => $method,
         'request_topic'  => $list->is_there_msg_topic,
-        'auto_submitted' => 'auto-forwarded',
+        'auto_submitted' => 'auto-generated',
     };
 
     my $bulk = Sympa::Bulk->new;
