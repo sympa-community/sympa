@@ -3087,16 +3087,15 @@ sub send_notify_to_editor {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
     my ($self, $operation, $param) = @_;
 
-    my @rcpt  = $self->get_admins_email('receptive_editor');
+    my @rcpt = $self->get_admins_email('receptive_editor');
+    @rcpt = $self->get_admins_email('actual_editor') unless @rcpt;
+
     my $robot = $self->{'domain'};
     $param->{'auto_submitted'} = 'auto-generated';
 
     unless (@rcpt) {
-        $log->syslog(
-            'notice',
-            'Warning: No editor or owner defined or all of them use nomail option in list %s',
-            $self->{'name'}
-        );
+        $log->syslog('notice',
+            'Warning: No editor and owner defined at all in list %s', $self);
         return undef;
     }
     unless (defined $operation) {
