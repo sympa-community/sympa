@@ -3089,7 +3089,7 @@ sub confirm {
         return undef;
     }
 
-    if ($action =~ /^editorkey(\s?,\s?(quiet))?/) {
+    if ($action =~ /^editorkey\b/) {
         my $key = Sympa::List::send_confirm_to_editor($message, 'md5');
 
         unless (defined $key) {
@@ -3116,7 +3116,7 @@ sub confirm {
             'Message %s with key %s for list %s from %s sent to editors',
             $message, $key, $list, $sender);
 
-        unless ($2 eq 'quiet') {
+        unless ($quiet or $action =~ /,\s*quiet\b/) {
             unless (
                 Sympa::Report::notice_report_msg(
                     'moderating_message', $sender,
@@ -3131,7 +3131,7 @@ sub confirm {
         }
         return 1;
 
-    } elsif ($action =~ /editor(\s?,\s?(quiet))?/) {
+    } elsif ($action =~ /editor\b/) {
         my $key = Sympa::List::send_confirm_to_editor($message, 'smtp');
 
         unless (defined $key) {
@@ -3158,7 +3158,7 @@ sub confirm {
             'Message %s with key %s for list %s from %s sent to editors',
             $message, $list, $key, $sender);
 
-        unless ($2 eq 'quiet') {
+        unless ($quiet or $action =~ /,\s*quiet\b/) {
             unless (
                 Sympa::Report::notice_report_msg(
                     'moderating_message', $sender,
@@ -3173,11 +3173,11 @@ sub confirm {
         }
         return 1;
 
-    } elsif ($action =~ /^reject(,(quiet))?/) {
+    } elsif ($action =~ /^reject\b/) {
         $log->syslog('notice',
             'Message %s for %s from %s rejected, sender not allowed',
             $message, $list, $sender);
-        unless ($2 eq 'quiet') {
+        unless ($quiet or $action =~ /,\s*quiet\b/) {
             if (defined $result->{'tt2'}) {
                 unless (
                     Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
@@ -3205,7 +3205,7 @@ sub confirm {
         }
         return undef;
 
-    } elsif ($action =~ /^do_it/) {
+    } elsif ($action =~ /^do_it\b/) {
         $message->add_header('X-Validation-by', $sender);
 
         ## Distribute the message
@@ -3227,7 +3227,7 @@ sub confirm {
             return undef;
         }
 
-        unless ($quiet || ($action =~ /quiet/i)) {
+        unless ($quiet or $action =~ /,\s*quiet\b/) {
             unless (
                 Sympa::Report::notice_report_msg(
                     'message_confirmed', $sender,
