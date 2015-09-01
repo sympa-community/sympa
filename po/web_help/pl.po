@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.48\n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2015-08-27 11:40+0000\n"
-"Last-Translator: Mastema44 <mastema44@gmail.com>\n"
+"PO-Revision-Date: 2011-11-16 17:11+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,8 +29,8 @@ msgstr ""
 "Language: pl\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Pootle 2.7\n"
-"X-POOTLE-MTIME: 1440675629.000000\n"
+"X-Generator: Pootle 2.5.1\n"
+"X-POOTLE-MTIME: 1321463460.000000\n"
 
 #: default/web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
@@ -2426,12 +2426,15 @@ msgstr ""
 "Ta opcja wymaga modułu perlowego Net::LDAP (perlldap)."
 
 #: default/web_tt2/help_editlist.tt2:105
+#, fuzzy
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
 "Ten paragraf definiuje parametry dla zapytania zwracającego listę "
-"subskrybentów. Ta opcja wymaga modułu perlowego Net::LDAP (perlldap)."
+"subskrybentów. Ten paragraf jest używany tylko, gdy user_data_source jest "
+"ustawione do uwzględnienia. Ta opcja wymaga modułu perlowego Net::LDAP "
+"(perlldap)."
 
 #: default/web_tt2/help_editlist.tt2:107
 #, fuzzy
@@ -2864,13 +2867,14 @@ msgstr "Nie możesz zalogować się do interfejsu webowego list mailingowych"
 
 #. (path_cgi)
 #: default/web_tt2/help_faquser.tt2:15
+#, fuzzy
 msgid ""
 "<strong>You have no password</strong>. To be given a password, follow the <a "
 "href=\"%1/firstpasswd\">First login?</a> link from the homepage. You will "
 "receive your new password by email."
 msgstr ""
 "<strong>Nie masz hasła</strong>. Aby otrzymać hasło, użyj linku <a href=\"%1/"
-"sendpasswd\">Pierwsze logowanie?</a>, który znajdziesz na stronie domowej. "
+"sendpasswd\">Pierwsze logowanie</a>, który znajdziesz na stronie domowej. "
 "Nowe hasło otrzymasz w wiadomości email."
 
 #. (path_cgi)
@@ -5301,7 +5305,6 @@ msgstr ""
 msgid ""
 "In the left menu, <strong>click on the 'Shared documents' link</strong>."
 msgstr ""
-"<strong>Kliknij link 'Dokumenty współdzielone'</strong> w menu po lewej."
 
 #: default/web_tt2/help_shared.tt2:14
 msgid ""
@@ -5309,9 +5312,6 @@ msgid ""
 "strong>: <strong>folders</strong>, <strong>files</strong> and "
 "<strong>bookmarks</strong>."
 msgstr ""
-"Sekcja 'Dokumenty współdzielone' może zawierać trzy typy danych:"
-"<strong>katalogi</strong>, <strong>pliki</strong> i <strong>zakładki</"
-"strong>."
 
 #. (icons_url)
 #: default/web_tt2/help_shared.tt2:16
@@ -5319,12 +5319,10 @@ msgid ""
 "<strong>Folders</strong> are preceded by the icon <img src=\"%1/folder.png\" "
 "style=\"border: 0px;\" title=\"Icon of folder\" />."
 msgstr ""
-"<strong>Katalogi</strong> są reperzentowane przez ikonę <img src=\"%1/folder."
-"png\" style=\"border: 0px;\" title=\"Icon of folder\" />."
 
 #: default/web_tt2/help_shared.tt2:18
 msgid "<strong>To browse a folder, click on its name</strong>."
-msgstr "<strong>Aby zobaczyć zawartość katalogu kliknij w jego nazwę.</strong>"
+msgstr ""
 
 #: default/web_tt2/help_shared.tt2:19
 msgid ""
