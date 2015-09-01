@@ -3,6 +3,60 @@
 
 (See Changelog file for the full changes log)
 
+6.2.4		September 01, 2015
+
+  Features:
+
+	[12323] src/sbin/bounced.pl.in:  Now bounced.pl can analyze RFC 6533
+	Internationalized Delivery Status and Disposition Notifications.
+
+
+  Bug fixes:
+
+	[12335] default/web_tt2/css.tt2: [Submitted by O. Lumineau, RENATER]
+	Several improvments in CSS.[Reported by J-M. MArtins Da Cruz, Mines
+	Paristech] Display bug in Pending and deleted lists page.
+
+	[12326] src/lib/Sympa/List.pm:	[Reported by S. Rich, Duke univ.] If
+	"send" scenario returns the result "editor", message will not be
+	forwarded to the editors.
+	This bug was injected during 6.2alpha.
+
+	[12320] src/lib/Sympa/List.pm: [#9998] [Submitted by A. Berenstein,
+	Electric Embers] The number of messages sent in list "stats" file is
+	updated as if the message were sent to the list's total subscribers,
+	including suspended members and so on.
+	Note: the number of bytes sent is still incorrect, because it looks a
+	bit difficult to calculate sizes of various reception modes, summary,
+	txt and so on.
+	Contributed patch is modified for 6.2.
+
+	[12315] src/lib/Sympa/Tracking.pm:  Flaw in bounce processing including
+	tracking feature.
+	- Messages bound for bounce addresses may be stored into bounce/
+	directory, even if they are related to the e-mail not subscribing to
+	the list.  The directory may be filled in by unwanted messages.
+	- Only envelope IDs in DSN messages are considered but original
+	recipients are not.  As a result, attacker can easily overwrite
+	tracking database by using messages with arbitrary envelope IDs.
+	Those problems are mitigated by checking if both original recipient and
+	(in case of tracking) envelope ID are valid, then rejecting unknown
+	emails/IDs.
+
+	[12305] src/lib/Sympa/List.pm:	If member_include parameter is set, its
+	contents are copied to include_users_* parameters.  Fixed by operating
+	on the copy of that parameter.
+
+	[12303] src/bin/upgrade_sympa_password.pl.in:  [Reported by S. Rich,
+	Duke Univ.] upgrade_sympa_password.pl cannot decrypt passwords in the
+	database properly, because it initialize cipher object before getting
+	"cookie" parameter.
+
+	[12295] src/lib/Sympa/Message.pm:  sympa_msg.pl will be crashed by
+	messages with empty body (messages consist only of header).
+	Though this bug had been found during 6.2alpha (r11232), it was fixed
+	imperfectly.
+
 6.2.3		July 16, 2015
 
   Bug fixes:
