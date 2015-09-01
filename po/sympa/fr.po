@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2014-05-30 17:27+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"PO-Revision-Date: 2015-09-01 15:30+0000\n"
+"Last-Translator: dverdin <david.verdin@renater.fr>\n"
 "Language-Team: Français\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 2.5.1\n"
+"X-Generator: Pootle 2.7\n"
 "Projct-Id-Version: fr\n"
-"X-POOTLE-MTIME: 1401470829.000000\n"
+"X-POOTLE-MTIME: 1441121436.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -10995,24 +10995,21 @@ msgstr ""
 
 #: default/mail_tt2/listmaster_notification.tt2:151
 msgid "Processing email feedback report failed"
-msgstr ""
+msgstr "Le traitement du rapport de remise de message a échoué"
 
 #: default/mail_tt2/listmaster_notification.tt2:157
-#, fuzzy
 msgid "Sympa could not handle email feedback report."
-msgstr "Sympa n'a pas pu charger la famille %2 pour la liste %1."
+msgstr "Sympa n'a pas pu traiter le rapport de remise du message."
 
 #. (list.name,list.host)
 #: default/mail_tt2/listmaster_notification.tt2:159
-#, fuzzy
 msgid "List: %1@%2"
-msgstr "Liste %1 / %2"
+msgstr "Liste : %1@%2"
 
 #. (feedback_type)
 #: default/mail_tt2/listmaster_notification.tt2:161
-#, fuzzy
 msgid "Feedback type: %1"
-msgstr "renvoyer à %1"
+msgstr "Type de rapport : %1"
 
 #: default/mail_tt2/listmaster_notification.tt2:175
 msgid "incorrect format of edit_list.conf"
@@ -11047,19 +11044,17 @@ msgid "Failed to inlude members for list '%1'"
 msgstr "Impossible de construire les membres de la liste '%1'"
 
 #: default/mail_tt2/listmaster_notification.tt2:187
-#, fuzzy
 msgid ""
 "Sympa could not include members from external data sources; the database or "
 "LDAP directory might be unreachable."
 msgstr ""
-"Sympa n'a pas pu inclure les administrateurs à partir d'une source externe ; "
-"l'annuaire LDAP ou la base de données est probablement inaccessible."
+"Sympa n'a pas pu inclure les membres depuis une source externe ; l'annuaire "
+"LDAP ou la base de données est probablement inaccessible."
 
 #. (e.type,e.name)
 #: default/mail_tt2/listmaster_notification.tt2:191
-#, fuzzy
 msgid "- Datasource '%2' (type %1)"
-msgstr "L'inclusion depuis la source de données %1 (de type %2) a échoué."
+msgstr "- Source de données '%2' (de type %1)"
 
 #: default/mail_tt2/listmaster_notification.tt2:195
 #: default/mail_tt2/listmaster_notification.tt2:201
@@ -11215,9 +11210,8 @@ msgid "Sympa could not modify list %1 (Family %2)"
 msgstr "Sympa n'a pas pu modifier la liste %1 (famille %2)"
 
 #: default/mail_tt2/listmaster_notification.tt2:293
-#, fuzzy
 msgid "Failed to parse web template"
-msgstr "Impossible de mettre à jour le fichier."
+msgstr "Impossible de compiler un template web"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:301
@@ -11817,28 +11811,31 @@ msgstr "Aucune action n'est nécessaire de votre part."
 msgid "FYI: automatic removal of user %1"
 msgstr "Information : suppression automatique de l'abonné %1"
 
-# nlsref 6,38
 #. (who,list.name)
 #: default/mail_tt2/listowner_notification.tt2:112
-#, fuzzy
 msgid "User <%1> has been automatically removed from list %2."
-msgstr "L'utilisateur \"%1\" a été supprimé de la liste %2."
+msgstr "L'utilisateur <%1> a été automatiquement supprimé de la liste %2."
 
 #: default/mail_tt2/listowner_notification.tt2:114
 msgid ""
 "The user complain to abuse service about a message from the list using email "
 "feedback report."
 msgstr ""
+"L'utilisateur s'est plaint auprès du service de gestion des abus à propos "
+"d'un message de la liste, au moyen d'un rapport de délivrance de message."
 
 #: default/mail_tt2/listowner_notification.tt2:116
 msgid ""
 "The welcome message (or a subscription remind) sent to the user has "
 "triggered a non-delivery report. The user email address might be incorrect."
 msgstr ""
+"Le message de bienvenue (ou un rappel d'abonnement) envoyé à l'utilisateur a "
+"égénré un rapport de non-remise. Cette adresse email est peut-être "
+"incorrecte."
 
 #: default/mail_tt2/listowner_notification.tt2:118
 msgid "(no action needed)"
-msgstr ""
+msgstr "(ne nécessite aucune action)"
 
 #. (list.name)
 #: default/mail_tt2/listowner_notification.tt2:131
