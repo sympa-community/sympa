@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: 2015-08-27 08:57+0000\n"
 "Last-Translator: system user <>\n"
 "Language-Team: Tiếng Việt\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.7\n"
 "X-POOTLE-MTIME: 1440665837.000000\n"
@@ -257,7 +257,7 @@ msgstr ""
 #: src/cgi/wwsympa.fcgi.in:7067 src/lib/Sympa/Admin.pm:268
 #: src/lib/Sympa/Admin.pm:586 src/lib/Sympa/Admin.pm:694
 #: src/lib/Sympa/Family.pm:2498 src/lib/Sympa/Family.pm:399
-#: src/lib/Sympa/Family.pm:672 src/lib/Sympa/List.pm:930
+#: src/lib/Sympa/Family.pm:672 src/lib/Sympa/List.pm:931
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y lúc %H:%M:%S"
 
@@ -295,7 +295,7 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/cgi/wwsympa.fcgi.in:8429 src/lib/Sympa/Commands.pm:810
-#: src/lib/Sympa/List.pm:2201
+#: src/lib/Sympa/List.pm:2216
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%a, %d %b %Y %H:%M:%S"
 
@@ -1402,7 +1402,7 @@ msgstr "Địa chỉ hồi âm bị buộc"
 msgid "value"
 msgstr "giá trị"
 
-#: src/lib/Sympa/List.pm:329 src/lib/Sympa/ListDef.pm:455
+#: src/lib/Sympa/List.pm:331 src/lib/Sympa/ListDef.pm:455
 msgid "other email address"
 msgstr "địa chỉ thư khác"
 
@@ -2213,16 +2213,16 @@ msgstr "Công việc định kỳ nhắc nhở về sự đăng ký"
 msgid "who updated the config"
 msgstr "ai đã cập nhật cấu hình"
 
-#: src/lib/Sympa/List.pm:315
+#: src/lib/Sympa/List.pm:317
 msgid "overwrite Reply-To: header field"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:316
+#: src/lib/Sympa/List.pm:318
 #, fuzzy
 msgid "preserve existing header field"
 msgstr "tương ứng với trường dòng đầu tồn tại"
 
-#: default/mhonarc-ressources.tt2:482 src/lib/Sympa/List.pm:319
+#: default/mhonarc-ressources.tt2:482 src/lib/Sympa/List.pm:321
 #, fuzzy
 msgid "sender"
 msgstr "Người gửi"
@@ -2230,506 +2230,506 @@ msgstr "Người gửi"
 #: default/mhonarc-ressources.tt2:488 default/web_tt2/copy_template.tt2:16
 #: default/web_tt2/copy_template.tt2:39 default/web_tt2/edit_template.tt2:19
 #: default/web_tt2/search_user.tt2:11 default/web_tt2/view_template.tt2:22
-#: src/lib/Sympa/List.pm:322
+#: src/lib/Sympa/List.pm:324
 msgid "list"
 msgstr "hộp thư chung"
 
-#: src/lib/Sympa/List.pm:326
+#: src/lib/Sympa/List.pm:328
 #, fuzzy
 msgid "all"
 msgstr "Tất cả"
 
-#: src/lib/Sympa/List.pm:332
+#: src/lib/Sympa/List.pm:334
 #, fuzzy
 msgid "subject field"
 msgstr "Chủ đề :"
 
-#: src/lib/Sympa/List.pm:333
+#: src/lib/Sympa/List.pm:335
 #, fuzzy
 msgid "message body"
 msgstr "Mã số thư"
 
-#: src/lib/Sympa/List.pm:334
+#: src/lib/Sympa/List.pm:336
 msgid "subject and body"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:340
+#: src/lib/Sympa/List.pm:342
 msgid "do nothing"
 msgstr ""
 
-#: default/web_tt2/search_user.tt2:38 src/lib/Sympa/List.pm:345
+#: default/web_tt2/search_user.tt2:38 src/lib/Sympa/List.pm:347
 msgid "owner"
 msgstr "chủ"
 
-#: default/scenari/access_web_archive.listmaster:1 src/lib/Sympa/List.pm:348
+#: default/scenari/access_web_archive.listmaster:1 src/lib/Sympa/List.pm:350
 msgid "listmaster"
 msgstr "chủ hộp thư chung"
 
-#: src/lib/Sympa/List.pm:351
+#: src/lib/Sympa/List.pm:353
 #, fuzzy
 msgid "remove bouncing users"
 msgstr "người dùng từ xa"
 
-#: src/lib/Sympa/List.pm:352
+#: src/lib/Sympa/List.pm:354
 #, fuzzy
 msgid "send notify to bouncing users"
 msgstr "thông báo chủ"
 
-#: src/lib/Sympa/List.pm:357
+#: src/lib/Sympa/List.pm:359
 #, fuzzy
 msgid "enabled"
 msgstr "bị ẩn"
 
-#: src/lib/Sympa/List.pm:358
+#: src/lib/Sympa/List.pm:360
 msgid "disabled"
 msgstr ""
 
 #: default/web_tt2/copy_template.tt2:14 default/web_tt2/copy_template.tt2:38
 #: default/web_tt2/edit_template.tt2:17 default/web_tt2/ls_templates.tt2:43
 #: default/web_tt2/show_sessions.tt2:4 default/web_tt2/view_template.tt2:20
-#: src/lib/Sympa/List.pm:361
+#: src/lib/Sympa/List.pm:363
 msgid "robot"
 msgstr "rô-bốt"
 
-#: src/lib/Sympa/List.pm:365
+#: src/lib/Sympa/List.pm:367
 #, fuzzy
 msgid "first entry"
 msgstr "Thư mục"
 
-#: src/lib/Sympa/List.pm:368
+#: src/lib/Sympa/List.pm:370
 #, fuzzy
 msgid "entries matching regular expression"
 msgstr "biểu thức chính quy cấp đầu"
 
-#: src/lib/Sympa/List.pm:372
+#: src/lib/Sympa/List.pm:374
 #, fuzzy
 msgid "base"
 msgstr "Chữ hoa/thường"
 
-#: src/lib/Sympa/List.pm:373
+#: src/lib/Sympa/List.pm:375
 #, fuzzy
 msgid "one level"
 msgstr "Cấp ghi lưu"
 
-#: src/lib/Sympa/List.pm:374
+#: src/lib/Sympa/List.pm:376
 #, fuzzy
 msgid "subtree"
 msgstr "gửi"
 
-#: src/lib/Sympa/List.pm:377
+#: src/lib/Sympa/List.pm:379
 #, fuzzy
 msgid "yes"
 msgstr "byte"
 
-#: src/lib/Sympa/List.pm:378
+#: src/lib/Sympa/List.pm:380
 #, fuzzy
 msgid "no"
 msgstr "Thông tin"
 
-#: src/lib/Sympa/List.pm:381
+#: src/lib/Sympa/List.pm:383
 #, fuzzy
 msgid "SSL version 2"
 msgstr "Phiên bản SSL"
 
-#: src/lib/Sympa/List.pm:382
+#: src/lib/Sympa/List.pm:384
 #, fuzzy
 msgid "SSL version 3"
 msgstr "Phiên bản SSL"
 
-#: src/lib/Sympa/List.pm:383
+#: src/lib/Sympa/List.pm:385
 #, fuzzy
 msgid "TLS version 1"
 msgstr "Phiên bản SSL"
 
-#: src/lib/Sympa/List.pm:384
+#: src/lib/Sympa/List.pm:386
 #, fuzzy
 msgid "TLS version 1.1"
 msgstr "Phiên bản SSL"
 
-#: src/lib/Sympa/List.pm:385
+#: src/lib/Sympa/List.pm:387
 #, fuzzy
 msgid "TLS version 1.2"
 msgstr "Phiên bản SSL"
 
-#: src/lib/Sympa/List.pm:389
+#: src/lib/Sympa/List.pm:391
 #, fuzzy
 msgid "receive notification email"
 msgstr "thông báo"
 
-#: src/lib/Sympa/List.pm:390
+#: src/lib/Sympa/List.pm:392
 #, fuzzy
 msgid "no notifications"
 msgstr "thông báo"
 
-#: src/lib/Sympa/List.pm:394
+#: src/lib/Sympa/List.pm:396
 #, fuzzy
 msgid "concealed from list menu"
 msgstr "ẩn nếu không phải chủ hộp thư chung"
 
-#: src/lib/Sympa/List.pm:395
+#: src/lib/Sympa/List.pm:397
 #, fuzzy
 msgid "listed on the list menu"
 msgstr "được liệt kê trên trang xem lại hộp thư chung"
 
-#: src/lib/Sympa/List.pm:398
+#: src/lib/Sympa/List.pm:400
 #, fuzzy
 msgid "bounce management"
 msgstr "Quản lý thư nảy về"
 
-#: src/lib/Sympa/List.pm:401
+#: src/lib/Sympa/List.pm:403
 #, fuzzy
 msgid "privileged owner"
 msgstr "Người sở hữu có quyền đặc biệt"
 
-#: src/lib/Sympa/List.pm:402
+#: src/lib/Sympa/List.pm:404
 #, fuzzy
 msgid "normal owner"
 msgstr "thông báo chủ"
 
-#: src/lib/Sympa/List.pm:405
+#: src/lib/Sympa/List.pm:407
 msgid "0 - highest priority"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:406
+#: src/lib/Sympa/List.pm:408
 msgid "9 - lowest priority"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:407
+#: src/lib/Sympa/List.pm:409
 #, fuzzy
 msgid "queue messages only"
 msgstr "Thư vừa nhận"
 
-#: src/lib/Sympa/List.pm:410
+#: src/lib/Sympa/List.pm:412
 msgid "replace @ characters"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:411
+#: src/lib/Sympa/List.pm:413
 msgid "use JavaScript"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:414
+#: src/lib/Sympa/List.pm:416
 #, fuzzy
 msgid "required to post message"
 msgstr "thông điệp nhắc nhở"
 
-#: src/lib/Sympa/List.pm:416
+#: src/lib/Sympa/List.pm:418
 #, fuzzy
 msgid "required to distribute message"
 msgstr "Thông điệp phát hành bổ sung"
 
-#: src/lib/Sympa/List.pm:419
+#: src/lib/Sympa/List.pm:421
 msgid "optional"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:422
+#: src/lib/Sympa/List.pm:424
 #, fuzzy
 msgid "required"
 msgstr "im"
 
-#: src/lib/Sympa/List.pm:425
+#: src/lib/Sympa/List.pm:427
 #, fuzzy
 msgid "string"
 msgstr "phân phối"
 
-#: src/lib/Sympa/List.pm:426
+#: src/lib/Sympa/List.pm:428
 msgid "multi-line text"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:427
+#: src/lib/Sympa/List.pm:429
 #, fuzzy
 msgid "number"
 msgstr "thành viên"
 
-#: src/lib/Sympa/List.pm:428
+#: src/lib/Sympa/List.pm:430
 #, fuzzy
 msgid "set of keywords"
 msgstr "Từ khoá chủ đề thư"
 
-#: src/lib/Sympa/List.pm:431
+#: src/lib/Sympa/List.pm:433
 msgid "add a new MIME part"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:432
+#: src/lib/Sympa/List.pm:434
 #, fuzzy
 msgid "append to message body"
 msgstr "%1 cú quét Thân thư"
 
-#: default/scenari/unsubscribe.open:1 src/lib/Sympa/List.pm:435
+#: default/scenari/unsubscribe.open:1 src/lib/Sympa/List.pm:437
 msgid "open"
 msgstr "mở"
 
 #: default/scenari/access_web_archive.closed:1
 #: default/scenari/archive_mail_access.closed:1
 #: default/scenari/invite.closed:1 default/scenari/send.closed:1
-#: src/lib/Sympa/List.pm:436
+#: src/lib/Sympa/List.pm:438
 msgid "closed"
 msgstr "bị đóng"
 
 #: default/scenari/access_web_archive.private:1
-#: default/scenari/archive_mail_access.private:1 src/lib/Sympa/List.pm:437
+#: default/scenari/archive_mail_access.private:1 src/lib/Sympa/List.pm:439
 msgid "subscribers only"
 msgstr "chỉ cho người đăng ký"
 
 #: default/scenari/access_web_archive.public:1
 #: default/scenari/archive_mail_access.public:1
-#: default/scenari/invite.public:1 src/lib/Sympa/List.pm:438
+#: default/scenari/invite.public:1 src/lib/Sympa/List.pm:440
 msgid "public"
 msgstr "công cộng"
 
-#: src/lib/Sympa/List.pm:441
-msgid "RDBMS"
-msgstr ""
-
-#: src/lib/Sympa/List.pm:442
-#, fuzzy
-msgid "include from local file"
-msgstr "mọi người từ miền cục bộ"
-
 #: src/lib/Sympa/List.pm:443
-msgid "include from external source"
+msgid "RDBMS"
 msgstr ""
 
 #: src/lib/Sympa/List.pm:444
 #, fuzzy
+msgid "include from local file"
+msgstr "mọi người từ miền cục bộ"
+
+#: src/lib/Sympa/List.pm:445
+msgid "include from external source"
+msgstr ""
+
+#: src/lib/Sympa/List.pm:446
+#, fuzzy
 msgid "general datasource"
 msgstr "Nguồn dữ liệu người dùng"
 
-#: src/lib/Sympa/List.pm:447
+#: src/lib/Sympa/List.pm:449
 #, fuzzy
 msgid "help"
 msgstr "Trợ giúp"
 
-#: src/lib/Sympa/List.pm:448
+#: src/lib/Sympa/List.pm:450
 #, fuzzy
 msgid "subscription"
 msgstr "Huỷ đăng ký: "
 
-#: src/lib/Sympa/List.pm:449
+#: src/lib/Sympa/List.pm:451
 #, fuzzy
 msgid "unsubscription"
 msgstr "Huỷ đăng ký: "
 
-#: src/lib/Sympa/List.pm:450
+#: src/lib/Sympa/List.pm:452
 #, fuzzy
 msgid "posting address"
 msgstr "Địa chỉ nảy về"
 
-#: src/lib/Sympa/List.pm:451
+#: src/lib/Sympa/List.pm:453
 #, fuzzy
 msgid "list archive"
 msgstr "Kho thư"
 
-#: src/lib/Sympa/List.pm:455
+#: src/lib/Sympa/List.pm:457
 #, fuzzy
 msgid "authenticated by password"
 msgstr "Gửi cho tôi mật khẩu của mình"
 
-#: src/lib/Sympa/List.pm:457
+#: src/lib/Sympa/List.pm:459
 #, fuzzy
 msgid "authenticated by S/MIME signature"
 msgstr "yêu cầu xác thực và sau đó chủ tán thành"
 
-#: src/lib/Sympa/List.pm:459
+#: src/lib/Sympa/List.pm:461
 #, fuzzy
 msgid "authenticated by DKIM signature"
 msgstr "yêu cầu xác thực và sau đó chủ tán thành"
 
-#: src/lib/Sympa/List.pm:460
+#: src/lib/Sympa/List.pm:462
 msgid "approved by editor"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:461
+#: src/lib/Sympa/List.pm:463
 #, fuzzy
 msgid "any messages"
 msgstr "thư"
 
-#: src/lib/Sympa/List.pm:464
+#: src/lib/Sympa/List.pm:466
 #, fuzzy
 msgid "daily"
 msgstr "ngày"
 
-#: src/lib/Sympa/List.pm:465
+#: src/lib/Sympa/List.pm:467
 #, fuzzy
 msgid "weekly"
 msgstr "1 tuần"
 
-#: src/lib/Sympa/List.pm:466
+#: src/lib/Sympa/List.pm:468
 msgid "monthly"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:467
+#: src/lib/Sympa/List.pm:469
 msgid "quarterly"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:468
+#: src/lib/Sympa/List.pm:470
 msgid "yearly"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:471
+#: src/lib/Sympa/List.pm:473
 msgid "use HTTP cookie"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:474
+#: src/lib/Sympa/List.pm:476
 msgid "100% - always"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:475
+#: src/lib/Sympa/List.pm:477
 msgid "0% - never"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:478
+#: src/lib/Sympa/List.pm:480
 #, fuzzy
 msgid "original messages"
 msgstr "thông điệp nhắc nhở"
 
-#: src/lib/Sympa/List.pm:479
+#: src/lib/Sympa/List.pm:481
 #, fuzzy
 msgid "decrypted messages"
 msgstr "các thư cũ nhất"
 
-#: src/lib/Sympa/List.pm:482
+#: src/lib/Sympa/List.pm:484
 msgid "on demand"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:485
+#: src/lib/Sympa/List.pm:487
 msgid "DKIM signature exists"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:486
+#: src/lib/Sympa/List.pm:488
 msgid "DMARC policy exists"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:487
+#: src/lib/Sympa/List.pm:489
 msgid "DMARC policy suggests rejection"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:489
+#: src/lib/Sympa/List.pm:491
 msgid "DMARC policy suggests quarantine"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:490
+#: src/lib/Sympa/List.pm:492
 #, fuzzy
 msgid "domain matching regular expression"
 msgstr "biểu thức chính quy cấp đầu"
 
-#: src/lib/Sympa/List.pm:493
+#: src/lib/Sympa/List.pm:495
 #, fuzzy
 msgid "display name"
 msgstr "Họ"
 
-#: src/lib/Sympa/List.pm:494
+#: src/lib/Sympa/List.pm:496
 msgid "display name and e-mail"
 msgstr ""
 
-#: src/lib/Sympa/List.pm:495
+#: src/lib/Sympa/List.pm:497
 #, fuzzy
 msgid "name \"via Mailing List\""
 msgstr "Hộp thư chung liên lạc trực tiếp"
 
-#: src/lib/Sympa/List.pm:496
+#: src/lib/Sympa/List.pm:498
 msgid "e-mail \"via Mailing List\""
 msgstr ""
 
-#: src/lib/Sympa/List.pm:501
+#: src/lib/Sympa/List.pm:503
 msgid "standard (direct reception)"
 msgstr "tiêu chuẩn (nhận trực tiếp)"
 
-#: src/lib/Sympa/List.pm:502
+#: src/lib/Sympa/List.pm:504
 msgid "digest MIME format"
 msgstr "định dạng bó thư MIME"
 
-#: src/lib/Sympa/List.pm:503
+#: src/lib/Sympa/List.pm:505
 msgid "digest plain text format"
 msgstr "định dạng bó thư nhập thô"
 
-#: src/lib/Sympa/List.pm:504
+#: src/lib/Sympa/List.pm:506
 msgid "summary mode"
 msgstr "chế độ tóm tắt"
 
-#: src/lib/Sympa/List.pm:505
+#: src/lib/Sympa/List.pm:507
 msgid "notice mode"
 msgstr "chế độ thông báo"
 
-#: src/lib/Sympa/List.pm:506
+#: src/lib/Sympa/List.pm:508
 #, fuzzy
 msgid "text-only mode"
 msgstr "chế độ chỉ nhập thô"
 
-#: src/lib/Sympa/List.pm:507
+#: src/lib/Sympa/List.pm:509
 #, fuzzy
 msgid "html-only mode"
 msgstr "chế độ chỉ HTML"
 
-#: src/lib/Sympa/List.pm:508
+#: src/lib/Sympa/List.pm:510
 msgid "urlize mode"
 msgstr "chế độ urlize"
 
-#: src/lib/Sympa/List.pm:509
+#: src/lib/Sympa/List.pm:511
 #, fuzzy
 msgid "no mail"
 msgstr "Địa chỉ thư"
 
-#: src/lib/Sympa/List.pm:510
+#: src/lib/Sympa/List.pm:512
 msgid "you do not receive your own posts"
 msgstr "bạn không nhận bài thư được mình gửi"
 
-#: src/lib/Sympa/List.pm:515
+#: src/lib/Sympa/List.pm:517
 msgid "listed in the list review page"
 msgstr "được liệt kê trên trang xem lại hộp thư chung"
 
-#: src/lib/Sympa/List.pm:516
+#: src/lib/Sympa/List.pm:518
 msgid "concealed"
 msgstr "bị ẩn"
 
-#: src/lib/Sympa/List.pm:521
+#: src/lib/Sympa/List.pm:523
 #, fuzzy
 msgid "in operation"
 msgstr "Thao tác"
 
-#: src/lib/Sympa/List.pm:522
+#: src/lib/Sympa/List.pm:524
 #, fuzzy
 msgid "list not yet activated"
 msgstr "Hộp thư chung chưa được kích hoạt"
 
-#: src/lib/Sympa/List.pm:523
+#: src/lib/Sympa/List.pm:525
 #, fuzzy
 msgid "erroneous configuration"
 msgstr "chép cấu hình hộp thư"
 
-#: src/lib/Sympa/List.pm:524
+#: src/lib/Sympa/List.pm:526
 #, fuzzy
 msgid "closed family instance"
 msgstr "Lần cuối tạo nhóm"
 
-#: src/lib/Sympa/List.pm:525
+#: src/lib/Sympa/List.pm:527
 #, fuzzy
 msgid "closed list"
 msgstr "Hộp thư chung bị đóng"
 
 #: default/mail_tt2/digest.tt2:12 default/mail_tt2/digestplain.tt2:9
-#: default/mail_tt2/get_archive.tt2:8 src/lib/Sympa/List.pm:2194
+#: default/mail_tt2/get_archive.tt2:8 src/lib/Sympa/List.pm:2209
 msgid "Table of contents:"
 msgstr "Mục Lục: "
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/List.pm:2203
+#: src/lib/Sympa/List.pm:2218
 msgid "%a, %d %b %Y"
 msgstr "%a, %d %b %Y"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:5257
+#: src/lib/Sympa/List.pm:5281
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:5264
+#: src/lib/Sympa/List.pm:5288
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:5268
+#: src/lib/Sympa/List.pm:5292
 msgid "Added %s users out of %s required."
 msgstr ""
 
@@ -4492,8 +4492,8 @@ msgstr "Hãy liên lạc với chủ hộp thư chung."
 #. (tt2_error)
 #. (error)
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:155
-#: default/mail_tt2/listmaster_notification.tt2:280
+#: default/mail_tt2/listmaster_notification.tt2:160
+#: default/mail_tt2/listmaster_notification.tt2:296
 #: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
 msgid "Error: %1"
 msgstr "Lỗi: %1"
@@ -5149,9 +5149,9 @@ msgid "scenario source"
 msgstr "nguồn kịch bản"
 
 #: default/mail_tt2/helpfile.tt2:61
-#: default/mail_tt2/listmaster_notification.tt2:288
-#: default/mail_tt2/listmaster_notification.tt2:327
-#: default/mail_tt2/listmaster_notification.tt2:399
+#: default/mail_tt2/listmaster_notification.tt2:304
+#: default/mail_tt2/listmaster_notification.tt2:343
+#: default/mail_tt2/listmaster_notification.tt2:415
 #: default/mail_tt2/listowner_notification.tt2:66 default/mail_tt2/lists.tt2:6
 #: default/web_tt2/edit_list_request.tt2:252
 #: default/web_tt2/edit_list_request.tt2:254
@@ -5303,12 +5303,12 @@ msgstr "Không tìm thấy tháng « %1 »"
 msgid "Archives from %1 are not accessible"
 msgstr "Không thể truy cập đến kho lưu từ %1"
 
-#: default/mail_tt2/listmaster_notification.tt2:363
+#: default/mail_tt2/listmaster_notification.tt2:379
 #: default/web_tt2/error.tt2:12
 msgid "Unable to load list topics."
 msgstr "Không thể nạp các vấn đề hộp thư chung."
 
-#: default/mail_tt2/listmaster_notification.tt2:364
+#: default/mail_tt2/listmaster_notification.tt2:380
 #: default/web_tt2/error.tt2:13
 msgid "Unable to load create_list templates."
 msgstr "Không thể nạp các mẫu tạo hộp thư chung (create_list)."
@@ -5332,7 +5332,7 @@ msgid "The exportation failed for list '%1'"
 msgstr "Lỗi xuất ra hộp thư chung « %1 »"
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:377
+#: default/mail_tt2/listmaster_notification.tt2:393
 #: default/web_tt2/error.tt2:18
 msgid "Cannot unzip file '%1'."
 msgstr "Không thể giải nén tập tin « %1 »."
@@ -5348,7 +5348,7 @@ msgstr "Không lấy được địa chỉ thư điện tử của bạn từ d�
 
 #. (i_err.key)
 #. (zipfile)
-#: default/mail_tt2/listmaster_notification.tt2:385
+#: default/mail_tt2/listmaster_notification.tt2:401
 #: default/web_tt2/error.tt2:21
 msgid "File not found."
 msgstr "Không tìm thấy tập tin."
@@ -5378,7 +5378,7 @@ msgstr ""
 
 #. (i_err.listname,i_err.new_listname)
 #. (list.name,new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:389
+#: default/mail_tt2/listmaster_notification.tt2:405
 #: default/web_tt2/error.tt2:26
 #, fuzzy
 msgid "Unable to rename list '%1' to '%2'."
@@ -9022,7 +9022,7 @@ msgstr "thông báo"
 msgid "Notification"
 msgstr "thông báo"
 
-#: default/mail_tt2/listmaster_notification.tt2:279
+#: default/mail_tt2/listmaster_notification.tt2:295
 #: default/web_tt2/tt2_error.tt2:58
 #, fuzzy
 msgid "Sympa could not deliver the requested page for the following reason: "
@@ -10691,12 +10691,12 @@ msgstr "%1 không thể làm được."
 #: default/mail_tt2/listmaster_notification.tt2:133
 #: default/mail_tt2/listmaster_notification.tt2:139
 #: default/mail_tt2/listmaster_notification.tt2:145
-#: default/mail_tt2/listmaster_notification.tt2:156
-#: default/mail_tt2/listmaster_notification.tt2:293
-#: default/mail_tt2/listmaster_notification.tt2:300
+#: default/mail_tt2/listmaster_notification.tt2:162
 #: default/mail_tt2/listmaster_notification.tt2:309
-#: default/mail_tt2/listmaster_notification.tt2:392
-#: default/mail_tt2/listmaster_notification.tt2:404
+#: default/mail_tt2/listmaster_notification.tt2:316
+#: default/mail_tt2/listmaster_notification.tt2:325
+#: default/mail_tt2/listmaster_notification.tt2:408
+#: default/mail_tt2/listmaster_notification.tt2:420
 msgid "See logs for more details."
 msgstr "Xem bản ghi để tìm chi tiết."
 
@@ -10720,21 +10720,31 @@ msgstr ""
 "Sympa không thể lưu thư « %1 » vào kho nên di chuyển nó vào thư mục « %2 »."
 
 #: default/mail_tt2/listmaster_notification.tt2:151
-msgid "A bounce management failed"
-msgstr "Lỗi quản lý thư bị nảy về"
-
-#. (file,bad)
-#: default/mail_tt2/listmaster_notification.tt2:153
-msgid ""
-"Sympa could not handle bounce message '%1'. Moving it into directory '%2'."
+msgid "Processing email feedback report failed"
 msgstr ""
-"Sympa không thể xử lý thư bị nảy về « %1 » nên di chuyển nó vào thư mục « %2 »."
 
+#: default/mail_tt2/listmaster_notification.tt2:157
+#, fuzzy
+msgid "Sympa could not handle email feedback report."
+msgstr "Sympa không thể nạp nhóm %2 cho hộp thư chung %1."
+
+#. (list.name,list.host)
 #: default/mail_tt2/listmaster_notification.tt2:159
+#, fuzzy
+msgid "List: %1@%2"
+msgstr "Hộp thư chung %1 / %2"
+
+#. (feedback_type)
+#: default/mail_tt2/listmaster_notification.tt2:161
+#, fuzzy
+msgid "Feedback type: %1"
+msgstr "gửi lại về %1"
+
+#: default/mail_tt2/listmaster_notification.tt2:175
 msgid "incorrect format of edit_list.conf"
 msgstr "sai định dạng edit_list.conf"
 
-#: default/mail_tt2/listmaster_notification.tt2:162
+#: default/mail_tt2/listmaster_notification.tt2:178
 #, fuzzy
 msgid ""
 "edit_list.conf format has changed:\n"
@@ -10744,12 +10754,12 @@ msgstr ""
 "Không còn chấp nhận « default » (mặc định) cho một dân số."
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:164
+#: default/mail_tt2/listmaster_notification.tt2:180
 msgid "Refer to documentation to adapt %1."
 msgstr "Xem tài liệu hướng dẫn để thay đổi lại %1 cho phù hợp."
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:166
+#: default/mail_tt2/listmaster_notification.tt2:182
 #, fuzzy
 msgid ""
 "Until then we recommend your remove %1;\n"
@@ -10759,12 +10769,12 @@ msgstr ""
 "cấu hình mặc định sẽ được dùng."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:169
-#: default/mail_tt2/listmaster_notification.tt2:367
+#: default/mail_tt2/listmaster_notification.tt2:185
+#: default/mail_tt2/listmaster_notification.tt2:383
 msgid "Failed to inlude members for list '%1'"
 msgstr "Lỗi bao gồm các thành viên cho hộp thư chung « %1 »"
 
-#: default/mail_tt2/listmaster_notification.tt2:171
+#: default/mail_tt2/listmaster_notification.tt2:187
 #, fuzzy
 msgid ""
 "Sympa could not include members from external data sources; the database or "
@@ -10774,21 +10784,21 @@ msgstr ""
 "liệu hay thư mục LDAP có thể không tới được."
 
 #. (e.type,e.name)
-#: default/mail_tt2/listmaster_notification.tt2:175
+#: default/mail_tt2/listmaster_notification.tt2:191
 msgid "- Datasource '%2' (type %1)"
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:179
-#: default/mail_tt2/listmaster_notification.tt2:185
+#: default/mail_tt2/listmaster_notification.tt2:195
+#: default/mail_tt2/listmaster_notification.tt2:201
 msgid "Check Sympa log files for more precise information"
 msgstr "Kiểm tra bản ghi Sympa để tìm thêm thông tin"
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:182
+#: default/mail_tt2/listmaster_notification.tt2:198
 msgid "admins update failed for list %1"
 msgstr "lỗi cập nhật quản trị cho hộp thư chung %1"
 
-#: default/mail_tt2/listmaster_notification.tt2:184
+#: default/mail_tt2/listmaster_notification.tt2:200
 #, fuzzy
 msgid ""
 "Sympa could not include admins from external data sources; the database or "
@@ -10798,53 +10808,53 @@ msgstr ""
 "liệu hay thư mục LDAP có thể không tới được."
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:188
-#: default/mail_tt2/listmaster_notification.tt2:213
-#: default/mail_tt2/listmaster_notification.tt2:221
-#: default/mail_tt2/listmaster_notification.tt2:228
-#: default/mail_tt2/listmaster_notification.tt2:256
-#: default/mail_tt2/listmaster_notification.tt2:263
-#: default/mail_tt2/listmaster_notification.tt2:270
+#: default/mail_tt2/listmaster_notification.tt2:204
+#: default/mail_tt2/listmaster_notification.tt2:229
+#: default/mail_tt2/listmaster_notification.tt2:237
+#: default/mail_tt2/listmaster_notification.tt2:244
+#: default/mail_tt2/listmaster_notification.tt2:272
+#: default/mail_tt2/listmaster_notification.tt2:279
+#: default/mail_tt2/listmaster_notification.tt2:286
 msgid "list %1 in status error_config"
 msgstr "hộp thư chung %1 có trạng thái error_config"
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:190
+#: default/mail_tt2/listmaster_notification.tt2:206
 msgid "No owner is defined for list %1."
 msgstr "Chưa xác định chủ cho hộp thư chung %1."
 
-#: default/mail_tt2/listmaster_notification.tt2:191
-#: default/mail_tt2/listmaster_notification.tt2:216
-#: default/mail_tt2/listmaster_notification.tt2:224
-#: default/mail_tt2/listmaster_notification.tt2:231
-#: default/mail_tt2/listmaster_notification.tt2:259
-#: default/mail_tt2/listmaster_notification.tt2:266
-#: default/mail_tt2/listmaster_notification.tt2:273
+#: default/mail_tt2/listmaster_notification.tt2:207
+#: default/mail_tt2/listmaster_notification.tt2:232
+#: default/mail_tt2/listmaster_notification.tt2:240
+#: default/mail_tt2/listmaster_notification.tt2:247
+#: default/mail_tt2/listmaster_notification.tt2:275
+#: default/mail_tt2/listmaster_notification.tt2:282
+#: default/mail_tt2/listmaster_notification.tt2:289
 msgid "The list status has been set to error_config."
 msgstr ""
 "Trạng thái của hộp thư chung đã được đặt thành « error_config » (cấu hình "
 "lỗi)."
 
-#: default/mail_tt2/listmaster_notification.tt2:192
-#: default/mail_tt2/listmaster_notification.tt2:217
-#: default/mail_tt2/listmaster_notification.tt2:225
-#: default/mail_tt2/listmaster_notification.tt2:232
-#: default/mail_tt2/listmaster_notification.tt2:239
-#: default/mail_tt2/listmaster_notification.tt2:246
-#: default/mail_tt2/listmaster_notification.tt2:260
-#: default/mail_tt2/listmaster_notification.tt2:267
-#: default/mail_tt2/listmaster_notification.tt2:274
-#: default/mail_tt2/listmaster_notification.tt2:281
+#: default/mail_tt2/listmaster_notification.tt2:208
+#: default/mail_tt2/listmaster_notification.tt2:233
+#: default/mail_tt2/listmaster_notification.tt2:241
+#: default/mail_tt2/listmaster_notification.tt2:248
+#: default/mail_tt2/listmaster_notification.tt2:255
+#: default/mail_tt2/listmaster_notification.tt2:262
+#: default/mail_tt2/listmaster_notification.tt2:276
+#: default/mail_tt2/listmaster_notification.tt2:283
+#: default/mail_tt2/listmaster_notification.tt2:290
+#: default/mail_tt2/listmaster_notification.tt2:297
 msgid "Check Sympa log files for more precise information."
 msgstr "Xem bản ghi Sympa để tìm thông tin chính xác hơn."
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:196
+#: default/mail_tt2/listmaster_notification.tt2:212
 msgid "List owner/editor email changes"
 msgstr "Đã thay đổi địa chỉ thư của chủ/biên tập hộp thư chung"
 
 #. (previous_email,new_email)
-#: default/mail_tt2/listmaster_notification.tt2:198
+#: default/mail_tt2/listmaster_notification.tt2:214
 #, fuzzy
 msgid ""
 "Member %1 has changed his owner/editor email address to %2. This change has "
@@ -10854,13 +10864,13 @@ msgstr ""
 "2. Thay đổi này đã được thực hiện với những hộp thư chung này:"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:205
+#: default/mail_tt2/listmaster_notification.tt2:221
 #, fuzzy
 msgid "List %1: Failed to change admin email address"
 msgstr "Hộp thư chung %1: không thay đổi được địa chỉ thư điện tử của quản trị"
 
 #. (current_email,new_email,datasource)
-#: default/mail_tt2/listmaster_notification.tt2:209
+#: default/mail_tt2/listmaster_notification.tt2:225
 msgid ""
 "Admin %1 could not change his admin email address (new email address is %2) "
 "because he is included via a the following data sources: %3.\n"
@@ -10875,18 +10885,18 @@ msgstr ""
 "mới đó."
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:215
+#: default/mail_tt2/listmaster_notification.tt2:231
 msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr ""
 "Gặp lỗi trong khi sao chép tập tin nhóm %2 vào thư mục hộp thư chung %1."
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:223
+#: default/mail_tt2/listmaster_notification.tt2:239
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr "Cấu hình của hộp thư chung %1 không tùy theo quy tắc của nhóm %2."
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:230
+#: default/mail_tt2/listmaster_notification.tt2:246
 msgid ""
 "Sympa could not check family %2 rules with list %1 param_constraint.conf "
 "file."
@@ -10894,126 +10904,126 @@ msgstr ""
 "Sympa không thể kiểm tra các quy tắc của nhóm %2 với tập tin « "
 "param_constraint.conf » của hộp thư chung %1."
 
-#: default/mail_tt2/listmaster_notification.tt2:236
-#: default/mail_tt2/listmaster_notification.tt2:243
+#: default/mail_tt2/listmaster_notification.tt2:252
+#: default/mail_tt2/listmaster_notification.tt2:259
 msgid "errors in param_constraint.conf file"
 msgstr "lỗi trong tập tin param_constraint.conf"
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:238
-#: default/mail_tt2/listmaster_notification.tt2:245
+#: default/mail_tt2/listmaster_notification.tt2:254
+#: default/mail_tt2/listmaster_notification.tt2:261
 msgid "Error(s) found in the file %1."
 msgstr "Gặp lỗi trong tập tin %1."
 
-#: default/mail_tt2/listmaster_notification.tt2:249
+#: default/mail_tt2/listmaster_notification.tt2:265
 msgid "File removed"
 msgstr "Tập tin bị gỡ bỏ"
 
 #. (param0)
-#: default/mail_tt2/listmaster_notification.tt2:251
+#: default/mail_tt2/listmaster_notification.tt2:267
 #, fuzzy
 msgid "The following file has been removed: %1"
 msgstr "Tập tin theo đây đã bị gỡ bỏ : %1"
 
 #. (param1)
-#: default/mail_tt2/listmaster_notification.tt2:252
+#: default/mail_tt2/listmaster_notification.tt2:268
 #, fuzzy
 msgid "A backup of the file has been made: %1"
 msgstr "Đã tạo một bản sao lưu của tập tin này: %1"
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:258
+#: default/mail_tt2/listmaster_notification.tt2:274
 msgid "Sympa could not load family %2 for list %1."
 msgstr "Sympa không thể nạp nhóm %2 cho hộp thư chung %1."
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:265
+#: default/mail_tt2/listmaster_notification.tt2:281
 msgid "Failed to instantiate family %2 for list %1"
 msgstr "Lỗi tạo lần nhóm %2 cho hộp thư chung %1"
 
 #. (param0,param1)
-#: default/mail_tt2/listmaster_notification.tt2:272
+#: default/mail_tt2/listmaster_notification.tt2:288
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr "Sympa không thể sửa đổi hộp thư chung %1 (Nhóm %2)"
 
-#: default/mail_tt2/listmaster_notification.tt2:277
+#: default/mail_tt2/listmaster_notification.tt2:293
 #, fuzzy
 msgid "Failed to parse web template"
 msgstr "Không cập nhật được một tập tin."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:285
-#: default/mail_tt2/listmaster_notification.tt2:296
-#: default/mail_tt2/listmaster_notification.tt2:314
-#: default/mail_tt2/listmaster_notification.tt2:324
+#: default/mail_tt2/listmaster_notification.tt2:301
+#: default/mail_tt2/listmaster_notification.tt2:312
+#: default/mail_tt2/listmaster_notification.tt2:330
+#: default/mail_tt2/listmaster_notification.tt2:340
 #, fuzzy
 msgid "Listmaster: internal server error "
 msgstr "Chủ hộp thư chung: lỗi trình phục vụ nội bộ"
 
 #. (who)
-#: default/mail_tt2/listmaster_notification.tt2:287
-#: default/mail_tt2/listmaster_notification.tt2:326
+#: default/mail_tt2/listmaster_notification.tt2:303
+#: default/mail_tt2/listmaster_notification.tt2:342
 msgid " User %1 has encountered an internal server error"
 msgstr "Người dùng %1 đã gặp một lỗi phần mềm nội bộ."
 
 #. (error)
-#: default/mail_tt2/listmaster_notification.tt2:298
+#: default/mail_tt2/listmaster_notification.tt2:314
 msgid "The following error occurred while managing bounces: %1"
 msgstr ""
 
 #. (listname, listdomain)
-#: default/mail_tt2/listmaster_notification.tt2:303
+#: default/mail_tt2/listmaster_notification.tt2:319
 #, fuzzy
 msgid "Listmaster: list %1@%2 at 100 percents error "
 msgstr "Chủ hộp thư chung: lỗi trình phục vụ nội bộ"
 
 #. (listname, listdomain)
-#: default/mail_tt2/listmaster_notification.tt2:305
+#: default/mail_tt2/listmaster_notification.tt2:321
 msgid ""
 "The list %1@%2 has 100 percents of its users in error. Something unusual "
 "must have happened."
 msgstr ""
 
 #. (sender)
-#: default/mail_tt2/listmaster_notification.tt2:307
+#: default/mail_tt2/listmaster_notification.tt2:323
 msgid ""
 "The user %1, who tried to send a mail to this list, has been warned, as well "
 "as the list owners."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:311
+#: default/mail_tt2/listmaster_notification.tt2:327
 #, fuzzy
 msgid "Check the bounces in this list:"
 msgstr "Tất cả thông tin về hộp thư chung này:"
 
 #. (listname,family,robot,msg_id)
-#: default/mail_tt2/listmaster_notification.tt2:317
+#: default/mail_tt2/listmaster_notification.tt2:333
 msgid ""
 "Failed to process message. Unable to create the dynamic list %1 on family %2@"
 "%3. Message <%4> was ignored."
 msgstr ""
 
 #. (family,robot,msg_id)
-#: default/mail_tt2/listmaster_notification.tt2:319
+#: default/mail_tt2/listmaster_notification.tt2:335
 msgid ""
 "Failed to process message: family %1@%2 does not exist. Unable to create the "
 "dynamic list.  Message <%3> was ignored."
 msgstr ""
 
-#: default/mail_tt2/listmaster_notification.tt2:327
-#: default/mail_tt2/listmaster_notification.tt2:399
+#: default/mail_tt2/listmaster_notification.tt2:343
+#: default/mail_tt2/listmaster_notification.tt2:415
 msgid "Web interface"
 msgstr "Giao diện Web"
 
-#: default/mail_tt2/listmaster_notification.tt2:329
+#: default/mail_tt2/listmaster_notification.tt2:345
 msgid "Unable to change directory."
 msgstr "Không thể chuyển đổi thư mục."
 
-#: default/mail_tt2/listmaster_notification.tt2:330
+#: default/mail_tt2/listmaster_notification.tt2:346
 msgid "The authentication server name is not defined."
 msgstr "Chưa xác định tên máy phục vụ xác thực."
 
-#: default/mail_tt2/listmaster_notification.tt2:331
+#: default/mail_tt2/listmaster_notification.tt2:347
 #, fuzzy
 msgid ""
 "auth.conf error: either email_http_header or ldap_host/"
@@ -11023,298 +11033,298 @@ msgstr ""
 "ldap_host/ldap_get_email_by_uid_filter »."
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:332
+#: default/mail_tt2/listmaster_notification.tt2:348
 msgid "Unkown authentication service %1."
 msgstr "Không nhận ra dịch vụ xác thực %1."
 
 #. (user)
-#: default/mail_tt2/listmaster_notification.tt2:333
+#: default/mail_tt2/listmaster_notification.tt2:349
 msgid "Add user '%1' in DB failed."
 msgstr "Lỗi thêm người dùng « %1 » vào cơ sở dữ liệu."
 
 #. (user)
-#: default/mail_tt2/listmaster_notification.tt2:334
+#: default/mail_tt2/listmaster_notification.tt2:350
 msgid "Update user '%1' in DB failed"
 msgstr "Lỗi cập nhật người dùng « %1 » trong cơ sở dữ liệu"
 
 #. (old_email)
-#: default/mail_tt2/listmaster_notification.tt2:334
-#: default/mail_tt2/listmaster_notification.tt2:336
+#: default/mail_tt2/listmaster_notification.tt2:350
+#: default/mail_tt2/listmaster_notification.tt2:352
 #, fuzzy
 msgid " (old email: %1)"
 msgstr " (thư cũ : %1)"
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:335
+#: default/mail_tt2/listmaster_notification.tt2:351
 msgid "Add subscriber '%1' in DB failed."
 msgstr "Lỗi thêm người đăng ký « %1 » vào cơ sở dữ liệu."
 
 #. (sub,old_email)
-#: default/mail_tt2/listmaster_notification.tt2:336
+#: default/mail_tt2/listmaster_notification.tt2:352
 msgid "Update subscriber '%1' in DB failed"
 msgstr "Lỗi cập nhật người đăng ký « %1 » trong cơ sở dữ liệu"
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:337
+#: default/mail_tt2/listmaster_notification.tt2:353
 msgid "Delete subscriber '%1' in DB failed."
 msgstr "Lỗi xoá người đăng ký « %1 » khỏi cơ sở dữ liệu."
 
 #. (old_email)
-#: default/mail_tt2/listmaster_notification.tt2:338
+#: default/mail_tt2/listmaster_notification.tt2:354
 msgid "Delete user in DB for old email '%1' failed."
 msgstr "Lỗi xoá người dùng khỏi cơ sở dữ liệu đối với thư cũ « %1 »."
 
 #. (email,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:339
+#: default/mail_tt2/listmaster_notification.tt2:355
 msgid "Subscriber '%1' is not found in list %2."
 msgstr "Người đăng ký « %1 » không tìm thấy trong hộp thư chung %2."
 
 #. (filepath)
-#: default/mail_tt2/listmaster_notification.tt2:340
+#: default/mail_tt2/listmaster_notification.tt2:356
 #, fuzzy
 msgid "Unable to read file: '%1'."
 msgstr "Không thể đọc tập tin: « %1 »."
 
 #. (filepath)
-#: default/mail_tt2/listmaster_notification.tt2:341
+#: default/mail_tt2/listmaster_notification.tt2:357
 #, fuzzy
 msgid "Unable to write file: '%1'."
 msgstr "Không thể ghi tập tin: « %1 »."
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:342
+#: default/mail_tt2/listmaster_notification.tt2:358
 msgid "Unable to open file '%1'."
 msgstr "Không thể mở tập tin « %1 »."
 
 #. (directory)
-#: default/mail_tt2/listmaster_notification.tt2:343
+#: default/mail_tt2/listmaster_notification.tt2:359
 msgid "Unable to open directory '%1'."
 msgstr "Không thể mở thư mục « %1 »."
 
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:344
+#: default/mail_tt2/listmaster_notification.tt2:360
 msgid "Unable to create directory '%1'."
 msgstr "Không thể tạo thư mục « %1 »."
 
 #. (spool)
-#: default/mail_tt2/listmaster_notification.tt2:345
+#: default/mail_tt2/listmaster_notification.tt2:361
 msgid "Unable to open spool '%1'."
 msgstr "Không thể mở hàng đợi ghi « %1 »."
 
 #. (msg)
-#: default/mail_tt2/listmaster_notification.tt2:346
+#: default/mail_tt2/listmaster_notification.tt2:362
 msgid "Unable to get message '%1'."
 msgstr "Không thể lấy thư « %1 »."
 
 #. (old,new)
-#: default/mail_tt2/listmaster_notification.tt2:347
+#: default/mail_tt2/listmaster_notification.tt2:363
 msgid "Unable to rename file '%1' into '%2'."
 msgstr "Không thể thay đổi tên của tập tin « %1 » thành « %2 »."
 
 #. (old,new)
-#: default/mail_tt2/listmaster_notification.tt2:348
+#: default/mail_tt2/listmaster_notification.tt2:364
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr "Không thể thay đổi tên của thư mục « %1 » thành « %2 »."
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:349
+#: default/mail_tt2/listmaster_notification.tt2:365
 msgid "Unable to erase file '%1'."
 msgstr "Không thể xoá tập tin « %1 »."
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:350
+#: default/mail_tt2/listmaster_notification.tt2:366
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
 "Không thể gửi lệnh DISTRIBUTE (phát hành) từ « %1 » tới hộp thư chung « %2 »."
 
 #. (dir)
-#: default/mail_tt2/listmaster_notification.tt2:351
+#: default/mail_tt2/listmaster_notification.tt2:367
 msgid "No HTML version of the message available in '%1'."
 msgstr "Không có sẵn phiên bản HTML của thư này trong « %1 »."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:352
+#: default/mail_tt2/listmaster_notification.tt2:368
 msgid "Unable to update file config_changes for list '%1'."
 msgstr ""
 "Không thể cập nhật tập tin « config_changes » (các thay đổi cấu hình) cho hộp "
 "thư chung « %1 »."
 
 #. (month,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:353
+#: default/mail_tt2/listmaster_notification.tt2:369
 msgid "Unable to find month '%1' for list '%2'"
 msgstr "Không tìm thấy tháng « %1 » cho hộp thư chung « %2 »."
 
 #. (dir)
 #. (path)
-#: default/mail_tt2/listmaster_notification.tt2:353
-#: default/mail_tt2/listmaster_notification.tt2:354
-#: default/mail_tt2/listmaster_notification.tt2:355
+#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:370
+#: default/mail_tt2/listmaster_notification.tt2:371
 #, fuzzy
 msgid ": unable to read '%1'."
 msgstr " : không thể đọc « %1 »."
 
 #. (arc_file,list.name,path)
-#: default/mail_tt2/listmaster_notification.tt2:354
+#: default/mail_tt2/listmaster_notification.tt2:370
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr "Không tìm thấy kho lưu « %1 » cho hộp thư chung « %2 »."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:355
+#: default/mail_tt2/listmaster_notification.tt2:371
 msgid "Unable to find archive for list '%1'"
 msgstr "Không tìm thấy kho lưu cho hộp thư chung « %1 »"
 
-#: default/mail_tt2/listmaster_notification.tt2:356
+#: default/mail_tt2/listmaster_notification.tt2:372
 #, fuzzy
 msgid "Unable to send archive: no message id found."
 msgstr "Không thể gửi kho lưu vì không tìm thấy mã số thư."
 
 #. (msgid)
-#: default/mail_tt2/listmaster_notification.tt2:357
+#: default/mail_tt2/listmaster_notification.tt2:373
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
 "Không tìm thấy thư trong kho lưu mà tương ứng với mã số thư (Message-ID) « %1 "
 "»."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:358
+#: default/mail_tt2/listmaster_notification.tt2:374
 msgid "Cannot save config file for list '%1'."
 msgstr "Không thể lưu tập tin cấu hình cho hộp thư chung « %1 »."
 
-#: default/mail_tt2/listmaster_notification.tt2:359
+#: default/mail_tt2/listmaster_notification.tt2:375
 msgid "Failed to install aliases."
 msgstr "Lỗi cài đặt các bí danh."
 
-#: default/mail_tt2/listmaster_notification.tt2:360
+#: default/mail_tt2/listmaster_notification.tt2:376
 msgid "Failed to remove aliases."
 msgstr "Lỗi gỡ bỏ các bí danh."
 
-#: default/mail_tt2/listmaster_notification.tt2:361
+#: default/mail_tt2/listmaster_notification.tt2:377
 msgid "Internal scenario error for 'create_list'."
 msgstr "Lỗi kịch bản nội bộ đối với « create_list » (tạo hộp thư chung)."
 
-#: default/mail_tt2/listmaster_notification.tt2:362
+#: default/mail_tt2/listmaster_notification.tt2:378
 msgid "Unable to create list."
 msgstr "Không thể tạo hộp thư chung."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:365
+#: default/mail_tt2/listmaster_notification.tt2:381
 msgid "Unable to get family for list '%1'."
 msgstr "Không thể lấy nhóm đối với hộp thư chung « %1 »."
 
 #. (new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:366
+#: default/mail_tt2/listmaster_notification.tt2:382
 msgid "Unable to reload list with new listname '%1'."
 msgstr "Không thể nạp lại hộp thư chung với tên mới « %1 »."
 
-#: default/mail_tt2/listmaster_notification.tt2:366
+#: default/mail_tt2/listmaster_notification.tt2:382
 msgid "Unable to reload list"
 msgstr "Không thể nạp lại hộp thư chung"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:368
+#: default/mail_tt2/listmaster_notification.tt2:384
 msgid "Failed to include list admins for list '%1'"
 msgstr "Lỗi bao gồm các quản trị cho hộp thư chung « %1 »"
 
-#: default/mail_tt2/listmaster_notification.tt2:369
+#: default/mail_tt2/listmaster_notification.tt2:385
 msgid "No owner is defined for the list '%1'"
 msgstr "Chưa xác định chủ cho hộp thư chung « %1 »"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:370
+#: default/mail_tt2/listmaster_notification.tt2:386
 msgid "The exportation to an Ldap directory failed for list '%1'"
 msgstr "Lỗi xuất tới thư mục LDAP đối với hộp thư chung « %1 »"
 
 #. (new_listname)
-#: default/mail_tt2/listmaster_notification.tt2:371
+#: default/mail_tt2/listmaster_notification.tt2:387
 msgid "Unable to check listname '%1' on SMTP server"
 msgstr "Không thể kiểm tra tên hộp thư chung « %1 » trên máy phục vụ SMTP"
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:372
+#: default/mail_tt2/listmaster_notification.tt2:388
 msgid "Cannot create shared for list '%1'."
 msgstr "Không thể tạo vùng chia sẻ đối với hộp thư chung « %1 »."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:373
+#: default/mail_tt2/listmaster_notification.tt2:389
 msgid "Cannot restore shared for list '%1'."
 msgstr "Không thể phục hồi vùng chia sẻ đối với hộp thư chung « %1 »."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:374
+#: default/mail_tt2/listmaster_notification.tt2:390
 msgid "Cannot delete shared for list '%1'."
 msgstr "Không thể xoá vùng chia sẻ đối với hộp thư chung « %1 »."
 
-#: default/mail_tt2/listmaster_notification.tt2:375
+#: default/mail_tt2/listmaster_notification.tt2:391
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr "Không thể duyệt các tài liệu chia sẻ đối với hộp thư chung « %1 »."
 
 #. (path)
-#: default/mail_tt2/listmaster_notification.tt2:376
+#: default/mail_tt2/listmaster_notification.tt2:392
 msgid "Cannot upload file '%1'."
 msgstr "Không thể tải lên tập tin « %1 »."
 
 #. (name)
-#: default/mail_tt2/listmaster_notification.tt2:378
+#: default/mail_tt2/listmaster_notification.tt2:394
 msgid "Errors while unzipping file '%1'."
 msgstr "Gặp lỗi trong khi giải nén tập tin « %1 »."
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:379
+#: default/mail_tt2/listmaster_notification.tt2:395
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr "Không thể gửi lệnh REMIND (nhắc nhở) từ « %1 » tới hộp thư chung « %2 »."
 
 #. (from,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:380
+#: default/mail_tt2/listmaster_notification.tt2:396
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr "Không thể gửi thư từ « %1 » tới hộp thư chung « %2 »."
 
 #. (key,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:381
+#: default/mail_tt2/listmaster_notification.tt2:397
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
 "Không thể truy cập đến thư được xác thực bằng khoá « %1 » đối với hộp thư "
 "chung « %2 »."
 
 #. (sub)
-#: default/mail_tt2/listmaster_notification.tt2:382
+#: default/mail_tt2/listmaster_notification.tt2:398
 msgid "Unable to delete subscription request for user '%1'."
 msgstr "Không thể xoá yêu cầu đăng ký của người dùng « %1 »."
 
 #. (file)
-#: default/mail_tt2/listmaster_notification.tt2:383
+#: default/mail_tt2/listmaster_notification.tt2:399
 msgid "Unable to add file '%1' to archives."
 msgstr "Không thể thêm tập tin « %1 » vào kho lưu."
 
 #. (zipfile)
-#: default/mail_tt2/listmaster_notification.tt2:384
+#: default/mail_tt2/listmaster_notification.tt2:400
 msgid "Unable to write file zip '%1'."
 msgstr "Không thể ghi tập tin zip « %1 »."
 
 #. (path,list.name)
-#: default/mail_tt2/listmaster_notification.tt2:386
+#: default/mail_tt2/listmaster_notification.tt2:402
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 "Không thể tạo một tài liệu chia sẻ SharedDocument với đường dẫn « %1 » cho "
 "hộp thư chung « %2 »."
 
-#: default/mail_tt2/listmaster_notification.tt2:387
+#: default/mail_tt2/listmaster_notification.tt2:403
 msgid "Parameter cookie undefined, authentication failure."
 msgstr "Chưa xác định tham số cookie nên không xác thực được."
 
 #. (env)
-#: default/mail_tt2/listmaster_notification.tt2:388
+#: default/mail_tt2/listmaster_notification.tt2:404
 #, fuzzy
 msgid "Cookie error: '%1' undefined, authentication failure."
 msgstr "Lỗi cookie: chưa xác định « %1 », lỗi xác thực."
 
 #. (list.name)
-#: default/mail_tt2/listmaster_notification.tt2:396
+#: default/mail_tt2/listmaster_notification.tt2:412
 #, fuzzy
 msgid "Listmaster: system error "
 msgstr "Chủ hộp thư chung: lỗi hệ thống"
 
 #. (who)
-#: default/mail_tt2/listmaster_notification.tt2:398
+#: default/mail_tt2/listmaster_notification.tt2:414
 msgid " User %1 has encountered a system error"
 msgstr "Người dùng %1 đã gặp một lỗi hệ thống"
 
@@ -11518,25 +11528,40 @@ msgstr "Bên này không cần làm gì."
 
 #. (who)
 #: default/mail_tt2/listowner_notification.tt2:106
-#: default/mail_tt2/listowner_notification.tt2:118
 msgid "FYI: automatic removal of user %1"
 msgstr "Ghi chú : tự động gỡ bỏ người dùng %1"
 
 #. (who,list.name)
-#: default/mail_tt2/listowner_notification.tt2:108
-#: default/mail_tt2/listowner_notification.tt2:120
-msgid "User \"%1\" has been automatically removed from list %2. "
+#: default/mail_tt2/listowner_notification.tt2:112
+#, fuzzy
+msgid "User <%1> has been automatically removed from list %2."
 msgstr "Người dùng « %1 » đã được tự động gỡ bỏ khỏi hộp thư chung %2."
 
+#: default/mail_tt2/listowner_notification.tt2:114
+msgid ""
+"The user complain to abuse service about a message from the list using email "
+"feedback report."
+msgstr ""
+
+#: default/mail_tt2/listowner_notification.tt2:116
+msgid ""
+"The welcome message (or a subscription remind) sent to the user has "
+"triggered a non-delivery report. The user email address might be incorrect."
+msgstr ""
+
+#: default/mail_tt2/listowner_notification.tt2:118
+msgid "(no action needed)"
+msgstr ""
+
 #. (list.name)
-#: default/mail_tt2/listowner_notification.tt2:129
+#: default/mail_tt2/listowner_notification.tt2:131
 #, fuzzy
 msgid "List %1: Failed to change member email address"
 msgstr ""
 "Hộp thư chung %1: không thay đổi được địa chỉ thư điện tử của thành viên"
 
 #. (current_email,new_email,datasource)
-#: default/mail_tt2/listowner_notification.tt2:133
+#: default/mail_tt2/listowner_notification.tt2:135
 msgid ""
 "User %1 could not change his member email address (new email address is %2) "
 "because he is included via a the following data sources: %3.\n"
@@ -11551,7 +11576,7 @@ msgstr ""
 "thư của người này."
 
 #. (list.name,type)
-#: default/mail_tt2/listowner_notification.tt2:136
+#: default/mail_tt2/listowner_notification.tt2:138
 msgid "List %1 / %2"
 msgstr "Hộp thư chung %1 / %2"
 
@@ -13107,6 +13132,12 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Lỗi không rõ."
 
+#. (who,list.name)
+#: default/mail_tt2/listowner_notification.tt2:108
+#: default/mail_tt2/listowner_notification.tt2:120
+msgid "User \"%1\" has been automatically removed from list %2. "
+msgstr "Người dùng « %1 » đã được tự động gỡ bỏ khỏi hộp thư chung %2."
+
 #: default/web_tt2/admin.tt2:103
 msgid "Warning : deletion is final, data recovery is not possible once done."
 msgstr ""
@@ -13743,6 +13774,15 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#~ msgid "A bounce management failed"
+#~ msgstr "Lỗi quản lý thư bị nảy về"
+
+#~ msgid ""
+#~ "Sympa could not handle bounce message '%1'. Moving it into directory '%2'."
+#~ msgstr ""
+#~ "Sympa không thể xử lý thư bị nảy về « %1 » nên di chuyển nó vào thư mục « %"
+#~ "2 »."
 
 #~ msgid ""
 #~ "Based on <em><a href=\"http://www.mhonarc.org/contrib/marc-search/\">Marc-"
