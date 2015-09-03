@@ -7094,8 +7094,8 @@ sub do_set_session_email {
     }
 
     if ($session) {
-        $session->{'restore_email'} = $param->{'user'}{'email'};
-        $session->{'email'}         = $in{'email'};
+        $session->{'restore_email'} ||= $param->{'user'}{'email'};
+        $session->{'email'}     = $in{'email'};
         $param->{'redirect_to'} = $param->{'base_url'} . $param->{'path_cgi'};
         return '1';
     } else {
