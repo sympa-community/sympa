@@ -7084,6 +7084,15 @@ sub do_set_session_email {
             {}, $param->{'action'}, $list);
         return 'serveradmin';
     }
+
+    # Prevent getting privilege of super-listmaster.
+    if (Sympa::is_listmaster('*', $in{'email'})) {
+        Sympa::Report::reject_report_web('user',
+            'You are not allowed to get the privilege of this user.',
+            {}, $param->{'action'}, $list);
+        return 'serveradmin';
+    }
+
     if ($session) {
         $session->{'restore_email'} = $param->{'user'}{'email'};
         $session->{'email'}         = $in{'email'};
