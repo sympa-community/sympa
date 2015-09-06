@@ -1197,8 +1197,7 @@ sub upgrade {
                         push @newconf,
                             sprintf("%s\t%s\n\n", $param->{'name'}, $v);
                     } else {
-                        push @newconf,
-                            sprintf("#%s\t%s\n\n", $param->{'name'}, $v);
+                        push @newconf, sprintf("#%s\t\n\n", $param->{'name'});
                     }
                 }
             }

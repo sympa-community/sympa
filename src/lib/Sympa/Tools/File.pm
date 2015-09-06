@@ -328,10 +328,9 @@ sub list_dir {
     my $all               = shift;
     my $original_encoding = shift;  # Suspected original encoding of filenames
 
-    if (opendir(DIR, $dir)) {
-        foreach my $file (sort grep (!/^\.\.?$/, readdir(DIR))) {
-
-            ## Guess filename encoding
+    if (opendir my $dh, $dir) {
+        foreach my $file (sort grep !/^\.\.?$/, readdir $dh) {
+            # Guess filename encoding
             my ($encoding, $guess);
             my $decoder =
                 Encode::Guess::guess_encoding($file, $original_encoding,
@@ -353,7 +352,7 @@ sub list_dir {
                 list_dir($dir . '/' . $file, $all, $original_encoding);
             }
         }
-        closedir DIR;
+        closedir $dh;
     }
 
     return 1;
