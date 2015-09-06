@@ -72,8 +72,8 @@ use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::SharedDocument;
-use Sympa::Spool;
 use Sympa::Spool::Archive;
+use Sympa::Spool::Incoming;
 use Sympa::Template;
 use tools;
 use Sympa::Tools::Data;
@@ -9141,12 +9141,7 @@ sub do_distribute {
     );
     $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
-    unless (
-        Sympa::Spool::store_spool(
-            $Conf::Conf{'queue'}, $message,
-            '%s@%s.%ld.%ld,%d', [qw(localpart domainpart TIME PID RAND)]
-        )
-        ) {
+    unless (Sympa::Spool::Incoming->new->store($message)) {
         Sympa::Report::reject_report_web(
             'intern',
             'cannot_send_distribute',
@@ -20337,12 +20332,7 @@ sub do_remind {
     );
     $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
-    unless (
-        Sympa::Spool::store_spool(
-            $Conf::Conf{'queue'}, $message,
-            '%s@%s.%ld.%ld,%d', [qw(localpart domainpart TIME PID RAND)]
-        )
-        ) {
+    unless (Sympa::Spool::Incoming->new->store($message)) {
         Sympa::Report::reject_report_web(
             'intern',
             'cannot_send_remind',
@@ -21712,12 +21702,7 @@ sub do_send_mail {
         $l_message->{sender}          = $param->{'user'}{'email'};
         $l_message->{md5_check}       = 1;
 
-        unless (
-            Sympa::Spool::store_spool(
-                $Conf::Conf{'queue'}, $l_message, '%s@%s.%ld.%ld,%d',
-                [qw(localpart domainpart TIME PID RAND)]
-            )
-            ) {
+        unless (Sympa::Spool::Incoming->new->store($l_message)) {
             Sympa::Report::reject_report_web(
                 'intern',
                 'cannot_send_mail',
@@ -21916,12 +21901,7 @@ sub do_tag_topic_by_sender {
     );
     $cmd_message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
-    unless (
-        Sympa::Spool::store_spool(
-            $Conf::Conf{'queue'}, $cmd_message,
-            '%s@%s.%ld.%ld,%d', [qw(localpart domainpart TIME PID RAND)]
-        )
-        ) {
+    unless (Sympa::Spool::Incoming->new->store($cmd_message)) {
         Sympa::Report::reject_report_web(
             'intern',
             'cannot_send_mail',

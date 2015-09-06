@@ -46,6 +46,7 @@ use Sympa::Mailer;
 use Sympa::Message;
 use Sympa::Report;
 use Sympa::Spool;
+use Sympa::Spool::Incoming;
 use tools;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
@@ -182,7 +183,8 @@ $SIG{'PIPE'} = 'IGNORE';     # Ignore SIGPIPE ; prevents process from dying
 # This is the main loop : look for files in the directory, handles
 # them, sleeps a while and continues the good job.
 
-my $spool = $Conf::Conf{'queueautomatic'};
+my $spool          = $Conf::Conf{'queueautomatic'};
+my $spool_incoming = Sympa::Spool::Incoming->new;
 
 while ($signal ne 'term') {
     Sympa::List::init_list_cache();
@@ -289,14 +291,15 @@ while ($signal ne 'term') {
         $log->syslog('notice', "Sympa %s reload config",
             Sympa::Constants::VERSION);
         _load();
-        $signal = 0;
+        $spool_incoming = Sympa::Spool::Incoming->new;
+        $signal         = 0;
     }
 
     # If the spool was empty, sleep for a while.
     unless ($numprocessed) {
         sleep $Conf::Conf{'sleep'};
     }
-}    #end of block while ($signal ne 'term'){
+}    # while ($signal ne 'term')
 
 $log->syslog('notice', 'Sympa/automatic exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid($pidfile, $PID);
@@ -769,11 +772,7 @@ sub process_message {
 
     # do not process messages in list creation only mode, move them to
     # main spool
-    my $marshalled = Sympa::Spool::store_spool(
-        $Conf::Conf{'queue'}, $message, '%s@%s.%ld.%ld,%d',
-        [qw(localpart domainpart date PID RAND)],
-        original => 1
-    );
+    my $marshalled = $spool_incoming->store($message, original => 1);
     if ($marshalled) {
         $log->syslog('notice',
             'Message %s is stored into incoming spool as <%s>',
