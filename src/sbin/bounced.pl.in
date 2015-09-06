@@ -490,7 +490,7 @@ sub process_message {
         my $parser = MIME::Parser->new;
         $parser->extract_nested_messages(0);
         $parser->output_to_core(1);
-        $parser->tmp_to_core(1);
+        $parser->tmp_dir($Conf::Conf{'tmpdir'});
         my $entity = $parser->parse_data($message->as_string);
 
         # Get list context from List-Id: field in the third part of report.
@@ -838,7 +838,7 @@ sub _parse_multipart_report {
     my $parser = MIME::Parser->new;
     $parser->extract_nested_messages(0);
     $parser->output_to_core(1);
-    $parser->tmp_to_core(1);
+    $parser->tmp_dir($Conf::Conf{'tmpdir'});
     my $entity = $parser->parse_data($message->as_string);
 
     return
