@@ -608,10 +608,15 @@ sub process_message {
     my $robot;
     my $listname;
 
-    $robot =
-        (ref $message->{context} eq 'Sympa::List')
-        ? $message->{context}->{'domain'}
-        : $message->{context};
+    if (ref $message->{context} eq 'Sympa::List') {
+        $robot = $message->{context}->{'domain'};
+    } elsif ($message->{context} and $message->{context} ne '*') {
+        $robot = $message->{context};
+    } else {
+        # Older "sympa" alias may not have "@domain" in argument of queue
+        # program.
+        $robot = $Conf::Conf{'domain'};
+    }
     $listname = $message->{'listname'};
 
     ## Ignoring messages with no sender
