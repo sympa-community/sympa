@@ -7,6 +7,9 @@ smtpc \- SMTP / LMTP client
 smtpc --esmtp \fIhost\fR:\fIport\fR -f \fIenvelope@sen.der\fR
 [ \fIoptions\fR... ] [ -- ] \fIrecipient@add.ress\fR ...
 
+smtpc --lmtp \fIhost\fR:\fIport\fR -f \fIenvelope@sen.der\fR
+[ \fIoptions\fR... ] [ -- ] \fIrecipient@add.ress\fR ...
+
 smtpc --lmtp \fIpath\fR -f \fIenvelope@sen.der\fR
 [ \fIoptions\fR... ] [ -- ] \fIrecipient@add.ress\fR ...
 
@@ -24,12 +27,13 @@ Show dialog in the session.
 
 .TP
 \fB--esmtp\fP \fIhost\fR[:\fIport\fR]
-Use TCP socket and ESMTP protocol to submit message.
+Uses TCP socket and ESMTP protocol to submit message.
 Either this option or \fB--lmtp\fP option is required.
 
 If \fIhost\fR is the IPv6 address, it must be enclosed in [...]
 to avoid confusion with colon separating \fIhost\fR and \fIport\fR,
-e.g. "[::1]", "[::1]:25".
+e.g. "[::1]", "[::1]:587".
+If \fIport\fR is omitted, "25" is used.
 
 .TP
 \fB-f\fP \fIenvelope@sen.der\fR, \fB-f\fP\fIenvelope@sen.der\fR
@@ -44,9 +48,12 @@ Specifys host name or IP address literal used in EHLO or LHLO request.
 Default is "localhost".
 
 .TP
-\fB--lmtp\fP \fIpath\fR
-Use Unix domain socket and LMTP protocol to submit message.
+\fB--lmtp\fP \fIhost\fR[:\fIport\fR], \fB--lmtp\fP \fIpath\fR
+Uses TCP or Unix domain socket and LMTP protocol to submit message.
 Either this option or \fB--esmtp\fP option is required.
+
+If \fIport\fR is omitted, "24" is used.
+\fIpath\fR must be full path to socket file.
 
 .TP
 \fB-N\fP \fIdsn\fR, \fB-N\fP\fIdsn\fR

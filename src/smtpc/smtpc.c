@@ -49,8 +49,10 @@
 #define SMTPC_8BIT (1)
 #define SMTPC_UTF8 (2)
 
-#define SMTPC_PROTO_ESMTP (1)
-#define SMTPC_PROTO_LMTP (1 << 1)
+#define SMTPC_PROTO_TCP (1)
+#define SMTPC_PROTO_UNIX (1 << 1)
+#define SMTPC_PROTO_ESMTP (1 << 2)
+#define SMTPC_PROTO_LMTP (1 << 3)
 
 #define SMTPC_EXT_8BITMIME (1)
 #define SMTPC_EXT_AUTH (1 << 1)
@@ -189,7 +191,7 @@ static int parse_options(int *argcptr, char ***argvptr)
     options.protocol = 0;
     options.myname = "localhost";
     options.nodename = NULL;
-    options.servname = "25";
+    options.servname = NULL;
     options.sender = NULL;
     options.notify = 0;
     options.envid = NULL;
@@ -211,7 +213,7 @@ static int parse_options(int *argcptr, char ***argvptr)
 		    fprintf(stderr, "Multiple servers are specified\n");
 		    return -1;
 		}
-		options.protocol = SMTPC_PROTO_ESMTP;
+		options.protocol = SMTPC_PROTO_TCP | SMTPC_PROTO_ESMTP;
 		arg = argv[++i];
 		if (arg[0] == '[') {
 		    p = options.nodename = arg + 1;
@@ -229,7 +231,8 @@ static int parse_options(int *argcptr, char ***argvptr)
 		    else if (*p != '\0') {
 			fprintf(stderr, "Malformed port \"%s\"\n", p);
 			return -1;
-		    }
+		    } else
+			options.servname = "25";
 		} else {
 		    p = options.nodename = arg;
 		    while (*p != '\0' && *p != ':')
@@ -239,6 +242,8 @@ static int parse_options(int *argcptr, char ***argvptr)
 
 		    if (*p != '\0')
 			options.servname = p;
+		    else
+			options.servname = "25";
 		}
 	    } else if (strcmp(arg, "--iam") == 0 && i + 1 < argc)
 		options.myname = argv[++i];
@@ -248,7 +253,42 @@ static int parse_options(int *argcptr, char ***argvptr)
 		    return -1;
 		}
 		options.protocol = SMTPC_PROTO_LMTP;
-		options.path = argv[++i];
+		arg = argv[++i];
+		if (arg[0] == '/') {
+		    options.protocol |= SMTPC_PROTO_UNIX;
+		    options.path = arg;
+		} else if (arg[0] == '[') {
+		    options.protocol |= SMTPC_PROTO_TCP;
+		    p = options.nodename = arg + 1;
+		    while (*p != '\0' && *p != ']')
+			p++;
+		    if (*p == ']' && options.nodename < p)
+			*p++ = '\0';
+		    else {
+			fprintf(stderr, "Malformed host \"%s\"\n", arg);
+			return -1;
+		    }
+
+		    if (*p == ':' && ++p != '\0')
+			options.servname = p;
+		    else if (*p != '\0') {
+			fprintf(stderr, "Malformed port \"%s\"\n", p);
+			return -1;
+		    } else
+			options.servname = "24";
+		} else {
+		    options.protocol |= SMTPC_PROTO_TCP;
+		    p = options.nodename = arg;
+		    while (*p != '\0' && *p != ':')
+			p++;
+		    if (*p == ':' && options.nodename < p)
+			*p++ = '\0';
+
+		    if (*p != '\0')
+			options.servname = p;
+		    else
+			options.servname = "24";
+		}
 	    } else if (strcmp(arg, "--smtputf8") == 0)
 		options.smtputf8 = 1;
 	    else if (strcmp(arg, "--verbose") == 0)
@@ -355,8 +395,8 @@ static int parse_options(int *argcptr, char ***argvptr)
 	fprintf(stderr, "Either --esmtp or --lmtp option must be given\n");
 	return -1;
     }
-    if (options.protocol & SMTPC_PROTO_ESMTP && options.nodename == NULL
-	|| options.protocol & SMTPC_PROTO_LMTP && options.path == NULL) {
+    if (options.protocol & SMTPC_PROTO_TCP && options.nodename == NULL
+	|| options.protocol & SMTPC_PROTO_UNIX && options.path == NULL) {
 	fprintf(stderr, "Nodename nor path is not specified\n");
 	return -1;
     }
@@ -826,9 +866,9 @@ int main(int argc, char *argv[])
 	exit(EX_OSERR);
     }
 
-    if (options.protocol & SMTPC_PROTO_ESMTP)
+    if (options.protocol & SMTPC_PROTO_TCP)
 	sockstr = sockstr_new(options.nodename, options.servname, NULL);
-    else if (options.protocol & SMTPC_PROTO_LMTP)
+    else if (options.protocol & SMTPC_PROTO_UNIX)
 	sockstr = sockstr_new(NULL, NULL, options.path);
     else
 	sockstr = NULL;
