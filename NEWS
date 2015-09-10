@@ -3,6 +3,21 @@
 
 (See Changelog file for the full changes log)
 
+6.2.5		September 10, 2015
+
+  Bug fixes:
+
+	[12342] src/sbin/sympa_msg.pl.in: [Reported by U. Buhvestov, Tartu
+	Tamme Gymnasium] "sympa" alias prepared for earlier version of Sympa
+	may not have domain part in argument of queue program.	Sympa rejects
+	messages sent to such alias with error "robot * undefined".  Fixed by
+	assigning default domain.
+
+	[12340] src/cgi/wwsympa.fcgi.in: [#10003] [Reported by S. Hatteberg,
+	Universitetet i Oslo] WWSympa: Robot listmaster can get global
+	listmaster privileges using "Impersonate another User" function.  Fixed
+	by checking if target user is the super-listmaster.
+
 6.2.4		September 01, 2015
 
   Features:
