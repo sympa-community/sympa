@@ -3317,9 +3317,9 @@ sub dmarc_protect {
     my $anonphrase;
     my @addresses     = Mail::Address->parse($originalFromHeader);
     my $dkimSignature = $self->get_header('DKIM-Signature');
-    my $origFrom      = '';
     my $mungeFrom     = 0;
 
+    my $origFrom;
     if (@addresses) {
         $origFrom = $addresses[0]->address;
         $log->syslog('debug', 'From addresses: %s', $origFrom);
@@ -3441,8 +3441,7 @@ sub dmarc_protect {
         # Identify default new From address
         my $phraseMode = $list->{'admin'}{'dmarc_protection'}{'phrase'}
             || 'name_via_list';
-        my $newAddr;
-        my $displayName;
+        my $newName;
         my $newComment;
         if ($listtype eq 'owner' or $listtype eq 'editor') {
             # -request or -editor address
@@ -3461,73 +3460,80 @@ sub dmarc_protect {
 
         if (@addresses) {
             # We should always have a From address in reality, unless the
-            # message is from a badly-behaved automate
-            if ($addresses[0]->phrase) {
-                $displayName =
-                    MIME::EncWords::decode_mimewords($addresses[0]->phrase,
-                    Charset => 'UTF-8');
-                $newComment = $addresses[0]->address
-                    if $phraseMode =~ /email/;
-            } else {
+            # message is from a badly-behaved automate.
+            my $origName =
+                MIME::EncWords::decode_mimewords($addresses[0]->phrase,
+                Charset => 'UTF-8')
+                if defined $addresses[0]->phrase;
+            unless (defined $origName and $origName =~ /\S/) {
                 # If we dont have a Phrase, should we search the Sympa
-                # database
-                # for the sender to obtain their name that way? Might be
-                # difficult.
-                $displayName = $addresses[0]->address;
-                $displayName =~ s/\@.*// unless $phraseMode =~ /email/;
+                # database for the sender to obtain their name that way?
+                # Might be difficult.
+                ($origName) = split /\@/, $origFrom;
             }
-            if ($phraseMode =~ /list/) {
-                if (defined $newComment and $newComment =~ /\S/) {
-                    if ($listtype eq 'owner') {
-                        $newComment = $language->gettext_sprintf(
-                            '%s via Owner Address of %s Mailing List',
-                            $newComment, $list->{'name'});
-                    } elsif ($listtype eq 'editor') {
-                        $newComment = $language->gettext_sprintf(
-                            '%s via Editor Address of %s Mailing List',
-                            $newComment, $list->{'name'});
-                    } else {
-                        $newComment = $language->gettext_sprintf(
-                            '%s via %s Mailing List',
-                            $newComment, $list->{'name'});
-                    }
+
+            if ($phraseMode eq 'name_and_email') {
+                $newName    = $origName;
+                $newComment = $origFrom;
+            } elsif ($phraseMode eq 'name_email_via_list') {
+                $newName = $origName;
+
+                if ($listtype eq 'owner') {
+                    $newComment = $language->gettext_sprintf(
+                        '%s via Owner Address of %s Mailing List',
+                        $origFrom, $list->{'name'});
+                } elsif ($listtype eq 'editor') {
+                    $newComment = $language->gettext_sprintf(
+                        '%s via Editor Address of %s Mailing List',
+                        $origFrom, $list->{'name'});
                 } else {
-                    if ($listtype eq 'owner') {
-                        $newComment = $language->gettext_sprintf(
-                            'via Owner Address of %s Mailing List',
-                            $list->{'name'});
-                    } elsif ($listtype eq 'editor') {
-                        $newComment = $language->gettext_sprintf(
-                            'via Editor Address of %s Mailing List',
-                            $list->{'name'});
-                    } else {
-                        $newComment =
-                            $language->gettext_sprintf('via %s Mailing List',
-                            $list->{'name'});
-                    }
+                    $newComment =
+                        $language->gettext_sprintf('%s via %s Mailing List',
+                        $origFrom, $list->{'name'});
                 }
+            } elsif ($phraseMode eq 'name_via_list') {
+                $newName = $origName;
+
+                if ($listtype eq 'owner') {
+                    $newComment = $language->gettext_sprintf(
+                        'via Owner Address of %s Mailing List',
+                        $list->{'name'});
+                } elsif ($listtype eq 'editor') {
+                    $newComment = $language->gettext_sprintf(
+                        'via Editor Address of %s Mailing List',
+                        $list->{'name'});
+                } else {
+                    $newComment =
+                        $language->gettext_sprintf('via %s Mailing List',
+                        $list->{'name'});
+                }
+            } else {
+                $newName = $origName;
             }
-            $self->add_header('Reply-To', $addresses[0]->address)
+
+            $self->add_header('Reply-To', $origFrom)
                 unless $self->get_header('Reply-To');
         }
         # If the new From email address has a Phrase component, then
         # append it
         if (defined $anonphrase and length $anonphrase) {
-            if (defined $displayName and $displayName =~ /\S/) {
-                $displayName .= ' ' . $anonphrase;
+            if (defined $newName and $newName =~ /\S/) {
+                $newName .= ' ' . $anonphrase;
             } else {
-                $displayName = $anonphrase;
+                $newName = $anonphrase;
             }
         }
-        $displayName = $language->gettext('Anonymous')
-            unless defined $displayName and $displayName =~ /\S/;
-
-        $newAddr =
-            tools::addrencode($anonaddr, $displayName,
-            tools::lang2charset($language->get_lang), $newComment);
+        $newName = $language->gettext('Anonymous')
+            unless defined $newName and $newName =~ /\S/;
 
         $self->add_header('X-Original-From', "$originalFromHeader");
-        $self->replace_header('From', $newAddr);
+        $self->replace_header(
+            'From',
+            tools::addrencode(
+                $anonaddr,                                $newName,
+                tools::lang2charset($language->get_lang), $newComment
+            )
+        );
     }
 }
 
