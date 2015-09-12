@@ -821,35 +821,26 @@ sub upgrade {
     }
 
     if (lower_version($previous_version, '5.5a.1')) {
-
-        ## Remove OTHER/ subdirectories in bounces
+        # Remove OTHER/ subdirectories in bounces
         $log->syslog('notice', "Removing obsolete OTHER/ bounce directories");
-        if (opendir BOUNCEDIR,
-            Conf::get_robot_conf($Conf::Conf{'domain'}, 'bounce_path')) {
-
-            foreach my $subdir (sort grep (!/^\.+$/, readdir(BOUNCEDIR))) {
+        if (opendir my $dh, $Conf::Conf{'bounce_path'}) {
+            foreach my $subdir (sort grep (!/^\.+$/, readdir $dh)) {
                 my $other_dir =
-                    Conf::get_robot_conf($Conf::Conf{'domain'}, 'bounce_path')
-                    . '/'
-                    . $subdir
-                    . '/OTHER';
+                    $Conf::Conf{'bounce_path'} . '/' . $subdir . '/OTHER';
                 if (-d $other_dir) {
                     Sympa::Tools::File::remove_dir($other_dir);
                     $log->syslog('notice', 'Directory %s removed',
                         $other_dir);
                 }
             }
-
-            close BOUNCEDIR;
-
+            closedir $dh;
         } else {
             $log->syslog(
                 'err',
                 'Failed to open directory %s: %m',
-                $Conf::Conf{'queuebounce'}
+                $Conf::Conf{'bounce_path'}
             );
         }
-
     }
 
     if (lower_version($previous_version, '6.1b.5')) {
