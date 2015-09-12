@@ -492,10 +492,12 @@ my %list_option = (
     'domain_regex' => {'gettext_id' => 'domain matching regular expression'},
 
     # dmarc_protection.phrase
-    'display_name'        => {'gettext_id' => 'display name'},
-    'name_and_email'      => {'gettext_id' => 'display name and e-mail'},
-    'name_via_list'       => {'gettext_id' => 'name "via Mailing List"'},
-    'name_email_via_list' => {'gettext_id' => 'e-mail "via Mailing List"'},
+    'display_name'        => {'gettext_id' => '"Name"'},
+    'name_and_email'      => {'gettext_id' => '"Name" (e-mail)'},
+    'name_via_list'       => {'gettext_id' => '"Name" (via List)'},
+    'name_email_via_list' => {'gettext_id' => '"Name" (e-mail via List)'},
+    'list_for_email'      => {'gettext_id' => '"List" (on behalf of e-mail)'},
+    'list_for_name'       => {'gettext_id' => '"List" (on behalf of Name)'},
 );
 
 ## Values for subscriber reception mode.
