@@ -687,7 +687,7 @@ TBD.
 
 =head1 SEE ALSO
 
-bounced(8), L<Sympa::Message>.
+bounced(8), L<Sympa::Message>, L<Sympa::Spool::Bounce>.
 
 =head1 HISTORY
 

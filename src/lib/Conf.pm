@@ -800,9 +800,8 @@ sub checkfiles {
     }
 
     foreach my $qdir (
-        'spool',     'queuedigest', 'queuemod',       'queuetopic',
-        'queueauth', 'queuebounce', 'queuesubscribe', 'queuetask',
-        'tmpdir'
+        'spool',     'queuedigest',    'queuemod',  'queuetopic',
+        'queueauth', 'queuesubscribe', 'queuetask', 'tmpdir'
         ) {
         unless (-d $Conf{$qdir}) {
             $log->syslog('info', 'Creating spool %s', $Conf{$qdir});
@@ -820,28 +819,6 @@ sub checkfiles {
                 ) {
                 $log->syslog('err', 'Unable to set rights on %s',
                     $Conf{$qdir});
-                $config_err++;
-            }
-        }
-    }
-
-    ## Also create associated bad/ spools
-    foreach my $qdir ('queuebounce') {
-        my $subdir = $Conf{$qdir} . '/bad';
-        unless (-d $subdir) {
-            $log->syslog('info', 'Creating spool %s', $subdir);
-            unless (mkdir($subdir, 0775)) {
-                $log->syslog('err', 'Unable to create spool %s', $subdir);
-                $config_err++;
-            }
-            unless (
-                Sympa::Tools::File::set_file_rights(
-                    file  => $subdir,
-                    user  => Sympa::Constants::USER,
-                    group => Sympa::Constants::GROUP,
-                )
-                ) {
-                $log->syslog('err', 'Unable to set rights on %s', $subdir);
                 $config_err++;
             }
         }

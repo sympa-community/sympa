@@ -55,7 +55,7 @@ use Sympa::Mailer;
 use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Scenario;
-use Sympa::Spool;
+use Sympa::Spool::Bounce;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -177,65 +177,39 @@ $log->syslog('notice', 'Bounced %s Started', Sympa::Constants::VERSION());
 ## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
 $SIG{'INT'}  = 'sigterm';
-my $end = 0;
+my $signal = 0;
 
-my $spool = $Conf::Conf{'queuebounce'};
+my $spool = Sympa::Spool::Bounce->new;
 
-$log->syslog('debug', 'Starting infinite loop');
-## infinite loop scanning the queue (unless a sig TERM is received
-while (!$end) {
+while ($signal ne 'term') {
     Sympa::List::init_list_cache();
     # Process grouped notifications
     Sympa::Alarm->instance->flush;
 
-    my $dh;
-    unless (opendir $dh, $spool) {
-        die sprintf 'Can\'t open dir %s: %s', $spool, $ERRNO;
-        # No return.
-    }
-    my @qfile =
-        grep { !/,lock/ and !/\A(?:\.|T\.|BAD-)/ and -f ($spool . '/' . $_) }
-        readdir $dh;
-    closedir $dh;
-    my %mtime =
-        map { ($_ => Sympa::Tools::File::get_mtime($spool . '/' . $_)) }
-        @qfile;
-    @qfile = sort { $mtime{$a} <=> $mtime{$b} } @qfile;
+    my ($message, $handle) = $spool->next;
 
-    my $numprocessed = 0;
-    foreach my $filename (@qfile) {
-        last if $end;
-
-        my $lock_fh =
-            Sympa::LockedFile->new($spool . '/' . $filename, -1, '+<');
-        next unless $lock_fh;
-
-        my $metadata = Sympa::Spool::unmarshal_metadata(
-            $spool, $filename,
-            qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
-            [qw(localpart domainpart date)]
-        );
-        next unless $metadata;
-
-        my $msg_string = do { local $RS; <$lock_fh> };
-        my $message = Sympa::Message->new($msg_string, %$metadata);
-
-        $numprocessed++;
-
-        my $status = process_message($message);
-
-        if ($status) {
-            remove($lock_fh);
+    if ($message and $handle) {
+        my $status = process_message($message, $handle);
+        unless (defined $status) {
+            $spool->quarantine($handle);
+        } elsif ($status) {
+            $spool->remove($handle);
         } else {
-            quarantine($lock_fh);
+            # Processing aborted.  Redo later.
+            $handle->close;
+            next;
         }
+    } elsif ($handle) {
+        $log->syslog('err', 'Cannot parse message <%s>', $handle->basename);
+        $spool->quarantine($handle);
+        next;
     }
 
-    ## Free zombie sendmail processes
+    # Free zombie sendmail processes.
     Sympa::Mailer->instance->reaper();
 
     # If the spool was empty, sleep for a while.
-    unless ($numprocessed) {
+    unless ($message or $handle) {
         sleep $Conf::Conf{'sleep'};
     }
 }
@@ -253,7 +227,7 @@ sub sigterm {
     my ($sig) = @_;
     $log->syslog('notice',
         'Signal %s received, still processing current task', $sig);
-    $end = 1;
+    $signal = 'term';
 }
 
 ## copy the bounce to the appropriate filename
