@@ -186,7 +186,8 @@ sub store {
         %options);
     return unless $marshalled;
 
-    $log->syslog('notice', 'Message %s is stored into archive spool as <%s>',
+    $log->syslog('notice',
+        'Message %s is stored into automatic spool as <%s>',
         $message, $marshalled);
     return $marshalled;
 }
