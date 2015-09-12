@@ -61,7 +61,7 @@ sub _create_spool {
         unless (-d $directory) {
             $log->syslog('info', 'Creating spool %s', $directory);
             unless (
-                mkdir($directory, 0755)
+                mkdir($directory, 0775)
                 and Sympa::Tools::File::set_file_rights(
                     file  => $directory,
                     user  => Sympa::Constants::USER(),
@@ -297,17 +297,9 @@ Message to be stored.  Following attributes and metadata are referred:
 
 =over
 
-=item {sender}
-
-Sender of the message.
-
 =item {date}
 
 Unix time when the message would be delivered.
-
-=item {time}
-
-Unix time in floating point number when the message was stored.
 
 =back
 
