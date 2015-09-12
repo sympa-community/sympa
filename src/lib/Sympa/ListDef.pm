@@ -1882,9 +1882,11 @@ our %pinfo = (
             'phrase' => {
                 'format' => [
                     'display_name',  'name_and_email',
-                    'name_via_list', 'name_email_via_list'
+                    'name_via_list', 'name_email_via_list',
+                    'list_for_email', 'list_for_name',
                 ],
-                'synonym' => {'name' => 'display_name'},
+                'synonym' =>
+                    {'name' => 'display_name', 'prefixed' => 'list_for_name'},
                 'default' => {'conf' => 'dmarc_protection_phrase'},
                 'gettext_id' => "New From name format",
                 'occurrence' => '0-1',

@@ -3507,6 +3507,40 @@ sub dmarc_protect {
                         $language->gettext_sprintf('via %s Mailing List',
                         $list->{'name'});
                 }
+            } elsif ($phraseMode eq 'list_for_email') {
+                if ($listtype eq 'owner') {
+                    $newName = $language->gettext_sprintf(
+                        'Owner Address of %s Mailing List',
+                        $list->{'name'});
+                } elsif ($listtype eq 'editor') {
+                    $newName = $language->gettext_sprintf(
+                        'Editor Address of %s Mailing List',
+                        $list->{'name'});
+                } else {
+                    $newName =
+                        $language->gettext_sprintf('%s Mailing List',
+                        $list->{'name'});
+                }
+
+                $newComment = $language->gettext_sprintf(
+                    'on behalf of %s', $origName);
+            } elsif ($phraseMode eq 'list_for_name') {
+                if ($listtype eq 'owner') {
+                    $newName = $language->gettext_sprintf(
+                        'Owner Address of %s Mailing List',
+                        $list->{'name'});
+                } elsif ($listtype eq 'editor') {
+                    $newName = $language->gettext_sprintf(
+                        'Editor Address of %s Mailing List',
+                        $list->{'name'});
+                } else {
+                    $newName =
+                        $language->gettext_sprintf('%s Mailing List',
+                        $list->{'name'});
+                }
+
+                $newComment = $language->gettext_sprintf(
+                    'on behalf of %s', $origFrom);
             } else {
                 $newName = $origName;
             }
