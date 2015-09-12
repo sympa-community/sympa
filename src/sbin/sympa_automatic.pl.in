@@ -45,7 +45,7 @@ use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message;
 use Sympa::Report;
-use Sympa::Spool;
+use Sympa::Spool::Automatic;
 use Sympa::Spool::Incoming;
 use tools;
 use Sympa::Tools::Daemon;
@@ -183,7 +183,7 @@ $SIG{'PIPE'} = 'IGNORE';     # Ignore SIGPIPE ; prevents process from dying
 # This is the main loop : look for files in the directory, handles
 # them, sleeps a while and continues the good job.
 
-my $spool          = $Conf::Conf{'queueautomatic'};
+my $spool          = Sympa::Spool::Automatic->new;
 my $spool_incoming = Sympa::Spool::Incoming->new;
 
 while ($signal ne 'term') {
@@ -191,98 +191,44 @@ while ($signal ne 'term') {
     # Process grouped notifications
     Sympa::Alarm->instance->flush;
 
-    my $dh;
-    unless (opendir $dh, $spool) {
-        die sprintf 'Can\'t open dir %s: %s', $spool, $ERRNO;
-        # No return.
-    }
-    my @qfile =
-        grep { !/,lock/ and !/\A(?:\.|T\.|BAD-)/ and -f ($spool . '/' . $_) }
-        readdir $dh;
-    closedir $dh;
-    my %mtime =
-        map { ($_ => Sympa::Tools::File::get_mtime($spool . '/' . $_)) }
-        @qfile;
-    @qfile = sort { $mtime{$a} <=> $mtime{$b} } @qfile;
+    $mailer->reaper();    # finish terminated process
 
-    my $numprocessed = 0;
-    foreach my $filename (@qfile) {
-        last if $signal;
+    my ($message, $handle) = $spool->next;
 
-        $mailer->reaper();    # finish terminated process
-
-        my $lock_fh =
-            Sympa::LockedFile->new($spool . '/' . $filename, -1, '+<');
-        next unless $lock_fh;
-
-        my $metadata = Sympa::Spool::unmarshal_metadata(
-            $spool, $filename,
-            qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
-            [qw(localpart domainpart date)]
-        );
-        next unless $metadata;
-
-        # z and Z are a null priority, so file stay in queue and are
-        # processed only if renamed by administrator
-        next
-            if $metadata->{'priority'} and lc($metadata->{'priority'}) eq 'z';
-
-        my $msg_string = do { local $RS; <$lock_fh> };
-        my $message = Sympa::Message->new($msg_string, %$metadata);
-
-        $numprocessed++;
-
+    if ($message and $handle) {
         # Appel de la fonction de traitement des mails entrants
-        my $status = process_message($message);
+        my $status = process_message($message, $handle);
 
-        if (defined $status) {
-            $log->syslog('debug', "Finished %s", $message);
-
+        unless (defined $status) {
+            $spool->quarantine($handle);
+        } elsif ($status) {
             if ($main::options{'keepcopy'}) {
                 unless (
                     File::Copy::copy(
-                        $spool . '/' . $filename,
-                        $main::options{'keepcopy'} . '/' . $filename
+                        $spool->{directory} . '/' . $handle->basename,
+                        $main::options{'keepcopy'} . '/' . $handle->basename
                     )
                     ) {
                     $log->syslog(
                         'notice',
                         'Could not rename %s/%s to %s/%s: %m',
-                        $spool,
-                        $filename,
+                        $spool->{directory},
+                        $handle->basename,
                         $main::options{'keepcopy'},
-                        $filename
+                        $handle->basename
                     );
                 }
             }
-            $lock_fh->unlink;
+            $spool->remove($handle);
         } else {
-            my $bad_dir = "$spool/bad";
-
-            if (-d $bad_dir) {
-                unless ($lock_fh->rename($bad_dir . '/' . $filename)) {
-                    die sprintf
-                        'Unable to rename bad file %s to %s/%s: %s',
-                        $filename, $bad_dir, $filename, $lock_fh->last_error;
-                }
-                $log->syslog('notice', "Moving bad file %s to bad/",
-                    $filename);
-            } else {
-                $log->syslog('notice', 'Missing directory "%s"', $bad_dir);
-                unless ($lock_fh->rename($spool . '/BAD-' . $filename)) {
-                    die sprintf
-                        'Unable to rename bad file %s to BAD-%s: %s',
-                        $filename, $filename, $lock_fh->last_error;
-                }
-                $log->syslog('notice', "Renaming bad file %s to BAD-%s",
-                    $filename, $filename);
-            }
+            # Processing aborted.  Redo later.
+            $handle->close;
+            next;
         }
-
-    }    ## END of infinite loop
-
-    # Purge grouped notifications
-    Sympa::Alarm->instance->flush(purge => 1);
+    } elsif ($handle) {
+        $spool->quarantine($handle);
+        next;
+    }
 
     if ($signal eq 'hup') {
         # Disconnect from Database
@@ -291,15 +237,19 @@ while ($signal ne 'term') {
         $log->syslog('notice', "Sympa %s reload config",
             Sympa::Constants::VERSION);
         _load();
+        $spool          = Sympa::Spool::Automatic->new;
         $spool_incoming = Sympa::Spool::Incoming->new;
         $signal         = 0;
     }
 
     # If the spool was empty, sleep for a while.
-    unless ($numprocessed) {
+    unless ($message or $handle) {
         sleep $Conf::Conf{'sleep'};
     }
 }    # while ($signal ne 'term')
+
+# Purge grouped notifications
+Sympa::Alarm->instance->flush(purge => 1);
 
 $log->syslog('notice', 'Sympa/automatic exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid($pidfile, $PID);
@@ -770,8 +720,7 @@ sub process_message {
             $list, $list->get_total());
     }
 
-    # do not process messages in list creation only mode, move them to
-    # main spool
+    # Do not process messages in list creation.  Move them to main spool.
     my $marshalled = $spool_incoming->store($message, original => 1);
     if ($marshalled) {
         $log->syslog('notice',

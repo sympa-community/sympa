@@ -77,6 +77,7 @@ nobase_modules_DATA = \
 	Sympa/SOAP/Transport.pm \
 	Sympa/Spool.pm \
 	Sympa/Spool/Archive.pm \
+	Sympa/Spool/Automatic.pm \
 	Sympa/Spool/Incoming.pm \
 	Sympa/Task.pm \
 	Sympa/Template.pm \
