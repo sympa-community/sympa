@@ -26,170 +26,16 @@ package Sympa::Spool::Automatic;
 
 use strict;
 use warnings;
-use English qw(-no_match_vars);
 
 use Conf;
-use Sympa::Constants;
-use Sympa::LockedFile;
-use Sympa::Log;
-use Sympa::Message;
-use Sympa::Spool;
-use Sympa::Tools::File;
 
-my $log = Sympa::Log->instance;
+use base qw(Sympa::Spool::Incoming);
 
-sub new {
-    my $class = shift;
-
-    my $self = bless {
-        directory         => $Conf::Conf{'queueautomatic'},
-        bad_directory     => $Conf::Conf{'queueautomatic'} . '/bad',
-        _metadatas        => undef,
-        _highest_priority => 'z',
-    } => $class;
-
-    $self->_create_spool;
-
-    return $self;
-}
-
-sub _create_spool {
-    my $self = shift;
-
-    my $umask = umask oct $Conf::Conf{'umask'};
-    foreach my $directory ($self->{directory}, $self->{bad_directory}) {
-        unless (-d $directory) {
-            $log->syslog('info', 'Creating spool %s', $directory);
-            unless (
-                mkdir($directory, 0775)
-                and Sympa::Tools::File::set_file_rights(
-                    file  => $directory,
-                    user  => Sympa::Constants::USER(),
-                    group => Sympa::Constants::GROUP()
-                )
-                ) {
-                die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
-            }
-        }
-    }
-    umask $umask;
-}
-
-sub next {
-    my $self = shift;
-
-    return unless $self->{directory};
-
-    unless ($self->{_metadatas}) {
-        my $dh;
-        unless (opendir $dh, $self->{directory}) {
-            die sprintf 'Cannot open dir %s: %s', $self->{directory}, $ERRNO;
-        }
-        $self->{_metadatas} = [
-            sort grep {
-                        !/,lock/
-                    and !m{(?:\A|/)(?:\.|T\.|BAD-)}
-                    and -f ($self->{directory} . '/' . $_)
-                } readdir $dh
-        ];
-        closedir $dh;
-
-        # Sort specific to this spool.
-        my %mtime =
-            map {
-            (   $_ => Sympa::Tools::File::get_mtime(
-                    $self->{directory} . '/' . $_
-                )
-                )
-            } @{$self->{_metadatas}};
-        $self->{_metadatas} =
-            [sort { $mtime{$a} <=> $mtime{$b} } @{$self->{_metadatas}}];
-    }
-    unless (@{$self->{_metadatas}}) {
-        undef $self->{_metadatas};
-        # Specific to this spool.
-        $self->{_highest_priority} = 'z';
-        return;
-    }
-
-    while (my $marshalled = shift @{$self->{_metadatas}}) {
-        my ($lock_fh, $metadata, $message);
-
-        # Try locking message.  Those locked or removed by other process will
-        # be skipped.
-        $lock_fh =
-            Sympa::LockedFile->new($self->{directory} . '/' . $marshalled,
-            -1, '+<');
-        next unless $lock_fh;
-
-        $metadata = Sympa::Spool::unmarshal_metadata(
-            $self->{directory},
-            $marshalled,
-            qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.(\w+)(?:,.*)?\z},
-            [qw(localpart domainpart date pid rand)]
-        );
-
-        # Filter specific to this spool.
-        # - z and Z are a null priority, so file stay in queue and are
-        #   processed only if renamed by administrator
-        next if $metadata and lc($metadata->{priority} || '') eq 'z';
-        # - Lazily seek highest priority: Messages with lower priority than
-        #   those already found are skipped.
-        if (length($metadata->{priority} || '')) {
-            next if $self->{_highest_priority} lt $metadata->{priority};
-            $self->{_highest_priority} = $metadata->{priority};
-        }
-
-        if ($metadata) {
-            my $msg_string = do { local $RS; <$lock_fh> };
-            $message = Sympa::Message->new($msg_string, %$metadata);
-        }
-
-        # Though message might not be deserialized, anyway return the result.
-        return ($message, $lock_fh);
-    }
-    return;
-}
-
-sub quarantine {
-    my $self    = shift;
-    my $lock_fh = shift;
-
-    my $bad_file;
-
-    $bad_file = $self->{'bad_directory'} . '/' . $lock_fh->basename;
-    unless (-d $self->{bad_directory} and $lock_fh->rename($bad_file)) {
-        $bad_file = $self->{directory} . '/BAD-' . $lock_fh->basename;
-        return undef unless $lock_fh->rename($bad_file);
-    }
-
-    return 1;
-}
-
-sub remove {
-    my $self    = shift;
-    my $lock_fh = shift;
-
-    return $lock_fh->unlink;
-}
-
-sub store {
-    my $self    = shift;
-    my $message = shift->dup;
-    my %options = @_;
-
-    $message->{date} = time unless defined $message->{date};
-
-    my $marshalled =
-        Sympa::Spool::store_spool($self->{directory}, $message,
-        '%s@%s.%ld.%ld,%d', [qw(localpart domainpart date PID RAND)],
-        %options);
-    return unless $marshalled;
-
-    $log->syslog('notice',
-        'Message %s is stored into automatic spool as <%s>',
-        $message, $marshalled);
-    return $marshalled;
+sub _directories {
+    return {
+        directory     => $Conf::Conf{'queueautomatic'},
+        bad_directory => $Conf::Conf{'queueautomatic'} . '/bad',
+    };
 }
 
 1;
@@ -213,90 +59,25 @@ Sympa::Spool::Automatic - Spool for incoming messages in automatic spool
 L<Sympa::Spool::Automatic> implements the spool for incoming messages in
 automatic spool.
 
-Note:
-In most cases, familyqueue(8) program stores messages to automatic spool.
-
 =head2 Methods
 
+See also L<Sympa::Spool/"Public methods">.
+
 =over
-
-=item new ( )
-
-I<Constructor>.
-Creates new instance of L<Sympa::Spool::Automatic>.
 
 =item next ( )
 
 I<Instance method>.
-Gets next message to process, order is controled by delivery date, then
+Order is controled by modification time of files and delivery date, then
 messages with possiblly higher priority are chosen.
-Message will be locked to prevent multiple proccessing of a single message.
-
-Parameters:
-
-None.
-
-Returns:
-
-Two-elements list of L<Sympa::Message> instance and filehandle locking
-a message.
-
-=item quarantine ( $handle )
-
-I<Instance method>.
-Quarantines a message.
-Message will be moved into bad/ subdirectory of the spool.
-
-Parameter:
-
-=over
-
-=item $handle
-
-Filehandle, L<Sympa::LockedFile> instance, locking message.
-
-=back
-
-Returns:
-
-True value if message could be quarantined.
-Otherwise false value.
-
-=item remove ( $handle )
-
-I<Instance method>.
-Removes a message.
-
-Parameter:
-
-=over
-
-=item $handle
-
-Filehandle, L<Sympa::LockedFile> instance, locking message.
-
-=back
-
-Returns:
-
-True value if message could be removed.
-Otherwise false value.
+Messages with lowest priority (C<z> or C<Z>) are skipped.
 
 =item store ( $message, [ original =E<gt> $original ] )
 
-I<Instance method>.
-Stores the message into spool.
-
-Note:
+In most cases, familyqueue(8) program stores messages to automatic spool.
 This method is not used in ordinal case.
 
-Parameters:
-
-=over
-
-=item $message
-
-Message to be stored.  Following attributes and metadata are referred:
+Following metadata is referred:
 
 =over
 
@@ -306,22 +87,23 @@ Unix time when the message would be delivered.
 
 =back
 
-=item original =E<gt> $original
-
-If the message was decrypted, stores original encrypted form.
-
 =back
 
-Returns:
+=head1 CONFIGURATION PARAMETERS
 
-If storing succeeded, marshalled metadata (file name) of the message.
-Otherwise C<undef>.
+Following site configuration parameters in sympa.conf will be referred.
+
+=over
+
+=item queueautomatic
+
+Directory path of list creation spool.
 
 =back
 
 =head1 SEE ALSO
 
-L<sympa_automatic(8)>, L<Sympa::Message>.
+L<sympa_automatic(8)>, L<Sympa::Message>, L<Sympa::Spool>.
 
 =head1 HISTORY
 

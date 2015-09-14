@@ -29,142 +29,20 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Conf;
-use Sympa::Constants;
-use Sympa::LockedFile;
-use Sympa::Log;
-use Sympa::Message;
-use Sympa::Spool;
-use Sympa::Tools::File;
 
-my $log = Sympa::Log->instance;
+use base qw(Sympa::Spool);
 
-sub new {
-    my $class = shift;
-
-    my $self = bless {
+sub _directories {
+    return {
         directory     => $Conf::Conf{'queueoutgoing'},
         bad_directory => $Conf::Conf{'queueoutgoing'} . '/bad',
-        _metadatas    => undef,
-    } => $class;
-
-    $self->_create_spool;
-
-    return $self;
+    };
 }
-
-sub _create_spool {
-    my $self = shift;
-
-    my $umask = umask oct $Conf::Conf{'umask'};
-    foreach my $directory ($self->{directory}, $self->{bad_directory}) {
-        unless (-d $directory) {
-            $log->syslog('info', 'Creating spool %s', $directory);
-            unless (
-                mkdir($directory, 0775)
-                and Sympa::Tools::File::set_file_rights(
-                    file  => $directory,
-                    user  => Sympa::Constants::USER(),
-                    group => Sympa::Constants::GROUP()
-                )
-                ) {
-                die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
-            }
-        }
-    }
-    umask $umask;
-}
-
-sub next {
-    my $self = shift;
-
-    return unless $self->{directory};
-
-    unless ($self->{_metadatas}) {
-        my $dh;
-        unless (opendir $dh, $self->{directory}) {
-            die sprintf 'Cannot open dir %s: %s', $self->{directory}, $ERRNO;
-        }
-        $self->{_metadatas} = [
-            sort grep {
-                        !/,lock/
-                    and !m{(?:\A|/)(?:\.|T\.|BAD-)}
-                    and -f ($self->{directory} . '/' . $_)
-                } readdir $dh
-        ];
-        closedir $dh;
-    }
-    unless (@{$self->{_metadatas}}) {
-        undef $self->{_metadatas};
-        return;
-    }
-
-    while (my $marshalled = shift @{$self->{_metadatas}}) {
-        my ($lock_fh, $metadata, $message);
-
-        # Try locking message.  Those locked or removed by other process will
-        # be skipped.
-        $lock_fh =
-            Sympa::LockedFile->new($self->{directory} . '/' . $marshalled,
-            -1, '+<');
-        next unless $lock_fh;
-
-        $metadata = Sympa::Spool::unmarshal_metadata(
-            $self->{directory},
-            $marshalled,
-            qr{\A(\d+)\.(\d+\.\d+)\.([^\s\@]*)\@([\w\.\-*]*),(\d+),(\d+)},
-            [qw(date time localpart domainpart pid rand)]
-        );
-
-        if ($metadata) {
-            my $msg_string = do { local $RS; <$lock_fh> };
-            $message = Sympa::Message->new($msg_string, %$metadata);
-        }
-
-        # Though message might not be deserialized, anyway return the result.
-        return ($message, $lock_fh);
-    }
-    return;
-}
-
-sub quarantine {
-    my $self    = shift;
-    my $lock_fh = shift;
-
-    my $bad_file;
-
-    $bad_file = $self->{'bad_directory'} . '/' . $lock_fh->basename;
-    unless (-d $self->{bad_directory} and $lock_fh->rename($bad_file)) {
-        $bad_file = $self->{directory} . '/BAD-' . $lock_fh->basename;
-        return undef unless $lock_fh->rename($bad_file);
-    }
-
-    return 1;
-}
-
-sub remove {
-    my $self    = shift;
-    my $lock_fh = shift;
-
-    return $lock_fh->unlink;
-}
-
-sub store {
-    my $self    = shift;
-    my $message = shift->dup;
-    my %options = @_;
-
-    $message->{date} = time unless defined $message->{date};
-
-    my $marshalled =
-        Sympa::Spool::store_spool($self->{directory}, $message,
-        '%d.%f.%s@%s,%ld,%d', [qw(date TIME localpart domainpart PID RAND)],
-        %options);
-    return unless $marshalled;
-
-    $log->syslog('notice', 'Message %s is stored into archive spool as <%s>',
-        $message, $marshalled);
-    return $marshalled;
-}
+use constant _generator      => 'Sympa::Message';
+use constant _marshal_format => '%d.%f.%s@%s,%ld,%d';
+use constant _marshal_keys   => [qw(date TIME localpart domainpart PID RAND)];
+use constant _marshal_regexp =>
+    qr{\A(\d+)\.(\d+\.\d+)\.([^\s\@]*)\@([\w\.\-*]*),(\d+),(\d+)};
 
 1;
 __END__
@@ -173,7 +51,7 @@ __END__
 
 =head1 NAME
 
-Sympa::Spool::Archive - Spool for messages waiting for archiving.
+Sympa::Spool::Archive - Spool for messages waiting for archiving
 
 =head1 SYNOPSIS
 
@@ -191,88 +69,19 @@ archiving.
 
 =head2 Methods
 
+See also L<Sympa::Spool/"Public methods">.
+
 =over
-
-=item new ( )
-
-I<Constructor>.
-Creates new instance of L<Sympa::Spool::Archive>.
 
 =item next ( )
 
-I<Instance method>.
-Gets next message to process, order is controled by delivery date, then by
-reception date.
-Message will be locked to prevent multiple proccessing of a single message.
-
-Parameters:
-
-None.
-
-Returns:
-
-Two-elements list of L<Sympa::Message> instance and filehandle locking
-a message.
-
-=item quarantine ( $handle )
-
-I<Instance method>.
-Quarantines a message.
-Message will be moved into bad/ subdirectory of the spool.
-
-Parameter:
-
-=over
-
-=item $handle
-
-Filehandle, L<Sympa::LockedFile> instance, locking message.
-
-=back
-
-Returns:
-
-True value if message could be quarantined.
-Otherwise false value.
-
-=item remove ( $handle )
-
-I<Instance method>.
-Removes a message.
-
-Parameter:
-
-=over
-
-=item $handle
-
-Filehandle, L<Sympa::LockedFile> instance, locking message.
-
-=back
-
-Returns:
-
-True value if message could be removed.
-Otherwise false value.
+Order is controled by delivery date, then by reception date.
 
 =item store ( $message, [ original =E<gt> $original ] )
 
-I<Instance method>.
-Stores the message into spool.
-
-Parameters:
+Following metadata of $message are referred:
 
 =over
-
-=item $message
-
-Message to be stored.  Following attributes and metadata are referred:
-
-=over
-
-=item {sender}
-
-Sender of the message.
 
 =item {date}
 
@@ -284,22 +93,27 @@ Unix time in floating point number when the message was stored.
 
 =back
 
-=item original =E<gt> $original
-
-If the message was decrypted, stores original encrypted form.
-
 =back
 
-Returns:
+=head1 CONFIGURATION PARAMETERS
 
-If storing succeeded, marshalled metadata (file name) of the message.
-Otherwise C<undef>.
+Following site configuration parameters in sympa.conf will be referred.
+
+=over
+
+=item queueoutgoing
+
+Directory path of archive spool.
+
+Note:
+Named such by historical reason.
 
 =back
 
 =head1 SEE ALSO
 
-L<sympa_msg(8)>, L<archived(8)>, L<Sympa::Message>.
+L<sympa_msg(8)>, L<archived(8)>,
+L<Sympa::Archive>, L<Sympa::Message>, L<Sympa::Spool>.
 
 =head1 HISTORY
 
