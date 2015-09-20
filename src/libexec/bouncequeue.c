@@ -42,7 +42,7 @@ static int      i, fd;
 #endif
 
 #ifndef CONFIG
-# define CONFIG		"/etc/sympa.conf"
+# define CONFIG		"/etc/sympa/sympa.conf"
 #endif
 
 char *
