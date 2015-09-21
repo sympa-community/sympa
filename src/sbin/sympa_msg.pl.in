@@ -41,18 +41,15 @@ use Sympa::Crash;    # Show traceback.
 use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::List;
-use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Mailer;
-use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Scenario;
-use Sympa::Spool;
+use Sympa::Spool::Digest::Collection;
 use Sympa::Spool::Incoming;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
-use Sympa::Tools::File;
 
 ## Internal tuning
 # delay between each read of the digestqueue
@@ -1951,56 +1948,13 @@ sub SendDigest {
     my $keep_digest = $options{keep_digest};
     my $send_now    = $options{send_now};
 
-    my $dh;
-    unless (opendir $dh, $Conf::Conf{'queuedigest'}) {
-        die sprintf 'Unable to access directory %s : %s',
-            $Conf::Conf{'queuedigest'}, $ERRNO;
-        # No return.
-    }
-    my @dfile =
-        grep {
-                !/,lock/
-            and !/\A(?:\.|T\.|BAD-)/
-            and -d ($Conf::Conf{'queuedigest'} . '/' . $_)
-        } readdir $dh;
-    closedir $dh;
-    my %mtime =
-        map {
-        (   $_ => Sympa::Tools::File::get_mtime(
-                $Conf::Conf{'queuedigest'} . '/' . $_
-            )
-            )
-        } @dfile;
-    @dfile = sort { $mtime{$a} <=> $mtime{$b} } @dfile;
+    my $collection = Sympa::Spool::Digest::Collection->new;
+    while (1) {
+        my ($spool, $handle) = $collection->next;
+        last unless $handle;    # No more spools.
+        next unless $spool;     # Malformed entry.
 
-    foreach my $listaddress (@dfile) {
-        my $filename = $Conf::Conf{'queuedigest'} . '/' . $listaddress;
-
-        my $metadata = Sympa::Spool::unmarshal_metadata(
-            $Conf::Conf{'queuedigest'},
-            $listaddress,
-            qr/\A([^\s\@]+)(?:\@([\w\.\-]+))?\z/,
-            [qw(localpart domainpart)]
-        );
-
-        unless ($metadata and ref($metadata->{context}) eq 'Sympa::List') {
-            #FIXME: File would be kept in such as bad/ directory.
-            $log->syslog('info', 'Unknown list %s, deleting digest file',
-                $listaddress);
-            $log->db_log(    #'robot'        => $robot,
-                #'list'         => $list->{'name'},
-                'action'       => 'SendDigest',
-                'parameters'   => "$filename",
-                'target_email' => '',
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'unknown_list',
-                'user_email'   => ''
-            );
-            unlink $filename;
-            next;            # foreach my $listaddress
-        }
-        my $list     = $metadata->{context};
+        my $list     = $spool->{context};
         my $robot_id = $list->{'domain'};
 
         $language->set_lang(
@@ -2009,11 +1963,12 @@ sub SendDigest {
             $Conf::Conf{'lang'}, 'en'
         );
 
-        if ($send_now or $list->get_nextdigest()) {
-            ## Blindly send the message to all users.
-            $log->syslog('info', "Sending digest to list %s", $listaddress);
+        if ($send_now or Sympa::List::may_distribute_digest($spool)) {
+            # Blindly send the message to all users.
+            $log->syslog('info', 'Sending digest to list %s', $list);
             my $start_time = time;
-            $list->distribute_digest(keep_digest => $keep_digest);
+            Sympa::List::distribute_digest($collection, $spool, $handle,
+                keep_digest => $keep_digest);
 
             $log->syslog('info', 'Digest of the list %s sent (%d seconds)',
                 $list, time - $start_time);

@@ -800,8 +800,8 @@ sub checkfiles {
     }
 
     foreach my $qdir (
-        'spool',     'queuedigest',    'queuemod',  'queuetopic',
-        'queueauth', 'queuesubscribe', 'queuetask', 'tmpdir'
+        'spool',          'queuemod',  'queuetopic', 'queueauth',
+        'queuesubscribe', 'queuetask', 'tmpdir'
         ) {
         unless (-d $Conf{$qdir}) {
             $log->syslog('info', 'Creating spool %s', $Conf{$qdir});

@@ -79,6 +79,8 @@ nobase_modules_DATA = \
 	Sympa/Spool/Archive.pm \
 	Sympa/Spool/Automatic.pm \
 	Sympa/Spool/Bounce.pm \
+	Sympa/Spool/Digest.pm \
+	Sympa/Spool/Digest/Collection.pm \
 	Sympa/Spool/Incoming.pm \
 	Sympa/Task.pm \
 	Sympa/Template.pm \

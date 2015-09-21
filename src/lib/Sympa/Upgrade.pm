@@ -47,6 +47,7 @@ use Sympa::Log;
 use Sympa::Message;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
+use Sympa::Spool::Digest;
 use tools;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
@@ -1530,16 +1531,22 @@ sub upgrade {
             closedir $dh;
         }
         foreach my $filename (@dfile) {
-            # Backward compatibility concern
-            my ($listname, $robot_id) = split /\@/, $filename, 2;
-            $robot_id ||= $Conf::Conf{'domain'};
-            my $list = Sympa::List->new($listname, $robot_id);
-            unless ($list) {
+            my $metadata = Sympa::Spool::unmarshal_metadata(
+                $Conf::Conf{'queuedigest'},
+                $filename,
+                qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\z},
+                [qw(localpart domainpart)]
+            );
+            unless ($metadata and ref $metadata->{context} eq 'Sympa::List') {
                 $log->syslog('err', 'Unknown list %s', $filename);
                 rename $Conf::Conf{'queuedigest'} . '/' . $filename,
                     $Conf::Conf{'queuedigest'} . '/' . $filename . '_unknown';
                 next;
             }
+
+            my $spool_digest = Sympa::Spool::Digest->new(%$metadata);
+            next unless $spool_digest;
+
             rename $Conf::Conf{'queuedigest'} . '/' . $filename,
                 $Conf::Conf{'queuedigest'} . '/' . $filename . '_migrated';
 
@@ -1554,15 +1561,14 @@ sub upgrade {
                 $text =~ s{$RS\z}{};
                 $text =~ s/\r?\z/\n/ unless $text =~ /\n\z/;
 
-                my $message = Sympa::Message->new($text, context => $list);
+                my $message = Sympa::Message->new($text, %$metadata);
                 next unless $message;
 
                 $message->{date} = time;
-                $list->store_digest($message);
+                $spool_digest->store($message);
             }
             close $fh;
         }
-
     }
 
     if (lower_version($previous_version, '6.2b.8')

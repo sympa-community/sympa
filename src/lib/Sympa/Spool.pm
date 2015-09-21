@@ -44,15 +44,19 @@ my $log = Sympa::Log->instance;
 # Methods.
 
 sub new {
-    my $class = shift;
+    my $class   = shift;
+    my %options = @_;
 
     die $EVAL_ERROR unless eval sprintf 'require %s', $class->_generator;
 
-    my $self =
-        bless {%{$class->_directories}, _metadatas => undef,} => $class;
+    my $self = bless {
+        %options,
+        %{$class->_directories(%options) || {}},
+        _metadatas => undef,
+    } => $class;
 
     $self->_create;
-    $self->_init;
+    $self->_init(0) or return undef;
 
     $self;
 }
@@ -65,9 +69,11 @@ sub _create {
         unless (-d $directory) {
             $log->syslog('info', 'Creating directory %s of %s',
                 $directory, $self);
+            unless (mkdir $directory, 0775 or -d $directory) {
+                die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
+            }
             unless (
-                mkdir($directory, 0775)
-                and Sympa::Tools::File::set_file_rights(
+                Sympa::Tools::File::set_file_rights(
                     file  => $directory,
                     user  => Sympa::Constants::USER(),
                     group => Sympa::Constants::GROUP()
@@ -92,7 +98,7 @@ sub next {
     }
     unless ($self->{_metadatas} and @{$self->{_metadatas}}) {
         undef $self->{_metadatas};
-        $self->_init;
+        $self->_init(1);
         return;
     }
 
@@ -103,7 +109,7 @@ sub next {
         # be skipped.
         $handle =
             Sympa::LockedFile->new($self->{directory} . '/' . $marshalled,
-            -1, '+<');
+            -1, $self->_is_collection ? '+' : '+<');
         next unless $handle;
 
         $metadata = Sympa::Spool::unmarshal_metadata(
@@ -114,8 +120,12 @@ sub next {
         if ($metadata) {
             next unless $self->_filter($metadata);
 
-            my $msg_string = do { local $RS; <$handle> };
-            $message = $self->_generator->new($msg_string, %$metadata);
+            if ($self->_is_collection) {
+                $message = $self->_generator->new(%$metadata);
+            } else {
+                my $msg_string = do { local $RS; <$handle> };
+                $message = $self->_generator->new($msg_string, %$metadata);
+            }
         }
 
         # Though message might not be deserialized, anyway return the result.
@@ -131,11 +141,14 @@ sub _load {
     unless (opendir $dh, $self->{directory}) {
         die sprintf 'Cannot open dir %s: %s', $self->{directory}, $ERRNO;
     }
+
+    my $iscol     = $self->_is_collection;
     my $metadatas = [
         sort grep {
                     !/,lock/
                 and !m{(?:\A|/)(?:\.|T\.|BAD-)}
-                and -f ($self->{directory} . '/' . $_)
+                and ((not $iscol and -f ($self->{directory} . '/' . $_))
+                or ($iscol and -d ($self->{directory} . '/' . $_)))
             } readdir $dh
     ];
     closedir $dh;
@@ -144,6 +157,8 @@ sub _load {
 }
 
 sub _filter {1}
+
+sub _is_collection {0}
 
 sub quarantine {
     my $self   = shift;
@@ -166,13 +181,21 @@ sub remove {
     my $self   = shift;
     my $handle = shift;
 
-    return $handle->unlink;
+    if ($self->_is_collection) {
+        return undef
+            unless rmdir($self->{directory} . '/' . $handle->basename);
+        return $handle->close;
+    } else {
+        return $handle->unlink;
+    }
 }
 
 sub store {
     my $self    = shift;
     my $message = shift->dup;
     my %options = @_;
+
+    return if $self->_is_collection;
 
     $message->{date} = time unless defined $message->{date};
 
@@ -244,8 +267,8 @@ sub split_listname {
 # Old name: SympaspoolClassic::analyze_file_name().
 sub unmarshal_metadata {
     $log->syslog('debug3', '(%s, %s, %s)', @_);
-    my $spool_dir       = shift;
-    my $marshalled      = shift;
+    my $spool_dir      = shift;
+    my $marshalled     = shift;
     my $marshal_regexp = shift;
     my $marshal_keys   = shift;
 
@@ -309,7 +332,7 @@ sub unmarshal_metadata {
 }
 
 sub marshal_metadata {
-    my $message         = shift;
+    my $message        = shift;
     my $marshal_format = shift;
     my $marshal_keys   = shift;
 
@@ -357,11 +380,11 @@ sub marshal_metadata {
 }
 
 sub store_spool {
-    my $spool_dir       = shift;
-    my $message         = shift;
+    my $spool_dir      = shift;
+    my $message        = shift;
     my $marshal_format = shift;
     my $marshal_keys   = shift;
-    my %options         = @_;
+    my %options        = @_;
 
     # At first content is stored into temporary file that has unique name and
     # is referred only by this function.
@@ -618,7 +641,7 @@ I<Instance method>, I<overridable>.
 Creates spool.
 By default, creates directories returned by _directories().
 
-=item _directories ( )
+=item _directories ( [ options, ... ] )
 
 I<Class or instance method>, I<mandatory for filesystem spool>.
 Returns hashref with directory paths related to the spool as values.
@@ -635,13 +658,25 @@ By default, always returns true value.
 
 I<Class or instance method>, I<mandatory>.
 Returns name of the class to serialize and deserialize messages in the spool.
-The class must implement methods dup(), new() and to_string().
+If spool subclass is the collection (see _is_collection),
+generator class must implement new().
+Otherwise,
+generator class must implement dup(), new() and to_string().
 
-=item _init ( )
+=item _init ( $state )
 
 I<Instance method>.
-Additional processing when _load() returns no contents or
-when the spool class is instantiated.
+Additional processing when _load() returns no contents ($state is 1) or
+when the spool class is instantiated ($state is 0).
+
+=item _is_collection ( )
+
+I<Instance method>, I<overridable>.
+If the class is collection of spool class, returns true value.
+By default returns false value.
+
+Collection class does not have store() method.
+Its content is the set of spool instances.
 
 =item _load ( )
 
