@@ -549,8 +549,11 @@ sub new {
         $name = $parts[0];
     }
 
-    ## Look for the list if no robot was provided
-    $robot ||= search_list_among_robots($name);
+    # Look for the list if no robot was provided.
+    if (not $robot or $robot eq '*') {
+        #FIXME: Default robot would be used instead of oppotunistic search.
+        $robot = search_list_among_robots($name);
+    }
 
     unless ($robot) {
         $log->syslog('err',
@@ -973,30 +976,16 @@ sub save_config {
 
 ## Loads the administrative data for a list
 sub load {
-    my ($self, $name, $robot, $options) = @_;
-    $log->syslog('debug2', '(%s, %s, %s)', $name, $robot,
-        join('/', keys %$options));
+    $log->syslog('debug2', '(%s, %s, %s, ...)', @_);
+    my $self    = shift;
+    my $name    = shift;
+    my $robot   = shift;
+    my $options = shift;
+
+    die 'bug in logic. Ask developer' unless $robot;
 
     ## Set of initializations ; only performed when the config is first loaded
     if ($options->{'first_access'}) {
-
-        ## Search robot if none was provided
-        unless ($robot) {
-            foreach my $r (keys %{$Conf::Conf{'robots'}}) {
-                if (-d "$Conf::Conf{'home'}/$r/$name") {
-                    $robot = $r;
-                    last;
-                }
-            }
-
-            ## Try default robot
-            unless ($robot) {
-                if (-d "$Conf::Conf{'home'}/$name") {
-                    $robot = $Conf::Conf{'domain'};
-                }
-            }
-        }
-
         if ($robot && (-d "$Conf::Conf{'home'}/$robot")) {
             $self->{'dir'} = "$Conf::Conf{'home'}/$robot/$name";
         } elsif (lc($robot) eq lc($Conf::Conf{'domain'})) {
