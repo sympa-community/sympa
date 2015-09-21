@@ -40,17 +40,14 @@ use Sympa::Crash;    # Show traceback.
 use Sympa::DatabaseManager;
 use Sympa::Family;
 use Sympa::List;
-use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Mailer;
-use Sympa::Message;
 use Sympa::Report;
 use Sympa::Spool::Automatic;
 use Sympa::Spool::Incoming;
 use tools;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
-use Sympa::Tools::File;
 
 ## Init random engine
 srand(time());
