@@ -9098,8 +9098,7 @@ sub do_distribute {
 
         ## TAG
         if ($list_topics) {
-            my $filetopic =
-                $list->tag_topic(tools::clean_msg_id($message->{'msg_id'}),
+            my $filetopic = $list->tag_topic($message->{message_id},
                 $list_topics, 'editor');
         }
 
