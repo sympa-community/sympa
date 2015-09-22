@@ -1331,12 +1331,26 @@ sub purge_session_table {
 
 # Remove messages from spools if older than duration given by configuration.
 sub purge_spools {
-    # Expiring bad messages in incoming spools.
+    # Expiring bad messages in incoming spools and archive spool.
     foreach my $queue (qw(queue queueautomatic queuebounce queueoutgoing)) {
         my $directory   = $Conf::Conf{$queue} . '/bad';
         my $clean_delay = $Conf::Conf{'clean_delay_' . $queue};
         if (-e $directory) {
             _clean_spool($directory, $clean_delay);
+        }
+    }
+
+    # Expiring bad messages in digest spool.
+    if (opendir my $dh, $Conf::Conf{'queuedigest'}) {
+        my $base_dir = $Conf::Conf{'queuedigest'};
+        my @dirs = grep { !/\A\./ and -d $base_dir . '/' . $_ } readdir $dh;
+        closedir $dh;
+        foreach my $subdir (@dirs) {
+            my $directory   = $base_dir . '/' . $subdir . '/bad';
+            my $clean_delay = $Conf::Conf{'clean_delay_queuedigest'};
+            if (-e $directory) {
+                _clean_spool($directory, $clean_delay);
+            }
         }
     }
 
