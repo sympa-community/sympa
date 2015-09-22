@@ -4438,7 +4438,7 @@ sub get_members {
     if ($role eq 'member') {
         $filter = '';
     } elsif ($role eq 'unconcealed_member') {
-        $filter = " AND visibility <> 'conceal'";
+        $filter = " AND visibility_subscriber <> 'conceal'";
     } else {
         die sprintf 'Unknown role "%s"', $role;
     }
