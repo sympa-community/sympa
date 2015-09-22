@@ -3,6 +3,46 @@
 
 (See Changelog file for the full changes log)
 
+6.2.6		September 22, 2015
+
+  Features:
+
+	[12352] src/lib/Sympa/ListDef.pm, src/lib/Sympa/Message.pm:
+	[#10005][Proposed by Y. Baouch, univ. of Colorado] New
+	dmarc_protection.phrase parameter values "list_for_email" and
+	"list_for_name" to give the from field "List (on behalf of SENDER)
+	<munged_email>".
+	This will solve the problem reported by several listmasters: If DMARC
+	protection feature munges originator field, the many mail client caches
+	such address by replaced display name, and misleadingly associates the
+	list address with the name of sender.
+
+
+
+  Changes:
+
+  Bug fixes:
+
+	[12370] src/lib/Sympa/List.pm: [Reported by I. Foulhouze, INRA] Review
+	page did not display the lists's subscribers because the query to
+	retrieve subscribers from the database did not use a correct field
+	name.
+
+	[12369] default/web_tt2/css.tt2, default/web_tt2/loginbanner.tt2:
+	[Reported by N. Samus] When using several SSO services, Sympa stackes
+	them into a drop down menu. The resulting menu was very long and badly
+	colored.
+
+	[12362] src/lib/Sympa/List.pm:	List aliases derived from slightly
+	older release of Sympa, prior to 5.2b, may not have domain part in
+	parameter of queue program, and messages sent to such aliases are
+	rejected.  Fixed by assigning appropriate domain.
+	Note: In the future release, domain part may be mandatory.
+
+	[12360] src/cgi/wwsympa.fcgi.in: [#10016] compose_mail: Even when
+	use_html_editor is set to 1, sent message has "text/plain"
+	content-type.
+
 6.2.5		September 10, 2015
 
   Bug fixes:
