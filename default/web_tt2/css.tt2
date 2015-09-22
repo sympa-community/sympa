@@ -2021,6 +2021,29 @@ span.bottom_page, p.bottom_page{
     text-align:right;
 }
 
+.top-bar form#use-sso fieldset {
+    height: 45px;
+    padding-top: 0.3rem;
+}
+.top-bar form#use-sso fieldset label[for="auth_service_name"] {
+        display: inline-block;
+        line-height: normal;
+        vertical-align: top;
+        max-width: 290px;
+}
+
+.top-bar form#use-sso fieldset select#auth_service_name {
+        max-width: 150px;
+        padding: 0;
+        color: [% color_5 %];
+        height: 2rem;
+}
+
+.top-bar form#use-sso fieldset button[name="action_sso_login"] {
+        padding: 0.3rem;
+        vertical-align: top;
+}
+
 /* main top-bar*/
  main .top-bar, main .top-bar .title-area, main .top-bar .active{
     height:30px;

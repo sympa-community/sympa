@@ -43,7 +43,7 @@
 [% ELSE %]
             <li>
               [% IF use_sso %]
-            <form action="[% path_cgi %]" method="post"> 
+            <form id="use-sso" action="[% path_cgi %]" method="post"> 
               <fieldset>	
               <input type="hidden" name="previous_action" value="[% previous_action %]" />
               <input type="hidden" name="previous_list" value="[% previous_list %]" />
@@ -57,13 +57,14 @@
 
                  [% END %]
                 [% ELSE %]
-                  <label for="auth_service_name">[%|loc%]To login, select your organization authentication server below:[%END%]&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                  <label for="auth_service_name">[%|loc%]To login, select your organization authentication server below:[%END%]</label>
                   <select id="auth_service_name" name="auth_service_name" onchange="this.form.submit();">
+                 <option value="1" selected>---[%|loc%]Click to select[%END%]---</option>
                   [% FOREACH server = sso %]
                      <option value="[% server.key %]">[% server.value %]</option>
                   [% END %]
                   </select>
-                <button type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]">[%|loc%]Go[%END%]</button>
+                <noscript><button type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]">[%|loc%]Go[%END%]</button></noscript>
                 [% END %]
               </fieldset>
             </form>
