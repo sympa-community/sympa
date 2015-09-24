@@ -26,10 +26,8 @@ package Sympa::Spool::Digest;
 
 use strict;
 use warnings;
-use English qw(-no_match_vars);
 
 use Conf;
-use Sympa::Tools::File;
 
 use base qw(Sympa::Spool);
 
@@ -56,13 +54,17 @@ sub _init {
 
     unless ($status) {
         # Get earliest time of messages in the spool.
-        my $metadatas = $self->_load;
-        unless ($metadatas and @$metadatas) {
-            $self->{time} = undef;
-        } else {
-            $self->{time} = Sympa::Tools::File::get_mtime(
-                $self->{directory} . '/' . $metadatas->[0]);
+        my $metadatas = $self->_load || [];
+        my $metadata;
+        while (my $marshalled = shift @$metadatas) {
+            $metadata = Sympa::Spool::unmarshal_metadata(
+                $self->{directory},     $marshalled,
+                $self->_marshal_regexp, $self->_marshal_keys
+            );
+            last if $metadata;
         }
+        $self->{time} = $metadata ? $metadata->{time} : undef;
+        $self->{_metadatas} = undef;    # Rewind cache.
     }
     return 1;
 }
