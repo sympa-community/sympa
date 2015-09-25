@@ -294,10 +294,10 @@ sub process_message {
             2;
         $local_part =~ s/==a==/\@/;
 
-        if ($local_part =~ s/==([wr])\z/$1/) {
+        if ($local_part =~ s/==([wr])\z//) {
             # VERP for welcome/remind probe in use.
             $unique = $1;
-        } elsif ($local_part =~ s/==(\w+)\z/$1/) {
+        } elsif ($local_part =~ s/==(\w+)\z//) {
             # Tracking in use.
             $distribution_id = $1;
         }
