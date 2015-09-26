@@ -1780,6 +1780,32 @@ sub upgrade {
         }    # End foreach my $file
     }
 
+    # Prior to 5.2b, domain part in message files of auth spool was
+    # missing.  As of 6.2.8, it became mandatory.
+    if (lower_version($previous_version, '6.2.8')) {
+        $log->syslog('notice', 'Upgrading auth spool.');
+
+        foreach my $spool_dir (($Conf::Conf{'queueauth'})) {
+            my $dh;
+            next unless opendir $dh, $spool_dir;
+
+            foreach my $filename (readdir $dh) {
+                next if $filename =~ /\A(?:[.]|T[.]|BAD-)/;
+                next unless -f $spool_dir . '/' . $filename;
+
+                next unless $filename =~ /\A([^\@]+)_(\w+)\z/;
+                my ($name, $authkey) = ($1, $2);
+
+                rename $spool_dir . '/' . $filename,
+                      $spool_dir . '/' 
+                    . $name . '@'
+                    . $Conf::Conf{'domain'} . '_'
+                    . $authkey;
+            }
+            closedir $dh;
+        }
+    }
+
     return 1;
 }
 

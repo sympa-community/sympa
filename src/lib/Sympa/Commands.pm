@@ -3001,53 +3001,27 @@ sub confirm {
     my $key = $1 || '';
     my $start_time = time;    # get the time at the beginning
 
-    my ($filename, $metadata);
-    my $queueauth = Conf::get_robot_conf($robot, 'queueauth');
+    my $spool_held =
+        Sympa::Spool::Held->new(context => $robot, authkey => $key);
 
-    unless (opendir DIR, $queueauth) {
-        $log->syslog('info', 'Warning: Unable to read %s directory',
-            $queueauth);
-        my $string =
-            sprintf
-            'Unable to open directory %s to confirm message with key %s',
-            $queueauth, $key;
-        Sympa::Report::reject_report_msg('intern', $string, $sender, {},
-            $robot, '', '');
-        return undef;
+    my ($message, $handle);
+    while (1) {
+        ($message, $handle) = $spool_held->next;
+        last unless $handle;
+        last
+            if $message
+                and $message->{authkey}
+                and $message->{authkey} eq $key;
     }
-
-    # TODO: delete old file from the auth directory
-    foreach my $file (grep (!/^\./, readdir(DIR))) {
-        next unless $file =~ /\_$key$/i;
-        $filename = $queueauth . '/' . $file;
-        next unless -f $filename and -r $filename;
-
-        $metadata = Sympa::Spool::unmarshal_metadata(
-            $queueauth, $file,
-            qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_(\w+)\z},
-            [qw(localpart domainpart authkey)]
-        );
-        last if $metadata;
-    }
-    closedir DIR;
 
     # auth spool keeps messages only with List context.
-    unless ($metadata and ref($metadata->{context}) eq 'Sympa::List') {
+    unless ($message) {
         $log->syslog('info', 'CONFIRM %s from %s refused, auth failed',
             $key, $sender);
         Sympa::Report::reject_report_msg('user', 'unfound_file_message',
             $sender, {'key' => $key},
             $robot, '', '');
         return 'wrong_auth';
-    }
-
-    my $message = Sympa::Message->new_from_file($filename, %$metadata);
-    unless ($message) {
-        $log->syslog('err', 'Unable to create Message object %s', $filename);
-        Sympa::Report::reject_report_msg('user', 'wrong_format_message',
-            $sender, {'key' => $key},
-            $robot, '', '');
-        return 'msg_not_found';
     }
 
     # Decrpyt message.
@@ -3246,7 +3220,7 @@ sub confirm {
             'CONFIRM %s from %s for list %s accepted (%d seconds)',
             $key, $sender, $list->{'name'}, time - $time_command);
 
-        unlink($filename);
+        $spool_held->remove($handle);
 
         return 1;
     }

@@ -73,6 +73,7 @@ use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::SharedDocument;
 use Sympa::Spool::Archive;
+use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Template;
 use tools;
@@ -901,6 +902,9 @@ our %in_regexp = (
 
     ## Envelope ID
     'envid' => '\w+',
+
+    ## Authentication/moderation key
+    'authkey' => '\w+',
 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -21783,22 +21787,22 @@ sub do_request_topic {
     $param->{'mailto'}  = Sympa::Tools::WWW::mailto($list, $param->{'to'});
     $param->{'authkey'} = $in{'authkey'};
 
-    my $listname  = $list->{'name'};
-    my $authqueue = Conf::get_robot_conf($robot, 'queueauth');
-    my $filename  = "$authqueue\/$listname\_$in{'authkey'}";
-
-    ## For compatibility concerns
-    foreach my $list_id ($list->get_list_id(), $list->{'name'}) {
-        $filename = $authqueue . '/' . $list_id . '_' . $in{'authkey'};
-        last if (-f $filename);
+    my $spool_held =
+        Sympa::Spool::Held->new(context => $list, authkey => $in{'authkey'});
+    my ($message, $handle);
+    while (1) {
+        ($message, $handle) = $spool_held->next(no_lock => 1);
+        last unless $handle;
+        last
+            if $message
+                and $message->{authkey}
+                and $message->{authkey} eq $in{'authkey'};
     }
-
-    my $message = Sympa::Message->new_from_file($filename, context => $list);
     unless ($message) {
-        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-            {'file' => $filename},
+        Sympa::Report::reject_report_web('intern', 'already_confirmed', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-        wwslog('notice', 'Cannot open file %s', $filename);
+        wwslog('notice', 'Cannot get message with key <%s> for list %s',
+            $in{'authkey'}, $list);
         return undef;
     }
 
@@ -21831,17 +21835,21 @@ sub do_request_topic {
 sub do_tag_topic_by_sender {
     wwslog('info', '');
 
-    my $parser;
-    my $listname  = $list->{'name'};
-    my $authqueue = Conf::get_robot_conf($robot, 'queueauth');
-    my $filename  = "$authqueue\/$listname" . '@' . "$robot\_$in{'authkey'}";
-
-    my $message = Sympa::Message->new_from_file($filename, context => $list);
+    my $spool_held =
+        Sympa::Spool::Held->new(context => $list, authkey => $in{'authkey'});
+    my ($message, $handle);
+    while (1) {
+        ($message, $handle) = $spool_held->next(no_lock => 1);
+        last unless $handle;
+        last
+            if $message
+                and $message->{authkey}
+                and $message->{authkey} eq $in{'authkey'};
+    }
     unless ($message) {
-        Sympa::Report::reject_report_web('intern',
-            'cannot_parse_message retrived by key %s for list %s@%s',
-            $in{'authkey'}, $listname, $robot);
-        wwslog('info', 'cannot parse message retrived by key %s for list %s',
+        Sympa::Report::reject_report_web('intern', 'already_confirmed', {},
+            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+        wwslog('info', 'cannot get message with key <%s> for list %s',
             $in{'authkey'}, $list);
         return undef;
     }
@@ -21874,24 +21882,6 @@ sub do_tag_topic_by_sender {
     my $filetopic =
         $list->tag_topic($in{'message_id'}, $list_topics, 'sender');
 
-    my $queueauth = Conf::get_robot_conf($robot, 'queueauth');
-    my $filemsg = "$queueauth/$list->{'name'}_$in{'authkey'}";
-
-    ## For compatibility concerns
-    foreach my $list_id ($list->get_list_id(), $list->{'name'}) {
-        $filemsg = $queueauth . '/' . $list_id . '_' . $in{'authkey'};
-        last if (-f $filemsg);
-    }
-
-    unless ($filemsg && (-r $filemsg)) {
-        Sympa::Report::reject_report_web('intern',
-            'tag_topic_by_sender_failed', {'key' => $in{'authkey'}},
-            $param->{'action'}, $robot);
-        wwslog('err', 'Unable to find message %s from %s, auth failed',
-            $in{'authkey'}, $param->{'user'}{'email'});
-        return undef;
-    }
-
     ## CONFIRM
     # Commands are injected into incoming spool directly with "md5"
     # authentication level.
@@ -21918,7 +21908,8 @@ sub do_tag_topic_by_sender {
             $param->{'user'}{'email'},
             $robot
         );
-        wwslog('err', 'Failed to send message for file %s', $filemsg);
+        wwslog('err', 'Failed to send message to comfirm message %s',
+            $message);
         return undef;
     }
 

@@ -83,6 +83,7 @@
   [% ELSIF u_err.msg == 'wrong_input_path' %][%|loc(u_err.tpl)%]Provided path is incorrect for template '%1'[%END%]
   [% ELSIF u_err.msg == 'cannot_open_file' %][%|loc(u_err.path)%]Cannot open file '%1'[%END%]
   [% ELSIF u_err.msg == 'listname_needed' %][%|loc%]You need to provide list name[%END%]
+  [% ELSIF u_err.msg == 'already_confirmed' %][%|loc%]Failed to get the held message; it has probably been confirmed[%END%]
   [% ELSIF u_err.msg == 'already_moderated' %][%|loc%]Failed to moderate a message; it was probably moderated by another moderator[%END%]
   [% ELSIF u_err.msg == 'msg_topic_missing' %][%|loc%]Tagging message is required for this list[%END%]
   [% ELSIF u_err.msg == 'empty_archives' %][%|loc%]Archives are empty for this list[%END%]

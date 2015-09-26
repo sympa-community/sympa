@@ -26,6 +26,7 @@ package Sympa::Spool;
 
 use strict;
 use warnings;
+use Cwd qw();
 use Digest::MD5;
 use English qw(-no_match_vars);
 use POSIX qw();
@@ -89,7 +90,8 @@ sub _create {
 sub _init {1}
 
 sub next {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     return unless $self->{directory};
 
@@ -107,10 +109,16 @@ sub next {
 
         # Try locking message.  Those locked or removed by other process will
         # be skipped.
-        $handle =
-            Sympa::LockedFile->new($self->{directory} . '/' . $marshalled,
-            -1, $self->_is_collection ? '+' : '+<');
-        next unless $handle;
+        if ($options{no_lock}) {
+            next
+                unless open $handle, '<',
+                $self->{directory} . '/' . $marshalled;
+        } else {
+            $handle =
+                Sympa::LockedFile->new($self->{directory} . '/' . $marshalled,
+                -1, $self->_is_collection ? '+' : '+<');
+            next unless $handle;
+        }
 
         $metadata = Sympa::Spool::unmarshal_metadata(
             $self->{directory},     $marshalled,
@@ -129,17 +137,34 @@ sub next {
         }
 
         # Though message might not be deserialized, anyway return the result.
-        return ($message, $handle);
+        if ($options{no_lock}) {
+            close $handle;
+            return ($message, 1);
+        } else {
+            return ($message, $handle);
+        }
     }
     return;
 }
 
+sub _filter {1}
+
 sub _load {
     my $self = shift;
 
-    my $dh;
-    unless (opendir $dh, $self->{directory}) {
-        die sprintf 'Cannot open dir %s: %s', $self->{directory}, $ERRNO;
+    my @entries;
+    if ($self->_glob_pattern) {
+        my $cwd = Cwd::getcwd();
+        die sprintf 'Cannot chdir to %s: %s', $self->{directory}, $ERRNO
+            unless chdir $self->{directory};
+        @entries = glob $self->_glob_pattern;
+        chdir $cwd;
+    } else {
+        my $dh;
+        die sprintf 'Cannot open dir %s: %s', $self->{directory}, $ERRNO
+            unless opendir $dh, $self->{directory};
+        @entries = readdir $dh;
+        closedir $dh;
     }
 
     my $iscol     = $self->_is_collection;
@@ -149,14 +174,13 @@ sub _load {
                 and !m{(?:\A|/)(?:\.|T\.|BAD-)}
                 and ((not $iscol and -f ($self->{directory} . '/' . $_))
                 or ($iscol and -d ($self->{directory} . '/' . $_)))
-            } readdir $dh
+            } @entries
     ];
-    closedir $dh;
 
     return $metadatas;
 }
 
-sub _filter {1}
+sub _glob_pattern {undef}
 
 sub _is_collection {0}
 
@@ -165,6 +189,7 @@ sub quarantine {
     my $handle = shift;
 
     return undef unless $self->{bad_directory};
+    return undef unless ref $handle;
 
     my $bad_file;
 
@@ -180,6 +205,8 @@ sub quarantine {
 sub remove {
     my $self   = shift;
     my $handle = shift;
+
+    return undef unless ref $handle;
 
     if ($self->_is_collection) {
         return undef
@@ -206,8 +233,18 @@ sub store {
 
     $log->syslog('notice', '%s is stored into %s as <%s>',
         $message, $self, $marshalled);
+
+    if ($self->_store_key) {
+        my $metadata = Sympa::Spool::unmarshal_metadata(
+            $self->{directory},     $marshalled,
+            $self->_marshal_regexp, $self->_marshal_keys
+        );
+        return $metadata ? $metadata->{$self->_store_key} : undef;
+    }
     return $marshalled;
 }
+
+sub _store_key {undef}
 
 # Low-level functions.
 
@@ -476,7 +513,7 @@ This module is the base class for spool subclasses of Sympa.
 I<Constructor>.
 Creates new instance of the class.
 
-=item next ( )
+=item next ( [ no_lock =E<gt> 1 ] )
 
 I<Instance method>.
 Gets next message to process, order is controled by name of spool file and
@@ -485,12 +522,23 @@ Message will be locked to prevent multiple proccessing of a single message.
 
 Parameters:
 
-None.
+=over
+
+=item no_lock =E<gt> 1
+
+Won't lock messages.
+
+=back
 
 Returns:
 
 Two-elements list of message instance and filehandle locking
 a message.
+If parsing message fails, list of C<undef> and filehandle.
+If no more message found, empty array.
+
+If C<no_lock> is set,
+true scalar value will be returned in place of filehandle.
 
 =item quarantine ( $handle )
 
@@ -663,6 +711,13 @@ generator class must implement new().
 Otherwise,
 generator class must implement dup(), new() and to_string().
 
+=item _glob_pattern ( )
+
+I<Instance method>.
+If implemented and returns non-empty string,
+glob() is used to search entries in the spool.
+Otherwise readdir() is used for filesystem spool to get all entries.
+
 =item _init ( $state )
 
 I<Instance method>.
@@ -691,10 +746,18 @@ By default, returns content of C<{directory}> directory sorted by file name.
 
 =item _marshal_regexp ( )
 
-I<Instance methods>, I<mandatory>.
+I<Instance methods>, I<mandatory for filesystem spool>.
 _marshal_format() and _marshal_keys() are used to marshal metadata.
 _marshal_keys() and _marshal_regexp() are used to unmarshal metadata.
 See also marshal_metadata() and unmarshal_metadata().
+
+=item _store_key ( )
+
+I<Instance method>.
+If implemented and returns non-empty string,
+store() returns an item in metadata specified by this method.
+By default store() returns marshalled metadata
+(file name on filesystem spool).
 
 =back
 
@@ -736,5 +799,7 @@ L<Sympa::Message>, especially L<Serialization|Sympa::Message/"Serialization">.
 
 L<Sympa::Spool> appeared on Sympa 6.2.
 It as the base class appeared on Sympa 6.2.6.
+
+_glob_pattern() and _store_key() are introduced on Sympa 6.2.8.
 
 =cut

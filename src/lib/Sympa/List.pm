@@ -66,6 +66,7 @@ use SDM;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Digest;
+use Sympa::Spool::Held;
 use Sympa::Task;
 use Sympa::Template;
 use tools;
@@ -2740,27 +2741,14 @@ sub send_confirm_to_sender {
     my $sender = $message->{'sender'};
 
     my ($i, @rcpt);
-    my $authqueue = $Conf::Conf{'queueauth'};
-
+    my $spool_held = Sympa::Spool::Held->new;
     # If crypted, store the crypted form of the message.
-    my $authkey;
-    my $marshalled = Sympa::Spool::store_spool(
-        $authqueue, $message, '%s@%s_%s',
-        [qw(localpart domainpart AUTHKEY)],
-        original => 1
-    );
-    unless ($marshalled) {
-        $log->syslog('err', 'Cannot create authkey %s for %s',
-            $authkey, $list);
+    my $authkey = $spool_held->store($message, original => 1);
+    unless ($authkey) {
+        $log->syslog('err', 'Cannot create authkey of message %s for %s',
+            $message, $list);
         return undef;
     }
-    $authkey = ${
-        Sympa::Spool::unmarshal_metadata(
-            $authqueue, $marshalled,
-            qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_([^_]+)\z},
-            [qw(localpart domainpart authkey)]
-        )
-        }{authkey};
 
     my $param = {
         'authkey'        => $authkey,
