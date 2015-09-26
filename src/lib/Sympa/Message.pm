@@ -4475,6 +4475,10 @@ Set C<return_path_add> to be true with pipe_transport.
 
 Use preline(1).
 
+=item sympa-milter
+
+As of version 0.7, prepending C<Return-Path:> is available.
+
 =back
 
 =head1 BUGS
