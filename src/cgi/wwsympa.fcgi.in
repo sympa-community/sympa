@@ -1141,6 +1141,7 @@ while ($query = new_loop()) {
         'main_menu_custom_button_3_url',
         'main_menu_custom_button_3_title',
         'main_menu_custom_button_3_target',
+        'static_content_url',
         'dark_color',
         'light_color',
         'text_color',
@@ -1173,7 +1174,7 @@ while ($query = new_loop()) {
 
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
         $param->{$p} = Conf::get_robot_conf($robot, $p)
-            if (($p =~ /_color$/) || ($p =~ /color_/));
+            if $p =~ /_color\z/ or $p =~ /\Acolor_/ or $p =~ /_url\z/;
     }
 
     foreach my $auth (keys %{$Conf::Conf{'cas_id'}{$robot}}) {
@@ -1256,9 +1257,9 @@ while ($query = new_loop()) {
     # Propagate plugins parameters
     $param->{'plugin'} = $in{'plugin'};
 
-    # Static content
-    $param->{'static_content_url'} =
-        Conf::get_robot_conf($robot, 'static_content_url');
+    # # Static content
+    # $param->{'static_content_url'} =
+    #     Conf::get_robot_conf($robot, 'static_content_url');
 
     ## CSS related
     $param->{'css_path'} = Conf::get_robot_conf($robot, 'css_path');
@@ -23928,7 +23929,7 @@ sub get_safe_robot_conf {
         main_menu_custom_button_1_target main_menu_custom_button_2_url
         main_menu_custom_button_2_title main_menu_custom_button_2_target
         main_menu_custom_button_3_url main_menu_custom_button_3_title
-        main_menu_custom_button_3_target
+        main_menu_custom_button_3_target static_content_url
         dark_color light_color text_color bg_color error_color
         use_blacklist antispam_feature custom_robot_parameter
         selected_color shaded_color color_0 color_1 color_2 color_3
@@ -23938,7 +23939,8 @@ sub get_safe_robot_conf {
         )
         ) {
         $param->{'conf'}{$p} = $robot->$p;
-        $param->{$p} = $robot->$p if $p =~ /_color$/ or $p =~ /color_/;
+        $param->{$p} = $robot->$p
+            if $p =~ /_color\z/ or $p =~ /\Acolor_/ or $p =~ /_url\z/;
     }
 
     ## compatibility concern: deprecated attributes of Robot.

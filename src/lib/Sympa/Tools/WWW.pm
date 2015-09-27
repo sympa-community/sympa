@@ -766,8 +766,7 @@ sub update_css {
             grep { $_->{name} } @Sympa::ConfDef::params
             ) {
             $param->{$p} = Conf::get_robot_conf($robot, $p)
-                if $p =~ /_color$/
-                    or $p =~ /color_/;
+                if $p =~ /_color\z/ or $p =~ /\Acolor_/ or $p =~ /_url\z/;
         }
 
         # Create directory if required
