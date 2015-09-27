@@ -35,6 +35,8 @@ nobase_doc_DATA = \
 	samples/families/sample-auto/config.tt2 \
 	samples/families/sample-auto/param_constraint.conf
 
+man1_MANS = \
+	sympa_toc.1
 man5_MANS = \
 	charset.conf.5 \
 	sympa.conf.5 \
@@ -43,9 +45,14 @@ man5_MANS = \
 EXTRA_DIST = $(nobase_doc_DATA) \
 	charset.conf.podin \
 	sympa.conf.podpl \
-	sympa_database.podpl
+	sympa_database.podpl \
+	sympa_toc.pod
 
-CLEANFILES = $(man5_MANS)
+CLEANFILES = $(man1_MANS) $(man5_MANS)
+
+.pod.1:
+	$(AM_V_GEN)$(POD2MAN) --section=1 --center="sympa $(VERSION)" \
+		--lax --release="$(VERSION)" $*.pod $@
 
 .podin.5:
 	$(AM_V_GEN)rm -f $*.pod

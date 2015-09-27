@@ -1,0 +1,226 @@
+=encoding utf-8
+
+=head1 NAME
+
+sympa_toc - Documentation on Sympa - Table of Contents
+
+=head1 DESCRIPTION
+
+B<Sympa> is scalable and highly customizable mailing list manager.
+It can cope with big lists (200,000 subscribers) and comes with
+a complete (user and admin) Web interface. It is
+internationalized, and supports the us, fr, de, es, it, fi, and
+chinese locales. A scripting language allows you to extend the
+behavior of commands. B<Sympa> can be linked to an LDAP directory
+or an RDBMS to create dynamic mailing lists. B<Sympa> provides S/MIME
+and HTTPS based authentication and encryption.
+Sympa is a modern mailing-list manager. It supports a lot of useful
+features.
+
+Below is the list of documentaion of Sympa.
+
+=head2 Reference manual
+
+=over
+
+=item I<Sympa, Mailing List Management Software - Reference manual>
+
+L<http://www.sympa.org/manual/>.
+
+=back
+
+=head2 Daemons
+
+=over
+
+=item L<archived(8)>
+
+Mailing List Archiving Daemon for Sympa
+
+=item L<bounced(8)>
+
+Mailing List Bounce Processing Daemon for Sympa
+
+=item L<bulk(8)>
+
+Daemon for Submitting Bulk Content to SMTP Engine
+
+=item L<sympa_automatic(8)>
+
+Automatic list creation daemon
+
+=item L<sympa_msg(8)>
+
+Daemon to handle incoming messages
+
+=item L<task_manager(8)>
+
+Daemon to Process Periodical Sympa Tasks
+
+=back
+
+=head2 Web interface
+
+=over
+
+=item L<sympa_soap_server(8)>
+
+Sympa SOAP server
+
+=item L<wwsympa(8)>
+
+WWSympa, Sympa's web interface
+
+=back
+
+=head2 Shell Interface
+
+=head3 Administration tools
+
+=over
+
+=item L<sympa(1)>
+
+Command line utility to manage Sympa
+
+=item L<sympa_newaliases(1)>
+
+Alias database maintenance
+
+=item L<sympa_wizard(1)>
+
+Help Performing Sympa Initial Setup
+
+=back
+
+=head3 Maintenance tools
+
+=over
+
+=item L<arc2webarc(1)>
+
+TBD.
+
+=item L<init_comment(1)>
+
+TBD.
+
+=item L<mod2html(1)>
+
+Generates HTML view of messages to be moderated
+
+=item L<p12topem(1)>
+
+TBD.
+
+=item L<sympa_soap_client(1)>
+
+TBD.
+
+=item L<sympa_test_ldap(1)>
+
+Testing LDAP connection for Sympa
+
+=item L<testlogs(1)>
+
+TBD.
+
+=item L<tpl2tt2(1)>
+
+TBD.
+
+=item L<upgrade_bulk_spool(1)>
+
+Migrating messages in bulk tables
+
+=item L<upgrade_send_spool(1)>
+
+Upgrade messages in incoming spool
+
+=item L<upgrade_sympa_password(1)>
+
+Upgrading password in database
+
+=back
+
+=head2 Auxiliary Programs
+
+=over
+
+=item L<alias_manager(8)>
+
+Manage Sympa Aliases
+
+=item L<ldap_alias_manager(8)>
+
+TBD.
+
+=item L<mysql_alias_manager(8)>
+
+TBD.
+
+=item L<queue(8)>, L<bouncequeue(8)>, L<familyqueue(8)>
+
+TBD.
+
+=item L<sympa_newaliases-wrapper(8)>, L<sympa_soap_server-wrapper(8)>,
+L<wwsympa-wrapper(8)>
+
+TBD.
+
+=item L<sympa_smtpc(1)>
+
+SMTP / LMTP client
+
+=back
+
+=head2 Configuration files
+
+=over
+
+=item L<charset.conf(5)>
+
+Configiration file for legacy character set support by Sympa
+
+=item L<sympa.conf(5)>, L<robot.conf(5)>
+
+Configuration file for default site and robot
+
+=back
+
+=head2 Internals
+
+=over
+
+=item L<Sympa::Internals(3)>
+
+List of Sympa internal modules
+
+=item L<sympa_database(5)>
+
+Strutcure of Sympa core database
+
+=back
+
+=head1 AVAILABILITY
+
+Latest version of B<Sympa> is available from L<http://www.sympa.org/>.
+
+=head1 MORE DOCUMENTATION
+
+The full documentation in HTML format can be found in
+L<http://www.sympa.org/manual/>.
+
+The mailing lists (with web archives) can be accessed at
+L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+
+=head1 BUGS
+
+Report bugs to Sympa bug tracker.
+See L<http://www.sympa.org/tracking>.
+
+=head1 SEE ALSO
+
+L<sendmail(8)>.
+
+=cut
