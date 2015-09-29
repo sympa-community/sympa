@@ -294,12 +294,12 @@ sub process_message {
             2;
         $local_part =~ s/==a==/\@/;
 
-        if ($local_part =~ s/==([wr])\z//) {
+        if ($local_part =~ s/(==[^\@]+)==([wr])\z/$1/) {
             # VERP for welcome/remind probe in use.
-            $unique = $1;
-        } elsif ($local_part =~ s/==(\w+)\z//) {
+            $unique = $2;
+        } elsif ($local_part =~ s/(==[^\@]+)==(\w+)\z/$1/) {
             # Tracking in use.
-            $distribution_id = $1;
+            $distribution_id = $2;
         }
 
         my $listname;
