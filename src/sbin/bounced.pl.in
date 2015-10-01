@@ -1889,37 +1889,11 @@ sub _canonicalize_status {
 
 # If bounce can't be handled correctly, saves it to the "bad" subdirectory of
 # the bounce spool.
-sub quarantine {
-    my $lock_fh = shift;
-    my $robot = shift || '*';
+#DEPRECATED.  Use Sympa::Spool::Bounce::quarantine().
+# sub quarantine;
 
-    my $bad_dir  = "$spool/bad";
-    my $filename = $lock_fh->basename;
-
-    if (-d $bad_dir) {
-        unless ($lock_fh->rename($bad_dir . '/' . $filename)) {
-            die sprintf
-                'Unable to rename bad file %s to %s/%s: %s',
-                $filename, $bad_dir, $filename, $lock_fh->last_error;
-        }
-        $log->syslog('notice', "Moving bad file %s to bad/", $filename);
-    } else {
-        $log->syslog('notice', 'Missing directory "%s"', $bad_dir);
-        unless ($lock_fh->rename($spool . '/BAD-' . $filename)) {
-            die sprintf
-                'Unable to rename bad file %s to BAD-%s: %s',
-                $filename, $filename, $lock_fh->last_error;
-        }
-        $log->syslog('notice', "Renaming bad file %s to BAD-%s",
-            $filename, $filename);
-    }
-}
-
-sub remove {
-    my $lock_fh = shift;
-
-    $lock_fh->unlink;
-}
+#DEPRECATED.  Use Sympa::Spool::Bounce::remove().
+# sub remove;
 
 __END__
 
