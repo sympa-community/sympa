@@ -2,7 +2,7 @@ To: [% to %]
 [% IF type == 'list_created' -%]
 [% PROCESS 'list_created.tt2' -%]
 
-[% IF type == 'list_rejected' -%]
+[% ELSIF type == 'list_rejected' -%]
 [% PROCESS 'list_rejected.tt2' -%]
 
 [% ELSIF type == 'arc_quota_exceeded' -%]
