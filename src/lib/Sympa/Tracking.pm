@@ -29,6 +29,7 @@ use warnings;
 use DateTime::Format::Mail;
 use English qw(-no_match_vars);
 
+use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::Log;
@@ -226,7 +227,17 @@ sub store {
     print $ofh $message->as_string;
     close $ofh;
 
-    return 1;
+    $log->syslog('notice', '%s is stored into %s as <%s>',
+        $message, $self, $filename);
+
+    # Remove earlier HTML view.
+    Sympa::Tools::File::remove_dir(
+        join('/',
+            $Conf::Conf{'viewmail_dir'}, 'bounce',
+            $self->{context}->get_id,    $filename)
+    );
+
+    return $filename;
 }
 
 ##############################################
