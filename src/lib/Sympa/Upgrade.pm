@@ -1238,111 +1238,10 @@ sub upgrade {
     # Create HTML view of pending messages
     if (lower_version($previous_version, '6.2b.1')) {
         $log->syslog('notice', 'Creating HTML view of moderation spool...');
-
-        my $spooldir     = $Conf::Conf{'queuemod'};
-        my $viewmail_dir = $Conf::Conf{'viewmail_dir'};
-        my @ignored      = ();
-        my @performed    = ();
-
-        my $umask = umask oct($Conf::Conf{'umask'});
-
-        # Create directory for HTML view if necessary
-        unless (-d "$viewmail_dir/mod") {
-            my @dirs = File::Path::mkpath("$viewmail_dir/mod");
-            foreach my $dir (@dirs) {
-                Sympa::Tools::File::set_file_rights(
-                    'file'  => $dir,
-                    'user'  => Sympa::Constants::USER(),
-                    'group' => Sympa::Constants::GROUP(),
-                );
-            }
-        }
-
-        unless (opendir DIR, $spooldir) {
-            die sprintf 'Can\t open dir %s: %s', $spooldir, "$!";
-            ## No return.
-        }
-        my @qfile = grep !/^\./, readdir DIR;
-        closedir DIR;
-
-        foreach my $filename (sort @qfile) {
-            ## For compatibility concern:
-            ## <name>@<robot>_<key> and <name>_<key> are possible.
-            unless ($filename =~ /^([^@]*)(?:\@([^@]*))?\_(.*)$/) {
-                push @ignored, $filename;
-                next;
-            }
-            my $listname = lc $1;
-            my $robot_id = lc($2 || $Conf::Conf{'domain'});
-            my $modkey   = $3;
-
-            # check if robot exists
-            unless (Conf::valid_robot($robot_id)) {
-                push @ignored, $filename;
-                next;
-            }
-            my $list = Sympa::List->new($listname, $robot_id);
-            unless ($list) {
-                push @ignored, $filename;
-                next;
-            }
-            my $message =
-                Sympa::Message->new_from_file("$spooldir/$filename",
-                context => $list);
-            unless ($message) {
-                push @ignored, $filename;
-                next;
-            }
-
-            my $destination_dir =
-                  $viewmail_dir . '/mod/'
-                . $list->get_list_id() . '/'
-                . $modkey;
-            if (-e $destination_dir) {
-                push @ignored, $filename;
-                next;
-            } else {
-                my @dirs = File::Path::mkpath($destination_dir);
-                foreach my $dir (@dirs) {
-                    Sympa::Tools::File::set_file_rights(
-                        'file'  => $dir,
-                        'user'  => Sympa::Constants::USER(),
-                        'group' => Sympa::Constants::GROUP(),
-                    );
-                }
-            }
-
-            Sympa::Archive::html_format(
-                $message,
-                'destination_dir' => $destination_dir,
-                'attachement_url' =>
-                    join('/', '..', 'viewmod', $listname, $modkey),
-            );
-            File::Find::find(
-                sub {
-                    Sympa::Tools::File::set_file_rights(
-                        'file'  => $File::Find::name,
-                        'user'  => Sympa::Constants::USER(),
-                        'group' => Sympa::Constants::GROUP(),
-                    );
-                },
-                $destination_dir
-            );
-
-            push @performed, $filename;
-        }
-
-        # Restore umask
-        umask $umask;
-
-        $log->syslog('notice',
-            'Upgrade process for spool %s: ignored files %s',
-            $spooldir, join(', ', @ignored))
-            if @ignored;
-        $log->syslog('notice',
-            'Upgrade process for spool %s: performed files %s',
-            $spooldir, join(', ', @performed))
-            if @performed;
+        my $status =
+            system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
+        $log->syslog('err', 'mod2html.pl failed with status %s', $status)
+            if $status;
     }
 
     # Rename files in automatic spool with older format created by
@@ -1780,12 +1679,13 @@ sub upgrade {
         }    # End foreach my $file
     }
 
-    # Prior to 5.2b, domain part in message files of auth spool was
-    # missing.  As of 6.2.8, it became mandatory.
+    # Prior to 5.2b, domain parts in message files of auth & mod spool were
+    # missing.  As of 6.2.8, they became mandatory.
     if (lower_version($previous_version, '6.2.8')) {
-        $log->syslog('notice', 'Upgrading auth spool.');
+        $log->syslog('notice', 'Upgrading auth & mod spool.');
 
-        foreach my $spool_dir (($Conf::Conf{'queueauth'}, $Conf::Conf{'queuemod'})) {
+        foreach my $spool_dir (
+            ($Conf::Conf{'queueauth'}, $Conf::Conf{'queuemod'})) {
             my $dh;
             next unless opendir $dh, $spool_dir;
 
@@ -1797,14 +1697,19 @@ sub upgrade {
                 my ($name, $authkey, $validated) = ($1, $2, $3);
                 $validated ||= '';
 
-                rename $spool_dir . '/' . $filename,
-                      $spool_dir . '/' 
-                    . $name . '@'
-                    . $Conf::Conf{'domain'} . '_'
-                    . $authkey . $validated;
+                rename sprintf('%s/%s', $spool_dir, $filename),
+                    sprintf('%s/%s@%s_%s%s',
+                    $spool_dir, $name, $Conf::Conf{'domain'}, $authkey,
+                    $validated);
             }
             closedir $dh;
         }
+
+        $log->syslog('notice', 'Creating HTML view of moderation spool...');
+        my $status =
+            system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
+        $log->syslog('err', 'mod2html.pl failed with status %s', $status)
+            if $status;
     }
 
     # During 6.2 to 6.2.7, [% static_content_url %] was used but omitted.
