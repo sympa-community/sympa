@@ -33,11 +33,11 @@ use Conf;
 use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Scenario;
-use Sympa::Spool;
+use Sympa::Spool::Held;
+use Sympa::Spool::Moderation;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
@@ -2852,19 +2852,25 @@ sub set {
 #
 ##############################################################
 sub distribute {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $what  = shift;
     my $robot = shift;
 
-    $what =~ /^\s*(\S+)\s+(.+)\s*$/;
+    $what =~ /^\s*(\S+)\s+(\w+)\s*$/;
     my ($which, $key) = ($1, $2);
-    $which =~ y/A-Z/a-z/;
-
-    $log->syslog('debug', '(%s, %s, %s, %s)', $which, $robot, $key, $what);
+    $which =~ tr/A-Z/a-z/ if $which;
+    unless ($which and $key and $key =~ /\A\w+\z/) {
+        Sympa::Report::reject_report_cmd('user', 'error_syntax', {},
+            $cmd_line);
+        $log->syslog('notice', 'Command syntax error');
+        return 'syntax_error';
+    }
 
     my $start_time = time;    # get the time at the beginning
-    ## Load the list if not already done, and reject the
-    ## subscription if this list is unknown to us.
-    my $list = Sympa::List->new($which, $robot);
+
+    # Load the list if not already done, and reject the
+    # subscription if this list is unknown to us.
+    my $list = Sympa::List->new($which, $robot, {just_try => 1});
     unless ($list) {
         $log->syslog('info',
             'DISTRIBUTE %s %s from %s refused, unknown list for robot %s',
@@ -2877,33 +2883,21 @@ sub distribute {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    #read the moderation queue and purge it
-    my $modqueue = Conf::get_robot_conf($robot, 'queuemod');
-
-    my $name = $list->{'name'};
-    my $file;
-
-    ## For compatibility concerns
-    foreach my $list_id ($list->get_list_id(), $list->{'name'}) {
-        $file = $modqueue . '/' . $list_id . '_' . $key;
-        last if (-f $file);
+    # Read the moderation queue and purge it.
+    my $spool_mod =
+        Sympa::Spool::Moderation->new(context => $list, authkey => $key);
+    my ($message, $handle);
+    while (1) {
+        ($message, $handle) = $spool_mod->next;
+        last unless $handle;
+        last if $message;    # Won't check {validated} property.
     }
-
-    ## if the file has been accepted by WWSympa, it's name is different.
-    unless (-r $file) {
-        ## For compatibility concerns
-        foreach my $list_id ($list->get_list_id(), $list->{'name'}) {
-            $file = $modqueue . '/' . $list_id . '_' . $key . '.distribute';
-            last if (-f $file);
-        }
-    }
-
-    ## Open and parse the file
-    my $message = Sympa::Message->new_from_file($file, context => $list);
     unless ($message) {
-        $log->syslog('err', 'Unable to create Message object %s', $file);
+        $log->syslog('err',
+            'Unable to find message with key <%s> for list %s',
+            $key, $list);
         Sympa::Report::reject_report_msg('user', 'unfound_message', $sender,
-            {'listname' => $name, 'key' => $key},
+            {'listname' => $list->{'name'}, 'key' => $key},
             $robot, '', $list);
         return 'msg_not_found';
     }
@@ -2928,7 +2922,7 @@ sub distribute {
 
     $numsmtp = Sympa::List::distribute_msg($message);
     unless (defined $numsmtp) {
-        $log->syslog('err', 'Unable to send message to list %s', $name);
+        $log->syslog('err', 'Unable to send message to list %s', $list);
         Sympa::Report::reject_report_msg('intern', '', $sender,
             {'msg_id' => $msg_id},
             $robot, $msg_string, $list);
@@ -2971,9 +2965,9 @@ sub distribute {
     }
 
     $log->syslog('info', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
-        $name, $key, $sender, time - $time_command);
+        $list->{'name'}, $key, $sender, time - $time_command);
 
-    unlink($file);
+    $spool_mod->remove($handle) and $spool_mod->html_remove($message);
 
     return 1;
 }
@@ -2993,28 +2987,29 @@ sub distribute {
 #
 ############################################################
 sub confirm {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $what  = shift;
     my $robot = shift;
-    $log->syslog('debug', '(%s, %s)', $what, $robot);
 
     $what =~ /^\s*(\w+)\s*$/;
-    my $key = $1 || '';
+    my $key = $1;
+    unless ($key and $key =~ /\A\w+\z/) {
+        Sympa::Report::reject_report_cmd('user', 'error_syntax', {},
+            $cmd_line);
+        $log->syslog('notice', 'Command syntax error');
+        return 'syntax_error';
+    }
+
     my $start_time = time;    # get the time at the beginning
 
     my $spool_held =
         Sympa::Spool::Held->new(context => $robot, authkey => $key);
-
     my ($message, $handle);
     while (1) {
         ($message, $handle) = $spool_held->next;
         last unless $handle;
-        last
-            if $message
-                and $message->{authkey}
-                and $message->{authkey} eq $key;
+        last if $message;
     }
-
-    # auth spool keeps messages only with List context.
     unless ($message) {
         $log->syslog('info', 'CONFIRM %s from %s refused, auth failed',
             $key, $sender);
@@ -3240,21 +3235,25 @@ sub confirm {
 #
 ##############################################################
 sub reject {
+    $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
     my $what  = shift;
     my $robot = shift;
     shift;
     my $editor_msg = shift;
 
-    $log->syslog('debug', '(%s, %s)', $what, $robot);
-
-    $what =~ /^(\S+)\s+(.+)\s*$/;
+    $what =~ /^(\S+)\s+(\w+)\s*$/;
     my ($which, $key) = ($1, $2);
-    $which =~ y/A-Z/a-z/;
-    my $modqueue = Conf::get_robot_conf($robot, 'queuemod');
-    ## Load the list if not already done, and reject the
-    ## subscription if this list is unknown to us.
-    my $list = Sympa::List->new($which, $robot);
+    $which =~ tr/A-Z/a-z/ if $which;
+    unless ($which and $key and $key =~ /\A\w+\z/) {
+        Sympa::Report::reject_report_cmd('user', 'error_syntax', {},
+            $cmd_line);
+        $log->syslog('notice', 'Command syntax error');
+        return 'syntax_error';
+    }
 
+    # Load the list if not already done, and reject the subscription if this
+    # list is unknown to us.
+    my $list = Sympa::List->new($which, $robot);
     unless ($list) {
         $log->syslog('info',
             'REJECT %s %s from %s refused, unknown list for robot %s',
@@ -3267,16 +3266,16 @@ sub reject {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $name = "$list->{'name'}";
-    my $file;
-
-    ## For compatibility concerns
-    foreach my $list_id ($list->get_list_id(), $list->{'name'}) {
-        $file = $modqueue . '/' . $list_id . '_' . $key;
-        last if -f $file;
+    my $spool_mod =
+        Sympa::Spool::Moderation->new(context => $list, authkey => $key);
+    my ($message, $handle);
+    while (1) {
+        ($message, $handle) = $spool_mod->next;
+        last unless $handle;
+        last if $message and not $message->{validated};
+        # Messages marked validated should not be rejected.
     }
-
-    unless ($file and -f $file) {
+    unless ($message) {
         $log->syslog('info', 'REJECT %s %s from %s refused, auth failed',
             $which, $key, $sender);
         Sympa::Report::reject_report_msg('user', 'unfound_message', $sender,
@@ -3285,18 +3284,10 @@ sub reject {
         return 'wrong_auth';
     }
 
-    my $message = Sympa::Message->new_from_file($file, context => $list);
-    unless ($message) {
-        $log->syslog('notice', 'Unable to parse message');
-        Sympa::Report::reject_report_msg('intern', '', $sender, {}, $robot,
-            '', $list);
-        return undef;
-    }
-
-    if ($message->{'sender'}) {
-        my $rejected_sender = $message->{'sender'};
+    if ($message->{sender}) {
+        my $rejected_sender = $message->{sender};
         my %context;
-        $context{'subject'}         = $message->{'decoded_subject'};
+        $context{'subject'}         = $message->{decoded_subject};
         $context{'rejected_by'}     = $sender;
         $context{'editor_msg_body'} = $editor_msg->body_as_string
             if $editor_msg;
@@ -3336,11 +3327,8 @@ sub reject {
     }
 
     $log->syslog('info', 'REJECT %s %s from %s accepted (%d seconds)',
-        $name, $sender, $key, time - $time_command);
-    Sympa::Tools::File::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/'
-            . $list->get_list_id() . '/'
-            . $key);
-    unlink($file);
+        $list->{'name'}, $sender, $key, time - $time_command);
+    $spool_mod->remove($handle) and $spool_mod->html_remove($message);
 
     return 1;
 }
@@ -3349,8 +3337,8 @@ sub reject {
 #  modindex
 #########################################################
 #  Sends a list of current messages to moderate of a list
-#  (look into spool queuemod)
-#  usage :    modindex <liste>
+#  (look into moderation spool)
+#  usage :    modindex <list>
 #
 # IN : -$name (+): listname
 #      -$robot (+): robot
@@ -3377,10 +3365,6 @@ sub modindex {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $modqueue = Conf::get_robot_conf($robot, 'queuemod');
-
-    my $i;
-
     unless ($list->is_admin('actual_editor', $sender)) {
         Sympa::Report::reject_report_cmd('auth', 'restricted_modindex', {},
             $cmd_line);
@@ -3389,66 +3373,23 @@ sub modindex {
         return 'not_allowed';
     }
 
-    # purge the queuemod -> delete old files
-    if (!opendir(DIR, $modqueue)) {
-        $log->syslog('info', 'Warning: Unable to read %s directory',
-            $modqueue);
-    }
-    my @qfile = sort grep (!/^\.+$/, readdir(DIR));
-    closedir(DIR);
-    my ($curlist, $moddelay);
-    foreach $i (sort @qfile) {
-
-        next if (-d "$modqueue/$i");
-
-        $i =~ /\_(.+)$/;
-        $curlist = Sympa::List->new($`, $robot);
-        if ($curlist) {
-            # list loaded
-            if (exists $curlist->{'admin'}{'clean_delay_queuemod'}) {
-                $moddelay = $curlist->{'admin'}{'clean_delay_queuemod'};
-            } else {
-                $moddelay =
-                    Conf::get_robot_conf($robot, 'clean_delay_queuemod');
-            }
-
-            if (Sympa::Tools::File::get_mtime("$modqueue/$i") <
-                (time - $moddelay * 86400)) {
-                unlink("$modqueue/$i");
-                $log->syslog('notice',
-                    'Deleting unmoderated message %s, too old', $i);
-            }
-        }
-    }
-
-    opendir(DIR, $modqueue);
-
-    my $list_id = $list->get_list_id();
-    my @files = (sort grep (/^($name|$list_id)\_/, readdir(DIR)));
-    closedir(DIR);
-    my $n;
+    my $spool_mod = Sympa::Spool::Moderation->new(context => $list);
     my @now = localtime(time);
 
-    ## List of messages
+    # List of messages
     my @spool;
 
-    foreach $i (@files) {
-        ## skip message already marked to be distributed using WWS
-        next if ($i =~ /.distribute$/);
+    while (1) {
+        my ($message, $handle) = $spool_mod->next(no_lock => 1);
+        last unless $handle;
+        next unless $message and not $message->{validated};
+        # Skip message already marked to be distributed using WWSympa.
 
-        ## Push message for building MODINDEX
-        my $raw_msg;
-        open(IN, "$modqueue\/$i");
-        while (<IN>) {
-            $raw_msg .= $_;
-        }
-        close IN;
-        push @spool, $raw_msg;
-
-        $n++;
+        # Push message for building MODINDEX
+        push @spool, $message->as_string;
     }
 
-    unless ($n) {
+    unless (scalar @spool) {
         Sympa::Report::notice_report_cmd('no_message_to_moderate',
             {'listname' => $name}, $cmd_line);
         $log->syslog('info',
@@ -3462,8 +3403,8 @@ sub modindex {
             $list,
             'modindex',
             $sender,
-            {   'spool' => \@spool,    #FIXME: Use msg_list.
-                'total' => $n,
+            {   'spool' => \@spool,          #FIXME: Use msg_list.
+                'total' => scalar(@spool),
                 'boundary1' => "==main $now[6].$now[5].$now[4].$now[3]==",
                 'boundary2' => "==digest $now[6].$now[5].$now[4].$now[3]=="
             }

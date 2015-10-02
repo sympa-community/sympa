@@ -63,10 +63,10 @@ use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
-use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Digest;
 use Sympa::Spool::Held;
+use Sympa::Spool::Moderation;
 use Sympa::Task;
 use Sympa::Template;
 use tools;
@@ -2571,48 +2571,23 @@ sub send_confirm_to_editor {
     my $method  = shift;
 
     my ($i, @rcpt);
-    my $list     = $message->{context};
-    my $modqueue = $Conf::Conf{'queuemod'};
+    my $list = $message->{context};
+    my $spool_mod = Sympa::Spool::Moderation->new(context => $list);
 
-    my $modkey = undef;
-    ## Keeps a copy of the message
+    my $modkey;
+    # Keeps a copy of the message.
     if ($method eq 'md5') {
-        ## move message to spool  mod
+        # Move message to mod spool.
         # If crypted, store the crypted form of the message (keep decrypted
         # form for HTML view).
-        my $marshalled = Sympa::Spool::store_spool(
-            $modqueue, $message, '%s@%s_%s',
-            [qw(localpart domainpart AUTHKEY)],
-            original => 1
-        );
-        unless ($marshalled) {
-            $log->syslog('err', 'Cannot create authkey of %s for %s',
+        if ($modkey = $spool_mod->store($message, original => 1)) {
+            $spool_mod->html_store($message, $modkey);
+        }
+        unless ($modkey) {
+            $log->syslog('err', 'Cannot create moderation key of %s for %s',
                 $message, $list);
             return undef;
         }
-        $log->syslog('info', '%s is stored in mod spool as <%s>',
-            $message, $marshalled);
-        $modkey = ${
-            Sympa::Spool::unmarshal_metadata(
-                $modqueue, $marshalled,
-                qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_([^_]+)\z},
-                [qw(localpart domainpart authkey)]
-            )
-            }{authkey};
-
-        # prepare HTML view of this message
-        # Note: 6.2a.32 or earlier stored HTML view into modqueue.
-        # 6.2b has dedicated directory specified by viewmail_dir parameter.
-        my $destination_dir =
-              $Conf::Conf{'viewmail_dir'} . '/mod/'
-            . $list->get_list_id() . '/'
-            . $modkey;
-        Sympa::Archive::html_format(
-            $message,
-            'destination_dir' => $destination_dir,
-            'attachement_url' =>
-                join('/', '..', 'viewmod', $list->{'name'}, $modkey),
-        );
     }
 
     @rcpt = $list->get_admins_email('receptive_editor');
@@ -2637,7 +2612,7 @@ sub send_confirm_to_editor {
         'msg_from'       => $message->{'sender'},
         'subject'        => $message->{'decoded_subject'},
         'spam_status'    => $message->{'spam_status'},
-        'mod_spool_size' => $list->get_mod_spool_size,
+        'mod_spool_size' => $spool_mod->size,
         'method'         => $method,
         'request_topic'  => $list->is_there_msg_topic,
         'auto_submitted' => 'auto-generated',
@@ -9404,24 +9379,8 @@ sub get_which {
 }
 
 ## return total of messages awaiting moderation
-sub get_mod_spool_size {
-    my $self = shift;
-    $log->syslog('debug3', '');
-    my @msg;
-
-    unless (opendir SPOOL, $Conf::Conf{'queuemod'}) {
-        $log->syslog('err', 'Unable to read spool %s',
-            $Conf::Conf{'queuemod'});
-        return undef;
-    }
-
-    my $list_name = $self->{'name'};
-    my $list_id   = $self->get_list_id();
-    @msg = sort grep(/^($list_id|$list_name)\_\w+$/, readdir SPOOL);
-
-    closedir SPOOL;
-    return ($#msg + 1);
-}
+# DEPRECATED: Use Sympa::Spool::Moderation::size().
+# sub get_mod_spool_size;
 
 ### moderation for shared
 
@@ -11255,7 +11214,8 @@ sub has_include_data_sources {
 }
 
 # move a message to a queue or distribute spool
-#DEPRECATED: No longer used.  Use Sympa::Spool::store_spool() (and unlink()).
+#DEPRECATED: No longer used.
+# Use Sympa::Spool::XXX::store() (and Sympa::Spool::XXX::remove()).
 sub move_message {
     my ($self, $file, $queue) = @_;
     $log->syslog('debug2', '(%s, %s, %s)', $file, $self->{'name'}, $queue);

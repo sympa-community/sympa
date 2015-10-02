@@ -1785,7 +1785,7 @@ sub upgrade {
     if (lower_version($previous_version, '6.2.8')) {
         $log->syslog('notice', 'Upgrading auth spool.');
 
-        foreach my $spool_dir (($Conf::Conf{'queueauth'})) {
+        foreach my $spool_dir (($Conf::Conf{'queueauth'}, $Conf::Conf{'queuemod'})) {
             my $dh;
             next unless opendir $dh, $spool_dir;
 
@@ -1793,14 +1793,15 @@ sub upgrade {
                 next if $filename =~ /\A(?:[.]|T[.]|BAD-)/;
                 next unless -f $spool_dir . '/' . $filename;
 
-                next unless $filename =~ /\A([^\@]+)_(\w+)\z/;
-                my ($name, $authkey) = ($1, $2);
+                next unless $filename =~ /\A([^\@]+)_(\w+)([.]distribute)?\z/;
+                my ($name, $authkey, $validated) = ($1, $2, $3);
+                $validated ||= '';
 
                 rename $spool_dir . '/' . $filename,
                       $spool_dir . '/' 
                     . $name . '@'
                     . $Conf::Conf{'domain'} . '_'
-                    . $authkey;
+                    . $authkey . $validated;
             }
             closedir $dh;
         }

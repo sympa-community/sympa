@@ -75,6 +75,7 @@ use Sympa::SharedDocument;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
+use Sympa::Spool::Moderation;
 use Sympa::Template;
 use tools;
 use Sympa::Tools::Data;
@@ -1174,7 +1175,9 @@ while ($query = new_loop()) {
 
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
         $param->{$p} = Conf::get_robot_conf($robot, $p)
-            if $p =~ /_color\z/ or $p =~ /\Acolor_/ or $p =~ /_url\z/;
+            if $p =~ /_color\z/
+                or $p =~ /\Acolor_/
+                or $p =~ /_url\z/;
     }
 
     foreach my $auth (keys %{$Conf::Conf{'cas_id'}{$robot}}) {
@@ -3079,8 +3082,8 @@ sub check_param_in {
         # If the user logged in is a privileged user, gather information
         # relative to administration tasks.
         if ($param->{'is_priv'}) {
-            $param->{'mod_message'} = $list->get_mod_spool_size();
-
+            $param->{'mod_message'} =
+                Sympa::Spool::Moderation->new(context => $list)->size;
             $param->{'mod_subscription'} =
                 $list->get_subscription_request_count();
 
@@ -8382,86 +8385,54 @@ sub do_del {
 #######################################################
 sub do_modindex {
     wwslog('info', '');
-    my $msg;
-    my $doc;
 
-    ## Loads message list
-    unless (opendir SPOOL, $Conf::Conf{'queuemod'}) {
-        Sympa::Report::reject_report_web(
-            'intern', 'cannot_open_spool',
-            {'spool' => $Conf::Conf{'queuemod'}}, $param->{'action'},
-            $list, $param->{'user'}{'email'},
-            $robot
-        );
-        wwslog('err', 'Unable to read spool');
-        return 'admin';
-    }
+    # Load message list.
+    $param->{'spool'} = [];
+    my $spool_mod = Sympa::Spool::Moderation->new(context => $list);
+    while (1) {
+        my ($message, $handle) = $spool_mod->next(no_lock => 1);
+        last unless $handle;
+        next unless $message and not $message->{validated};
 
-    my $list_name = $list->{'name'};
-    my $list_id   = $list->get_list_id();
-    foreach $msg (sort grep(!/^\./, readdir SPOOL)) {
-        next
-            unless ($msg =~ /^$list_id\_(\w+)$/
-            || $msg =~ /^$list_name\_(\w+)$/);
+        my $id = $message->{authkey};
 
-        my $id = $1;
-
-        ## Load msg
-        my $message = Sympa::Message->new_from_file(
-            $Conf::Conf{'queuemod'} . '/' . $msg,
-            context => $list);
-
-        unless (defined $message) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'cannot_get_msg',
-                {'msg' => "$Conf::Conf{'queuemod'}/$msg"},
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Unable to parse msg %s', $msg);
-            closedir SPOOL;
-            next;
-        }
-
-        $param->{'spool'}{$id}{'size'} = int($message->{'size'} / 1024 + 0.5);
-        $param->{'spool'}{$id}{'subject'} = $message->{'decoded_subject'}
-            || 'no_subject';
-
-        my $date = $message->get_header('Date');
+        my $date = $message->get_header('Date') || undef;
+        my ($date_epoch, $date_str);
         if ($date) {
-            $param->{'spool'}{$id}{'date_smtp'} = $date;
-            my $date_epoch = eval {
+            $date_epoch = eval {
                 DateTime::Format::Mail->new->loose->parse_datetime($date)
                     ->epoch;
             };
             if (defined $date_epoch) {
-                $param->{'spool'}{$id}{'date_epoch'} = $date_epoch;
-                $param->{'spool'}{$id}{'date'} =
-                    $language->gettext_strftime("%a, %d %b %Y %H:%M:%S",
+                $date_str =
+                    $language->gettext_strftime('%a, %d %b %Y %H:%M:%S',
                     localtime $date_epoch);
             }
         }
 
-        $param->{'spool'}{$id}{'from'}  = $message->{'sender'};
-        $param->{'spool'}{$id}{'gecos'} = $message->{'gecos'}
-            if defined $message->{'gecos'};
-        $param->{'spool'}{$id}{'spam_status'} = $message->{'spam_status'};
-        $param->{'spool'}{$id}{'is_subscriber'} =
-            $list->is_list_member($message->{'sender'});
+        my $entry = {
+            size          => int($message->{size} / 1024 + 0.5),
+            subject       => ($message->{decoded_subject} || 'no_subject'),
+            date_smtp     => $date,
+            date_epoch    => $date_epoch,
+            date          => $date_str,
+            from          => $message->{sender},
+            gecos         => $message->{gecos},
+            spam_status   => $message->{spam_status},
+            is_subscriber => $list->is_list_member($message->{sender}),
+        };
 
-        foreach my $field ('subject', 'date', 'from') {
-            $param->{'spool'}{$id}{$field} =~ s/&/&amp;/g;
-            $param->{'spool'}{$id}{$field} =~ s/</&lt;/g;
-            $param->{'spool'}{$id}{$field} =~ s/>/&gt;/g;
+        #FIXME: Are these required?
+        foreach my $field (qw(subject date from)) {
+            $entry->{$field} =~ s/&/&amp;/g;
+            $entry->{$field} =~ s/</&lt;/g;
+            $entry->{$field} =~ s/>/&gt;/g;
         }
+
+        push @{$param->{'spool'}}, {key => $id, value => $entry};
     }
-    closedir SPOOL;
 
     if ($list->is_there_msg_topic()) {
-
         $param->{'request_topic'} = 1;
 
         foreach my $top (@{$list->{'admin'}{'msg_topic'}}) {
@@ -8900,20 +8871,24 @@ sub do_reject {
     $param->{'blacklist_added'}   = 0;
     $param->{'blacklist_ignored'} = 0;
     foreach my $id (split(/,/, $in{'id'})) {
-        ## For compatibility concerns
-        foreach my $list_id ($list->get_list_id(), $list->{'name'}) {
-            $file = $Conf::Conf{'queuemod'} . '/' . $list_id . '_' . $id;
-            last if (-f $file);
+        next unless $id and $id =~ /\A\w+\z/;
+
+        my $spool_mod =
+            Sympa::Spool::Moderation->new(context => $list, authkey => $id);
+        my ($message, $handle);
+        while (1) {
+            ($message, $handle) = $spool_mod->next;
+            last unless $handle;
+            last if $message and not $message->{validated};
         }
-        my $message = undef;
-        $message = Sympa::Message->new_from_file($file, context => $list)
-            if $file;
+
         unless ($message) {
             Sympa::Report::reject_report_web('user', 'already_moderated', {},
                 $param->{'action'});
-            wwslog('err', 'Unable to open %s', $file);
+            wwslog('err', 'Unable to get message with <%s> for list %s',
+                $id, $list);
             web_db_log(
-                {   'parameters' => $in{'id'},
+                {   'parameters' => $id,
                     'status'     => 'error',
                     'error_type' => 'internal'
                 }
@@ -8998,23 +8973,8 @@ sub do_reject {
             }
         }
 
-        unless (unlink($file)) {
-            Sympa::Report::reject_report_web('intern', 'erase_file',
-                {'file' => $file},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Failed to erase %s', $file);
-            web_db_log(
-                {   'parameters' => $in{'id'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            #XXreturn undef;
-        }
-        # clean HTML view of the message
-        Sympa::Tools::File::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/'
-                . $list->get_list_id() . '/'
-                . $id);
+        $spool_mod->remove($handle) and $spool_mod->html_remove($message);
+
     }
     web_db_log(
         {   'parameters' => $in{'id'},
@@ -9074,22 +9034,24 @@ sub do_distribute {
         return undef;
     }
 
-    ## messages
+    # Load message list.
     foreach my $id (split(/,/, $in{'id'})) {    # QUIET DISTRIBUTE
-        ## For compatibility concerns
-        foreach my $list_id ($list->get_list_id(), $list->{'name'}) {
-            $file = $Conf::Conf{'queuemod'} . '/' . $list_id . '_' . $id;
-            last if (-f $file);
+        next unless $id and $id =~ /\A\w+\z/;
+
+        my $spool_mod =
+            Sympa::Spool::Moderation->new(context => $list, authkey => $id);
+        my ($message, $handle);
+        while (1) {
+            ($message, $handle) = $spool_mod->next;
+            last unless $handle;
+            last if $message and not $message->{validated};
         }
 
-        my $message = undef;
-        $message = Sympa::Message->new_from_file($file, context => $list)
-            if $file;
         unless ($message) {
             Sympa::Report::reject_report_web('user', 'already_moderated', {},
                 $param->{'action'});
-            wwslog('err',
-                'Unable to find message in spool mod with authkey %s', $id);
+            wwslog('err', 'Unable to find message with <%s> for list %s',
+                $id, $list);
             web_db_log(
                 {   'parameters' => $id,
                     'status'     => 'error',
@@ -9107,35 +9069,12 @@ sub do_distribute {
                 $list_topics, 'editor');
         }
 
-        unless (rename($file, "$file.distribute")) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'rename_file',
-                {   'old' => $file,
-                    'new' => "$file.distribute"
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Failed to rename %s', $file);
-            web_db_log(
-                {   'parameters' => $in{'id'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-        }
-        # clean HTML view of the message
-        Sympa::Tools::File::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/'
-                . $list->get_list_id() . '/'
-                . $id);
+        $spool_mod->remove($handle, action => 'distribute');
     }
 
     # Commands are injected into incoming spool directly with "md5"
     # authentication level.
-    my $message = Sympa::Message->new(
+    my $cmd_message = Sympa::Message->new(
         sprintf("\n\n%s\n", join("\n", @mail_command)),
         context         => $robot,
         envelope_sender => Conf::get_robot_conf($robot, 'request'),
@@ -9143,9 +9082,9 @@ sub do_distribute {
         md5_check       => 1,
         message_id      => tools::get_message_id($robot)
     );
-    $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
+    $cmd_message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
-    unless (Sympa::Spool::Incoming->new->store($message)) {
+    unless (Sympa::Spool::Incoming->new->store($cmd_message)) {
         Sympa::Report::reject_report_web(
             'intern',
             'cannot_send_distribute',
@@ -9192,20 +9131,19 @@ sub do_add_frommod {
 
     wwslog('info', '(%s)', $in{'id'});
 
-    ## messages
+    # Load message list.
     $in{'dump'} = '';
     foreach my $id (split /,/, $in{'id'}) {
-        my $file =
-            $Conf::Conf{'queuemod'} . '/' . $list->get_list_id() . '_' . $id;
-        my $message = Sympa::Message->new_from_file($file, context => $list);
-# Not yet implemented
-#        unless ($message) {
-#            # if the message has been accepted via WWSympa, it's in spool
-#            # 'validated'
-#            my $validatedspool = Sympa::Spool::Validated->new(
-#                filter => [context => $list, authkey => $id]);
-#            $message = $validatedspool->next;
-#        }
+        next unless $id and $id =~ /\A\w+\z/;
+
+        my $spool_mod =
+            Sympa::Spool::Moderation->new(context => $list, authkey => $id);
+        my ($message, $handle);
+        while (1) {
+            ($message, $handle) = $spool_mod->next(no_lock => 1);
+            last unless $handle;
+            last if $message;    # Won't check {validated} metadata.
+        }
         unless ($message) {
             Sympa::Report::reject_report_web('user', 'already_moderated', {},
                 $param->{'action'});
@@ -9220,9 +9158,9 @@ sub do_add_frommod {
             );
             next;
         }
-        my $email = $message->{'sender'};
+        my $email = $message->{sender};
         next unless defined $email and $email =~ /\S/;
-        my $fullname = $message->{'gecos'};
+        my $fullname = $message->{gecos};
 
         if (defined $fullname and $fullname =~ /\S/) {
             $in{'dump'} .= "$email $fullname\n";
@@ -11286,7 +11224,8 @@ sub do_home {
             next
                 if $param->{'admin_summary'}{$one_list->{'name'}};
 
-            my $mod_message = $one_list->get_mod_spool_size();
+            my $mod_message =
+                Sympa::Spool::Moderation->new(context => $one_list)->size;
             $param->{'admin_summary'}{$one_list->{'name'}}{'mod_message'} =
                 $mod_message
                 if $mod_message;
@@ -21794,10 +21733,7 @@ sub do_request_topic {
     while (1) {
         ($message, $handle) = $spool_held->next(no_lock => 1);
         last unless $handle;
-        last
-            if $message
-                and $message->{authkey}
-                and $message->{authkey} eq $in{'authkey'};
+        last if $message;
     }
     unless ($message) {
         Sympa::Report::reject_report_web('intern', 'already_confirmed', {},
@@ -21842,10 +21778,7 @@ sub do_tag_topic_by_sender {
     while (1) {
         ($message, $handle) = $spool_held->next(no_lock => 1);
         last unless $handle;
-        last
-            if $message
-                and $message->{authkey}
-                and $message->{authkey} eq $in{'authkey'};
+        last if $message;
     }
     unless ($message) {
         Sympa::Report::reject_report_web('intern', 'already_confirmed', {},
@@ -23940,7 +23873,9 @@ sub get_safe_robot_conf {
         ) {
         $param->{'conf'}{$p} = $robot->$p;
         $param->{$p} = $robot->$p
-            if $p =~ /_color\z/ or $p =~ /\Acolor_/ or $p =~ /_url\z/;
+            if $p =~ /_color\z/
+                or $p =~ /\Acolor_/
+                or $p =~ /_url\z/;
     }
 
     ## compatibility concern: deprecated attributes of Robot.

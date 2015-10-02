@@ -83,6 +83,7 @@ nobase_modules_DATA = \
 	Sympa/Spool/Digest/Collection.pm \
 	Sympa/Spool/Held.pm \
 	Sympa/Spool/Incoming.pm \
+	Sympa/Spool/Moderation.pm \
 	Sympa/Task.pm \
 	Sympa/Template.pm \
 	tools.pm \
