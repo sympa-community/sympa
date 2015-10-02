@@ -1712,13 +1712,6 @@ sub upgrade {
             if $status;
     }
 
-    # During 6.2 to 6.2.7, [% static_content_url %] was used but omitted.
-    if (lower_version($previous_version, '6.2.8')
-        and not lower_version($previous_version, '6.2')) {
-        $log->syslog('notice', 'Modifying CSS.');
-        Sympa::Tools::WWW::update_css(force => 1);
-    }
-
     return 1;
 }
 
