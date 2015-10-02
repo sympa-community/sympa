@@ -189,7 +189,7 @@ sub quarantine {
     my $handle = shift;
 
     return undef unless $self->{bad_directory};
-    return undef unless ref $handle;
+    die 'bug in logic. Ask developer' unless ref $handle;
 
     my $bad_file;
 
@@ -206,7 +206,7 @@ sub remove {
     my $self   = shift;
     my $handle = shift;
 
-    return undef unless ref $handle;
+    die 'bug in logic.  Ask developer' unless ref $handle;
 
     if ($self->_is_collection) {
         return undef
@@ -215,6 +215,10 @@ sub remove {
     } else {
         return $handle->unlink;
     }
+}
+
+sub size {
+    scalar @{shift->_load || []};
 }
 
 sub store {
@@ -247,6 +251,40 @@ sub store {
 sub _store_key {undef}
 
 # Low-level functions.
+
+sub build_glob_pattern {
+    my $format  = shift;
+    my $keys    = shift;
+    my %options = @_;
+
+    if (exists $options{context}) {
+        my $context = $options{context};
+        if (ref $context eq 'Sympa::List') {
+            @options{qw(localpart domainpart)} =
+                split /\@/, $context->get_list_address;
+        } else {
+            $options{domainpart} = $context;
+        }
+    }
+
+    $format =~ s/%[\W\d]*\w/%s/g;
+    my @args =
+        map {
+        if (exists $options{$_} and defined $options{$_}) {
+            my $val = $options{$_};
+            $val =~ s/([^\w\x80-\xFF])/\\$1/g;
+            $val;
+        } else {
+            '*';
+        }
+        } map {
+        lc $_
+        } @{$keys || []};
+    my $pattern = sprintf $format, @args;
+    $pattern =~ s/[*][*]+/*/g;
+
+    return ($pattern =~ /[0-9A-Za-z\x80-\xFF]/) ? $pattern : undef;
+}
 
 sub split_listname {
     my $robot_id = shift || '*';
@@ -562,6 +600,8 @@ Returns:
 True value if message could be quarantined.
 Otherwise false value.
 
+If $handle was not a filehandle, this method will die.
+
 =item remove ( $handle )
 
 I<Instance method>.
@@ -581,6 +621,25 @@ Returns:
 
 True value if message could be removed.
 Otherwise false value.
+
+If $handle was not a filehandle, this method will die.
+
+=item size ( )
+
+I<Instance method>.
+Gets the number of messages the spool contains.
+
+Parameters:
+
+None.
+
+Returns:
+
+Number of messages.
+
+Note:
+This method returns the number of messages _load() returns,
+not applying _filter().
 
 =item store ( $message, [ original =E<gt> $original ] )
 
@@ -626,6 +685,14 @@ C<{directory}>, C<{bad_directory}> and so on.
 
 =over
 
+=item build_glob_pattern ( $marshal_format, $marshal_keys,
+[ key =E<gt> value, ... ] )
+
+I<Function>.
+Builds a glob pattern from parameters and returns it.
+If built pattern is empty or contains only punctuations,
+i.e. C<[^0-9A-Za-z\x80-\xFF]>, will return C<undef>.
+
 =item split_listname ( $robot, $localpart )
 
 I<Function>.
@@ -641,6 +708,13 @@ C<'subscribe'>, C<'unsubscribe'>, C<'UNKNOWN'> or C<undef>.
 Note:
 For C<-request> and C<-owner> suffix, this function returns
 C<owner> and C<return_path> types, respectively.
+
+=item store_spool ( $spool_dir, $message, $marshal_format, $marshal_keys,
+[ key => value, ... ] )
+
+I<Function>.
+Store $message into directory $spool_dir as a file with name as
+marshalled metadata using $marshal_format and $marshal_keys.
 
 =item unmarshal_metadata ( $spool_dir, $marshalled,
 $marshal_regexp, $marshal_keys )
@@ -669,13 +743,6 @@ Otherwise it means metadata or property of $message.
 
 sprintf() is executed under C<C> locale:
 Full stop (C<.>) is always used for decimal point in floating point number.
-
-=item store_spool ( $spool_dir, $message, $marshal_format, $marshal_keys,
-[ key => value, ... ] )
-
-I<Function>.
-Store $message into directory $spool_dir as a file with name as
-marshalled metadata using $marshal_format and $marshal_keys.
 
 =back
 
@@ -800,6 +867,7 @@ L<Sympa::Message>, especially L<Serialization|Sympa::Message/"Serialization">.
 L<Sympa::Spool> appeared on Sympa 6.2.
 It as the base class appeared on Sympa 6.2.6.
 
-_glob_pattern() and _store_key() are introduced on Sympa 6.2.8.
+build_glob_pattern(), size(), _glob_pattern() and _store_key()
+are introduced on Sympa 6.2.8.
 
 =cut

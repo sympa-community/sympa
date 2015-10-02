@@ -35,13 +35,6 @@ sub _directories {
     return {directory => $Conf::Conf{'queueauth'},};
 }
 
-sub _filter {
-    my $self     = shift;
-    my $metadata = shift;
-
-    $metadata && ref $metadata->{context} eq 'Sympa::List';
-}
-
 use constant _generator => 'Sympa::Message';
 
 sub _glob_pattern { shift->{_pattern} }
@@ -56,40 +49,9 @@ sub new {
     my %options = @_;
 
     my $self = $class->SUPER::new(%options);
-
-    if ($self) {
-        # Construct glob pattern.
-        if (exists $options{context}) {
-            my $context = $options{context};
-            if (ref $context eq 'Sympa::List') {
-                @options{qw(localpart domainpart)} =
-                    split /\@/, $context->get_list_address;
-            } else {
-                $options{domainpart} = $context;
-            }
-        }
-
-        my $format = $self->_marshal_format;
-        $format =~ s/%[\W\d]*\w/%s/g;
-        my @args =
-            map {
-            if (exists $options{$_} and defined $options{$_}) {
-                my $val = $options{$_};
-                $val =~ s/([^\w\x80-\xFF])/\\$1/g;
-                $val;
-            } else {
-                '*';
-            }
-            } map {
-            lc $_
-            } @{$self->_marshal_keys || []};
-
-        my $pattern = sprintf $format, @args;
-        $pattern =~ s/[*][*]+/*/g;
-        if ($pattern =~ /[0-9A-Za-z\x80-\xFF]/) {
-            $self->{_pattern} = $pattern;
-        }
-    }
+    $self->{_pattern} =
+        Sympa::Spool::build_glob_pattern($self->_marshal_format,
+        $self->_marshal_keys, %options);
 
     $self;
 }
@@ -127,7 +89,7 @@ See also L<Sympa::Spool/"Public methods">.
 
 =item new ( [ context =E<gt> $list ], [ authkey =E<gt> $authkey ] )
 
-=item next ( )
+=item next ( [ no_lock =E<gt> 1 ] )
 
 If the pairs describing metadatas are specified,
 contents returned by next() are filtered by them.
@@ -160,7 +122,7 @@ Named such by historical reason.
 =head1 SEE ALSO
 
 L<sympa_msg(8)>, L<wwsympa(8)>,
-L<Sympa::Message>, L<Sympa::Spool>, L<Sympa::Spool::Moderation>.
+L<Sympa::Message>, L<Sympa::Spool>.
 
 =head1 HISTORY
 
