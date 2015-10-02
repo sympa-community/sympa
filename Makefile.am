@@ -25,16 +25,18 @@ if SMTPC
 SUBDIRS += src/smtpc
 endif
 
-check_SCRIPTS = t/Language.t \
-		t/LockedFile.t \
-		t/Regexps.t \
-		t/compile_modules.t \
-		t/compile_executables.t \
-		t/Database_LDAP.t \
-		t/tools_data.t \
-		t/tools_file.t \
-		t/Tools_SMIME.t \
-		t/tools_time.t
+check_SCRIPTS = \
+	t/Language.t \
+	t/LockedFile.t \
+	t/Regexps.t \
+	t/compile_modules.t \
+	t/compile_executables.t \
+	t/Database_LDAP.t \
+	t/parse_templates.t \
+	t/tools_data.t \
+	t/tools_file.t \
+	t/Tools_SMIME.t \
+	t/tools_time.t
 check_DATA = \
 	t/locale/cs/LC_MESSAGES/sympa.mo \
 	t/locale/cs/LC_MESSAGES/web_help.mo \
@@ -47,6 +49,7 @@ check_DATA = \
 	t/pki/key/rousse_nopassword.pem \
 	t/pki/key/rousse_password.pem \
 	t/stub/Sympa/Constants.pm \
+	t/tt2/config \
 	xt/perlcriticrc
 noinst_SCRIPTS = \
 	xt/critic.t \
