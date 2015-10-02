@@ -10,17 +10,6 @@ use Test::More;
 
 use Sympa::Template;
 
-my @def_tt2  = _templates('default',                       '*.tt2');
-my @list_tt2 = _templates('default/create_list_templates', '*/*.tt2');
-my @mail_tt2 = _templates('default/mail_tt2',              '*.tt2 */*.tt2');
-my @web_tt2  = _templates('default/web_tt2',               '*.tt2 */*.tt2');
-
-plan tests => scalar @def_tt2 + scalar @list_tt2 + scalar @mail_tt2 +
-    scalar @web_tt2;
-
-my $template = Sympa::Template->new;
-my $scalar;
-
 my $stub_dir = 't/tt2';
 my $params   = {
     all_lists   => {size => 2},
@@ -28,6 +17,14 @@ my $params   = {
     total_group => 2,
     rows        => 2,
 };
+
+my @def_tt2  = _templates('default',                       '*.tt2');
+my @list_tt2 = _templates('default/create_list_templates', '*/*.tt2');
+my @mail_tt2 = _templates('default/mail_tt2',              '*.tt2 */*.tt2');
+my @web_tt2  = _templates('default/web_tt2',               '*.tt2 */*.tt2');
+
+plan tests => scalar @def_tt2 + scalar @list_tt2 + scalar @mail_tt2 +
+    scalar @web_tt2;
 
 map { is _do_test('default',                       $_), '', $_ } @def_tt2;
 map { is _do_test('default/create_list_templates', $_), '', $_ } @list_tt2;
