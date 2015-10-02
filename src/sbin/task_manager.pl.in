@@ -1363,14 +1363,42 @@ sub purge_spools {
         }
     }
 
-    # Expiring moderation spools, topic spool and temporary files.
+    # Expiring moderation spools except mod, topic spool and temporary files.
     foreach my $queue (
-        qw(queueauth queueautomatic queuemod queuesubscribe queuetopic tmpdir)
-        ) {
+        qw(queueauth queueautomatic queuesubscribe queuetopic tmpdir)) {
         my $directory   = $Conf::Conf{$queue};
         my $clean_delay = $Conf::Conf{'clean_delay_' . $queue};
         if (-e $directory) {
             _clean_spool($directory, $clean_delay);
+        }
+    }
+
+    # Expiring mod spool.
+    my $modqueue = $Conf::Conf{'queuemod'};
+    if (opendir my $dh, $modqueue) {
+        my @qfiles = sort readdir $dh;
+        closedir $dh;
+        foreach my $i (@qfiles) {
+            next if $i =~ /\A[.]/;
+            next unless -f $modqueue . '/' . $i;
+
+            $i =~ /\A(.+)_[.\w]+\z/;
+            my $list = Sympa::List->new($1, '*', {just_try => 1}) if $1;
+            my $moddelay;
+            if (ref $list eq 'Sympa::List') {
+                $moddelay = $list->{'admin'}{'clean_delay_queuemod'};
+            } else {
+                $moddelay = $Conf::Conf{'clean_delay_queuemod'};
+            }
+            if ($moddelay) {
+                my $mtime =
+                    Sympa::Tools::File::get_mtime($modqueue . '/' . $i);
+                if ($mtime < time - $moddelay * 86400) {
+                    unlink($modqueue . '/' . $i);
+                    $log->syslog('notice',
+                        'Deleting unmoderated message %s, too old', $i);
+                }
+            }
         }
     }
 
@@ -1380,9 +1408,15 @@ sub purge_spools {
         my @dirs = grep { !/\A\./ and -d $base_dir . '/' . $_ } readdir $dh;
         closedir $dh;
         foreach my $list_id (@dirs) {
-            my $directory   = $base_dir . '/' . $list_id;
-            my $clean_delay = $Conf::Conf{'clean_delay_queuemod'};
-            if (-e $directory) {
+            my $clean_delay;
+            my $list = Sympa::List->new($list_id, '*', {just_try => 1});
+            if (ref $list eq 'Sympa::List') {
+                $clean_delay = $list->{'admin'}{'clean_delay_queuemod'};
+            } else {
+                $clean_delay = $Conf::Conf{'clean_delay_queuemod'};
+            }
+            my $directory = $base_dir . '/' . $list_id;
+            if ($clean_delay and -e $directory) {
                 _clean_spool($directory, $clean_delay);
             }
         }
