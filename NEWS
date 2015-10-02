@@ -3,6 +3,28 @@
 
 (See Changelog file for the full changes log)
 
+6.2.8		October 02, 2015
+
+  Features:
+
+	[12381] doc/Makefile.am, doc/sympa_toc.pod, src/sbin/sympa.pl.in: 
+	Let's start with sympa_toc(1) manual page to get overview of
+	documentation on Sympa.
+
+  Bug fixes:
+
+	[12385] src/lib/Sympa/Tracking.pm:  If "View last bounce" in
+	editsubscriber page or "mail tracking" is clicked, earlier bounces or
+	notification may be shown instead of the last ones.
+	Fixed by clearling older HTML view when a new bounce overwrites earlier
+	one.
+
+	[12382] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/Tools/WWW.pm,
+	src/lib/Sympa/Upgrade.pm: [Reported by T. Fillmore and S. Shipway] URL
+	path to bundled Raleway font is incorrect, and HTTP server responds 404
+	Not Found many times.  Fixed by passing static_content_url parameter to
+	css.tt2 when it is parsed.
+
 6.2.7		September 25, 2015
 
   Bug fixes:
