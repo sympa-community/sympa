@@ -194,6 +194,8 @@ Parameters:
 Hashref or message containing metadata.
 At least C<context> and C<authkey> are required.
 
+=back
+
 Returns:
 
 None.
