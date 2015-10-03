@@ -33,6 +33,7 @@ check_SCRIPTS = \
 	t/compile_executables.t \
 	t/Database_LDAP.t \
 	t/parse_templates.t \
+	t/pod-syntax.t \
 	t/tools_data.t \
 	t/tools_file.t \
 	t/Tools_SMIME.t \
@@ -56,8 +57,7 @@ noinst_SCRIPTS = \
 	xt/fixme.t \
 	xt/fixme-todo.t \
 	xt/pod-coverage.t \
-	xt/pod-spelling.t \
-	xt/pod-syntax.t
+	xt/pod-spelling.t
 
 EXTRA_DIST = \
 	important_changes.pl \
@@ -195,6 +195,9 @@ importantchanges:
 uninstall-hook:
 	rm -f $(DESTDIR)$(confdir)/sympa.conf
 	rm -f $(DESTDIR)$(confdir)/wwsympa.conf
+
+dist-hook:
+	$(MAKE) check
 
 META.json: META.json.pl Makefile src/lib/Sympa/ModDef.pm
 	cd src/lib; $(MAKE) Sympa/Constants.pm
