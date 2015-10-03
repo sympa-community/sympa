@@ -1,7 +1,5 @@
 <!-- $Id$ -->
 
-<br />
-
  <div class="block">
   <strong>
    [%|loc%]Listname:[%END%] [% list %]<br />
@@ -10,7 +8,6 @@
    [%|loc%]List requested by[%END%] [% list_request_by %] [%|loc(list_request_date)%] on %1[%END%]<br />
  </div>
 
-<br /><br />
 [% IF is_listmaster %]
 [% IF list_status == 'pending' %]
 <div>
@@ -28,36 +25,33 @@
 </fieldset>
 </form>
 </div>
-<br /><hr /><br />
+<hr />
 [% END %]
 [% END %]
 
 <div class="block">
-<strong>[%|loc%]Information file:[%END%] </strong><br /> 
+<h2>[%|loc%]Information file[%END%]</h2>
+[% IF is_listmaster ~%]
+  <code>[% list_info %]</code>
+[%~ END ~%]
 
-   [% IF is_listmaster %]
-      ([% list_info %])
-   [% END %]
 <pre class="code">
-   [% IF list_info_file_exists %]
-       [% INSERT 'info' %]
-   [% ELSE %]
-	No info file provided.
-   [% END %]
+  [%~ IF list_info_file_exists ~%]
+    [% list_info_content %]
+  [%~ ELSE ~%]
+    [%|loc%]No info file provided.[%END%]
+  [%~ END %]
 </pre>
-<hr /><br />
 </div>
-<br /><br />
-<div class="block">
-<strong>[%|loc%]Configuration file[%END%]</strong>
-   [% IF is_listmaster %]
-      ([% list_config %])
-   [% END %]
 
-<hr /><br />
+<div class="block">
+<h2>[%|loc%]Configuration file[%END%]</h2>
+[% IF is_listmaster ~%]
+  <code>[% list_config %]</code>
+[%~ END %]
 
 <pre class="code">
-        [% INSERT 'config' %]
+  [%~ list_config_content ~%]
 </pre>
 </div>
 <!-- end set_pending_list_request.tt2 -->

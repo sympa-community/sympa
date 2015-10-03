@@ -10748,7 +10748,14 @@ sub do_set_pending_list_request {
     $param->{'list_serial'}       = $list->{'admin'}{'serial'};
     $param->{'list_status'}       = $list->{'admin'}{'status'};
 
-    push @other_include_path, $list->{'dir'};
+    if (open my $fh, '<', $list_dir . '/config') {
+        $param->{'list_config_content'} = do { local $RS; <$fh> };
+        close $fh;
+    }
+    if (open my $fh, '<', $list_dir . '/info') {
+        $param->{'list_info_content'} = do { local $RS; <$fh> };
+        close $fh;
+    }
 
     return 1;
 }
