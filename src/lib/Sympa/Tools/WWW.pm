@@ -743,6 +743,168 @@ LOOP_FOREACH_TPL_NAME:
     return $list_templates;
 }
 
+# Old name: tools::get_templates_list().
+sub get_templates_list {
+    $log->syslog('debug3', '(%s, %s, %s => %s)', @_);
+    my $that    = shift;
+    my $type    = shift;
+    my %options = @_;
+
+    my ($list, $robot_id);
+    if (ref $that eq 'Sympa::List') {
+        $list     = $that;
+        $robot_id = $that->{'domain'};
+    } elsif ($that and $that ne '*') {
+        $robot_id = $that;
+    } else {
+        die 'bug in logic. Ask developer';
+    }
+
+    my $listdir;
+
+    unless ($type and ($type eq 'web' or $type eq 'mail')) {
+        $log->syslog('info', 'Internal error incorrect parameter');
+    }
+
+    my $distrib_dir = Sympa::Constants::DEFAULTDIR . '/' . $type . '_tt2';
+    my $site_dir    = $Conf::Conf{'etc'} . '/' . $type . '_tt2';
+    my $robot_dir =
+        $Conf::Conf{'etc'} . '/' . $robot_id . '/' . $type . '_tt2';
+
+    my @try;
+
+    ## The 'ignore_global' option allows to look for files at list level only
+    unless ($options{ignore_global}) {
+        push @try, $distrib_dir;
+        push @try, $site_dir;
+        push @try, $robot_dir;
+    }
+
+    if ($list) {
+        $listdir = $list->{'dir'} . '/' . $type . '_tt2';
+        push @try, $listdir;
+    } else {
+        $listdir = '';
+    }
+
+    my $i = 0;
+    my $tpl;
+
+    foreach my $dir (@try) {
+        opendir my $dh, $dir or next;
+
+        foreach my $file (grep { !/\A[.]/ } readdir $dh) {
+            # Subdirectory for a lang
+            if (-d $dir . '/' . $file) {
+                #FIXME: Templates in subdirectories would be listed.
+                next unless Sympa::Language::canonic_lang($file);
+
+                my $lang = $file;
+                opendir my $dh_lang, $dir . '/' . $lang or next;
+
+                foreach my $file (grep { !/\A[.]/ } readdir $dh_lang) {
+                    next unless ($file =~ /\.tt2$/);
+                    if ($dir eq $distrib_dir) {
+                        $tpl->{$file}{'distrib'}{$lang} =
+                            $dir . '/' . $lang . '/' . $file;
+                    }
+                    if ($dir eq $site_dir) {
+                        $tpl->{$file}{'site'}{$lang} =
+                            $dir . '/' . $lang . '/' . $file;
+                    }
+                    if ($dir eq $robot_dir) {
+                        $tpl->{$file}{'robot'}{$lang} =
+                            $dir . '/' . $lang . '/' . $file;
+                    }
+                    if ($dir eq $listdir) {
+                        $tpl->{$file}{'list'}{$lang} =
+                            $dir . '/' . $lang . '/' . $file;
+                    }
+                }
+                closedir $dh_lang;
+
+            } else {
+                next unless ($file =~ /\.tt2$/);
+                if ($dir eq $distrib_dir) {
+                    $tpl->{$file}{'distrib'}{'default'} = $dir . '/' . $file;
+                }
+                if ($dir eq $site_dir) {
+                    $tpl->{$file}{'site'}{'default'} = $dir . '/' . $file;
+                }
+                if ($dir eq $robot_dir) {
+                    $tpl->{$file}{'robot'}{'default'} = $dir . '/' . $file;
+                }
+                if ($dir eq $listdir) {
+                    $tpl->{$file}{'list'}{'default'} = $dir . '/' . $file;
+                }
+            }
+        }
+        closedir $dh;
+    }
+    return ($tpl);
+
+}
+
+# Returns the path for a specific template.
+# Old name: tools::get_template_path().
+sub get_template_path {
+    $log->syslog('debug2', '(%s, %s. %s, %s, %s)', @_);
+    my $that  = shift;
+    my $type  = shift;
+    my $scope = shift;
+    my $tpl   = shift;
+    my $lang  = shift || 'default';
+
+    my ($list, $robot_id);
+    if (ref $that eq 'Sympa::List') {
+        $list     = $that;
+        $robot_id = $that->{'domain'};
+    } elsif ($that and $that ne '*') {
+        $robot_id = $that;
+    } else {
+        die 'bug in logic. Ask developer';
+    }
+
+    my $subdir = '';
+    # canonicalize language name which may be old-style locale name.
+    unless ($lang eq 'default') {
+        my $oldlocale = Sympa::Language::lang2oldlocale($lang);
+        unless ($oldlocale eq $lang) {
+            $subdir = Sympa::Language::canonic_lang($lang);
+            unless ($subdir) {
+                $log->syslog('info', 'Internal error incorrect parameter');
+                return undef;
+            }
+        }
+    }
+
+    unless ($type and ($type eq 'web' or $type eq 'mail')) {
+        $log->syslog('info', 'Internal error incorrect parameter');
+        return undef;
+    }
+
+    my $dir;
+    if ($scope eq 'list') {
+        unless ($list) {
+            $log->syslog('err', 'Missing parameter "list"');
+            return undef;
+        }
+        $dir = $list->{'dir'};
+    } elsif ($scope eq 'robot') {
+        $dir = $Conf::Conf{'etc'} . '/' . $robot_id;
+    } elsif ($scope eq 'site') {
+        $dir = $Conf::Conf{'etc'};
+    } elsif ($scope eq 'distrib') {
+        $dir = Sympa::Constants::DEFAULTDIR;
+    } else {
+        return undef;
+    }
+
+    $dir .= '/' . $type . '_tt2';
+    $dir .= '/' . $subdir if length $subdir;
+    return $dir . '/' . $tpl;
+}
+
 # Old name: Conf::update_css().
 sub update_css {
     my %options = @_;
@@ -766,7 +928,9 @@ sub update_css {
             grep { $_->{name} } @Sympa::ConfDef::params
             ) {
             $param->{$p} = Conf::get_robot_conf($robot, $p)
-                if $p =~ /_color\z/ or $p =~ /\Acolor_/ or $p =~ /_url\z/;
+                if $p =~ /_color\z/
+                    or $p =~ /\Acolor_/
+                    or $p =~ /_url\z/;
         }
 
         # Create directory if required

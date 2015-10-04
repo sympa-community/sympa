@@ -7141,13 +7141,9 @@ sub do_ls_templates {
 
     $in{'webormail'} ||= 'web';
 
-    if (defined $list) {
-        $param->{'templates'} =
-            tools::get_templates_list($in{'webormail'}, $robot, $list);
-    } else {
-        $param->{'templates'} =
-            tools::get_templates_list($in{'webormail'}, $robot, undef);
-    }
+    $param->{'templates'} =
+        Sympa::Tools::WWW::get_templates_list($list || $robot,
+        $in{'webormail'});
 
     ## List of lang per type
     foreach my $level ('site', 'robot', 'list') {
@@ -7204,9 +7200,10 @@ sub do_remove_template {
         );
         return 1;
     }
-    $template_path =
-        tools::get_template_path($in{'webormail'}, $robot, $in{'scope'},
-        $in{'template_name'}, $in{'tpl_lang'}, $list);
+    $template_path = Sympa::Tools::WWW::get_template_path(
+        $list || $robot, $in{'webormail'}, $in{'scope'},
+        $in{'template_name'}, $in{'tpl_lang'}
+    );
 
     my $template_old_path =
         Sympa::Tools::File::shift_file($template_path, 10);
@@ -7268,9 +7265,10 @@ sub do_view_template {
         );
         return 1;
     }
-    $template_path =
-        tools::get_template_path($in{'webormail'}, $robot, $in{'scope'},
-        $in{'template_name'}, $in{'tpl_lang'}, $list);
+    $template_path = Sympa::Tools::WWW::get_template_path(
+        $list || $robot, $in{'webormail'}, $in{'scope'},
+        $in{'template_name'}, $in{'tpl_lang'}
+    );
 
     unless ($template_path and open(TPL, $template_path)) {
         Sympa::Report::reject_report_web('intern', 'cannot_open_file',
@@ -7328,7 +7326,8 @@ sub do_copy_template {
     if ($in{'scope_out'} eq 'list') {
         if ($in{'list_out'}) {
             my $list_out;
-            unless ($list_out = Sympa::List->new($in{'list_out'}, $robot)) {
+            unless ($list_out =
+                Sympa::List->new($in{'list_out'}, $robot, {just_try => 1})) {
                 Sympa::Report::reject_report_web('user', 'unknown_list',
                     {'list' => $in{'list_out'}},
                     $param->{'action'}, '');
@@ -7342,9 +7341,9 @@ sub do_copy_template {
                 return undef;
             }
             $param->{'template_path_out'} =
-                tools::get_template_path($in{'webormail'}, $robot, 'list',
-                $in{'template_name_out'},
-                $in{'tpl_lang_out'}, $list_out);
+                Sympa::Tools::WWW::get_template_path($list_out,
+                $in{'webormail'}, 'list', $in{'template_name_out'},
+                $in{'tpl_lang_out'});
         } else {
             Sympa::Report::reject_report_web('user', 'missing_arg',
                 {'argument' => 'list'},
@@ -7360,7 +7359,7 @@ sub do_copy_template {
         }
     } else {
         $param->{'template_path_out'} =
-            tools::get_template_path($in{'webormail'}, $robot,
+            Sympa::Tools::WWW::get_template_path($robot, $in{'webormail'},
             $in{'scope_out'}, $in{'template_name_out'},
             $in{'tpl_lang_out'});
     }
@@ -7463,9 +7462,8 @@ sub do_manage_template {
         my $escaped_template_path = $in{'message_template'};
         $escaped_template_path =~ s/\s/_/g;
         $param->{'template_path'} =
-            tools::get_template_path('mail', $robot, 'list',
-            'reject_' . $escaped_template_path . '.tt2',
-            '', $list);
+            Sympa::Tools::WWW::get_template_path($list || $robot,
+            'mail', 'list', 'reject_' . $escaped_template_path . '.tt2');
     }
     my $default_file = Sympa::search_fullpath($list || $robot,
         'reject.tt2', subdir => 'mail_tt2');
@@ -7539,9 +7537,8 @@ sub do_manage_template {
         my $escaped_template_path = $in{'new_template_name'};
         $escaped_template_path =~ s/\s/_/g;
         my $new_template_path =
-            tools::get_template_path('mail', $robot, 'list',
-            'reject_' . $escaped_template_path . '.tt2',
-            '', $list);
+            Sympa::Tools::WWW::get_template_path($list || $robot,
+            'mail', 'list', 'reject_' . $escaped_template_path . '.tt2');
 
         if (-f $new_template_path) {
             Sympa::Report::reject_report_web(
@@ -7683,8 +7680,8 @@ sub do_manage_template {
         Sympa::Report::notice_report_web('performed', {}, $in{'subaction'});
     }
     ## Build the list of available templates
-    my $available_files =
-        tools::get_templates_list('mail', '', $list, {'ignore_global' => 1});
+    my $available_files = Sympa::Tools::WWW::get_templates_list($list, 'mail',
+        ignore_global => 1);
     foreach $file (keys %$available_files) {
         if ($file eq 'reject.tt2') {
             my $base          = $list->{'dir'} . '/mail_tt2/';
@@ -7784,9 +7781,10 @@ sub do_edit_template {
         );
         return undef;
     }
-    $param->{'template_path'} =
-        tools::get_template_path($in{'webormail'}, $robot, $in{'scope'},
-        $in{'template_name'}, $in{'tpl_lang'}, $list);
+    $param->{'template_path'} = Sympa::Tools::WWW::get_template_path(
+        $list || $robot, $in{'webormail'}, $in{'scope'},
+        $in{'template_name'}, $in{'tpl_lang'}
+    );
 
     unless ($param->{'template_path'}
         and open(TPLOUT, '>', $param->{'template_path'})) {
@@ -8443,8 +8441,8 @@ sub do_modindex {
         $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
     }
 
-    my $available_files =
-        tools::get_templates_list('mail', '', $list, {'ignore_global' => 1});
+    my $available_files = Sympa::Tools::WWW::get_templates_list($list, 'mail',
+        ignore_global => 1);
     foreach my $file (keys %$available_files) {
 
         if ($file eq 'reject.tt2') {
@@ -9199,8 +9197,8 @@ sub do_viewmod {
     my $msg;
     my $tmp_dir;
 
-    my $available_files =
-        tools::get_templates_list('mail', '', $list, {'ignore_global' => 1});
+    my $available_files = Sympa::Tools::WWW::get_templates_list($list, 'mail',
+        ignore_global => 1);
     foreach my $file (keys %$available_files) {
         next unless ($file =~ /^reject_/);
         $file =~ s/^reject_//;
