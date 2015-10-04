@@ -146,22 +146,6 @@ Creates new instance of L<Sympa::Spool::Digest> related to the list $list.
 
 Order is controled by delivery date, then by reception date.
 
-=item store ( $message, [ original =E<gt> $original ] )
-
-Following metadata of $message are referred:
-
-=over
-
-=item {date}
-
-Unix time when the message was delivered.
-
-=item {time}
-
-Unix time in floating point number when the message was stored.
-
-=back
-
 =back
 
 =head2 Properties
@@ -173,6 +157,24 @@ See also L<Sympa::Spool/"Properties">.
 =item {time}
 
 Earliest time of messages in the spool, or C<undef>.
+
+=back
+
+=head2 Context and metadata
+
+See also L<Sympa::Spool/"Marshaling and unmarshaling metadata">.
+
+This class particularly gives following metadata:
+
+=over
+
+=item {date}
+
+Unix time when the message was delivered.
+
+=item {time}
+
+Unix time in floating point number when the message was stored.
 
 =back
 

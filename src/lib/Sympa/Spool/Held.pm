@@ -104,6 +104,21 @@ If storing succeeded, returns authentication key.
 
 =back
 
+=head2 Context and metadata
+
+See also L<Sympa::Spool/"Marshaling and unmarshaling metadata">.
+
+This class particularly gives following metadata:
+
+=over
+
+=item {authkey}
+
+Authentication key generated automatically
+when the message is stored to spool.
+
+=back
+
 =head1 CONFIGURATION PARAMETERS
 
 Following site configuration parameters in sympa.conf will be referred.

@@ -76,15 +76,19 @@ Order is controled by modification time of files and delivery date.
 In most cases, bouncequeue(8) program stores messages to bounce spool.
 This method is not used in ordinal case.
 
-Following metadata is referred:
+=back
+
+=head2 Context and metadata
+
+See also L<Sympa::Spool/"Marshaling and unmarshaling metadata">.
+
+This class particularly gives following metadata:
 
 =over
 
 =item {date}
 
 Unix time when the message would be delivered.
-
-=back
 
 =back
 

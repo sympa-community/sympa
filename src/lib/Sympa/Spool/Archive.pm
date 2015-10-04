@@ -77,9 +77,13 @@ See also L<Sympa::Spool/"Public methods">.
 
 Order is controled by delivery date, then by reception date.
 
-=item store ( $message, [ original =E<gt> $original ] )
+=back
 
-Following metadata of $message are referred:
+=head2 Context and metadata
+
+See also L<Sympa::Spool/"Marshaling and unmarshaling metadata">.
+
+This class particularly gives following metadata:
 
 =over
 
@@ -90,8 +94,6 @@ Unix time when the message would be delivered.
 =item {time}
 
 Unix time in floating point number when the message was stored.
-
-=back
 
 =back
 

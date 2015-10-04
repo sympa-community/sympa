@@ -77,15 +77,19 @@ Messages with lowest priority (C<z> or C<Z>) are skipped.
 In most cases, familyqueue(8) program stores messages to automatic spool.
 This method is not used in ordinal case.
 
-Following metadata is referred:
+=back
+
+=head2 Context and metadata
+
+See also L<Sympa::Spool/"Marshaling and unmarshaling metadata">.
+
+This class particularly gives following metadata:
 
 =over
 
 =item {date}
 
 Unix time when the message would be delivered.
-
-=back
 
 =back
 

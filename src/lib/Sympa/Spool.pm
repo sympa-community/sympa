@@ -828,6 +828,42 @@ By default store() returns marshalled metadata
 
 =back
 
+=head2 Marshaling and unmarshaling metadata
+
+Spool class gives generator class the B<metadata> to instantiate it.
+On spool based on filesystem, it is typically encoded into file names.
+For example a file name in incoming spool (L<Sympa::Spool::Incoming>)
+
+  listname-owner@domain.name.143599229.12345
+
+encodes the metadata
+
+  localpart  => 'listname-owner',
+  listname   => 'listname',
+  listtype   => 'return_path',
+  domainpart => 'domain.name',
+  date       => 143599229,
+
+Metadata always includes information of B<context>: List, Robot or
+Site.  For example:
+
+- Message in incoming spool bound for E<lt>listname@domain.nameE<gt>:
+
+  context    => Sympa::List <listname@domain.name>,
+
+- Command message in incoming spool bound for E<lt>sympa@domain.nameE<gt>:
+
+  context    => 'domain.name',
+
+- Message sent from Sympa to super-listmaster(s):
+
+  context    => '*'
+
+Context is determined when the generator class is instantiated, and
+generally never changed through lifetime of instance.
+Thus, constructor of generator class should take context object as an
+argument.
+
 =head1 CONFIGURATION PARAMETERS
 
 Following site configuration parameters in sympa.conf will be referred.

@@ -4370,41 +4370,9 @@ This is set by L</check_spam_status>() method.
 =head2 Serialization
 
 L<Sympa::Message> object includes number of slots as hash items:
-metadata, context, attributes and message content.
-
-B<Metadata> is given by spool.
-On spool based on filesystem, it is typically encoded into file names.
-For example a file name
-
-  listname-owner@domain.name.143599229.12345
-
-encodes the metadata
-
-  localpart  => 'listname-owner',
-  listname   => 'listname',
-  listtype   => 'return_path',
-  domainpart => 'domain.name',
-  date       => 143599229,
-
-Metadata always includes information of B<context>: List, Robot or
-Site.  For example:
-
-- Incoming post bound for E<lt>listname@domain.nameE<gt>:
-
-  context    => Sympa::List <listname@domain.name>,
-
-- Incoming command message bound for E<lt>sympa@domain.nameE<gt>:
-
-  context    => 'domain.name',
-
-- Message sent from Sympa to super-listmaster(s):
-
-  context    => '*'
-
-Context is determined when the object is instantiated, and never
-changed through its lifetime.
-Thus, constructor of objects should take context object as an
-argument.
+B<metadata>, B<context>, B<attributes> and B<message content>.
+Metadata including context are given by spool:
+See L<Sympa::Spool/"Marshaling and unmarshaling metadata">.
 
 Logically, objects are stored into physical spool as B<serialized form>
 and deserialized when they are fetched from spool.
