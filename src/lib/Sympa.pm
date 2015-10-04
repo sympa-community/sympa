@@ -549,7 +549,7 @@ sub _get_search_path {
     Sympa::send_dsn($list, $message, {}, '2.1.5', 'Success');
 
 Sends a delivery status notification (DSN) to SENDER
-by parsing dsn.tt2 template.
+by parsing delivery_status_notification.tt2 template.
 
 =back
 
@@ -641,7 +641,9 @@ sub send_dsn {
         ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
 
     my $dsn_message = Sympa::Message->new_from_template(
-        $that, 'dsn', $sender,
+        $that,
+        'delivery_status_notification',
+        $sender,
         {   %$param,
             'recipient'       => $recipient,
             'to'              => $sender,
