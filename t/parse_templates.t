@@ -10,12 +10,12 @@ use Test::More;
 
 use Sympa::Template;
 
-my $stub_dir = 't/tt2';
 my $params   = {
     all_lists   => {size => 2},
     languages   => {size => 2},
     total_group => 2,
     rows        => 2,
+    reply_to_header => {value => 'all', other_email => 'xxx@xxx',},
 };
 
 my @def_tt2  = _templates('default',                       '*.tt2');
@@ -55,7 +55,7 @@ sub _do_test {
     }
 
     my $template =
-        Sympa::Template->new('*', include_path => [$dir, $stub_dir]);
+        Sympa::Template->new('*', include_path => [$dir]);
     my $scalar;
     if ($template->parse($params, $tpl, \$scalar)) {
         return '';
