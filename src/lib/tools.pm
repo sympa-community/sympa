@@ -189,13 +189,18 @@ sub get_templates_list {
     my $tpl;
 
     foreach my $dir (@try) {
-        next unless opendir(DIR, $dir);
-        foreach my $file (grep (!/^\./, readdir(DIR))) {
-            ## Subdirectory for a lang
+        opendir my $dh, $dir or next;
+
+        foreach my $file (grep {!/\A[.]/} readdir $dh) {
+            # Subdirectory for a lang
             if (-d $dir . '/' . $file) {
+                #FIXME: Templates in subdirectories would be listed.
+                next unless Sympa::Language::canonic_lang($file);
+
                 my $lang = $file;
-                next unless opendir(LANGDIR, $dir . '/' . $lang);
-                foreach my $file (grep (!/^\./, readdir(LANGDIR))) {
+                opendir my $dh_lang, $dir . '/' . $lang or next;
+
+                foreach my $file (grep {!/\A[.]/} readdir $dh_lang) {
                     next unless ($file =~ /\.tt2$/);
                     if ($dir eq $distrib_dir) {
                         $tpl->{$file}{'distrib'}{$lang} =
@@ -214,7 +219,7 @@ sub get_templates_list {
                             $dir . '/' . $lang . '/' . $file;
                     }
                 }
-                closedir LANGDIR;
+                closedir $dh_lang;
 
             } else {
                 next unless ($file =~ /\.tt2$/);
@@ -232,7 +237,7 @@ sub get_templates_list {
                 }
             }
         }
-        closedir DIR;
+        closedir $dh;
     }
     return ($tpl);
 
