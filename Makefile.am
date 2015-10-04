@@ -50,7 +50,6 @@ check_DATA = \
 	t/pki/key/rousse_nopassword.pem \
 	t/pki/key/rousse_password.pem \
 	t/stub/Sympa/Constants.pm \
-	t/tt2/config \
 	xt/perlcriticrc
 noinst_SCRIPTS = \
 	xt/critic.t \
