@@ -789,7 +789,7 @@ sub cookie_changed {
 sub checkfiles {
     my $config_err = 0;
 
-    foreach my $p ('sendmail', 'openssl', 'antivirus_path') {
+    foreach my $p (qw(sendmail antivirus_path)) {
         next unless $Conf{$p};
 
         unless (-x $Conf{$p}) {
