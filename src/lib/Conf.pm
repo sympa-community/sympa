@@ -840,33 +840,32 @@ sub checkfiles {
         }
     }
 
-    ## queuebounce and bounce_path pointing to the same directory
-    if ($Conf{'queuebounce'} eq $Conf{'bounce_path'}) {
-        $log->syslog(
-            'err',
-            'Error in config: queuebounce and bounce_path parameters pointing to the same directory (%s)',
-            $Conf{'queuebounce'}
+    # Check if directory parameters point to the same directory.
+    my @keys = qw(bounce_path etc home
+        queue queueauth queuebounce queuebulk queuedigest
+        queuemod queueoutgoing queuesubscribe queuetask
+        queuetopic spool tmpdir viewmail_dir);
+    push @keys, 'queueautomatic'
+        if $Conf::Conf{'automatic_list_feature'} eq 'on';
+    my %dirs = (Sympa::Constants::PIDDIR() => 'PID directory',
         );
-        Sympa::send_notify_to_listmaster(
-            '*',
-            'queuebounce_and_bounce_path_are_the_same',
-            [$Conf{'queuebounce'}]
-        );
-        $config_err++;
-    }
 
-    ## automatic_list_creation enabled but queueautomatic pointing to queue
-    if (($Conf{automatic_list_feature} eq 'on')
-        && $Conf{'queue'} eq $Conf{'queueautomatic'}) {
-        $log->syslog(
-            'err',
-            'Error in config: queue and queueautomatic parameters pointing to the same directory (%s)',
-            $Conf{'queue'}
-        );
-        Sympa::send_notify_to_listmaster('*',
-            'queue_and_queueautomatic_are_the_same',
-            [$Conf{'queue'}]);
-        $config_err++;
+    foreach my $key (@keys) {
+        my $val = $Conf::Conf{$key};
+        next unless $val;
+
+        if ($dirs{$val}) {
+            $log->syslog(
+                'err',
+                'Error in config: %s and %s parameters pointing to the same directory (%s)',
+                $dirs{$val},
+                $key,
+                $val
+            );
+            $config_err++;
+        } else {
+            $dirs{$val} = $key;
+        }
     }
 
     # Create pictures dir if useful for each robot.
