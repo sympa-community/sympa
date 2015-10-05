@@ -7478,7 +7478,7 @@ sub _load_list_admin_from_include {
                         db_passwd  => $incl->{'passwd'},
                     );
                     $included =
-                        _include_users_sql(\%admin_users, $incl, $incl, $db,
+                        _include_users_sql(\%admin_users,Sympa::Datasource::_get_datasource_id($incl), $incl, $db,
                         \%option, 'untied',
                         $list_admin->{'sql_fetch_timeout'});
                 } elsif ($type eq 'include_ldap_query') {
