@@ -825,8 +825,6 @@ sub checkfiles {
     if (defined $Conf{'cafile'} && $Conf{'cafile'}) {
         unless (-f $Conf{'cafile'} && -r $Conf{'cafile'}) {
             $log->syslog('err', 'Cannot access cafile %s', $Conf{'cafile'});
-            Sympa::send_notify_to_listmaster('*', 'cannot_access_cafile',
-                [$Conf{'cafile'}]);
             $config_err++;
         }
     }
@@ -834,8 +832,6 @@ sub checkfiles {
     if (defined $Conf{'capath'} && $Conf{'capath'}) {
         unless (-d $Conf{'capath'} && -x $Conf{'capath'}) {
             $log->syslog('err', 'Cannot access capath %s', $Conf{'capath'});
-            Sympa::send_notify_to_listmaster('*', 'cannot_access_capath',
-                [$Conf{'capath'}]);
             $config_err++;
         }
     }
@@ -2205,12 +2201,6 @@ sub _load_single_robot_config {
             $config_file);
         unless (-r $config_file) {
             $log->syslog('err', 'No read access on %s', $config_file);
-            Sympa::send_notify_to_listmaster(
-                '*',
-                'cannot_access_robot_conf',
-                [   "No read access on $config_file. you should change privileges on this file to activate this virtual host. "
-                ]
-            );
             return undef;
         }
         unless (
