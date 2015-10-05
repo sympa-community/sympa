@@ -79,6 +79,20 @@ Subject: [% FILTER qencode %][%|loc%]CSS files have been updated[%END%][%END%]
 
 [%|loc%]Static CSS files have been updated.  Check log file for details.[%END%]
 
+[% ELSIF type == 'css_update_failed' -%]
+Subject: [%|qencode%][%|loc%]CSS update failed[%END%][%END%]
+
+[%|loc%]Static CSS failed updating.[%END%]
+
+[% IF error == 'cannot_mkdir' -%]
+[%|loc(target,message)%]Cannot make directory %1: %2.[%END -%]
+[% ELSIF error == 'cannot_open_file' -%]
+[%|loc(file,message)%]Cannot open file %1: %2.[%END -%]
+[% ELSIF error == 'tt2_error' -%]
+[%|loc(message)%]Parsing template failed: %1.[%END -%]
+[% ELSE -%]
+[%|loc%]Unknown error.[%END -%]
+[%END %]
 
 [% ELSIF type == 'db_restored' -%]
 Subject: [% FILTER qencode %][%|loc%]DataBase connection restored[%END%][%END%]

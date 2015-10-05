@@ -947,8 +947,14 @@ sub update_css {
             if (@$error) {
                 my ($target, $err) = %{$error->[-1] || {}};
 
-                Sympa::send_notify_to_listmaster($robot, 'cannot_mkdir',
-                    ["Could not create $target: $err"]);
+                Sympa::send_notify_to_listmaster(
+                    $robot,
+                    'css_update_failed',
+                    {   error   => 'cannot_mkdir',
+                        target  => $target,
+                        message => $err
+                    }
+                );
                 $log->syslog('err', 'Failed to create %s: %s', $target, $err);
 
                 umask $umask;
@@ -987,9 +993,14 @@ sub update_css {
 
                 unless (open CSS, '>', $dir . '/' . $css) {
                     my $errno = $ERRNO;
-                    Sympa::send_notify_to_listmaster($robot,
-                        'cannot_open_file',
-                        ["Could not open file $dir/$css: $errno"]);
+                    Sympa::send_notify_to_listmaster(
+                        $robot,
+                        'css_update_failed',
+                        {   error   => 'cannot_open_file',
+                            file    => "$dir/$css",
+                            message => $errno,
+                        }
+                    );
                     $log->syslog('err',
                         'Failed to open (write) file %s/%s: %s',
                         $dir, $css, $errno);
@@ -1003,9 +1014,9 @@ sub update_css {
                 unless ($css_template->parse($param, 'css.tt2', \*CSS)) {
                     my $error = $css_template->{last_error};
                     $error = $error->as_string if ref $error;
-                    $param->{'tt2_error'} = $error;
-                    Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
-                        [$error]);
+                    Sympa::send_notify_to_listmaster($robot,
+                        'css_update_failed',
+                        {error => 'tt2_error', message => $error});
                     $log->syslog('err', 'Error while installing %s/%s',
                         $dir, $css);
                 }
