@@ -1092,8 +1092,8 @@ sub load {
         unless (defined $admin) {
             $log->syslog(
                 'err',
-                'Impossible to load list config file for list % set in status error_config',
-                $self->{'name'}
+                'Impossible to load list config file for list %s set in status error_config',
+                $self
             );
             $self->set_status_error_config('load_admin_file_error');
             $lock_fh->close();
