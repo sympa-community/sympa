@@ -682,22 +682,24 @@ sub set_status_error_config {
 
 ## set the list in status family_closed and send a notify to owners
 sub set_status_family_closed {
-    my ($self, $message, @param) = @_;
-    $log->syslog('debug2', '');
+    $log->syslog('debug2', '(%s, %s, %s)', @_);
+    my $self    = shift;
+    my $message = shift;    # 'close_list', 'purge_list': Currently unused.
+    my @param   = @_;       # No longer used.
 
     unless ($self->{'admin'}{'status'} eq 'family_closed') {
+        my $updater =
+            Conf::get_robot_conf($self->{'domain'}, 'listmaster_email') . '@'
+            . Conf::get_robot_conf($self->{'domain'}, 'host');
 
-        my $host = Conf::get_robot_conf($self->{'domain'}, 'host');
-
-        unless ($self->close_list("listmaster\@$host", 'family_closed')) {
+        unless ($self->close_list($updater, 'family_closed')) {
             $log->syslog('err',
                 'Impossible to set the list %s in status family_closed');
             return undef;
         }
         $log->syslog('info', 'The list "%s" is set in status family_closed',
             $self->{'name'});
-        $self->send_notify_to_owner($message, \@param);
-        # messages : close_list
+        $self->send_notify_to_owner('list_closed_family', {});
     }
     return 1;
 }

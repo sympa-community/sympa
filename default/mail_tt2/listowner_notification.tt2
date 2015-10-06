@@ -20,10 +20,10 @@ Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning: archive 
 
 [%|loc(conf.host,conf.listmaster_email)%]Messages are still archived but you should contact %2@%1[%END%]. 
 
-[% ELSIF type == 'closed_during_instantiation_family' -%]
+[% ELSIF type == 'list_closed_family' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 is closed[%END%][%END%]
 
-[%|loc(list.name,list.host,param0)%]%1@%2 is no longer an instance of family %3.
+[%|loc(list.name,list.host,list.family.name)%]%1@%2 is no longer an instance of family %3.
 This list has been closed.[%END%]
 
 [% ELSIF type == 'warn-signoff' -%]

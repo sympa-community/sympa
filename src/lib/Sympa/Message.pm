@@ -407,6 +407,8 @@ sub new_from_template {
         $data->{'list'}{'subject'} = $list->{'admin'}{'subject'};
         $data->{'list'}{'owner'}   = [$list->get_admins('owner')];
         $data->{'list'}{'dir'} = $list->{'dir'};    #FIXME: Required?
+        $data->{'list'}{'family'} = {name => $list->get_family->{'name'}}
+            if $list->get_family;
     }
 
     # Sign mode
