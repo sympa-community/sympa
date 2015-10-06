@@ -1437,7 +1437,7 @@ sub search {
         my $time = time;
 
         unless ($sql_conf = Conf::load_sql_filter($file)) {
-            $that->send_notify_to_owner('named_filter',
+            $that->send_notify_to_owner('bad_named_filter',
                 {'filter' => $filter_file})
                 if ref $that eq 'Sympa::List';
             return undef;

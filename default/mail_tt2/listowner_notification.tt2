@@ -134,6 +134,11 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to change member
 
 If you are able to do so, you should probably update these data sources with this person's new email address.[%END%]
 
+[% ELSIF type == 'bad_named_filter' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to load named filter[%END%][%END%]
+
+[%|loc(list.name,list.host,filter)%]A named filter for list %1@%2 could not be loaded.  Check the filter definition in %3.[%END%]
+
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(list.name,type)%]List %1 / %2[%END%][%END%]
 
