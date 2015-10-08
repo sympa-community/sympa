@@ -1790,7 +1790,7 @@ sub setDetails {
             }
         }
         $user{'custom_attribute'} =
-            List::createXMLCustomAttribute(\%newcustom);
+            Sympa::List::createXMLCustomAttribute(\%newcustom);
     }
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user details')
@@ -1851,7 +1851,8 @@ sub setCustom {
         $newcustom{$key}{value} = $value;
     }
     %user = ();
-    $user{'custom_attribute'} = List::createXMLCustomAttribute(\%newcustom);
+    $user{'custom_attribute'} =
+        Sympa::List::createXMLCustomAttribute(\%newcustom);
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user attributes')
         ->faultdetail("SOAP setCustom : update user failed")
