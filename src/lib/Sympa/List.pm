@@ -29,7 +29,6 @@ use warnings;
 use Digest::MD5 qw();
 use Encode qw();
 use English;    # FIXME: drop $POSTMATCH usage
-use HTML::Entities qw();
 use HTTP::Request;
 use IO::Scalar;
 use LWP::UserAgent;
@@ -39,7 +38,6 @@ use POSIX qw();
 use Storable qw();
 use Time::Local qw();
 use URI::Escape qw();
-use XML::LibXML;
 
 use Sympa;
 use Sympa::Archive;
@@ -3769,7 +3767,8 @@ sub get_list_member_no_object {
         );
         if (defined $user->{custom_attribute}) {
             $user->{'custom_attribute'} =
-                parseCustomAttribute($user->{'custom_attribute'});
+                Sympa::Tools::Data::decode_custom_attribute(
+                $user->{'custom_attribute'});
         }
 
     } else {
@@ -3897,7 +3896,8 @@ sub get_first_list_member {
         ######################################################################
         if (defined $user->{custom_attribute}) {
             $user->{'custom_attribute'} =
-                parseCustomAttribute($user->{'custom_attribute'});
+                Sympa::Tools::Data::decode_custom_attribute(
+                $user->{'custom_attribute'});
         }
     } else {
         $sth->finish;
@@ -3916,62 +3916,11 @@ sub get_first_list_member {
     return $user;
 }
 
-# Create a custom attribute from an XML description
-# IN : A string, XML formed data as stored in database
-# OUT : HASH data storing custome attributes.
-sub parseCustomAttribute {
-    my $xmldoc = shift;
-    return undef unless defined $xmldoc and length $xmldoc;
+# Moved to Sympa::Tools::Data::decode_custom_attribute().
+#sub parseCustomAttribute;
 
-    my $parser = XML::LibXML->new();
-    my $tree;
-
-    ## We should use eval to parse to prevent the program to crash if it fails
-    if (ref($xmldoc) eq 'GLOB') {
-        $tree = eval { $parser->parse_fh($xmldoc) };
-    } else {
-        $tree = eval { $parser->parse_string($xmldoc) };
-    }
-
-    unless (defined $tree) {
-        $log->syslog('err', "Failed to parse XML data: %s", $EVAL_ERROR);
-        return undef;
-    }
-
-    my $doc = $tree->getDocumentElement;
-
-    my @custom_attr = $doc->getChildrenByTagName('custom_attribute');
-    my %ca;
-    foreach my $ca (@custom_attr) {
-        my $id    = Encode::encode_utf8($ca->getAttribute('id'));
-        my $value = Encode::encode_utf8($ca->getElementsByTagName('value'));
-        $ca{$id} = {value => $value};
-    }
-    return \%ca;
-}
-
-# Create an XML Custom attribute to be stored into data base.
-# IN : HASH data storing custome attributes
-# OUT : string, XML formed data to be stored in database
-sub createXMLCustomAttribute {
-    my $custom_attr = shift;
-    return
-        '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes></custom_attributes>'
-        if (not defined $custom_attr);
-    my $XMLstr = '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes>';
-    foreach my $k (sort keys %{$custom_attr}) {
-        my $value = $custom_attr->{$k}{value};
-        $value = '' unless defined $value;
-
-        $XMLstr .=
-              "<custom_attribute id=\"$k\"><value>"
-            . HTML::Entities::encode_entities($value, '<>&"')
-            . "</value></custom_attribute>";
-    }
-    $XMLstr .= "</custom_attributes>";
-
-    return $XMLstr;
-}
+# Moved to Sympa::Tools::Data::encode_custom_attribute().
+#sub createXMLCustomAttribute;
 
 ## Returns the first admin_user with $role for the list.
 #DEPRECATED: Merged into _get_basic_admins().  Use get_admins() instead.
@@ -4005,8 +3954,8 @@ sub get_next_list_member {
 
         $log->syslog('debug2', '(email = %s)', $user->{'email'});
         if (defined $user->{custom_attribute}) {
-            my $custom_attr =
-                parseCustomAttribute($user->{'custom_attribute'});
+            my $custom_attr = Sympa::Tools::Data::decode_custom_attribute(
+                $user->{'custom_attribute'});
             unless (defined $custom_attr) {
                 $log->syslog(
                     'err',
@@ -4304,7 +4253,8 @@ sub get_next_bouncing_list_member {
 
         if (defined $user->{custom_attribute}) {
             $user->{'custom_attribute'} =
-                parseCustomAttribute($user->{'custom_attribute'});
+                Sympa::Tools::Data::decode_custom_attribute(
+                $user->{'custom_attribute'});
         }
 
     } else {
@@ -4476,7 +4426,8 @@ sub get_members {
         $user->{update_date} ||= $user->{date};
 
         if (defined $user->{custom_attribute}) {
-            my $custom_attr = parseCustomAttribute($user->{custom_attribute});
+            my $custom_attr = Sympa::Tools::Data::decode_custom_attribute(
+                $user->{custom_attribute});
             unless (defined $custom_attr) {
                 $log->syslog(
                     'err',
@@ -5113,7 +5064,7 @@ sub add_list_member {
         my %custom_attr = %{$subscriptions->{$who}{'custom_attribute'}}
             if (defined $subscriptions->{$who}{'custom_attribute'});
         $new_user->{'custom_attribute'} ||=
-            createXMLCustomAttribute(\%custom_attr);
+            Sympa::Tools::Data::encode_custom_attribute(\%custom_attr);
         $log->syslog(
             'debug2',
             'Custom_attribute = %s',
@@ -7479,10 +7430,15 @@ sub _load_list_admin_from_include {
                         db_user    => $incl->{'user'},
                         db_passwd  => $incl->{'passwd'},
                     );
-                    $included =
-                        _include_users_sql(\%admin_users,Sympa::Datasource::_get_datasource_id($incl), $incl, $db,
-                        \%option, 'untied',
-                        $list_admin->{'sql_fetch_timeout'});
+                    $included = _include_users_sql(
+                        \%admin_users,
+                        Sympa::Datasource::_get_datasource_id($incl),
+                        $incl,
+                        $db,
+                        \%option,
+                        'untied',
+                        $list_admin->{'sql_fetch_timeout'}
+                    );
                 } elsif ($type eq 'include_ldap_query') {
                     my $db = Sympa::Database->new(
                         'LDAP',
@@ -7894,7 +7850,9 @@ sub sync_include_ca {
         if ($self->update_list_member(
                 $email,
                 {   'custom_attribute' =>
-                        createXMLCustomAttribute($users{$email})
+                        Sympa::Tools::Data::encode_custom_attribute(
+                        $users{$email}
+                        )
                 }
             )
             ) {
@@ -7939,7 +7897,9 @@ sub purge_ca {
         if ($self->update_list_member(
                 $email,
                 {   'custom_attribute' =>
-                        createXMLCustomAttribute($users{$email})
+                        Sympa::Tools::Data::encode_custom_attribute(
+                        $users{$email}
+                        )
                 }
             )
             ) {
@@ -10730,7 +10690,8 @@ sub get_subscription_requests {
         ## Following lines may contain custom attributes in an XML format
         my $custom_attribute = do { local $RS; <$fh> };
         close $fh;
-        my $xml = parseCustomAttribute($custom_attribute);
+        my $xml =
+            Sympa::Tools::Data::decode_custom_attribute($custom_attribute);
 
         $subscriptions{$email} = {
             'gecos'            => $gecos,

@@ -40,6 +40,7 @@ use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::Template;
 use tools;
+use Sympa::Tools::Data;
 use Sympa::Tools::Password;
 use Sympa::User;
 
@@ -1790,7 +1791,7 @@ sub setDetails {
             }
         }
         $user{'custom_attribute'} =
-            Sympa::List::createXMLCustomAttribute(\%newcustom);
+            Sympa::Tools::Data::encode_custom_attribute(\%newcustom);
     }
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user details')
@@ -1852,7 +1853,7 @@ sub setCustom {
     }
     %user = ();
     $user{'custom_attribute'} =
-        Sympa::List::createXMLCustomAttribute(\%newcustom);
+        Sympa::Tools::Data::encode_custom_attribute(\%newcustom);
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user attributes')
         ->faultdetail("SOAP setCustom : update user failed")

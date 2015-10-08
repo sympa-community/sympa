@@ -26,9 +26,11 @@ package Sympa::Tools::Data;
 
 use strict;
 use warnings;
+use Encode;
 use English qw(-no_match_vars);
 use HTML::Entities qw();
 use POSIX qw();
+use XML::LibXML qw();
 
 ## This applies recursively to a data structure
 ## The transformation subroutine is passed as a ref
@@ -386,6 +388,62 @@ sub smart_lessthan {
     } else {
         return $stra < $strb;
     }
+}
+
+# Create a custom attribute from an XML description
+# IN : A string, XML formed data as stored in database
+# OUT : HASH data storing custome attributes.
+# Old name: Sympa::List::parseCustomAttribute().
+sub decode_custom_attribute {
+    my $xmldoc = shift;
+    return undef unless defined $xmldoc and length $xmldoc;
+
+    my $parser = XML::LibXML->new();
+    my $tree;
+
+    ## We should use eval to parse to prevent the program to crash if it fails
+    if (ref($xmldoc) eq 'GLOB') {
+        $tree = eval { $parser->parse_fh($xmldoc) };
+    } else {
+        $tree = eval { $parser->parse_string($xmldoc) };
+    }
+
+    return unless defined $tree;
+
+    my $doc = $tree->getDocumentElement;
+
+    my @custom_attr = $doc->getChildrenByTagName('custom_attribute');
+    my %ca;
+    foreach my $ca (@custom_attr) {
+        my $id    = Encode::encode_utf8($ca->getAttribute('id'));
+        my $value = Encode::encode_utf8($ca->getElementsByTagName('value'));
+        $ca{$id} = {value => $value};
+    }
+    return \%ca;
+}
+
+# Create an XML Custom attribute to be stored into data base.
+# IN : HASH data storing custome attributes
+# OUT : string, XML formed data to be stored in database
+# Old name: Sympa::List::createXMLCustomAttribute().
+sub encode_custom_attribute {
+    my $custom_attr = shift;
+    return
+        '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes></custom_attributes>'
+        if (not defined $custom_attr);
+    my $XMLstr = '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes>';
+    foreach my $k (sort keys %{$custom_attr}) {
+        my $value = $custom_attr->{$k}{value};
+        $value = '' unless defined $value;
+
+        $XMLstr .=
+              "<custom_attribute id=\"$k\"><value>"
+            . HTML::Entities::encode_entities($value, '<>&"')
+            . "</value></custom_attribute>";
+    }
+    $XMLstr .= "</custom_attributes>";
+
+    return $XMLstr;
 }
 
 1;

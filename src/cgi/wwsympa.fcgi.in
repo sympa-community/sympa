@@ -5597,8 +5597,8 @@ sub do_set {
     my $xml_custom_attribute;
     if ($in{custom_attribute}) {
         return undef if (check_custom_attribute() != 1);
-        my $xml =
-            Sympa::List::createXMLCustomAttribute($in{custom_attribute});
+        my $xml = Sympa::Tools::Data::encode_custom_attribute(
+            $in{custom_attribute});
 
         $xml_custom_attribute = $xml;
     }
@@ -5977,8 +5977,8 @@ sub do_subscribe {
                 wwslog('notice', "Missing required custom attributes");
                 return 'subrequest';
             }
-            my $xml =
-                Sympa::List::createXMLCustomAttribute($in{custom_attribute});
+            my $xml = Sympa::Tools::Data::encode_custom_attribute(
+                $in{custom_attribute});
             $xml_custom_attribute = $xml;
         }
 
@@ -8063,7 +8063,7 @@ sub do_add {
             "do_add subscription \$subscriptions->{$email}{custom_attribute} = $subscriptions->{$email}{'custom_attribute'})"
         );
         if (ref($subscriptions->{$email}{'custom_attribute'}) eq 'HASH') {
-            my $xml = Sympa::List::createXMLCustomAttribute(
+            my $xml = Sympa::Tools::Data::encode_custom_attribute(
                 $subscriptions->{$email}{'custom_attribute'});
             wwslog('debug',
                 "do_add subscription XML \$subscriptions->{$email}{custom_attribute} = $xml;"
