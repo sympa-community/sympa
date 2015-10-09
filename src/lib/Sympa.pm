@@ -191,6 +191,11 @@ sub request_auth {
     my $cmd   = shift;
     my @param = @_;
 
+    # Suppress warnings on uninitialized value.
+    foreach my $i ((0 .. 1)) {
+        $param[$i] = '' unless defined $param[$i];
+    }
+
     my ($list, $robot);
     if (ref $that eq 'Sympa::List') {
         $list  = $that;
