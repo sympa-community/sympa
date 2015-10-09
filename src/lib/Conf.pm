@@ -2141,8 +2141,9 @@ sub _detect_missing_mandatory_parameters {
             $number_of_errors++;
             next;
         }
-        $param->{'config_hash'}{$parameter} ||=
-            $params{$parameter}->{'default'};
+        unless (defined $param->{'config_hash'}{$parameter}) {
+			$param->{'config_hash'}{$parameter} = $params{$parameter}->{'default'};
+		}
     }
     return $number_of_errors;
 }
