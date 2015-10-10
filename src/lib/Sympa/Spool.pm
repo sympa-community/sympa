@@ -267,7 +267,7 @@ sub build_glob_pattern {
         }
     }
 
-    $format =~ s/%[\W\d]*\w/%s/g;
+    $format =~ s/(%%|%[-#+.\d ]*[l]*\w)/$1 eq '%%' ? '%%' : '%s'/eg;
     my @args =
         map {
         if (exists $options{$_} and defined $options{$_}) {
