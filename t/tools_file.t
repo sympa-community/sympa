@@ -41,25 +41,40 @@ ok(
     'file, invalid mode: ok (fixme)'
 );
 
-ok(
-    !Sympa::Tools::File::set_file_rights(file => $file, user => $user, group => 'none'),
-    'file, valid user, invalid group: ko'
-);
+if ($UID) {
+    ok(
+        !Sympa::Tools::File::set_file_rights(file => $file, user => $user, group => 'none'),
+        'file, valid user, invalid group: ko'
+    );
+} else {
+    ok !defined eval { Sympa::Tools::File::set_file_rights(file => $file, user => $user, group => 'none') }, 'file, supere-user, invalid group: ko';
+}
 
 ok(
     !Sympa::Tools::File::set_file_rights(file => $file, user => 'none', group => $group),
     'file, invalid user, valid group: ko'
 );
 
-ok(
-    Sympa::Tools::File::set_file_rights(file => $file, user => $user, group => $group),
-    'file, valid user, valid group: ok'
-);
+if ($UID) {
+    ok(
+        Sympa::Tools::File::set_file_rights(file => $file, user => $user, group => $group),
+        'file, valid user, valid group: ok'
+    );
+} else {
+    ok !defined eval { Sympa::Tools::File::set_file_rights(file => $file, user => $user, group => $group) },
+        'file, super-user, valid group: ok';
+}
 
-ok(
-    Sympa::Tools::File::set_file_rights(file => $file, user => $user, group => $group, mode => 0666),
-    'file, valid user, valid group, valid mode: ok'
-);
+if ($UID) {
+    ok(
+        Sympa::Tools::File::set_file_rights(file => $file, user => $user, group => $group, mode => 0666),
+        'file, valid user, valid group, valid mode: ok'
+    );
+} else {
+    ok !defined eval { Sympa::Tools::File::set_file_rights(file => $file, user => $user, group => $group, mode => 0666) },
+        'file, super-user, valid group, valid mode: ok';
+    Sympa::Tools::File::set_file_rights(file => $file, mode => 0666);
+}
 
 is(get_perms($file), "0666", "expected mode");
 
@@ -106,7 +121,11 @@ utime 123456789, 1234567890, $file;
 is(Sympa::Tools::File::get_mtime($file), 1234567890);
 ok(Sympa::Tools::File::get_mtime("$dir/no-such-file") < -32768);
 chmod 0333, $file;
-ok(Sympa::Tools::File::get_mtime($file) < -32768);
+if ($UID) {
+    ok(Sympa::Tools::File::get_mtime($file) < -32768, 'unreadable file');
+} else {
+    is(Sympa::Tools::File::get_mtime($file), 1234567890, 'readable by super-user');
+}
 
 sub touch {
     my ($file) = @_;
