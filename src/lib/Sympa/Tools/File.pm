@@ -55,6 +55,12 @@ my $log = Sympa::Log->instance;
 
 Sets owner and/or access rights on a file.
 
+Returns true value if setting rights succeeded.
+Otherwise returns false value.
+
+Note:
+If superuser was speficied as owner, this function will die.
+
 =back
 
 =cut
@@ -64,10 +70,12 @@ sub set_file_rights {
     my ($uid, $gid);
 
     if ($param{'user'}) {
-        unless ($uid = (getpwnam($param{'user'}))[2]) {
-            $log->syslog('err', "User %s can't be found in passwd file",
-                $param{'user'});
+        $uid = (getpwnam($param{'user'}))[2];
+        unless (defined $uid) {
+            $log->syslog('err', 'User %s can\'t be found', $param{'user'});
             return undef;
+        } elsif ($uid == 0) {
+            die 'You are trying to give root permission';
         }
     } else {
         # "A value of -1 is interpreted by most systems to leave that value
