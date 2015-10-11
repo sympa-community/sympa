@@ -26,7 +26,7 @@ package Sympa::Tools::Data;
 
 use strict;
 use warnings;
-use Encode;
+use Encode qw();
 use English qw(-no_match_vars);
 use HTML::Entities qw();
 use POSIX qw();
@@ -408,7 +408,7 @@ sub decode_custom_attribute {
         $tree = eval { $parser->parse_string($xmldoc) };
     }
 
-    return unless defined $tree;
+    return undef unless defined $tree;
 
     my $doc = $tree->getDocumentElement;
 
