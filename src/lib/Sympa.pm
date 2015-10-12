@@ -58,6 +58,7 @@ use Sympa::Log;
 use Sympa::Message;
 use tools;
 use Sympa::Tools::Data;
+use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
 
@@ -1030,9 +1031,9 @@ Is the user listmaster?
 # Old names: [6.2b-6.2.3] Sympa::Robot::is_listmaster($who, $robot_id)
 sub is_listmaster {
     my $that = shift;
-    my $who = tools::clean_email(shift || '');
+    my $who = Sympa::Tools::Text::canonic_email(shift);
 
-    return undef unless length $who;
+    return undef unless defined $who;
     return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email($that);
     return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email('*');
     return 0;

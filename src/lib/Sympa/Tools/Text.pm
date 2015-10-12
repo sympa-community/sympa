@@ -30,6 +30,22 @@ use Text::LineFold;
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 
+# Old names: tools::clean_email(), tools::get_canonical_email().
+sub canonic_email {
+    my $email = shift;
+
+    return undef unless defined $email;
+
+    # Remove leading and trailing white spaces.
+    $email =~ s/\A\s+//;
+    $email =~ s/\s+\z//;
+
+    # Lower-case.
+    $email =~ tr/A-Z/a-z/;
+
+    return (length $email) ? $email : undef;
+}
+
 sub wrap_text {
     my $text = shift;
     my $init = shift;
@@ -77,6 +93,16 @@ This package provides some text-related functions.
 =head2 Functions
 
 =over
+
+=item canonic_email ( $email )
+
+I<Function>.
+Returns canonical form of e-mail address.
+
+Leading and trailing whilte spaces are removed.
+Latin letters without accents are lower-cased.
+
+For malformed inputs returns C<undef>.
 
 =item wrap_text ( $text, [ $init_tab, [ $subsequent_tab, [ $cols ] ] ] )
 

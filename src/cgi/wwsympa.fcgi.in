@@ -4770,7 +4770,8 @@ sub do_requestpasswd {
     $param->{'request_from_host'} = $ip;
     unless ($param->{'newuser'} = Sympa::User::get_global_user($in{'email'}))
     {
-        $param->{'newuser'} = {'email' => tools::clean_email($in{'email'})};
+        $param->{'newuser'} =
+            {'email' => Sympa::Tools::Text::canonic_email($in{'email'})};
         $param->{'newuser'}{'escaped_email'} =
             tools::escape_chars($param->{'newuser'}{'email'});
     }
@@ -6366,7 +6367,7 @@ sub do_subrequest {
         unless ($param->{'newuser'} =
             Sympa::User::get_global_user($in{'email'})) {
             $param->{'newuser'} =
-                {'email' => tools::clean_email($in{'email'})};
+                {'email' => Sympa::Tools::Text::canonic_email($in{'email'})};
             $param->{'newuser'}{'escaped_email'} =
                 tools::escape_chars($param->{'newuser'}{'email'});
         }
@@ -8022,25 +8023,25 @@ sub do_add {
     if ($in{'dump'}) {
         foreach (split /\n/, $in{'dump'}) {
             if (/^\s*($email_regexp)(\s+(.*))?\s*$/) {
-                $user{tools::get_canonical_email($1)} = $5;
+                $user{Sympa::Tools::Text::canonic_email($1)} = $5;
             }
         }
     } elsif ($in{'email'} =~ /,/) {
         foreach my $pair (split /\0/, $in{'email'}) {
             if ($pair =~ /^($email_regexp)(,(.*))?\s*$/) {
-                $user{tools::get_canonical_email($1)} = $5;
+                $user{Sympa::Tools::Text::canonic_email($1)} = $5;
             }
         }
     } elsif ($in{'email'}) {
         foreach my $email (split /\0/, $in{'email'}) {
-            $user{tools::get_canonical_email($email)} = $in{'gecos'};
+            $user{Sympa::Tools::Text::canonic_email($email)} = $in{'gecos'};
         }
     } elsif ($in{'pending_email'}) {
         foreach my $pair (split /\0/, $in{'pending_email'}) {
             my ($email, $gecos);
             if ($pair =~ /^($email_regexp)(,(.*))?\s*$/) {
                 ($email, $gecos) = ($1, $5);
-                $user{tools::get_canonical_email($email)} = $gecos;
+                $user{Sympa::Tools::Text::canonic_email($email)} = $gecos;
             }
         }
     } else {

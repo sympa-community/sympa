@@ -56,6 +56,7 @@ use Sympa::Scenario;
 use Sympa::Spool::Bounce;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
+use Sympa::Tools::Text;
 use Sympa::Tracking;
 
 ## Check options
@@ -791,8 +792,8 @@ sub _parse_dsn {
         next unless $rcpt;
         $rcpt = $1 if $rcpt =~ /\@.+:\s*(.+)\z/;
         $rcpt = $1 if $rcpt =~ /<(.+)>/;
-        $rcpt = tools::clean_email($rcpt);
-        next unless $rcpt;
+        $rcpt = Sympa::Tools::Text::canonic_email($rcpt);
+        next unless defined $rcpt;
 
         $result->{$rcpt} = $status;
     }

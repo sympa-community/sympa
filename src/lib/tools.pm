@@ -459,33 +459,11 @@ sub valid_email {
     return 1;
 }
 
-## Clean email address
-sub clean_email {
-    my $email = shift;
+#DEPRECATED.  Use Sympa::Tools::Text::canonic_email().
+#sub clean_email;
 
-    ## Lower-case
-    $email = lc($email);
-
-    ## remove leading and trailing spaces
-    $email =~ s/^\s*//;
-    $email =~ s/\s*$//;
-
-    return $email;
-}
-
-## Return canonical email address (lower-cased + space cleanup)
-## It could also support alternate email
-sub get_canonical_email {
-    my $email = shift;
-
-    ## Remove leading and trailing white spaces
-    $email =~ s/^\s*(\S.*\S)\s*$/$1/;
-
-    ## Lower-case
-    $email = lc($email);
-
-    return $email;
-}
+#DEPRECATED.  Use Sympa::Tools::Text::canonic_email().
+#sub get_canonical_email;
 
 #DEPRECATED: No longer used.
 # sub dump_html_var2($var);

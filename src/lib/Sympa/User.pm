@@ -33,9 +33,9 @@ use Sympa::DatabaseDescription;
 use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::Log;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::Password;
+use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
 
@@ -82,10 +82,10 @@ Create new Sympa::User object.
 
 sub new {
     my $pkg    = shift;
-    my $who    = tools::clean_email(shift || '');
+    my $who    = Sympa::Tools::Text::canonic_email(shift);
     my %values = @_;
     my $self;
-    return undef unless $who;
+    return undef unless defined $who;
 
     ## Canonicalize lang if possible
     $values{'lang'} = Sympa::Language::canonic_lang($values{'lang'})
@@ -149,9 +149,9 @@ Change email of user.
 
 sub moveto {
     my $self = shift;
-    my $newemail = tools::clean_email(shift || '');
+    my $newemail = Sympa::Tools::Text::canonic_email(shift);
 
-    unless ($newemail) {
+    unless (defined $newemail) {
         $log->syslog('err', 'No email');
         return undef;
     }
@@ -309,13 +309,13 @@ sub delete_global_user {
 
     $log->syslog('debug2', '');
 
-    return undef unless ($#users >= 0);
+    return undef unless @users;
 
     my $sdm = Sympa::DatabaseManager->instance;
     foreach my $who (@users) {
-        $who = tools::clean_email($who);
-        ## Update field
+        $who = Sympa::Tools::Text::canonic_email($who);
 
+        # Update field
         unless (
             $sdm
             and $sdm->do_prepared_query(
@@ -327,13 +327,13 @@ sub delete_global_user {
         }
     }
 
-    return $#users + 1;
+    return scalar @users;
 }
 
 ## Returns a hash for a given user
 sub get_global_user {
     $log->syslog('debug2', '(%s)', @_);
-    my $who = tools::clean_email(shift);
+    my $who = Sympa::Tools::Text::canonic_email(shift);
 
     ## Additional subscriber fields
     my $additional = '';
@@ -438,10 +438,10 @@ sub get_all_global_user {
 
 ## Is the person in user table (db only)
 sub is_global_user {
-    my $who = tools::clean_email(pop);
+    my $who = Sympa::Tools::Text::canonic_email(pop);
     $log->syslog('debug3', '(%s)', $who);
 
-    return undef unless ($who);
+    return undef unless defined $who;
 
     push @sth_stack, $sth;
     my $sdm = Sympa::DatabaseManager->instance;
@@ -478,7 +478,7 @@ sub update_global_user {
         $values = {@_};
     }
 
-    $who = tools::clean_email($who);
+    $who = Sympa::Tools::Text::canonic_email($who);
 
     ## use md5 fingerprint to store password
     $values->{'password'} =
@@ -573,7 +573,8 @@ sub add_global_user {
         || $values->{'lang'}
         if $values->{'lang'};
 
-    return undef unless (my $who = tools::clean_email($values->{'email'}));
+    my $who = Sympa::Tools::Text::canonic_email($values->{'email'});
+    return undef unless defined $who;
     return undef if (is_global_user($who));
 
     ## Update each table

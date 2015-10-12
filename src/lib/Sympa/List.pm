@@ -3235,7 +3235,7 @@ sub delete_list_member {
     my $total = 0;
 
     foreach my $who (@u) {
-        $who = tools::clean_email($who);
+        $who = Sympa::Tools::Text::canonic_email($who);
 
         ## Include in exclusion_table only if option is set.
         if ($exclude) {
@@ -3293,7 +3293,7 @@ sub delete_list_admin {
     delete $self->{_admin_cache}{$role};    # Reset cache
 
     foreach my $who (@u) {
-        $who = tools::clean_email($who);
+        $who = Sympa::Tools::Text::canonic_email($who);
         my $statement;
 
         my $sdm = Sympa::DatabaseManager->instance;
@@ -3650,7 +3650,7 @@ sub get_exclusion {
 ######################################################################
 sub get_list_member {
     my $self    = shift;
-    my $email   = tools::clean_email(shift);
+    my $email   = Sympa::Tools::Text::canonic_email(shift);
     my %options = @_;
 
     $log->syslog('debug2', '(%s)', $email);
@@ -3726,7 +3726,7 @@ sub get_list_member_no_object {
 
     my $name = $options->{'name'};
 
-    my $email = tools::clean_email($options->{'email'});
+    my $email = Sympa::Tools::Text::canonic_email($options->{'email'});
 
     ## Use session cache
     if (defined $list_cache{'get_list_member'}{$options->{'domain'}}{$name}
@@ -4043,7 +4043,7 @@ sub get_admins {
     my %options = @_;
 
     my %query = @{$options{filter} || []};
-    $query{email} = tools::clean_email($query{email})
+    $query{email} = Sympa::Tools::Text::canonic_email($query{email})
         if defined $query{email};
 
     # Fill caches.
@@ -4154,11 +4154,11 @@ sub _get_basic_admins {
     $sth->finish;
 
     foreach my $user (@$admin_user) {
-        $user->{'email'} = tools::clean_email($user->{'email'})
+        $user->{'email'} = Sympa::Tools::Text::canonic_email($user->{'email'})
             if defined $user->{'email'};
         $log->syslog('err',
             'Warning: Entry with empty email address in list %s', $self)
-            unless defined $user->{'email'} and length $user->{'email'};
+            unless defined $user->{'email'};
         $user->{'reception'}   ||= 'mail';
         $user->{'update_date'} ||= $user->{'date'};
     }
@@ -4473,9 +4473,9 @@ sub get_resembling_members {
     $log->syslog('debug2', '(%s, %s)', @_);
     my $self      = shift;
     my $role      = shift;
-    my $searchkey = tools::clean_email(shift || '');
+    my $searchkey = Sympa::Tools::Text::canonic_email(shift);
 
-    return unless $searchkey;
+    return unless defined $searchkey;
     $searchkey =~ s/(['%_\\])/\\$1/g;
 
     my ($local, $domain) = split /\@/, $searchkey;
@@ -4608,7 +4608,7 @@ sub is_admin {
 ## Is the indicated person a subscriber to the list?
 sub is_list_member {
     my ($self, $who) = @_;
-    $who = tools::clean_email($who);
+    $who = Sympa::Tools::Text::canonic_email($who);
     $log->syslog('debug3', '(%s)', $who);
 
     return undef unless ($self && $who);
@@ -4659,7 +4659,7 @@ sub is_list_member {
 sub update_list_member {
     my ($self, $who, $values) = @_;
     $log->syslog('debug2', '(%s)', $who);
-    $who = tools::clean_email($who);
+    $who = Sympa::Tools::Text::canonic_email($who);
 
     my ($field, $value, $table);
     my $name = $self->{'name'};
@@ -4855,7 +4855,7 @@ sub update_list_member {
 sub update_list_admin {
     my ($self, $who, $role, $values) = @_;
     $log->syslog('debug2', '(%s, %s)', $role, $who);
-    $who = tools::clean_email($who);
+    $who = Sympa::Tools::Text::canonic_email($who);
 
     my ($field, $value, $table);
     my $name = $self->{'name'};
@@ -5029,8 +5029,8 @@ sub add_list_member {
     my $current_list_members_count = $self->get_total();
 
     foreach my $new_user (@new_users) {
-        my $who = tools::clean_email($new_user->{'email'});
-        unless ($who) {
+        my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
+        unless (defined $who) {
             $log->syslog('err', 'Ignoring %s which is not a valid email',
                 $new_user->{'email'});
             next;
@@ -5203,9 +5203,10 @@ sub add_list_admin {
     delete $self->{_admin_cache}{$role};    # Reset cache
 
     foreach my $new_admin_user (@new_admin_users) {
-        my $who = tools::clean_email($new_admin_user->{'email'});
+        my $who =
+            Sympa::Tools::Text::canonic_email($new_admin_user->{'email'});
 
-        next unless $who;
+        next unless defined $who;
 
         $new_admin_user->{'date'} ||= time;
         $new_admin_user->{'update_date'} ||= $new_admin_user->{'date'};
@@ -6206,7 +6207,7 @@ sub _include_users_file {
             next;
         }
 
-        my $email = tools::clean_email($1);
+        my $email = Sympa::Tools::Text::canonic_email($1);
 
         unless (tools::valid_email($email)) {
             $log->syslog('err', 'Skip badly formed email address: "%s"',
@@ -6313,7 +6314,7 @@ sub _include_users_remote_file {
                 next;
             }
 
-            my $email = tools::clean_email($1);
+            my $email = Sympa::Tools::Text::canonic_email($1);
 
             unless (tools::valid_email($email)) {
                 $log->syslog('err', 'Skip badly formed email address: "%s"',
@@ -6523,7 +6524,7 @@ sub _include_users_ldap {
         } elsif (ref $emailentry eq 'ARRAY') {
             # Multiple values
             foreach my $email (@{$emailentry}) {
-                my $cleanmail = tools::clean_email($email);
+                my $cleanmail = Sympa::Tools::Text::canonic_email($email);
                 ## Skip badly formed emails
                 unless (tools::valid_email($email)) {
                     $log->syslog('err',
@@ -6537,7 +6538,7 @@ sub _include_users_ldap {
                 last if $ldap_select eq 'first';
             }
         } else {    #FIMXE: Probably not reached due to asref.
-            my $cleanmail = tools::clean_email($emailentry);
+            my $cleanmail = Sympa::Tools::Text::canonic_email($emailentry);
             ## Skip badly formed emails
             unless (tools::valid_email($emailentry)) {
                 $log->syslog('err', 'Skip badly formed email address: "%s"',
@@ -6561,7 +6562,7 @@ sub _include_users_ldap {
         my ($email, $gecos) = @$emailgecos;
         next if ($email =~ /^\s*$/);
 
-        $email = tools::clean_email($email);
+        $email = Sympa::Tools::Text::canonic_email($email);
         my %u;
         ## Check if user has already been included
         if ($users->{$email}) {
@@ -6744,7 +6745,7 @@ sub _include_users_ldap_2level {
             } elsif (ref $emailentry eq 'ARRAY') {
                 # Multiple values
                 foreach my $email (@{$emailentry}) {
-                    my $cleanmail = tools::clean_email($email);
+                    my $cleanmail = Sympa::Tools::Text::canonic_email($email);
                     ## Skip badly formed emails
                     unless (tools::valid_email($email)) {
                         $log->syslog('err',
@@ -6761,7 +6762,8 @@ sub _include_users_ldap_2level {
                     last if $ldap_select2 eq 'first';
                 }
             } else {    #FIXME: Probably not reached due to asref
-                my $cleanmail = tools::clean_email($emailentry);
+                my $cleanmail =
+                    Sympa::Tools::Text::canonic_email($emailentry);
                 ## Skip badly formed emails
                 unless (tools::valid_email($emailentry)) {
                     $log->syslog('err',
@@ -6789,7 +6791,7 @@ sub _include_users_ldap_2level {
         my ($email, $gecos) = @$emailgecos;
         next if ($email =~ /^\s*$/);
 
-        $email = tools::clean_email($email);
+        $email = Sympa::Tools::Text::canonic_email($email);
         my %u;
         ## Check if user has already been included
         if ($users->{$email}) {
@@ -6995,7 +6997,7 @@ sub _include_users_sql {
         ## Empty value
         next if ($email =~ /^\s*$/);
 
-        $email = tools::clean_email($email);
+        $email = Sympa::Tools::Text::canonic_email($email);
 
         ## Skip badly formed emails
         unless (tools::valid_email($email)) {
@@ -9323,7 +9325,7 @@ function to any list in ROBOT.
 
 sub get_which {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my $email    = tools::clean_email(shift);
+    my $email    = Sympa::Tools::Text::canonic_email(shift);
     my $robot_id = shift;
     my $role     = shift;
 
