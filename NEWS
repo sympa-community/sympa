@@ -3,6 +3,26 @@
 
 (See Changelog file for the full changes log)
 
+6.2.9		October 13, 2015
+
+  Bug fixes:
+
+	[12429] src/lib/Sympa/List.pm:	When using LDAP 1 or 2 levels  queries
+	in owner_includes, include failed because the full incl source was
+	passed instead of the MD5 sum, leading to a failed prepared statement.
+
+	[12423] t/tools_file.t:  "make check" run by root fails.  Fixed by
+	taking care of super-user privileges.
+
+	[12418] src/lib/Conf.pm:  Some parameters could not take the value '0'
+	(and were then set to their default value) because a test about whether
+	the parameter was set in config relied on a true value instead of a
+	defined value.
+
+	[12412] src/lib/Sympa/List.pm:	When using sql queries in
+	oxner_includes, it failed because the fulle incl source was passed
+	insetead of the MD5 sum, leading to a failed prepared statement.
+
 6.2.8		October 02, 2015
 
   Features:
