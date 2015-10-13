@@ -7449,7 +7449,7 @@ sub _load_list_admin_from_include {
                         bind_password => $incl->{'passwd'},
                     );
                     $included =
-                        _include_users_ldap(\%admin_users, $incl, $incl, $db,
+                        _include_users_ldap(\%admin_users, Sympa::Datasource::_get_datasource_id($incl), $incl, $db,
                         \%option);
                 } elsif ($type eq 'include_ldap_2level_query') {
                     my $db = Sympa::Database->new(
@@ -7460,7 +7460,7 @@ sub _load_list_admin_from_include {
                         timeout => $incl->{'timeout1'},  # Note: not "timeout"
                     );
                     my $result =
-                        _include_users_ldap_2level(\%admin_users, $incl,
+                        _include_users_ldap_2level(\%admin_users, Sympa::Datasource::_get_datasource_id($incl),
                         $incl, $db, \%option);
                     if (defined $result) {
                         $included = $result->{'total'};
