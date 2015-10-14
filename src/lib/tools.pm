@@ -167,7 +167,8 @@ sub load_edit_list_conf {
 #sub escape_regexp ($s);
 
 # Escape weird characters
-# FIXME: Should not use.
+# ToDo: This should be obsoleted: Would be better to use
+# Sympa::Tools::Text::encode_filesystem_safe().
 sub escape_chars {
     my $s          = shift;
     my $except     = shift;                            ## Exceptions
@@ -197,6 +198,8 @@ sub escape_chars {
 
 ## Escape shared document file name
 ## Q-decode it first
+# ToDo: This should be obsoleted: Would be better to use
+# Sympa::Tools::Text::encode_filesystem_safe().
 sub escape_docname {
     my $filename = shift;
     my $except   = shift;    ## Exceptions
@@ -223,6 +226,8 @@ sub unicode_to_utf8 {
 }
 
 ## Q-Encode web file name
+# ToDo: This should be obsoleted: Would be better to use
+# Sympa::Tools::Text::encode_filesystem_safe().
 sub qencode_filename {
     my $filename = shift;
 
@@ -255,6 +260,8 @@ sub qencode_filename {
 }
 
 ## Q-Decode web file name
+# ToDo: This should be obsoleted: Would be better to use
+# Sympa::Tools::Text::encode_filesystem_safe().
 sub qdecode_filename {
     my $filename = shift;
 
@@ -269,6 +276,8 @@ sub qdecode_filename {
 }
 
 ## Unescape weird characters
+# ToDo: This should be obsoleted: Would be better to use
+# Sympa::Tools::Text::decode_filesystem_safe().
 sub unescape_chars {
     my $s = shift;
 
@@ -384,6 +393,7 @@ sub escape_quote {
 
 ## Q-encode a complete file hierarchy
 ## Useful to Q-encode subshared documents
+# ToDo: See a comment on tools::qencode_filename().
 sub qencode_hierarchy {
     my $dir               = shift; ## Root directory
     my $original_encoding = shift; ## Suspected original encoding of filenames

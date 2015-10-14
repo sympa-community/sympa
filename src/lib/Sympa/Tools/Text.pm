@@ -26,6 +26,7 @@ package Sympa::Tools::Text;
 
 use strict;
 use warnings;
+use Encode qw();
 use Text::LineFold;
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
@@ -62,6 +63,25 @@ sub wrap_text {
     )->fold($init, $subs, $text);
 
     return $text;
+}
+
+sub decode_filesystem_safe {
+    my $str = shift;
+    return '' unless defined $str and length $str;
+
+    $str = Encode::encode_utf8($str) if Encode::is_utf8($str);
+    # On case-insensitive filesystem "_XX" along with "_xx" should be decoded.
+    $str =~ s/_([0-9A-Fa-f]{2})/chr hex "0x$1"/eg;
+    return $str;
+}
+
+sub encode_filesystem_safe {
+    my $str = shift;
+    return '' unless defined $str and length $str;
+
+    $str = Encode::encode_utf8($str) if Encode::is_utf8($str);
+    $str =~ s/([^-+.0-9\@A-Za-z])/sprintf '_%02x', ord $1/eg;
+    return $str;
 }
 
 sub foldcase {
@@ -134,6 +154,49 @@ Default is C<78>.
 
 =back
 
+=item decode_filesystem_safe ( $str )
+
+I<Function>.
+Decodes a string encoded by encode_filesystem_safe().
+
+Parameter:
+
+=over
+
+=item $str
+
+String to be decoded.
+
+=back
+
+Returns:
+
+Decoded string, stripped C<utf8> flag if any.
+
+=item encode_filesystem_safe ( $str )
+
+I<Function>.
+Encodes a string $str to be suitable for filesystem.
+
+Parameter:
+
+=over
+
+=item $str
+
+String to be encoded.
+
+=back
+
+Returns:
+
+Encoded string, stripped C<utf8> flag if any.
+All bytes except C<'-'>, C<'+'>, C<'.'>, C<'@'>
+and alphanumeric characters are encoded to sequences C<'_'> followed by
+two hexdigits.
+
+Note that C<'/'> will also be encoded.
+
 =item foldcase ( $str )
 
 I<Function>.
@@ -158,5 +221,12 @@ A string.
 =back
 
 =back
+
+=head1 HISTORY
+
+L<Sympa::Tools::Text> appeared on Sympa 6.2a.41.
+
+decode_filesystem_safe() and encode_filesystem_safe() were added
+on Sympa 6.2.10.
 
 =cut
