@@ -42,7 +42,7 @@ our @param_order =
     default_user_options msg_topic msg_topic_keywords_apply_on msg_topic_tagging reply_to_header reply_to forced_reply_to *
     verp_rate tracking welcome_return_path remind_return_path user_data_source include_file include_remote_file
     include_list include_remote_sympa_list include_ldap_query
-    include_ldap_2level_query include_sql_query include_voot_group include_admin ttl distribution_ttl creation update
+    include_ldap_2level_query include_sql_query include_voot_group ttl distribution_ttl creation update
     status serial custom_attribute include_ldap_ca include_ldap_2level_ca include_sql_ca);
 
 ## List parameters aliases
@@ -1881,8 +1881,8 @@ our %pinfo = (
             },
             'phrase' => {
                 'format' => [
-                    'display_name',  'name_and_email',
-                    'name_via_list', 'name_email_via_list',
+                    'display_name',   'name_and_email',
+                    'name_via_list',  'name_email_via_list',
                     'list_for_email', 'list_for_name',
                 ],
                 'synonym' =>
