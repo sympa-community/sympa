@@ -39,7 +39,7 @@ use DateTime;
 use DateTime::Format::Mail;
 use Digest::MD5;
 use Encode qw();
-use English;    # FIXME: drop $PREMATCH usage
+use English qw(-no_match_vars);
 use MIME::EncWords;
 use MIME::Lite::HTML;
 use POSIX qw();
@@ -68,6 +68,7 @@ use Sympa::Marc::Search;
 use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Report;
+use Sympa::Request;
 use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
@@ -76,6 +77,7 @@ use Sympa::Spool::Archive;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
+use Sympa::Spool::Request;
 use Sympa::Template;
 use tools;
 use Sympa::Tools::Data;
@@ -3084,8 +3086,10 @@ sub check_param_in {
         if ($param->{'is_priv'}) {
             $param->{'mod_message'} =
                 Sympa::Spool::Moderation->new(context => $list)->size;
-            $param->{'mod_subscription'} =
-                $list->get_subscription_request_count();
+            $param->{'mod_subscription'} = Sympa::Spool::Request->new(
+                context => $list,
+                action  => 'add'
+            )->size;
 
             $param->{'doc_mod_list'}     = $list->get_shared_moderated();
             $param->{'mod_total_shared'} = $#{$param->{'doc_mod_list'}} + 1;
@@ -5598,10 +5602,8 @@ sub do_set {
     my $xml_custom_attribute;
     if ($in{custom_attribute}) {
         return undef if (check_custom_attribute() != 1);
-        my $xml = Sympa::Tools::Data::encode_custom_attribute(
+        $xml_custom_attribute = Sympa::Tools::Data::encode_custom_attribute(
             $in{custom_attribute});
-
-        $xml_custom_attribute = $xml;
     }
 
     if ($in{'email'}) {
@@ -5978,9 +5980,9 @@ sub do_subscribe {
                 wwslog('notice', "Missing required custom attributes");
                 return 'subrequest';
             }
-            my $xml = Sympa::Tools::Data::encode_custom_attribute(
+            $xml_custom_attribute =
+                Sympa::Tools::Data::encode_custom_attribute(
                 $in{custom_attribute});
-            $xml_custom_attribute = $xml;
         }
 
         if ($param->{'is_subscriber'}) {
@@ -6028,7 +6030,6 @@ sub do_subscribe {
         $param->{'may_subscribe'} = 1;
 
         if ($sub_is =~ /owner/) {
-
             $list->send_notify_to_owner(
                 'subrequest',
                 {   'who'     => $param->{'user'}{'email'},
@@ -6042,8 +6043,15 @@ sub do_subscribe {
                 }
             );
 
-            $list->store_subscription_request($param->{'user'}{'email'},
-                "", $xml_custom_attribute);
+            my $spool_req = Sympa::Spool::Request->new;
+            my $request   = Sympa::Request->new_from_tuples(
+                context          => $list,
+                sender           => $param->{'user'}{'email'},
+                custom_attribute => $in{custom_attribute},
+                action           => 'add'
+            );
+            $spool_req->store($request);
+
             Sympa::Report::notice_report_web('sent_to_owner', {},
                 $param->{'action'});
             wwslog('info', 'Subscribe sent to owners');
@@ -7997,7 +8005,6 @@ sub do_add_request {
 ## TODO: vérifier validité email
 sub do_add {
     wwslog('info', '(%s)', $in{'email'} || $in{'pending_email'});
-    my $subscriptions = $list->get_subscription_requests();
 
     my %user;
 
@@ -8060,17 +8067,6 @@ sub do_add {
     my ($total, @new_users, @added_users);
     my $comma_emails;
     foreach my $email (keys %user) {
-        wwslog('debug',
-            "do_add subscription \$subscriptions->{$email}{custom_attribute} = $subscriptions->{$email}{'custom_attribute'})"
-        );
-        if (ref($subscriptions->{$email}{'custom_attribute'}) eq 'HASH') {
-            my $xml = Sympa::Tools::Data::encode_custom_attribute(
-                $subscriptions->{$email}{'custom_attribute'});
-            wwslog('debug',
-                "do_add subscription XML \$subscriptions->{$email}{custom_attribute} = $xml;"
-            );
-        }
-
         my $result = Sympa::Scenario::request_action(
             $list, 'add',
             $param->{'auth_method'},
@@ -8203,8 +8199,18 @@ sub do_add {
         return 'info';
     }
 
-    ## Delete subscription request if any
-    $list->delete_subscription_request(@added_users);
+    # Delete subscription requests if any
+    my $spool_req =
+        Sympa::Spool::Request->new(context => $list, action => 'add');
+    while (1) {
+        my ($request, $handle) = $spool_req->next;
+        last unless $handle;
+        next
+            unless $request
+                and grep { $request->{sender} eq $_ } @added_users;
+
+        $spool_req->remove($handle);
+    }
 
     Sympa::Report::notice_report_web('add_performed', {'total' => $total},
         $param->{'action'});
@@ -11236,8 +11242,10 @@ sub do_home {
                 $mod_message
                 if $mod_message;
 
-            my $mod_subscription =
-                $one_list->get_subscription_request_count();
+            my $mod_subscription = Sympa::Spool::Request->new(
+                context => $one_list,
+                action  => 'add'
+            )->size;
             $param->{'admin_summary'}{$one_list->{'name'}}
                 {'mod_subscription'} = $mod_subscription
                 if $mod_subscription;
@@ -22105,14 +22113,25 @@ sub do_attach {
 sub do_subindex {
     wwslog('info', '');
 
-    my $subscriptions = $list->get_subscription_requests();
-    foreach my $sub (keys %{$subscriptions}) {
-        $subscriptions->{$sub}{'date'} =
-            $language->gettext_strftime("%d %b %Y",
-            localtime($subscriptions->{$sub}{'date'}));
-    }
+    my $spool_req =
+        Sympa::Spool::Request->new(context => $list, action => 'add');
+    my $subscriptions;
+    while (1) {
+        my ($request, $handle) = $spool_req->next(no_lock => 1);
+        last unless $handle;
+        next unless $request;
 
+        $subscriptions->{$request->{sender}} = {
+            custom_attribute => $request->{custom_attribute},
+            date             => $language->gettext_strftime(
+                '%d %b %Y', localtime $request->{date}
+            ),
+            epoch => $request->{date},
+            gecos => $request->{gecos},
+        };
+    }
     $param->{'subscriptions'} = $subscriptions;
+
     web_db_log(
         {   'robot'        => $robot,
             'list'         => $list->{'name'},
@@ -22134,32 +22153,21 @@ sub do_ignoresub {
     my @users;
 
     foreach my $pair (split /\0/, $in{'pending_email'}) {
-        if ($pair =~ /,/) {
-            push @users, $PREMATCH;
+        if ($pair =~ /\A([^,]+),/) {
+            push @users, $1;
         }
     }
 
-    foreach my $u (@users) {
-        unless ($list->delete_subscription_request($u)) {
-            Sympa::Report::reject_report_web('intern', 'del_sub_request',
-                {'sub' => $u},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('info', '(%s) Failed', $u);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return 'subindex';
-        }
+    my $spool_req =
+        Sympa::Spool::Request->new(context => $list, action => 'add');
+    while (1) {
+        my ($request, $handle) = $spool_req->next;
+        last unless $handle;
+        next unless $request and grep { $request->{sender} eq $_ } @users;
+
+        $spool_req->remove($handle);
     }
+
     web_db_log(
         {   'robot'        => $robot,
             'list'         => $list->{'name'},

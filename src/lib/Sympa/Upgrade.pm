@@ -45,9 +45,11 @@ use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
+use Sympa::Request;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Digest;
+use Sympa::Spool::Request;
 use tools;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
@@ -1710,6 +1712,60 @@ sub upgrade {
             system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
         $log->syslog('err', 'mod2html.pl failed with status %s', $status)
             if $status;
+    }
+
+    # Upgrading moderation spool on subscription.
+    if (lower_version($previous_version, '6.2.10')) {
+        $log->syslog('notice', 'Upgrading subscribe spool.');
+
+        my $spool_dir = $Conf::Conf{'queuesubscribe'};
+        if (opendir my $dh, $spool_dir) {
+            foreach my $filename (readdir $dh) {
+                next if $filename =~ /\A(?:[.]|T[.]|BAD-)/;
+                next unless -f $spool_dir . '/' . $filename;
+
+                my $metadata =
+                    Sympa::Spool::unmarshal_metadata($spool_dir, $filename,
+                    qr{([^\s\@]+)(?:\@([\w\.\-]+))?[.](\d+)[.](\d+)\z},
+                    [qw(localpart domainpart date rand)]);
+                next unless $metadata;
+
+                my $lock_fh =
+                    Sympa::LockedFile->new($spool_dir . '/' . $filename,
+                    -1, '+<');
+                next unless $lock_fh;
+
+                my $req_string = do { local $RS; <$lock_fh> };
+
+                # First line of the file contains the user email address +
+                # his/her name.
+                my ($email, $gecos);
+                if ($req_string =~ s/\A((\S+|\".*\")\@\S+)(?:\t(.*))?\n+//) {
+                    ($email, $gecos) = ($1, $2);
+                } else {
+                    next;
+                }
+                # Following lines may contain custom attributes in XML format.
+                my $custom_attribute =
+                    Sympa::Tools::Data::decode_custom_attribute($req_string);
+                my $request = Sympa::Request->new_from_tuples(
+                    sender           => $email,
+                    gecos            => $gecos,
+                    custom_attribute => $custom_attribute,
+                    action           => 'add',
+                    %$metadata
+                );
+                next unless $request;
+
+                my $spool_req = Sympa::Spool::Request->new;
+                if ($spool_req->store($request)) {
+                    $lock_fh->unlink;
+                } else {
+                    $lock_fh->close;
+                }
+            }
+            close $dh;
+        }
     }
 
     return 1;

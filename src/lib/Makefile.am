@@ -68,6 +68,7 @@ nobase_modules_DATA = \
 	Sympa/ModDef.pm \
 	Sympa/Regexps.pm \
 	Sympa/Report.pm \
+	Sympa/Request.pm \
 	Sympa/Robot.pm \
 	Sympa/Scenario.pm \
 	SDM.pm \
@@ -84,6 +85,7 @@ nobase_modules_DATA = \
 	Sympa/Spool/Held.pm \
 	Sympa/Spool/Incoming.pm \
 	Sympa/Spool/Moderation.pm \
+	Sympa/Spool/Request.pm \
 	Sympa/Task.pm \
 	Sympa/Template.pm \
 	tools.pm \

@@ -65,6 +65,7 @@ use Sympa::Spool::Archive;
 use Sympa::Spool::Digest;
 use Sympa::Spool::Held;
 use Sympa::Spool::Moderation;
+use Sympa::Spool::Request;
 use Sympa::Task;
 use Sympa::Template;
 use tools;
@@ -5025,8 +5026,20 @@ sub add_list_member {
     $self->{'add_outcome'}{'remaining_members_to_add'} =
         $self->{'add_outcome'}{'expected_number_of_added_users'};
 
-    my $subscriptions              = $self->get_subscription_requests();
     my $current_list_members_count = $self->get_total();
+
+    my $subscriptions;
+    my $spool_req =
+        Sympa::Spool::Request->new(context => $self, action => 'add');
+    while (1) {
+        my ($request, $handle) = $spool_req->next(no_lock => 1);
+        last unless $handle;
+        next
+            unless $request
+                and grep { $request->{sender} eq $_->{email} } @new_users;
+
+        $subscriptions->{$request->{sender}} = $request;
+    }
 
     foreach my $new_user (@new_users) {
         my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
@@ -7449,8 +7462,9 @@ sub _load_list_admin_from_include {
                         bind_password => $incl->{'passwd'},
                     );
                     $included =
-                        _include_users_ldap(\%admin_users, Sympa::Datasource::_get_datasource_id($incl), $incl, $db,
-                        \%option);
+                        _include_users_ldap(\%admin_users,
+                        Sympa::Datasource::_get_datasource_id($incl),
+                        $incl, $db, \%option);
                 } elsif ($type eq 'include_ldap_2level_query') {
                     my $db = Sympa::Database->new(
                         'LDAP',
@@ -7460,7 +7474,8 @@ sub _load_list_admin_from_include {
                         timeout => $incl->{'timeout1'},  # Note: not "timeout"
                     );
                     my $result =
-                        _include_users_ldap_2level(\%admin_users, Sympa::Datasource::_get_datasource_id($incl),
+                        _include_users_ldap_2level(\%admin_users,
+                        Sympa::Datasource::_get_datasource_id($incl),
                         $incl, $db, \%option);
                     if (defined $result) {
                         $included = $result->{'total'};
@@ -10579,224 +10594,17 @@ sub select_list_members_for_topic {
 #
 ### END - functions for message topics ###
 
-sub store_subscription_request {
-    my ($self, $email, $gecos, $custom_attr) = @_;
-    $log->syslog('debug2', '(%s, %s, %s)', $self->{'name'}, $email, $gecos,
-        $custom_attr);
+# DEPRECATED.  Use Sympa::Spool::Request::store().
+#sub store_subscription_request;
 
-    my $filename =
-          $Conf::Conf{'queuesubscribe'} . '/'
-        . $self->get_list_id() . '.'
-        . time . '.'
-        . int(rand(1000));
+# DEPRECATED.  Use Sympa::Spool::Request::next().
+#sub get_subscription_requests;
 
-    unless (opendir SUBSPOOL, "$Conf::Conf{'queuesubscribe'}") {
-        $log->syslog(
-            'err',
-            'Could not open %s',
-            $Conf::Conf{'queuesubscribe'}
-        );
-        return undef;
-    }
+# DEPRECATED.  Use Sympa::Spool::Request::size().
+#sub get_subscription_request_count;
 
-    my @req_files = sort grep (!/^\.+$/, readdir(SUBSPOOL));
-    closedir SUBSPOOL;
-
-    my $listaddr = $self->get_list_id();
-
-    foreach my $file (@req_files) {
-        next unless ($file =~ /$listaddr\..*/);
-        unless (open OLDREQUEST, "$Conf::Conf{'queuesubscribe'}/$file") {
-            $log->syslog('err', 'Could not open %s for verification', $file);
-            return undef;
-        }
-        foreach my $line (<OLDREQUEST>) {
-            if ($line =~ /^$email/i) {
-                $log->syslog('notice', 'Subscription already requested by %s',
-                    $email);
-                return undef;
-            }
-        }
-        close OLDREQUEST;
-    }
-
-    unless (open REQUEST, ">$filename") {
-        $log->syslog('notice', 'Could not open %s', $filename);
-        return undef;
-    }
-
-    ## First line of the file contains the user email address + his/her name
-    printf REQUEST "%s\t%s\n", $email, (defined $gecos ? $gecos : '');
-
-    ## Following lines may contain custom attributes in an XML format
-    printf REQUEST "%s\n", $custom_attr if defined $custom_attr;
-
-    close REQUEST;
-
-    return 1;
-}
-
-sub get_subscription_requests {
-    my ($self) = shift;
-    $log->syslog('debug2', '(%s)', $self->{'name'});
-
-    my %subscriptions;
-
-    unless (opendir SPOOL, $Conf::Conf{'queuesubscribe'}) {
-        $log->syslog(
-            'info',
-            'Unable to read spool %s',
-            $Conf::Conf{'queuesubscribe'}
-        );
-        return undef;
-    }
-
-    foreach my $filename (
-        sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/,
-            readdir SPOOL)
-        ) {
-        my $fh;    #FIXME: files should be locked.
-        unless (open $fh, '<', "$Conf::Conf{'queuesubscribe'}/$filename") {
-            $log->syslog('err', 'Could not open %s', $filename);
-            closedir SPOOL;
-            next;
-        }
-
-        ## First line of the file contains the user email address + his/her
-        ## name
-        my $line = <$fh>;
-        my ($email, $gecos);
-        if ($line =~ /^((\S+|\".*\")\@\S+)\s*([^\t]*)\t(.*)$/) {
-            ($email, $gecos) = ($1, $3);
-
-        } else {
-            $log->syslog('err', "Failed to parse subscription request %s",
-                $filename);
-            next;
-        }
-
-        my $user_entry = $self->get_list_member($email, probe => 1);
-
-        if ($user_entry and $user_entry->{'subscribed'}) {
-            $log->syslog(
-                'err',
-                'User %s is subscribed to %s already. Deleting subscription request',
-                $email,
-                $self->{'name'}
-            );
-            unless (unlink "$Conf::Conf{'queuesubscribe'}/$filename") {
-                $log->syslog('err', 'Could not delete file %s', $filename);
-            }
-            next;
-        }
-        ## Following lines may contain custom attributes in an XML format
-        my $custom_attribute = do { local $RS; <$fh> };
-        close $fh;
-        my $xml =
-            Sympa::Tools::Data::decode_custom_attribute($custom_attribute);
-
-        $subscriptions{$email} = {
-            'gecos'            => $gecos,
-            'custom_attribute' => $xml
-        };
-        unless ($subscriptions{$email}{'gecos'}) {
-            my $user = Sympa::User->new($email);
-            if ($user->gecos) {
-                $subscriptions{$email}{'gecos'} = $user->gecos;
-            }
-        }
-
-        $filename =~ /^$self->{'name'}(\@$self->{'domain'})?\.(\d+)\.\d+$/;
-        $subscriptions{$email}{'date'} = $2;
-    }
-    closedir SPOOL;
-
-    return \%subscriptions;
-}
-
-sub get_subscription_request_count {
-    my ($self) = shift;
-    $log->syslog('debug2', '(%s)', $self->{'name'});
-
-    my %subscriptions;
-    my $i = 0;
-
-    unless (opendir SPOOL, $Conf::Conf{'queuesubscribe'}) {
-        $log->syslog(
-            'info',
-            'Unable to read spool %s',
-            $Conf::Conf{'queuesubscribe'}
-        );
-        return undef;
-    }
-
-    foreach my $filename (
-        sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/,
-            readdir SPOOL)
-        ) {
-        $i++;
-    }
-    closedir SPOOL;
-
-    return $i;
-}
-
-sub delete_subscription_request {
-    my ($self, @list_of_email) = @_;
-    $log->syslog('debug2', '(%s, %s)', $self->{'name'},
-        join(',', @list_of_email));
-
-    my $removed_file = 0;
-    my $email_regexp = Sympa::Regexps::email();
-
-    unless (opendir SPOOL, $Conf::Conf{'queuesubscribe'}) {
-        $log->syslog(
-            'info',
-            'Unable to read spool %s',
-            $Conf::Conf{'queuesubscribe'}
-        );
-        return undef;
-    }
-
-    foreach my $filename (
-        sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/,
-            readdir SPOOL)
-        ) {
-
-        unless (open REQUEST, "$Conf::Conf{'queuesubscribe'}/$filename") {
-            $log->syslog('notice', 'Could not open %s', $filename);
-            next;
-        }
-        my $line = <REQUEST>;
-        close REQUEST;
-
-        foreach my $email (@list_of_email) {
-
-            unless ($line =~ /^($email_regexp)\s*/ && ($1 eq $email)) {
-                next;
-            }
-
-            unless (unlink "$Conf::Conf{'queuesubscribe'}/$filename") {
-                $log->syslog('err', 'Could not delete file %s', $filename);
-                last;
-            }
-            $removed_file++;
-        }
-    }
-
-    closedir SPOOL;
-
-    unless ($removed_file > 0) {
-        $log->syslog(
-            'debug2',
-            'No pending subscription was found for users %s',
-            join(',', @list_of_email)
-        );
-        return undef;
-    }
-
-    return 1;
-}
+# DEPRECATED.  Use Sympa::Spool::Request::remove().
+#sub delete_subscription_request;
 
 sub get_shared_size {
     my $self = shift;

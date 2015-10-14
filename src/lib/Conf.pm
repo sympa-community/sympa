@@ -799,7 +799,7 @@ sub checkfiles {
         }
     }
 
-    foreach my $qdir (qw(spool queuetopic queuesubscribe queuetask tmpdir)) {
+    foreach my $qdir (qw(spool queuetopic queuetask tmpdir)) {
         unless (-d $Conf{$qdir}) {
             $log->syslog('info', 'Creating spool %s', $Conf{$qdir});
             unless (mkdir($Conf{$qdir}, 0775)) {
@@ -843,8 +843,7 @@ sub checkfiles {
         queuetopic spool tmpdir viewmail_dir);
     push @keys, 'queueautomatic'
         if $Conf::Conf{'automatic_list_feature'} eq 'on';
-    my %dirs = (Sympa::Constants::PIDDIR() => 'PID directory',
-        );
+    my %dirs = (Sympa::Constants::PIDDIR() => 'PID directory');
 
     foreach my $key (@keys) {
         my $val = $Conf::Conf{$key};
@@ -2142,8 +2141,9 @@ sub _detect_missing_mandatory_parameters {
             next;
         }
         unless (defined $param->{'config_hash'}{$parameter}) {
-			$param->{'config_hash'}{$parameter} = $params{$parameter}->{'default'};
-		}
+            $param->{'config_hash'}{$parameter} =
+                $params{$parameter}->{'default'};
+        }
     }
     return $number_of_errors;
 }

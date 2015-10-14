@@ -35,9 +35,11 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Report;
+use Sympa::Request;
 use Sympa::Scenario;
 use Sympa::Spool::Held;
 use Sympa::Spool::Moderation;
+use Sympa::Spool::Request;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
@@ -1194,7 +1196,16 @@ sub subscribe {
                 $robot
             );
         }
-        if ($list->store_subscription_request($sender, $comment)) {
+
+        my $spool_req = Sympa::Spool::Request->new;
+        my $request   = Sympa::Request->new_from_tuples(
+            context => $list,
+            sender  => $sender,
+            gecos   => $comment,
+            action  => 'add',
+            date    => $message->{date},    # Keep date of message.
+        );
+        if ($spool_req->store($request)) {
             $log->syslog(
                 'info',
                 'SUB %s from %s forwarded to the owners of the list (%d seconds)',
@@ -1869,7 +1880,19 @@ sub add {
                 return undef;
             }
 
-            $list->delete_subscription_request($email);
+            my $spool_req = Sympa::Spool::Request->new(
+                context => $list,
+                sender  => $email,
+                action  => 'add'
+            );
+            while (1) {
+                my ($request, $handle) = $spool_req->next;
+                last unless $handle;
+                next unless $request;
+
+                $spool_req->remove($handle);
+            }
+
             Sympa::Report::notice_report_cmd('now_subscriber',
                 {'email' => $email, 'listname' => $which}, $cmd_line);
         }

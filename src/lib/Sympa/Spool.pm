@@ -232,7 +232,8 @@ sub store {
 
     my $marshalled =
         Sympa::Spool::store_spool($self->{directory}, $message,
-        $self->_marshal_format, $self->_marshal_keys, %options);
+        $self->_marshal_format, $self->_marshal_keys, %options,
+        _filter_pre => sub { $self->_filter_pre(shift) },);
     return unless $marshalled;
 
     $log->syslog('notice', '%s is stored into %s as <%s>',
@@ -247,6 +248,8 @@ sub store {
     }
     return $marshalled;
 }
+
+sub _filter_pre {1}
 
 sub _store_key {undef}
 
@@ -476,9 +479,15 @@ sub store_spool {
     # Will retry up to five times.
     my $tries;
     for ($tries = 0; $tries < 5; $tries++) {
+        my $metadata = {%$message};
+        if (ref $options{_filter_pre} eq 'CODE') {
+            next unless $options{_filter_pre}->($metadata);
+        }
+
         my $marshalled =
-            Sympa::Spool::marshal_metadata($message, $marshal_format,
+            Sympa::Spool::marshal_metadata($metadata, $marshal_format,
             $marshal_keys);
+        next unless defined $marshalled and length $marshalled;
         my $path = $spool_dir . '/' . $marshalled;
 
         my $lock;
@@ -766,8 +775,21 @@ It must have keys at least C<directory> and
 =item _filter ( $metadata )
 
 I<Instance method>, I<overridable>.
-If it returned false value, processing of $metadata will be skipped.
+If it returned false value, processing of $metadata by next() will be skipped.
 By default, always returns true value.
+
+This method may modify unmarshalled metadata _and_ deserialized messages
+include it.
+
+=item _filter_pre ( $metadata )
+
+I<Instance method>, I<overridable>.
+If it returned false value, processing of $metadata by store() will be
+skipped.
+By default, always returns true value.
+
+This method may modify marshalled metadata _but_ stored messages are not
+affected.
 
 =item _generator ( )
 
@@ -904,6 +926,7 @@ L<Sympa::Spool> appeared on Sympa 6.2.
 It as the base class appeared on Sympa 6.2.6.
 
 build_glob_pattern(), size(), _glob_pattern() and _store_key()
-are introduced on Sympa 6.2.8.
+were introduced on Sympa 6.2.8.
+_filter_pre() was introduced on Sympa 6.2.10.
 
 =cut

@@ -35,9 +35,11 @@ use Conf;
 use Sympa::Constants;
 use Sympa::List;
 use Sympa::Log;
+use Sympa::Request;
 use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
+use Sympa::Spool::Request;
 use Sympa::Template;
 use tools;
 use Sympa::Tools::Data;
@@ -905,7 +907,19 @@ sub add {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Unable to add user')->faultdetail($error);
         }
-        $list->delete_subscription_request($email);
+
+        my $spool_req = Sympa::Spool::Request->new(
+            context => $list,
+            sender  => $email,
+            action  => 'add'
+        );
+        while (1) {
+            my ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            next unless $request;
+
+            $spool_req->remove($handle);
+        }
     }
 
     ## Now send the welcome file to the user if it exists and notification is
@@ -1453,7 +1467,6 @@ sub subscribe {
             ->faultdetail($reason_string);
     }
     if ($action =~ /owner/i) {
-        # Send a notice to the owners.
         $list->send_notify_to_owner(
             'subrequest',
             {   'who'     => $sender,
@@ -1463,7 +1476,15 @@ sub subscribe {
             }
         );
 
-        $list->store_subscription_request($sender, $gecos);
+        my $spool_req = Sympa::Spool::Request->new;
+        my $request   = Sympa::Request->new_from_tuples(
+            context => $list,
+            sender  => $sender,
+            gecos   => $gecos,
+            action  => 'add'
+        );
+        $spool_req->store($request);
+
         $log->syslog('info', '%s from %s forwarded to the owners of the list',
             $listname, $sender);
         return SOAP::Data->name('result')->type('boolean')->value(1);
