@@ -92,7 +92,7 @@ sub size {
     my %metadatas;
     foreach my $item (@{shift->_load || []}) {
         # Strip unique keys.
-        $item =~ s{\A(\d+),([^\s\@]+)\@([-.\w]+)_([\da-f]+),(\w+),([^\s,]*)\z}
+        $item =~ s{\A(\d+),([^\s\@]+)\@([-.\w]+)_([\da-f]+),([^\s,]*),(\w+)\z}
             {$2\@$3,$5,$6};
         $metadatas{$item} = 1;
     }
