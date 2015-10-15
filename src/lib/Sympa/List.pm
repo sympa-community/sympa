@@ -302,13 +302,13 @@ my %list_cache;
 ## DB fields with numeric type
 ## We should not do quote() for these while inserting data
 my %numeric_field = (
-    'cookie_delay_user'       => 1,
-    'bounce_score_subscriber' => 1,
-    'subscribed_subscriber'   => 1,
-    'included_subscriber'     => 1,
-    'subscribed_admin'        => 1,
-    'included_admin'          => 1,
-    'wrong_login_count'       => 1,
+    cookie_delay_user       => 1,
+    bounce_score_subscriber => 1,
+    subscribed_subscriber   => 1,
+    included_subscriber     => 1,
+    subscribed_admin        => 1,
+    included_admin          => 1,
+    wrong_login_count_user  => 1,
 );
 
 ## List parameter values except for parameters below.
@@ -4667,24 +4667,24 @@ sub update_list_member {
 
     # mapping between var and field names
     my %map_field = (
-        reception            => 'reception_subscriber',
-        topics               => 'topics_subscriber',
-        visibility           => 'visibility_subscriber',
-        date                 => 'date_subscriber',
-        update_date          => 'update_subscriber',
-        gecos                => 'comment_subscriber',
-        password             => 'password_user',
-        bounce               => 'bounce_subscriber',
-        score                => 'bounce_score_subscriber',
-        email                => 'user_subscriber',
-        subscribed           => 'subscribed_subscriber',
-        included             => 'included_subscriber',
-        id                   => 'include_sources_subscriber',
-        bounce_address       => 'bounce_address_subscriber',
-        custom_attribute     => 'custom_attribute_subscriber',
-        suspend              => 'suspend_subscriber',
-        startdate_subscriber => 'suspend_start_date_subscriber',
-        enddate              => 'suspend_end_date_subscriber'
+        reception        => 'reception_subscriber',
+        topics           => 'topics_subscriber',
+        visibility       => 'visibility_subscriber',
+        date             => 'date_subscriber',
+        update_date      => 'update_subscriber',
+        gecos            => 'comment_subscriber',
+        password         => 'password_user',
+        bounce           => 'bounce_subscriber',
+        score            => 'bounce_score_subscriber',
+        email            => 'user_subscriber',
+        subscribed       => 'subscribed_subscriber',
+        included         => 'included_subscriber',
+        id               => 'include_sources_subscriber',
+        bounce_address   => 'bounce_address_subscriber',
+        custom_attribute => 'custom_attribute_subscriber',
+        suspend          => 'suspend_subscriber',
+        startdate        => 'suspend_start_date_subscriber',
+        enddate          => 'suspend_end_date_subscriber'
     );
 
     ## mapping between var and tables
