@@ -7,10 +7,11 @@ use warnings;
 use Cwd qw();
 use English qw(-no_match_vars);
 use Test::More;
+use XML::LibXML;
 
 use Sympa::Template;
 
-my $params   = {
+my $params = {
     all_lists   => {size => 2},
     languages   => {size => 2},
     total_group => 2,
@@ -18,7 +19,7 @@ my $params   = {
     reply_to_header => {value => 'all', other_email => 'xxx@xxx',},
 };
 
-my @def_tt2  = _templates('default',                       '*.tt2');
+my @def_tt2 = _templates('default', '*.tt2 sympa.wsdl');
 my @list_tt2 = _templates('default/create_list_templates', '*/*.tt2');
 my @mail_tt2 = _templates('default/mail_tt2',              '*.tt2 */*.tt2');
 my @web_tt2  = _templates('default/web_tt2',               '*.tt2 */*.tt2');
@@ -54,10 +55,14 @@ sub _do_test {
         $tpl = [split /(?<=\n)/, $tpl];
     }
 
-    my $template =
-        Sympa::Template->new('*', include_path => [$dir]);
+    my $template = Sympa::Template->new('*', include_path => [$dir]);
     my $scalar;
     if ($template->parse($params, $tpl, \$scalar)) {
+        # Also check XML syntax.
+        if (not ref $tpl and $tpl eq 'sympa.wsdl') {
+            eval { XML::LibXML->load_xml(string => $scalar) }
+                or return $EVAL_ERROR;
+        }
         return '';
     } else {
         return $template->{last_error};
