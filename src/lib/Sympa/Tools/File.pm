@@ -22,18 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=encoding utf-8
-
-=head1 NAME
-
-Sympa::Tools::File - File-related functions
-
-=head1 DESCRIPTION
-
-This package provides some file-related functions.
-
-=cut
-
 package Sympa::Tools::File;
 
 use strict;
@@ -43,24 +31,6 @@ use English qw(-no_match_vars);
 use File::Copy::Recursive;
 use File::Find qw();
 use POSIX qw();
-
-=head2 Functions
-
-=over
-
-=item set_file_rights(%parameters)
-
-Sets owner and/or access rights on a file.
-
-Returns true value if setting rights succeeded.
-Otherwise returns false value.
-
-Note:
-If superuser was speficied as owner, this function will die.
-
-=back
-
-=cut
 
 sub set_file_rights {
     my %param = @_;
@@ -100,16 +70,6 @@ sub set_file_rights {
     return 1;
 }
 
-=over
-
-=item copy_dir($dir1, $dir2)
-
-Copy a directory and its content
-
-=back
-
-=cut
-
 sub copy_dir {
     my $dir1 = shift;
     my $dir2 = shift;
@@ -120,16 +80,6 @@ sub copy_dir {
     }
     return (File::Copy::Recursive::dircopy($dir1, $dir2));
 }
-
-=over
-
-=item del_dir($dir)
-
-Delete a directory and its content
-
-=back
-
-=cut
 
 sub del_dir {
     my $dir = shift;
@@ -147,16 +97,6 @@ sub del_dir {
     }
 }
 
-=over
-
-=item mk_parent_dir($file)
-
-To be used before creating a file in a directory that may not exist already.
-
-=back
-
-=cut
-
 sub mk_parent_dir {
     my $file = shift;
     $file =~ /^(.*)\/([^\/])*$/;
@@ -165,16 +105,6 @@ sub mk_parent_dir {
     return 1 if (-d $dir);
     mkdir_all($dir, 0755);
 }
-
-=over
-
-=item mkdir_all($path, $mode)
-
-Recursively create directory and all parent directories
-
-=back
-
-=cut
 
 sub mkdir_all {
     my ($path, $mode) = @_;
@@ -209,17 +139,6 @@ sub mkdir_all {
 
     return $status;
 }
-
-=over
-
-=item shift_file($file, $count)
-
-Shift file renaming it with date. If count is defined, keep $count file and
-unlink others
-
-=back
-
-=cut
 
 # Note: This is used only once.
 sub shift_file {
@@ -258,33 +177,6 @@ sub shift_file {
     return $file . '.' . $file_extention;
 }
 
-=over
-
-=item get_mtime ( $file )
-
-Gets modification time of the file.
-
-Parameter:
-
-=over
-
-=item $file
-
-Full path of file.
-
-=back
-
-Returns:
-
-Modification time as UNIX time.
-If the file is not found (including the case that the file vanishes during
-execution of this function) or is not readable, returns C<POSIX::INT_MIN>.
-In case of other error, returns C<undef>.
-
-=back
-
-=cut
-
 sub get_mtime {
     my $file = shift;
     die 'Missing parameter $file' unless $file;
@@ -296,17 +188,6 @@ sub get_mtime {
 ## Find a file in an ordered list of directories
 #DEPRECATED: No longer used.
 #sub find_file($filename, @directories);
-
-=over
-
-=item list_dir($dir, $all, $original_encoding)
-
-Recursively list the content of a directory
-Return an array of hash, each entry with directory + filename + encoding
-
-=back
-
-=cut
 
 sub list_dir {
     my $dir               = shift;
@@ -343,16 +224,6 @@ sub list_dir {
     return 1;
 }
 
-=over
-
-=item get_dir_size($dir)
-
-TBD.
-
-=back
-
-=cut
-
 sub get_dir_size {
     my $dir = shift;
 
@@ -372,18 +243,6 @@ sub get_dir_size {
 
     return $size;
 }
-
-=over
-
-=item remove_dir(@directories)
-
-Function for Removing a non-empty directory.
-It takes a variale number of arguments:
-It can be a list of directory or few direcoty paths.
-
-=back
-
-=cut
 
 sub remove_dir {
     foreach my $current_dir (@_) {
@@ -411,6 +270,89 @@ sub remove_dir {
 
 1;
 __END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Tools::File - File-related functions
+
+=head1 DESCRIPTION
+
+This package provides some file-related functions.
+
+=head2 Functions
+
+=over
+
+=item set_file_rights(%parameters)
+
+Sets owner and/or access rights on a file.
+
+Returns true value if setting rights succeeded.
+Otherwise returns false value.
+
+Note:
+If superuser was speficied as owner, this function will die.
+
+=item copy_dir($dir1, $dir2)
+
+Copy a directory and its content
+
+=item del_dir($dir)
+
+Delete a directory and its content
+
+=item mk_parent_dir($file)
+
+To be used before creating a file in a directory that may not exist already.
+
+=item mkdir_all($path, $mode)
+
+Recursively create directory and all parent directories
+
+=item shift_file($file, $count)
+
+Shift file renaming it with date. If count is defined, keep $count file and
+unlink others
+
+=item get_mtime ( $file )
+
+Gets modification time of the file.
+
+Parameter:
+
+=over
+
+=item $file
+
+Full path of file.
+
+=back
+
+Returns:
+
+Modification time as UNIX time.
+If the file is not found (including the case that the file vanishes during
+execution of this function) or is not readable, returns C<POSIX::INT_MIN>.
+In case of other error, returns C<undef>.
+
+=item list_dir($dir, $all, $original_encoding)
+
+Recursively list the content of a directory
+Return an array of hash, each entry with directory + filename + encoding
+
+=item get_dir_size($dir)
+
+TBD.
+
+=item remove_dir(@directories)
+
+Function for Removing a non-empty directory.
+It takes a variale number of arguments:
+It can be a list of directory or few direcoty paths.
+
+=back
 
 =head1 HISTORY
 
