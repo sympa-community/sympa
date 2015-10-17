@@ -340,12 +340,8 @@ sub _update_subscriber_bounce_history {
         }
         $count++;
 
-        $self->{context}->update_list_member(
-            $bouncefor,
-            {   'bounce' =>
-                    sprintf('%s %s %s %s', $first, $last, $count, $status)
-            }
-        );
+        $self->{context}->update_list_member($bouncefor,
+            bounce => sprintf('%s %s %s %s', $first, $last, $count, $status));
     }
     return 1;
 }

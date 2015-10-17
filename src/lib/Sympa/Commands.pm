@@ -1232,21 +1232,20 @@ sub subscribe {
         return 1;
     }
     if ($action =~ /do_it/i) {
-
         my $user_entry = $list->get_list_member($sender);
 
         if (defined $user_entry) {
+            # Only updates the date.  Options remain the same.
+            my %update = (
+                update_date => time,
+                subscribed  => 1,
+            );
+            $update{gecos} = $comment
+                if defined $comment and $comment =~ /\S/;
 
-            ## Only updates the date
-            ## Options remain the same
-            my $user = {};
-            $user->{'update_date'} = time;
-            $user->{'gecos'}       = $comment if $comment;
-            $user->{'subscribed'}  = 1;
-
-            unless ($list->update_list_member($sender, $user)) {
-                my $error = sprintf "Unable to update user %s in list %s",
-                    $user, $list->{'name'};
+            unless ($list->update_list_member($sender, %update)) {
+                my $error = sprintf 'Unable to update user %s in list %s',
+                    $sender, $list->{'name'};
                 Sympa::Report::reject_report_cmd('intern', $error,
                     {'listname' => $which},
                     $cmd_line, $sender, $robot);
@@ -2816,10 +2815,12 @@ sub set {
         }
 
         my $update_mode = $mode;
-        $update_mode = '' if ($update_mode eq 'mail');
+        $update_mode = '' if $update_mode eq 'mail';
         unless (
             $list->update_list_member(
-                $sender, {'reception' => $update_mode, 'update_date' => time}
+                $sender,
+                reception   => $update_mode,
+                update_date => time
             )
             ) {
             my $error =
@@ -2842,7 +2843,9 @@ sub set {
     if ($mode =~ /^(conceal|noconceal)/) {
         unless (
             $list->update_list_member(
-                $sender, {'visibility' => $mode, 'update_date' => time}
+                $sender,
+                visibility  => $mode,
+                update_date => time
             )
             ) {
             my $error =

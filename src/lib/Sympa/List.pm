@@ -207,9 +207,10 @@ the list.
 OBSOLETED.
 Use get_admins().
 
-=item update_list_member ( USER, HASHPTR )
+=item update_list_member ( $email, key =E<gt> value, ... )
 
-Sets the new values given in the hash for the user.
+I<Instance method>.
+Sets the new values given in the pairs for the user.
 
 =item update_list_admin ( USER, ROLE, HASHPTR )
 
@@ -299,17 +300,18 @@ my ($sth, @sth_stack);
 
 my %list_cache;
 
-## DB fields with numeric type
-## We should not do quote() for these while inserting data
-my %numeric_field = (
-    cookie_delay_user       => 1,
-    bounce_score_subscriber => 1,
-    subscribed_subscriber   => 1,
-    included_subscriber     => 1,
-    subscribed_admin        => 1,
-    included_admin          => 1,
-    wrong_login_count_user  => 1,
-);
+# DB fields with numeric type.
+# We should not do quote() for these while inserting data.
+my %db_struct = Sympa::DatabaseDescription::full_db_struct();
+my %numeric_field;
+foreach my $t (qw(subscriber_table admin_table)) {
+    foreach my $k (keys %{$db_struct{$t}->{fields}}) {
+        if ($db_struct{$t}->{fields}{$k}{struct} =~ /\A(tiny|small|big)?int/)
+        {
+            $numeric_field{$k} = 1;
+        }
+    }
+}
 
 ## List parameter values except for parameters below.
 my %list_option = (
@@ -3694,17 +3696,54 @@ sub get_list_member {
     return $user;
 }
 
-sub _list_member_cols {
-    my $additional = '';
-    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
-        $additional = ', ' . $Conf::Conf{'db_additional_subscriber_fields'};
+# Mapping between var and field names.
+sub _map_list_member_cols {
+    my %map_field = (
+        update_date => 'update_subscriber',
+        gecos       => 'comment_subscriber',
+        email       => 'user_subscriber',
+        id          => 'include_sources_subscriber',
+        startdate   => 'suspend_start_date_subscriber',
+        enddate     => 'suspend_end_date_subscriber',
+    );
+
+    foreach my $f (
+        keys %{
+            {Sympa::DatabaseDescription::full_db_struct()}
+            ->{'subscriber_table'}->{fields}
+        }
+        ) {
+        my $k = {reverse %map_field}->{$f};
+        unless ($k) {
+            $k = $f;
+            $k =~ s/_subscriber\z//;
+            $map_field{$k} = $f;
+        }
     }
-    return
-        sprintf
-        'user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS "date", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate%s',
-        SDM::get_canonical_read_date('date_subscriber'),
-        SDM::get_canonical_read_date('update_subscriber'),
-        $additional;
+    # Additional DB fields.
+    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
+        foreach my $f (split /\s*,\s*/,
+            $Conf::Conf{'db_additional_subscriber_fields'}) {
+            $map_field{$f} = $f;
+        }
+    }
+
+    return %map_field;
+}
+
+sub _list_member_cols {
+    my $sdm = shift;
+
+    my %map_field = _map_list_member_cols();
+    return join ', ', map {
+        my $col;
+        if ($_ eq 'date' or $_ eq 'update_date') {
+            $col = $sdm->get_canonical_read_date($map_field{$_});
+        } else {
+            $col = $map_field{$_};
+        }
+        ($col eq $_) ? $col : sprintf('%s AS "%s"', $col, $_);
+    } sort keys %map_field;
 }
 
 ######################################################################
@@ -3736,16 +3775,18 @@ sub get_list_member_no_object {
             {$email};
     }
 
-    push @sth_stack, $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
 
     unless (
-        $sth = SDM::do_prepared_query(
+        $sdm
+        and $sth = $sdm->do_prepared_query(
             sprintf(
-                q{SELECT %s, number_messages_subscriber AS number_messages
-                FROM subscriber_table
-                WHERE user_subscriber = ? AND
-                      list_subscriber = ? AND robot_subscriber = ?},
-                _list_member_cols()
+                q{SELECT %s
+                  FROM subscriber_table
+                  WHERE user_subscriber = ? AND
+                        list_subscriber = ? AND robot_subscriber = ?},
+                _list_member_cols($sdm)
             ),
             $email,
             $name,
@@ -3758,6 +3799,7 @@ sub get_list_member_no_object {
     }
     my $user = $sth->fetchrow_hashref('NAME_lc');
     if (defined $user) {
+        $sth->finish;
 
         $user->{'reception'}   ||= 'mail';
         $user->{'update_date'} ||= $user->{'date'};
@@ -3774,6 +3816,8 @@ sub get_list_member_no_object {
 
     } else {
         my $error = $sth->err;
+        $sth->finish;
+
         if ($error) {
             $log->syslog('err',
                 "An error occurred while fetching the data from the database."
@@ -3787,8 +3831,7 @@ sub get_list_member_no_object {
         }
     }
 
-    $sth = pop @sth_stack;
-    ## Set session cache
+    # Set session cache
     $list_cache{'get_list_member'}{$options->{'domain'}}{$name}{$email} =
         $user;
     return $user;
@@ -3825,6 +3868,7 @@ sub get_first_list_member {
     my $name = $self->{'name'};
     my $statement;
 
+    my $sdm = Sympa::DatabaseManager->instance;
     push @sth_stack, $sth;
 
     ## SQL regexp
@@ -3839,7 +3883,7 @@ sub get_first_list_member {
     $statement = sprintf q{SELECT %s
           FROM subscriber_table
           WHERE list_subscriber = %s AND robot_subscriber = %s %s},
-        _list_member_cols(),
+        _list_member_cols($sdm),
         SDM::quote($name),
         SDM::quote($self->{'domain'}),
         ($selection || '');
@@ -3860,7 +3904,7 @@ sub get_first_list_member {
     }
     push @sth_stack, $sth;
 
-    unless ($sth = SDM::do_query($statement)) {
+    unless ($sdm and $sth = $sdm->do_query($statement)) {
         $log->syslog('err', 'Unable to get members of list %s@%s',
             $name, $self->{'domain'});
         return undef;
@@ -4196,18 +4240,20 @@ sub get_first_bouncing_list_member {
 
     my $name = $self->{'name'};
 
+    my $sdm = Sympa::DatabaseManager->instance;
     push @sth_stack, $sth;
 
     unless (
-        $sth = SDM::do_prepared_query(
+        $sdm
+        and $sth = $sdm->do_prepared_query(
             sprintf(
                 q{SELECT %s
                 FROM subscriber_table
                 WHERE list_subscriber = ? AND robot_subscriber = ? AND
                       bounce_subscriber IS NOT NULL},
-                _list_member_cols()
+                _list_member_cols($sdm)
             ),
-            $name,
+            $self->{'name'},
             $self->{'domain'}
         )
         ) {
@@ -4379,13 +4425,13 @@ sub get_members {
 
     unless (
         $sdm
-        and $sth = SDM::do_prepared_query(
+        and $sth = $sdm->do_prepared_query(
             sprintf(
                 q{SELECT %s
                   FROM subscriber_table
                   WHERE list_subscriber = ? AND robot_subscriber = ?%s
                   %s},
-                _list_member_cols(), $filter, $order_by
+                _list_member_cols($sdm), $filter, $order_by
             ),
             $self->{'name'},
             $self->{'domain'}
@@ -4658,181 +4704,95 @@ sub is_list_member {
 
 ## Sets new values for the given user (except gecos)
 sub update_list_member {
-    my ($self, $who, $values) = @_;
-    $log->syslog('debug2', '(%s)', $who);
-    $who = Sympa::Tools::Text::canonic_email($who);
+    my $self   = shift;
+    my $who    = Sympa::Tools::Text::canonic_email(shift);
+    my $values = $_[0];                                      # Compat.
+    $values = {@_} unless ref $values eq 'HASH';
 
     my ($field, $value, $table);
     my $name = $self->{'name'};
 
-    # mapping between var and field names
-    my %map_field = (
-        reception        => 'reception_subscriber',
-        topics           => 'topics_subscriber',
-        visibility       => 'visibility_subscriber',
-        date             => 'date_subscriber',
-        update_date      => 'update_subscriber',
-        gecos            => 'comment_subscriber',
-        password         => 'password_user',
-        bounce           => 'bounce_subscriber',
-        bounce_score     => 'bounce_score_subscriber',
-        email            => 'user_subscriber',
-        subscribed       => 'subscribed_subscriber',
-        included         => 'included_subscriber',
-        id               => 'include_sources_subscriber',
-        bounce_address   => 'bounce_address_subscriber',
-        custom_attribute => 'custom_attribute_subscriber',
-        suspend          => 'suspend_subscriber',
-        startdate        => 'suspend_start_date_subscriber',
-        enddate          => 'suspend_end_date_subscriber'
-    );
+    # Mapping between var and field names.
+    my %map_field = _map_list_member_cols();
 
-    ## mapping between var and tables
-    my %map_table = (
-        reception        => 'subscriber_table',
-        topics           => 'subscriber_table',
-        visibility       => 'subscriber_table',
-        date             => 'subscriber_table',
-        update_date      => 'subscriber_table',
-        gecos            => 'subscriber_table',
-        password         => 'user_table',
-        bounce           => 'subscriber_table',
-        bounce_score     => 'subscriber_table',
-        email            => 'subscriber_table',
-        subscribed       => 'subscriber_table',
-        included         => 'subscriber_table',
-        id               => 'subscriber_table',
-        bounce_address   => 'subscriber_table',
-        custom_attribute => 'subscriber_table',
-        suspend          => 'subscriber_table',
-        startdate        => 'subscriber_table',
-        enddate          => 'subscriber_table'
-    );
+    my $sdm = Sympa::DatabaseManager->instance;
+    return undef unless $sdm;
 
-    ## additional DB fields
-    if (defined $Conf::Conf{'db_additional_subscriber_fields'}) {
-        foreach
-            my $f (split ',', $Conf::Conf{'db_additional_subscriber_fields'})
-        {
-            $map_table{$f} = 'subscriber_table';
-            $map_field{$f} = $f;
+    my @set_list;
+    my @val_list;
+    while (($field, $value) = each %{$values}) {
+        die sprintf 'Unknown database field %s', $field
+            unless $map_field{$field};
+
+        if ($field eq 'date' or $field eq 'update_date') {
+            push @set_list,
+                sprintf('%s = %s',
+                $map_field{$field}, $sdm->get_canonical_write_date($value));
+        } elsif ($field eq 'custom_attribute') {
+            push @set_list, sprintf('%s = ?', $map_field{$field});
+            push @val_list,
+                Sympa::Tools::Data::encode_custom_attribute($value);
+        } elsif ($numeric_field{$map_field{$field}}) {
+            push @set_list, sprintf('%s = ?', $map_field{$field});
+            # FIXME: Can't have a null value?
+            push @val_list, ($value || 0);
+        } else {
+            push @set_list, sprintf('%s = ?', $map_field{$field});
+            push @val_list, $value;
         }
     }
+    return 0 unless @set_list;
 
-    if (defined $Conf::Conf{'db_additional_user_fields'}) {
-        foreach my $f (split ',', $Conf::Conf{'db_additional_user_fields'}) {
-            $map_table{$f} = 'user_table';
-            $map_field{$f} = $f;
-        }
-    }
-
-    $log->syslog(
-        'debug2',
-        'Custom_attribute ID: %s',
-        $Conf::Conf{'custom_attribute'}
-    );
-    ## custom attributes
-    if (defined $Conf::Conf{'custom_attribute'}) {
-        foreach my $f (sort keys %{$Conf::Conf{'custom_attribute'}}) {
-            $log->syslog('debug2',
-                "custom_attribute id: $Conf::Conf{'custom_attribute'}{id} name: $Conf::Conf{'custom_attribute'}{name} type: $Conf::Conf{'custom_attribute'}{type} "
+    # Update field
+    if ($who eq '*') {
+        unless (
+            $sdm->do_prepared_query(
+                sprintf(
+                    q{UPDATE subscriber_table
+                      SET %s
+                      WHERE list_subscriber = ? AND robot_subscriber = ?},
+                    join(', ', @set_list)
+                ),
+                @val_list,
+                $self->{'name'},
+                $self->{'domain'}
+            )
+            ) {
+            $log->syslog(
+                'err',
+                'Could not update information for subscriber %s in database for list %s',
+                $who,
+                $self
             );
-
+            return undef;
+        }
+    } else {
+        unless (
+            $sdm->do_prepared_query(
+                sprintf(
+                    q{UPDATE subscriber_table
+                      SET %s
+                      WHERE user_subscriber = ? AND
+                            list_subscriber = ? AND robot_subscriber = ?},
+                    join(',', @set_list)
+                ),
+                @val_list,
+                $who,
+                $self->{'name'},
+                $self->{'domain'}
+            )
+            ) {
+            $log->syslog(
+                'err',
+                'Could not update information for subscriber %s in database for list %s',
+                $who,
+                $self
+            );
+            return undef;
         }
     }
 
-    ## Update each table
-    foreach $table ('user_table', 'subscriber_table') {
-
-        my @set_list;
-        while (($field, $value) = each %{$values}) {
-
-            unless ($map_field{$field} and $map_table{$field}) {
-                $log->syslog('err', 'Unknown database field %s', $field);
-                next;
-            }
-
-            if ($map_table{$field} eq $table) {
-                if ($field eq 'date' || $field eq 'update_date') {
-                    $value = SDM::get_canonical_write_date($value);
-                } elsif ($value and $value eq 'NULL') {    # get_null_value?
-                    if ($Conf::Conf{'db_type'} eq 'mysql') {
-                        $value = '\N';
-                    }
-                } else {
-                    if ($numeric_field{$map_field{$field}}) {
-                        $value ||= 0;    ## Can't have a null value
-                    } else {
-                        $value = SDM::quote($value);
-                    }
-                }
-                my $set = sprintf "%s=%s", $map_field{$field}, $value;
-                push @set_list, $set;
-            }
-        }
-        next unless @set_list;
-
-        ## Update field
-        if ($table eq 'user_table') {
-            unless (
-                $sth = SDM::do_query(
-                    "UPDATE %s SET %s WHERE (email_user=%s)",
-                    $table, join(',', @set_list),
-                    SDM::quote($who)
-                )
-                ) {
-                $log->syslog('err',
-                    'Could not update information for user %s in table %s',
-                    $who, $table);
-                return undef;
-            }
-        } elsif ($table eq 'subscriber_table') {
-            if ($who eq '*') {
-                unless (
-                    $sth = SDM::do_query(
-                        "UPDATE %s SET %s WHERE (list_subscriber=%s AND robot_subscriber = %s)",
-                        $table,
-                        join(',', @set_list),
-                        SDM::quote($name),
-                        SDM::quote($self->{'domain'})
-                    )
-                    ) {
-                    $log->syslog(
-                        'err',
-                        'Could not update information for user %s in table %s for list %s@%s',
-                        $who,
-                        $table,
-                        $name,
-                        $self->{'domain'}
-                    );
-                    return undef;
-                }
-            } else {
-                unless (
-                    $sth = SDM::do_query(
-                        "UPDATE %s SET %s WHERE (user_subscriber=%s AND list_subscriber=%s AND robot_subscriber = %s)",
-                        $table,
-                        join(',', @set_list),
-                        SDM::quote($who),
-                        SDM::quote($name),
-                        SDM::quote($self->{'domain'})
-                    )
-                    ) {
-                    $log->syslog(
-                        'err',
-                        'Could not update information for user %s in table %s for list %s@%s',
-                        $who,
-                        $table,
-                        $name,
-                        $self->{'domain'}
-                    );
-                    return undef;
-                }
-            }
-        }
-    }
-
-    ## Rename picture on disk if user email changed
+    # Rename picture on disk if user email changed.
     if ($values->{'email'}) {
         foreach my $path ($self->find_picture_paths($who)) {
             my $extension = [reverse split /\./, $path]->[0];
@@ -5074,17 +5034,21 @@ sub add_list_member {
         $new_user->{'date'} ||= time;
         $new_user->{'update_date'} ||= $new_user->{'date'};
 
-        my %custom_attr = %{$subscriptions->{$who}{'custom_attribute'}}
-            if (defined $subscriptions->{$who}{'custom_attribute'});
+        my $custom_attribute;
+        if (ref $new_user->{'custom_attribute'} eq 'HASH') {
+            $custom_attribute = $new_user->{'custom_attribute'};
+        } elsif ($subscriptions->{$who}{'custom_attribute'}) {
+            $custom_attribute = $subscriptions->{$who}{'custom_attribute'};
+        }
         $new_user->{'custom_attribute'} ||=
-            Sympa::Tools::Data::encode_custom_attribute(\%custom_attr);
+            Sympa::Tools::Data::encode_custom_attribute($custom_attribute);
         $log->syslog(
             'debug2',
             'Custom_attribute = %s',
             $new_user->{'custom_attribute'}
         );
 
-        ## Crypt password if it was not crypted
+        # Crypt password if it was not crypted.
         unless (
             Sympa::Tools::Data::smart_eq($new_user->{'password'}, qr/^crypt/))
         {
@@ -7865,12 +7829,7 @@ sub sync_include_ca {
 
     foreach my $email (keys %changed) {
         if ($self->update_list_member(
-                $email,
-                {   'custom_attribute' =>
-                        Sympa::Tools::Data::encode_custom_attribute(
-                        $users{$email}
-                        )
-                }
+                $email, custom_attribute => $users{$email}
             )
             ) {
             $log->syslog('debug', 'Updated user %s', $email);
@@ -7912,12 +7871,7 @@ sub purge_ca {
 
     foreach my $email (keys %users) {
         if ($self->update_list_member(
-                $email,
-                {   'custom_attribute' =>
-                        Sympa::Tools::Data::encode_custom_attribute(
-                        $users{$email}
-                        )
-                }
+                $email, custom_attribute => $users{$email}
             )
             ) {
             $log->syslog('debug', 'Updated user %s', $email);
@@ -7955,9 +7909,8 @@ sub sync_include {
             unless (
                 $self->update_list_member(
                     lc($user->{'email'}),
-                    {   'update_date' => time,
-                        'subscribed'  => 1
-                    }
+                    update_date => time,
+                    subscribed  => 1
                 )
                 ) {
                 $log->syslog(
@@ -8084,10 +8037,9 @@ sub sync_include {
                 unless (
                     $self->update_list_member(
                         $email,
-                        {   'update_date' => time,
-                            'included'    => 0,
-                            'id'          => ''
-                        }
+                        update_date => time,
+                        included    => 0,
+                        id          => ''
                     )
                     ) {
                     $log->syslog('err', '(%s) Failed to update %s',
@@ -8164,13 +8116,11 @@ sub sync_include {
                         unless (
                             $self->update_list_member(
                                 $email,
-                                {   'update_date' => $update_time,
-                                    $attribute =>
-                                        $new_subscribers->{$email}{$attribute}
-                                }
+                                update_date => $update_time,
+                                $attribute =>
+                                    $new_subscribers->{$email}{$attribute}
                             )
                             ) {
-
                             $log->syslog('err', '(%s) Failed to update %s',
                                 $self, $email);
                             next;
@@ -8188,10 +8138,9 @@ sub sync_include {
                 unless (
                     $self->update_list_member(
                         $email,
-                        {   'update_date' => time,
-                            'included'    => 1,
-                            'id'          => $new_subscribers->{$email}{'id'}
-                        }
+                        update_date => time,
+                        included    => 1,
+                        id          => $new_subscribers->{$email}{id}
                     )
                     ) {
                     $log->syslog('err', '(%s) Failed to update %s',
@@ -10507,13 +10456,14 @@ sub modifying_msg_topic_for_list_members {
                     unless (
                         $self->update_list_member(
                             lc($subscriber->{'email'}),
-                            {   'update_date' => time,
-                                'topics' => join(',', @{$topics->{'added'}})
-                            }
+                            update_date => time,
+                            topics      => join(',', @{$topics->{'added'}})
                         )
                         ) {
-                        $log->syslog('err',
-                            "($self->{'name'} : impossible to update user '$subscriber->{'email'}'"
+                        $log->syslog(
+                            'err',
+                            'Impossible to update user "%s" of list %s',
+                            $subscriber->{'email'}, $self
                         );
                     }
                     $deleted = 1;

@@ -1657,11 +1657,11 @@ sub change_user_email {
             }
 
         } else {
-
             unless (
                 $list->update_list_member(
                     $in{'current_email'},
-                    {'email' => $in{'new_email'}, 'update_date' => time}
+                    email       => $in{'new_email'},
+                    update_date => time
                 )
                 ) {
                 push @failed_for, $list;

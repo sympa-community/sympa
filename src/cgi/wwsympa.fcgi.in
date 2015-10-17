@@ -2564,9 +2564,8 @@ sub get_parameters_old {
         } elsif ($pname =~ /^custom_attribute(.*)$/) {
             my $key = $tokens[1];
             $regexp = $in_regexp{'custom_attribute'};
-            $log->syslog('debug2',
-                "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} $Conf::Conf{$key}{type}"
-            );
+            $log->syslog('debug3', '{%s}{%s} %s %s %s',
+                $p, $key, $pname, $in{$p}, $Conf::Conf{$key}{type});
             $custom_attribute->{$key} = {value => $in{$p}};
             undef $in{$p};
 
@@ -5599,10 +5598,9 @@ sub do_set {
     my ($reception, $visibility) = ($in{'reception'}, $in{'visibility'});
     my $email;
 
-    my $xml_custom_attribute;
     if ($in{custom_attribute}) {
-        return undef if (check_custom_attribute() != 1);
-        $xml_custom_attribute = Sympa::Tools::Data::encode_custom_attribute(
+        return undef
+            unless _check_custom_attribute($list, $param->{action},
             $in{custom_attribute});
     }
 
@@ -5756,8 +5754,8 @@ sub do_set {
     } else {
         $update->{'gecos'} = undef;
     }
-    $update->{'custom_attribute'} = $xml_custom_attribute
-        if $xml_custom_attribute;
+    $update->{'custom_attribute'} = $in{custom_attribute}
+        if $in{custom_attribute};
 
     unless ($list->update_list_member($email, $update)) {
         Sympa::Report::reject_report_web('intern',
@@ -5785,20 +5783,26 @@ sub do_set {
 
 ## checks if each element of the custom attribute is conform to the list's
 ## definition
-sub check_custom_attribute {
+# Old name: check_custom_attribute() in wwsympa.fcgi.
+# TODO: This would be moved to a method of appropriate class.
+sub _check_custom_attribute {
+    my $list             = shift;
+    my $action           = shift;
+    my $custom_attribute = shift;
 
     my @custom_attributes = @{$list->{'admin'}{'custom_attribute'}};
     my $isOK              = 1;
 
     foreach my $ca (@custom_attributes) {
-        my $value = $in{custom_attribute}{$ca->{id}}{value};
-        if ($ca->{optional} eq 'required' && $value eq '') {
+        my $value = $custom_attribute->{$ca->{id}}{value};
+        if (    $ca->{optional}
+            and $ca->{optional} eq 'required'
+            and not(defined $value and length $value)) {
             Sympa::Report::reject_report_web('user', 'missing_arg',
-                {'argument' => "\"$ca->{name}\" is required"},
-                $param->{'action'});
-            wwslog('info', 'Missing parameter');
+                {'argument' => $ca->{name}}, $action);
+            wwslog('info', 'Missing parameter "%s"', $ca->{id});
             web_db_log(
-                {   'parameters' => "$in{'reception'},$in{'visibility'}",
+                {   'parameters' => $ca->{id},
                     'status'     => 'error',
                     'error_type' => 'missing_parameter'
                 }
@@ -5807,23 +5811,22 @@ sub check_custom_attribute {
             next;
         }
 
-        ## No further checking if attribute if empty
-        next if ($value =~ /^$/);
+        # No further checking if attribute is empty.
+        next unless defined $value and length $value;
 
-        my @values = split(/,/, $ca->{'enum_values'})
-            if (defined $ca->{'enum_values'});
+        my @values = split /,/, $ca->{enum_values}
+            if defined $ca->{enum_values};
 
         ## Check that the parameter has the correct format
-        unless (($ca->{'type'} eq 'enum' && grep(/^$value$/, @values))
-            || ($ca->{'type'} eq 'integer' && $value =~ /^\d+$/)
-            || ($ca->{'type'} eq 'string'  && $value =~ /^.+$/)
-            || ($ca->{'type'} eq 'text'    && $value =~ /^.+$/m)) {
+        unless (($ca->{type} eq 'enum' and grep { $value eq $_ } @values)
+            or ($ca->{type} eq 'integer' and $value =~ /\A\d+\z/)
+            or ($ca->{type} eq 'string'  and $value =~ /\A.+\z/)
+            or ($ca->{type} eq 'text'    and length $value)) {
             Sympa::Report::reject_report_web('user', 'syntax_errors',
-                {'params' => $ca->{name}},
-                $param->{'action'});
-            wwslog('info', 'Syntax error');
+                {'params' => $ca->{name}}, $action);
+            wwslog('info', 'Syntax error in parameter "%s"', $ca->{id});
             web_db_log(
-                {   'parameters' => $ca->{name},
+                {   'parameters' => $ca->{id},
                     'status'     => 'error',
                     'error_type' => 'missing_parameter'
                 }
@@ -5965,24 +5968,22 @@ sub do_subscribe {
 
     return undef if purely_closed('subscribe');    #FIXME: mv this to Scenario
     if ($param->{'user'} and $param->{'user'}{'email'}) {
-        my $xml_custom_attribute;
-
         if ($list->{'admin'}{'custom_attribute'}) {
-            ## This variable is set in the subrequest form
-            ## If not set, it means that the user has not been prompted to
-            ## provide custom_attributes
+            # This variable is set in the subrequest form.
+            # If not set, it means that the user has not been prompted to
+            # provide custom_attributes.
             unless ($in{'via_subrequest'}) {
                 wwslog('notice', 'Returning subrequest form');
                 return "subrequest";
             }
-
-            if (check_custom_attribute() != 1) {
+            unless (
+                _check_custom_attribute(
+                    $list, $param->{action}, $in{custom_attribute}
+                )
+                ) {
                 wwslog('notice', "Missing required custom attributes");
                 return 'subrequest';
             }
-            $xml_custom_attribute =
-                Sympa::Tools::Data::encode_custom_attribute(
-                $in{custom_attribute});
         }
 
         if ($param->{'is_subscriber'}) {
@@ -6062,9 +6063,8 @@ sub do_subscribe {
                 unless (
                     $list->update_list_member(
                         $param->{'user'}{'email'},
-                        {   'subscribed'  => 1,
-                            'update_date' => time
-                        }
+                        subscribed  => 1,
+                        update_date => time
                     )
                     ) {
                     Sympa::Report::reject_report_web(
@@ -6106,8 +6106,8 @@ sub do_subscribe {
                     );
                     return undef;
                 }
-                $u->{'custom_attribute'} = $xml_custom_attribute
-                    if (defined $xml_custom_attribute);
+                $u->{custom_attribute} = $in{custom_attribute}
+                    if $in{custom_attribute};
                 $u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
                 $u->{'parameter'} = 'manual subscription';
 
@@ -6312,12 +6312,11 @@ sub do_suboptions {
 
 ## Subscription request (user not authenticated)
 sub do_subrequest {
-    wwslog('info', '(%s, %s)', $in{'email'}, $in{'custom_attribute'});
+    wwslog('info', '(%s, %s)', $in{'email'}, $in{custom_attribute});
 
     return undef if (purely_closed('subscribe'));
-    if (defined $in{'custom_attribute'}) {
-        $param->{'custom_attribute'} = $in{'custom_attribute'};
-    }
+    $param->{'custom_attribute'} = $in{custom_attribute}
+        if $in{custom_attribute};
 
     ## Auth ?
     if ($param->{'user'}{'email'}) {
@@ -11657,7 +11656,9 @@ sub do_resetbounce {
         unless (
             $list->update_list_member(
                 $email,
-                {'bounce' => 'NULL', 'update_date' => time, 'bounce_score' => 0}
+                bounce       => undef,
+                update_date  => time,
+                bounce_score => 0
             )
             ) {
             Sympa::Report::reject_report_web(

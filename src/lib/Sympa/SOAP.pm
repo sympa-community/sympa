@@ -42,7 +42,6 @@ use Sympa::Session;
 use Sympa::Spool::Request;
 use Sympa::Template;
 use tools;
-use Sympa::Tools::Data;
 use Sympa::Tools::Password;
 use Sympa::User;
 
@@ -1507,20 +1506,16 @@ sub subscribe {
         }
 
         if ($is_sub) {
+            # Only updates the date.  Options remain the same.
+            my %update = (update_date => time);
+            $update{gecos} = $gecos if defined $gecos and $gecos =~ /\S/;
 
-            ## Only updates the date
-            ## Options remain the same
-            my $user = {};
-            $user->{'update_date'} = time;
-            $user->{'gecos'} = $gecos if $gecos;
-
-            $log->syslog('err', 'User already subscribed');
-
-            die SOAP::Fault->faultcode('Server')->faultstring('Undef.')
-                ->faultdetail("SOAP subscribe : update user failed")
-                unless $list->update_list_member($sender, $user);
+            unless ($list->update_list_member($sender, %update)) {
+                $log->syslog('err', 'User update failed');
+                die SOAP::Fault->faultcode('Server')->faultstring('Undef.')
+                    ->faultdetail("SOAP subscribe : update user failed");
+            }
         } else {
-
             my $u;
             my $defaults = $list->get_default_user_options();
             %{$u} = %{$defaults};
@@ -1789,9 +1784,9 @@ sub setDetails {
     }
 
     # Set subscriber values; return 1 for success
-    %user = ();
-    $user{'gecos'} = $gecos if (defined $gecos);
-    $user{'reception'} = $reception
+    my %user;
+    $user{gecos} = $gecos if defined $gecos and $gecos =~ /\S/;
+    $user{reception} = $reception
         # ideally, this should check against the available_user_options
         # values from the $list config
         if $reception
@@ -1811,13 +1806,12 @@ sub setDetails {
                 $newcustom{$key}{value} = $value;
             }
         }
-        $user{'custom_attribute'} =
-            Sympa::Tools::Data::encode_custom_attribute(\%newcustom);
+        $user{'custom_attribute'} = \%newcustom;
     }
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user details')
         ->faultdetail("SOAP setDetails : update user failed")
-        unless $list->update_list_member($sender, \%user);
+        unless $list->update_list_member($sender, %user);
 
     return SOAP::Data->name('result')->type('boolean')->value(1);
 }
@@ -1828,7 +1822,6 @@ sub setCustom {
     my $list;
     my $rv;
     my %newcustom;
-    my %user;
 
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = $ENV{'SYMPA_ROBOT'};
@@ -1872,13 +1865,11 @@ sub setCustom {
         #         and defined $list->{'admin'}{'custom_attribute'};
         $newcustom{$key}{value} = $value;
     }
-    %user = ();
-    $user{'custom_attribute'} =
-        Sympa::Tools::Data::encode_custom_attribute(\%newcustom);
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user attributes')
         ->faultdetail("SOAP setCustom : update user failed")
-        unless $list->update_list_member($sender, \%user);
+        unless $list->update_list_member($sender,
+        custom_attribute => \%newcustom);
 
     return SOAP::Data->name('result')->type('boolean')->value(1);
 }

@@ -1728,8 +1728,8 @@ sub expire_bounce {
                 unless (
                     $list->update_list_member(
                         $email,
-                        {'bounce'         => 'NULL'},
-                        {'bounce_address' => 'NULL'}
+                        bounce         => undef,
+                        bounce_address => undef
                     )
                     ) {
                     $log->syslog('info', 'Failed update database for %s',
@@ -1824,10 +1824,10 @@ sub eval_bouncers {
             ) {
             my $score = get_score($user_ref, $list_traffic) || 0;
 
-            ## copying score into DataBase
+            # Copying score into database.
             unless (
                 $list->update_list_member(
-                    $user_ref->{'email'}, {'bounce_score' => $score}
+                    $user_ref->{'email'}, bounce_score => $score
                 )
                 ) {
                 $log->syslog('err', 'Error while updating DB for user %s',
