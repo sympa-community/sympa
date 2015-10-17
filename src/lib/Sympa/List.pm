@@ -3713,6 +3713,8 @@ sub _map_list_member_cols {
             ->{'subscriber_table'}->{fields}
         }
         ) {
+        next if $f eq 'list_subscriber' or $f eq 'robot_subscriber';
+
         my $k = {reverse %map_field}->{$f};
         unless ($k) {
             $k = $f;
