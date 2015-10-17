@@ -11657,7 +11657,7 @@ sub do_resetbounce {
         unless (
             $list->update_list_member(
                 $email,
-                {'bounce' => 'NULL', 'update_date' => time, 'score' => 0}
+                {'bounce' => 'NULL', 'update_date' => time, 'bounce_score' => 0}
             )
             ) {
             Sympa::Report::reject_report_web(

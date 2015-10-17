@@ -1827,7 +1827,7 @@ sub eval_bouncers {
             ## copying score into DataBase
             unless (
                 $list->update_list_member(
-                    $user_ref->{'email'}, {'score' => $score}
+                    $user_ref->{'email'}, {'bounce_score' => $score}
                 )
                 ) {
                 $log->syslog('err', 'Error while updating DB for user %s',
