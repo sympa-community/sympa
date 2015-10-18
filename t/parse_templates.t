@@ -23,14 +23,22 @@ my @def_tt2 = _templates('default', '*.tt2 sympa.wsdl');
 my @list_tt2 = _templates('default/create_list_templates', '*/*.tt2');
 my @mail_tt2 = _templates('default/mail_tt2',              '*.tt2 */*.tt2');
 my @web_tt2  = _templates('default/web_tt2',               '*.tt2 */*.tt2');
+my @g_task   = _templates('default/global_task_models',    '*.task');
+my @l_task   = _templates('default/list_task_models',      '*.task');
 
-plan tests => scalar @def_tt2 + scalar @list_tt2 + scalar @mail_tt2 +
-    scalar @web_tt2;
+plan tests => scalar @def_tt2 +
+    scalar @list_tt2 +
+    scalar @mail_tt2 +
+    scalar @web_tt2 +
+    scalar @g_task +
+    scalar @l_task;
 
 map { is _do_test('default',                       $_), '', $_ } @def_tt2;
 map { is _do_test('default/create_list_templates', $_), '', $_ } @list_tt2;
 map { is _do_test('default/mail_tt2',              $_), '', $_ } @mail_tt2;
 map { is _do_test('default/web_tt2',               $_), '', $_ } @web_tt2;
+map { is _do_test('default/global_task_models', $_, '[ ]'), '', $_ } @g_task;
+map { is _do_test('default/list_task_models',   $_, '[ ]'), '', $_ } @l_task;
 
 sub _templates {
     my $dir = shift;
@@ -44,10 +52,17 @@ sub _templates {
 }
 
 sub _do_test {
-    my $dir = shift;
-    my $tpl = shift;
+    my $dir  = shift;
+    my $tpl  = shift;
+    my $tags = shift;
 
-    if ($tpl eq 'mhonarc-ressources.tt2') {
+    if ($tags) {
+        open my $fh, '<', $dir . '/' . $tpl;
+        $tpl = do { local $RS; <$fh> };
+        close $fh;
+        $tpl = "[% TAGS $tags %]$tpl";
+        $tpl = [split /(?<=\n)/, $tpl];
+    } elsif ($tpl eq 'mhonarc-ressources.tt2') {
         open my $fh, '<', $dir . '/' . $tpl;
         $tpl = do { local $RS; <$fh> };
         close $fh;
