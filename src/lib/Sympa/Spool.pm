@@ -275,7 +275,7 @@ sub build_glob_pattern {
         map {
         if (exists $options{$_} and defined $options{$_}) {
             my $val = $options{$_};
-            $val =~ s/([^\w\x80-\xFF])/\\$1/g;
+            $val =~ s/([^0-9A-Za-z\x80-\xFF])/\\$1/g;
             $val;
         } else {
             '*';
@@ -286,7 +286,11 @@ sub build_glob_pattern {
     my $pattern = sprintf $format, @args;
     $pattern =~ s/[*][*]+/*/g;
 
-    return ($pattern =~ /[0-9A-Za-z\x80-\xFF]/) ? $pattern : undef;
+    # Eliminate patterns contains only punctuations:
+    # ',', '.', '_', wildcard etc.
+    return ($pattern =~ /[0-9A-Za-z\x80-\xFF]|\\[^0-9A-Za-z\x80-\xFF]/)
+        ? $pattern
+        : undef;
 }
 
 sub split_listname {
