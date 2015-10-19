@@ -8,13 +8,13 @@
         </li>
         <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Create List Menu[%END%]</span></a></li>
     </ul>
-<section class="top-bar-section">
+<menu class="top-bar-section">
     <ul class="left">
         <li><a href="#list_create">[%|loc%]Create a list using a template[%END%]</a></li>
         <li class="divider"></li>
         <li><a href="#list_copy">[%|loc%]Copy an existing list.[%END%]</a></li>
     </ul>
-</section>
+</menu>
 </nav>
 [% END %]
 
@@ -27,7 +27,7 @@
         </li>
         <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Listmaster Admin Menu[%END%]</span></a></li>
     </ul>
-<section class="top-bar-section">
+<menu class="top-bar-section">
   <ul class="left">
 [% IF (subaction == '' or subaction == 'm_lists') and action != 'skinsedit' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="has-dropdown [% class %]"><a href="[% path_cgi %]/serveradmin/m_lists">[%|loc%]Lists[%END%]</a>
@@ -63,7 +63,7 @@
 [% IF subaction == 'tracker' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/tracker">[%|loc%]Submitting a bug, a feature request[%END%]</a></li>
   </ul>
-</section>
+</menu>
 </nav>
 [% END %]
 
@@ -78,7 +78,7 @@
         </li>
         <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Index of lists[%END%]</span></a></li>
     </ul>
-<section class="top-bar-section">
+<menu class="top-bar-section">
   <ul class="left">
 [% FOREACH letter IN letters %]
   [% IF orderedlist.$letter.0 %]
@@ -90,7 +90,7 @@
  <li class="letter">
   <a href="[% path_cgi %]/lists[%IF topic%]/[%topic%][%IF subtopic%]/[%subtopic%][%END%][%END%]" onclick="show('loading'); hide('content-inner');">[%|loc%]All[%END%]</a> </li>
   </ul>
-</section>
+</menu>
 </nav>
 [% END %]
 
@@ -104,7 +104,7 @@
         </li>
         <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Menu[%END%]</span></a></li>
     </ul>
-<section class="top-bar-section">
+<menu class="top-bar-section">
   <ul class="left">
 [% IF action == 'edit_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="has-dropdown [% class %]"><a  href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Edit List Config[%END%]</a>
@@ -152,7 +152,7 @@
     <li class="[% class %]"><a  href="[% path_cgi %]/viewlogs/[% list %]" >[%|loc%]Logs[%END%]</a></li>
 [% END %]
   </ul>
-</section>
+</menu>
 </nav>
 [% END %]
 
@@ -165,14 +165,14 @@
         </li>
         <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Menu[%END%]</span></a></li>
     </ul>
-<section class="top-bar-section">
+<menu class="top-bar-section">
   <ul class="left">
     [% IF subaction == '' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/compose_mail/[% list %]">[%|loc%]Send a message[%END%]</a></li>
     [% IF subaction == 'html_news_letter' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/compose_mail/[% list %]/html_news_letter">[%|loc%]Send an html page[%END%]</a></li>
   </ul>
-</section>
+</menu>
 </nav>
 [% END %]
 
