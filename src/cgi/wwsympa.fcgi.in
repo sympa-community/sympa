@@ -6318,77 +6318,69 @@ sub do_subrequest {
     $param->{'custom_attribute'} = $in{custom_attribute}
         if $in{custom_attribute};
 
-    ## Auth ?
+    # Auth ?
     if ($param->{'user'}{'email'}) {
-        ## Subscriber ?
+        # Subscriber ?
         if ($param->{'is_subscriber'}) {
-            Sympa::Report::reject_report_web('user', 'already_subscriber',
-                {'list' => $list->{'name'}},
-                $param->{'action'}, $list);
-            wwslog('info', '%s already subscriber',
-                $param->{'user'}{'email'});
-            web_db_log(
-                {   'status'     => 'error',
-                    'error_type' => 'already_subscriber'
-                }
-            );
-            return undef;
+            $param->{'status'} = 'auth_subscribed';
+        } else {
+            $param->{'status'} = 'auth';
         }
-        $param->{'status'} = 'auth';
-    } else {
-        ## Provided email parameter ?
-        unless ($in{'email'}) {
-            $param->{'status'} = 'notauth_noemail';
-            return 1;
-        }
-        ## valid email address?
-        unless (tools::valid_email($in{'email'})) {
-            Sympa::Report::reject_report_web('user', 'incorrect_email',
-                {'email' => $in{'email'}},
-                $param->{'action'}, $list);
-            wwslog('info', 'Incorrect email %s', $in{'email'});
-            web_db_log(
-                {   'target_email' => $in{'email'},
-                    'status'       => 'error',
-                    'error_type'   => 'incorrect_email'
-                }
-            );
-            $param->{'status'} = 'notauth_noemail';
-            return 1;
-        }
-        ## Subscriber ?
-        if ($list->is_list_member($in{'email'})) {
-            $param->{'status'} = 'notauth_subscriber';
-            return 1;
-        }
-        my $user;
-        $user = Sympa::User::get_global_user($in{'email'})
-            if Sympa::User::is_global_user($in{'email'});
-
-        ## Need to send a password by email
-        $param->{'one_time_ticket'} =
-            Sympa::Auth::create_one_time_ticket($in{'email'}, $robot,
-            'subscribe/' . $list->{'name'}, $ip);
-        $param->{'login_error'}       = 'ticket_sent';
-        $param->{'request_from_host'} = $ip;
-        unless ($param->{'newuser'} =
-            Sympa::User::get_global_user($in{'email'})) {
-            $param->{'newuser'} =
-                {'email' => Sympa::Tools::Text::canonic_email($in{'email'})};
-            $param->{'newuser'}{'escaped_email'} =
-                tools::escape_chars($param->{'newuser'}{'email'});
-        }
-        unless (Sympa::send_file($robot, 'sendpasswd', $in{'email'}, $param))
-        {
-            wwslog('notice', 'Unable to send template "sendpasswd" to %s',
-                $in{'email'});
-            $param->{'login_error'} = 'unable_to_send_ticket';
-        }
-        # do_requestpasswd();
-        $param->{'status'} = 'notauth_passwordsent';
-
         return 1;
     }
+    # Provided email parameter ?
+    unless ($in{'email'}) {
+        $param->{'status'} = 'notauth_noemail';
+        return 1;
+    }
+    # Valid email address?
+    unless (tools::valid_email($in{'email'})) {
+        Sympa::Report::reject_report_web('user', 'incorrect_email',
+            {'email' => $in{'email'}},
+            $param->{'action'}, $list);
+        wwslog('info', 'Incorrect email %s', $in{'email'});
+        web_db_log(
+            {   'target_email' => $in{'email'},
+                'status'       => 'error',
+                'error_type'   => 'incorrect_email'
+            }
+        );
+        $param->{'status'} = 'notauth_noemail';
+        return 1;
+    }
+
+    # Subscriber ?
+    if ($list->is_list_member($in{'email'})) {
+        # To prevent sniffing users, fake "You requested a subscription"
+        # notice.
+        $param->{'login_error'} = 'ticket_sent';
+        $param->{'status'}      = 'notauth_passwordsent';
+        return 1;
+    }
+
+    $param->{'login_error'}       = 'ticket_sent';
+    $param->{'request_from_host'} = $ip;
+    $param->{'newuser'}           = Sympa::User::get_global_user($in{'email'})
+        if Sympa::User::is_global_user($in{'email'});
+    unless ($param->{'newuser'}) {
+        $param->{'newuser'} =
+            {'email' => Sympa::Tools::Text::canonic_email($in{'email'})};
+        $param->{'newuser'}{'escaped_email'} =
+            tools::escape_chars($param->{'newuser'}{'email'});
+    }
+    # Need to send a password by email
+    $param->{'one_time_ticket'} = Sympa::Auth::create_one_time_ticket(
+        $in{'email'}, $robot,
+        'subscribe/' . $list->{'name'},
+        $param->{'request_from_host'}
+    );
+    unless (Sympa::send_file($robot, 'sendpasswd', $in{'email'}, $param)) {
+        wwslog('notice', 'Unable to send template "sendpasswd" to %s',
+            $in{'email'});
+        $param->{'login_error'} = 'unable_to_send_ticket';
+    }
+    # do_requestpasswd();
+    $param->{'status'} = 'notauth_passwordsent';
 
     return 1;
 }

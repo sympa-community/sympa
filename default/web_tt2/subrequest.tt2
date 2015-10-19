@@ -1,8 +1,8 @@
 <!-- $Id$ -->
+[% IF status == 'auth_subscribed' ~%]
+  <strong>[%|loc(list)%]You are already subscribed to list %1[%END%].</strong>
 
-
-  [% IF status == 'auth' %]
-
+[%~ ELSIF status == 'auth' ~%]
         [% IF listconf.custom_attribute.size == 0 %]
           [%|loc(list)%]You requested a subscription to list %1[%END%].
           [%|loc%]To confirm your request, please click the button below:[%END%]<br />
@@ -23,16 +23,14 @@
         </fieldset>
         </form>
 
-  [% ELSIF status == 'notauth_passwordsent' %]
-
+[%~ ELSIF status == 'notauth_passwordsent' ~%]
         [%|loc(list)%]You requested a subscription to list %1[%END%].
         <br /><br />
         [%|loc%]To confirm your identity and prevent anyone from subscribing you to
         this list against your will, a message containing an validation link was sent to the e-mail address you provided.[%END%] <br /><br />
         [%|loc(list)%]Check your mailbox for new messages and click this link. This will confirm your subscription to list %1.[%END%]
 
-  [% ELSIF status == 'notauth_noemail' %]
-
+[%~ ELSE ~%]
         <form class="bold_label" action="[% path_cgi %]" method="post">
         <fieldset>
           <label for="email">[%|loc%]Your e-mail address[%END%]</label>
@@ -44,39 +42,5 @@
         </fieldset>
          </form>
 
-
-  [% ELSIF status == 'notauth' %]
-
-          [%|loc(list)%]To confirm your subscription to list %1, please enter
-        your password below[%END%]
-        [%~ IF listconf.custom_attribute.size == 0 ~%]
-          [%|loc%], in addition to the personal information requested.[%END%]
-	[% END %]
-
-         <form action="[% path_cgi %]" METHOD=POST>
-        <fieldset>
-          <label><b>[%|loc%]e-mail address[%END%]</b></label> [% email %]<br />
-          <label for="passwd">[%|loc%]password[%END%]</label>
-         <input id="passwd" type="password" name="passwd" size="20" /><br />
-
-         [% PROCESS edit_attributes.tt2 %]
-          <input type="hidden" name="list" value="[% list %]" />
-          <input type="hidden" name="email" value="[% email %]" />
-          <input type="hidden" name="previous_list" value="[% list %]" />
-          <input type="hidden" name="previous_action" value="subrequest" />
- 	  <input type="hidden" name="via_subrequest" value="1" />
-        &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
-        <input class="MainMenuLinks" type="submit" name="action_requestpasswd" value="[%|loc%]My password?[%END%]" />
-        </fieldset>
-         </form>
-
-  [% ELSIF status == 'notauth_subscriber' %]
-
-        <strong>[%|loc(list)%]You are already subscribed to list %1[%END%].</strong>
-        <br /><br />
-
-
-        [% PROCESS 'loginbanner.tt2' %]
-
-  [% END %]
+[%~ END %]
 <!-- end subrequest.tt2 -->
