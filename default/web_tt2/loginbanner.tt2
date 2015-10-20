@@ -24,7 +24,7 @@
             [%END%]
 
             <li><a href="[% path_cgi %]/pref"><i class="fa fa-cog"></i> [%|loc%]My preferences[%END%]</a></li>
-            <li><a href="[% path_cgi %]/my" onclick="show('loading'); hide('content-inner');"><i class="fa fa-th-list"></i> [%|loc%]My lists[%END%]</a></li>
+            <li><a href="[% path_cgi %]/my" onclick="show('loading'); hide('content-inner');"><i class="fa fa-envelope"></i> [%|loc%]My lists[%END%]</a></li>
             <li>
               [% IF auth_method == 'md5' %]
                 <form action="[% path_cgi %]" method="post">
