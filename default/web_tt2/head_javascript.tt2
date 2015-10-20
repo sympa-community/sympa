@@ -57,6 +57,12 @@ var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI
 
 <script src="[% static_content_url %]/external/jquery-ui.js"></script>
 
+<script src="[% static_content_url %]/external/jquery.jqplot.min.js"></script>
+<script src="[% static_content_url %]/external/jqplot.categoryAxisRenderer.min.js"></script>
+<script src="[% static_content_url %]/external/jqplot.barRenderer.min.js"></script>
+<script src="[% static_content_url %]/external/jqplot.canvasAxisTickRenderer.min.js"></script>
+<script src="[% static_content_url %]/external/jqplot.canvasTextRenderer.min.js"></script>
+
 <script src="[% static_content_url %]/js/sympa.js"></script>
 
 <!-- Foundation and other ui adaptation -->
@@ -67,10 +73,12 @@ var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI
 <script src="[% static_content_url %]/external/foundation/js/vendor/modernizr.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/vendor/fastclick.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/vendor/placeholder.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/vendor/jquery.js"></script>
+<!--<script src="[% static_content_url %]/external/foundation/js/vendor/jquery.js"></script>-->
 <script src="[% static_content_url %]/external/foundation/js/foundation/foundation.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/foundation/foundation.topbar.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.offcanvas.js"></script>
+<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.reveal.js"></script>
+<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.tooltip.js"></script>
+<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.accordion.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/foundation/responsive-tables.js"></script>
 <script>
 $(
@@ -82,45 +90,30 @@ $(document).foundation({
     }
 });
 
-});
+    /*Top Button*/ 
+    $(document).on( 'scroll', function(){
 
-/* DROPDOWN NAV ------------- */
-    var lockNavBar = false;
-    $(document).on('click', '.nav-bar a.flyout-toggle', function(e) {
-        e.preventDefault();
-        var flyout = $(this).siblings('.flyout');
-        if (lockNavBar === false) {
-            $('.nav-bar .flyout').not(flyout).slideUp(500);
-            flyout.slideToggle(500, function(){
-                lockNavBar = false;
-            });
+            if ($(window).scrollTop() > 100) {
+                    $('.scroll-top-wrapper').addClass('show');
+            } else {
+                    $('.scroll-top-wrapper').removeClass('show');
         }
-        lockNavBar = true;
     });
-  if (Modernizr.touch) {
-    $('.nav-bar>li.has-flyout>a.main').css({
-      'padding-right' : '75px'
-    });
-    $('.nav-bar>li.has-flyout>a.flyout-toggle').css({
-      'border-left' : '1px dashed #eee'
-    });
-  } else {
-    $('.nav-bar>li.has-flyout').hover(function() {
-      $(this).children('.flyout').show();
-    }, function() {
-      $(this).children('.flyout').hide();
-    })
-}
 
+    $('.scroll-top-wrapper').on('click', scrollToTop);
+
+    });
+
+/*Top Button*/
+function scrollToTop() {
+	verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
+	element = $('body');
+	offset = element.offset();
+	offsetTop = offset.top;
+	$('html, body').animate({scrollTop: offsetTop}, 500, 'linear');
+}
 </script>
 
-<!-- jqPlot. -->
-[%# Though I don't know why, these can't be put before Foundation. ~%]
-<script src="[% static_content_url %]/external/jquery.jqplot.min.js"></script>
-<script src="[% static_content_url %]/external/jqplot.categoryAxisRenderer.min.js"></script>
-<script src="[% static_content_url %]/external/jqplot.barRenderer.min.js"></script>
-<script src="[% static_content_url %]/external/jqplot.canvasAxisTickRenderer.min.js"></script>
-<script src="[% static_content_url %]/external/jqplot.canvasTextRenderer.min.js"></script>
 
 [% IF use_html_editor -%]
 <script src="[% html_editor_url %]"></script>
