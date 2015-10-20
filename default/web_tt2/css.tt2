@@ -383,7 +383,7 @@ h2 {
 }
 h3 {
 	margin: 0px 0px 0.6em;
-	color: [% color_3 %];
+	color: [% color_2 %];
 	font-weight: 100;
 	font-size: 1.4rem;
 }
@@ -2094,6 +2094,15 @@ main .top-bar-section li.nolink{
     padding: 0 10px;
     color: [% color_3 %];
     background-color: [% color_8 %];
+}
+
+main nav ~ h1,
+main nav ~ h2,
+main nav ~ h3,
+main nav ~ h4,
+main nav ~ h5,
+main nav ~ h6{
+    margin-top:1rem;
 }
 
 /* Initials in list of lists */
