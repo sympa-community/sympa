@@ -1,5 +1,5 @@
 <!-- $Id$ -->
-<h2>[%|loc(listname)%]List %1 statistics[%END%]</h2>
+<h3>[%|loc(listname)%]List %1 statistics[%END%]</h3>
 
 <p>[%|loc%]This page displays overall informations regarding the list activity[%END%]</p>
 
@@ -14,7 +14,7 @@
   [% SET chartid = "chartdiv" _ stat_id ~%]
   [% SET chartcontainerid = "chartcontainer" _ stat_id ~%]
   <div id="[% chartcontainerid %]">
-  <h2>[% o.title %]</h2>
+  <h4>[% o.title %]</h4>
   [% IF o.defined('stats_values') %]
     <div id="[% chartid %]" style="height:400px;">
     <script>
