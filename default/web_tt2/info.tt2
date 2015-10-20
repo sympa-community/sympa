@@ -26,54 +26,50 @@
       [% END %]
     [% END %]
 
-    [% IF is_owner %]
+     [% IF is_owner %]
     <div class="item_list">
       <p>[%|loc%]Common administrative options are linked below; full administrative options are available by selecting Admin beneath List Options in the Left Navigation menu.[%END%]</p>
   
       <div class="item">
-        <img class="item_icon" src="[% static_content_url %]/icons/subscribe.png" />
         <div class="item_content">
-          <a class="item_title" href="[% path_cgi %]/review/[% list %]">[%|loc%]View or Manage Subscribers[%END%]</a>
-          <ul>
-            <li>[%|loc%]View the list of subscribers[%END%]</li>
-            <li>[%|loc%]Review subscription requests[%END%]</li>
-            <li>[%|loc%]Add/delete subscribers[%END%]</li>
+         <a class="item_title" href="[% path_cgi %]/review/[% list %]"><i class="fa fa-users fa-3x fa-pull-left fa-border"></i> [%|loc%]View or Manage Subscribers[%END%]</a>
+          <ul class="fa-ul">
+            <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% path_cgi %]/review/[% list %]">[%|loc%]View the list of subscribers[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Review subscription requests[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% path_cgi %]/review/[% list %]">[%|loc%]Add/delete subscribers[%END%]</a></li>
           </ul>
         </div>
       </div>
   
       <div class="item">
-        <img class="item_icon" src="[% static_content_url %]/icons/config.png" />
         <div class="item_content">
-          <a class="item_title" href="[% path_cgi %]/admin/[% list %]">[%|loc%]List Configuration[%END%]</a>
-          <ul>
-            <li><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Modify owners or moderators (editors)[%END%]</a></li>
-            <li><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Modify list subject and visibility[%END%]</a></li>
-            <li><a href="[% path_cgi %]/edit_list_request/[% list %]/sending">[%|loc%]Change who can post to this list[%END%]</a></li>
-            <li><a href="[% path_cgi %]/edit_list_request/[% list %]/command">[%|loc%]Change who can (un)subscribe and view list information[%END%]</a></li>
-            <li><a href="[% path_cgi %]/admin/[% list %]">[%|loc%]Close this list[%END%]</a></li>
+          <a class="item_title" href="[% path_cgi %]/admin/[% list %]"><i class="fa fa-wrench fa-3x fa-pull-left fa-border"></i> [%|loc%]List Configuration[%END%]</a>
+          <ul class="fa-ul">
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Modify owners or moderators (editors)[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Modify list subject and visibility[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/edit_list_request/[% list %]/sending">[%|loc%]Change who can post to this list[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/edit_list_request/[% list %]/command">[%|loc%]Change who can (un)subscribe and view list information[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/admin/[% list %]">[%|loc%]Close this list[%END%]</a></li>
           </ul>
         </div>
       </div>
   
       <div class="item">
-        <img class="item_icon" src="[% static_content_url %]/icons/arc.png" />
         <div class="item_content">
-          <a class="item_title" href="[% path_cgi %]/arc/[% list %]">[%|loc%]List Archives[%END%]</a>
-          <ul>
-            <li><a href="[% path_cgi %]/edit_list_request/[% list %]/archives">[%|loc%]Change settings for who can view archives[%END%]</a></li>
-            <li><a href="[% path_cgi %]/arc_manage/[% list %]">[%|loc%]Download archives[%END%]</a></li>
+          <a class="item_title" href="[% path_cgi %]/arc/[% list %]"><i class="fa fa-archive fa-3x fa-pull-left fa-border"></i> [%|loc%]List Archives[%END%]</a>
+          <ul class="fa-ul">
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/edit_list_request/[% list %]/archives">[%|loc%]Change settings for who can view archives[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/arc_manage/[% list %]">[%|loc%]Download archives[%END%]</a></li>
           </ul>
         </div>
       </div>
   
       <div class="item">
-        <img class="item_icon" src="[% static_content_url %]/icons/datasources.png" />
         <div class="item_content">
-          <a class="item_title" href="[% path_cgi %]/edit_list_request/[% list %]/data_source">[%|loc%]Data Sources Configuration[%END%]</a>
-          <ul>
-            <li>[%|loc%]Configure data sources (SQL, LDAP, text file) for list membership[%END%]</li>
-            <li>[%|loc%]Include (nest) Sympa lists[%END%]</li>
+          <a class="item_title" href="[% path_cgi %]/edit_list_request/[% list %]/data_source"><i class="fa fa-database fa-3x fa-pull-left fa-border"></i> [%|loc%]Data Sources Configuration[%END%]</a>
+          <ul class="fa-ul">
+            <li><i class="fa-li fa fa-arrow-right"></i>[%|loc%]Configure data sources (SQL, LDAP, text file) for list membership[%END%]</li>
+            <li><i class="fa-li fa fa-arrow-right"></i>[%|loc%]Include (nest) Sympa lists[%END%]</li>
           </ul>
         </div>
       </div>
