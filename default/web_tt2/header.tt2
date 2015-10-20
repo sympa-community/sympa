@@ -25,7 +25,7 @@
         </li>
         <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Sympa Menu[%END%]</span></a></li>
     </ul>
-<section class="top-bar-section">
+<menu class="top-bar-section">
   <ul class="right">
         <!-- sympa menu start --> 
           [% PROCESS 'sympa_menu.tt2' %]
@@ -43,7 +43,7 @@
         </li>
         [% END %]
     </ul>
-</section>
+</menu>
 </nav>
 [% IF top_menu %]
 [% IF not list %]
