@@ -18,8 +18,8 @@ Deleted topic(s) is(are):[%END%]
    [% t %]
 [% END -%]
 
-[%|loc(url)%]To update your topics subscription, go to the following page:
-%1[% END %]
+[%|loc%]To update your topics subscription, go to the following page:[%END%]
+[% conf.wwsympa_url %]/suboptions/[% list.name %]
 
 
 [% ELSIF type == 'added_as_listadmin' -%]

@@ -859,6 +859,119 @@ sub send_notify_to_listmaster {
     return 1;
 }
 
+=over
+
+=item send_notify_to_user ( $that, $operation, $user, $param )
+
+Send a notice to a user (sender, subscriber or another user)
+by parsing user_notification.tt2 template.
+
+Parameters:
+
+=over
+
+=item $that
+
+L<Sympa::List>, Robot or Site.
+
+=item $operation
+
+Notification type.
+
+=item $user
+
+E-mail of notified user.
+
+=item $param
+
+Hashref or arrayref.  Values for template parsing.
+
+=back
+
+Returns:
+
+C<1> or C<undef>.
+
+=back
+
+=cut
+
+sub send_notify_to_user {
+    $log->syslog('debug2', '(%s, %s, %s, ...)', @_);
+    my $that      = shift;
+    my $operation = shift;
+    my $user      = shift;
+    my $param     = shift || {};
+
+    my ($list, $robot_id);
+    if (ref $that eq 'Sympa::List') {
+        $list     = $that;
+        $robot_id = $list->{'domain'};
+    } elsif ($that and $that ne '*') {
+        $robot_id = $that;
+    } else {
+        $robot_id = '*';
+    }
+
+    $param->{'auto_submitted'} = 'auto-generated';
+
+    die 'Missing parameter "operation"' unless $operation;
+    die 'missing parameter "user"'      unless $user;
+
+    if (ref $param eq "HASH") {
+        $param->{'to'}   = $user;
+        $param->{'type'} = $operation;
+
+        if ($operation eq 'ticket_to_signoff') {
+            $param->{one_time_ticket} =
+                Sympa::Auth::create_one_time_ticket($user, $robot_id,
+                'signoff/' . $list->{'name'},
+                $param->{ip})
+                or return undef;
+        } elsif ($operation eq 'ticket_to_family_signoff') {
+            $param->{one_time_ticket} =
+                Sympa::Auth::create_one_time_ticket($user, $robot_id,
+                'family_signoff/' . $param->{family} . '/' . $user,
+                $param->{ip})
+                or return undef;
+        } elsif ($operation eq 'ticket_to_send') {
+            $param->{'one_time_ticket'} =
+                Sympa::Auth::create_one_time_ticket($user, $robot_id,
+                'change_email/' . $param->{email},
+                $param->{ip})
+                or return undef;
+        }
+
+        unless (Sympa::send_file($that, 'user_notification', $user, $param)) {
+            $log->syslog('notice',
+                'Unable to send template "user_notification" to %s', $user);
+            return undef;
+        }
+    } elsif (ref $param eq "ARRAY") {
+        my $data = {
+            'to'   => $user,
+            'type' => $operation
+        };
+
+        for my $i (0 .. $#{$param}) {
+            $data->{"param$i"} = $param->[$i];
+        }
+        unless (Sympa::send_file($that, 'user_notification', $user, $data)) {
+            $log->syslog('notice',
+                'Unable to send template "user_notification" to %s', $user);
+            return undef;
+        }
+    } else {
+        $log->syslog(
+            'err',
+            'error on incoming parameter "%s", it must be a ref on HASH or a ref on ARRAY',
+            $param
+        );
+        return undef;
+    }
+    return 1;
+}
+
 =head3 Internationalization
 
 =over
@@ -1031,7 +1144,7 @@ Is the user listmaster?
 # Old names: [6.2b-6.2.3] Sympa::Robot::is_listmaster($who, $robot_id)
 sub is_listmaster {
     my $that = shift;
-    my $who = Sympa::Tools::Text::canonic_email(shift);
+    my $who  = Sympa::Tools::Text::canonic_email(shift);
 
     return undef unless defined $who;
     return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email($that);

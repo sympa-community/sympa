@@ -1779,18 +1779,11 @@ sub distribute_msg {
     my $rate = $self->get_total_bouncing() * 100 / $total;
     if ($rate > $self->{'admin'}{'bounce'}{'warn_rate'}) {
         $self->send_notify_to_owner('bounce_rate', {'rate' => $rate});
-        if ($rate == 100) {
-            $self->send_notify_to_user('hundred_percent_error',
-                $message->{'sender'});
-            Sympa::send_notify_to_listmaster(
-                $self->{'domain'},
-                'hundred_percent_error',
-                {   'listname'   => $self->{'name'},
-                    'listdomain' => $self->{'domain'},
-                    'sender'     => $message->{'sender'}
-                }
-                )
-
+        if (100 <= $rate) {
+            Sympa::send_notify_to_user($self, 'hundred_percent_error',
+                $message->{sender});
+            Sympa::send_notify_to_listmaster($self, 'hundred_percent_error',
+                {sender => $message->{sender}});
         }
     }
 
@@ -3096,72 +3089,8 @@ sub send_notify_to_editor {
     return 1;
 }
 
-####################################################
-# send_notify_to_user
-####################################################
-# Send a notice to a user (sender, subscriber ...)
-# by parsing user_notification.tt2 template
-#
-# IN : -$self (+): ref(List)
-#      -$operation (+): notification type
-#      -$user(+): email of notified user
-#      -$param(+) : ref(HASH) | ref(ARRAY)
-#       values for template parsing
-#
-# OUT : 1 | undef
-#
-######################################################
-sub send_notify_to_user {
-
-    my ($self, $operation, $user, $param) = @_;
-    $log->syslog('debug2', '(%s, %s, %s)', $self->{'name'}, $operation,
-        $user);
-
-    my $host  = $self->{'admin'}->{'host'};
-    my $robot = $self->{'domain'};
-    $param->{'auto_submitted'} = 'auto-generated';
-
-    unless (defined $operation) {
-        die 'missing incoming parameter "$operation"';
-    }
-    unless ($user) {
-        die 'missing incoming parameter "$user"';
-    }
-
-    if (ref($param) eq "HASH") {
-        $param->{'to'}   = $user;
-        $param->{'type'} = $operation;
-
-        if ($operation eq 'auto_notify_bouncers') {
-        }
-
-        unless (Sympa::send_file($self, 'user_notification', $user, $param)) {
-            $log->syslog('notice',
-                'Unable to send template "user_notification" to %s', $user);
-            return undef;
-        }
-    } elsif (ref($param) eq "ARRAY") {
-        my $data = {
-            'to'   => $user,
-            'type' => $operation
-        };
-
-        for my $i (0 .. $#{$param}) {
-            $data->{"param$i"} = $param->[$i];
-        }
-        unless (Sympa::send_file($self, 'user_notification', $user, $data)) {
-            $log->syslog('notice',
-                'Unable to send template "user_notification" to %s', $user);
-            return undef;
-        }
-    } else {
-        $log->syslog('err',
-            'error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY'
-        );
-        return undef;
-    }
-    return 1;
-}
+# Moved to Sympa::send_notify_to_user().
+#sub send_notify_to_user;
 
 =over
 
@@ -10441,19 +10370,11 @@ sub modifying_msg_topic_for_list_members {
                     )
                 );
 
-                if ($#{$topics->{'intersection'}} >= 0) {
-                    my $wwsympa_url =
-                        Conf::get_robot_conf($self->{'domain'},
-                        'wwsympa_url');
-                    $self->send_notify_to_user(
-                        'deleted_msg_topics',
+                if (@{$topics->{'intersection'}}) {
+                    Sympa::send_notify_to_user(
+                        $self, 'deleted_msg_topics',
                         $subscriber->{'email'},
-                        {   'del_topics' => $topics->{'intersection'},
-                            'url'        => sprintf(
-                                '%s/suboptions/%s',
-                                $wwsympa_url, $self->{'name'}
-                            ),
-                        }
+                        {del_topics => $topics->{'intersection'}}
                     );
                     unless (
                         $self->update_list_member(
@@ -10895,14 +10816,14 @@ sub remove_bouncers {
 
 # Sub for notifying users: "Be careful, you're bouncing".
 sub notify_bouncers {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $self   = shift;
     my $reftab = shift;
-    $log->syslog('debug', '(%s)', $self->{'name'});
 
     foreach my $user (@$reftab) {
         $log->syslog('notice', 'Notifying bouncing subsrciber of list %s: %s',
-            $self->{'name'}, $user);
-        $self->send_notify_to_user('auto_notify_bouncers', $user, {});
+            $self, $user);
+        Sympa::send_notify_to_user($self, 'auto_notify_bouncers', $user);
     }
     return 1;
 }

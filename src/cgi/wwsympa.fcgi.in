@@ -6426,29 +6426,9 @@ sub do_auto_signoff {
     ## Send the confirmation email to the user.
 
     if ($list->is_list_member($in{'email'})) {
-
-        my $ticket =
-            Sympa::Auth::create_one_time_ticket($in{'email'}, $robot,
-            'signoff/' . $list->{'name'}, $ip);
-
-        my $tt2_param = {
-            'list'            => $list,
-            'type'            => 'ticket_to_signoff',
-            'one_time_ticket' => $ticket,
-            'email'           => $in{'email'},
-            'context'         => 'auto_signoff',
-            'ip'              => $ip,
-        };
-        unless (
-            Sympa::send_file(
-                $robot, 'user_notification', $in{'email'}, $tt2_param
-            )
-            ) {
-            $log->syslog('notice',
-                "Unable to send template 'user_notification' to $in{'email'}"
-            );
-            return undef;
-        }
+        Sympa::send_notify_to_user($list, 'ticket_to_signoff', $in{'email'},
+            {context => 'auto_signoff', ip => $ip})
+            or return undef;
     } else {
         return Conf::get_robot_conf($robot, 'default_home');
     }
@@ -6460,38 +6440,24 @@ sub do_auto_signoff {
 
 sub do_family_signoff_request {
     wwslog('info', '');
-    ## If the URL isn't valid, then go to home page. No need to guide the
-    ## user: this function is supposed to be used by clicking on autocreated
-    ## URL only.
+    # If the URL isn't valid, then go to home page. No need to guide the
+    # user: this function is supposed to be used by clicking on autocreated
+    # URL only.
     return Conf::get_robot_conf($robot, 'default_home') unless $in{'email'};
+    my $family = Sympa::Family->new($in{'family'}, $robot);
+    return Conf::get_robot_conf($robot, 'default_home') unless $family;
 
-    my $ticket =
-        Sympa::Auth::create_one_time_ticket($in{'email'}, $robot,
-        'family_signoff/' . $in{'family'} . '/' . $in{'email'}, $ip);
+    Sympa::send_notify_to_user(
+        $robot,
+        'ticket_to_family_signoff',
+        $in{'email'},
+        {context => 'family_signoff', family => $family->{'name'}, ip => $ip}
+    ) or return undef;
 
-    my $tt2_param = {
-        'family'          => $in{'family'},
-        'type'            => 'ticket_to_family_signoff',
-        'one_time_ticket' => $ticket,
-        'email'           => $in{'email'},
-        'context'         => 'family_signoff',
-        'ip'              => $ip,
-    };
-    unless (
-        Sympa::send_file(
-            $robot, 'user_notification', $in{'email'}, $tt2_param
-        )
-        ) {
-        $log->syslog('notice',
-            'Unable to send template "user_notification" to %s',
-            $in{'email'});
-        return undef;
-    }
     $param->{'signing_off_email'} = $in{'email'};
     $param->{'family'}            = $in{'family'};
     # If OK, return the page displaying the information to the user.
     return 1;
-
 }
 
 sub do_family_signoff {
@@ -6731,28 +6697,9 @@ sub do_sigrequest {
         return 1;
     }
     if ($list->is_list_member($in{'email'})) {
-
-        my $ticket =
-            Sympa::Auth::create_one_time_ticket($in{'email'}, $robot,
-            'signoff/' . $list->{'name'}, $ip);
-
-        my $tt2_param = {
-            'type'            => 'ticket_to_signoff',
-            'list'            => $list,
-            'one_time_ticket' => $ticket,
-            'email'           => $in{'email'}
-        };
-        unless (
-            Sympa::send_file(
-                $robot, 'user_notification', $in{'email'}, $tt2_param
-            )
-            ) {
-            $log->syslog('notice',
-                "Unable to send template 'user_notification' to $in{'email'}"
-            );
-            return undef;
-        }
-
+        Sympa::send_notify_to_user($list, 'ticket_to_signoff', $in{'email'},
+            {ip => $ip})
+            or return undef;
     } else {
         $param->{'not_subscriber'} = 1;
     }
@@ -12444,15 +12391,14 @@ sub do_edit_list {
 
             ## Compare with new entries
             foreach my $entry (@{$new_admin->{$admin_type}}) {
-
                 unless ($previous_emails{$entry->{'email'}}) {
-
-                    ## Notify the new list owner/editor
-                    $list->send_notify_to_user(
+                    # Notify the new list owner/editor
+                    Sympa::send_notify_to_user(
+                        $list,
                         'added_as_listadmin',
                         $entry->{'email'},
-                        {   'admin_type' => $admin_type,
-                            'delegator'  => $param->{'user'}{'email'}
+                        {   admin_type => $admin_type,
+                            delegator  => $param->{'user'}{'email'}
                         }
                     );
                     Sympa::Report::notice_report_web('user_notified',
@@ -20501,36 +20447,10 @@ sub do_delete_pictures {
 sub do_change_email_request {
     wwslog('info', '(%s)', $in{'new_email'});
 
-    unless (
-        $param->{'one_time_ticket'} = Sympa::Auth::create_one_time_ticket(
-            $in{'new_email'},                            $robot,
-            'change_email/' . $param->{'user'}{'email'}, $ip
-        )
-        ) {
-
-        $log->syslog('notice',
-            "Unable to create one_time_ticket for $in{'new_email'}, service do_change_email_request"
-        );
-    } else {
-        $log->syslog('notice', '%s', $param->{'one_time_ticket'});
-    }
-
     $param->{'new_email'} = $in{'new_email'};
-    my $tt2_param = {
-        'type'            => 'ticket_to_send',
-        'one_time_ticket' => $param->{'one_time_ticket'},
-        'to'              => $in{'new_email'},
-    };
-    unless (
-        Sympa::send_file(
-            $robot, 'user_notification', $in{'new_email'}, $tt2_param
-        )
-        ) {
-        $log->syslog('notice',
-            "Unable to send template 'user_notification' to $in{'new_email'}"
-        );
-        return undef;
-    }
+    Sympa::send_notify_to_user($robot, 'ticket_to_send', $in{'new_email'},
+        {email => $param->{'user'}{'email'}, ip => $ip})
+        or return undef;
     return '1';
 }
 

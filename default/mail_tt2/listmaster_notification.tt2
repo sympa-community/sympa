@@ -330,9 +330,9 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [%|loc%]See logs for more details.[%END%]
 
 [% ELSIF type == 'hundred_percent_error' -%]
-Subject: [% FILTER qencode %][%|loc(listname, listdomain)%]Listmaster: list %1@%2 at 100 percents error [%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name, list.host)%]Listmaster: list %1@%2 at 100 percents error [%END%][%END%]
 
-[%|loc(listname, listdomain)%]The list %1@%2 has 100 percents of its users in error. Something unusual must have happened.[%END%]
+[%|loc(list.name, list.host)%]The list %1@%2 has 100 percents of its users in error. Something unusual must have happened.[%END%]
 
 [%|loc(sender)%]The user %1, who tried to send a mail to this list, has been warned, as well as the list owners.[%END%]
 
