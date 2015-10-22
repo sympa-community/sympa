@@ -557,7 +557,7 @@ sub add_global_user {
 
     my $sdm = Sympa::DatabaseManager->instance;
     unless ($sdm) {
-        $log->syslog('err', 'Unavailable databse connection');
+        $log->syslog('err', 'Unavailable database connection');
         return undef;
     }
 

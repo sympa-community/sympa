@@ -78,7 +78,7 @@ unless (Conf::load()) {
         Conf::get_sympa_conf();
 }
 
-# Check databse connectivity
+# Check database connectivity
 unless (Sympa::DatabaseManager->instance) {
     die sprintf
         "Database %s defined in sympa.conf has not the right structure or is unreachable.\n",
