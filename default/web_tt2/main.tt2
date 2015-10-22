@@ -40,11 +40,11 @@
 <noscript><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></noscript>
 
 [% IF nomenu %]
-      [% PROCESS error.tt2 IF errors %]
-      <div class="nomenu">
-			[% PROCESS notice.tt2 IF notices %]
-			[% PROCESS "${action}.tt2" IF action %]
-      </div>
+  [% PROCESS error.tt2 IF errors %]
+  <div class="nomenu">
+    [% PROCESS "${action}.tt2" IF action %]
+    [% PROCESS notice.tt2 IF notices %]
+  </div>
 [% ELSE %]
 
     [% PROCESS error.tt2 IF errors %]
@@ -77,16 +77,16 @@
        [% IF list_title %]<p><b>[%|loc%]Subject:[%END%]</b> [% list_title %] [% IF is_owner %]<a href="[% path_cgi %]/edit_list_request/[% list %]/description"><i class="fa fa-pencil-square" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>[% END %]
       [% END %]
 
-        [% PROCESS nav.tt2 %]
+    [% PROCESS nav.tt2 %]
 
-        [% PROCESS notice.tt2 IF notices %]
-        [% IF action == 'edit_list_request' %][% END %]
-        [% PROCESS "${action}.tt2" IF action %]
+    [% IF action == 'edit_list_request' %][% END %]
+    [% PROCESS "${action}.tt2" IF action %]
+    [% PROCESS notice.tt2 IF notices %]
 
- [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
+    [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
 
-[% IF top_menu %][% IF not list %][% END %][% END %]
-</main><!-- End content-inner -->
+    [% IF top_menu %][% IF not list %][% END %][% END %]
+  </main><!-- End content-inner -->
 
 <div class="displayNone"><a href="#top">[%|loc%]Top of Page[%END%]</a></div>
 
