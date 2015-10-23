@@ -65,7 +65,6 @@ use Sympa::Spool::Archive;
 use Sympa::Spool::Digest;
 use Sympa::Spool::Held;
 use Sympa::Spool::Moderation;
-use Sympa::Spool::Request;
 use Sympa::Task;
 use Sympa::Template;
 use tools;
@@ -4919,19 +4918,6 @@ sub add_list_member {
 
     my $current_list_members_count = $self->get_total();
 
-    my $subscriptions;
-    my $spool_req =
-        Sympa::Spool::Request->new(context => $self, action => 'add');
-    while (1) {
-        my ($request, $handle) = $spool_req->next(no_lock => 1);
-        last unless $handle;
-        next
-            unless $request
-                and grep { $request->{sender} eq $_->{email} } @new_users;
-
-        $subscriptions->{$request->{sender}} = $request;
-    }
-
     foreach my $new_user (@new_users) {
         my $who = Sympa::Tools::Text::canonic_email($new_user->{'email'});
         unless (defined $who) {
@@ -4967,14 +4953,12 @@ sub add_list_member {
 
         my $custom_attribute;
         if (ref $new_user->{'custom_attribute'} eq 'HASH') {
-            $custom_attribute = $new_user->{'custom_attribute'};
-        } elsif ($subscriptions->{$who}{'custom_attribute'}) {
-            $custom_attribute = $subscriptions->{$who}{'custom_attribute'};
+            $new_user->{'custom_attribute'} =
+                Sympa::Tools::Data::encode_custom_attribute(
+                $new_user->{'custom_attribute'});
         }
-        $new_user->{'custom_attribute'} ||=
-            Sympa::Tools::Data::encode_custom_attribute($custom_attribute);
         $log->syslog(
-            'debug2',
+            'debug3',
             'Custom_attribute = %s',
             $new_user->{'custom_attribute'}
         );

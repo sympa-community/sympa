@@ -88,17 +88,6 @@ sub new {
     $self;
 }
 
-sub size {
-    my %metadatas;
-    foreach my $item (@{shift->_load || []}) {
-        # Strip unique keys.
-        $item =~ s{\A(\d+),([^\s\@]+)\@([-.\w]+)_([\da-f]+),([^\s,]*),(\w+)\z}
-            {$2\@$3,$5,$6};
-        $metadatas{$item} = 1;
-    }
-    return scalar keys %metadatas;
-}
-
 1;
 __END__
 
@@ -121,7 +110,7 @@ Sympa::Spool::Request - Spool for held requests waiting for moderation
   my $size = $spool->size;
 
   my $spool = Sympa::Spool::Request->new(
-      context => $list, sender => $email, action => 'add');
+      context => $list, authkey => $id, action => 'add');
   my ($request, $handle) = $spool->next;
 
   $spool->remove($handle);
@@ -150,10 +139,6 @@ Order of items returned by next() is controled by time of submission.
 =item quarantine ( )
 
 Does nothing.
-
-=item size ( )
-
-Returns size not counting duplicate requests.
 
 =back
 

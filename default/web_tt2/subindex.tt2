@@ -8,7 +8,7 @@
     <table  class="responsive listOfItems">
     <caption>[%|loc%]Listing subscription to moderate[%END%]</caption>
       <tr>
-          <th><a href="#" onclick="toggle_selection(document.myform.pending_email);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></strong></th>
+          <th><a href="#" onclick="toggle_selection(document.myform.id);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></strong></th>
           <th colspan="2">[%|loc%]Email[%END%]</th>
           <th>[%|loc%]Name[%END%]</th>
           <th>[%|loc%]Date[%END%]</th>
@@ -25,10 +25,10 @@
           <tr class="color0">
 	[% END %]
 	    <td>
-           <input type="checkbox" name="pending_email" value="[% sub.key %],[% sub.value.gecos %]" />
+           <input type="checkbox" name="id" value="[% sub.key %]" />
 	    </td>
 	  <td colspan="2">
-	        [% sub.key %]
+	        [% sub.value.email %]
 	  </td>
 	  <td>
 	        [% sub.value.gecos %]&nbsp;
@@ -56,10 +56,10 @@
 <input type="hidden" name="previous_action" value="subindex" />
 <input type="hidden" name="previous_list" value="[% list %]" />
 <div style="clear:left; overflow:hidden; padding: 1.2em 0 0.25em;">
-<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.pending_email)" />
+<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.id)" />
 </div>
 <div style="clear:left; overflow:hidden; padding: 0.25em 0 0.25em;">
-<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add selected addresses[%END%]" />
+<input class="MainMenuLinks" type="submit" name="action_add_fromsub" value="[%|loc%]Add selected addresses[%END%]" />
 </div>
 <div style="clear:left; overflow:hidden; padding: 0.25em 0 0.25em;">
 <input class="MainMenuLinks" type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />

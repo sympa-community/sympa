@@ -191,6 +191,7 @@ our %comm = (
     'admin'            => 'do_admin',
     'add_request'      => 'do_add_request',
     'add'              => 'do_add',
+    'add_fromsub'      => 'do_add_fromsub',
     'del'              => 'do_del',
     'modindex'         => 'do_modindex',
     'reject'           => 'do_reject',
@@ -844,16 +845,14 @@ our %in_regexp = (
     'family_name' => Sympa::Regexps::family_name(),
     'family'      => Sympa::Regexps::family_name(),
 
-    ## Email addresses
-    'email'         => Sympa::Regexps::email() . '|' . Sympa::Regexps::uid(),
-    'init_email'    => Sympa::Regexps::email(),
-    'old_email'     => Sympa::Regexps::email(),
-    'new_email'     => Sympa::Regexps::email(),
-    'pending_email' => Sympa::Regexps::email()
-        . ',.*',    # Email address is followed by ',' + gecos data
-    'sender'   => Sympa::Regexps::email(),
-    'fromaddr' => Sympa::Regexps::email(),
-    'to'       => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
+    # Email addresses
+    'email'      => Sympa::Regexps::email() . '|' . Sympa::Regexps::uid(),
+    'init_email' => Sympa::Regexps::email(),
+    'old_email'  => Sympa::Regexps::email(),
+    'new_email'  => Sympa::Regexps::email(),
+    'sender'     => Sympa::Regexps::email(),
+    'fromaddr'   => Sympa::Regexps::email(),
+    'to' => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
     'automatic_list_part_*' => '[\w\-\.\+]*',
 
     ## Host
@@ -7942,7 +7941,7 @@ sub do_add_request {
 ####################################################
 ## TODO: vérifier validité email
 sub do_add {
-    wwslog('info', '(%s)', $in{'email'} || $in{'pending_email'});
+    wwslog('info', '(%s)', $in{'email'});
 
     my %user;
 
@@ -7956,7 +7955,7 @@ sub do_add {
             $param->{'action'});
         wwslog('info', 'List not open');
         web_db_log(
-            {   'target_email' => $in{'email'} || $in{'pending_email'},
+            {   'target_email' => $in{'email'},
                 'status'       => 'error',
                 'error_type'   => 'list_not_open'
             }
@@ -7981,20 +7980,12 @@ sub do_add {
         foreach my $email (split /\0/, $in{'email'}) {
             $user{Sympa::Tools::Text::canonic_email($email)} = $in{'gecos'};
         }
-    } elsif ($in{'pending_email'}) {
-        foreach my $pair (split /\0/, $in{'pending_email'}) {
-            my ($email, $gecos);
-            if ($pair =~ /^($email_regexp)(,(.*))?\s*$/) {
-                ($email, $gecos) = ($1, $5);
-                $user{Sympa::Tools::Text::canonic_email($email)} = $gecos;
-            }
-        }
     } else {
         Sympa::Report::reject_report_web('user', 'no_email', {},
             $param->{'action'});
         wwslog('info', 'No email');
         web_db_log(
-            {   'target_email' => $in{'email'} || $in{'pending_email'},
+            {   'target_email' => $in{'email'},
                 'status'       => 'error',
                 'error_type'   => 'no_email'
             }
@@ -8026,7 +8017,7 @@ sub do_add {
                 $param->{'action'}, $list);
             wwslog('info', '%s may not add', $param->{'user'}{'email'});
             web_db_log(
-                {   'target_email' => $in{'email'} || $in{'pending_email'},
+                {   'target_email' => $in{'email'},
                     'status'       => 'error',
                     'error_type'   => 'internal'
                 }
@@ -8040,9 +8031,9 @@ sub do_add {
                 $param->{'action'}, $list);
             wwslog('info', 'Incorrect email %s', $email);
             web_db_log(
-                {   'target_email' => $in{'email'} || $in{'pending_email'},
-                    'status' => 'error',
-                    'error_type' => 'incorrect_email'
+                {   'target_email' => $in{'email'},
+                    'status'       => 'error',
+                    'error_type'   => 'incorrect_email'
                 }
             );
             next;
@@ -8057,9 +8048,9 @@ sub do_add {
                 $param->{'action'}, $list);
             wwslog('info', '%s already subscriber', $email);
             web_db_log(
-                {   'target_email' => $in{'email'} || $in{'pending_email'},
-                    'status' => 'error',
-                    'error_type' => 'already_subscriber'
+                {   'target_email' => $in{'email'},
+                    'status'       => 'error',
+                    'error_type'   => 'already_subscriber'
                 }
             );
             next;
@@ -8153,8 +8144,8 @@ sub do_add {
     Sympa::Report::notice_report_web('add_performed', {'total' => $total},
         $param->{'action'});
     web_db_log(
-        {   'target_email' => $in{'email'} || $in{'pending_email'},
-            'status' => 'success'
+        {   'target_email' => $in{'email'},
+            'status'       => 'success'
         }
     );
 
@@ -8168,6 +8159,110 @@ sub do_add {
 
     $in{'list'} = $in{'previous_list'} if ($in{'previous_list'});
     return $in{'previous_action'} || 'review';
+}
+
+####################################################
+#  do_add_fromsub
+####################################################
+#  add user from subscription request index
+#
+####################################################
+sub do_add_fromsub {
+    wwslog('info', '(%s)', $in{'id'});
+
+    # If a list is not 'open' and allow_subscribe_if_pending has been set to
+    # 'off', returns undef.
+    unless ($list->{'admin'}{'status'} eq 'open'
+        or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq 'on')
+    {
+        Sympa::Report::reject_report_web('user', 'list_not_open',
+            {status => $list->{'admin'}{'status'}},
+            $param->{'action'});
+        wwslog('info', 'List not open');
+        web_db_log(
+            {   target_email => $in{'email'},
+                status       => 'error',
+                error_type   => 'list_not_open'
+            }
+        );
+        return undef;
+    }
+
+    my $total = 0;
+    foreach my $id (split /\0/, $in{'id'}) {
+        next unless $id and $id =~ /\A\w+\z/;
+
+        my $spool_req = Sympa::Spool::Request->new(
+            context => $list,
+            authkey => $id,
+            action  => 'add'
+        );
+        my ($request, $handle);
+        while (1) {
+            ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            last if $request;
+        }
+        unless ($request) {
+            Sympa::Report::reject_report_web('user', 'already_added', {},
+                $param->{'action'});
+            wwslog('err',
+                'No request with authkey %s.  It may be already subscribed',
+                $id);
+            web_db_log(
+                {   parameters => $id,
+                    status     => 'error',
+                    error_type => 'internal'
+                }
+            );
+            next;
+        }
+        next unless defined $request->{sender} and $request->{sender} =~ /\S/;
+
+        $list->add_list_member(
+            {   email            => $request->{sender},
+                gecos            => $request->{gecos},
+                custom_attribute => $request->{custom_attribute},
+            }
+        );
+        if ($list->{'add_outcome'}{'errors'}) {
+            wwslog(
+                'info',
+                'Subscribe failed: %s',
+                $list->{'add_outcome'}{'errors'}{'error_message'}
+            );
+            web_db_log(
+                {   parameters => $in{'email'},
+                    status     => 'error',
+                    error_type => 'user'
+                }
+            );
+            if ($list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'})
+            {
+                Sympa::Report::reject_report_web('user',
+                    {sub => $param->{'user'}{'email'}},
+                    $param->{'action'}, $list, $param->{'user'}{'email'},
+                    $robot);
+                last;
+            } else {
+                Sympa::Report::reject_report_web('intern',
+                    {sub => $param->{'user'}{'email'}},
+                    $param->{'action'}, $list, $param->{'user'}{'email'},
+                    $robot);
+            }
+        } else {
+            # Delete subscription request.
+            $spool_req->remove($handle);
+            web_db_log({target => $request->{sender}, status => 'success'});
+            $total++;
+        }
+    }
+    if ($total) {
+        Sympa::Report::notice_report_web('add_performed', {total => $total},
+            $param->{'action'});
+    }
+
+    return 'subindex';
 }
 
 ####################################################
@@ -9114,7 +9209,6 @@ sub do_add_frommod {
 
     if ($in{'dump'}) {
         delete $in{'email'};
-        delete $in{'pending_email'};
         $in{'previous_list'} = $list->{'name'};
         do_add();
     }
@@ -22028,22 +22122,27 @@ sub do_subindex {
 
     my $spool_req =
         Sympa::Spool::Request->new(context => $list, action => 'add');
-    my $subscriptions;
+    my @subscriptions;
     while (1) {
         my ($request, $handle) = $spool_req->next(no_lock => 1);
         last unless $handle;
         next unless $request;
 
-        $subscriptions->{$request->{sender}} = {
-            custom_attribute => $request->{custom_attribute},
-            date             => $language->gettext_strftime(
-                '%d %b %Y', localtime $request->{date}
-            ),
-            epoch => $request->{date},
-            gecos => $request->{gecos},
-        };
+        push @subscriptions,
+            {
+            key   => $request->{authkey},
+            value => {
+                custom_attribute => $request->{custom_attribute},
+                date             => $language->gettext_strftime(
+                    '%d %b %Y', localtime $request->{date}
+                ),
+                email => $request->{sender},
+                epoch => $request->{date},
+                gecos => $request->{gecos},
+            },
+            };
     }
-    $param->{'subscriptions'} = $subscriptions;
+    $param->{'subscriptions'} = [@subscriptions];
 
     web_db_log(
         {   'robot'        => $robot,
@@ -22063,22 +22162,21 @@ sub do_subindex {
 sub do_ignoresub {
     wwslog('info', '');
 
-    my @users;
+    foreach my $id (split /\0/, $in{'id'}) {
+        next unless $id and $id =~ /\A\w+\z/;
 
-    foreach my $pair (split /\0/, $in{'pending_email'}) {
-        if ($pair =~ /\A([^,]+),/) {
-            push @users, $1;
+        my $spool_req = Sympa::Spool::Request->new(
+            context => $list,
+            authkey => $id,
+            action  => 'add'
+        );
+        while (1) {
+            my ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            next unless $request;
+
+            $spool_req->remove($handle);
         }
-    }
-
-    my $spool_req =
-        Sympa::Spool::Request->new(context => $list, action => 'add');
-    while (1) {
-        my ($request, $handle) = $spool_req->next;
-        last unless $handle;
-        next unless $request and grep { $request->{sender} eq $_ } @users;
-
-        $spool_req->remove($handle);
     }
 
     web_db_log(
