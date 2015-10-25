@@ -298,10 +298,7 @@ sub db_log {
     my $user_email   = $options{'user_email'};
     my $client       = $options{'client'};
     my $daemon       = $self->{_service} || 'sympa';
-    my $date         = time;
-    my $random       = int(rand(1000000));
-    # my $id = $date * 1000000 + $random;
-    my $id = $date . $random;
+    my ($date, $usec) = Sympa::Tools::Time::gettimeofday();
 
     unless ($user_email) {
         $user_email = 'anonymous';
@@ -320,12 +317,12 @@ sub db_log {
     unless (
         $sdm->do_prepared_query(
             q{INSERT INTO logs_table
-              (id_logs, date_logs, robot_logs, list_logs, action_logs,
+              (date_logs, usec_logs, robot_logs, list_logs, action_logs,
                parameters_logs,
                target_email_logs, msg_id_logs, status_logs, error_type_logs,
                user_email_logs, client_logs, daemon_logs)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-            $id, $date, $robot, $list, $action,
+            $date, $usec, $robot, $list, $action,
             substr($parameters || '', 0, 100),
             $target_email, $msg_id, $status, $error_type,
             $user_email,   $client, $daemon
@@ -461,7 +458,8 @@ sub get_first_db_log {
     );
 
     my $statement =
-        sprintf q{SELECT date_logs, robot_logs AS robot, list_logs AS list,
+        sprintf q{SELECT date_logs, usec_logs AS usec,
+                         robot_logs AS robot, list_logs AS list,
                          action_logs AS action,
                          parameters_logs AS parameters,
                          target_email_logs AS target_email,
@@ -550,7 +548,7 @@ sub get_first_db_log {
         $statement .= sprintf "AND list_logs = '%s' ", $select->{'list'};
     }
 
-    $statement .= sprintf "ORDER BY date_logs ";
+    $statement .= 'ORDER BY date_logs, usec_logs ';
 
     my $sth;
     unless ($sth = $sdm->do_query($statement)) {

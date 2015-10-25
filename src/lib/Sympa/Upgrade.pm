@@ -1769,6 +1769,28 @@ sub upgrade {
         }
     }
 
+    if (lower_version($previous_version, '6.2.10')
+        and not lower_version($previous_version, '5.3a.8')) {
+        $log->syslog('notice', 'Upgrading logs_table.');
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        # As the field id_logs is no longer used but it has NOT NULL
+        # constraint, it should be deleted.
+        if ($sdm and $sdm->can('delete_field')) {
+            $sdm->delete_field({table => 'logs_table', field => 'id_logs'});
+        } else {
+            $log->syslog('err',
+                'Can\'t delete id_logs field in logs_table.  You must delete it manually.'
+            );
+        }
+        # Newly added subsecond field should be 0 by default.
+        $sdm->do_query(
+            q{UPDATE logs_table
+              SET usec_logs = 0
+              WHERE usec_logs IS NULL}
+        );
+    }
+
     return 1;
 }
 

@@ -597,13 +597,13 @@ my %full_db_struct = (
     },
     'logs_table' => {
         'fields' => {
-            'id_logs' => {
-                'struct'   => 'bigint(20)',
-                'doc'      => 'unique log\'s identifier',
-                'primary'  => 1,
-                'not_null' => 1,
-                'order'    => 1,
-            },
+            #'id_logs' => {
+            #    'struct'   => 'bigint(20)',
+            #    'doc'      => 'unique log\'s identifier',
+            #    'primary'  => 1,
+            #    'not_null' => 1,
+            #    'order'    => 1,
+            #},
             'user_email_logs' => {
                 'struct' => $email_struct,
                 'doc' =>
@@ -615,6 +615,11 @@ my %full_db_struct = (
                 'doc'      => 'date when the action was executed',
                 'not_null' => 1,
                 'order'    => 3,
+            },
+            'usec_logs' => {
+                'struct'   => 'int(6)',
+                'doc'      => 'subsecond in microsecond when the action was executed',
+                'order'    => 3.5,
             },
             'robot_logs' => {
                 'struct' => $robot_struct,
