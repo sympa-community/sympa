@@ -33,6 +33,7 @@ use Sympa::Constants;
 use Sympa::Log;
 use tools;
 use Sympa::Tools::File;
+use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
 
@@ -58,11 +59,11 @@ sub store {
     my $list   = $message->{context};
     return undef unless $msg_id and ref $list eq 'Sympa::List';
 
-    my $robot      = $list->{'domain'};
     my $queuetopic = $Conf::Conf{'queuetopic'};
-    my $list_id    = $list->get_id();
-    #FIXME: Message ID can contain hostile "/".
-    my $file = $list_id . '.' . $msg_id;
+
+    # Message ID can contain hostile "/".  Escape it.
+    my $file = sprintf '%s.%s', $list->get_id,
+        Sympa::Tools::Text::encode_filesystem_safe($msg_id);
 
     my $fh;
     unless (open $fh, '>', $queuetopic . '/' . $file) {
@@ -86,8 +87,8 @@ sub _create {
     unless (-d $spool_dir) {
         my $umask = umask oct $Conf::Conf{'umask'};
 
-        $log->syslog('info', 'Creating directory %s of %s',
-            $spool_dir, $self);
+        $log->syslog('info', 'Creating directory %s of %s', $spool_dir,
+            $self);
         unless (mkdir $spool_dir, 0775 or -d $spool_dir) {
             die sprintf 'Cannot create %s: %s', $spool_dir, $ERRNO;
         }
@@ -120,7 +121,10 @@ sub load {
     return undef unless $msg_id and ref $list eq 'Sympa::List';
 
     my $queuetopic = $Conf::Conf{'queuetopic'};
-    my $file = sprintf '%s.%s', $list->get_id, $msg_id;
+
+    # Message ID can contain hostile "/".  Escape it.
+    my $file = sprintf '%s.%s', $list->get_id,
+        Sympa::Tools::Text::encode_filesystem_safe($msg_id);
 
     my $fh;
     unless (open $fh, '<', $queuetopic . '/' . $file) {
@@ -173,9 +177,16 @@ Sympa::Topic - Message topic
 
 =head1 SYNOPSIS
 
-TBD.
+  use Sympa::Topic;
+  
+  $topic = Sympa::Topic->new(topic => $topics, method => 'auto');
+  $topic->store($message);
+  
+  $topic = Sympa::Topic->load($message);
 
 =head1 DESCRIPTION
+
+TBD.
 
 =head2 Methods
 
@@ -238,11 +249,14 @@ Message topic filename or C<undef>.
 
 =item queuetopic
 
-TBD.
+Directory path where topic files are stored.
+
+Note:
+Though it is neither queue nor spool, named such by historical reason.
 
 =item umask
 
-TBD.
+The umask to make directory.
 
 =back
 
