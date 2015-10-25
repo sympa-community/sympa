@@ -148,7 +148,7 @@ Change email of user.
 =cut
 
 sub moveto {
-    my $self = shift;
+    my $self     = shift;
     my $newemail = Sympa::Tools::Text::canonic_email(shift);
 
     unless (defined $newemail) {

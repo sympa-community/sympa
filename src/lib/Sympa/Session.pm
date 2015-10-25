@@ -935,7 +935,7 @@ sub check_cookie_extern {
 # later : use Session table to identify those who create a lot of sessions
 #FIXME: Robot context is ignored.
 sub _is_a_crawler {
-    my $robot   = shift;
+    my $robot = shift;
 
     my $ua = $ENV{'HTTP_USER_AGENT'};
     return undef unless defined $ua;

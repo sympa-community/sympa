@@ -3521,13 +3521,12 @@ sub dmarc_protect {
                         'Editor Address of %s Mailing List',
                         $list->{'name'});
                 } else {
-                    $newName =
-                        $language->gettext_sprintf('%s Mailing List',
+                    $newName = $language->gettext_sprintf('%s Mailing List',
                         $list->{'name'});
                 }
 
-                $newComment = $language->gettext_sprintf(
-                    'on behalf of %s', $origName);
+                $newComment =
+                    $language->gettext_sprintf('on behalf of %s', $origName);
             } elsif ($phraseMode eq 'list_for_name') {
                 if ($listtype eq 'owner') {
                     $newName = $language->gettext_sprintf(
@@ -3538,13 +3537,12 @@ sub dmarc_protect {
                         'Editor Address of %s Mailing List',
                         $list->{'name'});
                 } else {
-                    $newName =
-                        $language->gettext_sprintf('%s Mailing List',
+                    $newName = $language->gettext_sprintf('%s Mailing List',
                         $list->{'name'});
                 }
 
-                $newComment = $language->gettext_sprintf(
-                    'on behalf of %s', $origFrom);
+                $newComment =
+                    $language->gettext_sprintf('on behalf of %s', $origFrom);
             } else {
                 $newName = $origName;
             }

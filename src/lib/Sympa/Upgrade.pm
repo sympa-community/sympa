@@ -1724,10 +1724,11 @@ sub upgrade {
                 next if $filename =~ /\A(?:[.]|T[.]|BAD-)/;
                 next unless -f $spool_dir . '/' . $filename;
 
-                my $metadata =
-                    Sympa::Spool::unmarshal_metadata($spool_dir, $filename,
+                my $metadata = Sympa::Spool::unmarshal_metadata(
+                    $spool_dir, $filename,
                     qr{([^\s\@]+)(?:\@([\w\.\-]+))?[.](\d+)[.](\d+)\z},
-                    [qw(localpart domainpart date rand)]);
+                    [qw(localpart domainpart date rand)]
+                );
                 next unless $metadata;
 
                 my $lock_fh =
