@@ -28,6 +28,9 @@ use strict;
 use warnings;
 use POSIX qw();
 use Time::Local qw();
+use Time::HiRes qw();
+
+use constant has_gettimeofday => defined eval { Time::HiRes::gettimeofday() };
 
 ## subroutines for epoch and human format date processings
 
@@ -139,4 +142,68 @@ sub duration_conv {
     return $duration;
 }
 
+sub gettimeofday {
+    return (@_ = Time::HiRes::gettimeofday()) if has_gettimeofday();
+
+    my $orig_locale = POSIX::setlocale(POSIX::LC_NUMERIC());
+    POSIX::setlocale(POSIX::LC_NUMERIC(), 'C');
+
+    my ($second, $subsecond) =
+        split /[.]/, sprintf('%.6f', Time::HiRes::time());
+    $subsecond ||= '0' x 6;
+    $subsecond += 0;
+
+    POSIX::setlocale(POSIX::LC_NUMERIC(), $orig_locale);
+    return ($second, $subsecond);
+}
+
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Tools::Time - Time-related functions
+
+=head1 DESCRIPTION
+
+This package provides some time-related functions.
+
+=head2 Functions
+
+=over
+
+=item date_conv
+
+TBD.
+
+=item duration_conv
+
+TBD.
+
+=item epoch_conv
+
+TBD.
+
+=item get_midnight_time
+
+TBD.
+
+=item gettimeofday
+
+I<Function>.
+Returns an array C<(I<second>, I<microsecond>)> of current Unix time.
+
+If the system does not have gettimeofday(2) system call, this function
+emulates it.
+
+=back
+
+=head1 HISTORY
+
+L<Sympa::Tools::Time> appeared on Sympa 6.2a.37.
+
+gettimeofday() function was introduced on Sympa 6.2.10.
+
+=cut
