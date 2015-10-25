@@ -32,14 +32,10 @@ use Time::HiRes qw();
 
 use constant has_gettimeofday => defined eval { Time::HiRes::gettimeofday() };
 
-## subroutines for epoch and human format date processings
-
 ## convert an epoch date into a readable date scalar
 # DEPRECATED: No longer used.
 #sub adate($epoch);
 
-## Return the epoch date corresponding to the last midnight before date given
-## as argument.
 # Note: This is used only once.
 sub get_midnight_time {
     my $epoch = $_[0];
@@ -47,7 +43,6 @@ sub get_midnight_time {
     return $epoch - $date[0] - $date[1] * 60 - $date[2] * 3600;
 }
 
-## convert a human format date into an epoch date
 sub epoch_conv {
     my $arg = $_[0];             # argument date to convert
     my $time = $_[1] || time;    # the epoch current date
@@ -174,23 +169,29 @@ This package provides some time-related functions.
 
 =over
 
-=item date_conv
+=item date_conv ( $arg )
 
+I<Function>.
 TBD.
 
-=item duration_conv
+=item duration_conv ( $arg, [ $startdate ] )
 
+I<Function>.
 TBD.
 
-=item epoch_conv
+=item epoch_conv ( $arg )
 
+I<Function>.
+Converts a human format date into an Unix time.
 TBD.
 
-=item get_midnight_time
+=item get_midnight_time ( $time )
 
-TBD.
+I<Function>.
+Returns the Unix time corresponding to the last midnight before date given
+as argument.
 
-=item gettimeofday
+=item gettimeofday ( )
 
 I<Function>.
 Returns an array C<(I<second>, I<microsecond>)> of current Unix time.
