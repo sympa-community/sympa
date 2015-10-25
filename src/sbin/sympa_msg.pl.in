@@ -50,6 +50,7 @@ use Sympa::Spool::Digest::Collection;
 use Sympa::Spool::Incoming;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
+use Sympa::Topic;
 
 ## Internal tuning
 # delay between each read of the digestqueue
@@ -1263,33 +1264,28 @@ sub DoMessage {
         'message' => $message
     };
 
-    ## list msg topic
+    # List msg topic.
     if ($list->is_there_msg_topic()) {
-
-        my $info_msg_topic =
-            $list->load_msg_topic_file($messageid, $robot_id);
-
-        # is msg already tagged ?
-        if (ref($info_msg_topic) eq "HASH") {
-            if ($info_msg_topic->{'method'} eq "sender") {
-                $context->{'topic_sender'} = $info_msg_topic->{'topic'};
-
-            } elsif ($info_msg_topic->{'method'} eq "editor") {
-                $context->{'topic_editor'} = $info_msg_topic->{'topic'};
-
-            } elsif ($info_msg_topic->{'method'} eq "auto") {
-                $context->{'topic_auto'} = $info_msg_topic->{'topic'};
-            }
-
-            # not already tagged
-        } else {
-            $context->{'topic_auto'} = $list->automatic_tag($message);
+        my $topic;
+        if ($topic = Sympa::Topic->load($message)) {
+            # Is message already tagged?
+            ;
+        } elsif ($topic = Sympa::Topic->load($message, in_reply_to => 1)) {
+            # Is message in-reply-to already tagged?
+            $topic =
+                Sympa::Topic->new(topic => $topic->{topic}, method => 'auto');
+            $topic->store($message);
+        } elsif (my $topic_list = $message->compute_topic) {
+            # Not already tagged.
+            $topic =
+                Sympa::Topic->new(topic => $topic_list, method => 'auto');
+            $topic->store($message);
         }
 
-        $context->{'topic'} =
-               $context->{'topic_auto'}
-            || $context->{'topic_sender'}
-            || $context->{'topic_editor'};
+        if ($topic) {
+            $context->{'topic'} = $context->{'topic_' . $topic->{method}} =
+                $topic->{topic};
+        }
         $context->{'topic_needed'} =
             (!$context->{'topic'} && $list->is_msg_topic_tagging_required());
     }

@@ -799,7 +799,7 @@ sub checkfiles {
         }
     }
 
-    foreach my $qdir (qw(spool queuetopic queuetask tmpdir)) {
+    foreach my $qdir (qw(spool queuetask tmpdir)) {
         unless (-d $Conf{$qdir}) {
             $log->syslog('info', 'Creating spool %s', $Conf{$qdir});
             unless (mkdir($Conf{$qdir}, 0775)) {

@@ -73,6 +73,7 @@ use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
+use Sympa::Topic;
 use Sympa::Tracking;
 use Sympa::User;
 
@@ -1535,15 +1536,13 @@ sub distribute_msg {
     my $sequence = $self->_get_next_sequence;
 
     ## Loading info msg_topic file if exists, add X-Sympa-Topic
-    my $info_msg_topic;
-    if ($self->is_there_msg_topic()) {
-        my $msg_id = $message->{'message_id'};
-        $info_msg_topic = $self->load_msg_topic_file($msg_id, $robot);
-
-        # add X-Sympa-Topic header
-        if (ref($info_msg_topic) eq "HASH") {
-            $message->add_topic($info_msg_topic->{'topic'});
-        }
+    my $topic;
+    if ($self->is_there_msg_topic) {
+        $topic = Sympa::Topic->load($message);
+    }
+    if ($topic) {
+        # Add X-Sympa-Topic: header.
+        $message->add_header('X-Sympa-Topic', $topic->{topic});
     }
 
     # Hide the sender if the list is anonymized
@@ -1561,13 +1560,9 @@ sub distribute_msg {
         $message->replace_header('Message-Id', "<$new_id>");
         $message->delete_header('Resent-Message-Id');
 
-        # rename msg_topic filename
-        if ($info_msg_topic) {
-            my $queuetopic = Conf::get_robot_conf($robot, 'queuetopic');
-            my $listname = $self->get_list_id();
-            rename("$queuetopic/$info_msg_topic->{'filename'}",
-                "$queuetopic/$listname.$new_id");
-            $info_msg_topic->{'filename'} = "$listname.$new_id";
+        # Duplicate topic file by new message ID.
+        if ($topic) {
+            $topic->store({context => $self, message_id => $new_id});
         }
 
         ## Virer eventuelle signature S/MIME
@@ -1834,14 +1829,14 @@ sub distribute_msg {
         ## TOPICS
         my @selected_tabrcpt;
         my @possible_verptabrcpt;
-        if ($self->is_there_msg_topic()) {
+        if ($self->is_there_msg_topic) {
+            my $topic_list = $topic ? $topic->{topic} : '';
+
             @selected_tabrcpt =
-                $self->select_list_members_for_topic(
-                $new_message->get_topic(),
+                $self->select_list_members_for_topic($topic_list,
                 $available_recipients->{$mode}{'noverp'} || []);
             @possible_verptabrcpt =
-                $self->select_list_members_for_topic(
-                $new_message->get_topic(),
+                $self->select_list_members_for_topic($topic_list,
                 $available_recipients->{$mode}{'verp'} || []);
         } else {
             @selected_tabrcpt =
@@ -10061,326 +10056,21 @@ sub is_msg_topic_tagging_required {
     }
 }
 
-####################################################
-# automatic_tag
-####################################################
-#  Compute the topic(s) of the message and tag it.
-#
-# IN : -$self (+): ref(List)
-#      -$message (+): ref(message object)
-#      -$robot (+): *** No longer used
-#
-# OUT : string of tag(s), can be separated by ',', can be empty
-#        | undef
-####################################################
-sub automatic_tag {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my ($self, $message) = @_;
-    my $msg_id = $message->{'message_id'};
+# DEPRECATED.
+# Use Sympa::Message::compute_topic() and Sympa::Topic::store() instead.
+#sub automatic_tag;
 
-    my $topic_list = $self->compute_topic($message);
+# Moved to Sympa::Message::compute_topic().
+#sub compute_topic;
 
-    if ($topic_list) {
-        unless ($self->tag_topic($msg_id, $topic_list, 'auto')) {
-            $log->syslog('err', 'Unable to tag message %s with topic "%s"',
-                $msg_id, $topic_list);
-            return undef;
-        }
-    }
+# DEPRECATED.  Use Sympa::Topic::store() instead.
+#sub tag_topic;
 
-    return $topic_list;
-}
+# DEPRECATED.  Use Sympa::Topic::load() instead.
+#sub load_msg_topic_file;
 
-####################################################
-# compute_topic
-####################################################
-#  Compute the topic of the message. The topic is got
-#  from keywords defined in list_parameter
-#  msg_topic.keywords. The keyword is applied on the
-#  subject and/or the body of the message according
-#  to list parameter msg_topic_keywords_apply_on
-#
-# IN : -$self (+): ref(List)
-#      -$message (+): ref(message object)
-#      -$robot (+): *** No longer used.
-#
-# OUT : string of tag(s), can be separated by ',', can be empty
-####################################################
-sub compute_topic {
-    $log->syslog('debug3', '(%s, %s)', @_);
-    my ($self, $message) = @_;
-
-    my @topic_array;
-    my %topic_hash;
-    my %keywords;
-
-    ## TAGGING INHERITED BY THREAD
-    # getting in-reply-to
-    my $reply_to          = $message->get_header('In-Reply-To');
-    my $info_msg_reply_to = $self->load_msg_topic_file($reply_to)
-        if $reply_to;
-
-    # is msg reply to already tagged?
-    if (ref $info_msg_reply_to eq 'HASH') {
-        return $info_msg_reply_to->{'topic'};
-    }
-
-    ## TAGGING BY KEYWORDS
-    # getting keywords
-    foreach my $topic (@{$self->{'admin'}{'msg_topic'} || []}) {
-        my $list_keyw = Sympa::Tools::Data::get_array_from_splitted_string(
-            $topic->{'keywords'});
-
-        foreach my $keyw (@{$list_keyw}) {
-            $keywords{$keyw} = $topic->{'name'};
-        }
-    }
-
-    # getting string to parse
-    # We convert it to UTF-8 for case-ignore match with non-ASCII keywords.
-    my $mail_string = '';
-    if (index($self->{'admin'}{'msg_topic_keywords_apply_on'}, 'subject') >=
-        0) {
-        $mail_string = $message->{'decoded_subject'} . "\n";
-    }
-    unless ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'subject') {
-        my $entity = $message->as_entity;
-        my $eff_type = $entity->effective_type || '';
-        if ($eff_type eq 'multipart/signed' and $entity->parts) {
-            $entity = $entity->parts(0);
-        }
-        #FIXME: Should also handle application/pkcs7-mime format.
-
-        # get bodies of any text/* parts, not digging nested subparts.
-        my @parts;
-        if ($entity->parts) {
-            @parts = $entity->parts;
-        } else {
-            @parts = ($entity);
-        }
-        foreach my $part (@parts) {
-            next unless $part->effective_type =~ /^text\//i;
-            my $charset = $part->head->mime_attr("Content-Type.Charset");
-            $charset = MIME::Charset->new($charset);
-            $charset->encoder('UTF-8');
-
-            if (defined $part->bodyhandle) {
-                my $body = $part->bodyhandle->as_string();
-                my $converted;
-                eval { $converted = $charset->encode($body); };
-                if ($EVAL_ERROR) {
-                    $converted = $body;
-                    $converted =~ s/[^\x01-\x7F]/?/g;
-                }
-                $mail_string .= $converted . "\n";
-            }
-        }
-    }
-    # foldcase string
-    $mail_string = Sympa::Tools::Text::foldcase($mail_string);
-
-    # parsing
-    foreach my $keyw (keys %keywords) {
-        if (index($mail_string, Sympa::Tools::Text::foldcase($keyw)) >= 0) {
-            $topic_hash{$keywords{$keyw}} = 1;
-        }
-    }
-
-    # for no double
-    foreach my $k (sort keys %topic_hash) {
-        push @topic_array, $k if $topic_hash{$k};
-    }
-
-    unless (@topic_array) {
-        return '';
-    } else {
-        return (join(',', @topic_array));
-    }
-}
-
-####################################################
-# tag_topic
-####################################################
-#  tag the message by creating the msg topic file
-#
-# IN : -$self (+): ref(List)
-#      -$msg_id (+): string, msg_id of the msg to tag
-#      -$topic_list (+): string (splitted by ',')
-#      -$method (+) : 'auto'|'editor'|'sender'
-#         the method used for tagging
-#
-# OUT : string - msg topic filename
-#       | undef
-####################################################
-sub tag_topic {
-    my ($self, $msg_id, $topic_list, $method) = @_;
-    $log->syslog('debug3', '(%s, %s, "%s", %s)',
-        $self->{'name'}, $msg_id, $topic_list, $method);
-
-    my $robot      = $self->{'domain'};
-    my $queuetopic = Conf::get_robot_conf($robot, 'queuetopic');
-    my $list_id    = $self->get_list_id();
-    $msg_id = tools::clean_msg_id($msg_id);
-    $msg_id =~ s/>$//;    #FIXME: Message ID can contain hostile "/".
-    my $file = $list_id . '.' . $msg_id;
-
-    unless (open(FILE, ">$queuetopic/$file")) {
-        $log->syslog('info', 'Unable to create msg topic file %s/%s: %s',
-            $queuetopic, $file, $!);
-        return undef;
-    }
-
-    print FILE "TOPIC   $topic_list\n";
-    print FILE "METHOD  $method\n";
-
-    close FILE;
-
-    return "$queuetopic/$file";
-}
-
-####################################################
-# load_msg_topic_file
-####################################################
-#  Looks for a msg topic file from the msg_id of
-# the message, loads it and return contained information
-# in a HASH
-#
-# IN : -$self (+): ref(List)
-#      -$msg_id (+): the message ID
-#      -$robot (+): the robot
-#
-# OUT : ref(HASH) file contents :
-#         - topic : string - list of topic name(s)
-#         - method : editor|sender|auto - method used to tag
-#         - msg_id : the msg_id
-#         - filename : name of the file containing this information
-#     | undef
-####################################################
-sub load_msg_topic_file {
-    my ($self, $msg_id, $robot) = @_;
-    $msg_id = tools::clean_msg_id($msg_id);
-    $log->syslog('debug3', '(%s, %s)', $self->{'name'}, $msg_id);
-
-    my $queuetopic = Conf::get_robot_conf($robot, 'queuetopic');
-    my $list_id    = $self->get_list_id();
-    my $file       = "$list_id.$msg_id";
-
-    unless (open(FILE, "$queuetopic/$file")) {
-        $log->syslog('debug', 'No topic define; unable to open %s/%s: %s',
-            $queuetopic, $file, $!);
-        return undef;
-    }
-
-    my %info = ();
-
-    while (<FILE>) {
-        next if /^\s*(\#.*|\s*)$/;
-
-        if (/^(\S+)\s+(.+)$/io) {
-            my ($keyword, $value) = ($1, $2);
-            $value =~ s/\s*$//;
-
-            if ($keyword eq 'TOPIC') {
-                $info{'topic'} = $value;
-
-            } elsif ($keyword eq 'METHOD') {
-                if ($value =~ /^(editor|sender|auto)$/) {
-                    $info{'method'} = $value;
-                } else {
-                    $log->syslog('err',
-                        '(%s, %s) Syntax error in file %s/%s: %s',
-                        $queuetopic, $file, $!);
-                    return undef;
-                }
-            }
-        }
-    }
-    close FILE;
-
-    if ((exists $info{'topic'}) && (exists $info{'method'})) {
-        $info{'msg_id'}   = $msg_id;
-        $info{'filename'} = $file;
-
-        return \%info;
-    }
-    return undef;
-}
-
-####################################################
-# modifying_msg_topic_for_list_members()
-####################################################
-#  Deletes topics subscriber that does not exist anymore
-#  and send a notify to concerned subscribers.
-#
-# IN : -$self (+): ref(List)
-#      -$new_msg_topic (+): ref(ARRAY) - new state
-#        of msg_topic parameters
-#
-# OUT : -0 if no subscriber topics have been deleted
-#       -1 if some subscribers topics have been deleted
-#####################################################
-sub modifying_msg_topic_for_list_members {
-    my ($self, $new_msg_topic) = @_;
-    $log->syslog('debug3', '(%s', $self->{'name'});
-    my $deleted = 0;
-
-    my @old_msg_topic_name;
-    foreach my $msg_topic (@{$self->{'admin'}{'msg_topic'}}) {
-        push @old_msg_topic_name, $msg_topic->{'name'};
-    }
-
-    my @new_msg_topic_name;
-    foreach my $msg_topic (@{$new_msg_topic}) {
-        push @new_msg_topic_name, $msg_topic->{'name'};
-    }
-
-    my $msg_topic_changes =
-        Sympa::Tools::Data::diff_on_arrays(\@old_msg_topic_name,
-        \@new_msg_topic_name);
-
-    if ($#{$msg_topic_changes->{'deleted'}} >= 0) {
-
-        for (
-            my $subscriber = $self->get_first_list_member();
-            $subscriber;
-            $subscriber = $self->get_next_list_member()
-            ) {
-
-            if ($subscriber->{'reception'} eq 'mail') {
-                my $topics = Sympa::Tools::Data::diff_on_arrays(
-                    $msg_topic_changes->{'deleted'},
-                    Sympa::Tools::Data::get_array_from_splitted_string(
-                        $subscriber->{'topics'}
-                    )
-                );
-
-                if (@{$topics->{'intersection'}}) {
-                    Sympa::send_notify_to_user(
-                        $self, 'deleted_msg_topics',
-                        $subscriber->{'email'},
-                        {del_topics => $topics->{'intersection'}}
-                    );
-                    unless (
-                        $self->update_list_member(
-                            lc($subscriber->{'email'}),
-                            update_date => time,
-                            topics      => join(',', @{$topics->{'added'}})
-                        )
-                        ) {
-                        $log->syslog(
-                            'err',
-                            'Impossible to update user "%s" of list %s',
-                            $subscriber->{'email'}, $self
-                        );
-                    }
-                    $deleted = 1;
-                }
-            }
-        }
-    }
-    return 1 if ($deleted);
-    return 0;
-}
+# Moved to _notify_deleted_topic() in wwsympa.fcgi.
+#sub modifying_msg_topic_for_list_members;
 
 ####################################################
 # select_list_members_for_topic

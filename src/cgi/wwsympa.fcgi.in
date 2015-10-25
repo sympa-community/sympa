@@ -85,6 +85,7 @@ use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::Text;
 use Sympa::Tools::WWW;
+use Sympa::Topic;
 use Sympa::Tracking;
 use Sympa::User;
 
@@ -9101,10 +9102,10 @@ sub do_distribute {
         push @mail_command,
             sprintf('QUIET DISTRIBUTE %s %s', $list->{'name'}, $id);
 
-        ## TAG
+        # TAG
         if ($list_topics) {
-            my $filetopic = $list->tag_topic($message->{message_id},
-                $list_topics, 'editor');
+            Sympa::Topic->new(topic => $list_topics, method => 'editor')
+                ->store($message);
         }
 
         $spool_mod->remove($handle, action => 'distribute');
@@ -12357,10 +12358,7 @@ sub do_edit_list {
 
     ## For changed msg_topic.name
     if (defined $new_admin->{'msg_topic'}
-        && $list->modifying_msg_topic_for_list_members(
-            $new_admin->{'msg_topic'}
-        )
-        ) {
+        and _notify_deleted_topic($new_admin->{'msg_topic'})) {
         Sympa::Report::notice_report_web('subscribers_noticed_deleted_topics',
             {}, $param->{'action'});
     }
@@ -12670,6 +12668,73 @@ sub _shift_var {
         return _shift_var($i, $newvar, @tokens);
     }
     return $newvar;
+}
+
+# Deletes topics subscriber that does not exist anymore and send a notify to
+# concerned subscribers.
+# Returns 0 if no subscriber topics have been deleted; 1 if some subscribers
+# topics have been deleted.
+# Old name: Sympa::List::modifying_msg_topic_for_list_members().
+sub _notify_deleted_topic {
+    $log->syslog('debug3', '(%s)', @_);
+    my $new_msg_topic = shift;
+
+    my $deleted = 0;
+
+    my @old_msg_topic_name;
+    foreach my $msg_topic (@{$list->{'admin'}{'msg_topic'}}) {
+        push @old_msg_topic_name, $msg_topic->{'name'};
+    }
+
+    my @new_msg_topic_name;
+    foreach my $msg_topic (@{$new_msg_topic}) {
+        push @new_msg_topic_name, $msg_topic->{'name'};
+    }
+
+    my $msg_topic_changes =
+        Sympa::Tools::Data::diff_on_arrays(\@old_msg_topic_name,
+        \@new_msg_topic_name);
+
+    if (@{$msg_topic_changes->{'deleted'}}) {
+        for (
+            my $subscriber = $list->get_first_list_member();
+            $subscriber;
+            $subscriber = $list->get_next_list_member()
+            ) {
+            if ($subscriber->{'reception'} eq 'mail') {
+                my $topics = Sympa::Tools::Data::diff_on_arrays(
+                    $msg_topic_changes->{'deleted'},
+                    Sympa::Tools::Data::get_array_from_splitted_string(
+                        $subscriber->{'topics'}
+                    )
+                );
+
+                if (@{$topics->{'intersection'}}) {
+                    Sympa::send_notify_to_user(
+                        $list, 'deleted_msg_topics',
+                        $subscriber->{'email'},
+                        {del_topics => $topics->{'intersection'}}
+                    );
+                    unless (
+                        $list->update_list_member(
+                            lc($subscriber->{'email'}),
+                            update_date => time,
+                            topics      => join(',', @{$topics->{'added'}})
+                        )
+                        ) {
+                        $log->syslog(
+                            'err',
+                            'Impossible to update user "%s" of list %s',
+                            $subscriber->{'email'}, $list
+                        );
+                    }
+                    $deleted = 1;
+                }
+            }
+        }
+    }
+    return 1 if $deleted;
+    return 0;
 }
 
 #=head2 sub do_edit_list_request
@@ -21398,11 +21463,6 @@ sub do_send_mail {
         return undef;
     }
 
-    if ($list_topics) {
-        my $filetopic =
-            $list->tag_topic($in{'message_id'}, $list_topics, 'sender');
-    }
-
     # "In-Reply-To:" field, eliminating hostile characters.
     my $in_reply_to = tools::clean_msg_id($in{'in_reply_to'});
     undef $in_reply_to if $in_reply_to and $in_reply_to =~ /[\s<>]/;
@@ -21667,6 +21727,12 @@ sub do_send_mail {
     }
 
     if (@to_list and $in{'sub_action'} eq 'sendmailtolist') {
+        # TAG
+        if ($list_topics) {
+            Sympa::Topic->new(topic => $list_topics, method => 'sender')
+                ->store($message);
+        }
+
         my $l_message = $message->dup;
         $l_message->{envelope_sender} = $param->{'user'}{'email'};
         $l_message->{sender}          = $param->{'user'}{'email'};
@@ -21833,9 +21899,9 @@ sub do_tag_topic_by_sender {
         return undef;
     }
 
-    ## TAG
-    my $filetopic =
-        $list->tag_topic($in{'message_id'}, $list_topics, 'sender');
+    # TAG
+    Sympa::Topic->new(topic => $list_topics, method => 'sender')
+        ->store($message);
 
     ## CONFIRM
     # Commands are injected into incoming spool directly with "md5"

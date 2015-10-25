@@ -1109,6 +1109,7 @@ sub dump {
 }
 
 ## Add topic and put header X-Sympa-Topic
+# OBSOLETED.  No longer used.
 sub add_topic {
     my ($self, $topic) = @_;
 
@@ -1117,6 +1118,7 @@ sub add_topic {
 }
 
 ## Get topic
+# OBSOLETED.  No longer used.
 sub get_topic {
     my ($self) = @_;
 
@@ -3573,6 +3575,90 @@ sub dmarc_protect {
     }
 }
 
+# Old name: Sympa::List::compute_topic()
+sub compute_topic {
+    $log->syslog('debug2', '(%s)', @_);
+    my $self = shift;
+
+    my $list = $self->{context};
+    return undef unless ref $list eq 'Sympa::List';
+
+    my @topic_array;
+    my %topic_hash;
+    my %keywords;
+
+    # Getting keywords.
+    foreach my $topic (@{$list->{'admin'}{'msg_topic'} || []}) {
+        my $list_keyw = Sympa::Tools::Data::get_array_from_splitted_string(
+            $topic->{'keywords'});
+
+        foreach my $keyw (@{$list_keyw}) {
+            $keywords{$keyw} = $topic->{'name'};
+        }
+    }
+
+    # getting string to parse
+    # We convert it to UTF-8 for case-ignore match with non-ASCII keywords.
+    my $mail_string = '';
+    if (index($list->{'admin'}{'msg_topic_keywords_apply_on'}, 'subject') >=
+        0) {
+        $mail_string = $self->{'decoded_subject'} . "\n";
+    }
+    unless ($list->{'admin'}{'msg_topic_keywords_apply_on'} eq 'subject') {
+        my $entity = $self->as_entity;
+        my $eff_type = $entity->effective_type || '';
+        if ($eff_type eq 'multipart/signed' and $entity->parts) {
+            $entity = $entity->parts(0);
+        }
+        #FIXME: Should also handle application/pkcs7-mime format.
+
+        # get bodies of any text/* parts, not digging nested subparts.
+        my @parts;
+        if ($entity->parts) {
+            @parts = $entity->parts;
+        } else {
+            @parts = ($entity);
+        }
+        foreach my $part (@parts) {
+            next unless $part->effective_type =~ /^text\//i;
+            my $charset = $part->head->mime_attr("Content-Type.Charset");
+            $charset = MIME::Charset->new($charset);
+            $charset->encoder('UTF-8');
+
+            if (defined $part->bodyhandle) {
+                my $body = $part->bodyhandle->as_string();
+                my $converted;
+                eval { $converted = $charset->encode($body); };
+                if ($EVAL_ERROR) {
+                    $converted = $body;
+                    $converted =~ s/[^\x01-\x7F]/?/g;
+                }
+                $mail_string .= $converted . "\n";
+            }
+        }
+    }
+    # foldcase string
+    $mail_string = Sympa::Tools::Text::foldcase($mail_string);
+
+    # parsing
+    foreach my $keyw (keys %keywords) {
+        if (index($mail_string, Sympa::Tools::Text::foldcase($keyw)) >= 0) {
+            $topic_hash{$keywords{$keyw}} = 1;
+        }
+    }
+
+    # for no double
+    foreach my $k (sort keys %topic_hash) {
+        push @topic_array, $k if $topic_hash{$k};
+    }
+
+    unless (@topic_array) {
+        return '';
+    } else {
+        return join(',', @topic_array);
+    }
+}
+
 sub get_id {
     my $self = shift;
 
@@ -3916,6 +4002,9 @@ if everything's alright
 
 =item add_topic ( $output )
 
+Note:
+No longer used.
+
 I<Instance method>.
 Adds topic and puts header X-Sympa-Topic.
 
@@ -3940,6 +4029,9 @@ if everything's alright
 =back
 
 =item get_topic ( )
+
+Note:
+No longer used.
 
 I<Instance method>.
 Gets topic of message.
@@ -4225,6 +4317,23 @@ Returns:
 
 None.
 C<From:> field of the message may be modified.
+
+=item compute_topic ( )
+
+I<Instance method>.
+Compute the topic of the message. The topic is got
+from keywords defined in list parameter
+msg_topic.keywords. The keyword is applied on the
+subject and/or the body of the message according
+to list parameter msg_topic_keywords_apply_on
+
+Parameters:
+
+None.
+
+Returns:
+
+String of tag(s), can be separated by ',', can be empty.
 
 =item get_id ( )
 
