@@ -36,7 +36,6 @@ use MIME::Charset;
 use MIME::EncWords;
 use POSIX qw();
 use Storable qw();
-use Time::Local qw();
 use URI::Escape qw();
 
 use Sympa;
@@ -2086,169 +2085,9 @@ sub _mail_message {
         || undef;
 }
 
-####################################################
-# distribute_digest
-####################################################
-# Prepare and distribute digest message(s) to the subscribers with
-# reception digest, digestplain or summary
-#
-# IN : -$self(+) : ref(List)
-#
-# OUT : 1 : ok
-#       | 0 if no subscriber for sending digest
-#       | undef
-####################################################
 # Old name: List::send_msg_digest().
-# Note: This would be moved to Pipeline package.
-sub distribute_digest {
-    $log->syslog('debug2', '(%s, ...)', @_);
-    my $collection   = shift;
-    my $spool        = shift;
-    my $spool_handle = shift;
-    my %options      = @_;
-
-    my $list = $spool->{context};
-
-    my $available_recipients = $list->get_digest_recipients_per_mode;
-    unless ($available_recipients) {
-        $log->syslog('info', 'No subscriber for sending digest in list %s',
-            $list);
-
-        unless ($options{keep_digest}) {
-            while (1) {
-                my ($message, $handle) = $spool->next;
-                if ($message and $handle) {
-                    $spool->remove($handle);
-                } elsif ($handle) {
-                    $log->syslog('err', 'Cannot parse message <%s>',
-                        $handle->basename);
-                    $spool->quarantine($handle);
-                } else {
-                    last;
-                }
-            }
-        }
-
-        return 0;
-    }
-
-    my $time = time;
-
-    # Digest index.
-    my @all_msg;
-    my $i = 0;
-    while (1) {
-        my ($message, $handle) = $spool->next;
-        last unless $handle;    # No more messages.
-        unless ($message) {
-            $log->syslog('err', 'Cannot parse message <%s>',
-                $handle->basename);
-            $spool->quarantine($handle);
-            next;
-        }
-
-        $i++;
-
-        # Commented because one Spam made Sympa die (MIME::tools 5.413)
-        #$entity->remove_sig;
-        my $msg = {
-            'id'         => $i,
-            'subject'    => $message->{'decoded_subject'},
-            'from'       => $message->get_decoded_header('From'),
-            'date'       => $message->get_decoded_header('Date'),
-            'full_msg'   => $message->as_string,
-            'body'       => $message->body_as_string,
-            'plain_body' => $message->get_plaindigest_body,
-            #FIXME: Might be extracted from Date:.
-            'month'      => POSIX::strftime("%Y-%m", localtime $time),
-            'message_id' => $message->{'message_id'},
-        };
-        push @all_msg, $msg;
-
-        $spool->remove($handle) unless $options{keep_digest};
-    }
-
-    my $param = {
-        'replyto'   => $list->get_list_address('owner'),
-        'to'        => $list->get_list_address(),
-        'boundary1' => '----------=_'
-            . tools::get_message_id($list->{'domain'}),
-        'boundary2' => '----------=_'
-            . tools::get_message_id($list->{'domain'}),
-    };
-    # Compat. to 6.2a or earlier
-    $param->{'table_of_content'} = $language->gettext("Table of contents:");
-
-    if ($list->get_reply_to() =~ /^list$/io) {
-        $param->{'replyto'} = "$param->{'to'}";
-    }
-
-    $param->{'datetime'} =
-        $language->gettext_strftime("%a, %d %b %Y %H:%M:%S", localtime $time);
-    $param->{'date'} =
-        $language->gettext_strftime("%a, %d %b %Y", localtime $time);
-
-    ## Split messages into groups of digest_max_size size
-    my @group_of_msg;
-    while (@all_msg) {
-        my @group = splice @all_msg, 0, $list->{'admin'}{'digest_max_size'};
-        push @group_of_msg, \@group;
-    }
-
-    my $bulk = Sympa::Bulk->new;
-
-    $param->{'current_group'} = 0;
-    $param->{'total_group'}   = $#group_of_msg + 1;
-    ## Foreach set of digest_max_size messages...
-    foreach my $group (@group_of_msg) {
-        $param->{'current_group'}++;
-        $param->{'msg_list'}       = $group;
-        $param->{'auto_submitted'} = 'auto-generated';
-
-        # Prepare and send MIME digest, plain digest and summary.
-        foreach my $mode (qw{digest digestplain summary}) {
-            next unless exists $available_recipients->{$mode};
-
-            my $digest_message =
-                Sympa::Message->new_from_template($list, $mode,
-                $available_recipients->{$mode}, $param);
-            if ($digest_message) {
-                # Add RFC 2919 header field
-                $list->add_list_header($digest_message, 'id');
-                # Add RFC 2369 header fields
-                foreach my $field (
-                    @{  tools::get_list_params($list->{'domain'})
-                            ->{'rfc2369_header_fields'}->{'format'}
-                    }
-                    ) {
-                    if (scalar grep { $_ eq $field }
-                        @{$list->{'admin'}{'rfc2369_header_fields'}}) {
-                        $list->add_list_header($digest_message, $field);
-                    }
-                }
-            }
-            unless ($digest_message
-                and defined $bulk->store($digest_message,
-                    $available_recipients->{$mode})) {
-                $log->syslog('notice',
-                    'Unable to send template "%s" to %s list subscribers',
-                    $mode, $list);
-                next;
-            }
-
-            # Add number and size of digests sent to total in stats file.
-            my $numsent = scalar @{$available_recipients->{$mode}};
-            my $bytes   = length $digest_message->as_string;
-            $list->{'stats'}[1] += $numsent;
-            $list->{'stats'}[2] += $bytes;
-            $list->{'stats'}[3] += $bytes * $numsent;
-        }
-    }
-
-    $list->savestats();
-
-    return 1;
-}
+# Moved to Sympa::Spindle::SendDigest::_distribute_digest().
+#sub distribute_digest;
 
 sub get_digest_recipients_per_mode {
     my $self = shift;
@@ -5491,44 +5330,9 @@ sub is_archiving_enabled {
         'on');
 }
 
-## Returns 1 if the  digest must be sent.
 # Old name: Sympa::List::get_nextdigest().
-# Note: this would be moved to Pipeline package.
-sub may_distribute_digest {
-    $log->syslog('debug3', '(%s)', @_);
-    my $spool = shift;
-
-    my $list = $spool->{context};
-
-    return undef unless defined $spool->{time};
-    return undef unless $list->is_digest;
-
-    my @days = @{$list->{'admin'}{'digest'}->{'days'} || []};
-    my $hh = $list->{'admin'}{'digest'}->{'hour'}   || 0;
-    my $mm = $list->{'admin'}{'digest'}->{'minute'} || 0;
-
-    my @now        = localtime time;
-    my $today      = $now[6];                    # current day
-    my @timedigest = localtime $spool->{time};
-
-    ## Should we send a digest today
-    my $send_digest = 0;
-    foreach my $d (@days) {
-        if ($d == $today) {
-            $send_digest = 1;
-            last;
-        }
-    }
-    return undef unless $send_digest;
-
-    if ($hh * 60 + $mm <= $now[2] * 60 + $now[1]
-        and Time::Local::timelocal(0, @timedigest[1 .. 5]) <
-        Time::Local::timelocal(0, $mm, $hh, @now[3 .. 5])) {
-        return 1;
-    }
-
-    return undef;
-}
+# Moved to Sympa::Spindle::SendDigest::_may_distribute_digest().
+#sub may_distribute_digest;
 
 ## Loads all scenari for an action
 sub load_scenario_list {

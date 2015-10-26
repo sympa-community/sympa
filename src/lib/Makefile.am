@@ -76,6 +76,8 @@ nobase_modules_DATA = \
 	Sympa/Session.pm \
 	Sympa/SOAP.pm \
 	Sympa/SOAP/Transport.pm \
+	Sympa/Spindle.pm \
+	Sympa/Spindle/SendDigest.pm \
 	Sympa/Spool.pm \
 	Sympa/Spool/Archive.pm \
 	Sympa/Spool/Automatic.pm \

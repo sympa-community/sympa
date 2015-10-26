@@ -46,7 +46,7 @@ use Sympa::Mailer;
 use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Scenario;
-use Sympa::Spool::Digest::Collection;
+use Sympa::Spindle::SendDigest;
 use Sympa::Spool::Incoming;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
@@ -279,7 +279,7 @@ while ($signal ne 'term') {
     if (    $daemon_usage eq 'DAEMON_MASTER'
         and $index_queuedigest++ >= $digestsleep) {
         $index_queuedigest = 0;
-        SendDigest();
+        Sympa::Spindle::SendDigest->new->spin;
     }
 
     # Cleanup in-memory msgid table, only in a while.
@@ -1926,64 +1926,8 @@ sub DoCommand {
     return $success ? 1 : undef;
 }
 
-############################################################
-#  SendDigest
-############################################################
-#  Read the queuedigest and send old digests to the subscribers
-#  with the digest option.
-#
-# IN : -
-#
-# OUT : -
-#     | undef
-#
-##############################################################
-sub SendDigest {
-    $log->syslog('debug', '(%s => %s, %s => %s)', @_);
-    my %options     = @_;
-    my $keep_digest = $options{keep_digest};
-    my $send_now    = $options{send_now};
-
-    my $collection = Sympa::Spool::Digest::Collection->new;
-    while (1) {
-        my ($spool, $handle) = $collection->next;
-        last unless $handle;    # No more spools.
-        next unless $spool;     # Malformed entry.
-
-        my $list     = $spool->{context};
-        my $robot_id = $list->{'domain'};
-
-        $language->set_lang(
-            $list->{'admin'}{'lang'},
-            Conf::get_robot_conf($robot_id, 'lang'),
-            $Conf::Conf{'lang'}, 'en'
-        );
-
-        if ($send_now or Sympa::List::may_distribute_digest($spool)) {
-            # Blindly send the message to all users.
-            $log->syslog('info', 'Sending digest to list %s', $list);
-            my $start_time = time;
-            Sympa::List::distribute_digest($collection, $spool, $handle,
-                keep_digest => $keep_digest);
-
-            $log->syslog('info', 'Digest of the list %s sent (%d seconds)',
-                $list, time - $start_time);
-            $log->db_log(
-                'robot'        => $robot_id,
-                'list'         => $list->{'name'},
-                'action'       => 'SendDigest',
-                'parameters'   => "",
-                'target_email' => '',
-                'msg_id'       => '',
-                'status'       => 'success',
-                'error_type'   => '',
-                'user_email'   => ''
-            );
-        }
-    }
-
-    return 1;
-}
+# DEPRECATED.  Use Sympa::Spindle::SendDigest class.
+#sub SendDigest;
 
 ## Cleanup the msgid_table every 'msgid_table_cleanup_frequency' sec
 ## Removes all entries older than 'msgid_table_cleanup_ttl' sec
