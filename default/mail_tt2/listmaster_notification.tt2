@@ -196,7 +196,7 @@ Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%
 default configuration will be used.[%END%]
 
 [% ELSIF type == 'sync_include_failed' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Failed to inlude members for list '%1'[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Failed to include members for list '%1'[%END%][%END%]
 
 [%|loc%]Sympa could not include members from external data sources; the database or LDAP directory might be unreachable.[%END%]
 
@@ -394,7 +394,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [%ELSIF error == 'unable_to_load_create_list_templates'%][%|loc%]Unable to load create_list templates.[%END%]
 [%ELSIF error == 'unable_get_family'%][%|loc(list.name)%]Unable to get family for list '%1'.[%END%]
 [%ELSIF error == 'list_reload'%][%IF new_list.name %][%|loc(new_listname)%]Unable to reload list with new listname '%1'.[%END%][%ELSE%][%|loc%]Unable to reload list[%END%][%END%]
-[%ELSIF error == 'sync_include_failed' %][%|loc(list.name)%]Failed to inlude members for list '%1'[%END%] 
+[%ELSIF error == 'sync_include_failed' %][%|loc(list.name)%]Failed to include members for list '%1'[%END%] 
 [%ELSIF error == 'sync_include_admin_failed' %][%|loc(list.name)%]Failed to include list admins for list '%1'[%END%] 
 [%ELSIF error == 'no_owner_defined' %][%|loc%]No owner is defined for the list '%1'[%END%] 
 [%ELSIF error == 'exportation_failed' %][%|loc(list.name)%]The exportation to an Ldap directory failed for list '%1'[%END%] 
