@@ -304,7 +304,7 @@ Lists not reaching the time to distribute digest are omitted.
 
 =head2 Public methods
 
-See also L<Sympa::Spingle/"Public methods">.
+See also L<Sympa::Spindle/"Public methods">.
 
 =over
 
