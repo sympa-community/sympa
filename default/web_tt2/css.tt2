@@ -239,6 +239,10 @@ form{
     margin:0.5rem 0 1rem 0;
     clear:both;
 }
+main form form{
+    margin:1rem 0 0 0;
+    padding-left: 0!important;
+}
 
 label {
 	color: [% color_4 %];
@@ -271,8 +275,14 @@ input {
 
 input[type="checkbox"], input[type="radio"] {
 	border: none;
+	box-sizing: border-box;
+	*width: 13px;
+	*height: 13px;
 }
-
+input[type="file"]{
+	display: block;
+        margin-top:0.5rem;
+}
 select {
 	/*border: 1px solid [% color_12 %];
 	border-radius: 3px;
@@ -334,12 +344,6 @@ input[type="button"]:disabled, input[type="submit"]:disabled, input[type="reset"
 
 button[disabled], input[disabled] {
 	cursor: default;
-}
-
-input[type="checkbox"], input[type="radio"] {
-	box-sizing: border-box;
-	*width: 13px;
-	*height: 13px;
 }
 
 input[type="search"] {
@@ -707,6 +711,16 @@ dd {
 
 /* end aside */
 
+/*shared menu*/
+menu.shared{
+    margin:1rem;
+}
+menu.shared li{
+    display:inline;
+    list-style:none;
+}
+/* end shared menu */
+
 /*Top Button*/
 .scroll-top-wrapper {
     position: fixed;
@@ -748,6 +762,13 @@ dd {
 
 .remember{
    line-height: 2em;
+}
+
+/* Initials in list of lists */
+main .top-bar-section li.letter,
+main .top-bar-section li.letter a,
+h4.letter {
+    text-transform: capitalize;
 }
 
 #top{
@@ -1328,21 +1349,30 @@ a.dingbat {
 	font-size: 1.6em;
 }
 
-a.actionMenuLinks {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 5px;
-	margin: 0 0.5em 0 0;
-	cursor:pointer;
-	background-color: [% color_10 %];
-	color: [% color_7 %];
-	font-size: 0.9em;
+a.actionMenuLinksCurrentPage {
+    border: none;
+    text-decoration: none;
+    padding: 5px;
+    margin: 0 0.5em 0 0;
+    cursor:pointer;
+    background-color: [% color_10 %];
+    color: [% color_7 %];
+    font-size: 0.9em;
+    border-radius:2px;
 }
 
-a.actionMenuLinksCurrentPage {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
+a.actionMenuLinks {
+    border: 1px solid;
+    font-size: 0.9em;
+    text-decoration: none;
+    padding: 4px;
+    border-radius:2px;
+}
+a.actionMenuLinks:hover {
+    border: 1px solid [% color_5 %];
+    background-color: [% color_5 %];
+    color: [% color_7 %];
+    border-radius:2px;
 }
 
 a.actionMenuLinksInactive {
@@ -2076,13 +2106,6 @@ main nav ~ h4,
 main nav ~ h5,
 main nav ~ h6{
     margin-top:1rem;
-}
-
-/* Initials in list of lists */
-main .top-bar-section li.letter,
-main .top-bar-section li.letter a,
-h4.letter {
-    text-transform: capitalize;
 }
 
 /*font-awesome specificity*/

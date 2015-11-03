@@ -1,17 +1,15 @@
 <!-- $Id$ -->
-[%|loc(shortname)%]the file %1 already exists[%END%]
+<h2>[%|loc%]Shared documents[%END%] <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+
+<p class="alert-box warning">[%|loc(shortname)%]the file %1 already exists[%END%]</p>
 
 <form action="[% path_cgi %]" method="post">
 <fieldset>
   <label for="mode_delete">[%|loc(shortname)%]Do you want to delete the old file %1?[%END%]</label>
     <input id="mode_delete" class="MainMenuLinks" type="submit" name="mode_delete" value="[%|loc%]Delete[%END%]" />
-  <br />
   <label for="new_name">[%|loc(shortname)%]Do you want to rename your file %1?[%END%]</label>
-    <br />
     <input id="new_name" size="20" maxlength="100" name="new_name" />
     <input id="mode_rename" class="MainMenuLinks" type="submit" name="mode_rename" value="[%|loc%]Rename[%END%]" />
-    
-  <br />
   <label for="mode_cancel">[%|loc%]Do you want to cancel the upload?[%END%]</label>
     <input id="mode_cancel" class="MainMenuLinks" type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" />
 

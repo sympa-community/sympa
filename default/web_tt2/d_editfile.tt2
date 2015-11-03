@@ -1,39 +1,33 @@
 <!-- $Id$ -->
+<h2>[%|loc%]Shared documents[%END%] <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
-<div class="block">
-
-  <div class="search_form">
-     <a   href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"><img src="[% father_icon %]" alt="up to higher level directory"> [%|loc%]Up to higher level directory[%END%] </a>
-  </div>
-<br/>
-
+    <menu class="shared">
+    <li><span class="search_form"> <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]" title="[%|loc%]Up to higher level directory[%END%]"><i class="fa fa-folder-open fa-lg"><i class="fa fa-level-up fa-lg"></i></i></a></span></li>
+    </menu>
 
   [% IF url %]
-  <h1>[%|loc(visible_path)%]Edition of the bookmark %1[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h1>
+  <h3>[%|loc(visible_path)%]Edition of the bookmark %1[%END%]</h3>
   [% ELSE %]
-  <h1>[%|loc(visible_path)%]Edition of the file %1[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h1>
+  <h3>[%|loc(visible_path)%]Edition of the file %1[%END%]</h3>
   [% END %]
 
     [%|loc(doc_owner)%]Owner: %1[%END%] <br />
     [%|loc(doc_date)%]Last update: %1[%END%] <br />
-    [%|loc(desc)%]Description: %1[%END%] <br /><br />
+    [%|loc(desc)%]Description: %1[%END%] <br />
 
-</div>
-
-  <br /><br />
   [% IF !directory %]
   
   <form method="post" action="[% path_cgi %]" enctype="multipart/form-data">
   <fieldset>
 
   [% IF url %]
-  <label for="url"><strong> [%|loc%]Bookmark URL[%END%] </strong></label><br /> 
+  <label for="url">[%|loc%]Bookmark URL[%END%]</label>
   <input id="url" name="url" value="[% url %]" />
   [% ELSE %]
-  <label for="uploaded_file"><strong> [%|loc(visible_path)%]Replace the file %1 with your file[%END%] </strong></label>
-  &nbsp;<input id="uploaded_file" type="file" name="uploaded_file" />&nbsp;
+  <label for="uploaded_file"> [%|loc(visible_path)%]Replace the file %1 with your file[%END%] </label>
+  <input id="uploaded_file" type="file" name="uploaded_file" />
   [% END %]
-  &nbsp;
+  
   [% IF url %]
   <input class="MainMenuLinks" type="submit" value="[%|loc%]Update[%END%]" name="action_d_savefile" />
   [% ELSE %]
@@ -47,18 +41,14 @@
 
   [% END %]
 
-
-<br />
-<br />
-
 [% IF !url %]
 [% IF textfile %]
   <form action="[% path_cgi %]" method="post">
   <fieldset>
-  <label for="content"><strong> [%|loc(visible_path)%]Edit the file %1[%END%]</strong></label><br />
+  <label for="content">[%|loc(visible_path)%]Edit the file %1[%END%]</label>
   <textarea id="content" name="content" cols="90" rows="25">
     [%~ INSERT $filepath IF filepath ~%]
-  </textarea><br />
+  </textarea>
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />
   <input type="hidden" name="serial" value="[% serial_file %]" />

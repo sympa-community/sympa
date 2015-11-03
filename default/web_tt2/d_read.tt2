@@ -1,39 +1,40 @@
 <!-- $Id$ -->
+<h2>[%|loc%]Shared documents[%END%] <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 [% IF file %]
   [% INSERT $file IF file %]
 [% ELSE %]
 
-[% IF path %]  <span class="search_form"> <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]">[%|loc%]Up to higher level directory[%END%]</a></span>
+<menu class="shared">
+[% IF path %]<li><span class="search_form"> <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]" title="[%|loc%]Up to higher level directory[%END%]"><i class="fa fa-folder-open fa-lg"><i class="fa fa-level-up fa-lg"></i></i></a></span></li>
 [% END %]
 
 [% IF expert_page %]
-    <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_user_page=1">[%|loc%]User mode[%END%]</a>
-    <a class="actionMenuLinksCurrentPage" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_expert_page=1">[%|loc%]Expert mode[%END%]</a>
+    <li><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_user_page=1">[%|loc%]User mode[%END%]</a></li>
+    <li><a class="actionMenuLinksCurrentPage" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_expert_page=1">[%|loc%]Expert mode[%END%]</a></li>
 [% ELSE %] 
     [% IF has_dir_rights %]
-    <a class="actionMenuLinksCurrentPage" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_user_page=1">[%|loc%]User mode[%END%]</a>
-    <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_expert_page=1">[%|loc%]Expert mode[%END%]</a>
+    <li><a class="actionMenuLinksCurrentPage" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_user_page=1">[%|loc%]User mode[%END%]</a></li>
+    <li><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_expert_page=1">[%|loc%]Expert mode[%END%]</a></li>
     [% END %]
 [% END %]  
-
+</menu>
 [% IF path %]  
-
-<h2>[%|loc%]Listing of folder[%END%] [% visible_path %] <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
-
+<h3>[%|loc%]Listing of folder[%END%] [% visible_path %] </h3>
+    
+    <menu class="shared">
     [% IF expert_page %]
     <span class="search_form">
       [% IF may_edit %]
-    <a class="actionMenuLinks" href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[% FILTER escape_quote %][%|loc(visible_path)%]Do you really want to delete %1?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a> 
-	 <a class="actionMenuLinks"  href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]">[%|loc%]properties[%END%]</a>
+        <a class="actionMenuLinks" href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[% FILTER escape_quote %][%|loc(visible_path)%]Do you really want to delete %1?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a> 
+	<a class="actionMenuLinks"  href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]">[%|loc%]properties[%END%]</a>
       [% END %]
       [% IF may_control %]      
         <a  class="actionMenuLinks" href="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]">[%|loc%]access[%END%]</a>
       [% END %]      
 	</span>
     [% END %]
-
-      <br />
+    </menu>
 
     [%|loc(doc_owner)%]Owner: %1[%END%] <br />
     [%|loc(doc_date)%]Last update: %1[%END%] <br />
@@ -44,7 +45,7 @@
     <br />  
   [% ELSE %]
      
-  <h2>[%|loc%]Listing of root folder[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+  <h3>[%|loc%]Listing of root folder[%END%]</h3>
   [% END %]   
 
   <table  class="responsive listOfItems">
@@ -307,16 +308,16 @@
   [% IF expert_page %] 
   [% IF may_edit %]
    [% IF total_edit %]    
-    <div class="block">
+
     <form method="post" action="[% path_cgi %]">
     <fieldset>
-    <strong>
+    <h6>
     [% IF path %]
       [%|loc(visible_path)%]Create a new folder inside folder %1[%END%]
     [% ELSE %]
       [%|loc%]Create a new folder inside root folder[%END%]
     [% END %]
-    </strong> <br />
+    </h6>
     <label for="name_dir">[%|loc%]Folder name[%END%]</label> <input id="name_dir" maxlength="30" type="text" name="name_doc" />
     <input class="MainMenuLinks" type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_dir" />
     <input type="hidden" name="previous_action" value="d_read" />
@@ -326,13 +327,11 @@
     <input type="hidden" name="action" value="d_create_dir" />
     </fieldset>
     </form>
-    </div><br/>
    [% END %]
 
-    <div class="block">
     <form method="post" action="[% path_cgi %]">
     <fieldset>
-    <strong> [%|loc%]Create a new file[%END%]</strong> <br />
+    <h6> [%|loc%]Create a new file[%END%]</h6>
     <label for="name_doc">[%|loc%]File name[%END%]</label> <input id="name_doc" maxlength="30" type="text" name="name_doc" />
     <input class="MainMenuLinks" type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_dir" />
     <input type="hidden" name="previous_action" value="d_read" />
@@ -342,13 +341,11 @@
     <input type="hidden" name="action" value="d_create_dir" />
     </fieldset>
     </form>
-    </div>
 
-    <br /><div class="block">
     <form method="post" action="[% path_cgi %]">
     <fieldset>
-    <strong>[%|loc%]Add a bookmark[%END%]</strong><br />
-    <label for="name_title">[%|loc%]title[%END%]</label> <input id="name_title" maxlength="100" size="25" type="text" name="name_doc" /><br />
+    <h6>[%|loc%]Add a bookmark[%END%]</h6>
+    <label for="name_title">[%|loc%]title[%END%]</label> <input id="name_title" maxlength="100" size="25" type="text" name="name_doc" />
     <label for="url">[%|loc%]URL[%END%]</label> <input id="url" size="35" type="text" name="url" />
     <input class="MainMenuLinks" type="submit" value="[%|loc%]Add[%END%]" name="action_d_savefile" />
     <input type="hidden" name="previous_action" value="d_read" />
@@ -357,37 +354,32 @@
     <input type="hidden" name="action" value="d_savefile" />
     </fieldset>
     </form>
-    </div><br/>
-   <div class="block">
+
    <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
    <fieldset>
-   <label for="uploaded_file">
-   <strong>
+   <h6>
    [% IF path %]
      [%|loc(visible_path)%]Upload a file inside folder %1[%END%]
    [% ELSE %]
-     <strong> [%|loc%]Upload a file inside folder SHARED[%END%]
+     [%|loc%]Upload a file inside folder SHARED[%END%]
    [% END %]
-   </strong></label><br />
+   </h6>
    <input id="uploaded_file" type="file" name="uploaded_file"/>
    <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_upload" />
    <input type="hidden" name="list" value="[% list %]" />
    <input type="hidden" name="path" value="[% path %]" />
    </form> 
-   </div><br />
 
       [% IF total_edit %]
-        <div class="block">
         <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
 	<fieldset>
-	<label for="unzipped_file">
-        <strong>
+        <h6>
  	[% IF path %]
            [%|loc(visible_path)%]Unzip a file inside the folder %1[%END%]
          [% ELSE %]
            [%|loc%]Unzip a file inside the folder SHARED[%END%]
          [% END %]
-        </strong></label><br />
+        </h6>
         <input id="unzipped_file" type="file" name="unzipped_file"/>
 
         <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_unzip" />
@@ -395,7 +387,6 @@
         <input type="hidden" name="path" value="[% path %]" />
 	</fieldset>
         </form> 
-        </div><br />
        
        [% END %]
      [% END %]
