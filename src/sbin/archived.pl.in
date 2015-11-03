@@ -31,20 +31,16 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
-use Sympa;
 use Sympa::Alarm;
-use Sympa::Archive;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::DatabaseManager;
 use Sympa::Language;
-use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
-use Sympa::Spool::Archive;
+use Sympa::Spindle::StoreArchive;
 use Sympa::Tools::Daemon;
-use Sympa::Tools::File;
 
 # Check options
 my %options;
@@ -167,41 +163,18 @@ Sympa::Language->instance->set_lang($Conf::Conf{'lang'}, 'en');
 
 $log->syslog('notice', 'Archived %s Started', Sympa::Constants::VERSION);
 
+my $spindle = Sympa::Spindle::StoreArchive->new;
+
 # Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
 $SIG{'INT'}  = 'sigterm';
-my $end = 0;
 
-my $spool = Sympa::Spool::Archive->new;
+while (not $spindle->{finish}) {
+    $spindle->spin;
+    last if $spindle->{finish};
 
-# Infinite loop scanning the queue (unless a SIGTERM is received)
-while (!$end) {
-    Sympa::List::init_list_cache();
-    # Process grouped notifications
-    Sympa::Alarm->instance->flush;
-
-    my ($message, $handle) = $spool->next;
-
-    if ($message and $handle) {
-        my $status = process_message($message, $handle);
-        unless (defined $status) {
-            $spool->quarantine($handle);
-        } elsif ($status) {
-            $spool->remove($handle);
-        } else {
-            # Processing aborted.  Redo later.
-        }
-    } elsif ($handle) {
-        $log->syslog('err', 'Cannot parse message <%s>', $handle->basename);
-        $spool->quarantine($handle);
-        next;
-    } else {
-        # Sleep for a while if archive spool is empty.
-        sleep $Conf::Conf{'sleep'};
-    }
-
-    # Free zombie sendmail process.
-    Sympa::Mailer->instance->reaper;
+    # Sleep for a while if archive spool is empty.
+    sleep $Conf::Conf{'sleep'};
 }
 
 # Purge grouped notifications.
@@ -217,305 +190,32 @@ exit 0;
 
 # When we catch signal, just change the value of the loop variable.
 sub sigterm {
-    my ($sig) = @_;
+    my $sig = shift;
     $log->syslog('notice',
         'Signal %s received, still processing current task', $sig);
-    $end = 1;
+    $spindle->{finish} = $sig;
 }
 
-sub process_message {
-    my $message = shift;
-    my $handle  = shift;
+# Moved to Sympa::Spindle::StoreArchive::_twist().
+#sub process_message;
 
-    unless (defined $message) {
-        $log->syslog('err', 'Unable to create Sympa::Message object');
-        return undef;
-    }
-
-    $log->syslog('notice', 'Processing %s; sender: %s; message ID: %s',
-        $message, $message->{'sender'}, $message->{'message_id'});
-
-    my ($robot_id, $list, $type);
-    if (ref $message->{context} eq 'Sympa::List') {
-        $robot_id = $message->{context}->{'domain'};
-        $list     = $message->{context};
-    } else {
-        $robot_id = $message->{context};
-    }
-    $type = $message->{'listtype'} || '';
-
-    # Unknown robot
-    unless ($robot_id and $robot_id ne '*') {
-        $log->syslog('err', 'Robot %s does not exist', $robot_id);
-        return undef;
-    }
-
-    if ($type eq 'sympa') {
-        return do_command($robot_id, $message);
-    } elsif (not $type and $list) {
-        $log->syslog('notice', 'Archiving %s for list %s', $message, $list);
-        if ($Conf::Conf{'custom_archiver'}) {
-            my $status = system($Conf::Conf{'custom_archiver'},
-                '--list=' . $list->get_list_id,
-                '--file=' . $spool->{directory} . '/' . $handle->basename,
-            ) >> 8;
-            if ($status) {
-                $log->syslog('err', 'Custom archiver exits with code %d',
-                    $status);
-                return undef;
-            }
-        } else {
-            unless (mail2arc($message)) {
-                Sympa::send_notify_to_listmaster(
-                    $robot_id,
-                    'archiving_failed',
-                    {   'file' => $handle->basename,
-                        'bad'  => $spool->{bad_directory}
-                    }
-                );
-                return undef;
-            }
-        }
-    } else {
-        $log->syslog('err', 'Illegal format: %s', $message);
-        return undef;
-    }
-
-    return 1;
-}
-
-sub do_command {
-    my $robot_id = shift;
-    my $message  = shift;
-
-    my ($bodyh, $io);
-    unless ($bodyh = $message->as_entity->bodyhandle
-        and $io = $bodyh->open('r')) {
-        $log->syslog('err', 'Format error: %s', $message);
-        return undef;
-    }
-
-    while (my $line = $io->getline) {
-        chomp $line;
-        next unless $line =~ /\S/;
-        next if $line =~ /\A\s*#/;
-
-        my ($order, $listname, $args) = split /\s+/, $line, 3;
-
-        my $context;
-        if ($listname and $listname eq '*') {
-            $context = $robot_id;
-        } else {
-            $context = Sympa::List->new($listname, $robot_id);
-            unless ($context) {
-                $log->syslog('err', 'Unknown list %s', $listname);
-                next;
-            }
-        }
-
-        if ($order eq 'remove_arc') {
-            my ($arc, $msgid) = split /\s+/, $args, 2;
-            unless (ref $context eq 'Sympa::List') {
-                $log->syslog('err', 'Unknown list %s', $listname);
-                next;
-            }
-            unless ($arc =~ /\A\d{4}-\d{2}\z/) {
-                $log->syslog('err', 'Illegal archive path "%s"', $arc);
-                next;
-            }
-            unless ($msgid and $msgid !~ /NO-ID-FOUND\.mhonarc\.org/) {
-                $log->syslog('err', 'No message id found');
-                next;
-            }
-
-            do_remove_arc($context, $arc, $msgid, $message->{sender});
-        } elsif ($order eq 'rebuildarc') {
-            my $arc = (defined $args and length $args) ? $args : '*';
-            unless ($arc =~ /\A\d{4}-\d{2}\z/ or $arc eq '*') {
-                $log->syslog('err', 'Illegal archive path "%s"', $arc);
-                next;
-            }
-
-            if (ref $context eq 'Sympa::List') {
-                do_rebuildarc($context, $arc);
-            } else {
-                my $all_lists = Sympa::List::get_lists($context);
-                foreach my $list (@{$all_lists || []}) {
-                    do_rebuildarc($list, $arc);
-                }
-            }
-        } else {
-            $log->syslog('err', 'Format error: Unknown command "%s"', $order);
-            return undef;
-        }
-    }
-
-    return 1;
-}
+# Moved to Sympa::Spindle::StoreArchive::_do_command().
+#sub do_command;
 
 # Moved to Sympa::Archive::html_remove().  Use do_remove_arc() instead.
 #sub remove;
 
-# Note: Though namings "remove_arc" and "rebuildarc" are inconsistent, they
-# are intentional, to keep in sync with functions of WWSympa.
-sub do_remove_arc {
-    $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
-    my $list   = shift;
-    my $arc    = shift;
-    my $msgid  = shift;
-    my $sender = shift;
-
-    my $archive = Sympa::Archive->new($list);
-    unless ($archive->select_archive($arc)) {
-        $log->syslog('err', 'No archive %s of %s', $arc, $archive);
-        return undef;
-    }
-    my ($arc_message, $arc_handle) = $archive->fetch(message_id => $msgid);
-    unless ($arc_message) {
-        $log->syslog('err',
-            'Unable to load message with message ID %s found in %s of %s',
-            $msgid, $arc, $archive);
-        return undef;
-    }
-
-    # If not list owner, list editor nor listmaster, check if
-    # sender of remove order is sender of the message to be
-    # removed.
-    unless ($list->is_admin('owner', $sender)
-        or $list->is_admin('editor', $sender)
-        or Sympa::is_listmaster($list, $sender)) {
-        unless (lc $sender eq lc($arc_message->{sender} || '')) {
-            $log->syslog('err',
-                'Remove command for %s by unauthorized sender: %s',
-                $arc_message, $sender);
-            return undef;
-        }
-    }
-    # At this point, requested command is from an authorized person
-    # (message sender or list admin or listmaster).
-
-    $log->syslog('notice', 'Removing %s in %s of archive %s',
-        $msgid, $arc, $archive);
-
-    unless ($archive->html_remove($msgid) and $archive->remove($arc_handle)) {
-        return undef;
-    }
-
-    $log->db_log(
-        'robot'      => $list->{'domain'},
-        'list'       => $list->{'name'},
-        'action'     => 'remove_arc',
-        'parameters' => $msgid,
-        'msg_id'     => $msgid,
-        'status'     => 'success',
-        'user_email' => $sender
-    );
-    $log->add_stat(
-        'robot'     => $list->{'domain'},
-        'list'      => $list->{'name'},
-        'operation' => 'remove_arc',
-        'mail'      => $sender
-    );
-
-    return 1;
-}
+# Moved to Sympa::Spindle::StoreArchive::_do_remove_arc().
+#sub do_remove_arc;
 
 # Moved to Sympa::Archive::html_rebuild().  Use do_rebuildarc() instead.
 #sub rebuild;
 
-sub do_rebuildarc {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my $list = shift;
-    my $arc  = shift;
+# Moved to Sympa::Spindle::StoreArchive::_do_rebuildarc().
+#sub do_rebuildarc;
 
-    my $archive = Sympa::Archive->new($list);
-
-    if ($arc and $arc ne '*') {
-        $log->syslog('notice', 'Rebuilding %s of %s', $arc, $archive);
-        $archive->html_rebuild($arc);
-    } else {
-        $log->syslog('notice', 'Rebuilding archive of %s completely', $list);
-        foreach my $arc ($archive->get_archives) {
-            $archive->html_rebuild($arc);
-        }
-        $log->syslog('notice', 'Rebuild of %s archives completed', $list);
-    }
-}
-
-sub mail2arc {
-    $log->syslog('debug2', '(%s)', @_);
-    my $message = shift;
-
-    my $list    = $message->{context};
-    my $archive = Sympa::Archive->new($list);
-
-    # chdir $arcpath;
-
-    ## Check quota
-    if ($list->{'admin'}{'archive'}{'quota'}) {
-        my $used =
-            Sympa::Tools::File::get_dir_size($archive->{base_directory});
-
-        if ($used >= $list->{'admin'}{'archive'}{'quota'} * 1024) {
-            $log->syslog('err', 'Web archive quota exceeded for list %s',
-                $list);
-            $list->send_notify_to_owner('arc_quota_exceeded',
-                {'size' => $used});
-            return undef;
-        }
-        if ($used >= ($list->{'admin'}{'archive'}{'quota'} * 1024 * 0.95)) {
-            $log->syslog('err', 'Web archive quota exceeded for list %s',
-                $list);
-            $list->send_notify_to_owner(
-                'arc_quota_95',
-                {   'size' => $used,
-                    'rate' => int(
-                        $used * 100 /
-                            ($list->{'admin'}{'archive'}{'quota'} * 1024)
-                    )
-                }
-            );
-        }
-    }
-
-    if ($list->{'admin'}{'archive'}{'max_month'}) {
-        my $arc = POSIX::strftime('%Y-%m', localtime $message->{date});
-
-        unless ($archive->select_archive($arc)) {
-            $archive->add_archive($arc);
-            unless ($archive->select_archive($arc)) {
-                $log->syslog('err',
-                    'Cannot create directory %s in archive %s',
-                    $arc, $archive);
-                return undef;
-            }
-
-            # maybe need to remove some old archive
-            my @archives = $archive->get_archives;
-            my $nb_month = scalar @archives;
-            my $i        = 0;
-            while ($nb_month > $list->{'admin'}{'archive'}{'max_month'}) {
-                $log->syslog(
-                    'info',
-                    'Removing %s/%s',
-                    $archive->{base_directory},
-                    $archives[$i]
-                );
-
-                unless ($archives[$i] eq $arc) {
-                    $archive->purge_archive($archives[$i]);
-                }
-                $i++;
-                $nb_month--;
-            }
-        }
-    }
-
-    unless ($archive->store($message) and $archive->html_store($message)) {
-        return undef;
-    }
-    return 1;
-}
+# Moved to Sympa::Spindle::StoreArchive::_mail2arc().
+#sub mail2arc;
 
 # Moved to Sympa::Archive::_set_hidden_mode().
 #sub set_hidden_mode;
@@ -523,9 +223,6 @@ sub mail2arc {
 # Moved to Sympa::Archive::_unset_hidden_mode().
 #sub unset_hidden_mode;
 
-# Saves the archives index file
-#* $index, a string corresponding to the file name to which save an index.
-#* $lst, a character string
 # Moved to Sympa::Archive::_save_idx().
 #sub save_idx;
 
@@ -538,32 +235,7 @@ sub mail2arc {
 
 # Checks if directory exists and we have write and read accec to it.
 # DEPRECATED.  No longer used.
-sub directory_check {
-    my $dir = shift;
-    unless (-d $dir) {
-        printf STDERR "Creating missing %s directory\n", $dir;
-        unless (mkdir $dir, 0775) {
-            $log->syslog('err', 'Unable to create directory %s', $dir);
-            return undef;
-        }
-        unless (
-            Sympa::Tools::File::set_file_rights(
-                file  => $dir,
-                user  => Sympa::Constants::USER,
-                group => Sympa::Constants::GROUP,
-                mode  => 0775,
-            )
-            ) {
-            $log->syslog('err', 'Unable to set rights on %s', $dir);
-            return undef;
-        }
-    }
-    unless ((-r $dir) && (-w $dir)) {
-        $log->syslog('err', 'Unsufficient access to %s directory', $dir);
-        return undef;
-    }
-    return 1;
-}
+#sub directory_check;
 
 __END__
 
@@ -676,5 +348,7 @@ See L<http://www.sympa.org/tracking>.
 =head1 SEE ALSO
 
 L<sympa_msg(8)>, L<bounced(8)>, L<mhonarc(1)>, L<sympa.conf(5)>.
+
+L<Sympa::Spindle::StoreArchive>.
 
 =cut

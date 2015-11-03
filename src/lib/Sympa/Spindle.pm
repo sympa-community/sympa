@@ -46,18 +46,19 @@ sub new {
         $spools{$key} = $spool;
     }
 
-    bless {%options, %spools, distaff => $distaff, finish => undef,} =>
-        $class;
+    my $self = bless {%options, %spools, distaff => $distaff} => $class;
+    $self->_init(0) or return undef;
+    $self;
 }
 
 sub spin {
-    my $self    = shift;
-    my %options = @_;
+    my $self = shift;
 
     my $processed = 0;
-    undef $self->{finish};
+    delete $self->{finish};
 
     while (1) {
+        $self->_init(1);
         my ($message, $handle) = $self->{distaff}->next;
 
         if ($message and $handle) {
@@ -71,8 +72,8 @@ sub spin {
                 $self->_on_skip($message, $handle);
             }
 
-            return $status if $options{once};
             $processed++;
+            $self->_init(2);
         } elsif ($handle) {
             $self->_on_garbage($message, $handle);
         } else {
@@ -84,6 +85,8 @@ sub spin {
 
     return $processed;
 }
+
+sub _init {1}
 
 sub _on_failure {
     my $self    = shift;

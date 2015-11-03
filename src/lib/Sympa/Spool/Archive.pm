@@ -114,8 +114,8 @@ Named such by historical reason.
 
 =head1 SEE ALSO
 
-L<sympa_msg(8)>, L<archived(8)>,
-L<Sympa::Archive>, L<Sympa::Message>, L<Sympa::Spool>.
+L<Sympa::Archive>, L<Sympa::Message>, L<Sympa::Spindle::StoreArchive>,
+L<Sympa::Spool>.
 
 =head1 HISTORY
 
