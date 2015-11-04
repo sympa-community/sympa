@@ -55,7 +55,6 @@ sub spin {
     my $self = shift;
 
     my $processed = 0;
-    delete $self->{finish};
 
     while (1) {
         $self->_init(1);
