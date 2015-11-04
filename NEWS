@@ -3,6 +3,45 @@
 
 (See Changelog file for the full changes log)
 
+6.2.10		November 04, 2015
+
+  Changes:
+
+	[12445] default/web_tt2/subrequest.tt2, src/cgi/wwsympa.fcgi.in:  When
+	an anonymous user (user who has not logged in) selects "subscribe" menu
+	specifying e-mail address, fake message "a message containing an
+	validation link was sent" is shown and message is not really sent, even
+	if the e-mail had been already subscribed.  Previously, user was
+	notified that they are already subscribed.
+	The new behavior will prevent using "subscriber" menu to sniff
+	subscribers.
+
+  Bug fixes:
+
+	[12468] src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/Log.pm,
+	src/lib/Sympa/Upgrade.pm: [#9850] Database logging fails on rare
+	occations.  This is because primary key of logs_table is not
+	sufficiently unique.
+	Fixed by dropping primary key.	Table structure will be upgraded
+	automatically during upgrade process.  Additionally, upgrade table will
+	also keep subsecond part of logging date.
+
+	[12464] src/lib/Sympa/Topic.pm:  If message topics feature is enabled
+	and a message has message-ID containing "/" character, such message
+	cannot be tagged topics.
+	Fixed by escaping filesystem-unsafe characters in message-ID.
+
+	[12462] default/web_tt2/subindex.tt2, src/cgi/wwsympa.fcgi.in,
+	src/lib/Sympa/List.pm, src/lib/Sympa/Spool/Request.pm:	If a user
+	submits subscription requests to a list multiple times, owner can see
+	the last one in moderation page, but when she approves it, the first
+	one will be chosen.  As a result, custom attribute of subscribed user
+	may be differ from that owner has chosen.
+	Fixed by assigning unique key to each subscription request.  To make
+	this fix, format of files in subscribe spool (queuesubscribe) were
+	changed: Older format will be migrated during upgrading process
+	(sympa.pl --upgrade).
+
 6.2.9		October 13, 2015
 
   Bug fixes:
