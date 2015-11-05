@@ -12,7 +12,12 @@
   <span>[%|loc%]Subscribers:[%END%] [% total %]
   [% IF may_review %]
     <span>
-      <a href="[% path_cgi %]/review/[% list %]"><i class="fa fa-eye" title="[%|loc%]Review members[%END%]"></i></a>
+      <a href="[% path_cgi %]/review/[% list %]">
+      <span class="fa-stack fa-1x">
+		<i class="fa fa-square fa-lg fa-stack-1x"></i>
+		<i class="fa fa-eye fa-stack-1x fa-inverse"></i>
+	  </span>
+      </a>
     </span>
   [% END %]
 
@@ -49,7 +54,7 @@
 
     [% IF is_priv %]
       <span>
-        <a href="[% path_cgi %]/edit_list_request/[% list %]/description#owner"><i class="fa fa-pencil-square" title="[%|loc%](Edit)[%END%]"></i></a>
+        <a href="[% path_cgi %]/edit_list_request/[% list %]/description#owner"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>
       </span>
     [% END %]
   </span>
@@ -84,7 +89,7 @@
 
     [% IF is_priv %]
       <span>
-        <a href="[% path_cgi %]/edit_list_request/[% list %]/description#editor"><i class="fa fa-pencil-square" title="[%|loc%](Edit)[%END%]"></i></a>
+        <a href="[% path_cgi %]/edit_list_request/[% list %]/description#editor"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>
       </span>
     [% END %]
   </span>

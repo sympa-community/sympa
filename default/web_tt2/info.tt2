@@ -4,7 +4,7 @@
   [% homepage_content %]
 [% ELSE %]
 
-  <p><b>[%|loc%]Description:[%END%]</b> [% info_content %] [% IF is_owner %]<a href="[% path_cgi %]/editfile/[% list %]/info"><i class="fa fa-pencil-square" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>
+  <p><b>[%|loc%]Description:[%END%]</b> [% info_content %] [% IF is_owner %]<a href="[% path_cgi %]/editfile/[% list %]/info"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>
 
   [% IF is_owner || is_editor %]
     <hr />
