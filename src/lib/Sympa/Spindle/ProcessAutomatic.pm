@@ -37,6 +37,7 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Report;
+use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
 
@@ -200,7 +201,8 @@ sub _twist {
 
     # Enable SMTP logging if required.
     Sympa::Mailer->instance->{log_smtp} = $main::options{'mail'}
-        || Conf::get_robot_conf($robot, 'log_smtp');
+        || Sympa::Tools::Data::smart_eq(
+        Conf::get_robot_conf($robot, 'log_smtp'), 'on');
     # setting log_level using conf unless it is set by calling option
     unless (defined $main::options{'log_level'}) {
         $log->{level} = Conf::get_robot_conf($robot, 'log_level');
