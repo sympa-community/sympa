@@ -3,7 +3,7 @@
 
 (See Changelog file for the full changes log)
 
-6.2.10		November 04, 2015
+6.2.11		November 05, 2015
 
   Changes:
 
@@ -17,6 +17,9 @@
 	subscribers.
 
   Bug fixes:
+
+	[12478] src/lib/Sympa/Spindle/ProcessAutomatic.pm:  Logging invocation
+	of sendmail was not disabled even if log_smtp parameter was "off".
 
 	[12468] src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/Log.pm,
 	src/lib/Sympa/Upgrade.pm: [#9850] Database logging fails on rare
@@ -41,6 +44,10 @@
 	this fix, format of files in subscribe spool (queuesubscribe) were
 	changed: Older format will be migrated during upgrading process
 	(sympa.pl --upgrade).
+
+6.2.10		November 04, 2015
+
+  Never released: problem occured while tagging the version.
 
 6.2.9		October 13, 2015
 
