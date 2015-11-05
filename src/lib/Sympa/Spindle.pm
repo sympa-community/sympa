@@ -123,3 +123,176 @@ sub _twist {0}
 
 1;
 __END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle - Base class of subclasses to define Sympa workflows
+
+=head1 SYNOPSIS
+
+  package Sympa::Spindle::FOO;
+  use base qw(Sympa::Spindle);
+
+  use constant _distaff => 'Sympa::Spool::BAR';
+  
+  sub _twist {
+      my $self = shift;
+      my $object = shift;
+      my $handle = shift; 
+  
+      # Process object...
+ 
+      return 1;          # If succeeded.
+      return 0;          # If skipped.
+      return undef;      # If failed.
+  }
+
+  1;
+
+=head1 DESCRIPTION
+
+L<Sympa::Spindle> is the base class of subclasses to define particular
+workflows of Sympa.
+
+A spindle class is a set of features to process objects.
+If spin() method is called, it retrieves each object from source spool,
+processes it, at last passes altered object to appropriate destination
+(another spool or mailer), and removes it as necessity.
+Processing repeats until source spool is empty.
+
+=head2 Public methods
+
+=over
+
+=item new ( [ key =E<gt> value, ... ] )
+
+I<Constructor>.
+Creates new instance of L<Sympa::Spindle>.
+
+=item spin ( )
+
+I<instance method>.
+Fetches an object and handle locking it from source spool, processes them
+calling _twist() and repeats.
+If source spool no longer gives content, returns the number of processed
+objects.
+
+=back
+
+=head2 Properties
+
+Instance of L<Sympa::Spindle> may have following properties.
+
+=over
+
+=item {distaff}
+
+Instance of source spool class _distaff() method returns.
+
+=item {finish}
+
+I<Read/write>.
+At first this property is false.
+Once it is set, spin() finishes processing safely.
+
+=item Spools
+
+Instances of spool classes _spools() method returns.
+
+=back
+
+=head2 Methods subclass should implement
+
+=over
+
+=item _distaff ( )
+
+I<Class method>, I<mandatory>.
+Returns the name of source spool class.
+source spool class must implement new() and next().
+
+=item _init ( $state )
+
+I<Instance method>.
+Additional processing
+when the spindle class is instantiated ($state is 0), before spin() processes
+next object in source spool ($state is 1) or after it processed object
+($state is 2).
+
+If it returns false value, new() will return C<undef> (when $state is 0)
+or spin() will terminate processing (when $state is 1).
+By default it always returns C<1>.
+
+=item _on_garbage ( $handle )
+
+I<Instance method>, I<overridable>.
+Executes process when object could not be deserialized (new() method of object
+failed).
+By default, quarantines object calling quearantine() method of source spool.
+
+=item _on_failure ( $message, $handle )
+
+I<Instance method>, I<overridable>.
+Executes process when processing of $message failed (_twist() returned
+C<undef>).
+By default, quarantines object calling quearantine() method of source spool.
+
+=item _on_skip ( $message, $handle )
+
+I<Instance method>, I<overridable>.
+Executes process when $message was skipped (_twist() returned C<0>).
+By default, simply unlocks object calling close() method of $handle.
+
+=item _on_success ( $message, $handle )
+
+I<Instance method>, I<overridable>.
+Executes process when processing of $message succeeded (_twist() returned true
+value).
+By default, removes object calling remove() method of source spool.
+
+=item _spools ( )
+
+I<Class method>.
+If implemented, returns hashref with names of spool classes related to the
+spindle as values.
+
+=item _twist ( $message, $handle )
+
+I<Instance method>, I<mandatory>.
+Processes an object: Typically, modifys object or creates another object and
+stores it into appropriate spool.
+
+Parameters:
+
+=over
+
+=item $message
+
+An object fetched from source spool.
+
+=item $handle
+
+A handle locking the object.
+On filesystem spool it is filehandle;
+on collection it is true scalar value (see also L<Sympa::Spool>).
+
+=back
+
+Returns:
+
+Status of processing:
+True value on success; C<0> if processing skipped; C<undef> on failure.
+
+=back
+
+=head1 SEE ALSO
+
+L<Sympa::Spool>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle> appeared on Sympa 6.2.10.
+
+=cut
