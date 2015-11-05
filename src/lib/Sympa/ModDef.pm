@@ -383,6 +383,7 @@ our %cpan_modules = (
             'Used to create URI containing non URI-canonical characters.',
     },
     'XML::LibXML' => {
+        required_version => '1.70',
         'gettext_comment' => 'libxml2-devel is needed to build the Perl code',
         package_name      => 'XML-LibXML',
         mandatory         => 1,
