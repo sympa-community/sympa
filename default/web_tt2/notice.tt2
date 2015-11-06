@@ -28,8 +28,8 @@
 [%|loc(notice.total)%]%1 addresses have been removed[%END%]
 
 [% ELSIF notice.msg == 'performed' %]
-    <div  data-alert class="alert-box info radius">
-<i class="fi-eye"></i> 
+    <div  data-alert class="alert-box success radius">
+<i class="fi-check"></i> 
 [%|loc(notice.action)%]%1: action completed[%END%]
 
 [% ELSIF notice.msg == 'performed_soon' %]
