@@ -1,13 +1,10 @@
 <!-- $Id$ -->
-<div class="block">
-
-[% IF mod_total %]
+[%# IF mod_total %]
 
 <h2>[%|loc%]Listing messages to moderate[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
-<p>
 
 <!-- moderation of messages -->
-
+[% IF mod_message %]
 [% line_count = 0 %]
 [% mod_display_message = 1 %]
 [% FOREACH msg = spool %]
@@ -107,20 +104,20 @@
 	    [% END %]
 	  </td>
 	  <td>[% msg.value.size %] kb</td>
-
 	</tr>
       [% END %] 
     </table>
-
-[%END%]
+[% ELSE %]
+<p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No messages to moderate[%END%]</p>
+[% END %]
+[%# END %]
 <br />
 <!-- moderation of document shared -->
+<h2>[%|loc%]Listing of shared documents to moderate[%END%]</h2>
 [% IF mod_total_shared %]
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderate_shared">
 <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
-  <h2>[%|loc%]Listing of shared documents to moderate[%END%]</h2> 
-
   <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
   <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />
   <input class="MainMenuLinks" type="submit" name="action_d_reject_shared" value="[%|loc%]Notified reject[%END%]" />
@@ -128,7 +125,7 @@
     <table  class="responsive listOfItems">
     <caption>[%|loc%]Listing of documents shared to moderate[%END%]</caption>
       <tr>
-	<th>X</span></th>
+	<th><a href="#" onclick="toggle_selection(document.moderate_shared.id)" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i></a></th>
         <th>[%|loc%]Date[%END%]</th>
 	<th>[%|loc%]Author[%END%]</th>
 	<th>[%|loc%]Path[%END%]</th>
@@ -155,32 +152,28 @@
       [% END %] 
     </table>
 
-<br />
-[% IF conf.use_blacklist != 'none' %]
-   <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
-[%- END- %]
-  <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_shared.id)" /><br />
-
+  <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_shared.id)" />
+<br /><br />
   <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
   <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />
   <input class="MainMenuLinks" type="submit" name="action_d_reject_shared" value="[%|loc%]Notified reject[%END%]" />
 </fieldset>
 </form>
-
+[% ELSE %]
+<p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No documents to moderate[%END%]</p>
 [% END %]
-
+<br />
 <h2>[%|loc%]Moderation management[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
-<p>
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderation_management">
 <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
 [% IF conf.use_blacklist != 'none' %]
    <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
 [% END %]
- <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" <br />
-</fieldset></form>
-</p>
+ <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" />
+</fieldset>
+</form>
 
-</div>
+
 <!-- end modindex.tt2 -->

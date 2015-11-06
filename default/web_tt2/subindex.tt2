@@ -1,14 +1,14 @@
 <!-- $Id$ -->
-<div class="block">
 
-<h3 style="margin-top:0;">[%|loc%]Listing subscription to moderate[%END%]</h3>
+<h2>[%|loc%]Listing subscription to moderate[%END%]</h2>
+[% IF mod_subscription %]
 <form class="noborder" action="[% path_cgi %]" method="post" name="myform"> 
 <fieldset>
 <input type="hidden" name="list" value="[% list %]" />
     <table  class="responsive listOfItems">
     <caption>[%|loc%]Listing subscription to moderate[%END%]</caption>
       <tr>
-          <th><a href="#" onclick="toggle_selection(document.myform.id);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></strong></th>
+          <th><a href="#" onclick="toggle_selection(document.myform.pending_email);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></strong></th>
           <th colspan="2">[%|loc%]Email[%END%]</th>
           <th>[%|loc%]Name[%END%]</th>
           <th>[%|loc%]Date[%END%]</th>
@@ -25,18 +25,18 @@
           <tr class="color0">
 	[% END %]
 	    <td>
-           <input type="checkbox" name="id" value="[% sub.key %]" />
+           <input type="checkbox" name="pending_email" value="[% sub.key %],[% sub.value.gecos %]" />
 	    </td>
 	  <td colspan="2">
-	        [% sub.value.email %]
+	        [% sub.key %]
 	  </td>
 	  <td>
 	        [% sub.value.gecos %]&nbsp;
           </td>
-	  <td class="text_center">
+	  <td>
 	      [% sub.value.date %]
 	  </td>
-          <td class="text_left">
+          <td class="text-left">
               [% FOREACH ca_k IN list_conf.custom_attribute %]<b>[% ca_k.name %][%|loc%]:[%END%] </b>[% IF sub.value.custom_attribute.item(ca_k.id).value %][% sub.value.custom_attribute.item(ca_k.id).value %][% ELSE %]-[% END %]<br>[% END %]
           </td>
         </tr>
@@ -55,17 +55,12 @@
       </table>
 <input type="hidden" name="previous_action" value="subindex" />
 <input type="hidden" name="previous_list" value="[% list %]" />
-<div style="clear:left; overflow:hidden; padding: 1.2em 0 0.25em;">
-<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.id)" />
-</div>
-<div style="clear:left; overflow:hidden; padding: 0.25em 0 0.25em;">
-<input class="MainMenuLinks" type="submit" name="action_add_fromsub" value="[%|loc%]Add selected addresses[%END%]" />
-</div>
-<div style="clear:left; overflow:hidden; padding: 0.25em 0 0.25em;">
+<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.pending_email)" />
+<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add selected addresses[%END%]" />
 <input class="MainMenuLinks" type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />
-</div>
 </fieldset>
 </form>
-
-</div>
+[% ELSE %]
+<p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No subscription requests[%END%]</p>
+[% END %]
 <!-- end subindex.tt2 -->
