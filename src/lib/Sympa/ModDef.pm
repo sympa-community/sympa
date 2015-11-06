@@ -93,7 +93,7 @@ our %cpan_modules = (
         'gettext_id'     => 'used to decode date and time in message headers',
     },
     'DateTime::TimeZone' => {
-        required_version => '1.08',
+        required_version => '0.59',
         package_name     => 'DateTime-TimeZone',
         mandatory        => 1,
         'gettext_id'     => 'used to decode date and time in message headers',
@@ -152,12 +152,12 @@ our %cpan_modules = (
         mandatory        => 1,
         'gettext_id'     => 'used to compute MD5 digests for passwords, etc.',
     },
-    'Email::Simple' => {
-        required_version => '2.100',
-        package_name     => 'Email-Simple',
-        mandatory        => 1,
-        'gettext_id'     => 'Used for email tracking',
-    },
+    #'Email::Simple' => {
+    #    required_version => '2.100',
+    #    package_name     => 'Email-Simple',
+    #    mandatory        => 1,
+    #    'gettext_id'     => 'Used for email tracking',
+    #},
     'Encode' => {
         package_name => 'Encode',
         mandatory    => 1,
@@ -311,7 +311,6 @@ our %cpan_modules = (
     'Net::DNS' => {
         required_version => '0.65',
         package_name     => 'Net-DNS',
-        mandatory        => 1,
         'gettext_id' =>
             'this is required if you set a value for "dmarc_protection_mode" which requires DNS verification',
     },

@@ -37,12 +37,12 @@ use MIME::EncWords;
 use MIME::Entity;
 use MIME::Parser;
 use MIME::Tools;
-use Net::DNS;
 use Scalar::Util qw();
 use Text::LineFold;
 use URI::Escape qw();
 
 BEGIN { eval 'use Crypt::SMIME'; }
+BEGIN { eval 'use Net::DNS'; }
 
 use Sympa;
 use Conf;
@@ -3306,6 +3306,9 @@ sub _getCharset {
 
 sub dmarc_protect {
     my $self = shift;
+
+    # Net::DNS is optional.
+    return unless $Net::DNS::VERSION;
 
     my $list = $self->{context};
     return unless ref $list eq 'Sympa::List';
