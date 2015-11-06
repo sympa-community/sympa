@@ -11,9 +11,11 @@
   <h3>[%|loc(visible_path)%]Edition of the file %1[%END%]</h3>
   [% END %]
 
+    <p>
     [%|loc(doc_owner)%]Owner: %1[%END%] <br />
     [%|loc(doc_date)%]Last update: %1[%END%] <br />
     [%|loc(desc)%]Description: %1[%END%] <br />
+    </p>
 
   [% IF !directory %]
   

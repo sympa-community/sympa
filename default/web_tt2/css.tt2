@@ -279,6 +279,9 @@ input[type="checkbox"], input[type="radio"] {
 	*width: 13px;
 	*height: 13px;
 }
+table input[type="checkbox"], table input[type="radio"] {
+    margin-bottom:0
+}
 input[type="file"]{
 	display: block;
         margin-top:0.5rem;
@@ -452,8 +455,6 @@ article.home a.button{
     margin:3.5rem auto 0 auto;
 }
 
-
-
 /* Tables */
 table {
     background-color: [% color_7 %];
@@ -464,6 +465,13 @@ table {
     box-shadow: 0 1px 1px #ccc;
 }
 
+table.listOfItems tr { 
+    height:2rem;
+}
+table.listOfItems td{ 
+    vertical-align:middle;
+    text-align:center;
+}
 table.ls_template th{ 
     border-right: 1px solid [% color_7 %];
 }
@@ -474,17 +482,6 @@ table.ls_template td{
     border-right: 1px solid [% color_9 %];
 }
 
-/*
-table th:first-child {
-    border-radius: 4px 0 0 0;
-}
-table th:last-child {
-    border-radius: 0 4px 0 0;
-}
-table th:only-child{
-    border-radius: 4px 4px 0 0;
-}
-*/
 table tr.even, table tr.alt, table tr:nth-of-type(odd) {
   background: [% color_8 %];
 }
@@ -495,6 +492,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 table tr th {
     background-color: [% color_4 %];
     color: [% color_7 %];
+    text-align: center;
 }
 table tr th a{
     color: [% color_7 %];
@@ -537,7 +535,6 @@ table tr th a{
 	position:relative;
 	top:-1px;
 }
-
 
 #nav li {
 	list-style: none;
@@ -708,7 +705,6 @@ aside menu ul li.active a{
 dd {
 	margin: 0 0 0 40px;
 }
-
 /* end aside */
 
 /*shared menu*/
@@ -809,7 +805,6 @@ h4.letter {
 
 .item_list .item .item_content ul {
 	padding-left: 5rem;
-	margin: 0.5em 0;
 }
 
 .item_list .item .item_content p {
@@ -973,12 +968,12 @@ span.center {
 	text-align: center;
 }
 
-td.review_cels { 
+table td.review_cels { 
 	text-align: center;
 	padding:0 0.2em;
 }
 
-td.review_cels_mail { 
+table td.review_cels_mail { 
 	text-align: left;
 	padding:0 0 0 0.2em;
 }
@@ -1090,7 +1085,7 @@ ul.no_style {
 	margin: 2px;
 }
 
-/*
+
 /*
 #color_table { 
 	border: 1px dotted;
@@ -1557,27 +1552,27 @@ h7 strong {
     text-align:center;
 }
 .alert-box.alert {
-    border: 3px solid #D91E18;
-    border-radius: 5px;
+    border: 2px solid #D91E18;
+    border-radius: 3px;
     color: #D91E18;
     background-color:rgba(217, 30, 24, 0.2);
 }
 .alert-box.warning {
-    border: 3px solid #D35400;
-    border-radius: 5px;
+    border: 2px solid #D35400;
+    border-radius: 3px;
     color: #D35400;
     background-color: rgba(211, 84, 0, 0.2);
 }
 .alert-box.success {
-    border: 3px solid #1E824C;
-    border-radius: 5px;
+    border: 2px solid #1E824C;
+    border-radius: 3px;
     color: #1E824C;
     background-color: rgba(30, 130, 76, 0.2);
 }
 
 .alert-box.info {
-    border: 3px solid [% color_6 %];
-    border-radius: 5px;
+    border: 2px solid [% color_6 %];
+    border-radius: 3px;
     color: [% color_6 %];
     background-color: rgba(52, 152, 219, 0.2);
 }
@@ -1739,9 +1734,7 @@ h2 a.input {
 }
 
 textarea {
-    border: 1px solid; 
-    padding: 3px;
-    border-radius: 4px;
+    border-radius: 2px;
 }
 
 textarea.desc {
@@ -1782,54 +1775,54 @@ table.ls_template {
 }
 
 table.listOfItems { 
-	overflow: scroll;
+    overflow: scroll;
 }
 
 table.listOfItems td { 
-	border:1px solid;
+    border:1px solid;
 }
 
 table.listOfItems tr { 
-	border:1px solid [% color_12 %];
+    border:1px solid [% color_12 %];
 }
 
 table.listOfItems th {
-	padding:0 2px;
-	border: 1px solid black;
-	text-align: center;
-	white-space: normal;
+    padding:0 2px;
+    border: 1px solid black;
+    text-align: center;
+    white-space: normal;
 }
 
 table.pending_lists { 
-	border: 1px solid;
-	width: auto;
-	margin: 10px;
+    border: 1px solid;
+    width: auto;
+    margin: 10px;
 }
 
 table.pending_lists th { 
-	padding: 3px;
-	border: 1px solid;
+    padding: 3px;
+    border: 1px solid;
 }
 
 table.pending_lists th.title_pending { 
-	padding: 10px;
+    padding: 10px;
 }
 
 table.ls_template th { 
-	padding: 3px; 
-	border: solid 1px; 
-	text-align: center;
+    padding: 3px; 
+    border: solid 1px; 
+    text-align: center;
 }
 
 table.preferences { 
-	border: none;
-	border-spacing: 0.5em;
-	font-size: 1em;
+    border: none;
+    border-spacing: 0.5em;
+    font-size: 1em;
 }  
 
 table.preferences th { 
-	font-weight: normal;
-	white-space: nowrap;
+    font-weight: normal;
+    white-space: nowrap;
 }
 
             
@@ -2114,6 +2107,57 @@ span.fa-stack i.fa-plus-circle {
   top: 0.65rem;
   left: 0.8rem;
 }
+
+/* classes for defined colors */
+.color_0{
+    color:[% color_0 %];
+}
+.color_1{
+    color:[% color_1 %];
+}
+.color_2{
+    color:[% color_2 %];
+}
+.color_3{
+    color:[% color_3 %];
+}
+.color_4{
+    color:[% color_4 %];
+}
+.color_5{
+    color:[% color_5 %];
+}
+.color_6{
+    color:[% color_6 %];
+}
+.color_7{
+    color:[% color_7 %];
+}
+.color_8{
+    color:[% color_8 %];
+}
+.color_9{
+    color:[% color_9 %];
+}
+.color_10{
+    color:[% color_10 %];
+}
+.color_11{
+    color:[% color_11 %];
+}
+.color_12{
+    color:[% color_12 %];
+}
+.color_13{
+    color:[% color_13 %];
+}
+.color_14{
+    color:[% color_14 %];
+}
+.color_15{
+    color:[% color_15 %];
+}
+
 
 @media screen and (min-width: 0px) and (max-width: 419px) {
 	h1 {

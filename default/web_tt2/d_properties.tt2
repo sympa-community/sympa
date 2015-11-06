@@ -1,33 +1,31 @@
 <!-- $Id$ -->
-
-<span class="search_form"><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]">[%|loc%]Up to higher level directory[%END%]</a></span>
+<h2>[%|loc%]Shared documents[%END%] <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+    
+    <menu class="shared">
+    <li><span class="search_form"> <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]" title="[%|loc%]Up to higher level directory[%END%]"><i class="fa fa-folder-open fa-lg"><i class="fa fa-level-up fa-lg"></i></i></a></span></li>
+    </menu>
 
   [% IF url %]
-  <h2>[%|loc(visible_path)%]Properties of the bookmark %1[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+  <h3>[%|loc(visible_path)%]Properties of the bookmark %1[%END%]  </h3>
   [% ELSIF directory %]
-  <h2>[%|loc(visible_path)%]Properties of the directory %1[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+  <h3>[%|loc(visible_path)%]Properties of the directory %1[%END%]</h3>
   [% ELSE %]
-  <h2>[%|loc(visible_path)%]Properties of the file %1[%END%]  <a  href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+  <h3>[%|loc(visible_path)%]Properties of the file %1[%END%]</h3>
   [% END %]
-
-<br />
-
+    <p>
     [%|loc(doc_owner)%]Owner: %1[%END%] <br />
     [%|loc(doc_date)%]Last update: %1[%END%] <br />
-    [%|loc(desc)%]Description: %1[%END%] <br /><br />
-
-<p>
-<div class="block">
+    [%|loc(desc)%]Description: %1[%END%] <br />
+    </p>
   <form action="[% path_cgi %]" method="post">
   <fieldset>
   <label for="content">
-  <strong>
   [% IF directory %]
   [%|loc(fname)%]Describe directory '%1'[%END%]
   [% ELSE %]
   [%|loc(fname)%]Describe file '%1'[%END%]
   [% END %]
-  </strong></label><br />
+  </label>
   <input id="content" size="50" maxlength="100" name="content" value="[% desc %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />
@@ -36,19 +34,16 @@
   <input class="MainMenuLinks" size="50" maxlength="100" type="submit" name="action_d_describe" value="[%|loc%]Apply[%END%]" />
   </fieldset>
   </form>
-</div>
-</p><p>
-<div class="block">
+
   <form action="[% path_cgi %]" method="post">
   <fieldset>
   <label for="new_name">
-  <strong>
   [% IF directory %]
   [%|loc(fname)%]Rename directory %1[%END%]
   [% ELSE %]
   [%|loc(fname)%]Rename file %1[%END%]
   [% END %]
-  </strong></label><br />
+  </label>
   <input size="50" maxlength="100" name="new_name" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />
@@ -58,10 +53,6 @@
   <input class="MainMenuLinks" size="20" maxlength="50" type="submit" name="action_d_rename" value="[%|loc%]Rename[%END%]" />
   </fieldset>
   </form>
-</div>
-</p>
 
-<br />
-<br />
 
 <!-- end d_properties.tt2 -->

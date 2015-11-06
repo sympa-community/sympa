@@ -6,48 +6,49 @@
 [% ELSE %]
 
 <menu class="shared">
-[% IF path %]<li><span class="search_form"> <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]" title="[%|loc%]Up to higher level directory[%END%]"><i class="fa fa-folder-open fa-lg"><i class="fa fa-level-up fa-lg"></i></i></a></span></li>
+[% IF path %]
+<li><span class="search_form"> <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]Up to higher level directory[%END%]"><i class="fa fa-folder-open fa-lg"><i class="fa fa-level-up fa-lg"></i></i></a></span></li>
 [% END %]
 
 [% IF expert_page %]
-    <li><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_user_page=1">[%|loc%]User mode[%END%]</a></li>
-    <li><a class="actionMenuLinksCurrentPage" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_expert_page=1">[%|loc%]Expert mode[%END%]</a></li>
+    <li><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_user_page=1"><i class="fa fa-user "></i> [%|loc%]User mode[%END%]</a></li>
+    <li><a class="actionMenuLinksCurrentPage" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_expert_page=1"><i class="fa fa-cogs"></i> [%|loc%]Expert mode[%END%]</a></li>
 [% ELSE %] 
     [% IF has_dir_rights %]
-    <li><a class="actionMenuLinksCurrentPage" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_user_page=1">[%|loc%]User mode[%END%]</a></li>
-    <li><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_expert_page=1">[%|loc%]Expert mode[%END%]</a></li>
+    <li><a class="actionMenuLinksCurrentPage" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_user_page=1"><i class="fa fa-user"></i> [%|loc%]User mode[%END%]</a></li>
+    <li><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_expert_page=1"><i class="fa fa-cogs"></i> [%|loc%]Expert mode[%END%]</a></li>
     [% END %]
 [% END %]  
 </menu>
 [% IF path %]  
-<h3>[%|loc%]Listing of folder[%END%] [% visible_path %] </h3>
-    
+    <h3>[%|loc%]Listing of folder[%END%] [% visible_path %] </h3> 
     <menu class="shared">
     [% IF expert_page %]
     <span class="search_form">
       [% IF may_edit %]
-        <a class="actionMenuLinks" href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[% FILTER escape_quote %][%|loc(visible_path)%]Do you really want to delete %1?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a> 
-	<a class="actionMenuLinks"  href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]">[%|loc%]properties[%END%]</a>
+        <a class="actionMenuLinks" href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[% FILTER escape_quote %][%|loc(visible_path)%]Do you really want to delete %1?[%END%][%END%]'); return false;"><i class="fa fa-trash"></i> [%|loc%]delete[%END%]</a> 
+	<a class="actionMenuLinks"  href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]"><i class="fa fa-cog"></i> [%|loc%]properties[%END%]</a>
       [% END %]
       [% IF may_control %]      
-        <a  class="actionMenuLinks" href="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]">[%|loc%]access[%END%]</a>
+        <a  class="actionMenuLinks" href="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]"><i class="fa fa-lock"></i> [%|loc%]access[%END%]</a>
       [% END %]      
-	</span>
+    </span>
     [% END %]
     </menu>
-
+    <p>
     [%|loc(doc_owner)%]Owner: %1[%END%] <br />
-    [%|loc(doc_date)%]Last update: %1[%END%] <br />
+    [%|loc(doc_date)%]Last update: %1[%END%] <br /> 
     [% IF doc_title %]
     [%|loc(doc_title)%]Description: %1[%END%] <br /><br />
     [% END %]
-    
-    <br />  
+    </p>
   [% ELSE %]
-     
   <h3>[%|loc%]Listing of root folder[%END%]</h3>
   [% END %]   
 
+  [% IF empty %]
+    <p class="small-8 small-centered columns alert-box warning text-center">[%|loc%]Empty folder[%END%]</p>
+  [% ELSE %]
   <table  class="responsive listOfItems">
   <caption>[%|loc%]Listing of folder[%END%] [% visible_path %]</caption>
   <tr>
@@ -74,21 +75,10 @@
   [% END %]
 
   [% IF expert_page %]
-   <th>[%|loc%]Edit[%END%]</th> 
-   <th>[%|loc%]Delete[%END%]</th>
-   <th>[%|loc%]Access[%END%]</th>
-   <th>[%|loc%]Properties[%END%]</th>
-   [% IF is_editor %]
-     <th>[%|loc%]Moderation[%END%]</th>
-   [% END %]
+   <th>[%|loc%]Actions[%END%]</th> 
   [% END %]
   </tr>
-      
-  [% IF empty %]
-    <tr class="color0">
-    <td class="text_center" colspan="9"> [%|loc%]Empty folder[%END%] </td>
-    </tr>
-  [% ELSE %]   
+         
     [% IF sort_subdirs %]
       [% FOREACH s = sort_subdirs %]
         <tr class="color0">
@@ -107,51 +97,46 @@
 	</td>	    
 	<td>&nbsp;</td>
 	<td class="review_cels"> [% s.date %] </td>
-		
 
 	[% IF expert_page %]
-
+	  <td class="review_cels text-right">
 	  [% IF s.edit %]
-            <td>&nbsp; </td>
-	  <td class="review_cels">
 	    [% IF escaped_path %]
-	      <a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% s.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% s.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,s.doc)%]Do you really want to delete %1%2?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a>
+	      <a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% s.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% s.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,s.doc)%]Do you really want to delete %1%2?[%END%][%END%]'); return false;"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]delete[%END%]"><i class="fa fa-trash fa-lg"></i></a>
             [% ELSE %]
-	      <a href="[% path_cgi %]/d_delete/[% list %]/[% s.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% s.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,s.doc)%]Do you really want to delete %1%2?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a>
+	      <a href="[% path_cgi %]/d_delete/[% list %]/[% s.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% s.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,s.doc)%]Do you really want to delete %1%2?[%END%][%END%]'); return false;"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]delete[%END%]"><i class="fa fa-trash fa-lg"></i></a>
 	    [% END %]
-	  </td>
+
 	[% ELSE %]
-	  <td>&nbsp; </td>
-	  <td>&nbsp; </td>
+
 	[% END %]
 	
 	[% IF s.control %]
-	  <td class="review_cels">
 	    [% IF escaped_path %]
-	        <a href="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]/[% s.escaped_doc %]">[%|loc%]access[%END%]</a>
+	     &nbsp;<a href="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]/[% s.escaped_doc %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]access[%END%]"><i class="fa fa-lock fa-lg"></i></a>
 	    [% ELSE %]
-	     <a href="[% path_cgi %]/d_control/[% list %]/[% s.escaped_doc %]">[%|loc%]access[%END%]</a>
+	     &nbsp;<a href="[% path_cgi %]/d_control/[% list %]/[% s.escaped_doc %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]access[%END%]"><i class="fa fa-lock fa-lg"></i></a>
             [% END %]
-	    </td>	 
+	 
 	  [% ELSE %]
-	    <td>&nbsp; </td>
+
 	  [% END %]
       
           [% IF s.edit %]
-	    <td class="review_cels">
 	    [% IF escaped_path %]
-	      <a href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]/[% s.escaped_doc %]">[%|loc%]properties[%END%]</a>
+	      &nbsp;<a href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]/[% s.escaped_doc %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]properties[%END%]"><i class="fa fa-cog fa-lg"></i></a>
 	    [% ELSE %] 
-	      <a href="[% path_cgi %]/d_properties/[% list %]/[% s.escaped_doc %]">[%|loc%]properties[%END%]</a>
+	      &nbsp;<a href="[% path_cgi %]/d_properties/[% list %]/[% s.escaped_doc %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]properties[%END%]"><i class="fa fa-cog fa-lg"></i></a>
 	    [% END %]
-	  </td>	 
+ 
 	[% ELSE %]
-	  <td>&nbsp; </td>
+
 	[% END %]
 
       [% IF is_editor %]
-       <td>&nbsp; </td>
+
           [% END %]
+          </td>
 	[% END %]
       </tr>
       [% END %] 
@@ -241,62 +226,57 @@
 	[% END %]
 
 	 
-	[% IF expert_page %] 
-	[% IF f.edit %]
-	<td class="review_cels">
-	    [% IF escaped_path %]
-	      <a href="[% path_cgi %]/d_editfile/[% list %]/[% escaped_path %]/[% f.escaped_doc %]">[%|loc%]edit[%END%]</a>
-	    [% ELSE %]
-  	      <a href="[% path_cgi %]/d_editfile/[% list %]/[% f.escaped_doc %]">[%|loc%]edit[%END%]</a>
-	    [% END %]	  
-	</td>
-	<td class="review_cels">
-	    [% IF escaped_path %]
-              <a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% f.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% f.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,f.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb)?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a>
-	    [% ELSE %]
-              <a href="[% path_cgi %]/d_delete/[% list %]/[% f.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% f.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,f.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb)?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a>
-	    [% END %]
-	</td>
-	[% ELSE %]
-	  <td>&nbsp; </td> <td>&nbsp; </td>
-	[% END %]
-		 
-	[% IF f.control %]
-	  <td class="review_cels">
-	    [% IF escaped_path %]
-	      <a href="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]/[% f.escaped_doc %]">[%|loc%]access[%END%]</a>
-	    [% ELSE %]
-	      <a href="[% path_cgi %]/d_control/[% list %]/[% f.escaped_doc %]">[%|loc%]access[%END%]</a>
-	    [% END %]
-	    </td>
-	  [% ELSE %]
-	  <td>&nbsp; </td>
-	  [% END %]
-        
-	  [% IF f.edit %]
-	    <td class="review_cels">
-	    [% IF escaped_path %]
-	      <a href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]/[% f.escaped_doc %]">[%|loc%]properties[%END%]</a>
-	    [% ELSE %]	    
-	      <a href="[% path_cgi %]/d_properties/[% list %]/[% f.escaped_doc %]">[%|loc%]properties[%END%]</a>
-	    [% END %]
-	  </td>
-	[% ELSE %]
-	<td>&nbsp; </td>
-	[% END %]
-
+	[% IF expert_page %]
+	<td class="review_cels text-right">
         [% IF is_editor %]
           [% IF f.moderate %]
 	  [% IF expert_page %]
-          <td class="review_cels">
-          <a href="[% path_cgi %]/modindex/[% list %]"> [%|loc%]moderate[%END%]</a>
-          </td>
+          <a href="[% path_cgi %]/modindex/[% list %]"  class="tip-left color_10" data-tooltip aria-haspopup="true" title="[%|loc%]moderate[%END%]"> <i class="fa fa-hand-paper-o fa-lg"></i></a>&nbsp;
 	  [% END %]
           [% ELSE %]
-          <td>&nbsp; </td>
+
           [%END%]
         [%END%]
 
+	[% IF f.edit %]
+	    [% IF escaped_path %]
+	      <a href="[% path_cgi %]/d_editfile/[% list %]/[% escaped_path %]/[% f.escaped_doc %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]edit[%END%]"><i class="fa fa-pencil fa-lg"></i></a>
+	    [% ELSE %]
+  	      <a href="[% path_cgi %]/d_editfile/[% list %]/[% f.escaped_doc %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]edit[%END%]"><i class="fa fa-pencil fa-lg"></i></a>
+	    [% END %]	  
+
+	    [% IF escaped_path %]
+              &nbsp;<a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% f.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% f.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,f.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb)?[%END%][%END%]'); return false;"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]delete[%END%]"><i class="fa fa-trash fa-lg"></i></a>
+	    [% ELSE %]
+              &nbsp;<a href="[% path_cgi %]/d_delete/[% list %]/[% f.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% f.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,f.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb)?[%END%][%END%]'); return false;"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]delete[%END%]"><i class="fa fa-trash fa-lg"></i></a>
+	    [% END %]
+
+	[% ELSE %]
+
+	[% END %]
+		 
+	[% IF f.control %]
+	    [% IF escaped_path %]
+	      &nbsp;<a href="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]/[% f.escaped_doc %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]access[%END%]"><i class="fa fa-lock fa-lg"></i></a>
+	    [% ELSE %]
+	      &nbsp;<a href="[% path_cgi %]/d_control/[% list %]/[% f.escaped_doc %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]access[%END%]"><i class="fa fa-lock fa-lg"></i></a>
+	    [% END %]
+
+	  [% ELSE %]
+
+	  [% END %]
+        
+	  [% IF f.edit %]
+	    [% IF escaped_path %]
+	      &nbsp;<a href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]/[% f.escaped_doc %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]properties[%END%]"><i class="fa fa-cog fa-lg"></i></a>
+	    [% ELSE %]	    
+	      &nbsp;<a href="[% path_cgi %]/d_properties/[% list %]/[% f.escaped_doc %]"  class="tip-left" data-tooltip aria-haspopup="true" title="[%|loc%]properties[%END%]"><i class="fa fa-cog fa-lg"></i></a>
+	    [% END %]
+
+	[% ELSE %]
+
+	[% END %]
+        </td>
         [% END %]
 	</tr>
       [% END %] 
