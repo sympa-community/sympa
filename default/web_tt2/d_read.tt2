@@ -47,7 +47,7 @@
   [% END %]   
 
   [% IF empty %]
-    <p class="small-8 small-centered columns alert-box warning text-center">[%|loc%]Empty folder[%END%]</p>
+    <p class="small-8 small-centered columns alert-box info text-center">[%|loc%]Empty folder[%END%]</p>
   [% ELSE %]
   <table  class="responsive listOfItems">
   <caption>[%|loc%]Listing of folder[%END%] [% visible_path %]</caption>
@@ -231,7 +231,7 @@
         [% IF is_editor %]
           [% IF f.moderate %]
 	  [% IF expert_page %]
-          <a href="[% path_cgi %]/modindex/[% list %]"  class="tip-left color_10" data-tooltip aria-haspopup="true" title="[%|loc%]moderate[%END%]"> <i class="fa fa-hand-paper-o fa-lg"></i></a>&nbsp;
+          <a href="[% path_cgi %]/modindex/[% list %]"  class="tip-left color_10" data-tooltip aria-haspopup="true" title="[%|loc%]moderate[%END%]"> <i class="fa fa-shield fa-lg"></i></a>&nbsp;
 	  [% END %]
           [% ELSE %]
 
