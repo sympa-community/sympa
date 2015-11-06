@@ -58,11 +58,11 @@
                 </li>
                 <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]List Options Menu[%END%]</span></a></li>
             </ul>
-        <section class="top-bar-section  hide-for-medium-up">
+        <menu class="top-bar-section  hide-for-medium-up">
           <ul class="right">
             [% PROCESS list_menu.tt2 %]
             </ul>
-        </section>
+        </menu>
     </nav>
   [% END %]
 [% ELSE %]
@@ -77,7 +77,7 @@
                 </li>
                 <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]General Menu[%END%]</span></a></li>
             </ul>
-        <section class="top-bar-section  hide-for-medium-up">
+        <menu class="top-bar-section  hide-for-medium-up">
           <ul class="right">
         [% IF user.email %]
             [% PROCESS login_menu.tt2 %]
@@ -89,7 +89,7 @@
         [% END %]
             [% PROCESS 'sympa_menu.tt2' %]
             </ul>
-        </section>
+        </menu>
   </nav>
 [% END %]
 <!-- end aside_menu.tt2 -->
