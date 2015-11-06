@@ -8,28 +8,17 @@
   <li class="menuLinks"><span class="bg_color_error">[%|loc%]Erroneous configuration[%END%]</span></li>
 [% END %]
 
-<li class="menuLinks">
-  <span>[%|loc%]Subscribers:[%END%] [% total %]
-  [% IF may_review %]
-    <span>
-      <a href="[% path_cgi %]/review/[% list %]">
-      <span class="fa-stack fa-1x">
-		<i class="fa fa-square fa-lg fa-stack-1x"></i>
-		<i class="fa fa-eye fa-stack-1x fa-inverse"></i>
-	  </span>
-      </a>
-    </span>
-  [% END %]
-
-  [% IF is_priv %]
-    <span>
-      &nbsp;&nbsp;(<a href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Error rate:[%END%]</a> [% bounce_rate %]% )
-    </span>
-   </span>
-  [% END %]
+[% IF may_review %]
+<li>
+    <a href="[% path_cgi %]/review/[% list %]">[%|loc%]Subscribers:[%END%] [% total %]</a>
+</li> 
+[% END %]
+[% IF is_priv %]
+<li>
+    <a href="[% path_cgi %]/reviewbouncing/[% list %]">([%|loc%]Error rate:[%END%] [% bounce_rate %]%)</a> 
 </li>
-
-<li class="menuLinks">
+[% END %]
+<li>
   <span>[%|loc%]Owners:[%END%]
     <span>
     [% SET concealed = 0 ~%]
@@ -60,7 +49,7 @@
   </span>
 </li>
 
-<li class="menuLinks">
+<li>
   <span>[%|loc%]Moderators:[%END%]
     <span>
     [% IF editor %]
@@ -96,12 +85,12 @@
 </li>
 
 [% IF list_as_x509_cert %]
-  <li class="menuLinks">
+  <li>
     <a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a>
   </li>
 [% END %]
 
-<li class="menuLinks">
+<li>
   [% IF protection_type == 'javascript' %]
     [% hidden_head %]<a href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]</a>[% hidden_end %]
   [% ELSE %]

@@ -593,7 +593,6 @@ aside {
     font-size: 0.9em;
     word-wrap: break-word;
 }
-
 aside li {
     border: none;
     line-height: 1.7em;
@@ -635,7 +634,7 @@ aside menu.connect ul li.has-dropdown ul li input{
 aside menu li.divider, aside menu [role="separator"] {
     display:block;
     margin: 0.5rem 0!important;
-    border-bottom: 1px solid #4E4E4E;
+    border-bottom: 1px solid [% color_9 %];
 }
 aside menu li.divider:before, aside menu [role="separator"]:before {
 
@@ -2247,7 +2246,15 @@ span.fa-stack i.fa-plus-circle {
       display: none;
     }
 }
-
+@media only screen and (max-width: 768px){
+    table caption {
+    display: none;
+    }
+    aside menu ul li ul {
+    margin-left: 0;
+    padding-left: 0;
+    }
+}
 @media only screen and (max-width: 1025px){
     .top-bar .title-area img {
       height: 45px;
