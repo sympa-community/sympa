@@ -161,9 +161,11 @@ if ($main::options{'keepcopy'}) {
     }
 }
 
-my $spindle =
-    Sympa::Spindle::ProcessAutomatic->new(
-    keepcopy => $main::options{keepcopy});
+my $spindle = Sympa::Spindle::ProcessAutomatic->new(
+    keepcopy  => $main::options{keepcopy},
+    log_level => $main::options{log_level},
+    log_smtp  => $main::options{mail}
+);
 
 # Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -185,9 +187,11 @@ while (not $spindle->{finish} or $spindle->{finish} ne 'term') {
 
         $log->syslog('notice', "Reloading sympa/automatic daemon");
         _load();
-        $spindle =
-            Sympa::Spindle::ProcessAutomatic->new(
-            keepcopy => $main::options{keepcopy});
+        $spindle = Sympa::Spindle::ProcessAutomatic->new(
+            keepcopy  => $main::options{keepcopy},
+            log_level => $main::options{log_level},
+            log_smtp  => $main::options{mail}
+        );
         next;
     } elsif ($spindle->{finish}) {
         last;

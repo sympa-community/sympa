@@ -95,22 +95,6 @@ sub _twist {
 
     my $status;
 
-    unless (defined $message) {
-        $log->syslog('err', 'Unable to create Sympa::Message object');
-        $log->db_log(
-            #'robot'        => $robot,
-            #'list'         => $listname,
-            'action'       => 'process_message',
-            'parameters'   => '',
-            'target_email' => "",
-            'msg_id'       => '',
-            'status'       => 'error',
-            'error_type'   => 'unable_create_message',
-            'user_email'   => ''
-        );
-        return undef;
-    }
-
     unless (defined $message->{'message_id'}
         and length $message->{'message_id'}) {
         $log->syslog('err', 'Message %s has no message ID', $message);
@@ -200,16 +184,14 @@ sub _twist {
     # *** Now message content may be altered. ***
 
     # Enable SMTP logging if required.
-    Sympa::Mailer->instance->{log_smtp} = $main::options{'mail'}
+    Sympa::Mailer->instance->{log_smtp} = $self->{log_smtp}
         || Sympa::Tools::Data::smart_eq(
         Conf::get_robot_conf($robot, 'log_smtp'), 'on');
     # setting log_level using conf unless it is set by calling option
-    unless (defined $main::options{'log_level'}) {
-        $log->{level} = Conf::get_robot_conf($robot, 'log_level');
-        $log->syslog('debug',
-            'Setting log level with %s configuration (or sympa.conf): %d',
-            $robot, Conf::get_robot_conf($robot, 'log_level'));
-    }
+    $log->{level} =
+        (defined $self->{log_level})
+        ? $self->{log_level}
+        : Conf::get_robot_conf($robot, 'log_level');
 
     ## Strip of the initial X-Sympa-To and X-Sympa-Checksum internal headers
     delete $message->{'rcpt'};
@@ -485,12 +467,29 @@ See also L<Sympa::Spindle/"Public methods">.
 
 =over
 
-=item new ( [ keepcopy =E<gt> $directory ] )
+=item new ( [ keepcopy =E<gt> $directory ],
+[ log_level =E<gt> $level ],
+[ log_smtp =E<gt> 0|1 ] )
 
 =item spin ( )
 
-If C<keepcopy> option is set, spin() keeps copy of successfully processed
-messages in $directory.
+new() may take following options:
+
+=over
+
+=item keepcopy =E<gt> $directory
+
+spin() keeps copy of successfully processed messages in $directory.
+
+=item log_level =E<gt> $level
+
+Overwrites log_level parameter in configuration.
+
+=item log_smtp =E<gt> 0|1
+
+Overwrites log_smtp parameter in configuration.
+
+=back
 
 =back
 
