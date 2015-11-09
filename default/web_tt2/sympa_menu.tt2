@@ -1,26 +1,27 @@
         [% IF not top_menu %]
-        <li><label><i class="fa fa-bars"></i> [%|loc%]Sympa menu[%END%]</label></li>
+        <li class="menu_title"><label><i class="fa fa-bars"></i> [%|loc%]Sympa menu[%END%]</label></li>
         [% END %]
 	[% IF action == 'home' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		<li><a class="[% class %]" href="[% path_cgi %]/home"><i class="fi-home"></i>  [%|loc%]Home[%END%]</a></li>
+		<li class="[% class %]"><a  href="[% path_cgi %]/home"><i class="fi-home"></i>  [%|loc%]Home[%END%]</a></li>
 		
 	[% IF may_create_list %]
 		[% IF action == 'create_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		<li><a class="[% class %]" href="[% path_cgi %]/create_list_request" onclick="show('loading'); hide('content-inner');"><i class="fa fa-plus"></i> [%|loc%]Request a List[%END%]</a></li>
+		<li class="[% class %]"><a  href="[% path_cgi %]/create_list_request" onclick="show('loading'); hide('content-inner');"><i class="fa fa-plus"></i> [%|loc%]Request a List[%END%]</a></li>
 	[% END %]
 		
 	[% IF is_listmaster %]
-		[% IF action == 'serveradmin' or action == 'skinsedit' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' or action == 'edit_config' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
-		<li><a  class="[% class %]" href="[% path_cgi %]/serveradmin" ><i class="fa fa-wrench"></i> [%|loc%]Listmaster Admin[%END%]</a></li>
+		[% IF action == 'serveradmin' or action == 'skinsedit' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' or action == 'edit_config' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+		<li class="[% class %]"><a  href="[% path_cgi %]/serveradmin" ><i class="fa fa-wrench"></i> [%|loc%]Listmaster Admin[%END%]</a></li>
 	[% END %]
 		
 		[% IF action == 'lists' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		<li><a class="[% class %]" href="[% path_cgi %]/lists" onclick="show('loading'); hide('content-inner');"><i class="fa fa-list"></i> [%|loc%]Index of Lists[%END%]</a></li>
-		
-		<li><a href="[% path_cgi %]/search_list_request"><i class="fa fa-search"></i> [%|loc%]Search for List(s)[%END%]</a></li>
+		<li class="[% class %]"><a  href="[% path_cgi %]/lists" onclick="show('loading'); hide('content-inner');"><i class="fa fa-list"></i> [%|loc%]Index of Lists[%END%]</a></li>
+
+		[% IF action == 'search_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+		<li class="[% class %]"><a href="[% path_cgi %]/search_list_request"><i class="fa fa-search"></i> [%|loc%]Search for List(s)[%END%]</a></li>
 		
 		[% IF action == 'help' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		<li><a class="[% class %]" href="[% path_cgi %]/help" title="[%|loc%]Help[%END%]"><i class="fa fa-question"></i> [%|loc%]Help[%END%]</a></li>
+		<li class="[% class %]"><a  href="[% path_cgi %]/help" title="[%|loc%]Help[%END%]"><i class="fa fa-question"></i> [%|loc%]Help[%END%]</a></li>
 		
 	[% IF conf.main_menu_custom_button_1_title %]
 		<li><a class="MainMenuLinks" [% IF conf.main_menu_custom_button_1_target %] target ="[% conf.main_menu_custom_button_1_target %]"[% END %] href="[% conf.main_menu_custom_button_1_url %]">[% conf.main_menu_custom_button_1_title %]</a></li>
@@ -37,6 +38,6 @@
 [% FOREACH alf IN conf.automatic_list_families.keys %]
 	[% IF session.is_family_owner.$alf %]
 		[% IF action == 'automatic_lists_request' && family.name == conf.automatic_list_families.$alf.name %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
-		<li><a class="[% class %]" href="[% path_cgi %]/automatic_lists_request/[% conf.automatic_list_families.$alf.name %]" ><i class="fa fa-list-alt"></i> [% conf.automatic_list_families.$alf.display %]</a></li>
+		<li class="[% class %]"><a  href="[% path_cgi %]/automatic_lists_request/[% conf.automatic_list_families.$alf.name %]" ><i class="fa fa-list-alt"></i> [% conf.automatic_list_families.$alf.display %]</a></li>
 	[% END %]
 [% END %]
