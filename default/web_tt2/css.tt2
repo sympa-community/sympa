@@ -695,9 +695,10 @@ aside menu ul li.menu_title label {
     padding-top: 0.3rem;
     margin-bottom: 0.2rem;
     color:[% color_7 %];
+    cursor: default
 }
-aside menu ul li.menu_title{
-    background-color:[% color_6 %];
+aside menu ul li.menu_title, aside menu ul li.menu_title:hover{
+    background-color:[% color_6 %]!important;
 }
 
 aside menu ul li.active, aside menu ul li ul li.active{
