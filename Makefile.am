@@ -36,6 +36,7 @@ check_SCRIPTS = \
 	t/pod-syntax.t \
 	t/tools_data.t \
 	t/tools_file.t \
+	t/Tools_Password.t \
 	t/Tools_SMIME.t \
 	t/Tools_Text.t \
 	t/tools_time.t
