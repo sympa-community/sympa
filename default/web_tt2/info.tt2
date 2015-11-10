@@ -12,17 +12,17 @@
 
     [% IF is_owner || is_editor %]
       [% IF mod_message > 0 %]
-        <div id="noticeMsg">
+        <p class="small-8 small-centered columns alert-box info text-center">
           [%|loc(mod_message)%]There are %1 message(s) awaiting moderation.[%END%] <a href="[% path_cgi %]/modindex/[% list %]">[%|loc%](Review)[%END%]</a>
-        </div>
+        </p>
       [% END %]
     [% END %]
     
     [% IF is_owner %]
       [% IF mod_subscription > 0 %]
-        <div id="noticeMsg">
+        <p class="small-8 small-centered columns alert-box info text-center">
           [%|loc(mod_subscription)%]There are %1 subscription(s) awaiting moderation.[%END%] <a href="[% path_cgi %]/subindex/[% list %]">[%|loc%](Review)[%END%]
-        </div>
+        </p>
       [% END %]
     [% END %]
 
