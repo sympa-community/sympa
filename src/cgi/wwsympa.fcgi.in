@@ -6093,8 +6093,10 @@ sub do_subscribe {
                 $u->{'gecos'}    = $param->{'user'}{'gecos'} || $in{'gecos'};
                 $u->{'date'}     = $u->{'update_date'} = time;
                 $u->{'password'} = $param->{'user'}{'password'};
-                if (my $reason = tools::password_validation($u->{'password'}))
-                {
+                if (my $reason = Sympa::Tools::Password::password_validation(
+                        $u->{'password'}
+                    )
+                    ) {
                     Sympa::Report::reject_report_web('user',
                         'passwd_validation', {'reason' => $reason},
                         $param->{'action'});
@@ -6738,7 +6740,8 @@ sub do_setpasswd {
         return undef;
     }
 
-    if (my $reason = tools::password_validation($in{'newpasswd1'})) {
+    if (my $reason =
+        Sympa::Tools::Password::password_validation($in{'newpasswd1'})) {
         Sympa::Report::reject_report_web('user', 'passwd_validation',
             {'reason' => $reason},
             $param->{'action'});
@@ -8067,7 +8070,8 @@ sub do_add {
         $u->{'password'} = $u2->{'password'}
             || Sympa::Tools::Password::tmp_passwd($email);
 
-        if (my $reason = tools::password_validation($u->{'password'})) {
+        if (my $reason =
+            Sympa::Tools::Password::password_validation($u->{'password'})) {
             Sympa::Report::reject_report_web('user', 'passwd_validation',
                 {'reason' => $reason},
                 $param->{'action'});

@@ -662,70 +662,11 @@ sub addrencode {
 #DEPRECATED: Use Sympa::Message::get_decoded_header().
 #sub decode_header($msg, $tag, $sep=undef);
 
-BEGIN { eval 'use Data::Password'; }
+# Moved to @Sympa::Tools::Password::validation_messages.
+#my @validation_messages;
 
-my @validation_messages = (
-    {gettext_id => 'Not between %d and %d characters'},
-    {gettext_id => 'Not %d characters or greater'},
-    {gettext_id => 'Not less than or equal to %d characters'},
-    {gettext_id => 'contains bad characters'},
-    {gettext_id => 'contains less than %d character groups'},
-    {gettext_id => 'contains over %d leading characters in sequence'},
-    {gettext_id => "contains the dictionary word '%s'"},
-);
-
-sub password_validation {
-    my ($password) = @_;
-
-    my $pv = $Conf::Conf{'password_validation'};
-    return undef
-        unless $pv
-            and defined $password
-            and $Data::Password::VERSION;
-
-    local (
-        $Data::Password::DICTIONARY, $Data::Password::FOLLOWING,
-        $Data::Password::GROUPS,     $Data::Password::MINLEN,
-        $Data::Password::MAXLEN
-    );
-    local @Data::Password::DICTIONARIES = @Data::Password::DICTIONARIES;
-
-    my @techniques = split(/\s*,\s*/, $pv);
-    foreach my $technique (@techniques) {
-        my ($key, $value) = $technique =~ /([^=]+)=(.*)/;
-        $key = uc $key;
-
-        if ($key eq 'DICTIONARY') {
-            $Data::Password::DICTIONARY = $value;
-        } elsif ($key eq 'FOLLOWING') {
-            $Data::Password::FOLLOWING = $value;
-        } elsif ($key eq 'GROUPS') {
-            $Data::Password::GROUPS = $value;
-        } elsif ($key eq 'MINLEN') {
-            $Data::Password::MINLEN = $value;
-        } elsif ($key eq 'MAXLEN') {
-            $Data::Password::MAXLEN = $value;
-        } elsif ($key eq 'DICTIONARIES') {
-            # TODO: How do we handle a list of dictionaries?
-            push @Data::Password::DICTIONARIES, $value;
-        }
-    }
-    my $output = Data::Password::IsBadPassword($password);
-    return undef unless $output;
-
-    # Translate result if possible.
-    my $language = Sympa::Language->instance;
-    foreach my $item (@validation_messages) {
-        my $format = $item->{'gettext_id'};
-        my $regexp = quotemeta $format;
-        $regexp =~ s/\\\%[sd]/(.+)/g;
-
-        my ($match, @args) = ($output =~ /($regexp)/i);
-        next unless $match;
-        return $language->gettext_sprintf($format, @args);
-    }
-    return $output;
-}
+# Moved to Sympa::Tools::Password::password_validation().
+#sub password_validation;
 
 =over
 

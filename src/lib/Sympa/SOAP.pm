@@ -882,7 +882,9 @@ sub add {
         # If Password validation is enabled check the submitted password
         # against the site configured constraints
         if ($u2->{'password'}) {
-            if (my $result = tools::password_validation($u->{'password'})) {
+            if (my $result =
+                Sympa::Tools::Password::password_validation($u->{'password'}))
+            {
                 $log->syslog('info', 'add %s@%s %s from %s : scenario error',
                     $listname, $robot, $email, $sender);
                 die SOAP::Fault->faultcode('Server')
