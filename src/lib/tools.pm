@@ -662,7 +662,7 @@ sub addrencode {
 #DEPRECATED: Use Sympa::Message::get_decoded_header().
 #sub decode_header($msg, $tag, $sep=undef);
 
-BEGIN { 'use Data::Password'; }
+BEGIN { eval 'use Data::Password'; }
 
 my @validation_messages = (
     {gettext_id => 'Not between %d and %d characters'},
