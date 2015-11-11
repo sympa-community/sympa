@@ -192,6 +192,9 @@ while (!$end) {
     # setting log_level using conf unless it is set by calling option
     $log->{level} = $default_log_level;
 
+    # Free zombie sendmail process.
+    Sympa::Mailer->instance->reaper;
+
     Sympa::List::init_list_cache();
     # Process grouped notifications
     Sympa::Alarm->instance->flush;
@@ -579,11 +582,13 @@ while (!$end) {
         ## Sleep for a while if bulk_mailer DB table is empty
         sleep $Conf::Conf{'bulk_sleep'};
     }
-    $mailer->reaper();
 }
 
 # Purge grouped notifications
 Sympa::Alarm->instance->flush(purge => 1);
+
+# Free zombie sendmail process.
+Sympa::Mailer->instance->reaper;
 
 $log->syslog('notice', 'Bulk exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid('bulk', $PID, $options);
