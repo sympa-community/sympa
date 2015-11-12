@@ -1,8 +1,5 @@
 <!-- $Id$ -->
-<div class="block">
-
 <h2>[%|loc%]Casual administration[%END%]</h2>
-
 <ul>
 [% IF is_listmaster || is_owner %]
 	  <li><strong><a href="[% path_cgi %]/edit_list_request/[% list %]">[%|loc%]Edit list config:[%END%]</a></strong>  [%|loc%]Use it with care: it allows you to modify some of the list parameters. The list of the parameters you can modify depends on your privileges.[%END%]</li>
@@ -30,7 +27,6 @@
 <h2>[%|loc%]Drastic operations[%END%]</h2>
 
 [% IF is_privileged_owner %]        
-<div>
 <form name="manage_list_status" action="[% path_cgi %]" method="post">
 <fieldset>
   [% IF list_conf.status == 'closed' %]
@@ -42,8 +38,6 @@
   [% END %]
 </fieldset>
 </form>
-</div><br/>
-<div>
 <form name="manage_list_name" action="[% path_cgi %]" method="post">
 <fieldset>
   [% IF may_create_list %]
@@ -52,11 +46,9 @@
   [% END %]
 </fieldset>
 </form>
-</div><br/>
 [% END %]
 
 [% IF is_listmaster || is_owner %]
-<div>
 <form name="manage_shared_status" action="[% path_cgi %]" method="post">
 <fieldset>
 [% IF shared == 'none' %]
@@ -74,9 +66,6 @@
 [% END %]
 </fieldset>
 </form>
-</div><br/>
 [% END %]
 [% END %]
-
-</div>
 <!-- end admin.tt2 -->
