@@ -18,7 +18,7 @@
     <a href="[% path_cgi %]/reviewbouncing/[% list %]">([%|loc%]Error rate:[%END%] [% bounce_rate %]%)</a> 
 </li>
 [% END %]
-<li>
+<li class="nolink">
   <span>[%|loc%]Owners:[%END%]
     <span>
     [% SET concealed = 0 ~%]
@@ -49,7 +49,7 @@
   </span>
 </li>
 
-<li>
+<li class="nolink">
   <span>[%|loc%]Moderators:[%END%]
     <span>
     [% IF editor %]

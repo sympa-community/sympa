@@ -4,7 +4,7 @@
 [%~ SET owner_item = owner.item(user.email) %]
 [%~ SET editor_item = editor.item(user.email) %]
 [% IF is_listmaster || owner_item || is_editor || is_subscriber %]
-  <li><span>
+  <li class="nolink role"><span>
   [%# Show picture and higher privilege of user on this list. %]
   [%~ IF is_subscriber && pictures_display && pictures_url ~%]
     <img class="Pictures" src="[% pictures_url %]"

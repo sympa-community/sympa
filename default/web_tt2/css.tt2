@@ -695,11 +695,11 @@ aside menu ul li label{
     font-size:110%;
 }
 aside menu ul li.menu_title label {
-    padding-bottom: 0.3rem;
-    padding-top: 0.3rem;
+    padding-bottom: 0.1rem;
+    padding-top: 0.1rem;
     margin-bottom: 0.2rem;
     color:[% color_7 %];
-    cursor: default
+    cursor: default;
 }
 aside menu ul li.menu_title, aside menu ul li.menu_title:hover{
     background-color:[% color_6 %]!important;
@@ -710,6 +710,10 @@ aside menu ul li.active, aside menu ul li ul li.active{
 }
 aside menu ul li.active a{
     color:[% color_7 %];
+}
+aside ul li.role{
+    line-height:1rem;
+    margin-bottom:0.5rem;
 }
 
 dd {
@@ -2002,6 +2006,10 @@ span.bottom_page, p.bottom_page{
     padding-top: 0;
     padding-bottom: 0;
     width:15rem;
+}
+
+.top-bar .top-bar-section ul.right li.has-dropdown ul.dropdown li.role{
+    line-height:1rem;
 }
 
 .top-bar .title-area {
