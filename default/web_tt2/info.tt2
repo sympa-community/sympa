@@ -21,7 +21,7 @@
     [% IF is_owner %]
       [% IF mod_subscription > 0 %]
         <p class="small-8 small-centered columns alert-box info text-center">
-          [%|loc(mod_subscription)%]There are %1 subscription(s) awaiting moderation.[%END%] <a href="[% path_cgi %]/subindex/[% list %]">[%|loc%](Review)[%END%]
+          [%|loc(mod_subscription)%]There are %1 subscription(s) awaiting moderation.[%END%] <a href="[% path_cgi %]/subindex/[% list %]">[%|loc%](Review)[%END%]</a>
         </p>
       [% END %]
     [% END %]
