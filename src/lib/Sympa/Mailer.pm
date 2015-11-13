@@ -48,7 +48,6 @@ sub _new_instance {
 
     bless {
         _pids      => {},
-        _opensmtp  => 0,
         redundancy => 1,        # Process redundancy (used by bulk.pl).
         log_smtp   => undef,    # SMTP logging is enabled or not.
     } => $class;
@@ -67,14 +66,14 @@ sub _new_instance {
 #DEPRECATED: This is no longer used.
 
 sub reaper {
-    my $self  = shift;
-    my $block = shift;
+    my $self    = shift;
+    my %options = @_;
+
+    my $blocking = $options{blocking};
 
     my $pid;
-
-    $block = 1 unless defined $block;
-    while (($pid = waitpid(-1, $block ? POSIX::WNOHANG() : 0)) > 0) {
-        $block = 1;
+    while (0 < ($pid = waitpid(-1, $blocking ? 0 : POSIX::WNOHANG()))) {
+        $blocking = 0;
         unless (exists $self->{_pids}->{$pid}) {
             $log->syslog('debug2', 'Reaper waited %s, unknown process to me',
                 $pid);
@@ -97,14 +96,13 @@ sub reaper {
                 $CHILD_ERROR >> 8
             );
         }
-        $self->{_opensmtp}--;
         delete $self->{_pids}->{$pid};
     }
     $log->syslog(
-        'debug2',
+        'debug3',
         'Reaper unwaited PIDs: %s Open = %s',
         join(' ', sort { $a <=> $b } keys %{$self->{_pids}}),
-        $self->{_opensmtp}
+        scalar keys %{$self->{_pids}}
     );
     return $pid;
 }
@@ -178,11 +176,15 @@ sub store {
 
         # Check how many open smtp's we have, if too many wait for a few
         # to terminate and then do our job.
-        $log->syslog('debug3', 'Open = %s', $self->{_opensmtp});
-        while ($self->{_opensmtp} > $maxsmtp) {
-            $log->syslog('debug3', 'Too many open SMTP (%s), calling reaper',
-                $self->{_opensmtp});
-            last if $self->reaper(0) == -1;    # Blocking call to the reaper.
+        $log->syslog('debug3', 'Open = %s', scalar keys %{$self->{_pids}});
+        while ($maxsmtp < scalar keys %{$self->{_pids}}) {
+            $log->syslog(
+                'debug3',
+                'Too many open SMTP (%s), calling reaper',
+                scalar keys %{$self->{_pids}}
+            );
+            # Blockng call to the reaper.
+            last if $self->reaper(blocking => 1) < 0;
         }
 
         my ($pipein, $pipeout, $pid);
@@ -223,9 +225,8 @@ sub store {
                     $pid);
                 return undef;
             }
-            $self->{_opensmtp}++;
             select undef, undef, undef, 0.3
-                if $self->{_opensmtp} < $maxsmtp;
+                if scalar keys %{$self->{_pids}} < $maxsmtp;
         }
 
         # Output to handle.
@@ -324,7 +325,7 @@ Returns:
 
 A new L<Sympa::Mailer> instance, or I<undef> for failure.
 
-=item reaper ( [ $block ] )
+=item reaper ( [ blocking =E<gt> 1 ] )
 
 I<Instance method>.
 Non blocking function called by: main loop of sympa, task_manager, bounced
@@ -335,9 +336,9 @@ Parameter:
 
 =over
 
-=item $block
+=item blocking =E<gt> 1
 
-TBD
+Operation would block.
 
 =back
 
