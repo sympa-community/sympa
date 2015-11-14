@@ -31,6 +31,8 @@ use base qw(Class::Singleton);
 use English qw(-no_match_vars);
 use POSIX qw();
 
+use Sympa::Constants;
+use Sympa::LockedFile;
 use Sympa::Log;
 
 my $log = Sympa::Log->instance;
@@ -44,12 +46,13 @@ sub _new_instance {
 
 sub fork {
     my $self = shift;
+    my $tag = shift || [split /\//, $PROGRAM_NAME]->[-1];
 
     my $pid = CORE::fork();
     unless (defined $pid) {
         ;
     } elsif ($pid) {
-        $self->{children}->{$pid} = 1;
+        $self->{children}->{$pid} = $tag;
     } else {
         $self->{children} = {};
     }
@@ -61,9 +64,9 @@ sub reap_child {
     my $self    = shift;
     my %options = @_;
 
-    my $blocking = $options{blocking};
-
     my $pid;
+
+    my $blocking = $options{blocking};
     while (0 < ($pid = waitpid(-1, $blocking ? 0 : POSIX::WNOHANG()))) {
         $blocking = 0;
         unless (exists $self->{children}->{$pid}) {
@@ -74,15 +77,14 @@ sub reap_child {
         if ($CHILD_ERROR & 127) {
             $log->syslog(
                 'err',
-                'Child process %s for message <%s> was terminated by signal %d',
+                'Child process %s for <%s> was terminated by signal %d',
                 $pid,
                 $self->{children}->{$pid},
                 $CHILD_ERROR & 127
             );
         } elsif ($CHILD_ERROR) {
             $log->syslog(
-                'err',
-                'Child process %s for message <%s> exited with status %s',
+                'err', 'Child process %s for <%s> exited with status %s',
                 $pid,
                 $self->{children}->{$pid},
                 $CHILD_ERROR >> 8
@@ -105,7 +107,47 @@ sub reap_child {
         }
     }
 
+    if ($options{pidname}) {
+        my $pidname = $options{pidname};
+        foreach my $child_pid (_get_pids_in_pid_file($pidname)) {
+            next if $child_pid == $PID;
+
+            unless (exists $self->{children}->{$child_pid}) {
+                $log->syslog(
+                    'err',
+                    'The %s child exists in the PID file but is no longer running. Removing it and notifying listmaster',
+                    $child_pid
+                );
+                Sympa::Tools::Daemon::remove_pid($pidname, $child_pid,
+                    {multiple_process => 1});
+                Sympa::Tools::Daemon::send_crash_report(
+                    pid   => $child_pid,
+                    pname => [split /\//, $PROGRAM_NAME]->[-1]
+                );
+            }
+        }
+    }
+
     return $pid;
+}
+
+# Old name: Sympa::Tools::Daemon::get_pids_in_pid_file().
+sub _get_pids_in_pid_file {
+    my $name = shift;
+
+    my $piddir  = Sympa::Constants::PIDDIR;
+    my $pidfile = $piddir . '/' . $name . '.pid';
+
+    my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '<');
+    unless ($lock_fh) {
+        $log->syslog('err', 'Unable to open PID file %s: %m', $pidfile);
+        return;
+    }
+    my $l = <$lock_fh>;
+    my @pids = grep {/^[0-9]+$/} split(/\s+/, $l);
+    $lock_fh->close;
+
+    return @pids;
 }
 
 1;
@@ -143,13 +185,29 @@ Returns:
 
 A new L<Sympa::Process> instance, or I<undef> for failure.
 
-=item fork ( )
+=item fork ( [ $tag ] )
 
 I<Instance method>.
 Forks process.
 Note that this method should be used instead of fork() in Perl core.
 
-=item reap_child ( [ blocking =E<gt> 1 ], [ children =E<gt> \%children ] )
+Parameter:
+
+=over
+
+=item $tag
+
+A string to determine new child process.
+By default the name of calling process.
+
+=back
+
+Returns:
+
+See L<perlfunc/"fork">.
+
+=item reap_child ( [ blocking =E<gt> 1 ], [ children =E<gt> \%children ],
+pidname =E<gt> $name ] )
 
 I<Instance method>.
 Non blocking function called by: main loop of sympa, task_manager, bounced
@@ -166,7 +224,12 @@ Operation would block.
 
 =item children =E<gt> \%children
 
-Syncs local map of child PIDs.
+Syncs PIDs in local map %children.
+
+=item pidname =E<gt> $name
+
+Syncs child PIDs in PID file named $name.pid.
+If dead PID is found, notification will be send to listmaster.
 
 =back
 

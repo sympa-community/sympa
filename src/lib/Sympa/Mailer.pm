@@ -165,8 +165,8 @@ sub store {
             die sprintf 'Unable to create a SMTP channel: %s', $ERRNO;
             # No return
         }
-        $pid = _safefork();
-        $self->{_pids}->{$pid} = $message->get_id;
+        $pid = _safefork($message->get_id);
+        $self->{_pids}->{$pid} = 1;
 
         unless ($pid) {    # _safefork() would die if fork() had failed.
             # Child
@@ -248,9 +248,11 @@ sub store {
 # Old name: tools::safefork().
 # Note: Use store().
 sub _safefork {
+    my $tag = shift;
+
     my $err;
     for (my $i = 1; $i < 4; $i++) {
-        my $pid = $process->fork;
+        my $pid = $process->fork($tag);
         return $pid if defined $pid;
 
         $err = $ERRNO;
@@ -258,7 +260,8 @@ sub _safefork {
         #FIXME:should send a mail to the listmaster
         sleep(10 * $i);
     }
-    die sprintf 'Exiting because cannot create new process: %s', $err;
+    die sprintf 'Exiting because cannot create new process for <%s>: %s',
+        $tag, $err;
     # No return.
 }
 

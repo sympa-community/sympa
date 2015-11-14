@@ -42,11 +42,14 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message;
+use Sympa::Process;
 use tools;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
 use Sympa::Tracking;
+
+my $process = Sympa::Process->instance;
 
 my $date_of_last_activity = time();
 local $main::daemon_usage =
@@ -193,7 +196,7 @@ while (!$end) {
     $log->{level} = $default_log_level;
 
     # Free zombie sendmail process.
-    Sympa::Mailer->instance->reaper;
+    Sympa::Process->instance->reap_child;
 
     Sympa::List::init_list_cache();
     # Process grouped notifications
@@ -202,65 +205,26 @@ while (!$end) {
     my ($message, $handle);
 
     unless ($main::options{'foreground'}) {
-        ##
-        ## Create child bulks if too much packets are waiting to be sent in
-        ## the bulk_mailer table.
-        ## Only the main bulk process (DAEMON_MASTER) can create child
-        ## processes
-        ## Check if we need to run new child processes every
-        ## 'bulk_wait_to_fork' (sympa.conf parameter) seconds
-        if (   ($main::daemon_usage eq 'DAEMON_MASTER')
-            && (time() - $last_check_date > $timeout)) {
-            ## Clean up PID file (in case some child bulks would have died)
-            my @actual_children =
-                Sympa::Tools::Daemon::get_children_processes_list();
-            my @remaining_children;
-            my %dead_children = %created_children;
-            foreach my $apid (@actual_children) {
-                if (defined $dead_children{$apid}) {
-                    push @remaining_children, $apid;
-                    delete $dead_children{$apid};
-                }
-            }
-            my @pids_leftover = keys %dead_children;
-            if ($#pids_leftover > -1) {
-                my @dc;
-                $log->syslog('debug2',
-                    'Some childs of current process disappeared. Checking whether they shut down cleanly or not.'
-                );
-                my $pids_in_pfile =
-                    Sympa::Tools::Daemon::get_pids_in_pid_file('bulk');
-                foreach my $fpid (@{$pids_in_pfile}) {
-                    if (defined $dead_children{$fpid}) {
-                        $log->syslog(
-                            'err',
-                            'The %s child exists in the PID file but is no longer running. Removing it and notyfying listmaster',
-                            $fpid
-                        );
-                        my $pname = $0;
-                        $pname =~ s/.*\/(\w+)/$1/;
-                        Sympa::Tools::Daemon::send_crash_report(
-                            ('pid' => $fpid, 'pname' => $pname));
-                        Sympa::Tools::Daemon::remove_pid('bulk', $fpid,
-                            $options);
-                        delete $dead_children{$fpid};
-                        push @dc, $fpid;
-                    }
-                }
-            }
-            my $pids_in_pfile =
-                Sympa::Tools::Daemon::get_pids_in_pid_file('bulk');
-            unless (defined($pids_in_pfile)) {
-                Sympa::Tools::Daemon::write_pid('bulk', $PID, $options);
-                close STDERR;
-                Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
-                $pids_in_pfile = [$PID];
-            }
+        # Create child bulks if too much packets are waiting to be sent in
+        # the bulk_mailer table.
+        # Only the main bulk process (DAEMON_MASTER) can create child
+        # processes.
+        # Check if we need to run new child processes every
+        # 'bulk_wait_to_fork' (sympa.conf parameter) seconds.
+        if (    $main::daemon_usage eq 'DAEMON_MASTER'
+            and $timeout < time - $last_check_date) {
+            # Clean up PID file (in case some child bulks would have died)
+            $process->reap_child(
+                children => \%created_children,
+                pidname  => 'bulk'
+            );
+
             # Start new processes if there remain at least
             # 'bulk_fork_threshold' packets to send in the bulk spool.
-            if (my $r_packets = $bulk->too_much_remaining_packets()
-                and scalar(@remaining_children) <
-                $Conf::Conf{'bulk_max_count'}) {
+            my $spare_children =
+                $Conf::Conf{'bulk_max_count'} - scalar keys %created_children;
+            if (my $r_packets = $bulk->too_much_remaining_packets
+                and 0 < $spare_children) {
                 # Disconnect from database before fork to prevent DB handles
                 # to be shared by different processes.  Sharing database
                 # handles may crash bulk.pl.
@@ -271,14 +235,11 @@ while (!$end) {
                         'info',
                         'Important workload: %s packets to process. Creating %s child bulks to increase sending rate',
                         $r_packets,
-                        $Conf::Conf{'bulk_max_count'} -
-                            scalar(@remaining_children)
+                        $spare_children
                     );
-                    for my $process_count (
-                        1 .. $Conf::Conf{'bulk_max_count'} -
-                        scalar(@remaining_children)) {
+                    for my $process_count (1 .. $spare_children) {
                         $log->syslog('info', "Will fork: %s", $process_count);
-                        my $child_pid = fork;
+                        my $child_pid = $process->fork;
                         if ($child_pid) {
                             $log->syslog('info',
                                 'Starting bulk child daemon, PID %s',
@@ -588,7 +549,7 @@ while (!$end) {
 Sympa::Alarm->instance->flush(purge => 1);
 
 # Free zombie sendmail process.
-Sympa::Mailer->instance->reaper;
+Sympa::Process->instance->reap_child;
 
 $log->syslog('notice', 'Bulk exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid('bulk', $PID, $options);
