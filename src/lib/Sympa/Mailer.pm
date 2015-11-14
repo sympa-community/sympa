@@ -33,8 +33,10 @@ use POSIX qw();
 
 use Conf;
 use Sympa::Log;
+use Sympa::Process;
 
-my $log = Sympa::Log->instance;
+my $log     = Sympa::Log->instance;
+my $process = Sympa::Process->instance;
 
 my $max_arg;
 eval { $max_arg = POSIX::sysconf(POSIX::_SC_ARG_MAX()); };
@@ -65,46 +67,12 @@ sub _new_instance {
 #sub mail_forward($message, $from, $rcpt, $robot);
 #DEPRECATED: This is no longer used.
 
+# OBSOLETED.  Use Sympa::Process::reap_child().
 sub reaper {
     my $self    = shift;
     my %options = @_;
 
-    my $blocking = $options{blocking};
-
-    my $pid;
-    while (0 < ($pid = waitpid(-1, $blocking ? 0 : POSIX::WNOHANG()))) {
-        $blocking = 0;
-        unless (exists $self->{_pids}->{$pid}) {
-            $log->syslog('debug2', 'Reaper waited %s, unknown process to me',
-                $pid);
-            next;
-        }
-        if ($CHILD_ERROR & 127) {
-            $log->syslog(
-                'err',
-                'Child process %s for message <%s> was terminated by signal %d',
-                $pid,
-                $self->{_pids}->{$pid},
-                $CHILD_ERROR & 127
-            );
-        } elsif ($CHILD_ERROR) {
-            $log->syslog(
-                'err',
-                'Child process %s for message <%s> exited with status %s',
-                $pid,
-                $self->{_pids}->{$pid},
-                $CHILD_ERROR >> 8
-            );
-        }
-        delete $self->{_pids}->{$pid};
-    }
-    $log->syslog(
-        'debug3',
-        'Reaper unwaited PIDs: %s Open = %s',
-        join(' ', sort { $a <=> $b } keys %{$self->{_pids}}),
-        scalar keys %{$self->{_pids}}
-    );
-    return $pid;
+    return $process->reap_child(%options, children => $self->{_pids});
 }
 
 #DEPRECATED.
@@ -176,15 +144,20 @@ sub store {
 
         # Check how many open smtp's we have, if too many wait for a few
         # to terminate and then do our job.
+        $process->reap_child(children => $self->{_pids});
         $log->syslog('debug3', 'Open = %s', scalar keys %{$self->{_pids}});
         while ($maxsmtp < scalar keys %{$self->{_pids}}) {
             $log->syslog(
-                'debug3',
+                'info',
                 'Too many open SMTP (%s), calling reaper',
                 scalar keys %{$self->{_pids}}
             );
             # Blockng call to the reaper.
-            last if $self->reaper(blocking => 1) < 0;
+            last
+                if $process->reap_child(
+                blocking => 1,
+                children => $self->{_pids}
+                ) < 0;
         }
 
         my ($pipein, $pipeout, $pid);
@@ -277,7 +250,7 @@ sub store {
 sub _safefork {
     my $err;
     for (my $i = 1; $i < 4; $i++) {
-        my ($pid) = fork;
+        my $pid = $process->fork;
         return $pid if defined $pid;
 
         $err = $ERRNO;
@@ -301,11 +274,13 @@ Sympa::Mailer - Store messages to sendmail
 =head1 SYNOPSIS
 
   use Sympa::Mailer;
+  use Sympa::Process;
   my $mailer = Sympa::Mailer->instance;
+  my $process = Sympa::Process->instance;
 
   $mailer->store($message, ['user1@dom.ain', user2@other.dom.ain']);
 
-  $mailer->reaper;
+  $process->reap_child;
 
 =head1 DESCRIPTION
 
@@ -326,6 +301,9 @@ Returns:
 A new L<Sympa::Mailer> instance, or I<undef> for failure.
 
 =item reaper ( [ blocking =E<gt> 1 ] )
+
+OBSOLETED.
+Use L<Sympa::Process/"reap_child">.
 
 I<Instance method>.
 Non blocking function called by: main loop of sympa, task_manager, bounced

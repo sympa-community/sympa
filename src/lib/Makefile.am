@@ -66,6 +66,7 @@ nobase_modules_DATA = \
 	Sympa/Message/Plugin.pm \
 	Sympa/Message/Plugin/FixEncoding.pm \
 	Sympa/ModDef.pm \
+	Sympa/Process.pm \
 	Sympa/Regexps.pm \
 	Sympa/Report.pm \
 	Sympa/Request.pm \
