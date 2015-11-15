@@ -44,12 +44,12 @@ use Sympa::Mailer;
 use Sympa::Message;
 use Sympa::Process;
 use tools;
-use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
 use Sympa::Tracking;
 
 my $process = Sympa::Process->instance;
+$process->init(pidname => 'bulk');
 
 my $date_of_last_activity = time();
 local $main::daemon_usage =
@@ -140,15 +140,12 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     }
 }
 $log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
-## If process is running in foreground, don't write STDERR to a dedicated file
-my $options;
-$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-$options->{'multiple_process'} = 0;
 
-# Save the PID number
-Sympa::Tools::Daemon::write_pid('bulk', $PID, $options);
-unless ($options->{'stderr_to_tty'}) {
-    Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
+# Create and write the PID file.
+$process->write_pid(initial => 1);
+# If process is running in foreground, don't write STDERR to a dedicated file.
+unless ($main::options{foreground}) {
+    $process->direct_stderr_to_file;
 }
 ## Set the User ID & Group ID for the process
 $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
@@ -184,7 +181,6 @@ my $timeout         = $Conf::Conf{'bulk_wait_to_fork'};
 my $last_check_date = 0;
 my %created_children;
 
-$options->{'multiple_process'} = 1;
 $mailer->{redundancy} = $Conf::Conf{'bulk_max_count'} || 1;
 
 my $bulk = Sympa::Bulk->new;
@@ -214,10 +210,7 @@ while (!$end) {
         if (    $main::daemon_usage eq 'DAEMON_MASTER'
             and $timeout < time - $last_check_date) {
             # Clean up PID file (in case some child bulks would have died)
-            $process->reap_child(
-                children => \%created_children,
-                pidname  => 'bulk'
-            );
+            $process->reap_child(children => \%created_children, file => 1);
 
             # Start new processes if there remain at least
             # 'bulk_fork_threshold' packets to send in the bulk spool.
@@ -244,19 +237,17 @@ while (!$end) {
                             $log->syslog('info',
                                 'Starting bulk child daemon, PID %s',
                                 $child_pid);
-                            # Saves the pid number
-                            Sympa::Tools::Daemon::write_pid('bulk',
-                                $child_pid, $options);
+                            # Save the PID number.
+                            $process->write_pid(pid => $child_pid);
                             $created_children{$child_pid} = 1;
                             sleep 1;
                         } elsif (not defined $child_pid) {
                             $log->syslog('err', 'Cannot fork: %m');
                             last;
                         } else {
-                            ## We're in a child bulk process
+                            # We're in a child bulk process.
                             close STDERR;
-                            Sympa::Tools::Daemon::direct_stderr_to_file(
-                                ('pid' => $PID));
+                            $process->direct_stderr_to_file;
                             $date_of_last_activity = time();
                             $main::daemon_usage = 'DAEMON_SLAVE'; # child bulk
                             $log->openlog($Conf::Conf{'syslog'},
@@ -552,7 +543,7 @@ Sympa::Alarm->instance->flush(purge => 1);
 Sympa::Process->instance->reap_child;
 
 $log->syslog('notice', 'Bulk exited normally due to signal');
-Sympa::Tools::Daemon::remove_pid('bulk', $PID, $options);
+$process->remove_pid;
 
 exit(0);
 

@@ -95,7 +95,6 @@ nobase_modules_DATA = \
 	Sympa/Task.pm \
 	Sympa/Template.pm \
 	tools.pm \
-	Sympa/Tools/Daemon.pm \
 	Sympa/Tools/Data.pm \
 	Sympa/Tools/DKIM.pm \
 	Sympa/Tools/File.pm \

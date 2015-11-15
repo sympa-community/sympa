@@ -38,9 +38,12 @@ use Sympa::Crash;    # Show traceback.
 use Sympa::DatabaseManager;
 use Sympa::Log;
 use Sympa::Mailer;
+use Sympa::Process;
 use Sympa::Spindle::ProcessAutomatic;
-use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
+
+my $process = Sympa::Process->instance;
+$process->init(pidname => 'sympa_automatic');
 
 ## Init random engine
 srand(time());
@@ -101,17 +104,13 @@ unless ($main::options{'foreground'}) {
 
 }
 
-my $pidfile = 'sympa_automatic';
-
 $log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
-# If process is running in foreground, don't write STDERR to a
-# dedicated file
-my $options;
-$options->{'stderr_to_tty'} = 1 if $main::options{'foreground'};
-Sympa::Tools::Daemon::write_pid($pidfile, $PID, $options);
-unless ($options->{'stderr_to_tty'}) {
-    Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
+# Create and write the PID file.
+$process->write_pid(initial => 1);
+# If process is running in foreground, don't write STDERR to a dedicated file.
+unless ($main::options{foreground}) {
+    $process->direct_stderr_to_file;
 }
 
 # Set the User ID & Group ID for the process
@@ -205,10 +204,10 @@ while (not $spindle->{finish} or $spindle->{finish} ne 'term') {
 Sympa::Alarm->instance->flush(purge => 1);
 
 # Free zombie sendmail processes.
-Sympa::Mailer->instance->reaper;
+Sympa::Process->instance->reap_child;
 
 $log->syslog('notice', 'Sympa/automatic exited normally due to signal');
-Sympa::Tools::Daemon::remove_pid($pidfile, $PID);
+$process->remove_pid(final => 1);
 
 exit(0);
 

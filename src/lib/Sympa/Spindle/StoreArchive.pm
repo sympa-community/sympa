@@ -36,7 +36,7 @@ use Sympa::Archive;
 use Conf;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Mailer;
+use Sympa::Process;
 use Sympa::Tools::File;
 
 use base qw(Sympa::Spindle);
@@ -55,7 +55,7 @@ sub _init {
         Sympa::Alarm->instance->flush;
     } elsif ($state == 2) {
         # Free zombie sendmail process.
-        Sympa::Mailer->instance->reaper;
+        Sympa::Process->instance->reap_child;
     }
 
     1;

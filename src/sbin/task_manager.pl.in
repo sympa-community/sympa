@@ -41,18 +41,20 @@ use Sympa::Crash;    # Show traceback.
 use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Mailer;
 use Sympa::Message;
+use Sympa::Process;
 use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::Spool;
 use Sympa::Task;
 use tools;
-use Sympa::Tools::Daemon;
 use Sympa::Tools::File;
 use Sympa::Tools::Time;
 use Sympa::Tracking;
 use Sympa::User;
+
+my $process = Sympa::Process->instance;
+$process->init(pidname => 'task_manager');
 
 my %options;
 unless (
@@ -127,12 +129,11 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     }
 }
 
-## If process is running in foreground, don't write STDERR to a dedicated file
-my $options;
-$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-Sympa::Tools::Daemon::write_pid('task_manager', $PID, $options);
-unless ($options->{'stderr_to_tty'}) {
-    Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
+# Create and write the PID file.
+$process->write_pid(initial => 1);
+# If process is running in foreground, don't write STDERR to a dedicated file.
+unless ($main::options{foreground}) {
+    $process->direct_stderr_to_file;
 }
 
 ## Set the UserID & GroupID for the process
@@ -420,14 +421,14 @@ while (!$end) {
     sleep 60;
 
     ## Free zombie sendmail processes
-    Sympa::Mailer->instance->reaper();
+    Sympa::Process->instance->reap_child;
 }
 
 # Purge grouped notifications
 Sympa::Alarm->instance->flush(purge => 1);
 
 $log->syslog('notice', 'Task_Manager exited normally due to signal');
-Sympa::Tools::Daemon::remove_pid('task_manager', $PID);
+$process->remove_pid(final => 1);
 
 exit(0);
 

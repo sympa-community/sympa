@@ -387,7 +387,7 @@ If set, maximum number of invocation of sendmail is divided by this value.
 
 =head1 SEE ALSO
 
-L<Sympa::Alarm>, L<Sympa::Bulk>, L<Sympa::Message>.
+L<Sympa::Alarm>, L<Sympa::Bulk>, L<Sympa::Message>, L<Sympa::Process>.
 
 =head1 HISTORY
 

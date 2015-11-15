@@ -43,8 +43,11 @@ use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::DatabaseManager;
 use Sympa::Log;
+use Sympa::Process;
 use Sympa::Spindle::ProcessBounce;
-use Sympa::Tools::Daemon;
+
+my $process = Sympa::Process->instance;
+$process->init(pidname => 'bounced');
 
 ## Check options
 my %options;
@@ -103,14 +106,11 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     }
 }
 
-## If process is running in foreground, don't write STDERR to a dedicated file
-my $options;
-$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-
-## Create and write the PID file
-Sympa::Tools::Daemon::write_pid('bounced', $PID, $options);
-unless ($options->{'stderr_to_tty'}) {
-    Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
+# Create and write the PID file.
+$process->write_pid(initial => 1);
+# If process is running in foreground, don't write STDERR to a dedicated file.
+unless ($main::options{foreground}) {
+    $process->direct_stderr_to_file;
 }
 
 if ($main::options{'log_level'}) {
@@ -177,7 +177,7 @@ while (not $spindle->{finish}) {
 Sympa::Alarm->instance->flush(purge => 1);
 
 $log->syslog('notice', 'Bounced exited normally due to signal');
-Sympa::Tools::Daemon::remove_pid('bounced', $PID);
+$process->remove_pid(final => 1);
 
 exit(0);
 

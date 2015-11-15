@@ -38,9 +38,11 @@ use Sympa::Crash;    # Show traceback.
 use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Mailer;
+use Sympa::Process;
 use Sympa::Spindle::StoreArchive;
-use Sympa::Tools::Daemon;
+
+my $process = Sympa::Process->instance;
+$process->init(pidname => 'archived');
 
 # Check options
 my %options;
@@ -100,14 +102,11 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     }
 }
 
-## If process is running in foreground, don't write STDERR to a dedicated file
-my $options;
-$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-
-## Create and write the PID file
-Sympa::Tools::Daemon::write_pid('archived', $PID, $options);
-unless ($options->{'stderr_to_tty'}) {
-    Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
+# Create and write the PID file.
+$process->write_pid(initial => 1);
+# If process is running in foreground, don't write STDERR to a dedicated file.
+unless ($main::options{foreground}) {
+    $process->direct_stderr_to_file;
 }
 
 # setting log_level using conf unless it is set by calling option
@@ -181,10 +180,10 @@ while (not $spindle->{finish}) {
 Sympa::Alarm->instance->flush(purge => 1);
 
 # Free zombie sendmail processes.
-Sympa::Mailer->instance->reaper;
+Sympa::Process->instance->reap_child;
 
 $log->syslog('notice', 'Archived exited normally due to signal');
-Sympa::Tools::Daemon::remove_pid('archived', $PID);
+$process->remove_pid(final => 1);
 
 exit 0;
 

@@ -43,14 +43,17 @@ use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
+use Sympa::Process;
 use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Scenario;
 use Sympa::Spindle::SendDigest;
 use Sympa::Spool::Incoming;
-use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Topic;
+
+my $process = Sympa::Process->instance;
+$process->init(pidname => 'sympa_msg');
 
 ## Internal tuning
 # delay between each read of the digestqueue
@@ -140,28 +143,19 @@ unless ($main::options{'foreground'}) {
     }
 }
 
-my $pidfile = 'sympa_msg';
-
 $log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
-# If process is running in foreground, don't write STDERR to a
-# dedicated file
-my $options;
-$options->{'stderr_to_tty'} = 1 if $main::options{'foreground'};
-$options->{'multiple_process'} = 0;
-
-# Save the PID number
-Sympa::Tools::Daemon::write_pid($pidfile, $PID, $options);
-unless ($options->{'stderr_to_tty'}) {
-    Sympa::Tools::Daemon::direct_stderr_to_file(pid => $PID);
+# Create and write the PID file.
+$process->write_pid(initial => 1);
+# If process is running in foreground, don't write STDERR to a dedicated file.
+unless ($main::options{foreground}) {
+    $process->direct_stderr_to_file;
 }
 
 # Start multiple processes if required.
 unless ($main::options{'foreground'}) {
     if ($daemon_usage eq 'DAEMON_MASTER'
         and ($Conf::Conf{'incoming_max_count'} || 0) > 1) {
-        $options->{'multiple_process'} = 1;
-
         # Disconnect from database before fork to prevent DB handles
         # to be shared by different processes.  Sharing database
         # handles may crash sympa_msg.pl.
@@ -173,8 +167,7 @@ unless ($main::options{'foreground'}) {
                 $log->syslog('info', 'Starting child daemon, PID %s',
                     $child_pid);
                 # Saves the PID number
-                Sympa::Tools::Daemon::write_pid($pidfile, $child_pid,
-                    $options);
+                $process->write_pid(pid => $child_pid);
                 #$created_children{$child_pid} = 1;
                 sleep 1;
             } elsif (not defined $child_pid) {
@@ -183,7 +176,7 @@ unless ($main::options{'foreground'}) {
             } else {
                 # We're in a child process
                 close STDERR;
-                Sympa::Tools::Daemon::direct_stderr_to_file(pid => $PID);
+                $process->direct_stderr_to_file;
                 $daemon_usage = 'DAEMON_SLAVE';    # child
                 $log->openlog($Conf::Conf{'syslog'},
                     $Conf::Conf{'log_socket_type'});
@@ -327,7 +320,7 @@ while ($signal ne 'term') {
     }
 
     # Free zombie sendmail process.
-    Sympa::Mailer->instance->reaper;
+    Sympa::Process->instance->reap_child;
 
     if ($signal eq 'hup') {
         # Disconnect from Database
@@ -350,7 +343,7 @@ while ($signal ne 'term') {
 Sympa::Alarm->instance->flush(purge => 1);
 
 $log->syslog('notice', 'Sympa/msg exited normally due to signal');
-Sympa::Tools::Daemon::remove_pid($pidfile, $PID, $options);
+$process->remove_pid;
 
 exit(0);
 
