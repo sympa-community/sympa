@@ -52,8 +52,6 @@ my $process = Sympa::Process->instance;
 $process->init(pidname => 'bulk');
 
 my $date_of_last_activity = time();
-local $main::daemon_usage =
-    'DAEMON_MASTER';    ## Default is to launch bulk as master daemon.
 
 ## Check options
 ##  --debug : sets the debug mode
@@ -118,9 +116,6 @@ if ($main::options{'log_level'}) {
         $Conf::Conf{'log_level'}
     );
 }
-
-## Set the process as main bulk daemon by default.
-my $is_main_bulk = 0;
 
 ## Put ourselves in background if not in debug mode.
 unless ($main::options{'debug'} || $main::options{'foreground'}) {
@@ -203,11 +198,11 @@ while (!$end) {
     unless ($main::options{'foreground'}) {
         # Create child bulks if too much packets are waiting to be sent in
         # the bulk_mailer table.
-        # Only the main bulk process (DAEMON_MASTER) can create child
+        # Only the main bulk process ({generation} is 0) can create child
         # processes.
         # Check if we need to run new child processes every
         # 'bulk_wait_to_fork' (sympa.conf parameter) seconds.
-        if (    $main::daemon_usage eq 'DAEMON_MASTER'
+        if (0 == $process->{generation}
             and $timeout < time - $last_check_date) {
             # Clean up PID file (in case some child bulks would have died)
             $process->reap_child(children => \%created_children, file => 1);
@@ -249,7 +244,6 @@ while (!$end) {
                             close STDERR;
                             $process->direct_stderr_to_file;
                             $date_of_last_activity = time();
-                            $main::daemon_usage = 'DAEMON_SLAVE'; # child bulk
                             $log->openlog($Conf::Conf{'syslog'},
                                 $Conf::Conf{'log_socket_type'});
                             $log->syslog('info',
@@ -269,7 +263,7 @@ while (!$end) {
     }
     ## If a child bulk process is running for long enough, stop it (if the
     ## number of remaining packets to send is reasonnable).
-    if (    $main::daemon_usage eq 'DAEMON_SLAVE'
+    if (    0 < $process->{generation}
         and time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}
         and !(my $r_packets = $bulk->too_much_remaining_packets())) {
         $log->syslog('info',

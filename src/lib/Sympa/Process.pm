@@ -45,7 +45,10 @@ my $log = Sympa::Log->instance;
 sub _new_instance {
     my $class = shift;
 
-    bless {children => {}} => $class;
+    bless {
+        children   => {},
+        generation => 0,
+    } => $class;
 }
 
 sub init {
@@ -69,6 +72,7 @@ sub fork {
         $self->{children}->{$pid} = $tag;
     } else {
         $self->{children} = {};
+        $self->{generation}++;
     }
     $pid;
 }
@@ -528,6 +532,11 @@ L<Sympa::Process> instance may have following attributes:
 =item {children}
 
 Hashref with child PIDs forked by fork() method as keys.
+
+=item {generation}
+
+Generation of process.
+If fork() method succeeds, it will be increased by child process.
 
 =back
 

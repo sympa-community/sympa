@@ -62,9 +62,6 @@ my $digestsleep = 5;
 ## Init random engine
 srand(time());
 
-# Default is to launch process as master daemon.
-my $daemon_usage = 'DAEMON_MASTER';
-
 # Check options.
 my %options;
 unless (
@@ -154,7 +151,7 @@ unless ($main::options{foreground}) {
 
 # Start multiple processes if required.
 unless ($main::options{'foreground'}) {
-    if ($daemon_usage eq 'DAEMON_MASTER'
+    if (0 == $process->{generation}
         and ($Conf::Conf{'incoming_max_count'} || 0) > 1) {
         # Disconnect from database before fork to prevent DB handles
         # to be shared by different processes.  Sharing database
@@ -162,7 +159,7 @@ unless ($main::options{'foreground'}) {
         Sympa::DatabaseManager->disconnect;
 
         for my $process_count (2 .. $Conf::Conf{'incoming_max_count'}) {
-            my $child_pid = fork;
+            my $child_pid = $process->fork;
             if ($child_pid) {
                 $log->syslog('info', 'Starting child daemon, PID %s',
                     $child_pid);
@@ -177,7 +174,6 @@ unless ($main::options{'foreground'}) {
                 # We're in a child process
                 close STDERR;
                 $process->direct_stderr_to_file;
-                $daemon_usage = 'DAEMON_SLAVE';    # child
                 $log->openlog($Conf::Conf{'syslog'},
                     $Conf::Conf{'log_socket_type'});
                 $log->syslog('info', 'Slave daemon started with PID %s',
@@ -267,9 +263,9 @@ while ($signal ne 'term') {
     # Process grouped notifications
     Sympa::Alarm->instance->flush;
 
-    # process digest only in distribution mode.
+    # Process digest only in master process ({generation} is 0).
     # Scan queuedigest.
-    if (    $daemon_usage eq 'DAEMON_MASTER'
+    if (0 == $process->{generation}
         and $index_queuedigest++ >= $digestsleep) {
         $index_queuedigest = 0;
         Sympa::Spindle::SendDigest->new->spin;
