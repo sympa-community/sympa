@@ -103,6 +103,9 @@ sub password_validation {
     my ($password) = @_;
 
     my $pv = $Conf::Conf{'password_validation'};
+    if ($pv) {
+		require Data::Password;
+	}
     return undef
         unless $pv
             and defined $password
