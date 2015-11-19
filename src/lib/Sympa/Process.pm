@@ -47,6 +47,7 @@ sub _new_instance {
 
     bless {
         children   => {},
+        detached   => 0,
         generation => 0,
     } => $class;
 }
@@ -58,7 +59,36 @@ sub init {
     foreach my $key (sort keys %options) {
         $self->{$key} = $options{$key};
     }
+    $self->{name} ||= $self->{pidname} || [split /\//, $PROGRAM_NAME]->[-1];
     $self;
+}
+
+# Put ourselves in background.  That method works on many systems, although,
+# it seems that Unix conceptors have decided that there won't be a single and
+# easy way to detach a process from its controlling TTY.
+sub daemonize {
+    my $self = shift;
+
+    if (open my $tty, '/dev/tty') {
+        ioctl $tty, 0x20007471, 0;    # XXX s/b TIOCNOTTY()
+        close $tty;
+    }
+    open STDIN,  '<',  '/dev/null';
+    open STDOUT, '>>', '/dev/null';
+    open STDERR, '>>', '/dev/null';
+
+    setpgrp 0, 0;
+
+    my $child_pid = CORE::fork();
+    if ($child_pid) {
+        $log->syslog('notice', 'Starting %s daemon, PID %d',
+            $self->{name}, $child_pid);
+        exit 0;
+    } elsif (not defined $child_pid) {
+        die sprintf 'Cannot fork %s daemon: %s', $self->{name}, $ERRNO;
+    } else {
+        $self->{detached} = 1;
+    }
 }
 
 sub fork {
@@ -435,6 +465,19 @@ A new L<Sympa::Process> instance, or I<undef> for failure.
 I<Instance method>.
 TBD.
 
+=item daemonize ( )
+
+I<Instance method>.
+Puts ourselves in background.
+
+Parameters:
+
+None.
+
+Returns:
+
+None.
+
 =item fork ( [ $tag ] )
 
 I<Instance method>.
@@ -533,6 +576,11 @@ L<Sympa::Process> instance may have following attributes:
 
 Hashref with child PIDs forked by fork() method as keys.
 
+=item {detached}
+
+True value is set if daemonize() method was called and the process has been
+detached from TTY.
+
 =item {generation}
 
 Generation of process.
@@ -546,5 +594,7 @@ L<Sympa::Tools::Daemon> appeared on Sympa 6.2a.41.
 
 Renamed L<Sympa::Process> appeared on Sympa 6.2.12
 and began to provide OO interface.
+
+Sympa 6.2.13 introduced daemonize() method and {detached} attribute.
 
 =cut

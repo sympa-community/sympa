@@ -83,23 +83,9 @@ unless (Sympa::DatabaseManager->instance) {
         $Conf::Conf{'db_name'};
 }
 
-## Put ourselves in background if not in debug mode.
-unless ($main::options{'debug'} || $main::options{'foreground'}) {
-    open(STDERR, ">> /dev/null");
-    open(STDOUT, ">> /dev/null");
-    if (open(TTY, "/dev/tty")) {
-        # ioctl(TTY, TIOCNOTTY(), 0);
-        ioctl(TTY, 0x20007471, 0);    # XXX s/b TIOCNOTTY
-        close(TTY);
-    }
-    setpgrp 0, 0;
-    my $child_pid = fork;
-    if ($child_pid) {
-        $log->syslog('info', 'Starting archived daemon, PID %s', $child_pid);
-        exit 0;
-    } elsif (not defined $child_pid) {
-        die sprintf 'Cannot fork: %s', $ERRNO;
-    }
+# Put ourselves in background if not in debug mode.
+unless ($main::options{'foreground'}) {
+    $process->daemonize;
 }
 
 # Create and write the PID file.

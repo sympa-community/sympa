@@ -53,7 +53,7 @@ use Sympa::Tools::Data;
 use Sympa::Topic;
 
 my $process = Sympa::Process->instance;
-$process->init(pidname => 'sympa_msg');
+$process->init(pidname => 'sympa_msg', name => 'sympa/msg');
 
 ## Internal tuning
 # delay between each read of the digestqueue
@@ -95,29 +95,9 @@ my $mailer   = Sympa::Mailer->instance;
 
 _load();
 
-## Put ourselves in background if we're not in debug mode. That method
-## works on many systems, although, it seems that Unix conceptors have
-## decided that there won't be a single and easy way to detach a
-## process from its controlling TTY.
+# Put ourselves in background if we're not in debug mode.
 unless ($main::options{'foreground'}) {
-    if (open(TTY, "/dev/tty")) {
-        ioctl(TTY, 0x20007471, 0);    # XXX s/b TIOCNOTTY()
-        close(TTY);
-    }
-    open(STDIN,  ">> /dev/null");
-    open(STDOUT, ">> /dev/null");
-    open(STDERR, ">> /dev/null");
-
-    setpgrp 0, 0;
-
-    my $child_pid = fork;
-    if ($child_pid) {
-        $log->syslog('notice', 'Starting sympa/msg daemon, PID %d',
-            $child_pid);
-        exit 0;
-    } elsif (not defined $child_pid) {
-        die sprintf 'Cannot fork: %s', $ERRNO;
-    }
+    $process->daemonize;
 
     # Fork a new process dedicated to automatic list creation, if required.
     if ($Conf::Conf{'automatic_list_feature'} eq 'on') {

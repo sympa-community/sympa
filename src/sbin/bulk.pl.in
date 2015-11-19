@@ -117,22 +117,9 @@ if ($main::options{'log_level'}) {
     );
 }
 
-## Put ourselves in background if not in debug mode.
-unless ($main::options{'debug'} || $main::options{'foreground'}) {
-    open(STDERR, ">> /dev/null");
-    open(STDOUT, ">> /dev/null");
-    if (open(TTY, "/dev/tty")) {
-        close(TTY);
-    }
-    setpgrp 0, 0;
-    my $child_pid = fork;
-    if ($child_pid) {
-        $log->syslog('info', 'Starting bulk master daemon, PID %s',
-            $child_pid);
-        exit 0;
-    } elsif (not defined $child_pid) {
-        die sprintf 'Cannot fork: %s', $ERRNO;
-    }
+# Put ourselves in background if not in debug mode.
+unless ($main::options{'foreground'}) {
+    $process->daemonize;
 }
 $log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
 
@@ -195,7 +182,7 @@ while (!$end) {
 
     my ($message, $handle);
 
-    unless ($main::options{'foreground'}) {
+    if ($process->{detached}) {
         # Create child bulks if too much packets are waiting to be sent in
         # the bulk_mailer table.
         # Only the main bulk process ({generation} is 0) can create child

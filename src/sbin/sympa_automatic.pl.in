@@ -43,7 +43,7 @@ use Sympa::Spindle::ProcessAutomatic;
 use Sympa::Tools::Data;
 
 my $process = Sympa::Process->instance;
-$process->init(pidname => 'sympa_automatic');
+$process->init(pidname => 'sympa_automatic', name => 'sympa/automatic');
 
 ## Init random engine
 srand(time());
@@ -78,30 +78,9 @@ my $mailer = Sympa::Mailer->instance;
 
 _load();
 
-## Put ourselves in background if we're not in debug mode. That method
-## works on many systems, although, it seems that Unix conceptors have
-## decided that there won't be a single and easy way to detach a
-## process from its controlling TTY.
+# Put ourselves in background if we're not in debug mode.
 unless ($main::options{'foreground'}) {
-    if (open(TTY, "/dev/tty")) {
-        ioctl(TTY, 0x20007471, 0);    # XXX s/b TIOCNOTTY()
-        close(TTY);
-    }
-    open(STDIN,  ">> /dev/null");
-    open(STDOUT, ">> /dev/null");
-    open(STDERR, ">> /dev/null");
-
-    setpgrp 0, 0;
-
-    my $child_pid = fork;
-    if ($child_pid) {
-        $log->syslog('notice', 'Starting sympa/automatic daemon, PID %d',
-            $child_pid);
-        exit 0;
-    } elsif (not defined $child_pid) {
-        die sprintf 'Cannot fork: %s', $ERRNO;
-    }
-
+    $process->daemonize;
 }
 
 $log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
