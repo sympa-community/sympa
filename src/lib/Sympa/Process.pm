@@ -438,6 +438,9 @@ Sympa::Process - Process of Sympa
 
   use Sympa::Process;
   my $process = Sympa::Process->instance;
+  $process->init(pidname => 'sympa');
+
+  $process->daemonize;
 
   $process->fork;
   $process->reap_child;
@@ -468,7 +471,9 @@ TBD.
 =item daemonize ( )
 
 I<Instance method>.
-Puts ourselves in background.
+Daemonizes process itself.
+Process is given new process group, detached from TTY
+and given new process ID.
 
 Parameters:
 
