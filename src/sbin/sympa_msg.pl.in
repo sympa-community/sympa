@@ -567,14 +567,12 @@ sub process_message {
 
     # Enable SMTP logging if required.
     $mailer->{log_smtp} = $main::options{'mail'}
-        || Conf::get_robot_conf($robot, 'log_smtp');
-    # setting log_level using conf unless it is set by calling option
-    unless (defined $main::options{'log_level'}) {
-        $log->{level} = Conf::get_robot_conf($robot, 'log_level');
-        $log->syslog('debug',
-            'Setting log level with %s configuration (or sympa.conf): %d',
-            $robot, Conf::get_robot_conf($robot, 'log_level'));
-    }
+        || Sympa::Tools::Data::smart_eq(
+        Conf::get_robot_conf($robot, 'log_smtp'), 'on');
+    # Setting log_level using conf unless it is set by calling option.
+    $log->{level} = (defined $main::options{log_level})
+        ? $main::options{log_level}
+        : Conf::get_robot_conf($robot, 'log_level');
 
     ## Strip of the initial X-Sympa-To and X-Sympa-Checksum internal headers
     delete $message->{'rcpt'};
