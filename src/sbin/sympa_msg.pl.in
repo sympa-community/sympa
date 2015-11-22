@@ -459,24 +459,6 @@ sub process_message {
     $log->syslog('debug', '(%s)', @_);
     my $message = shift;
 
-    my $status;
-
-    unless (defined $message) {
-        $log->syslog('err', 'Unable to create Sympa::Message object');
-        $log->db_log(
-            #'robot'        => $robot,
-            #'list'         => $listname,
-            'action'       => 'process_message',
-            'parameters'   => '',
-            'target_email' => "",
-            'msg_id'       => '',
-            'status'       => 'error',
-            'error_type'   => 'unable_create_message',
-            'user_email'   => ''
-        );
-        return undef;
-    }
-
     unless (defined $message->{'message_id'}
         and length $message->{'message_id'}) {
         $log->syslog('err', 'Message %s has no message ID', $message);
@@ -598,19 +580,19 @@ sub process_message {
     delete $message->{'rcpt'};
     delete $message->{'checksum'};
 
-    ## Initialize command report
-    Sympa::Report::init_report_cmd();
-
     my $list =
         (ref $message->{context} eq 'Sympa::List')
         ? $message->{context}
         : undef;
-    my $type = $message->{'listtype'} || '';
-    my $list_address;
 
-    if ($type eq 'listmaster' or $type eq 'sympa') {
+    my $list_address;
+    if ($message->{'listtype'} and $message->{'listtype'} eq 'listmaster') {
         $list_address =
-            $message->{'localpart'} . '@'
+              Conf::get_robot_conf($robot, 'listmaster_email') . '@'
+            . Conf::get_robot_conf($robot, 'host');
+    } elsif ($message->{'listtype'} and $message->{'listtype'} eq 'sympa') {
+        $list_address =
+              Conf::get_robot_conf($robot, 'email') . '@'
             . Conf::get_robot_conf($robot, 'host');
     } else {
         unless (ref $list eq 'Sympa::List') {
@@ -675,9 +657,6 @@ sub process_message {
             return undef;
         }
     }
-
-    ## Q- and B-decode subject
-    my $subject_field = $message->{'decoded_subject'};
 
     ## Loop prevention
     my $loop;
@@ -750,88 +729,28 @@ sub process_message {
         return undef;
     }
 
-    if ($type eq 'listmaster') {
-        $status = DoForward('sympa', 'listmaster', $robot, $message);
-    } elsif ($type eq 'sympa') {
-        # Mail addressed to the robot is command.
-        $status = DoCommand('sympa', $robot, $message);
-    } elsif ($type eq 'subscribe' or $type eq 'unsubscribe') {
-        # Mail to <list>-subscribe or <list>-unsubscribe is command.
-        $status = DoCommand("$listname-$type", $robot, $message);
-    } elsif ($type eq 'owner') {    # -request
-        # Forward mails to <list>-request.
-        # Simulate Smartlist behaviour with command in subject
-        if (    $subject_field
-            and $subject_field =~
-            /^\s*(subscribe|unsubscribe)(\s*$listname)?\s*$/i) {
-            my $command = $1;
-            $status = DoCommand("$listname-$command", $robot, $message);
-        } else {
-            $status = DoForward($listname, 'owner', $robot, $message);
-        }
-    } elsif ($type eq 'return_path' or $type eq 'editor') {
-        # Forward mails to <list>-owner etc.
-        $status = DoForward($listname, $type, $robot, $message);
-    } else {
-        $status = DoMessage($message);
+    # Route messages to appropriate handlers.
+    if (    $message->{listtype}
+        and $message->{listtype} eq 'owner'
+        and $message->{'decoded_subject'}
+        and $message->{'decoded_subject'} =~
+        /\A\s*(subscribe|unsubscribe)(\s*$listname)?\s*\z/i) {
+        # Simulate Smartlist behaviour with command in subject.
+        $message->{listtype} = lc $1;
     }
-
-    ## Mail back the result.
-    if (Sympa::Report::is_there_any_report_cmd()) {
-        ## Loop prevention
-
-        ## Count reports sent to $sender
-        $loop_info{$sender}{'count'}++;
-
-        ## Sampling delay
-        if ((time - ($loop_info{$sender}{'date_init'} || 0)) <
-            $Conf::Conf{'loop_command_sampling_delay'}) {
-
-            ## Notify listmaster of first rejection
-            if ($loop_info{$sender}{'count'} ==
-                $Conf::Conf{'loop_command_max'}) {
-                ## Notify listmaster
-                Sympa::send_notify_to_listmaster($robot, 'loop_command',
-                    {'msg' => $message});
-            }
-
-            ## Too many reports sent => message skipped !!
-            if ($loop_info{$sender}{'count'} >=
-                $Conf::Conf{'loop_command_max'}) {
-                $log->syslog(
-                    'err',
-                    'Ignoring message which would cause a loop, %d messages sent to %s; loop_command_max exceeded',
-                    $loop_info{$sender}{'count'},
-                    $sender
-                );
-
-                return undef;
-            }
-        } else {
-            ## Sampling delay is over, reinit
-            $loop_info{$sender}{'date_init'} = time;
-
-            ## We apply Decrease factor if a loop occurred
-            $loop_info{$sender}{'count'} *=
-                $Conf::Conf{'loop_command_decrease_factor'};
-        }
-
-        ## Send the reply message
-        Sympa::Report::send_report_cmd($sender, $robot);
-        $log->db_log(
-            'robot'        => $robot,
-            'list'         => $listname,
-            'action'       => 'process_message',
-            'parameters'   => "",
-            'target_email' => "",
-            'msg_id'       => $msg_id,
-            'status'       => 'success',
-            'error_type'   => '',
-            'user_email'   => $sender
-        );
-
-    }
-
+    my $status = do {
+        no strict 'refs';
+        (   {   editor      => 'DoForward',
+                listmaster  => 'DoForward',
+                owner       => 'DoForward',    # -request
+                return_path => 'DoForward',    # -owner
+                subscribe   => 'DoCommand',
+                sympa       => 'DoCommand',
+                unsubscribe => 'DoCommand',
+            }->{$message->{listtype} || ''}
+                || 'DoMessage'
+        )->($message);
+    };
     return $status;
 }
 
@@ -845,18 +764,28 @@ sub process_message {
 #  [list]-request : the list owner or the listmaster.
 #  Message is forwarded according to $function
 #
-# IN : -$name : list name (+) if ($function <> 'listmaster')
-#      -$function (+): 'listmaster'|'owner'|'editor'
-#      -$robot (+): robot
-#      -$msg (+): ref(message object).
+# IN : -$msg (+): ref(message object).
 #
 # OUT : 1
 #     | undef
 #
 ############################################################
 sub DoForward {
-    my ($name, $function, $robot, $message) = @_;
-    $log->syslog('debug', '(%s, %s)', $name, $function);
+    $log->syslog('debug2', '(%s)', @_);
+    my $message = shift;
+
+    my ($name, $robot);
+    if (ref $message->{context} eq 'Sympa::List') {
+        $name  = $message->{context}->{'name'};
+        $robot = $message->{context}->{'domain'};
+    } elsif ($message->{context} and $message->{context} ne '*') {
+        $name  = 'sympa';
+        $robot = $message->{context};
+    } else {
+        $name  = 'sympa';
+        $robot = $Conf::Conf{'domain'};
+    }
+    my $function = $message->{listtype};
 
     my $msg        = $message->as_entity;        #FIXME: not required.
     my $messageid  = $message->{'message_id'};
@@ -875,8 +804,8 @@ sub DoForward {
         return undef;
     }
 
-    ##  Search for the list
-    my ($list, $admin, $host, $recipient, $priority);
+    # Search for the list.
+    my ($list, $recipient, $priority);
 
     if ($function eq 'listmaster') {
         $recipient =
@@ -917,9 +846,8 @@ sub DoForward {
             return undef;
         }
 
-        $admin     = $list->{'admin'};
         $recipient = $list->get_list_address($function);
-        $priority  = $admin->{'priority'};
+        $priority  = $list->{'admin'}{'priority'};
     }
 
     my @rcpt;
@@ -1698,25 +1626,27 @@ sub _check_command {
 ############################################################
 #  Handles a command sent to the list manager.
 #
-# IN : -$rcpt : recipient | <listname>-<subscribe|unsubscribe>
-#      -$robot (+): robot
-#      -$message : ref(Message) with :
-#        ->msg (+): ref(MIME::Entity) : message containing command
-#        ->filename (+): file containing message
+# IN : -$message : ref(Message)
 #
 # OUT : $success
 #     | undef
 #
 ##############################################################
 sub DoCommand {
-    $log->syslog('debug', '(%s, %s, %s)', @_);
-    my ($rcpt, $robot, $message) = @_;
+    $log->syslog('debug2', '(%s)', @_);
+    my $message = shift;
 
-    ## boolean
-    my $cmd_found = 0;
+    my ($list, $robot);
+    if (ref $message->{context} eq 'Sympa::List') {
+        $list  = $message->{context};
+        $robot = $list->{'domain'};
+    } elsif ($message->{context} and $message->{context} ne '*') {
+        $robot = $message->{context};
+    } else {
+        $robot = '*';
+    }
 
     my $messageid = $message->{'message_id'};
-    my ($success, $status);
 
     $log->syslog(
         'debug',
@@ -1729,9 +1659,8 @@ sub DoCommand {
     if ($message->{'spam_status'} eq 'spam') {
         $log->syslog(
             'notice',
-            'Message for list %s@%s ignored, because tagged as spam (message ID: %s)',
-            $rcpt,
-            $robot,
+            'Message for %s ignored, because tagged as spam (message ID: %s)',
+            $message->{context},
             $messageid
         );
         return undef;
@@ -1743,41 +1672,122 @@ sub DoCommand {
             'Found known Message-ID, ignoring command which would cause a loop'
         );
         $log->db_log(
-            'robot'        => $robot,
-            'list'         => $rcpt,
+            'robot' => $robot,
+            #'list'         => 'sympa',
             'action'       => 'DoCommand',
-            'parameters'   => "$rcpt,$robot,$message",
+            'parameters'   => $message->get_id,
             'target_email' => '',
             'msg_id'       => $messageid,
             'status'       => 'error',
             'error_type'   => 'known_message',
             'user_email'   => $sender
         );
+        # Clean old files from spool.
         return undef;
-    }    ## Clean old files from spool
-
-    ## Keep track of known message IDs...if any
+    }
+    # Keep track of known message IDs...if any.
     $msgid_table{'sympa@' . $robot}{$messageid} = time
         if ($messageid);
 
-    ## If X-Sympa-To = <listname>-<subscribe|unsubscribe> parse as a unique
-    ## command
-    if ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o) {
-        my ($listname, $command) = ($1, $2);
-        $log->syslog('debug', 'Processing message for %s-%s',
-            $listname, $command);
+    # Initialize command report.
+    Sympa::Report::init_report_cmd();
+
+    my $status = _do_command($message);
+
+    # Mail back the result.
+    if (Sympa::Report::is_there_any_report_cmd()) {
+        ## Loop prevention
+
+        ## Count reports sent to $sender
+        $loop_info{$sender}{'count'}++;
+
+        ## Sampling delay
+        if ((time - ($loop_info{$sender}{'date_init'} || 0)) <
+            $Conf::Conf{'loop_command_sampling_delay'}) {
+
+            ## Notify listmaster of first rejection
+            if ($loop_info{$sender}{'count'} ==
+                $Conf::Conf{'loop_command_max'}) {
+                ## Notify listmaster
+                Sympa::send_notify_to_listmaster($robot, 'loop_command',
+                    {'msg' => $message});
+            }
+
+            ## Too many reports sent => message skipped !!
+            if ($loop_info{$sender}{'count'} >=
+                $Conf::Conf{'loop_command_max'}) {
+                $log->syslog(
+                    'err',
+                    'Ignoring message which would cause a loop, %d messages sent to %s; loop_command_max exceeded',
+                    $loop_info{$sender}{'count'},
+                    $sender
+                );
+
+                return undef;
+            }
+        } else {
+            ## Sampling delay is over, reinit
+            $loop_info{$sender}{'date_init'} = time;
+
+            ## We apply Decrease factor if a loop occurred
+            $loop_info{$sender}{'count'} *=
+                $Conf::Conf{'loop_command_decrease_factor'};
+        }
+
+        ## Send the reply message
+        Sympa::Report::send_report_cmd($sender, $robot);
+        $log->db_log(
+            'robot' => $robot,
+            #'list'         => 'sympa',
+            'action'       => 'DoCommand',
+            'parameters'   => $message->get_id,
+            'target_email' => "",
+            'msg_id'       => $message->{message_id},
+            'status'       => 'success',
+            'error_type'   => '',
+            'user_email'   => $sender
+        );
+
+    }
+
+    return $status;
+}
+
+sub _do_command {
+    my $message = shift;
+
+    my ($list, $robot);
+    if (ref $message->{context} eq 'Sympa::List') {
+        $list  = $message->{context};
+        $robot = $list->{'domain'};
+    } elsif ($message->{context} and $message->{context} ne '*') {
+        $robot = $message->{context};
+    } else {
+        $robot = '*';
+    }
+
+    my $success;
+    my $cmd_found = 0;
+    my $messageid = $message->{message_id};
+    my $sender    = $message->{sender};
+
+    # If type is subscribe or unsubscribe, parse as a single command.
+    if (   $message->{listtype} eq 'subscribe'
+        or $message->{listtype} eq 'unsubscribe') {
+        $log->syslog('debug', 'Processing message for %s type %s',
+            $message->{context}, $message->{listtype});
         # FIXME: at this point $message->{'dkim_pass'} does not verify that
         # Subject: is part of the signature. It SHOULD !
         my $auth_level = $message->{'dkim_pass'} ? 'dkim' : undef;
 
         Sympa::Commands::parse($sender, $robot,
-            sprintf('%s %s', $command, $listname),
+            sprintf('%s %s', $message->{listtype}, $list->{'name'}),
             $auth_level, $message);
         $log->db_log(
             'robot'        => $robot,
-            'list'         => $listname,
+            'list'         => $list->{'name'},
             'action'       => 'DoCommand',
-            'parameters'   => "$rcpt,$robot,$message",
+            'parameters'   => $message->get_id,
             'target_email' => '',
             'msg_id'       => $messageid,
             'status'       => 'success',
@@ -1821,10 +1831,10 @@ sub DoCommand {
             Sympa::Report::global_report_cmd('user', 'error_content_type',
                 {});
             $log->db_log(
-                'robot'        => $robot,
-                'list'         => $rcpt,                     #FIXME
+                'robot' => $robot,
+                #'list'         => 'sympa',
                 'action'       => 'DoCommand',
-                'parameters'   => "$rcpt,$robot,$message",
+                'parameters'   => $message->get_id,
                 'target_email' => '',
                 'msg_id'       => $messageid,
                 'status'       => 'error',
@@ -1845,7 +1855,8 @@ sub DoCommand {
                   $message->{'smime_signed'} ? 'smime'
                 : $message->{'dkim_pass'}    ? 'dkim'
                 :                              $auth_level;
-            $status = Sympa::Commands::parse($sender, $robot, $i, $auth_level,
+            my $status =
+                Sympa::Commands::parse($sender, $robot, $i, $auth_level,
                 $message);
 
             $cmd_found = 1;    # if problem no_cmd_understood is sent here
@@ -1854,10 +1865,10 @@ sub DoCommand {
                 Sympa::Report::reject_report_cmd('user', 'not_understood', {},
                     $i);
                 $log->db_log(
-                    'robot'        => $robot,
-                    'list'         => $rcpt,                     #FIXME
+                    'robot' => $robot,
+                    #'list'         => 'sympa',
                     'action'       => 'DoCommand',
-                    'parameters'   => "$rcpt,$robot,$message",
+                    'parameters'   => $message->get_id,
                     'target_email' => '',
                     'msg_id'       => $messageid,
                     'status'       => 'error',
@@ -1879,10 +1890,10 @@ sub DoCommand {
         $log->syslog('info', "No command found in message");
         Sympa::Report::global_report_cmd('user', 'no_cmd_found', {});
         $log->db_log(
-            'robot'        => $robot,
-            'list'         => $rcpt,                     #FIXME
+            'robot' => $robot,
+            #'list'         => 'sympa',
             'action'       => 'DoCommand',
-            'parameters'   => "$rcpt,$robot,$message",
+            'parameters'   => $message->get_id,
             'target_email' => '',
             'msg_id'       => $messageid,
             'status'       => 'error',
