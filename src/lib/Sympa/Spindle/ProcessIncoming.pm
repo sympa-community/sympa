@@ -56,19 +56,19 @@ sub _init {
         $self->{_msgid}         = {};
         $self->{_msgid_cleanup} = time;
     } elsif ($state == 1) {
-    Sympa::List::init_list_cache();
-    # Process grouped notifications
-    Sympa::Alarm->instance->flush;
+        Sympa::List::init_list_cache();
+        # Process grouped notifications
+        Sympa::Alarm->instance->flush;
 
-    # Cleanup in-memory msgid table, only in a while.
-    if (time > $self->{_msgid_cleanup} +
-        $Conf::Conf{'msgid_table_cleanup_frequency'}) {
-        $self->_clean_msgid_table();
-        $self->{_msgid_cleanup} = time;
-    }
+        # Cleanup in-memory msgid table, only in a while.
+        if (time > $self->{_msgid_cleanup} +
+            $Conf::Conf{'msgid_table_cleanup_frequency'}) {
+            $self->_clean_msgid_table();
+            $self->{_msgid_cleanup} = time;
+        }
     } elsif ($state == 2) {
-    # Free zombie sendmail process.
-    Sympa::Process->instance->reap_child;
+        # Free zombie sendmail process.
+        Sympa::Process->instance->reap_child;
     }
 
     1;
@@ -79,23 +79,23 @@ sub _on_success {
     my $message = shift;
     my $handle  = shift;
 
-            if ($self->{keepcopy}) {
-                unless (
-                    File::Copy::copy(
-                        $self->{distaff}->{directory} . '/' . $handle->basename,
-                        $self->{keepcopy} . '/' . $handle->basename
-                    )
-                    ) {
-                    $log->syslog(
-                        'notice',
-                        'Could not rename %s/%s to %s/%s: %m',
-                        $self->{distaff}->{directory},
-                        $handle->basename,
-                        $self->{keepcopy},
-                        $handle->basename
-                    );
-                }
-            }
+    if ($self->{keepcopy}) {
+        unless (
+            File::Copy::copy(
+                $self->{distaff}->{directory} . '/' . $handle->basename,
+                $self->{keepcopy} . '/' . $handle->basename
+            )
+            ) {
+            $log->syslog(
+                'notice',
+                'Could not rename %s/%s to %s/%s: %m',
+                $self->{distaff}->{directory},
+                $handle->basename,
+                $self->{keepcopy},
+                $handle->basename
+            );
+        }
+    }
 
     $self->SUPER::_on_success($message, $handle);
 }
@@ -216,7 +216,8 @@ sub _twist {
         || Sympa::Tools::Data::smart_eq(
         Conf::get_robot_conf($robot, 'log_smtp'), 'on');
     # Setting log_level using conf unless it is set by calling option.
-    $log->{level} = (defined $self->{log_level})
+    $log->{level} =
+        (defined $self->{log_level})
         ? $self->{log_level}
         : Conf::get_robot_conf($robot, 'log_level');
 
@@ -417,7 +418,8 @@ sub _splicing_to {
         subscribe   => 'Sympa::Spindle::DoCommand',
         sympa       => 'Sympa::Spindle::DoCommand',
         unsubscribe => 'Sympa::Spindle::DoCommand',
-    }->{$message->{listtype} || ''} || 'Sympa::Spindle::DoMessage';
+        }->{$message->{listtype} || ''}
+        || 'Sympa::Spindle::DoMessage';
 }
 
 1;

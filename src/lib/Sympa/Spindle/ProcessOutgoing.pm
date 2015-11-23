@@ -58,30 +58,31 @@ sub _init {
         $self->{_last_check}    = 0;
         $self->{_pids}          = {};
     } elsif ($state == 1) {
-    # Enable SMTP logging if required.
-    $mailer->{log_smtp} = $self->{log_smtp}
-    || Sympa::Tools::Data::smart_eq($Conf::Conf{'log_smtp'}, 'on');
-    # setting log_level using conf unless it is set by calling option
-    $log->{level} = (defined $self->{log_level})
-        ? $self->{log_level}
-        : $Conf::Conf{'log_level'};
+        # Enable SMTP logging if required.
+        $mailer->{log_smtp} = $self->{log_smtp}
+            || Sympa::Tools::Data::smart_eq($Conf::Conf{'log_smtp'}, 'on');
+        # setting log_level using conf unless it is set by calling option
+        $log->{level} =
+            (defined $self->{log_level})
+            ? $self->{log_level}
+            : $Conf::Conf{'log_level'};
 
-    # Free zombie sendmail process.
-    Sympa::Process->instance->reap_child;
+        # Free zombie sendmail process.
+        Sympa::Process->instance->reap_child;
 
-    Sympa::List::init_list_cache();
-    # Process grouped notifications
-    Sympa::Alarm->instance->flush;
+        Sympa::List::init_list_cache();
+        # Process grouped notifications
+        Sympa::Alarm->instance->flush;
 
         unless ($process->{detached}) {
             ;
         } elsif (0 == $process->{generation}) {
-        # Create child bulks if too much packets are waiting to be sent in
-        # the bulk_mailer table.
-        # Only the main bulk process ({generation} is 0) can create child
-        # processes.
-        # Check if we need to run new child processes every
-        # 'bulk_wait_to_fork' (sympa.conf parameter) seconds.
+            # Create child bulks if too much packets are waiting to be sent in
+            # the bulk_mailer table.
+            # Only the main bulk process ({generation} is 0) can create child
+            # processes.
+            # Check if we need to run new child processes every
+            # 'bulk_wait_to_fork' (sympa.conf parameter) seconds.
             $self->_fork_children;
         } elsif (0 < $process->{generation}) {
             # If a child bulk process is running for long enough, stop it (if
@@ -100,77 +101,75 @@ sub _init {
 sub _fork_children {
     my $self = shift;
 
-        if ($Conf::Conf{'bulk_wait_to_fork'} < time - $self->{_last_check}) {
-            # Clean up PID file (in case some child bulks would have died)
-            $process->reap_child(children => $self->{_pids}, file => 1);
+    if ($Conf::Conf{'bulk_wait_to_fork'} < time - $self->{_last_check}) {
+        # Clean up PID file (in case some child bulks would have died)
+        $process->reap_child(children => $self->{_pids}, file => 1);
 
-            # Start new processes if there remain at least
-            # 'bulk_fork_threshold' packets to send in the bulk spool.
-            my $spare_children =
-                $Conf::Conf{'bulk_max_count'} - scalar keys %{$self->{_pids}};
-            if (my $r_packets = $self->{distaff}->too_much_remaining_packets
-                and 0 < $spare_children) {
-                # Disconnect from database before fork to prevent DB handles
-                # to be shared by different processes.  Sharing database
-                # handles may crash bulk.pl.
-                Sympa::DatabaseManager->disconnect;
+        # Start new processes if there remain at least
+        # 'bulk_fork_threshold' packets to send in the bulk spool.
+        my $spare_children =
+            $Conf::Conf{'bulk_max_count'} - scalar keys %{$self->{_pids}};
+        if (my $r_packets = $self->{distaff}->too_much_remaining_packets
+            and 0 < $spare_children) {
+            # Disconnect from database before fork to prevent DB handles
+            # to be shared by different processes.  Sharing database
+            # handles may crash bulk.pl.
+            Sympa::DatabaseManager->disconnect;
 
-                if ($Conf::Conf{'bulk_max_count'} > 1) {
-                    $log->syslog(
-                        'info',
-                        'Important workload: %s packets to process. Creating %s child bulks to increase sending rate',
-                        $r_packets,
-                        $spare_children
-                    );
-                    for my $process_count (1 .. $spare_children) {
-                        $log->syslog('info', "Will fork: %s", $process_count);
-                        my $child_pid = $process->fork;
-                        if ($child_pid) {
-                            $log->syslog('info',
-                                'Starting bulk child daemon, PID %s',
-                                $child_pid);
-                            # Save the PID number.
-                            $process->write_pid(pid => $child_pid);
-                            $self->{_pids}->{$child_pid} = 1;
-                            sleep 1;
-                        } elsif (not defined $child_pid) {
-                            $log->syslog('err', 'Cannot fork: %m');
-                            last;
-                        } else {
-                            # We're in a child bulk process.
-                            close STDERR;
-                            $process->direct_stderr_to_file;
-                            $self->{_last_activity} = time;
-                            $log->openlog($Conf::Conf{'syslog'},
-                                $Conf::Conf{'log_socket_type'});
-                            $log->syslog('info',
-                                'Bulk slave daemon started with PID %s',
-                                $PID);
-                            last;
-                        }
+            if ($Conf::Conf{'bulk_max_count'} > 1) {
+                $log->syslog(
+                    'info',
+                    'Important workload: %s packets to process. Creating %s child bulks to increase sending rate',
+                    $r_packets,
+                    $spare_children
+                );
+                for my $process_count (1 .. $spare_children) {
+                    $log->syslog('info', "Will fork: %s", $process_count);
+                    my $child_pid = $process->fork;
+                    if ($child_pid) {
+                        $log->syslog('info',
+                            'Starting bulk child daemon, PID %s', $child_pid);
+                        # Save the PID number.
+                        $process->write_pid(pid => $child_pid);
+                        $self->{_pids}->{$child_pid} = 1;
+                        sleep 1;
+                    } elsif (not defined $child_pid) {
+                        $log->syslog('err', 'Cannot fork: %m');
+                        last;
+                    } else {
+                        # We're in a child bulk process.
+                        close STDERR;
+                        $process->direct_stderr_to_file;
+                        $self->{_last_activity} = time;
+                        $log->openlog($Conf::Conf{'syslog'},
+                            $Conf::Conf{'log_socket_type'});
+                        $log->syslog('info',
+                            'Bulk slave daemon started with PID %s', $PID);
+                        last;
                     }
                 }
-
-                # Restore persistent connection.
-                Sympa::DatabaseManager->instance
-                    or die 'Reconnecting database failed';
             }
-            $self->{_last_check} = time;
+
+            # Restore persistent connection.
+            Sympa::DatabaseManager->instance
+                or die 'Reconnecting database failed';
         }
+        $self->{_last_check} = time;
+    }
 }
 
 # Private subroutine.
 sub _finish_child {
     my $self = shift;
 
-        if (time - $self->{_last_activity} > $Conf::Conf{'bulk_lazytime'}
-        and ! $self->{distaff}->too_much_remaining_packets) {
+    if (time - $self->{_last_activity} > $Conf::Conf{'bulk_lazytime'}
+        and !$self->{distaff}->too_much_remaining_packets) {
         $log->syslog('info',
             'Process %s didn\'t send any message since %s seconds, exiting',
             $PID, $Conf::Conf{'bulk_lazytime'});
 
-            $self->{finish} = 'exit';
-        }
+        $self->{finish} = 'exit';
+    }
 }
 
 sub _twist {
@@ -178,195 +177,119 @@ sub _twist {
     my $message = shift;
     my $handle  = shift;
 
-        # Get list/robot context.
-        my ($list, $robot, $listname);
-        if (ref($message->{context}) eq 'Sympa::List') {
-            $list     = $message->{context};
-            $robot    = $message->{context}->{'domain'};
-            $listname = $list->{'name'};
-        } elsif ($message->{context} and $message->{context} ne '*') {
-            $robot = $message->{context};
-        } else {
-            $robot = '*';
-        }
+    # Get list/robot context.
+    my ($list, $robot, $listname);
+    if (ref($message->{context}) eq 'Sympa::List') {
+        $list     = $message->{context};
+        $robot    = $message->{context}->{'domain'};
+        $listname = $list->{'name'};
+    } elsif ($message->{context} and $message->{context} ne '*') {
+        $robot = $message->{context};
+    } else {
+        $robot = '*';
+    }
 
-        if ($message->{serial} eq '0' or $message->{serial} eq 's') {
-            $log->syslog(
-                'notice',
-                'Start sending message %s to %s (priority %s) (starting %s seconds after scheduled expedition date)',
-                $message,
-                $message->{context},
-                $message->{'priority'},
-                time() - $message->{'date'}
-            );
-            # trace_smime($message, 'init');
-        }
+    if ($message->{serial} eq '0' or $message->{serial} eq 's') {
+        $log->syslog(
+            'notice',
+            'Start sending message %s to %s (priority %s) (starting %s seconds after scheduled expedition date)',
+            $message,
+            $message->{context},
+            $message->{'priority'},
+            time() - $message->{'date'}
+        );
+        # trace_smime($message, 'init');
+    }
 
-        # Enable SMTP logging if required.
-        $mailer->{log_smtp} = $self->{log_smtp}
-            || Sympa::Tools::Data::smart_eq(
-            Conf::get_robot_conf($robot, 'log_smtp'), 'on');
-        # setting log_level using conf unless it is set by calling option
-        $log->{level} = (defined $self->{log_level})
-            ? $self->{log_level}
-            : Conf::get_robot_conf($robot, 'log_level');
+    # Enable SMTP logging if required.
+    $mailer->{log_smtp} = $self->{log_smtp}
+        || Sympa::Tools::Data::smart_eq(
+        Conf::get_robot_conf($robot, 'log_smtp'), 'on');
+    # setting log_level using conf unless it is set by calling option
+    $log->{level} =
+        (defined $self->{log_level})
+        ? $self->{log_level}
+        : Conf::get_robot_conf($robot, 'log_level');
 
-        #HASH which will contain the attributes of the subscriber
-        my $data;
-        # Initialization of the HASH $data. It will be used by parse_tt2 to
-        # personalized messages.
-        # Note that message ID which can be anonymized should be taken from
-        # message header instead of {message_id} attribute.
-        my $msg_id = tools::clean_msg_id($message->get_header('Message-ID'));
-        $data = {
-            'messageid' => $msg_id,
-            'listname'  => $listname,
-            'robot'     => $robot,
-            #XXX'to'        => $message->{rcpt}, #XXX Insecure
-            'wwsympa_url' => Conf::get_robot_conf($robot, 'wwsympa_url'),
-        };
+    #HASH which will contain the attributes of the subscriber
+    my $data;
+    # Initialization of the HASH $data. It will be used by parse_tt2 to
+    # personalized messages.
+    # Note that message ID which can be anonymized should be taken from
+    # message header instead of {message_id} attribute.
+    my $msg_id = tools::clean_msg_id($message->get_header('Message-ID'));
+    $data = {
+        'messageid' => $msg_id,
+        'listname'  => $listname,
+        'robot'     => $robot,
+        #XXX'to'        => $message->{rcpt}, #XXX Insecure
+        'wwsympa_url' => Conf::get_robot_conf($robot, 'wwsympa_url'),
+    };
 
-        # Contain all the subscribers
-        my @rcpts = @{$message->{rcpt}};
-        ## Use an intermediate handler to encode to filesystem_encoding
-        my $user;
+    # Contain all the subscribers
+    my @rcpts = @{$message->{rcpt}};
+    ## Use an intermediate handler to encode to filesystem_encoding
+    my $user;
 
-        # Message transformation should be done in the folowing order:
-        #  -1 headers modifications (done in sympa.pl)
-        #  -2 DMARC protection
-        #  -3 personalize (a.k.a. "merge")
-        #  -4 S/MIME signing
-        #  -5 S/MIME encryption
-        #  -6 remove existing signature if altered
-        #  -7 DKIM signing
+    # Message transformation should be done in the folowing order:
+    #  -1 headers modifications (done in sympa.pl)
+    #  -2 DMARC protection
+    #  -3 personalize (a.k.a. "merge")
+    #  -4 S/MIME signing
+    #  -5 S/MIME encryption
+    #  -6 remove existing signature if altered
+    #  -7 DKIM signing
 
-        if ($message->{shelved}{dmarc_protect}) {
-            $message->dmarc_protect;
-        }
+    if ($message->{shelved}{dmarc_protect}) {
+        $message->dmarc_protect;
+    }
 
-        my $dkim;
-        if ($message->{shelved}{dkim_sign}) {
-            $dkim =
-                Sympa::Tools::DKIM::get_dkim_parameters($message->{context});
-        }
+    my $dkim;
+    if ($message->{shelved}{dkim_sign}) {
+        $dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context});
+    }
 
-        if (   $message->{shelved}{merge}
-            or $message->{shelved}{smime_encrypt}
-            or $message->{shelved}{tracking}) {
-            # message needs personalization
-            my $key;
+    if (   $message->{shelved}{merge}
+        or $message->{shelved}{smime_encrypt}
+        or $message->{shelved}{tracking}) {
+        # message needs personalization
+        my $key;
 
-            foreach my $rcpt (@rcpts) {
-                my $new_message = $message->dup;
-
-                my $envid;
-                my $return_path;
-
-                if (Sympa::Tools::Data::smart_eq(
-                        $new_message->{shelved}{tracking}, qr/dsn|mdn/
-                    )
-                    ) {
-                    # tracking by MDN required tracking by DSN to
-                    my $msgid = $new_message->{'message_id'};
-                    $envid = Sympa::Tracking::find_notification_id_by_message(
-                        $rcpt, $msgid, $listname, $robot);
-                    $return_path = $list->get_bounce_address($rcpt, $envid);
-                    $new_message->replace_header(
-                        'Disposition-Notification-To', $return_path)
-                        if $new_message->{shelved}{tracking} =~ /mdn/;
-                    # trace_smime($new_message, 'tracking');
-                } elsif (
-                    Sympa::Tools::Data::smart_eq(
-                        $new_message->{shelved}{tracking}, 'w'
-                    )
-                    ) {
-                    $return_path = $list->get_bounce_address($rcpt, 'w');
-                } elsif (
-                    Sympa::Tools::Data::smart_eq(
-                        $new_message->{shelved}{tracking}, 'r'
-                    )
-                    ) {
-                    $return_path = $list->get_bounce_address($rcpt, 'r');
-                } elsif ($new_message->{shelved}{tracking}) {    # simple VERP
-                    $return_path = $list->get_bounce_address($rcpt);
-                } elsif ($new_message->{envelope_sender}) {
-                    $return_path = $new_message->{envelope_sender};
-                } elsif ($list) {
-                    $return_path = $list->get_list_address('return_path');
-                } else {
-                    $return_path = Conf::get_robot_conf($robot, 'request');
-                }
-
-                if ($new_message->{shelved}{merge}) {
-                    unless ($new_message->personalize($list, $rcpt)) {
-                        $log->syslog('err', 'Erreur d appel personalize()');
-                        Sympa::send_notify_to_listmaster($list, 'bulk_failed',
-                            {'message_id' => $message->get_id});
-                        # Quarantine packet into bad spool.
-                        return undef;
-                    }
-                    delete $new_message->{shelved}{merge};
-                }
-
-                if ($new_message->{shelved}{smime_sign}) {
-                    $new_message->smime_sign;
-                    delete $new_message->{shelved}{smime_sign};
-                }
-
-                if ($new_message->{shelved}{smime_encrypt}) {
-                    unless ($new_message->smime_encrypt($rcpt)) {
-                        $log->syslog(
-                            'err',
-                            'Unable to encrypt message %s from %s for recipient %s',
-                            $new_message,
-                            $list,
-                            $rcpt
-                        );
-                        # Quarantine packet into bad spool.
-                        return undef;
-                    }
-                    delete $new_message->{shelved}{smime_encrypt};
-                }
-
-                if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
-                    $new_message->remove_invalid_dkim_signature;
-                }
-                if ($new_message->{shelved}{dkim_sign} and $dkim) {
-                    # apply DKIM signature AFTER any other message
-                    # transformation.
-                    $new_message->dkim_sign(
-                        'dkim_d'          => $dkim->{'d'},
-                        'dkim_i'          => $dkim->{'i'},
-                        'dkim_selector'   => $dkim->{'selector'},
-                        'dkim_privatekey' => $dkim->{'private_key'},
-                    );
-                    delete $new_message->{shelved}{dkim_sign};
-                }
-
-                # trace_smime($new_message, 'dkim');
-
-                $new_message->{envelope_sender} = $return_path;
-                unless (
-                    defined $mailer->store(
-                        $new_message, $rcpt,
-                        envid => $envid,
-                        tag   => $new_message->{serial}
-                    )
-                    ) {
-                    $log->syslog('err',
-                        'Failed to store message %s into mailer',
-                        $new_message);
-                    # Quarantine packet into bad spool.
-                    return undef;
-                }
-            }
-        } else {
-            # message doesn't need personalization, so can be sent by packet.
+        foreach my $rcpt (@rcpts) {
             my $new_message = $message->dup;
 
+            my $envid;
             my $return_path;
 
-            if ($new_message->{envelope_sender}) {
+            if (Sympa::Tools::Data::smart_eq(
+                    $new_message->{shelved}{tracking}, qr/dsn|mdn/
+                )
+                ) {
+                # tracking by MDN required tracking by DSN to
+                my $msgid = $new_message->{'message_id'};
+                $envid =
+                    Sympa::Tracking::find_notification_id_by_message($rcpt,
+                    $msgid, $listname, $robot);
+                $return_path = $list->get_bounce_address($rcpt, $envid);
+                $new_message->replace_header('Disposition-Notification-To',
+                    $return_path)
+                    if $new_message->{shelved}{tracking} =~ /mdn/;
+                # trace_smime($new_message, 'tracking');
+            } elsif (
+                Sympa::Tools::Data::smart_eq(
+                    $new_message->{shelved}{tracking}, 'w'
+                )
+                ) {
+                $return_path = $list->get_bounce_address($rcpt, 'w');
+            } elsif (
+                Sympa::Tools::Data::smart_eq(
+                    $new_message->{shelved}{tracking}, 'r'
+                )
+                ) {
+                $return_path = $list->get_bounce_address($rcpt, 'r');
+            } elsif ($new_message->{shelved}{tracking}) {    # simple VERP
+                $return_path = $list->get_bounce_address($rcpt);
+            } elsif ($new_message->{envelope_sender}) {
                 $return_path = $new_message->{envelope_sender};
             } elsif ($list) {
                 $return_path = $list->get_list_address('return_path');
@@ -374,16 +297,43 @@ sub _twist {
                 $return_path = Conf::get_robot_conf($robot, 'request');
             }
 
+            if ($new_message->{shelved}{merge}) {
+                unless ($new_message->personalize($list, $rcpt)) {
+                    $log->syslog('err', 'Erreur d appel personalize()');
+                    Sympa::send_notify_to_listmaster($list, 'bulk_failed',
+                        {'message_id' => $message->get_id});
+                    # Quarantine packet into bad spool.
+                    return undef;
+                }
+                delete $new_message->{shelved}{merge};
+            }
+
             if ($new_message->{shelved}{smime_sign}) {
                 $new_message->smime_sign;
                 delete $new_message->{shelved}{smime_sign};
             }
 
+            if ($new_message->{shelved}{smime_encrypt}) {
+                unless ($new_message->smime_encrypt($rcpt)) {
+                    $log->syslog(
+                        'err',
+                        'Unable to encrypt message %s from %s for recipient %s',
+                        $new_message,
+                        $list,
+                        $rcpt
+                    );
+                    # Quarantine packet into bad spool.
+                    return undef;
+                }
+                delete $new_message->{shelved}{smime_encrypt};
+            }
+
             if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
                 $new_message->remove_invalid_dkim_signature;
             }
-            # Initial message
             if ($new_message->{shelved}{dkim_sign} and $dkim) {
+                # apply DKIM signature AFTER any other message
+                # transformation.
                 $new_message->dkim_sign(
                     'dkim_d'          => $dkim->{'d'},
                     'dkim_i'          => $dkim->{'i'},
@@ -393,12 +343,14 @@ sub _twist {
                 delete $new_message->{shelved}{dkim_sign};
             }
 
-            # trace_smime($new_message,'dkim 2');
+            # trace_smime($new_message, 'dkim');
 
             $new_message->{envelope_sender} = $return_path;
             unless (
                 defined $mailer->store(
-                    $new_message, [@rcpts], tag => $new_message->{serial}
+                    $new_message, $rcpt,
+                    envid => $envid,
+                    tag   => $new_message->{serial}
                 )
                 ) {
                 $log->syslog('err', 'Failed to store message %s into mailer',
@@ -407,6 +359,53 @@ sub _twist {
                 return undef;
             }
         }
+    } else {
+        # message doesn't need personalization, so can be sent by packet.
+        my $new_message = $message->dup;
+
+        my $return_path;
+
+        if ($new_message->{envelope_sender}) {
+            $return_path = $new_message->{envelope_sender};
+        } elsif ($list) {
+            $return_path = $list->get_list_address('return_path');
+        } else {
+            $return_path = Conf::get_robot_conf($robot, 'request');
+        }
+
+        if ($new_message->{shelved}{smime_sign}) {
+            $new_message->smime_sign;
+            delete $new_message->{shelved}{smime_sign};
+        }
+
+        if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
+            $new_message->remove_invalid_dkim_signature;
+        }
+        # Initial message
+        if ($new_message->{shelved}{dkim_sign} and $dkim) {
+            $new_message->dkim_sign(
+                'dkim_d'          => $dkim->{'d'},
+                'dkim_i'          => $dkim->{'i'},
+                'dkim_selector'   => $dkim->{'selector'},
+                'dkim_privatekey' => $dkim->{'private_key'},
+            );
+            delete $new_message->{shelved}{dkim_sign};
+        }
+
+        # trace_smime($new_message,'dkim 2');
+
+        $new_message->{envelope_sender} = $return_path;
+        unless (
+            defined $mailer->store(
+                $new_message, [@rcpts], tag => $new_message->{serial}
+            )
+            ) {
+            $log->syslog('err', 'Failed to store message %s into mailer',
+                $new_message);
+            # Quarantine packet into bad spool.
+            return undef;
+        }
+    }
 
     1;
 }

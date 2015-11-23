@@ -457,8 +457,7 @@ sub get_first_db_log {
         ],
     );
 
-    my $statement =
-        sprintf q{SELECT date_logs, usec_logs AS usec,
+    my $statement = sprintf q{SELECT date_logs, usec_logs AS usec,
                          robot_logs AS robot, list_logs AS list,
                          action_logs AS action,
                          parameters_logs AS parameters,

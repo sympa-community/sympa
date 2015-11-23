@@ -617,9 +617,10 @@ my %full_db_struct = (
                 'order'    => 3,
             },
             'usec_logs' => {
-                'struct'   => 'int(6)',
-                'doc'      => 'subsecond in microsecond when the action was executed',
-                'order'    => 3.5,
+                'struct' => 'int(6)',
+                'doc' =>
+                    'subsecond in microsecond when the action was executed',
+                'order' => 3.5,
             },
             'robot_logs' => {
                 'struct' => $robot_struct,

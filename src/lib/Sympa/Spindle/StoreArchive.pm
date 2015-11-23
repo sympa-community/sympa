@@ -1,4 +1,3 @@
-#!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
 # $Id$
