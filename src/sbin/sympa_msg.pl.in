@@ -387,17 +387,17 @@ sub sighup {
 #sub DoSendMessage($message);
 #DEPRECATED: Run upgrade_send_spool.pl to migrate message with old format.
 
-# Moved to Sympa::Spindle::ProcessIncoming::DoForward().
+# Moved to Sympa::Spindle::DoForward::_twist().
 #sub DoForward;
 
-# Moved to Sympa::Spindle::ProcessIncoming::DoMessage().
+# Moved to Sympa::Spindle::DoMessage::_twist().
 #sub DoMessage;
 
 # Old name: tools::checkcommand().
-# Moved to Sympa::Spindle::ProcessIncoming::_check_command().
+# Moved to Sympa::Spindle::DoMessage::_check_command().
 #sub _check_command;
 
-# Moved to Sympa::Spindle::ProcessIncoming::DoCommand().
+# Moved to Sympa::Spindle::DoCommand::_twist().
 #sub DoCommand;
 
 # DEPRECATED.  Use Sympa::Spindle::SendDigest class.
