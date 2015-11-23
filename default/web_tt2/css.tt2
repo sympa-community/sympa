@@ -298,7 +298,12 @@ select {
 	margin-right: 10px;
 	outline:none;*/
 }
-
+select, input {
+   max-width: 550px;
+}
+select[name="size"] {
+   max-width: 60px;
+}
 textarea {
 	/*font-size: 13px;
 	color: [% color_4 %];
@@ -871,10 +876,6 @@ h4.letter {
 
 .navBar li {
     line-height: 2em;
-}
-
-select, input {
-   max-width: 550px;
 }
 
 #bold_label label {
