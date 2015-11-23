@@ -25,7 +25,8 @@
   <input type="hidden" name="list" value="[% list %]"/>
   </form>
   [% END %]
-  <br />
+  <hr>
+  <h3>[%|loc%]Subscription reminder message[%END%]</h3>
   <form class="noborder" name="synchronize_list_members" action="[% path_cgi %]" method="post">
   <input class="MainMenuLinks" type="submit" name="action_remind" value="[%|loc%]Remind all[%END%]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription reminder message to the %1 subscribers?[%END%][%END%]');"/>
   <input type="hidden" name="list" value="[% list %]"/>
@@ -34,7 +35,7 @@
   <hr>
   <h3>[%|loc%]Add Subscribers[%END%]</h3>
   <form action="[% path_cgi %]" method="post">
-  <p>&bull; <u>[%|loc%]To add an individual user:[%END%]</u>
+  <h4>[%|loc%]To add an individual user:[%END%]</h4>
   <fieldset>
    <input type="hidden" name="previous_action" value="review" />
    <input type="hidden" name="list" value="[% list %]" />
@@ -45,7 +46,7 @@
 	<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" />
   </fieldset>
   </form>
-  <p>&bull; <u>[%|loc%]To add multiple users:[%END%]</u>
+  <h4>[%|loc%]To add multiple users:[%END%]</h4>
   <p>[%|loc%]Click the Multiple Add button below to bulk-add users using a form.  (Alternatively, consider using a data-source such as SQL or an Active Directory Group).[%END%]
   <a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a>
 [% END %]

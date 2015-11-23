@@ -1,6 +1,6 @@
 <!-- $Id$ -->
-
-    <table  class="listOfItems text_center responsive">
+[% IF total != 0 %]
+    <table  class="listOfItems responsive">
     <caption>[%|loc%]List members[%END%]</caption>
       <tbody>
         <tr>
@@ -75,8 +75,6 @@
 	  [% END %]
         [% END %]
       </tr>
-
-    [% IF total != 0 %]
       [% FOREACH u = thosesubscribers %]
 	[% IF dark == '1' %]
 	  <tr>
@@ -163,15 +161,10 @@
 	[% ELSE %]
 	  [% SET dark = 1 %]
 	[% END %]
-
+        </tbody>
+      </table>
       [% END %]
-    [% ELSE %]
-      <tr>
-	<th colspan="[% colspan %]">
-	  [%|loc%]List has no subscribers[%END%]
-	</th>
-      </tr>
+      [% ELSE %]
+      <p class="small-12 medium-8 columns alert-box info text-center">[%|loc%]List has no subscribers[%END%]</p>
     [% END %]
-  </tbody>
-</table>
 <!-- End subscribers_table.tt2 -->
