@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 <h2>[%|loc%]Manage bouncing list members[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#manage_bounces" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
-
 <br />
+[% IF bounce_rate %]
 <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/bounce">[%|loc%]Dump[%END%]</a>
 
 <form action="[% path_cgi %]" method="post"> 
@@ -20,13 +20,13 @@
     <input type="hidden" name="list" value="[% list %]" />
 </fieldset>  
 </form>	
-<br />
 
 <form action="[% path_cgi %]">
 <fieldset>
   <input type="hidden" name="sortby" value="[% sortby %]" />
   <input type="hidden" name="action" value="reviewbouncing" />
   <input type="hidden" name="list" value="[% list %]" />
+  <label for="size">[%|loc%]Page size[%END%]</label>
   <select name="size" onchange="this.form.submit();">
           <option value="[% size %]" selected="selected">[% size %]</option>
 	  <option value="25">25</option>
@@ -36,9 +36,8 @@
   </select>
 </fieldset>  
 </form>
-<br />
 
-<div class="text_right">
+<div class="text-center">
         [% IF prev_page %]
 	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]"></a>
         [% END %]
@@ -54,7 +53,7 @@
 <fieldset>
      <input type="hidden" name="list" value="[% list %]" /> 	 
      <input type="hidden" name="previous_action" value="reviewbouncing" /> 	 
-  <table  class="responsive listOfItems">
+  <table  class="listOfItems">
   <caption>[%|loc%]Table which display list bounces[%END%]</caption>
       <tr>
 	<th rowspan="2"><a href="#" onclick="toggle_selection(document.myform.email);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></th>
@@ -110,7 +109,7 @@
 
         [% END %]
       </table>
-  <div class="text_right">
+  <div class="text-center">
         [% IF prev_page %]
 	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
         [% END %]
@@ -131,4 +130,7 @@
   <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
 </fieldset>
 </form>
+[% ELSE %]
+<p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No bouncing members[%END%]</p>
+[% END %]
 <!-- end reviewbouncing.tt2 -->
