@@ -1058,6 +1058,14 @@ our %pinfo = (
                 'format'     => '.+',
                 'default'    => 'ALL',
             },
+            'ca_verify' => {
+                'order'      => 2.8,
+                'gettext_id' => 'Certificate verification',
+                'format'     => ['none', 'optional', 'required'],
+                'synonym'    => {'require' => 'required'},
+                'default'    => 'required',
+                'occurrence' => '0-1'
+            },
             'user' => {
                 'order'      => 3,
                 'gettext_id' => "remote user",
@@ -1159,6 +1167,14 @@ our %pinfo = (
                 'gettext_id' => 'SSL ciphers used',
                 'format'     => '.+',
                 'default'    => 'ALL'
+            },
+            'ca_verify' => {
+                'order'      => 2.8,
+                'gettext_id' => 'Certificate verification',
+                'format'     => ['none', 'optional', 'required'],
+                'synonym'    => {'require' => 'required'},
+                'default'    => 'required',
+                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1442,6 +1458,14 @@ our %pinfo = (
                 'format'     => '.+',
                 'default'    => 'ALL'
             },
+            'ca_verify' => {
+                'order'      => 2.8,
+                'gettext_id' => 'Certificate verification',
+                'format'     => ['none', 'optional', 'required'],
+                'synonym'    => {'require' => 'required'},
+                'default'    => 'required',
+                'occurrence' => '0-1'
+            },
             'user' => {
                 'order'      => 3,
                 'gettext_id' => "remote user",
@@ -1549,6 +1573,14 @@ our %pinfo = (
                 'gettext_id' => 'SSL ciphers used',
                 'format'     => '.+',
                 'default'    => 'ALL'
+            },
+            'ca_verify' => {
+                'order'      => 2.8,
+                'gettext_id' => 'Certificate verification',
+                'format'     => ['none', 'optional', 'required'],
+                'synonym'    => {'require' => 'required'},
+                'default'    => 'required',
+                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,

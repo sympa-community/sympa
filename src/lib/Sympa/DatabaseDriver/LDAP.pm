@@ -102,10 +102,14 @@ sub _connect {
     # new() with multiple alternate hosts needs perl-ldap >= 0.27.
     my $connection = Net::LDAP->new(
         $self->{_hosts},
-        timeout => ($self->{'timeout'}   || 3),
-        verify  => ($self->{'ca_verify'} || 'optional'),
-        capath  => $self->{'ca_path'},
-        cafile  => $self->{'ca_file'},
+        timeout => ($self->{'timeout'} || 3),
+        verify => (
+              (not $self->{ca_verify}) ? 'optional'
+            : ($self->{ca_verify} eq 'required') ? 'require'
+            : $self->{ca_verify}
+        ),
+        capath     => $self->{'ca_path'},
+        cafile     => $self->{'ca_file'},
         sslversion => $self->{'ssl_version'},
         ciphers    => $self->{'ssl_ciphers'},
         clientcert => $self->{'ssl_cert'},
@@ -126,9 +130,13 @@ sub _connect {
     # START_TLS if requested.
     if ($self->{'use_start_tls'}) {
         my $mesg = $connection->start_tls(
-            verify => ($self->{'ca_verify'} || 'optional'),
-            capath => $self->{'ca_path'},
-            cafile => $self->{'ca_file'},
+            verify => (
+                  (not $self->{ca_verify}) ? 'optional'
+                : ($self->{ca_verify} eq 'required') ? 'require'
+                : $self->{ca_verify}
+            ),
+            capath     => $self->{'ca_path'},
+            cafile     => $self->{'ca_file'},
             sslversion => $self->{'ssl_version'},
             ciphers    => $self->{'ssl_ciphers'},
             clientcert => $self->{'ssl_cert'},
