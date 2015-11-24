@@ -804,7 +804,8 @@ sub close_family {
 
 =pod 
 
-=head2 sub instantiate(FILEHANDLE $fh, BOOLEAN $close_unknown)
+=head2 sub instantiate(FILEHANDLE $fh,
+[ close_unknown =E<gt> 1 ], [ quiet =E<gt> 1 ] )
 
 Creates family lists or updates them if they exist already.
 
@@ -839,15 +840,17 @@ Creates family lists or updates them if they exist already.
 #
 # IN : -$self
 #      -$xml_fh : file handle on the xml file
-#      -$close_unknown : true if must close old lists undefined in new
-#      instantiation
+#      -%options
+#        - close_unknown : true if must close old lists undefined in new
+#                          instantiation
+#        - quiet         :
 # OUT : -1 or undef
 #########################################
 sub instantiate {
-    my $self          = shift;
-    my $xml_file      = shift;
-    my $close_unknown = shift;
-    $log->syslog('debug2', '(%s)', $self->{'name'});
+    $log->syslog('debug2', '(%s, %s, ...)', @_);
+    my $self     = shift;
+    my $xml_file = shift;
+    my %options  = @_;
 
     ## all the description variables are emptied.
     $self->_initialize_instantiation();
@@ -1039,7 +1042,7 @@ sub instantiate {
 
     $progress->update($total) if $progress;
 
-    if ($output && !$main::options{'quiet'}) {
+    if ($output and !$options{quiet}) {
         print STDOUT
             "There is unread output from the instantiation proccess (aliasmanager messages ...), do you want to see it ? (y or n)";
         my $answer = <STDIN>;
@@ -1065,8 +1068,8 @@ sub instantiate {
         }
 
         my $answer;
-        unless ($close_unknown) {
-            #while (($answer ne 'y') && ($answer ne 'n')) {
+        unless ($options{close_unknown}) {
+            #while ($answer ne 'y' and $answer ne 'n') {
             print STDOUT
                 "The list $l isn't defined in the new instantiation family, do you want to close it ? (y or n)";
             $answer = <STDIN>;
@@ -1075,8 +1078,7 @@ sub instantiate {
             $answer ||= 'y';
             #}
         }
-        if ($close_unknown || $answer eq 'y') {
-
+        if ($options{close_unknown} or $answer eq 'y') {
             unless (
                 $list->set_status_family_closed(
                     'close_list', $self->{'name'}

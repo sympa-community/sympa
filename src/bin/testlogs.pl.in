@@ -33,6 +33,7 @@ use Sympa::Log;
 
 my %options;
 GetOptions(\%main::options, 'debug|d', 'log_level=s', 'config|f=s');
+$Conf::sympa_config = $main::options{config};
 
 my $log = Sympa::Log->instance;
 

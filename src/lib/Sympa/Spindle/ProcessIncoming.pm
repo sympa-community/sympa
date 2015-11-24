@@ -319,7 +319,8 @@ sub _twist {
     }
 
     # Anti-virus
-    my $rc = $message->check_virus_infection;
+    my $rc =
+        $message->check_virus_infection(debug => $self->{debug_virus_check});
     if ($rc) {
         my $antivirus_notify =
             Conf::get_robot_conf($robot, 'antivirus_notify') || 'none';

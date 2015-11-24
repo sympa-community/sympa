@@ -60,6 +60,7 @@ if ($main::options{'help'}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 }
+$Conf::sympa_config = $main::options{config};
 
 if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless $main::options{'log_level'};

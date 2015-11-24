@@ -92,6 +92,7 @@ if ($main::options{'help'}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 }
+$Conf::sympa_config = $main::options{config};
 
 if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless $main::options{'log_level'};
@@ -689,7 +690,8 @@ if ($main::options{'dump'}) {
     unless (
         $family->instantiate(
             $main::options{'input_file'},
-            $main::options{'close_unknown'}
+            close_unknown => $main::options{'close_unknown'},
+            quiet         => $main::options{quiet},
         )
         ) {
         print STDERR "\nImpossible family instantiation : action stopped \n";

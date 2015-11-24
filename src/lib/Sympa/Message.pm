@@ -2679,8 +2679,9 @@ sub _as_singlepart {
 # Note: this would be moved to incoming pipeline package.
 # Old names: tools::virus_infected(), Sympa::Tools::Message::virus_infected().
 sub check_virus_infection {
-    $log->syslog('debug2', '%s)', @_);
-    my $self = shift;
+    $log->syslog('debug2', '(%s, ...)', @_);
+    my $self    = shift;
+    my %options = @_;
 
     my $robot_id;
     if (ref $self->{context} eq 'Sympa::List') {
@@ -2933,8 +2934,8 @@ sub check_virus_infection {
         );
     }
 
-    ## if debug mode is active, the working directory is kept
-    unless ($main::options{'debug'}) {
+    # if debug mode is active, the working directory is kept
+    unless ($options{debug}) { #FIXME: Is this condition required?
         opendir DIR, $work_dir;
         my @list = readdir DIR;
         closedir DIR;
@@ -4248,10 +4249,14 @@ Gets decoded content of text/plain part.
 The text will be converted to UTF-8.
 Flowed text (see RFC 3676) will be conjuncted.
 
-=item check_virus_infection ()
+=item check_virus_infection ( [ debug =E<gt> 1 ] )
 
 I<Instance method>.
 Checks the message using anti-virus plugin, if configuration requests it.
+
+Parameter:
+
+TBD.
 
 Returns:
 

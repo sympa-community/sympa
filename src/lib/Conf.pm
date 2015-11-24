@@ -361,10 +361,10 @@ built-in default
 
 =cut
 
+our $sympa_config;
+
 sub get_sympa_conf {
-    return $main::options{'config'}
-        if %main::options and defined $main::options{'config'};
-    return $ENV{'SYMPA_CONFIG'} || Sympa::Constants::CONFIG;
+    return $sympa_config || $ENV{'SYMPA_CONFIG'} || Sympa::Constants::CONFIG;
 }
 
 =over 4

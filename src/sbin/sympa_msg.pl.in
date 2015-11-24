@@ -71,6 +71,7 @@ if ($main::options{'help'}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 }
+$Conf::sympa_config = $main::options{config};
 
 if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless $main::options{'log_level'};
@@ -212,6 +213,8 @@ my $spindle = Sympa::Spindle::ProcessIncoming->new(
     lang      => $main::options{lang},
     log_level => $main::options{log_level},
     log_smtp  => $main::options{mail},
+    #FIXME: Is it required?
+    debug_virus_check => $main::options{debug},
 );
 
 # Catch signals, in order to exit cleanly, whenever possible.
@@ -248,6 +251,8 @@ while (not $spindle->{finish} or $spindle->{finish} ne 'term') {
             lang      => $main::options{lang},
             log_level => $main::options{log_level},
             log_smtp  => $main::options{mail},
+            #FIXME: Is it required?
+            debug_virus_check => $main::options{debug},
         );
         next;
     } elsif ($spindle->{finish}) {
