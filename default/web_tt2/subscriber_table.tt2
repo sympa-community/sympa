@@ -88,7 +88,7 @@
 	    </td>
  	 [% END %]
 	 [% IF u.bounce %]
-	   <td colspan="2" class="text_left">
+	   <td colspan="2" class="text-left">
 	 
 	     [% IF is_owner %]
 	       <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
@@ -102,7 +102,7 @@
 	 [% END %]
 
 	 [% ELSE %]
-	   <td colspan="3" class="text_left">
+	   <td colspan="3" class="text-left">
 	     [% IF is_owner %]
 	       <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
 	     [% ELSE %]
@@ -161,9 +161,9 @@
 	[% ELSE %]
 	  [% SET dark = 1 %]
 	[% END %]
+      [% END %]
         </tbody>
       </table>
-      [% END %]
       [% ELSE %]
       <p class="small-12 medium-8 medium-centered columns alert-box info text-center">[%|loc%]List has no subscribers[%END%]</p>
     [% END %]
