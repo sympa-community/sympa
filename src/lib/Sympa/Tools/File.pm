@@ -293,7 +293,7 @@ Returns true value if setting rights succeeded.
 Otherwise returns false value.
 
 Note:
-If superuser was speficied as owner, this function will die.
+If superuser was specified as owner, this function will die.
 
 =item copy_dir($dir1, $dir2)
 

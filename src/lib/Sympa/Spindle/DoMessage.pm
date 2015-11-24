@@ -708,6 +708,6 @@ L<Sympa::Topic>.
 
 =head1 HISTORY
 
-L<Sympa::Spindle::DoCommand> appeared on Sympa 6.2.13.
+L<Sympa::Spindle::DoMessage> appeared on Sympa 6.2.13.
 
 =cut
