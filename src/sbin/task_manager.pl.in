@@ -34,14 +34,12 @@ use Template;
 
 use Sympa;
 use Sympa::Alarm;
-use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Message;
 use Sympa::Process;
 use Sympa::Scenario;
 use Sympa::Session;
@@ -155,7 +153,6 @@ $log->syslog('notice', 'Task_Manager %s Started',
 
 ###### VARIABLES DECLARATION ######
 
-my $bulk       = Sympa::Bulk->new;
 my $spool_task = $Conf::Conf{'queuetask'};
 my @tasks;    # list of tasks in the spool
 
