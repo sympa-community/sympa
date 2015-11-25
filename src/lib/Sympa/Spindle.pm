@@ -61,19 +61,7 @@ sub spin {
         my ($message, $handle) = $self->{distaff}->next;
 
         if ($message and $handle) {
-            my $status = $self->_twist($message, $handle);
-            while ($status and $status !~ /\A\d+\z/) {
-                die sprintf 'Illegal package name "%s"', $status
-                    unless $status =~ /\A(?:\w+::)*\w+\z/;
-                die $EVAL_ERROR unless eval sprintf 'require %s', $status;
-                my $twist = $status->can('_twist')
-                    or die sprintf
-                    'Can\'t locate object method "_twist" via package "%s"',
-                    $status;
-
-                $status = $self->$twist($message, $handle);
-            }
-
+            my $status = $self->spin_once($message, $handle);
             unless (defined $status) {
                 $self->_on_failure($message, $handle);
             } elsif ($status) {
@@ -94,6 +82,30 @@ sub spin {
     }
 
     return $processed;
+}
+
+sub spin_once {
+    my $self    = shift;
+    my $message = shift;
+    my $handle  = shift || 1;
+
+    my $status = $self->_twist($message, $handle);
+    while (ref $status eq 'ARRAY' and @$status) {
+        foreach my $class (@$status) {
+            die sprintf 'Illegal package name "%s"', $class
+                unless $class =~ /\A(?:\w+::)*\w+\z/;
+            die $EVAL_ERROR unless eval sprintf 'require %s', $class;
+            my $twist = $class->can('_twist')
+                or die sprintf
+                'Can\'t locate object method "_twist" via package "%s"',
+                $class;
+
+            $status = $self->$twist($message, $handle);
+            last unless $status;
+        }
+    }
+
+    return $status;
 }
 
 sub _init {1}
@@ -155,10 +167,10 @@ Sympa::Spindle - Base class of subclasses to define Sympa workflows
   
       # Process object...
  
-      return 1;                      # If succeeded.
-      return 0;                      # If skipped.
-      return undef;                  # If failed.
-      return 'Sympa::Spindle::BAZ';  # Splicing to another class.
+      return 1;                        # If succeeded.
+      return 0;                        # If skipped.
+      return undef;                    # If failed.
+      return ['Sympa::Spindle::BAZ'];  # Splicing to another class.
   }
 
   1;
@@ -295,11 +307,12 @@ on collection it is true scalar value (see also L<Sympa::Spool>).
 Returns:
 
 Status of processing:
-Positive integer on success; C<0> if processing skipped; C<undef> on failure.
+True value on success; C<0> if processing skipped; C<undef> on failure.
 
-As of Sympa 6.2.13, _twist() may also return the name of another class:
-_twist() method of given class will be called (not coercing spindle object
-into this class) and returned value will be used.
+As of Sympa 6.2.13, _twist() may also return the reference to array including
+name(s) of other classes:
+In this case spin() will call _twist() method of given classes in order
+(not coercing spindle object into them) and uses finally returned value.
 
 =back
 

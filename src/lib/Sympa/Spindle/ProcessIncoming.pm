@@ -384,7 +384,7 @@ sub _twist {
         # Simulate Smartlist behaviour with command in subject.
         $message->{listtype} = lc $1;
     }
-    return $self->_splicing_to($message);
+    return [$self->_splicing_to($message)];
 }
 
 # Private subroutines.
