@@ -175,7 +175,6 @@ sub _finish_child {
 sub _twist {
     my $self    = shift;
     my $message = shift;
-    my $handle  = shift;
 
     # Get list/robot context.
     my ($list, $robot, $listname);

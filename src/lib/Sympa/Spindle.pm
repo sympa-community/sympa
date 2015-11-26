@@ -32,9 +32,12 @@ sub new {
     my $class   = shift;
     my %options = @_;
 
-    die $EVAL_ERROR unless eval sprintf 'require %s', $class->_distaff;
-    my $distaff = $class->_distaff->new(%options);
-    return undef unless $distaff;
+    my $distaff;
+    if ($class->can('_distaff')) {
+        die $EVAL_ERROR unless eval sprintf 'require %s', $class->_distaff;
+        $distaff = $class->_distaff->new(%options);
+        return undef unless $distaff;
+    }
 
     my %spools;
     my $spools = $class->_spools if $class->can('_spools');
@@ -61,7 +64,7 @@ sub spin {
         my ($message, $handle) = $self->{distaff}->next;
 
         if ($message and $handle) {
-            my $status = $self->spin_once($message, $handle);
+            my $status = $self->twist($message);
             unless (defined $status) {
                 $self->_on_failure($message, $handle);
             } elsif ($status) {
@@ -84,12 +87,12 @@ sub spin {
     return $processed;
 }
 
-sub spin_once {
+sub twist {
     my $self    = shift;
     my $message = shift;
-    my $handle  = shift || 1;
 
-    my $status = $self->_twist($message, $handle);
+    my $status = $self->_twist($message);
+    # If the result is arrayref, splice to the classes in it.
     while (ref $status eq 'ARRAY' and @$status) {
         foreach my $class (@$status) {
             die sprintf 'Illegal package name "%s"', $class
@@ -100,7 +103,7 @@ sub spin_once {
                 'Can\'t locate object method "_twist" via package "%s"',
                 $class;
 
-            $status = $self->$twist($message, $handle);
+            $status = $self->$twist($message);
             last unless $status;
         }
     }
@@ -163,7 +166,6 @@ Sympa::Spindle - Base class of subclasses to define Sympa workflows
   sub _twist {
       my $self = shift;
       my $object = shift;
-      my $handle = shift; 
   
       # Process object...
  
@@ -203,6 +205,12 @@ calling _twist() and repeats.
 If source spool no longer gives content, returns the number of processed
 objects.
 
+=item twist ( $object )
+
+I<Instance method>.
+Processes an object calling _twist() and returns returned value.
+This method was introduced by Sympa 6.2.13.
+
 =back
 
 =head2 Properties
@@ -233,7 +241,7 @@ Instances of spool classes _spools() method returns.
 
 =item _distaff ( )
 
-I<Class method>, I<mandatory>.
+I<Class method>, I<mandatory> if you want to implement spin().
 Returns the name of source spool class.
 source spool class must implement new() and next().
 
@@ -282,25 +290,19 @@ I<Class method>.
 If implemented, returns hashref with names of spool classes related to the
 spindle as values.
 
-=item _twist ( $message, $handle )
+=item _twist ( $message )
 
 I<Instance method>, I<mandatory>.
 Processes an object: Typically, modifys object or creates another object and
 stores it into appropriate spool.
 
-Parameters:
+Parameter:
 
 =over
 
 =item $message
 
-An object fetched from source spool.
-
-=item $handle
-
-A handle locking the object.
-On filesystem spool it is filehandle;
-on collection it is true scalar value (see also L<Sympa::Spool>).
+An object.
 
 =back
 
@@ -311,8 +313,8 @@ True value on success; C<0> if processing skipped; C<undef> on failure.
 
 As of Sympa 6.2.13, _twist() may also return the reference to array including
 name(s) of other classes:
-In this case spin() will call _twist() method of given classes in order
-(not coercing spindle object into them) and uses finally returned value.
+In this case spin() and twist() will call _twist() method of given classes in
+order (not coercing spindle object into them) and uses finally returned value.
 
 =back
 

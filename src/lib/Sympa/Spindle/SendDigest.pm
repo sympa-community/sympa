@@ -50,7 +50,6 @@ use constant _spools     => {spool => 'Sympa::Bulk'};
 sub _twist {
     my $self         = shift;
     my $spool_digest = shift;
-    my $spool_handle = shift;    # True scalar, not used.
 
     return 0
         unless $self->{send_now}
