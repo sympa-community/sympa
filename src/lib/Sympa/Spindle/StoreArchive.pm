@@ -64,7 +64,6 @@ sub _init {
 sub _twist {
     my $self    = shift;
     my $message = shift;
-    my $handle  = shift;
 
     $log->syslog('notice', 'Processing %s; sender: %s; message ID: %s',
         $message, $message->{'sender'}, $message->{'message_id'});
@@ -89,12 +88,26 @@ sub _twist {
     } elsif (not $type and $list) {
         $log->syslog('notice', 'Archiving %s for list %s', $message, $list);
         if ($Conf::Conf{'custom_archiver'}) {
+            # As id of the message object in archive spool includes filename,
+            # it is filesystem-safe.
+            my $tmpfile =
+                'custom_archiver.' . [split /\//, $message->get_id]->[0];
+
+            if (open my $fh, '>', $Conf::Conf{'tmpdir'} . '/' . $tmpfile) {
+                print $fh $message->to_string(original => 1);
+                close $fh;
+            } else {
+                $log->syslog('err', 'Can\'t open temporary file for %s: %m',
+                    $message);
+                return undef;
+            }
+
             my $status = system($Conf::Conf{'custom_archiver'},
                 '--list=' . $list->get_list_id,
-                '--file='
-                    . $self->{distaff}->{directory} . '/'
-                    . $handle->basename,
+                '--file=' . $Conf::Conf{'tmpdir'} . '/' . $tmpfile,
             ) >> 8;
+            unlink $Conf::Conf{'tmpdir'} . '/' . $tmpfile;
+
             if ($status) {
                 $log->syslog('err', 'Custom archiver exits with code %d',
                     $status);
@@ -105,7 +118,7 @@ sub _twist {
                 Sympa::send_notify_to_listmaster(
                     $robot_id,
                     'archiving_failed',
-                    {   'file' => $handle->basename,
+                    {   'file' => $message->get_id,
                         'bad'  => $self->{distaff}->{bad_directory}
                     }
                 );
