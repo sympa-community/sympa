@@ -76,7 +76,7 @@ sub spin {
             $processed++;
             $self->_init(2);
         } elsif ($handle) {
-            $self->_on_garbage($message, $handle);
+            $self->_on_garbage($handle);
         } else {
             last;
         }
@@ -138,9 +138,8 @@ sub _on_skip {
 }
 
 sub _on_garbage {
-    my $self    = shift;
-    my $message = shift;
-    my $handle  = shift;
+    my $self   = shift;
+    my $handle = shift;
 
     $self->{distaff}->quarantine($handle);
 }
