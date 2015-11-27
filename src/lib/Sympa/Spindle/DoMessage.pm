@@ -155,28 +155,6 @@ sub _twist {
         }
     }
 
-    my $admin = $list->{'admin'};
-    unless ($admin) {
-        $log->syslog('err', 'List config is undefined');
-        Sympa::Report::reject_report_msg('intern', '', $sender,
-            {'message' => $message},
-            $robot_id, $msg_string, $list);
-        $log->db_log(
-            'robot'        => $robot_id,
-            'list'         => $list->{'name'},
-            'action'       => 'DoMessage',
-            'parameters'   => $message->get_id,
-            'target_email' => '',
-            'msg_id'       => $messageid,
-            'status'       => 'error',
-            'error_type'   => 'internal',
-            'user_email'   => $sender
-        );
-        return undef;
-    }
-
-    my $customheader = $admin->{'custom_header'};
-
     # Check if the message is too large
     my $max_size = $list->{'admin'}{'max_size'};
 
