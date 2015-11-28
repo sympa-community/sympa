@@ -2898,12 +2898,11 @@ sub distribute {
     # subscription if this list is unknown to us.
     my $list = Sympa::List->new($which, $robot, {just_try => 1});
     unless ($list) {
+        Sympa::Report::reject_report_cmd('user', 'no_existing_list',
+            {'listname' => $which}, $cmd_line);
         $log->syslog('info',
             'DISTRIBUTE %s %s from %s refused, unknown list for robot %s',
             $which, $key, $sender, $robot);
-        Sympa::Report::reject_report_msg('user', 'list_unknown', $sender,
-            {'listname' => $which},
-            $robot, '', '');
         return 'unknown_list';
     }
 
@@ -3177,25 +3176,16 @@ sub confirm {
                 unless (
                     Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
                     $log->syslog('notice',
-                        "Commands::confirm(): Unable to send template '$result->{'tt2'}' to $sender"
-                    );
+                        'Unable to send template "%s" to %s',
+                        $result->{'tt2'}, $sender);
                     Sympa::Report::reject_report_msg('auth',
                         $result->{'reason'}, $sender, {'message' => $message},
                         $robot, $msg_string, $list);
                 }
             } else {
-                unless (
-                    Sympa::Report::reject_report_msg(
-                        'auth', $result->{'reason'},
-                        $sender, {'message' => $message},
-                        $robot, $msg_string,
-                        $list
-                    )
-                    ) {
-                    $log->syslog('notice',
-                        "Commands::confirm(): Unable to send template 'message_report', type 'auth' to $sender"
-                    );
-                }
+                Sympa::Report::reject_report_msg('auth', $result->{'reason'},
+                    $sender, {'message' => $message},
+                    $robot, $msg_string, $list);
             }
         }
         return undef;
@@ -3281,12 +3271,11 @@ sub reject {
     # list is unknown to us.
     my $list = Sympa::List->new($which, $robot);
     unless ($list) {
+        Sympa::Report::reject_report_cmd('user', 'no_existing_list',
+            {'listname' => $which}, $cmd_line);
         $log->syslog('info',
             'REJECT %s %s from %s refused, unknown list for robot %s',
             $which, $key, $sender, $robot);
-        Sympa::Report::reject_report_msg('user', 'list_unknown', $sender,
-            {'listname' => $which},
-            $robot, '', '');
         return 'unknown_list';
     }
 
