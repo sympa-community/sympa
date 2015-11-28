@@ -548,28 +548,20 @@ sub _twist {
                 unless (
                     Sympa::send_file(
                         $list, $result->{'tt2'},
-                        $sender, {'auto_submitted' => 'auto-replied'}
+                        $sender, {auto_submitted => 'auto-replied'}
                     )
                     ) {
                     $log->syslog('notice',
-                        "sympa::DoMessage(): Unable to send template '$result->{'tt2'}' to $sender"
-                    );
+                        'Unable to send template "%s" to %s',
+                        $result->{'tt2'}, $sender);
+                    Sympa::Report::reject_report_msg('auth',
+                        $result->{'reason'}, $sender, {'message' => $message},
+                        $robot_id, $msg_string, $list);
                 }
             } else {
-                unless (
-                    Sympa::Report::reject_report_msg(
-                        'auth', $result->{'reason'},
-                        $sender, {'message' => $message},
-                        $robot_id, $msg_string,
-                        $list
-                    )
-                    ) {
-                    $log->syslog(
-                        'notice',
-                        'Unable to send template "message_report", type "auth" to %s',
-                        $sender
-                    );
-                }
+                Sympa::Report::reject_report_msg('auth', $result->{'reason'},
+                    $sender, {'message' => $message},
+                    $robot_id, $msg_string, $list);
             }
         }
         $log->db_log(

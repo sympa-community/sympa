@@ -3174,7 +3174,11 @@ sub confirm {
         unless ($quiet or $action =~ /,\s*quiet\b/) {
             if (defined $result->{'tt2'}) {
                 unless (
-                    Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
+                    Sympa::send_file(
+                        $list, $result->{'tt2'},
+                        $sender, {auto_submitted => 'auto-replied'}
+                    )
+                    ) {
                     $log->syslog('notice',
                         'Unable to send template "%s" to %s',
                         $result->{'tt2'}, $sender);
