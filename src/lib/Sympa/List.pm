@@ -829,8 +829,8 @@ sub get_latest_distribution_date {
 ## Update the stats struct
 ## Input  : num of bytes of msg
 ## Output : num of msgs sent
-# Old name: update_stats().
-sub _get_next_sequence {
+# Old name: List::update_stats().
+sub get_next_sequence {
     $log->syslog('debug3', '(%s)', @_);
     my $self = shift;
 
@@ -851,14 +851,13 @@ sub _get_next_sequence {
 #           the message sequence number, this way every subscriber is "VERPed"
 #           from time to time input table @rcpt is spliced: recipients for
 #           which VERP must be used are extracted from this table
-sub extract_verp_rcpt {
+# Old name: List::extract_verp_rcpt().
+sub _extract_verp_rcpt {
+    $log->syslog('debug3', '(%s, %s, %s, %s)', @_);
     my $percent     = shift;
-    my $xseq        = shift;
+    my $xsequence   = shift;
     my $refrcpt     = shift;
     my $refrcptverp = shift;
-
-    $log->syslog('debug', '(%s, %s, %s, %s)',
-        $percent, $xseq, $refrcpt, $refrcptverp);
 
     my @result;
 
@@ -873,10 +872,10 @@ sub extract_verp_rcpt {
             return undef;
         }
 
-        my $modulo = $xseq % $nbpart;
-        my $lenght = int(($#{$refrcpt} + 1) / $nbpart) + 1;
+        my $modulo = $xsequence % $nbpart;
+        my $length = int(scalar(@$refrcpt) / $nbpart) + 1;
 
-        @result = splice @$refrcpt, $lenght * $modulo, $lenght;
+        @result = splice @$refrcpt, $length * $modulo, $length;
     }
     foreach my $verprcpt (@$refrcptverp) {
         push @result, $verprcpt;
@@ -1532,7 +1531,7 @@ sub distribute_msg {
     my $robot = $self->{'domain'};
 
     # Update msg_count, and returns the new X-Sequence, if any.
-    my $sequence = $self->_get_next_sequence;
+    $message->{xsequence} = $self->get_next_sequence;
 
     ## Loading info msg_topic file if exists, add X-Sympa-Topic
     my $topic;
@@ -1555,7 +1554,8 @@ sub distribute_msg {
         $message->replace_header('From',
             $self->{'admin'}{'anonymous_sender'});
         $message->delete_header('Resent-From');
-        my $new_id = $self->{'name'} . '.' . $sequence . '@anonymous';
+        my $new_id =
+            $self->{'name'} . '.' . $message->{xsequence} . '@anonymous';
         $message->replace_header('Message-Id', "<$new_id>");
         $message->delete_header('Resent-Message-Id');
 
@@ -1577,7 +1577,7 @@ sub distribute_msg {
         my $data = {
             list => {
                 name     => $self->{'name'},
-                sequence => $self->{'stats'}->[0],
+                sequence => $message->{xsequence},
             },
         };
         my $template = Sympa::Template->new(undef);
@@ -1731,7 +1731,7 @@ sub distribute_msg {
     }
 
     # Transformation of message after archiving.
-    $self->post_archive($message, $sequence);
+    $self->post_archive($message);
 
     ## store msg in digest if list accept digest mode (encrypted message can't
     ## be included in digest)
@@ -1790,7 +1790,6 @@ sub distribute_msg {
         if Sympa::Tools::Data::smart_eq($message->{shelved}{tracking},
         qr/dsn|mdn/);
 
-    my $xsequence = $self->{'stats'}->[0];
     my $tags_to_use;
 
     # Define messages which can be tagged as first or last according to the
@@ -1845,9 +1844,10 @@ sub distribute_msg {
         }
 
         ## Preparing VERP recipients.
-        my @verp_selected_tabrcpt =
-            extract_verp_rcpt($verp_rate, $xsequence, \@selected_tabrcpt,
-            \@possible_verptabrcpt);
+        my @verp_selected_tabrcpt = _extract_verp_rcpt(
+            $verp_rate,         $message->{xsequence},
+            \@selected_tabrcpt, \@possible_verptabrcpt
+        );
 
         # Prepare non-VERP sending.
         if (@selected_tabrcpt) {
@@ -1944,9 +1944,8 @@ sub distribute_msg {
 
 # Note: this would be moved to Pipeline package.
 sub post_archive {
-    my $self     = shift;
-    my $message  = shift;
-    my $sequence = shift;
+    my $self    = shift;
+    my $message = shift;
 
     Sympa::Message::Plugin::execute('post_archive', $message);
 
@@ -1983,8 +1982,9 @@ sub post_archive {
     ## Add/replace useful header fields
 
     ## These fields should be added preserving existing ones.
-    $message->add_header('X-Loop', $self->get_list_address());
-    $message->add_header('X-Sequence', $sequence) if defined $sequence;
+    $message->add_header('X-Loop',     $self->get_list_address);
+    $message->add_header('X-Sequence', $message->{xsequence})
+        if defined $message->{xsequence};
     ## These fields should be overwritten if any of them already exist
     $message->delete_header('Errors-To');
     $message->add_header('Errors-To', $self->get_list_address('return_path'));
