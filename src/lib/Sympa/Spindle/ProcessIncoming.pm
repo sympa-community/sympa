@@ -266,7 +266,8 @@ sub _twist {
             );
             return undef;
         }
-        $list_address = $list->get_list_address();
+        $list_address = $list->get_list_address($message->{listtype})
+            || $list->get_list_address;
     }
 
     ## Loop prevention
@@ -303,19 +304,15 @@ sub _twist {
         }
     }
 
-    ## Loop prevention
-    my $loop;
-    foreach $loop ($message->get_header('X-Loop')) {
-        chomp $loop;
-        $log->syslog('debug2', 'X-Loop: %s', $loop);
-        #foreach my $l (split(/[\s,]+/, lc($loop))) {
-        if ($loop eq lc($list_address)) {
+    # Loop prevention.
+    foreach my $loop ($message->get_header('X-Loop')) {
+        $log->syslog('debug3', 'X-Loop: %s', $loop);
+        if ($loop and $loop eq $list_address) {
             $log->syslog('err',
                 'Ignoring message which would cause a loop (X-Loop: %s)',
                 $loop);
             return undef;
         }
-        #}
     }
 
     # Anti-virus
