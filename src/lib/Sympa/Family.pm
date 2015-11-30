@@ -390,15 +390,14 @@ sub add_list {
     }
     close FILE;
 
-    my $host = Conf::get_robot_conf($self->{'robot'}, 'host');
-
     # info parameters
-    $list->{'admin'}{'latest_instantiation'}{'email'} = "listmaster\@$host";
+    $list->{'admin'}{'latest_instantiation'}{'email'} =
+        Sympa::get_address($self, 'listmaster');
     ##FIXME:should be unneccessary
     $list->{'admin'}{'latest_instantiation'}{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
-    $list->save_config("listmaster\@$host");
+    $list->save_config(Sympa::get_address($self, 'listmaster'));
     $list->{'family'} = $self;
 
     ## check param_constraint.conf
@@ -664,14 +663,13 @@ sub modify_list {
     my @kept_files = keys %{$config_changes->{'file'}};
     $list->update_config_changes('file', \@kept_files);
 
-    my $host = Conf::get_robot_conf($self->{'robot'}, 'host');
-
-    $list->{'admin'}{'latest_instantiation'}{'email'} = "listmaster\@$host";
+    $list->{'admin'}{'latest_instantiation'}{'email'} =
+        Sympa::get_address($self, 'listmaster');
     ##FIXME:should be unneccessary
     $list->{'admin'}{'latest_instantiation'}{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
-    $list->save_config("listmaster\@$host");
+    $list->save_config(Sympa::get_address($self, 'listmaster'));
     $list->{'family'} = $self;
 
     ## check param_constraint.conf
@@ -2493,13 +2491,13 @@ sub _end_update_list {
     my ($self, $list, $xml_file) = @_;
     $log->syslog('debug3', '(%s, %s)', $self->{'name'}, $list->{'name'});
 
-    my $host = Conf::get_robot_conf($self->{'robot'}, 'host');
-    $list->{'admin'}{'latest_instantiation'}{'email'} = "listmaster\@$host";
+    $list->{'admin'}{'latest_instantiation'}{'email'} =
+        Sympa::get_address($self, 'listmaster');
     ##FIXME:should be unneccessary
     $list->{'admin'}{'latest_instantiation'}{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
-    $list->save_config("listmaster\@$host");
+    $list->save_config(Sympa::get_address($self, 'listmaster'));
     $list->{'family'} = $self;
 
     ## check param_constraint.conf

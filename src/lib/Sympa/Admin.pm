@@ -261,15 +261,13 @@ sub create_list_old {
         }
     }
 
-    ## Creation of the config file
-    my $host = Conf::get_robot_conf($robot, 'host');
-    ##FIXME:should be unneccessary
+    # Creation of the config file.
+    #FIXME:should be unneccessary
     $param->{'creation'}{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $param->{'creation'}{'date_epoch'} = time;
-    $param->{'creation_email'} = "listmaster\@$host"
-        unless ($param->{'creation_email'});
-    $param->{'status'} = 'open' unless ($param->{'status'});
+    $param->{'creation_email'} ||= Sympa::get_address($robot, 'listmaster');
+    $param->{'status'} ||= 'open';
 
     ## Lock config before openning the config file
     my $lock_fh = Sympa::LockedFile->new($list_dir . '/config', 5, '>');
@@ -585,17 +583,9 @@ sub create_list {
     $list->{'admin'}{'creation'}{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
-    if ($param->{'creation_email'}) {
-        $list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'};
-    } else {
-        my $host = Conf::get_robot_conf($robot, 'host');
-        $list->{'admin'}{'creation'}{'email'} = "listmaster\@$host";
-    }
-    if ($param->{'status'}) {
-        $list->{'admin'}{'status'} = $param->{'status'};
-    } else {
-        $list->{'admin'}{'status'} = 'open';
-    }
+    $list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'}
+        || Sympa::get_address($robot, 'listmaster');
+    $list->{'admin'}{'status'} = $param->{'status'} || 'open';
     $list->{'admin'}{'family_name'} = $family->{'name'};
 
     my $return = {};
@@ -693,18 +683,9 @@ sub update_list {
     $list->{'admin'}{'creation'}{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
-    if ($param->{'creation_email'}) {
-        $list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'};
-    } else {
-        my $host = Conf::get_robot_conf($robot, 'host');
-        $list->{'admin'}{'creation'}{'email'} = "listmaster\@$host";
-    }
-
-    if ($param->{'status'}) {
-        $list->{'admin'}{'status'} = $param->{'status'};
-    } else {
-        $list->{'admin'}{'status'} = 'open';
-    }
+    $list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'}
+        || Sympa::get_address($robot, 'listmaster');
+    $list->{'admin'}{'status'} = $param->{'status'} || 'open';
     $list->{'admin'}{'family_name'} = $family->{'name'};
 
     ## Create associated files if a template was given.
@@ -1369,14 +1350,14 @@ sub check_owner_defined {
 # check if the requested list exists already using
 #   smtp 'rcpt to'
 #
-# IN  : - $list : name of the list
+# IN  : - $name : name of the list
 #       - $robot : list's robot
 # OUT : - Net::SMTP object or 0
 #####################################################
 sub list_check_smtp {
-    my $list  = shift;
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $name  = shift;
     my $robot = shift;
-    $log->syslog('debug2', '(%s, %s)', $list, $robot);
 
     my $conf = '';
     my $smtp;
@@ -1388,16 +1369,16 @@ sub list_check_smtp {
     $smtp_helo =~ s/:[-\w]+$// if $smtp_helo;
     my $suffixes = Conf::get_robot_conf($robot, 'list_check_suffixes');
     return 0
-        unless ($smtp_relay && $suffixes);
-    my $domain = Conf::get_robot_conf($robot, 'host');
-    $log->syslog('debug2', '(%s, %s)', $list, $robot);
-    @suf = split(/,/, $suffixes);
-    return 0 if !@suf;
+        unless $smtp_relay and $suffixes;
+    my $host = Conf::get_robot_conf($robot, 'host');
+    $log->syslog('debug2', '(%s, %s)', $name, $robot);
+    @suf = split /\s*,\s*/, $suffixes;
+    return 0 unless @suf;
 
-    for (@suf) {
-        push @addresses, $list . "-$_\@" . $domain;
+    foreach my $suffix (@suf) {
+        push @addresses, $name . '-' . $suffix . '@' . $host;
     }
-    push @addresses, "$list\@" . $domain;
+    push @addresses, $name . '@' . $host;
 
     eval { require Net::SMTP; };
     if ($EVAL_ERROR) {

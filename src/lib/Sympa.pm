@@ -1088,13 +1088,18 @@ These are accessors derived from configuration parameters.
 =item get_address ( $that, [ $type ] )
 
     # Get address bound for super listmaster(s).
-    Sympa::get_address('*', 'listmaster'); # <listmaster@DEFAULT_HOST>
-    # Get address for command robot.
-    Sympa::get_address($robot);            # <sympa@HOST>
-    Sympa::get_address($robot, 'sympa');   # ditto.
-    # Get address bound for the list and its owner(s).
-    Sympa::get_address($list);             # <NAME@HOST>
-    Sympa::get_address($list, 'owner');    # <NAME-request@HOST>
+    Sympa::get_address('*', 'listmaster');     # <listmaster@DEFAULT_HOST>
+    # Get address for command robot and robot listmaster(s).
+    Sympa::get_address($robot, 'sympa');       # <sympa@HOST>
+    Sympa::get_address($robot, 'listmaster');  # <listmaster@HOST>
+    # Get address for command robot and robot listmaster(s).
+    Sympa::get_address($family, 'sympa');      # <sympa@HOST>
+    Sympa::get_address($family, 'listmaster'); # listmaster@HOST>
+    # Get address bound for the list and its owner(s) etc.
+    Sympa::get_address($list);                 # <NAME@HOST>
+    Sympa::get_address($list, 'owner');        # <NAME-request@HOST>
+    Sympa::get_address($list, 'editor');       # <NAME-editor@HOST>
+    Sympa::get_address($list, 'return_path');  # <NAME-owner@HOST>
 
 Site or robot:
 Returns the site or robot email address of type $type: email command address
@@ -1151,6 +1156,9 @@ sub get_address {
             # robot address, for convenience.
             return Sympa::get_address($that->{'domain'}, $type);
         }
+    } elsif (ref $that eq 'Sympa::Family') {
+        # robot address, for convenience.
+        return Sympa::get_address($that->{'robot'}, $type);
     } else {
         unless ($type) {
             return Conf::get_robot_conf($that, 'email') . '@'
