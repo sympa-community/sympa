@@ -1079,9 +1079,104 @@ sub get_supported_languages {
     return \@lang_list;
 }
 
-=head3 Users
+=head3 Addresses and users
 
 These are accessors derived from configuration parameters.
+
+=over
+
+=item get_address ( $that, [ $type ] )
+
+    # Get address bound for super listmaster(s).
+    Sympa::get_address('*', 'listmaster'); # <listmaster@DEFAULT_HOST>
+    # Get address for command robot.
+    Sympa::get_address($robot);            # <sympa@HOST>
+    Sympa::get_address($robot, 'sympa');   # ditto.
+    # Get address bound for the list and its owner(s).
+    Sympa::get_address($list);             # <NAME@HOST>
+    Sympa::get_address($list, 'owner');    # <NAME-request@HOST>
+
+Site or robot:
+Returns the site or robot email address of type $type: email command address
+(default, <sympa> address), "owner" (<sympa-request> address) or "listmaster".
+
+List:
+Returns the list email address of type $type: posting address (default),
+"owner" (<LIST-request> address), "editor", non-VERP "return_path"
+(<LIST-owner> address), "subscribe" or "unsubscribe".
+
+Note:
+%Conf::Conf or Conf::get_robot_conf() may return <sympa> and
+<sympa-request> addresses by "sympa" and "request" arguments, respectively.
+They are obsoleted.  Use this function instead.
+
+=back
+
+=cut
+
+sub get_address {
+    my $that = shift || '*';
+    my $type = shift || '';
+
+    if (ref $that eq 'Sympa::List') {
+        unless ($type) {
+            return $that->{'name'} . '@' . $that->{'admin'}{'host'};
+        } elsif ($type eq 'owner') {
+            return
+                  $that->{'name'}
+                . '-request' . '@'
+                . $that->{'admin'}{'host'};
+        } elsif ($type eq 'editor') {
+            return
+                  $that->{'name'}
+                . '-editor' . '@'
+                . $that->{'admin'}{'host'};
+        } elsif ($type eq 'return_path') {
+            return $that->{'name'}
+                . Conf::get_robot_conf($that->{'domain'},
+                'return_path_suffix')
+                . '@'
+                . $that->{'admin'}{'host'};
+        } elsif ($type eq 'subscribe') {
+            return
+                  $that->{'name'}
+                . '-subscribe' . '@'
+                . $that->{'admin'}{'host'};
+        } elsif ($type eq 'unsubscribe') {
+            return
+                  $that->{'name'}
+                . '-unsubscribe' . '@'
+                . $that->{'admin'}{'host'};
+        } elsif ($type eq 'sympa' or $type eq 'listmaster') {
+            # robot address, for convenience.
+            return Sympa::get_address($that->{'domain'}, $type);
+        }
+    } else {
+        unless ($type) {
+            return Conf::get_robot_conf($that, 'email') . '@'
+                . Conf::get_robot_conf($that, 'host');
+        } elsif ($type eq 'sympa') {    # same as above, for convenience
+            return Conf::get_robot_conf($that, 'email') . '@'
+                . Conf::get_robot_conf($that, 'host');
+        } elsif ($type eq 'owner' or $type eq 'request') {
+            return
+                  Conf::get_robot_conf($that, 'email')
+                . '-request' . '@'
+                . Conf::get_robot_conf($that, 'host');
+        } elsif ($type eq 'listmaster') {
+            return Conf::get_robot_conf($that, 'listmaster_email') . '@'
+                . Conf::get_robot_conf($that, 'host');
+        } elsif ($type eq 'return_path') {
+            return
+                  Conf::get_robot_conf($that, 'email')
+                . Conf::get_robot_conf($that, 'return_path_suffix') . '@'
+                . Conf::get_robot_conf($that, 'host');
+        }
+    }
+
+    $log->syslog('err', 'Unknown type of address "%s" for %s', $type, $that);
+    return undef;
+}
 
 =over
 

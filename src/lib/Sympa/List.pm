@@ -10383,6 +10383,9 @@ sub get_bounce_dir {
 
 =item get_list_address ( [ TYPE ] )
 
+OBSOLETED.
+Use L<Sympa/"get_address">.
+
 Return the list email address of type TYPE: posting address (default),
 "owner", "editor" or (non-VERP) "return_path".
 
@@ -10390,36 +10393,9 @@ Return the list email address of type TYPE: posting address (default),
 
 =cut
 
+# OBSOLETED. Merged into Sympa::get_address().
 sub get_list_address {
-    my $self = shift;
-    my $type = shift || '';
-
-    unless ($type) {
-        return $self->{'name'} . '@' . $self->{'admin'}{'host'};
-    } elsif ($type eq 'owner') {
-        return $self->{'name'} . '-request' . '@' . $self->{'admin'}{'host'};
-    } elsif ($type eq 'editor') {
-        return $self->{'name'} . '-editor' . '@' . $self->{'admin'}{'host'};
-    } elsif ($type eq 'return_path') {
-        return
-              $self->{'name'}
-            . Conf::get_robot_conf($self->{'domain'}, 'return_path_suffix')
-            . '@'
-            . $self->{'admin'}{'host'};
-    } elsif ($type eq 'subscribe') {
-        return
-              $self->{'name'}
-            . '-subscribe' . '@'
-            . $self->{'admin'}{'host'};
-    } elsif ($type eq 'unsubscribe') {
-        return
-              $self->{'name'}
-            . '-unsubscribe' . '@'
-            . $self->{'admin'}{'host'};
-    }
-    $log->syslog('err', 'Unknown type of list address "%s".  Ask developer',
-        $type);
-    return undef;
+    goto &Sympa::get_address; # "&" is required.
 }
 
 =over 4
