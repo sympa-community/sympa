@@ -51,57 +51,42 @@ sub _twist {
     # Fail-safe: Skip messages with unwanted types.
     return 0 unless $self->_splicing_to($message) eq __PACKAGE__;
 
-    my ($list, $robot_id, $listname);
-    if (ref($message->{context}) eq 'Sympa::List') {
-        $list     = $message->{context};
-        $robot_id = $list->{'domain'};
-        $listname = $list->{'name'};
-    } elsif ($message->{context} and $message->{context} ne '*') {
-        $robot_id = $message->{context};
-        $listname = $message->{'localpart'};
-    } else {
-        $robot_id = '*';
-        $listname = $message->{'localpart'};
-    }
+    my $start_time = time;
 
-    my $messageid  = $message->{'message_id'};
-    my $msg        = $message->as_entity;        #FIMXE: not required.
-    my $msg_string = $msg->as_string;            #FIXME: not required.
-
-    my $sender = $message->{'sender'};
-
-    ## List unknown
-    unless ($list) {
-        $log->syslog('notice', 'Unknown list %s', $listname);
-        my $sympa_email = Conf::get_robot_conf($robot_id, 'sympa');
+    # List unknown.
+    unless (ref $message->{context} eq 'Sympa::List') {
+        $log->syslog('notice', 'Unknown list %s', $message->{localpart});
 
         unless (
             Sympa::send_file(
-                $robot_id,
+                $message->{context},
                 'list_unknown',
-                $sender,
-                {   'list' => $listname,
+                $message->{sender},
+                {   'list' => $message->{localpart},
                     'date' =>
                         POSIX::strftime("%d %b %Y  %H:%M", localtime(time)),
-                    'boundary'       => $sympa_email . time,
                     'header'         => $message->header_as_string,
                     'auto_submitted' => 'auto-replied'
                 }
             )
             ) {
             $log->syslog('notice',
-                'Unable to send template "list_unknown" to %s', $sender);
+                'Unable to send template "list_unknown" to %s',
+                $message->{sender});
         }
         return undef;
     }
-
-    my $start_time = time;
+    my $list = $message->{context};
 
     Sympa::Language->instance->set_lang(
         $list->{'admin'}{'lang'},
-        Conf::get_robot_conf($robot_id, 'lang'),
+        Conf::get_robot_conf($list->{'domain'}, 'lang'),
         $Conf::Conf{'lang'}, 'en'
     );
+
+    my $messageid  = $message->{message_id};
+    my $msg_string = $message->as_string;
+    my $sender     = $message->{'sender'};
 
     ## Now check if the sender is an authorized address.
 
@@ -109,7 +94,7 @@ sub _twist {
         "Processing message %s for %s with priority %s, <%s>",
         $message, $list, $list->{'admin'}{'priority'}, $messageid);
 
-    if ($self->{_msgid}{$list->get_list_id()}{$messageid}) {
+    if ($self->{_msgid}{$list->get_id}{$messageid}) {
         $log->syslog(
             'err',
             'Found known Message-ID <%s>, ignoring message %s which would cause a loop',
@@ -117,7 +102,7 @@ sub _twist {
             $message
         );
         $log->db_log(
-            'robot'        => $robot_id,
+            'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},
             'action'       => 'DoMessage',
             'parameters'   => $message->get_id,
@@ -139,9 +124,9 @@ sub _twist {
                 'Found command "%s" in message, ignoring message', $cmd);
             Sympa::Report::reject_report_msg('user', 'routing_error', $sender,
                 {'message' => $message},
-                $robot_id, $msg_string, $list);
+                $list->{'domain'}, $msg_string, $list);
             $log->db_log(
-                'robot'        => $robot_id,
+                'robot'        => $list->{'domain'},
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
                 'parameters'   => $message->get_id,
@@ -158,10 +143,10 @@ sub _twist {
     # Check if the message is too large
     my $max_size = $list->{'admin'}{'max_size'};
 
-    if ($max_size && $message->{'size'} > $max_size) {
+    if ($max_size and $max_size < $message->{size}) {
         $log->syslog('info',
             'Message for %s from %s rejected because too large (%d > %d)',
-            $listname, $sender, $message->{'size'}, $max_size);
+            $list, $sender, $message->{size}, $max_size);
         Sympa::Report::reject_report_msg(
             'user',
             'message_too_large',
@@ -169,11 +154,11 @@ sub _twist {
             {   'msg_size' => int($message->{'size'} / 1024),
                 'max_size' => int($max_size / 1024)
             },
-            $robot_id,
+            $list->{'domain'},
             '', $list
         );
         $log->db_log(
-            'robot'        => $robot_id,
+            'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},
             'action'       => 'DoMessage',
             'parameters'   => $message->get_id,
@@ -186,15 +171,13 @@ sub _twist {
         return undef;
     }
 
-    my $rc;
-
     my $context = {
         'sender'  => $sender,
         'message' => $message
     };
 
     # List msg topic.
-    if ($list->is_there_msg_topic()) {
+    if ($list->is_there_msg_topic) {
         my $topic;
         if ($topic = Sympa::Topic->load($message)) {
             # Is message already tagged?
@@ -216,16 +199,16 @@ sub _twist {
                 $topic->{topic};
         }
         $context->{'topic_needed'} =
-            (!$context->{'topic'} && $list->is_msg_topic_tagging_required());
+            (!$context->{'topic'} && $list->is_msg_topic_tagging_required);
     }
 
-    ## Call scenarii : auth_method MD5 do not have any sense in send
-    ## scenarii because auth is perfom by distribute or reject command.
+    # Call scenario: auth_method MD5 do not have any sense in "send"
+    # scenario because auth is performed by distribute or reject command.
 
     my $action;
     my $result;
 
-    # the order of the following 3 lines is important ! SMIME > DKIM > SMTP
+    # The order of the following 3 lines is important! SMIME > DKIM > SMTP.
     my $auth_method =
           $message->{'smime_signed'} ? 'smime'
         : $message->{'md5_check'}    ? 'md5'
@@ -239,21 +222,21 @@ sub _twist {
     unless (defined $action) {
         $log->syslog(
             'err',
-            'Message (%s) ignored because unable to evaluate scenario "send" for list %s',
-            $messageid,
-            $listname
+            'Message %s ignored because unable to evaluate scenario "send" for list %s',
+            $message,
+            $list
         );
         Sympa::Report::reject_report_msg(
             'intern',
             'Message ignored because scenario "send" cannot be evaluated',
             $sender,
             {'msg_id' => $messageid, 'message' => $message},
-            $robot_id,
+            $list->{'domain'},
             $msg_string,
             $list
         );
         $log->db_log(
-            'robot'        => $robot_id,
+            'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},
             'action'       => 'DoMessage',
             'parameters'   => $message->get_id,
@@ -266,16 +249,17 @@ sub _twist {
         return undef;
     }
 
-    ## message topic context
-    if (($action =~ /^do_it/) && ($context->{'topic_needed'})) {
-        $action = 'editorkey'
-            if (
-            $list->{'admin'}{'msg_topic_tagging'} eq 'required_moderator');
-        $action = 'request_auth'
-            if ($list->{'admin'}{'msg_topic_tagging'} eq 'required_sender');
+    # Message topic context.
+    if ($action =~ /^do_it\b/ and $context->{'topic_needed'}) {
+        if ($list->{'admin'}{'msg_topic_tagging'} eq 'required_sender') {
+            $action = 'request_auth';
+        } elsif (
+            $list->{'admin'}{'msg_topic_tagging'} eq 'required_moderator') {
+            $action = 'editorkey';
+        }
     }
 
-    if ($action =~ /^do_it/) {
+    if ($action =~ /^do_it\b/) {
         $message->{shelved}{dkim_sign} = 1
             if Sympa::Tools::Data::is_in_array(
             $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
@@ -292,7 +276,7 @@ sub _twist {
             and $message->{'dkim_pass'}
             );
 
-        ## Check TT2 syntax for merge_feature.
+        # Check TT2 syntax for merge_feature.
         unless ($message->test_personalize($list)) {
             $log->syslog(
                 'err',
@@ -307,17 +291,17 @@ sub _twist {
         my $numsmtp = Sympa::List::distribute_msg($message);
 
         # Keep track of known message IDs...if any.
-        $self->{_msgid}{$list->get_list_id()}{$messageid} = time
+        $self->{_msgid}{$list->get_id}{$messageid} = time
             if $messageid;
 
         unless (defined $numsmtp) {
-            $log->syslog('err', 'Unable to send message to list %s',
-                $listname);
+            $log->syslog('err', 'Unable to send message %s to list %s',
+                $message, $list);
             Sympa::Report::reject_report_msg('intern', '', $sender,
                 {'msg_id' => $messageid, 'message' => $message},
-                $robot_id, $msg_string, $list);
+                $list->{'domain'}, $msg_string, $list);
             $log->db_log(
-                'robot'        => $robot_id,
+                'robot'        => $list->{'domain'},
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
                 'parameters'   => $message->get_id,
@@ -333,17 +317,17 @@ sub _twist {
             'info',
             'Message %s for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
             $message,
-            $listname,
+            $list,
             $sender,
             time - $start_time,
             $numsmtp,
-            $list->get_total(),
+            $list->get_total,
             $messageid,
             $message->{'size'}
         );
 
         return 1;
-    } elsif ($action =~ /^request_auth/) {
+    } elsif ($action =~ /^request_auth\b/) {
         ## Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
             $log->syslog(
@@ -363,13 +347,16 @@ sub _twist {
                 'Failed to send confirmation of %s for %s to sender %s',
                 $message, $list, $sender);
             Sympa::Report::reject_report_msg(
-                'intern', 'The request authentication sending failed',
-                $sender, {'msg_id' => $messageid, 'message' => $message},
-                $robot_id, $msg_string,
+                'intern',
+                'The request authentication sending failed',
+                $sender,
+                {'msg_id' => $messageid, 'message' => $message},
+                $list->{'domain'},
+                $msg_string,
                 $list
             );
             $log->db_log(
-                'robot'        => $robot_id,
+                'robot'        => $list->{'domain'},
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
                 'parameters'   => $message->get_id,
@@ -382,10 +369,10 @@ sub _twist {
             return undef;
         }
         $log->syslog('notice',
-            'Message for %s from %s kept for authentication with key %s',
-            $listname, $sender, $key);
+            'Message %s for %s from %s kept for authentication with key %s',
+            $message, $list, $sender, $key);
         $log->db_log(
-            'robot'        => $robot_id,
+            'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},
             'action'       => 'DoMessage',
             'parameters'   => $message->get_id,
@@ -395,11 +382,12 @@ sub _twist {
             'error_type'   => 'kept_for_auth',
             'user_email'   => $sender
         );
-        return 1;
-    } elsif ($action =~ /^editorkey(\s?,\s?(quiet))?/) {
-        my $quiet = $2;
 
-        ## Check syntax for merge_feature.
+        return 1;
+    } elsif ($action =~ /^editorkey\b(?:\s*,\s*(quiet))?/) {
+        my $quiet = $1;
+
+        # Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
             $log->syslog(
                 'err',
@@ -416,7 +404,7 @@ sub _twist {
         unless (defined $key) {
             $log->syslog(
                 'err',
-                'Failed to moderation request of %s from %s for list %s to editor(s)',
+                'Failed to send moderation request of %s from %s for list %s to editor(s)',
                 $message,
                 $sender,
                 $list
@@ -426,12 +414,12 @@ sub _twist {
                 'The request moderation sending to moderator failed.',
                 $sender,
                 {'msg_id' => $messageid, 'message' => $message},
-                $robot_id,
+                $list->{'domain'},
                 $msg_string,
                 $list
             );
             $log->db_log(
-                'robot'        => $robot_id,
+                'robot'        => $list->{'domain'},
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
                 'parameters'   => $message->get_id,
@@ -446,29 +434,20 @@ sub _twist {
 
         $log->syslog('info',
             'Key %s of message %s for list %s from %s sent to editors',
-            $key, $message, $listname, $sender);
+            $key, $message, $list, $sender);
 
-        # do not report to the sender if the message was tagged as a spam
+        # Do not report to the sender if the message was tagged as a spam.
         unless ($quiet or $message->{'spam_status'} eq 'spam') {
-            unless (
-                Sympa::Report::notice_report_msg(
-                    'moderating_message', $sender,
-                    {'message' => $message}, $robot_id,
-                    $list
-                )
-                ) {
-                $log->syslog(
-                    'notice',
-                    'Unable to send template "message_report", entry "moderating_message" to %s',
-                    $sender
-                );
-            }
+            Sympa::Report::notice_report_msg('moderating_message', $sender,
+                {'message' => $message},
+                $list->{'domain'}, $list);
         }
         return 1;
-    } elsif ($action =~ /^editor(\s?,\s?(quiet))?/) {
-        my $quiet = $2;
 
-        ## Check syntax for merge_feature.
+    } elsif ($action =~ /^editor\b(?:\s*,\s*(quiet))?/) {
+        my $quiet = $1;
+
+        # Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
             $log->syslog(
                 'err',
@@ -485,7 +464,7 @@ sub _twist {
         unless (defined $key) {
             $log->syslog(
                 'err',
-                'Failed to send moderation request of %s by %s for list %s to editor(s)',
+                'Failed to send moderation request of %s from %s for list %s to editor(s)',
                 $message,
                 $sender,
                 $list
@@ -495,12 +474,12 @@ sub _twist {
                 'The request moderation sending to moderator failed.',
                 $sender,
                 {'msg_id' => $messageid, 'message' => $message},
-                $robot_id,
+                $list->{'domain'},
                 $msg_string,
                 $list
             );
             $log->db_log(
-                'robot'        => $robot_id,
+                'robot'        => $list->{'domain'},
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
                 'parameters'   => $message->get_id,
@@ -513,36 +492,29 @@ sub _twist {
             return undef;
         }
 
-        $log->syslog('info', 'Message %s for %s from %s sent to editors',
-            $message, $listname, $sender);
+        $log->syslog('info', 'Message %s for list %s from %s sent to editors',
+            $message, $list, $sender);
 
-        # do not report to the sender if the message was tagged as a spam
+        # Do not report to the sender if the message was tagged as a spam.
         unless ($quiet or $message->{'spam_status'} eq 'spam') {
-            unless (
-                Sympa::Report::notice_report_msg(
-                    'moderating_message', $sender,
-                    {'message' => $message}, $robot_id,
-                    $list
-                )
-                ) {
-                $log->syslog('notice',
-                    "sympa::DoMessage(): Unable to send template 'message_report', type 'success', entry 'moderating_message' to $sender"
-                );
-            }
+            Sympa::Report::notice_report_msg('moderating_message', $sender,
+                {'message' => $message},
+                $list->{'domain'}, $list);
         }
         return 1;
-    } elsif ($action =~ /^reject(,(quiet))?/) {
-        my $quiet = $2;
+    } elsif ($action =~ /^reject\b(?:\s*,\s*(quiet))?/) {
+        my $quiet = $1;
 
         $log->syslog(
             'notice',
-            'Message for %s from %s rejected(%s) because sender not allowed',
-            $listname,
+            'Message %s for %s from %s rejected(%s) because sender not allowed',
+            $message,
+            $list,
             $sender,
             $result->{'tt2'}
         );
 
-        # do not report to the sender if the message was tagued as a spam
+        # Do not report to the sender if the message was tagged as a spam.
         unless ($quiet or $message->{'spam_status'} eq 'spam') {
             if (defined $result->{'tt2'}) {
                 unless (
@@ -556,16 +528,16 @@ sub _twist {
                         $result->{'tt2'}, $sender);
                     Sympa::Report::reject_report_msg('auth',
                         $result->{'reason'}, $sender, {'message' => $message},
-                        $robot_id, $msg_string, $list);
+                        $list->{'domain'}, $msg_string, $list);
                 }
             } else {
                 Sympa::Report::reject_report_msg('auth', $result->{'reason'},
                     $sender, {'message' => $message},
-                    $robot_id, $msg_string, $list);
+                    $list->{'domain'}, $msg_string, $list);
             }
         }
         $log->db_log(
-            'robot'        => $robot_id,
+            'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},
             'action'       => 'DoMessage',
             'parameters'   => $message->get_id,
@@ -580,13 +552,16 @@ sub _twist {
         $log->syslog('err',
             'Unknown action %s returned by the scenario "send"', $action);
         Sympa::Report::reject_report_msg(
-            'intern', 'Unknown action returned by the scenario "send"',
-            $sender, {'msg_id' => $messageid, 'message' => $message},
-            $robot_id, $msg_string,
+            'intern',
+            'Unknown action returned by the scenario "send"',
+            $sender,
+            {'msg_id' => $messageid, 'message' => $message},
+            $list->{'domain'},
+            $msg_string,
             $list
         );
         $log->db_log(
-            'robot'        => $robot_id,
+            'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},
             'action'       => 'DoMessage',
             'parameters'   => $message->get_id,
