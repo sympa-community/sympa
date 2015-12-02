@@ -84,8 +84,20 @@ Remote-MTA: dns; [% conf.host %]
 Diagnostic-Code: X-Sympa; [% diagnostic_code %]
 
 --[% boundary %]
+[%# Attach only header part of potentially unsafe contents. ~%]
+[% IF status == '5.1.1' || status == '5.1.2'
+   || status == '5.2.3' || status == '5.7.0' -%]
 Content-Type: text/rfc822-headers
+Content-Disposition: inline
 
 [% header %]
 
+[% ELSE -%]
+Content-Type: message/rfc822
+Content-Disposition: inline
+X-Sympa-Attach: yes
+
+[%# msg inserted here #%]
+
+[% END -%]
 --[% boundary %]--

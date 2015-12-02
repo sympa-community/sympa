@@ -578,14 +578,20 @@ my %diag_messages = (
     '5.1.2' => 'Bad destination system address',
     # too large
     '5.2.3' => 'Message length exceeds administrative limit',
+    # could not store message into spool or mailer
+    '5.3.0' => 'Other or undefined mail system status',
     # misconfigured family list
     '5.3.5' => 'System incorrectly configured',
     # loop detected
     '5.4.6' => 'Routing loop detected',
+    # message contains commands
+    '5.6.0' => 'Other or undefined media error',
     # failed to personalize (merge_feature)
     '5.6.5' => 'Conversion Failed',
     # virus found
     '5.7.0' => 'Other or undefined security status',
+    # message is not authorized and is rejected
+    '5.7.1' => 'Delivery not authorized, message refused',
     # failed to re-encrypt decrypted message
     '5.7.5' => 'Cryptographic failure',
 );
@@ -612,24 +618,24 @@ sub send_dsn {
         return undef;
     }
 
-    my $recipient = '';
+    $param->{listname} ||= $message->{localpart};
     if (ref $that eq 'Sympa::List') {
-        $recipient = $that->get_list_address;
+        $param->{recipient} ||=
+            $param->{listname} . '@' . $that->{'admin'}{'host'};
         $status ||= '5.1.1';
-    } elsif (!ref $that and $that and $that ne '*') {
-        if ($param->{'listname'}) {
-            if ($param->{'function'}) {
-                $recipient = sprintf '%s-%s@%s', $param->{'listname'},
-                    $param->{'function'}, Conf::get_robot_conf($that, 'host');
-            } else {
-                $recipient = sprintf '%s@%s', $param->{'listname'},
-                    Conf::get_robot_conf($that, 'host');
-            }
+
+        if ($status eq '5.2.3') {
+            my $max_size = $that->{'admin'}{'max_size'};
+            $param->{msg_size} = int($message->{'size'} / 1024);
+            $param->{max_size} = int($max_size / 1024);
         }
-        $recipient ||= $param->{'recipient'};
+    } elsif (!ref $that and $that and $that ne '*') {
+        $param->{recipient} ||=
+            $param->{listname} . '@' . Conf::get_robot_conf($that, 'host');
         $status ||= '5.1.1';
     } elsif ($that eq '*') {
-        $recipient = $param->{'recipient'};
+        $param->{recipient} ||=
+            $param->{listname} . '@' . $Conf::Conf{'host'};
         $status ||= '5.1.2';
     } else {
         die 'bug in logic.  Ask developer';
@@ -640,7 +646,13 @@ sub send_dsn {
     # Delivery result, "failed" or "delivered".
     my $action = (index($status, '2') == 0) ? 'delivered' : 'failed';
 
-    my $header = $message->header_as_string;
+    # Attach original (not decrypted) content.
+    my $msg_string = $message->as_string(original => 1);
+    $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
+    my $header =
+        ($msg_string =~ /\A\r?\n/)
+        ? ''
+        : [split /(?<=\n)\r?\n/, $msg_string, 2]->[0];
 
     my $date =
         (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
@@ -651,9 +663,9 @@ sub send_dsn {
         'delivery_status_notification',
         $sender,
         {   %$param,
-            'recipient'       => $recipient,
             'to'              => $sender,
             'date'            => $date,
+            'msg'             => $msg_string,
             'header'          => $header,
             'auto_submitted'  => 'auto-replied',
             'action'          => $action,
