@@ -116,7 +116,7 @@
               <li class="divider hide-for-small"></li>
            [% END %] 
            [% IF use_passwd == '1' %]
-          <li class="has-dropdown">
+          <li id="login-dropdown" class="has-dropdown">
             <a href="#"><i class="fa fa-user"></i> [%|loc%]Login[%END%]</a>
             <ul class="dropdown">
             <form action="[% path_cgi %]" method="post">

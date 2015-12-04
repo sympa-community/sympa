@@ -101,10 +101,24 @@ $(document).foundation({
     });
 
     $('.scroll-top-wrapper').on('click', scrollToTop);
+    /*Top Button*/
+
+    /* Correction of disapeared top-bar-dropdown menu on input lost focus */
+    $('#login-dropdown').removeClass('not-click').on('mouseover', function () {
+        $(this).addClass('hover');
+    }).on('mouseout', function (e) {
+        if (e.relatedTarget) {
+            if($(e.target).is(':input'))
+                $(e.target).blur();
+            
+            $(this).removeClass('hover');
+        }
+    });
+
 
     });
 
-/*Top Button*/
+
 function scrollToTop() {
 	verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
 	element = $('body');
