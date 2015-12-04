@@ -91,6 +91,8 @@ sub twist {
     my $self    = shift;
     my $message = shift;
 
+    $self->{start_time} = time;
+
     my $status = $self->_twist($message);
     # If the result is arrayref, splice to the classes in it.
     while (ref $status eq 'ARRAY' and @$status) {
@@ -171,7 +173,7 @@ Sympa::Spindle - Base class of subclasses to define Sympa workflows
       return 1;                        # If succeeded.
       return 0;                        # If skipped.
       return undef;                    # If failed.
-      return ['Sympa::Spindle::BAZ'];  # Splicing to another class.
+      return ['Sympa::Spindle::BAZ'];  # Splicing to the other class(es).
   }
 
   1;
@@ -204,12 +206,6 @@ calling _twist() and repeats.
 If source spool no longer gives content, returns the number of processed
 objects.
 
-=item twist ( $object )
-
-I<Instance method>.
-Processes an object calling _twist() and returns returned value.
-This method was introduced by Sympa 6.2.13.
-
 =back
 
 =head2 Properties
@@ -231,6 +227,12 @@ Once it is set, spin() finishes processing safely.
 =item Spools
 
 Instances of spool classes _spools() method returns.
+
+=item {start_time}
+
+Unix time when processing of the latest message by
+spin() began.
+Introduced by Sympa 6.2.13.
 
 =back
 
@@ -313,7 +315,8 @@ True value on success; C<0> if processing skipped; C<undef> on failure.
 As of Sympa 6.2.13, _twist() may also return the reference to array including
 name(s) of other classes:
 In this case spin() and twist() will call _twist() method of given classes in
-order (not coercing spindle object into them) and uses finally returned value.
+order (not coercing spindle object into them) and uses retruned false value
+at first or true value at last.
 
 =back
 
