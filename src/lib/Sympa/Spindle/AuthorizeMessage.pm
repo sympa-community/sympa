@@ -49,7 +49,7 @@ sub _twist {
     my $msg_string = $message->as_string;
 
     # Now check if the sender is an authorized address.
-    my $sender = $message->{sender};
+    my $sender = $self->{confirmed_by} || $message->{sender};
 
     my $context = {
         'sender'  => $sender,
@@ -57,7 +57,8 @@ sub _twist {
     };
 
     # List msg topic.
-    if ($list->is_there_msg_topic) {
+    if (not $self->{confirmed_by} # Not in ProcessHeld spindle.
+        and $list->is_there_msg_topic) {
         my $topic;
         if ($topic = Sympa::Topic->load($message)) {
             # Is message already tagged?
@@ -140,6 +141,9 @@ sub _twist {
     }
 
     if ($action =~ /^do_it\b/) {
+        my $quiet = $self->{quiet} || ($action =~ /,\s*quiet\b/);
+
+      unless ($self->{confirmed_by}) { # Not in ProcessHeld spindle.
         $message->{shelved}{dkim_sign} = 1
             if Sympa::Tools::Data::is_in_array(
             $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
@@ -155,6 +159,16 @@ sub _twist {
                 'dkim_authenticated_messages')
             and $message->{'dkim_pass'}
             );
+      } else {
+        $message->add_header('X-Validation-by', $self->{confirmed_by});
+
+        $message->{shelved}{dkim_sign} = 1
+            if Sympa::Tools::Data::is_in_array(
+            $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
+            or Sympa::Tools::Data::is_in_array(
+            $list->{'admin'}{'dkim_signature_apply_on'},
+            'md5_authenticated_messages');
+      }
 
         # Check TT2 syntax for merge_feature.
         unless ($message->test_personalize($list)) {
@@ -172,7 +186,7 @@ sub _twist {
 
         # Keep track of known message IDs...if any.
         $self->{_msgid}{$list->get_id}{$messageid} = time
-            if $messageid;
+            unless $self->{confirmed_by};
 
         unless (defined $numsmtp) {
             $log->syslog('err', 'Unable to send message %s to list %s',
@@ -192,7 +206,14 @@ sub _twist {
                 'user_email'   => $sender
             );
             return undef;
+        } elsif (not $quiet and $self->{confirmed_by}) {
+            Sympa::Report::notice_report_msg(
+                'message_confirmed', $sender,
+                {'key' => $self->{authkey}, 'message' => $message}, $list->{'domain'},
+                $list
+            );
         }
+
         $log->syslog(
             'info',
             'Message %s for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
@@ -207,7 +228,8 @@ sub _twist {
         );
 
         return 1;
-    } elsif ($action =~ /^request_auth\b/) {
+    } elsif (not $self->{confirmed_by} # Not in ProcessHeld spindle.
+        and $action =~ /^request_auth\b/) {
         ## Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
             $log->syslog(
@@ -264,8 +286,8 @@ sub _twist {
         );
 
         return 1;
-    } elsif ($action =~ /^editorkey\b(?:\s*,\s*(quiet))?/) {
-        my $quiet = $1;
+    } elsif ($action =~ /^editorkey\b/) {
+        my $quiet = $self->{quiet} || ($action =~ /,\s*quiet\b/);
 
         # Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
@@ -324,8 +346,8 @@ sub _twist {
         }
         return 1;
 
-    } elsif ($action =~ /^editor\b(?:\s*,\s*(quiet))?/) {
-        my $quiet = $1;
+    } elsif ($action =~ /^editor\b/) {
+        my $quiet = $self->{quiet} || ($action =~ /,\s*quiet\b/);
 
         # Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
@@ -382,8 +404,8 @@ sub _twist {
                 $list->{'domain'}, $list);
         }
         return 1;
-    } elsif ($action =~ /^reject\b(?:\s*,\s*(quiet))?/) {
-        my $quiet = $1;
+    } elsif ($action =~ /^reject\b/) {
+        my $quiet = $self->{quiet} || ($action =~ /,\s*quiet\b/);
 
         $log->syslog(
             'notice',

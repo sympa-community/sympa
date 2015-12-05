@@ -84,6 +84,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/DoMessage.pm \
 	Sympa/Spindle/ProcessAutomatic.pm \
 	Sympa/Spindle/ProcessBounce.pm \
+	Sympa/Spindle/ProcessHeld.pm \
 	Sympa/Spindle/ProcessIncoming.pm \
 	Sympa/Spindle/ProcessOutgoing.pm \
 	Sympa/Spindle/SendDigest.pm \

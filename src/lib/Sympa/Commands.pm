@@ -37,11 +37,10 @@ use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Request;
 use Sympa::Scenario;
-use Sympa::Spool::Held;
+use Sympa::Spindle::ProcessHeld;
 use Sympa::Spool::Moderation;
 use Sympa::Spool::Request;
 use Sympa::Tools::Data;
-use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::User;
 
@@ -3025,219 +3024,24 @@ sub confirm {
         return 'syntax_error';
     }
 
-    my $start_time = time;    # get the time at the beginning
+    my $spindle = Sympa::Spindle::ProcessHeld->new(
+        confirmed_by => $sender, context => $robot, authkey => $key,
+        quiet => $quiet);
 
-    my $spool_held =
-        Sympa::Spool::Held->new(context => $robot, authkey => $key);
-    my ($message, $handle);
-    while (1) {
-        ($message, $handle) = $spool_held->next;
-        last unless $handle;
-        last if $message;
-    }
-    unless ($message) {
+    unless ($spindle->spin) { # No message.
         $log->syslog('info', 'CONFIRM %s from %s refused, auth failed',
             $key, $sender);
         Sympa::Report::reject_report_msg('user', 'unfound_file_message',
             $sender, {'key' => $key},
             $robot, '', '');
         return 'wrong_auth';
-    }
-
-    # Decrpyt message.
-    # If encrypted, it will be re-encrypted by succeeding processes.
-    $message->smime_decrypt;
-
-    my $list = $message->{context};
-    $language->set_lang($list->{'admin'}{'lang'});
-
-    my $msgid      = $message->{'message_id'};
-    my $msg_string = $message->as_string;
-
-    my $result = Sympa::Scenario::request_action(
-        $list, 'send', 'md5',
-        {   'sender'  => $sender,
-            'message' => $message,
-        }
-    );
-
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        $log->syslog(
-            'err',
-            'Message %s is ignored because unable to evaluate scenario for list %s',
-            $message,
-            $list
-        );
-        Sympa::Report::reject_report_msg(
-            'intern',
-            'Message ignored because scenario "send" cannot be evaluated',
-            $sender,
-            {'msg_id' => $msgid, 'message' => $message},
-            $robot,
-            $msg_string,
-            $list
-        );
+    } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
+        $log->syslog('info',
+            'CONFIRM %s from %s accepted (%d seconds)',
+            $key, $sender, time - $time_command);
+        return 1;
+    } else {
         return undef;
-    }
-
-    if ($action =~ /^editorkey\b/) {
-        my $key = Sympa::List::send_confirm_to_editor($message, 'md5');
-
-        unless (defined $key) {
-            $log->syslog(
-                'err',
-                'Failed to moderation request %s from %s for list %s to editor(s)',
-                $message,
-                $sender,
-                $list
-            );
-            Sympa::Report::reject_report_msg(
-                'intern',
-                'The request moderation sending to moderator failed.',
-                $sender,
-                {'msg_id' => $msgid, 'message' => $message},
-                $robot,
-                $msg_string,
-                $list
-            );
-            return undef;
-        }
-
-        $log->syslog('info',
-            'Message %s with key %s for list %s from %s sent to editors',
-            $message, $key, $list, $sender);
-
-        unless ($quiet or $action =~ /,\s*quiet\b/) {
-            unless (
-                Sympa::Report::notice_report_msg(
-                    'moderating_message', $sender,
-                    {'message' => $message}, $robot,
-                    $list
-                )
-                ) {
-                $log->syslog('notice',
-                    "Commands::confirm(): Unable to send template 'message_report', entry 'moderating_message' to $sender"
-                );
-            }
-        }
-        return 1;
-
-    } elsif ($action =~ /editor\b/) {
-        my $key = Sympa::List::send_confirm_to_editor($message, 'smtp');
-
-        unless (defined $key) {
-            $log->syslog(
-                'err',
-                'Failed to moderation request of %s from %s for list %s to editor(s)',
-                $message,
-                $sender,
-                $list
-            );
-            Sympa::Report::reject_report_msg(
-                'intern',
-                'The request moderation sending to moderator failed.',
-                $sender,
-                {'msg_id' => $msgid, 'message' => $message},
-                $robot,
-                $msg_string,
-                $list
-            );
-            return undef;
-        }
-
-        $log->syslog('info',
-            'Message %s with key %s for list %s from %s sent to editors',
-            $message, $list, $key, $sender);
-
-        unless ($quiet or $action =~ /,\s*quiet\b/) {
-            unless (
-                Sympa::Report::notice_report_msg(
-                    'moderating_message', $sender,
-                    {'message' => $message}, $robot,
-                    $list
-                )
-                ) {
-                $log->syslog('notice',
-                    "Commands::confirm(): Unable to send template 'message_report', type 'success', entry 'moderating_message' to $sender"
-                );
-            }
-        }
-        return 1;
-
-    } elsif ($action =~ /^reject\b/) {
-        $log->syslog('notice',
-            'Message %s for %s from %s rejected, sender not allowed',
-            $message, $list, $sender);
-        unless ($quiet or $action =~ /,\s*quiet\b/) {
-            if (defined $result->{'tt2'}) {
-                unless (
-                    Sympa::send_file(
-                        $list, $result->{'tt2'},
-                        $sender, {auto_submitted => 'auto-replied'}
-                    )
-                    ) {
-                    $log->syslog('notice',
-                        'Unable to send template "%s" to %s',
-                        $result->{'tt2'}, $sender);
-                    Sympa::Report::reject_report_msg('auth',
-                        $result->{'reason'}, $sender, {'message' => $message},
-                        $robot, $msg_string, $list);
-                }
-            } else {
-                Sympa::Report::reject_report_msg('auth', $result->{'reason'},
-                    $sender, {'message' => $message},
-                    $robot, $msg_string, $list);
-            }
-        }
-        return undef;
-
-    } elsif ($action =~ /^do_it\b/) {
-        $message->add_header('X-Validation-by', $sender);
-
-        ## Distribute the message
-        my $numsmtp;
-        $message->{shelved}{dkim_sign} = 1
-            if Sympa::Tools::Data::is_in_array(
-            $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-            or Sympa::Tools::Data::is_in_array(
-            $list->{'admin'}{'dkim_signature_apply_on'},
-            'md5_authenticated_messages');
-
-        $numsmtp = Sympa::List::distribute_msg($message);
-        unless (defined $numsmtp) {
-            $log->syslog('err', 'Unable to send message to list %s',
-                $list->{'name'});
-            Sympa::Report::reject_report_msg('intern', '', $sender,
-                {'msg_id' => $msgid, 'message' => $message},
-                $robot, $msg_string, $list);
-            return undef;
-        }
-
-        unless ($quiet or $action =~ /,\s*quiet\b/) {
-            unless (
-                Sympa::Report::notice_report_msg(
-                    'message_confirmed', $sender,
-                    {'key' => $key, 'message' => $message}, $robot,
-                    $list
-                )
-                ) {
-                $log->syslog(
-                    'notice',
-                    'Unable to send template "message_report", entry "message_confirmed" to %s',
-                    $sender
-                );
-            }
-        }
-        $log->syslog('info',
-            'CONFIRM %s from %s for list %s accepted (%d seconds)',
-            $key, $sender, $list->{'name'}, time - $time_command);
-
-        $spool_held->remove($handle);
-
-        return 1;
     }
 }
 
