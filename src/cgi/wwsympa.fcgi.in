@@ -73,6 +73,7 @@ use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::SharedDocument;
+use Sympa::Spindle::DistributeMessage;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
@@ -10136,7 +10137,7 @@ sub do_send_me {
         $message->smime_decrypt;
 
         # Add or remove several header fields.
-        $list->post_archive($message);
+        Sympa::Spindle::DistributeMessage::post_archive($message);
 
         # Add footer/header.
         $message->decorate;

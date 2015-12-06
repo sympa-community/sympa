@@ -141,7 +141,7 @@ sub _twist {
     }
 
     if ($action =~ /^do_it\b/) {
-        my $quiet = $self->{quiet} || ($action =~ /,\s*quiet\b/);
+        $self->{quiet} ||= ($action =~ /,\s*quiet\b/); # Overwrite.
 
       unless ($self->{confirmed_by}) { # Not in ProcessHeld spindle.
         $message->{shelved}{dkim_sign} = 1
@@ -182,52 +182,11 @@ sub _twist {
             return undef;
         }
 
-        my $numsmtp = Sympa::List::distribute_msg($message);
-
         # Keep track of known message IDs...if any.
         $self->{_msgid}{$list->get_id}{$messageid} = time
             unless $self->{confirmed_by};
 
-        unless (defined $numsmtp) {
-            $log->syslog('err', 'Unable to send message %s to list %s',
-                $message, $list);
-            Sympa::Report::reject_report_msg('intern', '', $sender,
-                {'msg_id' => $messageid, 'message' => $message},
-                $list->{'domain'}, $msg_string, $list);
-            $log->db_log(
-                'robot'        => $list->{'domain'},
-                'list'         => $list->{'name'},
-                'action'       => 'DoMessage',
-                'parameters'   => $message->get_id,
-                'target_email' => '',
-                'msg_id'       => $messageid,
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $sender
-            );
-            return undef;
-        } elsif (not $quiet and $self->{confirmed_by}) {
-            Sympa::Report::notice_report_msg(
-                'message_confirmed', $sender,
-                {'key' => $self->{authkey}, 'message' => $message}, $list->{'domain'},
-                $list
-            );
-        }
-
-        $log->syslog(
-            'info',
-            'Message %s for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
-            $message,
-            $list,
-            $sender,
-            time - $self->{start_time},
-            $numsmtp,
-            $list->get_total,
-            $messageid,
-            $message->{'size'}
-        );
-
-        return 1;
+        return ['Sympa::Spindle::DistributeMessage'];
     } elsif (not $self->{confirmed_by} # Not in ProcessHeld spindle.
         and $action =~ /^request_auth\b/) {
         ## Check syntax for merge_feature.
@@ -484,7 +443,8 @@ __END__
 
 =head1 NAME
 
-Sympa::Spindle::AuthorizeMessage - Workflow to authorize messages
+Sympa::Spindle::AuthorizeMessage -
+Workflow to authorize messages bound for lists
 
 =head1 DESCRIPTION
 
@@ -512,7 +472,8 @@ Not implemented.
 
 =head1 SEE ALSO
 
-L<Sympa::Message>, L<Sympa::Scenario>, L<Sympa::Spindle::DoMessage>,
+L<Sympa::Message>, L<Sympa::Scenario>, L<Sympa::Spindle::DistributeMessage>,
+L<Sympa::Spindle::DoMessage>, L<Sympa::Spindle::ProcessHeld>,
 L<Sympa::Topic>.
 
 =head1 HISTORY

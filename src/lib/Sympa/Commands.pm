@@ -37,6 +37,7 @@ use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Request;
 use Sympa::Scenario;
+use Sympa::Spindle::DistributeMessage;
 use Sympa::Spindle::ProcessHeld;
 use Sympa::Spool::Moderation;
 use Sympa::Spool::Request;
@@ -2944,7 +2945,7 @@ sub distribute {
         $list->{'admin'}{'dkim_signature_apply_on'},
         'editor_validated_messages');
 
-    $numsmtp = Sympa::List::distribute_msg($message);
+    $numsmtp = Sympa::Spindle::DistributeMessage->_distribute_msg($message);
     unless (defined $numsmtp) {
         $log->syslog('err', 'Unable to send message to list %s', $list);
         Sympa::Report::reject_report_msg('intern', '', $sender,
