@@ -63,63 +63,61 @@ sub _twist {
     my $list      = $message->{context};
     my $messageid = $message->{message_id};
     my $sender =
-        $self->{confirmed_by} || $self->{distributed_by} || $message->{sender};
+           $self->{confirmed_by}
+        || $self->{distributed_by}
+        || $message->{sender};
 
-        my $numsmtp = _distribute_msg($message);
-        unless (defined $numsmtp) {
-            $log->syslog('err', 'Unable to send message %s to list %s',
-                $message, $list);
+    my $numsmtp = _distribute_msg($message);
+    unless (defined $numsmtp) {
+        $log->syslog('err', 'Unable to send message %s to list %s',
+            $message, $list);
         Sympa::send_notify_to_listmaster(
             $list,
             'mail_intern_error',
-            {   error => '',
+            {   error  => '',
                 who    => $sender,
                 msg_id => $messageid,
             }
         );
         Sympa::send_dsn($list, $message, {}, '5.3.0');
         $log->db_log(
-                'robot'        => $list->{'domain'},
-                'list'         => $list->{'name'},
-                'action'       => 'DoMessage',
-                'parameters'   => $message->get_id,
-                'target_email' => '',
-                'msg_id'       => $messageid,
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $sender
+            'robot'        => $list->{'domain'},
+            'list'         => $list->{'name'},
+            'action'       => 'DoMessage',
+            'parameters'   => $message->get_id,
+            'target_email' => '',
+            'msg_id'       => $messageid,
+            'status'       => 'error',
+            'error_type'   => 'internal',
+            'user_email'   => $sender
         );
         return undef;
     } elsif (not $self->{quiet}) {
         if ($self->{confirmed_by}) {
-            Sympa::Report::notice_report_msg(
-                'message_confirmed', $sender,
-                {'key' => $self->{authkey}, 'message' => $message}, $list->{'domain'},
-                $list
-            );
+            Sympa::Report::notice_report_msg('message_confirmed', $sender,
+                {'key' => $self->{authkey}, 'message' => $message},
+                $list->{'domain'}, $list);
         } elsif ($self->{distributed_by}) {
-            Sympa::Report::notice_report_msg(
-                'message_distributed', $sender,
-                {'key' => $self->{authkey}, 'message' => $message}, $list->{'domain'},
-                $list
-            );
+            Sympa::Report::notice_report_msg('message_distributed', $sender,
+                {'key' => $self->{authkey}, 'message' => $message},
+                $list->{'domain'}, $list);
         }
     }
 
-        $log->syslog(
-            'info',
-            'Message %s for %s from %s accepted (%.2f seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
-            $message,
-            $list,
-            $sender,
-            Time::HiRes::time() - $self->{start_time},
-            $numsmtp,
-            $list->get_total,
-            $messageid,
-            $message->{'size'}
-        );
+    $log->syslog(
+        'info',
+        'Message %s for %s from %s accepted (%.2f seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
+        $message,
+        $list,
+        $sender,
+        Time::HiRes::time() - $self->{start_time},
+        $numsmtp,
+        $list->get_total,
+        $messageid,
+        $message->{'size'}
+    );
 
-        return 1;
+    return 1;
 }
 
 # Private subroutines.

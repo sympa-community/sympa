@@ -44,54 +44,64 @@ sub _twist {
     my $self    = shift;
     my $message = shift;
 
-    my $list = $message->{context};
+    my $list      = $message->{context};
     my $messageid = $message->{message_id};
-    my $sender = $self->{confirmed_by} || $self->{distributed_by} || $message->{sender};
+    my $sender =
+           $self->{confirmed_by}
+        || $self->{distributed_by}
+        || $message->{sender};
 
-        my $key = _send_confirm_to_editor($message, 'md5');
+    my $key = _send_confirm_to_editor($message, 'md5');
 
-        unless (defined $key) {
-            $log->syslog(
-                'err',
-                'Failed to send moderation request of %s from %s for list %s to editor(s)',
-                $message,
-                $sender,
-                $list
-            );
+    unless (defined $key) {
+        $log->syslog(
+            'err',
+            'Failed to send moderation request of %s from %s for list %s to editor(s)',
+            $message,
+            $sender,
+            $list
+        );
         Sympa::send_notify_to_listmaster(
             $list,
             'mail_intern_error',
-            {   error => 'The request moderation sending to moderator failed.',
+            {   error =>
+                    'The request moderation sending to moderator failed.',
                 who    => $sender,
                 msg_id => $messageid,
             }
         );
         Sympa::send_dsn($list, $message, {}, '5.3.0');
-            $log->db_log(
-                'robot'        => $list->{'domain'},
-                'list'         => $list->{'name'},
-                'action'       => 'DoMessage',
-                'parameters'   => $message->get_id,
-                'target_email' => '',
-                'msg_id'       => $messageid,
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $sender
-            );
-            return undef;
-        }
+        $log->db_log(
+            'robot'        => $list->{'domain'},
+            'list'         => $list->{'name'},
+            'action'       => 'DoMessage',
+            'parameters'   => $message->get_id,
+            'target_email' => '',
+            'msg_id'       => $messageid,
+            'status'       => 'error',
+            'error_type'   => 'internal',
+            'user_email'   => $sender
+        );
+        return undef;
+    }
 
-        $log->syslog('info',
-            'Key %s of message %s for list %s from %s sent to editors (%.2f seconds)',
-            $key, $message, $list, $sender, Time::HiRes::time() - $self->{start_time});
+    $log->syslog(
+        'info',
+        'Key %s of message %s for list %s from %s sent to editors (%.2f seconds)',
+        $key,
+        $message,
+        $list,
+        $sender,
+        Time::HiRes::time() - $self->{start_time}
+    );
 
-        # Do not report to the sender if the message was tagged as a spam.
-        unless ($self->{quiet} or $message->{'spam_status'} eq 'spam') {
-            Sympa::Report::notice_report_msg('moderating_message', $sender,
-                {'message' => $message},
-                $list->{'domain'}, $list);
-        }
-        return 1;
+    # Do not report to the sender if the message was tagged as a spam.
+    unless ($self->{quiet} or $message->{'spam_status'} eq 'spam') {
+        Sympa::Report::notice_report_msg('moderating_message', $sender,
+            {'message' => $message},
+            $list->{'domain'}, $list);
+    }
+    return 1;
 }
 
 # Old name: List::send_to_editor(), Sympa::List::send_confirm_to_editor().
@@ -107,17 +117,17 @@ sub _send_confirm_to_editor {
     my $modkey;
     # Keeps a copy of the message.
     #XXXif ($method eq 'md5') {
-        # Move message to mod spool.
-        # If crypted, store the crypted form of the message (keep decrypted
-        # form for HTML view).
-        if ($modkey = $spool_mod->store($message, original => 1)) {
-            $spool_mod->html_store($message, $modkey);
-        }
-        unless ($modkey) {
-            $log->syslog('err', 'Cannot create moderation key of %s for %s',
-                $message, $list);
-            return undef;
-        }
+    # Move message to mod spool.
+    # If crypted, store the crypted form of the message (keep decrypted
+    # form for HTML view).
+    if ($modkey = $spool_mod->store($message, original => 1)) {
+        $spool_mod->html_store($message, $modkey);
+    }
+    unless ($modkey) {
+        $log->syslog('err', 'Cannot create moderation key of %s for %s',
+            $message, $list);
+        return undef;
+    }
     #XXX}
 
     @rcpt = $list->get_admins_email('receptive_editor');
@@ -209,4 +219,3 @@ sub _send_confirm_to_editor {
 }
 
 1;
-

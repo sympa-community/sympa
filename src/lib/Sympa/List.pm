@@ -9636,7 +9636,7 @@ Return the list email address of type TYPE: posting address (default),
 
 # OBSOLETED. Merged into Sympa::get_address().
 sub get_list_address {
-    goto &Sympa::get_address; # "&" is required.
+    goto &Sympa::get_address;    # "&" is required.
 }
 
 =over 4

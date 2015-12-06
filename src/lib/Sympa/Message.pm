@@ -2935,7 +2935,7 @@ sub check_virus_infection {
     }
 
     # if debug mode is active, the working directory is kept
-    unless ($options{debug}) { #FIXME: Is this condition required?
+    unless ($options{debug}) {    #FIXME: Is this condition required?
         opendir DIR, $work_dir;
         my @list = readdir DIR;
         closedir DIR;

@@ -39,44 +39,31 @@ use base qw(Sympa::Spindle);
 my $log = Sympa::Log->instance;
 
 sub _twist {
-    my $self = shift;
+    my $self    = shift;
     my $message = shift;
 
-    my $list = $message->{context};
+    my $list      = $message->{context};
     my $messageid = $message->{message_id};
-    my $sender = $self->{confirmed_by} || $self->{distributed_by} || $message->{sender};
+    my $sender =
+           $self->{confirmed_by}
+        || $self->{distributed_by}
+        || $message->{sender};
 
-        my $key = _send_confirm_to_sender($message);
+    my $key = _send_confirm_to_sender($message);
 
-        unless (defined $key) {
-            $log->syslog('err',
-                'Failed to send confirmation of %s for %s to sender %s',
-                $message, $list, $sender);
+    unless (defined $key) {
+        $log->syslog('err',
+            'Failed to send confirmation of %s for %s to sender %s',
+            $message, $list, $sender);
         Sympa::send_notify_to_listmaster(
             $list,
             'mail_intern_error',
-            {   error => 'The request authentication sending failed',
+            {   error  => 'The request authentication sending failed',
                 who    => $sender,
                 msg_id => $messageid,
             }
         );
         Sympa::send_dsn($list, $message, {}, '5.3.0');
-            $log->db_log(
-                'robot'        => $list->{'domain'},
-                'list'         => $list->{'name'},
-                'action'       => 'DoMessage',
-                'parameters'   => $message->get_id,
-                'target_email' => '',
-                'msg_id'       => $messageid,
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $sender
-            );
-            return undef;
-        }
-        $log->syslog('notice',
-            'Message %s for %s from %s kept for authentication with key %s (%.2f seconds)',
-            $message, $list, $sender, $key, Time::HiRes::time() - $self->{start_time});
         $log->db_log(
             'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},
@@ -84,12 +71,34 @@ sub _twist {
             'parameters'   => $message->get_id,
             'target_email' => '',
             'msg_id'       => $messageid,
-            'status'       => 'success',
-            'error_type'   => 'kept_for_auth',
+            'status'       => 'error',
+            'error_type'   => 'internal',
             'user_email'   => $sender
         );
+        return undef;
+    }
+    $log->syslog(
+        'notice',
+        'Message %s for %s from %s kept for authentication with key %s (%.2f seconds)',
+        $message,
+        $list,
+        $sender,
+        $key,
+        Time::HiRes::time() - $self->{start_time}
+    );
+    $log->db_log(
+        'robot'        => $list->{'domain'},
+        'list'         => $list->{'name'},
+        'action'       => 'DoMessage',
+        'parameters'   => $message->get_id,
+        'target_email' => '',
+        'msg_id'       => $messageid,
+        'status'       => 'success',
+        'error_type'   => 'kept_for_auth',
+        'user_email'   => $sender
+    );
 
-        return 1;
+    return 1;
 }
 
 # Old name: List::send_auth(), Sympa::List::send_confirm_to_sender().

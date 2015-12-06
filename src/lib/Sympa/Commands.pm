@@ -203,8 +203,10 @@ sub help {
             $sender, $robot);
     }
 
-    $log->syslog('info', 'HELP from %s accepted (%.2f seconds)',
-        $sender, Time::HiRes::time() - $time_command);
+    $log->syslog(
+        'info',  'HELP from %s accepted (%.2f seconds)',
+        $sender, Time::HiRes::time() - $time_command
+    );
 
     return 1;
 }
@@ -279,8 +281,10 @@ sub lists {
             $sender, $robot);
     }
 
-    $log->syslog('info', 'LISTS from %s accepted (%.2f seconds)',
-        $sender, Time::HiRes::time() - $time_command);
+    $log->syslog(
+        'info',  'LISTS from %s accepted (%.2f seconds)',
+        $sender, Time::HiRes::time() - $time_command
+    );
 
     return 1;
 }
@@ -915,7 +919,8 @@ sub review {
                 $cmd_line, $sender, $robot);
             return undef;
         }
-        $log->syslog('info', 'REVIEW %s from %s, auth requested (%.2f seconds)',
+        $log->syslog('info',
+            'REVIEW %s from %s, auth requested (%.2f seconds)',
             $listname, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
@@ -1037,9 +1042,12 @@ sub verify {
             Sympa::Report::notice_report_cmd('dkim', {}, $cmd_line);
         }
     } else {
-        $log->syslog('info',
+        $log->syslog(
+            'info',
             'VERIFY from %s: could not find correct S/MIME signature (%.2f seconds)',
-            $sender, Time::HiRes::time() - $time_command);
+            $sender,
+            Time::HiRes::time() - $time_command
+        );
         Sympa::Report::reject_report_cmd('user', 'no_verify_sign', {},
             $cmd_line);
     }
@@ -1302,8 +1310,11 @@ sub subscribe {
             );
         }
         $log->syslog(
-            'info', 'SUB %s from %s accepted (%.2f seconds, %d subscribers)',
-            $which, $sender, Time::HiRes::time() - $time_command,
+            'info',
+            'SUB %s from %s accepted (%.2f seconds, %d subscribers)',
+            $which,
+            $sender,
+            Time::HiRes::time() - $time_command,
             $list->get_total()
         );
 
@@ -1722,8 +1733,11 @@ sub signoff {
         }
 
         $log->syslog(
-            'info', 'SIG %s from %s accepted (%.2f seconds, %d subscribers)',
-            $which, $email, Time::HiRes::time() - $time_command,
+            'info',
+            'SIG %s from %s accepted (%.2f seconds, %d subscribers)',
+            $which,
+            $email,
+            Time::HiRes::time() - $time_command,
             $list->get_total()
         );
 
@@ -2044,7 +2058,8 @@ sub invite {
             return undef;
         }
 
-        $log->syslog('info', 'INVITE %s from %s, auth requested (%.2f seconds)',
+        $log->syslog('info',
+            'INVITE %s from %s, auth requested (%.2f seconds)',
             $which, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
@@ -2340,7 +2355,8 @@ sub remind {
                 return undef;
             }
         }
-        $log->syslog('info', 'REMIND %s from %s, auth requested (%.2f seconds)',
+        $log->syslog('info',
+            'REMIND %s from %s, auth requested (%.2f seconds)',
             $listname, $sender, Time::HiRes::time() - $time_command);
         return 1;
     } elsif ($action =~ /do_it/i) {
@@ -2601,7 +2617,8 @@ sub del {
                 $cmd_line, $sender, $robot);
             return undef;
         }
-        $log->syslog('info', 'DEL %s %s from %s, auth requested (%.2f seconds)',
+        $log->syslog('info',
+            'DEL %s %s from %s, auth requested (%.2f seconds)',
             $which, $who, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
@@ -2905,10 +2922,13 @@ sub distribute {
     }
 
     my $spindle = Sympa::Spindle::ProcessModeration->new(
-        distributed_by => $sender, context => $robot, authkey => $key,
-        quiet => $quiet);
+        distributed_by => $sender,
+        context        => $robot,
+        authkey        => $key,
+        quiet          => $quiet
+    );
 
-    unless ($spindle->spin) { # No message.
+    unless ($spindle->spin) {    # No message.
         $log->syslog('err',
             'Unable to find message with key <%s> for list %s',
             $key, $list);
@@ -2917,8 +2937,10 @@ sub distribute {
             $robot, '', $list);
         return 'msg_not_found';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
-        $log->syslog('info', 'DISTRIBUTE %s %s from %s accepted (%.2f seconds)',
-            $list->{'name'}, $key, $sender, Time::HiRes::time() - $time_command);
+        $log->syslog('info',
+            'DISTRIBUTE %s %s from %s accepted (%.2f seconds)',
+            $list->{'name'}, $key, $sender,
+            Time::HiRes::time() - $time_command);
         return 1;
     } else {
         return undef;
@@ -2954,10 +2976,13 @@ sub confirm {
     }
 
     my $spindle = Sympa::Spindle::ProcessHeld->new(
-        confirmed_by => $sender, context => $robot, authkey => $key,
-        quiet => $quiet);
+        confirmed_by => $sender,
+        context      => $robot,
+        authkey      => $key,
+        quiet        => $quiet
+    );
 
-    unless ($spindle->spin) { # No message.
+    unless ($spindle->spin) {    # No message.
         $log->syslog('info', 'CONFIRM %s from %s refused, auth failed',
             $key, $sender);
         Sympa::Report::reject_report_msg('user', 'unfound_file_message',
@@ -2965,8 +2990,7 @@ sub confirm {
             $robot, '', '');
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
-        $log->syslog('info',
-            'CONFIRM %s from %s accepted (%.2f seconds)',
+        $log->syslog('info', 'CONFIRM %s from %s accepted (%.2f seconds)',
             $key, $sender, Time::HiRes::time() - $time_command);
         return 1;
     } else {
@@ -3017,10 +3041,13 @@ sub reject {
     }
 
     my $spindle = Sympa::Spindle::ProcessModeration->new(
-        rejected_by => $sender, context => $list, authkey => $key,
-        quiet => $quiet);
+        rejected_by => $sender,
+        context     => $list,
+        authkey     => $key,
+        quiet       => $quiet
+    );
 
-    unless ($spindle->spin) { # No message
+    unless ($spindle->spin) {    # No message
         $log->syslog('info', 'REJECT %s %s from %s refused, auth failed',
             $which, $key, $sender);
         Sympa::Report::reject_report_msg('user', 'unfound_message', $sender,
@@ -3029,7 +3056,8 @@ sub reject {
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info', 'REJECT %s %s from %s accepted (%.2f seconds)',
-            $list->{'name'}, $key, $sender, Time::HiRes::time() - $time_command);
+            $list->{'name'}, $key, $sender,
+            Time::HiRes::time() - $time_command);
         return 1;
     } else {
         return undef;
@@ -3211,8 +3239,10 @@ sub which {
             $cmd_line, $sender, $robot);
     }
 
-    $log->syslog('info', 'WHICH from %s accepted (%.2f seconds)',
-        $sender, Time::HiRes::time() - $time_command);
+    $log->syslog(
+        'info',  'WHICH from %s accepted (%.2f seconds)',
+        $sender, Time::HiRes::time() - $time_command
+    );
 
     return 1;
 }

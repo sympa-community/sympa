@@ -583,7 +583,7 @@ sub create_list {
     $list->{'admin'}{'creation'}{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
-    $list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'}
+    $list->{'admin'}{'creation'}{'email'}      = $param->{'creation_email'}
         || Sympa::get_address($robot, 'listmaster');
     $list->{'admin'}{'status'} = $param->{'status'} || 'open';
     $list->{'admin'}{'family_name'} = $family->{'name'};
@@ -683,7 +683,7 @@ sub update_list {
     $list->{'admin'}{'creation'}{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
-    $list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'}
+    $list->{'admin'}{'creation'}{'email'}      = $param->{'creation_email'}
         || Sympa::get_address($robot, 'listmaster');
     $list->{'admin'}{'status'} = $param->{'status'} || 'open';
     $list->{'admin'}{'family_name'} = $family->{'name'};

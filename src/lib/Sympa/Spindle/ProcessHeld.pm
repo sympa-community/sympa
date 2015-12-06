@@ -53,7 +53,7 @@ sub _init {
 }
 
 sub _on_garbage {
-    my $self = shift;
+    my $self   = shift;
     my $handle = shift;
 
     # Keep broken message and skip it.

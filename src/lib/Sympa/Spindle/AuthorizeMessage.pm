@@ -57,8 +57,9 @@ sub _twist {
     };
 
     # List msg topic.
-    if (not $self->{confirmed_by} # Not in ProcessHeld spindle.
-        and $list->is_there_msg_topic) {
+    if (not $self->{confirmed_by}    # Not in ProcessHeld spindle.
+        and $list->is_there_msg_topic
+        ) {
         my $topic;
         if ($topic = Sympa::Topic->load($message)) {
             # Is message already tagged?
@@ -141,34 +142,34 @@ sub _twist {
     }
 
     if ($action =~ /^do_it\b/) {
-        $self->{quiet} ||= ($action =~ /,\s*quiet\b/); # Overwrite.
+        $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite.
 
-      unless ($self->{confirmed_by}) { # Not in ProcessHeld spindle.
-        $message->{shelved}{dkim_sign} = 1
-            if Sympa::Tools::Data::is_in_array(
-            $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-            or (
-            Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'},
-                'smime_authenticated_messages')
-            and $message->{'smime_signed'}
-            )
-            or (
-            Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'},
-                'dkim_authenticated_messages')
-            and $message->{'dkim_pass'}
-            );
-      } else {
-        $message->add_header('X-Validation-by', $self->{confirmed_by});
+        unless ($self->{confirmed_by}) {    # Not in ProcessHeld spindle.
+            $message->{shelved}{dkim_sign} = 1
+                if Sympa::Tools::Data::is_in_array(
+                $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
+                or (
+                Sympa::Tools::Data::is_in_array(
+                    $list->{'admin'}{'dkim_signature_apply_on'},
+                    'smime_authenticated_messages')
+                and $message->{'smime_signed'}
+                )
+                or (
+                Sympa::Tools::Data::is_in_array(
+                    $list->{'admin'}{'dkim_signature_apply_on'},
+                    'dkim_authenticated_messages')
+                and $message->{'dkim_pass'}
+                );
+        } else {
+            $message->add_header('X-Validation-by', $self->{confirmed_by});
 
-        $message->{shelved}{dkim_sign} = 1
-            if Sympa::Tools::Data::is_in_array(
-            $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-            or Sympa::Tools::Data::is_in_array(
-            $list->{'admin'}{'dkim_signature_apply_on'},
-            'md5_authenticated_messages');
-      }
+            $message->{shelved}{dkim_sign} = 1
+                if Sympa::Tools::Data::is_in_array(
+                $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
+                or Sympa::Tools::Data::is_in_array(
+                $list->{'admin'}{'dkim_signature_apply_on'},
+                'md5_authenticated_messages');
+        }
 
         # Check TT2 syntax for merge_feature.
         unless ($message->test_personalize($list)) {
@@ -187,8 +188,10 @@ sub _twist {
             unless $self->{confirmed_by};
 
         return ['Sympa::Spindle::DistributeMessage'];
-    } elsif (not $self->{confirmed_by} # Not in ProcessHeld spindle.
-        and $action =~ /^request_auth\b/) {
+    } elsif (
+        not $self->{confirmed_by}    # Not in ProcessHeld spindle.
+        and $action =~ /^request_auth\b/
+        ) {
         ## Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
             $log->syslog(
@@ -203,7 +206,7 @@ sub _twist {
 
         return ['Sympa::Spindle::ToHeld'];
     } elsif ($action =~ /^editorkey\b/) {
-        $self->{quiet} ||= ($action =~ /,\s*quiet\b/); # Overwrite
+        $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite
 
         # Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
@@ -219,7 +222,7 @@ sub _twist {
 
         return ['Sympa::Spindle::ToModeration'];
     } elsif ($action =~ /^editor\b/) {
-        $self->{quiet} ||= ($action =~ /,\s*quiet\b/); # Overwrite
+        $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite
 
         # Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {

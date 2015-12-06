@@ -68,8 +68,10 @@ sub _twist {
     $log->syslog('info', 'Sending digest to list %s', $list);
     $self->_distribute_digest($spool_digest);
 
-    $log->syslog('info', 'Digest of the list %s sent (%.2f seconds)',
-        $list, Time::HiRes::time() - $self->{start_time});
+    $log->syslog(
+        'info', 'Digest of the list %s sent (%.2f seconds)',
+        $list,  Time::HiRes::time() - $self->{start_time}
+    );
     $log->db_log(
         'robot'        => $list->{'domain'},
         'list'         => $list->{'name'},

@@ -46,15 +46,15 @@ sub _init {
     if ($state == 0) {
         die 'bug in logic. Ask developer'
             unless ($self->{distributed_by} or $self->{rejected_by})
-                and $self->{context}
-                and $self->{authkey};
+            and $self->{context}
+            and $self->{authkey};
     }
 
     1;
 }
 
 sub _on_garbage {
-    my $self = shift;
+    my $self   = shift;
     my $handle = shift;
 
     # Keep broken message and skip it.
@@ -97,7 +97,7 @@ sub _twist {
 # Private subroutines.
 
 sub _reject {
-    my $self = shift;
+    my $self    = shift;
     my $message = shift;
 
     # Messages marked validated should not be rejected.
@@ -131,7 +131,9 @@ sub _reject {
 
         # Notify author of message.
         unless ($self->{quiet}) {
-            unless (Sympa::send_file($list, 'reject', $message->{sender}, $param)) {
+            unless (
+                Sympa::send_file($list, 'reject', $message->{sender}, $param))
+            {
                 $log->syslog('notice',
                     'Unable to send template "reject" to %s',
                     $message->{sender});
@@ -140,11 +142,10 @@ sub _reject {
         }
 
         # Notify list moderator
-        Sympa::Report::notice_report_msg(
-            'message_rejected', $self->{rejected_by},
-            {'key' => $message->{authkey}, 'message' => $message}, $list->{'domain'},
-            $list
-        );
+        Sympa::Report::notice_report_msg('message_rejected',
+            $self->{rejected_by},
+            {'key' => $message->{authkey}, 'message' => $message},
+            $list->{'domain'}, $list);
     }
 
     1;
