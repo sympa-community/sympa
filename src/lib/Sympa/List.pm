@@ -58,8 +58,6 @@ use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
 use Sympa::Spool::Digest;
-use Sympa::Spool::Held;
-use Sympa::Spool::Moderation;
 use Sympa::Task;
 use Sympa::Template;
 use tools;
@@ -1750,6 +1748,8 @@ sub get_recipients_per_mode {
 
 =item send_confirm_to_editor ( $message, $method )
 
+This method was DEPRECATED.
+
 Send a L<Sympa::Message> object to the editor (for approval).
 
 Sends a message to the list editor to ask him for moderation
@@ -1782,122 +1782,14 @@ The moderation key for naming message waiting for moderation in moderation spool
 =cut
 
 # Old name: List::send_to_editor().
-# Note: This would be moved to Pipeline package.
-sub send_confirm_to_editor {
-    $log->syslog('debug2', '(%s, %s)', @_);
-    my $message = shift;
-    my $method  = shift;
-
-    my ($i, @rcpt);
-    my $list = $message->{context};
-    my $spool_mod = Sympa::Spool::Moderation->new(context => $list);
-
-    my $modkey;
-    # Keeps a copy of the message.
-    if ($method eq 'md5') {
-        # Move message to mod spool.
-        # If crypted, store the crypted form of the message (keep decrypted
-        # form for HTML view).
-        if ($modkey = $spool_mod->store($message, original => 1)) {
-            $spool_mod->html_store($message, $modkey);
-        }
-        unless ($modkey) {
-            $log->syslog('err', 'Cannot create moderation key of %s for %s',
-                $message, $list);
-            return undef;
-        }
-    }
-
-    @rcpt = $list->get_admins_email('receptive_editor');
-    @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
-    $log->syslog('notice',
-        'Warning: No owner and editor defined at all in list %s', $list)
-        unless @rcpt;
-
-    # Did we find a recipient?
-    unless (@rcpt) {
-        $log->syslog(
-            'err',
-            'Impossible to send the moderation request for message %s to editors of list %s. Neither editor nor owner defined!',
-            $message,
-            $list
-        );
-        return undef;
-    }
-
-    my $param = {
-        'modkey'         => $modkey,
-        'msg_from'       => $message->{'sender'},
-        'subject'        => $message->{'decoded_subject'},
-        'spam_status'    => $message->{'spam_status'},
-        'mod_spool_size' => $spool_mod->size,
-        'method'         => $method,
-        'request_topic'  => $list->is_there_msg_topic,
-        'auto_submitted' => 'auto-generated',
-    };
-
-    my $bulk = Sympa::Bulk->new;
-    foreach my $recipient (@rcpt) {
-        my $new_message = $message->dup;
-        if ($new_message->{'smime_crypted'}) {
-            unless ($new_message->smime_encrypt($recipient)) {
-                # If encryption failed, attach a generic error message:
-                # X509 cert missing.
-                $new_message = Sympa::Message->new_from_template(
-                    $list,
-                    'x509-user-cert-missing',
-                    $recipient,
-                    {   'mail' => {
-                            'sender'  => $message->{sender},
-                            'subject' => $message->{decoded_subject},
-                        },
-                    }
-                );
-            }
-        }
-        $param->{'msg'} = $new_message;
-
-        # create a one time ticket that will be used as un md5 URL credential
-        unless (
-            $param->{'one_time_ticket'} = Sympa::Auth::create_one_time_ticket(
-                $recipient,                    $list->{'domain'},
-                'modindex/' . $list->{'name'}, 'mail'
-            )
-            ) {
-            $log->syslog(
-                'notice',
-                'Unable to create one_time_ticket for %s, service modindex/%s',
-                $recipient,
-                $list->{'name'}
-            );
-        } else {
-            $log->syslog(
-                'debug',
-                'Ticket %s created',
-                $param->{'one_time_ticket'}
-            );
-        }
-
-        my $confirm_message =
-            Sympa::Message->new_from_template($list, 'moderate', $recipient,
-            $param);
-        if ($confirm_message) {
-            # Ensure 1 second elapsed since last message
-            $confirm_message->{'date'} = time + 1;
-        }
-        unless ($confirm_message
-            and defined $bulk->store($confirm_message, $recipient)) {
-            $log->syslog('notice', 'Unable to send template "moderate" to %s',
-                $recipient);
-            return undef;
-        }
-    }
-    return $modkey || 1;
-}
+# Moved to: Sympa::Spindle::ToEditor & Sympa::Spindle::ToModeration.
+#sub send_confirm_to_editor;
 
 =over
 
 =item send_confirm_to_sender ( $message )
+
+This method was DEPRECATED.
 
 Sends an authentication request for a sent message to distribute.
 The message for distribution is copied in the auth
@@ -1925,48 +1817,8 @@ The key for naming message waiting for confirmation (or tagging) in auth spool, 
 =cut
 
 # Old name: List::send_auth().
-# Note: This would be moved to Pipeline package.
-sub send_confirm_to_sender {
-    $log->syslog('debug3', '(%s)', @_);
-    my $message = shift;
-
-    my $list   = $message->{context};
-    my $sender = $message->{'sender'};
-
-    my ($i, @rcpt);
-    my $spool_held = Sympa::Spool::Held->new;
-    # If crypted, store the crypted form of the message.
-    my $authkey = $spool_held->store($message, original => 1);
-    unless ($authkey) {
-        $log->syslog('err', 'Cannot create authkey of message %s for %s',
-            $message, $list);
-        return undef;
-    }
-
-    my $param = {
-        'authkey'        => $authkey,
-        'msg'            => $message->as_string(original => 1),    # encrypted
-        'request_topic'  => $list->is_there_msg_topic,
-        'auto_submitted' => 'auto-replied',
-        #'file' => $message->{'filename'},    # obsoleted (<=6.1)
-    };
-
-    my $confirm_message =
-        Sympa::Message->new_from_template($list, 'send_auth', $sender,
-        $param);
-    if ($confirm_message) {
-        # Ensure 1 second elapsed since last message
-        $confirm_message->{'date'} = time + 1;
-    }
-    unless ($confirm_message
-        and defined Sympa::Bulk->new->store($confirm_message, $sender)) {
-        $log->syslog('notice', 'Unable to send template "send_auth" to %s',
-            $sender);
-        return undef;
-    }
-
-    return $authkey;
-}
+# Moved to Sympa::Spindle::ToHeld::_send_confirm_to_sender().
+#sub send_confirm_to_sender;
 
 #MOVED: Use Sympa::request_auth().
 #sub request_auth;

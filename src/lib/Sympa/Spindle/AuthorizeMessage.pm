@@ -201,52 +201,9 @@ sub _twist {
             return undef;
         }
 
-        my $key = Sympa::List::send_confirm_to_sender($message);
-
-        unless (defined $key) {
-            $log->syslog('err',
-                'Failed to send confirmation of %s for %s to sender %s',
-                $message, $list, $sender);
-            Sympa::Report::reject_report_msg(
-                'intern',
-                'The request authentication sending failed',
-                $sender,
-                {'msg_id' => $messageid, 'message' => $message},
-                $list->{'domain'},
-                $msg_string,
-                $list
-            );
-            $log->db_log(
-                'robot'        => $list->{'domain'},
-                'list'         => $list->{'name'},
-                'action'       => 'DoMessage',
-                'parameters'   => $message->get_id,
-                'target_email' => '',
-                'msg_id'       => $messageid,
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $sender
-            );
-            return undef;
-        }
-        $log->syslog('notice',
-            'Message %s for %s from %s kept for authentication with key %s',
-            $message, $list, $sender, $key);
-        $log->db_log(
-            'robot'        => $list->{'domain'},
-            'list'         => $list->{'name'},
-            'action'       => 'DoMessage',
-            'parameters'   => $message->get_id,
-            'target_email' => '',
-            'msg_id'       => $messageid,
-            'status'       => 'success',
-            'error_type'   => 'kept_for_auth',
-            'user_email'   => $sender
-        );
-
-        return 1;
+        return ['Sympa::Spindle::ToHeld'];
     } elsif ($action =~ /^editorkey\b/) {
-        my $quiet = $self->{quiet} || ($action =~ /,\s*quiet\b/);
+        $self->{quiet} ||= ($action =~ /,\s*quiet\b/); # Overwrite
 
         # Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
@@ -260,53 +217,9 @@ sub _twist {
             return undef;
         }
 
-        my $key = Sympa::List::send_confirm_to_editor($message, 'md5');
-
-        unless (defined $key) {
-            $log->syslog(
-                'err',
-                'Failed to send moderation request of %s from %s for list %s to editor(s)',
-                $message,
-                $sender,
-                $list
-            );
-            Sympa::Report::reject_report_msg(
-                'intern',
-                'The request moderation sending to moderator failed.',
-                $sender,
-                {'msg_id' => $messageid, 'message' => $message},
-                $list->{'domain'},
-                $msg_string,
-                $list
-            );
-            $log->db_log(
-                'robot'        => $list->{'domain'},
-                'list'         => $list->{'name'},
-                'action'       => 'DoMessage',
-                'parameters'   => $message->get_id,
-                'target_email' => '',
-                'msg_id'       => $messageid,
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $sender
-            );
-            return undef;
-        }
-
-        $log->syslog('info',
-            'Key %s of message %s for list %s from %s sent to editors',
-            $key, $message, $list, $sender);
-
-        # Do not report to the sender if the message was tagged as a spam.
-        unless ($quiet or $message->{'spam_status'} eq 'spam') {
-            Sympa::Report::notice_report_msg('moderating_message', $sender,
-                {'message' => $message},
-                $list->{'domain'}, $list);
-        }
-        return 1;
-
+        return ['Sympa::Spindle::ToModeration'];
     } elsif ($action =~ /^editor\b/) {
-        my $quiet = $self->{quiet} || ($action =~ /,\s*quiet\b/);
+        $self->{quiet} ||= ($action =~ /,\s*quiet\b/); # Overwrite
 
         # Check syntax for merge_feature.
         unless ($message->test_personalize($list)) {
@@ -320,49 +233,7 @@ sub _twist {
             return undef;
         }
 
-        my $key = Sympa::List::send_confirm_to_editor($message, 'smtp');
-
-        unless (defined $key) {
-            $log->syslog(
-                'err',
-                'Failed to send moderation request of %s from %s for list %s to editor(s)',
-                $message,
-                $sender,
-                $list
-            );
-            Sympa::Report::reject_report_msg(
-                'intern',
-                'The request moderation sending to moderator failed.',
-                $sender,
-                {'msg_id' => $messageid, 'message' => $message},
-                $list->{'domain'},
-                $msg_string,
-                $list
-            );
-            $log->db_log(
-                'robot'        => $list->{'domain'},
-                'list'         => $list->{'name'},
-                'action'       => 'DoMessage',
-                'parameters'   => $message->get_id,
-                'target_email' => '',
-                'msg_id'       => $messageid,
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $sender
-            );
-            return undef;
-        }
-
-        $log->syslog('info', 'Message %s for list %s from %s sent to editors',
-            $message, $list, $sender);
-
-        # Do not report to the sender if the message was tagged as a spam.
-        unless ($quiet or $message->{'spam_status'} eq 'spam') {
-            Sympa::Report::notice_report_msg('moderating_message', $sender,
-                {'message' => $message},
-                $list->{'domain'}, $list);
-        }
-        return 1;
+        return ['Sympa::Spindle::ToEditor'];
     } elsif ($action =~ /^reject\b/) {
         my $quiet = $self->{quiet} || ($action =~ /,\s*quiet\b/);
 
