@@ -26,6 +26,7 @@ package Sympa::Spindle::ToModeration;
 
 use strict;
 use warnings;
+use Time::HiRes qw();
 
 use Sympa;
 use Sympa::Auth;
@@ -81,8 +82,8 @@ sub _twist {
         }
 
         $log->syslog('info',
-            'Key %s of message %s for list %s from %s sent to editors',
-            $key, $message, $list, $sender);
+            'Key %s of message %s for list %s from %s sent to editors (%.2f seconds)',
+            $key, $message, $list, $sender, Time::HiRes::time() - $self->{start_time});
 
         # Do not report to the sender if the message was tagged as a spam.
         unless ($self->{quiet} or $message->{'spam_status'} eq 'spam') {

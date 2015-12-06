@@ -76,8 +76,8 @@ sub _twist {
             return undef;
         }
 
-        $log->syslog('info', 'Message %s for list %s from %s sent to editors',
-            $message, $list, $sender);
+        $log->syslog('info', 'Message %s for list %s from %s sent to editors (%.2f seconds)',
+            $message, $list, $sender, Time::HiRes::time() - $self->{start_time});
 
         # Do not report to the sender if the message was tagged as a spam.
         unless ($self->{quiet} or $message->{'spam_status'} eq 'spam') {

@@ -26,6 +26,7 @@ package Sympa::Spindle::ToHeld;
 
 use strict;
 use warnings;
+use Time::HiRes qw();
 
 use Sympa;
 use Sympa::Bulk;
@@ -74,8 +75,8 @@ sub _twist {
             return undef;
         }
         $log->syslog('notice',
-            'Message %s for %s from %s kept for authentication with key %s',
-            $message, $list, $sender, $key);
+            'Message %s for %s from %s kept for authentication with key %s (%.2f seconds)',
+            $message, $list, $sender, $key, Time::HiRes::time() - $self->{start_time});
         $log->db_log(
             'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},

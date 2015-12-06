@@ -26,6 +26,7 @@ package Sympa::Commands;
 
 use strict;
 use warnings;
+use Time::HiRes qw();
 
 use Sympa;
 use Sympa::Archive;
@@ -130,7 +131,7 @@ sub parse {
         if ($i =~ /^($j)(\s+(.+))?\s*$/i) {
             no strict 'refs';
 
-            $time_command = time;
+            $time_command = Time::HiRes::time();
             my $args = $3;
             if ($args and length $args) {
                 $args =~ s/^\s*//;
@@ -202,8 +203,8 @@ sub help {
             $sender, $robot);
     }
 
-    $log->syslog('info', 'HELP from %s accepted (%d seconds)',
-        $sender, time - $time_command);
+    $log->syslog('info', 'HELP from %s accepted (%.2f seconds)',
+        $sender, Time::HiRes::time() - $time_command);
 
     return 1;
 }
@@ -278,8 +279,8 @@ sub lists {
             $sender, $robot);
     }
 
-    $log->syslog('info', 'LISTS from %s accepted (%d seconds)',
-        $sender, time - $time_command);
+    $log->syslog('info', 'LISTS from %s accepted (%.2f seconds)',
+        $sender, Time::HiRes::time() - $time_command);
 
     return 1;
 }
@@ -394,8 +395,8 @@ sub stats {
                 $cmd_line, $sender, $robot);
         }
 
-        $log->syslog('info', 'STATS %s from %s accepted (%d seconds)',
-            $listname, $sender, time - $time_command);
+        $log->syslog('info', 'STATS %s from %s accepted (%.2f seconds)',
+            $listname, $sender, Time::HiRes::time() - $time_command);
     }
 
     return 1;
@@ -548,8 +549,8 @@ sub getfile {
         return 'no_archive';
     }
 
-    $log->syslog('info', 'GET %s %s from %s accepted (%d seconds)',
-        $which, $arc, $sender, time - $time_command);
+    $log->syslog('info', 'GET %s %s from %s accepted (%.2f seconds)',
+        $which, $arc, $sender, Time::HiRes::time() - $time_command);
 
     return 1;
 }
@@ -697,8 +698,8 @@ sub last {
         return 'no_archive';
     }
 
-    $log->syslog('info', 'LAST %s from %s accepted (%d seconds)',
-        $which, $sender, time - $time_command);
+    $log->syslog('info', 'LAST %s from %s accepted (%.2f seconds)',
+        $which, $sender, Time::HiRes::time() - $time_command);
 
     return 1;
 }
@@ -828,8 +829,8 @@ sub index {
             $cmd_line, $sender, $robot);
     }
 
-    $log->syslog('info', 'INDEX %s from %s accepted (%d seconds)',
-        $which, $sender, time - $time_command);
+    $log->syslog('info', 'INDEX %s from %s accepted (%.2f seconds)',
+        $which, $sender, Time::HiRes::time() - $time_command);
 
     return 1;
 }
@@ -914,8 +915,8 @@ sub review {
                 $cmd_line, $sender, $robot);
             return undef;
         }
-        $log->syslog('info', 'REVIEW %s from %s, auth requested (%d seconds)',
-            $listname, $sender, time - $time_command);
+        $log->syslog('info', 'REVIEW %s from %s, auth requested (%.2f seconds)',
+            $listname, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
     if ($action =~ /reject/i) {
@@ -979,8 +980,8 @@ sub review {
                 $cmd_line, $sender, $robot);
         }
 
-        $log->syslog('info', 'REVIEW %s from %s accepted (%d seconds)',
-            $listname, $sender, time - $time_command);
+        $log->syslog('info', 'REVIEW %s from %s accepted (%.2f seconds)',
+            $listname, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
     $log->syslog('info',
@@ -1025,8 +1026,8 @@ sub verify {
 
     if ($sign_mod) {
         $log->syslog(
-            'info',  'VERIFY successful from %s',
-            $sender, time - $time_command
+            'info',  'VERIFY successful from %s (%.2f seconds)',
+            $sender, Time::HiRes::time() - $time_command
         );
         if ($sign_mod eq 'smime') {
             ##$auth_method='smime';
@@ -1037,8 +1038,8 @@ sub verify {
         }
     } else {
         $log->syslog('info',
-            'VERIFY from %s: could not find correct S/MIME signature',
-            $sender, time - $time_command);
+            'VERIFY from %s: could not find correct S/MIME signature (%.2f seconds)',
+            $sender, Time::HiRes::time() - $time_command);
         Sympa::Report::reject_report_cmd('user', 'no_verify_sign', {},
             $cmd_line);
     }
@@ -1207,10 +1208,10 @@ sub subscribe {
         if ($spool_req->store($request)) {
             $log->syslog(
                 'info',
-                'SUB %s from %s forwarded to the owners of the list (%d seconds)',
+                'SUB %s from %s forwarded to the owners of the list (%.2f seconds)',
                 $which,
                 $sender,
-                time - $time_command
+                Time::HiRes::time() - $time_command
             );
         }
         return 1;
@@ -1226,8 +1227,8 @@ sub subscribe {
                 $cmd_line, $sender, $robot);
             return undef;
         }
-        $log->syslog('info', 'SUB %s from %s, auth requested (%d seconds)',
-            $which, $sender, time - $time_command);
+        $log->syslog('info', 'SUB %s from %s, auth requested (%.2f seconds)',
+            $which, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
     if ($action =~ /do_it/i) {
@@ -1301,8 +1302,8 @@ sub subscribe {
             );
         }
         $log->syslog(
-            'info', 'SUB %s from %s accepted (%d seconds, %d subscribers)',
-            $which, $sender, time - $time_command,
+            'info', 'SUB %s from %s accepted (%.2f seconds, %d subscribers)',
+            $which, $sender, Time::HiRes::time() - $time_command,
             $list->get_total()
         );
 
@@ -1450,8 +1451,8 @@ sub info {
                 $cmd_line, $sender, $robot);
         }
 
-        $log->syslog('info', 'INFO %s from %s accepted (%d seconds)',
-            $listname, $sender, time - $time_command);
+        $log->syslog('info', 'INFO %s from %s accepted (%.2f seconds)',
+            $listname, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
 
@@ -1625,8 +1626,8 @@ sub signoff {
                 $cmd_line, $sender, $robot);
             return undef;
         }
-        $log->syslog('info', 'SIG %s from %s auth requested (%d seconds)',
-            $which, $sender, time - $time_command);
+        $log->syslog('info', 'SIG %s from %s auth requested (%.2f seconds)',
+            $which, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
 
@@ -1654,10 +1655,10 @@ sub signoff {
         }
         $log->syslog(
             'info',
-            'SIG %s from %s forwarded to the owners of the list (%d seconds)',
+            'SIG %s from %s forwarded to the owners of the list (%.2f seconds)',
             $which,
             $sender,
-            time - $time_command
+            Time::HiRes::time() - $time_command
         );
         return 1;
     }
@@ -1721,8 +1722,8 @@ sub signoff {
         }
 
         $log->syslog(
-            'info', 'SIG %s from %s accepted (%d seconds, %d subscribers)',
-            $which, $email, time - $time_command,
+            'info', 'SIG %s from %s accepted (%.2f seconds, %d subscribers)',
+            $which, $email, Time::HiRes::time() - $time_command,
             $list->get_total()
         );
 
@@ -1837,8 +1838,8 @@ sub add {
                 $cmd_line, $sender, $robot);
             return undef;
         }
-        $log->syslog('info', 'ADD %s from %s, auth requested(%d seconds)',
-            $which, $sender, time - $time_command);
+        $log->syslog('info', 'ADD %s from %s, auth requested(%.2f seconds)',
+            $which, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
     if ($action =~ /do_it/i) {
@@ -1912,11 +1913,11 @@ sub add {
 
         $log->syslog(
             'info',
-            'ADD %s %s from %s accepted (%d seconds, %d subscribers)',
+            'ADD %s %s from %s accepted (%.2f seconds, %d subscribers)',
             $which,
             $email,
             $sender,
-            time - $time_command,
+            Time::HiRes::time() - $time_command,
             $list->get_total()
         );
         if ($action =~ /notify/i) {
@@ -2043,8 +2044,8 @@ sub invite {
             return undef;
         }
 
-        $log->syslog('info', 'INVITE %s from %s, auth requested (%d seconds)',
-            $which, $sender, time - $time_command);
+        $log->syslog('info', 'INVITE %s from %s, auth requested (%.2f seconds)',
+            $which, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
     if ($action =~ /do_it/i) {
@@ -2108,11 +2109,11 @@ sub invite {
                 }
                 $log->syslog(
                     'info',
-                    'INVITE %s %s from %s accepted, auth requested (%d seconds, %d subscribers)',
+                    'INVITE %s %s from %s accepted, auth requested (%.2f seconds, %d subscribers)',
                     $which,
                     $email,
                     $sender,
-                    time - $time_command,
+                    Time::HiRes::time() - $time_command,
                     $list->get_total()
                 );
                 Sympa::Report::notice_report_cmd('invite',
@@ -2138,11 +2139,11 @@ sub invite {
                 }
                 $log->syslog(
                     'info',
-                    'INVITE %s %s from %s accepted, (%d seconds, %d subscribers)',
+                    'INVITE %s %s from %s accepted, (%.2f seconds, %d subscribers)',
                     $which,
                     $email,
                     $sender,
-                    time - $time_command,
+                    Time::HiRes::time() - $time_command,
                     $list->get_total()
                 );
                 Sympa::Report::notice_report_cmd('invite',
@@ -2151,11 +2152,11 @@ sub invite {
             } elsif ($action =~ /reject/i) {
                 $log->syslog(
                     'info',
-                    'INVITE %s %s from %s refused, not allowed (%d seconds, %d subscribers)',
+                    'INVITE %s %s from %s refused, not allowed (%.2f seconds, %d subscribers)',
                     $which,
                     $email,
                     $sender,
-                    time - $time_command,
+                    Time::HiRes::time() - $time_command,
                     $list->get_total()
                 );
                 if (defined $result->{'tt2'}) {
@@ -2339,8 +2340,8 @@ sub remind {
                 return undef;
             }
         }
-        $log->syslog('info', 'REMIND %s from %s, auth requested (%d seconds)',
-            $listname, $sender, time - $time_command);
+        $log->syslog('info', 'REMIND %s from %s, auth requested (%.2f seconds)',
+            $listname, $sender, Time::HiRes::time() - $time_command);
         return 1;
     } elsif ($action =~ /do_it/i) {
 
@@ -2384,11 +2385,11 @@ sub remind {
                 {'total' => $total, 'listname' => $listname}, $cmd_line);
             $log->syslog(
                 'info',
-                'REMIND %s from %s accepted, sent to %d subscribers (%d seconds)',
+                'REMIND %s from %s accepted, sent to %d subscribers (%.2f seconds)',
                 $listname,
                 $sender,
                 $total,
-                time - $time_command
+                Time::HiRes::time() - $time_command
             );
 
             return 1;
@@ -2600,8 +2601,8 @@ sub del {
                 $cmd_line, $sender, $robot);
             return undef;
         }
-        $log->syslog('info', 'DEL %s %s from %s, auth requested (%d seconds)',
-            $which, $who, $sender, time - $time_command);
+        $log->syslog('info', 'DEL %s %s from %s, auth requested (%.2f seconds)',
+            $which, $who, $sender, Time::HiRes::time() - $time_command);
         return 1;
     }
 
@@ -2646,11 +2647,11 @@ sub del {
             {'email' => $who, 'listname' => $which}, $cmd_line);
         $log->syslog(
             'info',
-            'DEL %s %s from %s accepted (%d seconds, %d subscribers)',
+            'DEL %s %s from %s accepted (%.2f seconds, %d subscribers)',
             $which,
             $who,
             $sender,
-            time - $time_command,
+            Time::HiRes::time() - $time_command,
             $list->get_total()
         );
         if ($action =~ /notify/i) {
@@ -2835,8 +2836,8 @@ sub set {
         Sympa::Report::notice_report_cmd('config_updated',
             {'listname' => $which}, $cmd_line);
 
-        $log->syslog('info', 'SET %s %s from %s accepted (%d seconds)',
-            $which, $mode, $sender, time - $time_command);
+        $log->syslog('info', 'SET %s %s from %s accepted (%.2f seconds)',
+            $which, $mode, $sender, Time::HiRes::time() - $time_command);
     }
 
     if ($mode =~ /^(conceal|noconceal)/) {
@@ -2859,8 +2860,8 @@ sub set {
 
         Sympa::Report::notice_report_cmd('config_updated',
             {'listname' => $which}, $cmd_line);
-        $log->syslog('info', 'SET %s %s from %s accepted (%d seconds)',
-            $which, $mode, $sender, time - $time_command);
+        $log->syslog('info', 'SET %s %s from %s accepted (%.2f seconds)',
+            $which, $mode, $sender, Time::HiRes::time() - $time_command);
     }
     return 1;
 }
@@ -2916,8 +2917,8 @@ sub distribute {
             $robot, '', $list);
         return 'msg_not_found';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
-        $log->syslog('info', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
-            $list->{'name'}, $key, $sender, time - $time_command);
+        $log->syslog('info', 'DISTRIBUTE %s %s from %s accepted (%.2f seconds)',
+            $list->{'name'}, $key, $sender, Time::HiRes::time() - $time_command);
         return 1;
     } else {
         return undef;
@@ -2965,8 +2966,8 @@ sub confirm {
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info',
-            'CONFIRM %s from %s accepted (%d seconds)',
-            $key, $sender, time - $time_command);
+            'CONFIRM %s from %s accepted (%.2f seconds)',
+            $key, $sender, Time::HiRes::time() - $time_command);
         return 1;
     } else {
         return undef;
@@ -3027,8 +3028,8 @@ sub reject {
             $robot, '', $list);
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
-        $log->syslog('info', 'REJECT %s %s from %s accepted (%d seconds)',
-            $list->{'name'}, $key, $sender, time - $time_command);
+        $log->syslog('info', 'REJECT %s %s from %s accepted (%.2f seconds)',
+            $list->{'name'}, $key, $sender, Time::HiRes::time() - $time_command);
         return 1;
     } else {
         return undef;
@@ -3119,8 +3120,8 @@ sub modindex {
             $cmd_line, $sender, $robot);
     }
 
-    $log->syslog('info', 'MODINDEX %s from %s accepted (%d seconds)',
-        $name, $sender, time - $time_command);
+    $log->syslog('info', 'MODINDEX %s from %s accepted (%.2f seconds)',
+        $name, $sender, Time::HiRes::time() - $time_command);
 
     return 1;
 }
@@ -3210,8 +3211,8 @@ sub which {
             $cmd_line, $sender, $robot);
     }
 
-    $log->syslog('info', 'WHICH from %s accepted (%d seconds)',
-        $sender, time - $time_command);
+    $log->syslog('info', 'WHICH from %s accepted (%.2f seconds)',
+        $sender, Time::HiRes::time() - $time_command);
 
     return 1;
 }

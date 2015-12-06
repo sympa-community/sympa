@@ -27,6 +27,7 @@ package Sympa::Spindle;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
+use Time::HiRes qw();
 
 sub new {
     my $class   = shift;
@@ -91,7 +92,7 @@ sub twist {
     my $self    = shift;
     my $message = shift;
 
-    $self->{start_time} = time;
+    $self->{start_time} = Time::HiRes::time();
 
     my $status = $self->_twist($message);
     # If the result is arrayref, splice to the classes in it.
@@ -230,7 +231,7 @@ Instances of spool classes _spools() method returns.
 
 =item {start_time}
 
-Unix time when processing of the latest message by
+Unix time in floating point number when processing of the latest message by
 spin() began.
 Introduced by Sympa 6.2.13.
 

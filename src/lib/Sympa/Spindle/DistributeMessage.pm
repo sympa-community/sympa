@@ -29,6 +29,7 @@ use warnings;
 use Encode qw();
 use English;    # FIXME: drop $POSTMATCH usage
 use MIME::EncWords;
+use Time::HiRes qw();
 
 use Sympa;
 use Sympa::Bulk;
@@ -107,11 +108,11 @@ sub _twist {
 
         $log->syslog(
             'info',
-            'Message %s for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
+            'Message %s for %s from %s accepted (%.2f seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
             $message,
             $list,
             $sender,
-            time - $self->{start_time},
+            Time::HiRes::time() - $self->{start_time},
             $numsmtp,
             $list->get_total,
             $messageid,

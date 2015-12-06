@@ -27,6 +27,7 @@ package Sympa::Spindle::SendDigest;
 use strict;
 use warnings;
 use POSIX qw();
+use Time::HiRes qw();
 use Time::Local qw();
 
 use Conf;
@@ -65,11 +66,10 @@ sub _twist {
 
     # Blindly send the message to all users.
     $log->syslog('info', 'Sending digest to list %s', $list);
-    my $start_time = time;
     $self->_distribute_digest($spool_digest);
 
-    $log->syslog('info', 'Digest of the list %s sent (%d seconds)',
-        $list, time - $start_time);
+    $log->syslog('info', 'Digest of the list %s sent (%.2f seconds)',
+        $list, Time::HiRes::time() - $self->{start_time});
     $log->db_log(
         'robot'        => $list->{'domain'},
         'list'         => $list->{'name'},
