@@ -61,7 +61,8 @@ sub _twist {
 
     my $list      = $message->{context};
     my $messageid = $message->{message_id};
-    my $sender    = $self->{confirmed_by} || $message->{sender};
+    my $sender =
+        $self->{confirmed_by} || $self->{distributed_by} || $message->{sender};
 
         my $numsmtp = _distribute_msg($message);
         unless (defined $numsmtp) {
@@ -88,12 +89,20 @@ sub _twist {
                 'user_email'   => $sender
         );
         return undef;
-    } elsif (not $self->{quiet} and $self->{confirmed_by}) {
+    } elsif (not $self->{quiet}) {
+        if ($self->{confirmed_by}) {
             Sympa::Report::notice_report_msg(
                 'message_confirmed', $sender,
                 {'key' => $self->{authkey}, 'message' => $message}, $list->{'domain'},
                 $list
             );
+        } elsif ($self->{distributed_by}) {
+            Sympa::Report::notice_report_msg(
+                'message_distributed', $sender,
+                {'key' => $self->{authkey}, 'message' => $message}, $list->{'domain'},
+                $list
+            );
+        }
     }
 
         $log->syslog(

@@ -37,11 +37,10 @@ use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Request;
 use Sympa::Scenario;
-use Sympa::Spindle::DistributeMessage;
 use Sympa::Spindle::ProcessHeld;
+use Sympa::Spindle::ProcessModeration;
 use Sympa::Spool::Moderation;
 use Sympa::Spool::Request;
-use Sympa::Tools::Data;
 use Sympa::Tools::Password;
 use Sympa::User;
 
@@ -2892,8 +2891,6 @@ sub distribute {
         return 'syntax_error';
     }
 
-    my $start_time = time;    # get the time at the beginning
-
     # Load the list if not already done, and reject the
     # subscription if this list is unknown to us.
     my $list = Sympa::List->new($which, $robot, {just_try => 1});
@@ -2906,18 +2903,11 @@ sub distribute {
         return 'unknown_list';
     }
 
-    $language->set_lang($list->{'admin'}{'lang'});
+    my $spindle = Sympa::Spindle::ProcessModeration->new(
+        distributed_by => $sender, context => $robot, authkey => $key,
+        quiet => $quiet);
 
-    # Read the moderation queue and purge it.
-    my $spool_mod =
-        Sympa::Spool::Moderation->new(context => $list, authkey => $key);
-    my ($message, $handle);
-    while (1) {
-        ($message, $handle) = $spool_mod->next;
-        last unless $handle;
-        last if $message;    # Won't check {validated} property.
-    }
-    unless ($message) {
+    unless ($spindle->spin) { # No message.
         $log->syslog('err',
             'Unable to find message with key <%s> for list %s',
             $key, $list);
@@ -2925,76 +2915,13 @@ sub distribute {
             {'listname' => $list->{'name'}, 'key' => $key},
             $robot, '', $list);
         return 'msg_not_found';
-    }
-
-    # Decrypt message.
-    # If encrypted, it will be re-encrypted by succeeding process.
-    $message->smime_decrypt;
-
-    my $msg_id     = $message->{'message_id'};
-    my $msg_string = $message->as_string;
-
-    $message->add_header('X-Validation-by', $sender);
-
-    ## Distribute the message
-    my $numsmtp;
-    $message->{shelved}{dkim_sign} = 1
-        if Sympa::Tools::Data::is_in_array(
-        $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-        or Sympa::Tools::Data::is_in_array(
-        $list->{'admin'}{'dkim_signature_apply_on'},
-        'editor_validated_messages');
-
-    $numsmtp = Sympa::Spindle::DistributeMessage->_distribute_msg($message);
-    unless (defined $numsmtp) {
-        $log->syslog('err', 'Unable to send message to list %s', $list);
-        Sympa::Report::reject_report_msg('intern', '', $sender,
-            {'msg_id' => $msg_id},
-            $robot, $msg_string, $list);
+    } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
+        $log->syslog('info', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
+            $list->{'name'}, $key, $sender, time - $time_command);
+        return 1;
+    } else {
         return undef;
     }
-    unless ($numsmtp) {
-        $log->syslog(
-            'info',
-            'Message for %s from %s accepted but all subscribers use digest, nomail or summary',
-            $which,
-            $sender
-        );
-    }
-    $log->syslog(
-        'info',
-        'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
-        $which,
-        $sender,
-        time - $start_time,
-        $numsmtp,
-        $list->get_total(),
-        $msg_id,
-        $message->{'size'}
-    );
-
-    unless ($quiet) {
-        unless (
-            Sympa::Report::notice_report_msg(
-                'message_distributed', $sender,
-                {'key' => $key, 'message' => $message}, $robot,
-                $list
-            )
-            ) {
-            $log->syslog(
-                'notice',
-                'Unable to send template "message_report", entry "message_distributed" to %s',
-                $sender
-            );
-        }
-    }
-
-    $log->syslog('info', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
-        $list->{'name'}, $key, $sender, time - $time_command);
-
-    $spool_mod->remove($handle) and $spool_mod->html_remove($message);
-
-    return 1;
 }
 
 ############################################################
@@ -3088,73 +3015,24 @@ sub reject {
         return 'unknown_list';
     }
 
-    $language->set_lang($list->{'admin'}{'lang'});
+    my $spindle = Sympa::Spindle::ProcessModeration->new(
+        rejected_by => $sender, context => $list, authkey => $key,
+        quiet => $quiet);
 
-    my $spool_mod =
-        Sympa::Spool::Moderation->new(context => $list, authkey => $key);
-    my ($message, $handle);
-    while (1) {
-        ($message, $handle) = $spool_mod->next;
-        last unless $handle;
-        last if $message and not $message->{validated};
-        # Messages marked validated should not be rejected.
-    }
-    unless ($message) {
+    unless ($spindle->spin) { # No message
         $log->syslog('info', 'REJECT %s %s from %s refused, auth failed',
             $which, $key, $sender);
         Sympa::Report::reject_report_msg('user', 'unfound_message', $sender,
             {'key' => $key},
             $robot, '', $list);
         return 'wrong_auth';
+    } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
+        $log->syslog('info', 'REJECT %s %s from %s accepted (%d seconds)',
+            $list->{'name'}, $key, $sender, time - $time_command);
+        return 1;
+    } else {
+        return undef;
     }
-
-    if ($message->{sender}) {
-        my $rejected_sender = $message->{sender};
-        my %context;
-        $context{'subject'}         = $message->{decoded_subject};
-        $context{'rejected_by'}     = $sender;
-        $context{'editor_msg_body'} = $editor_msg->body_as_string
-            if $editor_msg;
-
-        $log->syslog('debug2', 'Message %s by %s rejected sender %s',
-            $context{'subject'}, $context{'rejected_by'}, $rejected_sender);
-
-        ## Notify author of message
-        unless ($quiet) {
-            unless (
-                Sympa::send_file(
-                    $list, 'reject', $rejected_sender, \%context
-                )
-                ) {
-                $log->syslog('notice',
-                    'Unable to send template "reject" to %s',
-                    $rejected_sender);
-                Sympa::Report::reject_report_msg('intern_quiet', '', $sender,
-                    {'listname' => $list->{'name'}, 'message' => $message},
-                    $robot, '', $list);
-            }
-        }
-
-        ## Notify list moderator
-        unless (
-            Sympa::Report::notice_report_msg(
-                'message_rejected', $sender,
-                {'key' => $key, 'message' => $message}, $robot,
-                $list
-            )
-            ) {
-            $log->syslog('err',
-                "Commands::reject(): Unable to send template 'message_report', entry 'message_rejected' to $sender"
-            );
-        }
-
-    }
-
-    $log->syslog('info', 'REJECT %s %s from %s accepted (%d seconds)',
-        $list->{'name'}, $sender, $key, time - $time_command);
-    $spool_mod->remove($handle) and $spool_mod->html_remove($message);
-
-    return 1;
 }
 
 #########################################################
