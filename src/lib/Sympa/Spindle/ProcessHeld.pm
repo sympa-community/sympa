@@ -154,7 +154,7 @@ new() must take following options:
 
 E-mail address of the user who confirmed the message.
 It is given by CONFIRM command and
-used by L<Sympa::Spindle::AuthorizeMessage>.
+used by L<Sympa::Spindle::AuthorizeMessage> to execute "send" scenario.
 
 =item context =E<gt> $context
 
@@ -166,7 +166,7 @@ spool.
 =item quiet =E<gt> 1
 
 If this option is set, automatic replys reporting result of processing
-to the user (See L</"confirmed_by">> will not be sent.
+to the user (see L</"confirmed_by">) will not be sent.
 
 =back
 
@@ -192,7 +192,8 @@ C<'failure'> is set if processing failed.
 =head1 SEE ALSO
 
 L<Sympa::Message>,
-L<Sympa::Spindle>, L<Sympa::Spool::Held>, L<Sympa::Spindle::AuthorizeMessage>.
+L<Sympa::Spindle>, L<Sympa::Spindle::AuthorizeMessage>,
+L<Sympa::Spool::Held>.
 
 =head1 HISTORY
 
