@@ -1522,6 +1522,16 @@ h7 strong {
     font-size: 1.3rem;
     text-align:center;
 }
+p.alert-box {
+    padding-top:0;
+    padding-bottom:0;
+}
+
+/* to overwrite margin-left:0 for p element when *-centered is applied */
+[class*="-centered"]{
+    margin-left:auto!important;
+}
+
 .alert-box.alert {
     border: 2px solid #D91E18;
     border-radius: 3px;
@@ -1542,9 +1552,9 @@ h7 strong {
 }
 
 .alert-box.info {
-    border: 2px solid [% color_6 %];
+    border: 2px solid #3498DB;
     border-radius: 3px;
-    color: [% color_6 %];
+    color: #3498DB;
     background-color: rgba(52, 152, 219, 0.2);
 }
 .alert-box i {
