@@ -4,6 +4,13 @@
 <h2>[%|loc%]Blacklist management[%END%]</h2><br />
 
 <div id="blacklist">
+<p>
+[% IF rows == '0' %]
+  <p class="small-12 medium-8 medium-centered columns alert-box info text-center">[%|loc%]The current blacklist is empty[%END%]</p>
+[% ELSE %]
+  <p class="small-12 medium-8 medium-centered columns alert-box info text-center">[%|loc(rows)%]The current blacklist contains %1 line(s)[%END%]</p>
+[% END %]
+</p>
 [%|loc(conf.use_blacklist)%]Operation requested by users which email is listed in the blacklist file are rejected. The blacklist is in use for the following operation: %1.[%END%]
 <br /><br />
 [%|loc%]Syntax:[%END%]
@@ -13,14 +20,6 @@
   <li>[%|loc%]asterisk (*) matches any string. Example: "*@spammer-domain.com" match any sender from that exact domain[%END%]</li>
   <li>[%|loc%]only one asterisk is allowed in a line[%END%]</li>
 </ul>
-
-<p>
-[% IF rows == '0' %]
-  [%|loc%]The current blacklist is empty[%END%]
-[% ELSE %]
-  [%|loc(rows)%]The current blacklist contains %1 line(s)[%END%]
-[% END %]
-</p>
 
 [% IF rows < '10' %] [% rows = '10' %] [% END %]
 [% IF rows > '20' %] [% rows = '20' %] [% END %]
