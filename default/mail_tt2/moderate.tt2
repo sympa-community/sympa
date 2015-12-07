@@ -35,7 +35,9 @@ DISTRIBUTE [% list.name %] [% modkey %]
 REJECT [% list.name %] [% modkey %]
 [%END%]
 [%|loc(conf.wwsympa_url)%]The messages moderating documentation:[%END%] <[% conf.wwsympa_url %]/help/admin#moderate>
-
+[%- END%]
+[%- END%]
+[% IF spam_status != 'spam' -%]
 --[% boundary %]
 Content-Type: message/rfc822
 Content-Transfer-Encoding: 8bit
@@ -45,5 +47,4 @@ X-Sympa-Attach: yes
 [%# Message is attached here. #%]
 
 --[% boundary %]--
-[%- END %]
 [%- END %]
