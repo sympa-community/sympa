@@ -1,6 +1,4 @@
 <!-- $Id$ -->
-[%# IF mod_total %]
-
 <h2>[%|loc%]Listing messages to moderate[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 <!-- moderation of messages -->
@@ -9,16 +7,15 @@
 [% mod_display_message = 1 %]
 [% FOREACH msg = spool %]
     [% line_count = line_count + 1 %]
-<div id="mainviewmod[% msg.key %]" class="block viewmod">
-<input style="float:right" type="button" name="action_distribute" value="X"  onclick="return hideform('mainviewmod[% msg.key %]')"/>
+<div id="mainviewmod[% msg.key %]" class="reveal-modal medium" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
 <h3>[%|loc%]Current message[%END%]</h3>
 [% PROCESS modform.tt2 %]
-<p>
+
 <div id="viewmod[% msg.key %]">
   [%|loc%]loading message...[%END%]
   <!-- empty div that will display a content by AJAX -->
 </div>
-</p>
+<a class="close-reveal-modal" aria-label="Close">&#215;</a>
 </div>
 
 [% END %]
@@ -28,11 +25,11 @@
  <table  class="responsive listOfItems">
  <caption>[%|loc%]Listing messages to moderate[%END%]</caption>
       <tr>
+	<th>[%|loc%]Actions[%END%]</th>
      [%- IF conf.antispam_feature == 'on' -%]
 	<th>[%|loc%]Spam[%END%]</th>	
      [%- END -%]
-	<th>[%|loc%]Moderate[%END%]</th>
-	<th [% IF is_owner %]colspan="2"[%END%]>[%|loc%]Author[%END%]</th>
+	<th >[%|loc%]Author[%END%]</th>
 	<th>[%|loc%]Subject[%END%]</th>
         <th>[%|loc%]Date[%END%]</th>
 	<th>[%|loc%]Size[%END%]</th>
@@ -47,7 +44,9 @@
 	  [% dark = '1' %]
           <tr class="color0">
 	[% END %]
-
+          <td class="text-left">
+           [% PROCESS modform.tt2 %]
+          </td>
         [%- IF conf.antispam_feature == 'on' -%]	
 	 <td>
 	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="[%|loc%]junk[%END%]" />
@@ -56,10 +55,6 @@
 	</td>
 	[%- END -%]
 
-          <td style="white-space: nowrap">
-           [% PROCESS modform.tt2 %]
-          </td>
-
 	  <td>
 	    [% IF msg.value.gecos %]
 	    [% msg.value.gecos %] &lt;[% msg.value.from %]&gt;
@@ -67,27 +62,6 @@
 	    [% msg.value.from %]
 	    [% END %]
 	  </td>
-
-	[% IF is_owner %]
-	  <td>
-	    [% IF msg.value.is_subscriber %]
-	    &nbsp;
-	    [% ELSE %]
-	    <form class="noborder" style="display:inline"
-	     action="[% path_cgi %]" method="post"
-	     name="add_frommod[% line_count %]"><fieldset>
-	      <input type="hidden" name="list" value="[% list %]" />
-	      <input type="hidden" name="id" value="[% msg.key %]" />
-	      <input type="hidden" name="from_modindex" value="from_modindex" />
-	      <input class="MainMenuLinks" type="submit"
-	       name="action_add_frommod"
-	       onclick="return request_confirm('[%|loc(msg.value.from)%]Dou you really want to add %1?[%END%]');"
-	       value="[%|loc%]Add subscribers[%END%]" />
-	    </form>
-	    [% END %]
-	  </td>
-	[% END %]
-
 	  <td>
 	    [% IF msg.value.subject == 'no_subject' %]
 	      [%|loc%]No subject[%END%]
@@ -110,7 +84,6 @@
 [% ELSE %]
 <p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No messages to moderate[%END%]</p>
 [% END %]
-[%# END %]
 <br />
 <!-- moderation of document shared -->
 <h2>[%|loc%]Listing of shared documents to moderate[%END%]</h2>
@@ -174,6 +147,4 @@
  <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" />
 </fieldset>
 </form>
-
-
 <!-- end modindex.tt2 -->

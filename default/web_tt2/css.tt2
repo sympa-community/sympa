@@ -482,6 +482,24 @@ table.listOfItems td{
     vertical-align:middle;
     text-align:center;
 }
+table.listOfItems td form, table.listOfItems td form fieldset{
+    display:inline;
+    margin:0;
+    padding:0!important;
+}
+table.listOfItems td form fieldset button.action, table.listOfItems td button.action {
+	display: inline-block;
+	color: [% color_5 %];
+	border: none;
+	background: none;
+	font-size: inherit;
+	font-weight: inherit;
+	padding: 0;
+	margin: 0;
+}
+table.listOfItems td form fieldset button.action:hover, table.listOfItems td button.action:hover {
+	color: [% color_6 %];
+}
 table.ls_template th{ 
     border-right: 1px solid [% color_7 %];
 }
@@ -1489,7 +1507,12 @@ h7 strong {
     background-color:[% color_7 %];
     border-radius: 5px;
 }
-#ErrorMsg .alert-box { 
+#ErrorMsg .alert-box, #ephemeralMsg .alert-box { 
+    margin-bottom:0;
+    padding-top:1.5rem!important;
+    padding-bottom:1.5rem!important;
+}
+#ErrorMsg .alert-box form{ 
     margin-bottom:0;
 }
 
@@ -1504,7 +1527,7 @@ h7 strong {
 }
 
 #ephemeralMsg {
-    height:50%;
+    height:auto;
     width:50%;
     position:fixed;
     top:calc(50% - 0%);
@@ -1514,17 +1537,12 @@ h7 strong {
     padding: 1em 0.5em;
     margin-bottom: 1.5em;
     background-color: #fff;
+    z-index:599;
 }
 
 .alert-box {
-    padding-top:2rem;
-    padding-bottom:2rem;
-    font-size: 1.3rem;
-    text-align:center;
-}
-p.alert-box {
-    padding-top:0;
-    padding-bottom:0;
+    padding: 0.5rem 1.5rem!important;
+    font-size: 1rem;
 }
 
 /* to overwrite margin-left:0 for p element when *-centered is applied */
@@ -2172,8 +2190,14 @@ span.fa-stack i.fa-plus-circle {
     padding-left: 0;
     }
 	table.listOfItems tr:nth-of-type(1) { 
-	height:2rem!important;
-	}
+        height:2rem!important;
+    }
+    .table-wrapper table th, .table-wrapper table td{
+        text-align:left;
+    }
+    .table-wrapper table td i.fa-lg{
+        font-size:1em;
+    }
 }
 @media only screen and (max-width: 1025px){
     .top-bar .title-area img {
