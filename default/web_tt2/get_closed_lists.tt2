@@ -3,6 +3,8 @@
 <form name="myform" action="[% path_cgi %]" method="post">
 <fieldset>
 <h2>[%|loc%]Closed lists[%END%]</h2>
+
+[% IF closed.size %]
 <table  class="responsive table_style">
 <caption>[%|loc%]Closed lists[%END%]</caption>
  <tr class="color_light">
@@ -28,6 +30,10 @@
 </table>
 <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.selected_lists)" />
 <input class="MainMenuLinks" type="submit" name="action_purge_list" value="[%|loc%]Purge selected lists[%END%]" />
+
+[% ELSE %]
+      <p class="small-12 medium-8 medium-centered columns alert-box info text-center">[%|loc%] No closed lists[%END%]</p>
+[% END %]
 </fieldset>
 </form>
 

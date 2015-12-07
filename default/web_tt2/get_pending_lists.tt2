@@ -3,6 +3,8 @@
 <form name="myform" action="[% path_cgi %]" method="post">
 <fieldset>
 <h2>[%|loc%]Pending lists[%END%]</h2>
+
+[% IF pending.size %]
 <table  class="responsive table_style">
 <caption>[%|loc%]Pending lists[%END%]</caption>
  <tr class="color_light">
@@ -26,6 +28,9 @@
 </tr>
 [% END %]
 </table>
+[% ELSE %]
+      <p class="small-12 medium-8 medium-centered columns alert-box info text-center">[%|loc%] No pending lists[%END%]</p>
+[% END %]
 </fieldset>
 </form>
 
