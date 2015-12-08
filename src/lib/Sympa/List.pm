@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Digest::MD5 qw();
 use English qw(-no_match_vars);
+use File::Path qw();
 use HTTP::Request;
 use IO::Scalar;
 use LWP::UserAgent;

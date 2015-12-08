@@ -33,6 +33,7 @@ use Sympa::Scenario;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+use Sympa::Tools::WWW;
 
 my $log = Sympa::Log->instance;
 
