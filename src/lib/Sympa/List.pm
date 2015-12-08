@@ -1461,15 +1461,18 @@ sub _get_single_param_value {
 
 ###   LIST DISTRIBUTION  ###
 
-# Note: send_msg() has been merged to this method.
-# Moved to: Sympa::Spindle::DistributeMessage::_distribute_msg().
+# Moved (split) to:
+# Sympa::Spindle::TransformIncoming::_twist(),
+# Sympa::Spindle::ToArchive::_twist(),
+# Sympa::Spindle::TransformOutgoing::_twist(),
+# Sympa::Spindle::ToDigest::_twist(), Sympa::Spindle::ToList::_send_msg().
 #sub distribute_msg;
 
-# Moved to: Sympa::Spindle::DistributeMessage::post_archive().
+# Moved to: Sympa::Spindle::DecodateOutgoing::_twist().
 #sub post_archive;
 
 # Old name: Sympa::Mail::mail_message()
-# Moved To: Sympa::Spindle::DistributeMessage::_mail_message().
+# Moved To: Sympa::Spindle::ToList::_mail_message().
 #sub _mail_message;
 
 # Old name: List::send_msg_digest().
@@ -1546,7 +1549,8 @@ sub get_digest_recipients_per_mode {
 #MOVED: Use Sympa::send_file() or Sympa::List::send_probe_to_user().
 # sub send_file($self, $tpl, $who, $robot, $context);
 
-#DEPRECATED: Merged to List::distribute_msg().
+#DEPRECATED: Merged to List::distribute_msg(), then moved to
+# Sympa::Spindle::ToList::_send_msg().
 # sub send_msg($message);
 
 sub get_recipients_per_mode {

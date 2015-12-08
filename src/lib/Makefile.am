@@ -91,9 +91,14 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ProcessOutgoing.pm \
 	Sympa/Spindle/SendDigest.pm \
 	Sympa/Spindle/StoreArchive.pm \
+	Sympa/Spindle/ToArchive.pm \
+	Sympa/Spindle/ToDigest.pm \
 	Sympa/Spindle/ToEditor.pm \
 	Sympa/Spindle/ToHeld.pm \
+	Sympa/Spindle/ToList.pm \
 	Sympa/Spindle/ToModeration.pm \
+	Sympa/Spindle/TransformIncoming.pm \
+	Sympa/Spindle/TransformOutgoing.pm \
 	Sympa/Spool.pm \
 	Sympa/Spool/Archive.pm \
 	Sympa/Spool/Automatic.pm \
