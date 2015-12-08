@@ -9434,9 +9434,9 @@ sub purge {
 
     if ($self->{'name'}) {
         #FIXME: Lock directories to remove them safely.
-        my $archive  = Sympa::Archive->new($self);
-        my $digest   = Sympa::Spool::Digest->new(context => $self);
-        my $tracking = Sympa::Tracking->new($self);
+        my $archive = Sympa::Archive->new(context => $self);
+        my $digest = Sympa::Spool::Digest->new(context => $self);
+        my $tracking = Sympa::Tracking->new(context => $self);
         my $error;
         File::Path::remove_tree($archive->{base_directory},
             {error => \$error});

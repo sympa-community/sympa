@@ -9722,7 +9722,7 @@ sub do_arc {
             unless ($session->{'archive_sniffer'} eq 'false');
     }
 
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
     # Calendar
     my @arcs = $archive->get_archives;
     unless (@arcs) {
@@ -9888,8 +9888,8 @@ sub do_latest_arc {
         $nb_arc = $NB_ARC_MAX;
     }
 
-    my $archive = Sympa::Archive->new($list);
-    my @arcs    = reverse $archive->get_archives;
+    my $archive = Sympa::Archive->new(context => $list);
+    my @arcs = reverse $archive->get_archives;
     my $stop_search;
     my @archives;
 
@@ -10051,7 +10051,7 @@ sub do_remove_arc {
     }
 
     my $msg_string = "\n\n";
-    my $tracking   = Sympa::Tracking->new($list);
+    my $tracking = Sympa::Tracking->new(context => $list);
     foreach my $msgid (@msgids) {
         chomp $msgid;
         $msg_string .= sprintf "remove_arc %s %s-%s %s\n", $list->{'name'},
@@ -10127,7 +10127,7 @@ sub do_send_me {
         return undef;
     }
 
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
     my ($message, $handle);
     if ($archive->select_archive("$in{'yyyy'}-$in{'month'}")) {
         ($message, $handle) = $archive->fetch(message_id => $in{'msgid'});
@@ -10137,7 +10137,7 @@ sub do_send_me {
         $message->smime_decrypt;
 
         # Add or remove several header fields.
-        Sympa::Spindle::TransformOutgoing->post_archive($message); #FIXME
+        Sympa::Spindle::TransformOutgoing->post_archive($message);    #FIXME
 
         # Add footer/header.
         $message->decorate;
@@ -10232,7 +10232,7 @@ sub do_view_source {
         return undef;
     }
 
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
     my ($message, $handle);
     if ($archive->select_archive("$in{'yyyy'}-$in{'month'}")) {
         ($message, $handle) = $archive->fetch(message_id => $in{'msgid'});
@@ -10365,7 +10365,7 @@ sub do_arcsearch_form {
         unless (
         defined check_authz('do_arcsearch_form', 'archive.web_access'));
 
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
     $param->{'yyyymm'}       = [reverse $archive->get_archives];
     $param->{'key_word'}     = $in{'key_word'};
     $param->{'archive_name'} = $in{'archive_name'};
@@ -10381,8 +10381,8 @@ sub do_arcsearch {
     return undef
         unless defined check_authz('do_arcsearch', 'archive.web_access');
 
-    my $search  = Sympa::Marc::Search->new;
-    my $archive = Sympa::Archive->new($list);
+    my $search = Sympa::Marc::Search->new;
+    my $archive = Sympa::Archive->new(context => $list);
     $search->search_base($archive->{base_directory});
     $search->base_href(Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/'
             . $param->{'list'});
@@ -10520,8 +10520,8 @@ sub do_arcsearch_id {
     return undef
         unless defined check_authz('do_arcsearch_id', 'archive.web_access');
 
-    my $search  = Sympa::Marc::Search->new;
-    my $archive = Sympa::Archive->new($list);
+    my $search = Sympa::Marc::Search->new;
+    my $archive = Sympa::Archive->new(context => $list);
     $search->search_base($archive->{base_directory});
     $search->base_href(Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/'
             . $param->{'list'});
@@ -22878,7 +22878,7 @@ sub do_arc_manage {
     return undef
         unless defined check_authz('do_arc', 'archive.web_access');
 
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
     $param->{'yyyymm'} = [reverse $archive->get_archives];
 
     return 1;
@@ -22919,7 +22919,7 @@ sub do_arc_download {
         return 'arc_manage';
     }
 
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
 
     # For each selected month
     foreach my $arc (split /\0/, $in{'directories'}) {
@@ -23131,7 +23131,7 @@ sub do_arc_delete {
         do_arc_download();
     }
 
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
     foreach my $arc (split /\0/, $in{'directories'}) {
         unless ($archive->purge_archive($arc)) {
             wwslog('info', 'Error while purging archive %s in %s',

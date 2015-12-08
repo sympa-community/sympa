@@ -287,7 +287,7 @@ sub _send_msg {
         $new_message->{shelved}{tracking} ||= 'verp';
 
         if ($new_message->{shelved}{tracking} =~ /dsn|mdn/) {
-            my $tracking = Sympa::Tracking->new($list);
+            my $tracking = Sympa::Tracking->new(context => $list);
 
             $tracking->register($new_message, [@verp_selected_tabrcpt],
                 'reception_option' => $mode);
@@ -346,7 +346,6 @@ sub _send_msg {
     $list->savestats;
     return $nbr_smtp;
 }
-
 
 # Distribute a message to a list, shelving encryption if needed.
 #

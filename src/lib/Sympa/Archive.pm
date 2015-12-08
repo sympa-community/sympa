@@ -48,7 +48,14 @@ my $log = Sympa::Log->instance;
 
 sub new {
     my $class = shift;
-    my $list  = shift;
+
+    my $list;
+    if (ref $_[0]) {    # Compat., not recommended.
+        $list = shift;
+    } else {
+        my %options = @_;
+        $list = $options{context};
+    }
 
     die 'Bug in logic.  Ask developer' unless ref $list eq 'Sympa::List';
     my $robot_id = $list->{'domain'};
@@ -992,7 +999,7 @@ Sympa::Archive - Archives of Sympa
 =head1 SYNOPSIS
 
   use Sympa::Archive;
-  $archive = Sympa::Archive->new($list);
+  $archive = Sympa::Archive->new(context => $list);
 
   @arcs = $archive->get_archives;
 
@@ -1017,7 +1024,7 @@ L<Sympa::Archive> implements the interface to handle archives.
 
 =over
 
-=item new ( $list )
+=item new ( context =E<gt> $list )
 
 I<Constructor>.
 Creates new instance of L<Sympa::Archive>.
@@ -1026,7 +1033,7 @@ Parameter:
 
 =over
 
-=item $list
+=item context =E<gt> $list
 
 Context of object, a L<Sympa::List> instance.
 

@@ -40,7 +40,14 @@ my $log = Sympa::Log->instance;
 
 sub new {
     my $class = shift;
-    my $list  = shift;
+
+    my $list;
+    if (ref $_[0]) {    # Compat., not recommended.
+        $list = shift;
+    } else {
+        my %options = @_;
+        $list = $options{context};
+    }
 
     die 'Bug in logic.  Ask developer'
         unless ref $list eq 'Sympa::List';
@@ -596,7 +603,7 @@ each message.
 
 =over
 
-=item new ( $list )
+=item new ( context =E<gt> $list )
 
 I<Constructor>.
 Creates new L<Sympa::Tracking> instance.
@@ -605,7 +612,7 @@ Parameter:
 
 =over
 
-=item $list
+=item context =E<gt> $list
 
 L<Sympa::List> object.
 

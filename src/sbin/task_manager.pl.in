@@ -1477,7 +1477,7 @@ sub purge_tables {
         return 1 if $end;
 
         foreach my $list (@{$all_lists || []}) {
-            my $tracking = Sympa::Tracking->new($list);
+            my $tracking = Sympa::Tracking->new(context => $list);
 
             $removed +=
                 $tracking->remove_message_by_period(

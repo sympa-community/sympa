@@ -501,7 +501,7 @@ sub getfile {
         return 'not_allowed';
     }
 
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
     my @msg_list;
     unless ($archive->select_archive($arc)) {
         Sympa::Report::reject_report_cmd('user', 'no_required_file', {},
@@ -653,7 +653,7 @@ sub last {
     }
 
     my ($arc_message, $arc_handle);
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
     foreach my $arc (reverse $archive->get_archives) {
         next unless $archive->select_archive($arc);
         ($arc_message, $arc_handle) = $archive->next(reverse => 1);
@@ -802,7 +802,7 @@ sub index {
 
     my @arcs;
     if ($list->is_archived) {
-        my $archive = Sympa::Archive->new($list);
+        my $archive = Sympa::Archive->new(context => $list);
         foreach my $arc ($archive->get_archives) {
             my $info = $archive->select_archive($arc, info => 1);
             next unless $info;

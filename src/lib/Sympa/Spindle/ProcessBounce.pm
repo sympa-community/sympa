@@ -209,7 +209,7 @@ sub _twist {
                 '%s: DSN detected: dsn_status=%s; rcpt=%s; arrival_date=%s',
                 $message, $dsn_status, $who, $arrival_date);
 
-            my $tracking = Sympa::Tracking->new($list);
+            my $tracking = Sympa::Tracking->new(context => $list);
             if ($tracking->store(
                     $message, $who,
                     envid        => $distribution_id,
@@ -268,7 +268,7 @@ sub _twist {
                 $date
             );
 
-            my $tracking = Sympa::Tracking->new($list);
+            my $tracking = Sympa::Tracking->new(context => $list);
             if ($tracking->store(
                     $message, $who,
                     envid        => $distribution_id,
@@ -551,7 +551,7 @@ sub _twist {
         }
     } elsif (%hash and $who) {
         # VERP in use.
-        my $tracking = Sympa::Tracking->new($list);
+        my $tracking = Sympa::Tracking->new(context => $list);
         my ($status) = values %hash;
 
         if ($tracking->store($message, $who, status => $status)) {
@@ -571,7 +571,7 @@ sub _twist {
             $numreported++;
         }
     } elsif (%hash) {
-        my $tracking = Sympa::Tracking->new($list);
+        my $tracking = Sympa::Tracking->new(context => $list);
 
         while (my ($rcpt, $status) = each %hash) {
             if ($tracking->store($message, $rcpt, status => $status)) {

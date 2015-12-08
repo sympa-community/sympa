@@ -214,7 +214,7 @@ sub _do_remove_arc {
     my $msgid  = shift;
     my $sender = shift;
 
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
     unless ($archive->select_archive($arc)) {
         $log->syslog('err', 'No archive %s of %s', $arc, $archive);
         return undef;
@@ -275,7 +275,7 @@ sub _do_rebuildarc {
     my $list = shift;
     my $arc  = shift;
 
-    my $archive = Sympa::Archive->new($list);
+    my $archive = Sympa::Archive->new(context => $list);
 
     if ($arc and $arc ne '*') {
         $log->syslog('notice', 'Rebuilding %s of %s', $arc, $archive);
@@ -294,8 +294,8 @@ sub _mail2arc {
     $log->syslog('debug2', '(%s)', @_);
     my $message = shift;
 
-    my $list    = $message->{context};
-    my $archive = Sympa::Archive->new($list);
+    my $list = $message->{context};
+    my $archive = Sympa::Archive->new(context => $list);
 
     # chdir $arcpath;
 
