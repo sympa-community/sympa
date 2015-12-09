@@ -10154,24 +10154,24 @@ sub do_send_me {
             'on');
 
         # Check if re-encryption is possible.
-        if ($message->{'smime_crypted'}) {
-            unless ($message->dup->smime_encrypt($param->{'user'}{'email'})) {
-                # If encryption failed, send a generic error message:
-                # X509 cert missing.
-                $message = Sympa::Message->new_from_template(
-                    $list,
-                    'x509-user-cert-missing',
-                    $param->{'user'}{'email'},
-                    {   'mail' => {
-                            'sender'  => $message->{sender},
-                            'subject' => $message->{decoded_subject},
-                        },
-                    }
-                );
-            } else {
-                # Otherwise shelve re-encryption with S/MIME.
-                $message->{shelved}{smime_encrypt} = 1;
-            }
+        if ($message->{smime_crypted}) {
+            # unless ($message->dup->smime_encrypt($param->{'user'}{'email'})) {
+            #     # If encryption failed, send a generic error message:
+            #     # X509 cert missing.
+            #     $message = Sympa::Message->new_from_template(
+            #         $list,
+            #         'x509-user-cert-missing',
+            #         $param->{'user'}{'email'},
+            #         {   'mail' => {
+            #                 'sender'  => $message->{sender},
+            #                 'subject' => $message->{decoded_subject},
+            #             },
+            #         }
+            #     );
+            # } else {
+            #     # Otherwise shelve re-encryption with S/MIME.
+            $message->{shelved}{smime_encrypt} = 1;
+            # }
         }
 
         # Overwrite original envelope sender.  It is REQUIRED for delivery.

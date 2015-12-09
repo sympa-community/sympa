@@ -321,8 +321,19 @@ sub _twist {
                         $list,
                         $rcpt
                     );
-                    # Quarantine packet into bad spool.
-                    return undef;
+                    # If encryption failed, send a generic error message:
+                    # X509 cert missing.
+                    my $entity = Sympa::Message->new_from_template(
+                        $list,
+                        'x509-user-cert-missing',
+                        $rcpt,
+                        {   'mail' => {
+                                'sender'  => $new_message->{sender},
+                                'subject' => $new_message->{decoded_subject},
+                            },
+                        }
+                    )->as_entity;
+                    $new_message->set_entity($entity);
                 }
                 delete $new_message->{shelved}{smime_encrypt};
             }
