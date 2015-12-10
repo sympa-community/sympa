@@ -10129,9 +10129,12 @@ sub do_send_me {
     }
 
     my $spindle = Sympa::Spindle::ResendArchive->new(
-        resent_by => $param->{'user'}{'email'},
-        context => $list, arc => "$in{'yyyy'}-$in{'month'}",
-        message_id => $message_id, quiet => 1);
+        resent_by  => $param->{'user'}{'email'},
+        context    => $list,
+        arc        => "$in{'yyyy'}-$in{'month'}",
+        message_id => $message_id,
+        quiet      => 1
+    );
 
     unless ($spindle and $spindle->spin) {
         wwslog('info', 'No file match msgid');
@@ -10139,20 +10142,20 @@ sub do_send_me {
         return undef;
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         wwslog(
-            'info',   'Message %s spooled for %s',
+            'info',      'Message %s spooled for %s',
             $message_id, $param->{'user'}{'email'}
         );
         Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
         $in{'month'} = $in{'yyyy'} . "-" . $in{'month'};
         return 'arc';
     } else {
-            $param->{'status'} = 'message_err';
-            wwslog(
-                'err',
-                'Impossible to send archive file to %s',
-                $param->{'user'}{'email'}
-            );
-            return undef;
+        $param->{'status'} = 'message_err';
+        wwslog(
+            'err',
+            'Impossible to send archive file to %s',
+            $param->{'user'}{'email'}
+        );
+        return undef;
     }
 
     return 1;

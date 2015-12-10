@@ -156,77 +156,77 @@ sub _send_msg {
 
     my $list = $message->{context};
 
-  my $verp_rate;
-  my $tags_to_use;
-  my $available_recipients;
-  unless ($resent_by) { # Not in ResendArchive spindle.
-    # Synchronize list members, required if list uses include sources
-    # unless sync_include has been performed recently.
-    if ($list->has_include_data_sources()) {
-        unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-            $log->syslog('notice', 'Unable to synchronize list %s', $list);
-            #FIXME: Might be better to abort if synchronization failed.
+    my $verp_rate;
+    my $tags_to_use;
+    my $available_recipients;
+    unless ($resent_by) {    # Not in ResendArchive spindle.
+        # Synchronize list members, required if list uses include sources
+        # unless sync_include has been performed recently.
+        if ($list->has_include_data_sources()) {
+            unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
+                $log->syslog('notice', 'Unable to synchronize list %s',
+                    $list);
+                #FIXME: Might be better to abort if synchronization failed.
+            }
         }
-    }
 
-    # Blindly send the message to all users.
+        # Blindly send the message to all users.
 
-    my $total = $list->get_total('nocache');
-    unless ($total and 0 < $total) {
-        $log->syslog('info', 'No subscriber in list %s', $list);
-        $list->savestats;
-        return 0;
-    }
-
-    # Postpone delivery if delivery time is specified.
-    my $delivery_date = $list->get_next_delivery_date;
-    $message->{date} = $delivery_date if defined $delivery_date;
-
-    # Bounce rate.
-    my $rate = $list->get_total_bouncing() * 100 / $total;
-    if ($rate > $list->{'admin'}{'bounce'}{'warn_rate'}) {
-        $list->send_notify_to_owner('bounce_rate', {'rate' => $rate});
-        if (100 <= $rate) {
-            Sympa::send_notify_to_user($list, 'hundred_percent_error',
-                $message->{sender});
-            Sympa::send_notify_to_listmaster($list, 'hundred_percent_error',
-                {sender => $message->{sender}});
+        my $total = $list->get_total('nocache');
+        unless ($total and 0 < $total) {
+            $log->syslog('info', 'No subscriber in list %s', $list);
+            $list->savestats;
+            return 0;
         }
-    }
 
-    # Prepare verp parameter.
-    $verp_rate = $list->{'admin'}{'verp_rate'};
-    # Force VERP if tracking is requested.
-    $verp_rate = '100%'
-        if Sympa::Tools::Data::smart_eq($message->{shelved}{tracking},
-        qr/dsn|mdn/);
+        # Postpone delivery if delivery time is specified.
+        my $delivery_date = $list->get_next_delivery_date;
+        $message->{date} = $delivery_date if defined $delivery_date;
 
-    # Define messages which can be tagged as first or last according to the
-    # VERP rate.
-    # If the VERP is 100%, then all the messages are VERP. Don't try to tag
-    # not VERP messages as they won't even exist.
-    if ($verp_rate eq '0%') {
-        $tags_to_use = {tag_verp => '0', tag_noverp => 'z'};
+        # Bounce rate.
+        my $rate = $list->get_total_bouncing() * 100 / $total;
+        if ($rate > $list->{'admin'}{'bounce'}{'warn_rate'}) {
+            $list->send_notify_to_owner('bounce_rate', {'rate' => $rate});
+            if (100 <= $rate) {
+                Sympa::send_notify_to_user($list, 'hundred_percent_error',
+                    $message->{sender});
+                Sympa::send_notify_to_listmaster($list,
+                    'hundred_percent_error', {sender => $message->{sender}});
+            }
+        }
+
+        # Prepare verp parameter.
+        $verp_rate = $list->{'admin'}{'verp_rate'};
+        # Force VERP if tracking is requested.
+        $verp_rate = '100%'
+            if Sympa::Tools::Data::smart_eq($message->{shelved}{tracking},
+            qr/dsn|mdn/);
+
+        # Define messages which can be tagged as first or last according to the
+        # VERP rate.
+        # If the VERP is 100%, then all the messages are VERP. Don't try to tag
+        # not VERP messages as they won't even exist.
+        if ($verp_rate eq '0%') {
+            $tags_to_use = {tag_verp => '0', tag_noverp => 'z'};
+        } else {
+            $tags_to_use = {tag_verp => 'z', tag_noverp => '0'};
+        }
+
+        # Separate subscribers depending on user reception option and also if
+        # VERP a dicovered some bounce for them.
+        # Storing the not empty subscribers' arrays into a hash.
+        $available_recipients = $list->get_recipients_per_mode($message);
+        unless ($available_recipients) {
+            $log->syslog('info', 'No subscriber for sending msg in list %s',
+                $list);
+            $list->savestats;
+            return 0;
+        }
     } else {
-        $tags_to_use = {tag_verp => 'z', tag_noverp => '0'};
+        $verp_rate            = '0%';
+        $tags_to_use          = {tag_verp => '0', tag_noverp => 'z',};
+        $available_recipients = {mail => {noverp => [$resent_by]}};
     }
-
-    # Separate subscribers depending on user reception option and also if
-    # VERP a dicovered some bounce for them.
-    # Storing the not empty subscribers' arrays into a hash.
-    $available_recipients = $list->get_recipients_per_mode($message);
-    unless ($available_recipients) {
-        $log->syslog('info', 'No subscriber for sending msg in list %s',
-            $list);
-        $list->savestats;
-        return 0;
-    }
-  } else {
-        $verp_rate = '0%';
-        $tags_to_use = { tag_verp => '0', tag_noverp => 'z', };
-        $available_recipients =
-            { mail => { noverp => [$resent_by] } };
-  }
 
     my $numstored = 0;
 

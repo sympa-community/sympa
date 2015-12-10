@@ -78,4 +78,3 @@ L<Sympa::Spool::Digest>.
 L<Sympa::Spindle::ToDigest> appeared on Sympa 6.2.13.
 
 =cut
-

@@ -87,8 +87,8 @@ sub _twist {
     my $self    = shift;
     my $message = shift;
 
-    my $message_id =
-        tools::clean_msg_id($message->get_header('Message-Id')) || '';
+    my $message_id = tools::clean_msg_id($message->get_header('Message-Id'))
+        || '';
     return 0 unless $message_id eq $self->{message_id};
 
     # Decrpyt message.
