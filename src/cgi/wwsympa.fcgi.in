@@ -73,7 +73,7 @@ use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::SharedDocument;
-use Sympa::Spindle::TransformOutgoing;
+use Sympa::Spindle::ResendArchive;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
@@ -10118,8 +10118,9 @@ sub do_send_me {
     wwslog('info', '(%s, %s, %s, %s)',
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
-    unless ($in{'msgid'}
-        and $in{'msgid'} !~ /NO-ID-FOUND\.mhonarc\.org/) {
+    my $message_id = tools::clean_msg_id($in{'msgid'});
+    unless ($message_id
+        and $message_id !~ /NO-ID-FOUND\.mhonarc\.org/) {
         Sympa::Report::reject_report_web('intern', 'may_not_send_me', {},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'No message id found');
@@ -10127,57 +10128,24 @@ sub do_send_me {
         return undef;
     }
 
-    my $archive = Sympa::Archive->new(context => $list);
-    my ($message, $handle);
-    if ($archive->select_archive("$in{'yyyy'}-$in{'month'}")) {
-        ($message, $handle) = $archive->fetch(message_id => $in{'msgid'});
-    }
-    if ($message) {
-        # Decrypt message if possible
-        $message->smime_decrypt;
+    my $spindle = Sympa::Spindle::ResendArchive->new(
+        resent_by => $param->{'user'}{'email'},
+        context => $list, arc => "$in{'yyyy'}-$in{'month'}",
+        message_id => $message_id, quiet => 1);
 
-        # Add or remove several header fields.
-        Sympa::Spindle::TransformOutgoing->post_archive($message);    #FIXME
-
-        # Add footer/header.
-        $message->prepare_message_according_to_mode('mail', $list);
-
-        # Shelve DMARC protection.
-        $message->{shelved}{dmarc_protect} = 1
-            if $list->{'admin'}{'dmarc_protection'}
-                and $list->{'admin'}{'dmarc_protection'}{'mode'}
-                and not $list->{'admin'}{'anonymous_sender'};
-
-        # Shelve personalization.
-        $message->{shelved}{merge} = 1
-            if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-            'on');
-
-        # Check if re-encryption is possible.
-        if ($message->{smime_crypted}) {
-            # unless ($message->dup->smime_encrypt($param->{'user'}{'email'})) {
-            #     # If encryption failed, send a generic error message:
-            #     # X509 cert missing.
-            #     $message = Sympa::Message->new_from_template(
-            #         $list,
-            #         'x509-user-cert-missing',
-            #         $param->{'user'}{'email'},
-            #         {   'mail' => {
-            #                 'sender'  => $message->{sender},
-            #                 'subject' => $message->{decoded_subject},
-            #             },
-            #         }
-            #     );
-            # } else {
-            #     # Otherwise shelve re-encryption with S/MIME.
-            $message->{shelved}{smime_encrypt} = 1;
-            # }
-        }
-
-        # Overwrite original envelope sender.  It is REQUIRED for delivery.
-        $message->{envelope_sender} = $list->get_list_address('return_path');
-
-        unless (defined $bulk->store($message, $param->{'user'}{'email'})) {
+    unless ($spindle and $spindle->spin) {
+        wwslog('info', 'No file match msgid');
+        $param->{'status'} = 'not_found';
+        return undef;
+    } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
+        wwslog(
+            'info',   'Message %s spooled for %s',
+            $message_id, $param->{'user'}{'email'}
+        );
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+        $in{'month'} = $in{'yyyy'} . "-" . $in{'month'};
+        return 'arc';
+    } else {
             $param->{'status'} = 'message_err';
             wwslog(
                 'err',
@@ -10185,18 +10153,6 @@ sub do_send_me {
                 $param->{'user'}{'email'}
             );
             return undef;
-        }
-        wwslog(
-            'info',   'Message %s spooled for %s',
-            $message, $param->{'user'}{'email'}
-        );
-        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
-        $in{'month'} = $in{'yyyy'} . "-" . $in{'month'};
-        return 'arc';
-    } else {
-        wwslog('info', 'No file match msgid');
-        $param->{'status'} = 'not_found';
-        return undef;
     }
 
     return 1;

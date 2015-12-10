@@ -138,11 +138,6 @@ sub _twist {
     1;
 }
 
-# Tentative.
-sub post_archive {
-    goto &_twist;
-}
-
 1;
 __END__
 

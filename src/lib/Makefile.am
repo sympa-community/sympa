@@ -89,6 +89,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ProcessIncoming.pm \
 	Sympa/Spindle/ProcessModeration.pm \
 	Sympa/Spindle/ProcessOutgoing.pm \
+	Sympa/Spindle/ResendArchive.pm \
 	Sympa/Spindle/SendDigest.pm \
 	Sympa/Spindle/StoreArchive.pm \
 	Sympa/Spindle/ToArchive.pm \

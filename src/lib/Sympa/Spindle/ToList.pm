@@ -50,10 +50,11 @@ sub _twist {
     my $sender =
            $self->{confirmed_by}
         || $self->{distributed_by}
+        || $self->{resent_by}
         || $message->{sender};
 
-    my $numsmtp = _send_msg($message);
-    unless (defined $numsmtp) {
+    my $numstored = _send_msg($message, $self->{resent_by});
+    unless (defined $numstored) {
         $log->syslog('err', 'Unable to send message %s to list %s',
             $message, $list);
         Sympa::send_notify_to_listmaster(
@@ -87,6 +88,7 @@ sub _twist {
                 {'key' => $self->{authkey}, 'message' => $message},
                 $list->{'domain'}, $list);
         }
+        # No notification sent to {resent_by} user.
     }
 
     $log->syslog(
@@ -96,7 +98,7 @@ sub _twist {
         $list,
         $sender,
         Time::HiRes::time() - $self->{start_time},
-        $numsmtp,
+        $numstored,
         $list->get_total,
         $messageid,
         $message->{'size'}
@@ -149,10 +151,15 @@ sub _extract_verp_rcpt {
 
 # Old names: List::send_msg(), (part of) Sympa::List::distribute_msg().
 sub _send_msg {
-    my $message = shift;
+    my $message   = shift;
+    my $resent_by = shift;
 
     my $list = $message->{context};
 
+  my $verp_rate;
+  my $tags_to_use;
+  my $available_recipients;
+  unless ($resent_by) { # Not in ResendArchive spindle.
     # Synchronize list members, required if list uses include sources
     # unless sync_include has been performed recently.
     if ($list->has_include_data_sources()) {
@@ -165,14 +172,17 @@ sub _send_msg {
     # Blindly send the message to all users.
 
     my $total = $list->get_total('nocache');
-
-    unless ($total > 0) {
+    unless ($total and 0 < $total) {
         $log->syslog('info', 'No subscriber in list %s', $list);
         $list->savestats;
         return 0;
     }
 
-    ## Bounce rate
+    # Postpone delivery if delivery time is specified.
+    my $delivery_date = $list->get_next_delivery_date;
+    $message->{date} = $delivery_date if defined $delivery_date;
+
+    # Bounce rate.
     my $rate = $list->get_total_bouncing() * 100 / $total;
     if ($rate > $list->{'admin'}{'bounce'}{'warn_rate'}) {
         $list->send_notify_to_owner('bounce_rate', {'rate' => $rate});
@@ -184,43 +194,44 @@ sub _send_msg {
         }
     }
 
-    #save the message before modifying it
-    my $nbr_smtp = 0;
-
-    # prepare verp parameter
-    my $verp_rate = $list->{'admin'}{'verp_rate'};
-    # force VERP if tracking is requested.
+    # Prepare verp parameter.
+    $verp_rate = $list->{'admin'}{'verp_rate'};
+    # Force VERP if tracking is requested.
     $verp_rate = '100%'
         if Sympa::Tools::Data::smart_eq($message->{shelved}{tracking},
         qr/dsn|mdn/);
 
-    my $tags_to_use;
-
     # Define messages which can be tagged as first or last according to the
     # VERP rate.
     # If the VERP is 100%, then all the messages are VERP. Don't try to tag
-    # not VERP
-    # messages as they won't even exist.
+    # not VERP messages as they won't even exist.
     if ($verp_rate eq '0%') {
-        $tags_to_use->{'tag_verp'}   = '0';
-        $tags_to_use->{'tag_noverp'} = 'z';
+        $tags_to_use = {tag_verp => '0', tag_noverp => 'z'};
     } else {
-        $tags_to_use->{'tag_verp'}   = 'z';
-        $tags_to_use->{'tag_noverp'} = '0';
+        $tags_to_use = {tag_verp => 'z', tag_noverp => '0'};
     }
 
-    # Separate subscribers depending on user reception option and also if VERP
-    # a dicovered some bounce for them.
+    # Separate subscribers depending on user reception option and also if
+    # VERP a dicovered some bounce for them.
     # Storing the not empty subscribers' arrays into a hash.
-    my $available_recipients = $list->get_recipients_per_mode($message);
+    $available_recipients = $list->get_recipients_per_mode($message);
     unless ($available_recipients) {
         $log->syslog('info', 'No subscriber for sending msg in list %s',
             $list);
         $list->savestats;
         return 0;
     }
+  } else {
+        $verp_rate = '0%';
+        $tags_to_use = { tag_verp => '0', tag_noverp => 'z', };
+        $available_recipients =
+            { mail => { noverp => [$resent_by] } };
+  }
+
+    my $numstored = 0;
 
     foreach my $mode (sort keys %$available_recipients) {
+        # Save the message before modifying it.
         my $new_message = $message->dup;
         unless ($new_message->prepare_message_according_to_mode($mode, $list))
         {
@@ -268,7 +279,7 @@ sub _send_msg {
                 return undef;
             }
             $tags_to_use->{'tag_noverp'} = '0' if $result;
-            $nbr_smtp++;
+            $numstored++;
 
             # Add number and size of messages sent to total in stats file.
             my $numsent = scalar @selected_tabrcpt;
@@ -314,7 +325,7 @@ sub _send_msg {
                 return undef;
             }
             $tags_to_use->{'tag_verp'} = '0' if $result;
-            $nbr_smtp++;
+            $numstored++;
 
             # Add number and size of messages sent to total in stats file.
             my $numsent = scalar @verp_selected_tabrcpt;
@@ -344,14 +355,14 @@ sub _send_msg {
         }
     }
     $list->savestats;
-    return $nbr_smtp;
+    return $numstored;
 }
 
 # Distribute a message to a list, shelving encryption if needed.
 #
 # IN : -$message(+) : ref(Sympa::Message)
 #      -\@rcpt(+) : recipients
-# OUT : -$numsmtp : number of sendmail process | undef
+# Returns: Marshalled metadata (file name) or undef
 #
 # Old name: Sympa::Mail::mail_message(), Sympa::List::_mail_message().
 sub _mail_message {
@@ -377,11 +388,6 @@ sub _mail_message {
     # Shelve re-encryption with S/MIME.
     $message->{shelved}{smime_encrypt} = 1
         if $message->{'smime_crypted'};
-
-    # if not specified, delivery time is right now (used for sympa messages
-    # etc.)
-    my $delivery_date = $list->get_next_delivery_date;
-    $message->{'date'} = $delivery_date if defined $delivery_date;
 
     # Overwrite original envelope sender.  It is REQUIRED for delivery.
     $message->{envelope_sender} = $list->get_list_address('return_path');
