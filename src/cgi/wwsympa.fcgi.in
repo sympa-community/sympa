@@ -21653,8 +21653,8 @@ sub do_send_mail {
 
     if (@to_user) {
         my $u_message = $message->dup;
-        #FIXME: envelope sender would be sympa-request address, isn't it?
-        $u_message->{envelope_sender} = Conf::get_robot_conf($robot, 'sympa');
+        # Set <sympa-request> address as envelope sender.
+        $u_message->{envelope_sender} = Sympa::get_address($robot, 'owner');
         $u_message->{priority} =
             Conf::get_robot_conf($robot, 'sympa_priority');
 
