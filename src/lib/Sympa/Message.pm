@@ -1754,38 +1754,8 @@ sub _merge_msg {
     return $entity;
 }
 
-sub test_personalize {
-    my $self = shift;
-    my $list = shift;
-
-    return 1
-        unless Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-        'on');
-
-    # Get available recipients to test.
-    my $available_recipients = $list->get_recipients_per_mode($self) || {};
-    # Always test all available reception modes using sender.
-    foreach my $mode ('mail',
-        grep { $_ and $_ ne 'nomail' and $_ ne 'not_me' }
-        @{$list->{'admin'}{'available_user_options'}->{'reception'} || []}) {
-        push @{$available_recipients->{$mode}{'verp'}}, $self->{'sender'};
-    }
-
-    foreach my $mode (sort keys %$available_recipients) {
-        my $message = $self->dup;
-        $message->prepare_message_according_to_mode($mode, $list);
-
-        foreach my $rcpt (
-            @{$available_recipients->{$mode}{'verp'}   || []},
-            @{$available_recipients->{$mode}{'noverp'} || []}
-            ) {
-            unless ($message->personalize($list, $rcpt, {})) {
-                return undef;
-            }
-        }
-    }
-    return 1;
-}
+# Moved to Sympa::Spindle::AuthorizeMessage::_test_personalize().
+#sub test_personalize;
 
 # Old name: Bulk::merge_data()
 sub personalize_text {
@@ -1902,15 +1872,11 @@ sub prepare_message_according_to_mode {
     return $self;
 }
 
+# OBSOLETED.  Use prepare_message_according_to_mode('mail').
 sub decorate {
     my $self = shift;
 
-    my $list = $self->{context};
-    return undef unless ref($self->{context}) eq 'Sympa::List';
-
-    my $entity = $self->as_entity->dup;
-    _decorate_parts($entity, $list);
-    $self->set_entity($entity);
+    return $self->prepare_message_according_to_mode('mail', $self->{context});
 }
 
 # Old name:
@@ -4161,6 +4127,9 @@ Modified message itself, or C<undef> if error occurred.
 
 =item test_personalize ( $list )
 
+DEPRECATED by Sympa 6.2.13.
+No longer available.
+
 I<Instance method>.
 Tests if personalization can be performed successfully over all subscribers
 of list.
@@ -4213,7 +4182,12 @@ C<'mail'>, C<'notice'>, C<'txt'> or C<'html'>.
 By C<'nomail'>, C<'digest'>, C<'digestplain'> or C<'summary'> mode,
 the message is not modified.
 
+Returns modified message object itself, or C<undef> if transformation failed.
+
 =item decorate ( )
+
+OBSOLETED.
+Use prepare_message_according_to_mode('mail', $list).
 
 I<Instance method>.
 Adds footer/header to a message.

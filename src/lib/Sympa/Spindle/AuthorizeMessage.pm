@@ -172,7 +172,7 @@ sub _twist {
         }
 
         # Check TT2 syntax for merge_feature.
-        unless ($message->test_personalize($list)) {
+        unless (_test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -193,7 +193,7 @@ sub _twist {
         and $action =~ /^request_auth\b/
         ) {
         ## Check syntax for merge_feature.
-        unless ($message->test_personalize($list)) {
+        unless (_test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -209,7 +209,7 @@ sub _twist {
         $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite
 
         # Check syntax for merge_feature.
-        unless ($message->test_personalize($list)) {
+        unless (_test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -225,7 +225,7 @@ sub _twist {
         $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite
 
         # Check syntax for merge_feature.
-        unless ($message->test_personalize($list)) {
+        unless (_test_personalize($message, $list)) {
             $log->syslog(
                 'err',
                 'Failed to personalize. Message %s for list %s was rejected',
@@ -308,6 +308,45 @@ sub _twist {
         );
         return undef;
     }
+}
+
+# Private subroutine.
+
+# Tests if personalization can be performed successfully over all subscribers
+# of list.
+# Returns: 1 if succeed, or undef.
+# Old name: Sympa::Message::test_personalize().
+sub _test_personalize {
+    my $message = shift;
+    my $list    = shift;
+
+    return 1
+        unless Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
+        'on');
+
+    # Get available recipients to test.
+    my $available_recipients = $list->get_recipients_per_mode($message) || {};
+    # Always test all available reception modes using sender.
+    foreach my $mode ('mail',
+        grep { $_ and $_ ne 'nomail' and $_ ne 'not_me' }
+        @{$list->{'admin'}{'available_user_options'}->{'reception'} || []}) {
+        push @{$available_recipients->{$mode}{'verp'}}, $message->{'sender'};
+    }
+
+    foreach my $mode (sort keys %$available_recipients) {
+        my $new_message = $message->dup;
+        $new_message->prepare_message_according_to_mode($mode, $list);
+
+        foreach my $rcpt (
+            @{$available_recipients->{$mode}{'verp'}   || []},
+            @{$available_recipients->{$mode}{'noverp'} || []}
+            ) {
+            unless ($new_message->personalize($list, $rcpt, {})) {
+                return undef;
+            }
+        }
+    }
+    return 1;
 }
 
 1;

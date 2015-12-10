@@ -10140,7 +10140,7 @@ sub do_send_me {
         Sympa::Spindle::TransformOutgoing->post_archive($message);    #FIXME
 
         # Add footer/header.
-        $message->decorate;
+        $message->prepare_message_according_to_mode('mail', $list);
 
         # Shelve DMARC protection.
         $message->{shelved}{dmarc_protect} = 1
@@ -21655,7 +21655,7 @@ sub do_send_mail {
         # Since some users may send message to themselves to test message
         # decoration and/or personalization, add such processing.
         # - Add footer / header.
-        $u_message->decorate;
+        $u_message->prepare_message_according_to_mode('mail', $list);
         # - Shelve personalization.
         $u_message->{shelved}{merge} = 1
             if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
