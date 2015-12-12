@@ -145,6 +145,13 @@ Your configuration regarding this command has not been updated.[%END-%]
 You probably confirmed your %1 using a different
 email address. Please try using your canonical address.[%END-%]
 
+[% ELSIF u_err.entry == 'unfound_message' -%]
+  [%|loc(u_err.listname,u_err.key)%]Unable to access the message on list %1 with  key %2.
+Warning: this message may already have been sent by one of the list's editor.[%END%]
+
+[% ELSIF u_err.entry == 'unfound_file_message' -%]
+  [%|loc(u_err.key)%]Unable to access the message authenticated with key %1. The message may already been confirmed.[%END%]
+
 [% ELSE %]
 [% u_err.entry %]
 [% END -%]

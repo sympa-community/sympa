@@ -2928,13 +2928,12 @@ sub distribute {
         quiet          => $quiet
     );
 
-    unless ($spindle->spin) {    # No message.
+    unless ($spindle and $spindle->spin) {    # No message.
         $log->syslog('err',
             'Unable to find message with key <%s> for list %s',
             $key, $list);
-        Sympa::Report::reject_report_msg('user', 'unfound_message', $sender,
-            {'listname' => $list->{'name'}, 'key' => $key},
-            $robot, '', $list);
+        Sympa::Report::reject_report_cmd('user', 'unfound_message',
+            {'listname' => $list->{'name'}, 'key' => $key}, $cmd_line);
         return 'msg_not_found';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info',
@@ -2982,12 +2981,11 @@ sub confirm {
         quiet        => $quiet
     );
 
-    unless ($spindle->spin) {    # No message.
+    unless ($spindle and $spindle->spin) {    # No message.
         $log->syslog('info', 'CONFIRM %s from %s refused, auth failed',
             $key, $sender);
-        Sympa::Report::reject_report_msg('user', 'unfound_file_message',
-            $sender, {'key' => $key},
-            $robot, '', '');
+        Sympa::Report::reject_report_cmd('user', 'unfound_file_message',
+            {'key' => $key}, $cmd_line);
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info', 'CONFIRM %s from %s accepted (%.2f seconds)',
@@ -3047,12 +3045,11 @@ sub reject {
         quiet       => $quiet
     );
 
-    unless ($spindle->spin) {    # No message
+    unless ($spindle and $spindle->spin) {    # No message
         $log->syslog('info', 'REJECT %s %s from %s refused, auth failed',
-            $which, $key, $sender);
-        Sympa::Report::reject_report_msg('user', 'unfound_message', $sender,
-            {'key' => $key},
-            $robot, '', $list);
+            $list->{'name'}, $key, $sender);
+        Sympa::Report::reject_report_cmd('user', 'unfound_message',
+            {'listname' => $list->{'name'}, 'key' => $key}, $cmd_line);
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info', 'REJECT %s %s from %s accepted (%.2f seconds)',
