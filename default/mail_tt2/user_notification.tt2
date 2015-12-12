@@ -73,6 +73,15 @@ You message to list %1 could not be delivered. All the subscribers to this list 
 Please contact the listmaster (%2@%3) to fix this probem before re-posting your message.
 [% END %]
 
+[% ELSIF type == 'plugin' -%]
+[%- TRY -%][%- INCLUDE $entry -%]
+[%- CATCH -%]
+Subject: [%FILTER qencode%][%|loc%]report message error on plugin[%END%][%END%]
+
+ENTRY=[% entry %]
+ERROR=[% error %]
+[% END -%]
+
 [% ELSE -%]
 Subject: [% FILTER qencode %][%list.name%] / [%type%][%END%]
 
