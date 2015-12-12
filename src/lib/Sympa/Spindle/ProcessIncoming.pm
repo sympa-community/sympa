@@ -36,7 +36,6 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Process;
-use Sympa::Report;
 use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
@@ -176,12 +175,10 @@ sub _twist {
         return undef;
     }
 
-    ## Unknown robot
+    # Unknown robot.
     unless ($message->{'md5_check'} or Conf::valid_robot($robot)) {
         $log->syslog('err', 'Robot %s does not exist', $robot);
-        Sympa::Report::reject_report_msg('user', 'list_unknown', $sender,
-            {'listname' => $listname, 'message' => $message},
-            '*', $message->as_string, '');
+        Sympa::send_dsn('*', $message, {}, '5.1.2');
         $log->db_log(
             'robot'        => $robot,
             'list'         => $listname,
@@ -242,17 +239,8 @@ sub _twist {
     } else {
         unless (ref $list eq 'Sympa::List') {
             $log->syslog('err', 'List %s does not exist', $listname);
-            Sympa::Report::reject_report_msg(
-                'user',
-                'list_unknown',
-                $sender,
-                {   'listname' => $listname,
-                    'message'  => $message
-                },
-                $robot,
-                $message->as_string,
-                ''
-            );
+            Sympa::send_dsn($message->{context} || '*', $message, {},
+                '5.1.1');
             $log->db_log(
                 'robot'        => $robot,
                 'list'         => $listname,

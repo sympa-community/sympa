@@ -26,13 +26,11 @@ package Sympa::Spindle::DoMessage;
 
 use strict;
 use warnings;
-use POSIX qw();
 
 use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Report;
 
 use base qw(Sympa::Spindle::ProcessIncoming);    # Deriving _splicing_to().
 
@@ -49,24 +47,7 @@ sub _twist {
     # List unknown.
     unless (ref $message->{context} eq 'Sympa::List') {
         $log->syslog('notice', 'Unknown list %s', $message->{localpart});
-
-        unless (
-            Sympa::send_file(
-                $message->{context},
-                'list_unknown',
-                $message->{sender},
-                {   'list' => $message->{localpart},
-                    'date' =>
-                        POSIX::strftime("%d %b %Y  %H:%M", localtime(time)),
-                    'header'         => $message->header_as_string,
-                    'auto_submitted' => 'auto-replied'
-                }
-            )
-            ) {
-            $log->syslog('notice',
-                'Unable to send template "list_unknown" to %s',
-                $message->{sender});
-        }
+        Sympa::send_dsn($message->{context} || '*', $message, {}, '5.1.1');
         return undef;
     }
     my $list = $message->{context};
@@ -77,12 +58,11 @@ sub _twist {
         $Conf::Conf{'lang'}, 'en'
     );
 
-    my $messageid  = $message->{message_id};
-    my $msg_string = $message->as_string;
-    my $sender     = $message->{'sender'};
+    my $messageid = $message->{message_id};
+    my $sender    = $message->{sender};
 
     $log->syslog('info',
-        "Processing message %s for %s with priority %s, <%s>",
+        'Processing message %s for %s with priority %s, <%s>',
         $message, $list, $list->{'admin'}{'priority'}, $messageid);
 
     if ($self->{_msgid}{$list->get_id}{$messageid}) {
@@ -113,9 +93,7 @@ sub _twist {
         if (defined $cmd) {
             $log->syslog('err',
                 'Found command "%s" in message, ignoring message', $cmd);
-            Sympa::Report::reject_report_msg('user', 'routing_error', $sender,
-                {'message' => $message},
-                $list->{'domain'}, $msg_string, $list);
+            Sympa::send_dsn($list, $message, {cmd => $cmd}, '5.6.0');
             $log->db_log(
                 'robot'        => $list->{'domain'},
                 'list'         => $list->{'name'},
@@ -138,16 +116,7 @@ sub _twist {
         $log->syslog('info',
             'Message for %s from %s rejected because too large (%d > %d)',
             $list, $sender, $message->{size}, $max_size);
-        Sympa::Report::reject_report_msg(
-            'user',
-            'message_too_large',
-            $sender,
-            {   'msg_size' => int($message->{'size'} / 1024),
-                'max_size' => int($max_size / 1024)
-            },
-            $list->{'domain'},
-            '', $list
-        );
+        Sympa::send_dsn($list, $message, {}, '5.2.3');
         $log->db_log(
             'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},

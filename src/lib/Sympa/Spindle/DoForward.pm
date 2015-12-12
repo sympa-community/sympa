@@ -26,13 +26,11 @@ package Sympa::Spindle::DoForward;
 
 use strict;
 use warnings;
-use POSIX qw();
 
 use Sympa;
 use Conf;
 use Sympa::Log;
 use Sympa::Mailer;
-use Sympa::Report;
 
 use base qw(Sympa::Spindle::ProcessIncoming);
 
@@ -59,11 +57,8 @@ sub _twist {
     }
     my $function = $message->{listtype};
 
-    my $msg        = $message->as_entity;        #FIXME: not required.
-    my $messageid  = $message->{'message_id'};
-    my $msg_string = $message->as_string;        #FIMXE: not required.
-    my $sender     = $message->{'sender'};
-    chomp $sender;
+    my $messageid = $message->{message_id};
+    my $sender    = $message->{sender};
 
     if ($message->{'spam_status'} eq 'spam') {
         $log->syslog(
@@ -95,26 +90,8 @@ sub _twist {
                 $name,
                 $messageid
             );
-            my $sympa_email = Conf::get_robot_conf($robot, 'sympa');
-            unless (
-                Sympa::send_file(
-                    $robot,
-                    'list_unknown',
-                    $sender,
-                    {   'list' => $name,
-                        'date' => POSIX::strftime(
-                            "%d %b %Y  %H:%M",
-                            localtime(time)
-                        ),
-                        'boundary'       => $sympa_email . time,
-                        'header'         => $message->header_as_string,
-                        'auto_submitted' => 'auto-replied'
-                    }
-                )
-                ) {
-                $log->syslog('notice',
-                    'Unable to send template "list_unknown" to %s', $sender);
-            }
+            Sympa::send_dsn($message->{context} || '*', $message, {},
+                '5.1.1');
             return undef;
         }
 
@@ -154,21 +131,20 @@ sub _twist {
         $log->syslog('err',
             'Message for %s function %s ignored, %s undefined in list %s',
             $name, $function, $function, $name);
-        my $string =
-            sprintf
-            'Impossible to forward a message to %s function %s : undefined in this list',
-            $name, $function;
-        Sympa::Report::reject_report_msg(
-            'intern', $string, $sender,
-            {   'msg_id'   => $messageid,
-                'entry'    => 'forward',
-                'function' => $function,
-                'message'  => $msg
-            },
-            $robot,
-            $msg_string,
-            $list
+        Sympa::send_notify_to_listmaster(
+            $message->{context} || '*',
+            'mail_intern_error',
+            {   error => sprintf(
+                    'Impossible to forward a message to %s function %s : undefined in this list',
+                    $name, $function
+                ),
+                who      => $sender,
+                msg_id   => $messageid,
+                entry    => 'forward',
+                function => $function,
+            }
         );
+        Sympa::send_dsn($message->{context} || '*', $message, {}, '5.3.0');
         $log->db_log(
             'robot'        => $robot,
             'list'         => $list->{'name'},
@@ -207,20 +183,20 @@ sub _twist {
     unless (defined Sympa::Mailer->instance->store($message, \@rcpt)) {
         $log->syslog('err', 'Impossible to forward mail for %s function %s',
             $name, $function);
-        my $string =
-            sprintf 'Impossible to forward a message for %s function %s',
-            $name, $function;
-        Sympa::Report::reject_report_msg(
-            'intern', $string, $sender,
-            {   'msg_id'   => $messageid,
-                'entry'    => 'forward',
-                'function' => $function,
-                'message'  => $msg
-            },
-            $robot,
-            $msg_string,
-            $list
+        Sympa::send_notify_to_listmaster(
+            $message->{context} || '*',
+            'mail_intern_error',
+            {   error => sprintf(
+                    'Impossible to forward a message for %s function %s',
+                    $name, $function
+                ),
+                who      => $sender,
+                msg_id   => $messageid,
+                entry    => 'forward',
+                function => $function,
+            }
         );
+        Sympa::send_dsn($message->{context} || '*', $message, {}, '5.3.0');
         $log->db_log(
             'robot'        => $robot,
             'list'         => $list->{'name'},

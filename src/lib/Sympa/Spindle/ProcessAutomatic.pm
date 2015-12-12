@@ -37,7 +37,6 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Process;
-use Sympa::Report;
 use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
@@ -151,12 +150,10 @@ sub _twist {
         return undef;
     }
 
-    ## Unknown robot
+    # Unknown robot.
     unless ($message->{'md5_check'} or Conf::valid_robot($robot)) {
         $log->syslog('err', 'Robot %s does not exist', $robot);
-        Sympa::Report::reject_report_msg('user', 'list_unknown', $sender,
-            {'listname' => $listname, 'message' => $message},
-            '*', $message->as_string, '');
+        Sympa::send_dsn('*', $message, {}, '5.1.2');
         $log->db_log(
             'robot'        => $robot,
             'list'         => $listname,
@@ -246,18 +243,7 @@ sub _twist {
                     'msg_id' => $msg_id,
                 }
             );
-            # FIXME: send DSN.
-            Sympa::Report::reject_report_msg(
-                'user',
-                'list_unknown',
-                $sender,
-                {   'listname' => $listname,
-                    'message'  => $message
-                },
-                $robot,
-                $message->as_string,
-                ''
-            );
+            Sympa::send_dsn($robot, $message, {}, '5.3.5');
             return undef;
         }
 
@@ -290,18 +276,7 @@ sub _twist {
                     'msg_id'   => $msg_id,
                 }
             );
-            # FIXME: send DSN.
-            Sympa::Report::reject_report_msg(
-                'user',
-                'dyn_cant_create',
-                $sender,
-                {   'listname' => $listname,
-                    'message'  => $message
-                },
-                $robot,
-                $message->as_string,
-                ''
-            );
+            Sympa::send_dsn($robot, $message, {}, '5.3.5');
             $log->db_log(
                 'robot'        => $dyn_family->{'robot'},
                 'list'         => $listname,
@@ -325,16 +300,8 @@ sub _twist {
                 $list,
                 $dyn_list_family
             );
-            # FIXME: send DSN.
-            Sympa::Report::reject_report_msg(
-                'user',
-                'dyn_cant_create',
-                $sender,
-                {'listname' => $list->{'name'}, 'message' => $message},
-                $robot,
-                $message->as_string,
-                ''
-            );
+            # As list may be purged, use robot context.
+            Sympa::send_dsn($robot, $message, {}, '4.2.1');
             $log->db_log(
                 'robot'        => $robot,
                 'list'         => $list->{'name'},
@@ -367,19 +334,8 @@ sub _twist {
             $log->syslog('err',
                 'Dynamic list %s from %s family has ZERO subscribers',
                 $list, $dyn_list_family);
-            # FIXME: send DSN.
-            Sympa::Report::reject_report_msg(
-                'user',
-                'list_unknown',
-                $sender,
-                {   'listname' => $list->{'name'},
-                    'list' => {'name' => $list->{'name'}, 'host' => $robot},
-                    'message' => $message
-                },
-                $robot,
-                $message->as_string,
-                ''
-            );
+            # As list may be purged, use robot context.
+            Sympa::send_dsn($robot, $message, {}, '4.2.4');
             $log->db_log(
                 'robot'        => $robot,
                 'list'         => $list->{'name'},
@@ -426,9 +382,9 @@ sub _twist {
             $message,
             $list
         );
-        Sympa::Report::reject_report_msg('intern', '', $sender,
-            {'msg_id' => $msg_id, 'message' => $message},
-            $robot, $message->as_string, $list);
+        Sympa::send_notify_to_listmaster($list, 'mail_intern_error',
+            {error => '', who => $sender, msg_id => $msg_id,});
+        Sympa::send_dsn($list, $message, {}, '5.3.0');
         return undef;
     }
 

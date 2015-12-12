@@ -30,7 +30,6 @@ use warnings;
 use Sympa;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Report;
 use Sympa::Scenario;
 use Sympa::Tools::Data;
 use Sympa::Topic;
@@ -44,9 +43,8 @@ sub _twist {
     my $self    = shift;
     my $message = shift;
 
-    my $list       = $message->{context};
-    my $messageid  = $message->{message_id};
-    my $msg_string = $message->as_string;
+    my $list      = $message->{context};
+    my $messageid = $message->{message_id};
 
     # Now check if the sender is an authorized address.
     my $sender = $self->{confirmed_by} || $message->{sender};
@@ -108,15 +106,16 @@ sub _twist {
             $message,
             $list
         );
-        Sympa::Report::reject_report_msg(
-            'intern',
-            'Message ignored because scenario "send" cannot be evaluated',
-            $sender,
-            {'msg_id' => $messageid, 'message' => $message},
-            $list->{'domain'},
-            $msg_string,
-            $list
+        Sympa::send_notify_to_listmaster(
+            $list,
+            'mail_intern_error',
+            {   error =>
+                    'Message ignored because scenario "send" cannot be evaluated',
+                who    => $sender,
+                msg_id => $messageid,
+            }
         );
+        Sympa::send_dsn($list, $message, {}, '5.3.0');
         $log->db_log(
             'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},
@@ -261,14 +260,12 @@ sub _twist {
                     $log->syslog('notice',
                         'Unable to send template "%s" to %s',
                         $result->{'tt2'}, $sender);
-                    Sympa::Report::reject_report_msg('auth',
-                        $result->{'reason'}, $sender, {'message' => $message},
-                        $list->{'domain'}, $msg_string, $list);
+                    Sympa::send_dsn($list, $message,
+                        {reason => $result->{'reason'}}, '5.7.1');
                 }
             } else {
-                Sympa::Report::reject_report_msg('auth', $result->{'reason'},
-                    $sender, {'message' => $message},
-                    $list->{'domain'}, $msg_string, $list);
+                Sympa::send_dsn($list, $message,
+                    {reason => $result->{'reason'}}, '5.7.1');
             }
         }
         $log->db_log(
@@ -286,15 +283,15 @@ sub _twist {
     } else {
         $log->syslog('err',
             'Unknown action %s returned by the scenario "send"', $action);
-        Sympa::Report::reject_report_msg(
-            'intern',
-            'Unknown action returned by the scenario "send"',
-            $sender,
-            {'msg_id' => $messageid, 'message' => $message},
-            $list->{'domain'},
-            $msg_string,
-            $list
+        Sympa::send_notify_to_listmaster(
+            $list,
+            'mail_intern_error',
+            {   error  => 'Unknown action returned by the scenario "send"',
+                who    => $sender,
+                msg_id => $messageid,
+            }
         );
+        Sympa::send_dsn($list, $message, {}, '5.3.0');
         $log->db_log(
             'robot'        => $list->{'domain'},
             'list'         => $list->{'name'},

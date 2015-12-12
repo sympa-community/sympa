@@ -12,10 +12,14 @@ Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
 Subject: [% FILTER qencode %][%|loc%]Too large message[%END%][%END%]
 [% ELSIF status == '5.3.0' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution: Internal server error[%END%][%END%]
+[% ELSIF status == '5.6.0' -%]
+Subject: [% FILTER qencode %][%|loc%]Message distribution: User error[%END%][%END%]
 [% ELSIF status == '5.6.5' -%]
 Subject: [% FILTER qencode %][%|loc%]Cannot personalize message[%END%][%END%]
 [% ELSIF status == '5.7.0' -%]
 Subject: [% FILTER qencode %][%|loc%]A virus in your mail[%END%][%END%]
+[% ELSIF status == '5.7.1' -%]
+Subject: [% FILTER qencode %][%|loc%]Message distribution: Authorization denied[%END%][%END%]
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(action)%]Delivery Status Notification: %1[%END%][%END%]
 [% END %]
@@ -55,6 +59,17 @@ Note: Because binary files have to be encoded in less-efficient ASCII format bef
 
 [%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END -%]
 
+[%   ELSIF status == '5.6.0' -%]
+[%|loc(list.name,conf.sympa,list.host,cmd)%]The following message was sent to list '%1' and it contains a line '%4' that can be interpreted as a command.
+
+If your message contained a command (like subscribe, unsubscribe, help, index, get, ...), please note that commands should never be sent to lists. Commands must be sent to %2 exclusively.
+
+If your message was really meant to be sent to the list, it was interpreted by the software as a command. Please contact the list owner:
+  %1-request@%3
+so that they can take care of your message.
+
+Thank you for your attention.[%END%]
+
 [%   ELSIF status == '5.6.5' -%]
 [%|loc%]Your message cannot be personalized.  Please check template syntax.[%END%]
 
@@ -68,6 +83,14 @@ Note: Because binary files have to be encoded in less-efficient ASCII format bef
 [%|loc%]It may be useful to check your system for viruses.
 
 Note, however, that many viruses fake sender's e-mail address, so it is possible that the virus didn't come from your computer. In that case, please disregard this message.[%END%]
+
+[%   ELSIF status == '5.7.1' -%]
+[%|loc(list.name)%]Your message for list '%1' (attached below) was rejected.
+You are not allowed to send this message for the following reason:[%END%]
+
+ [% PROCESS authorization_reject.tt2 -%]
+
+[%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
 
 [%   ELSE -%]
 [%|loc%]The following address is not a known mailing list:[%END%]

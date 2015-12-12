@@ -31,6 +31,7 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Report;
 use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
