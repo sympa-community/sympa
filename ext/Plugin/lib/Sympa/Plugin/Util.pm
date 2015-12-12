@@ -19,6 +19,7 @@ our %EXPORT_TAGS =
   , functions => [@obj, @log]
   );
 
+use Sympa;
 use Sympa::Report;
 
 =head1 NAME
@@ -122,14 +123,14 @@ OO wrapper around C<Sympa::Report::notice_report_web()>
 
 =head3 $reporter->rejectPerlEmail(@options);
 
-OO wrapper around C<Sympa::Report::reject_report_msg()>
+OO wrapper around C<Sympa::send_notify_to_user()>
 
 =cut
 
 {  package SPU_report;
    sub rejectToWeb(@)    { my $self = shift; Sympa::Report::reject_report_web(@_) }
    sub noticeToWeb(@)    { my $self = shift; Sympa::Report::notice_report_web(@_) }
-   sub rejectPerEmail(@) { my $self = shift; Sympa::Report::reject_report_msg(@_) }
+   sub rejectPerEmail(@) { my $self = shift; Sympa::send_notify_to_user($_[4], $_[0], $_[2], {%{$_[3]}, entry => $_[1]}) }
 }
 
 my $report;

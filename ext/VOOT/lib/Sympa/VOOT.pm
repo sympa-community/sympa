@@ -315,7 +315,7 @@ sub reportListError($$)
 
     reporter->rejectPerEmail
       ( plugin => 'message_report_voot_failed.tt2', $conf->{user}
-      , $conf, $list->{'domain'}, '', $list->{'name'}
+      , $conf, $list
       );
 
     1;
