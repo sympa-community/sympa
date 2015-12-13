@@ -4,7 +4,7 @@ Content-Type: multipart/report; report-type=delivery-status;
 Subject: [% FILTER qencode %][%|loc%]Message was successfully delivered[%END%][%END%]
 [% ELSIF status == '4.2.1' -%]
 Subject: [% FILTER qencode %][%|loc%]List could not be created[%END%][%END%]
-[% ELSIF status == '4.2.4' || status == '5.3.5' -%]
+[% ELSIF status == '4.2.4' -%]
 Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
 [% ELSIF status == '5.1.1' || status == '5.1.2' -%]
 Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
@@ -12,6 +12,8 @@ Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
 Subject: [% FILTER qencode %][%|loc%]Too large message[%END%][%END%]
 [% ELSIF status == '5.3.0' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution: Internal server error[%END%][%END%]
+[% ELSIF status == '5.3.5' -%]
+Subject: [% FILTER qencode %][%|loc%]Message distribution: User error[%END%][%END%]
 [% ELSIF status == '5.6.0' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution: User error[%END%][%END%]
 [% ELSIF status == '5.6.5' -%]
@@ -39,7 +41,7 @@ Content-Description: Notification
 [%   IF status == '4.2.1' -%]
 [%|loc(listname)%]The %1 list could not be created.[%END%]
 
-[%   ELSIF status == '4.2.4' || status == '5.3.5' -%]
+[%   ELSIF status == '4.2.4' -%]
 [%|loc(listname)%]List '%1' does not exist.[%END%]
 
 [%   ELSIF status == '5.1.2' -%]
@@ -58,6 +60,11 @@ Note: Because binary files have to be encoded in less-efficient ASCII format bef
 [% END -%]
 
 [%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END -%]
+
+[%   ELSIF status == '5.3.5' -%]
+[%|loc(listname)%]The %1 list could not be created.[%END%]
+
+[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
 
 [%   ELSIF status == '5.6.0' -%]
 [%|loc(list.name,conf.sympa,list.host,cmd)%]The following message was sent to list '%1' and it contains a line '%4' that can be interpreted as a command.
