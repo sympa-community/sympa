@@ -40,9 +40,8 @@ sub _directories {
 
     return {
         parent_directory => $Conf::Conf{'queuedigest'},
-        directory        => $Conf::Conf{'queuedigest'} . '/' . $list->get_id,
-        bad_directory    => $Conf::Conf{'queuedigest'} . '/'
-            . $list->get_id . '/bad',
+        directory        => $list->get_digest_spool_dir,
+        bad_directory    => $list->get_digest_spool_dir . '/bad',
     };
 }
 

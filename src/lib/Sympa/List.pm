@@ -37,7 +37,6 @@ use Storable qw();
 use URI::Escape qw();
 
 use Sympa;
-use Sympa::Archive;
 use Sympa::Auth;
 use Sympa::Bulk;
 use Conf;
@@ -58,7 +57,6 @@ use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
-use Sympa::Spool::Digest;
 use Sympa::Task;
 use Sympa::Template;
 use tools;
@@ -67,7 +65,6 @@ use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
-use Sympa::Tracking;
 use Sympa::User;
 
 my @sources_providing_listmembers = qw/
@@ -9437,14 +9434,11 @@ sub purge {
 
     if ($self->{'name'}) {
         #FIXME: Lock directories to remove them safely.
-        my $archive = Sympa::Archive->new(context => $self);
-        my $digest = Sympa::Spool::Digest->new(context => $self);
-        my $tracking = Sympa::Tracking->new(context => $self);
         my $error;
-        File::Path::remove_tree($archive->{base_directory},
+        File::Path::remove_tree($self->get_archive_dir, {error => \$error});
+        File::Path::remove_tree($self->get_digest_spool_dir,
             {error => \$error});
-        File::Path::remove_tree($digest->{directory},   {error => \$error});
-        File::Path::remove_tree($tracking->{directory}, {error => \$error});
+        File::Path::remove_tree($self->get_bounce_dir, {error => \$error});
     }
 
     ## Clean list table if needed
@@ -9618,13 +9612,32 @@ sub move_message {
     return 1;
 }
 
-## Return the path to the list bounce directory, where bounces are stored
+# New in 6.2.13.
+sub get_archive_dir {
+    my $self = shift;
+
+    my $arc_dir = Conf::get_robot_conf($self->{'domain'}, 'arc_path');
+    die sprintf
+        'Robot %s has no archives directory. Check arc_path parameter in this robot.conf and in sympa.conf',
+        $self->{'domain'}
+        unless $arc_dir;
+    return $arc_dir . '/' . $self->get_id;
+}
+
+# Return the path to the list bounce directory, where bounces are stored.
 sub get_bounce_dir {
     my $self = shift;
 
     my $root_dir = Conf::get_robot_conf($self->{'domain'}, 'bounce_path');
+    return $root_dir . '/' . $self->get_id;
+}
 
-    return $root_dir . '/' . $self->get_list_id();
+# New in 6.2.13.
+sub get_digest_spool_dir {
+    my $self = shift;
+
+    my $spool_dir = $Conf::Conf{'queuedigest'};
+    return $spool_dir . '/' . $self->get_id;
 }
 
 =over 4

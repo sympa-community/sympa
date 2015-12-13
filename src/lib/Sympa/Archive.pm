@@ -58,17 +58,10 @@ sub new {
     }
 
     die 'Bug in logic.  Ask developer' unless ref $list eq 'Sympa::List';
-    my $robot_id = $list->{'domain'};
-    my $arc_path = Conf::get_robot_conf($robot_id, 'arc_path');
-    die sprintf
-        'Robot %s has no archives directory. Check arc_path parameter in this robot.conf and in sympa.conf',
-        $robot_id
-        unless $arc_path;
-    my $base_directory = $arc_path . '/' . $list->get_id;
 
     my $self = bless {
         context           => $list,
-        base_directory    => $base_directory,
+        base_directory    => $list->get_archive_dir,
         arc_directory     => undef,
         directory         => undef,
         deleted_directory => undef,
