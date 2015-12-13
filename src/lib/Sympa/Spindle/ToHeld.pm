@@ -29,9 +29,7 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
-use Sympa::Bulk;
 use Sympa::Log;
-use Sympa::Message;
 use Sympa::Spool::Held;
 
 use base qw(Sympa::Spindle);
@@ -127,17 +125,12 @@ sub _send_confirm_to_sender {
         #'file' => $message->{'filename'},    # obsoleted (<=6.1)
     };
 
-    my $confirm_message =
-        Sympa::Message->new_from_template($list, 'send_auth', $sender,
-        $param);
-    if ($confirm_message) {
-        # Ensure 1 second elapsed since last message
-        $confirm_message->{'date'} = time + 1;
-    }
-    unless ($confirm_message
-        and defined Sympa::Bulk->new->store($confirm_message, $sender)) {
-        $log->syslog('notice', 'Unable to send template "send_auth" to %s',
-            $sender);
+    # Ensure 1 second elapsed since last message.
+    unless (
+        Sympa::send_file(
+            $list, 'send_auth', $sender, $param, date => time + 1
+        )
+        ) {
         return undef;
     }
 

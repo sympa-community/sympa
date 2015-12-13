@@ -30,10 +30,8 @@ use Time::HiRes qw();
 
 use Sympa;
 use Sympa::Auth;
-use Sympa::Bulk;
 use Sympa::Log;
 use Sympa::Message;
-use Sympa::Report;
 use Sympa::Spool::Moderation;
 
 use base qw(Sympa::Spindle);
@@ -97,9 +95,17 @@ sub _twist {
 
     # Do not report to the sender if the message was tagged as a spam.
     unless ($self->{quiet} or $message->{'spam_status'} eq 'spam') {
-        Sympa::Report::notice_report_msg('moderating_message', $sender,
-            {'message' => $message},
-            $list->{'domain'}, $list);
+        # Ensure 1 second elapsed since last message.
+        Sympa::send_file(
+            $list,
+            'message_report',
+            $sender,
+            {   type           => 'success', # Comapt. <=6.2.12.
+                entry          => 'moderating_message',
+                auto_submitted => 'auto-replied'
+            },
+            date => time + 1
+        );
     }
     return 1;
 }
@@ -158,7 +164,6 @@ sub _send_confirm_to_editor {
         'auto_submitted' => 'auto-generated',
     };
 
-    my $bulk = Sympa::Bulk->new;
     foreach my $recipient (@rcpt) {
         my $new_message = $message->dup;
         if ($new_message->{'smime_crypted'}) {
@@ -200,17 +205,12 @@ sub _send_confirm_to_editor {
             );
         }
 
-        my $confirm_message =
-            Sympa::Message->new_from_template($list, 'moderate', $recipient,
-            $param);
-        if ($confirm_message) {
-            # Ensure 1 second elapsed since last message
-            $confirm_message->{'date'} = time + 1;
-        }
-        unless ($confirm_message
-            and defined $bulk->store($confirm_message, $recipient)) {
-            $log->syslog('notice', 'Unable to send template "moderate" to %s',
-                $recipient);
+        # Ensure 1 second elapsed since last message.
+        unless (
+            Sympa::send_file(
+                $list, 'moderate', $recipient, $param, date => time + 1
+            )
+            ) {
             return undef;
         }
     }

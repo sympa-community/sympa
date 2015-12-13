@@ -455,7 +455,7 @@ sub new_from_template {
     }
 
     # Set default delivery date.
-    $self->{date} = time;
+    $self->{date} = (exists $options{date}) ? $options{date} : time;
 
     # Assign unique ID and log it.
     my $marshalled =

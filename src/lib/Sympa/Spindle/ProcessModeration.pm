@@ -31,7 +31,6 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Report;
 use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
@@ -132,21 +131,23 @@ sub _reject {
 
         # Notify author of message.
         unless ($self->{quiet}) {
-            unless (
-                Sympa::send_file($list, 'reject', $message->{sender}, $param))
-            {
-                $log->syslog('notice',
-                    'Unable to send template "reject" to %s',
-                    $message->{sender});
-                Sympa::send_dsn($list, $message, {}, '5.3.0');
-            }
+            Sympa::send_file($list, 'reject', $message->{sender}, $param)
+                or Sympa::send_dsn($list, $message, {}, '5.3.0');    #FIXME
         }
 
-        # Notify list moderator
-        Sympa::Report::notice_report_msg('message_rejected',
+        # Notify list moderator.
+        # Ensure 1 second elapsed since last message.
+        Sympa::send_file(
+            $list,
+            'message_report',
             $self->{rejected_by},
-            {'key' => $message->{authkey}, 'message' => $message},
-            $list->{'domain'}, $list);
+            {   type           => 'success', # Compat. <=6.2.12.
+                entry          => 'message_rejected',
+                auto_submitted => 'auto-replied',
+                key            => $message->{authkey}
+            },
+            date => time + 1
+        );
     }
 
     1;

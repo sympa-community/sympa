@@ -32,7 +32,6 @@ use Sympa;
 use Sympa::Bulk;
 use Conf;
 use Sympa::Log;
-use Sympa::Report;
 use Sympa::Tools::Data;
 use Sympa::Topic;
 use Sympa::Tracking;
@@ -80,13 +79,31 @@ sub _twist {
         return undef;
     } elsif (not $self->{quiet}) {
         if ($self->{confirmed_by}) {
-            Sympa::Report::notice_report_msg('message_confirmed', $sender,
-                {'key' => $self->{authkey}, 'message' => $message},
-                $list->{'domain'}, $list);
+            # Ensure 1 second elapsed since last message.
+            Sympa::send_file(
+                $list,
+                'message_report',
+                $self->{confirmed_by},
+                {   type           => 'success', # Compat. <=6.2.12.
+                    entry          => 'message_confirmed',
+                    auto_submitted => 'auto-replied',
+                    key            => $self->{authkey}
+                },
+                date => time + 1
+            );
         } elsif ($self->{distributed_by}) {
-            Sympa::Report::notice_report_msg('message_distributed', $sender,
-                {'key' => $self->{authkey}, 'message' => $message},
-                $list->{'domain'}, $list);
+            # Ensure 1 second elapsed since last message.
+            Sympa::send_file(
+                $list,
+                'message_report',
+                $self->{distributed_by},
+                {   type           => 'success', # Compat. <=6.2.12.
+                    entry          => 'message_distributed',
+                    auto_submitted => 'auto-replied',
+                    key            => $self->{authkey}
+                },
+                date => time + 1
+            );
         }
         # No notification sent to {resent_by} user.
     }
