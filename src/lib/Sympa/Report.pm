@@ -28,220 +28,20 @@ use strict;
 use warnings;
 
 use Sympa;
-use Sympa::Bulk;
 use Sympa::Log;
-use Sympa::Message;
 
 my $log = Sympa::Log->instance;
 
 ### MESSAGE DIFFUSION REPORT ###
 
-############################################################
-#  reject_report_msg
-############################################################
-#  Send a notification to the user about an error rejecting
-#  its message diffusion, using mail_tt2/message_report.tt2
-#
-# IN : -$type (+): 'intern'||'intern_quiet'||'user'||auth' - the error type
-#      -$error : scalar - the entry in message_report.tt2 if $type = 'user'
-#                       - string error for listmaster if $type = 'intern'
-#                       - the entry in authorization reject (called by
-#                       message_report.tt2)
-#                               if $type = 'auth'
-#      -$user (+): scalar - the user to notify
-#      -$param : ref(HASH) - var used in message_report.tt2
-#         $param->msg_id (+) if $type='intern'
-#      -$robot (+): robot
-#      -$msg_string : string - rejected msg
-#      -$list : ref(List)
-#
-# OUT : 1
-#
-##############################################################
-sub reject_report_msg {
-    my ($type, $error, $user, $param, $robot, $msg_string, $list) = @_;
-    $log->syslog('debug2', '(%s, %s, %s)', $type, $error, $user);
+# DEPRECATED.  Use Sympa::send_dsn().
+#sub reject_report_msg;
 
-    undef $list unless ref $list eq 'Sympa::List';
+# No longer used.
+#sub _get_msg_as_hash;
 
-    unless ($type eq 'intern'
-        or $type eq 'intern_quiet'
-        or $type eq 'user'
-        or $type eq 'auth'
-        or $type eq 'plugin') {
-        $log->syslog(
-            'err',
-            'Error to prepare parsing "message_report" template to %s: Not a valid error type',
-            $user
-        );
-        return undef;
-    }
-
-    unless ($user) {
-        $log->syslog('err',
-            'Unable to send template "command_report": No user to notify');
-        return undef;
-    }
-
-    unless ($robot) {
-        $log->syslog('err',
-            'Unable to send template "command_report": No robot');
-        return undef;
-    }
-
-    chomp($user);
-    $param->{'to'}             = $user;
-    $param->{'msg'}            = $msg_string;
-    $param->{'auto_submitted'} = 'auto-replied';
-    $param->{'entry'}          = $error;
-
-    $param->{'type'} =
-          $type eq 'user'   ? 'user_error'
-        : $type eq 'auth'   ? 'authorization_reject'
-        : $type eq 'plugin' ? 'plugin'
-        :                     'intern_error';
-
-    ## Prepare the original message if provided
-    if (defined $param->{'message'}) {
-        $param->{'original_msg'} = _get_msg_as_hash($param->{'message'});
-    }
-
-    my $report_message = Sympa::Message->new_from_template(($list || $robot),
-        'message_report', $user, $param);
-    if ($report_message) {
-        # Ensure 1 second elapsed since last message
-        $report_message->{'date'} = time + 1;
-    }
-    unless ($report_message
-        and defined Sympa::Bulk->new->store($report_message, $user)) {
-        $log->syslog('notice',
-            'Unable to send template "message_report" to "%s"', $user);
-    }
-
-    if ($type eq 'intern') {
-        chomp($param->{'msg_id'});
-
-        $param ||= {};
-        $param->{'error'}  = $error;
-        $param->{'who'}    = $user;
-        $param->{'action'} = 'message diffusion';
-        $param->{'msg_id'} = $param->{'msg_id'};
-        Sympa::send_notify_to_listmaster(($list || $robot),
-            'mail_intern_error', $param);
-    }
-    return 1;
-}
-
-############################################################
-#  _get_msg_as_hash
-############################################################
-#  Internal subroutine
-#  Provide useful parts of a message as a hash entries
-#
-# IN : -$msg_object (+): ref(HASH) - the MIME::Entity or Message object
-#
-# OUT : $msg_hash : ref(HASH) - the hashref
-#
-##############################################################
-#FIXME: Is returned value by this function actually used?
-
-sub _get_msg_as_hash {
-    my $msg_object = shift;
-
-    my ($msg_entity, $msg_string, $msg_hash);
-
-    if ($msg_object->isa('MIME::Entity')) {    ## MIME-Tools object
-        $msg_entity = $msg_object;
-        $msg_string = $msg_entity->as_string;
-    } elsif (ref $msg_object eq 'Sympa::Message') {
-        # Sympa's own Message object
-        $msg_entity = $msg_object->as_entity;
-        $msg_string = $msg_object->as_string;
-    } else {
-        $log->syslog('err', 'Wrong type for msg parameter');
-    }
-
-    my $head        = $msg_entity->head;
-    my $body_handle = $msg_entity->bodyhandle;
-    my $body_as_string;
-
-    if (defined $body_handle) {
-        $body_as_string = $body_handle->as_lines();
-    }
-
-    ## TODO : we should also decode headers + remove trailing \n + use these
-    ## variables in default mail templates
-
-    my $from    = $head->get('From');
-    my $subject = $head->get('Subject');
-    my $msg_id  = $head->get('Message-Id');
-    $msg_hash = {
-        'full'       => $msg_string,
-        'body'       => $body_as_string,
-        'from'       => $from,
-        'subject'    => $subject,
-        'message_id' => $msg_id
-    };
-
-    return $msg_hash;
-}
-
-############################################################
-#  notice_report_msg
-############################################################
-#  Send a notification to the user about a success for its
-#   message diffusion, using mail_tt2/message_report.tt2
-#
-# IN : -$entry (+): scalar - the entry in message_report.tt2
-#      -$user (+): scalar - the user to notify
-#      -$param : ref(HASH) - var used in message_report.tt2
-#      -$robot (+) : robot
-#      -$list : ref(List)
-#
-# OUT : 1
-#
-##############################################################
-sub notice_report_msg {
-    my ($entry, $user, $param, $robot, $list) = @_;
-
-    undef $list unless ref $list eq 'Sympa::List';
-
-    $param->{'to'}             = $user;
-    $param->{'type'}           = 'success';
-    $param->{'entry'}          = $entry;
-    $param->{'auto_submitted'} = 'auto-replied';
-
-    unless ($user) {
-        $log->syslog('err',
-            'Unable to send template "message_report": No user to notify');
-        return undef;
-    }
-
-    unless ($robot) {
-        $log->syslog('err',
-            'Unable to send template "message_report": No robot');
-        return undef;
-    }
-
-    ## Prepare the original message if provided
-    if (defined $param->{'message'}) {
-        $param->{'original_msg'} = _get_msg_as_hash($param->{'message'});
-    }
-
-    my $report_message = Sympa::Message->new_from_template(($list || $robot),
-        'message_report', $user, $param);
-    if ($report_message) {
-        # Ensure 1 second elapsed since last message
-        $report_message->{'date'} = time + 1;
-    }
-    unless ($report_message
-        and defined Sympa::Bulk->new->store($report_message, $user)) {
-        $log->syslog('notice',
-            'Unable to send template "message_report" to "%s"', $user);
-    }
-
-    return 1;
-}
+# DEPRECATED.  Use Sympa::send_file($that, 'message_report').
+#sub notice_report_msg;
 
 ### MAIL COMMAND REPORT ###
 
@@ -327,45 +127,38 @@ sub send_report_cmd {
 
     # for mail layout
     my $before_auth = 0;
-    $before_auth = 1 if ($#notice_cmd + 1);
+    $before_auth = 1 if @notice_cmd;
 
     my $before_user_err;
-    $before_user_err = 1 if ($before_auth || ($#auth_reject_cmd + 1));
+    $before_user_err = 1 if $before_auth or @auth_reject_cmd;
 
     my $before_intern_err;
-    $before_intern_err = 1 if ($before_user_err || ($#user_error_cmd + 1));
+    $before_intern_err = 1 if $before_user_err or @user_error_cmd;
 
     chomp($sender);
 
-    my $data = {
-        'to'                => $sender,
-        'nb_notice'         => $#notice_cmd + 1,
-        'nb_auth'           => $#auth_reject_cmd + 1,
-        'nb_user_err'       => $#user_error_cmd + 1,
-        'nb_intern_err'     => $#intern_error_cmd + 1,
-        'nb_global'         => $#global_error_cmd + 1,
-        'before_auth'       => $before_auth,
-        'before_user_err'   => $before_user_err,
-        'before_intern_err' => $before_intern_err,
-        'notices'           => \@notice_cmd,
-        'auths'             => \@auth_reject_cmd,
-        'user_errors'       => \@user_error_cmd,
-        'intern_errors'     => \@intern_error_cmd,
-        'globals'           => \@global_error_cmd,
-    };
-
-    my $report_message =
-        Sympa::Message->new_from_template($robot, 'command_report', $sender,
-        $data);
-    if ($report_message) {
-        # Ensure 1 second elapsed since last message
-        $report_message->{'date'} = time + 1;
-    }
-    unless ($report_message
-        and defined Sympa::Bulk->new->store($report_message, $sender)) {
-        $log->syslog('notice',
-            'Unable to send template "command_report" to %s', $sender);
-    }
+    # Ensure 1 second elapsed since last message.
+    Sympa::send_file(
+        $robot,
+        'command_report',
+        $sender,
+        {   to                => $sender,
+            nb_notice         => scalar(@notice_cmd),
+            nb_auth           => scalar(@auth_reject_cmd),
+            nb_user_err       => scalar(@user_error_cmd),
+            nb_intern_err     => scalar(@intern_error_cmd),
+            nb_global         => scalar(@global_error_cmd),
+            before_auth       => $before_auth,
+            before_user_err   => $before_user_err,
+            before_intern_err => $before_intern_err,
+            notices           => [@notice_cmd],
+            auths             => [@auth_reject_cmd],
+            user_errors       => [@user_error_cmd],
+            intern_errors     => [@intern_error_cmd],
+            globals           => [@global_error_cmd],
+        },
+        date => time + 1
+    );
 
     init_report_cmd();
 }
