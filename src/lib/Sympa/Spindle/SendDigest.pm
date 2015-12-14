@@ -30,6 +30,7 @@ use POSIX qw();
 use Time::HiRes qw();
 use Time::Local qw();
 
+use Sympa::Bulk;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
@@ -46,7 +47,6 @@ use constant _on_failure => 1;
 use constant _on_garbage => 1;
 use constant _on_skip    => 1;
 use constant _on_success => 1;
-use constant _spools     => {spool => 'Sympa::Bulk'};
 
 sub _twist {
     my $self         = shift;
@@ -216,9 +216,12 @@ sub _distribute_digest {
                     }
                 }
             }
-            unless ($digest_message
-                and defined $self->{spool}
-                ->store($digest_message, $available_recipients->{$mode})) {
+            unless (
+                $digest_message
+                and Sympa::Bulk->new->store(
+                    $digest_message, $available_recipients->{$mode}
+                )
+                ) {
                 $log->syslog('notice',
                     'Unable to send template "%s" to %s list subscribers',
                     $mode, $list);
@@ -329,10 +332,6 @@ See also L<Sympa::Spindle/"Properties">.
 =item {distaff}
 
 Instance of L<Sympa::Spool::Digest::Collection> class.
-
-=item {spool}
-
-Instance of L<Sympa::Bulk> class.
 
 =back
 

@@ -37,6 +37,7 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Process;
+use Sympa::Spool::Incoming;
 use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
@@ -44,7 +45,6 @@ use base qw(Sympa::Spindle);
 my $log = Sympa::Log->instance;
 
 use constant _distaff => 'Sympa::Spool::Automatic';
-use constant _spools => {spool => 'Sympa::Spool::Incoming'};
 
 sub _init {
     my $self  = shift;
@@ -370,7 +370,8 @@ sub _twist {
     }
 
     # Do not process messages in list creation.  Move them to main spool.
-    my $marshalled = $self->{spool}->store($message, original => 1);
+    my $marshalled =
+        Sympa::Spool::Incoming->new->store($message, original => 1);
     if ($marshalled) {
         $log->syslog('notice',
             'Message %s is stored into incoming spool as <%s>',
@@ -459,10 +460,6 @@ See also L<Sympa::Spindle/"Properties">.
 =item {distaff}
 
 Instance of L<Sympa::Spool::Automatic> class.
-
-=item {spool}
-
-Instance of L<Sympa::Spool::Incoming> class.
 
 =back
 
