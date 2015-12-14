@@ -1474,7 +1474,7 @@ sub _get_single_param_value {
 #sub _mail_message;
 
 # Old name: List::send_msg_digest().
-# Moved to Sympa::Spindle::SendDigest::_distribute_digest().
+# Moved to Sympa::Spindle::ProcessDigest::_distribute_digest().
 #sub distribute_digest;
 
 sub get_digest_recipients_per_mode {
@@ -4576,7 +4576,7 @@ sub is_archiving_enabled {
 }
 
 # Old name: Sympa::List::get_nextdigest().
-# Moved to Sympa::Spindle::SendDigest::_may_distribute_digest().
+# Moved to Sympa::Spindle::ProcessDigest::_may_distribute_digest().
 #sub may_distribute_digest;
 
 ## Loads all scenari for an action

@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Spindle::SendDigest;
+package Sympa::Spindle::ProcessDigest;
 
 use strict;
 use warnings;
@@ -288,18 +288,19 @@ __END__
 
 =head1 NAME
 
-Sympa::Spindle::SendDigest - Workflow of digest sending
+Sympa::Spindle::ProcessDigest - Workflow of digest sending
 
 =head1 SYNOPSIS
 
-  use Sympa::Spindle::SendDigest;
+  use Sympa::Spindle::ProcessDigest;
 
-  my $spindle = Sympa::Spindle::SendDigest->new;
+  my $spindle = Sympa::Spindle::ProcessDigest->new;
   $spindle->spin;
 
 =head1 DESCRIPTION
 
-L<Sympa::Spindle::SendDigest> defines workflow to distribute digest messages.
+L<Sympa::Spindle::ProcessDigest> defines workflow to distribute digest
+messages.
 
 When spin() method is invoked, messages kept in digest spool of each list are
 compiled into digest messages (MIME digest, plain text digest or summary) and
@@ -343,5 +344,6 @@ L<Sympa::Spool::Digest>, L<Sympa::Spool::Digest::Collection>.
 =head1 HISTORY
 
 L<Sympa::Spindle::SendDigest> appeared on Sympa 6.2.10.
+It was renamed to L<Sympa::Spindle::ProcessDigest> on Sympa 6.2.13.
 
 =cut

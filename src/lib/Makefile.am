@@ -83,15 +83,15 @@ nobase_modules_DATA = \
 	Sympa/Spindle/DoCommand.pm \
 	Sympa/Spindle/DoForward.pm \
 	Sympa/Spindle/DoMessage.pm \
+	Sympa/Spindle/ProcessArchive.pm \
 	Sympa/Spindle/ProcessAutomatic.pm \
 	Sympa/Spindle/ProcessBounce.pm \
+	Sympa/Spindle/ProcessDigest.pm \
 	Sympa/Spindle/ProcessHeld.pm \
 	Sympa/Spindle/ProcessIncoming.pm \
 	Sympa/Spindle/ProcessModeration.pm \
 	Sympa/Spindle/ProcessOutgoing.pm \
 	Sympa/Spindle/ResendArchive.pm \
-	Sympa/Spindle/SendDigest.pm \
-	Sympa/Spindle/StoreArchive.pm \
 	Sympa/Spindle/ToArchive.pm \
 	Sympa/Spindle/ToDigest.pm \
 	Sympa/Spindle/ToEditor.pm \

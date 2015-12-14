@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Spindle::StoreArchive;
+package Sympa::Spindle::ProcessArchive;
 
 use strict;
 use warnings;
@@ -372,18 +372,18 @@ __END__
 
 =head1 NAME
 
-Sympa::Spindle::StoreArchive - Workflow of archive storage
+Sympa::Spindle::ProcessArchive - Workflow of archive storage
 
 =head1 SYNOPSIS
 
-  use Sympa::Spindle::StoreArchive;
+  use Sympa::Spindle::ProcessArchive;
 
-  my $spindle = Sympa::Spindle::StoreArchive->new;
+  my $spindle = Sympa::Spindle::ProcessArchive->new;
   $spindle->spin;
 
 =head1 DESCRIPTION
 
-L<Sympa::Spindle::StoreArchive> defines workflow to store messages into
+L<Sympa::Spindle::ProcessArchive> defines workflow to store messages into
 archves.
 
 When spin() method is invoked, messages kept in archive spool are
@@ -444,5 +444,6 @@ L<Sympa::Archive>, L<Sympa::Spindle>, L<Sympa::Spool::Archive>.
 =head1 HISTORY
 
 L<Sympa::Spindle::StoreArchive> appeared on Sympa 6.2.10.
+It was renamed to L<Sympa::Spindle::ProcessArchive> on Sympa 6.2.13.
 
 =cut

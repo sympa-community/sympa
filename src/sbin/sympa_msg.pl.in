@@ -40,8 +40,8 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Process;
+use Sympa::Spindle::ProcessDigest;
 use Sympa::Spindle::ProcessIncoming;
-use Sympa::Spindle::SendDigest;
 use Sympa::Tools::Data;
 
 my $process = Sympa::Process->instance;
@@ -234,7 +234,7 @@ while (not $spindle->{finish} or $spindle->{finish} ne 'term') {
     if (0 == $process->{generation}
         and $index_queuedigest++ >= $digestsleep) {
         $index_queuedigest = 0;
-        Sympa::Spindle::SendDigest->new->spin;
+        Sympa::Spindle::ProcessDigest->new->spin;
     }
 
     $spindle->spin;
@@ -406,7 +406,7 @@ sub sighup {
 # Moved to Sympa::Spindle::DoCommand::_twist().
 #sub DoCommand;
 
-# DEPRECATED.  Use Sympa::Spindle::SendDigest class.
+# DEPRECATED.  Use Sympa::Spindle::ProcessDigest class.
 #sub SendDigest;
 
 # Moved to Sympa::Spindle::ProcessIncoming::_clean_msgid_table().
@@ -525,8 +525,8 @@ L<sympa.conf(5)>, L<sympa(1)>.
 L<archived(8)>, L<bulk(8)>, L<bounced(8)>, L<sympa_automatic(8)>,
 L<task_manager(8)>.
 
-L<Sympa::Spindle::ProcessIncoming>,
-L<Sympa::Spindle::SendDigest>.
+L<Sympa::Spindle::ProcessDigest>,
+L<Sympa::Spindle::ProcessIncoming>.
 
 =head1 HISTORY
 

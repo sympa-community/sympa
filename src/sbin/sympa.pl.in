@@ -46,7 +46,7 @@ use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
-use Sympa::Spindle::SendDigest;
+use Sympa::Spindle::ProcessDigest;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Upgrade;
@@ -995,7 +995,7 @@ elsif ($main::options{'sync_list_db'}) {
     }
     exit 0;
 } elsif ($main::options{'send_digest'}) {
-    Sympa::Spindle::SendDigest->new(
+    Sympa::Spindle::ProcessDigest->new(
         send_now    => 1,
         keep_digest => $main::options{'keep_digest'},
     )->spin;
@@ -1079,7 +1079,7 @@ sub _load {
     }
 }
 
-# DEPRECATED.  Use Sympa::Spindle::SendDigest class.
+# DEPRECATED.  Use Sympa::Spindle::ProcessDigest class.
 #sub SendDigest;
 
 # Lowercase field from database.

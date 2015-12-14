@@ -39,7 +39,7 @@ use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Process;
-use Sympa::Spindle::StoreArchive;
+use Sympa::Spindle::ProcessArchive;
 
 my $process = Sympa::Process->instance;
 $process->init(pidname => 'archived');
@@ -149,7 +149,7 @@ Sympa::Language->instance->set_lang($Conf::Conf{'lang'}, 'en');
 
 $log->syslog('notice', 'Archived %s Started', Sympa::Constants::VERSION);
 
-my $spindle = Sympa::Spindle::StoreArchive->new;
+my $spindle = Sympa::Spindle::ProcessArchive->new;
 
 # Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -182,25 +182,25 @@ sub sigterm {
     $spindle->{finish} = $sig;
 }
 
-# Moved to Sympa::Spindle::StoreArchive::_twist().
+# Moved to Sympa::Spindle::ProcessArchive::_twist().
 #sub process_message;
 
-# Moved to Sympa::Spindle::StoreArchive::_do_command().
+# Moved to Sympa::Spindle::ProcessArchive::_do_command().
 #sub do_command;
 
 # Moved to Sympa::Archive::html_remove().  Use do_remove_arc() instead.
 #sub remove;
 
-# Moved to Sympa::Spindle::StoreArchive::_do_remove_arc().
+# Moved to Sympa::Spindle::ProcessArchive::_do_remove_arc().
 #sub do_remove_arc;
 
 # Moved to Sympa::Archive::html_rebuild().  Use do_rebuildarc() instead.
 #sub rebuild;
 
-# Moved to Sympa::Spindle::StoreArchive::_do_rebuildarc().
+# Moved to Sympa::Spindle::ProcessArchive::_do_rebuildarc().
 #sub do_rebuildarc;
 
-# Moved to Sympa::Spindle::StoreArchive::_mail2arc().
+# Moved to Sympa::Spindle::ProcessArchive::_mail2arc().
 #sub mail2arc;
 
 # Moved to Sympa::Archive::_set_hidden_mode().
@@ -335,6 +335,6 @@ See L<http://www.sympa.org/tracking>.
 
 L<sympa_msg(8)>, L<bounced(8)>, L<mhonarc(1)>, L<sympa.conf(5)>.
 
-L<Sympa::Spindle::StoreArchive>.
+L<Sympa::Spindle::ProcessArchive>.
 
 =cut
