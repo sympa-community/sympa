@@ -82,9 +82,9 @@ body {
     font-family: 'Raleway', sans-serif;
     font-size: 0.85em;
     -webkit-text-size-adjust:100%;
-	line-height: 1.4;
-	color: [% color_1 %];
-	background-color:[% color_0 %];
+    line-height: 1.4;
+    color: [% color_1 %];
+    background-color:[% color_0 %];
 }
 
 /**
@@ -244,6 +244,7 @@ fieldset{
     display:table-cell;
     min-width:0;
 }
+
 main form form{
     margin:1rem 0 0 0;
     padding-left: 0!important;
@@ -389,12 +390,12 @@ h1,h2,h3,h4,h5,h6{
 h1 {
 	color: [% color_2 %];
 	font-weight: 100;
-	font-size: 2em;
+	font-size: 1.9em;
 	margin: 0px 0px 0.6em;
 }
 h2 {
 	color: [% color_2 %];
-	font-size: 1.7em;
+	font-size: 1.6em;
 	font-weight: 100;
 	margin: 1rem 0px 0.2rem;
 }
@@ -402,11 +403,11 @@ h3 {
 	margin: 0px 0px 0.6em;
 	color: [% color_2 %];
 	font-weight: 100;
-	font-size: 1.4em;
+	font-size: 1.3em;
 }
 h4 {
 	color: [% color_2 %];
-	font-size: 1.2rem;
+	font-size: 1.2em;
 	margin: 1em 0px 0px;
 	font-weight: 100;
 }
@@ -448,7 +449,7 @@ article.home > div{
 }
 article.home div > h2{
     margin-top:0.5rem;
-    font-size:1.3rem;
+    font-size:1.3em;
 }
 article.home div h1, article.home div h2, article.home div h3, article.home div h4, article.home div h5, article.home div h6, article.home div article, article.home div p, article.home div form {
     padding:0 0.5rem!important;
@@ -474,7 +475,6 @@ table {
     border-spacing: 0;
     box-shadow: 0 1px 1px #ccc;
 }
-
 table.listOfItems tr { 
     height:2rem;
 }
@@ -524,6 +524,10 @@ table tr th {
 }
 table tr th a{
     color: [% color_7 %];
+}
+table tr th, table tr td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
 }
 
 .table-wrapper table {
@@ -594,9 +598,6 @@ p {
 }
 
 /* header */
-header {
-
-}
 header h1{
     width:100%;
     text-align:center;
@@ -728,7 +729,6 @@ aside menu ul li.menu_title label {
 aside menu ul li.menu_title, aside menu ul li.menu_title:hover{
     background-color:[% color_6 %]!important;
 }
-
 aside menu ul li.active, aside menu ul li ul li.active{
     background-color:[% color_5%]!important;
 }
@@ -739,7 +739,6 @@ aside ul li.role{
     line-height:1rem;
     margin-bottom:0.5rem;
 }
-
 dd {
 	margin: 0 0 0 40px;
 }
@@ -1118,6 +1117,7 @@ ul.no_style {
 #template_editor li {
 	margin: 2px;
 }
+
 
 #color_table tr { 
     background-color: [% color_7 %]!important;
@@ -1515,7 +1515,6 @@ h7 strong {
 #ErrorMsg .alert-box form{ 
     margin-bottom:0;
 }
-
 #ErrorMsg input[type="button"]{
 	background: #D91E18 none no-repeat scroll top left;
 	font-size: 0.9em;
@@ -1543,6 +1542,7 @@ h7 strong {
 .alert-box {
     padding: 0.5rem 1.5rem!important;
     font-size: 1rem;
+    text-align:center;
 }
 
 /* to overwrite margin-left:0 for p element when *-centered is applied */
@@ -2120,14 +2120,14 @@ span.fa-stack i.fa-plus-circle {
 
 @media screen and (min-width: 420px) and (max-width: 779px) {
         h1 {
-		font-size: 1.8em;
+		font-size: 1.6em;
 	}
         h2 {
-		font-size: 1.5em;
+		font-size: 1.3em;
 		margin-top: 0;
 	}
 	h3 {
-		font-size: 1.2em;
+		font-size: 1.1em;
 		margin-top: 0.5em;
 		margin-bottom: 0.5em;
 	}
@@ -2189,7 +2189,7 @@ span.fa-stack i.fa-plus-circle {
     margin-left: 0;
     padding-left: 0;
     }
-	table.listOfItems tr:nth-of-type(1) { 
+    table.listOfItems tr:nth-of-type(1) { 
         height:2rem!important;
     }
     .table-wrapper table th, .table-wrapper table td{
