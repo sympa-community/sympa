@@ -84,7 +84,7 @@ sub _twist {
                 $list,
                 'message_report',
                 $self->{confirmed_by},
-                {   type           => 'success', # Compat. <=6.2.12.
+                {   type           => 'success',             # Compat<=6.2.12.
                     entry          => 'message_confirmed',
                     auto_submitted => 'auto-replied',
                     key            => $self->{authkey}
@@ -97,7 +97,7 @@ sub _twist {
                 $list,
                 'message_report',
                 $self->{distributed_by},
-                {   type           => 'success', # Compat. <=6.2.12.
+                {   type           => 'success',             # Compat<=6.2.12.
                     entry          => 'message_distributed',
                     auto_submitted => 'auto-replied',
                     key            => $self->{authkey}
@@ -256,10 +256,12 @@ sub _send_msg {
             return undef;
         }
 
-        ## TOPICS
+        # Topics.
         my @selected_tabrcpt;
         my @possible_verptabrcpt;
-        if ($list->is_there_msg_topic) {
+        if (not $resent_by    # Not in ResendArchive spindle.
+            and $list->is_there_msg_topic
+            ) {
             my $topic = Sympa::Topic->load($message);
             my $topic_list = $topic ? $topic->{topic} : '';
 
