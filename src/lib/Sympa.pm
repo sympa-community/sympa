@@ -47,6 +47,7 @@ use warnings;
 use DateTime;
 use Digest::MD5;
 use English qw(-no_match_vars);
+use Scalar::Util qw();
 
 use Sympa::Alarm;
 use Sympa::Auth;
@@ -55,7 +56,7 @@ use Conf;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Message;
+use Sympa::Message::Template;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
@@ -604,7 +605,8 @@ sub send_dsn {
     my $status  = shift;
     my $diag    = shift;
 
-    unless (ref $message eq 'Sympa::Message') {
+    unless (Scalar::Util::blessed($message)
+        and $message->isa('Sympa::Message')) {
         $log->syslog('err', 'object %s is not Message', $message);
         return undef;
     }
@@ -658,11 +660,12 @@ sub send_dsn {
         (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
         ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
 
-    my $dsn_message = Sympa::Message->new_from_template(
-        $that,
-        'delivery_status_notification',
-        $sender,
-        {   %$param,
+    my $dsn_message = Sympa::Message::Template->new(
+        context  => $that,
+        template => 'delivery_status_notification',
+        rcpt     => $sender,
+        data     => {
+            %$param,
             'to'              => $sender,
             'date'            => $date,
             'msg'             => $msg_string,
@@ -720,9 +723,13 @@ sub send_file {
     my $context = shift || {};
     my %options = @_;
 
-    my $message =
-        Sympa::Message->new_from_template($that, $tpl, $who, $context,
-        %options);
+    my $message = Sympa::Message::Template->new(
+        context  => $that,
+        template => $tpl,
+        rcpt     => $who,
+        data     => $context,
+        %options
+    );
 
     unless ($message and defined Sympa::Bulk->new->store($message, $who)) {
         $log->syslog('err', 'Could not send template %s to %s', $tpl, $who);
@@ -848,9 +855,12 @@ sub send_notify_to_listmaster {
                     or $operation eq 'no_db'
                     or $operation eq 'db_restored');
 
-        my $notif_message =
-            Sympa::Message->new_from_template($that,
-            'listmaster_notification', $email, $ts->{'data'});
+        my $notif_message = Sympa::Message::Template->new(
+            context  => $that,
+            template => 'listmaster_notification',
+            rcpt     => $email,
+            data     => $ts->{'data'}
+        );
 
         unless (
             $notif_message

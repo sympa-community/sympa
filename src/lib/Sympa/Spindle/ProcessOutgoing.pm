@@ -35,6 +35,7 @@ use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
+use Sympa::Message::Template;
 use Sympa::Process;
 use tools;
 use Sympa::Tools::Data;
@@ -323,11 +324,12 @@ sub _twist {
                     );
                     # If encryption failed, send a generic error message:
                     # X509 cert missing.
-                    my $entity = Sympa::Message->new_from_template(
-                        $list,
-                        'x509-user-cert-missing',
-                        $rcpt,
-                        {   'mail' => {
+                    my $entity = Sympa::Message::Template->new(
+                        context  => $list,
+                        template => 'x509-user-cert-missing',
+                        rcpt     => $rcpt,
+                        data     => {
+                            'mail' => {
                                 'sender'  => $new_message->{sender},
                                 'subject' => $new_message->{decoded_subject},
                             },

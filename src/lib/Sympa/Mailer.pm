@@ -59,7 +59,7 @@ sub _new_instance {
 #DEPRECATED: No longer used.
 
 #sub mail_file($robot, $filename, $rcpt, $data, $return_message_as_string);
-##DEPRECATED: Use Sympa::Message->new_from_template() & send_message().
+##DEPRECATED: Use Sympa::Message::Template::new() & send_message().
 
 #sub mail_message($message, $rcpt, [tag_as_last => 1]);
 # DEPRECATED: this is now a subroutine of Sympa::List::distribute_msg().

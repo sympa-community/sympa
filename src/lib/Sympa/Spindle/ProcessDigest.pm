@@ -34,7 +34,7 @@ use Sympa::Bulk;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Message;
+use Sympa::Message::Template;
 use tools;
 
 use base qw(Sympa::Spindle);
@@ -198,9 +198,12 @@ sub _distribute_digest {
         foreach my $mode (qw{digest digestplain summary}) {
             next unless exists $available_recipients->{$mode};
 
-            my $digest_message =
-                Sympa::Message->new_from_template($list, $mode,
-                $available_recipients->{$mode}, $param);
+            my $digest_message = Sympa::Message::Template->new(
+                context  => $list,
+                template => $mode,
+                rcpt     => $available_recipients->{$mode},
+                data     => $param
+            );
             if ($digest_message) {
                 # Add RFC 2919 header field
                 $list->add_list_header($digest_message, 'id');

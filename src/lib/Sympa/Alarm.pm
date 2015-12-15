@@ -31,7 +31,7 @@ use Sympa::Bulk;
 use Conf;
 use Sympa::Log;
 use Sympa::Mailer;
-use Sympa::Message;
+use Sympa::Message::Template;
 use tools;
 
 use base qw(Class::Singleton);
@@ -145,10 +145,12 @@ sub flush {
                         or $operation eq 'no_db'
                         or $operation eq 'db_restored';
 
-                my $message =
-                    Sympa::Message->new_from_template($robot_id,
-                    'listmaster_groupednotifications',
-                    $rcpt, $param);
+                my $message = Sympa::Message::Template->new(
+                    context  => $robot_id,
+                    template => 'listmaster_groupednotifications',
+                    rcpt     => $rcpt,
+                    data     => $param
+                );
                 unless ($message) {
                     $log->syslog(
                         'notice',

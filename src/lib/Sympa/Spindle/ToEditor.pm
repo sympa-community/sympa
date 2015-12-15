@@ -29,7 +29,7 @@ use warnings;
 
 use Sympa;
 use Sympa::Log;
-use Sympa::Message;
+use Sympa::Message::Template;
 
 use base qw(Sympa::Spindle);
 
@@ -94,7 +94,7 @@ sub _twist {
             $list,
             'message_report',
             $sender,
-            {   type           => 'success', # Compat. <=6.2.12.
+            {   type           => 'success',              # Compat. <=6.2.12.
                 entry          => 'moderating_message',
                 auto_submitted => 'auto-replied'
             },
@@ -145,11 +145,12 @@ sub _send_confirm_to_editor {
             unless ($new_message->smime_encrypt($recipient)) {
                 # If encryption failed, attach a generic error message:
                 # X509 cert missing.
-                $new_message = Sympa::Message->new_from_template(
-                    $list,
-                    'x509-user-cert-missing',
-                    $recipient,
-                    {   'mail' => {
+                $new_message = Sympa::Message::Template->new(
+                    context  => $list,
+                    template => 'x509-user-cert-missing',
+                    rcpt     => $recipient,
+                    data     => {
+                        'mail' => {
                             'sender'  => $message->{sender},
                             'subject' => $message->{decoded_subject},
                         },

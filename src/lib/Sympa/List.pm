@@ -52,7 +52,7 @@ use Sympa::Language;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Sympa::Log;
-use Sympa::Message;
+use Sympa::Message::Template;
 use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
@@ -2185,7 +2185,12 @@ sub send_probe_to_user {
     my $type = shift;
     my $who  = shift;
 
-    my $message = Sympa::Message->new_from_template($self, $type, $who, {});
+    my $message = Sympa::Message::Template->new(
+        context  => $self,
+        template => $type,
+        rcpt     => $who,
+        data     => {}
+    );
     if ($message) {
         # Shelve VERP for welcome or remind message if necessary
         if (    $self->{'admin'}{'welcome_return_path'} eq 'unique'
