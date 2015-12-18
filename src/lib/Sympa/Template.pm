@@ -37,6 +37,7 @@ use Template;
 use Sympa;
 use Sympa::Constants;
 use Sympa::Language;
+use Sympa::ListOpt;
 use tools;
 use Sympa::Tools::Text;
 
@@ -164,7 +165,7 @@ sub optdesc {
         return undef unless $x =~ /\S/;
         $x =~ s/^\s+//;
         $x =~ s/\s+$//;
-        return Sympa::List->get_option_title($x, $type, $withval);
+        return Sympa::ListOpt::get_title($x, $type, $withval);
     };
 }
 

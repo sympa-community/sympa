@@ -63,6 +63,7 @@ use Sympa::Family;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
 use Sympa::List;
+use Sympa::ListOpt;
 use Sympa::Log;
 use Sympa::Marc::Search;
 use Sympa::Message;
@@ -6272,7 +6273,7 @@ sub do_suboptions {
 
     foreach $m ($list->available_reception_mode) {
         $param->{'reception'}{$m}{'description'} =
-            $list->get_option_title($m, 'reception');
+            Sympa::ListOpt::get_title($m, 'reception');
         if ($s->{'reception'} eq $m) {
             $param->{'reception'}{$m}{'selected'} = ' selected';
             if ($m =~ /^(mail|notice|not_me|txt|html|urlize)$/i) {
@@ -6285,7 +6286,7 @@ sub do_suboptions {
 
     foreach $m (qw(conceal noconceal)) {
         $param->{'visibility'}{$m}{'description'} =
-            $list->get_option_title($m, 'visibility');
+            Sympa::ListOpt::get_title($m, 'visibility');
         if ($s->{'visibility'} eq $m) {
             $param->{'visibility'}{$m}{'selected'} = ' selected';
         } else {
@@ -11326,7 +11327,7 @@ sub do_editsubscriber {
 
     foreach my $m ($list->available_reception_mode) {
         $param->{'reception'}{$m}{'description'} =
-            $list->get_option_title($m, 'reception');
+            Sympa::ListOpt::get_title($m, 'reception');
         if ($param->{'current_subscriber'}{'reception'} eq $m) {
             $param->{'reception'}{$m}{'selected'} = ' selected';
         } else {
@@ -11336,7 +11337,7 @@ sub do_editsubscriber {
 
     foreach my $m (qw(conceal noconceal)) {
         $param->{'visibility'}{$m}{'description'} =
-            $list->get_option_title($m, 'visibility');
+            Sympa::ListOpt::get_title($m, 'visibility');
         if ($param->{'current_subscriber'}{'visibility'} eq $m) {
             $param->{'visibility'}{$m}{'selected'} = ' selected';
         } else {
@@ -13018,7 +13019,7 @@ sub _prepare_edit_form {
             foreach my $v (@{$p->{'value'}}) {
                 if ($v->{'name'} eq 'reception') {
                     foreach my $x (keys %{$v->{'value'}}) {
-                        $v->{'value'}{$x}{'title'} = $list->get_option_title(
+                        $v->{'value'}{$x}{'title'} = Sympa::ListOpt::get_title(
                             $x,
                             'reception',
                             Sympa::is_listmaster(
@@ -13028,7 +13029,7 @@ sub _prepare_edit_form {
                     }
                 } elsif ($v->{'name'} eq 'visibility') {
                     foreach my $x (keys %{$v->{'value'}}) {
-                        $v->{'value'}{$x}{'title'} = $list->get_option_title(
+                        $v->{'value'}{$x}{'title'} = Sympa::ListOpt::get_title(
                             $x,
                             'visibility',
                             Sympa::is_listmaster(
@@ -13041,7 +13042,7 @@ sub _prepare_edit_form {
         } elsif ($pname eq 'status') {
             foreach my $x (keys %{$p->{'value'}}) {
                 $p->{'value'}{$x}{'title'} =
-                    $list->get_option_title($x, 'status',
+                    Sympa::ListOpt::get_title($x, 'status',
                     Sympa::is_listmaster($list, $param->{'user'}{'email'}));
             }
         }
@@ -20932,7 +20933,7 @@ sub _set_my_lists_info {
             $member_info->{'visibility'} ||= 'noconceal';
             foreach my $mode ($list->available_reception_mode) {
                 $param->{'reception'}{$list->{'name'}}{$mode}{'description'} =
-                    $list->get_option_title($mode, 'reception');
+                    Sympa::ListOpt::get_title($mode, 'reception');
                 if ($member_info->{'reception'} eq $mode) {
                     $param->{'reception'}{$list->{'name'}}{$mode}
                         {'selected'} = ' selected';
