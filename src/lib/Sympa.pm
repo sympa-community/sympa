@@ -50,13 +50,13 @@ use English qw(-no_match_vars);
 use Scalar::Util qw();
 
 use Sympa::Alarm;
-use Sympa::Auth;
 use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Message::Template;
+use Sympa::Ticket;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
@@ -830,8 +830,8 @@ sub send_notify_to_listmaster {
         foreach my $email (@listmasters) {
             my $cdata = Sympa::Tools::Data::dup_var($data);
             $cdata->{'one_time_ticket'} =
-                Sympa::Auth::create_one_time_ticket($email, $robot_id,
-                'get_pending_lists', $cdata->{'ip'});
+                Sympa::Ticket::create($email, $robot_id, 'get_pending_lists',
+                $cdata->{'ip'});
             push @tosend,
                 {
                 email => $email,
@@ -946,19 +946,19 @@ sub send_notify_to_user {
 
         if ($operation eq 'ticket_to_signoff') {
             $param->{one_time_ticket} =
-                Sympa::Auth::create_one_time_ticket($user, $robot_id,
+                Sympa::Ticket::create($user, $robot_id,
                 'signoff/' . $list->{'name'},
                 $param->{ip})
                 or return undef;
         } elsif ($operation eq 'ticket_to_family_signoff') {
             $param->{one_time_ticket} =
-                Sympa::Auth::create_one_time_ticket($user, $robot_id,
+                Sympa::Ticket::create($user, $robot_id,
                 'family_signoff/' . $param->{family} . '/' . $user,
                 $param->{ip})
                 or return undef;
         } elsif ($operation eq 'ticket_to_send') {
             $param->{'one_time_ticket'} =
-                Sympa::Auth::create_one_time_ticket($user, $robot_id,
+                Sympa::Ticket::create($user, $robot_id,
                 'change_email/' . $param->{email},
                 $param->{ip})
                 or return undef;

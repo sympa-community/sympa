@@ -29,10 +29,10 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
-use Sympa::Auth;
 use Sympa::Log;
 use Sympa::Message::Template;
 use Sympa::Spool::Moderation;
+use Sympa::Ticket;
 
 use base qw(Sympa::Spindle);
 
@@ -187,7 +187,7 @@ sub _send_confirm_to_editor {
 
         # create a one time ticket that will be used as un md5 URL credential
         unless (
-            $param->{'one_time_ticket'} = Sympa::Auth::create_one_time_ticket(
+            $param->{'one_time_ticket'} = Sympa::Ticket::create(
                 $recipient,                    $list->{'domain'},
                 'modindex/' . $list->{'name'}, 'mail'
             )

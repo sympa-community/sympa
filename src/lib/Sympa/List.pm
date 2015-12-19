@@ -37,7 +37,6 @@ use Storable qw();
 use URI::Escape qw();
 
 use Sympa;
-use Sympa::Auth;
 use Sympa::Bulk;
 use Conf;
 use Sympa::ConfDef;
@@ -59,6 +58,7 @@ use Sympa::Scenario;
 use SDM;
 use Sympa::Task;
 use Sympa::Template;
+use Sympa::Ticket;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -1662,15 +1662,14 @@ sub send_notify_to_owner {
             $param->{'escaped_who'} = $param->{'who'};
             $param->{'escaped_who'} =~ s/\s/\%20/g;
             foreach my $owner (@rcpt) {
-                $param->{'one_time_ticket'} =
-                    Sympa::Auth::create_one_time_ticket(
+                $param->{'one_time_ticket'} = Sympa::Ticket::create(
                     $owner,
                     $robot,
                     'search/'
                         . $self->{'name'} . '/'
                         . $param->{'escaped_who'},
                     $param->{'ip'}
-                    );
+                );
                 unless (
                     Sympa::send_file(
                         $self, 'listowner_notification', [$owner], $param
@@ -1694,7 +1693,7 @@ sub send_notify_to_owner {
             $param->{'escaped_who'} =~ s/\s/\%20/g;
             foreach my $owner (@rcpt) {
                 $param->{'one_time_ticket'} =
-                    Sympa::Auth::create_one_time_ticket($owner, $robot,
+                    Sympa::Ticket::create($owner, $robot,
                     'subindex/' . $self->{'name'},
                     $param->{'ip'});
                 unless (

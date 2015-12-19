@@ -88,6 +88,12 @@ sub decrypt_password {
     return ($cipher->decrypt(MIME::Base64::decode($inpasswd)));
 }
 
+# Old name: Sympa::Session::get_random().
+sub get_random {
+    # Concatenates two integers for a better entropy.
+    return sprintf '%07d%07d', int(rand(10**7)), int(rand(10**7));
+}
+
 my @validation_messages = (
     {gettext_id => 'Not between %d and %d characters'},
     {gettext_id => 'Not %d characters or greater'},

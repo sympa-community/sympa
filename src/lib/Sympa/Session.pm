@@ -103,7 +103,7 @@ sub new {
         # create a new session context
         $self->{'new_session'} =
             1;    ## Tag this session as new, ie no data in the DB exist
-        $self->{'id_session'}  = get_random();
+        $self->{'id_session'}  = Sympa::Tools::Password::get_random();
         $self->{'email'}       = 'nobody';
         $self->{'remote_addr'} = $ENV{'REMOTE_ADDR'};
         $self->{'date'} = $self->{'refresh_date'} = $self->{'start_date'} =
@@ -389,7 +389,7 @@ sub renew {
     }
 
     ## Renew the session ID in order to prevent session hijacking
-    $new_id = get_random();
+    $new_id = Sympa::Tools::Password::get_random();
 
     ## Do refresh the session ID when remote address was changed or refresh
     ## interval was past.  Conditions also are checked by SQL so that
@@ -757,10 +757,8 @@ sub soap_cookie2 {
     return $cookie->as_string;
 }
 
-sub get_random {
-    ## Concatenates two integers for a better entropy.
-    return sprintf '%07d%07d', int(rand(10**7)), int(rand(10**7));
-}
+# Moved to Sympa::Tools::Password::get_random().
+#sub get_random;
 
 ## Return the session object content, as a hashref
 sub as_hashref {

@@ -114,6 +114,7 @@ nobase_modules_DATA = \
 	Sympa/Spool/Request.pm \
 	Sympa/Task.pm \
 	Sympa/Template.pm \
+	Sympa/Ticket.pm \
 	tools.pm \
 	Sympa/Tools/Data.pm \
 	Sympa/Tools/DKIM.pm \

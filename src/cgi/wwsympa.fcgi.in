@@ -81,6 +81,7 @@ use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
 use Sympa::Spool::Request;
 use Sympa::Template;
+use Sympa::Ticket;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -3547,7 +3548,7 @@ sub do_ticket {
     wwslog('info', '(%s)', $in{'ticket'});
 
     $param->{'ticket_context'} =
-        Sympa::Auth::get_one_time_ticket($robot, $in{'ticket'}, $ip);
+        Sympa::Ticket::load($robot, $in{'ticket'}, $ip);
     $param->{'ticket_context'}{'printable_date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S",
         localtime($param->{'ticket_context'}{'date'}));
@@ -4015,14 +4016,13 @@ sub do_sso_login {
                 $param->{'init_email'}    = $email;
 
                 ## Replace sendpassword with one time ticket
-                $param->{'one_time_ticket'} =
-                    Sympa::Auth::create_one_time_ticket(
+                $param->{'one_time_ticket'} = Sympa::Ticket::create(
                     $in{'email'},
                     $robot,
                     'sso_login/confirmemail?auth_service_name='
                         . $in{'auth_service_name'},
                     $ip
-                    );
+                );
 
                 unless (sendssopasswd($email)) {
                     Sympa::Report::reject_report_web('user',
@@ -4084,8 +4084,7 @@ sub do_sso_login {
 
                 ## Validate the ticket
                 my $ticket_output =
-                    Sympa::Auth::get_one_time_ticket($robot, $in{'ticket'},
-                    $ip);
+                    Sympa::Ticket::load($robot, $in{'ticket'}, $ip);
                 unless ($ticket_output->{'result'} eq 'success') {
                     Sympa::Report::reject_report_web('user', 'auth_failed',
                         {}, $param->{'action'});
@@ -4770,8 +4769,7 @@ sub do_requestpasswd {
     }
     wwslog('debug', 'Sending one time ticket for %s', $in{'email'});
     $param->{'one_time_ticket'} =
-        Sympa::Auth::create_one_time_ticket($in{'email'}, $robot,
-        'choosepasswd', $ip);
+        Sympa::Ticket::create($in{'email'}, $robot, 'choosepasswd', $ip);
     $param->{'request_from_host'} = $ip;
     unless ($param->{'newuser'} = Sympa::User::get_global_user($in{'email'}))
     {
@@ -6373,7 +6371,7 @@ sub do_subrequest {
             tools::escape_chars($param->{'newuser'}{'email'});
     }
     # Need to send a password by email
-    $param->{'one_time_ticket'} = Sympa::Auth::create_one_time_ticket(
+    $param->{'one_time_ticket'} = Sympa::Ticket::create(
         $in{'email'}, $robot,
         'subscribe/' . $list->{'name'},
         $param->{'request_from_host'}
@@ -13019,23 +13017,25 @@ sub _prepare_edit_form {
             foreach my $v (@{$p->{'value'}}) {
                 if ($v->{'name'} eq 'reception') {
                     foreach my $x (keys %{$v->{'value'}}) {
-                        $v->{'value'}{$x}{'title'} = Sympa::ListOpt::get_title(
+                        $v->{'value'}{$x}{'title'} =
+                            Sympa::ListOpt::get_title(
                             $x,
                             'reception',
                             Sympa::is_listmaster(
                                 $list, $param->{'user'}{'email'}
                             )
-                        );
+                            );
                     }
                 } elsif ($v->{'name'} eq 'visibility') {
                     foreach my $x (keys %{$v->{'value'}}) {
-                        $v->{'value'}{$x}{'title'} = Sympa::ListOpt::get_title(
+                        $v->{'value'}{$x}{'title'} =
+                            Sympa::ListOpt::get_title(
                             $x,
                             'visibility',
                             Sympa::is_listmaster(
                                 $list, $param->{'user'}{'email'}
                             )
-                        );
+                            );
                     }
                 }
             }
