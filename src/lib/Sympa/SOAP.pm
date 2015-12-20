@@ -1742,18 +1742,18 @@ sub getDetails {
 }
 
 sub setDetails {
-    my $class    = shift;
-    my $listname = shift;
-    my $subscriber;
-    my $list;
-    my %newcustom = ();
-    my %user      = ();
+    my $class     = shift;
+    my $listname  = shift;
     my $gecos     = shift;
     my $reception = shift;
-    my ($key, $value);
 
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = $ENV{'SYMPA_ROBOT'};
+
+    my $subscriber;
+    my $list;
+    my %newcustom;
+    my %user;
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -1785,8 +1785,7 @@ sub setDetails {
             'Use : <list> <gecos> <reception> [ <key> <value> ] ...');
     }
 
-    # Set subscriber values; return 1 for success
-    my %user;
+    # Set subscriber values; return 1 for success.
     $user{gecos} = $gecos if defined $gecos and $gecos =~ /\S/;
     $user{reception} = $reception
         # ideally, this should check against the available_user_options
@@ -1797,9 +1796,9 @@ sub setDetails {
     if (@_) {    # do we have any custom attributes passed?
         %newcustom = %{$subscriber->{'custom_attribute'}};
         while (@_) {
-            $key = shift;
+            my $key = shift;
             next unless $key;
-            $value = shift;
+            my $value = shift;
             if (!defined $value or $value eq '') {
                 undef $newcustom{$key};
             } else {
