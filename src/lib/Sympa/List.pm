@@ -37,7 +37,6 @@ use Storable qw();
 use URI::Escape qw();
 
 use Sympa;
-use Sympa::Bulk;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -51,11 +50,11 @@ use Sympa::Language;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Sympa::Log;
-use Sympa::Message::Template;
 use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
+use Sympa::Spindle::ProcessTemplate;
 use Sympa::Task;
 use Sympa::Template;
 use Sympa::Ticket;
@@ -1965,30 +1964,29 @@ sub send_probe_to_user {
     my $type = shift;
     my $who  = shift;
 
-    my $message = Sympa::Message::Template->new(
+    # Shelve VERP for welcome or remind message if necessary
+    my $tracking;
+    if (    $self->{'admin'}{'welcome_return_path'} eq 'unique'
+        and $type eq 'welcome') {
+        $tracking = 'w';
+    } elsif ($self->{'admin'}{'remind_return_path'} eq 'unique'
+        and $type eq 'remind') {
+        $tracking = 'r';
+    } else {
+        #FIXME? Return-Path for '*_return_path' parameter with 'owner'
+        # value is LIST-owner address.  It might be LIST-request address.
+    }
+
+    my $spindle = Sympa::Spindle::ProcessTemplate->new(
         context  => $self,
         template => $type,
         rcpt     => $who,
-        data     => {}
-    );
-    if ($message) {
-        # Shelve VERP for welcome or remind message if necessary
-        if (    $self->{'admin'}{'welcome_return_path'} eq 'unique'
-            and $type eq 'welcome') {
-            $message->{shelved}{tracking} = 'w';
-        } elsif ($self->{'admin'}{'remind_return_path'} eq 'unique'
-            and $type eq 'remind') {
-            $message->{shelved}{tracking} = 'r';
-        } else {
-            #FIXME: Currently, Return-Path for '*_return_path' parameter with
-            # 'owner' value is LIST-owner address.  LIST-request address would
-            # be better, isn't it?
-        }
+        data     => {},
+        tracking => $tracking,
         #FIXME: Why overwrite priority?
-        $message->{priority} =
-            Conf::get_robot_conf($self->{'domain'}, 'sympa_priority');
-    }
-    unless ($message and defined Sympa::Bulk->new->store($message, $who)) {
+        priority => Conf::get_robot_conf($self->{'domain'}, 'sympa_priority'),
+    );
+    unless ($spindle and $spindle->spin and $spindle->{finish} eq 'success') {
         $log->syslog('err', 'Could not send template %s to %s', $type, $who);
         return undef;
     }
