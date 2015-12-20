@@ -102,7 +102,8 @@ Not implemented.
 
 =head1 SEE ALSO
 
-L<Sympa::Spindle>, L<Sympa::Spindle::DoMessage>.
+L<Sympa::Spindle>, L<Sympa::Spindle::DoMessage>,
+L<Sympa::Spindle::ProcessModeration>.
 
 =head1 HISTORY
 

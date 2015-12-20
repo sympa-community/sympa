@@ -384,6 +384,8 @@ Not implemented.
 
 L<Sympa::Message>, L<Sympa::Scenario>, L<Sympa::Spindle::DistributeMessage>,
 L<Sympa::Spindle::DoMessage>, L<Sympa::Spindle::ProcessHeld>,
+L<Sympa::Spindle::ToEditor>, L<Sympa::Spindle::ToHeld>,
+L<Sympa::Spindle::ToModeration>,
 L<Sympa::Topic>.
 
 =head1 HISTORY

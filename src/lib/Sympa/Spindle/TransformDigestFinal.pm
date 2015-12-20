@@ -65,7 +65,22 @@ Process to transform digest messages - final stage
 
 =head1 DESCRIPTION
 
-TBD.
+L<Sympa::Spindle::TransformDigestFinal> decorates messages bound for list
+members with C<digest>, C<digestplain> or C<summary> reception mode.
+
+This class represents the series of following processes:
+
+=over
+
+=item *
+
+Adding RFC 2919 C<List-Id:> header field.
+
+=item *
+
+Adding RFC 2369 mailing list header fields.
+
+=back
 
 =head1 SEE ALSO
 

@@ -57,3 +57,25 @@ sub _twist {
 
 1;
 __END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle::ToOutgoing - Process to store messages into outgoing spool
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 SEE ALSO
+
+L<Sympa::Message>,
+L<Sympa::Spindle>,
+L<Sympa::Bulk>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle::ToOutgoing> appeared on Sympa 6.2.13.
+
+=cut

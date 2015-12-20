@@ -41,3 +41,26 @@ sub _twist {
 
 1;
 __END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle::ToAlarm -
+Process to store messages into spool on memory for listmaster notification
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 SEE ALSO
+
+L<Sympa::Message>,
+L<Sympa::Spindle>, L<Sympa::Spindle::ProcessTemplate>,
+L<Sympa::Alarm>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle::ToAlarm> appeared on Sympa 6.2.13.
+
+=cut

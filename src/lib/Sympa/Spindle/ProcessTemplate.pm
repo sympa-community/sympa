@@ -71,3 +71,87 @@ sub _twist {
 
 1;
 __END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle::ProcessTemplate - Workflow of template sending
+
+=head1 SYNOPSIS
+
+  use Sympa::Spindle::ProcessTemplate;
+
+  my $spindle = Sympa::Spindle::ProcessTemplate->new( options... );
+  $spindle->spin;
+
+=head1 DESCRIPTION
+
+L<Sympa::Spindle::ProcessTemplate> defines workflow to send messages
+generated from template.
+
+When spin() method is invoked, it takes an message generated from template,
+sends the message using another outgoing spindle and returns.
+
+=head2 Public methods
+
+See also L<Sympa::Spindle/"Public methods">.
+
+=over
+
+=item new ( I<template options>, [ splicing_to =E<gt> [spindles] ],
+[ add_list_statistics =E<gt> 1 ] )
+
+=item spin ( )
+
+new() may take following options.
+
+=over
+
+=item I<template options>
+
+See L<Sympa::Message::Template/"new">.
+
+=item splicing_to =E<gt> [spindles]
+
+A reference to array containing L<Sympa::Spindle> subclass(es) by which
+the message will be sent.
+By default C<['Sympa::Spindle::ToOutgoing']> is used.
+
+=item add_list_statistics =E<gt> 1
+
+TBD.
+
+=back
+
+=back
+
+=head2 Properties
+
+See also L<Sympa::Spindle/"Properties">.
+
+=over
+
+=item {distaff}
+
+Instance of L<Sympa::Message::Template> class.
+
+=item {finish}
+
+C<'success'> is set if processing succeeded.
+C<'failure'> is set if processing failed.
+
+=back
+
+=head1 SEE ALSO
+
+L<Sympa::Message::Template>,
+L<Sympa::Spindle>,
+L<Sympa::Spindle::ToAlarm>, L<Sympa::Spindle::ToMailer>,
+L<Sympa::Spindle::ToOutgoing>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle::ProcessTemplate> appeared on Sympa 6.2.13.
+
+=cut

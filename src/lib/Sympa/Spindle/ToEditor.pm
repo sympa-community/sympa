@@ -174,3 +174,25 @@ sub _send_confirm_to_editor {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle::ToEditor - Process to forward messages to list editors
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 SEE ALSO
+
+L<Sympa::Message>,
+L<Sympa::Spindle>, L<Sympa::Spindle::AuthorizeMessage>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle::ToEditor> appeared on Sympa 6.2.13.
+
+=cut

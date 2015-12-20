@@ -220,3 +220,27 @@ sub _send_confirm_to_editor {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle::ToModeration -
+Process to store messages into held spool to wait for moderation
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 SEE ALSO
+
+L<Sympa::Message>,
+L<Sympa::Spindle>, L<Sympa::Spindle::AuthorizeMessage>,
+L<Sympa::Spool::Moderation>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle::ToModeration> appeared on Sympa 6.2.13.
+
+=cut

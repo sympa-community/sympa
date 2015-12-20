@@ -269,6 +269,8 @@ Default is false.
 
 =head1 HISTORY
 
+Feature to compile notification to listmaster in group appeared on Sympa 6.2.
+
 L<Sympa::Alarm> appeared on Sympa 6.2.
 
 =cut

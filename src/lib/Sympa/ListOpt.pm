@@ -280,11 +280,55 @@ __END__
 
 =head1 NAME
 
-Sympa::ListOpt - Names of options
+Sympa::ListOpt - Definition of list configuration parameter values
 
 =head1 DESCRIPTION
 
-TBD.
+L<Sympa::ListOpt> gives information about options used for values of list
+configuration.
+
+=head2 Function
+
+=over
+
+=item get_title ( $value, [ $type, [ $withval ] ] )
+
+I<Function>.
+Gets i18n-ed title of option.
+Language context must be set in advance (See L<Sympa::Language>).
+
+Parameters:
+
+=over
+
+=item $value
+
+Value of option.
+
+=item $type
+
+Type of option.
+C<'reception'> (reception mode of list member),
+C<'visibility'> (visibility mode of list memeber),
+C<'status'> (status of list)
+or other (list config option, default).
+
+=item $withval
+
+Adds value of option to returned title.
+
+=back
+
+Returns:
+
+I18n-ed title of option value.
+
+=back
+
+=head1 SEE ALSO
+
+L<Sympa::Language>,
+L<Sympa::ListDef>.
 
 =head1 HISTORY
 

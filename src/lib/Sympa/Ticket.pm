@@ -180,3 +180,26 @@ sub load {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Ticket - One-time ticket for authorization
+
+=head1 SYNOPSIS
+
+TBD.
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 HISTORY
+
+Feature to handle one-time ticket was introduced on Sympa 6.0b.2.
+
+L<Sympa::Ticket> module appeared on Sympa 6.2.13.
+
+=cut

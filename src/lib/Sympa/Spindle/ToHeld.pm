@@ -138,3 +138,27 @@ sub _send_confirm_to_sender {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle::ToHeld -
+Process to store messages into held spool to wait for confirmation
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 SEE ALSO
+
+L<Sympa::Message>,
+L<Sympa::Spindle>, L<Sympa::Spindle::AuthorizeMessage>,
+L<Sympa::Spool::Held>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle::ToHeld> appeared on Sympa 6.2.13.
+
+=cut
