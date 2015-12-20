@@ -93,6 +93,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ProcessIncoming.pm \
 	Sympa/Spindle/ProcessModeration.pm \
 	Sympa/Spindle/ProcessOutgoing.pm \
+	Sympa/Spindle/ProcessTemplate.pm \
 	Sympa/Spindle/ResendArchive.pm \
 	Sympa/Spindle/ToArchive.pm \
 	Sympa/Spindle/ToDigest.pm \
@@ -100,6 +101,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ToHeld.pm \
 	Sympa/Spindle/ToList.pm \
 	Sympa/Spindle/ToModeration.pm \
+	Sympa/Spindle/ToOutgoing.pm \
 	Sympa/Spindle/TransformIncoming.pm \
 	Sympa/Spindle/TransformOutgoing.pm \
 	Sympa/Spool.pm \

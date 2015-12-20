@@ -194,32 +194,30 @@ sub new {
     }
 
     # Set default envelope sender.
-    if ($list) {
-        $self->{envelope_sender} = $list->get_list_address('return_path');
+    if (exists $options{envelope_sender}) {
+        $self->{envelope_sender} = $options{envelope_sender};
+    } elsif ($list) {
+        $self->{envelope_sender} = Sympa::get_address($list, 'return_path');
     } else {
-        $self->{envelope_sender} = Conf::get_robot_conf($robot_id, 'request');
+        $self->{envelope_sender} = Sympa::get_address($robot_id, 'owner');
     }
 
     # Set default delivery date.
     $self->{date} = (exists $options{date}) ? $options{date} : time;
+
+    # Set priority if specified.
+    $self->{priority} = $options{priority}
+        if exists $options{priority};
+
+    # Shelve tracking if speficied.
+    $self->{shelved}{tracking} = $options{tracking}
+        if exists $options{tracking};
 
     # Assign unique ID and log it.
     my $marshalled =
         Sympa::Spool::marshal_metadata($self, '%s@%s.%ld.%ld,%d',
         [qw(localpart domainpart date PID RAND)]);
     $self->{messagekey} = $marshalled;
-    $log->syslog(
-        'notice',
-        'Processing %s; message_id=%s; recipients=%s; sender=%s; template=%s; %s',
-        $self,
-        $self->{message_id},
-        $who,
-        $self->{sender},
-        $tpl,
-        join('; ',
-            map { $data->{$_} ? ("$_=$data->{$_}") : () }
-                qw(type action reason status))
-    );
 
     return $self;
 }
@@ -450,6 +448,19 @@ sub _new_from_template {
     return $self;
 }
 
+# Methods compatible to Sympa::Spool.
+
+sub next {
+    my $self = shift;
+
+    return if delete $self->{_done_next};
+    $self->{_done_next} = 1;
+    return ($self, 1);
+}
+
+use constant quarantine => 1;
+use constant remove     => 1;
+
 1;
 __END__
 
@@ -472,8 +483,7 @@ Sympa::Message::Template - Mail message generated from template
 =over
 
 =item new ( context =E<gt> $that, template =E<gt> $filename,
-rcpt =E<gt> $rcpt, [ data =E<gt> $data ],
-[ date =E<gt> $time ] )
+rcpt =E<gt> $rcpt, [ data =E<gt> $data ], [ options... ] )
 
 I<Constructor>.
 Creates L<Sympa::Message> object from template.
@@ -558,6 +568,19 @@ Below are optional parameters.
 
 Delivery time of message.
 By default current time will be used.
+
+=item envelope_sender =E<gt> $email
+
+Forces setting envelope sender.
+C<'E<lt>E<gt>'> may be used for null envelope sender.
+
+=item priority =E<gt> $priority
+
+Forces setting priority if specified.
+
+=item tracking =E<gt> $feature
+
+Forces tracking if specified.
 
 =back
 
