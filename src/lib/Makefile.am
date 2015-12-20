@@ -102,6 +102,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ToList.pm \
 	Sympa/Spindle/ToModeration.pm \
 	Sympa/Spindle/ToOutgoing.pm \
+	Sympa/Spindle/TransformDigestFinal.pm \
 	Sympa/Spindle/TransformIncoming.pm \
 	Sympa/Spindle/TransformOutgoing.pm \
 	Sympa/Spool.pm \

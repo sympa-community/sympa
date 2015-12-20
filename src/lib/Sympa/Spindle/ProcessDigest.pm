@@ -30,11 +30,10 @@ use POSIX qw();
 use Time::HiRes qw();
 use Time::Local qw();
 
-use Sympa::Bulk;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Message::Template;
+use Sympa::Spindle::ProcessTemplate;
 use tools;
 
 use base qw(Sympa::Spindle);
@@ -198,45 +197,26 @@ sub _distribute_digest {
         foreach my $mode (qw{digest digestplain summary}) {
             next unless exists $available_recipients->{$mode};
 
-            my $digest_message = Sympa::Message::Template->new(
+            my $spindle = Sympa::Spindle::ProcessTemplate->new(
                 context  => $list,
                 template => $mode,
                 rcpt     => $available_recipients->{$mode},
-                data     => $param
+                data     => $param,
+
+                splicing_to => [
+                    'Sympa::Spindle::TransformDigestFinal',
+                    'Sympa::Spindle::ToOutgoing'
+                ],
+                add_list_statistics => 1
             );
-            if ($digest_message) {
-                # Add RFC 2919 header field
-                $list->add_list_header($digest_message, 'id');
-                # Add RFC 2369 header fields
-                foreach my $field (
-                    @{  tools::get_list_params($list->{'domain'})
-                            ->{'rfc2369_header_fields'}->{'format'}
-                    }
-                    ) {
-                    if (scalar grep { $_ eq $field }
-                        @{$list->{'admin'}{'rfc2369_header_fields'}}) {
-                        $list->add_list_header($digest_message, $field);
-                    }
-                }
-            }
-            unless (
-                $digest_message
-                and Sympa::Bulk->new->store(
-                    $digest_message, $available_recipients->{$mode}
-                )
-                ) {
+            unless ($spindle
+                and $spindle->spin
+                and $spindle->{finish} eq 'success') {
                 $log->syslog('notice',
                     'Unable to send template "%s" to %s list subscribers',
                     $mode, $list);
                 next;
             }
-
-            # Add number and size of digests sent to total in stats file.
-            my $numsent = scalar @{$available_recipients->{$mode}};
-            my $bytes   = length $digest_message->as_string;
-            $list->{'stats'}[1] += $numsent;
-            $list->{'stats'}[2] += $bytes;
-            $list->{'stats'}[3] += $bytes * $numsent;
         }
     }
 
