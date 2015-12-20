@@ -217,6 +217,8 @@ sub store {
     my $rcpt    = shift;
     my %options = @_;
 
+    delete $message->{rcpt};    #FIXME
+
     my ($list, $robot_id);
     if (ref($message->{context}) eq 'Sympa::List') {
         $list     = $message->{context};
