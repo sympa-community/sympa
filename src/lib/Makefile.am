@@ -95,11 +95,13 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ProcessOutgoing.pm \
 	Sympa/Spindle/ProcessTemplate.pm \
 	Sympa/Spindle/ResendArchive.pm \
+	Sympa/Spindle/ToAlarm.pm \
 	Sympa/Spindle/ToArchive.pm \
 	Sympa/Spindle/ToDigest.pm \
 	Sympa/Spindle/ToEditor.pm \
 	Sympa/Spindle/ToHeld.pm \
 	Sympa/Spindle/ToList.pm \
+	Sympa/Spindle/ToMailer.pm \
 	Sympa/Spindle/ToModeration.pm \
 	Sympa/Spindle/ToOutgoing.pm \
 	Sympa/Spindle/TransformDigestFinal.pm \

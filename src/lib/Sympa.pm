@@ -49,13 +49,11 @@ use Digest::MD5;
 use English qw(-no_match_vars);
 use Scalar::Util qw();
 
-use Sympa::Alarm;
-use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Message::Template;
+use Sympa::Spindle::ProcessTemplate;
 use Sympa::Ticket;
 use tools;
 use Sympa::Tools::Data;
@@ -660,7 +658,7 @@ sub send_dsn {
         (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
         ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
 
-    my $dsn_message = Sympa::Message::Template->new(
+    my $spindle = Sympa::Spindle::ProcessTemplate->new(
         context  => $that,
         template => 'delivery_status_notification',
         rcpt     => $sender,
@@ -674,13 +672,11 @@ sub send_dsn {
             'action'          => $action,
             'status'          => $status,
             'diagnostic_code' => $diag,
-        }
-    );
-    if ($dsn_message) {
+        },
         # Set envelope sender.  DSN _must_ have null envelope sender.
-        $dsn_message->{envelope_sender} = '<>';
-    }
-    unless ($dsn_message and Sympa::Bulk->new->store($dsn_message, $sender)) {
+        envelope_sender => '<>',
+    );
+    unless ($spindle and $spindle->spin and $spindle->{finish} eq 'success') {
         $log->syslog('err', 'Unable to send DSN to %s', $sender);
         return undef;
     }
@@ -723,15 +719,14 @@ sub send_file {
     my $context = shift || {};
     my %options = @_;
 
-    my $message = Sympa::Message::Template->new(
+    my $spindle = Sympa::Spindle::ProcessTemplate->new(
         context  => $that,
         template => $tpl,
         rcpt     => $who,
         data     => $context,
         %options
     );
-
-    unless ($message and defined Sympa::Bulk->new->store($message, $who)) {
+    unless ($spindle and $spindle->spin and $spindle->{finish} eq 'success') {
         $log->syslog('err', 'Could not send template %s to %s', $tpl, $who);
         return undef;
     }
@@ -855,19 +850,17 @@ sub send_notify_to_listmaster {
                     or $operation eq 'no_db'
                     or $operation eq 'db_restored');
 
-        my $notif_message = Sympa::Message::Template->new(
+        my $spindle = Sympa::Spindle::ProcessTemplate->new(
             context  => $that,
             template => 'listmaster_notification',
             rcpt     => $email,
-            data     => $ts->{'data'}
-        );
+            data     => $ts->{'data'},
 
-        unless (
-            $notif_message
-            and defined Sympa::Alarm->instance->store(
-                $notif_message, $email, operation => $operation
-            )
-            ) {
+            splicing_to => ['Sympa::Spindle::ToAlarm'],
+        );
+        unless ($spindle
+            and $spindle->spin
+            and $spindle->{finish} eq 'success') {
             $log->syslog(
                 'notice',
                 'Unable to send template "listmaster_notification" to %s listmaster %s',
