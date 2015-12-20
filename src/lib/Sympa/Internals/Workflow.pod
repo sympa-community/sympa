@@ -1,0 +1,137 @@
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Internals::Workflow - Overview on workflow of Sympa
+
+=head1 DESCRIPTION
+
+Following picture roughly describes interaction among several classes in
+workflow of Sympa.  For more details see documentation on each class.
+
+ <<archived.pl>>
+ 
+ Archive => [ProcessArchive] => (list archive)
+ 
+ <<bounced.pl>>
+ 
+ Bounce => [ProcessBounce] => Tracking
+ 
+ <<bulk.pl>>
+ 
+ Outgoing => [ProcessOutgoing] => (Mailer)
+ 
+ <<sympa_automatic.pl>>
+ 
+ Automatic => [ProcessAutomatic] => Incoming
+ 
+ <<sympa_msg.pl>>
+ 
+ Digest::Collection => [ProcessDigest]
+                                    :
+                                    *1
+ 
+                     +-> (reject or ignore)
+                    /
+                   +---> [DoCommand]
+                  /               :
+ Incoming => [ProcessIncoming]    *2
+                  \                              +-> (reject)
+                   +-> [DoForward] => (Mailer)  /
+                    \                          +-> [ToEditor] => Outgoing
+                     +-> [DoMessage]          /
+                               \             /---> [ToHeld] => Held
+          *2                    +-> [AuthorizeMessage]
+          :                    /             \---> [ToModeration] => Mod.
+ Held => [ProcessHeld] -------+               \
+                                               +-> [DistributeMessage]
+                *2            +--> (reject)   /              \
+                :            /               /                \
+ Moderation => [ProcessModeration]          /                  \
+                             \             /                    \
+                              +-----------+                      \
+                                                                  \
+                       +-------------------------------------------+
+                        \
+                        [TransformIncoming]
+ <<wwsympa.fcgi>>         \
+                        [ToArchive] => Archive
+ (list archive)             \
+  => [ResendArchive] -- [TransformOutgoing] -+
+                              \               \
+                        [ToDigest] => Digest   \
+                                \               \
+                                 +---------------+-> [ToList] => Outgoing
+ 
+                            +-> [TransformDigestFinal]  
+                           /                     \
+ <<Template sending>>     /         +----------> [ToOutgoing] => Outgoing 
+                         /         / 
+ (mail template) => [ProcessTemplate] ---------> [ToAlarm] => Alarm
+                        :          \
+                        *1          +----------> [ToMailer] => (Mailer)
+
+=begin comment
+
+These have not been implemented yet.
+
+ <<task_manager.pl>>
+ 
+ Task => [ProcessTask] => Task
+ 
+ <<Others>>
+ 
+ Request => [ValidateAdd]
+ 
+ Request => [ValidateDel]
+ 
+ Request => [ValidateClose]
+ 
+ Request => [ValidatePurge]
+
+=end comment
+
+=head3 Legend
+
+=over
+
+=item C<I<ClassName>>
+
+Spool class.  Prefix C<Sympa::Spool::> is omitted.
+
+=over
+
+=item C<Alarm>
+
+=item C<Outgoing>
+
+=item C<Tracking>
+
+L<Sympa::Alarm>, L<Sympa::Bulk> and L<Sympa::Tracking> classes
+(they are named such by historical reason).
+
+=back
+
+=item C<[I<ClassName>]>
+
+Workflow class.  Prefix C<Sympa::Spindle::> is omitted.
+
+=item C<(Mailer)>
+
+L<Sympa::Mailer> class.
+
+=item C<(list archive)>
+
+L<Sympa::Archive> class.
+
+=item C<(mail template)>
+
+L<Sympa::Message::Template> class.
+
+=back
+
+=head1 SEE ALSO
+
+L<sympa_toc(1)>, L<Sympa::Internals>, L<Sympa::Spindle>, L<Sympa::Spool>.
+
+=cut

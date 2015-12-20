@@ -23,7 +23,8 @@
 nobase_nodist_modules_DATA = \
 	Sympa/Constants.pm
 nobase_dist_modules_DATA = \
-        Sympa/Internals.pod
+	Sympa/Internals.pod \
+	Sympa/Internals/Workflow.pod
 nobase_modules_DATA = \
 	Sympa.pm \
 	Sympa/Admin.pm \
