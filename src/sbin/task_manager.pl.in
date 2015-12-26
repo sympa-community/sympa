@@ -45,6 +45,7 @@ use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::Spool;
 use Sympa::Task;
+use Sympa::Ticket;
 use tools;
 use Sympa::Tools::File;
 use Sympa::Tools::Time;
@@ -1493,7 +1494,7 @@ sub purge_tables {
 sub purge_one_time_ticket_table {
 
     $log->syslog('info', '');
-    my $removed = Sympa::Session::purge_old_tickets('*');
+    my $removed = Sympa::Ticket::purge_old_tickets('*');
     unless (defined $removed) {
         $log->syslog('err', 'Failed to remove old tickets');
         return undef;

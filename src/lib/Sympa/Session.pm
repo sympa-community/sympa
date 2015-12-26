@@ -560,62 +560,8 @@ sub purge_old_sessions {
     return $total + $anonymous_total;
 }
 
-## remove old one_time_ticket from a particular robot or from all robots.
-## delay is a parameter in seconds
-##
-sub purge_old_tickets {
-    $log->syslog('debug2', '(%s)', @_);
-    my $robot = shift;
-
-    my $delay = Sympa::Tools::Time::duration_conv(
-        $Conf::Conf{'one_time_ticket_table_ttl'});
-
-    unless ($delay) {
-        $log->syslog('info', '(%s) Exit with delay null', $robot);
-        return;
-    }
-
-    my @tickets;
-    my $sth;
-    my $sdm = Sympa::DatabaseManager->instance;
-    unless ($sdm) {
-        $log->syslog('err', 'Unavailable database connection');
-        return;
-    }
-
-    my @conditions;
-    push @conditions,
-        sprintf('robot_one_time_ticket = %s', $sdm->quote($robot))
-        if $robot and $robot ne '*';
-    push @conditions, sprintf('%d > date_one_time_ticket', time - $delay)
-        if $delay;
-
-    my $condition = join(' AND ', @conditions);
-    my $where = "WHERE $condition" if $condition;
-
-    my $count_statement =
-        sprintf 'SELECT COUNT(*) FROM one_time_ticket_table %s', $where;
-    my $statement = sprintf 'DELETE FROM one_time_ticket_table %s', $where;
-
-    unless ($sth = $sdm->do_query($count_statement)) {
-        $log->syslog('err',
-            'Unable to count old one time tickets for robot %s', $robot);
-        return undef;
-    }
-
-    my $total = $sth->fetchrow;
-    if ($total == 0) {
-        $log->syslog('debug', 'No tickets to expire');
-    } else {
-        unless ($sth = $sdm->do_query($statement)) {
-            $log->syslog('err',
-                'Unable to delete expired one time tickets for robot %s',
-                $robot);
-            return undef;
-        }
-    }
-    return $total;
-}
+# Moved to: Sympa::Ticket::purge_old_tickets().
+#sub purge_old_tickets;
 
 # list sessions for $robot where last access is newer then $delay. List is
 # limited to connected users if $connected_only
