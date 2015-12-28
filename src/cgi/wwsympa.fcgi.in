@@ -6047,7 +6047,7 @@ sub do_subscribe {
             my $spool_req = Sympa::Spool::Request->new;
             my $request   = Sympa::Request->new_from_tuples(
                 context          => $list,
-                sender           => $param->{'user'}{'email'},
+                email            => $param->{'user'}{'email'},
                 custom_attribute => $in{custom_attribute},
                 action           => 'add'
             );
@@ -8141,7 +8141,7 @@ sub do_add {
         last unless $handle;
         next
             unless $request
-                and grep { $request->{sender} eq $_ } @added_users;
+                and grep { $request->{email} eq $_ } @added_users;
 
         $spool_req->remove($handle);
     }
@@ -8222,10 +8222,10 @@ sub do_add_fromsub {
             );
             next;
         }
-        next unless defined $request->{sender} and $request->{sender} =~ /\S/;
+        next unless defined $request->{email} and $request->{email} =~ /\S/;
 
         $list->add_list_member(
-            {   email            => $request->{sender},
+            {   email            => $request->{email},
                 gecos            => $request->{gecos},
                 custom_attribute => $request->{custom_attribute},
             }
@@ -8258,7 +8258,7 @@ sub do_add_fromsub {
         } else {
             # Delete subscription request.
             $spool_req->remove($handle);
-            web_db_log({target => $request->{sender}, status => 'success'});
+            web_db_log({target => $request->{email}, status => 'success'});
             $total++;
         }
     }
@@ -22167,7 +22167,7 @@ sub do_subindex {
                 date             => $language->gettext_strftime(
                     '%d %b %Y', localtime $request->{date}
                 ),
-                email => $request->{sender},
+                email => $request->{email},
                 epoch => $request->{date},
                 gecos => $request->{gecos},
             },

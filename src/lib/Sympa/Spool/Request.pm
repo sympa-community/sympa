@@ -40,10 +40,10 @@ sub _filter {
     my $self     = shift;
     my $metadata = shift;
 
-    # Decode sender e-mail.
-    $metadata->{sender} =
-        Sympa::Tools::Text::decode_filesystem_safe($metadata->{sender})
-        if $metadata and $metadata->{sender};
+    # Decode e-mail.
+    $metadata->{email} =
+        Sympa::Tools::Text::decode_filesystem_safe($metadata->{email})
+        if $metadata and $metadata->{email};
 
     1;
 }
@@ -52,10 +52,10 @@ sub _filter_pre {
     my $self     = shift;
     my $metadata = shift;
 
-    # Encode sender e-mail.
-    $metadata->{sender} =
-        Sympa::Tools::Text::encode_filesystem_safe($metadata->{sender})
-        if $metadata and $metadata->{sender};
+    # Encode e-mail.
+    $metadata->{email} =
+        Sympa::Tools::Text::encode_filesystem_safe($metadata->{email})
+        if $metadata and $metadata->{email};
 
     1;
 }
@@ -66,7 +66,7 @@ sub _glob_pattern { shift->{_pattern} }
 
 use constant _marshal_format => '%ld,%s@%s_%s,%s,%s';
 use constant _marshal_keys =>
-    [qw(date localpart domainpart AUTHKEY sender action)];
+    [qw(date localpart domainpart AUTHKEY email action)];
 use constant _marshal_regexp =>
     qr{\A(\d+),([^\s\@]+)\@([-.\w]+)_([\da-f]+),([^\s,]*),(\w+)\z};
 
@@ -76,7 +76,7 @@ sub new {
 
     my $self = $class->SUPER::new(%options);
 
-    # Build glob pattern using encoded sender e-mail.
+    # Build glob pattern using encoded e-mail.
     if ($self) {
         my $opts = {%options};
         $self->_filter_pre($opts);
@@ -127,7 +127,7 @@ See also L<Sympa::Spool/"Public methods">.
 =over
 
 =item new ( [ context =E<gt> $list ], [ action =E<gt> $action ],
-[ authkey =E<gt> $id ], [ sender =E<gt> $email ])
+[ authkey =E<gt> $id ], [ email =E<gt> $email ])
 
 =item next ( [ no_lock =E<gt> 1 ] )
 
@@ -164,7 +164,7 @@ when the request is stored to spool.
 
 Unix time when the request was submitted.
 
-=item {sender}
+=item {email}
 
 E-mail of user who submitted the request, or target e-mail of the request.
 

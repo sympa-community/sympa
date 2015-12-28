@@ -40,8 +40,8 @@ sub new {
     my $serialized = shift;
 
     my $self = bless {@_} => $class;
-    $self->{sender} = Sympa::Tools::Text::canonic_email($self->{sender})
-        if defined $self->{sender};
+    $self->{email} = Sympa::Tools::Text::canonic_email($self->{email})
+        if defined $self->{email};
 
     # Get attributes from pseudo-header fields at the top of serialized
     # message.  Note that field names are case-sensitive.
@@ -71,9 +71,9 @@ sub new {
             Sympa::Tools::Data::decode_custom_attribute($serialized);
     }
 
-    if ($self->{sender}
+    if ($self->{email}
         and not(defined $self->{gecos} and length $self->{gecos})) {
-        my $user = Sympa::User->new($self->{sender});
+        my $user = Sympa::User->new($self->{email});
         $self->{gecos} = $user->gecos if $user and $user->gecos;
     }
 

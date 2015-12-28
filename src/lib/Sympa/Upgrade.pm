@@ -1748,7 +1748,7 @@ sub upgrade {
                 my $custom_attribute =
                     Sympa::Tools::Data::decode_custom_attribute($req_string);
                 my $request = Sympa::Request->new_from_tuples(
-                    sender           => $email,
+                    email            => $email,
                     gecos            => $gecos,
                     custom_attribute => $custom_attribute,
                     action           => 'add',

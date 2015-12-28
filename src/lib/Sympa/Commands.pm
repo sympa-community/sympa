@@ -1208,7 +1208,7 @@ sub subscribe {
         my $spool_req = Sympa::Spool::Request->new;
         my $request   = Sympa::Request->new_from_tuples(
             context => $list,
-            sender  => $sender,
+            email   => $sender,
             gecos   => $comment,
             action  => 'add',
             date    => $message->{date},    # Keep date of message.
@@ -1895,7 +1895,7 @@ sub add {
 
             my $spool_req = Sympa::Spool::Request->new(
                 context => $list,
-                sender  => $email,
+                email   => $email,
                 action  => 'add'
             );
             while (1) {
