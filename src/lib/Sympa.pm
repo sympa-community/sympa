@@ -243,6 +243,10 @@ sub request_auth {
             my $keyauth = Sympa::compute_auth($list, $param[0], 'invite');
             $data->{'command'} = "auth $keyauth $cmd $listname $param[0]";
             $data->{'type'}    = 'invite';
+        } elsif ($cmd eq 'review') {
+            my $keyauth = Sympa::compute_auth($list, '', 'review');
+            $data->{'command'} = "auth $keyauth $cmd $listname";
+            $data->{'type'}    = 'review';
         }
 
         $data->{'command_escaped'} = tools::escape_url($data->{'command'});
