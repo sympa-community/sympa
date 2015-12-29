@@ -321,8 +321,7 @@ sub stats {
         return 'unknown_list';
     }
 
-    my $auth_method =
-        get_auth_method('stats', $sender, 'auth_failed', $sign_mod, $list);
+    my $auth_method = get_auth_method('stats', $sender, $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -440,8 +439,7 @@ sub getfile {
         return 'no_archive';
     }
 
-    my $auth_method =
-        get_auth_method('get', $sender, 'auth_failed', $sign_mod, $list);
+    my $auth_method = get_auth_method('get', $sender, $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -584,8 +582,7 @@ sub last {
         return 'no_archive';
     }
 
-    my $auth_method =
-        get_auth_method('last', $sender, 'auth_failed', $sign_mod, $list);
+    my $auth_method = get_auth_method('last', $sender, $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -717,8 +714,7 @@ sub index {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method =
-        get_auth_method('index', $sender, 'auth_failed', $sign_mod, $list);
+    my $auth_method = get_auth_method('index', $sender, $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -851,8 +847,7 @@ sub review {
         #FIXME: Abort if synchronization failed.
     }
 
-    my $auth_method =
-        get_auth_method('review', '', 'auth_failed', $sign_mod, $list);
+    my $auth_method = get_auth_method('review', '', $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -1070,9 +1065,7 @@ sub subscribe {
 
     ## Now check if the user may subscribe to the list
 
-    my $auth_method =
-        get_auth_method('subscribe', $sender, 'wrong_email_confirm',
-        $sign_mod, $list);
+    my $auth_method = get_auth_method('subscribe', $sender, $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -1323,8 +1316,7 @@ sub info {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method =
-        get_auth_method('info', '', 'auth_failed', $sign_mod, $list);
+    my $auth_method = get_auth_method('info', '', $sign_mod, $list);
 
     return 'wrong_auth'
         unless (defined $auth_method);
@@ -1522,9 +1514,7 @@ sub signoff {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    $auth_method =
-        get_auth_method('signoff', $email, 'wrong_email_confirm', $sign_mod,
-        $list);
+    $auth_method = get_auth_method('signoff', $email, $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -1738,9 +1728,7 @@ sub add {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method =
-        get_auth_method('add', $email, 'wrong_email_confirm', $sign_mod,
-        $list);
+    my $auth_method = get_auth_method('add', $email, $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -1937,9 +1925,7 @@ sub invite {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method =
-        get_auth_method('invite', $email, 'wrong_email_confirm', $sign_mod,
-        $list);
+    my $auth_method = get_auth_method('invite', $email, $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -2188,8 +2174,7 @@ sub remind {
         }
     }
 
-    my $auth_method =
-        get_auth_method('remind', '', 'auth_failed', $sign_mod, $list);
+    my $auth_method = get_auth_method('remind', '', $sign_mod, $list);
 
     return 'wrong_auth'
         unless (defined $auth_method);
@@ -2470,8 +2455,7 @@ sub del {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method =
-        get_auth_method('del', $who, 'wrong_email_confirm', $sign_mod, $list);
+    my $auth_method = get_auth_method('del', $who, $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -3167,8 +3151,8 @@ sub which {
 #       | undef
 ##########################################################
 sub get_auth_method {
-    $log->syslog('debug3', '(%s, %s, %s, %s, %s)', @_);
-    my ($cmd, $email, $type, $sign_mod, $list) = @_;
+    $log->syslog('debug3', '(%s, %s, %s, %s)', @_);
+    my ($cmd, $email, $sign_mod, $list) = @_;
     my $that;
     my $auth_method;
 
@@ -3189,13 +3173,13 @@ sub get_auth_method {
             $auth_method = 'md5';
         } else {
             $log->syslog('debug2', 'Auth should be %s', $compute);
-            if ($type eq 'auth_failed') {
+            if (grep { $cmd eq $_ } qw(add del invite signoff subscribe)) {
+                Sympa::Report::reject_report_cmd('user',
+                    'wrong_email_confirm', {command => $cmd}, $cmd_line);
+            } else {
                 Sympa::Report::reject_report_cmd('intern',
                     "The authentication process failed",
                     {}, $cmd_line, $sender, $that);
-            } else {
-                Sympa::Report::reject_report_cmd('user', $type,
-                    {command => $cmd}, $cmd_line);
             }
             $log->syslog('info', 'Command "%s" from %s refused, auth failed',
                 $cmd_line, $sender);
