@@ -141,9 +141,19 @@ Your configuration regarding this command has not been updated.[%END-%]
   [%|loc(u_err.email,u_err.listname)%]The User '%1' is already subscriber of list '%2'.[%END%]
 
 [% ELSIF u_err.entry == 'wrong_email_confirm' -%]
-  [%|loc(u_err.command)%]The authentication process failed.
-You probably confirmed your %1 using a different
-email address. Please try using your canonical address.[%END-%]
+[% IF u_err.command == 'subscribe' -%]
+  [%|loc%]The authentication process failed. You probably confirmed your subscription using a different email address. Please try using your canonical address.[%END-%]
+[% ELSIF u_err.command == 'signoff' -%]
+  [%|loc%]The authentication process failed. You probably confirmed your unsubscription using a different email address. Please try using your canonical address.[%END-%]
+[% ELSIF u_err.command == 'add' -%]
+  [%|loc%]The authentication process failed. You probably confirmed your addition using a different email address. Please try using your canonical address.[%END-%]
+[% ELSIF u_err.command == 'invite' -%]
+  [%|loc%]The authentication process failed. You probably confirmed your invitation using a different email address. Please try using your canonical address.[%END-%]
+[% ELSIF u_err.command == 'del' -%]
+  [%|loc%]The authentication process failed. You probably confirmed your deletion using a different email address. Please try using your canonical address.[%END-%]
+[% ELSE -%]
+  [%|loc(u_err.command)%]The authentication process failed. You probably confirmed your "%1" command using a different email address. Please try using your canonical address.[%END-%]
+[% END -%]
 
 [% ELSIF u_err.entry == 'unfound_message' -%]
   [%|loc(u_err.listname,u_err.key)%]Unable to access the message on list %1 with  key %2.

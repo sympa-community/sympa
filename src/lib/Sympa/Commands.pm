@@ -321,15 +321,8 @@ sub stats {
         return 'unknown_list';
     }
 
-    my $auth_method = get_auth_method(
-        'stats', $sender,
-        {   'type' => 'auth_failed',
-            'data' => {},
-            'msg'  => "STATS $listname from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    my $auth_method =
+        get_auth_method('stats', $sender, 'auth_failed', $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -447,15 +440,8 @@ sub getfile {
         return 'no_archive';
     }
 
-    my $auth_method = get_auth_method(
-        'get', $sender,
-        {   'type' => 'auth_failed',
-            'data' => {},
-            'msg'  => "GET $which $arc from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    my $auth_method =
+        get_auth_method('get', $sender, 'auth_failed', $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -598,15 +584,8 @@ sub last {
         return 'no_archive';
     }
 
-    my $auth_method = get_auth_method(
-        'last', $sender,
-        {   'type' => 'auth_failed',
-            'data' => {},
-            'msg'  => "LAST $which from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    my $auth_method =
+        get_auth_method('last', $sender, 'auth_failed', $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -738,15 +717,8 @@ sub index {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method = get_auth_method(
-        'index', $sender,
-        {   'type' => 'auth_failed',
-            'data' => {},
-            'msg'  => "INDEX $which from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    my $auth_method =
+        get_auth_method('index', $sender, 'auth_failed', $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -879,15 +851,8 @@ sub review {
         #FIXME: Abort if synchronization failed.
     }
 
-    my $auth_method = get_auth_method(
-        'review', '',
-        {   'type' => 'auth_failed',
-            'data' => {},
-            'msg'  => "REVIEW $listname from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    my $auth_method =
+        get_auth_method('review', '', 'auth_failed', $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -1105,16 +1070,9 @@ sub subscribe {
 
     ## Now check if the user may subscribe to the list
 
-    my $auth_method = get_auth_method(
-        'subscribe',
-        $sender,
-        {   'type' => 'wrong_email_confirm',
-            'data' => {'command' => 'subscription'},
-            'msg'  => "SUB $which from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    my $auth_method =
+        get_auth_method('subscribe', $sender, 'wrong_email_confirm',
+        $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -1365,15 +1323,8 @@ sub info {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method = get_auth_method(
-        'info', '',
-        {   'type' => 'auth_failed',
-            'data' => {},
-            'msg'  => "INFO $listname from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    my $auth_method =
+        get_auth_method('info', '', 'auth_failed', $sign_mod, $list);
 
     return 'wrong_auth'
         unless (defined $auth_method);
@@ -1571,16 +1522,9 @@ sub signoff {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    $auth_method = get_auth_method(
-        'signoff',
-        $email,
-        {   'type' => 'wrong_email_confirm',
-            'data' => {'command' => 'unsubscription'},
-            'msg'  => "SIG $which from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    $auth_method =
+        get_auth_method('signoff', $email, 'wrong_email_confirm', $sign_mod,
+        $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -1794,15 +1738,9 @@ sub add {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method = get_auth_method(
-        'add', $email,
-        {   'type' => 'wrong_email_confirm',
-            'data' => {'command' => 'addition'},
-            'msg'  => "ADD $which $email from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    my $auth_method =
+        get_auth_method('add', $email, 'wrong_email_confirm', $sign_mod,
+        $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -1999,15 +1937,9 @@ sub invite {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method = get_auth_method(
-        'invite', $email,
-        {   'type' => 'wrong_email_confirm',
-            'data' => {'command' => 'invitation'},
-            'msg'  => "INVITE $which $email from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    my $auth_method =
+        get_auth_method('invite', $email, 'wrong_email_confirm', $sign_mod,
+        $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -2256,28 +2188,8 @@ sub remind {
         }
     }
 
-    my $auth_method;
-
-    if ($listname eq '*') {
-        $auth_method = get_auth_method(
-            'remind', '',
-            {   'type' => 'auth_failed',
-                'data' => {},
-                'msg'  => "REMIND $listname from $sender"
-            },
-            $sign_mod
-        );
-    } else {
-        $auth_method = get_auth_method(
-            'remind', '',
-            {   'type' => 'auth_failed',
-                'data' => {},
-                'msg'  => "REMIND $listname from $sender"
-            },
-            $sign_mod,
-            $list
-        );
-    }
+    my $auth_method =
+        get_auth_method('remind', '', 'auth_failed', $sign_mod, $list);
 
     return 'wrong_auth'
         unless (defined $auth_method);
@@ -2558,15 +2470,8 @@ sub del {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method = get_auth_method(
-        'del', $who,
-        {   'type' => 'wrong_email_confirm',
-            'data' => {'command' => 'delete'},
-            'msg'  => "DEL $which $who from $sender"
-        },
-        $sign_mod,
-        $list
-    );
+    my $auth_method =
+        get_auth_method('del', $who, 'wrong_email_confirm', $sign_mod, $list);
     return 'wrong_auth'
         unless (defined $auth_method);
 
@@ -3254,10 +3159,7 @@ sub which {
 #
 # IN :-$cmd (+): current command
 #     -$email (+): used to compute auth
-#     -$error (+):ref(HASH) with keys :
-#        -type : for message_report.tt2 parsing
-#        -data : ref(HASH) for message_report.tt2 parsing
-#        -msg : for $log->syslog()
+#     -type : for message_report.tt2 parsing
 #     -$sign_mod (+): 'smime'| 'dkim' | -
 #     -$list : ref(List) | -
 #
@@ -3266,7 +3168,7 @@ sub which {
 ##########################################################
 sub get_auth_method {
     $log->syslog('debug3', '(%s, %s, %s, %s, %s)', @_);
-    my ($cmd, $email, $error, $sign_mod, $list) = @_;
+    my ($cmd, $email, $type, $sign_mod, $list) = @_;
     my $that;
     my $auth_method;
 
@@ -3287,15 +3189,16 @@ sub get_auth_method {
             $auth_method = 'md5';
         } else {
             $log->syslog('debug2', 'Auth should be %s', $compute);
-            if ($error->{'type'} eq 'auth_failed') {
+            if ($type eq 'auth_failed') {
                 Sympa::Report::reject_report_cmd('intern',
                     "The authentication process failed",
-                    $error->{'data'}, $cmd_line, $sender, $that);
+                    {}, $cmd_line, $sender, $that);
             } else {
-                Sympa::Report::reject_report_cmd('user', $error->{'type'},
-                    $error->{'data'}, $cmd_line);
+                Sympa::Report::reject_report_cmd('user', $type,
+                    {command => $cmd}, $cmd_line);
             }
-            $log->syslog('info', '%s refused, auth failed', $error->{'msg'});
+            $log->syslog('info', 'Command "%s" from %s refused, auth failed',
+                $cmd_line, $sender);
             return undef;
         }
     } else {
