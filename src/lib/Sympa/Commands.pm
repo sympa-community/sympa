@@ -1563,7 +1563,7 @@ sub signoff {
         }
         my $cmd = 'signoff';
         $cmd = "quiet $cmd" if $quiet;
-        unless (Sympa::request_auth($list, $to, $cmd)) {
+        unless (Sympa::request_auth($list, $to, $cmd, $email)) {
             my $error =
                 'Unable to request authentication for command "signoff"';
             Sympa::Report::reject_report_cmd('intern', $error,

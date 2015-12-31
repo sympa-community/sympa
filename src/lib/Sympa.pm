@@ -214,8 +214,9 @@ sub request_auth {
         $data->{'list_context'} = 1;
 
         if ($cmd =~ /signoff$/) {
-            $keyauth = Sympa::compute_auth($list, $email, 'signoff');
-            $data->{'command'} = "auth $keyauth $cmd $listname $email";
+            $param[0] ||= $email;
+            $keyauth = Sympa::compute_auth($list, $param[0], 'signoff');
+            $data->{'command'} = "auth $keyauth $cmd $listname $param[0]";
             $data->{'type'}    = 'signoff';
 
         } elsif ($cmd =~ /subscribe$/) {
