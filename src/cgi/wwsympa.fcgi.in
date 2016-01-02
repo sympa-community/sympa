@@ -6035,7 +6035,9 @@ sub do_subscribe {
                 'subrequest',
                 {   'who'     => $param->{'user'}{'email'},
                     'keyauth' => Sympa::compute_auth(
-                        $list, $param->{'user'}{'email'}, 'add'
+                        context => $list,
+                        email   => $param->{'user'}{'email'},
+                        action  => 'add'
                     ),
                     'replyto' => Conf::get_robot_conf($robot, 'sympa'),
                     'custom_attribute' => $in{custom_attribute},
@@ -6614,8 +6616,10 @@ sub unsubscribe {
             'sigrequest',
             {   'who'     => $param->{'user'}{'email'},
                 'keyauth' => Sympa::compute_auth(
-                    $list, $param->{'user'}{'email'}, 'del'
-                )
+                    context => $list,
+                    email   => $param->{'user'}{'email'},
+                    action  => 'del'
+                ),
             }
         );
         wwslog('info', 'Signoff sent to owner');

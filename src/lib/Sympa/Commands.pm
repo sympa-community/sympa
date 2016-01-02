@@ -871,7 +871,13 @@ sub review {
 
     if ($action =~ /request_auth/i) {
         $log->syslog('debug2', 'Auth requested from %s', $sender);
-        unless (Sympa::request_auth($list, $sender, 'review')) {
+        unless (
+            Sympa::request_auth(
+                context => $list,
+                sender  => $sender,
+                action  => 'review'
+            )
+            ) {
             my $error =
                 'Unable to request authentication for command "review"';
             Sympa::Report::reject_report_cmd('intern', $error,
@@ -1137,7 +1143,11 @@ sub subscribe {
             $list->send_notify_to_owner(
                 'subrequest',
                 {   'who'     => $sender,
-                    'keyauth' => Sympa::compute_auth($list, $sender, 'add'),
+                    'keyauth' => Sympa::compute_auth(
+                        context => $list,
+                        email   => $sender,
+                        action  => 'add'
+                    ),
                     'replyto' => Conf::get_robot_conf($robot, 'sympa'),
                     'gecos'   => $comment
                 }
@@ -1176,9 +1186,15 @@ sub subscribe {
         return 1;
     }
     if ($action =~ /request_auth/i) {
-        my $cmd = 'subscribe';
-        $cmd = "quiet $cmd" if $quiet;
-        unless (Sympa::request_auth($list, $sender, $cmd, $comment)) {
+        unless (
+            Sympa::request_auth(
+                context => $list,
+                sender  => $sender,
+                action  => 'subscribe',
+                gecos   => $comment,
+                quiet   => $quiet
+            )
+            ) {
             my $error =
                 'Unable to request authentication for command "subscribe"';
             Sympa::Report::reject_report_cmd('intern', $error,
@@ -1561,9 +1577,15 @@ sub signoff {
         } else {
             $to = $sender;
         }
-        my $cmd = 'signoff';
-        $cmd = "quiet $cmd" if $quiet;
-        unless (Sympa::request_auth($list, $to, $cmd, $email)) {
+        unless (
+            Sympa::request_auth(
+                context => $list,
+                sender  => $to,
+                email   => $email,
+                action  => 'signoff',
+                quiet   => $quiet
+            )
+            ) {
             my $error =
                 'Unable to request authentication for command "signoff"';
             Sympa::Report::reject_report_cmd('intern', $error,
@@ -1584,7 +1606,11 @@ sub signoff {
             $list->send_notify_to_owner(
                 'sigrequest',
                 {   'who'     => $sender,
-                    'keyauth' => Sympa::compute_auth($list, $sender, 'del')
+                    'keyauth' => Sympa::compute_auth(
+                        context => $list,
+                        email   => $sender,
+                        action  => 'del'
+                    )
                 }
             )
             ) {
@@ -1769,9 +1795,16 @@ sub add {
     }
 
     if ($action =~ /request_auth/i) {
-        my $cmd = 'add';
-        $cmd = "quiet $cmd" if $quiet;
-        unless (Sympa::request_auth($list, $sender, $cmd, $email, $comment)) {
+        unless (
+            Sympa::request_auth(
+                context => $list,
+                sender  => $sender,
+                action  => 'add',
+                quiet   => $quiet,
+                email   => $email,
+                gecos   => $comment
+            )
+            ) {
             my $error = 'Unable to request authentication for command "add"';
             Sympa::Report::reject_report_cmd('intern', $error,
                 {'listname' => $which},
@@ -1967,7 +2000,14 @@ sub invite {
 
     if ($action =~ /request_auth/i) {
         unless (
-            Sympa::request_auth($list, $sender, 'invite', $email, $comment)) {
+            Sympa::request_auth(
+                context => $list,
+                sender  => $sender,
+                action  => 'invite',
+                email   => $email,
+                gecos   => $comment
+            )
+            ) {
             my $error =
                 'Unable to request authentication for command "invite"';
             Sympa::Report::reject_report_cmd('intern', $error,
@@ -2021,7 +2061,11 @@ sub invite {
             }
 
             if ($action =~ /request_auth/i) {
-                my $keyauth = Sympa::compute_auth($list, $email, 'subscribe');
+                my $keyauth = Sympa::compute_auth(
+                    context => $list,
+                    email   => $email,
+                    action  => 'subscribe'
+                );
                 my $command = "auth $keyauth sub $which $comment";
                 $context{'subject'} = $command;
                 $context{'url'}     = "mailto:$sympa?subject=$command";
@@ -2234,7 +2278,13 @@ sub remind {
     } elsif ($action =~ /request_auth/i) {
         $log->syslog('debug2', 'Auth requested from %s', $sender);
         if ($listname eq '*') {
-            unless (Sympa::request_auth('*', $sender, 'remind')) {
+            unless (
+                Sympa::request_auth(
+                    context => '*',
+                    sender  => $sender,
+                    action  => 'remind'
+                )
+                ) {
                 my $error =
                     'Unable to request authentication for command "remind"';
                 Sympa::Report::reject_report_cmd('intern', $error,
@@ -2243,7 +2293,13 @@ sub remind {
                 return undef;
             }
         } else {
-            unless (Sympa::request_auth($list, $sender, 'remind')) {
+            unless (
+                Sympa::request_auth(
+                    context => $list,
+                    sender  => $sender,
+                    action  => 'remind'
+                )
+                ) {
                 my $error =
                     'Unable to request authentication for command "remind"';
                 Sympa::Report::reject_report_cmd('intern', $error,
@@ -2497,9 +2553,15 @@ sub del {
         return 'not_allowed';
     }
     if ($action =~ /request_auth/i) {
-        my $cmd = 'del';
-        $cmd = "quiet $cmd" if $quiet;
-        unless (Sympa::request_auth($list, $sender, $cmd, $who)) {
+        unless (
+            Sympa::request_auth(
+                context => $list,
+                sender  => $sender,
+                action  => 'del',
+                quiet   => $quiet,
+                email   => $who
+            )
+            ) {
             my $error = 'Unable to request authentication for command "del"';
             Sympa::Report::reject_report_cmd('intern', $error,
                 {'listname' => $which, 'list' => $list},
@@ -3163,11 +3225,19 @@ sub get_auth_method {
 
         my $compute;
         if (ref $list eq 'Sympa::List') {
-            $compute = Sympa::compute_auth($list, $email, $cmd);
+            $compute = Sympa::compute_auth(
+                context => $list,
+                email   => $email,
+                action  => $cmd
+            );
             $that = $list->{'domain'};    # Robot
         } else {
-            $compute = Sympa::compute_auth('*', $email, $cmd);
-            $that = '*';    # Site
+            $compute = Sympa::compute_auth(
+                context => '*',
+                email   => $email,
+                action  => $cmd
+            );
+            $that = '*';                  # Site
         }
         if ($auth eq $compute) {
             $auth_method = 'md5';

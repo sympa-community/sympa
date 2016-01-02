@@ -1471,7 +1471,11 @@ sub subscribe {
         $list->send_notify_to_owner(
             'subrequest',
             {   'who'     => $sender,
-                'keyauth' => Sympa::compute_auth($list, $sender, 'add'),
+                'keyauth' => Sympa::compute_auth(
+                    context => $list,
+                    email   => $sender,
+                    action  => 'add'
+                ),
                 'replyto' => Conf::get_robot_conf($robot, 'sympa'),
                 'gecos'   => $gecos
             }
@@ -1491,8 +1495,12 @@ sub subscribe {
         return SOAP::Data->name('result')->type('boolean')->value(1);
     }
     if ($action =~ /request_auth/i) {
-        my $cmd = 'subscribe';
-        Sympa::request_auth($list, $sender, $cmd, $gecos);
+        Sympa::request_auth(
+            context => $list,
+            sender  => $sender,
+            action  => 'subscribe',
+            gecos   => $gecos
+        );
         $log->syslog('info', '%s from %s, auth requested', $listname,
             $sender);
         return SOAP::Data->name('result')->type('boolean')->value(1);

@@ -67,12 +67,8 @@ my $log = Sympa::Log->instance;
 
 =over
 
-=item compute_auth
-
-    # To compute site-wide token
-    Sympa::compute_auth(('*', 'user@dom.ain', 'remind');
-    # To cpmpute a token specific to a list
-    Sympa::compute_auth($list, 'user@dom.ain', 'subscribe');
+=item compute_auth ( context =E<gt> $that, email =E<gt> $email,
+action =E<gt> $cmd )
 
 Genererate a MD5 checksum using private cookie and parameters.
 
@@ -80,17 +76,17 @@ Parameters:
 
 =over
 
-=item $that
+=item context =E<gt> $that
 
 L<Sympa::List>, Robot or Site.
 
-=item $email
+=item email =E<gt> $email
 
 Recipient (the person who asked for the command).
 
-=item $cmd
+=item action =E<gt> $cmd
 
-XXX
+TBD.
 
 =back
 
@@ -105,9 +101,11 @@ Authenticaton key.
 # Old name: List::compute_auth().
 sub compute_auth {
     $log->syslog('debug3', '(%s, %s, %s)', @_);
-    my $that  = shift;
-    my $email = shift;
-    my $cmd   = shift;
+    my %options = @_;
+
+    my $that  = $options{context};
+    my $email = $options{email};
+    my $cmd   = $options{action};
 
     my ($list, $robot);
     if (ref $that eq 'Sympa::List') {
@@ -118,8 +116,9 @@ sub compute_auth {
         $robot = '*';
     }
 
-    $email =~ y/[A-Z]/[a-z]/;
-    $cmd   =~ y/[A-Z]/[a-z]/;
+    $email = '' unless defined $email;
+    $email =~ tr/A-Z/a-z/;
+    $cmd   =~ tr/A-Z/a-z/;
 
     my ($cookie, $key, $listname);
 
@@ -141,12 +140,8 @@ sub compute_auth {
 
 =over
 
-=item request_auth
-
-    # To send robot or site auth request
-    Sympa::request_auth('*', 'user@dom.ain', 'remind');
-    # To send auth request specific to a list
-    Sympa::request_auth($list, 'user@dom.ain', 'subscribe'):
+=item request_auth ( context =E<gt> $that, sender =E<gt> $sender,
+action =E<gt> $cmd, [ email =E<gt> $email ], [ other options... ] )
 
 Sends an authentication request for a requested
 command.
@@ -155,23 +150,26 @@ Parameters:
 
 =over
 
-=item $that
+=item context =E<gt> $that
 
 L<Sympa::List>, Robot or Site.
 
-=item $email
+=item sender =E<gt> $email
 
 Recipient (the person who asked for the command)
 
-=item $cmd
+=item action =E<gt> $cmd
 
 'signoff', 'subscribe', 'add', 'del' or 'remind' if $that is List.
 'remind' else.
 
-=item @param
+=item email =E<gt> $email
 
-[0] is used if $cmd is subscribe|add|del|invite.
-[1] is used if $cmd is C<'add'>.
+Used if $cmd is add|del|invite|signoff.
+
+=item gecos =E<gt> $comment
+
+May be used if $cmd is C<'add'> or C<'subscribe'>.
 
 =back
 
@@ -186,15 +184,21 @@ C<1> or C<undef>.
 # Old name: List::request_auth().
 sub request_auth {
     $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
-    my $that  = shift;
-    my $email = shift;
-    my $cmd   = shift;
-    my @param = @_;
+    my %options = @_;
 
     # Suppress warnings on uninitialized value.
-    foreach my $i ((0 .. 1)) {
-        $param[$i] = '' unless defined $param[$i];
+    foreach my $i (qw(sender email gecos)) {
+        $options{$i} = '' unless defined $options{$i};
     }
+
+    my $that   = $options{context} || '*';
+    my $sender = $options{sender};
+    my $cmd    = $options{action};
+    my $email  = $options{email};
+    my $gecos  = $options{gecos};
+    my $quiet  = $options{quiet};
+
+    $cmd = "quiet $cmd" if $quiet;
 
     my ($list, $robot);
     if (ref $that eq 'Sympa::List') {
@@ -207,60 +211,82 @@ sub request_auth {
     }
 
     my $keyauth;
-    my $data = {'to' => $email};
+    my $data = {'to' => $sender};
 
     if ($list) {
         my $listname = $list->{'name'};
         $data->{'list_context'} = 1;
 
         if ($cmd =~ /signoff$/) {
-            $param[0] ||= $email;
-            $keyauth = Sympa::compute_auth($list, $param[0], 'signoff');
-            $data->{'command'} = "auth $keyauth $cmd $listname $param[0]";
+            $email ||= $sender;
+            $keyauth = Sympa::compute_auth(
+                context => $list,
+                email   => $email,
+                action  => 'signoff'
+            );
+            $data->{'command'} = "auth $keyauth $cmd $listname $email";
             $data->{'type'}    = 'signoff';
 
         } elsif ($cmd =~ /subscribe$/) {
-            $keyauth = Sympa::compute_auth($list, $email, 'subscribe');
-            $data->{'command'} = "auth $keyauth $cmd $listname $param[0]";
+            $keyauth = Sympa::compute_auth(
+                context => $list,
+                email   => $sender,
+                action  => 'subscribe'
+            );
+            $data->{'command'} = "auth $keyauth $cmd $listname $gecos";
             $data->{'type'}    = 'subscribe';
 
         } elsif ($cmd =~ /add$/) {
-            $keyauth = Sympa::compute_auth($list, $param[0], 'add');
-            $data->{'command'} =
-                "auth $keyauth $cmd $listname $param[0] $param[1]";
-            $data->{'type'} = 'add';
+            $keyauth = Sympa::compute_auth(
+                context => $list,
+                email   => $email,
+                action  => 'add'
+            );
+            $data->{'command'} = "auth $keyauth $cmd $listname $email $gecos";
+            $data->{'type'}    = 'add';
 
         } elsif ($cmd =~ /del$/) {
-            my $keyauth = Sympa::compute_auth($list, $param[0], 'del');
-            $data->{'command'} = "auth $keyauth $cmd $listname $param[0]";
+            my $keyauth = Sympa::compute_auth(
+                context => $list,
+                email   => $email,
+                action  => 'del'
+            );
+            $data->{'command'} = "auth $keyauth $cmd $listname $email";
             $data->{'type'}    = 'del';
 
         } elsif ($cmd eq 'remind') {
-            my $keyauth = Sympa::compute_auth($list, '', 'remind');
+            my $keyauth =
+                Sympa::compute_auth(context => $list, action => 'remind');
             $data->{'command'} = "auth $keyauth $cmd $listname";
             $data->{'type'}    = 'remind';
 
         } elsif ($cmd eq 'invite') {
-            my $keyauth = Sympa::compute_auth($list, $param[0], 'invite');
-            $data->{'command'} = "auth $keyauth $cmd $listname $param[0]";
+            my $keyauth = Sympa::compute_auth(
+                context => $list,
+                email   => $email,
+                action  => 'invite'
+            );
+            $data->{'command'} = "auth $keyauth $cmd $listname $email";
             $data->{'type'}    = 'invite';
         } elsif ($cmd eq 'review') {
-            my $keyauth = Sympa::compute_auth($list, '', 'review');
+            my $keyauth =
+                Sympa::compute_auth(context => $list, action => 'review');
             $data->{'command'} = "auth $keyauth $cmd $listname";
             $data->{'type'}    = 'review';
         }
 
         $data->{'command_escaped'} = tools::escape_url($data->{'command'});
         $data->{'auto_submitted'}  = 'auto-replied';
-        unless (Sympa::send_file($list, 'request_auth', $email, $data)) {
+        unless (Sympa::send_file($list, 'request_auth', $sender, $data)) {
             $log->syslog('notice',
-                'Unable to send template "request_auth" to %s', $email);
+                'Unable to send template "request_auth" to %s', $sender);
             return undef;
         }
 
     } else {
         if ($cmd eq 'remind') {
-            my $keyauth = Sympa::compute_auth('*', '', $cmd);
+            my $keyauth =
+                Sympa::compute_auth(context => '*', action => 'remind');
             $data->{'command'} = "auth $keyauth $cmd *";
             $data->{'command_escaped'} =
                 tools::escape_url($data->{'command'});
@@ -268,9 +294,9 @@ sub request_auth {
 
         }
         $data->{'auto_submitted'} = 'auto-replied';
-        unless (Sympa::send_file($robot, 'request_auth', $email, $data)) {
+        unless (Sympa::send_file($robot, 'request_auth', $sender, $data)) {
             $log->syslog('notice',
-                'Unable to send template "request_auth" to %s', $email);
+                'Unable to send template "request_auth" to %s', $sender);
             return undef;
         }
     }
