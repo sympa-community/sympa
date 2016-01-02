@@ -27,9 +27,10 @@ package Sympa::Regexps;
 use strict;
 use warnings;
 
-## Regexps for list params
-## Caution : if this regexp changes (more/less parenthesis), then regexp using
-## it should also be changed
+# This is the same as email below except that it does never give any groups.
+use constant addrspec => qr{(?:[-&+'./\w=]+|".*")\@[-\w]+(?:[.][-\w]+)+};
+# Caution: If this regexp changes (more/less parenthesis), then regexp using
+# it should also be changed.  By this reason it would be obsoleted.
 use constant email => qr'([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+';
 use constant family_name => qr'[a-z0-9][a-z0-9\-\.\+_]*';
 ## Allow \s for template names

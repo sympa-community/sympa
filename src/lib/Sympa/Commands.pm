@@ -1701,10 +1701,10 @@ sub add {
     $log->syslog('debug', '(%s, %s, %s, %s)',
         $what, $robot, $sign_mod, $message);
 
-    my $email_regexp = Sympa::Regexps::email();
+    my $email_regexp = Sympa::Regexps::addrspec();
 
-    $what =~ /^(\S+)\s+($email_regexp)(\s+(.+))?\s*$/;
-    my ($which, $email, $comment) = ($1, $2, $6);
+    $what =~ /^(\S+)\s+($email_regexp)(?:\s+(.+))?\s*$/;
+    my ($which, $email, $comment) = ($1, $2, $3);
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
@@ -2440,7 +2440,7 @@ sub del {
     $log->syslog('debug', '(%s, %s, %s, %s)',
         $what, $robot, $sign_mod, $message);
 
-    my $email_regexp = Sympa::Regexps::email();
+    my $email_regexp = Sympa::Regexps::addrspec();
 
     $what =~ /^(\S+)\s+($email_regexp)\s*/;
     my ($which, $who) = ($1, $2);
