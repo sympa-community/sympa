@@ -255,14 +255,14 @@ sub global_report_cmd {
 #      -$cmd : SCALAR - the rejected cmd : $xx.cmd in command_report.tt2
 #      -$sender :  required if $type eq 'intern'
 #                  scalar - the user to notify
-#      -$robot :   required if $type eq 'intern'
+#      -$list :    required if $type eq 'intern'
 #                  scalar - to notify listmaster
 #
 # OUT : 1|| undef
 #
 #########################################################
 sub reject_report_cmd {
-    my ($type, $error, $data, $cmd, $sender, $robot) = @_;
+    my ($type, $error, $data, $cmd, $sender, $list) = @_;
 
     unless ($type eq 'intern'
         || $type eq 'intern_quiet'
@@ -276,33 +276,27 @@ sub reject_report_cmd {
         return undef;
     }
 
+    $data ||= {};
+    $data->{cmd} = $cmd;
+    $data->{listname} = $list->{'name'} if ref $list eq 'Sympa::List';
+
     if ($type eq 'intern') {
-        if ($robot) {
-
-            my $listname;
-            if (defined $data->{'listname'}) {
-                $listname = $data->{'listname'};
-            }
-
-            my $param = $data;
-            $param ||= {};
-            $param->{'error'}    = $error;
-            $param->{'cmd'}      = $cmd;
-            $param->{'listname'} = $listname;
-            $param->{'who'}      = $sender;
-            $param->{'action'}   = 'Command process';
-
-            Sympa::send_notify_to_listmaster($robot, 'mail_intern_error',
-                $param);
+        if (ref $list eq 'Sympa::List') {
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   %$data,
+                    error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
+                }
+            );
         } else {
             $log->syslog('notice',
-                'Unable to notify listmaster for error: "%s": (no robot)',
+                'Unable to notify listmaster for error: "%s": (no list)',
                 $error);
         }
     }
-
-    $data ||= {};
-    $data->{'cmd'} = $cmd;
 
     if ($type eq 'auth') {
         $data->{'entry'} = $error;
@@ -336,11 +330,12 @@ sub reject_report_cmd {
 #
 #########################################################
 sub notice_report_cmd {
-    my ($entry, $data, $cmd) = @_;
+    my ($entry, $data, $cmd, $sender, $list) = @_;
 
     $data ||= {};
     $data->{'cmd'}   = $cmd;
     $data->{'entry'} = $entry;
+    $data->{listname} = $list->{'name'} if ref $list eq 'Sympa::List';
     push @notice_cmd, $data;
 }
 
