@@ -132,7 +132,7 @@ sub load {
     my $sdm = Sympa::DatabaseManager->instance;
 
     ## Load existing session.
-    if ($cookie and $cookie =~ /^\d{,16}$/) {
+    if ($cookie and $cookie !~ /[^0-9]/ and length $cookie <= 16) {
         ## Compatibility: session by older releases of Sympa.
         $id_session     = $cookie;
         $is_old_session = 1;

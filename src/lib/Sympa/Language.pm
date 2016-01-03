@@ -118,7 +118,7 @@ my $oldlocale_re = qr/^([a-z]{2})_([A-Z]{2})(?![A-Z])/i;
 
 ## Regexp for IETF language tag described in RFC 5646 (BCP 47), modified.
 my $language_tag_re = qr/^
-    ([a-z]{2}(?:-[a-z]{3}){,3} | [a-z]{2,3})        # language (and ext.)
+    ([a-z]{2}(?:-[a-z]{3}){1,3} | [a-z]{2,3})       # language (and ext.)
     (?:-([a-z]{4}))?                                # script
     (?:-([a-z]{2}))?                                # region (no UN M.49)
     (?:-(                                           # variant
