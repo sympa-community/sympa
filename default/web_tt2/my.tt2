@@ -1,13 +1,12 @@
 <!-- $Id$ -->
-
-[% IF user.email %]
   <h2><i class="fa fa-envelope-square"></i> [%|loc%]My lists[%END%]</h2>
-  
+[% IF user.email %]
   <p>[%|loc%]You are subscribed to or managing the following lists.[%END%]</p>
   
   <form class="noborder" action="[% path_cgi %]" method="post" name="suspend_request">
     [% IF which.size %]
       <div class="item_list">
+        <span class="divider"></span>
       [% FOREACH l = which %]
         [% additional_class = '' %]
         [% IF l.value.listsuspend %]
@@ -40,29 +39,32 @@
             [% END %]
           [% END %]
 
-          <ul>
+          <ul class="my">
             [% IF l.value.is_owner %]
-              <li><a href="[% path_cgi %]/review/[% l.key %]">[%|loc%]Review members[%END%]</a></li>
+              <li><a href="[% path_cgi %]/review/[% l.key %]"><i class="fa fa-users"></i> [%|loc%]Review members[%END%]</a></li>
             [% END %]
             
             [% IF is_user_allowed_to('archive.web_access', l.key) %]
-              <li><a href="[% path_cgi %]/arc/[% l.key %]">[%|loc%]Archives[%END%]</a></li>
+              <li><a href="[% path_cgi %]/arc/[% l.key %]"><i class="fa fa-archive"></i> [%|loc%]Archives[%END%]</a></li>
             [% END %]
           </ul>
         </div>
         </div>
+        <span class="divider"></span>
       [% END %]
       </div>
 
     [% ELSE %]
 
-      <p>[%|loc%]No subscription.[%END%]</p>
+      <p class="small-12 medium-8 medium-centered columns alert-box info">>[%|loc%]No subscription.[%END%]</p>
 
     [% END %]
 
   </form>
 
 [% ELSE %]
-   [%|loc%]You need to be logged in to access this page.[%END%]
+    <article>
+     [% PROCESS loginrequest.tt2 %]
+    </article>
 [% END %]
 <!-- end my.tt2 -->

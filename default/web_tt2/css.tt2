@@ -820,7 +820,7 @@ h4.letter {
 }
 
 .item_list .suspended {
-	background-color:[% color_13 %];
+    background-color:[% color_13 %];
 }
 
 .item_list .item .item_icon {
@@ -836,22 +836,40 @@ h4.letter {
 }
 
 .item_list .item .item_content .item_title {
-	display: block;
-	font-weight: bold;
+    display: block;
+    font-weight: bold;
 }
 
 .item_list .item .item_content ul {
-	padding-left: 5rem;
+    padding-left: 5rem;
+}
+
+.item_list .item .item_content ul.my {
+    margin:0;
+    padding-left: 0;
+}
+
+.item_list .item .item_content ul.my li{
+    display:inline;
+}
+
+.item_list .item .item_content ul.my li:nth-child(2){
+    padding-left: 1.5rem;
 }
 
 .item_list .item .item_content p {
-	font-size: 0.9em;
-	margin: 0.5em 0 0.5em 1em;
+    font-size: 0.9em;
+    margin: 0.5em 0 0.5em 1em;
 }
 
 .item_list .item .item_content p.note {
-	font-size: 80%;
-	font-style: italic;
+    font-size: 80%;
+    font-style: italic;
+}
+
+.item_list span.divider {
+    padding:0;
+    margin:0.5rem 0;
 }
 
 .prefs {
@@ -2115,7 +2133,12 @@ span.fa-stack i.fa-plus-circle {
 	h6 {
 		font-size: 0.8em;
 	}
-
+	.item_list .item .item_content ul.my li{
+		display:block;
+	}
+	.item_list .item .item_content ul.my li:nth-child(2){
+		padding-left:0;
+	}
 }
 
 @media screen and (min-width: 420px) and (max-width: 779px) {
