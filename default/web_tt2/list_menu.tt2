@@ -60,7 +60,7 @@
 [% PROCESS 'list_panel.tt2' %]
 
 <li class="divider"></li>
-
+<li></li>
 [% IF action == 'info'%][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
 <li class="[% class %]"><a href="[% path_cgi %]/info/[% list %]">[%|loc%]List Home[%END%]</a></li>
 
@@ -113,7 +113,7 @@
 [% END %]
 
 <li class="divider"></li>
-
+<li></li>
 [% IF is_archived %]
   [% IF user.email && arc_access || !user.email && arc_public_access %]
     [% IF action == 'arc' || action == 'arcsearch_form' || action == 'arcsearch' ||  action == 'arc_protect' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
