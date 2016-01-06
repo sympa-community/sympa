@@ -18,12 +18,12 @@ msgstr ""
 "Project-Id-Version: sympa-es\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
 "PO-Revision-Date: 2015-09-01 10:02+0000\n"
-"Last-Translator: acasado <acasado@ual.es>\n"
+"Last-Translator: Daniel Viñar Ulriksen <dani@belvil.net>\n"
 "Language-Team: Español <sympa-users@sympa.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.7\n"
 "X-POOTLE-MTIME: 1441101769.000000\n"
@@ -48,7 +48,7 @@ msgstr ""
 #: src/lib/Sympa/Message.pm:349 src/lib/Sympa/Message.pm:352
 #: src/lib/Sympa/Message.pm:359 src/libexec/alias_manager.pl.in:101
 msgid "%d %b %Y"
-msgstr "%d/%b/%Y"
+msgstr "%d %b %Y"
 
 #: src/libexec/ldap_alias_manager.pl.in:42
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -61,7 +61,7 @@ msgstr "Ejemplo: "
 
 #: src/sbin/sympa_wizard.pl.in:190
 msgid "(You must define this parameter)"
-msgstr "(Usted debe definir este parámetro)"
+msgstr "(Debes definir este parámetro)"
 
 #: src/sbin/sympa_wizard.pl.in:276
 msgid "%s [%s] : "
@@ -76,7 +76,7 @@ msgstr "Definición incorrecta del parámetro: %s\n"
 #: src/lib/Sympa/Upgrade.pm:1025 src/lib/Sympa/Upgrade.pm:1994
 #: src/lib/Sympa/Upgrade.pm:2038 src/sbin/sympa_wizard.pl.in:329
 msgid "%d.%b.%Y-%H.%M.%S"
-msgstr "%d/%b/%Y %H:%M:%S"
+msgstr "%d.%b.%Y-%H:%M:%S"
 
 #: src/sbin/sympa_wizard.pl.in:333
 msgid "Unable to rename %s : %s"
@@ -112,23 +112,25 @@ msgid ""
 "##############################################################################\n"
 "Press the Enter key to continue..."
 msgstr ""
-"##############################################################################\n"
+"#############################################################################"
+"#\n"
 "# Este proceso te ayudará a instalar todos los módulos Perl (CPAN) "
 "necesarios por el\n"
 "# programa Sympa.\n"
 "# Sympa necesita de 50 a 65 módulos Perl adicionales para funcionar "
 "correctamente.\n"
-"# El proceso completo de instalación tardará sobre 15 minutos.\n"
-"# Primero tendrás que configurar el entorno CPAN y seleccionar tu servidor "
-"CPAN\n"
-"# favorito.\n"
+"# El proceso completo de instalación tardará unos 15 minutos.\n"
+"# Primero tendrás que configurar el shell CPAN en sí y seleccionar tu "
+"servidor\n"
+"# CPAN favorito.\n"
 "# Observa que puedes optar por instalar los módulos Perl usando tu "
 "mecanismo\n"
 "# DEB/RPM favorito.\n"
 "# Sientete libre para interrumpir este proceso si lo necesitas; puedes "
 "reiniciarlo\n"
 "# posteriormente de forma segura.\n"
-"##############################################################################\n"
+"#############################################################################"
+"#\n"
 "Pulsa la tecla Intro para continuar..."
 
 #: src/sbin/sympa_wizard.pl.in:401
@@ -145,15 +147,15 @@ msgstr "Comprobando la versión de Perl:"
 
 #: src/sbin/sympa_wizard.pl.in:422
 msgid "Your version of perl is OK (%s  >= %s)"
-msgstr "Su versión de Perl esta OK (%s >= %s)"
+msgstr "Su versión de Perl está bien (%s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:426
 msgid ""
 "Your version of perl is TOO OLD (%s  < %s)\n"
 "Please INSTALL a new one !"
 msgstr ""
-"La versión de Perl es muy AMTIGUA (%s < %s)\n"
-"Por favor INSTALE una más reciente !"
+"La versión de Perl es DEMASIADO VIEJA (%s < %s)\n"
+"¡Por favor INSTALA una más reciente!"
 
 #: src/sbin/sympa_wizard.pl.in:430
 msgid "Checking for REQUIRED modules:"
@@ -175,7 +177,7 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:451
 msgid "perl module"
-msgstr "Modulo de Perl"
+msgstr "Modulo Perl"
 
 #: src/sbin/sympa_wizard.pl.in:451
 msgid "from CPAN"
@@ -195,11 +197,11 @@ msgstr "---------"
 
 #: src/sbin/sympa_wizard.pl.in:454
 msgid "------"
-msgstr "no fué encontrado en este sistema."
+msgstr "------"
 
 #: src/sbin/sympa_wizard.pl.in:473
 msgid "was not found on this system."
-msgstr "no encontrada en este sistema."
+msgstr "no fue encontrado en este sistema."
 
 #: src/sbin/sympa_wizard.pl.in:495
 msgid "OK (%-6s >= %s)"
@@ -207,20 +209,20 @@ msgstr "OK (%-6s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:498
 msgid "version is too old (%s < %s)"
-msgstr "la versión es muy antigua (%s < %s)"
+msgstr "la versión es demasiado vieja (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:501
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
-msgstr ">>>>>>> Usted debe actualizar \"%s\" a la versión \"%s\" <<<<<<."
+msgstr ">>>>>>> Debes actualizar \"%s\" a la versión \"%s\" <<<<<<."
 
 #: src/sbin/sympa_wizard.pl.in:533
 msgid "## You need root privileges to install %s module. ##"
-msgstr "## Ustede necesita privilegios de root para instalar el módulo %s. ##"
+msgstr "## Necesitas privilegios root para instalar el módulo %s. ##"
 
 #: src/sbin/sympa_wizard.pl.in:536
 msgid "## Press the Enter key to continue checking modules. ##"
 msgstr ""
-"## Presione la tecla Intro para continuar la comprobación de los módulos. ##"
+"## Presioae la tecla Intro para continuar la comprobación de los módulos. ##"
 
 #: src/sbin/sympa_wizard.pl.in:545
 msgid "-> Usage of this module: %s"
@@ -400,7 +402,7 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1453 src/lib/Sympa/ConfDef.pm:310
 msgid "Should not be changed ! May invalid all user password"
 msgstr ""
-"No debe ser modificada! Puede invalidar todas las contraseñas de usuario"
+"¡No debe ser modificado! Puede invalidar todas las contraseñas de usuario"
 
 #: src/lib/Sympa/ConfDef.pm:315
 msgid "Who is able to create lists"
@@ -456,7 +458,7 @@ msgstr "Verbosidad del registro"
 
 #: src/lib/Sympa/ConfDef.pm:369
 msgid "0: normal, 2,3,4: for debug"
-msgstr "0: normal, 2, 3,4: para debbugeo"
+msgstr "0: normal, 2, 3,4: para debug"
 
 #: src/lib/Sympa/ConfDef.pm:373
 msgid "Communication mode with syslogd (unix | inet)"
@@ -476,7 +478,7 @@ msgstr "Umask para la creación de archivos por Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:417
 msgid "Sending related"
-msgstr "Configuración ligada al envío de mensajes"
+msgstr "Vinculado al envío de mensajes"
 
 #: src/lib/Sympa/ConfDef.pm:421
 msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
@@ -4977,9 +4979,8 @@ msgid "Last update"
 msgstr "Última actualización"
 
 #: default/web_tt2/d_read.tt2:78
-#, fuzzy
 msgid "Actions"
-msgstr "Acción"
+msgstr "Acciones"
 
 #: default/web_tt2/d_read.tt2:205 default/web_tt2/d_read.tt2:95
 #: default/web_tt2/editsubscriber.tt2:91 default/web_tt2/latest_d_read.tt2:43
@@ -6977,9 +6978,8 @@ msgid "No subject"
 msgstr "Sin asunto"
 
 #: default/web_tt2/modindex.tt2:111
-#, fuzzy
 msgid "No messages to moderate"
-msgstr "Lista de mensajes para moderar"
+msgstr "No hay mensajes para moderar"
 
 #: default/web_tt2/modindex.tt2:116
 msgid "Listing of shared documents to moderate"
@@ -7002,9 +7002,8 @@ msgid "Path"
 msgstr "Ruta de acceso"
 
 #: default/web_tt2/modindex.tt2:163
-#, fuzzy
 msgid "No documents to moderate"
-msgstr "Lista de los documentos para moderar"
+msgstr "No hay documentos para moderar"
 
 # #-#-#-#-#  es.po (PACKAGE VERSION)  #-#-#-#-#
 #: default/web_tt2/modindex.tt2:166
@@ -10603,12 +10602,12 @@ msgstr "Error desconocido."
 
 #: default/mail_tt2/listmaster_notification.tt2:98
 msgid "DataBase connection restored"
-msgstr "conección a la base de datos restaurada"
+msgstr "conexión a la base de datos restaurada"
 
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:100
 msgid "Connection to database %1 restored."
-msgstr "conección a la base de datos %1 restaurada"
+msgstr "conexión a la base de datos %1 restaurada"
 
 #: default/mail_tt2/listmaster_notification.tt2:103
 #: default/mail_tt2/listmaster_notification.tt2:108

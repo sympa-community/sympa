@@ -15,10 +15,10 @@ msgstr ""
 "PO-Revision-Date: 2015-09-01 10:08+0000\n"
 "Last-Translator: system user <>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.7\n"
 "X-POOTLE-MTIME: 1441102135.000000\n"
@@ -4836,9 +4836,8 @@ msgid "Last update"
 msgstr "最終更新"
 
 #: default/web_tt2/d_read.tt2:78
-#, fuzzy
 msgid "Actions"
-msgstr "動作"
+msgstr "操作"
 
 #: default/web_tt2/d_read.tt2:205 default/web_tt2/d_read.tt2:95
 #: default/web_tt2/editsubscriber.tt2:91 default/web_tt2/latest_d_read.tt2:43
@@ -6819,9 +6818,8 @@ msgid "No subject"
 msgstr "件名なし"
 
 #: default/web_tt2/modindex.tt2:111
-#, fuzzy
 msgid "No messages to moderate"
-msgstr "モデレーション待ちメッセージの一覧"
+msgstr "モデレーションを待っているメッセージはありません"
 
 #: default/web_tt2/modindex.tt2:116
 msgid "Listing of shared documents to moderate"
@@ -6844,9 +6842,8 @@ msgid "Path"
 msgstr "パス"
 
 #: default/web_tt2/modindex.tt2:163
-#, fuzzy
 msgid "No documents to moderate"
-msgstr "モデレーションを待っている共有文書の一覧"
+msgstr "モデレーションを待っている共有文書はありません"
 
 #: default/web_tt2/modindex.tt2:166
 msgid "Moderation management"
@@ -9641,10 +9638,12 @@ msgstr "List unknown / そういうリストは知りません"
 msgid "Too large message"
 msgstr "Too large message / メッセージが大きすぎます"
 
+# DSNのため英語併記
 #: default/mail_tt2/delivery_status_notification.tt2:14
 msgid "Cannot personalize message"
 msgstr "Cannot personalize message / メッセージを個別化できません"
 
+# DSNのため英語併記
 #: default/mail_tt2/delivery_status_notification.tt2:16
 msgid "A virus in your mail"
 msgstr "A virus in your mail / メール中にウイルスがみつかりました"
@@ -9663,12 +9662,14 @@ msgstr ""
 "This is an automatic response sent by Sympa Mailing Lists Manager.\n"
 "このメールは、Sympa メーリングリスト管理システムからの自動応答です。"
 
+# DSNのため英語併記
 #: default/mail_tt2/delivery_status_notification.tt2:26
 msgid "Message was successfully delivered to following address:"
 msgstr ""
 "Message was successfully delivered to following address:\n"
 "次のアドレスへメッセージを配送できました。"
 
+# DSNのため英語併記
 #. (recipient)
 #. (list.name)
 #: default/mail_tt2/delivery_status_notification.tt2:31
@@ -9676,14 +9677,20 @@ msgstr ""
 msgid ""
 "Impossible to distribute your message for list '%1' for the following reason:"
 msgstr ""
-"リスト '%1' 宛のメッセージを配信できませんでした。理由は以下の通りです:"
+"Impossible to distribute your message for list '%1' for the following reason:"
+"\n"
+"リスト '%1' 宛のメッセージを配信できませんでした。理由は以下の通りです。"
 
+# DSNのため英語併記
 #. (listname)
 #: default/mail_tt2/delivery_status_notification.tt2:34
 #: default/mail_tt2/message_report.tt2:62
 msgid "The %1 list could not be created."
-msgstr "%1 メーリングリストは作成できませんでした。"
+msgstr ""
+"The %1 list could not be created.\n"
+"%1 メーリングリストは作成できませんでした。"
 
+# DSNのため英語併記
 #. (msg_size,max_size)
 #: default/mail_tt2/delivery_status_notification.tt2:45
 #: default/mail_tt2/message_report.tt2:56
@@ -9695,24 +9702,32 @@ msgid ""
 "before being sent over email, the final size of an attachment is often "
 "significantly larger that the original file."
 msgstr ""
-"メッセージを送れません。大きさ (%1 キロバイト) がリストで受け付けられる大き"
-"さ (%2 キロバイト) を超えていたためです。\n"
+"Your message could not be sent because its size (%1 kB) was over the maximum "
+"size (%2 kB) allowed on this list.\n"
+"メッセージを送れません。大きさ (%1 キロバイト) がリストで受け付けられる大きさ (%2 キロバイト) を超えていたためです。\n"
 "\n"
-"なお、バイナリデータをメールで送るときはまずASCII形式に符号化しなければならな"
-"いことになっているので、添付ファイルがあると元のファイルよりかなり大きくなり"
-"ます。"
+"Note: Because binary files have to be encoded in less-efficient ASCII format "
+"before being sent over email, the final size of an attachment is often "
+"significantly larger that the original file.\n"
+"なお、バイナリデータをメールで送るときはまずASCII形式に符号化しなければならないことになっているので、添付ファイルがあると元のファイルよりかなり大きく"
+"なります。"
 
+# DSNのため英語併記
 #: default/mail_tt2/delivery_status_notification.tt2:48
 msgid "Your message cannot be personalized.  Please check template syntax."
 msgstr ""
 "Your message cannot be personalized.  Please check template syntax.\n"
 "メッセージを個別化できません。テンプレートの構文をご確認ください。"
 
+# DSNのため英語併記
 #: default/mail_tt2/delivery_status_notification.tt2:51
 #: default/mail_tt2/your_infected_msg.tt2:3
 msgid "***** V I R U S    A L E R T *****"
-msgstr "***** ウイルスの警告 *****"
+msgstr ""
+"***** V I R U S   A L E R T *****\n"
+"***** ウイルスの警告 *****"
 
+# DSNのため英語併記
 #. (virus_name,recipient,sender)
 #: default/mail_tt2/delivery_status_notification.tt2:53
 #: default/mail_tt2/your_infected_msg.tt2:5
@@ -9720,14 +9735,20 @@ msgid ""
 "Our viruschecker found a virus named %1 in a message addressed to %2 and "
 "that seems to be yours (From: %3)."
 msgstr ""
-"ウイルス チェッカーが、%2 宛てのメッセージ中に %1 という名前のウイルスを発見"
-"しました。あなたから送信されたのかもしれません (送信者アドレス: %3)。"
+"Our viruschecker found a virus named %1 in a message addressed to %2 and "
+"that seems to be yours (From: %3).\n"
+"ウイルス チェッカーが、%2 宛てのメッセージ中に %1 という名前のウイルスを発見しました。あなたから送信されたのかもしれません (送信者アドレス: "
+"%3)。"
 
+# DSNのため英語併記
 #: default/mail_tt2/delivery_status_notification.tt2:55
 #: default/mail_tt2/your_infected_msg.tt2:7
 msgid "We stopped delivery of this email."
-msgstr "このメールの配送を停止しました。"
+msgstr ""
+"We stopped delivery of this email.\n"
+"このメールの配送を停止しました。"
 
+# DSNのため英語併記
 #: default/mail_tt2/delivery_status_notification.tt2:59
 #: default/mail_tt2/your_infected_msg.tt2:11
 msgid ""
@@ -9737,11 +9758,13 @@ msgid ""
 "possible that the virus didn't come from your computer. In that case, please "
 "disregard this message."
 msgstr ""
-"あなたのコンピュータ システムに対してウイルス チェックをするとよいでしょ"
-"う。\n"
+"It may be useful to check your system for viruses.\n"
+"あなたのコンピュータ システムに対してウイルス チェックをするとよいでしょう。\n"
 "\n"
-"注：ただ、多くのウイルスが送信者のメール アドレスを騙っています。そのため、こ"
-"のウイルスはあなたのコンピュータから届いたものでない可能性もあります。そのよ"
+"Note, however, that many viruses fake sender's e-mail address, so it is "
+"possible that the virus didn't come from your computer. In that case, please "
+"disregard this message.\n"
+"注：ただ、多くのウイルスが送信者のメール アドレスを騙っています。そのため、このウイルスはあなたのコンピュータから届いたものでない可能性もあります。そのよ"
 "うな場合、当メッセージはお読み捨てになってください。"
 
 # DSNなので英語を併記
@@ -11391,39 +11414,52 @@ msgstr "リスト一覧"
 msgid "Here is the list of lists from %1@%2"
 msgstr "以下が %1@%2 のリスト一覧です"
 
+# DSNのため英語併記
 #: default/mail_tt2/message_report.tt2:6
 msgid "Message distribution: Internal server error"
-msgstr "メッセージのゆくえ: サーバ内部でのエラー"
+msgstr "Message distribution: Internal server error / メッセージのゆくえ: サーバ内部でのエラー"
 
+# DSNのため英語併記
 #. (list.name,function)
 #: default/mail_tt2/message_report.tt2:14
 msgid ""
 "Impossible to forward your message to '%1-%2' because of an internal server "
 "error."
-msgstr "メッセージを %1-%2 に回送できません。サーバ内部のエラーのためです。"
+msgstr ""
+"Impossible to forward your message to '%1-%2' because of an internal server "
+"error.メッセージを %1-%2 に回送できません。サーバ内部のエラーのためです。"
 
+# DSNのため英語併記
 #. (list.name)
 #: default/mail_tt2/message_report.tt2:16
 msgid ""
 "Impossible to distribute your message for list '%1' because of an internal "
 "server error."
 msgstr ""
-"リスト %1 宛のメッセージを配信できません。サーバ内部のエラーのためです。"
+"Impossible to distribute your message for list '%1' because of an internal "
+"server error.リスト %1 宛のメッセージを配信できません。サーバ内部のエラーのためです。"
 
+# DSNのため英語併記
 #. (list.name,list.host)
 #: default/mail_tt2/message_report.tt2:19
 #: default/mail_tt2/message_report.tt2:76
 #: default/mail_tt2/message_report.tt2:97
 msgid "For further information, please contact %1-request@%2"
-msgstr "詳しいことは、%1-request@%2 にお問い合わせください"
+msgstr ""
+"For further information, please contact %1-request@%2.詳しいことは、%1-request@%2 "
+"にお問い合わせください。"
 
+# DSNのため英語併記
 #: default/mail_tt2/message_report.tt2:25
 msgid "Message distribution: User error"
-msgstr "メッセージのゆくえ: 間違い"
+msgstr "Message distribution: User error / メッセージのゆくえ: 間違い"
 
+# DSNのため英語併記
 #: default/mail_tt2/message_report.tt2:35
 msgid "Impossible to distribute your message for the following reason:"
-msgstr "メッセージを配信できませんでした。理由は以下の通りです:"
+msgstr ""
+"Impossible to distribute your message for the following "
+"reason:メッセージを配信できませんでした。理由は以下の通りです:"
 
 #. (list.name,conf.sympa,list.host)
 #: default/mail_tt2/message_report.tt2:51
@@ -11487,16 +11523,20 @@ msgstr ""
 msgid "For further information, please contact listmaster@%1"
 msgstr "詳しいことは、listmaster@%1 にお問い合わせください"
 
+# DSNのため英語併記
 #: default/mail_tt2/message_report.tt2:85
 msgid "Message distribution: Authorization denied"
-msgstr "メッセージのゆくえ: 認められませんでした"
+msgstr "Message distribution: Authorization denied / メッセージのゆくえ: 認められませんでした"
 
+# DSNのため英語併記
 #. (list.name)
 #: default/mail_tt2/message_report.tt2:93
 msgid ""
 "Your message for list '%1' (attached below) was rejected. \n"
 "You are not allowed to send this message for the following reason:"
 msgstr ""
+"Your message for list '%1' (attached below) was rejected. \n"
+"You are not allowed to send this message for the following reason:\n"
 "リスト %1 宛てのメッセージ (下に添付します) を拒否しました。\n"
 "このメッセージは以下の理由で送ることができません。"
 
@@ -12752,7 +12792,7 @@ msgstr "SNS認証"
 #. (provider)
 #: ext/VOOT/lib/Sympa/VOOT/tt2/message_report_voot_failed.tt2:1
 msgid "Your VOOT access to %1 may have expired."
-msgstr "あなたの %1 へ VOOT アクセスは有効期限が切れています。"
+msgstr "あなたの %1 への VOOT アクセスは有効期限が切れています。"
 
 #. (provider,group)
 #: ext/VOOT/lib/Sympa/VOOT/tt2/message_report_voot_failed.tt2:3
