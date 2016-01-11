@@ -193,7 +193,7 @@ sub _do_command {
         # Subject: is part of the signature. It SHOULD !
         my $auth_level = $message->{'dkim_pass'} ? 'dkim' : undef;
 
-        Sympa::Commands::parse($sender, $robot,
+        Sympa::Commands::parse($robot,
             sprintf('%s %s', $message->{listtype}, $list->{'name'}),
             $auth_level, $message);
         $log->db_log(
@@ -225,14 +225,15 @@ sub _do_command {
         :                              undef;
 
     if (defined $subject_field and $subject_field =~ /\S/) {
-        $success ||= Sympa::Commands::parse($sender, $robot, $subject_field,
-            $auth_level, $message);
+        $success ||=
+            Sympa::Commands::parse($robot, $subject_field, $auth_level,
+            $message);
         unless ($success and $success eq 'unknown_cmd') {
             $cmd_found = 1;
         }
     }
 
-    my $i;
+    my $line;
     my $size;
 
     ## Process the body of the message
@@ -257,11 +258,11 @@ sub _do_command {
             return $success ? 1 : undef;
         }
 
-        foreach $i (split /\r\n|\r|\n/, $body) {
-            last if $i =~ /^-- $/;    ## ignore signature
-            $i =~ s/^\s*>?\s*(.*)\s*$/$1/g;
-            next unless length $i;    ## skip empty lines
-            next if $i =~ /^\s*\#/;
+        foreach $line (split /\r\n|\r|\n/, $body) {
+            last if $line =~ /^-- $/;    # Ignore signature.
+            $line =~ s/^\s*>?\s*(.*)\s*$/$1/g;
+            next unless length $line;    # Skip empty lines.
+            next if $line =~ /^\s*\#/;
 
             #FIXME
             $auth_level =
@@ -269,14 +270,14 @@ sub _do_command {
                 : $message->{'dkim_pass'}    ? 'dkim'
                 :                              $auth_level;
             my $status =
-                Sympa::Commands::parse($sender, $robot, $i, $auth_level,
-                $message);
+                Sympa::Commands::parse($robot, $line, $auth_level, $message);
 
             $cmd_found = 1;    # if problem no_cmd_understood is sent here
             if ($status eq 'unknown_cmd') {
-                $log->syslog('notice', 'Unknown command found: %s', $i);
-                Sympa::Report::reject_report_cmd('user', 'not_understood', {},
-                    $i);
+                $log->syslog('notice', 'Unknown command found: %s', $line);
+                Sympa::Report::reject_report_cmd(
+                    {cmd_line => $line, context => $robot},
+                    'user', 'not_understood');
                 $log->db_log(
                     'robot' => $robot,
                     #'list'         => 'sympa',
@@ -290,7 +291,7 @@ sub _do_command {
                 );
                 last;
             }
-            if ($i =~ /^(quit|end|stop|-)\s*$/io) {
+            if ($line =~ /^(quit|end|stop|-)\s*$/io) {
                 last;
             }
 

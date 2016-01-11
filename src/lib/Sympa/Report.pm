@@ -262,7 +262,14 @@ sub global_report_cmd {
 #
 #########################################################
 sub reject_report_cmd {
-    my ($type, $error, $data, $cmd, $sender, $list) = @_;
+    my $request = shift;
+    my $type    = shift;
+    my $error   = shift || '';
+    my $data    = shift || {};
+
+    my $cmd    = $request->{cmd_line};
+    my $sender = $request->{sender};
+    my $list   = $request->{context};
 
     unless ($type eq 'intern'
         || $type eq 'intern_quiet'
@@ -278,7 +285,9 @@ sub reject_report_cmd {
 
     $data ||= {};
     $data->{cmd} = $cmd;
-    $data->{listname} = $list->{'name'} if ref $list eq 'Sympa::List';
+    if (ref $list eq 'Sympa::List') {
+        $data->{listname} = $list->{'name'};
+    }
 
     if ($type eq 'intern') {
         if (ref $list eq 'Sympa::List') {
@@ -330,12 +339,17 @@ sub reject_report_cmd {
 #
 #########################################################
 sub notice_report_cmd {
-    my ($entry, $data, $cmd, $sender, $list) = @_;
+    my $request = shift;
+    my $entry   = shift;
+    my $data    = shift || {};
 
-    $data ||= {};
-    $data->{'cmd'}   = $cmd;
+    my $list = $request->{context};
+
+    $data->{'cmd'}   = $request->{cmd_line};
     $data->{'entry'} = $entry;
-    $data->{listname} = $list->{'name'} if ref $list eq 'Sympa::List';
+    if (ref $list eq 'Sympa::List') {
+        $data->{listname} = $list->{'name'};
+    }
     push @notice_cmd, $data;
 }
 
