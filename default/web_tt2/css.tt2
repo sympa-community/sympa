@@ -433,37 +433,60 @@ main form h1, main form h2, main form h3, main form h4, main form h5, main form 
     padding-left:0!important;
     margin-left:0!important;
 }
-article.home {
-    margin:1rem 0;
+
+
+main.home h3{
+    font-weight:500;
+    color:[% color_5 %];
+    margin-bottom:20px;
 }
-article.home > div{
-    margin:0;
+
+/* Home Submenu */
+
+section:nth-of-type(1){
+    background-color:[% color_2 %];
+    min-height:3rem;
+    margin: 1rem auto 2rem auto;
+    padding:0 0 10px 0;
+}
+section:nth-of-type(1) ul {
+    display:table;
+    list-style: none;
+    margin: 0 auto;
     padding:0;
-    display:block;
-    height:200px;
-    background-color:[% color_8 %];
-    border:1px solid [% color_9 %];
-    border-radius:4px;
-    overflow-y:auto;
-    word-wrap:break-word;
 }
-article.home div > h2{
-    margin-top:0.5rem;
-    font-size:1.3em;
+section:nth-of-type(1) ul li{
+    display:table-cell;
+    padding:0;
+    text-align:center;
 }
-article.home div h1, article.home div h2, article.home div h3, article.home div h4, article.home div h5, article.home div h6, article.home div article, article.home div p, article.home div form {
-    padding:0 0.5rem!important;
+section:nth-of-type(1) li a{
+    color:[% color_7 %];
+    text-decoration: none;
+    font-size: 1rem;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
-article.home div input {
-    height:1.8rem;
+section:nth-of-type(1) span{
+    display: block;
 }
-article.home div #list_create form textarea.desc{
-    width:95%;
+section:nth-of-type(1) i span{
+    display: inline-block;
 }
-article.home a.button{
-    display:block;
-    width:35%;
-    margin:3.5rem auto 0 auto;
+section:nth-of-type(1) a:hover{
+    color:[% color_11 %];
+}
+section:nth-of-type(1) .fa-stack {
+    width: inherit;
+}
+section:nth-of-type(1) .fa-envelope, section:nth-of-type(1) .fa-plus, section:nth-of-type(1) .fa-search{
+    color: [% color_11 %];
+}
+section:nth-of-type(1) a:hover span i.fa-envelope, section:nth-of-type(1) a:hover span i.fa-plus, section:nth-of-type(1) a:hover span i.fa-search{
+    color: [% color_7 %];
 }
 
 /* Tables */
@@ -616,6 +639,21 @@ main{
     min-height:550px;
     [% END %]
 }  
+main.home{
+    min-height:inherit;
+    text-align: justify;
+    padding-bottom:0;
+}
+
+main h1.robot_name{
+    width:100%;
+    margin:0;
+    background-color:[% color_7 %];
+    letter-spacing: 0.1rem;
+    text-align: center;
+    z-index:10;
+}
+
 
 /* aside menu */
 aside {
@@ -662,7 +700,7 @@ aside menu.connect ul li.has-dropdown ul li input{
 }
 aside menu li.divider, aside menu [role="separator"] {
     display:block;
-    margin: 0!important;
+    margin:0!important;
     border-bottom: 1px solid [% color_5 %];
 }
 aside menu{
@@ -1605,6 +1643,26 @@ h7 strong {
     border: 2px solid [% color_6 %];
 }
 
+
+/* Test_home */
+#home_modal.reveal-modal, #home_modal dialog {
+    border: none;
+    padding: 0;
+    border-radius: 4px;
+}
+#home_modal.reveal-modal .alert-box{
+    margin-bottom:0
+}
+#home_modal.reveal-modal li {
+    list-style:none;
+}
+#home_modal.reveal-modal .alert-box button i {
+    border: none;
+    padding: 0;
+    margin-right: 0.2rem;
+}
+
+
 p.listenum {
 	margin-top: 0;
 	padding-top: 0;
@@ -2106,57 +2164,57 @@ span.fa-stack i.fa-plus-circle {
 
 
 @media screen and (min-width: 0px) and (max-width: 419px) {
-	h1 {
-		font-size: 1.6em;
-	}
-	h2 {
-		font-size: 1.3em;
-		margin-top: 0;
-	}
-	h3 {
-		font-size: 1.1em;
-		margin-top: 0.5em;
-		margin-bottom: 0.5em;
-	}
-	h4 {
-		font-size: 1em;
-	}
-	h5 {
-		font-size: 0.9em;
-	}
-	h6 {
-		font-size: 0.8em;
-	}
-	.item_list .item .item_content ul.my li{
-		display:block;
-	}
-	.item_list .item .item_content ul.my li:nth-child(2){
-		padding-left:0;
-	}
+    h1 {
+            font-size: 1.6em;
+    }
+    h2 {
+            font-size: 1.3em;
+            margin-top: 0;
+    }
+    h3 {
+            font-size: 1.1em;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+    }
+    h4 {
+            font-size: 1em;
+    }
+    h5 {
+            font-size: 0.9em;
+    }
+    h6 {
+            font-size: 0.8em;
+    }
+    .item_list .item .item_content ul.my li{
+        display:block;
+    }
+    .item_list .item .item_content ul.my li:nth-child(2){
+        padding-left:0;
+    }
 }
 
 @media screen and (min-width: 420px) and (max-width: 779px) {
-        h1 {
-		font-size: 1.6em;
-	}
-        h2 {
-		font-size: 1.3em;
-		margin-top: 0;
-	}
-	h3 {
-		font-size: 1.1em;
-		margin-top: 0.5em;
-		margin-bottom: 0.5em;
-	}
-	h4 {
-		font-size: 1em;
-	}
-	h5 {
-		font-size: 0.95em;
-	}
-	h6 {
-		font-size: 0.9em;
-	}
+    h1 {
+            font-size: 1.6em;
+    }
+    h2 {
+            font-size: 1.3em;
+            margin-top: 0;
+    }
+    h3 {
+            font-size: 1.1em;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+    }
+    h4 {
+            font-size: 1em;
+    }
+    h5 {
+            font-size: 0.95em;
+    }
+    h6 {
+            font-size: 0.9em;
+    }
 }
 
 @media only screen and (min-width: 641px){
@@ -2228,9 +2286,6 @@ span.fa-stack i.fa-plus-circle {
 a, li {
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
-
-
-[%# PROCESS css_universalistes.tt2 %]
 
 [% END %]
 
