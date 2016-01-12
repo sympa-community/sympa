@@ -40,11 +40,11 @@
 <noscript><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></noscript>
 
 [% IF nomenu %]
-  [% PROCESS error.tt2 IF errors %]
-  <div class="nomenu">
-    [% PROCESS "${action}.tt2" IF action %]
-    [% PROCESS notice.tt2 IF notices %]
-  </div>
+      [% PROCESS error.tt2 IF errors %]
+      <div class="nomenu">
+			[% PROCESS notice.tt2 IF notices %]
+			[% PROCESS "${action}.tt2" IF action %]
+      </div>
 [% ELSE %]
 
     [% PROCESS error.tt2 IF errors %]
@@ -55,9 +55,13 @@
 
 [% IF top_menu %][% IF not list %]<div id="loading" class="row">
 [% ELSE %]<div id="loading" class="medium-9 columns">[% END %][% ELSE %]<div id="loading" class="medium-9 columns">[% END %]
-   <div id="loadingText"><i class="fa fa-spinner fa-pulse"></i> <span></span></div></div>
+   <h1 id="loadingText"><i class="fa fa-spinner fa-pulse"></i> [%|loc%]Please Wait...[%END%]</h1></div>
+</div>
 
     [% PROCESS aside_menu.tt2 %]
+    [% IF action == 'home' %]
+        [% PROCESS home.tt2 %]
+    [% ELSE %]
     [% IF top_menu %]
       [%~ IF not list ~%]
         <main id="content-inner" class="row">
@@ -70,23 +74,24 @@
     <a name="content-inner"></a>
 
       [% IF not top_menu %]
-        <h1>[% main_title %]</h1>
+        <h1 class="robot_name">[% main_title %]</h1>
       [% END %]
       [% IF list %]
        [% PROCESS title.tt2 %]
        [% IF list_title %]<p><b>[%|loc%]Subject:[%END%]</b> [% list_title %] [% IF is_owner %]<a href="[% path_cgi %]/edit_list_request/[% list %]/description"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>[% END %]
       [% END %]
 
-    [% PROCESS nav.tt2 %]
+        [% PROCESS nav.tt2 %]
 
-    [% IF action == 'edit_list_request' %][% END %]
-    [% PROCESS "${action}.tt2" IF action %]
-    [% PROCESS notice.tt2 IF notices %]
+        [% PROCESS notice.tt2 IF notices %]
+        [% IF action == 'edit_list_request' %][% END %]
+        [% PROCESS "${action}.tt2" IF action %]
 
-    [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
+ [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
 
-    [% IF top_menu %][% IF not list %][% END %][% END %]
-  </main><!-- End content-inner -->
+[% IF top_menu %][% IF not list %][% END %][% END %]
+</main><!-- End content-inner -->
+    [% END %]
 
 <div class="displayNone"><a href="#top">[%|loc%]Top of Page[%END%]</a></div>
 
