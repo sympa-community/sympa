@@ -237,44 +237,44 @@ msgstr "%Y년%m월%d일 %H시%M분%S초"
 msgid "%d %b %y at %H:%M:%S"
 msgstr "%Y년%m월%d일 %H시%M분%S초"
 
-#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:196
+#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:391
 msgid "User guide"
 msgstr "사용자 설명서"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:519
+#: src/lib/Sympa/Commands.pm:689
 #, fuzzy
 msgid "Archive of %s, file %s"
 msgstr "%1 의 보관(저장), 파일 %2"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:654
+#: src/lib/Sympa/Commands.pm:814
 #, fuzzy
 msgid "Archive of %s, last message"
 msgstr "%1 의 보관(저장), 파일 %2"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:769
+#: src/lib/Sympa/Commands.pm:919
 msgid "%-37s %5.1f kB   %s"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:8455 src/lib/Sympa/Commands.pm:773
+#: src/cgi/wwsympa.fcgi.in:8455 src/lib/Sympa/Commands.pm:923
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:177
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%Y년%m월%d일 (%a) %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:12998 src/lib/Sympa/Commands.pm:1373
+#: src/cgi/wwsympa.fcgi.in:12998 src/lib/Sympa/Commands.pm:1462
 msgid "%A"
 msgstr "%a"
 
-#: default/mail_tt2/global_remind.tt2:1 src/lib/Sympa/Commands.pm:2321
+#: default/mail_tt2/global_remind.tt2:1 src/lib/Sympa/Commands.pm:2303
 msgid "Subscription summary"
 msgstr "구독 개요"
 
@@ -3427,8 +3427,7 @@ msgstr "사용자의 리스트"
 msgid "%s / %s"
 msgstr ""
 
-#: default/web_tt2/home.tt2:70 default/web_tt2/lists.tt2:22
-#: src/cgi/wwsympa.fcgi.in:4897
+#: default/web_tt2/lists.tt2:22 src/cgi/wwsympa.fcgi.in:4897
 msgid "Others"
 msgstr "기타"
 
@@ -3857,13 +3856,12 @@ msgstr "보관(저장) 관리"
 #: default/web_tt2/d_read.tt2:166 default/web_tt2/d_read.tt2:2
 #: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_list_request.tt2:4
 #: default/web_tt2/edit_list_request.tt2:43 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/editsubscriber.tt2:47 default/web_tt2/home.tt2:27
-#: default/web_tt2/latest_d_read.tt2:30 default/web_tt2/latest_d_read.tt2:33
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/picture_upload.tt2:21 default/web_tt2/pref.tt2:3
-#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:3
-#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:17
-#: default/web_tt2/subscriber_table.tt2:117
+#: default/web_tt2/editsubscriber.tt2:47 default/web_tt2/latest_d_read.tt2:30
+#: default/web_tt2/latest_d_read.tt2:33 default/web_tt2/modindex.tt2:139
+#: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
+#: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
+#: default/web_tt2/suboptions.tt2:17 default/web_tt2/subscriber_table.tt2:117
 msgid "Open in a new window"
 msgstr "새 창구에서 열림"
 
@@ -3875,13 +3873,12 @@ msgstr "새 창구에서 열림"
 #: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/edit_list_request.tt2:4
 #: default/web_tt2/edit_list_request.tt2:43 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/home.tt2:27 default/web_tt2/menu.tt2:24
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
-#: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:18 default/web_tt2/suboptions.tt2:73
-#: default/web_tt2/suboptions.tt2:94 default/web_tt2/suspend_request.tt2:5
-#: default/web_tt2/sympa_menu.tt2:24
+#: default/web_tt2/menu.tt2:24 default/web_tt2/modindex.tt2:139
+#: default/web_tt2/modindex.tt2:2 default/web_tt2/pref.tt2:3
+#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:3
+#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:18
+#: default/web_tt2/suboptions.tt2:73 default/web_tt2/suboptions.tt2:94
+#: default/web_tt2/suspend_request.tt2:5
 msgid "Help"
 msgstr "도움말"
 
@@ -4322,7 +4319,7 @@ msgstr "받는 사람: %1"
 
 #: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:51
 #: default/web_tt2/create_list_request.tt2:40
-#: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:77
+#: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:6
 #: default/web_tt2/tt2_error.tt2:51
 msgid "Subject:"
@@ -4523,7 +4520,7 @@ msgstr "템플렛"
 
 #: default/web_tt2/crash.tt2:51 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:46 default/web_tt2/list_panel.tt2:81
-#: default/web_tt2/main.tt2:77 default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:51
 #, fuzzy
 msgid "(Edit)"
 msgstr "편집"
@@ -4557,13 +4554,13 @@ msgstr "에러:"
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:91
+#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:96
 #: default/web_tt2/tt2_error.tt2:66
 msgid "Top of Page"
 msgstr ""
 
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:27
-#: default/web_tt2/home.tt2:29
+#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:51
+#: default/web_tt2/home.tt2:56
 msgid "Create list"
 msgstr "리스트 만들기"
 
@@ -6162,16 +6159,16 @@ msgstr "날짜"
 msgid "Back"
 msgstr "블랙리스트"
 
-#: default/web_tt2/head_ui.tt2:32
+#: default/web_tt2/head_ui.tt2:32 default/web_tt2/main.tt2:58
 msgid "Please Wait..."
 msgstr ""
 
-#: default/web_tt2/home.tt2:3
+#: default/web_tt2/home.tt2:11
 #, fuzzy
 msgid "Welcome"
 msgstr "환영받은 메시지"
 
-#: default/web_tt2/home.tt2:4
+#: default/web_tt2/home.tt2:13
 #, fuzzy
 msgid ""
 "This server provides you access to your mailing list environment. Starting "
@@ -6182,52 +6179,41 @@ msgstr ""
 "에서부터, 구독 옵션, 등록취소,\n"
 "보관, 리스트 관리 등등."
 
-#: default/web_tt2/home.tt2:7
+#: default/web_tt2/home.tt2:18
 #, fuzzy
 msgid "Logging In"
 msgstr "로그인"
 
-#: default/web_tt2/home.tt2:9
+#: default/web_tt2/home.tt2:20
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form in the top right menu."
 msgstr ""
 
-#: default/web_tt2/home.tt2:11
+#: default/web_tt2/home.tt2:22
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form to the left."
 msgstr ""
 
-#: default/web_tt2/home.tt2:17
+#: default/web_tt2/home.tt2:25
 msgid "What would you like to do ?"
 msgstr ""
 
-#: default/web_tt2/home.tt2:29 default/web_tt2/home.tt2:36
-#: default/web_tt2/home.tt2:42 default/web_tt2/loginbanner.tt2:109
-#: default/web_tt2/loginbanner.tt2:133
-msgid "Go"
-msgstr "시작"
-
-#: default/web_tt2/home.tt2:35 default/web_tt2/home.tt2:36
+#: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
+#: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:73
 #: default/web_tt2/loginbanner.tt2:69 default/web_tt2/my.tt2:2
 #, fuzzy
 msgid "My lists"
 msgstr "새로운 리스트"
 
-#: default/web_tt2/home.tt2:41 default/web_tt2/home.tt2:42
-#: default/web_tt2/pref.tt2:3 default/web_tt2/viewlogs.tt2:53
-msgid "User preferences"
-msgstr "사용자 기본설정"
-
-#: default/web_tt2/home.tt2:47
+#: default/web_tt2/home.tt2:59 default/web_tt2/home.tt2:64
+#: default/web_tt2/home.tt2:76 default/web_tt2/home.tt2:81
+#: default/web_tt2/home.tt2:92 default/web_tt2/home.tt2:97
+#: default/web_tt2/menu.tt2:21 default/web_tt2/sympa_menu.tt2:20
 #, fuzzy
-msgid "Browse lists by categories"
-msgstr "메일링 리스트 종류"
-
-#: default/web_tt2/home.tt2:62
-msgid "List of lists"
-msgstr "리스트(들)"
+msgid "Search for List(s)"
+msgstr "리스트 검색"
 
 #: default/web_tt2/info.tt2:11 default/web_tt2/review.tt2:5
 #, fuzzy
@@ -6624,6 +6610,10 @@ msgstr "인증 서버를 선택하십시오"
 msgid "Click to select"
 msgstr ""
 
+#: default/web_tt2/loginbanner.tt2:109 default/web_tt2/loginbanner.tt2:133
+msgid "Go"
+msgstr "시작"
+
 #: default/web_tt2/loginbanner.tt2:120 default/web_tt2/loginbanner.tt2:133
 msgid "Login"
 msgstr "로그인"
@@ -6863,29 +6853,24 @@ msgstr ""
 msgid "Search lists"
 msgstr "리스트 검색"
 
-#: default/web_tt2/menu.tt2:6 default/web_tt2/sympa_menu.tt2:5
+#: default/web_tt2/menu.tt2:6 default/web_tt2/sympa_menu.tt2:6
 msgid "Home"
 msgstr "홈"
 
-#: default/web_tt2/menu.tt2:10 default/web_tt2/sympa_menu.tt2:9
+#: default/web_tt2/menu.tt2:10 default/web_tt2/sympa_menu.tt2:10
 #, fuzzy
 msgid "Request a List"
 msgstr "요청했든 날짜"
 
-#: default/web_tt2/menu.tt2:15 default/web_tt2/sympa_menu.tt2:14
+#: default/web_tt2/menu.tt2:15 default/web_tt2/sympa_menu.tt2:15
 #, fuzzy
 msgid "Listmaster Admin"
 msgstr "리스트마스터"
 
-#: default/web_tt2/menu.tt2:19 default/web_tt2/sympa_menu.tt2:18
+#: default/web_tt2/menu.tt2:19 default/web_tt2/sympa_menu.tt2:26
 #, fuzzy
 msgid "Index of Lists"
 msgstr "비활성(사용) 리스트"
-
-#: default/web_tt2/menu.tt2:21 default/web_tt2/sympa_menu.tt2:21
-#, fuzzy
-msgid "Search for List(s)"
-msgstr "리스트 검색"
 
 #: default/web_tt2/modform.tt2:20 default/web_tt2/modform.tt2:33
 #: default/web_tt2/modform.tt2:4
@@ -7420,6 +7405,10 @@ msgstr "%1 메일링 리스트를 등록구독되지 않습니다."
 #: default/web_tt2/picture_upload.tt2:26
 msgid "In the members page"
 msgstr "가입자 페이지"
+
+#: default/web_tt2/pref.tt2:3 default/web_tt2/viewlogs.tt2:53
+msgid "User preferences"
+msgstr "사용자 기본설정"
 
 #: default/web_tt2/pref.tt2:17
 #, fuzzy
@@ -8975,10 +8964,51 @@ msgstr "대기 중 구독들"
 msgid "You need to be logged in to access this page."
 msgstr ""
 
-#: default/web_tt2/sympa_menu.tt2:2
+#: default/web_tt2/sympa_menu.tt2:3
 #, fuzzy
 msgid "Sympa menu"
 msgstr "Sympa 관리"
+
+#: default/web_tt2/sympa_menu.tt2:24
+#, fuzzy
+msgid "Search form"
+msgstr "사용자 검색"
+
+#: default/web_tt2/sympa_menu.tt2:28
+#, fuzzy
+msgid "Browse lists by categories"
+msgstr "메일링 리스트 종류"
+
+#: default/web_tt2/sympa_menu.tt2:36
+msgid "Support"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:40
+#, fuzzy
+msgid "Documentation"
+msgstr "문서"
+
+#: default/web_tt2/sympa_menu.tt2:42
+msgid "Frequently asked questions"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:42
+msgid "FAQ"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:44
+msgid "Give us feedback about this new Sympa version"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:44
+#, fuzzy
+msgid "Feedback"
+msgstr "%1에 전송"
+
+#: default/web_tt2/sympa_menu.tt2:64
+#, fuzzy
+msgid "Lists Families"
+msgstr "리스트들의 정보변경"
 
 #: default/web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -13142,58 +13172,6 @@ msgstr ""
 msgid "Do Not Notify"
 msgstr ""
 
-#. (u_err.command)
-#: default/mail_tt2/command_report.tt2:146
-msgid ""
-"The authentication process failed.\n"
-"You probably confirmed your %1 using a different\n"
-"email address. Please try using your canonical address."
-msgstr ""
-"인증 프로세스은 실패했습니다.\n"
-"달라던 것\n"
-"를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
-
-#. (list.name,conf.sympa,list.host)
-#: default/mail_tt2/message_report.tt2:51
-#, fuzzy
-msgid ""
-"The following message was sent to list '%1' and it seems to contain\n"
-"one or more commands like subscribe, unsubscribe, help, index, get, ...\n"
-"\n"
-"If your message contained a command, please notice that \n"
-"commands should never ever be sent to lists. Commands must be sent\n"
-"to %2 exclusively.\n"
-"\n"
-"If your message was really meant to be sent to the list, it was\n"
-"interpreted by the software as a command. Please contact the list owner:  \n"
-"%1-request@%3 so that he can take care of your message.\n"
-"\n"
-"Thank you for your attention.\n"
-msgstr ""
-"다음 메시지 메일링 리스트 는 '%1' 에 보내지고\n"
-" 포함하는 보입니다.한개 이상 명령 같이 등록구독하고, 등록취소하고, 돕고, 색인"
-"붙이고, 얻습니다,…\n"
-"\n"
-"만약에 메시지가 명령을 포함하면, 주의하기 저것을\n"
-"명령은 리스트에 결코 이제까지 보내져야 합니다. 명령은 보내져야\n"
-" 합니다.%2에 독점적으로.\n"
-"\n"
-"만약에 메시지가 리스트에 보내지기 위해 의미되면, 그것이었습니다\n"
-"명령으로 소프트웨어에 의해 해석했습니다. 리스트 소유자에게 문의 하기: \n"
-" %1-request@%3 그가 메시지를 다루어서 좋다 그래야\n"
-"\n"
-"주의를 감사합니다.\n"
-
-#. (list.name)
-#: default/mail_tt2/message_report.tt2:93
-#, fuzzy
-msgid ""
-"Your message for list '%1' (attached below) was rejected. \n"
-"You are not allowed to send this message for the following reason:"
-msgstr ""
-"(아래에 붙어 있습니다.) 리스트 는 '%1' 를 위한 메시지 거부했습니다.\n"
-"다음 이유를 위한 이 메세지를 보내는 것을 허용되지 않습니다:"
-
 #: default/web_tt2/loginbanner.tt2:9
 msgid "Role:&nbsp;"
 msgstr ""
@@ -13995,6 +13973,57 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#~ msgid "List of lists"
+#~ msgstr "리스트(들)"
+
+#~ msgid ""
+#~ "The authentication process failed.\n"
+#~ "You probably confirmed your %1 using a different\n"
+#~ "email address. Please try using your canonical address."
+#~ msgstr ""
+#~ "인증 프로세스은 실패했습니다.\n"
+#~ "달라던 것\n"
+#~ "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스"
+#~ "트."
+
+#, fuzzy
+#~ msgid ""
+#~ "The following message was sent to list '%1' and it seems to contain\n"
+#~ "one or more commands like subscribe, unsubscribe, help, index, get, ...\n"
+#~ "\n"
+#~ "If your message contained a command, please notice that \n"
+#~ "commands should never ever be sent to lists. Commands must be sent\n"
+#~ "to %2 exclusively.\n"
+#~ "\n"
+#~ "If your message was really meant to be sent to the list, it was\n"
+#~ "interpreted by the software as a command. Please contact the list "
+#~ "owner:  \n"
+#~ "%1-request@%3 so that he can take care of your message.\n"
+#~ "\n"
+#~ "Thank you for your attention.\n"
+#~ msgstr ""
+#~ "다음 메시지 메일링 리스트 는 '%1' 에 보내지고\n"
+#~ " 포함하는 보입니다.한개 이상 명령 같이 등록구독하고, 등록취소하고, 돕고, "
+#~ "색인붙이고, 얻습니다,…\n"
+#~ "\n"
+#~ "만약에 메시지가 명령을 포함하면, 주의하기 저것을\n"
+#~ "명령은 리스트에 결코 이제까지 보내져야 합니다. 명령은 보내져야\n"
+#~ " 합니다.%2에 독점적으로.\n"
+#~ "\n"
+#~ "만약에 메시지가 리스트에 보내지기 위해 의미되면, 그것이었습니다\n"
+#~ "명령으로 소프트웨어에 의해 해석했습니다. 리스트 소유자에게 문의 하기: \n"
+#~ " %1-request@%3 그가 메시지를 다루어서 좋다 그래야\n"
+#~ "\n"
+#~ "주의를 감사합니다.\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "Your message for list '%1' (attached below) was rejected. \n"
+#~ "You are not allowed to send this message for the following reason:"
+#~ msgstr ""
+#~ "(아래에 붙어 있습니다.) 리스트 는 '%1' 를 위한 메시지 거부했습니다.\n"
+#~ "다음 이유를 위한 이 메세지를 보내는 것을 허용되지 않습니다:"
 
 #, fuzzy
 #~ msgid "Default rejection message"

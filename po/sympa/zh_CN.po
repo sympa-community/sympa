@@ -232,44 +232,44 @@ msgstr "%Y年%m月%d日 %H时%M分%S秒"
 msgid "%d %b %y at %H:%M:%S"
 msgstr "%Y年%m月%d日 %H时%M分%S秒"
 
-#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:196
+#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:391
 msgid "User guide"
 msgstr "用户指南"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:519
+#: src/lib/Sympa/Commands.pm:689
 #, fuzzy
 msgid "Archive of %s, file %s"
 msgstr "归档%1，文件%2"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:654
+#: src/lib/Sympa/Commands.pm:814
 #, fuzzy
 msgid "Archive of %s, last message"
 msgstr "归档%1，文件%2"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:769
+#: src/lib/Sympa/Commands.pm:919
 msgid "%-37s %5.1f kB   %s"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:8455 src/lib/Sympa/Commands.pm:773
+#: src/cgi/wwsympa.fcgi.in:8455 src/lib/Sympa/Commands.pm:923
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:177
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日（%a）%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:12998 src/lib/Sympa/Commands.pm:1373
+#: src/cgi/wwsympa.fcgi.in:12998 src/lib/Sympa/Commands.pm:1462
 msgid "%A"
 msgstr "%A"
 
-#: default/mail_tt2/global_remind.tt2:1 src/lib/Sympa/Commands.pm:2321
+#: default/mail_tt2/global_remind.tt2:1 src/lib/Sympa/Commands.pm:2303
 msgid "Subscription summary"
 msgstr "订阅概要"
 
@@ -3412,8 +3412,7 @@ msgstr "您的邮件列表"
 msgid "%s / %s"
 msgstr ""
 
-#: default/web_tt2/home.tt2:70 default/web_tt2/lists.tt2:22
-#: src/cgi/wwsympa.fcgi.in:4897
+#: default/web_tt2/lists.tt2:22 src/cgi/wwsympa.fcgi.in:4897
 msgid "Others"
 msgstr "其它"
 
@@ -3839,13 +3838,12 @@ msgstr "归档管理"
 #: default/web_tt2/d_read.tt2:166 default/web_tt2/d_read.tt2:2
 #: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_list_request.tt2:4
 #: default/web_tt2/edit_list_request.tt2:43 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/editsubscriber.tt2:47 default/web_tt2/home.tt2:27
-#: default/web_tt2/latest_d_read.tt2:30 default/web_tt2/latest_d_read.tt2:33
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/picture_upload.tt2:21 default/web_tt2/pref.tt2:3
-#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:3
-#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:17
-#: default/web_tt2/subscriber_table.tt2:117
+#: default/web_tt2/editsubscriber.tt2:47 default/web_tt2/latest_d_read.tt2:30
+#: default/web_tt2/latest_d_read.tt2:33 default/web_tt2/modindex.tt2:139
+#: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
+#: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
+#: default/web_tt2/suboptions.tt2:17 default/web_tt2/subscriber_table.tt2:117
 msgid "Open in a new window"
 msgstr "打开一个新窗口"
 
@@ -3857,13 +3855,12 @@ msgstr "打开一个新窗口"
 #: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/edit_list_request.tt2:4
 #: default/web_tt2/edit_list_request.tt2:43 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/home.tt2:27 default/web_tt2/menu.tt2:24
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
-#: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:18 default/web_tt2/suboptions.tt2:73
-#: default/web_tt2/suboptions.tt2:94 default/web_tt2/suspend_request.tt2:5
-#: default/web_tt2/sympa_menu.tt2:24
+#: default/web_tt2/menu.tt2:24 default/web_tt2/modindex.tt2:139
+#: default/web_tt2/modindex.tt2:2 default/web_tt2/pref.tt2:3
+#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:3
+#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:18
+#: default/web_tt2/suboptions.tt2:73 default/web_tt2/suboptions.tt2:94
+#: default/web_tt2/suspend_request.tt2:5
 msgid "Help"
 msgstr "帮助"
 
@@ -4303,7 +4300,7 @@ msgstr "收件人：%1"
 
 #: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:51
 #: default/web_tt2/create_list_request.tt2:40
-#: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:77
+#: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:6
 #: default/web_tt2/tt2_error.tt2:51
 msgid "Subject:"
@@ -4500,7 +4497,7 @@ msgstr "模板"
 
 #: default/web_tt2/crash.tt2:51 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:46 default/web_tt2/list_panel.tt2:81
-#: default/web_tt2/main.tt2:77 default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:51
 #, fuzzy
 msgid "(Edit)"
 msgstr "编辑"
@@ -4533,13 +4530,13 @@ msgstr "错误：%1"
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:91
+#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:96
 #: default/web_tt2/tt2_error.tt2:66
 msgid "Top of Page"
 msgstr ""
 
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:27
-#: default/web_tt2/home.tt2:29
+#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:51
+#: default/web_tt2/home.tt2:56
 msgid "Create list"
 msgstr "建立邮件列表"
 
@@ -6127,16 +6124,16 @@ msgstr "日期"
 msgid "Back"
 msgstr "黑名单"
 
-#: default/web_tt2/head_ui.tt2:32
+#: default/web_tt2/head_ui.tt2:32 default/web_tt2/main.tt2:58
 msgid "Please Wait..."
 msgstr ""
 
-#: default/web_tt2/home.tt2:3
+#: default/web_tt2/home.tt2:11
 #, fuzzy
 msgid "Welcome"
 msgstr "欢迎邮件"
 
-#: default/web_tt2/home.tt2:4
+#: default/web_tt2/home.tt2:13
 msgid ""
 "This server provides you access to your mailing list environment. Starting "
 "from this web page, you can perform subscription options, unsubscription, "
@@ -6145,52 +6142,41 @@ msgstr ""
 "通过本服务器您可以对邮件列表进行配置，由此页面您可以进行订阅与退订选项、存"
 "档、邮件审核以及邮件列表参数的设置。"
 
-#: default/web_tt2/home.tt2:7
+#: default/web_tt2/home.tt2:18
 #, fuzzy
 msgid "Logging In"
 msgstr "登录"
 
-#: default/web_tt2/home.tt2:9
+#: default/web_tt2/home.tt2:20
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form in the top right menu."
 msgstr ""
 
-#: default/web_tt2/home.tt2:11
+#: default/web_tt2/home.tt2:22
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form to the left."
 msgstr ""
 
-#: default/web_tt2/home.tt2:17
+#: default/web_tt2/home.tt2:25
 msgid "What would you like to do ?"
 msgstr ""
 
-#: default/web_tt2/home.tt2:29 default/web_tt2/home.tt2:36
-#: default/web_tt2/home.tt2:42 default/web_tt2/loginbanner.tt2:109
-#: default/web_tt2/loginbanner.tt2:133
-msgid "Go"
-msgstr "去"
-
-#: default/web_tt2/home.tt2:35 default/web_tt2/home.tt2:36
+#: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
+#: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:73
 #: default/web_tt2/loginbanner.tt2:69 default/web_tt2/my.tt2:2
 #, fuzzy
 msgid "My lists"
 msgstr "新的邮件列表"
 
-#: default/web_tt2/home.tt2:41 default/web_tt2/home.tt2:42
-#: default/web_tt2/pref.tt2:3 default/web_tt2/viewlogs.tt2:53
-msgid "User preferences"
-msgstr "用户首选项"
-
-#: default/web_tt2/home.tt2:47
+#: default/web_tt2/home.tt2:59 default/web_tt2/home.tt2:64
+#: default/web_tt2/home.tt2:76 default/web_tt2/home.tt2:81
+#: default/web_tt2/home.tt2:92 default/web_tt2/home.tt2:97
+#: default/web_tt2/menu.tt2:21 default/web_tt2/sympa_menu.tt2:20
 #, fuzzy
-msgid "Browse lists by categories"
-msgstr "邮件列表分类"
-
-#: default/web_tt2/home.tt2:62
-msgid "List of lists"
-msgstr "邮件列表目录"
+msgid "Search for List(s)"
+msgstr "查找邮件列表"
 
 #: default/web_tt2/info.tt2:11 default/web_tt2/review.tt2:5
 #, fuzzy
@@ -6585,6 +6571,10 @@ msgstr "选择身份验证服务器"
 msgid "Click to select"
 msgstr "点击此处"
 
+#: default/web_tt2/loginbanner.tt2:109 default/web_tt2/loginbanner.tt2:133
+msgid "Go"
+msgstr "去"
+
 #: default/web_tt2/loginbanner.tt2:120 default/web_tt2/loginbanner.tt2:133
 msgid "Login"
 msgstr "登录"
@@ -6817,29 +6807,24 @@ msgstr ""
 msgid "Search lists"
 msgstr "查找邮件列表"
 
-#: default/web_tt2/menu.tt2:6 default/web_tt2/sympa_menu.tt2:5
+#: default/web_tt2/menu.tt2:6 default/web_tt2/sympa_menu.tt2:6
 msgid "Home"
 msgstr "主页"
 
-#: default/web_tt2/menu.tt2:10 default/web_tt2/sympa_menu.tt2:9
+#: default/web_tt2/menu.tt2:10 default/web_tt2/sympa_menu.tt2:10
 #, fuzzy
 msgid "Request a List"
 msgstr "请求的日期"
 
-#: default/web_tt2/menu.tt2:15 default/web_tt2/sympa_menu.tt2:14
+#: default/web_tt2/menu.tt2:15 default/web_tt2/sympa_menu.tt2:15
 #, fuzzy
 msgid "Listmaster Admin"
 msgstr "邮件列表管理员"
 
-#: default/web_tt2/menu.tt2:19 default/web_tt2/sympa_menu.tt2:18
+#: default/web_tt2/menu.tt2:19 default/web_tt2/sympa_menu.tt2:26
 #, fuzzy
 msgid "Index of Lists"
 msgstr "不活泼的邮件列表"
-
-#: default/web_tt2/menu.tt2:21 default/web_tt2/sympa_menu.tt2:21
-#, fuzzy
-msgid "Search for List(s)"
-msgstr "查找邮件列表"
 
 #: default/web_tt2/modform.tt2:20 default/web_tt2/modform.tt2:33
 #: default/web_tt2/modform.tt2:4
@@ -7370,6 +7355,10 @@ msgstr "你的照片在成员列表中"
 #: default/web_tt2/picture_upload.tt2:26
 msgid "In the members page"
 msgstr "在成员页"
+
+#: default/web_tt2/pref.tt2:3 default/web_tt2/viewlogs.tt2:53
+msgid "User preferences"
+msgstr "用户首选项"
 
 #: default/web_tt2/pref.tt2:17
 #, fuzzy
@@ -8913,10 +8902,51 @@ msgstr "等待订阅"
 msgid "You need to be logged in to access this page."
 msgstr ""
 
-#: default/web_tt2/sympa_menu.tt2:2
+#: default/web_tt2/sympa_menu.tt2:3
 #, fuzzy
 msgid "Sympa menu"
 msgstr "Sympa 管理"
+
+#: default/web_tt2/sympa_menu.tt2:24
+#, fuzzy
+msgid "Search form"
+msgstr "查找用户"
+
+#: default/web_tt2/sympa_menu.tt2:28
+#, fuzzy
+msgid "Browse lists by categories"
+msgstr "邮件列表分类"
+
+#: default/web_tt2/sympa_menu.tt2:36
+msgid "Support"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:40
+#, fuzzy
+msgid "Documentation"
+msgstr "文件"
+
+#: default/web_tt2/sympa_menu.tt2:42
+msgid "Frequently asked questions"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:42
+msgid "FAQ"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:44
+msgid "Give us feedback about this new Sympa version"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:44
+#, fuzzy
+msgid "Feedback"
+msgstr "回发到%1"
+
+#: default/web_tt2/sympa_menu.tt2:64
+#, fuzzy
+msgid "Lists Families"
+msgstr "Families"
 
 #: default/web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -13000,57 +13030,6 @@ msgstr ""
 msgid "Do Not Notify"
 msgstr ""
 
-#. (u_err.command)
-#: default/mail_tt2/command_report.tt2:146
-msgid ""
-"The authentication process failed.\n"
-"You probably confirmed your %1 using a different\n"
-"email address. Please try using your canonical address."
-msgstr ""
-"身份验证过程出错。\n"
-"您可能用一个不同的邮件地址证实您的%1。\n"
-"请尝试使用标准地址。"
-
-#. (list.name,conf.sympa,list.host)
-#: default/mail_tt2/message_report.tt2:51
-#, fuzzy
-msgid ""
-"The following message was sent to list '%1' and it seems to contain\n"
-"one or more commands like subscribe, unsubscribe, help, index, get, ...\n"
-"\n"
-"If your message contained a command, please notice that \n"
-"commands should never ever be sent to lists. Commands must be sent\n"
-"to %2 exclusively.\n"
-"\n"
-"If your message was really meant to be sent to the list, it was\n"
-"interpreted by the software as a command. Please contact the list owner:  \n"
-"%1-request@%3 so that he can take care of your message.\n"
-"\n"
-"Thank you for your attention.\n"
-msgstr ""
-"下列信息已发送到邮件列表＂%1＂并且它似乎包含\n"
-"一个或更多命令，比如订阅，退订，帮助，标注，得到，…\n"
-"\n"
-"如果邮件包含了一个命令，请注意\n"
-"命令不应该发送到邮件列表。命令必须只发送\n"
-"到%2。\n"
-"\n"
-"如果邮件真的被发送到了邮件列表，\n"
-"它会由软件解析成命令。请与邮件列表所有者联系：\n"
-"%1-request@%3以便他可以处理您的邮件。\n"
-"\n"
-"感谢您对此的注意。\n"
-
-#. (list.name)
-#: default/mail_tt2/message_report.tt2:93
-#, fuzzy
-msgid ""
-"Your message for list '%1' (attached below) was rejected. \n"
-"You are not allowed to send this message for the following reason:"
-msgstr ""
-"邮件列表＂%1＂（附在下面）被拒绝了。\n"
-"您不允许发送这则邮件因为以下原因："
-
 #: default/web_tt2/loginbanner.tt2:9
 msgid "Role:&nbsp;"
 msgstr ""
@@ -13787,6 +13766,55 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#~ msgid "List of lists"
+#~ msgstr "邮件列表目录"
+
+#~ msgid ""
+#~ "The authentication process failed.\n"
+#~ "You probably confirmed your %1 using a different\n"
+#~ "email address. Please try using your canonical address."
+#~ msgstr ""
+#~ "身份验证过程出错。\n"
+#~ "您可能用一个不同的邮件地址证实您的%1。\n"
+#~ "请尝试使用标准地址。"
+
+#, fuzzy
+#~ msgid ""
+#~ "The following message was sent to list '%1' and it seems to contain\n"
+#~ "one or more commands like subscribe, unsubscribe, help, index, get, ...\n"
+#~ "\n"
+#~ "If your message contained a command, please notice that \n"
+#~ "commands should never ever be sent to lists. Commands must be sent\n"
+#~ "to %2 exclusively.\n"
+#~ "\n"
+#~ "If your message was really meant to be sent to the list, it was\n"
+#~ "interpreted by the software as a command. Please contact the list "
+#~ "owner:  \n"
+#~ "%1-request@%3 so that he can take care of your message.\n"
+#~ "\n"
+#~ "Thank you for your attention.\n"
+#~ msgstr ""
+#~ "下列信息已发送到邮件列表＂%1＂并且它似乎包含\n"
+#~ "一个或更多命令，比如订阅，退订，帮助，标注，得到，…\n"
+#~ "\n"
+#~ "如果邮件包含了一个命令，请注意\n"
+#~ "命令不应该发送到邮件列表。命令必须只发送\n"
+#~ "到%2。\n"
+#~ "\n"
+#~ "如果邮件真的被发送到了邮件列表，\n"
+#~ "它会由软件解析成命令。请与邮件列表所有者联系：\n"
+#~ "%1-request@%3以便他可以处理您的邮件。\n"
+#~ "\n"
+#~ "感谢您对此的注意。\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "Your message for list '%1' (attached below) was rejected. \n"
+#~ "You are not allowed to send this message for the following reason:"
+#~ msgstr ""
+#~ "邮件列表＂%1＂（附在下面）被拒绝了。\n"
+#~ "您不允许发送这则邮件因为以下原因："
 
 #, fuzzy
 #~ msgid "Default rejection message"

@@ -258,42 +258,42 @@ msgstr "%d %b %Y at %H:%M:%S"
 msgid "%d %b %y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
-#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:196
+#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:391
 msgid "User guide"
 msgstr "Brukerguide"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:519
+#: src/lib/Sympa/Commands.pm:689
 msgid "Archive of %s, file %s"
 msgstr "Arkiv av %s, fil %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:654
+#: src/lib/Sympa/Commands.pm:814
 msgid "Archive of %s, last message"
 msgstr "Arkiv av de siste %s meldingene"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:769
+#: src/lib/Sympa/Commands.pm:919
 msgid "%-37s %5.1f kB   %s"
 msgstr "%-37s %5.1f kB         %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:8455 src/lib/Sympa/Commands.pm:773
+#: src/cgi/wwsympa.fcgi.in:8455 src/lib/Sympa/Commands.pm:923
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:177
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%a, %d %b %Y %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:12998 src/lib/Sympa/Commands.pm:1373
+#: src/cgi/wwsympa.fcgi.in:12998 src/lib/Sympa/Commands.pm:1462
 msgid "%A"
 msgstr "%A"
 
-#: default/mail_tt2/global_remind.tt2:1 src/lib/Sympa/Commands.pm:2321
+#: default/mail_tt2/global_remind.tt2:1 src/lib/Sympa/Commands.pm:2303
 msgid "Subscription summary"
 msgstr "Abonnementsoversikt"
 
@@ -3462,8 +3462,7 @@ msgstr "Dine lister"
 msgid "%s / %s"
 msgstr ""
 
-#: default/web_tt2/home.tt2:70 default/web_tt2/lists.tt2:22
-#: src/cgi/wwsympa.fcgi.in:4897
+#: default/web_tt2/lists.tt2:22 src/cgi/wwsympa.fcgi.in:4897
 msgid "Others"
 msgstr "Annet"
 
@@ -3897,13 +3896,12 @@ msgstr "Arkivbehandling"
 #: default/web_tt2/d_read.tt2:166 default/web_tt2/d_read.tt2:2
 #: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_list_request.tt2:4
 #: default/web_tt2/edit_list_request.tt2:43 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/editsubscriber.tt2:47 default/web_tt2/home.tt2:27
-#: default/web_tt2/latest_d_read.tt2:30 default/web_tt2/latest_d_read.tt2:33
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/picture_upload.tt2:21 default/web_tt2/pref.tt2:3
-#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:3
-#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:17
-#: default/web_tt2/subscriber_table.tt2:117
+#: default/web_tt2/editsubscriber.tt2:47 default/web_tt2/latest_d_read.tt2:30
+#: default/web_tt2/latest_d_read.tt2:33 default/web_tt2/modindex.tt2:139
+#: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
+#: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
+#: default/web_tt2/suboptions.tt2:17 default/web_tt2/subscriber_table.tt2:117
 msgid "Open in a new window"
 msgstr "Åpne i et nytt vindu"
 
@@ -3915,13 +3913,12 @@ msgstr "Åpne i et nytt vindu"
 #: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/edit_list_request.tt2:4
 #: default/web_tt2/edit_list_request.tt2:43 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/home.tt2:27 default/web_tt2/menu.tt2:24
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
-#: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:18 default/web_tt2/suboptions.tt2:73
-#: default/web_tt2/suboptions.tt2:94 default/web_tt2/suspend_request.tt2:5
-#: default/web_tt2/sympa_menu.tt2:24
+#: default/web_tt2/menu.tt2:24 default/web_tt2/modindex.tt2:139
+#: default/web_tt2/modindex.tt2:2 default/web_tt2/pref.tt2:3
+#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:3
+#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:18
+#: default/web_tt2/suboptions.tt2:73 default/web_tt2/suboptions.tt2:94
+#: default/web_tt2/suspend_request.tt2:5
 msgid "Help"
 msgstr "Hjelp"
 
@@ -4363,7 +4360,7 @@ msgstr "Til: %1"
 
 #: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:51
 #: default/web_tt2/create_list_request.tt2:40
-#: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:77
+#: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:6
 #: default/web_tt2/tt2_error.tt2:51
 msgid "Subject:"
@@ -4566,7 +4563,7 @@ msgstr "Maler"
 
 #: default/web_tt2/crash.tt2:51 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:46 default/web_tt2/list_panel.tt2:81
-#: default/web_tt2/main.tt2:77 default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:51
 #, fuzzy
 msgid "(Edit)"
 msgstr "rediger"
@@ -4600,13 +4597,13 @@ msgstr "Feilrate:"
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:91
+#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:96
 #: default/web_tt2/tt2_error.tt2:66
 msgid "Top of Page"
 msgstr ""
 
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:27
-#: default/web_tt2/home.tt2:29
+#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:51
+#: default/web_tt2/home.tt2:56
 msgid "Create list"
 msgstr "Opprett liste"
 
@@ -6205,15 +6202,15 @@ msgstr "dato"
 msgid "Back"
 msgstr "Svartelist"
 
-#: default/web_tt2/head_ui.tt2:32
+#: default/web_tt2/head_ui.tt2:32 default/web_tt2/main.tt2:58
 msgid "Please Wait..."
 msgstr "Vennligst vent..."
 
-#: default/web_tt2/home.tt2:3
+#: default/web_tt2/home.tt2:11
 msgid "Welcome"
 msgstr ""
 
-#: default/web_tt2/home.tt2:4
+#: default/web_tt2/home.tt2:13
 #, fuzzy
 msgid ""
 "This server provides you access to your mailing list environment. Starting "
@@ -6224,52 +6221,41 @@ msgstr ""
 "2. Med utgangspunkt i denne websiden kan du utføre abonnementsendringer, "
 "lese arkiver, listeadministrasjon og så videre."
 
-#: default/web_tt2/home.tt2:7
+#: default/web_tt2/home.tt2:18
 #, fuzzy
 msgid "Logging In"
 msgstr "Logg inn"
 
-#: default/web_tt2/home.tt2:9
+#: default/web_tt2/home.tt2:20
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form in the top right menu."
 msgstr ""
 
-#: default/web_tt2/home.tt2:11
+#: default/web_tt2/home.tt2:22
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form to the left."
 msgstr ""
 
-#: default/web_tt2/home.tt2:17
+#: default/web_tt2/home.tt2:25
 msgid "What would you like to do ?"
 msgstr ""
 
-#: default/web_tt2/home.tt2:29 default/web_tt2/home.tt2:36
-#: default/web_tt2/home.tt2:42 default/web_tt2/loginbanner.tt2:109
-#: default/web_tt2/loginbanner.tt2:133
-msgid "Go"
-msgstr "Kjør"
-
-#: default/web_tt2/home.tt2:35 default/web_tt2/home.tt2:36
+#: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
+#: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:73
 #: default/web_tt2/loginbanner.tt2:69 default/web_tt2/my.tt2:2
 #, fuzzy
 msgid "My lists"
 msgstr "Nye lister "
 
-#: default/web_tt2/home.tt2:41 default/web_tt2/home.tt2:42
-#: default/web_tt2/pref.tt2:3 default/web_tt2/viewlogs.tt2:53
-msgid "User preferences"
-msgstr "Brukerinnstillinger"
-
-#: default/web_tt2/home.tt2:47
+#: default/web_tt2/home.tt2:59 default/web_tt2/home.tt2:64
+#: default/web_tt2/home.tt2:76 default/web_tt2/home.tt2:81
+#: default/web_tt2/home.tt2:92 default/web_tt2/home.tt2:97
+#: default/web_tt2/menu.tt2:21 default/web_tt2/sympa_menu.tt2:20
 #, fuzzy
-msgid "Browse lists by categories"
-msgstr "E-postlistekategorier"
-
-#: default/web_tt2/home.tt2:62
-msgid "List of lists"
-msgstr "Oversikt over lister"
+msgid "Search for List(s)"
+msgstr "Søk etter lister"
 
 #: default/web_tt2/info.tt2:11 default/web_tt2/review.tt2:5
 #, fuzzy
@@ -6664,6 +6650,10 @@ msgstr "Velg din autentiseringstjener"
 msgid "Click to select"
 msgstr ""
 
+#: default/web_tt2/loginbanner.tt2:109 default/web_tt2/loginbanner.tt2:133
+msgid "Go"
+msgstr "Kjør"
+
 #: default/web_tt2/loginbanner.tt2:120 default/web_tt2/loginbanner.tt2:133
 msgid "Login"
 msgstr "Logg inn"
@@ -6896,29 +6886,24 @@ msgstr ""
 msgid "Search lists"
 msgstr "Søk etter lister"
 
-#: default/web_tt2/menu.tt2:6 default/web_tt2/sympa_menu.tt2:5
+#: default/web_tt2/menu.tt2:6 default/web_tt2/sympa_menu.tt2:6
 msgid "Home"
 msgstr "Hjem"
 
-#: default/web_tt2/menu.tt2:10 default/web_tt2/sympa_menu.tt2:9
+#: default/web_tt2/menu.tt2:10 default/web_tt2/sympa_menu.tt2:10
 #, fuzzy
 msgid "Request a List"
 msgstr "Bedt om på dato"
 
-#: default/web_tt2/menu.tt2:15 default/web_tt2/sympa_menu.tt2:14
+#: default/web_tt2/menu.tt2:15 default/web_tt2/sympa_menu.tt2:15
 #, fuzzy
 msgid "Listmaster Admin"
 msgstr "Listesjef"
 
-#: default/web_tt2/menu.tt2:19 default/web_tt2/sympa_menu.tt2:18
+#: default/web_tt2/menu.tt2:19 default/web_tt2/sympa_menu.tt2:26
 #, fuzzy
 msgid "Index of Lists"
 msgstr "Inaktive lister "
-
-#: default/web_tt2/menu.tt2:21 default/web_tt2/sympa_menu.tt2:21
-#, fuzzy
-msgid "Search for List(s)"
-msgstr "Søk etter lister"
 
 #: default/web_tt2/modform.tt2:20 default/web_tt2/modform.tt2:33
 #: default/web_tt2/modform.tt2:4
@@ -7454,6 +7439,10 @@ msgstr "Ditt bilde i abonnentslisten"
 #: default/web_tt2/picture_upload.tt2:26
 msgid "In the members page"
 msgstr "På medlemsiden"
+
+#: default/web_tt2/pref.tt2:3 default/web_tt2/viewlogs.tt2:53
+msgid "User preferences"
+msgstr "Brukerinnstillinger"
 
 #: default/web_tt2/pref.tt2:17
 #, fuzzy
@@ -9020,10 +9009,51 @@ msgstr "Påminnelse om ditt %s abonnement"
 msgid "You need to be logged in to access this page."
 msgstr "Du må være logget inn for å få tilgang til denne siden."
 
-#: default/web_tt2/sympa_menu.tt2:2
+#: default/web_tt2/sympa_menu.tt2:3
 #, fuzzy
 msgid "Sympa menu"
 msgstr "Sympa-administrator"
+
+#: default/web_tt2/sympa_menu.tt2:24
+#, fuzzy
+msgid "Search form"
+msgstr "Søk etter bruker"
+
+#: default/web_tt2/sympa_menu.tt2:28
+#, fuzzy
+msgid "Browse lists by categories"
+msgstr "E-postlistekategorier"
+
+#: default/web_tt2/sympa_menu.tt2:36
+msgid "Support"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:40
+#, fuzzy
+msgid "Documentation"
+msgstr "Dokument"
+
+#: default/web_tt2/sympa_menu.tt2:42
+msgid "Frequently asked questions"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:42
+msgid "FAQ"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:44
+msgid "Give us feedback about this new Sympa version"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:44
+#, fuzzy
+msgid "Feedback"
+msgstr "send den tilbake til %1"
+
+#: default/web_tt2/sympa_menu.tt2:64
+#, fuzzy
+msgid "Lists Families"
+msgstr "Familier"
 
 #: default/web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -13014,16 +13044,6 @@ msgstr ""
 msgid "For further information, please contact listmaster@%1"
 msgstr ""
 
-#. (list.name)
-#: default/mail_tt2/message_report.tt2:93
-#, fuzzy
-msgid ""
-"Your message for list '%1' (attached below) was rejected. \n"
-"You are not allowed to send this message for the following reason:"
-msgstr ""
-"Din melding til listen '%1' (vedlagt under) ble avvist.\n"
-"Du fikk ikke sende meldingen av følgende årsaker :"
-
 #. (key,list.name)
 #: default/mail_tt2/message_report.tt2:109
 msgid ""
@@ -13873,6 +13893,17 @@ msgid ""
 "Your message could not be sent because its size \n"
 "was over the maximum size allowed on this list."
 msgstr ""
+
+#~ msgid "List of lists"
+#~ msgstr "Oversikt over lister"
+
+#, fuzzy
+#~ msgid ""
+#~ "Your message for list '%1' (attached below) was rejected. \n"
+#~ "You are not allowed to send this message for the following reason:"
+#~ msgstr ""
+#~ "Din melding til listen '%1' (vedlagt under) ble avvist.\n"
+#~ "Du fikk ikke sende meldingen av følgende årsaker :"
 
 #~ msgid "hide"
 #~ msgstr "skjul"

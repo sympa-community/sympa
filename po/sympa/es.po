@@ -20,10 +20,10 @@ msgstr ""
 "PO-Revision-Date: 2015-09-01 10:02+0000\n"
 "Last-Translator: acasado <acasado@ual.es>\n"
 "Language-Team: Español <sympa-users@sympa.org>\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.7\n"
 "X-POOTLE-MTIME: 1441101769.000000\n"
@@ -269,42 +269,42 @@ msgstr "%d %b %Y en %H:%M:%S"
 msgid "%d %b %y at %H:%M:%S"
 msgstr "%d %b %Y a las %H:%M:%S"
 
-#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:196
+#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Commands.pm:391
 msgid "User guide"
 msgstr "Guía del usuario"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:519
+#: src/lib/Sympa/Commands.pm:689
 msgid "Archive of %s, file %s"
 msgstr "Archivo de %s, fichero %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:654
+#: src/lib/Sympa/Commands.pm:814
 msgid "Archive of %s, last message"
 msgstr "Archivos de la lista %s, último mensaje"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Commands.pm:769
+#: src/lib/Sympa/Commands.pm:919
 msgid "%-37s %5.1f kB   %s"
 msgstr "%-37s %5.1f kB %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:8455 src/lib/Sympa/Commands.pm:773
+#: src/cgi/wwsympa.fcgi.in:8455 src/lib/Sympa/Commands.pm:923
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:177
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%a, %d/%b/%Y %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:12998 src/lib/Sympa/Commands.pm:1373
+#: src/cgi/wwsympa.fcgi.in:12998 src/lib/Sympa/Commands.pm:1462
 msgid "%A"
 msgstr "%A"
 
-#: default/mail_tt2/global_remind.tt2:1 src/lib/Sympa/Commands.pm:2321
+#: default/mail_tt2/global_remind.tt2:1 src/lib/Sympa/Commands.pm:2303
 msgid "Subscription summary"
 msgstr "Resumen de suscripción"
 
@@ -3589,8 +3589,7 @@ msgstr "Tus listas"
 msgid "%s / %s"
 msgstr "%s / %s"
 
-#: default/web_tt2/home.tt2:70 default/web_tt2/lists.tt2:22
-#: src/cgi/wwsympa.fcgi.in:4897
+#: default/web_tt2/lists.tt2:22 src/cgi/wwsympa.fcgi.in:4897
 msgid "Others"
 msgstr "Otros"
 
@@ -3998,13 +3997,12 @@ msgstr "Gestión de archivos"
 #: default/web_tt2/d_read.tt2:166 default/web_tt2/d_read.tt2:2
 #: default/web_tt2/d_upload.tt2:2 default/web_tt2/edit_list_request.tt2:4
 #: default/web_tt2/edit_list_request.tt2:43 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/editsubscriber.tt2:47 default/web_tt2/home.tt2:27
-#: default/web_tt2/latest_d_read.tt2:30 default/web_tt2/latest_d_read.tt2:33
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/picture_upload.tt2:21 default/web_tt2/pref.tt2:3
-#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:3
-#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:17
-#: default/web_tt2/subscriber_table.tt2:117
+#: default/web_tt2/editsubscriber.tt2:47 default/web_tt2/latest_d_read.tt2:30
+#: default/web_tt2/latest_d_read.tt2:33 default/web_tt2/modindex.tt2:139
+#: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
+#: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
+#: default/web_tt2/suboptions.tt2:17 default/web_tt2/subscriber_table.tt2:117
 msgid "Open in a new window"
 msgstr "Abrir en una nueva ventana"
 
@@ -4016,13 +4014,12 @@ msgstr "Abrir en una nueva ventana"
 #: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/edit_list_request.tt2:4
 #: default/web_tt2/edit_list_request.tt2:43 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/home.tt2:27 default/web_tt2/menu.tt2:24
-#: default/web_tt2/modindex.tt2:139 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
-#: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:18 default/web_tt2/suboptions.tt2:73
-#: default/web_tt2/suboptions.tt2:94 default/web_tt2/suspend_request.tt2:5
-#: default/web_tt2/sympa_menu.tt2:24
+#: default/web_tt2/menu.tt2:24 default/web_tt2/modindex.tt2:139
+#: default/web_tt2/modindex.tt2:2 default/web_tt2/pref.tt2:3
+#: default/web_tt2/rename_list_request.tt2:3 default/web_tt2/review.tt2:3
+#: default/web_tt2/reviewbouncing.tt2:2 default/web_tt2/suboptions.tt2:18
+#: default/web_tt2/suboptions.tt2:73 default/web_tt2/suboptions.tt2:94
+#: default/web_tt2/suspend_request.tt2:5
 msgid "Help"
 msgstr "Ayuda"
 
@@ -4453,7 +4450,7 @@ msgstr "Para: %1"
 
 #: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:51
 #: default/web_tt2/create_list_request.tt2:40
-#: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:77
+#: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:6
 #: default/web_tt2/tt2_error.tt2:51
 msgid "Subject:"
@@ -4473,7 +4470,8 @@ msgstr "Esta lista está configurada para requerir temas."
 
 #: default/web_tt2/compose_mail.tt2:42
 msgid "Please select one or more topic(s) that corresponds to your message:"
-msgstr "Por favor, seleccione uno o varios temas que correspondan a su mensaje:"
+msgstr ""
+"Por favor, seleccione uno o varios temas que correspondan a su mensaje:"
 
 #: default/web_tt2/compose_mail.tt2:59
 msgid "Messages customization: use the template syntax:"
@@ -4647,7 +4645,7 @@ msgstr "Saltar al contenido."
 
 #: default/web_tt2/crash.tt2:51 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:46 default/web_tt2/list_panel.tt2:81
-#: default/web_tt2/main.tt2:77 default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:51
 msgid "(Edit)"
 msgstr "(Editar)"
 
@@ -4677,13 +4675,13 @@ msgstr "Errores: %1"
 msgid "Traceback"
 msgstr "Rastreo"
 
-#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:91
+#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:96
 #: default/web_tt2/tt2_error.tt2:66
 msgid "Top of Page"
 msgstr "Parte superior de la página"
 
-#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:27
-#: default/web_tt2/home.tt2:29
+#: default/web_tt2/create_list_request.tt2:6 default/web_tt2/home.tt2:51
+#: default/web_tt2/home.tt2:56
 msgid "Create list"
 msgstr "Creación de lista"
 
@@ -6220,15 +6218,15 @@ msgstr "Fecha de fin"
 msgid "Back"
 msgstr "Atrás"
 
-#: default/web_tt2/head_ui.tt2:32
+#: default/web_tt2/head_ui.tt2:32 default/web_tt2/main.tt2:58
 msgid "Please Wait..."
 msgstr "Por favor, espere..."
 
-#: default/web_tt2/home.tt2:3
+#: default/web_tt2/home.tt2:11
 msgid "Welcome"
 msgstr "Bienvenido"
 
-#: default/web_tt2/home.tt2:4
+#: default/web_tt2/home.tt2:13
 msgid ""
 "This server provides you access to your mailing list environment. Starting "
 "from this web page, you can perform subscription options, unsubscription, "
@@ -6238,11 +6236,11 @@ msgstr ""
 "de esta página, puedes modificar tus opciones de suscripción, darte de baja "
 "o de alta, acceder a los archivos, moderar las listas o configurarlas."
 
-#: default/web_tt2/home.tt2:7
+#: default/web_tt2/home.tt2:18
 msgid "Logging In"
 msgstr "Identificación"
 
-#: default/web_tt2/home.tt2:9
+#: default/web_tt2/home.tt2:20
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form in the top right menu."
@@ -6250,7 +6248,7 @@ msgstr ""
 "Muchas funciones en Sympa requieren que te identifiques en el sistema "
 "autenticandote, usando el formulario \"Acceso\" en el menú superior derecha."
 
-#: default/web_tt2/home.tt2:11
+#: default/web_tt2/home.tt2:22
 msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form to the left."
@@ -6258,33 +6256,22 @@ msgstr ""
 "Muchas funciones en Sympa requieren que te identifiques en el sistema "
 "autenticandote,usando el formulario \"Acceso de la izquierda."
 
-#: default/web_tt2/home.tt2:17
+#: default/web_tt2/home.tt2:25
 msgid "What would you like to do ?"
 msgstr "¿Qué te gustaría hacer?"
 
-#: default/web_tt2/home.tt2:29 default/web_tt2/home.tt2:36
-#: default/web_tt2/home.tt2:42 default/web_tt2/loginbanner.tt2:109
-#: default/web_tt2/loginbanner.tt2:133
-msgid "Go"
-msgstr "Aceptar"
-
-#: default/web_tt2/home.tt2:35 default/web_tt2/home.tt2:36
+#: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
+#: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:73
 #: default/web_tt2/loginbanner.tt2:69 default/web_tt2/my.tt2:2
 msgid "My lists"
 msgstr "Mis listas"
 
-#: default/web_tt2/home.tt2:41 default/web_tt2/home.tt2:42
-#: default/web_tt2/pref.tt2:3 default/web_tt2/viewlogs.tt2:53
-msgid "User preferences"
-msgstr "Preferencias de usuario"
-
-#: default/web_tt2/home.tt2:47
-msgid "Browse lists by categories"
-msgstr "Mostrar listas por categoría"
-
-#: default/web_tt2/home.tt2:62
-msgid "List of lists"
-msgstr "Listado de listas"
+#: default/web_tt2/home.tt2:59 default/web_tt2/home.tt2:64
+#: default/web_tt2/home.tt2:76 default/web_tt2/home.tt2:81
+#: default/web_tt2/home.tt2:92 default/web_tt2/home.tt2:97
+#: default/web_tt2/menu.tt2:21 default/web_tt2/sympa_menu.tt2:20
+msgid "Search for List(s)"
+msgstr "Búsqueda de lista(s)"
 
 #: default/web_tt2/info.tt2:11 default/web_tt2/review.tt2:5
 msgid "Administrative Options"
@@ -6658,6 +6645,10 @@ msgstr ""
 msgid "Click to select"
 msgstr "Haga clic para seleccionar"
 
+#: default/web_tt2/loginbanner.tt2:109 default/web_tt2/loginbanner.tt2:133
+msgid "Go"
+msgstr "Aceptar"
+
 #: default/web_tt2/loginbanner.tt2:120 default/web_tt2/loginbanner.tt2:133
 msgid "Login"
 msgstr "Acceso"
@@ -6877,25 +6868,21 @@ msgstr "Introduce un nombre o asunto de lista, o parte de él"
 msgid "Search lists"
 msgstr "Buscar listas"
 
-#: default/web_tt2/menu.tt2:6 default/web_tt2/sympa_menu.tt2:5
+#: default/web_tt2/menu.tt2:6 default/web_tt2/sympa_menu.tt2:6
 msgid "Home"
 msgstr "Portada"
 
-#: default/web_tt2/menu.tt2:10 default/web_tt2/sympa_menu.tt2:9
+#: default/web_tt2/menu.tt2:10 default/web_tt2/sympa_menu.tt2:10
 msgid "Request a List"
 msgstr "Pedir una Lista"
 
-#: default/web_tt2/menu.tt2:15 default/web_tt2/sympa_menu.tt2:14
+#: default/web_tt2/menu.tt2:15 default/web_tt2/sympa_menu.tt2:15
 msgid "Listmaster Admin"
 msgstr "Administración Listmaster"
 
-#: default/web_tt2/menu.tt2:19 default/web_tt2/sympa_menu.tt2:18
+#: default/web_tt2/menu.tt2:19 default/web_tt2/sympa_menu.tt2:26
 msgid "Index of Lists"
 msgstr "Índice de Listas"
-
-#: default/web_tt2/menu.tt2:21 default/web_tt2/sympa_menu.tt2:21
-msgid "Search for List(s)"
-msgstr "Búsqueda de lista(s)"
 
 #: default/web_tt2/modform.tt2:20 default/web_tt2/modform.tt2:33
 #: default/web_tt2/modform.tt2:4
@@ -7391,6 +7378,10 @@ msgstr "Tu avatar en la lista de suscriptores"
 #: default/web_tt2/picture_upload.tt2:26
 msgid "In the members page"
 msgstr "En la pagina de miembros "
+
+#: default/web_tt2/pref.tt2:3 default/web_tt2/viewlogs.tt2:53
+msgid "User preferences"
+msgstr "Preferencias de usuario"
 
 #: default/web_tt2/pref.tt2:17
 msgid "Connection expiration period:"
@@ -8952,9 +8943,49 @@ msgid "You need to be logged in to access this page."
 msgstr "Necesitas identificarte para acceder a esta página."
 
 # Admin es una abreviatura inglesa y poco formal, no española, es preferible administrador.
-#: default/web_tt2/sympa_menu.tt2:2
+#: default/web_tt2/sympa_menu.tt2:3
 msgid "Sympa menu"
 msgstr "Menú Sympa"
+
+#: default/web_tt2/sympa_menu.tt2:24
+#, fuzzy
+msgid "Search form"
+msgstr "Buscar usuario"
+
+#: default/web_tt2/sympa_menu.tt2:28
+msgid "Browse lists by categories"
+msgstr "Mostrar listas por categoría"
+
+#: default/web_tt2/sympa_menu.tt2:36
+msgid "Support"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:40
+#, fuzzy
+msgid "Documentation"
+msgstr "Documento"
+
+#: default/web_tt2/sympa_menu.tt2:42
+msgid "Frequently asked questions"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:42
+msgid "FAQ"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:44
+msgid "Give us feedback about this new Sympa version"
+msgstr ""
+
+#: default/web_tt2/sympa_menu.tt2:44
+#, fuzzy
+msgid "Feedback"
+msgstr "Tipo de realimentación: %1"
+
+#: default/web_tt2/sympa_menu.tt2:64
+#, fuzzy
+msgid "Lists Families"
+msgstr "familias"
 
 #: default/web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -9846,8 +9877,8 @@ msgid ""
 "command using a different email address. Please try using your canonical "
 "address."
 msgstr ""
-"Falló el proceso de autenticación. Probablemente confirmaste tu comando \"%"
-"1\" utilizando una dirección de correo diferente. Por favor, utiliza tu "
+"Falló el proceso de autenticación. Probablemente confirmaste tu comando \"%1"
+"\" utilizando una dirección de correo diferente. Por favor, utiliza tu "
 "dirección de correo verdadera."
 
 #. (u_err.listname,u_err.key)
@@ -13089,59 +13120,57 @@ msgstr "Imposible cargar el cliente. La configuración debe estar errónea."
 msgid "Unknown provider."
 msgstr "Fuente desconocida."
 
-#. (u_err.command)
-#: default/mail_tt2/command_report.tt2:146
-msgid ""
-"The authentication process failed.\n"
-"You probably confirmed your %1 using a different\n"
-"email address. Please try using your canonical address."
-msgstr ""
-"Falló el proceso de autenticación.\n"
-"Probablemente confirmaste tu suscripción utilizando una dirección\n"
-"de correo diferente. Por favor utiliza tu dirección de correo canónica."
+#~ msgid "List of lists"
+#~ msgstr "Listado de listas"
 
-#. (list.name,conf.sympa,list.host)
-#: default/mail_tt2/message_report.tt2:51
-msgid ""
-"The following message was sent to list '%1' and it seems to contain\n"
-"one or more commands like subscribe, unsubscribe, help, index, get, ...\n"
-"\n"
-"If your message contained a command, please notice that \n"
-"commands should never ever be sent to lists. Commands must be sent\n"
-"to %2 exclusively.\n"
-"\n"
-"If your message was really meant to be sent to the list, it was\n"
-"interpreted by the software as a command. Please contact the list owner:  \n"
-"%1-request@%3 so that he can take care of your message.\n"
-"\n"
-"Thank you for your attention.\n"
-msgstr ""
-"El siguiente mensaje fue enviado a la lista %1 y parece\n"
-"contener uno o varios comandos como SUBSCRIBE, UNSUBSCRIBE, HELP, INDEX, "
-"GET,... \n"
-"\n"
-"Si de hecho tu mensaje contuviera un comando, por favor recuerda que "
-"dichos  \n"
-"comandos por ningún motivo deben ser enviados a las listas.\n"
-"Deben ser enviados exclusivamente a la dirección %2.\n"
-"\n"
-"Si tu mensaje fuera destinado efectivamente a la lista, ha sido "
-"desgraciadamente\n"
-"interpretado por el software como un comando.\n"
-"Por favor contacta al responsable de la lista:\n"
-" %1-request@%3 para que procese tu mensaje.\n"
-"\n"
-"Gracias por tu atención. \n"
-"\n"
+#~ msgid ""
+#~ "The authentication process failed.\n"
+#~ "You probably confirmed your %1 using a different\n"
+#~ "email address. Please try using your canonical address."
+#~ msgstr ""
+#~ "Falló el proceso de autenticación.\n"
+#~ "Probablemente confirmaste tu suscripción utilizando una dirección\n"
+#~ "de correo diferente. Por favor utiliza tu dirección de correo canónica."
 
-#. (list.name)
-#: default/mail_tt2/message_report.tt2:93
-msgid ""
-"Your message for list '%1' (attached below) was rejected. \n"
-"You are not allowed to send this message for the following reason:"
-msgstr ""
-"Tu mensaje para la lista '%1' (adjunto a continuación) fue rechazado. \n"
-" No estás autorizado a mandar este mensaje por la siguiente razón: "
+#~ msgid ""
+#~ "The following message was sent to list '%1' and it seems to contain\n"
+#~ "one or more commands like subscribe, unsubscribe, help, index, get, ...\n"
+#~ "\n"
+#~ "If your message contained a command, please notice that \n"
+#~ "commands should never ever be sent to lists. Commands must be sent\n"
+#~ "to %2 exclusively.\n"
+#~ "\n"
+#~ "If your message was really meant to be sent to the list, it was\n"
+#~ "interpreted by the software as a command. Please contact the list "
+#~ "owner:  \n"
+#~ "%1-request@%3 so that he can take care of your message.\n"
+#~ "\n"
+#~ "Thank you for your attention.\n"
+#~ msgstr ""
+#~ "El siguiente mensaje fue enviado a la lista %1 y parece\n"
+#~ "contener uno o varios comandos como SUBSCRIBE, UNSUBSCRIBE, HELP, INDEX, "
+#~ "GET,... \n"
+#~ "\n"
+#~ "Si de hecho tu mensaje contuviera un comando, por favor recuerda que "
+#~ "dichos  \n"
+#~ "comandos por ningún motivo deben ser enviados a las listas.\n"
+#~ "Deben ser enviados exclusivamente a la dirección %2.\n"
+#~ "\n"
+#~ "Si tu mensaje fuera destinado efectivamente a la lista, ha sido "
+#~ "desgraciadamente\n"
+#~ "interpretado por el software como un comando.\n"
+#~ "Por favor contacta al responsable de la lista:\n"
+#~ " %1-request@%3 para que procese tu mensaje.\n"
+#~ "\n"
+#~ "Gracias por tu atención. \n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Your message for list '%1' (attached below) was rejected. \n"
+#~ "You are not allowed to send this message for the following reason:"
+#~ msgstr ""
+#~ "Tu mensaje para la lista '%1' (adjunto a continuación) fue rechazado. \n"
+#~ " No estás autorizado a mandar este mensaje por la siguiente razón: "
 
 #~ msgid "hide"
 #~ msgstr "oculto"
