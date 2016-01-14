@@ -15,10 +15,10 @@ msgstr ""
 "PO-Revision-Date: 2015-09-01 10:08+0000\n"
 "Last-Translator: system user <>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.7\n"
 "X-POOTLE-MTIME: 1441102135.000000\n"
@@ -2163,9 +2163,8 @@ msgstr "利用するSSL暗号方式"
 
 #: src/lib/Sympa/ListDef.pm:1063 src/lib/Sympa/ListDef.pm:1173
 #: src/lib/Sympa/ListDef.pm:1463 src/lib/Sympa/ListDef.pm:1579
-#, fuzzy
 msgid "Certificate verification"
-msgstr "証明書の有効期限"
+msgstr "証明書の検証"
 
 #: src/lib/Sympa/ListDef.pm:1803
 msgid "A set of parameters in order to define outgoing DKIM signature"
@@ -5984,9 +5983,8 @@ msgid "Purge selected lists"
 msgstr "選択したリストを削除"
 
 #: default/web_tt2/get_closed_lists.tt2:35
-#, fuzzy
 msgid " No closed lists"
-msgstr "閉鎖中のリスト"
+msgstr " 閉鎖中のリストはありません"
 
 #: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:38
 #: default/web_tt2/serveradmin.tt2:11
@@ -6045,9 +6043,8 @@ msgid "Requested date"
 msgstr "申込日"
 
 #: default/web_tt2/get_pending_lists.tt2:32
-#, fuzzy
 msgid " No pending lists"
-msgstr "承認待ちのリスト"
+msgstr " 承認待ちのリストはありません"
 
 #: default/web_tt2/header.tt2:15 default/web_tt2/header.tt2:26
 msgid "Sympa Menu"
@@ -6748,9 +6745,8 @@ msgid "Distribute"
 msgstr "配送"
 
 #: default/web_tt2/modform.tt2:5
-#, fuzzy
 msgid "Required topic"
-msgstr "必須"
+msgstr "必須のトピック"
 
 #: default/web_tt2/modform.tt2:14
 msgid ""
@@ -7498,9 +7494,8 @@ msgid "Reset errors for selected users"
 msgstr "選んだ人のエラーをリセットする"
 
 #: default/web_tt2/reviewbouncing.tt2:134
-#, fuzzy
 msgid "No bouncing members"
-msgstr "配送エラーを起こしている読者の管理"
+msgstr "配送エラーを起こしている読者はいません"
 
 #: default/web_tt2/review_family.tt2:4
 msgid "Table which display family lists"
@@ -7531,9 +7526,8 @@ msgid "Synchronize members with data sources"
 msgstr "データソースと読者情報の同期"
 
 #: default/web_tt2/review.tt2:27
-#, fuzzy
 msgid "Subscription reminder message"
-msgstr "読者登録確認の定期発送タスク"
+msgstr "登録確認メッセージ"
 
 #: default/web_tt2/review.tt2:29
 msgid "Remind all"
@@ -9594,67 +9588,55 @@ msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "%1 はすでに %2 メーリングリストに読者登録しています。"
 
 #: default/mail_tt2/command_report.tt2:145
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"本人確認の手続きが失敗しました。\n"
-"おそらく、%1の確認を別のメール アドレスでやってしまったのでしょう。\n"
-"あなたの正式なアドレスを使ってやり直してみてください。"
+"本人確認の手続きが失敗しました。おそらく、読者登録の確認を別のメール "
+"アドレスでやってしまったのでしょう。あなたの正式なアドレスを使ってやり直してみてください。"
 
 #: default/mail_tt2/command_report.tt2:147
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
 "unsubscription using a different email address. Please try using your "
 "canonical address."
 msgstr ""
-"本人確認の手続きが失敗しました。\n"
-"おそらく、%1の確認を別のメール アドレスでやってしまったのでしょう。\n"
-"あなたの正式なアドレスを使ってやり直してみてください。"
+"本人確認の手続きが失敗しました。おそらく、登録解除の確認を別のメール "
+"アドレスでやってしまったのでしょう。あなたの正式なアドレスを使ってやり直してみてください。"
 
 #: default/mail_tt2/command_report.tt2:149
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"本人確認の手続きが失敗しました。\n"
-"おそらく、%1の確認を別のメール アドレスでやってしまったのでしょう。\n"
-"あなたの正式なアドレスを使ってやり直してみてください。"
+"本人確認の手続きが失敗しました。おそらく、読者追加の確認を別のメール "
+"アドレスでやってしまったのでしょう。あなたの正式なアドレスを使ってやり直してみてください。"
 
 #: default/mail_tt2/command_report.tt2:151
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"本人確認の手続きが失敗しました。\n"
-"おそらく、%1の確認を別のメール アドレスでやってしまったのでしょう。\n"
-"あなたの正式なアドレスを使ってやり直してみてください。"
+"本人確認の手続きが失敗しました。おそらく、メーリングリストへの招待の確認を別のメール "
+"アドレスでやってしまったのでしょう。あなたの正式なアドレスを使ってやり直してみてください。"
 
 #: default/mail_tt2/command_report.tt2:153
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"本人確認の手続きが失敗しました。\n"
-"おそらく、%1の確認を別のメール アドレスでやってしまったのでしょう。\n"
-"あなたの正式なアドレスを使ってやり直してみてください。"
+"本人確認の手続きが失敗しました。おそらく、読者削除の確認を別のメール "
+"アドレスでやってしまったのでしょう。あなたの正式なアドレスを使ってやり直してみてください。"
 
 #. (u_err.command)
 #: default/mail_tt2/command_report.tt2:155
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
 "command using a different email address. Please try using your canonical "
 "address."
 msgstr ""
-"本人確認の手続きが失敗しました。\n"
-"おそらく、%1の確認を別のメール アドレスでやってしまったのでしょう。\n"
-"あなたの正式なアドレスを使ってやり直してみてください。"
+"本人確認の手続きが失敗しました。おそらく、「%1」コマンドの確認を別のメール "
+"アドレスでやってしまったのでしょう。あなたの正式なアドレスを使ってやり直してみてください。"
 
 #. (u_err.listname,u_err.key)
 #: default/mail_tt2/command_report.tt2:160
@@ -9861,7 +9843,6 @@ msgstr ""
 
 #. (list.name,conf.sympa,list.host,cmd)
 #: default/mail_tt2/delivery_status_notification.tt2:78
-#, fuzzy
 msgid ""
 "The following message was sent to list '%1' and it contains a line '%4' that "
 "can be interpreted as a command.\n"
@@ -9877,18 +9858,24 @@ msgid ""
 "\n"
 "Thank you for your attention."
 msgstr ""
-"以下のメッセージはメーリングリスト '%1' 宛てに送られたものですが、コマンドを"
-"含んでいるようでした (コマンドとは subscribe、unsubscribe、help、index、get、"
-"……のようなものです)。\n"
+"The following message was sent to list '%1' and it contains a line '%4' that "
+"can be interpreted as a command.\n"
+"以下のメッセージは %1 メーリングリスト宛てに送られたものですが、その中の「%4」という行はコマンドのように見えます。\n"
 "\n"
-"実際にコマンドを書いて送られたのであれば、今後はコマンドをリストに送らないよ"
-"うにしてください。コマンドは、%2 にしか送れません。\n"
+"If your message contained a command (like subscribe, unsubscribe, help, "
+"index, get, ...), please note that commands should never be sent to lists. "
+"Commands must be sent to %2 exclusively.\n"
+"実際にコマンドを書いて送られたのであれば (コマンドとは subscribe、unsubscribe、help、index、get、……のようなものです)"
+"、今後はコマンドをリストに送らないようにしてください。コマンドは、%2 にしか送れません。\n"
 "\n"
-"本当はリスト宛てのメッセージだったとしても、コマンドとしてサーバソフトウェア"
-"が読み取ってしまいました。リストのオーナーに問い合わせれば、メッセージを送り"
-"直してもらえるかもしれません: %1-request@%3\n"
+"If your message was really meant to be sent to the list, it was interpreted "
+"by the software as a command. Please contact the list owner:\n"
+"本当にリスト宛てのメッセージだったのだとしても、コマンドとしてサーバソフトウェアが読み取ってしまいました。リストのオーナーに問い合わせれば、\n"
+"   %1-request@%3\n"
+"so that they can take care of your message.\n"
+"メッセージを送れるようにしてもらえるかもしれません。\n"
 "\n"
-"最後まで読んでいただきありがとうございました。\n"
+"最後まで読んでいただきありがとうございました。"
 
 # DSNのため英語併記
 #: default/mail_tt2/delivery_status_notification.tt2:81
@@ -9950,14 +9937,13 @@ msgstr ""
 # DSNのため英語併記
 #. (list.name)
 #: default/mail_tt2/delivery_status_notification.tt2:96
-#, fuzzy
 msgid ""
 "Your message for list '%1' (attached below) was rejected.\n"
 "You are not allowed to send this message for the following reason:"
 msgstr ""
 "Your message for list '%1' (attached below) was rejected. \n"
 "You are not allowed to send this message for the following reason:\n"
-"リスト %1 宛てのメッセージ (下に添付します) を拒否しました。\n"
+"あなたからリスト %1 宛てのメッセージ (下に添付します) を拒否しました。\n"
 "このメッセージは以下の理由で送ることができません。"
 
 # DSNなので英語を併記

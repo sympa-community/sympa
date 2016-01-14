@@ -18,12 +18,12 @@ msgstr ""
 "Project-Id-Version: sympa-es\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
 "PO-Revision-Date: 2015-09-01 10:02+0000\n"
-"Last-Translator: Daniel Viñar Ulriksen <dani@belvil.net>\n"
+"Last-Translator: acasado <acasado@ual.es>\n"
 "Language-Team: Español <sympa-users@sympa.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.7\n"
 "X-POOTLE-MTIME: 1441101769.000000\n"
@@ -754,7 +754,7 @@ msgstr "Carpeta para el contenedor de suscripciones"
 
 #: src/lib/Sympa/ConfDef.pm:723
 msgid "Directory for topic spool"
-msgstr "Carpeta para el contenedor de categorías"
+msgstr "Carpeta para el contenedor de temáticas"
 
 #: src/lib/Sympa/ConfDef.pm:729
 msgid "Directory for bounce incoming spool"
@@ -1430,7 +1430,7 @@ msgstr "Moderadores"
 
 #: src/lib/Sympa/ListDef.pm:239
 msgid "Topics for the list"
-msgstr "Tópicos para la lista"
+msgstr "Temas para la lista"
 
 #: src/lib/Sympa/ListDef.pm:247
 msgid "Internet domain"
@@ -1487,24 +1487,24 @@ msgstr "Perfil de Suscripción"
 
 #: src/lib/Sympa/ListDef.pm:384
 msgid "Topics for message categorization"
-msgstr "Tópicos o temas para la categorización de mensajes"
+msgstr "Temas para la categorización de mensajes"
 
 #: src/lib/Sympa/ListDef.pm:388
 msgid "Message topic name"
-msgstr "mensaje de nombre de tema"
+msgstr "Mensaje nombre del tema"
 
 #: src/lib/Sympa/ListDef.pm:395
 msgid "Message topic keywords"
-msgstr "mensaje de tema de palabra claves"
+msgstr "Mensaje palabra claves del tema"
 
 #: src/lib/Sympa/ListDef.pm:401
 msgid "Message topic title"
-msgstr "mensaje de tema titulo"
+msgstr "Mensaje título del tema"
 
 #: src/lib/Sympa/ListDef.pm:413
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
-"Define a que partes de los mensajes las palabras claves de tópicos serán "
+"Define a que partes de los mensajes las palabras claves del tema serán "
 "aplicadas"
 
 #: src/lib/Sympa/ListDef.pm:421
@@ -2118,7 +2118,7 @@ msgstr "Nombre"
 
 #: src/lib/Sympa/ListDef.pm:2140
 msgid "additional comment"
-msgstr "Comentario"
+msgstr "comentario adicional"
 
 #: src/lib/Sympa/ListDef.pm:2146
 msgid "type"
@@ -2238,9 +2238,8 @@ msgstr "Claves de encriptado SSL utilizadas"
 
 #: src/lib/Sympa/ListDef.pm:1063 src/lib/Sympa/ListDef.pm:1173
 #: src/lib/Sympa/ListDef.pm:1463 src/lib/Sympa/ListDef.pm:1579
-#, fuzzy
 msgid "Certificate verification"
-msgstr "Fecha de caducidad"
+msgstr "Verificación de certificado"
 
 #: src/lib/Sympa/ListDef.pm:1803
 msgid "A set of parameters in order to define outgoing DKIM signature"
@@ -4470,11 +4469,11 @@ msgstr "Enviarme el mensaje"
 
 #: default/web_tt2/compose_mail.tt2:40 default/web_tt2/modform.tt2:7
 msgid "This list is configured to require topic(s)."
-msgstr "La lista está configurada para usar los temas."
+msgstr "Esta lista está configurada para requerir temas."
 
 #: default/web_tt2/compose_mail.tt2:42
 msgid "Please select one or more topic(s) that corresponds to your message:"
-msgstr "Por favor seleccione uno o varios temas que correspondan a su mensaje:"
+msgstr "Por favor, seleccione uno o varios temas que correspondan a su mensaje:"
 
 #: default/web_tt2/compose_mail.tt2:59
 msgid "Messages customization: use the template syntax:"
@@ -5139,7 +5138,7 @@ msgstr "¿Quieres cancelar la subida de archivo?"
 
 #: default/web_tt2/edit_attributes.tt2:4 default/web_tt2/subindex.tt2:15
 msgid "Additional information"
-msgstr "Informaciones adicionales"
+msgstr "Información adicional"
 
 #. (k.name)
 #: default/web_tt2/edit_attributes.tt2:7
@@ -6133,9 +6132,8 @@ msgid "Purge selected lists"
 msgstr "Borrar las listas seleccionadas"
 
 #: default/web_tt2/get_closed_lists.tt2:35
-#, fuzzy
 msgid " No closed lists"
-msgstr "lista clausurada"
+msgstr "No hay listas clausuradas"
 
 #: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:38
 #: default/web_tt2/serveradmin.tt2:11
@@ -6194,9 +6192,8 @@ msgid "Requested date"
 msgstr "Fecha de la solicitud"
 
 #: default/web_tt2/get_pending_lists.tt2:32
-#, fuzzy
 msgid " No pending lists"
-msgstr "Listas pendientes"
+msgstr "No hay listas pendientes"
 
 # Admin es una abreviatura inglesa y poco formal, no española, es preferible administrador.
 #: default/web_tt2/header.tt2:15 default/web_tt2/header.tt2:26
@@ -6906,21 +6903,20 @@ msgid "Distribute"
 msgstr "Distribuir"
 
 #: default/web_tt2/modform.tt2:5
-#, fuzzy
 msgid "Required topic"
-msgstr "necesario"
+msgstr "Tema necesario"
 
 #: default/web_tt2/modform.tt2:14
 msgid ""
 "Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute:"
 msgstr ""
-"Favor seleccionar uno o varios temas que describan el mensaje que "
+"Por favor, seleccione uno o varios temas que describan el mensaje que "
 "distribuyes:"
 
 #: default/web_tt2/modform.tt2:22
 msgid "You must select a topic"
-msgstr "Debes seleccionar un tema (topic)"
+msgstr "Debes seleccionar un tema"
 
 #: default/web_tt2/modform.tt2:37 default/web_tt2/modform.tt2:66
 #: default/web_tt2/modform.tt2:68 default/web_tt2/modindex.tt2:131
@@ -7344,7 +7340,7 @@ msgstr ""
 #: default/web_tt2/notice.tt2:113
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr ""
-"Se ha notificado a los suscriptores invloucrados acerca de los temas "
+"Se ha notificado a los suscriptores involucrados acerca de los temas "
 "borrados."
 
 #. (notice.total)
@@ -7559,14 +7555,14 @@ msgstr "Error desconocido."
 
 #: default/web_tt2/request_topic.tt2:5
 msgid "This list is configured to require topic(s) foreach message."
-msgstr "Esta lista está configurada para requerir tema(s) en cada mensaje."
+msgstr "Esta lista está configurada para requerir temas en cada mensaje."
 
 #: default/web_tt2/request_topic.tt2:7
 msgid ""
 "Please select one or more topic(s) that corresponds to your message below:"
 msgstr ""
-"Favor seleccionar uno o varios temas que correspondan a tu mensaje a "
-"continuación:"
+"Por favor, seleccione uno o varios temas que correspondan a su mensaje de "
+"abajo:"
 
 #: default/web_tt2/request_topic.tt2:15 default/web_tt2/request_topic.tt2:17
 msgid "Tag this mail"
@@ -7664,9 +7660,8 @@ msgid "Reset errors for selected users"
 msgstr "Anular los errores para los suscriptores seleccionados"
 
 #: default/web_tt2/reviewbouncing.tt2:134
-#, fuzzy
 msgid "No bouncing members"
-msgstr "Gestión de suscriptores con errores"
+msgstr "No hay miembros con errores"
 
 #: default/web_tt2/review_family.tt2:4
 msgid "Table which display family lists"
@@ -7697,9 +7692,8 @@ msgid "Synchronize members with data sources"
 msgstr "Sincronizar miembros con las fuentes de datos"
 
 #: default/web_tt2/review.tt2:27
-#, fuzzy
 msgid "Subscription reminder message"
-msgstr "Tarea periódica de recordatorios de suscripción"
+msgstr "Mensaje recordatorio de suscripción"
 
 #: default/web_tt2/review.tt2:29
 msgid "Remind all"
@@ -9443,7 +9437,7 @@ msgstr "Sólo el listmaster puede consultar los temas"
 
 #: default/mail_tt2/authorization_reject.tt2:153
 msgid "Topics visibility is restricted to identified users."
-msgstr "Sólo las usuarias y usuarios identificados pueden consultar los temas."
+msgstr "Solo los usuarios identificados pueden consultar los temas."
 
 #: default/mail_tt2/authorization_reject.tt2:156
 msgid "It is not possible to unsubscribe from this list."
@@ -9800,67 +9794,61 @@ msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "El usuario '%1' ya es miembro de la lista '%2'."
 
 #: default/mail_tt2/command_report.tt2:145
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"Falló el proceso de autenticación.\n"
-"Probablemente confirmaste tu suscripción utilizando una dirección\n"
-"de correo diferente. Por favor utiliza tu dirección de correo canónica."
+"Falló el proceso de autenticación. Probablemente confirmaste tu suscripción "
+"utilizando una dirección de correo diferente. Por favor, utiliza tu "
+"dirección de correo verdadera."
 
 #: default/mail_tt2/command_report.tt2:147
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
 "unsubscription using a different email address. Please try using your "
 "canonical address."
 msgstr ""
-"Falló el proceso de autenticación.\n"
-"Probablemente confirmaste tu suscripción utilizando una dirección\n"
-"de correo diferente. Por favor utiliza tu dirección de correo canónica."
+"Falló el proceso de autenticación. Probablemente confirmaste tu baja "
+"utilizando una dirección de correo diferente. Por favor, utiliza tu "
+"dirección de correo verdadera."
 
 #: default/mail_tt2/command_report.tt2:149
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"Falló el proceso de autenticación.\n"
-"Probablemente confirmaste tu suscripción utilizando una dirección\n"
-"de correo diferente. Por favor utiliza tu dirección de correo canónica."
+"Falló el proceso de autenticación. Probablemente confirmaste tu adición de "
+"suscripción utilizando una dirección de correo diferente. Por favor, utiliza "
+"tu dirección de correo verdadera."
 
 #: default/mail_tt2/command_report.tt2:151
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"Falló el proceso de autenticación.\n"
-"Probablemente confirmaste tu suscripción utilizando una dirección\n"
-"de correo diferente. Por favor utiliza tu dirección de correo canónica."
+"Falló el proceso de autenticación. Probablemente confirmaste tu invitación "
+"utilizando una dirección de correo diferente. Por favor, utiliza tu "
+"dirección de correo verdadera."
 
 #: default/mail_tt2/command_report.tt2:153
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"Falló el proceso de autenticación.\n"
-"Probablemente confirmaste tu suscripción utilizando una dirección\n"
-"de correo diferente. Por favor utiliza tu dirección de correo canónica."
+"Falló el proceso de autenticación. Probablemente confirmaste tu borrado "
+"utilizando una dirección de correo diferente. Por favor, utiliza tu "
+"dirección de correo verdadera."
 
 #. (u_err.command)
 #: default/mail_tt2/command_report.tt2:155
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
 "command using a different email address. Please try using your canonical "
 "address."
 msgstr ""
-"Falló el proceso de autenticación.\n"
-"Probablemente confirmaste tu suscripción utilizando una dirección\n"
-"de correo diferente. Por favor utiliza tu dirección de correo canónica."
+"Falló el proceso de autenticación. Probablemente confirmaste tu comando \"%"
+"1\" utilizando una dirección de correo diferente. Por favor, utiliza tu "
+"dirección de correo verdadera."
 
 #. (u_err.listname,u_err.key)
 #: default/mail_tt2/command_report.tt2:160
@@ -10029,7 +10017,6 @@ msgstr "Para mayor información, por favor contacta a  %1@%2 "
 
 #. (list.name,conf.sympa,list.host,cmd)
 #: default/mail_tt2/delivery_status_notification.tt2:78
-#, fuzzy
 msgid ""
 "The following message was sent to list '%1' and it contains a line '%4' that "
 "can be interpreted as a command.\n"
@@ -10045,23 +10032,19 @@ msgid ""
 "\n"
 "Thank you for your attention."
 msgstr ""
-"El siguiente mensaje fue enviado a la lista %1 y parece\n"
-"contener uno o varios comandos como SUBSCRIBE, UNSUBSCRIBE, HELP, INDEX, "
-"GET,... \n"
+"El siguiente mensaje fue enviado a la lista %1 y contiene una línea '%4' que "
+"puede ser interpretada como un comando.\n"
 "\n"
-"Si de hecho tu mensaje contuviera un comando, por favor recuerda que "
-"dichos  \n"
-"comandos por ningún motivo deben ser enviados a las listas.\n"
-"Deben ser enviados exclusivamente a la dirección %2.\n"
+"Si tu mensaje contiene un comando (como SUBSCRIBE, UNSUBSCRIBE, HELP, INDEX, "
+"GET,...), por favor, recuerde que los comandos nunca deben ser enviados a "
+"listas. Los comandos deben ser enviados exclusivamente a %2.\n"
 "\n"
-"Si tu mensaje fuera destinado efectivamente a la lista, ha sido "
-"desgraciadamente\n"
-"interpretado por el software como un comando.\n"
-"Por favor contacta al responsable de la lista:\n"
-" %1-request@%3 para que procese tu mensaje.\n"
+"Si tu mensaje se tiene que enviar a la lista, será interpretado por el "
+"programa como un comando. Por favor, contacta con el dueño de la lista:\n"
+"  %1-request@%3\n"
+"para que puedan hacerse cargo de tu mensaje.\n"
 "\n"
-"Gracias por tu atención. \n"
-"\n"
+"Gracias por tu atención."
 
 #: default/mail_tt2/delivery_status_notification.tt2:81
 msgid "Your message cannot be personalized.  Please check template syntax."
@@ -10106,12 +10089,11 @@ msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/delivery_status_notification.tt2:96
-#, fuzzy
 msgid ""
 "Your message for list '%1' (attached below) was rejected.\n"
 "You are not allowed to send this message for the following reason:"
 msgstr ""
-"Tu mensaje para la lista '%1' (adjunto a continuación) fue rechazado. \n"
+"Tu mensaje para la lista '%1' (adjunto a continuación) fue rechazado.\n"
 " No estás autorizado a mandar este mensaje por la siguiente razón: "
 
 #: default/mail_tt2/delivery_status_notification.tt2:103
@@ -11798,8 +11780,8 @@ msgid ""
 "This mailing list is configured to require topics; that's probably why this "
 "message went through the moderation process."
 msgstr ""
-"Esta lista está configurada para requerir temas; es probablemente por eso "
-"que este mensaje fue desviado al proceso de moderación."
+"Esta lista de correo está configurada para requerir temas; esa es la razón "
+"de que el mensaje se enviara al proceso de moderación."
 
 #: default/mail_tt2/moderate.tt2:23
 msgid ""
@@ -11965,8 +11947,8 @@ msgid ""
 "List %1 allows you to tag your messages, using a set of defined topics. To "
 "tag the attached message go to the following page:"
 msgstr ""
-"la lista %1 permite que marques tus mensajes usando un conjunto de temas "
-"predefinidos. ara marcar los mensajes adjuntos, visita este enlace:  "
+"La lista %1 permite que marques tus mensajes usando un conjunto de temas "
+"predefinidos. Para marcar los mensajes adjuntos, visita este enlace:  "
 
 #. (list.name)
 #: default/mail_tt2/send_auth.tt2:13
@@ -12134,7 +12116,7 @@ msgstr "Puedes contactar con el dueño de la lista:"
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:13
 msgid "Topics udpating in list %1"
-msgstr "Actualización de t&opicos en la lista %1"
+msgstr "Actualización de temas en la lista %1"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:16
@@ -12143,12 +12125,13 @@ msgid ""
 "deleted.\n"
 "Deleted topic(s) is(are):"
 msgstr ""
-"Algunos temas a los que estás suscrito en la lista '%1' fueron borrados.\n"
-"El(Los) tema(s) borrado(s) es(son):"
+"Algunos de los temas a los que estás suscrito en la lista '%1' fueron "
+"borrados.\n"
+"Los temas borrados son:"
 
 #: default/mail_tt2/user_notification.tt2:21
 msgid "To update your topics subscription, go to the following page:"
-msgstr "Para actualizar tu suscripción de tópicos y temas, visita esta página:"
+msgstr "Para actualizar tu suscripción de temas, visita esta página:"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:26
