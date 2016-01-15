@@ -58,18 +58,26 @@
 		<li><a class="MainMenuLinks" [% IF conf.main_menu_custom_button_3_target %] target ="[% conf.main_menu_custom_button_3_target %]"[% END %] href="[% conf.main_menu_custom_button_3_url %]">[% conf.main_menu_custom_button_3_title %]</a></li>
 	[%END%]
 
-        [% IF conf.automatic_list_families.keys && user.email %]
-                [% IF top_menu %][% IF action == 'automatic_lists_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %][% END %]
-                <li class="has-dropdown [% class %]">
-                    <a href="#"><i class="fa fa-list-alt"></i> [%|loc%]Lists Families[%END%]</a>
-                    <ul class="dropdown">
-                    [% FOREACH alf IN conf.automatic_list_families.keys %]
-                            [% IF action == 'automatic_lists_request' && family.name == conf.automatic_list_families.$alf.name %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]  
-                            [% IF session.is_family_owner.$alf %]
-                                <li class="[% class %]"><a  href="[% path_cgi %]/automatic_lists_request/[% conf.automatic_list_families.$alf.name %]" ><i class="fa fa-list-alt"></i> [% conf.automatic_list_families.$alf.display %]</a></li>
-                            [% END %]
-                    [% END %]
-                    </ul>
-                </li>
-        [% END %]
+	[% IF conf.automatic_list_families.keys && user.email %]
+		[% SET family_li = '' %]
+		[% SET owns_family = 0 %]
+		[% FOREACH alf IN conf.automatic_list_families.keys %]
+			[% IF action == 'automatic_lists_request' && family.name == conf.automatic_list_families.$alf.name %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]  
+			[% IF session.is_family_owner.$alf %]
+			[% display = conf.automatic_list_families.$alf.display %]
+			[% name = conf.automatic_list_families.$alf.name %]
+				[% family_li  = family_li _ "<li class=\"${class}\"><a  href=\"${path_cgi}/automatic_lists_request/${name}\" ><i class=\"fa fa-list-alt\"></i> ${display}</a></li>" %]
+				[% owns_family = 1 %]
+			[% END %]
+		[% END %]
+			[% IF top_menu %][% IF action == 'automatic_lists_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %][% END %]
+			[% IF owns_family %]
+			<li class="has-dropdown [% class %]">
+				<a href="#"><i class="fa fa-list-alt"></i> [%|loc%]Lists Families[%END%]</a>
+				<ul class="dropdown">
+					[% family_li %]
+				 </ul>
+			</li>
+			[% END %]
+	[% END %]
 <!-- end sympa_menu.tt2 -->	
