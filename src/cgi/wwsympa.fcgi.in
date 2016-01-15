@@ -177,6 +177,7 @@ our %comm = (
     'my'               => 'do_my',
     'which'            => 'do_which',
     'lists'            => 'do_lists',
+    'lists_categories' => 'do_lists_categories',
     'latest_lists'     => 'do_latest_lists',
     'active_lists'     => 'do_active_lists',
     'info'             => 'do_info',
@@ -4979,6 +4980,11 @@ sub do_lists {
             push @{$param->{'orderedlist'}{'others'}}, $listname;
         }
     }
+    return 1;
+}
+
+sub do_lists_categories {
+    wwslog('info', '');
     return 1;
 }
 

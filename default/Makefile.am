@@ -262,6 +262,7 @@ nobase_default_DATA = \
 	web_tt2/lca.tt2 \
 	web_tt2/list_button_footer.tt2 \
 	web_tt2/list_button_header.tt2 \
+	web_tt2/lists_categories.tt2 \
 	web_tt2/list_menu.tt2 \
 	web_tt2/list_panel.tt2 \
 	web_tt2/lists.tt2 \
