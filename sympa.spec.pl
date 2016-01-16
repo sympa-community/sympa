@@ -126,8 +126,8 @@ make DESTDIR=%{buildroot}
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
-cp -rp %{buildroot}%{_docdir}/%{name}/* ./
-rm -rf %{buildroot}%{_docdir}/%{name}/*
+mv %{buildroot}%{_docdir}/%{name} __doc
+cp -p AUTHORS ChangLog COPYING NEWS README __doc/
 
 %check
 %if 0%{?do_check}
@@ -154,7 +154,7 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS COPYING dot.perltidyrc NEWS README* samples
+%doc __doc/*
 %attr(-,sympa,sympa) %{_localstatedir}/*/sympa
 %{_sbindir}/*
 %dir %{_libexecdir}/sympa
