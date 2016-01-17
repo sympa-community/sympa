@@ -102,7 +102,14 @@ sub _twist {
     # Initialize command report.
     Sympa::Report::init_report_cmd();
 
-    my $status = _do_command($message);
+    my $status;
+    my $requests = _load_requests($message);
+    if ($requests and @$requests) {
+        foreach my $request (@$requests) {
+            my $result = Sympa::Commands::execute_request($request);
+            $status ||= $result;
+        }
+    }
 
     # Mail back the result.
     if (Sympa::Report::is_there_any_report_cmd()) {
@@ -166,7 +173,7 @@ sub _twist {
 # Private subroutines.
 
 # Old name: (part of) DoCommand() in sympa_msg.pl.
-sub _do_command {
+sub _load_requests {
     my $message = shift;
 
     my ($list, $robot);
@@ -179,36 +186,36 @@ sub _do_command {
         $robot = '*';
     }
 
-    my $success;
-    my $cmd_found = 0;
     my $messageid = $message->{message_id};
     my $sender    = $message->{sender};
 
     # If type is subscribe or unsubscribe, parse as a single command.
-    if (   $message->{listtype} eq 'subscribe'
-        or $message->{listtype} eq 'unsubscribe') {
+    if (my $action =
+        {subscribe => 'subscribe', unsubscribe => 'signoff'}
+        ->{$message->{listtype} || ''}) {
         $log->syslog('debug', 'Processing message for %s type %s',
             $message->{context}, $message->{listtype});
         # FIXME: at this point $message->{'dkim_pass'} does not verify that
         # Subject: is part of the signature. It SHOULD !
         my $auth_level = $message->{'dkim_pass'} ? 'dkim' : undef;
-
-        Sympa::Commands::parse($robot,
-            sprintf('%s %s', $message->{listtype}, $list->{'name'}),
-            $auth_level, $message);
-        $log->db_log(
-            'robot'        => $robot,
-            'list'         => $list->{'name'},
-            'action'       => 'DoCommand',
-            'parameters'   => $message->get_id,
-            'target_email' => '',
-            'msg_id'       => $messageid,
-            'status'       => 'success',
-            'error_type'   => '',
-            'user_email'   => $sender
-        );
-        return 1;
+        return [
+            Sympa::Request->new_from_tuples(
+                action => $action,
+                cmd_line =>
+                    sprintf('%s %s', $message->{listtype}, $list->{'name'}),
+                context  => $list,
+                email    => $message->{sender},
+                message  => $message,
+                sender   => $message->{sender},
+                sign_mod => $auth_level,
+            )
+        ];
     }
+
+    my $auth_level =
+          $message->{'smime_signed'} ? 'smime'
+        : $message->{'dkim_pass'}    ? 'dkim'
+        :                              undef;
 
     ## Process the Subject of the message
     ## Search and process a command in the Subject field
@@ -217,90 +224,53 @@ sub _do_command {
     $subject_field =~ s/\n//mg;    ## multiline subjects
     my $re_regexp = Sympa::Regexps::re();
     $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
-
-    #FIXME
-    my $auth_level =
-          $message->{'smime_signed'} ? 'smime'
-        : $message->{'dkim_pass'}    ? 'dkim'
-        :                              undef;
-
-    if (defined $subject_field and $subject_field =~ /\S/) {
-        $success ||=
+    if ($subject_field =~ /\S/) {
+        my $request =
             Sympa::Commands::parse($robot, $subject_field, $auth_level,
             $message);
-        unless ($success and $success eq 'unknown_cmd') {
-            $cmd_found = 1;
+        return [$request] unless $request->{action} eq 'unknown';
+    }
+
+    # Process the body of the message unless subject contained commands or
+    # message has no body.
+    my $body = $message->get_plain_body;
+    unless (defined $body) {
+        $log->syslog('err', 'Could not change multipart to singlepart');
+        Sympa::Report::global_report_cmd('user', 'error_content_type', {});
+        $log->db_log(
+            'robot' => $robot,
+            #'list'         => 'sympa',
+            'action'       => 'DoCommand',
+            'parameters'   => $message->get_id,
+            'target_email' => '',
+            'msg_id'       => $messageid,
+            'status'       => 'error',
+            'error_type'   => 'error_content_type',
+            'user_email'   => $sender
+        );
+        return [];
+    }
+
+    my @requests;
+    foreach my $line (split /\r\n|\r|\n/, $body) {
+        last if $line =~ /^-- $/;    # Ignore signature.
+        $line =~ s/^\s*>?\s*(.*)\s*$/$1/g;
+        next unless length $line;    # Skip empty lines.
+        next if $line =~ /^\s*\#/;
+
+        my $request =
+            Sympa::Commands::parse($robot, $line, $auth_level, $message);
+        if ($request) {
+            if (@requests or $request->{action} ne 'unknown') {
+                push @requests, $request;
+            }
+            last if $request->{action} eq 'unknown';
+            last if $request->{action} eq 'finished';
         }
     }
 
-    my $line;
-    my $size;
-
-    ## Process the body of the message
-    ## unless subject contained commands or message has no body
-    unless ($cmd_found) {
-        my $body = $message->get_plain_body;
-        unless (defined $body) {
-            $log->syslog('err', 'Could not change multipart to singlepart');
-            Sympa::Report::global_report_cmd('user', 'error_content_type',
-                {});
-            $log->db_log(
-                'robot' => $robot,
-                #'list'         => 'sympa',
-                'action'       => 'DoCommand',
-                'parameters'   => $message->get_id,
-                'target_email' => '',
-                'msg_id'       => $messageid,
-                'status'       => 'error',
-                'error_type'   => 'error_content_type',
-                'user_email'   => $sender
-            );
-            return $success ? 1 : undef;
-        }
-
-        foreach $line (split /\r\n|\r|\n/, $body) {
-            last if $line =~ /^-- $/;    # Ignore signature.
-            $line =~ s/^\s*>?\s*(.*)\s*$/$1/g;
-            next unless length $line;    # Skip empty lines.
-            next if $line =~ /^\s*\#/;
-
-            #FIXME
-            $auth_level =
-                  $message->{'smime_signed'} ? 'smime'
-                : $message->{'dkim_pass'}    ? 'dkim'
-                :                              $auth_level;
-            my $status =
-                Sympa::Commands::parse($robot, $line, $auth_level, $message);
-
-            $cmd_found = 1;    # if problem no_cmd_understood is sent here
-            if ($status eq 'unknown_cmd') {
-                $log->syslog('notice', 'Unknown command found: %s', $line);
-                Sympa::Report::reject_report_cmd(
-                    {cmd_line => $line, context => $robot},
-                    'user', 'not_understood');
-                $log->db_log(
-                    'robot' => $robot,
-                    #'list'         => 'sympa',
-                    'action'       => 'DoCommand',
-                    'parameters'   => $message->get_id,
-                    'target_email' => '',
-                    'msg_id'       => $messageid,
-                    'status'       => 'error',
-                    'error_type'   => 'not_understood',
-                    'user_email'   => $sender
-                );
-                last;
-            }
-            if ($line =~ /^(quit|end|stop|-)\s*$/io) {
-                last;
-            }
-
-            $success ||= $status;
-        }
-    }
-
-    ## No command found
-    unless ($cmd_found) {
+    # No command found.
+    unless (@requests) {
         $log->syslog('info', "No command found in message");
         Sympa::Report::global_report_cmd('user', 'no_cmd_found', {});
         $log->db_log(
@@ -314,10 +284,9 @@ sub _do_command {
             'error_type'   => 'no_cmd_found',
             'user_email'   => $sender
         );
-        return undef;
     }
 
-    return $success ? 1 : undef;
+    return [@requests];
 }
 
 1;

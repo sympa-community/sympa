@@ -212,7 +212,7 @@ my %comms     = (
 # time of the process command
 my $time_command;
 # key authentication if 'auth' is present in the command line
-my $auth;
+my $auth = '';
 # boolean says if quiet is in the cmd line
 my $quiet;
 
@@ -227,7 +227,7 @@ my $quiet;
 #     -$line (+): command line
 #     -$sign_mod : 'smime'| 'dkim' -
 #
-# OUT : $status |'unknown_cmd'
+# OUT : $request
 #
 ##############################################
 sub parse {
@@ -290,14 +290,16 @@ sub parse {
                 $context = $robot || '*';
             }
         } else {
-            Sympa::Report::reject_report_cmd(
-                {action => $action, cmd_line => $line, context => $context},
-                'user', 'error_syntax');
-            $log->syslog('notice', 'Command syntax error');
-            return 'syntax_error';
+            return Sympa::Request->new_from_tuples(
+                action   => $action,
+                cmd_line => $line,
+                context  => $robot,
+                error    => 'syntax_error',
+                message  => $message,
+                sender   => $message->{sender},
+                sign_mod => $sign_mod,
+            );
         }
-
-        $time_command = Time::HiRes::time();
 
         my $request = Sympa::Request->new_from_tuples(
             %args,
@@ -309,37 +311,99 @@ sub parse {
             sign_mod => $sign_mod,
         );
 
-        # Reject the command if this list is unknown to us.
-        if (not $args{anylists} and $args{localpart}) {
-            unless (ref $request->{context} eq 'Sympa::List') {
-                Sympa::Report::reject_report_cmd($request, 'user',
-                    'no_existing_list', {'listname' => $args{localpart}});
-                $log->syslog(
-                    'info',
-                    '%s %s from %s refused, unknown list for robot %s',
-                    uc $action,
-                    $args{localpart},
-                    $message->{sender},
-                    $robot
-                );
-                return 'unknown_list';
-            }
-        }
-        if ($filter) {
-            unless ($filter->($request)) {
-                Sympa::Report::reject_report_cmd($request, 'user',
-                    'error_syntax');
-                $log->syslog('notice', 'Command syntax error');
-                return 'syntax_error';
-            }
+        if (    not $args{anylists}
+            and $args{localpart}
+            and ref $request->{context} ne 'Sympa::List') {
+            # Reject the command if this list is unknown to us.
+            $request->{error} = 'unknown_list';
+        } elsif ($filter and not $filter->($request)) {
+            $request->{error} = 'syntax_error';
         }
 
-        no strict 'refs';
-        return $action->($request);
+        return $request;
     }
 
     # Unknown command.
-    return 'unknown_cmd';
+    return Sympa::Request->new_from_tuples(
+        action   => 'unknown',
+        cmd_line => $line,
+        context  => $robot,
+        message  => $message,
+        sender   => $message->{sender},
+        sign_mod => $sign_mod,
+    );
+}
+
+# Old name: (part of) Sympa::Commands::parse().
+sub execute_request {
+    my $request = shift;
+
+    return Sympa::Commands::error($request) if $request->{error};
+
+    $time_command = Time::HiRes::time();
+    my $action = $request->{action};
+    no strict 'refs';
+    return $action->($request);
+}
+
+##############################################
+#  error
+#
+#  Pseudo-request to report error.
+##############################################
+sub error {
+    my $request = shift;
+
+    my $message = $request->{message};
+    my $robot =
+        (ref $request->{context} eq 'Sympa::List')
+        ? $request->{context}->{'domain'}
+        : ($request->{context} || '*');
+    my $entry = $request->{error};
+
+    if ($entry eq 'syntax_error') {
+        Sympa::Report::reject_report_cmd($request, 'user', 'error_syntax');
+        $log->syslog('notice', 'Command syntax error');
+    } elsif ($entry eq 'unknown_list') {
+        Sympa::Report::reject_report_cmd($request, 'user', 'no_existing_list',
+            {'listname' => $request->{localpart}});
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $robot
+        );
+    } else {
+        Sympa::Report::reject_report_cmd($request, 'intern', $entry);
+        $log->syslog('err', 'Unknown error: %s', $entry);
+        return undef;
+    }
+    return 1;
+}
+
+sub unknown {
+    my $request = shift;
+
+    my $message = $request->{message};
+    my $robot =
+        (ref $request->{context} eq 'Sympa::List')
+        ? $request->{context}->{'domain'}
+        : ($request->{context} || '*');
+
+    $log->syslog('notice', 'Unknown command found: %s', $request->{cmd_line});
+    Sympa::Report::reject_report_cmd($request, 'user', 'not_understood');
+    $log->db_log(
+        'robot' => $robot,
+        #'list'         => 'sympa',
+        'action'       => 'DoCommand',
+        'parameters'   => $message->get_id,
+        'target_email' => '',
+        'msg_id'       => $message->{message_id},
+        'status'       => 'error',
+        'error_type'   => 'not_understood',
+        'user_email'   => $request->{sender},
+    );
+    return undef;
 }
 
 ##############################################
