@@ -127,6 +127,21 @@ sub to_string {
     return $msg_string;
 }
 
+sub get_id {
+    my $self = shift;
+
+    join ';', map {
+        my $val = $self->{$_};
+        if (ref $val eq 'Sympa::List') {
+            sprintf '%s=%s', $_, $val->get_id;
+        } else {
+            sprintf '%s=%s', $_, $val;
+        }
+        } grep {
+        defined $self->{$_}
+        } qw(action context arc email mode error);
+}
+
 1;
 __END__
 

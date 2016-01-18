@@ -32,6 +32,7 @@ nobase_modules_DATA = \
 	Sympa/Archive.pm \
 	Sympa/Auth.pm \
 	Sympa/Bulk.pm \
+	Sympa/CommandDef.pm \
 	Sympa/Commands.pm \
 	Conf.pm \
 	Sympa/ConfDef.pm \
@@ -73,6 +74,7 @@ nobase_modules_DATA = \
 	Sympa/Regexps.pm \
 	Sympa/Report.pm \
 	Sympa/Request.pm \
+	Sympa/Request/Message.pm \
 	Sympa/Robot.pm \
 	Sympa/Scenario.pm \
 	SDM.pm \
@@ -92,6 +94,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ProcessDigest.pm \
 	Sympa/Spindle/ProcessHeld.pm \
 	Sympa/Spindle/ProcessIncoming.pm \
+	Sympa/Spindle/ProcessMessage.pm \
 	Sympa/Spindle/ProcessModeration.pm \
 	Sympa/Spindle/ProcessOutgoing.pm \
 	Sympa/Spindle/ProcessTemplate.pm \

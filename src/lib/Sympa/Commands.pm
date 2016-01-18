@@ -34,7 +34,6 @@ use Conf;
 use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Request;
 use Sympa::Scenario;
@@ -48,291 +47,11 @@ use Sympa::User;
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
 
-my $_email_re = Sympa::Regexps::addrspec();
-my %comms     = (
-    add => {
-        cmd_regexp => qr'add'i,
-        arg_regexp => qr{(\S+)\s+($_email_re)(?:\s+(.+))?\s*\z},
-        arg_keys   => [qw(localpart email gecos)],
-        scenario   => 'add',
-    },
-    confirm => {
-        cmd_regexp => qr'con|confirm'i,
-        arg_regexp => qr'(\w+)\s*\z',
-        arg_keys   => [qw(authkey)],
-    },
-    del => {
-        cmd_regexp => qr'del|delete'i,
-        arg_regexp => qr{(\S+)\s+($_email_re)\s*},
-        arg_keys   => [qw(localpart email)],
-        scenario   => 'del',
-    },
-    distribute => {
-        cmd_regexp => qr'dis|distribute'i,
-        arg_regexp => qr'(\S+)\s+(\w+)\s*\z',
-        arg_keys   => [qw(localpart authkey)],
-        # No scenario.
-    },
-    get => {
-        cmd_regexp => qr'get'i,
-        arg_regexp => qr'(\S+)\s+(.+)',
-        arg_keys   => [qw(localpart arc)],
-        scenario   => 'archive.mail_access',
-    },
-    help => {cmd_regexp => qr'hel|help|sos'i,},
-    info => {
-        cmd_regexp => qr'inf|info'i,
-        arg_regexp => qr'(.+)',
-        arg_keys   => [qw(localpart)],
-        scenario   => 'info',
-    },
-    index => {
-        cmd_regexp => qr'ind|index'i,
-        arg_regexp => qr'(.+)',
-        arg_keys   => [qw(localpart)],
-        scenario   => 'archive.mail_access',
-    },
-    invite => {
-        cmd_regexp => qr'inv|invite'i,
-        arg_regexp => qr{(\S+)\s+($_email_re)(?:\s+(.+))?\s*\z},
-        arg_keys   => [qw(localpart email gecos)],
-        scenario   => 'invite',
-    },
-    last => {
-        cmd_regexp => qr'las|last'i,
-        arg_regexp => qr'(.+)',
-        arg_keys   => [qw(localpart)],
-        scenario   => 'archive.mail_access',
-    },
-    lists    => {cmd_regexp => qr'lis|lists?'i,},
-    modindex => {
-        cmd_regexp => qr'mod|modindex|modind'i,
-        arg_regexp => qr'(\S+)',
-        arg_keys   => [qw(localpart)],
-        # No scenario. Only actual editors are allowed.
-    },
-    finished => {cmd_regexp => qr'qui|quit|end|stop|-'i,},
-    reject   => {
-        cmd_regexp => qr'rej|reject'i,
-        arg_regexp => qr'(\S+)\s+(\w+)\s*\z',
-        arg_keys   => [qw(localpart authkey)],
-        # No scenario.
-    },
-    remind => {
-        cmd_regexp => qr'rem|remind'i,
-        arg_regexp => qr'(?:([*])|([^\s\@]+))(?:\@([-.\w]+))?\s*\z',
-        arg_keys   => [qw(anylists localpart domainpart)],
-        filter     => sub {
-            my $r = shift;
-
-            if ($r->{domainpart}) {
-                my $host;
-                if (ref $r->{context} eq 'Sympa::List') {
-                    $host = $r->{context}->{'admin'}{'host'};
-                } else {
-                    $host = Conf::get_robot_conf($r->{context}, 'host');
-                }
-                return undef unless lc $r->{domainpart} eq $host;
-            }
-            $r;
-        },
-        scenario => 'remind',    # or global_remind scenario.
-    },
-    review => {
-        cmd_regexp => qr'rev|review|who'i,
-        arg_regexp => qr'(.+)',
-        arg_keys   => [qw(localpart)],
-        scenario   => 'review',
-    },
-    set => {
-        cmd_regexp => qr'set'i,
-        arg_regexp =>
-            qr'(?:([*])|(\S+))\s+(digest|digestplain|nomail|normal|not_me|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)\s*\z'i,
-        arg_keys => [qw(anylists localpart mode)],
-        filter   => sub {
-            my $r = shift;
-
-            $r->{mode} = lc($r->{mode} || '');
-            # SET EACH is a synonym for SET MAIL.
-            $r->{mode} = 'mail'
-                if grep { $r->{mode} eq $_ }
-                    qw(each eachmail nodigest normal);
-            $r;
-        },
-        # No scenario.  Only list members are allowed.
-    },
-    stats => {
-        cmd_regexp => qr'sta|stats'i,
-        arg_regexp => qr'(.+)',
-        arg_keys   => [qw(localpart)],
-        scenario   => 'review',
-    },
-    subscribe => {
-        cmd_regexp => qr'sub|subscribe'i,
-        arg_regexp => qr'(\S+)(?:\s+(.+))?\s*\z',
-        arg_keys   => [qw(localpart gecos)],
-        filter     => sub {
-            my $r = shift;
-            $r->{email} = $r->{sender};
-            $r;
-        },
-        scenario => 'subscribe',
-    },
-    signoff => {
-        cmd_regexp => qr'sig|signoff|uns|unsub|unsubscribe'i,
-        arg_regexp =>
-            qr{(?:([*])|([^\s\@]+))(?:\@([-.\w]+))?(?:\s+($_email_re))?\z},
-        arg_keys => [qw(anylists localpart domainpart email)],
-        filter   => sub {
-            my $r = shift;
-            $r->{email} ||= $r->{sender};
-
-            if ($r->{domainpart}) {
-                my $host;
-                if (ref $r->{context} eq 'Sympa::List') {
-                    $host = $r->{context}->{'admin'}{'host'};
-                } else {
-                    $host = Conf::get_robot_conf($r->{context}, 'host');
-                }
-                return undef unless lc $r->{domainpart} eq $host;
-            }
-            $r;
-        },
-        scenario => 'unsubscribe',    # global signoff allows any lists.
-    },
-    verify => {
-        cmd_regexp => qr'ver|verify'i,
-        arg_regexp => qr'(.+)',
-        arg_keys   => [qw(localpart)],
-        # No scenario.
-    },
-    which => {cmd_regexp => qr'whi|which|status'i,},
-);
-
 # time of the process command
 my $time_command;
-# key authentication if 'auth' is present in the command line
-my $auth = '';
-# boolean says if quiet is in the cmd line
-my $quiet;
 
-##############################################
-#  parse
-##############################################
-# Parses the command and calls the adequate
-# subroutine with the arguments to the command.
-#
-# IN :
-#     -$robot (+): robot
-#     -$line (+): command line
-#     -$sign_mod : 'smime'| 'dkim' -
-#
-# OUT : $request
-#
-##############################################
-sub parse {
-    $log->syslog('debug2', '(%s, %s, %s, %s, %s)', @_);
-    my $robot    = shift;
-    my $line     = shift;
-    my $sign_mod = shift;
-    my $message  = shift;
-
-    $log->syslog('notice', "Parsing: %s", $line);
-
-    ## allow reply usage for auth process based on user mail replies
-    if ($line =~ /auth\s+(\S+)\s+(.+)$/io) {
-        $auth = $1;
-        $line = $2;
-    } else {
-        $auth = '';
-    }
-
-    if ($line =~ /^quiet\s+(.+)$/i) {
-        $line  = $1;
-        $quiet = 1;
-    } else {
-        $quiet = 0;
-    }
-
-    my $l = $line;
-    foreach my $action (sort keys %comms) {
-        my $cmd_regexp = $comms{$action}->{cmd_regexp};
-        my $arg_regexp = $comms{$action}->{arg_regexp};
-        my $arg_keys   = $comms{$action}->{arg_keys};
-        my $filter     = $comms{$action}->{filter};
-
-        next unless $cmd_regexp and $l =~ s/\A($cmd_regexp)(\s+|\z)//;
-
-        if (length $l) {
-            $l =~ s/\A\s+//;
-            $l =~ s/\s+\z//;
-        }
-        my (@matches, %args, $context);
-        unless ($arg_regexp) {
-            %args    = ();
-            $context = $robot;
-        } elsif (@matches = ($l =~ /\A$arg_regexp/)) {
-            %args = (
-                map {
-                    my $value = shift @matches;
-                    (defined $value and length $value)
-                        ? (lc($_) => $value)
-                        : ();
-                    } @{$arg_keys}
-            );
-
-            if (not $args{anylists} and $args{localpart}) {
-                # Load the list if not already done.
-                $context =
-                    Sympa::List->new($args{localpart}, $robot,
-                    {just_try => 1});
-            } else {
-                $context = $robot || '*';
-            }
-        } else {
-            return Sympa::Request->new_from_tuples(
-                action   => $action,
-                cmd_line => $line,
-                context  => $robot,
-                error    => 'syntax_error',
-                message  => $message,
-                sender   => $message->{sender},
-                sign_mod => $sign_mod,
-            );
-        }
-
-        my $request = Sympa::Request->new_from_tuples(
-            %args,
-            action   => $action,
-            cmd_line => $line,
-            context  => $context,
-            message  => $message,
-            sender   => $message->{sender},
-            sign_mod => $sign_mod,
-        );
-
-        if (    not $args{anylists}
-            and $args{localpart}
-            and ref $request->{context} ne 'Sympa::List') {
-            # Reject the command if this list is unknown to us.
-            $request->{error} = 'unknown_list';
-        } elsif ($filter and not $filter->($request)) {
-            $request->{error} = 'syntax_error';
-        }
-
-        return $request;
-    }
-
-    # Unknown command.
-    return Sympa::Request->new_from_tuples(
-        action   => 'unknown',
-        cmd_line => $line,
-        context  => $robot,
-        message  => $message,
-        sender   => $message->{sender},
-        sign_mod => $sign_mod,
-    );
-}
+# Moved to: Sympa::Request::Message::_parse().
+#sub parse;
 
 # Old name: (part of) Sympa::Commands::parse().
 sub execute_request {
@@ -1341,7 +1060,7 @@ sub subscribe {
                 sender  => $sender,
                 action  => 'subscribe',
                 gecos   => $comment,
-                quiet   => $quiet
+                quiet   => $request->{quiet}
             )
             ) {
             my $error =
@@ -1403,7 +1122,7 @@ sub subscribe {
         $u->save;
 
         ## Now send the welcome file to the user
-        unless ($quiet || ($action =~ /quiet/i)) {
+        unless ($request->{quiet} or $action =~ /,\s*quiet\b/i) {
             unless ($list->send_probe_to_user('welcome', $sender)) {
                 $log->syslog('notice', 'Unable to send "welcome" probe to %s',
                     $sender);
@@ -1690,7 +1409,7 @@ sub signoff {
                 sender  => $to,
                 email   => $email,
                 action  => 'signoff',
-                quiet   => $quiet
+                quiet   => $request->{quiet}
             )
             ) {
             my $error =
@@ -1784,7 +1503,7 @@ sub signoff {
             );
         }
 
-        unless ($quiet || ($action =~ /quiet/i)) {
+        unless ($request->{quiet} or $action =~ /,\s*quiet\b/i) {
             ## Send bye file to subscriber
             unless (Sympa::send_file($list, 'bye', $email, {})) {
                 $log->syslog('notice', 'Unable to send template "bye" to %s',
@@ -1879,7 +1598,7 @@ sub add {
                 context => $list,
                 sender  => $sender,
                 action  => 'add',
-                quiet   => $quiet,
+                quiet   => $request->{quiet},
                 email   => $email,
                 gecos   => $comment
             )
@@ -1953,7 +1672,7 @@ sub add {
 
         ## Now send the welcome file to the user if it exists and notification
         ## is supposed to be sent.
-        unless ($quiet || $action =~ /quiet/i) {
+        unless ($request->{quiet} or $action =~ /,\s*quiet\b/i) {
             unless ($list->send_probe_to_user('welcome', $email)) {
                 $log->syslog('notice', 'Unable to send "welcome" probe to %s',
                     $email);
@@ -2532,7 +2251,7 @@ sub del {
                 context => $list,
                 sender  => $sender,
                 action  => 'del',
-                quiet   => $quiet,
+                quiet   => $request->{quiet},
                 email   => $who
             )
             ) {
@@ -2575,7 +2294,7 @@ sub del {
 
         ## Send a notice to the removed user, unless the owner indicated
         ## quiet del.
-        unless ($quiet || $action =~ /quiet/i) {
+        unless ($request->{quiet} or $action =~ /,\s*quiet\b/i) {
             unless (Sympa::send_file($list, 'removed', $who, {})) {
                 $log->syslog('notice',
                     'Unable to send template "removed" to %s', $who);
@@ -2797,7 +2516,7 @@ sub distribute {
         distributed_by => $sender,
         context        => $robot,
         authkey        => $key,
-        quiet          => $quiet
+        quiet          => $request->{quiet}
     );
 
     unless ($spindle and $spindle->spin) {    # No message.
@@ -2845,7 +2564,7 @@ sub confirm {
         confirmed_by => $sender,
         context      => $robot,
         authkey      => $key,
-        quiet        => $quiet
+        quiet        => $request->{quiet}
     );
 
     unless ($spindle and $spindle->spin) {    # No message.
@@ -2891,7 +2610,7 @@ sub reject {
         rejected_by => $sender,
         context     => $list,
         authkey     => $key,
-        quiet       => $quiet
+        quiet       => $request->{quiet}
     );
 
     unless ($spindle and $spindle->spin) {    # No message
@@ -3102,12 +2821,14 @@ sub get_auth_method {
     my $cmd   = $request->{action};
     my $email = $request->{email};
 
+    my $auth = $request->{auth};
+
     my $that;
     my $auth_method;
 
     if ($sign_mod and $sign_mod eq 'smime') {
         $auth_method = 'smime';
-    } elsif ($auth ne '') {
+    } elsif ($auth) {
         $log->syslog('debug', 'Auth received from %s: %s', $sender, $auth);
 
         my $compute;
