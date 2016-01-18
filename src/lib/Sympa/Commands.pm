@@ -304,7 +304,7 @@ sub stats {
         return undef;
     }
 
-    if ($action =~ /reject/i) {
+    if ($action =~ /\Areject\b/i) {
         if (defined $result->{'tt2'}) {
             unless (
                 Sympa::send_file(
@@ -324,7 +324,8 @@ sub stats {
         $log->syslog('info', 'Stats %s from %s refused (not allowed)',
             $listname, $sender);
         return 'not_allowed';
-    } else {
+    }
+    if ($action =~ /\Ado_it\b/i) {
         my %stats = (
             'msg_rcv'  => $list->{'stats'}[0],
             'msg_sent' => $list->{'stats'}[1],
@@ -352,9 +353,15 @@ sub stats {
 
         $log->syslog('info', 'STATS %s from %s accepted (%.2f seconds)',
             $listname, $sender, Time::HiRes::time() - $time_command);
+        return 1;
     }
 
-    return 1;
+    $log->syslog('info',
+        'STATS %s from %s aborted, unknown requested action in scenario',
+        $listname, $sender);
+    my $error = sprintf 'Unknown requested action in scenario: %s', $action;
+    Sympa::Report::reject_report_cmd($request, 'intern', $error);
+    return undef;
 }
 
 ###############################################
@@ -413,7 +420,7 @@ sub get {
         return undef;
     }
 
-    if ($action =~ /reject/i) {
+    if ($action =~ /\Areject\b/i) {
         if (defined $result->{'tt2'}) {
             unless (
                 Sympa::send_file(
@@ -435,6 +442,7 @@ sub get {
         return 'not_allowed';
     }
 
+  if ($action =~ /\Ado_it\b/i) {
     my $archive = Sympa::Archive->new(context => $list);
     my @msg_list;
     unless ($archive->select_archive($arc)) {
@@ -487,6 +495,14 @@ sub get {
         $which, $arc, $sender, Time::HiRes::time() - $time_command);
 
     return 1;
+  }
+
+    $log->syslog('info',
+        'GET %s %s from %s aborted, unknown requested action in scenario',
+        $which, $arc, $sender);
+    my $error = sprintf 'Unknown requested action in scenario: %s', $action;
+    Sympa::Report::reject_report_cmd($request, 'intern', $error);
+    return undef;
 }
 
 ###############################################
@@ -542,7 +558,7 @@ sub last {
         return undef;
     }
 
-    if ($action =~ /reject/i) {
+    if ($action =~ /\Areject\b/i) {
         if (defined $result->{'tt2'}) {
             unless (
                 Sympa::send_file(
@@ -564,6 +580,7 @@ sub last {
         return 'not_allowed';
     }
 
+  if ($action =~ /\Ado_it\b/i) {
     my ($arc_message, $arc_handle);
     my $archive = Sympa::Archive->new(context => $list);
     foreach my $arc (reverse $archive->get_archives) {
@@ -614,6 +631,14 @@ sub last {
         $which, $sender, Time::HiRes::time() - $time_command);
 
     return 1;
+  }
+
+    $log->syslog('info',
+        'LAST %s from %s aborted, unknown requested action in scenario',
+        $which, $sender);
+    my $error = sprintf 'Unknown requested action in scenario: %s', $action;
+    Sympa::Report::reject_report_cmd($request, 'intern', $error);
+    return undef;
 }
 
 ############################################################
@@ -661,7 +686,7 @@ sub index {
         return undef;
     }
 
-    if ($action =~ /reject/i) {
+    if ($action =~ /\Areject\b/i) {
         if (defined $result->{'tt2'}) {
             unless (
                 Sympa::send_file(
@@ -683,6 +708,7 @@ sub index {
         return 'not_allowed';
     }
 
+  if ($action =~ /\Ado_it\b/i) {
     unless ($list->is_archived()) {
         Sympa::Report::reject_report_cmd($request, 'user', 'empty_archives');
         $log->syslog('info', 'INDEX %s from %s refused, list not archived',
@@ -725,6 +751,14 @@ sub index {
         $which, $sender, Time::HiRes::time() - $time_command);
 
     return 1;
+  }
+
+    $log->syslog('info',
+        'INDEX %s from %s aborted, unknown requested action in scenario',
+        $which, $sender);
+    my $error = sprintf 'Unknown requested action in scenario: %s', $action;
+    Sympa::Report::reject_report_cmd($request, 'intern', $error);
+    return undef;
 }
 
 ############################################################
