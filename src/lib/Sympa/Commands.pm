@@ -1626,7 +1626,8 @@ sub signoff {
             $req->{context}   = $list;
             $req->{localpart} = $list->{'name'};
 
-            $success ||= Sympa::Commands::signoff($req);
+            my $status = Sympa::Commands::signoff($req);
+            $success ||= $status;
         }
         return $success;
     }
@@ -2635,7 +2636,7 @@ sub set {
 
     # Recursive call to subroutine.
     unless (ref $request->{context} eq 'Sympa::List') {
-        my $status;
+        my $success;
         foreach my $list (
             Sympa::List::get_which($sender, $request->{context}, 'member')) {
             # Skip hidden lists.
@@ -2677,9 +2678,10 @@ sub set {
             $req->{context}   = $list;
             $req->{localpart} = $list->{'name'};
 
-            $status ||= Sympa::Commands::set($req);
+            my $status = Sympa::Commands::set($req);
+            $success ||= $status;
         }
-        return $status;
+        return $success;
     }
 
     my $list  = $request->{context};
