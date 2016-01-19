@@ -303,6 +303,7 @@ nobase_default_DATA = \
 	web_tt2/show_cert.tt2 \
 	web_tt2/show_exclude.tt2 \
 	web_tt2/show_sessions.tt2 \
+	web_tt2/sigindex.tt2 \
 	web_tt2/sigrequest.tt2 \
 	web_tt2/skinsedit.tt2 \
 	web_tt2/sso_login.tt2 \

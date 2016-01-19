@@ -1052,6 +1052,19 @@ sub del {
         die SOAP::Fault->faultcode('Server')
             ->faultstring('Unable to remove subscriber information')
             ->faultdetail('Database access failed');
+    } else {
+        my $spool_req = Sympa::Spool::Request->new(
+            context => $list,
+            email   => $email,
+            action  => 'del'
+        );
+        while (1) {
+            my ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            next unless $request;
+
+            $spool_req->remove($handle);
+        }
     }
 
     ## Send a notice to the removed user, unless the owner indicated

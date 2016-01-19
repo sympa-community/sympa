@@ -1480,13 +1480,23 @@ sub signoff {
                     $list->get_id)
             );
         }
-        $log->syslog(
-            'info',
-            'SIG %s from %s forwarded to the owners of the list (%.2f seconds)',
-            $which,
-            $sender,
-            Time::HiRes::time() - $time_command
+
+        my $spool_req   = Sympa::Spool::Request->new;
+        my $del_request = Sympa::Request->new_from_tuples(
+            context => $list,
+            email   => $sender,
+            action  => 'del',
+            date    => $message->{date},    # Keep date of message.
         );
+        if ($spool_req->store($del_request)) {
+            $log->syslog(
+                'info',
+                'SIG %s from %s forwarded to the owners of the list (%.2f seconds)',
+                $which,
+                $sender,
+                Time::HiRes::time() - $time_command
+            );
+        }
         return 1;
     }
     if ($action =~ /do_it/i) {
@@ -2324,6 +2334,19 @@ sub del {
             my $error =
                 "Unable to delete user $who from list $which for command 'del'";
             Sympa::Report::reject_report_cmd($request, 'intern', $error);
+        } else {
+            my $spool_req = Sympa::Spool::Request->new(
+                context => $list,
+                email   => $who,
+                action  => 'del'
+            );
+            while (1) {
+                my ($request, $handle) = $spool_req->next;
+                last unless $handle;
+                next unless $request;
+
+                $spool_req->remove($handle);
+            }
         }
 
         ## Send a notice to the removed user, unless the owner indicated

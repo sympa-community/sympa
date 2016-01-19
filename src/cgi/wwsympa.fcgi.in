@@ -173,7 +173,9 @@ our %comm = (
     'family_signoff_request' => 'do_family_signoff_request',
     #XXX'multiple_signoff' => 'do_multiple_signoff',
     'sigrequest'       => 'do_sigrequest',
+    'sigindex'         => 'do_sigindex',
     'ignoresub'        => 'do_ignoresub',
+    'ignoresig'        => 'do_ignoresig',
     'my'               => 'do_my',
     'which'            => 'do_which',
     'lists'            => 'do_lists',
@@ -198,6 +200,7 @@ our %comm = (
     'add'              => 'do_add',
     'add_fromsub'      => 'do_add_fromsub',
     'del'              => 'do_del',
+    'del_fromsig'      => 'do_del_fromsig',
     'modindex'         => 'do_modindex',
     'reject'           => 'do_reject',
     #XXX'reject_notify' => 'do_reject_notify',
@@ -402,7 +405,9 @@ our %action_args = (
     'family_signoff'         => ['family', 'email'],
     'family_signoff_request' => ['family', 'email'],
     'sigrequest'             => ['list',   'email'],
-    'set'                    => ['list',   'email', 'reception', 'gecos'],
+    'sigindex'               => ['list'],
+    'ignoresig'              => ['list',   '@email'],
+    'set'                => ['list', 'email', 'reception', 'gecos'],
     'serveradmin'        => ['subaction'],
     'set_session_email'  => ['email'],
     'skinsedit'          => [],
@@ -537,6 +542,7 @@ our %required_args = (
     'get_latest_lists'   => ['param.user.email'],
     'get_biggest_lists'  => ['param.user.email'],
     'get_pending_lists'  => ['param.user.email'],
+    'ignoresig'            => ['param.list', 'param.user.email'],
     'ignoresub'            => ['param.list', 'param.user.email'],
     'info'                 => ['param.list'],
     'install_pending_list' => ['param.user.email'],
@@ -584,6 +590,7 @@ our %required_args = (
     'set_pending_list_request' => ['param.user.email'],
     'setpasswd'  => ['param.user.email', 'newpasswd1', 'newpasswd2'],
     'setpref'    => ['param.user.email'],
+    'sigindex'   => ['param.list',       'param.user.email'],
     'signoff'    => ['param.list'],
     'sigrequest' => ['param.list'],
     'skinsedit'  => ['param.user.email'],
@@ -635,6 +642,7 @@ our %required_privileges = (
     'get_latest_lists'     => ['listmaster'],
     'get_biggest_lists'    => ['listmaster'],
     'get_pending_lists'    => ['listmaster'],
+    'ignoresig'            => ['owner', 'editor'],
     'ignoresub'            => ['owner', 'editor'],
     'install_pending_list' => ['listmaster'],
     'edit_config'          => ['listmaster'],
@@ -660,6 +668,7 @@ our %required_privileges = (
     'set_pending_list_request' => ['listmaster'],
     'set_session_email'        => ['listmaster'],
     'show_sessions'            => ['listmaster'],
+    'sigindex'                 => ['owner', 'editor'],
     'stats'                    => ['owner'],
     'subindex'                 => ['owner', 'editor'],
     'sync_include'             => ['owner', 'editor'],
@@ -707,8 +716,9 @@ my %action_type = (
     'dump_scenario'      => 'admin',
     'dump'               => 'admin',
     'remind'             => 'admin',
-#		'subindex' => 'admin',
+    #'subindex' => 'admin',
     'stats'                              => 'admin',
+    'ignoresig'                          => 'admin',
     'ignoresub'                          => 'admin',
     'rename_list'                        => 'admin',
     'copy_list'                          => 'admin',
@@ -3092,6 +3102,10 @@ sub check_param_in {
             $param->{'mod_subscription'} = Sympa::Spool::Request->new(
                 context => $list,
                 action  => 'add'
+            )->size;
+            $param->{'mod_signoff'} = Sympa::Spool::Request->new(
+                context => $list,
+                action  => 'del'
             )->size;
 
             $param->{'doc_mod_list'}     = $list->get_shared_moderated();
@@ -6628,6 +6642,15 @@ sub unsubscribe {
                 ),
             }
         );
+
+        my $spool_req = Sympa::Spool::Request->new;
+        my $request   = Sympa::Request->new_from_tuples(
+            context => $list,
+            email   => $param->{'user'}{'email'},
+            action  => 'del'
+        );
+        $spool_req->store($request);
+
         wwslog('info', 'Signoff sent to owner');
         $report{'success'} = 1;
         $report{'details'} = 'sent_to_owner';
@@ -8423,6 +8446,95 @@ sub do_del {
     delete $in{'previous_action'} if ($in{'previous_action'} eq 'search');
 
     return $in{'previous_action'} || 'review';
+}
+
+####################################################
+#  do_del_fromsig
+####################################################
+#  delete user in signoff request index
+#
+####################################################
+sub do_del_fromsig {
+    wwslog('info', '(%s)', $in{'id'});
+
+    # If a list is not 'open' and allow_subscribe_if_pending has been set to
+    # 'off', returns undef.
+    unless ($list->{'admin'}{'status'} eq 'open'
+        or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq 'on')
+    {
+        Sympa::Report::reject_report_web('user', 'list_not_open',
+            {status => $list->{'admin'}{'status'}},
+            $param->{'action'});
+        wwslog('info', 'List not open');
+        web_db_log(
+            {   target_email => $in{'email'},
+                status       => 'error',
+                error_type   => 'list_not_open'
+            }
+        );
+        return undef;
+    }
+
+    my $total = 0;
+    foreach my $id (split /\0/, $in{'id'}) {
+        next unless $id and $id =~ /\A\w+\z/;
+
+        my $spool_req = Sympa::Spool::Request->new(
+            context => $list,
+            authkey => $id,
+            action  => 'del'
+        );
+        my ($request, $handle);
+        while (1) {
+            ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            last if $request;
+        }
+        unless ($request) {
+            Sympa::Report::reject_report_web('user', 'already_deleted', {},
+                $param->{'action'});
+            wwslog('err',
+                'No request with authkey %s.  It may be already deleted',
+                $id);
+            web_db_log(
+                {   parameters => $id,
+                    status     => 'error',
+                    error_type => 'internal'
+                }
+            );
+            next;
+        }
+        next unless defined $request->{email} and $request->{email} =~ /\S/;
+
+        my $status = $list->delete_list_member(
+            users     => [$request->{email}],
+            exclude   => '1',
+            operation => 'del',
+        );
+        unless ($status) {
+            wwslog('info', 'Deletion failed: %s');
+            web_db_log(
+                {   parameters => $request->{email},
+                    status     => 'error',
+                    error_type => 'user'
+                }
+            );
+            Sympa::Report::reject_report_web('intern',
+                {sig => $request->{email}},
+                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+        } else {
+            # Delete signoff request.
+            $spool_req->remove($handle);
+            web_db_log({target => $request->{email}, status => 'success'});
+            $total++;
+        }
+    }
+    if ($total) {
+        Sympa::Report::notice_report_web('del_performed', {total => $total},
+            $param->{'action'});
+    }
+
+    return 'sigindex';
 }
 
 ####################################################
@@ -11255,6 +11367,13 @@ sub do_home {
             $param->{'admin_summary'}{$one_list->{'name'}}
                 {'mod_subscription'} = $mod_subscription
                 if $mod_subscription;
+            my $mod_signoff = Sympa::Spool::Request->new(
+                context => $one_list,
+                action  => 'del'
+            )->size;
+            $param->{'admin_summary'}{$one_list->{'name'}}{'mod_signoff'} =
+                $mod_signoff
+                if $mod_signoff;
 
             my $doc_mod_list     = $one_list->get_shared_moderated();
             my $mod_shared_total = $#{$doc_mod_list} + 1;
@@ -22233,6 +22352,81 @@ sub do_ignoresub {
         }
     );
     return 'subindex';
+}
+
+sub do_sigindex {
+    wwslog('info', '');
+
+    my $spool_req =
+        Sympa::Spool::Request->new(context => $list, action => 'del');
+    my @signoffs;
+    while (1) {
+        my ($request, $handle) = $spool_req->next(no_lock => 1);
+        last unless $handle;
+        next unless $request;
+
+        push @signoffs,
+            {
+            key   => $request->{authkey},
+            value => {
+                date => $language->gettext_strftime(
+                    '%d %b %Y', localtime $request->{date}
+                ),
+                email => $request->{email},
+                epoch => $request->{date},
+            },
+            };
+    }
+    $param->{'signoffs'} = [@signoffs];
+
+    web_db_log(
+        {   'robot'        => $robot,
+            'list'         => $list->{'name'},
+            'action'       => $param->{'action'},
+            'parameters'   => "",
+            'target_email' => "",
+            'msg_id'       => '',
+            'status'       => 'success',
+            'error_type'   => '',
+            'user_email'   => $param->{'user'}{'email'},
+        }
+    );
+    return 1;
+}
+
+sub do_ignoresig {
+    wwslog('info', '');
+
+    foreach my $id (split /\0/, $in{'id'}) {
+        next unless $id and $id =~ /\A\w+\z/;
+
+        my $spool_req = Sympa::Spool::Request->new(
+            context => $list,
+            authkey => $id,
+            action  => 'del'
+        );
+        while (1) {
+            my ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            next unless $request;
+
+            $spool_req->remove($handle);
+        }
+    }
+
+    web_db_log(
+        {   'robot'        => $robot,
+            'list'         => $list->{'name'},
+            'action'       => $param->{'action'},
+            'parameters'   => "",
+            'target_email' => "",
+            'msg_id'       => '',
+            'status'       => 'success',
+            'error_type'   => '',
+            'user_email'   => $param->{'user'}{'email'},
+        }
+    );
+    return 'sigindex';
 }
 
 sub do_stats {
