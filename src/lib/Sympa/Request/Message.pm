@@ -168,7 +168,10 @@ sub _parse {
     my $quiet = 1 if $line =~ s/\Aquiet\s+(.+)\z/$1/i;
 
     my $l = $line;
-    foreach my $action (sort keys %Sympa::CommandDef::comms) {
+    foreach my $action (
+        sort(grep /global_/, keys %Sympa::CommandDef::comms),
+        sort(grep !/global_/, keys %Sympa::CommandDef::comms)
+        ) {
 	my $comm = $Sympa::CommandDef::comms{$action};
         my $cmd_regexp = $comm->{cmd_regexp};
         my $arg_regexp = $comm->{arg_regexp};
@@ -195,7 +198,7 @@ sub _parse {
                     } @{$arg_keys}
             );
 
-            if (not $args{anylists} and $args{localpart}) {
+            if ($args{localpart}) {
                 # Load the list if not already done.
                 $context =
                     Sympa::List->new($args{localpart}, $robot,
@@ -229,9 +232,7 @@ sub _parse {
             sign_mod => $sign_mod,
         );
 
-        if (    not $args{anylists}
-            and $args{localpart}
-            and ref $request->{context} ne 'Sympa::List') {
+        if ($args{localpart} and ref $request->{context} ne 'Sympa::List') {
             # Reject the command if this list is unknown to us.
             $request->{error} = 'unknown_list';
         } elsif ($filter and not $filter->($request)) {
@@ -254,7 +255,16 @@ sub _parse {
 
 use constant quarantine => 1;
 use constant remove     => 1;
-use constant store      => 0;
+
+sub store {
+    my $self = shift;
+    my $request = shift;
+
+    $self->{_metadatas} ||= [];
+    unshift @{$self->{_metadatas}}, $request;
+
+    1;
+}
 
 1;
 __END__

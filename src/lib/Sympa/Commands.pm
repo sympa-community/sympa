@@ -1326,17 +1326,15 @@ sub info {
 #
 #
 ##############################################################
-sub signoff {
+sub global_signoff {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
     my $message = $request->{message};
     my $sender  = $request->{sender};
 
-    my $email = $request->{email} || $request->{sender};
-    # $email is defined if command is "unsubscribe <listname> <e-mail>"
+    my $email = $request->{email};
 
-    unless (ref $request->{context} eq 'Sympa::List') {
         my $success;
         foreach my $list (
             Sympa::List::get_which($email, $request->{context}, 'member')) {
@@ -1375,7 +1373,7 @@ sub signoff {
             }
 
             my $req = $request->dup;
-            delete $req->{anylists};
+            $req->{action}    = 'signoff';
             $req->{context}   = $list;
             $req->{localpart} = $list->{'name'};
 
@@ -1383,7 +1381,15 @@ sub signoff {
             $success ||= $status;
         }
         return $success;
-    }
+}
+
+sub signoff {
+    my $request = shift;
+
+    my $message = $request->{message};
+    my $sender  = $request->{sender};
+
+    my $email = $request->{email};
 
     my $list  = $request->{context};
     my $which = $list->{'name'};
@@ -1981,7 +1987,7 @@ sub invite {
 #
 #
 ##############################################################
-sub remind {
+sub global_remind {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
@@ -1990,14 +1996,8 @@ sub remind {
 
     my ($list, $listname, $robot);
 
-    if (ref $request->{context} eq 'Sympa::List') {
-        $list     = $request->{context};
-        $listname = $list->{'name'};
-        $robot    = $list->{'domain'};
-    } else {
         $listname = '*';
         $robot    = $request->{context};
-    }
 
     my $auth_method = get_auth_method($request);
     return 'wrong_auth'
@@ -2006,24 +2006,10 @@ sub remind {
     my $action;
     my $result;
 
-    unless (ref $request->{context} eq 'Sympa::List') {
         $result =
             Sympa::Scenario::request_action($robot, 'global_remind',
             $auth_method, {'sender' => $sender});
         $action = $result->{'action'} if (ref($result) eq 'HASH');
-    } else {
-        $language->set_lang($list->{'admin'}{'lang'});
-
-        $result = Sympa::Scenario::request_action(
-            $list, 'remind',
-            $auth_method,
-            {   'sender'  => $sender,
-                'message' => $message,
-            }
-        );
-
-        $action = $result->{'action'} if (ref($result) eq 'HASH');
-    }
 
     unless (defined $action) {
         my $error = "Unable to evaluate scenario 'remind' for list $listname";
@@ -2054,12 +2040,11 @@ sub remind {
         return 'not_allowed';
     } elsif ($action =~ /request_auth/i) {
         $log->syslog('debug2', 'Auth requested from %s', $sender);
-        unless (ref $request->{context} eq 'Sympa::List') {
             unless (
                 Sympa::request_auth(
                     context => '*',
                     sender  => $sender,
-                    action  => 'remind'
+                    action  => 'global_remind'
                 )
                 ) {
                 my $error =
@@ -2067,62 +2052,11 @@ sub remind {
                 Sympa::Report::reject_report_cmd($request, 'intern', $error);
                 return undef;
             }
-        } else {
-            unless (
-                Sympa::request_auth(
-                    context => $list,
-                    sender  => $sender,
-                    action  => 'remind'
-                )
-                ) {
-                my $error =
-                    'Unable to request authentication for command "remind"';
-                Sympa::Report::reject_report_cmd($request, 'intern', $error);
-                return undef;
-            }
-        }
         $log->syslog('info',
             'REMIND %s from %s, auth requested (%.2f seconds)',
             $listname, $sender, Time::HiRes::time() - $time_command);
         return 1;
     } elsif ($action =~ /do_it/i) {
-        if (ref $request->{context} eq 'Sympa::List') {
-            # For each subscriber send a reminder.
-            my $total = 0;
-            my $user;
-
-            unless ($user = $list->get_first_list_member()) {
-                my $error = "Unable to get subscribers for list $listname";
-                Sympa::Report::reject_report_cmd($request, 'intern', $error);
-                return undef;
-            }
-
-            do {
-                unless ($list->send_probe_to_user('remind', $user->{'email'}))
-                {
-                    $log->syslog('notice',
-                        'Unable to send "remind" probe to %s',
-                        $user->{'email'});
-                    Sympa::Report::reject_report_cmd($request,
-                        'intern_quiet');
-                }
-                $total += 1;
-            } while ($user = $list->get_next_list_member());
-
-            Sympa::Report::notice_report_cmd($request, 'remind',
-                {'total' => $total});
-            $log->syslog(
-                'info',
-                'REMIND %s from %s accepted, sent to %d subscribers (%.2f seconds)',
-                $listname,
-                $sender,
-                $total,
-                Time::HiRes::time() - $time_command
-            );
-
-            return 1;
-        } else {
-            ## Global REMIND
             my %global_subscription;
             my %global_info;
             my $count = 0;
@@ -2210,7 +2144,132 @@ sub remind {
             }
             Sympa::Report::notice_report_cmd($request, 'glob_remind',
                 {'count' => $count});
+        return 1;
+    } else {
+        $log->syslog(
+            'info',
+            'REMIND %s from %s aborted, unknown requested action in scenario',
+            $listname,
+            $sender
+        );
+        my $error = "Unknown requested action in scenario: $action.";
+        Sympa::Report::reject_report_cmd($request, 'intern', $error);
+        return undef;
+    }
+}
+
+sub remind {
+    $log->syslog('debug2', '(%s)', @_);
+    my $request = shift;
+
+    my $message = $request->{message};
+    my $sender  = $request->{sender};
+
+    my ($list, $listname, $robot);
+
+        $list     = $request->{context};
+        $listname = $list->{'name'};
+        $robot    = $list->{'domain'};
+
+    my $auth_method = get_auth_method($request);
+    return 'wrong_auth'
+        unless (defined $auth_method);
+
+    my $action;
+    my $result;
+
+        $language->set_lang($list->{'admin'}{'lang'});
+
+        $result = Sympa::Scenario::request_action(
+            $list, 'remind',
+            $auth_method,
+            {   'sender'  => $sender,
+                'message' => $message,
+            }
+        );
+
+        $action = $result->{'action'} if (ref($result) eq 'HASH');
+
+    unless (defined $action) {
+        my $error = "Unable to evaluate scenario 'remind' for list $listname";
+        Sympa::Report::reject_report_cmd($request, 'intern', $error);
+        return undef;
+    }
+
+    if ($action =~ /reject/i) {
+        $log->syslog('info', 'Remind for list %s from %s refused',
+            $listname, $sender);
+        if (defined $result->{'tt2'}) {
+            unless (
+                Sympa::send_file(
+                    $list || $robot,
+                    $result->{'tt2'}, $sender, {}
+                )
+                ) {
+                $log->syslog('notice', 'Unable to send template "%s" to %s',
+                    $result->{'tt2'}, $sender);
+
+                Sympa::Report::reject_report_cmd($request, 'auth',
+                    $result->{'reason'});
+            }
+        } else {
+            Sympa::Report::reject_report_cmd($request, 'auth',
+                $result->{'reason'});
         }
+        return 'not_allowed';
+    } elsif ($action =~ /request_auth/i) {
+        $log->syslog('debug2', 'Auth requested from %s', $sender);
+            unless (
+                Sympa::request_auth(
+                    context => $list,
+                    sender  => $sender,
+                    action  => 'remind'
+                )
+                ) {
+                my $error =
+                    'Unable to request authentication for command "remind"';
+                Sympa::Report::reject_report_cmd($request, 'intern', $error);
+                return undef;
+            }
+        $log->syslog('info',
+            'REMIND %s from %s, auth requested (%.2f seconds)',
+            $listname, $sender, Time::HiRes::time() - $time_command);
+        return 1;
+    } elsif ($action =~ /do_it/i) {
+            # For each subscriber send a reminder.
+            my $total = 0;
+            my $user;
+
+            unless ($user = $list->get_first_list_member()) {
+                my $error = "Unable to get subscribers for list $listname";
+                Sympa::Report::reject_report_cmd($request, 'intern', $error);
+                return undef;
+            }
+
+            do {
+                unless ($list->send_probe_to_user('remind', $user->{'email'}))
+                {
+                    $log->syslog('notice',
+                        'Unable to send "remind" probe to %s',
+                        $user->{'email'});
+                    Sympa::Report::reject_report_cmd($request,
+                        'intern_quiet');
+                }
+                $total += 1;
+            } while ($user = $list->get_next_list_member());
+
+            Sympa::Report::notice_report_cmd($request, 'remind',
+                {'total' => $total});
+            $log->syslog(
+                'info',
+                'REMIND %s from %s accepted, sent to %d subscribers (%.2f seconds)',
+                $listname,
+                $sender,
+                $total,
+                Time::HiRes::time() - $time_command
+            );
+
+            return 1;
     } else {
         $log->syslog(
             'info',
@@ -2402,7 +2461,7 @@ sub del {
 #
 #
 #############################################################
-sub set {
+sub global_set {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
@@ -2411,7 +2470,6 @@ sub set {
     my $mode    = $request->{mode};
 
     # Recursive call to subroutine.
-    unless (ref $request->{context} eq 'Sympa::List') {
         my $success;
         foreach my $list (
             Sympa::List::get_which($sender, $request->{context}, 'member')) {
@@ -2450,7 +2508,7 @@ sub set {
             }
 
             my $req = $request->dup;
-            delete $req->{anylists};
+            $req->{action}    = 'set';
             $req->{context}   = $list;
             $req->{localpart} = $list->{'name'};
 
@@ -2458,7 +2516,13 @@ sub set {
             $success ||= $status;
         }
         return $success;
-    }
+}
+
+sub set {
+    my $request = shift;
+
+    my $sender  = $request->{sender};
+    my $mode    = $request->{mode};
 
     my $list  = $request->{context};
     my $which = $list->{'name'};

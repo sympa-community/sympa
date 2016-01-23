@@ -106,6 +106,8 @@ sub compute_auth {
     my $that  = $options{context};
     my $email = $options{email};
     my $cmd   = $options{action};
+    # Compat. <= 6.2.12.
+    $cmd = 'remind' if $cmd eq 'global_remind';
 
     my ($list, $robot);
     if (ref $that eq 'Sympa::List') {
@@ -161,7 +163,7 @@ Recipient (the person who asked for the command)
 =item action =E<gt> $cmd
 
 'signoff', 'subscribe', 'add', 'del' or 'remind' if $that is List.
-'remind' else.
+'global_remind' else.
 
 =item email =E<gt> $email
 
@@ -284,10 +286,10 @@ sub request_auth {
         }
 
     } else {
-        if ($cmd eq 'remind') {
+        if ($cmd eq 'global_remind') {
             my $keyauth =
-                Sympa::compute_auth(context => '*', action => 'remind');
-            $data->{'command'} = "auth $keyauth $cmd *";
+                Sympa::compute_auth(context => '*', action => 'global_remind');
+            $data->{'command'} = "auth $keyauth remind *";
             $data->{'command_escaped'} =
                 tools::escape_url($data->{'command'});
             $data->{'type'} = 'remind';

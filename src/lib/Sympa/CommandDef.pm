@@ -31,7 +31,7 @@ use Conf;
 use Sympa::Regexps;
 
 my $_email_re = Sympa::Regexps::addrspec();
-our %comms     = (
+our %comms = (
     add => {
         cmd_regexp => qr'add'i,
         arg_regexp => qr{(\S+)\s+($_email_re)(?:\s+(.+))?\s*\z},
@@ -102,8 +102,8 @@ our %comms     = (
     },
     remind => {
         cmd_regexp => qr'rem|remind'i,
-        arg_regexp => qr'(?:([*])|([^\s\@]+))(?:\@([-.\w]+))?\s*\z',
-        arg_keys   => [qw(anylists localpart domainpart)],
+        arg_regexp => qr'([^\s\@]+)(?:\@([-.\w]+))?\s*\z',
+        arg_keys   => [qw(localpart domainpart)],
         filter     => sub {
             my $r = shift;
 
@@ -118,7 +118,11 @@ our %comms     = (
             }
             $r;
         },
-        scenario => 'remind',    # or global_remind scenario.
+        scenario => 'remind',
+    },
+    global_remind => {
+        cmd_regexp => qr'(?:rem|remind)\s+[*]'i,
+        scenario   => 'global_remind',
     },
     review => {
         cmd_regexp => qr'rev|review|who'i,
@@ -129,8 +133,8 @@ our %comms     = (
     set => {
         cmd_regexp => qr'set'i,
         arg_regexp =>
-            qr'(?:([*])|(\S+))\s+(digest|digestplain|nomail|normal|not_me|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)\s*\z'i,
-        arg_keys => [qw(anylists localpart mode)],
+            qr'(\S+)\s+(digest|digestplain|nomail|normal|not_me|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)\s*\z'i,
+        arg_keys => [qw(localpart mode)],
         filter   => sub {
             my $r = shift;
 
@@ -142,6 +146,22 @@ our %comms     = (
             $r;
         },
         # No scenario.  Only list members are allowed.
+    },
+    global_set => {
+        cmd_regexp => qr'set\s+[*]'i,
+        arg_regexp =>
+            qr'(digest|digestplain|nomail|normal|not_me|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)\s*\z'i,
+        arg_keys => [qw(mode)],
+        filter   => sub {
+            my $r = shift;
+
+            $r->{mode} = lc($r->{mode} || '');
+            # SET EACH is a synonym for SET MAIL.
+            $r->{mode} = 'mail'
+                if grep { $r->{mode} eq $_ }
+                    qw(each eachmail nodigest normal);
+            $r;
+        },
     },
     stats => {
         cmd_regexp => qr'sta|stats'i,
@@ -162,11 +182,12 @@ our %comms     = (
     },
     signoff => {
         cmd_regexp => qr'sig|signoff|uns|unsub|unsubscribe'i,
-        arg_regexp =>
-            qr{(?:([*])|([^\s\@]+))(?:\@([-.\w]+))?(?:\s+($_email_re))?\z},
-        arg_keys => [qw(anylists localpart domainpart email)],
-        filter   => sub {
+        arg_regexp => qr{([^\s\@]+)(?:\@([-.\w]+))?(?:\s+($_email_re))?\z},
+        arg_keys   => [qw(localpart domainpart email)],
+        filter     => sub {
             my $r = shift;
+
+            # email is defined if command is "unsubscribe <listname> <e-mail>".
             $r->{email} ||= $r->{sender};
 
             if ($r->{domainpart}) {
@@ -180,7 +201,19 @@ our %comms     = (
             }
             $r;
         },
-        scenario => 'unsubscribe',    # global signoff allows any lists.
+        scenario => 'unsubscribe',
+    },
+    global_signoff => {
+        cmd_regexp => qr'(?:sig|signoff|uns|unsub|unsubscribe)\s+[*]'i,
+        arg_regexp => qr{($_email_re)?\z},
+        arg_keys   => [qw(email)],
+        filter     => sub {
+            my $r = shift;
+
+            # email is defined if command is "unsubscribe * <e-mail>".
+            $r->{email} ||= $r->{sender};
+            $r;
+        },
     },
     verify => {
         cmd_regexp => qr'ver|verify'i,
@@ -193,4 +226,3 @@ our %comms     = (
 
 1;
 __END__
-
