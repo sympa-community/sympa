@@ -52,7 +52,7 @@ sub _twist {
 
     $log->syslog('notice', 'Processing %s', $request);
 
-    return Sympa::Commands::execute_request($request);
+    return Sympa::Commands::authorize_request($request);
 }
 
 1;

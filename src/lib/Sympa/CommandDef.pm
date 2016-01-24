@@ -37,6 +37,8 @@ our %comms = (
         arg_regexp => qr{(\S+)\s+($_email_re)(?:\s+(.+))?\s*\z},
         arg_keys   => [qw(localpart email gecos)],
         scenario   => 'add',
+        action_regexp =>
+            qr'reject|request_auth|do_it'i,
     },
     confirm => {
         cmd_regexp => qr'con|confirm'i,
@@ -48,6 +50,8 @@ our %comms = (
         arg_regexp => qr{(\S+)\s+($_email_re)\s*},
         arg_keys   => [qw(localpart email)],
         scenario   => 'del',
+        action_regexp =>
+            qr'reject|request_auth|do_it'i,
     },
     distribute => {
         cmd_regexp => qr'dis|distribute'i,
@@ -60,6 +64,8 @@ our %comms = (
         arg_regexp => qr'(\S+)\s+(.+)',
         arg_keys   => [qw(localpart arc)],
         scenario   => 'archive.mail_access',
+        action_regexp =>
+            qr'reject|do_it'i,
     },
     help => {cmd_regexp => qr'hel|help|sos'i,},
     info => {
@@ -67,24 +73,32 @@ our %comms = (
         arg_regexp => qr'(.+)',
         arg_keys   => [qw(localpart)],
         scenario   => 'info',
+        action_regexp =>
+            qr'reject|do_it'i,
     },
     index => {
         cmd_regexp => qr'ind|index'i,
         arg_regexp => qr'(.+)',
         arg_keys   => [qw(localpart)],
         scenario   => 'archive.mail_access',
+        action_regexp =>
+            qr'reject|do_it'i,
     },
     invite => {
         cmd_regexp => qr'inv|invite'i,
         arg_regexp => qr{(\S+)\s+($_email_re)(?:\s+(.+))?\s*\z},
         arg_keys   => [qw(localpart email gecos)],
         scenario   => 'invite',
+        action_regexp =>
+            qr'reject|request_auth|do_it'i,
     },
     last => {
         cmd_regexp => qr'las|last'i,
         arg_regexp => qr'(.+)',
         arg_keys   => [qw(localpart)],
         scenario   => 'archive.mail_access',
+        action_regexp =>
+            qr'reject|do_it'i,
     },
     lists    => {cmd_regexp => qr'lis|lists?'i,},
     modindex => {
@@ -119,16 +133,22 @@ our %comms = (
             $r;
         },
         scenario => 'remind',
+        action_regexp =>
+            qr'reject|request_auth|do_it'i,
     },
     global_remind => {
         cmd_regexp => qr'(?:rem|remind)\s+[*]'i,
         scenario   => 'global_remind',
+        action_regexp =>
+            qr'reject|request_auth|do_it'i,
     },
     review => {
         cmd_regexp => qr'rev|review|who'i,
         arg_regexp => qr'(.+)',
         arg_keys   => [qw(localpart)],
         scenario   => 'review',
+        action_regexp =>
+            qr'reject|request_auth|do_it'i,
     },
     set => {
         cmd_regexp => qr'set'i,
@@ -168,6 +188,8 @@ our %comms = (
         arg_regexp => qr'(.+)',
         arg_keys   => [qw(localpart)],
         scenario   => 'review',
+        action_regexp =>
+            qr'reject|do_it'i,    #FIXME: request_auth?
     },
     subscribe => {
         cmd_regexp => qr'sub|subscribe'i,
@@ -179,6 +201,8 @@ our %comms = (
             $r;
         },
         scenario => 'subscribe',
+        action_regexp =>
+            qr'reject|request_auth|owner|do_it'i,
     },
     signoff => {
         cmd_regexp => qr'sig|signoff|uns|unsub|unsubscribe'i,
@@ -202,6 +226,8 @@ our %comms = (
             $r;
         },
         scenario => 'unsubscribe',
+        action_regexp =>
+            qr'reject|request_auth|owner|do_it'i,
     },
     global_signoff => {
         cmd_regexp => qr'(?:sig|signoff|uns|unsub|unsubscribe)\s+[*]'i,

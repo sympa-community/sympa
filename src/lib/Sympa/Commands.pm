@@ -278,54 +278,16 @@ sub stats {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
     my $robot    = $list->{'domain'};
     my $message  = $request->{message};
     my $sender   = $request->{sender};
 
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $result = Sympa::Scenario::request_action(
-        $list, 'review',
-        $auth_method,
-        {   'sender'  => $sender,
-            'message' => $message,
-        }
-    );
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error = "Unable to evaluate scenario 'review' for list $listname";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /\Areject\b/i) {
-        if (defined $result->{'tt2'}) {
-            unless (
-                Sympa::send_file(
-                    $list, $result->{'tt2'},
-                    $sender, {'auto_submitted' => 'auto-replied'}
-                )
-                ) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'Stats %s from %s refused (not allowed)',
-            $listname, $sender);
-        return 'not_allowed';
-    }
-    if ($action =~ /\Ado_it\b/i) {
         my %stats = (
             'msg_rcv'  => $list->{'stats'}[0],
             'msg_sent' => $list->{'stats'}[1],
@@ -354,14 +316,6 @@ sub stats {
         $log->syslog('info', 'STATS %s from %s accepted (%.2f seconds)',
             $listname, $sender, Time::HiRes::time() - $time_command);
         return 1;
-    }
-
-    $log->syslog('info',
-        'STATS %s from %s aborted, unknown requested action in scenario',
-        $listname, $sender);
-    my $error = sprintf 'Unknown requested action in scenario: %s', $action;
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
 }
 
 ###############################################
@@ -380,6 +334,10 @@ sub get {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};
@@ -398,51 +356,6 @@ sub get {
         return 'no_archive';
     }
 
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'archive.mail_access',
-        $auth_method,
-        {   'sender'  => $sender,
-            'message' => $message,
-        }
-    );
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error =
-            "Unable to evaluate scenario 'archive_mail_access' for list $which";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /\Areject\b/i) {
-        if (defined $result->{'tt2'}) {
-            unless (
-                Sympa::send_file(
-                    $list, $result->{'tt2'},
-                    $sender, {'auto_submitted' => 'auto-replied'}
-                )
-                ) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'GET %s %s from %s refused (not allowed)',
-            $which, $arc, $sender);
-        return 'not_allowed';
-    }
-
-  if ($action =~ /\Ado_it\b/i) {
     my $archive = Sympa::Archive->new(context => $list);
     my @msg_list;
     unless ($archive->select_archive($arc)) {
@@ -495,14 +408,6 @@ sub get {
         $which, $arc, $sender, Time::HiRes::time() - $time_command);
 
     return 1;
-  }
-
-    $log->syslog('info',
-        'GET %s %s from %s aborted, unknown requested action in scenario',
-        $which, $arc, $sender);
-    my $error = sprintf 'Unknown requested action in scenario: %s', $action;
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
 }
 
 ###############################################
@@ -521,6 +426,10 @@ sub last {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};
@@ -536,51 +445,6 @@ sub last {
         return 'no_archive';
     }
 
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'archive.mail_access',
-        $auth_method,
-        {   'sender'  => $sender,
-            'message' => $message,
-        }
-    );
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error =
-            "Unable to evaluate scenario 'archive_mail_access' for list $which";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /\Areject\b/i) {
-        if (defined $result->{'tt2'}) {
-            unless (
-                Sympa::send_file(
-                    $list, $result->{'tt2'},
-                    $sender, {'auto_submitted' => 'auto-replied'}
-                )
-                ) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'LAST %s from %s refused (not allowed)',
-            $which, $sender);
-        return 'not_allowed';
-    }
-
-  if ($action =~ /\Ado_it\b/i) {
     my ($arc_message, $arc_handle);
     my $archive = Sympa::Archive->new(context => $list);
     foreach my $arc (reverse $archive->get_archives) {
@@ -631,14 +495,6 @@ sub last {
         $which, $sender, Time::HiRes::time() - $time_command);
 
     return 1;
-  }
-
-    $log->syslog('info',
-        'LAST %s from %s aborted, unknown requested action in scenario',
-        $which, $sender);
-    my $error = sprintf 'Unknown requested action in scenario: %s', $action;
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
 }
 
 ############################################################
@@ -656,6 +512,10 @@ sub index {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};
@@ -664,51 +524,6 @@ sub index {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'archive.mail_access',
-        $auth_method,
-        {   'sender'  => $sender,
-            'message' => $message,
-        }
-    );
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error =
-            "Unable to evaluate scenario 'archive_mail_access' for list $which";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /\Areject\b/i) {
-        if (defined $result->{'tt2'}) {
-            unless (
-                Sympa::send_file(
-                    $list, $result->{'tt2'},
-                    $sender, {'auto_submitted' => 'auto-replied'}
-                )
-                ) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'INDEX %s from %s refused (not allowed)',
-            $which, $sender);
-        return 'not_allowed';
-    }
-
-  if ($action =~ /\Ado_it\b/i) {
     unless ($list->is_archived()) {
         Sympa::Report::reject_report_cmd($request, 'user', 'empty_archives');
         $log->syslog('info', 'INDEX %s from %s refused, list not archived',
@@ -751,14 +566,6 @@ sub index {
         $which, $sender, Time::HiRes::time() - $time_command);
 
     return 1;
-  }
-
-    $log->syslog('info',
-        'INDEX %s from %s aborted, unknown requested action in scenario',
-        $which, $sender);
-    my $error = sprintf 'Unknown requested action in scenario: %s', $action;
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
 }
 
 ############################################################
@@ -774,6 +581,10 @@ sub review {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
     my $robot    = $list->{'domain'};
@@ -789,70 +600,8 @@ sub review {
         #FIXME: Abort if synchronization failed.
     }
 
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $result = Sympa::Scenario::request_action(
-        $list, 'review',
-        $auth_method,
-        {   'sender'  => $sender,
-            'message' => $message
-        }
-    );
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error = "Unable to evaluate scenario 'review' for list $listname";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /request_auth/i) {
-        $log->syslog('debug2', 'Auth requested from %s', $sender);
-        unless (
-            Sympa::request_auth(
-                context => $list,
-                sender  => $sender,
-                action  => 'review'
-            )
-            ) {
-            my $error =
-                'Unable to request authentication for command "review"';
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
-            return undef;
-        }
-        $log->syslog('info',
-            'REVIEW %s from %s, auth requested (%.2f seconds)',
-            $listname, $sender, Time::HiRes::time() - $time_command);
-        return 1;
-    }
-    if ($action =~ /reject/i) {
-        if (defined $result->{'tt2'}) {
-            unless (
-                Sympa::send_file(
-                    $list, $result->{'tt2'},
-                    $sender, {'auto_submitted' => 'auto-replied'}
-                )
-                ) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'Review %s from %s refused (not allowed)',
-            $listname, $sender);
-        return 'not_allowed';
-    }
-
     my @users;
 
-    if ($action =~ /do_it/i) {
         my $is_owner = $list->is_admin('owner', $sender)
             || Sympa::is_listmaster($list, $sender);
         unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
@@ -890,13 +639,6 @@ sub review {
         $log->syslog('info', 'REVIEW %s from %s accepted (%.2f seconds)',
             $listname, $sender, Time::HiRes::time() - $time_command);
         return 1;
-    }
-    $log->syslog('info',
-        'REVIEW %s from %s aborted, unknown requested action in scenario',
-        $listname, $sender);
-    my $error = "Unknown requested action in scenario: $action.";
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
 }
 
 ############################################################
@@ -911,6 +653,10 @@ sub verify {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
     my $robot    = $list->{'domain'};
@@ -957,18 +703,24 @@ sub subscribe {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};
     my $message = $request->{message};
     my $sender  = $request->{sender};
 
+    my $email   = $request->{email};
     my $comment = $request->{gecos};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    ## This is a really minimalistic handling of the comments,
-    ## it is far away from RFC-822 completeness.
+    # This is a really minimalistic handling of the comments,
+    # it is far away from RFC-822 completeness.
+    #FIXME: Needed?
     if (defined $comment and $comment =~ /\S/) {
         $comment =~ s/"/\\"/g;
         $comment = "\"$comment\"" if ($comment =~ /[<>\(\)]/);
@@ -976,160 +728,25 @@ sub subscribe {
         undef $comment;
     }
 
-    ## Now check if the user may subscribe to the list
-
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    ## query what to do with this subscribtion request
-
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'subscribe',
-        $auth_method,
-        {   'sender'  => $sender,
-            'message' => $message,
-        }
-    );
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error = "Unable to evaluate scenario 'subscribe' for list $which";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    $log->syslog('debug2', 'Action: %s', $action);
-
-    if ($action =~ /reject/i) {
-        if (defined $result->{'tt2'}) {
-            unless (
-                Sympa::send_file(
-                    $list, $result->{'tt2'},
-                    $sender, {'auto_submitted' => 'auto-replied'}
-                )
-                ) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'SUB %s from %s refused (not allowed)',
-            $which, $sender);
-        return 'not_allowed';
-    }
-
-    ## Unless rejected by scenario, don't go further if the user is subscribed
-    ## already.
-    my $user_entry = $list->get_list_member($sender);
-    if (defined($user_entry)) {
+    # Unless rejected by scenario, don't go further if the user is subscribed
+    # already.
+    my $user_entry = $list->get_list_member($email);
+    if (defined $user_entry) {
         Sympa::Report::reject_report_cmd($request, 'user',
-            'already_subscriber', {'email' => $sender});
+            'already_subscriber', {'email' => $email});
         $log->syslog(
             'err',
             'User %s is subscribed to %s already. Ignoring subscription request',
-            $sender,
-            $list->{'name'}
+            $email,
+            $list
         );
         return undef;
     }
-
-    ## Continue checking scenario.
-    if ($action =~ /owner/i) {
-        Sympa::Report::notice_report_cmd($request, 'req_forward');
-        ## Send a notice to the owners.
-        unless (
-            $list->send_notify_to_owner(
-                'subrequest',
-                {   'who'     => $sender,
-                    'keyauth' => Sympa::compute_auth(
-                        context => $list,
-                        email   => $sender,
-                        action  => 'add'
-                    ),
-                    'replyto' => Sympa::get_address($list, 'sympa'),
-                    'gecos'   => $comment
-                }
-            )
-            ) {
-            #FIXME: Why is error reported only in this case?
-            $log->syslog('info',
-                'Unable to send notify "subrequest" to %s list owner', $list);
-            Sympa::Report::reject_report_cmd(
-                $request, 'intern',
-                sprintf('Unable to send subrequest to %s list owner',
-                    $list->get_id)
-            );
-        }
-
-        my $spool_req   = Sympa::Spool::Request->new;
-        my $add_request = Sympa::Request->new_from_tuples(
-            context => $list,
-            email   => $sender,
-            gecos   => $comment,
-            action  => 'add',
-            date    => $message->{date},    # Keep date of message.
-        );
-        if ($spool_req->store($add_request)) {
-            $log->syslog(
-                'info',
-                'SUB %s from %s forwarded to the owners of the list (%.2f seconds)',
-                $which,
-                $sender,
-                Time::HiRes::time() - $time_command
-            );
-        }
-        return 1;
-    }
-    if ($action =~ /request_auth/i) {
-        unless (
-            Sympa::request_auth(
-                context => $list,
-                sender  => $sender,
-                action  => 'subscribe',
-                gecos   => $comment,
-                quiet   => $request->{quiet}
-            )
-            ) {
-            my $error =
-                'Unable to request authentication for command "subscribe"';
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
-            return undef;
-        }
-        $log->syslog('info', 'SUB %s from %s, auth requested (%.2f seconds)',
-            $which, $sender, Time::HiRes::time() - $time_command);
-        return 1;
-    }
-    if ($action =~ /do_it/i) {
-        my $user_entry = $list->get_list_member($sender);
-
-        if (defined $user_entry) {
-            # Only updates the date.  Options remain the same.
-            my %update = (
-                update_date => time,
-                subscribed  => 1,
-            );
-            $update{gecos} = $comment
-                if defined $comment and $comment =~ /\S/;
-
-            unless ($list->update_list_member($sender, %update)) {
-                my $error = sprintf 'Unable to update user %s in list %s',
-                    $sender, $list->get_id;
-                Sympa::Report::reject_report_cmd($request, 'intern', $error);
-                return undef;
-            }
-        } else {
 
             my $u;
             my $defaults = $list->get_default_user_options();
             %{$u} = %{$defaults};
-            $u->{'email'} = $sender;
+            $u->{'email'} = $email;
             $u->{'gecos'} = $comment;
             $u->{'date'}  = $u->{'update_date'} = time;
 
@@ -1147,27 +764,26 @@ sub subscribe {
                     $error);
                 return undef;
             }
-        }
 
-        my $u = Sympa::User->new($sender);
-        $u->lang($list->{'admin'}{'lang'}) unless $u->lang;
-        $u->password(Sympa::Tools::Password::tmp_passwd($sender))
-            unless $u->password;
-        $u->save;
+        my $user = Sympa::User->new($email);
+        $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
+        $user->password(Sympa::Tools::Password::tmp_passwd($email))
+            unless $user->password;
+        $user->save;
 
         ## Now send the welcome file to the user
-        unless ($request->{quiet} or $action =~ /,\s*quiet\b/i) {
-            unless ($list->send_probe_to_user('welcome', $sender)) {
+        unless ($request->{quiet}) {
+            unless ($list->send_probe_to_user('welcome', $email)) {
                 $log->syslog('notice', 'Unable to send "welcome" probe to %s',
-                    $sender);
+                    $email);
             }
         }
 
         ## If requested send notification to owners
-        if ($action =~ /notify/i) {
+        if ($request->{notify}) {
             $list->send_notify_to_owner(
                 'notice',
-                {   'who'     => $sender,
+                {   'who'     => $email,
                     'gecos'   => $comment,
                     'command' => 'subscribe'
                 }
@@ -1183,14 +799,6 @@ sub subscribe {
         );
 
         return 1;
-    }
-
-    $log->syslog('info',
-        'SUB %s from %s aborted, unknown requested action in scenario',
-        $which, $sender);
-    my $error = "Unknown requested action in scenario: $action.";
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
 }
 
 ############################################################
@@ -1207,6 +815,10 @@ sub info {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
     my $robot    = $list->{'domain'};
@@ -1214,46 +826,6 @@ sub info {
     my $sender   = $request->{sender};
 
     $language->set_lang($list->{'admin'}{'lang'});
-
-    my $auth_method = get_auth_method($request);
-
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $result = Sympa::Scenario::request_action(
-        $list, 'info',
-        $auth_method,
-        {   'sender'  => $sender,
-            'message' => $message,
-        }
-    );
-
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error = "Unable to evaluate scenario 'review' for list $listname";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /reject/i) {
-        if (defined $result->{'tt2'}) {
-            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'Review %s from %s refused (not allowed)',
-            $listname, $sender);
-        return 'not_allowed';
-    }
-    if ($action =~ /do_it/i) {
 
         my $data;
         foreach my $key (keys %{$list->{'admin'}}) {
@@ -1304,15 +876,6 @@ sub info {
         $log->syslog('info', 'INFO %s from %s accepted (%.2f seconds)',
             $listname, $sender, Time::HiRes::time() - $time_command);
         return 1;
-    }
-
-    $log->syslog('info',
-        'INFO %s from %s aborted, unknown requested action in scenario',
-        $listname, $sender);
-    my $error = "Unknown requested action in scenario: $action.";
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
-
 }
 
 ##############################################################
@@ -1377,7 +940,7 @@ sub global_signoff {
             $req->{context}   = $list;
             $req->{localpart} = $list->{'name'};
 
-            my $status = Sympa::Commands::signoff($req);
+            my $status = Sympa::Commands::authorize_request($req);
             $success ||= $status;
         }
         return $success;
@@ -1391,134 +954,28 @@ sub signoff {
 
     my $email = $request->{email};
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list  = $request->{context};
     my $which = $list->{'name'};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'unsubscribe',
-        $auth_method,
-        {   'email'   => $email,
-            'sender'  => $sender,
-            'message' => $message,
-        }
-    );
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error =
-            sprintf 'Unable to evaluate scenario "unsubscribe" for list %s',
-            $list->get_id;
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /reject/i) {
-        if (defined $result->{'tt2'}) {
-            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'SIG %s %s from %s refused (not allowed)',
-            $which, $email, $sender);
-        return 'not_allowed';
-    }
-    if ($action =~ /request_auth\s*\(\s*\[\s*(email|sender)\s*\]\s*\)/i) {
-        my $to;
-        if ($1 eq 'email') {
-            $to = $email;
-        } else {
-            $to = $sender;
-        }
-        unless (
-            Sympa::request_auth(
-                context => $list,
-                sender  => $to,
-                email   => $email,
-                action  => 'signoff',
-                quiet   => $request->{quiet}
-            )
-            ) {
-            my $error =
-                'Unable to request authentication for command "signoff"';
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
-            return undef;
-        }
-        $log->syslog('info', 'SIG %s from %s auth requested (%.2f seconds)',
-            $which, $sender, Time::HiRes::time() - $time_command);
-        return 1;
-    }
-
-    if ($action =~ /owner/i) {
-        Sympa::Report::notice_report_cmd($request, 'req_forward')
-            unless $action =~ /quiet/i;
-        ## Send a notice to the owners.
-        unless (
-            $list->send_notify_to_owner(
-                'sigrequest',
-                {   'who'     => $sender,
-                    'keyauth' => Sympa::compute_auth(
-                        context => $list,
-                        email   => $sender,
-                        action  => 'del'
-                    )
-                }
-            )
-            ) {
-            #FIXME: Why is error reported only in this case?
-            Sympa::Report::reject_report_cmd(
-                $request,
-                'intern_quiet',
-                sprintf('Unable to send sigrequest to %s list owner',
-                    $list->get_id)
-            );
-        }
-
-        my $spool_req   = Sympa::Spool::Request->new;
-        my $del_request = Sympa::Request->new_from_tuples(
-            context => $list,
-            email   => $sender,
-            action  => 'del',
-            date    => $message->{date},    # Keep date of message.
-        );
-        if ($spool_req->store($del_request)) {
-            $log->syslog(
-                'info',
-                'SIG %s from %s forwarded to the owners of the list (%.2f seconds)',
-                $which,
-                $sender,
-                Time::HiRes::time() - $time_command
-            );
-        }
-        return 1;
-    }
-    if ($action =~ /do_it/i) {
-        ## Now check if we know this email on the list and
-        ## remove it if found, otherwise just reject the
-        ## command.
+        # Now check if we know this email on the list and
+        # remove it if found, otherwise just reject the
+        # command.
         my $user_entry = $list->get_list_member($email);
-        unless ((defined $user_entry)) {
+        unless (defined $user_entry) {
             Sympa::Report::reject_report_cmd($request, 'user',
                 'your_email_not_found', {'email' => $email});
             $log->syslog('info', 'SIG %s from %s refused, not on list',
                 $which, $email);
 
-            ## Tell the owner somebody tried to unsubscribe
-            if ($action =~ /notify/i) {
-                # try to find email from same domain or email wwith same local
+            # Tell the owner somebody tried to unsubscribe.
+            if ($request->{notify}) {
+                # Try to find email from same domain or email with same local
                 # part.
                 $list->send_notify_to_owner(
                     'warn-signoff',
@@ -1538,12 +995,13 @@ sub signoff {
                 'operation' => 'signoff',
             )
             ) {
-            my $error = "Unable to delete user $email from list $which";
+            my $error = sprintf 'Unable to delete user %s from list %s',
+                $email, $list->get_id;
             Sympa::Report::reject_report_cmd($request, 'intern', $error);
         }
 
-        ## Notify the owner
-        if ($action =~ /notify/i) {
+        # Notify the owner.
+        if ($request->{notify}) {
             $list->send_notify_to_owner(
                 'notice',
                 {   'who'     => $email,
@@ -1553,8 +1011,8 @@ sub signoff {
             );
         }
 
-        unless ($request->{quiet} or $action =~ /,\s*quiet\b/i) {
-            ## Send bye file to subscriber
+        unless ($request->{quiet}) {
+            # Send bye file to subscriber.
             unless (Sympa::send_file($list, 'bye', $email, {})) {
                 $log->syslog('notice', 'Unable to send template "bye" to %s',
                     $email);
@@ -1565,16 +1023,12 @@ sub signoff {
             'info',
             'SIG %s from %s accepted (%.2f seconds, %d subscribers)',
             $which,
-            $email,
+            $sender,
             Time::HiRes::time() - $time_command,
             $list->get_total()
         );
 
         return 1;
-    }
-    my $error = "Unknown requested action in scenario: $action.";
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
 }
 
 ############################################################
@@ -1593,6 +1047,10 @@ sub add {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};
@@ -1604,64 +1062,6 @@ sub add {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $result = Sympa::Scenario::request_action(
-        $list, 'add',
-        $auth_method,
-        {   'email'   => $email,
-            'sender'  => $sender,
-            'message' => $message,
-        }
-    );
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error = "Unable to evaluate scenario 'add' for list $which";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /reject/i) {
-        if (defined $result->{'tt2'}) {
-            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'ADD %s %s from %s refused (not allowed)',
-            $which, $email, $sender);
-        return 'not_allowed';
-    }
-
-    if ($action =~ /request_auth/i) {
-        unless (
-            Sympa::request_auth(
-                context => $list,
-                sender  => $sender,
-                action  => 'add',
-                quiet   => $request->{quiet},
-                email   => $email,
-                gecos   => $comment
-            )
-            ) {
-            my $error = 'Unable to request authentication for command "add"';
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
-            return undef;
-        }
-        $log->syslog('info', 'ADD %s from %s, auth requested(%.2f seconds)',
-            $which, $sender, Time::HiRes::time() - $time_command);
-        return 1;
-    }
-    if ($action =~ /do_it/i) {
         if ($list->is_list_member($email)) {
             Sympa::Report::reject_report_cmd($request, 'user',
                 'already_subscriber', {'email' => $email});
@@ -1673,7 +1073,8 @@ sub add {
             );
             return undef;
 
-        } else {
+        }
+
             my $u;
             my $defaults = $list->get_default_user_options();
             %{$u} = %{$defaults};
@@ -1712,17 +1113,16 @@ sub add {
 
             Sympa::Report::notice_report_cmd($request, 'now_subscriber',
                 {'email' => $email});
-        }
 
-        my $u = Sympa::User->new($email);
-        $u->lang($list->{'admin'}{'lang'}) unless $u->lang;
-        $u->password(Sympa::Tools::Password::tmp_passwd($email))
-            unless $u->password;
-        $u->save;
+        my $user = Sympa::User->new($email);
+        $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
+        $user->password(Sympa::Tools::Password::tmp_passwd($email))
+            unless $user->password;
+        $user->save;
 
         ## Now send the welcome file to the user if it exists and notification
         ## is supposed to be sent.
-        unless ($request->{quiet} or $action =~ /,\s*quiet\b/i) {
+        unless ($request->{quiet}) {
             unless ($list->send_probe_to_user('welcome', $email)) {
                 $log->syslog('notice', 'Unable to send "welcome" probe to %s',
                     $email);
@@ -1738,7 +1138,7 @@ sub add {
             Time::HiRes::time() - $time_command,
             $list->get_total()
         );
-        if ($action =~ /notify/i) {
+        if ($request->{notify}) {
             $list->send_notify_to_owner(
                 'notice',
                 {   'who'     => $email,
@@ -1749,14 +1149,6 @@ sub add {
             );
         }
         return 1;
-    }
-    $log->syslog('info',
-        'ADD %s from %s aborted, unknown requested action in scenario',
-        $which, $sender);
-    my $error = "Unknown requested action in scenario: $action.";
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
-
 }
 
 ############################################################
@@ -1774,6 +1166,10 @@ sub invite {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};
@@ -1787,66 +1183,6 @@ sub invite {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $result = Sympa::Scenario::request_action(
-        $list, 'invite',
-        $auth_method,
-        {   'sender'  => $sender,
-            'message' => $message,
-        }
-    );
-
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error = "Unable to evaluate scenario 'invite' for list $which";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /reject/i) {
-        if (defined $result->{'tt2'}) {
-            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'INVITE %s %s from %s refused (not allowed)',
-            $which, $email, $sender);
-        return 'not_allowed';
-    }
-
-    if ($action =~ /request_auth/i) {
-        unless (
-            Sympa::request_auth(
-                context => $list,
-                sender  => $sender,
-                action  => 'invite',
-                email   => $email,
-                gecos   => $comment
-            )
-            ) {
-            my $error =
-                'Unable to request authentication for command "invite"';
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
-            return undef;
-        }
-
-        $log->syslog('info',
-            'INVITE %s from %s, auth requested (%.2f seconds)',
-            $which, $sender, Time::HiRes::time() - $time_command);
-        return 1;
-    }
-    if ($action =~ /do_it/i) {
         if ($list->is_list_member($email)) {
             Sympa::Report::reject_report_cmd($request, 'user',
                 'already_subscriber', {'email' => $email});
@@ -1857,8 +1193,9 @@ sub invite {
                 $which
             );
             return undef;
-        } else {
-            ## Is the guest user allowed to subscribe in this list ?
+        }
+
+            # Is the guest user allowed to subscribe in this list?
 
             my %context;
             $context{'user'}{'email'} = $email;
@@ -1883,7 +1220,7 @@ sub invite {
                 return undef;
             }
 
-            if ($action =~ /request_auth/i) {
+            if ($action =~ /\Arequest_auth\b/i) {
                 my $keyauth = Sympa::compute_auth(
                     context => $list,
                     email   => $email,
@@ -1913,7 +1250,7 @@ sub invite {
                 Sympa::Report::notice_report_cmd($request, 'invite',
                     {'email' => $email});
 
-            } elsif ($action !~ /reject/i) {
+            } elsif ($action !~ /\Areject\b/i) {
                 $context{'subject'} = "sub $which $comment";
                 $context{'url'} = "mailto:$sympa?subject=$context{'subject'}";
                 $context{'url'} =~ s/\s/%20/g;
@@ -1937,7 +1274,7 @@ sub invite {
                 Sympa::Report::notice_report_cmd($request, 'invite',
                     {'email' => $email});
 
-            } elsif ($action =~ /reject/i) {
+            } elsif ($action =~ /\Areject\b/i) {
                 $log->syslog(
                     'info',
                     'INVITE %s %s from %s refused, not allowed (%.2f seconds, %d subscribers)',
@@ -1964,15 +1301,8 @@ sub invite {
                         $result->{'reason'}, {'email' => $email});
                 }
             }
-        }
+
         return 1;
-    }
-    $log->syslog('info',
-        'INVITE %s from %s aborted, unknown requested action in scenario',
-        $which, $sender);
-    my $error = "Unknown requested action in scenario: $action.";
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
 }
 
 ############################################################
@@ -1999,64 +1329,6 @@ sub global_remind {
         $listname = '*';
         $robot    = $request->{context};
 
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $action;
-    my $result;
-
-        $result =
-            Sympa::Scenario::request_action($robot, 'global_remind',
-            $auth_method, {'sender' => $sender});
-        $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error = "Unable to evaluate scenario 'remind' for list $listname";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /reject/i) {
-        $log->syslog('info', 'Remind for list %s from %s refused',
-            $listname, $sender);
-        if (defined $result->{'tt2'}) {
-            unless (
-                Sympa::send_file(
-                    $list || $robot,
-                    $result->{'tt2'}, $sender, {}
-                )
-                ) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        return 'not_allowed';
-    } elsif ($action =~ /request_auth/i) {
-        $log->syslog('debug2', 'Auth requested from %s', $sender);
-            unless (
-                Sympa::request_auth(
-                    context => '*',
-                    sender  => $sender,
-                    action  => 'global_remind'
-                )
-                ) {
-                my $error =
-                    'Unable to request authentication for command "remind"';
-                Sympa::Report::reject_report_cmd($request, 'intern', $error);
-                return undef;
-            }
-        $log->syslog('info',
-            'REMIND %s from %s, auth requested (%.2f seconds)',
-            $listname, $sender, Time::HiRes::time() - $time_command);
-        return 1;
-    } elsif ($action =~ /do_it/i) {
             my %global_subscription;
             my %global_info;
             my $count = 0;
@@ -2145,17 +1417,6 @@ sub global_remind {
             Sympa::Report::notice_report_cmd($request, 'glob_remind',
                 {'count' => $count});
         return 1;
-    } else {
-        $log->syslog(
-            'info',
-            'REMIND %s from %s aborted, unknown requested action in scenario',
-            $listname,
-            $sender
-        );
-        my $error = "Unknown requested action in scenario: $action.";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
 }
 
 sub remind {
@@ -2165,77 +1426,16 @@ sub remind {
     my $message = $request->{message};
     my $sender  = $request->{sender};
 
-    my ($list, $listname, $robot);
-
-        $list     = $request->{context};
-        $listname = $list->{'name'};
-        $robot    = $list->{'domain'};
-
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    my $action;
-    my $result;
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
+        my $list     = $request->{context};
+        my $listname = $list->{'name'};
+        my $robot    = $list->{'domain'};
 
         $language->set_lang($list->{'admin'}{'lang'});
 
-        $result = Sympa::Scenario::request_action(
-            $list, 'remind',
-            $auth_method,
-            {   'sender'  => $sender,
-                'message' => $message,
-            }
-        );
-
-        $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error = "Unable to evaluate scenario 'remind' for list $listname";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /reject/i) {
-        $log->syslog('info', 'Remind for list %s from %s refused',
-            $listname, $sender);
-        if (defined $result->{'tt2'}) {
-            unless (
-                Sympa::send_file(
-                    $list || $robot,
-                    $result->{'tt2'}, $sender, {}
-                )
-                ) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        return 'not_allowed';
-    } elsif ($action =~ /request_auth/i) {
-        $log->syslog('debug2', 'Auth requested from %s', $sender);
-            unless (
-                Sympa::request_auth(
-                    context => $list,
-                    sender  => $sender,
-                    action  => 'remind'
-                )
-                ) {
-                my $error =
-                    'Unable to request authentication for command "remind"';
-                Sympa::Report::reject_report_cmd($request, 'intern', $error);
-                return undef;
-            }
-        $log->syslog('info',
-            'REMIND %s from %s, auth requested (%.2f seconds)',
-            $listname, $sender, Time::HiRes::time() - $time_command);
-        return 1;
-    } elsif ($action =~ /do_it/i) {
             # For each subscriber send a reminder.
             my $total = 0;
             my $user;
@@ -2270,17 +1470,6 @@ sub remind {
             );
 
             return 1;
-    } else {
-        $log->syslog(
-            'info',
-            'REMIND %s from %s aborted, unknown requested action in scenario',
-            $listname,
-            $sender
-        );
-        my $error = "Unknown requested action in scenario: $action.";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
 }
 
 ############################################################
@@ -2299,6 +1488,10 @@ sub del {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};
@@ -2309,68 +1502,8 @@ sub del {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless (defined $auth_method);
-
-    ## query what to do with this DEL request
-    my $result = Sympa::Scenario::request_action(
-        $list, 'del',
-        $auth_method,
-        {   'sender'  => $sender,
-            'email'   => $who,
-            'message' => $message,
-        }
-    );
-
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    unless (defined $action) {
-        my $error = "Unable to evaluate scenario 'del' for list $which";
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    if ($action =~ /reject/i) {
-        if (defined $result->{'tt2'}) {
-            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog('info', 'DEL %s %s from %s refused (not allowed)',
-            $which, $who, $sender);
-        return 'not_allowed';
-    }
-    if ($action =~ /request_auth/i) {
-        unless (
-            Sympa::request_auth(
-                context => $list,
-                sender  => $sender,
-                action  => 'del',
-                quiet   => $request->{quiet},
-                email   => $who
-            )
-            ) {
-            my $error = 'Unable to request authentication for command "del"';
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
-            return undef;
-        }
-        $log->syslog('info',
-            'DEL %s %s from %s, auth requested (%.2f seconds)',
-            $which, $who, $sender, Time::HiRes::time() - $time_command);
-        return 1;
-    }
-
-    if ($action =~ /do_it/i) {
-        ## Check if we know this email on the list and remove it. Otherwise
-        ## just reject the message.
+        # Check if we know this email on the list and remove it. Otherwise
+        # just reject the message.
         my $user_entry = $list->get_list_member($who);
 
         unless ((defined $user_entry)) {
@@ -2410,7 +1543,7 @@ sub del {
 
         ## Send a notice to the removed user, unless the owner indicated
         ## quiet del.
-        unless ($request->{quiet} or $action =~ /,\s*quiet\b/i) {
+        unless ($request->{quiet}) {
             unless (Sympa::send_file($list, 'removed', $who, {})) {
                 $log->syslog('notice',
                     'Unable to send template "removed" to %s', $who);
@@ -2427,7 +1560,7 @@ sub del {
             Time::HiRes::time() - $time_command,
             $list->get_total()
         );
-        if ($action =~ /notify/i) {
+        if ($request->{notify}) {
             $list->send_notify_to_owner(
                 'notice',
                 {   'who'     => $who,
@@ -2438,13 +1571,6 @@ sub del {
             );
         }
         return 1;
-    }
-    $log->syslog('info',
-        'DEL %s %s from %s aborted, unknown requested action in scenario',
-        $which, $who, $sender);
-    my $error = "Unknown requested action in scenario: $action.";
-    Sympa::Report::reject_report_cmd($request, 'intern', $error);
-    return undef;
 }
 
 ############################################################
@@ -2512,7 +1638,7 @@ sub global_set {
             $req->{context}   = $list;
             $req->{localpart} = $list->{'name'};
 
-            my $status = Sympa::Commands::set($req);
+            my $status = Sympa::Commands::authorize_request($req);
             $success ||= $status;
         }
         return $success;
@@ -2524,6 +1650,10 @@ sub set {
     my $sender  = $request->{sender};
     my $mode    = $request->{mode};
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list  = $request->{context};
     my $which = $list->{'name'};
 
@@ -2626,6 +1756,10 @@ sub distribute {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
     my $robot  = $list->{'domain'};
@@ -2720,6 +1854,10 @@ sub reject {
     $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
     my $robot  = $list->{'domain'};
@@ -2767,6 +1905,10 @@ sub modindex {
     $log->syslog('debug2', '(%s)', @_);
     my $request = shift;
 
+    unless (ref $request->{context} eq 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
     my $list   = $request->{context};
     my $name   = $list->{'name'};
     my $robot  = $list->{'domain'};
@@ -2921,6 +2063,189 @@ sub which {
 }
 
 ################ Function for authentication #######################
+
+sub authorize_request {
+    my $request = shift;
+
+    # Skip authorization unless specific scenario is defined.
+    if (   $request->{error}
+        or not $Sympa::CommandDef::comms{$request->{action}}
+        or not $Sympa::CommandDef::comms{$request->{action}}->{scenario}) {
+        return Sympa::Commands::execute_request($request);
+    }
+
+    my $scenario = $Sympa::CommandDef::comms{$request->{action}}->{scenario};
+    my $action_regexp =
+        $Sympa::CommandDef::comms{$request->{action}}->{action_regexp}
+        or die 'bug in logic. Ask developer';
+
+    my $message = $request->{message};
+    my $sender  = $request->{sender};
+
+    # Check if required list argument is known.
+    if ($request->{localpart} and ref $request->{context} ne 'Sympa::List') {
+        $request->{error} = 'unknown_list';
+        return Sympa::Commands::error($request);
+    }
+    my $that = $request->{context};
+
+    my $context = {
+        sender  => $sender,
+        message => $message,
+    };
+
+    # Authorize requests.
+
+    my $action;
+    my $result;
+
+    my $auth_method = get_auth_method($request);
+    return 'wrong_auth'
+        unless defined $auth_method;
+
+    $result = Sympa::Scenario::request_action($that, $scenario, $auth_method,
+        $context);
+    $action = $result->{'action'} if ref $result eq 'HASH';
+
+    unless (defined $action and $action =~ /\A(?:$action_regexp)\b/) {
+        $log->syslog(
+            'info',
+            '%s for %s from %s aborted, unknown requested action "%s" in scenario "%s"',
+            uc $request->{action},
+            $that,
+            $sender,
+            $action,
+            $scenario
+        );
+        my $error = sprintf 'Unknown requested action in scenario: %s',
+            ($action || '');
+        Sympa::Report::reject_report_cmd($request, 'intern', $error);
+        return undef;
+    }
+
+    # Special cases for subscribe & signoff: If membership is unsatisfactory,
+    # force execute request and let it be rejected.
+    unless ($action =~ /\Areject\b/i) {
+        if ($request->{action} eq 'subscribe'
+            and defined $that->get_list_member($request->{email})) {
+            $action =~ s/\A\w+/do_it/;
+        } elsif ($request->{action} eq 'signoff'
+            and not defined $that->get_list_member($request->{email})) {
+            $action =~ s/\A\w+/do_it/;
+        }
+    }
+
+    if ($action =~ /\Ado_it\b/i) {
+        $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);    # Overwrite.
+        $request->{notify} = ($action =~ /,\s*notify\b/i);
+        return Sympa::Commands::execute_request($request);
+    } elsif ($action =~ /\Arequest_auth\b(?:\s*[[]\s*(\S+)\s*[]])?/i) {
+        my $to = $1;
+        if ($to and $to eq 'email') {
+            $to = $request->{email} || $sender;
+        } else {
+            $to = $sender;
+        }
+
+        $log->syslog('debug2', 'Auth requested from %s', $sender);
+        unless (Sympa::request_auth(%$request, sender => $to)) {
+            my $error = sprintf
+                'Unable to request authentication for command "%s"',
+                $request->{action};
+            Sympa::Report::reject_report_cmd($request, 'intern', $error);
+            return undef;
+        }
+        $log->syslog(
+            'info',
+            '%s for %s from %s, auth requested (%.2f seconds)',
+            uc $request->{action},
+            $that,
+            $sender,
+            Time::HiRes::time() - $time_command
+        );
+        return 1;
+    } elsif ($action =~ /\Aowner\b/i and ref $that eq 'Sympa::List') {
+        Sympa::Report::notice_report_cmd($request, 'req_forward')
+            unless $action =~ /,\s*quiet\b/i;
+
+        my $tpl =
+            {subscribe => 'subrequest', signoff => 'sigrequest'}
+            ->{$request->{action}};
+        my $owner_action =
+            {subscribe => 'add', signoff => 'del'}->{$request->{action}};
+
+        # Send a notice to the owners.
+        unless (
+            $that->send_notify_to_owner(
+                $tpl,
+                {   'who'     => $sender,
+                    'keyauth' => Sympa::compute_auth(
+                        context => $that,
+                        email   => $request->{email},
+                        action  => $owner_action,
+                    ),
+                    'replyto' => Sympa::get_address($that, 'sympa'),
+                    'gecos'   => $request->{gecos},
+                }
+            )
+            ) {
+            #FIXME: Why is error reported only in this case?
+            $log->syslog('info',
+                'Unable to send notify "%s" to %s list owner',
+                $tpl, $that);
+            Sympa::Report::reject_report_cmd(
+                $request, 'intern',
+                sprintf('Unable to send subrequest to %s list owner',
+                    $that->get_id)
+            );
+        }
+
+        my $spool_req   = Sympa::Spool::Request->new;
+        my $add_request = Sympa::Request->new_from_tuples(
+            %$request,
+            action => $owner_action,
+            date   => $message->{date},    # Keep date of message.
+        );
+        if ($spool_req->store($add_request)) {
+            $log->syslog(
+                'info',
+                '%s for %s from %s forwarded to the owners of the list (%.2f seconds)',
+                uc $request->{action},
+                $that,
+                $sender,
+                Time::HiRes::time() - $time_command
+            );
+        }
+        return 1;
+    } elsif ($action =~ /\Areject\b/i) {
+        if (defined $result->{'tt2'}) {
+            unless (
+                Sympa::send_file(
+                    $that, $result->{'tt2'},
+                    $sender, {'auto_submitted' => 'auto-replied'}
+                )
+                ) {
+                $log->syslog('notice', 'Unable to send template "%s" to %s',
+                    $result->{'tt2'}, $sender);
+                Sympa::Report::reject_report_cmd($request, 'auth',
+                    $result->{'reason'});
+            }
+        } else {
+            Sympa::Report::reject_report_cmd($request, 'auth',
+                $result->{'reason'});
+        }
+        $log->syslog(
+            'info',
+            '%s for %s from %s refused (not allowed)',
+            uc $request->{action},
+            $that, $sender
+        );
+        return 'not_allowed';
+    } else {
+        #NOTREACHED
+        die 'bug in logic. Ask developer';
+    }
+}
 
 ##########################################################
 #  get_auth_method
