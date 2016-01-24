@@ -33,7 +33,6 @@ nobase_modules_DATA = \
 	Sympa/Auth.pm \
 	Sympa/Bulk.pm \
 	Sympa/CommandDef.pm \
-	Sympa/Commands.pm \
 	Conf.pm \
 	Sympa/ConfDef.pm \
 	Sympa/Config_XML.pm \
@@ -84,6 +83,8 @@ nobase_modules_DATA = \
 	Sympa/SOAP/Transport.pm \
 	Sympa/Spindle.pm \
 	Sympa/Spindle/AuthorizeMessage.pm \
+	Sympa/Spindle/AuthorizeRequest.pm \
+	Sympa/Spindle/DispatchRequest.pm \
 	Sympa/Spindle/DistributeMessage.pm \
 	Sympa/Spindle/DoCommand.pm \
 	Sympa/Spindle/DoForward.pm \

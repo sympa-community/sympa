@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Commands;
+package Sympa::Spindle::DispatchRequest;
 
 use strict;
 use warnings;
@@ -35,7 +35,6 @@ use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Report;
-use Sympa::Request;
 use Sympa::Scenario;
 use Sympa::Spindle::ProcessHeld;
 use Sympa::Spindle::ProcessModeration;
@@ -44,25 +43,27 @@ use Sympa::Spool::Request;
 use Sympa::Tools::Password;
 use Sympa::User;
 
+use base qw(Sympa::Spindle);
+
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
 
-# time of the process command
-my $time_command;
+# Use {start_time} attribute of spindle.
+#my $time_command;
 
 # Moved to: Sympa::Request::Message::_parse().
 #sub parse;
 
 # Old name: (part of) Sympa::Commands::parse().
-sub execute_request {
+sub _twist {
+    my $self    = shift;
     my $request = shift;
 
-    return Sympa::Commands::error($request) if $request->{error};
+    return _error($self, $request) if $request->{error};
 
-    $time_command = Time::HiRes::time();
-    my $action = $request->{action};
+    my $action = __PACKAGE__ . '::' . $request->{action};
     no strict 'refs';
-    return $action->($request);
+    return $self->$action($request);
 }
 
 ##############################################
@@ -70,7 +71,8 @@ sub execute_request {
 #
 #  Pseudo-request to report error.
 ##############################################
-sub error {
+sub _error {
+    my $self    = shift;
     my $request = shift;
 
     my $message = $request->{message};
@@ -100,7 +102,9 @@ sub error {
     return 1;
 }
 
+# Old name: Sympa::Commands::unknown().
 sub unknown {
+    my $self    = shift;
     my $request = shift;
 
     my $message = $request->{message};
@@ -135,8 +139,9 @@ sub unknown {
 # OUT : 1
 #
 ################################################
+# Old name: Sympa::Commands::finished().
 sub finished {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     Sympa::Report::notice_report_cmd($request, 'finished');
@@ -154,8 +159,9 @@ sub finished {
 # OUT : 1 | undef
 #
 ##############################################
+# Old name: Sympa::Commands::help().
 sub help {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     my $robot  = $request->{context};
@@ -182,7 +188,7 @@ sub help {
 
     $log->syslog(
         'info',  'HELP from %s accepted (%.2f seconds)',
-        $sender, Time::HiRes::time() - $time_command
+        $sender, Time::HiRes::time() - $self->{start_time}
     );
 
     return 1;
@@ -199,8 +205,9 @@ sub help {
 # OUT : 1  | undef
 #
 #######################################################
+# Old name: Sympa::Commands::lists().
 sub lists {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     my $robot   = $request->{context};
@@ -259,7 +266,7 @@ sub lists {
 
     $log->syslog(
         'info',  'LISTS from %s accepted (%.2f seconds)',
-        $sender, Time::HiRes::time() - $time_command
+        $sender, Time::HiRes::time() - $self->{start_time}
     );
 
     return 1;
@@ -274,13 +281,14 @@ sub lists {
 # OUT : 'unknown_list'|'not_allowed'|1  | undef
 #
 #######################################################
+# Old name: Sympa::Commands::stats().
 sub stats {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
@@ -314,7 +322,7 @@ sub stats {
         }
 
         $log->syslog('info', 'STATS %s from %s accepted (%.2f seconds)',
-            $listname, $sender, Time::HiRes::time() - $time_command);
+            $listname, $sender, Time::HiRes::time() - $self->{start_time});
         return 1;
 }
 
@@ -331,12 +339,12 @@ sub stats {
 ###############################################
 # Old name: Sympa::Commands::getfile().
 sub get {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
@@ -405,7 +413,7 @@ sub get {
     }
 
     $log->syslog('info', 'GET %s %s from %s accepted (%.2f seconds)',
-        $which, $arc, $sender, Time::HiRes::time() - $time_command);
+        $which, $arc, $sender, Time::HiRes::time() - $self->{start_time});
 
     return 1;
 }
@@ -422,13 +430,14 @@ sub get {
 # OUT : 'unknownlist'|'no_archive'|'not_allowed'|1
 #
 ###############################################
+# Old name: Sympa::Commands::last().
 sub last {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
@@ -492,7 +501,7 @@ sub last {
     }
 
     $log->syslog('info', 'LAST %s from %s accepted (%.2f seconds)',
-        $which, $sender, Time::HiRes::time() - $time_command);
+        $which, $sender, Time::HiRes::time() - $self->{start_time});
 
     return 1;
 }
@@ -508,13 +517,14 @@ sub last {
 # OUT : 'unknown_list'|'not_allowed'|'no_archive'|1
 #
 #############################################################
+# Old name: Sympa::Commands::index().
 sub index {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
@@ -563,7 +573,7 @@ sub index {
     }
 
     $log->syslog('info', 'INDEX %s from %s accepted (%.2f seconds)',
-        $which, $sender, Time::HiRes::time() - $time_command);
+        $which, $sender, Time::HiRes::time() - $self->{start_time});
 
     return 1;
 }
@@ -577,13 +587,14 @@ sub index {
 #       |'no_subscribers'|1 | undef
 #
 ################################################################
+# Old name: Sympa::Commands::review().
 sub review {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
@@ -637,7 +648,7 @@ sub review {
         }
 
         $log->syslog('info', 'REVIEW %s from %s accepted (%.2f seconds)',
-            $listname, $sender, Time::HiRes::time() - $time_command);
+            $listname, $sender, Time::HiRes::time() - $self->{start_time});
         return 1;
 }
 
@@ -649,13 +660,14 @@ sub review {
 # OUT : 1
 #
 #############################################################
+# Old name: Sympa::Commands::verify().
 sub verify {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
@@ -668,7 +680,7 @@ sub verify {
     if ($sign_mod) {
         $log->syslog(
             'info',  'VERIFY successful from %s (%.2f seconds)',
-            $sender, Time::HiRes::time() - $time_command
+            $sender, Time::HiRes::time() - $self->{start_time}
         );
         if ($sign_mod eq 'smime') {
             ##$auth_method='smime';
@@ -682,7 +694,7 @@ sub verify {
             'info',
             'VERIFY from %s: could not find correct S/MIME signature (%.2f seconds)',
             $sender,
-            Time::HiRes::time() - $time_command
+            Time::HiRes::time() - $self->{start_time}
         );
         Sympa::Report::reject_report_cmd($request, 'user', 'no_verify_sign');
     }
@@ -699,13 +711,14 @@ sub verify {
 # OUT : 'unknown_list'|'wrong_auth'|'not_allowed'| 1 | undef
 #
 ################################################################
+# Old name: Sympa::Commands::subscribe().
 sub subscribe {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
@@ -794,7 +807,7 @@ sub subscribe {
             'SUB %s from %s accepted (%.2f seconds, %d subscribers)',
             $which,
             $sender,
-            Time::HiRes::time() - $time_command,
+            Time::HiRes::time() - $self->{start_time},
             $list->get_total()
         );
 
@@ -811,13 +824,14 @@ sub subscribe {
 #
 #
 ##############################################################
+# Old name: Sympa::Commands::info().
 sub info {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
@@ -874,7 +888,7 @@ sub info {
         }
 
         $log->syslog('info', 'INFO %s from %s accepted (%.2f seconds)',
-            $listname, $sender, Time::HiRes::time() - $time_command);
+            $listname, $sender, Time::HiRes::time() - $self->{start_time});
         return 1;
 }
 
@@ -889,8 +903,9 @@ sub info {
 #
 #
 ##############################################################
+# Old name: (part of) Sympa::Commands::signoff().
 sub global_signoff {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     my $message = $request->{message};
@@ -898,7 +913,6 @@ sub global_signoff {
 
     my $email = $request->{email};
 
-        my $success;
         foreach my $list (
             Sympa::List::get_which($email, $request->{context}, 'member')) {
             # Skip hidden lists.
@@ -940,13 +954,14 @@ sub global_signoff {
             $req->{context}   = $list;
             $req->{localpart} = $list->{'name'};
 
-            my $status = Sympa::Commands::authorize_request($req);
-            $success ||= $status;
+            $self->{distaff}->store($req);
         }
-        return $success;
+        return 1;
 }
 
+# Old name: (part of) Sympa::Commands::signoff().
 sub signoff {
+    my $self    = shift;
     my $request = shift;
 
     my $message = $request->{message};
@@ -956,7 +971,7 @@ sub signoff {
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list  = $request->{context};
     my $which = $list->{'name'};
@@ -1024,7 +1039,7 @@ sub signoff {
             'SIG %s from %s accepted (%.2f seconds, %d subscribers)',
             $which,
             $sender,
-            Time::HiRes::time() - $time_command,
+            Time::HiRes::time() - $self->{start_time},
             $list->get_total()
         );
 
@@ -1043,13 +1058,14 @@ sub signoff {
 #
 #
 ############################################################
+# Old name: Sympa::Commands::add().
 sub add {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
@@ -1135,7 +1151,7 @@ sub add {
             $which,
             $email,
             $sender,
-            Time::HiRes::time() - $time_command,
+            Time::HiRes::time() - $self->{start_time},
             $list->get_total()
         );
         if ($request->{notify}) {
@@ -1162,13 +1178,14 @@ sub add {
 #
 #
 ##############################################################
+# Old name: Sympa::Commands::invite().
 sub invite {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
@@ -1244,7 +1261,7 @@ sub invite {
                     $which,
                     $email,
                     $sender,
-                    Time::HiRes::time() - $time_command,
+                    Time::HiRes::time() - $self->{start_time},
                     $list->get_total()
                 );
                 Sympa::Report::notice_report_cmd($request, 'invite',
@@ -1268,7 +1285,7 @@ sub invite {
                     $which,
                     $email,
                     $sender,
-                    Time::HiRes::time() - $time_command,
+                    Time::HiRes::time() - $self->{start_time},
                     $list->get_total()
                 );
                 Sympa::Report::notice_report_cmd($request, 'invite',
@@ -1281,7 +1298,7 @@ sub invite {
                     $which,
                     $email,
                     $sender,
-                    Time::HiRes::time() - $time_command,
+                    Time::HiRes::time() - $self->{start_time},
                     $list->get_total()
                 );
                 if (defined $result->{'tt2'}) {
@@ -1317,8 +1334,9 @@ sub invite {
 #
 #
 ##############################################################
+# Old name: (part of) Sympa::Commands::remind().
 sub global_remind {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     my $message = $request->{message};
@@ -1419,8 +1437,9 @@ sub global_remind {
         return 1;
 }
 
+# Old name: (part of) Sympa::Commands::remind().
 sub remind {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     my $message = $request->{message};
@@ -1428,7 +1447,7 @@ sub remind {
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
         my $list     = $request->{context};
         my $listname = $list->{'name'};
@@ -1466,7 +1485,7 @@ sub remind {
                 $listname,
                 $sender,
                 $total,
-                Time::HiRes::time() - $time_command
+                Time::HiRes::time() - $self->{start_time}
             );
 
             return 1;
@@ -1484,13 +1503,14 @@ sub remind {
 #
 #
 ##############################################################
+# Old name: Sympa::Commands::del().
 sub del {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
@@ -1557,7 +1577,7 @@ sub del {
             $which,
             $who,
             $sender,
-            Time::HiRes::time() - $time_command,
+            Time::HiRes::time() - $self->{start_time},
             $list->get_total()
         );
         if ($request->{notify}) {
@@ -1587,8 +1607,9 @@ sub del {
 #
 #
 #############################################################
+# Old name: (part of) Sympa::Commands::set().
 sub global_set {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     my $message = $request->{message};
@@ -1596,7 +1617,6 @@ sub global_set {
     my $mode    = $request->{mode};
 
     # Recursive call to subroutine.
-        my $success;
         foreach my $list (
             Sympa::List::get_which($sender, $request->{context}, 'member')) {
             # Skip hidden lists.
@@ -1638,13 +1658,14 @@ sub global_set {
             $req->{context}   = $list;
             $req->{localpart} = $list->{'name'};
 
-            my $status = Sympa::Commands::authorize_request($req);
-            $success ||= $status;
+            $self->{distaff}->store($req);
         }
-        return $success;
+        return 1;
 }
 
+# Old name: (part of) Sympa::Commands::set().
 sub set {
+    my $self    = shift;
     my $request = shift;
 
     my $sender  = $request->{sender};
@@ -1652,7 +1673,7 @@ sub set {
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list  = $request->{context};
     my $which = $list->{'name'};
@@ -1715,7 +1736,7 @@ sub set {
         Sympa::Report::notice_report_cmd($request, 'config_updated');
 
         $log->syslog('info', 'SET %s %s from %s accepted (%.2f seconds)',
-            $which, $mode, $sender, Time::HiRes::time() - $time_command);
+            $which, $mode, $sender, Time::HiRes::time() - $self->{start_time});
     }
 
     if ($mode =~ /^(conceal|noconceal)/) {
@@ -1736,7 +1757,7 @@ sub set {
 
         Sympa::Report::notice_report_cmd($request, 'config_updated');
         $log->syslog('info', 'SET %s %s from %s accepted (%.2f seconds)',
-            $which, $mode, $sender, Time::HiRes::time() - $time_command);
+            $which, $mode, $sender, Time::HiRes::time() - $self->{start_time});
     }
     return 1;
 }
@@ -1752,13 +1773,14 @@ sub set {
 # OUT : 'unknown_list'|'msg_noty_found'| 1 | undef
 #
 ##############################################################
+# Old name: Sympa::Commands::distribute().
 sub distribute {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
@@ -1785,7 +1807,7 @@ sub distribute {
         $log->syslog('info',
             'DISTRIBUTE %s %s from %s accepted (%.2f seconds)',
             $list->{'name'}, $key, $sender,
-            Time::HiRes::time() - $time_command);
+            Time::HiRes::time() - $self->{start_time});
         return 1;
     } else {
         return undef;
@@ -1806,8 +1828,9 @@ sub distribute {
 #
 #
 ############################################################
+# Old name: Sympa::Commands::confirm().
 sub confirm {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     my $robot  = $request->{context};
@@ -1830,7 +1853,7 @@ sub confirm {
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info', 'CONFIRM %s from %s accepted (%.2f seconds)',
-            $key, $sender, Time::HiRes::time() - $time_command);
+            $key, $sender, Time::HiRes::time() - $self->{start_time});
         return 1;
     } else {
         return undef;
@@ -1850,13 +1873,14 @@ sub confirm {
 #
 #
 ##############################################################
+# Old name: Sympa::Commands::reject().
 sub reject {
-    $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
@@ -1881,7 +1905,7 @@ sub reject {
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info', 'REJECT %s %s from %s accepted (%.2f seconds)',
             $list->{'name'}, $key, $sender,
-            Time::HiRes::time() - $time_command);
+            Time::HiRes::time() - $self->{start_time});
         return 1;
     } else {
         return undef;
@@ -1901,13 +1925,14 @@ sub reject {
 # OUT : 'unknown_list'|'not_allowed'|'no_file'|1
 #
 #########################################################
+# Old name: Sympa::Commands::modindex().
 sub modindex {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
+        return _error($self, $request);
     }
     my $list   = $request->{context};
     my $name   = $list->{'name'};
@@ -1966,7 +1991,7 @@ sub modindex {
     }
 
     $log->syslog('info', 'MODINDEX %s from %s accepted (%.2f seconds)',
-        $name, $sender, Time::HiRes::time() - $time_command);
+        $name, $sender, Time::HiRes::time() - $self->{start_time});
 
     return 1;
 }
@@ -1983,8 +2008,9 @@ sub modindex {
 # OUT : 1
 #
 #########################################################
+# Old name: Sympa::Commands::which().
 sub which {
-    $log->syslog('debug2', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     my $robot   = $request->{context};
@@ -2056,264 +2082,14 @@ sub which {
 
     $log->syslog(
         'info',  'WHICH from %s accepted (%.2f seconds)',
-        $sender, Time::HiRes::time() - $time_command
+        $sender, Time::HiRes::time() - $self->{start_time}
     );
 
     return 1;
 }
 
-################ Function for authentication #######################
-
-sub authorize_request {
-    my $request = shift;
-
-    # Skip authorization unless specific scenario is defined.
-    if (   $request->{error}
-        or not $Sympa::CommandDef::comms{$request->{action}}
-        or not $Sympa::CommandDef::comms{$request->{action}}->{scenario}) {
-        return Sympa::Commands::execute_request($request);
-    }
-
-    my $scenario = $Sympa::CommandDef::comms{$request->{action}}->{scenario};
-    my $action_regexp =
-        $Sympa::CommandDef::comms{$request->{action}}->{action_regexp}
-        or die 'bug in logic. Ask developer';
-
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
-
-    # Check if required list argument is known.
-    if ($request->{localpart} and ref $request->{context} ne 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return Sympa::Commands::error($request);
-    }
-    my $that = $request->{context};
-
-    my $context = {
-        sender  => $sender,
-        message => $message,
-    };
-
-    # Authorize requests.
-
-    my $action;
-    my $result;
-
-    my $auth_method = get_auth_method($request);
-    return 'wrong_auth'
-        unless defined $auth_method;
-
-    $result = Sympa::Scenario::request_action($that, $scenario, $auth_method,
-        $context);
-    $action = $result->{'action'} if ref $result eq 'HASH';
-
-    unless (defined $action and $action =~ /\A(?:$action_regexp)\b/) {
-        $log->syslog(
-            'info',
-            '%s for %s from %s aborted, unknown requested action "%s" in scenario "%s"',
-            uc $request->{action},
-            $that,
-            $sender,
-            $action,
-            $scenario
-        );
-        my $error = sprintf 'Unknown requested action in scenario: %s',
-            ($action || '');
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
-        return undef;
-    }
-
-    # Special cases for subscribe & signoff: If membership is unsatisfactory,
-    # force execute request and let it be rejected.
-    unless ($action =~ /\Areject\b/i) {
-        if ($request->{action} eq 'subscribe'
-            and defined $that->get_list_member($request->{email})) {
-            $action =~ s/\A\w+/do_it/;
-        } elsif ($request->{action} eq 'signoff'
-            and not defined $that->get_list_member($request->{email})) {
-            $action =~ s/\A\w+/do_it/;
-        }
-    }
-
-    if ($action =~ /\Ado_it\b/i) {
-        $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);    # Overwrite.
-        $request->{notify} = ($action =~ /,\s*notify\b/i);
-        return Sympa::Commands::execute_request($request);
-    } elsif ($action =~ /\Arequest_auth\b(?:\s*[[]\s*(\S+)\s*[]])?/i) {
-        my $to = $1;
-        if ($to and $to eq 'email') {
-            $to = $request->{email} || $sender;
-        } else {
-            $to = $sender;
-        }
-
-        $log->syslog('debug2', 'Auth requested from %s', $sender);
-        unless (Sympa::request_auth(%$request, sender => $to)) {
-            my $error = sprintf
-                'Unable to request authentication for command "%s"',
-                $request->{action};
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
-            return undef;
-        }
-        $log->syslog(
-            'info',
-            '%s for %s from %s, auth requested (%.2f seconds)',
-            uc $request->{action},
-            $that,
-            $sender,
-            Time::HiRes::time() - $time_command
-        );
-        return 1;
-    } elsif ($action =~ /\Aowner\b/i and ref $that eq 'Sympa::List') {
-        Sympa::Report::notice_report_cmd($request, 'req_forward')
-            unless $action =~ /,\s*quiet\b/i;
-
-        my $tpl =
-            {subscribe => 'subrequest', signoff => 'sigrequest'}
-            ->{$request->{action}};
-        my $owner_action =
-            {subscribe => 'add', signoff => 'del'}->{$request->{action}};
-
-        # Send a notice to the owners.
-        unless (
-            $that->send_notify_to_owner(
-                $tpl,
-                {   'who'     => $sender,
-                    'keyauth' => Sympa::compute_auth(
-                        context => $that,
-                        email   => $request->{email},
-                        action  => $owner_action,
-                    ),
-                    'replyto' => Sympa::get_address($that, 'sympa'),
-                    'gecos'   => $request->{gecos},
-                }
-            )
-            ) {
-            #FIXME: Why is error reported only in this case?
-            $log->syslog('info',
-                'Unable to send notify "%s" to %s list owner',
-                $tpl, $that);
-            Sympa::Report::reject_report_cmd(
-                $request, 'intern',
-                sprintf('Unable to send subrequest to %s list owner',
-                    $that->get_id)
-            );
-        }
-
-        my $spool_req   = Sympa::Spool::Request->new;
-        my $add_request = Sympa::Request->new_from_tuples(
-            %$request,
-            action => $owner_action,
-            date   => $message->{date},    # Keep date of message.
-        );
-        if ($spool_req->store($add_request)) {
-            $log->syslog(
-                'info',
-                '%s for %s from %s forwarded to the owners of the list (%.2f seconds)',
-                uc $request->{action},
-                $that,
-                $sender,
-                Time::HiRes::time() - $time_command
-            );
-        }
-        return 1;
-    } elsif ($action =~ /\Areject\b/i) {
-        if (defined $result->{'tt2'}) {
-            unless (
-                Sympa::send_file(
-                    $that, $result->{'tt2'},
-                    $sender, {'auto_submitted' => 'auto-replied'}
-                )
-                ) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
-            }
-        } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
-        }
-        $log->syslog(
-            'info',
-            '%s for %s from %s refused (not allowed)',
-            uc $request->{action},
-            $that, $sender
-        );
-        return 'not_allowed';
-    } else {
-        #NOTREACHED
-        die 'bug in logic. Ask developer';
-    }
-}
-
-##########################################################
-#  get_auth_method
-##########################################################
-# Checks the authentication and return method
-# used if authentication not failed
-#
-# OUT : 'smime'|'md5'|'dkim'|'smtp' if authentication OK, undef else
-#       | undef
-##########################################################
-sub get_auth_method {
-    $log->syslog('debug3', '(%s)', @_);
-    my $request = shift;
-
-    my $list     = $request->{context};
-    my $sign_mod = $request->{sign_mod};
-    my $sender   = $request->{sender};
-
-    my $cmd   = $request->{action};
-    my $email = $request->{email};
-
-    my $auth = $request->{auth};
-
-    my $that;
-    my $auth_method;
-
-    if ($sign_mod and $sign_mod eq 'smime') {
-        $auth_method = 'smime';
-    } elsif ($auth) {
-        $log->syslog('debug', 'Auth received from %s: %s', $sender, $auth);
-
-        my $compute;
-        if (ref $list eq 'Sympa::List') {
-            $compute = Sympa::compute_auth(
-                context => $list,
-                email   => $email,
-                action  => $cmd
-            );
-            $that = $list->{'domain'};    # Robot
-        } else {
-            $compute = Sympa::compute_auth(
-                context => '*',
-                email   => $email,
-                action  => $cmd
-            );
-            $that = '*';                  # Site
-        }
-        if ($auth eq $compute) {
-            $auth_method = 'md5';
-        } else {
-            $log->syslog('debug2', 'Auth should be %s', $compute);
-            if (grep { $cmd eq $_ } qw(add del invite signoff subscribe)) {
-                Sympa::Report::reject_report_cmd($request, 'user',
-                    'wrong_email_confirm', {command => $cmd});
-            } else {
-                Sympa::Report::reject_report_cmd($request, 'intern',
-                    'The authentication process failed');
-            }
-            $log->syslog('info', 'Command "%s" from %s refused, auth failed',
-                $request->{cmd_line}, $sender);
-            return undef;
-        }
-    } else {
-        $auth_method = 'smtp';
-        $auth_method = 'dkim' if $sign_mod and $sign_mod eq 'dkim';
-    }
-
-    return $auth_method;
-}
+# Old name: Sympa::Commands::get_auth_method().
+# Moved to: Sympa::Spindle::AuthorizeRequest::_get_auth_method().
+#sub get_auth_method;
 
 1;

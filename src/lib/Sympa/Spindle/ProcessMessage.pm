@@ -27,7 +27,6 @@ package Sympa::Spindle::ProcessMessage;
 use strict;
 use warnings;
 
-use Sympa::Commands;
 use Sympa::Log;
 
 use base qw(Sympa::Spindle);
@@ -52,7 +51,7 @@ sub _twist {
 
     $log->syslog('notice', 'Processing %s', $request);
 
-    return Sympa::Commands::authorize_request($request);
+    return ['Sympa::Spindle::AuthorizeRequest'];
 }
 
 1;
