@@ -65,7 +65,25 @@ sub spin {
         my ($message, $handle) = $self->{distaff}->next;
 
         if ($message and $handle) {
-            my $status = $self->twist($message);
+            $self->{start_time} = Time::HiRes::time();
+
+            my $status = $self->_twist($message);
+            # If the result is arrayref, splice to the classes in it.
+            while (ref $status eq 'ARRAY' and @$status) {
+                foreach my $class (@$status) {
+                    die sprintf 'Illegal package name "%s"', $class
+                        unless $class =~ /\A(?:\w+::)*\w+\z/;
+                    die $EVAL_ERROR unless eval sprintf 'require %s', $class;
+                    my $twist = $class->can('_twist')
+                        or die sprintf
+                        'Can\'t locate object method "_twist" via package "%s"',
+                        $class;
+
+                    $status = $self->$twist($message);
+                    last unless $status;
+                }
+            }
+
             unless (defined $status) {
                 $self->_on_failure($message, $handle);
             } elsif ($status) {
@@ -86,32 +104,6 @@ sub spin {
     }
 
     return $processed;
-}
-
-sub twist {
-    my $self    = shift;
-    my $message = shift;
-
-    $self->{start_time} = Time::HiRes::time();
-
-    my $status = $self->_twist($message);
-    # If the result is arrayref, splice to the classes in it.
-    while (ref $status eq 'ARRAY' and @$status) {
-        foreach my $class (@$status) {
-            die sprintf 'Illegal package name "%s"', $class
-                unless $class =~ /\A(?:\w+::)*\w+\z/;
-            die $EVAL_ERROR unless eval sprintf 'require %s', $class;
-            my $twist = $class->can('_twist')
-                or die sprintf
-                'Can\'t locate object method "_twist" via package "%s"',
-                $class;
-
-            $status = $self->$twist($message);
-            last unless $status;
-        }
-    }
-
-    return $status;
 }
 
 sub _init {1}

@@ -69,6 +69,7 @@ use constant _marshal_keys =>
     [qw(date localpart domainpart AUTHKEY email action)];
 use constant _marshal_regexp =>
     qr{\A(\d+),([^\s\@]+)\@([-.\w]+)_([\da-f]+),([^\s,]*),(\w+)\z};
+use constant _store_key => 'authkey';
 
 sub new {
     my $class   = shift;
