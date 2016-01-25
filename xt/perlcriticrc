@@ -1,2 +1,12 @@
 exclude = ExplicitReturnUndef
 theme = certrule || maintenance || performance || portability || security
+
+[Subroutines::ProhibitExcessComplexity]
+severity = 5
+# Lower threshold may be chosen in the future.
+max_mccabe = 100
+
+[Modules::ProhibitExcessMainComplexity]
+severity = 5
+max_mccabe = 20
+
