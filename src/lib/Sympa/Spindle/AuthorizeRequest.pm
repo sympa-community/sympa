@@ -119,81 +119,12 @@ sub _twist {
     } elsif ($action =~ /\Arequest_auth\b(?:\s*[[]\s*(\S+)\s*[]])?/i) {
         my $to = $1;
         if ($to and $to eq 'email') {
-            $to = $request->{email} || $sender;
-        } else {
-            $to = $sender;
+            $request->{sender_to_confirm} = $request->{email};
         }
-
-        $log->syslog('debug2', 'Auth requested from %s', $sender);
-        unless (Sympa::request_auth(%$request, sender => $to)) {
-            my $error = sprintf
-                'Unable to request authentication for command "%s"',
-                $request->{action};
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
-            return undef;
-        }
-        $log->syslog(
-            'info',
-            '%s for %s from %s, auth requested (%.2f seconds)',
-            uc $request->{action},
-            $that,
-            $sender,
-            Time::HiRes::time() - $self->{start_time}
-        );
-        return 1;
+        return ['Sympa::Spindle::ToAuth'];
     } elsif ($action =~ /\Aowner\b/i and ref $that eq 'Sympa::List') {
-        Sympa::Report::notice_report_cmd($request, 'req_forward')
-            unless $action =~ /,\s*quiet\b/i;
-
-        my $tpl =
-            {subscribe => 'subrequest', signoff => 'sigrequest'}
-            ->{$request->{action}};
-        my $owner_action =
-            {subscribe => 'add', signoff => 'del'}->{$request->{action}};
-
-        # Send a notice to the owners.
-        unless (
-            $that->send_notify_to_owner(
-                $tpl,
-                {   'who'     => $sender,
-                    'keyauth' => Sympa::compute_auth(
-                        context => $that,
-                        email   => $request->{email},
-                        action  => $owner_action,
-                    ),
-                    'replyto' => Sympa::get_address($that, 'sympa'),
-                    'gecos'   => $request->{gecos},
-                }
-            )
-            ) {
-            #FIXME: Why is error reported only in this case?
-            $log->syslog('info',
-                'Unable to send notify "%s" to %s list owner',
-                $tpl, $that);
-            Sympa::Report::reject_report_cmd(
-                $request, 'intern',
-                sprintf('Unable to send subrequest to %s list owner',
-                    $that->get_id)
-            );
-        }
-
-        my $spool_req   = Sympa::Spool::Request->new;
-        my $add_request = Sympa::Request->new_from_tuples(
-            %$request,
-            action => $owner_action,
-            date   => $message->{date},    # Keep date of message.
-        );
-        if ($spool_req->store($add_request)) {
-            $log->syslog(
-                'info',
-                '%s for %s from %s forwarded to the owners of the list (%.2f seconds)',
-                uc $request->{action},
-                $that,
-                $sender,
-                Time::HiRes::time() - $self->{start_time}
-            );
-        }
-        return 1;
+        $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);
+        return ['Sympa::Spindle::ToRequest'];
     } elsif ($action =~ /\Areject\b/i) {
         if (defined $result->{'tt2'}) {
             unless (

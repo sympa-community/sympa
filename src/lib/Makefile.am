@@ -102,6 +102,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ResendArchive.pm \
 	Sympa/Spindle/ToAlarm.pm \
 	Sympa/Spindle/ToArchive.pm \
+	Sympa/Spindle/ToAuth.pm \
 	Sympa/Spindle/ToDigest.pm \
 	Sympa/Spindle/ToEditor.pm \
 	Sympa/Spindle/ToHeld.pm \
@@ -109,6 +110,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ToMailer.pm \
 	Sympa/Spindle/ToModeration.pm \
 	Sympa/Spindle/ToOutgoing.pm \
+	Sympa/Spindle/ToRequest.pm \
 	Sympa/Spindle/TransformDigestFinal.pm \
 	Sympa/Spindle/TransformIncoming.pm \
 	Sympa/Spindle/TransformOutgoing.pm \

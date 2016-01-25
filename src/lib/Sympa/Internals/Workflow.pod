@@ -9,6 +9,8 @@ Sympa::Internals::Workflow - Overview on workflow of Sympa
 Following picture roughly describes interaction among several classes in
 workflow of Sympa.  For more details see documentation on each class.
 
+=head2 Message processing
+
  <<archived.pl>>
  
  Archive => [ProcessArchive] => (list archive)
@@ -41,15 +43,16 @@ workflow of Sympa.  For more details see documentation on each class.
                     \                          +-> [ToEditor] => Outgoing
                      +-> [DoMessage]          /
                                \             /---> [ToHeld] => Held
-          *2                    +-> [AuthorizeMessage]
+          *3 (CONFIRM)          +-> [AuthorizeMessage]
           :                    /             \---> [ToModeration] => Mod.
  Held => [ProcessHeld] -------+               \
                                                +-> [DistributeMessage]
-                *2            +--> (reject)   /              \
-                :            /               /                \
- Moderation => [ProcessModeration]          /                  \
-                             \             /                    \
-                              +-----------+                      \
+            *3 (DISTRIBUTE)                   /             \
+               (REJECT)       +--> (reject)  /               \
+                :            /              /                 \
+ Moderation => [ProcessModeration]         /                   \
+                             \            /                     \
+                              +----------+                       \
                                                                   \
                        +-------------------------------------------+
                         \
@@ -71,6 +74,21 @@ workflow of Sympa.  For more details see documentation on each class.
                         :          \
                         *1          +----------> [ToMailer] => (Mailer)
 
+=head2 Command processing
+
+ << sympa_msg.pl >>
+ 
+                 *2
+                 :                             +-> (reject)
+   (message) => [ProcessMessage]              /
+                              \              /---> [ToAuth] => (authkey)
+                               +-> [AuthorizeRequest]
+                                             \---> [ToRequest] => Request
+                                              \
+                                               +-> [DispatchRequest]
+                                                                :
+                                                                *3
+
 =begin comment
 
 These have not been implemented yet.
@@ -79,19 +97,9 @@ These have not been implemented yet.
  
  Task => [ProcessTask] => Task
  
- <<Others>>
- 
- Request => [ValidateAdd]
- 
- Request => [ValidateDel]
- 
- Request => [ValidateClose]
- 
- Request => [ValidatePurge]
-
 =end comment
 
-=head3 Legend
+=head2 Legend
 
 =over
 
@@ -127,6 +135,10 @@ L<Sympa::Archive> class.
 =item C<(mail template)>
 
 L<Sympa::Message::Template> class.
+
+=item C<(message)>
+
+L<Sympa::Request::Message> class.
 
 =back
 
