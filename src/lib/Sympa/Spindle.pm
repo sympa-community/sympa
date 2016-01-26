@@ -50,9 +50,18 @@ sub new {
         $spools{$key} = $spool;
     }
 
-    my $self = bless {%options, %spools, distaff => $distaff} => $class;
+    my $self =
+        bless {%options, %spools, distaff => $distaff, stash => []} => $class;
     $self->_init(0) or return undef;
     $self;
+}
+
+sub add_stash {
+    my $self   = shift;
+    my @params = @_;
+
+    $self->{stash} ||= [];
+    push @{$self->{stash}}, [@params];
 }
 
 sub spin {
@@ -193,11 +202,16 @@ Creates new instance of L<Sympa::Spindle>.
 
 =item spin ( )
 
-I<instance method>.
+I<Instance method>.
 Fetches an object and handle locking it from source spool, processes them
 calling _twist() and repeats.
 If source spool no longer gives content, returns the number of processed
 objects.
+
+=item add_stash ( =I<parameters>... )
+
+I<Instance method>.
+Adds arrayref of parameters to a storage for general-purpose.
 
 =back
 
@@ -226,6 +240,10 @@ Instances of spool classes _spools() method returns.
 Unix time in floating point number when processing of the latest message by
 spin() began.
 Introduced by Sympa 6.2.13.
+
+=item {stash}
+
+A reference to array of added data by add_stash().
 
 =back
 
@@ -315,6 +333,7 @@ at first or true value at last.
 
 =head1 SEE ALSO
 
+L<Sympa::Internals::Workflow>,
 L<Sympa::Spool>.
 
 =head1 HISTORY
