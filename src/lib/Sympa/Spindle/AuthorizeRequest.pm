@@ -31,7 +31,6 @@ use Time::HiRes qw();
 use Sympa;
 use Sympa::CommandDef;
 use Sympa::Log;
-use Sympa::Report;
 use Sympa::Request;
 use Sympa::Scenario;
 use Sympa::Spool::Request;
@@ -76,7 +75,7 @@ sub _twist {
     my $action;
     my $result;
 
-    my $auth_method = _get_auth_method($request);
+    my $auth_method = _get_auth_method($self, $request);
     return 'wrong_auth'
         unless defined $auth_method;
 
@@ -96,7 +95,15 @@ sub _twist {
         );
         my $error = sprintf 'Unknown requested action in scenario: %s',
             ($action || '');
-        Sympa::Report::reject_report_cmd($request, 'intern', $error);
+        Sympa::send_notify_to_listmaster(
+            $request->{context},
+            'mail_intern_error',
+            {   error  => $error,
+                who    => $sender,
+                action => 'Command process',
+            }
+        );
+        $self->add_stash($request, 'intern');
         return undef;
     }
 
@@ -135,12 +142,10 @@ sub _twist {
                 ) {
                 $log->syslog('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
-                Sympa::Report::reject_report_cmd($request, 'auth',
-                    $result->{'reason'});
+                $self->add_stash($request, 'auth', $result->{'reason'});
             }
         } else {
-            Sympa::Report::reject_report_cmd($request, 'auth',
-                $result->{'reason'});
+            $self->add_stash($request, 'auth', $result->{'reason'});
         }
         $log->syslog(
             'info',
@@ -160,7 +165,7 @@ sub _twist {
 # Returns 'smime', 'md5', 'dkim' or 'smtp' if authentication OK, undef else.
 # Old name: Sympa::Commands::get_auth_method().
 sub _get_auth_method {
-    $log->syslog('debug3', '(%s)', @_);
+    my $self    = shift;
     my $request = shift;
 
     my $list     = $request->{context};
@@ -201,11 +206,18 @@ sub _get_auth_method {
         } else {
             $log->syslog('debug2', 'Auth should be %s', $compute);
             if (grep { $cmd eq $_ } qw(add del invite signoff subscribe)) {
-                Sympa::Report::reject_report_cmd($request, 'user',
+                $self->add_stash($request, 'user',
                     'wrong_email_confirm', {command => $cmd});
             } else {
-                Sympa::Report::reject_report_cmd($request, 'intern',
-                    'The authentication process failed');
+                Sympa::send_notify_to_listmaster(
+                    $list,
+                    'mail_intern_error',
+                    {   error  => 'The authentication process failed',
+                        who    => $sender,
+                        action => 'Command process',
+                    }
+                );
+                $self->add_stash($request, 'intern');
             }
             $log->syslog('info', 'Command "%s" from %s refused, auth failed',
                 $request->{cmd_line}, $sender);

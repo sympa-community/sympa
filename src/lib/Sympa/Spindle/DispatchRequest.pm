@@ -34,7 +34,6 @@ use Conf;
 use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Report;
 use Sympa::Scenario;
 use Sympa::Spindle::ProcessHeld;
 use Sympa::Spindle::ProcessModeration;
@@ -83,10 +82,10 @@ sub _error {
     my $entry = $request->{error};
 
     if ($entry eq 'syntax_error') {
-        Sympa::Report::reject_report_cmd($request, 'user', 'error_syntax');
+        $self->add_stash($request, 'user', 'error_syntax');
         $log->syslog('notice', 'Command syntax error');
     } elsif ($entry eq 'unknown_list') {
-        Sympa::Report::reject_report_cmd($request, 'user', 'no_existing_list',
+        $self->add_stash($request, 'user', 'no_existing_list',
             {'listname' => $request->{localpart}});
         $log->syslog(
             'info',
@@ -95,7 +94,15 @@ sub _error {
             $request->{sender}, $robot
         );
     } else {
-        Sympa::Report::reject_report_cmd($request, 'intern', $entry);
+        Sympa::send_notify_to_listmaster(
+            $request->{context},
+            'mail_intern_error',
+            {   error  => $entry,
+                who    => $request->{sender},
+                action => 'Command process',
+            }
+        );
+        $self->add_stash($request, 'intern');
         $log->syslog('err', 'Unknown error: %s', $entry);
         return undef;
     }
@@ -114,7 +121,7 @@ sub unknown {
         : ($request->{context} || '*');
 
     $log->syslog('notice', 'Unknown command found: %s', $request->{cmd_line});
-    Sympa::Report::reject_report_cmd($request, 'user', 'not_understood');
+    $self->add_stash($request, 'user', 'not_understood');
     $log->db_log(
         'robot' => $robot,
         #'list'         => 'sympa',
@@ -144,7 +151,7 @@ sub finished {
     my $self    = shift;
     my $request = shift;
 
-    Sympa::Report::notice_report_cmd($request, 'finished');
+    $self->add_stash($request, 'notice', 'finished');
     return 1;
 }
 
@@ -183,7 +190,7 @@ sub help {
     unless (Sympa::send_file($robot, "helpfile", $sender, $data)) {
         $log->syslog('notice', 'Unable to send template "helpfile" to %s',
             $sender);
-        Sympa::Report::reject_report_cmd($request, 'intern_quiet');
+        $self->add_stash($request, 'intern');
     }
 
     $log->syslog(
@@ -261,7 +268,7 @@ sub lists {
     unless (Sympa::send_file($robot, 'lists', $sender, $data)) {
         $log->syslog('notice', 'Unable to send template "lists" to %s',
             $sender);
-        Sympa::Report::reject_report_cmd($request, 'intern_quiet');
+        $self->add_stash($request, 'intern');
     }
 
     $log->syslog(
@@ -318,7 +325,7 @@ sub stats {
             ) {
             $log->syslog('notice',
                 'Unable to send template "stats_reports" to %s', $sender);
-            Sympa::Report::reject_report_cmd($request, 'intern_quiet');
+            $self->add_stash($request, 'intern');
         }
 
         $log->syslog('info', 'STATS %s from %s accepted (%.2f seconds)',
@@ -357,7 +364,7 @@ sub get {
     $language->set_lang($list->{'admin'}{'lang'});
 
     unless ($list->is_archived) {
-        Sympa::Report::reject_report_cmd($request, 'user', 'empty_archives');
+        $self->add_stash($request, 'user', 'empty_archives');
         $log->syslog('info',
             'GET %s %s from %s refused, no archive for list %s',
             $which, $arc, $sender, $which);
@@ -367,8 +374,7 @@ sub get {
     my $archive = Sympa::Archive->new(context => $list);
     my @msg_list;
     unless ($archive->select_archive($arc)) {
-        Sympa::Report::reject_report_cmd($request, 'user',
-            'no_required_file');
+        $self->add_stash($request, 'user', 'no_required_file');
         $log->syslog('info', 'GET %s %s from %s, no such archive',
             $which, $arc, $sender);
         return 'no_archive';
@@ -407,8 +413,16 @@ sub get {
         auto_submitted => 'auto-replied'
     };
     unless (Sympa::send_file($list, 'get_archive', $sender, $param)) {
-        Sympa::Report::reject_report_cmd($request, 'intern',
-            sprintf('Unable to send archive to %s', $sender));
+        my $error = sprintf 'Unable to send archive to %s', $sender;
+        Sympa::send_notify_to_listmaster(
+            $list,
+            'mail_intern_error',
+            {   error  => $error,
+                who    => $sender,
+                action => 'Command process',
+            }
+        );
+        $self->add_stash($request, 'intern');
         return 'no_archive';
     }
 
@@ -448,7 +462,7 @@ sub last {
     $language->set_lang($list->{'admin'}{'lang'});
 
     unless ($list->is_archived()) {
-        Sympa::Report::reject_report_cmd($request, 'user', 'empty_archives');
+        $self->add_stash($request, 'user', 'empty_archives');
         $log->syslog('info', 'LAST %s from %s refused, list not archived',
             $which, $sender);
         return 'no_archive';
@@ -462,8 +476,7 @@ sub last {
         last if $arc_message;
     }
     unless ($arc_message) {
-        Sympa::Report::reject_report_cmd($request, 'user',
-            'no_required_file');
+        $self->add_stash($request, 'user', 'no_required_file');
         $log->syslog('info', 'LAST %s from %s, no such archive',
             $which, $sender);
         return 'no_archive';
@@ -495,8 +508,16 @@ sub last {
     unless (Sympa::send_file($list, 'get_archive', $sender, $param)) {
         $log->syslog('notice', 'Unable to send template "get_archive" to %s',
             $sender);
-        Sympa::Report::reject_report_cmd($request, 'intern',
-            sprintf('Unable to send archive to %s', $sender));
+        my $error = sprintf 'Unable to send archive to %s', $sender;
+        Sympa::send_notify_to_listmaster(
+            $list,
+            'mail_intern_error',
+            {   error  => $error,
+                who    => $sender,
+                action => 'Command process',
+            }
+        );
+        $self->add_stash($request, 'intern');
         return 'no_archive';
     }
 
@@ -535,7 +556,7 @@ sub index {
     $language->set_lang($list->{'admin'}{'lang'});
 
     unless ($list->is_archived()) {
-        Sympa::Report::reject_report_cmd($request, 'user', 'empty_archives');
+        $self->add_stash($request, 'user', 'empty_archives');
         $log->syslog('info', 'INDEX %s from %s refused, list not archived',
             $which, $sender);
         return 'no_archive';
@@ -569,7 +590,7 @@ sub index {
         ) {
         $log->syslog('notice',
             'Unable to send template "index_archive" to %s', $sender);
-        Sympa::Report::reject_report_cmd($request, 'intern_quiet');
+        $self->add_stash($request, 'intern');
     }
 
     $log->syslog('info', 'INDEX %s from %s accepted (%.2f seconds)',
@@ -616,8 +637,7 @@ sub review {
         my $is_owner = $list->is_admin('owner', $sender)
             || Sympa::is_listmaster($list, $sender);
         unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
-            Sympa::Report::reject_report_cmd($request, 'user',
-                'no_subscriber');
+            $self->add_stash($request, 'user', 'no_subscriber');
             $log->syslog('err', 'No subscribers in list "%s"',
                 $list->{'name'});
             return 'no_subscribers';
@@ -644,7 +664,7 @@ sub review {
             ) {
             $log->syslog('notice', 'Unable to send template "review" to %s',
                 $sender);
-            Sympa::Report::reject_report_cmd($request, 'intern_quiet');
+            $self->add_stash($request, 'intern');
         }
 
         $log->syslog('info', 'REVIEW %s from %s accepted (%.2f seconds)',
@@ -684,10 +704,10 @@ sub verify {
         );
         if ($sign_mod eq 'smime') {
             ##$auth_method='smime';
-            Sympa::Report::notice_report_cmd($request, 'smime');
+            $self->add_stash($request, 'notice', 'smime');
         } elsif ($sign_mod eq 'dkim') {
             ##$auth_method='dkim';
-            Sympa::Report::notice_report_cmd($request, 'dkim');
+            $self->add_stash($request, 'notice', 'dkim');
         }
     } else {
         $log->syslog(
@@ -696,7 +716,7 @@ sub verify {
             $sender,
             Time::HiRes::time() - $self->{start_time}
         );
-        Sympa::Report::reject_report_cmd($request, 'user', 'no_verify_sign');
+        $self->add_stash($request, 'user', 'no_verify_sign');
     }
     return 1;
 }
@@ -745,7 +765,7 @@ sub subscribe {
     # already.
     my $user_entry = $list->get_list_member($email);
     if (defined $user_entry) {
-        Sympa::Report::reject_report_cmd($request, 'user',
+        $self->add_stash($request, 'user',
             'already_subscriber', {'email' => $email});
         $log->syslog(
             'err',
@@ -769,12 +789,20 @@ sub subscribe {
                     sprintf "Unable to add user %s in list %s : %s",
                     $u, $list->get_id,
                     $list->{'add_outcome'}{'errors'}{'error_message'};
-                my $error_type = 'intern';
-                $error_type = 'user'
-                    if defined $list->{'add_outcome'}{'errors'}
-                    {'max_list_members_exceeded'};
-                Sympa::Report::reject_report_cmd($request, $error_type,
-                    $error);
+                if (defined $list->{'add_outcome'}{'errors'}
+                    {'max_list_members_exceeded'}) {
+                    $self->add_stash($request, 'user', $error);
+                } else {
+                    Sympa::send_notify_to_listmaster(
+                        $list,
+                        'mail_intern_error',
+                        {   error  => $error,
+                            who    => $sender,
+                            action => 'Command process',
+                        }
+                    );
+                    $self->add_stash($request, 'intern');
+                }
                 return undef;
             }
 
@@ -884,7 +912,7 @@ sub info {
         unless (Sympa::send_file($list, 'info_report', $sender, $data)) {
             $log->syslog('notice',
                 'Unable to send template "info_report" to %s', $sender);
-            Sympa::Report::reject_report_cmd($request, 'intern_quiet');
+            $self->add_stash($request, 'intern');
         }
 
         $log->syslog('info', 'INFO %s from %s accepted (%.2f seconds)',
@@ -983,7 +1011,7 @@ sub signoff {
         # command.
         my $user_entry = $list->get_list_member($email);
         unless (defined $user_entry) {
-            Sympa::Report::reject_report_cmd($request, 'user',
+            $self->add_stash($request, 'user',
                 'your_email_not_found', {'email' => $email});
             $log->syslog('info', 'SIG %s from %s refused, not on list',
                 $which, $email);
@@ -1012,7 +1040,15 @@ sub signoff {
             ) {
             my $error = sprintf 'Unable to delete user %s from list %s',
                 $email, $list->get_id;
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
+                }
+            );
+            $self->add_stash($request, 'intern');
         }
 
         # Notify the owner.
@@ -1079,7 +1115,7 @@ sub add {
     $language->set_lang($list->{'admin'}{'lang'});
 
         if ($list->is_list_member($email)) {
-            Sympa::Report::reject_report_cmd($request, 'user',
+            $self->add_stash($request, 'user',
                 'already_subscriber', {'email' => $email});
             $log->syslog(
                 'err',
@@ -1104,13 +1140,20 @@ sub add {
                     sprintf "Unable to add user %s in list %s : %s",
                     $u, $list->get_id,
                     $list->{'add_outcome'}{'errors'}{'error_message'};
-                my $error_type = 'intern';
-                $error_type = 'user'
-                    if (
-                    defined $list->{'add_outcome'}{'errors'}
-                    {'max_list_members_exceeded'});
-                Sympa::Report::reject_report_cmd($request, $error_type,
-                    $error);
+                if (defined $list->{'add_outcome'}{'errors'}
+                    {'max_list_members_exceeded'}) {
+                    $self->add_stash($request, 'user', $error);
+                } else {
+                    Sympa::send_notify_to_listmaster(
+                        $list,
+                        'mail_intern_error',
+                        {   error  => $error,
+                            who    => $sender,
+                            action => 'Command process',
+                        }
+                    );
+                    $self->add_stash($request, 'intern');
+                }
                 return undef;
             }
 
@@ -1127,7 +1170,7 @@ sub add {
                 $spool_req->remove($handle);
             }
 
-            Sympa::Report::notice_report_cmd($request, 'now_subscriber',
+            $self->add_stash($request, 'notice', 'now_subscriber',
                 {'email' => $email});
 
         my $user = Sympa::User->new($email);
@@ -1201,7 +1244,7 @@ sub invite {
     $language->set_lang($list->{'admin'}{'lang'});
 
         if ($list->is_list_member($email)) {
-            Sympa::Report::reject_report_cmd($request, 'user',
+            $self->add_stash($request, 'user',
                 'already_subscriber', {'email' => $email});
             $log->syslog(
                 'err',
@@ -1233,7 +1276,15 @@ sub invite {
             unless (defined $action) {
                 my $error =
                     "Unable to evaluate scenario 'subscribe' for list $which";
-                Sympa::Report::reject_report_cmd($request, 'intern', $error);
+                Sympa::send_notify_to_listmaster(
+                    $list,
+                    'mail_intern_error',
+                    {   error  => $error,
+                        who    => $sender,
+                        action => 'Command process',
+                    }
+                );
+                $self->add_stash($request, 'intern');
                 return undef;
             }
 
@@ -1251,8 +1302,18 @@ sub invite {
                 {
                     $log->syslog('notice',
                         'Unable to send template "invite" to %s', $email);
-                    Sympa::Report::reject_report_cmd($request, 'intern',
-                        "Unable to send template 'invite' to $email");
+                    my $error =
+                        sprintf 'Unable to send template "invite" to %s',
+                        $email;
+                    Sympa::send_notify_to_listmaster(
+                        $list,
+                        'mail_intern_error',
+                        {   error  => $error,
+                            who    => $sender,
+                            action => 'Command process',
+                        }
+                    );
+                    $self->add_stash($request, 'intern');
                     return undef;
                 }
                 $log->syslog(
@@ -1264,7 +1325,7 @@ sub invite {
                     Time::HiRes::time() - $self->{start_time},
                     $list->get_total()
                 );
-                Sympa::Report::notice_report_cmd($request, 'invite',
+                $self->add_stash($request, 'notice', 'invite',
                     {'email' => $email});
 
             } elsif ($action !~ /\Areject\b/i) {
@@ -1275,8 +1336,18 @@ sub invite {
                 {
                     $log->syslog('notice',
                         'Unable to send template "invite" to %s', $email);
-                    Sympa::Report::reject_report_cmd($request, 'intern',
-                        "Unable to send template 'invite' to $email");
+                    my $error =
+                        sprintf 'Unable to send template "invite" to %s',
+                        $email;
+                    Sympa::send_notify_to_listmaster(
+                        $list,
+                        'mail_intern_error',
+                        {   error  => $error,
+                            who    => $sender,
+                            action => 'Command process',
+                        }
+                    );
+                    $self->add_stash($request, 'intern');
                     return undef;
                 }
                 $log->syslog(
@@ -1288,7 +1359,7 @@ sub invite {
                     Time::HiRes::time() - $self->{start_time},
                     $list->get_total()
                 );
-                Sympa::Report::notice_report_cmd($request, 'invite',
+                $self->add_stash($request, 'notice', 'invite',
                     {'email' => $email});
 
             } elsif ($action =~ /\Areject\b/i) {
@@ -1310,11 +1381,11 @@ sub invite {
                         $log->syslog('notice',
                             'Unable to send template "%s" to %s',
                             $result->{'tt2'}, $sender);
-                        Sympa::Report::reject_report_cmd($request, 'auth',
+                        $self->add_stash($request, 'auth',
                             $result->{'reason'}, {'email' => $email});
                     }
                 } else {
-                    Sympa::Report::reject_report_cmd($request, 'auth',
+                    $self->add_stash($request, 'auth',
                         $result->{'reason'}, {'email' => $email});
                 }
             }
@@ -1428,11 +1499,10 @@ sub global_remind {
                     $log->syslog('notice',
                         'Unable to send template "global_remind" to %s',
                         $email);
-                    Sympa::Report::reject_report_cmd($request,
-                        'intern_quiet');
+                    $self->add_stash($request, 'intern');
                 }
             }
-            Sympa::Report::notice_report_cmd($request, 'glob_remind',
+            $self->add_stash($request, 'notice', 'glob_remind',
                 {'count' => $count});
         return 1;
 }
@@ -1461,7 +1531,15 @@ sub remind {
 
             unless ($user = $list->get_first_list_member()) {
                 my $error = "Unable to get subscribers for list $listname";
-                Sympa::Report::reject_report_cmd($request, 'intern', $error);
+                Sympa::send_notify_to_listmaster(
+                    $list,
+                    'mail_intern_error',
+                    {   error  => $error,
+                        who    => $sender,
+                        action => 'Command process',
+                    }
+                );
+                $self->add_stash($request, 'intern');
                 return undef;
             }
 
@@ -1471,14 +1549,12 @@ sub remind {
                     $log->syslog('notice',
                         'Unable to send "remind" probe to %s',
                         $user->{'email'});
-                    Sympa::Report::reject_report_cmd($request,
-                        'intern_quiet');
+                    $self->add_stash($request, 'intern');
                 }
                 $total += 1;
             } while ($user = $list->get_next_list_member());
 
-            Sympa::Report::notice_report_cmd($request, 'remind',
-                {'total' => $total});
+            $self->add_stash($request, 'notice', 'remind', {total => $total});
             $log->syslog(
                 'info',
                 'REMIND %s from %s accepted, sent to %d subscribers (%.2f seconds)',
@@ -1527,7 +1603,7 @@ sub del {
         my $user_entry = $list->get_list_member($who);
 
         unless ((defined $user_entry)) {
-            Sympa::Report::reject_report_cmd($request, 'user',
+            $self->add_stash($request, 'user',
                 'your_email_not_found', {'email' => $who});
             $log->syslog('info', 'DEL %s %s from %s refused, not on list',
                 $which, $who, $sender);
@@ -1545,7 +1621,15 @@ sub del {
             ) {
             my $error =
                 "Unable to delete user $who from list $which for command 'del'";
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
+                }
+            );
+            $self->add_stash($request, 'intern');
         } else {
             my $spool_req = Sympa::Spool::Request->new(
                 context => $list,
@@ -1569,8 +1653,7 @@ sub del {
                     'Unable to send template "removed" to %s', $who);
             }
         }
-        Sympa::Report::notice_report_cmd($request, 'removed',
-            {'email' => $who});
+        $self->add_stash($request, 'notice', 'removed', {'email' => $who});
         $log->syslog(
             'info',
             'DEL %s %s from %s accepted (%.2f seconds, %d subscribers)',
@@ -1683,7 +1766,7 @@ sub set {
     ## Check if we know this email on the list and remove it. Otherwise
     ## just reject the message.
     unless ($list->is_list_member($sender)) {
-        Sympa::Report::reject_report_cmd($request, 'user', 'email_not_found',
+        $self->add_stash($request, 'user', 'email_not_found',
             {'email' => $sender});
         $log->syslog('info', 'SET %s %s from %s refused, not on list',
             $which, $mode, $sender);
@@ -1692,7 +1775,7 @@ sub set {
 
     ## May set to DIGEST
     if ($mode =~ /^(digest|digestplain|summary)/ and !$list->is_digest()) {
-        Sympa::Report::reject_report_cmd($request, 'user', 'no_digest');
+        $self->add_stash($request, 'user', 'no_digest');
         $log->syslog('info', 'SET %s DIGEST from %s refused, no digest mode',
             $which, $sender);
         return 'not_allowed';
@@ -1703,8 +1786,7 @@ sub set {
         ) {
         # Verify that the mode is allowed
         if (!$list->is_available_reception_mode($mode)) {
-            Sympa::Report::reject_report_cmd(
-                $request, 'user',
+            $self->add_stash( $request, 'user',
                 'available_reception_mode',
                 {   'modes' => join(' ', $list->available_reception_mode()),
                     'reception_modes' => [$list->available_reception_mode()]
@@ -1727,13 +1809,21 @@ sub set {
             ) {
             my $error =
                 "Failed to change subscriber '$sender' options for list $which";
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
+                }
+            );
+            $self->add_stash($request, 'intern');
             $log->syslog('info', 'SET %s %s from %s refused, update failed',
                 $which, $mode, $sender);
             return 'failed';
         }
 
-        Sympa::Report::notice_report_cmd($request, 'config_updated');
+        $self->add_stash($request, 'notice', 'config_updated');
 
         $log->syslog('info', 'SET %s %s from %s accepted (%.2f seconds)',
             $which, $mode, $sender, Time::HiRes::time() - $self->{start_time});
@@ -1749,13 +1839,21 @@ sub set {
             ) {
             my $error =
                 "Failed to change subscriber '$sender' options for list $which";
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
+                }
+            );
+            $self->add_stash($request, 'intern');
             $log->syslog('info', 'SET %s %s from %s refused, update failed',
                 $which, $mode, $sender);
             return 'failed';
         }
 
-        Sympa::Report::notice_report_cmd($request, 'config_updated');
+        $self->add_stash($request, 'notice', 'config_updated');
         $log->syslog('info', 'SET %s %s from %s accepted (%.2f seconds)',
             $which, $mode, $sender, Time::HiRes::time() - $self->{start_time});
     }
@@ -1800,8 +1898,7 @@ sub distribute {
         $log->syslog('err',
             'Unable to find message with key <%s> for list %s',
             $key, $list);
-        Sympa::Report::reject_report_cmd($request, 'user', 'unfound_message',
-            {'key' => $key});
+        $self->add_stash($request, 'user', 'unfound_message', {key => $key});
         return 'msg_not_found';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info',
@@ -1848,7 +1945,7 @@ sub confirm {
     unless ($spindle and $spindle->spin) {    # No message.
         $log->syslog('info', 'CONFIRM %s from %s refused, auth failed',
             $key, $sender);
-        Sympa::Report::reject_report_cmd($request, 'user',
+        $self->add_stash($request, 'user',
             'unfound_file_message', {'key' => $key});
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
@@ -1899,8 +1996,7 @@ sub reject {
     unless ($spindle and $spindle->spin) {    # No message
         $log->syslog('info', 'REJECT %s %s from %s refused, auth failed',
             $list->{'name'}, $key, $sender);
-        Sympa::Report::reject_report_cmd($request, 'user', 'unfound_message',
-            {'key' => $key});
+        $self->add_stash($request, 'user', 'unfound_message', {key => $key});
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info', 'REJECT %s %s from %s accepted (%.2f seconds)',
@@ -1942,8 +2038,7 @@ sub modindex {
     $language->set_lang($list->{'admin'}{'lang'});
 
     unless ($list->is_admin('actual_editor', $sender)) {
-        Sympa::Report::reject_report_cmd($request, 'auth',
-            'restricted_modindex');
+        $self->add_stash($request, 'auth', 'restricted_modindex');
         $log->syslog('info', 'MODINDEX %s from %s refused, not allowed',
             $name, $sender);
         return 'not_allowed';
@@ -1966,7 +2061,7 @@ sub modindex {
     }
 
     unless (scalar @spool) {
-        Sympa::Report::notice_report_cmd($request, 'no_message_to_moderate');
+        $self->add_stash($request, 'notice', 'no_message_to_moderate');
         $log->syslog('info',
             'MODINDEX %s from %s refused, no message to moderate',
             $name, $sender);
@@ -1987,7 +2082,7 @@ sub modindex {
         ) {
         $log->syslog('notice', 'Unable to send template "modindex" to %s',
             $sender);
-        Sympa::Report::reject_report_cmd($request, 'intern_quiet');
+        $self->add_stash($request, 'intern');
     }
 
     $log->syslog('info', 'MODINDEX %s from %s accepted (%.2f seconds)',
@@ -2077,7 +2172,7 @@ sub which {
     unless (Sympa::send_file($robot, 'which', $sender, $data)) {
         $log->syslog('notice', 'Unable to send template "which" to %s',
             $sender);
-        Sympa::Report::reject_report_cmd($request, 'intern_quiet');
+        $self->add_stash($request, 'intern');
     }
 
     $log->syslog(

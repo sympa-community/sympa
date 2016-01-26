@@ -30,7 +30,6 @@ use Time::HiRes qw();
 
 use Sympa;
 use Sympa::Log;
-use Sympa::Report;
 
 use base qw(Sympa::Spindle);
 
@@ -48,7 +47,15 @@ sub _twist {
             my $error = sprintf
                 'Unable to request authentication for command "%s"',
                 $request->{action};
-            Sympa::Report::reject_report_cmd($request, 'intern', $error);
+            Sympa::send_notify_to_listmaster(
+                $request->{context},
+                'mail_intern_error',
+                {   error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
+                }
+            );
+            $self->add_stash($request, 'intern');
             return undef;
         }
         $log->syslog(

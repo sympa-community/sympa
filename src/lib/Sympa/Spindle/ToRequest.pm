@@ -30,7 +30,6 @@ use Time::HiRes qw();
 
 use Sympa;
 use Sympa::Log;
-use Sympa::Report;
 use Sympa::Request;
 use Sympa::Spool::Request;
 
@@ -46,7 +45,7 @@ sub _twist {
     my $message = $request->{message};
     my $sender  = $request->{sender};
 
-        Sympa::Report::notice_report_cmd($request, 'req_forward')
+        $self->add_stash($request, 'notice', 'req_forward')
             unless $request->{quiet};
 
         my $tpl =
@@ -74,11 +73,17 @@ sub _twist {
             $log->syslog('info',
                 'Unable to send notify "%s" to %s list owner',
                 $tpl, $list);
-            Sympa::Report::reject_report_cmd(
-                $request, 'intern',
-                sprintf('Unable to send subrequest to %s list owner',
-                    $list->get_id)
+            my $error = sprintf 'Unable to send subrequest to %s list owner',
+                    $list->get_id;
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
+                }
             );
+            $self->add_stash($request, 'intern');
         }
 
         my $spool_req   = Sympa::Spool::Request->new;

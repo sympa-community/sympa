@@ -31,7 +31,6 @@ use English qw(-no_match_vars);
 use Sympa;
 use Conf;
 use Sympa::Log;
-use Sympa::Report;
 use Sympa::Spindle::ProcessMessage;
 
 use base qw(Sympa::Spindle::ProcessIncoming);    # Derives _splicing_to().
@@ -99,15 +98,21 @@ sub _twist {
     # Keep track of known message IDs...if any.
     $self->{_msgid}{'sympa@' . $robot}{$messageid} = time;
 
-    # Initialize command report.
-    Sympa::Report::init_report_cmd();
-
-    my $spindle_message =
-        Sympa::Spindle::ProcessMessage->new(message => $message);
-    unless ($spindle_message and $spindle_message->spin) {
+    my $spindle = Sympa::Spindle::ProcessMessage->new(message => $message);
+    unless ($spindle and $spindle->spin) {
         # No command found.
         $log->syslog('info', "No command found in message");
-        Sympa::Report::global_report_cmd('user', 'no_cmd_found', {});
+        Sympa::send_file(
+            $robot,
+            'command_report',
+            $sender,
+            {   to        => $sender,
+                nb_global => 1,
+                globals   => [{entry => 'no_cmd_found'}],
+            },
+            # Ensure 1 second elapsed since last message.
+            date => time + 1
+        );
         $log->db_log(
             'robot' => $robot,
             #'list'         => 'sympa',
@@ -119,12 +124,14 @@ sub _twist {
             'error_type'   => 'no_cmd_found',
             'user_email'   => $sender
         );
+
+        return undef;
     }
-    my $status = $spindle_message->{success} if $spindle_message;
+    my $status = $spindle->{success} if $spindle;
 
     # Mail back the result.
-    if (Sympa::Report::is_there_any_report_cmd()) {
-        ## Loop prevention
+    if (@{$spindle->{stash} || []}) {
+        # Loop prevention.
 
         ## Count reports sent to $sender
         $self->{_loop_info}{$sender}{'count'}++;
@@ -162,8 +169,8 @@ sub _twist {
                 $Conf::Conf{'loop_command_decrease_factor'};
         }
 
-        ## Send the reply message
-        Sympa::Report::send_report_cmd($sender, $robot);
+        # Send the reply message.
+        _send_report($robot, $sender, $spindle->{stash});
         $log->db_log(
             'robot' => $robot,
             #'list'         => 'sympa',
@@ -179,6 +186,63 @@ sub _twist {
     }
 
     return $status;
+}
+
+# Send the template command_report to $sender with list of reports.
+# Old name: Sympa::Report::send_report_cmd().
+sub _send_report {
+    my $robot   = shift;
+    my $sender  = shift;
+    my $reports = shift;
+
+    my @reports;
+    foreach my $report (@{$reports || []}) {
+        my ($request, $type, $error, $params) = @$report;
+        my %data = %{$params || {}};
+
+        $data{type} = $type;
+        $data{cmd} = $request->{cmd_line};
+        $data{entry} = ($type eq 'intern') ? 'intern_error' : ($error || '');
+        my $that = $request->{context};
+        if (ref $that eq 'Sympa::List') {
+            $data{listname} = $that->{'name'};
+        }
+
+        push @reports, \%data;
+    }
+
+    my @notice_cmd       = grep { $_->{type} eq 'notice' } @reports;
+    my @auth_reject_cmd  = grep { $_->{type} eq 'auth' } @reports;
+    my @user_error_cmd   = grep { $_->{type} eq 'user' } @reports;
+    my @intern_error_cmd = grep { $_->{type} eq 'intern' } @reports;
+
+    # for mail layout
+    my $before_auth = @notice_cmd ? 1 : 0;
+    my $before_user_err   = ($before_auth     or @auth_reject_cmd) ? 1 : 0;
+    my $before_intern_err = ($before_user_err or @user_error_cmd)  ? 1 : 0;
+
+    # Ensure 1 second elapsed since last message.
+    Sympa::send_file(
+        $robot,
+        'command_report',
+        $sender,
+        {   to            => $sender,
+            nb_notice     => scalar(@notice_cmd),
+            nb_auth       => scalar(@auth_reject_cmd),
+            nb_user_err   => scalar(@user_error_cmd),
+            nb_intern_err => scalar(@intern_error_cmd),
+            #nb_global         => scalar(@global_error_cmd),
+            before_auth       => $before_auth,
+            before_user_err   => $before_user_err,
+            before_intern_err => $before_intern_err,
+            notices           => [@notice_cmd],
+            auths             => [@auth_reject_cmd],
+            user_errors       => [@user_error_cmd],
+            intern_errors     => [@intern_error_cmd],
+            #globals           => [@global_error_cmd],
+        },
+        date => time + 1
+    );
 }
 
 1;
