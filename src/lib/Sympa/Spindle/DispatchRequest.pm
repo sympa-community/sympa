@@ -785,14 +785,16 @@ sub subscribe {
 
             $list->add_list_member($u);
             if (defined $list->{'add_outcome'}{'errors'}) {
-                my $error =
-                    sprintf "Unable to add user %s in list %s : %s",
-                    $u, $list->get_id,
-                    $list->{'add_outcome'}{'errors'}{'error_message'};
                 if (defined $list->{'add_outcome'}{'errors'}
                     {'max_list_members_exceeded'}) {
-                    $self->add_stash($request, 'user', $error);
+                    $self->add_stash($request, 'user',
+                        'max_list_members_exceeded',
+                        {max_list_members => $list->{'admin'}{'max_list_members'}});
                 } else {
+                    my $error =
+                        sprintf 'Unable to add user %s in list %s : %s',
+                        $u, $list->get_id,
+                        $list->{'add_outcome'}{'errors'}{'error_message'};
                     Sympa::send_notify_to_listmaster(
                         $list,
                         'mail_intern_error',
@@ -1136,14 +1138,16 @@ sub add {
 
             $list->add_list_member($u);
             if (defined $list->{'add_outcome'}{'errors'}) {
-                my $error =
-                    sprintf "Unable to add user %s in list %s : %s",
-                    $u, $list->get_id,
-                    $list->{'add_outcome'}{'errors'}{'error_message'};
                 if (defined $list->{'add_outcome'}{'errors'}
                     {'max_list_members_exceeded'}) {
-                    $self->add_stash($request, 'user', $error);
+                    $self->add_stash($request, 'user',
+                        'max_list_members_exceeded',
+                        {max_list_members => $list->{'admin'}{'max_list_members'}});
                 } else {
+                    my $error =
+                        sprintf 'Unable to add user %s in list %s : %s',
+                        $u, $list->get_id,
+                        $list->{'add_outcome'}{'errors'}{'error_message'};
                     Sympa::send_notify_to_listmaster(
                         $list,
                         'mail_intern_error',

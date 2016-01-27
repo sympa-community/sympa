@@ -79,6 +79,7 @@
   [% ELSIF u_err.msg == 'file_not_editable' %][%|loc(u_err.file)%]%1: file not editable[%END%]
   [% ELSIF u_err.msg == 'already_subscriber' %][%|loc(u_err.list)%]You are already subscribed to the list %1[%END%]
   [% ELSIF u_err.msg == 'user_already_subscriber' %][%|loc(u_err.email,u_err.list)%]%1 is already subscribed to the list %2[%END%] 
+  [% ELSIF u_err.msg == 'max_list_members_exceeded' %][%|loc(u_err.sub,u_err.list)%]Unable to add user %1 in list %2: [%END%][%|loc(u_err.max_list_members)%]Attempt to exceed the max number of members (%1) for this list[%END%]
   [% ELSIF u_err.msg == 'no_passwd' %][%|loc%]Please provide your password[%END%]
   [% ELSIF u_err.msg == 'diff_passwd' %][%|loc%]The passwords you typed do not match[%END%]
   [% ELSIF u_err.msg == 'passwd_validation' %][%|loc(u_err.reason)%]The password you typed does not match this sites standards of strength: %1. Please pick a stronger password.[%END%]
