@@ -287,8 +287,10 @@ sub request_auth {
 
     } else {
         if ($cmd eq 'global_remind') {
-            my $keyauth =
-                Sympa::compute_auth(context => '*', action => 'global_remind');
+            my $keyauth = Sympa::compute_auth(
+                context => '*',
+                action  => 'global_remind'
+            );
             $data->{'command'} = "auth $keyauth remind *";
             $data->{'command_escaped'} =
                 tools::escape_url($data->{'command'});

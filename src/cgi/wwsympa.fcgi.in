@@ -417,27 +417,27 @@ our %action_args = (
     'get_inactive_lists' => [],
     'get_biggest_lists'  => [],
     'search_list'        => ['filter_list'],
-    'shared'             => ['list', '@path'],       #FIXME: no such function.
-    'd_read'             => ['list', '@path'],
-    'latest_d_read'      => ['list'],
-    'd_admin'            => ['list', 'd_admin'],
-    'd_delete'           => ['list', '@path'],
-    'd_rename'           => ['list', '@path'],
-    'd_create_dir'       => ['list', '@path'],
-    'd_overwrite'        => ['list', '@path'],
-    'd_savefile'         => ['list', '@path'],
-    'd_describe'         => ['list', '@path'],
-    'd_editfile'         => ['list', '@path'],
-    'd_properties'       => ['list', '@path'],
-    'd_control'          => ['list', '@path'],
-    'd_change_access'    => ['list', '@path'],
-    'd_set_owner'        => ['list', '@path'],
-    'dump'               => ['list', 'format'],
-    'search'             => ['list', 'filter'],
-    'search_user'        => ['email'],
-    'set_lang'           => ['lang'],
-    'attach'             => ['list', 'dir', 'file'],
-    'stats'              => ['list'],
+    'shared'          => ['list', '@path'],     #FIXME: no such function.
+    'd_read'          => ['list', '@path'],
+    'latest_d_read'   => ['list'],
+    'd_admin'         => ['list', 'd_admin'],
+    'd_delete'        => ['list', '@path'],
+    'd_rename'        => ['list', '@path'],
+    'd_create_dir'    => ['list', '@path'],
+    'd_overwrite'     => ['list', '@path'],
+    'd_savefile'      => ['list', '@path'],
+    'd_describe'      => ['list', '@path'],
+    'd_editfile'      => ['list', '@path'],
+    'd_properties'    => ['list', '@path'],
+    'd_control'       => ['list', '@path'],
+    'd_change_access' => ['list', '@path'],
+    'd_set_owner'     => ['list', '@path'],
+    'dump'            => ['list', 'format'],
+    'search'          => ['list', 'filter'],
+    'search_user'     => ['email'],
+    'set_lang'        => ['lang'],
+    'attach' => ['list', 'dir', 'file'],
+    'stats'  => ['list'],
     'edit_list_request' => ['list', 'group'],
     'rename_list'       => ['list', 'new_list', 'new_robot'],
     'copy_list'         => ['list', 'new_list', 'new_robot'],
@@ -588,14 +588,14 @@ our %required_args = (
     'set'      => ['param.list', 'reception|visibility'],
     'set_lang' => [],
     'set_pending_list_request' => ['param.user.email'],
-    'setpasswd'  => ['param.user.email', 'newpasswd1', 'newpasswd2'],
-    'setpref'    => ['param.user.email'],
-    'sigindex'   => ['param.list',       'param.user.email'],
-    'signoff'    => ['param.list'],
-    'sigrequest' => ['param.list'],
-    'skinsedit'  => ['param.user.email'],
-    'sso_login'  => ['auth_service_name'],
-    'stats'      => ['param.list'],
+    'setpasswd' => ['param.user.email', 'newpasswd1', 'newpasswd2'],
+    'setpref'   => ['param.user.email'],
+    'sigindex'               => ['param.list',       'param.user.email'],
+    'signoff'                => ['param.list'],
+    'sigrequest'             => ['param.list'],
+    'skinsedit'              => ['param.user.email'],
+    'sso_login'              => ['auth_service_name'],
+    'stats'                  => ['param.list'],
     'subindex'               => ['param.list',       'param.user.email'],
     'suboptions'             => ['param.list',       'param.user.email'],
     'subrequest'             => ['param.list'],
@@ -6142,7 +6142,11 @@ sub do_subscribe {
                         Sympa::Report::reject_report_web(
                             'user',
                             'max_list_members_exceeded',
-                            {max_list_members => $list->{'admin'}{'max_list_members'}, list => $list->{'name'}, 'sub' => $param->{'user'}{'email'}},
+                            {   max_list_members =>
+                                    $list->{'admin'}{'max_list_members'},
+                                list  => $list->{'name'},
+                                'sub' => $param->{'user'}{'email'}
+                            },
                             $param->{'action'},
                             $list,
                             $param->{'user'}{'email'},
@@ -8150,10 +8154,18 @@ sub do_add {
     if (defined $list->{'add_outcome'}{'errors'}) {
         if (defined $list->{'add_outcome'}{'errors'}
             {'max_list_members_exceeded'}) {
-            Sympa::Report::reject_report_web('user',
+            Sympa::Report::reject_report_web(
+                'user',
                 'max_list_members_exceeded',
-                {max_list_members => $list->{'admin'}{'max_list_members'}, list => $list->{'name'}, 'sub' => $param->{'user'}{'email'}},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+                {   max_list_members => $list->{'admin'}{'max_list_members'},
+                    list             => $list->{'name'},
+                    'sub'            => $param->{'user'}{'email'}
+                },
+                $param->{'action'},
+                $list,
+                $param->{'user'}{'email'},
+                $robot
+            );
         } else {
             my $error = $language->gettext_sprintf(
                 "Unable to add users in list %s : %s",
@@ -8288,22 +8300,34 @@ sub do_add_fromsub {
             );
             if ($list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'})
             {
-                Sympa::Report::reject_report_web('user',
+                Sympa::Report::reject_report_web(
+                    'user',
                     'max_list_members_exceeded',
-                    {max_list_members => $list->{'admin'}{'max_list_members'}, list => $list->{'name'}, sub => $param->{'user'}{'email'}},
-                    $param->{'action'}, $list, $param->{'user'}{'email'},
-                    $robot);
+                    {   max_list_members =>
+                            $list->{'admin'}{'max_list_members'},
+                        list => $list->{'name'},
+                        sub  => $param->{'user'}{'email'}
+                    },
+                    $param->{'action'},
+                    $list,
+                    $param->{'user'}{'email'},
+                    $robot
+                );
                 last;
             } else {
                 my $error = $language->gettext_sprintf(
                     "Unable to add users in list %s : %s",
                     $list->{'name'},
                     $list->{'add_outcome'}{'errors'}{'error_message'});
-                Sympa::Report::reject_report_web('intern',
+                Sympa::Report::reject_report_web(
+                    'intern',
                     $error,
                     {sub => $param->{'user'}{'email'}},
-                    $param->{'action'}, $list, $param->{'user'}{'email'},
-                    $robot);
+                    $param->{'action'},
+                    $list,
+                    $param->{'user'}{'email'},
+                    $robot
+                );
             }
         } else {
             # Delete subscription request.

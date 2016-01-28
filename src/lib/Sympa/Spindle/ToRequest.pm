@@ -35,7 +35,7 @@ use Sympa::Spool::Request;
 
 use base qw(Sympa::Spindle);
 
-my $log      = Sympa::Log->instance;
+my $log = Sympa::Log->instance;
 
 sub _twist {
     my $self    = shift;
@@ -45,64 +45,63 @@ sub _twist {
     my $message = $request->{message};
     my $sender  = $request->{sender};
 
-        $self->add_stash($request, 'notice', 'req_forward')
-            unless $request->{quiet};
+    $self->add_stash($request, 'notice', 'req_forward')
+        unless $request->{quiet};
 
-        my $tpl =
-            {subscribe => 'subrequest', signoff => 'sigrequest'}
-            ->{$request->{action}};
-        my $owner_action =
-            {subscribe => 'add', signoff => 'del'}->{$request->{action}};
+    my $tpl =
+        {subscribe => 'subrequest', signoff => 'sigrequest'}
+        ->{$request->{action}};
+    my $owner_action =
+        {subscribe => 'add', signoff => 'del'}->{$request->{action}};
 
-        # Send a notice to the owners.
-        unless (
-            $list->send_notify_to_owner(
-                $tpl,
-                {   'who'     => $sender,
-                    'keyauth' => Sympa::compute_auth(
-                        context => $list,
-                        email   => $request->{email},
-                        action  => $owner_action,
-                    ),
-                    'replyto' => Sympa::get_address($list, 'sympa'),
-                    'gecos'   => $request->{gecos},
-                }
-            )
-            ) {
-            #FIXME: Why is error reported only in this case?
-            $log->syslog('info',
-                'Unable to send notify "%s" to %s list owner',
-                $tpl, $list);
-            my $error = sprintf 'Unable to send subrequest to %s list owner',
-                    $list->get_id;
-            Sympa::send_notify_to_listmaster(
-                $list,
-                'mail_intern_error',
-                {   error  => $error,
-                    who    => $sender,
-                    action => 'Command process',
-                }
-            );
-            $self->add_stash($request, 'intern');
-        }
-
-        my $spool_req   = Sympa::Spool::Request->new;
-        my $add_request = Sympa::Request->new_from_tuples(
-            %$request,
-            action => $owner_action,
-            date   => $message->{date},    # Keep date of message.
+    # Send a notice to the owners.
+    unless (
+        $list->send_notify_to_owner(
+            $tpl,
+            {   'who'     => $sender,
+                'keyauth' => Sympa::compute_auth(
+                    context => $list,
+                    email   => $request->{email},
+                    action  => $owner_action,
+                ),
+                'replyto' => Sympa::get_address($list, 'sympa'),
+                'gecos'   => $request->{gecos},
+            }
+        )
+        ) {
+        #FIXME: Why is error reported only in this case?
+        $log->syslog('info', 'Unable to send notify "%s" to %s list owner',
+            $tpl, $list);
+        my $error = sprintf 'Unable to send subrequest to %s list owner',
+            $list->get_id;
+        Sympa::send_notify_to_listmaster(
+            $list,
+            'mail_intern_error',
+            {   error  => $error,
+                who    => $sender,
+                action => 'Command process',
+            }
         );
-        if ($spool_req->store($add_request)) {
-            $log->syslog(
-                'info',
-                '%s for %s from %s forwarded to the owners of the list (%.2f seconds)',
-                uc $request->{action},
-                $list,
-                $sender,
-                Time::HiRes::time() - $self->{start_time}
-            );
-        }
-        return 1;
+        $self->add_stash($request, 'intern');
+    }
+
+    my $spool_req   = Sympa::Spool::Request->new;
+    my $add_request = Sympa::Request->new_from_tuples(
+        %$request,
+        action => $owner_action,
+        date   => $message->{date},    # Keep date of message.
+    );
+    if ($spool_req->store($add_request)) {
+        $log->syslog(
+            'info',
+            '%s for %s from %s forwarded to the owners of the list (%.2f seconds)',
+            uc $request->{action},
+            $list,
+            $sender,
+            Time::HiRes::time() - $self->{start_time}
+        );
+    }
+    return 1;
 }
 
 1;

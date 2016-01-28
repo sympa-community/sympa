@@ -37,7 +37,7 @@ use Sympa::Spool::Request;
 
 use base qw(Sympa::Spindle);
 
-my $log      = Sympa::Log->instance;
+my $log = Sympa::Log->instance;
 
 sub _twist {
     my $self    = shift;
@@ -173,8 +173,8 @@ sub _get_auth_method {
     my $self    = shift;
     my $request = shift;
 
-    my $that     = $request->{context};
-    my $sender   = $request->{sender};
+    my $that   = $request->{context};
+    my $sender = $request->{sender};
 
     my $cmd   = $request->{action};
     my $email = $request->{email};
@@ -205,8 +205,8 @@ sub _get_auth_method {
         } else {
             $log->syslog('debug2', 'Auth should be %s', $compute);
             if (grep { $cmd eq $_ } qw(add del invite signoff subscribe)) {
-                $self->add_stash($request, 'user',
-                    'wrong_email_confirm', {command => $cmd});
+                $self->add_stash($request, 'user', 'wrong_email_confirm',
+                    {command => $cmd});
             } else {
                 Sympa::send_notify_to_listmaster(
                     $that,

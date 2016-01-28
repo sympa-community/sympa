@@ -33,7 +33,7 @@ use base qw(Sympa::Spindle);
 
 my $log = Sympa::Log->instance;
 
-use constant _distaff => 'Sympa::Request::Message';
+use constant _distaff    => 'Sympa::Request::Message';
 use constant _on_failure => 1;
 use constant _on_garbage => 1;
 

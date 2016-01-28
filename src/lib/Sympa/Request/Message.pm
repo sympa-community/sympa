@@ -45,7 +45,7 @@ sub new {
 }
 
 sub next {
-    my $self    = shift;
+    my $self = shift;
 
     unless ($self->{_metadatas}) {
         $self->{_metadatas} = $self->_load;
@@ -95,9 +95,9 @@ sub _load {
                 action => $action,
                 cmd_line =>
                     sprintf('%s %s', $message->{listtype}, $list->{'name'}),
-                context  => $list,
-                email    => $message->{sender},
-                message  => $message,
+                context => $list,
+                email   => $message->{sender},
+                message => $message,
                 #FIXME: smime_signed?
                 (map { $_ => $message->{$_} } qw(sender dkim_pass)),
             )
@@ -149,9 +149,9 @@ sub _load {
 # Old name: Sympa::Commands::parse().
 sub _parse {
     $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
-    my $robot    = shift;
-    my $line     = shift;
-    my $message  = shift;
+    my $robot   = shift;
+    my $line    = shift;
+    my $message = shift;
 
     $log->syslog('notice', "Parsing: %s", $line);
 
@@ -162,10 +162,10 @@ sub _parse {
 
     my $l = $line;
     foreach my $action (
-        sort(grep /global_/, keys %Sympa::CommandDef::comms),
+        sort(grep /global_/,  keys %Sympa::CommandDef::comms),
         sort(grep !/global_/, keys %Sympa::CommandDef::comms)
         ) {
-	my $comm = $Sympa::CommandDef::comms{$action};
+        my $comm       = $Sympa::CommandDef::comms{$action};
         my $cmd_regexp = $comm->{cmd_regexp};
         my $arg_regexp = $comm->{arg_regexp};
         my $arg_keys   = $comm->{arg_keys};
@@ -208,8 +208,9 @@ sub _parse {
                 error    => 'syntax_error',
                 message  => $message,
                 quiet    => $quiet,
-                (map { $_ => $message->{$_} }
-                    qw(sender dkim_pass smime_signed)),
+                (   map { $_ => $message->{$_} }
+                        qw(sender dkim_pass smime_signed)
+                ),
             );
         }
 
@@ -248,7 +249,7 @@ use constant quarantine => 1;
 use constant remove     => 1;
 
 sub store {
-    my $self = shift;
+    my $self    = shift;
     my $request = shift;
 
     $self->{_metadatas} ||= [];

@@ -141,7 +141,7 @@ sub _reject {
             $list,
             'message_report',
             $self->{rejected_by},
-            {   type           => 'success', # Compat. <=6.2.12.
+            {   type           => 'success',            # Compat. <=6.2.12.
                 entry          => 'message_rejected',
                 auto_submitted => 'auto-replied',
                 key            => $message->{authkey}

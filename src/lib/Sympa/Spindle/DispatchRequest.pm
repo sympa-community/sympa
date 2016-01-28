@@ -303,34 +303,32 @@ sub stats {
     my $message  = $request->{message};
     my $sender   = $request->{sender};
 
-        my %stats = (
-            'msg_rcv'  => $list->{'stats'}[0],
-            'msg_sent' => $list->{'stats'}[1],
-            'byte_rcv' =>
-                sprintf('%9.2f', ($list->{'stats'}[2] / 1024 / 1024)),
-            'byte_sent' =>
-                sprintf('%9.2f', ($list->{'stats'}[3] / 1024 / 1024))
-        );
+    my %stats = (
+        'msg_rcv'   => $list->{'stats'}[0],
+        'msg_sent'  => $list->{'stats'}[1],
+        'byte_rcv'  => sprintf('%9.2f', ($list->{'stats'}[2] / 1024 / 1024)),
+        'byte_sent' => sprintf('%9.2f', ($list->{'stats'}[3] / 1024 / 1024))
+    );
 
-        unless (
-            Sympa::send_file(
-                $list,
-                'stats_report',
-                $sender,
-                {   'stats'   => \%stats,
-                    'subject' => "STATS $list->{'name'}",  # compat <= 6.1.17.
-                    'auto_submitted' => 'auto-replied'
-                }
-            )
-            ) {
-            $log->syslog('notice',
-                'Unable to send template "stats_reports" to %s', $sender);
-            $self->add_stash($request, 'intern');
-        }
+    unless (
+        Sympa::send_file(
+            $list,
+            'stats_report',
+            $sender,
+            {   'stats'   => \%stats,
+                'subject' => "STATS $list->{'name'}",    # compat <= 6.1.17.
+                'auto_submitted' => 'auto-replied'
+            }
+        )
+        ) {
+        $log->syslog('notice',
+            'Unable to send template "stats_reports" to %s', $sender);
+        $self->add_stash($request, 'intern');
+    }
 
-        $log->syslog('info', 'STATS %s from %s accepted (%.2f seconds)',
-            $listname, $sender, Time::HiRes::time() - $self->{start_time});
-        return 1;
+    $log->syslog('info', 'STATS %s from %s accepted (%.2f seconds)',
+        $listname, $sender, Time::HiRes::time() - $self->{start_time});
+    return 1;
 }
 
 ###############################################
@@ -634,42 +632,41 @@ sub review {
 
     my @users;
 
-        my $is_owner = $list->is_admin('owner', $sender)
-            || Sympa::is_listmaster($list, $sender);
-        unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
-            $self->add_stash($request, 'user', 'no_subscriber');
-            $log->syslog('err', 'No subscribers in list "%s"',
-                $list->{'name'});
-            return 'no_subscribers';
-        }
-        do {
-            ## Owners bypass the visibility option
-            unless (($user->{'visibility'} eq 'conceal')
-                and (!$is_owner)) {
+    my $is_owner = $list->is_admin('owner', $sender)
+        || Sympa::is_listmaster($list, $sender);
+    unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
+        $self->add_stash($request, 'user', 'no_subscriber');
+        $log->syslog('err', 'No subscribers in list "%s"', $list->{'name'});
+        return 'no_subscribers';
+    }
+    do {
+        ## Owners bypass the visibility option
+        unless (($user->{'visibility'} eq 'conceal')
+            and (!$is_owner)) {
 
-                ## Lower case email address
-                $user->{'email'} =~ y/A-Z/a-z/;
-                push @users, $user;
+            ## Lower case email address
+            $user->{'email'} =~ y/A-Z/a-z/;
+            push @users, $user;
+        }
+    } while ($user = $list->get_next_list_member());
+    unless (
+        Sympa::send_file(
+            $list, 'review', $sender,
+            {   'users'          => \@users,
+                'total'          => $list->get_total(),
+                'subject'        => "REVIEW $listname",    # Compat <= 6.1.17.
+                'auto_submitted' => 'auto-replied'
             }
-        } while ($user = $list->get_next_list_member());
-        unless (
-            Sympa::send_file(
-                $list, 'review', $sender,
-                {   'users'   => \@users,
-                    'total'   => $list->get_total(),
-                    'subject' => "REVIEW $listname",    # Compat <= 6.1.17.
-                    'auto_submitted' => 'auto-replied'
-                }
-            )
-            ) {
-            $log->syslog('notice', 'Unable to send template "review" to %s',
-                $sender);
-            $self->add_stash($request, 'intern');
-        }
+        )
+        ) {
+        $log->syslog('notice', 'Unable to send template "review" to %s',
+            $sender);
+        $self->add_stash($request, 'intern');
+    }
 
-        $log->syslog('info', 'REVIEW %s from %s accepted (%.2f seconds)',
-            $listname, $sender, Time::HiRes::time() - $self->{start_time});
-        return 1;
+    $log->syslog('info', 'REVIEW %s from %s accepted (%.2f seconds)',
+        $listname, $sender, Time::HiRes::time() - $self->{start_time});
+    return 1;
 }
 
 ############################################################
@@ -762,8 +759,8 @@ sub subscribe {
     # already.
     my $user_entry = $list->get_list_member($email);
     if (defined $user_entry) {
-        $self->add_stash($request, 'user',
-            'already_subscriber', {'email' => $email});
+        $self->add_stash($request, 'user', 'already_subscriber',
+            {'email' => $email});
         $log->syslog(
             'err',
             'User %s is subscribed to %s already. Ignoring subscription request',
@@ -773,72 +770,71 @@ sub subscribe {
         return undef;
     }
 
-            my $u;
-            my $defaults = $list->get_default_user_options();
-            %{$u} = %{$defaults};
-            $u->{'email'} = $email;
-            $u->{'gecos'} = $comment;
-            $u->{'date'}  = $u->{'update_date'} = time;
+    my $u;
+    my $defaults = $list->get_default_user_options();
+    %{$u} = %{$defaults};
+    $u->{'email'} = $email;
+    $u->{'gecos'} = $comment;
+    $u->{'date'}  = $u->{'update_date'} = time;
 
-            $list->add_list_member($u);
-            if (defined $list->{'add_outcome'}{'errors'}) {
-                if (defined $list->{'add_outcome'}{'errors'}
-                    {'max_list_members_exceeded'}) {
-                    $self->add_stash($request, 'user',
-                        'max_list_members_exceeded',
-                        {max_list_members => $list->{'admin'}{'max_list_members'}});
-                } else {
-                    my $error =
-                        sprintf 'Unable to add user %s in list %s : %s',
-                        $u, $list->get_id,
-                        $list->{'add_outcome'}{'errors'}{'error_message'};
-                    Sympa::send_notify_to_listmaster(
-                        $list,
-                        'mail_intern_error',
-                        {   error  => $error,
-                            who    => $sender,
-                            action => 'Command process',
-                        }
-                    );
-                    $self->add_stash($request, 'intern');
-                }
-                return undef;
-            }
-
-        my $user = Sympa::User->new($email);
-        $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
-        $user->password(Sympa::Tools::Password::tmp_passwd($email))
-            unless $user->password;
-        $user->save;
-
-        ## Now send the welcome file to the user
-        unless ($request->{quiet}) {
-            unless ($list->send_probe_to_user('welcome', $email)) {
-                $log->syslog('notice', 'Unable to send "welcome" probe to %s',
-                    $email);
-            }
-        }
-
-        ## If requested send notification to owners
-        if ($request->{notify}) {
-            $list->send_notify_to_owner(
-                'notice',
-                {   'who'     => $email,
-                    'gecos'   => $comment,
-                    'command' => 'subscribe'
+    $list->add_list_member($u);
+    if (defined $list->{'add_outcome'}{'errors'}) {
+        if (defined $list->{'add_outcome'}{'errors'}
+            {'max_list_members_exceeded'}) {
+            $self->add_stash($request, 'user', 'max_list_members_exceeded',
+                {max_list_members => $list->{'admin'}{'max_list_members'}});
+        } else {
+            my $error =
+                sprintf 'Unable to add user %s in list %s : %s',
+                $u, $list->get_id,
+                $list->{'add_outcome'}{'errors'}{'error_message'};
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
                 }
             );
+            $self->add_stash($request, 'intern');
         }
-        $log->syslog(
-            'info',
-            'SUB %s from %s accepted (%.2f seconds, %d subscribers)',
-            $which,
-            $sender,
-            Time::HiRes::time() - $self->{start_time},
-            $list->get_total()
-        );
+        return undef;
+    }
 
-        return 1;
+    my $user = Sympa::User->new($email);
+    $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
+    $user->password(Sympa::Tools::Password::tmp_passwd($email))
+        unless $user->password;
+    $user->save;
+
+    ## Now send the welcome file to the user
+    unless ($request->{quiet}) {
+        unless ($list->send_probe_to_user('welcome', $email)) {
+            $log->syslog('notice', 'Unable to send "welcome" probe to %s',
+                $email);
+        }
+    }
+
+    ## If requested send notification to owners
+    if ($request->{notify}) {
+        $list->send_notify_to_owner(
+            'notice',
+            {   'who'     => $email,
+                'gecos'   => $comment,
+                'command' => 'subscribe'
+            }
+        );
+    }
+    $log->syslog(
+        'info',
+        'SUB %s from %s accepted (%.2f seconds, %d subscribers)',
+        $which,
+        $sender,
+        Time::HiRes::time() - $self->{start_time},
+        $list->get_total()
+    );
+
+    return 1;
 }
 
 ############################################################
@@ -868,55 +864,53 @@ sub info {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-        my $data;
-        foreach my $key (keys %{$list->{'admin'}}) {
-            $data->{$key} = $list->{'admin'}{$key};
+    my $data;
+    foreach my $key (keys %{$list->{'admin'}}) {
+        $data->{$key} = $list->{'admin'}{$key};
+    }
+
+    ## Set title in the current language
+    foreach my $p ('subscribe', 'unsubscribe', 'send', 'review') {
+        my $scenario = Sympa::Scenario->new(
+            'robot'     => $robot,
+            'directory' => $list->{'dir'},
+            'file_path' => $list->{'admin'}{$p}{'file_path'}
+        );
+        $data->{$p} = $scenario->get_current_title();
+    }
+
+    ## Digest
+    my @days;
+    if (defined $list->{'admin'}{'digest'}) {
+
+        foreach my $d (@{$list->{'admin'}{'digest'}{'days'}}) {
+            push @days,
+                $language->gettext_strftime("%A",
+                localtime(0 + ($d + 3) * (3600 * 24)));
         }
+        $data->{'digest'} =
+              join(',', @days) . ' '
+            . $list->{'admin'}{'digest'}{'hour'} . ':'
+            . $list->{'admin'}{'digest'}{'minute'};
+    }
 
-        ## Set title in the current language
-        foreach my $p ('subscribe', 'unsubscribe', 'send', 'review') {
-            my $scenario = Sympa::Scenario->new(
-                'robot'     => $robot,
-                'directory' => $list->{'dir'},
-                'file_path' => $list->{'admin'}{$p}{'file_path'}
-            );
-            $data->{$p} = $scenario->get_current_title();
-        }
+    ## Reception mode
+    $data->{'available_reception_mode'} = $list->available_reception_mode();
+    $data->{'available_reception_modeA'} =
+        [$list->available_reception_mode()];
 
-        ## Digest
-        my @days;
-        if (defined $list->{'admin'}{'digest'}) {
+    my $wwsympa_url = Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url');
+    $data->{'url'} = $wwsympa_url . '/info/' . $list->{'name'};
 
-            foreach my $d (@{$list->{'admin'}{'digest'}{'days'}}) {
-                push @days,
-                    $language->gettext_strftime("%A",
-                    localtime(0 + ($d + 3) * (3600 * 24)));
-            }
-            $data->{'digest'} =
-                  join(',', @days) . ' '
-                . $list->{'admin'}{'digest'}{'hour'} . ':'
-                . $list->{'admin'}{'digest'}{'minute'};
-        }
+    unless (Sympa::send_file($list, 'info_report', $sender, $data)) {
+        $log->syslog('notice', 'Unable to send template "info_report" to %s',
+            $sender);
+        $self->add_stash($request, 'intern');
+    }
 
-        ## Reception mode
-        $data->{'available_reception_mode'} =
-            $list->available_reception_mode();
-        $data->{'available_reception_modeA'} =
-            [$list->available_reception_mode()];
-
-        my $wwsympa_url =
-            Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url');
-        $data->{'url'} = $wwsympa_url . '/info/' . $list->{'name'};
-
-        unless (Sympa::send_file($list, 'info_report', $sender, $data)) {
-            $log->syslog('notice',
-                'Unable to send template "info_report" to %s', $sender);
-            $self->add_stash($request, 'intern');
-        }
-
-        $log->syslog('info', 'INFO %s from %s accepted (%.2f seconds)',
-            $listname, $sender, Time::HiRes::time() - $self->{start_time});
-        return 1;
+    $log->syslog('info', 'INFO %s from %s accepted (%.2f seconds)',
+        $listname, $sender, Time::HiRes::time() - $self->{start_time});
+    return 1;
 }
 
 ##############################################################
@@ -940,50 +934,49 @@ sub global_signoff {
 
     my $email = $request->{email};
 
-        foreach my $list (
-            Sympa::List::get_which($email, $request->{context}, 'member')) {
-            # Skip hidden lists.
-            my $result = Sympa::Scenario::request_action(
+    foreach my $list (
+        Sympa::List::get_which($email, $request->{context}, 'member')) {
+        # Skip hidden lists.
+        my $result = Sympa::Scenario::request_action(
+            $list,
+            'visibility',
+            'smtp',
+            {   'sender'  => $sender,
+                'message' => $message,
+            }
+        );
+
+        my $action;
+        $action = $result->{'action'} if (ref($result) eq 'HASH');
+
+        unless (defined $action) {
+            my $error =
+                sprintf 'Unable to evaluate scenario "visibility" for list ',
+                $list->get_id;
+            Sympa::send_notify_to_listmaster(
                 $list,
-                'visibility',
-                'smtp',
-                {   'sender'  => $sender,
-                    'message' => $message,
+                'intern_error',
+                {   'error'  => $error,
+                    'who'    => $sender,
+                    'cmd'    => $request->{cmd_line},
+                    'action' => 'Command process'
                 }
             );
-
-            my $action;
-            $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-            unless (defined $action) {
-                my $error =
-                    sprintf
-                    'Unable to evaluate scenario "visibility" for list ',
-                    $list->get_id;
-                Sympa::send_notify_to_listmaster(
-                    $list,
-                    'intern_error',
-                    {   'error'  => $error,
-                        'who'    => $sender,
-                        'cmd'    => $request->{cmd_line},
-                        'action' => 'Command process'
-                    }
-                );
-                next;
-            }
-
-            if ($action =~ /reject/) {
-                next;
-            }
-
-            my $req = $request->dup;
-            $req->{action}    = 'signoff';
-            $req->{context}   = $list;
-            $req->{localpart} = $list->{'name'};
-
-            $self->{distaff}->store($req);
+            next;
         }
-        return 1;
+
+        if ($action =~ /reject/) {
+            next;
+        }
+
+        my $req = $request->dup;
+        $req->{action}    = 'signoff';
+        $req->{context}   = $list;
+        $req->{localpart} = $list->{'name'};
+
+        $self->{distaff}->store($req);
+    }
+    return 1;
 }
 
 # Old name: (part of) Sympa::Commands::signoff().
@@ -1005,80 +998,80 @@ sub signoff {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-        # Now check if we know this email on the list and
-        # remove it if found, otherwise just reject the
-        # command.
-        my $user_entry = $list->get_list_member($email);
-        unless (defined $user_entry) {
-            $self->add_stash($request, 'user',
-                'your_email_not_found', {'email' => $email});
-            $log->syslog('info', 'SIG %s from %s refused, not on list',
-                $which, $email);
+    # Now check if we know this email on the list and
+    # remove it if found, otherwise just reject the
+    # command.
+    my $user_entry = $list->get_list_member($email);
+    unless (defined $user_entry) {
+        $self->add_stash($request, 'user', 'your_email_not_found',
+            {'email' => $email});
+        $log->syslog('info', 'SIG %s from %s refused, not on list',
+            $which, $email);
 
-            # Tell the owner somebody tried to unsubscribe.
-            if ($request->{notify}) {
-                # Try to find email from same domain or email with same local
-                # part.
-                $list->send_notify_to_owner(
-                    'warn-signoff',
-                    {   'who'   => $email,
-                        'gecos' => ($user_entry->{'gecos'} || '')
-                    }
-                );
-            }
-            return 'not_allowed';
-        }
-
-        ## Really delete and rewrite to disk.
-        unless (
-            $list->delete_list_member(
-                'users'     => [$email],
-                'exclude'   => '1',
-                'operation' => 'signoff',
-            )
-            ) {
-            my $error = sprintf 'Unable to delete user %s from list %s',
-                $email, $list->get_id;
-            Sympa::send_notify_to_listmaster(
-                $list,
-                'mail_intern_error',
-                {   error  => $error,
-                    who    => $sender,
-                    action => 'Command process',
-                }
-            );
-            $self->add_stash($request, 'intern');
-        }
-
-        # Notify the owner.
+        # Tell the owner somebody tried to unsubscribe.
         if ($request->{notify}) {
+            # Try to find email from same domain or email with same local
+            # part.
             $list->send_notify_to_owner(
-                'notice',
-                {   'who'     => $email,
-                    'gecos'   => ($user_entry->{'gecos'} || ''),
-                    'command' => 'signoff'
+                'warn-signoff',
+                {   'who'   => $email,
+                    'gecos' => ($user_entry->{'gecos'} || '')
                 }
             );
         }
+        return 'not_allowed';
+    }
 
-        unless ($request->{quiet}) {
-            # Send bye file to subscriber.
-            unless (Sympa::send_file($list, 'bye', $email, {})) {
-                $log->syslog('notice', 'Unable to send template "bye" to %s',
-                    $email);
+    ## Really delete and rewrite to disk.
+    unless (
+        $list->delete_list_member(
+            'users'     => [$email],
+            'exclude'   => '1',
+            'operation' => 'signoff',
+        )
+        ) {
+        my $error = sprintf 'Unable to delete user %s from list %s',
+            $email, $list->get_id;
+        Sympa::send_notify_to_listmaster(
+            $list,
+            'mail_intern_error',
+            {   error  => $error,
+                who    => $sender,
+                action => 'Command process',
             }
-        }
-
-        $log->syslog(
-            'info',
-            'SIG %s from %s accepted (%.2f seconds, %d subscribers)',
-            $which,
-            $sender,
-            Time::HiRes::time() - $self->{start_time},
-            $list->get_total()
         );
+        $self->add_stash($request, 'intern');
+    }
 
-        return 1;
+    # Notify the owner.
+    if ($request->{notify}) {
+        $list->send_notify_to_owner(
+            'notice',
+            {   'who'     => $email,
+                'gecos'   => ($user_entry->{'gecos'} || ''),
+                'command' => 'signoff'
+            }
+        );
+    }
+
+    unless ($request->{quiet}) {
+        # Send bye file to subscriber.
+        unless (Sympa::send_file($list, 'bye', $email, {})) {
+            $log->syslog('notice', 'Unable to send template "bye" to %s',
+                $email);
+        }
+    }
+
+    $log->syslog(
+        'info',
+        'SIG %s from %s accepted (%.2f seconds, %d subscribers)',
+        $which,
+        $sender,
+        Time::HiRes::time() - $self->{start_time},
+        $list->get_total()
+    );
+
+    return 1;
 }
 
 ############################################################
@@ -1113,102 +1106,98 @@ sub add {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-        if ($list->is_list_member($email)) {
-            $self->add_stash($request, 'user',
-                'already_subscriber', {'email' => $email});
-            $log->syslog(
-                'err',
-                'ADD command rejected; user "%s" already member of list "%s"',
-                $email,
-                $which
-            );
-            return undef;
+    if ($list->is_list_member($email)) {
+        $self->add_stash($request, 'user', 'already_subscriber',
+            {'email' => $email});
+        $log->syslog('err',
+            'ADD command rejected; user "%s" already member of list "%s"',
+            $email, $which);
+        return undef;
 
-        }
+    }
 
-            my $u;
-            my $defaults = $list->get_default_user_options();
-            %{$u} = %{$defaults};
-            $u->{'email'} = $email;
-            $u->{'gecos'} = $comment;
-            $u->{'date'}  = $u->{'update_date'} = time;
+    my $u;
+    my $defaults = $list->get_default_user_options();
+    %{$u} = %{$defaults};
+    $u->{'email'} = $email;
+    $u->{'gecos'} = $comment;
+    $u->{'date'}  = $u->{'update_date'} = time;
 
-            $list->add_list_member($u);
-            if (defined $list->{'add_outcome'}{'errors'}) {
-                if (defined $list->{'add_outcome'}{'errors'}
-                    {'max_list_members_exceeded'}) {
-                    $self->add_stash($request, 'user',
-                        'max_list_members_exceeded',
-                        {max_list_members => $list->{'admin'}{'max_list_members'}});
-                } else {
-                    my $error =
-                        sprintf 'Unable to add user %s in list %s : %s',
-                        $u, $list->get_id,
-                        $list->{'add_outcome'}{'errors'}{'error_message'};
-                    Sympa::send_notify_to_listmaster(
-                        $list,
-                        'mail_intern_error',
-                        {   error  => $error,
-                            who    => $sender,
-                            action => 'Command process',
-                        }
-                    );
-                    $self->add_stash($request, 'intern');
+    $list->add_list_member($u);
+    if (defined $list->{'add_outcome'}{'errors'}) {
+        if (defined $list->{'add_outcome'}{'errors'}
+            {'max_list_members_exceeded'}) {
+            $self->add_stash($request, 'user', 'max_list_members_exceeded',
+                {max_list_members => $list->{'admin'}{'max_list_members'}});
+        } else {
+            my $error =
+                sprintf 'Unable to add user %s in list %s : %s',
+                $u, $list->get_id,
+                $list->{'add_outcome'}{'errors'}{'error_message'};
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
                 }
-                return undef;
-            }
-
-            my $spool_req = Sympa::Spool::Request->new(
-                context => $list,
-                email   => $email,
-                action  => 'add'
             );
-            while (1) {
-                my ($request, $handle) = $spool_req->next;
-                last unless $handle;
-                next unless $request;
-
-                $spool_req->remove($handle);
-            }
-
-            $self->add_stash($request, 'notice', 'now_subscriber',
-                {'email' => $email});
-
-        my $user = Sympa::User->new($email);
-        $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
-        $user->password(Sympa::Tools::Password::tmp_passwd($email))
-            unless $user->password;
-        $user->save;
-
-        ## Now send the welcome file to the user if it exists and notification
-        ## is supposed to be sent.
-        unless ($request->{quiet}) {
-            unless ($list->send_probe_to_user('welcome', $email)) {
-                $log->syslog('notice', 'Unable to send "welcome" probe to %s',
-                    $email);
-            }
+            $self->add_stash($request, 'intern');
         }
+        return undef;
+    }
 
-        $log->syslog(
-            'info',
-            'ADD %s %s from %s accepted (%.2f seconds, %d subscribers)',
-            $which,
-            $email,
-            $sender,
-            Time::HiRes::time() - $self->{start_time},
-            $list->get_total()
+    my $spool_req = Sympa::Spool::Request->new(
+        context => $list,
+        email   => $email,
+        action  => 'add'
+    );
+    while (1) {
+        my ($request, $handle) = $spool_req->next;
+        last unless $handle;
+        next unless $request;
+
+        $spool_req->remove($handle);
+    }
+
+    $self->add_stash($request, 'notice', 'now_subscriber',
+        {'email' => $email});
+
+    my $user = Sympa::User->new($email);
+    $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
+    $user->password(Sympa::Tools::Password::tmp_passwd($email))
+        unless $user->password;
+    $user->save;
+
+    ## Now send the welcome file to the user if it exists and notification
+    ## is supposed to be sent.
+    unless ($request->{quiet}) {
+        unless ($list->send_probe_to_user('welcome', $email)) {
+            $log->syslog('notice', 'Unable to send "welcome" probe to %s',
+                $email);
+        }
+    }
+
+    $log->syslog(
+        'info',
+        'ADD %s %s from %s accepted (%.2f seconds, %d subscribers)',
+        $which,
+        $email,
+        $sender,
+        Time::HiRes::time() - $self->{start_time},
+        $list->get_total()
+    );
+    if ($request->{notify}) {
+        $list->send_notify_to_owner(
+            'notice',
+            {   'who'     => $email,
+                'gecos'   => $comment,
+                'command' => 'add',
+                'by'      => $sender
+            }
         );
-        if ($request->{notify}) {
-            $list->send_notify_to_owner(
-                'notice',
-                {   'who'     => $email,
-                    'gecos'   => $comment,
-                    'command' => 'add',
-                    'by'      => $sender
-                }
-            );
-        }
-        return 1;
+    }
+    return 1;
 }
 
 ############################################################
@@ -1244,154 +1233,142 @@ sub invite {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-        if ($list->is_list_member($email)) {
-            $self->add_stash($request, 'user',
-                'already_subscriber', {'email' => $email});
-            $log->syslog(
-                'err',
-                'INVITE command rejected; user "%s" already member of list "%s"',
-                $email,
-                $which
+    if ($list->is_list_member($email)) {
+        $self->add_stash($request, 'user', 'already_subscriber',
+            {'email' => $email});
+        $log->syslog(
+            'err',
+            'INVITE command rejected; user "%s" already member of list "%s"',
+            $email,
+            $which
+        );
+        return undef;
+    }
+
+    # Is the guest user allowed to subscribe in this list?
+
+    my %context;
+    $context{'user'}{'email'} = $email;
+    $context{'user'}{'gecos'} = $comment;
+    $context{'requested_by'}  = $sender;
+
+    my $result = Sympa::Scenario::request_action(
+        $list,
+        'subscribe',
+        'smtp',
+        {   'sender'  => $sender,
+            'message' => $message,
+        }
+    );
+    my $action;
+    $action = $result->{'action'} if (ref($result) eq 'HASH');
+
+    unless (defined $action) {
+        my $error = "Unable to evaluate scenario 'subscribe' for list $which";
+        Sympa::send_notify_to_listmaster(
+            $list,
+            'mail_intern_error',
+            {   error  => $error,
+                who    => $sender,
+                action => 'Command process',
+            }
+        );
+        $self->add_stash($request, 'intern');
+        return undef;
+    }
+
+    if ($action =~ /\Arequest_auth\b/i) {
+        my $keyauth = Sympa::compute_auth(
+            context => $list,
+            email   => $email,
+            action  => 'subscribe'
+        );
+        my $command = "auth $keyauth sub $which $comment";
+        $context{'subject'} = $command;
+        $context{'url'}     = "mailto:$sympa?subject=$command";
+        $context{'url'} =~ s/\s/%20/g;
+        unless (Sympa::send_file($list, 'invite', $email, \%context)) {
+            $log->syslog('notice', 'Unable to send template "invite" to %s',
+                $email);
+            my $error = sprintf 'Unable to send template "invite" to %s',
+                $email;
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
+                }
             );
+            $self->add_stash($request, 'intern');
             return undef;
         }
+        $log->syslog(
+            'info',
+            'INVITE %s %s from %s accepted, auth requested (%.2f seconds, %d subscribers)',
+            $which,
+            $email,
+            $sender,
+            Time::HiRes::time() - $self->{start_time},
+            $list->get_total()
+        );
+        $self->add_stash($request, 'notice', 'invite', {'email' => $email});
 
-            # Is the guest user allowed to subscribe in this list?
-
-            my %context;
-            $context{'user'}{'email'} = $email;
-            $context{'user'}{'gecos'} = $comment;
-            $context{'requested_by'}  = $sender;
-
-            my $result = Sympa::Scenario::request_action(
+    } elsif ($action !~ /\Areject\b/i) {
+        $context{'subject'} = "sub $which $comment";
+        $context{'url'}     = "mailto:$sympa?subject=$context{'subject'}";
+        $context{'url'} =~ s/\s/%20/g;
+        unless (Sympa::send_file($list, 'invite', $email, \%context)) {
+            $log->syslog('notice', 'Unable to send template "invite" to %s',
+                $email);
+            my $error = sprintf 'Unable to send template "invite" to %s',
+                $email;
+            Sympa::send_notify_to_listmaster(
                 $list,
-                'subscribe',
-                'smtp',
-                {   'sender'  => $sender,
-                    'message' => $message,
+                'mail_intern_error',
+                {   error  => $error,
+                    who    => $sender,
+                    action => 'Command process',
                 }
             );
-            my $action;
-            $action = $result->{'action'} if (ref($result) eq 'HASH');
+            $self->add_stash($request, 'intern');
+            return undef;
+        }
+        $log->syslog(
+            'info',
+            'INVITE %s %s from %s accepted, (%.2f seconds, %d subscribers)',
+            $which,
+            $email,
+            $sender,
+            Time::HiRes::time() - $self->{start_time},
+            $list->get_total()
+        );
+        $self->add_stash($request, 'notice', 'invite', {'email' => $email});
 
-            unless (defined $action) {
-                my $error =
-                    "Unable to evaluate scenario 'subscribe' for list $which";
-                Sympa::send_notify_to_listmaster(
-                    $list,
-                    'mail_intern_error',
-                    {   error  => $error,
-                        who    => $sender,
-                        action => 'Command process',
-                    }
-                );
-                $self->add_stash($request, 'intern');
-                return undef;
-            }
-
-            if ($action =~ /\Arequest_auth\b/i) {
-                my $keyauth = Sympa::compute_auth(
-                    context => $list,
-                    email   => $email,
-                    action  => 'subscribe'
-                );
-                my $command = "auth $keyauth sub $which $comment";
-                $context{'subject'} = $command;
-                $context{'url'}     = "mailto:$sympa?subject=$command";
-                $context{'url'} =~ s/\s/%20/g;
-                unless (Sympa::send_file($list, 'invite', $email, \%context))
-                {
-                    $log->syslog('notice',
-                        'Unable to send template "invite" to %s', $email);
-                    my $error =
-                        sprintf 'Unable to send template "invite" to %s',
-                        $email;
-                    Sympa::send_notify_to_listmaster(
-                        $list,
-                        'mail_intern_error',
-                        {   error  => $error,
-                            who    => $sender,
-                            action => 'Command process',
-                        }
-                    );
-                    $self->add_stash($request, 'intern');
-                    return undef;
-                }
-                $log->syslog(
-                    'info',
-                    'INVITE %s %s from %s accepted, auth requested (%.2f seconds, %d subscribers)',
-                    $which,
-                    $email,
-                    $sender,
-                    Time::HiRes::time() - $self->{start_time},
-                    $list->get_total()
-                );
-                $self->add_stash($request, 'notice', 'invite',
+    } elsif ($action =~ /\Areject\b/i) {
+        $log->syslog(
+            'info',
+            'INVITE %s %s from %s refused, not allowed (%.2f seconds, %d subscribers)',
+            $which,
+            $email,
+            $sender,
+            Time::HiRes::time() - $self->{start_time},
+            $list->get_total()
+        );
+        if (defined $result->{'tt2'}) {
+            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
+                $log->syslog('notice', 'Unable to send template "%s" to %s',
+                    $result->{'tt2'}, $sender);
+                $self->add_stash($request, 'auth', $result->{'reason'},
                     {'email' => $email});
-
-            } elsif ($action !~ /\Areject\b/i) {
-                $context{'subject'} = "sub $which $comment";
-                $context{'url'} = "mailto:$sympa?subject=$context{'subject'}";
-                $context{'url'} =~ s/\s/%20/g;
-                unless (Sympa::send_file($list, 'invite', $email, \%context))
-                {
-                    $log->syslog('notice',
-                        'Unable to send template "invite" to %s', $email);
-                    my $error =
-                        sprintf 'Unable to send template "invite" to %s',
-                        $email;
-                    Sympa::send_notify_to_listmaster(
-                        $list,
-                        'mail_intern_error',
-                        {   error  => $error,
-                            who    => $sender,
-                            action => 'Command process',
-                        }
-                    );
-                    $self->add_stash($request, 'intern');
-                    return undef;
-                }
-                $log->syslog(
-                    'info',
-                    'INVITE %s %s from %s accepted, (%.2f seconds, %d subscribers)',
-                    $which,
-                    $email,
-                    $sender,
-                    Time::HiRes::time() - $self->{start_time},
-                    $list->get_total()
-                );
-                $self->add_stash($request, 'notice', 'invite',
-                    {'email' => $email});
-
-            } elsif ($action =~ /\Areject\b/i) {
-                $log->syslog(
-                    'info',
-                    'INVITE %s %s from %s refused, not allowed (%.2f seconds, %d subscribers)',
-                    $which,
-                    $email,
-                    $sender,
-                    Time::HiRes::time() - $self->{start_time},
-                    $list->get_total()
-                );
-                if (defined $result->{'tt2'}) {
-                    unless (
-                        Sympa::send_file(
-                            $list, $result->{'tt2'}, $sender, {}
-                        )
-                        ) {
-                        $log->syslog('notice',
-                            'Unable to send template "%s" to %s',
-                            $result->{'tt2'}, $sender);
-                        $self->add_stash($request, 'auth',
-                            $result->{'reason'}, {'email' => $email});
-                    }
-                } else {
-                    $self->add_stash($request, 'auth',
-                        $result->{'reason'}, {'email' => $email});
-                }
             }
+        } else {
+            $self->add_stash($request, 'auth', $result->{'reason'},
+                {'email' => $email});
+        }
+    }
 
-        return 1;
+    return 1;
 }
 
 ############################################################
@@ -1416,96 +1393,89 @@ sub global_remind {
 
     my ($list, $listname, $robot);
 
-        $listname = '*';
-        $robot    = $request->{context};
+    $listname = '*';
+    $robot    = $request->{context};
 
-            my %global_subscription;
-            my %global_info;
-            my $count = 0;
-            my %context;
+    my %global_subscription;
+    my %global_info;
+    my $count = 0;
+    my %context;
 
-            $context{'subject'} = $language->gettext("Subscription summary");
-            # this remind is a global remind.
+    $context{'subject'} = $language->gettext("Subscription summary");
+    # this remind is a global remind.
 
-            my $all_lists = Sympa::List::get_lists($robot);
-            foreach my $list (@$all_lists) {
-                my $listname = $list->{'name'};
-                my $user;
-                next unless ($user = $list->get_first_list_member());
+    my $all_lists = Sympa::List::get_lists($robot);
+    foreach my $list (@$all_lists) {
+        my $listname = $list->{'name'};
+        my $user;
+        next unless ($user = $list->get_first_list_member());
 
-                do {
-                    my $email  = lc($user->{'email'});
-                    my $result = Sympa::Scenario::request_action(
-                        $list,
-                        'visibility',
-                        'smtp',
-                        {   'sender'  => $sender,
-                            'message' => $message,
-                        }
-                    );
-                    my $action;
-                    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-                    unless (defined $action) {
-                        my $error =
-                            "Unable to evaluate scenario 'visibility' for list $listname";
-                        Sympa::send_notify_to_listmaster(
-                            $list,
-                            'intern_error',
-                            {   'error'  => $error,
-                                'who'    => $sender,
-                                'cmd'    => $request->{cmd_line},
-                                'action' => 'Command process'
-                            }
-                        );
-                        next;
-                    }
-
-                    if ($action eq 'do_it') {
-                        push @{$global_subscription{$email}}, $listname;
-
-                        $user->{'lang'} ||= $list->{'admin'}{'lang'};
-
-                        $global_info{$email} = $user;
-
-                        $log->syslog('debug2',
-                            'REMIND *: %s subscriber of %s',
-                            $email, $listname);
-                        $count++;
-                    }
-                } while ($user = $list->get_next_list_member());
-            }
-            $log->syslog('debug2', 'Sending REMIND * to %d users', $count);
-
-            foreach my $email (keys %global_subscription) {
-                my $user = Sympa::User::get_global_user($email);
-                foreach my $key (keys %{$user}) {
-                    $global_info{$email}{$key} = $user->{$key}
-                        if ($user->{$key});
+        do {
+            my $email  = lc($user->{'email'});
+            my $result = Sympa::Scenario::request_action(
+                $list,
+                'visibility',
+                'smtp',
+                {   'sender'  => $sender,
+                    'message' => $message,
                 }
+            );
+            my $action;
+            $action = $result->{'action'} if (ref($result) eq 'HASH');
 
-                $context{'user'}{'email'} = $email;
-                $context{'user'}{'lang'}  = $global_info{$email}{'lang'};
-                $context{'user'}{'password'} =
-                    $global_info{$email}{'password'};
-                $context{'user'}{'gecos'} = $global_info{$email}{'gecos'};
-                @{$context{'lists'}} = @{$global_subscription{$email}};
-
-                #FIXME: needs VERP?
-                unless (
-                    Sympa::send_file(
-                        $robot, 'global_remind', $email, \%context
-                    )
-                    ) {
-                    $log->syslog('notice',
-                        'Unable to send template "global_remind" to %s',
-                        $email);
-                    $self->add_stash($request, 'intern');
-                }
+            unless (defined $action) {
+                my $error =
+                    "Unable to evaluate scenario 'visibility' for list $listname";
+                Sympa::send_notify_to_listmaster(
+                    $list,
+                    'intern_error',
+                    {   'error'  => $error,
+                        'who'    => $sender,
+                        'cmd'    => $request->{cmd_line},
+                        'action' => 'Command process'
+                    }
+                );
+                next;
             }
-            $self->add_stash($request, 'notice', 'glob_remind',
-                {'count' => $count});
-        return 1;
+
+            if ($action eq 'do_it') {
+                push @{$global_subscription{$email}}, $listname;
+
+                $user->{'lang'} ||= $list->{'admin'}{'lang'};
+
+                $global_info{$email} = $user;
+
+                $log->syslog('debug2', 'REMIND *: %s subscriber of %s',
+                    $email, $listname);
+                $count++;
+            }
+        } while ($user = $list->get_next_list_member());
+    }
+    $log->syslog('debug2', 'Sending REMIND * to %d users', $count);
+
+    foreach my $email (keys %global_subscription) {
+        my $user = Sympa::User::get_global_user($email);
+        foreach my $key (keys %{$user}) {
+            $global_info{$email}{$key} = $user->{$key}
+                if ($user->{$key});
+        }
+
+        $context{'user'}{'email'}    = $email;
+        $context{'user'}{'lang'}     = $global_info{$email}{'lang'};
+        $context{'user'}{'password'} = $global_info{$email}{'password'};
+        $context{'user'}{'gecos'}    = $global_info{$email}{'gecos'};
+        @{$context{'lists'}} = @{$global_subscription{$email}};
+
+        #FIXME: needs VERP?
+        unless (Sympa::send_file($robot, 'global_remind', $email, \%context))
+        {
+            $log->syslog('notice',
+                'Unable to send template "global_remind" to %s', $email);
+            $self->add_stash($request, 'intern');
+        }
+    }
+    $self->add_stash($request, 'notice', 'glob_remind', {'count' => $count});
+    return 1;
 }
 
 # Old name: (part of) Sympa::Commands::remind().
@@ -1520,52 +1490,50 @@ sub remind {
         $request->{error} = 'unknown_list';
         return _error($self, $request);
     }
-        my $list     = $request->{context};
-        my $listname = $list->{'name'};
-        my $robot    = $list->{'domain'};
+    my $list     = $request->{context};
+    my $listname = $list->{'name'};
+    my $robot    = $list->{'domain'};
 
-        $language->set_lang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
-            # For each subscriber send a reminder.
-            my $total = 0;
-            my $user;
+    # For each subscriber send a reminder.
+    my $total = 0;
+    my $user;
 
-            unless ($user = $list->get_first_list_member()) {
-                my $error = "Unable to get subscribers for list $listname";
-                Sympa::send_notify_to_listmaster(
-                    $list,
-                    'mail_intern_error',
-                    {   error  => $error,
-                        who    => $sender,
-                        action => 'Command process',
-                    }
-                );
-                $self->add_stash($request, 'intern');
-                return undef;
+    unless ($user = $list->get_first_list_member()) {
+        my $error = "Unable to get subscribers for list $listname";
+        Sympa::send_notify_to_listmaster(
+            $list,
+            'mail_intern_error',
+            {   error  => $error,
+                who    => $sender,
+                action => 'Command process',
             }
+        );
+        $self->add_stash($request, 'intern');
+        return undef;
+    }
 
-            do {
-                unless ($list->send_probe_to_user('remind', $user->{'email'}))
-                {
-                    $log->syslog('notice',
-                        'Unable to send "remind" probe to %s',
-                        $user->{'email'});
-                    $self->add_stash($request, 'intern');
-                }
-                $total += 1;
-            } while ($user = $list->get_next_list_member());
+    do {
+        unless ($list->send_probe_to_user('remind', $user->{'email'})) {
+            $log->syslog('notice', 'Unable to send "remind" probe to %s',
+                $user->{'email'});
+            $self->add_stash($request, 'intern');
+        }
+        $total += 1;
+    } while ($user = $list->get_next_list_member());
 
-            $self->add_stash($request, 'notice', 'remind', {total => $total});
-            $log->syslog(
-                'info',
-                'REMIND %s from %s accepted, sent to %d subscribers (%.2f seconds)',
-                $listname,
-                $sender,
-                $total,
-                Time::HiRes::time() - $self->{start_time}
-            );
+    $self->add_stash($request, 'notice', 'remind', {total => $total});
+    $log->syslog(
+        'info',
+        'REMIND %s from %s accepted, sent to %d subscribers (%.2f seconds)',
+        $listname,
+        $sender,
+        $total,
+        Time::HiRes::time() - $self->{start_time}
+    );
 
-            return 1;
+    return 1;
 }
 
 ############################################################
@@ -1599,82 +1567,82 @@ sub del {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-        # Check if we know this email on the list and remove it. Otherwise
-        # just reject the message.
-        my $user_entry = $list->get_list_member($who);
+    # Check if we know this email on the list and remove it. Otherwise
+    # just reject the message.
+    my $user_entry = $list->get_list_member($who);
 
-        unless ((defined $user_entry)) {
-            $self->add_stash($request, 'user',
-                'your_email_not_found', {'email' => $who});
-            $log->syslog('info', 'DEL %s %s from %s refused, not on list',
-                $which, $who, $sender);
-            return 'not_allowed';
-        }
+    unless ((defined $user_entry)) {
+        $self->add_stash($request, 'user', 'your_email_not_found',
+            {'email' => $who});
+        $log->syslog('info', 'DEL %s %s from %s refused, not on list',
+            $which, $who, $sender);
+        return 'not_allowed';
+    }
 
-        # Really delete and rewrite to disk.
-        my $u;
-        unless (
-            $u = $list->delete_list_member(
-                'users'     => [$who],
-                'exclude'   => ' 1',
-                'operation' => 'del'
-            )
-            ) {
-            my $error =
-                "Unable to delete user $who from list $which for command 'del'";
-            Sympa::send_notify_to_listmaster(
-                $list,
-                'mail_intern_error',
-                {   error  => $error,
-                    who    => $sender,
-                    action => 'Command process',
-                }
-            );
-            $self->add_stash($request, 'intern');
-        } else {
-            my $spool_req = Sympa::Spool::Request->new(
-                context => $list,
-                email   => $who,
-                action  => 'del'
-            );
-            while (1) {
-                my ($request, $handle) = $spool_req->next;
-                last unless $handle;
-                next unless $request;
-
-                $spool_req->remove($handle);
+    # Really delete and rewrite to disk.
+    my $u;
+    unless (
+        $u = $list->delete_list_member(
+            'users'     => [$who],
+            'exclude'   => ' 1',
+            'operation' => 'del'
+        )
+        ) {
+        my $error =
+            "Unable to delete user $who from list $which for command 'del'";
+        Sympa::send_notify_to_listmaster(
+            $list,
+            'mail_intern_error',
+            {   error  => $error,
+                who    => $sender,
+                action => 'Command process',
             }
-        }
-
-        ## Send a notice to the removed user, unless the owner indicated
-        ## quiet del.
-        unless ($request->{quiet}) {
-            unless (Sympa::send_file($list, 'removed', $who, {})) {
-                $log->syslog('notice',
-                    'Unable to send template "removed" to %s', $who);
-            }
-        }
-        $self->add_stash($request, 'notice', 'removed', {'email' => $who});
-        $log->syslog(
-            'info',
-            'DEL %s %s from %s accepted (%.2f seconds, %d subscribers)',
-            $which,
-            $who,
-            $sender,
-            Time::HiRes::time() - $self->{start_time},
-            $list->get_total()
         );
-        if ($request->{notify}) {
-            $list->send_notify_to_owner(
-                'notice',
-                {   'who'     => $who,
-                    'gecos'   => "",
-                    'command' => 'del',
-                    'by'      => $sender
-                }
-            );
+        $self->add_stash($request, 'intern');
+    } else {
+        my $spool_req = Sympa::Spool::Request->new(
+            context => $list,
+            email   => $who,
+            action  => 'del'
+        );
+        while (1) {
+            my ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            next unless $request;
+
+            $spool_req->remove($handle);
         }
-        return 1;
+    }
+
+    ## Send a notice to the removed user, unless the owner indicated
+    ## quiet del.
+    unless ($request->{quiet}) {
+        unless (Sympa::send_file($list, 'removed', $who, {})) {
+            $log->syslog('notice', 'Unable to send template "removed" to %s',
+                $who);
+        }
+    }
+    $self->add_stash($request, 'notice', 'removed', {'email' => $who});
+    $log->syslog(
+        'info',
+        'DEL %s %s from %s accepted (%.2f seconds, %d subscribers)',
+        $which,
+        $who,
+        $sender,
+        Time::HiRes::time() - $self->{start_time},
+        $list->get_total()
+    );
+    if ($request->{notify}) {
+        $list->send_notify_to_owner(
+            'notice',
+            {   'who'     => $who,
+                'gecos'   => "",
+                'command' => 'del',
+                'by'      => $sender
+            }
+        );
+    }
+    return 1;
 }
 
 ############################################################
@@ -1701,50 +1669,50 @@ sub global_set {
     my $mode    = $request->{mode};
 
     # Recursive call to subroutine.
-        foreach my $list (
-            Sympa::List::get_which($sender, $request->{context}, 'member')) {
-            # Skip hidden lists.
-            my $result = Sympa::Scenario::request_action(
+    foreach my $list (
+        Sympa::List::get_which($sender, $request->{context}, 'member')) {
+        # Skip hidden lists.
+        my $result = Sympa::Scenario::request_action(
+            $list,
+            'visibility',
+            'smtp',
+            {   'sender'  => $sender,
+                'message' => $message,
+            }
+        );
+
+        my $action;
+        $action = $result->{'action'} if (ref($result) eq 'HASH');
+
+        unless (defined $action) {
+            my $error =
+                sprintf
+                'Unable to evaluate scenario "visibility" for list %s',
+                $list->get_id;
+            Sympa::send_notify_to_listmaster(
                 $list,
-                'visibility',
-                'smtp',
-                {   'sender'  => $sender,
-                    'message' => $message,
+                'intern_error',
+                {   'error'  => $error,
+                    'who'    => $sender,
+                    'cmd'    => $request->{cmd_line},
+                    'action' => 'Command process'
                 }
             );
-
-            my $action;
-            $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-            unless (defined $action) {
-                my $error =
-                    sprintf
-                    'Unable to evaluate scenario "visibility" for list %s',
-                    $list->get_id;
-                Sympa::send_notify_to_listmaster(
-                    $list,
-                    'intern_error',
-                    {   'error'  => $error,
-                        'who'    => $sender,
-                        'cmd'    => $request->{cmd_line},
-                        'action' => 'Command process'
-                    }
-                );
-                next;
-            }
-
-            if ($action =~ /reject/) {
-                next;
-            }
-
-            my $req = $request->dup;
-            $req->{action}    = 'set';
-            $req->{context}   = $list;
-            $req->{localpart} = $list->{'name'};
-
-            $self->{distaff}->store($req);
+            next;
         }
-        return 1;
+
+        if ($action =~ /reject/) {
+            next;
+        }
+
+        my $req = $request->dup;
+        $req->{action}    = 'set';
+        $req->{context}   = $list;
+        $req->{localpart} = $list->{'name'};
+
+        $self->{distaff}->store($req);
+    }
+    return 1;
 }
 
 # Old name: (part of) Sympa::Commands::set().
@@ -1752,8 +1720,8 @@ sub set {
     my $self    = shift;
     my $request = shift;
 
-    my $sender  = $request->{sender};
-    my $mode    = $request->{mode};
+    my $sender = $request->{sender};
+    my $mode   = $request->{mode};
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
@@ -1787,7 +1755,8 @@ sub set {
         ) {
         # Verify that the mode is allowed
         if (!$list->is_available_reception_mode($mode)) {
-            $self->add_stash( $request, 'user',
+            $self->add_stash(
+                $request, 'user',
                 'available_reception_mode',
                 {   'modes' => join(' ', $list->available_reception_mode()),
                     'reception_modes' => [$list->available_reception_mode()]
@@ -1827,7 +1796,8 @@ sub set {
         $self->add_stash($request, 'notice', 'config_updated');
 
         $log->syslog('info', 'SET %s %s from %s accepted (%.2f seconds)',
-            $which, $mode, $sender, Time::HiRes::time() - $self->{start_time});
+            $which, $mode, $sender,
+            Time::HiRes::time() - $self->{start_time});
     }
 
     if ($mode =~ /^(conceal|noconceal)/) {
@@ -1856,7 +1826,8 @@ sub set {
 
         $self->add_stash($request, 'notice', 'config_updated');
         $log->syslog('info', 'SET %s %s from %s accepted (%.2f seconds)',
-            $which, $mode, $sender, Time::HiRes::time() - $self->{start_time});
+            $which, $mode, $sender,
+            Time::HiRes::time() - $self->{start_time});
     }
     return 1;
 }
@@ -1902,10 +1873,14 @@ sub distribute {
         $self->add_stash($request, 'user', 'unfound_message', {key => $key});
         return 'msg_not_found';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
-        $log->syslog('info',
+        $log->syslog(
+            'info',
             'DISTRIBUTE %s %s from %s accepted (%.2f seconds)',
-            $list->{'name'}, $key, $sender,
-            Time::HiRes::time() - $self->{start_time});
+            $list->{'name'},
+            $key,
+            $sender,
+            Time::HiRes::time() - $self->{start_time}
+        );
         return 1;
     } else {
         return undef;
@@ -1946,8 +1921,8 @@ sub confirm {
     unless ($spindle and $spindle->spin) {    # No message.
         $log->syslog('info', 'CONFIRM %s from %s refused, auth failed',
             $key, $sender);
-        $self->add_stash($request, 'user',
-            'unfound_file_message', {'key' => $key});
+        $self->add_stash($request, 'user', 'unfound_file_message',
+            {'key' => $key});
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info', 'CONFIRM %s from %s accepted (%.2f seconds)',
@@ -2000,9 +1975,11 @@ sub reject {
         $self->add_stash($request, 'user', 'unfound_message', {key => $key});
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
-        $log->syslog('info', 'REJECT %s %s from %s accepted (%.2f seconds)',
-            $list->{'name'}, $key, $sender,
-            Time::HiRes::time() - $self->{start_time});
+        $log->syslog(
+            'info',          'REJECT %s %s from %s accepted (%.2f seconds)',
+            $list->{'name'}, $key,
+            $sender,         Time::HiRes::time() - $self->{start_time}
+        );
         return 1;
     } else {
         return undef;

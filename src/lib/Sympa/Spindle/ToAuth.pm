@@ -33,40 +33,40 @@ use Sympa::Log;
 
 use base qw(Sympa::Spindle);
 
-my $log      = Sympa::Log->instance;
+my $log = Sympa::Log->instance;
 
 sub _twist {
     my $self    = shift;
     my $request = shift;
 
     my $sender = $request->{sender};
-    my $to     = $request->{sender_to_confirm} || $sender;
+    my $to = $request->{sender_to_confirm} || $sender;
 
-        $log->syslog('debug2', 'Auth requested from %s', $sender);
-        unless (Sympa::request_auth(%$request, sender => $to)) {
-            my $error = sprintf
-                'Unable to request authentication for command "%s"',
-                $request->{action};
-            Sympa::send_notify_to_listmaster(
-                $request->{context},
-                'mail_intern_error',
-                {   error  => $error,
-                    who    => $sender,
-                    action => 'Command process',
-                }
-            );
-            $self->add_stash($request, 'intern');
-            return undef;
-        }
-        $log->syslog(
-            'info',
-            '%s for %s from %s, auth requested (%.2f seconds)',
-            uc $request->{action},
+    $log->syslog('debug2', 'Auth requested from %s', $sender);
+    unless (Sympa::request_auth(%$request, sender => $to)) {
+        my $error = sprintf
+            'Unable to request authentication for command "%s"',
+            $request->{action};
+        Sympa::send_notify_to_listmaster(
             $request->{context},
-            $sender,
-            Time::HiRes::time() - $self->{start_time}
+            'mail_intern_error',
+            {   error  => $error,
+                who    => $sender,
+                action => 'Command process',
+            }
         );
-        return 1;
+        $self->add_stash($request, 'intern');
+        return undef;
+    }
+    $log->syslog(
+        'info',
+        '%s for %s from %s, auth requested (%.2f seconds)',
+        uc $request->{action},
+        $request->{context},
+        $sender,
+        Time::HiRes::time() - $self->{start_time}
+    );
+    return 1;
 }
 
 1;
