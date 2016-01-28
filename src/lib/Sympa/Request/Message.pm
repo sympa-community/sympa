@@ -90,7 +90,6 @@ sub _load {
             $message->{context}, $message->{listtype});
         # FIXME: at this point $message->{'dkim_pass'} does not verify that
         # Subject: is part of the signature. It SHOULD !
-        my $auth_level = $message->{'dkim_pass'} ? 'dkim' : undef;
         return [
             Sympa::Request->new_from_tuples(
                 action => $action,
@@ -99,26 +98,21 @@ sub _load {
                 context  => $list,
                 email    => $message->{sender},
                 message  => $message,
-                sender   => $message->{sender},
-                sign_mod => $auth_level,
+                #FIXME: smime_signed?
+                (map { $_ => $message->{$_} } qw(sender dkim_pass)),
             )
         ];
     }
 
-    my $auth_level =
-          $message->{'smime_signed'} ? 'smime'
-        : $message->{'dkim_pass'}    ? 'dkim'
-        :                              undef;
-
-    ## Process the Subject of the message
-    ## Search and process a command in the Subject field
+    # Process the Subject of the message.
+    # Search and process a command in the Subject field.
     my $subject_field = $message->{'decoded_subject'};
     $subject_field = '' unless defined $subject_field;
     $subject_field =~ s/\n//mg;    ## multiline subjects
     my $re_regexp = Sympa::Regexps::re();
     $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
     if ($subject_field =~ /\S/) {
-        my $request = _parse($robot, $subject_field, $auth_level, $message);
+        my $request = _parse($robot, $subject_field, $message);
         return [$request] unless $request->{action} eq 'unknown';
     }
 
@@ -138,7 +132,7 @@ sub _load {
         next unless length $line;    # Skip empty lines.
         next if $line =~ /^\s*\#/;
 
-        my $request = _parse($robot, $line, $auth_level, $message);
+        my $request = _parse($robot, $line, $message);
         if ($request) {
             if (@requests or $request->{action} ne 'unknown') {
                 push @requests, $request;
@@ -157,7 +151,6 @@ sub _parse {
     $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
     my $robot    = shift;
     my $line     = shift;
-    my $sign_mod = shift;
     my $message  = shift;
 
     $log->syslog('notice', "Parsing: %s", $line);
@@ -215,8 +208,8 @@ sub _parse {
                 error    => 'syntax_error',
                 message  => $message,
                 quiet    => $quiet,
-                sender   => $message->{sender},
-                sign_mod => $sign_mod,
+                (map { $_ => $message->{$_} }
+                    qw(sender dkim_pass smime_signed)),
             );
         }
 
@@ -228,8 +221,7 @@ sub _parse {
             context  => $context,
             message  => $message,
             quiet    => $quiet,
-            sender   => $message->{sender},
-            sign_mod => $sign_mod,
+            (map { $_ => $message->{$_} } qw(sender dkim_pass smime_signed)),
         );
 
         if ($args{localpart} and ref $request->{context} ne 'Sympa::List') {
@@ -248,8 +240,7 @@ sub _parse {
         cmd_line => $line,
         context  => $robot,
         message  => $message,
-        sender   => $message->{sender},
-        sign_mod => $sign_mod,
+        (map { $_ => $message->{$_} } qw(sender dkim_pass smime_signed)),
     );
 }
 

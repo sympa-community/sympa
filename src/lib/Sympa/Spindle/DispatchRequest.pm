@@ -692,21 +692,18 @@ sub verify {
     my $list     = $request->{context};
     my $listname = $list->{'name'};
     my $robot    = $list->{'domain'};
-    my $sign_mod = $request->{sign_mod};
     my $sender   = $request->{sender};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    if ($sign_mod) {
+    if ($request->{smime_signed} or $request->{dkim_pass}) {
         $log->syslog(
             'info',  'VERIFY successful from %s (%.2f seconds)',
             $sender, Time::HiRes::time() - $self->{start_time}
         );
-        if ($sign_mod eq 'smime') {
-            ##$auth_method='smime';
+        if ($request->{smime_signed}) {
             $self->add_stash($request, 'notice', 'smime');
-        } elsif ($sign_mod eq 'dkim') {
-            ##$auth_method='dkim';
+        } elsif ($request->{dkim_pass}) {
             $self->add_stash($request, 'notice', 'dkim');
         }
     } else {

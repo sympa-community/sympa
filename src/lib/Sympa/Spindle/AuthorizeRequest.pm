@@ -72,12 +72,17 @@ sub _twist {
 
     # Authorize requests.
 
+    return 'wrong_auth'
+        unless defined _get_auth_method($self, $request);
+
     my $action;
     my $result;
 
-    my $auth_method = _get_auth_method($self, $request);
-    return 'wrong_auth'
-        unless defined $auth_method;
+    my $auth_method =
+          $request->{smime_signed} ? 'smime'
+        : $request->{md5_check}    ? 'md5'
+        : $request->{dkim_pass}    ? 'dkim'
+        :                            'smtp';
 
     $result = Sympa::Scenario::request_action($that, $scenario, $auth_method,
         $context);
@@ -168,8 +173,7 @@ sub _get_auth_method {
     my $self    = shift;
     my $request = shift;
 
-    my $list     = $request->{context};
-    my $sign_mod = $request->{sign_mod};
+    my $that     = $request->{context};
     my $sender   = $request->{sender};
 
     my $cmd   = $request->{action};
@@ -177,32 +181,27 @@ sub _get_auth_method {
 
     my $auth = $request->{auth};
 
-    my $that;
-    my $auth_method;
-
-    if ($sign_mod and $sign_mod eq 'smime') {
-        $auth_method = 'smime';
+    if ($request->{smime_signed}) {
+        ;
     } elsif ($auth) {
         $log->syslog('debug', 'Auth received from %s: %s', $sender, $auth);
 
         my $compute;
-        if (ref $list eq 'Sympa::List') {
+        if (ref $that eq 'Sympa::List') {
             $compute = Sympa::compute_auth(
-                context => $list,
+                context => $that,
                 email   => $email,
                 action  => $cmd
             );
-            $that = $list->{'domain'};    # Robot
         } else {
             $compute = Sympa::compute_auth(
                 context => '*',
                 email   => $email,
                 action  => $cmd
             );
-            $that = '*';                  # Site
         }
         if ($auth eq $compute) {
-            $auth_method = 'md5';
+            $request->{md5_check} = 1;
         } else {
             $log->syslog('debug2', 'Auth should be %s', $compute);
             if (grep { $cmd eq $_ } qw(add del invite signoff subscribe)) {
@@ -210,7 +209,7 @@ sub _get_auth_method {
                     'wrong_email_confirm', {command => $cmd});
             } else {
                 Sympa::send_notify_to_listmaster(
-                    $list,
+                    $that,
                     'mail_intern_error',
                     {   error  => 'The authentication process failed',
                         who    => $sender,
@@ -223,12 +222,9 @@ sub _get_auth_method {
                 $request->{cmd_line}, $sender);
             return undef;
         }
-    } else {
-        $auth_method = 'smtp';
-        $auth_method = 'dkim' if $sign_mod and $sign_mod eq 'dkim';
     }
 
-    return $auth_method;
+    return 1;
 }
 
 1;
