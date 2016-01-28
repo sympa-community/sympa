@@ -106,3 +106,27 @@ sub _twist {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle::ToRequest -
+Process to store requests into request spool to wait for moderation
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 SEE ALSO
+
+L<Sympa::Request>,
+L<Sympa::Spindle>, L<Sympa::Spindle::AuthorizeRequest>,
+L<Sympa::Spool::Request>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle::ToRequest> appeared on Sympa 6.2.13.
+
+=cut

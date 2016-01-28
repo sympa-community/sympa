@@ -2189,3 +2189,46 @@ sub which {
 #sub get_auth_method;
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle::DispatchRequest -
+Workflow to dispatch requests
+
+=head1 DESCRIPTION
+
+L<Sympa::Spindle::DispatchRequest> dispatches requests, in most cases
+included in command messages.
+
+Requests are dispatched to routines to perform abstruct processing.
+
+=head2 Public methods
+
+See also L<Sympa::Spindle/"Public methods">.
+
+=over
+
+=item new ( key =E<gt> value, ... )
+
+In most cases, L<Sympa::Spindle::ProcessMessage>
+splices requests to this class.  This method is not used in ordinal case.
+
+=item spin ( )
+
+Not implemented.
+
+=back
+
+=head1 SEE ALSO
+
+L<Sympa::Spindle>, L<Sympa::Spindle::ProcessMessage>,
+L<Sympa::Spindle::ProcessRequest>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle::DispatchRequest> appeared on Sympa 6.2.13.
+
+=cut

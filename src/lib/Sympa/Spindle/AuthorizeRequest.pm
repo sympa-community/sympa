@@ -228,3 +228,47 @@ sub _get_auth_method {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle::AuthorizeRequest -
+Workflow to authorize requests in command messages
+
+=head1 DESCRIPTION
+
+L<Sympa::Spindle::AuthorizeRequest> authorizes requests and stores them
+into request spool or dispatch them.
+
+TBD
+
+=head2 Public methods
+
+See also L<Sympa::Spindle/"Public methods">.
+
+=over
+
+=item new ( key =E<gt> value, ... )
+
+In most cases, L<Sympa::Spindle::ProcessMessage>
+splices meessages to this class.  This method is not used in ordinal case.
+
+=item spin ( )
+
+Not implemented.
+
+=back
+
+=head1 SEE ALSO
+
+L<Sympa::Request>, L<Sympa::Scenario>, L<Sympa::Spindle::DispatchRequest>,
+L<Sympa::Spindle::ProcessMessage>, L<Sympa::Spindle::ProcessRequest>,
+L<Sympa::Spindle::ToAuth>, L<Sympa::Spindle::ToRequest>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle::AuthorizeRequest> appeared on Sympa 6.2.13.
+
+=cut

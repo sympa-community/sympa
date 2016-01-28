@@ -252,3 +252,27 @@ our %comms = (
 
 1;
 __END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::CommandDef - Definition of mail commands
+
+=head1 SYNOPSIS
+
+TBD
+
+=head1 DESCRIPTION
+
+TBD
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Message>.
+
+=head1 HISTORY
+
+L<Sympa::CommandDef> appeared on Sympa 6.2.13.
+
+=cut
