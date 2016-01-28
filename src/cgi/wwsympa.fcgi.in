@@ -20588,7 +20588,7 @@ sub do_load_cert {
         $ct = 'application/pkix-cert';
     }
     $param->{'bypass'} = 'extreme';
-    my $filename = sprintf '%s.cer', $list->name;
+    my $filename = sprintf '%s.cer', $list->get_id();
     printf "Content-Disposition: attachment; filename=\"%s\"\n", $filename;
     printf "Content-Type: %s\n\n%s", $ct, $cert;
     return 1;
