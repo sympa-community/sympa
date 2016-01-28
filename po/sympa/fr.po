@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2015-09-01 15:30+0000\n"
+"PO-Revision-Date: 2016-01-15 16:03+0000\n"
 "Last-Translator: dverdin <david.verdin@renater.fr>\n"
 "Language-Team: Français\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.7\n"
 "Projct-Id-Version: fr\n"
-"X-POOTLE-MTIME: 1441121436.000000\n"
+"X-POOTLE-MTIME: 1452873781.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -332,7 +332,6 @@ msgid "This setting can be overridden by each list"
 msgstr "Ce paramètre peut être redéfini au niveau de chaque liste"
 
 #: src/lib/Sympa/ConfDef.pm:284
-#, fuzzy
 msgid ""
 "Directory for storing static contents (CSS, members pictures, documentation) "
 "directly delivered by HTTP server"
@@ -988,7 +987,6 @@ msgid "Directory containing trusted CA certificates"
 msgstr "Repertoire contenant les AC de confiance"
 
 #: src/lib/Sympa/ConfDef.pm:1168
-#, fuzzy
 msgid "File containing trusted CA certificates"
 msgstr "Fichier contenant les AC de confiance"
 
@@ -1088,13 +1086,12 @@ msgid "Path to the antivirus scanner engine"
 msgstr "Chemin vers le moteur antivirus."
 
 #: src/lib/Sympa/ConfDef.pm:1291
-#, fuzzy
 msgid ""
 "supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
 msgstr ""
-"Antivirus supportés: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
-"Micro/VirusWall"
+"Antivirus supportés: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
+"Fsecure/fsav, Sophos, AVP et Trend Micro/VirusWall"
 
 #: src/lib/Sympa/ConfDef.pm:1296
 msgid "Antivirus plugin command argument"
@@ -1286,10 +1283,9 @@ msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr "Fragment javascript qui active et configure un éditeur HTML WYSIWYG."
 
 #: src/lib/Sympa/ConfDef.pm:1500
-#, fuzzy
 msgid "Is FastCGI module for HTTP server installed (0 | 1)"
 msgstr ""
-"Est-ce-que le module fast_cgi d'Apache (ou Roxen) est installé ( 0 | 1 )"
+"Est-ce que le module FastCGI pour le seveur web est installé ? ( 0 | 1 )"
 
 #: src/lib/Sympa/ConfDef.pm:1503
 msgid "This module provide much faster web interface"
@@ -2321,9 +2317,8 @@ msgstr "Algorithmes de chiffrement utilisés"
 
 #: src/lib/Sympa/ListDef.pm:1063 src/lib/Sympa/ListDef.pm:1173
 #: src/lib/Sympa/ListDef.pm:1463 src/lib/Sympa/ListDef.pm:1579
-#, fuzzy
 msgid "Certificate verification"
-msgstr "Date d'expiration"
+msgstr "Vérification de certificat"
 
 #: src/lib/Sympa/ListDef.pm:1803
 msgid "A set of parameters in order to define outgoing DKIM signature"
@@ -2806,23 +2801,20 @@ msgid "domain matching regular expression"
 msgstr "Expression régulière de concordance de domaine"
 
 #: src/lib/Sympa/ListOpt.pm:216
-#, fuzzy
 msgid "\"Name\""
-msgstr "Nom"
+msgstr "\"Nom\""
 
 #: src/lib/Sympa/ListOpt.pm:217
 msgid "\"Name\" (e-mail)"
 msgstr "\"Nom\" (courriel)"
 
 #: src/lib/Sympa/ListOpt.pm:218
-#, fuzzy
 msgid "\"Name\" (via List)"
-msgstr "nom \"via Mailing List\""
+msgstr "\"Nom\" (via List)"
 
 #: src/lib/Sympa/ListOpt.pm:219
-#, fuzzy
 msgid "\"Name\" (e-mail via List)"
-msgstr "email \"via Mailing List\""
+msgstr "\"Nom\" (courriel via List)"
 
 #: src/lib/Sympa/ListOpt.pm:220
 msgid "\"List\" (on behalf of e-mail)"
@@ -3080,23 +3072,20 @@ msgstr "via %s Mailing List"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3091 src/lib/Sympa/Message.pm:3107
-#, fuzzy
 msgid "Owner Address of %s Mailing List"
-msgstr "via l'adresse du propriétaire de la liste %s "
+msgstr "Adresse de propriétaire de la liste %s "
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3095 src/lib/Sympa/Message.pm:3111
-#, fuzzy
 msgid "Editor Address of %s Mailing List"
-msgstr "via l'adresse du modérateur de la liste %s"
+msgstr "Adresse de modérateur de la liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3098 src/lib/Sympa/Message.pm:3114
-#, fuzzy
 msgid "%s Mailing List"
-msgstr "via %s Mailing List"
+msgstr "Liste %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -5188,9 +5177,8 @@ msgid "Last update"
 msgstr "Mise à jour"
 
 #: default/web_tt2/d_read.tt2:78 default/web_tt2/modindex.tt2:28
-#, fuzzy
 msgid "Actions"
-msgstr "Action"
+msgstr "Actions"
 
 #: default/web_tt2/d_read.tt2:205 default/web_tt2/d_read.tt2:95
 #: default/web_tt2/editsubscriber.tt2:91 default/web_tt2/latest_d_read.tt2:43
@@ -5938,17 +5926,15 @@ msgstr "%1 est déjà abonné à la liste %2"
 
 #. (u_err.sub,u_err.list)
 #: default/web_tt2/error.tt2:82
-#, fuzzy
 msgid "Unable to add user %1 in list %2: "
-msgstr "Impossible d'ajouter l'utilisateur %s à la liste %s : %s"
+msgstr "Impossible d'ajouter l'utilisateur %1 à la liste %2 : "
 
 #. (u_err.max_list_members)
 #: default/web_tt2/error.tt2:82
-#, fuzzy
 msgid "Attempt to exceed the max number of members (%1) for this list"
 msgstr ""
 "Tentative d'ajout d'un abonné au-delà du nombre d'abonnés autorisés pour "
-"cette liste."
+"cette liste (%1)."
 
 #: default/web_tt2/error.tt2:83
 msgid "Please provide your password"
@@ -5982,11 +5968,10 @@ msgid "You need to provide list name"
 msgstr "Vous devez fournir le nom de la liste"
 
 #: default/web_tt2/error.tt2:89
-#, fuzzy
 msgid "Failed to get the held message; it has probably been confirmed"
 msgstr ""
-"Le message n'a pas pu être modéré ; il a probablement déjà été traité par un "
-"autre modérateur"
+"Impossible d'accéder au message en attente&nbsp;; il a probablement déjà été "
+"traité par un autre modérateur"
 
 #: default/web_tt2/error.tt2:90
 msgid ""
@@ -6376,9 +6361,8 @@ msgid "Purge selected lists"
 msgstr "Effacer les listes sélectionnées"
 
 #: default/web_tt2/get_closed_lists.tt2:35
-#, fuzzy
 msgid " No closed lists"
-msgstr "liste fermée"
+msgstr "Aucune liste fermée"
 
 #: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:38
 #: default/web_tt2/serveradmin.tt2:11
@@ -6438,9 +6422,8 @@ msgid "Requested date"
 msgstr "Date de la demande"
 
 #: default/web_tt2/get_pending_lists.tt2:32
-#, fuzzy
 msgid " No pending lists"
-msgstr "Listes en attente"
+msgstr "Aucune liste en attente"
 
 #: default/web_tt2/header.tt2:15 default/web_tt2/header.tt2:26
 msgid "Sympa Menu"
@@ -7168,9 +7151,8 @@ msgid "Distribute"
 msgstr "Distribuer"
 
 #: default/web_tt2/modform.tt2:5
-#, fuzzy
 msgid "Required topic"
-msgstr "requis"
+msgstr "Thème requis"
 
 #: default/web_tt2/modform.tt2:14
 msgid ""
@@ -7255,9 +7237,8 @@ msgid "No subject"
 msgstr "Sans objet"
 
 #: default/web_tt2/modindex.tt2:85
-#, fuzzy
 msgid "No messages to moderate"
-msgstr "Liste des messages à modérer"
+msgstr "Aucun message à modérer"
 
 #: default/web_tt2/modindex.tt2:89
 msgid "Listing of shared documents to moderate"
@@ -7280,9 +7261,8 @@ msgid "Path"
 msgstr "Chemin"
 
 #: default/web_tt2/modindex.tt2:136
-#, fuzzy
 msgid "No documents to moderate"
-msgstr "Liste des documents à modérer"
+msgstr "Aucun document à modérer"
 
 # nlsref 16,7
 #: default/web_tt2/modindex.tt2:139
@@ -7954,9 +7934,8 @@ msgid "Reset errors for selected users"
 msgstr "Annuler les erreurs pour les abonnés sélectionnés"
 
 #: default/web_tt2/reviewbouncing.tt2:134
-#, fuzzy
 msgid "No bouncing members"
-msgstr "Gestion des abonnés en erreur"
+msgstr "Aucun abonné en erreur"
 
 #: default/web_tt2/review_family.tt2:4
 msgid "Table which display family lists"
@@ -7988,9 +7967,8 @@ msgstr "Synchroniser les membres avec les sources de données"
 
 # nlsref 16,88
 #: default/web_tt2/review.tt2:27
-#, fuzzy
 msgid "Subscription reminder message"
-msgstr "Tâche périodique de rappel des abonnements"
+msgstr "Message de rappel d'abonnement"
 
 #: default/web_tt2/review.tt2:29
 msgid "Remind all"
@@ -8535,9 +8513,8 @@ msgid "notify owner"
 msgstr "Notifier le propriétaire"
 
 #: default/web_tt2/set_pending_list_request.tt2:33
-#, fuzzy
 msgid "Information file"
-msgstr "Fichier d'information :"
+msgstr "Fichier de description"
 
 #: default/web_tt2/set_pending_list_request.tt2:42
 msgid "No info file provided."
@@ -8621,17 +8598,14 @@ msgid "User email"
 msgstr "Adresse de l'utilisateur"
 
 #: default/web_tt2/sigindex.tt2:3 default/web_tt2/sigindex.tt2:9
-#, fuzzy
 msgid "Listing unsubscription to moderate"
-msgstr "Liste des abonnements à valider"
+msgstr "Liste des désabonnements à valider"
 
 #: default/web_tt2/sigindex.tt2:45 default/web_tt2/sigindex.tt2:56
-#, fuzzy
 msgid "No unsubscription requests"
-msgstr "Aucune demande d'abonnement"
+msgstr "Aucune demande de désabonnement"
 
 #: default/web_tt2/sigindex.tt2:51
-#, fuzzy
 msgid "Delete selected addresses"
 msgstr "Désabonner les adresses sélectionnées"
 
@@ -9310,18 +9284,16 @@ msgid "Sympa menu"
 msgstr "Menu Sympa"
 
 #: default/web_tt2/sympa_menu.tt2:24
-#, fuzzy
 msgid "Search form"
-msgstr "Rechercher un utilisateur"
+msgstr "Formulaire de recherche"
 
 #: default/web_tt2/sympa_menu.tt2:36
 msgid "Support"
 msgstr "Assistance"
 
 #: default/web_tt2/sympa_menu.tt2:40
-#, fuzzy
 msgid "Documentation"
-msgstr "Document"
+msgstr "Documentation"
 
 #: default/web_tt2/sympa_menu.tt2:42
 msgid "Frequently asked questions"
@@ -9336,15 +9308,13 @@ msgid "Give us feedback about this new Sympa version"
 msgstr "Donnez nous notre avis sur cette version de Sympa."
 
 #: default/web_tt2/sympa_menu.tt2:44
-#, fuzzy
 msgid "Feedback"
-msgstr "Type de rapport : %1"
+msgstr "Vos retours"
 
 # nlsref 8,7
 #: default/web_tt2/sympa_menu.tt2:76
-#, fuzzy
 msgid "Lists Families"
-msgstr "Familles"
+msgstr "Familles de listes"
 
 #: default/web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -10228,88 +10198,75 @@ msgstr "L'utilisateur '%1' est déjà abonné à la liste '%2'."
 
 #. (u_err.email,u_err.listname,u_err.max_list_members)
 #: default/mail_tt2/command_report.tt2:144
-#, fuzzy
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
 msgstr ""
-"Tentative d'ajout d'un abonné au-delà du nombre d'abonnés autorisés pour "
-"cette liste."
+"Impossible d'abonner l'utilisateur '%1' à la liste '%2'. Tentative d'ajout "
+"d'un abonné au-delà du nombre d'abonnés autorisés (%3) pour cette liste."
 
 # nlsref 6,16
 #: default/mail_tt2/command_report.tt2:148
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"La procédure d'authentification a échoué.\n"
-"Vous avez très probablement validé votre abonnement en utilisant une\n"
-"adresse différente. Veuillez reformuler une demande d'abonnement en "
-"utilisant votre adresse canonique."
+"La procédure d'authentification a échoué. Vous avez très probablement validé "
+"votre abonnement en utilisant une adresse différente. Veuillez reformuler "
+"une demande d'abonnement en utilisant votre adresse canonique."
 
 # nlsref 6,16
 #: default/mail_tt2/command_report.tt2:150
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
 "unsubscription using a different email address. Please try using your "
 "canonical address."
 msgstr ""
-"La procédure d'authentification a échoué.\n"
-"Vous avez très probablement validé votre abonnement en utilisant une\n"
-"adresse différente. Veuillez reformuler une demande d'abonnement en "
-"utilisant votre adresse canonique."
+"La procédure d'authentification a échoué. Vous avez très probablement "
+"confirmé votre désabonnement en utilisant une adresse différente. Veuillez "
+"reformuler une demande d'abonnement en utilisant votre adresse canonique."
 
 # nlsref 6,16
 #: default/mail_tt2/command_report.tt2:152
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"La procédure d'authentification a échoué.\n"
-"Vous avez très probablement validé votre abonnement en utilisant une\n"
-"adresse différente. Veuillez reformuler une demande d'abonnement en "
-"utilisant votre adresse canonique."
+"La procédure d'authentification a échoué. Vous avez très probablement validé "
+"votre ajout d'abonné en utilisant une adresse différente. Veuillez "
+"reformuler une demande d'abonnement en utilisant votre adresse canonique."
 
 # nlsref 6,16
 #: default/mail_tt2/command_report.tt2:154
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"La procédure d'authentification a échoué.\n"
-"Vous avez très probablement validé votre abonnement en utilisant une\n"
-"adresse différente. Veuillez reformuler une demande d'abonnement en "
-"utilisant votre adresse canonique."
+"La procédure d'authentification a échoué. Vous avez très probablement validé "
+"votre invitation en utilisant une adresse différente. Veuillez reformuler "
+"une demande d'abonnement en utilisant votre adresse canonique."
 
 # nlsref 6,16
 #: default/mail_tt2/command_report.tt2:156
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
 "using a different email address. Please try using your canonical address."
 msgstr ""
-"La procédure d'authentification a échoué.\n"
-"Vous avez très probablement validé votre abonnement en utilisant une\n"
-"adresse différente. Veuillez reformuler une demande d'abonnement en "
-"utilisant votre adresse canonique."
+"La procédure d'authentification a échoué. Vous avez très probablement validé "
+"votre suppression d'abonné en utilisant une adresse différente. Veuillez "
+"reformuler une demande d'abonnement en utilisant votre adresse canonique."
 
 # nlsref 6,16
 #. (u_err.command)
 #: default/mail_tt2/command_report.tt2:158
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
 "command using a different email address. Please try using your canonical "
 "address."
 msgstr ""
-"La procédure d'authentification a échoué.\n"
-"Vous avez très probablement validé votre abonnement en utilisant une\n"
-"adresse différente. Veuillez reformuler une demande d'abonnement en "
-"utilisant votre adresse canonique."
+"La procédure d'authentification a échoué. Vous avez très probablement validé "
+"votre commande \"%1\" en utilisant une adresse différente. Veuillez "
+"reformuler une demande d'abonnement en utilisant votre adresse canonique."
 
 # nlsref 6,41
 #. (u_err.listname,u_err.key)
@@ -10479,7 +10436,6 @@ msgstr "Pour plus de détails, contactez %1@%2"
 # nlsref 5,3
 #. (list.name,conf.sympa,list.host,cmd)
 #: default/mail_tt2/delivery_status_notification.tt2:78
-#, fuzzy
 msgid ""
 "The following message was sent to list '%1' and it contains a line '%4' that "
 "can be interpreted as a command.\n"
@@ -10495,21 +10451,20 @@ msgid ""
 "\n"
 "Thank you for your attention."
 msgstr ""
-"Le message suivant a été adressé à la liste '%1' alors qu'il semble\n"
-"contenir des commandes telles que subscribe, signoff, help, index, get, ...\n"
+"Le message suivant a été adressé à la liste '%1' et il contient une ligne '%"
+"4' qui peut être inteprétée comme une commande.\n"
 "\n"
-"Si effectivement votre message contenait une commande, sachez que les "
-"commandes\n"
-"ne doivent en aucun cas être adressées aux listes. Elles sont à envoyer à\n"
-"l'adresse %2 exclusivement.\n"
+"Si effectivement votre message contenait une commande (telle que subscribe, "
+"unsubscribe, signoff, help, index, etc.) sachez que les commandes ne doivent "
+"en aucun cas être adressées aux listes. Elles sont à envoyer à l'adresse %2 "
+"exclusivement.\n"
 "\n"
 "Si votre message était effectivement destiné à la liste, celui-ci a "
 "malheureusement été interprété par le logiciel comme une commande.\n"
 " Veuillez contacter le gestionnaire du service : %1-request@%3 afin qu'il "
-"s'occupe de\n"
-"votre message.\n"
+"s'occupe de votre message.\n"
 "\n"
-"Merci de votre attention.\n"
+"Merci de votre attention."
 
 #: default/mail_tt2/delivery_status_notification.tt2:81
 msgid "Your message cannot be personalized.  Please check template syntax."
@@ -10554,13 +10509,12 @@ msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/delivery_status_notification.tt2:96
-#, fuzzy
 msgid ""
 "Your message for list '%1' (attached below) was rejected.\n"
 "You are not allowed to send this message for the following reason:"
 msgstr ""
-"Votre message pour la liste '%1' (ci-joint) a été rejeté. Vous n'êtes pas "
-"autorisé à diffuser ce message pour la raison suivante :"
+"Votre message pour la liste '%1' (ci-joint) a été rejeté.\n"
+"Vous n'êtes pas autorisé à diffuser ce message pour la raison suivante :"
 
 #: default/mail_tt2/delivery_status_notification.tt2:103
 #: default/mail_tt2/list_unknown.tt2:11
@@ -11200,24 +11154,20 @@ msgstr "La CSS statique n'a pas pu être mise à jour."
 
 #. (target,message)
 #: default/mail_tt2/listmaster_notification.tt2:88
-#, fuzzy
 msgid "Cannot make directory %1: %2."
-msgstr "Renommer le répertoire %1"
+msgstr "Impossible de créer le répertoire %1 : %2."
 
 #. (file,message)
 #: default/mail_tt2/listmaster_notification.tt2:90
-#, fuzzy
 msgid "Cannot open file %1: %2."
-msgstr "Impossible d'ouvrir le fichier '%1'"
+msgstr "Impossible d'ouvrir le fichier '%1' : %2."
 
 #. (message)
 #: default/mail_tt2/listmaster_notification.tt2:92
-#, fuzzy
 msgid "Parsing template failed: %1."
-msgstr "problème de mise à jour des administrateurs de la liste %1"
+msgstr "L'interprétation du template a échoué : %1."
 
 #: default/mail_tt2/listmaster_notification.tt2:94
-#, fuzzy
 msgid "Unknown error."
 msgstr "Erreur inconnue."
 
@@ -11368,7 +11318,6 @@ msgstr ""
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:199
 #: default/mail_tt2/listmaster_notification.tt2:397
-#, fuzzy
 msgid "Failed to include members for list '%1'"
 msgstr "Impossible de construire les membres de la liste '%1'"
 
@@ -12189,9 +12138,8 @@ msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/listowner_notification.tt2:138
-#, fuzzy
 msgid "List %1: Failed to load named filter"
-msgstr "Liste %1 : problème de mise à jour de l'adresse email"
+msgstr "Liste %1 : Impossible de charger le filtre nommé (named filter)"
 
 #. (list.name,list.host,filter)
 #: default/mail_tt2/listowner_notification.tt2:140
@@ -12645,12 +12593,10 @@ msgstr ""
 
 # nlsref 6,69
 #: default/mail_tt2/user_notification.tt2:21
-#, fuzzy
 msgid "To update your topics subscription, go to the following page:"
 msgstr ""
 "Pour mettre à jour les thèmes auxquels vous êtes abonné, consultez la page "
-"ci-dessous : \n"
-"%1"
+"suivante :"
 
 #. (list.name)
 #: default/mail_tt2/user_notification.tt2:26
