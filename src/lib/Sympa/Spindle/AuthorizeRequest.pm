@@ -138,20 +138,8 @@ sub _twist {
         $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);
         return ['Sympa::Spindle::ToRequest'];
     } elsif ($action =~ /\Areject\b/i) {
-        if (defined $result->{'tt2'}) {
-            unless (
-                Sympa::send_file(
-                    $that, $result->{'tt2'},
-                    $sender, {'auto_submitted' => 'auto-replied'}
-                )
-                ) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                $self->add_stash($request, 'auth', $result->{'reason'});
-            }
-        } else {
-            $self->add_stash($request, 'auth', $result->{'reason'});
-        }
+        $self->add_stash($request, 'auth', $result->{'reason'},
+            {template => $result->{'tt2'}});
         $log->syslog(
             'info',
             '%s for %s from %s refused (not allowed)',

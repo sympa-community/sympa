@@ -200,6 +200,17 @@ sub _send_report {
         my ($request, $type, $error, $params) = @$report;
         my %data = %{$params || {}};
 
+        # Special case for "reject(tt2=TEMPLATE)".
+        if (    $type eq 'auth'
+            and $data{template}
+            and Sympa::send_file(
+                $request->{context}, $data{template},
+                $sender, {auto_submitted => 'auto-replied'}
+            )
+            ) {
+            next;
+        }
+
         $data{type} = $type;
         $data{cmd}  = $request->{cmd_line};
         $data{email} ||= $request->{email};

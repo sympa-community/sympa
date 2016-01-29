@@ -1355,17 +1355,8 @@ sub invite {
             Time::HiRes::time() - $self->{start_time},
             $list->get_total()
         );
-        if (defined $result->{'tt2'}) {
-            unless (Sympa::send_file($list, $result->{'tt2'}, $sender, {})) {
-                $log->syslog('notice', 'Unable to send template "%s" to %s',
-                    $result->{'tt2'}, $sender);
-                $self->add_stash($request, 'auth', $result->{'reason'},
-                    {'email' => $email});
-            }
-        } else {
-            $self->add_stash($request, 'auth', $result->{'reason'},
-                {'email' => $email});
-        }
+        $self->add_stash($request, 'auth', $result->{'reason'},
+            {'email' => $email, template => $result->{'tt2'}});
     }
 
     return 1;
