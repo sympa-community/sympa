@@ -21,7 +21,7 @@ X-Loop: [% conf.sympa %]
 [% ELSIF notice.entry == 'dkim' -%]
 [%|loc%]Your message contain a DKIM signature. It was succesfully verified[%END%]
 
-[% ELSIF notice.entry == 'req_forward' -%]
+[% ELSIF notice.entry == 'sent_to_owner' -%]
 [%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's
 owners for approval. You will receive a notification when you have
 been subscribed (or unsubscribed) to the list.[%END-%]

@@ -55,8 +55,7 @@ sub _twist {
         $Sympa::CommandDef::comms{$request->{action}}->{action_regexp}
         or die 'bug in logic. Ask developer';
 
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
+    my $sender = $request->{sender};
 
     # Check if required list argument is known.
     if ($request->{localpart} and ref $request->{context} ne 'Sympa::List') {
@@ -65,10 +64,8 @@ sub _twist {
     }
     my $that = $request->{context};
 
-    my $context = {
-        sender  => $sender,
-        message => $message,
-    };
+    my $context = $self->{scenario_context}
+        or die 'bug in logic. Ask developer';
 
     # Authorize requests.
 

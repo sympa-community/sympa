@@ -41,11 +41,10 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    my $list    = $request->{context};
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
+    my $list   = $request->{context};
+    my $sender = $request->{sender};
 
-    $self->add_stash($request, 'notice', 'req_forward')
+    $self->add_stash($request, 'notice', 'sent_to_owner')
         unless $request->{quiet};
 
     my $tpl =
@@ -87,9 +86,11 @@ sub _twist {
 
     my $spool_req   = Sympa::Spool::Request->new;
     my $add_request = Sympa::Request->new_from_tuples(
-        %$request,
         action => $owner_action,
-        date   => $message->{date},    # Keep date of message.
+        # Keep date of message.
+        (   map { ($_ => $request->{$_}) }
+                qw(date context custom_attribute email gecos sender)
+        ),
     );
     if ($spool_req->store($add_request)) {
         $log->syslog(

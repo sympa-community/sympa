@@ -98,7 +98,11 @@ sub _twist {
     # Keep track of known message IDs...if any.
     $self->{_msgid}{'sympa@' . $robot}{$messageid} = time;
 
-    my $spindle = Sympa::Spindle::ProcessMessage->new(message => $message);
+    my $spindle = Sympa::Spindle::ProcessMessage->new(
+        message => $message,
+        scenario_context =>
+            {sender => $message->{sender}, message => $message}
+    );
     unless ($spindle and $spindle->spin) {
         # No command found.
         $log->syslog('info', "No command found in message");
@@ -170,7 +174,22 @@ sub _twist {
         }
 
         # Send the reply message.
-        _send_report($robot, $sender, $spindle->{stash});
+        my $reports = $spindle->{stash};
+        if (grep { $_ and $_->[1] eq 'user' and $_->[2] eq 'not_understood' }
+            @{$spindle->{stash} || []}) {
+            $log->db_log(
+                'robot' => $robot,
+                #'list'         => 'sympa',
+                'action'       => 'DoCommand',
+                'parameters'   => $message->get_id,
+                'target_email' => '',
+                'msg_id'       => $message->{message_id},
+                'status'       => 'error',
+                'error_type'   => 'not_understood',
+                'user_email'   => $sender,
+            );
+        }
+        _send_report($robot, $sender, $reports);
         $log->db_log(
             'robot' => $robot,
             #'list'         => 'sympa',

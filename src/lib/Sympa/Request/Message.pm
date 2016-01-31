@@ -97,9 +97,8 @@ sub _load {
                     sprintf('%s %s', $message->{listtype}, $list->{'name'}),
                 context => $list,
                 email   => $message->{sender},
-                message => $message,
                 #FIXME: smime_signed?
-                (map { $_ => $message->{$_} } qw(sender dkim_pass)),
+                (map { ($_ => $message->{$_}) } qw(date sender dkim_pass)),
             )
         ];
     }
@@ -206,10 +205,9 @@ sub _parse {
                 cmd_line => $line,
                 context  => $robot,
                 error    => 'syntax_error',
-                message  => $message,
                 quiet    => $quiet,
-                (   map { $_ => $message->{$_} }
-                        qw(sender dkim_pass smime_signed)
+                (   map { ($_ => $message->{$_}) }
+                        qw(date sender dkim_pass smime_signed)
                 ),
             );
         }
@@ -220,9 +218,10 @@ sub _parse {
             auth     => $auth,
             cmd_line => $line,
             context  => $context,
-            message  => $message,
             quiet    => $quiet,
-            (map { $_ => $message->{$_} } qw(sender dkim_pass smime_signed)),
+            (   map { ($_ => $message->{$_}) }
+                    qw(date sender dkim_pass smime_signed)
+            ),
         );
 
         if ($args{localpart} and ref $request->{context} ne 'Sympa::List') {
@@ -240,8 +239,9 @@ sub _parse {
         action   => 'unknown',
         cmd_line => $line,
         context  => $robot,
-        message  => $message,
-        (map { $_ => $message->{$_} } qw(sender dkim_pass smime_signed)),
+        (   map { ($_ => $message->{$_}) }
+                qw(date sender dkim_pass smime_signed)
+        ),
     );
 }
 

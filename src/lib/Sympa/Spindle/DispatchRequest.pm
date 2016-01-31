@@ -74,7 +74,6 @@ sub _error {
     my $self    = shift;
     my $request = shift;
 
-    my $message = $request->{message};
     my $robot =
         (ref $request->{context} eq 'Sympa::List')
         ? $request->{context}->{'domain'}
@@ -114,25 +113,8 @@ sub unknown {
     my $self    = shift;
     my $request = shift;
 
-    my $message = $request->{message};
-    my $robot =
-        (ref $request->{context} eq 'Sympa::List')
-        ? $request->{context}->{'domain'}
-        : ($request->{context} || '*');
-
     $log->syslog('notice', 'Unknown command found: %s', $request->{cmd_line});
     $self->add_stash($request, 'user', 'not_understood');
-    $log->db_log(
-        'robot' => $robot,
-        #'list'         => 'sympa',
-        'action'       => 'DoCommand',
-        'parameters'   => $message->get_id,
-        'target_email' => '',
-        'msg_id'       => $message->{message_id},
-        'status'       => 'error',
-        'error_type'   => 'not_understood',
-        'user_email'   => $request->{sender},
-    );
     return undef;
 }
 
@@ -217,25 +199,24 @@ sub lists {
     my $self    = shift;
     my $request = shift;
 
-    my $robot   = $request->{context};
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
+    my $robot  = $request->{context};
+    my $sender = $request->{sender};
 
     my $data  = {};
     my $lists = {};
 
-    my $all_lists = Sympa::List::get_lists($robot);
+    my $auth_method =
+          $request->{smime_signed} ? 'smime'
+        : $request->{md5_check}    ? 'md5'
+        : $request->{dkim_pass}    ? 'dkim'
+        :                            'smtp';
 
-    foreach my $list (@$all_lists) {
-        my $result = Sympa::Scenario::request_action(
-            $list, 'visibility', 'smtp',    # 'smtp' isn't it a bug ?
-            {   'sender'  => $sender,
-                'message' => $message,
-            }
-        );
-
+    foreach my $list (@{Sympa::List::get_lists($robot) || []}) {
+        my $result =
+            Sympa::Scenario::request_action($list, 'visibility', $auth_method,
+            $self->{scenario_context});
         my $action;
-        $action = $result->{'action'} if (ref($result) eq 'HASH');
+        $action = $result->{'action'} if ref $result eq 'HASH';
 
         unless (defined $action) {
             my $error =
@@ -300,7 +281,6 @@ sub stats {
     my $list     = $request->{context};
     my $listname = $list->{'name'};
     my $robot    = $list->{'domain'};
-    my $message  = $request->{message};
     my $sender   = $request->{sender};
 
     my %stats = (
@@ -351,11 +331,10 @@ sub get {
         $request->{error} = 'unknown_list';
         return _error($self, $request);
     }
-    my $list    = $request->{context};
-    my $which   = $list->{'name'};
-    my $robot   = $list->{'domain'};
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
+    my $list   = $request->{context};
+    my $which  = $list->{'name'};
+    my $robot  = $list->{'domain'};
+    my $sender = $request->{sender};
 
     my $arc = $request->{arc};
 
@@ -451,11 +430,10 @@ sub last {
         $request->{error} = 'unknown_list';
         return _error($self, $request);
     }
-    my $list    = $request->{context};
-    my $which   = $list->{'name'};
-    my $robot   = $list->{'domain'};
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
+    my $list   = $request->{context};
+    my $which  = $list->{'name'};
+    my $robot  = $list->{'domain'};
+    my $sender = $request->{sender};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
@@ -545,11 +523,10 @@ sub index {
         $request->{error} = 'unknown_list';
         return _error($self, $request);
     }
-    my $list    = $request->{context};
-    my $which   = $list->{'name'};
-    my $robot   = $list->{'domain'};
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
+    my $list   = $request->{context};
+    my $which  = $list->{'name'};
+    my $robot  = $list->{'domain'};
+    my $sender = $request->{sender};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
@@ -618,7 +595,6 @@ sub review {
     my $list     = $request->{context};
     my $listname = $list->{'name'};
     my $robot    = $list->{'domain'};
-    my $message  = $request->{message};
     my $sender   = $request->{sender};
 
     my $user;
@@ -737,9 +713,7 @@ sub subscribe {
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};
-    my $message = $request->{message};
     my $sender  = $request->{sender};
-
     my $email   = $request->{email};
     my $comment = $request->{gecos};
 
@@ -859,7 +833,6 @@ sub info {
     my $list     = $request->{context};
     my $listname = $list->{'name'};
     my $robot    = $list->{'domain'};
-    my $message  = $request->{message};
     my $sender   = $request->{sender};
 
     $language->set_lang($list->{'admin'}{'lang'});
@@ -929,25 +902,23 @@ sub global_signoff {
     my $self    = shift;
     my $request = shift;
 
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
+    my $sender = $request->{sender};
+    my $email  = $request->{email};
 
-    my $email = $request->{email};
+    my $auth_method =
+          $request->{smime_signed} ? 'smime'
+        : $request->{md5_check}    ? 'md5'
+        : $request->{dkim_pass}    ? 'dkim'
+        :                            'smtp';
 
     foreach my $list (
         Sympa::List::get_which($email, $request->{context}, 'member')) {
         # Skip hidden lists.
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
-            'smtp',
-            {   'sender'  => $sender,
-                'message' => $message,
-            }
-        );
-
+        my $result =
+            Sympa::Scenario::request_action($list, 'visibility', $auth_method,
+            $self->{scenario_context});
         my $action;
-        $action = $result->{'action'} if (ref($result) eq 'HASH');
+        $action = $result->{'action'} if ref $result eq 'HASH';
 
         unless (defined $action) {
             my $error =
@@ -984,10 +955,8 @@ sub signoff {
     my $self    = shift;
     my $request = shift;
 
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
-
-    my $email = $request->{email};
+    my $sender = $request->{sender};
+    my $email  = $request->{email};
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
@@ -1098,9 +1067,7 @@ sub add {
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};
-    my $message = $request->{message};
     my $sender  = $request->{sender};
-
     my $email   = $request->{email};
     my $comment = $request->{gecos};
 
@@ -1223,9 +1190,7 @@ sub invite {
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};
-    my $message = $request->{message};
     my $sender  = $request->{sender};
-
     my $email   = $request->{email};
     my $comment = $request->{gecos};
 
@@ -1252,16 +1217,17 @@ sub invite {
     $context{'user'}{'gecos'} = $comment;
     $context{'requested_by'}  = $sender;
 
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'subscribe',
-        'smtp',
-        {   'sender'  => $sender,
-            'message' => $message,
-        }
-    );
+    my $auth_method =
+          $request->{smime_signed} ? 'smime'
+        : $request->{md5_check}    ? 'md5'
+        : $request->{dkim_pass}    ? 'dkim'
+        :                            'smtp';
+
+    my $result =
+        Sympa::Scenario::request_action($list, 'subscribe', $auth_method,
+        $self->{scenario_context});
     my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
+    $action = $result->{'action'} if ref $result eq 'HASH';
 
     unless (defined $action) {
         my $error = "Unable to evaluate scenario 'subscribe' for list $which";
@@ -1379,8 +1345,7 @@ sub global_remind {
     my $self    = shift;
     my $request = shift;
 
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
+    my $sender = $request->{sender};
 
     my ($list, $listname, $robot);
 
@@ -1393,26 +1358,26 @@ sub global_remind {
     my %context;
 
     $context{'subject'} = $language->gettext("Subscription summary");
-    # this remind is a global remind.
 
-    my $all_lists = Sympa::List::get_lists($robot);
-    foreach my $list (@$all_lists) {
+    my $auth_method =
+          $request->{smime_signed} ? 'smime'
+        : $request->{md5_check}    ? 'md5'
+        : $request->{dkim_pass}    ? 'dkim'
+        :                            'smtp';
+
+    # This remind is a global remind.
+    foreach my $list (@{Sympa::List::get_lists($robot) || []}) {
         my $listname = $list->{'name'};
         my $user;
         next unless ($user = $list->get_first_list_member());
 
         do {
-            my $email  = lc($user->{'email'});
-            my $result = Sympa::Scenario::request_action(
-                $list,
-                'visibility',
-                'smtp',
-                {   'sender'  => $sender,
-                    'message' => $message,
-                }
-            );
+            my $email = lc($user->{'email'});
+            my $result =
+                Sympa::Scenario::request_action($list, 'visibility',
+                $auth_method, $self->{scenario_context});
             my $action;
-            $action = $result->{'action'} if (ref($result) eq 'HASH');
+            $action = $result->{'action'} if ref $result eq 'HASH';
 
             unless (defined $action) {
                 my $error =
@@ -1474,8 +1439,7 @@ sub remind {
     my $self    = shift;
     my $request = shift;
 
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
+    my $sender = $request->{sender};
 
     unless (ref $request->{context} eq 'Sympa::List') {
         $request->{error} = 'unknown_list';
@@ -1548,13 +1512,11 @@ sub del {
         $request->{error} = 'unknown_list';
         return _error($self, $request);
     }
-    my $list    = $request->{context};
-    my $which   = $list->{'name'};
-    my $robot   = $list->{'domain'};
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
-
-    my $who = $request->{email};
+    my $list   = $request->{context};
+    my $which  = $list->{'name'};
+    my $robot  = $list->{'domain'};
+    my $sender = $request->{sender};
+    my $who    = $request->{email};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
@@ -1655,25 +1617,24 @@ sub global_set {
     my $self    = shift;
     my $request = shift;
 
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
-    my $mode    = $request->{mode};
+    my $sender = $request->{sender};
+    my $mode   = $request->{mode};
+
+    my $auth_method =
+          $request->{smime_signed} ? 'smime'
+        : $request->{md5_check}    ? 'md5'
+        : $request->{dkim_pass}    ? 'dkim'
+        :                            'smtp';
 
     # Recursive call to subroutine.
     foreach my $list (
         Sympa::List::get_which($sender, $request->{context}, 'member')) {
         # Skip hidden lists.
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
-            'smtp',
-            {   'sender'  => $sender,
-                'message' => $message,
-            }
-        );
-
+        my $result =
+            Sympa::Scenario::request_action($list, 'visibility', $auth_method,
+            $self->{scenario_context});
         my $action;
-        $action = $result->{'action'} if (ref($result) eq 'HASH');
+        $action = $result->{'action'} if ref $result eq 'HASH';
 
         unless (defined $action) {
             my $error =
@@ -2077,30 +2038,27 @@ sub which {
     my $self    = shift;
     my $request = shift;
 
-    my $robot   = $request->{context};
-    my $message = $request->{message};
-    my $sender  = $request->{sender};
+    my $robot  = $request->{context};
+    my $sender = $request->{sender};
 
     my ($listname, @which);
 
-    ## Subscriptions
+    my $auth_method =
+          $request->{smime_signed} ? 'smime'
+        : $request->{md5_check}    ? 'md5'
+        : $request->{dkim_pass}    ? 'dkim'
+        :                            'smtp';
+
+    # Subscriptions.
     my $data;
     foreach my $list (Sympa::List::get_which($sender, $robot, 'member')) {
-        ## wwsympa :  my $list = Sympa::List->new($l);
-        ##            next unless (defined $list);
         $listname = $list->{'name'};
 
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'visibility',
-            'smtp',
-            {   'sender'  => $sender,
-                'message' => $message,
-            }
-        );
-
+        my $result =
+            Sympa::Scenario::request_action($list, 'visibility', $auth_method,
+            $self->{scenario_context});
         my $action;
-        $action = $result->{'action'} if (ref($result) eq 'HASH');
+        $action = $result->{'action'} if ref $result eq 'HASH';
 
         unless (defined $action) {
             my $error =

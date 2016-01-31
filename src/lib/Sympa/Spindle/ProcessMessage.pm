@@ -67,7 +67,8 @@ Sympa::Spindle::ProcessMessage - Workflow of command processing
 
   use Sympa::Spindle::ProcessMessage;
 
-  my $spindle = Sympa::Spindle::ProcessMessage->new(message => $message);
+  my $spindle = Sympa::Spindle::ProcessMessage->new(
+      message => $message, scenario_context => {sender => $sender});
   $spindle->spin;
 
 =head1 DESCRIPTION
@@ -92,13 +93,17 @@ See also L<Sympa::Spindle/"Public methods">.
 
 =over
 
-=item new ( I<options...> )
+=item new ( scenario_context =E<gt> {context...}, [ message =E<gt> $message ] )
 
 =item spin ( )
 
 new() may take following options:
 
 =over
+
+=item scenario_context =E<gt> {context...}
+
+Authorization context given to scenario.
 
 =item message =E<gt> $message
 
