@@ -187,28 +187,6 @@ Warning: this message may already have been sent by one of the list's editor.[%E
 
 [% END -%]
 [% END -%]
-[%############################-%]
-[%########## GLOBALS #########-%]
-[%############################-%]
-[% IF nb_global %]
-[%- FOREACH glob = globals -%]
-
-           ==========================================
-
-[% IF glob.entry == 'error_content_type' -%]
-[%|loc%]Ignoring message body not in text/plain, please use text/plain only (or put your command in the subject).[%END-%]
-
-[% ELSIF glob.entry == 'no_cmd_found' -%]
-[%|loc%]No command found in message.[%END%]
-
-[% ELSIF glob.entry == 'intern_error' -%]
-[%|loc%]Ignoring message because of an internal server error.[%END%]
-
-[% ELSIF glob.entry == 'no_existing_list' -%]
-[%|loc(glob.listname)%]List '%1' does not exist.[%END%]
-[% END -%]
-[% END -%]
-[% END -%]
 
 -----------==========================================-----------
 

@@ -620,6 +620,8 @@ my %diag_messages = (
     '5.4.6' => 'Routing loop detected',
     # message contains commands
     '5.6.0' => 'Other or undefined media error',
+    # no command found in message
+    '5.6.1' => 'Media not supported',
     # failed to personalize (merge_feature)
     '5.6.5' => 'Conversion Failed',
     # virus found

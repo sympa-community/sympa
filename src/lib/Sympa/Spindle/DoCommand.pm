@@ -105,18 +105,8 @@ sub _twist {
     );
     unless ($spindle and $spindle->spin) {
         # No command found.
-        $log->syslog('info', "No command found in message");
-        Sympa::send_file(
-            $robot,
-            'command_report',
-            $sender,
-            {   to        => $sender,
-                nb_global => 1,
-                globals   => [{entry => 'no_cmd_found'}],
-            },
-            # Ensure 1 second elapsed since last message.
-            date => time + 1
-        );
+        $log->syslog('info', 'No command found in message %s', $message);
+        Sympa::send_dsn($robot, $message, {}, '5.6.1');
         $log->db_log(
             'robot' => $robot,
             #'list'         => 'sympa',
