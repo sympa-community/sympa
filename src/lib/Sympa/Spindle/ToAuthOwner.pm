@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Spindle::ToRequest;
+package Sympa::Spindle::ToAuthOwner;
 
 use strict;
 use warnings;
@@ -31,7 +31,7 @@ use Time::HiRes qw();
 use Sympa;
 use Sympa::Log;
 use Sympa::Request;
-use Sympa::Spool::Request;
+use Sympa::Spool::Auth;
 
 use base qw(Sympa::Spindle);
 
@@ -84,7 +84,7 @@ sub _twist {
         $self->add_stash($request, 'intern');
     }
 
-    my $spool_req   = Sympa::Spool::Request->new;
+    my $spool_req   = Sympa::Spool::Auth->new;
     my $add_request = Sympa::Request->new_from_tuples(
         action => $owner_action,
         # Keep date of message.
@@ -112,7 +112,7 @@ __END__
 
 =head1 NAME
 
-Sympa::Spindle::ToRequest -
+Sympa::Spindle::ToAuthOwner -
 Process to store requests into request spool to wait for moderation
 
 =head1 DESCRIPTION
@@ -123,10 +123,10 @@ TBD.
 
 L<Sympa::Request>,
 L<Sympa::Spindle>, L<Sympa::Spindle::AuthorizeRequest>,
-L<Sympa::Spool::Request>.
+L<Sympa::Spool::Auth>.
 
 =head1 HISTORY
 
-L<Sympa::Spindle::ToRequest> appeared on Sympa 6.2.13.
+L<Sympa::Spindle::ToAuthOwner> appeared on Sympa 6.2.13.
 
 =cut

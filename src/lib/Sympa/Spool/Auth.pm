@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Spool::Request;
+package Sympa::Spool::Auth;
 
 use strict;
 use warnings;
@@ -96,21 +96,21 @@ __END__
 
 =head1 NAME
 
-Sympa::Spool::Request - Spool for held requests waiting for moderation
+Sympa::Spool::Auth - Spool for held requests waiting for moderation
 
 =head1 SYNOPSIS
 
-  use Sympa::Spool::Request;
+  use Sympa::Spool::Auth;
 
-  my $spool = Sympa::Spool::Request->new;
+  my $spool = Sympa::Spool::Auth->new;
   my $request = Sympa::Request->new(...);
   $spool->store($request);
 
-  my $spool = Sympa::Spool::Request->new(
+  my $spool = Sympa::Spool::Auth->new(
       context => $list, action => 'add');
   my $size = $spool->size;
 
-  my $spool = Sympa::Spool::Request->new(
+  my $spool = Sympa::Spool::Auth->new(
       context => $list, authkey => $id, action => 'add');
   my ($request, $handle) = $spool->next;
 
@@ -118,7 +118,7 @@ Sympa::Spool::Request - Spool for held requests waiting for moderation
 
 =head1 DESCRIPTION
 
-L<Sympa::Spool::Request> implements the spool for held requests waiting
+L<Sympa::Spool::Auth> implements the spool for held requests waiting
 for moderation.
 
 =head2 Methods
@@ -194,5 +194,6 @@ L<Sympa::Request>, L<Sympa::Spool>.
 =head1 HISTORY
 
 L<Sympa::Spool::Request> appeared on Sympa 6.2.10.
+It was renamed to L<Sympa::Spool::Auth> on Sympa 6.2.13.
 
 =cut

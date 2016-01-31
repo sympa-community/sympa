@@ -45,8 +45,8 @@ use Sympa::Message;
 use Sympa::Request;
 use Sympa::Spool;
 use Sympa::Spool::Archive;
+use Sympa::Spool::Auth;
 use Sympa::Spool::Digest;
-use Sympa::Spool::Request;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -1756,7 +1756,7 @@ sub upgrade {
                 );
                 next unless $request;
 
-                my $spool_req = Sympa::Spool::Request->new;
+                my $spool_req = Sympa::Spool::Auth->new;
                 if ($spool_req->store($request)) {
                     $lock_fh->unlink;
                 } else {

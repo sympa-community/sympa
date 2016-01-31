@@ -76,10 +76,10 @@ use Sympa::Session;
 use Sympa::SharedDocument;
 use Sympa::Spindle::ResendArchive;
 use Sympa::Spool::Archive;
+use Sympa::Spool::Auth;
 use Sympa::Spool::Held;
 use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
-use Sympa::Spool::Request;
 use Sympa::Template;
 use Sympa::Ticket;
 use tools;
@@ -3099,11 +3099,11 @@ sub check_param_in {
         if ($param->{'is_priv'}) {
             $param->{'mod_message'} =
                 Sympa::Spool::Moderation->new(context => $list)->size;
-            $param->{'mod_subscription'} = Sympa::Spool::Request->new(
+            $param->{'mod_subscription'} = Sympa::Spool::Auth->new(
                 context => $list,
                 action  => 'add'
             )->size;
-            $param->{'mod_signoff'} = Sympa::Spool::Request->new(
+            $param->{'mod_signoff'} = Sympa::Spool::Auth->new(
                 context => $list,
                 action  => 'del'
             )->size;
@@ -6066,7 +6066,7 @@ sub do_subscribe {
                 }
             );
 
-            my $spool_req = Sympa::Spool::Request->new;
+            my $spool_req = Sympa::Spool::Auth->new;
             my $request   = Sympa::Request->new_from_tuples(
                 context          => $list,
                 email            => $param->{'user'}{'email'},
@@ -6655,7 +6655,7 @@ sub unsubscribe {
             }
         );
 
-        my $spool_req = Sympa::Spool::Request->new;
+        my $spool_req = Sympa::Spool::Auth->new;
         my $request   = Sympa::Request->new_from_tuples(
             context => $list,
             email   => $param->{'user'}{'email'},
@@ -8191,7 +8191,7 @@ sub do_add {
 
     # Delete subscription requests if any
     my $spool_req =
-        Sympa::Spool::Request->new(context => $list, action => 'add');
+        Sympa::Spool::Auth->new(context => $list, action => 'add');
     while (1) {
         my ($request, $handle) = $spool_req->next;
         last unless $handle;
@@ -8253,7 +8253,7 @@ sub do_add_fromsub {
     foreach my $id (split /\0/, $in{'id'}) {
         next unless $id and $id =~ /\A\w+\z/;
 
-        my $spool_req = Sympa::Spool::Request->new(
+        my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
             authkey => $id,
             action  => 'add'
@@ -8520,7 +8520,7 @@ sub do_del_fromsig {
     foreach my $id (split /\0/, $in{'id'}) {
         next unless $id and $id =~ /\A\w+\z/;
 
-        my $spool_req = Sympa::Spool::Request->new(
+        my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
             authkey => $id,
             action  => 'del'
@@ -11401,14 +11401,14 @@ sub do_home {
                 $mod_message
                 if $mod_message;
 
-            my $mod_subscription = Sympa::Spool::Request->new(
+            my $mod_subscription = Sympa::Spool::Auth->new(
                 context => $one_list,
                 action  => 'add'
             )->size;
             $param->{'admin_summary'}{$one_list->{'name'}}
                 {'mod_subscription'} = $mod_subscription
                 if $mod_subscription;
-            my $mod_signoff = Sympa::Spool::Request->new(
+            my $mod_signoff = Sympa::Spool::Auth->new(
                 context => $one_list,
                 action  => 'del'
             )->size;
@@ -22322,7 +22322,7 @@ sub do_subindex {
     wwslog('info', '');
 
     my $spool_req =
-        Sympa::Spool::Request->new(context => $list, action => 'add');
+        Sympa::Spool::Auth->new(context => $list, action => 'add');
     my @subscriptions;
     while (1) {
         my ($request, $handle) = $spool_req->next(no_lock => 1);
@@ -22366,7 +22366,7 @@ sub do_ignoresub {
     foreach my $id (split /\0/, $in{'id'}) {
         next unless $id and $id =~ /\A\w+\z/;
 
-        my $spool_req = Sympa::Spool::Request->new(
+        my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
             authkey => $id,
             action  => 'add'
@@ -22399,7 +22399,7 @@ sub do_sigindex {
     wwslog('info', '');
 
     my $spool_req =
-        Sympa::Spool::Request->new(context => $list, action => 'del');
+        Sympa::Spool::Auth->new(context => $list, action => 'del');
     my @signoffs;
     while (1) {
         my ($request, $handle) = $spool_req->next(no_lock => 1);
@@ -22441,7 +22441,7 @@ sub do_ignoresig {
     foreach my $id (split /\0/, $in{'id'}) {
         next unless $id and $id =~ /\A\w+\z/;
 
-        my $spool_req = Sympa::Spool::Request->new(
+        my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
             authkey => $id,
             action  => 'del'

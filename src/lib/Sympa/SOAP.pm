@@ -39,7 +39,7 @@ use Sympa::Request;
 use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
-use Sympa::Spool::Request;
+use Sympa::Spool::Auth;
 use Sympa::Template;
 use tools;
 use Sympa::Tools::Password;
@@ -909,7 +909,7 @@ sub add {
                 ->faultstring('Unable to add user')->faultdetail($error);
         }
 
-        my $spool_req = Sympa::Spool::Request->new(
+        my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
             email   => $email,
             action  => 'add'
@@ -1053,7 +1053,7 @@ sub del {
             ->faultstring('Unable to remove subscriber information')
             ->faultdetail('Database access failed');
     } else {
-        my $spool_req = Sympa::Spool::Request->new(
+        my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
             email   => $email,
             action  => 'del'
@@ -1494,7 +1494,7 @@ sub subscribe {
             }
         );
 
-        my $spool_req = Sympa::Spool::Request->new;
+        my $spool_req = Sympa::Spool::Auth->new;
         my $request   = Sympa::Request->new_from_tuples(
             context => $list,
             email   => $sender,

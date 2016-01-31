@@ -191,7 +191,7 @@ Returns serialized data of object.
 Context and metadata given to constructor are accessible as hash elements
 of object.
 They are given by request spool.
-See L<Sympa::Spool::Request/"Context and metadata"> for details.
+See L<Sympa::Spool::Auth/"Context and metadata"> for details.
 
 =head2 Attributes
 
@@ -211,7 +211,7 @@ Display name of user sending request.
 
 =head1 SEE ALSO
 
-L<Sympa::Spool::Request>.
+L<Sympa::Spool::Auth>.
 
 =head1 HISTORY
 

@@ -8973,16 +8973,16 @@ sub select_list_members_for_topic {
 #
 ### END - functions for message topics ###
 
-# DEPRECATED.  Use Sympa::Spool::Request::store().
+# DEPRECATED.  Use Sympa::Spool::Auth::store().
 #sub store_subscription_request;
 
-# DEPRECATED.  Use Sympa::Spool::Request::next().
+# DEPRECATED.  Use Sympa::Spool::Auth::next().
 #sub get_subscription_requests;
 
-# DEPRECATED.  Use Sympa::Spool::Request::size().
+# DEPRECATED.  Use Sympa::Spool::Auth::size().
 #sub get_subscription_request_count;
 
-# DEPRECATED.  Use Sympa::Spool::Request::remove().
+# DEPRECATED.  Use Sympa::Spool::Auth::remove().
 #sub delete_subscription_request;
 
 sub get_shared_size {

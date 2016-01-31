@@ -37,8 +37,8 @@ use Sympa::Log;
 use Sympa::Scenario;
 use Sympa::Spindle::ProcessHeld;
 use Sympa::Spindle::ProcessModeration;
+use Sympa::Spool::Auth;
 use Sympa::Spool::Moderation;
-use Sympa::Spool::Request;
 use Sympa::Tools::Password;
 use Sympa::User;
 
@@ -1114,7 +1114,7 @@ sub add {
         return undef;
     }
 
-    my $spool_req = Sympa::Spool::Request->new(
+    my $spool_req = Sympa::Spool::Auth->new(
         context => $list,
         email   => $email,
         action  => 'add'
@@ -1553,7 +1553,7 @@ sub del {
         );
         $self->add_stash($request, 'intern');
     } else {
-        my $spool_req = Sympa::Spool::Request->new(
+        my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
             email   => $who,
             action  => 'del'

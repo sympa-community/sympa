@@ -33,7 +33,7 @@ use Sympa::CommandDef;
 use Sympa::Log;
 use Sympa::Request;
 use Sympa::Scenario;
-use Sympa::Spool::Request;
+use Sympa::Spool::Auth;
 
 use base qw(Sympa::Spindle);
 
@@ -133,7 +133,7 @@ sub _twist {
         return ['Sympa::Spindle::ToAuth'];
     } elsif ($action =~ /\Aowner\b/i and ref $that eq 'Sympa::List') {
         $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);
-        return ['Sympa::Spindle::ToRequest'];
+        return ['Sympa::Spindle::ToAuthOwner'];
     } elsif ($action =~ /\Areject\b/i) {
         $self->add_stash($request, 'auth', $result->{'reason'},
             {template => $result->{'tt2'}});
@@ -250,7 +250,7 @@ Not implemented.
 
 L<Sympa::Request>, L<Sympa::Scenario>, L<Sympa::Spindle::DispatchRequest>,
 L<Sympa::Spindle::ProcessMessage>, L<Sympa::Spindle::ProcessRequest>,
-L<Sympa::Spindle::ToAuth>, L<Sympa::Spindle::ToRequest>.
+L<Sympa::Spindle::ToAuth>, L<Sympa::Spindle::ToAuthOwner>.
 
 =head1 HISTORY
 
