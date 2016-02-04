@@ -204,7 +204,7 @@ sub _parse {
                 auth     => $auth,
                 cmd_line => $line,
                 context  => $robot,
-                error    => 'syntax_error',
+                error    => 'syntax_errors',
                 quiet    => $quiet,
                 (   map { ($_ => $message->{$_}) }
                         qw(date sender dkim_pass smime_signed)
@@ -228,7 +228,7 @@ sub _parse {
             # Reject the command if this list is unknown to us.
             $request->{error} = 'unknown_list';
         } elsif ($filter and not $filter->($request)) {
-            $request->{error} = 'syntax_error';
+            $request->{error} = 'syntax_errors';
         }
 
         return $request;

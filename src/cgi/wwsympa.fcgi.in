@@ -8402,7 +8402,7 @@ sub do_del {
         my $user_entry = $list->get_list_member($email);
 
         unless (defined($user_entry)) {
-            Sympa::Report::reject_report_web('user', 'not_subscriber',
+            Sympa::Report::reject_report_web('user', 'user_not_subscriber',
                 {'email' => $email},
                 $param->{'action'}, $list);
 
@@ -11808,7 +11808,7 @@ sub do_resetbounce {
         my $escaped_email = tools::escape_chars($email);
 
         unless ($list->is_list_member($email)) {
-            Sympa::Report::reject_report_web('user', 'not_subscriber',
+            Sympa::Report::reject_report_web('user', 'user_not_subscriber',
                 {'email' => $email},
                 $param->{'action'}, $list);
             wwslog('info', '%s not subscribed', $email);

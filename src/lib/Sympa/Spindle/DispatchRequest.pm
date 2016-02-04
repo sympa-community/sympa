@@ -74,23 +74,18 @@ sub _error {
     my $self    = shift;
     my $request = shift;
 
-    my $robot =
-        (ref $request->{context} eq 'Sympa::List')
-        ? $request->{context}->{'domain'}
-        : ($request->{context} || '*');
     my $entry = $request->{error};
 
-    if ($entry eq 'syntax_error') {
-        $self->add_stash($request, 'user', 'error_syntax');
+    if ($entry eq 'syntax_errors') {
+        $self->add_stash($request, 'user', 'syntax_errors');
         $log->syslog('notice', 'Command syntax error');
     } elsif ($entry eq 'unknown_list') {
-        $self->add_stash($request, 'user', 'no_existing_list',
-            {'listname' => $request->{localpart}});
+        $self->add_stash($request, 'user', 'unknown_list');
         $log->syslog(
             'info',
             '%s from %s refused, unknown list for robot %s',
             uc $request->{action},
-            $request->{sender}, $robot
+            $request->{sender}, $request->{context}
         );
     } else {
         Sympa::send_notify_to_listmaster(
@@ -114,7 +109,7 @@ sub unknown {
     my $request = shift;
 
     $log->syslog('notice', 'Unknown command found: %s', $request->{cmd_line});
-    $self->add_stash($request, 'user', 'not_understood');
+    $self->add_stash($request, 'user', 'unknown_action');
     return undef;
 }
 
@@ -275,8 +270,14 @@ sub stats {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
@@ -328,8 +329,14 @@ sub get {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
@@ -427,8 +434,14 @@ sub last {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
@@ -520,8 +533,14 @@ sub index {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
@@ -589,8 +608,14 @@ sub review {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
@@ -659,8 +684,14 @@ sub verify {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
@@ -707,8 +738,14 @@ sub subscribe {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
@@ -827,8 +864,14 @@ sub info {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
@@ -959,8 +1002,14 @@ sub signoff {
     my $email  = $request->{email};
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list  = $request->{context};
     my $which = $list->{'name'};
@@ -972,10 +1021,13 @@ sub signoff {
     # command.
     my $user_entry = $list->get_list_member($email);
     unless (defined $user_entry) {
-        $self->add_stash($request, 'user', 'your_email_not_found',
-            {'email' => $email});
-        $log->syslog('info', 'SIG %s from %s refused, not on list',
-            $which, $email);
+        unless ($email eq $sender) {    # Request from other user?
+            $self->add_stash($request, 'user', 'user_not_subscriber');
+        } else {
+            $self->add_stash($request, 'user', 'not_subscriber');
+        }
+        $log->syslog('info', 'SIG %s from %s refused, %s not on list',
+            $which, $sender, $email);
 
         # Tell the owner somebody tried to unsubscribe.
         if ($request->{notify}) {
@@ -1061,8 +1113,14 @@ sub add {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
@@ -1184,8 +1242,14 @@ sub invite {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
@@ -1442,8 +1506,14 @@ sub remind {
     my $sender = $request->{sender};
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
@@ -1509,8 +1579,14 @@ sub del {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
@@ -1524,9 +1600,8 @@ sub del {
     # just reject the message.
     my $user_entry = $list->get_list_member($who);
 
-    unless ((defined $user_entry)) {
-        $self->add_stash($request, 'user', 'your_email_not_found',
-            {'email' => $who});
+    unless (defined $user_entry) {
+        $self->add_stash($request, 'user', 'user_not_subscriber');
         $log->syslog('info', 'DEL %s %s from %s refused, not on list',
             $which, $who, $sender);
         return 'not_allowed';
@@ -1618,7 +1693,6 @@ sub global_set {
     my $request = shift;
 
     my $sender = $request->{sender};
-    my $mode   = $request->{mode};
 
     my $auth_method =
           $request->{smime_signed} ? 'smime'
@@ -1672,65 +1746,77 @@ sub set {
     my $self    = shift;
     my $request = shift;
 
-    my $sender = $request->{sender};
-    my $mode   = $request->{mode};
+    my $sender     = $request->{sender};
+    my $email      = $request->{email};
+    my $reception  = $request->{reception};
+    my $visibility = $request->{visibility};
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list  = $request->{context};
     my $which = $list->{'name'};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    ## Check if we know this email on the list and remove it. Otherwise
-    ## just reject the message.
-    unless ($list->is_list_member($sender)) {
-        $self->add_stash($request, 'user', 'email_not_found',
-            {'email' => $sender});
-        $log->syslog('info', 'SET %s %s from %s refused, not on list',
-            $which, $mode, $sender);
+    # Check if we know this email on the list and remove it. Otherwise
+    # just reject the message.
+    unless ($list->is_list_member($email)) {
+        unless ($email eq $sender) {    # Request from owner?
+            $self->add_stash($request, 'user', 'user_not_subscriber');
+        } else {
+            $self->add_stash($request, 'user', 'not_subscriber');
+        }
+        $log->syslog('info', 'SET %s %s%s from %s refused, %s not on list',
+            $which, $reception, $visibility, $sender, $email);
         return 'not allowed';
     }
 
-    ## May set to DIGEST
-    if ($mode =~ /^(digest|digestplain|summary)/ and !$list->is_digest()) {
+    # May set to DIGEST.
+    if (    $reception
+        and grep { $reception eq $_ } qw(digest digestplain summary)
+        and not $list->is_digest) {
         $self->add_stash($request, 'user', 'no_digest');
-        $log->syslog('info', 'SET %s DIGEST from %s refused, no digest mode',
-            $which, $sender);
+        $log->syslog('info', 'SET %s %s from %s refused, no digest mode',
+            $which, $reception, $sender);
         return 'not_allowed';
     }
 
-    if ($mode =~
-        /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)/
-        ) {
-        # Verify that the mode is allowed
-        if (!$list->is_available_reception_mode($mode)) {
-            $self->add_stash(
-                $request, 'user',
-                'available_reception_mode',
-                {   'modes' => join(' ', $list->available_reception_mode()),
-                    'reception_modes' => [$list->available_reception_mode()]
-                }
-            );
-            $log->syslog('info',
-                'SET %s %s from %s refused, mode not available',
-                $which, $mode, $sender);
-            return 'not_allowed';
-        }
+    # Verify that the mode is allowed.
+    if ($reception and not $list->is_available_reception_mode($reception)) {
+        $self->add_stash(
+            $request, 'user',
+            'not_available_reception_mode',
+            {   modes => join(' ', $list->available_reception_mode),
+                reception_modes => [$list->available_reception_mode],
+                reception_mode  => $reception,
+            }
+        );
+        $log->syslog('info', 'SET %s %s from %s refused, mode not available',
+            $which, $reception, $sender);
+        return 'not_allowed';
+    }
 
-        my $update_mode = $mode;
-        $update_mode = '' if $update_mode eq 'mail';
+    if ($reception or $visibility) {
         unless (
             $list->update_list_member(
-                $sender,
-                reception   => $update_mode,
+                $email,
+                ($reception  ? (reception  => $reception)  : ()),
+                ($visibility ? (visibility => $visibility) : ()),
                 update_date => time
             )
             ) {
             my $error =
-                "Failed to change subscriber '$sender' options for list $which";
+                sprintf
+                'Failed to change subscriber "%s" options for list %s',
+                $email, $list->get_id;
             Sympa::send_notify_to_listmaster(
                 $list,
                 'mail_intern_error',
@@ -1740,47 +1826,15 @@ sub set {
                 }
             );
             $self->add_stash($request, 'intern');
-            $log->syslog('info', 'SET %s %s from %s refused, update failed',
-                $which, $mode, $sender);
+            $log->syslog('info', 'SET %s %s%s from %s refused, update failed',
+                $which, $reception, $visibility, $sender);
             return 'failed';
         }
-
-        $self->add_stash($request, 'notice', 'config_updated');
-
-        $log->syslog('info', 'SET %s %s from %s accepted (%.2f seconds)',
-            $which, $mode, $sender,
-            Time::HiRes::time() - $self->{start_time});
     }
 
-    if ($mode =~ /^(conceal|noconceal)/) {
-        unless (
-            $list->update_list_member(
-                $sender,
-                visibility  => $mode,
-                update_date => time
-            )
-            ) {
-            my $error =
-                "Failed to change subscriber '$sender' options for list $which";
-            Sympa::send_notify_to_listmaster(
-                $list,
-                'mail_intern_error',
-                {   error  => $error,
-                    who    => $sender,
-                    action => 'Command process',
-                }
-            );
-            $self->add_stash($request, 'intern');
-            $log->syslog('info', 'SET %s %s from %s refused, update failed',
-                $which, $mode, $sender);
-            return 'failed';
-        }
-
-        $self->add_stash($request, 'notice', 'config_updated');
-        $log->syslog('info', 'SET %s %s from %s accepted (%.2f seconds)',
-            $which, $mode, $sender,
-            Time::HiRes::time() - $self->{start_time});
-    }
+    $self->add_stash($request, 'notice', 'config_updated');
+    $log->syslog('info', 'SET %s from %s accepted (%.2f seconds)',
+        $which, $sender, Time::HiRes::time() - $self->{start_time});
     return 1;
 }
 
@@ -1801,8 +1855,14 @@ sub distribute {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
@@ -1822,7 +1882,8 @@ sub distribute {
         $log->syslog('err',
             'Unable to find message with key <%s> for list %s',
             $key, $list);
-        $self->add_stash($request, 'user', 'unfound_message', {key => $key});
+        $self->add_stash($request, 'user', 'already_moderated',
+            {key => $key});
         return 'msg_not_found';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog(
@@ -1873,7 +1934,7 @@ sub confirm {
     unless ($spindle and $spindle->spin) {    # No message.
         $log->syslog('info', 'CONFIRM %s from %s refused, auth failed',
             $key, $sender);
-        $self->add_stash($request, 'user', 'unfound_file_message',
+        $self->add_stash($request, 'user', 'already_confirmed',
             {'key' => $key});
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
@@ -1904,8 +1965,14 @@ sub reject {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
@@ -1924,7 +1991,8 @@ sub reject {
     unless ($spindle and $spindle->spin) {    # No message
         $log->syslog('info', 'REJECT %s %s from %s refused, auth failed',
             $list->{'name'}, $key, $sender);
-        $self->add_stash($request, 'user', 'unfound_message', {key => $key});
+        $self->add_stash($request, 'user', 'already_moderated',
+            {key => $key});
         return 'wrong_auth';
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog(
@@ -1957,8 +2025,14 @@ sub modindex {
     my $request = shift;
 
     unless (ref $request->{context} eq 'Sympa::List') {
-        $request->{error} = 'unknown_list';
-        return _error($self, $request);
+        $self->add_stash($request, 'user', 'unknown_list');
+        $log->syslog(
+            'info',
+            '%s from %s refused, unknown list for robot %s',
+            uc $request->{action},
+            $request->{sender}, $request->{context}
+        );
+        return 1;
     }
     my $list   = $request->{context};
     my $name   = $list->{'name'};

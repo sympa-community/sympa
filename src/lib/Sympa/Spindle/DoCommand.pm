@@ -165,7 +165,7 @@ sub _twist {
 
         # Send the reply message.
         my $reports = $spindle->{stash};
-        if (grep { $_ and $_->[1] eq 'user' and $_->[2] eq 'not_understood' }
+        if (grep { $_ and $_->[1] eq 'user' and $_->[2] eq 'unknown_action' }
             @{$spindle->{stash} || []}) {
             $log->db_log(
                 'robot' => $robot,
@@ -227,6 +227,8 @@ sub _send_report {
         my $that = $request->{context};
         if (ref $that eq 'Sympa::List') {
             $data{listname} = $that->{'name'};
+        } elsif ($request->{localpart}) {
+            $data{listname} = $request->{localpart};
         }
 
         push @reports, \%data;

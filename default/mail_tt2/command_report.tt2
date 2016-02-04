@@ -89,34 +89,33 @@ been subscribed (or unsubscribed) to the list.[%END-%]
 [%- FOREACH u_err = user_errors -%]
 > [% u_err.cmd -%]
 
-[% IF u_err.entry == 'not_understood' -%]
+[% IF u_err.entry == 'unknown_action' -%]
   [%|loc%]Command not understood: ignoring end of message.[%END%]
 
 [% ELSIF u_err.entry == 'no_verify_sign' -%]
   [%|loc%]Your message was not a multipart/signed message or Sympa could not verify the signature 
 (be aware that Sympa can't check signature if you use the subject header to write a command).[%END-%]
 
-[% ELSIF u_err.entry == 'error_syntax' -%]
+[% ELSIF u_err.entry == 'syntax_errors' -%]
   [%|loc%]Command syntax error.[%END%]
 
-[% ELSIF u_err.entry == 'no_existing_list' -%]
+[% ELSIF u_err.entry == 'unknown_list' -%]
   [%|loc(u_err.listname)%]List '%1' does not exist.[%END%]
 
 [% ELSIF u_err.entry == 'no_subscriber_preference' -%]
   [%|loc(u_err.listname)%]%1 mailing list does not provide subscriber preferences.[%END%]
 
-[% ELSIF u_err.entry == 'your_email_not_found' -%]
-  [%|loc(u_err.email,u_err.listname)%]Your e-mail address %1 has not been found in the list %2. Maybe
-you subscribed from a different e-mail address ?[%END-%]
+[% ELSIF u_err.entry == 'not_subscriber' -%]
+  [%|loc(u_err.email,u_err.listname)%]Your e-mail address %1 has not been found in the list %2. Maybe you subscribed from a different e-mail address?[%END-%]
 
-[% ELSIF u_err.entry == 'email_not_found' -%]
+[% ELSIF u_err.entry == 'user_not_subscriber' -%]
   [%|loc(u_err.email,u_err.listname)%]E-mail address %1 has not been found in the list %2.[%END%]
 
 [% ELSIF u_err.entry == 'no_digest' -%]
   [%|loc(u_err.listname)%]List %1 does not accept the DIGEST mode. 
 Your configuration regarding this command has not been updated.[%END-%]
 
-[% ELSIF u_err.entry == 'available_reception_mode' -%]
+[% ELSIF u_err.entry == 'not_available_reception_mode' -%]
   [%|loc(u_err.listname)%]List %1 allows only these reception modes: [%END -%]
 [%- FOREACH m = u_err.reception_modes -%]
 [%- IF loop.size >= 2 && loop.count == loop.size -%]
@@ -158,11 +157,11 @@ Your configuration regarding this command has not been updated.[%END-%]
   [%|loc(u_err.command)%]The authentication process failed. You probably confirmed your "%1" command using a different email address. Please try using your canonical address.[%END-%]
 [% END -%]
 
-[% ELSIF u_err.entry == 'unfound_message' -%]
+[% ELSIF u_err.entry == 'already_moderated' -%]
   [%|loc(u_err.listname,u_err.key)%]Unable to access the message on list %1 with  key %2.
 Warning: this message may already have been sent by one of the list's editor.[%END%]
 
-[% ELSIF u_err.entry == 'unfound_file_message' -%]
+[% ELSIF u_err.entry == 'already_confirmed' -%]
   [%|loc(u_err.key)%]Unable to access the message authenticated with key %1. The message may already been confirmed.[%END%]
 
 [% ELSE %]

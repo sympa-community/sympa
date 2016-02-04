@@ -144,10 +144,29 @@ sub _twist {
             $that, $sender
         );
         return 'not_allowed';
-    } else {
-        #NOTREACHED
-        die 'bug in logic. Ask developer';
     }
+
+    $log->syslog(
+        'info',
+        '%s for %s from %s aborted, unknown requested action "%s" in scenario "%s"',
+        uc $request->{action},
+        $that,
+        $sender,
+        $action,
+        $scenario
+    );
+    my $error = sprintf 'Unknown requested action in scenario: %s',
+        $request->{action};
+    Sympa::send_notify_to_listmaster(
+        $request->{context},
+        'mail_intern_error',
+        {   error  => $error,
+            who    => $sender,
+            action => 'Command process',
+        }
+    );
+    $self->add_stash($request, 'intern');
+    return undef;
 }
 
 # Checks the authentication and return method

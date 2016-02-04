@@ -143,16 +143,22 @@ our %comms = (
     set => {
         cmd_regexp => qr'set'i,
         arg_regexp =>
-            qr'(\S+)\s+(digest|digestplain|nomail|normal|not_me|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)\s*\z'i,
-        arg_keys => [qw(localpart mode)],
+            qr'(\S+)\s+(?:(digest|digestplain|nomail|normal|not_me|each|mail|summary|notice|txt|html|urlize)|(conceal|noconceal))\s*\z'i,
+        arg_keys => [qw(localpart reception visibility)],
         filter   => sub {
             my $r = shift;
 
-            $r->{mode} = lc($r->{mode} || '');
-            # SET EACH is a synonym for SET MAIL.
-            $r->{mode} = 'mail'
-                if grep { $r->{mode} eq $_ }
-                    qw(each eachmail nodigest normal);
+            $r->{email} = $r->{sender};
+            if ($r->{reception}) {
+                $r->{reception} = lc $r->{reception};
+                # SET EACH is a synonym for SET MAIL.
+                $r->{reception} = 'mail'
+                    if grep { $r->{reception} eq $_ }
+                        qw(each eachmail nodigest normal);
+            }
+            if ($r->{visibility}) {
+                $r->{visibility} = lc $r->{visibility};
+            }
             $r;
         },
         # No scenario.  Only list members are allowed.
@@ -160,16 +166,22 @@ our %comms = (
     global_set => {
         cmd_regexp => qr'set\s+[*]'i,
         arg_regexp =>
-            qr'(digest|digestplain|nomail|normal|not_me|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)\s*\z'i,
-        arg_keys => [qw(mode)],
+            qr'(?:(digest|digestplain|nomail|normal|not_me|each|mail|summary|notice|txt|html|urlize)|(conceal|noconceal))\s*\z'i,
+        arg_keys => [qw(reception visibility)],
         filter   => sub {
             my $r = shift;
 
-            $r->{mode} = lc($r->{mode} || '');
-            # SET EACH is a synonym for SET MAIL.
-            $r->{mode} = 'mail'
-                if grep { $r->{mode} eq $_ }
-                    qw(each eachmail nodigest normal);
+            $r->{email} = $r->{sender};
+            if ($r->{reception}) {
+                $r->{reception} = lc $r->{reception};
+                # SET EACH is a synonym for SET MAIL.
+                $r->{reception} = 'mail'
+                    if grep { $r->{reception} eq $_ }
+                        qw(each eachmail nodigest normal);
+            }
+            if ($r->{visibility}) {
+                $r->{visibility} = lc $r->{visibility};
+            }
             $r;
         },
     },
