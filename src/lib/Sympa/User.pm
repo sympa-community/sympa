@@ -169,7 +169,6 @@ sub moveto {
               WHERE email_user = ?},
             $newemail, $self->email
         )
-        and $sth->rows
         ) {
         $log->syslog('err', 'Can\'t move user %s to %s', $self, $newemail);
         $sth = pop @sth_stack;
