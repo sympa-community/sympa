@@ -1715,7 +1715,7 @@ sub change_user_email {
     my $oldu = Sympa::User->new($in{'new_email'});
     $oldu->expire if $oldu;
     my $u = Sympa::User->new($in{'current_email'});
-    unless ($u and $u->moveto($in{'new_mail'})) {
+    unless ($u and $u->moveto($in{'new_email'})) {
         $log->syslog('err', 'Update failed');
         return undef;
     }
