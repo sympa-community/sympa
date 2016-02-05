@@ -7,8 +7,9 @@ use English qw(-no_match_vars);
 my $module_description = '';
 
 foreach my $pm (sort { lc $a cmp lc $b } @ARGV) {
-    next unless $pm eq 'Sympa.pm' || index($pm, 'Sympa/') == 0;
-    next unless $pm =~ /\.pm(?:\.in)?\z/;
+    next
+        unless $pm eq 'Sympa.pm'
+        or $pm =~ m{\ASympa/(?:[^/]+/)*[A-Z]\w*[.]pm(?:[.]in)?\z};
 
     my $fh;
     next unless open $fh, '<', $pm;

@@ -73,6 +73,32 @@ nobase_modules_DATA = \
 	Sympa/Regexps.pm \
 	Sympa/Report.pm \
 	Sympa/Request.pm \
+	Sympa/Request/Handler/add.pm \
+	Sympa/Request/Handler/confirm.pm \
+	Sympa/Request/Handler/del.pm \
+	Sympa/Request/Handler/distribute.pm \
+	Sympa/Request/Handler/finished.pm \
+	Sympa/Request/Handler/get.pm \
+	Sympa/Request/Handler/global_remind.pm \
+	Sympa/Request/Handler/global_set.pm \
+	Sympa/Request/Handler/global_signoff.pm \
+	Sympa/Request/Handler/help.pm \
+	Sympa/Request/Handler/index.pm \
+	Sympa/Request/Handler/info.pm \
+	Sympa/Request/Handler/invite.pm \
+	Sympa/Request/Handler/last.pm \
+	Sympa/Request/Handler/lists.pm \
+	Sympa/Request/Handler/modindex.pm \
+	Sympa/Request/Handler/reject.pm \
+	Sympa/Request/Handler/remind.pm \
+	Sympa/Request/Handler/review.pm \
+	Sympa/Request/Handler/set.pm \
+	Sympa/Request/Handler/signoff.pm \
+	Sympa/Request/Handler/stats.pm \
+	Sympa/Request/Handler/subscribe.pm \
+	Sympa/Request/Handler/unknown.pm \
+	Sympa/Request/Handler/verify.pm \
+	Sympa/Request/Handler/which.pm \
 	Sympa/Request/Message.pm \
 	Sympa/Robot.pm \
 	Sympa/Scenario.pm \
