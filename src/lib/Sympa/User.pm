@@ -160,9 +160,10 @@ sub moveto {
     }
 
     push @sth_stack, $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
 
-    unless (
-        $sth = do_prepared_query(
+    unless ($sdm
+        and $sth = $sdm->do_prepared_query(
             q{UPDATE user_table
               SET email_user = ?
               WHERE email_user = ?},
