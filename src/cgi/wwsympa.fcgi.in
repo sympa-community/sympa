@@ -8115,20 +8115,20 @@ sub do_add {
         $u->{'password'} = $u2->{'password'}
             || Sympa::Tools::Password::tmp_passwd($email);
 
-        if (my $reason =
-            Sympa::Tools::Password::password_validation($u->{'password'})) {
-            Sympa::Report::reject_report_web('user', 'passwd_validation',
-                {'reason' => $reason},
-                $param->{'action'});
-            wwslog('info', 'Password validation');
-            web_db_log(
-                {   'status'     => 'error',
-                    'error_type' => 'bad_parameter'
-                }
-            );
-            return undef;
-        }
-
+        ##if (my $reason =
+            ##Sympa::Tools::Password::password_validation($u->{'password'})) {
+            ##Sympa::Report::reject_report_web('user', 'passwd_validation',
+                ##{'reason' => $reason},
+                ##$param->{'action'});
+            ##wwslog('info', 'Password validation');
+            ##web_db_log(
+                ##{   'status'     => 'error',
+                    ##'error_type' => 'bad_parameter'
+                ##}
+            ##);
+            ##return undef;
+        ##}
+##
         $u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
         if ($comma_emails) {
             $comma_emails = $comma_emails . ',' . $email;
