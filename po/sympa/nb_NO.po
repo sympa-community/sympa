@@ -3255,52 +3255,18 @@ msgstr "[Bilde%s]"
 msgid "My message hook"
 msgstr "Message-Id (meldings-id)"
 
-#: default/mail_tt2/helpfile.tt2:1
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:187
-msgid "User guide"
-msgstr "Brukerguide"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:405
-msgid "Archive of %s, file %s"
-msgstr "Arkiv av %s, fil %s"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:498
-msgid "Archive of %s, last message"
-msgstr "Arkiv av de siste %s meldingene"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:572
-msgid "%-37s %5.1f kB   %s"
-msgstr "%-37s %5.1f kB         %s"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:8614 src/lib/Sympa/Spindle/DispatchRequest.pm:576
-#: src/lib/Sympa/Spindle/ProcessDigest.pm:177
-msgid "%a, %d %b %Y %H:%M:%S"
-msgstr "%a, %d %b %Y %H:%M:%S"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:13164 src/lib/Sympa/Spindle/DispatchRequest.pm:888
-msgid "%A"
-msgstr "%A"
-
-#: default/mail_tt2/global_remind.tt2:1
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:1404
-msgid "Subscription summary"
-msgstr "Abonnementsoversikt"
-
 #: default/mail_tt2/digest.tt2:12 default/mail_tt2/digestplain.tt2:9
 #: default/mail_tt2/get_archive.tt2:8
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:170
 msgid "Table of contents:"
 msgstr "Innholdsliste:"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: src/cgi/wwsympa.fcgi.in:8614 src/lib/Sympa/Request/Handler/index.pm:84
+#: src/lib/Sympa/Spindle/ProcessDigest.pm:177
+msgid "%a, %d %b %Y %H:%M:%S"
+msgstr "%a, %d %b %Y %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -3447,6 +3413,39 @@ msgstr "listealiasmal"
 #: src/lib/Sympa/Message/Plugin/FixEncoding.pm:31
 msgid "Fix character set and encoding"
 msgstr ""
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/get.pm:107
+msgid "Archive of %s, file %s"
+msgstr "Arkiv av %s, fil %s"
+
+#: default/mail_tt2/global_remind.tt2:1
+#: src/lib/Sympa/Request/Handler/global_remind.pm:61
+msgid "Subscription summary"
+msgstr "Abonnementsoversikt"
+
+#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Request/Handler/help.pm:61
+msgid "User guide"
+msgstr "Brukerguide"
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/index.pm:80
+msgid "%-37s %5.1f kB   %s"
+msgstr "%-37s %5.1f kB         %s"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: src/cgi/wwsympa.fcgi.in:13164 src/lib/Sympa/Request/Handler/info.pm:86
+msgid "%A"
+msgstr "%A"
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/last.pm:100
+msgid "Archive of %s, last message"
+msgstr "Arkiv av de siste %s meldingene"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -4363,11 +4362,11 @@ msgstr "Fra: %1"
 msgid "To: %1"
 msgstr "Til: %1"
 
-#: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:51
+#: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:52
 #: default/web_tt2/create_list_request.tt2:40
 #: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:6
-#: default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/tt2_error.tt2:52
 msgid "Subject:"
 msgstr "Emne:"
 
@@ -4566,24 +4565,24 @@ msgstr "Utfør"
 msgid "Skip to Content."
 msgstr "Maler"
 
-#: default/web_tt2/crash.tt2:51 default/web_tt2/info.tt2:7
+#: default/web_tt2/crash.tt2:52 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:46 default/web_tt2/list_panel.tt2:81
-#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:52
 #, fuzzy
 msgid "(Edit)"
 msgstr "rediger"
 
-#: default/web_tt2/crash.tt2:57 default/web_tt2/tt2_error.tt2:57
+#: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:58
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "Tjenerfeil"
 
-#: default/web_tt2/crash.tt2:58
+#: default/web_tt2/crash.tt2:59
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr " Bruker %1 har opplevd en intern serverfeil"
 
-#: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
+#: default/web_tt2/crash.tt2:60 default/web_tt2/tt2_error.tt2:61
 msgid "Please contact the listmaster."
 msgstr "Vennligst kontakt listesjefen."
 
@@ -4593,17 +4592,17 @@ msgstr "Vennligst kontakt listesjefen."
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:174
 #: default/mail_tt2/listmaster_notification.tt2:310
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
+#: default/web_tt2/crash.tt2:63 default/web_tt2/tt2_error.tt2:60
 #, fuzzy
 msgid "Error: %1"
 msgstr "Feilrate:"
 
-#: default/web_tt2/crash.tt2:64
+#: default/web_tt2/crash.tt2:65
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:96
-#: default/web_tt2/tt2_error.tt2:66
+#: default/web_tt2/crash.tt2:74 default/web_tt2/main.tt2:96
+#: default/web_tt2/tt2_error.tt2:67
 msgid "Top of Page"
 msgstr ""
 
@@ -5102,11 +5101,11 @@ msgstr "parameterverdi"
 msgid "apply to"
 msgstr "Utfør"
 
-#: default/web_tt2/edit_config.tt2:37 default/web_tt2/serveradmin.tt2:187
+#: default/web_tt2/edit_config.tt2:36 default/web_tt2/serveradmin.tt2:187
 msgid "Set"
 msgstr ""
 
-#: default/web_tt2/edit_config.tt2:57
+#: default/web_tt2/edit_config.tt2:56
 #, fuzzy
 msgid "main conf"
 msgstr "Rediger listekonfigurasjon"
@@ -5640,7 +5639,7 @@ msgid "Not subscribed: %1"
 msgstr "Ikke abonnent: %1"
 
 #. (u_err.list)
-#: default/web_tt2/error.tt2:75
+#: default/web_tt2/error.tt2:76
 msgid "You are not subscribed to list %1"
 msgstr "Du abonnerer ikke på listen %1"
 
@@ -6474,7 +6473,7 @@ msgstr "Du må logge inn."
 msgid "Listmaster"
 msgstr "Listesjef"
 
-#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
+#: default/mail_tt2/command_report.tt2:124 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_menu.tt2:38 default/web_tt2/list_menu.tt2:43
 #: default/web_tt2/list_menu.tt2:46 default/web_tt2/list_menu.tt2:49
 #: default/web_tt2/list_panel.tt2:33 default/web_tt2/list_panel.tt2:65
@@ -9204,7 +9203,7 @@ msgid "Notification"
 msgstr "varsel"
 
 #: default/mail_tt2/listmaster_notification.tt2:309
-#: default/web_tt2/tt2_error.tt2:58
+#: default/web_tt2/tt2_error.tt2:59
 #, fuzzy
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "Sympa kunne ikke vise den ønskede siden av følgende årsak :"
@@ -9738,6 +9737,7 @@ msgstr ""
 "trykk:"
 
 #: default/mail_tt2/command_report.tt2:2
+#: default/mail_tt2/delivery_status_notification.tt2:20
 msgid "Results of your commands"
 msgstr "Resultatene fra dine kommandoer"
 
@@ -9851,13 +9851,11 @@ msgid "Command syntax error."
 msgstr ""
 
 #. (u_err.listname)
-#. (glob.listname)
 #. (listname)
 #. (recipient)
 #: default/mail_tt2/command_report.tt2:103
-#: default/mail_tt2/command_report.tt2:208
-#: default/mail_tt2/delivery_status_notification.tt2:45
-#: default/mail_tt2/delivery_status_notification.tt2:48
+#: default/mail_tt2/delivery_status_notification.tt2:47
+#: default/mail_tt2/delivery_status_notification.tt2:50
 msgid "List '%1' does not exist."
 msgstr "Listen '%1' eksisterer ikke."
 
@@ -9867,92 +9865,92 @@ msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "e-postlisten %1 har ikke forhåndsinnstillinger for nye påmeldinger"
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:110
+#: default/mail_tt2/command_report.tt2:109
 msgid ""
-"Your e-mail address %1 has not been found in the list %2. Maybe\n"
-"you subscribed from a different e-mail address ?"
+"Your e-mail address %1 has not been found in the list %2. Maybe you "
+"subscribed from a different e-mail address?"
 msgstr ""
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:113
+#: default/mail_tt2/command_report.tt2:112
 msgid "E-mail address %1 has not been found in the list %2."
 msgstr ""
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:117
+#: default/mail_tt2/command_report.tt2:116
 msgid ""
 "List %1 does not accept the DIGEST mode. \n"
 "Your configuration regarding this command has not been updated."
 msgstr ""
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:120
+#: default/mail_tt2/command_report.tt2:119
 #, fuzzy
 msgid "List %1 allows only these reception modes: "
 msgstr "%1 er ikke tilgjengelig i mottaksmodus"
 
-#: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
+#: default/mail_tt2/command_report.tt2:122 default/mail_tt2/info_report.tt2:29
 msgid ", and "
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:132
+#: default/mail_tt2/command_report.tt2:131
 msgid "This list archive is empty."
 msgstr "Dette listearkivet er tomt."
 
-#: default/mail_tt2/command_report.tt2:135
+#: default/mail_tt2/command_report.tt2:134
 msgid "Required file does not exist."
 msgstr ""
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:138
+#: default/mail_tt2/command_report.tt2:137
 msgid "List %1 has no subscriber."
 msgstr "Listen %1 har ingen abonnenter."
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:141
+#: default/mail_tt2/command_report.tt2:140
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr ""
 
 #. (u_err.email,u_err.listname,u_err.max_list_members)
-#: default/mail_tt2/command_report.tt2:144
+#: default/mail_tt2/command_report.tt2:143
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:148
+#: default/mail_tt2/command_report.tt2:147
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
 "using a different email address. Please try using your canonical address."
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:150
+#: default/mail_tt2/command_report.tt2:149
 msgid ""
 "The authentication process failed. You probably confirmed your "
 "unsubscription using a different email address. Please try using your "
 "canonical address."
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:152
+#: default/mail_tt2/command_report.tt2:151
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
 "using a different email address. Please try using your canonical address."
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:154
+#: default/mail_tt2/command_report.tt2:153
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
 "using a different email address. Please try using your canonical address."
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:156
+#: default/mail_tt2/command_report.tt2:155
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
 "using a different email address. Please try using your canonical address."
 msgstr ""
 
 #. (u_err.command)
-#: default/mail_tt2/command_report.tt2:158
+#: default/mail_tt2/command_report.tt2:157
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
 "command using a different email address. Please try using your canonical "
@@ -9960,45 +9958,31 @@ msgid ""
 msgstr ""
 
 #. (u_err.listname,u_err.key)
-#: default/mail_tt2/command_report.tt2:163
+#: default/mail_tt2/command_report.tt2:162
 msgid ""
 "Unable to access the message on list %1 with  key %2.\n"
 "Warning: this message may already have been sent by one of the list's editor."
 msgstr ""
 
 #. (u_err.key)
-#: default/mail_tt2/command_report.tt2:166
+#: default/mail_tt2/command_report.tt2:165
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:180
+#: default/mail_tt2/command_report.tt2:179
 #, fuzzy
 msgid "Command has failed because of an internal server error:"
 msgstr " Bruker %1 har opplevd en intern serverfeil"
 
-#: default/mail_tt2/command_report.tt2:182
+#: default/mail_tt2/command_report.tt2:181
 #, fuzzy
 msgid "These commands have failed because of an internal server error:"
 msgstr " Bruker %1 har opplevd en intern serverfeil"
 
-#: default/mail_tt2/command_report.tt2:199
-msgid ""
-"Ignoring message body not in text/plain, please use text/plain only (or put "
-"your command in the subject)."
-msgstr ""
-
-#: default/mail_tt2/command_report.tt2:202
-msgid "No command found in message."
-msgstr ""
-
-#: default/mail_tt2/command_report.tt2:205
-msgid "Ignoring message because of an internal server error."
-msgstr ""
-
 #. (conf.wwsympa_url)
-#: default/mail_tt2/command_report.tt2:215
+#: default/mail_tt2/command_report.tt2:192
 msgid "For further information, check the mailing list web site %1"
 msgstr ""
 
@@ -10034,38 +10018,38 @@ msgstr " Bruker %1 har opplevd en intern serverfeil"
 msgid "Message distribution: User error"
 msgstr " Bruker %1 har opplevd en intern serverfeil"
 
-#: default/mail_tt2/delivery_status_notification.tt2:20
+#: default/mail_tt2/delivery_status_notification.tt2:22
 #, fuzzy
 msgid "Cannot personalize message"
 msgstr "påminnelsesmelding"
 
-#: default/mail_tt2/delivery_status_notification.tt2:22
+#: default/mail_tt2/delivery_status_notification.tt2:24
 #, fuzzy
 msgid "A virus in your mail"
 msgstr "Virus i din epost"
 
-#: default/mail_tt2/delivery_status_notification.tt2:24
+#: default/mail_tt2/delivery_status_notification.tt2:26
 #, fuzzy
 msgid "Message distribution: Authorization denied"
 msgstr " Bruker %1 har opplevd en intern serverfeil"
 
 #. (action)
-#: default/mail_tt2/delivery_status_notification.tt2:26
+#: default/mail_tt2/delivery_status_notification.tt2:28
 #, fuzzy
 msgid "Delivery Status Notification: %1"
 msgstr "varsel"
 
-#: default/mail_tt2/delivery_status_notification.tt2:32
+#: default/mail_tt2/delivery_status_notification.tt2:34
 #: default/mail_tt2/list_unknown.tt2:9
 msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
 msgstr ""
 
-#: default/mail_tt2/delivery_status_notification.tt2:34
+#: default/mail_tt2/delivery_status_notification.tt2:36
 msgid "Message was successfully delivered to following address:"
 msgstr ""
 
 #. (recipient)
-#: default/mail_tt2/delivery_status_notification.tt2:39
+#: default/mail_tt2/delivery_status_notification.tt2:41
 #, fuzzy
 msgid ""
 "Impossible to distribute your message for list '%1' for the following reason:"
@@ -10073,13 +10057,13 @@ msgstr ""
 "Det er umulig å distribuere din melding til listen '%1' av følgende årsaker :"
 
 #. (listname)
-#: default/mail_tt2/delivery_status_notification.tt2:42
-#: default/mail_tt2/delivery_status_notification.tt2:65
+#: default/mail_tt2/delivery_status_notification.tt2:44
+#: default/mail_tt2/delivery_status_notification.tt2:67
 msgid "The %1 list could not be created."
 msgstr ""
 
 #. (msg_size,max_size)
-#: default/mail_tt2/delivery_status_notification.tt2:53
+#: default/mail_tt2/delivery_status_notification.tt2:55
 msgid ""
 "Your message could not be sent because its size (%1 kB) was over the maximum "
 "size (%2 kB) allowed on this list.\n"
@@ -10090,34 +10074,34 @@ msgid ""
 msgstr ""
 
 #. (list.name,function)
-#: default/mail_tt2/delivery_status_notification.tt2:57
+#: default/mail_tt2/delivery_status_notification.tt2:59
 msgid ""
 "Impossible to forward your message to '%1-%2' because of an internal server "
 "error."
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/delivery_status_notification.tt2:59
+#: default/mail_tt2/delivery_status_notification.tt2:61
 msgid ""
 "Impossible to distribute your message for list '%1' because of an internal "
 "server error."
 msgstr ""
 
 #. (list.name,list.host)
-#: default/mail_tt2/delivery_status_notification.tt2:100
-#: default/mail_tt2/delivery_status_notification.tt2:62
+#: default/mail_tt2/delivery_status_notification.tt2:105
+#: default/mail_tt2/delivery_status_notification.tt2:64
 msgid "For further information, please contact %1-request@%2"
 msgstr ""
 
 #. (conf.listmaster_email,conf.host)
-#: default/mail_tt2/delivery_status_notification.tt2:111
-#: default/mail_tt2/delivery_status_notification.tt2:67
+#: default/mail_tt2/delivery_status_notification.tt2:116
+#: default/mail_tt2/delivery_status_notification.tt2:69
 #: default/mail_tt2/list_unknown.tt2:19
 msgid "For further information, please contact %1@%2"
 msgstr ""
 
 #. (list.name,conf.sympa,list.host,cmd)
-#: default/mail_tt2/delivery_status_notification.tt2:78
+#: default/mail_tt2/delivery_status_notification.tt2:80
 msgid ""
 "The following message was sent to list '%1' and it contains a line '%4' that "
 "can be interpreted as a command.\n"
@@ -10134,29 +10118,33 @@ msgid ""
 "Thank you for your attention."
 msgstr ""
 
-#: default/mail_tt2/delivery_status_notification.tt2:81
+#: default/mail_tt2/delivery_status_notification.tt2:83
+msgid "No command found in message."
+msgstr ""
+
+#: default/mail_tt2/delivery_status_notification.tt2:86
 msgid "Your message cannot be personalized.  Please check template syntax."
 msgstr ""
 
-#: default/mail_tt2/delivery_status_notification.tt2:84
+#: default/mail_tt2/delivery_status_notification.tt2:89
 #: default/mail_tt2/your_infected_msg.tt2:3
 msgid "***** V I R U S    A L E R T *****"
 msgstr "***** V I R U S A L A R M *****"
 
 #. (virus_name,recipient,sender)
-#: default/mail_tt2/delivery_status_notification.tt2:86
+#: default/mail_tt2/delivery_status_notification.tt2:91
 #: default/mail_tt2/your_infected_msg.tt2:5
 msgid ""
 "Our viruschecker found a virus named %1 in a message addressed to %2 and "
 "that seems to be yours (From: %3)."
 msgstr ""
 
-#: default/mail_tt2/delivery_status_notification.tt2:88
+#: default/mail_tt2/delivery_status_notification.tt2:93
 #: default/mail_tt2/your_infected_msg.tt2:7
 msgid "We stopped delivery of this email."
 msgstr ""
 
-#: default/mail_tt2/delivery_status_notification.tt2:92
+#: default/mail_tt2/delivery_status_notification.tt2:97
 #: default/mail_tt2/your_infected_msg.tt2:11
 msgid ""
 "It may be useful to check your system for viruses.\n"
@@ -10167,7 +10155,7 @@ msgid ""
 msgstr ""
 
 #. (list.name)
-#: default/mail_tt2/delivery_status_notification.tt2:96
+#: default/mail_tt2/delivery_status_notification.tt2:101
 #, fuzzy
 msgid ""
 "Your message for list '%1' (attached below) was rejected.\n"
@@ -10176,13 +10164,13 @@ msgstr ""
 "Din melding til listen '%1' (vedlagt under) ble avvist.\n"
 "Du fikk ikke sende meldingen av følgende årsaker :"
 
-#: default/mail_tt2/delivery_status_notification.tt2:103
+#: default/mail_tt2/delivery_status_notification.tt2:108
 #: default/mail_tt2/list_unknown.tt2:11
 #, fuzzy
 msgid "The following address is not a known mailing list:"
 msgstr "Den følgende adressen er ikke en kjent e-postliste :"
 
-#: default/mail_tt2/delivery_status_notification.tt2:107
+#: default/mail_tt2/delivery_status_notification.tt2:112
 #: default/mail_tt2/list_unknown.tt2:15
 msgid ""
 "To find out the correct listname, ask for this server's lists directory:"
@@ -10287,15 +10275,15 @@ msgid "End of digest for list %1 - %2"
 msgstr ""
 
 #. (user.email)
-#: default/mail_tt2/global_remind.tt2:3
+#: default/mail_tt2/global_remind.tt2:5
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr ""
 
-#: default/mail_tt2/global_remind.tt2:4
+#: default/mail_tt2/global_remind.tt2:6
 msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr ""
 
-#: default/mail_tt2/global_remind.tt2:6
+#: default/mail_tt2/global_remind.tt2:8
 msgid "For each list here is a mail address to use if you want to unsubscribe."
 msgstr ""
 
@@ -13045,6 +13033,23 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Ukjent feil."
+
+#. (u_err.email,u_err.listname)
+#: default/mail_tt2/command_report.tt2:110
+msgid ""
+"Your e-mail address %1 has not been found in the list %2. Maybe\n"
+"you subscribed from a different e-mail address ?"
+msgstr ""
+
+#: default/mail_tt2/command_report.tt2:199
+msgid ""
+"Ignoring message body not in text/plain, please use text/plain only (or put "
+"your command in the subject)."
+msgstr ""
+
+#: default/mail_tt2/command_report.tt2:205
+msgid "Ignoring message because of an internal server error."
+msgstr ""
 
 #: default/web_tt2/viewmod.tt2:18
 msgid "Do Not Notify"

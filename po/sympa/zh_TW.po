@@ -3214,54 +3214,18 @@ msgstr "﹝圖象%s﹞"
 msgid "My message hook"
 msgstr "郵件頁腳"
 
-#: default/mail_tt2/helpfile.tt2:1
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:187
-msgid "User guide"
-msgstr "用戶指南"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:405
-#, fuzzy
-msgid "Archive of %s, file %s"
-msgstr "歸檔%1，文件%2"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:498
-#, fuzzy
-msgid "Archive of %s, last message"
-msgstr "歸檔%1，文件%2"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:572
-msgid "%-37s %5.1f kB   %s"
-msgstr ""
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:8614 src/lib/Sympa/Spindle/DispatchRequest.pm:576
-#: src/lib/Sympa/Spindle/ProcessDigest.pm:177
-msgid "%a, %d %b %Y %H:%M:%S"
-msgstr "%Y年%m月%d日（%a）%H:%M:%S"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:13164 src/lib/Sympa/Spindle/DispatchRequest.pm:888
-msgid "%A"
-msgstr "%A"
-
-#: default/mail_tt2/global_remind.tt2:1
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:1404
-msgid "Subscription summary"
-msgstr "訂閱概要"
-
 #: default/mail_tt2/digest.tt2:12 default/mail_tt2/digestplain.tt2:9
 #: default/mail_tt2/get_archive.tt2:8
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:170
 msgid "Table of contents:"
 msgstr "目錄表："
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: src/cgi/wwsympa.fcgi.in:8614 src/lib/Sympa/Request/Handler/index.pm:84
+#: src/lib/Sympa/Spindle/ProcessDigest.pm:177
+msgid "%a, %d %b %Y %H:%M:%S"
+msgstr "%Y年%m月%d日（%a）%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -3405,6 +3369,41 @@ msgstr "郵件列表別名模板"
 #: src/lib/Sympa/Message/Plugin/FixEncoding.pm:31
 msgid "Fix character set and encoding"
 msgstr ""
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/get.pm:107
+#, fuzzy
+msgid "Archive of %s, file %s"
+msgstr "歸檔%1，文件%2"
+
+#: default/mail_tt2/global_remind.tt2:1
+#: src/lib/Sympa/Request/Handler/global_remind.pm:61
+msgid "Subscription summary"
+msgstr "訂閱概要"
+
+#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Request/Handler/help.pm:61
+msgid "User guide"
+msgstr "用戶指南"
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/index.pm:80
+msgid "%-37s %5.1f kB   %s"
+msgstr ""
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: src/cgi/wwsympa.fcgi.in:13164 src/lib/Sympa/Request/Handler/info.pm:86
+msgid "%A"
+msgstr "%A"
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/last.pm:100
+#, fuzzy
+msgid "Archive of %s, last message"
+msgstr "歸檔%1，文件%2"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -4309,11 +4308,11 @@ msgstr "從：%1"
 msgid "To: %1"
 msgstr "收件人：%1"
 
-#: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:51
+#: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:52
 #: default/web_tt2/create_list_request.tt2:40
 #: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:6
-#: default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/tt2_error.tt2:52
 msgid "Subject:"
 msgstr "標題："
 
@@ -4506,24 +4505,24 @@ msgstr "應用"
 msgid "Skip to Content."
 msgstr "模板"
 
-#: default/web_tt2/crash.tt2:51 default/web_tt2/info.tt2:7
+#: default/web_tt2/crash.tt2:52 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:46 default/web_tt2/list_panel.tt2:81
-#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:52
 #, fuzzy
 msgid "(Edit)"
 msgstr "編輯"
 
-#: default/web_tt2/crash.tt2:57 default/web_tt2/tt2_error.tt2:57
+#: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:58
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "服務器錯誤"
 
-#: default/web_tt2/crash.tt2:58
+#: default/web_tt2/crash.tt2:59
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr "用戶%1遇到了一個內部服務器錯誤"
 
-#: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
+#: default/web_tt2/crash.tt2:60 default/web_tt2/tt2_error.tt2:61
 msgid "Please contact the listmaster."
 msgstr "請與郵件列表管理員聯系。"
 
@@ -4533,17 +4532,17 @@ msgstr "請與郵件列表管理員聯系。"
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:174
 #: default/mail_tt2/listmaster_notification.tt2:310
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
+#: default/web_tt2/crash.tt2:63 default/web_tt2/tt2_error.tt2:60
 #, fuzzy
 msgid "Error: %1"
 msgstr "錯誤："
 
-#: default/web_tt2/crash.tt2:64
+#: default/web_tt2/crash.tt2:65
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:96
-#: default/web_tt2/tt2_error.tt2:66
+#: default/web_tt2/crash.tt2:74 default/web_tt2/main.tt2:96
+#: default/web_tt2/tt2_error.tt2:67
 msgid "Top of Page"
 msgstr ""
 
@@ -5036,11 +5035,11 @@ msgstr "參量值"
 msgid "apply to"
 msgstr "應用"
 
-#: default/web_tt2/edit_config.tt2:37 default/web_tt2/serveradmin.tt2:187
+#: default/web_tt2/edit_config.tt2:36 default/web_tt2/serveradmin.tt2:187
 msgid "Set"
 msgstr ""
 
-#: default/web_tt2/edit_config.tt2:57
+#: default/web_tt2/edit_config.tt2:56
 #, fuzzy
 msgid "main conf"
 msgstr "編輯郵件列表配置"
@@ -5576,7 +5575,7 @@ msgid "Not subscribed: %1"
 msgstr "並非訂閱者：%1"
 
 #. (u_err.list)
-#: default/web_tt2/error.tt2:75
+#: default/web_tt2/error.tt2:76
 msgid "You are not subscribed to list %1"
 msgstr "您沒有訂閱郵件列表%1"
 
@@ -6406,7 +6405,7 @@ msgstr "您是下列郵件列表的編輯："
 msgid "Listmaster"
 msgstr "郵件列表管理員"
 
-#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
+#: default/mail_tt2/command_report.tt2:124 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_menu.tt2:38 default/web_tt2/list_menu.tt2:43
 #: default/web_tt2/list_menu.tt2:46 default/web_tt2/list_menu.tt2:49
 #: default/web_tt2/list_panel.tt2:33 default/web_tt2/list_panel.tt2:65
@@ -9110,7 +9109,7 @@ msgid "Notification"
 msgstr "通知"
 
 #: default/mail_tt2/listmaster_notification.tt2:309
-#: default/web_tt2/tt2_error.tt2:58
+#: default/web_tt2/tt2_error.tt2:59
 #, fuzzy
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "Sympa不能為以下原因發表送請求頁："
@@ -9643,6 +9642,7 @@ msgstr ""
 "單擊此連接："
 
 #: default/mail_tt2/command_report.tt2:2
+#: default/mail_tt2/delivery_status_notification.tt2:20
 msgid "Results of your commands"
 msgstr "您命令執行的結果"
 
@@ -9760,13 +9760,11 @@ msgid "Command syntax error."
 msgstr "命令語法錯誤。"
 
 #. (u_err.listname)
-#. (glob.listname)
 #. (listname)
 #. (recipient)
 #: default/mail_tt2/command_report.tt2:103
-#: default/mail_tt2/command_report.tt2:208
-#: default/mail_tt2/delivery_status_notification.tt2:45
-#: default/mail_tt2/delivery_status_notification.tt2:48
+#: default/mail_tt2/delivery_status_notification.tt2:47
+#: default/mail_tt2/delivery_status_notification.tt2:50
 msgid "List '%1' does not exist."
 msgstr "郵件列表“%1“不存在。"
 
@@ -9776,21 +9774,22 @@ msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "%1份郵件列表不支持訂閱者個人參量選擇。"
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:110
+#: default/mail_tt2/command_report.tt2:109
+#, fuzzy
 msgid ""
-"Your e-mail address %1 has not been found in the list %2. Maybe\n"
-"you subscribed from a different e-mail address ?"
+"Your e-mail address %1 has not been found in the list %2. Maybe you "
+"subscribed from a different e-mail address?"
 msgstr ""
 "郵件%1在郵件列表%2未被找到。有可能是\n"
 "您用另一個不同的郵件地址訂閱了？"
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:113
+#: default/mail_tt2/command_report.tt2:112
 msgid "E-mail address %1 has not been found in the list %2."
 msgstr "郵件地址%1在郵件列表%2中未被找到。"
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:117
+#: default/mail_tt2/command_report.tt2:116
 msgid ""
 "List %1 does not accept the DIGEST mode. \n"
 "Your configuration regarding this command has not been updated."
@@ -9799,41 +9798,41 @@ msgstr ""
 "您對于此命令的配置沒有更新。"
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:120
+#: default/mail_tt2/command_report.tt2:119
 #, fuzzy
 msgid "List %1 allows only these reception modes: "
 msgstr "郵件列表%1僅允許這些接收模式：%2"
 
-#: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
+#: default/mail_tt2/command_report.tt2:122 default/mail_tt2/info_report.tt2:29
 msgid ", and "
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:132
+#: default/mail_tt2/command_report.tt2:131
 msgid "This list archive is empty."
 msgstr "這個郵件列表歸檔是空的。"
 
-#: default/mail_tt2/command_report.tt2:135
+#: default/mail_tt2/command_report.tt2:134
 msgid "Required file does not exist."
 msgstr "需要的文件不存在。"
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:138
+#: default/mail_tt2/command_report.tt2:137
 msgid "List %1 has no subscriber."
 msgstr "郵件列表%1沒有訂閱者。"
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:141
+#: default/mail_tt2/command_report.tt2:140
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "用戶〞%1〞已經是〞%2〞郵件列表的訂閱者。"
 
 #. (u_err.email,u_err.listname,u_err.max_list_members)
-#: default/mail_tt2/command_report.tt2:144
+#: default/mail_tt2/command_report.tt2:143
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:148
+#: default/mail_tt2/command_report.tt2:147
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
@@ -9843,7 +9842,7 @@ msgstr ""
 "您可能用一個不同的郵件地址證實您的%1。\n"
 "請嘗試使用標準地址。"
 
-#: default/mail_tt2/command_report.tt2:150
+#: default/mail_tt2/command_report.tt2:149
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
@@ -9854,7 +9853,7 @@ msgstr ""
 "您可能用一個不同的郵件地址證實您的%1。\n"
 "請嘗試使用標準地址。"
 
-#: default/mail_tt2/command_report.tt2:152
+#: default/mail_tt2/command_report.tt2:151
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
@@ -9864,7 +9863,7 @@ msgstr ""
 "您可能用一個不同的郵件地址證實您的%1。\n"
 "請嘗試使用標準地址。"
 
-#: default/mail_tt2/command_report.tt2:154
+#: default/mail_tt2/command_report.tt2:153
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
@@ -9874,7 +9873,7 @@ msgstr ""
 "您可能用一個不同的郵件地址證實您的%1。\n"
 "請嘗試使用標準地址。"
 
-#: default/mail_tt2/command_report.tt2:156
+#: default/mail_tt2/command_report.tt2:155
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
@@ -9885,7 +9884,7 @@ msgstr ""
 "請嘗試使用標準地址。"
 
 #. (u_err.command)
-#: default/mail_tt2/command_report.tt2:158
+#: default/mail_tt2/command_report.tt2:157
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
@@ -9897,7 +9896,7 @@ msgstr ""
 "請嘗試使用標準地址。"
 
 #. (u_err.listname,u_err.key)
-#: default/mail_tt2/command_report.tt2:163
+#: default/mail_tt2/command_report.tt2:162
 #, fuzzy
 msgid ""
 "Unable to access the message on list %1 with  key %2.\n"
@@ -9907,41 +9906,25 @@ msgstr ""
 "警告：這條信息也許已經由郵件列表的一個編輯發送了。"
 
 #. (u_err.key)
-#: default/mail_tt2/command_report.tt2:166
+#: default/mail_tt2/command_report.tt2:165
 #, fuzzy
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
 msgstr "因為錯誤的格式無法用密鑰%1訪問證實的郵件。"
 
-#: default/mail_tt2/command_report.tt2:180
+#: default/mail_tt2/command_report.tt2:179
 #, fuzzy
 msgid "Command has failed because of an internal server error:"
 msgstr "由于一個內部服務器錯誤，命令失敗："
 
-#: default/mail_tt2/command_report.tt2:182
+#: default/mail_tt2/command_report.tt2:181
 #, fuzzy
 msgid "These commands have failed because of an internal server error:"
 msgstr "由于一個內部服務器錯誤，這些命令失敗："
 
-#: default/mail_tt2/command_report.tt2:199
-msgid ""
-"Ignoring message body not in text/plain, please use text/plain only (or put "
-"your command in the subject)."
-msgstr ""
-"忽略不是純文字（text/plain）的郵件內容，請只用純文字（或將命令放在郵件頭信息"
-"中）。"
-
-#: default/mail_tt2/command_report.tt2:202
-msgid "No command found in message."
-msgstr "在郵件中沒有發現命令。"
-
-#: default/mail_tt2/command_report.tt2:205
-msgid "Ignoring message because of an internal server error."
-msgstr "由于一個內部服務器錯誤而忽略郵件。"
-
 #. (conf.wwsympa_url)
-#: default/mail_tt2/command_report.tt2:215
+#: default/mail_tt2/command_report.tt2:192
 msgid "For further information, check the mailing list web site %1"
 msgstr "欲知詳情，檢查郵件列表網站%1"
 
@@ -9977,51 +9960,51 @@ msgstr "郵件發行：內部服務器錯誤"
 msgid "Message distribution: User error"
 msgstr "郵件發行：用戶錯誤"
 
-#: default/mail_tt2/delivery_status_notification.tt2:20
+#: default/mail_tt2/delivery_status_notification.tt2:22
 #, fuzzy
 msgid "Cannot personalize message"
 msgstr "任何人，沒有歡迎郵件"
 
-#: default/mail_tt2/delivery_status_notification.tt2:22
+#: default/mail_tt2/delivery_status_notification.tt2:24
 #, fuzzy
 msgid "A virus in your mail"
 msgstr "您的郵件中有一個病毒"
 
-#: default/mail_tt2/delivery_status_notification.tt2:24
+#: default/mail_tt2/delivery_status_notification.tt2:26
 #, fuzzy
 msgid "Message distribution: Authorization denied"
 msgstr "郵件發行：被否認的授權"
 
 #. (action)
-#: default/mail_tt2/delivery_status_notification.tt2:26
+#: default/mail_tt2/delivery_status_notification.tt2:28
 #, fuzzy
 msgid "Delivery Status Notification: %1"
 msgstr "所有者不需要身份驗證"
 
-#: default/mail_tt2/delivery_status_notification.tt2:32
+#: default/mail_tt2/delivery_status_notification.tt2:34
 #: default/mail_tt2/list_unknown.tt2:9
 msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
 msgstr "這是一個由Sympa郵遞列表管理器自動發送的回復。"
 
-#: default/mail_tt2/delivery_status_notification.tt2:34
+#: default/mail_tt2/delivery_status_notification.tt2:36
 msgid "Message was successfully delivered to following address:"
 msgstr ""
 
 #. (recipient)
-#: default/mail_tt2/delivery_status_notification.tt2:39
+#: default/mail_tt2/delivery_status_notification.tt2:41
 #, fuzzy
 msgid ""
 "Impossible to distribute your message for list '%1' for the following reason:"
 msgstr "無法發送您的郵件到郵件列表〞%1〞，因為以下原因："
 
 #. (listname)
-#: default/mail_tt2/delivery_status_notification.tt2:42
-#: default/mail_tt2/delivery_status_notification.tt2:65
+#: default/mail_tt2/delivery_status_notification.tt2:44
+#: default/mail_tt2/delivery_status_notification.tt2:67
 msgid "The %1 list could not be created."
 msgstr "%1郵件列表不能被創建。"
 
 #. (msg_size,max_size)
-#: default/mail_tt2/delivery_status_notification.tt2:53
+#: default/mail_tt2/delivery_status_notification.tt2:55
 msgid ""
 "Your message could not be sent because its size (%1 kB) was over the maximum "
 "size (%2 kB) allowed on this list.\n"
@@ -10032,34 +10015,34 @@ msgid ""
 msgstr ""
 
 #. (list.name,function)
-#: default/mail_tt2/delivery_status_notification.tt2:57
+#: default/mail_tt2/delivery_status_notification.tt2:59
 msgid ""
 "Impossible to forward your message to '%1-%2' because of an internal server "
 "error."
 msgstr "由于內部服務器錯誤，無法轉發您的郵件到〞%1－%2〞。"
 
 #. (list.name)
-#: default/mail_tt2/delivery_status_notification.tt2:59
+#: default/mail_tt2/delivery_status_notification.tt2:61
 msgid ""
 "Impossible to distribute your message for list '%1' because of an internal "
 "server error."
 msgstr "由于內部服務器錯誤，無法發送您的郵件到郵件列表〞%1〞。"
 
 #. (list.name,list.host)
-#: default/mail_tt2/delivery_status_notification.tt2:100
-#: default/mail_tt2/delivery_status_notification.tt2:62
+#: default/mail_tt2/delivery_status_notification.tt2:105
+#: default/mail_tt2/delivery_status_notification.tt2:64
 msgid "For further information, please contact %1-request@%2"
 msgstr "欲知詳情，請與聯系%1-request@%2"
 
 #. (conf.listmaster_email,conf.host)
-#: default/mail_tt2/delivery_status_notification.tt2:111
-#: default/mail_tt2/delivery_status_notification.tt2:67
+#: default/mail_tt2/delivery_status_notification.tt2:116
+#: default/mail_tt2/delivery_status_notification.tt2:69
 #: default/mail_tt2/list_unknown.tt2:19
 msgid "For further information, please contact %1@%2"
 msgstr "欲知詳情，請與聯系%1@%2"
 
 #. (list.name,conf.sympa,list.host,cmd)
-#: default/mail_tt2/delivery_status_notification.tt2:78
+#: default/mail_tt2/delivery_status_notification.tt2:80
 #, fuzzy
 msgid ""
 "The following message was sent to list '%1' and it contains a line '%4' that "
@@ -10089,17 +10072,21 @@ msgstr ""
 "\n"
 "感謝您對此的注意。\n"
 
-#: default/mail_tt2/delivery_status_notification.tt2:81
+#: default/mail_tt2/delivery_status_notification.tt2:83
+msgid "No command found in message."
+msgstr "在郵件中沒有發現命令。"
+
+#: default/mail_tt2/delivery_status_notification.tt2:86
 msgid "Your message cannot be personalized.  Please check template syntax."
 msgstr ""
 
-#: default/mail_tt2/delivery_status_notification.tt2:84
+#: default/mail_tt2/delivery_status_notification.tt2:89
 #: default/mail_tt2/your_infected_msg.tt2:3
 msgid "***** V I R U S    A L E R T *****"
 msgstr "＊＊＊＊＊　病　毒　警　告　＊＊＊＊＊"
 
 #. (virus_name,recipient,sender)
-#: default/mail_tt2/delivery_status_notification.tt2:86
+#: default/mail_tt2/delivery_status_notification.tt2:91
 #: default/mail_tt2/your_infected_msg.tt2:5
 #, fuzzy
 msgid ""
@@ -10110,12 +10097,12 @@ msgstr ""
 "一個叫%1的病，那似乎\n"
 "是您的（從：%3）。"
 
-#: default/mail_tt2/delivery_status_notification.tt2:88
+#: default/mail_tt2/delivery_status_notification.tt2:93
 #: default/mail_tt2/your_infected_msg.tt2:7
 msgid "We stopped delivery of this email."
 msgstr "這則郵件的發送停止了。"
 
-#: default/mail_tt2/delivery_status_notification.tt2:92
+#: default/mail_tt2/delivery_status_notification.tt2:97
 #: default/mail_tt2/your_infected_msg.tt2:11
 msgid ""
 "It may be useful to check your system for viruses.\n"
@@ -10130,7 +10117,7 @@ msgstr ""
 "請忽視這則郵件。"
 
 #. (list.name)
-#: default/mail_tt2/delivery_status_notification.tt2:96
+#: default/mail_tt2/delivery_status_notification.tt2:101
 #, fuzzy
 msgid ""
 "Your message for list '%1' (attached below) was rejected.\n"
@@ -10139,13 +10126,13 @@ msgstr ""
 "郵件列表〞%1〞（附在下面）被拒絕了。\n"
 "您不允許發送這則郵件因為以下原因："
 
-#: default/mail_tt2/delivery_status_notification.tt2:103
+#: default/mail_tt2/delivery_status_notification.tt2:108
 #: default/mail_tt2/list_unknown.tt2:11
 #, fuzzy
 msgid "The following address is not a known mailing list:"
 msgstr "以下地址不是已知郵件列表："
 
-#: default/mail_tt2/delivery_status_notification.tt2:107
+#: default/mail_tt2/delivery_status_notification.tt2:112
 #: default/mail_tt2/list_unknown.tt2:15
 #, fuzzy
 msgid ""
@@ -10257,15 +10244,15 @@ msgid "End of digest for list %1 - %2"
 msgstr "郵件列表%1－%2摘要的末端"
 
 #. (user.email)
-#: default/mail_tt2/global_remind.tt2:3
+#: default/mail_tt2/global_remind.tt2:5
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "訂閱概要（使用郵件%1）。"
 
-#: default/mail_tt2/global_remind.tt2:4
+#: default/mail_tt2/global_remind.tt2:6
 msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr "如果確定要從某一郵件列表退訂，請保存這則郵件。"
 
-#: default/mail_tt2/global_remind.tt2:6
+#: default/mail_tt2/global_remind.tt2:8
 msgid "For each list here is a mail address to use if you want to unsubscribe."
 msgstr "如果想要退訂，這裡每張郵件列表都有一個郵件地址。"
 
@@ -13086,6 +13073,15 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "未知"
 
+#. (u_err.email,u_err.listname)
+#: default/mail_tt2/command_report.tt2:110
+msgid ""
+"Your e-mail address %1 has not been found in the list %2. Maybe\n"
+"you subscribed from a different e-mail address ?"
+msgstr ""
+"郵件%1在郵件列表%2未被找到。有可能是\n"
+"您用另一個不同的郵件地址訂閱了？"
+
 #: default/web_tt2/modform.tt2:61
 msgid "hide"
 msgstr ""
@@ -13885,6 +13881,16 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#~ msgid ""
+#~ "Ignoring message body not in text/plain, please use text/plain only (or "
+#~ "put your command in the subject)."
+#~ msgstr ""
+#~ "忽略不是純文字（text/plain）的郵件內容，請只用純文字（或將命令放在郵件頭信"
+#~ "息中）。"
+
+#~ msgid "Ignoring message because of an internal server error."
+#~ msgstr "由于一個內部服務器錯誤而忽略郵件。"
 
 #~ msgid ""
 #~ "The authentication process failed.\n"

@@ -3350,54 +3350,18 @@ msgstr "%Εικόνα(%s)"
 msgid "My message hook"
 msgstr "υποσέλιδο μηνύματος"
 
-#: default/mail_tt2/helpfile.tt2:1
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:187
-msgid "User guide"
-msgstr "Οδηγός χρήστη"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:405
-#, fuzzy
-msgid "Archive of %s, file %s"
-msgstr "Αρχείο της λίστας %1, έγγραφο %2"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:498
-#, fuzzy
-msgid "Archive of %s, last message"
-msgstr "Αρχείο της λίστας %1, έγγραφο %2"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:572
-msgid "%-37s %5.1f kB   %s"
-msgstr ""
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:8614 src/lib/Sympa/Spindle/DispatchRequest.pm:576
-#: src/lib/Sympa/Spindle/ProcessDigest.pm:177
-msgid "%a, %d %b %Y %H:%M:%S"
-msgstr "%a, %d %b %Y %H:%M:%S"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:13164 src/lib/Sympa/Spindle/DispatchRequest.pm:888
-msgid "%A"
-msgstr "%A"
-
-#: default/mail_tt2/global_remind.tt2:1
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:1404
-msgid "Subscription summary"
-msgstr "Περίληψη συνδρομής"
-
 #: default/mail_tt2/digest.tt2:12 default/mail_tt2/digestplain.tt2:9
 #: default/mail_tt2/get_archive.tt2:8
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:170
 msgid "Table of contents:"
 msgstr "Πίνακας περιεχομένων:"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: src/cgi/wwsympa.fcgi.in:8614 src/lib/Sympa/Request/Handler/index.pm:84
+#: src/lib/Sympa/Spindle/ProcessDigest.pm:177
+msgid "%a, %d %b %Y %H:%M:%S"
+msgstr "%a, %d %b %Y %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -3542,6 +3506,41 @@ msgstr "πρότυπο παρωνυμίων (aliases) λίστας"
 #: src/lib/Sympa/Message/Plugin/FixEncoding.pm:31
 msgid "Fix character set and encoding"
 msgstr ""
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/get.pm:107
+#, fuzzy
+msgid "Archive of %s, file %s"
+msgstr "Αρχείο της λίστας %1, έγγραφο %2"
+
+#: default/mail_tt2/global_remind.tt2:1
+#: src/lib/Sympa/Request/Handler/global_remind.pm:61
+msgid "Subscription summary"
+msgstr "Περίληψη συνδρομής"
+
+#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Request/Handler/help.pm:61
+msgid "User guide"
+msgstr "Οδηγός χρήστη"
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/index.pm:80
+msgid "%-37s %5.1f kB   %s"
+msgstr ""
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: src/cgi/wwsympa.fcgi.in:13164 src/lib/Sympa/Request/Handler/info.pm:86
+msgid "%A"
+msgstr "%A"
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/last.pm:100
+#, fuzzy
+msgid "Archive of %s, last message"
+msgstr "Αρχείο της λίστας %1, έγγραφο %2"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -4432,11 +4431,11 @@ msgstr "Από: %1"
 msgid "To: %1"
 msgstr "Προς: %1"
 
-#: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:51
+#: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:52
 #: default/web_tt2/create_list_request.tt2:40
 #: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:6
-#: default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/tt2_error.tt2:52
 msgid "Subject:"
 msgstr "Θέμα:"
 
@@ -4633,24 +4632,24 @@ msgstr "Εφαρμογή"
 msgid "Skip to Content."
 msgstr "Πρότυπα"
 
-#: default/web_tt2/crash.tt2:51 default/web_tt2/info.tt2:7
+#: default/web_tt2/crash.tt2:52 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:46 default/web_tt2/list_panel.tt2:81
-#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:52
 #, fuzzy
 msgid "(Edit)"
 msgstr "επεξεργασία"
 
-#: default/web_tt2/crash.tt2:57 default/web_tt2/tt2_error.tt2:57
+#: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:58
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "Σφάλμα εξυπηρετητή"
 
-#: default/web_tt2/crash.tt2:58
+#: default/web_tt2/crash.tt2:59
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr " Ο χρήστης %1 συνάντησε ένα εσωτερικό σφάλμα"
 
-#: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
+#: default/web_tt2/crash.tt2:60 default/web_tt2/tt2_error.tt2:61
 msgid "Please contact the listmaster."
 msgstr "Παρακαλούμε επικοινωνήστε με το διαχειριστή του συστήματος."
 
@@ -4660,16 +4659,16 @@ msgstr "Παρακαλούμε επικοινωνήστε με το διαχει
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:174
 #: default/mail_tt2/listmaster_notification.tt2:310
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
+#: default/web_tt2/crash.tt2:63 default/web_tt2/tt2_error.tt2:60
 msgid "Error: %1"
 msgstr "Σφάλμα: %1"
 
-#: default/web_tt2/crash.tt2:64
+#: default/web_tt2/crash.tt2:65
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:96
-#: default/web_tt2/tt2_error.tt2:66
+#: default/web_tt2/crash.tt2:74 default/web_tt2/main.tt2:96
+#: default/web_tt2/tt2_error.tt2:67
 msgid "Top of Page"
 msgstr ""
 
@@ -5159,11 +5158,11 @@ msgstr "Προτιμώ"
 msgid "apply to"
 msgstr "Εφαρμογή"
 
-#: default/web_tt2/edit_config.tt2:37 default/web_tt2/serveradmin.tt2:187
+#: default/web_tt2/edit_config.tt2:36 default/web_tt2/serveradmin.tt2:187
 msgid "Set"
 msgstr "Ορισμός"
 
-#: default/web_tt2/edit_config.tt2:57
+#: default/web_tt2/edit_config.tt2:56
 #, fuzzy
 msgid "main conf"
 msgstr "Επεξεργασία Διαμόρφωσης Λίστας"
@@ -5685,7 +5684,7 @@ msgid "Not subscribed: %1"
 msgstr "Δεν πραγματοποιήθηκε εγγραφή συνδρομητή: %1"
 
 #. (u_err.list)
-#: default/web_tt2/error.tt2:75
+#: default/web_tt2/error.tt2:76
 msgid "You are not subscribed to list %1"
 msgstr "Δεν είστε συνδρομητής στη λίστα %1"
 
@@ -6488,7 +6487,7 @@ msgstr "Λίστες στις οποίες είστε συντονιστής:"
 msgid "Listmaster"
 msgstr "Διαχειριστής συστήματος"
 
-#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
+#: default/mail_tt2/command_report.tt2:124 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_menu.tt2:38 default/web_tt2/list_menu.tt2:43
 #: default/web_tt2/list_menu.tt2:46 default/web_tt2/list_menu.tt2:49
 #: default/web_tt2/list_panel.tt2:33 default/web_tt2/list_panel.tt2:65
@@ -9216,7 +9215,7 @@ msgid "Notification"
 msgstr "Αίτηση ταυτοποίησης"
 
 #: default/mail_tt2/listmaster_notification.tt2:309
-#: default/web_tt2/tt2_error.tt2:58
+#: default/web_tt2/tt2_error.tt2:59
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr ""
 "Το λογισμικό Sympa δεν μπόρεσε να παραδώσει την αιτούμενη σελίδα για τους "
@@ -9805,6 +9804,7 @@ msgstr ""
 "κάντε κλικ: "
 
 #: default/mail_tt2/command_report.tt2:2
+#: default/mail_tt2/delivery_status_notification.tt2:20
 msgid "Results of your commands"
 msgstr "Αποτελέσματα εντολών"
 
@@ -9918,13 +9918,11 @@ msgid "Command syntax error."
 msgstr "Λάθος σύνταξη εντολής."
 
 #. (u_err.listname)
-#. (glob.listname)
 #. (listname)
 #. (recipient)
 #: default/mail_tt2/command_report.tt2:103
-#: default/mail_tt2/command_report.tt2:208
-#: default/mail_tt2/delivery_status_notification.tt2:45
-#: default/mail_tt2/delivery_status_notification.tt2:48
+#: default/mail_tt2/delivery_status_notification.tt2:47
+#: default/mail_tt2/delivery_status_notification.tt2:50
 msgid "List '%1' does not exist."
 msgstr "Η λίστα '%1' δεν υπάρχει."
 
@@ -9935,21 +9933,22 @@ msgstr ""
 "Η λίστα ηλεκτρονικού ταχυδρομείου %1 δεν παρέχει προτιμήσεις συνδρομητών."
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:110
+#: default/mail_tt2/command_report.tt2:109
+#, fuzzy
 msgid ""
-"Your e-mail address %1 has not been found in the list %2. Maybe\n"
-"you subscribed from a different e-mail address ?"
+"Your e-mail address %1 has not been found in the list %2. Maybe you "
+"subscribed from a different e-mail address?"
 msgstr ""
 "Η διεύθυνσή σας %1 δε βρέθηκε στη λίστα %2.\n"
 "Μήπως εγγραφήκατε από διαφορετική διεύθυνση ηλεκτρονικής αλληλογραφίας;"
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:113
+#: default/mail_tt2/command_report.tt2:112
 msgid "E-mail address %1 has not been found in the list %2."
 msgstr "Η διεύθυνση %1 δε βρέθηκε στη λίστα %2."
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:117
+#: default/mail_tt2/command_report.tt2:116
 msgid ""
 "List %1 does not accept the DIGEST mode. \n"
 "Your configuration regarding this command has not been updated."
@@ -9958,42 +9957,42 @@ msgstr ""
 "Η διαμόρφωση σχετικά με αυτή την εντολή δεν έχει ενημερωθεί."
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:120
+#: default/mail_tt2/command_report.tt2:119
 #, fuzzy
 msgid "List %1 allows only these reception modes: "
 msgstr "Η λίστα %1 επιτρέπει μόνο τους τρόπους λήψης: %2"
 
-#: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
+#: default/mail_tt2/command_report.tt2:122 default/mail_tt2/info_report.tt2:29
 msgid ", and "
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:132
+#: default/mail_tt2/command_report.tt2:131
 msgid "This list archive is empty."
 msgstr "Το αρχείο της λίστας είναι άδειο."
 
-#: default/mail_tt2/command_report.tt2:135
+#: default/mail_tt2/command_report.tt2:134
 msgid "Required file does not exist."
 msgstr "Το απαιτούμενο αρχείο δεν υπάρχει."
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:138
+#: default/mail_tt2/command_report.tt2:137
 msgid "List %1 has no subscriber."
 msgstr "Η λίστα '%1' δεν έχει συνδρομητές."
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:141
+#: default/mail_tt2/command_report.tt2:140
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "Ο χρήστης '%1' είναι ήδη συνδρομητής της λίστας '%2'."
 
 #. (u_err.email,u_err.listname,u_err.max_list_members)
-#: default/mail_tt2/command_report.tt2:144
+#: default/mail_tt2/command_report.tt2:143
 #, fuzzy
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
 msgstr "Προσπάθεια υπέρβασης μέγιστου αριθμού συνδρομητών (%s) για τη λίστα."
 
-#: default/mail_tt2/command_report.tt2:148
+#: default/mail_tt2/command_report.tt2:147
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
@@ -10004,7 +10003,7 @@ msgstr ""
 "διαφορετική διεύθυνση ηλεκτρονικής αλληλογραφίας. Παρακαλώ προσπαθήστε "
 "χρησιμοποιώντας την κανονική σας διεύθυνση."
 
-#: default/mail_tt2/command_report.tt2:150
+#: default/mail_tt2/command_report.tt2:149
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
@@ -10016,7 +10015,7 @@ msgstr ""
 "διαφορετική διεύθυνση ηλεκτρονικής αλληλογραφίας. Παρακαλώ προσπαθήστε "
 "χρησιμοποιώντας την κανονική σας διεύθυνση."
 
-#: default/mail_tt2/command_report.tt2:152
+#: default/mail_tt2/command_report.tt2:151
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
@@ -10027,7 +10026,7 @@ msgstr ""
 "διαφορετική διεύθυνση ηλεκτρονικής αλληλογραφίας. Παρακαλώ προσπαθήστε "
 "χρησιμοποιώντας την κανονική σας διεύθυνση."
 
-#: default/mail_tt2/command_report.tt2:154
+#: default/mail_tt2/command_report.tt2:153
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
@@ -10038,7 +10037,7 @@ msgstr ""
 "διαφορετική διεύθυνση ηλεκτρονικής αλληλογραφίας. Παρακαλώ προσπαθήστε "
 "χρησιμοποιώντας την κανονική σας διεύθυνση."
 
-#: default/mail_tt2/command_report.tt2:156
+#: default/mail_tt2/command_report.tt2:155
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
@@ -10050,7 +10049,7 @@ msgstr ""
 "χρησιμοποιώντας την κανονική σας διεύθυνση."
 
 #. (u_err.command)
-#: default/mail_tt2/command_report.tt2:158
+#: default/mail_tt2/command_report.tt2:157
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
@@ -10063,7 +10062,7 @@ msgstr ""
 "χρησιμοποιώντας την κανονική σας διεύθυνση."
 
 #. (u_err.listname,u_err.key)
-#: default/mail_tt2/command_report.tt2:163
+#: default/mail_tt2/command_report.tt2:162
 msgid ""
 "Unable to access the message on list %1 with  key %2.\n"
 "Warning: this message may already have been sent by one of the list's editor."
@@ -10072,7 +10071,7 @@ msgstr ""
 "Προσοχή: Αυτό το μήνυμα ίσως να έχει ήδη σταλεί από άλλους συντονιστές."
 
 #. (u_err.key)
-#: default/mail_tt2/command_report.tt2:166
+#: default/mail_tt2/command_report.tt2:165
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
@@ -10080,32 +10079,16 @@ msgstr ""
 "Αδυναμία πρόσβασης μηνύματος ταυτοποιημένου με κλειδί %1. Ίσως το μήνυμα να "
 "έχει ήδη εγκριθεί."
 
-#: default/mail_tt2/command_report.tt2:180
+#: default/mail_tt2/command_report.tt2:179
 msgid "Command has failed because of an internal server error:"
 msgstr "Η εντολή απέτυχε λόγω εσωτερικού σφάλματος."
 
-#: default/mail_tt2/command_report.tt2:182
+#: default/mail_tt2/command_report.tt2:181
 msgid "These commands have failed because of an internal server error:"
 msgstr "Αυτές οι εντολές απέτυχαν λόγω εσωτερικού σφάλματος:"
 
-#: default/mail_tt2/command_report.tt2:199
-msgid ""
-"Ignoring message body not in text/plain, please use text/plain only (or put "
-"your command in the subject)."
-msgstr ""
-"Το μήνυμα θα αγνοηθεί καθώς το σώμα του δεν είναι απλό κείμενο, παρακαλούμε "
-"χρησιμοποιήστε μόνο απλό κείμενο (ή ορίστε την εντολή στο θέμα)."
-
-#: default/mail_tt2/command_report.tt2:202
-msgid "No command found in message."
-msgstr "Δε βρέθηκε εντολή στο μήνυμα."
-
-#: default/mail_tt2/command_report.tt2:205
-msgid "Ignoring message because of an internal server error."
-msgstr "Αγνόηση μηνύματος λόγω εσωτερικού σφάλματος."
-
 #. (conf.wwsympa_url)
-#: default/mail_tt2/command_report.tt2:215
+#: default/mail_tt2/command_report.tt2:192
 msgid "For further information, check the mailing list web site %1"
 msgstr ""
 "Για περισσότερες πληροφορίες, δείτε την ιστοσελίδα του εξυπηρετητή "
@@ -10141,51 +10124,51 @@ msgstr "Διανομή μηνυμάτων: εσωτερικό σφάλμα εξ�
 msgid "Message distribution: User error"
 msgstr "Διανομή μηνύματος: σφάλμα χρήστη"
 
-#: default/mail_tt2/delivery_status_notification.tt2:20
+#: default/mail_tt2/delivery_status_notification.tt2:22
 #, fuzzy
 msgid "Cannot personalize message"
 msgstr "όλοι, χωρίς μήνυμα υποδοχής"
 
-#: default/mail_tt2/delivery_status_notification.tt2:22
+#: default/mail_tt2/delivery_status_notification.tt2:24
 #, fuzzy
 msgid "A virus in your mail"
 msgstr "Ύπαρξη ιού στο μήνυμά σας"
 
-#: default/mail_tt2/delivery_status_notification.tt2:24
+#: default/mail_tt2/delivery_status_notification.tt2:26
 msgid "Message distribution: Authorization denied"
 msgstr "Διανομή μηνύματος: Χωρίς εξουσιοδότηση"
 
 #. (action)
-#: default/mail_tt2/delivery_status_notification.tt2:26
+#: default/mail_tt2/delivery_status_notification.tt2:28
 #, fuzzy
 msgid "Delivery Status Notification: %1"
 msgstr "παρακολούθηση μηνύματος με αναφορά παράδοσης"
 
-#: default/mail_tt2/delivery_status_notification.tt2:32
+#: default/mail_tt2/delivery_status_notification.tt2:34
 #: default/mail_tt2/list_unknown.tt2:9
 msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
 msgstr ""
 "Αυτή είναι μία αυτοματοποιημένη απάντηση από τον Διαχειριστή Λιστών Sympa."
 
-#: default/mail_tt2/delivery_status_notification.tt2:34
+#: default/mail_tt2/delivery_status_notification.tt2:36
 msgid "Message was successfully delivered to following address:"
 msgstr ""
 
 #. (recipient)
-#: default/mail_tt2/delivery_status_notification.tt2:39
+#: default/mail_tt2/delivery_status_notification.tt2:41
 msgid ""
 "Impossible to distribute your message for list '%1' for the following reason:"
 msgstr ""
 "Αδυναμία διανομής μηνύματος για τη λίστα '%1' για τους ακόλουθους λόγους:"
 
 #. (listname)
-#: default/mail_tt2/delivery_status_notification.tt2:42
-#: default/mail_tt2/delivery_status_notification.tt2:65
+#: default/mail_tt2/delivery_status_notification.tt2:44
+#: default/mail_tt2/delivery_status_notification.tt2:67
 msgid "The %1 list could not be created."
 msgstr "Αδυναμία δημιουργίας λίστας %1."
 
 #. (msg_size,max_size)
-#: default/mail_tt2/delivery_status_notification.tt2:53
+#: default/mail_tt2/delivery_status_notification.tt2:55
 msgid ""
 "Your message could not be sent because its size (%1 kB) was over the maximum "
 "size (%2 kB) allowed on this list.\n"
@@ -10202,7 +10185,7 @@ msgstr ""
 "μεγαλύτερο από το αρχικό αρχείο."
 
 #. (list.name,function)
-#: default/mail_tt2/delivery_status_notification.tt2:57
+#: default/mail_tt2/delivery_status_notification.tt2:59
 msgid ""
 "Impossible to forward your message to '%1-%2' because of an internal server "
 "error."
@@ -10211,7 +10194,7 @@ msgstr ""
 "εξυπηρετητή."
 
 #. (list.name)
-#: default/mail_tt2/delivery_status_notification.tt2:59
+#: default/mail_tt2/delivery_status_notification.tt2:61
 msgid ""
 "Impossible to distribute your message for list '%1' because of an internal "
 "server error."
@@ -10220,21 +10203,21 @@ msgstr ""
 "εξυπηρετητή."
 
 #. (list.name,list.host)
-#: default/mail_tt2/delivery_status_notification.tt2:100
-#: default/mail_tt2/delivery_status_notification.tt2:62
+#: default/mail_tt2/delivery_status_notification.tt2:105
+#: default/mail_tt2/delivery_status_notification.tt2:64
 msgid "For further information, please contact %1-request@%2"
 msgstr ""
 "Για περισσότερες πληροφορίες, παρακαλούμε επικοινωνήστε με %1-request@%2"
 
 #. (conf.listmaster_email,conf.host)
-#: default/mail_tt2/delivery_status_notification.tt2:111
-#: default/mail_tt2/delivery_status_notification.tt2:67
+#: default/mail_tt2/delivery_status_notification.tt2:116
+#: default/mail_tt2/delivery_status_notification.tt2:69
 #: default/mail_tt2/list_unknown.tt2:19
 msgid "For further information, please contact %1@%2"
 msgstr "Για περισσότερες πληροφορίες, επικοινωνήστε με %1@%2"
 
 #. (list.name,conf.sympa,list.host,cmd)
-#: default/mail_tt2/delivery_status_notification.tt2:78
+#: default/mail_tt2/delivery_status_notification.tt2:80
 #, fuzzy
 msgid ""
 "The following message was sent to list '%1' and it contains a line '%4' that "
@@ -10265,17 +10248,21 @@ msgstr ""
 "\n"
 "Ευχαριστούμε για την προσοχή σας.\n"
 
-#: default/mail_tt2/delivery_status_notification.tt2:81
+#: default/mail_tt2/delivery_status_notification.tt2:83
+msgid "No command found in message."
+msgstr "Δε βρέθηκε εντολή στο μήνυμα."
+
+#: default/mail_tt2/delivery_status_notification.tt2:86
 msgid "Your message cannot be personalized.  Please check template syntax."
 msgstr ""
 
-#: default/mail_tt2/delivery_status_notification.tt2:84
+#: default/mail_tt2/delivery_status_notification.tt2:89
 #: default/mail_tt2/your_infected_msg.tt2:3
 msgid "***** V I R U S    A L E R T *****"
 msgstr "*****ΣΥΝΑΓΕΡΜΟΣ ΙΟΥ*****"
 
 #. (virus_name,recipient,sender)
-#: default/mail_tt2/delivery_status_notification.tt2:86
+#: default/mail_tt2/delivery_status_notification.tt2:91
 #: default/mail_tt2/your_infected_msg.tt2:5
 #, fuzzy
 msgid ""
@@ -10286,12 +10273,12 @@ msgstr ""
 "στο μήνυμα που απευθύνεται προς %2 και φαίνεται\n"
 "ότι εστάλη από εσάς (Από: %3)."
 
-#: default/mail_tt2/delivery_status_notification.tt2:88
+#: default/mail_tt2/delivery_status_notification.tt2:93
 #: default/mail_tt2/your_infected_msg.tt2:7
 msgid "We stopped delivery of this email."
 msgstr "Η διανομή αυτού του μηνύματος έχει διακοπεί."
 
-#: default/mail_tt2/delivery_status_notification.tt2:92
+#: default/mail_tt2/delivery_status_notification.tt2:97
 #: default/mail_tt2/your_infected_msg.tt2:11
 msgid ""
 "It may be useful to check your system for viruses.\n"
@@ -10307,7 +10294,7 @@ msgstr ""
 "Σε αυτή την περίπτωση αγνοείστε το μήνυμα."
 
 #. (list.name)
-#: default/mail_tt2/delivery_status_notification.tt2:96
+#: default/mail_tt2/delivery_status_notification.tt2:101
 #, fuzzy
 msgid ""
 "Your message for list '%1' (attached below) was rejected.\n"
@@ -10316,12 +10303,12 @@ msgstr ""
 "Το μήνυμά σας για τη λίστα '%1' (επισυνάπτεται παρακάτω) απορρίφθηκε. \n"
 "Δεν σας επιτρέπεται η αποστολή αυτού του μηνύματος για τον παρακάτω λόγο:"
 
-#: default/mail_tt2/delivery_status_notification.tt2:103
+#: default/mail_tt2/delivery_status_notification.tt2:108
 #: default/mail_tt2/list_unknown.tt2:11
 msgid "The following address is not a known mailing list:"
 msgstr "Η ακόλουθη διεύθυνση δεν είναι μία γνωστή ηλεκτρονική λίστα:"
 
-#: default/mail_tt2/delivery_status_notification.tt2:107
+#: default/mail_tt2/delivery_status_notification.tt2:112
 #: default/mail_tt2/list_unknown.tt2:15
 msgid ""
 "To find out the correct listname, ask for this server's lists directory:"
@@ -10433,17 +10420,17 @@ msgid "End of digest for list %1 - %2"
 msgstr "Τέλος της σύναψης της λίστας %1 - %2"
 
 #. (user.email)
-#: default/mail_tt2/global_remind.tt2:3
+#: default/mail_tt2/global_remind.tt2:5
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Περίληψη συνδρομής (με χρήση της ηλεκτρονικής διεύθυνσης %1)."
 
-#: default/mail_tt2/global_remind.tt2:4
+#: default/mail_tt2/global_remind.tt2:6
 msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr ""
 "Αν επιθυμείτε την αποχώρησή σας από συνδρομητής κάποιας λίστας, παρακαλούμε "
 "αποθηκεύστε από το μήνυμα."
 
-#: default/mail_tt2/global_remind.tt2:6
+#: default/mail_tt2/global_remind.tt2:8
 msgid "For each list here is a mail address to use if you want to unsubscribe."
 msgstr ""
 "Για κάθε λίστα υπάρχει μία διεύθυνση ηλεκτρονικού ταχυδρομείου, η οποία "
@@ -13334,6 +13321,15 @@ msgstr "Αδυναμία φόρτωσης καταναλωτή, ίσως η δι
 msgid "Unknown provider."
 msgstr "Άγνωστος παροχέας."
 
+#. (u_err.email,u_err.listname)
+#: default/mail_tt2/command_report.tt2:110
+msgid ""
+"Your e-mail address %1 has not been found in the list %2. Maybe\n"
+"you subscribed from a different e-mail address ?"
+msgstr ""
+"Η διεύθυνσή σας %1 δε βρέθηκε στη λίστα %2.\n"
+"Μήπως εγγραφήκατε από διαφορετική διεύθυνση ηλεκτρονικής αλληλογραφίας;"
+
 #: default/web_tt2/modform.tt2:61
 msgid "hide"
 msgstr ""
@@ -13622,6 +13618,17 @@ msgstr ""
 #: ../wwsympa/wwsympa.fcgi.in:1993
 msgid "(top-level)"
 msgstr ""
+
+#~ msgid ""
+#~ "Ignoring message body not in text/plain, please use text/plain only (or "
+#~ "put your command in the subject)."
+#~ msgstr ""
+#~ "Το μήνυμα θα αγνοηθεί καθώς το σώμα του δεν είναι απλό κείμενο, "
+#~ "παρακαλούμε χρησιμοποιήστε μόνο απλό κείμενο (ή ορίστε την εντολή στο "
+#~ "θέμα)."
+
+#~ msgid "Ignoring message because of an internal server error."
+#~ msgstr "Αγνόηση μηνύματος λόγω εσωτερικού σφάλματος."
 
 #~ msgid ""
 #~ "The authentication process failed.\n"

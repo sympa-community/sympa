@@ -3221,54 +3221,18 @@ msgstr "[이미지 %s]"
 msgid "My message hook"
 msgstr "메시지 바닥글"
 
-#: default/mail_tt2/helpfile.tt2:1
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:187
-msgid "User guide"
-msgstr "사용자 설명서"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:405
-#, fuzzy
-msgid "Archive of %s, file %s"
-msgstr "%1 의 보관(저장), 파일 %2"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:498
-#, fuzzy
-msgid "Archive of %s, last message"
-msgstr "%1 의 보관(저장), 파일 %2"
-
-#. This entry is a sprintf format
-#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:572
-msgid "%-37s %5.1f kB   %s"
-msgstr ""
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:8614 src/lib/Sympa/Spindle/DispatchRequest.pm:576
-#: src/lib/Sympa/Spindle/ProcessDigest.pm:177
-msgid "%a, %d %b %Y %H:%M:%S"
-msgstr "%Y년%m월%d일 (%a) %H:%M:%S"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:13164 src/lib/Sympa/Spindle/DispatchRequest.pm:888
-msgid "%A"
-msgstr "%a"
-
-#: default/mail_tt2/global_remind.tt2:1
-#: src/lib/Sympa/Spindle/DispatchRequest.pm:1404
-msgid "Subscription summary"
-msgstr "구독 개요"
-
 #: default/mail_tt2/digest.tt2:12 default/mail_tt2/digestplain.tt2:9
 #: default/mail_tt2/get_archive.tt2:8
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:170
 msgid "Table of contents:"
 msgstr "목차:"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: src/cgi/wwsympa.fcgi.in:8614 src/lib/Sympa/Request/Handler/index.pm:84
+#: src/lib/Sympa/Spindle/ProcessDigest.pm:177
+msgid "%a, %d %b %Y %H:%M:%S"
+msgstr "%Y년%m월%d일 (%a) %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -3412,6 +3376,41 @@ msgstr "리스트 별명 템플렛"
 #: src/lib/Sympa/Message/Plugin/FixEncoding.pm:31
 msgid "Fix character set and encoding"
 msgstr ""
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/get.pm:107
+#, fuzzy
+msgid "Archive of %s, file %s"
+msgstr "%1 의 보관(저장), 파일 %2"
+
+#: default/mail_tt2/global_remind.tt2:1
+#: src/lib/Sympa/Request/Handler/global_remind.pm:61
+msgid "Subscription summary"
+msgstr "구독 개요"
+
+#: default/mail_tt2/helpfile.tt2:1 src/lib/Sympa/Request/Handler/help.pm:61
+msgid "User guide"
+msgstr "사용자 설명서"
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/index.pm:80
+msgid "%-37s %5.1f kB   %s"
+msgstr ""
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: src/cgi/wwsympa.fcgi.in:13164 src/lib/Sympa/Request/Handler/info.pm:86
+msgid "%A"
+msgstr "%a"
+
+#. This entry is a sprintf format
+#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
+#: src/lib/Sympa/Request/Handler/last.pm:100
+#, fuzzy
+msgid "Archive of %s, last message"
+msgstr "%1 의 보관(저장), 파일 %2"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -4322,11 +4321,11 @@ msgstr "보낸 사람: %1"
 msgid "To: %1"
 msgstr "받는 사람: %1"
 
-#: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:51
+#: default/web_tt2/compose_mail.tt2:14 default/web_tt2/crash.tt2:52
 #: default/web_tt2/create_list_request.tt2:40
 #: default/web_tt2/install_pending_list.tt2:16 default/web_tt2/main.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:6
-#: default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/tt2_error.tt2:52
 msgid "Subject:"
 msgstr "제목:"
 
@@ -4523,24 +4522,24 @@ msgstr "적용"
 msgid "Skip to Content."
 msgstr "템플렛"
 
-#: default/web_tt2/crash.tt2:51 default/web_tt2/info.tt2:7
+#: default/web_tt2/crash.tt2:52 default/web_tt2/info.tt2:7
 #: default/web_tt2/list_panel.tt2:46 default/web_tt2/list_panel.tt2:81
-#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:51
+#: default/web_tt2/main.tt2:81 default/web_tt2/tt2_error.tt2:52
 #, fuzzy
 msgid "(Edit)"
 msgstr "편집"
 
-#: default/web_tt2/crash.tt2:57 default/web_tt2/tt2_error.tt2:57
+#: default/web_tt2/crash.tt2:58 default/web_tt2/tt2_error.tt2:58
 #, fuzzy
 msgid "Internal Server Error"
 msgstr "서버 에러"
 
-#: default/web_tt2/crash.tt2:58
+#: default/web_tt2/crash.tt2:59
 #, fuzzy
 msgid "Sympa encountered an internal error."
 msgstr " %1 가 내부 서버 에러를 발생시켰습니다"
 
-#: default/web_tt2/crash.tt2:59 default/web_tt2/tt2_error.tt2:60
+#: default/web_tt2/crash.tt2:60 default/web_tt2/tt2_error.tt2:61
 msgid "Please contact the listmaster."
 msgstr "리스트마스터 관리자에 문의 하십시오."
 
@@ -4550,17 +4549,17 @@ msgstr "리스트마스터 관리자에 문의 하십시오."
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:174
 #: default/mail_tt2/listmaster_notification.tt2:310
-#: default/web_tt2/crash.tt2:62 default/web_tt2/tt2_error.tt2:59
+#: default/web_tt2/crash.tt2:63 default/web_tt2/tt2_error.tt2:60
 #, fuzzy
 msgid "Error: %1"
 msgstr "에러:"
 
-#: default/web_tt2/crash.tt2:64
+#: default/web_tt2/crash.tt2:65
 msgid "Traceback"
 msgstr ""
 
-#: default/web_tt2/crash.tt2:73 default/web_tt2/main.tt2:96
-#: default/web_tt2/tt2_error.tt2:66
+#: default/web_tt2/crash.tt2:74 default/web_tt2/main.tt2:96
+#: default/web_tt2/tt2_error.tt2:67
 msgid "Top of Page"
 msgstr ""
 
@@ -5056,11 +5055,11 @@ msgstr "매개 변수 값"
 msgid "apply to"
 msgstr "적용"
 
-#: default/web_tt2/edit_config.tt2:37 default/web_tt2/serveradmin.tt2:187
+#: default/web_tt2/edit_config.tt2:36 default/web_tt2/serveradmin.tt2:187
 msgid "Set"
 msgstr ""
 
-#: default/web_tt2/edit_config.tt2:57
+#: default/web_tt2/edit_config.tt2:56
 #, fuzzy
 msgid "main conf"
 msgstr "리스트 구성 편집"
@@ -5600,7 +5599,7 @@ msgid "Not subscribed: %1"
 msgstr "등록구독되지 않는: %1"
 
 #. (u_err.list)
-#: default/web_tt2/error.tt2:75
+#: default/web_tt2/error.tt2:76
 msgid "You are not subscribed to list %1"
 msgstr "%1 메일링 리스트를 등록구독되지 않습니다."
 
@@ -6432,7 +6431,7 @@ msgstr "리스트 편집자의입니다:"
 msgid "Listmaster"
 msgstr "리스트마스터"
 
-#: default/mail_tt2/command_report.tt2:125 default/mail_tt2/info_report.tt2:31
+#: default/mail_tt2/command_report.tt2:124 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/list_menu.tt2:38 default/web_tt2/list_menu.tt2:43
 #: default/web_tt2/list_menu.tt2:46 default/web_tt2/list_menu.tt2:49
 #: default/web_tt2/list_panel.tt2:33 default/web_tt2/list_panel.tt2:65
@@ -9159,7 +9158,7 @@ msgid "Notification"
 msgstr "알림"
 
 #: default/mail_tt2/listmaster_notification.tt2:309
-#: default/web_tt2/tt2_error.tt2:58
+#: default/web_tt2/tt2_error.tt2:59
 #, fuzzy
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "Sympa는 다음과 오는 이유를 위한 요청한 페이지를 전할 수 없었습니다 : "
@@ -9707,6 +9706,7 @@ msgstr ""
 "누르기 : "
 
 #: default/mail_tt2/command_report.tt2:2
+#: default/mail_tt2/delivery_status_notification.tt2:20
 msgid "Results of your commands"
 msgstr "명령의 결과"
 
@@ -9826,13 +9826,11 @@ msgid "Command syntax error."
 msgstr "명령 구문 에러."
 
 #. (u_err.listname)
-#. (glob.listname)
 #. (listname)
 #. (recipient)
 #: default/mail_tt2/command_report.tt2:103
-#: default/mail_tt2/command_report.tt2:208
-#: default/mail_tt2/delivery_status_notification.tt2:45
-#: default/mail_tt2/delivery_status_notification.tt2:48
+#: default/mail_tt2/delivery_status_notification.tt2:47
+#: default/mail_tt2/delivery_status_notification.tt2:50
 msgid "List '%1' does not exist."
 msgstr "'%1' 리스트 는 존재하지 않습니다."
 
@@ -9842,21 +9840,22 @@ msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "%1 의 메일링 리스트은 가입자의 기본설정을 제공하지 않습니다."
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:110
+#: default/mail_tt2/command_report.tt2:109
+#, fuzzy
 msgid ""
-"Your e-mail address %1 has not been found in the list %2. Maybe\n"
-"you subscribed from a different e-mail address ?"
+"Your e-mail address %1 has not been found in the list %2. Maybe you "
+"subscribed from a different e-mail address?"
 msgstr ""
 "이메일 주소 %1 는 메일링 리스트 %2에서 있지 않았습니다. 어쩌면\n"
 "다른 이메일 주소에서 등록구독했습니다?"
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:113
+#: default/mail_tt2/command_report.tt2:112
 msgid "E-mail address %1 has not been found in the list %2."
 msgstr "이메일 주소 %1 는 메일링 리스트 %2에서 확인 되지 않았습니다."
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:117
+#: default/mail_tt2/command_report.tt2:116
 msgid ""
 "List %1 does not accept the DIGEST mode. \n"
 "Your configuration regarding this command has not been updated."
@@ -9865,41 +9864,41 @@ msgstr ""
 "이 명령에 대해 구성 업데이트 하지 않았습니다."
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:120
+#: default/mail_tt2/command_report.tt2:119
 #, fuzzy
 msgid "List %1 allows only these reception modes: "
 msgstr "리스트 %1 는 다음과 받기 모드들만 사용할 수 있습니다 : %2"
 
-#: default/mail_tt2/command_report.tt2:123 default/mail_tt2/info_report.tt2:29
+#: default/mail_tt2/command_report.tt2:122 default/mail_tt2/info_report.tt2:29
 msgid ", and "
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:132
+#: default/mail_tt2/command_report.tt2:131
 msgid "This list archive is empty."
 msgstr "이 리스트 보관은 빕니다."
 
-#: default/mail_tt2/command_report.tt2:135
+#: default/mail_tt2/command_report.tt2:134
 msgid "Required file does not exist."
 msgstr "필수는 파일는 존재하지 않습니다."
 
 #. (u_err.listname)
-#: default/mail_tt2/command_report.tt2:138
+#: default/mail_tt2/command_report.tt2:137
 msgid "List %1 has no subscriber."
 msgstr "%1 메일링 리스트 에는 아무 가입자 없습니다."
 
 #. (u_err.email,u_err.listname)
-#: default/mail_tt2/command_report.tt2:141
+#: default/mail_tt2/command_report.tt2:140
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "'%1' 사용자가 이미 %2 메일링 리스트 가입자입니다."
 
 #. (u_err.email,u_err.listname,u_err.max_list_members)
-#: default/mail_tt2/command_report.tt2:144
+#: default/mail_tt2/command_report.tt2:143
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
 msgstr ""
 
-#: default/mail_tt2/command_report.tt2:148
+#: default/mail_tt2/command_report.tt2:147
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
@@ -9909,7 +9908,7 @@ msgstr ""
 "달라던 것\n"
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
-#: default/mail_tt2/command_report.tt2:150
+#: default/mail_tt2/command_report.tt2:149
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
@@ -9920,7 +9919,7 @@ msgstr ""
 "달라던 것\n"
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
-#: default/mail_tt2/command_report.tt2:152
+#: default/mail_tt2/command_report.tt2:151
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
@@ -9930,7 +9929,7 @@ msgstr ""
 "달라던 것\n"
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
-#: default/mail_tt2/command_report.tt2:154
+#: default/mail_tt2/command_report.tt2:153
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
@@ -9940,7 +9939,7 @@ msgstr ""
 "달라던 것\n"
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
-#: default/mail_tt2/command_report.tt2:156
+#: default/mail_tt2/command_report.tt2:155
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
@@ -9951,7 +9950,7 @@ msgstr ""
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
 #. (u_err.command)
-#: default/mail_tt2/command_report.tt2:158
+#: default/mail_tt2/command_report.tt2:157
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
@@ -9963,7 +9962,7 @@ msgstr ""
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
 #. (u_err.listname,u_err.key)
-#: default/mail_tt2/command_report.tt2:163
+#: default/mail_tt2/command_report.tt2:162
 #, fuzzy
 msgid ""
 "Unable to access the message on list %1 with  key %2.\n"
@@ -9973,41 +9972,25 @@ msgstr ""
 "경고 : 이 메세지는 다른 리스트의 것에 의해 이미 보내질지도 모릅니다.편집자."
 
 #. (u_err.key)
-#: default/mail_tt2/command_report.tt2:166
+#: default/mail_tt2/command_report.tt2:165
 #, fuzzy
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
 msgstr "틀린 형식 때문에 %1 키의 확인된 메시지를 액세스할 수 없습니다."
 
-#: default/mail_tt2/command_report.tt2:180
+#: default/mail_tt2/command_report.tt2:179
 #, fuzzy
 msgid "Command has failed because of an internal server error:"
 msgstr "명령은 내부 서버 에러 때문에 실패했습니다 :"
 
-#: default/mail_tt2/command_report.tt2:182
+#: default/mail_tt2/command_report.tt2:181
 #, fuzzy
 msgid "These commands have failed because of an internal server error:"
 msgstr "이들 명령은 내부 서버 에러 때문에 실패했습니다 :"
 
-#: default/mail_tt2/command_report.tt2:199
-msgid ""
-"Ignoring message body not in text/plain, please use text/plain only (or put "
-"your command in the subject)."
-msgstr ""
-"원본에서 아닙니다 메시지 본문를 text/plain, text/plain 단지 이용하기 (또는 두"
-"하기제목에 자신 명령)."
-
-#: default/mail_tt2/command_report.tt2:202
-msgid "No command found in message."
-msgstr "아무 명령 메시지에서 찾았습니다."
-
-#: default/mail_tt2/command_report.tt2:205
-msgid "Ignoring message because of an internal server error."
-msgstr "메시지를 무시 하십시요. 내부 서버 에러 때문입니다."
-
 #. (conf.wwsympa_url)
-#: default/mail_tt2/command_report.tt2:215
+#: default/mail_tt2/command_report.tt2:192
 msgid "For further information, check the mailing list web site %1"
 msgstr "자세한 내용은 다음 메일링 리스트 웹사이트 %1 를 참조하십시오"
 
@@ -10043,38 +10026,38 @@ msgstr "메시지 배포 : 내부 서버 에러"
 msgid "Message distribution: User error"
 msgstr "메시지 배포 : 사용자 에러"
 
-#: default/mail_tt2/delivery_status_notification.tt2:20
+#: default/mail_tt2/delivery_status_notification.tt2:22
 #, fuzzy
 msgid "Cannot personalize message"
 msgstr "누군가, 환영받은 메시지 없음"
 
-#: default/mail_tt2/delivery_status_notification.tt2:22
+#: default/mail_tt2/delivery_status_notification.tt2:24
 #, fuzzy
 msgid "A virus in your mail"
 msgstr "당신의 이메일에서 바이러스가 발견되었습니다."
 
-#: default/mail_tt2/delivery_status_notification.tt2:24
+#: default/mail_tt2/delivery_status_notification.tt2:26
 #, fuzzy
 msgid "Message distribution: Authorization denied"
 msgstr "메시지 배포 : 부정된 허가"
 
 #. (action)
-#: default/mail_tt2/delivery_status_notification.tt2:26
+#: default/mail_tt2/delivery_status_notification.tt2:28
 #, fuzzy
 msgid "Delivery Status Notification: %1"
 msgstr "인증 없는 소유자 에 의해"
 
-#: default/mail_tt2/delivery_status_notification.tt2:32
+#: default/mail_tt2/delivery_status_notification.tt2:34
 #: default/mail_tt2/list_unknown.tt2:9
 msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
 msgstr "이것 Sympa 메일링 리스트 매니저가 보내진 자동 회신."
 
-#: default/mail_tt2/delivery_status_notification.tt2:34
+#: default/mail_tt2/delivery_status_notification.tt2:36
 msgid "Message was successfully delivered to following address:"
 msgstr ""
 
 #. (recipient)
-#: default/mail_tt2/delivery_status_notification.tt2:39
+#: default/mail_tt2/delivery_status_notification.tt2:41
 #, fuzzy
 msgid ""
 "Impossible to distribute your message for list '%1' for the following reason:"
@@ -10082,13 +10065,13 @@ msgstr ""
 "리스트 '%1' 위한 메시지를 배포하기 불가. 다음 원인 때문에 실패했습니다 :"
 
 #. (listname)
-#: default/mail_tt2/delivery_status_notification.tt2:42
-#: default/mail_tt2/delivery_status_notification.tt2:65
+#: default/mail_tt2/delivery_status_notification.tt2:44
+#: default/mail_tt2/delivery_status_notification.tt2:67
 msgid "The %1 list could not be created."
 msgstr "%1 메일링 리스트 생성될 수 없었습니다."
 
 #. (msg_size,max_size)
-#: default/mail_tt2/delivery_status_notification.tt2:53
+#: default/mail_tt2/delivery_status_notification.tt2:55
 msgid ""
 "Your message could not be sent because its size (%1 kB) was over the maximum "
 "size (%2 kB) allowed on this list.\n"
@@ -10099,34 +10082,34 @@ msgid ""
 msgstr ""
 
 #. (list.name,function)
-#: default/mail_tt2/delivery_status_notification.tt2:57
+#: default/mail_tt2/delivery_status_notification.tt2:59
 msgid ""
 "Impossible to forward your message to '%1-%2' because of an internal server "
 "error."
 msgstr "메시지를 '%1-%2' 위해 전달하기 불가. 내부 서버 에러."
 
 #. (list.name)
-#: default/mail_tt2/delivery_status_notification.tt2:59
+#: default/mail_tt2/delivery_status_notification.tt2:61
 msgid ""
 "Impossible to distribute your message for list '%1' because of an internal "
 "server error."
 msgstr "리스트 '%1' 위한 메시지 배포가 불가능합니다. 내부 서버 에러."
 
 #. (list.name,list.host)
-#: default/mail_tt2/delivery_status_notification.tt2:100
-#: default/mail_tt2/delivery_status_notification.tt2:62
+#: default/mail_tt2/delivery_status_notification.tt2:105
+#: default/mail_tt2/delivery_status_notification.tt2:64
 msgid "For further information, please contact %1-request@%2"
 msgstr "자세한 내용은, %1-request@%2 에 문의 하십시오"
 
 #. (conf.listmaster_email,conf.host)
-#: default/mail_tt2/delivery_status_notification.tt2:111
-#: default/mail_tt2/delivery_status_notification.tt2:67
+#: default/mail_tt2/delivery_status_notification.tt2:116
+#: default/mail_tt2/delivery_status_notification.tt2:69
 #: default/mail_tt2/list_unknown.tt2:19
 msgid "For further information, please contact %1@%2"
 msgstr "자세한 내용은, %1@%2 에 문의 하십시오"
 
 #. (list.name,conf.sympa,list.host,cmd)
-#: default/mail_tt2/delivery_status_notification.tt2:78
+#: default/mail_tt2/delivery_status_notification.tt2:80
 #, fuzzy
 msgid ""
 "The following message was sent to list '%1' and it contains a line '%4' that "
@@ -10157,17 +10140,21 @@ msgstr ""
 "\n"
 "주의를 감사합니다.\n"
 
-#: default/mail_tt2/delivery_status_notification.tt2:81
+#: default/mail_tt2/delivery_status_notification.tt2:83
+msgid "No command found in message."
+msgstr "아무 명령 메시지에서 찾았습니다."
+
+#: default/mail_tt2/delivery_status_notification.tt2:86
 msgid "Your message cannot be personalized.  Please check template syntax."
 msgstr ""
 
-#: default/mail_tt2/delivery_status_notification.tt2:84
+#: default/mail_tt2/delivery_status_notification.tt2:89
 #: default/mail_tt2/your_infected_msg.tt2:3
 msgid "***** V I R U S    A L E R T *****"
 msgstr "*****  바 이 러 스   알 림  *****"
 
 #. (virus_name,recipient,sender)
-#: default/mail_tt2/delivery_status_notification.tt2:86
+#: default/mail_tt2/delivery_status_notification.tt2:91
 #: default/mail_tt2/your_infected_msg.tt2:5
 #, fuzzy
 msgid ""
@@ -10178,12 +10165,12 @@ msgstr ""
 "메시지에서 %2에 연설하고 저것 보입니다\n"
 "너의 것을 위해 (보낸 사람: %3)."
 
-#: default/mail_tt2/delivery_status_notification.tt2:88
+#: default/mail_tt2/delivery_status_notification.tt2:93
 #: default/mail_tt2/your_infected_msg.tt2:7
 msgid "We stopped delivery of this email."
 msgstr "우리는 멈췄 이 이메일의 배달"
 
-#: default/mail_tt2/delivery_status_notification.tt2:92
+#: default/mail_tt2/delivery_status_notification.tt2:97
 #: default/mail_tt2/your_infected_msg.tt2:11
 msgid ""
 "It may be useful to check your system for viruses.\n"
@@ -10198,7 +10185,7 @@ msgstr ""
 "이러스가 컴퓨터에서 오지 않았다 가능한. 저 케이스에서는,무시하기 이 메시지"
 
 #. (list.name)
-#: default/mail_tt2/delivery_status_notification.tt2:96
+#: default/mail_tt2/delivery_status_notification.tt2:101
 #, fuzzy
 msgid ""
 "Your message for list '%1' (attached below) was rejected.\n"
@@ -10207,13 +10194,13 @@ msgstr ""
 "(아래에 붙어 있습니다.) 리스트 는 '%1' 를 위한 메시지 거부했습니다.\n"
 "다음 이유를 위한 이 메세지를 보내는 것을 허용되지 않습니다:"
 
-#: default/mail_tt2/delivery_status_notification.tt2:103
+#: default/mail_tt2/delivery_status_notification.tt2:108
 #: default/mail_tt2/list_unknown.tt2:11
 #, fuzzy
 msgid "The following address is not a known mailing list:"
 msgstr "다음 주소 알려진 메일링 리스트 아닙니다 :"
 
-#: default/mail_tt2/delivery_status_notification.tt2:107
+#: default/mail_tt2/delivery_status_notification.tt2:112
 #: default/mail_tt2/list_unknown.tt2:15
 #, fuzzy
 msgid ""
@@ -10328,16 +10315,16 @@ msgid "End of digest for list %1 - %2"
 msgstr "%1 메일링 리스트 - %2 에 대한 다이제스트의 끝"
 
 #. (user.email)
-#: default/mail_tt2/global_remind.tt2:3
+#: default/mail_tt2/global_remind.tt2:5
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "구독의 개요 (이메일 %1 를 사용하는)."
 
-#: default/mail_tt2/global_remind.tt2:4
+#: default/mail_tt2/global_remind.tt2:6
 msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr ""
 "만약에 어떤 메일링 리스트에서 예약 취소하고 싶으면, 이 메일을 저장하십시오."
 
-#: default/mail_tt2/global_remind.tt2:6
+#: default/mail_tt2/global_remind.tt2:8
 msgid "For each list here is a mail address to use if you want to unsubscribe."
 msgstr "여기에서 각 리스트는 만약 가입취소를 위해 사용될 메일 주소 입니다."
 
@@ -13207,6 +13194,15 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "확인 불가"
 
+#. (u_err.email,u_err.listname)
+#: default/mail_tt2/command_report.tt2:110
+msgid ""
+"Your e-mail address %1 has not been found in the list %2. Maybe\n"
+"you subscribed from a different e-mail address ?"
+msgstr ""
+"이메일 주소 %1 는 메일링 리스트 %2에서 있지 않았습니다. 어쩌면\n"
+"다른 이메일 주소에서 등록구독했습니다?"
+
 #: default/web_tt2/modform.tt2:61
 msgid "hide"
 msgstr ""
@@ -14016,6 +14012,16 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#~ msgid ""
+#~ "Ignoring message body not in text/plain, please use text/plain only (or "
+#~ "put your command in the subject)."
+#~ msgstr ""
+#~ "원본에서 아닙니다 메시지 본문를 text/plain, text/plain 단지 이용하기 (또"
+#~ "는 두하기제목에 자신 명령)."
+
+#~ msgid "Ignoring message because of an internal server error."
+#~ msgstr "메시지를 무시 하십시요. 내부 서버 에러 때문입니다."
 
 #~ msgid ""
 #~ "The authentication process failed.\n"
