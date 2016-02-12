@@ -3,6 +3,179 @@
 
 (See Changelog file for the full changes log)
 
+6.2.13		February 12, 2016
+
+  Changes:
+
+	[12631] default/Makefile.am, default/web_tt2/lists_categories.tt2,
+	src/cgi/wwsympa.fcgi.in:  Displaying lists by categories is now a
+	specific action, accessible through Sympa main menu, instead of a part
+	of the default home page.
+
+	[12625] default/web_tt2/help_faq.tt2, default/web_tt2/sympa_menu.tt2: 
+	top menu reorganisation (search and support)
+
+	[12624] default/web_tt2/css.tt2: css modifications for major
+	reorganisation of homepage submenu
+
+	[12623] default/web_tt2/home.tt2, default/web_tt2/main.tt2: major
+	reorganisation of homepage submenu
+
+	[12622] default/web_tt2/my.tt2:  delete end useless >
+
+	[12618] default/web_tt2/css.tt2, default/web_tt2/list_menu.tt2: 
+	modification of aside menu structure and class divider color
+
+	[12617] default/web_tt2/css.tt2, default/web_tt2/my.tt2:  new look for
+	my lists page
+
+	[12604] src/lib/Makefile.am, src/lib/Sympa/Internals,
+	src/lib/Sympa/Internals/Workflow.pod, src/lib/Sympa/Internals.podpl: 
+	[Notice contributors] Logic to handle messages in processes of Sympa
+	has been highly refactored.  See the documentation
+	Sympa::Internals::Workflow for overview.
+
+	[12592] default/web_tt2/css.tt2:  title and table td font-size
+	reduction
+
+	[12583] default/mail_tt2/delivery_status_notification.tt2,
+	src/lib/Sympa/Spindle/AuthorizeMessage.pm,
+	src/lib/Sympa/Spindle/DoForward.pm, src/lib/Sympa/Spindle/DoMessage.pm,
+	src/lib/Sympa/Spindle/ProcessAutomatic.pm,
+	src/lib/Sympa/Spindle/ProcessIncoming.pm,
+	src/lib/Sympa/Spindle/ProcessModeration.pm:  If distribution of a
+	message is rejected or fails, delivery status notification (DSN)
+	instead of normal report will be sent by Sympa.  This behavior may
+	mitigate backscattering caused by unwanted situation (virus, storm of
+	spam, system trouble, ...).
+
+	[12573] default/web_tt2/css.tt2, default/web_tt2/modform.tt2,
+	default/web_tt2/modindex.tt2, default/web_tt2/viewmod.tt2:  Complete
+	reorganization of message moderation interface, with action icons and
+	modals, otherwise improve alert messages presentation and lisibility
+
+	[12572] default/web_tt2/blacklist.tt2:	delete paragrah tag
+
+	[12571] default/web_tt2/css.tt2:  titles font-size unit modification
+	(rem to em)
+
+	[12570] default/web_tt2/blacklist.tt2:	custumize info message 
+
+	[12569] default/web_tt2/get_closed_lists.tt2,
+	default/web_tt2/get_pending_lists.tt2:	add info message when no closed
+	or pending lists
+
+	[12539] default/web_tt2/css.tt2:  Global font-size reduction
+
+	[12535] default/web_tt2/review.tt2:  optimization of message info view
+
+	[12534] default/web_tt2/reviewbouncing.tt2,
+	default/web_tt2/subscriber_table.tt2:  medium-centered for alert-info
+
+	[12533] default/web_tt2/review.tt2,
+	default/web_tt2/subscriber_table.tt2:  global page settings and message
+	info when no list members
+
+	[12532] default/web_tt2/reviewbouncing.tt2:  alert-box info size for
+	small screens
+
+	[12530] default/web_tt2/reviewbouncing.tt2:  global page settings,
+	message when no bouncing members (bounce_rate=0), and responsive class
+	deleted for table because of th rowspan
+
+	[12529] default/web_tt2/reviewbouncing.tt2:  h3 title tag replaced by
+	h2 tag
+
+  Bug fixes:
+
+	[12672] src/lib/Sympa/User.pm:	Test in Sympa::User::moveto sub made
+	email change fail even though it was actually succesful. This is due to
+	the fact that ->rows will most of the time return 0 in case of
+	multiples virtual hosts. Fixed by getting rid of the rows test and
+	counting on the result of do-prepared_query to check whether the query
+	succeeded or not. The number of rows affected should not be a clue
+	because it will be zero for all virtual hosts if the user does not
+	exist. This should be checked before trying to change email address.
+
+	[12671] src/cgi/wwsympa.fcgi.in:  Password validation is not used
+	anymore when adding a new user, because such addition is made using a
+	temporary password that might not comply to password validation rules.
+	Actually the temporary password will never be used because user need to
+	define their password themselves the first time they login, using a one
+	time ticket. So they are more temporary placholders in the database
+	than temporary passwords.
+
+	[12670] src/lib/Sympa/Admin.pm: [Reported by S. Rich, Univ. Duke] A
+	typo in Admin.pm made the --change_user_email sympa command to fail.
+
+	[12667] src/lib/Sympa/User.pm:	[Reported by S. Rich, Duke univ.]
+	sympa.pl --change_user_email fails due to typo in source.
+
+	[12655] src/cgi/wwsympa.fcgi.in:  Downloading the list certificate from
+	the web interface returned an error because an obsoleted sub was used
+	to build the file name.
+
+	[12641] default/web_tt2/head_javascript.tt2:  Correction of javascript
+	for disapeared top-bar-dropdown menu on input lost focus
+
+	[12640] src/cgi/wwsympa.fcgi.in: [Introduced in rev. 11267][Reported by
+	V. Juloux, EPHE] The test of avatar's file size was inverted;
+	consequently, files respecting the size limit were rejected for size
+	limit reasons.
+
+	[12626] default/web_tt2/sympa_menu.tt2:  top comment modification
+
+	[12616] src/lib/Sympa/Language.pm, src/lib/Sympa/Session.pm:  Tests in
+	code using a few regexps were invalid due to typos.  These also produce
+	"Unescaped left brace in regex" deprecation warnings many, many times
+	with Perl 5.22 or later.
+
+	[12611] src/lib/Sympa/Commands.pm, src/lib/Sympa.pm:  If UNSUBSCRIBE
+	command with an email parameter not the same as sender is sent and
+	"unsubscribe" scenario returns value "request_auth(sender)", an invalid
+	auth key will be sent back to the sender.  Fixed by generating auth key
+	using right parameter.
+
+	[12610] src/lib/Sympa.pm:  REVIEW command cannot handle the result
+	"request_auth" returned by review scenario.
+
+	[12577] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/List.pm,
+	src/lib/Sympa/Spindle/ProcessOutgoing.pm:  If an incoming message is
+	encrypted, certificates of list members exist and any of them are
+	invalid, message distribution by bulk.pl aborts and part of list
+	members does not receive any messages.
+	Fixed by replacing outgoing messages with error messages if
+	re-encryption by bulk.pl fails.
+
+	[12568] default/web_tt2/css.tt2:  fix alert-box info color, and
+	*-centered foundation class margin-left
+
+	[12567] default/mail_tt2/moderate.tt2:	If send scenario returns result
+	"editor" (forwading to editor without validation key), notification
+	sent to editor does not include original message.
+	Fixed by correcting moderate.tt2 mail template.
+
+	[12551] src/lib/Sympa/Spindle/ProcessIncoming.pm:  Loop prevention of
+	the messages bound for administrators (listmaster, owner or editor)
+	using "X-Loop:" field does not work.  Fixed by comparing the field with
+	correct administrator address.
+
+	[12540] default/web_tt2/subscriber_table.tt2:  List members table
+	correction, end table tag wasn't at the correct place
+
+	[12538] src/lib/Sympa/DatabaseDriver/LDAP.pm, src/lib/Sympa/ListDef.pm:
+	 [Reported by S. Hatteberg & suggested by S. Shipway] "none" or other
+	value can not be specified to ca_verify parameter of LDAP datasource,
+	though it became required as of Sympa 6.2.
+	Fixed by adding new "ca_verify" defaulting "required" to corresponding
+	config paragraphs.
+
+	[12521] default/web_tt2/css.tt2:  new correction of uncolored dropdown
+	menu menu below form element
+
+	[12520] default/web_tt2/css.tt2:  correction of uncolored dropdown menu
+	menu below form element
+
 6.2.12		November 18, 2015
 
   Changes:

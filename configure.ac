@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 AC_PREREQ(2.60)
-AC_INIT(sympa, 6.2.12, sympa-authors@listes.renater.fr)
+AC_INIT(sympa, 6.2.13, sympa-authors@listes.renater.fr)
 AM_INIT_AUTOMAKE([foreign -Wall -Werror 1.9 tar-pax])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AM_PO_SUBDIRS
