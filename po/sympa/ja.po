@@ -12,16 +12,16 @@ msgstr ""
 "Project-Id-Version: Sympa-6.1.20+, 6.2a.38\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2015-09-01 10:08+0000\n"
-"Last-Translator: system user <>\n"
+"PO-Revision-Date: 2016-01-15 16:03+0000\n"
+"Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.7\n"
-"X-POOTLE-MTIME: 1441102135.000000\n"
+"X-POOTLE-MTIME: 1452873812.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -5572,15 +5572,13 @@ msgstr "%1 はすでに %2 メーリングリストに読者登録していま�
 
 #. (u_err.sub,u_err.list)
 #: default/web_tt2/error.tt2:82
-#, fuzzy
 msgid "Unable to add user %1 in list %2: "
-msgstr "%s を %s メーリングリストに追加できませんでした。%s"
+msgstr "%1 を %2 メーリングリストに追加できませんでした。"
 
 #. (u_err.max_list_members)
 #: default/web_tt2/error.tt2:82
-#, fuzzy
 msgid "Attempt to exceed the max number of members (%1) for this list"
-msgstr "このリストの読者数上限 (%s) を超えてしまいます。"
+msgstr "このリストの読者数上限 (%1) を超えてしまいます"
 
 #: default/web_tt2/error.tt2:83
 msgid "Please provide your password"
@@ -9618,8 +9616,8 @@ msgid ""
 "List %1 does not accept the DIGEST mode. \n"
 "Your configuration regarding this command has not been updated."
 msgstr ""
-"%1 メーリングリストでは DIGEST モードを受け付けません。\n"
-"あなたの個人設定のうち、このコマンドに関する設定は更新しません。"
+"%1 メーリングリストではまとめ読みモードを受け付けません。\n"
+"あなたの個人設定はこのコマンドによっては更新されていません。"
 
 #. (u_err.listname)
 #: default/mail_tt2/command_report.tt2:120
@@ -9650,11 +9648,10 @@ msgstr "%1 はすでに %2 メーリングリストに読者登録していま�
 
 #. (u_err.email,u_err.listname,u_err.max_list_members)
 #: default/mail_tt2/command_report.tt2:144
-#, fuzzy
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
-msgstr "このリストの読者数上限 (%s) を超えてしまいます。"
+msgstr "「%1」を「%2」メーリングリストに追加できませんでした。このリストの読者数上限 (%3) を超えてしまいます。"
 
 #: default/mail_tt2/command_report.tt2:148
 msgid ""
@@ -9750,7 +9747,7 @@ msgstr ""
 
 #: default/mail_tt2/command_report.tt2:202
 msgid "No command found in message."
-msgstr "このメッセージには、コマンドがなにもありませんでした。"
+msgstr "No command found in message.このメッセージには、コマンドがなにもありませんでした。"
 
 #: default/mail_tt2/command_report.tt2:205
 msgid "Ignoring message because of an internal server error."
@@ -10421,7 +10418,7 @@ msgstr "登録解除           : %1"
 #. (send)
 #: default/mail_tt2/info_report.tt2:19
 msgid "Sending messages  : %1"
-msgstr "メッセージの送信 :   %1"
+msgstr "メッセージの送信   : %1"
 
 #. (review)
 #: default/mail_tt2/info_report.tt2:20
