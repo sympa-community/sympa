@@ -68,8 +68,8 @@ sub _init {
             ? $self->{log_level}
             : $Conf::Conf{'log_level'};
 
-        # Free zombie sendmail process.
-        Sympa::Process->instance->reap_child;
+        ## Free zombie sendmail process.
+        #Sympa::Process->instance->reap_child;
 
         Sympa::List::init_list_cache();
         # Process grouped notifications
@@ -104,7 +104,7 @@ sub _fork_children {
 
     if ($Conf::Conf{'bulk_wait_to_fork'} < time - $self->{_last_check}) {
         # Clean up PID file (in case some child bulks would have died)
-        $process->reap_child(children => $self->{_pids}, file => 1);
+        $process->sync_child(hash => $self->{_pids}, file => 1);
 
         # Start new processes if there remain at least
         # 'bulk_fork_threshold' packets to send in the bulk spool.

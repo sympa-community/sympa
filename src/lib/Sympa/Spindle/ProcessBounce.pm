@@ -60,8 +60,8 @@ sub _init {
         # Process grouped notifications.
         Sympa::Alarm->instance->flush;
     } elsif ($state == 2) {
-        # Free zombie sendmail process.
-        Sympa::Process->instance->reap_child;
+        ## Free zombie sendmail process.
+        #Sympa::Process->instance->reap_child;
     }
 
     1;

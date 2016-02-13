@@ -67,13 +67,8 @@ sub _new_instance {
 #sub mail_forward($message, $from, $rcpt, $robot);
 #DEPRECATED: This is no longer used.
 
-# OBSOLETED.  Use Sympa::Process::reap_child().
-sub reaper {
-    my $self    = shift;
-    my %options = @_;
-
-    return $process->reap_child(%options, children => $self->{_pids});
-}
+# DEPRECATED.  Use Sympa::Process::reap_child().
+#sub reaper;
 
 #DEPRECATED.
 #sub sendto;
@@ -144,7 +139,7 @@ sub store {
 
         # Check how many open smtp's we have, if too many wait for a few
         # to terminate and then do our job.
-        $process->reap_child(children => $self->{_pids});
+        $process->sync_child(hash => $self->{_pids});
         $log->syslog('debug3', 'Open = %s', scalar keys %{$self->{_pids}});
         while ($maxsmtp < scalar keys %{$self->{_pids}}) {
             $log->syslog(
@@ -153,11 +148,8 @@ sub store {
                 scalar keys %{$self->{_pids}}
             );
             # Blockng call to the reaper.
-            last
-                if $process->reap_child(
-                blocking => 1,
-                children => $self->{_pids}
-                ) < 0;
+            last if $process->wait_child < 0;
+            $process->sync_child(hash => $self->{_pids});
         }
 
         my ($pipein, $pipeout, $pid);
@@ -283,8 +275,6 @@ Sympa::Mailer - Store messages to sendmail
 
   $mailer->store($message, ['user1@dom.ain', user2@other.dom.ain']);
 
-  $process->reap_child;
-
 =head1 DESCRIPTION
 
 L<Sympa::Mailer> implements the class to invoke sendmail processes and
@@ -305,7 +295,7 @@ A new L<Sympa::Mailer> instance, or I<undef> for failure.
 
 =item reaper ( [ blocking =E<gt> 1 ] )
 
-OBSOLETED.
+DEPRECATED.
 Use L<Sympa::Process/"reap_child">.
 
 I<Instance method>.

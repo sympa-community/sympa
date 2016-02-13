@@ -166,8 +166,8 @@ while (not $spindle->{finish}) {
 # Purge grouped notifications.
 Sympa::Alarm->instance->flush(purge => 1);
 
-# Free zombie sendmail processes.
-Sympa::Process->instance->reap_child;
+## Free zombie sendmail processes.
+#Sympa::Process->instance->reap_child;
 
 $log->syslog('notice', 'Archived exited normally due to signal');
 $process->remove_pid(final => 1);

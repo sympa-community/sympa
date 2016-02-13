@@ -26,6 +26,7 @@ package Sympa::Process;
 
 use strict;
 use warnings;
+use Config qw();
 use English qw(-no_match_vars);
 use POSIX qw();
 
@@ -38,6 +39,19 @@ use Sympa::Log;
 use Sympa::Tools::File;
 
 use base qw(Class::Singleton);
+
+BEGIN {
+    # Check compliance to POSIX.
+    die 'Safe signal is not provided'
+        unless $Config::Config{d_sigaction};
+    die 'Non-blocking wait is not supported'
+        unless $Config::Config{d_waitpid}
+            or $Config::Config{d_wait4};
+}
+
+INIT {
+    register_handler();
+}
 
 my $log = Sympa::Log->instance;
 
@@ -107,38 +121,16 @@ sub fork {
     $pid;
 }
 
-# Old name: Sympa::Mailer::reaper().
-sub reap_child {
+# Old name: (part of) Sympa::Mailer::reaper().
+sub wait_child {
     my $self    = shift;
-    my %options = @_;
 
     my $pid;
 
-    my $blocking = $options{blocking};
-    while (0 < ($pid = waitpid(-1, $blocking ? 0 : POSIX::WNOHANG()))) {
-        $blocking = 0;
-        unless (exists $self->{children}->{$pid}) {
-            $log->syslog('debug2', 'Reaper waited %s, unknown process to me',
-                $pid);
-            next;
-        }
-        if ($CHILD_ERROR & 127) {
-            $log->syslog(
-                'err',
-                'Child process %s for <%s> was terminated by signal %d',
-                $pid,
-                $self->{children}->{$pid},
-                $CHILD_ERROR & 127
-            );
-        } elsif ($CHILD_ERROR) {
-            $log->syslog(
-                'err', 'Child process %s for <%s> exited with status %s',
-                $pid,
-                $self->{children}->{$pid},
-                $CHILD_ERROR >> 8
-            );
-        }
-        delete $self->{children}->{$pid};
+    my $nohang = 0;
+    while (0 < ($pid = waitpid(-1, $nohang))) {
+        $nohang = POSIX::WNOHANG();
+        $self->_reap_child($pid);
     }
     $log->syslog(
         'debug3',
@@ -147,11 +139,62 @@ sub reap_child {
         scalar keys %{$self->{children}}
     );
 
-    if ($options{children}) {
-        my $children = $options{children};
-        foreach my $child_pid (keys %$children) {
-            delete $children->{$child_pid}
-                unless exists $self->{children}->{$child_pid};
+    return $pid;
+}
+
+sub register_handler {
+    $SIG{CHLD} = \&_child_handler;
+    $SIG{PIPE} = 'IGNORE';
+}
+
+sub _child_handler {
+    # Don't change $! and $? outside handler.
+    local ($ERRNO, $CHILD_ERROR);
+
+    # Reap only children registered by fork().
+    my $self = __PACKAGE__->instance;
+    foreach my $pid (keys %{$self->{children}}) {
+        next unless 0 < waitpid($pid, POSIX::WNOHANG());
+        $self->_reap_child($pid);
+    }
+
+    # For SysV signal(2).
+    $SIG{CHLD} = \&_child_handler;
+}
+
+sub _reap_child {
+    my $self = shift;
+    my $pid  = shift;
+
+    my $for =
+        (exists $self->{children}->{$pid})
+        ? $self->{children}->{$pid}
+        : 'unknown';
+    if ($CHILD_ERROR & 127) {
+        $log->syslog('err',
+            'Child process %s for <%s> was terminated by signal %d',
+            $pid, $for, $CHILD_ERROR & 127);
+    } elsif ($CHILD_ERROR) {
+        $log->syslog('err', 'Child process %s for <%s> exited with status %s',
+            $pid, $for, $CHILD_ERROR >> 8);
+    } else {
+        $log->syslog('debug2', 'Child process %s for <%s> exited normally',
+            $pid, $for);
+    }
+    delete $self->{children}->{$pid};
+}
+
+sub sync_child {
+    my $self    = shift;
+    my %options = @_;
+
+    if ($options{hash}) {
+        my $hash = $options{hash};
+        foreach my $child_pid (keys %$hash) {
+            next
+                if exists $self->{children}->{$child_pid}
+                    and kill 0, $child_pid;
+            delete $hash->{$child_pid};
         }
     }
 
@@ -159,19 +202,19 @@ sub reap_child {
         foreach my $child_pid (_get_pids_in_pid_file($self->{pidname})) {
             next if $child_pid == $PID;
 
-            unless (exists $self->{children}->{$child_pid}) {
-                $log->syslog(
-                    'err',
-                    'The %s child exists in the PID file but is no longer running. Removing it and notifying listmaster',
-                    $child_pid
-                );
-                $self->remove_pid(pid => $child_pid);
-                _send_crash_report($child_pid);
-            }
+            next
+                if exists $self->{children}->{$child_pid}
+                    and kill 0, $child_pid;
+
+            $log->syslog(
+                'err',
+                'The %s child exists in the PID file but is no longer running. Removing it and notifying listmaster',
+                $child_pid
+            );
+            $self->remove_pid(pid => $child_pid);
+            _send_crash_report($child_pid);
         }
     }
-
-    return $pid;
 }
 
 # Moved to Log::_daemon_name().
@@ -475,12 +518,17 @@ Sympa::Process - Process of Sympa
   $process->daemonize;
 
   $process->fork;
-  $process->reap_child;
 
 =head1 DESCRIPTION
 
 L<Sympa::Process> implements the class to handle process itself of Sympa
 software.
+
+=head2 Signal handling
+
+Once L<Sympa::Process> is loaded,
+C<SIGCHLD> signals are captured,
+and only defunct child processes invoked by fork() method are reaped.
 
 =head2 Methods
 
@@ -536,25 +584,35 @@ Returns:
 
 See L<perlfunc/"fork">.
 
-=item reap_child ( [ blocking =E<gt> 1 ], [ children =E<gt> \%children ],
-file =E<gt> 1 ] )
+=item reap_child ( [ blocking =E<gt> 1 ] )
+
+DEPRECATED.
+
+=item wait_child ( )
 
 I<Instance method>.
-Non blocking function called by: main loop of sympa, task_manager, bounced
-etc., just to clean the defuncts list by waiting to any processes and
-decrementing the counter.
+Waits for any child process.
 
-Parameter:
+Parameters:
+
+None.
+
+Returns:
+
+C<0>.
+Returns C<-1> on failure.
+
+=item sync_child ( [ hash =E<gt> \%hash ], [ file =E<gt> 1 ] )
+
+Updates process information in external data.
+
+Parameters:
 
 =over
 
-=item blocking =E<gt> 1
+=item hash =E<gt> \%hash
 
-Operation would block.
-
-=item children =E<gt> \%children
-
-Syncs PIDs in local map %children.
+Syncs PIDs in local map %hash
 
 =item file =E<gt> 1
 
@@ -565,9 +623,7 @@ If dead PID is found, notification will be sent to super-listmaster.
 
 Returns:
 
-PID of reaped child porocess or C<0>.
-If blocking option is set, returns C<0>.
-In both cases returns C<-1> on failure.
+None.
 
 =item remove_pid ([ pid =E<gt> $pid ], [ final =E<gt> 1 ] )
 
@@ -635,6 +691,11 @@ Evaluate subroutine $subref in $timeout seconds.
 
 TBD.
 
+=item register_handler ( )
+
+Registers C<SIGCHLD> handler.
+This function is usually called automatically during initialization.
+
 =back
 
 =head1 HISTORY
@@ -645,5 +706,9 @@ Renamed L<Sympa::Process> appeared on Sympa 6.2.12
 and began to provide OO interface.
 
 Sympa 6.2.13 introduced daemonize() method and {detached} attribute.
+
+As of Sympa 6.2.14, C<SIGCHLD> signal was captured and child processes
+were reaped immediately.  reap_child() method (formerly reaper()) was
+deprecated.
 
 =cut
