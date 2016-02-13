@@ -31,7 +31,6 @@ use English qw(-no_match_vars);
 use Conf;
 use Sympa::Constants;
 use Sympa::Log;
-use tools;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
 
@@ -115,7 +114,8 @@ sub load {
 
     my $msg_id =
         $options{in_reply_to}
-        ? tools::clean_msg_id($message->get_header('In-Reply-To'))
+        ? Sympa::Tools::Text::canonic_message_id(
+        $message->get_header('In-Reply-To'))
         : $message->{message_id};
     my $list = $message->{context};
     return undef unless $msg_id and ref $list eq 'Sympa::List';

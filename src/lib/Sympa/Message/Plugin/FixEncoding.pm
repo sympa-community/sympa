@@ -28,6 +28,8 @@ use strict;
 use warnings;
 use MIME::Charset '1.010';
 
+use Sympa::Language;
+
 use constant gettext_id => 'Fix character set and encoding';
 
 sub post_archive {
@@ -38,7 +40,7 @@ sub post_archive {
     my $list = $message->{context};
     my $lang = $list->{'admin'}{'lang'};
     return 1 unless Sympa::Language::canonic_lang($lang);
-    my $charset = tools::lang2charset($lang);
+    my $charset = Conf::lang2charset($lang);
 
     my $entity = $message->as_entity->dup;
     if (_fix_encoding($entity, $charset)) {

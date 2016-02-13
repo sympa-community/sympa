@@ -35,10 +35,10 @@ use MIME::EncWords;
 use Template;
 
 use Sympa;
+use Conf;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::ListOpt;
-use tools;
 use Sympa::Tools::Text;
 
 my $language = Sympa::Language->instance;
@@ -60,9 +60,33 @@ sub qencode {
     return MIME::EncWords::encode_mimewords(
         Encode::decode('utf8', $string),
         Encoding => 'A',
-        Charset  => tools::lang2charset($language->get_lang),
+        Charset  => Conf::lang2charset($language->get_lang),
         Field    => "message-id"
     );
+}
+
+# OBSOLETED.  This is kept only for backward compatibility.
+# Old name:: tt2::escape_xml().
+sub _escape_xml {
+    my $string = shift;
+
+    $string =~ s/&/&amp;/g;
+    $string =~ s/</&lt;/g;
+    $string =~ s/>/&gt;/g;
+    $string =~ s/\'/&apos;/g;
+    $string =~ s/\"/&quot;/g;
+
+    return $string;
+}
+
+# Old name: tt2::escape_quote().
+sub _escape_quote {
+    my $string = shift;
+
+    $string =~ s/\'/\\\'/g;
+    $string =~ s/\"/\\\"/g;
+
+    return $string;
 }
 
 sub encode_utf8 {
@@ -201,14 +225,14 @@ sub parse {
             loc      => [\&maketext, 1],
             helploc  => [\&maketext, 1],
             locdt    => [\&locdatetime, 1],
-            wrap         => [\&wrap,                1],
-            optdesc      => [\&optdesc,             1],
-            qencode      => [\&qencode,             0],
-            escape_xml   => [\&tools::escape_xml,   0],
-            escape_url   => [\&tools::escape_url,   0],
-            escape_quote => [\&tools::escape_quote, 0],
-            decode_utf8  => [\&decode_utf8,         0],
-            encode_utf8  => [\&encode_utf8,         0]
+            wrap         => [\&wrap,                           1],
+            optdesc      => [\&optdesc,                        1],
+            qencode      => [\&qencode,                        0],
+            escape_xml   => [\&_escape_xml,                    0],
+            escape_url   => [\&Sympa::Tools::Text::escape_url, 0],
+            escape_quote => [\&_escape_quote,                  0],
+            decode_utf8  => [\&decode_utf8,                    0],
+            encode_utf8  => [\&encode_utf8,                    0]
         }
     };
 

@@ -46,9 +46,9 @@ use Sympa::Session;
 use Sympa::Spool;
 use Sympa::Task;
 use Sympa::Ticket;
-use tools;
 use Sympa::Tools::File;
 use Sympa::Tools::Time;
+use Sympa::Tools::Text;
 use Sympa::Tracking;
 use Sympa::User;
 
@@ -1619,7 +1619,7 @@ sub purge_orphan_bounces {
             $user_ref = $list->get_next_bouncing_list_member()
             ) {
             my $user_id = $user_ref->{'email'};
-            $bounced_users{tools::escape_chars($user_id)} = 1;
+            $bounced_users{Sympa::Tools::Text::escape_chars($user_id)} = 1;
         }
 
         my $bounce_dir = $list->get_bounce_dir();
@@ -1720,7 +1720,7 @@ sub expire_bounce {
                         $email);
                     next;
                 }
-                my $escaped_email = tools::escape_chars($email);
+                my $escaped_email = Sympa::Tools::Text::escape_chars($email);
 
                 my $bounce_dir = $list->get_bounce_dir();
 

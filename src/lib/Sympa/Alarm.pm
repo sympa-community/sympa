@@ -27,12 +27,12 @@ package Sympa::Alarm;
 use strict;
 use warnings;
 
+use Sympa;
 use Sympa::Bulk;
 use Conf;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message::Template;
-use tools;
 
 use base qw(Class::Singleton);
 
@@ -134,7 +134,7 @@ sub flush {
                     operation             => $operation,
                     notification_messages => $messages{$rcpt},
                     boundary              => '----------=_'
-                        . tools::get_message_id($robot_id)
+                        . Sympa::unique_message_id($robot_id)
                 };
 
                 $log->syslog('info', 'Send messages to %s', $rcpt);

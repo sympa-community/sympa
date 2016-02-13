@@ -55,7 +55,6 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Spindle::ProcessTemplate;
 use Sympa::Ticket;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
 
@@ -277,8 +276,9 @@ sub request_auth {
             $data->{'type'}    = 'review';
         }
 
-        $data->{'command_escaped'} = tools::escape_url($data->{'command'});
-        $data->{'auto_submitted'}  = 'auto-replied';
+        $data->{'command_escaped'} =
+            Sympa::Tools::Text::escape_url($data->{'command'});
+        $data->{'auto_submitted'} = 'auto-replied';
         unless (Sympa::send_file($list, 'request_auth', $sender, $data)) {
             $log->syslog('notice',
                 'Unable to send template "request_auth" to %s', $sender);
@@ -293,7 +293,7 @@ sub request_auth {
             );
             $data->{'command'} = "auth $keyauth remind *";
             $data->{'command_escaped'} =
-                tools::escape_url($data->{'command'});
+                Sympa::Tools::Text::escape_url($data->{'command'});
             $data->{'type'} = 'remind';
 
         }
@@ -1276,7 +1276,8 @@ sub get_listmasters_email {
     }
 
     my @listmasters =
-        grep { tools::valid_email($_) } split /\s*,\s*/, $listmaster;
+        grep { Sympa::Tools::Text::valid_email($_) } split /\s*,\s*/,
+        $listmaster;
     # If no valid adresses found, use listmaster of site config.
     unless (@listmasters or (not ref $that and $that eq '*')) {
         $log->syslog('notice', 'Warning: No listmasters found for %s', $that);
@@ -1305,6 +1306,32 @@ sub is_listmaster {
     return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email($that);
     return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email('*');
     return 0;
+}
+
+=over
+
+=item unique_message_id ( $that )
+
+TBD
+
+=back
+
+=cut
+
+# Old name: tools::get_message_id().
+sub unique_message_id {
+    my $that = shift;
+
+    my $domain;
+    if (ref $that eq 'Sympa::List') {
+        $domain = Conf::get_robot_conf($that->{'domain'}, 'domain');
+    } elsif ($that and $that ne '*') {
+        $domain = Conf::get_robot_conf($that, 'domain');
+    } else {
+        $domain = $Conf::Conf{'domain'};
+    }
+
+    return sprintf '<sympa.%d.%d.%d@%s>', time, $PID, (int rand 999), $domain;
 }
 
 1;

@@ -41,8 +41,8 @@ use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Message;
 use Sympa::Spool;
-use tools;
 use Sympa::Tools::File;
+use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
 
@@ -188,8 +188,9 @@ sub fetch {
         next unless $message;     # Malformed message.
 
         if ($options{message_id}) {
-            my $message_id =
-                tools::clean_msg_id($message->get_header('Message-Id')) || '';
+            my $message_id = Sympa::Tools::Text::canonic_message_id(
+                $message->get_header('Message-Id'))
+                || '';
             if ($message_id eq $options{message_id}) {
                 undef $self->{_metadatas};    # Rewind cache.
                 return ($message, $handle);
@@ -391,7 +392,10 @@ sub html_remove {
     );
 
     # Remomve urlized message.
-    my $url_dir = $list->{'dir'} . '/urlized/' . tools::escape_chars($msgid);
+    my $url_dir =
+          $list->{'dir'}
+        . '/urlized/'
+        . Sympa::Tools::Text::escape_chars($msgid);
     my $error;
     File::Path::remove_tree($url_dir, {error => \$error});
 

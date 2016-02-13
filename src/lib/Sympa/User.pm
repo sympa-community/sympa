@@ -27,8 +27,9 @@ package Sympa::User;
 use strict;
 use warnings;
 use Carp qw();
+use Digest::MD5;
 
-use Sympa::Auth;
+use Conf;
 use Sympa::DatabaseDescription;
 use Sympa::DatabaseManager;
 use Sympa::Language;
@@ -162,7 +163,8 @@ sub moveto {
     push @sth_stack, $sth;
     my $sdm = Sympa::DatabaseManager->instance;
 
-    unless ($sdm
+    unless (
+        $sdm
         and $sth = $sdm->do_prepared_query(
             q{UPDATE user_table
               SET email_user = ?
@@ -269,12 +271,38 @@ sub AUTOLOAD {
 
 =item get_users ( ... )
 
+Not yet implemented.
+
 =back
 
 =cut
 
 sub get_users {
     die;
+}
+
+=over 4
+
+=item password_fingerprint ( )
+
+Returns the password finger print.
+
+=back
+
+=cut
+
+# Old name: Sympa::Auth::password_fingerprint().
+# Note: This proc may allow future replacement of md5 by sha1 or ...
+sub password_fingerprint {
+
+    $log->syslog('debug', '');
+
+    my $pwd = shift;
+    if (Conf::get_robot_conf('*', 'password_case') eq 'insensitive') {
+        return Digest::MD5::md5_hex(lc $pwd);
+    } else {
+        return Digest::MD5::md5_hex($pwd);
+    }
 }
 
 ############################################################################
@@ -482,7 +510,7 @@ sub update_global_user {
 
     ## use md5 fingerprint to store password
     $values->{'password'} =
-        Sympa::Auth::password_fingerprint($values->{'password'})
+        Sympa::User::password_fingerprint($values->{'password'})
         if ($values->{'password'});
 
     ## Canonicalize lang if possible.
@@ -565,7 +593,7 @@ sub add_global_user {
 
     ## encrypt password
     $values->{'password'} =
-        Sympa::Auth::password_fingerprint($values->{'password'})
+        Sympa::User::password_fingerprint($values->{'password'})
         if ($values->{'password'});
 
     ## Canonicalize lang if possible

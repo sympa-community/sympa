@@ -30,16 +30,17 @@ use DateTime;
 use Encode qw();
 use MIME::EncWords;
 
+use Sympa;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Spool;
 use Sympa::Template;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
+use Sympa::Tools::Text;
 use Sympa::User;
 
 use base qw(Sympa::Message);
@@ -174,7 +175,7 @@ sub new {
     } else {
         $data->{'robot_domain'} = Conf::get_robot_conf($robot_id, 'domain');
     }
-    $data->{'boundary'} = '----------=_' . tools::get_message_id($robot_id)
+    $data->{'boundary'} = '----------=_' . Sympa::unique_message_id($robot_id)
         unless $data->{'boundary'};
 
     my $self = $class->_new_from_template($that, $tpl . '.tt2', $who, $data);
@@ -250,7 +251,7 @@ sub _new_from_template {
         if ref $rcpt and ref $rcpt ne 'ARRAY';
 
     ## Charset for encoding
-    $data->{'charset'} ||= tools::lang2charset($data->{'lang'});
+    $data->{'charset'} ||= Conf::lang2charset($data->{'lang'});
 
     # Template file parsing
     # If context is List, add list directory and list archives to get the
@@ -306,7 +307,7 @@ sub _new_from_template {
 
     unless ($header_ok{'message-id'}) {
         $headers .=
-            sprintf("Message-Id: %s\n", tools::get_message_id($robot_id));
+            sprintf("Message-Id: %s\n", Sympa::unique_message_id($robot_id));
     }
 
     unless ($header_ok{'date'}) {
@@ -336,7 +337,7 @@ sub _new_from_template {
     unless ($header_ok{'from'}) {
         unless (defined $data->{'from'}) {
             $headers .= sprintf "From: %s\n",
-                tools::addrencode(
+                Sympa::Tools::Text::addrencode(
                 Conf::get_robot_conf($robot_id, 'sympa'),
                 Conf::get_robot_conf($robot_id, 'gecos'),
                 $data->{'charset'}
@@ -345,7 +346,7 @@ sub _new_from_template {
             or $data->{'from'} eq $data->{'conf'}{'sympa'}) {
             #XXX NOTREACHED: $data->{'from'} was obsoleted.
             $headers .= 'From: '
-                . tools::addrencode(
+                . Sympa::Tools::Text::addrencode(
                 $data->{'conf'}{'sympa'},
                 $data->{'conf'}{'gecos'},
                 $data->{'charset'}

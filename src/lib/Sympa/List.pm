@@ -50,6 +50,7 @@ use Sympa::Language;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Sympa::Log;
+use Sympa::Process;
 use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
@@ -58,7 +59,6 @@ use Sympa::Spindle::ProcessTemplate;
 use Sympa::Task;
 use Sympa::Template;
 use Sympa::Ticket;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
@@ -1159,7 +1159,7 @@ sub get_param_value {
     my $self        = shift;
     my $param       = shift;
     my $as_arrayref = shift || 0;
-    my $pinfo       = tools::get_list_params($self->{'domain'});
+    my $pinfo       = Sympa::Robot::list_params($self->{'domain'});
     my $minor_param;
     my $value;
 
@@ -1419,9 +1419,9 @@ sub get_recipients_per_mode {
         # # missing.
         # if ($message->{'smime_crypted'}
         #     and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
-        #     . tools::escape_chars($user->{'email'})
+        #     . Sympa::Tools::Text::escape_chars($user->{'email'})
         #     and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
-        #     . tools::escape_chars($user->{'email'} . '@enc')) {
+        #     . Sympa::Tools::Text::escape_chars($user->{'email'} . '@enc')) {
         #     my $subject = $message->{'decoded_subject'};
         #     my $sender  = $message->{'sender'};
         #     unless (
@@ -4136,7 +4136,7 @@ sub may_edit {
         $Sympa::Robot::mtime{'edit_list_conf'}{$edit_conf_file}) {
 
         $edit_conf = $edit_list_conf{$edit_conf_file} =
-            tools::load_edit_list_conf($self);
+            $self->_load_edit_list_conf;
         $Sympa::Robot::mtime{'edit_list_conf'}{$edit_conf_file} = time;
     } else {
         $edit_conf = $edit_list_conf{$edit_conf_file};
@@ -4199,12 +4199,11 @@ sub may_create_parameter {
     if (Sympa::is_listmaster($robot, $who)) {
         return 1;
     }
-    my $edit_conf = tools::load_edit_list_conf($self);
+    my $edit_conf = $self->_load_edit_list_conf;
     $edit_conf->{$parameter} ||= $edit_conf->{'default'};
     if (!$edit_conf->{$parameter}) {
-        $log->syslog('notice',
-            'tools::load_edit_list_conf privilege for parameter $parameter undefined'
-        );
+        $log->syslog('notice', 'Privilege for parameter %s undefined',
+            $parameter);
         return undef;
     }
     if ($edit_conf->{$parameter} =~ /^(owner|privileged_owner)$/i) {
@@ -4928,7 +4927,7 @@ sub _include_users_file {
 
         my $email = Sympa::Tools::Text::canonic_email($1);
 
-        unless (tools::valid_email($email)) {
+        unless (Sympa::Tools::Text::valid_email($email)) {
             $log->syslog('err', 'Skip badly formed email address: "%s"',
                 $email);
             next;
@@ -5035,7 +5034,7 @@ sub _include_users_remote_file {
 
             my $email = Sympa::Tools::Text::canonic_email($1);
 
-            unless (tools::valid_email($email)) {
+            unless (Sympa::Tools::Text::valid_email($email)) {
                 $log->syslog('err', 'Skip badly formed email address: "%s"',
                     $line);
                 next;
@@ -5130,7 +5129,7 @@ sub _include_users_voot_group {
     foreach my $member (@$members) {
         #foreach my $email (@{$member->{'emails'}}) {
         if (my $email = shift(@{$member->{'emails'}})) {
-            unless (tools::valid_email($email)) {
+            unless (Sympa::Tools::Text::valid_email($email)) {
                 $log->syslog('err', 'Skip badly formed email address: "%s"',
                     $email);
                 next;
@@ -5245,7 +5244,7 @@ sub _include_users_ldap {
             foreach my $email (@{$emailentry}) {
                 my $cleanmail = Sympa::Tools::Text::canonic_email($email);
                 ## Skip badly formed emails
-                unless (tools::valid_email($email)) {
+                unless (Sympa::Tools::Text::valid_email($email)) {
                     $log->syslog('err',
                         'Skip badly formed email address: "%s"', $email);
                     next;
@@ -5259,7 +5258,7 @@ sub _include_users_ldap {
         } else {    #FIMXE: Probably not reached due to asref.
             my $cleanmail = Sympa::Tools::Text::canonic_email($emailentry);
             ## Skip badly formed emails
-            unless (tools::valid_email($emailentry)) {
+            unless (Sympa::Tools::Text::valid_email($emailentry)) {
                 $log->syslog('err', 'Skip badly formed email address: "%s"',
                     $emailentry);
                 next;
@@ -5466,7 +5465,7 @@ sub _include_users_ldap_2level {
                 foreach my $email (@{$emailentry}) {
                     my $cleanmail = Sympa::Tools::Text::canonic_email($email);
                     ## Skip badly formed emails
-                    unless (tools::valid_email($email)) {
+                    unless (Sympa::Tools::Text::valid_email($email)) {
                         $log->syslog('err',
                             'Skip badly formed email address: "%s"', $email);
                         next;
@@ -5484,7 +5483,7 @@ sub _include_users_ldap_2level {
                 my $cleanmail =
                     Sympa::Tools::Text::canonic_email($emailentry);
                 ## Skip badly formed emails
-                unless (tools::valid_email($emailentry)) {
+                unless (Sympa::Tools::Text::valid_email($emailentry)) {
                     $log->syslog('err',
                         'Skip badly formed email address: "%s"', $emailentry);
                     next;
@@ -5701,7 +5700,8 @@ sub _include_users_sql {
 
     ## Process the SQL results
     my $array_of_users =
-        tools::eval_in_time(sub { $sth->fetchall_arrayref }, $fetch_timeout);
+        Sympa::Process::eval_in_time(sub { $sth->fetchall_arrayref },
+        $fetch_timeout);
     $sth->finish;
 
     unless (ref $array_of_users eq 'ARRAY') {
@@ -5719,7 +5719,7 @@ sub _include_users_sql {
         $email = Sympa::Tools::Text::canonic_email($email);
 
         ## Skip badly formed emails
-        unless (tools::valid_email($email)) {
+        unless (Sympa::Tools::Text::valid_email($email)) {
             $log->syslog('err', 'Skip badly formed email address: "%s"',
                 $email);
             next;
@@ -6248,7 +6248,7 @@ sub _load_include_admin_user_file {
     $log->syslog('debug3', '(%s, %s, %s)', @_);
     my ($robot, $file, $parsing) = @_;
 
-    my $pinfo = tools::get_list_params($robot);
+    my $pinfo = Sympa::Robot::list_params($robot);
     my %include;
     my (@paragraphs);
 
@@ -8159,7 +8159,7 @@ sub by_order {
 }
 
 ## Apply defaults to parameters definition (%Sympa::ListDef::pinfo)
-## DEPRECATED: use tools::get_list_params($robot).
+## DEPRECATED: use Sympa::Robot::list_params($robot).
 ##sub _apply_defaults {
 
 ## Save a parameter
@@ -8170,7 +8170,7 @@ sub _save_list_param {
     return 1 if $defaults;
     return 1 unless (defined($p));
 
-    my $pinfo = tools::get_list_params($robot_id);
+    my $pinfo = Sympa::Robot::list_params($robot_id);
     if (   defined($pinfo->{$key}{'scenario'})
         || defined($pinfo->{$key}{'task'})) {
         return 1 if ($p->{'name'} eq 'default');
@@ -8354,7 +8354,7 @@ sub _load_list_config_file {
     my ($directory, $robot, $file) = @_;
     $log->syslog('debug3', '(%s, %s, %s)', $directory, $robot, $file);
 
-    my $pinfo       = tools::get_list_params($robot);
+    my $pinfo       = Sympa::Robot::list_params($robot);
     my $config_file = $directory . '/' . $file;
 
     my %admin;
@@ -8715,7 +8715,7 @@ sub _save_list_config_file {
     my $self = shift;
     my ($config_file, $old_config_file) = @_;
 
-    my $pinfo = tools::get_list_params($self->{'domain'});
+    my $pinfo = Sympa::Robot::list_params($self->{'domain'});
 
     unless (rename $config_file, $old_config_file) {
         $log->syslog(
@@ -9560,8 +9560,8 @@ sub add_list_header {
             and $self->is_web_archived()) {
             # Use possiblly anonymized Message-Id: field instead of
             # {message_id} attribute.
-            my $message_id =
-                tools::clean_msg_id($message->get_header('Message-Id'));
+            my $message_id = Sympa::Tools::Text::canonic_message_id(
+                $message->get_header('Message-Id'));
 
             my @now  = localtime(time);
             my $yyyy = sprintf '%04d', 1900 + $now[5];
@@ -9694,6 +9694,66 @@ sub _flush_list_db {
 
 # Moved to Sympa::ListOpt::get_title().
 #sub get_option_title;
+
+# Return a hash from the edit_list_conf file.
+# Old name: tools::load_edit_list_conf().
+sub _load_edit_list_conf {
+    $log->syslog('debug2', '(%s)', @_);
+    my $self = shift;
+
+    my $robot = $self->{'domain'};
+    my $file;
+    my $conf;
+
+    return undef
+        unless $file = Sympa::search_fullpath($self, 'edit_list.conf');
+
+    my $fh;
+    unless (open $fh, '<', $file) {
+        $log->syslog('info', 'Unable to open config file %s', $file);
+        return undef;
+    }
+
+    my $error_in_conf;
+    my $roles_regexp =
+        'listmaster|privileged_owner|owner|editor|subscriber|default';
+    while (<$fh>) {
+        next if /^\s*(\#.*|\s*)$/;
+
+        if (/^\s*(\S+)\s+(($roles_regexp)\s*(,\s*($roles_regexp))*)\s+(read|write|hidden)\s*$/i
+            ) {
+            my ($param, $role, $priv) = ($1, $2, $6);
+            my @roles = split /,/, $role;
+            foreach my $r (@roles) {
+                $r =~ s/^\s*(\S+)\s*$/$1/;
+                if ($r eq 'default') {
+                    $error_in_conf = 1;
+                    $log->syslog('notice', '"default" is no more recognised');
+                    foreach
+                        my $set ('owner', 'privileged_owner', 'listmaster') {
+                        $conf->{$param}{$set} = $priv;
+                    }
+                    next;
+                }
+                $conf->{$param}{$r} = $priv;
+            }
+        } else {
+            $log->syslog(
+                'info',
+                'Unknown parameter in %s (Ignored) %s',
+                "$Conf::Conf{'etc'}/edit_list.conf", $_
+            );
+            next;
+        }
+    }
+
+    if ($error_in_conf) {
+        Sympa::send_notify_to_listmaster($robot, 'edit_list_error', [$file]);
+    }
+
+    close $fh;
+    return $conf;
+}
 
 =head2 Pluggin data-sources
 

@@ -27,12 +27,14 @@ package Sympa::SharedDocument;
 use strict;
 use warnings;
 use HTML::Entities qw();
+use MIME::EncWords;
 
+use Conf;
 use Sympa::Log;
 use Sympa::Scenario;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+use Sympa::Tools::Text;
 use Sympa::Tools::WWW;
 
 my $log = Sympa::Log->instance;
@@ -57,7 +59,7 @@ sub new {
 
     $document->{'path'} = Sympa::Tools::WWW::no_slash_end($path);
     $document->{'escaped_path'} =
-        tools::escape_chars($document->{'path'}, '/');
+        Sympa::Tools::Text::escape_chars($document->{'path'}, '/');
 
     ### Document isn't a description file
     if ($document->{'path'} =~ /\.desc/) {
@@ -121,7 +123,7 @@ sub new {
     }
 
     $document->{'escaped_filename'} =
-        tools::escape_chars($document->{'filename'});
+        Sympa::Tools::Text::escape_chars($document->{'filename'});
 
     ## Father dir
     if ($document->{'path'} =~ /^(([^\/]*\/)*)([^\/]+)$/) {
@@ -130,7 +132,7 @@ sub new {
         $document->{'father_path'} = '';
     }
     $document->{'escaped_father_path'} =
-        tools::escape_chars($document->{'father_path'}, '/');
+        Sympa::Tools::Text::escape_chars($document->{'father_path'}, '/');
 
     ### File, directory or URL ?
     if (!(-d $document->{'absolute_path'})) {
@@ -199,8 +201,7 @@ sub new {
             $document->{'anchor'} = $1;
         }
     } elsif ($document->{'type'} eq 'file') {
-        if (my $type =
-            Sympa::Tools::WWW::get_mime_type($document->{'file_extension'})) {
+        if (my $type = Conf::get_mime_type($document->{'file_extension'})) {
             # type of the file and apache icon
             if ($type =~ /^([\w\-]+)\/([\w\-]+)$/) {
                 my ($mimet, $subt) = ($1, $2);
@@ -525,6 +526,24 @@ sub check_access_control {
 
     $self->{'access'} = \%result;
     return 1;
+}
+
+# Escape shared document file name.  Q-decode it first.
+# ToDo: This should be obsoleted: Would be better to use
+# Sympa::Tools::Text::encode_filesystem_safe().
+# Old name: tools::escape_docname().
+sub escape_docname {
+    my $filename = shift;
+    my $except   = shift;    # Exceptions
+
+    # Q-decode.
+    $filename = MIME::EncWords::decode_mimewords($filename);
+
+    ## Decode from FS encoding to utf-8.
+    #$filename = Encode::decode($Conf::Conf{'filesystem_encoding'}, $filename);
+
+    # Escape some chars for use in URL.
+    return Sympa::Tools::Text::escape_chars($filename, $except);
 }
 
 1;

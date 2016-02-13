@@ -82,7 +82,6 @@ use Sympa::Spool::Incoming;
 use Sympa::Spool::Moderation;
 use Sympa::Template;
 use Sympa::Ticket;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
@@ -1111,7 +1110,7 @@ while ($query = new_loop()) {
     # Not yet implemented
     ### Create Robot object
     #$robot_object = new Robot $robot;
-    $pinfo = tools::get_list_params($robot);
+    $pinfo = Sympa::Robot::list_params($robot);
 
     ## Default robot
     if ($robot eq $Conf::Conf{'host'}) {
@@ -1853,9 +1852,9 @@ while ($query = new_loop()) {
 
             ## if bypass = 'asis', file content-type is in the file itself as is define by the action in $param->{'content_type'};
             unless ($param->{'bypass'} eq 'asis') {
-                my $type = $param->{'content_type'}
-                    || Sympa::Tools::WWW::get_mime_type(
-                    $param->{'file_extension'})
+                my $type =
+                       $param->{'content_type'}
+                    || Conf::get_mime_type($param->{'file_extension'})
                     || 'application/octet-stream';
                 printf "Content-Type: %s\n\n", $type;
             }
@@ -2406,16 +2405,16 @@ sub get_parameters {
                 ## Q-encode file path
                 my @tokens = split /\//, $in{$p};
                 foreach my $i (0 .. $#tokens) {
-                    $tokens[$i] = tools::qencode_filename($tokens[$i]);
+                    $tokens[$i] =
+                        Sympa::Tools::Text::qencode_filename($tokens[$i]);
                 }
                 $in{$p} = join '/', @tokens;
-                ## Sympa's URI escaping subroutine (tools::escape_chars())
-                ## replaces '/' with %A5 ('¥' character)
-                ## This should be transformed into a '/' again
-
             } elsif ($filtering_action eq 'unescape_html') {
-                $in{$p} = tools::unescape_chars($in{$p});
-
+                # Sympa's URI escaping subroutine
+                # (Sympa::Tools::Text::escape_chars()) replaces '/' with
+                # %A5 ('¥' character).  This should be transformed into a
+                # '/' again.
+                $in{$p} = Sympa::Tools::Text::unescape_chars($in{$p});
             } elsif ($filtering_action eq 'fix_escape_uri') {
                 $in{$p} =~ s/\xa5/\//g;
 
@@ -2460,7 +2459,8 @@ sub get_parameters_old {
         my @params = split /\//, $path_info;
 
         #	foreach my $i(0..$#params) {
-        #	    $params[$i] = tools::unescape_chars($params[$i]);
+        #	    $params[$i] =
+        #	        Sympa::Tools::Text::unescape_chars($params[$i]);
         #	}
 
         if ($params[0] eq 'nomenu') {
@@ -2658,14 +2658,15 @@ sub get_parameters_old {
                 ## Q-encode file path
                 my @tokens = split /\//, $in{$p};
                 foreach my $i (0 .. $#tokens) {
-                    $tokens[$i] = tools::qencode_filename($tokens[$i]);
+                    $tokens[$i] =
+                        Sympa::Tools::Text::qencode_filename($tokens[$i]);
                 }
                 $in{$p} = join '/', @tokens;
-                ## Sympa's URI escaping subroutine (tools::escape_chars())
-                ## replaces '/' with %A5 ('¥' character)
-                ## This should be transformed into a '/' again
-
             } elsif ($filtering{$in{'action'}}{$p} eq 'fix_escape_uri') {
+                # Sympa's URI escaping subroutine
+                # (Sympa::Tools::Text::escape_chars()) replaces '/' with
+                # %A5 ('¥' character).  This should be transformed into a
+                # '/' again.
                 $in{$p} =~ s/\xa5/\//g;
             }
         }
@@ -3402,7 +3403,8 @@ sub check_param_out {
             if ($ENV{'REQUEST_METHOD'} eq 'GET'
                 && !$auth_action{$in{'action'}}) {
                 $param->{'referer'} =
-                    tools::escape_chars(Sympa::Tools::WWW::get_my_url());
+                    Sympa::Tools::Text::escape_chars(
+                    Sympa::Tools::WWW::get_my_url());
             } else {
                 ## Keep the previous value of the referer
                 $param->{'referer'} = $in{'referer'};
@@ -3552,10 +3554,16 @@ sub check_param_out {
 
     $param->{'robot'} = $robot;
 
-    ## If parameter has the Unicode Perl flag, then switch to utf-8
-    ## this switch is applied recursively
-    Sympa::Tools::Data::recursive_transformation($param,
-        \&tools::unicode_to_utf8);
+    # If parameter has the Unicode Perl flag, then switch to utf-8.
+    # This switch is applied recursively.
+    Sympa::Tools::Data::recursive_transformation(
+        $param,
+        sub {
+            my $s = shift;
+            return Encode::encode_utf8($s) if Encode::is_utf8($s);
+            return $s;
+        }
+    );
 }
 
 ## ticket : this action is used if someone submits a one time ticket
@@ -3619,7 +3627,8 @@ sub do_login {
     my $next_action;
 
     if ($in{'referer'}) {
-        $param->{'redirect_to'} = tools::unescape_chars($in{'referer'});
+        $param->{'redirect_to'} =
+            Sympa::Tools::Text::unescape_chars($in{'referer'});
     } elsif ($in{'previous_action'}
         && $in{'previous_action'} !~ /^(login|logout|loginrequest)$/) {
         $next_action = $in{'previous_action'};
@@ -3682,7 +3691,7 @@ sub do_login {
             $in{'init_email'} = $in{'email'};
             $param->{'init_email'} = $in{'email'};
             $param->{'escaped_init_email'} =
-                tools::escape_chars($in{'email'});
+                Sympa::Tools::Text::escape_chars($in{'email'});
 
             Sympa::Report::reject_report_web('user', 'missing_arg',
                 {'argument' => 'passwd'},
@@ -4080,7 +4089,7 @@ sub do_sso_login {
                     $in{'init_email'} = $in{'email'};
                     $param->{'init_email'} = $in{'email'};
                     $param->{'escaped_init_email'} =
-                        tools::escape_chars($in{'email'});
+                        Sympa::Tools::Text::escape_chars($in{'email'});
 
                     Sympa::Report::reject_report_web('user', 'missing_arg',
                         {'argument' => 'ticket'},
@@ -4410,7 +4419,7 @@ sub is_ldap_user {
             split(/,/, $ldap->{'alternative_email_attribute'});
         my $attrs = $ldap->{'email_attribute'};
 
-        if (tools::valid_email($auth)) {
+        if (Sympa::Tools::Text::valid_email($auth)) {
             $filter = $ldap->{'get_dn_by_email_filter'};
         } else {
             $filter = $ldap->{'get_dn_by_uid_filter'};
@@ -4459,7 +4468,8 @@ sub do_loginrequest {
     }
 
     if ($in{'previous_action'} eq 'referer') {
-        $param->{'referer'} = tools::escape_chars($ENV{'HTTP_REFERER'});
+        $param->{'referer'} =
+            Sympa::Tools::Text::escape_chars($ENV{'HTTP_REFERER'});
     } elsif (!$param->{'previous_action'}) {
         $param->{'previous_action'} = 'loginrequest';
     }
@@ -4590,7 +4600,8 @@ sub do_logout {
     web_db_stat_log();
 
     if ($in{'previous_action'} eq 'referer') {
-        $param->{'referer'} = tools::escape_chars($in{'previous_list'});
+        $param->{'referer'} =
+            Sympa::Tools::Text::escape_chars($in{'previous_list'});
     }
 
     return Conf::get_robot_conf($robot, 'default_home');
@@ -4616,7 +4627,7 @@ sub sendssopasswd {
         return 'requestemail';
     }
 
-    unless (tools::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         Sympa::Report::reject_report_web('user', 'incorrect_email',
             {'email' => $email},
             $param->{'action'});
@@ -4664,13 +4675,13 @@ sub sendssopasswd {
         }
 
         $param->{'newuser'}{'escaped_email'} =
-            tools::escape_chars($param->{'newuser'}{'email'});
+            Sympa::Tools::Text::escape_chars($param->{'newuser'}{'email'});
 
     } else {
 
         $param->{'newuser'} = {
             'email'         => $email,
-            'escaped_email' => tools::escape_chars($email),
+            'escaped_email' => Sympa::Tools::Text::escape_chars($email),
             'password'      => Sympa::Tools::Password::tmp_passwd($email)
         };
 
@@ -4707,7 +4718,7 @@ sub do_renewpasswd {
         if ($url_redirect = is_ldap_user($in{'email'})) {
             $param->{'redirect_to'} = $url_redirect
                 if $url_redirect ne 'none';
-        } elsif (!tools::valid_email($in{'email'})) {
+        } elsif (!Sympa::Tools::Text::valid_email($in{'email'})) {
             Sympa::Report::reject_report_web('user', 'incorrect_email',
                 {'email' => $in{'email'}},
                 $param->{'action'});
@@ -4732,7 +4743,8 @@ sub do_renewpasswd {
     );
 
     if ($in{'previous_action'} eq 'referer') {
-        $param->{'referer'} = tools::escape_chars($in{'previous_list'});
+        $param->{'referer'} =
+            Sympa::Tools::Text::escape_chars($in{'previous_list'});
     }
     return 1;
 }
@@ -4791,7 +4803,7 @@ sub do_requestpasswd {
         $param->{'newuser'} =
             {'email' => Sympa::Tools::Text::canonic_email($in{'email'})};
         $param->{'newuser'}{'escaped_email'} =
-            tools::escape_chars($param->{'newuser'}{'email'});
+            Sympa::Tools::Text::escape_chars($param->{'newuser'}{'email'});
     }
     if ($param->{'one_time_ticket'}) {
         $param->{'login_error'} = 'ticket_sent';
@@ -5638,7 +5650,7 @@ sub do_set {
             return undef;
         }
 
-        $email = tools::unescape_chars($in{'email'});
+        $email = Sympa::Tools::Text::unescape_chars($in{'email'});
     } else {
         unless ($param->{'user'}{'email'}) {
             Sympa::Report::reject_report_web('user', 'no_user', {},
@@ -5693,9 +5705,9 @@ sub do_set {
     ## Lower-case new email address
     $in{'new_email'} = lc($in{'new_email'});
 
-    if ($in{'new_email'} && ($in{'email'} ne $in{'new_email'})) {
-
-        unless ($in{'new_email'} && tools::valid_email($in{'new_email'})) {
+    if ($in{'new_email'} and $in{'email'} ne $in{'new_email'}) {
+        unless ($in{'new_email'}
+            and Sympa::Tools::Text::valid_email($in{'new_email'})) {
             wwslog('notice', 'Incorrect email %s', $in{'new_email'});
             Sympa::Report::reject_report_web('user', 'incorrect_email',
                 {'email' => $in{'new_email'}},
@@ -6370,7 +6382,7 @@ sub do_subrequest {
         return 1;
     }
     # Valid email address?
-    unless (tools::valid_email($in{'email'})) {
+    unless (Sympa::Tools::Text::valid_email($in{'email'})) {
         Sympa::Report::reject_report_web('user', 'incorrect_email',
             {'email' => $in{'email'}},
             $param->{'action'}, $list);
@@ -6402,7 +6414,7 @@ sub do_subrequest {
         $param->{'newuser'} =
             {'email' => Sympa::Tools::Text::canonic_email($in{'email'})};
         $param->{'newuser'}{'escaped_email'} =
-            tools::escape_chars($param->{'newuser'}{'email'});
+            Sympa::Tools::Text::escape_chars($param->{'newuser'}{'email'});
     }
     # Need to send a password by email
     $param->{'one_time_ticket'} = Sympa::Ticket::create(
@@ -6730,7 +6742,7 @@ sub do_sigrequest {
         return 1;
     }
     ## valid email address?
-    unless (tools::valid_email($in{'email'})) {
+    unless (Sympa::Tools::Text::valid_email($in{'email'})) {
         Sympa::Report::reject_report_web('user', 'incorrect_email',
             {'email' => $in{'email'}},
             $param->{'action'}, $list);
@@ -7277,7 +7289,7 @@ sub do_view_template {
     $param->{'template_content'} = '';    # init content
     while (<TPL>) { $param->{'template_content'} .= $_; $param->{'rows'}++; }
     $param->{'template_content'} =
-        tools::escape_html($param->{'template_content'});
+        Sympa::Tools::WWW::escape_html_minimum($param->{'template_content'});
     close TPL;
 
     $param->{'webormail'}     = $in{'webormail'};
@@ -7408,7 +7420,8 @@ sub do_copy_template {
         );
         return undef;
     }
-    print TPLOUT tools::unescape_html($param->{'template_content'});
+    print TPLOUT Sympa::Tools::WWW::unescape_html_minimum(
+        $param->{'template_content'});
     close TPLOUT;
 
     if ($in{'list_out'}) { $param->{'list'} = $in{'list'} = $in{'list_out'}; }
@@ -7626,7 +7639,8 @@ sub do_manage_template {
         while (<FILE>) {
             $param->{'content'} .= $_;
         }
-        $param->{'content'} = tools::escape_html($param->{'content'});
+        $param->{'content'} =
+            Sympa::Tools::WWW::escape_html_minimum($param->{'content'});
         close FILE;
         $param->{'message_template'} = $in{'message_template'};
 
@@ -7795,7 +7809,7 @@ sub do_edit_template {
         );
         return undef;
     }
-    print TPLOUT tools::unescape_html($in{'content'});
+    print TPLOUT Sympa::Tools::WWW::unescape_html_minimum($in{'content'});
     close TPLOUT;
 
     $param->{'saved'}            = 1;
@@ -8074,7 +8088,7 @@ sub do_add {
             next;
         }
 
-        unless (tools::valid_email($email)) {
+        unless (Sympa::Tools::Text::valid_email($email)) {
             Sympa::Report::reject_report_web('user', 'incorrect_email',
                 {'email' => $email},
                 $param->{'action'}, $list);
@@ -8116,19 +8130,19 @@ sub do_add {
             || Sympa::Tools::Password::tmp_passwd($email);
 
         ##if (my $reason =
-            ##Sympa::Tools::Password::password_validation($u->{'password'})) {
-            ##Sympa::Report::reject_report_web('user', 'passwd_validation',
-                ##{'reason' => $reason},
-                ##$param->{'action'});
-            ##wwslog('info', 'Password validation');
-            ##web_db_log(
-                ##{   'status'     => 'error',
-                    ##'error_type' => 'bad_parameter'
-                ##}
-            ##);
-            ##return undef;
+        ##    Sympa::Tools::Password::password_validation($u->{'password'})) {
+        ##    Sympa::Report::reject_report_web('user', 'passwd_validation',
+        ##        {'reason' => $reason},
+        ##        $param->{'action'});
+        ##    wwslog('info', 'Password validation');
+        ##    web_db_log(
+        ##        {   'status'     => 'error',
+        ##            'error_type' => 'bad_parameter'
+        ##        }
+        ##    );
+        ##    return undef;
         ##}
-##
+        ##
         $u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
         if ($comma_emails) {
             $comma_emails = $comma_emails . ',' . $email;
@@ -8359,7 +8373,7 @@ sub do_add_fromsub {
 sub do_del {
     wwslog('info', '');
 
-    $in{'email'} = tools::unescape_chars($in{'email'});
+    $in{'email'} = Sympa::Tools::Text::unescape_chars($in{'email'});
 
     my $result = Sympa::Scenario::request_action(
         $list, 'del',
@@ -8397,7 +8411,7 @@ sub do_del {
 
     foreach my $email (@emails) {
 
-        my $escaped_email = tools::escape_chars($email);
+        my $escaped_email = Sympa::Tools::Text::escape_chars($email);
 
         my $user_entry = $list->get_list_member($email);
 
@@ -8736,10 +8750,12 @@ sub do_modindex {
         my $doc = {};
         $doc->{'visible_path'}  = $visible_path;
         $doc->{'visible_fname'} = $visible_fname;
-        $doc->{'escaped_fname'} = tools::escape_docname($fname, '/');
-        $doc->{'escaped_path'}  = tools::escape_docname($path, '/');
-        $doc->{'fname'}         = $fname;
-        $doc->{'size'}          = (-s $d) / 1000;
+        $doc->{'escaped_fname'} =
+            Sympa::SharedDocument::escape_docname($fname, '/');
+        $doc->{'escaped_path'} =
+            Sympa::SharedDocument::escape_docname($path, '/');
+        $doc->{'fname'} = $fname;
+        $doc->{'size'}  = (-s $d) / 1000;
         $doc->{'date'} =
             $language->gettext_strftime("%d %b %Y",
             localtime Sympa::Tools::File::get_mtime($d));
@@ -9124,10 +9140,7 @@ sub do_reject {
                     }
                 }
                 if ($in{'blacklist'}) {
-                    if (tools::add_in_blacklist(
-                            $rejected_sender, $robot, $list
-                        )
-                        ) {
+                    if (_add_in_blacklist($rejected_sender, $robot, $list)) {
                         $param->{'blacklist_added'} += 1;
                         wwslog('info',
                             "added $rejected_sender to $list->{'name'} blacklist"
@@ -9286,7 +9299,7 @@ sub do_distribute {
         envelope_sender => Conf::get_robot_conf($robot, 'request'),
         sender          => $param->{'user'}{'email'},
         md5_check       => 1,
-        message_id      => tools::get_message_id($robot)
+        message_id      => Sympa::unique_message_id($robot)
     );
     $cmd_message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
@@ -10108,10 +10121,11 @@ sub do_latest_arc {
                 }
 
                 if ($field eq 'message-id') {
-                    $msg_info{$var} =
-                        tools::clean_msg_id($msg_info{'message_id'});
+                    $msg_info{$var} = Sympa::Tools::Text::canonic_message_id(
+                        $msg_info{'message_id'});
                     #FIXME: Required?
-                    $msg_info{$var} = tools::escape_chars($msg_info{$var});
+                    $msg_info{$var} =
+                        Sympa::Tools::Text::escape_chars($msg_info{$var});
 
                     $msg_info{'year_month'} = $arc;
                 } else {
@@ -10119,7 +10133,8 @@ sub do_latest_arc {
                         MIME::EncWords::decode_mimewords($msg_info{$var},
                         Charset => 'utf8');
                     #FIXME: Required?
-                    $msg_info{$var} = tools::escape_html($msg_info{$var});
+                    $msg_info{$var} = Sympa::Tools::WWW::escape_html_minimum(
+                        $msg_info{$var});
                 }
             }
 
@@ -10194,7 +10209,7 @@ sub do_remove_arc {
     wwslog('info', 'List %s, yyyy %s, mm %s, #message %s',
         $in{'list'}, $in{'yyyy'}, $in{'month'});
 
-    # $in{'msgid'} = tools::unescape_chars($in{'msgid'});
+    # $in{'msgid'} = Sympa::Tools::Text::unescape_chars($in{'msgid'});
     my @msgids = split /\0/, $in{'msgid'};
 
     unless (@msgids) {
@@ -10280,7 +10295,7 @@ sub do_send_me {
     wwslog('info', '(%s, %s, %s, %s)',
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
-    my $message_id = tools::clean_msg_id($in{'msgid'});
+    my $message_id = Sympa::Tools::Text::canonic_message_id($in{'msgid'});
     unless ($message_id
         and $message_id !~ /NO-ID-FOUND\.mhonarc\.org/) {
         Sympa::Report::reject_report_web('intern', 'may_not_send_me', {},
@@ -10672,7 +10687,7 @@ sub do_arcsearch_id {
         return undef;
     }
 
-    $in{'msgid'} = tools::unescape_chars($in{'msgid'});
+    $in{'msgid'} = Sympa::Tools::Text::unescape_chars($in{'msgid'});
     $param->{'msgid'} = $in{'msgid'};
 
     $search->limit(1);
@@ -11459,7 +11474,7 @@ sub do_editsubscriber {
 
     my $subscriber;
 
-    $in{'email'} = tools::unescape_chars($in{'email'});
+    $in{'email'} = Sympa::Tools::Text::unescape_chars($in{'email'});
 
     unless ($subscriber = $list->get_list_member($in{'email'})) {
         Sympa::Report::reject_report_web('intern', 'subscriber_not_found',
@@ -11471,9 +11486,11 @@ sub do_editsubscriber {
 
     $param->{'current_subscriber'} = $subscriber;
     $param->{'current_subscriber'}{'escaped_email'} =
-        tools::escape_html($param->{'current_subscriber'}{'email'});
+        Sympa::Tools::WWW::escape_html_minimum(
+        $param->{'current_subscriber'}{'email'});
     $param->{'current_subscriber'}{'escaped_bounce_address'} =
-        tools::escape_html($param->{'current_subscriber'}{'bounce_address'});
+        Sympa::Tools::WWW::escape_html_minimum(
+        $param->{'current_subscriber'}{'bounce_address'});
     $param->{'current_subscriber'}{'date'} =
         $language->gettext_strftime("%d %b %Y",
         localtime($subscriber->{'date'}));
@@ -11586,7 +11603,7 @@ sub do_viewbounce {
     # Prevent directory traversal.
     delete $in{'file'} if $in{'file'} and $in{'file'} =~ m{/};
 
-    my $escaped_email = tools::escape_chars($in{'email'});
+    my $escaped_email = Sympa::Tools::Text::escape_chars($in{'email'});
 
     my $bounce_path =
         $in{'envid'}
@@ -11782,7 +11799,8 @@ sub do_reviewbouncing {
             localtime($i->{'last_bounce'}));
 
         ## Escape some weird chars
-        $i->{'escaped_email'} = tools::escape_chars($i->{'email'});
+        $i->{'escaped_email'} =
+            Sympa::Tools::Text::escape_chars($i->{'email'});
 
         push @{$param->{'members'}}, $i;
     }
@@ -11799,13 +11817,13 @@ sub do_reviewbouncing {
 sub do_resetbounce {
     wwslog('info', '');
 
-    $in{'email'} = tools::unescape_chars($in{'email'});
+    $in{'email'} = Sympa::Tools::Text::unescape_chars($in{'email'});
 
     my @emails = split /\0/, $in{'email'};
 
     foreach my $email (@emails) {
 
-        my $escaped_email = tools::escape_chars($email);
+        my $escaped_email = Sympa::Tools::Text::escape_chars($email);
 
         unless ($list->is_list_member($email)) {
             Sympa::Report::reject_report_web('user', 'user_not_subscriber',
@@ -14575,7 +14593,7 @@ sub do_d_read {
                         $subdirs{$d}{'doc'} =
                             Sympa::Tools::WWW::make_visible_path($d);
                         $subdirs{$d}{'escaped_doc'} =
-                            tools::escape_docname($d, '/');
+                            Sympa::SharedDocument::escape_docname($d, '/');
 
                         # size of the doc
                         $subdirs{$d}{'size'} = (-s $path_doc) / 1000;
@@ -14583,7 +14601,8 @@ sub do_d_read {
                         # description
                         $subdirs{$d}{'title'} = $desc_hash{'title'};
                         $subdirs{$d}{'escaped_title'} =
-                            tools::escape_html($desc_hash{'title'});
+                            Sympa::Tools::WWW::escape_html_minimum(
+                            $desc_hash{'title'});
 
                         # Author
                         if ($desc_hash{'email'}) {
@@ -14707,8 +14726,7 @@ sub do_d_read {
                             Sympa::Tools::WWW::get_icon($robot, 'url');
 
                         ## MIME - TYPES : icons for template
-                    } elsif (my $type = Sympa::Tools::WWW::get_mime_type($3))
-                    {
+                    } elsif (my $type = Conf::get_mime_type($3)) {
                         # type of the file and apache icon
                         $type =~ /^([\w\-]+)\/([\w\-]+)$/;
                         my $mimet = $1;
@@ -14787,7 +14805,8 @@ sub do_d_read {
                             # description of the file
                             $files{$d}{'title'} = $desc_hash{'title'};
                             $files{$d}{'escaped_title'} =
-                                tools::escape_html($desc_hash{'title'});
+                                Sympa::Tools::WWW::escape_html_minimum(
+                                $desc_hash{'title'});
                             # author
                             if ($desc_hash{'email'}) {
                                 $files{$d}{'author'} = $desc_hash{'email'};
@@ -14815,7 +14834,7 @@ sub do_d_read {
                                 Sympa::Tools::WWW::make_visible_path($d);
                         }
                         $files{$d}{'escaped_doc'} =
-                            tools::escape_docname($d, '/');
+                            Sympa::SharedDocument::escape_docname($d, '/');
 
                         # last update
                         my $date_epoch =
@@ -14870,7 +14889,8 @@ sub do_d_read {
                 $param->{'father'} = '';
             }
             $param->{'escaped_father'} =
-                tools::escape_docname($param->{'father'}, '/');
+                Sympa::SharedDocument::escape_docname($param->{'father'},
+                '/');
 
             # Parameters for the description
             if (-e "$doc/.desc") {
@@ -14883,7 +14903,7 @@ sub do_d_read {
             $param->{'path'}         = $path;
             $param->{'visible_path'} = $visible_path;
             $param->{'escaped_path'} =
-                tools::escape_docname($param->{'path'}, '/');
+                Sympa::SharedDocument::escape_docname($param->{'path'}, '/');
         }
         if (scalar keys %subdirs) {
             $param->{'sort_subdirs'} = \@sort_subdirs;
@@ -15192,7 +15212,7 @@ sub directory_browsing {
                         Sympa::Tools::WWW::get_icon($robot, 'url');
 
                     ## MIME - TYPES : icons for template
-                } elsif (my $type = Sympa::Tools::WWW::get_mime_type($3)) {
+                } elsif (my $type = Conf::get_mime_type($3)) {
                     # type of the file and apache icon
                     $type =~ /^([\w\-]+)\/([\w\-]+)$/;
                     my $mimet = $1;
@@ -15222,7 +15242,8 @@ sub directory_browsing {
 
                 ## name of the file
                 $file_info{'name'} = Sympa::Tools::WWW::make_visible_path($d);
-                $file_info{'escaped_name'} = tools::escape_docname($d, '/');
+                $file_info{'escaped_name'} =
+                    Sympa::SharedDocument::escape_docname($d, '/');
 
                 ## content_directory
                 if ($dir) {
@@ -15232,13 +15253,14 @@ sub directory_browsing {
                     $file_info{'content_dir'} = "/";
                 }
                 $file_info{'escaped_content_dir'} =
-                    tools::escape_docname($dir, '/');
+                    Sympa::SharedDocument::escape_docname($dir, '/');
 
                 if ($def_desc) {
                     ## description
                     $file_info{'title'} = $desc_hash{'title'};
                     $file_info{'escaped_title'} =
-                        tools::escape_html($desc_hash{'title'});
+                        Sympa::Tools::WWW::escape_html_minimum(
+                        $desc_hash{'title'});
 
                     ## author
                     if ($desc_hash{'email'}) {
@@ -15396,7 +15418,7 @@ sub do_d_editfile {
         $param->{'father'} = '';
     }
     $param->{'escaped_father'} =
-        tools::escape_docname($param->{'father'}, '/');
+        Sympa::SharedDocument::escape_docname($param->{'father'}, '/');
 
     # Description of the file
     my $descfile;
@@ -15555,7 +15577,7 @@ sub do_d_properties {
         $param->{'father'} = '';
     }
     $param->{'escaped_father'} =
-        tools::escape_docname($param->{'father'}, '/');
+        Sympa::SharedDocument::escape_docname($param->{'father'}, '/');
 
     $param->{'fname'} = Sympa::Tools::WWW::make_visible_path($3);
     # Description of the file
@@ -16396,7 +16418,7 @@ sub do_d_upload {
     # name of the file, without path
     my ($fname, $visible_fname);
     if ($fn =~ /([^\/\\]+)$/) {
-        $fname         = tools::qencode_filename($1);
+        $fname         = Sympa::Tools::Text::qencode_filename($1);
         $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
     }
 
@@ -17951,8 +17973,8 @@ sub d_unzip_shared_file {
     ## Qencode 8bit filenames afterward
     ## The suspected charset is the one that is associated to the user's
     ## language
-    tools::qencode_hierarchy($zip_abs_dir . '/zip',
-        tools::lang2charset($language->get_lang));
+    Sympa::Tools::File::qencode_hierarchy($zip_abs_dir . '/zip',
+        Conf::lang2charset($language->get_lang));
 
     return $status;
 }
@@ -19399,8 +19421,10 @@ sub do_d_create_dir {
     $param->{'path'} = $path;
 
     ## Q-decode file path and names
-    $param->{'decoded_path'}     = tools::qdecode_filename($param->{'path'});
-    $param->{'decoded_name_doc'} = tools::qdecode_filename($name_doc);
+    $param->{'decoded_path'} =
+        Sympa::Tools::Text::qdecode_filename($param->{'path'});
+    $param->{'decoded_name_doc'} =
+        Sympa::Tools::Text::qdecode_filename($name_doc);
 
     my $type = $in{'type'} || 'directory';
     my $desc_file;
@@ -19892,7 +19916,7 @@ sub do_d_control {
         $param->{'father'} = '';
     }
     $param->{'escaped_father'} =
-        tools::escape_docname($param->{'father'}, '/');
+        Sympa::SharedDocument::escape_docname($param->{'father'}, '/');
 
     my $desc_file;
     # path of the description file
@@ -19967,7 +19991,7 @@ sub do_d_control {
         $param->{'father'} = '';
     }
     $param->{'escaped_father'} =
-        tools::escape_docname($param->{'father'}, '/');
+        Sympa::SharedDocument::escape_docname($param->{'father'}, '/');
 
     $param->{'set_owner'} = 1;
 
@@ -20241,7 +20265,7 @@ sub do_d_set_owner {
     }
 
     # the email must look like an email "somebody@somewhere"
-    unless (tools::valid_email($in{'content'})) {
+    unless (Sympa::Tools::Text::valid_email($in{'content'})) {
         Sympa::Report::reject_report_web('user', 'incorrect_email',
             {'email' => $in{'content'}},
             $param->{'action'}, $list);
@@ -21444,9 +21468,10 @@ sub do_compose_mail {
     $param->{'mailto'} = Sympa::Tools::WWW::mailto($list, $param->{'to'});
     # headers will be encoded later.
     #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
-    $param->{'subject'}     = $in{'subject'};
-    $param->{'in_reply_to'} = tools::clean_msg_id($in{'in_reply_to'});
-    $param->{'message_id'}  = tools::get_message_id($robot);
+    $param->{'subject'} = $in{'subject'};
+    $param->{'in_reply_to'} =
+        Sympa::Tools::Text::canonic_message_id($in{'in_reply_to'});
+    $param->{'message_id'} = Sympa::unique_message_id($robot);
 
     if ($list->is_there_msg_topic()) {
 
@@ -21537,7 +21562,7 @@ sub do_send_mail {
     }
 
     # Determine user's character set.
-    my $charset = tools::lang2charset($language->get_lang);
+    my $charset = Conf::lang2charset($language->get_lang);
 
     # Take the sender mail
     my $from = $param->{'user'}{'email'};
@@ -21551,8 +21576,8 @@ sub do_send_mail {
 
     if (defined $param->{'subscriber'}) {
         $from =
-            tools::addrencode($from, $param->{'subscriber'}{'gecos'},
-            $charset);
+            Sympa::Tools::Text::addrencode($from,
+            $param->{'subscriber'}{'gecos'}, $charset);
     }
 
     # Encode subject.
@@ -21599,7 +21624,8 @@ sub do_send_mail {
     }
 
     # "In-Reply-To:" field, eliminating hostile characters.
-    my $in_reply_to = tools::clean_msg_id($in{'in_reply_to'});
+    my $in_reply_to =
+        Sympa::Tools::Text::canonic_message_id($in{'in_reply_to'});
     undef $in_reply_to if $in_reply_to and $in_reply_to =~ /[\s<>]/;
 
     ##--------------- send an html page or a message -------------------
@@ -21966,12 +21992,15 @@ sub do_request_topic {
     }
 
     # headers will be encoded later.
-    $param->{'subject'}    = $message->{'decoded_subject'};
-    $param->{'subject'}    = tools::escape_html($param->{'subject'});   #XXX
-    $param->{'from'}       = $message->get_decoded_header('From');
-    $param->{'from'}       = tools::escape_html($param->{'from'});      #XXX
-    $param->{'date'}       = $message->get_decoded_header('Date');
-    $param->{'date'}       = tools::escape_html($param->{'date'});      #XXX
+    $param->{'subject'} = $message->{'decoded_subject'};
+    $param->{'subject'} =
+        Sympa::Tools::WWW::escape_html_minimum($param->{'subject'});    #XXX
+    $param->{'from'} = $message->get_decoded_header('From');
+    $param->{'from'} =
+        Sympa::Tools::WWW::escape_html_minimum($param->{'from'});       #XXX
+    $param->{'date'} = $message->get_decoded_header('Date');
+    $param->{'date'} =
+        Sympa::Tools::WWW::escape_html_minimum($param->{'date'});       #XXX
     $param->{'message_id'} = $message->{'message_id'};
     $param->{'body'}       = $message->get_plain_body;                  #FIXME
 
@@ -23782,7 +23811,8 @@ sub _prepare_subscriber {
     $user->{'pictures_url'} = $list->find_picture_url($user->{'email'});
 
     ## Escape some weird chars
-    $user->{'escaped_email'} = tools::escape_chars($user->{'email'});
+    $user->{'escaped_email'} =
+        Sympa::Tools::Text::escape_chars($user->{'email'});
 
     ## Check data sources
     $user->{'sources'} = $list->get_datasource_name($user->{'id'})
@@ -24344,6 +24374,62 @@ sub purely_closed {
     );
 
     return $scenario->is_purely_closed;
+}
+
+# Old name: tools::add_in_blacklist().
+sub _add_in_blacklist {
+    my $entry = shift;
+    my $robot = shift;
+    my $list  = shift;
+
+    $log->syslog('info', '(%s, %s, %s)', $entry, $robot, $list->{'name'});
+    $entry = lc($entry);
+    chomp $entry;
+
+    # robot blacklist not yet availible
+    unless ($list) {
+        $log->syslog('info',
+            'Robot blacklist not yet availible, missing list parameter');
+        return undef;
+    }
+    unless (($entry) && ($robot)) {
+        $log->syslog('info', 'Missing parameters');
+        return undef;
+    }
+    if ($entry =~ /\*.*\*/) {
+        $log->syslog('info', 'Incorrect parameter %s', $entry);
+        return undef;
+    }
+    my $dir = $list->{'dir'} . '/search_filters';
+    unless ((-d $dir) || mkdir($dir, 0755)) {
+        $log->syslog('info', 'Unable to create dir %s', $dir);
+        return undef;
+    }
+    my $file = $dir . '/blacklist.txt';
+
+    my $fh;
+    if (open $fh, '<', $file) {
+        while (<$fh>) {
+            next if (/^\s*$/o || /^[\#\;]/o);
+            my $regexp = $_;
+            chomp $regexp;
+            $regexp =~ s/\*/.*/;
+            $regexp = '^' . $regexp . '$';
+            if ($entry =~ /$regexp/i) {
+                $log->syslog('notice', '%s already in blacklist(%s)',
+                    $entry, $_);
+                return 0;
+            }
+        }
+        close $fh;
+    }
+    unless (open $fh, '>>', $file) {
+        $log->syslog('info', 'Append to file %s', $file);
+        return undef;
+    }
+    print $fh "$entry\n";
+    close $fh;
+
 }
 
 __END__

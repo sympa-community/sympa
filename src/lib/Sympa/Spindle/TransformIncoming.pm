@@ -36,7 +36,6 @@ use Sympa::Log;
 use Sympa::Message::Plugin;
 use Sympa::Regexps;
 use Sympa::Template;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Topic;
 
@@ -183,7 +182,7 @@ sub _twist {
                 $before_tag . ' '
                 . MIME::EncWords::encode_mimewords(
                 Encode::decode_utf8('[' . $parsed_tag . ']'),
-                Charset  => tools::lang2charset($language->get_lang),
+                Charset  => Conf::lang2charset($language->get_lang),
                 Encoding => 'A',
                 Field    => 'Subject'
                 )

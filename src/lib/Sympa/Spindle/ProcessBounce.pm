@@ -317,7 +317,7 @@ sub _twist {
             my $head = MIME::Head->read(IO::Scalar->new(\$str));
 
             foreach my $list_id ($head->get('List-Id')) {
-                $list_id = tools::clean_msg_id($list_id);
+                $list_id = Sympa::Tools::Text::canonic_message_id($list_id);
 
                 if (0 == index(
                         scalar reverse($list_id),

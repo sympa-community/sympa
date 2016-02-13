@@ -29,7 +29,7 @@ use warnings;
 
 use Sympa::Log;
 use Sympa::Message::Plugin;
-use tools;
+use Sympa::Robot;
 
 use base qw(Sympa::Spindle);
 
@@ -114,7 +114,7 @@ sub _twist {
 
     ## Add RFC 2369 header fields
     foreach my $field (
-        @{  tools::get_list_params($list->{'domain'})
+        @{  Sympa::Robot::list_params($list->{'domain'})
                 ->{'rfc2369_header_fields'}->{'format'}
         }
         ) {

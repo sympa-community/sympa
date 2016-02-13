@@ -38,9 +38,9 @@ use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::LockedFile;
 use Sympa::Log;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
 
@@ -1290,6 +1290,43 @@ sub load_charset {
     return $charset;
 }
 
+=over
+
+=item lang2charset ( $lang )
+
+Gets charset for e-mail messages sent by Sympa.
+
+Parameters:
+
+$lang - language.
+
+Returns:
+
+Charset name.
+If it is not known, returns default charset.
+
+=back
+
+=cut
+
+# Old name: tools::lang2charset().
+# FIXME: This would be moved to such as Site package.
+sub lang2charset {
+    my $lang = shift;
+
+    my $locale2charset;
+    if ($lang and %Conf::Conf    # configuration loaded
+        and $locale2charset = $Conf::Conf{'locale2charset'}
+        ) {
+        foreach my $l (Sympa::Language::implicated_langs($lang)) {
+            if (exists $locale2charset->{$l}) {
+                return $locale2charset->{$l};
+            }
+        }
+    }
+    return 'utf-8';              # the last resort
+}
+
 ## load nrcpt file (limite receipient par domain
 sub load_nrcpt_by_domain {
     my $config_file = Sympa::search_fullpath('*', 'nrcpt_by_domain.conf');
@@ -2273,7 +2310,7 @@ sub _set_listmasters_entry {
             split(/,/, $param->{'config_hash'}{'listmaster'});
         $number_of_email_provided = $#emails_provided + 1;
         foreach my $lismaster_address (@emails_provided) {
-            if (tools::valid_email($lismaster_address)) {
+            if (Sympa::Tools::Text::valid_email($lismaster_address)) {
                 # Note: 'listmasters' was obsoleted.
                 push @{$param->{'config_hash'}{'listmasters'}},
                     $lismaster_address;
@@ -2625,5 +2662,56 @@ sub _load_wwsconf {
 
 # MOVED: Use Sympa::Tools::WWW::update_css().
 #sub update_css;
+
+# lazy loading on demand
+my %mime_types;
+
+# Old name: Sympa::Tools::WWW::get_mime_type().
+# FIXME: This would be moved to such as Site package.
+sub get_mime_type {
+    my $type = shift;
+
+    %mime_types = _load_mime_types() unless %mime_types;
+
+    return $mime_types{$type};
+}
+
+# Old name: Sympa::Tools::WWW::load_mime_types().
+sub _load_mime_types {
+    my %types = ();
+
+    my @localisation = (
+        Sympa::search_fullpath('*', 'mime.types'),
+        '/etc/mime.types', '/usr/local/apache/conf/mime.types',
+        '/etc/httpd/conf/mime.types',
+    );
+
+    foreach my $loc (@localisation) {
+        my $fh;
+        next unless $loc and open $fh, '<', $loc;
+
+        foreach my $line (<$fh>) {
+            next if $line =~ /^\s*\#/;
+            chomp $line;
+
+            my ($k, $v) = split /\s+/, $line, 2;
+            next unless $k and $v and $v =~ /\S/;
+
+            my @extensions = split /\s+/, $v;
+            # provides file extention, given the content-type
+            if (@extensions) {
+                $types{$k} = $extensions[0];
+            }
+            foreach my $ext (@extensions) {
+                $types{$ext} = $k;
+            }
+        }
+
+        close $fh;
+        return %types;
+    }
+
+    return;
+}
 
 1;

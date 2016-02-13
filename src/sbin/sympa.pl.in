@@ -47,8 +47,8 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Spindle::ProcessDigest;
-use tools;
 use Sympa::Tools::Data;
+use Sympa::Tools::File;
 use Sympa::Upgrade;
 
 ## Init random engine
@@ -851,9 +851,10 @@ if ($main::options{'dump'}) {
             Conf::get_robot_conf($robot, 'lang'),
             $default_lang
         );
-        my $list_encoding = tools::lang2charset($language->get_lang);
+        my $list_encoding = Conf::lang2charset($language->get_lang);
 
-        my $count = tools::qencode_hierarchy($list->{'dir'} . '/shared',
+        my $count =
+            Sympa::Tools::File::qencode_hierarchy($list->{'dir'} . '/shared',
             $list_encoding);
 
         if ($count) {

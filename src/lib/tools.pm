@@ -27,20 +27,8 @@ package tools;
 use strict;
 use warnings;
 use Encode qw();
-use Encode::MIME::Header;    # for 'MIME-Q' encoding
-use English;                 # FIXME: drop $MATCH usage
-use MIME::EncWords;
 
-use Sympa;
-use Conf;
-use Sympa::Language;
-use Sympa::ListDef;
-use Sympa::Log;
 use Sympa::Regexps;
-use Sympa::Tools::Data;
-use Sympa::Tools::File;
-
-my $log = Sympa::Log->instance;
 
 ## Returns an HTML::StripScripts::Parser object built with  the parameters
 ## provided as arguments.
@@ -65,18 +53,8 @@ my $log = Sympa::Log->instance;
 #sub sortbydomain($x, $y);
 
 # Sort subroutine to order files in sympa spool by date
-#OBSOLETED: No longer used.
-sub by_date {
-    my @a_tokens = split /\./, ($a || '');
-    my @b_tokens = split /\./, ($b || '');
-
-    ## File format : list@dom.date.pid
-    my $a_time = $a_tokens[$#a_tokens - 1] || 0;
-    my $b_time = $b_tokens[$#b_tokens - 1] || 0;
-
-    return $a_time <=> $b_time;
-
-}
+#DEPRECATED: No longer used.
+#sub by_date;
 
 # Moved to Sympa::Mailer::_safefork().
 #sub safefork ($i, $pid);
@@ -84,63 +62,8 @@ sub by_date {
 # Moved to _check_command in sympa_msg.pl.
 #sub checkcommand;
 
-## return a hash from the edit_list_conf file
-sub load_edit_list_conf {
-    $log->syslog('debug2', '(%s)', @_);
-    my $list = shift;
-
-    my $robot = $list->{'domain'};
-    my $file;
-    my $conf;
-
-    return undef
-        unless $file = Sympa::search_fullpath($list, 'edit_list.conf');
-
-    unless (open(FILE, $file)) {
-        $log->syslog('info', 'Unable to open config file %s', $file);
-        return undef;
-    }
-
-    my $error_in_conf;
-    my $roles_regexp =
-        'listmaster|privileged_owner|owner|editor|subscriber|default';
-    while (<FILE>) {
-        next if /^\s*(\#.*|\s*)$/;
-
-        if (/^\s*(\S+)\s+(($roles_regexp)\s*(,\s*($roles_regexp))*)\s+(read|write|hidden)\s*$/i
-            ) {
-            my ($param, $role, $priv) = ($1, $2, $6);
-            my @roles = split /,/, $role;
-            foreach my $r (@roles) {
-                $r =~ s/^\s*(\S+)\s*$/$1/;
-                if ($r eq 'default') {
-                    $error_in_conf = 1;
-                    $log->syslog('notice', '"default" is no more recognised');
-                    foreach
-                        my $set ('owner', 'privileged_owner', 'listmaster') {
-                        $conf->{$param}{$set} = $priv;
-                    }
-                    next;
-                }
-                $conf->{$param}{$r} = $priv;
-            }
-        } else {
-            $log->syslog(
-                'info',
-                'Unknown parameter in %s (Ignored) %s',
-                "$Conf::Conf{'etc'}/edit_list.conf", $_
-            );
-            next;
-        }
-    }
-
-    if ($error_in_conf) {
-        Sympa::send_notify_to_listmaster($robot, 'edit_list_error', [$file]);
-    }
-
-    close FILE;
-    return $conf;
-}
+# Moved to Sympa::List::_load_edit_list_conf().
+#sub load_edit_list_conf;
 
 # Moved to Sympa::Tools::WWW::_load_create_list_conf().
 #sub load_create_list_conf;
@@ -166,55 +89,14 @@ sub load_edit_list_conf {
 # DEPRECATED: Use "s/([^\x00-\x1F\s\w\x7F-\xFF])/\\$1/g;".
 #sub escape_regexp ($s);
 
-# Escape weird characters
-# ToDo: This should be obsoleted: Would be better to use
-# Sympa::Tools::Text::encode_filesystem_safe().
-sub escape_chars {
-    my $s          = shift;
-    my $except     = shift;                            ## Exceptions
-    my $ord_except = ord $except if defined $except;
+# Moved to: Sympa::Tools::Text::escape_chars().
+#sub escape_chars;
 
-    ## Escape chars
-    ##  !"#$%&'()+,:;<=>?[] AND accented chars
-    ## escape % first
-    foreach my $i (
-        0x25,
-        0x20 .. 0x24,
-        0x26 .. 0x2c,
-        0x3a .. 0x3f,
-        0x5b, 0x5d,
-        0x80 .. 0x9f,
-        0xa0 .. 0xff
-        ) {
-        next if defined $ord_except and $i == $ord_except;
-        my $hex_i = sprintf "%lx", $i;
-        $s =~ s/\x$hex_i/%$hex_i/g;
-    }
-    ## Special traetment for '/'
-    $s =~ s/\//%a5/g unless defined $except and $except eq '/';
-
-    return $s;
-}
-
-## Escape shared document file name
-## Q-decode it first
-# ToDo: This should be obsoleted: Would be better to use
-# Sympa::Tools::Text::encode_filesystem_safe().
-sub escape_docname {
-    my $filename = shift;
-    my $except   = shift;    ## Exceptions
-
-    ## Q-decode
-    $filename = MIME::EncWords::decode_mimewords($filename);
-
-    ## Decode from FS encoding to utf-8
-    #$filename = Encode::decode($Conf::Conf{'filesystem_encoding'}, $filename);
-
-    ## escapesome chars for use in URL
-    return tools::escape_chars($filename, $except);
-}
+# Moved to: Sympa::SharedDocument::escape_docname().
+#sub escape_docname;
 
 ## Convert from Perl unicode encoding to UTF8
+# OBSOLETED.  No longer used.
 sub unicode_to_utf8 {
     my $s = shift;
 
@@ -225,135 +107,20 @@ sub unicode_to_utf8 {
     return $s;
 }
 
-## Q-Encode web file name
-# ToDo: This should be obsoleted: Would be better to use
-# Sympa::Tools::Text::encode_filesystem_safe().
-sub qencode_filename {
-    my $filename = shift;
+# Moved to Sympa::Tools::Text::qencode_filename().
+#sub qencode_filename;
 
-    ## We don't use MIME::Words here because it does not encode properly
-    ## Unicode
-    ## Check if string is already Q-encoded first
-    ## Also check if the string contains 8bit chars
-    unless ($filename =~ /\=\?UTF-8\?/
-        || $filename =~ /^[\x00-\x7f]*$/) {
+# Moved to Sympa::Tools::Text::qdecode_filename().
+#sub qdecode_filename;
 
-        ## Don't encode elements such as .desc. or .url or .moderate
-        ## or .extension
-        my $part = $filename;
-        my ($leading, $trailing);
-        $leading  = $1 if ($part =~ s/^(\.desc\.)//);    ## leading .desc
-        $trailing = $1 if ($part =~ s/((\.\w+)+)$//);    ## trailing .xx
+# Moved to: Sympa::Tools::Text::unescape_chars().
+#sub unescape_chars;
 
-        my $encoded_part = MIME::EncWords::encode_mimewords(
-            $part,
-            Charset    => 'utf8',
-            Encoding   => 'q',
-            MaxLineLen => 1000,
-            Minimal    => 'NO'
-        );
+# Moved to: Sympa::Tools::WWW::escape_html_minimum().
+#sub escape_html;
 
-        $filename = $leading . $encoded_part . $trailing;
-    }
-
-    return $filename;
-}
-
-## Q-Decode web file name
-# ToDo: This should be obsoleted: Would be better to use
-# Sympa::Tools::Text::encode_filesystem_safe().
-sub qdecode_filename {
-    my $filename = shift;
-
-    ## We don't use MIME::Words here because it does not encode properly
-    ## Unicode
-    ## Check if string is already Q-encoded first
-    #if ($filename =~ /\=\?UTF-8\?/) {
-    $filename = Encode::encode_utf8(Encode::decode('MIME-Q', $filename));
-    #}
-
-    return $filename;
-}
-
-## Unescape weird characters
-# ToDo: This should be obsoleted: Would be better to use
-# Sympa::Tools::Text::decode_filesystem_safe().
-sub unescape_chars {
-    my $s = shift;
-
-    $s =~ s/%a5/\//g;    ## Special traetment for '/'
-    foreach my $i (0x20 .. 0x2c, 0x3a .. 0x3f, 0x5b, 0x5d, 0x80 .. 0x9f,
-        0xa0 .. 0xff) {
-        my $hex_i = sprintf "%lx", $i;
-        my $hex_s = sprintf "%c",  $i;
-        $s =~ s/%$hex_i/$hex_s/g;
-    }
-
-    return $s;
-}
-
-sub escape_html {
-    my $s = shift;
-    return $s unless defined $s;
-
-    $s =~ s/\"/\&quot\;/gm;
-    $s =~ s/\</&lt\;/gm;
-    $s =~ s/\>/&gt\;/gm;
-
-    return $s;
-}
-
-sub unescape_html {
-    my $s = shift;
-    return $s unless defined $s;
-
-    $s =~ s/\&quot\;/\"/g;
-    $s =~ s/&lt\;/\</g;
-    $s =~ s/&gt\;/\>/g;
-
-    return $s;
-}
-
-# Old name: tt2::escape_url().
-sub escape_url {
-    my $string = shift;
-
-    $string =~ s/[\s+]/sprintf('%%%02x', ord($MATCH))/eg;
-    # Some MUAs aren't able to decode ``%40'' (escaped ``@'') in e-mail
-    # address of mailto: URL, or take ``@'' in query component for a
-    # delimiter to separate URL from the rest.
-    my ($body, $query) = split(/\?/, $string, 2);
-    if (defined $query) {
-        $query =~ s/\@/sprintf('%%%02x', ord($MATCH))/eg;
-        $string = $body . '?' . $query;
-    }
-
-    return $string;
-}
-
-# Old name: tt2::escape_xml().
-# OBSOLETED: No longer used.
-sub escape_xml {
-    my $string = shift;
-
-    $string =~ s/&/&amp;/g;
-    $string =~ s/</&lt;/g;
-    $string =~ s/>/&gt;/g;
-    $string =~ s/\'/&apos;/g;
-    $string =~ s/\"/&quot;/g;
-
-    return $string;
-}
-
-# Old name: tt2::escape_quote().
-sub escape_quote {
-    my $string = shift;
-
-    $string =~ s/\'/\\\'/g;
-    $string =~ s/\"/\\\"/g;
-
-    return $string;
-}
+# Moved to: Sympa::Tools::WWW::unescape_html_minimum().
+#sub unescape_html;
 
 # Check sum used to authenticate communication from wwsympa to sympa
 # DEPRECATED: No longer used: This is moved to upgrade_send_spool.pl to be
@@ -363,7 +130,7 @@ sub escape_quote {
 # Moved to Conf::cookie_changed().
 #sub cookie_changed;
 
-# Moved to Sympa::Tools::WWW:_load_mime_types()
+# Moved to Conf::_load_mime_types()
 #sub load_mime_types();
 
 # Old name: List::compute_auth().
@@ -391,45 +158,8 @@ sub escape_quote {
 # Moved to Sympa::send_notify_to_listmaster().
 #sub send_notify_to_listmaster;
 
-## Q-encode a complete file hierarchy
-## Useful to Q-encode subshared documents
-# ToDo: See a comment on tools::qencode_filename().
-sub qencode_hierarchy {
-    my $dir               = shift; ## Root directory
-    my $original_encoding = shift; ## Suspected original encoding of filenames
-
-    my $count;
-    my @all_files;
-    Sympa::Tools::File::list_dir($dir, \@all_files, $original_encoding);
-
-    foreach my $f_struct (reverse @all_files) {
-
-        ## At least one 8bit char
-        next
-            unless ($f_struct->{'filename'} =~ /[^\x00-\x7f]/);
-
-        my $new_filename = $f_struct->{'filename'};
-        my $encoding     = $f_struct->{'encoding'};
-        Encode::from_to($new_filename, $encoding, 'utf8') if $encoding;
-
-        ## Q-encode filename to escape chars with accents
-        $new_filename = tools::qencode_filename($new_filename);
-
-        my $orig_f = $f_struct->{'directory'} . '/' . $f_struct->{'filename'};
-        my $new_f  = $f_struct->{'directory'} . '/' . $new_filename;
-
-        ## Rename the file using utf8
-        $log->syslog('notice', "Renaming %s to %s", $orig_f, $new_f);
-        unless (rename $orig_f, $new_f) {
-            $log->syslog('err', 'Failed to rename %s to %s: %m',
-                $orig_f, $new_f);
-            next;
-        }
-        $count++;
-    }
-
-    return $count;
-}
+# Moved to Sympa::Tools::File::qencode_hierarchy().
+#sub qencode_hierarchy;
 
 # DEPRECATED: No longer used.
 #sub dump_encoding($out);
@@ -437,37 +167,11 @@ sub qencode_hierarchy {
 # MOVED to Sympa::Session::_is_a_crawler().
 #sub is_a_crawler;
 
-sub get_message_id {
-    my $robot = shift;
+# Moved to Sympa::unique_message_id().
+#sub get_message_id;
 
-    my $domain;
-    if ($robot and $robot ne '*') {
-        $domain = Conf::get_robot_conf($robot, 'domain');
-    } else {
-        $domain = $Conf::Conf{'domain'};
-    }
-
-    return sprintf '<sympa.%d.%d.%d@%s>', time, $PID, int(rand(999)), $domain;
-}
-
-## Basic check of an email address
-sub valid_email {
-    my $email = shift;
-
-    my $email_re = Sympa::Regexps::email();
-    unless ($email =~ /^${email_re}$/) {
-        $log->syslog('err', 'Invalid email address "%s"', $email);
-        return undef;
-    }
-
-    ## Forbidden characters
-    if ($email =~ /[\|\$\*\?\!]/) {
-        $log->syslog('err', 'Invalid email address "%s"', $email);
-        return undef;
-    }
-
-    return 1;
-}
+# Moved to Sympa::Tools::Text::valid_email().
+#sub valid_email;
 
 #DEPRECATED.  Use Sympa::Tools::Text::canonic_email().
 #sub clean_email;
@@ -481,29 +185,8 @@ sub valid_email {
 #DEPRECATED: No longer used.
 # sub remove_empty_entries($var);
 
-####################################################
-# clean_msg_id
-####################################################
-# clean msg_id to use it without  \n, \s or <,>
-#
-# IN : -$msg_id (+) : the msg_id
-#
-# OUT : -$msg_id : the clean msg_id
-#
-######################################################
-sub clean_msg_id {
-    my $msg_id = shift;
-
-    return $msg_id unless defined $msg_id;
-
-    chomp $msg_id;
-
-    if ($msg_id =~ /\<(.+)\>/) {
-        $msg_id = $1;
-    }
-
-    return $msg_id;
-}
+# Moved to Sympa::Tools:Text::canonic_message_id().
+#sub clean_msg_id;
 
 # Change X-Sympa-To: header field in the message
 # DEPRECATED: No longer used
@@ -517,60 +200,8 @@ sub clean_msg_id {
 # Moved to Sympa::Upgrade::lower_version().
 #sub lower_version ($v1, $v2);
 
-sub add_in_blacklist {
-    my $entry = shift;
-    my $robot = shift;
-    my $list  = shift;
-
-    $log->syslog('info', '(%s, %s, %s)', $entry, $robot, $list->{'name'});
-    $entry = lc($entry);
-    chomp $entry;
-
-    # robot blacklist not yet availible
-    unless ($list) {
-        $log->syslog('info',
-            "tools::add_in_blacklist: robot blacklist not yet availible, missing list parameter"
-        );
-        return undef;
-    }
-    unless (($entry) && ($robot)) {
-        $log->syslog('info', 'Missing parameters');
-        return undef;
-    }
-    if ($entry =~ /\*.*\*/) {
-        $log->syslog('info', 'Incorrect parameter %s', $entry);
-        return undef;
-    }
-    my $dir = $list->{'dir'} . '/search_filters';
-    unless ((-d $dir) || mkdir($dir, 0755)) {
-        $log->syslog('info', 'Unable to create dir %s', $dir);
-        return undef;
-    }
-    my $file = $dir . '/blacklist.txt';
-
-    if (open BLACKLIST, "$file") {
-        while (<BLACKLIST>) {
-            next if (/^\s*$/o || /^[\#\;]/o);
-            my $regexp = $_;
-            chomp $regexp;
-            $regexp =~ s/\*/.*/;
-            $regexp = '^' . $regexp . '$';
-            if ($entry =~ /$regexp/i) {
-                $log->syslog('notice', '%s already in blacklist(%s)',
-                    $entry, $_);
-                return 0;
-            }
-        }
-        close BLACKLIST;
-    }
-    unless (open BLACKLIST, ">> $file") {
-        $log->syslog('info', 'Append to file %s', $file);
-        return undef;
-    }
-    print BLACKLIST "$entry\n";
-    close BLACKLIST;
-
-}
+# Moved to _add_in_blacklist() in wwsympa.fcgi.
+#sub add_in_blacklist;
 
 # DEPRECATED: No longer used.
 # sub get_fingerprint($email, $fingerprint);
@@ -611,49 +242,8 @@ sub get_regexp {
 # DEPRECATED: No longer used.
 # sub count_numbers_in_string($str);
 
-#*******************************************
-# Function : addrencode
-# Description : return formatted (and encoded) name-addr as RFC5322 3.4.
-## IN : addr, [phrase, [charset, [comment]]]
-#*******************************************
-sub addrencode {
-    my $addr    = shift;
-    my $phrase  = (shift || '');
-    my $charset = (shift || 'utf8');
-    my $comment = (shift || '');
-
-    return undef unless $addr =~ /\S/;
-
-    if ($phrase =~ /[^\s\x21-\x7E]/) {
-        $phrase = MIME::EncWords::encode_mimewords(
-            Encode::decode('utf8', $phrase),
-            'Encoding'    => 'A',
-            'Charset'     => $charset,
-            'Replacement' => 'FALLBACK',
-            'Field'       => 'Resent-Sender', # almost longest
-            'Minimal'     => 'DISPNAME',      # needs MIME::EncWords >= 1.012.
-        );
-    } elsif ($phrase =~ /\S/) {
-        $phrase =~ s/([\\\"])/\\$1/g;
-        $phrase = '"' . $phrase . '"';
-    }
-    if ($comment =~ /[^\s\x21-\x27\x2A-\x5B\x5D-\x7E]/) {
-        $comment = MIME::EncWords::encode_mimewords(
-            Encode::decode('utf8', $comment),
-            'Encoding'    => 'A',
-            'Charset'     => $charset,
-            'Replacement' => 'FALLBACK',
-            'Minimal'     => 'DISPNAME',
-        );
-    } elsif ($comment =~ /\S/) {
-        $comment =~ s/([\\\"])/\\$1/g;
-    }
-
-    return
-          ($phrase  =~ /\S/ ? "$phrase "    : '')
-        . ($comment =~ /\S/ ? "($comment) " : '')
-        . "<$addr>";
-}
+# Moved to: Sympa::Tools::Text::addrencode().
+#sub addrencode;
 
 # Generate a newsletter from an HTML URL or a file path.
 #sub create_html_part_from_web_page($param);
@@ -668,46 +258,8 @@ sub addrencode {
 # Moved to Sympa::Tools::Password::password_validation().
 #sub password_validation;
 
-=over
-
-=item eval_in_time ( $subref, $timeout )
-
-Evaluate subroutine $subref in $timeout seconds.
-
-TBD.
-
-=back
-
-=cut
-
-sub eval_in_time {
-    my $subref  = shift;
-    my $timeout = shift;
-
-    # Call to subroutine uses eval to set a timeout.
-    # This prevents a subroutine to make the process wait forever if it does
-    # not respond.
-    my $ret = eval {
-        local $SIG{__DIE__} = 'DEFAULT';
-        local $SIG{ALRM} = sub { die "TIMEOUT\n" };    # NB: \n required
-        alarm $timeout;
-
-        # Inner eval just in case the subroutine would die, thus leaving the
-        # alarm trigered.
-        my $ret = eval { $subref->() };
-        alarm 0;
-        $ret;
-    };
-    if ($EVAL_ERROR and $EVAL_ERROR eq "TIMEOUT\n") {
-        $log->syslog('err', 'Processing timeout');
-        return undef;
-    } elsif ($EVAL_ERROR) {
-        $log->syslog('err', 'Processing failed: %m');
-        return undef;
-    }
-
-    return $ret;
-}
+# Moved to Sympa::Process::eval_in_time().
+#sub eval_in_time;
 
 sub fix_children {
 }
@@ -718,61 +270,11 @@ sub fix_children {
 # Moved to Sympa::get_supported_languages().
 #sub get_supported_languages;
 
-=over 4
+# Moved to Sympa::Robot::list_params().
+#sub get_list_params;
 
-=item get_list_params
-
-I<Getter>.
-Returns hashref to list parameter information.
-
-=back
-
-=cut
-
-sub get_list_params {
-    my $robot_id = shift;
-
-    my $pinfo = Sympa::Tools::Data::dup_var(\%Sympa::ListDef::pinfo);
-    $pinfo->{'lang'}{'format'} = [Sympa::get_supported_languages($robot_id)];
-
-    return $pinfo;
-}
-
-=over
-
-=item lang2charset ( $lang )
-
-Gets charset for e-mail messages sent by Sympa.
-
-Parameters:
-
-$lang - language.
-
-Returns:
-
-Charset name.
-If it is not known, returns default charset.
-
-=back
-
-=cut
-
-## FIXME: This would be moved to such as Site package.
-sub lang2charset {
-    my $lang = shift;
-
-    my $locale2charset;
-    if ($lang and %Conf::Conf    # configuration loaded
-        and $locale2charset = $Conf::Conf{'locale2charset'}
-        ) {
-        foreach my $l (Sympa::Language::implicated_langs($lang)) {
-            if (exists $locale2charset->{$l}) {
-                return $locale2charset->{$l};
-            }
-        }
-    }
-    return 'utf-8';              # the last resort
-}
+# Moved to Conf::lang2charset().
+#sub lang2charset;
 
 # Moved to Sympa::Spool::split_listname().
 #sub split_listname;
@@ -788,3 +290,13 @@ sub lang2charset {
 #sub store_spool;
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NOTE
+
+This module was OBSOLETED.
+Use appropriate module(s) instead.
+
+=cut

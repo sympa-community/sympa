@@ -37,9 +37,9 @@ use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Message::Template;
 use Sympa::Process;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
+use Sympa::Tools::Text;
 use Sympa::Tracking;
 
 use base qw(Sympa::Spindle);
@@ -217,7 +217,8 @@ sub _twist {
     # personalized messages.
     # Note that message ID which can be anonymized should be taken from
     # message header instead of {message_id} attribute.
-    my $msg_id = tools::clean_msg_id($message->get_header('Message-ID'));
+    my $msg_id = Sympa::Tools::Text::canonic_message_id(
+        $message->get_header('Message-ID'));
     $data = {
         'messageid' => $msg_id,
         'listname'  => $listname,

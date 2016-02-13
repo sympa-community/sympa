@@ -47,7 +47,6 @@ use Sympa::Spool;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
 use Sympa::Spool::Digest;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
@@ -604,10 +603,10 @@ sub upgrade {
                 ## It should tell us what character encoding was used for
                 ## filenames
                 $language->set_lang($list->{'admin'}{'lang'});
-                my $list_encoding = tools::lang2charset($language->get_lang);
+                my $list_encoding = Conf::lang2charset($language->get_lang);
 
-                my $count =
-                    tools::qencode_hierarchy($list->{'dir'} . '/shared',
+                my $count = Sympa::Tools::File::qencode_hierarchy(
+                    $list->{'dir'} . '/shared',
                     $list_encoding);
 
                 if ($count) {
@@ -871,8 +870,8 @@ sub upgrade {
 
                     ## Decode and re-encode filename
                     $new_filename =
-                        tools::qencode_filename(
-                        tools::qdecode_filename($new_filename));
+                        Sympa::Tools::Text::qencode_filename(
+                        Sympa::Tools::Text::qdecode_filename($new_filename));
 
                     if ($new_filename ne $f_struct->{'filename'}) {
                         ## Rename file
@@ -1395,7 +1394,7 @@ sub upgrade {
                     $msg_string = MIME::Base64::decode_base64($msg_string);
                     my $bounce_path = sprintf '%s/%s_%08s',
                         $list->get_bounce_dir,
-                        tools::escape_chars($recipient),
+                        Sympa::Tools::Text::escape_chars($recipient),
                         $info->{'pk_notification'};
                     if (open my $fh, '>', $bounce_path) {
                         print $fh $msg_string;
@@ -1827,7 +1826,7 @@ sub to_utf8 {
             $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
         } else {
             $language->push_lang($lang);
-            $charset = tools::lang2charset($language->get_lang);
+            $charset = Conf::lang2charset($language->get_lang);
             $language->pop_lang;
         }
 

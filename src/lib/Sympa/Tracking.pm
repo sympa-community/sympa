@@ -33,8 +33,8 @@ use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::Log;
-use tools;
 use Sympa::Tools::File;
+use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
 
@@ -102,7 +102,7 @@ sub get_recipients_status {
     my $listname = shift;
     my $robot    = shift;
 
-    $msgid = tools::clean_msg_id($msgid);
+    $msgid = Sympa::Tools::Text::canonic_message_id($msgid);
 
     my $sth;
     my $sdm = Sympa::DatabaseManager->instance;
@@ -215,7 +215,8 @@ sub store {
         unless (_db_insert_notification($rcpt, %options)) {
             return undef;
         }
-        $filename = sprintf '%s_%08s', tools::escape_chars($rcpt),
+        $filename = sprintf '%s_%08s',
+            Sympa::Tools::Text::escape_chars($rcpt),
             $options{envid};
     } else {
         unless (
@@ -225,7 +226,7 @@ sub store {
                 $rcpt, $self->{context});
             return undef;
         }
-        $filename = tools::escape_chars($rcpt);
+        $filename = Sympa::Tools::Text::escape_chars($rcpt);
     }
     unless (open $ofh, '>', $bounce_dir . '/' . $filename) {
         $log->syslog('err', 'Unable to write %s/%s', $bounce_dir, $filename);
@@ -370,7 +371,7 @@ sub find_notification_id_by_message {
     my $listname  = shift;
     my $robot     = shift;
 
-    $msgid = tools::clean_msg_id($msgid);
+    $msgid = Sympa::Tools::Text::canonic_message_id($msgid);
 
     my $sth;
     my $sdm = Sympa::DatabaseManager->instance;
@@ -466,9 +467,10 @@ sub remove_message_by_id {
         return undef;
     }
     while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
-        my $bounce_dir    = $self->{directory};
-        my $escaped_email = tools::escape_chars($info->{'recipient'});
-        my $envid         = $info->{'envid'};
+        my $bounce_dir = $self->{directory};
+        my $escaped_email =
+            Sympa::Tools::Text::escape_chars($info->{'recipient'});
+        my $envid = $info->{'envid'};
         unlink sprintf('%s/%s_%08s', $bounce_dir, $escaped_email, $envid);
     }
     $sth->finish;
@@ -544,9 +546,10 @@ sub remove_message_by_period {
         return undef;
     }
     while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
-        my $bounce_dir    = $self->{directory};
-        my $escaped_email = tools::escape_chars($info->{'recipient'});
-        my $envid         = $info->{'envid'};
+        my $bounce_dir = $self->{directory};
+        my $escaped_email =
+            Sympa::Tools::Text::escape_chars($info->{'recipient'});
+        my $envid = $info->{'envid'};
         unlink sprintf('%s/%s_%08s', $bounce_dir, $escaped_email, $envid);
     }
     $sth->finish;

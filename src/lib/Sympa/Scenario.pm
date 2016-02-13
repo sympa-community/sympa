@@ -39,7 +39,6 @@ use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Robot;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Time;
@@ -687,7 +686,7 @@ sub verify {
 
     my $pinfo;
     if ($robot) {
-        $pinfo = tools::get_list_params($robot);
+        $pinfo = Sympa::Robot::list_params($robot);
     } else {
         $pinfo = {};
     }

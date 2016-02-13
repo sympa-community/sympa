@@ -32,7 +32,9 @@ use Sympa;
 use Conf;
 use Sympa::DatabaseManager;
 use Sympa::Language;
+use Sympa::ListDef;
 use Sympa::Log;
+use Sympa::Tools::Data;
 use Sympa::Tools::File;
 
 my $language = Sympa::Language->instance;
@@ -348,6 +350,27 @@ sub _add_topic {
             _add_topic(join('/', @tree[1 .. $#tree]), $title);
         return $topic;
     }
+}
+
+=over 4
+
+=item list_params
+
+I<Getter>.
+Returns hashref to list parameter information.
+
+=back
+
+=cut
+
+# Old name: tools::get_list_params().
+sub list_params {
+    my $robot_id = shift;
+
+    my $pinfo = Sympa::Tools::Data::dup_var(\%Sympa::ListDef::pinfo);
+    $pinfo->{'lang'}{'format'} = [Sympa::get_supported_languages($robot_id)];
+
+    return $pinfo;
 }
 
 1;

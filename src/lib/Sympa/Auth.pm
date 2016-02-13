@@ -34,25 +34,14 @@ use Sympa::Database;
 use Sympa::Log;
 use Sympa::Report;
 use Sympa::Robot;
-use tools;
 use Sympa::Tools::Data;
+use Sympa::Tools::Text;
 use Sympa::User;
 
 my $log = Sympa::Log->instance;
 
-## return the password finger print (this proc allow futur replacement of md5
-## by sha1 or ....)
-sub password_fingerprint {
-
-    $log->syslog('debug', '');
-
-    my $pwd = shift;
-    if (Conf::get_robot_conf('*', 'password_case') eq 'insensitive') {
-        return Digest::MD5::md5_hex(lc($pwd));
-    } else {
-        return Digest::MD5::md5_hex($pwd);
-    }
-}
+# Moved to: Sympa::User::password_fingerprint().
+#sub password_fingerprint;
 
 ## authentication : via email or uid
 sub check_auth {
@@ -63,7 +52,7 @@ sub check_auth {
 
     my ($canonic, $user);
 
-    if (tools::valid_email($auth)) {
+    if (Sympa::Tools::Text::valid_email($auth)) {
         return authentication($robot, $auth, $pwd);
     } else {
         ## This is an UID
@@ -158,7 +147,7 @@ sub authentication {
         ## the user passwords
         ## Other backends are Single Sign-On solutions
         if ($auth_service->{'auth_type'} eq 'user_table') {
-            my $fingerprint = password_fingerprint($pwd);
+            my $fingerprint = Sympa::User::password_fingerprint($pwd);
 
             if ($fingerprint eq $user->{'password'}) {
                 Sympa::User::update_global_user($email,
@@ -198,7 +187,7 @@ sub authentication {
 
     my $param;    #FIXME FIXME: not used.
     $param->{'init_email'}         = $email;
-    $param->{'escaped_init_email'} = tools::escape_chars($email);
+    $param->{'escaped_init_email'} = Sympa::Tools::Text::escape_chars($email);
     return undef;
 }
 
@@ -336,7 +325,7 @@ sub ldap_authentication {
     ## If the identifier provided was a valid email, return the provided
     ## email.
     ## Otherwise, return the canonical email guessed after the login.
-    if (tools::valid_email($auth)
+    if (Sympa::Tools::Text::valid_email($auth)
         and not Conf::get_robot_conf($robot, 'ldap_force_canonical_email')) {
         return $auth;
     } else {

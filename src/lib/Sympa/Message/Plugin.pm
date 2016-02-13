@@ -28,6 +28,8 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 
+use Sympa::Log;
+
 our %handlers;
 
 sub execute {

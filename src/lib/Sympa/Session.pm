@@ -33,7 +33,6 @@ use Conf;
 use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::Log;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::Password;
 use Sympa::Tools::Time;

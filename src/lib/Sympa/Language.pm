@@ -470,7 +470,7 @@ sub get_lang {
     return $self->{lang} || 'en';    # the last resort
 }
 
-# DEPRECATED: use tools::lang2charset().
+# DEPRECATED: use Conf::lang2charset().
 # sub GetCharset;
 
 ## DEPRECATED: Use canonic_lang().

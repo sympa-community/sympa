@@ -38,8 +38,8 @@ use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Report;
 use Sympa::Template;
-use tools;
 use Sympa::Tools::File;
+use Sympa::Tools::Text;
 use Sympa::User;
 
 my $log = Sympa::Log->instance;
@@ -62,9 +62,6 @@ my %icons = (
     'left'           => 'left.png',
     'right'          => 'right.png',
 );
-
-# lazy loading on demand
-my %mime_types;
 
 ## Cookie expiration periods with corresponding entry in NLS
 our %cookie_period = (
@@ -192,7 +189,7 @@ our %bounce_status = (
 ## MOVED: use Conf::_load_wwsconf().
 
 ## Load HTTPD MIME Types
-# Moved to _load_mime_types().
+# Moved to Conf::_load_mime_types().
 #sub load_mime_types();
 
 ## Returns user information extracted from the cookie
@@ -211,7 +208,7 @@ sub new_passwd {
 }
 
 ## Basic check of an email address
-# DUPLICATE: Use tools::valid_email().
+# DUPLICATE: Use Sympa::Tools::Text::valid_email().
 #sub valid_email($email);
 
 # 6.2b: added $robot parameter.
@@ -360,7 +357,7 @@ sub make_visible_path {
     }
 
     ## Qdecode the visible path
-    return tools::qdecode_filename($visible_path);
+    return Sympa::Tools::Text::qdecode_filename($visible_path);
 }
 
 ## returns a mailto according to list spam protection parameter
@@ -561,50 +558,8 @@ sub get_icon {
         . $icons{$type};
 }
 
-sub get_mime_type {
-    my $type = shift;
-
-    %mime_types = _load_mime_types() unless %mime_types;
-
-    return $mime_types{$type};
-}
-
-sub _load_mime_types {
-    my %types = ();
-
-    my @localisation = (
-        Sympa::search_fullpath('*', 'mime.types'),
-        '/etc/mime.types', '/usr/local/apache/conf/mime.types',
-        '/etc/httpd/conf/mime.types',
-    );
-
-    foreach my $loc (@localisation) {
-        my $fh;
-        next unless $loc and open $fh, '<', $loc;
-
-        foreach my $line (<$fh>) {
-            next if $line =~ /^\s*\#/;
-            chomp $line;
-
-            my ($k, $v) = split /\s+/, $line, 2;
-            next unless $k and $v and $v =~ /\S/;
-
-            my @extensions = split /\s+/, $v;
-            # provides file extention, given the content-type
-            if (@extensions) {
-                $types{$k} = $extensions[0];
-            }
-            foreach my $ext (@extensions) {
-                $types{$ext} = $k;
-            }
-        }
-
-        close $fh;
-        return %types;
-    }
-
-    return;
-}
+# Moved to: Conf::get_mime_type().
+#sub get_mime_type;
 
 ## return a hash from the edit_list_conf file
 # Old name: tools::load_create_list_conf().
@@ -1039,6 +994,30 @@ sub update_css {
 
     umask $umask;
     return 1;
+}
+
+# Old name: tools::escape_html().
+sub escape_html_minimum {
+    my $s = shift;
+    return $s unless defined $s;
+
+    $s =~ s/\"/\&quot\;/gm;
+    $s =~ s/\</&lt\;/gm;
+    $s =~ s/\>/&gt\;/gm;
+
+    return $s;
+}
+
+# Old name: tools::unescape_html().
+sub unescape_html_minimum {
+    my $s = shift;
+    return $s unless defined $s;
+
+    $s =~ s/\&quot\;/\"/g;
+    $s =~ s/&lt\;/\</g;
+    $s =~ s/&gt\;/\>/g;
+
+    return $s;
 }
 
 1;

@@ -41,8 +41,8 @@ use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::Spool::Auth;
 use Sympa::Template;
-use tools;
 use Sympa::Tools::Password;
+use Sympa::Tools::Text;
 use Sympa::User;
 
 ## Define types of SOAP type listType
@@ -813,7 +813,7 @@ sub add {
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <email>');
     }
-    unless (tools::valid_email($email)) {
+    unless (Sympa::Tools::Text::valid_email($email)) {
         my $error = "Invalid email address provided: '$email'";
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Unable to add user')->faultdetail($error);

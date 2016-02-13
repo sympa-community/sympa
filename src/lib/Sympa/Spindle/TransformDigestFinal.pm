@@ -27,7 +27,7 @@ package Sympa::Spindle::TransformDigestFinal;
 use strict;
 use warnings;
 
-use tools;
+use Sympa::Robot;
 
 use base qw(Sympa::Spindle);
 
@@ -40,7 +40,7 @@ sub _twist {
     $list->add_list_header($message, 'id');
     # Add RFC 2369 header fields
     foreach my $field (
-        @{  tools::get_list_params($list->{'domain'})
+        @{  Sympa::Robot::list_params($list->{'domain'})
                 ->{'rfc2369_header_fields'}->{'format'}
         }
         ) {

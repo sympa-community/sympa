@@ -54,13 +54,11 @@ use Sympa::Log;
 use Sympa::Scenario;
 use Sympa::Spool;
 use Sympa::Template;
-use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
-use Sympa::Tools::WWW;
 use Sympa::User;
 
 my $language = Sympa::Language->instance;
@@ -135,7 +133,8 @@ sub new {
             $self->{'envelope_sender'} = '<>';
         } else {
             my @addrs = Mail::Address->parse($addr);
-            if (@addrs and tools::valid_email($addrs[0]->address)) {
+            if (@addrs
+                and Sympa::Tools::Text::valid_email($addrs[0]->address)) {
                 $self->{'envelope_sender'} = $addrs[0]->address;
             }
         }
@@ -285,7 +284,7 @@ sub _get_sender_email {
         #$log->syslog('debug3', 'No valid sender address');
         return;
     }
-    unless (tools::valid_email($sender)) {
+    unless (Sympa::Tools::Text::valid_email($sender)) {
         $log->syslog('err', 'Invalid sender address "%s"', $sender);
         return;
     }
@@ -298,7 +297,8 @@ sub _get_sender_email {
 sub _get_message_id {
     my $self = shift;
 
-    return tools::clean_msg_id($self->{_head}->get('Message-Id', 0));
+    return Sympa::Tools::Text::canonic_message_id(
+        $self->{_head}->get('Message-Id', 0));
 }
 
 # Old names: (part of) mail::mail_file(), mail::parse_tt2_messageasstring(),
@@ -930,7 +930,8 @@ sub smime_encrypt {
     my $entity;
 
     my $base =
-        $Conf::Conf{'ssl_cert_dir'} . '/' . tools::escape_chars($email);
+        $Conf::Conf{'ssl_cert_dir'} . '/'
+        . Sympa::Tools::Text::escape_chars($email);
     if (-f $base . '@enc') {
         $certfile = $base . '@enc';
     } else {
@@ -1164,8 +1165,8 @@ sub check_smime_signature {
     # or a pair of single-purpose. save them, as email@addr if combined,
     # or as email@addr@sign / email@addr@enc for split certs.
     foreach my $c (keys %certs) {
-        my $filename =
-            "$Conf::Conf{ssl_cert_dir}/" . tools::escape_chars(lc($sender));
+        my $filename = "$Conf::Conf{ssl_cert_dir}/"
+            . Sympa::Tools::Text::escape_chars(lc($sender));
         if ($c ne 'both') {
             unlink $filename;    # just in case there's an old cert left...
             $filename .= "\@$c";
@@ -1856,7 +1857,7 @@ sub _urlize_parts {
     }
 
     ## Clean up Message-ID
-    my $dir1 = tools::escape_chars($message_id);
+    my $dir1 = Sympa::Tools::Text::escape_chars($message_id);
     $dir1 = '/' . $dir1;
     unless (mkdir "$expl/$dir1", 0775) {
         $log->syslog('err', 'Unable to create urlized directory %s/%s',
@@ -1904,8 +1905,7 @@ sub _urlize_one_part {
         $filename = Encode::encode_utf8($filename)
             if Encode::is_utf8($filename);
     } else {
-        my $fileExt =
-            Sympa::Tools::WWW::get_mime_type($entity->effective_type || '')
+        my $fileExt = Conf::get_mime_type($entity->effective_type || '')
             || 'bin';
         $filename = sprintf 'msg.%d.%s', $i, $fileExt;
     }
@@ -1945,14 +1945,14 @@ sub _urlize_one_part {
     (my $file_name = $filename) =~ s/\./\_/g;
     # do NOT escape '/' chars
     my $file_url = "$wwsympa_url/attach/$listname"
-        . tools::escape_chars("$dir/$filename", '/');
+        . Sympa::Tools::Text::escape_chars("$dir/$filename", '/');
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
     $parser->tmp_dir($Conf::Conf{'tmpdir'});
     my $new_part;
 
-    my $charset = tools::lang2charset($language->get_lang);
+    my $charset = Conf::lang2charset($language->get_lang);
     my $data    = {
         file_name => $file_name,
         file_url  => $file_url,
@@ -2542,8 +2542,7 @@ sub _split_mail {
             $fileExt = Encode::encode_utf8($fileExt)
                 if Encode::is_utf8($fileExt);
         } else {
-            $fileExt = Sympa::Tools::WWW::get_mime_type($head->mime_type)
-                || 'bin';
+            $fileExt = Conf::get_mime_type($head->mime_type) || 'bin';
         }
 
         ## Store body in file
@@ -3139,9 +3138,9 @@ sub dmarc_protect {
         $self->add_header('X-Original-From', "$originalFromHeader");
         $self->replace_header(
             'From',
-            tools::addrencode(
-                $anonaddr,                                $newName,
-                tools::lang2charset($language->get_lang), $newComment
+            Sympa::Tools::Text::addrencode(
+                $anonaddr,                               $newName,
+                Conf::lang2charset($language->get_lang), $newComment
             )
         );
     }

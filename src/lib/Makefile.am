@@ -153,7 +153,6 @@ nobase_modules_DATA = \
 	Sympa/Task.pm \
 	Sympa/Template.pm \
 	Sympa/Ticket.pm \
-	tools.pm \
 	Sympa/Tools/Data.pm \
 	Sympa/Tools/DKIM.pm \
 	Sympa/Tools/File.pm \

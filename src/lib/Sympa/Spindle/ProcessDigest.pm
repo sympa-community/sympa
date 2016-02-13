@@ -30,11 +30,11 @@ use POSIX qw();
 use Time::HiRes qw();
 use Time::Local qw();
 
+use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Spindle::ProcessTemplate;
-use tools;
 
 use base qw(Sympa::Spindle);
 
@@ -161,10 +161,8 @@ sub _distribute_digest {
     my $param = {
         'replyto'   => $list->get_list_address('owner'),
         'to'        => $list->get_list_address(),
-        'boundary1' => '----------=_'
-            . tools::get_message_id($list->{'domain'}),
-        'boundary2' => '----------=_'
-            . tools::get_message_id($list->{'domain'}),
+        'boundary1' => '----------=_' . Sympa::unique_message_id($list),
+        'boundary2' => '----------=_' . Sympa::unique_message_id($list),
     };
     # Compat. to 6.2a or earlier
     $param->{'table_of_content'} = $language->gettext("Table of contents:");

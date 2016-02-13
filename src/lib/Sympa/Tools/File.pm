@@ -26,11 +26,14 @@ package Sympa::Tools::File;
 
 use strict;
 use warnings;
+use Encode;
 use Encode::Guess;
 use English qw(-no_match_vars);
 use File::Copy::Recursive;
 use File::Find qw();
 use POSIX qw();
+
+use Sympa::Tools::Text;
 
 sub set_file_rights {
     my %param = @_;
@@ -138,6 +141,38 @@ sub mkdir_all {
     umask $saved_mask;
 
     return $status;
+}
+
+# Old name: tools::qencode_hierarchy().
+sub qencode_hierarchy {
+    my $dir               = shift; ## Root directory
+    my $original_encoding = shift; ## Suspected original encoding of filenames
+
+    my $count;
+    my @all_files;
+    Sympa::Tools::File::list_dir($dir, \@all_files, $original_encoding);
+
+    foreach my $f_struct (reverse @all_files) {
+
+        ## At least one 8bit char
+        next
+            unless ($f_struct->{'filename'} =~ /[^\x00-\x7f]/);
+
+        my $new_filename = $f_struct->{'filename'};
+        my $encoding     = $f_struct->{'encoding'};
+        Encode::from_to($new_filename, $encoding, 'utf8') if $encoding;
+
+        ## Q-encode filename to escape chars with accents
+        $new_filename = Sympa::Tools::Text::qencode_filename($new_filename);
+
+        my $orig_f = $f_struct->{'directory'} . '/' . $f_struct->{'filename'};
+        my $new_f  = $f_struct->{'directory'} . '/' . $new_filename;
+
+        # Rename the file using utf-8.
+        $count++ if rename $orig_f, $new_f;
+    }
+
+    return $count;
 }
 
 # Note: This is used only once.
@@ -345,6 +380,14 @@ Return an array of hash, each entry with directory + filename + encoding
 =item get_dir_size($dir)
 
 TBD.
+
+=item qencode_hierarchy()
+
+Q-encodes a complete file hierarchy.
+Useful to Q-encode subshared documents.
+
+ToDo:
+See a comment on L<Sympa::Tools::Text/qencode_filename>.
 
 =item remove_dir(@directories)
 
