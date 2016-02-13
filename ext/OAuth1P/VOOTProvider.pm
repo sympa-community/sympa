@@ -42,7 +42,6 @@ use JSON::XS;
 use Data::Dumper;
 
 #use List;
-use tools;
 #use tt2;
 use Conf;
 use Sympa::Log;

@@ -11,7 +11,7 @@ use List::Util     qw/first/;
 
 # Sympa modules
 use Sympa;
-use tools;
+use Sympa::Tools::Text;
 use Sympa::Plugin::Util   qw/:log reporter/;
 use Sympa::VOOT::Consumer ();
 
@@ -265,7 +265,7 @@ sub getListMembers(%)
         my $mem_email = $member->{emails}[0]
             or next MEMBER;
 
-	unless (tools::valid_email($mem_email))
+	unless (Sympa::Tools::Text::valid_email($mem_email))
         {   log(err => "skip malformed address '$mem_email' in $groupid");
             next MEMBER;
         }
