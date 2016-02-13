@@ -457,16 +457,7 @@ sub _get_pids_in_pid_file {
 
 # Old name: Sympa::Tools::Daemon::get_children_processes_list().
 # OBSOLETED.  No longer used.
-sub get_children_processes_list {
-    $log->syslog('debug3', '');
-    my @children;
-    for my $p (@{Proc::ProcessTable->new->table}) {
-        if ($p->ppid == $PID) {
-            push @children, $p->pid;
-        }
-    }
-    return @children;
-}
+#sub get_children_processes_list;
 
 # Utility functions.
 

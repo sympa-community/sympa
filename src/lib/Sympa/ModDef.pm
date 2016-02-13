@@ -327,14 +327,7 @@ our %cpan_modules = (
         'gettext_id' =>
             'this is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.',
     },
-    'perl'               => {required_version => '5.008',},
-    'Proc::ProcessTable' => {
-        package_name     => 'Proc-ProcessTable',
-        required_version => '0.44',
-        mandatory        => 1,
-        'gettext_id' =>
-            'Used by the bulk.pl daemon to check the number of slave bulks running.',
-    },
+    'perl' => {required_version => '5.008',},
     # Scalar::Util is included in Scalar-List-Utils.
     'SOAP::Lite' => {
         required_version => '0.712',
