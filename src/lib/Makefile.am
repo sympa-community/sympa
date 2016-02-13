@@ -102,7 +102,6 @@ nobase_modules_DATA = \
 	Sympa/Request/Message.pm \
 	Sympa/Robot.pm \
 	Sympa/Scenario.pm \
-	SDM.pm \
 	Sympa/SharedDocument.pm \
 	Sympa/Session.pm \
 	Sympa/SOAP.pm \
