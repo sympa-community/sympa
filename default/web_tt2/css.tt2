@@ -443,24 +443,24 @@ main.home h3{
 
 /* Home Submenu */
 
-section:nth-of-type(1){
+section.home-submenu{
     background-color:[% color_2 %];
     min-height:3rem;
     margin: 1rem auto 2rem auto;
     padding:0 0 10px 0;
 }
-section:nth-of-type(1) ul {
+section.home-submenu ul {
     display:table;
     list-style: none;
     margin: 0 auto;
     padding:0;
 }
-section:nth-of-type(1) ul li{
+section.home-submenu ul li{
     display:table-cell;
     padding:0;
     text-align:center;
 }
-section:nth-of-type(1) li a{
+section.home-submenu li a{
     color:[% color_7 %];
     text-decoration: none;
     font-size: 1rem;
@@ -470,22 +470,22 @@ section:nth-of-type(1) li a{
     -ms-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
 }
-section:nth-of-type(1) span{
+section.home-submenu span{
     display: block;
 }
-section:nth-of-type(1) i span{
+section.home-submenu i span{
     display: inline-block;
 }
-section:nth-of-type(1) a:hover{
+section.home-submenu a:hover{
     color:[% color_11 %];
 }
-section:nth-of-type(1) .fa-stack {
+section.home-submenu .fa-stack {
     width: inherit;
 }
-section:nth-of-type(1) .fa-envelope, section:nth-of-type(1) .fa-plus, section:nth-of-type(1) .fa-search{
+section.home-submenu .fa-envelope, section.home-submenu .fa-plus, section.home-submenu .fa-search{
     color: [% color_11 %];
 }
-section:nth-of-type(1) a:hover span i.fa-envelope, section:nth-of-type(1) a:hover span i.fa-plus, section:nth-of-type(1) a:hover span i.fa-search{
+section.home-submenu a:hover span i.fa-envelope, section.home-submenu a:hover span i.fa-plus, section.home-submenu a:hover span i.fa-search{
     color: [% color_7 %];
 }
 
