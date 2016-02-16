@@ -931,9 +931,10 @@ sub html_format {
         ),
         '-outdir'        => $destination_dir,
         '-attachmentdir' => $destination_dir,
-        '-attachmenturl' => $attachment_url,
-        '-umask'         => $Conf::Conf{'umask'},
-        '-stdout'        => "$destination_dir/msg00000.html",
+        '-attachmenturl' =>
+            sprintf('(%s%% path_cgi %%%s)/%s', $tag, $tag, $attachment_url),
+        '-umask'  => $Conf::Conf{'umask'},
+        '-stdout' => "$destination_dir/msg00000.html",
         '--',
         $msg_file
     ) >> 8;

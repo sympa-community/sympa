@@ -9412,7 +9412,11 @@ sub do_viewmod {
     wwslog('info', '(%s, %s)', $in{'id'}, $in{'file'});
 
     # Prevent directory traversal.
-    delete $in{'file'} if $in{'file'} and $in{'file'} =~ m{/};
+    if ($in{'file'}) {
+        my $subpath = $in{'file'};
+        $subpath =~ s{\Amsg00000/}{};
+        delete $in{'file'} if $subpath =~ m{/};
+    }
 
     my $msg;
     my $tmp_dir;
@@ -9440,7 +9444,10 @@ sub do_viewmod {
         return undef;
     }
 
-    if ($in{'file'} and $in{'file'} ne 'msg00000.html') {
+    if (    $in{'file'}
+        and $in{'file'} ne 'msg00000.html'
+        and -f $html_dir . '/' . $in{'file'}
+        and -r $html_dir . '/' . $in{'file'}) {
         $in{'file'} =~ /\.(\w+)$/;
         $param->{'file_extension'} = $1;
         $param->{'file'}           = $html_dir . '/' . $in{'file'};
@@ -9455,9 +9462,6 @@ sub do_viewmod {
         push @other_include_path, $html_dir;
     }
 
-    $param->{'base'} = sprintf "%s/viewmod/%s/%s/",
-        Conf::get_robot_conf($robot, 'wwsympa_url'), $param->{'list'},
-        $in{'id'};
     $param->{'id'} = $in{'id'};
 
     if ($list->is_there_msg_topic()) {
@@ -11601,7 +11605,11 @@ sub do_viewbounce {
         $in{'email'}, $in{'file'}, $in{'envid'});
 
     # Prevent directory traversal.
-    delete $in{'file'} if $in{'file'} and $in{'file'} =~ m{/};
+    if ($in{'file'}) {
+        my $subpath = $in{'file'};
+        $subpath =~ s{\Amsg00000/}{};
+        delete $in{'file'} if $subpath =~ m{/};
+    }
 
     my $escaped_email = Sympa::Tools::Text::escape_chars($in{'email'});
 
@@ -11621,10 +11629,13 @@ sub do_viewbounce {
 
     my $html_relpath =
         $in{'envid'}
-        ? sprintf('%s/%s_%08s',
-        $list->get_list_id(), $escaped_email, $in{'envid'})
-        : sprintf('%s/%s', $list->get_list_id(), $escaped_email);
-    my $html_dir = $Conf::Conf{'viewmail_dir'} . '/bounce/' . $html_relpath;
+        ? sprintf('%s_%08s', $escaped_email, $in{'envid'})
+        : $escaped_email;
+    my $html_dir =
+          $Conf::Conf{'viewmail_dir'}
+        . '/bounce/'
+        . $list->get_id . '/'
+        . $html_relpath;
 
     unless (-d $html_dir) {
         my $bounce_message =
@@ -11633,7 +11644,8 @@ sub do_viewbounce {
         Sympa::Archive::html_format(
             $bounce_message,
             'destination_dir' => $html_dir,
-            'attachment_url'  => '../viewbounce/' . $html_relpath
+            'attachment_url' =>
+                sprintf('viewbounce/%s/%s', $list->{'name'}, $html_relpath),
         ) if $bounce_message;
     }
 
@@ -11646,7 +11658,10 @@ sub do_viewbounce {
         return undef;
     }
 
-    if ($in{'file'} and $in{'file'} ne 'msg00000.html') {
+    if (    $in{'file'}
+        and $in{'file'} ne 'msg00000.html'
+        and -f $html_dir . '/' . $in{'file'}
+        and -r $html_dir . '/' . $in{'file'}) {
         $in{'file'} =~ /\.(\w+)$/;
         $param->{'file_extension'} = $1;
         $param->{'file'}           = $html_dir . '/' . $in{'file'};
