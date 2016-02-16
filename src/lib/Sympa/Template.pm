@@ -117,31 +117,20 @@ sub decode_utf8 {
 
 }
 
-## We use different catalog/textdomains depending on the template that
-## requests translations
-my %template2textdomain = (
-    'help_admin.tt2'         => 'web_help',
-    'help_arc.tt2'           => 'web_help',
-    'help_editfile.tt2'      => 'web_help',
-    'help_editlist.tt2'      => 'web_help',
-    'help_faqadmin.tt2'      => 'web_help',
-    'help_faquser.tt2'       => 'web_help',
-    'help_introduction.tt2'  => 'web_help',
-    'help_listconfig.tt2'    => 'web_help',
-    'help_mail_commands.tt2' => 'web_help',
-    'help_sendmsg.tt2'       => 'web_help',
-    'help_shared.tt2'        => 'web_help',
-    'help_suspend.tt2'       => 'web_help',
-    'help.tt2'               => 'web_help',
-    'help_user_options.tt2'  => 'web_help',
-    'help_user.tt2'          => 'web_help',
-);
+# We use different catalog/textdomains depending on the template that
+# requests translations.
+# help.tt2 and help_*.tt2 templates use domain "web_help".  Others use default
+# domain "sympa".
+sub _template2textdomain {
+    my $template_name = shift;
+    return ($template_name =~ /\Ahelp(?:_\w+)?[.]tt2\z/) ? 'web_help' : '';
+}
 
 sub maketext {
     my ($context, @arg) = @_;
 
     my $template_name = $context->stash->get('component')->{'name'};
-    my $textdomain = $template2textdomain{$template_name} || '';
+    my $textdomain    = _template2textdomain($template_name);
 
     return sub {
         my $ret = $language->maketext($textdomain, $_[0], @arg);
