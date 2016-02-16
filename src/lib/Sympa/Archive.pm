@@ -886,7 +886,7 @@ sub html_format {
     my $msg_as_string = $message->as_string;
 
     my $destination_dir = $opts{'destination_dir'};
-    my $attachement_url = $opts{'attachement_url'};
+    my $attachment_url  = $opts{'attachment_url'};
 
     my $mhonarc_ressources =
         Sympa::search_fullpath($that, 'mhonarc-ressources.tt2');
@@ -931,7 +931,7 @@ sub html_format {
         ),
         '-outdir'        => $destination_dir,
         '-attachmentdir' => $destination_dir,
-        '-attachmenturl' => $attachement_url,
+        '-attachmenturl' => $attachment_url,
         '-umask'         => $Conf::Conf{'umask'},
         '-stdout'        => "$destination_dir/msg00000.html",
         '--',
@@ -1219,7 +1219,7 @@ I<undef> if something goes wrong.
 
 =item html_format ( $message,
 destination_dir =E<gt> $destination_dir,
-attachement_url =E<gt> $attachement_url )
+attachment_url =E<gt> $attachment_url )
 
 I<Function>.
 Converts a message to HTML.
@@ -1239,7 +1239,10 @@ The directory result is stored in.
 
 =item $attachment_url
 
-Base URL used to link attachements.
+Base URL used to link attachments.
+
+Note:
+On 6.2.13 and earlier, this option was named "C<attachB<e>ment_url>".
 
 =back
 

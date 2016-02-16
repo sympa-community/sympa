@@ -421,7 +421,7 @@ sub _new_from_template {
         $headers .= "\n";
     }
 
-    ## All these data provide mail attachements in service messages
+    # All these data provide mail attachments in service messages.
     my @msgs = ();
     if (ref($data->{'msg_list'}) eq 'ARRAY') {
         @msgs =

@@ -11633,7 +11633,7 @@ sub do_viewbounce {
         Sympa::Archive::html_format(
             $bounce_message,
             'destination_dir' => $html_dir,
-            'attachement_url' => '../viewbounce/' . $html_relpath
+            'attachment_url'  => '../viewbounce/' . $html_relpath
         ) if $bounce_message;
     }
 

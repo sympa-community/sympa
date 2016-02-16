@@ -108,7 +108,7 @@ sub html_store {
             $message,
             destination_dir =>
                 join('/', $self->{html_base_directory}, $list_id, $modkey),
-            attachement_url => join('/', '..', 'viewmod', $listname, $modkey)
+            attachment_url => join('/', '..', 'viewmod', $listname, $modkey)
         );
     }
 
