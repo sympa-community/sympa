@@ -26,9 +26,6 @@
      <link rel="alternate" type="application/xml" title="[%|loc%]RSS Active lists[%END%]" href="[% base_url%][% path_cgi %]/rss/active_lists?count=20"/>
      [% END -%]
    [% END -%]
-
-[% IF base %] <base href="[% base %]" /> [% END %]
-
 </head>
 
 <body onload="[% IF use_htmlarea %] HTMLArea.replaceAll();[% END %][% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]">

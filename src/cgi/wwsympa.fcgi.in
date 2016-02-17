@@ -9920,8 +9920,23 @@ sub do_arc {
         }
     }
 
+    # Given partial URI, redirect to base.
+    unless ($in{'month'}) {
+        $param->{'redirect_to'} =
+            sprintf '%s/arc/%s/%s/',
+            Conf::get_robot_conf($robot, 'wwsympa_url'),
+            $list->{'name'}, $latest;
+        return 1;
+    }
+    unless ($in{'arc_file'} or $ENV{REQUEST_URI} =~ /\/\z/) {
+        $param->{'redirect_to'} =
+            sprintf '%s/arc/%s/%s/',
+            Conf::get_robot_conf($robot, 'wwsympa_url'),
+            $list->{'name'}, $in{'month'};
+        return 1;
+    }
+
     # Read HTML file
-    $in{'month'} ||= $latest;
     unless ($archive->select_archive($in{'month'})) {
         wwslog('err', 'Unable to find month "%s" in %s',
             $in{'month'}, $archive);
@@ -10021,8 +10036,6 @@ sub do_arc {
     if ($session->{'is_a_crawler'}) {
         $param->{'header_date'} = $param->{'date'};
     }
-    $param->{'base'} = sprintf "%s%s/arc/%s/%s/%s", $param->{'base_url'},
-        $param->{'path_cgi'}, $param->{'list'}, $in{'month'}, $in{'arc_file'};
     $param->{'archive_name'} = $in{'month'};
 
     #test pour différentier les action d'un robot et d'un simple abonné
