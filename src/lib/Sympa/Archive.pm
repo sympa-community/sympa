@@ -31,7 +31,6 @@ use Digest::MD5 qw();
 use Encode qw();
 use English qw(-no_match_vars);
 use File::Path qw();
-use HTML::Entities qw();
 use POSIX qw();
 
 use Sympa;
@@ -219,9 +218,7 @@ sub html_fetch {
 
         if (/^<!--(\S+): (.*) -->$/) {
             my ($key, $value) = ($1, $2);
-            $value =
-                Encode::encode_utf8(
-                HTML::Entities::decode_entities(Encode::decode_utf8($value)));
+            $value = Sympa::Tools::Text::decode_html($value);
             if ($key eq 'X-From-R13') {
                 $metadata->{'X-From'} = $value;
                 # MHonArc protection of email addresses.

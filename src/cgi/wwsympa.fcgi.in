@@ -1927,7 +1927,7 @@ while ($query = new_loop()) {
                 [$error]);
             wwslog('err', '/rss: error: %s', $error);
             printf STDOUT "\n<!-- %s -->\n",
-                HTML::Entities::encode_entities($error, '<>&"');
+                Sympa::Tools::Text::encode_html($error);
         }
     } elsif ($ajax) {
         print "Cache-control: no-cache\n";
@@ -1964,7 +1964,7 @@ while ($query = new_loop()) {
                 [$error]);
             wwslog('err', '/ajax/%s: error: %s', $param->{'action'}, $error);
             printf "\n<!-- %s -->\n",
-                HTML::Entities::encode_entities($error, '<>&"');
+                Sympa::Tools::Text::encode_html($error);
         }
 # 	 close FILE;
     } elsif ($param->{'redirect_to'}) {
@@ -2942,7 +2942,7 @@ sub send_html {
             wwslog('err', '/%s: error: %s', $param->{'action'}, $error);
         }
 
-        my $error_escaped = HTML::Entities::encode_entities($error, '<>&"');
+        my $error_escaped = Sympa::Tools::Text::encode_html($error);
         $param->{'tt2_error'}      = $error_escaped;
         $param_copy->{'tt2_error'} = $error_escaped;
         $template->parse($param_copy, 'tt2_error.tt2', \*STDOUT,
@@ -23433,8 +23433,10 @@ sub do_css {
 
         Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
         wwslog('info', '/%s: error: %s', $in{'file'}, $error);
-        printf STDOUT "\n/* %s */\n",
-            HTML::Entities::encode_entities($error, '&/');
+        my $error_escaped = $error;
+        $error_escaped =~ s/&/&amp;/g;
+        $error_escaped =~ s/\//&#47;/g;
+        printf STDOUT "\n/* %s */\n", $error_escaped;
     }
 
     return;

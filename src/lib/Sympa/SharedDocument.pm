@@ -26,7 +26,6 @@ package Sympa::SharedDocument;
 
 use strict;
 use warnings;
-use HTML::Entities qw();
 use MIME::EncWords;
 
 use Conf;
@@ -176,7 +175,7 @@ sub new {
         $document->{'owner'} = $desc_hash{'email'};
         $document->{'title'} = $desc_hash{'title'};
         $document->{'escaped_title'} =
-            HTML::Entities::encode_entities($document->{'title'}, '<>&"');
+            Sympa::Tools::Text::encode_html($document->{'title'});
 
         # Author
         if ($desc_hash{'email'}) {

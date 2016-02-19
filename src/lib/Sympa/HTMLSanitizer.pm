@@ -28,10 +28,10 @@ use strict;
 use warnings;
 use base qw(HTML::StripScripts::Parser);
 
-use HTML::Entities qw();
 use Scalar::Util qw();
 
 use Conf;
+use Sympa::Tools::Text;
 
 our %url_prefix_of;
 
@@ -123,8 +123,7 @@ sub sanitize_var {
                 } elsif (defined $var->[$index]) {
                     # preserve numeric flags.
                     $var->[$index] =
-                        HTML::Entities::encode_entities($var->[$index],
-                        '<>&"')
+                        Sympa::Tools::Text::encode_html($var->[$index])
                         unless Scalar::Util::looks_like_number(
                         $var->[$index]);
                 }
@@ -144,8 +143,7 @@ sub sanitize_var {
                         or $parameters{'htmlToFilter'}{$key}) {
                         # preserve numeric flags.
                         $var->{$key} =
-                            HTML::Entities::encode_entities($var->{$key},
-                            '<>&"')
+                            Sympa::Tools::Text::encode_html($var->{$key})
                             unless Scalar::Util::looks_like_number(
                             $var->{$key});
                     }

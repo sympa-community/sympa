@@ -28,9 +28,10 @@ use strict;
 use warnings;
 use Encode qw();
 use English qw(-no_match_vars);
-use HTML::Entities qw();
 use POSIX qw();
 use XML::LibXML qw();
+
+use Sympa::Tools::Text;
 
 ## This applies recursively to a data structure
 ## The transformation subroutine is passed as a ref
@@ -122,7 +123,7 @@ sub dump_html_var {
         }
     } else {
         if (defined $var) {
-            $html .= HTML::Entities::encode_entities($var, '<>&"');
+            $html .= Sympa::Tools::Text::encode_html($var);
         } else {
             $html .= 'UNDEF';
         }
@@ -438,7 +439,7 @@ sub encode_custom_attribute {
 
         $XMLstr .=
               "<custom_attribute id=\"$k\"><value>"
-            . HTML::Entities::encode_entities($value, '<>&"')
+            . Sympa::Tools::Text::encode_html($value)
             . "</value></custom_attribute>";
     }
     $XMLstr .= "</custom_attributes>";

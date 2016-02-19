@@ -29,7 +29,6 @@ use warnings;
 use DateTime;
 use Encode qw();
 use English;    # FIXME: drop $PREMATCH usage
-use HTML::Entities qw();
 use HTML::TreeBuilder;
 use Mail::Address;
 use MIME::Charset;
@@ -1757,10 +1756,10 @@ sub _append_footer_header_to_part {
     }
     $in_cset->encoder($in_cset);    # no charset conversion
 
-    ## Decode body to Unicode, since HTML::Entities::encode_entities() and
-    ## newline normalization will break texts with several character sets
-    ## (UTF-16/32, ISO-2022-JP, ...).
-    ## Only decodable bodies are allowed.
+    # Decode body to Unicode, since Sympa::Tools::Text::encode_html() and
+    # newline normalization will break texts with several character sets
+    # (UTF-16/32, ISO-2022-JP, ...).
+    # Only decodable bodies are allowed.
     eval {
         $body = $in_cset->decode($body, 1);
         $header_msg = Encode::decode_utf8($header_msg, 1);
@@ -1806,10 +1805,10 @@ sub _append_footer_header_to_part {
         $log->syslog('debug3', "Treating text/html part");
 
         # Escape special characters.
-        $header_msg = HTML::Entities::encode_entities($header_msg, '<>&"');
+        $header_msg = Sympa::Tools::Text::encode_html($header_msg);
         $header_msg =~ s/(\r\n|\r|\n)$//;        # strip the last newline.
         $header_msg =~ s,(\r\n|\r|\n),<br/>,g;
-        $footer_msg = HTML::Entities::encode_entities($footer_msg, '<>&"');
+        $footer_msg = Sympa::Tools::Text::encode_html($footer_msg);
         $footer_msg =~ s/(\r\n|\r|\n)$//;        # strip the last newline.
         $footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
 

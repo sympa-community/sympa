@@ -29,6 +29,7 @@ use warnings;
 use Encode qw();
 use English;                 # FIXME: drop $MATCH usage
 use Encode::MIME::Header;    # 'MIME-Q' encoding.
+use HTML::Entities qw();
 use MIME::EncWords;
 use Text::LineFold;
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
@@ -135,6 +136,13 @@ sub decode_filesystem_safe {
     return $str;
 }
 
+sub decode_html {
+    my $str = shift;
+
+    Encode::encode_utf8(
+        HTML::Entities::decode_entities(Encode::decode_utf8($str)));
+}
+
 sub encode_filesystem_safe {
     my $str = shift;
     return '' unless defined $str and length $str;
@@ -142,6 +150,12 @@ sub encode_filesystem_safe {
     $str = Encode::encode_utf8($str) if Encode::is_utf8($str);
     $str =~ s/([^-+.0-9\@A-Za-z])/sprintf '_%02x', ord $1/eg;
     return $str;
+}
+
+sub encode_html {
+    my $str = shift;
+
+    HTML::Entities::encode_entities($str, '<>&"');
 }
 
 # Old name: tools::escape_chars().
@@ -342,6 +356,25 @@ Default is C<78>.
 
 =back
 
+=item decode_html ( $str )
+
+I<Function>.
+Decodes HTML entities in a string encoded by UTF-8 or a Unicode string.
+
+Parameter:
+
+=over
+
+=item $str
+
+String to be decoded.
+
+=back
+
+Returns:
+
+Decoded string, stripped C<utf8> flag if any.
+
 =item decode_filesystem_safe ( $str )
 
 I<Function>.
@@ -360,6 +393,26 @@ String to be decoded.
 Returns:
 
 Decoded string, stripped C<utf8> flag if any.
+
+=item encode_html ( $str )
+
+I<Function>.
+Encodes characters in a string $str to HTML entities.
+C<'E<lt>'>, C<'E<gt>'>, C<'E<amp>'> and C<'E<quot>'> are encoded.
+
+Parameter:
+
+=over
+
+=item $str
+
+String to be encoded.
+
+=back
+
+Returns:
+
+Encoded string, I<not> stripping utf8 flag if any.
 
 =item encode_filesystem_safe ( $str )
 
@@ -454,5 +507,7 @@ L<Sympa::Tools::Text> appeared on Sympa 6.2a.41.
 
 decode_filesystem_safe() and encode_filesystem_safe() were added
 on Sympa 6.2.10.
+
+decode_html() and encode_html() were added on Sympa 6.2.14.
 
 =cut
