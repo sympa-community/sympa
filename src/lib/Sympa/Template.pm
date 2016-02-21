@@ -37,6 +37,7 @@ use Template;
 use Sympa;
 use Conf;
 use Sympa::Constants;
+use Sympa::HTMLDecorator;
 use Sympa::Language;
 use Sympa::ListOpt;
 use Sympa::Tools::Text;
@@ -170,6 +171,18 @@ sub wrap {
     };
 }
 
+sub _obfuscate {
+    my ($context, $mode) = @_;
+
+    return sub { shift }
+        unless grep { $mode eq $_ } qw(at javascript);
+
+    return sub {
+        my $text = shift;
+        Sympa::HTMLDecorator->instance->decorate($text, email => $mode);
+    };
+}
+
 sub optdesc {
     my ($context, $type, $withval) = @_;
     return sub {
@@ -215,6 +228,7 @@ sub parse {
             helploc  => [\&maketext, 1],
             locdt    => [\&locdatetime, 1],
             wrap         => [\&wrap,                           1],
+            obfuscate    => [\&_obfuscate,                     1],
             optdesc      => [\&optdesc,                        1],
             qencode      => [\&qencode,                        0],
             escape_xml   => [\&_escape_xml,                    0],
@@ -423,6 +437,26 @@ A string representing date/time:
 "YYYY/MM", "YYYY/MM/DD", "YYYY/MM/DD/HH/MM" or "YYYY/MM/DD/HH/MM/SS".
 
 =back
+
+=item obfuscate ( mode )
+
+Obfuscates email addresses in the text according to mode.
+
+=over
+
+=item Filtered text
+
+HTML document or fragment.
+
+=item mode
+
+Obfuscation mode.  C<at> or C<javascript>.
+Invalid mode will be silently ignored.
+
+=back
+
+Note:
+This filter was introduced by Sympa 6.2.14.
 
 =item optdesc ( type, withval )
 

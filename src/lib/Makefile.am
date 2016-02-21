@@ -54,6 +54,7 @@ nobase_modules_DATA = \
 	Sympa/Family.pm \
 	Sympa/Fetch.pm \
 	Sympa/HTML/FormatText.pm \
+	Sympa/HTMLDecorator.pm \
 	Sympa/HTMLSanitizer.pm \
 	Sympa/Language.pm \
 	Sympa/List.pm \
