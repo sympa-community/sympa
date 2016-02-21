@@ -495,7 +495,7 @@ sub html_store {
         Conf::get_robot_conf($list->{'domain'}, 'mhonarc'),
         '-add',
         #XXX'-modifybodyaddresses',
-        #XXX'-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
+        '-addressmodifycode' => '1', # w/a: Clear old cache in .mhonarc.db.
         '-rcfile'            => $mhonarc_ressources,
         '-outdir'            => $self->{arc_directory},
         '-definevars'        => sprintf(
@@ -662,7 +662,7 @@ sub html_rebuild {
     my @cmd = (
         Conf::get_robot_conf($robot_id, 'mhonarc'),
         #XXX'-modifybodyaddresses',
-        #XXX'-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
+        '-addressmodifycode' => '1', # w/a: Clear old cache in .mhonarc.db.
         '-rcfile'            => $mhonarc_ressources,
         '-outdir'            => $arc_directory,
         '-definevars'        => sprintf(
