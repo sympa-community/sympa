@@ -30,7 +30,7 @@
   <tr class="color0">[% SET dark = 1 %]
 [% END %]
    <td>
-     <a href="[% path_cgi %]/info/[% l.name %]" ><strong>[% hidden_head %][% l.name %][% hidden_at %][% l.host %][% hidden_end %]</strong></a>
+     <a href="[% path_cgi %]/info/[% l.name %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.name %]@[% l.host %][% END %]</strong></a>
    </td>
 
   <td> [% l.date %] </td>

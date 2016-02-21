@@ -91,11 +91,7 @@
 [% END %]
 
 <li>
-  [% IF protection_type == 'javascript' %]
-    [% hidden_head %]<a href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]</a>[% hidden_end %]
-  [% ELSE %]
-    <a href="mailto:[% hidden_head %][% list %]-request[% hidden_at %][% domain %][% hidden_end %]">[%|loc%]Contact owners[%END%]</a>
-  [% END %]
+  [%|obfuscate(listconf.spam_protection) %]<a href="mailto:[% list %]-request@[% domain %]">[%|loc%]Contact owners[%END%]</a>[% END %]
 </li>
 
 <!-- end list_panel.tt2 -->

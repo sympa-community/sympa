@@ -482,20 +482,20 @@ sub html_store {
     );
 
     my $tag = _get_tag($list);
-    if (    $list->{'admin'}{'web_archive_spam_protection'} ne 'none'
-        and $list->{'admin'}{'web_archive_spam_protection'} ne 'cookie') {
-        _set_hidden_mode($tag);
-    } else {
-        _unset_hidden_mode();
-    }
+    #XXXif (    $list->{'admin'}{'web_archive_spam_protection'} ne 'none'
+    #XXX    and $list->{'admin'}{'web_archive_spam_protection'} ne 'cookie') {
+    #XXX    _set_hidden_mode($tag);
+    #XXX} else {
+    #XXX    _unset_hidden_mode();
+    #XXX}
 
     # Call mhonarc on cleaned message source to make clean htlm view of
     # message.
     my @cmd = (
         Conf::get_robot_conf($list->{'domain'}, 'mhonarc'),
         '-add',
-        '-modifybodyaddresses',
-        '-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
+        #XXX'-modifybodyaddresses',
+        #XXX'-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
         '-rcfile'            => $mhonarc_ressources,
         '-outdir'            => $self->{arc_directory},
         '-definevars'        => sprintf(
@@ -629,12 +629,12 @@ sub html_rebuild {
     my $mhonarc_ressources =
         Sympa::search_fullpath($list, 'mhonarc-ressources.tt2');
 
-    if (    $list->{'admin'}{'web_archive_spam_protection'} ne 'none'
-        and $list->{'admin'}{'web_archive_spam_protection'} ne 'cookie') {
-        _set_hidden_mode($tag);
-    } else {
-        _unset_hidden_mode();
-    }
+    #XXXif (    $list->{'admin'}{'web_archive_spam_protection'} ne 'none'
+    #XXX    and $list->{'admin'}{'web_archive_spam_protection'} ne 'cookie') {
+    #XXX    _set_hidden_mode($tag);
+    #XXX} else {
+    #XXX    _unset_hidden_mode();
+    #XXX}
 
     # Remove existing HTML files and .mhonarc.db.
     my $dh;
@@ -661,8 +661,8 @@ sub html_rebuild {
 
     my @cmd = (
         Conf::get_robot_conf($robot_id, 'mhonarc'),
-        '-modifybodyaddresses',
-        '-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
+        #XXX'-modifybodyaddresses',
+        #XXX'-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
         '-rcfile'            => $mhonarc_ressources,
         '-outdir'            => $arc_directory,
         '-definevars'        => sprintf(
@@ -712,6 +712,7 @@ sub html_rebuild {
 # Sets the value of $ENV{'M2H_ADDRESSMODIFYCODE'} and
 # $ENV{'M2H_MODIFYBODYADDRESSES'}.
 #* $tag a character string (containing the result of _get_tag($list))
+# NO LONGER USED.
 sub _set_hidden_mode {
     # Tag is used as variable elements in tags to prevent message contents to
     # be parsed
@@ -725,6 +726,7 @@ sub _set_hidden_mode {
 }
 
 # Empties $ENV{'M2H_ADDRESSMODIFYCODE'}.
+# NO LONGER USED.
 sub _unset_hidden_mode {
     # Be careful, the .mhonarc.db file keeps track of previous
     # M2H_ADDRESSMODIFYCODE setup.

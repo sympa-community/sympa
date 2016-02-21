@@ -23,7 +23,7 @@
   [% IF l.value.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% l.key %]" >
 [%|loc%]admin[%END%]</a>[% END %]
   <a class="list_menu_links" href="[% path_cgi %]/info/[% l.key %]" >
-[% hidden_head %][% l.key %][% hidden_end %]</a><br />
+[%|obfuscate(conf.spam_protection) %][% l.key %][% END %]</a><br />
   <span>[% l.value.subject %]</span><br />
   </li>
   [% SET n = n + 1 %]

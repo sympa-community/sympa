@@ -15,7 +15,7 @@
         <div class="item[% additional_class %]">
         <div class="item_content">
           <a class="item_title" href="[% path_cgi %]/info/[% l.key %]">
-            [% hidden_head %][% l.key %][% hidden_end %]
+            [%|obfuscate(conf.spam_protection) %][% l.key %][% END %]
             [% IF l.value.is_owner || l.value.is_editor || l.value.is_subscriber ~%]
               <span class="highlighted">(
               [%~ IF l.value.is_owner ~%]

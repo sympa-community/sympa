@@ -29,7 +29,7 @@
           <tr class="color0">
 	[% END %]
         <td>
-           <a href="[% path_cgi %]/info/[% l.key %]" ><strong>[% hidden_head %][% l.key %][% hidden_at %][% l.value.host %][% hidden_end %]</strong></a>
+           <a href="[% path_cgi %]/info/[% l.key %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.key %]@[% l.value.host %][% END %]</strong></a>
         </td>
         <td>
 	   [% IF l.value.is_member %][%|loc%]member[%END%] [% END %]
