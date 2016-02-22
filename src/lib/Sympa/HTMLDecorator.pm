@@ -26,7 +26,6 @@ package Sympa::HTMLDecorator;
 
 use strict;
 use warnings;
-use Encode qw();
 
 use Sympa::Regexps;
 use Sympa::Tools::Text;
@@ -35,143 +34,144 @@ use base qw(HTML::Parser Class::Singleton);
 
 # Class::Singleton constructor.
 sub _new_instance {
-    my $class = shift;
-
-    $class->SUPER::new(
+    return shift->SUPER::new(
         api_version        => 3,
-        default_h          => [\&_output, 'self,text'],
-        end_h              => [\&_end, 'self,tagname,text'],
-        start_h            => [\&_start, 'self,tagname,attr,text'],
+        default_h          => [\&_default, 'self,text'],
+        end_h              => [\&_end, 'self,event,tagname,text'],
+        end_document_h     => [\&_end_document, 'self'],
+        start_h            => [\&_start, 'self,event,tagname,attr,text'],
         start_document_h   => [\&_start_document, 'self'],
-        text_h             => [\&_text, 'self,text'],
+        text_h             => [\&_text, 'self,event,text'],
         empty_element_tags => 1,
         unbroken_text      => 1,
     );
 }
 
-sub _end {
-    my $self    = shift;
-    my $tagname = shift;
-    my $text    = shift;
+sub _default {
+    my $self = shift;
+    my $text = shift;
 
-    my $func = $self->{_shdEmailFunc};
-    unless ($func
-        and $self->{_shdStart}
-        and lc $tagname eq $self->{_shdStart}) {
-        $self->{_shdOutput} .= $text;
-    } else {
-        $self->{_shdOutput} .= $func->($text, '', '');
-    }
-    delete $self->{_shdStart};
+    $self->_queue_flush;
+    $self->{_shdOutput} .= $text;
 }
 
-sub _start {
-    my $self    = shift;
-    my $tagname = shift;
-    my $attr    = shift;
-    my $text    = shift;
+sub _end {
+    my $self = shift;
+    my %options;
+    @options{qw(event tagname text)} = @_;
 
-    my $func = $self->{_shdEmailFunc};
-    unless ($func
-        and lc $tagname eq 'a'
-        and $attr
-        and $attr->{href}
-        and $attr->{href} =~ /\Amailto:/i) {
-        $self->{_shdOutput} .= $text;
+    if ($self->_queue_tagname eq 'a') {
+        $self->_queue_push(%options);
+        if (lc $options{tagname} eq 'a') {
+            $self->_queue_flush;
+        }
         return;
     }
 
-    if ($text =~ /\A(.+\bhref\s*=\s*([\"\']?)mailto:)([^\"]*)(\2.+)\z/is) {
-        my ($before, $dtext, $after) =
-            ($1, Sympa::Tools::Text::decode_html($3), $4);
-        $self->{_shdOutput} .= $func->($before, $dtext, $after);
-        $self->{_shdStart} = lc $tagname;
-    } else {
-        $self->{_shdOutput} .= $text;
+    $self->_queue_flush;
+    $self->{_shdOutput} .= $options{text};
+}
+
+sub _end_document {
+    my $self = shift;
+
+    $self->_queue_flush;
+}
+
+sub _start {
+    my $self = shift;
+    my %options;
+    @options{qw(event tagname attr text)} = @_;
+
+    if ($self->_queue_tagname eq 'a') {
+        unless (grep { lc $options{tagname} eq $_ } qw(a script)) {
+            $self->_queue_push(%options);
+            return;
+        }
     }
+
+    if (    lc $options{tagname} eq 'a'
+        and $options{attr}
+        and $options{attr}->{href}
+        and $options{attr}->{href} =~ /\Amailto:/i) {
+        $self->_queue_flush;
+        $self->_queue_push(%options);
+        return;
+    }
+
+    $self->_queue_flush;
+    $self->{_shdOutput} .= $options{text};
 }
 
 sub _start_document {
     my $self = shift;
 
     $self->{_shdOutput} = '';
-    delete $self->{_shdStart};
+    $self->_queue_clear;
 }
 
 sub _text {
     my $self = shift;
-    my $text = shift;
+    my %options;
+    @options{qw(event text)} = @_;
 
-    if (my $func = $self->{_shdEmailFunc}) {
-        my $dtext    = Sympa::Tools::Text::decode_html($text);
-        my $email_re = Sympa::Regexps::addrspec();
+    my $dtext    = Sympa::Tools::Text::decode_html($options{text});
+    my $email_re = Sympa::Regexps::addrspec();
 
-        my $decorated = '';
-        pos $dtext = 0;
-        while ($dtext =~ /\G((?:\s|.)*?)\b($email_re)\b/cg) {
-            my ($t, $email) = ($1, $2);
-            $decorated .= Sympa::Tools::Text::encode_html($t);
-            $decorated .= $func->('', $email, '');
-        }
-        if (pos $dtext) {
-            $self->{_shdOutput} .= $decorated;
-            $self->{_shdOutput} .=
-                Sympa::Tools::Text::encode_html(substr $dtext, pos $dtext);
-            return;
-        }
+    if ($self->_queue_tagname eq 'a' or $dtext =~ /\b$email_re\b/) {
+        $self->_queue_push(%options);
+        return;
     }
-    $self->{_shdOutput} .= $text;
+
+    $self->_queue_flush;
+    $self->{_shdOutput} .= $options{text};
     return;
 }
 
-sub _decorate_email_at {
-    my $before = shift;
-    my $dtext  = shift;
-    my $after  = shift;
-
-    $dtext =~ s/\@/ AT /g;
-    return $before . Sympa::Tools::Text::encode_html($dtext) . $after;
-}
-
-sub _decorate_email_js {
-    my $before = shift;
-    my $dtext  = shift;
-    my $after  = shift;
-
-    my ($local, $domain) = split /\@/, $dtext, 2;
-    ($local, $domain) = map {
-        my $str = (defined $_) ? $_ : '';
-        $str = Sympa::Tools::Text::encode_html($str);
-        $str;
-    } ($local, $domain);
-    ($before, $local, $domain, $after) = map {
-        my $str = (defined $_) ? $_ : '';
-        $str =~ s/([\\\"])/\\$1/g;
-        $str =~ s/\r\n|\r|\n/\\n/g;
-        $str =~ s/\t/\\t/g;
-        $str;
-    } ($before, $local, $domain, $after);
-
-    if (length $domain) {
-        return
-              sprintf '<script type="text/javascript">' . "\n" . '<!--' . "\n"
-            . 'document.write("%s%s" + "@" + "%s%s")' . "\n"
-            . '// -->' . "\n"
-            . '</script>', $before, $local, $domain, $after;
-    } else {
-        return
-              sprintf '<script type="text/javascript">' . "\n" . '<!--' . "\n"
-            . 'document.write("%s%s%s")' . "\n"
-            . '// -->' . "\n"
-            . '</script>', $before, $local, $after;
-    }
-}
-
-sub _output {
+sub _queue_clear {
     my $self = shift;
-    my $text = shift;
 
-    $self->{_shdOutput} .= $text;
+    $self->{_shdEmailQueued} = [];
+}
+
+sub _queue_flush {
+    my $self = shift;
+
+    return unless @{$self->{_shdEmailQueued}};
+
+    if (my $func = $self->{_shdEmailFunc}) {
+        $self->{_shdOutput} .= $self->$func();
+    } else {
+        while (my $item = $self->_queue_shift) {
+            $self->{_shdOutput} .= $item->{text};
+        }
+    }
+    $self->_queue_clear;
+}
+
+sub _queue_push {
+    my $self    = shift;
+    my %options = @_;
+
+    push @{$self->{_shdEmailQueued}}, {%options};
+}
+
+sub _queue_shift {
+    my $self = shift;
+
+    return shift @{$self->{_shdEmailQueued}};
+}
+
+sub _queue_tagname {
+    my $self = shift;
+
+    if (    @{$self->{_shdEmailQueued}}
+        and $self->{_shdEmailQueued}->[0]->{event} eq 'start'
+        and lc $self->{_shdEmailQueued}->[0]->{tagname} eq 'a') {
+        return 'a';
+    } else {
+        return '';
+    }
 }
 
 sub decorate {
@@ -183,8 +183,8 @@ sub decorate {
 
     if ($options{email}) {
         $self->{_shdEmailFunc} =
-              $options{email} eq 'at'         ? \&_decorate_email_at
-            : $options{email} eq 'javascript' ? \&_decorate_email_js
+              $options{email} eq 'at'         ? \&decorate_email_at
+            : $options{email} eq 'javascript' ? \&decorate_email_js
             :                                   undef;
     }
     # No decoration needed.
@@ -193,11 +193,88 @@ sub decorate {
     if ($html =~ /[<>]/) {
         $self->parse($html);
         $self->eof;
-        return $self->{_shdOutput};
     } else {
-        $self->_text($html);
-        return $self->{_shdOutput};
+        $self->_queue_clear;
+        $self->_text('text', $html);
+        $self->_queue_flush;
     }
+    return $self->{_shdOutput};
+}
+
+sub decorate_email_at {
+    my $self = shift;
+
+    my $decorated = '';
+    my $email_re  = Sympa::Regexps::addrspec();
+    while (my $item = $self->_queue_shift) {
+        if ($item->{event} eq 'text') {
+            my $dtext = Sympa::Tools::Text::decode_html($item->{text});
+            if ($dtext =~ s{\b($email_re)\b}{join ' AT ', split(/\@/, $1)}eg)
+            {
+                $decorated .= Sympa::Tools::Text::encode_html($dtext);
+            } else {
+                $decorated .= $item->{text};
+            }
+        } elsif ($item->{event} eq 'start') {
+            my $text = $item->{text};
+            if ($text =~ s{\b(href=\S+)}{join '%20AT%20', split(/\@/, $1)}egi)
+            {
+                $decorated .= $text;
+            } else {
+                $decorated .= $item->{text};
+            }
+        } else {
+            $decorated .= $item->{text};
+        }
+    }
+    return $decorated;
+}
+
+sub decorate_email_js {
+    my $self = shift;
+
+    my $text = '';
+    while (my $item = $self->_queue_shift) {
+        $text .= $item->{text};
+    }
+
+    if (index($text, '<') == 0) {
+        return _decorate_email_js($text);
+    }
+
+    my $decorated = '';
+    my $email_re  = Sympa::Regexps::addrspec();
+    my $dtext     = Sympa::Tools::Text::decode_html($text);
+    pos $dtext = 0;
+    while ($dtext =~ /\G((?:\n|.)*?)\b($email_re)\b/cg) {
+        $decorated .=
+              Sympa::Tools::Text::encode_html($1)
+            . _decorate_email_js(Sympa::Tools::Text::encode_html($2));
+    }
+    if (pos $dtext) {
+        return $decorated
+            . Sympa::Tools::Text::encode_html(substr $dtext, pos $dtext);
+    }
+
+    return $text;
+}
+
+sub _decorate_email_js {
+    my $text = shift;
+
+    my @texts = map {
+        my $str = (defined $_) ? $_ : '';
+        $str =~ s/([\\\"])/\\$1/g;
+        $str =~ s/\r\n|\r|\n/\\n/g;
+        $str =~ s/\t/\\t/g;
+        $str;
+    } split /\b|(?=\@)|(?<=\@)/, $text;
+    return
+          sprintf '<script type="text/javascript">' . "\n" . '<!--' . "\n"
+        . 'document.write(%s)' . "\n"
+        . '// -->' . "\n"
+        . '</script>',
+        join(" +\n", map { '"' . $_ . '"' } @texts);
 }
 
 1;
