@@ -203,6 +203,7 @@ our %cpan_modules = (
         mandatory    => 1,
         'gettext_id' => 'used to compute plaindigest messages from HTML',
     },
+    # HTML::Parser is used by HTML::StripScripts::Parser.
     'HTML::StripScripts::Parser' => {
         required_version => '1.03',
         package_name     => 'HTML-StripScripts-Parser',
