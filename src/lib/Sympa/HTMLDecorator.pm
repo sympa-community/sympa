@@ -194,9 +194,9 @@ sub decorate {
         $self->parse($html);
         $self->eof;
     } else {
-        $self->_queue_clear;
+        $self->_start_document;
         $self->_text('text', $html);
-        $self->_queue_flush;
+        $self->_end_document;
     }
     return $self->{_shdOutput};
 }
