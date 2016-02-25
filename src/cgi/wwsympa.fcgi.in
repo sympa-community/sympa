@@ -1231,14 +1231,10 @@ while ($query = new_loop()) {
     ## Hash defining the parameters where no control is performed (because
     ## they are supposed to contain html and/or javascript).
     $param->{'htmlAllowedParam'} = {
-        'title'                => 1,
-        'hidden_head'          => 1,
-        'hidden_end'           => 1,
-        'hidden_at'            => 1,
-        'list_protected_email' => 1,
+        #'hidden_head'          => 1,
+        #'hidden_end'           => 1,
+        #'hidden_at'            => 1,
         'selected'             => 1,
-        'author_mailto'        => 1,
-        'mailto'               => 1,
         'logo_html_definition' => 1,
         'template_content'     => 1,
         'html_dumpvars'        => 1,
@@ -1701,19 +1697,13 @@ while ($query = new_loop()) {
 
     if ($param->{'list'}) {
         $param->{'list_title'} = $list->{'admin'}{'subject'};
-        $param->{'list_protected_email'} =
-            get_protected_email_address($param->{'list'},
-            $list->{'admin'}{'host'});
-        $param->{'title'} =
-            get_protected_email_address($param->{'list'},
-            $list->{'admin'}{'host'});
+        $param->{'title'} = Sympa::get_address($list);
         $param->{'title_clear_txt'} = "$param->{'list'}";
 
         if ($param->{'subtitle'}) {
             $param->{'main_title'} =
                 "$param->{'list'} - $param->{'subtitle'}";
         }
-
     } else {
         $param->{'main_title'} = $param->{'title'} =
             Conf::get_robot_conf($robot, 'title');
@@ -3247,20 +3237,13 @@ sub check_param_out {
             foreach my $u ($list->get_admins($role)) {
                 next unless $u->{'email'};
 
-                my $mailto =
-                    Sympa::Tools::WWW::mailto($list, $u->{'email'},
-                    $u->{'gecos'});
                 my ($local, $domain) = split /\@/, $u->{'email'};
-                my $masked_email = $u->{'email'};
-                $masked_email =~ s/\@/ AT /;
 
                 $param->{$role}{$u->{'email'}} = {
                     gecos        => $u->{gecos},
                     visibility   => $u->{visibility},
-                    mailto       => $mailto,
                     local        => $local,
                     domain       => $domain,
-                    masked_email => $masked_email
                 };
             }
         }
@@ -14553,9 +14536,6 @@ sub do_d_read {
                         # Author
                         if ($desc_hash{'email'}) {
                             $subdirs{$d}{'author'} = $desc_hash{'email'};
-                            $subdirs{$d}{'author_mailto'} =
-                                Sympa::Tools::WWW::mailto($list,
-                                $desc_hash{'email'});
                             $subdirs{$d}{'author_known'} = 1;
                         }
 
@@ -14757,9 +14737,6 @@ sub do_d_read {
                             if ($desc_hash{'email'}) {
                                 $files{$d}{'author'} = $desc_hash{'email'};
                                 $files{$d}{'author_known'} = 1;
-                                $files{$d}{'author_mailto'} =
-                                    Sympa::Tools::WWW::mailto($list,
-                                    $desc_hash{'email'});
                             }
                         } else {
                             if ($may_edit != 0) {
@@ -21411,7 +21388,6 @@ sub do_compose_mail {
             $param->{'recipients'}{$recipient}{'domain_to'}
         ) = split('@', $recipient);
     }
-    $param->{'mailto'} = Sympa::Tools::WWW::mailto($list, $param->{'to'});
     # headers will be encoded later.
     #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
     $param->{'subject'} = $in{'subject'};
@@ -21918,7 +21894,6 @@ sub do_request_topic {
     }
 
     $param->{'to'}      = $list->get_list_address();
-    $param->{'mailto'}  = Sympa::Tools::WWW::mailto($list, $param->{'to'});
     $param->{'authkey'} = $in{'authkey'};
 
     my $spool_held =
@@ -22863,85 +22838,12 @@ sub do_dump {
 }
 
 ## returns a mailto according to list spam protection parameter
-sub mailto {
-
-    my $list  = shift;
-    my $email = shift;
-    my $gecos = shift;
-    my $next_one;
-
-    my $mailto = '';
-    my @addresses;
-    my %recipients;
-
-    @addresses = split(',', $email);
-
-    $gecos = $email unless ($gecos);
-    $gecos =~ s/&/&amp;/g;
-    $gecos =~ s/</&lt;/g;
-    $gecos =~ s/>/&gt;/g;
-    foreach my $address (@addresses) {
-
-        ($recipients{$address}{'local'}, $recipients{$address}{'domain'}) =
-            split('@', $address);
-    }
-
-    if ($list->{'admin'}{'spam_protection'} eq 'none') {
-        $mailto .= "<a href=\"mailto:?";
-        foreach my $address (@addresses) {
-            $mailto .= "&amp;" if ($next_one);
-            $mailto .= "to=$address";
-            $next_one = 1;
-        }
-        $mailto .= "\">$gecos</a>";
-    } elsif ($list->{'admin'}{'spam_protection'} eq 'javascript') {
-
-        if ($gecos =~ /\@/) {
-            $gecos =~ s/@/\" + \"@\" + \"/;
-        }
-
-        $mailto .= "<script type=\"text/javascript\">
- <!--
- document.write(\"<a href=\\\"\" + \"mail\" + \"to:?\" + ";
-        foreach my $address (@addresses) {
-            $mailto .= "\"\&amp\;\" + " if ($next_one);
-            $mailto .=
-                "\"to=\" + \"$recipients{$address}{'local'}\" + \"@\" + \"$recipients{$address}{'domain'}\" + ";
-            $next_one = 1;
-        }
-        $mailto .= "\"\\\">$gecos<\" + \"/a>\")
- // --></script>";
-
-    } elsif ($list->{'admin'}{'spam_protection'} eq 'at') {
-        foreach my $address (@addresses) {
-            $mailto .= " AND " if ($next_one);
-            $mailto .=
-                "$recipients{$address}{'local'} AT $recipients{$address}{'domain'}";
-            $next_one = 1;
-        }
-    }
-    return $mailto;
-
-}
+# No longer used.
+#sub mailto;
 
 ## Returns a spam-protected form of email address
-sub get_protected_email_address {
-    my ($local_part, $domain_part) = @_;
-
-    if ($list->{'admin'}{'spam_protection'} eq 'javascript') {
-
-        my $return = "<script type=\"text/javascript\">
- <!--
- document.write(\"$local_part\" + \"@\" + \"$domain_part\")
- // --></script>";
-        return ($return);
-    } elsif ($list->{'admin'}{'spam_protection'} eq 'at') {
-        return ("$local_part AT $domain_part");
-    } else {
-        return ($local_part . '@' . $domain_part);
-    }
-
-}
+# DEPRECATED.  Use [%|obfuscate()%] in template.
+#sub get_protected_email_address;
 
 ## view logs stored in RDBMS
 ## this function as been writen in order to allow list owner and listmater to

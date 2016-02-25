@@ -10,6 +10,9 @@
 <form class="noborder" action="[% path_cgi %]" method="post" name="compose_mail" enctype="multipart/form-data">
     <fieldset>
 	[%|loc(user.email)%]From: %1[%END%]<br />
+	[% mailto = BLOCK ~%]
+	  [% to | mailto(to) | obfuscate(listconf.spam_protection) %]
+	[%~END~%]
 	[%|loc(mailto)%]To: %1[%END%]<br />
 	<label for="subject">[%|loc%]Subject:[%END%] <input id="subject" type="text" size="45" name="subject" value="[% subject %]" /></label>
 	[% IF subaction == "html_news_letter" %]

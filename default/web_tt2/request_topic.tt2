@@ -25,6 +25,9 @@
 <br />
 
 [%|loc(from)%]From: %1[%END%]<br />
+[% mailto = BLOCK ~%]
+  [% to | mailto(to) | obfuscate(listconf.spam_protection) %]
+[%~ END ~%]
 [%|loc(mailto)%]To: %1[%END%]<br />
 [%|loc(date)%]Date: %1[%END%]<br />
 

@@ -90,7 +90,7 @@
 	<img src="[% s.icon %]" alt="[% s.escaped_title %]" /> [% s.doc %]</a></td>
 	<td class="review_cels">
 	[% IF s.author_known %] 
-	  [% s.author_mailto %]  
+	  [% s.author | mailto(s.author) | obfuscate(listconf.spam_protection) %]  
         [% ELSE %]
 	   [%|loc%]Unknown[%END%] 
 	[% END %]
@@ -200,7 +200,7 @@
 	[% ELSE %]
          <td class="review_cels">
 	 [% IF f.author_known %]
-	   [% f.author_mailto %]
+	   [% f.author | mailto(f.author) | obfuscate(listconf.spam_protection) %]
  	 [% ELSE %]
            [%|loc%]Unknown[%END%]  
          [%END%]

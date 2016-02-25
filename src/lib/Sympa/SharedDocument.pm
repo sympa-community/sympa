@@ -180,8 +180,6 @@ sub new {
         # Author
         if ($desc_hash{'email'}) {
             $document->{'author'} = $desc_hash{'email'};
-            $document->{'author_mailto'} =
-                Sympa::Tools::WWW::mailto($list, $desc_hash{'email'});
             $document->{'author_known'} = 1;
         }
     }

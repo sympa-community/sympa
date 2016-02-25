@@ -361,65 +361,8 @@ sub make_visible_path {
 }
 
 ## returns a mailto according to list spam protection parameter
-sub mailto {
-    my $list  = shift;
-    my $email = shift;
-    my $gecos = shift;
-    my $next_one;
-
-    my $mailto = '';
-    my @addresses;
-    my %recipients;
-
-    @addresses = split(',', $email);
-
-    $gecos = $email unless ($gecos);
-    $gecos =~ s/&/&amp;/g;
-    $gecos =~ s/</&lt;/g;
-    $gecos =~ s/>/&gt;/g;
-    foreach my $address (@addresses) {
-
-        ($recipients{$address}{'local'}, $recipients{$address}{'domain'}) =
-            split('@', $address);
-    }
-
-    if ($list->{'admin'}{'spam_protection'} eq 'none') {
-        $mailto .= "<a href=\"mailto:?";
-        foreach my $address (@addresses) {
-            $mailto .= "&amp;" if ($next_one);
-            $mailto .= "to=$address";
-            $next_one = 1;
-        }
-        $mailto .= "\">$gecos</a>";
-    } elsif ($list->{'admin'}{'spam_protection'} eq 'javascript') {
-
-        if ($gecos =~ /\@/) {
-            $gecos =~ s/@/\" + \"@\" + \"/;
-        }
-
-        $mailto .= "<script type=\"text/javascript\">
- <!--
- document.write(\"<a href=\\\"\" + \"mail\" + \"to:?\" + ";
-        foreach my $address (@addresses) {
-            $mailto .= "\"\&amp\;\" + " if ($next_one);
-            $mailto .=
-                "\"to=\" + \"$recipients{$address}{'local'}\" + \"@\" + \"$recipients{$address}{'domain'}\" + ";
-            $next_one = 1;
-        }
-        $mailto .= "\"\\\">$gecos<\" + \"/a>\")
- // --></script>";
-
-    } elsif ($list->{'admin'}{'spam_protection'} eq 'at') {
-        foreach my $address (@addresses) {
-            $mailto .= " AND " if ($next_one);
-            $mailto .=
-                "$recipients{$address}{'local'} AT $recipients{$address}{'domain'}";
-            $next_one = 1;
-        }
-    }
-    return $mailto;
-
-}
+# DEPRECATED.  Use [%|mailto()%] and [%|obfuscate()%] filters in template.
+#sub mailto;
 
 ## return the mode of editing included in $action : 0, 0.5 or 1
 sub find_edit_mode {
