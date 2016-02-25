@@ -171,10 +171,42 @@ sub wrap {
     };
 }
 
+sub _mailto {
+    my ($context, $email, $query, $nodecode) = @_;
+
+    return sub {
+        my $text = shift;
+
+        unless ($text =~ /\S/) {
+            $text =
+                $nodecode ? Sympa::Tools::Text::encode_html($email) : $email;
+        }
+        return sprintf '<a href="%s">%s</a>',
+            Sympa::Tools::Text::encode_html(
+            Sympa::Tools::Text::mailtourl(
+                $email,
+                decode_html => !$nodecode,
+                query       => $query,
+            )
+            ),
+            $text;
+    };
+}
+
+sub _mailtourl {
+    my ($context, $query) = @_;
+
+    return sub {
+        my $text = shift;
+
+        return Sympa::Tools::Text::mailtourl($text, query => $query);
+    };
+}
+
 sub _obfuscate {
     my ($context, $mode) = @_;
 
-    return sub { shift }
+    return sub {shift}
         unless grep { $mode eq $_ } qw(at javascript);
 
     return sub {
@@ -228,6 +260,8 @@ sub parse {
             helploc  => [\&maketext, 1],
             locdt    => [\&locdatetime, 1],
             wrap         => [\&wrap,                           1],
+            mailto       => [\&_mailto,                        1],
+            mailtourl    => [\&_mailtourl,                     1],
             obfuscate    => [\&_obfuscate,                     1],
             optdesc      => [\&optdesc,                        1],
             qencode      => [\&qencode,                        0],
@@ -406,7 +440,8 @@ Escape quotation marks.
 
 =item escape_url
 
-Escape URL.
+Escapes URL.
+See also L<Sympa::Tools::Text/"escape_url">.
 
 =item escape_xml
 
@@ -438,9 +473,62 @@ A string representing date/time:
 
 =back
 
+=item mailto ( email, [ {key = val, ...}, [ nodecode ] ] )
+
+Generates HTML fragment linking to C<mailto:> URL,
+i.e. C<E<lt>a href="mailto:I<email>"E<gt>I<filtered text>E<lt>/aE<gt>>.
+
+=over
+
+=item Filtered text
+
+Content of linking element.
+If it does not contain nonspaces, e-mail address will be used.
+
+=item email
+
+E-mail address(es) to be linked.
+
+=item {key = val, ...}
+
+Optional query.
+
+=item nodecode
+
+If true, assumes arguments are not encoded as HTML entities.
+By default entities are decoded at first.
+
+This option does I<not> affect filtered text.
+
+=back
+
+Note:
+This filter was introduced by Sympa 6.2.14.
+
+=item mailtourl ( [ {key = val, ...} ] )
+
+Generates C<mailto:> URL.
+
+=over
+
+=item Filtered text
+
+E-mail address(es).
+Note that any characters must not be encoded as HTML entities.
+
+=item {key = val, ...}
+
+Optional query.
+Note that any characters must not be encoded as HTML entities.
+
+=back
+
+Note:
+This filter was introduced by Sympa 6.2.14.
+
 =item obfuscate ( mode )
 
-Obfuscates email addresses in the text according to mode.
+Obfuscates email addresses in the HTML text according to mode.
 
 =over
 

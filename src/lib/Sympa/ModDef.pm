@@ -369,7 +369,7 @@ our %cpan_modules = (
         'gettext_id'     => 'used to get time with sub-second precision',
     },
     'URI::Escape' => {
-        required_version => '1.35',
+        required_version => '3.28', # Included in URI-1.35.
         package_name     => 'URI-Escape',
         mandatory        => 1,
         'gettext_id' =>

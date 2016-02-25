@@ -32,6 +32,7 @@ use Encode::MIME::Header;    # 'MIME-Q' encoding.
 use HTML::Entities qw();
 use MIME::EncWords;
 use Text::LineFold;
+use URI::Escape qw();
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 
@@ -158,6 +159,19 @@ sub encode_html {
     HTML::Entities::encode_entities($str, '<>&"');
 }
 
+sub encode_uri {
+    my $str     = shift;
+    my %options = @_;
+
+    # Note: URI-1.35 (URI::Escape 3.28) or later is required.
+    return Encode::encode_utf8(
+        URI::Escape::uri_escape_utf8(
+            Encode::decode_utf8($str),
+            '^-A-Za-z0-9._~' . (exists $options{omit} ? $options{omit} : '')
+        )
+    );
+}
+
 # Old name: tools::escape_chars().
 sub escape_chars {
     my $s          = shift;
@@ -187,6 +201,8 @@ sub escape_chars {
 }
 
 # Old name: tt2::escape_url().
+# Not recommended.  Use Sympa::Tools::Text::escape_uri() or
+# Sympa::Tools::Text::mailtourl().
 sub escape_url {
     my $string = shift;
 
@@ -214,6 +230,67 @@ sub foldcase {
         # later supports it. Perl 5.16.0 and later have built-in fc().
         return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
     }
+}
+
+sub mailtourl {
+    my $text    = shift;
+    my %options = @_;
+
+    my $dtext =
+          (not defined $text)   ? ''
+        : $options{decode_html} ? Sympa::Tools::Text::decode_html($text)
+        :                         $text;
+    $dtext =~ s/\A\s+//;
+    $dtext =~ s/\s+\z//;
+    $dtext =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;
+    $dtext =~ s/\r\n|\r|\n/ /g;
+
+    # The ``@'' in email address should not be encoded because some MUAs
+    # aren't able to decode ``%40'' in e-mail address of mailto: URL.
+    # Contrary, ``@'' in query component should be encoded because some
+    # MUAs take it for a delimiter to separate URL from the rest.
+    my ($format, $utext, $qsep);
+    if ($dtext =~ /[()<>\[\]:;,\"\s]/) {
+        # Use "to" header if source text includes any of RFC 5322
+        # "specials", minus ``@'' and ``\'', plus whitespaces.
+        $format = 'mailto:?to=%s%s';
+        $utext  = Sympa::Tools::Text::encode_uri($dtext);
+        $qsep   = '&';
+    } else {
+        $format = 'mailto:%s%s';
+        $utext  = Sympa::Tools::Text::encode_uri($dtext, omit => '@');
+        $qsep   = '?';
+    }
+
+    my $qstring;
+    my $query = $options{query};
+    unless (ref $query eq 'HASH' and %$query) {
+        $qstring = '';
+    } else {
+        $qstring = $qsep . join(
+            '&',
+            map {
+                my ($dkey, $dval) = map {
+                    (not defined $_) ? ''
+                        : $options{decode_html}
+                        ? Sympa::Tools::Text::decode_html($_)
+                        : $_;
+                } ($_, $query->{$_});
+                unless (lc $dkey eq 'body') {
+                    $dval =~ s/\A\s+//;
+                    $dval =~ s/\s+\z//;
+                    $dval =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;
+                    $dval =~ s/\r\n|\r|\n/ /g;
+                }
+
+                sprintf '%s=%s',
+                    Sympa::Tools::Text::encode_uri($dkey),
+                    Sympa::Tools::Text::encode_uri($dval);
+                } sort keys %$query
+        );
+    }
+
+    return sprintf $format, $utext, $qstring;
 }
 
 # Old name: tools::qdecode_filename().
@@ -438,6 +515,30 @@ two hexdigits.
 
 Note that C<'/'> will also be encoded.
 
+=item encode_uri ( $str, [ omit => $chars ] )
+
+TBD
+
+Parameters:
+
+=over
+
+=item $str
+
+String to be encoded.
+
+=item omit =E<gt> $chars
+
+By default, all characters except those defined as "unreserved" in RFC 3986
+are encoded, that is, C<[^-A-Za-z0-9._~]>.
+If this parameter is given, it will prevent encoding additional characters.
+
+=back
+
+Returns:
+
+Encoded string, stripped C<utf8> flag if any.
+
 =item escape_chars ( $str )
 
 Escape weird characters.
@@ -448,6 +549,10 @@ L</encode_filesystem_safe>.
 =item escape_url ( $str )
 
 Escapes string using URL encoding.
+
+Note:
+This is not recommended.
+Would be better to use L</"encode_uri"> or L</"mailtourl">.
 
 =item foldcase ( $str )
 
@@ -508,6 +613,7 @@ L<Sympa::Tools::Text> appeared on Sympa 6.2a.41.
 decode_filesystem_safe() and encode_filesystem_safe() were added
 on Sympa 6.2.10.
 
-decode_html() and encode_html() were added on Sympa 6.2.14.
+decode_html(), encode_html(), encode_uri() and mailtourl()
+were added on Sympa 6.2.14.
 
 =cut
