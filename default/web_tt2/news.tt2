@@ -33,7 +33,9 @@
 [% FOREACH user_with_errors = errors_summary -%]
 <li>[%|loc(user_with_errors.key)%] List %1: [%END%]
 [% IF user_with_errors.value %] [%|loc(user_with_errors.value.count)%] %1 error(s)[% END %], 
-<a href="mailto:[% user_with_errors.key %]-request@[% conf.host %]">[%|loc()%]please contact the list owners[% END %]</a>
+[% | mailto("${user_with_errors.key}-request@${conf.host}") ~%]
+  [%|loc()%]please contact the list owners[% END %]
+[%~ END%]
 <ul>
 <li>[%|loc(user_with_errors.value.first)%]first bounce: %1[% END %]</li>
 <li>[%|loc(user_with_errors.value.last)%]last bounce: %1[% END %]</li>

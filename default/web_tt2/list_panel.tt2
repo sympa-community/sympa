@@ -91,7 +91,11 @@
 [% END %]
 
 <li>
-  [%|obfuscate(listconf.spam_protection) %]<a href="mailto:[% list %]-request@[% domain %]">[%|loc%]Contact owners[%END%]</a>[% END %]
+  [% | obfuscate(listconf.spam_protection) ~%]
+    [% | mailto("${list}-request@${domain}") ~%][%# FIXME: Use host. ~%]
+      [%|loc%]Contact owners[%END%]
+    [%~ END %]
+  [%~ END %]
 </li>
 
 <!-- end list_panel.tt2 -->

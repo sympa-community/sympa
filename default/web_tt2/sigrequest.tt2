@@ -19,7 +19,7 @@
       <br /><br />
       [%|loc%]You might have subscribed with another address.
       Please contact the list owner to help you unsubscribe:[%END%]
-      <a href="mailto:[% list %]-request@[% conf.host %]">[% list %]-request@[% conf.host %]</a>
+      [% '' | mailto("${list}-request@${conf.host}") %]
       
   [% ELSIF ! email %]
       [%|loc(list)%]We need to check your identity before validating your unsubscription request for list %1. If you have a user account you should login or create an account. <br/>Otherwise we can send you an email with a validation link inside; please provide your email address below to receive this validation link.[%END%]
