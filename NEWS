@@ -3,6 +3,73 @@
 
 (See Changelog file for the full changes log)
 
+6.2.14		February 26, 2016
+
+  Features:
+
+	[12680] src/lib/Sympa/Mailer.pm, src/lib/Sympa/Process.pm,
+	src/lib/Sympa/Spindle/ProcessArchive.pm,
+	src/lib/Sympa/Spindle/ProcessAutomatic.pm,
+	src/lib/Sympa/Spindle/ProcessBounce.pm,
+	src/lib/Sympa/Spindle/ProcessIncoming.pm,
+	src/lib/Sympa/Spindle/ProcessOutgoing.pm, src/sbin/archived.pl.in,
+	src/sbin/bulk.pl.in, src/sbin/sympa_automatic.pl.in,
+	src/sbin/task_manager.pl.in:  Now daemons capture SIGCHLD signal so
+	that defunct child processes (sendmail) will be reaped faster.
+
+
+
+  Changes:
+
+	[12696] default/web_tt2/head_ui.tt2:  Adding version number in CSS URL
+	to ensure stylesheet reloading when changing version.
+
+  Bug fixes:
+
+	[12702] default/mail_tt2/certif_warning.tt2,
+	default/mail_tt2/delivery_status_notification.tt2,
+	default/mail_tt2/expire_deletion.tt2,
+	default/mail_tt2/expire_warning1.tt2,
+	default/mail_tt2/expire_warning2.tt2,
+	default/mail_tt2/global_remind.tt2, default/mail_tt2/invite.tt2,
+	default/mail_tt2/list_unknown.tt2,
+	default/mail_tt2/listowner_notification.tt2,
+	default/mail_tt2/lists.tt2, default/mail_tt2/moderate.tt2,
+	default/mail_tt2/remind.tt2, default/mail_tt2/removed.tt2,
+	default/mail_tt2/request_auth.tt2, default/mail_tt2/send_auth.tt2,
+	src/lib/Sympa/List.pm:	If the list name contains "+", incorrect
+	"mailto:" links are generated in service messages.
+	Fixed by encoding special characters using new "mailtourl" template
+	filter.
+
+	[12697] src/cgi/sympa_soap_server.fcgi.in:  Sympa SOAP server crashed
+	because Sympa::Alarm module was not loaded.
+
+	[12690] default/web_tt2/active_lists.tt2, default/web_tt2/arc.tt2,
+	default/web_tt2/latest_lists.tt2, default/web_tt2/list_panel.tt2,
+	default/web_tt2/lists.tt2, default/web_tt2/my.tt2,
+	default/web_tt2/search_user.tt2, default/web_tt2/suspend_request.tt2,
+	default/web_tt2/your_lists.tt2, src/cgi/wwsympa.fcgi.in,
+	src/lib/Sympa/Archive.pm: [#6987] [Reported by D. Pritts, Internet2]
+	Changing web_archive_spam_protection did not update spam protection
+	mode on past archives.	Fixed by applying spam protection at the time
+	of display, not when archives were created / rebuilt.
+
+	[12687] default/web_tt2/crash.tt2, default/web_tt2/main.tt2,
+	default/web_tt2/tt2_error.tt2, src/cgi/wwsympa.fcgi.in: [#8570]
+	[Reported by A. Epstein, Cornell Univ.] <base> element in web output
+	should be eliminated, because it will mess reverse proxy and so on. 
+	Fixed by making partial URIs to be redirected to base URI.
+
+	[12685] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/Archive.pm,
+	src/lib/Sympa/Spool/Moderation.pm:  WWSympa: Cannot view attachements
+	in bounce messages and moderated messages.  Fixed by correcting
+	inappropriate relative URL paths.
+
+	[12683] default/web_tt2/css.tt2, default/web_tt2/home.tt2:  Home
+	submenu with top_menu mode was not rendered correctly.	Fixed by
+	updating CSS.
+
 6.2.13		February 12, 2016
 
   Changes:
