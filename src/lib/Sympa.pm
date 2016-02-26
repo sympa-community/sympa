@@ -276,8 +276,6 @@ sub request_auth {
             $data->{'type'}    = 'review';
         }
 
-        $data->{'command_escaped'} =
-            Sympa::Tools::Text::escape_url($data->{'command'});
         $data->{'auto_submitted'} = 'auto-replied';
         unless (Sympa::send_file($list, 'request_auth', $sender, $data)) {
             $log->syslog('notice',
@@ -292,9 +290,7 @@ sub request_auth {
                 action  => 'global_remind'
             );
             $data->{'command'} = "auth $keyauth remind *";
-            $data->{'command_escaped'} =
-                Sympa::Tools::Text::escape_url($data->{'command'});
-            $data->{'type'} = 'remind';
+            $data->{'type'}    = 'remind';
 
         }
         $data->{'auto_submitted'} = 'auto-replied';

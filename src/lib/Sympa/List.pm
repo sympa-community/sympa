@@ -34,7 +34,6 @@ use IO::Scalar;
 use LWP::UserAgent;
 use POSIX qw();
 use Storable qw();
-use URI::Escape qw();
 
 use Sympa;
 use Conf;
@@ -1655,17 +1654,14 @@ sub send_notify_to_owner {
         $param->{'type'}           = $operation;
 
         if ($operation eq 'warn-signoff') {
-            $param->{'escaped_gecos'} = $param->{'gecos'};
-            $param->{'escaped_gecos'} =~ s/\s/\%20/g;
-            $param->{'escaped_who'} = $param->{'who'};
-            $param->{'escaped_who'} =~ s/\s/\%20/g;
             foreach my $owner (@rcpt) {
                 $param->{'one_time_ticket'} = Sympa::Ticket::create(
                     $owner,
                     $robot,
                     'search/'
-                        . $self->{'name'} . '/'
-                        . $param->{'escaped_who'},
+                        . Sympa::Tools::Text::encode_uri($self->{'name'})
+                        . '/'
+                        . Sympa::Tools::Text::encode_uri($param->{'who'}),
                     $param->{'ip'}
                 );
                 unless (
@@ -1682,18 +1678,14 @@ sub send_notify_to_owner {
                 }
             }
         } elsif ($operation eq 'subrequest') {
-            if (defined $param->{'gecos'} and $param->{'gecos'} =~ /\S/) {
-                #FIXME: Escape metacharacters.
-                $param->{'escaped_gecos'} = $param->{'gecos'};
-                $param->{'escaped_gecos'} =~ s/\s/\%20/g;
-            }
-            $param->{'escaped_who'} = $param->{'who'};
-            $param->{'escaped_who'} =~ s/\s/\%20/g;
             foreach my $owner (@rcpt) {
-                $param->{'one_time_ticket'} =
-                    Sympa::Ticket::create($owner, $robot,
-                    'subindex/' . $self->{'name'},
-                    $param->{'ip'});
+                $param->{'one_time_ticket'} = Sympa::Ticket::create(
+                    $owner,
+                    $robot,
+                    'subindex/'
+                        . Sympa::Tools::Text::encode_uri($self->{'name'}),
+                    $param->{'ip'}
+                );
                 unless (
                     Sympa::send_file(
                         $self, 'listowner_notification', [$owner], $param
@@ -1708,13 +1700,7 @@ sub send_notify_to_owner {
                 }
             }
         } else {
-            if ($operation eq 'sigrequest') {
-                $param->{'escaped_who'} = $param->{'who'};
-                $param->{'escaped_who'} =~ s/\s/\%20/g;
-                $param->{'sympa'} =
-                    Conf::get_robot_conf($self->{'domain'}, 'sympa');
-
-            } elsif ($operation eq 'bounce_rate') {
+            if ($operation eq 'bounce_rate') {
                 $param->{'rate'} = int($param->{'rate'} * 10) / 10;
             }
             unless (

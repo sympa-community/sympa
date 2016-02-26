@@ -117,10 +117,8 @@ sub _twist {
             email   => $email,
             action  => 'subscribe'
         );
-        my $command = "auth $keyauth sub $which $comment";
-        $context{'subject'} = $command;
-        $context{'url'}     = "mailto:$sympa?subject=$command";
-        $context{'url'} =~ s/\s/%20/g;
+        $context{'subject'} = sprintf 'auth %s sub %s %s', $keyauth,
+            $list->{'name'}, $comment;
         unless (Sympa::send_file($list, 'invite', $email, \%context)) {
             $log->syslog('notice', 'Unable to send template "invite" to %s',
                 $email);
@@ -149,9 +147,7 @@ sub _twist {
         $self->add_stash($request, 'notice', 'invite', {'email' => $email});
 
     } elsif ($action !~ /\Areject\b/i) {
-        $context{'subject'} = "sub $which $comment";
-        $context{'url'}     = "mailto:$sympa?subject=$context{'subject'}";
-        $context{'url'} =~ s/\s/%20/g;
+        $context{'subject'} = sprintf 'sub %s %s', $list->{'name'}, $comment;
         unless (Sympa::send_file($list, 'invite', $email, \%context)) {
             $log->syslog('notice', 'Unable to send template "invite" to %s',
                 $email);

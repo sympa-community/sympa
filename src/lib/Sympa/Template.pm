@@ -441,7 +441,8 @@ Escape quotation marks.
 =item escape_url
 
 Escapes URL.
-See also L<Sympa::Tools::Text/"escape_url">.
+
+This was OBSOLETED.  Use L</"mailtourl"> instead.
 
 =item escape_xml
 
@@ -473,7 +474,7 @@ A string representing date/time:
 
 =back
 
-=item mailto ( email, [ {key = val, ...}, [ nodecode ] ] )
+=item mailto ( email, [ {key =E<gt> val, ...}, [ nodecode ] ] )
 
 Generates HTML fragment linking to C<mailto:> URL,
 i.e. C<E<lt>a href="mailto:I<email>"E<gt>I<filtered text>E<lt>/aE<gt>>.
@@ -489,7 +490,7 @@ If it does not contain nonspaces, e-mail address will be used.
 
 E-mail address(es) to be linked.
 
-=item {key = val, ...}
+=item {key =E<gt> val, ...}
 
 Optional query.
 
