@@ -25,12 +25,16 @@ Content-Disposition: inline
 [% ELSE -%]
 [% IF method == 'md5' && ! request_topic -%]
 [%|loc(list.name)%]To distribute the attached message in list %1:[%END%]
-<[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=DISTRIBUTE [%list.name%] [%modkey%][% END %]>
+<[% | mailtourl({subject => "DISTRIBUTE ${list.name} ${modkey}"}) ~%]
+  [% conf.email %]@[% conf.host %]
+[%~ END %]>
 [%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
 DISTRIBUTE [% list.name %] [% modkey %]
 
 [%|loc%]To reject it (it will be removed):[%END%]
-<[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=REJECT [%list.name%] [%modkey%][% END %]>
+<[% | mailtourl({subject => "REJECT ${list.name} ${modkey}"}) ~%]
+  [% conf.email %]@[% conf.host %]
+[%~ END %]>
 [%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
 REJECT [% list.name %] [% modkey %]
 [%END%]

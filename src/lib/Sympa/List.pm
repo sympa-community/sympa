@@ -9562,37 +9562,54 @@ sub add_list_header {
         $message->add_header(
             'List-Help',
             sprintf(
-                '<mailto:%s@%s?subject=help>',
-                Conf::get_robot_conf($robot, 'email'),
-                Conf::get_robot_conf($robot, 'host')
+                '<%s>',
+                Sympa::Tools::Text::mailtourl(
+                    Sympa::get_address($self, 'sympa'),
+                    query => {subject => 'help'}
+                )
             )
         );
     } elsif ($field eq 'unsubscribe') {
         $message->add_header(
             'List-Unsubscribe',
             sprintf(
-                '<mailto:%s@%s?subject=unsubscribe%%20%s>',
-                Conf::get_robot_conf($robot, 'email'),
-                Conf::get_robot_conf($robot, 'host'),
-                $self->{'name'}
+                '<%s>',
+                Sympa::Tools::Text::mailtourl(
+                    Sympa::get_address($self, 'sympa'),
+                    query => {
+                        subject => sprintf('unsubscribe %s', $self->{'name'})
+                    }
+                )
             )
         );
     } elsif ($field eq 'subscribe') {
         $message->add_header(
             'List-Subscribe',
             sprintf(
-                '<mailto:%s@%s?subject=subscribe%%20%s>',
-                Conf::get_robot_conf($robot, 'email'),
-                Conf::get_robot_conf($robot, 'host'),
-                $self->{'name'}
+                '<%s>',
+                Sympa::Tools::Text::mailtourl(
+                    Sympa::get_address($self, 'sympa'),
+                    query =>
+                        {subject => sprintf('subscribe %s', $self->{'name'})}
+                )
             )
         );
     } elsif ($field eq 'post') {
-        $message->add_header('List-Post',
-            sprintf('<mailto:%s>', $self->get_list_address()));
+        $message->add_header(
+            'List-Post',
+            sprintf('<%s>',
+                Sympa::Tools::Text::mailtourl(Sympa::get_address($self)))
+        );
     } elsif ($field eq 'owner') {
-        $message->add_header('List-Owner',
-            sprintf('<mailto:%s>', $self->get_list_address('owner')));
+        $message->add_header(
+            'List-Owner',
+            sprintf(
+                '<%s>',
+                Sympa::Tools::Text::mailtourl(
+                    Sympa::get_address($self, 'owner')
+                )
+            )
+        );
     } elsif ($field eq 'archive') {
         if (Conf::get_robot_conf($robot, 'wwsympa_url')
             and $self->is_web_archived()) {
@@ -9600,7 +9617,7 @@ sub add_list_header {
                 'List-Archive',
                 sprintf('<%s/arc/%s>',
                     Conf::get_robot_conf($robot, 'wwsympa_url'),
-                    $self->{'name'})
+                    Sympa::Tools::Text::encode_uri($self->{'name'}))
             );
         } else {
             return 0;
@@ -9619,10 +9636,10 @@ sub add_list_header {
             my $archived_msg_url =
                 sprintf '%s/arcsearch_id/%s/%s-%s/%s',
                 Conf::get_robot_conf($robot, 'wwsympa_url'),
-                $self->{'name'}, $yyyy, $mm,
-                URI::Escape::uri_escape($message_id);
+                Sympa::Tools::Text::encode_uri($self->{'name'}), $yyyy, $mm,
+                Sympa::Tools::Text::encode_uri($message_id);
             $message->add_header('Archived-At',
-                '<' . $archived_msg_url . '>');
+                sprintf('<%s>', $archived_msg_url));
         } else {
             return 0;
         }

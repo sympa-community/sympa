@@ -24,13 +24,17 @@ Subject: [% FILTER qencode %][%command%][%END%]
   [%- END -%]	
 [%- END -%]
 
-[%|loc(conf.sympa,command)-%]If you want this action to be taken, please
+[% sympa = BLOCK %][% conf.email %]@[% conf.host %][%END%]
+[%|loc(sympa,command) %]If you want this action to be taken, please
 
 - reply to this mail
 OR
 - send a message to %1 with subject
  %2
 OR
-- hit the following mailto[% END %] [% FILTER escape_url %]mailto:[%conf.sympa%]?subject=[%command_escaped%][% END %]
+- hit the following mailto[% END %]
+ [% | mailtourl({subject => "$command"}) ~%]
+   [% conf.email %]@[% conf.host %]
+ [%~ END %]
 
 [%|loc-%]If you do not want this action to be taken, you can safely ignore this message.[% END %]

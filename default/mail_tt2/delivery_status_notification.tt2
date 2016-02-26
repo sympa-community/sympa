@@ -69,7 +69,7 @@ Note: Because binary files have to be encoded in less-efficient ASCII format bef
 [%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
 
 [%   ELSIF status == '5.6.0' -%]
-[%|loc(list.name,conf.sympa,list.host,cmd)%]The following message was sent to list '%1' and it contains a line '%4' that can be interpreted as a command.
+[%|loc(list.name,"${conf.email}@${conf.host}",list.host,cmd)%]The following message was sent to list '%1' and it contains a line '%4' that can be interpreted as a command.
 
 If your message contained a command (like subscribe, unsubscribe, help, index, get, ...), please note that commands should never be sent to lists. Commands must be sent to %2 exclusively.
 
@@ -111,7 +111,9 @@ You are not allowed to send this message for the following reason:[%END%]
 
 [%|loc%]To find out the correct listname, ask for this server's lists directory:[%END%]
 
-	mailto:[% conf.email %]@[% conf.host %]?subject=WHICH
+	[% | mailtourl({subject => 'WHICH'}) ~%]
+	  [% conf.email %]@[% conf.host %]
+	[%~ END %]
 
 [%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
 

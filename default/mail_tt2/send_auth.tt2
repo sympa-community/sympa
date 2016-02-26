@@ -1,4 +1,4 @@
-Reply-to: [% conf.sympa %]
+Reply-to: [% conf.email %]@[% conf.host %]
 [% IF request_topic -%]Subject: [% FILTER qencode %][%|loc(list.name)%]Tag your message for list %1[%END%][%END%]
 [% ELSE -%]Subject: [% FILTER qencode %]Confirm [% authkey %][%END%]
 [% END -%]
@@ -12,10 +12,11 @@ Content-Disposition: inline
 [%conf.wwsympa_url%]/request_topic/[%list.name%]/[%authkey%]
 [%- ELSE -%][%|loc(list.name)%]To distribute the attached message in list %1, follow the link below:[%END%]
 
-[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=CONFIRM [%authkey%][% END %]
+[% | mailtourl({subject => "CONFIRM ${authkey}"}) ~%]
+  [% conf.email %]@[% conf.host %]
+[%~ END %]
 
-[%|loc(conf.sympa)%]Or send a message to %1 with the following subject:
-[% END %]
+[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[% END %]
 CONFIRM [% authkey %]
 [%- END -%]
 

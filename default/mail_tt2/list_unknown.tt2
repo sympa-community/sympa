@@ -14,7 +14,9 @@ Content-Description: Notification
 
 [%|loc%]To find out the correct listname, ask for this server's lists directory:[%END%]
 
-	mailto:[% conf.email %]@[% conf.host %]?subject=WHICH
+	[% | mailtourl({subject => 'WHICH'}) ~%]
+	  [% conf.email %]@[% conf.host %]
+	[%~ END %]
 
 [%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
 

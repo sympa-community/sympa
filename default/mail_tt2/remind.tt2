@@ -6,5 +6,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Reminder of your subscription to
 [%|loc%]Everything about this list: [%END%][% conf.wwsympa_url %]/info/[% list.name %]
 [% IF subscriber.included != 1 %]
 [%|loc%]Unsubscription:[%END%]
-[% FILTER escape_url %]mailto:[%conf.email%]@[%conf.host%]?subject=sig [%list.name%] [%user.email%][% END %]
+[% | mailtourl({subject => "sig ${list.name} ${user.email}"}) ~%]
+  [% conf.email %]@[% conf.host %]
+[%~ END %]
 [%END%]
