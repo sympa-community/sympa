@@ -82,6 +82,7 @@ sub lists {
     my $topic    = shift;
     my $subtopic = shift;
     my $mode     = shift;
+    $mode ||= '';
 
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = $ENV{'SYMPA_ROBOT'};
