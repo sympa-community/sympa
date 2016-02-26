@@ -17,16 +17,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa-es\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2015-09-01 10:02+0000\n"
-"Last-Translator: acasado <acasado@ual.es>\n"
+"PO-Revision-Date: 2016-01-15 16:02+0000\n"
+"Last-Translator: Antonio Casado <acasado@ual.es>\n"
 "Language-Team: Español <sympa-users@sympa.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.7\n"
-"X-POOTLE-MTIME: 1441101769.000000\n"
+"X-POOTLE-MTIME: 1452873753.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -81,11 +81,11 @@ msgstr "%d.%b.%Y-%H:%M:%S"
 
 #: src/sbin/sympa_wizard.pl.in:333
 msgid "Unable to rename %s : %s"
-msgstr "Imposible cambiar el nombre de la lista %s: %s"
+msgstr "Incapaz de cambiar el nombre %s : %s"
 
 #: src/sbin/sympa_wizard.pl.in:341
 msgid "Unable to open %s : %s"
-msgstr "Imposible abrir %s : %s"
+msgstr "Incapaz de abrir %s : %s"
 
 #: src/sbin/sympa_wizard.pl.in:352
 msgid ""
@@ -134,7 +134,7 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:401
 msgid "Which RDBMS will you use for core database:"
-msgstr "Cuál SGBD usará para la base de datos:"
+msgstr "Cuál SGBD usará para la base de datos principal:"
 
 #: src/sbin/sympa_wizard.pl.in:406
 msgid "-> Select RDBMS [1-%d] "
@@ -146,7 +146,7 @@ msgstr "Comprobando la versión de Perl:"
 
 #: src/sbin/sympa_wizard.pl.in:422
 msgid "Your version of perl is OK (%s  >= %s)"
-msgstr "Su versión de Perl está bien (%s >= %s)"
+msgstr "Tu versión de Perl está bien (%s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:426
 msgid ""
@@ -184,7 +184,7 @@ msgstr "desde CPAN"
 
 #: src/sbin/sympa_wizard.pl.in:452
 msgid "STATUS"
-msgstr "ESTATUS"
+msgstr "ESTADO"
 
 #: src/sbin/sympa_wizard.pl.in:453
 msgid "-----------"
@@ -208,7 +208,7 @@ msgstr "OK (%-6s >= %s)"
 
 #: src/sbin/sympa_wizard.pl.in:498
 msgid "version is too old (%s < %s)"
-msgstr "la versión es demasiado vieja (%s < %s)"
+msgstr "la versión es demasiado antigua (%s < %s)"
 
 #: src/sbin/sympa_wizard.pl.in:501
 msgid ">>>>>>> You must update \"%s\" to version \"%s\" <<<<<<."
@@ -216,12 +216,12 @@ msgstr ">>>>>>> Debes actualizar \"%s\" a la versión \"%s\" <<<<<<."
 
 #: src/sbin/sympa_wizard.pl.in:533
 msgid "## You need root privileges to install %s module. ##"
-msgstr "## Necesitas privilegios root para instalar el módulo %s. ##"
+msgstr "## Necesitas privilegios de root para instalar el módulo %s. ##"
 
 #: src/sbin/sympa_wizard.pl.in:536
 msgid "## Press the Enter key to continue checking modules. ##"
 msgstr ""
-"## Presioae la tecla Intro para continuar la comprobación de los módulos. ##"
+"## Presiona la tecla Intro para continuar la comprobación de los módulos. ##"
 
 #: src/sbin/sympa_wizard.pl.in:545
 msgid "-> Usage of this module: %s"
@@ -240,8 +240,8 @@ msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
 msgstr ""
-"La instalación de %s FALLÓ. Deberías descargar el archivo tar.gz de http://"
-"search.cpan.org e instalarlo manualmente."
+"La instalación de %s volvió a FALLAR. Deberías descargar el archivo tar.gz "
+"de http://search.cpan.org e instalarlo manualmente."
 
 #: src/sbin/sympa_wizard.pl.in:598
 msgid ""
@@ -262,7 +262,7 @@ msgstr ""
 #: src/lib/Sympa/Family.pm:2498 src/lib/Sympa/Family.pm:398
 #: src/lib/Sympa/Family.pm:670 src/lib/Sympa/List.pm:674
 msgid "%d %b %Y at %H:%M:%S"
-msgstr "%d %b %Y en %H:%M:%S"
+msgstr "%d %b %Y a las %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -275,8 +275,8 @@ msgid ""
 "The number of seconds a bulk sleeps between starting a new loop if it didn't "
 "find a message to send."
 msgstr ""
-"El número de segundos que un proceso bulk duerme entre ejecuciones si no "
-"encontró ningun mensaje a enviar."
+"El número de segundos que un proceso bulk espera entre ejecuciones si no "
+"encuentra ningún mensaje para enviar."
 
 #: src/lib/Sympa/ConfDef.pm:814
 msgid ""
@@ -284,12 +284,13 @@ msgid ""
 "Sympa GUI. Don't select a language if you don't have the proper locale "
 "packages installed."
 msgstr ""
-"Esto es la lista de idiomas que será propuesta a tus usuarios por la GUI de "
-"Sympa. No selecciones un idioma su no tienes instalada la local. "
+"Esta es la lista de idiomas que será propuesta a tus usuarios por la GUI de "
+"Sympa. No selecciones un idioma si no tienes el paquete \"locale\" correcto "
+"instalado. "
 
 #: src/lib/Sympa/ConfDef.pm:33
 msgid "Site customization"
-msgstr "Personalización del servidor"
+msgstr "Personalización del servicio"
 
 #: src/lib/Sympa/ConfDef.pm:36
 msgid "Main robot hostname"
@@ -497,9 +498,8 @@ msgid ""
 "If set, when a list editor report a spam, this external script is run by "
 "wwsympa or sympa, the spam is sent into script stdin"
 msgstr ""
-"Si se establece, cuando un editor de la lista notifica un spam, este script "
-"externo lo ejecuta wwsympa o sympa, el spam se envía a la entrada estandar "
-"del script"
+"Si se configura, cuando un moderador de la lista informa de un spam, wwsympa "
+"o sympa ejecuta este programa externo enviando el spam a su entrada estándar"
 
 #: src/lib/Sympa/ConfDef.pm:495
 msgid ""
@@ -620,11 +620,11 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:606
 msgid "Bulk mailer"
-msgstr "Configuración del bulk mailer (manejador de correo en masa)"
+msgstr "Servidor de correo masivo"
 
 #: src/lib/Sympa/ConfDef.pm:614
 msgid "Default priority for a packet to be sent by bulk."
-msgstr "Prioridad predeterminada de un paquete enviado mediante bulk."
+msgstr "Prioridad predeterminada para que un paquete sea enviado por bulk."
 
 #: src/lib/Sympa/ConfDef.pm:622
 msgid ""
@@ -700,7 +700,7 @@ msgstr "Carpeta para el contenedor de moderación"
 
 #: src/lib/Sympa/ConfDef.pm:703
 msgid "Directory for digest spool"
-msgstr "Carpeta para el contenedor de resúmenes"
+msgstr "Carpeta para el contenedor de recopilaciones"
 
 #: src/lib/Sympa/ConfDef.pm:708
 msgid "Directory for authentication spool"
@@ -1021,10 +1021,10 @@ msgid ""
 "\"editor_validated_messages\"."
 msgstr ""
 "Tipo de mensaje que es añadido a la firma DKIM antes de la distribución a "
-"los suscriptores. Posibles valores son \"none\", \"any\" o una lista de las "
-"siguientes palabras: \"md5_authenticated_messages\", "
-"\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
-"\"editor_validated_messages\"."
+"los suscriptores. Los posibles valores son \"none\", \"any\" o una lista de "
+"las siguientes palabras: \"md5_authenticated_messages\", \""
+"smime_authenticated_messages\", \"dkim_authenticated_messages\", \""
+"editor_validated_messages\"."
 
 #: src/lib/Sympa/ConfDef.pm:1216
 msgid "Location of the file where DKIM private key is stored"
@@ -1420,7 +1420,7 @@ msgstr "Hora de entrega (hh:mm)"
 
 #: src/lib/Sympa/ListDef.pm:304
 msgid "Digest frequency"
-msgstr "Frecuencia del Resumen"
+msgstr "Periodicidad de la recopilación"
 
 #: src/lib/Sympa/ListDef.pm:1950 src/lib/Sympa/ListDef.pm:309
 #: src/lib/Sympa/ListDef.pm:856
@@ -1437,7 +1437,7 @@ msgstr "minuto"
 
 #: src/lib/Sympa/ListDef.pm:333
 msgid "Digest maximum number of messages"
-msgstr "Máximo número de mensajes en el resumen "
+msgstr "Número de mensajes máximo de la recopilación"
 
 #: src/lib/Sympa/ListDef.pm:342
 msgid "Available subscription options"
@@ -1599,7 +1599,7 @@ msgstr "Archivos"
 
 #: src/lib/Sympa/ListDef.pm:684
 msgid "frequency"
-msgstr "frecuencia"
+msgstr "periodicidad"
 
 #: src/lib/Sympa/ListDef.pm:703
 msgid "access right by mail commands"
@@ -2528,7 +2528,7 @@ msgstr "abierta"
 #: default/scenari/invite.closed:1 default/scenari/send.closed:1
 #: src/lib/Sympa/ListOpt.pm:159
 msgid "closed"
-msgstr "clausurado"
+msgstr "cerrado"
 
 #: default/scenari/access_web_archive.private:1
 #: default/scenari/archive_mail_access.private:1 src/lib/Sympa/ListOpt.pm:160
@@ -2691,15 +2691,15 @@ msgstr "estandar (recepción directa)"
 
 #: src/lib/Sympa/ListOpt.pm:227
 msgid "digest MIME format"
-msgstr "compilación en formato MIME"
+msgstr "recopilación en formato MIME"
 
 #: src/lib/Sympa/ListOpt.pm:228
 msgid "digest plain text format"
-msgstr "compilación en formato texto"
+msgstr "recopilación en formato de texto plano"
 
 #: src/lib/Sympa/ListOpt.pm:229
 msgid "summary mode"
-msgstr "resumen de mensajes"
+msgstr "modo resumen"
 
 #: src/lib/Sympa/ListOpt.pm:230
 msgid "notice mode"
@@ -2752,7 +2752,7 @@ msgstr "instancia de familia cerrada"
 
 #: src/lib/Sympa/ListOpt.pm:250
 msgid "closed list"
-msgstr "lista clausurada"
+msgstr "lista cerrada"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -2900,7 +2900,7 @@ msgstr "%s por dirección del dueño de la lista de correo %s"
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3065
 msgid "%s via Editor Address of %s Mailing List"
-msgstr "%s por dirección del Editor de la lista de correo %s"
+msgstr "%s por el moderador de la lista de correo %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -2918,7 +2918,7 @@ msgstr "por dirección del dueño de la lista de correo %s"
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3081
 msgid "via Editor Address of %s Mailing List"
-msgstr "por dirección del Editor de la lista de correo %s"
+msgstr "por el moderador de la lista de correo %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -2936,7 +2936,7 @@ msgstr "Dirección del dueño de la lista de correo %s"
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3095 src/lib/Sympa/Message.pm:3111
 msgid "Editor Address of %s Mailing List"
-msgstr "Dirección del Editor de la lista de correo %s"
+msgstr "Moderador de la lista de correo %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -3109,7 +3109,7 @@ msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:153
 msgid "used to compute MD5 digests for passwords, etc."
-msgstr "utilizado para calcular resumenes MD5 de contraseñas, etc."
+msgstr "utilizado para calcular resúmenes MD5 de contraseñas, etc."
 
 #: src/lib/Sympa/ModDef.pm:159
 msgid "Used for email tracking"
@@ -3141,7 +3141,7 @@ msgstr "utilizado para crear o eliminar rutas de acceso"
 
 #: src/lib/Sympa/ModDef.pm:204 src/lib/Sympa/ModDef.pm:215
 msgid "used to compute plaindigest messages from HTML"
-msgstr "utilizado para calcular mensajes de texto desde HTML"
+msgstr "utilizado para realizar mensajes recopilatorios en texto desde HTML"
 
 #: src/lib/Sympa/ModDef.pm:210
 msgid "required for XSS protection on the web interface"
@@ -3492,7 +3492,7 @@ msgstr "Mensaje de recordatorio"
 
 #: src/lib/Sympa/Tools/WWW.pm:89
 msgid "editor rejection message"
-msgstr "Mensaje de rechazo del moderador"
+msgstr "mensaje de rechazo del moderador"
 
 #: src/lib/Sympa/Tools/WWW.pm:90
 msgid "subscribing invitation message"
@@ -3512,7 +3512,7 @@ msgstr "Mensaje de recordatorio global"
 
 #: src/lib/Sympa/Tools/WWW.pm:94
 msgid "summary message"
-msgstr "mensaje recapitulativo"
+msgstr "mensaje de resumen"
 
 #: src/lib/Sympa/Tools/WWW.pm:95
 msgid "list description"
@@ -3640,8 +3640,8 @@ msgstr "Fuiste dado de baja correctamente de la lista de correo %s."
 msgid ""
 "Unsubscription from list %s denied: Unsubscription from this list is closed."
 msgstr ""
-"Tu solicitud de darte de baja de la lista %s fracasó: no está permitido "
-"darse de baja de esa lista. "
+"Se denegó tu solicitud de darte de baja de la lista %s: no está permitido "
+"darse de baja de esa lista."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -3803,7 +3803,7 @@ msgstr "Crear un espacio de documentos"
 
 #: default/web_tt2/admin_menu.tt2:102
 msgid "Restore shared"
-msgstr "Restaurar el espacio de documentos"
+msgstr "Restaurar documentos compartidos"
 
 #: default/web_tt2/admin.tt2:59 default/web_tt2/admin_menu.tt2:105
 msgid "Delete Shared"
@@ -3817,7 +3817,7 @@ msgstr "Restaurar la lista"
 #. (list)
 #: default/web_tt2/admin_menu.tt2:122 default/web_tt2/admin_menu.tt2:124
 msgid "Are you sure you wish to close %1 list?"
-msgstr "¿Estás seguro de querer clausurar la lista %1?"
+msgstr "¿Estás seguro de querer cerrar la lista %1?"
 
 #: default/web_tt2/admin.tt2:36 default/web_tt2/admin_menu.tt2:122
 #: default/web_tt2/admin_menu.tt2:124
@@ -3933,12 +3933,13 @@ msgstr "¿Estás seguro de querer restaurar la lista %1?"
 msgid ""
 "This list is currently closed. Clicking this button will make it active "
 "again."
-msgstr "Esta lista está clausurada. Al presionar este botón será restaurada."
+msgstr ""
+"Esta lista está cerrada. Al hacer clic en este botón se volverá a activar."
 
 #. (list)
 #: default/web_tt2/admin.tt2:36
 msgid "Are you sure you wish to close list %1?"
-msgstr "¿Estás seguro de querer borrar la lista %1?"
+msgstr "¿Estás seguro de querer cerrar la lista %1?"
 
 #: default/web_tt2/admin.tt2:36
 msgid ""
@@ -3973,18 +3974,16 @@ msgid ""
 "Closes the shared document web space. It can be restored using \"Restore "
 "shared\" button."
 msgstr ""
-"Clausurar el espacio de documentos compartidos. Podrá ser recuperado "
-"mediante el botón \"Restaurar el espacio de documentos\"."
+"Cerrar el espacio web de documentos compartidos. Podrá ser recuperado "
+"mediante el botón \"Restaurar documentos compartidos\"."
 
 #: default/web_tt2/admin.tt2:63
 msgid "Restore Shared"
-msgstr "Restaurar el espacio de documentos"
+msgstr "Restaurar documentos compartidos"
 
 #: default/web_tt2/admin.tt2:63
 msgid "Restores the previously closed shared document web space."
-msgstr ""
-"El espacio de documentos compartidos está clausurado. Presiona este botón "
-"para restaurarlo."
+msgstr "Restaura el espacio web de documentos compartidos previamente cerrado."
 
 # #-#-#-#-#  es.po (PACKAGE VERSION)  #-#-#-#-#
 #: default/web_tt2/arc_manage.tt2:4
@@ -4421,8 +4420,8 @@ msgid ""
 "list has been closed. Its subscribers have been deleted from\n"
 "the subscriber database. The list is no longer public on the site."
 msgstr ""
-"La lista fue clausurada. Los suscriptores fueros borrados de\n"
-"la base de datos de suscriptores. La lísta ya no se ve públicamente en el "
+"La lista ha sido cerrada. Los suscriptores han sido borrados de\n"
+"la base de datos de suscriptores. La lista ya no se ve públicamente en el "
 "servidor."
 
 #: default/web_tt2/close_list.tt2:7
@@ -5234,8 +5233,8 @@ msgid ""
 "can be sent to the original author. You may prepare various rejection "
 "messages."
 msgstr ""
-"Mensaje de rechazo: cuando un mensaje es rechazado por el editor de la "
-"lista, puede ser enviado una notificación al autor. Puedes preparar varios "
+"Mensaje de rechazo: cuando un mensaje es rechazado por el moderador de la "
+"lista, se puede enviar una notificación al autor. Puedes preparar varios "
 "mensajes de rechazo."
 
 #: default/web_tt2/editfile.tt2:59
@@ -5400,7 +5399,7 @@ msgstr "Dirección detectada a través de la técnica de VERP"
 
 #: default/web_tt2/editsubscriber.tt2:87
 msgid "Status:"
-msgstr "Estatuto:"
+msgstr "Estado:"
 
 #: default/web_tt2/editsubscriber.tt2:98
 msgid "Bounce count:"
@@ -5431,7 +5430,7 @@ msgstr "Borrar los errores"
 #: default/web_tt2/edit_template.tt2:3 default/web_tt2/ls_templates.tt2:3
 #: default/web_tt2/view_template.tt2:3
 msgid "Template edition system"
-msgstr "Editor de modelos (templates)"
+msgstr "Sistema de edición de modelos (templates)"
 
 #: default/web_tt2/edit_template.tt2:7 default/web_tt2/view_template.tt2:8
 msgid "Type: "
@@ -5716,15 +5715,13 @@ msgstr "%1 ya es suscriptor de la lista %2"
 
 #. (u_err.sub,u_err.list)
 #: default/web_tt2/error.tt2:82
-#, fuzzy
 msgid "Unable to add user %1 in list %2: "
-msgstr "Imposible añadir el usuario %s en la lista %s : %s"
+msgstr "Imposible añadir el usuario %1 en la lista %2: "
 
 #. (u_err.max_list_members)
 #: default/web_tt2/error.tt2:82
-#, fuzzy
 msgid "Attempt to exceed the max number of members (%1) for this list"
-msgstr "Intento de superar el número máximo de miembros (%s) para esta lista."
+msgstr "Intento de superar el número máximo de miembros (%1) para esta lista."
 
 #: default/web_tt2/error.tt2:83
 msgid "Please provide your password"
@@ -5824,12 +5821,12 @@ msgstr "El parámetro '%1' tiene un valor erróneo: '%2'"
 #. (u_err.listname)
 #: default/web_tt2/error.tt2:102
 msgid "The list '%1' is already closed"
-msgstr "La lista '%1' ya está clausurada"
+msgstr "La lista '%1' ya está cerrada"
 
 #. (u_err.listname)
 #: default/web_tt2/error.tt2:103
 msgid "The list '%1' is not closed"
-msgstr "La lista '%1' no está clausurada"
+msgstr "La lista '%1' no está cerrada"
 
 #. (u_err.bad_listname)
 #: default/web_tt2/error.tt2:104
@@ -5981,7 +5978,7 @@ msgstr "La fase deutenticación fracasó"
 #. (u_err.status)
 #: default/web_tt2/error.tt2:136
 msgid "Service unavailable because list status is '%1'"
-msgstr "Servicio indisponible porque el estatuto de la lista es '%1'"
+msgstr "Servicio no disponible porque el estado de la lista es '%1'"
 
 #. (u_err.argument)
 #: default/web_tt2/error.tt2:137
@@ -6125,7 +6122,7 @@ msgstr "Nombre de la Lista"
 #: default/web_tt2/get_closed_lists.tt2:5
 #: default/web_tt2/get_closed_lists.tt2:9
 msgid "Closed lists"
-msgstr "Listas clausuradas"
+msgstr "Listas cerradas"
 
 #: default/web_tt2/get_closed_lists.tt2:12
 #: default/web_tt2/get_pending_lists.tt2:11
@@ -6148,7 +6145,7 @@ msgstr "Borrar las listas seleccionadas"
 
 #: default/web_tt2/get_closed_lists.tt2:35
 msgid " No closed lists"
-msgstr "No hay listas clausuradas"
+msgstr " No hay listas cerradas"
 
 #: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:38
 #: default/web_tt2/serveradmin.tt2:11
@@ -6181,7 +6178,7 @@ msgstr "Dueños"
 
 #: default/web_tt2/get_inactive_lists.tt2:16
 msgid "Editors"
-msgstr "Moderador/a"
+msgstr "Moderadores"
 
 #: default/web_tt2/get_inactive_lists.tt2:30
 msgid "none so far"
@@ -6356,7 +6353,7 @@ msgstr "Cambiar quién puede (de)suscribirse y ver información de la lista"
 
 #: default/web_tt2/info.tt2:52
 msgid "Close this list"
-msgstr "Clausurar esta lista"
+msgstr "Cerrar esta lista"
 
 #: default/web_tt2/info.tt2:59
 msgid "List Archives"
@@ -6468,7 +6465,7 @@ msgstr "Eres dueño."
 
 #: default/web_tt2/list_menu.tt2:21 default/web_tt2/loginbanner.tt2:27
 msgid "You are editor."
-msgstr "Eres editor."
+msgstr "Eres moderador."
 
 #: default/mail_tt2/listmaster_groupednotifications.tt2:4
 #: default/mail_tt2/listmaster_notification.tt2:1
@@ -6494,7 +6491,7 @@ msgstr "Dueño privilegiado"
 #: default/web_tt2/list_menu.tt2:48 default/web_tt2/lists.tt2:34
 #: default/web_tt2/loginbanner.tt2:43 default/web_tt2/my.tt2:25
 msgid "Editor"
-msgstr "Editor"
+msgstr "Moderador"
 
 #: default/web_tt2/list_menu.tt2:53 default/web_tt2/lists.tt2:37
 #: default/web_tt2/loginbanner.tt2:48 default/web_tt2/my.tt2:28
@@ -6564,7 +6561,7 @@ msgstr "RSS"
 
 #: default/web_tt2/list_panel.tt2:4
 msgid "Closed list"
-msgstr "Lista clausurada"
+msgstr "Lista cerrada"
 
 #: default/web_tt2/list_panel.tt2:6
 msgid "List not yet activated"
@@ -6692,7 +6689,7 @@ msgstr "Ayuda acerca de la autenticación"
 
 #: default/web_tt2/loginbanner.tt2:144
 msgid "First login?"
-msgstr "¿Primera conexión?"
+msgstr "¿Primer  acceso?"
 
 #: default/web_tt2/loginbanner.tt2:145
 msgid "Lost password?"
@@ -7083,7 +7080,7 @@ msgstr "Ver listas pendientes (solicitadas)"
 
 #: default/web_tt2/nav.tt2:36 default/web_tt2/serveradmin.tt2:9
 msgid "View Closed Lists"
-msgstr "Ver listas clausuradas"
+msgstr "Ver listas cerradas"
 
 #: default/web_tt2/nav.tt2:42 default/web_tt2/serveradmin.tt2:45
 msgid "Users"
@@ -7296,7 +7293,7 @@ msgstr "la lista fue suprimida"
 
 #: default/web_tt2/notice.tt2:53
 msgid "List has been closed"
-msgstr "la lista fue clausurada"
+msgstr "La lista ha sido cerrada"
 
 #: default/web_tt2/notice.tt2:58
 msgid "List has been restored"
@@ -7741,9 +7738,9 @@ msgid ""
 "(Alternatively, consider using a data-source such as SQL or an Active "
 "Directory Group)."
 msgstr ""
-"Haga clic en el botón 'Añadir varios' a continuación para cargar usuarios a "
-"través de un formulario.  (Alternativamente, considera la utilización de una "
-"fuente de datos como SQL o un Grupo de Directorio Activo)."
+"Haga clic en el botón 'Añadir varios' a continuación para cargar masivamente "
+"usuarios a través de un formulario.  (Alternativamente, considera la "
+"utilización de una fuente de datos como SQL o un Grupo de Directorio Activo)."
 
 #: default/web_tt2/review.tt2:48
 msgid "Multiple add"
@@ -8214,7 +8211,7 @@ msgstr "el %1"
 
 #: default/web_tt2/set_pending_list_request.tt2:20
 msgid "Close it"
-msgstr "Clausurar la lista"
+msgstr "Cerrarla"
 
 #: default/web_tt2/set_pending_list_request.tt2:21
 msgid "Install it"
@@ -8311,19 +8308,16 @@ msgid "User email"
 msgstr "Dirección del usuario"
 
 #: default/web_tt2/sigindex.tt2:3 default/web_tt2/sigindex.tt2:9
-#, fuzzy
 msgid "Listing unsubscription to moderate"
-msgstr "Listado de suscripciones por moderar"
+msgstr "Listado de darse de baja por moderar"
 
 #: default/web_tt2/sigindex.tt2:45 default/web_tt2/sigindex.tt2:56
-#, fuzzy
 msgid "No unsubscription requests"
-msgstr "Ninguna solicitud de suscripción"
+msgstr "Ninguna solicitud para darse de baja"
 
 #: default/web_tt2/sigindex.tt2:51
-#, fuzzy
 msgid "Delete selected addresses"
-msgstr "Dar de baja a las direcciones seleccionadas"
+msgstr "Eliminar las direcciones seleccionadas"
 
 #: default/web_tt2/sigindex.tt2:52 default/web_tt2/subindex.tt2:60
 msgid "Reject selected addresses"
@@ -8465,13 +8459,13 @@ msgid ""
 "following color editor. When finished, you may copy the result a new CCS "
 "static file. The target is specified by css_path parameter."
 msgstr ""
-"Si no utilizas los parámetros « css_path » y « css_url », los colores están "
-"definidos en el archivo de configuración « robot.conf ». Sino, los colores "
+"Si no utilizas los parámetros \"css_path\" y \"css_url\", los colores están "
+"definidos en el archivo de configuración \"robot.conf\". Sino, los colores "
 "están definidos en la hoja de estilos estática. Los colores pueden ser "
 "cambiados por el resto de la sesión utilizando el siguiente editor. Si "
 "quieres conservar definitivamente las modificaciones realizadas, puedes "
 "crear una nueva hoja de estilos CSS estática. Se especifíca la ubicación del "
-"archivo de esta hoja de estilos mediante el parámetro « css_path »."
+"archivo de esta hoja de estilos mediante el parámetro \"css_path\"."
 
 #: default/web_tt2/skinsedit.tt2:40
 msgid ""
@@ -8988,40 +8982,36 @@ msgid "Sympa menu"
 msgstr "Menú Sympa"
 
 #: default/web_tt2/sympa_menu.tt2:24
-#, fuzzy
 msgid "Search form"
-msgstr "Buscar usuario"
+msgstr "Formulario de búsqueda"
 
 #: default/web_tt2/sympa_menu.tt2:36
 msgid "Support"
-msgstr ""
+msgstr "Soporte"
 
 #: default/web_tt2/sympa_menu.tt2:40
-#, fuzzy
 msgid "Documentation"
-msgstr "Documento"
+msgstr "Documentación"
 
 #: default/web_tt2/sympa_menu.tt2:42
 msgid "Frequently asked questions"
-msgstr ""
+msgstr "Preguntas más frecuentes"
 
 #: default/web_tt2/sympa_menu.tt2:42
 msgid "FAQ"
-msgstr ""
+msgstr "FAQ"
 
 #: default/web_tt2/sympa_menu.tt2:44
 msgid "Give us feedback about this new Sympa version"
-msgstr ""
+msgstr "Opina sobre esta nueva versión de Sympa"
 
 #: default/web_tt2/sympa_menu.tt2:44
-#, fuzzy
 msgid "Feedback"
-msgstr "Tipo de realimentación: %1"
+msgstr "Opinión"
 
 #: default/web_tt2/sympa_menu.tt2:76
-#, fuzzy
 msgid "Lists Families"
-msgstr "familias"
+msgstr "Familias de listas"
 
 #: default/web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -9272,7 +9262,7 @@ msgstr "administrador"
 
 #: default/mail_tt2/authorization_reject.tt2:5
 msgid "Archives are closed."
-msgstr "Los archivos están clausurados."
+msgstr "Los archivos están cerrados."
 
 #: default/mail_tt2/authorization_reject.tt2:8
 msgid "Archives are restricted to list owners."
@@ -9305,7 +9295,7 @@ msgstr ""
 
 #: default/mail_tt2/authorization_reject.tt2:15
 msgid "Web archives are closed."
-msgstr "Los archivos Web están clausurados."
+msgstr "Los archivos Web están cerrados."
 
 #: default/mail_tt2/authorization_reject.tt2:18
 msgid "Web archives are restricted to list subscribers and local domain users."
@@ -9472,7 +9462,7 @@ msgstr ""
 
 #: default/mail_tt2/authorization_reject.tt2:130
 msgid "Multipart messages are not allowed in this list."
-msgstr "Los mensajes 'multipart' no están permitidos en esta lista."
+msgstr "Los mensajes 'multiparte' no están permitidos en esta lista."
 
 #: default/mail_tt2/authorization_reject.tt2:133
 msgid "Message distribution in the list is restricted to list subscribers."
@@ -9587,7 +9577,7 @@ msgstr ""
 
 #: default/mail_tt2/authorization_reject.tt2:204
 msgid "The list is closed."
-msgstr "La lista está clausurada."
+msgstr "La lista está cerrada."
 
 #: default/mail_tt2/authorization_reject.tt2:207
 msgid "you are not allowed to perform this action."
@@ -9787,7 +9777,7 @@ msgid ""
 "(be aware that Sympa can't check signature if you use the subject header to "
 "write a command)."
 msgstr ""
-"Tu mensaje no era un mensaje multipart/firmado o Sympa no pudo verificar la "
+"Tu mensaje no era un mensaje multiparte/firmado o Sympa no pudo verificar la "
 "firma (tenga en cuenta que Sympa no puede comprobar la firma si se utiliza "
 "la cabecera asunto al escribir un comando)."
 
@@ -9811,13 +9801,12 @@ msgstr "La lista %1 no porpone opciones de suscripción."
 
 #. (u_err.email,u_err.listname)
 #: default/mail_tt2/command_report.tt2:109
-#, fuzzy
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
 "subscribed from a different e-mail address?"
 msgstr ""
-"No se encontró tu dirección de correo %1 en la lista %2. ¿Quizás\n"
-"estás suscrito con una dirección diferente?"
+"No se encontró tu dirección de correo %1 en la lista %2. ¿Quizás estás "
+"suscrito con una dirección de correo diferente?"
 
 #. (u_err.email,u_err.listname)
 #: default/mail_tt2/command_report.tt2:112
@@ -9830,8 +9819,8 @@ msgid ""
 "List %1 does not accept the DIGEST mode. \n"
 "Your configuration regarding this command has not been updated."
 msgstr ""
-"La lista %1 no acepta el modo de resumen (DIGEST).\n"
-"Tu configuración relativa a esa lista no fue modificada."
+"La lista %1 no acepta el modo RECOPILACIÓN.\n"
+"Tu configuración respecto a este comando no ha sido modificada."
 
 #. (u_err.listname)
 #: default/mail_tt2/command_report.tt2:119
@@ -9862,11 +9851,12 @@ msgstr "El usuario '%1' ya es miembro de la lista '%2'."
 
 #. (u_err.email,u_err.listname,u_err.max_list_members)
 #: default/mail_tt2/command_report.tt2:143
-#, fuzzy
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
 "members (%3) for this list."
-msgstr "Intento de superar el número máximo de miembros (%s) para esta lista."
+msgstr ""
+"Incapaz de añadir el usuario '%1' en la lista '%2'. Intento de superar el "
+"número máximo de miembros (%3) para esta lista."
 
 #: default/mail_tt2/command_report.tt2:147
 msgid ""
@@ -9931,9 +9921,9 @@ msgid ""
 "Unable to access the message on list %1 with  key %2.\n"
 "Warning: this message may already have been sent by one of the list's editor."
 msgstr ""
-"Imposible acceder al mensaje para moderar por la lista %1 con la clave %2.\n"
-"Advertencia: este mensaje puede ya haber sido moderado por uno/a de los "
-"editores/as de la lista."
+"Imposible acceder al mensaje en la lista %1 con la clave %2.\n"
+"Advertencia: este mensaje puede que ya haya sido moderado por uno de los "
+"moderadores de la lista."
 
 #. (u_err.key)
 #: default/mail_tt2/command_report.tt2:165
@@ -10176,7 +10166,7 @@ msgstr ""
 #: default/mail_tt2/digest.tt2:10 default/mail_tt2/digest.tt2:4
 #: default/mail_tt2/digestplain.tt2:4
 msgid "%1 Digest %2"
-msgstr "Compilación del %2, lista %1 "
+msgstr "Lista %1, recopilación de %2"
 
 #. (current_group,total_group)
 #: default/mail_tt2/digest.tt2:4 default/mail_tt2/digestplain.tt2:4
@@ -10186,12 +10176,12 @@ msgstr " (%1/%2)"
 #. (list.name,date)
 #: default/mail_tt2/digestplain.tt2:7
 msgid "%1 digest %2"
-msgstr "%1 resumen %2"
+msgstr "Lista %1, recopilación de %2"
 
 #. (list.name,date)
 #: default/mail_tt2/digest.tt2:38 default/mail_tt2/digestplain.tt2:28
 msgid "End of %1 Digest %2"
-msgstr "Fin de compilación de la lista %1 - %2"
+msgstr "Lista %1, Fin de la recopilación de %2"
 
 #: default/mail_tt2/d_install_shared.tt2:2
 msgid "Your document has been installed."
@@ -10204,7 +10194,7 @@ msgid ""
 "has been installed by %4 list editor."
 msgstr ""
 "Tu documento %1 para la lista %2@%3\n"
-"ha sido instalado por el moderador de la lista %4."
+"ha sido instalado por el moderador %4."
 
 #: default/mail_tt2/d_install_shared.tt2:7
 msgid "The list document repository:"
@@ -10221,7 +10211,7 @@ msgid ""
 "has been rejected by %4 list editor."
 msgstr ""
 "Tu documento %1 para la lista %2@%3\n"
-"ha sido rechazado por el moderador de la lista %4."
+"ha sido rechazado por el moderador %4."
 
 #. (list.name)
 #: default/mail_tt2/expire_deletion.tt2:2 default/mail_tt2/removed.tt2:2
@@ -10270,12 +10260,12 @@ msgstr "Darse de baja (anular suscripción):"
 #. (list.name,date)
 #: default/mail_tt2/get_archive.tt2:32
 msgid "End of digest for list %1 - %2"
-msgstr "Fin de compilación de la lista %1 - %2"
+msgstr "Lista %1, Fin de la recopilación de %2"
 
 #. (user.email)
 #: default/mail_tt2/global_remind.tt2:5
 msgid "Summary of your subscription (using the e-mail %1)."
-msgstr "Síntesis de tus suscripciones (con e-mail %1)."
+msgstr "Resumen de tus suscripciones (con e-mail %1)."
 
 #: default/mail_tt2/global_remind.tt2:6
 msgid "If you want to unsubscribe from some list, please save this mail."
@@ -10288,7 +10278,7 @@ msgstr "He aquí, para cada lista, una dirección para darse de baja:"
 
 #: default/mail_tt2/helpfile.tt2:4
 msgid "                       (Automatic Mailing System)"
-msgstr "                         (SYstème de MultiPosteo Automático)"
+msgstr "                         (Sistema de Correo Automático)"
 
 #: default/mail_tt2/helpfile.tt2:6
 msgid "                                User's Guide"
@@ -10367,44 +10357,47 @@ msgstr "UNSubscribe * <EMAIL>       * Para darse de baja de todas las listas. "
 msgid ""
 "SET <list>|* NOMAIL         * To suspend the message reception for <list>"
 msgstr ""
-"SET <list>|* NOMAIL   * Para suspender la recepción de mensajes de una lista"
+"SET <lista>|* NOMAIL   * Para suspender la recepción de mensajes de <lista>"
 
 #: default/mail_tt2/helpfile.tt2:28
 msgid "SET <list>|* DIGEST         * Message reception in compilation mode"
-msgstr "SET <list>|* DIGEST   * Para recibir los mensajes en modo recopilado"
+msgstr ""
+"SET <lista>|* DIGEST          * Para recibir los mensajes en modo "
+"recopilación"
 
 #: default/mail_tt2/helpfile.tt2:29
 msgid ""
 "SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as "
 "a plain text email with all attachments"
 msgstr ""
-"SET <list|*> DIGESTPLAIN    * Recepción de mensajes de modo recopilado, "
-"manda un correo en texto pleno con todos los mensajes adjuntos"
+"SET <list|*> DIGESTPLAIN    * Recepción de mensajes de modo recopilación, "
+"manda un correo electrónico de texto sin formato con todos los documentos "
+"adjuntos"
 
 #: default/mail_tt2/helpfile.tt2:30
 msgid "SET <list>|* SUMMARY        * Receiving the message index only"
-msgstr "SET <list>|* SUMMARY        * Recibir sólo el índice de mensajes"
+msgstr "SET <lista>|* SUMMARY        * Recibir sólo el índice de mensajes"
 
 #: default/mail_tt2/helpfile.tt2:31
 msgid "SET <list>|* NOTICE         * Receiving message subject only"
-msgstr "SET <list>|* NOTICE  * Para recibir sólo el asunto de los mensajes"
+msgstr "SET <lista>|* NOTICE  * Para recibir sólo el asunto de los mensajes"
 
 #: default/mail_tt2/helpfile.tt2:32
 msgid "SET <list>|* MAIL           * <list> reception in normal mode"
-msgstr "SET <list>|* MAIL   * Para activar la recepción normal de mensajes"
+msgstr "SET <lista>|* MAIL   * Para activar la recepción en modo normal"
 
 #: default/mail_tt2/helpfile.tt2:33
 msgid ""
 "SET <list>|* CONCEAL        * To become unlisted (hidden subscriber address)"
 msgstr ""
-"SET <list>|* CONCEAL            * Ya no estar más en el listado (Ocultar la "
+"SET <lista>|* CONCEAL            * No aparecer en el listado (Ocultar la "
 "dirección de suscripción)"
 
 #: default/mail_tt2/helpfile.tt2:34
 msgid "SET <list>|* NOCONCEAL      * Subscriber address visible via REView"
 msgstr ""
-"SET <nombre_lista>|* NOCONCEAL   * Las dirección de suscriptor será visible "
-"via REView"
+"SET <lista>|* NOCONCEAL   * Las dirección de suscriptor será visible con el "
+"comando REView"
 
 #: default/mail_tt2/helpfile.tt2:37
 msgid "INDex <list>                * <list> archive file list"
@@ -10418,13 +10411,13 @@ msgstr "GET <lista> <fichero>       * Para obtener el <fichero> de <lista>"
 #: default/mail_tt2/helpfile.tt2:39
 msgid ""
 "LAST <list>                 * Used to received the last message from <list>"
-msgstr "LAST <Lista>                * recibir el último mensaje de <lista>"
+msgstr "LAST <lista>                * recibir el último mensaje de <lista>"
 
 #: default/mail_tt2/helpfile.tt2:40
 msgid "INVITE <list> <email>       * Invite <email> for subscription in <list>"
 msgstr ""
-"INVITE <nombre_lista> <email>       * Envía una invitación a <email> para la "
-"suscripción a <nombre_lista>"
+"INVITE <lista> <email>       * Envía una invitación a <email> para la "
+"suscripción a <lista>"
 
 #: default/mail_tt2/helpfile.tt2:41
 msgid ""
@@ -10452,31 +10445,33 @@ msgstr ""
 #: default/mail_tt2/helpfile.tt2:48
 msgid "ADD <list> user@host Full name  * To add a user to a list"
 msgstr ""
-"ADD <nombre_lista> usuario@dominio Nombre Completo  * Para añadir un usuario "
-"a una lista"
+"ADD <lista> usuario@dominio Nombre Completo  * Para añadir un usuario a una "
+"lista"
 
 #: default/mail_tt2/helpfile.tt2:49
 msgid "DEL <list> user@host            * To delete a user from a list"
 msgstr ""
-"DEL <nombre_lista> usuario@dominio                   * Para eliminar un "
-"usuario de una lista"
+"DEL <lista> usuario@dominio                   * Para eliminar un usuario de "
+"una lista"
 
 #: default/mail_tt2/helpfile.tt2:50
 msgid "STATS <list>                    * To consult the statistics for <list>"
 msgstr ""
-"STATS <list>                    * Para consultar las estadísticas de <lista>"
+"STATS <lista>                    * Para consultar las estadísticas de <lista>"
 
 #: default/mail_tt2/helpfile.tt2:52
 msgid ""
 "REMIND <list>                   * Send a reminder message to each subscriber "
 "(this is a way to inform anyone what is his real subscribing email)."
 msgstr ""
-"REMID <nombre_lista>   * Envia un recordatorio sobre la lista a cada "
-"suscriptor."
+"REMIND <lista>   * Envía un mensaje recordatorio a cada suscriptor (esta es "
+"la forma de informar a alguien de cuál es su verdadero correo electrónico de "
+"suscripción)."
 
 #: default/mail_tt2/helpfile.tt2:56
 msgid "DISTribute <list> <key>        * Moderation: to validate a message"
-msgstr "DISTribute <list> <key>           *Moderación: para validar un mensaje"
+msgstr ""
+"DISTribute <lista> <clave>           *Moderación: para validar un mensaje"
 
 #: default/mail_tt2/helpfile.tt2:57
 msgid "REJect <list> <key>            * Moderation: to reject a message"
@@ -10487,8 +10482,8 @@ msgid ""
 "MODINDEX <list>                 * Moderation: to view the list of messages "
 "to moderate"
 msgstr ""
-"MODINDEX <Lista>                   * moderación: para ver la lista de "
-"mensajes por moderar"
+"MODINDEX <lista>                   * moderación: para ver la lista de "
+"mensajes a moderar"
 
 #: default/mail_tt2/helpfile.tt2:61
 msgid "Powered by Sympa"
@@ -10557,7 +10552,7 @@ msgstr "Tamaño máximo: %1"
 #. (digest)
 #: default/mail_tt2/info_report.tt2:24
 msgid "Digest            : %1"
-msgstr "Compilación: %1"
+msgstr "Recopilación            : %1"
 
 #. ('')
 #: default/mail_tt2/info_report.tt2:26
@@ -10824,7 +10819,7 @@ msgstr "conexión a la base de datos %1 restaurada"
 #: default/mail_tt2/listmaster_notification.tt2:103
 #: default/mail_tt2/listmaster_notification.tt2:108
 msgid "Bulk mailer error"
-msgstr "Error del manejador de correo en masa"
+msgstr "Error del servidor de correo masivo"
 
 #. (message_id)
 #: default/mail_tt2/listmaster_notification.tt2:105
@@ -10999,7 +10994,7 @@ msgstr ""
 #: default/mail_tt2/listmaster_notification.tt2:293
 #: default/mail_tt2/listmaster_notification.tt2:300
 msgid "list %1 in status error_config"
-msgstr "lista %1 en estatuto error_config"
+msgstr "lista %1 en estado error_config"
 
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:220
@@ -11014,7 +11009,7 @@ msgstr "No hay dueño definido para la lista %1."
 #: default/mail_tt2/listmaster_notification.tt2:296
 #: default/mail_tt2/listmaster_notification.tt2:303
 msgid "The list status has been set to error_config."
-msgstr "El estatuto de la lista fue modificado a error_config."
+msgstr "El estado de la lista ha sido modificado a error_config."
 
 #: default/mail_tt2/listmaster_notification.tt2:222
 #: default/mail_tt2/listmaster_notification.tt2:247
@@ -11032,7 +11027,7 @@ msgstr "Revisar la bitácora (log) de Sympa para mayor información. "
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:226
 msgid "List owner/editor email changes"
-msgstr "Cambio de correo electrónico de un dueño/moderador de la lista"
+msgstr "Cambio del correo electrónico de un dueño/moderador"
 
 #. (previous_email,new_email)
 #: default/mail_tt2/listmaster_notification.tt2:228
@@ -11040,8 +11035,8 @@ msgid ""
 "Member %1 has changed his owner/editor email address to %2. This change has "
 "been performed for the following lists:"
 msgstr ""
-"El miembro %1 ha cambiado su dirección de correo electrónico a %2. Este "
-"cambio ha sido realizado para las listas siguientes:"
+"El miembro %1 dueño/moderador ha cambiado su dirección de correo electrónico "
+"a %2. Este cambio ha sido realizado para las listas siguientes:"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:235
@@ -11427,7 +11422,7 @@ msgstr "No se pueden crear documentos compatidos para la lista '%1'. "
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:403
 msgid "Cannot restore shared for list '%1'."
-msgstr "No se puede restaurar los documentos compartidos para la lista '%1'"
+msgstr "No se puede restaurar los documentos compartidos para la lista '%1'."
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:404
@@ -11546,7 +11541,7 @@ msgstr "Aún se archivan los mensajes, pero deberías contactar con %2@%1"
 #. (list.name)
 #: default/mail_tt2/listowner_notification.tt2:24
 msgid "List %1 is closed"
-msgstr "la lista %1 esta clausurada"
+msgstr "La lista %1 está cerrada"
 
 #. (list.name,list.host,list.family.name)
 #: default/mail_tt2/listowner_notification.tt2:27
@@ -11555,12 +11550,12 @@ msgid ""
 "This list has been closed."
 msgstr ""
 "%1@%2 ya no es una instancia de la familia %3.\n"
-"Esta lista fue clausurada."
+"Esta lista ha sido cerrada."
 
 #. (type,list.name,who,gecos)
 #: default/mail_tt2/listowner_notification.tt2:30
 msgid "FYI: %1 List \"%2\" from %3 %4"
-msgstr "FYI: %1 list %2 de %3 %4"
+msgstr "Información: %1 Lista \"%2\" de %3 %4"
 
 #. (who,gecos,list.name)
 #: default/mail_tt2/listowner_notification.tt2:33
@@ -11679,12 +11674,12 @@ msgstr ""
 #. (command,list.name,who,gecos)
 #: default/mail_tt2/listowner_notification.tt2:99
 msgid "FYI: %1 list %2 from %3 %4"
-msgstr "FYI: %1 list %2 de %3 %4"
+msgstr "Información: %1 lista %2 de %3 %4"
 
 #. (command,list.name,who,gecos)
 #: default/mail_tt2/listowner_notification.tt2:101
 msgid "FYI command %1 list %2 from %3 %4"
-msgstr "comando FYI %1 lista %2 de %3 %4"
+msgstr "Información: comando %1 para la lista %2 de %3 %4"
 
 #. (by)
 #: default/mail_tt2/listowner_notification.tt2:101
@@ -11698,7 +11693,7 @@ msgstr "No se necesita ninguna acción por parte tuya. "
 #. (who)
 #: default/mail_tt2/listowner_notification.tt2:106
 msgid "FYI: automatic removal of user %1"
-msgstr "FYI: remover automatico de usuario %1"
+msgstr "Información: eliminación automática del usuario %1"
 
 #. (who,list.name)
 #: default/mail_tt2/listowner_notification.tt2:112
@@ -12139,12 +12134,12 @@ msgstr "Megabytes transmitidos         :      %1"
 #. (list.name,date)
 #: default/mail_tt2/summary.tt2:2
 msgid "%1 Summary %2"
-msgstr "%1 Resumen %2"
+msgstr "Lista %1 Resumen de %2"
 
 #. (list.name,date)
 #: default/mail_tt2/summary.tt2:5
 msgid "%1 summary %2"
-msgstr "%1 resumen %2"
+msgstr "Lista %1 resumen de %2"
 
 #. (file_name)
 #: default/mail_tt2/urlized_part.tt2:4
@@ -12344,7 +12339,7 @@ msgstr "listas son propias de: "
 
 #: default/mail_tt2/which.tt2:16
 msgid "Lists you are editor of:"
-msgstr "listas son editadas de:"
+msgstr "Listas de las que eres moderador:"
 
 #. (list.name,list.host)
 #: default/mail_tt2/x509-user-cert-missing.tt2:2
@@ -12394,7 +12389,7 @@ msgstr "Búsqueda avanzada"
 #: default/mhonarc-ressources.tt2:180 default/mhonarc-ressources.tt2:292
 #: default/mhonarc-ressources.tt2:63
 msgid "mails"
-msgstr "mails"
+msgstr "correos"
 
 #: default/mhonarc-ressources.tt2:181 default/mhonarc-ressources.tt2:293
 #: default/mhonarc-ressources.tt2:64
@@ -12660,8 +12655,8 @@ msgstr "¡cualquiera puede hacerlo!"
 #: default/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
 msgstr ""
-"Moderada, para los moderadores: no necesita autenticación si se envía una "
-"firma DKIM válida."
+"Moderada; si es moderador, no necesita autenticación si se envía una firma "
+"DKIM válida."
 
 #: default/scenari/send.editorkey:1
 msgid "Moderated"
@@ -12673,7 +12668,7 @@ msgstr "Moderador, para los moderadores "
 
 #: default/scenari/send.editorkeyonlyauth:1
 msgid "Moderated, need  authentication  from editor"
-msgstr "Moderada, necesita autenticación del moderador."
+msgstr "Moderada, el moderador necesita autenticación"
 
 #: default/scenari/send.intranet:1
 msgid "restricted to local domain"
@@ -12698,7 +12693,7 @@ msgstr "moderador, restringido a subscriptores"
 
 #: default/scenari/send.privateandnomultipartoreditorkey:1
 msgid "Moderated, for non subscribers sending multipart messages"
-msgstr "moderador, para noenviar mensajes multipart"
+msgstr "Moderada, para los no-suscriptores que envien mensajes multiparte"
 
 #: default/scenari/send.privatekey:1
 msgid "restricted to subscribers with previous md5 authentication"
@@ -12730,7 +12725,9 @@ msgstr "Público; no requiere autenticación si se envía una firma DKIM válida
 
 #: default/scenari/send.publicnoattachment:1
 msgid "public list multipart/mixed messages are forwarded to moderator"
-msgstr "lista pública, se redirijen al moderador los mensajes multipart/mixtos"
+msgstr ""
+"lista pública, se redirijen al moderador los mensajes multiparte/mixtos y "
+"con adjuntos"
 
 #: default/scenari/send.public_nobcc:1
 msgid "public list, Bcc rejected (anti-spam)"
@@ -12738,7 +12735,7 @@ msgstr "lista pública Bcc rejected (anti-spam)"
 
 #: default/scenari/send.publicnomultipart:1
 msgid "public list multipart messages are rejected"
-msgstr "lista pública pero los mensajes con anexos no están permitidos"
+msgstr "lista pública, los mensajes multiparte se rechazan"
 
 #: default/scenari/spam_status.x-spam-status:1
 msgid "test x-spam-status  header"
@@ -13001,8 +12998,8 @@ msgid ""
 "Mailing list configuration to be used for a news letter providing both text "
 "plain and HTML formats"
 msgstr ""
-"Configuración adaptada a un boletín de noticias tanto de texto plano como en "
-"formato HTML"
+"Configuración de lista de correo adaptada a un boletín de noticias tanto de "
+"texto sin formato como en formato HTML"
 
 #: default/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
@@ -13152,12 +13149,14 @@ msgstr "Imposible cargar el cliente. La configuración debe estar errónea."
 msgid "Unknown provider."
 msgstr "Fuente desconocida."
 
-#~ msgid ""
-#~ "Your e-mail address %1 has not been found in the list %2. Maybe\n"
-#~ "you subscribed from a different e-mail address ?"
-#~ msgstr ""
-#~ "No se encontró tu dirección de correo %1 en la lista %2. ¿Quizás\n"
-#~ "estás suscrito con una dirección diferente?"
+#. (u_err.email,u_err.listname)
+#: default/mail_tt2/command_report.tt2:110
+msgid ""
+"Your e-mail address %1 has not been found in the list %2. Maybe\n"
+"you subscribed from a different e-mail address ?"
+msgstr ""
+"No se encontró tu dirección de correo %1 en la lista %2. ¿Quizás\n"
+"estás suscrito con una dirección diferente?"
 
 #~ msgid ""
 #~ "Ignoring message body not in text/plain, please use text/plain only (or "

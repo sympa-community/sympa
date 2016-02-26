@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2015-09-01 21:09+0000\n"
+"PO-Revision-Date: 2016-01-15 16:02+0000\n"
 "Last-Translator: Urmas Buhvestov <urmas@tamme.tartu.ee>\n"
 "Language-Team: Eesti\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.7\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-POOTLE-MTIME: 1441141758.000000\n"
+"X-POOTLE-MTIME: 1452873762.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -106,6 +106,21 @@ msgid ""
 "##############################################################################\n"
 "Press the Enter key to continue..."
 msgstr ""
+"##############################################\n"
+"# See protsess aitab teil installida kõik Perl (CPAN) moodulid, mis on "
+"vajalikud Sympa \n"
+"# tarkvara tööks. \n"
+"# Sympa nõuab 50-65 täiendavat Perl moodulit, et töötada korralikult. \n"
+"# Kogu paigaldamine võib võtta umbes 15 minutit. \n"
+"# Peate esmalt seadistada CPAN keskkonna ja ise valima \n"
+"# sobiva CPAN serveri. \n"
+"# Pagee tähele, et võite paigaldada nõutud Perl mooduleid ka kasutades oma \n"
+"# tavapärast DEB / RPM mehhanismi. \n"
+"# Võite julgelt protsessi katkestada, saate selle vajadusel hiljem uuesti "
+"ohutult \n"
+"# käivitada. \n"
+"###############################################\n"
+"Vajutage ENTER klahvi jätkamiseks ..."
 
 #: src/sbin/sympa_wizard.pl.in:401
 msgid "Which RDBMS will you use for core database:"
@@ -159,7 +174,7 @@ msgstr "CPAN serverist"
 
 #: src/sbin/sympa_wizard.pl.in:452
 msgid "STATUS"
-msgstr ""
+msgstr "STAATUS"
 
 #: src/sbin/sympa_wizard.pl.in:453
 msgid "-----------"
@@ -167,15 +182,15 @@ msgstr ""
 
 #: src/sbin/sympa_wizard.pl.in:453
 msgid "---------"
-msgstr ""
+msgstr "---------"
 
 #: src/sbin/sympa_wizard.pl.in:454
 msgid "------"
-msgstr ""
+msgstr "-----"
 
 #: src/sbin/sympa_wizard.pl.in:473
 msgid "was not found on this system."
-msgstr ""
+msgstr "ei leitud."
 
 #: src/sbin/sympa_wizard.pl.in:495
 msgid "OK (%-6s >= %s)"
@@ -203,23 +218,27 @@ msgstr "-> Selle mooduli kastutamine: %s"
 
 #: src/sbin/sympa_wizard.pl.in:552
 msgid "-> Prerequisites: %s"
-msgstr ""
+msgstr "-> Eeldused: %s"
 
 #: src/sbin/sympa_wizard.pl.in:557
 msgid "-> Install module %s ? [%s] "
-msgstr ""
+msgstr "-> Kas installeerida moodul %s? [%s]"
 
 #: src/sbin/sympa_wizard.pl.in:593
 msgid ""
 "Installation of %s still FAILED. You should download the tar.gz from http://"
 "search.cpan.org and install it manually."
 msgstr ""
+"Mooduli %s installeerimine EBAÕNNESTUS. Peaksite laadima tar.gz faili "
+"veebilehelt http://search.cpan.org ja installeerima selle kästitsi."
 
 #: src/sbin/sympa_wizard.pl.in:598
 msgid ""
 "Installation of %s FAILED. Do you want to force the installation of this "
 "module? (y/N) "
 msgstr ""
+"Mooduli %s installeerimine EBAÕNNESTUS. Kas soovite sundida selle mooduli "
+"installeerimist? (y/N) "
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -245,6 +264,8 @@ msgid ""
 "The number of seconds a bulk sleeps between starting a new loop if it didn't "
 "find a message to send."
 msgstr ""
+"Pausi pikkus sekundites kaua hulgikirja protsess magab enne uuesti "
+"käivitumist juhul kui ta hetkel ühtegi kirja ei leia."
 
 #: src/lib/Sympa/ConfDef.pm:814
 msgid ""
@@ -13116,6 +13137,16 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Tundmatu teenusepakkuja."
 
+# nlsref 6,30
+#. (u_err.email,u_err.listname)
+#: default/mail_tt2/command_report.tt2:110
+msgid ""
+"Your e-mail address %1 has not been found in the list %2. Maybe\n"
+"you subscribed from a different e-mail address ?"
+msgstr ""
+"Teie e-posti aadressi %1 ei leitud listist %2. Võibolla olete listi\n"
+"liikmeks mõnelt teiselt e-posti aadressilt?"
+
 #: default/web_tt2/modform.tt2:61
 msgid "hide"
 msgstr ""
@@ -13505,14 +13536,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:1463
 msgid "Path to the javascript file making the WYSIWYG HTML editor available"
 msgstr ""
-
-# nlsref 6,30
-#~ msgid ""
-#~ "Your e-mail address %1 has not been found in the list %2. Maybe\n"
-#~ "you subscribed from a different e-mail address ?"
-#~ msgstr ""
-#~ "Teie e-posti aadressi %1 ei leitud listist %2. Võibolla olete listi\n"
-#~ "liikmeks mõnelt teiselt e-posti aadressilt?"
 
 # nlsref 4,37
 #~ msgid ""
