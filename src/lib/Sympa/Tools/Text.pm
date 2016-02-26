@@ -27,7 +27,7 @@ package Sympa::Tools::Text;
 use strict;
 use warnings;
 use Encode qw();
-use English;                 # FIXME: drop $MATCH usage
+use English qw(-no_match_vars);
 use Encode::MIME::Header;    # 'MIME-Q' encoding.
 use HTML::Entities qw();
 use MIME::EncWords;
@@ -201,23 +201,9 @@ sub escape_chars {
 }
 
 # Old name: tt2::escape_url().
-# Not recommended.  Use Sympa::Tools::Text::escape_uri() or
+# DEPRECATED.  Use Sympa::Tools::Text::escape_uri() or
 # Sympa::Tools::Text::mailtourl().
-sub escape_url {
-    my $string = shift;
-
-    $string =~ s/[\s+]/sprintf('%%%02x', ord($MATCH))/eg;
-    # Some MUAs aren't able to decode ``%40'' (escaped ``@'') in e-mail
-    # address of mailto: URL, or take ``@'' in query component for a
-    # delimiter to separate URL from the rest.
-    my ($body, $query) = split(/\?/, $string, 2);
-    if (defined $query) {
-        $query =~ s/\@/sprintf('%%%02x', ord($MATCH))/eg;
-        $string = $body . '?' . $query;
-    }
-
-    return $string;
-}
+#sub escape_url;
 
 sub foldcase {
     my $str = shift;
@@ -548,10 +534,7 @@ L</encode_filesystem_safe>.
 
 =item escape_url ( $str )
 
-Escapes string using URL encoding.
-
-Note:
-This is not recommended.
+DEPRECATED.
 Would be better to use L</"encode_uri"> or L</"mailtourl">.
 
 =item foldcase ( $str )
@@ -576,6 +559,33 @@ Parameter:
 A string.
 
 =back
+
+=item mailtourl ( $email, [ decode_html =E<gt> 1 ],
+[ query =E<gt> {key =E<gt> val, ...} ] )
+
+Constructs a C<mailto:> URL for given e-mail.
+
+Parameters:
+
+=over
+
+=item $email
+
+E-mail address.
+
+=item decode_html =E<gt> 1
+
+If set, arguments are assumed to include HTML entities.
+
+=item query =E<gt> {key =E<gt> val, ...}
+
+Optional query.
+
+=back
+
+Returns:
+
+Constructed URL.
 
 =item qdecode_filename ( $filename )
 
@@ -614,6 +624,6 @@ decode_filesystem_safe() and encode_filesystem_safe() were added
 on Sympa 6.2.10.
 
 decode_html(), encode_html(), encode_uri() and mailtourl()
-were added on Sympa 6.2.14.
+were added on Sympa 6.2.14, and escape_url() was deprecated.
 
 =cut

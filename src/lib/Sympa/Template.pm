@@ -67,6 +67,24 @@ sub qencode {
 }
 
 # OBSOLETED.  This is kept only for backward compatibility.
+# Old name: tt2::escape_url().
+sub _escape_url {
+    my $string = shift;
+
+    $string =~ s/([\s+])/sprintf('%%%02x', ord $1)/eg;
+    # Some MUAs aren't able to decode ``%40'' (escaped ``@'') in e-mail
+    # address of mailto: URL, or take ``@'' in query component for a
+    # delimiter to separate URL from the rest.
+    my ($body, $query) = split(/\?/, $string, 2);
+    if (defined $query) {
+        $query =~ s/(\@)/sprintf('%%%02x', ord $1)/eg;
+        $string = $body . '?' . $query;
+    }
+
+    return $string;
+}
+
+# OBSOLETED.  This is kept only for backward compatibility.
 # Old name:: tt2::escape_xml().
 sub _escape_xml {
     my $string = shift;
@@ -259,17 +277,17 @@ sub parse {
             loc      => [\&maketext, 1],
             helploc  => [\&maketext, 1],
             locdt    => [\&locdatetime, 1],
-            wrap         => [\&wrap,                           1],
-            mailto       => [\&_mailto,                        1],
-            mailtourl    => [\&_mailtourl,                     1],
-            obfuscate    => [\&_obfuscate,                     1],
-            optdesc      => [\&optdesc,                        1],
-            qencode      => [\&qencode,                        0],
-            escape_xml   => [\&_escape_xml,                    0],
-            escape_url   => [\&Sympa::Tools::Text::escape_url, 0],
-            escape_quote => [\&_escape_quote,                  0],
-            decode_utf8  => [\&decode_utf8,                    0],
-            encode_utf8  => [\&encode_utf8,                    0]
+            wrap         => [\&wrap,          1],
+            mailto       => [\&_mailto,       1],
+            mailtourl    => [\&_mailtourl,    1],
+            obfuscate    => [\&_obfuscate,    1],
+            optdesc      => [\&optdesc,       1],
+            qencode      => [\&qencode,       0],
+            escape_xml   => [\&_escape_xml,   0],
+            escape_url   => [\&_escape_url,   0],
+            escape_quote => [\&_escape_quote, 0],
+            decode_utf8  => [\&decode_utf8,   0],
+            encode_utf8  => [\&encode_utf8,   0]
         }
     };
 
