@@ -389,55 +389,6 @@ For malformed inputs returns C<undef>.
 Returns canonical form of message ID without trailing or leading whitespaces
 or C<E<lt>>, C<E<gt>>.
 
-=item wrap_text ( $text, [ $init_tab, [ $subsequent_tab, [ $cols ] ] ] )
-
-I<Function>.
-Returns line-wrapped text.
-
-Parameters:
-
-=over
-
-=item $text
-
-The text to be folded.
-
-=item $init_tab
-
-Indentation prepended to the first line of paragraph.
-Default is C<''>, no indentation.
-
-=item $subsequent_tab
-
-Indentation prepended to each subsequent line of folded paragraph.
-Default is C<''>, no indentation.
-
-=item $cols
-
-Max number of columns of folded text.
-Default is C<78>.
-
-=back
-
-=item decode_html ( $str )
-
-I<Function>.
-Decodes HTML entities in a string encoded by UTF-8 or a Unicode string.
-
-Parameter:
-
-=over
-
-=item $str
-
-String to be decoded.
-
-=back
-
-Returns:
-
-Decoded string, stripped C<utf8> flag if any.
-
 =item decode_filesystem_safe ( $str )
 
 I<Function>.
@@ -457,11 +408,10 @@ Returns:
 
 Decoded string, stripped C<utf8> flag if any.
 
-=item encode_html ( $str )
+=item decode_html ( $str )
 
 I<Function>.
-Encodes characters in a string $str to HTML entities.
-C<'E<lt>'>, C<'E<gt>'>, C<'E<amp>'> and C<'E<quot>'> are encoded.
+Decodes HTML entities in a string encoded by UTF-8 or a Unicode string.
 
 Parameter:
 
@@ -469,13 +419,13 @@ Parameter:
 
 =item $str
 
-String to be encoded.
+String to be decoded.
 
 =back
 
 Returns:
 
-Encoded string, I<not> stripping utf8 flag if any.
+Decoded string, stripped C<utf8> flag if any.
 
 =item encode_filesystem_safe ( $str )
 
@@ -501,9 +451,31 @@ two hexdigits.
 
 Note that C<'/'> will also be encoded.
 
+=item encode_html ( $str )
+
+I<Function>.
+Encodes characters in a string $str to HTML entities.
+C<'E<lt>'>, C<'E<gt>'>, C<'E<amp>'> and C<'E<quot>'> are encoded.
+
+Parameter:
+
+=over
+
+=item $str
+
+String to be encoded.
+
+=back
+
+Returns:
+
+Encoded string, I<not> stripping utf8 flag if any.
+
 =item encode_uri ( $str, [ omit => $chars ] )
 
-TBD
+I<Function>.
+Encodes potentially unsafe characters in the string using "percent" encoding
+suitable for URIs.
 
 Parameters:
 
@@ -563,6 +535,7 @@ A string.
 =item mailtourl ( $email, [ decode_html =E<gt> 1 ],
 [ query =E<gt> {key =E<gt> val, ...} ] )
 
+I<Function>.
 Constructs a C<mailto:> URL for given e-mail.
 
 Parameters:
@@ -613,6 +586,36 @@ L</decode_filesystem_safe>.
 =item valid_email ( $string )
 
 Basic check of an email address.
+
+=item wrap_text ( $text, [ $init_tab, [ $subsequent_tab, [ $cols ] ] ] )
+
+I<Function>.
+Returns line-wrapped text.
+
+Parameters:
+
+=over
+
+=item $text
+
+The text to be folded.
+
+=item $init_tab
+
+Indentation prepended to the first line of paragraph.
+Default is C<''>, no indentation.
+
+=item $subsequent_tab
+
+Indentation prepended to each subsequent line of folded paragraph.
+Default is C<''>, no indentation.
+
+=item $cols
+
+Max number of columns of folded text.
+Default is C<78>.
+
+=back
 
 =back
 
