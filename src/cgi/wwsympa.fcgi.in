@@ -7799,8 +7799,7 @@ sub do_skinsedit {
         }
         $param->{'conf'} = $Conf::Conf;
 
-        foreach my $css ('style.css', 'print.css', 'fullPage.css',
-            'print-preview.css') {
+        foreach my $css (qw(style.css)) {
             $param->{'css'} = $css;
             my $css_file;
             # if user use editcolor form we must generate a static CSS that

@@ -864,8 +864,7 @@ sub update_css {
             Sympa::search_fullpath($robot, 'css.tt2', subdir => 'web_tt2');
         my $css_tt2_mtime = Sympa::Tools::File::get_mtime($css_tt2_path);
 
-        foreach my $css ('style.css', 'print.css', 'fullPage.css',
-            'print-preview.css') {
+        foreach my $css (qw(style.css)) {
             # Lock file to prevent multiple processes from writing it.
             my $lock_fh = Sympa::LockedFile->new($dir . '/' . $css, -1, '+');
             next unless $lock_fh;
