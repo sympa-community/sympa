@@ -20881,7 +20881,7 @@ sub do_change_email {
         Sympa::Report::reject_report_web(
             'intern',
             'update_user_db_failed',
-            {   'user'      => $new_email,
+            {   'user'      => $param->{'user'},
                 'old_email' => $old_email
             },
             $param->{'action'},
@@ -20914,7 +20914,7 @@ sub do_change_email {
         Sympa::Report::reject_report_web(
             'intern',
             'update_netidmap_failed',
-            {   'user'      => $new_email,
+            {   'user'      => $param->{'user'},
                 'old_email' => $old_email
             },
             $param->{'action'},
