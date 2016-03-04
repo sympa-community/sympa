@@ -4176,7 +4176,7 @@ sub do_sso_login {
         unless (Sympa::User::is_global_user($email)) {
             unless (Sympa::User::add_global_user({'email' => $email})) {
                 Sympa::Report::reject_report_web('intern',
-                    'add_user_db_failed', {'user' => $email},
+                    'add_user_db_failed', {'email' => $email},
                     $param->{'action'}, '', $email, $robot);
                 wwslog('info', 'Add failed');
                 web_db_log(
@@ -4196,7 +4196,7 @@ sub do_sso_login {
             )
             ) {
             Sympa::Report::reject_report_web('intern',
-                'update_user_db_failed', {'user' => $email},
+                'update_user_db_failed', {'user' => Sympa::User->new($email)},
                 $param->{'action'}, '', $email, $robot);
             wwslog('info', 'Update failed');
             web_db_log(
@@ -5802,7 +5802,7 @@ sub do_setpref {
             Sympa::Report::reject_report_web(
                 'intern',
                 'update_user_db_failed',
-                {'user' => $param->{'user'}{'email'}},
+                {'user' => $param->{'user'}},
                 $param->{'action'},
                 '',
                 $param->{'user'}{'email'},
@@ -5824,7 +5824,7 @@ sub do_setpref {
             Sympa::Report::reject_report_web(
                 'intern',
                 'add_user_db_failed',
-                {'user' => $param->{'user'}{'email'}},
+                {'user' => $param->{'user'}},
                 $param->{'action'},
                 '',
                 $param->{'user'}{'email'},
@@ -6719,7 +6719,7 @@ sub do_setpasswd {
             Sympa::Report::reject_report_web(
                 'intern',
                 'update_user_db_failed',
-                {'user' => $param->{'user'}{'email'}},
+                {'user' => $param->{'user'}},
                 $param->{'action'},
                 '',
                 $param->{'user'}{'email'},
@@ -6746,7 +6746,7 @@ sub do_setpasswd {
             Sympa::Report::reject_report_web(
                 'intern',
                 'add_user_db_failed',
-                {'user' => $param->{'user'}{'email'}},
+                {'user' => $param->{'user'}},
                 $param->{'action'},
                 '',
                 $param->{'user'}{'email'},
@@ -22113,7 +22113,7 @@ sub do_set_lang {
                     Sympa::Report::reject_report_web(
                         'intern',
                         'update_user_db_failed',
-                        {'user' => $param->{'user'}{'email'}},
+                        {'user' => $param->{'user'}},
                         $param->{'action'},
                         '',
                         $param->{'user'}{'email'},
@@ -22145,7 +22145,7 @@ sub do_set_lang {
                     Sympa::Report::reject_report_web(
                         'intern',
                         'add_user_db_failed',
-                        {'user' => $param->{'user'}{'email'}},
+                        {'user' => $param->{'user'}},
                         $param->{'action'},
                         '',
                         $param->{'user'}{'email'},
@@ -22642,10 +22642,9 @@ sub do_blacklist {
                 Sympa::Report::reject_report_web(
                     'intern',
                     'unable to open file',
-                    {   'file' => $file,
-                        $param->{'action'}, '', $param->{'user'}{'email'}
-                    },
-                    $robot
+                    {'file' => $file},
+                    $robot,
+                    $param->{'action'}, '', $param->{'user'}{'email'}
                 );
                 wwslog('err', 'Unable to read %s', $file);
                 web_db_log(
