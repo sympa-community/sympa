@@ -44,6 +44,7 @@ use MIME::EncWords;
 use MIME::Lite::HTML;
 use POSIX qw();
 use Time::Local qw();
+use URI;
 use Data::Dumper;    # tentative
 BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
@@ -1219,9 +1220,6 @@ while ($query = new_loop()) {
         $Conf::Conf{'authentication_info_url'}{$robot};
     $param->{'wwsconf'} = Conf::_load_wwsconf;    #FXIME: no longer used?
 
-    $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
-    ## Replace '//' with '/' because it would break navigation
-    $param->{'path_cgi'} =~ s/\/\//\//g;
     $param->{'version'} = Sympa::Constants::VERSION;
     $param->{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
@@ -1267,7 +1265,7 @@ while ($query = new_loop()) {
     Sympa::Report::init_report_web();
 
     ## Get PATH_INFO parameters
-    get_parameters();
+    get_parameters($robot);
 
     # Propagate plugins parameters
     $param->{'plugin'} = $in{'plugin'};
@@ -2144,8 +2142,6 @@ sub _split_params {
 
     if ($params[0] eq 'nomenu') {
         $param->{'nomenu'} = 1;
-        $param->{'path_cgi'} .=
-            '/nomenu';    ## other links should keep the nomenu attribute
         shift @params;
     }
 
@@ -2203,18 +2199,7 @@ sub _split_params {
 }
 
 sub get_parameters {
-    #    wwslog('debug3', '');
-
-    ## CGI URL
-    if ($ENV{'HTTPS'} eq 'on') {
-        $param->{'base_url'} = sprintf 'https://%s',
-            Sympa::Tools::WWW::get_http_host();
-        $param->{'use_ssl'} = 1;
-    } else {
-        $param->{'base_url'} = sprintf 'http://%s',
-            Sympa::Tools::WWW::get_http_host();
-        $param->{'use_ssl'} = 0;
-    }
+    my $robot = shift;
 
     $param->{'path_info'} = $ENV{'PATH_INFO'};
     # Useful to skip previous_action when using POST.
@@ -2246,6 +2231,16 @@ sub get_parameters {
         }
         $param->{'nomenu'} = $in{'nomenu'};
     }
+
+    # From CGI URL get {base_url} and {path_cgi} parameters.
+    # Note that other links should keep the nomenu attribute.
+    my $uri = URI->new(Sympa::get_url($robot, undef,
+        nomenu => $param->{'nomenu'}, authority => 'remote'));
+    @{$param}{'base_url', 'path_cgi'} =
+        ($uri->scheme . '://' . $uri->authority, $uri->path);
+
+    # mod_ssl sets SSL_PROTOCOL; Apache-SSL sets SSL_PROTOCOL_VERSION.
+    $param->{'use_ssl'} = ($ENV{HTTPS} && $ENV{HTTPS} eq 'on');
 
     ## Lowercase email addresses
     $in{'email'} = lc($in{'email'});
@@ -2420,251 +2415,8 @@ sub get_parameters {
     return 1;
 }
 
-sub get_parameters_old {
-    #    wwslog('debug3', '');
-
-    ## CGI URL
-    if ($ENV{'HTTPS'} eq 'on') {
-        $param->{'base_url'} = sprintf 'https://%s',
-            Sympa::Tools::WWW::get_http_host();
-        $param->{'use_ssl'} = 1;
-    } else {
-        $param->{'base_url'} = sprintf 'http://%s',
-            Sympa::Tools::WWW::get_http_host();
-        $param->{'use_ssl'} = 0;
-    }
-
-    $param->{'path_info'} = $ENV{'PATH_INFO'};
-
-    if ($ENV{'REQUEST_METHOD'} eq 'GET') {
-        my $path_info = $ENV{'PATH_INFO'};
-        $log->syslog('debug', "PATH_INFO: %s", $ENV{'PATH_INFO'});
-
-        $path_info =~ s+^/++;
-
-        my $ending_slash = 0;
-        if ($path_info =~ /\/$/) {
-            $ending_slash = 1;
-        }
-
-        my @params = split /\//, $path_info;
-
-        #	foreach my $i(0..$#params) {
-        #	    $params[$i] =
-        #	        Sympa::Tools::Text::unescape_chars($params[$i]);
-        #	}
-
-        if ($params[0] eq 'nomenu') {
-            $param->{'nomenu'} = 1;
-            $param->{'path_cgi'} .=
-                '/nomenu';    ## other links should keep the nomenu attribute
-            shift @params;
-        }
-
-        ## debug mode
-        if ($params[0] =~ /debug(\d)?/) {
-            shift @params;
-            if ($1) {
-                $main::options{'debug_level'} = $1 if ($1);
-            } else {
-                $main::options{'debug_level'} = 1;
-            }
-        } else {
-            $main::options{'debug_level'} = 0;
-        }
-        $log->syslog(
-            'debug2',
-            'Debug level %s',
-            $main::options{'debug_level'}
-        );
-
-        ## rss mode
-########### /^rss$/ ???
-        if ($params[0] eq 'rss') {
-            shift @params;
-            $rss = 1;
-        }
-
-        if ($#params >= 0) {
-            $in{'action'} = $params[0];
-
-            my $args;
-            if (defined $action_args{$in{'action'}}) {
-                $args = $action_args{$in{'action'}};
-            } else {
-                $args = $action_args{'default'};
-            }
-
-            my $i = 1;
-            foreach my $p (@$args) {
-                my $pname;
-                ## More than 1 param
-                if ($p =~ /^\@(\w+)$/) {
-                    $pname = $1;
-                    $in{$pname} = join '/', @params[$i .. $#params];
-                    $in{$pname} .= '/' if $ending_slash;
-                    last;
-                } else {
-                    $pname = $p;
-                    $in{$pname} = $params[$i];
-                }
-                $i++;
-            }
-        }
-    } elsif ($ENV{'REQUEST_METHOD'} eq 'POST') {
-        ## POST
-
-        if ($in{'javascript_action'}) {
-            ## because of incompatibility javascript
-            $in{'action'} = $in{'javascript_action'};
-        }
-        foreach my $p (keys %in) {
-            $log->syslog('debug2', 'POST key %s value %s', $p, $in{$p});
-            if ($p =~ /^((\w*)action)_(\w+)((\.\w+)*)$/) {
-
-                $in{$1} = $3;
-                if ($4) {
-                    foreach my $v (split /\./, $4) {
-                        $v =~ s/^\.?(\w+)\.?/$1/;
-                        $in{$v} = 1;
-                    }
-                }
-
-                undef $in{$p};
-            }
-        }
-
-        $param->{'nomenu'} = $in{'nomenu'};
-    }
-
-    ## Lowercase email addresses
-    $in{'email'} = lc($in{'email'});
-
-    ## Don't get multiple listnames
-    if ($in{'list'}) {
-        my @lists = split /\0/, $in{'list'};
-        $in{'list'} = $lists[0];
-    }
-
-    my $custom_attribute;
-
-    ## Check parameters format
-    foreach my $p (keys %in) {
-
-        ## Skip empty parameters
-        next if ($in{$p} =~ /^$/);
-
-        ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL,
-        ## and EIMS:
-        $in{$p} =~ s/\r\n|\r/\n/g;
-
-        my @tokens = split(/\./, $p);
-        my $pname = $tokens[0];
-
-        ## Regular expressions applied on parameters
-
-        my $regexp;
-        if ($pname =~ /^additional_field/) {
-            $regexp = $in_regexp{'additional_field'};
-        } elsif ($pname =~ /^custom_attribute(.*)$/) {
-            my $key = $tokens[1];
-            $regexp = $in_regexp{'custom_attribute'};
-            $log->syslog('debug3', '{%s}{%s} %s %s %s',
-                $p, $key, $pname, $in{$p}, $Conf::Conf{$key}{type});
-            $custom_attribute->{$key} = {value => $in{$p}};
-            undef $in{$p};
-
-        } elsif ($in_regexp{$pname}) {
-            $regexp = $in_regexp{$pname};
-        } else {
-            $regexp = $in_regexp{'*'};
-        }
-
-        my $negative_regexp;
-        if ($pname =~ /^additional_field/) {
-            $negative_regexp = $in_negative_regexp{'additional_field'};
-        } elsif ($in_negative_regexp{$pname}) {
-            $negative_regexp = $in_negative_regexp{$pname};
-        }
-
-        # If we are editing an HTML file in the shared, allow HTML but prevent
-        # XSS.
-        if (   $pname eq 'content'
-            && $in{'action'} eq 'd_savefile'
-            && $in{'path'} =~ $list->{'dir'} . '/shared'
-            && lc($in{'path'}) =~ /\.html?/) {
-            my $tmpparam = $in{$p};
-            $tmpparam =
-                Sympa::HTMLSanitizer->new($robot)->sanitize_html($in{$p});
-            if (defined $tmpparam) {
-                $in{$p} = $tmpparam;
-            } else {
-                $log->syslog('err', 'Unable to sanitize parameter %s',
-                    $pname);
-            }
-        }
-
-        foreach my $one_p (split /\0/, $in{$p}) {
-            if ($one_p !~ /^$regexp$/s
-                || (defined $negative_regexp && $one_p =~ /$negative_regexp/s)
-                ) {
-                ## Dump parameters in a tmp file for later analysis
-                my $dump_file =
-                      Conf::get_robot_conf($robot, 'tmpdir')
-                    . '/sympa_dump.'
-                    . time . '.'
-                    . $PID;
-                unless (open DUMP, ">$dump_file") {
-                    wwslog('err', 'Failed to create %s: %s',
-                        $dump_file, $ERRNO);
-                }
-                Sympa::Tools::Data::dump_var(\%in, 0, \*DUMP);
-                close DUMP;
-
-                Sympa::Report::reject_report_web('user', 'syntax_errors',
-                    {'params' => $p},
-                    '', '');
-                wwslog(
-                    'err',
-                    'Syntax error for parameter %s value "%s" not conform to regexp:%s; dumped vars in %s',
-                    $pname,
-                    $one_p,
-                    $regexp,
-                    $dump_file
-                );
-                $in{$p} = '';
-                next;
-            }
-        }
-    }
-
-    $in{custom_attribute} = $custom_attribute;
-
-    ## For shared-related actions, Q-encode filenames
-    ## This required for filenames that include non ascii characters
-    if (defined $filtering{$in{'action'}}) {
-
-        foreach my $p (keys %{$filtering{$in{'action'}}}) {
-            if ($filtering{$in{'action'}}{$p} eq 'qencode') {
-                ## Q-encode file path
-                my @tokens = split /\//, $in{$p};
-                foreach my $i (0 .. $#tokens) {
-                    $tokens[$i] =
-                        Sympa::Tools::Text::qencode_filename($tokens[$i]);
-                }
-                $in{$p} = join '/', @tokens;
-            } elsif ($filtering{$in{'action'}}{$p} eq 'fix_escape_uri') {
-                # Sympa's URI escaping subroutine
-                # (Sympa::Tools::Text::escape_chars()) replaces '/' with
-                # %A5 ('¥' character).  This should be transformed into a
-                # '/' again.
-                $in{$p} =~ s/\xa5/\//g;
-            }
-        }
-    }
-
-    return 1;
-}
+# NO LONGER USED.
+#sub get_parameters_old;
 
 ## Check required parameters for an action
 ## It compares incoming parameter to those declared as required in
