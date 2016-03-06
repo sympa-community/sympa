@@ -247,22 +247,35 @@ sub mailtourl {
         $utext  = Sympa::Tools::Text::encode_uri($dtext, omit => '@');
         $qsep   = '?';
     }
+    my $qstring = _url_query_string(
+        $options{query},
+        decode_html => $options{decode_html},
+        leadchar    => $qsep,
+        sepchar     => '&',
+        trim_values => 1,
+    );
 
-    my $qstring;
-    my $query = $options{query};
+    return sprintf $format, $utext, $qstring;
+}
+
+sub _url_query_string {
+    my $query   = shift;
+    my %options = @_;
+
     unless (ref $query eq 'HASH' and %$query) {
-        $qstring = '';
+        return '';
     } else {
-        $qstring = $qsep . join(
-            '&',
+        my $decode_html = $options{decode_html};
+        my $trim_values = $options{trim_values};
+        return ($options{leadchar} || '?') . join(
+            ($options{sepchar} || ';'),
             map {
                 my ($dkey, $dval) = map {
-                    (not defined $_) ? ''
-                        : $options{decode_html}
-                        ? Sympa::Tools::Text::decode_html($_)
-                        : $_;
+                          (not defined $_) ? ''
+                        : $decode_html ? Sympa::Tools::Text::decode_html($_)
+                        :                $_;
                 } ($_, $query->{$_});
-                unless (lc $dkey eq 'body') {
+                if ($trim_values and lc $dkey ne 'body') {
                     $dval =~ s/\A\s+//;
                     $dval =~ s/\s+\z//;
                     $dval =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;
@@ -275,8 +288,6 @@ sub mailtourl {
                 } sort keys %$query
         );
     }
-
-    return sprintf $format, $utext, $qstring;
 }
 
 # Old name: tools::qdecode_filename().
@@ -351,6 +362,42 @@ sub valid_email {
     return undef if $email =~ /[\|\$\*\?\!]/;
 
     return 1;
+}
+
+sub weburl {
+    my $base    = shift;
+    my $paths   = shift;
+    my %options = @_;
+
+    my @paths = map {
+        Sympa::Tools::Text::encode_uri(
+              (not defined $_)      ? ''
+            : $options{decode_html} ? Sympa::Tools::Text::decode_html($_)
+            : $_
+        );
+    } @{$paths || []};
+
+    my $qstring = _url_query_string(
+        $options{query},
+        decode_html => $options{decode_html},
+        sepchar     => '&',
+    );
+
+    my $fstring;
+    my $fragment = $options{fragment};
+    if (defined $fragment) {
+        $fstring = '#'
+            . Sympa::Tools::Text::encode_uri(
+            $options{decode_html}
+            ? Sympa::Tools::Text::decode_html($fragment)
+            : $fragment
+            );
+    } else {
+        $fstring = '';
+    }
+
+    return sprintf '%s%s%s', join('/', grep { defined $_ } ($base, @paths)),
+        $qstring, $fstring;
 }
 
 1;
@@ -586,6 +633,43 @@ L</decode_filesystem_safe>.
 =item valid_email ( $string )
 
 Basic check of an email address.
+
+=item weburl ( $base, \@paths, [ decode_html =E<gt> 1 ],
+[ fragment =E<gt> $fragment ], [ query =E<gt> \%query ] )
+
+Constructs a C<http:> or C<https:> URL under given base URI.
+
+Parameters:
+
+=over
+
+=item $base
+
+Base URI.
+
+=item \@paths
+
+Additional path components.
+
+=item decode_html =E<gt> 1
+
+If set, arguments are assumed to include HTML entities.
+Exception is $base:
+It is assumed not to include entities.
+
+=item fragment =E<gt> $fragment
+
+Optional fragment.
+
+=item query =E<gt> \%query
+
+Optional query.
+
+=back
+
+Returns:
+
+A URI.
 
 =item wrap_text ( $text, [ $init_tab, [ $subsequent_tab, [ $cols ] ] ] )
 

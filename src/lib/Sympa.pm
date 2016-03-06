@@ -48,6 +48,7 @@ use DateTime;
 use Digest::MD5;
 use English qw(-no_match_vars);
 use Scalar::Util qw();
+use URI;
 
 use Conf;
 use Sympa::Constants;
@@ -1281,6 +1282,143 @@ sub get_listmasters_email {
     }
 
     return wantarray ? @listmasters : [@listmasters];
+}
+
+=over
+
+=item get_url ( $that, $action, [ nomenu =E<gt> 1 ], [ paths =E<gt> \@paths ],
+[ authority =E<gt> $mode ],
+[ options... ] )
+
+Returns URL for web interface.
+
+Parameters:
+
+=over
+
+=item $action
+
+Name of action.
+This is inserted into URL intact.
+
+=item authority =E<gt> $mode
+
+C<'default'> respects C<wwsympa_url> parameter.
+C<'remote'> replaces scheme, host and port using CGI environment variables.
+C<'local'> is similar but may additionally replace script path.
+C<'omit'> omits scheme and authority, i.e. returns relative URI.
+
+Note that C<'remote'> and C<'local'> modes work correctly only under
+CGI environment.
+
+=item nomenu =E<gt> 1
+
+Adds C<nomenu> modifier.
+
+=item paths =E<gt> \@paths
+
+Additional path components.
+Note that they are percent-encoded as necessity.
+
+=item options...
+
+See L<Sympa::Tools::Text/"weburl">.
+
+=back
+
+Returns:
+
+A string.
+
+Note:
+If $mode is C<'local'>, result is that Sympa server recognizes locally.
+In other cases, result is the URI that is used by end users to access to web
+interface.
+C<'local'> URI can be differ from others when, for example, the server is
+placed behind reverse proxy.
+
+=back
+
+=cut
+
+sub get_url {
+    my $that    = shift;
+    my $action  = shift;
+    my %options = @_;
+
+    my $robot_id =
+          (ref $that eq 'Sympa::List') ? $that->{'domain'}
+        : ($that and $that ne '*') ? $that
+        :                            '*';
+    my $option_authority = $options{authority} || 'default';
+
+    my $base;
+    if ($option_authority eq 'remote' or $option_authority eq 'local') {
+        my $uri = URI->new(Conf::get_robot_conf($robot_id, 'wwsympa_url'));
+
+        # Override scheme, host and port by actual ones.
+        if ($ENV{HTTPS} and $ENV{HTTPS} eq 'on') {
+            $uri->scheme('https');
+        }
+
+        my ($host_port, $port);
+        if ($option_authority eq 'remote') {
+            # Try authority remotely given.
+            # Note: Several proxies set "X-Forwarded-Host:" and/or
+            # "X-Forwarded-Server:" fields.  Some of them (e.g. AWS load
+            # balancer) additionally set "X-Forwarded-Port:" field.
+            if ($host_port = $ENV{HTTP_X_FORWARDED_HOST}) {
+                $host_port = [split /\s*,\s*/, $host_port]->[0];
+            } elsif ($host_port = $ENV{HTTP_X_FORWARDED_SERVER}) {
+                $host_port = [split /\s*,\s*/, $host_port]->[0];
+                $port = $ENV{HTTP_X_FORWARDED_PORT};
+            }
+        } else {    # 'local'
+            if (my $path = $ENV{SCRIPT_NAME}) {
+                $uri->path($path);
+            }
+        }
+
+        unless ($host_port) {
+            # Try authority locally given.
+            if ($host_port = $ENV{HTTP_HOST}) {
+                ;
+            } else {
+                # HTTP/1.0 or earlier?
+                $host_port = $ENV{SERVER_NAME};
+                $port      = $ENV{SERVER_PORT};
+            }
+        }
+
+        if ($host_port) {
+            if ($host_port !~ /[^:0-9a-f]/i and $host_port =~ /:.*:/) {
+                # IPv6 address not enclosed.
+                $host_port = "[$host_port]";
+            }
+            unless ($host_port =~ /:\d+\z/) {
+                $host_port .= ':'
+                    . ($port ? $port : ($uri->scheme eq 'https') ? 443 : 80);
+            }
+            $uri->host_port($host_port);
+        }
+
+        $base = $uri->canonical->as_string;
+    } elsif ($option_authority eq 'omit') {
+        $base =
+            URI->new(Conf::get_robot_conf($robot_id, 'wwsympa_url'))->path;
+    } else {    # 'default'
+        $base = Conf::get_robot_conf($robot_id, 'wwsympa_url');
+    }
+
+    $base .= '/nomenu' if $options{nomenu};
+    $base .= '/' . $action if defined $action and length $action;
+
+    if (ref $that eq 'Sympa::List') {
+        return Sympa::Tools::Text::weburl($base,
+            [$that->{'name'}, @{$options{paths} || []}], %options);
+    } else {
+        return Sympa::Tools::Text::weburl($base, $options{paths}, %options);
+    }
 }
 
 =over
