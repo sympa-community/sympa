@@ -1310,6 +1310,7 @@ C<'omit'> omits scheme and authority, i.e. returns relative URI.
 
 Note that C<'remote'> and C<'local'> modes work correctly only under
 CGI environment.
+See also a note below.
 
 =item nomenu =E<gt> 1
 
@@ -1334,8 +1335,11 @@ Note:
 If $mode is C<'local'>, result is that Sympa server recognizes locally.
 In other cases, result is the URI that is used by end users to access to web
 interface.
-C<'local'> URI can be differ from others when, for example, the server is
-placed behind reverse proxy.
+When, for example, the server is placed behind reverse proxy,
+C<'local'> URI can be differ from others
+and C<'remote'> URI is less trustworthy than others.
+So C<Location:> field in HTTP response to cause redirection would be better
+to contain C<'local'> URI.
 
 =back
 
