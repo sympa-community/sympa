@@ -1857,18 +1857,17 @@ sub _urlize_parts {
 
     ## Clean up Message-ID
     my $dir1 = Sympa::Tools::Text::escape_chars($message_id);
-    $dir1 = '/' . $dir1;
+    #XXX$dir1 = '/' . $dir1;
     unless (mkdir "$expl/$dir1", 0775) {
         $log->syslog('err', 'Unable to create urlized directory %s/%s',
             $expl, $dir1);
         return 0;
     }
 
-    my $wwsympa_url = Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url');
-    my @parts       = ();
-    my $i           = 0;
+    my @parts = ();
+    my $i     = 0;
     foreach my $part ($entity->parts) {
-        my $p = _urlize_one_part($part->dup, $list, $dir1, $i, $wwsympa_url);
+        my $p = _urlize_one_part($part->dup, $list, $dir1, $i);
         if (defined $p) {
             push @parts, $p;
             $i++;
@@ -1885,11 +1884,10 @@ sub _urlize_parts {
 }
 
 sub _urlize_one_part {
-    my $entity      = shift;
-    my $list        = shift;
-    my $dir         = shift;
-    my $i           = shift;
-    my $wwsympa_url = shift;
+    my $entity = shift;
+    my $list   = shift;
+    my $dir    = shift;
+    my $i      = shift;
 
     my $expl     = $list->{'dir'} . '/urlized';
     my $listname = $list->{'name'};
@@ -1942,9 +1940,9 @@ sub _urlize_one_part {
     }
 
     (my $file_name = $filename) =~ s/\./\_/g;
-    # do NOT escape '/' chars
-    my $file_url = "$wwsympa_url/attach/$listname"
-        . Sympa::Tools::Text::escape_chars("$dir/$filename", '/');
+    # Do NOT escape '/' chars separating path components.
+    my $file_url = Sympa::get_url($list, 'attach',
+        paths => [$dir, Sympa::Tools::Text::escape_chars($filename)]);
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);

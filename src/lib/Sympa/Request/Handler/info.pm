@@ -97,8 +97,7 @@ sub _twist {
     $data->{'available_reception_modeA'} =
         [$list->available_reception_mode()];
 
-    my $wwsympa_url = Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url');
-    $data->{'url'} = $wwsympa_url . '/info/' . $list->{'name'};
+    $data->{'url'} = Sympa::get_url($list, 'info');
 
     unless (Sympa::send_file($list, 'info_report', $sender, $data)) {
         $log->syslog('notice', 'Unable to send template "info_report" to %s',

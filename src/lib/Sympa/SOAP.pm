@@ -118,14 +118,10 @@ sub lists {
         next unless ($action eq 'do_it');
 
         ##building result packet
-        $result_item->{'listAddress'} =
-            $listname . '@' . $list->{'admin'}{'host'};
-        $result_item->{'subject'} = $list->{'admin'}{'subject'};
+        $result_item->{'listAddress'} = Sympa::get_address($list);
+        $result_item->{'subject'}     = $list->{'admin'}{'subject'};
         $result_item->{'subject'} =~ s/;/,/g;
-        $result_item->{'homepage'} =
-              Conf::get_robot_conf($robot, 'wwsympa_url') 
-            . '/info/'
-            . $listname;
+        $result_item->{'homepage'} = Sympa::get_url($list, 'info');
 
         my $listInfo;
         if ($mode eq 'complex') {
@@ -527,15 +523,13 @@ sub info {
 
         $result_item->{'listAddress'} =
             SOAP::Data->name('listAddress')->type('string')
-            ->value($listname . '@' . $list->{'admin'}{'host'});
+            ->value(Sympa::get_address($list));
         $result_item->{'subject'} =
             SOAP::Data->name('subject')->type('string')
             ->value($list->{'admin'}{'subject'});
         $result_item->{'homepage'} =
             SOAP::Data->name('homepage')->type('string')
-            ->value(Conf::get_robot_conf($robot, 'wwsympa_url') 
-                . '/info/'
-                . $listname);
+            ->value(Sympa::get_url($list, 'info'));
 
         ## determine status of user
         if ($list->is_admin('owner', $sender)
@@ -1655,12 +1649,10 @@ sub which {
         $action = $result->{'action'} if (ref($result) eq 'HASH');
         next unless ($action =~ /do_it/i);
 
-        $result_item->{'listAddress'} =
-            $name . '@' . $list->{'admin'}{'host'};
-        $result_item->{'subject'} = $list->{'admin'}{'subject'};
+        $result_item->{'listAddress'} = Sympa::get_address($list);
+        $result_item->{'subject'}     = $list->{'admin'}{'subject'};
         $result_item->{'subject'} =~ s/;/,/g;
-        $result_item->{'homepage'} =
-            Conf::get_robot_conf($robot, 'wwsympa_url') . '/info/' . $name;
+        $result_item->{'homepage'} = Sympa::get_url($list, 'info');
 
         ## determine status of user
         $result_item->{'isOwner'} = 0;

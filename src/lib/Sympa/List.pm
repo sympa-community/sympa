@@ -9599,12 +9599,8 @@ sub add_list_header {
     } elsif ($field eq 'archive') {
         if (Conf::get_robot_conf($robot, 'wwsympa_url')
             and $self->is_web_archived()) {
-            $message->add_header(
-                'List-Archive',
-                sprintf('<%s/arc/%s>',
-                    Conf::get_robot_conf($robot, 'wwsympa_url'),
-                    Sympa::Tools::Text::encode_uri($self->{'name'}))
-            );
+            $message->add_header('List-Archive',
+                sprintf('<%s>', Sympa::get_url($self, 'arc')));
         } else {
             return 0;
         }
@@ -9619,13 +9615,16 @@ sub add_list_header {
             my @now  = localtime(time);
             my $yyyy = sprintf '%04d', 1900 + $now[5];
             my $mm   = sprintf '%02d', $now[4] + 1;
-            my $archived_msg_url =
-                sprintf '%s/arcsearch_id/%s/%s-%s/%s',
-                Conf::get_robot_conf($robot, 'wwsympa_url'),
-                Sympa::Tools::Text::encode_uri($self->{'name'}), $yyyy, $mm,
-                Sympa::Tools::Text::encode_uri($message_id);
-            $message->add_header('Archived-At',
-                sprintf('<%s>', $archived_msg_url));
+            $message->add_header(
+                'Archived-At',
+                sprintf(
+                    '<%s>',
+                    Sympa::get_url(
+                        $self, 'arcsearch_id',
+                        paths => ["$yyyy-$mm", $message_id]
+                    )
+                )
+            );
         } else {
             return 0;
         }
