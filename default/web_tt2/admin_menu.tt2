@@ -12,7 +12,7 @@
     [% ELSE %]
     <td style="background: [% color_9 %]; text-align: center;">
        [% IF is_owner %]
-       <a href="[% path_cgi %]/review/[% list %]">
+       <a href="[% 'review' | url_rel([list]) %]">
        <span style="font-size: smaller;"><strong>[%|loc%]Subscribers[%END%]</strong></span></a>
        [% END %]
     </td>
@@ -20,12 +20,12 @@
 
     [% IF action == 'edit_list_request' %]
     <td style="background: [% color_4 %]; text-align: center;">
-      <a href="[% path_cgi %]/edit_list_request/[% list %]">
+      <a href="[% 'edit_list_request' | url_rel([list]) %]">
       <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Edit List Config[%END%]</strong></span></a>
     </td>
     [% ELSE %]
     <td style="background: [% color_9 %]; text-align: center;">
-        <a href="[% path_cgi %]/edit_list_request/[% list %]">
+        <a href="[% 'edit_list_request' | url_rel([list]) %]">
           <span style="font-size: smaller;"><strong>[%|loc%]Edit List Config[%END%]</strong></span></a>
     </td>
     [% END %]
@@ -37,7 +37,7 @@
     [% ELSE %]
        [% IF is_editor %]
        <td style="background: [% color_9 %]; text-align: center;">
-         <a href="[% path_cgi %]/modindex/[% list %]">
+         <a href="[% 'modindex' | url_rel([list]) %]">
          <span style="font-size: smaller;"><strong>[%|loc%]Moderate[%END%]</strong></span></a>
        </td>
        [% ELSE %]
@@ -54,7 +54,7 @@
     [% ELSE %]
     <td style="background: [% color_9 %]; text-align: center;">
        [% IF is_owner %]
-       <a href="[% path_cgi %]/editfile/[% list %]">
+       <a href="[% 'editfile' | url_rel([list]) %]">
        <span style="font-size: smaller;"><strong>[%|loc%]Customizing[%END%]</strong></span></a>
        [% END %]
     </td>
@@ -63,13 +63,13 @@
    [% IF is_archived %]
     [% IF action == 'arc_manage' %]
     <td style="background: [% color_4 %]; text-align: center;">
-      <a href="[% path_cgi %]/arc_manage/[% list %]">
+      <a href="[% 'arc_manage' | url_rel([list]) %]">
       <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Manage Archives[%END%]</strong></span></a>
     </td>
     [% ELSE %]
     <td style="background: [% color_9 %]; text-align: center;">
         [% IF is_owner %]
-        <a href="[% path_cgi %]/arc_manage/[% list %]">
+        <a href="[% 'arc_manage' | url_rel([list]) %]">
 	<span style="font-size: smaller;"><strong>[%|loc%]Manage Archives[%END%]</strong></span></a>
         [% END %]
     </td>
@@ -83,7 +83,7 @@
     [% ELSE %]
     <td style="background: [% color_9 %]; text-align: center;">
        [% IF is_owner %]
-       <a href="[% path_cgi %]/reviewbouncing/[% list %]">
+       <a href="[% 'reviewbouncing' | url_rel([list]) %]">
        <span style="font-size: smaller;"><strong>[%|loc%]Bounces[%END%]</strong></span></a>
        [% END %]
     </td>
@@ -92,16 +92,16 @@
     <td style="background: [% color_9 %]; text-align: center;">
 	[% IF shared == 'none' %]
           [% IF is_privileged_owner %]
-          <a href="[% path_cgi %]/d_admin/[% list %]/create">
+          <a href="[% 'd_admin' | url_rel([list,'create']) %]">
              <span style="font-size: smaller;"><strong>[%|loc%]Create Shared[%END%]</strong></span></a>
           [% ELSE %]
              <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Create Shared[%END%]</strong></span>
           [% END %]
 	[% ELSIF shared == 'deleted' %]
-          <a href="[% path_cgi %]/d_admin/[% list %]/restore">
+          <a href="[% 'd_admin' | url_rel([list,'restore']) %]">
              <span style="font-size: smaller;"><strong>[%|loc%]Restore shared[%END%]</strong></span></a>
 	[% ELSIF shared == 'exist' %]
-          <a href="[% path_cgi %]/d_admin/[% list %]/delete" >
+          <a href="[% 'd_admin' | url_rel([list,'delete']) %]" >
              <span style="font-size: smaller;"><strong>[%|loc%]Delete Shared[%END%]</strong></span></a>
         [% ELSE %]
           <span style="font-size: smaller; color: red;">
@@ -113,20 +113,20 @@
    <td style="background: [% color_9 %]; text-align: center;">
        [% IF list_conf.status == 'closed' %]         
         [% IF is_listmaster %]                   
-        <a href="[% path_cgi %]/restore_list/[% list %]" >
+        <a href="[% 'restore_list' | url_rel([list]) %]" >
           <span style="font-size: smaller;"><strong>[%|loc%]Restore List[%END%]</strong></span></a>
         [% ELSE %]                               
           <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Restore List[%END%]</strong></span>
         [% END %]                              
        [% ELSIF is_privileged_owner %]                 
-        <a href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to close %1 list?[%END%][%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|loc%]Remove List[%END%]</strong></span></a>
+        <a href="[% 'close_list' | url_rel([list]) %]" onclick="request_confirm_link('[% 'close_list' | url_rel([list]) %]', '[% | escape_quote %][%|loc(list)%]Are you sure you wish to close %1 list?[%END%][%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|loc%]Remove List[%END%]</strong></span></a>
        [% ELSIF is_owner %]                      
-       <a href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to close %1 list?[%END%][%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|loc%]Remove List[%END%]</strong></span></a>
+       <a href="[% 'close_list' | url_rel([list]) %]" onclick="request_confirm_link('[% 'close_list' | url_rel([list]) %]', '[% | escape_quote %][%|loc(list)%]Are you sure you wish to close %1 list?[%END%][%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|loc%]Remove List[%END%]</strong></span></a>
        [% END %]                               
     </td>       
   <td style="background: [% color_9 %]; text-align: center;">
     [% IF may_create_list %]
-      <a href="[% path_cgi %]/rename_list_request/[% list %]"><span style="font-size: smaller;"><strong>[%|loc%]Rename List[%END%]</strong></span></a>
+      <a href="[% 'rename_list_request' | url_rel([list]) %]"><span style="font-size: smaller;"><strong>[%|loc%]Rename List[%END%]</strong></span></a>
     [% ELSE %]
       <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Rename List[%END%]</strong></span>
     [%END%]
@@ -135,32 +135,32 @@
     </tr>
     <tr>
     <td style="background: [% color_4 %]; text-align: center;">
-       <a href="[% path_cgi %]/edit_list_request/[% list %]/description">
+       <a href="[% 'edit_list_request' | url_rel([list,'description']) %]">
        <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]List Definition[%END%]</strong></span></a>
     </td>
     <td style="background: [% color_4 %]; text-align: center;">
-       <a href="[% path_cgi %]/edit_list_request/[% list %]/sending">
+       <a href="[% 'edit_list_request' | url_rel([list,'sending']) %]">
        <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Sending/Receiving[%END%]</strong></span></a>
     </td> 
     <td style="background: [% color_4 %]; text-align: center;">
-       <a href="[% path_cgi %]/edit_list_request/[% list %]/command">
+       <a href="[% 'edit_list_request' | url_rel([list,'command']) %]">
        <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Privileges[%END%]</strong></span></a>
     </td>
     <td style="background: [% color_4 %]; text-align: center;">
-       <a href="[% path_cgi %]/edit_list_request/[% list %]/archives">
+       <a href="[% 'edit_list_request' | url_rel([list,'archives']) %]">
        <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Archives[%END%]</strong></span></a>
     </td> 
     <td style="background: [% color_4 %]; text-align: center;">
-       <a href="[% path_cgi %]/edit_list_request/[% list %]/bounces">
+       <a href="[% 'edit_list_request' | url_rel([list,'bounces']) %]">
        <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Bounce Settings[%END%]</strong></span></a>
     </td>
     
     <td style="background: [% color_4 %]; text-align: center;">
-       <a href="[% path_cgi %]/edit_list_request/[% list %]/other">
+       <a href="[% 'edit_list_request' | url_rel([list,'other']) %]">
        <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Miscellaneous[%END%]</strong></span></a>
     </td>
     <td style="background: [% color_4 %]; text-align: center;">
-       <a href="[% path_cgi %]/edit_list_request/[% list %]/data_source">
+       <a href="[% 'edit_list_request' | url_rel([list,'data_source']) %]">
        <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Data Source[%END%]</strong></span></a>
     </td>                             
     [% END %] 
@@ -168,7 +168,7 @@
     </tr>
     <tr>
     <td style="background: [% selected_color %]; text-align: center;">
-       <a href="[% path_cgi %]/edit_list_request/[% list %]/description">
+       <a href="[% 'edit_list_request' | url_rel([list,'description']) %]">
        <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Attribute optionnal/required[%END%]</strong></span></a>
     </td>
     [% END %] 

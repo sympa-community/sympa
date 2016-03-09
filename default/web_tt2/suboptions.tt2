@@ -14,7 +14,7 @@
     <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
   [% END %]
   </select>
-  <a href="[% path_cgi %]/nomenu/help/user_options" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help">
+  <a href="[% 'nomenu/help/user_options' | url_rel %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help">
   <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
   </div>
 
@@ -70,7 +70,7 @@
 <form action="[%path_cgi%]" method="POST">
 [% IF subscriber.suspend %]
   <h3>[%|loc%]Restore subscription[%END%]
-    <a href="[%path_cgi %]/help/suspend"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
+    <a href="[% 'help/suspend' | url_rel %]"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
   </h3>
   <p>[%|loc%]Your subscription is suspended.[%END%]</p>
 
@@ -91,7 +91,7 @@
   <input class="MainMenuLinks" type="submit" name="sub_action_suspendstop" value="[%|loc%]Resume my subscription[%END%]" />
 [% ELSE %]
   <h3>[%|loc%]Suspend subscription[%END%]
-    <a href="[%path_cgi %]/help/suspend"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
+    <a href="[% 'help/suspend' | url_rel %]"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
   </h3>
   <p>[%|loc%]You can suspend your membership by using the button below. The suspend option prevents delivery of emails, this can be useful if you are out of the office for some time.[%END%]</p>
 

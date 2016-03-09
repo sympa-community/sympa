@@ -33,7 +33,7 @@ Subject: [% FILTER qencode %][%|loc(type,list.name,who,gecos)%]FYI: %1 List "%2"
 [%|loc(who,gecos,list.name)%]WARNING: %1 %2 failed to unsubscribe from %3 because his address was not found in the list.
 You may help this person looking for similar email in subscriber list using the following link :[%END%]
 
-[% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
+[% 'ticket' | url_abs([one_time_ticket]) %]
  
 [% ELSIF type == 'erase_customizing' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" customizations have been removed[%END%][%END%]
@@ -53,7 +53,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Subscription request to list %1[
 A user asked to be added as a subscriber to your list. In order to list and manage
 pending subscription requests you should click on the following link:[%END%]
 
-[% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
+[% 'ticket' | url_abs([one_time_ticket]) %]
 
 [%|loc(replyto)%]If prefered, you can accept this subscription request sending an email to %1 with the following subject:[%END%]
 AUTH [%keyauth%] ADD [%list.name%] [%who%] [%gecos%]
@@ -96,8 +96,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]WARNING: bounce rate too high in
 
 You should delete bouncing subscribers: 
 [%END%]
-[% conf.wwsympa_url %]/reviewbouncing/[% list.name %]
-
+[% 'reviewbouncing' | url_abs([list.name]) %]
 
 [% ELSIF type == 'notice' -%]
 Subject: [% FILTER qencode %][%|loc(command,list.name,who,gecos)%]FYI: %1 list %2 from %3 %4[%END%][%END%]

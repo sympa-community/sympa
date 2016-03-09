@@ -2,7 +2,7 @@
 
 <h2>[%|loc%]Copying template[%END%]</h2><br />
 <p>
-<form id="cp_template" action="[% path_cgi %]/copy_template" method="post">
+<form id="cp_template" action="[% 'copy_template' | url_rel %]" method="post">
 <fieldset>
   <legend><strong> [%|loc%]Input template[%END%]</strong> </legend>
   <label>[%|loc%]Template name: [%END%]</label><strong> [% template_name %] </strong><br />

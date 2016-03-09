@@ -11,4 +11,4 @@ was unable to access your personal certificate (email %1).[%END%]
 to  %1@%2 .[%END%]
 
 [%|loc%]Information about this list:[%END%]
-[% conf.wwsympa_url %]/info/[% list.name %]
+[% 'info' | url_abs([list.name]) %]

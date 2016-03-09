@@ -23,7 +23,7 @@
 [% IF rows < '10' %] [% rows = '10' %] [% END %]
 [% IF rows > '20' %] [% rows = '20' %] [% END %]
 [% rows = rows+2 %]
-<form class="noborder" action="[% path_cgi %]/blacklist" method="post">
+<form class="noborder" action="[% 'blacklist' | url_rel %]" method="post">
 <fieldset>
   <textarea name="blacklist" cols="80" rows="[% rows %]">
     [%~ blacklist ~%]

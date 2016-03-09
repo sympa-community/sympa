@@ -17,7 +17,7 @@
   <tr class="color0">[% SET dark = 1 %]
 [% END %]
 <td>[% list.creation_date %]</td>
-<td><a href="[% path_cgi %]/admin/[% list.name %]">[% list.name %]</a></td>
+<td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
 <td>[% list.subject %]</td>
 </tr>
 [% END %]

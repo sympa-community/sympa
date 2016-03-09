@@ -30,38 +30,38 @@
 <menu class="top-bar-section">
   <ul class="left">
 [% IF (subaction == '' or subaction == 'm_lists') and action != 'skinsedit' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="has-dropdown [% class %]"><a href="[% path_cgi %]/serveradmin/m_lists">[%|loc%]Lists[%END%]</a>
+    <li class="has-dropdown [% class %]"><a href="[% 'serveradmin/m_lists' | url_rel %]">[%|loc%]Lists[%END%]</a>
        <ul class="dropdown">
-          <li><a href="[% path_cgi %]/get_pending_lists">[%|loc%]View Pending (Requested) lists[%END%]</a></li>
-          <li><a href="[% path_cgi %]/get_closed_lists">[%|loc%]View Closed Lists[%END%]</a></li>
-          <li><a href="[% path_cgi %]/get_latest_lists">[%|loc%]View Lists sorted by Creation Date[%END%]</a></li>
-          <li><a href="[% path_cgi %]/get_inactive_lists">[%|loc%]View Lists sorted by Last Message Date[%END%]</a></li>
+          <li><a href="[% 'get_pending_lists' | url_rel %]">[%|loc%]View Pending (Requested) lists[%END%]</a></li>
+          <li><a href="[% 'get_closed_lists' | url_rel %]">[%|loc%]View Closed Lists[%END%]</a></li>
+          <li><a href="[% 'get_latest_lists' | url_rel %]">[%|loc%]View Lists sorted by Creation Date[%END%]</a></li>
+          <li><a href="[% 'get_inactive_lists' | url_rel %]">[%|loc%]View Lists sorted by Last Message Date[%END%]</a></li>
        </ul>
 </li>
 [% IF subaction == 'users' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/users">[%|loc%]Users[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'serveradmin/users' | url_rel %]">[%|loc%]Users[%END%]</a></li>
 [% IF subaction == 'archives' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/archives">[%|loc%]Archives[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'serveradmin/archives' | url_rel %]">[%|loc%]Archives[%END%]</a></li>
 [% IF subaction == 'logs' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/logs">[%|loc%]System log[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'serveradmin/logs' | url_rel %]">[%|loc%]System log[%END%]</a></li>
 [% IF subaction == 'templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/templates">[%|loc%]Templates[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'serveradmin/templates' | url_rel %]">[%|loc%]Templates[%END%]</a></li>
 [% IF action == 'skinsedit' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/skinsedit">[%|loc%]Skins, CSS and colors[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'skinsedit' | url_rel %]">[%|loc%]Skins, CSS and colors[%END%]</a></li>
 [% IF main_robot %]
 [% IF subaction == 'vhosts' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/vhosts">[%|loc%]Virtual Robots[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'serveradmin/vhosts' | url_rel %]">[%|loc%]Virtual Robots[%END%]</a></li>
 [% IF action == 'edit_config' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/edit_config">[%|loc%]Edit Robot Config[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'edit_config' | url_rel %]">[%|loc%]Edit Robot Config[%END%]</a></li>
 [% END %]
 [% IF families -%]
 [% IF subaction == 'families' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/families">[%|loc%]Families[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'serveradmin/families' | url_rel %]">[%|loc%]Families[%END%]</a></li>
 [% END %]
 [% IF subaction == 'translation' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/translation">[%|loc%]Translating Sympa[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'serveradmin/translation' | url_rel %]">[%|loc%]Translating Sympa[%END%]</a></li>
 [% IF subaction == 'tracker' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/tracker">[%|loc%]Submitting a bug, a feature request[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'serveradmin/tracker' | url_rel %]">[%|loc%]Submitting a bug, a feature request[%END%]</a></li>
   </ul>
 </menu>
 </nav>
@@ -88,7 +88,13 @@
  [% END %] 
 [% END %]
  <li class="letter">
-  <a href="[% path_cgi %]/lists[%IF topic%]/[%topic%][%IF subtopic%]/[%subtopic%][%END%][%END%]" onclick="show('loading'); hide('content-inner');">[%|loc%]All[%END%]</a> </li>
+  [% topic_paths = [];
+     IF topic;
+       topic_paths.push(topic);
+       IF subtopic; topic_paths.push(subtopic); END;
+     END;
+  ~%]
+  <a href="[% 'lists' | url_rel(topic_paths) %]" onclick="show('loading'); hide('content-inner');">[%|loc%]All[%END%]</a> </li>
   </ul>
 </menu>
 </nav>
@@ -107,49 +113,49 @@
 <menu class="top-bar-section">
   <ul class="left">
 [% IF action == 'edit_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="has-dropdown [% class %]"><a  href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Edit List Config[%END%]</a>
+    <li class="has-dropdown [% class %]"><a  href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Edit List Config[%END%]</a>
         <ul class="dropdown">
         [% IF group == 'description' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a  href="[% path_cgi %]/edit_list_request/[% list %]/description" >[%|loc%]List definition[%END%]</a></li>
+             <li class="[% class %]"><a  href="[% 'edit_list_request' | url_rel([list,'description']) %]" >[%|loc%]List definition[%END%]</a></li>
         [% IF group == 'sending' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/sending" >[%|loc%]Sending/receiving setup[%END%]</a></li>
+             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'sending']) %]" >[%|loc%]Sending/receiving setup[%END%]</a></li>
         [% IF group == 'command' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/command" >[%|loc%]Privileges[%END%]</a></li>
+             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'command']) %]" >[%|loc%]Privileges[%END%]</a></li>
         [% IF group == 'archives' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/archives" >[%|loc%]Archives[%END%]</a></li>
+             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'archives']) %]" >[%|loc%]Archives[%END%]</a></li>
         [% IF group == 'bounces' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/bounces" >[%|loc%]Bounces[%END%]</a></li>
+             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'bounces']) %]" >[%|loc%]Bounces[%END%]</a></li>
         [% IF group == 'data_source' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/data_source" >[%|loc%]Data sources setup[%END%]</a></li>
+             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'data_source']) %]" >[%|loc%]Data sources setup[%END%]</a></li>
         [% IF group == 'dkim' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/dkim" >[%|loc%]DKIM[%END%]</a></li>
+             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'dkim']) %]" >[%|loc%]DKIM[%END%]</a></li>
         [% IF action == 'editfile' && selected_file == 'description_templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-            <li class="[% class %]"><a href="[% path_cgi %]/editfile/[% list %]/description_templates">[%|loc%]List description/homepage[%END%]</a></li>
+            <li class="[% class %]"><a href="[% 'editfile' | url_rel([list,'description_templates']) %]">[%|loc%]List description/homepage[%END%]</a></li>
         [% IF action == 'editfile' && selected_file == 'message_templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-            <li class="[% class %]"><a href="[% path_cgi %]/editfile/[% list %]/message_templates">[%|loc%]Message templates[%END%]</a></li>
+            <li class="[% class %]"><a href="[% 'editfile' | url_rel([list,'message_templates']) %]">[%|loc%]Message templates[%END%]</a></li>
         [% IF group == 'other' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-             <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/other" >[%|loc%]Miscellaneous[%END%]</a></li>
+             <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'other']) %]" >[%|loc%]Miscellaneous[%END%]</a></li>
           </ul>
     </li>
 [% IF is_owner %]
 [% IF action == 'review' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a  href="[% path_cgi %]/review/[% list %]">[%|loc%]Manage Subscribers[%END%]</a></li>
+    <li class="[% class %]"><a  href="[% 'review' | url_rel([list]) %]">[%|loc%]Manage Subscribers[%END%]</a></li>
 [% END %]
 [% IF conf.use_blacklist != 'none' %]
 [% IF action == 'blacklist' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a  href="[% path_cgi %]/blacklist/[% list %]" >[%|loc%]Blacklist[%END%]</a></li>
+    <li class="[% class %]"><a  href="[% 'blacklist' | url_rel([list]) %]" >[%|loc%]Blacklist[%END%]</a></li>
 [% END %]
 [% IF is_archived %]
 [% IF action == 'arc_manage' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a  href="[% path_cgi %]/arc_manage/[% list %]">[%|loc%]Manage Archives[%END%]</a></li>
+    <li class="[% class %]"><a  href="[% 'arc_manage' | url_rel([list]) %]">[%|loc%]Manage Archives[%END%]</a></li>
 [% END %]
 [% IF is_owner %]
 [% IF action == 'reviewbouncing' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a  href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Bounces[%END%]</a></li>
+    <li class="[% class %]"><a  href="[% 'reviewbouncing' | url_rel([list]) %]">[%|loc%]Bounces[%END%]</a></li>
 [% END %]
 [% IF is_priv || is_listmaster %]
 [% IF action == 'viewlogs' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a  href="[% path_cgi %]/viewlogs/[% list %]" >[%|loc%]Logs[%END%]</a></li>
+    <li class="[% class %]"><a  href="[% 'viewlogs' | url_rel([list]) %]" >[%|loc%]Logs[%END%]</a></li>
 [% END %]
   </ul>
 </menu>
@@ -168,9 +174,9 @@
 <menu class="top-bar-section">
   <ul class="left">
     [% IF subaction == '' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/compose_mail/[% list %]">[%|loc%]Send a message[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'compose_mail' | url_rel([list]) %]">[%|loc%]Send a message[%END%]</a></li>
     [% IF subaction == 'html_news_letter' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/compose_mail/[% list %]/html_news_letter">[%|loc%]Send an html page[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'compose_mail' | url_rel([list,'html_news_letter']) %]">[%|loc%]Send an html page[%END%]</a></li>
   </ul>
 </menu>
 </nav>

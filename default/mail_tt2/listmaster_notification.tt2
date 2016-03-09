@@ -7,10 +7,10 @@ Subject: [% FILTER qencode %][%|loc(list.name,list.host,email)%]List "%1@%2" cre
 
 [% list.name %]@[% list.host %]
 [% list.subject %]
-[% conf.wwsympa_url %]/info/[% list.name %]
+[% 'info' | url_abs([list.name]) %]
 
 [%|loc%]To activate/delete this mailing list:[%END%]
-[% conf.wwsympa_url %]/ticket/[%one_time_ticket%]
+[% 'ticket' | url_abs([one_time_ticket]) %]
 
 [%- ELSIF type == 'list_created' -%]
 [% PROCESS 'list_created.tt2' -%]
@@ -30,7 +30,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" renaming[%END%][%END%]
 [% END %]
 
 [%|loc%]To activate/delete this mailing list:[%END%]
-[% conf.wwsympa_url %]/ticket/[%one_time_ticket%]
+[% 'ticket' | url_abs([one_time_ticket]) %]
 
 [% ELSIF type == 'no_db' -%]
 Subject: [% FILTER qencode %][%|loc%]No DataBase[%END%][%END%]
@@ -339,7 +339,7 @@ Subject: [% FILTER qencode %][%|loc(list.name, list.host)%]Listmaster: list %1@%
 
 [%|loc%]See logs for more details.[%END%]
 
-[%|loc%]Check the bounces in this list:[% END %] [% conf.wwsympa_url %]/reviewbouncing/[% listname %]
+[%|loc%]Check the bounces in this list:[% END %] [% 'reviewbouncing' | url_abs([listname]) %]
 
 [% ELSIF type == 'automatic_list_creation_failed' -%]
 Subject: [% FILTER qencode %][%|loc%]Listmaster: internal server error [%END%][%END%]

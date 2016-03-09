@@ -40,7 +40,7 @@
     [%~ END %]
             [% IF may_create_list %]
             <li class="small-12 medium-4 columns">
-                <a href="[% path_cgi %]/my" title="[%|loc%]My lists[%END%]">
+                <a href="[% 'my' | url_rel %]" title="[%|loc%]My lists[%END%]">
                     <span class="fa-stack fa-5x">
                       <i class="fa fa-circle fa-stack-2x "></i>
                       <i class="fa fa-envelope fa-stack-1x"></i>
@@ -48,7 +48,7 @@
                 [%|loc%]My lists[%END%]</a>
             </li>
             <li class="small-12 medium-4 columns">
-                <a href="[% path_cgi %]/create_list_request" title="[%|loc%]Create list[%END%]">
+                <a href="[% 'create_list_request' | url_rel %]" title="[%|loc%]Create list[%END%]">
                     <span class="fa-stack fa-5x">
                       <i class="fa fa-circle fa-stack-2x "></i>
                       <i class="fa fa-plus fa-stack-1x"></i>
@@ -56,7 +56,7 @@
                 [%|loc%]Create list[%END%]</a>
             </li>
             <li class="small-12 medium-4 columns">
-                <a href="[% path_cgi %]/search_list_request" title="[%|loc%]Search for List(s)[%END%]">
+                <a href="[% 'search_list_request' | url_rel %]" title="[%|loc%]Search for List(s)[%END%]">
                     <span class="fa-stack fa-5x">
                       <i class="fa fa-circle fa-stack-2x "></i>
                       <i class="fa fa-search fa-stack-1x"></i>
@@ -65,7 +65,7 @@
             </li>
             [% ELSE %]
             <li class="small-12 medium-4 medium-offset-2 columns">
-                <a href="[% path_cgi %]/my" title="[%|loc%]My lists[%END%]">
+                <a href="[% 'my' | url_rel %]" title="[%|loc%]My lists[%END%]">
                     <span class="fa-stack fa-5x">
                       <i class="fa fa-circle fa-stack-2x "></i>
                       <i class="fa fa-envelope fa-stack-1x"></i>
@@ -73,7 +73,7 @@
                 [%|loc%]My lists[%END%]</a>
             </li>
             <li class="small-12 medium-4 columns end">
-                <a href="[% path_cgi %]/search_list_request" title="[%|loc%]Search for List(s)[%END%]">
+                <a href="[% 'search_list_request' | url_rel %]" title="[%|loc%]Search for List(s)[%END%]">
                     <span class="fa-stack fa-5x">
                       <i class="fa fa-circle fa-stack-2x "></i>
                       <i class="fa fa-search fa-stack-1x"></i>
@@ -89,7 +89,7 @@
          <ul class="small-12 columns">
     [%~ END %]
             <li class="small-12 columns">
-                <a href="[% path_cgi %]/search_list_request" title="[%|loc%]Search for List(s)[%END%]">
+                <a href="[% 'search_list_request' | url_rel %]" title="[%|loc%]Search for List(s)[%END%]">
                     <span class="fa-stack fa-5x">
                       <i class="fa fa-circle fa-stack-2x "></i>
                       <i class="fa fa-search fa-stack-1x"></i>

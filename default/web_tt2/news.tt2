@@ -13,9 +13,9 @@
 <!-- list of administrative tasks -->
  [% FOREACH list_to_admin = admin_summary -%]
    <li>[%|loc(list_to_admin.key)%]List %1:[%END%] 
-   [% IF list_to_admin.value.mod_message %]<a href="[% path_cgi %]/modindex/[% list_to_admin.key %]">[%|loc(list_to_admin.value.mod_message)%]%1 message(s)[%END%][% END %]</a>
-   [% IF list_to_admin.value.mod_shared_total %]<a href="[% path_cgi %]/modindex/[% list_to_admin.key %]">[%|loc(list_to_admin.value.mod_shared_total)%]%1 document(s)[%END%][% END %]</a>
-   [% IF list_to_admin.value.mod_subscription %]<a href="[% path_cgi %]/subindex/[% list_to_admin.key %]">[%|loc(list_to_admin.value.mod_subscription)%]%1 subscription request(s)[%END%][% END %]</a></li>
+   [% IF list_to_admin.value.mod_message %]<a href="[% 'modindex' | url_rel([list_to_admin.key]) %]">[%|loc(list_to_admin.value.mod_message)%]%1 message(s)[%END%][% END %]</a>
+   [% IF list_to_admin.value.mod_shared_total %]<a href="[% 'modindex' | url_rel([list_to_admin.key]) %]">[%|loc(list_to_admin.value.mod_shared_total)%]%1 document(s)[%END%][% END %]</a>
+   [% IF list_to_admin.value.mod_subscription %]<a href="[% 'subindex' | url_rel([list_to_admin.key]) %]">[%|loc(list_to_admin.value.mod_subscription)%]%1 subscription request(s)[%END%][% END %]</a></li>
  [% END -%]
 </ul>
 </div>

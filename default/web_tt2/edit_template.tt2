@@ -31,7 +31,7 @@ lang="[%tpl_lang_lang%]" xml:lang="[%tpl_lang_lang%]"
 [%- END %]</li>
 </ul>
 </p><br />
-<form action="[% path_cgi %]/edit_template" method="post">
+<form action="[% 'edit_template' | url_rel %]" method="post">
 <fieldset>
 <textarea wrap="off" name="content" cols="90" rows="[% rows %]">
   [%~ template_content ~%]

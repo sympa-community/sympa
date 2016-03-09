@@ -20,7 +20,7 @@ Deleted topic(s) is(are):[%END%]
 [% END -%]
 
 [%|loc%]To update your topics subscription, go to the following page:[%END%]
-[% conf.wwsympa_url %]/suboptions/[% list.name %]
+[% 'suboptions' | url_abs([list.name]) %]
 
 
 [% ELSIF type == 'added_as_listadmin' -%]
@@ -32,15 +32,15 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Management of list %1[%END%][%EN
 [%|loc(delegator,list.name,list.host)%]You have been delegated the responsability of list moderator by %1 for list %2@%3.[%END%]
 [% END %]
 
-[%|loc%]The list homepage:[%END%] [% conf.wwsympa_url %]/info/[% list.name %]
-[%|loc%]Owner and moderator guide:[%END%] [% conf.wwsympa_url %]/help/admin
+[%|loc%]The list homepage:[%END%] [% 'info' | url_abs([list.name]) %]
+[%|loc%]Owner and moderator guide:[%END%] [% 'help/admin' | url_abs %]
 
 
 [% ELSIF type == 'ticket_to_send' -%]
 Subject: [% FILTER qencode %][%|loc%]Changing your subscriber email address[%END%][%END%]
 
 [%|loc%]You have requested to change your subscriber email address. To confirm your new email address with the SYMPA server, please click the link below:[%END%] 
-  [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
+  [% 'ticket' | url_abs([one_time_ticket]) %]
 
 
 [% ELSIF type == 'ticket_to_signoff' -%]
@@ -52,7 +52,7 @@ To confirm and get removed from the list, please click the link below: [%END%]
 [% ELSE %]
 [%|loc(list.name)%]You have requested to be removed from list %1. To confirm and get removed from the list, please click the link below: [%END%] 
 [% END %]
-  [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
+  [% 'ticket' | url_abs([one_time_ticket]) %]
 
 [% ELSIF type == 'ticket_to_family_signoff' -%]
 Subject: [% FILTER qencode %][%|loc(family)%]Unsubscribing from family %1[%END%][%END%]
@@ -63,7 +63,7 @@ To confirm and get removed from all the lists of this family, please click the l
 [% ELSE %]
 [%|loc(family)%]You have requested to be removed from family %1. To confirm and get removed from all the lists of this family, please click the link below: [%END%] 
 [% END %]
-  [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
+  [% 'ticket' | url_abs([one_time_ticket]) %]
 
 
 [% ELSIF type == 'hundred_percent_error' -%]

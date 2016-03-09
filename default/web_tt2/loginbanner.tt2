@@ -65,8 +65,8 @@
               <li><span>[%|loc(last_login_host)%]last login from %1[%END%] &nbsp;&nbsp; ([% last_login_date %])<span></li>
             [%END%]
 
-            <li><a href="[% path_cgi %]/pref"><i class="fa fa-cog"></i> [%|loc%]My preferences[%END%]</a></li>
-            <li><a href="[% path_cgi %]/my" onclick="show('loading'); hide('content-inner');"><i class="fa fa-envelope"></i> [%|loc%]My lists[%END%]</a></li>
+            <li><a href="[% 'pref' | url_rel %]"><i class="fa fa-cog"></i> [%|loc%]My preferences[%END%]</a></li>
+            <li><a href="[% 'my' | url_rel %]" onclick="show('loading'); hide('content-inner');"><i class="fa fa-envelope"></i> [%|loc%]My lists[%END%]</a></li>
             <li>
               [% IF auth_method == 'md5' %]
                 <form action="[% path_cgi %]" method="post">
@@ -141,8 +141,8 @@
             [% IF authentication_info_url %]
                <li><a class="menuLinks" href="[%authentication_info_url%]">[%|loc%]Authentication help[% END %]</a></li>
             [% ELSE %]
-              <li><a href="[% path_cgi %]/firstpasswd/[% escaped_init_email %]">[%|loc%]First login?[%END%]</a></li>
-              <li><a href="[% path_cgi %]/renewpasswd/[% escaped_init_email %]">[%|loc%]Lost password?[%END%]</a></li>
+              <li><a href="[% 'firstpasswd' | url_rel([escaped_init_email]) %]">[%|loc%]First login?[%END%]</a></li>
+              <li><a href="[% 'renewpasswd' | url_rel([escaped_init_email]) %]">[%|loc%]Lost password?[%END%]</a></li>
             [% END %]
            [% IF top_menu %]
             </ul>

@@ -33,10 +33,10 @@
 		[% file %]
 		</td>
                 <td  align="center">
-		<a href="[% path_cgi %]/manage_template/modify/[% list %]/[% file %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+		<a href="[% 'manage_template/modify' | url_rel([list,file]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
 		</td>
 		<td align="center">
-		<a href="[% path_cgi %]/manage_template/delete/[% list %]/[% file %]" class="MainMenuLinks" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(file)%]Do you really want to delete message %1?[%END%][%END%]')">[%|loc%]Delete[%END%]</a>
+		<a href="[% 'manage_template/delete' | url_rel([list,file]) %]" class="MainMenuLinks" onclick="return request_confirm('[% | escape_quote %][%|loc(file)%]Do you really want to delete message %1?[%END%][%END%]')">[%|loc%]Delete[%END%]</a>
 		</td>
 		</tr>
 	[% END %]

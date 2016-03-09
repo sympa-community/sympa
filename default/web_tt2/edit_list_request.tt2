@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 <div class="block">
 
-<h2>[%|loc%]Edit List Configuration[%END%] <a  href="[% path_cgi %]/nomenu/help/listconfig" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<h2>[%|loc%]Edit List Configuration[%END%] <a  href="[% 'nomenu/help/listconfig' | url_rel %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 [% IF !group %]
   [% IF GROUP == 'description' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
@@ -37,10 +37,10 @@
           <span class="edit_list_request_help">
           [% IF p.type == 'scenario' %]
             [% IF is_listmaster %]
-              &nbsp;<a class="input" href="[% path_cgi %]/dump_scenario/[% list %]/[% p.name %]" title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END%]</a>
+              &nbsp;<a class="input" href="[% 'dump_scenario' | url_rel([list,p.name]) %]" title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END%]</a>
             [% END %]
           [% END %]
-          <a  href="[% path_cgi %]/nomenu/help/editlist#[% p.name %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
+          <a  href="[% 'nomenu/help/editlist' | url_rel %]#[% p.name %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
           </span>
           </h4>
 

@@ -10,6 +10,6 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Welcome to list %1[%END%][%END%]
 [% CATCH %]
 [% END %]
 
-[%|loc%]The list homepage:[%END%] [% conf.wwsympa_url %]/info/[% list.name %]
-[%|loc%]General informations about mailing lists:[%END%] [% conf.wwsympa_url %]/help/introduction
+[%|loc%]The list homepage:[%END%] [% 'info' | url_abs([list.name]) %]
+[%|loc%]General informations about mailing lists:[%END%] [% 'help/introduction' | url_abs %]
 

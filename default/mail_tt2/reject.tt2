@@ -9,4 +9,4 @@ has been rejected by the moderator (%3).[%END%]
 
 
 [%|loc(list.name)%]Check %1 list usage:[%END%]
-[% conf.wwsympa_url %]/info/[% list.name %]
+[% 'info' | url_abs([list.name]) %]

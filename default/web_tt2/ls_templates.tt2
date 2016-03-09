@@ -16,7 +16,7 @@
 <br />
 [%|loc%]First you may list a category of templates; the list should include a default template and may include any templates designated for a particular list. You will then have an oportunity to copy and edit templates for the current robot or the named list.[%END%]<br />
 
-<form action="[% path_cgi %]/ls_templates" method="post">
+<form action="[% 'ls_templates' | url_rel %]" method="post">
 <fieldset>
 <ul>
 <li>[%|loc%]Select templates type:[%END%]  
@@ -99,7 +99,7 @@ lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]"
  [% FOREACH lang = file.value.distrib %]
  <td class="text_center">
   [% IF lang.value %]
-    <form action="[% path_cgi %]/edit_template" method="post">
+    <form action="[% 'edit_template' | url_rel %]" method="post">
     <fieldset>
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="template_name" value="[% file.key %]" />
@@ -118,7 +118,7 @@ lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]"
 [% FOREACH lang = file.value.site %]
   <td class="text_center">
   [% IF lang.value %]
-    <form action="[% path_cgi %]/edit_template" method="post">
+    <form action="[% 'edit_template' | url_rel %]" method="post">
     <fieldset>
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
@@ -140,7 +140,7 @@ lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]"
 [% FOREACH lang = file.value.robot %]
   <td class="text_center">
   [% IF lang.value %]
-    <form action="[% path_cgi %]/edit_template" method="post">
+    <form action="[% 'edit_template' | url_rel %]" method="post">
     <fieldset>
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
@@ -161,7 +161,7 @@ lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]"
     [% FOREACH lang = file.value.list %]
     <td class="text_center">
     [% IF lang.value %]
-    <form action="[% path_cgi %]/edit_template" method="post">
+    <form action="[% 'edit_template' | url_rel %]" method="post">
     <fieldset>
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />

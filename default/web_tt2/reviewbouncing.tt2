@@ -1,8 +1,8 @@
 <!-- $Id$ -->
-<h2>[%|loc%]Manage bouncing list members[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#manage_bounces" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<h2>[%|loc%]Manage bouncing list members[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#manage_bounces" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 <br />
 [% IF bounce_rate %]
-<a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/bounce">[%|loc%]Dump[%END%]</a>
+<a class="actionMenuLinks" href="[% 'dump' | url_rel([list,'bounce']) %]">[%|loc%]Dump[%END%]</a>
 
 <form action="[% path_cgi %]" method="post"> 
 <fieldset>
@@ -39,13 +39,13 @@
 
 <div class="text-center">
         [% IF prev_page %]
-	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]"></a>
+	  <a href="[% 'reviewbouncing' | url_rel([list,prev_page,size]) %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]"></a>
         [% END %]
         [% IF page %]
   	  [%|loc(page,total_page)%]page %1 / %2[%END%]
         [% END %]
         [% IF next_page %]
-	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]"></a>
+	  <a href="[% 'reviewbouncing' | url_rel([list,next_page,size]) %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]"></a>
         [% END %]
 </div>
 
@@ -80,7 +80,7 @@
 	    <input type="checkbox" name="email" value="[% u.escaped_email %]" />
 	  </td>
 	  <td>
-	      <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/reviewbouncing">[% u.email %]</a>
+	      <a href="[% 'editsubscriber' | url_rel([list,u.escaped_email,'reviewbouncing']) %]">[% u.email %]</a>
 
 	  </td>
           <td class="text_center 
@@ -111,13 +111,13 @@
       </table>
   <div class="text-center">
         [% IF prev_page %]
-	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
+	  <a href="[% 'reviewbouncing' | url_rel([list,prev_page,size]) %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
         [% END %]
         [% IF page %]
   	  [%|loc(page,total_page)%]page %1 / %2[%END%]
         [% END %]
         [% IF next_page %]
-	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
+	  <a href="[% 'reviewbouncing' | url_rel([list,next_page,size]) %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
         [% END %]
   </div>
   [% IF is_owner %]

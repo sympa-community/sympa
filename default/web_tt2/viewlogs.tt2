@@ -82,12 +82,12 @@
 	    [%|loc%]Sub date[%END%]
 	[% ELSE %]
 	    <th>
-            <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/date" >[%|loc%]Date[%END%]</a>
+            <a href="[% 'viewlogs' | url_rel([list,1,size,'date']) %]" >[%|loc%]Date[%END%]</a>
 	[% END %]
         </th>
 
 	    <th>
-               <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/list">[%|loc%]List[%END%]</a>
+               <a href="[% 'viewlogs' | url_rel([list,1,size,'list']) %]">[%|loc%]List[%END%]</a>
 	</th>
 
 	[% IF sortby == 'action' %]
@@ -95,7 +95,7 @@
 	    [%|loc%]Action[%END%]
 	[% ELSE %]
 	    <th>
-               <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/action">[%|loc%]Action[%END%]</a>
+               <a href="[% 'viewlogs' | url_rel([list,1,size,'action']) %]">[%|loc%]Action[%END%]</a>
 	[% END %]
 	</th>
 
@@ -124,7 +124,7 @@
 	    [%|loc%]User Email[%END%]
 	[% ELSE %]
 	    <th>	    
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/user_email">[%|loc%]User Email[%END%]</a>
+	    <a href="[% 'viewlogs' | url_rel([list,1,size,'user_email']) %]">[%|loc%]User Email[%END%]</a>
 	[% END %]
 	</th>
 
@@ -226,13 +226,13 @@
   </form>
 <br />
   [% IF prev_page %]
-    <a href="[% path_cgi %]/viewlogs/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
+    <a href="[% 'viewlogs' | url_rel([list,prev_page,size,sortby]) %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
   [% END %]
   [% IF page %]
     [%|loc(page,total_page)%]page %1 / %2[%END%]
   [% END %]
   [% IF next_page %]
-    <a href="[% path_cgi %]/viewlogs/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
+    <a href="[% 'viewlogs' | url_rel([list,next_page,size,sortby]) %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
   [% END %]
   </div>
 [% END %]

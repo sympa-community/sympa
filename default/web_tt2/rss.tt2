@@ -8,9 +8,13 @@
 [%- ELSIF action == 'latest_arc' -%][%|loc%] most recent messages [%END%]
 [%- ELSIF action == 'latest_d_read' -%][%|loc%] most recent documents [%END%]
 [%- END -%]</title>
-  <link>[%- IF action == 'latest_arc' -%][% base_url %][% path_cgi %]/arc/[% list %]/
-[%- ELSIF action == 'latest_d_read' -%] [% base_url %][% path_cgi %]/d_read/[% list %]/
-[%- ELSE -%][% base_url %][% path_cgi %]
+  <link>
+[%- IF action == 'latest_arc' ~%]
+  [% 'arc' | url_abs([list,'']) %]
+[%- ELSIF action == 'latest_d_read' ~%]
+  [% 'd_read' | url_abs([list,'']) %]
+[%- ELSE ~%]
+  [% '' | url_abs %]
 [%- END -%]</link>
   <description>[% IF errors %] [%|loc%]Server error[%END%] [% END -%]
 [%- IF action == 'latest_lists' -%] 
@@ -63,21 +67,21 @@
  [% FOREACH l = latest_lists -%]
   <item>
     <title>[% l.name %]@[% l.host %] - [% l.subject | xml %]</title>
-    <link>[% base_url %][% path_cgi %]/info/[% l.name %]</link>
+    <link>[% 'info' | url_abs([l.name]) %]</link>
   </item>
  [% END -%]
 [% ELSIF action == 'active_lists' -%]
  [% FOREACH l = active_lists -%]
   <item>
     <title>[%|loc(l.name,l.host,l.subject,l.msg_count)%]%1@%2 - %3: %4 messages[%END%]	[% IF l.average -%] - [%|loc(l.average)%]%1 by day [%END%][%END%]</title>
-    <link>[% base_url %][% path_cgi %]/info/[% l.name %]</link>
+    <link>[% 'info' | url_abs([l.name]) %]</link>
   </item>
  [% END -%]
 [% ELSIF action == 'latest_arc' -%]
  [% FOREACH a = archives -%]
   <item>
     <title>[% a.subject | xml %] - [% a.from | xml %]</title>
-    <link>[% conf.wwsympa_url %]/arcsearch_id/[% list %]/[% a.year_month %]/[% a.message_id %]</link>
+    <link>[% 'arcsearch_id' | url_abs([list,a.year_month,a.message_id]) %]</link>
     <pubDate>[% a.date_smtp %]</pubDate>
   </item>
  [% END -%]
@@ -89,7 +93,9 @@
     <link>[% d.url %]</link>
     [% ELSE -%]
      <title>[% d.name %]</title>
-    <link>[%|xml%][% base_url %][% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %][%END%]</link>
+     <link>[%# FIXME:path would be percent-encoded. ~%]
+      [% 'd_read' | url_abs([list]) %][% d.escaped_content_dir %]/[% d.escaped_name ~%]
+     </link>
     [% END -%]
   </item>
   [% END -%]

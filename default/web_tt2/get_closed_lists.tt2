@@ -22,7 +22,7 @@
 [% END %]
 
 <td><input type="checkbox" name="selected_lists" value="[% list.key %]" /></td>
-<td><a href="[% path_cgi %]/admin/[% list.key %]">[% list.key %]</a></td>
+<td><a href="[% 'admin' | url_rel([list.key]) %]">[% list.key %]</a></td>
 <td>[% list.value.subject %]</td>
 <td>[% list.value.by %]</td>
 </tr>

@@ -1,19 +1,19 @@
 <!-- $Id$ -->
 [% IF is_owner %]
-<h2>[%|loc%]Manage list members[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<h2>[%|loc%]Manage list members[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
   <h3>[%|loc%]Administrative Options[%END%]</h3>
-  <a class="actionMenuLinks" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Pending subscriptions[%END%]</a> 
+  <a class="actionMenuLinks" href="[% 'subindex' | url_rel([list]) %]">[%|loc%]Pending subscriptions[%END%]</a> 
   [% IF conf.use_blacklist != 'none' %]
-    <a class="actionMenuLinks" href="[% path_cgi %]/blacklist/[% list %]">[%|loc%]Blacklist[%END%]</a>
+    <a class="actionMenuLinks" href="[% 'blacklist' | url_rel([list]) %]">[%|loc%]Blacklist[%END%]</a>
   [% END %]
-  <a class="actionMenuLinks" href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Bounces[%END%]</a>
+  <a class="actionMenuLinks" href="[% 'reviewbouncing' | url_rel([list]) %]">[%|loc%]Bounces[%END%]</a>
   [% IF action == 'search' %]
-     <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/[% filter %]">[%|loc%]Dump[%END%]</a>
+     <a class="actionMenuLinks" href="[% 'dump' | url_rel([list,filter]) %]">[%|loc%]Dump[%END%]</a>
   [% ELSE %]
-     <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/light">[%|loc%]Dump[%END%]</a> 
+     <a class="actionMenuLinks" href="[% 'dump' | url_rel([list,'light']) %]">[%|loc%]Dump[%END%]</a> 
   [% END %]
-     <a class="actionMenuLinks" href="[% path_cgi %]/show_exclude/[% list %]">[%|loc%]Exclude[%END%]</a> 
+     <a class="actionMenuLinks" href="[% 'show_exclude' | url_rel([list]) %]">[%|loc%]Exclude[%END%]</a> 
   <br />
 
   [% IF may_sync %]
@@ -45,7 +45,7 @@
   </form>
   <h4>[%|loc%]To add multiple users:[%END%]</h4>
   <p>[%|loc%]Click the Multiple Add button below to bulk-add users using a form.  (Alternatively, consider using a data-source such as SQL or an Active Directory Group).[%END%]
-  <br /><a class="button" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a>
+  <br /><a class="button" href="[% 'add_request' | url_rel([list]) %]">[%|loc%]Multiple add[%END%]</a>
 [% END %]
 
 <hr>
@@ -140,13 +140,13 @@
   </fieldset>
   </form>
    [% IF prev_page %]
-    <a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
+    <a href="[% 'review' | url_rel([list,prev_page,size,sortby]) %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
    [% END %]
    [% IF page %]
      [%|loc(page,total_page)%]page %1 / %2[%END%]
    [% END %]
    [% IF next_page %]
-     <a href="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
+     <a href="[% 'review' | url_rel([list,next_page,size,sortby]) %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
    [% END %]
 </div>
 [% END %]

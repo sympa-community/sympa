@@ -5,9 +5,9 @@ Subject: [% FILTER qencode %][%|loc(conf.title)%]%1 / your environment[%END%][%E
 [%|loc%]To complete your account setup actions you need to confirm that you have 
 supplied a working email address.  Please follow the link below to complete your account configuration.[%END%]
 
-   [% base_url %][% path_cgi %]/sso_login/[% server.key %]/confirmemail/[% init_email %]/[% one_time_ticket %]
+   [% 'sso_login' | url_abs([server.key,'confirmemail',init_email,one_time_ticket]) %]
 
 
-[% conf.title %]: [% base_url %][% path_cgi %] 
+[% conf.title %]: [% conf.wwsympa_url %] 
 
-[%|loc(base_url,path_cgi)%]Help on Sympa: %1%2[%END%]/help
+[%|loc(conf.wwsympa_url,'/help')%]Help on Sympa: %1%2[%END%]

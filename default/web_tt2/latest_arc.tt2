@@ -24,7 +24,7 @@
  [% FOREACH a = archives %] 
  <tr>
    <td> [% a.date %] </td>
-   <td> <a href="[% conf.wwsympa_url %]/arcsearch_id/[% list %]/[% a.year_month %]/[% a.message_id %]" >[% a.subject %] </td>
+   <td> <a href="[% 'arcsearch_id' | url_abs([list,a.year_month,a.message_id]) %]" >[% a.subject %] </td>
    <td> [% a.from %] </td>
  </tr>
  

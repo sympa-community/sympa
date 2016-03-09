@@ -48,7 +48,7 @@
       <img id="large_picture" src="[% current_subscriber.pictures_url %]" alt="[% current_subscriber.escaped_email %]'s picture"/>
     </a>
     [% IF current_subscriber.escaped_email == user.email %]
-      <p><a href="[% path_cgi %]/suboptions/[% list %]" title="">[%|loc%]Changing your picture for this list[%END%]</a></p>
+      <p><a href="[% 'suboptions' | url_rel([list]) %]" title="">[%|loc%]Changing your picture for this list[%END%]</a></p>
     [% END %]
   [% END %]
 
@@ -112,8 +112,8 @@
     </p>
     </div>
 
-    <a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.email | uri %]"
-      onclick="$('.viewmod').hide();$('#viewbounce').load('[% path_cgi%]/ajax/viewbounce/[% list %]/[% current_subscriber.email | uri %]').parent().show(); return false">[%|loc%]View last bounce[%END%]</a>
+    <a href="[% 'viewbounce' | url_rel([list,current_subscriber.email]) %]"
+      onclick="$('.viewmod').hide();$('#viewbounce').load('[% 'ajax/viewbounce' | url_rel([list,current_subscriber.email]) %]').parent().show(); return false">[%|loc%]View last bounce[%END%]</a>
 
     <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" />
 

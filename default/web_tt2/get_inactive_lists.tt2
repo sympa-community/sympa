@@ -30,7 +30,7 @@
       <em>[%|loc%]none so far[%END%]</em>
     [% END %]
 </td>
-<td><a href="[% path_cgi %]/admin/[% list.name %]">[% list.name %]</a></td>
+<td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
 <td>[% list.subject %]</td>
 <td>[% list.subscribers_count  %]</td>
 <td>[% list.msg_count  %]</td>

@@ -5,10 +5,10 @@
 
     <h3>[%|loc%]Information[%END%]</h3>
        <ul>
-          <li><a href="[% path_cgi %]/get_pending_lists">[%|loc%]View Pending (Requested) lists[%END%]</a></li>
-          <li><a href="[% path_cgi %]/get_closed_lists">[%|loc%]View Closed Lists[%END%]</a></li>
-          <li><a href="[% path_cgi %]/get_latest_lists">[%|loc%]View Lists sorted by Creation Date[%END%]</a></li>
-          <li><a href="[% path_cgi %]/get_inactive_lists">[%|loc%]View Lists sorted by Last Message Date[%END%]</a></li>
+          <li><a href="[% 'get_pending_lists' | url_rel %]">[%|loc%]View Pending (Requested) lists[%END%]</a></li>
+          <li><a href="[% 'get_closed_lists' | url_rel %]">[%|loc%]View Closed Lists[%END%]</a></li>
+          <li><a href="[% 'get_latest_lists' | url_rel %]">[%|loc%]View Lists sorted by Creation Date[%END%]</a></li>
+          <li><a href="[% 'get_inactive_lists' | url_rel %]">[%|loc%]View Lists sorted by Last Message Date[%END%]</a></li>
        </ul>
 [% END %] 
 
@@ -135,7 +135,7 @@
 </form>
 <br />
 <p><a class="actionMenuLinks" href="http://pootle.sympa.org/">[%|loc%]view translations[%END%]</a>
-<a class="actionMenuLinks" href="[% path_cgi %]/ls_templates">[%|loc%]Customize templates[%END%]</a>
+<a class="actionMenuLinks" href="[% 'ls_templates' | url_rel %]">[%|loc%]Customize templates[%END%]</a>
 </p>
 
 </div>
@@ -159,7 +159,7 @@
 [% IF subaction == 'skins' %]
 <h2>[%|loc%]Skins, CSS and colors[%END%]</h2><br />
 <div>
-<a class="actionMenuLinks" href="[% path_cgi %]/skinsedit">[%|loc%]Skins administration page[%END%]</a>
+<a class="actionMenuLinks" href="[% 'skinsedit' | url_rel %]">[%|loc%]Skins administration page[%END%]</a>
 </div>
 [% END %] 
 [% IF subaction == 'edit_config' %]

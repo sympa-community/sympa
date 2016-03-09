@@ -14,7 +14,7 @@
         [% END %]
         <div class="item[% additional_class %]">
         <div class="item_content">
-          <a class="item_title" href="[% path_cgi %]/info/[% l.key %]">
+          <a class="item_title" href="[% 'info' | url_rel([l.key]) %]">
             [%|obfuscate(conf.spam_protection) %][% l.key %][% END %]
             [% IF l.value.is_owner || l.value.is_editor || l.value.is_subscriber ~%]
               <span class="highlighted">(
@@ -41,11 +41,11 @@
 
           <ul class="my">
             [% IF l.value.is_owner %]
-              <li><a href="[% path_cgi %]/review/[% l.key %]"><i class="fa fa-users"></i> [%|loc%]Review members[%END%]</a></li>
+              <li><a href="[% 'review' | url_rel([l.key]) %]"><i class="fa fa-users"></i> [%|loc%]Review members[%END%]</a></li>
             [% END %]
             
             [% IF is_user_allowed_to('archive.web_access', l.key) %]
-              <li><a href="[% path_cgi %]/arc/[% l.key %]"><i class="fa fa-archive"></i> [%|loc%]Archives[%END%]</a></li>
+              <li><a href="[% 'arc' | url_rel([l.key]) %]"><i class="fa fa-archive"></i> [%|loc%]Archives[%END%]</a></li>
             [% END %]
           </ul>
         </div>

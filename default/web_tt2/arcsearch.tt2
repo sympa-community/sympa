@@ -2,11 +2,11 @@
 <div class="block">
 
 <h2>[%|loc%]Result of your search in the archive[%END%] 
-<a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span class="color_dark">[% list %]:</span></a> </h2>
+<a href="[% 'arc' | url_rel([list,archive_name]) %]"><span class="color_dark">[% list %]:</span></a> </h2>
 
 <p>[%|loc%]Search field:[%END%] 
 [% FOREACH u = directories %]
- <a href="[% path_cgi %]/arc/[% list %]/[% u %]"><span class="color_dark">[% u %]</font></a> - 
+ <a href="[% 'arc' | url_rel([list,u]) %]"><span class="color_dark">[% u %]</font></a> - 
 [% END %]
 </p>
 <p>
@@ -139,7 +139,7 @@
 </form>
 <hr />
 
-<a class="actionMenuLinks" href="[% path_cgi %]/arc/[% list %]/[% archive_name %]">[%|loc(archive_name)%]Return to archive %1[%END%] 
+<a class="actionMenuLinks" href="[% 'arc' | url_rel([list,archive_name]) %]">[%|loc(archive_name)%]Return to archive %1[%END%] 
 </a><br />
 
 </div>

@@ -4,7 +4,7 @@
   [% homepage_content %]
 [% ELSE %]
 
-  <p><b>[%|loc%]Description:[%END%]</b> [% info_content %] [% IF is_owner %]<a href="[% path_cgi %]/editfile/[% list %]/info"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>
+  <p><b>[%|loc%]Description:[%END%]</b> [% info_content %] [% IF is_owner %]<a href="[% 'editfile' | url_rel([list,'info']) %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>
 
   [% IF is_owner || is_editor %]
     <hr />
@@ -13,7 +13,7 @@
     [% IF is_owner || is_editor %]
       [% IF mod_message > 0 %]
         <p class="small-8 small-centered columns alert-box info text-center">
-          [%|loc(mod_message)%]There are %1 message(s) awaiting moderation.[%END%] <a href="[% path_cgi %]/modindex/[% list %]">[%|loc%](Review)[%END%]</a>
+          [%|loc(mod_message)%]There are %1 message(s) awaiting moderation.[%END%] <a href="[% 'modindex' | url_rel([list]) %]">[%|loc%](Review)[%END%]</a>
         </p>
       [% END %]
     [% END %]
@@ -21,7 +21,7 @@
     [% IF is_owner %]
       [% IF mod_subscription > 0 %]
         <p class="small-8 small-centered columns alert-box info text-center">
-          [%|loc(mod_subscription)%]There are %1 subscription(s) awaiting moderation.[%END%] <a href="[% path_cgi %]/subindex/[% list %]">[%|loc%](Review)[%END%]</a>
+          [%|loc(mod_subscription)%]There are %1 subscription(s) awaiting moderation.[%END%] <a href="[% 'subindex' | url_rel([list]) %]">[%|loc%](Review)[%END%]</a>
         </p>
       [% END %]
     [% END %]
@@ -32,41 +32,41 @@
   
       <div class="item">
         <div class="item_content">
-         <a class="item_title" href="[% path_cgi %]/review/[% list %]"><i class="fa fa-users fa-3x fa-pull-left fa-border"></i> [%|loc%]View or Manage Subscribers[%END%]</a>
+         <a class="item_title" href="[% 'review' | url_rel([list]) %]"><i class="fa fa-users fa-3x fa-pull-left fa-border"></i> [%|loc%]View or Manage Subscribers[%END%]</a>
           <ul class="fa-ul">
-            <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% path_cgi %]/review/[% list %]">[%|loc%]View the list of subscribers[%END%]</a></li>
-            <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Review subscription requests[%END%]</a></li>
-            <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% path_cgi %]/review/[% list %]">[%|loc%]Add/delete subscribers[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% 'review' | url_rel([list]) %]">[%|loc%]View the list of subscribers[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% 'subindex' | url_rel([list]) %]">[%|loc%]Review subscription requests[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% 'review' | url_rel([list]) %]">[%|loc%]Add/delete subscribers[%END%]</a></li>
           </ul>
         </div>
       </div>
   
       <div class="item">
         <div class="item_content">
-          <a class="item_title" href="[% path_cgi %]/admin/[% list %]"><i class="fa fa-wrench fa-3x fa-pull-left fa-border"></i> [%|loc%]List Configuration[%END%]</a>
+          <a class="item_title" href="[% 'admin' | url_rel([list]) %]"><i class="fa fa-wrench fa-3x fa-pull-left fa-border"></i> [%|loc%]List Configuration[%END%]</a>
           <ul class="fa-ul">
-            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Modify owners or moderators (editors)[%END%]</a></li>
-            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Modify list subject and visibility[%END%]</a></li>
-            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/edit_list_request/[% list %]/sending">[%|loc%]Change who can post to this list[%END%]</a></li>
-            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/edit_list_request/[% list %]/command">[%|loc%]Change who can (un)subscribe and view list information[%END%]</a></li>
-            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/admin/[% list %]">[%|loc%]Close this list[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Modify owners or moderators (editors)[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Modify list subject and visibility[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'sending']) %]">[%|loc%]Change who can post to this list[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'command']) %]">[%|loc%]Change who can (un)subscribe and view list information[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'admin' | url_rel([list]) %]">[%|loc%]Close this list[%END%]</a></li>
           </ul>
         </div>
       </div>
   
       <div class="item">
         <div class="item_content">
-          <a class="item_title" href="[% path_cgi %]/arc/[% list %]"><i class="fa fa-archive fa-3x fa-pull-left fa-border"></i> [%|loc%]List Archives[%END%]</a>
+          <a class="item_title" href="[% 'arc' | url_rel([list]) %]"><i class="fa fa-archive fa-3x fa-pull-left fa-border"></i> [%|loc%]List Archives[%END%]</a>
           <ul class="fa-ul">
-            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/edit_list_request/[% list %]/archives">[%|loc%]Change settings for who can view archives[%END%]</a></li>
-            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% path_cgi %]/arc_manage/[% list %]">[%|loc%]Download archives[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'archives']) %]">[%|loc%]Change settings for who can view archives[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'arc_manage' | url_rel([list]) %]">[%|loc%]Download archives[%END%]</a></li>
           </ul>
         </div>
       </div>
   
       <div class="item">
         <div class="item_content">
-          <a class="item_title" href="[% path_cgi %]/edit_list_request/[% list %]/data_source"><i class="fa fa-database fa-3x fa-pull-left fa-border"></i> [%|loc%]Data Sources Configuration[%END%]</a>
+          <a class="item_title" href="[% 'edit_list_request' | url_rel([list,'data_source']) %]"><i class="fa fa-database fa-3x fa-pull-left fa-border"></i> [%|loc%]Data Sources Configuration[%END%]</a>
           <ul class="fa-ul">
             <li><i class="fa-li fa fa-arrow-right"></i>[%|loc%]Configure data sources (SQL, LDAP, text file) for list membership[%END%]</li>
             <li><i class="fa-li fa fa-arrow-right"></i>[%|loc%]Include (nest) Sympa lists[%END%]</li>

@@ -3,22 +3,20 @@ To: [% to %]
 [% IF type == 'shared_moderated' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Shared document to be approved for %1[%END%][%END%]
 
-[% IF many_files %]
-[%|loc(list.name,filename,who,conf.wwsympa_url)%]There are new shared documents in list %1: 
+[% IF many_files -%]
+[%|loc(list.name,filename,who)%]There are new shared documents in list %1: 
 	%2
 
 	from %3
 
-To moderate these document: 
-%4/modindex/%1[% END %]
-
-[% ELSE %]
-[%|loc(list.name,filename,who,conf.wwsympa_url)%]There is a new shared document in list %1: 
+To moderate these document: [%END%]
+[%- ELSE -%]
+[%|loc(list.name,filename,who)%]There is a new shared document in list %1: 
 	%2 from %3
 
-To moderate this document: 
-%4/modindex/%1
- [% END %][% END %]
+To moderate this document: [%END%]
+[%- END %]
+[% 'modindex' | url_abs([list.name]) %]
 
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(list.name,type)%]Moderators List %1 / %2[%END%][%END%]

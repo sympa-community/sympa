@@ -1,5 +1,5 @@
 <!-- $Id$ -->
-<h2>[%|loc%]Listing messages to moderate[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<h2>[%|loc%]Listing messages to moderate[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 <!-- moderation of messages -->
 [% IF mod_message %]
@@ -118,7 +118,8 @@
 	  </td>
 	  <td>[% f.author %]</td>
 	  <td>
-	    <a href="[% path_cgi %]/d_read/[% list %][% f.escaped_path %][% f.escaped_fname %]">[% f.visible_path %][% f.visible_fname %]</a>
+	    [%# FIXME:path would be percent-encoded. ~%]
+	    <a href="[% 'd_read' | url_rel([list]) %][% f.escaped_path %][% f.escaped_fname %]">[% f.visible_path %][% f.visible_fname %]</a>
 	  </td>
 	  <td>[% f.size %] kb</td>
 	</tr>
@@ -136,7 +137,7 @@
 <p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No documents to moderate[%END%]</p>
 [% END %]
 <br />
-<h2>[%|loc%]Moderation management[%END%] <a  href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<h2>[%|loc%]Moderation management[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderation_management">
 <fieldset>

@@ -2,23 +2,23 @@
 <h2>[%|loc%]Casual administration[%END%]</h2>
 <ul>
 [% IF is_listmaster || is_owner %]
-	  <li><strong><a href="[% path_cgi %]/edit_list_request/[% list %]">[%|loc%]Edit list config:[%END%]</a></strong>  [%|loc%]Use it with care: it allows you to modify some of the list parameters. The list of the parameters you can modify depends on your privileges.[%END%]</li>
+	  <li><strong><a href="[% 'edit_list_request' | url_rel([list]) %]">[%|loc%]Edit list config:[%END%]</a></strong>  [%|loc%]Use it with care: it allows you to modify some of the list parameters. The list of the parameters you can modify depends on your privileges.[%END%]</li>
 [% END %]
 [% IF is_listmaster || is_owner || may_del %]
-          <li><strong><a href="[% path_cgi %]/review/[% list %]">[%|loc%]Manage subscribers:[%END%]</a></strong> [%|loc%]Allows you to add or delete list subscribers, moderate subscriptions and so on.[%END%]</li>
+          <li><strong><a href="[% 'review' | url_rel([list]) %]">[%|loc%]Manage subscribers:[%END%]</a></strong> [%|loc%]Allows you to add or delete list subscribers, moderate subscriptions and so on.[%END%]</li>
   [% IF conf.use_blacklist != 'none' %]
-     	  <li><strong><a href="[% path_cgi %]/blacklist/[% list %]" >[%|loc%]Blacklist:[%END%]</a></strong> [%|loc%]Handles the set of black-listed mail addresses for this list.[%END%]</li>
+     	  <li><strong><a href="[% 'blacklist' | url_rel([list]) %]" >[%|loc%]Blacklist:[%END%]</a></strong> [%|loc%]Handles the set of black-listed mail addresses for this list.[%END%]</li>
   [% END %]
 [% END %]
 [% IF is_listmaster || is_owner %]
 [% IF is_archived %]
-          <li><strong><a href="[% path_cgi %]/arc_manage/[% list %]">[%|loc%]Manage archives:[%END%]</a></strong> [%|loc%]Allows you to download and delete list archives.[%END%]</li>
+          <li><strong><a href="[% 'arc_manage' | url_rel([list]) %]">[%|loc%]Manage archives:[%END%]</a></strong> [%|loc%]Allows you to download and delete list archives.[%END%]</li>
 [% END %]
 [% IF is_listmaster || is_owner  || ( is_editor && may_review ) %]
-          <li><strong><a href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Bounces:[%END%]</a></strong> [%|loc%]Manages non-delivery reports (also called bounces).[%END%]</li>
+          <li><strong><a href="[% 'reviewbouncing' | url_rel([list]) %]">[%|loc%]Bounces:[%END%]</a></strong> [%|loc%]Manages non-delivery reports (also called bounces).[%END%]</li>
 [% END %]
 [% IF is_priv || is_listmaster %]
-          <li><strong><a href="[% path_cgi %]/viewlogs/[% list %]/first" >[%|loc%]Logs:[%END%]</a></strong> [%|loc%]A tool for exploring the list logs.[%END%]</li>
+          <li><strong><a href="[% 'viewlogs' | url_rel([list,'first']) %]" >[%|loc%]Logs:[%END%]</a></strong> [%|loc%]A tool for exploring the list logs.[%END%]</li>
 [% END %]
 [% END %]
 </ul>

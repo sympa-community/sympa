@@ -14,7 +14,7 @@
   [% END %]
   [% IF single_topic != "" %]
     <ul class="mailing_lists_menu">
-      <li><a href="[% path_cgi %]/lists" onclick="show('loading'); hide('content-inner');"><strong>[%|loc%]List of lists[%END%]</strong></a></li>
+      <li><a href="[% 'lists' | url_rel %]" onclick="show('loading'); hide('content-inner');"><strong>[%|loc%]List of lists[%END%]</strong></a></li>
     </ul>
   [% ELSE %]
       <ul class="mailing_lists_menu">
@@ -22,17 +22,17 @@
     [% FOREACH topic = topics %]
       [% IF topic.id == 'other' || topic.id == 'topicsless' %]
 	[% UNLESS topic_other %]
-          <li><a href="[% path_cgi %]/lists/[% topic.id %]" onclick="show('loading'); hide('content-inner');"><strong>[% IF topic.current_title %][% topic.current_title %][% ELSE %][%|loc%]Others[%END%][% END %]</strong></a></li>
+          <li><a href="[% 'lists' | url_rel([topic.id]) %]" onclick="show('loading'); hide('content-inner');"><strong>[% IF topic.current_title %][% topic.current_title %][% ELSE %][%|loc%]Others[%END%][% END %]</strong></a></li>
 	  [% SET topic_other = 1 %]
 	[% END %]
       [% ELSE %]
-       <li><a href="[% path_cgi %]/lists/[% topic.id %]" onclick="show('loading'); hide('content-inner');"><strong>[% topic.current_title %]</strong></a></li>
+       <li><a href="[% 'lists' | url_rel([topic.id]) %]" onclick="show('loading'); hide('content-inner');"><strong>[% topic.current_title %]</strong></a></li>
       [% END %]
 
       [% IF topic.sub.size %]
             <ul class="no_style">
       [% FOREACH subtopic = topic.sub %]
-              <li class="smaller"><a href="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]" onclick="show('loading'); hide('content-inner');">[% subtopic.value.current_title %]</a></li>
+              <li class="smaller"><a href="[% 'lists' | url_rel([topic.id,subtopic.key]) %]" onclick="show('loading'); hide('content-inner');">[% subtopic.value.current_title %]</a></li>
       [% END %]
       </ul>
       [% END %]

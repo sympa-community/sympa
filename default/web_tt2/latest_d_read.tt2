@@ -27,13 +27,16 @@
    <td> [% d.last_update %] </td>
    <td>
     [% IF d.html %]
-      <a href="[% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %]" title="[%|loc%]Open in a new window[%END%]" target="html_window">
+      [%# FIXME:path would be percent-encoded. ~%]
+      <a href="[% 'd_read' | url_rel([list]) %][% d.escaped_content_dir %]/[% d.escaped_name %]" title="[%|loc%]Open in a new window[%END%]" target="html_window">
       <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
     [% ELSIF d.url %]
       <a href="[% d.url %]" title="[%|loc%]Open in a new window[%END%]" target="html_window">
       <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.anchor %] </a>
     [% ELSE %]
-      <a href="[% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %]">
+      [%# FIXME:path would be encoded. ~%]
+      <a href="[% 'd_read' | url_rel([list]) ~%]
+      [% d.escaped_content_dir %]/[% d.escaped_name ~%]">
 	  <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
     [% END %] 
 
@@ -43,7 +46,8 @@
 	   [%|loc%]Unknown[%END%] 
 	[% END %] 
    </td>
-   <td> <a href="[% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]"/> [% d.content_dir %] </td>
+   [%# FIXME:path would be percent-encoded. ~%]
+   <td> <a href="[% 'd_read' | url_rel([list]) %][% d.escaped_content_dir %]"/> [% d.content_dir %] </td>
  </tr>
  
  [% END %]  

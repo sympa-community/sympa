@@ -24,7 +24,7 @@
       <ul class="listenum">
       [% FOREACH listname IN  orderedlist.$letter %]
         <li class="listenum">
-          <a href="[% path_cgi %]/info/[% listname %]">[%|obfuscate(conf.spam_protection) %][% listname %]@[% which.$listname.host %][% END %]
+          <a href="[% 'info' | url_rel([listname]) %]">[%|obfuscate(conf.spam_protection) %][% listname %]@[% which.$listname.host %][% END %]
             [% IF which.$listname.is_owner || which.$listname.is_editor || which.$listname.is_subscriber ~%]
               <span class="highlighted">(
               [%~ IF which.$listname.is_owner ~%]

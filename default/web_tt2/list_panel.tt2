@@ -10,12 +10,12 @@
 
 [% IF may_review %]
 <li>
-    <a href="[% path_cgi %]/review/[% list %]">[%|loc%]Subscribers:[%END%] [% total %]</a>
+    <a href="[% 'review' | url_rel([list]) %]">[%|loc%]Subscribers:[%END%] [% total %]</a>
 </li> 
 [% END %]
 [% IF is_priv %]
 <li>
-    <a href="[% path_cgi %]/reviewbouncing/[% list %]">([%|loc%]Error rate:[%END%] [% bounce_rate %]%)</a> 
+    <a href="[% 'reviewbouncing' | url_rel([list]) %]">([%|loc%]Error rate:[%END%] [% bounce_rate %]%)</a> 
 </li>
 [% END %]
 <li class="nolink">
@@ -43,7 +43,7 @@
 
     [% IF is_priv %]
       <span>
-        <a href="[% path_cgi %]/edit_list_request/[% list %]/description#owner"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>
+        <a href="[% 'edit_list_request' | url_rel([list,'description'],{},'owner') %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>
       </span>
     [% END %]
   </span>
@@ -78,7 +78,7 @@
 
     [% IF is_priv %]
       <span>
-        <a href="[% path_cgi %]/edit_list_request/[% list %]/description#editor"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>
+        <a href="[% 'edit_list_request' | url_rel([list,'description'],{},'editor') %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>
       </span>
     [% END %]
   </span>
@@ -86,7 +86,7 @@
 
 [% IF list_as_x509_cert %]
   <li>
-    <a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a>
+    <a href="[% 'load_cert' | url_rel([list]) %]">[%|loc%]Load certificate[%END%]</a>
   </li>
 [% END %]
 

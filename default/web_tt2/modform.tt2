@@ -72,7 +72,7 @@
     <a class="close-reveal-modal" aria-label="Close">&#215;</a>
   </div>
 [% IF !mod_display_message %]
-&nbsp;<button type="button" class="action" name="action_distribute" value="[%|loc%]view[%END%]" data-tooltip aria-haspopup="true" data-reveal-id="mainviewmod[% msg.key %]" onclick="jQuery('#viewmod[% msg.key %]').load('[% path_cgi %]/ajax/viewmod/[% list %]/[% msg.key %]')" title="[%|loc%]view[%END%]"><i class="fa fa-eye fa-lg"></i></button>
+&nbsp;<button type="button" class="action" name="action_distribute" value="[%|loc%]view[%END%]" data-tooltip aria-haspopup="true" data-reveal-id="mainviewmod[% msg.key %]" onclick="jQuery('#viewmod[% msg.key %]').load('[% 'ajax/viewmod' | url_rel([list,msg.key]) %]')" title="[%|loc%]view[%END%]"><i class="fa fa-eye fa-lg"></i></button>
 [% END %]
 
 [% IF is_owner %]

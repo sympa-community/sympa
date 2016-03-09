@@ -47,7 +47,7 @@
       [% END %]
       [% IF list %]
        [% TRY; PROCESS title.tt2; CATCH; ''; END %]
-       [% IF list_title %]<p><b>[%|loc%]Subject:[%END%]</b> [% list_title %] [% IF is_owner %]<a href="[% path_cgi %]/edit_list_request/[% list %]/description"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>[% END %]
+       [% IF list_title %]<p><b>[%|loc%]Subject:[%END%]</b> [% list_title %] [% IF is_owner %]<a href="[% 'edit_list_request' | url_rel([list,'description']) %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>[% END %]
       [% END %]
 
         [% TRY; PROCESS nav.tt2; CATCH; ''; END %]

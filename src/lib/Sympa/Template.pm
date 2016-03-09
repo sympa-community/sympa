@@ -245,6 +245,38 @@ sub optdesc {
     };
 }
 
+sub _url_func {
+    my $self   = shift;
+    my $is_abs = shift;
+    my $data   = shift;
+    my %options;
+    @options{qw(paths query fragment)} = @_;
+
+    @options{qw(authority decode_html nomenu)} = (
+        ($is_abs ? 'default' : 'omit'),
+        ($self->{subdir} && $self->{subdir} eq 'web_tt2'),
+        ($self->{subdir} && $self->{subdir} eq 'web_tt2' && $data->{nomenu}),
+    );
+
+    my $that = $self->{context};
+    my $robot_id =
+          (ref $that eq 'Sympa::List') ? $that->{'domain'}
+        : ($that and $that ne '*') ? $that
+        :                            '*';
+
+    return sub {
+        my $action = shift;
+
+        my %nomenu;
+        if ($action and $action =~ m{\Anomenu/(.*)\z}) {
+            $action = $1;
+            %nomenu = (nomenu => 1);
+        }
+        my $url = Sympa::get_url($robot_id, $action, %options, %nomenu);
+        $options{decode_html} ? Sympa::Tools::Text::encode_html($url) : $url;
+    };
+}
+
 sub parse {
     my $self       = shift;
     my $data       = shift;
@@ -287,7 +319,9 @@ sub parse {
             escape_url   => [\&_escape_url,   0],
             escape_quote => [\&_escape_quote, 0],
             decode_utf8  => [\&decode_utf8,   0],
-            encode_utf8  => [\&encode_utf8,   0]
+            encode_utf8  => [\&encode_utf8,   0],
+            url_abs => [sub { shift; $self->_url_func(1, $data, @_) }, 1],
+            url_rel => [sub { shift; $self->_url_func(0, $data, @_) }, 1],
         }
     };
 
@@ -595,6 +629,44 @@ Despite its name, appropriate encoding scheme
 =item unescape
 
 No longer used.
+
+=item url_abs ( ... )
+
+Same as L</"url_rel"> but gives absolute URI.
+
+Note:
+This filter was introduced by Sympa 6.2.15.
+
+=item url_rel ( [ paths, [ query, [ fragment ] ] ] )
+
+Gives relative URI for specified action.
+
+If it is called by the web templates (in C<web_tt2> subdirectories),
+HTML entities in the arguments will be decoded
+and special characters in resulting URL will be encoded.
+
+=over
+
+=item Filtered text
+
+Name of action.
+
+=item paths
+
+Array.  Additional path components.
+
+=item query
+
+Hash.  Optional query.
+
+=item fragment
+
+Scalar.  Optional fragment.
+
+=back
+
+Note:
+This filter was introduced by Sympa 6.2.15.
 
 =item wrap ( init, subs, cols )
 
