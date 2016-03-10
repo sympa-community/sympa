@@ -298,7 +298,7 @@ sub _send_msg {
                 return undef;
             }
             $tags_to_use->{'tag_noverp'} = '0' if $result;
-            $numstored++;
+            $numstored += $result->{total_packets};
 
             # Add number and size of messages sent to total in stats file.
             my $numsent = scalar @selected_tabrcpt;
@@ -344,7 +344,7 @@ sub _send_msg {
                 return undef;
             }
             $tags_to_use->{'tag_verp'} = '0' if $result;
-            $numstored++;
+            $numstored += $result->{total_packets};
 
             # Add number and size of messages sent to total in stats file.
             my $numsent = scalar @verp_selected_tabrcpt;

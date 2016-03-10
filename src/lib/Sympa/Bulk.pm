@@ -274,6 +274,7 @@ sub store {
     } else {
         @rcpts = _get_recipient_tabs_by_domain($robot_id, @{$rcpt || []});
     }
+    my $total_sent = $#rcpts+1;
 
     # Create a temporary lock file in the packet directory to prevent bulk.pl
     # from removing packet directory and the message during addition of
@@ -303,7 +304,8 @@ sub store {
 
     $log->syslog('notice', 'Message %s is stored into bulk spool as <%s>',
         $message, $marshalled);
-    return $marshalled;
+    return unless $marshalled;
+    return {marshalled => $marshalled,total_packets=> $total_sent};
 }
 
 # Old name: (part of) Sympa::Mail::mail_message().
