@@ -35,9 +35,18 @@ use constant email => qr'([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+';
 use constant family_name => qr'[a-z0-9][a-z0-9\-\.\+_]*';
 ## Allow \s for template names
 use constant template_name => qr'[a-zA-Z0-9][a-zA-Z0-9\-\.\+_\s]*';
-use constant host          => qr'[\w\.\-]+';
+#FIXME: Not matching with IPv6 address.
+use constant host     => qr'[\w\.\-]+';
+use constant hostport => qr{(?:
+        [-.\w]+ (?::\d+)?
+      | [:0-9a-f]*:[:0-9a-f]*:[:0-9a-f]*
+      | \[ [:0-9a-f]*:[:0-9a-f]*:[:0-9a-f]* \] (?::\d+)?
+    )}ix;
+use constant ipv6 => qr'[:0-9a-f]*:[:0-9a-f]*:[:0-9a-f]*'i;
+#FIXME: Cannot contain IPv6 address.
 use constant multiple_host_with_port =>
     '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*';
+#FIXME: Cannot contain IPv6 address.
 use constant multiple_host_or_url =>
     qr'([-\w]+://.+|[-.\w]+(:\d+)?)(,([-\w]+://.+|[-.\w]+(:\d+)?))*';
 use constant listname    => qr'[a-z0-9][a-z0-9\-\.\+_]*';

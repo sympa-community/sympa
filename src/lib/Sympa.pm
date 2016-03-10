@@ -54,6 +54,7 @@ use Conf;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Regexps;
 use Sympa::Spindle::ProcessTemplate;
 use Sympa::Ticket;
 use Sympa::Tools::Data;
@@ -1383,9 +1384,12 @@ sub get_url {
             }
         }
 
-        unless ($host_port) {
+        my $hostport_re = Sympa::Regexps::hostport();
+        my $ipv6_re     = Sympa::Regexps::ipv6();
+        unless ($host_port and $host_port =~ /\A$hostport_re\z/) {
             # Try authority locally given.
-            if ($host_port = $ENV{HTTP_HOST}) {
+            if (    $host_port = $ENV{HTTP_HOST}
+                and $host_port =~ /\A$hostport_re\z/) {
                 ;
             } else {
                 # HTTP/1.0 or earlier?
@@ -1395,7 +1399,7 @@ sub get_url {
         }
 
         if ($host_port) {
-            if ($host_port !~ /[^:0-9a-f]/i and $host_port =~ /:.*:/) {
+            if ($host_port =~ /\A$ipv6_re\z/) {
                 # IPv6 address not enclosed.
                 $host_port = "[$host_port]";
             }
@@ -1403,7 +1407,7 @@ sub get_url {
                 $host_port .= ':'
                     . ($port ? $port : ($uri->scheme eq 'https') ? 443 : 80);
             }
-            $uri->host_port($host_port);
+            $uri->host_port(lc $host_port);
         }
 
         $base = $uri->canonical->as_string;
@@ -1415,12 +1419,13 @@ sub get_url {
     }
 
     $base .= '/nomenu' if $options{nomenu};
-    $base .= '/' . $action if defined $action and length $action;
 
     if (ref $that eq 'Sympa::List') {
+        $base .= '/' . ($action || 'info');
         return Sympa::Tools::Text::weburl($base,
             [$that->{'name'}, @{$options{paths} || []}], %options);
     } else {
+        $base .= '/' . $action if $action;
         return Sympa::Tools::Text::weburl($base, $options{paths}, %options);
     }
 }
