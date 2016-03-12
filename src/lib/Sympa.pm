@@ -1305,12 +1305,10 @@ This is inserted into URL intact.
 =item authority =E<gt> $mode
 
 C<'default'> respects C<wwsympa_url> parameter.
-C<'remote'> replaces scheme, host and port using CGI environment variables.
-C<'local'> is similar but may additionally replace script path.
+C<'local'> is similar but may replace host name and script path.
 C<'omit'> omits scheme and authority, i.e. returns relative URI.
 
-Note that C<'remote'> and C<'local'> modes work correctly only under
-CGI environment.
+Note that C<'local'> mode works correctly only under CGI environment.
 See also a note below.
 
 =item nomenu =E<gt> 1
@@ -1336,10 +1334,8 @@ Note:
 If $mode is C<'local'>, result is that Sympa server recognizes locally.
 In other cases, result is the URI that is used by end users to access to web
 interface.
-When, for example, the server is placed behind reverse proxy,
-C<'local'> URI can be differ from others
-and C<'remote'> URI is less trustworthy than others.
-So C<Location:> field in HTTP response to cause redirection would be better
+When, for example, the server is placed behind a reverse-proxy,
+C<Location:> field in HTTP response to cause redirection would be better
 to contain C<'local'> URI.
 
 =back
@@ -1358,56 +1354,39 @@ sub get_url {
     my $option_authority = $options{authority} || 'default';
 
     my $base;
-    if ($option_authority eq 'remote' or $option_authority eq 'local') {
+    if ($option_authority eq 'local') {
         my $uri = URI->new(Conf::get_robot_conf($robot_id, 'wwsympa_url'));
 
-        # Override scheme, host and port by actual ones.
+        # Override scheme.
         if ($ENV{HTTPS} and $ENV{HTTPS} eq 'on') {
             $uri->scheme('https');
         }
 
+        # Try authority locally given.
         my ($host_port, $port);
-        if ($option_authority eq 'remote') {
-            # Try authority remotely given.
-            # Note: Several proxies set "X-Forwarded-Host:" and/or
-            # "X-Forwarded-Server:" fields.  Some of them (e.g. AWS load
-            # balancer) additionally set "X-Forwarded-Port:" field.
-            if ($host_port = $ENV{HTTP_X_FORWARDED_HOST}) {
-                $host_port = [split /\s*,\s*/, $host_port]->[0];
-            } elsif ($host_port = $ENV{HTTP_X_FORWARDED_SERVER}) {
-                $host_port = [split /\s*,\s*/, $host_port]->[0];
-                $port = $ENV{HTTP_X_FORWARDED_PORT};
-            }
-        } else {    # 'local'
-            if (my $path = $ENV{SCRIPT_NAME}) {
-                $uri->path($path);
-            }
-        }
-
         my $hostport_re = Sympa::Regexps::hostport();
         my $ipv6_re     = Sympa::Regexps::ipv6();
-        unless ($host_port and $host_port =~ /\A$hostport_re\z/) {
-            # Try authority locally given.
-            if (    $host_port = $ENV{HTTP_HOST}
-                and $host_port =~ /\A$hostport_re\z/) {
-                ;
-            } else {
-                # HTTP/1.0 or earlier?
-                $host_port = $ENV{SERVER_NAME};
-                $port      = $ENV{SERVER_PORT};
-            }
+        unless ($host_port = $ENV{HTTP_HOST}
+            and $host_port =~ /\A$hostport_re\z/) {
+            # HTTP/1.0 or earlier?
+            $host_port = $ENV{SERVER_NAME};
+            $port      = $ENV{SERVER_PORT};
         }
-
         if ($host_port) {
             if ($host_port =~ /\A$ipv6_re\z/) {
                 # IPv6 address not enclosed.
-                $host_port = "[$host_port]";
+                $host_port = '[' . $host_port . ']';
             }
             unless ($host_port =~ /:\d+\z/) {
                 $host_port .= ':'
                     . ($port ? $port : ($uri->scheme eq 'https') ? 443 : 80);
             }
-            $uri->host_port(lc $host_port);
+            $uri->host_port($host_port);
+        }
+
+        # Override path with actual one.
+        if (my $path = $ENV{SCRIPT_NAME}) {
+            $uri->path($path);
         }
 
         $base = $uri->canonical->as_string;
