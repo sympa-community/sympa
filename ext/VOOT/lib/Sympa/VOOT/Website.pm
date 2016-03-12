@@ -176,7 +176,7 @@ sub getAccessFor($$$)
 {   my ($self, $consumer, $param, $here) = @_;
     my $goto  = $consumer->startAuth(param => $param
       , next_page => "$param->{base_url}$param->{path_cgi}/$here"
-      );
+      ); #FIXME: Use Sympa::get_url().
     log(info => "going for access at $goto");
     $goto ? main::do_redirect($goto) : 1;
 

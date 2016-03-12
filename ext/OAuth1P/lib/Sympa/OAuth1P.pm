@@ -145,7 +145,8 @@ my $prov_id;
     $consumer->get
       ( method    => $ENV{REQUEST_METHOD}
       , voot_path => $voot_path
-      , url       => "$param->{base_url}$param->{path_cgi}/voot/$voot_path"
+      , url       => Sympa::get_url($args{robot_id}, 'voot',
+          nomenu => $param->{nomenu}, paths => [$voot_path])
       , authorization_header => $ENV{HTTP_AUTHORIZATION}
       , request_parameters   => $in
       , robot     => $args{robot_id}
@@ -176,7 +177,7 @@ sub createProvider($$$$)
       , url                  => "$param->{base_url}$param->{path_cgi}/$for"
       , authorization_header => $ENV{HTTP_AUTHORIZATION}
       , request_parameters   => $in
-      );
+      ); #FIXME: Use Sympa::get_url().
 
     my $bad = $provider ? $provider->checkRequest(checktoken => $check) : 400;
     my $http_code = $bad || 200;

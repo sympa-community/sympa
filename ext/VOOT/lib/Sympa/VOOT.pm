@@ -184,6 +184,7 @@ sub consumer($$@)
     # 20130409 MO: ugly, only used for oauth2 right now.
     # Needed because of a bug in current SURFconext implementation.  See
     # remark in https://wiki.surfnetlabs.nl/display/surfconextdev/API
+    #FIXME: Use Sympa::get_url().
     $auth->{redirect_uri} ||=
        "$param->{base_url}$param->{path_cgi}/oauth2_ready/$prov_id";
 

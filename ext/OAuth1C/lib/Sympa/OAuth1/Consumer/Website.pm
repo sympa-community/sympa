@@ -67,6 +67,7 @@ sub startAuth(%)
     my $ticket   = Sympa::Ticket::create($session->{user}
       , $param->{session}{robot}, $come_back, $ip);
 
+    #FIXME: Use Sympa::get_url().
     join '/', "$param->{base_url}$param->{path_cgi}"
       , oauth_ready => $session->{provider}, $ticket;
 }

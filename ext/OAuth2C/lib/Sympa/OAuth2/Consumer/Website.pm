@@ -71,6 +71,7 @@ sub startAuth(%)
     $session->{next_page} = $come_back;
     $self->updateSession($session);
 
+    #FIXME: Use Sympa::get_url().
     join '/', "$param->{base_url}$param->{path_cgi}"
       , oauth2_ready => $session->{provider};
 }
