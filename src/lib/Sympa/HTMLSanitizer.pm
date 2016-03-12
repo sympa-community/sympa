@@ -29,11 +29,10 @@ use warnings;
 use base qw(HTML::StripScripts::Parser);
 
 use Scalar::Util qw();
+use URI;
 
-use Conf;
+use Sympa;
 use Sympa::Tools::Text;
-
-our %url_prefix_of;
 
 # Returns a specialized HTML::StripScripts::Parser object built with the
 # parameters provided as arguments.
@@ -46,14 +45,8 @@ sub new {
             AllowSrc => 1,
         }
     );
-
-    my $url_prefix =
-        lc(    Conf::get_robot_conf($robot_id, 'http_host')
-            || Conf::get_robot_conf($robot_id, 'wwsympa_url'));
-    $url_prefix = 'http://' . $url_prefix
-        unless $url_prefix =~ m{\A[-\w]+://};
-    $url_prefix =~ s{/\z}{};    # Strip trailing path separator.
-    $url_prefix_of{$self + 0} = $url_prefix;
+    $self->{_shsURLPrefix} =
+        URI->new(Sympa::get_url($robot_id))->canonical->as_string;
 
     return $self;
 }
@@ -64,14 +57,17 @@ sub validate_src_attribute {
     my $text = shift;
 
     # Allow only cid URLs and local links in src attribute.
-    my $url_prefix = $url_prefix_of{$self + 0};
-    if (   index(lc $text, 'cid:') == 0
-        or ($url_prefix and lc $text eq $url_prefix)
-        or ($url_prefix and index(lc $text, $url_prefix . '/') == 0)) {
-        return $text;
-    } else {
-        return undef;
+    $text = URI->new($text)->canonical->as_string;
+    return $text if 0 == index $text, 'cid:';
+    if (my $url_prefix = $self->{_shsURLPrefix}) {
+        return $text
+            if $text eq $url_prefix
+                or 0 == index($text, $url_prefix . '/')
+                or 0 == index($text, $url_prefix . '?')
+                or 0 == index($text, $url_prefix . '#');
     }
+
+    return undef;
 }
 
 # This method is specific to this subclass.
@@ -158,12 +154,6 @@ sub sanitize_var {
         die 'Variable is neither a hash nor an array';
     }
     return 1;
-}
-
-sub DESTROY {
-    my $self = shift;
-
-    delete $url_prefix_of{$self + 0};
 }
 
 1;

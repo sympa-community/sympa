@@ -36,6 +36,7 @@ use Sympa::Constants;
 use Sympa::Language;
 use Sympa::LockedFile;
 use Sympa::Log;
+use Sympa::Regexps;
 use Sympa::Report;
 use Sympa::Template;
 use Sympa::Tools::File;
@@ -259,34 +260,74 @@ sub init_passwd {
     return 1;
 }
 
+# NOTE: As of 6.2.15, by default, less trustworthy "X-Forwarded-Host:" request
+# field is not referred and this function returns host name and path
+# respecting wwsympa_url robot parameter.  To change this behavior, use
+# "authority" option (See Sympa::get_url()).
 sub get_my_url {
-    my $return_url;
+    my $robot   = shift;
+    my %options = @_;
 
-    # mod_ssl sets SSL_PROTOCOL; Apache-SSL sets SSL_PROTOCOL_VERSION.
-    if ($ENV{'HTTPS'} and $ENV{'HTTPS'} eq 'on') {
-        $return_url = 'https';
+    my $original_path_info;
+
+    # Try getting encoded PATH_INFO and query.
+    my $request_uri = $ENV{REQUEST_URI} || '';
+    my $script_name = $ENV{SCRIPT_NAME} || '';
+    if (   $request_uri eq $script_name
+        or 0 == index($request_uri, $script_name . '?')
+        or 0 == index($request_uri, $script_name . '/')) {
+        $original_path_info = substr($request_uri, length $script_name);
     } else {
-        $return_url = 'http';
+        # Workaround: Encode PATH_INFO again and use it.
+        my $path_info = $ENV{PATH_INFO} || '';
+        my $query_string = $ENV{QUERY_STRING};
+        $original_path_info =
+            Sympa::Tools::Text::encode_uri($path_info, omit => '/')
+            . ($query_string ? ('?' . $query_string) : '');
     }
 
-    $return_url .= '://' . Sympa::Tools::WWW::get_http_host();
-    $return_url .= ':' . $ENV{'SERVER_PORT'}
-        unless $ENV{'SERVER_PORT'} eq '80'
-            or $ENV{'SERVER_PORT'} eq '443';
-    $return_url .= $ENV{'REQUEST_URI'};
-    return ($return_url);
+    return Sympa::get_url($robot, undef, authority => $options{authority})
+        . $original_path_info;
 }
 
 # Old name: (part of) get_header_field() in wwsympa.fcgi.
+# NOTE: As of 6.2.15, less trustworthy "X-Forwarded-Server:" request field is
+# _no longer_ referred and this function returns only locally detected server
+# name.
 sub get_server_name {
-    # HTTP_X_ header fields set when using a proxy
-    return $ENV{'HTTP_X_FORWARDED_SERVER'} || $ENV{'SERVER_NAME'};
+    my $server = $ENV{SERVER_NAME};
+    return undef unless defined $server and length $server;
+
+    my $ipv6_re = Sympa::Regexps::ipv6();
+    if ($server =~ /\A$ipv6_re\z/) {    # IPv6 address
+        $server = "[$server]";
+    }
+    return lc $server;
 }
 
 # Old name: (part of) get_header_field() in wwsympa.fcgi.
+# NOTE: As of 6.2.15, less trustworthy "X-Forwarded-Host:" request field is
+# _no longer_ referred and this function returns only locally detected host
+# information.
 sub get_http_host {
-    # HTTP_X_ header fields set when using a proxy
-    return $ENV{'HTTP_X_FORWARDED_HOST'} || $ENV{'HTTP_HOST'};
+    my ($host, $port);
+
+    my $hostport_re = Sympa::Regexps::hostport();
+    my $ipv6_re     = Sympa::Regexps::ipv6();
+    unless ($host = $ENV{HTTP_HOST} and $host =~ /\A$hostport_re\z/) {
+        $host = $ENV{SERVER_NAME};
+        $port = $ENV{SERVER_PORT};
+    }
+    return undef unless $host;
+
+    if ($host =~ /\A$ipv6_re\z/) {    # IPv6 address
+        $host = "[$host]";
+    }
+    unless ($host =~ /:\d+\z/) {
+        $host = "$host:$port" if $port;
+    }
+
+    return lc $host;
 }
 
 # Uploade source file to the destination on the server
