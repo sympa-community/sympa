@@ -5023,8 +5023,7 @@ sub _include_users_remote_file {
     my $req = HTTP::Request->new(GET => $url);
 
     if (defined $param->{'user'} && defined $param->{'passwd'}) {
-        # FIXME: set agent credentials,
-        # requiring to compute realm and net location
+        $req->authorization_basic($param->{'user'}, $param->{'passwd'});
     }
 
     my $res = $fetch->request($req);
