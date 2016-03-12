@@ -16,7 +16,7 @@ To moderate these document: [%END%]
 
 To moderate this document: [%END%]
 [%- END %]
-[% 'modindex' | url_abs([list.name]) %]
+[% 'docindex' | url_abs([list.name]) %]
 
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(list.name,type)%]Moderators List %1 / %2[%END%][%END%]

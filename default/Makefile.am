@@ -213,6 +213,7 @@ nobase_default_DATA = \
 	web_tt2/d_control.tt2 \
 	web_tt2/d_editfile.tt2 \
 	web_tt2/d_install_shared.tt2 \
+	web_tt2/docindex.tt2 \
 	web_tt2/d_properties.tt2 \
 	web_tt2/d_read.tt2 \
 	web_tt2/dump_scenario.tt2 \

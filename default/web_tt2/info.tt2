@@ -16,6 +16,11 @@
           [%|loc(mod_message)%]There are %1 message(s) awaiting moderation.[%END%] <a href="[% 'modindex' | url_rel([list]) %]">[%|loc%](Review)[%END%]</a>
         </p>
       [% END %]
+      [% IF mod_total_shared > 0 %]
+        <p class="small-8 small-centered columns alert-box info text-center">
+          [%|loc(mod_total_shared)%]There are %1 shared document(s) awaiting moderation.[%END%] <a href="[% 'docindex' | url_rel([list]) %]">[%|loc%](Review)[%END%]</a>
+        </p>
+      [% END %]
     [% END %]
     
     [% IF is_owner %]

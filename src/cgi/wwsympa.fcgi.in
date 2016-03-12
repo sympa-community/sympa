@@ -202,6 +202,7 @@ our %comm = (
     'del'              => 'do_del',
     'del_fromsig'      => 'do_del_fromsig',
     'modindex'         => 'do_modindex',
+    'docindex'         => 'do_docindex',
     'reject'           => 'do_reject',
     #XXX'reject_notify' => 'do_reject_notify',
     'distribute'      => 'do_distribute',
@@ -371,6 +372,7 @@ our %action_args = (
     'd_reject_shared'  => ['list',            'id'],
     'd_install_shared' => ['list',            'id'],
     'modindex'         => ['list'],
+    'docindex'         => ['list'],
     'viewmod'     => ['list', 'id', '@file'],
     'viewfile'    => ['list', 'file'],
     'add'         => ['list', 'email'],
@@ -554,6 +556,7 @@ our %required_args = (
     'logout'        => ['param.user.email'],
     'manage_template'    => ['param.list',       'param.user.email'],
     'modindex'           => ['param.list',       'param.user.email'],
+    'docindex'           => ['param.list',       'param.user.email'],
     'multiple_subscribe' => ['param.list'],
     'pref'               => ['param.user.email'],
     'purge_list'         => ['param.user.email', 'selected_lists'],
@@ -649,6 +652,7 @@ our %required_privileges = (
     'ls_templates'         => ['listmaster'],
     'manage_template'      => ['owner'],
     'modindex'        => ['editor',           'owner', 'listmaster'],
+    'docindex'        => ['editor',           'owner', 'listmaster'],
     'purge_list'      => ['privileged_owner', 'listmaster'],
     'rebuildallarc'   => ['listmaster'],
     'rebuildarc'      => ['listmaster'],
@@ -692,7 +696,7 @@ my %action_type = (
     'add_request' => 'admin',
     'add'         => 'admin',
     'del'         => 'admin',
-#		'modindex' =>'admin',
+    # 'modindex' =>'admin',
     'reject'             => 'admin',
     'reject_notify'      => 'admin',
     'distribute'         => 'admin',
@@ -8408,7 +8412,14 @@ sub do_modindex {
             push(@{$param->{'available_files'}}, $file);
         }
     }
-    ## shared documents awaiting moderation
+
+    return 1;
+}
+
+sub do_docindex {
+    wwslog('info', '');
+
+    # Shared documents awaiting moderation
     foreach my $d (@{$param->{'doc_mod_list'}}) {
 
         $d =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
@@ -8447,13 +8458,6 @@ sub do_modindex {
         push(@{$param->{'info_doc_mod'}}, $doc);
     }
 
-    unless (($param->{'spool'}) || ($param->{'mod_total_shared'} > 0)) {
-        Sympa::Report::notice_report_web('no_msg_document',
-            {'list' => $in{'list'}},
-            $param->{'action'});
-        wwslog('err', 'No message and no document');
-    }
-
     return 1;
 }
 
@@ -8462,7 +8466,7 @@ sub do_d_install_shared {
     wwslog('info', '(%s)', $in{'id'});
 
     if ($in{'mode_cancel'}) {
-        return 'modindex';
+        return 'docindex';
     }
 
     my $shareddir = $list->{'dir'} . '/shared';
@@ -8646,7 +8650,7 @@ sub do_d_install_shared {
 
     Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
     web_db_log({'status' => 'success'});
-    return 'modindex';
+    return 'docindex';
 }
 
 ### reject moderated documents of shared
@@ -8736,7 +8740,7 @@ sub do_d_reject_shared {
             'status'     => 'success'
         }
     );
-    return 'modindex';
+    return 'docindex';
 }
 
 ####################################################

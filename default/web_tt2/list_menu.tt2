@@ -75,7 +75,8 @@
     [% IF is_editor %]
       [% IF action == 'modindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
       <li  class="[% class %]"><a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Message[%END%] ([% mod_message %]) </a></li>
-      <li  class="[% class %]"><a  href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Document[%END%] ([% mod_total_shared %])</a></li>
+      [% IF action == 'docindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+      <li class="[% class %]"><a href="[% 'docindex' | url_rel([list]) %]">[%|loc%]Document[%END%] ([% mod_total_shared %])</a></li>
     [% END %]
     [% IF is_owner %]
       [% IF action == 'subindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]

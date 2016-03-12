@@ -231,7 +231,7 @@
         [% IF is_editor %]
           [% IF f.moderate %]
 	  [% IF expert_page %]
-          <a href="[% 'modindex' | url_rel([list]) %]"  class="tip-left color_10" data-tooltip aria-haspopup="true" title="[%|loc%]moderate[%END%]"> <i class="fa fa-shield fa-lg"></i></a>&nbsp;
+          <a href="[% 'docindex' | url_rel([list]) %]"  class="tip-left color_10" data-tooltip aria-haspopup="true" title="[%|loc%]moderate[%END%]"> <i class="fa fa-shield fa-lg"></i></a>&nbsp;
 	  [% END %]
           [% ELSE %]
 
