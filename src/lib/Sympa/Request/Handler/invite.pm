@@ -85,15 +85,10 @@ sub _twist {
     $context{'user'}{'gecos'} = $comment;
     $context{'requested_by'}  = $sender;
 
-    my $auth_method =
-          $request->{smime_signed} ? 'smime'
-        : $request->{md5_check}    ? 'md5'
-        : $request->{dkim_pass}    ? 'dkim'
-        :                            'smtp';
-
+    # Emulating subscription privilege of target user.
     my $result =
-        Sympa::Scenario::request_action($list, 'subscribe', $auth_method,
-        $self->{scenario_context});
+        Sympa::Scenario::request_action($list, 'subscribe', 'md5',
+        {sender => $email});
     my $action;
     $action = $result->{'action'} if ref $result eq 'HASH';
 
@@ -111,7 +106,19 @@ sub _twist {
         return undef;
     }
 
-    if ($action =~ /\Arequest_auth\b/i) {
+    if ($action =~ /\Areject\b/i) {
+        $log->syslog(
+            'info',
+            'INVITE %s %s from %s refused, not allowed (%.2f seconds, %d subscribers)',
+            $which,
+            $email,
+            $sender,
+            Time::HiRes::time() - $self->{start_time},
+            $list->get_total()
+        );
+        $self->add_stash($request, 'auth', $result->{'reason'},
+            {'email' => $email, template => $result->{'tt2'}});
+    } else {
         my $keyauth = Sympa::compute_auth(
             context => $list,
             email   => $email,
@@ -145,48 +152,6 @@ sub _twist {
             $list->get_total()
         );
         $self->add_stash($request, 'notice', 'invite', {'email' => $email});
-
-    } elsif ($action !~ /\Areject\b/i) {
-        $context{'subject'} = sprintf 'sub %s %s', $list->{'name'}, $comment;
-        unless (Sympa::send_file($list, 'invite', $email, \%context)) {
-            $log->syslog('notice', 'Unable to send template "invite" to %s',
-                $email);
-            my $error = sprintf 'Unable to send template "invite" to %s',
-                $email;
-            Sympa::send_notify_to_listmaster(
-                $list,
-                'mail_intern_error',
-                {   error  => $error,
-                    who    => $sender,
-                    action => 'Command process',
-                }
-            );
-            $self->add_stash($request, 'intern');
-            return undef;
-        }
-        $log->syslog(
-            'info',
-            'INVITE %s %s from %s accepted, (%.2f seconds, %d subscribers)',
-            $which,
-            $email,
-            $sender,
-            Time::HiRes::time() - $self->{start_time},
-            $list->get_total()
-        );
-        $self->add_stash($request, 'notice', 'invite', {'email' => $email});
-
-    } elsif ($action =~ /\Areject\b/i) {
-        $log->syslog(
-            'info',
-            'INVITE %s %s from %s refused, not allowed (%.2f seconds, %d subscribers)',
-            $which,
-            $email,
-            $sender,
-            Time::HiRes::time() - $self->{start_time},
-            $list->get_total()
-        );
-        $self->add_stash($request, 'auth', $result->{'reason'},
-            {'email' => $email, template => $result->{'tt2'}});
     }
 
     return 1;
