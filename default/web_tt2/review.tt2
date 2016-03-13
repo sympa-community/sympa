@@ -4,6 +4,7 @@
 
   <h3>[%|loc%]Administrative Options[%END%]</h3>
   <a class="actionMenuLinks" href="[% 'subindex' | url_rel([list]) %]">[%|loc%]Pending subscriptions[%END%]</a> 
+  <a class="actionMenuLinks" href="[% 'sigindex' | url_rel([list]) %]">[%|loc%]Pending unsubscriptions[%END%]</a> 
   [% IF conf.use_blacklist != 'none' %]
     <a class="actionMenuLinks" href="[% 'blacklist' | url_rel([list]) %]">[%|loc%]Blacklist[%END%]</a>
   [% END %]

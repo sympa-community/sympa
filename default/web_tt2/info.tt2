@@ -29,6 +29,11 @@
           [%|loc(mod_subscription)%]There are %1 subscription(s) awaiting moderation.[%END%] <a href="[% 'subindex' | url_rel([list]) %]">[%|loc%](Review)[%END%]</a>
         </p>
       [% END %]
+      [% IF mod_signoff > 0 %]
+        <p class="small-8 small-centered columns alert-box info text-center">
+          [%|loc(mod_signoff)%]There are %1 unsubscription(s) awaiting moderation.[%END%] <a href="[% 'sigindex' | url_rel([list]) %]">[%|loc%](Review)[%END%]</a>
+        </p>
+      [% END %]
     [% END %]
 
      [% IF is_owner %]
@@ -41,6 +46,7 @@
           <ul class="fa-ul">
             <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% 'review' | url_rel([list]) %]">[%|loc%]View the list of subscribers[%END%]</a></li>
             <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% 'subindex' | url_rel([list]) %]">[%|loc%]Review subscription requests[%END%]</a></li>
+            <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% 'sigindex' | url_rel([list]) %]">[%|loc%]Review unsubscription requests[%END%]</a></li>
             <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% 'review' | url_rel([list]) %]">[%|loc%]Add/delete subscribers[%END%]</a></li>
           </ul>
         </div>

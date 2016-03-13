@@ -55,13 +55,12 @@ pending subscription requests you should click on the following link:[%END%]
 
 [% 'ticket' | url_abs([one_time_ticket]) %]
 
-[%|loc(replyto)%]If prefered, you can accept this subscription request sending an email to %1 with the following subject:[%END%]
+[%|loc("${conf.email}@${conf.host}")%]If prefered, you can accept this subscription request sending an email to %1 with the following subject:[%END%]
 AUTH [%keyauth%] ADD [%list.name%] [%who%] [%gecos%]
-
 
 [%|loc%]That can be done using this mailto link:[%END%]
 [% | mailtourl({subject => "auth ${keyauth} ADD ${list.name} ${who} ${gecos}"}) ~%]
-  [% replyto %]
+  [% conf.email %]@[% conf.host %]
 [%~ END %]
 
 [% IF custom_attribute %]
@@ -79,12 +78,15 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]UNsubscription request from list
 A user asked to be deleted from your list. If this is OK 
 with you, you should click on the following link:[% END %]
 
+[% 'ticket' | url_abs([one_time_ticket]) %]
+
+[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
+AUTH [%keyauth%] DEL [%list.name%] [%who%]
+
+[%|loc%]That can be done using this mailto link:[%END%]
 [% | mailtourl({subject => "auth ${keyauth} DEL ${list.name} ${who}"}) ~%]
   [% conf.email %]@[% conf.host %]
 [%~ END %]
- 
-[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
-AUTH [%keyauth%] DEL [%list.name%] [%who%]
 
 [% ELSIF type == 'automatic_bounce_management' -%]
 [% PROCESS 'automatic_bounce_management.tt2' -%]

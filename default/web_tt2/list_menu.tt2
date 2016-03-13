@@ -81,6 +81,8 @@
     [% IF is_owner %]
       [% IF action == 'subindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
       <li class="[% class %]"><a href="[% 'subindex' | url_rel([list]) %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a></li>
+      [% IF action == 'sigindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+      <li class="[% class %]"><a href="[% 'sigindex' | url_rel([list]) %]">[%|loc%]Unsubscriptions[%END%] ([% mod_signoff %])</a></li>
     [% END %]
     </ul>
   </li>

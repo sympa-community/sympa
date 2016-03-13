@@ -1699,6 +1699,28 @@ sub send_notify_to_owner {
                     );
                 }
             }
+        } elsif ($operation eq 'sigrequest') {
+            foreach my $owner (@rcpt) {
+                $param->{'one_time_ticket'} = Sympa::Ticket::create(
+                    $owner,
+                    $robot,
+                    'sigindex/'
+                        . Sympa::Tools::Text::encode_uri($self->{'name'}),
+                    $param->{'ip'}
+                );
+                unless (
+                    Sympa::send_file(
+                        $self, 'listowner_notification', [$owner], $param
+                    )
+                    ) {
+                    $log->syslog(
+                        'notice',
+                        'Unable to send template "listowner_notification" to %s list owner %s',
+                        $self,
+                        $owner
+                    );
+                }
+            }
         } else {
             if ($operation eq 'bounce_rate') {
                 $param->{'rate'} = int($param->{'rate'} * 10) / 10;
