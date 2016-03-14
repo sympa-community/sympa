@@ -1,5 +1,6 @@
 <!-- $Id$ -->
 [% IF action == 'create_list_request' %]
+[% IF all_lists.size > 0 ~%]
 [%# Remove the class "menu-icon" to get rid of menu icon.
     Take out inner text of span element to just have icon alone. ~%]
 <nav class="top-bar" data-topbar role="navigation">
@@ -16,6 +17,7 @@
     </ul>
 </menu>
 </nav>
+[%~ END %]
 [% END %]
 
 [% IF action == 'serveradmin' or action == 'skinsedit'  or action == 'edit_config' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' %]
