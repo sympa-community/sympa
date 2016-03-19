@@ -1,3 +1,4 @@
+[%# $Id$ ~%]
 Content-Type: multipart/report; report-type=delivery-status; 
 	boundary="[% boundary %]"
 [% IF action == "delivered" -%]
@@ -26,7 +27,11 @@ Subject: [% FILTER qencode %][%|loc%]A virus in your mail[%END%][%END%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution: Authorization denied[%END%][%END%]
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(action)%]Delivery Status Notification: %1[%END%][%END%]
-[% END %]
+[% END -%]
+X-Loop: [% conf.email %]@[% conf.host %]
+
+This is a MIME-encapsulated message.
+
 --[% boundary %]
 Content-Disposition: inline
 Content-Description: Notification
