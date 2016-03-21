@@ -91,10 +91,8 @@ sub _load {
         # FIXME: at this point $message->{'dkim_pass'} does not verify that
         # Subject: is part of the signature. It SHOULD !
         return [
-            Sympa::Request->new_from_tuples(
+            Sympa::Request->new(
                 action => $action,
-                cmd_line =>
-                    sprintf('%s %s', $message->{listtype}, $list->{'name'}),
                 context => $list,
                 email   => $message->{sender},
                 #FIXME: smime_signed?
@@ -158,7 +156,6 @@ sub _parse {
         if ($req->{action} eq 'auth') {
             $request->{error} = 'syntax_errors';
         } elsif ($req->{action} eq 'unknown' or $req->{error}) {
-            $req->{cmd_line} = $request->{cmd_line};
             $request = $req;
         } else {
             $request->{request} = $req;

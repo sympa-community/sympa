@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Scalar::Util qw();
 
+use Sympa::CommandDef;
 use Sympa::Log;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
@@ -103,6 +104,23 @@ sub new_from_tuples {
     my %options = @_;
 
     return $class->new('', %options);
+}
+
+sub cmd_line {
+    my $self = shift;
+
+    return $self->{cmd_line} if $self->{cmd_line};
+    return undef
+        if not $self->{action}
+            or $self->{action} eq 'unknown';
+
+    my $cmd_format = $Sympa::CommandDef::comms{$self->{action}}->{cmd_format};
+    my $arg_keys   = $Sympa::CommandDef::comms{$self->{action}}->{arg_keys};
+    return undef
+        unless $cmd_format;
+
+    return sprintf $cmd_format,
+        map { defined $_ ? $_ : '' } @{$self}{@{$arg_keys || []}};
 }
 
 sub dup {
@@ -253,6 +271,16 @@ Gets deep copy of instance.
 
 I<Serializer>.
 Returns serialized data of object.
+
+=item cmd_line ( )
+
+I<Instance method>.
+TBD.
+
+=item get_id ( )
+
+I<Instance method>.
+Gets unique identifier of instance.
 
 =back
 

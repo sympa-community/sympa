@@ -221,7 +221,7 @@ sub _send_report {
         }
 
         $data{type} = $type;
-        $data{cmd}  = $request->{cmd_line};
+        $data{cmd}  = $request->cmd_line;
         $data{email} ||= $request->{email};
         $data{entry} = ($type eq 'intern') ? 'intern_error' : ($error || '');
         my $that = $request->{context};

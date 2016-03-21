@@ -1512,7 +1512,7 @@ sub subscribe {
         }
 
         # Send notice to the user.
-        my $cmd_line = $request->{cmd_line};
+        my $cmd_line = $request->cmd_line;
         unless (
             Sympa::send_file(
                 $list,
