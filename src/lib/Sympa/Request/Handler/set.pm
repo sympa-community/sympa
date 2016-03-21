@@ -73,7 +73,7 @@ sub _twist {
         }
         $log->syslog('info', 'SET %s %s%s from %s refused, %s not on list',
             $which, $reception, $visibility, $sender, $email);
-        return 'not allowed';
+        return undef;
     }
 
     # May set to DIGEST.
@@ -83,7 +83,7 @@ sub _twist {
         $self->add_stash($request, 'user', 'no_digest');
         $log->syslog('info', 'SET %s %s from %s refused, no digest mode',
             $which, $reception, $sender);
-        return 'not_allowed';
+        return undef;
     }
 
     # Verify that the mode is allowed.
@@ -98,7 +98,7 @@ sub _twist {
         );
         $log->syslog('info', 'SET %s %s from %s refused, mode not available',
             $which, $reception, $sender);
-        return 'not_allowed';
+        return undef;
     }
 
     if ($reception or $visibility) {
@@ -125,7 +125,7 @@ sub _twist {
             $self->add_stash($request, 'intern');
             $log->syslog('info', 'SET %s %s%s from %s refused, update failed',
                 $which, $reception, $visibility, $sender);
-            return 'failed';
+            return undef;
         }
     }
 

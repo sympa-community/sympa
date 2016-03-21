@@ -72,7 +72,7 @@ sub _twist {
         $self->add_stash($request, 'user', 'user_not_subscriber');
         $log->syslog('info', 'DEL %s %s from %s refused, not on list',
             $which, $who, $sender);
-        return 'not_allowed';
+        return undef;
     }
 
     # Really delete and rewrite to disk.
@@ -95,6 +95,7 @@ sub _twist {
             }
         );
         $self->add_stash($request, 'intern');
+        return undef;
     } else {
         my $spool_req = Sympa::Spool::Auth->new(
             context => $list,

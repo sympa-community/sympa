@@ -59,7 +59,7 @@ sub _twist {
             $key, $sender);
         $self->add_stash($request, 'user', 'already_confirmed',
             {'key' => $key});
-        return 'wrong_auth';
+        return undef;
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog('info', 'CONFIRM %s from %s accepted (%.2f seconds)',
             $key, $sender, Time::HiRes::time() - $self->{start_time});

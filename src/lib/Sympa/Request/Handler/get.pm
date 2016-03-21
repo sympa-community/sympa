@@ -68,7 +68,7 @@ sub _twist {
         $log->syslog('info',
             'GET %s %s from %s refused, no archive for list %s',
             $which, $arc, $sender, $which);
-        return 'no_archive';
+        return undef;
     }
 
     my $archive = Sympa::Archive->new(context => $list);
@@ -77,7 +77,7 @@ sub _twist {
         $self->add_stash($request, 'user', 'no_required_file');
         $log->syslog('info', 'GET %s %s from %s, no such archive',
             $which, $arc, $sender);
-        return 'no_archive';
+        return undef;
     }
 
     while (1) {
@@ -123,7 +123,7 @@ sub _twist {
             }
         );
         $self->add_stash($request, 'intern');
-        return 'no_archive';
+        return undef;
     }
 
     $log->syslog('info', 'GET %s %s from %s accepted (%.2f seconds)',

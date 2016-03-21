@@ -86,7 +86,7 @@ sub _twist {
                 }
             );
         }
-        return 'not_allowed';
+        return undef;
     }
 
     ## Really delete and rewrite to disk.
@@ -108,6 +108,7 @@ sub _twist {
             }
         );
         $self->add_stash($request, 'intern');
+        return undef;
     }
 
     # Notify the owner.

@@ -94,6 +94,7 @@ sub _twist {
         $log->syslog('notice', 'Unable to send template "lists" to %s',
             $sender);
         $self->add_stash($request, 'intern');
+        return undef;
     }
 
     $log->syslog(

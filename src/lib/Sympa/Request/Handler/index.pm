@@ -65,7 +65,7 @@ sub _twist {
         $self->add_stash($request, 'user', 'empty_archives');
         $log->syslog('info', 'INDEX %s from %s refused, list not archived',
             $which, $sender);
-        return 'no_archive';
+        return undef;
     }
 
     my @arcs;
@@ -97,6 +97,7 @@ sub _twist {
         $log->syslog('notice',
             'Unable to send template "index_archive" to %s', $sender);
         $self->add_stash($request, 'intern');
+        return undef;
     }
 
     $log->syslog('info', 'INDEX %s from %s accepted (%.2f seconds)',

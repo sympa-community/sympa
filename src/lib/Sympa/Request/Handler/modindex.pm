@@ -66,7 +66,7 @@ sub _twist {
         $self->add_stash($request, 'auth', 'restricted_modindex');
         $log->syslog('info', 'MODINDEX %s from %s refused, not allowed',
             $name, $sender);
-        return 'not_allowed';
+        return undef;
     }
 
     my $spool_mod = Sympa::Spool::Moderation->new(context => $list);
@@ -90,7 +90,7 @@ sub _twist {
         $log->syslog('info',
             'MODINDEX %s from %s refused, no message to moderate',
             $name, $sender);
-        return 'no_file';
+        return undef;
     }
 
     unless (
@@ -108,6 +108,7 @@ sub _twist {
         $log->syslog('notice', 'Unable to send template "modindex" to %s',
             $sender);
         $self->add_stash($request, 'intern');
+        return undef;
     }
 
     $log->syslog('info', 'MODINDEX %s from %s accepted (%.2f seconds)',

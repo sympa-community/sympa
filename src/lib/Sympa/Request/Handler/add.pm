@@ -74,7 +74,6 @@ sub _twist {
             'ADD command rejected; user "%s" already member of list "%s"',
             $email, $which);
         return undef;
-
     }
 
     my $u;

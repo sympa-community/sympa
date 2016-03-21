@@ -118,6 +118,7 @@ sub _twist {
         );
         $self->add_stash($request, 'auth', $result->{'reason'},
             {'email' => $email, template => $result->{'tt2'}});
+        return undef;
     } else {
         my $keyauth = Sympa::compute_auth(
             context => $list,

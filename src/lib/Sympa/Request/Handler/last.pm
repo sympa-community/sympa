@@ -65,7 +65,7 @@ sub _twist {
         $self->add_stash($request, 'user', 'empty_archives');
         $log->syslog('info', 'LAST %s from %s refused, list not archived',
             $which, $sender);
-        return 'no_archive';
+        return undef;
     }
 
     my ($arc_message, $arc_handle);
@@ -79,7 +79,7 @@ sub _twist {
         $self->add_stash($request, 'user', 'no_required_file');
         $log->syslog('info', 'LAST %s from %s, no such archive',
             $which, $sender);
-        return 'no_archive';
+        return undef;
     }
     $arc_handle->close;    # Unlock.
 
@@ -118,7 +118,7 @@ sub _twist {
             }
         );
         $self->add_stash($request, 'intern');
-        return 'no_archive';
+        return undef;
     }
 
     $log->syslog('info', 'LAST %s from %s accepted (%.2f seconds)',

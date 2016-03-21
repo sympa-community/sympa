@@ -71,7 +71,7 @@ sub _twist {
             $list->{'name'}, $key, $sender);
         $self->add_stash($request, 'user', 'already_moderated',
             {key => $key});
-        return 'wrong_auth';
+        return undef;
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog(
             'info',          'REJECT %s %s from %s accepted (%.2f seconds)',

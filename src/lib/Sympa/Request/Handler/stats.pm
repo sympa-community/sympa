@@ -78,6 +78,7 @@ sub _twist {
         $log->syslog('notice',
             'Unable to send template "stats_reports" to %s', $sender);
         $self->add_stash($request, 'intern');
+        return undef;
     }
 
     $log->syslog('info', 'STATS %s from %s accepted (%.2f seconds)',

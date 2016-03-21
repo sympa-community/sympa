@@ -65,6 +65,7 @@ sub _twist {
         $log->syslog('notice', 'Unable to send template "helpfile" to %s',
             $sender);
         $self->add_stash($request, 'intern');
+        return undef;
     }
 
     $log->syslog(

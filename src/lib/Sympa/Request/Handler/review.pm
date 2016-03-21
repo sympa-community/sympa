@@ -74,7 +74,7 @@ sub _twist {
     unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
         $self->add_stash($request, 'user', 'no_subscriber');
         $log->syslog('err', 'No subscribers in list "%s"', $list->{'name'});
-        return 'no_subscribers';
+        return undef;
     }
     do {
         ## Owners bypass the visibility option
@@ -99,6 +99,7 @@ sub _twist {
         $log->syslog('notice', 'Unable to send template "review" to %s',
             $sender);
         $self->add_stash($request, 'intern');
+        return undef;
     }
 
     $log->syslog('info', 'REVIEW %s from %s accepted (%.2f seconds)',

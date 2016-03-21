@@ -71,7 +71,7 @@ sub _twist {
             $key, $list);
         $self->add_stash($request, 'user', 'already_moderated',
             {key => $key});
-        return 'msg_not_found';
+        return undef;
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         $log->syslog(
             'info',
