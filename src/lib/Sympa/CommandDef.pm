@@ -36,6 +36,8 @@ our %comms = (
         cmd_regexp    => qr'add'i,
         arg_regexp    => qr{(\S+)\s+($_email_re)(?:\s+(.+))?\s*\z},
         arg_keys      => [qw(localpart email gecos)],
+        cmd_format    => 'ADD %s %s %s',
+        ctx_class     => 'Sympa::List',
         scenario      => 'add',
         action_regexp => qr'reject|request_auth|do_it'i,
     },
@@ -43,11 +45,14 @@ our %comms = (
         cmd_regexp => qr'con|confirm'i,
         arg_regexp => qr'(\w+)\s*\z',
         arg_keys   => [qw(authkey)],
+        cmd_format => 'CONFIRM %s',
     },
     del => {
         cmd_regexp    => qr'del|delete'i,
         arg_regexp    => qr{(\S+)\s+($_email_re)\s*},
         arg_keys      => [qw(localpart email)],
+        cmd_format    => 'DEL %s %s',
+        ctx_class     => 'Sympa::List',
         scenario      => 'del',
         action_regexp => qr'reject|request_auth|do_it'i,
     },
@@ -55,20 +60,26 @@ our %comms = (
         cmd_regexp => qr'dis|distribute'i,
         arg_regexp => qr'(\S+)\s+(\w+)\s*\z',
         arg_keys   => [qw(localpart authkey)],
+        cmd_format => 'DISTRIBUTE %s %s',
+        ctx_class  => 'Sympa::List',
         # No scenario.
     },
     get => {
         cmd_regexp    => qr'get'i,
         arg_regexp    => qr'(\S+)\s+(.+)',
         arg_keys      => [qw(localpart arc)],
+        cmd_format    => 'GET %s %s',
+        ctx_class     => 'Sympa::List',
         scenario      => 'archive.mail_access',
         action_regexp => qr'reject|do_it'i,
     },
-    help => {cmd_regexp => qr'hel|help|sos'i,},
+    help => {cmd_regexp => qr'hel|help|sos'i, cmd_format => 'HELP',},
     info => {
         cmd_regexp    => qr'inf|info'i,
         arg_regexp    => qr'(.+)',
         arg_keys      => [qw(localpart)],
+        cmd_format    => 'INFO %s',
+        ctx_class     => 'Sympa::List',
         scenario      => 'info',
         action_regexp => qr'reject|do_it'i,
     },
@@ -76,6 +87,8 @@ our %comms = (
         cmd_regexp    => qr'ind|index'i,
         arg_regexp    => qr'(.+)',
         arg_keys      => [qw(localpart)],
+        cmd_format    => 'INDEX %s',
+        ctx_class     => 'Sympa::List',
         scenario      => 'archive.mail_access',
         action_regexp => qr'reject|do_it'i,
     },
@@ -83,6 +96,8 @@ our %comms = (
         cmd_regexp    => qr'inv|invite'i,
         arg_regexp    => qr{(\S+)\s+($_email_re)(?:\s+(.+))?\s*\z},
         arg_keys      => [qw(localpart email gecos)],
+        cmd_format    => 'INVITE %s %s %s',
+        ctx_class     => 'Sympa::List',
         scenario      => 'invite',
         action_regexp => qr'reject|request_auth|do_it'i,
     },
@@ -90,14 +105,18 @@ our %comms = (
         cmd_regexp    => qr'las|last'i,
         arg_regexp    => qr'(.+)',
         arg_keys      => [qw(localpart)],
+        cmd_format    => 'LAST %s',
+        ctx_class     => 'Sympa::List',
         scenario      => 'archive.mail_access',
         action_regexp => qr'reject|do_it'i,
     },
-    lists    => {cmd_regexp => qr'lis|lists?'i,},
+    lists    => {cmd_regexp => qr'lis|lists?'i, cmd_format => 'LISTS',},
     modindex => {
         cmd_regexp => qr'mod|modindex|modind'i,
         arg_regexp => qr'(\S+)',
         arg_keys   => [qw(localpart)],
+        cmd_format => 'MODINDEX %s',
+        ctx_class  => 'Sympa::List',
         # No scenario. Only actual editors are allowed.
     },
     finished => {cmd_regexp => qr'qui|quit|end|stop|-'i,},
@@ -105,12 +124,15 @@ our %comms = (
         cmd_regexp => qr'rej|reject'i,
         arg_regexp => qr'(\S+)\s+(\w+)\s*\z',
         arg_keys   => [qw(localpart authkey)],
+        cmd_format => 'REJECT %s %s',
+        ctx_class  => 'Sympa::List',
         # No scenario.
     },
     remind => {
         cmd_regexp => qr'rem|remind'i,
         arg_regexp => qr'([^\s\@]+)(?:\@([-.\w]+))?\s*\z',
         arg_keys   => [qw(localpart domainpart)],
+        cmd_format => 'REMIND %1$s',
         filter     => sub {
             my $r = shift;
 
@@ -125,11 +147,13 @@ our %comms = (
             }
             $r;
         },
+        ctx_class     => 'Sympa::List',
         scenario      => 'remind',
         action_regexp => qr'reject|request_auth|do_it'i,
     },
     global_remind => {
         cmd_regexp    => qr'(?:rem|remind)\s+[*]'i,
+        cmd_format    => 'REMIND *',
         scenario      => 'global_remind',
         action_regexp => qr'reject|request_auth|do_it'i,
     },
@@ -137,6 +161,8 @@ our %comms = (
         cmd_regexp    => qr'rev|review|who'i,
         arg_regexp    => qr'(.+)',
         arg_keys      => [qw(localpart)],
+        cmd_format    => 'REVIEW %s',
+        ctx_class     => 'Sympa::List',
         scenario      => 'review',
         action_regexp => qr'reject|request_auth|do_it'i,
     },
@@ -144,8 +170,9 @@ our %comms = (
         cmd_regexp => qr'set'i,
         arg_regexp =>
             qr'(\S+)\s+(?:(digest|digestplain|nomail|normal|not_me|each|mail|summary|notice|txt|html|urlize)|(conceal|noconceal))\s*\z'i,
-        arg_keys => [qw(localpart reception visibility)],
-        filter   => sub {
+        arg_keys   => [qw(localpart reception visibility)],
+        cmd_format => 'SET %s %s%s',
+        filter     => sub {
             my $r = shift;
 
             $r->{email} = $r->{sender};
@@ -161,14 +188,16 @@ our %comms = (
             }
             $r;
         },
+        ctx_class => 'Sympa::List',
         # No scenario.  Only list members are allowed.
     },
     global_set => {
         cmd_regexp => qr'set\s+[*]'i,
         arg_regexp =>
             qr'(?:(digest|digestplain|nomail|normal|not_me|each|mail|summary|notice|txt|html|urlize)|(conceal|noconceal))\s*\z'i,
-        arg_keys => [qw(reception visibility)],
-        filter   => sub {
+        arg_keys   => [qw(reception visibility)],
+        cmd_format => 'SET * %s%s',
+        filter     => sub {
             my $r = shift;
 
             $r->{email} = $r->{sender};
@@ -189,6 +218,8 @@ our %comms = (
         cmd_regexp    => qr'sta|stats'i,
         arg_regexp    => qr'(.+)',
         arg_keys      => [qw(localpart)],
+        cmd_format    => 'STATS %s',
+        ctx_class     => 'Sympa::List',
         scenario      => 'review',
         action_regexp => qr'reject|do_it'i,    #FIXME: request_auth?
     },
@@ -196,11 +227,13 @@ our %comms = (
         cmd_regexp => qr'sub|subscribe'i,
         arg_regexp => qr'(\S+)(?:\s+(.+))?\s*\z',
         arg_keys   => [qw(localpart gecos)],
+        cmd_format => 'SUB %s %s',
         filter     => sub {
             my $r = shift;
             $r->{email} = $r->{sender};
             $r;
         },
+        ctx_class     => 'Sympa::List',
         scenario      => 'subscribe',
         action_regexp => qr'reject|request_auth|owner|do_it'i,
     },
@@ -208,6 +241,7 @@ our %comms = (
         cmd_regexp => qr'sig|signoff|uns|unsub|unsubscribe'i,
         arg_regexp => qr{([^\s\@]+)(?:\@([-.\w]+))?(?:\s+($_email_re))?\z},
         arg_keys   => [qw(localpart domainpart email)],
+        cmd_format => 'SIG %1$s %3$s',
         filter     => sub {
             my $r = shift;
 
@@ -225,6 +259,7 @@ our %comms = (
             }
             $r;
         },
+        ctx_class     => 'Sympa::List',
         scenario      => 'unsubscribe',
         action_regexp => qr'reject|request_auth|owner|do_it'i,
     },
@@ -232,6 +267,7 @@ our %comms = (
         cmd_regexp => qr'(?:sig|signoff|uns|unsub|unsubscribe)\s+[*]'i,
         arg_regexp => qr{($_email_re)?\z},
         arg_keys   => [qw(email)],
+        cmd_format => 'SIG * %s',
         filter     => sub {
             my $r = shift;
 
@@ -244,9 +280,11 @@ our %comms = (
         cmd_regexp => qr'ver|verify'i,
         arg_regexp => qr'(.+)',
         arg_keys   => [qw(localpart)],
+        cmd_format => 'VERIFY %s',
+        ctx_class  => 'Sympa::List',
         # No scenario.
     },
-    which => {cmd_regexp => qr'whi|which|status'i,},
+    which => {cmd_regexp => qr'whi|which|status'i, cmd_format => 'WHICH',},
 );
 
 1;
