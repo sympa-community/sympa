@@ -26,19 +26,6 @@
 ## This corresponds to Sympa::ConfigurableObject (and Sympa::Site) package
 ## in trunk.
 
-=encoding utf-8
-
-=head1 NAME
-
-Sympa - Future base class of Sympa functional objects
-
-=head1 DESCRIPTION
-
-This module aims to be the base class for functional objects of Sympa:
-Site, Robot, Family and List.
-
-=cut
-
 package Sympa;
 
 use strict;
@@ -61,128 +48,13 @@ use Sympa::Tools::Text;
 
 my $log = Sympa::Log->instance;
 
-=head2 Functions
-
-=head3 Handling the Authentication Token
-
-=over
-
-=item compute_auth ( context =E<gt> $that, email =E<gt> $email,
-action =E<gt> $cmd )
-
-DEPRECATED.
-Genererate a MD5 checksum using private cookie and parameters.
-
-Parameters:
-
-=over
-
-=item context =E<gt> $that
-
-L<Sympa::List>, Robot or Site.
-
-=item email =E<gt> $email
-
-Recipient (the person who asked for the command).
-
-=item action =E<gt> $cmd
-
-TBD.
-
-=back
-
-Returns:
-
-Authenticaton key.
-
-=back
-
-=cut
-
 # Old name: List::compute_auth().
 #DEPRECATED.  Reusable auth key is no longer used.
 #sub compute_auth;
 
-=over
-
-=item request_auth ( context =E<gt> $that, sender =E<gt> $sender,
-action =E<gt> $cmd, [ email =E<gt> $email ], [ other options... ] )
-
-DEPRECATED.
-Sends an authentication request for a requested
-command.
-
-Parameters:
-
-=over
-
-=item context =E<gt> $that
-
-L<Sympa::List>, Robot or Site.
-
-=item sender =E<gt> $email
-
-Recipient (the person who asked for the command)
-
-=item action =E<gt> $cmd
-
-'signoff', 'subscribe', 'add', 'del' or 'remind' if $that is List.
-'global_remind' else.
-
-=item email =E<gt> $email
-
-Used if $cmd is add|del|invite|signoff.
-
-=item gecos =E<gt> $comment
-
-May be used if $cmd is C<'add'> or C<'subscribe'>.
-
-=back
-
-Returns:
-
-C<1> or C<undef>.
-
-=back
-
-=cut
-
 # Old name: List::request_auth().
 # DEPRECATED.  Reusable auth keys are no longer used.
 #sub request_auth;
-
-=head3 Finding config files and templates
-
-=over 4
-
-=item search_fullpath ( $that, $name, [ opt => val, ...] )
-
-    # To get file name for global site
-    $file = Sympa::search_fullpath('*', $name);
-    # To get file name for a robot
-    $file = Sympa::search_fullpath($robot_id, $name);
-    # To get file name for a family
-    $file = Sympa::search_fullpath($family, $name);
-    # To get file name for a list
-    $file = Sympa::search_fullpath($list, $name);
-
-Look for a file in the list > robot > site > default locations.
-
-Possible values for options:
-    order     => 'all'
-    subdir    => directory ending each path
-    lang      => language
-    lang_only => if paths without lang subdirectory would be omitted
-
-Returns full path of target file C<I<root>/I<subdir>/I<lang>/I<name>>
-or C<I<root>/I<subdir>/I<name>>.
-I<root> is the location determined by target object $that.
-I<subdir> and I<lang> are optional.
-If C<lang_only> option is set, paths without I<lang> subdirectory is omitted.
-
-=back
-
-=cut
 
 # Old names:
 # [<=6.2a] tools::get_filename()
@@ -233,44 +105,6 @@ sub search_fullpath {
 
     return undef;
 }
-
-=over 4
-
-=item get_search_path ( $that, [ opt => val, ... ] )
-
-    # To make include path for global site
-    @path = @{Sympa::get_search_path('*')};
-    # To make include path for a robot
-    @path = @{Sympa::get_search_path($robot_id)};
-    # To make include path for a family
-    @path = @{Sympa::get_search_path($family)};
-    # To make include path for a list
-    @path = @{Sympa::get_search_path($list)};
-
-make an array of include path for tt2 parsing
-
-IN :
-      -$that(+) : ref(Sympa::List) | ref(Sympa::Family) | Robot | "*"
-      -%options : options
-
-Possible values for options:
-    subdir    => directory ending each path
-    lang      => language
-    lang_only => if paths without lang subdirectory would be omitted
-
-OUT : ref(ARRAY) of tt2 include path
-
-=begin comment
-
-Note:
-As of 6.2b, argument $lang is recommended to be IETF language tag,
-rather than locale name.
-
-=end comment
-
-=back
-
-=cut
 
 # Old names:
 # [<=6.2a] tools::make_tt2_include_path()
@@ -415,29 +249,6 @@ sub _get_search_path {
     return @search_path;
 }
 
-=head3 Sending Notifications
-
-=over 4
-
-=item send_dsn ( $that, $message,
-[ { key => val, ... }, [ $status, [ $diag ] ] ] )
-
-    # To send site-wide DSN
-    Sympa::send_dsn('*', $message, {'recipient' => $rcpt},
-        '5.1.2', 'Unknown robot');
-    # To send DSN related to a robot
-    Sympa::send_dsn($robot, $message, {'listname' => $name},
-        '5.1.1', 'Unknown list');
-    # To send DSN specific to a list
-    Sympa::send_dsn($list, $message, {}, '2.1.5', 'Success');
-
-Sends a delivery status notification (DSN) to SENDER
-by parsing delivery_status_notification.tt2 template.
-
-=back
-
-=cut
-
 # Default diagnostic messages taken from IANA registry:
 # http://www.iana.org/assignments/smtp-enhanced-status-codes/
 # They should be modified to fit in Sympa.
@@ -564,32 +375,6 @@ sub send_dsn {
     return 1;
 }
 
-=over
-
-=item send_file ( $that, $tpl, $who, [ $context, [ options... ] ] )
-
-    # To send site-global (not relative to a list or a robot)
-    # message
-    Sympa::send_file('*', $template, $who, ...);
-    # To send global (not relative to a list, but relative to a
-    # robot) message
-    Sympa::send_file($robot, $template, $who, ...);
-    # To send message relative to a list
-    Sympa::send_file($list, $template, $who, ...);
-
-Send a message to user(s).
-Find the tt2 file according to $tpl, set up
-$data for the next parsing (with $context and
-configuration)
-Message is signed if the list has a key and a
-certificate
-
-Note: List::send_global_file() was deprecated.
-
-=back
-
-=cut
-
 # Old name: List::send_file() and List::send_global_file().
 sub send_file {
     $log->syslog('debug2', '(%s, %s, %s, ...)', @_);
@@ -613,47 +398,6 @@ sub send_file {
 
     return 1;
 }
-
-=over 4
-
-=item send_notify_to_listmaster ( $that, $operation, $data )
-
-    # To send notify to super listmaster(s)
-    Sympa::send_notify_to_listmaster('*', 'css_updated', ...);
-    # To send notify to normal (per-robot) listmaster(s)
-    Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', ...);
-    # To send notify to normal listmaster(s) of robot the list belongs to.
-    Sympa::send_notify_to_listmaster($list, 'request_list_creation', ...);
-
-Sends a notice to (super or normal) listmaster by parsing
-listmaster_notification.tt2 template.
-
-Parameters:
-
-=over
-
-=item $self
-
-L<Sympa::List>, Robot or Site.
-
-=item $operation
-
-Notification type.
-
-=item $param
-
-Hashref or arrayref.
-Values for template parsing.
-
-=back
-
-Returns:
-
-C<1> or C<undef>.
-
-=back
-
-=cut
 
 # Old name: List::send_notify_to_listmaster()
 sub send_notify_to_listmaster {
@@ -754,43 +498,6 @@ sub send_notify_to_listmaster {
     return 1;
 }
 
-=over
-
-=item send_notify_to_user ( $that, $operation, $user, $param )
-
-Send a notice to a user (sender, subscriber or another user)
-by parsing user_notification.tt2 template.
-
-Parameters:
-
-=over
-
-=item $that
-
-L<Sympa::List>, Robot or Site.
-
-=item $operation
-
-Notification type.
-
-=item $user
-
-E-mail of notified user.
-
-=item $param
-
-Hashref or arrayref.  Values for template parsing.
-
-=back
-
-Returns:
-
-C<1> or C<undef>.
-
-=back
-
-=cut
-
 sub send_notify_to_user {
     $log->syslog('debug2', '(%s, %s, %s, ...)', @_);
     my $that      = shift;
@@ -867,30 +574,6 @@ sub send_notify_to_user {
     return 1;
 }
 
-=head3 Internationalization
-
-=over
-
-=item best_language ( LANG, ... )
-
-    # To get site-wide best language.
-    $lang = Sympa::best_language('*', 'de', 'en-US;q=0.9');
-    # To get robot-wide best language.
-    $lang = Sympa::best_language($robot, 'de', 'en-US;q=0.9');
-    # To get list-specific best language.
-    $lang = Sympa::best_language($list, 'de', 'en-US;q=0.9');
-
-Chooses best language under the context of List, Robot or Site.
-Arguments are language codes (see L<Language>) or ones with quality value.
-If no arguments are given, the value of C<HTTP_ACCEPT_LANGUAGE> environment
-variable will be used.
-
-Returns language tag or, if negotiation failed, lang of object.
-
-=back
-
-=cut
-
 sub best_language {
     my $that = shift;
     my $accept_string = join ',', grep { $_ and $_ =~ /\S/ } @_;
@@ -933,19 +616,6 @@ sub best_language {
     return Sympa::Language::negotiate_lang($accept_string, @langs) || $lang;
 }
 
-=over 4
-
-=item get_supported_languages ( $that )
-
-I<Function>.
-Gets supported languages, canonicalized.
-In array context, returns array of supported languages.
-In scalar context, returns arrayref to them.
-
-=back
-
-=cut
-
 #FIXME: Inefficient.  Would be cached.
 #FIXME: Would also accept Sympa::List object.
 # Old name: [trunk] Sympa::Site::supported_languages().
@@ -973,46 +643,6 @@ sub get_supported_languages {
     return @lang_list if wantarray;
     return \@lang_list;
 }
-
-=head3 Addresses and users
-
-These are accessors derived from configuration parameters.
-
-=over
-
-=item get_address ( $that, [ $type ] )
-
-    # Get address bound for super listmaster(s).
-    Sympa::get_address('*', 'listmaster');     # <listmaster@DEFAULT_HOST>
-    # Get address for command robot and robot listmaster(s).
-    Sympa::get_address($robot, 'sympa');       # <sympa@HOST>
-    Sympa::get_address($robot, 'listmaster');  # <listmaster@HOST>
-    # Get address for command robot and robot listmaster(s).
-    Sympa::get_address($family, 'sympa');      # <sympa@HOST>
-    Sympa::get_address($family, 'listmaster'); # listmaster@HOST>
-    # Get address bound for the list and its owner(s) etc.
-    Sympa::get_address($list);                 # <NAME@HOST>
-    Sympa::get_address($list, 'owner');        # <NAME-request@HOST>
-    Sympa::get_address($list, 'editor');       # <NAME-editor@HOST>
-    Sympa::get_address($list, 'return_path');  # <NAME-owner@HOST>
-
-Site or robot:
-Returns the site or robot email address of type $type: email command address
-(default, <sympa> address), "owner" (<sympa-request> address) or "listmaster".
-
-List:
-Returns the list email address of type $type: posting address (default),
-"owner" (<LIST-request> address), "editor", non-VERP "return_path"
-(<LIST-owner> address), "subscribe" or "unsubscribe".
-
-Note:
-%Conf::Conf or Conf::get_robot_conf() may return <sympa> and
-<sympa-request> addresses by "sympa" and "request" arguments, respectively.
-They are obsoleted.  Use this function instead.
-
-=back
-
-=cut
 
 sub get_address {
     my $that = shift || '*';
@@ -1081,26 +711,6 @@ sub get_address {
     return undef;
 }
 
-=over
-
-=item get_listmasters_email ( $that )
-
-    # To get addresses of super-listmasters.
-    @addrs = Sympa::get_listmasters_email('*');
-    # To get addresses of normal listmasters of a robot.
-    @addrs = Sympa::get_listmasters_email($robot);
-    # To get addresses of normal listmasters of the robot of a family.
-    @addrs = Sympa::get_listmasters_email($family);
-    # To get addresses of normal listmasters of the robot of a list.
-    @addrs = Sympa::get_listmasters_email($list);
-
-Gets valid email addresses of listmasters. In array context, returns array of
-addresses. In scalar context, returns arrayref to them.
-
-=back
-
-=cut
-
 # Old names:
 # [6.2b] Conf::get_robot_conf(..., 'listmasters'), $Conf::Conf{'listmasters'}.
 # [trunk] Site::listmasters().
@@ -1129,63 +739,6 @@ sub get_listmasters_email {
 
     return wantarray ? @listmasters : [@listmasters];
 }
-
-=over
-
-=item get_url ( $that, $action, [ nomenu =E<gt> 1 ], [ paths =E<gt> \@paths ],
-[ authority =E<gt> $mode ],
-[ options... ] )
-
-Returns URL for web interface.
-
-Parameters:
-
-=over
-
-=item $action
-
-Name of action.
-This is inserted into URL intact.
-
-=item authority =E<gt> $mode
-
-C<'default'> respects C<wwsympa_url> parameter.
-C<'local'> is similar but may replace host name and script path.
-C<'omit'> omits scheme and authority, i.e. returns relative URI.
-
-Note that C<'local'> mode works correctly only under CGI environment.
-See also a note below.
-
-=item nomenu =E<gt> 1
-
-Adds C<nomenu> modifier.
-
-=item paths =E<gt> \@paths
-
-Additional path components.
-Note that they are percent-encoded as necessity.
-
-=item options...
-
-See L<Sympa::Tools::Text/"weburl">.
-
-=back
-
-Returns:
-
-A string.
-
-Note:
-If $mode is C<'local'>, result is that Sympa server recognizes locally.
-In other cases, result is the URI that is used by end users to access to web
-interface.
-When, for example, the server is placed behind a reverse-proxy,
-C<Location:> field in HTTP response to cause redirection would be better
-to contain C<'local'> URI.
-
-=back
-
-=cut
 
 sub get_url {
     my $that    = shift;
@@ -1254,16 +807,6 @@ sub get_url {
     }
 }
 
-=over
-
-=item is_listmaster ( $that, $who )
-
-Is the user listmaster?
-
-=back
-
-=cut
-
 # Old names: [6.2b-6.2.3] Sympa::Robot::is_listmaster($who, $robot_id)
 sub is_listmaster {
     my $that = shift;
@@ -1274,16 +817,6 @@ sub is_listmaster {
     return 1 if grep { lc $_ eq $who } Sympa::get_listmasters_email('*');
     return 0;
 }
-
-=over
-
-=item unique_message_id ( $that )
-
-TBD
-
-=back
-
-=cut
 
 # Old name: tools::get_message_id().
 sub unique_message_id {
@@ -1303,6 +836,329 @@ sub unique_message_id {
 
 1;
 __END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa - Future base class of Sympa functional objects
+
+=head1 DESCRIPTION
+
+This module aims to be the base class for functional objects of Sympa:
+Site, Robot, Family and List.
+
+=head2 Functions
+
+=head3 Finding config files and templates
+
+=over 4
+
+=item search_fullpath ( $that, $name, [ opt => val, ...] )
+
+    # To get file name for global site
+    $file = Sympa::search_fullpath('*', $name);
+    # To get file name for a robot
+    $file = Sympa::search_fullpath($robot_id, $name);
+    # To get file name for a family
+    $file = Sympa::search_fullpath($family, $name);
+    # To get file name for a list
+    $file = Sympa::search_fullpath($list, $name);
+
+Look for a file in the list > robot > site > default locations.
+
+Possible values for options:
+    order     => 'all'
+    subdir    => directory ending each path
+    lang      => language
+    lang_only => if paths without lang subdirectory would be omitted
+
+Returns full path of target file C<I<root>/I<subdir>/I<lang>/I<name>>
+or C<I<root>/I<subdir>/I<name>>.
+I<root> is the location determined by target object $that.
+I<subdir> and I<lang> are optional.
+If C<lang_only> option is set, paths without I<lang> subdirectory is omitted.
+
+=item get_search_path ( $that, [ opt => val, ... ] )
+
+    # To make include path for global site
+    @path = @{Sympa::get_search_path('*')};
+    # To make include path for a robot
+    @path = @{Sympa::get_search_path($robot_id)};
+    # To make include path for a family
+    @path = @{Sympa::get_search_path($family)};
+    # To make include path for a list
+    @path = @{Sympa::get_search_path($list)};
+
+make an array of include path for tt2 parsing
+
+IN :
+      -$that(+) : ref(Sympa::List) | ref(Sympa::Family) | Robot | "*"
+      -%options : options
+
+Possible values for options:
+    subdir    => directory ending each path
+    lang      => language
+    lang_only => if paths without lang subdirectory would be omitted
+
+OUT : ref(ARRAY) of tt2 include path
+
+=begin comment
+
+Note:
+As of 6.2b, argument $lang is recommended to be IETF language tag,
+rather than locale name.
+
+=end comment
+
+=back
+
+=head3 Sending Notifications
+
+=over 4
+
+=item send_dsn ( $that, $message,
+[ { key => val, ... }, [ $status, [ $diag ] ] ] )
+
+    # To send site-wide DSN
+    Sympa::send_dsn('*', $message, {'recipient' => $rcpt},
+        '5.1.2', 'Unknown robot');
+    # To send DSN related to a robot
+    Sympa::send_dsn($robot, $message, {'listname' => $name},
+        '5.1.1', 'Unknown list');
+    # To send DSN specific to a list
+    Sympa::send_dsn($list, $message, {}, '2.1.5', 'Success');
+
+Sends a delivery status notification (DSN) to SENDER
+by parsing delivery_status_notification.tt2 template.
+
+=item send_file ( $that, $tpl, $who, [ $context, [ options... ] ] )
+
+    # To send site-global (not relative to a list or a robot)
+    # message
+    Sympa::send_file('*', $template, $who, ...);
+    # To send global (not relative to a list, but relative to a
+    # robot) message
+    Sympa::send_file($robot, $template, $who, ...);
+    # To send message relative to a list
+    Sympa::send_file($list, $template, $who, ...);
+
+Send a message to user(s).
+Find the tt2 file according to $tpl, set up
+$data for the next parsing (with $context and
+configuration)
+Message is signed if the list has a key and a
+certificate
+
+Note: List::send_global_file() was deprecated.
+
+=item send_notify_to_listmaster ( $that, $operation, $data )
+
+    # To send notify to super listmaster(s)
+    Sympa::send_notify_to_listmaster('*', 'css_updated', ...);
+    # To send notify to normal (per-robot) listmaster(s)
+    Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', ...);
+    # To send notify to normal listmaster(s) of robot the list belongs to.
+    Sympa::send_notify_to_listmaster($list, 'request_list_creation', ...);
+
+Sends a notice to (super or normal) listmaster by parsing
+listmaster_notification.tt2 template.
+
+Parameters:
+
+=over
+
+=item $self
+
+L<Sympa::List>, Robot or Site.
+
+=item $operation
+
+Notification type.
+
+=item $param
+
+Hashref or arrayref.
+Values for template parsing.
+
+=back
+
+Returns:
+
+C<1> or C<undef>.
+
+=item send_notify_to_user ( $that, $operation, $user, $param )
+
+Send a notice to a user (sender, subscriber or another user)
+by parsing user_notification.tt2 template.
+
+Parameters:
+
+=over
+
+=item $that
+
+L<Sympa::List>, Robot or Site.
+
+=item $operation
+
+Notification type.
+
+=item $user
+
+E-mail of notified user.
+
+=item $param
+
+Hashref or arrayref.  Values for template parsing.
+
+=back
+
+Returns:
+
+C<1> or C<undef>.
+
+=back
+
+=head3 Internationalization
+
+=over
+
+=item best_language ( LANG, ... )
+
+    # To get site-wide best language.
+    $lang = Sympa::best_language('*', 'de', 'en-US;q=0.9');
+    # To get robot-wide best language.
+    $lang = Sympa::best_language($robot, 'de', 'en-US;q=0.9');
+    # To get list-specific best language.
+    $lang = Sympa::best_language($list, 'de', 'en-US;q=0.9');
+
+Chooses best language under the context of List, Robot or Site.
+Arguments are language codes (see L<Language>) or ones with quality value.
+If no arguments are given, the value of C<HTTP_ACCEPT_LANGUAGE> environment
+variable will be used.
+
+Returns language tag or, if negotiation failed, lang of object.
+
+=item get_supported_languages ( $that )
+
+I<Function>.
+Gets supported languages, canonicalized.
+In array context, returns array of supported languages.
+In scalar context, returns arrayref to them.
+
+=back
+
+=head3 Addresses and users
+
+These are accessors derived from configuration parameters.
+
+=over
+
+=item get_address ( $that, [ $type ] )
+
+    # Get address bound for super listmaster(s).
+    Sympa::get_address('*', 'listmaster');     # <listmaster@DEFAULT_HOST>
+    # Get address for command robot and robot listmaster(s).
+    Sympa::get_address($robot, 'sympa');       # <sympa@HOST>
+    Sympa::get_address($robot, 'listmaster');  # <listmaster@HOST>
+    # Get address for command robot and robot listmaster(s).
+    Sympa::get_address($family, 'sympa');      # <sympa@HOST>
+    Sympa::get_address($family, 'listmaster'); # listmaster@HOST>
+    # Get address bound for the list and its owner(s) etc.
+    Sympa::get_address($list);                 # <NAME@HOST>
+    Sympa::get_address($list, 'owner');        # <NAME-request@HOST>
+    Sympa::get_address($list, 'editor');       # <NAME-editor@HOST>
+    Sympa::get_address($list, 'return_path');  # <NAME-owner@HOST>
+
+Site or robot:
+Returns the site or robot email address of type $type: email command address
+(default, <sympa> address), "owner" (<sympa-request> address) or "listmaster".
+
+List:
+Returns the list email address of type $type: posting address (default),
+"owner" (<LIST-request> address), "editor", non-VERP "return_path"
+(<LIST-owner> address), "subscribe" or "unsubscribe".
+
+Note:
+%Conf::Conf or Conf::get_robot_conf() may return <sympa> and
+<sympa-request> addresses by "sympa" and "request" arguments, respectively.
+They are obsoleted.  Use this function instead.
+
+=item get_listmasters_email ( $that )
+
+    # To get addresses of super-listmasters.
+    @addrs = Sympa::get_listmasters_email('*');
+    # To get addresses of normal listmasters of a robot.
+    @addrs = Sympa::get_listmasters_email($robot);
+    # To get addresses of normal listmasters of the robot of a family.
+    @addrs = Sympa::get_listmasters_email($family);
+    # To get addresses of normal listmasters of the robot of a list.
+    @addrs = Sympa::get_listmasters_email($list);
+
+Gets valid email addresses of listmasters. In array context, returns array of
+addresses. In scalar context, returns arrayref to them.
+
+=item get_url ( $that, $action, [ nomenu =E<gt> 1 ], [ paths =E<gt> \@paths ],
+[ authority =E<gt> $mode ],
+[ options... ] )
+
+Returns URL for web interface.
+
+Parameters:
+
+=over
+
+=item $action
+
+Name of action.
+This is inserted into URL intact.
+
+=item authority =E<gt> $mode
+
+C<'default'> respects C<wwsympa_url> parameter.
+C<'local'> is similar but may replace host name and script path.
+C<'omit'> omits scheme and authority, i.e. returns relative URI.
+
+Note that C<'local'> mode works correctly only under CGI environment.
+See also a note below.
+
+=item nomenu =E<gt> 1
+
+Adds C<nomenu> modifier.
+
+=item paths =E<gt> \@paths
+
+Additional path components.
+Note that they are percent-encoded as necessity.
+
+=item options...
+
+See L<Sympa::Tools::Text/"weburl">.
+
+=back
+
+Returns:
+
+A string.
+
+Note:
+If $mode is C<'local'>, result is that Sympa server recognizes locally.
+In other cases, result is the URI that is used by end users to access to web
+interface.
+When, for example, the server is placed behind a reverse-proxy,
+C<Location:> field in HTTP response to cause redirection would be better
+to contain C<'local'> URI.
+
+=item is_listmaster ( $that, $who )
+
+Is the user listmaster?
+
+=item unique_message_id ( $that )
+
+TBD
+
+=back
 
 =head1 SEE ALSO
 
