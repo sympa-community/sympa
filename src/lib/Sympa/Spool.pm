@@ -436,10 +436,14 @@ sub marshal_metadata {
             $localpart;
         } elsif ($_ eq 'domainpart') {
             $domainpart;
-        } elsif ($_ eq 'PID') {
-            $PID;
         } elsif ($_ eq 'AUTHKEY') {
             Digest::MD5::md5_hex(time . (int rand 46656) . $domainpart);
+        } elsif ($_ eq 'KEYAUTH') {
+            substr
+                Digest::MD5::md5_hex(time . (int rand 46656) . $domainpart),
+                0, 16;
+        } elsif ($_ eq 'PID') {
+            $PID;
         } elsif ($_ eq 'RAND') {
             int rand 10000;
         } elsif ($_ eq 'TIME') {
@@ -751,7 +755,7 @@ Returns formatted string by sprintf() using $marshal_format
 and metadatas indexed by keys in arrayref $marshal_keys.
 
 If key is uppercase, it means auto-generated value:
-C<'AUTHKEY'>, C<'DATE'>, C<'PID'>, C<'RAND'>, C<'TIME'>.
+C<'AUTHKEY'>, C<'KEYAUTH'>, C<'PID'>, C<'RAND'>, C<'TIME'>.
 Otherwise it means metadata or property of $message.
 
 sprintf() is executed under C<C> locale:
