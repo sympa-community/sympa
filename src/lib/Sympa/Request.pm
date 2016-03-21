@@ -35,9 +35,22 @@ use Sympa::User;
 
 my $log = Sympa::Log->instance;
 
+my %attrmap = (
+    action => 'X-Sympa-Action',
+    gecos  => 'X-Sympa-Display-Name',
+    sender => 'X-Sympa-Sender',
+);
+my @optattrs = qw(arc reception visibility);
+
 sub new {
-    my $class      = shift;
-    my $serialized = shift;
+    my $class = shift;
+    # Optional $serialized.
+    my $serialized;
+    unless (@_ and ($_[0] eq '' or $_[0] =~ /\n/)) {
+        $serialized = '';
+    } else {
+        $serialized = shift;
+    }
 
     my $self = bless {@_} => $class;
     $self->{email} = Sympa::Tools::Text::canonic_email($self->{email})
@@ -46,15 +59,19 @@ sub new {
     # Get attributes from pseudo-header fields at the top of serialized
     # message.  Note that field names are case-sensitive.
 
+    my %revmap = reverse %attrmap;
     pos($serialized) = 0;
     while ($serialized =~ /\G(X-Sympa-[-\w]+): (.*?)\n(?![ \t])/cgs) {
         my ($k, $v) = ($1, $2);
         next unless length $v;
 
-        if ($k eq 'X-Sympa-Action') {
-            $self->{action} = $v;
-        } elsif ($k eq 'X-Sympa-Display-Name') {
-            $self->{gecos} = $v;
+        if ($k eq 'X-Sympa-Options') {
+            my %vals =
+                map { my ($k, $v) = split /=/, $_, 2; ($k, $v) }
+                split /\s*;\s*/, $v;
+            @{$self}{@optattrs} = @vals{@optattrs};
+        } elsif (my $attr = $revmap{$k}) {
+            $self->{$attr} = $v;
         } else {
             $log->syslog('err', 'Unknown attribute information: "%s: %s"',
                 $k, $v);
@@ -80,6 +97,7 @@ sub new {
     $self;
 }
 
+# OBSOLETED.  Use new().
 sub new_from_tuples {
     my $class   = shift;
     my %options = @_;
@@ -111,12 +129,23 @@ sub to_string {
     my $self = shift;
 
     my $msg_string = '';
-    if (defined $self->{action} and length $self->{action}) {
-        $msg_string .= sprintf "X-Sympa-Action: %s\n", $self->{action};
+    foreach my $attr (sort keys %attrmap) {
+        my $val = _canonic_value($self->{$attr});
+        if (defined $val and length $val) {
+            $msg_string .= sprintf "%s: %s\n", $attrmap{$attr}, $val;
+        }
     }
-    if (defined $self->{gecos} and length $self->{gecos}) {
-        $msg_string .= sprintf "X-Sympa-Display-Name: %s\n", $self->{gecos};
+
+    my $optattrs = join '; ', map {
+        my $val = _canonic_value($self->{$_});
+        (defined $val and length $val)
+            ? (sprintf '%s=%s', $_, $val)
+            : ();
+    } @optattrs;
+    if ($optattrs) {
+        $msg_string .= sprintf "X-Sympa-Options: %s\n", $optattrs;
     }
+
     if (ref $self->{custom_attribute} eq 'HASH') {
         my $xml_string = Sympa::Tools::Data::encode_custom_attribute(
             $self->{custom_attribute});
@@ -125,6 +154,17 @@ sub to_string {
         $msg_string .= "\n";
     }
     return $msg_string;
+}
+
+sub _canonic_value {
+    my $val = shift;
+
+    return undef unless defined $val;
+    $val =~ s/\A\s+//;
+    $val =~ s/\s+\z//;
+    $val =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;
+    $val =~ s/\r\n|\r|\n/ /g;
+    $val;
 }
 
 sub get_id {
@@ -153,7 +193,9 @@ Sympa::Request - Requests for operation
 
 =head1 SYNOPSYS
 
-TBD.
+  use Sympa::Request;
+  my $request = Sympa::Request->new($serialized, context => $list);
+  my $request = Sympa::Request->new(context => $list, action => 'last');
 
 =head1 DESCRIPTION
 
@@ -164,14 +206,42 @@ users.
 
 =over
 
-=item new ( $serialized, context => $list, [ key =E<gt> value, ... ] )
+=item new ( [ $serialized, ] context =E<gt> $that, action =E<gt> $action,
+key =E<gt> value, ... ] )
 
 I<Constructor>.
 Creates a new L<Sympa::Request> object.
 
+Parameters:
+
+=over
+
+=item $serialized
+
+Serialized request.
+
+=item context =E<gt> object
+
+Context.  L<Sympa::List> object, Robot or C<'*'>.
+
+=item action =E<gt> $action
+
+Name of requested action.
+
+=item key =E<gt> value, ...
+
+Metadata and attributes.
+
+=back
+
+Returns:
+
+A new instance of L<Sympa::Request>, or I<undef>, if something went wrong.
+
 =item new_from_tuples ( key =E<gt> value, ... )
 
 I<Constructor>.
+OBSOLETED.
 Creates L<Sympa::Request> object from paired options.
 
 =item dup ( )
@@ -196,6 +266,7 @@ See L<Sympa::Spool::Auth/"Context and metadata"> for details.
 =head2 Attributes
 
 These are accessible as hash elements of objects.
+There are attributes including:
 
 =over
 
@@ -207,7 +278,24 @@ Custom attribute connected to requested action.
 
 Display name of user sending request.
 
+=item {sender}
+
+E-mail of user who sent the request.
+
 =back
+
+=head2 Serialization
+
+L<Sympa::Request> object includes number of slots as hash items:
+B<metadata>, B<context> and B<attributes>.
+Metadata including context are given by spool:
+See L<Sympa::Spool/"Marshaling and unmarshaling metadata">.
+
+Logically, objects are stored into physical spool as B<serialized form>
+and deserialized when they are fetched from spool.
+Attributes are encoded in C<X-Sympa-*:> pseudo-header fields.
+
+See also L<Sympa::Message/"Serialization"> for example.
 
 =head1 SEE ALSO
 
