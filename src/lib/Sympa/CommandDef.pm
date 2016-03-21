@@ -41,6 +41,12 @@ our %comms = (
         scenario      => 'add',
         action_regexp => qr'reject|request_auth|do_it'i,
     },
+    auth => {
+        cmd_regexp => qr'auth'i,
+        arg_regexp => qr'(\w+)\s+(.+)',
+        arg_keys   => [qw(keyauth cmd)],
+        cmd_format => 'AUTH %s %s',
+    },
     confirm => {
         cmd_regexp => qr'con|confirm'i,
         arg_regexp => qr'(\w+)\s*\z',

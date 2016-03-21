@@ -44,25 +44,32 @@ sub _twist {
     my $list   = $request->{context};
     my $sender = $request->{sender};
 
-    $self->add_stash($request, 'notice', 'sent_to_owner')
-        unless $request->{quiet};
-
     my $tpl =
         {subscribe => 'subrequest', signoff => 'sigrequest'}
         ->{$request->{action}};
     my $owner_action =
         {subscribe => 'add', signoff => 'del'}->{$request->{action}};
 
+    my $spool_req   = Sympa::Spool::Auth->new;
+    my $add_request = Sympa::Request->new(
+        action => $owner_action,
+        # Keep date of message.
+        (   map { ($_ => $request->{$_}) }
+                qw(date context custom_attribute email gecos sender)
+        ),
+    );
+    my $keyauth;
+    unless ($keyauth = $spool_req->store($add_request)) {
+        $self->add_stash($request, 'intern');
+        return undef;
+    }
+
     # Send a notice to the owners.
     unless (
         $list->send_notify_to_owner(
             $tpl,
             {   'who'     => $sender,
-                'keyauth' => Sympa::compute_auth(
-                    context => $list,
-                    email   => $request->{email},
-                    action  => $owner_action,
-                ),
+                'keyauth' => $keyauth,
                 'replyto' => Sympa::get_address($list, 'sympa'),
                 'gecos'   => $request->{gecos},
             }
@@ -82,26 +89,20 @@ sub _twist {
             }
         );
         $self->add_stash($request, 'intern');
+        return undef;
     }
 
-    my $spool_req   = Sympa::Spool::Auth->new;
-    my $add_request = Sympa::Request->new_from_tuples(
-        action => $owner_action,
-        # Keep date of message.
-        (   map { ($_ => $request->{$_}) }
-                qw(date context custom_attribute email gecos sender)
-        ),
+    $self->add_stash($request, 'notice', 'sent_to_owner')
+        unless $request->{quiet};
+
+    $log->syslog(
+        'info',
+        '%s for %s from %s forwarded to the owners of the list (%.2f seconds)',
+        uc $request->{action},
+        $list,
+        $sender,
+        Time::HiRes::time() - $self->{start_time}
     );
-    if ($spool_req->store($add_request)) {
-        $log->syslog(
-            'info',
-            '%s for %s from %s forwarded to the owners of the list (%.2f seconds)',
-            uc $request->{action},
-            $list,
-            $sender,
-            Time::HiRes::time() - $self->{start_time}
-        );
-    }
     return 1;
 }
 

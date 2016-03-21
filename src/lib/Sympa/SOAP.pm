@@ -1476,39 +1476,58 @@ sub subscribe {
             ->faultdetail($reason_string);
     }
     if ($action =~ /owner/i) {
-        $list->send_notify_to_owner(
-            'subrequest',
-            {   'who'     => $sender,
-                'keyauth' => Sympa::compute_auth(
-                    context => $list,
-                    email   => $sender,
-                    action  => 'add'
-                ),
-                'replyto' => Conf::get_robot_conf($robot, 'sympa'),
-                'gecos'   => $gecos
-            }
-        );
-
         my $spool_req = Sympa::Spool::Auth->new;
-        my $request   = Sympa::Request->new_from_tuples(
+        my $request   = Sympa::Request->new(
             context => $list,
             email   => $sender,
             gecos   => $gecos,
             action  => 'add'
         );
-        $spool_req->store($request);
+        my $keyauth = $spool_req->store($request);
+
+        $list->send_notify_to_owner(
+            'subrequest',
+            {   'who'     => $sender,
+                'keyauth' => $keyauth,
+                'replyto' => Conf::get_robot_conf($robot, 'sympa'),
+                'gecos'   => $gecos
+            }
+        );
 
         $log->syslog('info', '%s from %s forwarded to the owners of the list',
             $listname, $sender);
         return SOAP::Data->name('result')->type('boolean')->value(1);
     }
     if ($action =~ /request_auth/i) {
-        Sympa::request_auth(
+        my $request = Sympa::Request->new(
             context => $list,
             sender  => $sender,
             action  => 'subscribe',
             gecos   => $gecos
         );
+        my $spool_req = Sympa::Spool::Auth->new;
+        my $keyauth;
+        unless ($keyauth = $spool_req->store($request)) {
+            #XXX FIXME: Check if failed!
+        }
+
+        # Send notice to the user.
+        my $cmd_line = $request->{cmd_line};
+        unless (
+            Sympa::send_file(
+                $list,
+                'request_auth',
+                $sender,
+                {   command => sprintf('AUTH %s %s', $keyauth, $cmd_line),
+                    type    => $request->{action},
+                    to      => $sender,
+                    auto_submitted => 'auto-replied',
+                }
+            )
+            ) {
+            #XXX FIXME: Check if failed!
+        }
+
         $log->syslog('info', '%s from %s, auth requested', $listname,
             $sender);
         return SOAP::Data->name('result')->type('boolean')->value(1);

@@ -75,6 +75,7 @@ nobase_modules_DATA = \
 	Sympa/Report.pm \
 	Sympa/Request.pm \
 	Sympa/Request/Handler/add.pm \
+	Sympa/Request/Handler/auth.pm \
 	Sympa/Request/Handler/confirm.pm \
 	Sympa/Request/Handler/del.pm \
 	Sympa/Request/Handler/distribute.pm \
@@ -116,6 +117,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/DoForward.pm \
 	Sympa/Spindle/DoMessage.pm \
 	Sympa/Spindle/ProcessArchive.pm \
+	Sympa/Spindle/ProcessAuth.pm \
 	Sympa/Spindle/ProcessAutomatic.pm \
 	Sympa/Spindle/ProcessBounce.pm \
 	Sympa/Spindle/ProcessDigest.pm \

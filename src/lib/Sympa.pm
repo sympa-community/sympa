@@ -45,7 +45,6 @@ use strict;
 use warnings;
 #use Cwd qw();
 use DateTime;
-use Digest::MD5;
 use English qw(-no_match_vars);
 use Scalar::Util qw();
 use URI;
@@ -71,6 +70,7 @@ my $log = Sympa::Log->instance;
 =item compute_auth ( context =E<gt> $that, email =E<gt> $email,
 action =E<gt> $cmd )
 
+DEPRECATED.
 Genererate a MD5 checksum using private cookie and parameters.
 
 Parameters:
@@ -100,52 +100,15 @@ Authenticaton key.
 =cut
 
 # Old name: List::compute_auth().
-sub compute_auth {
-    $log->syslog('debug3', '(%s, %s, %s)', @_);
-    my %options = @_;
-
-    my $that  = $options{context};
-    my $email = $options{email};
-    my $cmd   = $options{action};
-    # Compat. <= 6.2.12.
-    $cmd = 'remind' if $cmd eq 'global_remind';
-
-    my ($list, $robot);
-    if (ref $that eq 'Sympa::List') {
-        $list = $that;
-    } elsif ($that and $that ne '*') {
-        $robot = $that;
-    } else {
-        $robot = '*';
-    }
-
-    $email = '' unless defined $email;
-    $email =~ tr/A-Z/a-z/;
-    $cmd   =~ tr/A-Z/a-z/;
-
-    my ($cookie, $key, $listname);
-
-    if ($list) {
-        $listname = $list->{'name'};
-        $cookie   = $list->{'admin'}{'cookie'}
-            || Conf::get_robot_conf($robot, 'cookie');
-    } else {
-        $listname = '';
-        $cookie = Conf::get_robot_conf($robot, 'cookie');
-    }
-
-    $key = substr(
-        Digest::MD5::md5_hex(join('/', $cookie, $listname, $email, $cmd)),
-        -8);
-
-    return $key;
-}
+#DEPRECATED.  Reusable auth key is no longer used.
+#sub compute_auth;
 
 =over
 
 =item request_auth ( context =E<gt> $that, sender =E<gt> $sender,
 action =E<gt> $cmd, [ email =E<gt> $email ], [ other options... ] )
 
+DEPRECATED.
 Sends an authentication request for a requested
 command.
 
@@ -185,126 +148,8 @@ C<1> or C<undef>.
 =cut
 
 # Old name: List::request_auth().
-sub request_auth {
-    $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
-    my %options = @_;
-
-    # Suppress warnings on uninitialized value.
-    foreach my $i (qw(sender email gecos)) {
-        $options{$i} = '' unless defined $options{$i};
-    }
-
-    my $that   = $options{context} || '*';
-    my $sender = $options{sender};
-    my $cmd    = $options{action};
-    my $email  = $options{email};
-    my $gecos  = $options{gecos};
-    my $quiet  = $options{quiet};
-
-    $cmd = "quiet $cmd" if $quiet;
-
-    my ($list, $robot);
-    if (ref $that eq 'Sympa::List') {
-        $list  = $that;
-        $robot = $that->{'domain'};
-    } elsif ($that and $that ne '*') {
-        $robot = $that;
-    } else {
-        $robot = '*';
-    }
-
-    my $keyauth;
-    my $data = {'to' => $sender};
-
-    if ($list) {
-        my $listname = $list->{'name'};
-        $data->{'list_context'} = 1;
-
-        if ($cmd =~ /signoff$/) {
-            $email ||= $sender;
-            $keyauth = Sympa::compute_auth(
-                context => $list,
-                email   => $email,
-                action  => 'signoff'
-            );
-            $data->{'command'} = "auth $keyauth $cmd $listname $email";
-            $data->{'type'}    = 'signoff';
-
-        } elsif ($cmd =~ /subscribe$/) {
-            $keyauth = Sympa::compute_auth(
-                context => $list,
-                email   => $sender,
-                action  => 'subscribe'
-            );
-            $data->{'command'} = "auth $keyauth $cmd $listname $gecos";
-            $data->{'type'}    = 'subscribe';
-
-        } elsif ($cmd =~ /add$/) {
-            $keyauth = Sympa::compute_auth(
-                context => $list,
-                email   => $email,
-                action  => 'add'
-            );
-            $data->{'command'} = "auth $keyauth $cmd $listname $email $gecos";
-            $data->{'type'}    = 'add';
-
-        } elsif ($cmd =~ /del$/) {
-            my $keyauth = Sympa::compute_auth(
-                context => $list,
-                email   => $email,
-                action  => 'del'
-            );
-            $data->{'command'} = "auth $keyauth $cmd $listname $email";
-            $data->{'type'}    = 'del';
-
-        } elsif ($cmd eq 'remind') {
-            my $keyauth =
-                Sympa::compute_auth(context => $list, action => 'remind');
-            $data->{'command'} = "auth $keyauth $cmd $listname";
-            $data->{'type'}    = 'remind';
-
-        } elsif ($cmd eq 'invite') {
-            my $keyauth = Sympa::compute_auth(
-                context => $list,
-                email   => $email,
-                action  => 'invite'
-            );
-            $data->{'command'} = "auth $keyauth $cmd $listname $email";
-            $data->{'type'}    = 'invite';
-        } elsif ($cmd eq 'review') {
-            my $keyauth =
-                Sympa::compute_auth(context => $list, action => 'review');
-            $data->{'command'} = "auth $keyauth $cmd $listname";
-            $data->{'type'}    = 'review';
-        }
-
-        $data->{'auto_submitted'} = 'auto-replied';
-        unless (Sympa::send_file($list, 'request_auth', $sender, $data)) {
-            $log->syslog('notice',
-                'Unable to send template "request_auth" to %s', $sender);
-            return undef;
-        }
-
-    } else {
-        if ($cmd eq 'global_remind') {
-            my $keyauth = Sympa::compute_auth(
-                context => '*',
-                action  => 'global_remind'
-            );
-            $data->{'command'} = "auth $keyauth remind *";
-            $data->{'type'}    = 'remind';
-
-        }
-        $data->{'auto_submitted'} = 'auto-replied';
-        unless (Sympa::send_file($robot, 'request_auth', $sender, $data)) {
-            $log->syslog('notice',
-                'Unable to send template "request_auth" to %s', $sender);
-            return undef;
-        }
-    }
-
-    return 1;
-}
+# DEPRECATED.  Reusable auth keys are no longer used.
+#sub request_auth;
 
 =head3 Finding config files and templates
 

@@ -66,10 +66,10 @@ sub _glob_pattern { shift->{_pattern} }
 
 use constant _marshal_format => '%ld,%s@%s_%s,%s,%s';
 use constant _marshal_keys =>
-    [qw(date localpart domainpart AUTHKEY email action)];
+    [qw(date localpart domainpart KEYAUTH email action)];
 use constant _marshal_regexp =>
     qr{\A(\d+),([^\s\@]+)\@([-.\w]+)_([\da-f]+),([^\s,]*),(\w+)\z};
-use constant _store_key => 'authkey';
+use constant _store_key => 'keyauth';
 
 sub new {
     my $class   = shift;
@@ -111,7 +111,7 @@ Sympa::Spool::Auth - Spool for held requests waiting for moderation
   my $size = $spool->size;
 
   my $spool = Sympa::Spool::Auth->new(
-      context => $list, authkey => $id, action => 'add');
+      context => $list, keyauth => $id, action => 'add');
   my ($request, $handle) = $spool->next;
 
   $spool->remove($handle);
@@ -128,7 +128,7 @@ See also L<Sympa::Spool/"Public methods">.
 =over
 
 =item new ( [ context =E<gt> $list ], [ action =E<gt> $action ],
-[ authkey =E<gt> $id ], [ email =E<gt> $email ])
+[ keyauth =E<gt> $id ], [ email =E<gt> $email ])
 
 =item next ( [ no_lock =E<gt> 1 ] )
 
@@ -156,11 +156,6 @@ This class particularly gives following metadata:
 Action requested.
 C<'add'> etc.
 
-=item {authkey}
-
-Authentication key generated automatically
-when the request is stored to spool.
-
 =item {date}
 
 Unix time when the request was submitted.
@@ -168,6 +163,11 @@ Unix time when the request was submitted.
 =item {email}
 
 E-mail of user who submitted the request, or target e-mail of the request.
+
+=item {keyauth}
+
+Authentication key generated automatically
+when the request is stored to spool.
 
 =back
 

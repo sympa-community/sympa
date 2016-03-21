@@ -145,8 +145,31 @@ sub _load {
 }
 
 # Parses the command and returns Sympa::Request instance.
-# Old name: Sympa::Commands::parse().
 sub _parse {
+    my $robot   = shift;
+    my $line    = shift;
+    my $message = shift;
+
+    my $request = __parse($robot, $line, $message);
+
+    if ($request->{action} eq 'auth' and not $request->{error}) {
+        my $req = __parse($robot, $request->{cmd}, $message);
+
+        if ($req->{action} eq 'auth') {
+            $request->{error} = 'syntax_errors';
+        } elsif ($req->{action} eq 'unknown' or $req->{error}) {
+            $req->{cmd_line} = $request->{cmd_line};
+            $request = $req;
+        } else {
+            $request->{request} = $req;
+        }
+    }
+
+    return $request;
+}
+
+# Old name: Sympa::Commands::parse().
+sub __parse {
     $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
     my $robot   = shift;
     my $line    = shift;
@@ -154,8 +177,6 @@ sub _parse {
 
     $log->syslog('notice', "Parsing: %s", $line);
 
-    # Authentication key if 'auth' is present in the command line.
-    my $auth = $1 if $line =~ s/\A\s*auth\s+(\S+)\s+(.+)\z/$2/i;
     # Boolean says if quiet is in the cmd line.
     my $quiet = 1 if $line =~ s/\Aquiet\s+(.+)\z/$1/i;
 
@@ -199,9 +220,8 @@ sub _parse {
                 $context = $robot || '*';
             }
         } else {
-            return Sympa::Request->new_from_tuples(
+            return Sympa::Request->new(
                 action   => $action,
-                auth     => $auth,
                 cmd_line => $line,
                 context  => $robot,
                 error    => 'syntax_errors',
@@ -212,10 +232,9 @@ sub _parse {
             );
         }
 
-        my $request = Sympa::Request->new_from_tuples(
+        my $request = Sympa::Request->new(
             %args,
             action   => $action,
-            auth     => $auth,
             cmd_line => $line,
             context  => $context,
             quiet    => $quiet,
@@ -235,7 +254,7 @@ sub _parse {
     }
 
     # Unknown command.
-    return Sympa::Request->new_from_tuples(
+    return Sympa::Request->new(
         action   => 'unknown',
         cmd_line => $line,
         context  => $robot,

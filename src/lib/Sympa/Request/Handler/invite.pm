@@ -79,12 +79,6 @@ sub _twist {
     }
 
     # Is the guest user allowed to subscribe in this list?
-
-    my %context;
-    $context{'user'}{'email'} = $email;
-    $context{'user'}{'gecos'} = $comment;
-    $context{'requested_by'}  = $sender;
-
     # Emulating subscription privilege of target user.
     my $result =
         Sympa::Scenario::request_action($list, 'subscribe', 'md5',
@@ -120,14 +114,29 @@ sub _twist {
             {'email' => $email, template => $result->{'tt2'}});
         return undef;
     } else {
-        my $keyauth = Sympa::compute_auth(
+        my $spool_req     = Sympa::Spool::Auth->new;
+        my $req_subscribe = Sympa::Request->new(
             context => $list,
+            action  => 'subscribe',
             email   => $email,
-            action  => 'subscribe'
+            sender  => $sender,
         );
-        $context{'subject'} = sprintf 'auth %s sub %s %s', $keyauth,
-            $list->{'name'}, $comment;
-        unless (Sympa::send_file($list, 'invite', $email, \%context)) {
+        my $keyauth = $spool_req->store($req_subscribe);
+
+        unless (
+            Sympa::send_file(
+                $list, 'invite', $email,
+                {   user         => {email => $email, gecos => $comment},
+                    requested_by => $sender,
+                    keyauth      => $keyauth,
+                    # Compat. <= 6.2.14.
+                    subject => sprintf(
+                        'auth %s sub %s %s',
+                        $keyauth, $list->{'name'}, $comment
+                    )
+                }
+            )
+            ) {
             $log->syslog('notice', 'Unable to send template "invite" to %s',
                 $email);
             my $error = sprintf 'Unable to send template "invite" to %s',

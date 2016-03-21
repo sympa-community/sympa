@@ -5736,29 +5736,27 @@ sub do_subscribe {
         $param->{'may_subscribe'} = 1;
 
         if ($sub_is =~ /owner/) {
+            my $spool_req = Sympa::Spool::Auth->new;
+            my $request   = Sympa::Request->new(
+                context          => $list,
+                action           => 'add',
+                custom_attribute => $in{custom_attribute},
+                email            => $param->{'user'}{'email'},
+                gecos            => $param->{'user'}{'gecos'},
+                sender           => $param->{'user'}{'email'},
+            );
+            my $keyauth = $spool_req->store($request);
+
             $list->send_notify_to_owner(
                 'subrequest',
                 {   'who'     => $param->{'user'}{'email'},
-                    'keyauth' => Sympa::compute_auth(
-                        context => $list,
-                        email   => $param->{'user'}{'email'},
-                        action  => 'add'
-                    ),
-                    'replyto' => Conf::get_robot_conf($robot, 'sympa'),
+                    'keyauth' => $keyauth,
+                    'replyto' => Sympa::get_address($list, 'sympa'),
                     'custom_attribute' => $in{custom_attribute},
                     'gecos'            => $param->{'user'}{'gecos'},
                     'ip'               => $ip
                 }
             );
-
-            my $spool_req = Sympa::Spool::Auth->new;
-            my $request   = Sympa::Request->new_from_tuples(
-                context          => $list,
-                email            => $param->{'user'}{'email'},
-                custom_attribute => $in{custom_attribute},
-                action           => 'add'
-            );
-            $spool_req->store($request);
 
             Sympa::Report::notice_report_web('sent_to_owner', {},
                 $param->{'action'});
@@ -6329,24 +6327,21 @@ sub unsubscribe {
         $report{'details_error'}  = {};
         return %report;
     } elsif ($sig_is =~ /owner/) {
+        my $spool_req = Sympa::Spool::Auth->new;
+        my $request   = Sympa::Request->new(
+            context => $list,
+            action  => 'del',
+            email   => $param->{'user'}{'email'},
+            sender  => $param->{'user'}{'email'},
+        );
+        my $keyauth = $spool_req->store($request);
+
         $list->send_notify_to_owner(
             'sigrequest',
             {   'who'     => $param->{'user'}{'email'},
-                'keyauth' => Sympa::compute_auth(
-                    context => $list,
-                    email   => $param->{'user'}{'email'},
-                    action  => 'del'
-                ),
+                'keyauth' => $keyauth,
             }
         );
-
-        my $spool_req = Sympa::Spool::Auth->new;
-        my $request   = Sympa::Request->new_from_tuples(
-            context => $list,
-            email   => $param->{'user'}{'email'},
-            action  => 'del'
-        );
-        $spool_req->store($request);
 
         wwslog('info', 'Signoff sent to owner');
         $report{'success'} = 1;
@@ -7955,7 +7950,7 @@ sub do_add_fromsub {
 
         my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
-            authkey => $id,
+            keyauth => $id,
             action  => 'add'
         );
         my ($request, $handle);
@@ -8222,7 +8217,7 @@ sub do_del_fromsig {
 
         my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
-            authkey => $id,
+            keyauth => $id,
             action  => 'del'
         );
         my ($request, $handle);

@@ -30,6 +30,7 @@ use Time::HiRes qw();
 
 use Sympa;
 use Sympa::Log;
+use Sympa::Spool::Auth;
 
 use base qw(Sympa::Spindle);
 
@@ -39,16 +40,38 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
+    my $that   = $request->{context} || '*';
     my $sender = $request->{sender};
-    my $to = $request->{sender_to_confirm} || $sender;
+    my $to     = $request->{sender_to_confirm} || $sender;
 
     $log->syslog('debug2', 'Auth requested from %s', $sender);
-    unless (Sympa::request_auth(%$request, sender => $to)) {
+
+    my $spool_req = Sympa::Spool::Auth->new;
+    my $keyauth;
+    unless ($keyauth = $spool_req->store($request)) {
+        $self->add_stash($request, 'intern');
+        return undef;
+    }
+
+    # Send notice to the user.
+    my $cmd_line = $request->{cmd_line};
+    unless (
+        Sympa::send_file(
+            $that,
+            'request_auth',
+            $to,
+            {   command        => sprintf('AUTH %s %s', $keyauth, $cmd_line),
+                type           => $request->{action},
+                to             => $to,
+                auto_submitted => 'auto-replied',
+            }
+        )
+        ) {
         my $error = sprintf
             'Unable to request authentication for command "%s"',
             $request->{action};
         Sympa::send_notify_to_listmaster(
-            $request->{context},
+            $that,
             'mail_intern_error',
             {   error  => $error,
                 who    => $sender,
@@ -70,3 +93,27 @@ sub _twist {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Spindle::ToAuth -
+Process to store requests into request spool to wait for moderation
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 SEE ALSO
+
+L<Sympa::Request>,
+L<Sympa::Spindle>, L<Sympa::Spindle::AuthorizeRequest>,
+L<Sympa::Spool::Auth>.
+
+=head1 HISTORY
+
+L<Sympa::Spindle::ToAuth> appeared on Sympa 6.2.13.
+
+=cut

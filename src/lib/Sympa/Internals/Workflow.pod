@@ -76,15 +76,15 @@ workflow of Sympa.  For more details see documentation on each class.
 
 =head2 Command processing
 
- << sympa_msg.pl >>
+ <<sympa_msg.pl>>
  
                  *2
                  :                             +-> (reject)
    (message) => [ProcessMessage]              /
-                              \              /---> [ToAuth] => (authkey)
-                               +-> [AuthorizeRequest]
-                                             \---> [ToAuthOwner] => Auth
-                                              \
+                              \              /---> [ToAuth] => Auth
+          *3 (AUTH)            +-> [AuthorizeRequest]
+          :                   /              \---> [ToAuthOwner] => Auth
+ Auth => [ProcessAuth] ------+                \
                                                +-> [DispatchRequest]
                                                                 :
                                                                 *3

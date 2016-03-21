@@ -33,7 +33,6 @@ use Sympa::CommandDef;
 use Sympa::Log;
 use Sympa::Request;
 use Sympa::Scenario;
-use Sympa::Spool::Auth;
 
 use base qw(Sympa::Spindle);
 
@@ -50,6 +49,8 @@ sub _twist {
         return ['Sympa::Spindle::DispatchRequest'];
     }
 
+    my $ctx_class =
+        $Sympa::CommandDef::comms{$request->{action}}->{ctx_class} || '';
     my $scenario = $Sympa::CommandDef::comms{$request->{action}}->{scenario};
     my $action_regexp =
         $Sympa::CommandDef::comms{$request->{action}}->{action_regexp}
@@ -57,8 +58,8 @@ sub _twist {
 
     my $sender = $request->{sender};
 
-    # Check if required list argument is known.
-    if ($request->{localpart} and ref $request->{context} ne 'Sympa::List') {
+    # Check if required context (known list or robot) is given.
+    unless (ref $request->{context} eq $ctx_class) {
         $request->{error} = 'unknown_list';
         return ['Sympa::Spindle::DispatchRequest'];
     }
@@ -67,14 +68,13 @@ sub _twist {
     my $context = $self->{scenario_context}
         or die 'bug in logic. Ask developer';
 
-    # Authorize requests.
-
-    return 'wrong_auth'
-        unless defined _get_auth_method($self, $request);
+    # Call scenario: auth_method MD5 do not have any sense in
+    # scenario because auth is performed by AUTH command.
 
     my $action;
     my $result;
 
+    # The order of the following 3 lines is important! SMIME > DKIM > SMTP.
     my $auth_method =
           $request->{smime_signed} ? 'smime'
         : $request->{md5_check}    ? 'md5'
@@ -143,7 +143,7 @@ sub _twist {
             uc $request->{action},
             $that, $sender
         );
-        return 'not_allowed';
+        return undef;
     }
 
     $log->syslog(
@@ -173,63 +173,8 @@ sub _twist {
 # used if authentication not failed.
 # Returns 'smime', 'md5', 'dkim' or 'smtp' if authentication OK, undef else.
 # Old name: Sympa::Commands::get_auth_method().
-sub _get_auth_method {
-    my $self    = shift;
-    my $request = shift;
-
-    my $that   = $request->{context};
-    my $sender = $request->{sender};
-
-    my $cmd   = $request->{action};
-    my $email = $request->{email};
-
-    my $auth = $request->{auth};
-
-    if ($request->{smime_signed}) {
-        ;
-    } elsif ($auth) {
-        $log->syslog('debug', 'Auth received from %s: %s', $sender, $auth);
-
-        my $compute;
-        if (ref $that eq 'Sympa::List') {
-            $compute = Sympa::compute_auth(
-                context => $that,
-                email   => $email,
-                action  => $cmd
-            );
-        } else {
-            $compute = Sympa::compute_auth(
-                context => '*',
-                email   => $email,
-                action  => $cmd
-            );
-        }
-        if ($auth eq $compute) {
-            $request->{md5_check} = 1;
-        } else {
-            $log->syslog('debug2', 'Auth should be %s', $compute);
-            if (grep { $cmd eq $_ } qw(add del invite signoff subscribe)) {
-                $self->add_stash($request, 'user', 'wrong_email_confirm',
-                    {command => $cmd});
-            } else {
-                Sympa::send_notify_to_listmaster(
-                    $that,
-                    'mail_intern_error',
-                    {   error  => 'The authentication process failed',
-                        who    => $sender,
-                        action => 'Command process',
-                    }
-                );
-                $self->add_stash($request, 'intern');
-            }
-            $log->syslog('info', 'Command "%s" from %s refused, auth failed',
-                $request->{cmd_line}, $sender);
-            return undef;
-        }
-    }
-
-    return 1;
-}
+# DEPRECATED.  Use Sympa::Request::Handler::auth module to authorize requests.
+#sub _get_auth_method;
 
 1;
 __END__
