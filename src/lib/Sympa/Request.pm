@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Scalar::Util qw();
 
+use Sympa;
 use Sympa::CommandDef;
 use Sympa::Log;
 use Sympa::Tools::Data;
@@ -107,9 +108,11 @@ sub new_from_tuples {
 }
 
 sub cmd_line {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
-    return $self->{cmd_line} if $self->{cmd_line};
+    return $self->{cmd_line}
+        if $self->{cmd_line} and not $options{canonic};
     return undef
         if not $self->{action}
             or $self->{action} eq 'unknown';
@@ -119,8 +122,18 @@ sub cmd_line {
     return undef
         unless $cmd_format;
 
+    $cmd_format = $cmd_format->($self) if ref $cmd_format;
+
+    my %attrs   = %{$self};
+    my $context = $self->{context};
+    if (ref $context eq 'Sympa::List') {
+        @attrs{qw(localpart domainpart)} =
+            split /\@/, Sympa::get_address($context);
+    } else {
+        $attrs{domainpart} = $context;
+    }
     return sprintf $cmd_format,
-        map { defined $_ ? $_ : '' } @{$self}{@{$arg_keys || []}};
+        map { defined $_ ? $_ : '' } @attrs{@{$arg_keys || []}};
 }
 
 sub dup {
@@ -272,7 +285,7 @@ Gets deep copy of instance.
 I<Serializer>.
 Returns serialized data of object.
 
-=item cmd_line ( )
+=item cmd_line ( [ canonic =E<gt> 1 ] )
 
 I<Instance method>.
 TBD.

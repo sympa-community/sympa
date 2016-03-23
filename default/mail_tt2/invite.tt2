@@ -6,11 +6,11 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Invitation to join list %1[%END%
 [%|loc(list.subject)%]This list is about %1, so you are probably concerned.[%END%]
 
 [%|loc%]To subscribe just hit the following link:[%END%]
-[% | mailtourl({subject=>"auth ${keyauth} sub ${list.name} ${user.email}"}) ~%]
+[% | mailtourl({subject => "AUTH ${keyauth} ${cmd}"}) ~%]
   [% conf.email %]@[% conf.host %]
 [%~ END %]
 
 [%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
-  AUTH [% keyauth %] SUB [% list.name %] [% user.email %]
+  AUTH [% keyauth %] [% cmd %]
 
 [%|loc%]If you don't want to subscribe just ignore this message.[%END%]

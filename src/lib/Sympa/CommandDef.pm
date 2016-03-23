@@ -247,8 +247,14 @@ our %comms = (
         cmd_regexp => qr'sig|signoff|uns|unsub|unsubscribe'i,
         arg_regexp => qr{([^\s\@]+)(?:\@([-.\w]+))?(?:\s+($_email_re))?\z},
         arg_keys   => [qw(localpart domainpart email)],
-        cmd_format => 'SIG %1$s %3$s',
-        filter     => sub {
+        cmd_format => sub {
+            my $r = shift;
+
+            return ($r->{sender} and $r->{sender} eq $r->{email})
+                ? 'SIG %s'
+                : 'SIG %1$s %3$s';
+        },
+        filter => sub {
             my $r = shift;
 
             # email is defined if command is "unsubscribe <listname> <e-mail>".
@@ -273,8 +279,14 @@ our %comms = (
         cmd_regexp => qr'(?:sig|signoff|uns|unsub|unsubscribe)\s+[*]'i,
         arg_regexp => qr{($_email_re)?\z},
         arg_keys   => [qw(email)],
-        cmd_format => 'SIG * %s',
-        filter     => sub {
+        cmd_format => sub {
+            my $r = shift;
+
+            return ($r->{sender} and $r->{sender} eq $r->{email})
+                ? 'SIG *'
+                : 'SIG * %s';
+        },
+        filter => sub {
             my $r = shift;
 
             # email is defined if command is "unsubscribe * <e-mail>".

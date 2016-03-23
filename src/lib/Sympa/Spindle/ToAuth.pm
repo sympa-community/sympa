@@ -54,13 +54,16 @@ sub _twist {
     }
 
     # Send notice to the user.
-    my $cmd_line = $request->cmd_line;
+    my $cmd_line = $request->cmd_line(canonic => 1);
     unless (
         Sympa::send_file(
             $that,
             'request_auth',
             $to,
-            {   command        => sprintf('AUTH %s %s', $keyauth, $cmd_line),
+            {   cmd => $cmd_line,
+                # Compat. <= 6.2.14.
+                command        => sprintf('AUTH %s %s', $keyauth, $cmd_line),
+                keyauth        => $keyauth,
                 type           => $request->{action},
                 to             => $to,
                 auto_submitted => 'auto-replied',

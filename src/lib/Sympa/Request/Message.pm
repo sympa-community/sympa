@@ -97,6 +97,7 @@ sub _load {
                 email   => $message->{sender},
                 #FIXME: smime_signed?
                 (map { ($_ => $message->{$_}) } qw(date sender dkim_pass)),
+                cmd_line => $action, # Fake command line.
             )
         ];
     }

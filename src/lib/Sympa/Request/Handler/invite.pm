@@ -123,17 +123,16 @@ sub _twist {
         );
         my $keyauth = $spool_req->store($req_subscribe);
 
+        my $cmd_line = $req_subscribe->cmd_line(canonic => 1);
         unless (
             Sympa::send_file(
                 $list, 'invite', $email,
                 {   user         => {email => $email, gecos => $comment},
                     requested_by => $sender,
                     keyauth      => $keyauth,
+                    cmd          => $cmd_line,
                     # Compat. <= 6.2.14.
-                    subject => sprintf(
-                        'auth %s sub %s %s',
-                        $keyauth, $list->{'name'}, $comment
-                    )
+                    subject => sprintf('AUTH %s %s', $keyauth, $cmd_line),
                 }
             )
             ) {
