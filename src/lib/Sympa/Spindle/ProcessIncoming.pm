@@ -143,6 +143,14 @@ sub _twist {
         $message->{sender}
     );
 
+    # Preventing loops based on Sympa processes sending DSN to each other.
+    if (grep {/multipart\/report/} $message->get_header('Content-type')){
+        $log->syslog('err',
+            '%s: Ignoring message which would cause a loop; message appears to be DSN report.',
+            $message);
+        return undef;
+    }
+
     my $robot;
     my $listname;
 
