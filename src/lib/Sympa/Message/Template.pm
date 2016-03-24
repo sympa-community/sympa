@@ -178,7 +178,8 @@ sub new {
     $data->{'boundary'} = '----------=_' . Sympa::unique_message_id($robot_id)
         unless $data->{'boundary'};
 
-    my $self = $class->_new_from_template($that, $tpl . '.tt2', $who, $data);
+    my $self = $class->_new_from_template($that, $tpl . '.tt2',
+        $who, $data, %options);
     return undef unless $self;
 
     # Shelve S/MIME signing.
@@ -231,6 +232,7 @@ sub _new_from_template {
     my $filename = shift;
     my $rcpt     = shift;
     my $data     = shift;
+    my %options  = @_;
 
     my ($list, $robot_id);
     if (ref $that eq 'Sympa::List') {
@@ -336,12 +338,18 @@ sub _new_from_template {
     }
     unless ($header_ok{'from'}) {
         unless (defined $data->{'from'}) {
+            # DSN should not have command address <sympa> to prevent looping
+            # by dumb auto-responder (including Sympa command robot itself).
+            my $sympa =
+                (       exists $options{envelope_sender}
+                    and defined $options{envelope_sender}
+                    and $options{envelope_sender} eq '<>')
+                ? Sympa::get_address($robot_id, 'owner')    # sympa-request
+                : Sympa::get_address($robot_id);
             $headers .= sprintf "From: %s\n",
-                Sympa::Tools::Text::addrencode(
-                Conf::get_robot_conf($robot_id, 'sympa'),
+                Sympa::Tools::Text::addrencode($sympa,
                 Conf::get_robot_conf($robot_id, 'gecos'),
-                $data->{'charset'}
-                );
+                $data->{'charset'});
         } elsif ($data->{'from'} eq 'sympa'
             or $data->{'from'} eq $data->{'conf'}{'sympa'}) {
             #XXX NOTREACHED: $data->{'from'} was obsoleted.
