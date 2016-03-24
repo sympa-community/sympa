@@ -66,6 +66,17 @@ sub _twist {
 
     my $sender = $message->{'sender'};
 
+    # Preventing loops based on Sympa processes sending DSN to each other.
+    if ($message->{envelope_sender} and $message->{envelope_sender} eq '<>'
+        or grep {/multipart\/report/i} $message->get_header('Content-type')) {
+        $log->syslog(
+            'notice',
+            '%s: Ignoring message which would cause a loop; message appears to be DSN report',
+            $message
+        );
+        return undef;
+    }
+
     if ($message->{'spam_status'} eq 'spam') {
         $log->syslog(
             'notice',
