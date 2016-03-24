@@ -47,6 +47,7 @@ sub _twist {
     my $spindle = Sympa::Spindle::ProcessAuth->new(
         context      => $req->{context},
         action       => $req->{action},
+        email        => $req->{email},
         keyauth      => $key,
         confirmed_by => $sender,
         scenario_context => $self->{scenario_context},
