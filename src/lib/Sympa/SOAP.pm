@@ -1479,9 +1479,10 @@ sub subscribe {
         my $spool_req = Sympa::Spool::Auth->new;
         my $request   = Sympa::Request->new(
             context => $list,
+            action  => 'add',
             email   => $sender,
             gecos   => $gecos,
-            action  => 'add'
+            sender  => $sender,
         );
         my $keyauth = $spool_req->store($request);
 
@@ -1501,9 +1502,10 @@ sub subscribe {
     if ($action =~ /request_auth/i) {
         my $request = Sympa::Request->new(
             context => $list,
-            sender  => $sender,
             action  => 'subscribe',
-            gecos   => $gecos
+            email   => $sender,
+            gecos   => $gecos,
+            sender  => $sender,
         );
         my $spool_req = Sympa::Spool::Auth->new;
         my $keyauth;
