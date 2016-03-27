@@ -32,9 +32,11 @@ use Sympa;
 use Sympa::Log;
 use Sympa::Spindle::ProcessAuth;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $log = Sympa::Log->instance;
+
+use constant _action_scenario => undef;
 
 sub _twist {
     my $self    = shift;

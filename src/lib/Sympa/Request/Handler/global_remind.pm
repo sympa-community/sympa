@@ -34,10 +34,13 @@ use Sympa::Log;
 use Sympa::Scenario;
 use Sympa::User;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
+
+use constant _action_scenario => 'global_remind';
+use constant _action_regexp   => qr'reject|request_auth|do_it'i;
 
 # Sends a personal reminder to each subscriber
 # of every list using template 'global_remind'.

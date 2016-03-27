@@ -26,6 +26,7 @@ package Sympa::Request;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use Scalar::Util qw();
 
 use Sympa;
@@ -53,8 +54,19 @@ sub new {
     } else {
         $serialized = shift;
     }
+    my %options = @_;
 
-    my $self = bless {@_} => $class;
+    my $handler = $options{action};
+    $handler = 'Sympa::Request::Handler::' . $handler
+        unless 0 < index $handler, '::';
+    unless (eval sprintf 'require %s',
+        $handler and $handler->isa('Sympa::Request::Handler')) {
+        $log->syslog('err', 'Unable to use %s module: %s',
+            $handler, $EVAL_ERROR || 'Not a Sympa::Request::Handler class');
+        return undef;
+    }
+
+    my $self = bless {%options, _handler => $handler} => $class;
     $self->{email} = Sympa::Tools::Text::canonic_email($self->{email})
         if defined $self->{email};
 
@@ -198,19 +210,23 @@ sub _canonic_value {
     $val;
 }
 
+sub handler {
+    shift->{_handler};
+}
+
 sub get_id {
     my $self = shift;
 
     join ';', map {
         my $val = $self->{$_};
-        if (ref $val eq 'Sympa::List') {
+        if (ref $val) {
             sprintf '%s=%s', $_, $val->get_id;
         } else {
             sprintf '%s=%s', $_, $val;
         }
         } grep {
         defined $self->{$_}
-        } qw(action context arc email mode error);
+        } qw(action context arc email reception visibility request error);
 }
 
 1;
@@ -290,6 +306,11 @@ Returns serialized data of object.
 I<Instance method>.
 TBD.
 
+=item handler ( )
+
+I<Instance method>.
+Name of a subclass of L<Sympa::Request::Handler> to process request.
+
 =item get_id ( )
 
 I<Instance method>.
@@ -340,6 +361,8 @@ See also L<Sympa::Message/"Serialization"> for example.
 
 =head1 SEE ALSO
 
+L<Sympa::Request::Handler>,
+L<Sympa::Request::Message>,
 L<Sympa::Spool::Auth>.
 
 =head1 HISTORY

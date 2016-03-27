@@ -47,8 +47,7 @@ sub _twist {
     my $tpl =
         {subscribe => 'subrequest', signoff => 'sigrequest'}
         ->{$request->{action}};
-    my $owner_action =
-        {subscribe => 'add', signoff => 'del'}->{$request->{action}};
+    my $owner_action = $request->handler->owner_action || $request->{action};
 
     my $spool_req   = Sympa::Spool::Auth->new;
     my $add_request = Sympa::Request->new(

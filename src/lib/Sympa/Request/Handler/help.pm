@@ -34,10 +34,12 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::User;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
+
+use constant _action_scenario => undef;
 
 # Sends the help file for the software.
 # Old name: Sympa::Commands::help().

@@ -31,9 +31,11 @@ use Time::HiRes qw();
 use Sympa::Log;
 use Sympa::Spindle::ProcessHeld;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $log = Sympa::Log->instance;
+
+use constant _action_scenario => undef;
 
 # Confirms the authentication of a message for its
 # distribution on a list.

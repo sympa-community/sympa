@@ -86,6 +86,8 @@ workflow of Sympa.  For more details see documentation on each class.
           :                   /              \---> [ToAuthOwner] => Auth
  Auth => [ProcessAuth] ------+                \
                                                +-> [DispatchRequest]
+                                                            \
+                                                     (request handler)
                                                                 :
                                                                 *3
 
@@ -139,6 +141,10 @@ L<Sympa::Message::Template> class.
 =item C<(message)>
 
 L<Sympa::Request::Message> class.
+
+=item C<(request handler)>
+
+A subclass of C<Sympa::Request::Handler> class.
 
 =back
 

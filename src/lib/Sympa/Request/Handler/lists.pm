@@ -33,9 +33,11 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $log = Sympa::Log->instance;
+
+use constant _action_scenario => undef;
 
 # Sends back the list of public lists on this node.
 # Old name: Sympa::Commands::lists().

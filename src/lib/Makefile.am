@@ -74,6 +74,7 @@ nobase_modules_DATA = \
 	Sympa/Regexps.pm \
 	Sympa/Report.pm \
 	Sympa/Request.pm \
+	Sympa/Request/Handler.pm \
 	Sympa/Request/Handler/add.pm \
 	Sympa/Request/Handler/auth.pm \
 	Sympa/Request/Handler/confirm.pm \

@@ -37,9 +37,6 @@ our %comms = (
         arg_regexp    => qr{(\S+)\s+($_email_re)(?:\s+(.+))?\s*\z},
         arg_keys      => [qw(localpart email gecos)],
         cmd_format    => 'ADD %s %s %s',
-        ctx_class     => 'Sympa::List',
-        scenario      => 'add',
-        action_regexp => qr'reject|request_auth|do_it'i,
     },
     auth => {
         cmd_regexp => qr'auth'i,
@@ -58,26 +55,18 @@ our %comms = (
         arg_regexp    => qr{(\S+)\s+($_email_re)\s*},
         arg_keys      => [qw(localpart email)],
         cmd_format    => 'DEL %s %s',
-        ctx_class     => 'Sympa::List',
-        scenario      => 'del',
-        action_regexp => qr'reject|request_auth|do_it'i,
     },
     distribute => {
         cmd_regexp => qr'dis|distribute'i,
         arg_regexp => qr'(\S+)\s+(\w+)\s*\z',
         arg_keys   => [qw(localpart authkey)],
         cmd_format => 'DISTRIBUTE %s %s',
-        ctx_class  => 'Sympa::List',
-        # No scenario.
     },
     get => {
         cmd_regexp    => qr'get'i,
         arg_regexp    => qr'(\S+)\s+(.+)',
         arg_keys      => [qw(localpart arc)],
         cmd_format    => 'GET %s %s',
-        ctx_class     => 'Sympa::List',
-        scenario      => 'archive.mail_access',
-        action_regexp => qr'reject|do_it'i,
     },
     help => {cmd_regexp => qr'hel|help|sos'i, cmd_format => 'HELP',},
     info => {
@@ -85,36 +74,24 @@ our %comms = (
         arg_regexp    => qr'(.+)',
         arg_keys      => [qw(localpart)],
         cmd_format    => 'INFO %s',
-        ctx_class     => 'Sympa::List',
-        scenario      => 'info',
-        action_regexp => qr'reject|do_it'i,
     },
     index => {
         cmd_regexp    => qr'ind|index'i,
         arg_regexp    => qr'(.+)',
         arg_keys      => [qw(localpart)],
         cmd_format    => 'INDEX %s',
-        ctx_class     => 'Sympa::List',
-        scenario      => 'archive.mail_access',
-        action_regexp => qr'reject|do_it'i,
     },
     invite => {
         cmd_regexp    => qr'inv|invite'i,
         arg_regexp    => qr{(\S+)\s+($_email_re)(?:\s+(.+))?\s*\z},
         arg_keys      => [qw(localpart email gecos)],
         cmd_format    => 'INVITE %s %s %s',
-        ctx_class     => 'Sympa::List',
-        scenario      => 'invite',
-        action_regexp => qr'reject|request_auth|do_it'i,
     },
     last => {
         cmd_regexp    => qr'las|last'i,
         arg_regexp    => qr'(.+)',
         arg_keys      => [qw(localpart)],
         cmd_format    => 'LAST %s',
-        ctx_class     => 'Sympa::List',
-        scenario      => 'archive.mail_access',
-        action_regexp => qr'reject|do_it'i,
     },
     lists    => {cmd_regexp => qr'lis|lists?'i, cmd_format => 'LISTS',},
     modindex => {
@@ -122,8 +99,6 @@ our %comms = (
         arg_regexp => qr'(\S+)',
         arg_keys   => [qw(localpart)],
         cmd_format => 'MODINDEX %s',
-        ctx_class  => 'Sympa::List',
-        # No scenario. Only actual editors are allowed.
     },
     finished => {cmd_regexp => qr'qui|quit|end|stop|-'i,},
     reject   => {
@@ -131,8 +106,6 @@ our %comms = (
         arg_regexp => qr'(\S+)\s+(\w+)\s*\z',
         arg_keys   => [qw(localpart authkey)],
         cmd_format => 'REJECT %s %s',
-        ctx_class  => 'Sympa::List',
-        # No scenario.
     },
     remind => {
         cmd_regexp => qr'rem|remind'i,
@@ -153,24 +126,16 @@ our %comms = (
             }
             $r;
         },
-        ctx_class     => 'Sympa::List',
-        scenario      => 'remind',
-        action_regexp => qr'reject|request_auth|do_it'i,
     },
     global_remind => {
         cmd_regexp    => qr'(?:rem|remind)\s+[*]'i,
         cmd_format    => 'REMIND *',
-        scenario      => 'global_remind',
-        action_regexp => qr'reject|request_auth|do_it'i,
     },
     review => {
         cmd_regexp    => qr'rev|review|who'i,
         arg_regexp    => qr'(.+)',
         arg_keys      => [qw(localpart)],
         cmd_format    => 'REVIEW %s',
-        ctx_class     => 'Sympa::List',
-        scenario      => 'review',
-        action_regexp => qr'reject|request_auth|do_it'i,
     },
     set => {
         cmd_regexp => qr'set'i,
@@ -194,8 +159,6 @@ our %comms = (
             }
             $r;
         },
-        ctx_class => 'Sympa::List',
-        # No scenario.  Only list members are allowed.
     },
     global_set => {
         cmd_regexp => qr'set\s+[*]'i,
@@ -225,9 +188,6 @@ our %comms = (
         arg_regexp    => qr'(.+)',
         arg_keys      => [qw(localpart)],
         cmd_format    => 'STATS %s',
-        ctx_class     => 'Sympa::List',
-        scenario      => 'review',
-        action_regexp => qr'reject|do_it'i,    #FIXME: request_auth?
     },
     subscribe => {
         cmd_regexp => qr'sub|subscribe'i,
@@ -239,9 +199,6 @@ our %comms = (
             $r->{email} = $r->{sender};
             $r;
         },
-        ctx_class     => 'Sympa::List',
-        scenario      => 'subscribe',
-        action_regexp => qr'reject|request_auth|owner|do_it'i,
     },
     signoff => {
         cmd_regexp => qr'sig|signoff|uns|unsub|unsubscribe'i,
@@ -271,9 +228,6 @@ our %comms = (
             }
             $r;
         },
-        ctx_class     => 'Sympa::List',
-        scenario      => 'unsubscribe',
-        action_regexp => qr'reject|request_auth|owner|do_it'i,
     },
     global_signoff => {
         cmd_regexp => qr'(?:sig|signoff|uns|unsub|unsubscribe)\s+[*]'i,
@@ -299,8 +253,6 @@ our %comms = (
         arg_regexp => qr'(.+)',
         arg_keys   => [qw(localpart)],
         cmd_format => 'VERIFY %s',
-        ctx_class  => 'Sympa::List',
-        # No scenario.
     },
     which => {cmd_regexp => qr'whi|which|status'i, cmd_format => 'WHICH',},
 );
@@ -320,11 +272,63 @@ TBD
 
 =head1 DESCRIPTION
 
-TBD
+This module keeps definition of mail commands.
+
+=head2 Global variable
+
+=over
+
+=item %comms
+
+This hash defines format of mail commands.
+It is used for decoding and encoding between command lines and internal
+request objects.
+
+Key is the name of action which is given as C<action> parameter to constructor
+of L<Sympa::Request>.
+Note that not all sort of requests are defined.
+
+Value is the hashref.
+Each item of hashrefs accepts the following keywords :
+
+=over
+
+=item cmd_regexp
+
+A regexp matching command.
+Note that C<i> modifier is necessary.
+
+=item arg_regexp
+
+A regexp matching command line arguments.
+Note that C<i> modifier may be needed.
+
+=item arg_keys
+
+An arrayref of parameter names mapping command line to attribute.
+C<'localpart'> is special:
+If it is contained, C<context> attribute of resulting request object is
+an instance of L<Sympa::List> class.
+
+=item cmd_format
+
+A string to format command line using attributes.
+If this item is code reference, it will be called with request object
+and returned value will be used as format string.
+
+=item filter
+
+A coderef to perform additional checking.
+It is called with request object and, if it returns false value,
+decoding will fail.
+
+=back
+
+=back
 
 =head1 SEE ALSO
 
-L<Sympa::Request::Message>.
+L<Sympa::Request>, L<Sympa::Request::Message>.
 
 =head1 HISTORY
 

@@ -45,11 +45,15 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
+    # Check if required context (known list or robot) is given.
+    if (defined $request->handler->context_class
+        and $request->handler->context_class ne ref $request->{context}) {
+        $request->{error} = 'unknown_list';
+    }
+
     return _error($self, $request)
         if $request->{error};
-    return ['Sympa::Request::Handler::' . $request->{action}]
-        unless 0 < index $request->{action}, '::';
-    return [$request->{action}];
+    return [$request->handler];
 }
 
 # Pseudo-request to report error.
@@ -83,7 +87,7 @@ sub _error {
         $log->syslog('err', 'Unknown error: %s', $entry);
         return undef;
     }
-    return 1;
+    return undef;
 }
 
 # Old name: Sympa::Commands::get_auth_method().

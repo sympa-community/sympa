@@ -29,9 +29,12 @@ use warnings;
 
 use Sympa::Log;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $log = Sympa::Log->instance;
+
+use constant _action_scenario => undef;
+use constant _context_class   => undef;    # Don't care.
 
 # Internal request to inform unknown commands.
 # Old name: Sympa::Commands::unknown().

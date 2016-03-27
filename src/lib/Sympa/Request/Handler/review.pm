@@ -32,10 +32,14 @@ use Sympa;
 use Sympa::Language;
 use Sympa::Log;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
+
+use constant _action_scenario => 'review';
+use constant _action_regexp   => qr'reject|request_auth|do_it'i;
+use constant _context_class   => 'Sympa::List';
 
 # Sends the list of subscribers to the requester.
 # Old name: Sympa::Commands::review().
@@ -43,16 +47,6 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    unless (ref $request->{context} eq 'Sympa::List') {
-        $self->add_stash($request, 'user', 'unknown_list');
-        $log->syslog(
-            'info',
-            '%s from %s refused, unknown list for robot %s',
-            uc $request->{action},
-            $request->{sender}, $request->{context}
-        );
-        return 1;
-    }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
     my $robot    = $list->{'domain'};

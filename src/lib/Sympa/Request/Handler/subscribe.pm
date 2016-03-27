@@ -34,10 +34,15 @@ use Sympa::Log;
 use Sympa::Tools::Password;
 use Sympa::User;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
+
+use constant _action_scenario => 'subscribe';
+use constant _action_regexp   => qr'reject|request_auth|owner|do_it'i;
+use constant _context_class   => 'Sympa::List';
+use constant _owner_action    => 'add';
 
 # Subscribes a user to a list. The user sent a subscribe
 # command. Format was : sub list optionnal comment. User can
@@ -47,16 +52,6 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    unless (ref $request->{context} eq 'Sympa::List') {
-        $self->add_stash($request, 'user', 'unknown_list');
-        $log->syslog(
-            'info',
-            '%s from %s refused, unknown list for robot %s',
-            uc $request->{action},
-            $request->{sender}, $request->{context}
-        );
-        return 1;
-    }
     my $list    = $request->{context};
     my $which   = $list->{'name'};
     my $robot   = $list->{'domain'};

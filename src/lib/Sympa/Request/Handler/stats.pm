@@ -31,9 +31,13 @@ use Time::HiRes qw();
 use Sympa;
 use Sympa::Log;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $log = Sympa::Log->instance;
+
+use constant _action_scenario => 'review';
+use constant _action_regexp   => qr'reject|do_it'i;    #FIXME: request_auth?
+use constant _context_class   => 'Sympa::List';
 
 # Sends the statistics about a list using template
 # 'stats_report'.
@@ -42,16 +46,6 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    unless (ref $request->{context} eq 'Sympa::List') {
-        $self->add_stash($request, 'user', 'unknown_list');
-        $log->syslog(
-            'info',
-            '%s from %s refused, unknown list for robot %s',
-            uc $request->{action},
-            $request->{sender}, $request->{context}
-        );
-        return 1;
-    }
     my $list     = $request->{context};
     my $listname = $list->{'name'};
     my $robot    = $list->{'domain'};

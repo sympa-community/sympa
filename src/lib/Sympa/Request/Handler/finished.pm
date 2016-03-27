@@ -27,7 +27,9 @@ package Sympa::Request::Handler::finished;
 use strict;
 use warnings;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
+
+use constant _action_scenario => undef;
 
 # Do not process what is after this line.
 # Old name: Sympa::Commands::finished().

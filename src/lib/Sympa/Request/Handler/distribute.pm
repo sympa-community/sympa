@@ -31,9 +31,12 @@ use Time::HiRes qw();
 use Sympa::Log;
 use Sympa::Spindle::ProcessModeration;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $log = Sympa::Log->instance;
+
+use constant _action_scenario => undef;
+use constant _context_class   => 'Sympa::List';
 
 # Distributes the broadcast of a validated moderated message.
 # Old name: Sympa::Commands::distribute().
@@ -41,16 +44,6 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    unless (ref $request->{context} eq 'Sympa::List') {
-        $self->add_stash($request, 'user', 'unknown_list');
-        $log->syslog(
-            'info',
-            '%s from %s refused, unknown list for robot %s',
-            uc $request->{action},
-            $request->{sender}, $request->{context}
-        );
-        return 1;
-    }
     my $list   = $request->{context};
     my $which  = $list->{'name'};
     my $robot  = $list->{'domain'};

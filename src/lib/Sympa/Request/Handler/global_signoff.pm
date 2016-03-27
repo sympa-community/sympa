@@ -32,9 +32,11 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
 
-use base qw(Sympa::Spindle);
+use base qw(Sympa::Request::Handler);
 
 my $log = Sympa::Log->instance;
+
+use constant _action_scenario => undef;
 
 # Unsubscribes a user from a list. The user sent a signoff
 # command.  He can be informed by template 'bye'

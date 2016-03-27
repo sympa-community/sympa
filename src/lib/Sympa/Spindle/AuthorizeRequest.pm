@@ -29,7 +29,6 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
-use Sympa::CommandDef;
 use Sympa::Log;
 use Sympa::Request;
 use Sympa::Scenario;
@@ -43,23 +42,18 @@ sub _twist {
     my $request = shift;
 
     # Skip authorization unless specific scenario is defined.
-    if (   $request->{error}
-        or not $Sympa::CommandDef::comms{$request->{action}}
-        or not $Sympa::CommandDef::comms{$request->{action}}->{scenario}) {
+    if ($request->{error} or not $request->handler->action_scenario) {
         return ['Sympa::Spindle::DispatchRequest'];
     }
 
-    my $ctx_class =
-        $Sympa::CommandDef::comms{$request->{action}}->{ctx_class} || '';
-    my $scenario = $Sympa::CommandDef::comms{$request->{action}}->{scenario};
-    my $action_regexp =
-        $Sympa::CommandDef::comms{$request->{action}}->{action_regexp}
-        or die 'bug in logic. Ask developer';
+    my $scenario      = $request->handler->action_scenario;
+    my $action_regexp = $request->handler->action_regexp;
 
     my $sender = $request->{sender};
 
     # Check if required context (known list or robot) is given.
-    unless (ref $request->{context} eq $ctx_class) {
+    if (defined $request->handler->context_class
+        and $request->handler->context_class ne ref $request->{context}) {
         $request->{error} = 'unknown_list';
         return ['Sympa::Spindle::DispatchRequest'];
     }
