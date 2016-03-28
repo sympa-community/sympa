@@ -118,7 +118,12 @@ encryption.
     --sysconfdir=%{_sysconfdir}/sympa \
     --with-cgidir=%{_libexecdir}/sympa \
     --with-confdir=%{_sysconfdir}/sympa \
+%if 0%{?use_systemd}
+    --without-initdir \
+    --with-unitsdir=%{_unitdir} \
+%else
     --with-initdir=%{_initrddir} \
+%endif
     --with-smrshdir=%{_sysconfdir}/smrsh \
     INSTALL_DATA='install -c -p -m 644'
 make DESTDIR=%{buildroot}
@@ -176,4 +181,12 @@ fi
 %{_sysconfdir}/smrsh/*
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa
 %config(noreplace,missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/*
+%if 0%{?use_systemd}
+%{_unitdir}/sympa.service
+%{_unitdir}/sympa-outgoing.service
+%{_unitdir}/sympa-archive.service
+%{_unitdir}/sympa-bounce.service
+%{_unitdir}/sympa-task.service
+%else
 %{_initrddir}/sympa
+%endif
