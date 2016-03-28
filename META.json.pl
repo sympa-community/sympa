@@ -69,5 +69,16 @@ sub prereqs {
 
         $requires{$mod} = $def->{required_version} || '0';
     }
-    return (runtime => {requires => \%requires});
+    my %requires_perl =
+        ('perl' => $Sympa::ModDef::cpan_modules{'perl'}->{required_version});
+    return (
+        configure => {requires => \%requires_perl},
+        build     => {requires => \%requires_perl},
+        test      => {
+            requires =>
+                {%requires, 'Test::Harness' => '0', 'Test::More' => '0'}
+        },
+        runtime => {requires => \%requires},
+        develop => {requires => {'CPAN::Meta' => '2.00'}},
+    );
 }
