@@ -20,7 +20,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+if SYSV_INIT
 init_SCRIPTS = sympa
+endif
+
+if SYSTEMD_UNITS
 units_SCRIPTS = \
 	sympa-archive.service \
 	sympa-bounce.service \
@@ -31,6 +35,7 @@ noinst_SCRIPTS = \
 	nginx-sympasoap.service \
 	nginx-wwsympa.service \
 	sympa-tmpfiles.conf
+endif
 
 EXTRA_DIST = \
 	sympa.in \

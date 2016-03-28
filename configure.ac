@@ -252,6 +252,7 @@ AS_HELP_STRING(
     ),
     [test "x$withval" = "xyes" || initdir="$withval"; test "x$withval" = "xno" && initdir=""]
 )
+AM_CONDITIONAL([SYSV_INIT], [test "x$initdir" != "x"])
 
 AC_ARG_WITH(
     unitsdir,
@@ -261,6 +262,7 @@ AC_ARG_WITH(
     ),
     [test "x$withval" = "xyes" || unitsdir="$withval"; test "x$withval" = "xno" && unitsdir=""]
 )
+AM_CONDITIONAL([SYSTEMD_UNITS], [test "x$unitsdir" != "x"])
 
 AC_ARG_WITH(
     smrshdir,
