@@ -21,12 +21,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 init_SCRIPTS = sympa
+units_SCRIPTS = \
+	sympa-archive.service \
+	sympa-bounce.service \
+	sympa-outgoing.service \
+	sympa-task.service \
+	sympa.service
+noinst_SCRIPTS = \
+	nginx-sympasoap.service \
+	nginx-wwsympa.service \
+	sympa-tmpfiles.conf
 
-EXTRA_DIST = sympa.in
+EXTRA_DIST = \
+	sympa.in \
+	sympa-archive.servicein \
+	sympa-bounce.servicein \
+	sympa-outgoing.servicein \
+	sympa-task.servicein \
+	sympa.servicein \
+	nginx-sympasoap.servicein \
+	nginx-wwsympa.servicein \
+	sympa-tmpfiles.confin
 
-CLEANFILES = $(init_SCRIPTS)
+CLEANFILES = $(init_SCRIPTS) $(units_SCRIPTS) $(noinst_SCRIPTS)
 
-sympa: Makefile
+sympa: sympa.in Makefile
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--CONFIG--|$(CONFIG)|' \
@@ -38,4 +57,21 @@ sympa: Makefile
 		< $(srcdir)/$@.in > $@
 	@chmod +x $@
 
-sympa: sympa.in
+.servicein.service: Makefile
+	@rm -f $@
+	$(AM_V_GEN)$(SED) \
+		-e 's|--USER--|$(USER)|' \
+		-e 's|--GROUP--|$(GROUP)|' \
+		-e 's|--libexecdir--|$(libexecdir)|' \
+		-e 's|--piddir--|$(piddir)|' \
+		-e 's|--sbindir--|$(sbindir)|' \
+		< $(srcdir)/$@in > $@
+
+.confin.conf: Makefile
+	@rm -f $@
+	$(AM_V_GEN)$(SED) \
+		-e 's|--USER--|$(USER)|' \
+		-e 's|--GROUP--|$(GROUP)|' \
+		-e 's|--piddir--|$(piddir)|' \
+		< $(srcdir)/$@in > $@
+

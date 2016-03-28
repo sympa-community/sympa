@@ -48,6 +48,7 @@ AC_ARG_ENABLE(
 if test "$fhs" = "yes"; then
     # only define custom variables
     initdir=$sysconfdir/rc.d/init.d
+    unitsdir=
     smrshdir=$sysconfdir/smrsh
     piddir=$localstatedir/run/sympa
     lockdir=$localstatedir/lock/subsys
@@ -79,6 +80,7 @@ else
 
     # define custom variables
     initdir=/etc/rc.d/init.d
+    unitsdir=
     smrshdir=/etc/smrsh
     piddir=$prefix
     lockdir=$localstatedir/lock/subsys
@@ -96,6 +98,7 @@ fi
  
 # substitute custom variables
 AC_SUBST(initdir)
+AC_SUBST(unitsdir)
 AC_SUBST(smrshdir)
 AC_SUBST(piddir)
 AC_SUBST(lockdir)
@@ -248,6 +251,15 @@ AS_HELP_STRING(
         [do not install System V init script]
     ),
     [test "x$withval" = "xyes" || initdir="$withval"; test "x$withval" = "xno" && initdir=""]
+)
+
+AC_ARG_WITH(
+    unitsdir,
+    AS_HELP_STRING(
+	[--with-unitsdir=DIR],
+	[install Systemd unit files @<:@no@:>@]
+    ),
+    [test "x$withval" = "xyes" || unitsdir="$withval"; test "x$withval" = "xno" && unitsdir=""]
 )
 
 AC_ARG_WITH(
