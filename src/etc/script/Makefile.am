@@ -25,13 +25,13 @@ init_SCRIPTS = sympa
 endif
 
 if SYSTEMD_UNITS
-units_SCRIPTS = \
+units_DATA = \
 	sympa-archive.service \
 	sympa-bounce.service \
 	sympa-outgoing.service \
 	sympa-task.service \
 	sympa.service
-noinst_SCRIPTS = \
+noinst_DATA = \
 	nginx-sympasoap.service \
 	nginx-wwsympa.service \
 	sympa-tmpfiles.conf
@@ -48,7 +48,7 @@ EXTRA_DIST = \
 	nginx-wwsympa.servicein \
 	sympa-tmpfiles.confin
 
-CLEANFILES = $(init_SCRIPTS) $(units_SCRIPTS) $(noinst_SCRIPTS)
+CLEANFILES = $(init_SCRIPTS) $(units_DATA) $(noinst_DATA)
 
 sympa: sympa.in Makefile
 	@rm -f $@
