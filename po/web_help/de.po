@@ -9,16 +9,16 @@ msgstr ""
 "Report-Msgid-Bugs-To: Jens Krehbiel-Graether <jens.krehbiel-graether@okg-"
 "computer.de>\n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2014-05-13 13:13+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"PO-Revision-Date: 2016-01-15 16:05+0000\n"
+"Last-Translator: Daniel <d.stoye@cms.hu-berlin.de>\n"
 "Language-Team: Deutsch\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.1\n"
-"X-POOTLE-MTIME: 1399986825.000000\n"
+"X-Generator: Pootle 2.7\n"
+"X-POOTLE-MTIME: 1452873908.000000\n"
 
 #: default/web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
@@ -2492,30 +2492,27 @@ msgstr ""
 "Zeile enthalten (Zeilen mit einem \"#\" am Anfang werden ignoriert)."
 
 #: default/web_tt2/help_editlist.tt2:103
-#, fuzzy
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
 "second-level queries convert the DNs into e-mail addresses. This feature "
 "requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
-"Dieser Abschnitt definiert Parameter für eine zweistufige Abfrage von "
-"Abonnenten. Normalerweise liefert die erste Abfrage eine Liste der DNs "
-"(eindeutige Namen), und die zweite Abfrage wandelt diese DNs in E-Mail-"
+"Dieser Abschnitt definiert die Parameter für eine zweistufige Abfrage von "
+"Abonnenten. Normalerweise liefert die erste Abfrage eine Liste der DNs ("
+"eindeutige Namen), und die zweite Abfrage wandelt diese DNs in E-Mail-"
 "Adressen um. Diese Funktion benötigt das Net::LDAP (perlldap) PERL-Modul."
 
 #: default/web_tt2/help_editlist.tt2:105
-#, fuzzy
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
-"Dieser Abschnitt definiert die Paramter für eine Abfrage, die eine Liste von "
-"Abonnenten zurückliefert. Diese Funktion benötigt das Net::LDAP (perlldap) "
-"PERL-Modul."
+"Dieser Abschnitt definiert die Parameter für eine Abfrage, die eine Liste "
+"von Abonnenten zurückliefert. Diese Funktion benötigt das Net::LDAP "
+"(perlldap) PERL-Modul."
 
 #: default/web_tt2/help_editlist.tt2:107
-#, fuzzy
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
 "subscribers of the current list. You may include as many lists as required, "
@@ -2525,14 +2522,14 @@ msgid ""
 "list B and then list B in list A, since this will give rise to an infinite "
 "loop."
 msgstr ""
-"Abonnenten einer Liste einbinden. Alle Abonnenten der angegebenen Liste "
-"werden Abonnenten der aktuellen Liste. Sie können beliebig viele Listen "
-"einbinden, wobei für jede Liste eine eigene \"include_list listenname\"-"
-"Zeile verwendet wird. Es kann jede Art von Liste eingebunden werden; Sie "
-"können also auch Listen einbinden, die ihrerseits durch Einbinden anderer "
-"Listen definiert werden. Seien Sie dabei aber vorsichtig, dass Sie nicht "
-"Liste A in Liste B und dann Liste B in Liste A einbinden, da dadurch eine "
-"Endlosschleife entstehen würde."
+"Abonnenten einer anderen Liste einbinden. Alle Abonnenten der angegebenen "
+"Liste werden Abonnenten der aktuellen Liste. Sie können beliebig viele "
+"Listen einbinden, wobei für jede Liste eine eigene \"include_list "
+"listenname\"-Zeile verwendet wird. Es kann jede Art von Liste eingebunden "
+"werden; Sie können also auch Listen einbinden, die ihrerseits durch "
+"Einbinden anderer Listen definiert werden. Seien Sie dabei aber vorsichtig, "
+"dass Sie nicht Liste A in Liste B und dann Liste B in Liste A einbinden, da "
+"dadurch eine Endlosschleife entstehen würde."
 
 #: default/web_tt2/help_editlist.tt2:109
 msgid ""
@@ -2561,12 +2558,11 @@ msgstr ""
 "kontrolliert. "
 
 #: default/web_tt2/help_editlist.tt2:112
-#, fuzzy
 msgid ""
 "This parameter is used to begin a paragraph defining the SQL query "
 "parameters. "
 msgstr ""
-"Dieser Parameter wird für den Start eines Abschnittes verwendet, der die "
+"Dieser Parameter wird für den Anfang eines Abschnittes verwendet, der die "
 "Parameter einer SQL-Abfrage definiert. "
 
 #: default/web_tt2/help_editlist.tt2:114
@@ -2909,7 +2905,7 @@ msgstr ""
 
 #: default/web_tt2/help_faq.tt2:4
 msgid "User and admin FAQ"
-msgstr ""
+msgstr "Benutzer und Administratoren FAQ"
 
 #. (path_cgi)
 #: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
@@ -3867,16 +3863,14 @@ msgstr ""
 "enthaltenen Regeln zu halten."
 
 #: default/web_tt2/help_introduction.tt2:118
-#, fuzzy
 msgid ""
 "If available, list owners and moderators have to conform to the 'Owner and "
 "moderator charter'."
 msgstr ""
 "Soweit verfügbar müssen sich die Listeneigentümer und -Moderatoren an die "
-"'Eigentümer- und Moderatoren Charta' halten."
+"'Eigentümer- und Moderatoren Richtlinien' halten."
 
 #: default/web_tt2/help_introduction.tt2:119
-#, fuzzy
 msgid ""
 "The use of mailing lists naturally means respecting the rules of good "
 "practices as regards to email."
@@ -6313,7 +6307,7 @@ msgstr "Ihre Abonnements verwalten"
 
 #: default/web_tt2/help_suspend.tt2:5
 msgid "How does the suspension work?"
-msgstr ""
+msgstr "Wie funktioniert das Aussetzen des Abonnements?"
 
 #: default/web_tt2/help_suspend.tt2:6
 msgid ""
@@ -6324,16 +6318,14 @@ msgstr ""
 "befolgen Sie diese Schritte:"
 
 #: default/web_tt2/help_suspend.tt2:8
-#, fuzzy
 msgid ""
 "Select a start date through the calendar that appears when you click on the "
 "\"start date\" field;"
 msgstr ""
-"Wählen Sie ein Anfangsdatum mit dem Kalender, der erscheint, wenn Sie auf "
-"den \"Anfangsdatum\"-Knopf klicken;"
+"Wählen Sie ein Anfangsdatum in dem Kalender, der erscheint, wenn Sie auf den "
+"\"Anfangsdatum\"-Knopf klicken;"
 
 #: default/web_tt2/help_suspend.tt2:9
-#, fuzzy
 msgid ""
 "if you wish, you can specify the date when you want your subscription to "
 "resume. Do it using the \"end date\" field. You can click on \"indefinite.\" "
@@ -6346,31 +6338,27 @@ msgstr ""
 "Sie auf diese Seite zurückkehren, um Ihr Abonnement wieder aufzunehmen;"
 
 #: default/web_tt2/help_suspend.tt2:10
-#, fuzzy
 msgid ""
 "Select the lists which you want to suspend your subscription for. The "
 "\"Toogle selection\" button allows you to invert the selection;"
 msgstr ""
-"Wählen Sie die Listen aus für die Sie Ihr Abonnement aussetzen möchten. Der "
+"Wählen Sie die Listen aus, für die Sie Ihr Abonnement aussetzen möchten. Der "
 "Knopf \"Auswahl umkehren (Toggle selection)\" ermöglicht Ihnen die Auswahl "
 "zu invertieren;"
 
 #: default/web_tt2/help_suspend.tt2:11
-#, fuzzy
 msgid "Click on \"Suspend my subscriptions\" to confirm the suspension."
 msgstr "Klicken Sie zur Bestätigung auf \"Meine Abonnements aussetzen\"."
 
 #: default/web_tt2/help_suspend.tt2:13
-#, fuzzy
 msgid ""
 "<strong>To resume your subscription</strong> to one or more lists, follow "
 "these steps:"
 msgstr ""
-"Um für eine oder mehrere Listen <strong>Ihr Abonnement wieder aufzunehmen</"
-"strong> befolgen Sie diese Schritte:"
+"Um für eine oder mehrere Listen <strong>Ihr Abonnement wieder "
+"aufzunehmen</strong> befolgen Sie folgende Schritte:"
 
 #: default/web_tt2/help_suspend.tt2:15
-#, fuzzy
 msgid ""
 "Select the list(s) you want to reactivate. The \"Toogle selection\" button "
 "allows you to invert the selection;"
@@ -6380,9 +6368,8 @@ msgstr ""
 "invertieren;"
 
 #: default/web_tt2/help_suspend.tt2:16
-#, fuzzy
 msgid "Click \"Resume\"."
-msgstr "\"Wiederaufnehmen\" drücken;"
+msgstr "Klicken Sie auf \"Wiederaufnehmen\"."
 
 #: default/web_tt2/help.tt2:11
 msgid "Subscriber, moderator and owner documentation"
@@ -6415,7 +6402,6 @@ msgstr ""
 "Sympa."
 
 #: default/web_tt2/help_user_options.tt2:3
-#, fuzzy
 msgid ""
 "This is a description of the reception modes available in Sympa. These "
 "options are mutually exclusive, which means that you can't set two different "
@@ -6423,7 +6409,7 @@ msgid ""
 "specific mailing lists."
 msgstr ""
 "Dies ist eine Beschreibung der in Sympa zur Verfügung stehenden "
-"Empfangsmodi. Diese Optionen schließen sich gegenseitig aus, Sie können also "
+"Empfangsmodi. Diese Optionen schließen sich gegenseitig aus. Sie können also "
 "nicht zwei unterschiedliche Empfangsmodi gleichzeitig setzen.  \n"
 "Bei bestimmten Listen stehen möglicherweise nur einige dieser Modi zur "
 "Verfügung."
@@ -6999,12 +6985,12 @@ msgstr ""
 
 #. (path_cgi)
 #: default/web_tt2/help_user.tt2:83
-#, fuzzy
 msgid ""
 "<a href=\"%1/help/suspend\">suspend or resume</a> your subscription of each "
 "list;"
 msgstr ""
-"ein <a href=\"%1/help/user\">Benutzerhandbuch</a> zur Verwendung von Sympa;"
+"<a href=\"%1/help/suspend\">Aussetzen oder Wiederaufnehmen</a> von "
+"Abonnements einzelner Listen"
 
 #: default/web_tt2/help_user.tt2:84
 msgid "<a href=\"#unsubscribe\">unsubscribe</a> from the list."
@@ -7493,20 +7479,17 @@ msgstr ""
 "\"><strong>Dokumentation zum Bereich für gemeinsame Dokumente.</strong></a>"
 
 #: default/web_tt2/help_user.tt2:164
-#, fuzzy
 msgid "Suspending or resuming your subscription of each list"
-msgstr ""
-"ein <a href=\"%1/help/user\">Benutzerhandbuch</a> zur Verwendung von Sympa;"
+msgstr "Aussetzen oder Wiederaufnehmen von Abonnements einzelner Listen"
 
 #. (path_cgi)
 #: default/web_tt2/help_user.tt2:165
-#, fuzzy
 msgid ""
 "Please refer to the <a href=\"%1/help/suspend\"><strong>subscription "
 "management documentation</strong></a>."
 msgstr ""
-"Bitte betrachten Sie hierzu die <a href=\"%1/help/arc"
-"\"><strong>Archivdokumentation.</strong></a>"
+"Bitte betrachten Sie hierzu die <a href=\"%1/help/suspend\"><strong>"
+"Dokumentation zur Abonnementverwaltung</strong></a>"
 
 #: default/web_tt2/help_user.tt2:167
 msgid "Unsubscribing from lists"
