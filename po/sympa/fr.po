@@ -4,10 +4,10 @@ msgstr ""
 "PO-Revision-Date: 2016-01-15 16:03+0000\n"
 "Last-Translator: dverdin <david.verdin@renater.fr>\n"
 "Language-Team: Français\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.7\n"
 "Projct-Id-Version: fr\n"
@@ -6550,9 +6550,8 @@ msgstr "(Voir)"
 
 #. (mod_total_shared)
 #: default/web_tt2/info.tt2:21
-#, fuzzy
 msgid "There are %1 shared document(s) awaiting moderation."
-msgstr "Il y a %1 message(s) en attente de modération."
+msgstr "Il y a %1 document(s) en attente de modération."
 
 #. (mod_subscription)
 #: default/web_tt2/info.tt2:29
@@ -6561,9 +6560,8 @@ msgstr "Il y a %1 abonnement(s) en attente de modération."
 
 #. (mod_signoff)
 #: default/web_tt2/info.tt2:34
-#, fuzzy
 msgid "There are %1 unsubscription(s) awaiting moderation."
-msgstr "Il y a %1 abonnement(s) en attente de modération."
+msgstr "Il y a %1 désabonnement(s) en attente de modération."
 
 #: default/web_tt2/info.tt2:41
 msgid ""
@@ -6588,9 +6586,8 @@ msgid "Review subscription requests"
 msgstr "Parcourir les demandes d'abonnement"
 
 #: default/web_tt2/info.tt2:49
-#, fuzzy
 msgid "Review unsubscription requests"
-msgstr "Parcourir les demandes d'abonnement"
+msgstr "Parcourir les demandes de désabonnement"
 
 #: default/web_tt2/info.tt2:50
 msgid "Add/delete subscribers"
@@ -6793,9 +6790,8 @@ msgid "Subscriptions"
 msgstr "Abonnements"
 
 #: default/web_tt2/list_menu.tt2:85
-#, fuzzy
 msgid "Unsubscriptions"
-msgstr "Désabonnement"
+msgstr "Désabonnements"
 
 #: default/web_tt2/list_menu.tt2:93
 msgid "Statistics"
@@ -7476,9 +7472,8 @@ msgstr "%1 demande(s) d'inscription"
 
 #. (list_to_admin.value.mod_signoff)
 #: default/web_tt2/news.tt2:19
-#, fuzzy
 msgid "%1 unsubscription request(s)"
-msgstr "%1 demande(s) d'inscription"
+msgstr "%1 demande(s) de désabonnement"
 
 #: default/web_tt2/news.tt2:31
 msgid "User Errors"
@@ -7980,9 +7975,8 @@ msgid "Pending subscriptions"
 msgstr "Abonnements en attente"
 
 #: default/web_tt2/review.tt2:7
-#, fuzzy
 msgid "Pending unsubscriptions"
-msgstr "Abonnements en attente"
+msgstr "Désabonnements en attente"
 
 #: default/web_tt2/review.tt2:17
 msgid "Exclude"
@@ -10313,14 +10307,13 @@ msgstr ""
 # nlsref 6,16
 #: default/mail_tt2/command_report.tt2:176
 #: default/mail_tt2/command_report.tt2:178
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
 "subscription reminder using a different email address. Please try using your "
 "canonical address."
 msgstr ""
 "La procédure d'authentification a échoué. Vous avez très probablement "
-"confirmé votre désabonnement en utilisant une adresse différente. Veuillez "
+"confirmé votre abonnement en utilisant une adresse différente. Veuillez "
 "reformuler une demande d'abonnement en utilisant votre adresse canonique."
 
 # nlsref 6,16
@@ -11038,7 +11031,6 @@ msgstr "Document à modérer pour %1"
 
 #. (list.name,filename,who)
 #: default/mail_tt2/listeditor_notification.tt2:12
-#, fuzzy
 msgid ""
 "There are new shared documents in list %1: \n"
 "\t%2\n"
@@ -11047,17 +11039,15 @@ msgid ""
 "\n"
 "To moderate these document: "
 msgstr ""
-"Il y a un nouveau document dans l'espace documents de la liste %1 : \n"
-"\t %2\n"
+"Il y a de nouveaux documents dans l'espace documents de la liste %1 : \n"
+"\t%2\n"
 "\n"
-"\t de %3\n"
+"\tde %3\n"
 "\n"
-"Pour modérer ces documents : \n"
-"%4/modindex/%1"
+"Pour modérer ces documents :"
 
 #. (list.name,filename,who)
 #: default/mail_tt2/listeditor_notification.tt2:17
-#, fuzzy
 msgid ""
 "There is a new shared document in list %1: \n"
 "\t%2 from %3\n"
@@ -11065,11 +11055,9 @@ msgid ""
 "To moderate this document: "
 msgstr ""
 "Il y a un nouveau document dans l'espace documents de la liste %1 : \n"
-"\t %2 de %3\n"
+"\t%2 de %3\n"
 "\n"
-"Pour modérer ce document : \n"
-"%4/modindex/%1\n"
-" "
+"Pour modérer ce document :"
 
 #. (list.name,type)
 #: default/mail_tt2/listeditor_notification.tt2:22
@@ -12191,7 +12179,7 @@ msgstr "Liste %1 / %2"
 
 #: default/mail_tt2/listowner_notification.tt2:58
 msgid "${conf.email}@${conf.host}"
-msgstr ""
+msgstr "${conf.email}@${conf.host}"
 
 #. (list.name)
 #: default/mail_tt2/list_rejected.tt2:1
