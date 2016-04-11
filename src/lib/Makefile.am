@@ -74,6 +74,7 @@ nobase_modules_DATA = \
 	Sympa/Regexps.pm \
 	Sympa/Report.pm \
 	Sympa/Request.pm \
+	Sympa/Request/Collection.pm \
 	Sympa/Request/Handler.pm \
 	Sympa/Request/Handler/add.pm \
 	Sympa/Request/Handler/auth.pm \
@@ -127,6 +128,7 @@ nobase_modules_DATA = \
 	Sympa/Spindle/ProcessMessage.pm \
 	Sympa/Spindle/ProcessModeration.pm \
 	Sympa/Spindle/ProcessOutgoing.pm \
+	Sympa/Spindle/ProcessRequest.pm \
 	Sympa/Spindle/ProcessTemplate.pm \
 	Sympa/Spindle/ResendArchive.pm \
 	Sympa/Spindle/ToAlarm.pm \
