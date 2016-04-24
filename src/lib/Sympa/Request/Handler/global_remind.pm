@@ -111,7 +111,12 @@ sub _twist {
             }
         } while ($user = $list->get_next_list_member());
     }
-    $log->syslog('debug2', 'Sending REMIND * to %d users', $count);
+    unless (%global_subscription) {
+        $self->add_stash($request, 'user', 'no_lists');
+        $log->syslog('info', 'REMIND * from %s refused, no lists to proceess',
+            $sender);
+        return undef;
+    }
 
     foreach my $email (keys %global_subscription) {
         my $user = Sympa::User::get_global_user($email);

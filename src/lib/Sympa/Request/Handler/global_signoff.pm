@@ -31,6 +31,7 @@ use Sympa;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
+use Sympa::Spindle::ProcessRequest;
 
 use base qw(Sympa::Request::Handler);
 
@@ -54,16 +55,16 @@ sub _twist {
         : $request->{dkim_pass}    ? 'dkim'
         :                            'smtp';
 
+    my @target_lists;
     foreach my $list (
         Sympa::List::get_which($email, $request->{context}, 'member')) {
         # Skip hidden lists.
         my $result =
             Sympa::Scenario::request_action($list, 'visibility', $auth_method,
             $self->{scenario_context});
-        my $action;
-        $action = $result->{'action'} if ref $result eq 'HASH';
+        my $action = $result->{'action'} if ref $result eq 'HASH';
 
-        unless (defined $action) {
+        unless ($action) {
             my $error =
                 sprintf 'Unable to evaluate scenario "visibility" for list ',
                 $list->get_id;
@@ -79,17 +80,30 @@ sub _twist {
             next;
         }
 
-        if ($action =~ /reject/) {
+        if ($action =~ /\Areject\b/i) {
             next;
         }
 
-        my $req = $request->dup;
-        $req->{action}    = 'signoff';
-        $req->{context}   = $list;
-        $req->{localpart} = $list->{'name'};
-
-        $self->{distaff}->store($req);
+        push @target_lists, $list;
     }
+    unless (@target_lists) {
+        $self->add_stash($request, 'user', 'no_lists');
+        $log->syslog('info', 'SIG * %s from %s refused, no lists to process',
+            $email, $sender);
+        return undef;
+    }
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context => [@target_lists],
+        action  => 'signoff',
+        (map { ($_ => $request->{$_}) }
+            qw(email sender smime_signed md5_check dkim_pass cmd_line)),
+
+        scenario_context => $self->{scenario_context},
+        stash            => $self->{stash},
+    );
+    $spindle and $spindle->spin;
+
     return 1;
 }
 

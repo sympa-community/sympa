@@ -52,7 +52,9 @@ sub _twist {
         email        => $req->{email},
         keyauth      => $key,
         confirmed_by => $sender,
+
         scenario_context => $self->{scenario_context},
+        stash            => $self->{stash},
     );
 
     unless ($spindle and $spindle->spin) {
@@ -61,15 +63,10 @@ sub _twist {
         $self->add_stash($request, 'user', 'wrong_email_confirm',
             {key => $key, command => $req->{action}});
         return undef;
+    } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
+        return 1;
     } else {
-        foreach my $item (@{$spindle->{stash} || []}) {
-            $self->add_stash(@$item);
-        }
-        if ($spindle->{finish} and $spindle->{finish} eq 'success') {
-            return 1;
-        } else {
-            return undef;
-        }
+        return undef;
     }
 }
 

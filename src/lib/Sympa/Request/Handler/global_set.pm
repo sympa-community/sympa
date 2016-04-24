@@ -31,6 +31,7 @@ use Sympa;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
+use Sympa::Spindle::ProcessRequest;
 
 use base qw(Sympa::Request::Handler);
 
@@ -53,16 +54,16 @@ sub _twist {
         :                            'smtp';
 
     # Recursive call to subroutine.
+    my @target_lists;
     foreach my $list (
         Sympa::List::get_which($sender, $request->{context}, 'member')) {
         # Skip hidden lists.
         my $result =
             Sympa::Scenario::request_action($list, 'visibility', $auth_method,
             $self->{scenario_context});
-        my $action;
-        $action = $result->{'action'} if ref $result eq 'HASH';
+        my $action = $result->{'action'} if ref $result eq 'HASH';
 
-        unless (defined $action) {
+        unless ($action) {
             my $error =
                 sprintf
                 'Unable to evaluate scenario "visibility" for list %s',
@@ -79,17 +80,32 @@ sub _twist {
             next;
         }
 
-        if ($action =~ /reject/) {
+        if ($action =~ /\Areject\b/i) {
             next;
         }
 
-        my $req = $request->dup;
-        $req->{action}    = 'set';
-        $req->{context}   = $list;
-        $req->{localpart} = $list->{'name'};
-
-        $self->{distaff}->store($req);
+        push @target_lists, $list;
     }
+    unless (@target_lists) {
+        $self->add_stash($request, 'user', 'no_lists');
+        $log->syslog('info', 'SET * %s%s from %s refused, no lists to process',
+            $request->{reception}, $request->{visibility}, $sender);
+        return undef;
+    }
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context => [@target_lists],
+        action  => 'set',
+        (map { ($_ => $request->{$_}) }
+            qw(email reception visibility
+                sender smime_signed md5_check dkim_pass
+                cmd_line)),
+
+        scenario_context => $self->{scenario_context},
+        stash            => $self->{stash},
+    );
+    $spindle and $spindle->spin;
+
     return 1;
 }
 

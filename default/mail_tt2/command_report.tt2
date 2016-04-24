@@ -187,6 +187,9 @@ Warning: this message may already have been sent by one of the list's editor.[%E
 [% ELSIF u_err.entry == 'already_confirmed' -%]
   [%|loc(u_err.key)%]Unable to access the message authenticated with key %1. The message may already been confirmed.[%END%]
 
+[% ELSIF u_err.entry == 'no_lists' -%]
+  [%|loc%]No lists available.[%END%]
+
 [% ELSE %]
 [% u_err.entry %]
 [% END -%]

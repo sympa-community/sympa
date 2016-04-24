@@ -50,8 +50,9 @@ sub new {
         $spools{$key} = $spool;
     }
 
-    my $self =
-        bless {%options, %spools, distaff => $distaff, stash => []} => $class;
+    my $self = bless {%options, %spools, distaff => $distaff} => $class;
+    $self->{stash} ||= [];
+
     $self->_init(0) or return undef;
     $self;
 }
