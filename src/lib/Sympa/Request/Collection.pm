@@ -28,7 +28,6 @@ use strict;
 use warnings;
 
 use Sympa::Log;
-use Sympa::Request;
 
 use base qw(Sympa::Spool);
 

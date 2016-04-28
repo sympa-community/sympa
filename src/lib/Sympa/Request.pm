@@ -361,6 +361,7 @@ See also L<Sympa::Message/"Serialization"> for example.
 
 =head1 SEE ALSO
 
+L<Sympa::Request::Collection>,
 L<Sympa::Request::Handler>,
 L<Sympa::Request::Message>,
 L<Sympa::Spool::Auth>.

@@ -85,11 +85,11 @@ workflow of Sympa.  For more details see documentation on each class.
           *3 (AUTH)            +-> [AuthorizeRequest]
           :                   /              \---> [ToAuthOwner] => Auth
  Auth => [ProcessAuth] ------+                \
-                                               +-> [DispatchRequest]
-                                                            \
-                                                     (request handler)
-                                                                :
-                                                                *3
+                            /                  +-> [DispatchRequest]
+                           /                                \
+                          /                          (request handler)
+ Request::Collection =>  /                                      :
+           [ProcessRequest]                                     *3
 
 =begin comment
 

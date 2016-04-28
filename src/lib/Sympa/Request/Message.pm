@@ -30,19 +30,10 @@ use warnings;
 use Sympa::Log;
 use Sympa::CommandDef;
 use Sympa::Regexps;
-use Sympa::Request;
+
+use base qw(Sympa::Spool);
 
 my $log = Sympa::Log->instance;
-
-# Methods.
-
-sub new {
-    my $class   = shift;
-    my %options = @_;
-
-    die 'bug in logic. Ask developer' unless $options{message};
-    bless {%options, _metadatas => undef,} => $class;
-}
 
 sub next {
     my $self = shift;
@@ -63,21 +54,15 @@ sub next {
     return;
 }
 
+use constant _create => 1;
+use constant _directories => {};
+use constant _generator => 'Sympa::Request';
+
 # Old name: (part of) DoCommand() in sympa_msg.pl.
 sub _load {
     my $self = shift;
 
     my $message = $self->{message};
-
-    my ($list, $robot);
-    if (ref $message->{context} eq 'Sympa::List') {
-        $list  = $message->{context};
-        $robot = $list->{'domain'};
-    } elsif ($message->{context} and $message->{context} ne '*') {
-        $robot = $message->{context};
-    } else {
-        $robot = '*';
-    }
 
     my $messageid = $message->{message_id};
     my $sender    = $message->{sender};
@@ -91,9 +76,9 @@ sub _load {
         # FIXME: at this point $message->{'dkim_pass'} does not verify that
         # Subject: is part of the signature. It SHOULD !
         return [
-            Sympa::Request->new(
+            $self->_generator->new(
                 action => $action,
-                context => $list,
+                context => $message->{context},
                 email   => $message->{sender},
                 #FIXME: smime_signed?
                 (map { ($_ => $message->{$_}) } qw(date sender dkim_pass)),
@@ -110,7 +95,7 @@ sub _load {
     my $re_regexp = Sympa::Regexps::re();
     $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
     if ($subject_field =~ /\S/) {
-        my $request = _parse($robot, $subject_field, $message);
+        my $request = $self->_parse($subject_field, $message);
         return [$request] unless $request->{action} eq 'unknown';
     }
 
@@ -130,7 +115,7 @@ sub _load {
         next unless length $line;    # Skip empty lines.
         next if $line =~ /^\s*\#/;
 
-        my $request = _parse($robot, $line, $message);
+        my $request = $self->_parse($line, $message);
         if ($request) {
             if (@requests or $request->{action} ne 'unknown') {
                 push @requests, $request;
@@ -145,14 +130,14 @@ sub _load {
 
 # Parses the command and returns Sympa::Request instance.
 sub _parse {
-    my $robot   = shift;
+    my $self    = shift;
     my $line    = shift;
     my $message = shift;
 
-    my $request = __parse($robot, $line, $message);
+    my $request = $self->__parse($line, $message);
 
     if ($request->{action} eq 'auth' and not $request->{error}) {
-        my $req = __parse($robot, $request->{cmd}, $message);
+        my $req = $self->__parse($request->{cmd}, $message);
 
         if ($req->{action} eq 'auth') {
             $request->{error} = 'syntax_errors';
@@ -168,10 +153,18 @@ sub _parse {
 
 # Old name: Sympa::Commands::parse().
 sub __parse {
-    $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
-    my $robot   = shift;
+    my $self    = shift;
     my $line    = shift;
     my $message = shift;
+
+    my $robot;
+    if (ref $message->{context} eq 'Sympa::List') {
+        $robot = $message->{context}->{'domain'};
+    } elsif ($message->{context} and $message->{context} ne '*') {
+        $robot = $message->{context};
+    } else {
+        $robot = '*';
+    }
 
     $log->syslog('notice', "Parsing: %s", $line);
 
@@ -218,7 +211,7 @@ sub __parse {
                 $context = $robot || '*';
             }
         } else {
-            return Sympa::Request->new(
+            return $self->_generator->new(
                 action   => $action,
                 cmd_line => $line,
                 context  => $robot,
@@ -230,7 +223,7 @@ sub __parse {
             );
         }
 
-        my $request = Sympa::Request->new(
+        my $request = $self->_generator->new(
             %args,
             action   => $action,
             cmd_line => $line,
@@ -252,7 +245,7 @@ sub __parse {
     }
 
     # Unknown command.
-    return Sympa::Request->new(
+    return $self->_generator->new(
         action   => 'unknown',
         cmd_line => $line,
         context  => $robot,
@@ -264,16 +257,6 @@ sub __parse {
 
 use constant quarantine => 1;
 use constant remove     => 1;
-
-sub store {
-    my $self    = shift;
-    my $request = shift;
-
-    $self->{_metadatas} ||= [];
-    unshift @{$self->{_metadatas}}, $request;
-
-    1;
-}
 
 1;
 __END__
