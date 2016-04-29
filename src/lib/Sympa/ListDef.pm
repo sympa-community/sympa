@@ -47,15 +47,15 @@ our @param_order =
 
 # List parameter alias names
 our %alias = (
-    #'reply-to'        => 'reply_to',
-    #'replyto'         => 'reply_to',
-    #'forced_replyto'  => 'forced_reply_to',
-    #'forced_reply-to' => 'forced_reply_to',
-    #'custom-subject'  => 'custom_subject',
-    #'custom-header'   => 'custom_header',
-    #'subscription'    => 'subscribe',
-    #'unsubscription'  => 'unsubscribe',
-    #'max-size'        => 'max_size'
+    'reply-to'        => 'reply_to',
+    'replyto'         => 'reply_to',
+    'forced_replyto'  => 'forced_reply_to',
+    'forced_reply-to' => 'forced_reply_to',
+    'custom-subject'  => 'custom_subject',
+    'custom-header'   => 'custom_header',
+    'subscription'    => 'subscribe',
+    'unsubscription'  => 'unsubscribe',
+    'max-size'        => 'max_size'
 );
 
 our %pinfo = (
@@ -2305,6 +2305,13 @@ This module keeps definition of configuration parameters for each list.
 
 =over
 
+=item %alias
+
+Hash to define parameter alias names mainly for backward compatibility.
+
+Key is the parameter name in format C<I<name>> or C<I<name>.I<key>>.
+Value is the canonical name of parameter or subparameter.
+
 =item %pinfo
 
 This hash COMPLETELY defines ALL list parameters.
@@ -2408,5 +2415,9 @@ XXX
 =head1 SEE ALSO
 
 L<config(5)>.
+
+=head1 HISTORY
+
+L<Sympa::ListDef> was separated from L<List> module on Sympa 6.2.
 
 =cut
