@@ -8527,6 +8527,14 @@ sub _load_list_config_file {
 
                 my $key = $1;
 
+                # Subparameter aliases (compatibility concerns).
+                # Note: subparameter alias was introduced by 6.2.15.
+                if (defined $Sympa::ListDef::alias{"$pname.$key"}) {
+                    $paragraph[$i] =~
+                        s/^\s*$key/$Sympa::ListDef::alias{"$pname.$key"}/;
+                    $key = $Sympa::ListDef::alias{"$pname.$key"};
+                }
+
                 unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
                     $log->syslog('err',
                         'Unknown key "%s" in paragraph "%s" in %s',

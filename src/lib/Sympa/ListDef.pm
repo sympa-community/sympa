@@ -45,17 +45,17 @@ our @param_order =
     include_ldap_2level_query include_sql_query include_voot_group ttl distribution_ttl creation update
     status serial custom_attribute include_ldap_ca include_ldap_2level_ca include_sql_ca);
 
-## List parameters aliases
-my %alias = (
-    'reply-to'        => 'reply_to',
-    'replyto'         => 'reply_to',
-    'forced_replyto'  => 'forced_reply_to',
-    'forced_reply-to' => 'forced_reply_to',
-    'custom-subject'  => 'custom_subject',
-    'custom-header'   => 'custom_header',
-    'subscription'    => 'subscribe',
-    'unsubscription'  => 'unsubscribe',
-    'max-size'        => 'max_size'
+# List parameter alias names
+our %alias = (
+    #'reply-to'        => 'reply_to',
+    #'replyto'         => 'reply_to',
+    #'forced_replyto'  => 'forced_reply_to',
+    #'forced_reply-to' => 'forced_reply_to',
+    #'custom-subject'  => 'custom_subject',
+    #'custom-header'   => 'custom_header',
+    #'subscription'    => 'subscribe',
+    #'unsubscription'  => 'unsubscribe',
+    #'max-size'        => 'max_size'
 );
 
 our %pinfo = (
@@ -2214,7 +2214,8 @@ sub cleanup {
 
     ## Enumeration
     if (ref($v->{'format'}) eq 'ARRAY') {
-        $v->{'file_format'} ||= join '|', @{$v->{'format'}};
+        $v->{'file_format'} ||= join '|', @{$v->{'format'}},
+            keys %{$v->{synonym} || {}};
     }
 
     ## Set 'format' as default for 'file_format'
@@ -2263,7 +2264,8 @@ sub cleanup {
         ## Enumeration
         if (ref($v->{'format'}{$k}{'format'}) eq 'ARRAY') {
             $v->{'file_format'}{$k}{'file_format'} ||= join '|',
-                @{$v->{'format'}{$k}{'format'}};
+                @{$v->{'format'}{$k}{'format'}},
+                keys %{$v->{'format'}{$k}{synonym} || {}};
         }
 
         if (($v->{'file_format'}{$k}{'occurrence'} =~ /n$/)
