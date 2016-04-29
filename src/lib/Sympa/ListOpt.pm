@@ -96,9 +96,14 @@ my %list_option = (
     'one'  => {'gettext_id' => 'one level'},
     'sub'  => {'gettext_id' => 'subtree'},
 
-    # include_ldap_2level_query.use_ssl, include_ldap_query.use_ssl
-    'yes' => {'gettext_id' => 'yes'},
-    'no'  => {'gettext_id' => 'no'},
+    # include_ldap_query.use_tls, include_ldap_2level_query.use_tls,
+    # include_ldap_ca.use_tls, include_ldap_2level_ca.use_tls
+    'starttls' => {'gettext_id' => 'use STARTTLS'},
+    'ldaps'    => {'gettext_id' => 'use LDAPS (LDAP over TLS)'},
+
+    ## include_ldap_2level_query.use_ssl, include_ldap_query.use_ssl
+    #'yes' => {'gettext_id' => 'yes'},
+    #'no'  => {'gettext_id' => 'no'},
 
     # include_ldap_2level_query.ssl_version, include_ldap_query.ssl_version
     'sslv2'   => {'gettext_id' => 'SSL version 2'},

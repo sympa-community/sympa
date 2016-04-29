@@ -1006,8 +1006,9 @@ sub _load_auth {
             'alternative_email_attribute' => '(\w+)(,\w+)*',
             'scope'                       => 'base|one|sub',
             'authentication_info_url'     => 'http(s)?:/.*',
-            'use_ssl'                     => '1',
-            'use_start_tls'               => '1',
+            'use_tls'                     => 'starttls|ldaps|none',
+            'use_ssl'                     => '1', # Obsoleted
+            'use_start_tls'               => '1', # Obsoleted
             'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
@@ -1041,8 +1042,9 @@ sub _load_auth {
             'scope'         => 'base|one|sub',
             'get_email_by_uid_filter' => '.+',
             'email_attribute'         => '\w+',
-            'use_ssl'                 => '1',
-            'use_start_tls'           => '1',
+            'use_tls'                     => 'starttls|ldaps|none',
+            'use_ssl'                 => '1', # Obsoleted
+            'use_start_tls'           => '1', # Obsoleted
             'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
@@ -1067,8 +1069,9 @@ sub _load_auth {
             'scope'         => 'base|one|sub',
             'get_email_by_uid_filter' => '.+',
             'email_attribute'         => '\w+',
-            'use_ssl'                 => '1',
-            'use_start_tls'           => '1',
+            'use_tls'                     => 'starttls|ldaps|none',
+            'use_ssl'                 => '1', # Obsoleted
+            'use_start_tls'           => '1', # Obsoleted
             'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
@@ -1140,6 +1143,14 @@ sub _load_auth {
         ## process current paragraph
         if (/^\s+$/o || eof(IN)) {
             if (defined($current_paragraph)) {
+                # Parameters obsoleted as of 6.2.15.
+                if ($current_paragraph->{use_start_tls}) {
+                    $current_paragraph->{use_tls} = 'starttls';
+                } elsif ($current_paragraph->{use_ssl}) {
+                    $current_paragraph->{use_tls} = 'ldaps';
+                }
+                delete $current_paragraph->{use_start_tls};
+                delete $current_paragraph->{use_ssl};
 
                 if ($current_paragraph->{'auth_type'} eq 'cas') {
                     unless (defined $current_paragraph->{'base_url'}) {

@@ -55,7 +55,13 @@ our %alias = (
     'custom-header'   => 'custom_header',
     'subscription'    => 'subscribe',
     'unsubscription'  => 'unsubscribe',
-    'max-size'        => 'max_size'
+    'max-size'        => 'max_size',
+    # "*.use_ssl (yes|no)" are mapped to "*.use_tls (ldaps|none)".
+    # See also each parameter definition.
+    'include_ldap_query.use_ssl'        => 'use_tls',    # 5.3a.2 - 6.2.14
+    'include_ldap_2level_query.use_ssl' => 'use_tls',    # ,,
+    'include_ldap_ca.use_ssl'           => 'use_tls',    # 6.2a? - 6.2.14
+    'include_ldap_2level_ca.use_ssl'    => 'use_tls',    # ,,
 );
 
 our %pinfo = (
@@ -1039,12 +1045,19 @@ our %pinfo = (
                 'obsolete'   => 1,
                 'length'     => 4
             },
-            'use_ssl' => {
-                'order'      => 2.5,
-                'gettext_id' => 'use SSL (LDAPS)',
-                'format'     => ['yes', 'no'],
-                'default'    => 'no'
+            'use_tls' => {
+                'order'      => 2.4,
+                'gettext_id' => 'use TLS (formerly SSL)',
+                'format'     => ['starttls', 'ldaps', 'none'],
+                'default'    => 'none',
+                'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
             },
+            #'use_ssl' => {
+            #    'order'      => 2.5,
+            #    'gettext_id' => 'use SSL (LDAPS)',
+            #    'format'     => ['yes', 'no'],
+            #    'default'    => 'no'
+            #},
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
@@ -1149,12 +1162,19 @@ our %pinfo = (
                 'obsolete'   => 1,
                 'length'     => 4
             },
-            'use_ssl' => {
-                'order'      => 2.5,
-                'gettext_id' => 'use SSL (LDAPS)',
-                'format'     => ['yes', 'no'],
-                'default'    => 'no'
+            'use_tls' => {
+                'order'      => 2.4,
+                'gettext_id' => 'use TLS (formerly SSL)',
+                'format'     => ['starttls', 'ldaps', 'none'],
+                'default'    => 'none',
+                'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
             },
+            #'use_ssl' => {
+            #    'order'      => 2.5,
+            #    'gettext_id' => 'use SSL (LDAPS)',
+            #    'format'     => ['yes', 'no'],
+            #    'default'    => 'no'
+            #},
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
@@ -1439,12 +1459,19 @@ our %pinfo = (
                 'obsolete'   => 1,
                 'length'     => 4
             },
-            'use_ssl' => {
-                'order'      => 2.5,
-                'gettext_id' => 'use SSL (LDAPS)',
-                'format'     => ['yes', 'no'],
-                'default'    => 'no'
+            'use_tls' => {
+                'order'      => 2.4,
+                'gettext_id' => 'use TLS (formerly SSL)',
+                'format'     => ['starttls', 'ldaps', 'none'],
+                'default'    => 'none',
+                'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
             },
+            #'use_ssl' => {
+            #    'order'      => 2.5,
+            #    'gettext_id' => 'use SSL (LDAPS)',
+            #    'format'     => ['yes', 'no'],
+            #    'default'    => 'no'
+            #},
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
@@ -1555,12 +1582,19 @@ our %pinfo = (
                 'obsolete'   => 1,
                 'length'     => 4
             },
-            'use_ssl' => {
-                'order'      => 2.5,
-                'gettext_id' => 'use SSL (LDAPS)',
-                'format'     => ['yes', 'no'],
-                'default'    => 'no'
+            'use_tls' => {
+                'order'      => 2.4,
+                'gettext_id' => 'use TLS (formerly SSL)',
+                'format'     => ['starttls', 'ldaps', 'none'],
+                'default'    => 'none',
+                'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
             },
+            #'use_ssl' => {
+            #    'order'      => 2.5,
+            #    'gettext_id' => 'use SSL (LDAPS)',
+            #    'format'     => ['yes', 'no'],
+            #    'default'    => 'no'
+            #},
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',

@@ -37,7 +37,7 @@ my $log = Sympa::Log->instance;
 use constant required_parameters => [qw(host)];
 use constant optional_parameters => [
     qw(port bind_dn bind_password
-        use_ssl use_start_tls ssl_version ssl_ciphers
+       use_tls ssl_version ssl_ciphers
         ssl_cert ssl_key ca_verify ca_path ca_file)
 ];
 use constant required_modules => [qw(Net::LDAP)];
@@ -47,6 +47,8 @@ sub _new {
     my $class   = shift;
     my $db_type = shift;
     my %params  = @_;
+
+    $params{use_tls} ||= 'none';
 
     # Canonicalize host parameter to be "scheme://host:port".
     # Note: Net::LDAP >= 0.40 is required to use ldaps: scheme.
@@ -58,19 +60,14 @@ sub _new {
     foreach my $host (@hosts) {
         $host .= ':' . $params{port}
             if $params{port} and $host !~ m{:[-\w]+\z};
-        # Value of obsoleted use_ssl parameter may be '1' or 'yes' depending
-        # on the context.
         $host = 'ldaps://' . $host
-            if $params{use_ssl}
-                and ($params{use_ssl} eq '1' or $params{use_ssl} eq 'yes')
-                and $host !~ m{\A[-\w]+://};
+            if $params{use_tls} eq 'ldaps' and $host !~ m{\A[-\w]+://};
         $host = 'ldap://' . $host
             if $host !~ m{\A[-\w]+://};
     }
     $params{_hosts} = [@hosts];
     $params{host} = join ',', @hosts;
     delete $params{port};
-    delete $params{use_ssl};
 
     return bless {%params} => $class;
 }
@@ -78,8 +75,8 @@ sub _new {
 sub _connect {
     my $self = shift;
 
-    if ($self->{host} =~ m{\bldaps://} or $self->{use_start_tls}) {
-        # LDAPS and start_tls require IO::Socket::SSL.
+    if ($self->{host} =~ m{\bldaps://} or $self->{use_tls} eq 'starttls') {
+        # LDAPS and STARTTLS require IO::Socket::SSL.
         unless ($IO::Socket::SSL::VERSION) {
             $log->syslog('err', 'Can\'t load IO::Socket::SSL');
             return undef;
@@ -128,7 +125,7 @@ sub _connect {
     my $host_entry = sprintf '%s://%s', $connection->scheme, $connection->uri;
 
     # START_TLS if requested.
-    if ($self->{'use_start_tls'}) {
+    if ($self->{use_tls} eq 'starttls') {
         my $mesg = $connection->start_tls(
             verify => (
                   (not $self->{ca_verify}) ? 'optional'
@@ -247,8 +244,19 @@ sub error {
 
 Sympa::DatabaseDriver::LDAP - Database driver for LDAP search operation
 
+=head1 DESCRIPTION
+
+TBD.
+
 =head1 SEE ALSO
 
 L<Sympa::DatabaseDriver>, L<Sympa::Database>.
+
+=head1 HISTORY
+
+L<Sympa::DatabaseDriver::LDAP> appeared on Sympa 6.2.
+
+On Sympa 6.2.15, C<use_ssl> and C<use_start_tls> options were deprecated and
+replaced by C<use_tls>.
 
 =cut

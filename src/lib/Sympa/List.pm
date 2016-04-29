@@ -5898,8 +5898,8 @@ sub _load_list_members_from_include {
 
             # As CA certificate is required, take it from site config.
             if (    ref $incl eq 'HASH'
-                and $incl->{use_ssl}
-                and $incl->{use_ssl} eq 'yes'
+                and $incl->{use_tls}
+                and $incl->{use_tls} ne 'none'
                 and not $incl->{ca_file}
                 and not $incl->{ca_path}) {
                 $incl->{ca_file} = $Conf::Conf{'cafile'}
@@ -6170,8 +6170,8 @@ sub _load_list_admin_from_include {
 
                 # As CA certificate is required, take it from site config.
                 if (    ref $incl eq 'HASH'
-                    and $incl->{use_ssl}
-                    and $incl->{use_ssl} eq 'yes'
+                    and $incl->{use_tls}
+                    and $incl->{use_tls} ne 'none'
                     and not $incl->{ca_file}
                     and not $incl->{ca_path}) {
                     $incl->{ca_file} = $Conf::Conf{'cafile'}
@@ -6558,8 +6558,8 @@ sub sync_include_ca {
 
             # As CA certificate is required, take it from site config.
             if (    ref $incl eq 'HASH'
-                and $incl->{use_ssl}
-                and $incl->{use_ssl} eq 'yes'
+                and $incl->{use_tls}
+                and $incl->{use_tls} ne 'none'
                 and not $incl->{ca_file}
                 and not $incl->{ca_path}) {
                 $incl->{ca_file} = $Conf::Conf{'cafile'}

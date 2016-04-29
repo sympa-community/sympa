@@ -42,6 +42,7 @@ unless (
         \%options,
         (   map {"$_=s"} @{Sympa::DatabaseDriver::LDAP->required_parameters},
             @{Sympa::DatabaseDriver::LDAP->optional_parameters},
+            qw(use_ssl use_start_tls), # Deprecated as of 6.2.15
             qw(filter scope)
         ),
         qw(suffix:s attrs:s),
@@ -56,6 +57,15 @@ if ($options{'help'}) {
     printf "Sympa %s\n", Sympa::Constants::VERSION;
     exit 0;
 }
+
+# Parameters deprecated as of 6.2.15.
+if ($options{use_start_tls}) {
+    $options{use_tls} = 'starttls';
+} elsif ($options{use_ssl}) {
+    $options{use_tls} = 'ldaps';
+}
+delete $options{use_start_tls};
+delete $options{use_ssl};
 
 my $db = Sympa::Database->new('LDAP', %options);
 unless ($db
@@ -128,11 +138,11 @@ sympa_test_ldap, sympa_test_ldap.pl - Testing LDAP connection for Sympa
   [ --attrs=[ string,...|* ] ]
   [ --bind_dn=string [ --bind_password=string ] ]
   [ --port=string ] [ --scope=base|one|sub ]
-  [ --use_ssl=1|--use_start_tls=1
+  [ --use_tls=starttls|ldaps|none
     [ --ca_file=string ] [ --ca_path=string ]
     [ --ca_verify=none|optional|require ]
     [ --ssl_cert=string ] [ --ssl_ciphers=string ] [ --ssl_key=string ]
-    [ --ssl_version=sslv2|sslv3|tlsv1|tlsv1_2|tlsv1_3 ] ]
+    [ --ssl_version=sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2 ] ]
 
   sympa_test_ldap.pl --help
 
@@ -150,5 +160,8 @@ L<Sympa::DatabaseDriver::LDAP>.
 =head1 HISTORY
 
 testldap.pl was renamed to sympa_test_ldap.pl on Sympa 6.2.
+
+C<--use_ssl> and C<--use_start_tls> options were obsoleted by Sympa 6.2.15.
+C<--use_tls> option would be used instead.
 
 =cut
