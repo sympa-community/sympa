@@ -72,3 +72,23 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::auth - auth request handler
+
+=head1 DESCRIPTION
+
+Fetchs the request matching with {request} attribute from held request spool,
+and if succeeded, processes it with C<md5> authentication level.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>, L<Sympa::Spindle::ProcessAuth>.
+
+=head1 HISTORY
+
+L<Sympa::Request::Handler::auth> appeared on Sympa 6.2.15.
+
+=cut

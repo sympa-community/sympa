@@ -43,7 +43,6 @@ use constant _action_scenario => 'info';
 use constant _action_regexp   => qr'reject|do_it'i;
 use constant _context_class   => 'Sympa::List';
 
-# Sends the information file to the requester.
 # Old name: Sympa::Commands::info().
 sub _twist {
     my $self    = shift;
@@ -107,3 +106,20 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::info - info request handler
+
+=head1 DESCRIPTION
+
+Sends the information of a list to the requester using 'info_report' template.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

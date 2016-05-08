@@ -36,7 +36,6 @@ my $log = Sympa::Log->instance;
 use constant _action_scenario => undef;
 use constant _context_class   => undef;    # Don't care.
 
-# Internal request to inform unknown commands.
 # Old name: Sympa::Commands::unknown().
 sub _twist {
     my $self    = shift;
@@ -49,3 +48,20 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::unknown - unknown request handler
+
+=head1 DESCRIPTION
+
+Internally-used request to inform unknown commands.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

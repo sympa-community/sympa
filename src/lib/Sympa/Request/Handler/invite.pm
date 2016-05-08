@@ -42,8 +42,6 @@ use constant _action_scenario => 'invite';
 use constant _action_regexp   => qr'reject|request_auth|do_it'i;
 use constant _context_class   => 'Sympa::List';
 
-# Invite someone to subscribe a list by sending him
-# template 'invite'.
 # Old name: Sympa::Commands::invite().
 sub _twist {
     my $self    = shift;
@@ -162,3 +160,23 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::invite - invite request handler
+
+=head1 DESCRIPTION
+
+Invites someone to subscribe a list by sending him
+template 'invite'.
+
+Subscription request of target user is stored into held request spool.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>, L<Sympa::Spool::Auth>.
+
+=head1 HISTORY
+
+=cut

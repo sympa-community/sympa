@@ -44,9 +44,6 @@ use constant _action_scenario => 'add';
 use constant _action_regexp   => qr'reject|request_auth|do_it'i;
 use constant _context_class   => 'Sympa::List';
 
-# Adds a user to a list (requested by another user). Verifies
-# the proper authorization and sends acknowledgements unless
-# quiet add.
 # Old name: Sympa::Commands::add().
 sub _twist {
     my $self    = shift;
@@ -156,3 +153,22 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::add - add request handler
+
+=head1 DESCRIPTION
+
+Adds a user to a list (requested by another user). Verifies
+the proper authorization and sends acknowledgements unless
+quiet add.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

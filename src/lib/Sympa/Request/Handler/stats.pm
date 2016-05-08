@@ -39,8 +39,6 @@ use constant _action_scenario => 'review';
 use constant _action_regexp   => qr'reject|do_it'i;    #FIXME: request_auth?
 use constant _context_class   => 'Sympa::List';
 
-# Sends the statistics about a list using template
-# 'stats_report'.
 # Old name: Sympa::Commands::stats().
 sub _twist {
     my $self    = shift;
@@ -82,3 +80,21 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::stats - stats request handler
+
+=head1 DESCRIPTION
+
+Sends the statistics about a list using template
+'stats_report'.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

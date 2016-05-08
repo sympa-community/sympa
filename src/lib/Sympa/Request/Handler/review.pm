@@ -41,7 +41,6 @@ use constant _action_scenario => 'review';
 use constant _action_regexp   => qr'reject|request_auth|do_it'i;
 use constant _context_class   => 'Sympa::List';
 
-# Sends the list of subscribers to the requester.
 # Old name: Sympa::Commands::review().
 sub _twist {
     my $self    = shift;
@@ -106,3 +105,21 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::review - review request handler
+
+=head1 DESCRIPTION
+
+Sends the list of subscribers to the requester
+using 'review' template.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

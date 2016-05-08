@@ -38,8 +38,6 @@ my $log = Sympa::Log->instance;
 use constant _action_scenario => undef;
 use constant _context_class   => 'Sympa::List';
 
-# Refuse and delete a moderated message and notify sender
-# by sending template 'reject'.
 # Old name: Sympa::Commands::reject().
 sub _twist {
     my $self    = shift;
@@ -79,3 +77,21 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::reject - reject request handler
+
+=head1 DESCRIPTION
+
+Refuse and delete a moderated message and notify sender
+by sending template 'reject'.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>, L<Sympa::Spindle::ProcessModeration>.
+
+=head1 HISTORY
+
+=cut

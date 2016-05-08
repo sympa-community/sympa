@@ -41,8 +41,6 @@ use constant _action_scenario => 'remind';
 use constant _action_regexp   => qr'reject|request_auth|do_it'i;
 use constant _context_class   => 'Sympa::List';
 
-# Sends a personal reminder to each subscriber of one list
-# using template 'remind'.
 # Old name: (part of) Sympa::Commands::remind().
 sub _twist {
     my $self    = shift;
@@ -97,3 +95,21 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::remind - remind request handler
+
+=head1 DESCRIPTION
+
+Sends a personal reminder to each subscriber of one list
+using template 'remind'.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

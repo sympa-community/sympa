@@ -39,8 +39,6 @@ my $log = Sympa::Log->instance;
 
 use constant _action_scenario => undef;
 
-# Return list of lists that sender is subscribed. If he is
-# owner and/or editor, managed lists are also noticed.
 # Old name: Sympa::Commands::which().
 sub _twist {
     my $self    = shift;
@@ -121,3 +119,22 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::which - which request handler
+
+=head1 DESCRIPTION
+
+Returns list of lists that sender is subscribed. If he is
+owner and/or editor, managed lists are also noticed.
+The 'which' template is used.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

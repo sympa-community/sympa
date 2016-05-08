@@ -41,7 +41,6 @@ my $log      = Sympa::Log->instance;
 
 use constant _action_scenario => undef;
 
-# Sends the help file for the software.
 # Old name: Sympa::Commands::help().
 sub _twist {
     my $self    = shift;
@@ -80,3 +79,20 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::help - help request handler
+
+=head1 DESCRIPTION
+
+Sends the help file for the software using 'helpfile' template.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

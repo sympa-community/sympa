@@ -42,9 +42,6 @@ use constant _action_scenario => 'del';
 use constant _action_regexp   => qr'reject|request_auth|do_it'i;
 use constant _context_class   => 'Sympa::List';
 
-# Removes a user from a list (requested by another user).
-# Verifies the authorization and sends acknowledgements
-# unless quiet is specified.
 # Old name: Sympa::Commands::del().
 sub _twist {
     my $self    = shift;
@@ -138,3 +135,22 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::del - del request handler
+
+=head1 DESCRIPTION
+
+Removes a user from a list (requested by another user).
+Verifies the authorization and sends acknowledgements
+unless quiet is specified.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

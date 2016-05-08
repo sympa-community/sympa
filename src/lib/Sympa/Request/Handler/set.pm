@@ -40,7 +40,6 @@ my $log      = Sympa::Log->instance;
 use constant _action_scenario => undef;           # Only list members allowed.
 use constant _context_class   => 'Sympa::List';
 
-# Change subscription options (reception or visibility).
 # Old name: (part of) Sympa::Commands::set().
 sub _twist {
     my $self    = shift;
@@ -130,3 +129,20 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::set - set request handler
+
+=head1 DESCRIPTION
+
+Change subscription options (reception or visibility).
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

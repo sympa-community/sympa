@@ -41,8 +41,6 @@ my $log      = Sympa::Log->instance;
 use constant _action_scenario => undef;         # Only actual editors allowed.
 use constant _context_class   => 'Sympa::List';
 
-# Sends a list of current messages to moderate of a list
-# (look into moderation spool).
 # Old name: Sympa::Commands::modindex().
 sub _twist {
     my $self    = shift;
@@ -112,3 +110,22 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::modindex - modindex request handler
+
+=head1 DESCRIPTION
+
+Sends a list of current messages to moderate of a list,
+using 'modindex' template
+(look into moderation spool).
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>, L<Sympa::Spool::Moderation>.
+
+=head1 HISTORY
+
+=cut

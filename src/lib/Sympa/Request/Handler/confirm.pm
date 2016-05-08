@@ -37,8 +37,6 @@ my $log = Sympa::Log->instance;
 
 use constant _action_scenario => undef;
 
-# Confirms the authentication of a message for its
-# distribution on a list.
 # Old name: Sympa::Commands::confirm().
 sub _twist {
     my $self    = shift;
@@ -73,3 +71,21 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::confirm - confirm request handler
+
+=head1 DESCRIPTION
+
+Confirms the authentication of a message for its
+distribution on a list.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>, L<Sympa::Spindle::ProcessHeld>.
+
+=head1 HISTORY
+
+=cut

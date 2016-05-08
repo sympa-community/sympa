@@ -39,7 +39,6 @@ my $log = Sympa::Log->instance;
 
 use constant _action_scenario => undef;
 
-# Sends back the list of public lists on this node.
 # Old name: Sympa::Commands::lists().
 sub _twist {
     my $self    = shift;
@@ -109,3 +108,20 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::lists - lists request handler
+
+=head1 DESCRIPTION
+
+Sends back the list of public lists on this node using 'lists' template.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

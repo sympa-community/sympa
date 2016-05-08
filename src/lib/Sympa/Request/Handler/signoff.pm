@@ -42,8 +42,6 @@ use constant _action_regexp   => qr'reject|request_auth|owner|do_it'i;
 use constant _context_class   => 'Sympa::List';
 use constant _owner_action    => 'del';
 
-# Unsubscribes a user from a list. The user sent a signoff
-# command. He can be informed by template 'bye'.
 # Old name: (part of) Sympa::Commands::signoff().
 sub _twist {
     my $self    = shift;
@@ -138,3 +136,21 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::signoff - signoff request handler
+
+=head1 DESCRIPTION
+
+Unsubscribes a user from a list.
+The user can be informed by template 'bye'.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

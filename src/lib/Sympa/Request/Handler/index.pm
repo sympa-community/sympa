@@ -42,7 +42,6 @@ use constant _action_scenario => 'archive.mail_access';
 use constant _action_regexp   => qr'reject|do_it'i;
 use constant _context_class   => 'Sympa::List';
 
-# Sends the list of archived files of a list.
 # Old name: Sympa::Commands::index().
 sub _twist {
     my $self    = shift;
@@ -102,3 +101,20 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::index - index request handler
+
+=head1 DESCRIPTION
+
+Sends the list of archived files of a list using 'index_archive' template.
+
+=head1 SEE ALSO
+
+L<Sympa::Archive>, L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

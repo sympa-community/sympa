@@ -39,7 +39,6 @@ my $log      = Sympa::Log->instance;
 use constant _action_scenario => undef;
 use constant _context_class   => 'Sympa::List';
 
-# Verify an S/MIME signature.
 # Old name: Sympa::Commands::verify().
 sub _twist {
     my $self    = shift;
@@ -76,3 +75,20 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::verify - verify request handler
+
+=head1 DESCRIPTION
+
+Verifys S/MIME signature in the message.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut

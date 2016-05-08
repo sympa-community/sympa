@@ -38,7 +38,6 @@ my $log = Sympa::Log->instance;
 use constant _action_scenario => undef;
 use constant _context_class   => 'Sympa::List';
 
-# Distributes the broadcast of a validated moderated message.
 # Old name: Sympa::Commands::distribute().
 sub _twist {
     my $self    = shift;
@@ -82,3 +81,20 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::distribute - distribute request handler
+
+=head1 DESCRIPTION
+
+Distributes the broadcast of a validated moderated message.
+
+=head1 SEE ALSO
+
+L<Sympa::Request::Handler>, L<Sympa::Spindle::ProcessModeration>.
+
+=head1 HISTORY
+
+=cut

@@ -42,7 +42,6 @@ use constant _action_scenario => 'archive.mail_access';
 use constant _action_regexp   => qr'reject|do_it'i;
 use constant _context_class   => 'Sympa::List';
 
-# Sends back the requested archive file.
 # Old name: Sympa::Commands::getfile().
 sub _twist {
     my $self    = shift;
@@ -128,3 +127,20 @@ sub _twist {
 
 1;
 __END__
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Request::Handler::get - get request handler
+
+=head1 DESCRIPTION
+
+Sends back the requested archive file using 'get_archive' template.
+
+=head1 SEE ALSO
+
+L<Sympa::Archive>, L<Sympa::Request::Handler>.
+
+=head1 HISTORY
+
+=cut
