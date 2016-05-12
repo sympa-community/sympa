@@ -965,15 +965,15 @@ sub update_css {
             }
         }
     }
-    if ($css_updated) {
-        ## Notify main listmaster
-        Sympa::send_notify_to_listmaster(
-            '*',
-            'css_updated',
-            [   "Static CSS files have been updated ; check log file for details"
-            ]
-        );
-    }
+    #if ($css_updated) {
+    #    ## Notify main listmaster
+    #    Sympa::send_notify_to_listmaster(
+    #        '*',
+    #        'css_updated',
+    #        [   "Static CSS files have been updated ; check log file for details"
+    #        ]
+    #    );
+    #}
 
     umask $umask;
     return 1;
