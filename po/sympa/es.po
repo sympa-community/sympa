@@ -20,10 +20,10 @@ msgstr ""
 "PO-Revision-Date: 2016-01-15 16:02+0000\n"
 "Last-Translator: Antonio Casado <acasado@ual.es>\n"
 "Language-Team: Español <sympa-users@sympa.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.7\n"
 "X-POOTLE-MTIME: 1452873753.000000\n"
@@ -6331,9 +6331,8 @@ msgstr "(Revisar)"
 
 #. (mod_total_shared)
 #: default/web_tt2/info.tt2:21
-#, fuzzy
 msgid "There are %1 shared document(s) awaiting moderation."
-msgstr "Hay %1 mensaje(s) en espera de aprobación."
+msgstr "Hay %1 documento(s) compartidos(s) en espera de aprobación."
 
 #. (mod_subscription)
 #: default/web_tt2/info.tt2:29
@@ -6342,9 +6341,8 @@ msgstr "Hay %1 mensaje(s) en espera de aprobación."
 
 #. (mod_signoff)
 #: default/web_tt2/info.tt2:34
-#, fuzzy
 msgid "There are %1 unsubscription(s) awaiting moderation."
-msgstr "Hay %1 mensaje(s) en espera de aprobación."
+msgstr "Hay %1 solicitud(es) de baja en espera de aprobación."
 
 #: default/web_tt2/info.tt2:41
 msgid ""
@@ -6369,9 +6367,8 @@ msgid "Review subscription requests"
 msgstr "Revisar solicitudes de suscripción"
 
 #: default/web_tt2/info.tt2:49
-#, fuzzy
 msgid "Review unsubscription requests"
-msgstr "Revisar solicitudes de suscripción"
+msgstr "Revisar solicitudes de baja"
 
 #: default/web_tt2/info.tt2:50
 msgid "Add/delete subscribers"
@@ -6567,9 +6564,8 @@ msgid "Subscriptions"
 msgstr "Suscripciones"
 
 #: default/web_tt2/list_menu.tt2:85
-#, fuzzy
 msgid "Unsubscriptions"
-msgstr "Darse de baja"
+msgstr "Peticiones de baja"
 
 #: default/web_tt2/list_menu.tt2:93
 msgid "Statistics"
@@ -7228,9 +7224,8 @@ msgstr "%1 solicitud(es) de suscripción"
 
 #. (list_to_admin.value.mod_signoff)
 #: default/web_tt2/news.tt2:19
-#, fuzzy
 msgid "%1 unsubscription request(s)"
-msgstr "%1 solicitud(es) de suscripción"
+msgstr "%1 solicitud(es) de baja"
 
 #: default/web_tt2/news.tt2:31
 msgid "User Errors"
@@ -7720,9 +7715,8 @@ msgid "Pending subscriptions"
 msgstr "Suscripciones pendientes"
 
 #: default/web_tt2/review.tt2:7
-#, fuzzy
 msgid "Pending unsubscriptions"
-msgstr "Suscripciones pendientes"
+msgstr "Solicitudes de baja pendientes"
 
 #: default/web_tt2/review.tt2:17
 msgid "Exclude"
@@ -9958,15 +9952,14 @@ msgstr ""
 
 #: default/mail_tt2/command_report.tt2:176
 #: default/mail_tt2/command_report.tt2:178
-#, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
 "subscription reminder using a different email address. Please try using your "
 "canonical address."
 msgstr ""
-"Falló el proceso de autenticación. Probablemente confirmaste tu baja "
-"utilizando una dirección de correo diferente. Por favor, utiliza tu "
-"dirección de correo verdadera."
+"Falló el proceso de autenticación. Probablemente confirmaste tu recordatorio "
+"de solicitud de suscripción utilizando una dirección de correo electrónico "
+"diferente. Por favor, utiliza tu dirección de correo verdadera."
 
 #. (u_err.command)
 #: default/mail_tt2/command_report.tt2:180
@@ -10682,7 +10675,6 @@ msgstr "Documento compartidopor ser aprobado para %1"
 
 #. (list.name,filename,who)
 #: default/mail_tt2/listeditor_notification.tt2:12
-#, fuzzy
 msgid ""
 "There are new shared documents in list %1: \n"
 "\t%2\n"
@@ -10696,24 +10688,20 @@ msgstr ""
 "\n"
 "\tde %3\n"
 "\n"
-"Para moderar estos documentos: \n"
-"%4/modindex/%1"
+"Para moderar estos documentos: "
 
 #. (list.name,filename,who)
 #: default/mail_tt2/listeditor_notification.tt2:17
-#, fuzzy
 msgid ""
 "There is a new shared document in list %1: \n"
 "\t%2 from %3\n"
 "\n"
 "To moderate this document: "
 msgstr ""
-"Hay un nuevo documento compartido en la lista %1:\n"
+"Hay un nuevo documento compartido en la lista %1: \n"
 "\t%2 de %3\n"
 "\n"
-"Para moderar este documento: \n"
-"%4/modindex/%1\n"
-" "
+"Para moderar este documento:  "
 
 #. (list.name,type)
 #: default/mail_tt2/listeditor_notification.tt2:22
@@ -11619,7 +11607,7 @@ msgstr ""
 #. (type,list.name,who,gecos)
 #: default/mail_tt2/listowner_notification.tt2:31
 msgid "FYI: %1 List \"%2\" from %3 %4"
-msgstr "Información: %1 Lista \"%2\" de %3 %4"
+msgstr "Información: comando %1 para la lista \"%2\" de %3 %4"
 
 #. (who,gecos,list.name)
 #: default/mail_tt2/listowner_notification.tt2:34
@@ -11720,7 +11708,7 @@ msgstr ""
 #. (command,list.name,who,gecos)
 #: default/mail_tt2/listowner_notification.tt2:104
 msgid "FYI: %1 list %2 from %3 %4"
-msgstr "Información: %1 lista %2 de %3 %4"
+msgstr "Información: comando %1 para la lista %2 de %3 %4"
 
 #. (command,list.name,who,gecos)
 #: default/mail_tt2/listowner_notification.tt2:106
@@ -11809,7 +11797,7 @@ msgstr "lista %1 / %2"
 
 #: default/mail_tt2/listowner_notification.tt2:58
 msgid "${conf.email}@${conf.host}"
-msgstr ""
+msgstr "${conf.email}@${conf.host}"
 
 #. (list.name)
 #: default/mail_tt2/list_rejected.tt2:1
