@@ -27,13 +27,7 @@ package Sympa::Spindle::ProcessAuth;
 use strict;
 use warnings;
 
-use Sympa;
-use Conf;
-use Sympa::Log;
-
 use base qw(Sympa::Spindle);
-
-my $log = Sympa::Log->instance;
 
 use constant _distaff => 'Sympa::Spool::Auth';
 
@@ -51,6 +45,8 @@ sub _init {
     1;
 }
 
+# NOTE: Sympa::Spool::Auth shares spool directory with Sympa::Spool::Reserved.
+# So, unparsable items MUST NOT be removed / quarantined.
 sub _on_garbage {
     my $self   = shift;
     my $handle = shift;
