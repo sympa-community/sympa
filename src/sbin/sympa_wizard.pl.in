@@ -97,10 +97,22 @@ GetOptions(
     \%options,
     'target=s',
     'create:s',    # parameter is optional and only "sympa.conf" is allowed.
+    'batch',
+    'display',
     'check',
     'help|h',
     'version|v',
 );
+
+my %user_param;
+for (@ARGV) {
+    # check for key/values settings
+    if (/^([\w]+)+=(.+)/) {
+        $user_param{$1} = $2;
+    } else {
+        die "$0: Invalid commandline argument: $_";
+    }
+}
 
 if ($options{help}) {
     pod2usage();
@@ -134,7 +146,7 @@ sub create_configuration {
     my $umask = umask 037;
     unless (open NEWF, '>', $conf) {
         umask $umask;
-        die "Unable to open $conf: $ERRNO";
+        die "$0: Unable to open $conf: $ERRNO";
     }
     umask $umask;
 
@@ -220,9 +232,28 @@ sub edit_configuration {
     ## Load sympa config (but not using database)
     unless (defined Conf::load($sympa_conf, 1)) {
         printf STDERR
-            "Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.\n",
+            "$0: Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.\n",
             $sympa_conf;
         exit 1;
+    }
+
+    if ($options{display}) {
+        my ($var, $disp);
+
+        print "[SYMPA]\n";
+        for (sort (keys (%Conf::Conf))) {
+            $var = $Conf::Conf{$_};
+
+            if (ref($var) eq 'ARRAY') {
+                $disp = join(',', @$var);
+            } else {
+                $disp = $var;
+            }
+
+            print qq{$_="$disp"
+            };
+        }
+        exit 0;
     }
 
     my $somechange = 0;
@@ -266,7 +297,11 @@ sub edit_configuration {
         }
 
         my $new_value = '';
-        if ($param->{'edit'} and $param->{'edit'} eq '1') {
+        if ($options{batch}) {
+            if (exists $user_param{$name}) {
+                $new_value = $user_param{$name};
+            }
+        } elsif ($param->{'edit'} and $param->{'edit'} eq '1') {
             print "\n\n** $title **\n" if $title;
 
             print "\n";
@@ -338,7 +373,7 @@ sub edit_configuration {
         my $umask = umask 037;
         unless (open(SYMPA, "> $sympa_conf")) {
             umask $umask;
-            die sprintf(gettext("Unable to open %s : %s"),
+            die "$0: " . sprintf(gettext("Unable to open %s : %s"),
                 $sympa_conf, $ERRNO);
         }
         umask $umask;
