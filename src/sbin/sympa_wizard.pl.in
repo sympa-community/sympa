@@ -104,16 +104,6 @@ GetOptions(
     'version|v',
 );
 
-my %user_param;
-for (@ARGV) {
-    # check for key/values settings
-    if (/^([\w]+)+=(.+)/) {
-        $user_param{$1} = $2;
-    } else {
-        die "$0: Invalid commandline argument: $_";
-    }
-}
-
 if ($options{help}) {
     pod2usage();
 } elsif ($options{'version'}) {
@@ -121,10 +111,21 @@ if ($options{help}) {
     exit 0;
 } elsif (defined $options{create}) {
     create_configuration();
+} elsif ($options{display}) {
+    display_configuration();
 } elsif ($options{check}) {
     check_cpan();
 } else {
-    edit_configuration();
+    my %user_param;
+    foreach my $arg (@ARGV) {
+        # check for key/values settings
+        if ($arg =~ /\A(\w+)=(.+)/) {
+            $user_param{$1} = $2;
+        } else {
+            die "$0: Invalid commandline argument: $arg\n";
+        }
+    }
+    edit_configuration(%user_param);
 }
 
 exit 0;
@@ -146,7 +147,9 @@ sub create_configuration {
     my $umask = umask 037;
     unless (open NEWF, '>', $conf) {
         umask $umask;
-        die "$0: Unable to open $conf: $ERRNO";
+        die "$0: "
+            . sprintf(gettext("Unable to open %s : %s"), $conf, $ERRNO)
+            . "\n";
     }
     umask $umask;
 
@@ -208,10 +211,43 @@ sub create_configuration {
     print STDERR "$conf file has been created\n";
 }
 
-sub edit_configuration {
-    die "You must run as superuser.\n"
+sub display_configuration {
+    die "$0: You must run as superuser.\n"
         if $UID;
-    die "Installation of Sympa has not been completed.\n"
+    die "$0: Installation of Sympa has not been completed.\n"
+        . "Run sympa_wizard.pl --check\n"
+        if $modfail;
+
+    # Load sympa config (but not using database)
+    unless (defined Conf::load($sympa_conf, 1)) {
+        printf STDERR
+            "$0: Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.\n",
+            $sympa_conf;
+        exit 1;
+    }
+
+    my ($var, $disp);
+
+    print "[SYMPA]\n";
+    foreach my $key (sort keys %Conf::Conf) {
+        $var = $Conf::Conf{$key};
+
+        if (ref($var) eq 'ARRAY') {
+            $disp = join(',', map { defined $_ ? $_ : '' } @$var);
+        } else {
+            $disp = defined $var ? $var : '';
+        }
+
+        printf "%s=\"%s\"\n", $key, $disp;
+    }
+}
+
+sub edit_configuration {
+    my %user_param = @_;
+
+    die "$0: You must run as superuser.\n"
+        if $UID;
+    die "$0: Installation of Sympa has not been completed.\n"
         . "Run sympa_wizard.pl --check\n"
         if $modfail;
 
@@ -235,25 +271,6 @@ sub edit_configuration {
             "$0: Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.\n",
             $sympa_conf;
         exit 1;
-    }
-
-    if ($options{display}) {
-        my ($var, $disp);
-
-        print "[SYMPA]\n";
-        for (sort (keys (%Conf::Conf))) {
-            $var = $Conf::Conf{$_};
-
-            if (ref($var) eq 'ARRAY') {
-                $disp = join(',', @$var);
-            } else {
-                $disp = $var;
-            }
-
-            print qq{$_="$disp"
-            };
-        }
-        exit 0;
     }
 
     my $somechange = 0;
@@ -373,8 +390,10 @@ sub edit_configuration {
         my $umask = umask 037;
         unless (open(SYMPA, "> $sympa_conf")) {
             umask $umask;
-            die "$0: " . sprintf(gettext("Unable to open %s : %s"),
-                $sympa_conf, $ERRNO);
+            die "$0: "
+                . sprintf(gettext("Unable to open %s : %s"),
+                $sympa_conf, $ERRNO)
+                . "\n";
         }
         umask $umask;
         chown [getpwnam(Sympa::Constants::USER)]->[2],
@@ -654,8 +673,10 @@ sympa_wizard, sympa_wizard.pl - Help Performing Sympa Initial Setup
 =head1 SYNOPSIS
 
 S<B<sympa_wizard.pl>>
+    S<[B<--batch> [I<key>=I<value> ...]]>
     S<[B<--check>]>
     S<[B<--create> [B<--target=>I<file>]]>
+    S<[B<--display>]>
     S<[B<-h, --help>]>
     S<[B<-v, --version>]>
 
@@ -667,6 +688,11 @@ S<B<sympa_wizard.pl>>
 
 Edit current Sympa configuration.
 
+=item sympa_wizard.pl --batch I<key>=I<value> ...
+
+Edit in batch mode.
+Arguments would include pairs of parameter name and value.
+
 =item sympa_wizard.pl --check
 
 Check CPAN modules needed for running Sympa.
@@ -674,6 +700,10 @@ Check CPAN modules needed for running Sympa.
 =item sympa_wizard.pl --create [--target file]
 
 Creates a new F<sympa.conf> configuration file.
+
+=item sympa_wizard.pl --display
+
+Outputs all configuration parameters.
 
 =item sympa_wizard.pl --help
 
@@ -696,5 +726,7 @@ This program was originally written by:
 =item Olivier SalaE<252>n <os@cru.fr>
 
 =back
+
+C<--batch> and C<--display> options are added on Sympa 6.1.25 and 6.2.15.
 
 =cut
