@@ -23043,32 +23043,34 @@ sub do_css {
 sub do_rss_request {
     wwslog('info', '');
 
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'visibility',
-        $param->{'auth_method'},
-        {   'sender'      => $param->{'user'}{'email'},
-            'remote_host' => $param->{'remote_host'},
-            'remote_addr' => $param->{'remote_addr'}
-        }
-    );
-    my $sub_is;
-    my $reason;
-    if (ref($result) eq 'HASH') {
-        $sub_is = $result->{'action'};
-        $reason = $result->{'reason'};
-    }
-    if ($sub_is =~ /reject/) {
-        wwslog('info',
-            'RSS not accessible because list %s is not visible to user %s',
-            $list->get_list_id, $param->{'user'}{'email'});
-        web_db_log(
-            {   'parameters' => $param->{'user'}{'email'},
-                'status'     => 'error',
-                'error_type' => 'authorization'
+    if (ref $list eq 'Sympa::List') {
+        my $result = Sympa::Scenario::request_action(
+            $list,
+            'visibility',
+            $param->{'auth_method'},
+            {   'sender'      => $param->{'user'}{'email'},
+                'remote_host' => $param->{'remote_host'},
+                'remote_addr' => $param->{'remote_addr'}
             }
         );
-        return undef;
+        my $sub_is;
+        my $reason;
+        if (ref $result eq 'HASH') {
+            $sub_is = $result->{'action'};
+            $reason = $result->{'reason'};
+        }
+        if ($sub_is =~ /\Areject\b/i) {
+            wwslog('info',
+                'RSS not accessible because list %s is not visible to user %s',
+                $list->get_id, $param->{'user'}{'email'});
+            web_db_log(
+                {   'parameters' => $param->{'user'}{'email'},
+                    'status'     => 'error',
+                    'error_type' => 'authorization'
+                }
+            );
+            return undef;
+        }
     }
 
     my %args;
@@ -23078,7 +23080,7 @@ sub do_rss_request {
     $args{count} = $in{'count'} if $in{'count'};
     $args{for}   = $in{'for'}   if $in{'for'};
 
-    if ($list) {
+    if (ref $list eq 'Sympa::List') {
         $param->{'latest_arc_url'} =
             Sympa::get_url($list, 'rss/latest_arc', query => {%args});
         $param->{'latest_d_read_url'} =
