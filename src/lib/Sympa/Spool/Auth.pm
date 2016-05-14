@@ -184,9 +184,6 @@ Directory path of held request spool.
 Note:
 Named such by historical reason.
 
-Note:
-Physical spool directory is shared with L<Sympa::Spool::Reserved>.
-
 =back
 
 =head1 SEE ALSO

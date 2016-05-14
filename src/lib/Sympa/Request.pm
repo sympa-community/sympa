@@ -42,12 +42,6 @@ my %attrmap = (
     action => 'X-Sympa-Action',
     gecos  => 'X-Sympa-Display-Name',
     sender => 'X-Sympa-Sender',
-    # Below are used for auth and logging purpose.
-    remote_addr => 'X-Sympa-Remote-Addr',
-    remote_host => 'X-Sympa-Remote-Host',
-    remote_application_name => 'X-Sympa-Remote-Application-Name',
-    # Below are used only for logging purpose.
-    daemon => 'X-Sympa-Server',
 );
 my @optattrs = qw(arc reception visibility);
 
