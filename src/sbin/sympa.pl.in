@@ -967,10 +967,6 @@ elsif ($main::options{'close_family'}) {
 }
 ##########################################
 elsif ($main::options{'sync_list_db'}) {
-    unless ($Conf::Conf{'db_list_cache'} eq 'on') {
-        print STDOUT "\nSympa not configured to use database list caching \n";
-        exit 1;
-    }
     my $listname = $main::options{'list'} || '';
     if (length($listname) > 1) {
         my $list = Sympa::List->new($listname);

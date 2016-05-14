@@ -418,6 +418,46 @@ my %full_db_struct = (
             'Exclusion table is used in order to manage unsubscription for subsceriber inclued from an external data source.',
         'order' => 5,
     },
+    'inclusion_table' => {
+        'fields' => {
+            'list_inclusion' => {
+                'struct' => $list_struct,
+                'doc'      => 'list name of including list',
+                'order'    => 1,
+                'primary'  => 1,
+                'not_null' => 1,
+            },
+            'robot_inclusion' => {
+                'struct'   => $robot_struct,
+                'doc'      => 'robot (domain) name of the list',
+                'order'    => 2,
+                'primary'  => 1,
+                'not_null' => 1,
+            },
+            'included_list_inclusion' => {
+                'struct' => $list_struct,
+                'doc'      => 'list name of included list',
+                'order'    => 4,
+                'primary'  => 1,
+                'not_null' => 1,
+            },
+            'included_robot_inclusion' => {
+                'struct'   => $robot_struct,
+                'doc'      => 'robot (domain) name of included list',
+                'order'    => 5,
+                'primary'  => 1,
+                'not_null' => 1,
+            },
+            'update_epoch_inclusion' => {
+                'struct' => 'int(11)',
+                'doc'    => 'the date this entry was created or updated',
+                'order'  => 6,
+            },
+        },
+        'doc' =>
+            'Inclusion table is used in order to manage lists inclued from / including subscribers of other lists.',
+        'order' => 4,
+    },
     'session_table' => {
         'fields' => {
             'id_session' => {

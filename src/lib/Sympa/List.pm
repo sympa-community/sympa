@@ -268,6 +268,10 @@ its messages.
 Returns true is the list is configured to keep archives of
 its messages, i.e. process_archive parameter is set to "on".
 
+=item is_included ( )
+
+Returns true value if the list is included in another list(s).
+
 =item get_stats ( OPTION )
 
 Returns either a formatted printable strings or an array whith
@@ -4406,6 +4410,29 @@ sub is_web_archived {
 sub is_archiving_enabled {
     return Sympa::Tools::Data::smart_eq(shift->{'admin'}{'process_archive'},
         'on');
+}
+
+sub is_included {
+    my $self = shift;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    unless ($sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT COUNT(*)
+              FROM inclusion_table
+              WHERE included_list_inclusion = ? AND
+                    included_robot_inclusion = ?},
+            $self->{'name'}, $self->{'domain'})) {
+        $log->syslog('err', 'Failed to get inclusion information on list %s',
+            $self);
+        return 1; # Fake positive result.
+    }
+    my ($num) = $sth->fetchrow_array;
+    $sth->finish;
+
+    return $num;
 }
 
 # Old name: Sympa::List::get_nextdigest().
@@ -9189,23 +9216,10 @@ sub close_list {
     ## If list is included by another list, then it cannot be removed
     ## TODO : we should also check owner_include and editor_include, but a bit
     ## more tricky
-    my $all_lists = get_lists('*');
-    foreach my $list (@{$all_lists}) {
-        my $included_lists = $list->{'admin'}{'include_list'};
-        next unless (defined $included_lists);
-
-        foreach my $included_list_name (@{$included_lists}) {
-
-            if ($included_list_name eq $self->get_list_id()
-                || (   $included_list_name eq $self->{'name'}
-                    && $list->{'domain'} eq $self->{'domain'})
-                ) {
-                $log->syslog('err',
-                    'List %s is included by list %s: cannot close it',
-                    $self->get_list_id(), $list->get_list_id());
-                return undef;
-            }
-        }
+    if ($self->is_included) {
+        $log->syslog('err',
+            'List %s is included by other list: cannot close it', $self);
+        return undef;
     }
 
     ## Dump subscribers, unless list is already closed
@@ -9749,6 +9763,43 @@ sub _update_list_db {
         $sth = pop @sth_stack;
         return undef;
     }
+
+    # Update inclusion_table: This feature was added on 6.2.16.
+    my $now = time;
+    foreach my $l (@{$self->{'admin'}{'include_list'} || []}) {
+        $l =~ s/\s+filter\s+.+//;
+        my ($name, $domain) = map { lc $_ } split /\@/, $l, 2;
+        $domain ||= $self->{'domain'};
+
+        unless (
+            $sth = $sdm->do_prepared_query(
+                q{UPDATE inclusion_table
+                  SET update_epoch_inclusion = ?
+                  WHERE list_inclusion = ? AND robot_inclusion = ? AND
+                        included_list_inclusion = ? AND
+                        included_robot_inclusion = ? AND
+                        (update_epoch_inclusion IS NULL OR
+                         update_epoch_inclusion < ?)},
+            $now, $self->{'name'}, $self->{'domain'}, $name, $domain, $now)
+            and $sth->rows
+            or $sth = $sdm->do_prepared_query(
+                q{INSERT INTO inclusion_table
+                  (list_inclusion, robot_inclusion,
+                   included_list_inclusion, included_robot_inclusion,
+                   update_epoch_inclusion)
+                  VALUES (?, ?, ?, ?, ?)},
+                $self->{'name'}, $self->{'domain'}, $name, $domain, $now)
+            and $sth->rows) {
+            $log->syslog('err', 'Unable to update list %s in database', $self);
+            $sth = pop @sth_stack;
+            return undef;
+        }
+    }
+    $sdm->do_prepared_query(
+        q{DELETE FROM inclusion_table
+          WHERE list_inclusion = ? AND robot_inclusion = ? AND
+                update_epoch_inclusion < ?},
+        $self->{'name'}, $self->{'domain'}, $now);
 
     $sth = pop @sth_stack;
 
