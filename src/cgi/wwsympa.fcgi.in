@@ -3221,7 +3221,10 @@ sub check_param_out {
             }
 
         }
-    }
+
+        # List included in other list may not be closed nor renamed.
+        $param->{'is_included'} = 1 if $list->is_included;
+   }
 
     $param->{'robot'} = $robot;
 
@@ -13348,6 +13351,21 @@ sub do_rename_list {
     wwslog('info', '(%s, %s, mode = %s)',
         $in{'new_listname'}, $in{'new_robot'}, $mode);
 
+    # Don't rename the list included in other list.
+    unless ($mode and $mode eq 'copy') {
+        if ($list->is_included) {
+            Sympa::Report::reject_report_web('user', 'cannot_rename_list',
+                {reason => 'included'}, $param->{'action'}, $list);
+            wwslog('Cannot rename list %s: Included by other list', $list);
+            web_db_log(
+                {   'status' => 'error',
+                    'error_type' => 'cannot_rename_list',
+                }
+            );
+            return undef;
+        }
+    }
+
     my $result = Sympa::Admin::rename_list(
         list         => $list,
         new_listname => $in{'new_listname'},
@@ -13517,6 +13535,16 @@ sub do_close_list {
             }
         );
         return undef;
+    } elsif ($list->is_included) {
+        Sympa::Report::reject_report_web('user', 'cannot_close_list',
+            {reason => 'included'}, $param->{'action'}, $list);
+        wwslog('info', 'Cannot close list %s: Included by other list', $list);
+        web_db_log(
+            {   'status'     => 'error',
+                'error_type' => 'cannot_close_list'
+            }
+        );
+        return 'admin';
     } elsif ($list->{'admin'}{'status'} eq 'pending') {
         wwslog('info', 'Closing a pending list makes it purged');
         $list->purge($param->{'user'}{'email'});

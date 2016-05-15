@@ -777,6 +777,17 @@ sub rename_list {
         return 'incorrect_listname';
     }
 
+    # If list is included by another list, then it cannot be renamed.
+    # TODO : we should also check owner_include and editor_include, but a bit
+    # more tricky.
+    unless ($param{'mode'} and $param{'mode'} eq 'copy') {
+        if ($list->is_included) {
+            $log->syslog('err',
+               'List %s is included by other list: cannot rename it', $list);
+            return 'intern';
+        }
+    }
+
     ## Evaluate authorization scenario unless run as listmaster (sympa.pl)
     my ($result, $r_action, $reason);
     unless ($param{'options'}{'skip_authz'}) {

@@ -4156,6 +4156,20 @@ sub rename_list_db {
         return undef;
     }
 
+    unless (
+        $sdm
+        and $sdm->do_prepared_query(
+            q{UPDATE inclusion_table
+              SET list_inclusion = ?, robot_inclusion = ?
+              WHERE list_inclusion = ? AND robot_inclusion = ?},
+            $new_listname,   $new_robot,
+            $self->{'name'}, $self->{'domain'}
+        )
+        ) {
+        $log->syslog('err', "Unable to rename list in database");
+        return undef;
+    }
+
     return 1;
 }
 
@@ -9302,7 +9316,7 @@ sub purge {
     }
 
     ## Clean list table if needed
-    if ($Conf::Conf{'db_list_cache'} eq 'on') {
+    #if ($Conf::Conf{'db_list_cache'} eq 'on') {
         my $sdm = Sympa::DatabaseManager->instance;
         unless (
             $sdm
@@ -9315,6 +9329,17 @@ sub purge {
             $log->syslog('err', 'Cannot remove list %s (robot %s) from table',
                 $self->{'name'}, $self->{'domain'});
         }
+    #}
+    unless (
+        $sdm
+        and $sdm->do_prepared_query(
+            q{DELETE FROM inclusion_table
+              WHERE list_inclusion = ? AND robot_inclusion = ?},
+            $self->{'name'}, $self->{'domain'}
+        )
+        ) {
+        $log->syslog('err', 'Cannot remove list %s (robot %s) from table',
+            $self->{'name'}, $self->{'domain'});
     }
 
     ## Clean memory cache
