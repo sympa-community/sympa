@@ -279,10 +279,10 @@ sub update_field {
     my $fields = $self->get_fields({'table' => $table});
     if ($fields->{$field} eq 'timestamptz' and $type =~ /^int/i) {
         @sql = (
-            "ALTER TABLE list_table RENAME $field TO ${field}_tmp",
-            "ALTER TABLE list_table ADD $field $type$options",
-            "UPDATE list_table SET $field = date_part('epoch', ${field}_tmp)",
-            "ALTER TABLE list_table DROP ${field}_tmp"
+            "ALTER TABLE $table RENAME $field TO ${field}_tmp",
+            "ALTER TABLE $table ADD $field $type$options",
+            "UPDATE $table SET $field = date_part('epoch', ${field}_tmp)",
+            "ALTER TABLE $table DROP ${field}_tmp"
         );
     } else {
         @sql = sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s %s",
