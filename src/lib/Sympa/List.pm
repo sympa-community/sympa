@@ -4160,10 +4160,10 @@ sub rename_list_db {
         $sdm
         and $sdm->do_prepared_query(
             q{UPDATE inclusion_table
-              SET list_inclusion = ?, robot_inclusion = ?
-              WHERE list_inclusion = ? AND robot_inclusion = ?},
-            $new_listname,   $new_robot,
-            $self->{'name'}, $self->{'domain'}
+              SET target_inclusion = ?
+              WHERE target_inclusion = ?},
+            sprintf('%s@%s', $new_listname, $new_robot),
+            $self->get_id
         )
         ) {
         $log->syslog('err', "Unable to rename list in database");
@@ -4436,9 +4436,8 @@ sub is_included {
         and $sth = $sdm->do_prepared_query(
             q{SELECT COUNT(*)
               FROM inclusion_table
-              WHERE included_list_inclusion = ? AND
-                    included_robot_inclusion = ?},
-            $self->{'name'}, $self->{'domain'})) {
+              WHERE source_inclusion = ?},
+            $self->get_id)) {
         $log->syslog('err', 'Failed to get inclusion information on list %s',
             $self);
         return 1; # Fake positive result.
@@ -5875,7 +5874,6 @@ sub _load_list_members_from_include {
     my (%users, $depend_on);
     my $total = 0;
     my @errors;
-    my $result;
     my @ex_sources;
 
     foreach my $entry (@{$self->{'admin'}{'member_include'}}) {
@@ -6127,9 +6125,23 @@ sub _load_list_members_from_include {
     }
 
     ## If an error occurred, return an undef value
-    $result->{'users'}      = \%users;
-    $result->{'errors'}     = \@errors;
-    $result->{'exclusions'} = \@ex_sources;
+    my $result = {
+        users      => \%users,
+        errors     => \@errors,
+        exclusions => \@ex_sources,
+        depend_on  => [
+            Sympa::Tools::Data::sort_uniq(
+                grep { $self->get_id ne $_ }
+                map {
+                    # Canonicalize list ID. FIXME.
+                    my $list_id = $_;
+                    $list_id =~ s/\s+filter\s+.*\z//;
+                    $list_id = sprintf '%s@%s', $list_id, $self->{'domain'}
+                        unless $list_id =~ /\@/;
+                    lc $list_id
+                } keys %$depend_on)
+            ],
+    };
     ##use Data::Dumper;
     ##if(open OUT, '>/tmp/result') { print OUT Dumper $result; close OUT }
     return $result;
@@ -6331,7 +6343,21 @@ sub _load_list_admin_from_include {
         }
     }
 
-    return \%admin_users;
+    return {
+        users => \%admin_users,
+        depend_on => [
+            Sympa::Tools::Data::sort_uniq(
+                grep { $self->get_id ne $_ }
+                map {
+                    # Canonicalize list ID. FIXME.
+                    my $list_id = $_;
+                    $list_id =~ s/\s+filter\s+.*\z//;
+                    $list_id = sprintf '%s@%s', $list_id, $self->{'domain'}
+                        unless $list_id =~ /\@/;
+                    lc $list_id
+                } keys %$depend_on)
+        ],
+    };
 }
 
 # Load an include admin user file (xx.incl)
@@ -6763,10 +6789,12 @@ sub sync_include {
     unless ($option and $option eq 'purge') {
         my $result =
             $self->_load_list_members_from_include(
-            $self->get_list_of_sources_id(\%old_subscribers));
+            $self->get_list_of_sources_id(\%old_subscribers))
+            || {};
         $new_subscribers = $result->{'users'};
         my @errors     = @{$result->{'errors'}};
         my @exclusions = @{$result->{'exclusions'}};
+        my @depend_on = @{$result->{depend_on} || []};
 
         ## If include sources were not available, do not update subscribers
         ## Use DB cache instead and warn the listmaster.
@@ -6832,6 +6860,9 @@ sub sync_include {
                 }
             }
         }
+
+        # Update inclusion dependency (added on 6.2.16).
+        $self->_update_inclusion_table('member', @depend_on);
     }
 
     my $data_exclu;
@@ -7044,6 +7075,49 @@ sub sync_include {
     return 1;
 }
 
+# Update inclusion_table: This feature was added on 6.2.16.
+sub _update_inclusion_table {
+    my $self = shift;
+    my $role = shift;
+    my @depend_on = @_;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    my $now = time;
+    foreach my $list_id (@depend_on) {
+        unless (
+            $sdm
+            and $sth = $sdm->do_prepared_query(
+                q{UPDATE inclusion_table
+                  SET update_epoch_inclusion = ?
+                  WHERE target_inclusion = ? AND
+                        role_inclusion = ? AND
+                        source_inclusion = ? AND
+                        (update_epoch_inclusion IS NULL OR
+                         update_epoch_inclusion < ?)},
+                $now, $self->get_id, $role, $list_id, $now)
+            and $sth->rows
+            or $sdm
+            and $sth = $sdm->do_prepared_query(
+                q{INSERT INTO inclusion_table
+                  (target_inclusion, role_inclusion, source_inclusion,
+                   update_epoch_inclusion)
+                  VALUES (?, ?, ?, ?)},
+                $self->get_id, $role, $list_id, $now)
+            and $sth->rows) {
+            $log->syslog('err', 'Unable to update list %s in database',
+                $self);
+            return undef;
+        }
+    }
+    $sdm->do_prepared_query(
+        q{DELETE FROM inclusion_table
+          WHERE target_inclusion = ? AND role_inclusion = ? AND
+                update_epoch_inclusion < ?},
+        $self->get_id, $role, $now);
+}
+
 ## The previous function (sync_include) is to be called by the task_manager.
 ## This one is to be called from anywhere else. This function deletes the
 ## scheduled
@@ -7088,11 +7162,13 @@ sub sync_include_admin {
 
         ## Load a hash with the new admin user list from an include source(s)
         my $new_admin_users_include;
+        my @depend_on;
         ## Load a hash with the new admin user users from the list config
         my $new_admin_users_config;
         unless ($option and $option eq 'purge') {
-            $new_admin_users_include =
-                $self->_load_list_admin_from_include($role);
+            my $result = $self->_load_list_admin_from_include($role) || {};
+            $new_admin_users_include = $result->{users};
+            @depend_on = @{$result->{depend_on} || []};
 
             ## If include sources were not available, do not update admin
             ## users
@@ -7105,6 +7181,9 @@ sub sync_include_admin {
                     'sync_include_admin_failed', {});
                 return undef;
             }
+
+            # Update inclusion_table (added on 6.2.16).
+            $self->_update_inclusion_table($role, @depend_on);
 
             $new_admin_users_config =
                 $self->_load_list_admin_from_config($role);
@@ -9326,20 +9405,18 @@ sub purge {
                 $self->{'name'}, $self->{'domain'}
             )
             ) {
-            $log->syslog('err', 'Cannot remove list %s (robot %s) from table',
-                $self->{'name'}, $self->{'domain'});
+            $log->syslog('err', 'Cannot remove list %s from table', $self);
         }
     #}
     unless (
         $sdm
         and $sdm->do_prepared_query(
             q{DELETE FROM inclusion_table
-              WHERE list_inclusion = ? AND robot_inclusion = ?},
-            $self->{'name'}, $self->{'domain'}
+              WHERE target_inclusion = ?},
+            $self->get_id
         )
         ) {
-        $log->syslog('err', 'Cannot remove list %s (robot %s) from table',
-            $self->{'name'}, $self->{'domain'});
+        $log->syslog('err', 'Cannot remove list %s from table', $self);
     }
 
     ## Clean memory cache
@@ -9788,43 +9865,6 @@ sub _update_list_db {
         $sth = pop @sth_stack;
         return undef;
     }
-
-    # Update inclusion_table: This feature was added on 6.2.16.
-    my $now = time;
-    foreach my $l (@{$self->{'admin'}{'include_list'} || []}) {
-        $l =~ s/\s+filter\s+.+//;
-        my ($name, $domain) = map { lc $_ } split /\@/, $l, 2;
-        $domain ||= $self->{'domain'};
-
-        unless (
-            $sth = $sdm->do_prepared_query(
-                q{UPDATE inclusion_table
-                  SET update_epoch_inclusion = ?
-                  WHERE list_inclusion = ? AND robot_inclusion = ? AND
-                        included_list_inclusion = ? AND
-                        included_robot_inclusion = ? AND
-                        (update_epoch_inclusion IS NULL OR
-                         update_epoch_inclusion < ?)},
-            $now, $self->{'name'}, $self->{'domain'}, $name, $domain, $now)
-            and $sth->rows
-            or $sth = $sdm->do_prepared_query(
-                q{INSERT INTO inclusion_table
-                  (list_inclusion, robot_inclusion,
-                   included_list_inclusion, included_robot_inclusion,
-                   update_epoch_inclusion)
-                  VALUES (?, ?, ?, ?, ?)},
-                $self->{'name'}, $self->{'domain'}, $name, $domain, $now)
-            and $sth->rows) {
-            $log->syslog('err', 'Unable to update list %s in database', $self);
-            $sth = pop @sth_stack;
-            return undef;
-        }
-    }
-    $sdm->do_prepared_query(
-        q{DELETE FROM inclusion_table
-          WHERE list_inclusion = ? AND robot_inclusion = ? AND
-                update_epoch_inclusion < ?},
-        $self->{'name'}, $self->{'domain'}, $now);
 
     $sth = pop @sth_stack;
 

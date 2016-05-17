@@ -54,6 +54,22 @@ go
 
 /* -------------------------------------------------------- */
 
+/* Table structure for table `inclusion_table` */
+ 
+
+create table inclusion_table 
+( 
+	 target_inclusion 	varchar(131) NOT NULL, 
+	 role_inclusion 	varchar(15) NOT NULL,
+	 source_inclusion 	varchar(131) NOT NULL, 
+	 update_epoch_inclusion 	numeric, 
+	 constraint ind_inclusion PRIMARY KEY (target_inclusion, role_inclusion, source_inclusion)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
 /* Table structure for table `exclusion_table` */
  
 

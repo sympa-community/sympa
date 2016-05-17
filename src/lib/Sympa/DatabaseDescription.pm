@@ -33,6 +33,8 @@ my $email_struct  = sprintf 'varchar(%d)', Sympa::Constants::EMAIL_LEN();
 my $family_struct = sprintf 'varchar(%d)', Sympa::Constants::FAMILY_LEN();
 my $list_struct   = sprintf 'varchar(%d)', Sympa::Constants::LIST_LEN();
 my $robot_struct  = sprintf 'varchar(%d)', Sympa::Constants::ROBOT_LEN();
+my $list_id_struct = sprintf 'varchar(%d)',
+    Sympa::Constants::LIST_LEN() + 1 + Sympa::Constants::ROBOT_LEN();
 
 my %full_db_struct = (
     'subscriber_table' => {
@@ -420,38 +422,31 @@ my %full_db_struct = (
     },
     'inclusion_table' => {
         'fields' => {
-            'list_inclusion' => {
-                'struct' => $list_struct,
-                'doc'      => 'list name of including list',
+            'target_inclusion' => {
+                'struct'   => $list_id_struct,
+                'doc'      => 'list ID of including list',
                 'order'    => 1,
                 'primary'  => 1,
                 'not_null' => 1,
             },
-            'robot_inclusion' => {
-                'struct'   => $robot_struct,
-                'doc'      => 'robot (domain) name of the list',
+            'role_inclusion' => {
+                'struct'   => "enum('member','owner','editor')",
+                'doc'      => 'role of included user',
                 'order'    => 2,
                 'primary'  => 1,
                 'not_null' => 1,
             },
-            'included_list_inclusion' => {
-                'struct' => $list_struct,
-                'doc'      => 'list name of included list',
-                'order'    => 4,
-                'primary'  => 1,
-                'not_null' => 1,
-            },
-            'included_robot_inclusion' => {
-                'struct'   => $robot_struct,
-                'doc'      => 'robot (domain) name of included list',
-                'order'    => 5,
+            'source_inclusion' => {
+                'struct'   => $list_id_struct,
+                'doc'      => 'list ID of included list',
+                'order'    => 3,
                 'primary'  => 1,
                 'not_null' => 1,
             },
             'update_epoch_inclusion' => {
                 'struct' => 'int(11)',
                 'doc'    => 'the date this entry was created or updated',
-                'order'  => 6,
+                'order'  => 4,
             },
         },
         'doc' =>
