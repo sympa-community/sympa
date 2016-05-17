@@ -391,6 +391,49 @@ sub smart_lessthan {
     }
 }
 
+=over
+
+=item sort_uniq ( [ \&comp ], @items )
+
+Returns sorted array of unique elements in the list.
+
+Parameters:
+
+=over
+
+=item \&comp
+
+Optional subroutine reference to compare each pairs of elements.
+It should take two arguments and return negative, zero or positive result.
+
+=item @items
+
+Items to be sorted.
+
+=back
+
+This function was added on Sympa 6.2.16.
+
+=back
+
+=cut
+
+sub sort_uniq {
+    my $comp;
+    if (ref $_[0] eq 'CODE') {
+        $comp = shift;
+    }
+
+    my %items;
+    @items{@_} = ();
+
+    if ($comp) {
+        return sort { $comp->($a, $b) } keys %items;
+    } else {
+        return sort keys %items;
+    }
+}
+
 # Create a custom attribute from an XML description
 # IN : A string, XML formed data as stored in database
 # OUT : HASH data storing custome attributes.
