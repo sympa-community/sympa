@@ -4801,21 +4801,18 @@ sub _include_users_remote_sympa_list {
 
 ## include a list as subscribers.
 sub _include_users_list {
-    my ($users, $includelistname, $robot, $default_user_options, $tied) = @_;
     $log->syslog('debug2', '');
+    my $users                = shift;
+    my $includelistname      = shift;
+    my $filter               = shift;
+    my $id                   = shift;
+    my $robot                = shift;
+    my $default_user_options = shift;
+    my $tied                 = shift;
 
     my $total = 0;
-    my $filter;
 
-    my $id = Sympa::Datasource::_get_datasource_id($includelistname);
-
-    my $filter_regex = '('
-        . Sympa::Regexps::listname() . '(?:\@'
-        . Sympa::Regexps::host()
-        . ')?)\s+filter\s+(.+)';
-    if ($includelistname =~ m/$filter_regex/) {
-        $includelistname = $1;
-        $filter          = $2;
+    if (defined $filter and length $filter) {
         chomp $filter;
         # Build tt2.
         $filter =~
@@ -4844,7 +4841,7 @@ sub _include_users_list {
         $user = $includelist->get_next_list_member()
         ) {
         # Do we need filtering ?
-        if (defined $filter) {
+        if (defined $filter and length $filter) {
             # Prepare available variables
             my $variables = {};
             $variables->{$_} = $user->{$_} foreach (keys %$user);
@@ -5871,7 +5868,8 @@ sub _load_list_members_from_include {
             } @sources_providing_listmembers
     };
 
-    my (%users, $depend_on);
+    my %users;
+    my @depend_on;
     my $total = 0;
     my @errors;
     my @ex_sources;
@@ -6081,8 +6079,23 @@ sub _load_list_members_from_include {
                         {'type' => $type, 'name' => $incl->{'name'}};
                 }
             } elsif ($type eq 'include_list') {
-                $depend_on->{$self->{'name'}} = 1;
-                if (_inclusion_loop($self->{'name'}, $incl, $depend_on)) {
+                # Parsing parameter. FIXME.
+                my ($source_id, $filter);
+                my $filter_regex = '('
+                    . Sympa::Regexps::listname() . '(?:\@'
+                    . Sympa::Regexps::host()
+                    . ')?)\s+filter\s+(.+)';
+                if ($incl =~ /\A$filter_regex/) {
+                    ($source_id, $filter) = (lc $1, $2);
+                    undef $filter unless $filter =~ /\S/;
+                } else {
+                     $source_id = $incl;
+                }
+                $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
+                    unless 0 < index($source_id, '@');
+                $source_id = lc $source_id;
+
+                if ($self->_inclusion_loop('member', $source_id)) {
                     $log->syslog(
                         'err',
                         'Loop detection in list inclusion: could not include again %s in list %s',
@@ -6090,12 +6103,15 @@ sub _load_list_members_from_include {
                         $self
                     );
                 } else {
-                    $depend_on->{$incl} = 1;
                     $included =
-                        _include_users_list(\%users, $incl, $self->{'domain'},
+                        _include_users_list(\%users, $source_id, $filter,
+                        Sympa::Datasource::_get_datasource_id($incl),
+                        $self->{'domain'},
                         $self->{'admin'}{'default_user_options'});
                     unless (defined $included) {
                         push @errors, {'type' => $type, 'name' => $incl};
+                    } else {
+                        push @depend_on, $source_id;
                     }
                 }
             } elsif ($type eq 'include_file') {
@@ -6129,18 +6145,7 @@ sub _load_list_members_from_include {
         users      => \%users,
         errors     => \@errors,
         exclusions => \@ex_sources,
-        depend_on  => [
-            Sympa::Tools::Data::sort_uniq(
-                grep { $self->get_id ne $_ }
-                map {
-                    # Canonicalize list ID. FIXME.
-                    my $list_id = $_;
-                    $list_id =~ s/\s+filter\s+.*\z//;
-                    $list_id = sprintf '%s@%s', $list_id, $self->{'domain'}
-                        unless $list_id =~ /\@/;
-                    lc $list_id
-                } keys %$depend_on)
-            ],
+        depend_on  => [Sympa::Tools::Data::sort_uniq(@depend_on)],
     };
     ##use Data::Dumper;
     ##if(open OUT, '>/tmp/result') { print OUT Dumper $result; close OUT }
@@ -6154,7 +6159,8 @@ sub _load_list_admin_from_include {
 
     $log->syslog('debug2', '(%s) For list %s', $role, $name);
 
-    my (%admin_users, $depend_on);
+    my %admin_users;
+    my @depend_on;
     my $total      = 0;
     my $list_admin = $self->{'admin'};
     my $dir        = $self->{'dir'};
@@ -6301,20 +6307,41 @@ sub _load_list_admin_from_include {
                         $self->_include_users_remote_sympa_list(\%admin_users,
                         $incl, $dir, $self->{'domain'}, \%option);
                 } elsif ($type eq 'include_list') {
-                    $depend_on->{$name} = 1;
-                    if (_inclusion_loop($name, $incl, $depend_on)) {
+                    # Parsing parameter. FIXME.
+                    my ($source_id, $filter);
+                    my $filter_regex = '('
+                        . Sympa::Regexps::listname() . '(?:\@'
+                        . Sympa::Regexps::host()
+                        . ')?)\s+filter\s+(.+)';
+                    if ($incl =~ /\A$filter_regex/) {
+                        ($source_id, $filter) = (lc $1, $2);
+                        undef $filter unless $filter =~ /\S/;
+                    } else {
+                         $source_id = $incl;
+                    }
+                    $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
+                        unless 0 < index($source_id, '@');
+                    $source_id = lc $source_id;
+
+                    if ($source_id eq $self->get_id) { #FIXME: Required?
                         $log->syslog(
                             'err',
-                            'Loop detection in list inclusion: could not include again %s in %s',
+                            'Loop detection in list inclusion: could not include again %s in %s of %s',
                             $incl,
-                            $name
+                            $role,
+                            $self
                         );
                     } else {
-                        $depend_on->{$incl} = 1;
                         $included = _include_users_list(
-                            \%admin_users,     $incl,
+                            \%admin_users, $source_id, $filter,
+                            Sympa::Datasource::_get_datasource_id($incl),
                             $self->{'domain'}, \%option
                         );
+                        unless (defined $included) {
+                            # push @errors, {'type' => $type, 'name' => $incl};
+                        } else {
+                            push @depend_on, $source_id;
+                        }
                     }
                 } elsif ($type eq 'include_file') {
                     $included =
@@ -6344,19 +6371,8 @@ sub _load_list_admin_from_include {
     }
 
     return {
-        users => \%admin_users,
-        depend_on => [
-            Sympa::Tools::Data::sort_uniq(
-                grep { $self->get_id ne $_ }
-                map {
-                    # Canonicalize list ID. FIXME.
-                    my $list_id = $_;
-                    $list_id =~ s/\s+filter\s+.*\z//;
-                    $list_id = sprintf '%s@%s', $list_id, $self->{'domain'}
-                        unless $list_id =~ /\@/;
-                    lc $list_id
-                } keys %$depend_on)
-        ],
+        users     => \%admin_users,
+        depend_on => [Sympa::Tools::Data::sort_uniq(@depend_on)],
     };
 }
 
@@ -7162,13 +7178,12 @@ sub sync_include_admin {
 
         ## Load a hash with the new admin user list from an include source(s)
         my $new_admin_users_include;
-        my @depend_on;
         ## Load a hash with the new admin user users from the list config
         my $new_admin_users_config;
         unless ($option and $option eq 'purge') {
             my $result = $self->_load_list_admin_from_include($role) || {};
             $new_admin_users_include = $result->{users};
-            @depend_on = @{$result->{depend_on} || []};
+            my @depend_on = @{$result->{depend_on} || []};
 
             ## If include sources were not available, do not update admin
             ## users
@@ -7182,9 +7197,6 @@ sub sync_include_admin {
                 return undef;
             }
 
-            # Update inclusion_table (added on 6.2.16).
-            $self->_update_inclusion_table($role, @depend_on);
-
             $new_admin_users_config =
                 $self->_load_list_admin_from_config($role);
 
@@ -7194,6 +7206,9 @@ sub sync_include_admin {
                     $role, $name);
                 return undef;
             }
+
+            # Update inclusion dependency (added on 6.2.16).
+            $self->_update_inclusion_table($role, @depend_on);
         }
 
         my @add_tab;
@@ -7485,15 +7500,51 @@ sub is_update_param {
     }
 }
 
+# Checks if adding a include_list setting will cause inclusion loop.
+#FIXME:Isn't there any more efficient way to explore DAG?
 sub _inclusion_loop {
+    my $self      = shift;
+    my $role      = shift || 'member';
+    my $source_id = shift;
 
-    my $name      = shift;
-    my $incl      = shift;
-    my $depend_on = shift;
+    my $target_id = $self->get_id;
+    my %visited;
 
-    return 1 if ($depend_on->{$incl});
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
 
-    return undef;
+    my @ancestors = ($source_id);
+    while (@ancestors) {
+        # Loop detected.
+	return 1
+            if grep { $target_id eq $_ } @ancestors;
+
+        @visited{@ancestors} = @ancestors;
+        @ancestors = Sympa::Tools::Data::sort_uniq(
+            grep {
+                # Ignore loop by other nodes to prevent infinite processing.
+                not exists $visited{$_}
+            } map {
+                my @parents;
+                if (
+                    $sdm
+                    and $sth = $sdm->do_prepared_query(
+                        q{SELECT source_inclusion
+                          FROM inclusion_table
+                          WHERE target_inclusion = ? AND role_inclusion = ?},
+                        $_, $role
+                    )
+                    ) {
+                    @parents =
+                        map { $_->[0] } @{$sth->fetchall_arrayref([0]) || []};
+                    $sth->finish;
+                }
+                @parents
+            } @ancestors
+        );
+    }
+
+    return 0;
 }
 
 sub _load_total_db {
@@ -9864,6 +9915,15 @@ sub _update_list_db {
         $log->syslog('err', 'Unable to update list %s in database', $self);
         $sth = pop @sth_stack;
         return undef;
+    }
+
+    # If inclusion settings do no longer exist, inclusion_table won't be
+    # sync'ed anymore.  Rows left behind should be removed.
+    unless ($self->has_include_data_sources) {
+        $sdm and $sdm->do_prepared_query(
+            q{DELETE FROM inclusion_table
+              WHERE target_inclusion = ?},
+            $self->get_id);
     }
 
     $sth = pop @sth_stack;
