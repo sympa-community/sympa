@@ -186,6 +186,13 @@ sub _distribute {
         $list->{'admin'}{'dkim_signature_apply_on'},
         'editor_validated_messages');
 
+    # Notify author of message.
+    $message->{envelope_sender} = $message->{sender};
+    unless ($self->{quiet}) {
+        Sympa::send_dsn($message->{context}, $message, {}, '2.1.5');
+    }
+
+    $message->{envelope_sender} = $self->{distributed_by};
     return ['Sympa::Spindle::DistributeMessage'];
 }
 
