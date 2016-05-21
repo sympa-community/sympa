@@ -6466,6 +6466,12 @@ sub _load_include_admin_user_file {
 
         $pname = $1;
 
+        ## Parameter aliases (compatibility concerns)
+        if (defined $Sympa::ListDef::alias{$pname}) {
+            $paragraph[0] =~ s/^\s*$pname/$Sympa::ListDef::alias{$pname}/;
+            $pname = $Sympa::ListDef::alias{$pname};
+        }
+
         unless ($config_in_admin_user_file{$pname}) {
             $log->syslog('info', 'Unknown parameter "%s" in %s',
                 $pname, $file);
@@ -6507,6 +6513,14 @@ sub _load_include_admin_user_file {
                 }
 
                 my $key = $1;
+
+                # Subparameter aliases (compatibility concerns).
+                # Note: subparameter alias was introduced by 6.2.15.
+                if (defined $Sympa::ListDef::alias{"$pname.$key"}) {
+                    $paragraph[$i] =~
+                        s/^\s*$key/$Sympa::ListDef::alias{"$pname.$key"}/;
+                    $key = $Sympa::ListDef::alias{"$pname.$key"};
+                }
 
                 unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
                     $log->syslog('info',
