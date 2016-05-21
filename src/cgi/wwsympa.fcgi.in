@@ -182,6 +182,7 @@ our %comm = (
     'lists_categories' => 'do_lists_categories',
     'latest_lists'     => 'do_latest_lists',
     'active_lists'     => 'do_active_lists',
+    'including_lists'  => 'do_including_lists',
     'info'             => 'do_info',
     'subscriber_count' => 'do_subscriber_count',
     'review'           => 'do_review',
@@ -355,6 +356,7 @@ our %action_args = (
     'lists'        => ['topic', 'subtopic'],
     'latest_lists' => ['topic', 'subtopic'],
     'active_lists' => ['topic', 'subtopic'],
+    'including_lists' => ['list'],
     'login'        => ['email', 'passwd', 'previous_action', 'previous_list'],
     'sso_login' => ['auth_service_name', 'subaction', 'email', 'ticket'],
     'sso_login_succeeded' =>
@@ -546,6 +548,7 @@ our %required_args = (
     'get_pending_lists'  => ['param.user.email'],
     'ignoresig'            => ['param.list', 'param.user.email'],
     'ignoresub'            => ['param.list', 'param.user.email'],
+    'including_lists'      => ['param.list', 'param.user.email'],
     'info'                 => ['param.list'],
     'install_pending_list' => ['param.user.email'],
     'edit_config'          => ['param.user.email'],
@@ -647,6 +650,7 @@ our %required_privileges = (
     'get_pending_lists'    => ['listmaster'],
     'ignoresig'            => ['owner', 'editor'],
     'ignoresub'            => ['owner', 'editor'],
+    'including_lists'      => ['owner', 'listmaster'],
     'install_pending_list' => ['listmaster'],
     'edit_config'          => ['listmaster'],
     'ls_templates'         => ['listmaster'],
@@ -4840,6 +4844,45 @@ sub do_active_lists {
     }
 
     $param->{'which'} = undef;
+
+    return 1;
+}
+
+sub do_including_lists {
+    my %which;
+
+    foreach my $role (qw(member owner editor)) {
+        foreach my $l (@{$list->get_including_lists($role) || []}) {
+            unless (exists $which{$l->get_id}) {
+                # Check visibility.
+                my $result = Sympa::Scenario::request_action(
+                    $l,
+                    'visibility',
+                    $param->{'auth_method'},
+                    {   'sender'      => $param->{'user'}{'email'},
+                        'remote_host' => $param->{'remote_host'},
+                        'remote_addr' => $param->{'remote_addr'},
+                        'options'     => {'dont_reload_scenario' => 1}
+                    }
+                );
+                my $action = $result->{'action'} if ref $result eq 'HASH';
+                next unless $action;
+
+                $which{$l->get_id} = {
+                   host    => $l->{'admin'}{'host'},
+                   name    => $l->{'name'},
+                   robot   => $l->{'domain'},
+                   subject => ($l->{'admin'}{'subject'} || $l->{'name'}),
+                   url_abs => Sympa::get_url($l, 'info'),
+                   url_rel => Sympa::get_url($l, 'info', authority => 'omit'),
+                   visible => ($action =~ /\Ado_it\b/i),
+                };
+            }
+            $which{$l->get_id}->{$role . '_include'} = 1;
+        }
+    }
+
+    $param->{which} = {%which};
 
     return 1;
 }

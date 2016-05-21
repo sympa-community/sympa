@@ -7629,6 +7629,65 @@ sub _save_list_members_file {
 
 =over 4
 
+=item get_including_lists ( $role )
+
+I<Instance method>.
+List of lists including specified list and hosted by a whole site.
+
+Parameter:
+
+=over
+
+=item $role
+
+Role of included users.
+C<'member'>, C<'owner'> or C<'editor'>.
+
+=back
+
+Returns:
+
+Arrayref of <Sympa::List> instances.
+Return C<undef> on failure.
+
+=back
+
+=cut
+
+sub get_including_lists {
+    my $self = shift;
+    my $role = shift || 'member';
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    unless ($sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT target_inclusion AS "target"
+              FROM inclusion_table
+              WHERE source_inclusion = ? AND role_inclusion = ?},
+            $self->get_id, $role
+        )
+        ) {
+        $log->syslog('err', 'Cannot get lists including %s', $self);
+        return undef;
+    }
+
+    my @lists;
+    while (my $r = $sth->fetchrow_hashref('NAME_lc')) {
+        next unless $r and $r->{target};
+        my $l = __PACKAGE__->new($r->{target});
+        next unless $l;
+
+        push @lists, $l;
+    }
+    $sth->finish;
+
+    return [@lists];
+}
+
+=over 4
+
 =item get_lists( [ $that, [ options, ... ] ] )
 
 I<Function>.
