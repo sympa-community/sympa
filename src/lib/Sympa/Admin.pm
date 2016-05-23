@@ -778,8 +778,6 @@ sub rename_list {
     }
 
     # If list is included by another list, then it cannot be renamed.
-    # TODO : we should also check owner_include and editor_include, but a bit
-    # more tricky.
     unless ($param{'mode'} and $param{'mode'} eq 'copy') {
         if ($list->is_included) {
             $log->syslog('err',
@@ -1601,15 +1599,15 @@ sub change_user_email {
         my $user_entry = $list->get_list_member($in{'current_email'});
 
         if ($user_entry->{'included'} == 1) {
-            ## Check the type of data sources
-            ## If only include_list of local mailing lists, then no problem
-            ## Otherwise, notify list owner
-            ## We could also force a sync_include for local lists
+            # Check the type of data sources.
+            # If only include_sympa_list of local mailing lists, then no
+            # problem.  Otherwise, notify list owner.
+            # We could also force a sync_include for local lists.
             my $use_external_data_sources;
             foreach my $datasource_id (split(/,/, $user_entry->{'id'})) {
                 my $datasource = $list->search_datasource($datasource_id);
                 if (   !defined $datasource
-                    or $datasource->{'type'} ne 'include_list'
+                    or $datasource->{'type'} ne 'include_sympa_list'
                     or (    $datasource->{'def'} =~ /\@(.+)$/
                         and $1 ne $robot_id)
                     ) {

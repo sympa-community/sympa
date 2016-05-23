@@ -68,10 +68,10 @@ my @sources_providing_listmembers = qw/
     include_file
     include_ldap_2level_query
     include_ldap_query
-    include_list
     include_remote_file
     include_remote_sympa_list
     include_sql_query
+    include_sympa_list
     /;
 
 #XXX include_admin
@@ -4806,21 +4806,10 @@ sub _include_users_list {
     my $tied                 = shift;
 
     my $robot     = $self->{'domain'};
-
-    my $listname_regex =
-          Sympa::Regexps::listname() . '(?:\@'
-        . Sympa::Regexps::host()
-        . ')?';
-    my $filter_regex = '(' . $listname_regex . ')\s+filter\s+(.+)';
-
-    my ($source_id, $filter);
-    if ($incl =~ /\A$filter_regex/) {
-        ($source_id, $filter) = (lc $1, $2);
-    } else {
-        $source_id = lc $incl;
-    }
+    my $source_id = lc $incl->{listname};
     $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
         unless 0 < index($source_id, '@');
+    my $filter = $incl->{filter};
     my $id     = Sympa::Datasource::_get_datasource_id($incl);
 
     my $total = 0;
@@ -6085,12 +6074,12 @@ sub _load_list_members_from_include {
                     push @errors,
                         {'type' => $type, 'name' => $incl->{'name'}};
                 }
-            } elsif ($type eq 'include_list') {
+            } elsif ($type eq 'include_sympa_list') {
                 if ($self->_inclusion_loop('member', $incl, 'recursive')) {
                     $log->syslog(
                         'err',
                         'Loop detection in list inclusion: could not include again %s in list %s',
-                        $incl,
+                        $incl->{name},
                         $self
                     );
                 } else {
@@ -6099,7 +6088,7 @@ sub _load_list_members_from_include {
                         $self->{'admin'}{'default_user_options'});
                     unless (defined $included) {
                         push @errors,
-                            {'type' => $type, 'name' => $incl};
+                            {'type' => $type, 'name' => $incl->{name}};
                     } else {
                         push @depend_on, $incl;
                     }
@@ -6137,18 +6126,7 @@ sub _load_list_members_from_include {
         exclusions => \@ex_sources,
         depend_on  => [Sympa::Tools::Data::sort_uniq(map
             {
-                my $listname_regex =
-                    Sympa::Regexps::listname() . '(?:\@'
-                  . Sympa::Regexps::host()
-                  . ')?';
-                my $filter_regex = '(' . $listname_regex . ')\s+filter\s+(.+)';
-
-                my $source_id;
-                if (/\A$filter_regex/) {
-                    $source_id = lc $1;
-                } else {
-                    $source_id = lc $_;
-                }
+                my $source_id = lc $_->{listname};
                 $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
                     unless 0 < index($source_id, '@');
                 $source_id
@@ -6311,13 +6289,13 @@ sub _load_list_admin_from_include {
                     $included =
                         $self->_include_users_remote_sympa_list(\%admin_users,
                         $incl, $dir, $self->{'domain'}, \%option);
-                } elsif ($type eq 'include_list') {
+                } elsif ($type eq 'include_sympa_list') {
                     if ($self->_inclusion_loop($role, $incl, 0)) {
                         #FIXME: Required?
                         $log->syslog(
                             'err',
                             'Loop detection in list inclusion: could not include again %s in %s of %s',
-                            $incl,
+                            $incl->{name},
                             $role,
                             $self
                         );
@@ -6326,7 +6304,7 @@ sub _load_list_admin_from_include {
                             \%admin_users, $incl, \%option);
                         unless (defined $included) {
                             # push @errors,
-                            #    {'type' => $type, 'name' => $incl};
+                            #    {'type' => $type, 'name' => $incl->{name}};
                         } else {
                             push @depend_on, $incl;
                         }
@@ -6362,17 +6340,7 @@ sub _load_list_admin_from_include {
         users     => \%admin_users,
         depend_on => [Sympa::Tools::Data::sort_uniq(map
             {
-                my $listname_regex =
-                    Sympa::Regexps::listname() . '(?:\@'
-                  . Sympa::Regexps::host()
-                  . ')?';                                                                       my $filter_regex = '(' . $listname_regex . ')\s+filter\s+(.+)';
-
-                my $source_id;
-                if (/\A$filter_regex/) {
-                    $source_id = lc $1;
-                } else {
-                    $source_id = lc $_;
-                }
+                my $source_id = lc $_->{listname};
                 $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
                     unless 0 < index($source_id, '@');
                 $source_id
@@ -6391,8 +6359,10 @@ sub _load_include_admin_user_file {
     my $robot = $self->{'domain'};
 
     my $pinfo = {};
-    @{$pinfo}{@sources_providing_listmembers} =
-        @{Sympa::Robot::list_params($robot) || {}}{@sources_providing_listmembers};
+    # 'include_list' is kept for comatibility with 6.2.15 or earlier.
+    my @sources = (@sources_providing_listmembers, 'include_list');
+    @{$pinfo}{@sources} =
+        @{Sympa::Robot::list_params($robot) || {}}{@sources};
 
     my %include;
     my (@paragraphs);
@@ -6614,6 +6584,8 @@ sub _load_include_admin_user_file {
             }
         }
     }
+
+    _load_include_admin_user_postprocess(\%include);
 
     return \%include;
 }
@@ -7524,7 +7496,7 @@ sub is_update_param {
     }
 }
 
-# Checks if adding a include_list setting will cause inclusion loop.
+# Checks if adding a include_sympa_list setting will cause inclusion loop.
 #FIXME:Isn't there any more efficient way to explore DAG?
 sub _inclusion_loop {
     my $self      = shift;
@@ -7532,18 +7504,7 @@ sub _inclusion_loop {
     my $incl      = shift;
     my $recursive = shift;
 
-    my $listname_regex =
-          Sympa::Regexps::listname() . '(?:\@'
-        . Sympa::Regexps::host()
-        . ')?';
-    my $filter_regex = '(' . $listname_regex . ')\s+filter\s+(.+)';
-
-    my ($source_id, $filter);
-    if ($incl =~ /\A$filter_regex/) {
-        ($source_id, $filter) = (lc $1, $2);
-    } else {
-        $source_id = lc $incl;
-    }
+    my $source_id = lc $incl->{listname};
     $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
         unless 0 < index($source_id, '@');
     my $target_id = $self->get_id;
@@ -8963,6 +8924,7 @@ sub _load_list_config_file {
     }
 
     $self->_load_list_config_postprocess(\%admin);
+    _load_include_admin_user_postprocess(\%admin);
 
     return \%admin;
 }
@@ -9056,6 +9018,46 @@ sub _load_list_config_postprocess {
             'Reception is not compatible between default_user_options and available_user_options in configuration of %s',
             $self
         );
+    }
+}
+
+# Proprocessing particular parameters specific to datasources.
+sub _load_include_admin_user_postprocess {
+    my $config_hash = shift;
+
+    # The include_list was obsoleted by include_sympa_list on 6.2.16.
+    if ($config_hash->{'include_list'}) {
+        my $listname_regex =
+              Sympa::Regexps::listname() . '(?:\@'
+            . Sympa::Regexps::host()
+            . ')?';
+        my $filter_regex = '(' . $listname_regex . ')\s+filter\s+(.+)';
+
+        $config_hash->{'include_sympa_list'} ||= [];
+        foreach my $incl (@{$config_hash->{'include_list'} || []}) {
+            next unless defined $incl and $incl =~ /\S/;
+
+            my ($listname, $filter);
+            if ($incl =~ /\A$filter_regex/) {
+                ($listname, $filter) = (lc $1, $2);
+                undef $filter unless $filter =~ /\S/;
+            } elsif ($incl =~ /\A$listname_regex\z/) {
+                $listname = lc $incl;
+            } else {
+                $log->syslog('err',
+                    'Malformed value "%s" in include_list parameter. Skipped',
+                    $incl);
+                next;
+            }
+
+            push @{$config_hash->{'include_sympa_list'}}, {
+                    name     => sprintf('include_list %s', $incl),
+                    listname => $listname,
+                    filter   => $filter,
+                };
+        }
+        delete $config_hash->{'include_list'};
+        delete $config_hash->{'defaults'}{'include_sympa_list'};
     }
 }
 

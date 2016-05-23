@@ -497,39 +497,36 @@ sub upgrade {
         close BOUNCEDIR;
     }
 
-    ## Update lists config using 'include_list'
+    # Update lists config using 'include_sympa_list'
     if (lower_version($previous_version, '5.2a.1')) {
-
         $log->syslog('notice',
-            'Update lists config using include_list parameter...');
+            'Update lists config using include_sympa_list parameter...');
 
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
-
-            if (defined $list->{'admin'}{'include_list'}) {
-                my $include_lists = $list->{'admin'}{'include_list'};
+                my @include_lists =
+                    @{$list->{'admin'}{'include_sympa_list'} || []};
                 my $changed       = 0;
-                foreach my $index (0 .. $#{$include_lists}) {
-                    my $incl      = $include_lists->[$index];
-                    my $incl_list = Sympa::List->new($incl);
+                foreach my $incl (@include_lists) {
+                    # Search for the list if robot is not specified.
+                    my $incl_list = Sympa::List->new($incl->{listname});
 
-                    if (defined $incl_list
+                    if ($incl_list
                         and $incl_list->{'domain'} ne $list->{'domain'}) {
                         $log->syslog(
                             'notice',
                             'Update config file of list %s, including list %s',
-                            $list->get_list_id(),
-                            $incl_list->get_list_id()
+                            $list->get_id,
+                            $incl_list->get_id
                         );
-                        $include_lists->[$index] = $incl_list->get_list_id();
+                        $incl->{listname} = $incl_list->get_id;
                         $changed = 1;
                     }
                 }
                 if ($changed) {
-                    $list->{'admin'}{'include_list'} = $include_lists;
-                    $list->save_config('listmaster@' . $list->{'domain'});
+                    $list->{'admin'}{'include_sympa_list'} = [@include_lists];
+                    $list->save_config(Sympa::get_address($list, 'listmaster'));
                 }
-            }
         }
     }
 

@@ -41,7 +41,7 @@ our @param_order =
     host lang process_archive web_archive archive digest digest_max_size available_user_options
     default_user_options msg_topic msg_topic_keywords_apply_on msg_topic_tagging reply_to_header reply_to forced_reply_to *
     verp_rate tracking welcome_return_path remind_return_path user_data_source include_file include_remote_file
-    include_list include_remote_sympa_list include_ldap_query
+    include_sympa_list include_remote_sympa_list include_ldap_query
     include_ldap_2level_query include_sql_query include_voot_group ttl distribution_ttl creation update
     status serial custom_attribute include_ldap_ca include_ldap_2level_ca include_sql_ca);
 
@@ -958,6 +958,33 @@ our %pinfo = (
         'format'     => Sympa::Regexps::listname() . '(\@'
             . Sympa::Regexps::host()
             . ')?(\s+filter\s+.+)?',
+        'occurrence' => '0-n',
+        'obsolete'   => 1, # <= 6.2.15.
+    },
+
+    'include_sympa_list' => {
+        'group'      => 'data_source',
+        'gettext_id' => "List inclusion",
+        'format'     => {
+            'name' => {
+                'order'      => 1,
+                'gettext_id' => "short name for this source",
+                'format'     => '.+',
+                'length'     => 15
+            },
+            'listname' => {
+                'order'      => 2,
+                'gettext_id' => "list name to include",
+                'format'     => Sympa::Regexps::listname() . '(\@'
+                    . Sympa::Regexps::host() . ')?',
+                'occurrence' => '1'
+            },
+            'filter' => {
+                'order'      => 3,
+                'gettext_id' => "filter definition",
+                'format'     => '.*'
+            },
+        },
         'occurrence' => '0-n'
     },
 
