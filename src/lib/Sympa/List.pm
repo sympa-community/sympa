@@ -82,6 +82,7 @@ my @more_data_sources = qw/
     /;
 
 # All non-pluggable sources are in the admin user file
+# NO LONGER USED.
 my %config_in_admin_user_file = map +($_ => 1),
     @sources_providing_listmembers;
 
@@ -803,9 +804,7 @@ sub load {
     } elsif ($self->{'name'} ne $name
         or $time_config > $last_time_config
         or $options->{'reload_config'}) {
-        $admin =
-            _load_list_config_file($self->{'dir'}, $self->{'domain'},
-            'config');
+        $admin = $self->_load_list_config_file;
 
         ## Get a shared lock on config file first
         my $lock_fh =
@@ -4502,7 +4501,6 @@ sub load_task_list {
     my ($self, $action, $robot) = @_;
     $log->syslog('debug2', '(%s, %s)', $action, $robot);
 
-    my $directory = "$self->{'dir'}";
     my %list_of_task;
 
     foreach my $dir (
@@ -4801,14 +4799,29 @@ sub _include_users_remote_sympa_list {
 
 ## include a list as subscribers.
 sub _include_users_list {
-    $log->syslog('debug2', '');
+    my $self                 = shift;
     my $users                = shift;
-    my $includelistname      = shift;
-    my $filter               = shift;
-    my $id                   = shift;
-    my $robot                = shift;
+    my $incl                 = shift;
     my $default_user_options = shift;
     my $tied                 = shift;
+
+    my $robot     = $self->{'domain'};
+
+    my $listname_regex =
+          Sympa::Regexps::listname() . '(?:\@'
+        . Sympa::Regexps::host()
+        . ')?';
+    my $filter_regex = '(' . $listname_regex . ')\s+filter\s+(.+)';
+
+    my ($source_id, $filter);
+    if ($incl =~ /\A$filter_regex/) {
+        ($source_id, $filter) = (lc $1, $2);
+    } else {
+        $source_id = lc $incl;
+    }
+    $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
+        unless 0 < index($source_id, '@');
+    my $id     = Sympa::Datasource::_get_datasource_id($incl);
 
     my $total = 0;
 
@@ -4818,20 +4831,16 @@ sub _include_users_list {
         $filter =~
             s/^((?:USE\s[^;]+;)*)(.+)/[% TRY %][% $1 %][%IF $2 %]1[%END%][% CATCH %][% error %][%END%]/;
         $log->syslog('notice', 'Applying filter on included list %s : %s',
-            $includelistname, $filter);
+            $source_id, $filter);
     }
 
     my $includelist;
 
-    ## The included list is local or in another local robot
-    if ($includelistname =~ /\@/) {
-        $includelist = Sympa::List->new($includelistname);
-    } else {
-        $includelist = Sympa::List->new($includelistname, $robot);
-    }
+    # The included list is local or in another local robot
+    $includelist = Sympa::List->new($source_id);
 
     unless ($includelist) {
-        $log->syslog('info', 'Included list %s unknown', $includelistname);
+        $log->syslog('info', 'Included list %s unknown', $source_id);
         return undef;
     }
 
@@ -4944,7 +4953,7 @@ sub _include_users_list {
         }
     }
     $log->syslog('info', "%d included users from list %s",
-        $total, $includelistname);
+        $total, $includelist);
     return $total;
 }
 
@@ -4967,7 +4976,7 @@ sub _include_users_admin {
         }
 
         foreach my $list (@$lists) {
-            #my $admin = _load_list_config_file($dir, $domain, 'config');
+            #my $admin = $list->_load_list_config_file;
         }
     }
 }
@@ -5902,8 +5911,7 @@ sub _load_list_members_from_include {
             my $include_path = $include_file;
             if ($include_path =~ s/$name$//) {
                 $parsing{'include_path'} = $include_path;
-                $include_member =
-                    _load_include_admin_user_file($self->{'domain'},
+                $include_member = $self->_load_include_admin_user_file(
                     $include_path, \%parsing);
             } else {
                 $log->syslog('err',
@@ -5914,8 +5922,7 @@ sub _load_list_members_from_include {
 
         } else {
             $include_member =
-                _load_include_admin_user_file($self->{'domain'},
-                $include_file);
+                $self->_load_include_admin_user_file($include_file);
         }
 
         if ($include_member and %$include_member) {
@@ -6079,23 +6086,7 @@ sub _load_list_members_from_include {
                         {'type' => $type, 'name' => $incl->{'name'}};
                 }
             } elsif ($type eq 'include_list') {
-                # Parsing parameter. FIXME.
-                my ($source_id, $filter);
-                my $filter_regex = '('
-                    . Sympa::Regexps::listname() . '(?:\@'
-                    . Sympa::Regexps::host()
-                    . ')?)\s+filter\s+(.+)';
-                if ($incl =~ /\A$filter_regex/) {
-                    ($source_id, $filter) = (lc $1, $2);
-                    undef $filter unless $filter =~ /\S/;
-                } else {
-                     $source_id = $incl;
-                }
-                $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
-                    unless 0 < index($source_id, '@');
-                $source_id = lc $source_id;
-
-                if ($self->_inclusion_loop('member', $source_id)) {
+                if ($self->_inclusion_loop('member', $incl, 'recursive')) {
                     $log->syslog(
                         'err',
                         'Loop detection in list inclusion: could not include again %s in list %s',
@@ -6104,14 +6095,13 @@ sub _load_list_members_from_include {
                     );
                 } else {
                     $included =
-                        _include_users_list(\%users, $source_id, $filter,
-                        Sympa::Datasource::_get_datasource_id($incl),
-                        $self->{'domain'},
+                        $self->_include_users_list(\%users, $incl,
                         $self->{'admin'}{'default_user_options'});
                     unless (defined $included) {
-                        push @errors, {'type' => $type, 'name' => $incl};
+                        push @errors,
+                            {'type' => $type, 'name' => $incl};
                     } else {
-                        push @depend_on, $source_id;
+                        push @depend_on, $incl;
                     }
                 }
             } elsif ($type eq 'include_file') {
@@ -6145,7 +6135,24 @@ sub _load_list_members_from_include {
         users      => \%users,
         errors     => \@errors,
         exclusions => \@ex_sources,
-        depend_on  => [Sympa::Tools::Data::sort_uniq(@depend_on)],
+        depend_on  => [Sympa::Tools::Data::sort_uniq(map
+            {
+                my $listname_regex =
+                    Sympa::Regexps::listname() . '(?:\@'
+                  . Sympa::Regexps::host()
+                  . ')?';
+                my $filter_regex = '(' . $listname_regex . ')\s+filter\s+(.+)';
+
+                my $source_id;
+                if (/\A$filter_regex/) {
+                    $source_id = lc $1;
+                } else {
+                    $source_id = lc $_;
+                }
+                $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
+                    unless 0 < index($source_id, '@');
+                $source_id
+            } @depend_on)],
     };
     ##use Data::Dumper;
     ##if(open OUT, '>/tmp/result') { print OUT Dumper $result; close OUT }
@@ -6202,8 +6209,7 @@ sub _load_list_admin_from_include {
             my $include_path = $include_file;
             if ($include_path =~ s/$name$//) {
                 $parsing{'include_path'} = $include_path;
-                $include_admin_user =
-                    _load_include_admin_user_file($self->{'domain'},
+                $include_admin_user = $self->_load_include_admin_user_file(
                     $include_path, \%parsing);
             } else {
                 $log->syslog('err',
@@ -6214,8 +6220,7 @@ sub _load_list_admin_from_include {
 
         } else {
             $include_admin_user =
-                _load_include_admin_user_file($self->{'domain'},
-                $include_file);
+                $self->_load_include_admin_user_file($include_file);
         }
 
         foreach my $type (@sources_providing_listmembers) {
@@ -6307,23 +6312,8 @@ sub _load_list_admin_from_include {
                         $self->_include_users_remote_sympa_list(\%admin_users,
                         $incl, $dir, $self->{'domain'}, \%option);
                 } elsif ($type eq 'include_list') {
-                    # Parsing parameter. FIXME.
-                    my ($source_id, $filter);
-                    my $filter_regex = '('
-                        . Sympa::Regexps::listname() . '(?:\@'
-                        . Sympa::Regexps::host()
-                        . ')?)\s+filter\s+(.+)';
-                    if ($incl =~ /\A$filter_regex/) {
-                        ($source_id, $filter) = (lc $1, $2);
-                        undef $filter unless $filter =~ /\S/;
-                    } else {
-                         $source_id = $incl;
-                    }
-                    $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
-                        unless 0 < index($source_id, '@');
-                    $source_id = lc $source_id;
-
-                    if ($source_id eq $self->get_id) { #FIXME: Required?
+                    if ($self->_inclusion_loop($role, $incl, 0)) {
+                        #FIXME: Required?
                         $log->syslog(
                             'err',
                             'Loop detection in list inclusion: could not include again %s in %s of %s',
@@ -6332,15 +6322,13 @@ sub _load_list_admin_from_include {
                             $self
                         );
                     } else {
-                        $included = _include_users_list(
-                            \%admin_users, $source_id, $filter,
-                            Sympa::Datasource::_get_datasource_id($incl),
-                            $self->{'domain'}, \%option
-                        );
+                        $included = $self->_include_users_list(
+                            \%admin_users, $incl, \%option);
                         unless (defined $included) {
-                            # push @errors, {'type' => $type, 'name' => $incl};
+                            # push @errors,
+                            #    {'type' => $type, 'name' => $incl};
                         } else {
-                            push @depend_on, $source_id;
+                            push @depend_on, $incl;
                         }
                     }
                 } elsif ($type eq 'include_file') {
@@ -6372,16 +6360,40 @@ sub _load_list_admin_from_include {
 
     return {
         users     => \%admin_users,
-        depend_on => [Sympa::Tools::Data::sort_uniq(@depend_on)],
+        depend_on => [Sympa::Tools::Data::sort_uniq(map
+            {
+                my $listname_regex =
+                    Sympa::Regexps::listname() . '(?:\@'
+                  . Sympa::Regexps::host()
+                  . ')?';                                                                       my $filter_regex = '(' . $listname_regex . ')\s+filter\s+(.+)';
+
+                my $source_id;
+                if (/\A$filter_regex/) {
+                    $source_id = lc $1;
+                } else {
+                    $source_id = lc $_;
+                }
+                $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
+                    unless 0 < index($source_id, '@');
+                $source_id
+            } @depend_on)],
     };
 }
 
 # Load an include admin user file (xx.incl)
+#FIXME: Would be merged to _load_list_config_file() which mostly duplicates.
 sub _load_include_admin_user_file {
     $log->syslog('debug3', '(%s, %s, %s)', @_);
-    my ($robot, $file, $parsing) = @_;
+    my $self    = shift;
+    my $file    = shift;
+    my $parsing = shift;
 
-    my $pinfo = Sympa::Robot::list_params($robot);
+    my $robot = $self->{'domain'};
+
+    my $pinfo = {};
+    @{$pinfo}{@sources_providing_listmembers} =
+        @{Sympa::Robot::list_params($robot) || {}}{@sources_providing_listmembers};
+
     my %include;
     my (@paragraphs);
 
@@ -6410,7 +6422,8 @@ sub _load_include_admin_user_file {
             }
         }
     } else {
-        unless (open INCLUDE, $file) {
+        my $fh;
+        unless (open $fh, '<', $file) {
             $log->syslog('info', 'Cannot open %s', $file);
         }
 
@@ -6419,14 +6432,14 @@ sub _load_include_admin_user_file {
 
         ## Split in paragraphs
         my $i = 0;
-        while (<INCLUDE>) {
+        while (<$fh>) {
             if (/^\s*$/) {
                 $i++ if $paragraphs[$i];
             } else {
                 push @{$paragraphs[$i]}, $_;
             }
         }
-        close INCLUDE;
+        close $fh;
     }
 
     for my $index (0 .. $#paragraphs) {
@@ -6472,7 +6485,7 @@ sub _load_include_admin_user_file {
             $pname = $Sympa::ListDef::alias{$pname};
         }
 
-        unless ($config_in_admin_user_file{$pname}) {
+        unless ($pinfo->{$pname}) {
             $log->syslog('info', 'Unknown parameter "%s" in %s',
                 $pname, $file);
             next;
@@ -6539,8 +6552,7 @@ sub _load_include_admin_user_file {
                     next;
                 }
 
-                $hash{$key} =
-                    _load_list_param($robot, $key, $1,
+                $hash{$key} = $self->_load_list_param($key, $1,
                     $pinfo->{$pname}{'file_format'}{$key});
             }
 
@@ -6552,8 +6564,7 @@ sub _load_include_admin_user_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}
                         {'default'}) {
-                        $hash{$k} =
-                            _load_list_param($robot, $k, 'default',
+                        $hash{$k} = $self->_load_list_param($k, 'default',
                             $pinfo->{$pname}{'file_format'}{$k});
                     }
                 }
@@ -6593,8 +6604,7 @@ sub _load_include_admin_user_file {
                 next;
             }
 
-            my $value =
-                _load_list_param($robot, $pname, $1, $pinfo->{$pname});
+            my $value = $self->_load_list_param($pname, $1, $pinfo->{$pname});
 
             if (($pinfo->{$pname}{'occurrence'} =~ /n$/)
                 && !(ref($value) =~ /^ARRAY/)) {
@@ -7519,14 +7529,33 @@ sub is_update_param {
 sub _inclusion_loop {
     my $self      = shift;
     my $role      = shift || 'member';
-    my $source_id = shift;
+    my $incl      = shift;
+    my $recursive = shift;
 
+    my $listname_regex =
+          Sympa::Regexps::listname() . '(?:\@'
+        . Sympa::Regexps::host()
+        . ')?';
+    my $filter_regex = '(' . $listname_regex . ')\s+filter\s+(.+)';
+
+    my ($source_id, $filter);
+    if ($incl =~ /\A$filter_regex/) {
+        ($source_id, $filter) = (lc $1, $2);
+    } else {
+        $source_id = lc $incl;
+    }
+    $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
+        unless 0 < index($source_id, '@');
     my $target_id = $self->get_id;
-    my %visited;
+
+    unless ($recursive) {
+        return ($source_id eq $target_id);
+    }
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
 
+    my %visited;
     my @ancestors = ($source_id);
     while (@ancestors) {
         # Loop detected.
@@ -8532,8 +8561,14 @@ sub _save_list_param {
 
 ## Load a single line
 sub _load_list_param {
-    $log->syslog('debug3', '(%s, %s, %s, %s, %s)', @_);
-    my ($robot, $key, $value, $p, $directory) = @_;
+    $log->syslog('debug3', '(%s, %s, %s, %s)', @_);
+    my $self  = shift;
+    my $key   = shift;
+    my $value = shift;
+    my $p     = shift;
+
+    my $robot     = $self->{'domain'};
+    my $directory = $self->{'dir'};
 
     ## Empty value
     if ($value =~ /^\s*$/) {
@@ -8649,12 +8684,15 @@ sub get_cert {
 }
 
 ## Load a config file of a list
+#FIXME: Would merge _load_include_admin_user_file() which mostly duplicates.
 sub _load_list_config_file {
-    my ($directory, $robot, $file) = @_;
-    $log->syslog('debug3', '(%s, %s, %s)', $directory, $robot, $file);
+    $log->syslog('debug3', '(%s)', @_);
+    my $self = shift;
+
+    my $robot     = $self->{'domain'};
 
     my $pinfo       = Sympa::Robot::list_params($robot);
-    my $config_file = $directory . '/' . $file;
+    my $config_file = $$self->{'dir'} . '/config';
 
     my %admin;
     my (@paragraphs);
@@ -8801,9 +8839,8 @@ sub _load_list_config_file {
                     next;
                 }
 
-                $hash{$key} =
-                    _load_list_param($robot, $key, $1,
-                    $pinfo->{$pname}{'file_format'}{$key}, $directory);
+                $hash{$key} = $self->_load_list_param($key, $1,
+                    $pinfo->{$pname}{'file_format'}{$key});
             }
 
             ## Apply defaults & Check required keys
@@ -8814,9 +8851,8 @@ sub _load_list_config_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}
                         {'default'}) {
-                        $hash{$k} =
-                            _load_list_param($robot, $k, 'default',
-                            $pinfo->{$pname}{'file_format'}{$k}, $directory);
+                        $hash{$k} = $self->_load_list_param($k, 'default',
+                            $pinfo->{$pname}{'file_format'}{$k});
                     }
                 }
 
@@ -8858,9 +8894,7 @@ sub _load_list_config_file {
                 next;
             }
 
-            my $value =
-                _load_list_param($robot, $pname, $1, $pinfo->{$pname},
-                $directory);
+            my $value = $self->_load_list_param($pname, $1, $pinfo->{$pname});
 
             delete $admin{'defaults'}{$pname};
 
@@ -8888,9 +8922,8 @@ sub _load_list_config_file {
 
             ## Simple (versus structured) parameter case
             if (defined $pinfo->{$p}{'default'}) {
-                $admin{$p} =
-                    _load_list_param($robot, $p, $pinfo->{$p}{'default'},
-                    $pinfo->{$p}, $directory);
+                $admin{$p} = $self->_load_list_param($p,
+                    $pinfo->{$p}{'default'}, $pinfo->{$p});
 
                 ## Sructured parameters case : the default values are defined
                 ## at the next level
@@ -8906,10 +8939,9 @@ sub _load_list_config_file {
                         next;
                     }
 
-                    $hash->{$key} = _load_list_param(
-                        $robot, $key,
+                    $hash->{$key} = $self->_load_list_param($key,
                         $pinfo->{$p}{'format'}{$key}{'default'},
-                        $pinfo->{$p}{'format'}{$key}, $directory
+                        $pinfo->{$p}{'format'}{$key}
                     );
                 }
 
@@ -8930,9 +8962,19 @@ sub _load_list_config_file {
         }
     }
 
+    $self->_load_list_config_postprocess(\%admin);
+
+    return \%admin;
+}
+
+# Proprocessing particular parameters.
+sub _load_list_config_postprocess {
+    my $self        = shift;
+    my $config_hash = shift;
+
     ## "Original" parameters
-    if (defined($admin{'digest'})) {
-        if ($admin{'digest'} =~ /^(.+)\s+(\d+):(\d+)$/) {
+    if (defined($config_hash->{'digest'})) {
+        if ($config_hash->{'digest'} =~ /^(.+)\s+(\d+):(\d+)$/) {
             my $digest = {};
             $digest->{'hour'}   = $2;
             $digest->{'minute'} = $3;
@@ -8940,50 +8982,50 @@ sub _load_list_config_file {
             $days =~ s/\s//g;
             @{$digest->{'days'}} = split /,/, $days;
 
-            $admin{'digest'} = $digest;
+            $config_hash->{'digest'} = $digest;
         }
     }
+
     # The 'host' parameter is ignored if the list is stored on a
-    #  virtual robot directory
+    # virtual robot directory.
+    # $config_hash->{'host'} = $self{'domain'} if ($self{'dir'} ne '.');
 
-    # $admin{'host'} = $self{'domain'} if ($self{'dir'} ne '.');
-
-    if (defined($admin{'custom_subject'})) {
-        if ($admin{'custom_subject'} =~ /^\s*\[\s*(\w+)\s*\]\s*$/) {
-            $admin{'custom_subject'} = $1;
+    if (defined($config_hash->{'custom_subject'})) {
+        if ($config_hash->{'custom_subject'} =~ /^\s*\[\s*(\w+)\s*\]\s*$/) {
+            $config_hash->{'custom_subject'} = $1;
         }
     }
 
     ## Format changed for reply_to parameter
     ## New reply_to_header parameter
-    if ((   $admin{'forced_reply_to'}
-            && !$admin{'defaults'}{'forced_reply_to'}
+    if ((   $config_hash->{'forced_reply_to'}
+            && !$config_hash->{'defaults'}{'forced_reply_to'}
         )
-        || ($admin{'reply_to'} && !$admin{'defaults'}{'reply_to'})
+        || ($config_hash->{'reply_to'} && !$config_hash->{'defaults'}{'reply_to'})
         ) {
         my ($value, $apply, $other_email);
-        $value = $admin{'forced_reply_to'} || $admin{'reply_to'};
-        $apply = 'forced' if ($admin{'forced_reply_to'});
+        $value = $config_hash->{'forced_reply_to'} || $config_hash->{'reply_to'};
+        $apply = 'forced' if ($config_hash->{'forced_reply_to'});
         if ($value =~ /\@/) {
             $other_email = $value;
             $value       = 'other_email';
         }
 
-        $admin{'reply_to_header'} = {
+        $config_hash->{'reply_to_header'} = {
             'value'       => $value,
             'other_email' => $other_email,
             'apply'       => $apply
         };
 
         ## delete old entries
-        $admin{'reply_to'}        = undef;
-        $admin{'forced_reply_to'} = undef;
+        $config_hash->{'reply_to'}        = undef;
+        $config_hash->{'forced_reply_to'} = undef;
     }
 
     # lang
     # canonicalize language
-    unless ($admin{'lang'} = Sympa::Language::canonic_lang($admin{'lang'})) {
-        $admin{'lang'} = Conf::get_robot_conf($robot, 'lang');
+    unless ($config_hash->{'lang'} = Sympa::Language::canonic_lang($config_hash->{'lang'})) {
+        $config_hash->{'lang'} = Conf::get_robot_conf($self->{'domain'}, 'lang');
     }
 
     ############################################
@@ -8991,29 +9033,30 @@ sub _load_list_config_file {
     ############################################
 
     ## This default setting MUST BE THE LAST ONE PERFORMED
-#    if ($admin{'status'} ne 'open') {
-#	## requested and closed list are just list hidden using visibility parameter
-#	## and with send parameter set to closed.
-#	$admin{'send'} = _load_list_param('.','send', 'closed', $pinfo->{'send'}, $directory);
-#	$admin{'visibility'} = _load_list_param('.','visibility', 'conceal', $pinfo->{'visibility'}, $directory);
-#    }
+    #if ($config_hash->{'status'} ne 'open') {
+    #    # requested and closed list are just list hidden using visibility
+    #    # parameter and with send parameter set to closed.
+    #    $config_hash->{'send'} =
+    #        $self->_load_list_param('send', 'closed', $pinfo->{'send'});
+    #    $config_hash->{'visibility'} =
+    #        $self->_load_list_param('visibility', 'conceal',
+    #            $pinfo->{'visibility'});
+    #}
 
     ## reception of default_user_options must be one of reception of
     ## available_user_options. If none, warning and put reception of
     ## default_user_options in reception of available_user_options
-    if (!grep (/^$admin{'default_user_options'}{'reception'}$/,
-            @{$admin{'available_user_options'}{'reception'}})
+    if (!grep (/^$config_hash->{'default_user_options'}{'reception'}$/,
+            @{$config_hash->{'available_user_options'}{'reception'}})
         ) {
-        push @{$admin{'available_user_options'}{'reception'}},
-            $admin{'default_user_options'}{'reception'};
+        push @{$config_hash->{'available_user_options'}{'reception'}},
+            $config_hash->{'default_user_options'}{'reception'};
         $log->syslog(
             'info',
-            'Reception is not compatible between default_user_options and available_user_options in %s',
-            $directory
+            'Reception is not compatible between default_user_options and available_user_options in configuration of %s',
+            $self
         );
     }
-
-    return \%admin;
 }
 
 ## Save a config file
@@ -9430,9 +9473,7 @@ sub close_list {
         unless ($self
         && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
 
-    ## If list is included by another list, then it cannot be removed
-    ## TODO : we should also check owner_include and editor_include, but a bit
-    ## more tricky
+    # If list is included by another list, then it cannot be removed.
     if ($self->is_included) {
         $log->syslog('err',
             'List %s is included by other list: cannot close it', $self);
