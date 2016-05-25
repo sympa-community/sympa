@@ -8653,7 +8653,7 @@ sub _load_list_config_file {
     my $robot     = $self->{'domain'};
 
     my $pinfo       = Sympa::Robot::list_params($robot);
-    my $config_file = $$self->{'dir'} . '/config';
+    my $config_file = $self->{'dir'} . '/config';
 
     my %admin;
     my (@paragraphs);
