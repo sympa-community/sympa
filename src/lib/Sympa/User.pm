@@ -563,10 +563,6 @@ sub update_global_user {
         $sth = pop @sth_stack;
         return undef;
     }
-    unless ($sth->rows) {
-        $sth = pop @sth_stack;
-        return 0;
-    }
 
     $sth = pop @sth_stack;
 
