@@ -4164,7 +4164,9 @@ sub do_help {
     if ($in{'help_topic'}) {
         if ($in{'help_topic'} eq 'editlist') {
             foreach my $pname (sort Sympa::List::by_order keys %{$pinfo}) {
-                next if ($pname =~ /^(comment|defaults)$/);
+                next if grep { $pname eq $_ } qw(comment defaults);
+                # Skip obsoleted parameters and alias names.
+                next if $pinfo->{$pname}{'obsolete'};
 
                 if ($pinfo->{$pname}{'gettext_id'}) {
                     $param->{'param'}{$pname}{'title'} =
@@ -11908,26 +11910,25 @@ sub do_edit_list {
             unless (
             $list->may_edit($pname, $param->{'user'}{'email'}) eq 'write');
 
-        ## If the list belongs to a family, gather all the constraints for
-        ## each edited parameter.
-        if (ref($family) eq 'Sympa::Family') {
-
-            if ((ref($pinfo->{$pname}{'format'}) ne 'HASH') && (!ref($pname)))
-            {
-                # simple parameter
+        # If the list belongs to a family, gather all the constraints for
+        # each edited parameter.
+        if (ref $family eq 'Sympa::Family') {
+            unless (ref $pinfo->{$pname}{'format'} eq 'HASH' or ref $pname) {
+                # Simple parameter.
                 my $constraint = $family->get_param_constraint($pname);
 
-                if (ref($constraint) eq 'HASH') {    # controlled parameter
+                if (ref $constraint eq 'HASH') {
+                    # Controlled parameter.
                     $check_family{$pname} = $constraint;
 
-                } elsif ($constraint ne '0')
-                {    # fixed parameter (free : no control)
+                } elsif ($constraint ne '0') {
+                    # Fixed parameter (free : no control).
                     next;
                 }
             }
         }
 
-        ## Skip the obsolete parameters.
+        # Skip the obsolete parameters and alias names.
         next if $pinfo->{$pname}{'obsolete'};
 
         ## $to_index value will correspond to the number of not empty
@@ -11948,7 +11949,7 @@ sub do_edit_list {
                 if (ref($pinfo->{$pname}{'format'}) eq 'HASH') {
                     ## Check each component of the complex parameter.
                     foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
-                        ## Skip the obsolete component.
+                        # Skip the obsolete component and the alias.
                         next if $pinfo->{$pname}{'format'}{$key}{'obsolete'};
 
                         ## As soon as a required component is found missing,
@@ -12015,7 +12016,7 @@ sub do_edit_list {
             if (ref($pinfo->{$pname}{'format'}) eq 'HASH') {
                 ## Check each component of the complex parameter.
                 foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
-                    ## Skip the obsolete component.
+                    # Skip the obsolete component and the alias.
                     next if $pinfo->{$pname}{'format'}{$key}{'obsolete'};
 
                     ## Remove the full record if a component is emtpy and
@@ -12069,7 +12070,7 @@ sub do_edit_list {
                 ## Check each parameter component.
                 ## Example: 'owner->email'
                 foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
-                    ## Skip the obsolete component.
+                    # Skip the obsolete component and the alias.
                     next if $pinfo->{$pname}{'format'}{$key}{'obsolete'};
 
                     ## Check that the user is allowed to edit this parameter
@@ -12854,14 +12855,13 @@ sub _prepare_edit_form {
 
     ## For each parameter defined in List.pm, retrieve and prepare for editing
     foreach my $pname (sort Sympa::List::by_order keys %{$pinfo}) {
+        # Skip comments and default values.
+        next if grep { $pname eq $_ } qw(comment defaults);
 
-        ## Skip comments and default values.
-        next if ($pname =~ /^(comment|defaults)$/);
+        # Skip parameters belonging to another group.
+        next if $in{'group'} and $pinfo->{$pname}{'group'} ne $in{'group'};
 
-        ## Skip parameters belonging to another group.
-        next if ($in{'group'} && ($pinfo->{$pname}{'group'} ne $in{'group'}));
-
-        ## Skip obsolete parameters.
+        # Skip obsolete parameters and alias names.
         next if $pinfo->{$pname}{'obsolete'};
 
         ## Check whether the parameter can be edited by the logged user.

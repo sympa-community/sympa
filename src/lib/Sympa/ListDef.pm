@@ -46,23 +46,8 @@ our @param_order =
     status serial custom_attribute include_ldap_ca include_ldap_2level_ca include_sql_ca);
 
 # List parameter alias names
-our %alias = (
-    'reply-to'        => 'reply_to',
-    'replyto'         => 'reply_to',
-    'forced_replyto'  => 'forced_reply_to',
-    'forced_reply-to' => 'forced_reply_to',
-    'custom-subject'  => 'custom_subject',
-    'custom-header'   => 'custom_header',
-    'subscription'    => 'subscribe',
-    'unsubscription'  => 'unsubscribe',
-    'max-size'        => 'max_size',
-    # "*.use_ssl (yes|no)" are mapped to "*.use_tls (ldaps|none)".
-    # See also each parameter definition.
-    'include_ldap_query.use_ssl'        => 'use_tls',    # 5.3a.2 - 6.2.14
-    'include_ldap_2level_query.use_ssl' => 'use_tls',    # ,,
-    'include_ldap_ca.use_ssl'           => 'use_tls',    # 6.2a? - 6.2.14
-    'include_ldap_2level_ca.use_ssl'    => 'use_tls',    # ,,
-);
+# DEPRECATED.  Use 'obsolete' elements.
+#our %alias;
 
 our %pinfo = (
 
@@ -437,6 +422,8 @@ our %pinfo = (
         'default'    => 'sender',
         'obsolete'   => 1
     },
+    'reply-to' => {'obsolete' => 'reply_to'},
+    'replyto'  => {'obsolete' => 'reply_to'},
 
     'forced_reply_to' => {
         'group'      => 'sending',
@@ -444,6 +431,8 @@ our %pinfo = (
         'format'     => '\S+',
         'obsolete'   => 1
     },
+    'forced_replyto'  => {'obsolete' => 'forced_reply_to'},
+    'forced_reply-to' => {'obsolete' => 'forced_reply_to'},
 
     'reply_to_header' => {
         'group'      => 'sending',
@@ -483,6 +472,7 @@ our %pinfo = (
         'occurrence' => '0-n',
         'length'     => 30
     },
+    'custom-header' => {'obsolete' => 'custom_header'},
 
     'custom_subject' => {
         'group'      => 'sending',
@@ -490,6 +480,7 @@ our %pinfo = (
         'format'     => '.+',
         'length'     => 15
     },
+    'custom-subject' => {'obsolete' => 'custom_subject'},
 
     'footer_type' => {
         'group'      => 'sending',
@@ -506,6 +497,7 @@ our %pinfo = (
         'length'       => 8,
         'default'      => {'conf' => 'max_size'}
     },
+    'max-size' => {'obsolete' => 'max_size'},
 
     'merge_feature' => {
         'group'      => 'sending',
@@ -581,6 +573,7 @@ our %pinfo = (
         'gettext_id' => "Who can subscribe to the list",
         'scenario'   => 'subscribe'
     },
+    'subscription' => {'obsolete' => 'subscribe'},
 
     'add' => {
         'group'      => 'command',
@@ -593,6 +586,7 @@ our %pinfo = (
         'gettext_id' => "Who can unsubscribe",
         'scenario'   => 'unsubscribe'
     },
+    'unsubscription' => {'obsolete' => 'unsubscribe'},
 
     'del' => {
         'group'      => 'command',
@@ -763,7 +757,7 @@ our %pinfo = (
                 'format'       => '\d+',
                 'length'       => 3,
                 'default'      => {'conf' => 'bounce_halt_rate'},
-                'obsolete'     => 1,
+                'obsolete' => 1,    # Not yet implemented.
             }
         }
     },
@@ -959,7 +953,7 @@ our %pinfo = (
             . Sympa::Regexps::host()
             . ')?(\s+filter\s+.+)?',
         'occurrence' => '0-n',
-        'obsolete'   => 1, # <= 6.2.15.
+        'obsolete'   => 1,       # 2.2.6 - 6.2.15.
     },
 
     'include_sympa_list' => {
@@ -1079,12 +1073,13 @@ our %pinfo = (
                 'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
             },
-            #'use_ssl' => {
-            #    'order'      => 2.5,
-            #    'gettext_id' => 'use SSL (LDAPS)',
-            #    'format'     => ['yes', 'no'],
-            #    'default'    => 'no'
-            #},
+            'use_ssl' => {
+                #'order'      => 2.5,
+                #'gettext_id' => 'use SSL (LDAPS)',
+                #'format'     => ['yes', 'no'],
+                #'default'    => 'no'
+                'obsolete' => 'use_tls',    # 5.3a.2 - 6.2.14
+            },
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
@@ -1196,12 +1191,13 @@ our %pinfo = (
                 'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
             },
-            #'use_ssl' => {
-            #    'order'      => 2.5,
-            #    'gettext_id' => 'use SSL (LDAPS)',
-            #    'format'     => ['yes', 'no'],
-            #    'default'    => 'no'
-            #},
+            'use_ssl' => {
+                #'order'      => 2.5,
+                #'gettext_id' => 'use SSL (LDAPS)',
+                #'format'     => ['yes', 'no'],
+                #'default'    => 'no'
+                'obsolete' => 'use_tls',    # 5.3a.2 - 6.2.14
+            },
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
@@ -1493,12 +1489,13 @@ our %pinfo = (
                 'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
             },
-            #'use_ssl' => {
-            #    'order'      => 2.5,
-            #    'gettext_id' => 'use SSL (LDAPS)',
-            #    'format'     => ['yes', 'no'],
-            #    'default'    => 'no'
-            #},
+            'use_ssl' => {
+                #'order'      => 2.5,
+                #'gettext_id' => 'use SSL (LDAPS)',
+                #'format'     => ['yes', 'no'],
+                #'default'    => 'no'
+                'obsolete' => 'use_tls',    # 6.2a? - 6.2.14
+            },
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
@@ -1616,12 +1613,13 @@ our %pinfo = (
                 'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
             },
-            #'use_ssl' => {
-            #    'order'      => 2.5,
-            #    'gettext_id' => 'use SSL (LDAPS)',
-            #    'format'     => ['yes', 'no'],
-            #    'default'    => 'no'
-            #},
+            'use_ssl' => {
+                #'order'      => 2.5,
+                #'gettext_id' => 'use SSL (LDAPS)',
+                #'format'     => ['yes', 'no'],
+                #'default'    => 'no'
+                'obsolete' => 'use_tls',    # 6.2a? - 6.2.14
+            },
             'ssl_version' => {
                 'order'      => 2.6,
                 'gettext_id' => 'SSL version',
@@ -2368,10 +2366,7 @@ This module keeps definition of configuration parameters for each list.
 
 =item %alias
 
-Hash to define parameter alias names mainly for backward compatibility.
-
-Key is the parameter name in format C<I<name>> or C<I<name>.I<key>>.
-Value is the canonical name of parameter or subparameter.
+Deprecated by Sympa 6.2.16.
 
 =item %pinfo
 
@@ -2446,6 +2441,9 @@ Group of parameters.
 Obsolete parameter ; should not be displayed
 nor saved.
 
+As of 6.2.16, if the value is true value and is not C<1>,
+defines parameter alias name mainly for backward compatibility.
+
 =item obsolete_values
 
 Defined obsolete values for a parameter.
@@ -2466,10 +2464,6 @@ that should always be saved in the config file.
 Used to select passwords web input type.
 
 =back
-
-=item @param_order
-
-XXX
 
 =back
 

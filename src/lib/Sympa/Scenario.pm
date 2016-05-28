@@ -817,18 +817,27 @@ sub verify {
             } elsif ($param eq 'address') {
                 my $val = $list->get_list_address();
                 $value =~ s/\[list\-\>$param\]/$val/;
-            } elsif (exists $pinfo->{$param}
-                and !ref($list->{'admin'}{$param})) {
-                my $val = $list->{'admin'}{$param};
-                $val = '' unless defined $val;
-                $value =~ s/\[list\-\>$param\]/$val/;
             } else {
-                $log->syslog('err', 'Unknown list parameter %s in rule %s',
-                    $value, $condition);
-                $log->syslog('info', 'Unknown list parameter %s in rule %s',
-                    $value, $condition)
-                    if $log_it;
-                return undef;
+                my $canon_param = $param;
+                if (exists $pinfo->{$param}) {
+                    my $alias = $pinfo->{$param}{'obsolete'};
+                    if ($alias and exists $pinfo->{$alias}) {
+                        $canon_param = $alias;
+                    }
+                }
+                if (exists $pinfo->{$canon_param}
+                    and !ref($list->{'admin'}{$canon_param})) {
+                    my $val = $list->{'admin'}{$canon_param};
+                    $val = '' unless defined $val;
+                    $value =~ s/\[list\-\>$param\]/$val/;
+                } else {
+                    $log->syslog('err', 'Unknown list parameter %s in rule %s',
+                        $value, $condition);
+                    $log->syslog('info', 'Unknown list parameter %s in rule %s',
+                        $value, $condition)
+                        if $log_it;
+                    return undef;
+                }
             }
         } elsif ($value =~ /\[env\-\>([\w\-]+)\]/i) {
             my $env = $ENV{$1};

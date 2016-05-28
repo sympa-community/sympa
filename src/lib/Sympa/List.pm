@@ -1168,6 +1168,21 @@ sub get_param_value {
         $param       = $1;
         $minor_param = $2;
     }
+    # Resolve aliases.
+    if ($pinfo->{$param}) {
+        my $alias = $pinfo->{$param}{'obsolete'};
+        if ($alias and $pinfo->{$alias}) {
+            $param = $alias;
+        }
+    }
+    if (    $minor_param
+        and ref $pinfo->{$param}{'format'} eq 'HASH'
+        and $pinfo->{$param}{'format'}{$minor_param}) {
+        my $alias = $pinfo->{$param}{'format'}{$minor_param}{'obsolete'};
+        if ($alias and $pinfo->{$param}{'format'}{$alias}) {
+            $minor_param = $alias;
+        }
+    }
 
     ## Multiple parameter (owner, custom_header, ...)
     if (ref($self->{'admin'}{$param}) eq 'ARRAY'
@@ -6449,10 +6464,11 @@ sub _load_include_admin_user_file {
 
         $pname = $1;
 
-        ## Parameter aliases (compatibility concerns)
-        if (defined $Sympa::ListDef::alias{$pname}) {
-            $paragraph[0] =~ s/^\s*$pname/$Sympa::ListDef::alias{$pname}/;
-            $pname = $Sympa::ListDef::alias{$pname};
+        # Parameter aliases (compatibility concerns).
+        my $alias = $pinfo->{$pname}{'obsolete'};
+        if ($alias and $pinfo->{$alias}) {
+            $paragraph[0] =~ s/^\s*$pname/$alias/;
+            $pname = $alias;
         }
 
         unless ($pinfo->{$pname}) {
@@ -6499,10 +6515,10 @@ sub _load_include_admin_user_file {
 
                 # Subparameter aliases (compatibility concerns).
                 # Note: subparameter alias was introduced by 6.2.15.
-                if (defined $Sympa::ListDef::alias{"$pname.$key"}) {
-                    $paragraph[$i] =~
-                        s/^\s*$key/$Sympa::ListDef::alias{"$pname.$key"}/;
-                    $key = $Sympa::ListDef::alias{"$pname.$key"};
+                my $alias = $pinfo->{$pname}{'format'}{$key}{'obsolete'};
+                if ($alias and $pinfo->{$pname}{'format'}{$alias}) {
+                    $paragraph[$i] =~ s/^\s*$key/$alias/;
+                    $key = $alias;
                 }
 
                 unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
@@ -8721,10 +8737,11 @@ sub _load_list_config_file {
 
         $pname = $1;
 
-        ## Parameter aliases (compatibility concerns)
-        if (defined $Sympa::ListDef::alias{$pname}) {
-            $paragraph[0] =~ s/^\s*$pname/$Sympa::ListDef::alias{$pname}/;
-            $pname = $Sympa::ListDef::alias{$pname};
+        # Parameter aliases (compatibility concerns).
+        my $alias = $pinfo->{$pname}{'obsolete'};
+        if ($alias and $pinfo->{$alias}) {
+            $paragraph[0] =~ s/^\s*$pname/$alias/;
+            $pname = $alias;
         }
 
         unless (defined $pinfo->{$pname}) {
@@ -8772,10 +8789,10 @@ sub _load_list_config_file {
 
                 # Subparameter aliases (compatibility concerns).
                 # Note: subparameter alias was introduced by 6.2.15.
-                if (defined $Sympa::ListDef::alias{"$pname.$key"}) {
-                    $paragraph[$i] =~
-                        s/^\s*$key/$Sympa::ListDef::alias{"$pname.$key"}/;
-                    $key = $Sympa::ListDef::alias{"$pname.$key"};
+                my $alias = $pinfo->{$pname}{'format'}{$key}{'obsolete'};
+                if ($alias and $pinfo->{$pname}{'format'}{$alias}) {
+                    $paragraph[$i] =~ s/^\s*$key/$alias/;
+                    $key = $alias;
                 }
 
                 unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
