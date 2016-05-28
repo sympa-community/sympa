@@ -2,9 +2,13 @@
 Description=Sympa mailing list manager
 After=syslog.target
 Wants=sympa-outgoing.service
+Before=sympa-outgoing.service
 Wants=sympa-archive.service
+Before=sympa-archive.service
 Wants=sympa-bounce.service
+Before=sympa-bounce.service
 Wants=sympa-task.service
+Before=sympa-task.service
  
 [Service]
 Type=forking
