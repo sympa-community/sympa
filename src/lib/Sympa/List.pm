@@ -4446,15 +4446,18 @@ sub is_included {
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
 
-    unless ($sdm
+    unless (
+        $sdm
         and $sth = $sdm->do_prepared_query(
             q{SELECT COUNT(*)
               FROM inclusion_table
               WHERE source_inclusion = ?},
-            $self->get_id)) {
+            $self->get_id
+        )
+        ) {
         $log->syslog('err', 'Failed to get inclusion information on list %s',
             $self);
-        return 1; # Fake positive result.
+        return 1;    # Fake positive result.
     }
     my ($num) = $sth->fetchrow_array;
     $sth->finish;
@@ -5915,8 +5918,9 @@ sub _load_list_members_from_include {
             my $include_path = $include_file;
             if ($include_path =~ s/$name$//) {
                 $parsing{'include_path'} = $include_path;
-                $include_member = $self->_load_include_admin_user_file(
-                    $include_path, \%parsing);
+                $include_member =
+                    $self->_load_include_admin_user_file($include_path,
+                    \%parsing);
             } else {
                 $log->syslog('err',
                     'Errors to get path of the the file %s.incl',
@@ -6139,13 +6143,17 @@ sub _load_list_members_from_include {
         users      => \%users,
         errors     => \@errors,
         exclusions => \@ex_sources,
-        depend_on  => [Sympa::Tools::Data::sort_uniq(map
-            {
-                my $source_id = lc $_->{listname};
-                $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
-                    unless 0 < index($source_id, '@');
-                $source_id
-            } @depend_on)],
+        depend_on  => [
+            Sympa::Tools::Data::sort_uniq(
+                map {
+                    my $source_id = lc $_->{listname};
+                    $source_id = sprintf '%s@%s', $source_id,
+                        $self->{'domain'}
+                        unless 0 < index($source_id, '@');
+                    $source_id
+                    } @depend_on
+            )
+        ],
     };
     ##use Data::Dumper;
     ##if(open OUT, '>/tmp/result') { print OUT Dumper $result; close OUT }
@@ -6202,8 +6210,9 @@ sub _load_list_admin_from_include {
             my $include_path = $include_file;
             if ($include_path =~ s/$name$//) {
                 $parsing{'include_path'} = $include_path;
-                $include_admin_user = $self->_load_include_admin_user_file(
-                    $include_path, \%parsing);
+                $include_admin_user =
+                    $self->_load_include_admin_user_file($include_path,
+                    \%parsing);
             } else {
                 $log->syslog('err',
                     'Errors to get path of the the file %s.incl',
@@ -6315,8 +6324,9 @@ sub _load_list_admin_from_include {
                             $self
                         );
                     } else {
-                        $included = $self->_include_users_list(
-                            \%admin_users, $incl, \%option);
+                        $included =
+                            $self->_include_users_list(\%admin_users, $incl,
+                            \%option);
                         unless (defined $included) {
                             # push @errors,
                             #    {'type' => $type, 'name' => $incl->{name}};
@@ -6353,13 +6363,17 @@ sub _load_list_admin_from_include {
 
     return {
         users     => \%admin_users,
-        depend_on => [Sympa::Tools::Data::sort_uniq(map
-            {
-                my $source_id = lc $_->{listname};
-                $source_id = sprintf '%s@%s', $source_id, $self->{'domain'}
-                    unless 0 < index($source_id, '@');
-                $source_id
-            } @depend_on)],
+        depend_on => [
+            Sympa::Tools::Data::sort_uniq(
+                map {
+                    my $source_id = lc $_->{listname};
+                    $source_id = sprintf '%s@%s', $source_id,
+                        $self->{'domain'}
+                        unless 0 < index($source_id, '@');
+                    $source_id
+                    } @depend_on
+            )
+        ],
     };
 }
 
@@ -6538,7 +6552,8 @@ sub _load_include_admin_user_file {
                     next;
                 }
 
-                $hash{$key} = $self->_load_list_param($key, $1,
+                $hash{$key} =
+                    $self->_load_list_param($key, $1,
                     $pinfo->{$pname}{'file_format'}{$key});
             }
 
@@ -6550,7 +6565,8 @@ sub _load_include_admin_user_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}
                         {'default'}) {
-                        $hash{$k} = $self->_load_list_param($k, 'default',
+                        $hash{$k} =
+                            $self->_load_list_param($k, 'default',
                             $pinfo->{$pname}{'file_format'}{$k});
                     }
                 }
@@ -6822,7 +6838,7 @@ sub sync_include {
         $new_subscribers = $result->{'users'};
         my @errors     = @{$result->{'errors'}};
         my @exclusions = @{$result->{'exclusions'}};
-        my @depend_on = @{$result->{depend_on} || []};
+        my @depend_on  = @{$result->{depend_on} || []};
 
         ## If include sources were not available, do not update subscribers
         ## Use DB cache instead and warn the listmaster.
@@ -7105,8 +7121,8 @@ sub sync_include {
 
 # Update inclusion_table: This feature was added on 6.2.16.
 sub _update_inclusion_table {
-    my $self = shift;
-    my $role = shift;
+    my $self      = shift;
+    my $role      = shift;
     my @depend_on = @_;
 
     my $sdm = Sympa::DatabaseManager->instance;
@@ -7124,16 +7140,18 @@ sub _update_inclusion_table {
                         source_inclusion = ? AND
                         (update_epoch_inclusion IS NULL OR
                          update_epoch_inclusion < ?)},
-                $now, $self->get_id, $role, $list_id, $now)
+                $now, $self->get_id, $role, $list_id, $now
+            )
             and $sth->rows
-            or $sdm
-            and $sth = $sdm->do_prepared_query(
+            or $sdm and $sth = $sdm->do_prepared_query(
                 q{INSERT INTO inclusion_table
                   (target_inclusion, role_inclusion, source_inclusion,
                    update_epoch_inclusion)
                   VALUES (?, ?, ?, ?)},
-                $self->get_id, $role, $list_id, $now)
-            and $sth->rows) {
+                $self->get_id, $role, $list_id, $now
+            )
+            and $sth->rows
+            ) {
             $log->syslog('err', 'Unable to update list %s in database',
                 $self);
             return undef;
@@ -7143,7 +7161,8 @@ sub _update_inclusion_table {
         q{DELETE FROM inclusion_table
           WHERE target_inclusion = ? AND role_inclusion = ? AND
                 update_epoch_inclusion < ?},
-        $self->get_id, $role, $now);
+        $self->get_id, $role, $now
+    );
 }
 
 ## The previous function (sync_include) is to be called by the task_manager.
@@ -7536,7 +7555,7 @@ sub _inclusion_loop {
     my @ancestors = ($source_id);
     while (@ancestors) {
         # Loop detected.
-	return 1
+        return 1
             if grep { $target_id eq $_ } @ancestors;
 
         @visited{@ancestors} = @ancestors;
@@ -7544,10 +7563,9 @@ sub _inclusion_loop {
             grep {
                 # Ignore loop by other nodes to prevent infinite processing.
                 not exists $visited{$_}
-            } map {
+                } map {
                 my @parents;
-                if (
-                    $sdm
+                if ($sdm
                     and $sth = $sdm->do_prepared_query(
                         q{SELECT source_inclusion
                           FROM inclusion_table
@@ -7560,7 +7578,7 @@ sub _inclusion_loop {
                     $sth->finish;
                 }
                 @parents
-            } @ancestors
+                } @ancestors
         );
     }
 
@@ -7681,7 +7699,8 @@ sub get_including_lists {
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
 
-    unless ($sdm
+    unless (
+        $sdm
         and $sth = $sdm->do_prepared_query(
             q{SELECT target_inclusion AS "target"
               FROM inclusion_table
@@ -8666,7 +8685,7 @@ sub _load_list_config_file {
     $log->syslog('debug3', '(%s)', @_);
     my $self = shift;
 
-    my $robot     = $self->{'domain'};
+    my $robot = $self->{'domain'};
 
     my $pinfo       = Sympa::Robot::list_params($robot);
     my $config_file = $self->{'dir'} . '/config';
@@ -8817,7 +8836,8 @@ sub _load_list_config_file {
                     next;
                 }
 
-                $hash{$key} = $self->_load_list_param($key, $1,
+                $hash{$key} =
+                    $self->_load_list_param($key, $1,
                     $pinfo->{$pname}{'file_format'}{$key});
             }
 
@@ -8829,7 +8849,8 @@ sub _load_list_config_file {
                 unless (defined $hash{$k}) {
                     if (defined $pinfo->{$pname}{'file_format'}{$k}
                         {'default'}) {
-                        $hash{$k} = $self->_load_list_param($k, 'default',
+                        $hash{$k} =
+                            $self->_load_list_param($k, 'default',
                             $pinfo->{$pname}{'file_format'}{$k});
                     }
                 }
@@ -8900,8 +8921,9 @@ sub _load_list_config_file {
 
             ## Simple (versus structured) parameter case
             if (defined $pinfo->{$p}{'default'}) {
-                $admin{$p} = $self->_load_list_param($p,
-                    $pinfo->{$p}{'default'}, $pinfo->{$p});
+                $admin{$p} =
+                    $self->_load_list_param($p, $pinfo->{$p}{'default'},
+                    $pinfo->{$p});
 
                 ## Sructured parameters case : the default values are defined
                 ## at the next level
@@ -8917,7 +8939,8 @@ sub _load_list_config_file {
                         next;
                     }
 
-                    $hash->{$key} = $self->_load_list_param($key,
+                    $hash->{$key} = $self->_load_list_param(
+                        $key,
                         $pinfo->{$p}{'format'}{$key}{'default'},
                         $pinfo->{$p}{'format'}{$key}
                     );
@@ -8980,10 +9003,12 @@ sub _load_list_config_postprocess {
     if ((   $config_hash->{'forced_reply_to'}
             && !$config_hash->{'defaults'}{'forced_reply_to'}
         )
-        || ($config_hash->{'reply_to'} && !$config_hash->{'defaults'}{'reply_to'})
+        || ($config_hash->{'reply_to'}
+            && !$config_hash->{'defaults'}{'reply_to'})
         ) {
         my ($value, $apply, $other_email);
-        $value = $config_hash->{'forced_reply_to'} || $config_hash->{'reply_to'};
+        $value = $config_hash->{'forced_reply_to'}
+            || $config_hash->{'reply_to'};
         $apply = 'forced' if ($config_hash->{'forced_reply_to'});
         if ($value =~ /\@/) {
             $other_email = $value;
@@ -9003,8 +9028,10 @@ sub _load_list_config_postprocess {
 
     # lang
     # canonicalize language
-    unless ($config_hash->{'lang'} = Sympa::Language::canonic_lang($config_hash->{'lang'})) {
-        $config_hash->{'lang'} = Conf::get_robot_conf($self->{'domain'}, 'lang');
+    unless ($config_hash->{'lang'} =
+        Sympa::Language::canonic_lang($config_hash->{'lang'})) {
+        $config_hash->{'lang'} =
+            Conf::get_robot_conf($self->{'domain'}, 'lang');
     }
 
     ############################################
@@ -9046,8 +9073,7 @@ sub _load_include_admin_user_postprocess {
     if ($config_hash->{'include_list'}) {
         my $listname_regex =
               Sympa::Regexps::listname() . '(?:\@'
-            . Sympa::Regexps::host()
-            . ')?';
+            . Sympa::Regexps::host() . ')?';
         my $filter_regex = '(' . $listname_regex . ')\s+filter\s+(.+)';
 
         $config_hash->{'include_sympa_list'} ||= [];
@@ -9061,16 +9087,19 @@ sub _load_include_admin_user_postprocess {
             } elsif ($incl =~ /\A$listname_regex\z/) {
                 $listname = lc $incl;
             } else {
-                $log->syslog('err',
+                $log->syslog(
+                    'err',
                     'Malformed value "%s" in include_list parameter. Skipped',
-                    $incl);
+                    $incl
+                );
                 next;
             }
 
-            push @{$config_hash->{'include_sympa_list'}}, {
-                    name     => sprintf('include_list %s', $incl),
-                    listname => $listname,
-                    filter   => $filter,
+            push @{$config_hash->{'include_sympa_list'}},
+                {
+                name     => sprintf('include_list %s', $incl),
+                listname => $listname,
+                filter   => $filter,
                 };
         }
         delete $config_hash->{'include_list'};
@@ -9580,17 +9609,17 @@ sub purge {
 
     ## Clean list table if needed
     #if ($Conf::Conf{'db_list_cache'} eq 'on') {
-        my $sdm = Sympa::DatabaseManager->instance;
-        unless (
-            $sdm
-            and $sdm->do_prepared_query(
-                q{DELETE FROM list_table
+    my $sdm = Sympa::DatabaseManager->instance;
+    unless (
+        $sdm
+        and $sdm->do_prepared_query(
+            q{DELETE FROM list_table
                   WHERE name_list = ? AND robot_list = ?},
-                $self->{'name'}, $self->{'domain'}
-            )
-            ) {
-            $log->syslog('err', 'Cannot remove list %s from table', $self);
-        }
+            $self->{'name'}, $self->{'domain'}
+        )
+        ) {
+        $log->syslog('err', 'Cannot remove list %s from table', $self);
+    }
     #}
     unless (
         $sdm
@@ -10056,7 +10085,8 @@ sub _update_list_db {
         $sdm and $sdm->do_prepared_query(
             q{DELETE FROM inclusion_table
               WHERE target_inclusion = ?},
-            $self->get_id);
+            $self->get_id
+        );
     }
 
     $sth = pop @sth_stack;

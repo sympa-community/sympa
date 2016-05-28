@@ -1007,8 +1007,8 @@ sub _load_auth {
             'scope'                       => 'base|one|sub',
             'authentication_info_url'     => 'http(s)?:/.*',
             'use_tls'                     => 'starttls|ldaps|none',
-            'use_ssl'                     => '1', # Obsoleted
-            'use_start_tls'               => '1', # Obsoleted
+            'use_ssl'                     => '1',                  # Obsoleted
+            'use_start_tls'               => '1',                  # Obsoleted
             'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
@@ -1042,9 +1042,9 @@ sub _load_auth {
             'scope'         => 'base|one|sub',
             'get_email_by_uid_filter' => '.+',
             'email_attribute'         => '\w+',
-            'use_tls'                     => 'starttls|ldaps|none',
-            'use_ssl'                 => '1', # Obsoleted
-            'use_start_tls'           => '1', # Obsoleted
+            'use_tls'                 => 'starttls|ldaps|none',
+            'use_ssl'                 => '1',                     # Obsoleted
+            'use_start_tls'           => '1',                     # Obsoleted
             'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
@@ -1069,9 +1069,9 @@ sub _load_auth {
             'scope'         => 'base|one|sub',
             'get_email_by_uid_filter' => '.+',
             'email_attribute'         => '\w+',
-            'use_tls'                     => 'starttls|ldaps|none',
-            'use_ssl'                 => '1', # Obsoleted
-            'use_start_tls'           => '1', # Obsoleted
+            'use_tls'                 => 'starttls|ldaps|none',
+            'use_ssl'                 => '1',                     # Obsoleted
+            'use_start_tls'           => '1',                     # Obsoleted
             'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',

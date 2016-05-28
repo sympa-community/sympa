@@ -504,29 +504,26 @@ sub upgrade {
 
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
-                my @include_lists =
-                    @{$list->{'admin'}{'include_sympa_list'} || []};
-                my $changed       = 0;
-                foreach my $incl (@include_lists) {
-                    # Search for the list if robot is not specified.
-                    my $incl_list = Sympa::List->new($incl->{listname});
+            my @include_lists =
+                @{$list->{'admin'}{'include_sympa_list'} || []};
+            my $changed = 0;
+            foreach my $incl (@include_lists) {
+                # Search for the list if robot is not specified.
+                my $incl_list = Sympa::List->new($incl->{listname});
 
-                    if ($incl_list
-                        and $incl_list->{'domain'} ne $list->{'domain'}) {
-                        $log->syslog(
-                            'notice',
-                            'Update config file of list %s, including list %s',
-                            $list->get_id,
-                            $incl_list->get_id
-                        );
-                        $incl->{listname} = $incl_list->get_id;
-                        $changed = 1;
-                    }
+                if (    $incl_list
+                    and $incl_list->{'domain'} ne $list->{'domain'}) {
+                    $log->syslog('notice',
+                        'Update config file of list %s, including list %s',
+                        $list->get_id, $incl_list->get_id);
+                    $incl->{listname} = $incl_list->get_id;
+                    $changed = 1;
                 }
-                if ($changed) {
-                    $list->{'admin'}{'include_sympa_list'} = [@include_lists];
-                    $list->save_config(Sympa::get_address($list, 'listmaster'));
-                }
+            }
+            if ($changed) {
+                $list->{'admin'}{'include_sympa_list'} = [@include_lists];
+                $list->save_config(Sympa::get_address($list, 'listmaster'));
+            }
         }
     }
 

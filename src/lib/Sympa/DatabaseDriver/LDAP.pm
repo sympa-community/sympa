@@ -37,7 +37,7 @@ my $log = Sympa::Log->instance;
 use constant required_parameters => [qw(host)];
 use constant optional_parameters => [
     qw(port bind_dn bind_password
-       use_tls ssl_version ssl_ciphers
+        use_tls ssl_version ssl_ciphers
         ssl_cert ssl_key ca_verify ca_path ca_file)
 ];
 use constant required_modules => [qw(Net::LDAP)];

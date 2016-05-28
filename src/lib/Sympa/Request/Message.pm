@@ -54,9 +54,9 @@ sub next {
     return;
 }
 
-use constant _create => 1;
+use constant _create      => 1;
 use constant _directories => {};
-use constant _generator => 'Sympa::Request';
+use constant _generator   => 'Sympa::Request';
 
 # Old name: (part of) DoCommand() in sympa_msg.pl.
 sub _load {
@@ -77,12 +77,12 @@ sub _load {
         # Subject: is part of the signature. It SHOULD !
         return [
             $self->_generator->new(
-                action => $action,
+                action  => $action,
                 context => $message->{context},
                 email   => $message->{sender},
                 #FIXME: smime_signed?
                 (map { ($_ => $message->{$_}) } qw(date sender dkim_pass)),
-                cmd_line => $action, # Fake command line.
+                cmd_line => $action,    # Fake command line.
             )
         ];
     }
@@ -91,7 +91,7 @@ sub _load {
     # Search and process a command in the Subject field.
     my $subject_field = $message->{'decoded_subject'};
     $subject_field = '' unless defined $subject_field;
-    $subject_field =~ s/\n//mg;    ## multiline subjects
+    $subject_field =~ s/\n//mg;         ## multiline subjects
     my $re_regexp = Sympa::Regexps::re();
     $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
     if ($subject_field =~ /\S/) {

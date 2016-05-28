@@ -123,7 +123,7 @@ sub fork {
 
 # Old name: (part of) Sympa::Mailer::reaper().
 sub wait_child {
-    my $self    = shift;
+    my $self = shift;
 
     my $pid;
 

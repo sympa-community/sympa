@@ -94,8 +94,9 @@ sub _twist {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context => [@target_lists],
         action  => 'signoff',
-        (map { ($_ => $request->{$_}) }
-            qw(email sender smime_signed md5_check dkim_pass cmd_line)),
+        (   map { ($_ => $request->{$_}) }
+                qw(email sender smime_signed md5_check dkim_pass cmd_line)
+        ),
 
         scenario_context => $self->{scenario_context},
         stash            => $self->{stash},
@@ -107,6 +108,7 @@ sub _twist {
 
 1;
 __END__
+
 =encoding utf-8
 
 =head1 NAME

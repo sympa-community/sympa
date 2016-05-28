@@ -87,7 +87,8 @@ sub _twist {
     }
     unless (@target_lists) {
         $self->add_stash($request, 'user', 'no_lists');
-        $log->syslog('info', 'SET * %s%s from %s refused, no lists to process',
+        $log->syslog('info',
+            'SET * %s%s from %s refused, no lists to process',
             $request->{reception}, $request->{visibility}, $sender);
         return undef;
     }
@@ -95,10 +96,11 @@ sub _twist {
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context => [@target_lists],
         action  => 'set',
-        (map { ($_ => $request->{$_}) }
-            qw(email reception visibility
+        (   map { ($_ => $request->{$_}) }
+                qw(email reception visibility
                 sender smime_signed md5_check dkim_pass
-                cmd_line)),
+                cmd_line)
+        ),
 
         scenario_context => $self->{scenario_context},
         stash            => $self->{stash},
@@ -110,6 +112,7 @@ sub _twist {
 
 1;
 __END__
+
 =encoding utf-8
 
 =head1 NAME

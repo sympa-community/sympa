@@ -831,9 +831,11 @@ sub verify {
                     $val = '' unless defined $val;
                     $value =~ s/\[list\-\>$param\]/$val/;
                 } else {
-                    $log->syslog('err', 'Unknown list parameter %s in rule %s',
+                    $log->syslog('err',
+                        'Unknown list parameter %s in rule %s',
                         $value, $condition);
-                    $log->syslog('info', 'Unknown list parameter %s in rule %s',
+                    $log->syslog('info',
+                        'Unknown list parameter %s in rule %s',
                         $value, $condition)
                         if $log_it;
                     return undef;

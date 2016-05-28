@@ -781,7 +781,7 @@ sub rename_list {
     unless ($param{'mode'} and $param{'mode'} eq 'copy') {
         if ($list->is_included) {
             $log->syslog('err',
-               'List %s is included by other list: cannot rename it', $list);
+                'List %s is included by other list: cannot rename it', $list);
             return 'intern';
         }
     }

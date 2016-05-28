@@ -179,7 +179,7 @@ sub new {
 
         # Author
         if ($desc_hash{'email'}) {
-            $document->{'author'} = $desc_hash{'email'};
+            $document->{'author'}       = $desc_hash{'email'};
             $document->{'author_known'} = 1;
         }
     }

@@ -1941,7 +1941,8 @@ sub _urlize_one_part {
 
     (my $file_name = $filename) =~ s/\./\_/g;
     # Do NOT escape '/' chars separating path components.
-    my $file_url = Sympa::get_url($list, 'attach',
+    my $file_url =
+        Sympa::get_url($list, 'attach',
         paths => [$dir, Sympa::Tools::Text::escape_chars($filename)]);
 
     my $parser = MIME::Parser->new;

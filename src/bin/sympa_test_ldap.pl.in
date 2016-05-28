@@ -42,7 +42,7 @@ unless (
         \%options,
         (   map {"$_=s"} @{Sympa::DatabaseDriver::LDAP->required_parameters},
             @{Sympa::DatabaseDriver::LDAP->optional_parameters},
-            qw(use_ssl use_start_tls), # Deprecated as of 6.2.15
+            qw(use_ssl use_start_tls),    # Deprecated as of 6.2.15
             qw(filter scope)
         ),
         qw(suffix:s attrs:s),

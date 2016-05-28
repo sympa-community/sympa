@@ -352,12 +352,12 @@ our %action_args = (
     'default'       => ['list'],
     'editfile'      => ['list', 'file', 'previous_action'],
     'requestpasswd' => ['email'],
-    'choosepasswd' => ['email', 'passwd'],
-    'lists'        => ['topic', 'subtopic'],
-    'latest_lists' => ['topic', 'subtopic'],
-    'active_lists' => ['topic', 'subtopic'],
+    'choosepasswd'    => ['email', 'passwd'],
+    'lists'           => ['topic', 'subtopic'],
+    'latest_lists'    => ['topic', 'subtopic'],
+    'active_lists'    => ['topic', 'subtopic'],
     'including_lists' => ['list'],
-    'login'        => ['email', 'passwd', 'previous_action', 'previous_list'],
+    'login' => ['email', 'passwd', 'previous_action', 'previous_list'],
     'sso_login' => ['auth_service_name', 'subaction', 'email', 'ticket'],
     'sso_login_succeeded' =>
         ['auth_service_name', 'previous_action', 'previous_list'],
@@ -1106,7 +1106,7 @@ while ($query = new_loop()) {
 
         my $request_uri = $ENV{'REQUEST_URI'} || '';
         while (my ($path, $v) = each %$hostmap) {
-            if (0 == index $request_uri, $path) { #FIXME:percent-decode
+            if (0 == index $request_uri, $path) {    #FIXME:percent-decode
                 # Longer path wins.
                 if (length $selected_path < length $path) {
                     ($selected_robot, $selected_path) = ($v, $path);
@@ -1115,7 +1115,7 @@ while ($query = new_loop()) {
         }
         $robot = $selected_robot;
     }
-    $robot = $Conf::Conf{'host'} unless $robot; #FIXME:Use domain.
+    $robot = $Conf::Conf{'host'} unless $robot;      #FIXME:Use domain.
 
     # Not yet implemented
     ### Create Robot object
@@ -1123,7 +1123,7 @@ while ($query = new_loop()) {
     $pinfo = Sympa::Robot::list_params($robot);
 
     ## Default robot
-    if ($robot eq $Conf::Conf{'host'}) { #FIXME:Use domain.
+    if ($robot eq $Conf::Conf{'host'}) {             #FIXME:Use domain.
         $param->{'default_robot'} = 1;
     }
 
@@ -1139,11 +1139,9 @@ while ($query = new_loop()) {
     $http_host =~ s/:\d+$//;    # Suppress port.
     unless (substr($http_host, -length($cookie_domain)) eq lc $cookie_domain
         or $cookie_domain eq 'localhost') {
-        wwslog(
-            'notice',
+        wwslog('notice',
             '(%s) Does NOT match HTTP_HOST; setting cookie_domain to %s',
-            $cookie_domain, $http_host
-        );
+            $cookie_domain, $http_host);
         $cookie_domain = $http_host;
     }
     $param->{'cookie_domain'} = $cookie_domain;
@@ -1713,8 +1711,8 @@ while ($query = new_loop()) {
     }
 
     if ($param->{'list'}) {
-        $param->{'list_title'} = $list->{'admin'}{'subject'};
-        $param->{'title'} = Sympa::get_address($list);
+        $param->{'list_title'}      = $list->{'admin'}{'subject'};
+        $param->{'title'}           = Sympa::get_address($list);
         $param->{'title_clear_txt'} = "$param->{'list'}";
 
         if ($param->{'subtitle'}) {
@@ -1971,8 +1969,7 @@ while ($query = new_loop()) {
             Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
             wwslog('err', '/ajax/%s: error: %s', $param->{'action'}, $error);
-            printf "\n<!-- %s -->\n",
-                Sympa::Tools::Text::encode_html($error);
+            printf "\n<!-- %s -->\n", Sympa::Tools::Text::encode_html($error);
         }
 # 	 close FILE;
     } elsif ($param->{'redirect_to'}) {
@@ -2255,8 +2252,8 @@ sub get_parameters {
     # Note that other links should keep the nomenu attribute.
     # NOTE: The base_url is kept for compatibility to Sympa < 6.2.15.  The
     # path_cgi is still used in archives, help etc.
-    my $uri = URI->new(Sympa::get_url($robot, undef,
-        nomenu => $param->{'nomenu'}));
+    my $uri =
+        URI->new(Sympa::get_url($robot, undef, nomenu => $param->{'nomenu'}));
     $param->{'base_url'} = $uri->scheme . '://' . $uri->authority
         if $uri->authority;
     $param->{'path_cgi'} = $uri->path;
@@ -3014,10 +3011,10 @@ sub check_param_out {
                 my ($local, $domain) = split /\@/, $u->{'email'};
 
                 $param->{$role}{$u->{'email'}} = {
-                    gecos        => $u->{gecos},
-                    visibility   => $u->{visibility},
-                    local        => $local,
-                    domain       => $domain,
+                    gecos      => $u->{gecos},
+                    visibility => $u->{visibility},
+                    local      => $local,
+                    domain     => $domain,
                 };
             }
         }
@@ -3228,7 +3225,7 @@ sub check_param_out {
 
         # List included in other list may not be closed nor renamed.
         $param->{'is_included'} = 1 if $list->is_included;
-   }
+    }
 
     $param->{'robot'} = $robot;
 
@@ -4871,13 +4868,14 @@ sub do_including_lists {
                 next unless $action;
 
                 $which{$l->get_id} = {
-                   host    => $l->{'admin'}{'host'},
-                   name    => $l->{'name'},
-                   robot   => $l->{'domain'},
-                   subject => ($l->{'admin'}{'subject'} || $l->{'name'}),
-                   url_abs => Sympa::get_url($l, 'info'),
-                   url_rel => Sympa::get_url($l, 'info', authority => 'omit'),
-                   visible => ($action =~ /\Ado_it\b/i),
+                    host    => $l->{'admin'}{'host'},
+                    name    => $l->{'name'},
+                    robot   => $l->{'domain'},
+                    subject => ($l->{'admin'}{'subject'} || $l->{'name'}),
+                    url_abs => Sympa::get_url($l, 'info'),
+                    url_rel =>
+                        Sympa::get_url($l, 'info', authority => 'omit'),
+                    visible => ($action =~ /\Ado_it\b/i),
                 };
             }
             $which{$l->get_id}->{$role . '_include'} = 1;
@@ -5620,12 +5618,9 @@ sub do_setpref {
             )
             ) {
             Sympa::Report::reject_report_web(
-                'intern',
-                'update_user_db_failed',
-                {'user' => $param->{'user'}},
-                $param->{'action'},
-                '',
-                $param->{'user'}{'email'},
+                'intern', 'update_user_db_failed',
+                {'user' => $param->{'user'}}, $param->{'action'},
+                '', $param->{'user'}{'email'},
                 $robot
             );
             wwslog('info', 'Update failed');
@@ -5641,15 +5636,9 @@ sub do_setpref {
     } else {
         $changes->{'email'} = $param->{'user'}{'email'};
         unless (Sympa::User::add_global_user($changes)) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'add_user_db_failed',
+            Sympa::Report::reject_report_web('intern', 'add_user_db_failed',
                 {'user' => $param->{'user'}},
-                $param->{'action'},
-                '',
-                $param->{'user'}{'email'},
-                $robot
-            );
+                $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
             wwslog('info', 'Add failed');
             web_db_log(
                 {   'parameters' =>
@@ -5797,9 +5786,9 @@ sub do_subscribe {
 
             $list->send_notify_to_owner(
                 'subrequest',
-                {   'who'     => $param->{'user'}{'email'},
-                    'keyauth' => $keyauth,
-                    'replyto' => Sympa::get_address($list, 'sympa'),
+                {   'who'              => $param->{'user'}{'email'},
+                    'keyauth'          => $keyauth,
+                    'replyto'          => Sympa::get_address($list, 'sympa'),
                     'custom_attribute' => $in{custom_attribute},
                     'gecos'            => $param->{'user'}{'gecos'},
                     'ip'               => $ip
@@ -6532,12 +6521,9 @@ sub do_setpasswd {
             )
             ) {
             Sympa::Report::reject_report_web(
-                'intern',
-                'update_user_db_failed',
-                {'user' => $param->{'user'}},
-                $param->{'action'},
-                '',
-                $param->{'user'}{'email'},
+                'intern', 'update_user_db_failed',
+                {'user' => $param->{'user'}}, $param->{'action'},
+                '', $param->{'user'}{'email'},
                 $robot
             );
             wwslog('info', 'Update failed');
@@ -6558,15 +6544,9 @@ sub do_setpasswd {
                 }
             )
             ) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'add_user_db_failed',
+            Sympa::Report::reject_report_web('intern', 'add_user_db_failed',
                 {'user' => $param->{'user'}},
-                $param->{'action'},
-                '',
-                $param->{'user'}{'email'},
-                $robot
-            );
+                $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
             wwslog('info', 'Update failed');
             web_db_log(
                 {   'status'     => 'error',
@@ -9654,7 +9634,7 @@ sub do_arc {
         $param->{'redirect_to'} = Sympa::get_url(
             $list, 'arc',
             nomenu    => $param->{'nomenu'},
-            paths     => [$latest, ''], # Ends with '/'.
+            paths     => [$latest, ''],        # Ends with '/'.
             authority => 'local'
         );
         return 1;
@@ -9663,7 +9643,7 @@ sub do_arc {
         $param->{'redirect_to'} = Sympa::get_url(
             $list, 'arc',
             nomenu    => $param->{'nomenu'},
-            paths     => [$in{'month'}, ''], # Ends with '/'.
+            paths     => [$in{'month'}, ''],    # Ends with '/'.
             authority => 'local'
         );
         return 1;
@@ -13398,10 +13378,11 @@ sub do_rename_list {
     unless ($mode and $mode eq 'copy') {
         if ($list->is_included) {
             Sympa::Report::reject_report_web('user', 'cannot_rename_list',
-                {reason => 'included'}, $param->{'action'}, $list);
+                {reason => 'included'},
+                $param->{'action'}, $list);
             wwslog('Cannot rename list %s: Included by other list', $list);
             web_db_log(
-                {   'status' => 'error',
+                {   'status'     => 'error',
                     'error_type' => 'cannot_rename_list',
                 }
             );
@@ -13527,11 +13508,14 @@ sub do_rename_list {
 
     my $new_list = Sympa::List->new($in{'new_listname'}, $in{'new_robot'});
     if ($in{'new_robot'} eq $robot) {
-        $param->{'redirect_to'} = Sympa::get_url($new_list, 'admin',
-            nomenu => $param->{'nomenu'}, authority => 'local');
+        $param->{'redirect_to'} = Sympa::get_url(
+            $new_list, 'admin',
+            nomenu    => $param->{'nomenu'},
+            authority => 'local'
+        );
     } else {
-        $param->{'redirect_to'} = Sympa::get_url($new_list, 'admin',
-            nomenu => $param->{'nomenu'});
+        $param->{'redirect_to'} =
+            Sympa::get_url($new_list, 'admin', nomenu => $param->{'nomenu'});
     }
 
     $param->{'list'} = $in{'new_listname'};
@@ -13580,7 +13564,8 @@ sub do_close_list {
         return undef;
     } elsif ($list->is_included) {
         Sympa::Report::reject_report_web('user', 'cannot_close_list',
-            {reason => 'included'}, $param->{'action'}, $list);
+            {reason => 'included'},
+            $param->{'action'}, $list);
         wwslog('info', 'Cannot close list %s: Included by other list', $list);
         web_db_log(
             {   'status'     => 'error',
@@ -22494,8 +22479,7 @@ sub do_blacklist {
                     'intern',
                     'unable to open file',
                     {'file' => $file},
-                    $robot,
-                    $param->{'action'}, '', $param->{'user'}{'email'}
+                    $robot, $param->{'action'}, '', $param->{'user'}{'email'}
                 );
                 wwslog('err', 'Unable to read %s', $file);
                 web_db_log(
@@ -23131,9 +23115,12 @@ sub do_rss_request {
             $reason = $result->{'reason'};
         }
         if ($sub_is =~ /\Areject\b/i) {
-            wwslog('info',
+            wwslog(
+                'info',
                 'RSS not accessible because list %s is not visible to user %s',
-                $list->get_id, $param->{'user'}{'email'});
+                $list->get_id,
+                $param->{'user'}{'email'}
+            );
             web_db_log(
                 {   'parameters' => $param->{'user'}{'email'},
                     'status'     => 'error',
