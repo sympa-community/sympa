@@ -26,13 +26,6 @@
 <link rel="stylesheet" href="[% css_url %]/style.css?version=[% version %]" media="screen" title="Sympa CSS" />
 [% END %]
 
-[%# Show loading notice only when CSS is enabled. ~%]
-<style>
-  #loadingText span:before {
-    content: "[%|loc%]Please Wait...[%END%]";
-  }
-</style>
-
 [% PROCESS css_ie.tt2 %]
 
 [% IF locale_css %]
