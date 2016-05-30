@@ -1791,8 +1791,7 @@ sub _load_a_param {
 ## Returns undef if something went wrong while attempting to read the file.
 sub _load_config_file_to_hash {
     my $param = shift;
-    my $result;
-    $result->{'errors'} = 0;
+
     my $line_num = 0;
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $param->{'path_to_config_file'})) {
@@ -1803,6 +1802,14 @@ sub _load_config_file_to_hash {
         );
         return undef;
     }
+
+    # Initialize result.
+    my $result = {
+        errors          => 0,
+        config          => {},
+        numbered_config => {},
+    };
+
     while (<IN>) {
         $line_num++;
         # skip empty or commented lines
