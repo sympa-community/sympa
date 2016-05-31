@@ -474,7 +474,7 @@ sub match_all {
 ## PUBLIC METHOD
 sub match_this {
     my $self = shift;
-    my $string = join(' ', @_);
+    my $string = join '\s+', @_;
     $string = '(?i)' . $string if ($self->case);
     my $code     = "sub { use utf8; /" . $string . "/ }";
     my $function = eval $code;
