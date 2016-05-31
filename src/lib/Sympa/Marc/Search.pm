@@ -423,6 +423,12 @@ sub body_match_all {
     my $tail;
     if   ($self->case) { $tail = '/i' }
     else               { $tail = '/' }
+
+    # Quick fix: Escape non-words.
+    foreach my $ret (@ret) {
+        $ret =~ s/([^\x00-\x1F\s\w\x7F-\xFF])/\\$1/g;
+    }
+
     my $code = <<EOCODE;
 sub {
 	use utf8;
