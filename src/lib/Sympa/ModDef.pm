@@ -215,6 +215,8 @@ our %cpan_modules = (
         mandatory    => 1,
         'gettext_id' => 'used to compute plaindigest messages from HTML',
     },
+    # HTTP::Cookies is included or depended on by libwww-perl.
+    # HTTP::Request is included or depended on by libwww-perl.
     'IO::File' => {
         required_version => '1.10',
         package_name     => 'IO',
