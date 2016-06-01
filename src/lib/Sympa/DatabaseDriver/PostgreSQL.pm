@@ -26,6 +26,7 @@ package Sympa::DatabaseDriver::PostgreSQL;
 
 use strict;
 use warnings;
+use Encode qw();
 
 use Sympa::Log;
 
@@ -54,10 +55,47 @@ sub connect {
 
     # - Configure Postgres to use ISO format dates.
     # - Set client encoding to UTF8.
+    # Note: utf8 flagging must be disabled so that we will consistently use
+    # UTF-8 bytestring as internal format.
     $self->__dbh->do("SET DATESTYLE TO 'ISO';");
     $self->__dbh->do("SET NAMES 'utf8'");
 
     return 1;
+}
+
+sub quote {
+    my $self      = shift;
+    my $string    = shift;
+    my $data_type = shift;
+
+    # Set utf8 flag, because DBD::Pg 3.x needs utf8 flag for input parameters
+    # even if pg_enable_utf8 option is disabled.
+    unless (0 == index($DBD::Pg::VERSION, '2')
+        or (ref $data_type eq 'HASH' and $data_type->{pg_type})) {
+        $string = Encode::decode_utf8($string);
+    }
+    return $self->SUPER::quote($string, $data_type);
+}
+
+sub do_prepared_query {
+    my $self  = shift;
+    my $query = shift;
+
+    # Set utf8 flag, because DBD::Pg 3.x needs utf8 flag for input parameters
+    # even if pg_enable_utf8 option is disabled.
+    unless (0 == index($DBD::Pg::VERSION, '2')) {
+        my @params;
+        while (scalar @_) {
+            my $p = shift;
+            if (ref $p) {
+                push @params, $p, shift;
+            } else {
+                push @params, Encode::decode_utf8($p);
+            }
+        }
+        @_ = @params;
+    }
+    return $self->SUPER::do_prepared_query($query, @_);
 }
 
 sub get_substring_clause {
