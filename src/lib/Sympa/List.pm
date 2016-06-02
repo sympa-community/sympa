@@ -10141,14 +10141,18 @@ sub _load_edit_list_conf {
     }
 
     my $error_in_conf;
-    my $roles_regexp =
-        'listmaster|privileged_owner|owner|editor|subscriber|default';
-    while (<$fh>) {
-        next if /^\s*(\#.*|\s*)$/;
+    my $role_re =
+        qr'(?:listmaster|privileged_owner|owner|editor|subscriber|default)'i;
+    my $priv_re = qr'(?:read|write|hidden)'i;
+    my $line_re =
+        qr/\A\s*(\S+)\s+($role_re(?:\s*,\s*$role_re)*)\s+($priv_re)\s*\z/i;
+    foreach my $line (<$fh>) {
+        next unless $line =~ /\S/;
+        next if $line =~ /\A\s*#/;
+        chomp $line;
 
-        if (/^\s*(\S+)\s+(($roles_regexp)\s*(,\s*($roles_regexp))*)\s+(read|write|hidden)\s*$/i
-            ) {
-            my ($param, $role, $priv) = ($1, $2, $6);
+        if ($line =~ /$line_re/) {
+            my ($param, $role, $priv) = ($1, $2, $3);
 
             # Resolve alias.
             my $key;
@@ -10169,14 +10173,13 @@ sub _load_edit_list_conf {
             }
             $param = $param . '.' . $key if $key;
 
-            my @roles = split /,/, $role;
+            my @roles = split /\s*,\s*/, $role;
             foreach my $r (@roles) {
                 $r =~ s/^\s*(\S+)\s*$/$1/;
                 if ($r eq 'default') {
                     $error_in_conf = 1;
                     $log->syslog('notice', '"default" is no more recognised');
-                    foreach
-                        my $set ('owner', 'privileged_owner', 'listmaster') {
+                    foreach my $set (qw(owner privileged_owner listmaster)) {
                         $conf->{$param}{$set} = $priv;
                     }
                     next;
@@ -10184,11 +10187,8 @@ sub _load_edit_list_conf {
                 $conf->{$param}{$r} = $priv;
             }
         } else {
-            $log->syslog(
-                'info',
-                'Unknown parameter in %s (Ignored) %s',
-                "$Conf::Conf{'etc'}/edit_list.conf", $_
-            );
+            $log->syslog('info', 'Unknown parameter in %s (Ignored): %s',
+                $file, $line);
             next;
         }
     }
