@@ -10125,6 +10125,9 @@ sub _load_edit_list_conf {
     my $self = shift;
 
     my $robot = $self->{'domain'};
+
+    my $pinfo = Sympa::Robot::list_params($self->{'domain'});
+
     my $file;
     my $conf;
 
@@ -10146,6 +10149,26 @@ sub _load_edit_list_conf {
         if (/^\s*(\S+)\s+(($roles_regexp)\s*(,\s*($roles_regexp))*)\s+(read|write|hidden)\s*$/i
             ) {
             my ($param, $role, $priv) = ($1, $2, $6);
+
+            # Resolve alias.
+            my $key;
+            ($param, $key) = split /[.]/, $param, 2;
+            if ($pinfo->{$param}) {
+                my $alias = $pinfo->{$param}{obsolete};
+                if ($alias and $pinfo->{$alias}) {
+                    $param = $alias;
+                }
+                if (    $key
+                    and ref $pinfo->{$param}{'format'} eq 'HASH'
+                    and $pinfo->{$param}{'format'}{$key}) {
+                    my $alias = $pinfo->{$param}{'format'}{$key}{obsolete};
+                    if ($alias and $pinfo->{$param}{'format'}{$alias}) {
+                        $key = $alias;
+                    }
+                }
+            }
+            $param = $param . '.' . $key if $key;
+
             my @roles = split /,/, $role;
             foreach my $r (@roles) {
                 $r =~ s/^\s*(\S+)\s*$/$1/;
