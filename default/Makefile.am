@@ -209,7 +209,6 @@ nobase_default_DATA = \
 	web_tt2/create_list_request.tt2 \
 	web_tt2/create_list.tt2 \
 	web_tt2/css.tt2 \
-	web_tt2/css_ie.tt2 \
 	web_tt2/d_control.tt2 \
 	web_tt2/d_editfile.tt2 \
 	web_tt2/d_install_shared.tt2 \
@@ -415,4 +414,6 @@ install-data-hook:
 	$(LN_S) -f lists.tt2 which.tt2; \
 	$(LN_S) -f lists.tt2 search_list.tt2; \
 	rm -f authorization_reject.tt2; \
-	$(LN_S) -f ../mail_tt2/authorization_reject.tt2
+	$(LN_S) -f ../mail_tt2/authorization_reject.tt2; \
+	test -f css_ie.tt2 || echo '' >> css_ie.tt2
+
