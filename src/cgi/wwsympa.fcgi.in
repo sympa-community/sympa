@@ -13076,44 +13076,30 @@ sub _prepare_data {
     my $data2;
     if ($struct->{'occurrence'} =~ /n$/) {
         $p_glob->{'occurrence'} = 'multiple';
-        if (defined($data)) {
-            $data2 = $data;
+        $data2 = $data || [];
 
-            if ($may_edit eq 'write') {
-                ## Add an empty entry
-                unless (($name eq 'days')
-                    || ($name eq 'reception')
-                    || ($name eq 'rfc2369_header_fields')
-                    || ($name eq 'topics')) {
-
-                    my $empty_entry;
-                    ## Structured parameter
-                    if (ref($struct->{'format'}) eq 'HASH') {
-                        foreach
-                            my $sub_parameter (keys %{$struct->{'format'}}) {
-
-                            ## Use default value if defined
-                            if ($struct->{'format'}{$sub_parameter}
-                                {'default'}) {
-                                $empty_entry->{$sub_parameter} =
-                                    $struct->{'format'}{$sub_parameter}
-                                    {'default'};
-                            }
+        if ($may_edit eq 'write') {
+            # Add an empty entry.
+            unless (grep { $name eq $_ }
+                qw(days reception rfc2369_header_fields topics)) {
+                my $empty_entry;
+                if (ref($struct->{'format'}) eq 'HASH') {
+                    # Structured parameter.
+                    foreach my $sub_parameter (keys %{$struct->{'format'}}) {
+                        # Use default value if defined.
+                        if ($struct->{'format'}{$sub_parameter}{'default'}) {
+                            $empty_entry->{$sub_parameter} =
+                                $struct->{'format'}{$sub_parameter}
+                                {'default'};
                         }
-                        $empty_entry->{is_empty} = 1;
-
-                        ## Simpe parameter
-                    } else {
-                        $empty_entry = undef;
                     }
-
-                    push @{$data2}, $empty_entry;
-                    ## wwslog('debug2', 'Add 1 %s', $name);
+                    $empty_entry->{is_empty} = 1;
+                } else {
+                    # Simple parameter.
+                    $empty_entry = undef;
                 }
-            }
-        } else {
-            if ($may_edit eq 'write') {
-                $data2 = [undef];
+
+                push @{$data2}, $empty_entry;
             }
         }
     } else {
