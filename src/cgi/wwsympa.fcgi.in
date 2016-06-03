@@ -22116,7 +22116,7 @@ sub do_subindex {
 
         push @subscriptions,
             {
-            key   => $request->{authkey},
+            key   => $request->{keyauth},
             value => {
                 custom_attribute => $request->{custom_attribute},
                 date             => $language->gettext_strftime(
