@@ -22139,7 +22139,7 @@ sub do_ignoresub {
 
         my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
-            authkey => $id,
+            keyauth => $id,
             action  => 'add'
         );
         while (1) {
@@ -22179,7 +22179,7 @@ sub do_sigindex {
 
         push @signoffs,
             {
-            key   => $request->{authkey},
+            key   => $request->{keyauth},
             value => {
                 date => $language->gettext_strftime(
                     '%d %b %Y', localtime $request->{date}
@@ -22214,7 +22214,7 @@ sub do_ignoresig {
 
         my $spool_req = Sympa::Spool::Auth->new(
             context => $list,
-            authkey => $id,
+            keyauth => $id,
             action  => 'del'
         );
         while (1) {
