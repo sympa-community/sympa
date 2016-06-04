@@ -230,9 +230,24 @@ sub display_configuration {
 
     print "[SYMPA]\n";
     foreach my $key (sort keys %Conf::Conf) {
+        next
+            if grep { $key eq $_ }
+                qw(auth_services blacklist cas_number crawlers_detection
+                generic_sso_number ldap ldap_number listmasters
+                locale2charset nrcpt_by_domain robot_by_http_host request
+                robot_name robots source_file sympa trusted_applications
+                use_passwd);
+
         $var = $Conf::Conf{$key};
 
-        if (ref($var) eq 'ARRAY') {
+        if ($key eq 'automatic_list_families') {
+            $disp = join ';', map {
+                my $name = $_;
+                join ':', map { sprintf '%s=%s', $_, $var->{$name}{$_} }
+                    grep { !/\Aescaped_/ }
+                    sort keys %{$var->{$name} || {}};
+            } sort keys %{$var || {}};
+        } elsif (ref $var eq 'ARRAY') {
             $disp = join(',', map { defined $_ ? $_ : '' } @$var);
         } else {
             $disp = defined $var ? $var : '';
