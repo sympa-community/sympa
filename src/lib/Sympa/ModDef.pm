@@ -243,7 +243,7 @@ our %cpan_modules = (
         'gettext_id'     => 'set of various subroutines to handle scalar',
     },
     'Locale::Messages' => {
-        required_version => '1.22',
+        required_version => '1.20',
         package_name     => 'libintl-perl',
         mandatory        => 1,
         'gettext_id'     => 'internationalization functions',

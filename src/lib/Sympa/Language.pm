@@ -28,7 +28,7 @@ use strict;
 use warnings;
 use base qw(Class::Singleton);
 
-use Locale::Messages '1.22';    # virtually same as 1.23.
+use Locale::Messages;
 use POSIX qw();
 
 use Sympa::Constants;
@@ -39,7 +39,11 @@ BEGIN {
     ## map ll_RR with ll.
     ## libintl-perl 1.23 or later is required to use 'gettext_dumb' package
     ## which is independent from POSIX locale.
-    Locale::Messages->select_package('gettext_dumb');
+    if ( $Locale::Messages::VERSION >= 1.22 ) {
+        Locale::Messages->select_package('gettext_dumb');
+    } else {
+        Locale::Messages->select_package('gettext_pp');
+    }
     ## Workaround: Prevent from searching catalogs in /usr/share/locale.
     undef $Locale::gettext_pp::__gettext_pp_default_dir;
 
