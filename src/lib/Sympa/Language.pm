@@ -37,13 +37,12 @@ BEGIN {
     ## Using the Pure Perl implementation of gettext
     ## This is required on Solaris : native implementation of gettext does not
     ## map ll_RR with ll.
-    ## libintl-perl 1.23 or later is required to use 'gettext_dumb' package
-    ## which is independent from POSIX locale.
-    if ( $Locale::Messages::VERSION >= 1.22 ) {
-        Locale::Messages->select_package('gettext_dumb');
-    } else {
-        Locale::Messages->select_package('gettext_pp');
-    }
+    # libintl-perl 1.22 (virtually 1.23) or later is recommended to use
+    # 'gettext_dumb' package which is independent from POSIX locale.  If older
+    # version is used.  falls back to 'gettext_pp'.
+    my $package = Locale::Messages->select_package('gettext_dumb');
+    Locale::Messages->select_package('gettext_pp')
+        unless $package and $package eq 'gettext_dumb';
     ## Workaround: Prevent from searching catalogs in /usr/share/locale.
     undef $Locale::gettext_pp::__gettext_pp_default_dir;
 
