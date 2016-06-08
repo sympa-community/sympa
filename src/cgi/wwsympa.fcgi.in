@@ -7912,19 +7912,6 @@ sub do_add {
         return 'info';
     }
 
-    # Delete subscription requests if any
-    my $spool_req =
-        Sympa::Spool::Auth->new(context => $list, action => 'add');
-    while (1) {
-        my ($request, $handle) = $spool_req->next;
-        last unless $handle;
-        next
-            unless $request
-                and grep { $request->{email} eq $_ } @added_users;
-
-        $spool_req->remove($handle);
-    }
-
     Sympa::Report::notice_report_web('add_performed', {'total' => $total},
         $param->{'action'});
     web_db_log(
@@ -8053,7 +8040,6 @@ sub do_add_fromsub {
                 );
             }
         } else {
-            # Delete subscription request.
             $spool_req->remove($handle);
             web_db_log({target => $request->{email}, status => 'success'});
             $total++;
@@ -8196,10 +8182,6 @@ sub do_del {
         return undef;
     }
 
-# Not yet implemented.
-#    ## Delete signoff request if any
-#    $list->delete_signoff_request(@removed_users);
-
     Sympa::Report::notice_report_web('del_performed', {'total' => $total},
         $param->{'action'});
 
@@ -8287,7 +8269,6 @@ sub do_del_fromsig {
                 {sig => $request->{email}},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         } else {
-            # Delete signoff request.
             $spool_req->remove($handle);
             web_db_log({target => $request->{email}, status => 'success'});
             $total++;

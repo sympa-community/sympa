@@ -31,7 +31,6 @@ use Time::HiRes qw();
 use Sympa;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Spool::Auth;
 
 use base qw(Sympa::Request::Handler);
 
@@ -67,9 +66,8 @@ sub _twist {
     }
 
     # Really delete and rewrite to disk.
-    my $u;
     unless (
-        $u = $list->delete_list_member(
+        $list->delete_list_member(
             'users'     => [$who],
             'exclude'   => ' 1',
             'operation' => 'del'
@@ -87,19 +85,6 @@ sub _twist {
         );
         $self->add_stash($request, 'intern');
         return undef;
-    } else {
-        my $spool_req = Sympa::Spool::Auth->new(
-            context => $list,
-            email   => $who,
-            action  => 'del'
-        );
-        while (1) {
-            my ($request, $handle) = $spool_req->next;
-            last unless $handle;
-            next unless $request;
-
-            $spool_req->remove($handle);
-        }
     }
 
     ## Send a notice to the removed user, unless the owner indicated

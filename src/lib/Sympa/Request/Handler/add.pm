@@ -31,7 +31,6 @@ use Time::HiRes qw();
 use Sympa;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Spool::Auth;
 use Sympa::Tools::Password;
 use Sympa::User;
 
@@ -96,19 +95,6 @@ sub _twist {
             $self->add_stash($request, 'intern');
         }
         return undef;
-    }
-
-    my $spool_req = Sympa::Spool::Auth->new(
-        context => $list,
-        email   => $email,
-        action  => 'add'
-    );
-    while (1) {
-        my ($request, $handle) = $spool_req->next;
-        last unless $handle;
-        next unless $request;
-
-        $spool_req->remove($handle);
     }
 
     $self->add_stash($request, 'notice', 'now_subscriber',

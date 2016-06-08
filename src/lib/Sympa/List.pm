@@ -54,6 +54,7 @@ use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Spindle::ProcessTemplate;
+use Sympa::Spool::Auth;
 use Sympa::Task;
 use Sympa::Template;
 use Sympa::Ticket;
@@ -2082,6 +2083,20 @@ sub delete_list_member {
             next;
         }
 
+        # Delete signoff requests if any.
+        my $spool_req = Sympa::Spool::Auth->new(
+            context => $self,
+            action  => 'del',
+            email   => $who,
+        );
+        while (1) {
+            my ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            next unless $request;
+
+            $spool_req->remove($handle);
+        }
+
         #log in stat_table to make statistics
         if ($operation) {
             $log->add_stat(
@@ -3627,6 +3642,42 @@ sub update_list_member {
         }
     }
 
+    # Delete subscription / signoff requests no longer used.
+    my $new_email;
+    if ($who ne '*' and $values->{'email'}
+        and $new_email = Sympa::Tools::Text::canonic_email($values->{'email'})
+        and $who ne $new_email) {
+        my $spool_req;
+
+        # Delete signoff requests if any.
+        $spool_req = Sympa::Spool::Auth->new(
+            context => $self,
+            action  => 'del',
+            email   => $who,
+        );
+        while (1) {
+            my ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            next unless $request;
+
+            $spool_req->remove($handle);
+        }
+
+        # Delete subscription requests if any.
+        $spool_req = Sympa::Spool::Auth->new(
+            context => $self,
+            action  => 'add',
+            email   => $new_email,
+        );
+        while (1) {
+            my ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            next unless $request;
+
+            $spool_req->remove($handle);
+        }
+    }
+
     # Rename picture on disk if user email changed.
     if ($values->{'email'}) {
         foreach my $path ($self->find_picture_paths($who)) {
@@ -3976,6 +4027,21 @@ sub add_list_member {
             );
             next;
         }
+
+        # Delete subscription requests if any.
+        my $spool_req = Sympa::Spool::Auth->new(
+            context => $self,
+            action  => 'add',
+            email   => $who,
+        );
+        while (1) {
+            my ($request, $handle) = $spool_req->next;
+            last unless $handle;
+            next unless $request;
+
+            $spool_req->remove($handle);
+        }
+
         $self->{'add_outcome'}{'added_members'}++;
         $self->{'add_outcome'}{'remaining_member_to_add'}--;
         $current_list_members_count++;

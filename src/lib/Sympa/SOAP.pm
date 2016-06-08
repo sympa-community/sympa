@@ -903,19 +903,6 @@ sub add {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Unable to add user')->faultdetail($error);
         }
-
-        my $spool_req = Sympa::Spool::Auth->new(
-            context => $list,
-            email   => $email,
-            action  => 'add'
-        );
-        while (1) {
-            my ($request, $handle) = $spool_req->next;
-            last unless $handle;
-            next unless $request;
-
-            $spool_req->remove($handle);
-        }
     }
 
     ## Now send the welcome file to the user if it exists and notification is
@@ -1033,9 +1020,8 @@ sub del {
     }
 
     # Really delete and rewrite to disk.
-    my $u;
     unless (
-        $u = $list->delete_list_member(
+        $list->delete_list_member(
             'users'     => [$email],
             'exclude'   => '1',
             'operation' => 'del'
@@ -1047,19 +1033,6 @@ sub del {
         die SOAP::Fault->faultcode('Server')
             ->faultstring('Unable to remove subscriber information')
             ->faultdetail('Database access failed');
-    } else {
-        my $spool_req = Sympa::Spool::Auth->new(
-            context => $list,
-            email   => $email,
-            action  => 'del'
-        );
-        while (1) {
-            my ($request, $handle) = $spool_req->next;
-            last unless $handle;
-            next unless $request;
-
-            $spool_req->remove($handle);
-        }
     }
 
     ## Send a notice to the removed user, unless the owner indicated
