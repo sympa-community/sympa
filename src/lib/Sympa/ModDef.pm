@@ -262,7 +262,7 @@ our %cpan_modules = (
     # Mail::DKIM::Signer is included in Mail-DKIM.
     # Mail::DKIM::TextWrap is included in Mail-DKIM.
     'Mail::DKIM::Verifier' => {
-        required_version => '0.39',
+        required_version => '0.37',
         package_name     => 'Mail-DKIM',
         'gettext_id' =>
             'required in order to use DKIM features (both for signature verification and signature insertion)',

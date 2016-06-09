@@ -430,6 +430,16 @@ sub check_spam_status {
     }
 }
 
+my $has_mail_dkim_textwrap;
+BEGIN {
+    eval 'use Mail::DKIM::Signer';
+    # This doesn't export $VERSION.
+    eval 'use Mail::DKIM::TextWrap';
+    $has_mail_dkim_textwrap = !$EVAL_ERROR;
+    # Mail::DKIM::Signer prior to 0.38 doesn't import this.
+    eval 'use Mail::DKIM::PrivateKey';
+}
+
 # Old name: tools::dkim_sign() which took string and returned string.
 sub dkim_sign {
     $log->syslog('debug', '(%s)', @_);
@@ -457,13 +467,13 @@ sub dkim_sign {
         return undef;
     }
 
-    unless (eval "require Mail::DKIM::Signer") {
+    unless ($Mail::DKIM::Signer::VERSION) {
         $log->syslog('err',
             "Failed to load Mail::DKIM::Signer Perl module, ignoring DKIM signature"
         );
         return undef;
     }
-    unless (eval "require Mail::DKIM::TextWrap") {
+    unless ($has_mail_dkim_textwrap) {
         $log->syslog('err',
             "Failed to load Mail::DKIM::TextWrap Perl module, signature will not be pretty"
         );
