@@ -74,24 +74,22 @@ __END__
 # RPM spec file for Sympa.
 @COMMANDLINE@
 
-%define name    sympa
-%define version @VERSION@
-%define release 1%{?dist}
-
-Name:     %{name}
-Version:  %{version}
-Release:  %{release}
+Name:     sympa
+Version:  @VERSION@
+Release:  1%{?dist}
 Summary(fr): Sympa est un gestionnaire de listes électroniques
 Summary:  Sympa is a powerful multilingual List Manager
 License:  GPL
 Group:    System Environment/Daemons
 URL:      http://www.sympa.org/
 Source:   http://www.sympa.org/distribution/%{name}-%{version}.tar.gz
+
 Requires: smtpdaemon
 @REQUIRES@
 Requires: webserver
 Requires(pre): /usr/sbin/useradd
 Requires(pre): /usr/sbin/groupadd
+
 BuildRoot: %{_tmppath}/%{name}-%{version}
 
 %description
@@ -146,15 +144,16 @@ rm -rf %{buildroot}
 %pre
 # Create "sympa" group if it does not exists
 if ! getent group sympa > /dev/null 2>&1; then
-  /usr/sbin/groupadd sympa
+  /usr/sbin/groupadd -r sympa
 fi
 
 # Create "sympa" user if it does not exists
 if ! getent passwd sympa > /dev/null 2>&1; then
   /usr/sbin/useradd -r -g sympa \
       -d %{_localstatedir}/lib/sympa \
-      -c "system user for sympa" \
-      -s "/bin/bash"
+      -c "System User for Sympa" \
+      -s "/bin/bash" \
+      sympa
 fi
 
 %files
