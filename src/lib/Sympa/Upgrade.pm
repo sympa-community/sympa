@@ -325,7 +325,7 @@ sub upgrade {
 
             next unless ($listname && $listdomain);
 
-            my $list = Sympa::List->new($listname);
+            my $list = Sympa::List->new($listname,$listdomain);
             unless (defined $list) {
                 $log->syslog('notice', 'Skipping unknown list %s', $listname);
                 next;
@@ -509,7 +509,7 @@ sub upgrade {
             my $changed = 0;
             foreach my $incl (@include_lists) {
                 # Search for the list if robot is not specified.
-                my $incl_list = Sympa::List->new($incl->{listname});
+                my $incl_list = Sympa::List->new($incl->{listname}, $list->{'domain'});
 
                 if (    $incl_list
                     and $incl_list->{'domain'} ne $list->{'domain'}) {
