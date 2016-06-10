@@ -6,11 +6,10 @@ BindTo=sympa.service
 [Service]
 Type=forking
 PIDFile=--piddir--/sympasoap.pid
-ExecStart=${FCGI_SPAWN} -F ${FCGI_CHILDREN} \
+ExecStart=/usr/bin/spawn-fcgi -F $FCGI_CHILDREN \
     -P --piddir--/sympasoap.pid \
-    -u ${FCGI_USER} -g ${FCGI_GROUP} ${FCGI_OPTS} -- \
+    -u $FCGI_USER -g $FCGI_GROUP $FCGI_OPTS -- \
     --libexecdir--/sympa_soap_server.fcgi
-Environment="FCGI_SPAWN=/usr/bin/spawn-fcgi"
 Environment="FCGI_CHILDREN=5"
 Environment="FCGI_USER=--USER--"
 Environment="FCGI_GROUP=--GROUP--"
