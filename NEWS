@@ -3,6 +3,83 @@
 
 (See Changelog file for the full changes log)
 
+6.2.16		June 17, 2016
+
+  Features:
+
+	[12807] src/cgi/wwsympa.fcgi.in, src/lib/Sympa/List.pm:  WWSympa:
+	"including_lists" page to get lists including particular lists.  This
+	page is accessible only by list owners and listmasters.
+
+	[12805] src/lib/Sympa/List.pm:	Now looping by include_list settings
+	can be detected.  Inclusion is skipped if a setting will cause looping.
+
+
+
+  Changes:
+
+	[12810] default/web_tt2/help_editlist.tt2, src/lib/Sympa/Admin.pm,
+	src/lib/Sympa/List.pm, src/lib/Sympa/ListDef.pm,
+	src/lib/Sympa/Upgrade.pm:  'include_sympa_list' parameter obsoletes
+	'include_list' parameter in list config and named data sources.  Older
+	one may still be used and mapped to newer one internally.
+
+	[12806] src/lib/Sympa/Spindle/ProcessModeration.pm: [REported by J.P.
+	Barrière, ENIT] Now when a message is successfully moderated, a DSN is
+	sent to the original author.
+
+  Bug fixes:
+
+	[12837] src/lib/Sympa/Upgrade.pm:  When upgrading from versions older
+	thant 5.0, upgrade would fail some steps because the call to List::new
+	did not use the domain name.
+
+	[12831] src/lib/Sympa/Language.pm, src/lib/Sympa/ModDef.pm:  [Submitted
+	by X. Bachelot] Older version of Locale::Messages is available on
+	several distributions (e.g. RHEL/CentOS 6/7), while Sympa requires 1.22
+	or later.  The patch tests the Locale::Message version and falls back
+	to gettext_pp if the version is too old.
+
+	[12827] src/cgi/wwsympa.fcgi.in: [Reported by P. Kissman, Commonwealth
+	of Massachusetts and D. Stoye, Univ. Berlin] The subindex page did not allow to actually
+	accept/reject subscriptions. This was because of a badly named
+	parameter passed to the templates.
+
+	[12821] src/lib/Sympa/DatabaseDriver/PostgreSQL.pm:  PostgreSQL: With
+	DBD::Pg 3.x, non-ASCII inputs are broken.
+	DBD::Pg 3.x needs "utf8 flags" for text parameters of queries, even if
+	pg_enable_utf8 option is disabled.  As a workaround, now parameters fed
+	to queries will be decoded to Unicode strings.	This fix is
+	experimental.
+
+	[12819] src/lib/Sympa/Marc/Search.pm:  WWSympa: arcsearch crashes if a
+	search key word contains "'" and search area includes "Body".
+	Fixed by escaping search key words appropriately.
+
+	[12817] src/lib/Conf.pm:  [Reported by several listmasters]
+	Sympa_wizard.pl crashes if sympa.conf do never include valid
+	parameters.  Fixed by initializing hashref appropriately.
+
+	[12813] src/etc/script/sympa.servicein:  [Reported by P. Camps, Univ.
+	Montpellier 2] On rebooting, Sympa cannot be started by systemd units,
+	because database service may not have been started always.
+	Improved sympa.service by ensuring other daemons will be started after
+	invocation of sympa_msg.pl.  Note that this fix does not solve starting
+	order of database service and Sympa: sympa.service should be customized
+	if necessary.
+
+	[12812] src/lib/Sympa/User.pm:	A test on the number of effected rows
+	displayed an error when updating a user. Fixed by removing this test -
+	which was useless as, if the query fails, an error is raised already.
+
+	[12800] src/lib/Sympa/DatabaseDescription.pm, src/lib/Sympa/List.pm,
+	src/sbin/sympa.pl.in:  [Reported by S. Rich, Duke univ.] Close List
+	operation cause timeout on web interface.  Because Sympa scans all
+	lists to ensure that any lists do never include the list to be closed.
+	Fixed by introducing new DB table 'inclusion_table' to cache
+	'include_list' configuration of lists.	The new table will be created
+	and filled automatically during upgrade process.
+
 6.2.15		May 12, 2016
 
   Features:
