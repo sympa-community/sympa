@@ -67,7 +67,7 @@ if (-t) {
 if ($modfail) {
     no warnings;
 
-    *gettext = sub {shift};
+    *gettext = sub { $_[1] ? sprintf('%*s', $_[1], $_[0]) : $_[0] };
 
     eval { require Text::Wrap; };
     if ($EVAL_ERROR) {
@@ -81,7 +81,11 @@ if ($modfail) {
     no warnings;
 
     my $language = Sympa::Language->instance;
-    *gettext          = sub { $language->gettext(shift) };
+    *gettext = sub {
+        $_[1]
+            ? Sympa::Tools::Text::pad($language->gettext($_[0]), $_[1])
+            : $language->gettext($_[0]);
+    };
     *gettext_strftime = sub { $language->gettext_strftime(@_) };
 
     my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
@@ -517,7 +521,7 @@ sub check_modules {
 #    my($default, $todo, $versions, $opt_features) = @_;
     my ($default, $cpan_modules, $type) = @_;
 
-    printf "%-24s%-24s%s\n", gettext('perl module'), gettext('from CPAN'),
+    printf "%s%s%s\n", gettext('perl module', -24), gettext('from CPAN', -24),
         gettext('STATUS');
     printf "%-24s%-24s%s\n", gettext('-----------'), gettext('---------'),
         gettext('------');
