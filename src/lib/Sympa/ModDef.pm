@@ -99,7 +99,8 @@ our %cpan_modules = (
         'gettext_id'     => 'used to decode date and time in message headers',
     },
     'DBD::CSV' => {
-        package_name => 'DBD-CSV',
+        required_version => '0.22',
+        package_name     => 'DBD-CSV',
         'gettext_id' =>
             'CSV database driver, required if you include list members, owners or editors from CSV file.',
     },
