@@ -376,6 +376,7 @@ our %cpan_modules = (
         mandatory        => 1,
         'gettext_id'     => 'used to get time with sub-second precision',
     },
+    # Unicode::GCString is included in Unicode-LineBreak.
     'URI::Escape' => {
         required_version => '3.28',    # Included in URI-1.35.
         package_name     => 'URI',

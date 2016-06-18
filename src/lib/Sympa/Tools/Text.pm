@@ -32,6 +32,7 @@ use Encode::MIME::Header;    # 'MIME-Q' encoding.
 use HTML::Entities qw();
 use MIME::EncWords;
 use Text::LineFold;
+use Unicode::GCString;
 use URI::Escape qw();
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
@@ -287,6 +288,24 @@ sub _url_query_string {
                     Sympa::Tools::Text::encode_uri($dval);
                 } sort keys %$query
         );
+    }
+}
+
+sub pad {
+    my $str   = shift;
+    my $width = shift;
+
+    return $str unless $width and defined $str;
+
+    my $ustr = Encode::is_utf8($str) ? $str : Encode::decode_utf8($str);
+    my $cols = Unicode::GCString->new($ustr)->columns;
+
+    unless ($cols < abs $width) {
+        return $str;
+    } elsif ($width < 0) {
+        return $str . (' ' x (-$width - $cols));
+    } else {
+        return (' ' x ($width - $cols)) . $str;
     }
 }
 
@@ -607,6 +626,31 @@ Returns:
 
 Constructed URL.
 
+=item pad ( $str, $width )
+
+Pads space a string so that result will not be narrower than given width.
+
+Parameters:
+
+=over
+
+=item $str
+
+A string.
+
+=item $width
+
+If $width is false value or width of $str is not less than $width,
+does nothing.
+If $width is less than C<0>, pads right.
+Otherwise, pads left.
+
+=back
+
+Returns:
+
+Padded string.
+
 =item qdecode_filename ( $filename )
 
 Q-Decodes web file name.
@@ -712,5 +756,7 @@ on Sympa 6.2.10.
 
 decode_html(), encode_html(), encode_uri() and mailtourl()
 were added on Sympa 6.2.14, and escape_url() was deprecated.
+
+pad() was added on Sympa 6.2.17.
 
 =cut
