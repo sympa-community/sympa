@@ -74,10 +74,9 @@ sub _get_datasource_id {
         ## hash) we should transform
         ## the following algorithm into something that would be recursive.
         ## Unlikely it happens.
-        my @orderedValues;
-        foreach my $key (sort (keys %{$source})) {
-            @orderedValues = (@orderedValues, $key, $source->{$key});
-        }
+        my @orderedValues =
+            map { (defined $source->{$_}) ? ($_, $source->{$_}) : () }
+            sort keys %$source;
         return substr(Digest::MD5::md5_hex(join('/', @orderedValues)), -8);
     } else {
         return substr(Digest::MD5::md5_hex($source), -8);
