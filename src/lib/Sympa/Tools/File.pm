@@ -280,6 +280,8 @@ sub get_dir_size {
 }
 
 sub remove_dir {
+    no warnings qw(File::Find);
+
     foreach my $current_dir (@_) {
         File::Find::finddepth({wanted => \&del, no_chdir => 1}, $current_dir);
     }
