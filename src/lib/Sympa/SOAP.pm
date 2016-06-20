@@ -1287,8 +1287,6 @@ sub signoff {
             ->faultdetail("List $listname unknown");
     }
 
-    my $host = Conf::get_robot_conf($robot, 'host');
-
     if ($listname eq '*') {
         my $success;
         foreach my $list (Sympa::List::get_which($sender, $robot, 'member')) {
@@ -1463,7 +1461,7 @@ sub subscribe {
             'subrequest',
             {   'who'     => $sender,
                 'keyauth' => $keyauth,
-                'replyto' => Conf::get_robot_conf($robot, 'sympa'),
+                'replyto' => Sympa::get_address($robot),
                 'gecos'   => $gecos
             }
         );

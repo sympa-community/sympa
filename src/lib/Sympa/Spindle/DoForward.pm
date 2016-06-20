@@ -75,9 +75,7 @@ sub _twist {
     my ($list, $recipient, $priority);
 
     if ($function eq 'listmaster') {
-        $recipient =
-            $Conf::Conf{'listmaster_email'} . '@'
-            . Conf::get_robot_conf($robot, 'host');
+        $recipient = Sympa::get_address($robot, 'listmaster');
         $priority = 0;
     } else {
         $list = $message->{context};
@@ -170,15 +168,14 @@ sub _twist {
     #       protected against DMARC if neccessary.  The listmaster address
     #       would be protected, too.
     $message->add_header('X-Loop', $recipient);
-    $message->replace_header('Sender',
-        Conf::get_robot_conf($robot, 'request'));
+    $message->replace_header('Sender', Sympa::get_address($robot, 'owner'));
     $message->delete_header('Resent-Sender');
     if ($function eq 'owner' or $function eq 'editor') {
         $message->dmarc_protect if $list;
     }
 
     # Overwrite envelope sender.  It is REQUIRED for delivery.
-    $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
+    $message->{envelope_sender} = Sympa::get_address($robot, 'owner');
 
     unless (defined Sympa::Mailer->instance->store($message, \@rcpt)) {
         $log->syslog('err', 'Impossible to forward mail for %s function %s',

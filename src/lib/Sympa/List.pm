@@ -463,9 +463,7 @@ sub set_status_family_closed {
     my @param   = @_;       # No longer used.
 
     unless ($self->{'admin'}{'status'} eq 'family_closed') {
-        my $updater =
-            Conf::get_robot_conf($self->{'domain'}, 'listmaster_email') . '@'
-            . Conf::get_robot_conf($self->{'domain'}, 'host');
+        my $updater = Sympa::get_address($self->{'domain'}, 'listmaster');
 
         unless ($self->close_list($updater, 'family_closed')) {
             $log->syslog('err',

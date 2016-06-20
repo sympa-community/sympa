@@ -417,9 +417,7 @@ sub send_notify_to_listmaster {
     }
 
     my @listmasters = Sympa::get_listmasters_email($that);
-    my $to =
-          Conf::get_robot_conf($robot_id, 'listmaster_email') . '@'
-        . Conf::get_robot_conf($robot_id, 'host');
+    my $to = Sympa::get_address($robot_id, 'listmaster');
 
     if (ref $data ne 'HASH' and ref $data ne 'ARRAY') {
         die

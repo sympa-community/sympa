@@ -295,7 +295,7 @@ sub _twist {
             } elsif ($list) {
                 $return_path = $list->get_list_address('return_path');
             } else {
-                $return_path = Conf::get_robot_conf($robot, 'request');
+                $return_path = Sympa::get_address($robot, 'owner');
             }
 
             if ($new_message->{shelved}{merge}) {
@@ -383,7 +383,7 @@ sub _twist {
         } elsif ($list) {
             $return_path = $list->get_list_address('return_path');
         } else {
-            $return_path = Conf::get_robot_conf($robot, 'request');
+            $return_path = Sympa::get_address($robot, 'owner');
         }
 
         if ($new_message->{shelved}{smime_sign}) {

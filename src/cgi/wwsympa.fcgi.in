@@ -1153,8 +1153,6 @@ while ($query = new_loop()) {
     foreach my $p (
         'email',
         'host',
-        'sympa',
-        'request',
         'soap_url',
         'wwsympa_url',
         'listmaster_email',
@@ -1207,6 +1205,9 @@ while ($query = new_loop()) {
                 or $p =~ /\Acolor_/
                 or $p =~ /_url\z/;
     }
+    # Compat.: deprecated attributes of Robot.
+    $param->{'conf'}{'sympa'}   = Sympa::get_address($robot);
+    $param->{'conf'}{'request'} = Sympa::get_address($robot, 'owner');
 
     foreach my $auth (keys %{$Conf::Conf{'cas_id'}{$robot}}) {
         $log->syslog('debug2', 'CAS authentication service %s', $auth);
@@ -8986,7 +8987,7 @@ sub do_distribute {
     my $cmd_message = Sympa::Message->new(
         sprintf("\n\n%s\n", join("\n", @mail_command)),
         context         => $robot,
-        envelope_sender => Conf::get_robot_conf($robot, 'request'),
+        envelope_sender => Sympa::get_address($robot, 'owner'),
         sender          => $param->{'user'}{'email'},
         md5_check       => 1,
         message_id      => Sympa::unique_message_id($robot)
@@ -20264,7 +20265,7 @@ sub do_remind {
     my $message = Sympa::Message->new(
         sprintf("\n\n%s\n", $mail_command),
         context         => $robot,
-        envelope_sender => Conf::get_robot_conf($robot, 'request'),
+        envelope_sender => Sympa::get_address($robot, 'owner'),
         sender          => $param->{'user'}{'email'},
         md5_check       => 1,
         message_id      => sprintf('<%s@wwsympa>', $time)
@@ -21541,8 +21542,7 @@ sub do_send_mail {
             if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
             'on');
 
-        $u_message->{envelope_sender} =
-            Conf::get_robot_conf($robot, 'request');
+        $u_message->{envelope_sender} = Sympa::get_address($robot, 'owner');
         $u_message->{priority} =
             Conf::get_robot_conf($robot, 'sympa_priority');
 
@@ -21797,7 +21797,7 @@ sub do_tag_topic_by_sender {
     my $cmd_message = Sympa::Message->new(
         sprintf("\n\nQUIET CONFIRM %s\n", $in{'authkey'}),
         context         => $robot,
-        envelope_sender => Conf::get_robot_conf($robot, 'request'),
+        envelope_sender => Sympa::get_address($robot, 'owner'),
         sender          => $sender,
         md5_check       => 1,
         message_id      => sprintf('<%s@wwsympa>', $time)

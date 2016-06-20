@@ -2084,9 +2084,11 @@ sub _infer_robot_parameter_values {
     unless ($param->{'config_hash'}{'email'}) {
         $param->{'config_hash'}{'email'} = $Conf{'email'};
     }
+    # Obsoleted. Use get_address().
     $param->{'config_hash'}{'sympa'} =
           $param->{'config_hash'}{'email'} . '@'
         . $param->{'config_hash'}{'host'};
+    # Obsoleted. Use get_address('owner').
     $param->{'config_hash'}{'request'} =
           $param->{'config_hash'}{'email'}
         . '-request@'

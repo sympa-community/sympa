@@ -229,13 +229,9 @@ sub _twist {
 
     my $list_address;
     if ($message->{'listtype'} and $message->{'listtype'} eq 'listmaster') {
-        $list_address =
-              Conf::get_robot_conf($robot, 'listmaster_email') . '@'
-            . Conf::get_robot_conf($robot, 'host');
+        $list_address = Sympa::get_address($robot, 'listmaster');
     } elsif ($message->{'listtype'} and $message->{'listtype'} eq 'sympa') {
-        $list_address =
-              Conf::get_robot_conf($robot, 'email') . '@'
-            . Conf::get_robot_conf($robot, 'host');
+        $list_address = Sympa::get_address($robot);
     } else {
         unless (ref $list eq 'Sympa::List') {
             $log->syslog('err', 'List %s does not exist', $listname);

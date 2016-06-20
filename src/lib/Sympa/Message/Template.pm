@@ -136,12 +136,15 @@ sub new {
     }
 
     foreach my $p (
-        'email',   'gecos',      'host',        'sympa',
-        'request', 'listmaster', 'wwsympa_url', 'title',
-        'listmaster_email'
+        'email',       'gecos', 'host', 'listmaster',
+        'wwsympa_url', 'title', 'listmaster_email'
         ) {
         $data->{'conf'}{$p} = Conf::get_robot_conf($robot_id, $p);
     }
+    # Compat.: Deprecated attributes of Robot.
+    $data->{'conf'}{'sympa'}   = Sympa::get_address($robot_id);
+    $data->{'conf'}{'request'} = Sympa::get_address($robot_id, 'owner');
+
     $data->{'conf'}{'version'} = Sympa::Constants::VERSION();
 
     $data->{'sender'} ||= $who;

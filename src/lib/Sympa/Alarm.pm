@@ -87,8 +87,7 @@ sub store {
         return 1;
     } else {
         # Overwrite envelope sender
-        $message->{envelope_sender} =
-            Conf::get_robot_conf($robot_id, 'request');
+        $message->{envelope_sender} = Sympa::get_address($robot_id, 'owner');
         #FIXME: Priority would better to be '0', isn't it?
         $message->{priority} =
             Conf::get_robot_conf($robot_id, 'sympa_priority');
