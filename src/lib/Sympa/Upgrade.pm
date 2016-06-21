@@ -590,7 +590,7 @@ sub upgrade {
                 $log->syslog(
                     'notice',
                     'Processing list %s...',
-                    $list->get_list_address()
+                    Sympa::get_address($list)
                 );
 
                 ## Determine default lang for this list
@@ -851,7 +851,7 @@ sub upgrade {
                 $log->syslog(
                     'notice',
                     'Processing list %s...',
-                    $list->get_list_address()
+                    Sympa::get_address($list)
                 );
 
                 my @all_files;

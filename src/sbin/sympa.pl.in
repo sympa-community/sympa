@@ -776,7 +776,7 @@ if ($main::options{'dump'}) {
     }
 
     printf "Members of list %s have been successfully update.\n",
-        $list->get_list_address();
+        Sympa::get_address($list);
     exit 0;
 ## Migration from one version to another
 } elsif ($main::options{'upgrade'}) {
@@ -840,7 +840,7 @@ if ($main::options{'dump'}) {
         $log->syslog(
             'notice',
             'Processing list %s...',
-            $list->get_list_address()
+            Sympa::get_address($list)
         );
 
         ## Determine default lang for this list

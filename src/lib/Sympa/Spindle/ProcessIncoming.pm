@@ -250,8 +250,8 @@ sub _twist {
             );
             return undef;
         }
-        $list_address = $list->get_list_address($message->{listtype})
-            || $list->get_list_address;
+        $list_address = Sympa::get_address($list, $message->{listtype})
+            || Sympa::get_address($list);
     }
 
     ## Loop prevention

@@ -349,7 +349,7 @@ sub request_action {
     if ($log_it) {
         if ($list) {
             $trace_scenario = sprintf 'scenario request %s for list %s :',
-                $operation, $list->get_list_id;
+                $operation, $list->get_id;
             $log->syslog('info', 'Will evaluate scenario %s for list %s',
                 $operation, $list);
         } elsif ($robot_id and $robot_id ne '*') {
@@ -815,7 +815,7 @@ sub verify {
                 my $val = $list->{$param};
                 $value =~ s/\[list\-\>$param\]/$val/;
             } elsif ($param eq 'address') {
-                my $val = $list->get_list_address();
+                my $val = Sympa::get_address($list);
                 $value =~ s/\[list\-\>$param\]/$val/;
             } else {
                 my $canon_param = $param;

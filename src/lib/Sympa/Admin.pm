@@ -916,8 +916,7 @@ sub rename_list {
 
         ## Rename archive
         my $arc_dir =
-            Conf::get_robot_conf($robot, 'arc_path') . '/'
-            . $list->get_list_id();
+            Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_id;
         my $new_arc_dir =
               Conf::get_robot_conf($param{'new_robot'}, 'arc_path') . '/'
             . $param{'new_listname'} . '@'

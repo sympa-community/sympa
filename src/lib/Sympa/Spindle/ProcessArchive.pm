@@ -103,7 +103,7 @@ sub _twist {
             }
 
             my $status = system($Conf::Conf{'custom_archiver'},
-                '--list=' . $list->get_list_id,
+                '--list=' . $list->get_id,
                 '--file=' . $Conf::Conf{'tmpdir'} . '/' . $tmpfile,
             ) >> 8;
             unlink $Conf::Conf{'tmpdir'} . '/' . $tmpfile;

@@ -3030,10 +3030,10 @@ sub dmarc_protect {
         my $newComment;
         if ($listtype eq 'owner' or $listtype eq 'editor') {
             # -request or -editor address
-            $anonaddr = $list->get_list_address($listtype);
+            $anonaddr = Sympa::get_address($list, $listtype);
         } else {
             $anonaddr = $list->{'admin'}{'dmarc_protection'}{'other_email'};
-            $anonaddr = $list->get_list_address()
+            $anonaddr = Sympa::get_address($list)
                 unless $anonaddr and $anonaddr =~ /\@/;
             my @anonFrom = Mail::Address->parse($anonaddr);
             if (@anonFrom) {

@@ -27,6 +27,7 @@ package Sympa::Spindle::TransformOutgoing;
 use strict;
 use warnings;
 
+use Sympa;
 use Sympa::Log;
 use Sympa::Message::Plugin;
 use Sympa::Robot;
@@ -55,7 +56,7 @@ sub _twist {
             $message->delete_header('Resent-Reply-To');
 
             if ($list->{'admin'}{'reply_to_header'}->{'value'} eq 'list') {
-                $reply = $list->get_list_address();
+                $reply = Sympa::get_address($list);
             } elsif (
                 $list->{'admin'}{'reply_to_header'}->{'value'} eq 'sender') {
                 #FIXME: Missing From: field?
@@ -64,7 +65,7 @@ sub _twist {
             {
                 #FIXME: Missing From: field?
                 $reply =
-                      $list->get_list_address() . ','
+                      Sympa::get_address($list) . ','
                     . $message->get_header('From');
             } elsif ($list->{'admin'}{'reply_to_header'}->{'value'} eq
                 'other_email') {
@@ -78,12 +79,13 @@ sub _twist {
     ## Add/replace useful header fields
 
     ## These fields should be added preserving existing ones.
-    $message->add_header('X-Loop',     $list->get_list_address);
+    $message->add_header('X-Loop',     Sympa::get_address($list));
     $message->add_header('X-Sequence', $message->{xsequence})
         if defined $message->{xsequence};
     ## These fields should be overwritten if any of them already exist
     $message->delete_header('Errors-To');
-    $message->add_header('Errors-To', $list->get_list_address('return_path'));
+    $message->add_header('Errors-To',
+        Sympa::get_address($list, 'return_path'));
     ## Two Precedence: fields are added (overwritten), as some MTAs recognize
     ## only one of them.
     $message->delete_header('Precedence');
@@ -92,7 +94,7 @@ sub _twist {
     # The Sender: field should be added (overwritten) at least for DKIM or
     # Sender ID (a.k.a. SPF 2.0) compatibility.  Note that Resent-Sender:
     # field will be removed.
-    $message->replace_header('Sender', $list->get_list_address('owner'));
+    $message->replace_header('Sender', Sympa::get_address($list, 'owner'));
     $message->delete_header('Resent-Sender');
     $message->replace_header('X-no-archive', 'yes');
 

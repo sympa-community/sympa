@@ -293,7 +293,7 @@ sub _twist {
             } elsif ($new_message->{envelope_sender}) {
                 $return_path = $new_message->{envelope_sender};
             } elsif ($list) {
-                $return_path = $list->get_list_address('return_path');
+                $return_path = Sympa::get_address($list, 'return_path');
             } else {
                 $return_path = Sympa::get_address($robot, 'owner');
             }
@@ -381,7 +381,7 @@ sub _twist {
         if ($new_message->{envelope_sender}) {
             $return_path = $new_message->{envelope_sender};
         } elsif ($list) {
-            $return_path = $list->get_list_address('return_path');
+            $return_path = Sympa::get_address($list, 'return_path');
         } else {
             $return_path = Sympa::get_address($robot, 'owner');
         }

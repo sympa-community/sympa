@@ -170,10 +170,10 @@ sub new {
         # . a list should have several certificates and use if possible a
         #   certificate issued by the same CA as the recipient CA if it exists
         if ($smime_sign) {
-            $data->{'fromlist'} = $list->get_list_address();
-            $data->{'replyto'}  = $list->get_list_address('owner');
+            $data->{'fromlist'} = Sympa::get_address($list);
+            $data->{'replyto'}  = Sympa::get_address($list, 'owner');
         } else {
-            $data->{'fromlist'} = $list->get_list_address('owner');
+            $data->{'fromlist'} = Sympa::get_address($list, 'owner');
         }
     } else {
         $data->{'robot_domain'} = Conf::get_robot_conf($robot_id, 'domain');

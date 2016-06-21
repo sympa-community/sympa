@@ -305,9 +305,7 @@ while (!$end) {
             my %used_list_models;    # stores which models already have a task
             foreach (@list_models) { $used_list_models{$_} = undef; }
 
-            foreach
-                my $model (Sympa::Task::get_used_models($list->get_list_id()))
-            {
+            foreach my $model (Sympa::Task::get_used_models($list->get_id)) {
                 $used_list_models{$model} = 1;
             }
 

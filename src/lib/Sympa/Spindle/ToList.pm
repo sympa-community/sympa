@@ -409,7 +409,7 @@ sub _mail_message {
         if $message->{'smime_crypted'};
 
     # Overwrite original envelope sender.  It is REQUIRED for delivery.
-    $message->{envelope_sender} = $list->get_list_address('return_path');
+    $message->{envelope_sender} = Sympa::get_address($list, 'return_path');
 
     return Sympa::Bulk->new->store($message, $rcpt, tag => $tag)
         || undef;

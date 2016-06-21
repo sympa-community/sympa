@@ -9123,7 +9123,7 @@ sub do_viewmod {
 
     my $html_dir =
           $Conf::Conf{'viewmail_dir'} . '/mod/'
-        . $list->get_list_id() . '/'
+        . $list->get_id . '/'
         . $in{'id'};
 
     unless (-d $html_dir) {
@@ -12239,7 +12239,7 @@ sub do_edit_list {
     if (exists $changed{'owner'}) {
         my @special = ();
         push @special,
-            map { $list->get_list_address($_) }
+            map { Sympa::get_address($list, $_) }
             qw(owner editor return_path subscribe unsubscribe);
         push @special, map {
             sprintf '%s-%s@%s',
@@ -13556,7 +13556,7 @@ sub do_close_list {
             Sympa::Report::reject_report_web('intern', 'cannot_close_list',
                 {}, $param->{'action'}, $list, $param->{'user'}{'email'},
                 $robot);
-            wwslog('err', 'Cannot close list %s', $list->get_list_id());
+            wwslog('err', 'Cannot close list %s', $list);
             web_db_log(
                 {   'status'     => 'error',
                     'error_type' => 'unknown'
@@ -20338,7 +20338,7 @@ sub do_load_cert {
         $ct = 'application/pkix-cert';
     }
     $param->{'bypass'} = 'extreme';
-    my $filename = sprintf '%s.cer', $list->get_id();
+    my $filename = sprintf '%s.cer', $list->get_id;
     printf "Content-Disposition: attachment; filename=\"%s\"\n", $filename;
     printf "Content-Type: %s\n\n%s", $ct, $cert;
     return 1;
@@ -21184,7 +21184,7 @@ sub do_compose_mail {
         $in{'to'} =~ s/ /\@/g;
         $param->{'to'} = $in{'to'};
     } else {
-        $param->{'to'} = $list->get_list_address();
+        $param->{'to'} = Sympa::get_address($list);
     }
     foreach my $recipient (split(',', $param->{'to'})) {
         (   $param->{'recipients'}{$recipient}{'local_to'},
@@ -21263,7 +21263,7 @@ sub do_send_mail {
                 );
                 return undef;
             }
-            $to = $list->get_list_address();
+            $to = Sympa::get_address($list);
         }
         unless ($param->{'may_post'}) {
             Sympa::Report::reject_report_web('auth',
@@ -21516,17 +21516,18 @@ sub do_send_mail {
     # - Message bound for user will be injected into bulk spool.
     #FIXME: Check destinations: they should be list, original sender, user or
     # other_email.
-    my @to_list = grep { $_ eq $list->get_list_address } split /\s*,\s*/, $to;
+    my @to_list =
+        grep { $_ eq Sympa::get_address($list) } split /\s*,\s*/, $to;
     my @to_user =
         grep {
                 $_
-            and $_ ne $list->get_list_address
+            and $_ ne Sympa::get_address($list)
             and $_ ne $param->{'user'}{'email'}
         } split /\s*,\s*/, $to;
     my @to_me =
         grep {
                 $_
-            and $_ ne $list->get_list_address
+            and $_ ne Sympa::get_address($list)
             and $_ eq $param->{'user'}{'email'}
         } split /\s*,\s*/, $to;
 
@@ -21695,7 +21696,7 @@ sub do_request_topic {
         }
     }
 
-    $param->{'to'}      = $list->get_list_address();
+    $param->{'to'}      = Sympa::get_address($list);
     $param->{'authkey'} = $in{'authkey'};
 
     my $spool_held =

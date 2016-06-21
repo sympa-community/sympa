@@ -33,6 +33,7 @@ use POSIX qw();
 use Sys::Hostname qw();
 use Time::HiRes qw();
 
+use Sympa;
 use Conf;
 use Sympa::Constants;
 use Sympa::List;
@@ -264,7 +265,7 @@ sub build_glob_pattern {
         my $context = $options{context};
         if (ref $context eq 'Sympa::List') {
             @options{qw(localpart domainpart)} =
-                split /\@/, $context->get_list_address;
+                split /\@/, Sympa::get_address($context);
         } else {
             $options{domainpart} = $context;
         }
@@ -423,7 +424,7 @@ sub marshal_metadata {
     my ($localpart, $domainpart);
     if (ref $message->{context} eq 'Sympa::List') {
         ($localpart) = split /\@/,
-            $message->{context}->get_list_address($message->{listtype});
+            Sympa::get_address($message->{context}, $message->{listtype});
         $domainpart = $message->{context}->{'domain'};
     } else {
         my $robot_id = $message->{context} || '*';

@@ -159,8 +159,8 @@ sub _distribute_digest {
     }
 
     my $param = {
-        'replyto'   => $list->get_list_address('owner'),
-        'to'        => $list->get_list_address(),
+        'replyto'   => Sympa::get_address($list, 'owner'),
+        'to'        => Sympa::get_address($list),
         'boundary1' => '----------=_' . Sympa::unique_message_id($list),
         'boundary2' => '----------=_' . Sympa::unique_message_id($list),
     };

@@ -58,7 +58,7 @@ sub get_dkim_parameters {
                 $list->{'admin'}{'dkim_parameters'}{'signer_identity'};
         } else {
             # RFC 4871 (page 21)
-            $data->{'i'} = $list->get_list_address('owner');    # -request
+            $data->{'i'} = Sympa::get_address($list, 'owner');    # -request
         }
         $data->{'selector'} = $list->{'admin'}{'dkim_parameters'}{'selector'};
         $keyfile = $list->{'admin'}{'dkim_parameters'}{'private_key_path'};

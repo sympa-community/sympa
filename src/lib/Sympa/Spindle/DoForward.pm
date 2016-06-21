@@ -93,7 +93,7 @@ sub _twist {
             return undef;
         }
 
-        $recipient = $list->get_list_address($function);
+        $recipient = Sympa::get_address($list, $function);
         $priority  = $list->{'admin'}{'priority'};
     }
 

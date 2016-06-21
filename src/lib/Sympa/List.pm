@@ -2850,7 +2850,7 @@ sub get_next_list_member {
                     'err',
                     "Failed to parse custom attributes for user %s, list %s",
                     $user->{'email'},
-                    $self->get_list_id()
+                    $self
                 );
             }
             $user->{'custom_attribute'} = $custom_attr;
@@ -9457,8 +9457,7 @@ sub get_arc_size {
     my $self = shift;
     my $dir  = shift;
 
-    return Sympa::Tools::File::get_dir_size(
-        $dir . '/' . $self->get_list_id());
+    return Sympa::Tools::File::get_dir_size($dir . '/' . $self->get_id);
 }
 
 # return the date epoch for next delivery planified for a list
@@ -9655,7 +9654,7 @@ sub purge {
 
     ## Remove tasks for this list
     Sympa::Task::list_tasks($Conf::Conf{'queuetask'});
-    foreach my $task (Sympa::Task::get_tasks_by_list($self->get_list_id())) {
+    foreach my $task (Sympa::Task::get_tasks_by_list($self->get_id)) {
         unlink $task->{'filepath'};
     }
 
@@ -9828,7 +9827,7 @@ sub move_message {
     $log->syslog('debug2', '(%s, %s, %s)', $file, $self->{'name'}, $queue);
 
     my $dir = $queue || (Sympa::Constants::SPOOLDIR() . '/distribute');
-    my $filename = $self->get_list_id() . '.' . time . '.' . int(rand(999));
+    my $filename = $self->get_id . '.' . time . '.' . (int rand 999);
 
     unless (open OUT, ">$dir/T.$filename") {
         $log->syslog('err', 'Cannot create file %s', "$dir/T.$filename");
