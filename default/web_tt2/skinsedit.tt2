@@ -1,47 +1,22 @@
 <!-- $Id: skinsedit.tt2 5649 2009-04-07 14:33:38Z serge.aumont -->
 
- 
-
 <h2>[%|loc%]Cascading Style Sheet[%END%]</h2>
-<p>
-
-[%|loc%]When not using css_url parameters, sympa deliver a dynamic CSS which is created using a template name css.tt2. Usually this template is comming from Sympa distribution tar. Using this CSS is not a good solution because for each clic, Sympa fcgi server is requested twice. If you use  css_url parameters the style sheet are delivered by your http server. When you install a new Sympa version and start it at the first time, the different CSS files are installed in the directory specified by css_path parameter. So if you want to preserve some site customization from being overwriten when starting a new sympa version, css_path and css_url should not point to the same directory .[%END%] 
 
 [% IF css_result %]
-<strong>[%|loc%]static css installation succeed. Reload the current page and/or check sympa logs  to be sure that static css a really in use.[%END%]</strong><br /><br />
+<p><strong>[%|loc%]static css installation succeed. Reload the current page and/or check sympa logs  to be sure that static css a really in use.[%END%]</strong></p>
 [% END %]
-[% IF css_path %]
-<ul>
-<li>[%|loc%]The css_path parameter is defined, value is[%END%] <strong>[% css_path %]</strong> </li>
-<li>[%|loc%]the current definition for css location (css_url parameter) is[%END%] <a target="test" href="[% css_url %]">[% css_url %] </a><strong>[% css_warning %]</strong>.</li>
 
-</ul><br />
-
-	<form action="[% path_cgi %]" method="post">
-	<fieldset>
-	<input type="hidden" name="action" value="skinsedit" />
-        <input type="hidden" name="installcss" value="1" />
-        <input class="MainMenuLinks" type="submit" name="action_skinsedit" value="[%|loc%]Install Static CSS[%END%]" />
-	</fieldset>
-	</form>
-
-[% ELSE %]
-
-[%|loc(cssurl)%]Currently you have not defined the css_path parameter. <strong>You should edit the robot.conf configuration file </strong> (or if not using virtual robot, the sympa.conf file). Setting this parameter allows you to use this page to install static CSS and <strong>make sympa faster</strong>. Don't forget to set parameter css_url, it must be the URL for the directory where css are stored (current value is <a target="test" href="%1">%1</a>).[%END%]
-
-[% END %]
-</p>
 <h2>[%|loc%]Colors[%END%]</h2>
-<p>
 
-[%|loc%]If you are not using css_path and css_url parameters, colors are defined in the robot.conf configuration file. Otherwise, colors are defined in the static CSS. Colors can be changed on your current session using the following color editor. When finished, you may copy the result a new CCS static file. The target is specified by css_path parameter.[%END%]
-[% IF css_path %]([% css_path %])[% END %]
-[%|loc%]
-Be careful: the CSS file is overwritten using css.tt2 template, usually this file is comming from Sympa distribution so your CSS customization may be erased when doing this.[% END %]
-</p>
 <p>
 [%|loc%]Use the color editor in order to change defined colors. First select the color you want to change and pick a color,then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you choosen, you may save them in a new static CSS.
 [%END%]
+</p>
+
+<p>
+[%|loc%]
+Be careful: the CSS file is overwritten using css.tt2 template, usually this file is comming from Sympa distribution so your CSS customization may be erased when doing this.[% END %]
+[%|loc%]So if you want to preserve some site customization from being overwriten when starting a new sympa version, css_path and css_url should not point to the same directory.[%END%]
 </p>
 
 <form action="[% path_cgi %]" method="post">

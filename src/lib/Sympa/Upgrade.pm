@@ -50,7 +50,6 @@ use Sympa::Spool::Digest;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
-use Sympa::Tools::WWW;
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
@@ -1354,9 +1353,12 @@ sub upgrade {
                     $robot);
                 save_web_tt2("$Conf::Conf{'etc'}/$robot/web_tt2");
             }
+
+            # CSS would be regenerated...
+            my $dir = Conf::get_robot_conf($robot, 'css_path');
+            rename $dir . '/style.css', $dir . '/style.css.' . time
+                if -f $dir . '/style.css';
         }
-        #Used to regenerate CSS...
-        Sympa::Tools::WWW::update_css(force => 1);
         $log->syslog('notice',
             'Web interface colors defaulted to new values.');
     }

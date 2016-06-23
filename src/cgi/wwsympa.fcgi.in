@@ -1289,16 +1289,17 @@ while ($query = new_loop()) {
     ## CSS related
     $param->{'css_path'} = Conf::get_robot_conf($robot, 'css_path');
     $param->{'css_url'}  = Conf::get_robot_conf($robot, 'css_url');
+
     ## If CSS file not found, let Sympa do the job...
-    unless ($param->{'css_path'} and -f $param->{'css_path'} . '/style.css') {
-        wwslog(
-            'err',
-            'Could not find CSS file %s, using default CSS',
-            $param->{'css_path'} . '/style.css'
-        ) if $param->{'css_path'};    # Notice only if path was defined.
-        $param->{'css_url'} =
-            Sympa::get_url($robot, 'css', authority => 'omit');
-    }
+    #unless ($param->{'css_path'} and -f $param->{'css_path'} . '/style.css') {
+    #    wwslog(
+    #        'err',
+    #        'Could not find CSS file %s, using default CSS',
+    #        $param->{'css_path'} . '/style.css'
+    #    ) if $param->{'css_path'};    # Notice only if path was defined.
+    #    $param->{'css_url'} =
+    #        Sympa::get_url($robot, 'css', authority => 'omit');
+    #}
 
     wwslog(
         'info',
