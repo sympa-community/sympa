@@ -626,9 +626,9 @@ ssize_t sockstr_putdata(sockstr_t * self, void *buf, size_t count,
 		break;
 
 	if (fixnewline) {
-	    if (p + 1 == q && q[-1] == '\n' ||
+	    if ((p + 1 == q && q[-1] == '\n') ||
 		q[-1] == '\r' ||
-		p + 1 < q && q[-2] != '\r' && q[-1] == '\n')
+		(p + 1 < q && q[-2] != '\r' && q[-1] == '\n'))
 		linelen = q - p - 1;
 	    else if (q[-1] != '\n')
 		linelen = q - p;

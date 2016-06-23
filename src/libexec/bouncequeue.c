@@ -92,7 +92,6 @@ main(int argn, char **argv)
 {
    char	*bouncedir;
    char        *listname;
-   unsigned int		priority;
    int			firstline = 1;
 
    /* Usage : bouncequeue list-name */

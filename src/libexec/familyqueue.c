@@ -32,8 +32,6 @@
 #include <unistd.h>
 #include <time.h>
 
-static char rcsid[] = "(@)$Id$";
-
 static char     qfile[128];
 static char     buf[16384];
 static int      i, fd;
@@ -94,7 +92,6 @@ main(int argn, char **argv)
 {
    char	*queuedir;
    char        *listname, *familyname;
-   unsigned int		priority;
    int			firstline = 1;
 
    /* Usage : queue list-name family-name */

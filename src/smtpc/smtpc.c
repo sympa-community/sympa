@@ -151,7 +151,7 @@ static char *encode_unitext(unsigned char *str)
     while (*p != '\0') {
 	if (*p == '\\' || *p == '+' || *p == '=')
 	    enclen += 6;
-	else if (33 <= *p && *p <= 126 || 128 <= *p)
+	else if ((33 <= *p && *p <= 126) || 128 <= *p)
 	    enclen++;
 	else
 	    enclen += 6;
@@ -167,7 +167,7 @@ static char *encode_unitext(unsigned char *str)
     while (*p != '\0') {
 	if (*p == '\\' || *p == '+' || *p == '=')
 	    q += sprintf(q, "\\x{%02X}", (unsigned int) *p);
-	else if (33 <= *p && *p <= 126 || 128 <= *p)
+	else if ((33 <= *p && *p <= 126) || 128 <= *p)
 	    *q++ = *p;
 	else
 	    q += sprintf(q, "\\x{%02X}", (unsigned int) *p);
@@ -395,8 +395,8 @@ static int parse_options(int *argcptr, char ***argvptr)
 	fprintf(stderr, "Either --esmtp or --lmtp option must be given\n");
 	return -1;
     }
-    if (options.protocol & SMTPC_PROTO_TCP && options.nodename == NULL
-	|| options.protocol & SMTPC_PROTO_UNIX && options.path == NULL) {
+    if ((options.protocol & SMTPC_PROTO_TCP && options.nodename == NULL)
+	|| (options.protocol & SMTPC_PROTO_UNIX && options.path == NULL)) {
 	fprintf(stderr, "Nodename nor path is not specified\n");
 	return -1;
     }
@@ -520,7 +520,7 @@ static ssize_t read_message(void)
 		if (p == message.buf || p[-1] != '\r')
 		    cr++;
 
-		if (p[1] == '\n' || p[1] == '\r' && p[2] == '\n') {
+		if (p[1] == '\n' || (p[1] == '\r' && p[2] == '\n')) {
 		    p++;
 		    break;
 		}
@@ -626,8 +626,8 @@ static void parse_extensions(void)
 
 	    wp = word;
 	    while (wp - word + 1 < sizeof(word) &&
-		   (*p == '-' || '0' <= *p && *p <= '9' ||
-		    'A' <= *p && *p <= 'Z' || 'a' <= *p && *p <= 'z'))
+		   (*p == '-' || ('0' <= *p && *p <= '9') ||
+		    ('A' <= *p && *p <= 'Z') || ('a' <= *p && *p <= 'z')))
 		if ('a' <= *p && *p <= 'z')
 		    *wp++ = *p++ + ('A' - 'a');
 		else
@@ -745,10 +745,10 @@ static ssize_t transaction(void)
 
     if (server.extensions & SMTPC_EXT_SMTPUTF8 &&
 	options.smtputf8 &&
-	(message.envfeature == SMTPC_UTF8
-	 && message.headfeature != SMTPC_8BIT
-	 || message.envfeature != SMTPC_8BIT
-	 && message.headfeature == SMTPC_UTF8))
+	((message.envfeature == SMTPC_UTF8
+	 && message.headfeature != SMTPC_8BIT)
+	 || (message.envfeature != SMTPC_8BIT
+	 && message.headfeature == SMTPC_UTF8)))
 	ext_smtputf8 = " SMTPUTF8";
 
     switch (dialog(300, "MAIL FROM:<%s>%s%s%s%s\r\n", options.sender,
