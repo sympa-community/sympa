@@ -237,7 +237,7 @@ our %comm = (
     'set_session_email'        => 'do_set_session_email',
     'restore_email'            => 'do_restore_email',
     'skinsedit'                => 'do_skinsedit',
-    'css'                      => 'do_css',
+    #XXX'css' => 'do_css',
     'help'                     => 'do_help',
     'edit_list_request'        => 'do_edit_list_request',
     'edit_list'                => 'do_edit_list',
@@ -365,7 +365,7 @@ our %action_args = (
     'logout'           => ['previous_action', 'previous_list'],
     'renewpasswd'      => ['previous_action', 'previous_list'],
     'firstpasswd'      => ['previous_action', 'previous_list'],
-    'css'              => ['file'],
+    #XXX'css' => ['file'],
     'pref'             => ['previous_action', 'previous_list'],
     'reject'           => ['list',            'id'],
     'distribute'       => ['list',            'id'],
@@ -512,7 +512,7 @@ our %required_args = (
     ## other required parameters are checked in the subroutine
     'create_list'         => ['param.user.email'],
     'create_list_request' => ['param.user.email'],
-    'css'                 => [],
+    #XXX'css' => [],
     'd_admin'             => ['param.list', 'param.user.email'],
     'd_change_access'     => ['param.list', 'param.user.email'],
     'd_control'           => ['param.list', 'param.user.email'],
@@ -769,7 +769,7 @@ my %temporary_actions = (
     'sso_login'           => 1,
     'sso_login_succeeded' => 1,
     'ticket'              => 1,
-    'css'                 => 1,
+    #XXX'css' => 1,
     'rss'                 => 1,    # FIXME:currently not used.
     'ajax'                => 1,
     'wsdl'                => 1,
@@ -1582,10 +1582,11 @@ while ($query = new_loop()) {
     $param->{'htmlarea_url'}    = $Conf::Conf{'htmlarea_url'};
     # if ($Conf::Conf{'export_topics'} =~ /all/i);
 
-    if ($in{'action'} eq 'css') {
-        do_css();
-        $param->{'action'} = 'css';
-    } elsif ($maintenance_mode) {
+    #if ($in{'action'} eq 'css') {
+    #    do_css();
+    #    $param->{'action'} = 'css';
+    #} elsif
+    if ($maintenance_mode) {
         do_maintenance();
         $param->{'action'} = 'maintenance';
     } else {
@@ -1738,7 +1739,7 @@ while ($query = new_loop()) {
 
     ## Do not manage cookies at this level if content was already sent
     unless ($param->{'bypass'} eq 'extreme'
-        || $param->{'action'} eq 'css'
+        #XXX|| $param->{'action'} eq 'css'
         || $maintenance_mode
         || $rss
         || $ajax) {
@@ -7543,9 +7544,7 @@ sub do_edit_template {
 
 }
 
-## Server show colors, and install static css in future edit colors etc
-
-## Server show colors, and install static css in futur edit colors etc
+# Server show colors, and install static css in future edit colors etc.
 sub do_skinsedit {
     wwslog('info', '');
     my $f;
@@ -23039,30 +23038,31 @@ sub do_arc_delete {
     return 'arc_manage';
 }
 
-sub do_css {
-    wwslog('debug', '(%s)', $in{'file'});
-    $param->{'bypass'} = 'extreme';
-    print "Content-type: text/css; charset=utf-8\n\n";
-    $param->{'css'} = $in{'file'};
-
-    # Do not include locale subdirectories (lang parameter).
-    # The css.tt2 by each locale will override styles in main CSS.
-    my $css_template = Sympa::Template->new($robot, subdir => 'web_tt2');
-    unless ($css_template->parse($param, 'css.tt2', \*STDOUT)) {
-        my $error = $css_template->{last_error};
-        $error = $error->as_string if ref $error;
-        $param->{'tt2_error'} = $error;
-
-        Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
-        wwslog('info', '/%s: error: %s', $in{'file'}, $error);
-        my $error_escaped = $error;
-        $error_escaped =~ s/&/&amp;/g;
-        $error_escaped =~ s/\//&#47;/g;
-        printf STDOUT "\n/* %s */\n", $error_escaped;
-    }
-
-    return;
-}
+# DEPRECATED. No longer used.
+#sub do_css {
+#    wwslog('debug', '(%s)', $in{'file'});
+#    $param->{'bypass'} = 'extreme';
+#    print "Content-type: text/css; charset=utf-8\n\n";
+#    $param->{'css'} = $in{'file'};
+#
+#    # Do not include locale subdirectories (lang parameter).
+#    # The css.tt2 by each locale will override styles in main CSS.
+#    my $css_template = Sympa::Template->new($robot, subdir => 'web_tt2');
+#    unless ($css_template->parse($param, 'css.tt2', \*STDOUT)) {
+#        my $error = $css_template->{last_error};
+#        $error = $error->as_string if ref $error;
+#        $param->{'tt2_error'} = $error;
+#
+#        Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
+#        wwslog('info', '/%s: error: %s', $in{'file'}, $error);
+#        my $error_escaped = $error;
+#        $error_escaped =~ s/&/&amp;/g;
+#        $error_escaped =~ s/\//&#47;/g;
+#        printf STDOUT "\n/* %s */\n", $error_escaped;
+#    }
+#
+#    return;
+#}
 
 sub do_rss_request {
     wwslog('info', '');
