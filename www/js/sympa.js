@@ -328,9 +328,8 @@ function trackDrag(node, handler)
 {
     function fixCoords(x, y)
     {
-        var nodePageCoords = pageCoords(node);
-        x = (x - nodePageCoords.x) + document.documentElement.scrollLeft;
-        y = (y - nodePageCoords.y) + document.documentElement.scrollTop;
+        x = x - $(node).offset().left;
+        y = y - $(node).offset().top;
         if (x < 0) x = 0;
         if (y < 0) y = 0;
         if (x > node.offsetWidth - 1) x = node.offsetWidth - 1;
@@ -339,14 +338,14 @@ function trackDrag(node, handler)
     }
     function mouseDown(ev)
     {
-        var coords = fixCoords(ev.clientX, ev.clientY);
+        var coords = fixCoords(ev.pageX, ev.pageY);
         var lastX = coords.x;
         var lastY = coords.y;
         handler(coords.x, coords.y);
 
         function moveHandler(ev)
         {
-            var coords = fixCoords(ev.clientX, ev.clientY);
+            var coords = fixCoords(ev.pageX, ev.pageY);
             if (coords.x != lastX || coords.y != lastY)
             {
                 lastX = coords.x;
@@ -541,27 +540,8 @@ function rgbToHsv(red, green, blue)
     };
 }
 
-function pageCoords(node)
-{
-  if (node.getBoundingClientRect)
-  {
-    var rect = node.getBoundingClientRect();
-    return {x: rect.left, y: rect.top};
-  }
-  else
-  {
-    /* buggy, however, some browsers don't support getBoundingClient(). */ 
-    var left = 0;
-    var top = 0;
-    while (node)
-    {
-        left += node.offsetLeft;
-        top += node.offsetTop;
-        node = node.offsetParent;
-    }
-    return {x: left, y: top};
-  }
-}
+// DEPRECATED: No longer used.
+// function pageCoords(node);
 
 // The real code begins here.
 var huePositionImg = document.createElement('img');
@@ -675,10 +655,13 @@ function makeColorSelector(inputBox)
     }
     $(inputBox).change(inputBoxChanged);
     inputBox.size = 8;
-    inputBox.style.position = 'absolute';
-    inputBox.style.right = '15px';
-    inputBox.style.top = (225 + (25 - (inputBox.offsetHeight/2))).toString() + 'px';
-    colorSelectorDiv.appendChild(inputBox);
+    inputBoxDiv = document.createElement('div');
+    inputBoxDiv.style.position = 'absolute';
+    inputBoxDiv.style.right = '15px';
+    inputBoxDiv.style.top =
+        (225 + (25 - (inputBox.offsetHeight/2))).toString() + 'px';
+    inputBoxDiv.appendChild(inputBox);
+    colorSelectorDiv.appendChild(inputBoxDiv);
     
     inputBoxChanged();
     
