@@ -326,10 +326,10 @@ function fixPNG(myImage)
 
 function trackDrag(node, handler)
 {
-    function fixCoords(x, y)
+    function fixCoords(ev)
     {
-        x = x - $(node).offset().left;
-        y = y - $(node).offset().top;
+        x = ev.pageX - $(node).offset().left;
+        y = ev.pageY - $(node).offset().top;
         if (x < 0) x = 0;
         if (y < 0) y = 0;
         if (x > node.offsetWidth - 1) x = node.offsetWidth - 1;
@@ -338,14 +338,14 @@ function trackDrag(node, handler)
     }
     function mouseDown(ev)
     {
-        var coords = fixCoords(ev.pageX, ev.pageY);
+        var coords = fixCoords(ev);
         var lastX = coords.x;
         var lastY = coords.y;
         handler(coords.x, coords.y);
 
         function moveHandler(ev)
         {
-            var coords = fixCoords(ev.pageX, ev.pageY);
+            var coords = fixCoords(ev);
             if (coords.x != lastX || coords.y != lastY)
             {
                 lastX = coords.x;
@@ -355,89 +355,17 @@ function trackDrag(node, handler)
         }
         function upHandler(ev)
         {
-            myRemoveEventListener(document, 'mouseup', upHandler);
-            myRemoveEventListener(document, 'mousemove', moveHandler);
-            myAddEventListener(node, 'mousedown', mouseDown);
+            $(document).off('mouseup', upHandler);
+            $(document).off('mousemove', moveHandler);
+            $(node).on('mousedown', mouseDown);
         }
-        myAddEventListener(document, 'mouseup', upHandler);
-        myAddEventListener(document, 'mousemove', moveHandler);
-        myRemoveEventListener(node, 'mousedown', mouseDown);
+        $(document).on('mouseup', upHandler);
+        $(document).on('mousemove', moveHandler);
+        $(node).off('mousedown', mouseDown);
         if (ev.preventDefault) ev.preventDefault();
     }
-    myAddEventListener(node, 'mousedown', mouseDown);
-    node.onmousedown = function(e) { return false; };
-    node.onselectstart = function(e) { return false; };
-    node.ondragstart = function(e) { return false; };
+    $(node).on('mousedown', mouseDown);
 }
-
-var eventListeners = [];
-
-function findEventListener(node, event, handler)
-{
-    var i;
-    for (i in eventListeners)
-    {
-        if (eventListeners[i].node == node && eventListeners[i].event == event
-         && eventListeners[i].handler == handler)
-        {
-            return i;
-        }
-    }
-    return null;
-}
-function myAddEventListener(node, event, handler)
-{
-    if (findEventListener(node, event, handler) != null)
-    {
-        return;
-    }
-
-    if (!node.addEventListener)
-    {
-        node.attachEvent('on' + event, handler);
-    }
-    else
-    {
-        node.addEventListener(event, handler, false);
-    }
-
-    eventListeners.push({node: node, event: event, handler: handler});
-}
-
-function removeEventListenerIndex(index)
-{
-    var eventListener = eventListeners[index];
-    delete eventListeners[index];
-    
-    if (!eventListener.node.removeEventListener)
-    {
-        eventListener.node.detachEvent('on' + eventListener.event,
-                                       eventListener.handler);
-    }
-    else
-    {
-        eventListener.node.removeEventListener(eventListener.event,
-                                               eventListener.handler, false);
-    }
-}
-
-function myRemoveEventListener(node, event, handler)
-{
-    removeEventListenerIndex(findEventListener(node, event, handler));
-}
-
-function cleanupEventListeners()
-{
-    var i;
-    for (i = eventListeners.length; i > 0; i--)
-    {
-        if (eventListeners[i] != undefined)
-        {
-            removeEventListenerIndex(i);
-        }
-    }
-}
-myAddEventListener(window, 'unload', cleanupEventListeners);
 
 // This copyright statement applies to the following two functions,
 // which are taken from MochiKit.
@@ -539,9 +467,6 @@ function rgbToHsv(red, green, blue)
         v: value
     };
 }
-
-// DEPRECATED: No longer used.
-// function pageCoords(node);
 
 // The real code begins here.
 var huePositionImg = document.createElement('img');
@@ -655,7 +580,7 @@ function makeColorSelector(inputBox)
     }
     $(inputBox).change(inputBoxChanged);
     inputBox.size = 8;
-    inputBoxDiv = document.createElement('div');
+    var inputBoxDiv = document.createElement('div');
     inputBoxDiv.style.position = 'absolute';
     inputBoxDiv.style.right = '15px';
     inputBoxDiv.style.top =
@@ -686,7 +611,7 @@ function makeColorSelectors(ev)
     }
 }
 
-myAddEventListener(window, 'load', makeColorSelectors);
+$(window).on('load', makeColorSelectors);
 
 /***********************************************************************
 * script MICRO-CAL (V4.2) par Amroune Selim (amrounix@gmail.com)
