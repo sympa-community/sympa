@@ -328,14 +328,31 @@ function trackDrag(node, handler)
 {
     function fixCoords(ev)
     {
-        x = ev.pageX - $(node).offset().left;
-        y = ev.pageY - $(node).offset().top;
+        var e = ev.originalEvent.changedTouches
+            ? ev.originalEvent.changedTouches[0] : ev;
+        x = e.pageX - $(node).offset().left;
+        y = e.pageY - $(node).offset().top;
         if (x < 0) x = 0;
         if (y < 0) y = 0;
         if (x > node.offsetWidth - 1) x = node.offsetWidth - 1;
         if (y > node.offsetHeight - 1) y = node.offsetHeight - 1;
         return {x: x, y: y};
     }
+    var _pointer = (function()
+    {
+        if (window.navigator.pointerEnabled) // Pointer events (IE11+)
+        {
+            return {down: 'pointerdown', move: 'pointermove', up: 'pointerup'};
+        }
+        else if ('ontouchstart' in window)   // Touch events
+        {
+            return {down: 'touchstart', move: 'touchmove', up: 'touchend'};
+        }
+        else
+        {
+            return {down: 'mousedown', move: 'mousemove', up: 'mouseup'};
+        }
+    })();
     function mouseDown(ev)
     {
         var coords = fixCoords(ev);
@@ -355,16 +372,16 @@ function trackDrag(node, handler)
         }
         function upHandler(ev)
         {
-            $(document).off('mouseup', upHandler);
-            $(document).off('mousemove', moveHandler);
-            $(node).on('mousedown', mouseDown);
+            $(document).off(_pointer.up, upHandler);
+            $(document).off(_pointer.move, moveHandler);
+            $(node).on(_pointer.down, mouseDown);
         }
-        $(document).on('mouseup', upHandler);
-        $(document).on('mousemove', moveHandler);
-        $(node).off('mousedown', mouseDown);
+        $(document).on(_pointer.up, upHandler);
+        $(document).on(_pointer.move, moveHandler);
+        $(node).off(_pointer.down, mouseDown);
         if (ev.preventDefault) ev.preventDefault();
     }
-    $(node).on('mousedown', mouseDown);
+    $(node).on(_pointer.down, mouseDown);
 }
 
 // This copyright statement applies to the following two functions,
