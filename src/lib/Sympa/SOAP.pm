@@ -866,6 +866,19 @@ sub add {
             ->faultstring('Unable to add user')->faultdetail($error);
 
     } else {
+        # If a list is not 'open' and allow_subscribe_if_pending has been set
+        # to 'off' returns error report.
+        unless ($list->{'admin'}{'status'} eq 'open'
+            or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
+            'on') {
+            my $error =
+                sprintf 'Service unavailable because list status is \'%s\'',
+                $list->{'admin'}{'status'};
+            $log->syslog('info', 'List %s not open', $list);
+            die SOAP::Fault::faultcode("Server")
+                ->faultstring('List not open')->faultdetail($error);
+        }
+
         my $u;
         my $defaults = $list->get_default_user_options();
         my $u2       = Sympa::User->new($email);
@@ -1017,6 +1030,19 @@ sub del {
             $listname, $email, $sender);
         die SOAP::Fault->faultcode('Client')->faultstring('Not subscribed')
             ->faultdetail('Not member of list or not subscribed');
+    }
+
+    # If a list is not 'open' and allow_subscribe_if_pending has been set
+    # to 'off' returns error report.
+    unless ($list->{'admin'}{'status'} eq 'open'
+        or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
+        'on') {
+        my $error =
+            sprintf 'Service unavailable because list status is \'%s\'',
+            $list->{'admin'}{'status'};
+        $log->syslog('info', 'List %s not open', $list);
+        die SOAP::Fault::faultcode("Server")
+            ->faultstring('List not open')->faultdetail($error);
     }
 
     # Really delete and rewrite to disk.
@@ -1345,6 +1371,19 @@ sub signoff {
                 );
         }
 
+        # If a list is not 'open' and allow_subscribe_if_pending has been set
+        # to 'off' returns error report.
+        unless ($list->{'admin'}{'status'} eq 'open'
+            or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
+            'on') {
+            my $error =
+                sprintf 'Service unavailable because list status is \'%s\'',
+                $list->{'admin'}{'status'};
+            $log->syslog('info', 'List %s not open', $list);
+            die SOAP::Fault::faultcode("Server")
+                ->faultstring('List not open')->faultdetail($error);
+        }
+
         ## Really delete and rewrite to disk.
         $list->delete_list_member(
             'users'     => [$sender],
@@ -1529,6 +1568,20 @@ sub subscribe {
                     ->faultdetail("SOAP subscribe : update user failed");
             }
         } else {
+            # If a list is not 'open' and allow_subscribe_if_pending has been
+            # set to 'off' returns error report.
+            unless ($list->{'admin'}{'status'} eq 'open'
+                or
+                Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
+                'on') {
+                my $error =
+                    sprintf 'Service unavailable because list status is \'%s\'',
+                    $list->{'admin'}{'status'};
+                $log->syslog('info', 'List %s not open', $list);
+                die SOAP::Fault::faultcode("Server")
+                    ->faultstring('List not open')->faultdetail($error);
+            }
+
             my $u;
             my $defaults = $list->get_default_user_options();
             %{$u} = %{$defaults};

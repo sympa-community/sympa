@@ -158,6 +158,10 @@ Your configuration regarding this command has not been updated.[%END-%]
 [% ELSIF u_err.entry == 'already_subscriber' -%]
   [%|loc(u_err.email,u_err.listname)%]The User '%1' is already subscriber of list '%2'.[%END%]
 
+[% ELSIF u_err.entry == 'list_not_open' -%]
+  [%~ statdesc = BLOCK %][% u_err.status | optdesc('status') %][%END -%]
+  [%|loc(statdesc)%]Service unavailable because list status is '%1'[%END%]
+
 [% ELSIF u_err.entry == 'max_list_members_exceeded' -%]
   [%|loc(u_err.email,u_err.listname,u_err.max_list_members)%]Unable to add user '%1' in list '%2'. Attempt to exceed the max number of members (%3) for this list.[%END%]
 

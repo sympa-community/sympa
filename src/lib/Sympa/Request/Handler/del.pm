@@ -29,6 +29,7 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
+use Conf;
 use Sympa::Language;
 use Sympa::Log;
 
@@ -62,6 +63,18 @@ sub _twist {
         $self->add_stash($request, 'user', 'user_not_subscriber');
         $log->syslog('info', 'DEL %s %s from %s refused, not on list',
             $which, $who, $sender);
+        return undef;
+    }
+
+    # If a list is not 'open' and allow_subscribe_if_pending has been set to
+    # 'off' returns undef.
+    unless ($list->{'admin'}{'status'} eq 'open'
+        or
+        Conf::get_robot_conf($list->{'domain'}, 'allow_subscribe_if_pending')
+        eq 'on') {
+        $self->add_stash($request, 'user', 'list_not_open',
+            {'status' => $list->{'admin'}{'status'}});
+        $log->syslog('info', 'List %s not open', $list);
         return undef;
     }
 

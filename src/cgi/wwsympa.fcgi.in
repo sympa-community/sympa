@@ -5831,6 +5831,27 @@ sub do_subscribe {
                     return undef;
                 }
             } else {
+                # If a list is not 'open' and allow_subscribe_if_pending
+                # has been set to 'off', returns undef.
+                unless (
+                    $list->{'admin'}{'status'} eq 'open'
+                    or Conf::get_robot_conf(
+                        $robot, 'allow_subscribe_if_pending'
+                    ) eq 'on'
+                    ) {
+                    Sympa::Report::reject_report_web('user', 'list_not_open',
+                        {'status' => $list->{'admin'}{'status'}},
+                        $param->{'action'});
+                    wwslog('info', 'List not open');
+                    web_db_log(
+                        {   'target_email' => $in{'email'},
+                            'status'       => 'error',
+                            'error_type'   => 'list_not_open'
+                        }
+                    );
+                    return undef;
+                }
+
                 my $defaults = $list->get_default_user_options();
                 my $u;
                 %{$u} = %{$defaults};
@@ -6299,7 +6320,8 @@ sub do_signoff {
     } else {
         Sympa::Report::reject_report_web(
             $result{'category_error'},
-            $result{'reason_error'}, {'list' => $list->{'name'}},
+            $result{'reason_error'},
+            {%{$result{'details_error'} || {}}, 'list' => $list->{'name'}},
             $param->{'action'}, $list
         );
     }
@@ -6388,6 +6410,26 @@ sub unsubscribe {
         $report{'details'} = 'sent_to_owner';
         return %report;
     } else {
+        # If a list is not 'open' and allow_subscribe_if_pending has been set
+        # to 'off' returns error report.
+        unless ($list->{'admin'}{'status'} eq 'open'
+            or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
+            'on') {
+            wwslog('info', 'List not open');
+            web_db_log(
+                {   'target_email' => $in{'email'},
+                    'status'       => 'error',
+                    'error_type'   => 'list_not_open'
+                }
+            );
+            $report{'success'}        = 0;
+            $report{'category_error'} = 'user';
+            $report{'reason_error'}   = 'list_not_open',
+            $report{'details_error'} =
+                {'status' => $list->{'admin'}{'status'}};
+            return %report;
+        }
+
         unless (
             $list->delete_list_member(
                 'users'     => [$authenticated_email_address],
