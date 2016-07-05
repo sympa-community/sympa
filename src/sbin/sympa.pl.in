@@ -533,22 +533,12 @@ if ($main::options{'dump'}) {
         exit 1;
     }
 
-    if ($list->{'admin'}{'family_name'}) {
-        unless (
-            $list->set_status_family_closed('purge_list', $list->{'name'})) {
-            print STDERR
-                "Could not purge list $main::options{'purge_list'}\n";
-            exit 1;
-        }
-    } else {
-        unless ($list->purge()) {
-            print STDERR
-                "Could not purge list $main::options{'close_list'}\n";
-            exit 1;
-        }
+    unless ($list->purge) {
+        print STDERR "Could not purge list $main::options{'purge_list'}\n";
+        exit 1;
     }
 
-    printf STDOUT "List %s has been closed, aliases have been removed\n",
+    printf STDOUT "List %s has been purged, aliases have been removed\n",
         $list->{'name'};
 
     exit 0;
