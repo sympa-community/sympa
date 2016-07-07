@@ -254,6 +254,7 @@ nobase_default_DATA = \
 	web_tt2/help_user_options.tt2 \
 	web_tt2/help_user.tt2 \
 	web_tt2/home.tt2 \
+	web_tt2/including_lists.tt2 \
 	web_tt2/info.tt2 \
 	web_tt2/install_pending_list.tt2 \
 	web_tt2/javascript.tt2 \

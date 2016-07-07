@@ -1,0 +1,8 @@
+<h3>[%|loc(list)%]Lists including %1[% END %]</h3>
+[% IF which && which.size %]
+	<ul class="fa-ul">
+		[% FOREACH list IN which.values %]
+		<li><i class="fa-li fa fa-arrow-right"></i> <a href="[% list.url_abs %]">[% list.name %]@[% list.robot %]</a> <i>[% list.subject %]</i></li>
+		[% END %]
+	</ul>
+[% END %]
