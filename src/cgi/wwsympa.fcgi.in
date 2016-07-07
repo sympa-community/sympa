@@ -997,8 +997,8 @@ unless (Conf::data_structure_uptodate()) {
     );
 }
 
-# Update main CSS if required.
-Sympa::Tools::WWW::update_css();
+## Update main CSS if required.
+#Sympa::Tools::WWW::update_css();
 
 our %changed_params;
 
@@ -2609,6 +2609,25 @@ sub send_html {
         }
     }
 
+    # Main CSS, possiblly customized.
+    my $main_css;
+    if ($session->{'custom_css'}) {
+        $main_css = Sympa::Tools::WWW::get_css_url($robot,
+            custom_css =>
+                {map { ($_ => $param->{$_}) } grep {/\Acolor_/} keys %$param});
+        unless ($main_css) {
+            wwslog('info', 'Error while parsing custom CSS');
+            delete $param->{'custom_css'};
+        }
+    }
+    $main_css ||= Sympa::Tools::WWW::get_css_url($robot);
+    $param->{'main_css'} = $main_css;
+
+    # Per-locale CSS.
+    $param->{'lang_css'} =
+        Sympa::Tools::WWW::get_css_url($robot, lang => $param->{'lang'})
+        if $param->{'lang'};
+
     # XSS escaping applied to all outgoing parameters.
     ## Escape parameters on a copy to avoid altering useful data.
     my $param_copy = Sympa::Tools::Data::dup_var($param);
@@ -2628,51 +2647,6 @@ sub send_html {
     ## Available plugins, to switch on template fragments
     $param_copy->{plugins} =
         $plugins ? sub { $plugins->tt2Fragments(@_) } : sub { () };
-
-    ## Custom CSSes.  They are stored to $param_copy so that they won't be
-    ## escaped.
-
-    # testing custom CSS.
-    if ($session->{'custom_css'}) {
-        # Do not include locale paths (lang parameter).
-        # The css.tt2 by each locales will override styles in main CSS.
-        my $css;
-        my $css_template = Sympa::Template->new(
-            $list || $robot,
-            plugins => $plugins,
-            subdir  => 'web_tt2'
-        );
-        unless ($css_template->parse($param, 'css.tt2', \$css)) {
-            wwslog('info', 'Error while parsing custom CSS');
-            delete $param_copy->{'custom_css'};
-        } else {
-            $param_copy->{'custom_css'} = $css;
-        }
-    }
-
-    # per-locale CSS.
-    if (Sympa::search_fullpath(
-            $list || $robot, 'css.tt2',
-            subdir    => 'web_tt2',
-            lang      => $param->{'lang'},
-            lang_only => 1
-        )
-        ) {
-        # Conversely, include only locale paths.
-        my $css;
-        my $css_template = Sympa::Template->new(
-            $list || $robot,
-            subdir    => 'web_tt2',
-            lang      => $param->{'lang'},
-            lang_only => 1
-        );
-        unless ($css_template->parse($param, 'css.tt2', \$css)) {
-            wwslog('info', 'Error while parsing CSS css.tt2 for lang %s',
-                $param->{'lang'});
-        } else {
-            $param_copy->{'locale_css'} = $css;
-        }
-    }
 
     # Now include locale paths (lang parameter).
     my $template = Sympa::Template->new(
@@ -7589,19 +7563,11 @@ sub do_edit_template {
 # Server show colors, and install static css in future edit colors etc.
 sub do_skinsedit {
     wwslog('info', '');
-    my $f;
 
-    my $dir     = Conf::get_robot_conf($robot, 'css_path');
-    my $css_url = Conf::get_robot_conf($robot, 'css_url');
-
-    ## Checking families and other virtual hosts.
+    # Checking families and other virtual hosts.
     get_server_details();
 
-    $param->{'css_warning'} =
-        "parameter css_url seems strange, it must be the url of a directory not a css file"
-        if ($css_url =~ /\.css$/);
-
-    if (($in{'editcolors'}) && ($in{'subaction'} eq 'reset')) {
+    if ($in{'editcolors'} and $in{'subaction'} eq 'reset') {
         delete $session->{'custom_css'};
         delete $param->{'session'}{'custom_css'};
         delete $param->{'custom_css'};
@@ -7609,6 +7575,8 @@ sub do_skinsedit {
         foreach my $colornumber (0 .. 15) {
             delete $session->{'color_' . $colornumber};
             delete $param->{'session'}{'color_' . $colornumber};
+            $param->{'color_' . $colornumber} =
+                Conf::get_robot_conf($robot, 'color_' . $colornumber);
         }
     }
 
@@ -7616,9 +7584,7 @@ sub do_skinsedit {
         return unless $in{'custom_color_number'} =~ /color_/;
         $param->{'custom_color_number'} = $in{'custom_color_number'};
         $param->{'custom_color_value'}  = $in{'custom_color_value'};
-        $param->{'custom_css'} =
-            $css_url . '/' . $param->{'user'}{'email'} . '.style.css';
-        $session->{'custom_css'} = $param->{'custom_css'};
+        $param->{'custom_css'} = $session->{'custom_css'} = 1;
 
         $session->{$in{'custom_color_number'}} = $in{'custom_color_value'};
 
@@ -7626,7 +7592,6 @@ sub do_skinsedit {
         foreach my $colornumber (0 .. 15) {
             if ($session->{'color_' . $colornumber}) {
                 $param->{'color_' . $colornumber} =
-                    $session->{'color_' . $colornumber};
                 $param->{'session'}{'color_' . $colornumber} =
                     $session->{'color_' . $colornumber};
             }
@@ -7634,99 +7599,15 @@ sub do_skinsedit {
     }
 
     if ($in{'subaction'} eq 'install' or $in{'installcss'}) {
-        # Do not include locale subdirectories (lang parameter).
-        # The css.tt2 by each locale will override styles in main CSS.
-        my $css_template = Sympa::Template->new($robot, subdir => 'web_tt2');
-
-        my $date = time;
-        my $style_file;
-
-        # update config
-        foreach my $colornumber (0 .. 15) {
-            Conf::set_robot_conf(
-                $robot,
-                'color_' . $colornumber,
-                $session->{'color_' . $colornumber}
-            ) if ($session->{'color_' . $colornumber});
+        # Update config.
+        my @keys = grep { $session->{$_} } map { 'color_' . $_ } (0 .. 15);
+        foreach my $key (@keys) {
+            Conf::set_robot_conf($robot, $key, $session->{$key});
         }
-        $param->{'conf'} = $Conf::Conf;
+        @{$param->{'conf'}}{@keys} = @{$session}{@keys};
+        @{$param}{@keys}           = @{$session}{@keys};
 
-        foreach my $css (qw(style.css)) {
-            $param->{'css'} = $css;
-            my $css_file;
-            # if user use editcolor form we must generate a static CSS that
-            # used custom colors.
-            if ($in{'subaction_test'}) {
-                $css_file = "$dir/$param->{'user'}{'email'}.$css";
-            } else {
-                $css_file = "$dir/$css";
-            }
-            unless (-d $dir) {
-                unless (mkdir $dir, 0775) {
-                    Sympa::Report::reject_report_web('intern', "mkdir_failed",
-                        {'path' => $dir},
-                        $param->{'action'}, '', $param->{'user'}{'email'},
-                        $robot);
-                    wwslog('err', 'Failed to create directory %s: %s',
-                        $dir, $ERRNO);
-                    return undef;
-                }
-                chmod 0775, $dir;
-                wwslog('notice', 'Created missing directory %s', $dir);
-            }
-
-            ## Keep a copy of the previous CSS (only if this is not a custom
-            ## css).
-            if ((-f "$css_file") && !($in{'editcolors'})) {
-                unless (rename "$css_file", "$css_file.$date") {
-                    Sympa::Report::reject_report_web(
-                        'intern',
-                        'cannot_rename_file',
-                        {'path' => "$css_file.$date"},
-                        $param->{'action'},
-                        '',
-                        $param->{'user'}{'email'},
-                        $robot
-                    );
-                    wwslog('err', 'Can\'t open file %s.%s', $css_file, $date);
-                    return undef;
-                }
-            }
-
-            if ($in{'subaction_install'}) {
-                foreach my $colornumber (0 .. 15) {
-                    $param->{'color_' . $colornumber} =
-                        $session->{'color_' . $colornumber}
-                        if ($session->{'color_' . $colornumber});
-                }
-            }
-
-            unless (open(CSS, ">$css_file")) {
-                Sympa::Report::reject_report_web(
-                    'intern', 'cannot_open_file',
-                    {'path' => "$css_file"}, $param->{'action'},
-                    '', $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Can\'t open file (write) %s', $css_file);
-                return undef;
-            }
-            unless ($css_template->parse($param, 'css.tt2', \*CSS)) {
-                my $error = $css_template->{last_error};
-                $error = $error->as_string if ref $error;
-                $param->{'tt2_error'} = $error;
-
-                Sympa::send_notify_to_listmaster($robot, 'web_tt2_error',
-                    [$error]);
-                wwslog('info', 'Error while installing %s: %s',
-                    $css_file, $error);
-            }
-            close(CSS);
-
-            ## Make the CSS readable to anyone
-            chmod 0775, "$css_file";
-
-        }
+        Sympa::Tools::WWW::get_css_url($robot, force => 1);
 
         $param->{'css_result'} = 1;
     }
@@ -23081,30 +22962,7 @@ sub do_arc_delete {
 }
 
 # DEPRECATED. No longer used.
-#sub do_css {
-#    wwslog('debug', '(%s)', $in{'file'});
-#    $param->{'bypass'} = 'extreme';
-#    print "Content-type: text/css; charset=utf-8\n\n";
-#    $param->{'css'} = $in{'file'};
-#
-#    # Do not include locale subdirectories (lang parameter).
-#    # The css.tt2 by each locale will override styles in main CSS.
-#    my $css_template = Sympa::Template->new($robot, subdir => 'web_tt2');
-#    unless ($css_template->parse($param, 'css.tt2', \*STDOUT)) {
-#        my $error = $css_template->{last_error};
-#        $error = $error->as_string if ref $error;
-#        $param->{'tt2_error'} = $error;
-#
-#        Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
-#        wwslog('info', '/%s: error: %s', $in{'file'}, $error);
-#        my $error_escaped = $error;
-#        $error_escaped =~ s/&/&amp;/g;
-#        $error_escaped =~ s/\//&#47;/g;
-#        printf STDOUT "\n/* %s */\n", $error_escaped;
-#    }
-#
-#    return;
-#}
+#sub do_css;
 
 sub do_rss_request {
     wwslog('info', '');

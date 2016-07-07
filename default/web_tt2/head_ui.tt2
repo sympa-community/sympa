@@ -18,20 +18,12 @@
   select[multiple], select[size] { height: auto; background-image: none; }
 </style>
 
-[% IF custom_css %]
-<style>
-[% custom_css %]
-</style>
-[% ELSE %]
-<link rel="stylesheet" href="[% css_url %]/style.css?version=[% version %]" media="screen" title="Sympa CSS" />
-[% END %]
-
-[% IF locale_css %]
-<style>
-[% locale_css %]
-</style>
-[% END %]
-
+[% IF main_css ~%]
+  <link rel="stylesheet" href="[% main_css %]" title="Sympa CSS" />
+[%~ END %]
+[% IF lang_css ~%]
+  <link rel="stylesheet" href="[% lang_css %]" />
+[%~ END %]
 [% IF conf.favicon_url %]
 <link rel="shortcut icon" href="[% conf.favicon_url %]" />
 [% ELSE %]

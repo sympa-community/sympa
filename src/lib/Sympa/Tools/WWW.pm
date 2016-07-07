@@ -845,138 +845,237 @@ sub get_template_path {
 }
 
 # Old name: Conf::update_css().
-sub update_css {
+# DEPRECATED.  No longer used.
+#sub update_css;
+
+# get_css_url($robot, [ force => 1 ], [ lang => $lang | custom_css => $param ])
+# Old name: (part of) Conf::update_css().
+sub get_css_url {
+    my $robot   = shift;
     my %options = @_;
 
-    my $force = $options{force};
+    # Get parameters for parsing.
+    my $lang;
+    my $param = {};
+    foreach my $p (
+        grep { /_color\z/ or /\Acolor_/ or /_url\z/ }
+        map { $_->{name} } grep { $_->{name} } @Sympa::ConfDef::params
+        ) {
+        $param->{$p} = Conf::get_robot_conf($robot, $p);
+    }
+    if ($options{custom_css}) {
+        # Override colors for parsing.
+        my %colors = %{$options{custom_css}};
+        my @keys =
+            grep { defined $colors{$_} and length $colors{$_} } keys %colors;
+        @{$param}{@keys} = @colors{@keys};
+        $param->{custom_css} = 1;
+    } elsif ($options{lang}) {
+        $lang = Sympa::Language::canonic_lang($options{lang});
+        # Malformed lang parameter.
+        return '' unless $lang;
+
+        $param->{lang} = $lang;
+    }
+    $param->{css} = 'style.css';    # Compat. <= 6.2.16.
+
+    # Get path and mtime of template file.
+    my ($template_path, $template_mtime, $css_hash);
+    if ($lang) {
+        # Include only locale paths.
+        $template_path = Sympa::search_fullpath(
+            $robot, 'css.tt2',
+            subdir    => 'web_tt2',
+            lang      => $lang,
+            lang_only => 1
+        );
+        # No template for specified language.
+        return '' unless $template_path;
+    } else {
+        # Do not include locale paths (lang parameter).
+        # The css.tt2 by each locale will override styles in main CSS.
+        $template_path =
+            Sympa::search_fullpath($robot, 'css.tt2', subdir => 'web_tt2');
+        unless ($template_path) {    # Impossible case.
+            return Sympa::Tools::Text::weburl(
+                Conf::get_robot_conf($robot, 'css_url'),
+                ['style.css']);
+        }
+    }
+    $template_mtime = Sympa::Tools::File::get_mtime($template_path);
+    $param->{path}  = $template_path;
+    $param->{mtime} = $template_mtime;
+
+    my $hash = Digest::MD5::md5_hex(
+        join ',',
+        map { $_ . '=' . $param->{$_} }
+            grep { defined $param->{$_} and length $param->{$_} }
+            sort keys %$param
+    );
+
+    my ($dir, $path, $url);
+    if ($options{custom_css}) {
+        $dir =
+            sprintf '%s/%s/%s',
+            Conf::get_robot_conf($robot, 'static_content_path'),
+            'css', $robot;
+        # Expire old files.
+        if (opendir my $dh, $dir) {
+            foreach my $file (readdir $dh) {
+                next unless $file =~ /\Astyle[.][0-9a-f]+[.]css\b/;
+                next unless -f $dir . '/' . $file;
+                next
+                    if time - 3600 <
+                        Sympa::Tools::File::get_mtime($dir . '/' . $file);
+                unlink $dir . '/' . $file;
+            }
+            closedir $dh;
+        }
+
+        $path = $dir . '/style.' . $hash . '.css';
+        $url =
+            Sympa::Tools::Text::weburl(
+            Conf::get_robot_conf($robot, 'static_content_url'),
+            ['css', $robot, 'style.' . $hash . '.css']);
+    } elsif ($lang) {
+        $param->{'lang'} = $lang;
+        $dir =
+            sprintf '%s/%s/%s/%s',
+            Conf::get_robot_conf($robot, 'static_content_path'),
+            'css', $robot, $lang;
+
+        $path = $dir . '/lang.css';
+        $url  = Sympa::Tools::Text::weburl(
+            Conf::get_robot_conf($robot, 'static_content_url'),
+            ['css', $robot, $lang, 'lang.css'],
+            query => {h => $hash}
+        );
+    } else {
+        # Use css_path and css_url parameters so that the user may provide
+        # their own CSS.
+        $dir = Conf::get_robot_conf($robot, 'css_path');
+
+        $path = $dir . '/style.css';
+        $url =
+            Sympa::Tools::Text::weburl(
+            Conf::get_robot_conf($robot, 'css_url'),
+            ['style.css'], query => {h => $hash});
+    }
+
+    # Update the CSS if it is missing or if a new css.tt2 was installed.
+    unless (!-f $path
+        or Sympa::Tools::File::get_mtime($path) < $template_mtime
+        or $options{force}) {
+        return $url;
+    }
+
+    $log->syslog(
+        'notice',
+        'Template file %s has changed; updating static CSS file %s; previous file renamed',
+        $template_path,
+        $path
+    );
 
     # Set umask.
     my $umask = umask 022;
 
-    # create or update static CSS files
-    my $css_updated = undef;
-    my @robots = ('*', keys %{$Conf::Conf{'robots'}});
-    foreach my $robot (@robots) {
-        my $dir = Conf::get_robot_conf($robot, 'css_path');
+    # Create directory if required
+    unless (-d $dir) {
+        my $error;
+        File::Path::make_path(
+            $dir,
+            {   mode  => 0755,
+                owner => Sympa::Constants::USER(),
+                group => Sympa::Constants::GROUP(),
+                error => \$error
+            }
+        );
+        if (@$error) {
+            my ($target, $err) = %{$error->[-1] || {}};
 
-        ## Get colors for parsing
-        my $param = {};
-
-        foreach my $p (
-            map  { $_->{name} }
-            grep { $_->{name} } @Sympa::ConfDef::params
-            ) {
-            $param->{$p} = Conf::get_robot_conf($robot, $p)
-                if $p =~ /_color\z/
-                    or $p =~ /\Acolor_/
-                    or $p =~ /_url\z/;
-        }
-
-        # Create directory if required
-        unless (-d $dir) {
-            my $error;
-            File::Path::make_path(
-                $dir,
-                {   mode  => 0755,
-                    owner => Sympa::Constants::USER(),
-                    group => Sympa::Constants::GROUP(),
-                    error => \$error
+            Sympa::send_notify_to_listmaster(
+                $robot,
+                'css_update_failed',
+                {   error   => 'cannot_mkdir',
+                    target  => $target,
+                    message => $err
                 }
             );
-            if (@$error) {
-                my ($target, $err) = %{$error->[-1] || {}};
+            $log->syslog('err', 'Failed to create %s: %s', $target, $err);
 
-                Sympa::send_notify_to_listmaster(
-                    $robot,
-                    'css_update_failed',
-                    {   error   => 'cannot_mkdir',
-                        target  => $target,
-                        message => $err
-                    }
-                );
-                $log->syslog('err', 'Failed to create %s: %s', $target, $err);
-
-                umask $umask;
-                return undef;
-            }
-        }
-
-        my $css_tt2_path =
-            Sympa::search_fullpath($robot, 'css.tt2', subdir => 'web_tt2');
-        my $css_tt2_mtime = Sympa::Tools::File::get_mtime($css_tt2_path);
-
-        foreach my $css (qw(style.css)) {
-            # Lock file to prevent multiple processes from writing it.
-            my $lock_fh = Sympa::LockedFile->new($dir . '/' . $css, -1, '+');
-            next unless $lock_fh;
-
-            $param->{'css'} = $css;
-
-            # Update the CSS if it is missing or if a new css.tt2 was
-            # installed
-            if (!-f $dir . '/' . $css
-                or $css_tt2_mtime >
-                Sympa::Tools::File::get_mtime($dir . '/' . $css)
-                or $force) {
-                $log->syslog(
-                    'notice',
-                    'TT2 file %s has changed; updating static CSS file %s/%s; previous file renamed',
-                    $css_tt2_path,
-                    $dir,
-                    $css
-                );
-
-                ## Keep copy of previous file
-                rename $dir . '/' . $css, $dir . '/' . $css . '.' . time;
-
-                unless (open CSS, '>', $dir . '/' . $css) {
-                    my $errno = $ERRNO;
-                    Sympa::send_notify_to_listmaster(
-                        $robot,
-                        'css_update_failed',
-                        {   error   => 'cannot_open_file',
-                            file    => "$dir/$css",
-                            message => $errno,
-                        }
-                    );
-                    $log->syslog('err',
-                        'Failed to open (write) file %s/%s: %s',
-                        $dir, $css, $errno);
-
-                    umask $umask;
-                    return undef;
-                }
-
-                my $css_template =
-                    Sympa::Template->new($robot, subdir => 'web_tt2');
-                unless ($css_template->parse($param, 'css.tt2', \*CSS)) {
-                    my $error = $css_template->{last_error};
-                    $error = $error->as_string if ref $error;
-                    Sympa::send_notify_to_listmaster($robot,
-                        'css_update_failed',
-                        {error => 'tt2_error', message => $error});
-                    $log->syslog('err', 'Error while installing %s/%s',
-                        $dir, $css);
-                }
-
-                $css_updated++;
-
-                close CSS;
-            }
+            umask $umask;
+            return undef;
         }
     }
-    #if ($css_updated) {
-    #    ## Notify main listmaster
-    #    Sympa::send_notify_to_listmaster(
-    #        '*',
-    #        'css_updated',
-    #        [   "Static CSS files have been updated ; check log file for details"
-    #        ]
-    #    );
-    #}
+
+    # Lock file to prevent multiple processes from writing it.
+    my $lock_fh = Sympa::LockedFile->new($path, -1, '+');
+    unless ($lock_fh) {
+        umask $umask;
+        return $url;
+    }
+
+    my $fh;
+    unless (open $fh, '>', $path . '.new') {
+        my $errno = $ERRNO;
+        Sympa::send_notify_to_listmaster(
+            $robot,
+            'css_update_failed',
+            {   error   => 'cannot_open_file',
+                file    => $path,
+                message => $errno,
+            }
+        );
+        $log->syslog('err', 'Failed to open (write) file %s: %s',
+            $path, $errno);
+
+        umask $umask;
+        return undef;
+    }
+
+    my $template;
+    if ($lang) {
+        $template = Sympa::Template->new(
+            $robot,
+            subdir    => 'web_tt2',
+            lang      => $lang,
+            lang_only => 1
+        );
+    } else {
+        $template = Sympa::Template->new($robot, subdir => 'web_tt2');
+    }
+    unless ($template->parse($param, 'css.tt2', $fh)) {
+        my $error = $template->{last_error};
+        $error = $error->as_string if ref $error;
+        Sympa::send_notify_to_listmaster($robot, 'css_update_failed',
+            {error => 'tt2_error', message => $error});
+        $log->syslog('err', 'Error while installing %s', $path);
+
+        # Keep previous file.
+        close $fh;
+        unlink $path . '.new';
+
+        umask $umask;
+        return $url;
+    }
+
+    close $fh;
+
+    # Keep copy of previous file.
+    unless (
+        (not -f $path or rename($path, $path . '.' . time) or unlink $path)
+        and rename($path . '.new', $path)) {
+        my $errno = $ERRNO;
+        Sympa::send_notify_to_listmaster($robot, 'css_update_failed',
+            {error => 'cannot_rename_file', message => $errno});
+        $log->syslog('err', 'Error while installing %s: %s', $path, $errno);
+
+        umask $umask;
+        return undef;
+    }
 
     umask $umask;
-    return 1;
+    return $url;
 }
 
 # Old name: tools::escape_html().
