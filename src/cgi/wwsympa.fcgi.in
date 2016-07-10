@@ -177,7 +177,7 @@ our %comm = (
     'ignoresub'        => 'do_ignoresub',
     'ignoresig'        => 'do_ignoresig',
     'my'               => 'do_my',
-    'which'            => 'do_which',
+    #'which' => 'do_which',
     'lists'            => 'do_lists',
     'lists_categories' => 'do_lists_categories',
     'latest_lists'     => 'do_latest_lists',
@@ -620,7 +620,7 @@ our %required_args = (
     'viewlogs'               => ['param.list'],
     'viewmod' => ['param.list', 'param.user.email', 'id|idspam'],
     'wsdl'    => [],
-    'which'   => ['param.user.email'],
+    #'which' => ['param.user.email'],
 );
 
 ## Defines the required privileges to access privileged actions
@@ -4491,57 +4491,8 @@ sub do_my {
 
 ## Which list the user is subscribed to
 ## TODO (pour listmaster, toutes les listes)
-sub do_which {
-    my $which = {};
-
-    wwslog('info', '');
-
-    $param->{'get_which'} = undef;
-    $param->{'which'}     = undef;
-
-    foreach my $role ('member', 'owner', 'editor') {
-
-        foreach my $list (
-            Sympa::List::get_which($param->{'user'}{'email'}, $robot, $role))
-        {
-            my $l = $list->{'name'};
-
-            my $result = Sympa::Scenario::request_action(
-                $list,
-                'visibility',
-                $param->{'auth_method'},
-                {   'sender'      => $param->{'user'}{'email'},
-                    'remote_host' => $param->{'remote_host'},
-                    'remote_addr' => $param->{'remote_addr'}
-                }
-            );
-
-            my $r_action;
-            $r_action = $result->{'action'} if (ref($result) eq 'HASH');
-
-            next unless ($r_action =~ /do_it/);
-
-            $param->{'which'}{$l}{'subject'} = $list->{'admin'}{'subject'};
-            $param->{'which'}{$l}{'host'}    = $list->{'admin'}{'host'};
-
-            if ($role eq 'member') {
-                push @{$param->{'get_which'}}, $list;
-            }
-
-            if ($role eq 'owner' || $role eq 'editor') {
-                $param->{'which'}{$l}{'admin'} = 1;
-            }
-
-            ## For compatibility concerns (3.0)
-            ## To be deleted one of these day
-            $param->{$role}{$l}{'subject'} = $list->{'admin'}{'subject'};
-            $param->{$role}{$l}{'host'}    = $list->{'admin'}{'host'};
-
-        }
-
-    }
-    return 1;
-}
+# DEPRECATED: No longer used.
+#sub do_which {
 
 ## The list of list
 sub do_lists {

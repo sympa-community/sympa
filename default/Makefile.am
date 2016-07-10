@@ -182,7 +182,6 @@ nobase_default_DATA = \
 	scenari/visibility.secret \
 	web_tt2/active_lists.tt2 \
 	web_tt2/add_request.tt2 \
-	web_tt2/admin_menu.tt2 \
 	web_tt2/admin.tt2 \
 	web_tt2/ajax.tt2 \
 	web_tt2/arc_manage.tt2 \
@@ -257,7 +256,6 @@ nobase_default_DATA = \
 	web_tt2/including_lists.tt2 \
 	web_tt2/info.tt2 \
 	web_tt2/install_pending_list.tt2 \
-	web_tt2/javascript.tt2 \
 	web_tt2/latest_arc.tt2 \
 	web_tt2/latest_d_read.tt2 \
 	web_tt2/latest_lists.tt2 \
@@ -276,8 +274,6 @@ nobase_default_DATA = \
 	web_tt2/maintenance.tt2 \
 	web_tt2/main.tt2 \
 	web_tt2/manage_template.tt2 \
-	web_tt2/menu.tt2 \
-	web_tt2/menu_search.tt2 \
 	web_tt2/modindex.tt2 \
 	web_tt2/modform.tt2 \
 	web_tt2/my.tt2 \
@@ -324,7 +320,6 @@ nobase_default_DATA = \
 	web_tt2/viewlogs.tt2 \
 	web_tt2/viewmod.tt2 \
 	web_tt2/view_template.tt2 \
-	web_tt2/your_lists.tt2 \
 	web_tt2/ja/css.tt2 \
 	web_tt2/ko/css.tt2 \
 	web_tt2/zh-CN/css.tt2 \
@@ -412,7 +407,7 @@ install-data-hook:
 	cd $(DESTDIR)$(defaultdir)/web_tt2; \
 	rm -f ja_JP/css.tt2 ko_KR/css.tt2 zh_CN/css.tt2 zh_TW/css.tt2; \
 	$(LN_S) -f review.tt2 search.tt2; \
-	$(LN_S) -f lists.tt2 which.tt2; \
+	rm -f which.tt2; \
 	$(LN_S) -f lists.tt2 search_list.tt2; \
 	rm -f authorization_reject.tt2; \
 	$(LN_S) -f ../mail_tt2/authorization_reject.tt2; \
