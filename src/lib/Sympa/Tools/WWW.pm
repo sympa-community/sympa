@@ -848,14 +848,46 @@ sub get_template_path {
 # DEPRECATED.  No longer used.
 #sub update_css;
 
+my %hash;
+
 # get_css_url($robot, [ force => 1 ], [ lang => $lang | custom_css => $param ])
 # Old name: (part of) Conf::update_css().
 sub get_css_url {
     my $robot   = shift;
     my %options = @_;
 
+    my ($url, $hash);
+    if ($options{custom_css}) {
+        my $umask = umask 022;
+        ($url) = _get_css_url($robot, %options);
+        umask $umask;
+    } elsif ($options{lang}) {
+        my $lang = Sympa::Language::canonic_lang($options{lang});
+        return undef unless $lang;    # Malformed lang parameter.
+
+        my $umask = umask 022;
+        ($url, $hash) = _get_css_url($robot, %options, lang => $lang);
+        umask $umask;
+
+        $hash{$lang} = $hash if $hash;
+    } else {
+        my $umask = umask 022;
+        ($url, $hash) = _get_css_url($robot, %options);
+        umask $umask;
+
+        $hash{_main} = $hash if $hash;
+    }
+    return $url;
+}
+
+sub _get_css_url {
+    my $robot   = shift;
+    my %options = @_;
+
+    my %colors = %{$options{custom_css} || {}};
+    my $lang = $options{lang};
+
     # Get parameters for parsing.
-    my $lang;
     my $param = {};
     foreach my $p (
         grep { /_color\z/ or /\Acolor_/ or /_url\z/ }
@@ -863,24 +895,19 @@ sub get_css_url {
         ) {
         $param->{$p} = Conf::get_robot_conf($robot, $p);
     }
-    if ($options{custom_css}) {
+    if (%colors) {
         # Override colors for parsing.
-        my %colors = %{$options{custom_css}};
         my @keys =
             grep { defined $colors{$_} and length $colors{$_} } keys %colors;
         @{$param}{@keys} = @colors{@keys};
         $param->{custom_css} = 1;
-    } elsif ($options{lang}) {
-        $lang = Sympa::Language::canonic_lang($options{lang});
-        # Malformed lang parameter.
-        return '' unless $lang;
-
+    } elsif ($lang) {
         $param->{lang} = $lang;
     }
     $param->{css} = 'style.css';    # Compat. <= 6.2.16.
 
     # Get path and mtime of template file.
-    my ($template_path, $template_mtime, $css_hash);
+    my ($template_path, $template_mtime);
     if ($lang) {
         # Include only locale paths.
         $template_path = Sympa::search_fullpath(
@@ -890,16 +917,18 @@ sub get_css_url {
             lang_only => 1
         );
         # No template for specified language.
-        return '' unless $template_path;
+        return unless $template_path;
     } else {
         # Do not include locale paths (lang parameter).
         # The css.tt2 by each locale will override styles in main CSS.
         $template_path =
             Sympa::search_fullpath($robot, 'css.tt2', subdir => 'web_tt2');
         unless ($template_path) {    # Impossible case.
-            return Sympa::Tools::Text::weburl(
+            my $url =
+                Sympa::Tools::Text::weburl(
                 Conf::get_robot_conf($robot, 'css_url'),
                 ['style.css']);
+            return ($url);
         }
     }
     $template_mtime = Sympa::Tools::File::get_mtime($template_path);
@@ -914,7 +943,7 @@ sub get_css_url {
     );
 
     my ($dir, $path, $url);
-    if ($options{custom_css}) {
+    if (%colors) {
         $dir =
             sprintf '%s/%s/%s',
             Conf::get_robot_conf($robot, 'static_content_path'),
@@ -933,12 +962,11 @@ sub get_css_url {
         }
 
         $path = $dir . '/style.' . $hash . '.css';
-        $url =
-            Sympa::Tools::Text::weburl(
+        $url  = Sympa::Tools::Text::weburl(
             Conf::get_robot_conf($robot, 'static_content_url'),
-            ['css', $robot, 'style.' . $hash . '.css']);
+            ['css', $robot, 'style.' . $hash . '.css']
+        );
     } elsif ($lang) {
-        $param->{'lang'} = $lang;
         $dir =
             sprintf '%s/%s/%s/%s',
             Conf::get_robot_conf($robot, 'static_content_path'),
@@ -962,22 +990,26 @@ sub get_css_url {
             ['style.css'], query => {h => $hash});
     }
 
-    # Update the CSS if it is missing or if a new css.tt2 was installed.
-    unless (!-f $path
-        or Sympa::Tools::File::get_mtime($path) < $template_mtime
-        or $options{force}) {
-        return $url;
+    # Update the CSS if it is missing or if css.tt2 or configuration was
+    # changed.
+    if (-f $path and not $options{force}) {
+        if (%colors) {
+            return ($url);
+        } elsif (
+            (exists $hash{$lang || '_main'})
+            ? ($hash{$lang || '_main'} eq $hash)
+            : ($template_mtime < Sympa::Tools::File::get_mtime($path))
+            ) {
+            return ($url, $hash);
+        }
     }
 
     $log->syslog(
         'notice',
-        'Template file %s has changed; updating static CSS file %s; previous file renamed',
+        'Template file %s or configuration has changed; updating CSS file %s',
         $template_path,
         $path
     );
-
-    # Set umask.
-    my $umask = umask 022;
 
     # Create directory if required
     unless (-d $dir) {
@@ -1003,16 +1035,14 @@ sub get_css_url {
             );
             $log->syslog('err', 'Failed to create %s: %s', $target, $err);
 
-            umask $umask;
-            return undef;
+            return;
         }
     }
 
     # Lock file to prevent multiple processes from writing it.
     my $lock_fh = Sympa::LockedFile->new($path, -1, '+');
     unless ($lock_fh) {
-        umask $umask;
-        return $url;
+        return ($url);
     }
 
     my $fh;
@@ -1029,8 +1059,8 @@ sub get_css_url {
         $log->syslog('err', 'Failed to open (write) file %s: %s',
             $path, $errno);
 
-        umask $umask;
-        return undef;
+        return ($url) if -f $path;
+        return;
     }
 
     my $template;
@@ -1055,8 +1085,8 @@ sub get_css_url {
         close $fh;
         unlink $path . '.new';
 
-        umask $umask;
-        return $url;
+        return ($url) if -f $path;
+        return;
     }
 
     close $fh;
@@ -1070,12 +1100,10 @@ sub get_css_url {
             {error => 'cannot_rename_file', message => $errno});
         $log->syslog('err', 'Error while installing %s: %s', $path, $errno);
 
-        umask $umask;
-        return undef;
+        return;
     }
 
-    umask $umask;
-    return $url;
+    return ($url, $hash);
 }
 
 # Old name: tools::escape_html().
