@@ -13952,7 +13952,7 @@ sub by_order {
 ##
 ## Function do_d_read
 sub do_d_read {
-    wwslog('info', '(%s)', $in{'path'});
+    wwslog('trace', '(%s)', $in{'path'});
 
     ### Useful variables
 
@@ -13964,7 +13964,15 @@ sub do_d_read {
 
     $path = Sympa::Tools::Text::unescape_chars($path);
 
-    $path = Sympa::Tools::Text::qencode_filename($path);
+    my @components = split '/', $path;
+    my @new_components;
+    foreach my $component (@components) {
+        push @new_components, Sympa::Tools::Text::qencode_filename($component);
+    }
+
+    $path = join '/', @new_components;
+
+    wwslog('trace','%s',$path);
 
     # moderation
     my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
