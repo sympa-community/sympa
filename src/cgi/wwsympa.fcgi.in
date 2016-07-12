@@ -13962,6 +13962,10 @@ sub do_d_read {
     # relative path / directory shared of the document
     my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
+    $path = Sympa::Tools::Text::unescape_chars($path);
+
+    $path = Sympa::Tools::Text::qencode_filename($path);
+
     # moderation
     my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
 
