@@ -273,7 +273,14 @@ sub _url_func {
             %nomenu = (nomenu => 1);
         }
         my $url = Sympa::get_url($robot_id, $action, %options, %nomenu);
-        $options{decode_html} ? Sympa::Tools::Text::encode_html($url) : $url;
+        my $return;
+        if ($options{decode_html}) {
+			$return = Sympa::Tools::Text::encode_html($url);
+		}else{
+			$return = $url;
+		}
+        $return =~ s{%2f}{/}ig;
+        return $return;
     };
 }
 
