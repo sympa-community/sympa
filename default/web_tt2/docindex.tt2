@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 <h2>[%|loc%]Listing of shared documents to moderate[%END%]</h2>
-[% IF mod_total_shared %]
+[% IF shared_doc.moderated %]
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderate_shared">
 <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
@@ -17,10 +17,10 @@
 	<th>[%|loc%]Path[%END%]</th>
 	<th>[%|loc%]Size[%END%]	</th>
       </tr>	 
-      [% FOREACH f = info_doc_mod %]
+      [% FOREACH f = shared_doc.moderated %]
         <tr>
          <td>
-            <input type="checkbox" name="id" value="[% f.path %][% f.fname %]" />
+            <input type="checkbox" name="id" value="[% f.paths.join("/") %]" />
 	 </td>
 	  <td>
 	    [% IF f.date %]
@@ -29,10 +29,9 @@
 	      &nbsp;
 	    [% END %]
 	  </td>
-	  <td>[% f.author %]</td>
+	  <td>[% f.owner %]</td>
 	  <td>
-	    [%# FIXME:path would be percent-encoded. ~%]
-	    <a href="[% 'd_read' | url_rel([list]) %][% f.escaped_path %][% f.escaped_fname %]">[% f.visible_path %][% f.visible_fname %]</a>
+	    <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">[% f.paths.join("/") %]</a>
 	  </td>
 	  <td>[% f.size %] kb</td>
 	</tr>

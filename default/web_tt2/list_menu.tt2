@@ -141,7 +141,7 @@
 [% IF shared == 'exist' %]
   [% IF may_d_read %]
     [% IF action == 'd_read' || action == 'd_edit' || action == 'd_properties' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'd_read' | url_rel([list]) %]" >[%|loc%]Shared documents[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'd_read' | url_rel([list,'']) %]" >[%|loc%]Shared documents[%END%]</a></li>
   [% ELSE %]
     <li class="menuInactive2"><span>[%|loc%]Shared documents[%END%]</span></li>
   [% END %]

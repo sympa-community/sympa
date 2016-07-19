@@ -252,6 +252,12 @@ sub _url_func {
     my %options;
     @options{qw(paths query fragment)} = @_;
 
+    # Flatten nested path components.
+    if ($options{paths} and @{$options{paths}}) {
+        $options{paths} =
+            [map { ref $_ eq 'ARRAY' ? @$_ : ($_) } @{$options{paths}}];
+    }
+
     @options{qw(authority decode_html nomenu)} = (
         ($is_abs ? 'default' : 'omit'),
         ($self->{subdir} && $self->{subdir} eq 'web_tt2'),
@@ -273,14 +279,7 @@ sub _url_func {
             %nomenu = (nomenu => 1);
         }
         my $url = Sympa::get_url($robot_id, $action, %options, %nomenu);
-        my $return;
-        if ($options{decode_html}) {
-			$return = Sympa::Tools::Text::encode_html($url);
-		}else{
-			$return = $url;
-		}
-        $return =~ s{%2f}{/}ig;
-        return $return;
+        $options{decode_html} ? Sympa::Tools::Text::encode_html($url) : $url;
     };
 }
 
