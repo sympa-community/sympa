@@ -8299,8 +8299,22 @@ sub do_docindex {
 
     # Shared documents awaiting moderation.
     my $shared_doc = Sympa::SharedDocument->new($list);
+    unless ($shared_doc and -r $shared_doc->{fs_path}) {
+        wwslog('err', 'There is no shared documents');
+        Sympa::Report::reject_report_web('user', 'no_shared', {},
+            $param->{'action'}, $list);
+        web_db_log(
+            {   'parameters' => '',
+                'status'     => 'error',
+                'error_type' => 'internal'
+            }
+        );
+        return undef;
+    }
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
+
     my @mod = map { $_->as_hashref } $shared_doc->get_moderated_descendants;
-    $param->{'shared_doc'}{'moderated'} = [@mod] if @mod;
+    $param->{'shared_doc'}{'children'} = [@mod] if @mod;
 
     return 1;
 }

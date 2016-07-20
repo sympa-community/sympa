@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 <h2>[%|loc%]Listing of shared documents to moderate[%END%]</h2>
-[% IF shared_doc.moderated %]
+[% IF shared_doc.children %]
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderate_shared">
 <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
@@ -17,7 +17,7 @@
 	<th>[%|loc%]Path[%END%]</th>
 	<th>[%|loc%]Size[%END%]	</th>
       </tr>	 
-      [% FOREACH f = shared_doc.moderated %]
+      [% FOREACH f = shared_doc.children %]
         <tr>
          <td>
             <input type="checkbox" name="id" value="[% f.paths.join("/") %]" />
