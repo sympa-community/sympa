@@ -26,8 +26,10 @@ package Sympa::SharedDocument;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use File::Find qw();
 use MIME::EncWords;
+use POSIX qw();
 
 use Sympa;
 use Conf;
@@ -223,20 +225,22 @@ sub _new_child {
 sub _load_desc {
     my $self = shift;
 
-    my $desc_file;
-    if (-d $self->{fs_path}) {
-        $desc_file = $self->{fs_path} . '/.desc';
-    } else {
-        $desc_file =
-            $self->{parent}->{fs_path} . '/.desc.' . $self->{fs_name};
-    }
-
+    my $desc_file = $self->_desc_file;
     return unless $desc_file and -e $desc_file;
 
     my %desc = _load_desc_file($desc_file);
     $desc{serial_desc} = Sympa::Tools::File::get_mtime($desc_file);
 
     return %desc;
+}
+
+# Gets path of property description on physical filesystem.
+sub _desc_file {
+    my $self = shift;
+
+    return (-d $self->{fs_path})
+        ? ($self->{fs_path} . '/.desc')
+        : ($self->{parent}->{fs_path} . '/.desc.' . $self->{fs_name});
 }
 
 # Old name: Sympa::Tools::WWW::get_desc_file().
@@ -315,6 +319,18 @@ sub as_hashref {
         if grep { $self->{type} eq $_ } qw(root directory);
 
     return {%hash};
+}
+
+sub count_children {
+    my $self = shift;
+
+    my $dh;
+    return undef unless opendir $dh, $self->{fs_path};
+    my @children =
+        grep { !/\A[.]+\z/ and !/\A[.]desc(?:[.]|\z)/ } sort readdir $dh;
+    closedir $dh;
+
+    return scalar @children;
 }
 
 sub get_children {
@@ -657,6 +673,88 @@ sub get_privileges {
 #    return $result;
 #}
 
+sub install {
+    my $self = shift;
+
+    unless ($self->{moderate} and -e $self->{fs_path}) {
+        $ERRNO = POSIX::ENOENT();
+        return undef;
+    }
+
+    my $new_fs_name;
+    if ($self->{fs_name} =~ /\A[.](.+)[.]moderate\z/) {
+        $new_fs_name = $1;
+    } else {
+        $ERRNO = POSIX::ENOENT();
+        return undef;
+    }
+    my $new_fs_path = $self->{parent}->{fs_path} . '/' . $new_fs_name;
+    my $desc_file   = $self->_desc_file;
+    my $new_desc_file =
+          (-d $self->{fs_path})
+        ? ($new_fs_path . '/.desc')
+        : ($self->{parent}->{fs_path} . '/.desc.' . $new_fs_name);
+
+    # Rename the old file in .old if exists.
+    if (-e $new_fs_path) {
+        return undef
+            unless CORE::rename $new_fs_path, $new_fs_path . '.old';
+        if (-e $new_desc_file) {
+            return undef
+                unless CORE::rename $new_desc_file, $new_desc_file . '.old';
+        }
+    }
+    return undef
+        unless CORE::rename $self->{fs_path}, $new_fs_path;
+    if (-e $desc_file) {
+        return undef
+            unless CORE::rename $desc_file, $new_desc_file;
+    }
+
+    $self->{fs_path} = $new_fs_path;
+    $self->{fs_name} = $new_fs_name;
+    delete $self->{moderate};
+
+    return 1;
+}
+
+sub rmdir {
+    my $self = shift;
+
+    unless ($self->{type} eq 'directory' and -d $self->{fs_path}) {
+        $ERRNO = POSIX::ENOTDIR();
+        return undef;
+    }
+    if ($self->count_children) {
+        $ERRNO = POSIX::EEXIST();
+        return undef;
+    }
+
+    if (-e $self->_desc_file) {
+        return undef unless CORE::unlink $self->_desc_file;
+    }
+    CORE::rmdir $self->{fs_path};
+}
+
+sub unlink {
+    my $self = shift;
+
+    if (grep { $self->{type} eq $_ } qw(root directory)) {
+        $ERRNO = POSIX::EPERM();
+        return undef;
+    }
+
+    return undef
+        unless CORE::unlink $self->{fs_path};
+    my $desc_file = $self->_desc_file;
+    if (-e $desc_file) {
+        return undef
+            unless CORE::unlink $desc_file;
+    }
+
+    return 1;
+}
+
 # Escape shared document file name.  Q-decode it first.
 # ToDo: This should be obsoleted: Would be better to use
 # Sympa::Tools::Text::encode_filesystem_safe().
@@ -770,6 +868,11 @@ additional "/" character.
 
 =back
 
+=item count_children ( )
+
+I<Instance method>.
+Returns number of child nodes.
+
 =item count_moderated_descendants ( )
 
 I<Instance method>.
@@ -830,6 +933,37 @@ I<Instance method>.
 Gets privileges of a user on the node.
 
 TBD.
+
+=item install ( )
+
+I<Instance method>.
+Approves (install) file if it was held for moderation.
+
+Returns:
+
+True value.
+If installation failed, returns false value and sets $ERRNO ($!).
+
+=item rmdir ( )
+
+I<instalce method>.
+Removes directory from repository.
+Directory must be empty.
+
+Returns:
+
+True value.
+If installation failed, returns false value and sets $ERRNO ($!).
+
+=item unlink ( )
+
+I<instalce method>.
+Removes file from repository.
+
+Returns:
+
+True value.
+If installation failed, returns false value and sets $ERRNO ($!).
 
 =item get_id ( )
 
@@ -967,8 +1101,6 @@ Directory or file.
 Moderated directory or file.
 
 =item I<... path>/I<name>/.desc
-
-=item I<... path>/.I<name>.moderate/.desc
 
 =item I<... path>/.desc.I<name>
 
