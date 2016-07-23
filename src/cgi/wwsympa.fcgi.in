@@ -944,20 +944,20 @@ our %in_negative_regexp = ('arc_file' => '^(arctxt|\.)');
 ## Paramater can be '*' or 'param*'
 ## Like Q-encoding
 my %filtering = (
-    'd_reject_shared'  => {'id'       => 'qencode'},
-    'd_install_shared' => {'id'       => 'qencode'},
+    #XXX'd_reject_shared' => {'id' => 'qencode'},
+    #XXX'd_install_shared' => {'id' => 'qencode'},
     #XXX'd_read' => {'path' => 'qencode'},
     'd_create_dir'     => {'name_doc' => 'qencode', 'path' => 'qencode'},
     'd_upload'         => {'path'     => 'qencode'},
     'd_unzip'          => {'path'     => 'qencode'},
     'd_editfile'       => {'path'     => 'qencode'},
-    'd_properties'     => {'path'     => 'qencode'},
+    #XXX'd_properties' => {'path' => 'qencode'},
     'd_overwrite'      => {'path'     => 'qencode'},
     'd_savefile'       => {'path'     => 'qencode', 'name_doc' => 'qencode'},
     'd_describe'       => {'path'     => 'qencode'},
-    'd_delete'         => {'path'     => 'qencode'},
-    'd_rename'         => {'path'     => 'qencode', 'new_name' => 'qencode'},
-    'd_control'        => {'path'     => 'qencode'},
+    #XXX'd_delete' => {'path' => 'qencode'},
+    #XXX'd_rename' => {'path' => 'qencode', 'new_name' => 'qencode'},
+    #XXX'd_control' => {'path' => 'qencode'},
     'd_change_access'  => {'path'     => 'qencode'},
     'd_set_owner'      => {'path'     => 'qencode'},
     'requestpasswd'    => {'email'    => 'fix_escape_uri'},
@@ -8319,7 +8319,7 @@ sub do_docindex {
     return 1;
 }
 
-### installation of moderated documents of shared
+# Installation of moderated documents of shared.
 sub do_d_install_shared {
     wwslog('info', '(%s)', $in{'id'});
 
@@ -8327,182 +8327,77 @@ sub do_d_install_shared {
         return 'docindex';
     }
 
-    my $shareddir = $list->{'dir'} . '/shared';
-    my $file;
-    my $slash_path;
-    my $fname;
-    my $visible_fname;
-    # list of file already existing
-    my @list_file_exist;
+    my $shared_doc = Sympa::SharedDocument->new($list);
+    unless ($shared_doc and -r $shared_doc->{fs_path}) {
+        wwslog('err', 'There is no shared documents');
+        Sympa::Report::reject_report_web('user', 'no_shared', {},
+            $param->{'action'}, $list);
+        web_db_log(
+            {   'parameters' => '',
+                'status'     => 'error',
+                'error_type' => 'internal'
+            }
+        );
+        return undef;
+    }
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
+
+    my @id = split /\0/, $in{'id'};
 
     unless ($in{'mode_confirm'} || $in{'mode_cancel'}) {
+        # File already exists ?
+        my @children_hash = map { $_->as_hashref }
+            grep { $_ and not $_->{moderate} }
+            map { Sympa::SharedDocument->new($list, $_) }
+            @id;
 
-        # file already exists ?
-        foreach my $id (split /\0/, $in{'id'}) {
-
-            $file = "$shareddir$id";
-            $id =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
-            $slash_path    = $1;
-            $fname         = $3;
-            $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
-
-            if (-e "$file") {
-                if (-e "$shareddir$slash_path$visible_fname") {
-                    push(@list_file_exist, "$slash_path$visible_fname");
-                }
-            }
-        }
-
-        if (@list_file_exist) {
-
-            $param->{'list_file'} = \@list_file_exist;
-            my @id = split(/\0/, $in{'id'});
-            $param->{'id'} = \@id;
+        if (@children_hash) {
+            $param->{'shared_doc'}{'children'} = [@children_hash];
+            $param->{'id'} = [@id];
 
             return 1;
         }
     }
 
-    # install the file(s) selected
-    foreach my $id (split /\0/, $in{'id'}) {
+    # Install the file(s) selected
+    foreach my $id (@id) {
+        next unless $id;
+        my $child = Sympa::SharedDocument->new($list, $id);
+        next unless $child and $child->{moderate};
 
-        $file = "$shareddir$id";
-        $id =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
-        $slash_path = $1;
-        $fname      = $3;
-        my $new_fname;    ## new filename without the .moderate extension
-        if ($fname =~ /^\.(.+)\.moderate$/) {
-            $new_fname = $1;
+        unless ($child->install) {
+            my $errno = $ERRNO;
+            Sympa::Report::reject_report_web(
+                'intern',
+                'install_shared_failed',
+                {},
+                $param->{'action'},
+                $list,
+                $param->{'user'}{'email'},
+                $robot
+            );
+            wwslog('err', 'Failed to nstall %s; %s',
+                $child, $errno);
+            web_db_log(
+                {   'status'     => 'error',
+                    'error_type' => 'internal'
+                }
+            );
+            return undef;
         }
-        my $visible_path = Sympa::Tools::WWW::make_visible_path($slash_path);
-        $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
 
-        if (-e "$file") {
+        # Send a message to the author.
+        my %context;
+        $context{'installed_by'} = $param->{'user'}{'email'};
+        $context{'filename'}     = join '/', @{$child->{paths}};
 
-            # rename the old file in .old if exists
-            if (-e "$shareddir$slash_path$new_fname") {
-                unless (
-                    rename "$shareddir$slash_path$new_fname",
-                    "$shareddir$slash_path$new_fname.old"
-                    ) {
-                    Sympa::Report::reject_report_web(
-                        'intern',
-                        'rename_file',
-                        {   'old' => "$shareddir$slash_path$new_fname",
-                            'new' => "$shareddir$slash_path$new_fname.old"
-                        },
-                        $param->{'action'},
-                        $list,
-                        $param->{'user'}{'email'},
-                        $robot
-                    );
-                    wwslog('err', 'Failed to rename %s%s%s to .old: %s',
-                        $shareddir, $slash_path, $new_fname, $ERRNO);
-                    web_db_log(
-                        {   'status'     => 'error',
-                            'error_type' => 'internal'
-                        }
-                    );
-                    return undef;
-                }
-                unless (
-                    rename "$shareddir$slash_path.desc.$new_fname",
-                    "$shareddir$slash_path.desc.$new_fname.old"
-                    ) {
-                    Sympa::Report::reject_report_web(
-                        'intern',
-                        'rename_file',
-                        {   'old' => "$shareddir$slash_path.desc.$new_fname",
-                            'new' =>
-                                "$shareddir$slash_path.desc.$new_fname.old"
-                        },
-                        $param->{'action'},
-                        $list,
-                        $param->{'user'}{'email'},
-                        $robot
-                    );
-                    wwslog('err', 'Failed to rename %s%s.desc.%s to .old: %s',
-                        $shareddir, $slash_path, $new_fname, $ERRNO);
-                    web_db_log(
-                        {   'status'     => 'error',
-                            'error_type' => 'internal'
-                        }
-                    );
-                    return undef;
-                }
-
-            }
-
-            unless (
-                rename("$shareddir$id", "$shareddir$slash_path$new_fname")) {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$shareddir$id",
-                        'new' => "$shareddir$slash_path$new_fname"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Failed to rename %s to %s%s%s: %s',
-                    $file, $shareddir, $slash_path, $new_fname, $ERRNO);
-                web_db_log(
-                    {   'status'     => 'error',
-                        'error_type' => 'internal'
-                    }
-                );
-                return undef;
-            }
-            unless (
-                rename(
-                    "$shareddir$slash_path.desc.$fname",
-                    "$shareddir$slash_path.desc.$new_fname"
-                )
-                ) {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$shareddir$slash_path.desc.$fname",
-                        'new' => "$shareddir$slash_path.desc.$new_fname"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Failed to rename %s to %s%s%s: %s',
-                    $file, $shareddir, $slash_path, $new_fname, $ERRNO);
-                web_db_log(
-                    {   'status'     => 'error',
-                        'error_type' => 'internal'
-                    }
-                );
-                return undef;
-            }
-
-            # send a message to the author
-            my %context;
-            $context{'installed_by'} = $param->{'user'}{'email'};
-            $context{'filename'}     = "$visible_path$visible_fname";
-
-            my %desc_hash;
-            if ($id && (-e "$shareddir$slash_path.desc.$visible_fname")) {
-                %desc_hash = Sympa::Tools::WWW::get_desc_file(
-                    "$shareddir$slash_path.desc.$visible_fname");
-            }
-
-            my $sender = $desc_hash{'email'};
-            unless (
-                Sympa::send_file(
-                    $list, 'd_install_shared', $sender, \%context
-                )
-                ) {
-                wwslog('notice',
-                    'Unable to send template "d_install_shared" to %s',
-                    $sender);
-            }
+        my $sender = $child->{owner};
+        unless (
+            Sympa::send_file($list, 'd_install_shared', $sender, \%context)
+            ) {
+            wwslog('notice',
+                'Unable to send template "d_install_shared" to %s',
+                $sender);
         }
     }
 
@@ -8511,38 +8406,38 @@ sub do_d_install_shared {
     return 'docindex';
 }
 
-### reject moderated documents of shared
+# Reject moderated documents of shared.
 sub do_d_reject_shared {
     wwslog('info', '(%s)', $in{'id'});
 
-    my $shareddir = $list->{'dir'} . '/shared';
-    my $file;
-    my $slash_path;
-    my $fname;
-    my $visible_fname;
+    my $shared_doc = Sympa::SharedDocument->new($list);
+    unless ($shared_doc and -r $shared_doc->{fs_path}) {
+        wwslog('err', 'There is no shared documents');
+        Sympa::Report::reject_report_web('user', 'no_shared', {},
+            $param->{'action'}, $list);
+        web_db_log(
+            {   'parameters' => '',
+                'status'     => 'error',
+                'error_type' => 'internal'
+            }
+        );
+        return undef;
+    }
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
 
-    foreach my $id (split /\0/, $in{'id'}) {
+    my @id = split /\0/, $in{'id'};
 
-        $file = "$shareddir$id";
-        $id =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
-        $slash_path    = $1;
-        $fname         = $3;
-        $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
-        my $visible_path = Sympa::Tools::WWW::make_visible_path($slash_path);
+    foreach my $id (@id) {
+        my $child = Sympa::SharedDocument->new($list, $id);
+        next unless $child and $child->{moderate};
 
         unless ($in{'quiet'}) {
-
             my %context;
             my $sender;
             $context{'rejected_by'} = $param->{'user'}{'email'};
-            $context{'filename'}    = "$visible_path$visible_fname";
+            $context{'filename'}    = join '/', @{$child->{paths}};
 
-            my %desc_hash;
-            if ($id && (-e "$shareddir$slash_path.desc.$fname")) {
-                %desc_hash = Sympa::Tools::WWW::get_desc_file(
-                    "$shareddir$slash_path.desc.$fname");
-            }
-            $sender = $desc_hash{'email'};
+            $sender = $child->{owner};
 
             unless (
                 Sympa::send_file(
@@ -8555,35 +8450,13 @@ sub do_d_reject_shared {
             }
         }
 
-        unless (unlink($file)) {
+        unless ($child->unlink) {
             Sympa::Report::reject_report_web('intern', 'erase_file',
-                {'file' => $file},
+                {'file' => join('/', @{$child->{paths}})},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Failed to erase %s', $file);
+            wwslog('err', 'Failed to erase %s', $child->{fs_path});
             web_db_log(
-                {   'parameters' => $in{'id'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-
-        unless (unlink("$shareddir$slash_path.desc.$fname")) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'erase_file',
-                {'file' => "$shareddir$slash_path.desc.$fname"},
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err',
-                "do_d_reject_shared: failed to erase $shareddir$slash_path.desc.$fname"
-            );
-            web_db_log(
-                {   'parameters' => $in{'id'},
+                {   'parameters' => $id,
                     'status'     => 'error',
                     'error_type' => 'internal'
                 }
@@ -14551,104 +14424,48 @@ sub do_d_editfile {
 sub do_d_properties {
     wwslog('info', '(%s)', $in{'path'});
 
-    # Variables
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $path = $in{'path'};
 
-    $path = Sympa::Tools::Text::unescape_chars($path);
-
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
-    }
-
-    $path = join '/', @new_components;
-
-
-    my $list_name    = $list->{'name'};
-    my $shareddir    = $list->{'dir'} . '/shared';
-    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
-
-    $param->{'directory'} = -d "$shareddir/$path";
-
-    # Control
-
-    unless ($path) {
-        Sympa::Report::reject_report_web('user', 'missing_arg',
-            {'argument' => 'filename'},
-            $param->{'action'});
-        wwslog('err', 'No file name');
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'no_file'
-            }
-        );
-        return undef;
-    }
-
+    my $shared_doc = Sympa::SharedDocument->new($list, $path);
     # Existing document? File?
-    unless (-w "$shareddir/$path") {
+    unless ($shared_doc
+        and -r $shared_doc->{fs_path}
+        and -w $shared_doc->{fs_path}
+        and $shared_doc->{type} ne 'root') {
+        wwslog('err', '%s: no such file or directory', $path);
         Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
+            {'path' => $path},
             $param->{'action'}, $list);
-        wwslog('err',
-            "do_d_properties : Cannot edit $shareddir/$path : not an existing file"
-        );
         web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'no_file'
+            {   'robot'        => $robot,
+                'list'         => $list->{'name'},
+                'action'       => $param->{'action'},
+                'parameters'   => "$in{'path'}",
+                'target_email' => "",
+                'msg_id'       => '',
+                'status'       => 'error',
+                'error_type'   => 'internal',
+                'user_email'   => $param->{'user'}{'email'},
             }
         );
         return undef;
     }
-
-    ### Document isn't a description file?
-    unless ($path !~ /\.desc/) {
-        wwslog('err', '%s/%s: description file', $shareddir, $path);
-        Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return undef;
-    }
-
-    if ($path =~ /\.url$/) {
-        ## Get URL of bookmark
-        open URL, "$shareddir/$path";
-        my $url = <URL>;
-        close URL;
-        chomp $url;
-
-        $param->{'url'} = $url;
-    }
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
 
     # Access control.
-    my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access;
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'edit',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
-            }
-        );
-    }
+    my %access = $shared_doc->get_privileges(
+        mode             => 'edit',
+        sender           => $param->{'user'}{'email'},
+        auth_method      => $param->{'auth_method'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        }
+    );
     my $may_edit = $access{'may'}{'edit'};
 
-    unless ($may_edit > 0) {
+    unless ($may_edit) {
         Sympa::Report::reject_report_web('auth', $access{'reason'}{'edit'},
             {}, $param->{'action'}, $list);
         wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
@@ -14661,61 +14478,29 @@ sub do_d_properties {
         return undef;
     }
 
-    ## End of controls
+    # End of controls.
 
-    $param->{'list'}         = $list_name;
-    $param->{'path'}         = $path;
-    $param->{'visible_path'} = $visible_path;
+    $param->{'list'}         = $list->{'name'};
 
     # test if it's a text file
-    if (-T "$shareddir/$path") {
+    if (-T $shared_doc->{fs_path}) {
         $param->{'textfile'} = 1;
-        $param->{'filepath'} = "$shareddir/$path";
+        $param->{'filepath'} = $shared_doc->{fs_path}; #FIXME:required?
     } else {
         $param->{'textfile'} = 0;
     }
     $param->{'use_htmlarea'} = '1'
         if $Conf::Conf{'htmlarea_url'}
             and $param->{'textfile'}
-            and $path =~ /\.html?/;
-
-    #Current directory
-    if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
-        $param->{'father'} = $1;
-    } else {
-        $param->{'father'} = '';
-    }
-    $param->{'escaped_father'} =
-        Sympa::SharedDocument::escape_docname($param->{'father'}, '/');
-
-    $param->{'fname'} = Sympa::Tools::WWW::make_visible_path($3);
-    # Description of the file
-    my $descfile;
-    if (-d "$shareddir/$path") {
-        $descfile = "$shareddir/$1$3/.desc";
-    } else {
-        $descfile = "$shareddir/$1.desc.$3";
-    }
-
-    if (-e $descfile) {
-        my %desc_hash = Sympa::Tools::WWW::get_desc_file($descfile);
-        $param->{'desc'}      = $desc_hash{'title'};
-        $param->{'doc_owner'} = $desc_hash{'email'};
-        ## Synchronization
-        $param->{'serial_desc'} = (stat $descfile)[9];
-    }
+            and $shared_doc->{html};
 
     ## Synchronization
-    my $date_epoch = Sympa::Tools::File::get_mtime("$shareddir/$path");
-    $param->{'serial_file'} = $date_epoch;
-    ## parameters of the current directory
-    $param->{'doc_date'} =
-        $language->gettext_strftime("%d %b %y  %H:%M", localtime $date_epoch);
+    $param->{'serial_file'} = $shared_doc->{date_epoch}; #FIXME:required?
 
     #FIXME: Required?
     $allow_absolute_path = 1;
 
-    $param->{'father_icon'} = Sympa::Tools::WWW::get_icon($robot, 'father');
+    #XXX$param->{'father_icon'} = Sympa::Tools::WWW::get_icon($robot, 'father');
 
     web_db_log(
         {   'parameters' => $in{'path'},
@@ -18113,83 +17898,16 @@ sub d_test_existing_and_rights {
 sub do_d_delete {
     wwslog('info', '(%s)', $in{'path'});
 
-    #useful variables
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $path = $in{'path'};
 
-    $path = Sympa::Tools::Text::unescape_chars($path);
-
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
-    }
-
-    $path = join '/', @new_components;
-
-
-    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
-
-    #Current directory and document to delete
-    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
-    my $current_directory = Sympa::Tools::WWW::no_slash_end($1);
-    my $document          = $3;
-
-    # path of the shared directory
-    #my $list_name = $in{'list'};
-    my $list_name = $list->{'name'};
-    my $shareddir = $list->{'dir'} . '/shared';
-
-    #### Controls
-
-    ## must be something to delete
-    unless ($document) {
-        Sympa::Report::reject_report_web('user', 'missing_arg',
-            {'argument' => 'doccument'},
-            $param->{'action'});
-        wwslog('err', 'No document to delete has been specified');
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'path'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'missing_parameter',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    ### Document isn't a description file?
-    unless ($document !~ /^\.desc/) {
-        wwslog('err', '%s/%s: description file', $shareddir, $path);
+    my $shared_doc = Sympa::SharedDocument->new($list, $path);
+    # Document exists?
+    unless ($shared_doc
+        and -r $shared_doc->{fs_path}
+        and $shared_doc->{type} ne 'root') {
+        wwslog('err', '%s: no such file or directory', $path);
         Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'path'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'description_file',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    ### Document exists?
-    unless (-e "$shareddir/$path") {
-        wwslog('err', '%s/%s: no such file or directory', $shareddir, $path);
-        Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
+            {'path' => $path},
             $param->{'action'}, $list);
         web_db_log(
             {   'robot'        => $robot,
@@ -18205,12 +17923,9 @@ sub do_d_delete {
         );
         return undef;
     }
-
-    # removing of the document
-    my $doc = "$shareddir/$path";
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
 
     # Access control.
-    my $shared_doc = Sympa::SharedDocument->new($list, $path);
     my %access;
     if ($shared_doc) {
         %access = $shared_doc->get_privileges(
@@ -18225,8 +17940,8 @@ sub do_d_delete {
         );
     }
 
-    unless ($access{'may'}{'edit'} > 0) {
-        Sympa::Report::reject_report_web('auth', $access{'reason'}{'edit'},
+    unless ($access{may}{edit}) {
+        Sympa::Report::reject_report_web('auth', $access{reason}{edit},
             {}, $param->{'action'}, $list);
         wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
         web_db_log(
@@ -18244,73 +17959,15 @@ sub do_d_delete {
         return undef;
     }
 
-    ## Directory
-    if (-d "$shareddir/$path") {
-
-        # test of emptiness
-        opendir DIR, "$doc";
-        my @readdir = readdir DIR;
-        close DIR;
-
-        # test for "ordinary" files
-        my @test_normal = grep !/^\./, @readdir;
-        my @test_hidden = grep !(/^\.desc$/ | /^\.(\.)?$/ | /^[^\.]/),
-            @readdir;
-        if (($#test_normal != -1) || ($#test_hidden != -1)) {
-            Sympa::Report::reject_report_web('user', 'full_directory',
-                {'directory' => $path},
-                $param->{'action'}, $list);
-            wwslog('err', 'Failed to erase %s: directory not empty', $doc);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'path'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        # removing of the description file if exists
-        if (-e "$doc/\.desc") {
-            unless (unlink("$doc/.desc")) {
-                Sympa::Report::reject_report_web('intern', 'erase_file',
-                    {'file' => "$doc/.desc"},
-                    $param->{'action'}, $list, $param->{'user'}{'email'},
-                    $robot);
-                wwslog('err', 'Failed to erase %s/.desc: %s', $doc, $ERRNO);
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$in{'path'}",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-                return undef;
-            }
-        }
-        # removing of the directory
-        rmdir $doc;
-
-        ## File
-    } else {
-
-        # removing of the document
-        unless (unlink($doc)) {
+    if ($shared_doc->{type} eq 'directory') {
+        # Directory.
+        unless ($shared_doc->rmdir) {
+            my $errno = $ERRNO;
             Sympa::Report::reject_report_web('intern', 'erase_file',
-                {'file' => "$doc"},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Failed to erase %s', $doc);
+                {'file' => $path},
+                $param->{'action'}, $list, $param->{'user'}{'email'},
+                $robot);
+            wwslog('err', 'Failed to erase %s: %s', $shared_doc, $errno);
             web_db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
@@ -18325,25 +17982,27 @@ sub do_d_delete {
             );
             return undef;
         }
-        # removing of the description file if exists
-        if (-e "$shareddir/$current_directory/.desc.$document") {
-            unless (unlink("$shareddir/$current_directory/.desc.$document")) {
-                wwslog('err',
-                    "do_d_delete: failed to erase $shareddir/$current_directory/.desc.$document"
-                );
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$in{'path'}",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-            }
+    } else {
+        # Removing of the document.
+        unless ($shared_doc->unlink) {
+            my $errno = $ERRNO;
+            Sympa::Report::reject_report_web('intern', 'erase_file',
+                {'file' => $path},
+                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+            wwslog('err', 'Failed to erase %s: %s', $shared_doc, $errno);
+            web_db_log(
+                {   'robot'        => $robot,
+                    'list'         => $list->{'name'},
+                    'action'       => $param->{'action'},
+                    'parameters'   => "$in{'path'}",
+                    'target_email' => "",
+                    'msg_id'       => '',
+                    'status'       => 'error',
+                    'error_type'   => 'internal',
+                    'user_email'   => $param->{'user'}{'email'},
+                }
+            );
+            return undef;
         }
     }
     web_db_log(
@@ -18361,8 +18020,8 @@ sub do_d_delete {
 
     web_db_stat_log();
 
-    $in{'list'} = $list_name;
-    $in{'path'} = $current_directory;
+    $in{'list'} = $list->{'name'};
+    $in{'path'} = join '/', @{$shared_doc->{parent}->{paths}};
     return 'd_read';
 }
 
@@ -18373,73 +18032,16 @@ sub do_d_delete {
 #******************************************
 
 sub do_d_rename {
-    wwslog('info', '(%s)', $in{'path'});
+    wwslog('info', '(%s, %s)', $in{'path'}, $in{'new_name'});
 
-    #useful variables
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $path = $in{'path'};
 
-    $path = Sympa::Tools::Text::unescape_chars($path);
-
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
-    }
-
-    $path = join '/', @new_components;
-
-
-    #moderation
-    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
-    my $moderate;
-    if ($path =~ /\.moderate$/) {
-        $moderate = 1;
-    }
-
-    #Current directory and document to delete
-    my $current_directory;
-    if ($path =~ /^(.*)\/([^\/]+)$/) {
-        $current_directory = Sympa::Tools::WWW::no_slash_end($1);
-    } else {
-        $current_directory = '.';
-    }
-    $path =~ /(^|\/)([^\/]+)$/;
-    my $document = $2;
-
-    # path of the shared directory
-    my $list_name = $list->{'name'};
-    my $shareddir = $list->{'dir'} . '/shared';
-
-    #### Controls
-
-    ## must be something to delete
-    unless ($document) {
-        Sympa::Report::reject_report_web('user', 'missing_arg',
-            {'argument' => 'document'},
-            $param->{'action'});
-        wwslog('err', 'No document to rename has been specified');
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'path'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'no_file',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    ### Document isn't a description file?
-    unless ($document !~ /^\.desc/) {
-        wwslog('err', '%s/%s: description file', $shareddir, $path);
+    my $shared_doc = Sympa::SharedDocument->new($list, $path);
+    # Document exists?
+    unless ($shared_doc and -e $shared_doc->{fs_path}) {
+        wwslog('err', '%s: no such file or directory', $path);
         Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
+            {'path' => $path},
             $param->{'action'}, $list);
         web_db_log(
             {   'robot'        => $robot,
@@ -18455,94 +18057,21 @@ sub do_d_rename {
         );
         return undef;
     }
-
-    ### Document exists?
-    unless (-e "$shareddir/$path") {
-        wwslog('err', '%s/%s: no such file or directory', $shareddir, $path);
-        Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'path'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'no_such_document',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    if (   $in{'new_name'} =~ /^\./
-        || $in{'new_name'} =~ /\.desc/
-        || $in{'new_name'} =~ /[~\#\[\]\/]$/) {
-        Sympa::Report::reject_report_web('user', 'incorrect_name',
-            {'name' => $in{'new_name'}},
-            $param->{'action'}, $list);
-        wwslog('err',
-            "do_d_rename : Unable to create file $in{'new_name'} : incorrect name"
-        );
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'path'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'bad_parameter',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    if (($document =~ /\.url$/) && ($in{'new_name'} !~ /\.url$/)) {
-        Sympa::Report::reject_report_web('user', 'incorrect_name',
-            {'name' => $in{'new_name'}},
-            $param->{'action'}, $list);
-        wwslog('err',
-            "do_d_rename : New file name $in{'new_name'} does not match URL filenames"
-        );
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'path'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'bad_parameter',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    my $doc = "$shareddir/$path";
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
 
     # Access control.
-    my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access;
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'edit',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
-            }
-        );
-    }
-
-    unless ($access{'may'}{'edit'} > 0) {
-        Sympa::Report::reject_report_web('auth', $access{'reason'}{'edit'},
+    my %access = $shared_doc->get_privileges(
+        mode             => 'edit',
+        sender           => $param->{'user'}{'email'},
+        auth_method      => $param->{'auth_method'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        }
+    );
+    unless ($access{may}{edit}) {
+        Sympa::Report::reject_report_web('auth', $access{reason}{edit},
             {}, $param->{'action'}, $list);
         wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
         web_db_log(
@@ -18559,112 +18088,36 @@ sub do_d_rename {
         );
         return undef;
     }
-    if ($moderate) {
-        $log->syslog('notice', '%s, %s/%s/%s', $doc, $shareddir,
-            $current_directory, $in{'new_name'});
-        unless (rename $doc,
-            "$shareddir/$current_directory/.$in{'new_name'}.moderate") {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'rename_file',
-                {   'old' => $doc,
-                    'new' =>
-                        "$shareddir/$current_directory/.$in{'new_name'}.moderate"
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Failed to rename %s to %s: %s',
-                $doc, "$shareddir/$current_directory/$in{'new_name'}",
-                $ERRNO);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'path'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-    } else {
-        $log->syslog('notice', '%s, %s/%s/%s', $doc, $shareddir,
-            $current_directory, $in{'new_name'});
-        unless (rename $doc, "$shareddir/$current_directory/$in{'new_name'}")
-        {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'rename_file',
-                {   'old' => $doc,
-                    'new' => "$shareddir/$current_directory/$in{'new_name'}"
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Failed to rename %s to %s: %s',
-                $doc, "$shareddir/$current_directory/$in{'new_name'}",
-                $ERRNO);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'path'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-    }
-    ## Rename description file
-    my $desc_file     = "$shareddir/$current_directory/.desc.$document";
-    my $new_desc_file = $desc_file;
 
-    if (-f $desc_file) {
-        if ($moderate) {
-            $new_desc_file =~ s/\Q$document/\.$in{'new_name'}\.moderate/;
-        } else {
-            $new_desc_file =~ s/\Q$document/$in{'new_name'}/;
-        }
-        unless (rename $desc_file, $new_desc_file) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'rename_file',
-                {   'old' => $desc_file,
-                    'new' => $new_desc_file
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Failed to rename %s: %s', $desc_file, $ERRNO);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'path'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
+    unless ($shared_doc->rename($in{'new_name'})) {
+        my $errno = $ERRNO;
+        Sympa::Report::reject_report_web(
+            'intern',
+            'rename_file',
+            {   'old' => join('/', $shared_doc->{paths}),
+                'new' => $in{'new_name'}},
+            $param->{'action'},
+            $list,
+            $param->{'user'}{'email'},
+            $robot
+        );
+        wwslog('err', 'Failed to rename %s to %s: %s',
+            $shared_doc, $in{'new_name'}, $errno);
+        web_db_log(
+            {   'robot'        => $robot,
+                'list'         => $list->{'name'},
+                'action'       => $param->{'action'},
+                'parameters'   => "$in{'path'}",
+                'target_email' => "",
+                'msg_id'       => '',
+                'status'       => 'error',
+                'error_type'   => 'internal',
+                'user_email'   => $param->{'user'}{'email'},
+            }
+        );
+        return undef;
     }
+
     web_db_log(
         {   'robot'        => $robot,
             'list'         => $list->{'name'},
@@ -18677,12 +18130,10 @@ sub do_d_rename {
             'user_email'   => $param->{'user'}{'email'},
         }
     );
-    $in{'list'} = $list_name;
-    if ($current_directory eq '.') {
-        $in{'path'} = '';
-    } else {
-        $in{'path'} = $current_directory . '';
-    }
+
+    $in{'list'} = $list->{'name'};
+
+    $in{'path'} = join '/', @{$shared_doc->{parent}->{paths}};
     return 'd_read';
 }
 
@@ -19116,78 +18567,16 @@ sub do_d_create_dir {
 sub do_d_control {
     wwslog('info', '%s', $in{'path'});
 
-    # Variables
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $path = $in{'path'};
 
-    $path = Sympa::Tools::Text::unescape_chars($path);
-
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
-    }
-
-    $path = join '/', @new_components;
-
-    #my $list_name = $in{'list'};
-    my $list_name = $list->{'name'};
-
-    # path of the shared directory
-    my $shareddir = $list->{'dir'} . '/shared';
-
-    #moderation
-    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
-
-    unless ($path) {
-        Sympa::Report::reject_report_web('user', 'missing_arg',
-            {'argument' => 'document'},
-            $param->{'action'});
-        wwslog('info', 'No document name');
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'path'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'missing_parameter',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
+    my $shared_doc = Sympa::SharedDocument->new($list, $path);
     # Existing document?
-    unless (-e "$shareddir/$path") {
+    unless ($shared_doc
+        and -r $shared_doc->{fs_path}
+        and $shared_doc->{type} ne 'root') {
+        wwslog('err', '%s: no such file or directory', $path);
         Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        wwslog('info',
-            "do_d_control : Cannot control $shareddir/$path : not an existing document"
-        );
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'path'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'no_such_document',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    ### Document isn't a description file?
-    unless ($path !~ /\.desc/) {
-        wwslog('info', '%s/%s: description file', $shareddir, $path);
-        Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
+            {'path' => $path},
             $param->{'action'}, $list);
         web_db_log(
             {   'robot'        => $robot,
@@ -19197,31 +18586,27 @@ sub do_d_control {
                 'target_email' => "",
                 'msg_id'       => '',
                 'status'       => 'error',
-                'error_type'   => 'no_such_document',
+                'error_type'   => 'internal',
                 'user_email'   => $param->{'user'}{'email'},
             }
         );
         return undef;
     }
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
 
     # Access control.
-    my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access;
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'control',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
-            }
-        );
-    }
-
-    unless ($access{'may'}{'control'}) {
-        Sympa::Report::reject_report_web('auth', $access{'reason'}{'edit'},
+    my %access = $shared_doc->get_privileges(
+        mode             => 'control',
+        sender           => $param->{'user'}{'email'},
+        auth_method      => $param->{'auth_method'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        }
+    );
+    unless ($access{may}{control}) {
+        Sympa::Report::reject_report_web('auth', $access{reason}{edit},
             {}, $param->{'action'}, $list);
         wwslog('info', 'Access denied for %s', $param->{'user'}{'email'});
         web_db_log(
@@ -19239,52 +18624,20 @@ sub do_d_control {
         return undef;
     }
 
-    ## End of controls
-
-    #Current directory
-    if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
-        $param->{'father'} = Sympa::Tools::WWW::no_slash_end($1);
-    } else {
-        $param->{'father'} = '';
-    }
-    $param->{'escaped_father'} =
-        Sympa::SharedDocument::escape_docname($param->{'father'}, '/');
-
-    my $desc_file;
-    # path of the description file
-    if (-d "$shareddir/$path") {
-        $desc_file = "$shareddir/$1$3/.desc";
-    } else {
-        $desc_file = "$shareddir/$1.desc.$3";
-    }
-
     # Description of the file
     my $read;
     my $edit;
 
-    if (-e $desc_file) {
-        ## Synchronization
-        $param->{'serial_desc'} = (stat $desc_file)[9];
-        my %desc_hash = Sympa::Tools::WWW::get_desc_file("$desc_file");
-        # rights for read and edit
-        $read = $desc_hash{'read'};
-        $edit = $desc_hash{'edit'};
-        # owner of the document
-        $param->{'doc_owner'} = $desc_hash{'email'};
-        $param->{'doc_title'} = $desc_hash{'title'};
+    if ($shared_doc->{scenario}) {
+        $read = $shared_doc->{scenario}{read};
+        $edit = $shared_doc->{scenario}{edit};
     } else {
         $read = $access{'scenario'}{'read'};
         $edit = $access{'scenario'}{'edit'};
     }
 
-    ## other info
-    $param->{'doc_date'} = $language->gettext_strftime("%d %b %y  %H:%M",
-        localtime Sympa::Tools::File::get_mtime("$shareddir/$path"));
-
     # template parameters
-    $param->{'list'}         = $list_name;
-    $param->{'path'}         = $path;
-    $param->{'visible_path'} = $visible_path;
+    $param->{'list'}         = $list->{'name'};
 
     my $lang = $param->{'lang'};
 
@@ -19316,18 +18669,9 @@ sub do_d_control {
     }
     $param->{'scenari_edit'}{$edit}{'selected'} = 'selected="selected"';
 
-    ## father directory
-    if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
-        $param->{'father'} = Sympa::Tools::WWW::no_slash_end($1);
-    } else {
-        $param->{'father'} = '';
-    }
-    $param->{'escaped_father'} =
-        Sympa::SharedDocument::escape_docname($param->{'father'}, '/');
-
     $param->{'set_owner'} = 1;
 
-    $param->{'father_icon'} = Sympa::Tools::WWW::get_icon($robot, 'father');
+    #XXX$param->{'father_icon'} = Sympa::Tools::WWW::get_icon($robot, 'father');
     web_db_log(
         {   'robot'        => $robot,
             'list'         => $list->{'name'},
