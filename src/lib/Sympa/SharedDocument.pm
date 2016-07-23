@@ -718,6 +718,55 @@ sub install {
     return 1;
 }
 
+sub rename {
+    my $self     = shift;
+    my $new_name = shift;
+
+    if ($self->{type} eq 'root') {
+	$ERRNO = POSIX::EPERM();
+	return undef;
+    }
+    if (   not(defined $new_name and length $new_name)
+        or $new_name =~ /\A[.]/
+        or 0 <= index($new_name, '/')
+        or $new_name =~ /[~#\[\]]$/
+        or ($self->{type} eq 'url' and $new_name !~ /[.]url\z/)) {
+        $ERRNO = POSIX::EINVAL();
+        return undef;
+    }
+
+    my $new_fs_name;
+    if ($self->{moderate}) {
+        $new_fs_name = '.'
+            . Sympa::Tools::Text::qencode_filename($new_name)
+            . '.moderate';
+    } else {
+        $new_fs_name = Sympa::Tools::Text::qencode_filename($new_name);
+    }
+    my $new_fs_path = $self->{parent}->{fs_path} . '/' . $new_fs_name;
+    my $new_paths =
+        [@{$self->{paths}}[0 .. ($#{$self->{paths}} - 1)], $new_name];
+
+    return undef
+        unless CORE::rename $self->{fs_path}, $new_fs_path;
+
+    # Rename description file.
+    unless ($self->{type} eq 'directory') {
+        my $desc_file = $self->_desc_file;
+        my $new_desc_file =
+            $self->{parent}->{fs_path} . '/.desc.' . $new_fs_name;
+        if (-e $desc_file) {
+            return undef
+                unless CORE::rename $desc_file, $new_desc_file;
+        }
+    }
+
+    @{$self}{qw(fs_name fs_path name paths)} =
+        ($new_fs_name, $new_fs_path, $new_name, $new_paths);
+
+    return 1;
+}
+
 sub rmdir {
     my $self = shift;
 
@@ -938,6 +987,26 @@ TBD.
 
 I<Instance method>.
 Approves (install) file if it was held for moderation.
+
+Returns:
+
+True value.
+If installation failed, returns false value and sets $ERRNO ($!).
+
+=item rename ( $new_name )
+
+I<Instance method>.
+Renames file or directory.
+
+Parameters:
+
+=over
+
+=item $new_name
+
+The name to be renamed to.
+
+=back
 
 Returns:
 
