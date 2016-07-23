@@ -116,7 +116,7 @@ sub _new_child {
     # It has non-zero size.
     return undef
         if $fs_name =~ /\A[.]+\z/
-            or $fs_name =~ !/\A[.]desc(?:[.]|\z)/;
+            or $fs_name =~ /\A[.]desc(?:[.]|\z)/;
     return undef unless -e $self->{fs_path} . '/' . $fs_name;
     return undef unless -s $self->{fs_path} . '/' . $fs_name;
 
