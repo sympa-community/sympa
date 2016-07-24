@@ -13388,11 +13388,9 @@ sub do_d_admin {
         }
     );
 
-    my $dir = $list->{'dir'};
-
-    unless ($access{'may'}{'edit'}) {
+    unless ($access{may}{edit}) {
         wwslog('info', 'Permission denied for %s', $param->{'user'}{'email'});
-        Sympa::Report::reject_report_web('auth', $access{'reason'}{'edit'},
+        Sympa::Report::reject_report_web('auth', $access{reason}{edit},
             {}, $param->{'action'}, $list);
         web_db_log(
             {   'parameters' => '',
@@ -13404,9 +13402,8 @@ sub do_d_admin {
     }
 
     if ($in{'d_admin'} eq 'create') {
-
-        unless ($list->create_shared()) {
-            wwslog('info', 'Could not create the shared');
+        unless ($shared_doc->create) {
+            wwslog('info', 'Could not create the shared %s: %m', $shared_doc);
             Sympa::Report::reject_report_web('intern', 'create_shared', {},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             web_db_log(
@@ -13419,10 +13416,9 @@ sub do_d_admin {
         }
 
         return 'd_read';
-
     } elsif ($in{'d_admin'} eq 'restore') {
-        unless (-e "$dir/pending.shared") {
-            wwslog('info', 'Restore; %s/pending.shared not found', $dir);
+        unless ($shared_doc->restore) {
+            wwslog('info', 'Couldnot restore the shared %s; %m', $shared_doc);
             Sympa::Report::reject_report_web('intern', 'restore_shared', {},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             web_db_log(
@@ -13433,22 +13429,17 @@ sub do_d_admin {
             );
             return undef;
         }
-        if (-e "$dir/shared") {
-            wwslog('info', 'Restore; %s/shared already exist', $dir);
-            Sympa::Report::reject_report_web('intern', 'restore_shared', {},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-        unless (rename("$dir/pending.shared", "$dir/shared")) {
-            wwslog('info', 'Restore; unable to rename %s/pending.shared',
-                $dir);
-            Sympa::Report::reject_report_web('intern', 'restore_shared', {},
+
+        web_db_log(
+            {   'parameters' => $in{'path'},
+                'status'     => 'success'
+            }
+        );
+        return 'd_read';
+    } elsif ($in{'d_admin'} eq 'delete') {
+        unless ($shared_doc->delete) {
+            wwslog('info', 'Couldnot delete the shared %s: %m', $shared_doc);
+            Sympa::Report::reject_report_web('intern', 'delete_shared', {},
                 $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             web_db_log(
                 {   'parameters' => $in{'path'},
@@ -13464,50 +13455,8 @@ sub do_d_admin {
                 'status'     => 'success'
             }
         );
-        return 'd_read';
-    } elsif ($in{'d_admin'} eq 'delete') {
-        unless (-e "$dir/shared") {
-            wwslog('info', 'Restore; %s/shared not found', $dir);
-            Sympa::Report::reject_report_web('intern', 'delete_shared', {},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-        if (-e "$dir/pending.shared") {
-            wwslog('info', 'Delete; %s/pending.shared already exist', $dir);
-            Sympa::Report::reject_report_web('intern', 'delete_shared', {},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-        unless (rename("$dir/shared", "$dir/pending.shared")) {
-            wwslog('info', 'Restore; unable to rename %s/shared', $dir);
-            Sympa::Report::reject_report_web('intern', 'delete_shared', {},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
     }
-    web_db_log(
-        {   'parameters' => $in{'path'},
-            'status'     => 'success'
-        }
-    );
+
     return 'admin';
 }
 
