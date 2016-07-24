@@ -15441,7 +15441,7 @@ sub do_d_upload {
 
     ## Check quota
     if ($list->{'admin'}{'shared_doc'}{'quota'}) {
-        if ($list->get_shared_size() >=
+        if (Sympa::SharedDocument->new($list)->get_size >=
             $list->{'admin'}{'shared_doc'}{'quota'} * 1024) {
             Sympa::Report::reject_report_web('user', 'shared_full', {},
                 $param->{'action'}, $list);
@@ -16627,7 +16627,7 @@ sub do_d_unzip {
 
     ## Check quota
     if ($list->{'admin'}{'shared_doc'}{'quota'}) {
-        if ($list->get_shared_size() >=
+        if (Sympa::SharedDocument->new($list)->get_size >=
             $list->{'admin'}{'shared_doc'}{'quota'} * 1024) {
             Sympa::Report::reject_report_web('user', 'shared_full', {},
                 $param->{'action'}, $list);
@@ -17578,7 +17578,7 @@ sub d_copy_file {
         ## Check quota
         if ($list->{'admin'}{'shared_doc'}{'quota'}) {
 
-            if ($list->get_shared_size() >=
+            if (Sympa::SharedDocument->new($list)->get_size >=
                 $list->{'admin'}{'shared_doc'}{'quota'} * 1024) {
                 Sympa::Report::reject_report_web('user', 'shared_full', {},
                     $param->{'action'}, $list);
@@ -21015,12 +21015,10 @@ sub do_ignoresig {
 sub do_stats {
     wwslog('info', '');
 
-    $param->{'shared_size'} = int(($list->get_shared_size + 512) / 1024);
-    $param->{'arc_size'}    = int(
-        (   $list->get_arc_size(Conf::get_robot_conf($robot, 'arc_path')) +
-                512
-        ) / 1024
-    );
+    $param->{'shared_size'} =
+        int((Sympa::SharedDocument->new($list)->get_size + 512) / 1024);
+    $param->{'arc_size'} =
+        int((Sympa::Archive->new(context => $list)->get_size + 512) / 1024);
 
     my $stats = {
         send_mail => {title => $language->gettext("Mail sending")},

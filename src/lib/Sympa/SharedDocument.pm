@@ -729,6 +729,15 @@ sub get_privileges {
 #    return $result;
 #}
 
+# Old name: Sympa::List::get_shared_size().
+sub get_size {
+    my $self = shift;
+
+    return undef unless grep { $self->{type} eq $_ } qw(root directory);
+    return 0 unless -d $self->{fs_path};
+    return Sympa::Tools::File::get_dir_size($self->{fs_path});
+}
+
 sub install {
     my $self = shift;
 
@@ -1049,6 +1058,11 @@ I<Instance method>.
 Gets privileges of a user on the node.
 
 TBD.
+
+=item get_size ( )
+
+I<Instance method>.
+Gets total size under current node.
 
 =item install ( )
 

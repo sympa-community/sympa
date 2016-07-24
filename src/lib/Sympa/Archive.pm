@@ -584,6 +584,15 @@ sub get_archives {
 # DEPRECATED.  Use select_archive() and fetch().
 #sub search_msgid;
 
+# Old name: Sympa::List::get_arc_size().
+sub get_size {
+    my $self = shift;
+    my $dir  = shift;
+
+    return 0 unless -d $self->{base_directory};
+    return Sympa::Tools::File::get_dir_size($self->{base_directory});
+}
+
 # OBSOLETED.  No longer used.
 sub exist {
     my ($name, $file) = @_;
@@ -1068,6 +1077,12 @@ Returns:
 
 Hashref.
 Note that message won't be locked.
+
+=item get_size ( )
+
+I<Instance method>.
+Gets total size of messages in archives.
+This method was introduced on Sympa 6.2.17.
 
 =item next ( [ reverse =E<gt> 1 ] )
 
