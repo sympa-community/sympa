@@ -17,6 +17,7 @@
   [% ELSIF i_err.msg == 'sync_include_admin_failed' %][%|loc%]Failed to include list admins[%END%] 
   [% ELSIF i_err.msg == 'no_owner_defined' %][%|loc%]No owner is defined for the list[%END%] 
   [% ELSIF i_err.msg == 'exportation_failed' %][%|loc(i_err.listname)%]The exportation failed for list '%1'[%END%] 
+  [% ELSIF i_err.msg == 'cannot_create_child' %][%|loc(name)%]Cannot create '%1'.[%END%]
   [% ELSIF i_err.msg == 'cannot_unzip' %][%|loc(name)%]Cannot unzip file '%1'.[%END%] 
   [% ELSIF i_err.msg == 'auth_msg_failed' %][%|loc(i_err.key)%]Unable to access the message authenticated with key %1[%END%]
   [% ELSIF i_err.msg == 'no_identified_user' %][%|loc%]Failed to get your email address from the authentication service.[%END%]

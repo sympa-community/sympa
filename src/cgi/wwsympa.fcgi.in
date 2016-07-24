@@ -271,7 +271,7 @@ our %comm = (
     'upload_pictures'      => 'do_upload_pictures',
     'delete_pictures'      => 'do_delete_pictures',
     'd_read'               => 'do_d_read',
-    'd_create_dir'         => 'do_d_create_dir',
+    'd_create_child'       => 'do_d_create_child',
     'd_upload'             => 'do_d_upload',
     'd_unzip'              => 'do_d_unzip',
     'd_editfile'           => 'do_d_editfile',
@@ -427,7 +427,7 @@ our %action_args = (
     'd_admin'         => ['list', 'd_admin'],
     'd_delete'        => ['list', '@path'],
     'd_rename'        => ['list', '@path'],
-    'd_create_dir'    => ['list', '@path'],
+    'd_create_child'  => ['list', '@path'],
     'd_overwrite'     => ['list', '@path'],
     'd_savefile'      => ['list', '@path'],
     'd_describe'      => ['list', '@path'],
@@ -516,7 +516,7 @@ our %required_args = (
     'd_admin'             => ['param.list', 'param.user.email'],
     'd_change_access'     => ['param.list', 'param.user.email'],
     'd_control'           => ['param.list', 'param.user.email'],
-    'd_create_dir'        => ['param.list', 'param.user.email', 'name_doc'],
+    'd_create_child'      => ['param.list', 'param.user.email', 'new_name'],
     'd_delete'         => ['param.list', 'param.user.email'],
     'd_describe'       => ['param.list', 'param.user.email', 'content'],
     'd_editfile'       => ['param.list', 'param.user.email'],
@@ -947,7 +947,7 @@ my %filtering = (
     #XXX'd_reject_shared' => {'id' => 'qencode'},
     #XXX'd_install_shared' => {'id' => 'qencode'},
     #XXX'd_read' => {'path' => 'qencode'},
-    'd_create_dir'     => {'name_doc' => 'qencode', 'path' => 'qencode'},
+    #XXX'd_create_child' => {'new_name' => 'qencode', 'path' => 'qencode'},
     'd_upload'         => {'path'     => 'qencode'},
     'd_unzip'          => {'path'     => 'qencode'},
     'd_editfile'       => {'path'     => 'qencode'},
@@ -18138,117 +18138,61 @@ sub do_d_rename {
 }
 
 #*******************************************
-# Function : do_d_create_dir
+# Function : do_d_create_child
 # Description : Creates a new file / directory
 #******************************************
-sub do_d_create_dir {
-    wwslog('info', '(%s)', $in{'name_doc'});
+# Old name: do_d_create_dir().
+sub do_d_create_child {
+    wwslog('info', '(%s, %s, %s)', $in{'path'}, $in{'new_name'}, $in{'type'});
 
-    #useful variables
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $path     = $in{'path'};
+    my $new_name = $in{'new_name'};
+    my $type     = $in{'type'} || 'directory';
 
-    $path = Sympa::Tools::Text::unescape_chars($path);
+    $param->{'list'} = $list->{'name'};
 
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
-    }
-
-    $path = join '/', @new_components;
-
-
-    #my $list_name = $in{'list'};
-    my $list_name = $list->{'name'};
-    my $name_doc  = $in{'name_doc'};
-
-    $param->{'list'} = $list_name;
-    $param->{'path'} = $path;
-
-    ## Q-decode file path and names
-    $param->{'decoded_path'} =
-        Sympa::Tools::Text::qdecode_filename($param->{'path'});
-    $param->{'decoded_name_doc'} =
-        Sympa::Tools::Text::qdecode_filename($name_doc);
-
-    my $type = $in{'type'} || 'directory';
-    my $desc_file;
-
-    ### Controls
-
-    # Must be a directory to create (directory name not empty)
-    unless ($name_doc) {
-        Sympa::Report::reject_report_web('user', 'no_name', {},
-            $param->{'action'}, $list);
-        wwslog('err', 'Unable to create: no name specified!');
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'name_doc'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'missing_parameter',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    # The name of the directory must be correct
-    if (   $name_doc =~ /^\./
-        || $name_doc =~ /\.desc/
-        || $name_doc =~ /[~\#\[\]\/]$/) {
-        Sympa::Report::reject_report_web('user', 'incorrect_name',
-            {'name' => $name_doc},
-            $param->{'action'}, $list);
-        wwslog('err', 'Unable to create directory %s: incorrect name',
-            $name_doc);
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'name_doc'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'bad_parameter',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    # Access control
     my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access;
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'edit',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
+    unless ($shared_doc
+        and -r $shared_doc->{fs_path}
+        and -w $shared_doc->{fs_path}
+        and grep { $shared_doc->{type} eq $_ } qw(root directory)) {
+        wwslog('err', 'Unable to read %s: no such directory', $path);
+        Sympa::Report::reject_report_web('user', 'no_such_document',
+            {'path' => $path},
+            $param->{'action'}, $list);
+        web_db_log(
+            {   'parameters' => $in{'path'},
+                'status'     => 'error',
+                'error_type' => 'internal'
             }
         );
+        return undef;
     }
+    $param->{shared_doc} = $shared_doc->as_hashref;
 
-    if ($type eq 'directory') {    ## only when (is_author || !moderated)
-        if ($access{'may'}{'edit'} == 0) {
+    # Access control.
+    my %access = $shared_doc->get_privileges(
+        mode             => 'edit',
+        sender           => $param->{'user'}{'email'},
+        auth_method      => $param->{'auth_method'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        }
+    );
+
+    if ($type eq 'directory') {    # only when (is_author or !moderated)
+        unless ($access{may}{edit}) {
             Sympa::Report::reject_report_web('auth',
-                $access{'reason'}{'edit'},
+                $access{reason}{edit},
                 {}, $param->{'action'}, $list);
             wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
             web_db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
                     'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
+                    'parameters'   => "$in{'new_name'}",
                     'target_email' => "",
                     'msg_id'       => '',
                     'status'       => 'error',
@@ -18258,7 +18202,7 @@ sub do_d_create_dir {
             );
             return undef;
         }
-        if ($access{'may'}{'edit'} == 0.5) {
+        if ($access{may}{edit} == 0.5) {
             Sympa::Report::reject_report_web('auth', 'dir_edit_moderated', {},
                 $param->{'action'}, $list);
             wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
@@ -18266,7 +18210,7 @@ sub do_d_create_dir {
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
                     'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
+                    'parameters'   => "$in{'new_name'}",
                     'target_email' => "",
                     'msg_id'       => '',
                     'status'       => 'error',
@@ -18277,16 +18221,16 @@ sub do_d_create_dir {
             return undef;
         }
     } else {
-        if ($access{'may'}{'edit'} == 0) {
+        unless ($access{may}{edit}) {
             Sympa::Report::reject_report_web('auth',
-                $access{'reason'}{'edit'},
+                $access{reason}{edit},
                 {}, $param->{'action'}, $list);
             wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
             web_db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
                     'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
+                    'parameters'   => "$in{'new_name'}",
                     'target_email' => "",
                     'msg_id'       => '',
                     'status'       => 'error',
@@ -18298,25 +18242,24 @@ sub do_d_create_dir {
         }
     }
 
-    # path of the shared directory
-    my $shareddir = $list->{'dir'} . '/shared';
+    my ($child) = $shared_doc->get_children(name => $new_name);
 
-    my $document = "$shareddir/$path/$name_doc";
-
-    $param->{'document'} = $document;
-
-    # the file musn't already exists
-    if (-e $document) {
+    # The file mustn't already exists
+    # except only if the file is moderated and its author can erase it.
+    if ($child
+        and not($child->{moderate}
+            and $child->{owner} eq $param->{'user'}{'email'})
+        ) {
         Sympa::Report::reject_report_web('user', 'doc_already_exist',
-            {'name' => "$path/$name_doc"},
+            {'name' => $path . '/' . $new_name},
             $param->{'action'}, $list);
         wwslog('err', 'Can\'t create %s/%s: file already exists',
-            $path, $name_doc);
+            $path, $new_name);
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
                 'action'       => $param->{'action'},
-                'parameters'   => "$in{'name_doc'}",
+                'parameters'   => "$in{'new_name'}",
                 'target_email' => "",
                 'msg_id'       => '',
                 'status'       => 'error',
@@ -18327,193 +18270,50 @@ sub do_d_create_dir {
         return undef;
     }
 
-    # if the file .moderate exists, only its author can erase it
-
-    my $doc_moderate = "$shareddir/$path/" . "." . "$name_doc" . ".moderate";
-    my $file_moderated;
-
-    if (-e "$doc_moderate") {
-
-        $file_moderated = 1;
-        my $desc =
-            "$shareddir/$path/" . ".desc.." . "$name_doc" . ".moderate";
-        $desc =~ s/\/+/\//g;
-        my %desc_hash = Sympa::Tools::WWW::get_desc_file("$desc");
-
-        unless ($desc_hash{'email'} eq $param->{'user'}{'email'}) {
-            Sympa::Report::reject_report_web(
-                'user',
-                'cannot_upload',
-                {   'path'   => "$path/$name_doc",
-                    'reason' => "file already exists but not yet moderated"
-                },
-                $param->{'action'},
-                $list
-            );
-            wwslog(
-                'err',
-                'Unable to create %s: file already exists but not yet moderated',
-                $doc_moderate
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'file_already_exists',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
+    unless ($shared_doc->create_child($new_name,
+        type => $type,
+        moderate => ($access{may}{edit} == 0.5 && $type ne 'directory'),
+        owner => $param->{'user'}{'email'},
+        scenario => $access{'scenario'}
+        )
+        ) {
+        my $errno = $ERRNO;
+        my $error_type;
+        if ($errno == POSIX::EINVAL()) {
+            # The name of the directory must be correct
+            Sympa::Report::reject_report_web('user', 'incorrect_name',
+                {'name' => $new_name},
+                $param->{'action'}, $list);
+            $error_type = 'bad_parameter';
+        } else {
+            Sympa::Report::reject_report_web('intern', 'cannot_create_child',
+                {'name' => $new_name},
+                $param->{'action'}, $list);
+            $error_type = 'intern';
         }
+        wwslog('err', 'Unable to create directory %s: %s', $new_name,
+            $errno);
+        web_db_log(
+            {   'robot'        => $robot,
+                'list'         => $list->{'name'},
+                'action'       => $param->{'action'},
+                'parameters'   => "$in{'new_name'}",
+                'target_email' => "",
+                'msg_id'       => '',
+                'status'       => 'error',
+                'error_type'   => $error_type,
+                'user_email'   => $param->{'user'}{'email'},
+            }
+        );
+        return undef;
     }
 
-    ### End of controls
-
-    if ($type eq 'directory') {
-        # Creation of the new directory
-        unless (mkdir("$document", 0777)) {
-            Sympa::Report::reject_report_web('intern', 'cannot_mkdir',
-                {'dir' => $document},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Unable to create %s: %s', $document, $ERRNO);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        $desc_file = "$document/.desc";
-
-    } else {
-        # Creation of the new file
-        unless (open FILE, ">$document") {
-            Sympa::Report::reject_report_web(
-                'intern', 'cannot_open_file',
-                {'file' => "$path/$name_doc"}, $param->{'action'},
-                $list, $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Unable to create %s: %s', $document, $ERRNO);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-        close FILE;
-
-        $desc_file = "$shareddir/$path/.desc.$name_doc";
-    }
-
-    # Creation of a default description file
-    unless (open(DESC, ">$desc_file")) {
-        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-            {'file' => "$desc_file"},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-    }
-
-    print DESC "title\n \n\n";
-    print DESC "creation\n  date_epoch " . time
-        . "\n  email $param->{'user'}{'email'}\n\n";
-
-    print DESC "access\n";
-    print DESC "  read $access{'scenario'}{'read'}\n";
-    print DESC "  edit $access{'scenario'}{'edit'}\n\n";
-
-    #size of the new file created
-    my @infos    = stat $desc_file;
-    my $filesize = $infos[7];
-
-    close DESC;
-
-    # moderation
-    if ($access{'may'}{'edit'} == 0.5 && ($type ne 'directory')) {
-        unless (
-            rename "$shareddir/$path/$name_doc",
-            "$shareddir/$path/.$name_doc.moderate"
-            ) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'rename_file',
-                {   'old' => "$shareddir/$path/$name_doc",
-                    'new' => "$shareddir/$path/.$name_doc.moderate"
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Failed to rename %s/%s to %s/.%s.moderate: %s',
-                $path, $name_doc, $path, $name_doc, $ERRNO);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-        }
-
-        unless (rename "$desc_file",
-            "$shareddir/$path/.desc..$name_doc.moderate") {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'rename_file',
-                {   'old' => $desc_file,
-                    'new' => "$shareddir/$path/.desc..$name_doc.moderate"
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Failed to rename %s to %s/.desc..%s.moderate : %s',
-                $desc_file, $path, $name_doc, $ERRNO);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-        }
-
-        unless ($file_moderated) {
+    # Moderation
+    if ($access{may}{edit} == 0.5 and $type ne 'directory') {
+        unless ($child and $child->{moderate}) {
             $list->send_notify_to_editor(
                 'shared_moderated',
-                {   'filename' => $param->{'decoded_path'} . '/'
-                        . $param->{'decoded_name_doc'},
+                {   'filename' => $path . '/' . $new_name,
                     'who' => $param->{'user'}{'email'}
                 }
             );
@@ -18524,7 +18324,7 @@ sub do_d_create_dir {
         {   'robot'        => $robot,
             'list'         => $list->{'name'},
             'action'       => $param->{'action'},
-            'parameters'   => "$in{'name_doc'}",
+            'parameters'   => "$in{'new_name'}",
             'target_email' => "",
             'msg_id'       => '',
             'status'       => 'success',
@@ -18533,27 +18333,19 @@ sub do_d_create_dir {
         }
     );
 
-    #web_db_stat_log : test before if the creation is a file or a directory
+    # web_db_stat_log : test before if the creation is a file or a directory.
     if ($type eq 'directory') {
         web_db_stat_log(operation => 'd_create_dir');
     } else {
-        web_db_stat_log(
-            operation => 'd_create_file',
-            parameter => $filesize,
-        );
+        web_db_stat_log(operation => 'd_create_file');
     }
 
     if ($type eq 'directory') {
         return 'd_read';
-    }
-
-    if ($access{'may'}{'edit'} == 0.5) {
-        $in{'path'} = "$path/.$name_doc.moderate";
     } else {
-        $in{'path'} = "$path/$name_doc";
+        $in{'path'} = $path . '/' . $new_name;
+        return 'd_editfile';
     }
-
-    return 'd_editfile';
 }
 
 ############## Control
