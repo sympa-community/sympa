@@ -118,7 +118,9 @@ sub _new_child {
         if $fs_name =~ /\A[.]+\z/
             or $fs_name =~ /\A[.]desc(?:[.]|\z)/;
     return undef unless -e $self->{fs_path} . '/' . $fs_name;
-    return undef unless -s $self->{fs_path} . '/' . $fs_name;
+    unless (exists $options{allow_empty} and $options{allow_empty}) {
+        return undef unless -s $self->{fs_path} . '/' . $fs_name;
+    }
 
     my $child = bless {
         context => $self->{context},
@@ -351,6 +353,9 @@ sub create_child {
     } else {
         my $fh;
         return undef unless open $fh, '>', $new_fs_path;
+        if (exists $options{content} and defined $options{content}) {
+            print $fh $options{content};
+        }
         close $fh;
     }
 
@@ -369,7 +374,7 @@ sub create_child {
     print $fh "\n";
     close $fh;
 
-    return 1;
+    return $self->_new_child($new_fs_name, allow_empty => 1);
 }
 
 sub count_children {
@@ -979,14 +984,14 @@ I<Instance method>.
 Returns number of nodes waiting for moderation.
 
 =item create_child ( $name, owner =E<gt> $email, scenario =E<gt> $scenario,
-type =E<gt> $type )
+type =E<gt> $type, [ content => $content ] )
 
 I<Instance method>.
-Creates child node.
+Creates child node and returns it.
 TBD.
 
 =item get_children ( [ moderate =E<gt> boolean ], [ name =E<gt> $name ],
-[ order_by =E<gt> $order ], [ owner =E<gt> $email ] )
+[ order_by =E<gt> $order ], [ owner =E<gt> $email ], [ allow_empty =E<gt> 1 ] )
 
 I<Instance method>.
 Gets child nodes.
@@ -1012,6 +1017,10 @@ C<'order_by_author'> (by owner),
 C<'order_by_size'> (by size),
 C<'order_by_date'> (by modification time).
 Default is ordering by names.
+
+=item allow_empty =E<gt> 1
+
+Don't omit nodes with zero size.
 
 =back
 
