@@ -950,7 +950,7 @@ my %filtering = (
     #XXX'd_create_child' => {'new_name' => 'qencode', 'path' => 'qencode'},
     'd_upload'         => {'path'     => 'qencode'},
     'd_unzip'          => {'path'     => 'qencode'},
-    'd_editfile'       => {'path'     => 'qencode'},
+    #XXX'd_editfile' => {'path' => 'qencode'},
     #XXX'd_properties' => {'path' => 'qencode'},
     'd_overwrite'      => {'path'     => 'qencode'},
     'd_savefile'       => {'path'     => 'qencode', 'name_doc' => 'qencode'},
@@ -14221,88 +14221,9 @@ sub directory_browsing {
 sub do_d_editfile {
     wwslog('info', '(%s)', $in{'path'});
 
-    # Variables
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $path = $in{'path'};
 
-    $path = Sympa::Tools::Text::unescape_chars($path);
-
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
-    }
-
-    $path = join '/', @new_components;
-
-
-    my $list_name    = $list->{'name'};
-    my $shareddir    = $list->{'dir'} . '/shared';
-    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
-
-    $param->{'directory'} = -d "$shareddir/$path";
-
-    # Control
-
-    unless ($path) {
-        Sympa::Report::reject_report_web('user', 'missing_arg',
-            {'argument' => 'file name'},
-            $param->{'action'});
-        wwslog('err', 'No file name');
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'missing_parameter'
-            }
-        );
-        return undef;
-    }
-
-    # Existing document? File?
-    unless (-w "$shareddir/$path") {
-        Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        wwslog('err',
-            "d_editfile : Cannot edit $shareddir/$path : not an existing file"
-        );
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'no_file'
-            }
-        );
-        return undef;
-    }
-
-    ### Document isn't a description file?
-    unless ($path !~ /\.desc/) {
-        wwslog('err', '%s/%s: description file', $shareddir, $path);
-        Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return undef;
-    }
-
-    if (($path =~ /\.url$/) || ($path =~ /^\..+\.url.moderate$/)) {
-        ## Get URL of bookmark
-        open URL, "$shareddir/$path";
-        my $url = <URL>;
-        close URL;
-        chomp $url;
-
-        $param->{'url'} = $url;
-        $visible_path =~ s/\.url$//;
-    }
-
-    ### is list open ?
+    # Is list open?
     unless ($list->{'admin'}{'status'} eq 'open') {
         Sympa::Report::reject_report_web('user', 'list_not_open',
             {'status' => $list->{'admin'}{'status'}},
@@ -14321,25 +14242,41 @@ sub do_d_editfile {
         return undef;
     }
 
-    # Access control.
     my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access;
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'edit',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
+    # Existing document? File?
+    unless ($shared_doc
+        and -r $shared_doc->{fs_path}
+        and -w $shared_doc->{fs_path}
+        and not(grep { $shared_doc->{type} eq $_ } qw(root directory))) {
+        wwslog('err', 'Unable to read %s: no such file or directory', $path);
+        Sympa::Report::reject_report_web('user', 'no_such_document',
+            {'path' => $path},
+            $param->{'action'}, $list);
+        web_db_log(
+            {   'parameters' => $in{'path'},
+                'status'     => 'error',
+                'error_type' => 'internal'
             }
         );
+        return undef;
     }
-    my $may_edit = $access{'may'}{'edit'};
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
 
-    unless ($may_edit > 0) {
-        Sympa::Report::reject_report_web('auth', $access{'reason'}{'edit'},
+    # Access control.
+    my %access = $shared_doc->get_privileges(
+        mode             => 'edit',
+        sender           => $param->{'user'}{'email'},
+        auth_method      => $param->{'auth_method'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        }
+    );
+    my $may_edit = $access{may}{edit};
+
+    unless ($may_edit) {
+        Sympa::Report::reject_report_web('auth', $access{reason}{edit},
             {}, $param->{'action'}, $list);
         wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
         web_db_log(
@@ -14353,14 +14290,15 @@ sub do_d_editfile {
 
     ## End of controls
 
-    $param->{'list'}         = $list_name;
-    $param->{'path'}         = $path;
-    $param->{'visible_path'} = $visible_path;
+    $param->{'list'}         = $list->{'name'};
 
-    # test if it's a text file
-    if (-T "$shareddir/$path") {
+    # Test if it's a text file.
+    if (-T $shared_doc->{fs_path}) { #FIXME:Better check
         $param->{'textfile'} = 1;
-        $param->{'filepath'} = "$shareddir/$path";
+        if (open my $fh, '<', $shared_doc->{fs_path}) {
+            $param->{'shared_doc'}{'content'} = do { local $RS; <$fh> };
+            close $fh;
+        }
     } else {
         $param->{'textfile'} = 0;
     }
@@ -14369,42 +14307,9 @@ sub do_d_editfile {
             and $param->{'textfile'}
             and $path =~ /\.html?/;
 
-    #Current directory
-    if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
-        $param->{'father'} = $1;
-    } else {
-        $param->{'father'} = '';
-    }
-    $param->{'escaped_father'} =
-        Sympa::SharedDocument::escape_docname($param->{'father'}, '/');
+    #XXX$allow_absolute_path = 1;
 
-    # Description of the file
-    my $descfile;
-    if (-d "$shareddir/$path") {
-        $descfile = "$shareddir/$1$3/.desc";
-    } else {
-        $descfile = "$shareddir/$1.desc.$3";
-    }
-
-    if (-e $descfile) {
-        my %desc_hash = Sympa::Tools::WWW::get_desc_file($descfile);
-        $param->{'desc'}      = $desc_hash{'title'};
-        $param->{'doc_owner'} = $desc_hash{'email'};
-        ## Synchronization
-        $param->{'serial_desc'} = (stat $descfile)[9];
-    }
-
-    ## Synchronization
-    my $date_epoch = Sympa::Tools::File::get_mtime("$shareddir/$path");
-    $param->{'serial_file'} = $date_epoch;
-    ## parameters of the current directory
-    $param->{'doc_date'} =
-        $language->gettext_strftime("%d %b %y  %H:%M", localtime $date_epoch);
-
-    #FIXME: Required?
-    $allow_absolute_path = 1;
-
-    $param->{'father_icon'} = Sympa::Tools::WWW::get_icon($robot, 'father');
+    #XXX$param->{'father_icon'} = Sympa::Tools::WWW::get_icon($robot, 'father');
 
     web_db_log(
         {   'parameters' => $in{'path'},
