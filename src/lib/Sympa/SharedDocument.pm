@@ -323,6 +323,20 @@ sub as_hashref {
     return {%hash};
 }
 
+# Old name: Sympa::List::create_shared().
+sub create {
+    my $self = shift;
+
+    unless ($self->{type} eq 'root') {
+        $ERRNO = POSIX::EINVAL();
+        return undef;
+    }
+    return undef unless CORE::mkdir $self->{fs_path}, 0777;
+
+    $self->{status} = 'exist';
+    return 1;
+}
+
 sub create_child {
     my $self     = shift;
     my $new_name = shift;
@@ -375,6 +389,23 @@ sub create_child {
     close $fh;
 
     return $self->_new_child($new_fs_name, allow_empty => 1);
+}
+
+sub delete {
+    my $self = shift;
+
+    unless ($self->{type} eq 'root') {
+        $ERRNO = POSIX::EINVAL();
+        return undef;
+    }
+
+    my $list = $self->{context};
+    return undef
+        unless CORE::rename $self->{fs_path},
+        $list->{'dir'} . '/pending.shared';
+
+    $self->{status} = 'deleted';
+    return 1;
 }
 
 sub count_children {
@@ -832,6 +863,23 @@ sub rename {
     return 1;
 }
 
+sub restore {
+    my $self = shift;
+
+    unless ($self->{type} eq 'root') {
+        $ERRNO = POSIX::EINVAL();
+        return undef;
+    }
+
+    my $list = $self->{context};
+    return undef
+        unless CORE::rename $list->{'dir'} . '/pending.shared',
+        $self->{fs_path};
+
+    $self->{status} = 'exist';
+    return 1;
+}
+
 sub rmdir {
     my $self = shift;
 
@@ -1119,6 +1167,27 @@ If installation failed, returns false value and sets $ERRNO ($!).
 
 I<Instance method>.
 Returns unique identifier of instance.
+
+=back
+
+=head3 Methods for repository root
+
+=over
+
+=item create ( )
+
+I<Instance method>.
+Creates document repository on physical filesystem.
+
+=item delete ( )
+
+I<Instance method>.
+Deletes document repository.
+
+=item restore ( )
+
+I<Instance method>.
+Restores deleted document repository.
 
 =back
 
