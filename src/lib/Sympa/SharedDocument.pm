@@ -45,9 +45,10 @@ my $log = Sympa::Log->instance;
 
 # Creates a new object.
 sub new {
-    my $class = shift;
-    my $list  = shift;
-    my $path  = shift;
+    my $class   = shift;
+    my $list    = shift;
+    my $path    = shift;
+    my %options = @_;
 
     die 'bug in logic. Ask developer' unless ref $list eq 'Sympa::List';
 
@@ -77,7 +78,7 @@ sub new {
         #FIXME: At present, conversion by qencode_filename() /
         # qdecode_filename() may not be bijective.  So we take the first one
         # of (possiblly multiple) matching paths insted of taking encoded one.
-        my ($self) = $parent->get_children(name => $name);
+        my ($self) = $parent->get_children(%options, name => $name);
         return $self;
     }
 }
@@ -966,7 +967,7 @@ L<Sympa::SharedDocument> implements shared document repository of lists.
 
 =over
 
-=item new ( $list, [ $path ] )
+=item new ( $list, [ $path, [ allow_empty =E<gt> 1 ] ] )
 
 I<Constructor>.
 Creates new instance.
@@ -983,6 +984,10 @@ A L<Sympa::List> instance.
 
 String to determine path or arrayref of path components.
 The path is relative to repository root.
+
+=item allow_empty =E<gt> 1
+
+Don't omit files with zero size.
 
 =back
 
@@ -1140,7 +1145,7 @@ The name to be renamed to.
 Returns:
 
 True value.
-If installation failed, returns false value and sets $ERRNO ($!).
+If renaming failed, returns false value and sets $ERRNO ($!).
 
 =item rmdir ( )
 
@@ -1151,7 +1156,7 @@ Directory must be empty.
 Returns:
 
 True value.
-If installation failed, returns false value and sets $ERRNO ($!).
+If removal failed, returns false value and sets $ERRNO ($!).
 
 =item unlink ( )
 
@@ -1161,7 +1166,7 @@ Removes file from repository.
 Returns:
 
 True value.
-If installation failed, returns false value and sets $ERRNO ($!).
+If removal failed, returns false value and sets $ERRNO ($!).
 
 =item get_id ( )
 
@@ -1214,7 +1219,8 @@ File extension if any.
 =item {fs_name}
 
 I<Mandatory>.
-Name of node on physical filesystem.  
+Name of node on physical filesystem,
+i.e. the last part of {fs_path}.
 
 =item {fs_path}
 
@@ -1247,7 +1253,8 @@ Set if node is held for moderation.
 =item {name}
 
 I<Mandatory>.
-Name of node accessible by users.
+Name of node accessible by users,
+i.e. the last item of {paths}.
 
 =item {owner}
 
