@@ -316,10 +316,10 @@ sub create_list_old {
         return undef;
     }
 
-    ## Create shared if required
-    if (defined $list->{'admin'}{'shared_doc'}) {
-        $list->create_shared();
-    }
+    ## Create shared if required.
+    #if (defined $list->{'admin'}{'shared_doc'}) {
+    #    $list->create_shared();
+    #}
 
     #log in stat_table to make statistics
 
@@ -574,10 +574,10 @@ sub create_list {
         return undef;
     }
 
-    ## Create shared if required
-    if (defined $list->{'admin'}{'shared_doc'}) {
-        $list->create_shared();
-    }
+    ## Create shared if required.
+    #if (defined $list->{'admin'}{'shared_doc'}) {
+    #    $list->create_shared();
+    #}
 
     ##FIXME:should be unneccessary
     $list->{'admin'}{'creation'}{'date'} =
