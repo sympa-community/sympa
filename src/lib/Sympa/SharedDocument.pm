@@ -321,6 +321,57 @@ sub as_hashref {
     return {%hash};
 }
 
+sub create_child {
+    my $self     = shift;
+    my $new_name = shift;
+    my %options  = @_;
+
+    if (   not(defined $new_name and length $new_name)
+        or $new_name =~ /\A[.]/
+        or 0 <= index($new_name, '/')
+        or $new_name =~ /[~#\[\]]$/) {
+        $ERRNO = POSIX::EINVAL();
+        return undef;
+    }
+
+    $options{type} ||= 'directory';
+
+    my $new_fs_name =
+        $options{moderate}
+        ? '.' . Sympa::Tools::Text::qencode_filename($new_name) . '.moderate'
+        : Sympa::Tools::Text::qencode_filename($new_name);
+    my $new_fs_path = $self->{fs_path} . '/' . $new_fs_name;
+    my $new_desc_file =
+        ($options{type} eq 'directory')
+        ? $new_fs_path . '/.desc'
+        : $self->{fs_path} . '/.desc.' . $new_fs_name;
+
+    if ($options{type} eq 'directory') {
+        return undef unless mkdir $new_fs_path, 0777;
+    } else {
+        my $fh;
+        return undef unless open $fh, '>', $new_fs_path;
+        close $fh;
+    }
+
+    # Creation of a default description file
+    my $fh;
+    return undef unless open $fh, '>', $new_desc_file;
+    print $fh "title\n";
+    print $fh " \n";
+    print $fh "\n";
+    print $fh "creation\n  date_epoch " . time . "\n";
+    print $fh "  email $options{owner}\n";
+    print $fh "\n";
+    print $fh "access\n";
+    print $fh "  read $options{scenario}->{read}\n";
+    print $fh "  edit $options{scenario}->{edit}\n";
+    print $fh "\n";
+    close $fh;
+
+    return 1;
+}
+
 sub count_children {
     my $self = shift;
 
@@ -723,8 +774,8 @@ sub rename {
     my $new_name = shift;
 
     if ($self->{type} eq 'root') {
-	$ERRNO = POSIX::EPERM();
-	return undef;
+        $ERRNO = POSIX::EPERM();
+        return undef;
     }
     if (   not(defined $new_name and length $new_name)
         or $new_name =~ /\A[.]/
@@ -910,7 +961,7 @@ Hashref including attributes of parent node recursively.
 
 =item {paths_d}
 
-Same as {path} but, if the node is a directory, includes additional empty
+Same as {paths} but, if the node is a directory, includes additional empty
 component at the end.
 This is useful when the path created by join() should be followed by
 additional "/" character.
@@ -926,6 +977,13 @@ Returns number of child nodes.
 
 I<Instance method>.
 Returns number of nodes waiting for moderation.
+
+=item create_child ( $name, owner =E<gt> $email, scenario =E<gt> $scenario,
+type =E<gt> $type )
+
+I<Instance method>.
+Creates child node.
+TBD.
 
 =item get_children ( [ moderate =E<gt> boolean ], [ name =E<gt> $name ],
 [ order_by =E<gt> $order ], [ owner =E<gt> $email ] )
