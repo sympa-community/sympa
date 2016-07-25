@@ -380,7 +380,8 @@ sub create_child {
     print $fh "title\n";
     print $fh " \n";
     print $fh "\n";
-    print $fh "creation\n  date_epoch " . time . "\n";
+    print $fh "creation\n";
+    print $fh "  date_epoch " . time . "\n";
     print $fh "  email $options{owner}\n";
     print $fh "\n";
     print $fh "access\n";
@@ -899,6 +900,37 @@ sub rmdir {
     CORE::rmdir $self->{fs_path};
 }
 
+#FIXME:Generalize serialization.
+#FIXME:Lock file.
+sub save_description {
+    my $self = shift;
+
+    $self->{title} = '' unless defined $self->{title};
+
+    my $fh;
+    return undef unless open $fh, '>', $self->_desc_file;
+
+    print $fh "title\n";
+    printf $fh "  %s\n", $self->{title};
+    print $fh "\n";
+
+    print $fh "access\n";
+    printf $fh "  read %s\n", $self->{scenario}{read};
+    printf $fh "  edit %s\n", $self->{scenario}{edit};
+    print $fh "\n";
+
+    print $fh "creation\n";
+    printf $fh "  date_epoch %s\n", $self->{date_epoch};
+    printf $fh "  email %s\n",      $self->{owner};
+    print $fh "\n";
+
+    close $fh;
+
+    $self->{serial_desc} = Sympa::Tools::File::get_mtime($self->_desc_file);
+
+    return 1;
+}
+
 sub unlink {
     my $self = shift;
 
@@ -1158,6 +1190,11 @@ Returns:
 True value.
 If removal failed, returns false value and sets $ERRNO ($!).
 
+=item save_description ( )
+
+I<Instance method>.
+Creates or updates property description of the node.
+
 =item unlink ( )
 
 I<instalce method>.
@@ -1280,6 +1317,7 @@ These may be given by property description.
 =item {serial_desc}
 
 Modification time of property description in Unix time.
+Available if property description exists.
 
 =item {size}
 
