@@ -26,7 +26,8 @@
   [%|loc(fname)%]Describe file '%1'[%END%]
   [% END %]
   </label>
-  <input id="content" size="50" maxlength="100" name="content" value="[% desc %]" />
+  <input id="content" size="50" maxlength="100" name="content"
+    value="[% shared_doc.title %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
   <input type="hidden" name="serial" value="[% shared_doc.serial_desc %]" />

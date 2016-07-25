@@ -954,12 +954,12 @@ my %filtering = (
     #XXX'd_properties' => {'path' => 'qencode'},
     'd_overwrite'      => {'path'     => 'qencode'},
     'd_savefile'       => {'path'     => 'qencode', 'name_doc' => 'qencode'},
-    'd_describe'       => {'path'     => 'qencode'},
+    #XXX'd_describe' => {'path' => 'qencode'},
     #XXX'd_delete' => {'path' => 'qencode'},
     #XXX'd_rename' => {'path' => 'qencode', 'new_name' => 'qencode'},
     #XXX'd_control' => {'path' => 'qencode'},
-    'd_change_access'  => {'path'     => 'qencode'},
-    'd_set_owner'      => {'path'     => 'qencode'},
+    #XXX'd_change_access' => {'path' => 'qencode'},
+    #XXX'd_set_owner' => {'path' => 'qencode'},
     'requestpasswd'    => {'email'    => 'fix_escape_uri'},
     'viewbounce'       => {'email'    => 'fix_escape_uri'},
     'editsubscriber'   => {'email'    => 'fix_escape_uri'},
@@ -14373,72 +14373,20 @@ sub do_d_properties {
 #******************************************
 
 sub do_d_describe {
-    wwslog('info', '(%s)', $in{'path'});
+    wwslog('info', '(%s, %s)', $in{'path'}, $in{'content'});
 
-    # Variables
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $path = $in{'path'};
 
-    $path = Sympa::Tools::Text::unescape_chars($path);
-
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
-    }
-
-    $path = join '/', @new_components;
-
-    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
-    my $list_name    = $list->{'name'};
-    my $shareddir    = $list->{'dir'} . '/shared';
-
-    ####  Controls
-
-    ### Document isn't a description file?
-    unless ($path !~ /\.desc/) {
-        wwslog('info', '%s/%s: description file', $shareddir, $path);
-        Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return undef;
-    }
-
-    ## the path must not be empty (the description file of the shared
-    ## directory
-    #  doesn't exist)
-    unless ($path) {
-        Sympa::Report::reject_report_web(
-            'intern',
-            'cannot_describe_shared_directory',
+    my $shared_doc = Sympa::SharedDocument->new($list, $path);
+    # The description file of repository root doesn't exist.
+    unless ($shared_doc
+        and -r $shared_doc->{fs_path}
+        and $shared_doc->{type} ne 'root') {
+        Sympa::Report::reject_report_web('user', 'no_doc_to_describe',
             {'path' => $path},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot
         );
-        wwslog('info', 'Cannot describe %s: root directory', $shareddir);
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return undef;
-    }
-
-    # the file to describe must already exist
-    unless (-e "$shareddir/$path") {
-        Sympa::Report::reject_report_web('user', 'no_doc_to_describe',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        wwslog('info',
-            "d_describe : Unable to describe $shareddir/$path : not an existing document"
-        );
+        wwslog('info', 'Cannot describe %s', $path);
         web_db_log(
             {   'parameters' => $in{'path'},
                 'status'     => 'error',
@@ -14446,27 +14394,22 @@ sub do_d_describe {
             }
         );
         return undef;
-        in {'shortname'};
     }
+    $param->{shared_doc} = $shared_doc->as_hashref;
 
     # Access control.
-    my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access;
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'edit',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
-            }
-        );
-    }
-
-    unless ($access{'may'}{'edit'} > 0) {
-        Sympa::Report::reject_report_web('auth', $access{'reason'}{'edit'},
+    my %access = $shared_doc->get_privileges(
+        mode             => 'edit',
+        sender           => $param->{'user'}{'email'},
+        auth_method      => $param->{'auth_method'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        }
+    );
+    unless ($access{may}{edit}) {
+        Sympa::Report::reject_report_web('auth', $access{reason}{edit},
             {}, $param->{'action'}, $list);
         wwslog('info', 'Access denied for %s', $param->{'user'}{'email'});
         web_db_log(
@@ -14480,29 +14423,18 @@ sub do_d_describe {
 
     ## End of controls
 
-    if ($in{'content'} !~ /^\s*$/) {
+    if (defined $in{'content'} and $in{'content'} =~ /\S/) {
+        $shared_doc->{title} = $in{'content'};
 
-        # Description file
-        $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
-        my $dir  = $1;
-        my $file = $3;
-
-        my $desc_file;
-        if (-d "$shareddir/$path") {
-            $desc_file = "$shareddir/$dir$file/.desc";
-        } else {
-            $desc_file = "$shareddir/$dir.desc.$file";
-        }
-
-        if (-r "$desc_file") {
-            # if description file already exists : open it and modify it
-            my %desc_hash = Sympa::Tools::WWW::get_desc_file("$desc_file");
-
+        if (exists $shared_doc->{serial_desc}
+            and defined $shared_doc->{serial_desc}) {
+            # If description file already exists: Open it and modify it.
             # Synchronization
-            unless (synchronize($desc_file, $in{'serial'})) {
+            unless ($shared_doc->{serial_desc} == $in{'serial'}) {
                 Sympa::Report::reject_report_web('user', 'synchro_failed', {},
                     $param->{'action'}, $list);
-                wwslog('info', 'Synchronization failed for %s', $desc_file);
+                wwslog('info', 'Synchronization failed for description of %s',
+                   $shared_doc);
                 web_db_log(
                     {   'parameters' => $in{'path'},
                         'status'     => 'error',
@@ -14511,76 +14443,30 @@ sub do_d_describe {
                 );
                 return undef;
             }
-
-            # fill the description file
-            unless (open DESC, ">$desc_file") {
-                wwslog('info', 'Cannot open %s: %s', $desc_file, $ERRNO);
-                Sympa::Report::reject_report_web(
-                    'intern', 'cannot_open_file',
-                    {'file' => $desc_file}, $param->{'action'},
-                    $list, $param->{'user'}{'email'},
-                    $robot
-                );
-                web_db_log(
-                    {   'parameters' => $in{'path'},
-                        'status'     => 'error',
-                        'error_type' => 'internal'
-                    }
-                );
-                return undef;
-            }
-
-            # information modified
-            print DESC "title\n  $in{'content'}\n\n";
-            # information not modified
-            print DESC
-                "access\n  read $desc_hash{'read'}\n  edit $desc_hash{'edit'}\n\n";
-            print DESC "creation\n";
-            # time
-            print DESC "  date_epoch $desc_hash{'date'}\n";
-            # author
-            print DESC "  email $desc_hash{'email'}\n\n";
-
-            close DESC;
-
         } else {
-            # Creation of a description file
-            unless (open(DESC, ">$desc_file")) {
-                Sympa::Report::reject_report_web(
-                    'intern', 'cannot_open_file',
-                    {'file' => $desc_file}, $param->{'action'},
-                    $list, $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('info',
-                    "d_describe : Cannot create description file $desc_file : $ERRNO"
-                );
-                web_db_log(
-                    {   'parameters' => $in{'path'},
-                        'status'     => 'error',
-                        'error_type' => 'internal'
-                    }
-                );
-                return undef;
-            }
-            # fill
-            # description
-            print DESC "title\n  $in{'content'}\n\n";
-            # date and author
-            my @info = stat "$shareddir/$path";
-            print DESC "creation\n  date_epoch "
-                . $info[10]
-                . "\n  email\n\n";
-            # access rights
-            print DESC "access\n";
-            print DESC "  read $access{'scenario'}{'read'}\n";
-            print DESC "  edit $access{'scenario'}{'edit'}\n\n";
-
-            close DESC;
-
+            $shared_doc->{scenario} = $access{scenario};
         }
 
-        $in{'path'} = Sympa::Tools::WWW::no_slash_end($dir);
+        # Fill the description file.
+        unless ($shared_doc->save_description) {
+            wwslog('info', 'Cannot save description of %s: %s',
+                $shared_doc, $ERRNO);
+            Sympa::Report::reject_report_web(
+                'intern', 'cannot_open_file',
+                {'path' => $path}, $param->{'action'},
+                $list, $param->{'user'}{'email'},
+                $robot
+            );
+            web_db_log(
+                {   'parameters' => $in{'path'},
+                    'status'     => 'error',
+                    'error_type' => 'internal'
+                }
+            );
+            return undef;
+        }
+
+        $in{'path'} = join '/', @{$shared_doc->{parent}->{paths}};
     }
 
     web_db_log(
@@ -14590,7 +14476,6 @@ sub do_d_describe {
     );
 
     return 'd_read';
-
 }
 
 #*******************************************
@@ -18344,65 +18229,17 @@ sub do_d_control {
 sub do_d_change_access {
     wwslog('info', '(%s)', $in{'path'});
 
-    # Variables
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $path = $in{'path'};
 
-    $path = Sympa::Tools::Text::unescape_chars($path);
-
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
-    }
-
-    $path = join '/', @new_components;
-
-
-    my $list_name = $list->{'name'};
-
-    # path of the shared directory
-    my $shareddir = $list->{'dir'} . '/shared';
-
-    ####  Controls
-
-    ## the path must not be empty (the description file of the shared
-    ## directory
-    #  doesn't exist)
-    unless ($path) {
-        Sympa::Report::reject_report_web(
-            'intern',
-            'cannot_describe_shared_directory',
-            {'path' => $path},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot
-        );
-        wwslog('info',
-            "do_d_change_access : Cannot change access $shareddir : root directory"
-        );
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'path'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    # the document to describe must already exist
-    unless (-e "$shareddir/$path") {
+    my $shared_doc = Sympa::SharedDocument->new($list, $path);
+    # The document to describe must already exist.
+    unless ($shared_doc
+        and -r $shared_doc->{fs_path}
+        and $shared_doc->{type} ne 'root') {
         Sympa::Report::reject_report_web('user', 'no_doc_to_describe',
             {'path' => $path},
             $param->{'action'}, $list);
-        wwslog('info',
-            "d_change_access : Unable to change access $shareddir/$path : no such document"
-        );
+        wwslog('info', 'Unable to change access %s: No such document', $path);
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
@@ -18417,28 +18254,25 @@ sub do_d_change_access {
         );
         return undef;
     }
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
 
     # Access control.
-    my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access;
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'control',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
-            }
-        );
-    }
-
-    unless ($access{'may'}{'control'}) {
+    my %access = $shared_doc->get_privileges(
+        mode             => 'control',
+        sender           => $param->{'user'}{'email'},
+        auth_method      => $param->{'auth_method'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        }
+    );
+    unless ($access{may}{control}) {
         Sympa::Report::reject_report_web('auth',
             'action_listmaster_or_privileged_owner_or_author',
             {}, $param->{'action'}, $list);
-        wwslog('info', 'Access denied for %s', $param->{'user'}{'email'});
+        wwslog('info', 'Access denied for %s by %s', $path,
+            $param->{'user'}{'email'});
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
@@ -18454,29 +18288,14 @@ sub do_d_change_access {
         return undef;
     }
 
-    ## End of controls
-
-    # Description file
-    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
-    my $dir  = $1;
-    my $file = $3;
-
-    my $desc_file;
-    if (-d "$shareddir/$path") {
-        $desc_file = "$shareddir/$1$3/.desc";
-    } else {
-        $desc_file = "$shareddir/$1.desc.$3";
-    }
-
-    if (-e "$desc_file") {
-        # if description file already exists : open it and modify it
-        my %desc_hash = Sympa::Tools::WWW::get_desc_file("$desc_file");
-
-        # Synchronization
-        unless (synchronize($desc_file, $in{'serial'})) {
+    if (exists $shared_doc->{serial_desc}
+        and defined $shared_doc->{serial_desc}) {
+        # If description file already exists : open it and modify it.
+        # Synchronization.
+        unless ($shared_doc->{serial_desc} == $in{'serial'}) {
             Sympa::Report::reject_report_web('user', 'synchro_failed', {},
                 $param->{'action'}, $list);
-            wwslog('info', 'Synchronization failed for %s', $desc_file);
+            wwslog('info', 'Synchronization failed for %s', $shared_doc);
             web_db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
@@ -18491,130 +18310,26 @@ sub do_d_change_access {
             );
             return undef;
         }
-
-        unless (open DESC, ">$desc_file") {
-            wwslog('info', 'Cannot open %s: %s', $desc_file, $ERRNO);
-            Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-                {'file' => $desc_file},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'path'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        # information not modified
-        print DESC "title\n  $desc_hash{'title'}\n\n";
-
-        # access rights
-        print DESC "access\n  read $in{'read_access'}\n";
-        print DESC "  edit $in{'edit_access'}\n\n";
-
-        print DESC "creation\n";
-        # time
-        print DESC "  date_epoch $desc_hash{'date'}\n";
-        # author
-        print DESC "  email $desc_hash{'email'}\n\n";
-
-        close DESC;
-
     } else {
-        # Creation of a description file
-        unless (open(DESC, ">$desc_file")) {
-            Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-                {'file' => $desc_file},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('info',
-                "d_change_access : Cannot create description file $desc_file : $ERRNO"
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'path'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-        print DESC "title\n \n\n";
-
-        my @info = stat "$shareddir/$path";
-        print DESC "creation\n  date_epoch " . $info[10] . "\n  email\n\n";
-        print DESC "access\n  read $in{'read_access'}\n";
-        print DESC "  edit $in{'edit_access'}\n\n";
-
-        close DESC;
-
+        $shared_doc->{scenario} =
+            {read => $access{scenario}{read}, edit => $access{scenario}{edit}};
     }
 
-    return 'd_control';
+    $shared_doc->{scenario}{read} = $in{'read_access'}
+        if $in{'read_access'};
+    $shared_doc->{scenario}{edit} = $in{'edit_access'}
+        if $in{'edit_access'};
 
-}
-
-sub do_d_set_owner {
-    wwslog('info', '(%s)', $in{'path'});
-
-    # Variables
-    my $desc_file;
-
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
-
-    $path = Sympa::Tools::Text::unescape_chars($path);
-
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
-    }
-
-    $path = join '/', @new_components;
-
-
-    #moderation
-    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
-
-    #my $list_name = $in{'list'};
-    my $list_name = $list->{'name'};
-
-    # path of the shared directory
-    my $shareddir = $list->{'dir'} . '/shared';
-
-    ####  Controls
-
-    ## the path must not be empty (the description file of the shared
-    ## directory
-    #  doesn't exist)
-    unless ($path) {
-        Sympa::Report::reject_report_web(
-            'intern',
-            'cannot_describe_shared_directory',
+    unless ($shared_doc->save_description) {
+        wwslog('info', 'Cannot open description of %s: %m', $shared_doc);
+        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
             {'path' => $path},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot
-        );
-        wwslog('info',
-            "do_d_set_owner : Cannot change access $shareddir : root directory"
-        );
+            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
                 'action'       => $param->{'action'},
-                'parameters'   => "$in{'name_doc'}",
+                'parameters'   => "$in{'path'}",
                 'target_email' => "",
                 'msg_id'       => '',
                 'status'       => 'error',
@@ -18625,8 +18340,18 @@ sub do_d_set_owner {
         return undef;
     }
 
-    # the email must look like an email "somebody@somewhere"
-    unless (Sympa::Tools::Text::valid_email($in{'content'})) {
+    return 'd_control';
+}
+
+sub do_d_set_owner {
+    wwslog('info', '(%s, %s)', $in{'path'}, $in{'content'});
+
+    my $path = $in{'path'};
+
+    # The email must look like an email "somebody@somewhere".
+    my $email = Sympa::Tools::Text::canonic_email($in{'content'})
+        if $in{'content'};
+    unless ($email and Sympa::Tools::Text::valid_email($email)) {
         Sympa::Report::reject_report_web('user', 'incorrect_email',
             {'email' => $in{'content'}},
             $param->{'action'}, $list);
@@ -18646,35 +18371,44 @@ sub do_d_set_owner {
         return undef;
     }
 
-    # Access control
-    ## father directory
-    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
-    my $dir  = $1;
-    my $file = $3;
-    if (-d "$shareddir/$path") {
-        $desc_file = "$shareddir/$dir$file/.desc";
-    } else {
-        $desc_file = "$shareddir/$dir.desc.$file";
-    }
-
-    # Must be authorized to control father directory.
-    #my $shared_doc = Sympa::SharedDocument->new($list, $1);
     my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access;
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'control',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
+    # The document to describe must already exist.
+    unless ($shared_doc
+        and -r $shared_doc->{fs_path}
+        and $shared_doc->{type} ne 'root') {
+        Sympa::Report::reject_report_web('user', 'no_doc_to_describe',
+            {'path' => $path},
+            $param->{'action'}, $list);
+        wwslog('info', 'Unable to change access %s: No such document', $path);
+        web_db_log(
+            {   'robot'        => $robot,
+                'list'         => $list->{'name'},
+                'action'       => $param->{'action'},
+                'parameters'   => "$in{'path'}",
+                'target_email' => "",
+                'msg_id'       => '',
+                'status'       => 'error',
+                'error_type'   => 'no_file',
+                'user_email'   => $param->{'user'}{'email'},
             }
         );
+        return undef;
     }
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
 
-    unless ($access{'may'}{'control'}) {
+    #XXX# Must be authorized to control father directory.
+    #XXXmy $shared_doc = Sympa::SharedDocument->new($list, $1);
+    my %access = $shared_doc->get_privileges(
+        mode             => 'control',
+        sender           => $param->{'user'}{'email'},
+        auth_method      => $param->{'auth_method'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        }
+    );
+    unless ($access{may}{control}) {
         Sympa::Report::reject_report_web('auth',
             'action_listmaster_or_privileged_owner_or_author',
             {}, $param->{'action'}, $list);
@@ -18694,42 +18428,14 @@ sub do_d_set_owner {
         return undef;
     }
 
-    my $may_set = 1;
-
-    unless ($may_set) {
-        Sympa::Report::reject_report_web('user', 'full_directory',
-            {'directory' => $visible_path},
-            $param->{'action'}, $list);
-        wwslog('info', 'Cannot set owner of a full directory');
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$in{'name_doc'}",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'full_directory',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    ## End of controls
-
-    my %desc_hash;
-
-    if (-e "$desc_file") {
-        # if description file already exists : open it and modify it
-        %desc_hash = Sympa::Tools::WWW::get_desc_file("$desc_file");
-
-        # Synchronization
-        unless (synchronize($desc_file, $in{'serial'})) {
-
+    if (exists $shared_doc->{serial_desc}
+        and defined $shared_doc->{serial_desc}) {
+        # If description file already exists : open it and modify it.
+        # Synchronization.
+        unless ($shared_doc->{serial_desc} == $in{'serial'}) {
             Sympa::Report::reject_report_web('user', 'synchro_failed', {},
                 $param->{'action'}, $list);
-            wwslog('info', 'Synchronization failed for %s', $desc_file);
+            wwslog('info', 'Synchronization failed for %s', $shared_doc);
             web_db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
@@ -18744,77 +18450,32 @@ sub do_d_set_owner {
             );
             return undef;
         }
-
-        unless (open DESC, ">$desc_file") {
-            wwslog('info', 'Cannot open %s: %s', $desc_file, $ERRNO);
-            Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-                {'file' => $desc_file},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        # information not modified
-        print DESC "title\n  $desc_hash{'title'}\n\n";
-
-        print DESC "access\n  read $desc_hash{'read'}\n";
-        print DESC "  edit $desc_hash{'edit'}\n\n";
-        print DESC "creation\n";
-        # time
-        print DESC "  date_epoch $desc_hash{'date'}\n";
-
-        #information modified
-        # author
-        print DESC "  email $in{'content'}\n\n";
-
-        close DESC;
-
     } else {
-        # Creation of a description file
-        unless (open(DESC, ">$desc_file")) {
-            Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-                {'file' => $desc_file},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('info',
-                "d_set_owner : Cannot create description file $desc_file : $ERRNO"
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-        print DESC "title\n  $desc_hash{'title'}\n\n";
-        my @info = stat "$shareddir/$path";
-        print DESC "creation\n  date_epoch "
-            . $info[10]
-            . "\n  email $in{'content'}\n\n";
+        $shared_doc->{scenario} = $access{scenario};
+    }        
 
-        print DESC "access\n  read $access{'scenario'}{'read'}\n";
-        print DESC "  edit $access{'scenario'}{'edit'}\n\n";
+    $shared_doc->{owner} = $email;
 
-        close DESC;
-
+    unless ($shared_doc->save_description) {
+        wwslog('info', 'Cannot save description of %s: %m', $shared_doc);
+        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
+            {'path' => $path},
+            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+        web_db_log(
+            {   'robot'        => $robot,
+                'list'         => $list->{'name'},
+                'action'       => $param->{'action'},
+                'parameters'   => "$in{'content'}",
+                'target_email' => "",
+                'msg_id'       => '',
+                'status'       => 'error',
+                'error_type'   => 'internal',
+                'user_email'   => $param->{'user'}{'email'},
+            }
+        );
+        return undef;
     }
+
     web_db_log(
         {   'robot'        => $robot,
             'list'         => $list->{'name'},
@@ -18830,15 +18491,14 @@ sub do_d_set_owner {
 
     # ONLY IF SET_OWNER can be performed even if not control of the parent
     # directory.
-    unless ($access{'may'}{'control'}) {
+    unless ($access{may}{control}) {
         # Parent directory
         my $parent = $shared_doc->{parent};
         $in{'path'} = join '/', $parent->{paths} if $parent;
         return 'd_read';
+    } else {
+        return 'd_control';
     }
-
-    ## ELSE
-    return 'd_control';
 }
 
 ## Protecting archives from Email Sniffers
