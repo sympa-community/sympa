@@ -22,33 +22,33 @@
    <th>[%|loc%]Directory[%END%]</th>
  </tr>
 
- [% FOREACH d = documents %]
- <tr>
-   <td> [% d.last_update %] </td>
-   <td>
-    [% IF d.html %]
-      [%# FIXME:path would be percent-encoded. ~%]
-      <a href="[% 'd_read' | url_rel([list]) %][% d.escaped_content_dir %]/[% d.escaped_name %]" title="[%|loc%]Open in a new window[%END%]" target="html_window">
-      <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
-    [% ELSIF d.url %]
-      <a href="[% d.url %]" title="[%|loc%]Open in a new window[%END%]" target="html_window">
-      <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.anchor %] </a>
-    [% ELSE %]
-      [%# FIXME:path would be encoded. ~%]
-      <a href="[% 'd_read' | url_rel([list]) ~%]
-      [% d.escaped_content_dir %]/[% d.escaped_name ~%]">
-	  <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
-    [% END %] 
+  [% FOREACH d = shared_doc.children %]
+  <tr>
+    <td> [% d.date %] </td>
+    <td>
+    [% IF d.html ~%]
+      <a href="[% 'd_read' | url_rel([list,d.paths_d]) %]"
+        title="[%|loc%]Open in a new window[%END%]" target="html_window">
+      <img src="[% d.icon %]" alt="[% d.title %]" /> [% d.name %] </a>
+    [%~ ELSIF d.type == 'url' ~%]
+      <a href="[% d.url %]"
+        title="[%|loc%]Open in a new window[%END%]" target="html_window">
+      <img src="[% d.icon %]" alt="[% d.title %]" /> [% d.label %] </a>
+    [%~ ELSE ~%]
+      <a href="[% 'd_read' | url_rel([list,d.paths_d]) %]">
+        <img src="[% d.icon %]" alt="[% d.title %]" /> [% d.name %] </a>
+    [%~ END %] 
 
-   <td> [% IF d.author %] 
-           [% d.author %] 
-	[% ELSE %]
-	   [%|loc%]Unknown[%END%] 
-	[% END %] 
+   <td>
+   [%~ IF d.owner ~%] 
+     [% d.owner %] 
+   [%~ ELSE ~%]
+     [%|loc%]Unknown[%END%] 
+   [%~ END ~%] 
    </td>
-   [%# FIXME:path would be percent-encoded. ~%]
-   <td> <a href="[% 'd_read' | url_rel([list]) %][% d.escaped_content_dir %]"/> [% d.content_dir %] </td>
- </tr>
+   <td> <a href="[% 'd_read' | url_rel([list,d.parent.paths_d]) %]"/>
+     [% d.parent.name %] </td>
+  </tr>
  
  [% END %]  
 

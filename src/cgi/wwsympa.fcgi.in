@@ -13853,11 +13853,11 @@ sub do_d_read {
     return 1;
 }
 
-## Access to latest shared documents
+# Access to latest shared documents.
 sub do_latest_d_read {
     wwslog('info', '(%s, %s, %s)', $in{'list'}, $in{'for'}, $in{'count'});
 
-    ### is list open ?
+    # Is list open?
     unless ($list->{'admin'}{'status'} eq 'open') {
         Sympa::Report::reject_report_web('user', 'list_not_open',
             {'status' => $list->{'admin'}{'status'}},
@@ -13876,48 +13876,36 @@ sub do_latest_d_read {
         return undef;
     }
 
-    ### shared exist ?
-    my $shareddir = $list->{'dir'} . '/shared';
-    unless (-r "$shareddir") {
+    my $shared_doc = Sympa::SharedDocument->new($list);
+    # Shared exist?
+    unless ($shared_doc and -r $shared_doc->{fs_path}) {
         wwslog('err',
-            "do_latest_d_read : unable to read $shareddir : no such file or directory"
-        );
+            'Unable to read %s: no such file or directory', $shared_doc);
         Sympa::Report::reject_report_web('user', 'no_shared', {},
             $param->{'action'}, $list);
         return undef;
     }
-
-    ### Document has non-size zero?
-    unless (-s "$shareddir") {
-        wwslog('err', 'Unable to read %s: empty document', $shareddir);
-        Sympa::Report::reject_report_web('user', 'shared_empty', {},
-            $param->{'action'}, $list);
-        return undef;
-    }
+    $param->{'shared_doc'} = $shared_doc->as_hashref;
 
     # Access control.
-    my %access;
-    my $shared_doc = Sympa::SharedDocument->new($list, $shareddir);
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'read,control',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
-            }
-        );
-    }
-    unless ($access{'may'}{'read'}) {
-        Sympa::Report::reject_report_web('auth', $access{'reason'}{'read'},
+    my %access = $shared_doc->get_privileges(
+        mode             => 'read,control',
+        sender           => $param->{'user'}{'email'},
+        auth_method      => $param->{'auth_method'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        }
+    );
+    unless ($access{may}{read}) {
+        Sympa::Report::reject_report_web('auth', $access{reason}{read},
             {}, $param->{'action'}, $list);
         wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
         return undef;
     }
 
-    ## parameters of the query
+    # Parameters of the query.
     my $today = time;
 
     my $oldest_day;
@@ -13944,58 +13932,31 @@ sub do_latest_d_read {
         $nb_doc = $NB_DOC_MAX;
     }
 
-    my $documents;
-    unless ($documents =
-        directory_browsing('', $oldest_day, $access{'may'}{'control'})) {
-        wwslog('err', '(%s) Impossible to browse shared', $list);
-        Sympa::Report::reject_report_web('intern', 'browse_shared', {},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-        return undef;
-    }
-
-    @$documents =
-        sort ({$b->{'date_epoch'} <=> $a->{'date_epoch'}} @$documents);
-
-    @{$param->{'documents'}} = splice(@$documents, 0, $nb_doc);
+    my @children = sort { $b->{'date_epoch'} <=> $a->{'date_epoch'} }
+        _latest_d_read($shared_doc, $oldest_day, $access{may}{control});
+    $param->{'shared_doc'}{'children'} =
+        [map { $_->as_hashref } splice @children, 0, $nb_doc];
 
     return 1;
 }
 
-##  browse a directory recursively and return documents younger than
-##  $oldest_day
-sub directory_browsing {
-    my ($dir, $oldest_day, $may_control) = @_;
-    wwslog('debug2', '(%s, %s)', $dir, $oldest_day);
+# Browse a directory recursively and return documents younger than
+# $oldest_day.
+# Old name: directory_browsing() in wwsympa.fcgi.
+sub _latest_d_read {
+    wwslog('debug2', '(%s, %s, %s)', @_);
+    my $shared_doc  = shift;
+    my $oldest_day  = shift;
+    my $may_control = shift;
 
     my @result;
-    my $shareddir = $list->{'dir'} . '/shared';
-    my $path_dir  = "$shareddir/$dir";
-
-    ## listing of all the shared documents of the directory
-    unless (opendir DIR, "$path_dir") {
-        wwslog('err', '(%s) Cannot open the directory: %s', $dir, $ERRNO);
-        return undef;
-    }
-
-    my @tmpdir = readdir DIR;
-    closedir DIR;
-
-    # array of file not hidden
-    my @directory = grep !/^\./, @tmpdir;
 
     my $user = $param->{'user'}{'email'} || 'nobody';
 
-    ## browsing
-    foreach my $d (@directory) {
-        my $path_d = "$path_dir/$d";
-
-        #case subdirectory
-        if (-d $path_d) {
-            if (-e "$path_d/.desc") {
-                # check access permission for reading
-                my %desc_hash =
-                    Sympa::Tools::WWW::get_desc_file("$path_d/.desc");
-
+    foreach my $child ($shared_doc->get_children) {
+        if ($child->{type} eq 'directory') {
+            if ($child->{scenario}) {
+                # Check access permission for reading.
                 my $result = Sympa::Scenario::request_action(
                     $list,
                     'shared_doc.d_read',
@@ -14003,62 +13964,25 @@ sub directory_browsing {
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'scenario'    => $desc_hash{'read'}
+                        'scenario'    => $child->{scenario}{read}
                     }
                 );
-                my $action;
-                $action = $result->{'action'} if (ref($result) eq 'HASH');
-                if (   ($user eq $desc_hash{'email'})
-                    || ($may_control)
-                    || ($action =~ /do_it/i)) {
-                    my $content_d;
-                    unless ($content_d =
-                        directory_browsing("$dir/$d", $oldest_day)) {
-                        wwslog('err',
-                            "directory_browsing($dir) : impossible to browse subdirectory $d"
-                        );
-                        next;
-                    }
-                    if (ref($content_d) eq "ARRAY") {
-                        push @result, @$content_d;
-                    }
+                my $action = $result->{'action'} if ref $result eq 'HASH';
+                $action ||= '';
+
+                if (   $user eq $child->{owner}
+                    or $may_control
+                    or $action =~ /\Ado_it\b/i) {
+                    push @result, _latest_d_read($child, $oldest_day);
                 }
             }
-
-            #case file
         } else {
+            next if $child->{date_epoch} < $oldest_day;
+            # Exception of index.html.
+            next if $child->{name} =~ /\Aindex[.]html?\z/i;
 
-            my %file_info;
-
-            ## last update
-            my $date_epoch = Sympa::Tools::File::get_mtime($path_d);
-            $file_info{'date_epoch'} = $date_epoch;
-
-            if ($file_info{'date_epoch'} < $oldest_day) {
-                next;
-            }
-
-            $file_info{'last_update'} =
-                $language->gettext_strftime("%d %b %Y",
-                localtime $date_epoch);
-
-            ## exception of index.html
-            if ($d =~ /^(index\.html?)$/i) {
-                next;
-            }
-
-            my $may      = 1;
-            my $def_desc = 0;
-            my %desc_hash;
-
-            if (-e "$path_dir/.desc.$d") {
-                # a desc file was found
-                $def_desc = 1;
-
-                # check access permission
-                %desc_hash =
-                    Sympa::Tools::WWW::get_desc_file("$path_dir/.desc.$d");
-
+            my $may = 1;
+            if ($child->{scenario}) {
                 my $result = Sympa::Scenario::request_action(
                     $list,
                     'shared_doc.d_read',
@@ -14066,99 +13990,23 @@ sub directory_browsing {
                     {   'sender'      => $param->{'user'}{'email'},
                         'remote_host' => $param->{'remote_host'},
                         'remote_addr' => $param->{'remote_addr'},
-                        'scenario'    => $desc_hash{'read'}
+                        'scenario'    => $child->{scenario}{read}
                     }
                 );
-                my $action;
-                $action = $result->{'action'} if (ref($result) eq 'HASH');
-                unless (($user eq $desc_hash{'email'})
-                    || ($may_control)
-                    || ($action =~ /do_it/i)) {
+                my $action = $result->{'action'} if ref $result eq 'HASH';
+                $action ||= '';
+
+                unless ($user eq $child->{owner}
+                    or $may_control
+                    or $action =~ /\Ado_it\b/i) {
                     $may = 0;
                 }
             }
+            push @result, $child if $may;
+        }
+    }
 
-            # if permission or no description file
-            if ($may) {
-                $path_d =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/;
-
-                ## Bookmark
-                if ($path_d =~ /\.url$/) {
-                    open DOC, $path_d;
-                    my $url = <DOC>;
-                    close DOC;
-                    chomp $url;
-                    $file_info{'url'} = $url;
-                    $file_info{'anchor'} =
-                        Sympa::Tools::WWW::make_visible_path($d);
-                    $file_info{'icon'} =
-                        Sympa::Tools::WWW::get_icon($robot, 'url');
-
-                    ## MIME - TYPES : icons for template
-                } elsif (my $type = Conf::get_mime_type($3)) {
-                    # type of the file and apache icon
-                    $type =~ /^([\w\-]+)\/([\w\-]+)$/;
-                    my $mimet = $1;
-                    my $subt  = $2;
-                    if ($subt) {
-                        if ($subt =~ /^octet-stream$/) {
-                            $mimet = 'octet-stream';
-                            $subt  = 'binary';
-                        }
-                    }
-                    $file_info{'icon'} =
-                           Sympa::Tools::WWW::get_icon($robot, $mimet)
-                        || Sympa::Tools::WWW::get_icon($robot, 'unknown');
-
-                    ## UNKNOWN FILE TYPE
-                } else {
-                    $file_info{'icon'} =
-                        Sympa::Tools::WWW::get_icon($robot, 'unknown');
-                }
-
-                ## case html
-                if ($3 =~ /^html?$/i) {
-                    $file_info{'html'} = 1;
-                    $file_info{'icon'} =
-                        Sympa::Tools::WWW::get_icon($robot, 'text');
-                }
-
-                ## name of the file
-                $file_info{'name'} = Sympa::Tools::WWW::make_visible_path($d);
-                $file_info{'escaped_name'} =
-                    Sympa::SharedDocument::escape_docname($d, '/');
-
-                ## content_directory
-                if ($dir) {
-                    $file_info{'content_dir'} =
-                        Sympa::Tools::WWW::make_visible_path($dir);
-                } else {
-                    $file_info{'content_dir'} = "/";
-                }
-                $file_info{'escaped_content_dir'} =
-                    Sympa::SharedDocument::escape_docname($dir, '/');
-
-                if ($def_desc) {
-                    ## description
-                    $file_info{'title'} = $desc_hash{'title'};
-                    $file_info{'escaped_title'} =
-                        Sympa::Tools::WWW::escape_html_minimum(
-                        $desc_hash{'title'});
-
-                    ## author
-                    if ($desc_hash{'email'}) {
-                        $file_info{'author'} = $desc_hash{'email'};
-                    }
-                }
-
-                push @result, \%file_info;
-            }
-        }    # else (file)
-
-    }    # foreach
-
-    return \@result;
-
+    return @result;
 }
 
 #*******************************************

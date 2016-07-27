@@ -86,16 +86,14 @@
   </item>
  [% END -%]
 [% ELSIF action == 'latest_d_read' -%]
- [% FOREACH d = documents -%]
+  [% FOREACH d = shared_doc.children -%]
   <item>
-   [% IF d.url -%]
-    <title>[%|loc(d.anchor)%]Bookmark %1[%END%]</title>
+  [% IF d.type == 'url' -%]
+    <title>[%|loc(d.label)%]Bookmark %1[%END%]</title>
     <link>[% d.url %]</link>
-    [% ELSE -%]
-     <title>[% d.name %]</title>
-     <link>[%# FIXME:path would be percent-encoded. ~%]
-      [% 'd_read' | url_abs([list]) %][% d.escaped_content_dir %]/[% d.escaped_name ~%]
-     </link>
+  [% ELSE -%]
+    <title>[% d.name %]</title>
+    <link>[% 'd_read' | url_abs([list,d.paths_d]) %]</link>
     [% END -%]
   </item>
   [% END -%]
