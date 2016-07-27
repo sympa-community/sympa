@@ -459,6 +459,7 @@ sub _by_order {
     }
 }
 
+# OBSOLETED.  Never used.
 sub dump {
     my $self = shift;
     my $fd   = shift;
@@ -466,6 +467,7 @@ sub dump {
     Sympa::Tools::Data::dump_var($self, 0, $fd);
 }
 
+# OBSOLETED.  No longer used.
 sub dup {
     my $self = shift;
 
@@ -950,23 +952,9 @@ sub unlink {
     return 1;
 }
 
-# Escape shared document file name.  Q-decode it first.
-# ToDo: This should be obsoleted: Would be better to use
-# Sympa::Tools::Text::encode_filesystem_safe().
 # Old name: tools::escape_docname().
-sub escape_docname {
-    my $filename = shift;
-    my $except   = shift;    # Exceptions
-
-    # Q-decode.
-    $filename = MIME::EncWords::decode_mimewords($filename);
-
-    ## Decode from FS encoding to utf-8.
-    #$filename = Encode::decode($Conf::Conf{'filesystem_encoding'}, $filename);
-
-    # Escape some chars for use in URL.
-    return Sympa::Tools::Text::escape_chars($filename, $except);
-}
+# DEPRECATED. No longer used.
+#sub escape_docname;
 
 sub get_id {
     shift->{fs_path};
