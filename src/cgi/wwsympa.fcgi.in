@@ -276,8 +276,7 @@ our %comm = (
     'd_unzip'              => 'do_d_unzip',
     'd_editfile'           => 'do_d_editfile',
     'd_properties'         => 'do_d_properties',
-    'd_overwrite'          => 'do_d_overwrite',
-    'd_savefile'           => 'do_d_savefile',
+    'd_update'             => 'do_d_update',
     'd_describe'           => 'do_d_describe',
     'd_delete'             => 'do_d_delete',
     'd_rename'             => 'do_d_rename',
@@ -428,8 +427,7 @@ our %action_args = (
     'd_delete'        => ['list', '@path'],
     'd_rename'        => ['list', '@path'],
     'd_create_child'  => ['list', '@path'],
-    'd_overwrite'     => ['list', '@path'],
-    'd_savefile'      => ['list', '@path'],
+    'd_update'        => ['list', '@path'],
     'd_describe'      => ['list', '@path'],
     'd_editfile'      => ['list', '@path'],
     'd_properties'    => ['list', '@path'],
@@ -521,12 +519,11 @@ our %required_args = (
     'd_describe'       => ['param.list', 'param.user.email', 'content'],
     'd_editfile'       => ['param.list', 'param.user.email'],
     'd_install_shared' => ['param.list', 'param.user.email', 'id'],
-    'd_overwrite'      => ['param.list', 'param.user.email'],
     'd_properties'     => ['param.list', 'param.user.email'],
     'd_read'          => ['param.list'],
     'd_reject_shared' => ['param.list', 'param.user.email', 'id'],
     'd_rename'        => ['param.list', 'param.user.email', 'new_name'],
-    'd_savefile'      => ['param.list', 'param.user.email', 'content|url'],
+    'd_update  '      => ['param.list', 'param.user.email', 'content|url|uploaded_file'],
     'd_set_owner'     => ['param.list', 'param.user.email'],
     'd_unzip'         => ['param.list', 'param.user.email'],
     'd_upload'        => ['param.list', 'param.user.email'],
@@ -952,8 +949,7 @@ my %filtering = (
     'd_unzip'          => {'path'     => 'qencode'},
     #XXX'd_editfile' => {'path' => 'qencode'},
     #XXX'd_properties' => {'path' => 'qencode'},
-    'd_overwrite'      => {'path'     => 'qencode'},
-    'd_savefile'       => {'path'     => 'qencode', 'name_doc' => 'qencode'},
+    #XXX'd_update' => {'path' => 'qencode'},
     #XXX'd_describe' => {'path' => 'qencode'},
     #XXX'd_delete' => {'path' => 'qencode'},
     #XXX'd_rename' => {'path' => 'qencode', 'new_name' => 'qencode'},
@@ -2337,7 +2333,7 @@ sub get_parameters {
         # If we are editing an HTML file in the shared, allow HTML but prevent
         # XSS.
         if (   $pname eq 'content'
-            && $in{'action'} eq 'd_savefile'
+            && $in{'action'} eq 'd_update'
             && $in{'path'} =~ $list->{'dir'} . '/shared'
             && lc($in{'path'}) =~ /\.html?/) {
             my $tmpparam = $in{$p};
@@ -14327,101 +14323,32 @@ sub do_d_describe {
 }
 
 #*******************************************
-# Function : do_d_savefile
-# Description : Saves a file edited in a
-#               text area
+# Function : do_d_update
+# Description : Overwrites existing file.
 #******************************************
 
-sub do_d_savefile {
-    wwslog('info', '(%s)', $in{'path'});
+# Old name: do_d_savefile().
+sub do_d_update {
+    wwslog('info', '(%s, %s)', $in{'path'}, $in{'type'});
 
-    # Variables
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $path = $in{'path'};
+    my $type = $in{'type'} || 'file';
 
-    $path = Sympa::Tools::Text::unescape_chars($path);
-
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
+    my $content;
+    if ($type eq 'upload') {
+        # Parameters of the uploaded file.
+        my $fh = $query->upload('uploaded_file');
+        my $content = do { local $RS; <$fh> };
+    } elsif ($type eq 'url') {
+        $content = sprintf "%s\n", $in{'url'} if $in{'url'};
+    } else {
+        $content = $in{'content'};
     }
-
-    $path = join '/', @new_components;
-
-
-    if (   $in{'url'}
-        && $in{'previous_action'} eq 'd_read') {
-        $path .= '/' . $in{'name_doc'} . '.url';
-    }
-
-    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
-
-    my $moderated;
-    if ($visible_path ne $path) {
-        $moderated = 1;
-    }
-
-    #my $list_name = $in{'list'};
-    my $list_name = $list->{'name'};
-
-    my $shareddir = $list->{'dir'} . '/shared';
-
-    ####  Controls
-
-    my $creation = 1 unless (-f "$shareddir/$path");
-
-    ### Document isn't a description file
-    unless ($path !~ /\.desc/) {
-        wwslog('err', '%s/%s: description file', $shareddir, $path);
-        Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return undef;
-    }
-
-    # Access control.
-    my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access;
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'edit',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
-            }
-        );
-    }
-
-    unless ($access{'may'}{'edit'} > 0) {
-        Sympa::Report::reject_report_web('auth', $access{'reason'}{'edit'},
-            {}, $param->{'action'}, $list);
-        wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'authorization'
-            }
-        );
-        return undef;
-    }
-    #### End of controls
-
-    if (($in{'content'} =~ /^\s*$/) && ($in{'url'} =~ /^\s*$/)) {
+    unless (defined $content
+        and ($type eq 'upload' and length $content or $content =~ /\S/)) {
         Sympa::Report::reject_report_web('user', 'no_content', {},
             $param->{'action'}, $list);
-        wwslog('err', 'Cannot save file %s/%s: no content', $shareddir,
-            $path);
+        wwslog('err', 'Cannot save file %s: no content', $path);
         web_db_log(
             {   'parameters' => $in{'path'},
                 'status'     => 'error',
@@ -14431,281 +14358,16 @@ sub do_d_savefile {
         return undef;
     }
 
-    # Synchronization
-    unless ($in{'url'}) {    # only for files
-        unless (synchronize("$shareddir/$path", $in{'serial'})) {
-            Sympa::Report::reject_report_web('user', 'synchro_failed', {},
-                $param->{'action'}, $list);
-            wwslog('err',
-                "do_d_savefile : Synchronization failed for $shareddir/$path"
-            );
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-    }
-
-    # Renaming of the old file
-############""" pas les url ?
-    rename("$shareddir/$path", "$shareddir/$path.old")
-        unless ($creation);
-
-    my $dir;
-    my $file;
-    if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
-        $dir  = $1;
-        $file = $3;
-    }
-
-    if ($in{'url'}) {
-##############
-#	 if ($access{'may'}{'edit'} == 0.5) {
-#	     open URL, ">$shareddir/$dir.$file.moderate";
-#	 }else {
-        open URL, ">$shareddir/$path";
-#	 }
-        print URL "$in{'url'}\n";
-        close URL;
-    } else {
-        # Creation of the shared file
-        unless (open FILE, ">$shareddir/$path") {
-            rename("$shareddir/$path.old", "$shareddir/$path");
-            Sympa::Report::reject_report_web(
-                'user',
-                'cannot_overwrite',
-                {   'reason' => $1,
-                    'path'   => $visible_path
-                },
-                $param->{'action'},
-                $list
-            );
-            wwslog('err',
-                "do_d_savefile : Cannot open for replace $shareddir/$path : $ERRNO"
-            );
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-        print FILE $in{'content'};
-        close FILE;
-    }
-
-    unlink "$shareddir/$path.old";
-
-    # Description file
-    if (-e "$shareddir/$dir.desc.$file") {
-
-        # if description file already exists : open it and modify it
-        my %desc_hash =
-            Sympa::Tools::WWW::get_desc_file("$shareddir/$dir.desc.$file");
-
-        open DESC, ">$shareddir/$dir.desc.$file";
-
-        # information not modified
-        print DESC "title\n  $desc_hash{'title'}\n\n";
-        print DESC
-            "access\n  read $desc_hash{'read'}\n  edit $desc_hash{'edit'}\n\n";
-        print DESC "creation\n";
-        # date
-        print DESC '  date_epoch ' . $desc_hash{'date'} . "\n";
-
-        # information modified
-        # author
-        print DESC "  email $param->{'user'}{'email'}\n\n";
-
-        close DESC;
-
-    } else {
-        # Creation of a description file if author is known
-
-        unless (open(DESC, ">$shareddir/$dir.desc.$file")) {
-            wwslog('info',
-                "do_d_savefile: cannot create description file $shareddir/$dir.desc.$file"
-            );
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-        }
-        # description
-        print DESC "title\n \n\n";
-        # date of creation and author
-        my @info = stat "$shareddir/$path";
-        print DESC "creation\n  date_epoch "
-            . $info[10]
-            . "\n  email $param->{'user'}{'email'}\n\n";
-        # Access
-        print DESC "access\n";
-        print DESC "  read $access{'scenario'}{'read'}\n";
-        print DESC "  edit $access{'scenario'}{'edit'}\n\n";
-
-        close DESC;
-    }
-
-    # shared_moderated
-#######################
-    if (($access{'may'}{'edit'} == 0.5) && ($creation)) {
-
-        unless (rename "$shareddir/$path", "$shareddir/$dir.$file.moderate") {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'rename_file',
-                {   'old' => "$shareddir/$path",
-                    'new' => "$shareddir/$dir.$file.moderate"
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err',
-                "do_d_savefile : Failed to rename  $path to $dir.$file.moderate : $ERRNO"
-            );
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-        }
-        unless (
-            rename "$shareddir/$dir.desc.$file",
-            "$shareddir/$dir.desc..$file.moderate"
-            ) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'rename_file',
-                {   'old' => "$shareddir/$dir.desc.$file",
-                    'new' => "$shareddir/$dir.desc..$file.moderate"
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err',
-                "do_d_savefile : Failed to rename $dir.desc.$file to $dir.desc..$file.moderate : $ERRNO"
-            );
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-        }
-
-        if (!$in{'url'}) {
-            $in{'path'} = $path;
-            $param->{'path'} = $path;
-        } else {
-            $visible_path = $file;
-            $visible_path =~ s/\.url$//;
-        }
-
-        $list->send_notify_to_editor(
-            'shared_moderated',
-            {   'filename' => $visible_path,
-                'who'      => $param->{'user'}{'email'}
-            }
-        );
-
-        Sympa::Report::notice_report_web('to_moderate',
-            {'path' => $visible_path},
-            $param->{'action'});
-    }
-
-    Sympa::Report::notice_report_web('save_success',
-        {'path' => $visible_path},
-        $param->{'action'});
-    web_db_log(
-        {   'parameters' => $in{'path'},
-            'status'     => 'success'
-        }
-    );
-    if ($in{'previous_action'}) {
-        return $in{'previous_action'};
-    } else {
-        $in{'path'} =~ s/([^\/]+)$//;
-        $param->{'path'} =~ s/([^\/]+)$//;
-        return 'd_read';
-    }
-}
-
-#*******************************************
-# Function : do_d_overwrite
-# Description : Overwrites a file with a
-#               uploaded file
-#******************************************
-
-sub do_d_overwrite {
-    wwslog('info', '(%s)', $in{'path'});
-
-    # Variables
-    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
-
-    $path = Sympa::Tools::Text::unescape_chars($path);
-
-    my @components = split '/', $path;
-    my @new_components;
-    foreach my $component (@components) {
-		wwslog('trace','comp: %s',$component);
-        push @new_components, Sympa::Tools::Text::qencode_filename($component);
-        wwslog('trace','fixed comp: %s',$component);
-    }
-
-    $path = join '/', @new_components;
-
-
-    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
-
-    #my $list_name = $in{'list'};
-    my $list_name = $list->{'name'};
-
-    # path of the shared directory
-    my $shareddir = $list->{'dir'} . '/shared';
-
-    # Parameters of the uploaded file
-    my $fh = $query->upload('uploaded_file');
-    my $fn = $query->param('uploaded_file');
-
-    # name of the file
-    my $fname;
-    if ($fn =~ /([^\/\\]+)$/) {
-        $fname = $1;
-    }
-
-    ### uploaded file must have a name
-    unless ($fname) {
-        Sympa::Report::reject_report_web('user', 'missing_arg',
-            {'argument' => 'file name'},
-            $param->{'action'});
-        wwslog('info', 'No file specified to overwrite');
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'no_file'
-            }
-        );
-        return undef;
-    }
-
-    ####### Controls
-
-    ### Document isn't a description file?
-    unless ($path !~ /\.desc/) {
-        wwslog('err', '%s/%s: description file', $shareddir, $path);
+    my $shared_doc =
+        Sympa::SharedDocument->new($list, $path, allow_empty => 1);
+    # Existing document? File?
+    unless ($shared_doc
+        and -r $shared_doc->{fs_path}
+        and -w $shared_doc->{fs_path}
+        and not(grep { $shared_doc->{type} eq $_ } qw(root directory))) {
+        wwslog('err', 'Unable to read %s: no such file or directory', $path);
         Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
+            {'path' => $path},
             $param->{'action'}, $list);
         web_db_log(
             {   'parameters' => $in{'path'},
@@ -14715,59 +14377,21 @@ sub do_d_overwrite {
         );
         return undef;
     }
-
-    # the path to replace must already exist
-    unless (-e "$shareddir/$path") {
-        Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        wwslog('err',
-            "do_d_overwrite : Unable to overwrite $shareddir/$path : not an existing file"
-        );
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'no_file'
-            }
-        );
-        return undef;
-    }
-
-    # the path must represent a file
-    if (-d "$shareddir/$path") {
-        Sympa::Report::reject_report_web('user', 'doc_already_a_dir',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        wwslog('err',
-            "do_d_overwrite : Unable to create $shareddir/$path : a directory named $path already exists"
-        );
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'already_exists'
-            }
-        );
-        return undef;
-    }
+    $param->{shared_doc} = $shared_doc->as_hashref;
 
     # Access control.
-    my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access;
-    if ($shared_doc) {
-        %access = $shared_doc->get_privileges(
-            mode             => 'edit',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
-            }
-        );
-    }
-
-    unless ($access{'may'}{'edit'} > 0) {
-        Sympa::Report::reject_report_web('auth', $access{'reason'}{'edit'},
+    my %access = $shared_doc->get_privileges(
+        mode             => 'edit',
+        sender           => $param->{'user'}{'email'},
+        auth_method      => $param->{'auth_method'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        }
+    );
+    unless ($access{may}{edit}) {
+        Sympa::Report::reject_report_web('auth', $access{reason}{edit},
             {}, $param->{'action'}, $list);
         wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
         web_db_log(
@@ -14778,13 +14402,42 @@ sub do_d_overwrite {
         );
         return undef;
     }
-    #### End of controls
 
     # Synchronization
-    unless (synchronize("$shareddir/$path", $in{'serial'})) {
-        Sympa::Report::reject_report_web('user', 'synchro_failed', {},
-            $param->{'action'}, $list);
-        wwslog('err', 'Synchronization failed for %s/%s', $shareddir, $path);
+    unless ($type eq 'url') {    # Only for files.
+        unless ($shared_doc->{date_epoch} == $in{'serial'}) {
+            Sympa::Report::reject_report_web('user', 'synchro_failed', {},
+                $param->{'action'}, $list);
+            wwslog('err', 'Synchronization failed for %s', $shared_doc);
+            web_db_log(
+                {   'parameters' => $in{'path'},
+                    'status'     => 'error',
+                    'error_type' => 'internal'
+                }
+            );
+            return undef;
+        }
+    }
+
+    # Renaming of the old file
+    # Isn't url ?
+    rename $shared_doc->{fs_path}, $shared_doc->{fs_path} . '.old';
+
+    # Creation of the shared file
+    my $ofh;
+    unless (open $ofh, '>', $shared_doc->{fs_path}) {
+        my $errno = $ERRNO;
+        rename $shared_doc->{fs_path} . '.old', $shared_doc->{fs_path};
+        Sympa::Report::reject_report_web(
+            'user',
+            'cannot_overwrite',
+            {   'reason' => $errno,
+                'path'   => $path
+            },
+            $param->{'action'},
+            $list
+        );
+        wwslog('err', 'Cannot open for replace %s: %s', $shared_doc, $errno);
         web_db_log(
             {   'parameters' => $in{'path'},
                 'status'     => 'error',
@@ -14793,170 +14446,39 @@ sub do_d_overwrite {
         );
         return undef;
     }
+    print $ofh $content;
+    close $ofh;
 
-    # Renaming of the old file
-    rename("$shareddir/$path", "$shareddir/$path.old");
+    unlink $shared_doc->{fs_path} . '.old';
 
-    # Creation of the shared file
-    unless (open FILE, ">:bytes", "$shareddir/$path") {
-        Sympa::Report::reject_report_web(
-            'user',
-            'cannot_overwrite',
-            {   'reason' => $ERRNO,
-                'path'   => $visible_path
-            },
-            $param->{'action'},
-            $list
-        );
-        wwslog('err', 'Cannot open for replace %s/%s: %s',
-            $shareddir, $path, $ERRNO);
-        web_db_log(
-            {   'parameters' => $in{'path'},
-                'status'     => 'error',
-                'error_type' => 'cannot_overwrite'
-            }
-        );
-        return undef;
-    }
-    while (<$fh>) {
-        print FILE;
-    }
-    close FILE;
+    $shared_doc->{scenario} ||= $access{scenario};
+    $shared_doc->{owner} = $param->{'user'}{'email'};
+    $shared_doc->{date_epoch} =
+        Sympa::Tools::File::get_mtime($shared_doc->{fs_path});
+    $shared_doc->save_description;
 
-    # Description file
-    my ($dir, $file);
-    if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
-        $dir  = $1;
-        $file = $3;
-    }
+    $in{'list'} = $list->{'name'};
 
-    if (-e "$shareddir/$dir.desc.$file") {
-        # if description file already exists: open it and modify it
-        my %desc_hash =
-            Sympa::Tools::WWW::get_desc_file("$shareddir/$dir.desc.$file");
-
-        open DESC, ">$shareddir/$dir.desc.$file";
-
-        # information not modified
-        print DESC "title\n  $desc_hash{'title'}\n\n";
-        print DESC
-            "access\n  read $desc_hash{'read'}\n  edit $desc_hash{'edit'}\n\n";
-        print DESC "creation\n";
-        # time
-        print DESC "  date_epoch $desc_hash{'date'}\n";
-        # information modified
-        # author
-        print DESC "  email $param->{'user'}{'email'}\n\n";
-
-        close DESC;
-    } else {
-        # Creation of a description file
-        unless (open(DESC, ">$shareddir/$dir.desc.$file")) {
-            wwslog('info',
-                "do_d_overwrite : Cannot create description file $shareddir/$dir.desc.$file"
-            );
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-        # description
-        print DESC "title\n  \n\n";
-        # date of creation and author
-        my @info = stat "$shareddir/$path";
-        print DESC "creation\n  date_epoch "
-            . $info[10]
-            . "\n  email $param->{'user'}{'email'}\n\n";
-        # access rights
-        print DESC "access\n";
-        print DESC "  read $access{'scenario'}{'read'}\n";
-        print DESC "  edit $access{'scenario'}{'edit'}\n\n";
-
-        close DESC;
-
-    }
-
-    # shared_moderated
-    if (($access{'may'}{'edit'} == 0.5) && ($path eq $visible_path)) {
-        unless (rename "$shareddir/$path", "$shareddir/$dir.$file.moderate") {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'rename_file',
-                {   'old' => "$shareddir/$path",
-                    'new' => "$shareddir/$dir.$file.moderate"
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err',
-                "do_d_overwrite : Failed to rename  $path to $dir.$file.moderate : $ERRNO"
-            );
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-        unless (
-            rename "$shareddir/$dir.desc.$file",
-            "$shareddir/$dir.desc..$file.moderate"
-            ) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'rename_file',
-                {   'old' => "$shareddir/$dir.desc.$file",
-                    'new' => "$shareddir/$dir.desc..$file.moderate"
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err',
-                "do_d_overwrite : Failed to rename $dir.desc.$file to $dir.desc..$file.moderate : $ERRNO"
-            );
-            web_db_log(
-                {   'parameters' => $in{'path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-        }
-        $list->send_notify_to_editor(
-            'shared_moderated',
-            {   'filename' => $visible_path,
-                'who'      => $param->{'user'}{'email'}
-            }
-        );
-        $in{'path'} = "$dir.$file.moderate";
-        Sympa::Report::notice_report_web('to_moderate',
-            {'path' => $visible_path},
-            $param->{'action'});
-    }
-
-    # Removing of the old file
-    unlink "$shareddir/$path.old";
-
-    $in{'list'} = $list_name;
-    #$in{'path'} = $dir;
-
-    # message of success
-    Sympa::Report::notice_report_web('upload_success',
-        {'path' => $visible_path});
+    Sympa::Report::notice_report_web('save_success',
+        {'path' => $path},
+        $param->{'action'});
     web_db_log(
         {   'parameters' => $in{'path'},
             'status'     => 'success'
         }
     );
-    return 'd_editfile';
+
+    if ($in{'previous_action'}) {
+        return $in{'previous_action'};
+    } else {
+        $in{'path'} = $param->{'path'} =
+            join '/', @{$shared_doc->{parent}->{paths}};
+        return 'd_read';
+    }
 }
+
+# Merged to do_d_update().
+#sub do_d_overwrite;
 
 #*******************************************
 # Function : do_d_upload
@@ -17737,6 +17259,14 @@ sub do_d_create_child {
     my $new_name = $in{'new_name'};
     my $type     = $in{'type'} || 'directory';
 
+    my $content;
+    if ($type eq 'url') {
+        $content  = sprintf "%s\n", $in{'url'} if $in{'url'};
+        $new_name = $new_name . '.url';
+    }
+
+    wwslog('info', '(%s, %s, %s)', $path, $new_name, $type);
+
     $param->{'list'} = $list->{'name'};
 
     my $shared_doc = Sympa::SharedDocument->new($list, $path);
@@ -17862,7 +17392,8 @@ sub do_d_create_child {
         type => $type,
         moderate => ($access{may}{edit} == 0.5 && $type ne 'directory'),
         owner => $param->{'user'}{'email'},
-        scenario => $access{'scenario'}
+        scenario => $access{'scenario'},
+        (($type eq 'url') ? (content => $content) : ())
     );
     unless ($new_child) {
         my $errno = $ERRNO;
@@ -17930,6 +17461,8 @@ sub do_d_create_child {
     }
 
     if ($type eq 'directory') {
+        return 'd_read';
+    } elsif ($type eq 'url') {
         return 'd_read';
     } else {
         $in{'path'} = join '/', @{$new_child->{paths}};

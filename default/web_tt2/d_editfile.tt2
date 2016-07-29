@@ -19,22 +19,25 @@
 
   [% UNLESS shared_doc.type == 'directory' %]
   
+  [% IF shared_doc.type == 'url' ~%]
+  <form method="post" action="[% path_cgi %]">
+  <fieldset>
+    <label for="url">[%|loc%]Bookmark URL[%END%]</label>
+    <input id="url" name="url" value="[% shared_doc.url %]" />
+    <input class="MainMenuLinks" type="submit" value="[%|loc%]Update[%END%]"
+      name="action_d_update" />
+    <input type="hidden" name="type" value="url" />
+  [%~ ELSE ~%]
   <form method="post" action="[% path_cgi %]" enctype="multipart/form-data">
   <fieldset>
-
-  [% IF shared_doc.type == 'url' %]
-  <label for="url">[%|loc%]Bookmark URL[%END%]</label>
-  <input id="url" name="url" value="[% shared_doc.url %]" />
-  [% ELSE %]
-  <label for="uploaded_file"> [%|loc(shared_doc.name)%]Replace the file %1 with your file[%END%] </label>
-  <input id="uploaded_file" type="file" name="uploaded_file" />
-  [% END %]
-  
-  [% IF shared_doc.type == 'url' %]
-  <input class="MainMenuLinks" type="submit" value="[%|loc%]Update[%END%]" name="action_d_savefile" />
-  [% ELSE %]
-  <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_overwrite" />
-  [% END %]
+    <label for="uploaded_file">
+    [%|loc(shared_doc.name)%]Replace the file %1 with your file[%END%] </label>
+    <input id="uploaded_file" type="file" name="uploaded_file" />
+    <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]"
+      name="action_d_update" />
+    <input type="hidden" name="type" value="upload" />
+    <input type="hidden" name="previous_action" value="d_editfile" />
+  [%~ END %]
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
   <input type="hidden" name="serial" value="[% shared_doc.date_epoch %]" />
@@ -54,7 +57,9 @@
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
   <input type="hidden" name="serial" value="[% shared_doc.date_epoch %]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_savefile" value="[%|loc%]Publish[%END%]" />
+  <input type="hidden" name="type" value="file" />
+  <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]"
+    name="action_d_update" />
   </fieldset>
   </form>
 [% END %]

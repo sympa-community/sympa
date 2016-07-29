@@ -322,13 +322,17 @@
     <form method="post" action="[% path_cgi %]">
     <fieldset>
     <h6>[%|loc%]Add a bookmark[%END%]</h6>
-    <label for="name_title">[%|loc%]title[%END%]</label> <input id="name_title" maxlength="100" size="25" type="text" name="name_doc" />
+    <label for="name_title">[%|loc%]title[%END%]</label>
+      <input id="name_title" maxlength="100" size="25" type="text"
+        name="new_name" />
     <label for="url">[%|loc%]URL[%END%]</label> <input id="url" size="35" type="text" name="url" />
-    <input class="MainMenuLinks" type="submit" value="[%|loc%]Add[%END%]" name="action_d_savefile" />
+    <input class="MainMenuLinks" type="submit" value="[%|loc%]Add[%END%]"
+      name="action_d_create_child" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
-    <input type="hidden" name="action" value="d_savefile" />
+    <input type="hidden" name="type" value="url" />
+    <input type="hidden" name="action" value="d_create_child" />
     </fieldset>
     </form>
 
