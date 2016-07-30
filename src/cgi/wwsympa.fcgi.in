@@ -272,7 +272,6 @@ our %comm = (
     'delete_pictures'      => 'do_delete_pictures',
     'd_read'               => 'do_d_read',
     'd_create_child'       => 'do_d_create_child',
-    'd_upload'             => 'do_d_upload',
     'd_unzip'              => 'do_d_unzip',
     'd_editfile'           => 'do_d_editfile',
     'd_properties'         => 'do_d_properties',
@@ -526,7 +525,6 @@ our %required_args = (
     'd_update  '      => ['param.list', 'param.user.email', 'content|url|uploaded_file'],
     'd_set_owner'     => ['param.list', 'param.user.email'],
     'd_unzip'         => ['param.list', 'param.user.email'],
-    'd_upload'        => ['param.list', 'param.user.email'],
     'del'             => ['param.list', 'param.user.email', 'email'],
     'delete_pictures' => ['param.list', 'param.user.email'],
     'distribute'      => ['param.list', 'param.user.email', 'id|idspam'],
@@ -945,7 +943,6 @@ my %filtering = (
     #XXX'd_install_shared' => {'id' => 'qencode'},
     #XXX'd_read' => {'path' => 'qencode'},
     #XXX'd_create_child' => {'new_name' => 'qencode', 'path' => 'qencode'},
-    'd_upload'         => {'path'     => 'qencode'},
     'd_unzip'          => {'path'     => 'qencode'},
     #XXX'd_editfile' => {'path' => 'qencode'},
     #XXX'd_properties' => {'path' => 'qencode'},
@@ -13354,16 +13351,10 @@ sub do_show_cert {
     return 1;
 }
 
-## Function synchronize
-## Return true if the file in parameter can be overwrited
-## false if it has changes since the parameter date_epoch
-sub synchronize {
-    # args : 'path' , 'date_epoch'
-    my $path       = shift;
-    my $date_epoch = shift;
-
-    return $date_epoch == Sympa::Tools::File::get_mtime($path);
-}
+# Return true if the file in parameter can be overwrited
+# false if it has changes since the parameter date_epoch
+# DEPRECATED: No longer used.
+#sub synchronize;
 
 # DEPRECATED.  Use Sympa::SharedDocument::get_privileges().
 #sub d_access_control;
@@ -14326,8 +14317,7 @@ sub do_d_describe {
 # Function : do_d_update
 # Description : Overwrites existing file.
 #******************************************
-
-# Old name: do_d_savefile().
+# Old names: do_d_savefile() and do_d_overwrite().
 sub do_d_update {
     wwslog('info', '(%s, %s)', $in{'path'}, $in{'type'});
 
@@ -14480,1067 +14470,8 @@ sub do_d_update {
 # Merged to do_d_update().
 #sub do_d_overwrite;
 
-#*******************************************
-# Function : do_d_upload
-# Description : Creates a new file with a
-#               uploaded file
-#******************************************
-
-sub do_d_upload {
-    # Parameters of the uploaded file (from d_read.tt2)
-    my $fn = $in{'uploaded_file'};
-
-    # name of the file, without path
-    my ($fname, $visible_fname);
-    if ($fn =~ /([^\/\\]+)$/) {
-        $fname         = Sympa::Tools::Text::qencode_filename($1);
-        $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
-    }
-
-    # param from d_upload.tt2
-    if ($in{'shortname'}) {
-        $fname = $in{'shortname'};
-    }
-    wwslog('info', '(%s/%s)', $in{'path'}, $fname);
-
-    # Variables
-    my $path         = Sympa::Tools::WWW::no_slash_end($in{'path'});
-    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
-
-    # path of the shared directory
-    my $shareddir = $list->{'dir'} . '/shared';
-
-    # name of the file
-    my $longname = "$shareddir/$path/$fname";
-
-    $longname =~ s/\/+/\//g;
-
-    ###########
-    #Get the size of uploaded file : used in db_stat_log (parameter)
-    my @infos = stat $longname;
-    my $size  = $infos[7];
-    ###########
-
-#     ## $path must have a slash at its end
-#     $path = format_path('with_slash',$path);
-
-    #my $list_name = $in{'list'};
-    my $list_name = $list->{'name'};
-
-    ## Controls
-
-    # uploaded file must have a name
-    unless ($fname) {
-        Sympa::Report::reject_report_web('user', 'no_name', {},
-            $param->{'action'}, $list);
-        wwslog('err', 'No file specified to upload');
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$visible_path,$visible_fname",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'no_file',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    ## Check quota
-    if ($list->{'admin'}{'shared_doc'}{'quota'}) {
-        if (Sympa::SharedDocument->new($list)->get_size >=
-            $list->{'admin'}{'shared_doc'}{'quota'} * 1024) {
-            Sympa::Report::reject_report_web('user', 'shared_full', {},
-                $param->{'action'}, $list);
-            wwslog('err',
-                "do_d_upload : Shared Quota exceeded for list $list->{'name'}"
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'shared_full',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-    }
-
-    # The name of the file must be correct and musn't not be a description
-    # file
-    if (   $fname =~ /^\./
-        || $fname =~ /\.desc/
-        || $fname =~ /[~\#\[\]]$/) {
-
-        #    unless ($fname =~ /^\w/ and
-        #	    $fname =~ /\w$/ and
-        #	    $fname =~ /^[\w\-\.]+$/ and
-        #	    $fname !~ /\.desc/) {
-        Sympa::Report::reject_report_web('user', 'incorrect_name',
-            {'name' => $fname},
-            $param->{'action'}, $list);
-        wwslog('err', 'Unable to create file %s: incorrect name', $fname);
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$visible_path,$visible_fname",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'bad_parameter',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    # the file must be uploaded in a directory existing
-    unless (-d "$shareddir/$path") {
-        Sympa::Report::reject_report_web('user', 'no_such_document',
-            {'path' => $visible_path},
-            $param->{'action'}, $list);
-        wwslog('err', '%s/%s: not a directory', $shareddir, $path);
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$visible_path,$visible_fname",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    # Access control for the directory where there is the uploading
-    my $shared_doc = Sympa::SharedDocument->new($list, $path);
-    my %access_dir;
-    if ($shared_doc) {
-        %access_dir = $shared_doc->get_privileges(
-            mode             => 'edit,control',
-            sender           => $param->{'user'}{'email'},
-            auth_method      => $param->{'auth_method'},
-            scenario_context => {
-                sender      => $param->{'user'}{'email'},
-                remote_host => $param->{'remote_host'},
-                remote_addr => $param->{'remote_addr'}
-            }
-        );
-    }
-
-    if ($access_dir{'may'}{'edit'} == 0) {
-        Sympa::Report::reject_report_web('auth',
-            $access_dir{'reason'}{'edit'},
-            {}, $param->{'action'}, $list);
-        wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$visible_path,$visible_fname",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'authorization',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    # Lowercase for file name
-    # $fname = $fname;
-
-    ## when the file already exists :
-
-    # the temporary name of the uploaded file : with .duplicate
-    my $tmpname     = "." . "$fname" . ".duplicate";
-    my $longtmpname = "$shareddir/$path/$tmpname";
-    $longtmpname =~ s/\/+/\//g;
-
-    # the temporary desc of the uploaded file : with .duplicate
-    my $tmpdesc     = ".desc." . "$tmpname";
-    my $longtmpdesc = "$shareddir/$path/$tmpdesc";
-    $longtmpdesc =~ s/\/+/\//g;
-
-    # if we aren't in mode_delete nor in mode_rename nor in mode_cancel and
-    # the file already exists
-    # then we create of a temporary file
-    if (   (-e "$longname")
-        && ($in{'mode_delete'} eq undef)
-        && ($in{'mode_rename'} eq undef)
-        && ($in{'mode_cancel'} eq undef)) {
-
-        # Access control for the file already existing.
-        my $shared_doc =
-            Sympa::SharedDocument->new($list, $path . '/' . $fname);
-        my %access_file;
-        if ($shared_doc) {
-            %access_file = $shared_doc->get_privileges(
-                mode             => 'edit',
-                sender           => $param->{'user'}{'email'},
-                auth_method      => $param->{'auth_method'},
-                scenario_context => {
-                    sender      => $param->{'user'}{'email'},
-                    remote_host => $param->{'remote_host'},
-                    remote_addr => $param->{'remote_addr'}
-                }
-            );
-        }
-
-        unless ($access_file{'may'}{'edit'} > 0) {
-            Sympa::Report::reject_report_web('auth',
-                $access_file{'reason'}{'edit'},
-                {}, $param->{'action'}, $list);
-            return undef;
-        }
-
-        if (-e "$longtmpname") {
-            # if exists a temp file younger than 5 minutes that belongs to
-            # another user : upload refused
-            my @info    = stat $longtmpname;
-            my $timeold = time - $info[10];
-
-            if ($timeold <= 300) {
-                my %desc_hash =
-                    Sympa::Tools::WWW::get_desc_file($longtmpdesc);
-
-                unless ($desc_hash{'email'} eq $param->{'user'}{'email'}) {
-                    Sympa::Report::reject_report_web(
-                        'user',
-                        'cannot_upload',
-                        {   'path' => "$visible_path/$visible_fname",
-                            'reason' =>
-                                "file being uploaded by $desc_hash{'email'} at this time"
-                        },
-                        $param->{'action'},
-                        $list
-                    );
-                    wwslog('err',
-                        "do_d_upload : Unable to upload $longtmpname : file being uploaded at this time "
-                    );
-                    web_db_log(
-                        {   'robot'        => $robot,
-                            'list'         => $list->{'name'},
-                            'action'       => $param->{'action'},
-                            'parameters'   => "$visible_path,$visible_fname",
-                            'target_email' => "",
-                            'msg_id'       => '',
-                            'status'       => 'error',
-                            'error_type'   => 'internal',
-                            'user_email'   => $param->{'user'}{'email'},
-                        }
-                    );
-                    return undef;
-                }
-            }
-        }
-
-        creation_shared_file($shareddir, $path, $tmpname);
-        creation_desc_file($shareddir, $path, $tmpname, %access_file);
-
-        $param->{'serial_file'} = Sympa::Tools::File::get_mtime($longname);
-        $param->{'path'}        = $path;
-        $param->{'shortname'}   = $fname;
-
-        return 1;
-    }
-
-    # for the moderation
-    my $longmodname = "$shareddir/$path/" . "." . "$fname" . ".moderate";
-    $longmodname =~ s/\/+/\//g;
-
-    my $longmoddesc =
-        "$shareddir/$path/" . ".desc.." . "$fname" . ".moderate";
-    $longmoddesc =~ s/\/+/\//g;
-
-    # when a file is already waiting for moderation
-    my $file_moderated;
-
-    if (-e "$longmodname") {
-
-        my %desc_hash = Sympa::Tools::WWW::get_desc_file("$longmoddesc");
-        $file_moderated = 1;
-
-        unless ($desc_hash{'email'} eq $param->{'user'}{'email'}) {
-            Sympa::Report::reject_report_web(
-                'user',
-                'cannot_upload',
-                {   'path'   => "$path/$fname",
-                    'reason' => "file already exists but not yet moderated"
-                },
-                $param->{'action'},
-                $list
-            );
-            wwslog('err',
-                "do_d_upload : Unable to create $longname : file already exists but not yet moderated"
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'file_already_exists',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-    }
-
-    ## Exception index.html
-    unless ($fname !~ /^index.html?$/i) {
-        unless ($access_dir{'may'}{'control'}) {
-            Sympa::Report::reject_report_web(
-                'user',
-                'index_html',
-                {   'dir'    => $path,
-                    'reason' => "d_access_control"
-                },
-                $param->{'action'},
-                $list
-            );
-            wwslog('err',
-                "do_d_upload : $param->{'user'}{'email'} not authorized to upload a INDEX.HTML file in $path"
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'authorization',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-    }
-
-    # if we're in mode_delete or mode_rename or mode_cancel, the temp file and
-    # his desc file must exist
-    if (   $in{'mode_delete'}
-        || $in{'mode_rename'}
-        || $in{'mode_cancel'}) {
-
-        unless (-e $longtmpname) {
-            Sympa::Report::reject_report_web('user', 'no_uploaded_file', {},
-                $param->{'action'}, $list);
-            wwslog('err',
-                "do_d_upload : there isn't any temp file for the uploaded file $fname"
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'no_file',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        unless (-e $longtmpdesc) {
-            Sympa::Report::reject_report_web('user', 'no_uploaded_file', {},
-                $param->{'action'}, $list);
-            wwslog('err',
-                "do_d_upload : there isn't any desc temp file for the uploaded file $fname"
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'no_file',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-    }
-    ## End of controls
-
-    # in mode_delete the file is going to be overwritten
-    if ($in{'mode_delete'}) {
-
-        # Synchronization
-        unless (synchronize("$longname", $in{'serial'})) {
-            Sympa::Report::reject_report_web('user', 'synchro_failed', {},
-                $param->{'action'}, $list);
-            wwslog('err', 'Synchronization failed for %s', $longname);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'synchro_failed',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        # Renaming the tmp file and the desc file
-
-        if ($access_dir{'may'}{'edit'} == 1) {
-
-            # Renaming of the old file
-            my $longgoodname = "$shareddir/$path/$fname";
-            $longgoodname =~ s/\/+/\//g;
-            unless (rename "$longgoodname", "$longgoodname.old") {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$longgoodname",
-                        'new' => "$longgoodname.old"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Failed to rename %s to .old: %s',
-                    $longgoodname, $ERRNO);
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$visible_path,$visible_fname",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-                return undef;
-            }
-
-            # Renaming of the old desc
-            my $longgooddesc = "$shareddir/$path/" . ".desc." . "$fname";
-            $longgooddesc =~ s/\/+/\//g;
-            unless (rename "$longgooddesc", "$longgooddesc.old") {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$longgooddesc",
-                        'new' => "$longgooddesc.old"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Failed to rename %s to .old: %s',
-                    $longgooddesc, $ERRNO);
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$visible_path,$visible_fname",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-            }
-
-            # the tmp file
-            unless (rename "$longtmpname", "$longgoodname") {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$longtmpname",
-                        'new' => "$longgoodname"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Failed to rename %s to %s: %s',
-                    $longtmpname, $longgoodname, $ERRNO);
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$visible_path,$visible_fname",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-            }
-
-            # the tmp desc file
-            unless (rename "$longtmpdesc", "$longgooddesc") {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$longtmpdesc",
-                        'new' => "$longgooddesc"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Failed to rename %s to %s: %s',
-                    $longtmpdesc, $longgooddesc, $ERRNO);
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$visible_path,$visible_fname",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-            }
-
-        } elsif ($access_dir{'may'}{'edit'} == 0.5) {
-
-            unless (rename "$longtmpname", "$longmodname") {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$longtmpname",
-                        'new' => "$longmodname"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Failed to rename %s to %s: %s',
-                    $longtmpname, $longmodname, $ERRNO);
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$visible_path,$visible_fname",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-            }
-
-            unless (rename "$longtmpdesc", "$longmoddesc") {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$longtmpdesc",
-                        'new' => "$longmoddesc"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Failed to rename %s to %s: %s',
-                    $longtmpdesc, $longmoddesc, $ERRNO);
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$visible_path,$visible_fname",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-            }
-
-            $list->send_notify_to_editor(
-                'shared_moderated',
-                {   'filename' => "$path/$fname",
-                    'who'      => $param->{'user'}{'email'}
-                }
-            );
-        } else {
-            Sympa::Report::reject_report_web('auth',
-                $access_dir{'reason'}{'edit'},
-                {}, $param->{'action'}, $list);
-            wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'authorization',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-#	 $in{'list'} = $list_name;
-
-        # message of success
-        Sympa::Report::notice_report_web('upload_success', {'path' => $fname},
-            $param->{'action'});
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$visible_path,$visible_fname",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'success',
-                'error_type'   => '',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return 'd_read';
-    }
-
-    # in mode_rename the file is going to be renamed
-    if ($in{'mode_rename'}) {
-
-        my $longnewname = "$shareddir/$path/$in{'new_name'}";
-        $longnewname =~ s/\/+/\//g;
-
-        # Control new document name
-        unless ($in{'new_name'}) {
-            Sympa::Report::reject_report_web('user', 'missing_arg',
-                {'argument' => 'new name'},
-                $param->{'action'});
-            wwslog('err', 'New name missing to rename the uploaded file');
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'missing_parameter',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-        if (   $in{'new_name'} =~ /^\./
-            || $in{'new_name'} =~ /\.desc/
-            || $in{'new_name'} =~ /[~\#\[\]\/]$/) {
-            Sympa::Report::reject_report_web('user', 'incorrect_name',
-                {'name' => $in{'new_name'}},
-                $param->{'action'}, $list);
-            wwslog('err',
-                "do_d_upload : Unable to create file $in{'new_name'} : incorrect name"
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'bad_parameter',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        if (($fname =~ /\.url$/) && ($in{'new_name'} !~ /\.url$/)) {
-            Sympa::Report::reject_report_web('user', 'incorrect_name',
-                {'name' => $in{'new_name'}},
-                $param->{'action'}, $list);
-            wwslog('err',
-                "do_d_upload : New file name $in{'new_name'} does not match URL filenames"
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'bad_parameter',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        if (-e $longnewname) {
-            Sympa::Report::reject_report_web('user', 'doc_already_exist',
-                {'name' => $in{'new_name'}},
-                $param->{'action'}, $list);
-            wwslog('err', '%s is an existing name', $in{'new_name'});
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'file_already_exists',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        # when a file is already waiting for moderation
-        if (-e "$shareddir/$path/.$in{'new_name'}.moderate") {
-            Sympa::Report::reject_report_web('user', 'doc_already_exist',
-                {'name' => $in{'new_name'}},
-                $param->{'action'}, $list);
-            wwslog('err',
-                "do_d_upload : $in{'new_name'} is an existing name for a not yet moderated file"
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'file_already_exists',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-        # when a file is being uploaded
-        if (-e "$shareddir/$path/.$in{'new_name'}.duplicate") {
-            Sympa::Report::reject_report_web('user', 'doc_already_exist',
-                {'name' => $in{'new_name'}},
-                $param->{'action'}, $list);
-            wwslog('err',
-                "do_d_upload : $in{'new_name'} is an existing name for a file being uploaded "
-            );
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'file_already_exists',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-        }
-
-        # Renaming the tmp file and the desc file
-
-        if ($access_dir{'may'}{'edit'} == 1) {
-            unless (rename "$longtmpname", "$longnewname") {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$longtmpname",
-                        'new' => "$longnewname"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Failed to rename %s to %s: %s',
-                    $longtmpname, $longnewname, $ERRNO);
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$visible_path,$visible_fname",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-            }
-
-            my $longnewdesc = "$shareddir/$path/.desc.$in{'new_name'}";
-            $longnewdesc =~ s/\/+/\//g;
-
-            unless (rename "$longtmpdesc", "$longnewdesc") {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$longtmpdesc",
-                        'new' => "$longnewdesc"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err', 'Failed to rename %s to %s: %s',
-                    $longtmpdesc, $longnewdesc, $ERRNO);
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$visible_path,$visible_fname",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-            }
-
-        } elsif ($access_dir{'may'}{'edit'} == 0.5) {
-
-            unless (rename "$longtmpname",
-                "$shareddir/$path/.$in{'new_name'}.moderate") {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$longtmpname",
-                        'new' => "$shareddir/$path/.$in{'new_name'}.moderate"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err',
-                    "do_d_upload : Failed to rename $longtmpname to $shareddir/$path/.$in{'new_name'}.moderate : $ERRNO"
-                );
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$visible_path,$visible_fname",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-            }
-
-            unless (rename "$longtmpdesc",
-                "$shareddir/$path/.desc..$in{'new_name'}.moderate") {
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    'rename_file',
-                    {   'old' => "$longtmpdesc",
-                        'new' =>
-                            "$shareddir/$path/.desc..$in{'new_name'}.moderate"
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                wwslog('err',
-                    "do_d_upload : Failed to rename $longtmpdesc to $shareddir/$path/.desc..$in{'new_name'}.moderate: $ERRNO"
-                );
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "$visible_path,$visible_fname",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'internal',
-                        'user_email'   => $param->{'user'}{'email'},
-                    }
-                );
-            }
-
-            $list->send_notify_to_editor(
-                'shared_moderated',
-                {   'filename' => "$path/$in{'new_name'}",
-                    'who'      => $param->{'user'}{'email'}
-                }
-            );
-        } else {
-            Sympa::Report::reject_report_web('auth',
-                $access_dir{'reason'}{'edit'},
-                {}, $param->{'action'}, $list);
-            wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'authorization',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-#	 $in{'list'} = $list_name;
-
-        # message of success
-        Sympa::Report::notice_report_web('upload_success', {'path' => $fname},
-            $param->{'action'});
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$visible_path,$visible_fname",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'success',
-                'error_type'   => '',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return 'd_read';
-    }
-
-    # in mode_cancel, we delete the temp file and his desc
-    if ($in{'mode_cancel'}) {
-
-        # removing of the temp file
-        unless (unlink($longtmpname)) {
-            Sympa::Report::reject_report_web('intern', 'erase_file',
-                {'file' => $longtmpname},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Failed to erase the temp file %s', $longtmpname);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        # removing of the description temp file
-        unless (unlink($longtmpdesc)) {
-            Sympa::Report::reject_report_web('intern', 'erase_file',
-                {'file' => $longtmpdesc},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Failed to erase the desc temp file %s',
-                $longtmpdesc);
-            web_db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
-                    'action'       => $param->{'action'},
-                    'parameters'   => "$visible_path,$visible_fname",
-                    'target_email' => "",
-                    'msg_id'       => '',
-                    'status'       => 'error',
-                    'error_type'   => 'internal',
-                    'user_email'   => $param->{'user'}{'email'},
-                }
-            );
-            return undef;
-        }
-
-        return 'd_read';
-    }
-
-    ## usual case
-
-    # shared_moderated
-    if ($access_dir{'may'}{'edit'} == 0.5) {
-        my $modname = "." . "$fname" . ".moderate";
-
-        creation_shared_file($shareddir, $path, $modname);
-        creation_desc_file($shareddir, $path, $modname, %access_dir);
-
-        unless ($file_moderated) {
-            $list->send_notify_to_editor(
-                'shared_moderated',
-                {   'filename' => "$path/$fname",
-                    'who'      => $param->{'user'}{'email'}
-                }
-            );
-        }
-
-        Sympa::Report::notice_report_web('to_moderate', {'path' => $fname},
-            $param->{'action'});
-
-    } else {
-        creation_shared_file($shareddir, $path, $fname);
-        creation_desc_file($shareddir, $path, $fname, %access_dir);
-    }
-
-    $in{'list'} = $list_name;
-
-    Sympa::Report::notice_report_web('upload_success',
-        {'path' => $visible_fname},
-        $param->{'action'});
-    web_db_log(
-        {   'robot'        => $robot,
-            'list'         => $list->{'name'},
-            'action'       => $param->{'action'},
-            'parameters'   => "$visible_path,$visible_fname",
-            'target_email' => "",
-            'msg_id'       => '',
-            'status'       => 'success',
-            'error_type'   => '',
-            'user_email'   => $param->{'user'}{'email'},
-        }
-    );
-
-    web_db_stat_log(parameter => $size);
-
-    return 'd_read';
-}
+# Merged to do_d_create_child().
+#sub do_d_upload;
 
 ## Creation of a picture file
 sub creation_picture_file {
@@ -15577,83 +14508,11 @@ sub creation_picture_file {
     chmod 0644, "$path/$fname";
 }
 
-## Creation of a shared file
-sub creation_shared_file {
-    my ($shareddir, $path, $fname) = @_;
+# No longer used (subroutine of deprecated do_d_upload()).
+#sub creation_shared_file;
 
-    unless (-d $shareddir . '/' . $path) {
-        wwslog('notice', 'Create dir %s/%s/', $shareddir, $path);
-
-        unless (mkdir($shareddir . '/' . $path, 0755)) {
-            wwslog('err',
-                "creation_shared_file : Unable to create dir $shareddir/$path/"
-            );
-            return undef;
-        }
-
-    }
-    unless (
-        Sympa::Tools::WWW::upload_file_to_server(
-            {   'query'       => $query,
-                'file_field'  => 'uploaded_file',
-                'destination' => "$shareddir/$path/$fname",
-            }
-        )
-        ) {
-        Sympa::Report::reject_report_web('intern', 'cannot_upload',
-            {'path' => "$path/$fname"},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$fname",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $param->{'user'}{'email'},
-            }
-        );
-        return undef;
-    }
-
-    ## XSS Protection for HTML files.
-    if (lc($fname) =~ /\.html?/) {
-        my $sanitized_html =
-            Sympa::HTMLSanitizer->new($robot)
-            ->sanitize_html_file("$shareddir/$path/$fname");
-        if (defined $sanitized_html) {
-            open my $fh, '>', "$shareddir/$path/$fname";
-            print $fh $sanitized_html;
-            close $fh;
-        } else {
-            $log->syslog('err', 'Unable to sanitize file %s', $fname);
-        }
-    }
-
-}
-
-## Creation of the description file
-sub creation_desc_file {
-    my ($shareddir, $path, $fname, %access) = @_;
-
-    unless (open(DESC, ">$shareddir/$path/.desc.$fname")) {
-        wwslog('err',
-            "creation_desc_file: cannot create description file $shareddir/.desc.$path/$fname"
-        );
-    }
-
-    print DESC "title\n \n\n";
-    print DESC "creation\n  date_epoch " . time
-        . "\n  email $param->{'user'}{'email'}\n\n";
-
-    print DESC "access\n";
-    print DESC "  read $access{'scenario'}{'read'}\n";
-    print DESC "  edit $access{'scenario'}{'edit'}\n";
-
-    close DESC;
-}
+# No longer used (subroutine of deprecated do_d_upload()).
+#sub creation_desc_file;
 
 #*******************************************
 # Function : do_d_unzip
@@ -17251,7 +16110,7 @@ sub do_d_rename {
 # Function : do_d_create_child
 # Description : Creates a new file / directory
 #******************************************
-# Old name: do_d_create_dir().
+# Old names: do_d_create_dir() and do_d_upload().
 sub do_d_create_child {
     wwslog('info', '(%s, %s, %s)', $in{'path'}, $in{'new_name'}, $in{'type'});
 
@@ -17260,7 +16119,19 @@ sub do_d_create_child {
     my $type     = $in{'type'} || 'directory';
 
     my $content;
-    if ($type eq 'url') {
+    if ($type eq 'upload') {
+        my $fh = $query->upload('uploaded_file');
+        $content = do { local $RS; <$fh> };
+
+        my $fn = $query->upload('uploaded_file');
+        $new_name = $1 if $fn =~ m{([^/\\]+)\z}; # Name without path.
+
+        $new_name = $language->gettext('New file')
+            if not defined $new_name
+                or $new_name !~ /\S/
+                or $new_name !~ m{\A[^<>\\\*\$\[\]/\n]+\z}
+                or $new_name =~ /[~#\[\]]$/;
+    } elsif ($type eq 'url') {
         $content  = sprintf "%s\n", $in{'url'} if $in{'url'};
         $new_name = $new_name . '.url';
     }
@@ -17290,7 +16161,7 @@ sub do_d_create_child {
 
     # Access control.
     my %access = $shared_doc->get_privileges(
-        mode             => 'edit',
+        mode             => 'edit,control',
         sender           => $param->{'user'}{'email'},
         auth_method      => $param->{'auth_method'},
         scenario_context => {
@@ -17358,42 +16229,113 @@ sub do_d_create_child {
             );
             return undef;
         }
+
+        # Exception for index.html.
+        if (    $type eq 'upload'
+            and $new_name =~ /\Aindex[.]html?\z/i
+            and not $access{may}{control}) {
+            Sympa::Report::reject_report_web('user', 'index_html',
+                {dir => $path, reason => 'd_access_control'},
+                $param->{'action'}, $list);
+            wwslog('err', 'Not authorized to upload a INDEX.HTML file in %s',
+                $path);
+            web_db_log(
+                {   'robot'        => $robot,
+                    'list'         => $list->{'name'},
+                    'action'       => $param->{'action'},
+                    'parameters'   => "$path,$new_name",
+                    'target_email' => "",
+                    'msg_id'       => '',
+                    'status'       => 'error',
+                    'error_type'   => 'authorization',
+                    'user_email'   => $param->{'user'}{'email'},
+                }
+            );
+            return undef;
+        }
     }
 
     my ($child) = $shared_doc->get_children(name => $new_name);
 
-    # The file mustn't already exists
-    # except only if the file is moderated and its author can erase it.
-    if ($child
-        and not($child->{moderate}
-            and $child->{owner} eq $param->{'user'}{'email'})
+    # The file mustn't already exist except if:
+    # - it is uploaded,
+    # - it is moderated and its author can erase it.
+    if ($child) {
+        if ($type eq 'upload') {
+            # Add a suffix (2), (3), ...
+            my ($g, $alt_name);
+            for ($g = 2; $child; $g++) {
+                $alt_name = $new_name;
+                $alt_name =~ s/((?:[.]\w+)+)\z/ ($g).$1/
+                    or $alt_name = "$new_name ($g)";
+                $child = $shared_doc->get_children(name => $alt_name);
+            }
+            $new_name = $alt_name;
+        } elsif (not $child->{moderate}
+            or $child->{owner} ne $param->{'user'}{'email'}) {
+            Sympa::Report::reject_report_web('user', 'doc_already_exist',
+                {'name' => $path . '/' . $new_name},
+                $param->{'action'}, $list);
+            wwslog('err', 'Can\'t create %s/%s: file already exists',
+                $path, $new_name);
+            web_db_log(
+                {   'robot'        => $robot,
+                    'list'         => $list->{'name'},
+                    'action'       => $param->{'action'},
+                    'parameters'   => "$in{'new_name'}",
+                    'target_email' => "",
+                    'msg_id'       => '',
+                    'status'       => 'error',
+                    'error_type'   => 'file_already_exists',
+                    'user_email'   => $param->{'user'}{'email'},
+                }
+            );
+            return undef;
+        }
+    }
+
+    # Check quota.
+    if ($type eq 'upload'    #FIXME:Check in other cases too.
+        and $list->{'admin'}{'shared_doc'}{'quota'}
+        and Sympa::SharedDocument->new($list)->get_size >=
+        $list->{'admin'}{'shared_doc'}{'quota'} * 1024
         ) {
-        Sympa::Report::reject_report_web('user', 'doc_already_exist',
-            {'name' => $path . '/' . $new_name},
+        Sympa::Report::reject_report_web('user', 'shared_full', {},
             $param->{'action'}, $list);
-        wwslog('err', 'Can\'t create %s/%s: file already exists',
-            $path, $new_name);
+        wwslog('err', 'Shared Quota exceeded for list %s', $list);
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
                 'action'       => $param->{'action'},
-                'parameters'   => "$in{'new_name'}",
+                'parameters'   => "$path,$new_name",
                 'target_email' => "",
                 'msg_id'       => '',
                 'status'       => 'error',
-                'error_type'   => 'file_already_exists',
+                'error_type'   => 'shared_full',
                 'user_email'   => $param->{'user'}{'email'},
             }
         );
         return undef;
     }
 
+    # XSS Protection for HTML files.
+    if ($type eq 'upload'    #FIXME:Check in other cases too.
+        and $new_name =~ /[.]html?\z/i) {
+        my $sanitized_html =
+            Sympa::HTMLSanitizer->new($robot)->sanitize_html($content);
+        if (defined $sanitized_html) {
+            $content = $sanitized_html;
+        } else {
+            $log->syslog('err', 'Unable to sanitize file %s', $new_name);
+        }
+    }
+
     my $new_child = $shared_doc->create_child($new_name,
-        type => $type,
+        type => ($type eq 'upload' ? 'file' : $type),
         moderate => ($access{may}{edit} == 0.5 && $type ne 'directory'),
         owner => $param->{'user'}{'email'},
         scenario => $access{'scenario'},
-        (($type eq 'url') ? (content => $content) : ())
+        (($type eq 'upload' or $type eq 'url') ? (content => $content) : ())
     );
     unless ($new_child) {
         my $errno = $ERRNO;
@@ -17456,17 +16398,17 @@ sub do_d_create_child {
     # web_db_stat_log : test before if the creation is a file or a directory.
     if ($type eq 'directory') {
         web_db_stat_log(operation => 'd_create_dir');
+    } elsif ($type eq 'upload') {
+        web_db_stat_log(operation => 'd_upload', parameter => length $content);
     } else {
         web_db_stat_log(operation => 'd_create_file');
     }
 
-    if ($type eq 'directory') {
-        return 'd_read';
-    } elsif ($type eq 'url') {
-        return 'd_read';
-    } else {
+    if ($type eq 'file') {
         $in{'path'} = join '/', @{$new_child->{paths}};
         return 'd_editfile';
+    } else {
+        return 'd_read';
     }
 }
 

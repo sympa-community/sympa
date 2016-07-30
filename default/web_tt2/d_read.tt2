@@ -339,14 +339,16 @@
    <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
    <fieldset>
    <h6>
-   [% IF path %]
-     [%|loc(visible_path)%]Upload a file inside folder %1[%END%]
+   [% IF shared_doc.paths.size %]
+     [%|loc(shared_doc.name)%]Upload a file inside folder %1[%END%]
    [% ELSE %]
      [%|loc%]Upload a file inside folder SHARED[%END%]
    [% END %]
    </h6>
    <input id="uploaded_file" type="file" name="uploaded_file"/>
-   <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_upload" />
+   <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]"
+     name="action_d_create_child" />
+   <input type="hidden" name="type" value="upload" />
    <input type="hidden" name="list" value="[% list %]" />
    <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
    </form> 

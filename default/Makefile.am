@@ -216,7 +216,6 @@ nobase_default_DATA = \
 	web_tt2/d_read.tt2 \
 	web_tt2/dump_scenario.tt2 \
 	web_tt2/dumpvars.tt2 \
-	web_tt2/d_upload.tt2 \
 	web_tt2/edit_attributes.tt2 \
 	web_tt2/edit_config.tt2 \
 	web_tt2/editfile.tt2 \
