@@ -513,7 +513,7 @@ our %required_args = (
     'd_admin'             => ['param.list', 'param.user.email'],
     'd_change_access'     => ['param.list', 'param.user.email'],
     'd_control'           => ['param.list', 'param.user.email'],
-    'd_create_child'      => ['param.list', 'param.user.email', 'new_name'],
+    'd_create_child'      => ['param.list', 'param.user.email', 'new_name|uploaded_file'],
     'd_delete'         => ['param.list', 'param.user.email'],
     'd_describe'       => ['param.list', 'param.user.email', 'content'],
     'd_editfile'       => ['param.list', 'param.user.email'],
@@ -816,9 +816,8 @@ our %in_regexp = (
         '(.*[\/\\\\])?[^<>\*\$\n]+',          # Could be precised (use of "'")
     'unzipped_file'     => '(.*[\/\\\\])?[^<>\*\$\n]+',
     'dir'               => '[^<>\\\*\$\n]+',
-    'name_doc'          => '[^<>\\\*\$\[\]\/\n]+',
+    'new_name'          => '[^<>\\\*\$\[\]\/\n]+',
     'shortname'         => '[^<>\\\*\$\n]+',
-    'new_name'          => '[^<>\\\*\$\n]+',
     'id'                => '[^<>\\\*\$\n]+',
     'template_name'     => Sympa::Regexps::template_name(),
     'new_template_name' => Sympa::Regexps::template_name(),
@@ -16127,12 +16126,12 @@ sub do_d_create_child {
         $new_name = $1 if $fn =~ m{([^/\\]+)\z}; # Name without path.
 
         $new_name = $language->gettext('New file')
-            if not defined $new_name
-                or $new_name !~ /\S/
-                or $new_name !~ m{\A[^<>\\\*\$\[\]/\n]+\z}
-                or $new_name =~ /[~#\[\]]$/;
+            unless Sympa::SharedDocument::valid_name($new_name);
     } elsif ($type eq 'url') {
         $content  = sprintf "%s\n", $in{'url'} if $in{'url'};
+
+        $new_name = $language->gettext('New bookmark')
+            unless Sympa::SharedDocument::valid_name($new_name);
         $new_name = $new_name . '.url';
     }
 
@@ -16266,7 +16265,7 @@ sub do_d_create_child {
             my ($g, $alt_name);
             for ($g = 2; $child; $g++) {
                 $alt_name = $new_name;
-                $alt_name =~ s/((?:[.]\w+)+)\z/ ($g).$1/
+                $alt_name =~ s/((?:[.]\w+)+)\z/ ($g)$1/
                     or $alt_name = "$new_name ($g)";
                 $child = $shared_doc->get_children(name => $alt_name);
             }
@@ -16683,7 +16682,7 @@ sub do_d_set_owner {
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
                 'action'       => $param->{'action'},
-                'parameters'   => "$in{'name_doc'}",
+                'parameters'   => $in{'path'},
                 'target_email' => "",
                 'msg_id'       => '',
                 'status'       => 'error',
@@ -16740,7 +16739,7 @@ sub do_d_set_owner {
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
                 'action'       => $param->{'action'},
-                'parameters'   => "$in{'name_doc'}",
+                'parameters'   => $in{'path'},
                 'target_email' => "",
                 'msg_id'       => '',
                 'status'       => 'error',
@@ -16763,7 +16762,7 @@ sub do_d_set_owner {
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
                     'action'       => $param->{'action'},
-                    'parameters'   => "$in{'name_doc'}",
+                    'parameters'   => $in{'path'},
                     'target_email' => "",
                     'msg_id'       => '',
                     'status'       => 'error',
@@ -16803,7 +16802,7 @@ sub do_d_set_owner {
         {   'robot'        => $robot,
             'list'         => $list->{'name'},
             'action'       => $param->{'action'},
-            'parameters'   => "$in{'name_doc'}",
+            'parameters'   => $in{'path'},
             'target_email' => "",
             'msg_id'       => '',
             'status'       => 'success',
