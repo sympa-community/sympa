@@ -343,15 +343,12 @@ sub create_child {
     my $new_name = shift;
     my %options  = @_;
 
-    if (   not(defined $new_name and length $new_name)
-        or $new_name =~ /\A[.]/
-        or 0 <= index($new_name, '/')
-        or $new_name =~ /[~#\[\]]$/) {
+    $options{type} ||= 'directory';
+
+    if (not Sympa::SharedDocument::valid_name($new_name)) {
         $ERRNO = POSIX::EINVAL();
         return undef;
     }
-
-    $options{type} ||= 'directory';
 
     my $new_fs_name =
         $options{moderate}
@@ -826,10 +823,7 @@ sub rename {
         $ERRNO = POSIX::EPERM();
         return undef;
     }
-    if (   not(defined $new_name and length $new_name)
-        or $new_name =~ /\A[.]/
-        or 0 <= index($new_name, '/')
-        or $new_name =~ /[~#\[\]]$/
+    if (not Sympa::SharedDocument::valid_name($new_name)
         or ($self->{type} eq 'url' and $new_name !~ /[.]url\z/)) {
         $ERRNO = POSIX::EINVAL();
         return undef;
@@ -948,6 +942,20 @@ sub unlink {
         return undef
             unless CORE::unlink $desc_file;
     }
+
+    return 1;
+}
+
+sub valid_name {
+    my $new_name = shift;
+
+    return undef
+        if not defined $new_name
+            or $new_name !~ /\S/
+            or $new_name =~ /\A[.]/
+            or 0 <= index($new_name, '/')
+            or $new_name =~ /[<>\\\*\$\[\]\n]/
+            or $new_name =~ /[~#\[\]]$/;
 
     return 1;
 }
@@ -1218,6 +1226,21 @@ Deletes document repository.
 
 I<Instance method>.
 Restores deleted document repository.
+
+=back
+
+=head2 Functions
+
+=over
+
+=item valid_name ( $new_name )
+
+I<Function>.
+Check if the name is allowed for directory and file.
+
+Note:
+This should be used with name of newly created node.
+Existing files and directories may have the name not allowed by this function.
 
 =back
 
