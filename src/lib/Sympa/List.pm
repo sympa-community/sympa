@@ -8441,77 +8441,14 @@ sub get_which {
 
 ### moderation for shared
 
-# return the status of the shared
-sub get_shared_status {
-    my $self = shift;
-    $log->syslog('debug3', '(%s)', $self->{'name'});
+# DEPRECATED: Use {status} attribute of Sympa::SharedDocument instance.
+#sub get_shared_status;
 
-    if (-e $self->{'dir'} . '/shared') {
-        return 'exist';
-    } elsif (-e $self->{'dir'} . '/pending.shared') {
-        return 'deleted';
-    } else {
-        return 'none';
-    }
-}
+# DEPRECATED: Use Sympa::SharedDocument::get_moderated_descendants().
+#sub get_shared_moderated;
 
-# return the list of documents shared waiting for moderation
-sub get_shared_moderated {
-    my $self = shift;
-    $log->syslog('debug3', '');
-    my $shareddir = $self->{'dir'} . '/shared';
-
-    unless (-e "$shareddir") {
-        return undef;
-    }
-
-    ## sort of the shared
-    my @mod_dir = sort_dir_to_get_mod("$shareddir");
-    return \@mod_dir;
-}
-
-# return the list of documents awaiting for moderation in a dir and its
-# subdirs
-sub sort_dir_to_get_mod {
-    #dir to explore
-    my $dir = shift;
-    $log->syslog('debug3', '');
-
-    # listing of all the shared documents of the directory
-    unless (opendir DIR, "$dir") {
-        $log->syslog('err', 'Cannot open %s: %m', $dir);
-        return undef;
-    }
-
-    # array of entry of the directory DIR
-    my @tmpdir = readdir DIR;
-    closedir DIR;
-
-    # private entry with documents not yet moderated
-    my @moderate_dir = grep (/(\.moderate)$/, @tmpdir);
-    @moderate_dir = grep (!/^\.desc\./, @moderate_dir);
-
-    foreach my $d (@moderate_dir) {
-        $d = "$dir/$d";
-    }
-
-    my $path_d;
-    foreach my $d (@tmpdir) {
-        # current document
-        $path_d = "$dir/$d";
-
-        if ($d =~ /^\.+$/) {
-            next;
-        }
-
-        if (-d $path_d) {
-            push(@moderate_dir, sort_dir_to_get_mod($path_d));
-        }
-    }
-
-    return @moderate_dir;
-
-}
+# DEPRECATED: Subroutine of get_shared_moderated().
+#sub sort_dir_to_get_mod;
 
 ## Get the type of a DB field
 #OBSOLETED: No longer used. This is specific to MySQL: Use $sdm->get_fields()
@@ -9447,18 +9384,11 @@ sub select_list_members_for_topic {
 # DEPRECATED.  Use Sympa::Spool::Auth::remove().
 #sub delete_subscription_request;
 
-sub get_shared_size {
-    my $self = shift;
+# OBSOLETED: Use Sympa::SharedDocument::get_size().
+#sub get_shared_size;
 
-    return Sympa::Tools::File::get_dir_size($self->{'dir'} . '/shared');
-}
-
-sub get_arc_size {
-    my $self = shift;
-    my $dir  = shift;
-
-    return Sympa::Tools::File::get_dir_size($dir . '/' . $self->get_id);
-}
+# OBSOLETED: Use Sympa::Archive::get_size().
+#sub get_arc_size;
 
 # return the date epoch for next delivery planified for a list
 # Note: As of 6.2a.41, returns undef if parameter is not set or invalid.
@@ -9788,24 +9718,8 @@ sub notify_bouncers {
     return 1;
 }
 
-## Create the document repository
-sub create_shared {
-    my $self = shift;
-
-    my $dir = $self->{'dir'} . '/shared';
-
-    if (-e $dir) {
-        $log->syslog('err', '%s already exists', $dir);
-        return undef;
-    }
-
-    unless (mkdir($dir, 0777)) {
-        $log->syslog('err', 'Unable to create %s: %m', $dir);
-        return undef;
-    }
-
-    return 1;
-}
+# DDEPRECATED: Use Sympa::SharedDocument::create().
+#sub create_shared;
 
 ## check if a list  has include-type data sources
 sub has_include_data_sources {

@@ -31,6 +31,7 @@ use Digest::MD5 qw();
 use Encode qw();
 use English qw(-no_match_vars);
 use File::Path qw();
+use IO::File;
 use POSIX qw();
 
 use Sympa;

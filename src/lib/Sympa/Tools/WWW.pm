@@ -364,172 +364,30 @@ sub upload_file_to_server {
     return 1;
 }
 
-## Useful function to get off the slash at the end of the path
-## at its end
-sub no_slash_end {
-    my $path = shift;
+# DEPRECATED: No longer used.
+#sub no_slash_end;
 
-    ## supress ending '/'
-    $path =~ s/\/+$//;
-
-    return $path;
-}
-
-## return a visible path from a moderated file or not
-sub make_visible_path {
-    my $path = shift;
-
-    my $visible_path = $path;
-
-    if ($path =~ /\.url(\.moderate)?$/) {
-        if ($path =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/) {
-            $visible_path =~ s/\.moderate$//;
-            $visible_path =~ s/^\.//;
-            $visible_path =~ s/\.url$//;
-        }
-
-    } elsif ($path =~ /\.moderate$/) {
-        if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
-            my $name = $3;
-            $name =~ s/^\.//;
-            $name =~ s/\.moderate//;
-            $visible_path = "$2" . "$name";
-        }
-    }
-
-    ## Qdecode the visible path
-    return Sympa::Tools::Text::qdecode_filename($visible_path);
-}
+# DEPRECATED: No longer used.
+#sub make_visible_path;
 
 ## returns a mailto according to list spam protection parameter
 # DEPRECATED.  Use [%|mailto()%] and [%|obfuscate()%] filters in template.
 #sub mailto;
 
-## return the mode of editing included in $action : 0, 0.5 or 1
-sub find_edit_mode {
-    my $action = shift;
+# DEPRECATED: No longer used.
+#sub find_edit_mode;
 
-    my $result;
-    if ($action =~ /editor/i) {
-        $result = 0.5;
-    } elsif ($action =~ /do_it/i) {
-        $result = 1;
-    } else {
-        $result = 0;
-    }
-    return $result;
-}
+# DEPRECATED: No longer used.
+#sub merge_edit;
 
-## return the mode of editing : 0, 0.5 or 1 :
-#  do the merging between 2 args of right access edit  : "0" > "0.5" > "1"
-#  instead of a "and" between two booleans : the most restrictive right is
-#  imposed
-sub merge_edit {
-    my $arg1 = shift;
-    my $arg2 = shift;
-    my $result;
+# Moved: Use Sympa::SharedDocument::_load_desc_file().
+#sub get_desc_file;
 
-    if ($arg1 == 0 || $arg2 == 0) {
-        $result = 0;
-    } elsif ($arg1 == 0.5 || $arg2 == 0.5) {
-        $result = 0.5;
-    } else {
-        $result = 1;
-    }
-    return $result;
-}
+# DEPRECATED: No longer used.
+#sub get_directory_content;
 
-sub get_desc_file {
-    my $file = shift;
-    my $ligne;
-    my %hash;
-
-    open DESC_FILE, "$file";
-
-    while ($ligne = <DESC_FILE>) {
-        if ($ligne =~ /^title\s*$/) {
-            #case title of the document
-            while ($ligne = <DESC_FILE>) {
-                last if ($ligne =~ /^\s*$/);
-                $ligne =~ /^\s*(\S.*\S)\s*/;
-                $hash{'title'} = $hash{'title'} . $1 . " ";
-            }
-        }
-
-        if ($ligne =~ /^creation\s*$/) {
-            #case creation of the document
-            while ($ligne = <DESC_FILE>) {
-                last if ($ligne =~ /^\s*$/);
-                if ($ligne =~ /^\s*email\s*(\S*)\s*/) {
-                    $hash{'email'} = $1;
-                }
-                if ($ligne =~ /^\s*date_epoch\s*(\d*)\s*/) {
-                    $hash{'date'} = $1;
-                }
-            }
-        }
-
-        if ($ligne =~ /^access\s*$/) {
-            #case access scenarios for the document
-            while ($ligne = <DESC_FILE>) {
-                last if ($ligne =~ /^\s*$/);
-                if ($ligne =~ /^\s*read\s*(\S*)\s*/) {
-                    $hash{'read'} = $1;
-                }
-                if ($ligne =~ /^\s*edit\s*(\S*)\s*/) {
-                    $hash{'edit'} = $1;
-                }
-            }
-        }
-    }
-
-    close DESC_FILE;
-
-    return %hash;
-}
-
-## return a ref on an array of file (or subdirecties) to show to user
-sub get_directory_content {
-    my $tmpdir = shift;
-    my $user   = shift;
-    my $list   = shift;
-    my $doc    = shift;
-
-    # array of file not hidden
-    my @dir = grep !/^\./, @$tmpdir;
-
-    # array with documents not yet moderated
-    my @moderate_dir = grep (/(\.moderate)$/, @$tmpdir);
-    @moderate_dir = grep (!/^\.desc\./, @moderate_dir);
-
-    # The editor can see file not yet moderated.
-    # A user can see file not yet moderated if they are the owner of these
-    # files.
-    if ($list->is_admin('actual_editor', $user)) {
-        push(@dir, @moderate_dir);
-    } else {
-        my @privatedir = select_my_files($user, $doc, \@moderate_dir);
-        push(@dir, @privatedir);
-    }
-
-    return \@dir;
-}
-
-## return an array that contains only file from @$refdir that belongs to $user
-sub select_my_files {
-    my ($user, $path, $refdir) = @_;
-    my @new_dir;
-
-    foreach my $d (@$refdir) {
-        if (-e "$path/.desc.$d") {
-            my %desc_hash = get_desc_file("$path/.desc.$d");
-            if ($user eq $desc_hash{'email'}) {
-                $new_dir[$#new_dir + 1] = $d;
-            }
-        }
-    }
-    return @new_dir;
-}
+# DEPRECATED: No longer used (a subroutine of get_directory_content()).
+#sub select_my_files;
 
 sub get_icon {
     my $robot = shift || '*';
