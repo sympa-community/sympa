@@ -353,27 +353,26 @@
    <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
    </form> 
 
-      [% IF total_edit %]
-        <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
-	<fieldset>
-        <h6>
- 	[% IF path %]
-           [%|loc(visible_path)%]Unzip a file inside the folder %1[%END%]
-         [% ELSE %]
-           [%|loc%]Unzip a file inside the folder SHARED[%END%]
-         [% END %]
-        </h6>
-        <input id="unzipped_file" type="file" name="unzipped_file"/>
-
-        <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_unzip" />
-        <input type="hidden" name="list" value="[% list %]" />
-        <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
-	</fieldset>
-        </form> 
-       
-     [%~ END %]
-   [%~ END %]
-   [%~ END %]
+    [% IF total_edit ~%]
+    <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
+    <fieldset>
+    <h6>
+    [% IF shared_doc.paths.size ~%]
+      [%|loc(shared_doc.name)%]Unzip a file inside the folder %1[%END%]
+    [%~ ELSE ~%]
+      [%|loc%]Unzip a file inside the folder SHARED[%END%]
+    [%~ END %]
+    </h6>
+    <input id="uploaded_file" type="file" name="uploaded_file"/>
+    <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]"
+      name="action_d_unzip" />
+    <input type="hidden" name="list" value="[% list %]" />
+    <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
+    </fieldset>
+    </form> 
+    [%~ END %]
+  [%~ END %]
+  [%~ END %]
 
 [%~ END %]
    
