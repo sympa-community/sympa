@@ -219,6 +219,53 @@ sub foldcase {
     }
 }
 
+#FIXME: Missing ru, uk, ...
+my %legacy_charsets = (
+    'ar'    => [qw(iso-8859-6)],
+    'bs'    => [qw(iso-8859-2)],
+    'cs'    => [qw(iso-8859-2)],
+    'eo'    => [qw(iso-8859-3)],
+    'et'    => [qw(iso-8859-4)],
+    'he'    => [qw(iso-8859-8)],
+    'hr'    => [qw(iso-8859-2)],
+    'hu'    => [qw(iso-8859-2)],
+    'ja'    => [qw(euc-jp cp932 MacJapanese)],
+    'kl'    => [qw(iso-8859-4)],
+    'ko'    => [qw(cp949)],
+    'lt'    => [qw(iso-8859-4)],
+    'lv'    => [qw(iso-8859-4)],
+    'mt'    => [qw(iso-8859-3)],
+    'pl'    => [qw(iso-8859-2)],
+    'ro'    => [qw(iso-8859-2)],
+    'sk'    => [qw(iso-8859-2)],
+    'sl'    => [qw(iso-8859-2)],
+    'th'    => [qw(iso-8859-11)],
+    'tr'    => [qw(iso-8859-9)],
+    'zh-CN' => [qw(euc-cn)],
+    'zh-TW' => [qw(big5-eten)],
+);
+
+sub guessed_to_utf8 {
+    my $text  = shift;
+    my @langs = @_;
+
+    return Encode::encode_utf8($text) if Encode::is_utf8($text);
+    return $text
+        unless defined $text
+            and length $text
+            and $text =~ /[^\x00-\x7F]/;
+
+    my $utf8;
+    foreach
+        my $charset ('utf-8', map { $_ ? @$_ : () } @legacy_charsets{@langs})
+    {
+        $utf8 = eval { Encode::decode($charset, $text, Encode::FB_CROAK()) };
+        last if defined $utf8;
+    }
+    $utf8 = Encode::decode('iso-8859-1', $text) unless defined $utf8;
+    return Encode::encode_utf8($utf8);
+}
+
 sub mailtourl {
     my $text    = shift;
     my %options = @_;
@@ -597,6 +644,35 @@ Parameter:
 A string.
 
 =back
+
+=item guessed_to_utf8( $text, [ lang, ... ] )
+
+I<Function>.
+Guesses text charset considering language context
+and returns the text reencoded by UTF-8.
+
+Note:
+This function was introduced on Sympa 6.2.17.
+
+Parameters:
+
+=over
+
+=item $text
+
+Text to be reencoded.
+
+=item lang, ...
+
+Language tag(s) which may be given by L<Sympa::Language/"implicated_langs">.
+
+=back
+
+Returns:
+
+Reencoded text.
+If any charsets could not be guessed, C<iso-8859-1> will be used
+as the last resort, just because it covers full range of 8-bit.
 
 =item mailtourl ( $email, [ decode_html =E<gt> 1 ],
 [ query =E<gt> {key =E<gt> val, ...} ] )
