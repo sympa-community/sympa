@@ -219,7 +219,6 @@ sub foldcase {
     }
 }
 
-#FIXME: Missing ru, uk, ...
 my %legacy_charsets = (
     'ar'    => [qw(iso-8859-6)],
     'bs'    => [qw(iso-8859-2)],
@@ -237,10 +236,12 @@ my %legacy_charsets = (
     'mt'    => [qw(iso-8859-3)],
     'pl'    => [qw(iso-8859-2)],
     'ro'    => [qw(iso-8859-2)],
+    'ru'    => [qw(koi8-r cp1251)],               # cp866? MacCyrillic?
     'sk'    => [qw(iso-8859-2)],
     'sl'    => [qw(iso-8859-2)],
-    'th'    => [qw(iso-8859-11)],
+    'th'    => [qw(iso-8859-11 cp874 MacThai)],
     'tr'    => [qw(iso-8859-9)],
+    'uk'    => [qw(koi8-u)],                      # MacUkrainian?
     'zh-CN' => [qw(euc-cn)],
     'zh-TW' => [qw(big5-eten)],
 );
@@ -651,9 +652,6 @@ I<Function>.
 Guesses text charset considering language context
 and returns the text reencoded by UTF-8.
 
-Note:
-This function was introduced on Sympa 6.2.17.
-
 Parameters:
 
 =over
@@ -833,6 +831,6 @@ on Sympa 6.2.10.
 decode_html(), encode_html(), encode_uri() and mailtourl()
 were added on Sympa 6.2.14, and escape_url() was deprecated.
 
-pad() was added on Sympa 6.2.17.
+guessed_to_utf8() and pad() were added on Sympa 6.2.17.
 
 =cut
