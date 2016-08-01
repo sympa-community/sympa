@@ -14328,7 +14328,10 @@ sub do_d_update {
     if ($type eq 'upload') {
         # Parameters of the uploaded file.
         my $fh = $query->upload('uploaded_file');
-        my $content = do { local $RS; <$fh> };
+        if (defined $fh) {
+            my $ioh = $fh->handle;
+            $content = do { local $RS; <$ioh> };
+        }
     } elsif ($type eq 'url') {
         $content = sprintf "%s\n", $in{'url'} if $in{'url'};
     } else {
@@ -14525,8 +14528,15 @@ sub do_d_unzip {
 
     my $path = $in{'path'};
 
+    my $zip_name;
     my $fn = $in{'uploaded_file'};
-    my $zip_name = $1 if $fn =~ /([^\/\\]+)$/; # Name without path.
+    if (defined $fn) {
+        # Guess client charset.
+        $zip_name = Sympa::Tools::Text::guessed_to_utf8($fn,
+            Sympa::Language::implicated_langs($language->get_lang));
+        # Name without path.
+        $zip_name = $1 if $zip_name =~ /([^\/\\]+)$/;
+    }
     unless ($zip_name and $zip_name =~ /.+[.]zip\z/i) {
         Sympa::Report::reject_report_web(
             'user',
@@ -15106,13 +15116,21 @@ sub do_d_create_child {
     my $content;
     if ($type eq 'upload') {
         my $fh = $query->upload('uploaded_file');
-        $content = do { local $RS; <$fh> };
-
+        if (defined $fh) {
+            my $ioh = $fh->handle;
+            $content = do { local $RS; <$ioh> };
+        }
         my $fn = $query->upload('uploaded_file');
-        $new_name = $1 if $fn =~ m{([^/\\]+)\z}; # Name without path.
-
-        $new_name = $language->gettext('New file')
-            unless Sympa::SharedDocument::valid_name($new_name);
+        if (defined $fn) {
+            # Guess client encoding.
+            $new_name = Sympa::Tools::Text::guessed_to_utf8($fn,
+                Sympa::Language::implicated_langs($language->get_lang));
+            # Name without path.
+            $new_name = $1 if $new_name =~ m{([^/\\]+)\z};
+            # Avoid invalid names.
+            $new_name = $language->gettext('New file')
+                unless Sympa::SharedDocument::valid_name($new_name);
+        }
     } elsif ($type eq 'url') {
         $content  = sprintf "%s\n", $in{'url'} if $in{'url'};
 
