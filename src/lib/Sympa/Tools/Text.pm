@@ -36,6 +36,7 @@ use Unicode::GCString;
 use URI::Escape qw();
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
+BEGIN { eval 'use Unicode::Normalize qw()'; }
 
 use Sympa::Regexps;
 
@@ -264,6 +265,11 @@ sub guessed_to_utf8 {
         last if defined $utf8;
     }
     $utf8 = Encode::decode('iso-8859-1', $text) unless defined $utf8;
+
+    # Apply NFC: e.g. for modified-NFD by Mac OS X.
+    $utf8 = Unicode::Normalize::normalize('NFC', $utf8)
+        if $Unicode::Normalize::VERSION;
+        
     return Encode::encode_utf8($utf8);
 }
 
