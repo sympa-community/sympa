@@ -40,7 +40,7 @@ use DateTime::Format::Mail;
 use Digest::MD5;
 use Encode qw();
 use English qw(-no_match_vars);
-use IO::File;
+use IO::File qw();
 use MIME::EncWords;
 use MIME::Lite::HTML;
 use POSIX qw();
@@ -14636,11 +14636,16 @@ sub do_d_unzip {
     }
 
     # Uploaded of the file.zip
+    my ($zip, $az);
     my $fh = $query->upload('uploaded_file');
-    bless $fh => 'IO::File'; # Archive::Zip uses opened().
-    my $zip = Archive::Zip->new();
-    my $az = $zip->readFromFileHandle($fh);
-    unless ($az == Archive::Zip::AZ_OK()) {
+    if (defined $fh) {
+        my $ioh = $fh->handle;
+        # The handle must know seek() in addition to opened().
+        bless $ioh => 'IO::File' unless $ioh->can('seek');
+        $zip = Archive::Zip->new();
+        $az = $zip->readFromFileHandle($ioh);
+    }
+    unless (defined $az and $az == Archive::Zip::AZ_OK()) {
         Sympa::Report::reject_report_web('intern', 'cannot_unzip',
             {name => $zip_name},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot
