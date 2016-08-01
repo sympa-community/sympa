@@ -7,13 +7,21 @@
 
 <menu class="shared">
 [% IF shared_doc.paths.size -%]
-  <li><span class="search_form">
-  <a class="actionMenuLinks"
-    href="[% 'd_read' | url_rel([list,shared_doc.parent.paths_d]) %]"
-    class="tip-left" data-tooltip aria-haspopup="true"
-    title="[%|loc%]Up to higher level directory[%END%]">
-    <i class="fa fa-folder-open fa-lg"><i class="fa fa-level-up fa-lg"></i></i>
-  </a></span></li>
+  [% FOREACH a = shared_doc.ancestors ~%]
+    [% IF a.type == 'root' ~%]
+      <li><a class="actionMenuLinks"
+        href="[% 'd_read' | url_rel([list,'']) %]"
+        class="tip-left" data-tooltip aria-haspopup="true"
+        title="[%|loc%]Root folder[%END%]">
+        <i class="fa fa-home fa-lg"></i>
+      </a></li>
+    [%~ ELSE ~%]
+      <li><a class="actionMenuLinks"
+        href="[% 'd_read' | url_rel([list,a.paths_d]) %]">
+        <i class="fa fa-folder"></i> [%~ a.name ~%]
+      </a></li>
+    [%~ END %]
+  [%~ END %]
 [%~ END %]
 
 [% IF expert_page -%]

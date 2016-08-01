@@ -321,6 +321,19 @@ sub as_hashref {
     push @{$hash{paths_d}}, ''
         if grep { $self->{type} eq $_ } qw(root directory);
 
+    my @ancestors;
+    my $p = $self->{parent};
+    while ($p) {
+        unshift @ancestors, {
+            name    => $p->{name},
+            paths   => $p->{paths},
+            paths_d => [@{$p->{paths}}, ''],
+            type    => $p->{type},
+        };
+        $p = $p->{parent};
+    }
+    $hash{ancestors} = [@ancestors];
+
     return {%hash};
 }
 
@@ -1041,6 +1054,10 @@ A hashref including attributes of instance (see L</Attributes>)
 and following special items:
 
 =over
+
+=item {ancestors}
+
+Arrayref of hashrefs including some attributes of all ancestor nodes.
 
 =item {context}
 
