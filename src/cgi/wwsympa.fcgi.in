@@ -13481,7 +13481,6 @@ sub do_d_read {
     }
 
     my $shared_doc = Sympa::SharedDocument->new($list, $path);
-
     # Document exists ?
     unless ($shared_doc and -r $shared_doc->{fs_path}) {
         wwslog('err', 'Unable to read %s: no such file or directory',
@@ -13497,7 +13496,6 @@ sub do_d_read {
         );
         return undef;
     }
-
     $param->{'shared_doc'} = $shared_doc->as_hashref;
 
     # Access control.
@@ -14153,10 +14151,8 @@ sub do_d_properties {
             remote_addr => $param->{'remote_addr'}
         }
     );
-    my $may_edit = $access{'may'}{'edit'};
-
-    unless ($may_edit) {
-        Sympa::Report::reject_report_web('auth', $access{'reason'}{'edit'},
+    unless ($access{may}{edit}) {
+        Sympa::Report::reject_report_web('auth', $access{reason}{edit},
             {}, $param->{'action'}, $list);
         wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
         web_db_log(
@@ -14168,27 +14164,10 @@ sub do_d_properties {
         return undef;
     }
 
-    # End of controls.
-
     $param->{'list'}         = $list->{'name'};
 
-    # test if it's a text file
-    if (-T $shared_doc->{fs_path}) {
-        $param->{'textfile'} = 1;
-        $param->{'filepath'} = $shared_doc->{fs_path}; #FIXME:required?
-    } else {
-        $param->{'textfile'} = 0;
-    }
-    $param->{'use_htmlarea'} = '1'
-        if $Conf::Conf{'htmlarea_url'}
-            and $param->{'textfile'}
-            and $shared_doc->{html};
-
-    ## Synchronization
-    $param->{'serial_file'} = $shared_doc->{date_epoch}; #FIXME:required?
-
-    #FIXME: Required?
-    $allow_absolute_path = 1;
+    ##FIXME: Required?
+    #$allow_absolute_path = 1;
 
     #XXX$param->{'father_icon'} = Sympa::Tools::WWW::get_icon($robot, 'father');
 
@@ -14760,7 +14739,22 @@ sub do_d_unzip {
             ($member->isDirectory ? () : (content  => $content))
         )
         ) {
-             $status = 0;
+            wwslog('err',
+                'Unable to create member %s of the zip file as %s: %s',
+                $member->fileName, join('/', @$subpaths));
+            web_db_log(
+                {   'robot'        => $robot,
+                    'list'         => $list->{'name'},
+                    'action'       => $param->{'action'},
+                    'parameters'   => $member->fileName,
+                    'target_email' => "",
+                    'msg_id'       => '',
+                    'status'       => 'error',
+                    'error_type'   => 'internal',
+                    'user_email'   => $param->{'user'}{'email'},
+                }
+            );
+            $status = 0;
         }
     }
     unless ($status) {
@@ -15818,9 +15812,7 @@ sub do_d_set_owner {
     # ONLY IF SET_OWNER can be performed even if not control of the parent
     # directory.
     unless ($access{may}{control}) {
-        # Parent directory
-        my $parent = $shared_doc->{parent};
-        $in{'path'} = join '/', $parent->{paths} if $parent;
+        $in{'path'} = join '/', @{$shared_doc->{parent}->{paths}};
         return 'd_read';
     } else {
         return 'd_control';
