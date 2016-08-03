@@ -14047,7 +14047,7 @@ sub do_d_editfile {
 
     # Access control.
     my %access = $shared_doc->get_privileges(
-        mode             => 'edit',
+        mode             => 'edit,control',
         sender           => $param->{'user'}{'email'},
         auth_method      => $param->{'auth_method'},
         scenario_context => {
@@ -14056,9 +14056,7 @@ sub do_d_editfile {
             remote_addr => $param->{'remote_addr'}
         }
     );
-    my $may_edit = $access{may}{edit};
-
-    unless ($may_edit) {
+    unless ($access{may}{edit}) {
         Sympa::Report::reject_report_web('auth', $access{reason}{edit},
             {}, $param->{'action'}, $list);
         wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
@@ -14074,6 +14072,9 @@ sub do_d_editfile {
     ## End of controls
 
     $param->{'list'}         = $list->{'name'};
+
+    $param->{'shared_doc'}{'may_edit'}    = $access{may}{edit};
+    $param->{'shared_doc'}{'may_control'} = $access{may}{control};
 
     # Test if it's a text file.
     if (-T $shared_doc->{fs_path}) { #FIXME:Better check
@@ -14142,7 +14143,7 @@ sub do_d_properties {
 
     # Access control.
     my %access = $shared_doc->get_privileges(
-        mode             => 'edit',
+        mode             => 'edit,control',
         sender           => $param->{'user'}{'email'},
         auth_method      => $param->{'auth_method'},
         scenario_context => {
@@ -14165,6 +14166,9 @@ sub do_d_properties {
     }
 
     $param->{'list'}         = $list->{'name'};
+
+    $param->{'shared_doc'}{'may_edit'}    = $access{may}{edit};
+    $param->{'shared_doc'}{'may_control'} = $access{may}{control};
 
     ##FIXME: Required?
     #$allow_absolute_path = 1;
@@ -15449,7 +15453,7 @@ sub do_d_control {
 
     # Access control.
     my %access = $shared_doc->get_privileges(
-        mode             => 'control',
+        mode             => 'edit,control',
         sender           => $param->{'user'}{'email'},
         auth_method      => $param->{'auth_method'},
         scenario_context => {
@@ -15491,6 +15495,9 @@ sub do_d_control {
 
     # template parameters
     $param->{'list'}         = $list->{'name'};
+
+    $param->{'shared_doc'}{'may_edit'}    = $access{may}{edit};
+    $param->{'shared_doc'}{'may_control'} = $access{may}{control};
 
     my $lang = $param->{'lang'};
 

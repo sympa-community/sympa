@@ -4,27 +4,73 @@
 <menu class="shared">
   [% FOREACH a = shared_doc.ancestors ~%]
     [% IF a.type == 'root' ~%]
-      <li><a class="actionMenuLinks"
+      <li><a class="actionMenuLinks tip-left" data-tooltip aria-haspopup="true"
         href="[% 'd_read' | url_rel([list,'']) %]"
-        class="tip-left" data-tooltip aria-haspopup="true"
         title="[%|loc%]Root folder[%END%]">
         <i class="fa fa-home fa-lg"></i>
       </a></li>
     [%~ ELSE ~%]
-      <li><a class="actionMenuLinks"
+      <li><a class="actionMenuLinks sharedMenu"
         href="[% 'd_read' | url_rel([list,a.paths_d]) %]">
-        <i class="fa fa-folder"></i> [%~ a.name ~%]
+        <i class="fa fa-folder-open"></i> [%~ a.name ~%]
       </a></li>
     [%~ END %]
+  [%~ END ~%]
+
+  <li><span class="actionMenuLinksInactive sharedMenu">
+  [% IF shared_doc.type == 'directory' ~%]
+    <i class="fa fa-folder"></i> [%~ shared_doc.name ~%]
+  [%~ ELSE ~%]
+    <i class="fa fa-file"></i> [%~ shared_doc.name ~%]
   [%~ END %]
+  </span></li>
 </menu>
 
-<h3>[%|loc(shared_doc.name)%]Access control for the document %1[%END%]</h3>
+<h3>
+  <i class="fa fa-lock fa-lg"></i>
+  [%|loc(shared_doc.name)%]Access control for the document %1[%END%]
+</h3>
+
     <p>
     [%|loc(shared_doc.owner)%]Owner: %1[%END%] <br />
     [%|loc(shared_doc.date)%]Last update: %1[%END%] <br />
     [%|loc(shared_doc.title)%]Description: %1[%END%] <br />
     </p>
+
+[% IF shared_doc.may_edit || shared_doc.may_control ~%]
+  <menu class="shared">
+  <span class="search_form">
+    [% IF shared_doc.type == 'directory' %]
+      <a class="actionMenuLinks"
+        href="[% 'd_read' | url_rel([list,shared_doc.paths_d]) %]">
+        <i class="fa fa-list-ul"></i> [%|loc%]browse[%END%]</a>
+    [% ELSIF shared_doc.may_edit %]
+      <a class="actionMenuLinks"
+        href="[% 'd_editfile' | url_rel([list,shared_doc.paths_d]) %]">
+        <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]</a>
+    [% ELSE %]
+      <span class="actionMenuLinksInactive">
+        <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]</span>
+    [% END %]
+
+    [% IF shared_doc.may_edit %]
+      <a class="actionMenuLinks"
+        href="[% 'd_delete' | url_rel([list,shared_doc.paths_d]) %]"
+        onclick="request_confirm_link('[% 'd_delete' | url_rel([list,shared_doc.paths_d]) %]', '[% | escape_quote %][%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%][%END%]'); return false;">
+        <i class="fa fa-trash"></i> [%|loc%]delete[%END%]</a>
+    [% END %]
+    [% IF shared_doc.may_control %]
+      <span class="actionMenuLinksInactive"
+        <i class="fa fa-lock"></i> [%|loc%]access[%END%]</span>
+    [% END %]
+    [% IF shared_doc.may_edit %]
+      <a class="actionMenuLinks"
+        href="[% 'd_properties' | url_rel([list,shared_doc.paths_d]) %]">
+        <i class="fa fa-cog"></i> [%|loc%]properties[%END%]</a>
+    [% END %]
+  </span>
+  </menu>
+[%~ END %]
 
   <form action="[% path_cgi %]" method="post">
   <fieldset>

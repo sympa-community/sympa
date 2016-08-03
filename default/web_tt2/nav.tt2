@@ -184,4 +184,25 @@
 </nav>
 [% END %]
 
+[% IF action == 'd_read' ~%]
+  <nav class="top-bar" data-topbar role="navigation">
+  <ul class="title-area">
+    <li calss="name"> </li>
+    <li class="toggle-topbar menu-icon">
+      <a href="#"><span>[%|loc%]Menu[%END%]</span></a> </li>
+    <menu class="top-bar-section">
+    <ul class="left">
+      <li class="[% UNLESS expert_page %]active not-click[%END%]">
+        <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{type=>'directory',previous_action=>'d_read',show_user_page=>'1'}) %]">
+          <i class="fa fa-user "></i> [%|loc%]User mode[%END%]</a> </li>
+      <li class="divider"></li>
+      <li class="[% IF expert_page %]active not-click[%END%]">
+        <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{type=>'directory',previous_action=>'d_read',show_expert_page=>'1'}) %]">
+          <i class="fa fa-cogs"></i> [%|loc%]Expert mode[%END%]</a> </li>
+    </ul>
+    </menu>
+  </ul>
+  </nav>
+[%~ END %]
+
 <!-- end nav.tt2 -->

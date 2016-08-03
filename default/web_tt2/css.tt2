@@ -1427,7 +1427,8 @@ a.actionMenuLinksCurrentPage {
     border-radius:2px;
 }
 
-a.actionMenuLinks {
+a.actionMenuLinks,
+span.actionMenuLinksInactive {
     border: 1px solid;
     font-size: 0.9em;
     text-decoration: none;
@@ -1441,15 +1442,13 @@ a.actionMenuLinks:hover {
     border-radius:2px;
 }
 
-a.actionMenuLinksInactive {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
-}
-
-#actionnuLinksInactive {
-	text-decoration: none;
-	padding-left: 3px;
+.sharedMenu {
+    display: inline-block;
+    max-width: 20%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: keep-all;
 }
 
 a.ArcMenuLinks,
