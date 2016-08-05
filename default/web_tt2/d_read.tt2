@@ -5,7 +5,8 @@
 [% IF shared_doc.paths.size -%]
   [% FOREACH a = shared_doc.ancestors ~%]
     [% IF a.type == 'root' ~%]
-      <li><a class="actionMenuLinks tip-left" data-tooltip aria-haspopup="true"
+      <li><a class="actionMenuLinks sharedMenu tip-left"
+        data-tooltip aria-haspopup="true"
         href="[% 'd_read' | url_rel([list,'']) %]"
         title="[%|loc%]Root folder[%END%]">
         <i class="fa fa-home fa-lg"></i>
