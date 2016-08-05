@@ -203,6 +203,7 @@ nobase_default_DATA = \
 	web_tt2/choosepasswd.tt2 \
 	web_tt2/close_list.tt2 \
 	web_tt2/compose_mail.tt2 \
+	web_tt2/confirm_action.tt2 \
 	web_tt2/copy_template.tt2 \
 	web_tt2/crash.tt2 \
 	web_tt2/create_list_request.tt2 \

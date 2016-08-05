@@ -71,6 +71,7 @@ function request_confirm(my_message) {
 }
 
 // To confirm on a link (A HREF)
+// NO LONGER USED as of 6.2.17.
 function request_confirm_link(my_url, my_message) {
 	if(confirm(my_message)) top.location = my_url;
 }

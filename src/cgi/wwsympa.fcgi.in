@@ -157,6 +157,7 @@ if ($Conf::Conf{'use_fast_cgi'}) {
 
 ## subroutines
 our %comm = (
+    'confirm_action'         => 'do_confirm_action',
     'home'                   => 'do_home',
     'logout'                 => 'do_logout',
     'loginrequest'           => 'do_loginrequest',
@@ -1573,6 +1574,8 @@ while ($query = new_loop()) {
     $param->{'http_user_agent'} = $ENV{'HTTP_USER_AGENT'};
     $param->{'htmlarea_url'}    = $Conf::Conf{'htmlarea_url'};
     # if ($Conf::Conf{'export_topics'} =~ /all/i);
+
+    $session->confirm_action($action, 'init');
 
     #if ($in{'action'} eq 'css') {
     #    do_css();
@@ -3212,6 +3215,12 @@ sub check_param_out {
             return $s;
         }
     );
+}
+
+sub do_confirm_action {
+    $param->{confirm_action} = $session->{confirm_action};
+
+    return 1;
 }
 
 ## ticket : this action is used if someone submits a one time ticket
@@ -5652,6 +5661,15 @@ sub do_subscribe {
             }
         }
 
+        unless ($in{'via_subrequest'}) {
+            # Action confirmed?
+            my $next_action = $session->confirm_action(
+                $in{'action'}, $in{'response'},
+                arg => $param->{'user'}{'email'},
+                previous_action => ($in{'previous_action'} || 'info'));
+            return $next_action unless $next_action eq '1';
+        }
+
         if ($param->{'is_subscriber'}) {
             Sympa::Report::reject_report_web('user', 'already_subscriber',
                 {'list' => $list->{'name'}},
@@ -6231,6 +6249,12 @@ sub do_signoff {
 
         $param->{'user'}{'email'} = $in{'email'};
     }
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action($in{'action'}, $in{'response'},
+        arg => $param->{'user'}{'email'},
+        previous_action => ($in{'previous_action'} || 'info'));
+    return $next_action unless $next_action eq '1';
 
     my %result = unsubscribe($authenticated_email_address, $list);
     if ($result{'success'} == 1) {
@@ -14901,7 +14925,6 @@ sub do_d_delete {
             }
         );
     }
-
     unless ($access{may}{edit}) {
         Sympa::Report::reject_report_web('auth', $access{reason}{edit},
             {}, $param->{'action'}, $list);
@@ -14920,6 +14943,14 @@ sub do_d_delete {
         );
         return undef;
     }
+
+    # End of control
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action($in{'action'}, $in{'response'},
+        arg => join('/', @{$shared_doc->{paths}}),
+        previous_action => ($in{'previous_action'} || 'd_read'));
+    return $next_action unless $next_action eq '1';
 
     if ($shared_doc->{type} eq 'directory') {
         # Directory.

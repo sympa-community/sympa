@@ -1,0 +1,29 @@
+<!-- $Id$ -->
+<p>
+[% IF confirm_action == 'd_delete' ~%]
+  [%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%]
+[%~ ELSIF confirm_action == 'signoff' ~%]
+  [%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]
+[%~ ELSIF confirm_action == 'subscribe' ~%]
+  [%|loc(list)%]Do you really want to subscribe to list %1?[%END%]
+[%~ END %]
+</p>
+
+<form action="[% path_cgi %]" method="POST">
+[% IF confirm_action == 'd_delete' ~%]
+  <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
+[%~ ELSIF confirm_action == 'signoff' ~%]
+  <input type="hidden" name="email" value="[% user.email %]" />
+[%~ ELSIF confirm_action == 'subscribe' ~%]
+  <input type="hidden" name="email" value="[% user.email %]" />
+[%~ END %]
+  <input type="hidden" name="action" value="[% confirm_action %]" />
+  <input type="hidden" name="list" value="[% list %]" />
+  <button type="submit" name="response" value="confirm">
+    [%|loc%]Confirm[%END%]
+  </button>
+  <button type="submit" name="response" value="cancel">
+    [%|loc%]Cancel[%END%]
+  </button>
+</form>
+<!-- end of confirm_action.tt2 -->

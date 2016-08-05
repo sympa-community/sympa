@@ -885,4 +885,108 @@ sub _is_a_crawler {
     return $Conf::Conf{'crawlers_detection'}{'user_agent_string'}{$ua};
 }
 
+# Check if action has been confirmed.
+# $action - Action to be checked
+# $response - Response from user: "init", false (not yet checked), "confirm"
+#   and others (cancelled).
+# arg => $arg
+# previous_action => $previous_action
+sub confirm_action {
+    my $self     = shift;
+    my $action   = shift;
+    my $response = shift || '';
+    my %opts     = @_;
+
+    if ($response eq 'init') {
+        # Check if action in session matches current action.
+        unless ($self->{confirm_action}
+            and $self->{confirm_action} eq $action) {
+            delete @{$self}{qw(confirm_action confirm_id previous_action)};
+        }
+        return;
+    }
+
+    my $id = Digest::MD5::md5_hex($opts{arg} || '');
+    my $default_home = Conf::get_robot_conf($self->{robot}, 'default_home');
+    unless ($response
+        and $self->{confirm_action}
+        and $self->{confirm_action} eq $action
+        and $self->{confirm_id}
+        and $self->{confirm_id} eq $id) {
+        # Not yet confirmed / dismissed: Save parameters in session.
+        @{$self}{qw(confirm_action confirm_id previous_action)} =
+            ($action, $id, ($opts{previous_action} || $default_home));
+        return 'confirm_action';
+    } elsif ($response eq 'confirm') {
+        # Action is confirmed: Clear parameters in session.
+        delete @{$self}{qw(confirm_action confirm_id previous_action)};
+        return 1;
+    } else {
+        # Action is dismissed: Clear parameters in session then returns name
+        # of previous action.
+        my $previous_action = $self->{previous_action} || $default_home;
+        delete @{$self}{qw(confirm_action confirm_id previous_action)};
+        return $previous_action;
+    }
+}
+
 1;
+__END__
+
+=encoding utf-8
+
+#=head1 NAME
+
+Sympa::Session - Web session
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head2 Methods
+
+=over
+
+=item confirm_action ( $action, $response, [ arg =E<gt> $arg, ]
+[ previous_action =E<gt> $previous_action ] )
+
+I<Instance metrhod>.
+Check if action has been confirmed.
+
+Parameters:
+
+=over
+
+=item $action
+
+Action to be checked.
+
+=item $response
+
+Response from user:
+C<'init'>, false value (not yet checked), C<'confirm'> and others (cancelled).
+
+=item arg =E<gt> $arg
+
+=item previous_action => $previous_action
+
+TBD.
+
+=back
+
+Returns:
+
+TBD.
+
+=back
+
+=head1 SEE ALSO
+
+=head1 HISTORY
+
+L<SympaSession> appeared on Sympa 5.4a3.
+
+It was renamed to L<Sympa::Session> on Sympa 6.2a.41.
+
+=cut
+

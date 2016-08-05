@@ -44,8 +44,7 @@
       </span>
     [% IF shared_doc.may_edit %]
       <a class="actionMenuLinks"
-        href="[% 'd_delete' | url_rel([list,shared_doc.paths_d]) %]"
-        onclick="request_confirm_link('[% 'd_delete' | url_rel([list,shared_doc.paths_d]) %]', '[% | escape_quote %][%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%][%END%]'); return false;">
+        href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
         <i class="fa fa-trash"></i> [%|loc%]delete[%END%]</a> 
     [% END %]
     [% IF shared_doc.may_control %]      
@@ -130,8 +129,7 @@
 	[% IF expert_page ~%]
 	  <td class="review_cels text-right">
 	  [% IF s.may_edit ~%]
-	    <a href="[% 'd_delete' | url_rel([list,s.paths_d]) %]"
-              onclick="request_confirm_link('[% 'd_delete' | url_rel([list,s.paths_d]) %]', '[% | escape_quote %][%|loc(s.name)%]Do you really want to delete %1%2?[%END%][%END%]'); return false;"
+	    <a href="[% 'd_delete' | url_rel([list,s.paths_d],{previous_action=>action}) %]"
               class="tip-left" data-tooltip aria-haspopup="true"
               title="[%|loc%]delete[%END%]"><i class="fa fa-trash fa-lg"></i>
             </a>
@@ -256,8 +254,7 @@
 	  <a href="[% 'd_editfile' | url_rel([list,f.paths_d]) %]"
             class="tip-left" data-tooltip aria-haspopup="true"
             title="[%|loc%]edit[%END%]"><i class="fa fa-pencil fa-lg"></i></a>
-          &nbsp;<a href="[% 'd_delete' | url_rel([list,f.paths_d]) %]"
-            onclick="request_confirm_link('[% 'd_delete' | url_rel([list,f.paths_d]) %]', '[% | escape_quote %][%|loc(f.paths.join("/"),"",f.size)%]Do you really want to delete %1%2 (%3 Kb)?[%END%][%END%]'); return false;"
+          &nbsp;<a href="[% 'd_delete' | url_rel([list,f.paths_d],{previous_action=>action}) %]"
             class="tip-left" data-tooltip aria-haspopup="true"
             title="[%|loc%]delete[%END%]"><i class="fa fa-trash fa-lg"></i></a>
         [%~ ELSE ~%]

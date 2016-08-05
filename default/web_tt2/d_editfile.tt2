@@ -46,8 +46,7 @@
 
     [% IF shared_doc.may_edit %]
       <a class="actionMenuLinks"
-        href="[% 'd_delete' | url_rel([list,shared_doc.paths_d]) %]"
-        onclick="request_confirm_link('[% 'd_delete' | url_rel([list,shared_doc.paths_d]) %]', '[% | escape_quote %][%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%][%END%]'); return false;">
+        href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
         <i class="fa fa-trash"></i> [%|loc%]delete[%END%]</a>
     [% END %]
     [% IF shared_doc.may_control %]
