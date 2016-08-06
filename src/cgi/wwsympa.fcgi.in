@@ -5664,7 +5664,7 @@ sub do_subscribe {
         unless ($in{'via_subrequest'}) {
             # Action confirmed?
             my $next_action = $session->confirm_action(
-                $in{'action'}, $in{'response'},
+                $in{'action'}, $in{'response_action'},
                 arg => $param->{'user'}{'email'},
                 previous_action => ($in{'previous_action'} || 'info'));
             return $next_action unless $next_action eq '1';
@@ -6251,7 +6251,8 @@ sub do_signoff {
     }
 
     # Action confirmed?
-    my $next_action = $session->confirm_action($in{'action'}, $in{'response'},
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
         arg => $param->{'user'}{'email'},
         previous_action => ($in{'previous_action'} || 'info'));
     return $next_action unless $next_action eq '1';
@@ -14947,7 +14948,8 @@ sub do_d_delete {
     # End of control
 
     # Action confirmed?
-    my $next_action = $session->confirm_action($in{'action'}, $in{'response'},
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
         arg => join('/', @{$shared_doc->{paths}}),
         previous_action => ($in{'previous_action'} || 'd_read'));
     return $next_action unless $next_action eq '1';

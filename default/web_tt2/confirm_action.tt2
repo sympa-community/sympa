@@ -19,11 +19,9 @@
 [%~ END %]
   <input type="hidden" name="action" value="[% confirm_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
-  <button type="submit" name="response" value="confirm">
-    [%|loc%]Confirm[%END%]
-  </button>
-  <button type="submit" name="response" value="cancel">
-    [%|loc%]Cancel[%END%]
-  </button>
+  <input class="MainMenuLinks" type="submit" name="response_action_confirm"
+    value="[%|loc%]Confirm[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="response_action_cancel"
+    value="[%|loc%]Cancel[%END%]" />
 </form>
 <!-- end of confirm_action.tt2 -->
