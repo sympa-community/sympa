@@ -2,7 +2,7 @@
 # $Id$
 
 AC_PREREQ([2.59])
-AC_INIT([smtpc], [0.1a.5], [sympa-authors@listes.renater.fr])
+AC_INIT([smtpc], [0.1], [sympa-authors@listes.renater.fr])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror 1.9 tar-pax])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CONFIG_HEADERS([config.h])
