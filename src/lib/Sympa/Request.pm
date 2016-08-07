@@ -127,7 +127,7 @@ sub cmd_line {
         if $self->{cmd_line} and not $options{canonic};
     return undef
         if not $self->{action}
-            or $self->{action} eq 'unknown';
+        or $self->{action} eq 'unknown';
 
     my $cmd_format = $Sympa::CommandDef::comms{$self->{action}}->{cmd_format};
     my $arg_keys   = $Sympa::CommandDef::comms{$self->{action}}->{arg_keys};

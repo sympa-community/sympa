@@ -101,8 +101,7 @@ if ($robot) {
 } else {
     $home_sympa = $Conf::Conf{'home'};
 }
-my $dest_dir =
-    Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_id;
+my $dest_dir = Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_id;
 
 unless (-d "$home_sympa/$listname") {
     die "No directory for list $listname";

@@ -38,8 +38,8 @@ sub _init {
     if ($state == 0) {
         die 'bug in logic. Ask developer'
             unless $self->{confirmed_by}
-                and $self->{context}
-                and $self->{keyauth};
+            and $self->{context}
+            and $self->{keyauth};
     }
 
     1;

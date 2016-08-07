@@ -98,7 +98,7 @@ sub next {
                         !/,lock/
                     and !m{(?:\A|/)(?:\.|T\.|BAD-)}
                     and -f ($self->{pct_directory} . '/' . $_)
-                } glob '*/*'
+            } glob '*/*'
         ];
         chdir $cwd;
     }

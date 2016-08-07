@@ -347,8 +347,8 @@ sub getUserEmailByCookie {
 
     unless ($cookie) {
         $log->syslog('err', "Missing parameter cookie");
-        die SOAP::Fault->faultcode('Client')->faultstring('Missing parameter')
-            ->faultdetail('Use : <cookie>');
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('Missing parameter')->faultdetail('Use : <cookie>');
     }
 
     my $session =
@@ -631,7 +631,8 @@ sub createList {
         $log->syslog('info',
             'Create_list %s@%s from %s refused, missing parameter(s) %s',
             $listname, $robot, $sender, $reject);
-        die SOAP::Fault->faultcode('Server')->faultstring('Missing parameter')
+        die SOAP::Fault->faultcode('Server')
+            ->faultstring('Missing parameter')
             ->faultdetail("Missing required parameter(s) : $reject");
     }
     # check authorization
@@ -1035,14 +1036,14 @@ sub del {
     # If a list is not 'open' and allow_subscribe_if_pending has been set
     # to 'off' returns error report.
     unless ($list->{'admin'}{'status'} eq 'open'
-        or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
-        'on') {
+        or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq 'on')
+    {
         my $error =
             sprintf 'Service unavailable because list status is \'%s\'',
             $list->{'admin'}{'status'};
         $log->syslog('info', 'List %s not open', $list);
-        die SOAP::Fault::faultcode("Server")
-            ->faultstring('List not open')->faultdetail($error);
+        die SOAP::Fault::faultcode("Server")->faultstring('List not open')
+            ->faultdetail($error);
     }
 
     # Really delete and rewrite to disk.
@@ -1575,7 +1576,8 @@ sub subscribe {
                 Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
                 'on') {
                 my $error =
-                    sprintf 'Service unavailable because list status is \'%s\'',
+                    sprintf
+                    'Service unavailable because list status is \'%s\'',
                     $list->{'admin'}{'status'};
                 $log->syslog('info', 'List %s not open', $list);
                 die SOAP::Fault::faultcode("Server")
@@ -1853,8 +1855,8 @@ sub setDetails {
         # ideally, this should check against the available_user_options
         # values from the $list config
         if $reception
-            and $reception =~
-            /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)$/;
+        and $reception =~
+        /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)$/;
     if (@_) {    # do we have any custom attributes passed?
         %newcustom = %{$subscriber->{'custom_attribute'}};
         while (@_) {

@@ -253,7 +253,7 @@ sub next {
                         !/,lock/
                     and !m{(?:\A|/)(?:\.|T\.|BAD-)}
                     and -f ($self->{directory} . '/' . $_)
-                } readdir $dh
+            } readdir $dh
         ];
         closedir $dh;
 
@@ -311,7 +311,7 @@ sub html_next {
                         !/,lock/
                     and !m{(?:\A|/)(?:\.|T\.|BAD-)}
                     and -f ($self->{arc_directory} . '/' . $_)
-                } readdir $dh
+            } readdir $dh
         ];
         closedir $dh;
 
@@ -569,7 +569,7 @@ sub get_archives {
     my @arcs =
         grep {
         /\A\d\d\d\d\-\d\d\z/
-            and -d $base_directory . '/' 
+            and -d $base_directory . '/'
             . $_
             . '/arctxt'
         }

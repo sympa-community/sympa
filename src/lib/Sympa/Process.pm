@@ -46,7 +46,7 @@ BEGIN {
         unless $Config::Config{d_sigaction};
     die 'Non-blocking wait is not supported'
         unless $Config::Config{d_waitpid}
-            or $Config::Config{d_wait4};
+        or $Config::Config{d_wait4};
 }
 
 INIT {
@@ -193,7 +193,7 @@ sub sync_child {
         foreach my $child_pid (keys %$hash) {
             next
                 if exists $self->{children}->{$child_pid}
-                    and kill 0, $child_pid;
+                and kill 0, $child_pid;
             delete $hash->{$child_pid};
         }
     }
@@ -204,7 +204,7 @@ sub sync_child {
 
             next
                 if exists $self->{children}->{$child_pid}
-                    and kill 0, $child_pid;
+                and kill 0, $child_pid;
 
             $log->syslog(
                 'err',

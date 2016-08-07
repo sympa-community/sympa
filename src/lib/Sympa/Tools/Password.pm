@@ -111,8 +111,8 @@ sub password_validation {
     my $pv = $Conf::Conf{'password_validation'};
     return undef
         unless $pv
-            and defined $password
-            and $Data::Password::VERSION;
+        and defined $password
+        and $Data::Password::VERSION;
 
     local (
         $Data::Password::DICTIONARY, $Data::Password::FOLLOWING,

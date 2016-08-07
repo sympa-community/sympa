@@ -141,7 +141,7 @@ sub authentication {
         next if ($email !~ /$auth_service->{'regexp'}/i);
         next
             if $auth_service->{'negative_regexp'}
-                and $email =~ /$auth_service->{'negative_regexp'}/i;
+            and $email =~ /$auth_service->{'negative_regexp'}/i;
 
         ## Only 'user_table' and 'ldap' backends will need that Sympa collects
         ## the user passwords

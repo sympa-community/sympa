@@ -109,7 +109,7 @@ sub new {
                 map {
                     my ($ak, $av) = split /=/, $_, 2;
                     ($ak => ($av || 1))
-                    } split(/\s*;\s*/, $v)
+                } split(/\s*;\s*/, $v)
             };
         } elsif ($k eq 'X-Sympa-Spam-Status') {     # New in 6.2a.41
             $self->{'spam_status'} = $v;
@@ -431,6 +431,7 @@ sub check_spam_status {
 }
 
 my $has_mail_dkim_textwrap;
+
 BEGIN {
     eval 'use Mail::DKIM::Signer';
     # This doesn't export $VERSION.
@@ -1791,10 +1792,10 @@ sub _append_footer_header_to_part {
         if (length $footer_msg) {
             $footer_msg .= "\n" unless $footer_msg =~ /\n\z/;
         }
-        if (uc($entity->head->mime_attr('Content-Transfer-Encoding') || '') eq
-            'BASE64') {
+        if (uc($entity->head->mime_attr('Content-Transfer-Encoding') || '')
+            eq 'BASE64') {
             $header_msg =~ s/\r\n|\r|\n/\r\n/g;
-            $body       =~ s/(\r\n|\r|\n)\z/\r\n/;    # only at end
+            $body =~ s/(\r\n|\r|\n)\z/\r\n/;    # only at end
             $footer_msg =~ s/\r\n|\r|\n/\r\n/g;
         }
 
@@ -1804,7 +1805,7 @@ sub _append_footer_header_to_part {
         my ($newcharset, $newenc);
         ($body, $newcharset, $newenc) =
             $in_cset->body_encode($new_body, Replacement => 'FALLBACK');
-        unless ($newcharset) {                        # bug in MIME::Charset?
+        unless ($newcharset) {                  # bug in MIME::Charset?
             $log->syslog('err', 'Can\'t determine output charset');
             return undef;
         } elsif ($newcharset ne $in_cset->as_string) {
@@ -1816,10 +1817,10 @@ sub _append_footer_header_to_part {
 
         # Escape special characters.
         $header_msg = Sympa::Tools::Text::encode_html($header_msg);
-        $header_msg =~ s/(\r\n|\r|\n)$//;        # strip the last newline.
+        $header_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
         $header_msg =~ s,(\r\n|\r|\n),<br/>,g;
         $footer_msg = Sympa::Tools::Text::encode_html($footer_msg);
-        $footer_msg =~ s/(\r\n|\r|\n)$//;        # strip the last newline.
+        $footer_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
         $footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
 
         $new_body = $body;
@@ -1928,7 +1929,8 @@ sub _urlize_one_part {
     if ($entity->bodyhandle) {
         my $ct = $entity->effective_type || 'text/plain';
         printf $fh "Content-Type: %s", $ct;
-        printf $fh "; Charset=%s", $head->mime_attr('Content-Type.Charset')
+        printf $fh "; Charset=%s",
+            $head->mime_attr('Content-Type.Charset')
             if Sympa::Tools::Data::smart_eq(
             $head->mime_attr('Content-Type.Charset'), qr/\S/);
         print $fh "\n\n";
@@ -2218,8 +2220,8 @@ sub _as_singlepart {
             if ($eff_type eq lc $preferred_type
                 or (    $eff_type eq 'multipart/related'
                     and $part->parts
-                    and lc($part->parts(0)->effective_type || 'text/plain') eq
-                    $preferred_type)
+                    and lc($part->parts(0)->effective_type || 'text/plain')
+                    eq $preferred_type)
                 ) {
                 ## Only keep the first matching part
                 $entity->parts([$part]);
@@ -2340,9 +2342,9 @@ sub check_virus_infection {
 
         $error_msg = $result
             if $status != 0
-                and $status != 12
-                and $status != 13
-                and $status != 19;
+            and $status != 12
+            and $status != 13
+            and $status != 19;
     } elsif ($antivirus_path =~ /\/vscan$/) {
         # Trend Micro
 
@@ -2893,7 +2895,7 @@ sub dmarc_protect {
 
     return
         unless $list->{'admin'}{'dmarc_protection'}
-            and $list->{'admin'}{'dmarc_protection'}{'mode'};
+        and $list->{'admin'}{'dmarc_protection'}{'mode'};
 
     $log->syslog('debug', 'DMARC protection on');
     my $dkimdomain = $list->{'admin'}{'dmarc_protection'}{'domain_regex'};

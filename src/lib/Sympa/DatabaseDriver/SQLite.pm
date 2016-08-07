@@ -158,7 +158,7 @@ sub get_tables {
     }
 
     foreach my $t (@raw_tables) {
-        $t =~ s/^"main"\.//;            # needed for SQLite 3
+        $t =~ s/^"main"\.//;    # needed for SQLite 3
         $t =~ s/^.*\"([^\"]+)\"$/$1/;
         push @result, $t;
     }

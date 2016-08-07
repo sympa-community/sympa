@@ -197,10 +197,12 @@ sub _twist {
     ## Prepare tracking if list config allow it
     my @apply_tracking = ();
 
-    push @apply_tracking, 'dsn'
+    push @apply_tracking,
+        'dsn'
         if Sympa::Tools::Data::smart_eq(
         $list->{'admin'}{'tracking'}->{'delivery_status_notification'}, 'on');
-    push @apply_tracking, 'mdn'
+    push @apply_tracking,
+        'mdn'
         if Sympa::Tools::Data::smart_eq(
         $list->{'admin'}{'tracking'}->{'message_disposition_notification'},
         'on')

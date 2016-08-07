@@ -130,7 +130,8 @@ sub sympa_checksum {
     my $rcpt = shift;
     return (
         substr(
-            Digest::MD5::md5_hex(join('/', $Conf::Conf{'cookie'}, $rcpt)), -10
+            Digest::MD5::md5_hex(join('/', $Conf::Conf{'cookie'}, $rcpt)),
+            -10
         )
     );
 }

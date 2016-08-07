@@ -65,7 +65,7 @@ sub _twist {
             {
                 #FIXME: Missing From: field?
                 $reply =
-                      Sympa::get_address($list) . ','
+                    Sympa::get_address($list) . ','
                     . $message->get_header('From');
             } elsif ($list->{'admin'}{'reply_to_header'}->{'value'} eq
                 'other_email') {

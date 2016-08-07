@@ -1321,8 +1321,8 @@ sub get_digest_recipients_per_mode {
 
     return 0
         unless @tabrcpt_summary
-            or @tabrcpt_digest
-            or @tabrcpt_digestplain;
+        or @tabrcpt_digest
+        or @tabrcpt_digestplain;
 
     my $available_recipients;
     $available_recipients->{'summary'} = \@tabrcpt_summary
@@ -1403,7 +1403,7 @@ sub get_recipients_per_mode {
         # Check if "not_me" reception mode is set.
         next
             if $user->{'reception'} eq 'not_me'
-                and $message->{sender} eq $user->{'email'};
+            and $message->{sender} eq $user->{'email'};
 
         # Recipients who won't receive encrypted messages.
         # The digest, digestplain, nomail and summary reception option are
@@ -1489,15 +1489,15 @@ sub get_recipients_per_mode {
 
     return 0
         unless @tabrcpt_mail
-            or @tabrcpt_notice
-            or @tabrcpt_txt
-            or @tabrcpt_html
-            or @tabrcpt_urlize
-            or @tabrcpt_mail_verp
-            or @tabrcpt_notice_verp
-            or @tabrcpt_txt_verp
-            or @tabrcpt_html_verp
-            or @tabrcpt_urlize_verp;
+        or @tabrcpt_notice
+        or @tabrcpt_txt
+        or @tabrcpt_html
+        or @tabrcpt_urlize
+        or @tabrcpt_mail_verp
+        or @tabrcpt_notice_verp
+        or @tabrcpt_txt_verp
+        or @tabrcpt_html_verp
+        or @tabrcpt_urlize_verp;
 
     my $available_recipients;
 
@@ -3376,8 +3376,8 @@ sub get_resembling_members {
     my $initial = $1 if defined $first and $first =~ /\A([a-z])/;
     $initial .= $1
         if defined $initial
-            and defined $name
-            and $name =~ /\A([a-z])/;
+        and defined $name
+        and $name =~ /\A([a-z])/;
     my ($top, $upperdomain) = split /[.]/, $domain, 2;
 
     my @cond;
@@ -3642,7 +3642,8 @@ sub update_list_member {
 
     # Delete subscription / signoff requests no longer used.
     my $new_email;
-    if ($who ne '*' and $values->{'email'}
+    if (    $who ne '*'
+        and $values->{'email'}
         and $new_email = Sympa::Tools::Text::canonic_email($values->{'email'})
         and $who ne $new_email) {
         my $spool_req;
@@ -3958,8 +3959,8 @@ sub add_list_member {
                 ) {
                 $log->syslog('err', 'Unable to add user %s to user_table',
                     $who);
-                $self->{'add_outcome'}{'errors'}
-                    {'unable_to_add_to_database'} = 1;
+                $self->{'add_outcome'}{'errors'}{'unable_to_add_to_database'}
+                    = 1;
                 next;
             }
         }
@@ -4377,7 +4378,7 @@ sub may_do {
     return undef unless ($admin);
 
     $action =~ y/A-Z/a-z/;
-    $who    =~ y/A-Z/a-z/;
+    $who =~ y/A-Z/a-z/;
 
     if ($action =~ /^(index|get)$/io) {
         my $arc_access = $admin->{'archive'}{'mail_access'};
@@ -4415,7 +4416,7 @@ sub may_do {
 
             return undef
                 unless $self->is_list_member($who)
-                    or $self->is_admin('owner', $who);
+                or $self->is_admin('owner', $who);
         } elsif (
             $admin->{'send'} =~ /^(editor|editorkey|privateoreditorkey)$/i) {
             return undef unless $self->is_admin('actual_editor', $who);
@@ -4440,13 +4441,13 @@ sub may_do {
         if ($admin->{'send'} =~ /^(privatekey)$/io) {
             return 1
                 if $self->is_list_member($who)
-                    or $self->is_admin('owner', $who)
-                    or Sympa::is_listmaster($self, $who);
+                or $self->is_admin('owner', $who)
+                or Sympa::is_listmaster($self, $who);
         } elsif ($admin->{'send'} =~ /^(privateorpublickey)$/io) {
             return 1
                 unless $self->is_list_member($who)
-                    or $self->is_admin('owner', $who)
-                    or Sympa::is_listmaster($self, $who);
+                or $self->is_admin('owner', $who)
+                or Sympa::is_listmaster($self, $who);
         } elsif ($admin->{'send'} =~ /^(publickey)$/io) {
             return 1;
         }
@@ -4495,7 +4496,7 @@ sub is_web_archived {
     my $self = shift;
     return 1
         if ref $self->{'admin'}{'archive'} eq 'HASH'
-            and $self->{'admin'}{'archive'}{'web_access'};
+        and $self->{'admin'}{'archive'}{'web_access'};
     return undef;
 }
 
@@ -5640,7 +5641,7 @@ sub _include_users_ldap_2level {
 
                     next
                         if $ldap_select2 eq 'regex'
-                            and $cleanmail !~ /$ldap_regex2/;
+                        and $cleanmail !~ /$ldap_regex2/;
                     next if $emailsViewed{$cleanmail};
                     push @emails, [$cleanmail, $gecosentry];
                     $emailsViewed{$cleanmail} = 1;
@@ -5658,7 +5659,7 @@ sub _include_users_ldap_2level {
 
                 next
                     if $ldap_select2 eq 'regex'
-                        and $cleanmail !~ /$ldap_regex2/;
+                    and $cleanmail !~ /$ldap_regex2/;
                 next if $emailsViewed{$cleanmail};
                 push @emails, [$cleanmail, $gecosentry];
                 $emailsViewed{$cleanmail} = 1;
@@ -5945,7 +5946,7 @@ sub _load_list_members_from_include {
     my $sources = {
         map {
             ($_ => (Sympa::Tools::Data::dup_var($self->{'admin'}{$_}) || []))
-            } @sources_providing_listmembers
+        } @sources_providing_listmembers
     };
 
     my %users;
@@ -6215,7 +6216,7 @@ sub _load_list_members_from_include {
                         $self->{'domain'}
                         unless 0 < index($source_id, '@');
                     $source_id
-                    } @depend_on
+                } @depend_on
             )
         ],
     };
@@ -6435,7 +6436,7 @@ sub _load_list_admin_from_include {
                         $self->{'domain'}
                         unless 0 < index($source_id, '@');
                     $source_id
-                    } @depend_on
+                } @depend_on
             )
         ],
     };
@@ -6627,8 +6628,8 @@ sub _load_include_admin_user_file {
 
                 ## Default value
                 unless (defined $hash{$k}) {
-                    if (defined $pinfo->{$pname}{'file_format'}{$k}
-                        {'default'}) {
+                    if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
+                        ) {
                         $hash{$k} =
                             $self->_load_list_param($k, 'default',
                             $pinfo->{$pname}{'file_format'}{$k});
@@ -6938,19 +6939,16 @@ sub sync_include {
                             $old_subscribers{$email}{'update_date'};
                         $new_subscribers->{$email}{'visibility'} =
                             $self->get_default_user_options->{'visibility'}
-                            if
-                            defined $self->get_default_user_options->{
-                                    'visibility'};
+                            if defined $self->get_default_user_options->{
+                            'visibility'};
                         $new_subscribers->{$email}{'reception'} =
                             $self->get_default_user_options->{'reception'}
-                            if
-                            defined $self->get_default_user_options->{
-                                    'reception'};
+                            if defined $self->get_default_user_options->{
+                            'reception'};
                         $new_subscribers->{$email}{'profile'} =
                             $self->get_default_user_options->{'profile'}
-                            if
-                            defined $self->get_default_user_options->{
-                                    'profile'};
+                            if defined $self->get_default_user_options->{
+                            'profile'};
                         $new_subscribers->{$email}{'info'} =
                             $self->get_default_user_options->{'info'}
                             if
@@ -8511,7 +8509,7 @@ sub _save_list_param {
                 ## Skip if empty value
                 next
                     unless defined $p->{$k}{'name'}
-                        and $p->{$k}{'name'} =~ /\S/;
+                    and $p->{$k}{'name'} =~ /\S/;
 
                 $fd->print(sprintf "%s %s\n", $k, $p->{$k}{'name'});
 
@@ -8848,8 +8846,8 @@ sub _load_list_config_file {
 
                 ## Default value
                 unless (defined $hash{$k}) {
-                    if (defined $pinfo->{$pname}{'file_format'}{$k}
-                        {'default'}) {
+                    if (defined $pinfo->{$pname}{'file_format'}{$k}{'default'}
+                        ) {
                         $hash{$k} =
                             $self->_load_list_param($k, 'default',
                             $pinfo->{$pname}{'file_format'}{$k});
@@ -9648,9 +9646,9 @@ sub remove_aliases {
 
     return undef
         unless $self
-            and $list_of_lists{$self->{'domain'}}{$self->{'name'}}
-            and Conf::get_robot_conf($self->{'domain'}, 'sendmail_aliases') !~
-            /^none$/i;
+        and $list_of_lists{$self->{'domain'}}{$self->{'name'}}
+        and Conf::get_robot_conf($self->{'domain'}, 'sendmail_aliases') !~
+        /^none$/i;
 
     my $alias_manager = $Conf::Conf{'alias_manager'};
 

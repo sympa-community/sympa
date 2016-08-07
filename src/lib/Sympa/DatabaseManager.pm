@@ -52,7 +52,7 @@ sub instance {
 
     return undef
         unless $self = Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)
-            and $self->connect;
+        and $self->connect;
 
     # At once connection succeeded, we keep trying to connect.
     # Unless in a web context, because we can't afford long response time on

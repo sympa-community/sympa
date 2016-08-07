@@ -993,8 +993,8 @@ sub instantiate {
                 );
 
             } else {
-                $self->{'created_lists'}{'without_aliases'}{$list->{'name'}} =
-                    $result->{'aliases'};
+                $self->{'created_lists'}{'without_aliases'}{$list->{'name'}}
+                    = $result->{'aliases'};
             }
 
             # config_changes

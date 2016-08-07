@@ -308,9 +308,9 @@ sub _twist {
             my $etype = $part->effective_type || '';
             next
                 unless $etype eq 'message/rfc822'
-                    or $etype eq 'text/rfc822-headers'
-                    or $etype eq 'message/global'
-                    or $etype eq 'message/global-headers';
+                or $etype eq 'text/rfc822-headers'
+                or $etype eq 'message/global'
+                or $etype eq 'message/global-headers';
             next unless $part->bodyhandle;
 
             my $str  = $part->bodyhandle->as_string . "\n\n";

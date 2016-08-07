@@ -174,11 +174,11 @@ our %comm = (
     'family_signoff'         => 'do_family_signoff',
     'family_signoff_request' => 'do_family_signoff_request',
     #XXX'multiple_signoff' => 'do_multiple_signoff',
-    'sigrequest'       => 'do_sigrequest',
-    'sigindex'         => 'do_sigindex',
-    'ignoresub'        => 'do_ignoresub',
-    'ignoresig'        => 'do_ignoresig',
-    'my'               => 'do_my',
+    'sigrequest' => 'do_sigrequest',
+    'sigindex'   => 'do_sigindex',
+    'ignoresub'  => 'do_ignoresub',
+    'ignoresig'  => 'do_ignoresig',
+    'my'         => 'do_my',
     #'which' => 'do_which',
     'lists'            => 'do_lists',
     'lists_categories' => 'do_lists_categories',
@@ -213,32 +213,32 @@ our %comm = (
     'viewmod'         => 'do_viewmod',
     'd_reject_shared' => 'do_d_reject_shared',
     #XXX'reject_notify_shared' => 'do_reject_notify_shared',
-    'd_install_shared'         => 'do_d_install_shared',
-    'editfile'                 => 'do_editfile',
-    'savefile'                 => 'do_savefile',
-    'arc'                      => 'do_arc',
-    'latest_arc'               => 'do_latest_arc',
-    'latest_d_read'            => 'do_latest_d_read',
-    'arc_manage'               => 'do_arc_manage',
-    'remove_arc'               => 'do_remove_arc',
-    'send_me'                  => 'do_send_me',
-    'view_source'              => 'do_view_source',
-    'tracking'                 => 'do_tracking',
-    'arcsearch_form'           => 'do_arcsearch_form',
-    'arcsearch_id'             => 'do_arcsearch_id',
-    'arcsearch'                => 'do_arcsearch',
-    'rebuildarc'               => 'do_rebuildarc',
-    'rebuildallarc'            => 'do_rebuildallarc',
-    'arc_download'             => 'do_arc_download',
-    'arc_delete'               => 'do_arc_delete',
-    'serveradmin'              => 'do_serveradmin',
-    'set_loglevel'             => 'do_set_loglevel',
-    'set_dumpvars'             => 'do_set_dumpvars',
-    'show_sessions'            => 'do_show_sessions',
-    'unset_dumpvars'           => 'do_unset_dumpvars',
-    'set_session_email'        => 'do_set_session_email',
-    'restore_email'            => 'do_restore_email',
-    'skinsedit'                => 'do_skinsedit',
+    'd_install_shared'  => 'do_d_install_shared',
+    'editfile'          => 'do_editfile',
+    'savefile'          => 'do_savefile',
+    'arc'               => 'do_arc',
+    'latest_arc'        => 'do_latest_arc',
+    'latest_d_read'     => 'do_latest_d_read',
+    'arc_manage'        => 'do_arc_manage',
+    'remove_arc'        => 'do_remove_arc',
+    'send_me'           => 'do_send_me',
+    'view_source'       => 'do_view_source',
+    'tracking'          => 'do_tracking',
+    'arcsearch_form'    => 'do_arcsearch_form',
+    'arcsearch_id'      => 'do_arcsearch_id',
+    'arcsearch'         => 'do_arcsearch',
+    'rebuildarc'        => 'do_rebuildarc',
+    'rebuildallarc'     => 'do_rebuildallarc',
+    'arc_download'      => 'do_arc_download',
+    'arc_delete'        => 'do_arc_delete',
+    'serveradmin'       => 'do_serveradmin',
+    'set_loglevel'      => 'do_set_loglevel',
+    'set_dumpvars'      => 'do_set_dumpvars',
+    'show_sessions'     => 'do_show_sessions',
+    'unset_dumpvars'    => 'do_unset_dumpvars',
+    'set_session_email' => 'do_set_session_email',
+    'restore_email'     => 'do_restore_email',
+    'skinsedit'         => 'do_skinsedit',
     #XXX'css' => 'do_css',
     'help'                     => 'do_help',
     'edit_list_request'        => 'do_edit_list_request',
@@ -361,10 +361,10 @@ our %action_args = (
     'sso_login' => ['auth_service_name', 'subaction', 'email', 'ticket'],
     'sso_login_succeeded' =>
         ['auth_service_name', 'previous_action', 'previous_list'],
-    'loginrequest'     => ['previous_action', 'previous_list'],
-    'logout'           => ['previous_action', 'previous_list'],
-    'renewpasswd'      => ['previous_action', 'previous_list'],
-    'firstpasswd'      => ['previous_action', 'previous_list'],
+    'loginrequest' => ['previous_action', 'previous_list'],
+    'logout'       => ['previous_action', 'previous_list'],
+    'renewpasswd'  => ['previous_action', 'previous_list'],
+    'firstpasswd'  => ['previous_action', 'previous_list'],
     #XXX'css' => ['file'],
     'pref'             => ['previous_action', 'previous_list'],
     'reject'           => ['list',            'id'],
@@ -512,10 +512,11 @@ our %required_args = (
     'create_list'         => ['param.user.email'],
     'create_list_request' => ['param.user.email'],
     #XXX'css' => [],
-    'd_admin'             => ['param.list', 'param.user.email'],
-    'd_change_access'     => ['param.list', 'param.user.email'],
-    'd_control'           => ['param.list', 'param.user.email'],
-    'd_create_child'      => ['param.list', 'param.user.email', 'new_name|uploaded_file'],
+    'd_admin'         => ['param.list', 'param.user.email'],
+    'd_change_access' => ['param.list', 'param.user.email'],
+    'd_control'       => ['param.list', 'param.user.email'],
+    'd_create_child' =>
+        ['param.list', 'param.user.email', 'new_name|uploaded_file'],
     'd_delete'         => ['param.list', 'param.user.email'],
     'd_describe'       => ['param.list', 'param.user.email', 'content'],
     'd_editfile'       => ['param.list', 'param.user.email'],
@@ -524,7 +525,8 @@ our %required_args = (
     'd_read'          => ['param.list'],
     'd_reject_shared' => ['param.list', 'param.user.email', 'id'],
     'd_rename'        => ['param.list', 'param.user.email', 'new_name'],
-    'd_update  '      => ['param.list', 'param.user.email', 'content|url|uploaded_file'],
+    'd_update  ' =>
+        ['param.list', 'param.user.email', 'content|url|uploaded_file'],
     'd_set_owner'     => ['param.list', 'param.user.email'],
     'd_unzip'         => ['param.list', 'param.user.email', 'uploaded_file'],
     'del'             => ['param.list', 'param.user.email', 'email'],
@@ -768,10 +770,10 @@ my %temporary_actions = (
     'sso_login_succeeded' => 1,
     'ticket'              => 1,
     #XXX'css' => 1,
-    'rss'                 => 1,    # FIXME:currently not used.
-    'ajax'                => 1,
-    'wsdl'                => 1,
-    'redirect'            => 1,
+    'rss'      => 1,    # FIXME:currently not used.
+    'ajax'     => 1,
+    'wsdl'     => 1,
+    'redirect' => 1,
 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -954,9 +956,9 @@ my %filtering = (
     #XXX'd_control' => {'path' => 'qencode'},
     #XXX'd_change_access' => {'path' => 'qencode'},
     #XXX'd_set_owner' => {'path' => 'qencode'},
-    'requestpasswd'    => {'email'    => 'fix_escape_uri'},
-    'viewbounce'       => {'email'    => 'fix_escape_uri'},
-    'editsubscriber'   => {'email'    => 'fix_escape_uri'},
+    'requestpasswd'  => {'email' => 'fix_escape_uri'},
+    'viewbounce'     => {'email' => 'fix_escape_uri'},
+    'editsubscriber' => {'email' => 'fix_escape_uri'},
     ## Required because outgoing parameters have been html-escaped in
     ## edit_list_request
     'edit_list' => {'*param*' => 'unescape_html'},
@@ -1117,7 +1119,7 @@ while ($query = new_loop()) {
     $pinfo = Sympa::Robot::list_params($robot);
 
     ## Default robot
-    if ($robot eq $Conf::Conf{'host'}) {             #FIXME:Use domain.
+    if ($robot eq $Conf::Conf{'host'}) {    #FIXME:Use domain.
         $param->{'default_robot'} = 1;
     }
 
@@ -1196,11 +1198,11 @@ while ($query = new_loop()) {
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
         $param->{$p} = Conf::get_robot_conf($robot, $p)
             if $p =~ /_color\z/
-                or $p =~ /\Acolor_/
-                or $p =~ /_url\z/;
+            or $p =~ /\Acolor_/
+            or $p =~ /_url\z/;
     }
     # Compat.: deprecated attributes of Robot.
-    $param->{'conf'}{'sympa'}   = Sympa::get_address($robot);
+    $param->{'conf'}{'sympa'} = Sympa::get_address($robot);
     $param->{'conf'}{'request'} = Sympa::get_address($robot, 'owner');
 
     foreach my $auth (keys %{$Conf::Conf{'cas_id'}{$robot}}) {
@@ -1394,7 +1396,7 @@ while ($query = new_loop()) {
                 $param->{'user'}{'email'} = lc(
                     Crypt::OpenSSL::X509->new_from_string(
                         $ENV{SSL_CLIENT_CERT}
-                        )->email()
+                    )->email()
                 );
             }
 
@@ -1734,11 +1736,12 @@ while ($query = new_loop()) {
     $session->store();
 
     ## Do not manage cookies at this level if content was already sent
-    unless ($param->{'bypass'} eq 'extreme'
+    unless (
+        $param->{'bypass'} eq 'extreme'
         #XXX|| $param->{'action'} eq 'css'
         || $maintenance_mode
-        || $rss
-        || $ajax) {
+        || $rss || $ajax
+        ) {
 
         my $delay = $param->{'user'}{'cookie_delay'};
         unless (defined $delay) {
@@ -1780,15 +1783,15 @@ while ($query = new_loop()) {
 
             return 0
                 unless ref($result) eq 'HASH'
-                    and $result->{'action'} ne 'reject';
+                and $result->{'action'} ne 'reject';
 
             return 0
                 if $permission eq 'subscribe'
-                    and $list->is_list_member($param->{'user'}{'email'});
+                and $list->is_list_member($param->{'user'}{'email'});
 
             return 0
                 if $permission eq 'archive.web_access'
-                    and not defined $list->{'admin'}{'archive'};
+                and not defined $list->{'admin'}{'archive'};
 
             return 1;
         };
@@ -2611,7 +2614,8 @@ sub send_html {
     if ($session->{'custom_css'}) {
         $main_css = Sympa::Tools::WWW::get_css_url($robot,
             custom_css =>
-                {map { ($_ => $param->{$_}) } grep {/\Acolor_/} keys %$param});
+                {map { ($_ => $param->{$_}) } grep {/\Acolor_/} keys %$param}
+        );
         unless ($main_css) {
             wwslog('info', 'Error while parsing custom CSS');
             delete $param->{'custom_css'};
@@ -2903,7 +2907,7 @@ sub check_param_in {
 
         # Check if the current user can read the shared documents.
         my $shared_doc = Sympa::SharedDocument->new($list);
-        my %access = $shared_doc->get_privileges(
+        my %access     = $shared_doc->get_privileges(
             mode             => 'read',
             sender           => $param->{'user'}{'email'},
             auth_method      => $param->{'auth_method'},
@@ -3548,8 +3552,8 @@ sub do_login {
 sub do_sso_login {
     wwslog('info', '(%s)', $in{'auth_service_name'});
 
-    delete $session->{'do_not_use_cas'
-        };    #when user require CAS login, reset do_not_use_cas cookie
+    # When user require CAS login, reset do_not_use_cas cookie.
+    delete $session->{'do_not_use_cas'};
     my $next_action;
 
     if ($param->{'user'}{'email'}) {
@@ -3667,7 +3671,7 @@ sub do_sso_login {
                     lc( $ENV{
                             $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                                 {'email_http_header'}
-                            }
+                        }
                     )
                 );
                 ## Only get the first occurrence if multi-valued
@@ -3837,7 +3841,7 @@ sub do_sso_login {
                     lc( $ENV{
                             $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                                 {'email_http_header'}
-                            }
+                        }
                     )
                 );
                 ## Only get the first occurrence if multi-valued
@@ -4585,8 +4589,8 @@ sub do_lists {
         $list_info->{'topics'} = $list->{'admin'}{'topics'};
 
         if (    $param->{'user'}{'email'}
-            and $list->is_admin('privileged_owner', $param->{'user'}{'email'})
-            ) {
+            and
+            $list->is_admin('privileged_owner', $param->{'user'}{'email'})) {
             $list_info->{'is_privileged_owner'} = 1;
             $list_info->{'is_owner'}            = 1;
             # Compat. < 6.2b.2.
@@ -4672,8 +4676,8 @@ sub do_latest_lists {
     my $count_lists = 0;
     foreach my $l (
         sort {
-            $param->{'which'}{$b}{'date_epoch'} <=> $param->{'which'}{$a}
-                {'date_epoch'}
+            $param->{'which'}{$b}{'date_epoch'}
+                <=> $param->{'which'}{$a}{'date_epoch'}
         } (keys(%{$param->{'which'}}))
         ) {
 
@@ -4753,8 +4757,8 @@ sub do_active_lists {
     ## get "count" lists
     foreach my $l (
         sort {
-            $param->{'which'}{$b}{'msg_count'} <=> $param->{'which'}{$a}
-                {'msg_count'}
+            $param->{'which'}{$b}{'msg_count'}
+                <=> $param->{'which'}{$a}{'msg_count'}
         } (keys(%{$param->{'which'}}))
         ) {
         if (defined $in{'count'}) {
@@ -5123,7 +5127,7 @@ sub do_search {
                 if defined $i->{'gecos'};
             next
                 unless index($i->{'email'}, $searchkey) >= 0
-                    or (defined $gecos and index($gecos, $searchkey) >= 0);
+                or (defined $gecos and index($gecos, $searchkey) >= 0);
         }
 
         ## Add user
@@ -5346,7 +5350,7 @@ sub do_set {
         return undef;
     }
 
-    $reception  = '' if $reception  eq 'mail';
+    $reception  = '' if $reception eq 'mail';
     $visibility = '' if $visibility eq 'noconceal';
 
     my $update = {
@@ -5666,8 +5670,9 @@ sub do_subscribe {
             # Action confirmed?
             my $next_action = $session->confirm_action(
                 $in{'action'}, $in{'response_action'},
-                arg => $param->{'user'}{'email'},
-                previous_action => ($in{'previous_action'} || 'info'));
+                arg             => $param->{'user'}{'email'},
+                previous_action => ($in{'previous_action'} || 'info')
+            );
             return $next_action unless $next_action eq '1';
         }
 
@@ -6254,8 +6259,9 @@ sub do_signoff {
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg => $param->{'user'}{'email'},
-        previous_action => ($in{'previous_action'} || 'info'));
+        arg             => $param->{'user'}{'email'},
+        previous_action => ($in{'previous_action'} || 'info')
+    );
     return $next_action unless $next_action eq '1';
 
     my %result = unsubscribe($authenticated_email_address, $list);
@@ -6269,7 +6275,8 @@ sub do_signoff {
             $result{'category_error'},
             $result{'reason_error'},
             {%{$result{'details_error'} || {}}, 'list' => $list->{'name'}},
-            $param->{'action'}, $list
+            $param->{'action'},
+            $list
         );
     }
     return Conf::get_robot_conf($robot, 'default_home');
@@ -6372,7 +6379,7 @@ sub unsubscribe {
             $report{'success'}        = 0;
             $report{'category_error'} = 'user';
             $report{'reason_error'}   = 'list_not_open',
-            $report{'details_error'} =
+                $report{'details_error'} =
                 {'status' => $list->{'admin'}{'status'}};
             return %report;
         }
@@ -7553,7 +7560,7 @@ sub do_skinsedit {
         return unless $in{'custom_color_number'} =~ /color_/;
         $param->{'custom_color_number'} = $in{'custom_color_number'};
         $param->{'custom_color_value'}  = $in{'custom_color_value'};
-        $param->{'custom_css'} = $session->{'custom_css'} = 1;
+        $param->{'custom_css'}          = $session->{'custom_css'} = 1;
 
         $session->{$in{'custom_color_number'}} = $in{'custom_color_value'};
 
@@ -7561,7 +7568,7 @@ sub do_skinsedit {
         foreach my $colornumber (0 .. 15) {
             if ($session->{'color_' . $colornumber}) {
                 $param->{'color_' . $colornumber} =
-                $param->{'session'}{'color_' . $colornumber} =
+                    $param->{'session'}{'color_' . $colornumber} =
                     $session->{'color_' . $colornumber};
             }
         }
@@ -7574,7 +7581,7 @@ sub do_skinsedit {
             Conf::set_robot_conf($robot, $key, $session->{$key});
         }
         @{$param->{'conf'}}{@keys} = @{$session}{@keys};
-        @{$param}{@keys}           = @{$session}{@keys};
+        @{$param}{@keys} = @{$session}{@keys};
 
         Sympa::Tools::WWW::get_css_url($robot, force => 1);
 
@@ -8367,8 +8374,7 @@ sub do_d_install_shared {
         # File already exists ?
         my @children_hash = map { $_->as_hashref }
             grep { $_ and not $_->{moderate} }
-            map { Sympa::SharedDocument->new($list, $_) }
-            @id;
+            map { Sympa::SharedDocument->new($list, $_) } @id;
 
         if (@children_hash) {
             $param->{'shared_doc'}{'children'} = [@children_hash];
@@ -8386,17 +8392,10 @@ sub do_d_install_shared {
 
         unless ($child->install) {
             my $errno = $ERRNO;
-            Sympa::Report::reject_report_web(
-                'intern',
-                'install_shared_failed',
-                {},
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Failed to nstall %s; %s',
-                $child, $errno);
+            Sympa::Report::reject_report_web('intern',
+                'install_shared_failed', {}, $param->{'action'}, $list,
+                $param->{'user'}{'email'}, $robot);
+            wwslog('err', 'Failed to nstall %s; %s', $child, $errno);
             web_db_log(
                 {   'status'     => 'error',
                     'error_type' => 'internal'
@@ -8408,15 +8407,13 @@ sub do_d_install_shared {
         # Send a message to the author.
         my %context;
         $context{'installed_by'} = $param->{'user'}{'email'};
-        $context{'filename'}     = join '/', @{$child->{paths}};
+        $context{'filename'} = join '/', @{$child->{paths}};
 
         my $sender = $child->{owner};
         unless (
-            Sympa::send_file($list, 'd_install_shared', $sender, \%context)
-            ) {
+            Sympa::send_file($list, 'd_install_shared', $sender, \%context)) {
             wwslog('notice',
-                'Unable to send template "d_install_shared" to %s',
-                $sender);
+                'Unable to send template "d_install_shared" to %s', $sender);
         }
     }
 
@@ -8454,7 +8451,7 @@ sub do_d_reject_shared {
             my %context;
             my $sender;
             $context{'rejected_by'} = $param->{'user'}{'email'};
-            $context{'filename'}    = join '/', @{$child->{paths}};
+            $context{'filename'} = join '/', @{$child->{paths}};
 
             $sender = $child->{owner};
 
@@ -8470,9 +8467,15 @@ sub do_d_reject_shared {
         }
 
         unless ($child->unlink) {
-            Sympa::Report::reject_report_web('intern', 'erase_file',
+            Sympa::Report::reject_report_web(
+                'intern',
+                'erase_file',
                 {'file' => join('/', @{$child->{paths}})},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+                $param->{'action'},
+                $list,
+                $param->{'user'}{'email'},
+                $robot
+            );
             wwslog('err', 'Failed to erase %s', $child->{fs_path});
             web_db_log(
                 {   'parameters' => $id,
@@ -10822,8 +10825,8 @@ sub do_create_list_request {
     if ($in{'topics'}) {
         my ($topic, $subtopic) = split('/', $in{'topics'});
         if ($subtopic) {
-            $param->{'list_of_topics'}{$topic}{'sub'}{$subtopic}{'selected'} =
-                1;
+            $param->{'list_of_topics'}{$topic}{'sub'}{$subtopic}{'selected'}
+                = 1;
         } else {
             $param->{'list_of_topics'}{$topic}{'selected'} = 1;
         }
@@ -10875,8 +10878,8 @@ sub do_home {
                 context => $one_list,
                 action  => 'add'
             )->size;
-            $param->{'admin_summary'}{$one_list->{'name'}}
-                {'mod_subscription'} = $mod_subscription
+            $param->{'admin_summary'}{$one_list->{'name'}}{'mod_subscription'}
+                = $mod_subscription
                 if $mod_subscription;
             my $mod_signoff = Sympa::Spool::Auth->new(
                 context => $one_list,
@@ -10886,10 +10889,10 @@ sub do_home {
                 $mod_signoff
                 if $mod_signoff;
 
-            my $shared_doc = Sympa::SharedDocument->new($one_list);
+            my $shared_doc       = Sympa::SharedDocument->new($one_list);
             my $mod_shared_total = $shared_doc->count_moderated_descendants;
-            $param->{'admin_summary'}{$one_list->{'name'}}
-                {'mod_shared_total'} = $mod_shared_total
+            $param->{'admin_summary'}{$one_list->{'name'}}{'mod_shared_total'}
+                = $mod_shared_total
                 if $mod_shared_total;
 
         }
@@ -11067,7 +11070,8 @@ sub do_viewbounce {
     my $bounce_path =
         $in{'envid'}
         ? sprintf('%s/%s_%08s',
-        $list->get_bounce_dir(), $escaped_email, $in{'envid'})
+        $list->get_bounce_dir(),
+        $escaped_email, $in{'envid'})
         : $list->get_bounce_dir() . '/' . $escaped_email;
 
     unless (-r $bounce_path) {
@@ -12645,7 +12649,8 @@ sub _prepare_edit_form {
                         my $t =
                             $language->gettext_strftime("%A",
                             gmtime(0 + ($day + 3) * (3600 * 24)));
-                        $t = sprintf '%s (%s)', $t, $day
+                        $t = sprintf '%s (%s)', $t,
+                            $day
                             if Sympa::is_listmaster($list,
                             $param->{'user'}{'email'});
                         $v->{'value'}{$day}{'title'} = $t;
@@ -12898,8 +12903,8 @@ sub _prepare_data {
             $p->{is_empty} = delete $d->{is_empty};
             foreach my $k (
                 sort {
-                    $struct->{'format'}{$a}{'order'} <=> $struct->{'format'}
-                        {$b}{'order'}
+                    $struct->{'format'}{$a}{'order'}
+                        <=> $struct->{'format'}{$b}{'order'}
                 }
                 keys %{$struct->{'format'}}
                 ) {
@@ -13390,7 +13395,7 @@ sub do_d_admin {
     wwslog('info', '(%s, %s)', $in{'list'}, $in{'d_admin'});
 
     my $shared_doc = Sympa::SharedDocument->new($list);
-    my %access = $shared_doc->get_privileges(
+    my %access     = $shared_doc->get_privileges(
         mode             => 'edit',
         sender           => $param->{'user'}{'email'},
         auth_method      => $param->{'auth_method'},
@@ -13566,240 +13571,242 @@ sub do_d_read {
 
     # Directory
 
-        # verification of the URL (the path must have a slash at its end)
-        #if ($ENV{'PATH_INFO'} !~ /\/$/) {
-        #    $param->{'redirect_to'} = Sympa::get_url($list, 'd_read',
-        #        nomenu => $param->{'nomenu'}, authority => 'local');
-        #    return 1;
-        #}
+    # verification of the URL (the path must have a slash at its end)
+    #if ($ENV{'PATH_INFO'} !~ /\/$/) {
+    #    $param->{'redirect_to'} = Sympa::get_url($list, 'd_read',
+    #        nomenu => $param->{'nomenu'}, authority => 'local');
+    #    return 1;
+    #}
 
-        # To sort subdirs and files.
-        my $order = $in{'order'} || 'order_by_doc';
-        $param->{'order_by'} = $order;
+    # To sort subdirs and files.
+    my $order = $in{'order'} || 'order_by_doc';
+    $param->{'order_by'} = $order;
 
-        my @children;
-        if ($list->is_admin('actual_editor', $param->{'user'}{'email'})) {
-            @children = $shared_doc->get_children(order_by => $order);
-        } else {
-            @children = grep {
-                $_->{moderate} and $_->{owner} eq $param->{'user'}{'email'}
-                    or not $_->{moderate}
-            } $shared_doc->get_children(order_by => $order);
-        }
+    my @children;
+    if ($list->is_admin('actual_editor', $param->{'user'}{'email'})) {
+        @children = $shared_doc->get_children(order_by => $order);
+    } else {
+        @children = grep {
+            $_->{moderate} and $_->{owner} eq $param->{'user'}{'email'}
+                or not $_->{moderate}
+        } $shared_doc->get_children(order_by => $order);
+    }
 
-        # Empty directory?
-        $param->{'empty'} = !scalar @children;
+    # Empty directory?
+    $param->{'empty'} = !scalar @children;
 
-        # For the exception of index.html.
-        # Name of the file "index.html" if exists in the directory read.
-        my $indexhtml;
+    # For the exception of index.html.
+    # Name of the file "index.html" if exists in the directory read.
+    my $indexhtml;
 
-        # Boolean : one of the subdirectories or files inside can be edited
-        # -> normal mode of read -> d_read.tt2;
-        my $normal_mode;
+    # Boolean : one of the subdirectories or files inside can be edited
+    # -> normal mode of read -> d_read.tt2;
+    my $normal_mode;
 
-        my $user = $param->{'user'}{'email'} || 'nobody';
+    my $user = $param->{'user'}{'email'} || 'nobody';
 
-        my @children_hash = map {
-            my $child      = $_;
-            my $child_hash = $_->as_hashref;
+    my @children_hash = map {
+        my $child      = $_;
+        my $child_hash = $_->as_hashref;
 
-            # Case subdirectory
-            if ($child->{type} eq 'directory') {
-                if ($child->{scenario}) {
-                    # Check access permission for reading.
-                    my $result = Sympa::Scenario::request_action(
-                        $list,
-                        'shared_doc.d_read',
-                        $param->{'auth_method'},
-                        {   'sender'      => $param->{'user'}{'email'},
-                            'remote_host' => $param->{'remote_host'},
-                            'remote_addr' => $param->{'remote_addr'},
-                            'scenario'    => $child->{scenario}{read}
-                        }
-                    );
-                    my $action;
-                    $action = $result->{'action'} if ref $result eq 'HASH';
+        # Case subdirectory
+        if ($child->{type} eq 'directory') {
+            if ($child->{scenario}) {
+                # Check access permission for reading.
+                my $result = Sympa::Scenario::request_action(
+                    $list,
+                    'shared_doc.d_read',
+                    $param->{'auth_method'},
+                    {   'sender'      => $param->{'user'}{'email'},
+                        'remote_host' => $param->{'remote_host'},
+                        'remote_addr' => $param->{'remote_addr'},
+                        'scenario'    => $child->{scenario}{read}
+                    }
+                );
+                my $action;
+                $action = $result->{'action'} if ref $result eq 'HASH';
 
-                    if (   $user eq $child->{owner}
-                        or $may_control
-                        or $action =~ /\Ado_it\b/i) {
-                        # If the file can be read, check for edit access &
-                        # edit description files access.
-                        # Only authenticated users can edit a file.
-                        if ($param->{'user'}{'email'}) {
-                            my $result = Sympa::Scenario::request_action(
-                                $list,
-                                'shared_doc.d_edit',
-                                $param->{'auth_method'},
-                                {   'sender' => $param->{'user'}{'email'},
-                                    'remote_host' => $param->{'remote_host'},
-                                    'remote_addr' => $param->{'remote_addr'},
-                                    'scenario'    => $child->{scenario}{edit}
-                                }
-                            );
-                            my $action_edit;
-                            $action_edit = $result->{'action'}
-                                if ref $result eq 'HASH';
-                            $action_edit ||= '';
-
-                            # may_action_edit = 0, 0.5 or 1
-                            my $may_action_edit =
-                                  ($action_edit =~ /\Ado_it\b/i)  ? 1
-                                : ($action_edit =~ /\Aeditor\b/i) ? 0.5
-                                :                                   0;
-                            $may_action_edit =
-                                  !($may_action_edit and $may_edit) ? 0
-                                : ($may_action_edit == 0.5 or $may_edit == 0.5)
-                                ? 0.5 : 1; 
-                            if ($may_control or $user eq $child->{owner}) {
-                                $child_hash->{may_edit} = 1;
-                                # ...or = $may_action_edit ?
-                                # If index.html, must know if something can be
-                                # edit in the dir.
-                                $normal_mode = 1;
-                            } elsif ($may_action_edit) {
-                                # $may_action_edit = 0.5 or 1
-                                $child_hash->{may_edit} = $may_action_edit;
-                                # If index.html, must know if something can be
-                                # edit in the dir.
-                                $normal_mode = 1;
+                if (   $user eq $child->{owner}
+                    or $may_control
+                    or $action =~ /\Ado_it\b/i) {
+                    # If the file can be read, check for edit access &
+                    # edit description files access.
+                    # Only authenticated users can edit a file.
+                    if ($param->{'user'}{'email'}) {
+                        my $result = Sympa::Scenario::request_action(
+                            $list,
+                            'shared_doc.d_edit',
+                            $param->{'auth_method'},
+                            {   'sender'      => $param->{'user'}{'email'},
+                                'remote_host' => $param->{'remote_host'},
+                                'remote_addr' => $param->{'remote_addr'},
+                                'scenario'    => $child->{scenario}{edit}
                             }
-                        }
+                        );
+                        my $action_edit;
+                        $action_edit = $result->{'action'}
+                            if ref $result eq 'HASH';
+                        $action_edit ||= '';
 
+                        # may_action_edit = 0, 0.5 or 1
+                        my $may_action_edit =
+                              ($action_edit =~ /\Ado_it\b/i)  ? 1
+                            : ($action_edit =~ /\Aeditor\b/i) ? 0.5
+                            :                                   0;
+                        $may_action_edit =
+                             !($may_action_edit and $may_edit) ? 0
+                            : ($may_action_edit == 0.5 or $may_edit == 0.5)
+                            ? 0.5
+                            : 1;
                         if ($may_control or $user eq $child->{owner}) {
-                            $child_hash->{may_control} = 1;
+                            $child_hash->{may_edit} = 1;
+                            # ...or = $may_action_edit ?
+                            # If index.html, must know if something can be
+                            # edit in the dir.
+                            $normal_mode = 1;
+                        } elsif ($may_action_edit) {
+                            # $may_action_edit = 0.5 or 1
+                            $child_hash->{may_edit} = $may_action_edit;
+                            # If index.html, must know if something can be
+                            # edit in the dir.
+                            $normal_mode = 1;
                         }
                     }
-                } else {
-                    # No description file = no need to check access for read
-                    # access for edit and control
-                    if ($may_control) {
-                        $child_hash->{may_edit} = 1;
-                        # ...or = $may_action_edit ?
-                        $normal_mode = 1;
-                    } elsif ($may_edit) {
-                        # $may_action_edit = 1 or 0.5
-                        $child_hash->{may_edit} = $may_edit;
-                        $normal_mode = 1;
-                    }
 
-                    if ($may_control) {
+                    if ($may_control or $user eq $child->{owner}) {
                         $child_hash->{may_control} = 1;
                     }
                 }
             } else {
-                # case file
-                my $may      = 1;
-                my $def_desc = 0;
-
-                if ($child->{scenario}) {
-                    # a desc file was found
-                    $def_desc = 1;
-
-                    my $result = Sympa::Scenario::request_action(
-                        $list,
-                        'shared_doc.d_read',
-                        $param->{'auth_method'},
-                        {   'sender'      => $param->{'user'}{'email'},
-                            'remote_host' => $param->{'remote_host'},
-                            'remote_addr' => $param->{'remote_addr'},
-                            'scenario'    => $child->{scenario}{read}
-                        }
-                    );
-                    my $action;
-                    $action = $result->{'action'} if ref $result eq 'HASH';
-                    unless ($user eq $child->{owner}
-                        or $may_control
-                        or $action =~ /\Ado_it\b/i) {
-                        $may = 0;
-                    }
+                # No description file = no need to check access for read
+                # access for edit and control
+                if ($may_control) {
+                    $child_hash->{may_edit} = 1;
+                    # ...or = $may_action_edit ?
+                    $normal_mode = 1;
+                } elsif ($may_edit) {
+                    # $may_action_edit = 1 or 0.5
+                    $child_hash->{may_edit} = $may_edit;
+                    $normal_mode = 1;
                 }
 
-                # If permission or no description file.
-                if ($may) {
-                    # Exception of index.html.
-                    if ($child->{name} =~ /\Aindex[.]html?\z/i) {
-                        $indexhtml = $child->{name};
+                if ($may_control) {
+                    $child_hash->{may_control} = 1;
+                }
+            }
+        } else {
+            # case file
+            my $may      = 1;
+            my $def_desc = 0;
+
+            if ($child->{scenario}) {
+                # a desc file was found
+                $def_desc = 1;
+
+                my $result = Sympa::Scenario::request_action(
+                    $list,
+                    'shared_doc.d_read',
+                    $param->{'auth_method'},
+                    {   'sender'      => $param->{'user'}{'email'},
+                        'remote_host' => $param->{'remote_host'},
+                        'remote_addr' => $param->{'remote_addr'},
+                        'scenario'    => $child->{scenario}{read}
                     }
-
-                    ## Access control for edit and control
-                    if ($def_desc) {
-                        # Check access for edit and control the file.
-                        # Only authenticated users can edit files.
-
-                        if ($param->{'user'}{'email'}) {
-                            my $result = Sympa::Scenario::request_action(
-                                $list,
-                                'shared_doc.d_edit',
-                                $param->{'auth_method'},
-                                {   'sender' => $param->{'user'}{'email'},
-                                    'remote_host' => $param->{'remote_host'},
-                                    'remote_addr' => $param->{'remote_addr'},
-                                    'scenario'    => $child->{scenario}{edit}
-                                }
-                            );
-                            my $action_edit;
-                            $action_edit = $result->{'action'}
-                                if ref $result eq 'HASH';
-                            $action_edit ||= '';
-
-                            # may_action_edit = 0, 0.5 or 1
-                            my $may_action_edit =
-                                  ($action_edit =~ /\Ado_it\b/i)  ? 1
-                                : ($action_edit =~ /\Aeditor\b/i) ? 0.5
-                                :                                   0;
-                            $may_action_edit =
-                                  !($may_action_edit and $may_edit) ? 0
-                                : ($may_action_edit == 0.5 or $may_edit == 0.5)
-                                ? 0.5 : 1; 
-                            if ($may_control or $user eq $child->{owner}) {
-                                $normal_mode = 1;
-                                $child_hash->{may_edit} = 1;
-                                # ...or = $may_action_edit ?
-                            } elsif ($may_action_edit) {
-                                # $may_action_edit = 1 or 0.5
-                                $normal_mode = 1;
-                                $child_hash->{may_edit} = $may_action_edit;
-                            }
-
-                            if ($user eq $child->{owner} or $may_control) {
-                                $child_hash->{may_control} = 1;
-                            }
-                        } else {
-                            if ($may_edit) {
-                                $child_hash->{may_edit} = $may_edit;
-                                $normal_mode = 1;
-                            }
-                            if ($may_control) {
-                                $child_hash->{may_control} = 1;
-                            }
-                        }
-                    }
+                );
+                my $action;
+                $action = $result->{'action'} if ref $result eq 'HASH';
+                unless ($user eq $child->{owner}
+                    or $may_control
+                    or $action =~ /\Ado_it\b/i) {
+                    $may = 0;
                 }
             }
 
-            $child_hash;
-        } @children; # map {...}
+            # If permission or no description file.
+            if ($may) {
+                # Exception of index.html.
+                if ($child->{name} =~ /\Aindex[.]html?\z/i) {
+                    $indexhtml = $child->{name};
+                }
 
-        # Exception : index.html
-        if ($indexhtml) {
-            unless ($normal_mode) {
-                $param->{'content_type'} = 'text/html';
-                $param->{'bypass'}       = 1;
-                $param->{'file'} = $shared_doc->{fs_path} . '/' . $indexhtml;
-                return 1;
+                ## Access control for edit and control
+                if ($def_desc) {
+                    # Check access for edit and control the file.
+                    # Only authenticated users can edit files.
+
+                    if ($param->{'user'}{'email'}) {
+                        my $result = Sympa::Scenario::request_action(
+                            $list,
+                            'shared_doc.d_edit',
+                            $param->{'auth_method'},
+                            {   'sender'      => $param->{'user'}{'email'},
+                                'remote_host' => $param->{'remote_host'},
+                                'remote_addr' => $param->{'remote_addr'},
+                                'scenario'    => $child->{scenario}{edit}
+                            }
+                        );
+                        my $action_edit;
+                        $action_edit = $result->{'action'}
+                            if ref $result eq 'HASH';
+                        $action_edit ||= '';
+
+                        # may_action_edit = 0, 0.5 or 1
+                        my $may_action_edit =
+                              ($action_edit =~ /\Ado_it\b/i)  ? 1
+                            : ($action_edit =~ /\Aeditor\b/i) ? 0.5
+                            :                                   0;
+                        $may_action_edit =
+                             !($may_action_edit and $may_edit) ? 0
+                            : ($may_action_edit == 0.5 or $may_edit == 0.5)
+                            ? 0.5
+                            : 1;
+                        if ($may_control or $user eq $child->{owner}) {
+                            $normal_mode = 1;
+                            $child_hash->{may_edit} = 1;
+                            # ...or = $may_action_edit ?
+                        } elsif ($may_action_edit) {
+                            # $may_action_edit = 1 or 0.5
+                            $normal_mode = 1;
+                            $child_hash->{may_edit} = $may_action_edit;
+                        }
+
+                        if ($user eq $child->{owner} or $may_control) {
+                            $child_hash->{may_control} = 1;
+                        }
+                    } else {
+                        if ($may_edit) {
+                            $child_hash->{may_edit} = $may_edit;
+                            $normal_mode = 1;
+                        }
+                        if ($may_control) {
+                            $child_hash->{may_control} = 1;
+                        }
+                    }
+                }
             }
         }
 
-        # parameters for the template file
-        $param->{'list'} = $list->{'name'};
+        $child_hash;
+    } @children;    # map {...}
 
-        $param->{'shared_doc'}{'may_edit'}    = $may_edit;
-        $param->{'shared_doc'}{'may_control'} = $may_control;
+    # Exception : index.html
+    if ($indexhtml) {
+        unless ($normal_mode) {
+            $param->{'content_type'} = 'text/html';
+            $param->{'bypass'}       = 1;
+            $param->{'file'} = $shared_doc->{fs_path} . '/' . $indexhtml;
+            return 1;
+        }
+    }
 
-        $param->{'shared_doc'}{'children'} = \@children_hash
-            if @children_hash;
+    # parameters for the template file
+    $param->{'list'} = $list->{'name'};
+
+    $param->{'shared_doc'}{'may_edit'}    = $may_edit;
+    $param->{'shared_doc'}{'may_control'} = $may_control;
+
+    $param->{'shared_doc'}{'children'} = \@children_hash
+        if @children_hash;
 
     #XXX$param->{'father_icon'} = Sympa::Tools::WWW::get_icon($robot, 'father');
     #XXX$param->{'sort_icon'}   = Sympa::Tools::WWW::get_icon($robot, 'sort');
@@ -14097,13 +14104,13 @@ sub do_d_editfile {
 
     ## End of controls
 
-    $param->{'list'}         = $list->{'name'};
+    $param->{'list'} = $list->{'name'};
 
     $param->{'shared_doc'}{'may_edit'}    = $access{may}{edit};
     $param->{'shared_doc'}{'may_control'} = $access{may}{control};
 
     # Test if it's a text file.
-    if (-T $shared_doc->{fs_path}) { #FIXME:Better check
+    if (-T $shared_doc->{fs_path}) {    #FIXME:Better check
         $param->{'textfile'} = 1;
         if (open my $fh, '<', $shared_doc->{fs_path}) {
             $param->{'shared_doc'}{'content'} = do { local $RS; <$fh> };
@@ -14114,8 +14121,8 @@ sub do_d_editfile {
     }
     $param->{'use_htmlarea'} = '1'
         if $Conf::Conf{'htmlarea_url'}
-            and $param->{'textfile'}
-            and $path =~ /\.html?/;
+        and $param->{'textfile'}
+        and $path =~ /\.html?/;
 
     #XXX$allow_absolute_path = 1;
 
@@ -14191,7 +14198,7 @@ sub do_d_properties {
         return undef;
     }
 
-    $param->{'list'}         = $list->{'name'};
+    $param->{'list'} = $list->{'name'};
 
     $param->{'shared_doc'}{'may_edit'}    = $access{may}{edit};
     $param->{'shared_doc'}{'may_control'} = $access{may}{control};
@@ -14228,8 +14235,7 @@ sub do_d_describe {
         and $shared_doc->{type} ne 'root') {
         Sympa::Report::reject_report_web('user', 'no_doc_to_describe',
             {'path' => $path},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot
-        );
+            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'Cannot describe %s', $path);
         web_db_log(
             {   'parameters' => $in{'path'},
@@ -14278,7 +14284,7 @@ sub do_d_describe {
                 Sympa::Report::reject_report_web('user', 'synchro_failed', {},
                     $param->{'action'}, $list);
                 wwslog('info', 'Synchronization failed for description of %s',
-                   $shared_doc);
+                    $shared_doc);
                 web_db_log(
                     {   'parameters' => $in{'path'},
                         'status'     => 'error',
@@ -14295,12 +14301,9 @@ sub do_d_describe {
         unless ($shared_doc->save_description) {
             wwslog('info', 'Cannot save description of %s: %s',
                 $shared_doc, $ERRNO);
-            Sympa::Report::reject_report_web(
-                'intern', 'cannot_open_file',
-                {'path' => $path}, $param->{'action'},
-                $list, $param->{'user'}{'email'},
-                $robot
-            );
+            Sympa::Report::reject_report_web('intern', 'cannot_open_file',
+                {'path' => $path},
+                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             web_db_log(
                 {   'parameters' => $in{'path'},
                     'status'     => 'error',
@@ -14461,8 +14464,7 @@ sub do_d_update {
 
     $in{'list'} = $list->{'name'};
 
-    Sympa::Report::notice_report_web('save_success',
-        {'path' => $path},
+    Sympa::Report::notice_report_web('save_success', {'path' => $path},
         $param->{'action'});
     web_db_log(
         {   'parameters' => $in{'path'},
@@ -14473,8 +14475,8 @@ sub do_d_update {
     if ($in{'previous_action'}) {
         return $in{'previous_action'};
     } else {
-        $in{'path'} = $param->{'path'} =
-            join '/', @{$shared_doc->{parent}->{paths}};
+        $in{'path'} = $param->{'path'} = join '/',
+            @{$shared_doc->{parent}->{paths}};
         return 'd_read';
     }
 }
@@ -14541,7 +14543,8 @@ sub do_d_unzip {
     my $fn = $in{'uploaded_file'};
     if (defined $fn) {
         # Guess client charset.
-        $zip_name = Sympa::Tools::Text::guessed_to_utf8($fn,
+        $zip_name =
+            Sympa::Tools::Text::guessed_to_utf8($fn,
             Sympa::Language::implicated_langs($language->get_lang));
         # Name without path.
         $zip_name = $1 if $zip_name =~ /([^\/\\]+)$/;
@@ -14662,13 +14665,12 @@ sub do_d_unzip {
         # The handle must know seek() in addition to opened().
         bless $ioh => 'IO::File' unless $ioh->can('seek');
         $zip = Archive::Zip->new();
-        $az = $zip->readFromFileHandle($ioh);
+        $az  = $zip->readFromFileHandle($ioh);
     }
     unless (defined $az and $az == Archive::Zip::AZ_OK()) {
         Sympa::Report::reject_report_web('intern', 'cannot_unzip',
             {name => $zip_name},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot
-        );
+            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('err', 'Unable to read the zip file: %s', $az);
         web_db_log(
             {   'robot'        => $robot,
@@ -14709,13 +14711,18 @@ sub do_d_unzip {
         }
 
         # Does file alreay exist?
-        if (Sympa::SharedDocument->new($list,
-                [@{$shared_doc->{paths}}, @subpaths])) {
+        if (Sympa::SharedDocument->new(
+                $list, [@{$shared_doc->{paths}}, @subpaths]
+            )
+            ) {
             Sympa::Report::reject_report_web('user', 'doc_already_exist',
                 {'name' => join('/', @subpaths)},
                 $param->{'action'}, $list);
-            wwslog('err', 'Can\'t create %s: file already exists',
-                join('/', @subpaths));
+            wwslog(
+                'err',
+                'Can\'t create %s: file already exists',
+                join('/', @subpaths)
+            );
             web_db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
@@ -14762,13 +14769,15 @@ sub do_d_unzip {
                 next;
             }
         }
-        unless (_d_create_descendant($shared_doc, $subpaths,
-            owner    => $param->{'user'}{'email'},
-            scenario => $access{scenario},
-            type     => ($member->isDirectory ? 'directory' : 'file'),
-            ($member->isDirectory ? () : (content  => $content))
-        )
-        ) {
+        unless (
+            _d_create_descendant(
+                $shared_doc, $subpaths,
+                owner    => $param->{'user'}{'email'},
+                scenario => $access{scenario},
+                type     => ($member->isDirectory ? 'directory' : 'file'),
+                ($member->isDirectory ? () : (content => $content))
+            )
+            ) {
             wwslog('err',
                 'Unable to create member %s of the zip file as %s: %s',
                 $member->fileName, join('/', @$subpaths));
@@ -14820,8 +14829,8 @@ sub _d_create_descendant {
     return $shared_doc unless @$subpaths;
 
     my $parent_subpaths = [@$subpaths];
-    my $new_name = pop @$parent_subpaths;
-    my $parent = _d_create_descendant($shared_doc, $parent_subpaths,
+    my $new_name        = pop @$parent_subpaths;
+    my $parent          = _d_create_descendant($shared_doc, $parent_subpaths,
         %opts, type => 'directory');
     return undef unless $parent;
 
@@ -14850,7 +14859,7 @@ sub _d_create_descendant {
             # Directory already exists.
             return $child;
         }
-    }    
+    }
 
     return $parent->create_child($new_name, %opts);
 }
@@ -14952,7 +14961,8 @@ sub do_d_delete {
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
         arg => join('/', @{$shared_doc->{paths}}),
-        previous_action => ($in{'previous_action'} || 'd_read'));
+        previous_action => ($in{'previous_action'} || 'd_read')
+    );
     return $next_action unless $next_action eq '1';
 
     if ($shared_doc->{type} eq 'directory') {
@@ -14961,8 +14971,7 @@ sub do_d_delete {
             my $errno = $ERRNO;
             Sympa::Report::reject_report_web('intern', 'erase_file',
                 {'file' => $path},
-                $param->{'action'}, $list, $param->{'user'}{'email'},
-                $robot);
+                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
             wwslog('err', 'Failed to erase %s: %s', $shared_doc, $errno);
             web_db_log(
                 {   'robot'        => $robot,
@@ -15091,7 +15100,8 @@ sub do_d_rename {
             'intern',
             'rename_file',
             {   'old' => join('/', $shared_doc->{paths}),
-                'new' => $in{'new_name'}},
+                'new' => $in{'new_name'}
+            },
             $param->{'action'},
             $list,
             $param->{'user'}{'email'},
@@ -15155,7 +15165,8 @@ sub do_d_create_child {
         my $fn = $query->upload('uploaded_file');
         if (defined $fn) {
             # Guess client encoding.
-            $new_name = Sympa::Tools::Text::guessed_to_utf8($fn,
+            $new_name =
+                Sympa::Tools::Text::guessed_to_utf8($fn,
                 Sympa::Language::implicated_langs($language->get_lang));
             # Name without path.
             $new_name = $1 if $new_name =~ m{([^/\\]+)\z};
@@ -15164,7 +15175,7 @@ sub do_d_create_child {
                 unless Sympa::SharedDocument::valid_name($new_name);
         }
     } elsif ($type eq 'url') {
-        $content  = sprintf "%s\n", $in{'url'} if $in{'url'};
+        $content = sprintf "%s\n", $in{'url'} if $in{'url'};
 
         $new_name = $language->gettext('New bookmark')
             unless Sympa::SharedDocument::valid_name($new_name);
@@ -15208,8 +15219,7 @@ sub do_d_create_child {
 
     if ($type eq 'directory') {    # only when (is_author or !moderated)
         unless ($access{may}{edit}) {
-            Sympa::Report::reject_report_web('auth',
-                $access{reason}{edit},
+            Sympa::Report::reject_report_web('auth', $access{reason}{edit},
                 {}, $param->{'action'}, $list);
             wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
             web_db_log(
@@ -15246,8 +15256,7 @@ sub do_d_create_child {
         }
     } else {
         unless ($access{may}{edit}) {
-            Sympa::Report::reject_report_web('auth',
-                $access{reason}{edit},
+            Sympa::Report::reject_report_web('auth', $access{reason}{edit},
                 {}, $param->{'action'}, $list);
             wwslog('err', 'Access denied for %s', $param->{'user'}{'email'});
             web_db_log(
@@ -15355,7 +15364,8 @@ sub do_d_create_child {
 
     # XSS Protection for HTML files.
     if ($type eq 'upload'    #FIXME:Check in other cases too.
-        and $new_name =~ /[.]html?\z/i) {
+        and $new_name =~ /[.]html?\z/i
+        ) {
         my $sanitized_html =
             Sympa::HTMLSanitizer->new($robot)->sanitize_html($content);
         if (defined $sanitized_html) {
@@ -15365,10 +15375,11 @@ sub do_d_create_child {
         }
     }
 
-    my $new_child = $shared_doc->create_child($new_name,
+    my $new_child = $shared_doc->create_child(
+        $new_name,
         type => ($type eq 'upload' ? 'file' : $type),
         moderate => ($access{may}{edit} == 0.5 && $type ne 'directory'),
-        owner => $param->{'user'}{'email'},
+        owner    => $param->{'user'}{'email'},
         scenario => $access{'scenario'},
         (($type eq 'upload' or $type eq 'url') ? (content => $content) : ())
     );
@@ -15387,8 +15398,7 @@ sub do_d_create_child {
                 $param->{'action'}, $list);
             $error_type = 'intern';
         }
-        wwslog('err', 'Unable to create directory %s: %s', $new_name,
-            $errno);
+        wwslog('err', 'Unable to create directory %s: %s', $new_name, $errno);
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
@@ -15434,7 +15444,10 @@ sub do_d_create_child {
     if ($type eq 'directory') {
         web_db_stat_log(operation => 'd_create_dir');
     } elsif ($type eq 'upload') {
-        web_db_stat_log(operation => 'd_upload', parameter => length $content);
+        web_db_stat_log(
+            operation => 'd_upload',
+            parameter => length $content
+        );
     } else {
         web_db_stat_log(operation => 'd_create_file');
     }
@@ -15528,7 +15541,7 @@ sub do_d_control {
     }
 
     # template parameters
-    $param->{'list'}         = $list->{'name'};
+    $param->{'list'} = $list->{'name'};
 
     $param->{'shared_doc'}{'may_edit'}    = $access{may}{edit};
     $param->{'shared_doc'}{'may_control'} = $access{may}{control};
@@ -15632,8 +15645,10 @@ sub do_d_change_access {
         Sympa::Report::reject_report_web('auth',
             'action_listmaster_or_privileged_owner_or_author',
             {}, $param->{'action'}, $list);
-        wwslog('info', 'Access denied for %s by %s', $path,
-            $param->{'user'}{'email'});
+        wwslog(
+            'info', 'Access denied for %s by %s',
+            $path,  $param->{'user'}{'email'}
+        );
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
@@ -15672,8 +15687,10 @@ sub do_d_change_access {
             return undef;
         }
     } else {
-        $shared_doc->{scenario} =
-            {read => $access{scenario}{read}, edit => $access{scenario}{edit}};
+        $shared_doc->{scenario} = {
+            read => $access{scenario}{read},
+            edit => $access{scenario}{edit}
+        };
     }
 
     $shared_doc->{scenario}{read} = $in{'read_access'}
@@ -15813,7 +15830,7 @@ sub do_d_set_owner {
         }
     } else {
         $shared_doc->{scenario} = $access{scenario};
-    }        
+    }
 
     $shared_doc->{owner} = $email;
 
@@ -16482,7 +16499,7 @@ sub _set_my_lists_info {
             );
             next
                 unless ref $result eq 'HASH'
-                    and $result->{'action'} eq 'do_it';
+                and $result->{'action'} eq 'do_it';
 
             my $l = $list->{'name'};
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -16516,14 +16533,14 @@ sub _set_my_lists_info {
             $member_info->{'reception'}  ||= 'mail';
             $member_info->{'visibility'} ||= 'noconceal';
             foreach my $mode ($list->available_reception_mode) {
-                $param->{'reception'}{$list->{'name'}}{$mode}{'description'} =
-                    Sympa::ListOpt::get_title($mode, 'reception');
+                $param->{'reception'}{$list->{'name'}}{$mode}{'description'}
+                    = Sympa::ListOpt::get_title($mode, 'reception');
                 if ($member_info->{'reception'} eq $mode) {
-                    $param->{'reception'}{$list->{'name'}}{$mode}
-                        {'selected'} = ' selected';
+                    $param->{'reception'}{$list->{'name'}}{$mode}{'selected'}
+                        = ' selected';
                 } else {
-                    $param->{'reception'}{$list->{'name'}}{$mode}
-                        {'selected'} = '';
+                    $param->{'reception'}{$list->{'name'}}{$mode}{'selected'}
+                        = '';
                 }
             }
 
@@ -16619,7 +16636,7 @@ sub do_suspend_request_action {
 
             if (   ($day1 =~ /([0-9]*)/)
                 && ($month1 =~ /([0-9]*)/)
-                && ($year1  =~ /([0-9]*)/)) {
+                && ($year1 =~ /([0-9]*)/)) {
                 if (   ((1 <= $day1) && ($day1 <= 31))
                     && ((0 <= $month1) && ($month1 <= 11))
                     && (1900 <= $year1)) {
@@ -16648,7 +16665,7 @@ sub do_suspend_request_action {
 
                 if (   ($day2 =~ /([0-9]*)/)
                     && ($month2 =~ /([0-9]*)/)
-                    && ($year2  =~ /([0-9]*)/)) {
+                    && ($year2 =~ /([0-9]*)/)) {
                     if (   ((1 <= $day2) && ($day2 <= 31))
                         && ((0 <= $month2) && ($month2 <= 11))
                         && (1900 <= $year2)) {
@@ -17918,7 +17935,7 @@ sub do_stats {
                         $language->gettext_strftime('%d %b %Y', localtime $_);
                     $formatted_date =~ s/([\\\'])/\\$1/g;
                     sprintf "['%s',%d]", $formatted_date, $data->{$_}
-                    } sort keys %$data
+                } sort keys %$data
             ) . ']';
         }
     }
@@ -18675,8 +18692,9 @@ sub do_arc_delete {
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg => join(',', @directories),
-        previous_action => 'arc_manage');
+        arg             => join(',', @directories),
+        previous_action => 'arc_manage'
+    );
     return $next_action unless $next_action eq '1';
 
     ## if user want to download archives before delete
@@ -19201,8 +19219,8 @@ sub get_safe_robot_conf {
         $param->{'conf'}{$p} = $robot->$p;
         $param->{$p} = $robot->$p
             if $p =~ /_color\z/
-                or $p =~ /\Acolor_/
-                or $p =~ /_url\z/;
+            or $p =~ /\Acolor_/
+            or $p =~ /_url\z/;
     }
 
     ## compatibility concern: deprecated attributes of Robot.

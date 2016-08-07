@@ -314,7 +314,7 @@ sub request_action {
     $context->{'robot_domain'}  = $robot_id;
     $context->{'msg_encrypted'} = 'smime'
         if defined $context->{'message'}
-            and $context->{'message'}->{'smime_crypted'};
+        and $context->{'message'}->{'smime_crypted'};
     ## Check that authorization method is one of those known by Sympa
     unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
         $log->syslog('info', 'Unknown auth method %s', $auth_method);
@@ -1258,7 +1258,7 @@ sub verify {
         if ($regexp =~ /\[host\]/) {
             my $reghost = Conf::get_robot_conf($robot, 'host');
             $reghost =~ s/\./\\./g;
-            $regexp  =~ s/\[host\]/$reghost/g;
+            $regexp =~ s/\[host\]/$reghost/g;
         }
 
         # wrap matches with eval{} to avoid crash by malformed regexp.
@@ -1478,11 +1478,11 @@ sub search {
                     return undef;
                 }
 
-                $filter    =~ s/\[$full_var\]/$context->{$var}{$key}/;
+                $filter =~ s/\[$full_var\]/$context->{$var}{$key}/;
                 $statement =~ s/\[$full_var\]/?/;
                 push @statement_args, $context->{$var}{$key};
             } else {               ## Scalar
-                $filter    =~ s/\[$full_var\]/$context->{$var}/;
+                $filter =~ s/\[$full_var\]/$context->{$var}/;
                 $statement =~ s/\[$full_var\]/?/;
                 push @statement_args, $context->{$var};
 
@@ -1529,11 +1529,11 @@ sub search {
             $first_row, $statement);
 
         if ($first_row == 0) {
-            $persistent_cache{'named_filter'}{$filter_file}{$filter}
-                {'value'} = 0;
+            $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'}
+                = 0;
         } else {
-            $persistent_cache{'named_filter'}{$filter_file}{$filter}
-                {'value'} = 1;
+            $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'}
+                = 1;
         }
         $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} =
             time;
@@ -1619,12 +1619,12 @@ sub search {
         }
 
         if ($mesg->count() == 0) {
-            $persistent_cache{'named_filter'}{$filter_file}{$filter}
-                {'value'} = 0;
+            $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'}
+                = 0;
 
         } else {
-            $persistent_cache{'named_filter'}{$filter_file}{$filter}
-                {'value'} = 1;
+            $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'}
+                = 1;
         }
 
         $db->disconnect()
@@ -1688,8 +1688,8 @@ sub verify_custom {
     my $filter = join('*', @{$args_ref});
     if (defined($persistent_cache{'named_filter'}{$condition}{$filter})
         && (time <=
-            $persistent_cache{'named_filter'}{$condition}{$filter}{'update'} +
-            $timeout)
+            $persistent_cache{'named_filter'}{$condition}{$filter}{'update'}
+            + $timeout)
         ) {    ## Cache has 1hour lifetime
         $log->syslog('notice', 'Using previous custom condition cache %s',
             $filter);

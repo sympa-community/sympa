@@ -813,7 +813,7 @@ sub _get_css_url {
                 next unless -f $dir . '/' . $file;
                 next
                     if time - 3600 <
-                        Sympa::Tools::File::get_mtime($dir . '/' . $file);
+                    Sympa::Tools::File::get_mtime($dir . '/' . $file);
                 unlink $dir . '/' . $file;
             }
             closedir $dh;

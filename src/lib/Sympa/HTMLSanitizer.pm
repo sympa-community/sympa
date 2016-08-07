@@ -62,9 +62,9 @@ sub validate_src_attribute {
     if (my $url_prefix = $self->{_shsURLPrefix}) {
         return $text
             if $text eq $url_prefix
-                or 0 == index($text, $url_prefix . '/')
-                or 0 == index($text, $url_prefix . '?')
-                or 0 == index($text, $url_prefix . '#');
+            or 0 == index($text, $url_prefix . '/')
+            or 0 == index($text, $url_prefix . '?')
+            or 0 == index($text, $url_prefix . '#');
     }
 
     return undef;

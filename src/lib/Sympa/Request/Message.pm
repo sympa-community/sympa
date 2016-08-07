@@ -91,7 +91,7 @@ sub _load {
     # Search and process a command in the Subject field.
     my $subject_field = $message->{'decoded_subject'};
     $subject_field = '' unless defined $subject_field;
-    $subject_field =~ s/\n//mg;         ## multiline subjects
+    $subject_field =~ s/\n//mg;    ## multiline subjects
     my $re_regexp = Sympa::Regexps::re();
     $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
     if ($subject_field =~ /\S/) {
@@ -199,7 +199,7 @@ sub __parse {
                     (defined $value and length $value)
                         ? (lc($_) => $value)
                         : ();
-                    } @{$arg_keys}
+                } @{$arg_keys}
             );
 
             if ($args{localpart}) {

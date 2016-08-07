@@ -74,8 +74,8 @@ sub get_dkim_parameters {
 
     return undef
         unless defined $data->{'d'}
-            and defined $data->{'selector'}
-            and defined $keyfile;
+        and defined $data->{'selector'}
+        and defined $keyfile;
 
     my $fh;
     unless (open $fh, '<', $keyfile) {

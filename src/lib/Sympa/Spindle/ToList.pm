@@ -326,9 +326,9 @@ sub _send_msg {
         # Ignore those reception option where mail must not ne sent.
         next
             if $mode eq 'digest'
-                or $mode eq 'digestplain'
-                or $mode eq 'summary'
-                or $mode eq 'nomail';
+            or $mode eq 'digestplain'
+            or $mode eq 'summary'
+            or $mode eq 'nomail';
 
         ## prepare VERP sending.
         if (@verp_selected_tabrcpt) {
@@ -397,8 +397,8 @@ sub _mail_message {
     # Shelve DMARC protection, unless anonymization feature is enabled.
     $message->{shelved}{dmarc_protect} = 1
         if $list->{'admin'}{'dmarc_protection'}
-            and $list->{'admin'}{'dmarc_protection'}{'mode'}
-            and not $list->{'admin'}{'anonymous_sender'};
+        and $list->{'admin'}{'dmarc_protection'}{'mode'}
+        and not $list->{'admin'}{'anonymous_sender'};
 
     # Shelve personalization.
     $message->{shelved}{merge} = 1

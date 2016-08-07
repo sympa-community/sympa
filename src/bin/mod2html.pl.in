@@ -41,8 +41,8 @@ while (1) {
     my $context = $message->{context};
     next
         unless ref $context eq 'Sympa::List'
-            and $message->{authkey}
-            and $message->{authkey} =~ /\A\w+\z/;
+        and $message->{authkey}
+        and $message->{authkey} =~ /\A\w+\z/;
     next
         if -f join('/',
         $spool_mod->{html_base_directory}, $context->get_id,

@@ -100,9 +100,9 @@ if ($main::options{'debug'}) {
 my $log = Sympa::Log->instance;
 $log->{log_to_stderr} = 'notice,err'
     if $main::options{'upgrade'}
-        || $main::options{'reload_list_config'}
-        || $main::options{'test_database_message_buffer'}
-        || $main::options{'conf_2_db'};
+    || $main::options{'reload_list_config'}
+    || $main::options{'test_database_message_buffer'}
+    || $main::options{'conf_2_db'};
 
 if ($main::options{'upgrade_config_location'}) {
     my $config_file = Conf::get_sympa_conf();

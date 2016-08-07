@@ -83,8 +83,8 @@ sub html_remove {
             $message->{authkey})
         )
         if $message
-            and $message->{authkey}
-            and ref $message->{context} eq 'Sympa::List';
+        and $message->{authkey}
+        and ref $message->{context} eq 'Sympa::List';
 
     return;
 }

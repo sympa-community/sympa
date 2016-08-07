@@ -157,7 +157,7 @@ sub upgrade {
             # FIXME: line below will always success
             next
                 unless defined $list->{'admin'}{'web_archive'}
-                    or defined $list->{'admin'}{'archive'};
+                or defined $list->{'admin'}{'archive'};
 
             my $arc_message = Sympa::Message->new(
                 sprintf("\nrebuildarc %s *\n\n", $list->{'name'}),
@@ -324,7 +324,7 @@ sub upgrade {
 
             next unless ($listname && $listdomain);
 
-            my $list = Sympa::List->new($listname,$listdomain);
+            my $list = Sympa::List->new($listname, $listdomain);
             unless (defined $list) {
                 $log->syslog('notice', 'Skipping unknown list %s', $listname);
                 next;
@@ -508,7 +508,8 @@ sub upgrade {
             my $changed = 0;
             foreach my $incl (@include_lists) {
                 # Search for the list if robot is not specified.
-                my $incl_list = Sympa::List->new($incl->{listname}, $list->{'domain'});
+                my $incl_list =
+                    Sympa::List->new($incl->{listname}, $list->{'domain'});
 
                 if (    $incl_list
                     and $incl_list->{'domain'} ne $list->{'domain'}) {
@@ -559,7 +560,7 @@ sub upgrade {
             # FIXME: next line always success
             next
                 unless defined $list->{'admin'}{'web_archive'}
-                    or defined $list->{'admin'}{'archive'};
+                or defined $list->{'admin'}{'archive'};
 
             my $arc_message = Sympa::Message->new(
                 sprintf("\nrebuildarc %s *\n\n", $list->{'name'}),

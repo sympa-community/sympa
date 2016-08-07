@@ -1428,7 +1428,7 @@ sub install_aliases {
 
     return 1
         if Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') =~
-            /^none$/i;
+        /^none$/i;
 
     my $alias_manager = $Conf::Conf{'alias_manager'};
     $log->syslog('debug2', '%s add %s %s', $alias_manager, $list->{'name'},
@@ -1507,7 +1507,7 @@ sub remove_aliases {
 
     return 1
         if Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') =~
-            /^none$/i;
+        /^none$/i;
 
     my $status = $list->remove_aliases();
     my $suffix =
@@ -1668,7 +1668,7 @@ sub change_user_email {
             my ($admin_user) = @{
                 $list->get_admins($role,
                     filter => [email => $in{'current_email'}])
-                };
+            };
             if ($admin_user and $admin_user->{'included'}) {
                 # Notify listmaster
                 Sympa::send_notify_to_listmaster(

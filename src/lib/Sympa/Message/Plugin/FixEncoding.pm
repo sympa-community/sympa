@@ -64,7 +64,7 @@ sub _fix_encoding {
     # Parts with nonstandard encodings aren't modified.
     return 0
         if $encoding
-            and $encoding !~ /\A(?:BASE64|QUOTED-PRINTABLE|[78]BIT|BINARY)\z/;
+        and $encoding !~ /\A(?:BASE64|QUOTED-PRINTABLE|[78]BIT|BINARY)\z/;
     # Signed or encrypted parts aren't modified.
     return 0 if $eff_type =~ m{^multipart/(signed|encrypted)$};
     # Attachments aren't modified.

@@ -236,11 +236,11 @@ sub display_configuration {
     foreach my $key (sort keys %Conf::Conf) {
         next
             if grep { $key eq $_ }
-                qw(auth_services blacklist cas_number crawlers_detection
-                generic_sso_number ldap ldap_number listmasters
-                locale2charset nrcpt_by_domain robot_by_http_host request
-                robot_name robots source_file sympa trusted_applications
-                use_passwd);
+            qw(auth_services blacklist cas_number crawlers_detection
+            generic_sso_number ldap ldap_number listmasters
+            locale2charset nrcpt_by_domain robot_by_http_host request
+            robot_name robots source_file sympa trusted_applications
+            use_passwd);
 
         $var = $Conf::Conf{$key};
 
@@ -481,8 +481,8 @@ Press the Enter key to continue..."
             chomp $selected;
             last
                 if $selected =~ /\A\d+\z/
-                    and 0 < $selected
-                    and $selected * 2 <= scalar @dbd;
+                and 0 < $selected
+                and $selected * 2 <= scalar @dbd;
         }
         $Sympa::ModDef::cpan_modules{$dbd[$selected * 2 - 1]}->{mandatory} =
             1;

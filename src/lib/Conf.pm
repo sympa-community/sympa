@@ -589,7 +589,7 @@ sub conf_2_db {
 
         my $config;
         if (my $result_of_config_loading = _load_config_file_to_hash(
-                {         'path_to_config_file' => $Conf{'etc'} . '/' 
+                {         'path_to_config_file' => $Conf{'etc'} . '/'
                         . $robot
                         . '/robot.conf'
                 }
@@ -1204,8 +1204,8 @@ sub _load_auth {
                     }
 
                     $Conf{'cas_id'}{$robot}
-                        {$current_paragraph->{'auth_service_name'}}
-                        {'casnum'} = scalar @paragraphs;
+                        {$current_paragraph->{'auth_service_name'}}{'casnum'}
+                        = scalar @paragraphs;
 
                     ## Default value for auth_service_friendly_name IS
                     ## auth_service_name
@@ -1433,7 +1433,7 @@ sub load_automatic_lists_description {
     my $config;
     if (defined $robot) {
         $config =
-              $Conf{'etc'} . '/' 
+              $Conf{'etc'} . '/'
             . $robot
             . '/families/'
             . $family
@@ -1464,8 +1464,8 @@ sub load_automatic_lists_description {
                 $instance_param =~ /^\s*(\S+)\s+(.*)\s*$/;
                 my $key   = $1;
                 my $value = $2;
-                $key   =~ s/^\s*//;
-                $key   =~ s/\s*$//;
+                $key =~ s/^\s*//;
+                $key =~ s/\s*$//;
                 $value =~ s/^\s*//;
                 $value =~ s/\s*$//;
                 $structured_instance->{$key} = $value;
@@ -2536,9 +2536,9 @@ sub _source_has_not_changed {
     my $file_bin = $file . $binary_file_extension;
     return 1
         if -r $file
-            and -r $file_bin
-            and Sympa::Tools::File::get_mtime($file) <
-            Sympa::Tools::File::get_mtime($file_bin);
+        and -r $file_bin
+        and Sympa::Tools::File::get_mtime($file) <
+        Sympa::Tools::File::get_mtime($file_bin);
     return 0;
 }
 

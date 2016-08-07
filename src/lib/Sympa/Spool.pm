@@ -175,7 +175,7 @@ sub _load {
                 and !m{(?:\A|/)(?:\.|T\.|BAD-)}
                 and ((not $iscol and -f ($self->{directory} . '/' . $_))
                 or ($iscol and -d ($self->{directory} . '/' . $_)))
-            } @entries
+        } @entries
     ];
 
     return $metadatas;
@@ -368,15 +368,15 @@ sub unmarshal_metadata {
         map {
             my $value = shift @matches;
             (defined $value and length $value) ? (lc($_) => $value) : ();
-            } @{$marshal_keys}
+        } @{$marshal_keys}
     };
 
     my ($robot_id, $listname, $type, $list, $priority);
 
     $robot_id = lc($data->{'domainpart'})
         if defined $data->{'domainpart'}
-            and length $data->{'domainpart'}
-            and Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
+        and length $data->{'domainpart'}
+        and Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
     ($listname, $type) =
         Sympa::Spool::split_listname($robot_id || '*', $data->{'localpart'});
 

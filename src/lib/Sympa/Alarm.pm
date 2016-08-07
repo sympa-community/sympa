@@ -80,8 +80,8 @@ sub store {
             $operation, join(', ', @rcpts), $robot_id)
             unless $operation eq 'logs_failed';
         foreach my $rcpt (@rcpts) {
-            push @{$self->{_stack}
-                    ->{$robot_id}{$operation}{'messages'}{$rcpt}},
+            push @{$self->{_stack}->{$robot_id}{$operation}{'messages'}{$rcpt}
+                },
                 $message->as_string;
         }
         return 1;
@@ -113,8 +113,8 @@ sub flush {
             # not old enough to send and first not too old
             next
                 unless $purge
-                    or $last_age > 30
-                    or $first_age > 60;
+                or $last_age > 30
+                or $first_age > 60;
             next
                 unless $self->{_stack}->{$robot_id}{$operation}{'messages'};
 
@@ -141,8 +141,8 @@ sub flush {
                 # Skip DB access because DB is not accessible
                 $rcpt = [$rcpt]
                     if $operation eq 'missing_dbd'
-                        or $operation eq 'no_db'
-                        or $operation eq 'db_restored';
+                    or $operation eq 'no_db'
+                    or $operation eq 'db_restored';
 
                 my $message = Sympa::Message::Template->new(
                     context  => $robot_id,

@@ -75,7 +75,7 @@ sub addrencode {
     }
 
     return
-          ($phrase  =~ /\S/ ? "$phrase "    : '')
+          ($phrase =~ /\S/  ? "$phrase "    : '')
         . ($comment =~ /\S/ ? "($comment) " : '')
         . "<$addr>";
 }
@@ -254,8 +254,8 @@ sub guessed_to_utf8 {
     return Encode::encode_utf8($text) if Encode::is_utf8($text);
     return $text
         unless defined $text
-            and length $text
-            and $text =~ /[^\x00-\x7F]/;
+        and length $text
+        and $text =~ /[^\x00-\x7F]/;
 
     my $utf8;
     foreach
@@ -269,7 +269,7 @@ sub guessed_to_utf8 {
     # Apply NFC: e.g. for modified-NFD by Mac OS X.
     $utf8 = Unicode::Normalize::normalize('NFC', $utf8)
         if $Unicode::Normalize::VERSION;
-        
+
     return Encode::encode_utf8($utf8);
 }
 
@@ -340,7 +340,7 @@ sub _url_query_string {
                 sprintf '%s=%s',
                     Sympa::Tools::Text::encode_uri($dkey),
                     Sympa::Tools::Text::encode_uri($dval);
-                } sort keys %$query
+            } sort keys %$query
         );
     }
 }
@@ -446,7 +446,7 @@ sub weburl {
         Sympa::Tools::Text::encode_uri(
               (not defined $_)      ? ''
             : $options{decode_html} ? Sympa::Tools::Text::decode_html($_)
-            : $_
+            :                         $_
         );
     } @{$paths || []};
 

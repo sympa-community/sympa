@@ -46,9 +46,9 @@ sub _init {
     if ($state == 0) {
         die 'bug in logic. Ask developer'
             unless $self->{resent_by}
-                and $self->{context}
-                and $self->{arc}
-                and $self->{message_id};
+            and $self->{context}
+            and $self->{arc}
+            and $self->{message_id};
         $self->{distaff}->select_archive($self->{arc})
             or return 0;
     }

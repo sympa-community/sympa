@@ -101,9 +101,9 @@ sub _connect {
         $self->{_hosts},
         timeout => ($self->{'timeout'} || 3),
         verify => (
-              (not $self->{ca_verify}) ? 'optional'
+              (not $self->{ca_verify})           ? 'optional'
             : ($self->{ca_verify} eq 'required') ? 'require'
-            : $self->{ca_verify}
+            :                                      $self->{ca_verify}
         ),
         capath     => $self->{'ca_path'},
         cafile     => $self->{'ca_file'},
@@ -128,9 +128,9 @@ sub _connect {
     if ($self->{use_tls} eq 'starttls') {
         my $mesg = $connection->start_tls(
             verify => (
-                  (not $self->{ca_verify}) ? 'optional'
+                  (not $self->{ca_verify})           ? 'optional'
                 : ($self->{ca_verify} eq 'required') ? 'require'
-                : $self->{ca_verify}
+                :                                      $self->{ca_verify}
             ),
             capath     => $self->{'ca_path'},
             cafile     => $self->{'ca_file'},

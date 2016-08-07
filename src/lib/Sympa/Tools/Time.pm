@@ -119,8 +119,8 @@ sub duration_conv {
     }
 
     my $duration =
-        $date[6] + 60 *
-        ($date[5] +
+        $date[6] +
+        60 * ($date[5] +
             60 * ($date[4] + 24 * ($date[3] + 7 * $date[2] + 365 * $date[0]))
         );
 

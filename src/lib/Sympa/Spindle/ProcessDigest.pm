@@ -53,7 +53,7 @@ sub _twist {
 
     return 0
         unless $self->{send_now}
-            or _may_distribute_digest($spool_digest);
+        or _may_distribute_digest($spool_digest);
 
     my $list = $spool_digest->{context};
 
@@ -159,8 +159,8 @@ sub _distribute_digest {
     }
 
     my $param = {
-        'replyto'   => Sympa::get_address($list, 'owner'),
-        'to'        => Sympa::get_address($list),
+        'replyto' => Sympa::get_address($list, 'owner'),
+        'to'      => Sympa::get_address($list),
         'boundary1' => '----------=_' . Sympa::unique_message_id($list),
         'boundary2' => '----------=_' . Sympa::unique_message_id($list),
     };

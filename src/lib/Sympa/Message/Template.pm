@@ -142,7 +142,7 @@ sub new {
         $data->{'conf'}{$p} = Conf::get_robot_conf($robot_id, $p);
     }
     # Compat.: Deprecated attributes of Robot.
-    $data->{'conf'}{'sympa'}   = Sympa::get_address($robot_id);
+    $data->{'conf'}{'sympa'} = Sympa::get_address($robot_id);
     $data->{'conf'}{'request'} = Sympa::get_address($robot_id, 'owner');
 
     $data->{'conf'}{'version'} = Sympa::Constants::VERSION();
@@ -171,7 +171,7 @@ sub new {
         #   certificate issued by the same CA as the recipient CA if it exists
         if ($smime_sign) {
             $data->{'fromlist'} = Sympa::get_address($list);
-            $data->{'replyto'}  = Sympa::get_address($list, 'owner');
+            $data->{'replyto'} = Sympa::get_address($list, 'owner');
         } else {
             $data->{'fromlist'} = Sympa::get_address($list, 'owner');
         }

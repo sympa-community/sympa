@@ -41,7 +41,7 @@ BEGIN {
     *File::NFSLock::rand_file      = sub($) {
         my $file = shift;
         return
-              $file 
+              $file
             . ',lock.'
             . time() % 10000 . '.'
             . $PID . '.'

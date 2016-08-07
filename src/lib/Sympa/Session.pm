@@ -82,7 +82,7 @@ sub new {
     }
     $self->{'passive_session'} = 1
         if $rss
-            or $action and ($action eq 'wsdl' or $action eq 'css');
+        or $action and ($action eq 'wsdl' or $action eq 'css');
 
     # if a session cookie exist, try to restore an existing session, don't
     # store sessions from bots

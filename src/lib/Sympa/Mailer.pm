@@ -171,7 +171,7 @@ sub store {
             exec $sendmail, @sendmail_args, '-f',
                 ($return_path eq '<>' ? '' : $return_path), '--', @rcpt;
 
-            exit 1;        # Should never get there.
+            exit 1;    # Should never get there.
         } else {
             # Parent
             if ($self->{log_smtp}) {

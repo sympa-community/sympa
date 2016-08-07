@@ -152,7 +152,7 @@ our %comms = (
                 # SET EACH is a synonym for SET MAIL.
                 $r->{reception} = 'mail'
                     if grep { $r->{reception} eq $_ }
-                        qw(each eachmail nodigest normal);
+                    qw(each eachmail nodigest normal);
             }
             if ($r->{visibility}) {
                 $r->{visibility} = lc $r->{visibility};
@@ -175,7 +175,7 @@ our %comms = (
                 # SET EACH is a synonym for SET MAIL.
                 $r->{reception} = 'mail'
                     if grep { $r->{reception} eq $_ }
-                        qw(each eachmail nodigest normal);
+                    qw(each eachmail nodigest normal);
             }
             if ($r->{visibility}) {
                 $r->{visibility} = lc $r->{visibility};

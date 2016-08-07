@@ -68,9 +68,9 @@ sub new {
         my $name         = pop @$parent_paths;
         return undef
             unless defined $name
-                and length $name
-                and $name !~ /\A[.]+\z/
-                and $name !~ /\A[.]desc(?:[.]|\z)/;
+            and length $name
+            and $name !~ /\A[.]+\z/
+            and $name !~ /\A[.]desc(?:[.]|\z)/;
 
         my $parent = $class->new($list, $parent_paths);
         return undef unless $parent;
@@ -117,7 +117,7 @@ sub _new_child {
     # It has non-zero size.
     return undef
         if $fs_name =~ /\A[.]+\z/
-            or $fs_name =~ /\A[.]desc(?:[.]|\z)/;
+        or $fs_name =~ /\A[.]desc(?:[.]|\z)/;
     return undef unless -e $self->{fs_path} . '/' . $fs_name;
     unless (exists $options{allow_empty} and $options{allow_empty}) {
         return undef unless -s $self->{fs_path} . '/' . $fs_name;
@@ -324,12 +324,13 @@ sub as_hashref {
     my @ancestors;
     my $p = $self->{parent};
     while ($p) {
-        unshift @ancestors, {
+        unshift @ancestors,
+            {
             name    => $p->{name},
             paths   => $p->{paths},
             paths_d => [@{$p->{paths}}, ''],
             type    => $p->{type},
-        };
+            };
         $p = $p->{parent};
     }
     $hash{ancestors} = [@ancestors];
@@ -964,11 +965,11 @@ sub valid_name {
 
     return undef
         if not defined $new_name
-            or $new_name !~ /\S/
-            or $new_name =~ /\A[.]/
-            or 0 <= index($new_name, '/')
-            or $new_name =~ /[<>\\\*\$\[\]\n]/
-            or $new_name =~ /[~#\[\]]$/;
+        or $new_name !~ /\S/
+        or $new_name =~ /\A[.]/
+        or 0 <= index($new_name, '/')
+        or $new_name =~ /[<>\\\*\$\[\]\n]/
+        or $new_name =~ /[~#\[\]]$/;
 
     return 1;
 }
