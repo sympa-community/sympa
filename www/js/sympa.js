@@ -23,6 +23,7 @@ function showMessage(message, ishtml) { // if ishtml not set then \n to <br /> t
 }
 
 // To confirm archives deletion
+// NO LONGER USED as of 6.2.17.
 function dbl_confirm(my_form, my_message,my_message2) {
   if (confirm(my_message)) {
       if (confirm(my_message2)) {

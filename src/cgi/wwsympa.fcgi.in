@@ -758,8 +758,9 @@ my %action_type = (
     'automatic_lists_management'         => 'serveradmin',
 );
 
-## actions tthat are not used in return of login,
+# Actions that are not used in return of login,
 my %temporary_actions = (
+    'confirm_action'      => 1,
     'logout'              => 1,
     'loginrequest'        => 1,
     'login'               => 1,
@@ -2232,7 +2233,7 @@ sub get_parameters {
             $log->syslog('debug2', 'POST key %s value %s', $p, $in{$p})
                 unless ($p =~ /passwd/);
             if ($p =~ /^((\w*)action)_(\w+)((\.\w+)*)$/) {
-
+                # Getting $in{'action'}, $in{'response_action'} etc.
                 $in{$1} = $3;
                 if ($4) {
                     foreach my $v (split /\./, $4) {
@@ -18650,7 +18651,8 @@ sub do_arc_delete {
     return undef
         unless defined check_authz('do_arc', 'archive.web_access');
 
-    unless (defined $in{'directories'}) {
+    my @directories = sort split /\0/, ($in{'directories'} || '');
+    unless (@directories) {
         Sympa::Report::reject_report_web('user', 'select_month', {},
             $param->{'action'});
         wwslog('info', 'No Archives months selected');
@@ -18668,6 +18670,14 @@ sub do_arc_delete {
         );
         return 'arc_manage';
     }
+    $param->{'directories'} = [@directories];
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg => join(',', @directories),
+        previous_action => 'arc_manage');
+    return $next_action unless $next_action eq '1';
 
     ## if user want to download archives before delete
     wwslog('notice', 'ZIP: %s', $in{'zip'});
@@ -18676,7 +18686,7 @@ sub do_arc_delete {
     }
 
     my $archive = Sympa::Archive->new(context => $list);
-    foreach my $arc (split /\0/, $in{'directories'}) {
+    foreach my $arc (@directories) {
         unless ($archive->purge_archive($arc)) {
             wwslog('info', 'Error while purging archive %s in %s',
                 $arc, $archive);

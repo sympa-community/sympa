@@ -1,6 +1,8 @@
 <!-- $Id$ -->
 <p>
-[% IF confirm_action == 'd_delete' ~%]
+[% IF confirm_action == 'arc_delete' ~%]
+  [%|loc%]Do you really want to delete Selected Archives?[%END%]
+[%~ ELSIF confirm_action == 'd_delete' ~%]
   [%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%]
 [%~ ELSIF confirm_action == 'signoff' ~%]
   [%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]
@@ -10,7 +12,15 @@
 </p>
 
 <form action="[% path_cgi %]" method="POST">
-[% IF confirm_action == 'd_delete' ~%]
+[% IF confirm_action == 'arc_delete' ~%]
+  [% FOREACH d = directories ~%]
+    <input type="hidden" name="directories" value="[% d %]" />
+  [%~ END %]
+  <div>
+    <input type="checkbox" id="zip" name="zip" value="1" checked="checked" />
+    <label for="zip">[%|loc%]Download deleted archives[%END%]</label>
+  </div>
+[%~ ELSIF confirm_action == 'd_delete' ~%]
   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
 [%~ ELSIF confirm_action == 'signoff' ~%]
   <input type="hidden" name="email" value="[% user.email %]" />
@@ -20,8 +30,23 @@
   <input type="hidden" name="action" value="[% confirm_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input class="MainMenuLinks" type="submit" name="response_action_confirm"
+    id="response_action_confirm"
     value="[%|loc%]Confirm[%END%]" />
   <input class="MainMenuLinks" type="submit" name="response_action_cancel"
-    value="[%|loc%]Cancel[%END%]" />
+    value="[%|loc%]Back[%END%]" />
 </form>
+
+[% IF confirm_action == 'arc_delete' ~%]
+  [%# FIXME. ~%]
+  <script>
+  <!--
+  $('#response_action_confirm').click(function(){
+    if ($('#zip').prop('checked'))
+      setTimeout(function(){
+        window.location.href = '[% 'arc_manage' | url_rel([list]) %]';
+      }, 1000);
+  });
+  //-->
+  </script>
+[%~ END %]
 <!-- end of confirm_action.tt2 -->
