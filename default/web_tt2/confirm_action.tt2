@@ -1,15 +1,30 @@
 <!-- $Id$ -->
-<p>
 [% IF confirm_action == 'arc_delete' ~%]
-  [%|loc%]Do you really want to delete Selected Archives?[%END%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Delete Selected Month(s)[%END%]
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to delete Selected Archives?[%END%]
+  </strong></p>
 [%~ ELSIF confirm_action == 'd_delete' ~%]
-  [%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%]
+  <p><strong>
+    [%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%]
+  </strong></p>
 [%~ ELSIF confirm_action == 'signoff' ~%]
-  [%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Unsubscribe[%END%]
+  </h2>
+  <p><strong>
+    [%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]
+  </strong></p>
 [%~ ELSIF confirm_action == 'subscribe' ~%]
-  [%|loc(list)%]Do you really want to subscribe to list %1?[%END%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Subscribe[%END%]
+  </h2>
+  <p><strong>
+    [%|loc(list)%]Do you really want to subscribe to list %1?[%END%]
+  </strong></p>
 [%~ END %]
-</p>
 
 <form action="[% path_cgi %]" method="POST">
 [% IF confirm_action == 'arc_delete' ~%]
@@ -29,11 +44,14 @@
 [%~ END %]
   <input type="hidden" name="action" value="[% confirm_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
-  <input class="MainMenuLinks" type="submit" name="response_action_confirm"
-    id="response_action_confirm"
-    value="[%|loc%]Confirm[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="response_action_cancel"
-    value="[%|loc%]Back[%END%]" />
+  <div>
+    <input class="MainMenuLinks" type="submit"
+      id="response_action_confirm" name="response_action_confirm"
+      value="[%|loc%]Confirm[%END%]" />
+    <input class="MainMenuLinks" type="submit"
+      id="response_action_cancel" name="response_action_cancel"
+      value="[%|loc%]Back[%END%]" />
+  </div>
 </form>
 
 [% IF confirm_action == 'arc_delete' ~%]
