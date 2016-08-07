@@ -15,6 +15,7 @@ Environment="FCGI_USER=--USER--"
 Environment="FCGI_GROUP=--GROUP--"
 Environment="FCGI_OPTS=-s --piddir--/wwsympa.socket -M 0600 -U nginx"
 EnvironmentFile=-/etc/sysconfig/sympa
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
