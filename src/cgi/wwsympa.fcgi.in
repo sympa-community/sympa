@@ -13291,7 +13291,17 @@ sub do_close_list {
             }
         );
         return 'admin';
-    } elsif ($list->{'admin'}{'status'} eq 'pending') {
+    }
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => $list->{'name'},
+        previous_action => 'admin'
+    );
+    return $next_action unless $next_action eq '1';
+
+    if ($list->{'admin'}{'status'} eq 'pending') {
         wwslog('info', 'Closing a pending list makes it purged');
         $list->purge($param->{'user'}{'email'});
         Sympa::Report::notice_report_web('list_purged', {},
@@ -13337,6 +13347,14 @@ sub do_restore_list {
         );
         return undef;
     }
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => $list->{'name'},
+        previous_action => 'admin'
+    );
+    return $next_action unless $next_action eq '1';
 
     ## Change status & save config
     $list->{'admin'}{'status'} = 'open';
@@ -13405,7 +13423,6 @@ sub do_d_admin {
             remote_addr => $param->{'remote_addr'}
         }
     );
-
     unless ($access{may}{edit}) {
         wwslog('info', 'Permission denied for %s', $param->{'user'}{'email'});
         Sympa::Report::reject_report_web('auth', $access{reason}{edit},
@@ -13455,6 +13472,16 @@ sub do_d_admin {
         );
         return 'd_read';
     } elsif ($in{'d_admin'} eq 'delete') {
+        $param->{'d_admin'} = $in{'d_admin'};
+
+        # Action confirmed?
+        my $next_action = $session->confirm_action(
+            $in{'action'}, $in{'response_action'},
+            arg             => $in{'d_admin'} . '/' . $list->{'name'},
+            previous_action => 'admin'
+        );
+        return $next_action unless $next_action eq '1';
+
         unless ($shared_doc->delete) {
             wwslog('info', 'Couldnot delete the shared %s: %m', $shared_doc);
             Sympa::Report::reject_report_web('intern', 'delete_shared', {},

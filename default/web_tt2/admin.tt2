@@ -29,10 +29,12 @@
 [% IF is_privileged_owner %]        
   [% IF list_conf.status == 'closed' ~%]
     <form name="manage_list_status" action="[% path_cgi %]" method="post">
-    <fieldset>
-    <input class="MainMenuLinks" type="submit" name="action_restore_list" value="[%|loc%]Restore List[%END%]" onClick="return request_confirm('[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to restore list %1?[%END%][%END%]');"/> [%|loc%]This list is currently closed. Clicking this button will make it active again.[%END%]
+    <div>
+    <input class="MainMenuLinks" type="submit" name="action_restore_list"
+      value="[%|loc%]Restore List[%END%]" />
+    [%|loc%]This list is currently closed. Clicking this button will make it active again.[%END%]
     <input type="hidden" name="list" value="[% list %]"/>
-    </fieldset>
+    </div>
     </form>
   [%~ ELSIF is_included ~%]
     <p>[%|loc%]Closing or renaming this list is impossible, because it is included by other mailing list(s).[%END%]
@@ -41,10 +43,12 @@
     </a></p>
   [%~ ELSE ~%]
     <form name="manage_list_status" action="[% path_cgi %]" method="post">
-    <fieldset>
-    <input class="MainMenuLinks" type="submit" name="action_close_list" value="[%|loc%]Remove List[%END%]" onClick="return request_confirm('[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to close list %1?[%END%][%END%]');"/> [%|loc%]Completely removes the current list. Listmaster privileges are required to restore a list.[%END%]
+    <div>
+    <input class="MainMenuLinks" type="submit" name="action_close_list"
+      value="[%|loc%]Remove List[%END%]" />
+    [%|loc%]Completely removes the current list. Listmaster privileges are required to restore a list.[%END%]
     <input type="hidden" name="list" value="[% list %]"/>
-    </fieldset>
+    </div>
     </form>
   [%~ END %]
   [% IF may_create_list && ! is_included ~%]
@@ -59,13 +63,15 @@
 
 [% IF is_listmaster || is_owner %]
 <form name="manage_shared_status" action="[% path_cgi %]" method="post">
-<fieldset>
+<div>
 [% IF shared == 'none' %]
   <input class="MainMenuLinks" type="submit" name="action_d_admin" value="[%|loc%]Create Shared[%END%]"/> [%|loc%]Initializes the shared document web space.[%END%]
   <input type="hidden" name="list" value="[% list %]"/>
   <input type="hidden" name="d_admin" value="create"/>
 [% ELSIF shared == 'exist' %]
-  <input class="MainMenuLinks" type="submit" name="action_d_admin" value="[%|loc%]Delete Shared[%END%]" onClick="return request_confirm('[% FILTER escape_quote %][%|loc(listname)%]Are you sure you wish to delete the shared documents for list %1?[%END%][%END%]');"/> [%|loc%]Closes the shared document web space. It can be restored using "Restore shared" button.[%END%]</li>
+  <input class="MainMenuLinks" type="submit" name="action_d_admin"
+    value="[%|loc%]Delete Shared[%END%]" />
+  [%|loc%]Closes the shared document web space. It can be restored using "Restore shared" button.[%END%]</li>
   <input type="hidden" name="list" value="[% list %]"/>
   <input type="hidden" name="d_admin" value="delete"/>
 [% ELSIF shared == 'deleted' %]
@@ -73,7 +79,7 @@
   <input type="hidden" name="list" value="[% list %]"/>
   <input type="hidden" name="d_admin" value="restore"/>
 [% END %]
-</fieldset>
+</div>
 </form>
 [% END %]
 [% END %]

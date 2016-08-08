@@ -6,9 +6,33 @@
   <p><strong>
     [%|loc%]Do you really want to delete Selected Archives?[%END%]
   </strong></p>
+[% ELSIF confirm_action == 'close_list' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Remove List[%END%]
+  </h2>
+  <p><strong>
+    [%|loc(list)%]Are you sure you wish to close list %1?[%END%]
+  </strong></p>
+[% ELSIF confirm_action == 'd_admin' && d_admin == 'delete' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Delete Shared[%END%]
+  </h2>
+  <p><strong>
+    [%|loc(listname)%]Are you sure you wish to delete the shared documents for list %1?[%END%]
+  </strong></p>
 [%~ ELSIF confirm_action == 'd_delete' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Delete[%END%]
+  </h2>
   <p><strong>
     [%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%]
+  </strong></p>
+[%~ ELSIF confirm_action == 'restore_list' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Restore List[%END%]
+  </h2>
+  <p><strong>
+    [%|loc(list)%]Are you sure you wish to restore list %1?[%END%]
   </strong></p>
 [%~ ELSIF confirm_action == 'signoff' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -35,6 +59,8 @@
     <input type="checkbox" id="zip" name="zip" value="1" checked="checked" />
     <label for="zip">[%|loc%]Download deleted archives[%END%]</label>
   </div>
+[% ELSIF confirm_action == 'd_admin' && d_admin == 'delete' ~%]
+  <input type="hidden" name="d_admin" value="[% d_admin %]" />
 [%~ ELSIF confirm_action == 'd_delete' ~%]
   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
 [%~ ELSIF confirm_action == 'signoff' ~%]
