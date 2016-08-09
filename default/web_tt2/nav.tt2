@@ -96,7 +96,7 @@
        IF subtopic; topic_paths.push(subtopic); END;
      END;
   ~%]
-  <a href="[% 'lists' | url_rel(topic_paths) %]" onclick="show('loading'); hide('content-inner');">[%|loc%]All[%END%]</a> </li>
+  <a class="heavyWork" href="[% 'lists' | url_rel(topic_paths) %]">[%|loc%]All[%END%]</a> </li>
   </ul>
 </menu>
 </nav>

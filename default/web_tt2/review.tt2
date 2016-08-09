@@ -20,7 +20,7 @@
   [% IF may_sync %]
   <br />
   <form name="synchronize_list_members" action="[% path_cgi %]" method="post">
-  <input class="MainMenuLinks" type="submit" name="action_sync_include" value="[%|loc%]Synchronize members with data sources[%END%]" onclick="show('loading'); hide('content-inner');" />
+  <input class="MainMenuLinks heavyWork" type="submit" name="action_sync_include" value="[%|loc%]Synchronize members with data sources[%END%]" />
   <input type="hidden" name="list" value="[% list %]"/>
   </form>
   [% END %]

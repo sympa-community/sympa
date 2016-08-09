@@ -53,10 +53,12 @@ function showhide(div) {
 	$('#' + div).toggle();
 }
 
+// NO LONGER USED as of Sympa 6.2.17.
 function show(div) {
 	$('#' + div).show();
 }
 
+// NO LONGER USED as of Sympa 6.2.17.
 function hide(div) {
 	$('#' + div).hide();
 }
@@ -913,6 +915,14 @@ function toggleDivDisplay(my_message_id) {
 function hideform(my_message_id) {
 	$('#' + my_message_id).hide();
 }
+
+// Show "Loading..." spinner icon.
+$(function() {
+	$('.heavyWork').on('click', function(){
+		$('#loading').show();
+		$('#content-inner').hide();
+	});
+});
 
 // fade effect for notification boxes
 $(function() {

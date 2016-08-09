@@ -66,7 +66,7 @@
             [%END%]
 
             <li><a href="[% 'pref' | url_rel %]"><i class="fa fa-cog"></i> [%|loc%]My preferences[%END%]</a></li>
-            <li><a href="[% 'my' | url_rel %]" onclick="show('loading'); hide('content-inner');"><i class="fa fa-envelope"></i> [%|loc%]My lists[%END%]</a></li>
+            <li><a class="heavyWork" href="[% 'my' | url_rel %]"><i class="fa fa-envelope"></i> [%|loc%]My lists[%END%]</a></li>
             <li>
               [% IF auth_method == 'md5' %]
                 <form action="[% path_cgi %]" method="post">
@@ -130,7 +130,7 @@
               <input type="text" name="email" id="email_login" size="28" value="[% unauthenticated_email %]" /></label></li>
               <li><label for="passwd" >[%|loc%]password:[%END%]
               <input type="password" name="passwd" id="passwd" size="8" /></label></li>
-              <li><span><button type="submit" name="action_login" value="[%|loc%]Login[%END%]" onclick="show('loading'); hide('content-inner');"><i class="fa fa-user"></i> [%|loc%]Go[%END%]</button></span></li>
+              <li><span><button class="heavyWork" type="submit" name="action_login" value="[%|loc%]Login[%END%]"><i class="fa fa-user"></i> [%|loc%]Go[%END%]</button></span></li>
               </fieldset>
             </form>
            [% IF not top_menu %]

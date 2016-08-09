@@ -7,7 +7,7 @@
 		
 	[% IF may_create_list %]
 		[% IF action == 'create_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		<li class="[% class %]"><a  href="[% 'create_list_request' | url_rel %]" onclick="show('loading'); hide('content-inner');"><i class="fa fa-plus"></i> [%|loc%]Request a List[%END%]</a></li>
+		<li class="[% class %]"><a class="heavyWork" href="[% 'create_list_request' | url_rel %]"><i class="fa fa-plus"></i> [%|loc%]Request a List[%END%]</a></li>
 	[% END %]
 		
 	[% IF is_listmaster %]
@@ -23,7 +23,7 @@
 				[% IF action == 'search_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
 				<li class="[% class %]"><a href="[% 'search_list_request' | url_rel %]"><i class="fa fa-search"></i> [%|loc%]Search form[%END%]</a></li>
 				[% IF action == 'lists' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-				<li class="[% class %]"><a href="[% 'lists' | url_rel %]" onclick="show('loading'); hide('content-inner');"><i class="fa fa-list"></i> [%|loc%]Index of Lists[%END%]</a></li>
+				<li class="[% class %]"><a class="heavyWork" href="[% 'lists' | url_rel %]"><i class="fa fa-list"></i> [%|loc%]Index of Lists[%END%]</a></li>
 				[% IF action == 'lists_categories' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
 				<li class="[% class %]"><a href="[% 'lists_categories' | url_rel %]" target=""><i class="fa fa-sitemap"></i> [%|loc%]Browse lists by categories[%END%]</a>		
 		[% IF top_menu %]
