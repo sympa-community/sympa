@@ -27,8 +27,10 @@
   <hr>
   <h3>[%|loc%]Subscription reminder message[%END%]</h3>
   <form class="noborder" name="synchronize_list_members" action="[% path_cgi %]" method="post">
-  <input class="MainMenuLinks" type="submit" name="action_remind" value="[%|loc%]Remind all[%END%]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription reminder message to the %1 subscribers?[%END%][%END%]');"/>
-  <input type="hidden" name="list" value="[% list %]"/>
+    <input class="MainMenuLinks" type="submit" name="action_remind"
+      value="[%|loc%]Remind all[%END%]" />
+    <input type="hidden" name="previous_action" value="[% action %]" />
+    <input type="hidden" name="list" value="[% list %]" />
   </form>
   <hr>
   <h3>[%|loc%]Add Subscribers[%END%]</h3>

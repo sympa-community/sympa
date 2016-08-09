@@ -442,8 +442,8 @@ our %action_args = (
     'attach' => ['list', 'dir', 'file'],
     'stats'  => ['list'],
     'edit_list_request' => ['list', 'group'],
-    'rename_list'       => ['list', 'new_list', 'new_robot'],
-    'copy_list'         => ['list', 'new_list', 'new_robot'],
+    'rename_list'       => ['list', 'new_listname', 'new_robot'],
+    'copy_list'         => ['list', 'new_listname', 'new_robot'],
     'redirect'        => [],
     'viewlogs'        => ['list', 'page', 'size', 'sortby'],
     'wsdl'            => [],
@@ -857,7 +857,6 @@ our %in_regexp = (
     ## List names
     'list' => '[\w\-\.\+]*',    ## Sympa::Regexps::listname() + uppercase
     'previous_list'  => '[\w\-\.\+]*',
-    'new_list'       => '[\w\-\.\+]*',
     'listname'       => '[\w\-\.\+]*',
     'new_listname'   => '[\w\-\.\+]*',
     'selected_lists' => '[\w\-\.\+]*',
@@ -13081,6 +13080,8 @@ sub do_copy_list {
 # in order to rename a list you must be list owner and you must be allowed to
 # create new list
 sub do_rename_list {
+    wwslog('info', '(%s, %s, mode=%s)',
+        $in{'new_listname'}, $in{'new_robot'}, @_);
     my $mode = shift;
 
     if ($in{'new_listname'} =~ /[A-Z]/) {
@@ -13088,12 +13089,11 @@ sub do_rename_list {
         Sympa::Report::notice_report_web('listname_lowercased', {},
             $param->{'action'});
     }
+    $param->{'new_listname'} = $in{'new_listname'};
+    $param->{'new_robot'}    = $in{'new_robot'};
 
-    wwslog('info', '(%s, %s, mode = %s)',
-        $in{'new_listname'}, $in{'new_robot'}, $mode);
-
-    # Don't rename the list included in other list.
     unless ($mode and $mode eq 'copy') {
+        # Don't rename the list included in other list.
         if ($list->is_included) {
             Sympa::Report::reject_report_web('user', 'cannot_rename_list',
                 {reason => 'included'},
@@ -13106,6 +13106,14 @@ sub do_rename_list {
             );
             return undef;
         }
+
+        # Action confirmed?
+        my $next_action = $session->confirm_action(
+            $in{'action'}, $in{'response_action'},
+            arg             => $in{'new_listname'} . '@' . $in{'new_robot'},
+            previous_action => ($in{'previous_action'} || 'admin')
+        );
+        return $next_action unless $next_action eq '1';
     }
 
     my $result = Sympa::Admin::rename_list(
@@ -15926,6 +15934,14 @@ sub do_remind {
 
     ## Access control
     return undef unless (defined check_authz('do_remind', 'remind'));
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => $list->{'name'},
+        previous_action => ($in{'previous_action'} || 'admin')
+    );
+    return $next_action unless $next_action eq '1';
 
     my $extention = time . "." . int(rand 9999);
     my $mail_command;

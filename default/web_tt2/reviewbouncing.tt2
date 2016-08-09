@@ -14,11 +14,13 @@
 </form>
 
 <form method="post" action="[% path_cgi %]">
-<fieldset>
-    <input class="MainMenuLinks" type="submit" value="[%|loc%]Remind all subscribers[%END%]" name="action_remind" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription reminder message to the %1 subscribers?[%END%][%END%]')" />
-    <input type="hidden" name="action" value="remind" />
-    <input type="hidden" name="list" value="[% list %]" />
-</fieldset>  
+<div>
+  <input class="MainMenuLinks" type="submit"
+    value="[%|loc%]Remind all subscribers[%END%]" name="action_remind" />
+  <input type="hidden" name="previous_action" value="[% action %]" />
+  <input type="hidden" name="action" value="remind" />
+  <input type="hidden" name="list" value="[% list %]" />
+</div>  
 </form>	
 
 <form action="[% path_cgi %]">

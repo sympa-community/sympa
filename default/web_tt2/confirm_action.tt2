@@ -27,6 +27,20 @@
   <p><strong>
     [%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%]
   </strong></p>
+[%~ ELSIF confirm_action == 'remind' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Remind all subscribers[%END%]
+  </h2>
+  <p><strong>
+    [%|loc(total)%]Do you really want to send a subscription reminder message to the %1 subscribers?[%END%]
+  </strong></p>
+[%~ ELSIF confirm_action == 'rename_list' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Rename List[%END%]
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to rename this list?[%END%]
+  </strong></p>
 [%~ ELSIF confirm_action == 'restore_list' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Restore List[%END%]
@@ -63,6 +77,9 @@
   <input type="hidden" name="d_admin" value="[% d_admin %]" />
 [%~ ELSIF confirm_action == 'd_delete' ~%]
   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
+[%~ ELSIF confirm_action == 'rename_list' ~%]
+  <input type="hidden" name="new_listname" value="[% new_listname %]" />
+  <input type="hidden" name="new_robot" value="[% new_robot %]" />
 [%~ ELSIF confirm_action == 'signoff' ~%]
   <input type="hidden" name="email" value="[% user.email %]" />
 [%~ ELSIF confirm_action == 'subscribe' ~%]
