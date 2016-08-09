@@ -2,27 +2,28 @@
 
 <h3>[%|loc%]Renaming the list[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#renamelist" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h3>
 <br />
-	<form action="[% path_cgi %]" method="post">
-	<fieldset>
-	  <input type="hidden" name="list" value="[% list %]" />
-	  <label for="new_listname">[%|loc%]New list name:[%END%]</label> <input id="new_listname" name="new_listname" value="" /> @
-	[% IF robots %]
-           <select name="new_robot">
-           [% FOREACH vr = robots %]
-             <option value="[% vr.key %]" [% vr.value %]>[% vr.key %]</option>
-           [% END %]
-	   </select>
-	[% ELSE %]
-	   <input name="new_robot" type="hidden" value="[% robot %]" />
-	   [% robot %]
-        [% END %]
-<br />
-	  <input class="MainMenuLinks" type="submit" name="action_rename_list"
-	    value="[%|loc%]Rename this list[%END%]" />
-	</fieldset>
-	</form>
+
+<form action="[% path_cgi %]" method="post">
+  <input type="hidden" name="list" value="[% list %]" />
+<div>
+  <label for="new_listname">[%|loc%]New list name:[%END%]</label>
+  <input id="new_listname" name="new_listname"
+    value="" style="display: inline-block; width: 50%" /> @
+  [% IF robots ~%]
+    <select name="new_robot" style="max-width: 40%">
+    [% FOREACH vr = robots ~%]
+      <option value="[% vr.key %]" [% vr.value %]>[% vr.key %]</option>
+    [% END %]
+    </select>
+  [%~ ELSE ~%]
+    <input name="new_robot" type="hidden" value="[% robot %]" />
+    [% robot %]
+  [%~ END %]
+</div>
+<div>
+  <input class="MainMenuLinks" type="submit" name="action_rename_list"
+    value="[%|loc%]Rename this list[%END%]" />
+</div>
+</form>
 
 <!-- end rename_list_request.tt2 -->
-	
-	
-
