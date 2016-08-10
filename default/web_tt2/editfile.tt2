@@ -49,7 +49,7 @@
 <a href="[% 'editfile' | url_rel([list,'welcome.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Welcome message: This message is sent to new subscribers. It can be a full MIME structured message (only for MIME gurus).[%END%]<br />
 [% END %]
 [% IF files.$item2 %]
-<a href="[% 'manage_template/ls_template' | url_rel([list,'reject',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Rejection message: when a message is rejected by list editor, a notification can be sent to the original author. You may prepare various rejection messages.[%END%]<br />
+<a href="[% 'editfile' | url_rel([list,'reject.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Rejection message: when a message is rejected by list editor, a notification can be sent to the original author. You may prepare various rejection messages.[%END%]<br />
 [% END %]
 [% IF files.$item3 %]
 <a href="[% 'editfile' | url_rel([list,'remind.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Remind message: This message is sent to each subscriber

@@ -316,6 +316,11 @@ our %comm = (
     'edit_attributes' => 'do_edit_attributes',
     'ticket'          => 'do_ticket',
     'manage_template' => 'do_manage_template',
+    'rt_create'       => 'do_rt_create',
+    'rt_delete'       => 'do_rt_delete',
+    'rt_edit'         => 'do_rt_edit',
+    'rt_setdefault'   => 'do_rt_setdefault',
+    'rt_update'       => 'do_rt_update',
     #XXX'send_newsletter' => 'do_send_newsletter',
     'suspend'                => 'do_suspend',
     'suspend_request'        => 'do_suspend_request',
@@ -462,6 +467,8 @@ our %action_args = (
     'ticket'              => ['ticket'],
     'change_email'        => ['email'],
     'manage_template' => ['subaction', 'list', 'message_template'],
+    'rt_delete'       => ['list',          'message_template'],
+    'rt_edit'         => ['list',          'message_template'],
     'send_newsletter' => [],
     'compose_mail'    => ['list',          'subaction'],
     'suspend'         => ['list'],
@@ -556,7 +563,13 @@ our %required_args = (
     'latest_lists'  => ['for|count'],
     'load_cert'     => ['param.list'],
     'logout'        => ['param.user.email'],
-    'manage_template'    => ['param.list',       'param.user.email'],
+    'manage_template' => ['param.list', 'param.user.email'],
+    'rt_create' => ['param.list', 'param.user.email', 'new_template_name'],
+    'rt_delete'     => ['param.list', 'param.user.email', 'message_template'],
+    'rt_edit'       => ['param.list', 'param.user.email', 'message_template'],
+    'rt_setdefault' => ['param.list', 'param.user.email', 'new_default'],
+    'rt_update' =>
+        ['param.list', 'param.user.email', 'message_template', 'content'],
     'modindex'           => ['param.list',       'param.user.email'],
     'docindex'           => ['param.list',       'param.user.email'],
     'multiple_subscribe' => ['param.list'],
@@ -654,6 +667,11 @@ our %required_privileges = (
     'edit_config'          => ['listmaster'],
     'ls_templates'         => ['listmaster'],
     'manage_template'      => ['owner'],
+    'rt_create'            => ['owner'],
+    'rt_delete'            => ['owner'],
+    'rt_edit'              => ['owner'],
+    'rt_setdefault'        => ['owner'],
+    'rt_update'            => ['owner'],
     'modindex'        => ['editor',           'owner', 'listmaster'],
     'docindex'        => ['editor',           'owner', 'listmaster'],
     'purge_list'      => ['privileged_owner', 'listmaster'],
@@ -7162,259 +7180,34 @@ sub do_copy_template {
     return ('edit_template');
 }
 
-## manage the rejection templates
+# Manage the rejection templates.
+#FIXME: Would rename to do_rt_XXX().
 sub do_manage_template {
-    wwslog('info', '(%s, %s)', $in{'subaction'}, $in{'message_template'});
+    wwslog('info');
 
-    my $file;
+    my $base = $list->{'dir'} . '/mail_tt2/';
 
-    $in{'message_template'} =~ s/^reject_//;
-
-    if ($in{'message_template'}) {
-        my $escaped_template_path = $in{'message_template'};
-        $escaped_template_path =~ s/\s/_/g;
-        $param->{'template_path'} =
-            Sympa::Tools::WWW::get_template_path($list || $robot,
-            'mail', 'list', 'reject_' . $escaped_template_path . '.tt2');
-    }
-    my $default_file = Sympa::search_fullpath($list || $robot,
-        'reject.tt2', subdir => 'mail_tt2');
-
-    if ($in{'subaction'} eq 'save') {
-        ## create the parent directory if it doesn't already exist
-        unless (Sympa::Tools::File::mk_parent_dir($param->{'template_path'}))
-        {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'cannot_open_file',
-                {'path' => $param->{'template_path'}},
-                $param->{'action'},
-                '',
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog(
-                'err',
-                'Can\'t create parent directory for %s: %s',
-                $param->{'template_path'}, $ERRNO
-            );
-            web_db_log(
-                {   'parameters' => $param->{'template_name'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-        ## open the template
-        unless (open(TPLOUT, '>', $param->{'template_path'})) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'cannot_open_file',
-                {'path' => $param->{'template_path'}},
-                $param->{'action'},
-                '',
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog(
-                'err',
-                'Can\'t open file %s: %s',
-                $param->{'template_path'}, $ERRNO
-            );
-            web_db_log(
-                {   'parameters' => $in{'template_name'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-        ##  save template contents
-        print TPLOUT $in{'template_content'};
-        close TPLOUT;
-        Sympa::Report::notice_report_web('performed', {}, $in{'subaction'});
-    } elsif ($in{'subaction'} eq 'create_new') {
-        $in{'template_new'} = $in{'new_template_name'};
-
-        unless ($in{'new_template_name'}) {
-            Sympa::Report::reject_report_web(
-                'user',
-                'missing template name',
-                {'path' => ''},
-                $param->{'action'}, '', $param->{'user'}{'email'}, $robot
-            );
-            return undef;
-        }
-        my $escaped_template_path = $in{'new_template_name'};
-        $escaped_template_path =~ s/\s/_/g;
-        my $new_template_path =
-            Sympa::Tools::WWW::get_template_path($list || $robot,
-            'mail', 'list', 'reject_' . $escaped_template_path . '.tt2');
-
-        if (-f $new_template_path) {
-            Sympa::Report::reject_report_web(
-                'intern', 'template already exist',
-                {'path' => $new_template_path}, $param->{'action'},
-                '', $param->{'user'}{'email'},
-                $robot
-            );
-            return undef;
-        }
-        ## create the parent directory if it doesn't already exist
-        unless (Sympa::Tools::File::mk_parent_dir($new_template_path)) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'cannot_open_file',
-                {'path' => $param->{'template_path'}},
-                $param->{'action'},
-                '',
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog(
-                'err',
-                'Can\'t create parent directory for %s: %s',
-                $param->{'template_path'}, $ERRNO
-            );
-            web_db_log(
-                {   'parameters' => $param->{'template_name'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-
-        my $default_file = Sympa::search_fullpath($list || $robot,
-            'reject.tt2', subdir => 'mail_tt2');
-
-        unless (open(DEFAULT, $default_file)) {
-            Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-                {'path' => $default_file},
-                $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Can\'t open file %s: %s', $default_file, $ERRNO);
-            return undef;
-        }
-
-        unless (open(TPL, '> ' . $new_template_path)) {
-            Sympa::Report::reject_report_web('intern', 'cannot_open_file',
-                {'path' => $new_template_path},
-                $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
-            wwslog('err', 'Can\'t open file %s: %s',
-                $new_template_path, $ERRNO);
-            return undef;
-        }
-
-        while (<DEFAULT>) {
-            print TPL $_;
-        }
-        close DEFAULT;
-        close TPL;
-        $in{'subaction'}        = 'modify';
-        $in{'message_template'} = $in{'new_template_name'};
-        return 'manage_template';
-
-    } elsif ($in{'subaction'} eq 'modify') {
-
-        unless (open(FILE, $param->{'template_path'})) {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'cannot_open_file',
-                {'path' => $param->{'template_path'}},
-                $param->{'action'},
-                '',
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog(
-                'err',
-                'Can\'t open file MODIFY %s: %s',
-                $param->{'template_path'}, $ERRNO
-            );
-            web_db_log(
-                {   'parameters' => $param->{'template_path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-        while (<FILE>) {
-            $param->{'content'} .= $_;
-        }
-        $param->{'content'} =
-            Sympa::Tools::WWW::escape_html_minimum($param->{'content'});
-        close FILE;
-        $param->{'message_template'} = $in{'message_template'};
-
-    } elsif ($in{'subaction'} eq 'setdefault') {
-        # replace existing reject.tt2 file by a symlink to reject_default.tt2
-        # for compatibility with version older than 6.0
-        my $base = $list->{'dir'} . '/mail_tt2/';
-        $in{'new_default'} =~ s/\s/_/g;
-        my $absolute_file = $base . 'reject_' . $in{'new_default'} . '.tt2';
-
-        $log->syslog(
-            'info',
-            'Change default by linking %s 2 %s',
-            $base . 'reject.tt2',
-            $absolute_file
-        );
-        if (-l $base . 'reject.tt2') {
-            unless (unlink($base . 'reject.tt2')) {
-                wwslog('err', 'Could not unlink %s', $base . 'reject.tt2');
-            }
-        }
-        unless (symlink($absolute_file, $base . 'reject.tt2')) {
-            wwslog('err', 'Could not symlink %s, %s',
-                $absolute_file, $base . 'reject.tt2');
-        }
-
-    } elsif ($in{'subaction'} eq 'delete') {
-
-        unless (unlink $param->{'template_path'}) {
-            Sympa::Report::reject_report_web('intern', 'cannot_delete',
-                {'file_del' => $param->{'template_path'}},
-                '', '', '', $robot);
-            wwslog(
-                'err',
-                'Can\'t open file %s: %s',
-                $param->{'template_path'}, $ERRNO
-            );
-            web_db_log(
-                {   'parameters' => $param->{'template_path'},
-                    'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-        Sympa::Report::notice_report_web('performed', {}, $in{'subaction'});
-    }
-    ## Build the list of available templates
+    # Build the list of available templates.
     my $available_files = Sympa::Tools::WWW::get_templates_list($list, 'mail',
         ignore_global => 1);
-    foreach $file (keys %$available_files) {
+    foreach my $file (keys %$available_files) {
         if ($file eq 'reject.tt2') {
-            my $base          = $list->{'dir'} . '/mail_tt2/';
             my $absolute_file = $base . 'reject.tt2';
             if (-l $absolute_file) {
-                my $default = readlink($absolute_file);
-                if ((-f $default) || (-f $base . $default)) {
-
-                    $default =~ s/^.*reject_//;
-                    $default =~ s/.tt2$//;
+                my $default = readlink $absolute_file;
+                if (-f $default or -f $base . $default) {
+                    $default =~ s/\A.*reject_//;
+                    $default =~ s/[.]tt2\z//;
                     $default =~ s/_/ /g;
                     $param->{'default_reject_template'} = $default;
                 } else {
-                    # link to no existing file. remove link
+                    # Link to no existing file. Remove link.
                     wwslog(
                         'err',
                         'Link %s point to un no existing file (%s)',
                         $base . 'reject.tt2', $default
                     );
-                    unless (unlink($absolute_file)) {
+                    unless (unlink $absolute_file) {
                         wwslog(
                             'err',
                             'Could not unlink %s',
@@ -7426,8 +7219,7 @@ sub do_manage_template {
                 # replace existing reject.tt2 file by a symlink to
                 # reject_default.tt2 for compatibility with version older than
                 # 6.0
-                unless (rename($absolute_file, $base . 'reject_default.tt2'))
-                {
+                unless (rename $absolute_file, $base . 'reject_default.tt2') {
                     wwslog(
                         'err',
                         'Could not rename %, %s',
@@ -7435,7 +7227,7 @@ sub do_manage_template {
                         $base . 'reject_default.tt2'
                     );
                 }
-                unless (symlink($base . 'reject_default.tt2', $absolute_file))
+                unless (symlink $base . 'reject_default.tt2', $absolute_file)
                 {
                     wwslog(
                         'err',
@@ -7446,18 +7238,248 @@ sub do_manage_template {
                 }
 
                 $param->{'default_reject_template'} = 'default';
-                push(@{$param->{'available_files'}}, 'default');
+                push @{$param->{'available_files'}}, 'default';
             }
         } else {
-            next unless ($file =~ /^reject_/);
-            $file =~ s/^reject_//;
-            $file =~ s/.tt2$//;
+            next unless $file =~ /^reject_/;
+            $file =~ s/\Areject_//;
+            $file =~ s/[.]tt2\z//;
             $file =~ s/_/ /g;
-            push(@{$param->{'available_files'}}, $file);
+            push @{$param->{'available_files'}}, $file;
         }
     }
 
     return 1;
+}
+
+sub _rt_canonic_name {
+    my $name = shift;
+
+    return $name unless $name;
+    $name =~ s/^reject_//;
+    $name =~ s/\s/_/g;
+    return $name;
+}
+
+# Old name: do_manage_template() with subaction "save".
+sub do_rt_update {
+    wwslog('info', '(%s, ...)', $in{'message_template'});
+
+    my $template_name = _rt_canonic_name($in{'message_template'});
+    my $template_path =
+        Sympa::Tools::WWW::get_template_path($list,
+        'mail', 'list', 'reject_' . $template_name . '.tt2')
+        if $template_name;
+
+    # Create the parent directory if it doesn't already exist.
+    unless ($template_path
+        and Sympa::Tools::File::mk_parent_dir($template_path)) {
+        my $errno = $ERRNO;
+        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
+            {'path' => $template_name},
+            $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
+        wwslog('err', 'Can\'t create parent directory for %s: %s',
+            $template_path, $errno);
+        web_db_log(
+            {   'parameters' => $template_name,
+                'status'     => 'error',
+                'error_type' => 'internal'
+            }
+        );
+        return undef;
+    }
+    # Open the template.
+    my $ofh;
+    unless (open $ofh, '>', $template_path) {
+        my $errno = $ERRNO;
+        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
+            {'path' => $template_name},
+            $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
+        wwslog('err', 'Can\'t open file %s: %s', $template_path, $errno);
+        web_db_log(
+            {   'parameters' => $template_name,
+                'status'     => 'error',
+                'error_type' => 'internal'
+            }
+        );
+        return undef;
+    }
+    ##  save template contents
+    print $ofh $in{'content'};
+    close $ofh;
+    Sympa::Report::notice_report_web('performed', {}, $in{'subaction'});
+
+    return 'manage_template';
+}
+
+# Old name: do_manage_template() with subaction "create_new".
+sub do_rt_create {
+    wwslog('info', '(%s)', $in{'new_template_name'});
+
+    my $new_template_name = _rt_canonic_name($in{'new_template_name'});
+    my $new_template_path =
+        Sympa::Tools::WWW::get_template_path($list,
+        'mail', 'list', 'reject_' . $new_template_name . '.tt2')
+        if $new_template_name;
+    my $default_file =
+        Sympa::search_fullpath($list, 'reject.tt2', subdir => 'mail_tt2');
+
+    unless ($new_template_path) {
+        Sympa::Report::reject_report_web(
+            'user',
+            'missing template name',
+            {'path' => ''},
+            $param->{'action'}, '', $param->{'user'}{'email'}, $robot
+        );
+        return undef;
+    }
+    if (-f $new_template_path) {
+        Sympa::Report::reject_report_web(
+            'intern',
+            'template already exist',
+            {'path' => $new_template_name},
+            $param->{'action'}, '', $param->{'user'}{'email'}, $robot
+        );
+        return undef;
+    }
+    # Create the parent directory if it doesn't already exist.
+    unless (Sympa::Tools::File::mk_parent_dir($new_template_path)) {
+        my $errno = $ERRNO;
+        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
+            {'path' => $new_template_name},
+            $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
+        wwslog('err', 'Can\'t create parent directory for %s: %s',
+            $new_template_path, $errno);
+        web_db_log(
+            {   'parameters' => $new_template_name,
+                'status'     => 'error',
+                'error_type' => 'internal'
+            }
+        );
+        return undef;
+    }
+
+    my $fh;
+    unless (open $fh, '<', $default_file) {
+        my $errno = $ERRNO;
+        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
+            {'path' => $default_file},
+            $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
+        wwslog('err', 'Can\'t open file %s: %s', $default_file, $errno);
+        return undef;
+    }
+    my $ofh;
+    unless (open $ofh, '>', $new_template_path) {
+        my $errno = $ERRNO;
+        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
+            {'path' => $new_template_name},
+            $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
+        wwslog('err', 'Can\'t open file %s: %s', $new_template_path, $errno);
+        return undef;
+    }
+
+    my $content = do { local $RS; <$fh> };
+    print $ofh $content;
+    close $fh;
+    close $ofh;
+    #XXX$in{'subaction'}        = 'modify';
+    $in{'message_template'} = $new_template_name;
+    #XXXreturn 'manage_template';
+
+    return 'rt_edit';
+}
+
+# Old name: do_manage_template() with subaction "modify".
+sub do_rt_edit {
+    wwslog('info', '(%s, ...)', $in{'message_template'});
+
+    my $template_name = _rt_canonic_name($in{'message_template'});
+    my $template_path =
+        Sympa::Tools::WWW::get_template_path($list,
+        'mail', 'list', 'reject_' . $template_name . '.tt2')
+        if $template_name;
+
+    my $fh;
+    unless ($template_path and open $fh, '<', $template_path) {
+        my $errno = $ERRNO;
+        Sympa::Report::reject_report_web('intern', 'cannot_open_file',
+            {'path' => $template_name},
+            $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
+        wwslog('err', 'Can\'t open file MODIFY %s: %s',
+            $template_path, $errno);
+        web_db_log(
+            {   'parameters' => $template_name,
+                'status'     => 'error',
+                'error_type' => 'internal'
+            }
+        );
+        return undef;
+    }
+    $param->{'content'} = do { local $RS; <$fh> };
+    #XXX$param->{'content'} =
+    #XXX    Sympa::Tools::WWW::escape_html_minimum($param->{'content'});
+    close $fh;
+    $param->{'message_template'} = $template_name;
+
+    return 'manage_template';
+}
+
+# Old name: do_manage_template() with subaction "setdefault".
+sub do_rt_setdefault {
+    wwslog('info', '(%s)', $in{'new_default'});
+
+    # Replace existing reject.tt2 file by a symlink to reject_default.tt2
+    # for compatibility with version older than 6.0
+    my $base          = $list->{'dir'} . '/mail_tt2/';
+    my $new_default   = _rt_canonic_name($in{'new_default'});
+    my $absolute_file = $base . 'reject_' . $new_default . '.tt2';
+
+    $log->syslog(
+        'info',
+        'Change default by linking %s 2 %s',
+        $base . 'reject.tt2',
+        $absolute_file
+    );
+    if (-l $base . 'reject.tt2') {
+        unless (unlink $base . 'reject.tt2') {
+            wwslog('err', 'Could not unlink %s', $base . 'reject.tt2');
+        }
+    }
+    unless (symlink $absolute_file, $base . 'reject.tt2') {
+        wwslog('err', 'Could not symlink %s, %s',
+            $absolute_file, $base . 'reject.tt2');
+    }
+
+    return 'manage_template';
+}
+
+# Old name: (part of) do_manage_template() with subaction "delete".
+sub do_rt_delete {
+    wwslog('info', '(%s)', $in{'message_template'});
+
+    my $template_name = _rt_canonic_name($in{'message_template'});
+    my $template_path =
+        Sympa::Tools::WWW::get_template_path($list,
+        'mail', 'list', 'reject_' . $template_name . '.tt2')
+        if $template_name;
+
+    unless ($template_path and unlink $template_path) {
+        my $errno = $ERRNO;
+        Sympa::Report::reject_report_web('intern', 'cannot_delete',
+            {'file_del' => $template_name},
+            '', '', '', $robot);
+        wwslog('err', 'Can\'t open file %s: %s', $template_path, $errno);
+        web_db_log(
+            {   'parameters' => $template_name,
+                'status'     => 'error',
+                'error_type' => 'internal'
+            }
+        );
+        return undef;
+    }
+    Sympa::Report::notice_report_web('performed', {}, $in{'subaction'});
+
+    return 'manage_template';
 }
 
 ## online template edition
