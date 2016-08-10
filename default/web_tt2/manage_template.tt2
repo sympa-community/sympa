@@ -32,10 +32,12 @@
 		[% file %]
 		</td>
                 <td  align="center">
-		<a href="[% 'rt_edit' | url_rel([list,file]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
+		<a href="[% 'rt_edit' | url_rel([list,file]) %]"
+		  class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
 		</td>
 		<td align="center">
-		<a href="[% 'rt_delete' | url_rel([list,file]) %]" class="MainMenuLinks" onclick="return request_confirm('[% | escape_quote %][%|loc(file)%]Do you really want to delete message %1?[%END%][%END%]')">[%|loc%]Delete[%END%]</a>
+		<a href="[% 'rt_delete' | url_rel([list,file]) %]"
+		  class="MainMenuLinks" >[%|loc%]Delete[%END%]</a>
 		</td>
 		</tr>
 	[% END %]

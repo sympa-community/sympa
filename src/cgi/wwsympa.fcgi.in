@@ -6911,10 +6911,7 @@ sub do_ls_templates {
 
 # show a template, used by copy_template and edit_emplate
 sub do_remove_template {
-
     wwslog('info', '');
-
-    my $template_path;
 
     if ($in{'scope'} eq 'list' and ref $list ne 'Sympa::List') {
         Sympa::Report::reject_report_web('user', 'missing_arg',
@@ -6929,11 +6926,23 @@ sub do_remove_template {
         );
         return 1;
     }
-    $template_path = Sympa::Tools::WWW::get_template_path(
+    $param->{'webormail'}     = $in{'webormail'};
+    $param->{'scope'}         = $in{'scope'};
+    $param->{'template_name'} = $in{'template_name'};
+    $param->{'tpl_lang'}      = $in{'tpl_lang'};
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg => join '/', @in{qw(webormail scope template_name tpl_lang)},
+        previous_action => 'ls_templates'
+    );
+    return $next_action unless $next_action eq '1';
+
+    my $template_path = Sympa::Tools::WWW::get_template_path(
         $list || $robot, $in{'webormail'}, $in{'scope'},
         $in{'template_name'}, $in{'tpl_lang'}
     );
-
     my $template_old_path =
         Sympa::Tools::File::shift_file($template_path, 10);
     unless ($template_old_path) {
@@ -6958,10 +6967,6 @@ sub do_remove_template {
             'status'     => 'status'
         }
     );
-    $param->{'webormail'}     = $in{'webormail'};
-    $param->{'scope'}         = $in{'scope'};
-    $param->{'template_name'} = $in{'template_name'};
-    $param->{'tpl_lang'}      = $in{'tpl_lang'};
 
     return 'ls_templates';
 }
@@ -7462,6 +7467,15 @@ sub do_rt_delete {
         Sympa::Tools::WWW::get_template_path($list,
         'mail', 'list', 'reject_' . $template_name . '.tt2')
         if $template_name;
+    $param->{'message_template'} = $template_name;
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg => $template_name,
+        previous_action => 'manage_template'
+    );
+    return $next_action unless $next_action eq '1';
 
     unless ($template_path and unlink $template_path) {
         my $errno = $ERRNO;

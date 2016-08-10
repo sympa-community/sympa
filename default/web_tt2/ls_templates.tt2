@@ -125,9 +125,12 @@ lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]"
       <input type="hidden" name="scope" value="site" />
       <input type="hidden" name="tpl_lang" value="[% lang.key %]" />
       <input type="hidden" name="webormail" value="[% webormail %]" />
-      <input class="MainMenuLinks" type="submit" name="action_edit_template" value="[%|loc%]edit[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1?[%END%][%END%]');" />
+      <input class="MainMenuLinks" type="submit" name="action_edit_template"
+        value="[%|loc%]edit[% END %]" />
+      <input class="MainMenuLinks" type="submit" name="action_copy_template"
+        value="[%|loc%]cp[% END %]" />
+      <input class="MainMenuLinks" type="submit" name="action_remove_template"
+        value="[%|loc%]rm[% END %]" />
     </fieldset>
     </form>	
   [% END %]
@@ -147,9 +150,12 @@ lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]"
       <input type="hidden" name="scope" value="robot" />
       <input type="hidden" name="tpl_lang" value="[% lang.key %]" />
       <input type="hidden" name="webormail" value="[% webormail %]" />
-      <input class="MainMenuLinks" type="submit" name="action_edit_template" value="[%|loc%]edit[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1?[%END%][%END%]');"/>
+      <input class="MainMenuLinks" type="submit" name="action_edit_template"
+        value="[%|loc%]edit[% END %]" />
+      <input class="MainMenuLinks" type="submit" name="action_copy_template"
+        value="[%|loc%]cp[% END %]" />
+      <input class="MainMenuLinks" type="submit" name="action_remove_template"
+        value="[%|loc%]rm[% END %]" />
     </fieldset>
     </form>
   [% END %]
@@ -169,9 +175,12 @@ lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]"
       <input type="hidden" name="tpl_lang" value="[% lang.key %]" />
       <input type="hidden" name="list" value="[% list %]" />
       <input type="hidden" name="webormail" value="[% webormail %]" />
-      <input class="MainMenuLinks" type="submit" name="action_edit_template" value="[%|loc%]edit[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1?[%END%][%END%]');"/>
+      <input class="MainMenuLinks" type="submit" name="action_edit_template"
+        value="[%|loc%]edit[% END %]" />
+      <input class="MainMenuLinks" type="submit" name="action_copy_template"
+        value="[%|loc%]cp[% END %]" />
+      <input class="MainMenuLinks" type="submit" name="action_remove_template"
+        value="[%|loc%]rm[% END %]" />
     </fieldset>
     </form>
     [% END %]
