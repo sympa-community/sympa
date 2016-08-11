@@ -47,9 +47,17 @@
       </table>
 <input type="hidden" name="previous_action" value="sigindex" />
 <input type="hidden" name="previous_list" value="[% list %]" />
-<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.id)" />
-<input class="MainMenuLinks" type="submit" name="action_del_fromsig" value="[%|loc%]Delete selected addresses[%END%]" />
-<input class="MainMenuLinks" type="submit" name="action_ignoresig" value="[%|loc%]Reject selected addresses[%END%]" />
+  <div>
+    <input class="MainMenuLinks" type="button"
+      value="[%|loc%]Toggle Selection[%END%]"
+      onclick="toggle_selection(document.myform.id)" />
+  </div>
+  <div>
+    <input class="MainMenuLinks" type="submit" name="action_del_fromsig"
+      value="[%|loc%]Delete selected addresses[%END%]" />
+    <input class="MainMenuLinks" type="submit" name="action_ignoresig"
+      value="[%|loc%]Reject selected addresses[%END%]" />
+  </div>
 </fieldset>
 </form>
 [% ELSE %]

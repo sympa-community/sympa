@@ -1,19 +1,48 @@
 <!-- $Id$ -->
-[% IF confirm_action == 'arc_delete' ~%]
+[% IF confirm_action == 'add' ~%]
+  [%# Confirmation is required only by show_exclude action. ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Restore selected email addresses[%END%]"
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to restore subscription for ALL selected addresses?[%END%]
+  </strong></p>
+[%~ ELSIF confirm_action == 'add_frommod' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Add subscribers[%END%] 
+  </h2>
+  <p><strong>
+    [%|loc(email.0)%]Dou you really want to add %1?[%END%] 
+  </strong></p>
+[%~ ELSIF confirm_action == 'arc_delete' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Delete Selected Month(s)[%END%]
   </h2>
   <p><strong>
     [%|loc%]Do you really want to delete Selected Archives?[%END%]
   </strong></p>
-[% ELSIF confirm_action == 'close_list' ~%]
+[%~ ELSIF confirm_action == 'close_list' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Remove List[%END%]
   </h2>
   <p><strong>
     [%|loc(list)%]Are you sure you wish to close list %1?[%END%]
   </strong></p>
-[% ELSIF confirm_action == 'd_admin' && d_admin == 'delete' ~%]
+[%~ ELSIF confirm_action == 'del' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Delete selected email addresses[%END%]
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]
+  </strong></p>
+[%~ ELSIF confirm_action == 'del_fromsig' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Delete selected addresses[%END%]
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]
+  </strong></p>
+[%~ ELSIF confirm_action == 'd_admin' && d_admin == 'delete' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Delete Shared[%END%]
   </h2>
@@ -79,7 +108,21 @@
 [%~ END %]
 
 <form action="[% path_cgi %]" method="POST">
-[% IF confirm_action == 'arc_delete' ~%]
+[% IF confirm_action == 'add' ~%]
+  <input type="hidden" name="previous_action" value="show_exclude" />
+  [% FOREACH e = email ~%]
+    <input type="hidden" name="email" value="[% e %]" />
+  [%~ END %]
+  <div>
+    <input type="checkbox" id="quiet" type="checkbox" name="quiet" value="1"
+      [% IF quiet %]checked="checked"[%END%] />
+    <label for="quiet">[%|loc%]Quiet (don't send welcome email)[%END%]</label>
+  </div>
+[%~ ELSIF confirm_action == 'add_frommod' ~%]
+  [% FOREACH i = id ~%]
+    <input type="hidden" name="id" value="[% i %]" />
+  [%~ END %]
+[%~ ELSIF confirm_action == 'arc_delete' ~%]
   [% FOREACH d = directories ~%]
     <input type="hidden" name="directories" value="[% d %]" />
   [%~ END %]
@@ -87,7 +130,20 @@
     <input type="checkbox" id="zip" name="zip" value="1" checked="checked" />
     <label for="zip">[%|loc%]Download deleted archives[%END%]</label>
   </div>
-[% ELSIF confirm_action == 'd_admin' && d_admin == 'delete' ~%]
+[%~ ELSIF confirm_action == 'del' ~%]
+  [% FOREACH e = email ~%]
+    <input type="hidden" name="email" value="[% e %]" />
+  [%~ END %]
+  <div>
+    <input type="checkbox" id="quiet" name="quiet" value="1"
+      [% IF quiet %]checked="checked"[%END%] />
+    <label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label>
+  </div>
+[%~ ELSIF confirm_action == 'del_fromsig' ~%]
+  [% FOREACH i = id ~%]
+    <input type="hidden" name="id" value="[% i %]" />
+  [%~ END %]
+[%~ ELSIF confirm_action == 'd_admin' && d_admin == 'delete' ~%]
   <input type="hidden" name="d_admin" value="[% d_admin %]" />
 [%~ ELSIF confirm_action == 'd_delete' ~%]
   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
@@ -110,7 +166,7 @@
   <input type="hidden" name="action" value="[% confirm_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <div>
-    <input class="MainMenuLinks heavyWork" type="submit"
+    <input class="MainMenuLinks" type="submit"
       id="response_action_confirm" name="response_action_confirm"
       value="[%|loc%]Confirm[%END%]" />
     <input class="MainMenuLinks" type="submit"

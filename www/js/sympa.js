@@ -69,6 +69,7 @@ function hideError() {
 }
 
 // To confirm a form submition
+// NO LONGER USED as of 6.2.17.
 function request_confirm(my_message) {
 	return !!confirm(my_message);
 }

@@ -7670,6 +7670,21 @@ sub do_add {
         return undef;
     }
 
+    my @emails = split /\0/, $in{'email'};
+
+    if ($in{'previous_action'} and $in{'previous_action'} eq 'show_exclude') {
+        $param->{'email'} = [@emails];
+        $param->{'quiet'} = $in{'quiet'};
+
+        # Action confirmed?
+        my $next_action = $session->confirm_action(
+            $in{'action'}, $in{'response_action'},
+            arg             => join(',', sort @emails),
+            previous_action => $in{'previous_action'}
+        );
+        return $next_action unless $next_action eq '1';
+    }
+
     my $email_regexp = Sympa::Regexps::email();
     if ($in{'dump'}) {
         foreach (split /\n/, $in{'dump'}) {
@@ -8003,7 +8018,19 @@ sub do_add_fromsub {
 sub do_del {
     wwslog('info', '');
 
-    $in{'email'} = Sympa::Tools::Text::unescape_chars($in{'email'});
+    $in{'email'} = Sympa::Tools::Text::unescape_chars($in{'email'}); #FIXME
+    my @emails = split /\0/, $in{'email'};
+
+    $param->{'email'} = [@emails];
+    $param->{'quiet'} = $in{'quiet'};
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', sort @emails),
+        previous_action => ($in{'previous_action'} || 'review')
+    );
+    return $next_action unless $next_action eq '1';
 
     my $result = Sympa::Scenario::request_action(
         $list, 'del',
@@ -8034,8 +8061,6 @@ sub do_del {
         );
         return undef;
     }
-
-    my @emails = split /\0/, $in{'email'};
 
     my ($total, @removed_users);
 
@@ -8156,8 +8181,19 @@ sub do_del_fromsig {
         return undef;
     }
 
+    my @ids = split /\0/, $in{'id'};
+    $param->{'id'} = [@ids];
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', sort @ids),
+        previous_action => 'sigindex'
+    );
+    return $next_action unless $next_action eq '1';
+
     my $total = 0;
-    foreach my $id (split /\0/, $in{'id'}) {
+    foreach my $id (@ids) {
         next unless $id and $id =~ /\A\w+\z/;
 
         my $spool_req = Sympa::Spool::Auth->new(
@@ -8819,14 +8855,15 @@ sub do_distribute {
 #
 ####################################################
 sub do_add_frommod {
-    $in{'id'} =~ s/^,//;
-    $in{'id'} =~ s/\0/,/g;
-
     wwslog('info', '(%s)', $in{'id'});
 
+    my @ids = split /\0/, $in{'id'};
+    $param->{'id'} = [@ids];
+
+    my @emails;
     # Load message list.
     $in{'dump'} = '';
-    foreach my $id (split /,/, $in{'id'}) {
+    foreach my $id (@ids) {
         next unless $id and $id =~ /\A\w+\z/;
 
         my $spool_mod =
@@ -8860,7 +8897,18 @@ sub do_add_frommod {
         } else {
             $in{'dump'} .= "$email\n";
         }
+
+        push @emails, $email;
     }
+    $param->{'email'} = [@emails];
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', sort @ids),
+        previous_action => 'modindex'
+    );
+    return $next_action unless $next_action eq '1';
 
     if ($in{'dump'}) {
         delete $in{'email'};

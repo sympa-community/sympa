@@ -86,8 +86,8 @@
       <input type="hidden" name="id" value="[% msg.key %]" />
       <input type="hidden" name="from_modindex" value="from_modindex" />
       <button class="action" type="submit" name="action_add_frommod"
-       onclick="return request_confirm('[%|loc(msg.value.from)%]Dou you really want to add %1?[%END%]');"
-       value="[%|loc%]Add subscribers[%END%]" data-tooltip aria-haspopup="true" title="[%|loc%]Add subscribers[%END%]"><i class="fa fa-user-plus fa-lg"></i>[% IF mod_display_message %] [%|loc%]Add subscribers[%END%][% END %]</button>
+       value="[%|loc%]Add subscribers[%END%]" data-tooltip aria-haspopup="true"
+       title="[%|loc%]Add subscribers[%END%]"><i class="fa fa-user-plus fa-lg"></i>[% IF mod_display_message %] [%|loc%]Add subscribers[%END%][% END %]</button>
     </form>
     [% END %]
 [% END %]

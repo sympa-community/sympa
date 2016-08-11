@@ -31,11 +31,20 @@
         [% END %]
       [% END %]
     </table>
-     [% IF may_add %]
-        <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.show_exclude.email)" /><br />
-	<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Restore selected email addresses[%END%]"  onclick="return request_confirm('[%|loc%]Do you really want to restore subscription for ALL selected addresses?[%END%]')" />
-        <input id="quiet_exclusion" type="checkbox" name="quiet"/> <label for="quiet_exclusion">[%|loc%]quiet[%END%] </label>
-      [% END %]
+    [% IF may_add %]
+    <div>
+      <input class="MainMenuLinks" type="button"
+	value="[%|loc%]Toggle Selection[%END%]"
+	onclick="toggle_selection(document.show_exclude.email)" /><br />
+    </div>
+    <div>
+      <input class="MainMenuLinks" type="submit" name="action_add"
+        value="[%|loc%]Restore selected email addresses[%END%]" />
+      <input id="quiet_exclusion" type="checkbox" name="quiet"/>
+      <label for="quiet_exclusion">[%|loc%]quiet[%END%] </label>
+      <input type="hidden" name="previous_action" value="[% action %]" />
+    </div>
+    [% END %]
 
    </fieldset>
  </form>
