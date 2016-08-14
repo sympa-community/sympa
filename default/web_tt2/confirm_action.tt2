@@ -159,7 +159,7 @@
   <input type="hidden" name="message_template"
     value="[% message_template %]" />
 [%~ ELSIF confirm_action == 'signoff' ~%]
-  <input type="hidden" name="email" value="[% user.email %]" />
+  <input type="hidden" name="email" value="[% email %]" />
 [%~ ELSIF confirm_action == 'subscribe' ~%]
   <input type="hidden" name="email" value="[% user.email %]" />
 [%~ END %]

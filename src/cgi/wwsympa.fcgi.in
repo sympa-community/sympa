@@ -6240,48 +6240,47 @@ sub do_signoff {
     wwslog('info', '');
 
     return undef if (purely_closed('unsubscribe'));
-    my $authenticated_email_address = $param->{'user'}{'email'};
-    unless ($authenticated_email_address) {
-        unless ($in{'email'}) {
-            return 'sigrequest';
-        }
 
-        ## Perform login first
-        if ($in{'passwd'}) {
-            $in{'previous_action'} = 'signoff';
-            $in{'previous_list'}   = $param->{'list'};
-            return 'login';
-        }
-
-        if (Sympa::User::is_global_user($in{'email'})) {
-            Sympa::Report::reject_report_web('user', 'no_user', {},
-                $param->{'action'});
-            wwslog('info', 'Need auth for user %s', $in{'email'});
-            web_db_log(
-                {   'target_email' => $in{'email'},
-                    'status'       => 'error',
-                    'error_type'   => 'authentication'
-                }
-            );
-            return undef;
-        }
-
-        ## No passwd
-        Sympa::Tools::WWW::init_passwd($robot, $in{'email'},
-            {'lang' => $param->{'lang'}});
-
-        $param->{'user'}{'email'} = $in{'email'};
+    my $email = $param->{'user'}{'email'} || $in{'email'};
+    unless ($email) {
+        return 'sigrequest';
+    } elsif (not $param->{'user'}{'email'} and $in{'passwd'}) {    #FIXME
+        # Perform login first.
+        $in{'previous_action'} = 'signoff';
+        $in{'previous_list'}   = $param->{'list'};
+        return 'login';
     }
+
+    # The check below will no longer be performed: Don't check if the user is
+    # registered so that an attempt to sniff users in user_table will fail.
+    #if (not $param->{'user'}{'email'}
+    #    and Sympa::User::is_global_user($email)) {
+    #    Sympa::Report::reject_report_web('user', 'no_user', {},
+    #        $param->{'action'});
+    #    wwslog('info', 'Need auth for user %s', $email);
+    #    web_db_log(
+    #        {   'target_email' => $email,
+    #            'status'       => 'error',
+    #            'error_type'   => 'authentication'
+    #        }
+    #    );
+    #    return undef;
+    #}
+    #XXX# No passwd
+    #XXXSympa::Tools::WWW::init_passwd($robot, $email,
+    #XXX    {'lang' => $param->{'lang'}});
+
+    $param->{'email'} = $email;
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg             => $param->{'user'}{'email'},
+        arg             => $email,
         previous_action => ($in{'previous_action'} || 'info')
     );
     return $next_action unless $next_action eq '1';
 
-    my %result = unsubscribe($authenticated_email_address, $list);
+    my %result = unsubscribe($email, $list);
     if ($result{'success'} == 1) {
         Sympa::Report::notice_report_web($result{'details'}, {},
             $param->{'action'});
@@ -6301,17 +6300,13 @@ sub do_signoff {
 
 ## Unsubscribe current user from a list.
 sub unsubscribe {
-    my $authenticated_email_address = shift;
-    my $list                        = shift;
-    my %report                      = ('success', 1, 'details', '');
+    my $email = shift;
+    my $list  = shift;
 
-    unless ($list->is_list_member($authenticated_email_address)) {
-        wwslog(
-            'info',
-            '%s not subscribed to %s',
-            $param->{'user'}{'email'},
-            $param->{'list'}
-        );
+    my %report = (success => 1, details => '');
+
+    unless ($list->is_list_member($email)) {
+        wwslog('info', '%s not subscribed to %s', $email, $list);
         web_db_log(
             {   'status'     => 'error',
                 'error_type' => 'not_subscriber'
@@ -6343,12 +6338,7 @@ sub unsubscribe {
     $param->{'may_signoff'} = 1 if ($sig_is =~ /do_it|owner/);
 
     if ($sig_is =~ /reject/) {
-        wwslog(
-            'info',
-            '%s may not signoff from %s',
-            $param->{'user'}{'email'},
-            $param->{'list'}
-        );
+        wwslog('info', '%s may not signoff from %s', $email, $list);
         web_db_log(
             {   'status'     => 'error',
                 'error_type' => 'authorization'
@@ -6364,7 +6354,7 @@ sub unsubscribe {
         my $request   = Sympa::Request->new(
             context => $list,
             action  => 'del',
-            email   => $param->{'user'}{'email'},
+            email   => $email,
             sender  => $param->{'user'}{'email'},
         );
         my $keyauth = $spool_req->store($request);
@@ -6403,7 +6393,7 @@ sub unsubscribe {
 
         unless (
             $list->delete_list_member(
-                'users'     => [$authenticated_email_address],
+                'users'     => [$email],
                 'exclude'   => ' 1',
                 'operation' => 'signoff',
             )
@@ -6417,27 +6407,22 @@ sub unsubscribe {
             $report{'success'}        = 0;
             $report{'category_error'} = 'intern';
             $report{'reason_error'}   = 'delete_subscriber_db_failed';
-            $report{'details_error'} =
-                {'sub' => $authenticated_email_address};
+            $report{'details_error'}  = {'sub' => $email};
             return %report;
         }
 
         if ($sig_is =~ /notify/) {
             $list->send_notify_to_owner(
                 'notice',
-                {   'who'     => $authenticated_email_address,
+                {   'who'     => $email,
                     'gecos'   => '',
                     'command' => 'signoff'
                 }
             );
         }
 
-        unless (
-            Sympa::send_file($list, 'bye', $authenticated_email_address, {}))
-        {
-            wwslog('notice',
-                "Unable to send template 'bye' to $authenticated_email_address"
-            );
+        unless (Sympa::send_file($list, 'bye', $email, {})) {
+            wwslog('notice', 'Unable to send template \'bye\' to %s', $email);
         }
     }
     web_db_log({'status' => 'success'});
@@ -6934,7 +6919,7 @@ sub do_remove_template {
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg => join '/', @in{qw(webormail scope template_name tpl_lang)},
+        arg => join('/', @in{qw(webormail scope template_name tpl_lang)}),
         previous_action => 'ls_templates'
     );
     return $next_action unless $next_action eq '1';
@@ -7472,7 +7457,7 @@ sub do_rt_delete {
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg => $template_name,
+        arg             => $template_name,
         previous_action => 'manage_template'
     );
     return $next_action unless $next_action eq '1';
@@ -8018,7 +8003,7 @@ sub do_add_fromsub {
 sub do_del {
     wwslog('info', '');
 
-    $in{'email'} = Sympa::Tools::Text::unescape_chars($in{'email'}); #FIXME
+    $in{'email'} = Sympa::Tools::Text::unescape_chars($in{'email'});    #FIXME
     my @emails = split /\0/, $in{'email'};
 
     $param->{'email'} = [@emails];
@@ -8027,7 +8012,7 @@ sub do_del {
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg             => join(',', sort @emails),
+        arg => join(',', sort @emails),
         previous_action => ($in{'previous_action'} || 'review')
     );
     return $next_action unless $next_action eq '1';
