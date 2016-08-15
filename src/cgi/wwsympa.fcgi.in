@@ -6461,12 +6461,14 @@ sub do_sigrequest {
         );
         return 1;
     }
+
+    # To prevent sniffing subscribers using signoff link, we always respond
+    # "We've sent you an email including a validation link" to anonymous user,
+    # but the email will be sent only if the user was really a subscriber.
     if ($list->is_list_member($in{'email'})) {
         Sympa::send_notify_to_user($list, 'ticket_to_signoff', $in{'email'},
             {ip => $ip})
             or return undef;
-    } else {
-        $param->{'not_subscriber'} = 1;
     }
 
     $param->{'email'} = $in{'email'};
