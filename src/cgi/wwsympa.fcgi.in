@@ -5082,8 +5082,11 @@ sub do_review {
 
 ## Show the table of exclude
 sub do_show_exclude {
-
     wwslog('info', '');
+
+    return undef
+        unless $param->{'user'}{'email'};
+
     # Get the emails of the exclude about a list and the date of their
     # insertion
     my $data_exclu = $list->get_exclusion();
