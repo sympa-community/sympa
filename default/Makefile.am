@@ -224,7 +224,6 @@ nobase_default_DATA = \
 	web_tt2/editsubscriber.tt2 \
 	web_tt2/edit_template.tt2 \
 	web_tt2/error.tt2 \
-	web_tt2/exclusion_table.tt2 \
 	web_tt2/family_signoff.tt2 \
 	web_tt2/family_signoff_request.tt2 \
 	web_tt2/footer.tt2 \
