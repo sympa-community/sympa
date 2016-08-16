@@ -885,12 +885,6 @@ sub _is_a_crawler {
     return $Conf::Conf{'crawlers_detection'}{'user_agent_string'}{$ua};
 }
 
-# Check if action has been confirmed.
-# $action - Action to be checked
-# $response - Response from user: "init", false (not yet checked), "confirm"
-#   and others (cancelled).
-# arg => $arg
-# previous_action => $previous_action
 sub confirm_action {
     my $self     = shift;
     my $action   = shift;
@@ -935,23 +929,126 @@ __END__
 
 =encoding utf-8
 
-#=head1 NAME
+=head1 NAME
 
 Sympa::Session - Web session
 
+=head1 SYNOPSIS
+
+  use Sympa::Session;
+  
+  my $session = Sympa::Session->new($robot,
+      {cookie => Sympa::Session::get_session_cookie($ENV{'HTTP_COOKIE'})}
+  );
+  $session->renew();
+  $session->store();
+
+=head2 Confirmation
+
+  $session->confirm_action($action, 'init');
+  
+  sub do_myaction {
+  
+      # Validate arguments...
+  
+      $param->{arg} = $arg;
+      my $next_action = $session->confirm_action($action, $response,
+          $arg, $previous_action);
+      return $next_action unless $next_action eq '1';
+  
+      # Process action...
+  
+  }
+
 =head1 DESCRIPTION
 
-TBD.
+L<Sympa::Session> provides web session for Sympa web interface.
+HTTP cookie is required to determine users.
+Session store is used to keep users' personal data.
 
 =head2 Methods
 
 =over
+
+=item new ( $robot, { [ cookie =E<gt> $cookie ], ... } )
+
+I<Constructor>.
+Creates new instance and loads user data from session store.
+
+Parameters:
+
+=over
+
+=item $robot
+
+Context of the session.
+
+=item { cookie =E<gt> $cookie }
+
+HTTP cookie.
+
+=back
+
+Returns:
+
+A new instance.
+
+=item as_hashref ( )
+
+I<Instance method>.
+Casts the instance to hashref.
+
+Parameters:
+
+None.
+
+Returns:
+
+A hashref including attributes of instance (see L</Attributes>).
 
 =item confirm_action ( $action, $response, [ arg =E<gt> $arg, ]
 [ previous_action =E<gt> $previous_action ] )
 
 I<Instance metrhod>.
 Check if action has been confirmed.
+
+Confirmation follows two steps:
+
+=over
+
+=item 1.
+
+The method is called with no (undefined) response.
+The action, hash of argument and previous_action are stored into
+session store.
+And then this method returns C<'confirm_action'>.
+
+=item 2.
+
+The method is called with C<'confirm'> or other true value as response.
+I<If> action and hash of argument match with those in session store, and:
+
+=over
+
+=item *
+
+If C<'confirm'> is given, returns C<1>.
+
+=item *
+
+If other true value is given, returns previous action stored in
+session store (previous_action given in argument is ignored).
+
+=back
+
+In both cases session store is cleared.
+
+=back
+
+Anytime when the action submitted by user is determined,
+This method may be called with response as C<'init'>.
+In this case, if action doesn't match with that in session store,
+session store will be cleared.
 
 Parameters:
 
@@ -965,28 +1062,83 @@ Action to be checked.
 
 Response from user:
 C<'init'>, false value (not yet checked), C<'confirm'> and others (cancelled).
+This may typically be given by user using C<response_action> parameter.
 
 =item arg =E<gt> $arg
 
+Argument(s) of action.
+
 =item previous_action => $previous_action
 
+The action users will be redirected when action is confirmed.
+This may typically given by user using C<previous_action> parameter.
+
+=back
+
+=item is_anonymous ( )
+
+I<Instance method>.
+TBD.
+
+=item renew ( )
+
+I<Instance method>.
+Renews the session.
+Updates internal session ID and HTTP cookie.
+
+=item store ( )
+
+I<Instance method>.
+Stores session into session store.
+
+=back
+
+=head2 Functions
+
+=over
+
+=item check_cookie_extern ( )
+
+I<Function>.
+TBD.
+
+=item decrypt_session_id ( )
+
+I<Function>.
+TBD.
+
+=item encrypt_session_id ( )
+
+I<Function>.
+TBD.
+
+=item list_sessions ( )
+
+I<Function>.
+TBD.
+
+=item purge_old_sessions ( )
+
+I<Function>.
 TBD.
 
 =back
 
-Returns:
+=head2 Attributes
 
 TBD.
-
-=back
 
 =head1 SEE ALSO
+
+L<Sympa::DatabaseManager>.
 
 =head1 HISTORY
 
 L<SympaSession> appeared on Sympa 5.4a3.
 
 It was renamed to L<Sympa::Session> on Sympa 6.2a.41.
+
+L</"confirm_action"> method was added on Sympa 6.2.17.
 
 =cut
 
