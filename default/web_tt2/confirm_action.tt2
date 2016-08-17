@@ -14,6 +14,10 @@
   <p><strong>
     [%|loc(email.0)%]Dou you really want to add %1?[%END%] 
   </strong></p>
+[%~ ELSIF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]List archive[%END%]
+  </h2>
 [%~ ELSIF confirm_action == 'arc_delete' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Delete Selected Month(s)[%END%]
@@ -109,7 +113,6 @@
 
 <form action="[% path_cgi %]" method="POST">
 [% IF confirm_action == 'add' ~%]
-  <input type="hidden" name="previous_action" value="show_exclude" />
   [% FOREACH e = email ~%]
     <input type="hidden" name="email" value="[% e %]" />
   [%~ END %]
@@ -122,6 +125,12 @@
   [% FOREACH i = id ~%]
     <input type="hidden" name="id" value="[% i %]" />
   [%~ END %]
+[%~ ELSIF confirm_action == 'arc' ~%]
+  <input type="hidden" name="month" value="[% month %]" />
+  <input type="hidden" name="arc_file" value="[% arc_file %]" />
+[%~ ELSIF confirm_action == 'arcsearch_id' ~%]
+  <input type="hidden" name="archive_name" value="[% archive_name %]" />
+  <input type="hidden" name="msgid" value="[% msgid %]" />
 [%~ ELSIF confirm_action == 'arc_delete' ~%]
   [% FOREACH d = directories ~%]
     <input type="hidden" name="directories" value="[% d %]" />
@@ -165,6 +174,14 @@
 [%~ END %]
   <input type="hidden" name="action" value="[% confirm_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
+[% IF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
+  <div>
+    <input class="MainMenuLinks" type="submit"
+      id="response_action_confirm" name="response_action_confirm"
+      value="[%|loc%]I am not a spammer[%END%]" />
+  </div>
+  <p>[%|loc%]This button aims at protecting mailing lists archives against Spam Harvester.[%END%]</p>
+[%~ ELSE ~%]
   <div>
     <input class="MainMenuLinks" type="submit"
       id="response_action_confirm" name="response_action_confirm"
@@ -173,6 +190,7 @@
       id="response_action_cancel" name="response_action_cancel"
       value="[%|loc%]Back[%END%]" />
   </div>
+[%~ END %]
 </form>
 
 [% IF confirm_action == 'arc_delete' ~%]

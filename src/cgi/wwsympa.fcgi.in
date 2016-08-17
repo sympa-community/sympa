@@ -287,7 +287,6 @@ our %comm = (
     'd_admin'              => 'do_d_admin',
     'dump_scenario'        => 'do_dump_scenario',
     'dump'                 => 'do_dump',
-    'arc_protect'          => 'do_arc_protect',
     'remind'               => 'do_remind',
     'change_email'         => 'do_change_email',
     'change_email_request' => 'do_change_email_request',
@@ -501,7 +500,6 @@ our %required_args = (
     'arc_delete'              => ['param.user.email', 'param.list'],
     'arc_download'            => ['param.user.email', 'param.list'],
     'arc_manage'              => ['param.list'],
-    'arc_protect'             => ['param.list'],
     'arcsearch'               => ['param.list'],
     'arcsearch_form'          => ['param.list'],
     'arcsearch_id'            => ['param.list'],
@@ -9405,12 +9403,31 @@ sub do_arc {
         $param->{'may_tracking'} = 0;
     }
 
-    $session->{'archive_sniffer'} = 'false'
-        if ($param->{'user'}{'email'} or $in{'not_a_sniffer'});
+    if (    ($session->{'archive_sniffer'} || '') ne 'false'
+        and not $param->{'user'}{'email'}
+        and $list->{'admin'}{'web_archive_spam_protection'} eq 'cookie') {
+        my $month    = $in{'month'}    || '';
+        my $arc_file = $in{'arc_file'} || '';
 
-    if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie') {
-        return 'arc_protect'
-            unless ($session->{'archive_sniffer'} eq 'false');
+        $param->{'month'}    = $month;
+        $param->{'arc_file'} = $arc_file;
+
+        # Action confirmed?
+        my $next_action = $session->confirm_action(
+            $in{'action'}, $in{'response_action'},
+            arg => join('/', $month, $arc_file),
+            previous_action => ($in{'previous_action'} || 'info')
+        );
+        return $next_action unless $next_action eq '1';
+
+        # If confirmed, set flag and redirect to the file.
+        $session->{'archive_sniffer'} = 'false';
+        $param->{'redirect_to'}       = Sympa::get_url(
+            $list, 'arc',
+            paths => ($month ? [$month, $arc_file] : ['']),
+            authority => 'local'
+        );
+        return 1;
     }
 
     my $archive = Sympa::Archive->new(context => $list);
@@ -10187,6 +10204,26 @@ sub do_arcsearch_id {
     # Access control
     return undef
         unless defined check_authz('do_arcsearch_id', 'archive.web_access');
+
+    if (    ($session->{'archive_sniffer'} || '') ne 'false'
+        and not $param->{'user'}{'email'}
+        and $list->{'admin'}{'web_archive_spam_protection'} eq 'cookie') {
+        my $archive_name = $in{'archive_name'} || '';
+        my $msgid        = $in{'msgid'}        || '';
+        $param->{'archive_name'} = $archive_name;
+        $param->{'msgid'}        = $msgid;
+
+        # Action confirmed?
+        my $next_action = $session->confirm_action(
+            $in{'action'}, $in{'response_action'},
+            arg             => join('/', $archive_name, $msgid),
+            previous_action => 'info'
+        );
+        return $next_action unless $next_action eq '1';
+
+        # If confirmed, set flag.
+        $session->{'archive_sniffer'} = 'false';
+    }
 
     my $search = Sympa::Marc::Search->new;
     my $archive = Sympa::Archive->new(context => $list);
@@ -15987,11 +16024,8 @@ sub do_d_set_owner {
 }
 
 ## Protecting archives from Email Sniffers
-sub do_arc_protect {
-    wwslog('info', '');
-
-    return 1;
-}
+# No longer used.
+#sub do_arc_protect;
 
 ####################################################
 #  do_remind
