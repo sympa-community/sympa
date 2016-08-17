@@ -121,7 +121,7 @@
 <li></li>
 [% IF is_archived %]
   [% IF user.email && arc_access || !user.email && arc_public_access %]
-    [% IF action == 'arc' || action == 'arcsearch_form' || action == 'arcsearch' ||  action == 'arc_protect' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+    [% IF action == 'arc' || action == 'arcsearch_form' || action == 'arcsearch' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% 'arc' | url_rel([list]) %]" >[%|loc%]Archive[%END%]</a></li>
   [% ELSE %]
     <li class="menuInactive2"><span>[%|loc%]Archive[%END%]</span></li>
