@@ -42,7 +42,7 @@
   
       <div class="item">
         <div class="item_content">
-         <a class="item_title" href="[% 'review' | url_rel([list]) %]"><i class="fa fa-users fa-3x fa-pull-left fa-border"></i> [%|loc%]View or Manage Subscribers[%END%]</a>
+         <a class="item_title" href="[% 'review' | url_rel([list]) %]"><i class="fa fa-users fa-3x pull-left fa-border"></i> [%|loc%]View or Manage Subscribers[%END%]</a>
           <ul class="fa-ul">
             <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% 'review' | url_rel([list]) %]">[%|loc%]View the list of subscribers[%END%]</a></li>
             <li><i class="fa-li fa fa-arrow-right"></i> <a href="[% 'subindex' | url_rel([list]) %]">[%|loc%]Review subscription requests[%END%]</a></li>
@@ -54,7 +54,7 @@
   
       <div class="item">
         <div class="item_content">
-          <a class="item_title" href="[% 'admin' | url_rel([list]) %]"><i class="fa fa-wrench fa-3x fa-pull-left fa-border"></i> [%|loc%]List Configuration[%END%]</a>
+          <a class="item_title" href="[% 'admin' | url_rel([list]) %]"><i class="fa fa-wrench fa-3x pull-left fa-border"></i> [%|loc%]List Configuration[%END%]</a>
           <ul class="fa-ul">
             <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Modify owners or moderators (editors)[%END%]</a></li>
             <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Modify list subject and visibility[%END%]</a></li>
@@ -67,7 +67,7 @@
   
       <div class="item">
         <div class="item_content">
-          <a class="item_title" href="[% 'arc' | url_rel([list]) %]"><i class="fa fa-archive fa-3x fa-pull-left fa-border"></i> [%|loc%]List Archives[%END%]</a>
+          <a class="item_title" href="[% 'arc' | url_rel([list]) %]"><i class="fa fa-archive fa-3x pull-left fa-border"></i> [%|loc%]List Archives[%END%]</a>
           <ul class="fa-ul">
             <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'edit_list_request' | url_rel([list,'archives']) %]">[%|loc%]Change settings for who can view archives[%END%]</a></li>
             <li><i class="fa-li fa fa-arrow-right"></i><a href="[% 'arc_manage' | url_rel([list]) %]">[%|loc%]Download archives[%END%]</a></li>
@@ -77,7 +77,7 @@
   
       <div class="item">
         <div class="item_content">
-          <a class="item_title" href="[% 'edit_list_request' | url_rel([list,'data_source']) %]"><i class="fa fa-database fa-3x fa-pull-left fa-border"></i> [%|loc%]Data Sources Configuration[%END%]</a>
+          <a class="item_title" href="[% 'edit_list_request' | url_rel([list,'data_source']) %]"><i class="fa fa-database fa-3x pull-left fa-border"></i> [%|loc%]Data Sources Configuration[%END%]</a>
           <ul class="fa-ul">
             <li><i class="fa-li fa fa-arrow-right"></i>[%|loc%]Configure data sources (SQL, LDAP, text file) for list membership[%END%]</li>
             <li><i class="fa-li fa fa-arrow-right"></i>[%|loc%]Include (nest) Sympa lists[%END%]</li>
