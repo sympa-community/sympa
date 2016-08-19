@@ -1257,7 +1257,6 @@ while ($query = new_loop()) {
         #'hidden_at'            => 1,
         'selected'             => 1,
         'logo_html_definition' => 1,
-        'template_content'     => 1,
         'html_dumpvars'        => 1,
         'html_editor_init'     => 1,
         'html_content'         => 1,
@@ -6992,7 +6991,8 @@ sub do_view_template {
         $in{'template_name'}, $in{'tpl_lang'}
     );
 
-    unless ($template_path and open(TPL, $template_path)) {
+    my $fh;
+    unless ($template_path and open $fh, '<', $template_path) {
         Sympa::Report::reject_report_web('intern', 'cannot_open_file',
             {'path' => $in{'template_path'}},
             $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
@@ -7000,12 +7000,9 @@ sub do_view_template {
         return undef;
     }
 
-    $param->{'rows'}             = 5;     # minimum size of 5 rows;
-    $param->{'template_content'} = '';    # init content
-    while (<TPL>) { $param->{'template_content'} .= $_; $param->{'rows'}++; }
-    $param->{'template_content'} =
-        Sympa::Tools::WWW::escape_html_minimum($param->{'template_content'});
-    close TPL;
+    $param->{'rows'} = 5;    # minimum size of 5 rows;
+    $param->{'template_content'} = do { local $RS; <$fh> };
+    close $fh;
 
     $param->{'webormail'}     = $in{'webormail'};
     $param->{'template_name'} = $in{'template_name'};
@@ -7112,7 +7109,8 @@ sub do_copy_template {
         return undef;
     }
 
-    unless (open(TPLOUT, '>', $param->{'template_path_out'})) {
+    my $ofh;
+    unless (open $ofh, '>', $param->{'template_path_out'}) {
         Sympa::Report::reject_report_web(
             'intern',
             'cannot_open_file',
@@ -7135,9 +7133,8 @@ sub do_copy_template {
         );
         return undef;
     }
-    print TPLOUT Sympa::Tools::WWW::unescape_html_minimum(
-        $param->{'template_content'});
-    close TPLOUT;
+    print $ofh $param->{'template_content'};
+    close $ofh;
 
     if ($in{'list_out'}) { $param->{'list'} = $in{'list'} = $in{'list_out'}; }
 
@@ -7409,8 +7406,6 @@ sub do_rt_edit {
         return undef;
     }
     $param->{'content'} = do { local $RS; <$fh> };
-    #XXX$param->{'content'} =
-    #XXX    Sympa::Tools::WWW::escape_html_minimum($param->{'content'});
     close $fh;
     $param->{'message_template'} = $template_name;
 
@@ -7523,8 +7518,9 @@ sub do_edit_template {
         $in{'template_name'}, $in{'tpl_lang'}
     );
 
-    unless ($param->{'template_path'}
-        and open(TPLOUT, '>', $param->{'template_path'})) {
+    my $ofh;
+    unless ($param->{'template_path'} and open $ofh,
+        '>', $param->{'template_path'}) {
         Sympa::Report::reject_report_web('intern', 'cannot_open_file',
             {'path' => $param->{'template_path'}},
             $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
@@ -7537,8 +7533,8 @@ sub do_edit_template {
         );
         return undef;
     }
-    print TPLOUT Sympa::Tools::WWW::unescape_html_minimum($in{'content'});
-    close TPLOUT;
+    print $ofh $in{'content'};
+    close $ofh;
 
     $param->{'saved'}            = 1;
     $param->{'template_content'} = $in{'content'};
