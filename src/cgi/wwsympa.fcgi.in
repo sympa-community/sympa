@@ -17504,17 +17504,11 @@ sub do_request_topic {
     }
 
     # headers will be encoded later.
-    $param->{'subject'} = $message->{'decoded_subject'};
-    $param->{'subject'} =
-        Sympa::Tools::WWW::escape_html_minimum($param->{'subject'});    #XXX
-    $param->{'from'} = $message->get_decoded_header('From');
-    $param->{'from'} =
-        Sympa::Tools::WWW::escape_html_minimum($param->{'from'});       #XXX
-    $param->{'date'} = $message->get_decoded_header('Date');
-    $param->{'date'} =
-        Sympa::Tools::WWW::escape_html_minimum($param->{'date'});       #XXX
+    $param->{'subject'}    = $message->{'decoded_subject'};
+    $param->{'from'}       = $message->get_decoded_header('From');
+    $param->{'date'}       = $message->get_decoded_header('Date');
     $param->{'message_id'} = $message->{'message_id'};
-    $param->{'body'}       = $message->get_plain_body;                  #FIXME
+    $param->{'body'}       = $message->get_plain_body;               #FIXME
 
     $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
 
