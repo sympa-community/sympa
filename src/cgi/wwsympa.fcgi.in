@@ -8261,40 +8261,34 @@ sub do_modindex {
 
         my $id = $message->{authkey};
 
-        my $date = $message->get_header('Date') || undef;
-        my ($date_epoch, $date_str);
-        if ($date) {
+        my ($date_smtp, $date_epoch, $date);
+        $date_smtp = $message->get_header('Date') || undef;
+        if ($date_smtp) {
             $date_epoch = eval {
-                DateTime::Format::Mail->new->loose->parse_datetime($date)
+                DateTime::Format::Mail->new->loose->parse_datetime($date_smtp)
                     ->epoch;
             };
             if (defined $date_epoch) {
-                $date_str =
-                    $language->gettext_strftime('%a, %d %b %Y %H:%M:%S',
+                $date = $language->gettext_strftime('%a, %d %b %Y %H:%M:%S',
                     localtime $date_epoch);
             }
         }
 
-        my $entry = {
-            size          => int($message->{size} / 1024 + 0.5),
-            subject       => ($message->{decoded_subject} || 'no_subject'),
-            date_smtp     => $date,
-            date_epoch    => $date_epoch,
-            date          => $date_str,
-            from          => $message->{sender},
-            gecos         => $message->{gecos},
-            spam_status   => $message->{spam_status},
-            is_subscriber => $list->is_list_member($message->{sender}),
-        };
-
-        #FIXME: Are these required?
-        foreach my $field (qw(subject date from)) {
-            $entry->{$field} =~ s/&/&amp;/g;
-            $entry->{$field} =~ s/</&lt;/g;
-            $entry->{$field} =~ s/>/&gt;/g;
-        }
-
-        push @{$param->{'spool'}}, {key => $id, value => $entry};
+        push @{$param->{'spool'}},
+            {
+            key   => $id,
+            value => {
+                size          => int($message->{size} / 1024 + 0.5),
+                subject       => $message->{decoded_subject},
+                date_smtp     => $date_smtp,
+                date_epoch    => $date_epoch,
+                date          => $date,
+                from          => $message->{sender},
+                gecos         => $message->{gecos},
+                spam_status   => $message->{spam_status},
+                is_subscriber => $list->is_list_member($message->{sender}),
+            }
+            };
     }
 
     if ($list->is_there_msg_topic()) {
@@ -9647,70 +9641,36 @@ sub do_latest_arc {
 
             last if $nb_arc <= 0;
 
-            my %msg_info;
-
-            foreach my $field ('message-id', 'subject', 'from') {
-
-                my $var = $field;
-                $var =~ s/-/_/g;
-
-                $msg_info{$var} = $message->get_header($field);
-
-                # Hide full email address
-                if ($field eq 'from') {
-                    if ($msg_info{$var} =~ /(.+)\<.+\>/) {
-                        $msg_info{$var} = $1;
-                    } else {
-                        my @email = split /\@/, $msg_info{$var};
-                        $msg_info{$var} = $email[0];
-                    }
-                }
-
-                if ($field eq 'message-id') {
-                    $msg_info{$var} = Sympa::Tools::Text::canonic_message_id(
-                        $msg_info{'message_id'});
-                    #FIXME: Required?
-                    $msg_info{$var} =
-                        Sympa::Tools::Text::escape_chars($msg_info{$var});
-
-                    $msg_info{'year_month'} = $arc;
-                } else {
-                    $msg_info{$var} =
-                        MIME::EncWords::decode_mimewords($msg_info{$var},
-                        Charset => 'utf8');
-                    #FIXME: Required?
-                    $msg_info{$var} = Sympa::Tools::WWW::escape_html_minimum(
-                        $msg_info{$var});
-                }
-            }
-
-            my $date = $message->get_header('Date');
-
-            unless (defined $date) {
+            my ($date_smtp, $date_epoch, $date);
+            $date_smtp = $message->get_header('Date') || undef;
+            unless ($date_smtp) {
                 wwslog('err', 'No date found in message %s', $message);
                 next;
             }
-
-            $msg_info{'date_smtp'} = $date;
-            my $date_epoch = eval {
-                DateTime::Format::Mail->new->loose->parse_datetime($date)
+            $date_epoch = eval {
+                DateTime::Format::Mail->new->loose->parse_datetime($date_smtp)
                     ->epoch;
             };
             if (defined $date_epoch) {
-                $msg_info{'date_epoch'} = $date_epoch;
-                $msg_info{'date'} = $language->gettext_strftime("%d %b %Y",
-                    localtime $date_epoch);
-
                 if ($date_epoch < $oldest_day) {
                     $stop_search = 1;
                     last;
                 }
-            }
-            foreach my $key (keys %msg_info) {
-                chomp($msg_info{$key});
+                $date = $language->gettext_strftime("%d %b %Y",
+                    localtime $date_epoch);
             }
 
-            push @archives, \%msg_info;
+            push @archives,
+                {
+                subject    => $message->{decoded_subject},
+                date_smtp  => $date_smtp,
+                date_epoch => $date_epoch,
+                date       => $date,
+                from       => $message->{sender},
+                gecos      => $message->{gecos},
+                message_id => $message->{message_id},
+                year_month => $arc,
+                };
             $nb_arc--;
         }
     }

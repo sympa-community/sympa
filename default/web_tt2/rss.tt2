@@ -82,7 +82,7 @@
   <item>
     <title>[% a.subject | xml %] - [% a.from | xml %]</title>
     <link>[% 'arcsearch_id' | url_abs([list,a.year_month,a.message_id]) %]</link>
-    <pubDate>[% a.date_smtp %]</pubDate>
+    <pubDate>[% a.date_smtp | xml %]</pubDate>
   </item>
  [% END -%]
 [% ELSIF action == 'latest_d_read' -%]

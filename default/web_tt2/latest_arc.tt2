@@ -24,8 +24,8 @@
  [% FOREACH a = archives %] 
  <tr>
    <td> [% a.date %] </td>
-   <td> <a href="[% 'arcsearch_id' | url_abs([list,a.year_month,a.message_id]) %]" >[% a.subject %] </td>
-   <td> [% a.from %] </td>
+   <td> <a href="[% 'arcsearch_id' | url_abs([list,a.year_month,a.message_id]) %]" > [% UNLESS a.subject.length %]<i>[%|loc%]No subject[%END%]</i>[% ELSE %][% a.subject %][%END%] </td>
+   <td> [% a.gecos || a.from.split('@').0 %] </td>
  </tr>
  
  [% END %]  
