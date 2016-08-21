@@ -331,38 +331,8 @@ sub get_http_host {
 }
 
 # Uploade source file to the destination on the server
-sub upload_file_to_server {
-    my $param = shift;
-    $log->syslog(
-        'debug',
-        "Uploading file from field %s to destination %s",
-        $param->{'file_field'},
-        $param->{'destination'}
-    );
-    my $fh;
-    unless ($fh = $param->{'query'}->upload($param->{'file_field'})) {
-        $log->syslog(
-            'debug',
-            'Cannot upload file from field %s',
-            $param->{'file_field'}
-        );
-        return undef;
-    }
-
-    unless (open FILE, ">:bytes", $param->{'destination'}) {
-        $log->syslog(
-            'debug',
-            'Cannot open file %s: %m',
-            $param->{'destination'}
-        );
-        return undef;
-    }
-    while (<$fh>) {
-        print FILE;
-    }
-    close FILE;
-    return 1;
-}
+# DEPRECATED.  No longer used.
+#sub upload_file_to_server;
 
 # DEPRECATED: No longer used.
 #sub no_slash_end;
@@ -965,28 +935,12 @@ sub _get_css_url {
 }
 
 # Old name: tools::escape_html().
-sub escape_html_minimum {
-    my $s = shift;
-    return $s unless defined $s;
-
-    $s =~ s/\"/\&quot\;/gm;
-    $s =~ s/\</&lt\;/gm;
-    $s =~ s/\>/&gt\;/gm;
-
-    return $s;
-}
+# DEPRECATED.  No longer used.
+#sub escape_html_minimum;
 
 # Old name: tools::unescape_html().
-sub unescape_html_minimum {
-    my $s = shift;
-    return $s unless defined $s;
-
-    $s =~ s/\&quot\;/\"/g;
-    $s =~ s/&lt\;/\</g;
-    $s =~ s/&gt\;/\>/g;
-
-    return $s;
-}
+# DEPRECATED.  No longer used.
+#sub unescape_html_minimum;
 
 1;
 __END__
