@@ -79,10 +79,10 @@
 	[% END %]
 
 	  <td>
-	    <input type="checkbox" name="email" value="[% u.escaped_email %]" />
+	    <input type="checkbox" name="email" value="[% u.email %]" />
 	  </td>
 	  <td>
-	      <a href="[% 'editsubscriber' | url_rel([list,u.escaped_email,'reviewbouncing']) %]">[% u.email %]</a>
+	    <a href="[% 'editsubscriber' | url_rel([list],{email=>u.email,previous_action=>action}) %]">[% u.email %]</a>
 
 	  </td>
           <td class="text_center 

@@ -138,12 +138,25 @@
            </li>
            [% END %]
            <li class="divider hide-for-small"></li>
-            [% IF authentication_info_url %]
-               <li><a class="menuLinks" href="[%authentication_info_url%]">[%|loc%]Authentication help[% END %]</a></li>
-            [% ELSE %]
-              <li><a href="[% 'firstpasswd' | url_rel([escaped_init_email]) %]">[%|loc%]First login?[%END%]</a></li>
-              <li><a href="[% 'renewpasswd' | url_rel([escaped_init_email]) %]">[%|loc%]Lost password?[%END%]</a></li>
-            [% END %]
+           [% IF authentication_info_url %]
+             <li><a class="menuLinks" href="[%authentication_info_url%]">
+               [%|loc%]Authentication help[% END %]
+             </a></li>
+           [% ELSIF init_email %]
+             <li><a href="[% 'firstpasswd' | url_rel([],{email=>init_email}) %]">
+               [%|loc%]First login?[%END%]
+             </a></li>
+             <li><a href="[% 'renewpasswd' | url_rel([],{email=>init_email}) %]">
+               [%|loc%]Lost password?[%END%]
+             </a></li>
+           [% ELSE %]
+             <li><a href="[% 'firstpasswd' | url_rel %]">
+               [%|loc%]First login?[%END%]
+             </a></li>
+             <li><a href="[% 'renewpasswd' | url_rel %]">
+               [%|loc%]Lost password?[%END%]
+             </a></li>
+           [% END %]
            [% IF top_menu %]
             </ul>
            </li>

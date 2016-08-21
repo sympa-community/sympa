@@ -58,7 +58,7 @@
       <input type="hidden" name="envid" value="[% u.envid %]" />
       <input type="submit" class="MainMenuLinks"
         value="[%|loc%]view[%END%]"
-        onclick="$('.viewmod').hide();$('#viewbounce[% u.envid %]').load('[% 'ajax/viewbounce' | url_rel([list,u.recipient],{envid=>u.envid}) %]').parent().show(); return false" />
+        onclick="$('.viewmod').hide();$('#viewbounce[% u.envid %]').load('[% 'ajax/viewbounce' | url_rel([list],{email=>u.recipient,envid=>u.envid}) %]').parent().show(); return false" />
       </form>
     [% ELSE %]
       &nbsp;

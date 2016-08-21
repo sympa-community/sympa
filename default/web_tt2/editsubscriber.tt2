@@ -6,10 +6,11 @@
 
   <input type="hidden" name="previous_action" value="[% previous_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="email" value="[% current_subscriber.escaped_email %]" />
+  <input type="hidden" name="email" value="[% current_subscriber.email %]" />
 
   <label for="new_email">[%|loc%]Email:[%END%]  </label>
-  <input type="text" name="new_email" id="new_email" value="[% current_subscriber.escaped_email %]" size="25" />
+  <input type="text" name="new_email" id="new_email"
+    value="[% current_subscriber.email %]" size="25" />
 
   <label for="gecos">[%|loc%]Name:[%END%]  </label>
   <input type="text" name="gecos" id="gecos" value="[% current_subscriber.gecos %]" size="25" />
@@ -42,15 +43,21 @@
   <label>[%|loc%]Language:[%END%]  </label>[% current_subscriber.lang %]
 
 
-  [% IF pictures_display %]
-    <label for="picture">[%|loc%]Picture:[%END%]  </label>
-    <a id="picture" href="[% current_subscriber.pictures_url %]" title="[% current_subscriber.pictures_url %],[%|loc%]Open in a new window[%END%]" target="pictures">
-      <img id="large_picture" src="[% current_subscriber.pictures_url %]" alt="[% current_subscriber.escaped_email %]'s picture"/>
-    </a>
-    [% IF current_subscriber.escaped_email == user.email %]
+  [% IF pictures_display ~%]
+    [% IF current_subscriber.pictures_url || current_subscriber.email == user.email ~%]
+      <label for="picture">[%|loc%]Picture:[%END%]  </label>
+    [%~ END %]
+    [% IF current_subscriber.pictures_url ~%]
+      <a id="picture" href="[% current_subscriber.pictures_url %]"
+        title="[%|loc%]Open in a new window[%END%]" target="pictures">
+        <img id="large_picture" src="[% current_subscriber.pictures_url %]"
+          alt="[%|loc(current_subscriber.email)%]%1's picture[%END%]" />
+      </a>
+    [%~ END %]
+    [% IF current_subscriber.email == user.email ~%]
       <p><a href="[% 'suboptions' | url_rel([list]) %]" title="">[%|loc%]Changing your picture for this list[%END%]</a></p>
-    [% END %]
-  [% END %]
+    [%~ END %]
+  [%~ END %]
 
   [% IF additional_fields %]
     [% FOREACH field = additional_fields %]
@@ -79,9 +86,9 @@
   [% IF current_subscriber.bounce %]
     <h3 class="bg_color_error">[%|loc%]Bouncing address[%END%]</h3>
 
-    [% IF current_subscriber.escaped_bounce_address  %]
+    [% IF current_subscriber.bounce_address  %]
       <label>[%|loc%]Address detected via VERP technology[%END%]  </label>
-      [% current_subscriber.escaped_bounce_address %]
+      [% current_subscriber.bounce_address %]
     [% END %]
 
     <label>[%|loc%]Status:[%END%] </label>
@@ -112,8 +119,8 @@
     </p>
     </div>
 
-    <a href="[% 'viewbounce' | url_rel([list,current_subscriber.email]) %]"
-      onclick="$('.viewmod').hide();$('#viewbounce').load('[% 'ajax/viewbounce' | url_rel([list,current_subscriber.email]) %]').parent().show(); return false">[%|loc%]View last bounce[%END%]</a>
+    <a href="[% 'viewbounce' | url_rel([list],{email=>current_subscriber.email}) %]"
+      onclick="$('.viewmod').hide();$('#viewbounce').load('[% 'ajax/viewbounce' | url_rel([list],{email=>current_subscriber.email}) %]').parent().show(); return false">[%|loc%]View last bounce[%END%]</a>
 
     <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" />
 

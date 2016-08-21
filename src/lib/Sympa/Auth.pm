@@ -186,8 +186,7 @@ sub authentication {
     $log->syslog('err', 'Incorrect password for user %s', $email);
 
     my $param;    #FIXME FIXME: not used.
-    $param->{'init_email'}         = $email;
-    $param->{'escaped_init_email'} = Sympa::Tools::Text::escape_chars($email);
+    $param->{'init_email'} = $email;
     return undef;
 }
 

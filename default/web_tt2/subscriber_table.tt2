@@ -84,14 +84,14 @@
 
 	 [% IF is_owner %]
 	    <td>
-	        <input type="checkbox" name="email" value="[% u.escaped_email %]" />
+	        <input type="checkbox" name="email" value="[% u.email %]" />
 	    </td>
  	 [% END %]
 	 [% IF u.bounce %]
 	   <td colspan="2" class="text-left">
 	 
 	     [% IF is_owner %]
-	       <a href="[% 'editsubscriber' | url_rel([list,u.escaped_email,'review']) %]">[% u.email %]</a>
+	       <a href="[% 'editsubscriber' | url_rel([list],{email=>u.email,previous_action=>action}) %]">[% u.email %]</a>
 	     [% ELSE %]
  	       [% u.email %]
  	     [% END %]
@@ -104,7 +104,7 @@
 	 [% ELSE %]
 	   <td colspan="3" class="text-left">
 	     [% IF is_owner %]
-	       <a href="[% 'editsubscriber' | url_rel([list,u.escaped_email,'review']) %]">[% u.email %]</a>
+	       <a href="[% 'editsubscriber' | url_rel([list],{email=>u.email,previous_action=>action}) %]">[% u.email %]</a>
 	     [% ELSE %]
 	       [% u.email %]
 	     [% END %]

@@ -351,7 +351,12 @@ my %auth_action = (
     'ticket'              => 1,
 );
 
-## Arguments awaited in the PATH_INFO, depending on the action
+# Arguments awaited in the PATH_INFO, depending on the action.
+# NOTE:
+# * The email addresses should NOT be embedded in PATH_INFO, because included
+#   slashes (/) cannot be handled correctly by web servers. They are kept just
+#   for compatibility to earlier releases of Sympa.  Use query parameters
+#   instead.
 our %action_args = (
     'default'       => ['list'],
     'editfile'      => ['list', 'file', 'previous_action'],
@@ -384,11 +389,11 @@ our %action_args = (
     'add'         => ['list', 'email'],
     'add_request' => ['list'],
     'del' => ['list', 'email'],
-    'editsubscriber' =>
-        ['list', 'email', 'previous_action', 'custom_attribute'],
-#		'editsubscriber' => ['list','email','previous_action'],
-    'viewbounce'  => ['list', 'email', '@file'],
-    'resetbounce' => ['list', 'email'],
+    #'editsubscriber' =>
+    #    ['list', 'email', 'previous_action', 'custom_attribute'],
+    #'editsubscriber' => ['list', 'email', 'previous_action'],
+    #'viewbounce'     => ['list', 'email', '@file'],
+    #'resetbounce'    => ['list', 'email'],
     'review'         => ['list', 'page',  'size', 'sortby'],
     'reviewbouncing' => ['list', 'page',  'size'],
     'arc'            => ['list', 'month', '@arc_file'],
@@ -971,9 +976,9 @@ my %filtering = (
     #XXX'd_control' => {'path' => 'qencode'},
     #XXX'd_change_access' => {'path' => 'qencode'},
     #XXX'd_set_owner' => {'path' => 'qencode'},
-    'requestpasswd'  => {'email' => 'fix_escape_uri'},
-    'viewbounce'     => {'email' => 'fix_escape_uri'},
-    'editsubscriber' => {'email' => 'fix_escape_uri'},
+    #XXX'requestpasswd' => {'email' => 'fix_escape_uri'},
+    #XXX'viewbounce' => {'email' => 'fix_escape_uri'},
+    #XXX'editsubscriber' => {'email' => 'fix_escape_uri'},
     ## Required because outgoing parameters have been html-escaped in
     ## edit_list_request
     'edit_list' => {'*param*' => 'unescape_html'},
@@ -2432,14 +2437,12 @@ sub get_parameters {
             #    $in{$p} = join '/', @tokens;
             #}
             if ($filtering_action eq 'unescape_html') {
-                # Sympa's URI escaping subroutine
-                # (Sympa::Tools::Text::escape_chars()) replaces '/' with
-                # %A5 ('¥' character).  This should be transformed into a
-                # '/' again.
                 $in{$p} = Sympa::Tools::Text::unescape_chars($in{$p});
-            } elsif ($filtering_action eq 'fix_escape_uri') {
-                $in{$p} =~ s/\xa5/\//g;
-
+                #} elsif ($filtering_action eq 'fix_escape_uri') {
+                #    # Sympa::Tools::Text::escape_chars() replaces '/' with
+                #    # %A5 ('¥' character).  This should be transformed into a
+                #    # '/' again.
+                #    $in{$p} =~ s{/}{\xa5}g;
             } elsif ($filtering_action eq 'normalize') {
                 $in{$p} =~ s/^\$+//;    ## remove leading \s
                 $in{$p} =~ s/\$+$//;    ## remove trailing \s
@@ -3366,8 +3369,6 @@ sub do_login {
         } else {
             $in{'init_email'} = $in{'email'};
             $param->{'init_email'} = $in{'email'};
-            $param->{'escaped_init_email'} =
-                Sympa::Tools::Text::escape_chars($in{'email'});
 
             Sympa::Report::reject_report_web('user', 'missing_arg',
                 {'argument' => 'passwd'},
@@ -3762,8 +3763,6 @@ sub do_sso_login {
                 unless ($in{'ticket'}) {
                     $in{'init_email'} = $in{'email'};
                     $param->{'init_email'} = $in{'email'};
-                    $param->{'escaped_init_email'} =
-                        Sympa::Tools::Text::escape_chars($in{'email'});
 
                     Sympa::Report::reject_report_web('user', 'missing_arg',
                         {'argument' => 'ticket'},
@@ -4354,15 +4353,11 @@ sub sendssopasswd {
                 Sympa::Tools::Password::tmp_passwd($email);
         }
 
-        $param->{'newuser'}{'escaped_email'} =
-            Sympa::Tools::Text::escape_chars($param->{'newuser'}{'email'});
-
     } else {
 
         $param->{'newuser'} = {
-            'email'         => $email,
-            'escaped_email' => Sympa::Tools::Text::escape_chars($email),
-            'password'      => Sympa::Tools::Password::tmp_passwd($email)
+            'email'    => $email,
+            'password' => Sympa::Tools::Password::tmp_passwd($email)
         };
 
     }
@@ -4482,8 +4477,6 @@ sub do_requestpasswd {
     {
         $param->{'newuser'} =
             {'email' => Sympa::Tools::Text::canonic_email($in{'email'})};
-        $param->{'newuser'}{'escaped_email'} =
-            Sympa::Tools::Text::escape_chars($param->{'newuser'}{'email'});
     }
     if ($param->{'one_time_ticket'}) {
         $param->{'login_error'} = 'ticket_sent';
@@ -5324,7 +5317,7 @@ sub do_set {
             return undef;
         }
 
-        $email = Sympa::Tools::Text::unescape_chars($in{'email'});
+        $email = $in{'email'};
     } else {
         unless ($param->{'user'}{'email'}) {
             Sympa::Report::reject_report_web('user', 'no_user', {},
@@ -6107,8 +6100,6 @@ sub do_subrequest {
     unless ($param->{'newuser'}) {
         $param->{'newuser'} =
             {'email' => Sympa::Tools::Text::canonic_email($in{'email'})};
-        $param->{'newuser'}{'escaped_email'} =
-            Sympa::Tools::Text::escape_chars($param->{'newuser'}{'email'});
     }
     # Need to send a password by email
     $param->{'one_time_ticket'} = Sympa::Ticket::create(
@@ -8002,7 +7993,6 @@ sub do_add_fromsub {
 sub do_del {
     wwslog('info', '');
 
-    $in{'email'} = Sympa::Tools::Text::unescape_chars($in{'email'});    #FIXME
     my @emails = split /\0/, $in{'email'};
 
     $param->{'email'} = [@emails];
@@ -10211,7 +10201,7 @@ sub do_arcsearch_id {
         return undef;
     }
 
-    $in{'msgid'} = Sympa::Tools::Text::unescape_chars($in{'msgid'});
+    #$in{'msgid'} = Sympa::Tools::Text::unescape_chars($in{'msgid'});
     $param->{'msgid'} = $in{'msgid'};
 
     $search->limit(1);
@@ -10998,8 +10988,6 @@ sub do_editsubscriber {
 
     my $subscriber;
 
-    $in{'email'} = Sympa::Tools::Text::unescape_chars($in{'email'});
-
     unless ($subscriber = $list->get_list_member($in{'email'})) {
         Sympa::Report::reject_report_web('intern', 'subscriber_not_found',
             {'email' => $in{'email'}},
@@ -11009,12 +10997,6 @@ sub do_editsubscriber {
     }
 
     $param->{'current_subscriber'} = $subscriber;
-    $param->{'current_subscriber'}{'escaped_email'} =
-        Sympa::Tools::WWW::escape_html_minimum(
-        $param->{'current_subscriber'}{'email'});
-    $param->{'current_subscriber'}{'escaped_bounce_address'} =
-        Sympa::Tools::WWW::escape_html_minimum(
-        $param->{'current_subscriber'}{'bounce_address'});
     $param->{'current_subscriber'}{'date'} =
         $language->gettext_strftime("%d %b %Y",
         localtime($subscriber->{'date'}));
@@ -11334,10 +11316,6 @@ sub do_reviewbouncing {
             $language->gettext_strftime("%d %b %Y",
             localtime($i->{'last_bounce'}));
 
-        ## Escape some weird chars
-        $i->{'escaped_email'} =
-            Sympa::Tools::Text::escape_chars($i->{'email'});
-
         push @{$param->{'members'}}, $i;
     }
 
@@ -11352,8 +11330,6 @@ sub do_reviewbouncing {
 
 sub do_resetbounce {
     wwslog('info', '');
-
-    $in{'email'} = Sympa::Tools::Text::unescape_chars($in{'email'});
 
     my @emails = split /\0/, $in{'email'};
 
@@ -19223,10 +19199,6 @@ sub _prepare_subscriber {
     $user->{'email'} =~ /\@(.+)$/;
     $user->{'domain'}       = $1;
     $user->{'pictures_url'} = $list->find_picture_url($user->{'email'});
-
-    ## Escape some weird chars
-    $user->{'escaped_email'} =
-        Sympa::Tools::Text::escape_chars($user->{'email'});
 
     ## Check data sources
     $user->{'sources'} = $list->get_datasource_name($user->{'id'})
