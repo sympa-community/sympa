@@ -27,11 +27,19 @@
     </select>
        
     <input id="target" type="text" name="target" value="[% target %]" size ="20"/>
-
+  <div>
     <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
-    <input type="text" id="date_from" name="date_from" maxlength="10" size="10" value="[% date_from %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" >
+    <input type="text" id="date_from" name="date_from" maxlength="10" size="10"
+      style="display: inline-block; max-width: 40%"
+      value="[% date_from %]"
+      placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
     <label for="date_to">[%|loc%]to:[%END%]</label>
-    <input type="text" id="date_to" name="date_to" maxlength="10" size="10" value="[% date_to %]" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" ><noscript><em>[%|loc%]ex: 24-05-2006[%END%]</em></noscript>
+    <input type="text" id="date_to" name="date_to" maxlength="10" size="10"
+      style="display: inline-block; max-width: 40%"
+      value="[% date_to %]"
+      placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
+    <noscript>([%|loc%]ex: 24-05-2006[%END%])</noscript>
+  </div>
 
     <label for="type">[%|loc%]Search by type:[%END%]</label>
     <select id="type" name="type">

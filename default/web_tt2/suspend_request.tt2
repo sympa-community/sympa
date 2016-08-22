@@ -77,10 +77,19 @@
     
     <input type="hidden" name="action" value="suspend_request_action"/>
     <input class="MainMenuLinks" type="submit" name="sub_action_suspendsave" value="[%|loc%]Suspend my subscriptions[%END%]"/>
-    [%|loc%]From:[%END%] <noscript>(dd-mm-yyyy)</noscript><input type="text" id="date_deb" name="date_deb" maxlength="10" size="10" value="[% d_day %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" />
-    [%|loc%]To:[%END%] <noscript>(dd-mm-yyyy)</noscript><input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" />
+  <div>
+    <label for="date_deb">[%|loc%]From:[%END%]</label>
+    <input type="text" id="date_deb" name="date_deb" maxlength="10" size="10"
+      style="display: inline-block; max-width: 40%"
+      value="[% d_day %]"
+      placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
+    <label for="date_fin">[%|loc%]To:[%END%]</label>
+    <input type="text" id="date_fin" name="date_fin" maxlength="10" size="10"
+      style="display: inline-block; max-width: 40%"
+      placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
+    <noscript>([%|loc%]dd-mm-yyyy[%END%])</noscript>
     <input type="checkbox" name="indefinite" />[%|loc%]Suspend my membership indefinitely[%END%]
-    <br />
+  </div>
     
     [% IF suspended %]
     <input class="MainMenuLinks" type="submit" name="sub_action_suspendstop" value="[%|loc%]Resume my subscriptions[%END%]"/>

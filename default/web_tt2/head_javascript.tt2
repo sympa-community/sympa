@@ -23,33 +23,13 @@ var HUE_SLIDER_LOCATION = '[% icons_url %]/h.png';
 var HUE_SLIDER_ARROWS_LOCATION = '[% icons_url %]/position.png';
 var SAT_VAL_SQUARE_LOCATION = '[% icons_url %]/sv.png';
 
-// Variables used by the calendar js.
-var pDefaut = { 
-	"mois" : "[%|loc%]January:February:March:April:May:June:July:August:September:October:November:December[%END%]".split(":"),
-	"jour" : "[%|loc%]Sun:Mon:Tue:Wed:Thu:Fri:Sat[%END%]".split(":"),
-	"jLib" : "[%|loc%]Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday[%END%]".split(":"),
-	"titre" : "[%|loc%]Calendar[%END%]",
-	"aujourdhui" : "[%|loc%]today[%END%]",
-	"debutSemaine" : 0,                      /*debut de la semaine 0=lun,1=mar,...*/
-	"jPause" : {6:true,0:true},              /*jour de pause de la semaine (samedi & dimanche)*/
-	"jFeriee": {"1-1":"Jour de l'an","1-5":"Fête du travail","8-5":"Armistice 39-45","14-7":"Fête nationale","15-8":"Ascension","1-11":"Armistice 14-18","11-11":"Toussaint","25-12":"Noël"} ,
-	"moisMoins" : "<", "moisPlus" : ">",     /*navigation par mois*/ 
-	"anneeMoins" : "<<", "anneePlus" : ">>", /*navigation par annee*/
-	"format" : "%j-%m-%a",                   /*format de sortie : %j = jour, %m = mois, %a =année*/ 
-	"date" : null, "ddeb" : "", "dfin" : "",
-	"dateMin" : null, "dateMax" : null
-}
-
-
-var param_ddeb = {"dfin" : "date_fin", "titre" : "[%|loc%]Start date[%END%]" };
-var param_dfin = {"ddeb" : "date_deb", "titre" : "[%|loc%]End date[%END%]"  };
-
-var tempo = new Array(); /*gestion de la fermeture des calendriers quand on perd le focus*/
-var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI":0,"PRE":0,"SPAN":0,"SUB":0,"SUP":0,"FORM":0};
-//var nomove={"TD":0,"TABLE":0};
-
 var sympa = {
-    "loadingText": "[%|loc%]Please Wait...[%END%]"
+    calendarButtonText: "[%|loc%]Calendar[%END%]",
+    dayNames:           "[%|loc%]Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday[%END%]".split(":"),
+    dayNamesMin:        "[%|loc%]Su:Mo:Tu:We:Th:Fr:Sa[%END%]".split(":"),
+    firstDay:           0,
+    loadingText:        "[%|loc%]Please Wait...[%END%]",
+    monthNamesShort:    "[%|loc%]Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec[%END%]".split(":")
 };
 //-->
 </script>
