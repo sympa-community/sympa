@@ -3,7 +3,7 @@
 ## DEVELOPMENT WARNING
 ## Don't add javascript to this file, except if you need to initialize
 ## variables using TT2 parsing.
-## Use the src/etc/script/js/sympa.js file instead to write your scripts.
+## Use the js/sympa.js file instead of writing your scripts.
 #%]
 <script>
 <!--
@@ -48,6 +48,9 @@ var tempo = new Array(); /*gestion de la fermeture des calendriers quand on perd
 var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI":0,"PRE":0,"SPAN":0,"SUB":0,"SUP":0,"FORM":0};
 //var nomove={"TD":0,"TABLE":0};
 
+var sympa = {
+    "loadingText": "[%|loc%]Please Wait...[%END%]"
+};
 //-->
 </script>
 

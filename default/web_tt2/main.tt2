@@ -50,24 +50,16 @@
     [% PROCESS header.tt2 %]
 [% END %]
 
+[%# Show loading notice only when javascript is enabled. ~%]
 [% IF top_menu ~%]
   [% IF not list ~%]
-    <div id="loading" class="row">
+    <div id="loading" class="row"></div>
   [%~ ELSE ~%]
-    <div id="loading" class="medium-9 columns">
-  [%~ END ~%]
-[% ELSE ~%]
-  <div id="loading" class="medium-9 columns">
-[%~ END ~%]
-[%# Show loading notice only when javascript is enabled. ~%]
-<script>
-  <!--
-  document.write('[%|escape_quote ~%]
-    <h1 id="loadingText"><i class="fa fa-spinner fa-pulse"></i> [%|loc%]Please Wait...[%END%]</h1>
-  [%~ END %]');
-  //-->
-</script>
-</div>
+    <div id="loading" class="medium-9 columns"></div>
+  [%~ END %]
+[%~ ELSE ~%]
+  <div id="loading" class="medium-9 columns"></div>
+[%~ END %]
 
     [% PROCESS aside_menu.tt2 %]
     [% IF action == 'home' %]

@@ -917,8 +917,13 @@ function hideform(my_message_id) {
 	$('#' + my_message_id).hide();
 }
 
-// Show "Loading..." spinner icon.
+// Show "Please wait..." spinner icon.
 $(function() {
+	var loadingText =
+	$('<h1 id="loadingText"><i class="fa fa-spinner fa-pulse"></i> ' +
+		sympa.loadingText + '</h1>');
+	$('#loading').append(loadingText);
+
 	$('.heavyWork').on('click', function(){
 		$('#loading').show();
 		$('#content-inner').hide();
