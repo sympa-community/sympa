@@ -721,3 +721,40 @@ $(function() {
 	});
 });
 
+/* Top button. */
+$(function() {
+    var scrollTopInner = $('<span class="scroll-top-inner">' +
+        '<i class="fa fa-2x fa-arrow-circle-up"></i></span>');
+    $('.scroll-top-wrapper').append(scrollTopInner);
+
+    $(document).on('scroll', function(){
+        if ($(window).scrollTop() > 100) {
+            $('.scroll-top-wrapper').addClass('show');
+        } else {
+            $('.scroll-top-wrapper').removeClass('show');
+        }
+    });
+
+    $('.scroll-top-wrapper').on('click', function(){
+        $('html, body')
+            .animate({scrollTop: $('body').offset().top}, 500, 'linear');
+    });
+});
+
+/* Correction of disapeared top-bar-dropdown menu on input lost focus. */
+$(function() {
+    $('#login-dropdown').removeClass('not-click').on('mouseover',
+    function(){
+        $(this).addClass('hover');
+    }).on('mouseout',
+    function(e){
+        if (e.relatedTarget
+            && !$('#login-dropdown').has(e.relatedTarget).length) {
+            if ($(e.target).is(':input'))
+                $(e.target).blur();
+
+            $(this).removeClass('hover');
+        }
+    });
+});
+

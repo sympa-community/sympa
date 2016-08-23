@@ -25,21 +25,17 @@ var lang = '[% lang %]';
 //-->
 </script>
 
-<!-- Now retrieving the javascript files -->
-
+[%# Now retrieving the javascript files ~%]
 <script src="[% static_content_url %]/external/jquery.js"></script>
-
 <script src="[% static_content_url %]/external/jquery-ui.js"></script>
-
 <script src="[% static_content_url %]/external/jquery.jqplot.min.js"></script>
 <script src="[% static_content_url %]/external/jqplot.categoryAxisRenderer.min.js"></script>
 <script src="[% static_content_url %]/external/jqplot.barRenderer.min.js"></script>
 <script src="[% static_content_url %]/external/jqplot.canvasAxisTickRenderer.min.js"></script>
 <script src="[% static_content_url %]/external/jqplot.canvasTextRenderer.min.js"></script>
-
 <script src="[% static_content_url %]/js/sympa.js"></script>
 
-<!-- Foundation and other ui adaptation -->
+[%# Foundation and other ui adaptation ~%]
 <!--[if lt IE 9]>
 <script type="text/javascript" src="[% static_content_url %]/external/html5shiv/html5shiv.js"></script>
 <![endif]-->
@@ -47,59 +43,25 @@ var lang = '[% lang %]';
 <script src="[% static_content_url %]/external/foundation/js/vendor/modernizr.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/vendor/fastclick.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/vendor/placeholder.js"></script>
-<!--<script src="[% static_content_url %]/external/foundation/js/vendor/jquery.js"></script>-->
+[%IF 0%]<script src="[% static_content_url %]/external/foundation/js/vendor/jquery.js"></script>[%END%]
 <script src="[% static_content_url %]/external/foundation/js/foundation/foundation.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/foundation/foundation.topbar.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/foundation/foundation.reveal.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/foundation/foundation.tooltip.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/foundation/foundation.accordion.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/foundation/responsive-tables.js"></script>
+[%# Loading foundation. ~%]
 <script>
-$(
-function () {
-// Loading foundation
+<!--
+$(function() {
 $(document).foundation({
     topbar: {
         back_text: '<i class="fa fa-undo"></i> [%|loc%]Back[%END%]'
     }
 });
-
-    /*Top Button*/ 
-    $(document).on( 'scroll', function(){
-
-            if ($(window).scrollTop() > 100) {
-                    $('.scroll-top-wrapper').addClass('show');
-            } else {
-                    $('.scroll-top-wrapper').removeClass('show');
-        }
-    });
-
-    $('.scroll-top-wrapper').on('click', scrollToTop);
-
-    /* Correction of disapeared top-bar-dropdown menu on input lost focus */
-    $('#login-dropdown').removeClass('not-click').on('mouseover', function () {
-        $(this).addClass('hover');
-    }).on('mouseout', function (e) {
-        if (e.relatedTarget && !$('#login-dropdown').has(e.relatedTarget).length) {
-            if($(e.target).is(':input'))
-                $(e.target).blur();
-            
-            $(this).removeClass('hover');
-        }
-    });
-
-    });
-
-
-function scrollToTop() {
-	verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
-	element = $('body');
-	offset = element.offset();
-	offsetTop = offset.top;
-	$('html, body').animate({scrollTop: offsetTop}, 500, 'linear');
-}
+});
+//-->
 </script>
-
 
 [% IF use_html_editor -%]
 <script src="[% html_editor_url %]"></script>
