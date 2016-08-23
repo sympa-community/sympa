@@ -4,33 +4,24 @@
 ## Don't add javascript to this file, except if you need to initialize
 ## variables using TT2 parsing.
 ## Use the js/sympa.js file instead of writing your scripts.
+## This script only contains variable initializations.
 #%]
 <script>
 <!--
-// this script only contains variable initializations.
-
-// Miscellaneous vars
-var path_cgi = '[% path_cgi %]/';
-var lang = '[% lang %]';
-//-->
-</script>
-
-<script>
-<!--
-// A few configuration settings
-var CROSSHAIRS_LOCATION = '[% icons_url %]/crosshairs.png';
-var HUE_SLIDER_LOCATION = '[% icons_url %]/h.png';
-var HUE_SLIDER_ARROWS_LOCATION = '[% icons_url %]/position.png';
-var SAT_VAL_SQUARE_LOCATION = '[% icons_url %]/sv.png';
-
+[%# A few configuration settings and miscellaneous vars. ~%]
 var sympa = {
     calendarButtonText: "[%|loc%]Calendar[%END%]",
+    calendarFirstDay:   0,
     dayNames:           "[%|loc%]Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday[%END%]".split(":"),
     dayNamesMin:        "[%|loc%]Su:Mo:Tu:We:Th:Fr:Sa[%END%]".split(":"),
-    firstDay:           0,
+    home_url:           '[% path_cgi %]/',
+    icons_url:          '[% icons_url %]',
+    lang:               '[% lang %]',
     loadingText:        "[%|loc%]Please Wait...[%END%]",
     monthNamesShort:    "[%|loc%]Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec[%END%]".split(":")
 };
+[%# Variable for backward compatibility. ~%]
+var lang = '[% lang %]';
 //-->
 </script>
 

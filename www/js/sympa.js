@@ -38,7 +38,7 @@ function dbl_confirm(my_form, my_message,my_message2) {
 function refresh_mom_and_die() {
   url = window.opener.location.href;
   if (url.indexOf('logout') > -1 ) {
-    url = path_cgi;
+    url = sympa.home_url;
   }
   window.opener.location = url;
   self.close();
@@ -495,28 +495,28 @@ var huePositionImg = document.createElement('img');
 huePositionImg.galleryImg = false;
 huePositionImg.width = 35;
 huePositionImg.height = 11;
-huePositionImg.src = HUE_SLIDER_ARROWS_LOCATION;
+huePositionImg.src = sympa.icons_url + '/position.png';
 huePositionImg.style.position = 'absolute';
 
 var hueSelectorImg = document.createElement('img');
 hueSelectorImg.galleryImg = false;
 hueSelectorImg.width = 35;
 hueSelectorImg.height = 200;
-hueSelectorImg.src = HUE_SLIDER_LOCATION;
+hueSelectorImg.src = sympa.icons_url + '/h.png';
 hueSelectorImg.style.display = 'block';
 
 var satValImg = document.createElement('img');
 satValImg.galleryImg = false;
 satValImg.width = 200;
 satValImg.height = 200;
-satValImg.src = SAT_VAL_SQUARE_LOCATION;
+satValImg.src = sympa.icons_url + '/sv.png';
 satValImg.style.display = 'block';
 
 var crossHairsImg = document.createElement('img');
 crossHairsImg.galleryImg = false;
 crossHairsImg.width = 21;
 crossHairsImg.height = 21;
-crossHairsImg.src = CROSSHAIRS_LOCATION;
+crossHairsImg.src = sympa.icons_url + '/crosshairs.png';
 crossHairsImg.style.position = 'absolute';
 
 function makeColorSelector(inputBox)
@@ -644,7 +644,7 @@ $(function() {
         dateFormat:      'dd-mm-yy',
         dayNames:        sympa.dayNames,
         dayNamesMin:     sympa.dayNamesMin,
-        firstDay:        sympa.firstDay,
+        firstDay:        sympa.calendarFirstDay,
         monthNamesShort: sympa.monthNamesShort,
         shortYearCutoff: 50,
         showOn:          "button"
