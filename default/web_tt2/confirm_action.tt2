@@ -67,6 +67,21 @@
   <p><strong>
     [%|loc(total)%]Do you really want to send a subscription reminder message to the %1 subscribers?[%END%]
   </strong></p>
+[%~ ELSIF confirm_action == 'remove_arc' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [% IF 1 < msgid.size ~%]
+      [%|loc%]Tag messages for deletion[%END%]
+    [%~ ELSE ~%]
+      [%|loc%]tag this mail for deletion[%END%]
+    [%~ END %]
+  </h2>
+  <p><strong>
+    [% IF 1 < msgid.size ~%]
+      [%|loc%]Do you really want to delete these messages ?[%END%]
+    [%~ ELSE ~%]
+      [%|loc%]Do you really want to delete this message ?[%END%]
+    [%~ END %]
+  </strong></p>
 [%~ ELSIF confirm_action == 'remove_template' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Delete[%END%]
@@ -156,6 +171,12 @@
   <input type="hidden" name="d_admin" value="[% d_admin %]" />
 [%~ ELSIF confirm_action == 'd_delete' ~%]
   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
+[%~ ELSIF confirm_action == 'remove_arc' ~%]
+  <input type="hidden" name="yyyy" value="[% yyyy %]" />
+  <input type="hidden" name="month" value="[% month %]" />
+  [% FOREACH m = msgid ~%]
+    <input type="hidden" name="msgid" value="[% m %]" />
+  [%~ END %]
 [%~ ELSIF confirm_action == 'remove_template' ~%]
   <input type="hidden" name="webormail" value="[% webormail %]" />
   <input type="hidden" name="scope" value="[% scope %]" />

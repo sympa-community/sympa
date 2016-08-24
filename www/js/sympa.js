@@ -68,11 +68,10 @@ function hideError() {
 	$('#ErrorMsg').remove();
 }
 
-// To confirm a form submition
-// NO LONGER USED as of 6.2.17.
-function request_confirm(my_message) {
-	return !!confirm(my_message);
-}
+/*
+ * No longer used as of 6.2.17, however, can be included in older archives.
+ */
+function request_confirm(m) { return true; }
 
 // To confirm on a link (A HREF)
 // NO LONGER USED as of 6.2.17.

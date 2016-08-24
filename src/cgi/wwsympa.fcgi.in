@@ -9722,6 +9722,17 @@ sub do_remove_arc {
         $param->{'status'} = 'no_msgid';
         return undef;
     }
+    $param->{'yyyy'}  = $in{'yyyy'};
+    $param->{'month'} = $in{'month'};
+    $param->{'msgid'} = [@msgids];
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', $in{'yyyy'}, $in{'month'}, @msgids),
+        previous_action => 'arc'
+    );
+    return $next_action unless $next_action eq '1';
 
     my $msg_string = "\n\n";
     my $tracking = Sympa::Tracking->new(context => $list);
