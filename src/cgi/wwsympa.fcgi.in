@@ -9732,7 +9732,11 @@ sub do_remove_arc {
         arg             => join(',', $in{'yyyy'}, $in{'month'}, @msgids),
         previous_action => 'arc'
     );
-    return $next_action unless $next_action eq '1';
+    unless ($next_action eq '1') {
+        $in{'month'} = sprintf '%s-%s', $in{'yyyy'}, $in{'month'}
+            if $next_action eq 'arc';
+        return $next_action;
+    }
 
     my $msg_string = "\n\n";
     my $tracking = Sympa::Tracking->new(context => $list);
