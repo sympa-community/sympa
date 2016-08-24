@@ -71,6 +71,7 @@ function hideError() {
 /*
  * No longer used as of 6.2.17, however, can be included in older archives.
  */
+function isNotEmpty(i) { return true; }
 function request_confirm(m) { return true; }
 
 // To confirm on a link (A HREF)
@@ -693,16 +694,25 @@ $(function() {
 	$('#ephemeralMsg').delay(500).fadeOut(4000);
 });
 
-/* check if the value of element is not empty */
-function isNotEmpty(id) {
-	var elem = $('#' + id);
-	if (elem) {
-		var v = elem.val();
-		if (v.replace(/\s+/g, ''))
-			return true;
-	}
-	return false;
-}
+/* Check if the value of field(s) specified by data-selector is empty. */
+$(function() {
+    $('.disableIfEmpty').each(function(){
+        var target = this;
+        var selector = $(this).attr('data-selector');
+        $(selector).on('keyup change', function(){
+            var isEmpty = false;
+            $(selector).each(function(){
+                var val = $(this).val();
+                if (val && val.replace(/\s+/g, '').length)
+                    return true;
+                isEmpty = true;
+                return false;
+            });
+            $(target).prop('disabled', isEmpty);
+        });
+        $(selector).trigger('change');
+    });
+});
 
 //  Creating our button in JS for smaller screens
 $(function() {

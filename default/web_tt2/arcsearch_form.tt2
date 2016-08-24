@@ -11,9 +11,11 @@
 
 <span class="larger">[%|loc%]Search field:[%END%]  </span><a href="[% 'arc' | url_rel([list,archive_name]) %]"><strong>[% archive_name %]</strong></a>
 
-<input name="key_word" type="text" size="30" value="[% key_word %]" />
+<input id="key_word" name="key_word" type="text" size="30"
+  value="[% key_word %]" />
 <input name="action" type="hidden" value="arcsearch" />
-<input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" onClick="if (document.getElementsByName('key_word')[0].value.replace(/\s+/g, '')) return true; else return false;" />
+<input class="MainMenuLinks disableIfEmpty" data-selector="#key_word"
+  name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" />
 <br />
 
 <label>[%|loc%]Search:[%END%]  </label>
