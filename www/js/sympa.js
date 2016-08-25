@@ -1,38 +1,4 @@
-function showMDN(el) {
-	var pre = $(el).parent().find('pre').eq(0);
-	if(!pre.length) return;
-	var mdn = pre.html();
-	return showMessage(mdn.replace(/ /g, '&nbsp;').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/\n/g, '<br />'), true);
-}
-
-function showMessage(message, ishtml) { // if ishtml not set then \n to <br /> transformation is applied to message
-	if(!ishtml) message = message.replace(/\n/g, '<br />');
-	
-	var block = $('<div id="ErrorBlock" />').prependTo('body');
-	var msg = $('<div id="ErrorMsg" />').prependTo('body');
-	var ctn = $('<div class="messageContent" />').appendTo(msg).append(message);
-	
-	var fs = $('<fieldset />').appendTo($('<form />').appendTo(msg));
-	
-	$('<input type="button" class="MainMenuLinks" value="OK" />').appendTo(fs).on('click', function() {
-		$('#ErrorBlock').remove();
-		$('#ErrorMsg').remove();
-	});
-	
-	return ctn;
-}
-
-// To confirm archives deletion
-// NO LONGER USED as of 6.2.17.
-function dbl_confirm(my_form, my_message,my_message2) {
-  if (confirm(my_message)) {
-      if (confirm(my_message2)) {
-        my_form.zip.value = "1";
-      }
-  }else{
-    return false;
-  }
-}
+/* $Id$ */
 
 // To confirm on a link (A HREF)
 function refresh_mom_and_die() {
@@ -42,25 +8,6 @@ function refresh_mom_and_die() {
   }
   window.opener.location = url;
   self.close();
-}
-
-function setnsubmit(element, attribute, value, formid) {
-	$('#' + element).attr(attribute, value);
-	$('#' + formid).submit();
-}
-
-function showhide(div) {
-	$('#' + div).toggle();
-}
-
-// NO LONGER USED as of Sympa 6.2.17.
-function show(div) {
-	$('#' + div).show();
-}
-
-// NO LONGER USED as of Sympa 6.2.17.
-function hide(div) {
-	$('#' + div).hide();
 }
 
 function hideError() {
@@ -73,26 +20,6 @@ function hideError() {
  */
 function isNotEmpty(i) { return true; }
 function request_confirm(m) { return true; }
-
-// To confirm on a link (A HREF)
-// NO LONGER USED as of 6.2.17.
-function request_confirm_link(my_url, my_message) {
-	if(confirm(my_message)) top.location = my_url;
-}
-
-function GetCookie(name) {
-	var cookies = document.cookies.split('; ');
-	
-	for(var i=0; i<cookies.length; i++) {
-		var parts = cookies[i].split('=');
-		var key = parts.shift();
-		if(key != name) continue;
-		
-		return parts.join('='); // In case of =s in value
-	}
-	
-	return null;
-}  
 
 function toggle_selection(myfield) {
 	if(typeof myfield.length == 'undefined') myfield = [myfield];
@@ -166,64 +93,6 @@ function empty_field(target_field, control_field) {
 		document.getElementById(target_field).value = '';
 	}
 }
-
-//to hide menu
-
-function afficheId(baliseId,baliseId2)
-  {
-  if (document.getElementById && document.getElementById(baliseId) != null)
-    {
-    document.getElementById(baliseId).style.visibility='visible';
-    document.getElementById(baliseId).style.display='block';
-    }
-  if (document.getElementById(baliseId2) != null)
-    {
-    document.getElementById(baliseId2).style.margin='0 0 0 25%';
-    }
-  }
-
-function cacheId(baliseId,baliseId2)
-  {
-  if (document.getElementById && document.getElementById(baliseId) != null)
-    {
-    document.getElementById(baliseId).style.visibility='hidden';
-    document.getElementById(baliseId).style.display='none';
-    }
-  if (document.getElementById(baliseId2) != null)
-    {
-    document.getElementById(baliseId2).style.margin='0 0 0 0';
-    }
-  
-  }
-
-cacheId('contenu','Stretcher');
-// if JavaScript is available, hide the content on the page load.
-// Without JavaScript, content will be display.
-
-
-// Pour afficher/cacher avec timeout des commandes d'admin dans la liste des listes
-function affiche(id) {
-  document.getElementById(id).style.display = '';
-  if(document.getElementById(id).to) window.clearTimeout(document.getElementById(id).to);
-}
-function cache(e,id) {
-  var relTarg = e.relatedTarget || e.toElement;
-  if(!isChildOf(relTarg,document.getElementById('admin_[% listname %]'))) {
-    document.getElementById(id).to = window.setTimeout(function() {
-      document.getElementById(id).style.display = 'none';
-    }, 1000);
-  }
-}
-function isChildOf(child,par) {
-  while(child!=document) {
-    if(child==par) { return true; }
-    child = child.parentNode;
-  }
-  return false;
-}
-// Fin afficher/cacher avec timeout des commandes d'admin dans la liste des listes
-
-
 
 // Here are some boring utility functions. The real code comes later.
 
@@ -664,13 +533,6 @@ function config_ctxhelp(td) {
 	td.data('ctx_help').show();
 }
 
-
-// function that hide all hiddenform except one which Id is the function parameter (used in modindex and more)
-function toggleDivDisplay(my_message_id) {
-	$('div[name="hiddenform"]:not(#' + my_message_id + ')').hide();
-	$('#' + my_message_id).show();
-}
-
 //hide a div (usually a part of a form) 
 function hideform(my_message_id) {
 	$('#' + my_message_id).hide();
@@ -712,22 +574,6 @@ $(function() {
         });
         $(selector).trigger('change');
     });
-});
-
-//  Creating our button in JS for smaller screens
-$(function() {
-	$('#menu').prepend('<button type="button" id="menutoggle" class="navtoogle" aria-hidden="true"><span aria-hidden="true" class="fa fa-lg fa-2x fa-bars"></span> [%|loc%]Menu[%END%]</button>');
-	
-	//  Toggle the class on click to show / hide the menu
-	$('#menutoggle').on('click', function() {
-		$(this).addClass('active');
-	});
-	
-	// http://tympanus.net/codrops/2013/05/08/responsive-retina-ready-menu/comment-page-2/#comment-438918
-	$(document).on('click', function(event) {
-		var button = $('#menutoggle');
-		if(event.target !== button[0] && button.is(':visible')) button.removeClass('active');
-	});
 });
 
 /* Top button. */
