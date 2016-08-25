@@ -46,23 +46,25 @@ fi
 
 # OSTYPE *is* defined on Solaris 10! (bug #3149)
 case "$OSTYPE" in
-        *solaris*)
-        OSTYPE=SunOS
-        ;;
+*solaris*)
+    OSTYPE=SunOS
+    ;;
+Linux)
+    if [ -f /etc/SuSE-release ] ; then
+	OSDIST='Suse'
+    fi
+    if [ -f /etc/debian_version ] ; then
+	OSDIST='Debian'
+    fi
+    if [ -f /etc/slackware-version ] ; then
+	OSDIST='Slack'
+    fi
+    ;;
+*BSD)
+    OSDIST=$OSTYPE
+    OSTYPE=BSD
+    ;;
 esac
-
-if [ -f /etc/SuSE-release ] ; then
-    OSTYPE='Suse'
-fi
-
-if [ -f /etc/debian_version ] ; then
-    OSTYPE='Debian'
-fi
-
-if [ -f /etc/slackware-version ] ; then
-    OSTYPE='Slack'
-fi
-
 
 ##'echo -n' not supported with SH on Solaris
 if [ ${OSTYPE} = "SunOS" ]; then
@@ -93,7 +95,11 @@ sympa_status() {
 	    runningpids=""
 	    if [ "$pids" != "" ] ; then
 		for pid in $pids; do
-		    running=`ps -A | grep "$pid ..* $comm"`
+		    if [ "$OSTYPE" = "BSD" ]; then
+			running=`ps -axw | grep "^[[:space:]]*$pid[[:space:]]"`
+		    else
+			running=`ps -A | grep "$pid ..* $comm"`
+		    fi
 		    if [ "$running" != "" ]; then
 			runningpids="$runningpids $pid"
 		    fi
@@ -195,7 +201,11 @@ sympa_stop() {
 	if [ "$pids" != "" ]; then
 	    for pid in $pids; do
 		killcount=0
-		running=`ps -A | grep "$pid ..* $comm"`
+		if [ "$OSTYPE" = "BSD" ]; then
+		    running=`ps -axw | grep "^[[:space:]]*$pid[[:space:]]"`
+		else
+		    running=`ps -A | grep "$pid ..* $comm"`
+		fi
 		while [ "$running" != "" ]; do
 		    if [ $killcount -gt 10 ]; then
 			if [ ${use_functions} ]; then
@@ -207,13 +217,21 @@ sympa_stop() {
 		    fi
 
 		    kill -TERM $pid >/dev/null 2>&1
-		    running=`ps -A | grep "$pid ..* $comm"`
+		    if [ "$OSTYPE" = "BSD" ]; then
+			running=`ps -axw | grep "^[[:space:]]*$pid[[:space:]]"`
+		    else
+			running=`ps -A | grep "$pid ..* $comm"`
+		    fi
 		    if [ "$running" = "" ]; then
 			runcount=`expr $runcount + 1`
 			break
 		    fi
 		    sleep 2
-		    running=`ps -A | grep "$pid ..* $comm"`
+		    if [ "$OSTYPE" = "BSD" ]; then
+			running=`ps -axw | grep "^[[:space:]]*$pid[[:space:]]"`
+		    else
+			running=`ps -A | grep "$pid ..* $comm"`
+		    fi
 		    if [ "$running" = "" ]; then
 			runcount=`expr $runcount + 1`
 			break
@@ -240,7 +258,7 @@ sympa_stop() {
 
 
 # Check that networking is up.
-if [ ${OSTYPE} != "Slack" -a ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suse" ]; then
+if [ ${OSTYPE} != "Linux" -a ${OSTYPE} != "BSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "Darwin" ]; then
     if [ ${NETWORKING} = "no" ]
     then
 	    exit 0
