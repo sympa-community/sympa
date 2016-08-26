@@ -87,7 +87,7 @@
       <tr>
 	[% IF sortby == 'date' %]
   	    <th class="sortby">
-	    [%|loc%]Sub date[%END%]
+	    [%|loc%]Date[%END%]
 	[% ELSE %]
 	    <th>
             <a href="[% 'viewlogs' | url_rel([list,1,size,'date']) %]" >[%|loc%]Date[%END%]</a>
