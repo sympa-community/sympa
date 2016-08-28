@@ -867,6 +867,10 @@ sub html_format {
 
     my $destination_dir = $opts{'destination_dir'};
     my $attachment_url  = $opts{'attachment_url'};
+    if (ref $attachment_url eq 'ARRAY') {
+        $attachment_url = join '/',
+            map { Sympa::Tools::Text::encode_uri($_) } @$attachment_url;
+    }
 
     my $mhonarc_ressources =
         Sympa::search_fullpath($that, 'mhonarc-ressources.tt2');
@@ -1230,6 +1234,11 @@ Base URL used to link attachments.
 
 Note:
 On 6.2.13 and earlier, this option was named "C<attachB<e>ment_url>".
+
+Note:
+On 6.2.17 and later, this option may take an arrayref value.
+In such case items will be percent-encoded and conjuncted.
+Otherwise if a string is given, it will not be encoded.
 
 =back
 

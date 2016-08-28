@@ -11162,8 +11162,7 @@ sub do_viewbounce {
         Sympa::Archive::html_format(
             $bounce_message,
             'destination_dir' => $html_dir,
-            'attachment_url' =>
-                sprintf('viewbounce/%s/%s', $list->{'name'}, $html_relpath),
+            'attachment_url' => ['viewbounce', $list->{'name'}, $html_relpath]
         ) if $bounce_message;
     }
 
