@@ -392,7 +392,8 @@ our %action_args = (
     #'editsubscriber' =>
     #    ['list', 'email', 'previous_action', 'custom_attribute'],
     #'editsubscriber' => ['list', 'email', 'previous_action'],
-    #'viewbounce'     => ['list', 'email', '@file'],
+    #'viewbounce' => ['list', 'email', '@file'],
+    'viewbounce' => ['list', 'dir', '@file'],
     #'resetbounce'    => ['list', 'email'],
     'review'         => ['list', 'page',  'size', 'sortby'],
     'reviewbouncing' => ['list', 'page',  'size'],
@@ -630,7 +631,7 @@ our %required_args = (
     'tag_topic_by_sender'    => ['param.list'],
     'upload_pictures'        => ['param.user.email', 'param.list'],
     'view_template'          => ['webormail'],
-    'viewbounce'             => ['param.list',       'email'],
+    'viewbounce'             => ['param.list',       'email|file'],
     'viewfile'               => ['file',             'param.list'],
     'viewlogs'               => ['param.list'],
     'viewmod' => ['param.list', 'param.user.email', 'id|idspam'],
@@ -11118,8 +11119,8 @@ sub do_editsubscriber {
 }
 
 sub do_viewbounce {
-    wwslog('info', '(%s, %s, envid=%s)',
-        $in{'email'}, $in{'file'}, $in{'envid'});
+    wwslog('info', '(dir/file=%s/%s, email=%s, envid=%s)',
+        $in{'dir'}, $in{'file'}, $in{'email'}, $in{'envid'});
 
     # Prevent directory traversal.
     if ($in{'file'}) {
@@ -11127,16 +11128,24 @@ sub do_viewbounce {
         $subpath =~ s{\Amsg00000/}{};
         delete $in{'file'} if $subpath =~ m{/};
     }
+    if ($in{'dir'}) {
+        delete $in{'dir'} if 0 <= index($in{'dir'}, '/');
+    }
 
-    my $escaped_email = Sympa::Tools::Text::escape_chars($in{'email'});
+    my $html_relpath;
+    if ($in{'email'}) {
+        my $escaped_email = Sympa::Tools::Text::escape_chars($in{'email'});
+        $html_relpath =
+            $in{'envid'}
+            ? sprintf('%s_%08s', $escaped_email, $in{'envid'})
+            : $escaped_email;
+    } elsif ($in{'dir'} and $in{'file'}) {
+        $html_relpath = $in{'dir'};
+    } else {
+        return undef;
+    }
 
-    my $bounce_path =
-        $in{'envid'}
-        ? sprintf('%s/%s_%08s',
-        $list->get_bounce_dir(),
-        $escaped_email, $in{'envid'})
-        : $list->get_bounce_dir() . '/' . $escaped_email;
-
+    my $bounce_path = $list->get_bounce_dir() . '/' . $html_relpath;
     unless (-r $bounce_path) {
         Sympa::Report::reject_report_web('user', 'no_bounce_user',
             {'email' => $in{'email'}},
@@ -11145,20 +11154,14 @@ sub do_viewbounce {
         return undef;
     }
 
-    my $html_relpath =
-        $in{'envid'}
-        ? sprintf('%s_%08s', $escaped_email, $in{'envid'})
-        : $escaped_email;
     my $html_dir =
           $Conf::Conf{'viewmail_dir'}
         . '/bounce/'
         . $list->get_id . '/'
         . $html_relpath;
-
     unless (-d $html_dir) {
         my $bounce_message =
-            Sympa::Message->new_from_file($bounce_path,
-            context => ($list || $robot));
+            Sympa::Message->new_from_file($bounce_path, context => $list);
         Sympa::Archive::html_format(
             $bounce_message,
             'destination_dir' => $html_dir,
