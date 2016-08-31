@@ -10,10 +10,15 @@ function refresh_mom_and_die() {
   self.close();
 }
 
-function hideError() {
-	$('#ErrorBlock').remove();
-	$('#ErrorMsg').remove();
-}
+/* Show error dialog. */
+$(function() {
+    var closeButton =
+        $('<a class="close-reveal-modal" aria-label="' + sympa.closeText
+            + '">&#215;</a>');
+    $('#ErrorMsg .alert-box').append(closeButton);
+
+    $('#ErrorMsg').foundation('reveal', 'open');
+});
 
 /*
  * No longer used as of 6.2.17, however, can be included in older archives.

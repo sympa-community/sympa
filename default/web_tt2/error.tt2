@@ -1,9 +1,9 @@
 <!-- $Id$ -->
-
-<div id="ErrorBlock"></div>
-<div id="ErrorMsg">
+<div id="ErrorMsg" class="reveal-modal medium" data-reveal
+  aria-labelledby="[%|loc%]Error[%END%]" aria-hidden="true" role="dialog">
 <div class="alert-box alert radius">
-<i class="fi-x"></i>
+  <i class="fi-x"></i>
+
 [%###################-%]
 [%#### INTERN  ERROR -%]
 [%###################-%]
@@ -27,10 +27,8 @@
   [% ELSIF i_err.msg == 'file_update_failed' %][%|loc(i_err.key)%]Failed to update a file.[%END%]
   [% ELSIF i_err.msg == 'create_list' %][%|loc(i_err.listname)%]Failed creating list '%1'. The list might already exist or listname might include forbidden characters.[%END%]
   [% ELSIF i_err.msg == 'unable_to_rename_list' %][%|loc(i_err.listname,i_err.new_listname)%]Unable to rename list '%1' to '%2'.[%END%]
-
-[% END %]
-<br />
-	
+  [% END %]
+  </br>
 [% END %]
 
 [%###################-%]
@@ -165,12 +163,7 @@
   <br />
 [% END %]
 
-<form >
-<fieldset>
-<input  class="MainMenuLinks" type="button" value="OK" onclick="hideError();">
-
-</fieldset>
-</form>
+[%# Close button will be inserted here. ~%]
 
 </div>
 </div>
