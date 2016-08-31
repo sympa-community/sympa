@@ -24,9 +24,10 @@
        <tr class="color0">[% SET dark='1'%]
      [% END %]
 <form action="[% path_cgi %]" method="post">
-     <td [% IF confparam.query %]onmouseover="config_ctxhelp(this);"[% END %]>
+     <td [% IF confparam.query ~%]
+       data-tooltip aria-haspopup="true" title="[% confparam.query %]"
+     [%~ END %]>
 	<strong>[% confparam.name  %]</strong>
-	[% IF confparam.query %]<div style="position:absolute;display:none;margin-top:5px;border:1px solid black;background-color:[%color_5%];padding:3px">[% confparam.query %]</div>[% END %]
      </td>
      <td>
 
@@ -56,7 +57,7 @@
 	[%|loc%]main conf[%END%]
 [% END %]
 </td>
-<td>[% confparam.default %]</td>[%# <td>confparam.query</td> %]
+<td>[% confparam.default %]</td>
 </form>
 </tr>
      [% SET close_table = '</table>' %]
