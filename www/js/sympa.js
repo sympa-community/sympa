@@ -10,13 +10,12 @@ function refresh_mom_and_die() {
   self.close();
 }
 
-/* Show error dialog. */
+/* Show error dialog.  It may be closed only when javascript is enabled. */
 $(function() {
     var closeButton =
         $('<a class="close-reveal-modal" aria-label="' + sympa.closeText
             + '">&#215;</a>');
-    $('#ErrorMsg .alert-box').append(closeButton);
-
+    $('#ErrorMsg').append(closeButton);
     $('#ErrorMsg').foundation('reveal', 'open');
 });
 
@@ -88,15 +87,6 @@ function clear_log_form() {
 	f.elements["date_from"].value = '';
 	f.elements["date_to"].value = '';
 	f.elements["ip"].value = '';
-}
-
-//set a form field value to empty string. It uses the value of the field whose id is given
-// as argument as a control to perform this operation or not.
-function empty_field(target_field, control_field) {
-	if (document.getElementById(control_field).value == 'false'){
-		document.getElementById(control_field).value = 'true';
-		document.getElementById(target_field).value = '';
-	}
 }
 
 // Here are some boring utility functions. The real code comes later.
@@ -529,15 +519,6 @@ $(function() {
     $('#date_to').datepicker(options);
 });
 
-/* popups config contextual help */
-function config_ctxhelp(td) {
-	td = $(td);
-	if(!td.data('ctx_help')) td.data('ctx_help', td.find('div').eq(0).width(td.closest('table').width()).on('mouseout', function() {
-		$(this).hide();
-	}));
-	td.data('ctx_help').show();
-}
-
 /* Add "Close" button to popup showing bounce. */
 $(function() {
     $('#mainviewbounce, #mainviewmod').on('opened.fndtn.reveal', function(){
@@ -570,7 +551,7 @@ $(function() {
 $(function() {
     $('.disableIfEmpty').each(function(){
         var target = this;
-        var selector = $(this).attr('data-selector');
+        var selector = $(this).data('selector');
         $(selector).on('keyup change', function(){
             var isEmpty = false;
             $(selector).each(function(){
