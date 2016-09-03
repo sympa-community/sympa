@@ -538,10 +538,15 @@ function config_ctxhelp(td) {
 	td.data('ctx_help').show();
 }
 
-//hide a div (usually a part of a form) 
-function hideform(my_message_id) {
-	$('#' + my_message_id).hide();
-}
+/* Add "Close" button to popup showing bounce. */
+$(function() {
+    $('#mainviewbounce, #mainviewmod').on('opened.fndtn.reveal', function(){
+        var closeButton =
+            $('<a class="close-reveal-modal" aria-label="' + sympa.closeText
+                + '">&#215;</a>');
+        $(this).append(closeButton);
+    });
+});
 
 // Show "Please wait..." spinner icon.
 $(function() {

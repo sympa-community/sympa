@@ -3,25 +3,6 @@
 
 <!-- moderation of messages -->
 [% IF mod_message %]
-[% line_count = 0 %]
-[% mod_display_message = 1 %]
-[% FOREACH msg = spool %]
-    [% line_count = line_count + 1 %]
-<div id="mainviewmod[% msg.key %]" class="reveal-modal medium" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-<h3>[%|loc%]Current message[%END%]</h3>
-[% PROCESS modform.tt2 %]
-
-<div id="viewmod[% msg.key %]">
-  [%|loc%]loading message...[%END%]
-  <!-- empty div that will display a content by AJAX -->
-</div>
-<a class="close-reveal-modal" aria-label="Close">&#215;</a>
-</div>
-
-[% END %]
-
-[% mod_display_message = 0 %]
-
  <table  class="responsive listOfItems">
  <caption>[%|loc%]Listing messages to moderate[%END%]</caption>
       <tr>
@@ -34,7 +15,9 @@
         <th>[%|loc%]Date[%END%]</th>
 	<th>[%|loc%]Size[%END%]</th>
       </tr>	 
-      [% FOREACH msg = spool %]
+
+    [% line_count = 0 ~%]
+    [% FOREACH msg = spool %]
 
         [% line_count = line_count + 1 %]	
         [% IF dark == '1' %]
@@ -45,7 +28,7 @@
           <tr class="color0">
 	[% END %]
           <td class="text-left">
-           [% PROCESS modform.tt2 %]
+           [% PROCESS modform.tt2 mod_display_message = 0 %]
           </td>
         [%- IF conf.antispam_feature == 'on' -%]	
 	 <td>
@@ -79,8 +62,8 @@
 	  </td>
 	  <td>[% msg.value.size %] kb</td>
 	</tr>
-      [% END %] 
-    </table>
+    [% END %] 
+  </table>
 [% ELSE %]
 <p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No messages to moderate[%END%]</p>
 [% END %]
@@ -96,4 +79,10 @@
  <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" />
 </fieldset>
 </form>
+
+<div id="mainviewmod" class="reveal-modal medium" data-reveal
+  aria-labelledby="[%|loc%]Current message[%END%]" aria-hidden="true"
+  role="dialog">
+  [%# empty div that will display a content by AJAX. ~%]
+</div>
 <!-- end modindex.tt2 -->

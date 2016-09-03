@@ -11196,6 +11196,24 @@ sub do_viewbounce {
         push @other_include_path, $html_dir;
     }
 
+    if ($in{'email'} and $in{'envid'}) {
+        my $tracking = Sympa::Tracking->new(context => $list);
+        my $info = $tracking->db_fetch(
+            recipient => $in{'email'}, envid => $in{'envid'});
+        if ($info) {
+            $info->{arrival_date} =
+                $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+                localtime $info->{arrival_epoch})
+                if defined $info->{arrival_epoch};
+            $param->{'tracking_info'} = $info;
+        }
+    } elsif ($in{'email'}) {
+        $param->{'tracking_info'} = {
+            recipient => $in{'email'},
+        };
+    }
+    $param->{'previous_action'} = $in{'previous_action'} || 'editsubscriber';
+
     return 1;
 }
 

@@ -108,23 +108,22 @@
     <label>[%|loc%]Period:[%END%] </label>
     [%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]
 
-    <div id="mainviewbounce" class="viewmod">
-    <input style="float:right" type="button" value="X"
-      onclick="return hideform('mainviewbounce')"/>
-    <p>
-    <div id="viewbounce">
-      [%|loc%]loading message...[%END%]
-      <!-- empty div that will display a content by AJAX -->
-     </div>
-    </p>
+    <div>
+      [%# Button to load AJAX content to reveal modal. See Foundation docs. ~%]
+      <a href="[% 'ajax/viewbounce' | url_rel([list],{email=>current_subscriber.email,previous_action=>action}) %]"
+        data-reveal-id="mainviewbounce" data-reveal-ajax="true"
+        class="MainMenuLinks">[%|loc%]View last bounce[%END%]</a>
+      <input class="MainMenuLinks" type="submit" name="action_resetbounce"
+        value="[%|loc%]Reset errors[%END%]" />
     </div>
-
-    <a href="[% 'viewbounce' | url_rel([list],{email=>current_subscriber.email}) %]"
-      onclick="$('.viewmod').hide();$('#viewbounce').load('[% 'ajax/viewbounce' | url_rel([list],{email=>current_subscriber.email}) %]').parent().show(); return false">[%|loc%]View last bounce[%END%]</a>
-
-    <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" />
-
   [% END %]
 </fieldset>
 </form>
+
+<div id="mainviewbounce"
+  class="reveal-modal medium" data-reveal
+  aria-labelledby="[%|loc%]View last bounce[%END%]" aria-hidden="true"
+  role="dialog">
+  [%# empty div that will display a content by AJAX. ~%]
+</div>
 <!-- end editsubscriber.tt2 -->

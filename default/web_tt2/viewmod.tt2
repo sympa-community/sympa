@@ -1,7 +1,19 @@
 <!-- $Id$ -->
+<h3>[%|loc%]Current message[%END%]</h3>
+[% PROCESS modform.tt2 mod_display_message = 1 %]
+
+<div id="viewmod">
 [% TRY ~%]
   [% html_content | eval %]
 [%~ CATCH ~%]
   <!-- [% error | html %] -->
 [%~ END %]
+</div>
+
+<noscript>
+  <p><a href="[% 'modindex' | url_rel([list]) %]"
+    class="MainMenuLinks">[%|loc%]Back[%END%]</a></p>
+</noscript>
+
+[%# Close button will be inserted here. ~%]
 <!-- end viewmod.tt2 -->

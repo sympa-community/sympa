@@ -112,7 +112,8 @@ sub get_recipients_status {
     unless (
         $sdm
         and $sth = $sdm->do_prepared_query(
-            q{SELECT recipient_notification AS recipient,
+            q{SELECT message_id_notification AS message_id,
+                     recipient_notification AS recipient,
                      reception_option_notification AS reception_option,
                      status_notification AS status,
                      arrival_date_notification AS arrival_date,
@@ -144,6 +145,51 @@ sub get_recipients_status {
     $sth->finish;
 
     return \@pk_notifs;
+}
+
+sub db_fetch {
+    my $self    = shift;
+    my %options = @_;
+
+    my $list = $self->{context};
+
+    my $recipient = $options{recipient};
+    my $envid     = $options{envid};
+    return undef unless $recipient and $envid;
+
+    my $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
+
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT message_id_notification AS message_id,
+                     recipient_notification AS recipient,
+                     reception_option_notification AS reception_option,
+                     status_notification AS status,
+                     arrival_date_notification AS arrival_date,
+                     arrival_epoch_notification AS arrival_epoch,
+                     type_notification AS "type",
+                     pk_notification AS envid
+              FROM notification_table
+              WHERE list_notification = ? AND robot_notification = ? AND
+                    recipient_notification = ? AND pk_notification = ?},
+            $list->{'name'}, $list->{'domain'},
+            $recipient,      $envid
+        )
+        ) {
+        $log->syslog(
+            'err',
+            'Unable to retrieve tracking information for message %s, list %s',
+            $recipient,
+            $list
+        );
+        return undef;
+    }
+    my $pk_notif = $sth->fetchrow_hashref;
+    $sth->finish;
+
+    return $pk_notif;
 }
 
 # Old name: Sympa::Tracking::db_init_notification_table()
@@ -625,6 +671,10 @@ Returns:
 
 New L<Sympa::Tracking> object or C<undef>.
 If unrecoverable error occurred, this method will die.
+
+=item db_fetch ( recipient =E<gt> $email, envid =E<gt> $envid )
+
+TBD.
 
 =item get_recipients_status
 

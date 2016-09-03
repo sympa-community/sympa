@@ -23,7 +23,6 @@
    </div>
     </fieldset>
     </form>
-    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
   </div>
 [%- ELSE -%]
   <form class="noborder" action="[% path_cgi %]" method="post" name="moderate_mail[% line_count %]" id="moderate_mail[% line_count %]">
@@ -34,7 +33,7 @@
     </fieldset>
   </form>
 [%- END -%]
-<button type="button" class="action" name="action_reject" value="[%|loc%]Reject[%END%]" data-reveal-id="reject[% line_count %]" data-tooltip aria-haspopup="true" title="[%|loc%]Reject[%END%]" /><i class="fa fa-trash fa-lg"></i>[% IF mod_display_message %] [%|loc%]Reject[%END%][% END %]</button>
+<button type="button" class="action" name="action_reject" value="[%|loc%]Reject[%END%]" data-reveal-id="reject[% line_count %]" data-tooltip aria-haspopup="true" title="[%|loc%]Reject[%END%]"><i class="fa fa-trash fa-lg"></i>[% IF mod_display_message %] [%|loc%]Reject[%END%][% END %]</button>
 <div id="reject[% line_count %]" class="reveal-modal medium" data-reveal aria-labelledby="[%|loc%]Rejecting message[%END%]" aria-hidden="true" role="dialog">
   <h3>[%|loc%]Rejecting message[%END%]</h3>
     <form class="noborder" action="[% path_cgi %]" method="post" name="reject_mail[% line_count %]" id="reject_mail[% line_count %]">
@@ -69,10 +68,13 @@
   [% END %]
     </fieldset>
     </form>
-    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
   </div>
-[% IF !mod_display_message %]
-&nbsp;<button type="button" class="action" name="action_distribute" value="[%|loc%]view[%END%]" data-tooltip aria-haspopup="true" data-reveal-id="mainviewmod[% msg.key %]" onclick="jQuery('#viewmod[% msg.key %]').load('[% 'ajax/viewmod' | url_rel([list,msg.key]) %]')" title="[%|loc%]view[%END%]"><i class="fa fa-eye fa-lg"></i></button>
+[% UNLESS mod_display_message %]
+  [%# Button to load AJAX content to reveal modal. See Foundation docs. ~%]
+  &nbsp;<a href="[% 'ajax/viewmod' | url_rel([list,msg.key]) %]"
+    data-reveal-id="mainviewmod" data-reveal-ajax="true"
+    data-tooltip aria-haspopup="true"
+    title="[%|loc%]view[%END%]"><i class="fa fa-eye fa-lg"></i></a>
 [% END %]
 
 [% IF is_owner %]
