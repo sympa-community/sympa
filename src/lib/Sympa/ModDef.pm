@@ -61,6 +61,11 @@ our %cpan_modules = (
         mandatory        => 1,
         'gettext_id'     => 'used to construct various singleton classes.',
     },
+    'Clone' => {
+        required_version => '0.31',
+        package_name     => 'Clone',
+        'gettext_id'     => 'used to make copy of internal data structures.',
+    },
     'Crypt::CipherSaber' => {
         required_version => '0.50',
         package_name     => 'Crypt-CipherSaber',

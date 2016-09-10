@@ -30,6 +30,7 @@ use Encode qw();
 use English qw(-no_match_vars);
 use POSIX qw();
 use XML::LibXML qw();
+BEGIN { eval 'use Clone qw()'; }
 
 use Sympa::Tools::Text;
 
@@ -129,6 +130,14 @@ sub dump_html_var {
         }
     }
     return $html;
+}
+
+# Duplicates a complex variable (faster).
+# CAUTION: This duplicates blessed elements even if they are
+# singleton/multiton; this breaks subroutine references.
+sub clone_var {
+    return Clone::clone($_[0]) if $Clone::VERSION;
+    goto &dup_var;    # '&' needed
 }
 
 ## Duplictate a complex variable
