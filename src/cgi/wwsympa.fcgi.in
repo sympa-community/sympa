@@ -1972,6 +1972,22 @@ while ($query = new_loop()) {
             $param->{'list_conf'} = $list->{'admin'};
         }
 
+        # XSS escaping applied to all outgoing parameters.
+        # Escape parameters on a copy to avoid altering useful data.
+        my $param_copy = Sympa::Tools::Data::dup_var($param);
+        if (defined $param_copy) {
+            unless (
+                Sympa::HTMLSanitizer->new($robot)->sanitize_var(
+                    $param_copy,
+                    'htmlAllowedParam' => $param_copy->{'htmlAllowedParam'},
+                    'htmlToFilter'     => $param_copy->{'htmlToFilter'},
+                )
+                ) {
+                $log->syslog('err', 'Failed to sanitize $param in host %s',
+                    $robot);
+            }
+        }
+
         my $template = Sympa::Template->new(
             $list || $robot,
             plugins      => $plugins,
@@ -1983,7 +1999,7 @@ while ($query = new_loop()) {
         undef $allow_absolute_path;
         @other_include_path = ();
 
-        unless ($template->parse($param, 'ajax.tt2', \*STDOUT)) {
+        unless ($template->parse($param_copy, 'ajax.tt2', \*STDOUT)) {
             my $error = $template->{last_error};
             $error = $error->as_string if ref $error;
             $param->{'tt2_error'} = $error;
@@ -1993,7 +2009,7 @@ while ($query = new_loop()) {
             wwslog('err', '/ajax/%s: error: %s', $param->{'action'}, $error);
             printf "\n<!-- %s -->\n", Sympa::Tools::Text::encode_html($error);
         }
-# 	 close FILE;
+        # close FILE;
     } elsif ($param->{'redirect_to'}) {
         $log->syslog('notice', 'Redirecting to %s', $param->{'redirect_to'});
         print "Location: $param->{'redirect_to'}\n\n";
