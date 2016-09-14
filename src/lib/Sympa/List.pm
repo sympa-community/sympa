@@ -2351,10 +2351,10 @@ sub insert_delete_exclusion {
                 $sdm
                 and $sdm->do_prepared_query(
                     q{INSERT INTO exclusion_table
-                      (list_exclusion, robot_exclusion, user_exclusion,
-                       date_exclusion)
-                      VALUES (?, ?, ?, ?)},
-                    $name, $robot_id, $email, $date
+                      (list_exclusion, family_exclusion, robot_exclusion,
+                       user_exclusion, date_exclusion)
+                      VALUES (?, ?, ?, ?, ?)},
+                    $name, '', $robot_id, $email, $date
                 )
                 ) {
                 $log->syslog('err', 'Unable to exclude user %s from list %s',
