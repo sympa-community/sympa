@@ -536,7 +536,7 @@ our %required_args = (
     'd_read'          => ['param.list'],
     'd_reject_shared' => ['param.list', 'param.user.email', 'id'],
     'd_rename'        => ['param.list', 'param.user.email', 'new_name'],
-    'd_update  ' =>
+    'd_update' =>
         ['param.list', 'param.user.email', 'content|url|uploaded_file'],
     'd_set_owner'     => ['param.list', 'param.user.email'],
     'd_unzip'         => ['param.list', 'param.user.email', 'uploaded_file'],
@@ -11215,7 +11215,9 @@ sub do_viewbounce {
     if ($in{'email'} and $in{'envid'}) {
         my $tracking = Sympa::Tracking->new(context => $list);
         my $info = $tracking->db_fetch(
-            recipient => $in{'email'}, envid => $in{'envid'});
+            recipient => $in{'email'},
+            envid     => $in{'envid'}
+        );
         if ($info) {
             $info->{arrival_date} =
                 $language->gettext_strftime('%d %b %Y at %H:%M:%S',
@@ -11224,9 +11226,7 @@ sub do_viewbounce {
             $param->{'tracking_info'} = $info;
         }
     } elsif ($in{'email'}) {
-        $param->{'tracking_info'} = {
-            recipient => $in{'email'},
-        };
+        $param->{'tracking_info'} = {recipient => $in{'email'},};
     }
     $param->{'previous_action'} = $in{'previous_action'} || 'editsubscriber';
 
