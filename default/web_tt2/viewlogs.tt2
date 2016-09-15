@@ -3,30 +3,27 @@
 
 <h2>[%|loc%]Logs view[%END%]</h2>
 
-<form id="logs_form" name="log_form" method="post" action="[% path_cgi %]">
-<fieldset>
+<form id="logs_form" name="log_form" method="POST" action="[% path_cgi %]">
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="action" value="viewlogs" />
 
+  <div>
     <label for="target_type">[%|loc%]Search by:[%END%]</label>
     <select id="target_type" name="target_type">
-
-       [% IF target_type  == 'target_email' %]
-	 <option value="[% target_type %]">[%|loc%]Email[%END%]</option>
-	 <option value="none">-----------</option>
-       [% ELSE %] 
-	 [% IF target_type == 'msg_id' %]
-	   <option value="[% target_type %]">[%|loc%]Message Id[%END%]</option>
-	   <option value="none">-----------</option>
-         [% END %]
-       [% END %]
-
-       <option value="target_email">[%|loc%]Email[%END%]</option>
-       <option value="msg_id">[%|loc%]Message Id[%END%]</option>
-       <option value="none">-----------</option>
+      <option value="target_email"
+        [%~ IF target_type == 'target_email'%] selected[%END ~%]
+      >[%|loc%]Email[%END%]</option>
+      <option value="msg_id"
+        [%~ IF target_type == 'msg_id'%] selected[%END ~%]
+      >[%|loc%]Message Id[%END%]</option>
+      <option value="none"></option>
     </select>
-       
-    <input id="target" type="text" name="target" value="[% target %]" size ="20"/>
+  </div>
+  <div>
+    <label for="target">[%|loc%]matching with:[%END%]</label>
+    <input id="target" type="text" name="target" value="[% target %]"
+      size ="20" />
+  </div>
   <div>
     <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
     <input type="text" id="date_from" name="date_from" maxlength="10" size="10"
@@ -40,40 +37,47 @@
       placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
     <noscript>([%|loc%]ex: 24-05-2006[%END%])</noscript>
   </div>
-
+  <div>
     <label for="type">[%|loc%]Search by type:[%END%]</label>
     <select id="type" name="type">
-       [% IF type %]
-	 [% IF type == 'all_actions' %]
-	   <option value="all_actions">[%|loc%]All[%END%]</option>
-	   <option value="none">------------</option>
-	 [% ELSE %]
-           <option value="[% type %]">[% type %]</option>
-	   <option value="none">------------</option>
-	 [% END %]
-       [% END %]
-       <option value="all_actions">[%|loc%]All[%END%]</option>
-       <option value="none">------------</option>
-       <option value="authentication">[%|loc%]Authentication[%END%]</option>
-       <option value="bounced">[%|loc%]Bounce management[%END%]</option>
-       <option value="list_management">[%|loc%]List Management[%END%]</option>
-       <option value="message">[%|loc%]Message[%END%]</option>
-       <option value="preferences">[%|loc%]User preferences[%END%]</option>
-       <option value="subscription">[%|loc%]User management[%END%]</option>
-       <option value="shared">[%|loc%]Web documents management[%END%]</option>
-       <option value="none">------------</option>
+      <option value="none"></option>
+      <option value="all_actions"
+        [%~IF type == 'all_actions' %] selected[%END ~%]
+      >[%|loc%]All[%END%]</option>
+      <option value="authentication"
+        [%~IF type == 'authentication' %] selected[%END ~%]
+      >[%|loc%]Authentication[%END%]</option>
+      <option value="bounced"
+        [%~IF type == 'bounced' %] selected[%END ~%]
+      >[%|loc%]Bounce management[%END%]</option>
+      <option value="list_management"
+        [%~IF type == 'list_management' %] selected[%END ~%]
+      >[%|loc%]List Management[%END%]</option>
+      <option value="message"
+        [%~IF type == 'message' %] selected[%END ~%]
+      >[%|loc%]Message[%END%]</option>
+      <option value="preferences"
+        [%~IF type == 'preferences' %] selected[%END ~%]
+      >[%|loc%]User preferences[%END%]</option>
+      <option value="subscription"
+        [%~IF type == 'subscription' %] selected[%END ~%]
+      >[%|loc%]User management[%END%]</option>
+      <option value="shared"
+        [%~IF type == 'shared' %] selected[%END ~%]
+      >[%|loc%]Web documents management[%END%]</option>
     </select>
+  </div>
 
   [% IF is_listmaster %]
-      <label for="ip">[%|loc%]Search by IP:[%END%]</label>
-      <input id="ip" type="text" name="ip" value="[% ip %]"/>
+  <div>
+    <label for="ip">[%|loc%]Search by IP:[%END%]</label>
+    <input id="ip" type="text" name="ip" value="[% ip %]"/>
+  </div>
   [% END %]
 
-    <label for="submit"></label>
-    <input  class="MainMenuLinks" id="btnsubmit" type="submit" name="action_viewlogs" value="[%|loc%]View[%END%]" />
-    &nbsp;&nbsp;
-    <input  class="MainMenuLinks" id="btnreset" type="button" value="[%|loc%]Reset[%END%]" onclick="javascript:clear_log_form()"/>
-</fieldset>
+  <input  class="MainMenuLinks" id="btnsubmit" type="submit"
+    name="action_viewlogs" value="[%|loc%]View[%END%]" />
+  [%# Reset button will be inserted here. ~%]
 </form>
 
 <em>[%|loc%]Search period: [%END%]<strong>[%|locdt(date_from_formated)%]%d %b %Y %H:%M:%S[%END%]</strong> [%|loc%]to[%END%] <strong>[%|locdt(date_to_formated)%]%d %b %Y %H:%M:%S[%END%]</strong></em><br />
@@ -175,11 +179,13 @@
 	  <td>
   	      [% l.target_email %]
 	  </td>
-	  <td>
-	      [% IF l.msg_id %]
-  	        <a href="javascript:searched_by_msgId('[% l.msg_id %]')" title="[%|loc%]view other events related to this message id.[%END%]">[%|loc%]Other events[%END%]</a>
-	      [% END %]
-	  </td>
+          <td>
+          [% IF l.msg_id %]
+            <a href="[% 'viewlogs' | url_rel([list,page,size,sortby],{type=>'all_actions',target_type=>'msg_id',target=>l.msg_id}) %]"
+              data-tooltip aria-haspopup="true"
+              title="[%|loc%]view other events related to this message id.[%END%]">[%|loc%]Other events[%END%]</a>
+          [% END %]
+          </td>
 	  <td>
 	     [% l.status %]
 	  </td>
@@ -211,7 +217,7 @@
 
 [% IF action != 'search' %]
   <div id="page_size">
-  <form action="[% path_cgi %]">
+  <form action="[% path_cgi %]" method="POST">
   <fieldset>
   <input type="hidden" name="sortby" value="[% sortby %]" />
   <input type="hidden" name="action" value="viewlogs" />
@@ -223,13 +229,28 @@
   <input type="hidden" name="type" value="[% type %]" />
   <input type="hidden" name="ip" value="[% ip %]" />
   <label for="size">[%|loc%]Page size[%END%]</label>
-  <select id="size" name="size" onchange="this.form.submit();">
-          <option value="[% size %]" selected="selected">[% size %]</option>
-	  <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-	  <option value="500">500</option>
+  [% SET size = 0 UNLESS size ~%]
+  <select id="size" name="size" class="submitOnChange">
+  [% FOREACH s = [25, 50, 100, 500] ~%]
+    [% IF 0 < size && size < s ~%]
+      <option value="[% size %]" selected>[% size %]</option>
+      <option value="[% s %]">[% s %]</option>
+      [%~ size = 0 ~%]
+    [%~ ELSIF size == s ~%]
+      <option value="[% size %]" selected>[% size %]</option>
+      [%~ size = 0 ~%]
+    [%~ ELSIF s < size && loop.last() ~%]
+      <option value="[% s %]">[% s %]</option>
+      <option value="[% size %]" selected>[% size %]</option>
+    [%~ ELSE ~%]
+      <option value="[% s %]">[% s %]</option>
+    [%~ END %]
+  [%~ END %]
   </select>
+  <noscript>
+    <input type="submit" class="MainMenuLinks" name="action_viewlogs"
+      value="[%|loc%]Change[%END%]" />
+  </noscript>
   </fieldset>
   </form>
 <br />

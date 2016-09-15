@@ -75,36 +75,27 @@ function checkbox_check_topic(form, warningId) {
 	return false;
 }
 
-function set_select_value(s, v) {
-	$(s).val(v);
-}
+/* Add a button to reset all fields in log form. */
+$(function() {
+    var logsForm = $('#logs_form');
+    var resetButton = 
+        $('<input class="MainMenuLinks" id="btnreset" type="button" value="'
+            + sympa.resetText + '" />');
+    logsForm.append(resetButton);
 
-//launch a search by message Id
-function searched_by_msgId(id) {
-	var f = document.forms["log_form"];
-	
-	set_select_value(f.elements["type"], 'all_actions');
-	
-	set_select_value(f.elements["target_type"], 'msg_id');
-	
-	f.elements["target"].value = id;
-	f.submit();
-}
+    $('#btnreset').on('click', function(){
+        logsForm.find('[name="type"]').val('all_actions');
+        logsForm.find('[name="target_type"]').val('msg_id');
+        logsForm.find('input[type="text"]').val('');
+    });
+});
 
-//reset all field in log form.
-function clear_log_form() {
-	var f = document.forms["log_form"];
-	
-	set_select_value(f.elements["type"], 'all_actions');
-	
-	set_select_value(f.elements["target_type"], 'msg_id');
-	
-	f.elements["target"].value = '';
-
-	f.elements["date_from"].value = '';
-	f.elements["date_to"].value = '';
-	f.elements["ip"].value = '';
-}
+/* Submit immediately if the widget with class 'submitOnChange' is changed. */
+$(function() {
+    $('.submitOnChange').on('change', function(){
+        $(this).closest('form').submit();
+    });
+});
 
 // Here are some boring utility functions. The real code comes later.
 
