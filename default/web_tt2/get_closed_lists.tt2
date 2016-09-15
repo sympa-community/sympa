@@ -1,6 +1,8 @@
 <!-- $Id$ -->
 
-<form name="myform" action="[% path_cgi %]" method="post">
+<form name="myform"
+  class="toggleContainer" data-toggle-selector="input[name='selected_lists']"
+  action="[% path_cgi %]" method="POST">
 <fieldset>
 <h2>[%|loc%]Closed lists[%END%]</h2>
 
@@ -8,7 +10,10 @@
 <table  class="responsive table_style">
 <caption>[%|loc%]Closed lists[%END%]</caption>
  <tr class="color_light">
-   <th><a href="#" onclick="toggle_selection(document.myform.selected_lists);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></th>
+   <th><a href="#"
+     data-tooltip aria-haspopup="true"
+     title="[%|loc%]Toggle Selection[%END%]"
+     class="toggleButton"><i class="fa fa-check-square-o"></i> </a></th>
    <th>[%|loc%]list name[%END%]</th>
    <th>[%|loc%]list subject[%END%]</th>
    <th>[%|loc%]Requested by[%END%]</th>
@@ -28,7 +33,8 @@
 </tr>
 [% END %]
 </table>
-<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.selected_lists)" />
+<input class="MainMenuLinks toggleButton" type="button"
+  value="[%|loc%]Toggle Selection[%END%]" />
 <input class="MainMenuLinks" type="submit" name="action_purge_list" value="[%|loc%]Purge selected lists[%END%]" />
 
 [% ELSE %]

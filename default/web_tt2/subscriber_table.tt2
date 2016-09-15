@@ -4,11 +4,14 @@
     <caption>[%|loc%]List members[%END%]</caption>
       <tbody>
         <tr>
-	[% SET colspan = 0 %]
-	[% IF is_owner %]
-	   [% SET colspan = colspan + 1 %]
-	   <th><a href="#" onclick="toggle_selection(document.myform.email);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></th>
-	[% END %]
+        [% SET colspan = 0 %]
+        [% IF is_owner %]
+          [% SET colspan = colspan + 1 %]
+          <th><a href="#"
+            data-tooltip aria-haspopup="true"
+            title="[%|loc%]Toggle Selection[%END%]"
+            class="toggleButton"><i class="fa fa-check-square-o"></i> </a></th>
+        [% END %]
 
 	[% SET colspan = colspan + 3 %]
         [% IF sortby == 'email' %]

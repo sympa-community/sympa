@@ -8,8 +8,9 @@ he should be included via an external data source. Users get into the exclusion 
 They get off the exclusion table with the standard subscribe/add functions.[%END%]</p>
 
 [% IF exclude_users ~%]
-  <form class="noborder" action="[% path_cgi %]" method="post"
-    name="show_exclude">
+  <form class="noborder toggleContainer"
+    data-toggle-selector="input[name='email']"
+    action="[% path_cgi %]" method="POST" name="show_exclude">
   <fieldset>
     <input type="hidden" name="previous_list" value="[% list %]" />
     <input type="hidden" name="list" value="[% list %]" />
@@ -18,10 +19,9 @@ They get off the exclusion table with the standard subscribe/add functions.[%END
     <tr>
     [% IF is_listmaster || is_owner  || may_add ~%]
       <th><a href="#"
-        onclick="toggle_selection(document.show_exclude.email);return false;"
-        title="[%|loc%]Toggle Selection[%END%]">
-        <i class="fa fa-check-square-o"></i>
-      </a></th>
+        data-tooltip aria-haspopup="true"
+        title="[%|loc%]Toggle Selection[%END%]"
+        class="toggleButton"><i class="fa fa-check-square-o"></i> </a></th>
     [%~ END %]
     <th>[%|loc%]Email[%END%]</th>
     <th>[%|loc%]Since[%END%]</th>
@@ -42,9 +42,8 @@ They get off the exclusion table with the standard subscribe/add functions.[%END
 
     [% IF may_add ~%]
     <div>
-      <input class="MainMenuLinks" type="button"
-        value="[%|loc%]Toggle Selection[%END%]"
-        onclick="toggle_selection(document.show_exclude.email)" />
+      <input class="MainMenuLinks toggleButton" type="button"
+        value="[%|loc%]Toggle Selection[%END%]" />
     </div>
     <div>
       <input class="MainMenuLinks" type="submit" name="action_add"

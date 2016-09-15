@@ -24,13 +24,30 @@ $(function() {
  */
 function isNotEmpty(i) { return true; }
 function request_confirm(m) { return true; }
+function toggle_selection(myfield) { return false; }
 
-function toggle_selection(myfield) {
-	if(typeof myfield.length == 'undefined') myfield = [myfield];
-	$.each(myfield, function() {
-		$(this).prop('checked',  !$(this).is(':checked'));
+/* Toggle selection. */
+/* Fields included in .toggleContainer and specified by data-selector
+ * will be toggled by clicking .toggleButton. */
+$(function() {
+    /* Compatibility for older archives created by Sympa prior to 6.2.17. */
+    $('form#msglist').each(function(){
+        $(this).addClass('toggleContainer')
+            .data('toggle-selector', 'input[name="msgid"]');
+        $(this).find('input[type="button"]').addClass('toggleButton');
     });
-}
+
+    $('.toggleContainer').each(function(){
+        var container = this;
+        var selector = $(this).data('toggle-selector');
+        $(this).find('.toggleButton').on('click', function(){
+            $(container).find(selector).each(function(){
+                $(this).prop('checked', !$(this).is(':checked'));
+            });
+            return false;
+        });
+    });
+});
 
 function chooseColorNumber(cn, cv) {
     $('#custom_color_number').val(cn);

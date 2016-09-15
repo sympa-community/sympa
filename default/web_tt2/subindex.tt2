@@ -2,13 +2,17 @@
 
 <h2>[%|loc%]Listing subscription to moderate[%END%]</h2>
 [% IF mod_subscription %]
-<form class="noborder" action="[% path_cgi %]" method="post" name="myform"> 
+<form class="noborder toggleContainer" data-toggle-selector="input[name='id']"
+  action="[% path_cgi %]" method="POST" name="myform"> 
 <fieldset>
 <input type="hidden" name="list" value="[% list %]" />
     <table  class="responsive listOfItems">
     <caption>[%|loc%]Listing subscription to moderate[%END%]</caption>
       <tr>
-          <th><a href="#" onclick="toggle_selection(document.myform.id);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></strong></th>
+        <th><a href="#"
+          data-tooltip aria-haspopup="true"
+          title="[%|loc%]Toggle Selection[%END%]"
+          class="toggleButton"><i class="fa fa-check-square-o"></i> </a></th>
           <th colspan="2">[%|loc%]Email[%END%]</th>
           <th>[%|loc%]Name[%END%]</th>
           <th>[%|loc%]Date[%END%]</th>
@@ -55,7 +59,8 @@
       </table>
 <input type="hidden" name="previous_action" value="subindex" />
 <input type="hidden" name="previous_list" value="[% list %]" />
-<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.id)" />
+<input class="MainMenuLinks toggleButton" type="button"
+  value="[%|loc%]Toggle Selection[%END%]" />
 <input class="MainMenuLinks" type="submit" name="action_add_fromsub" value="[%|loc%]Add selected addresses[%END%]" />
 <input class="MainMenuLinks" type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />
 </fieldset>

@@ -73,7 +73,8 @@
 <hr>
 <h3>[%|loc%]Subscriber Table[%END%]</h3>
 
-<form name="myform" action="[% path_cgi %]" method="post">
+<form class="toggleContainer" data-toggle-selector="input[name='email']"
+  name="myform" action="[% path_cgi %]" method="POST">
 <fieldset>
   <input type="hidden" name="previous_action" value="[% action %]" />
   <input type="hidden" name="previous_list" value="[% list %]" />
@@ -96,9 +97,8 @@
 [% IF total != 0 %]
   [% IF is_owner %]
   <div>
-    <input class="MainMenuLinks" type="button"
-      value="[%|loc%]Toggle Selection[%END%]"
-      onclick="toggle_selection(document.myform.email)" />
+    <input class="MainMenuLinks toggleButton" type="button"
+      value="[%|loc%]Toggle Selection[%END%]" />
   </div>
   <div>
     <input class="MainMenuLinks" type="submit" name="action_del"

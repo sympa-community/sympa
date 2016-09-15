@@ -1,7 +1,8 @@
 <!-- $Id$ -->
 <h2>[%|loc%]Listing of shared documents to moderate[%END%]</h2>
 [% IF shared_doc.children %]
-<form class="noborder" action="[% path_cgi %]" method="post" name="moderate_shared">
+<form class="noborder toggleContainer" data-toggle-selector="input[name='id']"
+  action="[% path_cgi %]" method="POST" name="moderate_shared">
 <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
   <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
@@ -11,11 +12,14 @@
     <table  class="responsive listOfItems">
     <caption>[%|loc%]Listing of documents shared to moderate[%END%]</caption>
       <tr>
-	<th><a href="#" onclick="toggle_selection(document.moderate_shared.id)" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i></a></th>
+        <th><a href="#"
+          data-tooltip aria-haspopup="true"
+          title="[%|loc%]Toggle Selection[%END%]"
+          class="toggleButton"><i class="fa fa-check-square-o"></i></a></th>
         <th>[%|loc%]Date[%END%]</th>
-	<th>[%|loc%]Author[%END%]</th>
-	<th>[%|loc%]Path[%END%]</th>
-	<th>[%|loc%]Size[%END%]	</th>
+        <th>[%|loc%]Author[%END%]</th>
+        <th>[%|loc%]Path[%END%]</th>
+        <th>[%|loc%]Size[%END%]	</th>
       </tr>	 
       [% FOREACH f = shared_doc.children %]
         <tr>
@@ -38,7 +42,8 @@
       [% END %] 
     </table>
 
-  <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_shared.id)" />
+  <input class="MainMenuLinks toggleButton" type="button"
+    value="[%|loc%]Toggle Selection[%END%]" />
 <br /><br />
   <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
   <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />

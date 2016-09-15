@@ -55,14 +55,18 @@
         [% END %]
 </div>
 
-<form name="myform" action="[% path_cgi %]" method="post">
+<form name="myform" action="[% path_cgi %]" method="POST"
+  class="toggleContainer" data-toggle-selector="input[name='email']">
 <fieldset>
      <input type="hidden" name="list" value="[% list %]" /> 	 
      <input type="hidden" name="previous_action" value="reviewbouncing" /> 	 
   <table  class="listOfItems">
   <caption>[%|loc%]Table which display list bounces[%END%]</caption>
       <tr>
-	<th rowspan="2"><a href="#" onclick="toggle_selection(document.myform.email);return false;" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i> </a></th>
+        <th rowspan="2"><a href="#"
+          data-tooltip aria-haspopup="true"
+          title="[%|loc%]Toggle Selection[%END%]"
+          class="toggleButton"><i class="fa fa-check-square-o"></i> </a></th>
         <th rowspan="2">[%|loc%]Email[%END%]</th>
 	<th rowspan="2">[%|loc%]Bounce score[%END%]</th>
 	<th colspan="3">[%|loc%]Details[%END%]</th>
@@ -139,7 +143,8 @@
   </div>
   [% END %]
 
-  <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
+  <input class="MainMenuLinks toggleButton" type="button"
+    value="[%|loc%]Toggle Selection[%END%]" />
 </fieldset>
 </form>
 [% ELSE %]
