@@ -144,13 +144,28 @@
   <input type="hidden" name="sortby" value="[% sortby %]" />
   <input type="hidden" name="action" value="review" />
   <input type="hidden" name="list" value="[% list %]" />
-  <select id="size" name="size" onchange="this.form.submit();">
-          <option value="[% size %]" selected="selected">[% size %]</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-          <option value="500">500</option>
+  [% SET mysize = (size || 0) ~%]
+  <select id="size" name="size" class="submitOnChange">
+  [% FOREACH s = [25, 50, 100, 500] ~%]
+    [% IF 0 < mysize && mysize < s ~%]
+      <option value="[% size %]" selected>[% size %]</option>
+      <option value="[% s %]">[% s %]</option>
+      [%~ mysize = 0 ~%]
+    [%~ ELSIF mysize == s ~%]
+      <option value="[% size %]" selected>[% size %]</option>
+      [%~ mysize = 0 ~%]
+    [%~ ELSIF s < mysize && loop.last() ~%]
+      <option value="[% s %]">[% s %]</option>
+      <option value="[% size %]" selected>[% size %]</option>
+    [%~ ELSE ~%]
+      <option value="[% s %]">[% s %]</option>
+    [%~ END %]
+  [%~ END %]
   </select>
+  <noscript>
+    <input type="submit" class="MainMenuLinks" name="action_review"
+      value="[%|loc%]Change[%END%]" />
+  </noscript>
   </fieldset>
   </form>
    [% IF prev_page %]

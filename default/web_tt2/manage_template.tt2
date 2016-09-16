@@ -26,8 +26,13 @@
         		  <tr class="color0">
 		[% END %]
                 <td align="center">
-                <input type="radio" name="new_default" value="[% file %]" [% IF file == default_reject_template %] checked="checked" [% ELSE %]  onchange="this.form.submit();" [% END %]>
-	        </td> 
+                <input type="radio" name="new_default" value="[% file %]"
+                  [% IF file == default_reject_template ~%]
+                    checked="checked"
+                  [%~ ELSE ~%]
+                    class="submitOnChange"
+                  [%~ END %]>
+                </td> 
        		<td>
 		[% file %]
 		</td>

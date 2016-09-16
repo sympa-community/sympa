@@ -229,17 +229,17 @@
   <input type="hidden" name="type" value="[% type %]" />
   <input type="hidden" name="ip" value="[% ip %]" />
   <label for="size">[%|loc%]Page size[%END%]</label>
-  [% SET size = 0 UNLESS size ~%]
+  [% SET mysize = (size || 0) ~%]
   <select id="size" name="size" class="submitOnChange">
   [% FOREACH s = [25, 50, 100, 500] ~%]
-    [% IF 0 < size && size < s ~%]
+    [% IF 0 < mysize && mysize < s ~%]
       <option value="[% size %]" selected>[% size %]</option>
       <option value="[% s %]">[% s %]</option>
-      [%~ size = 0 ~%]
-    [%~ ELSIF size == s ~%]
+      [%~ mysize = 0 ~%]
+    [%~ ELSIF mysize == s ~%]
       <option value="[% size %]" selected>[% size %]</option>
-      [%~ size = 0 ~%]
-    [%~ ELSIF s < size && loop.last() ~%]
+      [%~ mysize = 0 ~%]
+    [%~ ELSIF s < mysize && loop.last() ~%]
       <option value="[% s %]">[% s %]</option>
       <option value="[% size %]" selected>[% size %]</option>
     [%~ ELSE ~%]

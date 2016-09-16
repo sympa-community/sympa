@@ -97,11 +97,12 @@
                     <input type="hidden" name="auth_service_name" value="[% server.key %]" />
                     <button type="submit" name="action_sso_login" value="[% server.value %]"><i class="fa fa-user"></i> [% server.value %]</button>
 
-                 [% END %]
+                  [% END %]
                 [% ELSE %]
                   <label for="auth_service_name">[%|loc%]To login, select your organization authentication server below:[%END%]</label>
-                  <select id="auth_service_name" name="auth_service_name" onchange="this.form.submit();">
-                 <option value="1" selected>---[%|loc%]Click to select[%END%]---</option>
+                  <select id="auth_service_name" name="auth_service_name"
+                    class="submitOnChange">
+                  <option value="1" selected>---[%|loc%]Click to select[%END%]---</option>
                   [% FOREACH server = sso %]
                      <option value="[% server.key %]">[% server.value %]</option>
                   [% END %]
