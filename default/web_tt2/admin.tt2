@@ -18,7 +18,7 @@
           <li><strong><a href="[% 'reviewbouncing' | url_rel([list]) %]">[%|loc%]Bounces:[%END%]</a></strong> [%|loc%]Manages non-delivery reports (also called bounces).[%END%]</li>
 [% END %]
 [% IF is_priv || is_listmaster %]
-          <li><strong><a href="[% 'viewlogs' | url_rel([list,'first']) %]" >[%|loc%]Logs:[%END%]</a></strong> [%|loc%]A tool for exploring the list logs.[%END%]</li>
+          <li><strong><a href="[% 'viewlogs' | url_rel([list]) %]">[%|loc%]Logs:[%END%]</a></strong> [%|loc%]A tool for exploring the list logs.[%END%]</li>
 [% END %]
 [% END %]
 </ul>
