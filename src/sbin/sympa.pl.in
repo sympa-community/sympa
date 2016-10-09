@@ -766,7 +766,7 @@ if ($main::options{'dump'}) {
     }
 
     printf "Members of list %s have been successfully update.\n",
-        Sympa::get_address($list);
+        $list->get_id;
     exit 0;
 ## Migration from one version to another
 } elsif ($main::options{'upgrade'}) {
@@ -798,64 +798,10 @@ if ($main::options{'dump'}) {
 
     exit 0;
 
-## rename file names that may be incorrectly encoded because of previous Sympa
-## versions
 } elsif ($main::options{'upgrade_shared'}) {
-
-    $log->syslog('notice', "Upgrade shared process...");
-
-    my $listname;
-    my $robot;
-
-    unless (($main::options{'list'}) || ($main::options{'robot'})) {
-        $log->syslog('err',
-            "listname and domain are required, use --list= --robot= options");
-        exit 0;
-    }
-    $listname = $main::options{'list'};
-    $robot    = $main::options{'robot'};
-
-    $log->syslog('notice', "Upgrading share for list=%s robot=%s",
-        $listname, $robot);
-
-    my $list = Sympa::List->new($listname, $robot);
-
-    unless (defined $list) {
-        printf STDERR "Incorrect list or domain name : %s %s\n",
-            $listname, $robot;
-        exit 1;
-    }
-
-    if (-d $list->{'dir'} . '/shared') {
-        $log->syslog(
-            'notice',
-            'Processing list %s...',
-            Sympa::get_address($list)
-        );
-
-        ## Determine default lang for this list
-        ## It should tell us what character encoding was used for
-        ## filenames
-        $language->set_lang(
-            $list->{'admin'}{'lang'},
-            Conf::get_robot_conf($robot, 'lang'),
-            $default_lang
-        );
-        my $list_encoding = Conf::lang2charset($language->get_lang);
-
-        my $count =
-            Sympa::Tools::File::qencode_hierarchy($list->{'dir'} . '/shared',
-            $list_encoding);
-
-        if ($count) {
-            $log->syslog('notice', 'List %s: %d filenames has been changed',
-                $list->{'name'}, $count);
-        }
-    }
-    $log->syslog('notice', 'Upgrade_shared process finished');
+    printf STDERR "Obsoleted.  Use upgrade_shared_repository.pl.\n";
 
     exit 0;
-
 } elsif ($main::options{'reload_list_config'}) {
     if ($main::options{'list'}) {
         $log->syslog('notice', 'Loading list %s...', $main::options{'list'});
@@ -1307,6 +1253,10 @@ Test the database message buffer size.
 Runs Sympa maintenance script to upgrade from version I<X> to version I<Y>.
 
 =item B<--upgrade_shared> [B<--list=>I<X>] [B<--robot=>I<Y>]>
+
+B<Note>:
+This option was deprecated.
+See upgrade_shared_repository(1).
 
 Rename files in shared.
 

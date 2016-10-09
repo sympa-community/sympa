@@ -582,35 +582,9 @@ sub upgrade {
     ## encoding
     if (lower_version($previous_version, '5.3a.8')) {
         $log->syslog('notice', 'Q-Encoding web documents filenames...');
-
-        $language->push_lang($Conf::Conf{'lang'});
-        my $all_lists = Sympa::List::get_lists('*');
-        foreach my $list (@$all_lists) {
-            if (-d $list->{'dir'} . '/shared') {
-                $log->syslog(
-                    'notice',
-                    'Processing list %s...',
-                    Sympa::get_address($list)
-                );
-
-                ## Determine default lang for this list
-                ## It should tell us what character encoding was used for
-                ## filenames
-                $language->set_lang($list->{'admin'}{'lang'});
-                my $list_encoding = Conf::lang2charset($language->get_lang);
-
-                my $count = Sympa::Tools::File::qencode_hierarchy(
-                    $list->{'dir'} . '/shared',
-                    $list_encoding);
-
-                if ($count) {
-                    $log->syslog('notice',
-                        'List %s: %d filenames has been changed',
-                        $list->{'name'}, $count);
-                }
-            }
-        }
-        $language->pop_lang;
+        system Sympa::Constants::SCRIPTDIR()
+            . '/upgrade_shared_repository.pl',
+            '--all_lists';
     }
 
     ## We now support UTF-8 only for custom templates, config files, headers
@@ -845,54 +819,9 @@ sub upgrade {
         ## We change encoding of shared documents according to new algorithm
         $log->syslog('notice',
             'Fixing Q-encoding of web document filenames...');
-        my $all_lists = Sympa::List::get_lists('*');
-        foreach my $list (@$all_lists) {
-            if (-d $list->{'dir'} . '/shared') {
-                $log->syslog(
-                    'notice',
-                    'Processing list %s...',
-                    Sympa::get_address($list)
-                );
-
-                my @all_files;
-                Sympa::Tools::File::list_dir($list->{'dir'}, \@all_files,
-                    'utf-8');
-
-                my $count;
-                foreach my $f_struct (reverse @all_files) {
-                    my $new_filename = $f_struct->{'filename'};
-
-                    ## Decode and re-encode filename
-                    $new_filename =
-                        Sympa::Tools::Text::qencode_filename(
-                        Sympa::Tools::Text::qdecode_filename($new_filename));
-
-                    if ($new_filename ne $f_struct->{'filename'}) {
-                        ## Rename file
-                        my $orig_f =
-                              $f_struct->{'directory'} . '/'
-                            . $f_struct->{'filename'};
-                        my $new_f =
-                            $f_struct->{'directory'} . '/' . $new_filename;
-                        $log->syslog('notice', "Renaming %s to %s",
-                            $orig_f, $new_f);
-                        unless (rename $orig_f, $new_f) {
-                            $log->syslog('err',
-                                'Failed to rename %s to %s: %m',
-                                $orig_f, $new_f);
-                            next;
-                        }
-                        $count++;
-                    }
-                }
-                if ($count) {
-                    $log->syslog('notice',
-                        'List %s: %d filenames has been changed',
-                        $list->{'name'}, $count);
-                }
-            }
-        }
-
+        system Sympa::Constants::SCRIPTDIR()
+            . '/upgrade_shared_repository.pl',
+            '--all_lists', '--fix_qencode';
     }
     if (lower_version($previous_version, '6.1.11')) {
         ## Exclusion table was not robot-enabled.

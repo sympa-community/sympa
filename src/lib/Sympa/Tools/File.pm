@@ -26,8 +26,6 @@ package Sympa::Tools::File;
 
 use strict;
 use warnings;
-use Encode;
-use Encode::Guess;
 use English qw(-no_match_vars);
 use File::Copy::Recursive;
 use File::Find qw();
@@ -144,36 +142,8 @@ sub mkdir_all {
 }
 
 # Old name: tools::qencode_hierarchy().
-sub qencode_hierarchy {
-    my $dir               = shift; ## Root directory
-    my $original_encoding = shift; ## Suspected original encoding of filenames
-
-    my $count;
-    my @all_files;
-    Sympa::Tools::File::list_dir($dir, \@all_files, $original_encoding);
-
-    foreach my $f_struct (reverse @all_files) {
-
-        ## At least one 8bit char
-        next
-            unless ($f_struct->{'filename'} =~ /[^\x00-\x7f]/);
-
-        my $new_filename = $f_struct->{'filename'};
-        my $encoding     = $f_struct->{'encoding'};
-        Encode::from_to($new_filename, $encoding, 'utf8') if $encoding;
-
-        ## Q-encode filename to escape chars with accents
-        $new_filename = Sympa::Tools::Text::qencode_filename($new_filename);
-
-        my $orig_f = $f_struct->{'directory'} . '/' . $f_struct->{'filename'};
-        my $new_f  = $f_struct->{'directory'} . '/' . $new_filename;
-
-        # Rename the file using utf-8.
-        $count++ if rename $orig_f, $new_f;
-    }
-
-    return $count;
-}
+# Moved to: _qencode_hierarchy() in upgrade_shared_repository.pl.
+#sub qencode_hierarchy;
 
 # Note: This is used only once.
 sub shift_file {
@@ -224,40 +194,8 @@ sub get_mtime {
 #DEPRECATED: No longer used.
 #sub find_file($filename, @directories);
 
-sub list_dir {
-    my $dir               = shift;
-    my $all               = shift;
-    my $original_encoding = shift;  # Suspected original encoding of filenames
-
-    if (opendir my $dh, $dir) {
-        foreach my $file (sort grep !/^\.\.?$/, readdir $dh) {
-            # Guess filename encoding
-            my ($encoding, $guess);
-            my $decoder =
-                Encode::Guess::guess_encoding($file, $original_encoding,
-                'utf-8');
-            if (ref $decoder) {
-                $encoding = $decoder->name;
-            } else {
-                $guess = $decoder;
-            }
-
-            push @$all,
-                {
-                'directory' => $dir,
-                'filename'  => $file,
-                'encoding'  => $encoding,
-                'guess'     => $guess
-                };
-            if (-d "$dir/$file") {
-                list_dir($dir . '/' . $file, $all, $original_encoding);
-            }
-        }
-        closedir $dh;
-    }
-
-    return 1;
-}
+# Moved to: _list_dir() in upgrade_shared_repository.pl.
+#sub list_dir;
 
 sub get_dir_size {
     my $dir = shift;
@@ -376,6 +314,8 @@ In case of other error, returns C<undef>.
 
 =item list_dir($dir, $all, $original_encoding)
 
+DEPRECATED.
+
 Recursively list the content of a directory
 Return an array of hash, each entry with directory + filename + encoding
 
@@ -384,6 +324,8 @@ Return an array of hash, each entry with directory + filename + encoding
 TBD.
 
 =item qencode_hierarchy()
+
+DEPRECATED.
 
 Q-encodes a complete file hierarchy.
 Useful to Q-encode subshared documents.
