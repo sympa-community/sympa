@@ -120,6 +120,17 @@ sub _twist {
         $messageid,
         $message->{'size'}
     );
+    $log->db_log(
+        'robot'        => $list->{'domain'},
+        'list'         => $list->{'name'},
+        'action'       => 'DoMessage',
+        'parameters'   => $message->get_id,
+        'target_email' => '',
+        'msg_id'       => $messageid,
+        'status'       => 'success',
+        'error_type'   => '',
+        'user_email'   => $sender
+    );
 
     return 1;
 }
