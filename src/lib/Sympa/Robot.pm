@@ -257,8 +257,9 @@ sub load_topics {
             } else {
                 my $subtopic = join('/', @tree[1 .. $#tree]);
                 my $title = _get_topic_titles($topic);
+                my $visibility = $topic->{'visibility'} || 'default';
                 $list_of_topics{$robot}{$tree[0]}{'sub'}{$subtopic} =
-                    _add_topic($subtopic, $title);
+                    _add_topic($subtopic, $title, $visibility);
             }
         }
 
@@ -339,15 +340,15 @@ sub _get_topic_titles {
 
 ## Inner sub used by load_topics()
 sub _add_topic {
-    my ($name, $title) = @_;
+    my ($name, $title, $visibility) = @_;
     my $topic = {};
 
     my @tree = split '/', $name;
     if ($#tree == 0) {
-        return {'title' => $title};
+        return {'title' => $title, 'visibility' => $visibility};
     } else {
         $topic->{'sub'}{$name} =
-            _add_topic(join('/', @tree[1 .. $#tree]), $title);
+            _add_topic(join('/', @tree[1 .. $#tree]), $title, $visibility);
         return $topic;
     }
 }

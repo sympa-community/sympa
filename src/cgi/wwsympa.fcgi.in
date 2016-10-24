@@ -18123,17 +18123,51 @@ sub do_stats {
     return 1;
 }
 
+sub _purge_subtopics {
+    my ($robot, $topic_name, $topic) = @_;
+
+    if ($topic->{sub}) {
+        my @names = (keys %{$topic->{sub}});
+
+        for my $name (@names) {
+            my $result = Sympa::Scenario::request_action(
+                 $robot,
+                'topics_visibility',
+                $param->{'auth_method'},
+                {   'topicname'   => join ('/', $topic_name, $name),
+                    'sender'      => $param->{'user'}{'email'},
+                    'remote_host' => $param->{'remote_host'},
+                    'remote_addr' => $param->{'remote_addr'}
+                }
+            );
+
+            my $action;
+            $action = $result->{'action'} if (ref($result) eq 'HASH');
+
+            if ($action =~ /do_it/) {
+                _purge_subtopics($robot, $topic->{sub}->{$name});
+            } 
+            else {
+                delete $topic->{sub}->{$name};
+            }
+        } 
+    } 
+} 
+
 ## setting the topics list for templates
 sub export_topics {
 
     my $robot = shift;
     wwslog('debug2', '(%s)', $robot);
-    my %topics = Sympa::Robot::load_topics($robot);
+    my %topics_orig = Sympa::Robot::load_topics($robot);
 
-    unless (%topics) {
+    unless (%topics_orig) {
         wwslog('err', 'No topics defined');
         return undef;
     }
+
+    my $dup = Sympa::Tools::Data::dup_var(\%topics_orig); 
+    my %topics = %$dup;
 
     ## Remove existing topics
     $param->{'topics'} = undef;
@@ -18156,6 +18190,9 @@ sub export_topics {
         my $action;
         $action = $result->{'action'} if (ref($result) eq 'HASH');
         next unless ($action =~ /do_it/);
+
+        # Purge concealed subtopics
+        _purge_subtopics($robot, $t, $topics{$t});
 
         my $current = $topics{$t};
         $current->{'id'} = $t;

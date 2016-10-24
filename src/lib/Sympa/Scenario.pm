@@ -444,12 +444,24 @@ sub request_action {
 
     } elsif ($context->{'topicname'}) {
         ## Topics
+        my $visibility;
+
+        ## Split in case of subtopics
+        my @tree = split '/', $context->{'topicname'};
+        my $topic = $Sympa::Robot::list_of_topics{$robot_id}{$tree[0]};
+        shift(@tree);
+
+        for my $node (@tree) {
+            next unless exists $topic->{sub};
+            $topic = $topic->{sub}->{$node};
+        }
+
+        $visibility = $topic->{'visibility'};
 
         $scenario = Sympa::Scenario->new(
             'robot'    => $robot_id,
             'function' => 'topics_visibility',
-            'name'     => $Sympa::Robot::list_of_topics{$robot_id}
-                {$context->{'topicname'}}{'visibility'},
+            'name' => $visibility,
             'options' => $context->{'options'}
         );
 
