@@ -46,6 +46,11 @@
   <p><strong>
     [%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]
   </strong></p>
+[%~ ELSIF confirm_action == 'distribute' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Distribute[%END%]
+  </h2>
+
 [%~ ELSIF confirm_action == 'd_admin' && d_admin == 'delete' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Delete Shared[%END%]
@@ -167,6 +172,22 @@
   [% FOREACH i = id ~%]
     <input type="hidden" name="id" value="[% i %]" />
   [%~ END %]
+[%~ ELSIF confirm_action == 'distribute' ~%]
+  [% FOREACH i = id ~%]
+    <input type="hidden" name="id" value="[% i %]" />
+  [%~ END %]
+  [% IF topic_required ~%]
+    <h3>[%|loc%]This list is configured to require topic(s).[%END%]</h3>
+  [%~ END %]
+  <p>[%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute:[%END%]</p>
+  <ul>
+  [% FOREACH t = listconf.msg_topic ~%]
+    [% NEXT UNLESS t && t.name ~%]
+    <li><input type="checkbox" name="topic" id="topic_[%t.name%]"
+      value="[% t.name %]" />
+    <label for="topic_[%t.name%]">[% t.title %] </label></li>
+  [%~ END %]
+  </ul>
 [%~ ELSIF confirm_action == 'd_admin' && d_admin == 'delete' ~%]
   <input type="hidden" name="d_admin" value="[% d_admin %]" />
 [%~ ELSIF confirm_action == 'd_delete' ~%]

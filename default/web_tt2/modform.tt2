@@ -1,45 +1,27 @@
 <!-- $Id$ -->
-[%- IF msg.value.spam_status == 'spam' -%][% idname = 'idspam' %][% therissomespam = '1' %][% ELSE %][% idname = 'id' %][% therissomeham = '1' %][% END -%]
-[%- IF topic_required -%]
-  <button class="action" type="button" name="action_distribute" value="[%|loc%]Distribute[%END%]" data-reveal-id="topics[% line_count %]" data-tooltip aria-haspopup="true" title="[%|loc%]Distribute[%END%]"><i class="fa fa-share fa-lg"></i>[% IF mod_display_message %] [%|loc%]Distribute[%END%][% END %]</button>&nbsp;
-  <div id="topics[% line_count %]"class="reveal-modal medium" data-reveal aria-labelledby="[%|loc%]Required topic[%END%]" aria-hidden="true" role="dialog">
-   [%- IF request_topic -%]
-     <h3> [%|loc%]This list is configured to require topic(s).[%END%]</h3>
 
-    <form class="noborder" action="[% path_cgi %]" method="post" name="moderate_mail[% line_count %]" id="moderate_mail[% line_count %]">
-    <fieldset>
-      <input type="hidden" name="list" value="[% list %]" />
-      <input type="hidden" name="[% idname %]" value="[% msg.key %]" />
+<form class="noborder" action="[% path_cgi %]" method="POST"
+  name="moderate_mail[% line_count %]" id="moderate_mail[% line_count %]">
+  <fieldset>
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="id" value="[% msg.key %]" />
+  <button class="action" type="submit" name="action_distribute"
+    value="[%|loc%]Distribute[%END%]" data-tooltip aria-haspopup="true"
+    title="[%|loc%]Distribute[%END%]"><i class="fa fa-share fa-lg"></i>
+    [%~ IF mod_display_message ~%]
+      [%|loc%]Distribute[%END%]
+    [%~ END ~%]
+  </button>&nbsp;
+  </fieldset>
+</form>
 
-     <br />[%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute:[%END%] <br />
-     [% FOREACH t = available_topics %]
-       <input id="topic_[%t.name%].[%line_count%]" type="checkbox" name="topic_[%t.name%]" value="1" /> <label for="topic_[%t.name%].[%line_count%]">[% t.title %] </label><br />
-     [%- END- %]
-     <br />
-   [%- END -%]
-   <button type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" onclick="return checkbox_check_topic(moderate_mail[% line_count %],'warningTopic[% line_count %]');"><i class="fa fa-share fa-lg"></i> [%|loc%]Distribute[%END%]</button>&nbsp;
-   <div class="formError" style="display:none"  id="warningTopic[% line_count %]">
-     <p class="alert-box alert">[%|loc%]You must select a topic[%END%]</p>
-   </div>
-    </fieldset>
-    </form>
-  </div>
-[%- ELSE -%]
-  <form class="noborder" action="[% path_cgi %]" method="post" name="moderate_mail[% line_count %]" id="moderate_mail[% line_count %]">
-    <fieldset>
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="[% idname %]" value="[% msg.key %]" />
-    <button class="action" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" data-tooltip aria-haspopup="true" title="[%|loc%]Distribute[%END%]"><i class="fa fa-share fa-lg"></i>[% IF mod_display_message %] [%|loc%]Distribute[%END%][% END %]</button>&nbsp;
-    </fieldset>
-  </form>
-[%- END -%]
 <button type="button" class="action" name="action_reject" value="[%|loc%]Reject[%END%]" data-reveal-id="reject[% line_count %]" data-tooltip aria-haspopup="true" title="[%|loc%]Reject[%END%]"><i class="fa fa-trash fa-lg"></i>[% IF mod_display_message %] [%|loc%]Reject[%END%][% END %]</button>
 <div id="reject[% line_count %]" class="reveal-modal medium" data-reveal aria-labelledby="[%|loc%]Rejecting message[%END%]" aria-hidden="true" role="dialog">
   <h3>[%|loc%]Rejecting message[%END%]</h3>
     <form class="noborder" action="[% path_cgi %]" method="post" name="reject_mail[% line_count %]" id="reject_mail[% line_count %]">
     <fieldset>
     <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="[% idname %]" value="[% msg.key %]" />
+    <input type="hidden" name="id" value="[% msg.key %]" />
     <input type="hidden" name="from_modindex" value="from_modindex" />
   <label>[%|loc%]Choose notification:[%END%]</label>
   <select  name="message_template">
