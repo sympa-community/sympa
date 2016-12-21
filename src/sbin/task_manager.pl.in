@@ -1920,7 +1920,7 @@ sub process_bouncers {
                     $list->send_notify_to_owner('automatic_bounce_management',
                         $param);
                 } elsif ($notification eq 'listmaster') {
-                    Sympa::send_notfy_to_listmaster($list,
+                    Sympa::send_notify_to_listmaster($list,
                         'automatic_bounce_management', $param);
                 }
             }
