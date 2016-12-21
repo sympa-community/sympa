@@ -455,7 +455,7 @@ sub unset_index {
         $param->{'index'}, $param->{'table'});
 
     my $sth;
-    unless ($sth = $self->do_query(q{DROP INDEX "%s"}, $param->{'index'})) {
+    unless ($sth = $self->do_query(q{DROP INDEX IF EXISTS "%s"}, $param->{'index'})) {
         $log->syslog('err',
             'Could not drop index %s from table %s in database %s',
             $param->{'index'}, $param->{'table'}, $self->{'db_name'});
@@ -806,7 +806,7 @@ sub _rename_or_drop_table {
     } elsif ($r) {
         return $r;
     } else {
-        unless ($self->do_query(q{DROP TABLE "%s"}, $table)) {
+        unless ($self->do_query(q{DROP TABLE IF EXISTS "%s"}, $table)) {
             $log->syslog('err', 'Could not drop table "%s"', $table);
             return undef;
         }
