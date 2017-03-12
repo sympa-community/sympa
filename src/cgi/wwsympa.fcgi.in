@@ -19388,8 +19388,24 @@ sub get_server_details {
     ## All Robots are shown to super listmaster
     if (Sympa::is_listmaster('*', $param->{'user'}{'email'})) {
         $param->{'main_robot'} = 1;
-        #FIXME: Entry for main robot is missing.
-        $param->{'robots'} = $Conf::Conf{'robots'};
+
+        # If there are two or more robots, 'robots' variable will be filled.
+        my @robots = Sympa::List::get_robots();
+        if (@robots and 1 < scalar @robots) {
+            $param->{'robots'} = {
+                map {
+                    my $r = $_;
+                    (   $r => {
+                            map { ($_ => Conf::get_robot_conf($r, $_)) }
+                                qw(host listmaster wwsympa_url)
+                        }
+                        )
+                    } @robots
+            };
+        } else {
+            # No virtual robots.
+            delete $param->{'robots'};
+        }
     }
 
     ## Families
