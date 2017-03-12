@@ -1,16 +1,12 @@
-# #-#-#-#-#  blank_web_help_pl.po (sympa)  #-#-#-#-#
 # Sympa online help internationalisation.
 # Copyright (C) 2007
 # This file is distributed under the same license as Sympa.
 # FIRST AUTHOR <david.verdin@cru.fr>, 2007.
 #
-# #-#-#-#-#  tmp_web_help_pl.po (1.48)  #-#-#-#-#
-# #-#-#-#-#  pl.po (PACKAGE VERSION)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL>, YEAR.
 #
-# #-#-#-#-#  pl.po (PACKAGE VERSION)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -31,6 +27,61 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.7\n"
 "X-POOTLE-MTIME: 1441103143.000000\n"
+
+#: default/web_tt2/help.tt2:11
+msgid "Subscriber, moderator and owner documentation"
+msgstr "Dokumentacja subskrybenta, moderatora i właściciela listy"
+
+#: default/web_tt2/help.tt2:13
+msgid "In this documentation, you will find:"
+msgstr "Dokumentacja zawiera:"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:15
+msgid ""
+"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
+msgstr ""
+"<a href=\"%1/help/introduction\">ogólne informacje</a> na temat list "
+"mailingowych;"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:16
+msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr ""
+"<a href=\"%1/help/user\">podręcznik użytkownika</a> na temat korzystania z "
+"Sympy;"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:17
+msgid ""
+"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
+msgstr ""
+"<a href=\"%1/help/admin\">podręcznik administratora</a> na temat korzystania "
+"z Sympy."
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
+msgid ""
+"If you want to perform a particular task, take a look at the list of all <a "
+"href=\"%1/help/introduction#features\">available features</a> in the mailing "
+"list management software Sympa."
+msgstr ""
+"Jeśli chcesz wykonać konkretną czynność, przejrzyj listę <a href=\"%1/help/"
+"introduction#features\">dostępnych funkcji</a> dostarczanych przez system "
+"zarządzania listami mailingowymi Sympa."
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
+msgid ""
+"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
+"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
+"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
+"\"Frequently asked questions\">FAQ</acronym></a>."
+msgstr ""
+"Jeśli potrzebujesz pomocy, zapoznaj się z <a href=\"%1/help/faquser"
+"\"><acronym title=\"Frequently asked questions\">FAQ</acronym> dla "
+"użytkowników</a> albo <a href=\"%1/help/faqadmin\"><acronym title="
+"\"Frequently asked questions\">FAQ</acronym> dla administratorów</a>."
 
 #: default/web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
@@ -2762,6 +2813,10 @@ msgid ""
 msgstr ""
 "Ten parametr wskazuje czy tagowanie jest opcjonalne czy wymagane dla listy."
 
+#: default/web_tt2/help_faq.tt2:4
+msgid "User and admin FAQ"
+msgstr ""
+
 #: default/web_tt2/help_faqadmin.tt2:3
 msgid "Administrators Frequently Asked Questions"
 msgstr "Często zadawane pytania administratorów"
@@ -2827,34 +2882,6 @@ msgstr ""
 "Jeśli nadal nie wiadomo gdzie leży problem, <strong>skontaktuj się a "
 "administratorem serwera</strong>, który sprawdzi logi serwera aby znaleźć "
 "przyczynę problemu."
-
-#: default/web_tt2/help_faq.tt2:4
-msgid "User and admin FAQ"
-msgstr ""
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
-msgid ""
-"If you want to perform a particular task, take a look at the list of all <a "
-"href=\"%1/help/introduction#features\">available features</a> in the mailing "
-"list management software Sympa."
-msgstr ""
-"Jeśli chcesz wykonać konkretną czynność, przejrzyj listę <a href=\"%1/help/"
-"introduction#features\">dostępnych funkcji</a> dostarczanych przez system "
-"zarządzania listami mailingowymi Sympa."
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
-msgid ""
-"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
-"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
-"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
-"\"Frequently asked questions\">FAQ</acronym></a>."
-msgstr ""
-"Jeśli potrzebujesz pomocy, zapoznaj się z <a href=\"%1/help/faquser"
-"\"><acronym title=\"Frequently asked questions\">FAQ</acronym> dla "
-"użytkowników</a> albo <a href=\"%1/help/faqadmin\"><acronym title="
-"\"Frequently asked questions\">FAQ</acronym> dla administratorów</a>."
 
 #: default/web_tt2/help_faquser.tt2:3
 msgid "Users Frequently Asked Questions"
@@ -4468,24 +4495,23 @@ msgstr ""
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
 "sending <strong>%1@%2</strong> the following command: <span class=\"commande"
-"\"><strong>GET nameofthelist year-month</strong></span> (example: <em "
-"class=\"example\">GET list_example 2016-07</em>). Then you receive a "
-"compilation of all messages sent during the chosen month. This compilation "
-"is sent in plain text and contains <acronym lang=\"en\" xml:lang=\"en\" "
-"title=\"HyperText Markup Language\">HTML</acronym> tags instead of the "
-"original formatting; it also involves full headers for each message. The "
+"\"><strong>GET nameofthelist year-month</strong></span> (example: <em class="
+"\"example\">GET list_example 2016-07</em>). Then you receive a compilation "
+"of all messages sent during the chosen month. This compilation is sent in "
+"plain text and contains <acronym lang=\"en\" xml:lang=\"en\" title="
+"\"HyperText Markup Language\">HTML</acronym> tags instead of the original "
+"formatting; it also involves full headers for each message. The "
 "'<strong>Text archives</strong>' parameter allows you to define:"
 msgstr ""
 "Możliwy jest także <strong>dostęp do archiwum listy za pośrednictwem email</"
 "strong>, przez wysłanie na adres <strong>%1@%2</strong> następującego "
 "polecenia: <span class=\"commande\"><strong>GET nazwalisty rokmiesiąc</"
-"strong></span> (na przykład: <em class=\"example\">GET list_example "
-"2016-07</em>). W odpowiedzi otrzymasz zbiór wiadomości wysłanych w "
-"wybranym miesiącu. Zbiór jest wysyłany plain tekstem i zawiera tagi <acronym "
-"lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</"
-"acronym> zamiast oryginalnego formatowania; zawiera także pełne nagłówki "
-"każdej wiadomości. Parametr '<strong>Archiwa tekstowe</strong>' pozwala "
-"zdefiniować:"
+"strong></span> (na przykład: <em class=\"example\">GET list_example 2016-07</"
+"em>). W odpowiedzi otrzymasz zbiór wiadomości wysłanych w wybranym miesiącu. "
+"Zbiór jest wysyłany plain tekstem i zawiera tagi <acronym lang=\"en\" xml:"
+"lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> zamiast "
+"oryginalnego formatowania; zawiera także pełne nagłówki każdej wiadomości. "
+"Parametr '<strong>Archiwa tekstowe</strong>' pozwala zdefiniować:"
 
 #: default/web_tt2/help_listconfig.tt2:142
 msgid ""
@@ -5954,177 +5980,6 @@ msgstr ""
 msgid "Click \"Resume\"."
 msgstr ""
 
-#: default/web_tt2/help.tt2:11
-msgid "Subscriber, moderator and owner documentation"
-msgstr "Dokumentacja subskrybenta, moderatora i właściciela listy"
-
-#: default/web_tt2/help.tt2:13
-msgid "In this documentation, you will find:"
-msgstr "Dokumentacja zawiera:"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:15
-msgid ""
-"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
-msgstr ""
-"<a href=\"%1/help/introduction\">ogólne informacje</a> na temat list "
-"mailingowych;"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:16
-msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
-msgstr ""
-"<a href=\"%1/help/user\">podręcznik użytkownika</a> na temat korzystania z "
-"Sympy;"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:17
-msgid ""
-"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
-msgstr ""
-"<a href=\"%1/help/admin\">podręcznik administratora</a> na temat korzystania "
-"z Sympy."
-
-#: default/web_tt2/help_user_options.tt2:3
-#, fuzzy
-msgid ""
-"This is a description of the reception modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-msgstr ""
-"To jest opis trybów odbioru dostępnych w Sympie. Te opcje są wzajemnie "
-"wykluczające się, tzn. nie możesz ustawić dwóch różnych trybów odbierania "
-"jednocześnie. Tylko niektóre z trybów mogą być dostępne dla określonych list "
-"mailingowych."
-
-#: default/web_tt2/help_user_options.tt2:7
-msgid "Digest"
-msgstr "Skrót (Uporządkowanie)"
-
-#: default/web_tt2/help_user_options.tt2:10
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-msgstr ""
-"Zamiast otrzymywania indywidualnych wiadomości pocztowych z listy, "
-"subskrybent otrzyma okresowo zgrupowane wiadomości w Skrócie. Ten Skrót "
-"zbiera grupę wiadomości z listy korzystając z wieloczęściowego/skróconego "
-"formatu MIME."
-
-#: default/web_tt2/help_user_options.tt2:12
-#: default/web_tt2/help_user_options.tt2:20
-msgid "The sending interval for these Digests is defined by the list owner."
-msgstr ""
-"Interwał wysyłania dla tych Skrótów jest zdefiniowany przez właściciela "
-"listy."
-
-#: default/web_tt2/help_user_options.tt2:14
-msgid "DigestPlain"
-msgstr "ProstySkrót (ProsteUporządkowanie)"
-
-#: default/web_tt2/help_user_options.tt2:18
-msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-msgstr ""
-"Podobne do opcji Skrótu (Digest) w tym, że subskrybent będzie okresowo \n"
-"otrzymywał zgrupowane wiadomości w Skrócie. Przy użyciu ProstegoSkrótu "
-"(DigestPlain) Skrót będzie wysyłany w formacie zwykłego tekstu, bez "
-"załączników. ProstySkrót jest użyteczny, jeśli twoje oprogramowanie do "
-"poczty nie wyświetla dobrze wiadomości w formacie wieloczęściowym/skróconym."
-
-#: default/web_tt2/help_user_options.tt2:22
-msgid "Summary"
-msgstr "Podsumowanie"
-
-#: default/web_tt2/help_user_options.tt2:26
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-msgstr ""
-"Zamiast otrzymywać osobiste wiadomości pocztowe z listy, subskrybent będzie "
-"okresowo otrzymywał listę wiadomości. Ten tryb jest bardzo podobny do trybu "
-"Skróconego odbioru, ale subskrybent otrzymuje tylko listę wiadomości."
-
-#: default/web_tt2/help_user_options.tt2:29
-msgid "Nomail"
-msgstr "Brak poczty"
-
-#: default/web_tt2/help_user_options.tt2:31
-msgid ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-msgstr ""
-"Ten tryb jest używany, gdy subskrybent nie chce już otrzymywać poczty z "
-"listy, ale chce zachować możliwość wysyłania wiadomości do listy. Ten tryb "
-"zapobiega sytuacjom, gdzie subskrybent wypisuje się z listy, a potem "
-"ponownie zapisuje."
-
-#: default/web_tt2/help_user_options.tt2:36
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-msgstr ""
-"Ten tryb jest używany, gdy subskrybent chce otrzymywać wiadomości wysyłane w "
-"obu formatach HTML i zwykłego tekstu\n"
-"tylko w formacie HTML."
-
-#: default/web_tt2/help_user_options.tt2:41
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-msgstr ""
-"Ten tryb jest używany, gdy subskrybent chce otrzymywać wiadomości wysyłane w "
-"obu formatach HTML i zwykłego tekstu\n"
-"tylko w formacie HTML "
-
-#: default/web_tt2/help_user_options.tt2:46
-msgid ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-msgstr ""
-"Ten tryb jest używany, gdy subskrybent nie chce otrzymywać załączonych "
-"plików. Załączone pliki są \n"
-"podmieniane na adres URL kierujący do pliku zachowanego na stronie listy."
-
-#: default/web_tt2/help_user_options.tt2:51
-msgid ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-msgstr ""
-"Ten tryb jest używany, gdy subskrybent nie chce otrzymywać kopii wiadomości, "
-"które on lub ona wysłała do \n"
-"listy."
-
-#: default/web_tt2/help_user_options.tt2:56
-msgid ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
-msgstr ""
-"Ta opcja jest głównie używana do anulowania trybów braku poczty, "
-"podsumowania lub paczek wiadomości (digest). Jeśli subskrybent był w trybie "
-"braku poczty, on lub ona będzie ponownie otrzymywała indywidualne wiadomości "
-"pocztowe z listy."
-
 #: default/web_tt2/help_user.tt2:3
 msgid "Mailing lists - User Guide"
 msgstr "Listy mailingowe - Podręcznik użytkownika"
@@ -7104,6 +6959,209 @@ msgstr ""
 #: default/web_tt2/help_user.tt2:179
 msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
 msgstr "<strong>W lewym menu, kliknij link 'Wypisz się z listy'</strong>."
+
+#: default/web_tt2/help_user_options.tt2:3
+#, fuzzy
+msgid ""
+"This is a description of the reception modes available in Sympa. These "
+"options are mutually exclusive, which means that you can't set two different "
+"receive modes at the same time. Only some of the modes might be available to "
+"specific mailing lists."
+msgstr ""
+"To jest opis trybów odbioru dostępnych w Sympie. Te opcje są wzajemnie "
+"wykluczające się, tzn. nie możesz ustawić dwóch różnych trybów odbierania "
+"jednocześnie. Tylko niektóre z trybów mogą być dostępne dla określonych list "
+"mailingowych."
+
+#: default/web_tt2/help_user_options.tt2:7
+msgid "Digest"
+msgstr "Skrót (Uporządkowanie)"
+
+#: default/web_tt2/help_user_options.tt2:10
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber "
+"will periodically \n"
+"receive batched messages in a Digest. This Digest compiles a group of "
+"messages from the list, using\n"
+"the multipart/digest MIME format."
+msgstr ""
+"Zamiast otrzymywania indywidualnych wiadomości pocztowych z listy, "
+"subskrybent otrzyma okresowo zgrupowane wiadomości w Skrócie. Ten Skrót "
+"zbiera grupę wiadomości z listy korzystając z wieloczęściowego/skróconego "
+"formatu MIME."
+
+#: default/web_tt2/help_user_options.tt2:12
+#: default/web_tt2/help_user_options.tt2:20
+msgid "The sending interval for these Digests is defined by the list owner."
+msgstr ""
+"Interwał wysyłania dla tych Skrótów jest zdefiniowany przez właściciela "
+"listy."
+
+#: default/web_tt2/help_user_options.tt2:14
+msgid "DigestPlain"
+msgstr "ProstySkrót (ProsteUporządkowanie)"
+
+#: default/web_tt2/help_user_options.tt2:18
+msgid ""
+"Similar to the Digest option in that the subscriber will periodically \n"
+"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
+"a plain text \n"
+"format, with all attachments stripped out. DigestPlain is useful if your "
+"email software doesn't\n"
+"display multipart/digest format messages well."
+msgstr ""
+"Podobne do opcji Skrótu (Digest) w tym, że subskrybent będzie okresowo \n"
+"otrzymywał zgrupowane wiadomości w Skrócie. Przy użyciu ProstegoSkrótu "
+"(DigestPlain) Skrót będzie wysyłany w formacie zwykłego tekstu, bez "
+"załączników. ProstySkrót jest użyteczny, jeśli twoje oprogramowanie do "
+"poczty nie wyświetla dobrze wiadomości w formacie wieloczęściowym/skróconym."
+
+#: default/web_tt2/help_user_options.tt2:22
+msgid "Summary"
+msgstr "Podsumowanie"
+
+#: default/web_tt2/help_user_options.tt2:26
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber "
+"will periodically \n"
+"receive a list of messages. This mode is very close to the Digest reception "
+"mode but the \n"
+"subscriber receives only the list of messages."
+msgstr ""
+"Zamiast otrzymywać osobiste wiadomości pocztowe z listy, subskrybent będzie "
+"okresowo otrzymywał listę wiadomości. Ten tryb jest bardzo podobny do trybu "
+"Skróconego odbioru, ale subskrybent otrzymuje tylko listę wiadomości."
+
+#: default/web_tt2/help_user_options.tt2:29
+msgid "Nomail"
+msgstr "Brak poczty"
+
+#: default/web_tt2/help_user_options.tt2:31
+msgid ""
+"This mode is used when a subscriber no longer wishes to receive mail from "
+"the list, but nevertheless wishes to retain the ability to post to the list. "
+"This mode therefore prevents the subscriber from unsubscribing and "
+"subscribing later on."
+msgstr ""
+"Ten tryb jest używany, gdy subskrybent nie chce już otrzymywać poczty z "
+"listy, ale chce zachować możliwość wysyłania wiadomości do listy. Ten tryb "
+"zapobiega sytuacjom, gdzie subskrybent wypisuje się z listy, a potem "
+"ponownie zapisuje."
+
+#: default/web_tt2/help_user_options.tt2:36
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both "
+"HTML and plain text formats\n"
+"only in plain text format."
+msgstr ""
+"Ten tryb jest używany, gdy subskrybent chce otrzymywać wiadomości wysyłane w "
+"obu formatach HTML i zwykłego tekstu\n"
+"tylko w formacie HTML."
+
+#: default/web_tt2/help_user_options.tt2:41
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both "
+"HTML and plain text formats\n"
+"only in HTML format."
+msgstr ""
+"Ten tryb jest używany, gdy subskrybent chce otrzymywać wiadomości wysyłane w "
+"obu formatach HTML i zwykłego tekstu\n"
+"tylko w formacie HTML "
+
+#: default/web_tt2/help_user_options.tt2:46
+msgid ""
+"This mode is used when a subscriber does not want to receive attached files. "
+"The attached files are \n"
+"replaced by a URL leading to the file stored on the list site."
+msgstr ""
+"Ten tryb jest używany, gdy subskrybent nie chce otrzymywać załączonych "
+"plików. Załączone pliki są \n"
+"podmieniane na adres URL kierujący do pliku zachowanego na stronie listy."
+
+#: default/web_tt2/help_user_options.tt2:51
+msgid ""
+"This mode is used when a subscriber does not want to receive copies of "
+"messages that he or she has sent to \n"
+"the list."
+msgstr ""
+"Ten tryb jest używany, gdy subskrybent nie chce otrzymywać kopii wiadomości, "
+"które on lub ona wysłała do \n"
+"listy."
+
+#: default/web_tt2/help_user_options.tt2:56
+msgid ""
+"This option is used mainly to cancel the nomail, summary or digest modes. If "
+"the subscriber was \n"
+"in nomail mode, he or she will again receive individual mail messages from "
+"the list."
+msgstr ""
+"Ta opcja jest głównie używana do anulowania trybów braku poczty, "
+"podsumowania lub paczek wiadomości (digest). Jeśli subskrybent był w trybie "
+"braku poczty, on lub ona będzie ponownie otrzymywała indywidualne wiadomości "
+"pocztowe z listy."
+
+#, fuzzy
+#~ msgid ""
+#~ "The use of mailing lists naturally means respecting the rules of good "
+#~ "practices as regards email (the \"Netiquette\")."
+#~ msgstr ""
+#~ "Korzystanie z list mailingowych wiąże się także z przestrzeganiem "
+#~ "ogólnych reguł korzystania z poczty elektronicznej (tzw. Netykieta)."
+
+#~ msgid ""
+#~ "This is a description of the receivie modes available in Sympa. These "
+#~ "options are mutually exclusive, which means that you can't set two "
+#~ "different receive modes at the same time. Only some of the modes might be "
+#~ "available to specific mailing lists."
+#~ msgstr ""
+#~ "To jest opis trybów odbioru dostępnych w Sympie. Te opcje są wzajemnie "
+#~ "wykluczające się, tzn. nie możesz ustawić dwóch różnych trybów odbierania "
+#~ "jednocześnie. Tylko niektóre z trybów mogą być dostępne dla określonych "
+#~ "list mailingowych."
+
+#, fuzzy
+#~ msgid ""
+#~ "Include subscribers from other list. All subscribers of list listname "
+#~ "become subscribers of the current list. You may include as many lists as "
+#~ "required, using one include_list listname line for each included list. "
+#~ "Any list at all may be included; you may therefore include lists which "
+#~ "are also defined by the inclusion of other lists. Be careful, however, "
+#~ "not to include list A in list B and then list B in list A, since this "
+#~ "will give rise to an infinite loop."
+#~ msgstr ""
+#~ "Ten parametr będzie interpretowany tylko jeśli user_data_source jest "
+#~ "ustawione do uwzględnienia. Wszyscy subskrybenci listy nazwa listy "
+#~ "zostaną subskrybentami aktualnej listy. Możesz uwzględnić tak dużo list, "
+#~ "ile potrzebne, korzystając z jednej linii nazwy listy include_list (???) "
+#~ "dla każdej uwzględnianej listy. Jakakolwiek lista może zostać "
+#~ "uwzględniona; definicja user_data_source uwzględnionych list jest "
+#~ "nieistotna i dlatego możesz uwzględniać listy, które są także definiowane "
+#~ "poprzez zawieranie innych list. Bądź jednak ostrożny by nie uwzględniać "
+#~ "listy A w liście B, a potem listy B w liście A, ponieważ powstanie "
+#~ "nieskończona pętla."
+
+#~ msgid ""
+#~ "It is also possible to <strong>access the list archive by email</strong>, "
+#~ "by sending <strong>%1@%2</strong> the following command: <span class="
+#~ "\"commande\"><strong>get nameofthelist log.yearmonth</strong></span> "
+#~ "(example: <em class=\"example\">get list_example log.200507</em>). Then "
+#~ "you receive a compilation of all messages sent during the chosen month. "
+#~ "This compilation is sent in plain text and contains <acronym lang=\"en\" "
+#~ "xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> tags "
+#~ "instead of the original formatting; it also involves full headers for "
+#~ "each message. The '<strong>Text archives</strong>' parameter allows you "
+#~ "to define:"
+#~ msgstr ""
+#~ "Możliwy jest także <strong>dostęp do archiwum listy za pośrednictwem "
+#~ "email</strong>, przez wysłanie na adres <strong>%1@%2</strong> "
+#~ "następującego polecenia: <span class=\"commande\"><strong>get nazwalisty "
+#~ "log.rokmiesiąc</strong></span> (na przykład: <em class=\"example\">get "
+#~ "list_example log.200507</em>). W odpowiedzi otrzymasz zbiór wiadomości "
+#~ "wysłanych w wybranym miesiącu. Zbiór jest wysyłany plain tekstem i "
+#~ "zawiera tagi <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText "
+#~ "Markup Language\">HTML</acronym> zamiast oryginalnego formatowania; "
+#~ "zawiera także pełne nagłówki każdej wiadomości. Parametr '<strong>Archiwa "
+#~ "tekstowe</strong>' pozwala zdefiniować:"
 
 #~ msgid "No Comment"
 #~ msgstr "Bez komentarza"

@@ -1,16 +1,13 @@
-# #-#-#-#-#  blank_web_help_ja.po (sympa)  #-#-#-#-#
 # Sympa online help internationalisation.
 # Copyright (C) 2007
 # This file is distributed under the same license as Sympa.
 # FIRST AUTHOR <david.verdin@cru.fr>, 2007.
 #
-# #-#-#-#-#  tmp_web_help_ja.po (Sympa-5.4b.1)  #-#-#-#-#
 # Japanese translation for Sympa
 # Copyright (c) (c) 2005 Canonical Ltd, and Rosetta Contributors 2005
 # This file is distributed under the same license as the sympa package.
 # moriwaka <moriwaka@valinux.co.jp>, 2005.
 # Hatuka*nezumi <hatuka@nezumi.nu>, 2006-2010.
-# , fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Sympa-5.4.6, 6.0, 6.1a.1\n"
@@ -26,6 +23,56 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.7\n"
 "X-POOTLE-MTIME: 1452873917.000000\n"
+
+#: default/web_tt2/help.tt2:11
+msgid "Subscriber, moderator and owner documentation"
+msgstr "読者、モデレータ、オーナー向けのドキュメント"
+
+#: default/web_tt2/help.tt2:13
+msgid "In this documentation, you will find:"
+msgstr "このドキュメントでは、次の事項について述べます:"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:15
+msgid ""
+"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
+msgstr "メーリング リストの<a href=\"%1/help/introduction\">一般的な紹介</a>;"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:16
+msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr "Sympa の使用についての<a href=\"%1/help/user\">ユーザ ガイド</a>。"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:17
+msgid ""
+"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
+msgstr "Sympa の使用についての<a href=\"%1/help/admin\">管理者ガイド</a>。"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
+msgid ""
+"If you want to perform a particular task, take a look at the list of all <a "
+"href=\"%1/help/introduction#features\">available features</a> in the mailing "
+"list management software Sympa."
+msgstr ""
+"特定のことがらを実現する方法を探しておられるのでしたら、メーリングリスト管理"
+"ソフトウェア Sympa で<a href=\"%1/help/introduction#features\">できること</a>"
+"の一覧をご覧ください。"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
+msgid ""
+"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
+"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
+"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
+"\"Frequently asked questions\">FAQ</acronym></a>."
+msgstr ""
+"なにか問題が起きているのでしたら、まず <a href=\"%1/help/faquser\">利用する方"
+"のための <acronym title=\"よくある質問。Frequently asked questions\">FAQ</"
+"acronym></a> か <a href=\"%1/help/faqadmin\">運営する方のための <acronym "
+"title=\"よくある質問。Frequently asked questions\">FAQ</acronym></a> をご覧に"
+"なってみてください。"
 
 #: default/web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
@@ -2738,7 +2785,6 @@ msgstr ""
 "LDAP (perlldap) Perl モジュールが必要です。"
 
 #: default/web_tt2/help_editlist.tt2:107
-#, fuzzy
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
 "subscribers of the current list. You may include as many lists as required, "
@@ -3050,6 +3096,10 @@ msgstr ""
 "このパラメータで、このリストではトピックの印が必須か、なくてもよいかを指定し"
 "ます。"
 
+#: default/web_tt2/help_faq.tt2:4
+msgid "User and admin FAQ"
+msgstr "利用者と管理者のFAQ"
+
 #: default/web_tt2/help_faqadmin.tt2:3
 msgid "Administrators Frequently Asked Questions"
 msgstr "リストのオーナーがかかえる問題"
@@ -3117,35 +3167,6 @@ msgstr ""
 "どうしてもだめなら、<strong>リストシステム管理者に問い合わせる</strong>。リス"
 "トシステム管理者は、電子メールサーバのシステムログを調べて問題の原因をつきと"
 "めます。"
-
-#: default/web_tt2/help_faq.tt2:4
-msgid "User and admin FAQ"
-msgstr "利用者と管理者のFAQ"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
-msgid ""
-"If you want to perform a particular task, take a look at the list of all <a "
-"href=\"%1/help/introduction#features\">available features</a> in the mailing "
-"list management software Sympa."
-msgstr ""
-"特定のことがらを実現する方法を探しておられるのでしたら、メーリングリスト管理"
-"ソフトウェア Sympa で<a href=\"%1/help/introduction#features\">できること</a>"
-"の一覧をご覧ください。"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
-msgid ""
-"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
-"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
-"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
-"\"Frequently asked questions\">FAQ</acronym></a>."
-msgstr ""
-"なにか問題が起きているのでしたら、まず <a href=\"%1/help/faquser\">利用する方"
-"のための <acronym title=\"よくある質問。Frequently asked questions\">FAQ</"
-"acronym></a> か <a href=\"%1/help/faqadmin\">運営する方のための <acronym "
-"title=\"よくある質問。Frequently asked questions\">FAQ</acronym></a> をご覧に"
-"なってみてください。"
 
 #: default/web_tt2/help_faquser.tt2:3
 msgid "Users Frequently Asked Questions"
@@ -4954,22 +4975,22 @@ msgstr ""
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
 "sending <strong>%1@%2</strong> the following command: <span class=\"commande"
-"\"><strong>GET nameofthelist year-month</strong></span> (example: <em "
-"class=\"example\">GET list_example 2016-07</em>). Then you receive a "
-"compilation of all messages sent during the chosen month. This compilation "
-"is sent in plain text and contains <acronym lang=\"en\" xml:lang=\"en\" "
-"title=\"HyperText Markup Language\">HTML</acronym> tags instead of the "
-"original formatting; it also involves full headers for each message. The "
+"\"><strong>GET nameofthelist year-month</strong></span> (example: <em class="
+"\"example\">GET list_example 2016-07</em>). Then you receive a compilation "
+"of all messages sent during the chosen month. This compilation is sent in "
+"plain text and contains <acronym lang=\"en\" xml:lang=\"en\" title="
+"\"HyperText Markup Language\">HTML</acronym> tags instead of the original "
+"formatting; it also involves full headers for each message. The "
 "'<strong>Text archives</strong>' parameter allows you to define:"
 msgstr ""
 "<strong>電子メールで投稿保管庫の中を見る</strong>こともできます。<strong>%1@%"
 "2</strong> に次のコマンドを送ります: <span class=\"commande\"><strong>GET リ"
 "スト名 年-月</strong></span> (例: <em class=\"example\">GET list_example "
-"2016-07</em>)。すると、指定した月のメッセージをまとめて受け取れます。この"
-"まとめ読みはプレインテキストで届き、<acronym lang=\"en\" xml:lang=\"en\" "
-"title=\"HyperText Markup Language\">HTML</acronym> のタグもそのまま見えます"
-"し、メッセージのヘッダがすべて入っています。「<strong>テキスト投稿保管庫</"
-"strong>」パラメータで次のことを決めることができます。"
+"2016-07</em>)。すると、指定した月のメッセージをまとめて受け取れます。このまと"
+"め読みはプレインテキストで届き、<acronym lang=\"en\" xml:lang=\"en\" title="
+"\"HyperText Markup Language\">HTML</acronym> のタグもそのまま見えますし、メッ"
+"セージのヘッダがすべて入っています。「<strong>テキスト投稿保管庫</strong>」パ"
+"ラメータで次のことを決めることができます。"
 
 # # "<strong>qui a le droit</strong> de se faire envoyer par e-mail les "
 # # "archives récapitulatives des messages de la liste ;"
@@ -7007,164 +7028,6 @@ msgstr ""
 msgid "Click \"Resume\"."
 msgstr "「再開」をクリックします。"
 
-#: default/web_tt2/help.tt2:11
-msgid "Subscriber, moderator and owner documentation"
-msgstr "読者、モデレータ、オーナー向けのドキュメント"
-
-#: default/web_tt2/help.tt2:13
-msgid "In this documentation, you will find:"
-msgstr "このドキュメントでは、次の事項について述べます:"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:15
-msgid ""
-"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
-msgstr "メーリング リストの<a href=\"%1/help/introduction\">一般的な紹介</a>;"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:16
-msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
-msgstr "Sympa の使用についての<a href=\"%1/help/user\">ユーザ ガイド</a>。"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:17
-msgid ""
-"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
-msgstr "Sympa の使用についての<a href=\"%1/help/admin\">管理者ガイド</a>。"
-
-#: default/web_tt2/help_user_options.tt2:3
-msgid ""
-"This is a description of the reception modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-msgstr ""
-"ここでは、お使いになれる受け取りモードについて説明します。これらの選択肢は互"
-"いに排他的です。つまり、同時に異なった2つのモードを設定することはできません。"
-"メーリングリストによっては、一部の選択肢しか選べないこともあります。"
-
-#: default/web_tt2/help_user_options.tt2:7
-msgid "Digest"
-msgstr "まとめ読み"
-
-#: default/web_tt2/help_user_options.tt2:10
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-msgstr ""
-"読者は、リストからメールメッセージを一通ずつ受け取る代わりに、定期的にまとめ"
-"て受け取ります。まとめ読みは、リストから送るメッセージを multipart/digest "
-"MIME形式でまとめたものです。"
-
-#: default/web_tt2/help_user_options.tt2:12
-#: default/web_tt2/help_user_options.tt2:20
-msgid "The sending interval for these Digests is defined by the list owner."
-msgstr "こういったまとめ読みを送信する間隔は、リストのオーナーが決めます。"
-
-#: default/web_tt2/help_user_options.tt2:14
-msgid "DigestPlain"
-msgstr "まとめ読み (プレイン)"
-
-#: default/web_tt2/help_user_options.tt2:18
-msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-msgstr ""
-"読者が定期的にまとまったメッセージを受け取る点は、\n"
-"普通のまとめ読みと同じです。まとめ読み (プレイン) では、まとめ読みを\n"
-"プレインテキスト形式で、添付ファイルを取り除いた状態で送ります。\n"
-"まとめ読み (プレイン) は、電子メールソフトウェアが multipart/digest 形式\n"
-"のメッセージをうまく表示できない場合に役立ちます。"
-
-#: default/web_tt2/help_user_options.tt2:22
-msgid "Summary"
-msgstr "メッセージの一覧"
-
-#: default/web_tt2/help_user_options.tt2:26
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-msgstr ""
-"リストからの個別のメールを受け取る代わりに、読者は定期的に\n"
-"メッセージの一覧を受け取ります。このモードはまとめ読みに近いものですが、\n"
-"読者はメッセージの一覧だけを受け取ります。"
-
-#: default/web_tt2/help_user_options.tt2:29
-msgid "Nomail"
-msgstr "なにも受け取らない"
-
-#: default/web_tt2/help_user_options.tt2:31
-msgid ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-msgstr ""
-"このモードは、読者がリストからのメール受け取りを希望しないがリストへの投稿は"
-"したいという場合に使います。さらに、たとえば休暇などで一時的にメールを読めな"
-"くなる読者が登録解除してまた読者登録するといったことを、しなくてすむようにし"
-"ます。"
-
-#: default/web_tt2/help_user_options.tt2:36
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-msgstr ""
-"このモードは、読者がHTMLとプレインテキストの両方で送信されたメールを\n"
-"プレインテキスト形式のみで受け取りたいときに使います。"
-
-#: default/web_tt2/help_user_options.tt2:41
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-msgstr ""
-"このモードは、読者がHTMLとプレインテキストの両方で送信されたメールを HTML\n"
-"形式のみで受け取りたいときに使います。"
-
-#: default/web_tt2/help_user_options.tt2:46
-msgid ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-msgstr ""
-"このモードは、読者が添付ファイルを受け取りたくないときに使います。\n"
-"添付ファイルはリストのウェブサイト上のファイル保存場所を示す URL に置き換えら"
-"れます。"
-
-#: default/web_tt2/help_user_options.tt2:51
-msgid ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-msgstr ""
-"このモードは、読者が自分の投稿したメッセージと同じものを受け取りたくない場合"
-"に\n"
-"使います。"
-
-#: default/web_tt2/help_user_options.tt2:56
-msgid ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
-msgstr ""
-"これは主に、nomail (なにも受け取らない)、summary (メッセージの一覧)、digest "
-"(まとめ読み) のいずれかのモードを取りやめるのに使います。\n"
-"読者が nomail (なにも受け取らない) モードにしていた場合、リストからのメッセー"
-"ジをまた一通ずつ受け取れるようになります。"
-
 #: default/web_tt2/help_user.tt2:3
 msgid "Mailing lists - User Guide"
 msgstr "メーリングリスト - 利用する方むけの説明"
@@ -8286,6 +8149,198 @@ msgstr "登録解除したい<strong>リストの案内ページへ行きます<
 msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
 msgstr ""
 "<strong>左側のメニューで、「登録解除」のリンクをクリックします</strong>。"
+
+#: default/web_tt2/help_user_options.tt2:3
+msgid ""
+"This is a description of the reception modes available in Sympa. These "
+"options are mutually exclusive, which means that you can't set two different "
+"receive modes at the same time. Only some of the modes might be available to "
+"specific mailing lists."
+msgstr ""
+"ここでは、お使いになれる受け取りモードについて説明します。これらの選択肢は互"
+"いに排他的です。つまり、同時に異なった2つのモードを設定することはできません。"
+"メーリングリストによっては、一部の選択肢しか選べないこともあります。"
+
+#: default/web_tt2/help_user_options.tt2:7
+msgid "Digest"
+msgstr "まとめ読み"
+
+#: default/web_tt2/help_user_options.tt2:10
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber "
+"will periodically \n"
+"receive batched messages in a Digest. This Digest compiles a group of "
+"messages from the list, using\n"
+"the multipart/digest MIME format."
+msgstr ""
+"読者は、リストからメールメッセージを一通ずつ受け取る代わりに、定期的にまとめ"
+"て受け取ります。まとめ読みは、リストから送るメッセージを multipart/digest "
+"MIME形式でまとめたものです。"
+
+#: default/web_tt2/help_user_options.tt2:12
+#: default/web_tt2/help_user_options.tt2:20
+msgid "The sending interval for these Digests is defined by the list owner."
+msgstr "こういったまとめ読みを送信する間隔は、リストのオーナーが決めます。"
+
+#: default/web_tt2/help_user_options.tt2:14
+msgid "DigestPlain"
+msgstr "まとめ読み (プレイン)"
+
+#: default/web_tt2/help_user_options.tt2:18
+msgid ""
+"Similar to the Digest option in that the subscriber will periodically \n"
+"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
+"a plain text \n"
+"format, with all attachments stripped out. DigestPlain is useful if your "
+"email software doesn't\n"
+"display multipart/digest format messages well."
+msgstr ""
+"読者が定期的にまとまったメッセージを受け取る点は、\n"
+"普通のまとめ読みと同じです。まとめ読み (プレイン) では、まとめ読みを\n"
+"プレインテキスト形式で、添付ファイルを取り除いた状態で送ります。\n"
+"まとめ読み (プレイン) は、電子メールソフトウェアが multipart/digest 形式\n"
+"のメッセージをうまく表示できない場合に役立ちます。"
+
+#: default/web_tt2/help_user_options.tt2:22
+msgid "Summary"
+msgstr "メッセージの一覧"
+
+#: default/web_tt2/help_user_options.tt2:26
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber "
+"will periodically \n"
+"receive a list of messages. This mode is very close to the Digest reception "
+"mode but the \n"
+"subscriber receives only the list of messages."
+msgstr ""
+"リストからの個別のメールを受け取る代わりに、読者は定期的に\n"
+"メッセージの一覧を受け取ります。このモードはまとめ読みに近いものですが、\n"
+"読者はメッセージの一覧だけを受け取ります。"
+
+#: default/web_tt2/help_user_options.tt2:29
+msgid "Nomail"
+msgstr "なにも受け取らない"
+
+#: default/web_tt2/help_user_options.tt2:31
+msgid ""
+"This mode is used when a subscriber no longer wishes to receive mail from "
+"the list, but nevertheless wishes to retain the ability to post to the list. "
+"This mode therefore prevents the subscriber from unsubscribing and "
+"subscribing later on."
+msgstr ""
+"このモードは、読者がリストからのメール受け取りを希望しないがリストへの投稿は"
+"したいという場合に使います。さらに、たとえば休暇などで一時的にメールを読めな"
+"くなる読者が登録解除してまた読者登録するといったことを、しなくてすむようにし"
+"ます。"
+
+#: default/web_tt2/help_user_options.tt2:36
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both "
+"HTML and plain text formats\n"
+"only in plain text format."
+msgstr ""
+"このモードは、読者がHTMLとプレインテキストの両方で送信されたメールを\n"
+"プレインテキスト形式のみで受け取りたいときに使います。"
+
+#: default/web_tt2/help_user_options.tt2:41
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both "
+"HTML and plain text formats\n"
+"only in HTML format."
+msgstr ""
+"このモードは、読者がHTMLとプレインテキストの両方で送信されたメールを HTML\n"
+"形式のみで受け取りたいときに使います。"
+
+#: default/web_tt2/help_user_options.tt2:46
+msgid ""
+"This mode is used when a subscriber does not want to receive attached files. "
+"The attached files are \n"
+"replaced by a URL leading to the file stored on the list site."
+msgstr ""
+"このモードは、読者が添付ファイルを受け取りたくないときに使います。\n"
+"添付ファイルはリストのウェブサイト上のファイル保存場所を示す URL に置き換えら"
+"れます。"
+
+#: default/web_tt2/help_user_options.tt2:51
+msgid ""
+"This mode is used when a subscriber does not want to receive copies of "
+"messages that he or she has sent to \n"
+"the list."
+msgstr ""
+"このモードは、読者が自分の投稿したメッセージと同じものを受け取りたくない場合"
+"に\n"
+"使います。"
+
+#: default/web_tt2/help_user_options.tt2:56
+msgid ""
+"This option is used mainly to cancel the nomail, summary or digest modes. If "
+"the subscriber was \n"
+"in nomail mode, he or she will again receive individual mail messages from "
+"the list."
+msgstr ""
+"これは主に、nomail (なにも受け取らない)、summary (メッセージの一覧)、digest "
+"(まとめ読み) のいずれかのモードを取りやめるのに使います。\n"
+"読者が nomail (なにも受け取らない) モードにしていた場合、リストからのメッセー"
+"ジをまた一通ずつ受け取れるようになります。"
+
+#~ msgid ""
+#~ "Include subscribers from other list. All subscribers of list listname "
+#~ "become subscribers of the current list. You may include as many lists as "
+#~ "required, using one include_list listname line for each included list. "
+#~ "Any list at all may be included; you may therefore include lists which "
+#~ "are also defined by the inclusion of other lists. Be careful, however, "
+#~ "not to include list A in list B and then list B in list A, since this "
+#~ "will give rise to an infinite loop."
+#~ msgstr ""
+#~ "他のリストから読者を取り込みます。設定したリストの読者はすべて、このリスト"
+#~ "の読者になります。取り込みたいリストについて一行ずつ include_list 行を書く"
+#~ "ことで、いくつでも必要なだけリストを取り込むことができます。ほかのリストを"
+#~ "取り込んでいるリストであっても、取り込むことができます。なお、A メーリング"
+#~ "リストを B メーリングリストに取り込み、さらに A メーリングリストに B メー"
+#~ "リングリストを取り込むと、無限ループを引き起こします。ご注意ください。"
+
+# # "Il est également possible d'<strong>accéder aux archives de la liste par "
+# # "e-mail</strong>, en envoyant à <strong>%1@%1</strong> la commande "
+# # "suivante : <span class=\"commande\"><strong>get nomdelaliste "
+# # "log.anneemois</strong></span> (exemple : <em class=\"example\">get "
+# # "cri-exemple log.200507</em>). L'abonné reçoit alors une compilation de "
+# # "tous les messages envoyés au cours du mois choisi. Cette compilation est "
+# # "envoyée en texte brut et contient des balises <acronym lang=\"en\" "
+# # "xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> à la "
+# # "place du formatage d'origine ; elle comprend également des en-têtes "
+# # "détaillés pour chaque message. Le paramètre '<strong>Archives "
+# # "textuelles</strong>' vous permet de définir :"
+#~ msgid ""
+#~ "It is also possible to <strong>access the list archive by email</strong>, "
+#~ "by sending <strong>%1@%2</strong> the following command: <span class="
+#~ "\"commande\"><strong>get nameofthelist log.yearmonth</strong></span> "
+#~ "(example: <em class=\"example\">get list_example log.200507</em>). Then "
+#~ "you receive a compilation of all messages sent during the chosen month. "
+#~ "This compilation is sent in plain text and contains <acronym lang=\"en\" "
+#~ "xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> tags "
+#~ "instead of the original formatting; it also involves full headers for "
+#~ "each message. The '<strong>Text archives</strong>' parameter allows you "
+#~ "to define:"
+#~ msgstr ""
+#~ "<strong>電子メールで投稿保管庫の中を見る</strong>こともできます。<strong>%"
+#~ "1@%2</strong> に次のコマンドを送ります: <span class=\"commande"
+#~ "\"><strong>get リスト名 log.年月</strong></span> (例: <em class=\"example"
+#~ "\">get list_example log.200507</em>)。すると、指定した月のメッセージをまと"
+#~ "めて受け取れます。このまとめ読みはプレインテキストで届き、<acronym lang="
+#~ "\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> "
+#~ "のタグもそのまま見えますし、メッセージのヘッダがすべて入っています。"
+#~ "「<strong>テキスト投稿保管庫</strong>」パラメータで次のことを決めることが"
+#~ "できます。"
+
+#~ msgid ""
+#~ "This is a description of the receivie modes available in Sympa. These "
+#~ "options are mutually exclusive, which means that you can't set two "
+#~ "different receive modes at the same time. Only some of the modes might be "
+#~ "available to specific mailing lists."
+#~ msgstr ""
+#~ "ここでは、お使いになれる受け取りモードについて説明します。これらの選択肢は"
+#~ "互いに排他的です。つまり、同時に異なった2つのモードを設定することはできま"
+#~ "せん。メーリングリストによっては、一部の選択肢しか選べないこともあります。"
 
 # 仮訳
 # See the comment for "Good Practices".
