@@ -28,20 +28,33 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 use File::Find qw();
-use MIME::EncWords;
 use POSIX qw();
 
 use Sympa;
 use Conf;
 use Sympa::Language;
-use Sympa::Log;
 use Sympa::Scenario;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
-use Sympa::Tools::WWW;
 
-my $log = Sympa::Log->instance;
+# Hash of the icons linked with a type of file.
+my %icons = (
+    'unknown'        => 'unknown.png',
+    'folder'         => 'folder.png',
+    'current_folder' => 'folder.open.png',
+    'application'    => 'unknown.png',
+    'octet-stream'   => 'binary.png',
+    'audio'          => 'sound1.png',
+    'image'          => 'image2.png',
+    'text'           => 'text.png',
+    'video'          => 'movie.png',
+    'father'         => 'back.png',
+    'sort'           => 'down.png',
+    'url'            => 'link.png',
+    'left'           => 'left.png',
+    'right'          => 'right.png',
+);
 
 # Creates a new object.
 sub new {
@@ -179,7 +192,7 @@ sub _new_child {
     # File, directory or URL ?
     my $robot_id = $self->{context}->{'domain'};
     if ($child->{type} eq 'url') {
-        $child->{icon} = Sympa::Tools::WWW::get_icon($robot_id, 'url');
+        $child->{icon} = _get_icon($robot_id, 'url');
 
         if (open my $fh, $child->{fs_path}) {
             my $url = <$fh>;
@@ -198,7 +211,7 @@ sub _new_child {
             $child->{mime_type} = 'text/html';
 
             $child->{html} = 1;
-            $child->{icon} = Sympa::Tools::WWW::get_icon($robot_id, 'text');
+            $child->{icon} = _get_icon($robot_id, 'text');
         } elsif (my $type =
             Conf::get_mime_type($child->{file_extension} || '')) {
             $child->{mime_type} = lc $type;
@@ -210,16 +223,15 @@ sub _new_child {
             } else {
                 ($mimet) = split m{/}, $type;
             }
-            $child->{icon} = Sympa::Tools::WWW::get_icon($robot_id, $mimet)
-                || Sympa::Tools::WWW::get_icon($robot_id, 'unknown');
+            $child->{icon} = _get_icon($robot_id, $mimet)
+                || _get_icon($robot_id, 'unknown');
         } else {
             # Unknown file type.
-            $child->{icon} =
-                Sympa::Tools::WWW::get_icon($robot_id, 'unknown');
+            $child->{icon} = _get_icon($robot_id, 'unknown');
         }
     } else {
         # Directory.
-        $child->{icon} = Sympa::Tools::WWW::get_icon($robot_id, 'folder');
+        $child->{icon} = _get_icon($robot_id, 'folder');
     }
 
     $child;
@@ -297,6 +309,18 @@ sub _load_desc_file {
     close $fh;
 
     return %hash;
+}
+
+# Old name: Sympa::Tools::WWW::get_icon().
+sub _get_icon {
+    my $robot = shift || '*';
+    my $type = shift;
+
+    return undef unless defined $icons{$type};
+    return
+          Conf::get_robot_conf($robot, 'static_content_url')
+        . '/icons/'
+        . $icons{$type};
 }
 
 sub as_hashref {
