@@ -503,9 +503,13 @@ $POWERED_BY$
     <input type="hidden" name="month" value="$mois$" />
     <input type="hidden" name="msgid" value="$MSGID$" />
     <input type="hidden" name="action" value="" />
-   ($tag$% IF user.email == '$FROMADDRNAME:J$@$FROMADDRDOMAIN$'  || is_owner %$tag$)
-    <input class="MainMenuLinks" type="submit" name="action_remove_arc" value="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" />
-    ($tag$% END %$tag$)
+    ($tag$% from_addr = BLOCK ~%$tag$)
+      ($tag$% '$FROMADDRNAME:J$@$FROMADDRDOMAIN$' | canonic_email %$tag$)
+    ($tag$%~ END ~%$tag$)
+    ($tag$% IF user.email == from_addr || is_owner ~%$tag$)
+      <input class="MainMenuLinks" type="submit" name="action_remove_arc"
+       value="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" />
+    ($tag$%~ END %$tag$)
     ($tag$% IF is_owner %$tag$)
     <br /><input class="MainMenuLinks" type="submit" name="action_view_source" value="($tag$%|loc%$tag$)view source($tag$%END%$tag$)" />
     ($tag$% END %$tag$)

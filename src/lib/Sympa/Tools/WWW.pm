@@ -37,32 +37,11 @@ use Sympa::Language;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Regexps;
-use Sympa::Report;
 use Sympa::Template;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
-use Sympa::User;
 
 my $log = Sympa::Log->instance;
-
-# hash of the icons linked with a type of file
-# application file
-my %icons = (
-    'unknown'        => 'unknown.png',
-    'folder'         => 'folder.png',
-    'current_folder' => 'folder.open.png',
-    'application'    => 'unknown.png',
-    'octet-stream'   => 'binary.png',
-    'audio'          => 'sound1.png',
-    'image'          => 'image2.png',
-    'text'           => 'text.png',
-    'video'          => 'movie.png',
-    'father'         => 'back.png',
-    'sort'           => 'down.png',
-    'url'            => 'link.png',
-    'left'           => 'left.png',
-    'right'          => 'right.png',
-);
 
 ## Cookie expiration periods with corresponding entry in NLS
 our %cookie_period = (
@@ -197,68 +176,16 @@ our %bounce_status = (
 # Deprecated.  Use Sympa::Session->new etc.
 #sub get_email_from_cookie;
 
-sub new_passwd {
-
-    my $passwd;
-    my $nbchar = int(rand 5) + 6;
-    foreach my $i (0 .. $nbchar) {
-        $passwd .= chr(int(rand 26) + ord('a'));
-    }
-
-    return 'init' . $passwd;
-}
+# NO LONGER USED.
+#sub new_passwd;
 
 ## Basic check of an email address
 # DUPLICATE: Use Sympa::Tools::Text::valid_email().
 #sub valid_email($email);
 
 # 6.2b: added $robot parameter.
-sub init_passwd {
-    my ($robot, $email, $data) = @_;
-
-    my ($passwd, $user);
-
-    if (Sympa::User::is_global_user($email)) {
-        $user = Sympa::User::get_global_user($email);
-
-        $passwd = $user->{'password'};
-
-        unless ($passwd) {
-            $passwd = new_passwd();
-
-            unless (
-                Sympa::User::update_global_user(
-                    $email, {'password' => $passwd}
-                )
-                ) {
-                Sympa::Report::reject_report_web('intern',
-                    'update_user_db_failed', {'user' => $email},
-                    '', '', $email, $robot);
-                $log->syslog('info', 'Update failed');
-                return undef;
-            }
-        }
-    } else {
-        $passwd = new_passwd();
-        unless (
-            Sympa::User::add_global_user(
-                {   'email'    => $email,
-                    'password' => $passwd,
-                    'lang'     => $data->{'lang'},
-                    'gecos'    => $data->{'gecos'}
-                }
-            )
-            ) {
-            Sympa::Report::reject_report_web('intern', 'add_user_db_failed',
-                {'user' => $email},
-                '', '', $email, $robot);
-            $log->syslog('info', 'Add failed');
-            return undef;
-        }
-    }
-
-    return 1;
-}
+# DEPRECATED.  No longer used.
+#sub init_passwd;
 
 # NOTE: As of 6.2.15, by default, less trustworthy "X-Forwarded-Host:" request
 # field is not referred and this function returns host name and path
@@ -359,16 +286,8 @@ sub get_http_host {
 # DEPRECATED: No longer used (a subroutine of get_directory_content()).
 #sub select_my_files;
 
-sub get_icon {
-    my $robot = shift || '*';
-    my $type = shift;
-
-    return undef unless defined $icons{$type};
-    return
-          Conf::get_robot_conf($robot, 'static_content_url')
-        . '/icons/'
-        . $icons{$type};
-}
+# Moved to Sympa::SharedDocument::_get_icon().
+#sub get_icon;
 
 # Moved to: Conf::get_mime_type().
 #sub get_mime_type;

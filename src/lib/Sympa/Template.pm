@@ -328,6 +328,7 @@ sub parse {
             encode_utf8  => [\&encode_utf8,   0],
             url_abs => [sub { shift; $self->_url_func(1, $data, @_) }, 1],
             url_rel => [sub { shift; $self->_url_func(0, $data, @_) }, 1],
+            canonic_email => \&Sympa::Tools::Text::canonic_email,
         }
     };
 
@@ -483,6 +484,12 @@ These custom filters are defined by L<Sympa::Template>.
 See L<Template::Manual::Filters> about usage of filters.
 
 =over
+
+=item canonic_email
+
+Canonicalize e-mail address.
+
+This filter was added by Sympa 6.2.17.
 
 =item decode_utf8
 

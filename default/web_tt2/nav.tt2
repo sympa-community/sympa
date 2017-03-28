@@ -50,12 +50,14 @@
     <li class="[% class %]"><a href="[% 'serveradmin/templates' | url_rel %]">[%|loc%]Templates[%END%]</a></li>
 [% IF action == 'skinsedit' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% 'skinsedit' | url_rel %]">[%|loc%]Skins, CSS and colors[%END%]</a></li>
-[% IF main_robot %]
-[% IF subaction == 'vhosts' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+[% IF main_robot && robots ~%]
+    [% IF subaction == 'vhosts' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% 'serveradmin/vhosts' | url_rel %]">[%|loc%]Virtual Robots[%END%]</a></li>
-[% IF action == 'edit_config' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+[%~ END %]
+[% IF main_robot ~%]
+  [% IF action == 'edit_config' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% 'edit_config' | url_rel %]">[%|loc%]Edit Robot Config[%END%]</a></li>
-[% END %]
+[%~ END %]
 [% IF families -%]
 [% IF subaction == 'families' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% 'serveradmin/families' | url_rel %]">[%|loc%]Families[%END%]</a></li>
