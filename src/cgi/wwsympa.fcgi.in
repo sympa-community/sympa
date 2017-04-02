@@ -11797,8 +11797,11 @@ sub do_edit_list {
                     }
                     ## Else if the parameter has only a scalar value
                 } else {
-                    ## Remove if empty
-                    if ($new_admin->{$pname}[$i] =~ /^\s*$/) {
+                    ## Remove if empty, but not if it's a param we should be
+                    ## able to remove
+                    if (   $new_admin->{$pname}[$i] =~ /^\s*$/
+                        && $pname !~
+                           /^(anonymous_sender|delivery_time|other_email)$/) {
                         splice(@{$new_admin->{$pname}}, $i, 1);
                         next;
                     }
