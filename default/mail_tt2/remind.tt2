@@ -2,12 +2,9 @@
 From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Reminder of your subscription to %1[%END%][%END%]
 
-%|loc(list.name,list.host,user.email,user.password)%]You are receiving this mail because you are subscribed to the mailing list
-%1@%2 with email address %3.
+[%|loc(list.name,list.host,user.email,user.password)%]You are receiving this mail because you are subscribed to the mailing list %1@%2 with email address %3.
 
-It is important to us to not send mail to people that don't want to receive
-it. If you do not want to be on this mailing list, please follow the
-instructions below to remove yourself.
+It is important to us to not send mail to people that don't want to receive it. If you do not want to be on this mailing list, please follow the instructions below to remove yourself.
 
 [%|loc%]List information: [%END%][% conf.wwsympa_url %]/info/[% list.name %]
 [% IF subscriber.included != 1 %]
