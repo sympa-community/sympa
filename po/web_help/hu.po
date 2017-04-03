@@ -1,10 +1,8 @@
-# #-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#
 # Sympa online help internationalisation.
 # Copyright (C) 2007
 # This file is distributed under the same license as Sympa.
 # FIRST AUTHOR <david.verdin@cru.fr>, 2007.
 #
-# #-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
@@ -23,6 +21,63 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1\n"
 "X-POOTLE-MTIME: 1398412082.000000\n"
+
+#: default/web_tt2/help.tt2:11
+msgid "Subscriber, moderator and owner documentation"
+msgstr ""
+"Dokumentáció a levelezőlisták tagjai, moderátorai és tulajdonosai részére"
+
+#: default/web_tt2/help.tt2:13
+msgid "In this documentation, you will find:"
+msgstr "A következő leírások állnak rendelkezésre:"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:15
+msgid ""
+"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
+msgstr ""
+"egy <a href=\"%1/help/introduction\">általános bevezető</a> a levelezőlisták "
+"használatáról"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:16
+msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr ""
+"egy <a href=\"%1/help/user\">felhasználók számára készült leírás</a> a Sympa "
+"levelezőlista-rendszer használatáról"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:17
+msgid ""
+"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
+msgstr ""
+"egy <a href=\"%1/help/admin\">listatulajdonosok számára készült leírás</a> a "
+"Sympa levelezőlista-rendszer használatáról"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
+msgid ""
+"If you want to perform a particular task, take a look at the list of all <a "
+"href=\"%1/help/introduction#features\">available features</a> in the mailing "
+"list management software Sympa."
+msgstr ""
+"Ha egy konkrét feladathoz van szüksége segítségre, akkor nézze meg a "
+"rendelkezésre álló <a href=\"%1/help/introduction#features\">szolgáltatások "
+"listáját.</a> "
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
+msgid ""
+"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
+"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
+"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
+"\"Frequently asked questions\">FAQ</acronym></a>."
+msgstr ""
+"Ha valami problémája van a rendszer használatával, érdemes megnéznie a <a "
+"href=\"%1/help/faquser\">felhasználói <acronym title=\"Gyakran Ismételt "
+"Kérdések\">GYIK</acronym></a>-ot vagy a  <a href=\"%1/help/faqadmin"
+"\">listatulajdonosok <acronym title=\"Gyakran Ismételt Kérdések\">GYIK</"
+"acronym></a>-ját."
 
 #: default/web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
@@ -1676,8 +1731,6 @@ msgid ""
 "Unsubscribe message: This message is sent when users leave the list\n"
 "using the UNSUBSCRIBE command."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "Leiratkozási üzenet: Az üzenet elküldésre kerül, ha a tag az UNSUBSCRIBE\n"
 "paranccsal leiratkozik a listáról."
 
@@ -1712,8 +1765,6 @@ msgid ""
 "Subscribing invitation message: sent to a person if someone  \n"
 "uses the INVITE command to invite someone to subscribe."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "Felkérő levél a feliratkozásra: elküldésre kerül, ha feliratkozásra\n"
 "kérünk fel valakit az INVITE paranccsal."
 
@@ -1854,8 +1905,6 @@ msgid ""
 "new bounce messages, the subscriber's email seems to be OK again. Active if "
 "task_manager.pl is running."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "Annak a feladat sablonnak (task template) a neve, ami a régi "
 "visszapattanások törlését végzi. Hasznos törölni egy tag e-mail címének "
 "visszapattanásait, ha néhány üzenetet sikerült elküldeni új visszapattanás "
@@ -1882,8 +1931,6 @@ msgid ""
 "This parameter defines a lower limit for each category of bouncing users.For "
 "example, level 1 begins from 45 to level_2_treshold."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "Minden visszapattanó felhasználónak van egy pontszáma (0 és 100 között). Ez "
 "a paraméter határozza meg az alsó határokat a visszapattanó felhasználók "
 "kategóriái között. Például: az 1-es szint 45-től a 2-es szint határáig "
@@ -1921,8 +1968,6 @@ msgid ""
 "This parameter defines the score range defining each category of bouncing "
 "users.For example, level 2 is for users with a score between 80 and 100."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "Minden visszapattanó felhasználónak van egy pontszáma (0 és 100 között). Ez "
 "a paraméter határozza meg a határokat a visszapattanó felhasználók "
 "kategóriái között. Például: a kettes szint azoké a felhasználóké, akiknek 80 "
@@ -2011,8 +2056,6 @@ msgid ""
 "messages are sent to subscribers according to the frequency selected with "
 "this parameter."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "A kivonat (digest) mód leírása. Ha ez a paraméter adott, a tagoknak "
 "lehetősége van az üzeneteket többrészes/kivonat (multipart/digest) MIME "
 "formában, vagy sima szöveges kivonatként megkapni. Az üzenetek csoportokba "
@@ -2058,8 +2101,6 @@ msgid ""
 "subscribers and asks them to renew their subscription. If they don't they "
 "are deleted."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "Ez a paraméter megadja, melyik modell használatos elavulási feladat (expire "
 "task) létrehozásakor. Egy elavulási feladat időnként megvizsgálja a tagok "
 "fel- vagy újrafeliratkozási dátumát, és megkéri őket, hogy frissítsék a "
@@ -2147,8 +2188,6 @@ msgid ""
 "in list B and then list B in list A, since this will give rise to an "
 "infinite loop."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
 "include (beágyazás). A listanév lista minden tagja az aktuális lista tagja "
 "lesz. Annyi listát ágyazhat be, amennyit csak akar, egy include_list "
@@ -2167,8 +2206,6 @@ msgid ""
 "paragraph for each included list. Be careful, however, not to give rise to "
 "an infinite loop resulting from cross includes."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "A Sympa képes kapcsolódni egy másik Sympa szolgáltatóhoz https-en keresztül, "
 "hogy letöltsön egy távoli listát azért, hogy a távoli lista minden tagját "
 "felvegye tagnak. Annyi listát bevehet, amennyit csak akar, egy "
@@ -2183,8 +2220,6 @@ msgid ""
 "to the remote Sympa to review the list. This is controlled by the review "
 "scenario."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "Ennél a műveletnél az egyik Sympa szerverként, a másik kliensként "
 "viselkedik. A szerver oldalán az az egyetlen szükséges beállítás, hogy "
 "engedélyezni kell  a kapcsolódó Sympának a lista megtekintését. Ezt a "
@@ -2253,8 +2288,6 @@ msgid ""
 "task regularly sends  subscribers a message which reminds them of their list "
 "subscriptions."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "Ez a paraméter megadja, melyik modell használatos emlékeztető feladat "
 "(remind task) létrehozásakor. Egy emlékeztető feladat időnként üzenetet küld "
 "minden tagnak, melyben emlékezteti őket listatagságukra."
@@ -2344,8 +2377,6 @@ msgid ""
 "Sympa and you can choose to use them with the spam_protection and "
 "web_archive_spam_protection parameters. Possible value are:"
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "A Sympa honlapot védeni kell a spambotok ellen, amik e-mail címeket "
 "gyűjtenek a nyilvános honlapokon. Különféle módszerek adottak a Sympában, és "
 "a spam_protection és web_archive_spam_protection paraméterekkel választhatja "
@@ -2357,8 +2388,6 @@ msgid ""
 "the address is hidden using a javascript. A user who enables javascript can "
 "see a nice mailto address where others have nothing."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "a cím javascripttel lesz elrejtve. Azok a felhasználók, akik engedélyezik a "
 "javascriptet egy levélcímet láthatnak ott, ahol mások semmit"
 
@@ -2437,8 +2466,6 @@ msgid ""
 "receive a cookie before browsing the archives. This blocks all robot, even "
 "google and co."
 msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
 "Ugyanaz, mint a spam_protection, de csak a webes archívumra korlátozva. Egy "
 "másik érték is választható: süti (cookie), ahol a felhasználóknak egy kis "
 "űrlapot kell kitölteni, és a kapott sütivel lehet böngészni az archívumot. "
@@ -2469,6 +2496,10 @@ msgstr ""
 #: default/web_tt2/help_editlist.tt2:177
 msgid ""
 "This parameter indicates if the tagging is optional or required for a list."
+msgstr ""
+
+#: default/web_tt2/help_faq.tt2:4
+msgid "User and admin FAQ"
 msgstr ""
 
 #: default/web_tt2/help_faqadmin.tt2:3
@@ -2519,35 +2550,6 @@ msgid ""
 "As a last resort, <strong>contact the listmaster</strong>, who will check "
 "the mail server logs in order to find the cause of the problem."
 msgstr ""
-
-#: default/web_tt2/help_faq.tt2:4
-msgid "User and admin FAQ"
-msgstr ""
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
-msgid ""
-"If you want to perform a particular task, take a look at the list of all <a "
-"href=\"%1/help/introduction#features\">available features</a> in the mailing "
-"list management software Sympa."
-msgstr ""
-"Ha egy konkrét feladathoz van szüksége segítségre, akkor nézze meg a "
-"rendelkezésre álló <a href=\"%1/help/introduction#features\">szolgáltatások "
-"listáját.</a> "
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
-msgid ""
-"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
-"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
-"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
-"\"Frequently asked questions\">FAQ</acronym></a>."
-msgstr ""
-"Ha valami problémája van a rendszer használatával, érdemes megnéznie a <a "
-"href=\"%1/help/faquser\">felhasználói <acronym title=\"Gyakran Ismételt "
-"Kérdések\">GYIK</acronym></a>-ot vagy a  <a href=\"%1/help/faqadmin"
-"\">listatulajdonosok <acronym title=\"Gyakran Ismételt Kérdések\">GYIK</"
-"acronym></a>-ját."
 
 #: default/web_tt2/help_faquser.tt2:3
 msgid "Users Frequently Asked Questions"
@@ -5376,189 +5378,6 @@ msgstr ""
 msgid "Click \"Resume\"."
 msgstr ""
 
-#: default/web_tt2/help.tt2:11
-msgid "Subscriber, moderator and owner documentation"
-msgstr ""
-"Dokumentáció a levelezőlisták tagjai, moderátorai és tulajdonosai részére"
-
-#: default/web_tt2/help.tt2:13
-msgid "In this documentation, you will find:"
-msgstr "A következő leírások állnak rendelkezésre:"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:15
-msgid ""
-"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
-msgstr ""
-"egy <a href=\"%1/help/introduction\">általános bevezető</a> a levelezőlisták "
-"használatáról"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:16
-msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
-msgstr ""
-"egy <a href=\"%1/help/user\">felhasználók számára készült leírás</a> a Sympa "
-"levelezőlista-rendszer használatáról"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:17
-msgid ""
-"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
-msgstr ""
-"egy <a href=\"%1/help/admin\">listatulajdonosok számára készült leírás</a> a "
-"Sympa levelezőlista-rendszer használatáról"
-
-#: default/web_tt2/help_user_options.tt2:3
-#, fuzzy
-msgid ""
-"This is a description of the reception modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-msgstr ""
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
-"A következőkben bemutatjuk a Sympánál használható különböző levélfogadási "
-"módokat. Ezek a beállítások kizárják egymást, vagyis egyszerre két különböző "
-"fogadási módot nem lehet megadni. Lehet, hogy némelyik listán nem "
-"engedélyezett az összes bemutatott fogadási mód."
-
-#: default/web_tt2/help_user_options.tt2:7
-msgid "Digest"
-msgstr "Digest (kivonat)"
-
-#: default/web_tt2/help_user_options.tt2:10
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-msgstr ""
-"Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a beállítással "
-"elérhető, hogy a leveleket\n"
-"adott időközönként összefűzve, egyben, kivonatként (digest) kaphassuk meg.A "
-"kivonatforma\n"
-"a listára érkezett leveleket összefűzve multipart/digest MIME formátumban "
-"tartalmazza."
-
-#: default/web_tt2/help_user_options.tt2:12
-#: default/web_tt2/help_user_options.tt2:20
-msgid "The sending interval for these Digests is defined by the list owner."
-msgstr ""
-"A digest levelek küldésének gyakoriságát a lista tulajdonosa határozza meg."
-
-#: default/web_tt2/help_user_options.tt2:14
-msgid "DigestPlain"
-msgstr "Digestplain (sima kivonat)"
-
-#: default/web_tt2/help_user_options.tt2:18
-msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-msgstr ""
-"Hasonlít a kivonat választáshoz abban, hogy a tag időszakosan\n"
-"összefűzött üzeneteket kap kivonat formájában. Digestplainnel a kivonat sima "
-"szöveg\n"
-"formájában lesz kézbesítve, minden csatolmány nélkül. A digestplain "
-"hasznos,\n"
-"ha az e-mail programja nem kezeli rendesen a többrészes/kivonat (multipart/"
-"digest) formátumú leveleket."
-
-#: default/web_tt2/help_user_options.tt2:22
-msgid "Summary"
-msgstr "Summary (összegzés)"
-
-#: default/web_tt2/help_user_options.tt2:26
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-msgstr ""
-"Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a beállítással "
-"elérhető, hogy a továbbiakban \n"
-"csak a levelek listáját kapjuk meg adott időközönként. Ez a mód nagyon "
-"hasonlít\n"
-"a kivonat (digest) küldési módra, de attól eltérően itt csak a levelek "
-"listája kerül kézbesítésre."
-
-#: default/web_tt2/help_user_options.tt2:29
-msgid "Nomail"
-msgstr "Nomail (nincs levél)"
-
-#: default/web_tt2/help_user_options.tt2:31
-msgid ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-msgstr ""
-"Ez a mód akkor lehet hasznos, ha egy tag a listáról a továbbiakban nem akar "
-"leveleket kapni, de a listára mégis szeretne leveleket küldeni. Ezzel a "
-"beállítással a felhasználónak nem kell leiratkoznia listáról azért, hogy a "
-"leveleket ne kapja meg, és nem kell később feliratkoznia, hogy leveleket "
-"küldhessen a listára."
-
-#: default/web_tt2/help_user_options.tt2:36
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-msgstr ""
-"Ez a mód akkor lehet hasznos, ha a felhasználó csak sima szöveges "
-"formátumban szeretné megkapni az üzeneteket\n"
-"függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL formátumban "
-"érkeztek."
-
-#: default/web_tt2/help_user_options.tt2:41
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-msgstr ""
-"Ez a mód akkor lehet hasznos, ha a felhasználó csak HTML formátumban "
-"szeretné megkapni az üzeneteket\n"
-"függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL formátumban "
-"érkeztek."
-
-#: default/web_tt2/help_user_options.tt2:46
-msgid ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-msgstr ""
-"Ez a mód akkor lehet hasznos, ha a egy tag nem akar a listáról csatolt "
-"állományokat fogadni.\n"
-"Ilyenkor az állomány helyett egy URL jelenik meg, ami az eredeti "
-"csatolmányhoz vezet."
-
-#: default/web_tt2/help_user_options.tt2:51
-msgid ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-msgstr ""
-"Ez a mód akkor lehet hasznos, ha egy tag nem akar másolatot kapni a listára "
-"küldött, tőle származó levelekről."
-
-#: default/web_tt2/help_user_options.tt2:56
-msgid ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
-msgstr ""
-"Ezzel a beállítással a nomail, summary vagy digest módokat lehet "
-"megszüntetni. Ha a felhasználó\n"
-"nomail módban volt, akkor ezzel a beállítással ismét egyenként meg fogja "
-"kapnia lista leveleit."
-
 #: default/web_tt2/help_user.tt2:3
 msgid "Mailing lists - User Guide"
 msgstr "Levelezőlisták - Felhasználói leírás"
@@ -6567,6 +6386,194 @@ msgstr ""
 msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
 msgstr ""
 "A bal oldali menüben <strong>kattintson a \"Leiratkozás\" szövegre!</strong>"
+
+#: default/web_tt2/help_user_options.tt2:3
+#, fuzzy
+msgid ""
+"This is a description of the reception modes available in Sympa. These "
+"options are mutually exclusive, which means that you can't set two different "
+"receive modes at the same time. Only some of the modes might be available to "
+"specific mailing lists."
+msgstr ""
+"A következőkben bemutatjuk a Sympánál használható különböző levélfogadási "
+"módokat. Ezek a beállítások kizárják egymást, vagyis egyszerre két különböző "
+"fogadási módot nem lehet megadni. Lehet, hogy némelyik listán nem "
+"engedélyezett az összes bemutatott fogadási mód."
+
+#: default/web_tt2/help_user_options.tt2:7
+msgid "Digest"
+msgstr "Digest (kivonat)"
+
+#: default/web_tt2/help_user_options.tt2:10
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber "
+"will periodically \n"
+"receive batched messages in a Digest. This Digest compiles a group of "
+"messages from the list, using\n"
+"the multipart/digest MIME format."
+msgstr ""
+"Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a beállítással "
+"elérhető, hogy a leveleket\n"
+"adott időközönként összefűzve, egyben, kivonatként (digest) kaphassuk meg.A "
+"kivonatforma\n"
+"a listára érkezett leveleket összefűzve multipart/digest MIME formátumban "
+"tartalmazza."
+
+#: default/web_tt2/help_user_options.tt2:12
+#: default/web_tt2/help_user_options.tt2:20
+msgid "The sending interval for these Digests is defined by the list owner."
+msgstr ""
+"A digest levelek küldésének gyakoriságát a lista tulajdonosa határozza meg."
+
+#: default/web_tt2/help_user_options.tt2:14
+msgid "DigestPlain"
+msgstr "Digestplain (sima kivonat)"
+
+#: default/web_tt2/help_user_options.tt2:18
+msgid ""
+"Similar to the Digest option in that the subscriber will periodically \n"
+"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
+"a plain text \n"
+"format, with all attachments stripped out. DigestPlain is useful if your "
+"email software doesn't\n"
+"display multipart/digest format messages well."
+msgstr ""
+"Hasonlít a kivonat választáshoz abban, hogy a tag időszakosan\n"
+"összefűzött üzeneteket kap kivonat formájában. Digestplainnel a kivonat sima "
+"szöveg\n"
+"formájában lesz kézbesítve, minden csatolmány nélkül. A digestplain "
+"hasznos,\n"
+"ha az e-mail programja nem kezeli rendesen a többrészes/kivonat (multipart/"
+"digest) formátumú leveleket."
+
+#: default/web_tt2/help_user_options.tt2:22
+msgid "Summary"
+msgstr "Summary (összegzés)"
+
+#: default/web_tt2/help_user_options.tt2:26
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber "
+"will periodically \n"
+"receive a list of messages. This mode is very close to the Digest reception "
+"mode but the \n"
+"subscriber receives only the list of messages."
+msgstr ""
+"Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a beállítással "
+"elérhető, hogy a továbbiakban \n"
+"csak a levelek listáját kapjuk meg adott időközönként. Ez a mód nagyon "
+"hasonlít\n"
+"a kivonat (digest) küldési módra, de attól eltérően itt csak a levelek "
+"listája kerül kézbesítésre."
+
+#: default/web_tt2/help_user_options.tt2:29
+msgid "Nomail"
+msgstr "Nomail (nincs levél)"
+
+#: default/web_tt2/help_user_options.tt2:31
+msgid ""
+"This mode is used when a subscriber no longer wishes to receive mail from "
+"the list, but nevertheless wishes to retain the ability to post to the list. "
+"This mode therefore prevents the subscriber from unsubscribing and "
+"subscribing later on."
+msgstr ""
+"Ez a mód akkor lehet hasznos, ha egy tag a listáról a továbbiakban nem akar "
+"leveleket kapni, de a listára mégis szeretne leveleket küldeni. Ezzel a "
+"beállítással a felhasználónak nem kell leiratkoznia listáról azért, hogy a "
+"leveleket ne kapja meg, és nem kell később feliratkoznia, hogy leveleket "
+"küldhessen a listára."
+
+#: default/web_tt2/help_user_options.tt2:36
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both "
+"HTML and plain text formats\n"
+"only in plain text format."
+msgstr ""
+"Ez a mód akkor lehet hasznos, ha a felhasználó csak sima szöveges "
+"formátumban szeretné megkapni az üzeneteket\n"
+"függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL formátumban "
+"érkeztek."
+
+#: default/web_tt2/help_user_options.tt2:41
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both "
+"HTML and plain text formats\n"
+"only in HTML format."
+msgstr ""
+"Ez a mód akkor lehet hasznos, ha a felhasználó csak HTML formátumban "
+"szeretné megkapni az üzeneteket\n"
+"függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL formátumban "
+"érkeztek."
+
+#: default/web_tt2/help_user_options.tt2:46
+msgid ""
+"This mode is used when a subscriber does not want to receive attached files. "
+"The attached files are \n"
+"replaced by a URL leading to the file stored on the list site."
+msgstr ""
+"Ez a mód akkor lehet hasznos, ha a egy tag nem akar a listáról csatolt "
+"állományokat fogadni.\n"
+"Ilyenkor az állomány helyett egy URL jelenik meg, ami az eredeti "
+"csatolmányhoz vezet."
+
+#: default/web_tt2/help_user_options.tt2:51
+msgid ""
+"This mode is used when a subscriber does not want to receive copies of "
+"messages that he or she has sent to \n"
+"the list."
+msgstr ""
+"Ez a mód akkor lehet hasznos, ha egy tag nem akar másolatot kapni a listára "
+"küldött, tőle származó levelekről."
+
+#: default/web_tt2/help_user_options.tt2:56
+msgid ""
+"This option is used mainly to cancel the nomail, summary or digest modes. If "
+"the subscriber was \n"
+"in nomail mode, he or she will again receive individual mail messages from "
+"the list."
+msgstr ""
+"Ezzel a beállítással a nomail, summary vagy digest módokat lehet "
+"megszüntetni. Ha a felhasználó\n"
+"nomail módban volt, akkor ezzel a beállítással ismét egyenként meg fogja "
+"kapnia lista leveleit."
+
+#, fuzzy
+#~ msgid ""
+#~ "The use of mailing lists naturally means respecting the rules of good "
+#~ "practices as regards email (the \"Netiquette\")."
+#~ msgstr ""
+#~ "A levelezőlisták használatakor természetesen figyelembe vesszük az "
+#~ "Interneten egyébként is javasolt illemszabályokat (\"Netikett\")."
+
+#, fuzzy
+#~ msgid ""
+#~ "This is a description of the receivie modes available in Sympa. These "
+#~ "options are mutually exclusive, which means that you can't set two "
+#~ "different receive modes at the same time. Only some of the modes might be "
+#~ "available to specific mailing lists."
+#~ msgstr ""
+#~ "A következőkben bemutatjuk a Sympánál használható különböző levélfogadási "
+#~ "módokat. Ezek a beállítások kizárják egymást, vagyis egyszerre két "
+#~ "különböző fogadási módot nem lehet megadni. Lehet, hogy némelyik listán "
+#~ "nem engedélyezett az összes bemutatott fogadási mód."
+
+#, fuzzy
+#~ msgid ""
+#~ "Include subscribers from other list. All subscribers of list listname "
+#~ "become subscribers of the current list. You may include as many lists as "
+#~ "required, using one include_list listname line for each included list. "
+#~ "Any list at all may be included; you may therefore include lists which "
+#~ "are also defined by the inclusion of other lists. Be careful, however, "
+#~ "not to include list A in list B and then list B in list A, since this "
+#~ "will give rise to an infinite loop."
+#~ msgstr ""
+#~ "Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
+#~ "include (beágyazás). A listanév lista minden tagja az aktuális lista "
+#~ "tagja lesz. Annyi listát ágyazhat be, amennyit csak akar, egy "
+#~ "include_list listanév sort használva minden beágyazott listánál. "
+#~ "Bármilyen lista beágyazható, a beágyazott lista user_data_source "
+#~ "beállítása nem számít, így beágyazhat olyan listát, ami más listák "
+#~ "beágyazásával jött létre. Ugyanakkor vigyázzon, ne ágyazza be A listába B "
+#~ "listát, és B listába A listát, mivel ez végtelen ciklushoz vezet."
 
 #~ msgid "No Comment"
 #~ msgstr "Nincs megjegyzés"

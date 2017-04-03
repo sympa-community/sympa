@@ -390,7 +390,7 @@ sub new {
         || $list->{'admin'}{'ttl'};
     if ($status
         && ((     !$options->{'skip_sync_admin'}
-                && $list->{'last_sync'} < time - $pertinent_ttl
+                && $list->{'last_sync_admin_user'} < time - $pertinent_ttl
             )
             || $options->{'force_sync_admin'}
         )

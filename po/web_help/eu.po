@@ -1,10 +1,8 @@
-# #-#-#-#-#  blank_web_help_eu.po (sympa)  #-#-#-#-#
 # Sympa online help internationalisation.
 # Copyright (C) 2007
 # This file is distributed under the same license as Sympa.
 # FIRST AUTHOR <david.verdin@cru.fr>, 2007.
 #
-# #-#-#-#-#  tmp_web_help_eu.po (sympa)  #-#-#-#-#
 # Basque translation for sympa
 # Copyright (c) 2006 Rosetta Contributors and Canonical Ltd 2006
 # This file is distributed under the same license as the sympa package.
@@ -26,6 +24,56 @@ msgstr ""
 "X-Generator: Pootle 2.5.1\n"
 "X-Rosetta-Export-Date: 2006-12-11 09:58+0000\n"
 "X-POOTLE-MTIME: 1426679752.000000\n"
+
+#: default/web_tt2/help.tt2:11
+msgid "Subscriber, moderator and owner documentation"
+msgstr "Harpidedun, moderatzaile eta jabearen dokumentazioa"
+
+#: default/web_tt2/help.tt2:13
+msgid "In this documentation, you will find:"
+msgstr "Dokumentazio honetan zera topatuko duzu:"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:15
+msgid ""
+"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
+msgstr ""
+"Eposta zerrendetara <a href=\"%1/help/introduction\">sarrera orokorra</a>;"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:16
+msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr "Symparen erabilerarako <a href=\"%1/help/user\">erabiltzaile gida</a>;"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:17
+msgid ""
+"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
+msgstr "Symparen erabilerarako <a href=\"%1/help/admin\">kudeatzaile gida</a>;"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
+msgid ""
+"If you want to perform a particular task, take a look at the list of all <a "
+"href=\"%1/help/introduction#features\">available features</a> in the mailing "
+"list management software Sympa."
+msgstr ""
+"Ataza jakin bat burutu behar baduzu, bota begirada bat Sympa eposta "
+"zerrenden kudeatzaile softwarearen <a href=\"%1/help/introduction#features"
+"\">ezaugarriei</a>."
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
+msgid ""
+"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
+"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
+"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
+"\"Frequently asked questions\">FAQ</acronym></a>."
+msgstr ""
+"Edozein arazo baduzu, begiratu <a href=\"%1/help/faquser\">erabiltzaileen "
+"<acronym title=\"Maiz Egindako Galderak\">MEG-etan</acronym></a> edo <a href="
+"\"%1/help/faqadmin\">kudeatzaileen <acronym title=\"Maiz Egindako Galderak"
+"\">MEG-etan</acronym></a>."
 
 #: default/web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
@@ -2710,6 +2758,10 @@ msgstr ""
 "Parametro honekin zerrendan etiketatzea aukerakoa edo derrigorrezkoa den "
 "zehazten da."
 
+#: default/web_tt2/help_faq.tt2:4
+msgid "User and admin FAQ"
+msgstr ""
+
 #: default/web_tt2/help_faqadmin.tt2:3
 msgid "Administrators Frequently Asked Questions"
 msgstr "Kudeatzaileek Maiz Egindako Galderak"
@@ -2775,34 +2827,6 @@ msgid ""
 msgstr ""
 "Azkenik, <strong>jar zaitez kontaktuan zerrenda kudeatzaileekin</strong>, "
 "posta zerbitzariko logak begiratuko dituzte arazoaren jatorriaren bila."
-
-#: default/web_tt2/help_faq.tt2:4
-msgid "User and admin FAQ"
-msgstr ""
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
-msgid ""
-"If you want to perform a particular task, take a look at the list of all <a "
-"href=\"%1/help/introduction#features\">available features</a> in the mailing "
-"list management software Sympa."
-msgstr ""
-"Ataza jakin bat burutu behar baduzu, bota begirada bat Sympa eposta "
-"zerrenden kudeatzaile softwarearen <a href=\"%1/help/introduction#features"
-"\">ezaugarriei</a>."
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
-msgid ""
-"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
-"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
-"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
-"\"Frequently asked questions\">FAQ</acronym></a>."
-msgstr ""
-"Edozein arazo baduzu, begiratu <a href=\"%1/help/faquser\">erabiltzaileen "
-"<acronym title=\"Maiz Egindako Galderak\">MEG-etan</acronym></a> edo <a href="
-"\"%1/help/faqadmin\">kudeatzaileen <acronym title=\"Maiz Egindako Galderak"
-"\">MEG-etan</acronym></a>."
 
 #: default/web_tt2/help_faquser.tt2:3
 msgid "Users Frequently Asked Questions"
@@ -4396,23 +4420,23 @@ msgstr ""
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
 "sending <strong>%1@%2</strong> the following command: <span class=\"commande"
-"\"><strong>GET nameofthelist year-month</strong></span> (example: <em "
-"class=\"example\">GET list_example 2016-07</em>). Then you receive a "
-"compilation of all messages sent during the chosen month. This compilation "
-"is sent in plain text and contains <acronym lang=\"en\" xml:lang=\"en\" "
-"title=\"HyperText Markup Language\">HTML</acronym> tags instead of the "
-"original formatting; it also involves full headers for each message. The "
+"\"><strong>GET nameofthelist year-month</strong></span> (example: <em class="
+"\"example\">GET list_example 2016-07</em>). Then you receive a compilation "
+"of all messages sent during the chosen month. This compilation is sent in "
+"plain text and contains <acronym lang=\"en\" xml:lang=\"en\" title="
+"\"HyperText Markup Language\">HTML</acronym> tags instead of the original "
+"formatting; it also involves full headers for each message. The "
 "'<strong>Text archives</strong>' parameter allows you to define:"
 msgstr ""
 "<strong>Zerrendako artxiboa eposta bidez eskuratu</strong> ahal da ere, "
 "<strong>%1@%2</strong> helbidera ondoko komandoa bidaliz: <span class="
 "\"commande\"><strong>GET zerrendaizena urtehilbetea</strong></span> "
-"(adibidez: <em class=\"example\">GET zerrenda_bat 2016-07</em>). "
-"Hautatutako hilabeteko mezu guztien bilduma jasoko duzu. Bilduma testu "
-"hutsean bidaltzen da eta <acronym lang=\"en\" xml:lang=\"en\" title="
-"\"HyperText Markup Language\">HTML</acronym> etiketak ditu berezkok "
-"formatuaren ordez; mezu bakoitzaren goiburu guztiak adierazten dira ere. "
-"'<strong>Testu artxiboak</strong>' parametroak ondokoa adieraz dezake: "
+"(adibidez: <em class=\"example\">GET zerrenda_bat 2016-07</em>). Hautatutako "
+"hilabeteko mezu guztien bilduma jasoko duzu. Bilduma testu hutsean bidaltzen "
+"da eta <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
+"\">HTML</acronym> etiketak ditu berezkok formatuaren ordez; mezu bakoitzaren "
+"goiburu guztiak adierazten dira ere. '<strong>Testu artxiboak</strong>' "
+"parametroak ondokoa adieraz dezake: "
 
 #: default/web_tt2/help_listconfig.tt2:142
 msgid ""
@@ -6045,162 +6069,6 @@ msgstr ""
 msgid "Click \"Resume\"."
 msgstr "Sakatu \"Alta\"."
 
-#: default/web_tt2/help.tt2:11
-msgid "Subscriber, moderator and owner documentation"
-msgstr "Harpidedun, moderatzaile eta jabearen dokumentazioa"
-
-#: default/web_tt2/help.tt2:13
-msgid "In this documentation, you will find:"
-msgstr "Dokumentazio honetan zera topatuko duzu:"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:15
-msgid ""
-"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
-msgstr ""
-"Eposta zerrendetara <a href=\"%1/help/introduction\">sarrera orokorra</a>;"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:16
-msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
-msgstr "Symparen erabilerarako <a href=\"%1/help/user\">erabiltzaile gida</a>;"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:17
-msgid ""
-"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
-msgstr "Symparen erabilerarako <a href=\"%1/help/admin\">kudeatzaile gida</a>;"
-
-#: default/web_tt2/help_user_options.tt2:3
-#, fuzzy
-msgid ""
-"This is a description of the reception modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-msgstr ""
-"Hau Sympan dauden bidalketa moduen deskribapen bat da. Aukera hauek elkar "
-"baztergarriak dira, hau da, ezin dituzu bi bidalketa modu ezberdin batera "
-"erabili. Eposta zerrenda jakin batzuetan hauetako batzuk bakarrik egon "
-"daitezke gaiturik."
-
-#: default/web_tt2/help_user_options.tt2:7
-msgid "Digest"
-msgstr "Bilduma"
-
-#: default/web_tt2/help_user_options.tt2:10
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-msgstr ""
-"Eposta mezuak banaka jaso beharrean, harpidedunak periodikoki mezuen multzo "
-"bat jasoko du bilduma batean. Bilduma honek zerrendako mezu multzo bat "
-"elkartzen ditu multipart/digest MIME formatua erabiliz."
-
-#: default/web_tt2/help_user_options.tt2:12
-#: default/web_tt2/help_user_options.tt2:20
-msgid "The sending interval for these Digests is defined by the list owner."
-msgstr "Bilduma hauek bidaltzeko maiztasuna zerrendaren jabeak definitzen du."
-
-#: default/web_tt2/help_user_options.tt2:14
-msgid "DigestPlain"
-msgstr "BildumaHutsa"
-
-#: default/web_tt2/help_user_options.tt2:18
-msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-msgstr ""
-"Bilduma aukeraren antzekoa, harpidedunek periodikoki mezuen multzoak jasoko "
-"dituzte bilduma batean. BildumaHutsa-rekin bilduma testu hutseko formatuan "
-"bidaltzen da, eranskin guztiak kenduta. Erabilgarria zure eposta bezeroak "
-"multipart/digest formatua ez badu ongi bistaratzen."
-
-#: default/web_tt2/help_user_options.tt2:22
-msgid "Summary"
-msgstr "Laburpena"
-
-#: default/web_tt2/help_user_options.tt2:26
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-msgstr ""
-"Eposta mezuak banaka jaso beharrean, harpidedunak periodikoki mezuen "
-"zerrenda bat jasoko du. Bilduma moduaren oso antzekoa, baina harpidedunak "
-"mezuen zerrenda jasotzen du bakarrik."
-
-#: default/web_tt2/help_user_options.tt2:29
-msgid "Nomail"
-msgstr "Epostarik ez"
-
-#: default/web_tt2/help_user_options.tt2:31
-msgid ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-msgstr ""
-"Modu honetan harpidedunak ez ditu zerrendako mezuak jasotzen baina "
-"zerrendara idazteko aukera mantentzen du. Modu honekin harpideduna ez-"
-"harpidetu eta berriro harpidetu behar izatea saihesten du."
-
-#: default/web_tt2/help_user_options.tt2:36
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-msgstr ""
-"Modu honetan harpidedunak mezu guztiak testu soilean jasotzen ditu, bai HTML "
-"formatuko mezuak bai testu soilekoak."
-
-#: default/web_tt2/help_user_options.tt2:41
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-msgstr ""
-"Modu honetan harpidedunak mezu guztiak HTML formatuan jasotzen ditu, bai "
-"HTML formatuko mezuak bai testu soilekoak."
-
-#: default/web_tt2/help_user_options.tt2:46
-msgid ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-msgstr ""
-"Modu honetan harpidedunak ez ditu eranskinak jasotzen. Eranskinak zerrendako "
-"webgunean gordeta dagoen fitxategirako estekagatik aldatzen dira."
-
-#: default/web_tt2/help_user_options.tt2:51
-msgid ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-msgstr ""
-"Modu honetan harpidedunak ez ditu berak zerrendara bidalitako mezuen kopiak "
-"jasotzen."
-
-#: default/web_tt2/help_user_options.tt2:56
-msgid ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
-msgstr ""
-"Aukera hau 'epostarik ez', laburpen edo bilduma moduak ezeztatzeko balio du. "
-"Harpideduna 'epostarik ez' moduan bazegoen zerrendara bidalitako mezu "
-"bakoitza jasoko du berriz. "
-
 #: default/web_tt2/help_user.tt2:3
 msgid "Mailing lists - User Guide"
 msgstr "Eposta zerrendak - Erabiltzaile gida"
@@ -7163,3 +7031,172 @@ msgstr ""
 #: default/web_tt2/help_user.tt2:179
 msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
 msgstr "<strong>Ezkerreko menuan, sakatu 'Ez-harpidetu' estekan</strong>."
+
+#: default/web_tt2/help_user_options.tt2:3
+#, fuzzy
+msgid ""
+"This is a description of the reception modes available in Sympa. These "
+"options are mutually exclusive, which means that you can't set two different "
+"receive modes at the same time. Only some of the modes might be available to "
+"specific mailing lists."
+msgstr ""
+"Hau Sympan dauden bidalketa moduen deskribapen bat da. Aukera hauek elkar "
+"baztergarriak dira, hau da, ezin dituzu bi bidalketa modu ezberdin batera "
+"erabili. Eposta zerrenda jakin batzuetan hauetako batzuk bakarrik egon "
+"daitezke gaiturik."
+
+#: default/web_tt2/help_user_options.tt2:7
+msgid "Digest"
+msgstr "Bilduma"
+
+#: default/web_tt2/help_user_options.tt2:10
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber "
+"will periodically \n"
+"receive batched messages in a Digest. This Digest compiles a group of "
+"messages from the list, using\n"
+"the multipart/digest MIME format."
+msgstr ""
+"Eposta mezuak banaka jaso beharrean, harpidedunak periodikoki mezuen multzo "
+"bat jasoko du bilduma batean. Bilduma honek zerrendako mezu multzo bat "
+"elkartzen ditu multipart/digest MIME formatua erabiliz."
+
+#: default/web_tt2/help_user_options.tt2:12
+#: default/web_tt2/help_user_options.tt2:20
+msgid "The sending interval for these Digests is defined by the list owner."
+msgstr "Bilduma hauek bidaltzeko maiztasuna zerrendaren jabeak definitzen du."
+
+#: default/web_tt2/help_user_options.tt2:14
+msgid "DigestPlain"
+msgstr "BildumaHutsa"
+
+#: default/web_tt2/help_user_options.tt2:18
+msgid ""
+"Similar to the Digest option in that the subscriber will periodically \n"
+"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
+"a plain text \n"
+"format, with all attachments stripped out. DigestPlain is useful if your "
+"email software doesn't\n"
+"display multipart/digest format messages well."
+msgstr ""
+"Bilduma aukeraren antzekoa, harpidedunek periodikoki mezuen multzoak jasoko "
+"dituzte bilduma batean. BildumaHutsa-rekin bilduma testu hutseko formatuan "
+"bidaltzen da, eranskin guztiak kenduta. Erabilgarria zure eposta bezeroak "
+"multipart/digest formatua ez badu ongi bistaratzen."
+
+#: default/web_tt2/help_user_options.tt2:22
+msgid "Summary"
+msgstr "Laburpena"
+
+#: default/web_tt2/help_user_options.tt2:26
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber "
+"will periodically \n"
+"receive a list of messages. This mode is very close to the Digest reception "
+"mode but the \n"
+"subscriber receives only the list of messages."
+msgstr ""
+"Eposta mezuak banaka jaso beharrean, harpidedunak periodikoki mezuen "
+"zerrenda bat jasoko du. Bilduma moduaren oso antzekoa, baina harpidedunak "
+"mezuen zerrenda jasotzen du bakarrik."
+
+#: default/web_tt2/help_user_options.tt2:29
+msgid "Nomail"
+msgstr "Epostarik ez"
+
+#: default/web_tt2/help_user_options.tt2:31
+msgid ""
+"This mode is used when a subscriber no longer wishes to receive mail from "
+"the list, but nevertheless wishes to retain the ability to post to the list. "
+"This mode therefore prevents the subscriber from unsubscribing and "
+"subscribing later on."
+msgstr ""
+"Modu honetan harpidedunak ez ditu zerrendako mezuak jasotzen baina "
+"zerrendara idazteko aukera mantentzen du. Modu honekin harpideduna ez-"
+"harpidetu eta berriro harpidetu behar izatea saihesten du."
+
+#: default/web_tt2/help_user_options.tt2:36
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both "
+"HTML and plain text formats\n"
+"only in plain text format."
+msgstr ""
+"Modu honetan harpidedunak mezu guztiak testu soilean jasotzen ditu, bai HTML "
+"formatuko mezuak bai testu soilekoak."
+
+#: default/web_tt2/help_user_options.tt2:41
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both "
+"HTML and plain text formats\n"
+"only in HTML format."
+msgstr ""
+"Modu honetan harpidedunak mezu guztiak HTML formatuan jasotzen ditu, bai "
+"HTML formatuko mezuak bai testu soilekoak."
+
+#: default/web_tt2/help_user_options.tt2:46
+msgid ""
+"This mode is used when a subscriber does not want to receive attached files. "
+"The attached files are \n"
+"replaced by a URL leading to the file stored on the list site."
+msgstr ""
+"Modu honetan harpidedunak ez ditu eranskinak jasotzen. Eranskinak zerrendako "
+"webgunean gordeta dagoen fitxategirako estekagatik aldatzen dira."
+
+#: default/web_tt2/help_user_options.tt2:51
+msgid ""
+"This mode is used when a subscriber does not want to receive copies of "
+"messages that he or she has sent to \n"
+"the list."
+msgstr ""
+"Modu honetan harpidedunak ez ditu berak zerrendara bidalitako mezuen kopiak "
+"jasotzen."
+
+#: default/web_tt2/help_user_options.tt2:56
+msgid ""
+"This option is used mainly to cancel the nomail, summary or digest modes. If "
+"the subscriber was \n"
+"in nomail mode, he or she will again receive individual mail messages from "
+"the list."
+msgstr ""
+"Aukera hau 'epostarik ez', laburpen edo bilduma moduak ezeztatzeko balio du. "
+"Harpideduna 'epostarik ez' moduan bazegoen zerrendara bidalitako mezu "
+"bakoitza jasoko du berriz. "
+
+#~ msgid ""
+#~ "Include subscribers from other list. All subscribers of list listname "
+#~ "become subscribers of the current list. You may include as many lists as "
+#~ "required, using one include_list listname line for each included list. "
+#~ "Any list at all may be included; you may therefore include lists which "
+#~ "are also defined by the inclusion of other lists. Be careful, however, "
+#~ "not to include list A in list B and then list B in list A, since this "
+#~ "will give rise to an infinite loop."
+#~ msgstr ""
+#~ "Beste zerrendako harpidedunak txertatu. Zerrendaizena zerrendako "
+#~ "harpidedun guztiak uneko zerrendaren harpidedun bihurtzen dira. Nahi "
+#~ "beste zerrenda txertatu ahal dituzu, bakoitzerako include_list "
+#~ "zerrendaizena bat erabiliz. Edozein zerrenda txertatu daiteke; beste "
+#~ "zerrendak txertatuz sortutako zerrendak ere txertatu ahal dira. Kontuz, "
+#~ "hala ere, A zerrenda B zerrendan txertatu eta B zerrenda A zerrendan "
+#~ "txertatzearekin, etengabeko begizta bat sortuko delako."
+
+#~ msgid ""
+#~ "It is also possible to <strong>access the list archive by email</strong>, "
+#~ "by sending <strong>%1@%2</strong> the following command: <span class="
+#~ "\"commande\"><strong>get nameofthelist log.yearmonth</strong></span> "
+#~ "(example: <em class=\"example\">get list_example log.200507</em>). Then "
+#~ "you receive a compilation of all messages sent during the chosen month. "
+#~ "This compilation is sent in plain text and contains <acronym lang=\"en\" "
+#~ "xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> tags "
+#~ "instead of the original formatting; it also involves full headers for "
+#~ "each message. The '<strong>Text archives</strong>' parameter allows you "
+#~ "to define:"
+#~ msgstr ""
+#~ "<strong>Zerrendako artxiboa eposta bidez eskuratu</strong> ahal da ere, "
+#~ "<strong>%1@%2</strong> helbidera ondoko komandoa bidaliz: <span class="
+#~ "\"commande\"><strong>get zerrendaizena log.urtehilbetea</strong></span> "
+#~ "(adibidez: <em class=\"example\">get zerrenda_bat log.200507</em>). "
+#~ "Hautatutako hilabeteko mezu guztien bilduma jasoko duzu. Bilduma testu "
+#~ "hutsean bidaltzen da eta <acronym lang=\"en\" xml:lang=\"en\" title="
+#~ "\"HyperText Markup Language\">HTML</acronym> etiketak ditu berezkok "
+#~ "formatuaren ordez; mezu bakoitzaren goiburu guztiak adierazten dira ere. "
+#~ "'<strong>Testu artxiboak</strong>' parametroak ondokoa adieraz dezake: "
