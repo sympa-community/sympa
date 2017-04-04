@@ -3,19 +3,19 @@
 <h2>[%|loc%]Cascading Style Sheet[%END%]</h2>
 
 [% IF css_result %]
-<p><strong>[%|loc%]static css installation succeed. Reload the current page and/or check sympa logs  to be sure that static css a really in use.[%END%]</strong></p>
+<p><strong>[%|loc%]static css installation succeed. Reload the current page and/or check sympa logs to be sure that static css a really in use.[%END%]</strong></p>
 [% END %]
 
 <h2>[%|loc%]Colors[%END%]</h2>
 
 <p>
-[%|loc%]Use the color editor in order to change defined colors. First select the color you want to change and pick a color,then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you choosen, you may save them in a new static CSS.
+[%|loc%]Use the color editor in order to change defined colors. First select the color you want to change and pick a color,then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you chosen, you may save them in a new static CSS.
 [%END%]
 </p>
 
 <p>
 [%|loc%]
-Be careful: the CSS file is overwritten using css.tt2 template, usually this file is comming from Sympa distribution so your CSS customization may be erased when doing this.[% END %]
+Be careful: the CSS file is overwritten using css.tt2 template, usually this file is coming from Sympa distribution so your CSS customization may be erased when doing this.[% END %]
 [%|loc%]So if you want to preserve some site customization from being overwriten when starting a new sympa version, css_path and css_url should not point to the same directory.[%END%]
 </p>
 
@@ -54,7 +54,7 @@ Be careful: the CSS file is overwritten using css.tt2 template, usually this fil
 <p>[%|loc%]Please note that these indications don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well all that works.[%END%]</p>
 
 <table  id="color_table" class="responsive">
-<caption>[%|loc%]This table display every colors used in Sympa, with their hexadecimal code [%END%]</caption>
+<caption>[%|loc%]This table displays every color used in Sympa, with their hexadecimal code [%END%]</caption>
 <tr id="color_table_title">
 <th>[%|loc%]parameter[%END%]</th>
 <th>[%|loc%]parameter value[%END%]</th>

@@ -1,13 +1,13 @@
 <!-- $Id$ -->
 
-<h2>[%|loc%]Listing subscription to moderate[%END%]</h2>
+<h2>[%|loc%]List of subscriptions to moderate[%END%]</h2>
 [% IF mod_subscription %]
 <form class="noborder toggleContainer" data-toggle-selector="input[name='id']"
   action="[% path_cgi %]" method="POST" name="myform"> 
 <fieldset>
 <input type="hidden" name="list" value="[% list %]" />
     <table  class="responsive listOfItems">
-    <caption>[%|loc%]Listing subscription to moderate[%END%]</caption>
+    <caption>[%|loc%]List of subscriptions to moderate[%END%]</caption>
       <tr>
         <th><a href="#"
           data-tooltip aria-haspopup="true"

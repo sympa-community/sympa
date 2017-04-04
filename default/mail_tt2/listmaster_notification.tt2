@@ -226,7 +226,7 @@ Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END
 [% ELSIF type == 'listowner_email_changed' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]List owner/editor email changes[%END%][%END%]
 
-[%|loc(previous_email,new_email)%]Member %1 has changed his owner/editor email address to %2. This change has been performed for the following lists:[%END%]
+[%|loc(previous_email,new_email)%]Member %1 has changed their owner/editor email address to %2. This change has been performed for the following lists:[%END%]
 [% FOREACH updated_list IN updated_lists -%]
 [% updated_list %]
 [% END %]
@@ -235,7 +235,7 @@ Subject: [% FILTER qencode %][%|loc(param0)%]List owner/editor email changes[%EN
 [% ELSIF type == 'failed_to_change_included_admin' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to change admin email address[%END%][%END%]
 
-[%|loc(current_email,new_email,datasource)%]Admin %1 could not change his admin email address (new email address is %2) because he is included via a the following data sources: %3.
+[%|loc(current_email,new_email,datasource)%]Admin %1 could not change their admin email address (new email address is %2) because he is included via a the following data sources: %3.
 
 If you are able to do so, you should probably update these data sources with this person's new email address.[%END%]
 
