@@ -11637,50 +11637,11 @@ sub do_edit_list {
         }
     }
 
-    ## This hash will contain all the data gathered from the edit list form.
-    ## The keys are the parameter names.
-    ## The values are either the parameter value or an array containing this
-    ## value if this is a multiple values parameter.
-    ## The value can be a scalar or a hash.
-    my $new_admin = {};
-
-    ## This hash contains the names of all the parameters sent by the form to
-    ## the FCGI.
-    ## The keys are the parameters name, the value is always 1.
-    ## Used only to parse the data.
-    my $edited_param = {};
-
-    ## Parse all the data sent from the web interface to the FCGI.
-    ## Fills the $new_admin and $edited_param hashes.
-    foreach my $key (sort keys %in) {
-        next unless ($key =~ /^(single_param|multiple_param)\.(\S+)$/);
-
-        $key =~ /^(single_param|multiple_param)\.(\S+)$/;
-        my ($type, $name) = ($1, $2);
-
-        ## Tag parameter as present in the form
-        if (   $name =~ /^([^\.]+)(\.)/
-            || $name =~ /^([^\.]+)$/) {
-            $edited_param->{$1} = 1;
-        }
-
-        ## Parameter value
-        my $value = $in{$key};
-        next if ($value =~ /^\s*$/);
-
-        ## If the parameter is a multiple values parameter, store the values
-        ## into an array.
-        if ($type eq 'multiple_param') {
-            my @values = split /\0/, $value;
-            $value = \@values;
-        }
-
-        my @token = split(/\./, $name);
-
-        ## make it an entry in $new_admin
-        my $var = _shift_var(0, $new_admin, @token);
-        $$var = $value;
-    }
+    # This hash will contain all the data gathered from the edit list form.
+    # The keys are the parameter names.
+    # The values are either the parameter value or an array containing this
+    # value if this is a multiple values parameter.
+    my $new_admin = _deserialize_changes();
 
     ## Check that the serial number sent by the form is the same as the one we
     ## expect.
@@ -11731,7 +11692,9 @@ sub do_edit_list {
     ## Start of the loop parsing the data sent by the edition form. ##
     ######################################################################
 
-    foreach my $pname (sort Sympa::List::by_order keys %{$edited_param}) {
+    foreach
+        my $pname (sort Sympa::List::by_order grep { exists $new_admin->{$_} }
+        keys %$pinfo) {
 
         ## $p will contain the values of the current parameter in the previous
         ## list config
@@ -12364,54 +12327,43 @@ sub do_edit_list {
     return 'edit_list_request';
 }
 
-## Shift tokens to get a reference to the desired
-## entry in $var (recursive)
-sub _shift_var {
-    my ($i, $var, @tokens) = @_;
-    wwslog('debug3', '(%s, %s, %s)', $i, $var, join('.', @tokens));
-    my $newvar;
+# Parses all the data sent from the web interface to the FCGI.
+# Fills the $new_admin.
+sub _deserialize_changes {
+    my $new_admin = {};
 
-    my $token = shift @tokens;
+    foreach my $key (sort keys %in) {
+        next unless $key =~ /\A(single_param|multiple_param)[.](\S+)\z/;
+        my ($type, $name) = ($1, $2);
 
-    if ($token =~ /^\d+$/) {
-        return \$var->[$token]
-            if ($#tokens == -1);
-
-        if ($tokens[0] =~ /^\d+$/) {
-            unless (ref $var->[$token]) {
-                $var->[$token] = [];
-            }
-            $newvar = $var->[$token];
+        # If the parameter is a multiple values parameter, store the values
+        # into an array.
+        my $value;
+        if ($type eq 'multiple_param') {
+            $value = [grep {/\S/} split /\0/, $in{$key}];
         } else {
-            unless (ref $var->[$token]) {
-                $var->[$token] = {};
-            }
-            $newvar = $var->[$token];
-        }
-    } else {
-        return \$var->{$token}
-            if ($#tokens == -1);
-
-        if ($tokens[0] =~ /^\d+$/) {
-            unless (ref $var->{$token}) {
-                $var->{$token} = [];
-            }
-            $newvar = $var->{$token};
-        } else {
-            unless (ref $var->{$token}) {
-                $var->{$token} = {};
-            }
-            $newvar = $var->{$token};
+            $value = ($in{$key} =~ /\S/) ? $in{$key} : undef;
         }
 
+        # $in{'owner.0.gecos'} is stored into $new_admin->{owner}[0]{gecos}.
+        # Inconsistent subscripts will be ignored.
+        my @subscripts = map {
+            if (/\A\d+\z/) {
+                sprintf '[%s]', $_;
+            } elsif (/\A[-\w]+\z/) {
+                sprintf "{'%s'}", $_;
+            } else {
+                "{''}";
+            }
+        } split /[.]/, $name;
+        eval sprintf '$new_admin->%s = $value', join('->', @subscripts);
     }
 
-    if ($#tokens > -1) {
-        $i++;
-        return _shift_var($i, $newvar, @tokens);
-    }
-    return $newvar;
+    return $new_admin;
 }
+
+# No longer used.
+#sub _shift_var;
 
 # Deletes topics subscriber that does not exist anymore and send a notify to
 # concerned subscribers.
