@@ -2216,7 +2216,9 @@ our %pinfo = (
             'optional' => {
                 'order'      => 6,
                 'gettext_id' => "is the attribute optional?",
-                'format'     => ['required', 'optional']
+                'format'     => ['required', 'optional'],
+                'default'    => 'optional',
+                'occurrence' => 1
             }
         },
         'occurrence' => '0-n'
