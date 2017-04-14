@@ -2381,6 +2381,7 @@ List parameters format accepts the following keywords :
 
 Regexp aplied to the configuration file entry;
 some common regexps are defined in L<Sympa::Regexps>.
+Or arrayref containing all possible values of parameter.
 
 If the parameter is paragraph, value of this item is a hashref containing
 definitions of sub-parameters.
@@ -2423,6 +2424,8 @@ strings in NLS catalogs.
 Occurrence of the parameter in the config file
 possible values: C<0-1>, C<1>, C<0-n> and C<1-n>.
 Example: A list may have multiple owner.
+
+See also L</"Node types">.
 
 =item gettext_id
 
@@ -2467,9 +2470,97 @@ Used to select passwords web input type.
 
 =back
 
+=head2 Node types
+
+Each node of configuration has one of following four types.
+Some of them can include other type of nodes recursively.
+
+=over
+
+=item Set (multiple enumerated values)
+
+=over
+
+=item *
+
+{occurrence}: C<'0-n'> or C<'1-n'>.
+
+=item *
+
+{format}: Arrayref.
+Or, it is regexp and {split_char} is defined.
+
+=back
+
+List of unique items not considering order.
+Items are scalars, and cannot be special values (scenario or task).
+The set cannot contain paragraphs, sets or arrays.
+
+=item Array (multiple values)
+
+=over
+
+=item *
+
+{occurrence}: C<'0-n'> or C<'1-n'>.
+
+=item *
+
+{format}: Regexp or hashref.
+
+=item *
+
+{split_char}: Not defined.
+
+=back
+
+List of the same type of nodes in order.
+Type of all nodes can be one of paragraph,
+scalar or special value (scenario or task).
+The array cannot contain sets or arrays.
+
+=item Paragraph (structured value)
+
+=over
+
+=item *
+
+{occurrence}: C<'0-1'> or C<'1'>, if the node is not an item of array or set.
+
+=item *
+
+{format}: Hashref.
+
+=back
+
+Compound node of one or more named nodes.
+Paragraph can contain any type of nodes, and each of their names and types
+are defined as member of {format}.
+
+=item Leaf (simple value)
+
+=over
+
+=item *
+
+{occurrence}: C<'0-1'> or C<'1'>, if the value is not an item of
+the set or the array.
+
+=item *
+
+{format}: Regexp or arrayref.
+
+=back
+
+Scalar or special value (scenario or task).
+Leaf cannot contain any other nodes.
+
+=back
+
 =head1 SEE ALSO
 
-L<config(5)>.
+L<config(5)>,
+L<Sympa::ListOpt>.
 
 =head1 HISTORY
 
