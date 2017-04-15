@@ -94,10 +94,10 @@ sub _sanitize_changes {
 
             my @r;
             if ($pii->{occurrence} =~ /n$/) {
-                if (ref $pii->{format} eq 'ARRAY' or $pii->{split_char}) {
+                if (ref $pii->{format} eq 'ARRAY') {
                     @r =
-                        $self->_sanitize_changes_set($curi, $newi,
-                        $pii, $pni, $authz);
+                        $self->_sanitize_changes_set($curi, $newi, $pii, $pni,
+                        $authz);
                 } else {
                     @r =
                         $self->_sanitize_changes_array($curi, $newi, $pii,
@@ -116,7 +116,7 @@ sub _sanitize_changes {
             # Omit removal if current configuration is already empty.
             (@r and not defined $r[1] and not defined $curi) ? () : @r;
         }
-    } sort keys %$new;
+    } sort Sympa::List::by_order keys %$new;
 
     return {%ret};
 }
@@ -154,21 +154,15 @@ sub _sanitize_changes_set {
     my %updated = map {
         $i++;
         my $curi = $_;
-
-        if (grep { Sympa::Tools::Data::smart_eq($curi, $_) } @$new) {
-            ($i => $_);
-        } else {
-            ($i => undef);
-        }
+        (grep { Sympa::Tools::Data::smart_eq($curi, $_) } @$new)
+            ? ()
+            : ($i => undef);
     } @$cur;
     my %added = map {
         my $newi = $_;
-
-        if (grep { Sympa::Tools::Data::smart_eq($newi, $_) } @$cur) {
-            ();
-        } else {
-            (++$i => $_);
-        }
+        (grep { Sympa::Tools::Data::smart_eq($newi, $_) } @$cur)
+            ? ()
+            : (++$i => $_);
     } @$new;
     my %ret = (%updated, %added);
 
@@ -257,10 +251,10 @@ sub _sanitize_changes_paragraph {
 
             my @r;
             if ($pii->{occurrence} =~ /n$/) {
-                if (ref $pii->{format} eq 'ARRAY' or $pii->{split_char}) {
+                if (ref $pii->{format} eq 'ARRAY') {
                     @r =
-                        $self->_sanitize_changes_set($curi, $newi,
-                        $pii, $pni, $authz);
+                        $self->_sanitize_changes_set($curi, $newi, $pii, $pni,
+                        $authz);
                 } else {
                     @r =
                         $self->_sanitize_changes_array($curi, $newi, $pii,
@@ -281,19 +275,19 @@ sub _sanitize_changes_paragraph {
         }
     } sort keys %$new;
 
-    # As soon as a required component is found to be removed,
-    # the whole parameter instance is removed.
-    while (my ($k, $v) = each %ret) {
-        next if defined $v;
-        return ($pnames->[-1] => undef)
-            if $pitem->{format}->{$k}->{occurrence} =~ /^1/;
-    }
-
-    # If all children are removed, remove parent.
     while (my ($k, $v) = each %ret) {
         $cur->{$k} = $v;
     }
-    return ($pnames->[-1] => undef) unless grep { defined $_ } values %$cur;
+    # As soon as a required component is found to be removed,
+    # the whole parameter instance is removed.
+    return ($pnames->[-1] => undef)
+        if grep {
+        $pitem->{format}->{$_}->{occurrence} =~ /^1/
+            and not defined $cur->{$_}
+        } keys %{$pitem->{format}};
+    # If all children are removed, remove parent.
+    return ($pnames->[-1] => undef)
+        unless grep { defined $_ } values %$cur;
 
     unless (%ret) {
         return ();    # No valid changes
@@ -409,20 +403,22 @@ sub _validate_changes_multiple {
         foreach my $i (sort { $a <=> $b } keys %$new) {
             my $newi = $new->{$i};
 
-            my $r;
-            if (ref $pitem->{format} eq 'HASH') {
-                $r =
-                    $self->_validate_changes_paragraph($newi, $pitem, $pnames,
-                    $errors);
-            } else {
-                $r =
-                    $self->_validate_changes_leaf($newi, $pitem, $pnames,
-                    $errors);
-            }
+            if (defined $newi) {
+                my $r;
+                if (ref $pitem->{format} eq 'HASH') {
+                    $r =
+                        $self->_validate_changes_paragraph($newi, $pitem,
+                        $pnames, $errors);
+                } else {
+                    $r =
+                        $self->_validate_changes_leaf($newi, $pitem, $pnames,
+                        $errors);
+                }
 
-            return undef unless defined $r;
-            delete $new->{$i} if $r eq 'omit';
-            $ret = 'invalid' if $r eq 'invalid';
+                return undef unless defined $r;
+                delete $new->{$i} if $r eq 'omit';
+                $ret = 'invalid' if $r eq 'invalid';
+            }
         }
 
         return 'omit' unless %$new;
@@ -498,8 +494,8 @@ sub _validate_changes_leaf {
     # Check that the new values have the right syntax.
     if (defined $new) {
         my $format = $pitem->{format};
-        $format = $pitem->{file_format} if ref $format;
-        unless ($new =~ /^$format$/) {
+        if (   (ref $format eq 'ARRAY' and not grep { $new eq $_ } @$format)
+            or (ref $format ne 'ARRAY' and not $new =~ /^$format$/)) {
             wwslog('err', 'Syntax error: %s = %s', join('.', $pnames), $new);
             push @$errors, ['user', 'syntax_errors', $pitem, $pnames];
             return 'invalid';
@@ -516,7 +512,7 @@ __END__
 
 =head1 NAME
 
-Sympa::Language - Handling languages and locales
+Sympa::List::Config - List configuration
 
 =head1 SYNOPSIS
 
