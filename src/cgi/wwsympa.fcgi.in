@@ -12678,10 +12678,10 @@ sub _prepare_edit_form {
             $p->{'type'} = 'enum';
 
             my @topics;
-            foreach my $topic (@{$p->{'value'}}) {
-                push @topics, $topic->{'value'};
+            foreach my $topic (sort keys %{$p->{'value'}}) {
+                push @topics, $topic if $p->{'value'}{$topic}{'selected'};
             }
-            undef $p->{'value'};
+            delete $p->{'value'};
             my %list_of_topics = Sympa::Robot::load_topics($robot);
 
             if (defined $p->{'constraint'}) {

@@ -228,7 +228,7 @@ our %pinfo = (
     'topics' => {
         'group'      => 'description',
         'gettext_id' => "Topics for the list",
-        'format'     => '[\-\w]+(\/[\-\w]+)?',
+        'format'     => [],     # Sympa::Robot::load_topics() called later
         'split_char' => ',',
         'occurrence' => '0-n'
     },
@@ -2490,7 +2490,6 @@ Some of them can include other type of nodes recursively.
 =item *
 
 {format}: Arrayref.
-Or, it is regexp and {split_char} is defined.
 
 =back
 
@@ -2509,10 +2508,6 @@ The set cannot contain paragraphs, sets or arrays.
 =item *
 
 {format}: Regexp or hashref.
-
-=item *
-
-{split_char}: Not defined.
 
 =back
 

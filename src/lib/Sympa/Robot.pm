@@ -369,7 +369,24 @@ sub list_params {
     my $robot_id = shift;
 
     my $pinfo = Sympa::Tools::Data::clone_var(\%Sympa::ListDef::pinfo);
-    $pinfo->{'lang'}{'format'} = [Sympa::get_supported_languages($robot_id)];
+    $pinfo->{lang}{format} = [Sympa::get_supported_languages($robot_id)];
+
+    my %topics = Sympa::Robot::load_topics($robot_id);
+    my @topics = map {
+        my $topic = $_;
+        if ($topics{$topic}->{sub}) {
+            (   $topic,
+                map { $topic . '/' . $_ } sort keys %{$topics{$topic}->{sub}}
+            );
+        } else {
+            ($topic);
+        }
+    } sort keys %topics;
+    $pinfo->{topics}{format} = [@topics];
+    # Compat.
+    $pinfo->{topics}{file_format} = sprintf '(%s)(,(%s))*',
+        join('|', @topics),
+        join('|', @topics);
 
     return $pinfo;
 }
