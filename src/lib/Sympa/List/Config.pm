@@ -30,6 +30,7 @@ use warnings;
 use Conf;
 use Sympa::Robot;
 use Sympa::Tools::Data;
+use Sympa::Tools::Text;
 
 sub new {
     my $class   = shift;
@@ -39,10 +40,28 @@ sub new {
     die 'bug in logic. Ask developer' unless ref $context eq 'Sympa::List';
 
     #FIXME: Should sanitize $config.
-    bless {context => $context, config => $config} => $class;
+    bless {context => $context, config => $config, changes => {}} => $class;
 }
 
-sub update {
+sub get {
+    my $self = shift;
+    my $key  = shift;
+
+    return undef unless exists $self->{config}->{$key};
+    # FIXME:Multiple levels of keys should be possible.
+    return Sympa::Tools::Data::clone_var($self->{config}->{$key});
+}
+
+sub get_change {
+    my $self = shift;
+    my $key  = shift;
+
+    return undef unless exists $self->{changes}->{$key};
+    # FIXME:Multiple levels of keys should be possible.
+    return Sympa::Tools::Data::clone_var($self->{changes}->{$key});
+}
+
+sub submit {
     my $self   = shift;
     my $new    = shift;
     my $user   = shift;
@@ -52,11 +71,13 @@ sub update {
 
     # Error if no parameter was edited.
     unless ($changes and %$changes) {
+        $self->{changes} = {};
         push @$errors, ['user', 'no_parameter_edited'];
         return '';
     }
 
     my $validity = $self->_validate_changes($changes, $errors);
+    $self->{changes} = $changes;
 
     return $validity;
 }
@@ -472,6 +493,46 @@ sub _validate_changes_paragraph {
     return $ret;
 }
 
+my %validations = (
+    # Checking that list owner address is not set to one of the special
+    # addresses.
+    list_special_addresses => sub {
+        my $self = shift;
+        my $new  = shift;
+
+        my $list = $self->{context};
+
+        my $email = Sympa::Tools::Text::canonic_email($new);
+        return 'syntax_errors'
+            unless defined $email;
+
+        my @special = ();
+        push @special,
+            map { Sympa::get_address($list, $_) }
+            qw(owner editor return_path subscribe unsubscribe);
+        push @special, map {
+            sprintf '%s-%s@%s',
+                $list->{'name'}, lc $_, $list->{'admin'}{'host'}
+            }
+            split /[,\s]+/,
+            Conf::get_robot_conf($list->{'domain'}, 'list_check_suffixes');
+        my $bounce_email_re = quotemeta($list->get_bounce_address('ANY'));
+        $bounce_email_re =~ s/(?<=\\\+).*(?=\\\@)/.*/;
+
+        return 'incorrect_email'
+            if grep { $email eq $_ } @special
+                or $email =~ /^$bounce_email_re$/;
+    },
+    # Checking no topic named "other".
+    reserved_msg_topic_name => sub {
+        my $self = shift;
+        my $new  = shift;
+
+        return 'topic_other'
+            if lc $new eq 'other';
+    },
+);
+
 # Validates leaf.
 sub _validate_changes_leaf {
     my $self   = shift;
@@ -496,13 +557,26 @@ sub _validate_changes_leaf {
         my $format = $pitem->{format};
         if (   (ref $format eq 'ARRAY' and not grep { $new eq $_ } @$format)
             or (ref $format ne 'ARRAY' and not $new =~ /^$format$/)) {
-            wwslog('err', 'Syntax error: %s = %s', join('.', $pnames), $new);
-            push @$errors, ['user', 'syntax_errors', $pitem, $pnames];
+            push @$errors,
+                ['user', 'syntax_errors', $pitem, $pnames, {value => $new}];
+            return 'invalid';
+        }
+        foreach my $validation (@{$pitem->{validations} || []}) {
+            next unless ref $validations{$validation} eq 'CODE';
+            my $validity = $validations{$validation}->($self, $new);
+            next unless $validity;
+
+            push @$errors,
+                ['user', $validity, $pitem, $pnames, {value => $new}];
             return 'invalid';
         }
     }
 
     return 'valid';
+}
+
+sub commit {
+    die 'Not yet implemented';
 }
 
 1;
@@ -518,8 +592,55 @@ Sympa::List::Config - List configuration
 
   use Sympa::List::Config;
   my $config = Sympa::List::Config->new($list, {...});
-  
-  my $result = $config->update({...});
+ 
+  my $errors = []; 
+  my $validity = $config->submit({...}, $user, $errors);
+  $config->commit;
 
 =head1 DESCRIPTION
 
+=head2 Methods
+
+=over
+
+=item new ( $list, [ $initial_config ] )
+
+I<Constructor>.
+TBD.
+
+=item get ( $key )
+
+I<Instance method>.
+TBD.
+
+=item get_change ($key )
+
+I<Instance method>.
+Gets submitted change.
+
+=item submit ( $new, $user, \@errors )
+
+I<Instance method>.
+Submits change and verify it.
+TBD.
+
+=item commit ( $change )
+
+I<Instance method>.
+Merges change verified by sbumit() into actual configuration.
+TBD.
+
+=back
+
+=head1 SEE ALSO
+
+L<Sympa::List>,
+L<Sympa::ListDef>.
+
+=head1 HISTORY
+
+L<Sympa::List::Config> appeared on Sympa 6.2.17.
+
+=cut
+
+# -*- indent-tabs-mode: nil; -*-

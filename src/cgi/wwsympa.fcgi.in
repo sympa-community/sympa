@@ -12045,66 +12045,11 @@ sub do_edit_list {
         return undef;
     }
 
-    ## Checking no topic named "other"
-    foreach my $msg_topic (@{$new_admin->{'msg_topic'}}) {
-        if ($msg_topic->{'name'} =~ /^other$/i) {
-            $msg_topic->{'name'}  = undef;
-            $msg_topic->{'title'} = undef;
-            Sympa::Report::reject_report_web('user', 'topic_other', {},
-                $param->{'action'}, $list);
-            wwslog('notice', 'Topic other is a reserved word');
-            web_db_log(
-                {   'status'     => 'error',
-                    'error_type' => 'syntax_errors'
-                }
-            );
-            return undef;
-        }
-    }
-
     ## For changed msg_topic.name
     if (defined $new_admin->{'msg_topic'}
         and _notify_deleted_topic($new_admin->{'msg_topic'})) {
         Sympa::Report::notice_report_web('subscribers_noticed_deleted_topics',
             {}, $param->{'action'});
-    }
-
-    ## Checking that list owner address is not set to one of the special
-    ## addresses:
-    if (exists $changed{'owner'}) {
-        my @special = ();
-        push @special,
-            map { Sympa::get_address($list, $_) }
-            qw(owner editor return_path subscribe unsubscribe);
-        push @special, map {
-            sprintf '%s-%s@%s',
-                $list->{'name'}, lc $_, $list->{'admin'}{'host'}
-            }
-            split /[,\s]+/,
-            Conf::get_robot_conf($robot, 'list_check_suffixes');
-        my $bounce_email_re = quotemeta($list->get_bounce_address('ANY'));
-        $bounce_email_re =~ s/(?<=\\\+).*(?=\\\@)/.*/;
-
-        foreach my $owner (@{$new_admin->{'owner'}}) {
-            my $owner_email = lc $owner->{'email'};
-
-            if (grep { $owner_email eq $_ } @special
-                or $owner_email =~ /^$bounce_email_re$/) {
-                ## generate an error and return
-                Sympa::Report::reject_report_web('user', 'incorrect_email',
-                    {'email' => $owner->{'email'}},
-                    $param->{'action'}, $list);
-                wwslog('info', 'Reserved email address %s',
-                    $owner->{'email'});
-                web_db_log(
-                    {   'status'     => 'error',
-                        'error_type' => 'incorrect_email',
-                        'parameters' => $owner->{'email'}
-                    }
-                );
-                return undef;
-            }
-        }
     }
 
     ## Delete selected params

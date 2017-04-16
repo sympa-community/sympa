@@ -80,7 +80,8 @@ our %pinfo = (
                 'gettext_id' => "email address",
                 'format'     => Sympa::Regexps::email(),
                 'occurrence' => '1',
-                'length'     => 30
+                'length'     => 30,
+                validations  => ['list_special_addresses'],
             },
             'gecos' => {
                 'order'      => 2,
@@ -379,7 +380,8 @@ our %pinfo = (
                 'gettext_id' => "Message topic name",
                 'format'     => '[\-\w]+',
                 'occurrence' => '1',
-                'length'     => 15
+                'length'     => 15,
+                validations  => ['reserved_msg_topic_name'],
             },
             'keywords' => {
                 'order'      => 2,
@@ -2467,6 +2469,10 @@ that should always be saved in the config file.
 =item field_type
 
 Used to select passwords web input type.
+
+=item validations
+
+TBD.
 
 =back
 
