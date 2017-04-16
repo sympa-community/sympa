@@ -172,8 +172,9 @@ sub update_email_netidmap_db {
     return 1;
 }
 
-## Loads the list of topics if updated
-## FIXME: This might be moved to Robot package.
+# Loads the list of topics if updated.
+# The topic names "others" and "topicsless" are reserved words therefore
+# ignored.  Note: "other" is not reserved and may be used.
 sub load_topics {
     my $robot = shift;
     $log->syslog('debug2', '(%s)', $robot);
@@ -210,7 +211,10 @@ sub load_topics {
         my (@rough_data, $topic);
         while (<FILE>) {
             Encode::from_to($_, $Conf::Conf{'filesystem_encoding'}, 'utf8');
-            if (/^([\-\w\/]+)\s*$/) {
+            if (/\A(others|topicsless)\s*\z/) {
+                # "others" and "topicsless" are reserved words. Ignore.
+                next;
+            } elsif (/^([\-\w\/]+)\s*$/) {
                 $index++;
                 $topic = {
                     'name'  => $1,
