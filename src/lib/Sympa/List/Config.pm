@@ -634,7 +634,16 @@ sub commit {
         }
     }
 
-    die 'Not yet implemented';
+    # Update 'defaults' item to indicate default settings, for compatibility.
+    #FIXME:Multiple levels of keys should be possible.
+    foreach my $pname (sort keys %{$self->{changes}}) {
+        if (defined $self->{changes}->{$pname}
+            or $pinfo->{$pname}->{internal}) {
+            delete $self->{config}->{defaults}->{$pname};
+        } else {
+            $self->{config}->{defaults}->{$pname} = 1;
+        }
+    }
 }
 
 sub _merge_changes_multiple {
