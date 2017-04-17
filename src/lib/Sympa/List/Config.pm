@@ -35,12 +35,97 @@ use Sympa::Tools::Text;
 sub new {
     my $class   = shift;
     my $context = shift;
-    my $config  = shift || {};
+    my %options = @_;
 
     die 'bug in logic. Ask developer' unless ref $context eq 'Sympa::List';
 
+    my $config = $options{config} || {};
+    $config = Sympa::Tools::Data::clone_var($config)
+        if $options{copy};
+
     #FIXME: Should sanitize $config.
-    bless {context => $context, config => $config, changes => {}} => $class;
+    my $self =
+        bless {context => $context, _config => $config, _changes => {}} =>
+        $class;
+
+    $self->{_pinfo} = $self->_list_params(%options);
+
+    return $self;
+}
+
+sub _list_params {
+    my $self    = shift;
+    my %options = @_;
+
+    my $list = $self->{context};
+
+    my $pinfo = Sympa::Robot::list_params($list->{'domain'});
+    $self->_list_params_apply_family($pinfo)
+        unless $options{no_family};
+
+    return $pinfo;
+}
+
+sub _list_params_apply_family {
+    my $self  = shift;
+    my $pinfo = shift;
+
+    my $family = $self->{context}->get_family;
+    return unless ref $family eq 'Sympa::Family';
+
+    foreach my $pname (keys %$pinfo) {
+        $self->__list_params_apply_family($pinfo->{$pname}, [$pname],
+            $family);
+    }
+}
+
+# Adds additional constraint by family to pinfo.
+# The family constraint
+# * restricts options for particular scalar parameters to the set of values,
+# * makes occurrence of them be required.
+sub __list_params_apply_family {
+    my $self   = shift;
+    my $pitem  = shift;
+    my $pnames = shift;
+    my $family = shift;
+
+    my $ret = 0;
+    if (ref $pitem->{format} eq 'HASH') {
+        foreach my $key (keys %{$pitem->{format}}) {
+            if ($self->_list_params_apply_family(
+                    $pitem->{format}->{$key},
+                    [@$pnames, $key], $family
+                )
+                ) {
+                if ($pitem->{format}->{$key}->{occurrence} eq '0-1') {
+                    $pitem->{format}->{$key}->{occurrence} = '1';
+                } elsif ($pitem->{format}->{$key}->{occurrence} eq '0-n') {
+                    $pitem->{format}->{$key}->{occurrence} = '1-n';
+                }
+                $ret = 1;
+            }
+        }
+    } else {
+        my $constraint = $family->get_param_constraint(join '.', @$pnames);
+        unless (defined $constraint) {    # Error
+            next;
+        } elsif (ref $constraint eq 'ARRAY') {    # Multiple choices
+            $pitem->{format} = $constraint;
+            if ($pitem->{occurrence} eq '0-1') {
+                $pitem->{occurrence} = '1';
+            } elsif ($pitem->{occurrence} eq '0-n') {
+                $pitem->{occurrence} = '1-n';
+            }
+        } elsif ($constraint ne '0') {            # Fixed value
+            $pitem->{format}     = [$constraint];
+            $pitem->{occurrence} = '1';
+        } else {                                  # No control
+            next;
+        }
+        $ret = 1;
+    }
+
+    return $ret;
 }
 
 sub get {
@@ -48,24 +133,24 @@ sub get {
     my $key  = shift;
 
     #FIXME:Give default value if any.
-    return unless exists $self->{config}->{$key};    # void
+    return unless exists $self->{_config}->{$key};    # void
     #FIXME:Multiple levels of keys should be possible.
-    return Sympa::Tools::Data::clone_var($self->{config}->{$key});
+    return Sympa::Tools::Data::clone_var($self->{_config}->{$key});
 }
 
 sub get_change {
     my $self = shift;
     my $key  = shift;
 
-    return unless exists $self->{changes}->{$key};    # void
+    return unless exists $self->{_changes}->{$key};    # void
     # FIXME:Multiple levels of keys should be possible.
-    return Sympa::Tools::Data::clone_var($self->{changes}->{$key});
+    return Sympa::Tools::Data::clone_var($self->{_changes}->{$key});
 }
 
 sub get_changeset {
     my $self = shift;
 
-    return $self->{changes};
+    return $self->{_changes};
 }
 
 sub submit {
@@ -78,13 +163,13 @@ sub submit {
 
     # Error if no parameter was edited.
     unless ($changes and %$changes) {
-        $self->{changes} = {};
+        $self->{_changes} = {};
         push @$errors, ['user', 'no_parameter_edited'];
         return '';
     }
 
     my $validity = $self->_validate_changes($changes, $errors);
-    $self->{changes} = $changes;
+    $self->{_changes} = $changes;
 
     return $validity;
 }
@@ -109,7 +194,7 @@ sub _sanitize_changes {
         my $pnames = shift;
         'write' eq $list->may_edit(join('.', @{$pnames || []}), $user);
     };
-    my $pinfo = $self->_list_params;
+    my $pinfo = $self->{_pinfo};
 
     my %ret = map {
         unless (exists $pinfo->{$_} and $pinfo->{$_}) {
@@ -118,7 +203,7 @@ sub _sanitize_changes {
             my $pii  = $pinfo->{$_};
             my $pni  = [$_];
             my $newi = $new->{$_};
-            my $curi = Sympa::Tools::Data::clone_var($self->{config}{$_});
+            my $curi = Sympa::Tools::Data::clone_var($self->{_config}{$_});
 
             my @r;
             if ($pii->{occurrence} =~ /n$/) {
@@ -383,8 +468,7 @@ sub _validate_changes {
     my $new    = shift;
     my $errors = shift;
 
-    my $list  = $self->{context};
-    my $pinfo = $self->_list_params;
+    my $pinfo = $self->{_pinfo};
 
     my $ret = 'valid';
     foreach my $pname (sort Sympa::List::by_order keys %$new) {
@@ -604,8 +688,8 @@ sub commit {
     my $errors = shift || [];
 
     my $list    = $self->{context};
-    my $changes = $self->{changes};
-    my $pinfo   = $self->_list_params;
+    my $changes = $self->{_changes};
+    my $pinfo   = $self->{_pinfo};
 
     # Updating config_changes for changed parameters.
     # FIXME:Check subitems also.
@@ -616,32 +700,32 @@ sub commit {
         }
     }
 
-    foreach my $pname (sort keys %{$self->{changes}}) {
-        my $curi = $self->{config}->{$pname};
-        my $newi = $self->{changes}->{$pname};
+    foreach my $pname (sort keys %{$self->{_changes}}) {
+        my $curi = $self->{_config}->{$pname};
+        my $newi = $self->{_changes}->{$pname};
         my $pii  = $pinfo->{$pname};
 
         unless (defined $newi) {
-            delete $self->{config}->{$pname};
+            delete $self->{_config}->{$pname};
         } elsif ($pii->{occurrence} =~ /n$/) {
-            $curi = $self->{config}->{$pname} ||= [];
+            $curi = $self->{_config}->{$pname} ||= [];
             $self->_merge_changes_multiple($curi, $newi, $pii);
         } elsif (ref $pii->{format} eq 'HASH') {
-            $curi = $self->{config}->{$pname} ||= {};
+            $curi = $self->{_config}->{$pname} ||= {};
             $self->_merge_changes_paragraph($curi, $newi, $pii);
         } else {
-            $self->{config}->{$pname} = $newi;
+            $self->{_config}->{$pname} = $newi;
         }
     }
 
     # Update 'defaults' item to indicate default settings, for compatibility.
     #FIXME:Multiple levels of keys should be possible.
-    foreach my $pname (sort keys %{$self->{changes}}) {
-        if (defined $self->{changes}->{$pname}
+    foreach my $pname (sort keys %{$self->{_changes}}) {
+        if (defined $self->{_changes}->{$pname}
             or $pinfo->{$pname}->{internal}) {
-            delete $self->{config}->{defaults}->{$pname};
+            delete $self->{_config}->{defaults}->{$pname};
         } else {
-            $self->{config}->{defaults}->{$pname} = 1;
+            $self->{_config}->{defaults}->{$pname} = 1;
         }
     }
 }
@@ -698,76 +782,6 @@ sub _merge_changes_paragraph {
     }
 }
 
-sub _list_params {
-    my $self = shift;
-
-    my $list = $self->{context};
-
-    my $pinfo = Sympa::Robot::list_params($list->{'domain'});
-    $self->_list_params_apply_family($pinfo);
-
-    return $pinfo;
-}
-
-sub _list_params_apply_family {
-    my $self  = shift;
-    my $pinfo = shift;
-
-    my $family = $self->{context}->get_family;
-    return unless ref $family eq 'Sympa::Family';
-
-    my $ret = 0;
-    foreach my $pname (keys %$pinfo) {
-        $self->__list_params_apply_family($pinfo->{$pname}, [$pname],
-            $family);
-    }
-}
-
-sub __list_params_apply_family {
-    my $self   = shift;
-    my $pitem  = shift;
-    my $pnames = shift;
-    my $family = shift;
-
-    my $ret = 0;
-    if (ref $pitem->{format} eq 'HASH') {
-        foreach my $key (keys %{$pitem->{format}}) {
-            if ($self->_list_params_apply_family(
-                    $pitem->{format}->{$key},
-                    [@$pnames, $key], $family
-                )
-                ) {
-                if ($pitem->{format}->{$key}->{occurrence} eq '0-1') {
-                    $pitem->{format}->{$key}->{occurrence} = '1';
-                } elsif ($pitem->{format}->{$key}->{occurrence} eq '0-n') {
-                    $pitem->{format}->{$key}->{occurrence} = '1-n';
-                }
-                $ret = 1;
-            }
-        }
-    } else {
-        my $constraint = $family->get_param_constraint(join '.', @$pnames);
-        unless (defined $constraint) {    # Error
-            next;
-        } elsif (ref $constraint eq 'ARRAY') {    # Multiple choices
-            $pitem->{format} = $constraint;
-            if ($pitem->{occurrence} eq '0-1') {
-                $pitem->{occurrence} = '1';
-            } elsif ($pitem->{occurrence} eq '0-n') {
-                $pitem->{occurrence} = '1-n';
-            }
-        } elsif ($constraint ne '0') {            # Fixed value
-            $pitem->{format}     = [$constraint];
-            $pitem->{occurrence} = '1';
-        } else {                                  # No control
-            next;
-        }
-        $ret = 1;
-    }
-
-    return $ret;
-}
-
 1;
 __END__
 
@@ -792,7 +806,8 @@ Sympa::List::Config - List configuration
 
 =over
 
-=item new ( $list, [ $initial_config ] )
+=item new ( $list, [ config =E<gt> $initial_config ], [ copy =E<gt> 1 ],
+[ no_family =E<gt> 1 ] )
 
 I<Constructor>.
 TBD.
@@ -856,6 +871,16 @@ TBD.
 I<Instance method>.
 Merges change verified by sbumit() into actual configuration.
 TBD.
+
+=back
+
+=head2 Attribute
+
+=over
+
+=item {context}
+
+Context, L<Sympa::List> instance.
 
 =back
 
