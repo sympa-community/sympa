@@ -164,7 +164,8 @@ our %pinfo = (
                 'gettext_id' => "email address",
                 'format'     => Sympa::Regexps::email(),
                 'occurrence' => '1',
-                'length'     => 30
+                'length'     => 30,
+                validations  => ['list_editor_address'],
             },
             'reception' => {
                 'order'      => 4,

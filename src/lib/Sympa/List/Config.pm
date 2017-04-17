@@ -501,6 +501,20 @@ sub _validate_changes_paragraph {
 }
 
 my %validations = (
+    # Checking that list editor address is not set to editor special address.
+    list_editor_address => sub {
+        my $self = shift;
+        my $new  = shift;
+
+        my $list = $self->{context};
+
+        my $email = Sympa::Tools::Text::canonic_email($new);
+        return 'syntax_errors'
+            unless defined $email;
+
+        return 'incorrect_email'
+            if Sympa::get_address($list, 'editor') eq $new;
+    },
     # Checking that list owner address is not set to one of the special
     # addresses.
     list_special_addresses => sub {
