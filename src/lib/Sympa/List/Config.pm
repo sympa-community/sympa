@@ -35,7 +35,7 @@ use Sympa::Tools::Text;
 sub new {
     my $class   = shift;
     my $context = shift;
-    my $config  = shift;
+    my $config  = shift || {};
 
     die 'bug in logic. Ask developer' unless ref $context eq 'Sympa::List';
 
@@ -47,8 +47,9 @@ sub get {
     my $self = shift;
     my $key  = shift;
 
-    return undef unless exists $self->{config}->{$key};
-    # FIXME:Multiple levels of keys should be possible.
+    #FIXME:Give default value if any.
+    return unless exists $self->{config}->{$key};    # void
+    #FIXME:Multiple levels of keys should be possible.
     return Sympa::Tools::Data::clone_var($self->{config}->{$key});
 }
 
@@ -56,9 +57,15 @@ sub get_change {
     my $self = shift;
     my $key  = shift;
 
-    return undef unless exists $self->{changes}->{$key};
+    return unless exists $self->{changes}->{$key};    # void
     # FIXME:Multiple levels of keys should be possible.
     return Sympa::Tools::Data::clone_var($self->{changes}->{$key});
+}
+
+sub get_changeset {
+    my $self = shift;
+
+    return $self->{changes};
 }
 
 sub submit {
@@ -102,7 +109,7 @@ sub _sanitize_changes {
         my $pnames = shift;
         'write' eq $list->may_edit(join('.', @{$pnames || []}), $user);
     };
-    my $pinfo = Sympa::Robot::list_params($list->{'domain'});
+    my $pinfo = $self->_list_params;
 
     my %ret = map {
         unless (exists $pinfo->{$_} and $pinfo->{$_}) {
@@ -377,7 +384,7 @@ sub _validate_changes {
     my $errors = shift;
 
     my $list  = $self->{context};
-    my $pinfo = Sympa::Robot::list_params($list->{'domain'});
+    my $pinfo = $self->_list_params;
 
     my $ret = 'valid';
     foreach my $pname (sort Sympa::List::by_order keys %$new) {
@@ -555,8 +562,11 @@ sub _validate_changes_leaf {
     # Check that the new values have the right syntax.
     if (defined $new) {
         my $format = $pitem->{format};
-        if (   (ref $format eq 'ARRAY' and not grep { $new eq $_ } @$format)
-            or (ref $format ne 'ARRAY' and not $new =~ /^$format$/)) {
+        if (ref $format eq 'ARRAY' and not grep { $new eq $_ } @$format) {
+            push @$errors,
+                ['user', 'syntax_errors', $pitem, $pnames, {value => $new}];
+            return 'invalid';
+        } elsif (ref $format ne 'ARRAY' and not $new =~ /^$format$/) {
             push @$errors,
                 ['user', 'syntax_errors', $pitem, $pnames, {value => $new}];
             return 'invalid';
@@ -576,7 +586,163 @@ sub _validate_changes_leaf {
 }
 
 sub commit {
+    my $self = shift;
+    my $errors = shift || [];
+
+    my $list    = $self->{context};
+    my $changes = $self->{changes};
+    my $pinfo   = $self->_list_params;
+
+    # Updating config_changes for changed parameters.
+    # FIXME:Check subitems also.
+    if (ref($list->get_family) eq 'Sympa::Family') {
+        unless ($list->update_config_changes('param', [keys %$changes])) {
+            push @$errors, ['intern', 'update_config_changes'];
+            return undef;
+        }
+    }
+
+    foreach my $pname (sort keys %{$self->{changes}}) {
+        my $curi = $self->{config}->{$pname};
+        my $newi = $self->{changes}->{$pname};
+        my $pii  = $pinfo->{$pname};
+
+        unless (defined $newi) {
+            delete $self->{config}->{$pname};
+        } elsif ($pii->{occurrence} =~ /n$/) {
+            $curi = $self->{config}->{$pname} ||= [];
+            $self->_merge_changes_multiple($curi, $newi, $pii);
+        } elsif (ref $pii->{format} eq 'HASH') {
+            $curi = $self->{config}->{$pname} ||= {};
+            $self->_merge_changes_paragraph($curi, $newi, $pii);
+        } else {
+            $self->{config}->{$pname} = $newi;
+        }
+    }
+
     die 'Not yet implemented';
+}
+
+sub _merge_changes_multiple {
+    my $self  = shift;
+    my $cur   = shift;
+    my $new   = shift;
+    my $pitem = shift;
+
+    foreach my $i (reverse sort { $a <=> $b } keys %$new) {
+        my $curi = $cur->[$i];
+        my $newi = $new->{$i};
+
+        unless (defined $new->{$i}) {
+            delete $cur->[$i];
+        } elsif (ref $pitem->{format} eq 'HASH') {
+            $curi = $cur->[$i] ||= {};
+            $self->_merge_changes_paragraph($curi, $newi, $pitem);
+        } else {
+            $cur->[$i] = $newi;
+        }
+    }
+
+    # Set: Dedupe and sort.
+    if (ref $pitem->{format} eq 'ARRAY') {
+        my %elements = map { ($_ => 1) } @$cur;
+        @$cur = sort keys %elements;
+    }
+}
+
+sub _merge_changes_paragraph {
+    my $self  = shift;
+    my $cur   = shift;
+    my $new   = shift;
+    my $pitem = shift;
+
+    foreach my $key (sort keys %$new) {
+        my $curi = $cur->{$key};
+        my $newi = $new->{$key};
+        my $pii  = $pitem->{format}->{$key};
+
+        unless (defined $newi) {
+            delete $cur->{$key};
+        } elsif ($pii->{occurrence} =~ /n$/) {
+            $curi = $cur->{$key} ||= [];
+            $self->_merge_changes_multiple($curi, $newi, $pii);
+        } elsif (ref $pii->{format} eq 'HASH') {
+            $curi = $cur->{$key} ||= {};
+            $self->_merge_changes_paragraph($curi, $newi, $pii);
+        } else {
+            $cur->{$key} = $newi;
+        }
+    }
+}
+
+sub _list_params {
+    my $self = shift;
+
+    my $list = $self->{context};
+
+    my $pinfo = Sympa::Robot::list_params($list->{'domain'});
+    $self->_list_params_apply_family($pinfo);
+
+    return $pinfo;
+}
+
+sub _list_params_apply_family {
+    my $self  = shift;
+    my $pinfo = shift;
+
+    my $family = $self->{context}->get_family;
+    return unless ref $family eq 'Sympa::Family';
+
+    my $ret = 0;
+    foreach my $pname (keys %$pinfo) {
+        $self->__list_params_apply_family($pinfo->{$pname}, [$pname],
+            $family);
+    }
+}
+
+sub __list_params_apply_family {
+    my $self   = shift;
+    my $pitem  = shift;
+    my $pnames = shift;
+    my $family = shift;
+
+    my $ret = 0;
+    if (ref $pitem->{format} eq 'HASH') {
+        foreach my $key (keys %{$pitem->{format}}) {
+            if ($self->_list_params_apply_family(
+                    $pitem->{format}->{$key},
+                    [@$pnames, $key], $family
+                )
+                ) {
+                if ($pitem->{format}->{$key}->{occurrence} eq '0-1') {
+                    $pitem->{format}->{$key}->{occurrence} = '1';
+                } elsif ($pitem->{format}->{$key}->{occurrence} eq '0-n') {
+                    $pitem->{format}->{$key}->{occurrence} = '1-n';
+                }
+                $ret = 1;
+            }
+        }
+    } else {
+        my $constraint = $family->get_param_constraint(join '.', @$pnames);
+        unless (defined $constraint) {    # Error
+            next;
+        } elsif (ref $constraint eq 'ARRAY') {    # Multiple choices
+            $pitem->{format} = $constraint;
+            if ($pitem->{occurrence} eq '0-1') {
+                $pitem->{occurrence} = '1';
+            } elsif ($pitem->{occurrence} eq '0-n') {
+                $pitem->{occurrence} = '1-n';
+            }
+        } elsif ($constraint ne '0') {            # Fixed value
+            $pitem->{format}     = [$constraint];
+            $pitem->{occurrence} = '1';
+        } else {                                  # No control
+            next;
+        }
+        $ret = 1;
+    }
+
+    return $ret;
 }
 
 1;
@@ -595,7 +761,7 @@ Sympa::List::Config - List configuration
  
   my $errors = []; 
   my $validity = $config->submit({...}, $user, $errors);
-  $config->commit;
+  $config->commit($errors);
 
 =head1 DESCRIPTION
 
@@ -611,20 +777,58 @@ TBD.
 =item get ( $key )
 
 I<Instance method>.
-TBD.
+Gets current value of parameter $key.
 
-=item get_change ($key )
+Parameter:
+
+=over
+
+=item $key
+
+Parameter name.
+
+=back
+
+Returns:
+
+If value is not set, returns C<undef>.
+
+=item get_change ( $key )
 
 I<Instance method>.
-Gets submitted change.
+Gets submitted change on parameter $key.
+
+Parameter:
+
+=over
+
+=item $key
+
+Parameter name.
+
+=back
+
+Returns:
+
+If value won't be changed, returns empty list in array context
+and C<undef> in scalar context.
+If value would be deleted, returns C<undef>.
+
+=item get_changeset ( )
+
+I<Instance method>.
+Gets all submitted changes.
+
+Note that returned value is the real reference to internal information.
+Any modifications might break it.
 
 =item submit ( $new, $user, \@errors )
 
 I<Instance method>.
-Submits change and verify it.
+Submits change and verifys it.
 TBD.
 
-=item commit ( $change )
+=item commit ( [ \@errors ] )
 
 I<Instance method>.
 Merges change verified by sbumit() into actual configuration.
@@ -636,6 +840,16 @@ TBD.
 
 L<Sympa::List>,
 L<Sympa::ListDef>.
+
+=head1 KNOWN BUGS
+
+=over
+
+=item *
+
+get() cannot return default values.
+
+=back
 
 =head1 HISTORY
 
