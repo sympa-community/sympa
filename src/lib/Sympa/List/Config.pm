@@ -107,22 +107,48 @@ sub __list_params_apply_family {
         }
     } else {
         my $constraint = $family->get_param_constraint(join '.', @$pnames);
+        my @constr;
         unless (defined $constraint) {    # Error
             next;
         } elsif (ref $constraint eq 'ARRAY') {    # Multiple choices
-            $pitem->{format} = $constraint;
-            if ($pitem->{occurrence} eq '0-1') {
-                $pitem->{occurrence} = '1';
-            } elsif ($pitem->{occurrence} eq '0-n') {
-                $pitem->{occurrence} = '1-n';
-            }
+            @constr = @$constraint;
         } elsif ($constraint ne '0') {            # Fixed value
-            $pitem->{format}     = [$constraint];
-            $pitem->{occurrence} = '1';
+            @constr = ($constraint);
         } else {                                  # No control
             next;
         }
-        $ret = 1;
+
+        if (ref $pitem->{format} eq 'ARRAY') {
+            @constr = grep {
+                my $k = $_;
+                grep { $k eq $_ } @constr
+            } @{$pitem->{format}};
+        } else {
+            my $re = $pitem->{format};
+            @constr = grep {/^($re)$/} @constr;
+        }
+
+        if (@constr) {
+            if (ref $pitem->{format} eq 'ARRAY') {
+                $pitem->{format} = [@constr];
+            } else {
+                $pitem->{format} = join '|', map { quotemeta $_ } @constr;
+            }
+
+            if ($pitem->{occurrence} eq '0-n') {
+                $pitem->{occurrence} = '1-n';
+            } elsif ($pitem->{occurrence} eq '0-1') {
+                $pitem->{occurrence} = '1';
+            }
+
+            if (1 == scalar @constr) {
+                $pitem->{default} = $constr[0];
+            } elsif (exists $pitem->{default} and defined $pitem->{default}) {
+                delete $pitem->{default}
+                    unless grep { $pitem->{default} eq $_ } @constr;
+            }
+            $ret = 1;
+        }
     }
 
     return $ret;
@@ -257,11 +283,16 @@ sub _sanitize_changes_set {
         } else {
             $cur = $default;
         }
-        if ($pitem->{split_char}) {
+        unless (defined $cur) {
+            $cur = [];
+        } elsif ($pitem->{split_char}) {
             my $split_char = $pitem->{split_char};
             $cur = [split /\s*$split_char\s*/, $cur];
         }
     }
+    # Dedupe and sort.
+    my %elements = map { ($_ => 1) } grep { defined $_ } @$cur;
+    @$cur = sort keys %elements;
 
     my $i       = -1;
     my %updated = map {
@@ -736,12 +767,18 @@ sub _merge_changes_multiple {
     my $new   = shift;
     my $pitem = shift;
 
+    # The set: Dedupe and sort.
+    if (ref $pitem->{format} eq 'ARRAY') {
+        my %elements = map { ($_ => 1) } grep { defined $_ } @$cur;
+        @$cur = sort keys %elements;
+    }
+
     foreach my $i (reverse sort { $a <=> $b } keys %$new) {
         my $curi = $cur->[$i];
         my $newi = $new->{$i};
 
         unless (defined $new->{$i}) {
-            delete $cur->[$i];
+            splice @$cur, $i, 1;
         } elsif (ref $pitem->{format} eq 'HASH') {
             $curi = $cur->[$i] ||= {};
             $self->_merge_changes_paragraph($curi, $newi, $pitem);
@@ -750,9 +787,9 @@ sub _merge_changes_multiple {
         }
     }
 
-    # Set: Dedupe and sort.
+    # The set: Dedupe and sort.
     if (ref $pitem->{format} eq 'ARRAY') {
-        my %elements = map { ($_ => 1) } @$cur;
+        my %elements = map { ($_ => 1) } grep { defined $_ } @$cur;
         @$cur = sort keys %elements;
     }
 }
