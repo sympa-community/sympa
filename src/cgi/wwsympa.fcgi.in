@@ -11619,30 +11619,6 @@ sub do_search_list {
 sub do_edit_list {
     wwslog('info', '');
 
-    ## Check if the list belong to a family.
-    my $family;
-    if (defined $list->{'admin'}{'family_name'}) {
-        unless ($family = $list->get_family()) {
-            Sympa::Report::reject_report_web('intern', 'unable_get_family',
-                {}, $param->{'action'}, $list, $param->{'user'}{'email'},
-                $robot);
-            wwslog('info', 'Impossible to get list %s\'s family',
-                $list->{'name'});
-            web_db_log(
-                {   'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-    }
-
-    # This hash will contain all the data gathered from the edit list form.
-    # The keys are the parameter names.
-    # The values are either the parameter value or an array containing this
-    # value if this is a multiple values parameter.
-    my $new_admin = _deserialize_changes();
-
     ## Check that the serial number sent by the form is the same as the one we
     ## expect.
     ## Avoid modifying a list previously modified by another way.
@@ -11665,538 +11641,109 @@ sub do_edit_list {
         return undef;
     }
 
-    ## Check changes & check syntax
-    ## %changed stores the names of the parameters whose values differs from
-    ## the value in the config file.
-    ## %stores the name of parameter for which values have been deleted. The
-    ## keys are the parameter name, the values are the index of the deleted
-    ## value.
-    ## @syntax_error stores the list of parameters for which syntax errors wre
-    ## founs while evaluating the data sent by the form.
-    my (%changed, %delete);
-    my @syntax_error;
+    # Start parsing the data sent by the edition form.
+    my $new_admin = _deserialize_changes();
 
-    ## Check family constraints.
-    ## %check_family is a hash whose keys are a parameter name and whose
-    ## values are the constraints
-    ## defined for this parameter.
-    my %check_family;
-
-    ## Getting changes about owners or editors
-    ## If changes occurred in the owner or editor definition, these scalars
-    ## are set to 1.
-    my $owner_update  = 0;
-    my $editor_update = 0;
-
-    ######################################################################
-    ## Start of the loop parsing the data sent by the edition form. ##
-    ######################################################################
-
-    foreach
-        my $pname (sort Sympa::List::by_order grep { exists $new_admin->{$_} }
-        keys %$pinfo) {
-
-        ## $p will contain the values of the current parameter in the previous
-        ## list config
-        ## $new_p  will contain the values sent by the form for the current
-        ## parameter.
-        my ($p, $new_p);
-
-        ## Check privileges first
-        next
-            unless (
-            $list->may_edit($pname, $param->{'user'}{'email'}) eq 'write');
-
-        # If the list belongs to a family, gather all the constraints for
-        # each edited parameter.
-        if (ref $family eq 'Sympa::Family') {
-            unless (ref $pinfo->{$pname}{'format'} eq 'HASH' or ref $pname) {
-                # Simple parameter.
-                my $constraint = $family->get_param_constraint($pname);
-
-                if (ref $constraint eq 'HASH') {
-                    # Controlled parameter.
-                    $check_family{$pname} = $constraint;
-
-                } elsif ($constraint ne '0') {
-                    # Fixed parameter (free : no control).
-                    next;
-                }
-            }
-        }
-
-        # Skip the obsolete parameters and alias names.
-        next if $pinfo->{$pname}{'obsolete'};
-
-        ## $to_index value will correspond to the number of not empty
-        ## parameters sent by the form.
-        my $to_index;
-
-        ####### Validation, step 1: remove empty entries ###########
-
-        ## If the parameter can have multiple values...
-        if ($pinfo->{$pname}{'occurrence'} =~ /n$/) {
-
-            ## They were either entries removed by the user or empty entries
-            ## added by wwsympa
-            ## The loop is going backward so we can remove empty entries
-            my @all = 0 .. $#{$new_admin->{$pname}};
-            foreach my $i (reverse @all) {
-                ## If the parameter has a complex structure
-                if (ref($pinfo->{$pname}{'format'}) eq 'HASH') {
-                    ## Check each component of the complex parameter.
-                    foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
-                        # Skip the obsolete component and the alias.
-                        next if $pinfo->{$pname}{'format'}{$key}{'obsolete'};
-
-                        ## As soon as a required component is found missing,
-                        ## the whole parameter instance is removed.
-                        if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~
-                            /^1/
-                            && $new_admin->{$pname}[$i]{$key} =~ /^\s*$/) {
-                            splice(@{$new_admin->{$pname}}, $i, 1);
-                            last;
-                        }
-                    }
-                    ## Else if the parameter has only a scalar value
-                } else {
-                    ## Remove if empty
-                    if ($new_admin->{$pname}[$i] =~ /^\s*$/) {
-                        splice(@{$new_admin->{$pname}}, $i, 1);
-                        next;
-                    }
-                }
-            }
-
-            ## Now, %new_admin contains only entries for which all the
-            ## mandatory values are accounted for.
-
-            ## $last_index corresponds to the number of remaining instances of
-            ## this param sent by the form.
-            my $last_index = $#{$new_admin->{$pname}};
-
-            ## If a mandatory parameter is missing, issue an error and stop
-            ## here.
-            if ($pinfo->{$pname}{'occurrence'} =~ /^1/ && !($last_index >= 0))
-            {
-                delete $new_admin->{$pname};
-                wwslog('err', 'Parameter %s is mandatory', $pname);
-                Sympa::Report::reject_report_web('user',
-                    'mandatory_parameter', {'p_name' => $pname},
+    my $config = Sympa::List::Config->new($list, config => $list->{'admin'});
+    my $errors = [];
+    my $validity =
+        $config->submit($new_admin, $param->{'user'}{'email'}, $errors);
+    unless (defined $validity) {
+        if (my @intern = grep { $_->[0] eq 'intern' } @$errors) {
+            foreach my $err (@intern) {
+                Sympa::Report::reject_report_web('intern', $err->[1], {},
                     $param->{'action'}, $list);
-                web_db_log(
-                    {   'status'     => 'error',
-                        'error_type' => 'syntax_errors'
-                    }
-                );
-                next;
+                wwslog('err', 'Internal error %s', $err->[1]);
             }
-
-            ## If there are less entries in the config file than were sent by
-            ## the form,
-            ## $to_index must correspond to the number of entries sent.
-            if ($#{$list->{'admin'}{$pname}} < $last_index) {
-                $to_index = $last_index;
-                ## Otherwise, $to_index must correspond to the number of
-                ## entries in the config file.
-            } else {
-                $to_index = $#{$list->{'admin'}{$pname}};
-            }
-
-            $p     = $list->{'admin'}{$pname};
-            $new_p = $new_admin->{$pname};
-
-            ## If the parameter can't have multiple values...
         } else {
-
-            ## If the parameter has a complex structure
-            if (ref($pinfo->{$pname}{'format'}) eq 'HASH') {
-                ## Check each component of the complex parameter.
-                foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
-                    # Skip the obsolete component and the alias.
-                    next if $pinfo->{$pname}{'format'}{$key}{'obsolete'};
-
-                    ## Remove the full record if a component is emtpy and
-                    ## required
-                    if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /^1/
-                        && $new_admin->{$pname}{$key} =~ /^\s*$/) {
-                        delete $new_admin->{$pname};
-                        last;
-                    }
-                }
-                ## If the parameter contains a simple scalar value.
-            } else {
-
-                ## Remove if empty
-                if ($new_admin->{$pname} =~ /^\s*$/) {
-                    delete $new_admin->{$pname};
-                    next;    # Go directly to the next parameter.
-                }
-            }
-
-            $p     = [$list->{'admin'}{$pname}];
-            $new_p = [$new_admin->{$pname}];
+            Sympa::Report::reject_report_web('intern', 'unknown', {},
+                $param->{'action'}, $list);
+            wwslog('err', 'Unknown error');
         }
-
-        ### Validation, step 2: - check if the parameter was modified.
-        ### ###
-        ###                     - check that the new values have the right
-        ###                     syntax. ###
-        ### Note: this step is performed for each occurrence of the parameter.
-        ### ###
-
-        foreach my $i (0 .. $to_index) {
-            unless (defined $new_p->[$i]) {
-                push @{$delete{$pname}}, $i;
-                $changed{$pname} = 1;
-                next;
+        web_db_log(
+            {   'status'     => 'error',
+                'error_type' => 'internal'
             }
-            ## If the parameter corresponds to a scenario or a task, mark it
-            ## as changed if its name was changed.
-            ## Example: 'subscribe'
-            if (   $pinfo->{$pname}{'scenario'}
-                || $pinfo->{$pname}{'task'}) {
-                if ($p->[$i]{'name'} ne $new_p->[$i]{'name'}) {
-                    $changed{$pname} = 1;
-                    next;
-                }
-                ## If the parameter has a complex structure, we need to check
-                ## all its components.
-                ## Example: 'owner'
-            } elsif (ref($pinfo->{$pname}{'format'}) eq 'HASH') {
-                ## Check each parameter component.
-                ## Example: 'owner->email'
-                foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
-                    # Skip the obsolete component and the alias.
-                    next if $pinfo->{$pname}{'format'}{$key}{'obsolete'};
-
-                    ## Check that the user is allowed to edit this parameter
-                    ## component.
-                    next
-                        unless (
-                        $list->may_edit("$pname.$key",
-                            $param->{'user'}{'email'}) eq 'write'
-                        );
-
-                    ## If the list belongs to a family, check the possible
-                    ## constraints on this parameter component.
-                    if (ref($family) eq 'Sympa::Family') {
-                        ## Test constraints only if the parameter component is
-                        ## not a complex structure.
-                        if (!ref($key)) {
-                            my $constraint =
-                                $family->get_param_constraint("$pname.$key");
-                            if (ref($constraint) eq 'HASH') {
-                                # controlled parameter
-                                $check_family{$pname}{$key} = $constraint;
-                            } elsif ($constraint ne '0') {   # fixed parameter
-                                next;    # Go to the next parameter component.
-                            }
-                        }
-                    }
-
-                    ## If the parameter component corresponds to a task or a
-                    ## scenario, mark it as changed if its name was changed.
-                    if (   $pinfo->{$pname}{'format'}{$key}{'scenario'}
-                        || $pinfo->{$pname}{'format'}{$key}{'task'}) {
-                        if ($p->[$i]{$key}{'name'} ne
-                            $new_p->[$i]{$key}{'name'}) {
-                            $changed{$pname} = 1;
-                            # Mark as changed and go to the next parameter
-                            # component.
-                            next;
-                        }
-                        ## If the parameter component doesn't correspond to a
-                        ## task or a scenario, we must check its content.
-                    } else {
-                        ## Parameter component check, case 1: this parameter
-                        ## component can have multiple occurrence.
-                        ## Example: 'digest->days'
-                        if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~
-                            /n$/) {
-                            ## If the new value differs from the previous
-                            ## value, mark as changed and go to the next
-                            ## parameter component.
-                            if ($#{$p->[$i]{$key}} != $#{$new_p->[$i]{$key}})
-                            {
-                                $changed{$pname} = 1;
-                                next;
-                            }
-
-                            ## For each occurrence of this parameter
-                            ## component, check value
-                            foreach my $index (0 .. $#{$p->[$i]{$key}}) {
-                                my $format =
-                                    $pinfo->{$pname}{'format'}{$key}
-                                    {'format'};
-
-                                ## If the format has a complex structure, it
-                                ## is the description of a file format.
-                                if (ref($format)) {
-                                    $format =
-                                        $pinfo->{$pname}{'format'}{$key}
-                                        {'file_format'};
-                                }
-                                ## If this occurrence of the parameter
-                                ## component differs from the corresponding
-                                ## one in the config
-                                ## check the syntax and mark as changed.
-                                if ($p->[$i]{$key}[$index] ne
-                                    $new_p->[$i]{$key}[$index]) {
-
-                                    if (defined($new_p->[$i]{$key}[$index])
-                                        && $new_p->[$i]{$key}[$index] !~
-                                        /^$format$/i) {
-                                        wwslog('err',
-                                            "Syntax error : $pname/$i/$key/$index = $new_p->[$i]{$key}[$index]"
-                                        );
-                                        push @syntax_error, $pname;
-                                    }
-                                    $changed{$pname} = 1;
-                                    # Mark as changed and go to the next
-                                    # parameter component.
-                                    next;
-                                }
-                            }
-
-                            ## Parameter component check, case 2: this
-                            ## component is limited to one occurrence.
-                            ## Example: 'owner->email'
-                        } else {
-                            ## If the parameter component value differs from
-                            ## the corresponding one in the config, go on.
-                            if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {
-                                my $format =
-                                    $pinfo->{$pname}{'format'}{$key}
-                                    {'format'};
-
-                                ## If the format has a complex structure, it
-                                ## is the description of a file format.
-                                if (ref($format)) {
-                                    $format =
-                                        $pinfo->{$pname}{'format'}{$key}
-                                        {'file_format'};
-                                }
-
-                                ## Check the syntax and mark as changed if the
-                                ## syntax is correct.
-                                if (defined($new_p->[$i]{$key})
-                                    && $new_p->[$i]{$key} !~ /^$format$/i) {
-                                    wwslog('err',
-                                        "Syntax error : $pname/$i/$key = $new_p->[$i]{$key}"
-                                    );
-                                    push @syntax_error, $pname;
-                                }
-
-                                $changed{$pname} = 1;
-                                # Mark as changed and go to the next parameter
-                                # component.
-                                next;
-                            }
-                        }
-                    }
-                }
-                ## If the parameter has just a scalar value, just check its
-                ## value.
-                ## Example: 'max_size'
-            } else {
-                ## If the value differs from the one in the config file, mark
-                ## parameter as changed if the syntax is correct.
-                if ($p->[$i] ne $new_p->[$i]) {
-                    unless (
-                        $new_p->[$i] =~ /^$pinfo->{$pname}{'file_format'}$/) {
-                        wwslog('err', 'Syntax error: %s/%s = %s',
-                            $pname, $i, $new_p->[$i]);
-                        push @syntax_error, $pname;
-                    }
-                    $changed{$pname} = 1;
-                }
-            }
-        }
+        );
+        return undef;
     }
-
-    ######################################################################
-    ## Validation of the form finished. Start of valid data treatments  ##
-    ######################################################################
-
-    ## Error if no parameter was edited
-    unless (keys %changed) {
-        Sympa::Report::reject_report_web('user', 'no_parameter_edited', {},
+    foreach my $err (
+        grep { $_->[0] eq 'user' and $_->[1] eq 'mandatory_parameter' }
+        @$errors) {
+        Sympa::Report::reject_report_web($err->[0], $err->[1],
+            {'p_name' => $err->[3]->[-1], %{$err->[5] || {}}},
             $param->{'action'}, $list);
-        wwslog('info', 'No parameter was edited by user');
+        wwslog('err', 'Error on parameter %s: Mandatory',
+            join '.', @{$err->[3]});
+        web_db_log(
+            {   'status'     => 'error',
+                'error_type' => 'syntax_errors'
+            }
+        );
+    }
+    if (my @syntax_errors =
+        grep { $_->[0] eq 'user' and $_->[1] eq 'syntax_errors' } @$errors) {
+        my $params = join ', ', map { $_->[3]->[-1] } @syntax_errors;
+        Sympa::Report::reject_report_web('user', 'syntax_errors',
+            {'params' => $params},
+            $param->{'action'}, $list);
+        wwslog('info', 'Syntax errors for parameters %s', $params);
+        web_db_log(
+            {   'status'     => 'error',
+                'error_type' => 'syntax_errors'
+            }
+        );
         return 'edit_list_request';
     }
-
-    ## Syntax errors
-    if ($#syntax_error > -1) {
-        Sympa::Report::reject_report_web('user', 'syntax_errors',
-            {'params' => join(',', @syntax_error)},
+    foreach my $err (
+        grep {
+                    $_->[0] eq 'user'
+                and $_->[1] ne 'mandatory_parameter'
+                and $_->[1] ne 'syntax_errors'
+        } @$errors
+        ) {
+        Sympa::Report::reject_report_web('user', $err->[1], ($err->[4] || {}),
             $param->{'action'}, $list);
         wwslog(
-            'info',
-            'Syntax errors for parameters %s',
-            join(',', @syntax_error)
+            'info', 'Error \'%s\' for parameters %s',
+            $err->[1], join('.', @{$err->[3] || []})
         );
         web_db_log(
             {   'status'     => 'error',
                 'error_type' => 'syntax_errors'
             }
         );
-        return undef;
     }
 
-    ## For changed msg_topic.name
-    if (defined $new_admin->{'msg_topic'}
-        and _notify_deleted_topic($new_admin->{'msg_topic'})) {
+    if ($validity eq '') {
+        Sympa::Report::reject_report_web('user', 'no_parameter_edited', {},
+            $param->{'action'}, $list);
+        wwslog('info', 'No parameter was edited by user');
+        return 'edit_list_request';
+    }
+
+    # Validation of the form finished. Start of valid data treatments.
+
+    # For changed msg_topic.name.
+    if (_notify_deleted_topic($config)) {
         Sympa::Report::notice_report_web('subscribers_noticed_deleted_topics',
             {}, $param->{'action'});
     }
+    # For changed owner/editor
+    _notify_added_admin($config);
+    #my $owner_update = 1
+    #   if $config->get_change('owner')
+    #       or $config->get_change('owner_include');
+    #my $editor_update = 1
+    #   if $config->get_change('editor')
+    #       or $config->get_change('editor_include');
+    my $data_source_updated = 1
+        if grep { $config->get_change($_) }
+            grep { $_ =~ /\Ainclude_/ or $_ eq 'ttl' }
+            keys %$pinfo;
 
-    ## Delete selected params
-    foreach my $p (keys %delete) {
-
-        if (($p eq 'owner') || ($p eq 'owner_include')) {
-            $owner_update = 1;
-        }
-
-        if (($p eq 'editor') || ($p eq 'editor_include')) {
-            $editor_update = 1;
-        }
-
-        ## Delete ALL entries
-        unless (ref($delete{$p})) {
-            undef $new_admin->{$p};
-            next;
-        }
-
-        ## Delete selected entries
-        foreach my $k (reverse @{$delete{$p}}) {
-            splice @{$new_admin->{$p}}, $k, 1;
-        }
-
-        if (defined $check_family{$p}) {    # $p is family controlled
-            if ($#{$new_admin->{$p}} < 0) {
-                Sympa::Report::reject_report_web('user',
-                    'p_family_controlled', {'param' => $p},
-                    $param->{'action'}, $list);
-                wwslog('info',
-                    'Parameter %s must have values (family context)', $p);
-                web_db_log(
-                    {   'status'     => 'error',
-                        'error_type' => 'missing_parameter'
-                    }
-                );
-                return undef;
-            }
-        }
-    }
-
-    # updating config_changes for deleted parameters
-    if (ref($family)) {
-        my @array_delete = keys %delete;
-        unless ($list->update_config_changes('param', \@array_delete)) {
-            Sympa::Report::reject_report_web('intern',
-                'update_config_changes', {}, $param->{'action'}, $list,
-                $param->{'user'}{'email'}, $robot);
-            wwslog(
-                'info',
-                'Cannot write in config_changes for deleted parameters from list %s',
-                $list->{'name'}
-            );
-            web_db_log(
-                {   'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            return undef;
-        }
-    }
-
-    ## Update config in memory
-    my $data_source_updated;
-    foreach my $parameter (keys %changed) {
-
-        my $pname;
-        if ($parameter =~ /^([\w-]+)\.([\w-]+)$/) {
-            $pname = $1;
-        } else {
-            $pname = $parameter;
-        }
-
-        ## If new owners/editors have been added, then notify them
-        foreach my $admin_type ('owner', 'editor') {
-            my (%previous_emails, %new_emails);
-
-            ## Check previous entries
-            foreach my $entry (@{$list->{'admin'}{$admin_type}}) {
-                $previous_emails{$entry->{'email'}} = 1;
-            }
-
-            ## Compare with new entries
-            foreach my $entry (@{$new_admin->{$admin_type}}) {
-                unless ($previous_emails{$entry->{'email'}}) {
-                    # Notify the new list owner/editor
-                    Sympa::send_notify_to_user(
-                        $list,
-                        'added_as_listadmin',
-                        $entry->{'email'},
-                        {   admin_type => $admin_type,
-                            delegator  => $param->{'user'}{'email'}
-                        }
-                    );
-                    Sympa::Report::notice_report_web('user_notified',
-                        {'notified_user' => $entry->{'email'}},
-                        $param->{'action'});
-                }
-            }
-        }
-
-        if (defined $check_family{$pname}) {    # $pname is CONTROLLED
-            _check_new_values(\%check_family, $pname, $new_admin);
-        }
-
-        ## If datasource config changed
-        if ($pname =~ /^(include_.*|ttl)$/) {
-            $data_source_updated = 1;
-        }
-
-        $list->{'admin'}{$pname} = $new_admin->{$pname};
-        if (defined $new_admin->{$pname} || $pinfo->{$pname}{'internal'}) {
-            delete $list->{'admin'}{'defaults'}{$pname};
-        } else {
-            $list->{'admin'}{'defaults'}{$pname} = 1;
-        }
-
-        if (($pname eq 'owner') || ($pname eq 'owner_include')) {
-            $owner_update = 1;
-        }
-
-        if (($pname eq 'editor') || ($pname eq 'editor_include')) {
-            $editor_update = 1;
-        }
-
-        # updating config_changes for changed parameters
-
-        if (ref($family)) {
-            my @array_changed = keys %changed;
-            unless ($list->update_config_changes('param', \@array_changed)) {
-                Sympa::Report::reject_report_web('intern',
-                    'update_config_changes', {}, $param->{'action'}, $list,
-                    $param->{'user'}{'email'}, $robot);
-                wwslog(
-                    'info',
-                    'Cannot write in config_changes for changed parameters from list %s',
-                    $list->{'name'}
-                );
-                web_db_log(
-                    {   'status'     => 'error',
-                        'error_type' => 'internal'
-                    }
-                );
-                return undef;
-            }
-        }
-    }
+    # Update config in memory.
+    $config->commit;
 
     ## Save config file
     unless ($list->save_config($param->{'user'}{'email'})) {
@@ -12239,8 +11786,8 @@ sub do_edit_list {
         }
     }
 
-    ## call sync_include_admin if there are changes about owners or editors
-    ## and we're in mode include2
+    # Call sync_include_admin if there are changes about owners or editors.
+    #FIXME:Update only when owner or editor was updated.
     unless ($list->sync_include_admin()) {
         Sympa::Report::reject_report_web('intern',
             'sync_include_admin_failed', {}, $param->{'action'}, $list,
@@ -12255,16 +11802,12 @@ sub do_edit_list {
     }
 
     ## Tag changed parameters
-    foreach my $pname (keys %changed) {
+    foreach my $pname (keys %{$config->get_changeset}) {
         $::changed_params{$pname} = 1;
     }
 
     ## Save stats
     $list->savestats();
-
-    #      print "Content-type: text/plain\n\n";
-    #    Sympa::Tools::Data::dump_var($list->{'admin'}{'msg_topic'},0);
-    #    Sympa::Tools::Data::dump_var($param->{'param'},0);
 
     Sympa::Report::notice_report_web('list_config_updated', {},
         $param->{'action'});
@@ -12273,7 +11816,13 @@ sub do_edit_list {
 }
 
 # Parses all the data sent from the web interface to the FCGI.
-# Fills the $new_admin.
+# Context:
+#   $list: Sympa::List instance.
+#   %in: Input from form.
+# Parameters:
+#   None.
+# Returns:
+#   Hashref containing parsed input.
 sub _deserialize_changes {
     my $new_admin = {};
 
@@ -12317,25 +11866,27 @@ sub _deserialize_changes {
 # Old name: Sympa::List::modifying_msg_topic_for_list_members().
 sub _notify_deleted_topic {
     $log->syslog('debug3', '(%s)', @_);
-    my $new_msg_topic = shift;
+    my $config = shift;
+
+    my @msg_topics         = @{$config->get('msg_topic') || []};
+    my @msg_topics_changes = $config->get_change('msg_topic');
+    return 0 unless @msg_topics_changes; # No changes.
+
+    my @msg_topics_deleted;
+    my ($msg_topics_changes) = @msg_topics_changes;
+    unless (defined $msg_topics_changes) {
+        @msg_topics_deleted = @msg_topics;
+    } else {
+        my %msg_topics_changes = %{$config->get_change('msg_topic') || {}};
+        @msg_topics_deleted = map {
+            $msg_topics[$_] ? ($msg_topics[$_]->{name}) : ();
+        } grep {
+            not defined $msg_topics_changes{$_}
+        } sort {$a <=> $b} keys %msg_topics_changes;
+    }
 
     my $deleted = 0;
-
-    my @old_msg_topic_name;
-    foreach my $msg_topic (@{$list->{'admin'}{'msg_topic'}}) {
-        push @old_msg_topic_name, $msg_topic->{'name'};
-    }
-
-    my @new_msg_topic_name;
-    foreach my $msg_topic (@{$new_msg_topic}) {
-        push @new_msg_topic_name, $msg_topic->{'name'};
-    }
-
-    my $msg_topic_changes =
-        Sympa::Tools::Data::diff_on_arrays(\@old_msg_topic_name,
-        \@new_msg_topic_name);
-
-    if (@{$msg_topic_changes->{'deleted'}}) {
+    if (@msg_topics_deleted) {
         for (
             my $subscriber = $list->get_first_list_member();
             $subscriber;
@@ -12343,7 +11894,7 @@ sub _notify_deleted_topic {
             ) {
             if ($subscriber->{'reception'} eq 'mail') {
                 my $topics = Sympa::Tools::Data::diff_on_arrays(
-                    $msg_topic_changes->{'deleted'},
+                    [@msg_topics_deleted],
                     Sympa::Tools::Data::get_array_from_splitted_string(
                         $subscriber->{'topics'}
                     )
@@ -12373,8 +11924,39 @@ sub _notify_deleted_topic {
             }
         }
     }
-    return 1 if $deleted;
-    return 0;
+    return $deleted;
+}
+
+sub _notify_added_admin {
+    my $config = shift;
+
+    # If new owners/editors have been added, then notify them.
+    foreach my $admin_type ('owner', 'editor') {
+        my %previous_emails = map {
+            ($_->{email} => 1)
+        } @{$config->get($admin_type) || []};
+        my %new_emails = map {
+            ($_->{email} => 1)
+        } grep {$_} values %{$config->get_change($admin_type) || {}};
+
+        # Compare with new entries.
+        foreach my $email (keys %new_emails) {
+            unless ($previous_emails{$email}) {
+                # Notify the new list owner/editor
+                Sympa::send_notify_to_user(
+                    $list,
+                    'added_as_listadmin',
+                    $email,
+                    {   admin_type => $admin_type,
+                        delegator  => $param->{'user'}{'email'}
+                    }
+                );
+                Sympa::Report::notice_report_web('user_notified',
+                    {'notified_user' => $email},
+                    $param->{'action'});
+            }
+        }
+    }
 }
 
 #=head2 sub do_edit_list_request
@@ -12422,122 +12004,8 @@ sub do_edit_list_request {
     return 1;
 }
 
-sub _check_new_values {
-    my $check_family = shift;
-    my $pname        = shift;
-    my $new_admin    = shift;
-    wwslog('debug3', '(%s)', $pname);
-
-    my $fake_list =
-        bless {'domain' => $robot, 'admin' => $new_admin} => 'Sympa::List';
-    ## TODO: update parameter cache
-    my $uncompellable_param = Sympa::Family::get_uncompellable_param();
-
-    if (ref($pinfo->{$pname}{'format'}) eq 'HASH') {    #composed parameter
-
-        foreach my $key (keys %{$check_family->{$pname}}) {
-
-            my $constraint = $check_family->{$pname}{$key};
-            my $values     = $fake_list->get_param_value("$pname.$key", 1);
-            my $nb_for     = 0;
-
-            # exception for uncompellable param
-            foreach my $p (keys %{$uncompellable_param}) {
-                if (($pname eq $p) && !($uncompellable_param->{$p})) {
-                    return 1;
-                }
-
-                if (($pname eq $p) && ($key eq $uncompellable_param->{$p})) {
-                    return 1;
-                }
-            }
-            foreach my $p_val (@{$values}) {    #each element value
-                $nb_for++;
-                if (ref($p_val) eq 'ARRAY') {    # multiple values
-                    foreach my $p (@{$p_val}) {
-                        if (  !($constraint->{$p})
-                            && (($nb_for == 1) || ($p ne ''))) {
-                            Sympa::Report::reject_report_web('user',
-                                'p_family_wrong',
-                                {'param' => $pname, 'val' => $p},
-                                $param->{'action'});
-                            wwslog(
-                                'info',
-                                'Parameter %s has got wrong value: %s (family context)',
-                                $pname,
-                                $p
-                            );
-                            return undef;
-                        }
-                    }
-                } else {    # single value
-                    if (  !($constraint->{$p_val})
-                        && (($nb_for == 1) || ($p_val ne ''))) {
-                        Sympa::Report::reject_report_web('user',
-                            'p_family_wrong',
-                            {'param' => $pname, 'val' => $p_val},
-                            $param->{'action'});
-                        wwslog(
-                            'info',
-                            'Parameter %s has got wrong value: %s (family context)',
-                            $pname,
-                            $p_val
-                        );
-                        return undef;
-                    }
-                }
-            }
-        }
-    } else {    #simple parameter
-
-        # exception for uncompellable param
-        foreach my $p (keys %{$uncompellable_param}) {
-            if ($pname eq $p) {
-                return 1;
-            }
-        }
-
-        my $constraint = $check_family->{$pname};
-        my $values     = $fake_list->get_param_value($pname, 1);
-        my $nb_for     = 0;
-
-        foreach my $p_val (@{$values}) {    #each element value
-            $nb_for++;
-            if (ref($p_val) eq 'ARRAY') {    # multiple values
-                foreach my $p (@{$p_val}) {
-                    if (  !($constraint->{$p})
-                        && (($nb_for == 1) || ($p ne ''))) {
-                        Sympa::Report::reject_report_web('user',
-                            'p_family_wrong',
-                            {'param' => $pname, 'val' => $p},
-                            $param->{'action'});
-                        wwslog(
-                            'info',
-                            'Parameter %s has got wrong value: %s (family context)',
-                            $pname,
-                            $p
-                        );
-                        return undef;
-                    }
-                }
-            } else {    # single value
-                if (  !($constraint->{$p_val})
-                    && (($nb_for == 1) || ($p_val ne ''))) {
-                    Sympa::Report::reject_report_web('user', 'p_family_wrong',
-                        {'param' => $pname, 'val' => $p_val},
-                        $param->{'action'});
-                    wwslog(
-                        'info',
-                        'Parameter %s has got wrong value: %s (family context)',
-                        $pname,
-                        $p_val
-                    );
-                    return undef;
-                }
-            }
-        }
-    }
-}
+# No longer used.
+#sub _check_new_values;
 
 #=head2 sub _prepare_edit_form(LIST)
 #
