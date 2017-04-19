@@ -73,7 +73,7 @@ sub _list_params_apply_family {
     my $family = $self->{context}->get_family;
     return unless ref $family eq 'Sympa::Family';
 
-    foreach my $pname (keys %$pinfo) {
+    foreach my $pname (_keys($pinfo)) {
         $self->__list_params_apply_family($pinfo->{$pname}, [$pname],
             $family);
     }
@@ -91,7 +91,7 @@ sub __list_params_apply_family {
 
     my $ret = 0;
     if (ref $pitem->{format} eq 'HASH') {
-        foreach my $key (keys %{$pitem->{format}}) {
+        foreach my $key (_keys($pitem->{format})) {
             if ($self->_list_params_apply_family(
                     $pitem->{format}->{$key},
                     [@$pnames, $key], $family
@@ -179,6 +179,21 @@ sub get_changeset {
     return $self->{_changes};
 }
 
+sub keys {
+    my $self = shift;
+
+    return _keys($self->{_pinfo});
+}
+
+sub _keys {
+    my $hash = shift;
+    my $phash = shift || $hash;
+
+    return sort {
+        ($phash->{$a}->{order} || 999) <=> ($phash->{$b}->{order} || 999)
+    } CORE::keys %$hash;
+}
+
 sub submit {
     my $self   = shift;
     my $new    = shift;
@@ -255,7 +270,7 @@ sub _sanitize_changes {
             # Omit removal if current configuration is already empty.
             (@r and not defined $r[1] and not defined $curi) ? () : @r;
         }
-    } sort Sympa::List::by_order keys %$new;
+    } _keys($new, $pinfo);
 
     return {%ret};
 }
@@ -292,7 +307,7 @@ sub _sanitize_changes_set {
     }
     # Dedupe and sort.
     my %elements = map { ($_ => 1) } grep { defined $_ } @$cur;
-    @$cur = sort keys %elements;
+    @$cur = sort(CORE::keys %elements);
 
     my $i       = -1;
     my %updated = map {
@@ -417,7 +432,7 @@ sub _sanitize_changes_paragraph {
             # Omit removal if current configuration is already empty.
             (@r and not defined $r[1] and not defined $curi) ? () : @r;
         }
-    } sort keys %$new;
+    } _keys($new, $pitem->{format});
 
     while (my ($k, $v) = each %ret) {
         $cur->{$k} = $v;
@@ -428,7 +443,7 @@ sub _sanitize_changes_paragraph {
         if grep {
         $pitem->{format}->{$_}->{occurrence} =~ /^1/
             and not defined $cur->{$_}
-        } keys %{$pitem->{format}};
+        } _keys($pitem->{format});
     # If all children are removed, remove parent.
     return ($pnames->[-1] => undef)
         unless grep { defined $_ } values %$cur;
@@ -502,7 +517,7 @@ sub _validate_changes {
     my $pinfo = $self->{_pinfo};
 
     my $ret = 'valid';
-    foreach my $pname (sort Sympa::List::by_order keys %$new) {
+    foreach my $pname (_keys($new, $pinfo)) {
         my $newi = $new->{$pname};
         my $pii  = $pinfo->{$pname};
         my $pni  = [$pname];
@@ -543,7 +558,7 @@ sub _validate_changes_multiple {
 
     my $ret = 'valid';
     if (defined $new) {
-        foreach my $i (sort { $a <=> $b } keys %$new) {
+        foreach my $i (sort { $a <=> $b } CORE::keys %$new) {
             my $newi = $new->{$i};
 
             if (defined $newi) {
@@ -585,7 +600,7 @@ sub _validate_changes_paragraph {
 
     my $ret = 'valid';
     if (defined $new) {
-        foreach my $key (sort keys %$new) {
+        foreach my $key (_keys($new, $pitem->{format})) {
             my $pii  = $pitem->{format}->{$key};
             my $pni  = [@$pnames, $key];
             my $newi = $new->{$key};
@@ -725,13 +740,15 @@ sub commit {
     # Updating config_changes for changed parameters.
     # FIXME:Check subitems also.
     if (ref($list->get_family) eq 'Sympa::Family') {
-        unless ($list->update_config_changes('param', [keys %$changes])) {
+        unless (
+            $list->update_config_changes('param', [_keys($changes, $pinfo)]))
+        {
             push @$errors, ['intern', 'update_config_changes'];
             return undef;
         }
     }
 
-    foreach my $pname (sort keys %{$self->{_changes}}) {
+    foreach my $pname (_keys($self->{_changes}, $pinfo)) {
         my $curi = $self->{_config}->{$pname};
         my $newi = $self->{_changes}->{$pname};
         my $pii  = $pinfo->{$pname};
@@ -751,7 +768,7 @@ sub commit {
 
     # Update 'defaults' item to indicate default settings, for compatibility.
     #FIXME:Multiple levels of keys should be possible.
-    foreach my $pname (sort keys %{$self->{_changes}}) {
+    foreach my $pname (_keys($self->{_changes}, $pinfo)) {
         if (defined $self->{_changes}->{$pname}
             or $pinfo->{$pname}->{internal}) {
             delete $self->{_config}->{defaults}->{$pname};
@@ -770,10 +787,10 @@ sub _merge_changes_multiple {
     # The set: Dedupe and sort.
     if (ref $pitem->{format} eq 'ARRAY') {
         my %elements = map { ($_ => 1) } grep { defined $_ } @$cur;
-        @$cur = sort keys %elements;
+        @$cur = sort(CORE::keys %elements);
     }
 
-    foreach my $i (reverse sort { $a <=> $b } keys %$new) {
+    foreach my $i (reverse sort { $a <=> $b } CORE::keys %$new) {
         my $curi = $cur->[$i];
         my $newi = $new->{$i};
 
@@ -790,7 +807,7 @@ sub _merge_changes_multiple {
     # The set: Dedupe and sort.
     if (ref $pitem->{format} eq 'ARRAY') {
         my %elements = map { ($_ => 1) } grep { defined $_ } @$cur;
-        @$cur = sort keys %elements;
+        @$cur = sort(CORE::keys %elements);
     }
 }
 
@@ -800,7 +817,7 @@ sub _merge_changes_paragraph {
     my $new   = shift;
     my $pitem = shift;
 
-    foreach my $key (sort keys %$new) {
+    foreach my $key (_keys($new, $pitem->{format})) {
         my $curi = $cur->{$key};
         my $newi = $new->{$key};
         my $pii  = $pitem->{format}->{$key};
@@ -896,6 +913,11 @@ Gets all submitted changes.
 
 Note that returned value is the real reference to internal information.
 Any modifications might break it.
+
+=item keys ( )
+
+I<Instance method>.
+TBD.
 
 =item submit ( $new, $user, \@errors )
 

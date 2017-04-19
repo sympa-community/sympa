@@ -35,15 +35,8 @@ our %default = (
     'length'     => 25
 );
 
-our @param_order =
-    qw (subject visibility info subscribe add unsubscribe del owner owner_include
-    send editor editor_include delivery_time account topics
-    host lang process_archive web_archive archive digest digest_max_size available_user_options
-    default_user_options msg_topic msg_topic_keywords_apply_on msg_topic_tagging reply_to_header reply_to forced_reply_to *
-    verp_rate tracking welcome_return_path remind_return_path user_data_source include_file include_remote_file
-    include_sympa_list include_remote_sympa_list include_ldap_query
-    include_ldap_2level_query include_sql_query include_voot_group ttl distribution_ttl creation update
-    status serial custom_attribute include_ldap_ca include_ldap_2level_ca include_sql_ca);
+# DEPRECATED. No longer used.
+#our @param_order;
 
 # List parameter alias names
 # DEPRECATED.  Use 'obsolete' elements.
@@ -54,6 +47,7 @@ our %pinfo = (
     ### Global definition page ###
 
     'subject' => {
+        order        => 10.01,
         'group'      => 'description',
         'gettext_id' => "Subject of the list",
         'format'     => '.+',
@@ -62,6 +56,7 @@ our %pinfo = (
     },
 
     'visibility' => {
+        order        => 10.02,
         'group'      => 'description',
         'gettext_id' => "Visibility of the list",
         'scenario'   => 'visibility',
@@ -72,6 +67,7 @@ our %pinfo = (
     },
 
     'owner' => {
+        order        => 10.03,
         'group'      => 'description',
         'gettext_id' => "Owner",
         'format'     => {
@@ -118,6 +114,7 @@ our %pinfo = (
     },
 
     'owner_include' => {
+        order        => 10.04,
         'group'      => 'description',
         'gettext_id' => 'Owners defined in an external data source',
         'format'     => {
@@ -156,6 +153,7 @@ our %pinfo = (
     },
 
     'editor' => {
+        order        => 10.05,
         'group'      => 'description',
         'gettext_id' => "Moderators",
         'format'     => {
@@ -196,6 +194,7 @@ our %pinfo = (
     },
 
     'editor_include' => {
+        order        => 10.06,
         'group'      => 'description',
         'gettext_id' => 'Moderators defined in an external data source',
         'format'     => {
@@ -228,6 +227,7 @@ our %pinfo = (
     },
 
     'topics' => {
+        order        => 10.07,
         'group'      => 'description',
         'gettext_id' => "Topics for the list",
         'format'     => [],     # Sympa::Robot::load_topics() called later
@@ -236,6 +236,7 @@ our %pinfo = (
     },
 
     'host' => {
+        order        => 10.08,
         'group'      => 'description',
         'gettext_id' => "Internet domain",
         'format'     => Sympa::Regexps::host(),
@@ -244,6 +245,7 @@ our %pinfo = (
     },
 
     'lang' => {
+        order        => 10.09,
         'group'      => 'description',
         'gettext_id' => "Language of the list",
         'format' => [],    ## Sympa::get_supported_languages() called later
@@ -252,6 +254,7 @@ our %pinfo = (
     },
 
     'family_name' => {
+        order        => 10.10,
         'group'      => 'description',
         'gettext_id' => 'Family name',
         'format'     => Sympa::Regexps::family_name(),
@@ -260,6 +263,7 @@ our %pinfo = (
     },
 
     'max_list_members' => {
+        order          => 10.11,
         'group'        => 'description',
         'gettext_id'   => "Maximum number of list members",
         'gettext_unit' => 'list members',
@@ -269,6 +273,7 @@ our %pinfo = (
     },
 
     'priority' => {
+        order        => 10.12,
         'group'      => 'description',
         'gettext_id' => "Priority",
         'format'     => [0 .. 9, 'z'],
@@ -279,12 +284,14 @@ our %pinfo = (
     ### Sending page ###
 
     'send' => {
+        order        => 20.01,
         'group'      => 'sending',
         'gettext_id' => "Who can send messages",
         'scenario'   => 'send'
     },
 
     'delivery_time' => {
+        order        => 20.02,
         'group'      => 'sending',
         'gettext_id' => "Delivery time (hh:mm)",
         'format'     => '[0-2]?\d\:[0-6]\d',
@@ -293,6 +300,7 @@ our %pinfo = (
     },
 
     'digest' => {
+        order         => 20.03,
         'group'       => 'sending',
         'gettext_id'  => "Digest frequency",
         'file_format' => '\d+(\s*,\s*\d+)*\s+\d+:\d+',
@@ -322,6 +330,7 @@ our %pinfo = (
     },
 
     'digest_max_size' => {
+        order          => 20.04,
         'group'        => 'sending',
         'gettext_id'   => "Digest maximum number of messages",
         'gettext_unit' => 'messages',
@@ -331,6 +340,7 @@ our %pinfo = (
     },
 
     'available_user_options' => {
+        order        => 20.05,
         'group'      => 'sending',
         'gettext_id' => "Available subscription options",
         'format'     => {
@@ -350,6 +360,7 @@ our %pinfo = (
     },
 
     'default_user_options' => {
+        order        => 20.06,
         'group'      => 'sending',
         'gettext_id' => "Subscription profile",
         'format'     => {
@@ -373,6 +384,7 @@ our %pinfo = (
     },
 
     'msg_topic' => {
+        order        => 20.07,
         'group'      => 'sending',
         'gettext_id' => "Topics for message categorization",
         'format'     => {
@@ -402,6 +414,7 @@ our %pinfo = (
     },
 
     'msg_topic_keywords_apply_on' => {
+        order   => 20.08,
         'group' => 'sending',
         'gettext_id' =>
             "Defines to which part of messages topic keywords are applied",
@@ -411,6 +424,7 @@ our %pinfo = (
     },
 
     'msg_topic_tagging' => {
+        order        => 20.09,
         'group'      => 'sending',
         'gettext_id' => "Message tagging",
         'format'     => ['required_sender', 'required_moderator', 'optional'],
@@ -438,6 +452,7 @@ our %pinfo = (
     'forced_reply-to' => {'obsolete' => 'forced_reply_to'},
 
     'reply_to_header' => {
+        order        => 20.10,
         'group'      => 'sending',
         'gettext_id' => "Reply address",
         'format'     => {
@@ -463,12 +478,14 @@ our %pinfo = (
     },
 
     'anonymous_sender' => {
+        order        => 20.11,
         'group'      => 'sending',
         'gettext_id' => "Anonymous sender",
         'format'     => '.+'
     },
 
     'custom_header' => {
+        order        => 20.12,
         'group'      => 'sending',
         'gettext_id' => "Custom header field",
         'format'     => '\S+:\s+.*',
@@ -478,6 +495,7 @@ our %pinfo = (
     'custom-header' => {'obsolete' => 'custom_header'},
 
     'custom_subject' => {
+        order        => 20.13,
         'group'      => 'sending',
         'gettext_id' => "Subject tagging",
         'format'     => '.+',
@@ -486,6 +504,7 @@ our %pinfo = (
     'custom-subject' => {'obsolete' => 'custom_subject'},
 
     'footer_type' => {
+        order        => 20.14,
         'group'      => 'sending',
         'gettext_id' => "Attachment type",
         'format'     => ['mime', 'append'],
@@ -493,6 +512,7 @@ our %pinfo = (
     },
 
     'max_size' => {
+        order          => 20.15,
         'group'        => 'sending',
         'gettext_id'   => "Maximum message size",
         'gettext_unit' => 'bytes',
@@ -503,6 +523,7 @@ our %pinfo = (
     'max-size' => {'obsolete' => 'max_size'},
 
     'merge_feature' => {
+        order        => 20.16,
         'group'      => 'sending',
         'gettext_id' => "Allow message personalization",
         'format'     => ['on', 'off'],
@@ -511,6 +532,7 @@ our %pinfo = (
     },
 
     'reject_mail_from_automates_feature' => {
+        order        => 20.18,
         'group'      => 'sending',
         'gettext_id' => "Reject mail from automates (crontab, etc)?",
         'format'     => ['on', 'off'],
@@ -519,6 +541,7 @@ our %pinfo = (
     },
 
     'remove_headers' => {
+        order        => 20.19,
         'group'      => 'sending',
         'gettext_id' => 'Incoming SMTP header fields to be removed',
         'format'     => '\S+',
@@ -528,6 +551,7 @@ our %pinfo = (
     },
 
     'remove_outgoing_headers' => {
+        order        => 20.20,
         'group'      => 'sending',
         'gettext_id' => 'Outgoing SMTP header fields to be removed',
         'format'     => '\S+',
@@ -537,6 +561,7 @@ our %pinfo = (
     },
 
     'rfc2369_header_fields' => {
+        order        => 20.21,
         'group'      => 'sending',
         'gettext_id' => "RFC 2369 Header fields",
         'format' =>
@@ -547,6 +572,7 @@ our %pinfo = (
     },
 
     'message_hook' => {
+        order        => 20.17,
         'group'      => 'sending',
         'gettext_id' => 'Hook modules for message processing',
         'format'     => {
@@ -566,12 +592,14 @@ our %pinfo = (
     ### Command page ###
 
     'info' => {
+        order        => 30.01,
         'group'      => 'command',
         'gettext_id' => "Who can view list information",
         'scenario'   => 'info'
     },
 
     'subscribe' => {
+        order        => 30.02,
         'group'      => 'command',
         'gettext_id' => "Who can subscribe to the list",
         'scenario'   => 'subscribe'
@@ -579,12 +607,14 @@ our %pinfo = (
     'subscription' => {'obsolete' => 'subscribe'},
 
     'add' => {
+        order        => 30.03,
         'group'      => 'command',
         'gettext_id' => "Who can add subscribers",
         'scenario'   => 'add'
     },
 
     'unsubscribe' => {
+        order        => 30.04,
         'group'      => 'command',
         'gettext_id' => "Who can unsubscribe",
         'scenario'   => 'unsubscribe'
@@ -592,24 +622,28 @@ our %pinfo = (
     'unsubscription' => {'obsolete' => 'unsubscribe'},
 
     'del' => {
+        order        => 30.05,
         'group'      => 'command',
         'gettext_id' => "Who can delete subscribers",
         'scenario'   => 'del'
     },
 
     'invite' => {
+        order        => 30.06,
         'group'      => 'command',
         'gettext_id' => "Who can invite people",
         'scenario'   => 'invite'
     },
 
     'remind' => {
+        order        => 30.07,
         'group'      => 'command',
         'gettext_id' => "Who can start a remind process",
         'scenario'   => 'remind'
     },
 
     'review' => {
+        order        => 30.08,
         'group'      => 'command',
         'gettext_id' => "Who can review subscribers",
         'scenario'   => 'review',
@@ -617,6 +651,7 @@ our %pinfo = (
     },
 
     'shared_doc' => {
+        order        => 30.09,
         'group'      => 'command',
         'gettext_id' => "Shared documents",
         'format'     => {
@@ -644,6 +679,7 @@ our %pinfo = (
     ### Archives page ###
 
     'process_archive' => {
+        order        => 40.01,
         'group'      => 'archives',
         'gettext_id' => "Store distributed messages into archive",
         'format'     => ['on', 'off'],
@@ -679,6 +715,7 @@ our %pinfo = (
         }
     },
     'archive' => {
+        order        => 40.02,
         'group'      => 'archives',
         'gettext_id' => "Archives",
         'format'     => {
@@ -726,6 +763,7 @@ our %pinfo = (
     },
 
     'archive_crypted_msg' => {
+        order        => 40.03,
         'group'      => 'archives',
         'gettext_id' => "Archive encrypted mails as cleartext",
         'format'     => ['original', 'decrypted'],
@@ -733,6 +771,7 @@ our %pinfo = (
     },
 
     'web_archive_spam_protection' => {
+        order        => 40.04,
         'group'      => 'archives',
         'gettext_id' => "email address protection method",
         'format'     => ['cookie', 'javascript', 'at', 'none'],
@@ -742,6 +781,7 @@ our %pinfo = (
     ### Bounces page ###
 
     'bounce' => {
+        order        => 50.01,
         'group'      => 'bounces',
         'gettext_id' => "Bounces management",
         'format'     => {
@@ -766,6 +806,7 @@ our %pinfo = (
     },
 
     'bouncers_level1' => {
+        order        => 50.02,
         'group'      => 'bounces',
         'gettext_id' => "Management of bouncers, 1st level",
         'format'     => {
@@ -793,6 +834,7 @@ our %pinfo = (
     },
 
     'bouncers_level2' => {
+        order        => 50.03,
         'group'      => 'bounces',
         'gettext_id' => "Management of bouncers, 2nd level",
         'format'     => {
@@ -820,6 +862,7 @@ our %pinfo = (
     },
 
     'verp_rate' => {
+        order        => 50.04,
         'group'      => 'bounces',
         'gettext_id' => "percentage of list members in VERP mode",
         'format' =>
@@ -828,6 +871,7 @@ our %pinfo = (
     },
 
     'tracking' => {
+        order        => 50.05,
         'group'      => 'bounces',
         'gettext_id' => "Message tracking feature",
         'format'     => {
@@ -865,6 +909,7 @@ our %pinfo = (
     },
 
     'welcome_return_path' => {
+        order        => 50.06,
         'group'      => 'bounces',
         'gettext_id' => "Welcome return-path",
         'format'     => ['unique', 'owner'],
@@ -872,6 +917,7 @@ our %pinfo = (
     },
 
     'remind_return_path' => {
+        order        => 50.07,
         'group'      => 'bounces',
         'gettext_id' => "Return-path of the REMIND command",
         'format'     => ['unique', 'owner'],
@@ -881,6 +927,7 @@ our %pinfo = (
     ### Datasources page ###
 
     'inclusion_notification_feature' => {
+        order   => 60.01,
         'group' => 'data_source',
         'gettext_id' =>
             "Notify subscribers when they are included from a data source?",
@@ -890,6 +937,7 @@ our %pinfo = (
     },
 
     'sql_fetch_timeout' => {
+        order          => 60.03,
         'group'        => 'data_source',
         'gettext_id'   => "Timeout for fetch of include_sql_query",
         'gettext_unit' => 'seconds',
@@ -907,6 +955,7 @@ our %pinfo = (
     },
 
     'include_file' => {
+        order        => 60.04,
         'group'      => 'data_source',
         'gettext_id' => "File inclusion",
         'format'     => '\S+',
@@ -915,6 +964,7 @@ our %pinfo = (
     },
 
     'include_remote_file' => {
+        order        => 60.05,
         'group'      => 'data_source',
         'gettext_id' => "Remote file inclusion",
         'format'     => {
@@ -960,6 +1010,7 @@ our %pinfo = (
     },
 
     'include_sympa_list' => {
+        order        => 60.06,
         'group'      => 'data_source',
         'gettext_id' => "List inclusion",
         'format'     => {
@@ -986,6 +1037,7 @@ our %pinfo = (
     },
 
     'include_remote_sympa_list' => {
+        order        => 60.07,
         'group'      => 'data_source',
         'gettext_id' => "remote list inclusion",
         'format'     => {
@@ -1027,6 +1079,7 @@ our %pinfo = (
     },
 
     'member_include' => {
+        order        => 60.02,
         'group'      => 'data_source',
         'gettext_id' => 'Users included from parameterizable data sources',
         'format'     => {
@@ -1047,6 +1100,7 @@ our %pinfo = (
     },
 
     'include_ldap_query' => {
+        order        => 60.08,
         'group'      => 'data_source',
         'gettext_id' => "LDAP query inclusion",
         'format'     => {
@@ -1165,6 +1219,7 @@ our %pinfo = (
     },
 
     'include_ldap_2level_query' => {
+        order        => 60.09,
         'group'      => 'data_source',
         'gettext_id' => "LDAP 2-level query inclusion",
         'format'     => {
@@ -1334,6 +1389,7 @@ our %pinfo = (
     },
 
     'include_sql_query' => {
+        order        => 60.10,
         'group'      => 'data_source',
         'gettext_id' => "SQL query inclusion",
         'format'     => {
@@ -1414,6 +1470,7 @@ our %pinfo = (
     },
 
     'include_voot_group' => {
+        order        => 60.11,
         'group'      => 'data_source',
         'gettext_id' => "VOOT group inclusion",
         'format'     => {
@@ -1446,6 +1503,7 @@ our %pinfo = (
     },
 
     'ttl' => {
+        order          => 60.12,
         'group'        => 'data_source',
         'gettext_id'   => "Inclusions timeout",
         'gettext_unit' => 'seconds',
@@ -1455,6 +1513,7 @@ our %pinfo = (
     },
 
     'distribution_ttl' => {
+        order          => 60.13,
         'group'        => 'data_source',
         'gettext_id'   => "Inclusions timeout for message distribution",
         'gettext_unit' => 'seconds',
@@ -1463,6 +1522,7 @@ our %pinfo = (
     },
 
     'include_ldap_ca' => {
+        order        => 60.14,
         'group'      => 'data_source',
         'gettext_id' => "LDAP query custom attribute",
         'format'     => {
@@ -1587,6 +1647,7 @@ our %pinfo = (
     },
 
     'include_ldap_2level_ca' => {
+        order        => 60.15,
         'group'      => 'data_source',
         'gettext_id' => "LDAP 2-level query custom attribute",
         'format'     => {
@@ -1762,6 +1823,7 @@ our %pinfo = (
     },
 
     'include_sql_ca' => {
+        order        => 60.16,
         'group'      => 'data_source',
         'gettext_id' => "SQL query custom attribute",
         'format'     => {
@@ -1849,6 +1911,7 @@ our %pinfo = (
     ### DKIM page ###
 
     'dkim_feature' => {
+        order        => 70.01,
         'group'      => 'dkim',
         'gettext_id' => "Insert DKIM signature to messages sent to the list",
         'gettext_comment' =>
@@ -1859,6 +1922,7 @@ our %pinfo = (
     },
 
     'dkim_parameters' => {
+        order        => 70.02,
         'group'      => 'dkim',
         'gettext_id' => "DKIM configuration",
         'gettext_comment' =>
@@ -1891,7 +1955,7 @@ our %pinfo = (
                 'format'     => '\S+',
                 'occurrence' => '0-1',
                 #'default'    => {'conf' => 'dkim_header_list'},
-                'obsolete'   => 1,
+                'obsolete' => 1,
             },
             'signer_domain' => {
                 'order' => 5,
@@ -1917,6 +1981,7 @@ our %pinfo = (
     },
 
     'dkim_signature_apply_on' => {
+        order   => 70.03,
         'group' => 'dkim',
         'gettext_id' =>
             "The categories of messages sent to the list that will be signed using DKIM.",
@@ -1933,6 +1998,7 @@ our %pinfo = (
     },
 
     'dmarc_protection' => {
+        order    => 70.04,
         'format' => {
             'mode' => {
                 'format' => [
@@ -2007,6 +2073,7 @@ our %pinfo = (
     },
 
     'clean_delay_queuemod' => {
+        order          => 90.01,
         'group'        => 'other',
         'gettext_id'   => "Expiration of unmoderated messages",
         'gettext_unit' => 'days',
@@ -2016,6 +2083,7 @@ our %pinfo = (
     },
 
     'cookie' => {
+        order        => 90.02,
         'group'      => 'other',
         'gettext_id' => "Secret string for generating unique keys",
         'format'     => '\S+',
@@ -2024,6 +2092,7 @@ our %pinfo = (
     },
 
     'custom_vars' => {
+        order        => 90.04,
         'group'      => 'other',
         'gettext_id' => "custom parameters",
         'format'     => {
@@ -2044,12 +2113,14 @@ our %pinfo = (
     },
 
     'expire_task' => {
+        order        => 90.05,
         'group'      => 'other',
         'gettext_id' => "Periodical subscription expiration task",
         'task'       => 'expire'
     },
 
     'latest_instantiation' => {
+        order        => 99.01,
         'group'      => 'other',
         'gettext_id' => 'Latest family instantiation',
         'format'     => {
@@ -2075,6 +2146,7 @@ our %pinfo = (
     },
 
     'loop_prevention_regex' => {
+        order   => 90.06,
         'group' => 'other',
         'gettext_id' =>
             "Regular expression applied to prevent loops with robots",
@@ -2084,6 +2156,7 @@ our %pinfo = (
     },
 
     'pictures_feature' => {
+        order   => 90.07,
         'group' => 'other',
         'gettext_id' =>
             "Allow picture display? (must be enabled for the current robot)",
@@ -2093,6 +2166,7 @@ our %pinfo = (
     },
 
     'remind_task' => {
+        order        => 90.08,
         'group'      => 'other',
         'gettext_id' => 'Periodical subscription reminder task',
         'task'       => 'remind',
@@ -2100,6 +2174,7 @@ our %pinfo = (
     },
 
     'spam_protection' => {
+        order        => 90.09,
         'group'      => 'other',
         'gettext_id' => "email address protection method",
         'format'     => ['at', 'javascript', 'none'],
@@ -2107,6 +2182,7 @@ our %pinfo = (
     },
 
     'creation' => {
+        order        => 99.02,
         'group'      => 'other',
         'gettext_id' => "Creation of the list",
         'format'     => {
@@ -2133,6 +2209,7 @@ our %pinfo = (
     },
 
     'update' => {
+        order        => 99.03,
         'group'      => 'other',
         'gettext_id' => "Last update of config",
         'format'     => {
@@ -2162,6 +2239,7 @@ our %pinfo = (
     },
 
     'status' => {
+        order        => 99.04,
         'group'      => 'other',
         'gettext_id' => "Status of the list",
         'format' =>
@@ -2171,6 +2249,7 @@ our %pinfo = (
     },
 
     'serial' => {
+        order        => 99.05,
         'group'      => 'other',
         'gettext_id' => "Serial number of the config",
         'format'     => '\d+',
@@ -2180,6 +2259,7 @@ our %pinfo = (
     },
 
     'custom_attribute' => {
+        order        => 90.03,
         'group'      => 'other',
         'gettext_id' => "Custom user attributes",
         'format'     => {
@@ -2232,18 +2312,6 @@ _apply_defaults();
 
 ## Apply defaults to parameters definition (%pinfo)
 sub _apply_defaults {
-    return if exists $default{'order'};    # already loaded
-
-    ## Parameter order
-    foreach my $index (0 .. $#param_order) {
-        if ($param_order[$index] eq '*') {
-            $default{'order'} = $index;
-        } else {
-            $pinfo{$param_order[$index]}{'order'} = $index;
-        }
-    }
-
-    ## Parameters
     foreach my $p (keys %pinfo) {
         cleanup($p, $pinfo{$p});
     }
