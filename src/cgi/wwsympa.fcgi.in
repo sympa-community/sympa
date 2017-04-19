@@ -12416,13 +12416,6 @@ sub _prepare_data {
                 foreach my $elt (@{$struct->{'format'}}) {
                     $p_glob->{'value'}{$elt}{'selected'} = 0;
                 }
-
-                ## Check obsolete values ; they should not be printed
-                if (defined $struct->{'obsolete_values'}) {
-                    foreach my $elt (@{$struct->{'obsolete_values'}}) {
-                        delete $p_glob->{'value'}{$elt};
-                    }
-                }
             }
             if (ref($d)) {
                 next unless (ref($d) eq 'ARRAY');

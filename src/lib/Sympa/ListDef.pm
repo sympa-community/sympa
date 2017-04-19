@@ -2522,6 +2522,8 @@ defines parameter alias name mainly for backward compatibility.
 
 =item obsolete_values
 
+B<Deprecated>.
+
 Defined obsolete values for a parameter.
 These values should not get proposed on the web interface
 edition form.
