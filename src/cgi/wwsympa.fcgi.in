@@ -11713,11 +11713,12 @@ sub do_edit_list {
                 'error_type' => 'syntax_errors'
             }
         );
+        return 'edit_list_request';
     }
 
     if ($validity eq '') {
-        Sympa::Report::reject_report_web('user', 'no_parameter_edited', {},
-            $param->{'action'}, $list);
+        Sympa::Report::notice_report_web('no_parameter_edited', {},
+            $param->{'action'});
         wwslog('info', 'No parameter was edited by user');
         return 'edit_list_request';
     }

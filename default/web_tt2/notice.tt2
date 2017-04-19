@@ -44,6 +44,11 @@
 <i class="fi-check"></i> 
 [%|loc%]Configuration file has been updated[%END%]
 
+[% ELSIF notice.msg == 'no_parameter_edited' %]
+    <div  data-alert class="alert-box info radius">
+<i class="fi-eye"></i>
+[%|loc%]No parameter was edited[%END%]
+
 [% ELSIF notice.msg == 'list_purged' %]
     <div  data-alert class="alert-box success radius">
 <i class="fi-check"></i> 

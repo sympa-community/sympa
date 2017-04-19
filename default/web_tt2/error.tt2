@@ -92,7 +92,6 @@
   [% ELSIF u_err.msg == 'didnt_change_anything' %][%|loc%]You did not select an action to perform[%END%]
   [% ELSIF u_err.msg == 'no_bounce_user' %][%|loc(u_err.email)%]No bounce for user  %1[%END%]
   [% ELSIF u_err.msg == 'no_bounce_subscriber' %][%|loc%]List has no bouncing subscribers[%END%]
-  [% ELSIF u_err.msg == 'no_parameter_edited' %][%|loc%]No parameter was edited[%END%]
   [% ELSIF u_err.msg == 'config_changed' %][%|loc(u_err.email)%]Config file has been modified by %1. Cannot apply your changes[%END%]
   [% ELSIF u_err.msg == 'topic_other' %][%|loc%]Topic "other" is a reserved word[%END%]
   [% ELSIF u_err.msg == 'mandatory_parameter' %][%|loc(u_err.p_name)%]Parameter '%1' is mandatory. Ignoring deletion.[%END%]

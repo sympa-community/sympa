@@ -190,7 +190,7 @@ sub submit {
     # Error if no parameter was edited.
     unless ($changes and %$changes) {
         $self->{_changes} = {};
-        push @$errors, ['user', 'no_parameter_edited'];
+        push @$errors, ['notice', 'no_parameter_edited'];
         return '';
     }
 
