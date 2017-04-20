@@ -241,10 +241,20 @@ sub _sanitize_changes {
         unless (exists $pinfo->{$_} and $pinfo->{$_}) {
             ();    # Sanity check: unknown parameter
         } else {
-            my $pii  = $pinfo->{$_};
-            my $pni  = [$_];
-            my $newi = $new->{$_};
-            my $curi = Sympa::Tools::Data::clone_var($self->{_config}{$_});
+            # Resolve alias.
+            my ($k, $o) = ($_, $_);
+            do {
+                ($k, $o) = ($o, $pinfo->{$o}->{obsolete});
+            } while ($o and $pinfo->{$o});
+            unless ($k eq $_) {
+                $new->{$k} = $new->{$_};
+                delete $new->{$_};
+            }
+
+            my $pii  = $pinfo->{$k};
+            my $pni  = [$k];
+            my $newi = $new->{$k};
+            my $curi = Sympa::Tools::Data::clone_var($self->{_config}{$k});
 
             my @r;
             if ($pii->{occurrence} =~ /n$/) {
@@ -305,6 +315,23 @@ sub _sanitize_changes_set {
             $cur = [split /\s*$split_char\s*/, $cur];
         }
     }
+    # Resolve synonym.
+    @$cur = map {
+        if (defined $_) {
+            my $synonym = ($pitem->{synonym} || {})->{$_};
+            (defined $synonym) ? $synonym : $_;
+        } else {
+            undef;
+        }
+    } @$cur;
+    @$new = map {
+        if (defined $_) {
+            my $synonym = ($pitem->{synonym} || {})->{$_};
+            (defined $synonym) ? $synonym : $_;
+        } else {
+            undef;
+        }
+    } @$new;
     # Dedupe and sort.
     my %elements = map { ($_ => 1) } grep { defined $_ } @$cur;
     @$cur = sort(CORE::keys %elements);
@@ -403,10 +430,20 @@ sub _sanitize_changes_paragraph {
         unless (exists $pitem->{format}->{$_} and $pitem->{format}->{$_}) {
             ();                             # Sanity check: unknown parameter
         } else {
-            my $pii  = $pitem->{format}->{$_};
-            my $pni  = [@$pnames, $_];
-            my $newi = $new->{$_};
-            my $curi = $cur->{$_};
+            # Resolve alias.
+            my ($k, $o) = ($_, $_);
+            do {
+                ($k, $o) = ($o, $pitem->{format}->{$o}->{obsolete});
+            } while ($o and $pitem->{format}->{$o});
+            unless ($k eq $_) {
+                $new->{$k} = $new->{$_};
+                delete $new->{$_};
+            }
+
+            my $pii  = $pitem->{format}->{$k};
+            my $pni  = [@$pnames, $k];
+            my $newi = $new->{$k};
+            my $curi = $cur->{$k};
 
             my @r;
             if ($pii->{occurrence} =~ /n$/) {
@@ -485,6 +522,15 @@ sub _sanitize_changes_leaf {
         } else {
             $cur = $default;
         }
+    }
+    # Resolve synonym.
+    if (defined $cur) {
+        my $synonym = ($pitem->{synonym} || {})->{$cur};
+        $cur = $synonym if defined $synonym;
+    }
+    if (defined $new) {
+        my $synonym = ($pitem->{synonym} || {})->{$new};
+        $new = $synonym if defined $synonym;
     }
 
     if (Sympa::Tools::Data::smart_eq($cur, $new)) {
