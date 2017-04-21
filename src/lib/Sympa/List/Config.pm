@@ -39,7 +39,12 @@ sub new {
 
     die 'bug in logic. Ask developer' unless ref $context eq 'Sympa::List';
 
-    my $config = $options{config} || {};
+    my $config;
+    if (exists $options{config}) {
+        $config = $options{config};    # undef means list creation
+    } else {
+        $config = {};
+    }
     $config = Sympa::Tools::Data::clone_var($config)
         if $options{copy};
 
@@ -158,7 +163,6 @@ sub get {
     my $self = shift;
     my $key  = shift;
 
-    #FIXME:Give default value if any.
     return unless exists $self->{_config}->{$key};    # void
     #FIXME:Multiple levels of keys should be possible.
     return Sympa::Tools::Data::clone_var($self->{_config}->{$key});
@@ -177,6 +181,83 @@ sub get_changeset {
     my $self = shift;
 
     return $self->{_changes};
+}
+
+# Gets default for the set or the array of scalars.
+sub _get_default_multiple {
+    my $self  = shift;
+    my $pitem = shift;
+
+    my $val;
+    my $list = $self->{context};
+
+    my $default = $pitem->{default};
+    if (ref $default eq 'HASH' and exists $default->{conf}) {
+        $val = Conf::get_robot_conf($list->{'domain'}, $default->{conf});
+    } else {
+        $val = $default;
+    }
+
+    unless (defined $val) {
+        $val = [];
+    } else {
+        my $re = quotemeta($pitem->{split_char} || ',');
+        $val = [split /\s*$re\s*/, $val];
+    }
+
+    return $val;
+}
+
+sub _get_default_leaf {
+    my $self  = shift;
+    my $pitem = shift;
+
+    my $val;
+    my $list = $self->{context};
+
+    my $default = $pitem->{default};
+    if (ref $default eq 'HASH' and exists $default->{conf}) {
+        $val = Conf::get_robot_conf($list->{'domain'}, $default->{conf});
+    } else {
+        $val = $default;
+    }
+
+    if (defined $val and ($pitem->{scenario} or $pitem->{task})) {
+        return {name => $val};
+    } else {
+        return $val;
+    }
+}
+
+# Apply default values, if elements are mandatory and are scalar.
+# The init option means list/node creation.
+sub _apply_defaults {
+    my $self    = shift;
+    my $cur     = shift;
+    my $phash   = shift;
+    my %options = @_;
+
+    foreach my $key (_keys($phash)) {
+        my $pii = $phash->{$key};
+
+        if (exists $cur->{$key}) {
+            next;
+        } elsif (ref $pii->{format} eq 'HASH') {    # Not a scalar
+            next;
+        } elsif ($pii->{occurrence} =~ /n$/) {
+            if (exists $pii->{default}) {
+                $cur->{$key} = $self->_get_default_multiple($pii)
+                    if $options{init}
+                        or $pii->{occurrence} =~ /^1/;
+            }
+        } else {
+            if (exists $pii->{default}) {
+                $cur->{$key} = $self->_get_default_leaf($pii)
+                    if $options{init}
+                        or $pii->{occurrence} =~ /^1/;
+            }
+        }
+    }
 }
 
 sub keys {
@@ -237,6 +318,11 @@ sub _sanitize_changes {
     };
     my $pinfo = $self->{_pinfo};
 
+    # Undefined {_config} means list creation.
+    my $init = (not defined $self->{_config});
+    my $cur = $init ? {} : Sympa::Tools::Data::clone_var($self->{_config});
+    $self->_apply_defaults($cur, $pinfo, init => $init);
+
     my %ret = map {
         unless (exists $pinfo->{$_} and $pinfo->{$_}) {
             ();    # Sanity check: unknown parameter
@@ -254,7 +340,7 @@ sub _sanitize_changes {
             my $pii  = $pinfo->{$k};
             my $pni  = [$k];
             my $newi = $new->{$k};
-            my $curi = Sympa::Tools::Data::clone_var($self->{_config}{$k});
+            my $curi = $cur->{$k};
 
             my @r;
             if ($pii->{occurrence} =~ /n$/) {
@@ -270,7 +356,7 @@ sub _sanitize_changes {
             } elsif (ref $pii->{format} eq 'HASH') {
                 @r =
                     $self->_sanitize_changes_paragraph($curi, $newi, $pii,
-                    $pni, $authz);
+                    $pni, $authz, init => (not defined $curi));
             } else {
                 @r =
                     $self->_sanitize_changes_leaf($curi, $newi, $pii, $pni,
@@ -288,7 +374,7 @@ sub _sanitize_changes {
 # Sanitizes set.
 sub _sanitize_changes_set {
     my $self   = shift;
-    my $cur    = shift;
+    my $cur    = shift || [];
     my $new    = shift;
     my $pitem  = shift;
     my $pnames = shift;
@@ -300,41 +386,17 @@ sub _sanitize_changes_set {
 
     my $list = $self->{context};
 
-    # Apply default.
-    unless (defined $cur) {
-        my $default = $pitem->{default};
-        if (ref $default eq 'HASH' and exists $default->{conf}) {
-            $cur = Conf::get_robot_conf($list->{'domain'}, $default->{conf});
-        } else {
-            $cur = $default;
-        }
-        unless (defined $cur) {
-            $cur = [];
-        } elsif ($pitem->{split_char}) {
-            my $split_char = $pitem->{split_char};
-            $cur = [split /\s*$split_char\s*/, $cur];
-        }
-    }
     # Resolve synonym.
-    @$cur = map {
-        if (defined $_) {
-            my $synonym = ($pitem->{synonym} || {})->{$_};
-            (defined $synonym) ? $synonym : $_;
-        } else {
-            undef;
-        }
-    } @$cur;
-    @$new = map {
-        if (defined $_) {
-            my $synonym = ($pitem->{synonym} || {})->{$_};
-            (defined $synonym) ? $synonym : $_;
-        } else {
-            undef;
-        }
-    } @$new;
-    # Dedupe and sort.
-    my %elements = map { ($_ => 1) } grep { defined $_ } @$cur;
-    @$cur = sort(CORE::keys %elements);
+    if (ref $pitem->{synonym} eq 'HASH') {
+        @$new = map {
+            if (defined $_) {
+                my $synonym = $pitem->{synonym}->{$_};
+                (defined $synonym) ? $synonym : $_;
+            } else {
+                undef;
+            }
+        } @$new;
+    }
 
     my $i       = -1;
     my %updated = map {
@@ -387,7 +449,7 @@ sub _sanitize_changes_array {
         if (ref $pitem->{format} eq 'HASH') {
             @r =
                 $self->_sanitize_changes_paragraph($curi, $_, $pitem, $pnames,
-                $authz);
+                $authz, init => (not defined $curi));
         } else {
             @r =
                 $self->_sanitize_changes_leaf($curi, $_, $pitem, $pnames,
@@ -414,17 +476,21 @@ sub _sanitize_changes_array {
 }
 
 # Sanitizes paragraph.
+# The init option means node creation.
 sub _sanitize_changes_paragraph {
-    my $self   = shift;
-    my $cur    = shift || {};
-    my $new    = shift;
-    my $pitem  = shift;
-    my $pnames = shift;
-    my $authz  = shift;
+    my $self    = shift;
+    my $cur     = shift || {};
+    my $new     = shift;
+    my $pitem   = shift;
+    my $pnames  = shift;
+    my $authz   = shift;
+    my %options = @_;
 
     return () unless ref $new eq 'HASH';    # Sanity check
     return () if $pitem->{obsolete};
     return () unless $authz->($pnames);
+
+    $self->_apply_defaults($cur, $pitem->{format}, init => $options{init});
 
     my %ret = map {
         unless (exists $pitem->{format}->{$_} and $pitem->{format}->{$_}) {
@@ -459,7 +525,7 @@ sub _sanitize_changes_paragraph {
             } elsif (ref $pii->{format} eq 'HASH') {
                 @r =
                     $self->_sanitize_changes_paragraph($curi, $newi, $pii,
-                    $pni, $authz);
+                    $pni, $authz, init => (not defined $curi));
             } else {
                 @r =
                     $self->_sanitize_changes_leaf($curi, $newi, $pii, $pni,
@@ -514,27 +580,14 @@ sub _sanitize_changes_leaf {
         $cur = ($cur || {})->{name};
         $new = ($new || {})->{name};
     }
-    # Apply default.
-    unless (defined $cur) {
-        my $default = $pitem->{default};
-        if (ref $default eq 'HASH' and exists $default->{conf}) {
-            $cur = Conf::get_robot_conf($list->{'domain'}, $default->{conf});
-        } else {
-            $cur = $default;
-        }
-    }
     # Resolve synonym.
-    if (defined $cur) {
-        my $synonym = ($pitem->{synonym} || {})->{$cur};
-        $cur = $synonym if defined $synonym;
-    }
-    if (defined $new) {
-        my $synonym = ($pitem->{synonym} || {})->{$new};
+    if (defined $new and ref $pitem->{synonym} eq 'HASH') {
+        my $synonym = $pitem->{synonym}->{$new};
         $new = $synonym if defined $synonym;
     }
 
     if (Sympa::Tools::Data::smart_eq($cur, $new)) {
-        return ();    # Not changed
+        return ();                                     # Not changed
     }
 
     if ($pitem->{scenario} or $pitem->{task}) {
@@ -794,23 +847,32 @@ sub commit {
         }
     }
 
+    # Undefined {_config} means list creation.
+    my $init = (not defined $self->{_config});
+    my $cur = $init ? {} : $self->{_config};
+    $self->_apply_defaults($cur, $pinfo, init => $init);
+
     foreach my $pname (_keys($self->{_changes}, $pinfo)) {
-        my $curi = $self->{_config}->{$pname};
+        my $curi = $cur->{$pname};
         my $newi = $self->{_changes}->{$pname};
         my $pii  = $pinfo->{$pname};
 
         unless (defined $newi) {
-            delete $self->{_config}->{$pname};
+            delete $cur->{$pname};
         } elsif ($pii->{occurrence} =~ /n$/) {
-            $curi = $self->{_config}->{$pname} ||= [];
+            $curi = $cur->{$pname} = [] unless defined $curi;
             $self->_merge_changes_multiple($curi, $newi, $pii);
         } elsif (ref $pii->{format} eq 'HASH') {
-            $curi = $self->{_config}->{$pname} ||= {};
-            $self->_merge_changes_paragraph($curi, $newi, $pii);
+            my $init = (not defined $curi);
+            $curi = $cur->{$pname} = {} if $init;
+            $self->_merge_changes_paragraph($curi, $newi, $pii,
+                init => $init);
         } else {
-            $self->{_config}->{$pname} = $newi;
+            $cur->{$pname} = $newi;
         }
     }
+
+    $self->{_config} = $cur if $init;
 
     # Update 'defaults' item to indicate default settings, for compatibility.
     #FIXME:Multiple levels of keys should be possible.
@@ -830,12 +892,6 @@ sub _merge_changes_multiple {
     my $new   = shift;
     my $pitem = shift;
 
-    # The set: Dedupe and sort.
-    if (ref $pitem->{format} eq 'ARRAY') {
-        my %elements = map { ($_ => 1) } grep { defined $_ } @$cur;
-        @$cur = sort(CORE::keys %elements);
-    }
-
     foreach my $i (reverse sort { $a <=> $b } CORE::keys %$new) {
         my $curi = $cur->[$i];
         my $newi = $new->{$i};
@@ -843,8 +899,10 @@ sub _merge_changes_multiple {
         unless (defined $new->{$i}) {
             splice @$cur, $i, 1;
         } elsif (ref $pitem->{format} eq 'HASH') {
-            $curi = $cur->[$i] ||= {};
-            $self->_merge_changes_paragraph($curi, $newi, $pitem);
+            my $init = (not defined $curi);
+            $curi = $cur->[$i] = {} if $init;
+            $self->_merge_changes_paragraph($curi, $newi, $pitem,
+                init => $init);
         } else {
             $cur->[$i] = $newi;
         }
@@ -857,11 +915,16 @@ sub _merge_changes_multiple {
     }
 }
 
+# Merges changes on paragraph node.
+# The init option means node creation.
 sub _merge_changes_paragraph {
-    my $self  = shift;
-    my $cur   = shift;
-    my $new   = shift;
-    my $pitem = shift;
+    my $self    = shift;
+    my $cur     = shift;
+    my $new     = shift;
+    my $pitem   = shift;
+    my %options = @_;
+
+    $self->_apply_defaults($cur, $pitem->{format}, init => $options{init});
 
     foreach my $key (_keys($new, $pitem->{format})) {
         my $curi = $cur->{$key};
@@ -871,15 +934,22 @@ sub _merge_changes_paragraph {
         unless (defined $newi) {
             delete $cur->{$key};
         } elsif ($pii->{occurrence} =~ /n$/) {
-            $curi = $cur->{$key} ||= [];
+            $curi = $cur->{$key} = [] unless defined $curi;
             $self->_merge_changes_multiple($curi, $newi, $pii);
         } elsif (ref $pii->{format} eq 'HASH') {
-            $curi = $cur->{$key} ||= {};
-            $self->_merge_changes_paragraph($curi, $newi, $pii);
+            my $init = (not defined $curi);
+            $curi = $cur->{$key} = {} if $init;
+            $self->_merge_changes_paragraph($curi, $newi, $pii,
+                init => $init);
         } else {
             $cur->{$key} = $newi;
         }
     }
+}
+
+sub get_id {
+    my $list = shift->{context};
+    $list ? $list->get_id : '';
 }
 
 1;
@@ -910,7 +980,30 @@ Sympa::List::Config - List configuration
 [ no_family =E<gt> 1 ] )
 
 I<Constructor>.
+Creates new instance of L<Sympa::List::Config> object.
+
+Parameters:
+
+=over
+
+=item $list
+
+Context.  An instance of L<Sympa::List> class.
+
+=item config =E<gt> $initial_config
+
+Initial configuration.
+C<undef> must be specified when the list will be initially created.
+
+=item copy =E<gt> 1
+
 TBD.
+
+=item no_family =E<gt> 1
+
+TBD.
+
+=back
 
 =item get ( $key )
 
@@ -993,16 +1086,6 @@ Context, L<Sympa::List> instance.
 
 L<Sympa::List>,
 L<Sympa::ListDef>.
-
-=head1 KNOWN BUGS
-
-=over
-
-=item *
-
-get() cannot return default values.
-
-=back
 
 =head1 HISTORY
 
