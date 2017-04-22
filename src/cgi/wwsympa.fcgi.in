@@ -11667,54 +11667,33 @@ sub do_edit_list {
         );
         return undef;
     }
-    foreach my $err (
-        grep { $_->[0] eq 'user' and $_->[1] eq 'mandatory_parameter' }
-        @$errors) {
-        Sympa::Report::reject_report_web($err->[0], $err->[1],
-            {'p_name' => $err->[3]->[-1], %{$err->[5] || {}}},
-            $param->{'action'}, $list);
-        wwslog('err', 'Error on parameter %s: Mandatory',
-            join '.', @{$err->[3]});
-        web_db_log(
-            {   'status'     => 'error',
-                'error_type' => 'syntax_errors'
-            }
+
+    my $error_return = 0;
+    foreach my $err (grep { $_->[0] eq 'user' } @$errors) {
+        $error_return = 1 unless $err->[1] eq 'mandatory_parameter';
+
+        Sympa::Report::reject_report_web(
+            $err->[0],
+            $err->[1],
+            {   'p_name' => $language->gettext($err->[2]->{gettext_id}),
+                %{$err->[4] || {}}
+            },
+            $param->{'action'},
+            $list
         );
-    }
-    if (my @syntax_errors =
-        grep { $_->[0] eq 'user' and $_->[1] eq 'syntax_errors' } @$errors) {
-        my $params = join ', ', map { $_->[3]->[-1] } @syntax_errors;
-        Sympa::Report::reject_report_web('user', 'syntax_errors',
-            {'params' => $params},
-            $param->{'action'}, $list);
-        wwslog('info', 'Syntax errors for parameters %s', $params);
-        web_db_log(
-            {   'status'     => 'error',
-                'error_type' => 'syntax_errors'
-            }
-        );
-        return 'edit_list_request';
-    }
-    foreach my $err (
-        grep {
-                    $_->[0] eq 'user'
-                and $_->[1] ne 'mandatory_parameter'
-                and $_->[1] ne 'syntax_errors'
-        } @$errors
-        ) {
-        Sympa::Report::reject_report_web('user', $err->[1], ($err->[4] || {}),
-            $param->{'action'}, $list);
         wwslog(
-            'info', 'Error \'%s\' for parameters %s',
-            $err->[1], join('.', @{$err->[3] || []})
+            'err',
+            'Error on parameter %s: %s',
+            join('.', @{$err->[3]}),
+            $err->[1]
         );
         web_db_log(
             {   'status'     => 'error',
                 'error_type' => 'syntax_errors'
             }
         );
-        return 'edit_list_request';
     }
+    return 'edit_list_request' if $error_return;
 
     if ($validity eq '') {
         Sympa::Report::notice_report_web('no_parameter_edited', {},
