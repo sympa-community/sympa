@@ -275,6 +275,20 @@ sub _keys {
     } CORE::keys %$hash;
 }
 
+# Gets parameter name of node.
+sub _pname {
+    my $ppaths = shift;
+    return undef unless $ppaths and @$ppaths;
+    [grep { !/\A\d+\z/ } @$ppaths]->[-1];
+}
+
+# Gets full parameter name of node.
+sub _pfullname {
+    my $ppaths = shift;
+    return undef unless $ppaths and @$ppaths;
+    return join '.', grep { !/\A\d+\z/ } @$ppaths;
+}
+
 sub submit {
     my $self   = shift;
     my $new    = shift;
@@ -313,8 +327,8 @@ sub _sanitize_changes {
     my $list = $self->{context};
 
     my $authz = sub {
-        my $pnames = shift;
-        'write' eq $list->may_edit(join('.', @{$pnames || []}), $user);
+        my $ppaths = shift;
+        'write' eq $list->may_edit(_pfullname($ppaths), $user);
     };
     my $pinfo = $self->{_pinfo};
 
@@ -338,7 +352,7 @@ sub _sanitize_changes {
             }
 
             my $pii  = $pinfo->{$k};
-            my $pni  = [$k];
+            my $ppi  = [$k];
             my $newi = $new->{$k};
             my $curi = $cur->{$k};
 
@@ -346,20 +360,20 @@ sub _sanitize_changes {
             if ($pii->{occurrence} =~ /n$/) {
                 if (ref $pii->{format} eq 'ARRAY') {
                     @r =
-                        $self->_sanitize_changes_set($curi, $newi, $pii, $pni,
+                        $self->_sanitize_changes_set($curi, $newi, $pii, $ppi,
                         $authz);
                 } else {
                     @r =
                         $self->_sanitize_changes_array($curi, $newi, $pii,
-                        $pni, $authz);
+                        $ppi, $authz);
                 }
             } elsif (ref $pii->{format} eq 'HASH') {
                 @r =
                     $self->_sanitize_changes_paragraph($curi, $newi, $pii,
-                    $pni, $authz, init => (not defined $curi));
+                    $ppi, $authz, init => (not defined $curi));
             } else {
                 @r =
-                    $self->_sanitize_changes_leaf($curi, $newi, $pii, $pni,
+                    $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi,
                     $authz);
             }
 
@@ -377,12 +391,12 @@ sub _sanitize_changes_set {
     my $cur    = shift || [];
     my $new    = shift;
     my $pitem  = shift;
-    my $pnames = shift;
+    my $ppaths = shift;
     my $authz  = shift;
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $authz->($pnames);
+    return () unless $authz->($ppaths);
 
     my $list = $self->{context};
 
@@ -418,12 +432,12 @@ sub _sanitize_changes_set {
     while (my ($k, $v) = each %ret) {
         $cur->[$k] = $v;
     }
-    return ($pnames->[-1] => undef) unless grep { defined $_ } @$cur;
+    return (_pname($ppaths) => undef) unless grep { defined $_ } @$cur;
 
     unless (%ret) {
         return ();    # No valid changes
     } else {
-        return ($pnames->[-1] => {%ret});
+        return (_pname($ppaths) => {%ret});
     }
 }
 
@@ -433,26 +447,27 @@ sub _sanitize_changes_array {
     my $cur    = shift || [];
     my $new    = shift;
     my $pitem  = shift;
-    my $pnames = shift;
+    my $ppaths = shift;
     my $authz  = shift;
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $authz->($pnames);
+    return () unless $authz->($ppaths);
 
     my $i   = -1;
     my %ret = map {
         $i++;
         my $curi = $cur->[$i];
+        my $ppi = [@$ppaths, $i];
 
         my @r;
         if (ref $pitem->{format} eq 'HASH') {
             @r =
-                $self->_sanitize_changes_paragraph($curi, $_, $pitem, $pnames,
+                $self->_sanitize_changes_paragraph($curi, $_, $pitem, $ppi,
                 $authz, init => (not defined $curi));
         } else {
             @r =
-                $self->_sanitize_changes_leaf($curi, $_, $pitem, $pnames,
+                $self->_sanitize_changes_leaf($curi, $_, $pitem, $ppi,
                 $authz);
         }
 
@@ -466,12 +481,12 @@ sub _sanitize_changes_array {
     while (my ($k, $v) = each %ret) {
         $cur->[$k] = $v;
     }
-    return ($pnames->[-1] => undef) unless grep { defined $_ } @$cur;
+    return (_pname($ppaths) => undef) unless grep { defined $_ } @$cur;
 
     unless (%ret) {
         return ();    # No valid changes
     } else {
-        return ($pnames->[-1] => {%ret});
+        return (_pname($ppaths) => {%ret});
     }
 }
 
@@ -482,13 +497,13 @@ sub _sanitize_changes_paragraph {
     my $cur     = shift || {};
     my $new     = shift;
     my $pitem   = shift;
-    my $pnames  = shift;
+    my $ppaths  = shift;
     my $authz   = shift;
     my %options = @_;
 
     return () unless ref $new eq 'HASH';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $authz->($pnames);
+    return () unless $authz->($ppaths);
 
     $self->_apply_defaults($cur, $pitem->{format}, init => $options{init});
 
@@ -507,7 +522,7 @@ sub _sanitize_changes_paragraph {
             }
 
             my $pii  = $pitem->{format}->{$k};
-            my $pni  = [@$pnames, $k];
+            my $ppi  = [@$ppaths, $k];
             my $newi = $new->{$k};
             my $curi = $cur->{$k};
 
@@ -515,20 +530,20 @@ sub _sanitize_changes_paragraph {
             if ($pii->{occurrence} =~ /n$/) {
                 if (ref $pii->{format} eq 'ARRAY') {
                     @r =
-                        $self->_sanitize_changes_set($curi, $newi, $pii, $pni,
+                        $self->_sanitize_changes_set($curi, $newi, $pii, $ppi,
                         $authz);
                 } else {
                     @r =
                         $self->_sanitize_changes_array($curi, $newi, $pii,
-                        $pni, $authz);
+                        $ppi, $authz);
                 }
             } elsif (ref $pii->{format} eq 'HASH') {
                 @r =
                     $self->_sanitize_changes_paragraph($curi, $newi, $pii,
-                    $pni, $authz, init => (not defined $curi));
+                    $ppi, $authz, init => (not defined $curi));
             } else {
                 @r =
-                    $self->_sanitize_changes_leaf($curi, $newi, $pii, $pni,
+                    $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi,
                     $authz);
             }
 
@@ -542,19 +557,19 @@ sub _sanitize_changes_paragraph {
     }
     # As soon as a required component is found to be removed,
     # the whole parameter instance is removed.
-    return ($pnames->[-1] => undef)
+    return (_pname($ppaths) => undef)
         if grep {
         $pitem->{format}->{$_}->{occurrence} =~ /^1/
             and not defined $cur->{$_}
         } _keys($pitem->{format});
     # If all children are removed, remove parent.
-    return ($pnames->[-1] => undef)
+    return (_pname($ppaths) => undef)
         unless grep { defined $_ } values %$cur;
 
     unless (%ret) {
         return ();    # No valid changes
     } else {
-        return ($pnames->[-1] => {%ret});
+        return (_pname($ppaths) => {%ret});
     }
 }
 
@@ -564,12 +579,12 @@ sub _sanitize_changes_leaf {
     my $cur    = shift;
     my $new    = shift;
     my $pitem  = shift;
-    my $pnames = shift;
+    my $ppaths = shift;
     my $authz  = shift;
 
     return () if ref $new eq 'ARRAY';    # Sanity check: Hashref or scalar
     return () if $pitem->{obsolete};
-    return () unless $authz->($pnames);
+    return () unless $authz->($ppaths);
 
     my $list = $self->{context};
 
@@ -591,9 +606,9 @@ sub _sanitize_changes_leaf {
     }
 
     if ($pitem->{scenario} or $pitem->{task}) {
-        return ($pnames->[-1] => {name => $new});
+        return (_pname($ppaths) => {name => $new});
     } else {
-        return ($pnames->[-1] => $new);
+        return (_pname($ppaths) => $new);
     }
 }
 
@@ -619,18 +634,18 @@ sub _validate_changes {
     foreach my $pname (_keys($new, $pinfo)) {
         my $newi = $new->{$pname};
         my $pii  = $pinfo->{$pname};
-        my $pni  = [$pname];
+        my $ppi  = [$pname];
 
         my $r;
         if ($pii->{occurrence} =~ /n$/) {
             $r =
-                $self->_validate_changes_multiple($newi, $pii, $pni, $errors);
+                $self->_validate_changes_multiple($newi, $pii, $ppi, $errors);
         } elsif (ref $pii->{format} eq 'HASH') {
             $r =
-                $self->_validate_changes_paragraph($newi, $pii, $pni,
+                $self->_validate_changes_paragraph($newi, $pii, $ppi,
                 $errors);
         } else {
-            $r = $self->_validate_changes_leaf($newi, $pii, $pni, $errors);
+            $r = $self->_validate_changes_leaf($newi, $pii, $ppi, $errors);
         }
 
         return undef unless defined $r;
@@ -647,11 +662,15 @@ sub _validate_changes_multiple {
     my $self   = shift;
     my $new    = shift;
     my $pitem  = shift;
-    my $pnames = shift;
+    my $ppaths = shift;
     my $errors = shift;
 
     if (not defined $new and $pitem->{occurrence} =~ /^1/) {
-        push @$errors, ['user', 'mandatory_parameter', $pitem, $pnames];
+        push @$errors,
+            [
+            'user', 'mandatory_parameter',
+            {p_info => $pitem, p_paths => $ppaths}
+            ];
         return 'omit';
     }
 
@@ -659,16 +678,17 @@ sub _validate_changes_multiple {
     if (defined $new) {
         foreach my $i (sort { $a <=> $b } CORE::keys %$new) {
             my $newi = $new->{$i};
+            my $ppi = [@$ppaths, $i];
 
             if (defined $newi) {
                 my $r;
                 if (ref $pitem->{format} eq 'HASH') {
                     $r =
                         $self->_validate_changes_paragraph($newi, $pitem,
-                        $pnames, $errors);
+                        $ppi, $errors);
                 } else {
                     $r =
-                        $self->_validate_changes_leaf($newi, $pitem, $pnames,
+                        $self->_validate_changes_leaf($newi, $pitem, $ppi,
                         $errors);
                 }
 
@@ -689,11 +709,15 @@ sub _validate_changes_paragraph {
     my $self   = shift;
     my $new    = shift;
     my $pitem  = shift;
-    my $pnames = shift;
+    my $ppaths = shift;
     my $errors = shift;
 
     if (not defined $new and $pitem->{occurrence} =~ /^1/) {
-        push @$errors, ['user', 'mandatory_parameter', $pitem, $pnames];
+        push @$errors,
+            [
+            'user', 'mandatory_parameter',
+            {p_info => $pitem, p_paths => $ppaths}
+            ];
         return 'omit';
     }
 
@@ -701,21 +725,21 @@ sub _validate_changes_paragraph {
     if (defined $new) {
         foreach my $key (_keys($new, $pitem->{format})) {
             my $pii  = $pitem->{format}->{$key};
-            my $pni  = [@$pnames, $key];
+            my $ppi  = [@$ppaths, $key];
             my $newi = $new->{$key};
 
             my $r;
             if ($pii->{occurrence} =~ /n$/) {
                 $r =
-                    $self->_validate_changes_multiple($newi, $pii, $pni,
+                    $self->_validate_changes_multiple($newi, $pii, $ppi,
                     $errors);
             } elsif (ref $pii->{format} eq 'HASH') {
                 $r =
-                    $self->_validate_changes_paragraph($newi, $pii, $pni,
+                    $self->_validate_changes_paragraph($newi, $pii, $ppi,
                     $errors);
             } else {
                 $r =
-                    $self->_validate_changes_leaf($newi, $pii, $pni, $errors);
+                    $self->_validate_changes_leaf($newi, $pii, $ppi, $errors);
             }
 
             return undef unless defined $r;
@@ -788,7 +812,7 @@ sub _validate_changes_leaf {
     my $self   = shift;
     my $new    = shift;
     my $pitem  = shift;
-    my $pnames = shift;
+    my $ppaths = shift;
     my $errors = shift;
 
     # If the parameter corresponds to a scenario or a task, mark it
@@ -798,7 +822,11 @@ sub _validate_changes_leaf {
     }
 
     if (not defined $new and $pitem->{occurrence} =~ /^1/) {
-        push @$errors, ['user', 'mandatory_parameter', $pitem, $pnames];
+        push @$errors,
+            [
+            'user', 'mandatory_parameter',
+            {p_info => $pitem, p_paths => $ppaths}
+            ];
         return 'omit';
     }
 
@@ -807,11 +835,17 @@ sub _validate_changes_leaf {
         my $format = $pitem->{format};
         if (ref $format eq 'ARRAY' and not grep { $new eq $_ } @$format) {
             push @$errors,
-                ['user', 'syntax_errors', $pitem, $pnames, {value => $new}];
+                [
+                'user', 'syntax_errors',
+                {p_info => $pitem, p_paths => $ppaths, value => $new}
+                ];
             return 'invalid';
         } elsif (ref $format ne 'ARRAY' and not $new =~ /^$format$/) {
             push @$errors,
-                ['user', 'syntax_errors', $pitem, $pnames, {value => $new}];
+                [
+                'user', 'syntax_errors',
+                {p_info => $pitem, p_paths => $ppaths, value => $new}
+                ];
             return 'invalid';
         }
         foreach my $validation (@{$pitem->{validations} || []}) {
@@ -820,7 +854,10 @@ sub _validate_changes_leaf {
             next unless $validity;
 
             push @$errors,
-                ['user', $validity, $pitem, $pnames, {value => $new}];
+                [
+                'user', $validity,
+                {p_info => $pitem, p_paths => $ppaths, value => $new}
+                ];
             return 'invalid';
         }
     }

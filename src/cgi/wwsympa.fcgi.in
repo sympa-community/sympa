@@ -11651,7 +11651,7 @@ sub do_edit_list {
     unless (defined $validity) {
         if (my @intern = grep { $_->[0] eq 'intern' } @$errors) {
             foreach my $err (@intern) {
-                Sympa::Report::reject_report_web('intern', $err->[1], {},
+                Sympa::Report::reject_report_web($err->[0], $err->[1], {},
                     $param->{'action'}, $list);
                 wwslog('err', 'Internal error %s', $err->[1]);
             }
@@ -11675,8 +11675,9 @@ sub do_edit_list {
         Sympa::Report::reject_report_web(
             $err->[0],
             $err->[1],
-            {   'p_name' => $language->gettext($err->[2]->{gettext_id}),
-                %{$err->[4] || {}}
+            {   'p_name' =>
+                    $language->gettext($err->[2]->{p_info}->{gettext_id}),
+                %{$err->[2]}
             },
             $param->{'action'},
             $list
@@ -11684,7 +11685,7 @@ sub do_edit_list {
         wwslog(
             'err',
             'Error on parameter %s: %s',
-            join('.', @{$err->[3]}),
+            join('.', @{$err->[2]->{p_paths}}),
             $err->[1]
         );
         web_db_log(
