@@ -53,7 +53,7 @@
                         <!-- Multiple Enum -->
 
                           [% IF p.may_edit == 'write' %]
-                            <select name="multiple_param.[% p.name %]" multiple="multiple" size="[% p.value.size %]">
+                            <select name="multiple_param.[% p.name %]" id="param.[% p.name %]" multiple="multiple" size="[% p.value.size %]">
                               [% FOREACH enum = p.value %]
                                 <option value="[% enum.key %]"
                                 [% IF enum.value.selected == '1' %]
@@ -90,7 +90,7 @@
 
                                 [% IF key.may_edit != 'hidden' %] 
 
-                                      <label for="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
+                                      <label for="param.[% p.name %].[% o_INDEX %].[% key.name %]">
                                         [% IF key.title %]
                                           [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
                                         [% ELSE %]
@@ -102,7 +102,7 @@
                                         <!-- Enum -->
                                         
                                         [% IF key.may_edit == 'write' %]
-                                          <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
+                                          <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="param.[% p.name %].[% o_INDEX %].[% key.name %]">
                                             [% FOREACH enum = key.value %]
                                               <option value="[% enum.key %]"
                                               [%- IF enum.value.selected == '1' -%]
@@ -116,7 +116,6 @@
                                           [% FOREACH enum = key.value %]
                                             [% IF enum.value.selected == '1' %]
                                               [% IF enum.value.title %][% enum.value.title %][% ELSE %][%|optdesc('',is_listmaster)%][% enum.key %][%END%][% END %]
-                                              <input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% enum.key %]" />
                                             [% END %]
                                           [% END %]
                                         [% END %]
@@ -125,7 +124,7 @@
                                       [% ELSIF key.type == 'datasource' %]
                                         <!-- Datasource -->
                                         [% IF key.may_edit == 'write' %]
-                                          <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
+                                          <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="param.[% p.name %].[% o_INDEX %].[% key.name %]">
                                             [% FOREACH source = key.value %]
                                               <option value="[% source.value.name %]"
                                               [% IF source.value.selected == '1' %]
@@ -139,25 +138,23 @@
                                           [% FOREACH source = key.value %]
                                             [% IF source.value.selected == '1' %]
                                               [% source.value.title %] ([% source.value.name %])
-                                              <input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% source.value.name %]" />
                                             [% END %]
                                           [% END %]
                                         [% END %]
                                       [% ELSE %]
                                         <!-- Scalar -->
                                         [% IF key.may_edit == 'write' %]
-                                          [% IF key.field_type == 'password' %]
-                                            <input type="password" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
-                                          [% ELSE %]
-                                            <input type="text" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
-                                          [% END %]
+                                          <input
+                                           [%~ IF key.field_type == 'password' %] type="password"
+                                           [%~ ELSE %] type="text"
+                                           [%~ END %]
+                                           name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% IF key.field_type == 'password' %]
                                             [% key.hidden_field %]
                                           [% ELSE %]
                                             [% key.value %]
                                           [% END %]
-                                          <input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" />
                                         [% END %]
                                         [% key.unit %]
                                       [% END %]
@@ -167,7 +164,7 @@
                             [% ELSE %]
                               <!-- Scalar -->
                                   [% IF p.may_edit == 'write' %]
-                                    <input type="text" name="single_param.[% p.name %].[% o_INDEX %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% o.value %]" size="[% o.length %]" />
+                                    <input type="text" name="single_param.[% p.name %].[% o_INDEX %]" id="param.[% p.name %].[% o_INDEX %]" value="[% o.value %]" size="[% o.length %]" />
                                   [% ELSIF p.may_edit == 'read' %]
                                     [% o.value %]
                                   [% END %]
@@ -185,7 +182,7 @@
                           [% IF p.type == 'scenario' %]
                             <!-- Scenario -->
                             [% IF p.may_edit == 'write' %]
-                              <select name="single_param.[% p.name %].name" id="single_param.[% p.name %].name">
+                              <select name="single_param.[% p.name %].name" id="param.[% p.name %]">
                                 [% FOREACH scenario = p.value %]
                                   [% UNLESS scenario.value.name.match('(default)\s*$') %]
                                     <option value="[% scenario.value.name %]"
@@ -208,7 +205,7 @@
                           [% ELSIF p.type == 'task' %]
                             <!-- Task -->
                             [% IF p.may_edit == 'write' %]
-                              <select name="single_param.[% p.name %].name" id="single_param.[% p.name %].name">
+                              <select name="single_param.[% p.name %].name" id="param.[% p.name %]">
                                 [% FOREACH task = p.value %]
                                   <option value="[% task.value.name %]"
                                   [% IF task.value.selected == '1' %]
@@ -227,7 +224,7 @@
                           [% ELSIF p.type == 'datasource' %]
                             <!-- Datasource -->
                             [% IF p.may_edit == 'write' %]
-                              <select name="single_param.[% p.name %].name" id="single_param.[% p.name %].name">
+                              <select name="single_param.[% p.name %]" id="param.[% p.name %]">
                                 [% FOREACH source = p.value %]
                                   <option value="[% source.value.name %]"
                                   [% IF source.value.selected == '1' %]
@@ -247,7 +244,7 @@
                               <!-- Paragraph -->
                               [% FOREACH key = p.value %]
                                 [% IF key.may_edit != 'hidden' %] 
-                                      <label for="single_param.[% p.name %].[% key.name %].name">
+                                      <label for="param.[% p.name %].[% key.name %]">
                                         [% IF key.title %]
                                           [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
                                         [% ELSE %]
@@ -258,7 +255,7 @@
                                       [% IF key.type == 'scenario' %]
                                         <!-- Scenario -->
                                         [% IF key.may_edit == 'write' %]
-                                          <select name="single_param.[% p.name %].[% key.name %].name" id="single_param.[% p.name %].[% key.name %].name">
+                                          <select name="single_param.[% p.name %].[% key.name %].name" id="param.[% p.name %].[% key.name %]">
                                             [% FOREACH scenario = key.value %]
                                               <option value="[% scenario.value.name %]"
                                               [% IF scenario.value.selected == '1' %]
@@ -278,7 +275,7 @@
                                       [% ELSIF key.type == 'task' %]
                                         <!-- Task -->
                                         [% IF key.may_edit == 'write' %]
-                                          <select name="single_param.[% p.name %].[% key.name %].name" id="single_param.[% p.name %].[% key.name %].name">
+                                          <select name="single_param.[% p.name %].[% key.name %].name" id="param.[% p.name %].[% key.name %]">
                                             [% FOREACH task = key.value %]
                                               <option value="[% task.name %]"
                                               [% IF task.value.selected == '1' %]
@@ -297,7 +294,7 @@
                                       [% ELSIF key.type == 'datasource' %]
                                         <!-- Datasource -->
                                         [% IF key.may_edit == 'write' %]
-                                          <select name="single_param.[% p.name %].[% key.name %].name" id="single_param.[% p.name %].[% key.name %].name">
+                                          <select name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]">
                                             [% FOREACH source = key.value %]
                                               <option value="[% source.name %]"
                                               [% IF source.value.selected == '1' %]
@@ -318,9 +315,9 @@
                                         <!-- Enum -->
                                         [% IF key.may_edit == 'write' %]
                                           [% IF key.occurrence == 'multiple' %]
-                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" multiple="multiple" size="[% key.value.size %]">
+                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]" multiple="multiple" size="[% key.value.size %]">
                                           [% ELSE %]
-                                            <select name="single_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" class="neutral">
+                                            <select name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]" class="neutral">
                                           [% END %]
                                           [% FOREACH enum = key.value %]
                                             <option value="[% enum.key %]"
@@ -361,7 +358,7 @@
                                       [% ELSE %]
                                         <!-- Scalar -->
                                         [% IF key.may_edit == 'write' %]
-                                          <input type="text" name="single_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" value="[% key.value %]" size="[% key.length %]" />
+                                          <input type="text" name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% key.value %]
                                         [% END %]
@@ -373,7 +370,7 @@
                           [% ELSIF p.type == 'enum' %]
                           <!-- Enum -->
                             [% IF p.may_edit == 'write' %]
-                              <select name="single_param.[% p.name %]" id="single_param.[% p.name %].name" class="neutral">
+                              <select name="single_param.[% p.name %]" id="param.[% p.name %]" class="neutral">
                                 [% FOREACH enum = p.value %]
                                   <option value="[% enum.key %]"
                                   [% IF enum.value.selected == '1' %]
@@ -411,7 +408,7 @@
                           [% ELSE %]
                             <!-- Scalar -->
                             [% IF p.may_edit == 'write' %]
-                              <input type="text" name="single_param.[% p.name %]" id="single_param.[% p.name %].name" value="[% p.value %]" size="[% p.length %]" />
+                              <input type="text" name="single_param.[% p.name %]" id="param.[% p.name %]" value="[% p.value %]" size="[% p.length %]" />
                             [% ELSIF p.may_edit == 'read' %]
                               [% p.value %]
                             [% END %]
