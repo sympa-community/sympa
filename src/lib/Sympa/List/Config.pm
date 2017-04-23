@@ -39,16 +39,18 @@ sub new {
 
     die 'bug in logic. Ask developer' unless ref $context eq 'Sympa::List';
 
+    # The undef means list creation.
+    # Empty hashref (default) means loading existing config.
     my $config;
     if (exists $options{config}) {
-        $config = $options{config};    # undef means list creation
+        $config = $options{config};
     } else {
         $config = {};
     }
     $config = Sympa::Tools::Data::clone_var($config)
         if $options{copy};
 
-    #FIXME: Should sanitize $config.
+    #FIXME:Should $config be sanitized?
     my $self =
         bless {context => $context, _config => $config, _changes => {}} =>
         $class;
@@ -160,21 +162,73 @@ sub __list_params_apply_family {
 }
 
 sub get {
-    my $self = shift;
-    my $key  = shift;
+    my $self  = shift;
+    my $ppath = shift;
 
-    return unless exists $self->{_config}->{$key};    # void
-    #FIXME:Multiple levels of keys should be possible.
-    return Sympa::Tools::Data::clone_var($self->{_config}->{$key});
+    my @ppaths = split /[.]/, $ppath;
+    return unless @ppaths;
+
+    my @value = _get($self->{_config}, @ppaths);
+    return unless @value;
+    return $value[0] unless ref $value[0];
+    return Sympa::Tools::Data::clone_var($value[0]);
+}
+
+sub _get {
+    my $cur    = shift;
+    my @ppaths = @_;
+
+    while (1) {
+        my $key = pop @ppaths;
+
+        if ($key =~ /\A\d+\z/) {
+            unless (ref $cur eq 'ARRAY' and exists $cur->[$key]) {
+                return;
+            } elsif (not @ppaths) {
+                return ($cur->[$key]);
+            } else {
+                $cur = $cur->[$key];
+            }
+        } else {
+            unless (ref $cur eq 'HASH' and exists $cur->{$key}) {
+                return;
+            } elsif (not @ppaths) {
+                return $cur->{$key};
+            } else {
+                $cur = $cur->{$key};
+            }
+        }
+    }
 }
 
 sub get_change {
-    my $self = shift;
-    my $key  = shift;
+    my $self  = shift;
+    my $ppath = shift;
 
-    return unless exists $self->{_changes}->{$key};    # void
-    # FIXME:Multiple levels of keys should be possible.
-    return Sympa::Tools::Data::clone_var($self->{_changes}->{$key});
+    my @ppaths = split /[.]/, $ppath;
+    return unless @ppaths;
+
+    my @value = _get_change($self->{_changes}, @ppaths);
+    return unless @value;
+    return $value[0] unless ref $value[0];
+    return Sympa::Tools::Data::clone_var($value[0]);
+}
+
+sub _get_change {
+    my $new    = shift;
+    my @ppaths = @_;
+
+    while (1) {
+        my $key = pop @ppaths;
+
+        unless (ref $new eq 'HASH' and exists $new->{$key}) {
+            return;
+        } elsif (not @ppaths) {
+            return $new->{$key};
+        } else {
+            $new = $new->{$key};
+        }
+    }
 }
 
 sub get_changeset {
@@ -260,10 +314,32 @@ sub _apply_defaults {
     }
 }
 
-sub keys {
+sub get_schema {
     my $self = shift;
+    return Sympa::Tools::Data::clone_var($self->{_pinfo});
+}
 
-    return _keys($self->{_pinfo});
+sub keys {
+    my $self  = shift;
+    my $pname = shift;
+
+    return _keys($self->{_pinfo}) unless $pname;
+    my @pnames = split /[.]/, $pname;
+
+    my $phash = $self->{_pinfo};
+    while (1) {
+        my $key = pop @pnames;
+
+        unless (ref $phash eq 'HASH'
+            and exists $phash->{$key}
+            and exists $phash->{$key}->{format}) {
+            return;
+        } elsif (not @pnames) {
+            return _keys($phash->{$key}->{format});
+        } else {
+            $phash = $phash->{$key}->{format};
+        }
+    }
 }
 
 sub _keys {
@@ -275,14 +351,14 @@ sub _keys {
     } CORE::keys %$hash;
 }
 
-# Gets parameter name of node.
+# Gets parameter name of node from list of parameter paths.
 sub _pname {
     my $ppaths = shift;
     return undef unless $ppaths and @$ppaths;
     [grep { !/\A\d+\z/ } @$ppaths]->[-1];
 }
 
-# Gets full parameter name of node.
+# Gets full parameter name of node from list of parameter paths.
 sub _pfullname {
     my $ppaths = shift;
     return undef unless $ppaths and @$ppaths;
@@ -333,9 +409,11 @@ sub _sanitize_changes {
     my $pinfo = $self->{_pinfo};
 
     # Undefined {_config} means list creation.
+    # Empty hashref means loading existing config.
     my $init = (not defined $self->{_config});
+    my $loading = ($self->{_config} and not %{$self->{_config}});
     my $cur = $init ? {} : Sympa::Tools::Data::clone_var($self->{_config});
-    $self->_apply_defaults($cur, $pinfo, init => $init);
+    $self->_apply_defaults($cur, $pinfo, init => ($init and not $loading));
 
     my %ret = map {
         unless (exists $pinfo->{$_} and $pinfo->{$_}) {
@@ -365,12 +443,15 @@ sub _sanitize_changes {
                 } else {
                     @r =
                         $self->_sanitize_changes_array($curi, $newi, $pii,
-                        $ppi, $authz);
+                        $ppi, $authz, loading => $loading);
                 }
             } elsif (ref $pii->{format} eq 'HASH') {
-                @r =
-                    $self->_sanitize_changes_paragraph($curi, $newi, $pii,
-                    $ppi, $authz, init => (not defined $curi));
+                @r = $self->_sanitize_changes_paragraph(
+                    $curi, $newi, $pii,
+                    $ppi,  $authz,
+                    init    => (not defined $curi),
+                    loading => $loading
+                );
             } else {
                 @r =
                     $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi,
@@ -443,12 +524,13 @@ sub _sanitize_changes_set {
 
 # Sanitizes array.
 sub _sanitize_changes_array {
-    my $self   = shift;
-    my $cur    = shift || [];
-    my $new    = shift;
-    my $pitem  = shift;
-    my $ppaths = shift;
-    my $authz  = shift;
+    my $self    = shift;
+    my $cur     = shift || [];
+    my $new     = shift;
+    my $pitem   = shift;
+    my $ppaths  = shift;
+    my $authz   = shift;
+    my %options = @_;
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
@@ -462,9 +544,12 @@ sub _sanitize_changes_array {
 
         my @r;
         if (ref $pitem->{format} eq 'HASH') {
-            @r =
-                $self->_sanitize_changes_paragraph($curi, $_, $pitem, $ppi,
-                $authz, init => (not defined $curi));
+            @r = $self->_sanitize_changes_paragraph(
+                $curi, $_, $pitem, $ppi,
+                $authz,
+                init    => (not defined $curi),
+                loading => $options{loading}
+            );
         } else {
             @r =
                 $self->_sanitize_changes_leaf($curi, $_, $pitem, $ppi,
@@ -505,7 +590,8 @@ sub _sanitize_changes_paragraph {
     return () if $pitem->{obsolete};
     return () unless $authz->($ppaths);
 
-    $self->_apply_defaults($cur, $pitem->{format}, init => $options{init});
+    $self->_apply_defaults($cur, $pitem->{format},
+        init => ($options{init} and not $options{loading}));
 
     my %ret = map {
         unless (exists $pitem->{format}->{$_} and $pitem->{format}->{$_}) {
@@ -535,12 +621,15 @@ sub _sanitize_changes_paragraph {
                 } else {
                     @r =
                         $self->_sanitize_changes_array($curi, $newi, $pii,
-                        $ppi, $authz);
+                        $ppi, $authz, loading => $options{loading});
                 }
             } elsif (ref $pii->{format} eq 'HASH') {
-                @r =
-                    $self->_sanitize_changes_paragraph($curi, $newi, $pii,
-                    $ppi, $authz, init => (not defined $curi));
+                @r = $self->_sanitize_changes_paragraph(
+                    $curi, $newi, $pii,
+                    $ppi,  $authz,
+                    init    => (not defined $curi),
+                    loading => $options{loading}
+                );
             } else {
                 @r =
                     $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi,
@@ -885,9 +974,11 @@ sub commit {
     }
 
     # Undefined {_config} means list creation.
-    my $init = (not defined $self->{_config});
-    my $cur = $init ? {} : $self->{_config};
-    $self->_apply_defaults($cur, $pinfo, init => $init);
+    # Empty hashref means loading existing config.
+    my $init    = (not defined $self->{_config});
+    my $loading = ($self->{_config} and not %{$self->{_config}});
+    my $cur     = $init ? {} : $self->{_config};
+    $self->_apply_defaults($cur, $pinfo, init => ($init and not $loading));
 
     foreach my $pname (_keys($self->{_changes}, $pinfo)) {
         my $curi = $cur->{$pname};
@@ -898,12 +989,16 @@ sub commit {
             delete $cur->{$pname};
         } elsif ($pii->{occurrence} =~ /n$/) {
             $curi = $cur->{$pname} = [] unless defined $curi;
-            $self->_merge_changes_multiple($curi, $newi, $pii);
+            $self->_merge_changes_multiple($curi, $newi, $pii,
+                loading => $loading);
         } elsif (ref $pii->{format} eq 'HASH') {
             my $init = (not defined $curi);
             $curi = $cur->{$pname} = {} if $init;
-            $self->_merge_changes_paragraph($curi, $newi, $pii,
-                init => $init);
+            $self->_merge_changes_paragraph(
+                $curi, $newi, $pii,
+                init    => $init,
+                loading => $loading
+            );
         } else {
             $cur->{$pname} = $newi;
         }
@@ -924,10 +1019,11 @@ sub commit {
 }
 
 sub _merge_changes_multiple {
-    my $self  = shift;
-    my $cur   = shift;
-    my $new   = shift;
-    my $pitem = shift;
+    my $self    = shift;
+    my $cur     = shift;
+    my $new     = shift;
+    my $pitem   = shift;
+    my %options = @_;
 
     foreach my $i (reverse sort { $a <=> $b } CORE::keys %$new) {
         my $curi = $cur->[$i];
@@ -938,8 +1034,11 @@ sub _merge_changes_multiple {
         } elsif (ref $pitem->{format} eq 'HASH') {
             my $init = (not defined $curi);
             $curi = $cur->[$i] = {} if $init;
-            $self->_merge_changes_paragraph($curi, $newi, $pitem,
-                init => $init);
+            $self->_merge_changes_paragraph(
+                $curi, $newi, $pitem,
+                init    => $init,
+                loading => $options{loading}
+            );
         } else {
             $cur->[$i] = $newi;
         }
@@ -961,7 +1060,8 @@ sub _merge_changes_paragraph {
     my $pitem   = shift;
     my %options = @_;
 
-    $self->_apply_defaults($cur, $pitem->{format}, init => $options{init});
+    $self->_apply_defaults($cur, $pitem->{format},
+        init => ($options{init} and not $options{loading}));
 
     foreach my $key (_keys($new, $pitem->{format})) {
         my $curi = $cur->{$key};
@@ -972,12 +1072,16 @@ sub _merge_changes_paragraph {
             delete $cur->{$key};
         } elsif ($pii->{occurrence} =~ /n$/) {
             $curi = $cur->{$key} = [] unless defined $curi;
-            $self->_merge_changes_multiple($curi, $newi, $pii);
+            $self->_merge_changes_multiple($curi, $newi, $pii,
+                loading => $options{loading});
         } elsif (ref $pii->{format} eq 'HASH') {
             my $init = (not defined $curi);
             $curi = $cur->{$key} = {} if $init;
-            $self->_merge_changes_paragraph($curi, $newi, $pii,
-                init => $init);
+            $self->_merge_changes_paragraph(
+                $curi, $newi, $pii,
+                init    => $init,
+                loading => $options{loading}
+            );
         } else {
             $cur->{$key} = $newi;
         }
@@ -1006,6 +1110,9 @@ Sympa::List::Config - List configuration
   my $errors = []; 
   my $validity = $config->submit({...}, $user, $errors);
   $config->commit($errors);
+  
+  my $value = $config->get('owner.0.gecos');
+  my @keys  = $config->keys('owner');
 
 =head1 DESCRIPTION
 
@@ -1030,49 +1137,79 @@ Context.  An instance of L<Sympa::List> class.
 =item config =E<gt> $initial_config
 
 Initial configuration.
-C<undef> must be specified when the list will be initially created.
+Note:
 
-=item copy =E<gt> 1
+=over
 
-TBD.
+=item *
 
-=item no_family =E<gt> 1
+When the list will be initially created,
+C<undef> must be specified explicitly
+so that default parameter values will be completed.
 
-TBD.
+=item *
+
+When exisiting list will be instantiated and config will be loaded,
+C<{}> (default) would be specified
+so that default parameter values except optional ones
+(with occurrence C<'0-1'> or C<'0-n'>) will be completed.
+
+=item *
+
+Otherwise, default parameter values are completed
+only when the new paragraph node will be added.
 
 =back
 
-=item get ( $key )
+=item copy =E<gt> 1
+
+Uses deep copy of initial configuration (see L</"config">)
+instead of real reference.
+
+=item no_family =E<gt> 1
+
+Won't apply family constraint.
+By default, the constraint will be applied if the list is belonging to
+family.
+
+=back
+
+=item get ( $ppath )
 
 I<Instance method>.
-Gets current value of parameter $key.
+Gets copy of current value of parameter.
 
 Parameter:
 
 =over
 
-=item $key
+=item $ppath
 
-Parameter name.
+Parameter path,
+e.g. C<'owner.0.email'> specifys "email" parameter of
+the first "owner" paragraph.
 
 =back
 
 Returns:
 
-If value is not set, returns C<undef>.
+Value of parameter.
+If parameter or value does not exist, returns C<undef> in scalar context
+and an empty list in array context.
 
-=item get_change ( $key )
+=item get_change ( $ppath )
 
 I<Instance method>.
-Gets submitted change on parameter $key.
+Gets copy of submitted change on parameter.
 
 Parameter:
 
 =over
 
-=item $key
+=item $ppath
 
-Parameter name.
+Parameter path.
+See also get().
 
 =back
 
@@ -1090,10 +1227,33 @@ Gets all submitted changes.
 Note that returned value is the real reference to internal information.
 Any modifications might break it.
 
-=item keys ( )
+=item get_schema ( )
 
 I<Instance method>.
-TBD.
+TDB.
+
+=item keys ( [ $pname ] )
+
+I<Instance method>.
+Gets parameter keys in order defined by schema.
+
+Parameter:
+
+=over
+
+=item $pname
+
+Full parameter name.
+If omitted or false value,
+returns keys of top-level parameters.
+
+=back
+
+Returns:
+
+List of keys.
+If parameter does not exist or it does not have sub-parameters,
+i.e. it is not the paragraph, empty list.
 
 =item submit ( $new, $user, \@errors )
 
