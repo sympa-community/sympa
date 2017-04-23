@@ -130,7 +130,7 @@
                                               [% IF source.value.selected == '1' %]
                                                 selected="selected"
                                               [% END %]
-                                              >[% source.value.title %]</option>
+                                              >[% source.value.title %] ([% source.value.name %])</option>
                                             [% END %]
                                           </select>
 
@@ -304,7 +304,7 @@
                                         [% IF key.may_edit == 'write' %]
                                           <select name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]">
                                             [% FOREACH source = key.value %]
-                                              <option value="[% source.name %]"
+                                              <option value="[% source.value.name %]"
                                               [% IF source.value.selected == '1' %]
                                                 selected="selected"
                                               [% END %]
