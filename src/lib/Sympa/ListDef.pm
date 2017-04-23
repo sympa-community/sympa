@@ -2459,6 +2459,8 @@ Or arrayref containing all possible values of parameter.
 If the parameter is paragraph, value of this item is a hashref containing
 definitions of sub-parameters.
 
+See also L</"Node types">.
+
 =item file_format
 
 Config file format of the parameter might not be
@@ -2467,6 +2469,7 @@ the same in memory.
 =item split_char
 
 Character used to separate multiple parameters.
+Used with the set or the array of scalars.
 
 =item length
 
@@ -2480,6 +2483,10 @@ Tells that the parameter is a scenario, providing its name.
 
 Default value for the param ; may be a robot configuration
 parameter (conf).
+
+If occurrence is C<0-1> or C<0-n>,
+default value will be assigned
+only when list is created or new node is added to configuration.
 
 =item synonym
 
@@ -2599,7 +2606,8 @@ The array cannot contain sets or arrays.
 
 =item *
 
-{occurrence}: C<'0-1'> or C<'1'>, if the node is not an item of array or set.
+{occurrence}: If the node is an item of array, C<'0-n'> or C<'1-n'>.
+Otherwise, C<'0-1'> or C<'1'>.
 
 =item *
 
@@ -2617,12 +2625,13 @@ are defined as member of {format}.
 
 =item *
 
-{occurrence}: C<'0-1'> or C<'1'>, if the value is not an item of
-the set or the array.
+{occurrence}: If the node is an item of array, C<'0-n'> or C<'1-n'>.
+Otherwise, C<'0-1'> or C<'1'>.
 
 =item *
 
-{format}: Regexp or arrayref.
+{format}: If the node is an item of array, regexp.
+Otherwise, regexp or arrayref.
 
 =back
 
