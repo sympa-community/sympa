@@ -46,6 +46,7 @@ use Sympa::Datasource;
 use Sympa::Family;
 use Sympa::Fetch;
 use Sympa::Language;
+use Sympa::List::Config;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Sympa::Log;

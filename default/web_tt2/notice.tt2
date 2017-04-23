@@ -4,6 +4,8 @@
     <div  data-alert class="alert-box info radius">
 <i class="fi-eye"></i> 
 [%|loc(last_login_host,last_login_date)%]last login from %1 (%2)[%END%]<br/>
+
+    </div>
 [%END%]
 
 [% FOREACH notice = notices %]
@@ -41,6 +43,11 @@
     <div  data-alert class="alert-box success radius">
 <i class="fi-check"></i> 
 [%|loc%]Configuration file has been updated[%END%]
+
+[% ELSIF notice.msg == 'no_parameter_edited' %]
+    <div  data-alert class="alert-box info radius">
+<i class="fi-eye"></i>
+[%|loc%]No parameter was edited[%END%]
 
 [% ELSIF notice.msg == 'list_purged' %]
     <div  data-alert class="alert-box success radius">
@@ -143,11 +150,12 @@
 [%|loc(notice.notified_user)%]User %1 has been notified[%END%]
 
 [% ELSE %]
+    <div  data-alert class="alert-box info radius">
+<i class="fi-eye"></i>
 [% notice.msg.replace('\n','<br/>') %]
 
 [% END %]
-
-[% END %]
     </div>
+[% END %]
 </div>
 <!-- end notice.tt2 -->

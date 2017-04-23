@@ -58,6 +58,7 @@ nobase_modules_DATA = \
 	Sympa/HTMLSanitizer.pm \
 	Sympa/Language.pm \
 	Sympa/List.pm \
+	Sympa/List/Config.pm \
 	Sympa/ListDef.pm \
 	Sympa/ListOpt.pm \
 	Sympa/LockedFile.pm \

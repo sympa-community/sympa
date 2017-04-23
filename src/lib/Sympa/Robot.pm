@@ -172,8 +172,9 @@ sub update_email_netidmap_db {
     return 1;
 }
 
-## Loads the list of topics if updated
-## FIXME: This might be moved to Robot package.
+# Loads the list of topics if updated.
+# The topic names "others" and "topicsless" are reserved words therefore
+# ignored.  Note: "other" is not reserved and may be used.
 sub load_topics {
     my $robot = shift;
     $log->syslog('debug2', '(%s)', $robot);
@@ -210,7 +211,10 @@ sub load_topics {
         my (@rough_data, $topic);
         while (<FILE>) {
             Encode::from_to($_, $Conf::Conf{'filesystem_encoding'}, 'utf8');
-            if (/^([\-\w\/]+)\s*$/) {
+            if (/\A(others|topicsless)\s*\z/) {
+                # "others" and "topicsless" are reserved words. Ignore.
+                next;
+            } elsif (/^([\-\w\/]+)\s*$/) {
                 $index++;
                 $topic = {
                     'name'  => $1,
@@ -369,7 +373,24 @@ sub list_params {
     my $robot_id = shift;
 
     my $pinfo = Sympa::Tools::Data::clone_var(\%Sympa::ListDef::pinfo);
-    $pinfo->{'lang'}{'format'} = [Sympa::get_supported_languages($robot_id)];
+    $pinfo->{lang}{format} = [Sympa::get_supported_languages($robot_id)];
+
+    my %topics = Sympa::Robot::load_topics($robot_id);
+    my @topics = map {
+        my $topic = $_;
+        if ($topics{$topic}->{sub}) {
+            (   $topic,
+                map { $topic . '/' . $_ } sort keys %{$topics{$topic}->{sub}}
+            );
+        } else {
+            ($topic);
+        }
+    } sort keys %topics;
+    $pinfo->{topics}{format} = [@topics];
+    # Compat.
+    $pinfo->{topics}{file_format} = sprintf '(%s)(,(%s))*',
+        join('|', @topics),
+        join('|', @topics);
 
     return $pinfo;
 }
