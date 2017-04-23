@@ -150,11 +150,11 @@
                                            [%~ END %]
                                            name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
                                         [% ELSIF key.may_edit == 'read' %]
-                                          [% IF key.field_type == 'password' %]
-                                            [% key.hidden_field %]
-                                          [% ELSE %]
+                                          [% IF key.field_type == 'password' ~%]
+                                            [% x = '*'; x.repeat(key.value.length()) %]
+                                          [%~ ELSE ~%]
                                             [% key.value %]
-                                          [% END %]
+                                          [%~ END %]
                                         [% END %]
                                         [% key.unit %]
                                       [% END %]
@@ -164,9 +164,17 @@
                             [% ELSE %]
                               <!-- Scalar -->
                                   [% IF p.may_edit == 'write' %]
-                                    <input type="text" name="single_param.[% p.name %].[% o_INDEX %]" id="param.[% p.name %].[% o_INDEX %]" value="[% o.value %]" size="[% o.length %]" />
+                                    <input
+                                     [%~ IF p.field_type == 'password' %] type="password"
+                                     [%~ ELSE %] type="text"
+                                     [%~ END %]
+                                     name="single_param.[% p.name %].[% o_INDEX %]" id="param.[% p.name %].[% o_INDEX %]" value="[% o.value %]" size="[% o.length %]" />
                                   [% ELSIF p.may_edit == 'read' %]
-                                    [% o.value %]
+                                    [% IF p.field_type == 'password' ~%]
+                                      [% x = '*'; x.repeat(o.value.length()) %]
+                                    [%~ ELSE ~%]
+                                      [% o.value %]
+                                    [%~ END %]
                                   [% END %]
                                   [% o.unit %]
                             [% END %]
@@ -358,9 +366,17 @@
                                       [% ELSE %]
                                         <!-- Scalar -->
                                         [% IF key.may_edit == 'write' %]
-                                          <input type="text" name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
+                                          <input
+                                           [%~ IF key.field_type == 'password' %] type="password"
+                                           [%~ ELSE %] type="text"
+                                           [%~ END %]
+                                           name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
                                         [% ELSIF key.may_edit == 'read' %]
-                                          [% key.value %]
+                                          [% IF key.field_type == 'password' ~%]
+                                            [% x = '*'; x.repeat(key.value.length()) %]
+                                          [%~ ELSE ~%]
+                                            [% key.value %]
+                                          [%~ END %]
                                         [% END %]
                                         [% key.unit %]
 
@@ -408,9 +424,17 @@
                           [% ELSE %]
                             <!-- Scalar -->
                             [% IF p.may_edit == 'write' %]
-                              <input type="text" name="single_param.[% p.name %]" id="param.[% p.name %]" value="[% p.value %]" size="[% p.length %]" />
+                              <input
+                               [%~ IF p.field_type == 'password' %] type="password"
+                               [%~ ELSE %] type="text"
+                               [%~ END %]
+                               name="single_param.[% p.name %]" id="param.[% p.name %]" value="[% p.value %]" size="[% p.length %]" />
                             [% ELSIF p.may_edit == 'read' %]
-                              [% p.value %]
+                              [% IF p.field_type == 'password' ~%]
+                                [% x = '*'; x.repeat(p.value.length()) %]
+                              [%~ ELSE ~%]
+                                [% p.value %]
+                              [%~ END %]
                             [% END %]
                             [% p.unit %]
                           [% END %]

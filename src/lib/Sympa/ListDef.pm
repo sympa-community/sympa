@@ -2087,6 +2087,7 @@ our %pinfo = (
         'group'      => 'other',
         'gettext_id' => "Secret string for generating unique keys",
         'format'     => '\S+',
+        'field_type' => 'password',
         'length'     => 15,
         'default'    => {'conf' => 'cookie'}
     },
