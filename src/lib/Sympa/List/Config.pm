@@ -179,7 +179,7 @@ sub _get {
     my @ppaths = @_;
 
     while (1) {
-        my $key = pop @ppaths;
+        my $key = shift @ppaths;
 
         if ($key =~ /\A\d+\z/) {
             unless (ref $cur eq 'ARRAY' and exists $cur->[$key]) {
@@ -219,7 +219,7 @@ sub _get_change {
     my @ppaths = @_;
 
     while (1) {
-        my $key = pop @ppaths;
+        my $key = shift @ppaths;
 
         unless (ref $new eq 'HASH' and exists $new->{$key}) {
             return;
@@ -328,7 +328,7 @@ sub keys {
 
     my $phash = $self->{_pinfo};
     while (1) {
-        my $key = pop @pnames;
+        my $key = shift @pnames;
 
         unless (ref $phash eq 'HASH'
             and exists $phash->{$key}
