@@ -250,6 +250,7 @@ our %pinfo = (
         'gettext_id' => "Language of the list",
         'format' => [],    ## Sympa::get_supported_languages() called later
         'file_format' => '\w+(\-\w+)*',
+        'field_type'  => 'lang',
         'default'     => {'conf' => 'lang'}
     },
 
@@ -310,6 +311,7 @@ our %pinfo = (
                 'gettext_id'  => "days",
                 'format'      => [0 .. 6],
                 'file_format' => '1|2|3|4|5|6|7',
+                'field_type'  => 'dayofweek',
                 'occurrence'  => '1-n'
             },
             'hour' => {
@@ -351,6 +353,7 @@ our %pinfo = (
                     'summary', 'nomail', 'txt',    'html',
                     'urlize',  'not_me'
                 ],
+                'field_type' => 'reception',
                 'occurrence' => '1-n',
                 'split_char' => ',',
                 'default' =>
@@ -372,12 +375,14 @@ our %pinfo = (
                     'summary', 'notice',      'txt',  'html',
                     'urlize',  'not_me'
                 ],
+                'field_type' => 'reception',
                 'default' => 'mail'
             },
             'visibility' => {
                 'order'      => 2,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'field_type' => 'visibility',
                 'default'    => 'noconceal'
             }
         },
@@ -2138,9 +2143,11 @@ our %pinfo = (
             },
             'date_epoch' => {
                 'order'      => 3,
-                'gettext_id' => 'epoch date',
+                'gettext_id' => 'date',
                 'format'     => '\d+',
-                'occurrence' => '1'
+                'field_type' => 'unixtime',
+                'occurrence' => '1',
+                'length'     => 10,
             }
         },
         'internal' => 1
@@ -2189,9 +2196,11 @@ our %pinfo = (
         'format'     => {
             'date_epoch' => {
                 'order'      => 3,
-                'gettext_id' => "epoch date",
+                'gettext_id' => "date",
                 'format'     => '\d+',
-                'occurrence' => '1'
+                'field_type' => 'unixtime',
+                'occurrence' => '1',
+                'length'     => 10,
             },
             'date' => {
                 'order'      => 2,
@@ -2230,10 +2239,11 @@ our %pinfo = (
             },
             'date_epoch' => {
                 'order'      => 3,
-                'gettext_id' => 'epoch date',
+                'gettext_id' => 'date',
                 'format'     => '\d+',
+                'field_type' => 'unixtime',
                 'occurrence' => '1',
-                'length'     => 8
+                'length'     => 10,
             }
         },
         'internal' => 1,
@@ -2245,6 +2255,7 @@ our %pinfo = (
         'gettext_id' => "Status of the list",
         'format' =>
             ['open', 'closed', 'pending', 'error_config', 'family_closed'],
+        'field_type' => 'status',
         'default'  => 'open',
         'internal' => 1
     },
@@ -2547,7 +2558,39 @@ that should always be saved in the config file.
 
 =item field_type
 
-Used to select passwords web input type.
+Used to special treatment of parameter value to show it.
+
+=over
+
+=item C<'dayofweek'>
+
+Day of week, C<0> - C<6>.
+
+=item C<'lang'>
+
+Language tag.
+
+=item C<'password'>
+
+The value to be concealed.
+
+=item C<'reception'>
+
+Reception mode of list member.
+
+=item C<'status'>
+
+Status of list.
+
+=item C<'unixtime'>
+
+The time in second from Unix epoch.
+
+=item C<'visibility'>
+
+Visibility mode of list memeber.
+
+=back
 
 =item validations
 

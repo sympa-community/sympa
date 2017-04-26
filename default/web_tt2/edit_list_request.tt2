@@ -50,33 +50,36 @@
                       <!-- Multiple params -->
 
                       [% IF p.type == 'enum' %]
-                        <!-- Multiple Enum -->
-
+                          <!-- set -->
                           [% IF p.may_edit == 'write' %]
-                            <select name="multiple_param.[% p.name %]" id="param.[% p.name %]" multiple="multiple" size="[% p.value.size %]">
+                            <select name="multiple_param.[% p.name %]" id="param.[% p.name %]" multiple="multiple" size="[% p.value.size %]"
+                             [%~ IF p.field_type == 'lang' %] class="neutral"[% END %]>
                               [% FOREACH enum = p.value %]
                                 <option value="[% enum.key %]"
-                                [% IF enum.value.selected == '1' %]
-                                  selected="selected"
-                                [% END %]
-                                [% IF enum.value.title %]
-                                  >[% enum.value.title %]</option>
-                                [% ELSE %]
-                                  >[%|optdesc('',is_listmaster)%][% enum.key %][%END%]</option>
-                                [% END %]
+                                 [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
+                                 [%~ IF p.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[% END %]>
+                                [%~ IF enum.value.title ~%]
+                                  [% enum.value.title %]
+                                [%~ ELSE ~%]
+                                  [% enum.key | optdesc(p.field_type,is_listmaster) %]
+                                [%~ END ~%]
+                                </option>
                               [% END %]
                             </select>
                           [% ELSIF p.may_edit == 'read' %]
                             [% FOREACH enum = p.value %]
-                              [% IF enum.value.selected == '1' %]
-                                [% IF enum.value.title %]
+                              [% IF enum.value.selected == '1' ~%]
+                                [%~ IF p.field_type == 'lang' %]<span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">[% END ~%]
+                                [% IF enum.value.title ~%]
                                   [% enum.value.title %]
-                                [% ELSE %]
-                                  [%|optdesc('',is_listmaster)%][% enum.key %][%END%]
-                                [% END %]
-                              [% END %]
+                                [%~ ELSE ~%]
+                                  [% enum.key | optdesc(p.field_type,is_listmaster) %]
+                                [%~ END %]
+                                [%~ IF p.field_type == 'lang' %]</span>[% END %]
+                              [%~ END %]
                             [% END %]
                           [% END %]
+                          <!-- end set -->
                       [% ELSE %]
                         [% o_INDEX = 0 %]
                         [% FOREACH o = p.value %]
@@ -99,41 +102,46 @@
                                       </label>
 
                                       [% IF key.type == 'enum' %]
-                                        <!-- Enum -->
-                                        
+                                        <!-- enum -->
                                         [% IF key.may_edit == 'write' %]
-                                          <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="param.[% p.name %].[% o_INDEX %].[% key.name %]">
-                                            [% FOREACH enum = key.value %]
-                                              <option value="[% enum.key %]"
-                                              [%- IF enum.value.selected == '1' -%]
-                                                selected="selected"
-                                              [%- END -%]
-                                              >[% IF enum.value.title %][% enum.value.title %][% ELSE %][%|optdesc('',is_listmaster)%][% enum.key %][%END%][% END %]
-                                              </option>
-                                            [% END %]
+                                          <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="param.[% p.name %].[% o_INDEX %].[% key.name %]"
+                                           [%~ IF key.field_type == 'lang' %] class="neutral"[% END %]>
+                                          [% FOREACH enum = key.value %]
+                                            <option value="[% enum.key %]"
+                                             [%~ IF enum.value.selected == '1' %] selected="selected"[% END ~%]
+                                             [%~ IF pitem.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[%END%]>
+                                            [%~ IF enum.value.title ~%]
+                                              [% enum.value.title %]
+                                            [%~ ELSE ~%]
+                                              [% enum.key | optdesc(key.field_type,is_listmaster) %]
+                                            [%~ END %]
+                                            </option>
+                                          [% END %]
                                           </select>
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH enum = key.value %]
-                                            [% IF enum.value.selected == '1' %]
-                                              [% IF enum.value.title %][% enum.value.title %][% ELSE %][%|optdesc('',is_listmaster)%][% enum.key %][%END%][% END %]
-                                            [% END %]
+                                            [% IF enum.value.selected == '1' ~%]
+                                              [%~ IF key.field_type == 'lang' %]<span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">[% END ~%]
+                                              [% IF enum.value.title ~%]
+                                                [% enum.value.title %]
+                                              [%~ ELSE ~%]
+                                                [% enum.key | optdesc(key.field_type,is_listmaster) %]
+                                              [%~ END %]
+                                              [%~ IF key.field_type == 'lang' %]</span>[% END ~%]
+                                            [%~ END %]
                                           [% END %]
                                         [% END %]
-
-                                        
+                                        <!-- end enum -->
                                       [% ELSIF key.type == 'datasource' %]
-                                        <!-- Datasource -->
+                                        <!-- datasource -->
                                         [% IF key.may_edit == 'write' %]
                                           <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="param.[% p.name %].[% o_INDEX %].[% key.name %]">
-                                            [% FOREACH source = key.value %]
-                                              <option value="[% source.value.name %]"
-                                              [% IF source.value.selected == '1' %]
-                                                selected="selected"
-                                              [% END %]
-                                              >[% source.value.title %] ([% source.value.name %])</option>
-                                            [% END %]
+                                          [% FOREACH source = key.value %]
+                                            <option value="[% source.value.name %]"
+                                             [%~ IF source.value.selected == '1' %] selected="selected"[% END %]>
+                                            [%~ source.value.title %] ([% source.value.name %])</option>
+                                          [% END %]
                                           </select>
-
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH source = key.value %]
                                             [% IF source.value.selected == '1' %]
@@ -141,42 +149,51 @@
                                             [% END %]
                                           [% END %]
                                         [% END %]
+                                        <!-- end datasource -->
                                       [% ELSE %]
-                                        <!-- Scalar -->
+                                        <!-- scalar -->
                                         [% IF key.may_edit == 'write' %]
                                           <input
                                            [%~ IF key.field_type == 'password' %] type="password"
                                            [%~ ELSE %] type="text"
                                            [%~ END %]
-                                           name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
-                                        [% ELSIF key.may_edit == 'read' %]
-                                          [% IF key.field_type == 'password' ~%]
-                                            [% x = '*'; x.repeat(key.value.length()) %]
+                                           name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]"
+                                           [%~ IF key.field_type == 'lang' %] class="neutral"[% END %] />
+                                        [% ELSIF key.may_edit == 'read' ~%]
+                                          [% IF key.field_type == 'lang' %]<span class="neutral" lang="[%key.value%]" xml:lang="[%key.value%]">[% END ~%]
+                                          [% IF key.field_type ~%]
+                                            [% key.value | optdesc(key.field_type,is_listmaster) %]
                                           [%~ ELSE ~%]
                                             [% key.value %]
                                           [%~ END %]
-                                        [% END %]
+                                          [%~ IF key.field_type == 'lang' %]</span>[% END %]
+                                        [%~ END %]
                                         [% key.unit %]
+                                        <!-- end scalar -->
                                       [% END %]
                                   
                                 [% END %]
                               [% END %]
                             [% ELSE %]
-                              <!-- Scalar -->
+                                  <!-- scalar -->
                                   [% IF p.may_edit == 'write' %]
                                     <input
                                      [%~ IF p.field_type == 'password' %] type="password"
                                      [%~ ELSE %] type="text"
                                      [%~ END %]
-                                     name="single_param.[% p.name %].[% o_INDEX %]" id="param.[% p.name %].[% o_INDEX %]" value="[% o.value %]" size="[% o.length %]" />
-                                  [% ELSIF p.may_edit == 'read' %]
-                                    [% IF p.field_type == 'password' ~%]
-                                      [% x = '*'; x.repeat(o.value.length()) %]
+                                     name="single_param.[% p.name %].[% o_INDEX %]" id="param.[% p.name %].[% o_INDEX %]" value="[% o.value %]" size="[% p.length %]"
+                                     [%~ IF p.field_type == 'lang' %] class="neutral"[% END %] />
+                                  [% ELSIF p.may_edit == 'read' ~%]
+                                    [% IF p.field_type == 'lang' %]<span class="neutral" lang="[%o.value%]" xml:lang="[%o.value%]">[% END ~%]
+                                    [% IF p.field_type ~%]
+                                      [% o.value | optdesc(p.field_type,is_listmaster) %]
                                     [%~ ELSE ~%]
                                       [% o.value %]
                                     [%~ END %]
-                                  [% END %]
-                                  [% o.unit %]
+                                    [%~ IF p.field_type == 'lang' %]</span>[% END %]
+                                  [%~ END %]
+                                  [% p.unit %]
+                                  <!-- end scalar -->
                             [% END %]
                             [% o_INDEX = o_INDEX + 1 %]
                           [% END %]
@@ -188,20 +205,18 @@
                       [% ELSE %]
                         <!-- Single params -->
                           [% IF p.type == 'scenario' %]
-                            <!-- Scenario -->
+                            <!-- scenario -->
                             [% IF p.may_edit == 'write' %]
                               <select name="single_param.[% p.name %].name" id="param.[% p.name %]">
                                 [% FOREACH scenario = p.value %]
-                                  [% UNLESS scenario.value.name.match('(default)\s*$') %]
+                                  [% UNLESS scenario.value.name == 'default' ~%]
                                     <option value="[% scenario.value.name %]"
-                                    [% IF scenario.value.selected == '1' %]
-                                      selected="selected"
-                                    [% END %]
-                                    >[% scenario.value.web_title %] ([% scenario.value.name %])</option>
-                                  [% END %]
+                                     [%~ IF scenario.value.selected == '1' %] selected="selected"[% END %]>
+                                    [% scenario.value.web_title %] ([% scenario.value.name %])
+                                    </option>
+                                  [%~ END %]
                                 [% END %]
                               </select>
-
                             [% ELSIF p.may_edit == 'read' %]
                               [% FOREACH scenario = p.value %]
                                 [% IF scenario.value.selected == '1' %]
@@ -209,9 +224,9 @@
                                 [% END %]
                               [% END %]
                             [% END %]
-
+                            <!-- end scenario -->
                           [% ELSIF p.type == 'task' %]
-                            <!-- Task -->
+                            <!-- task -->
                             [% IF p.may_edit == 'write' %]
                               <select name="single_param.[% p.name %].name" id="param.[% p.name %]">
                                 [% FOREACH task = p.value %]
@@ -229,8 +244,9 @@
                                 [% END %]
                               [% END %]
                             [% END %]
+                            <!-- end task -->
                           [% ELSIF p.type == 'datasource' %]
-                            <!-- Datasource -->
+                            <!-- datasource -->
                             [% IF p.may_edit == 'write' %]
                               <select name="single_param.[% p.name %]" id="param.[% p.name %]">
                                 [% FOREACH source = p.value %]
@@ -248,6 +264,7 @@
                                 [% END %]
                               [% END %]
                             [% END %]
+                            <!-- end datasource -->
                           [% ELSIF p.type == 'paragraph' %]
                               <!-- Paragraph -->
                               [% FOREACH key = p.value %]
@@ -261,18 +278,18 @@
                                       </label>
 
                                       [% IF key.type == 'scenario' %]
-                                        <!-- Scenario -->
+                                        <!-- scenario -->
                                         [% IF key.may_edit == 'write' %]
                                           <select name="single_param.[% p.name %].[% key.name %].name" id="param.[% p.name %].[% key.name %]">
                                             [% FOREACH scenario = key.value %]
-                                              <option value="[% scenario.value.name %]"
-                                              [% IF scenario.value.selected == '1' %]
-                                                selected="selected"
-                                              [% END %]
-                                              >[% scenario.value.web_title %] ([% scenario.value.name %])</option>
+                                              [% UNLESS scenario.value.name == 'default' ~%]
+                                                <option value="[% scenario.value.name %]"
+                                                 [% IF scenario.value.selected == '1' %] selected="selected"[% END %]>
+                                                [% scenario.value.web_title %] ([% scenario.value.name %])
+                                                </option>
+                                              [%~ END %]
                                             [% END %]
                                           </select>
-
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH scenario = key.value %]
                                             [% IF scenario.value.selected == '1' %]
@@ -280,12 +297,13 @@
                                             [% END %]
                                           [% END %]
                                         [% END %]
+                                        <!-- end scenario -->
                                       [% ELSIF key.type == 'task' %]
-                                        <!-- Task -->
+                                        <!-- task -->
                                         [% IF key.may_edit == 'write' %]
                                           <select name="single_param.[% p.name %].[% key.name %].name" id="param.[% p.name %].[% key.name %]">
                                             [% FOREACH task = key.value %]
-                                              <option value="[% task.name %]"
+                                              <option value="[% task.value.name %]"
                                               [% IF task.value.selected == '1' %]
                                                 selected="selected"
                                               [% END %]
@@ -299,16 +317,15 @@
                                             [% END %]
                                           [% END %]
                                         [% END %]
+                                        <!-- end task -->
                                       [% ELSIF key.type == 'datasource' %]
-                                        <!-- Datasource -->
+                                        <!-- datasource -->
                                         [% IF key.may_edit == 'write' %]
                                           <select name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]">
                                             [% FOREACH source = key.value %]
                                               <option value="[% source.value.name %]"
-                                              [% IF source.value.selected == '1' %]
-                                                selected="selected"
-                                              [% END %]
-                                              >[% source.value.title %] ([% source.value.name %])</option>
+                                               [%~ IF source.value.selected == '1' %] selected="selected"[% END %]>
+                                              [%~ source.value.title %] ([% source.value.name %])</option>
                                             [% END %]
                                           </select>
                                         [% ELSIF key.may_edit == 'read' %]
@@ -318,125 +335,145 @@
                                             [% END %]
                                           [% END %]
                                         [% END %]
-
+                                        <!-- end datasource -->
                                       [% ELSIF key.type == 'enum' %]
-                                        <!-- Enum -->
-                                        [% IF key.may_edit == 'write' %]
-                                          [% IF key.occurrence == 'multiple' %]
-                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]" multiple="multiple" size="[% key.value.size %]">
-                                          [% ELSE %]
-                                            <select name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]" class="neutral">
-                                          [% END %]
-                                          [% FOREACH enum = key.value %]
-                                            <option value="[% enum.key %]"
-                                              [% IF enum.value.selected == '1' %]
-                                                selected="selected"
-                                              [% END %]
-                                              [% IF p.name == 'lang' %]
-                                                lang="[%enum.key%]"
-                                                xml:lang="[%enum.key%]"
-                                              [%END%]
-                                              [% IF enum.value.title %]
-                                                >[% enum.value.title %]</option>
-                                              [% ELSE %]
-                                                >[%|optdesc('',is_listmaster)%][% enum.key %][%END%]</option>
-                                              [% END %]
-                                          [% END %]
-                                          </select>
-
-                                        [% ELSIF key.may_edit == 'read' %]
-                                          [% FOREACH enum = key.value %]
-                                            [% IF enum.value.selected == '1' %]
-                                              [% IF enum.value.title %]
-                                                [% IF p.name == 'lang' %]
-                                                  <span class="neutral"
-                                                  lang="[%enum.key%]"
-                                                  xml:lang="[%enum.key%]"
-                                                  >[% enum.value.title %]</span>
-                                                [% ELSE %]
+                                        [% IF key.occurrence == 'multiple' %]
+                                          <!-- set -->
+                                          [% IF key.may_edit == 'write' %]
+                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]" multiple="multiple" size="[% key.value.size %]"
+                                             [%~ IF key.field_type == 'lang' %] class="neutral"[% END %]>
+                                            [% FOREACH enum = key.value %]
+                                              <option value="[% enum.key %]"
+                                              [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
+                                              [%~ IF key.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[%END%]>
+                                              [%~ IF enum.value.title ~%]
+                                                [% enum.value.title %]
+                                              [%~ ELSE ~%]
+                                                [% enum.key | optdesc(key.field_type,is_listmaster) %]
+                                              [%~ END ~%]
+                                              </option>
+                                            [% END %]
+                                            </select>
+                                          [% ELSIF key.may_edit == 'read' %]
+                                            [% FOREACH enum = key.value %]
+                                              [% IF enum.value.selected == '1' ~%]
+                                                [% IF key.field_type == 'lang' %]<span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">[% END ~%]
+                                                [%~ IF enum.value.title ~%]
                                                   [% enum.value.title %]
-                                                [% END %]
-                                              [% ELSE %]
-                                                [%|optdesc('',is_listmaster)%][% enum.key %][%END%]
+                                                [%~ ELSE ~%]
+                                                  [% enum.key | optdesc(key.field_type,is_listmaster) %]
+                                                [%~ END ~%]
+                                                [% IF key.field_type == 'lang' %]</span>[% END %]
                                               [% END %]
                                             [% END %]
                                           [% END %]
+                                          <!-- end set -->
+                                        [% ELSE %]
+                                          <!-- enum -->
+                                          [% IF key.may_edit == 'write' %]
+                                            <select name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]"
+                                             [%~ IF key.field_type == 'lang' %] class="neutral"[% END %]>
+                                            [% FOREACH enum = key.value %]
+                                              <option value="[% enum.key %]"
+                                               [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
+                                               [%~ IF key.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[%END%]>
+                                              [%~ IF enum.value.title ~%]
+                                                [% enum.value.title %]
+                                              [%~ ELSE ~%]
+                                                [% enum.key | optdesc(key.field_type,is_listmaster) %]
+                                              [%~ END ~%]
+                                              </option>
+                                            [% END %]
+                                            </select>
+                                          [% ELSIF key.may_edit == 'read' %]
+                                            [% FOREACH enum = key.value %]
+                                              [% IF enum.value.selected == '1' ~%]
+                                                [% IF key.field_type == 'lang' %]<span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">[% END ~%]
+                                                [%~ IF enum.value.title ~%]
+                                                  [% enum.value.title %]
+                                                [%~ ELSE ~%]
+                                                  [% enum.key | optdesc(key.field_type,is_listmaster) %]
+                                                [%~ END ~%]
+                                                [% IF key.field_type == 'lang' %]</span>[% END %]
+                                              [% END %]
+                                            [% END %]
+                                          [% END %]
+                                          <!-- end enum -->
                                         [% END %]
-
                                       [% ELSE %]
-                                        <!-- Scalar -->
+                                        <!-- scalar -->
                                         [% IF key.may_edit == 'write' %]
                                           <input
                                            [%~ IF key.field_type == 'password' %] type="password"
                                            [%~ ELSE %] type="text"
                                            [%~ END %]
-                                           name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
-                                        [% ELSIF key.may_edit == 'read' %]
-                                          [% IF key.field_type == 'password' ~%]
-                                            [% x = '*'; x.repeat(key.value.length()) %]
+                                           name="single_param.[% p.name %].[% key.name %]" id="param.[% p.name %].[% key.name %]" value="[% key.value %]" size="[% key.length %]"
+                                           [%~ IF key.field_type == 'lang' %] class="neutral"[% END %] />
+                                        [% ELSIF key.may_edit == 'read' ~%]
+                                          [%~ IF key.field_type == 'lang' %]<span class="neutral" lang="[%key.value%]" xml:lang="[%key.value%]">[%END%]
+                                          [% IF key.field_type ~%]
+                                            [% key.value | optdesc(key.field_type,is_listmaster) %]
                                           [%~ ELSE ~%]
                                             [% key.value %]
                                           [%~ END %]
-                                        [% END %]
+                                          [%~ IF key.field_type == 'lang' %]</span>[% END %]
+                                        [%~ END %]
                                         [% key.unit %]
-
+                                        <!-- end scalar -->
                                       [% END %]
                               [% END %]
                             [% END %]
                           [% ELSIF p.type == 'enum' %]
-                          <!-- Enum -->
+                            <!-- enum -->
                             [% IF p.may_edit == 'write' %]
-                              <select name="single_param.[% p.name %]" id="param.[% p.name %]" class="neutral">
+                              <select name="single_param.[% p.name %]" id="param.[% p.name %]"
+                               [%~ IF p.field_type == 'lang' %] class="neutral"[% END %]>
                                 [% FOREACH enum = p.value %]
                                   <option value="[% enum.key %]"
-                                  [% IF enum.value.selected == '1' %]
-                                    selected="selected"
-                                  [% END %]
-                                  [% IF p.name == 'lang' %]
-                                    lang="[%enum.key%]"
-                                    xml:lang="[%enum.key%]"
-                                  [%END%]
-                                  [% IF enum.value.title %]
-                                    >[% enum.value.title %]</option>
-                                  [% ELSE %]
-                                    >[%|optdesc('',is_listmaster)%][% enum.key %][%END%]</option>
-                                  [% END %]
+                                   [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
+                                   [%~ IF p.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[%END%]>
+                                  [% IF enum.value.title ~%]
+                                    [% enum.value.title %]
+                                  [%~ ELSE ~%]
+                                    [% enum.key | optdesc(p.field_type,is_listmaster) %]
+                                  [%~ END %]
+                                  </option>
                                 [% END %]
                               </select>
                             [% ELSIF p.may_edit == 'read' %]
                               [% FOREACH enum = p.value %]
                                 [% IF enum.value.selected == '1' %]
-                                  [% IF enum.value.title %]
-                                    [% IF p.name == 'lang' %]
-                                      <span class="neutral"
-                                      lang="[%enum.key%]"
-                                      xml:lang="[%enum.key%]"
-                                      >[% enum.value.title %]</span>
-                                    [% ELSE %]
-                                      [% enum.value.title %]
-                                    [% END %]
-                                  [% ELSE %]
-                                    [%|optdesc('',is_listmaster)%][% enum.key %][%END%]
-                                  [% END %]
+                                  [%~ IF p.field_type == 'lang' %]<span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">[% END %]
+                                  [%~ IF enum.value.title ~%]
+                                    [% enum.value.title %]
+                                  [%~ ELSE ~%]
+                                    [% enum.key | optdesc(p.field_type,is_listmaster) %]
+                                  [%~ END %]
+                                  [%~ IF p.field_type == 'lang' %]</span>[% END %]
                                 [% END %]
                               [% END %]
                             [% END %]
+                            <!-- end enum -->
                           [% ELSE %]
-                            <!-- Scalar -->
-                            [% IF p.may_edit == 'write' %]
+                            <!-- scalar -->
+                            [% IF p.may_edit == 'write' ~%]
                               <input
                                [%~ IF p.field_type == 'password' %] type="password"
                                [%~ ELSE %] type="text"
                                [%~ END %]
-                               name="single_param.[% p.name %]" id="param.[% p.name %]" value="[% p.value %]" size="[% p.length %]" />
-                            [% ELSIF p.may_edit == 'read' %]
-                              [% IF p.field_type == 'password' ~%]
-                                [% x = '*'; x.repeat(p.value.length()) %]
+                               name="single_param.[% p.name %]" id="param.[% p.name %]" value="[% p.value %]" size="[% p.length %]"
+                               [%~ IF p.field_type == 'lang' %] class="neutral"[% END %] />
+                            [%~ ELSIF p.may_edit == 'read' ~%]
+                              [%~ IF p.field_type == 'lang' %]<span class="neutral" lang="[% p.value %]" xml:lang="[% p.value %]">[% END ~%]
+                              [% IF p.field_type ~%]
+                                [% p.value | optdesc(p.field_type,is_listmaster) %]
                               [%~ ELSE ~%]
                                 [% p.value %]
                               [%~ END %]
+                              [%~ IF p.field_type == 'lang' %]</span>[% END %]
                             [% END %]
                             [% p.unit %]
+                            <!-- end scalar -->
                           [% END %]
 
                       [% END %]

@@ -261,19 +261,46 @@ sub get_title {
     my $type    = shift || '';
     my $withval = shift || 0;
 
-    my $map = {
-        'reception'  => \%reception_mode,
-        'visibility' => \%visibility_mode,
-        'status'     => \%list_status,
-        }->{$type}
-        || \%list_option;
-    my $t = $map->{$option} || {};
-    if ($t->{'gettext_id'}) {
-        my $ret = $language->gettext($t->{'gettext_id'});
-        $ret =~ s/^\s+//;
-        $ret =~ s/\s+$//;
-        return sprintf '%s (%s)', $ret, $option if $withval;
-        return $ret;
+    my $title = undef;
+
+    if ($type eq 'dayofweek') {
+        if ($option =~ /\A[0-9]+\z/) {
+            $title = [
+                split /:/,
+                $language->gettext(
+                    'Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday'
+                )
+            ]->[$option % 7];
+        }
+    } elsif ($type eq 'lang') {
+        $language->push_lang;
+        if ($language->set_lang($option)) {
+            $title = $language->native_name;
+        }
+        $language->pop_lang;
+    } elsif ($type eq 'password') {
+        return '*' x length($option);    # return
+    } elsif ($type eq 'unixtime') {
+        $title = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime $option);
+    } else {
+        my $map = {
+            'reception'  => \%reception_mode,
+            'visibility' => \%visibility_mode,
+            'status'     => \%list_status,
+            }->{$type}
+            || \%list_option;
+        my $t = $map->{$option} || {};
+        if ($t->{gettext_id}) {
+            $title = $language->gettext($t->{gettext_id});
+            $title =~ s/^\s+//;
+            $title =~ s/\s+$//;
+        }
+    }
+
+    if (defined $title) {
+        return sprintf '%s (%s)', $title, $option if $withval;
+        return $title;
     }
     return $option;
 }
@@ -312,10 +339,8 @@ Value of option.
 
 =item $type
 
-Type of option.
-C<'reception'> (reception mode of list member),
-C<'visibility'> (visibility mode of list memeber),
-C<'status'> (status of list)
+Type of option:
+field_type (see L<Sympa::ListDef>)
 or other (list config option, default).
 
 =item $withval

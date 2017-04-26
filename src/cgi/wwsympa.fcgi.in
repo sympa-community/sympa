@@ -12109,67 +12109,10 @@ sub _prepare_edit_form {
             foreach my $v (@{$p->{'value'}}) {
                 next unless ($v->{'name'} eq 'days');
                 if (ref($v->{'value'}) eq 'ARRAY') {
-                    $log->syslog('debug2',
-                        'Empty digest parameter. Putting a dummy value');
+                    # Empty digest parameter. Putting a dummy value.
                     $v->{'value'} = undef;
                     $v->{'type'}  = 'enum';
-                } else {
-                    foreach my $day (keys %{$v->{'value'}}) {
-                        my $t =
-                            $language->gettext_strftime("%A",
-                            gmtime(0 + ($day + 3) * (3600 * 24)));
-                        $t = sprintf '%s (%s)', $t,
-                            $day
-                            if Sympa::is_listmaster($list,
-                            $param->{'user'}{'email'});
-                        $v->{'value'}{$day}{'title'} = $t;
-                    }
                 }
-            }
-        } elsif ($pname eq 'lang') {
-            $language->push_lang;
-            foreach my $lang (keys %{$p->{'value'}}) {
-                $language->set_lang($lang);
-                my $t = $language->native_name || $lang;
-                $t = sprintf '%s (%s)', $t, $lang
-                    if Sympa::is_listmaster($list, $param->{'user'}{'email'});
-                $p->{'value'}{$lang}{'title'} = $t;
-                # compatibility: 6.1.
-                $p->{'value'}{$lang}{'lang_tag'} = $lang;
-            }
-            $language->pop_lang;
-        } elsif ($pname eq 'available_user_options'
-            or $pname eq 'default_user_options') {
-            foreach my $v (@{$p->{'value'}}) {
-                if ($v->{'name'} eq 'reception') {
-                    foreach my $x (keys %{$v->{'value'}}) {
-                        $v->{'value'}{$x}{'title'} =
-                            Sympa::ListOpt::get_title(
-                            $x,
-                            'reception',
-                            Sympa::is_listmaster(
-                                $list, $param->{'user'}{'email'}
-                            )
-                            );
-                    }
-                } elsif ($v->{'name'} eq 'visibility') {
-                    foreach my $x (keys %{$v->{'value'}}) {
-                        $v->{'value'}{$x}{'title'} =
-                            Sympa::ListOpt::get_title(
-                            $x,
-                            'visibility',
-                            Sympa::is_listmaster(
-                                $list, $param->{'user'}{'email'}
-                            )
-                            );
-                    }
-                }
-            }
-        } elsif ($pname eq 'status') {
-            foreach my $x (keys %{$p->{'value'}}) {
-                $p->{'value'}{$x}{'title'} =
-                    Sympa::ListOpt::get_title($x, 'status',
-                    Sympa::is_listmaster($list, $param->{'user'}{'email'}));
             }
         }
 
@@ -12306,6 +12249,9 @@ sub _prepare_data {
     } else {
         $data2 = [$data];
     }
+
+    # filed_type
+    $p_glob->{field_type} = $struct->{field_type};
 
     my @all_p;
 
