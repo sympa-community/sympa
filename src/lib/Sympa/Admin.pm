@@ -262,9 +262,6 @@ sub create_list_old {
     }
 
     # Creation of the config file.
-    #FIXME:should be unneccessary
-    $param->{'creation'}{'date'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $param->{'creation'}{'date_epoch'} = time;
     $param->{'creation_email'} ||= Sympa::get_address($robot, 'listmaster');
     $param->{'status'} ||= 'open';
@@ -579,9 +576,6 @@ sub create_list {
     #    $list->create_shared();
     #}
 
-    ##FIXME:should be unneccessary
-    $list->{'admin'}{'creation'}{'date'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
     $list->{'admin'}{'creation'}{'email'}      = $param->{'creation_email'}
         || Sympa::get_address($robot, 'listmaster');
@@ -679,9 +673,6 @@ sub update_list {
         return undef;
     }
 
-    ##FIXME:should be unneccessary
-    $list->{'admin'}{'creation'}{'date'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
     $list->{'admin'}{'creation'}{'email'}      = $param->{'creation_email'}
         || Sympa::get_address($robot, 'listmaster');
@@ -1243,9 +1234,6 @@ sub clone_list_as_empty {
     $new_list->{'admin'}{'serial'} = 0;
     $new_list->{'admin'}{'creation'}{'email'} = $email if ($email);
     $new_list->{'admin'}{'creation'}{'date_epoch'} = time;
-    ##FIXME:should be unneccessary
-    $new_list->{'admin'}{'creation'}{'date'} =
-        $language->gettext_strftime("%d %b %y at %H:%M:%S", localtime time);
     $new_list->save_config($email);
     return $new_list;
 }

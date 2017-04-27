@@ -2137,7 +2137,8 @@ our %pinfo = (
                 'occurrence' => '0-1'
             },
             'date' => {
-                'order'      => 2,
+                #'order'      => 2,
+                'obsolete'   => 1,
                 'gettext_id' => 'date',
                 'format'     => '.+'
             },
@@ -2203,7 +2204,8 @@ our %pinfo = (
                 'length'     => 10,
             },
             'date' => {
-                'order'      => 2,
+                #'order'      => 2,
+                'obsolete'   => 1,
                 'gettext_id' => "human readable",
                 'format'     => '.+'
             },
@@ -2232,7 +2234,8 @@ our %pinfo = (
                 'length'     => 30
             },
             'date' => {
-                'order'      => 2,
+                #'order'      => 2,
+                'obsolete'   => 1,
                 'gettext_id' => 'date',
                 'format'     => '.+',
                 'length'     => 30

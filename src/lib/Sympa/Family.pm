@@ -393,9 +393,6 @@ sub add_list {
     # info parameters
     $list->{'admin'}{'latest_instantiation'}{'email'} =
         Sympa::get_address($self, 'listmaster');
-    ##FIXME:should be unneccessary
-    $list->{'admin'}{'latest_instantiation'}{'date'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
     $list->save_config(Sympa::get_address($self, 'listmaster'));
     $list->{'family'} = $self;
@@ -665,9 +662,6 @@ sub modify_list {
 
     $list->{'admin'}{'latest_instantiation'}{'email'} =
         Sympa::get_address($self, 'listmaster');
-    ##FIXME:should be unneccessary
-    $list->{'admin'}{'latest_instantiation'}{'date'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
     $list->save_config(Sympa::get_address($self, 'listmaster'));
     $list->{'family'} = $self;
@@ -2493,9 +2487,6 @@ sub _end_update_list {
 
     $list->{'admin'}{'latest_instantiation'}{'email'} =
         Sympa::get_address($self, 'listmaster');
-    ##FIXME:should be unneccessary
-    $list->{'admin'}{'latest_instantiation'}{'date'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
     $list->save_config(Sympa::get_address($self, 'listmaster'));
     $list->{'family'} = $self;
