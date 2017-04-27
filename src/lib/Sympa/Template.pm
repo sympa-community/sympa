@@ -233,15 +233,21 @@ sub _obfuscate {
     };
 }
 
-sub optdesc {
-    my ($context, $type, $withval) = @_;
+sub _optdesc_func {
+    my $self    = shift;
+    my $type    = shift;
+    my $withval = shift;
+
+    my $encode_html = ($self->{subdir} && $self->{subdir} eq 'web_tt2');
+
     return sub {
         my $x = shift;
         return undef unless defined $x;
         return undef unless $x =~ /\S/;
         $x =~ s/^\s+//;
         $x =~ s/\s+$//;
-        return Sympa::ListOpt::get_title($x, $type, $withval);
+        my $title = Sympa::ListOpt::get_title($x, $type, $withval);
+        $encode_html ? Sympa::Tools::Text::encode_html($title) : $title;
     };
 }
 
@@ -315,11 +321,11 @@ sub parse {
             loc      => [\&maketext, 1],
             helploc  => [\&maketext, 1],
             locdt    => [\&locdatetime, 1],
-            wrap         => [\&wrap,          1],
-            mailto       => [\&_mailto,       1],
-            mailtourl    => [\&_mailtourl,    1],
-            obfuscate    => [\&_obfuscate,    1],
-            optdesc      => [\&optdesc,       1],
+            wrap      => [\&wrap,       1],
+            mailto    => [\&_mailto,    1],
+            mailtourl => [\&_mailtourl, 1],
+            obfuscate => [\&_obfuscate, 1],
+            optdesc => [sub { shift; $self->_optdesc_func(@_) }, 1],
             qencode      => [\&qencode,       0],
             escape_xml   => [\&_escape_xml,   0],
             escape_url   => [\&_escape_url,   0],
@@ -616,6 +622,10 @@ This filter was introduced by Sympa 6.2.14.
 
 Generates i18n'ed description of list parameter value.
 
+As of Sympa 6.2.17, if it is called by the web templates
+(in C<web_tt2> subdirectories),
+special characters in result will be encoded.
+
 =over
 
 =item Filtered text
@@ -624,7 +634,8 @@ Parameter value.
 
 =item type
 
-Type of list parameter value: 'reception', 'visibility', 'status'
+Type of list parameter value:
+Special types (See L<Sympa::ListDef/"field_type">)
 or others (default).
 
 =item withval
