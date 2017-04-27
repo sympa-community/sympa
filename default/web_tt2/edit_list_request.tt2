@@ -3,490 +3,390 @@
 
 <h2>[%|loc%]Edit List Configuration[%END%] <a  href="[% 'nomenu/help/listconfig' | url_rel %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
-[% IF !group %]
-  [% IF GROUP == 'description' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+[% IF !group ~%]
+  [% IF GROUP == 'description' ~%]
+    [% SET class = 'menuLinksCurrentPage' %]
+  [%~ ELSE ~%]
+    [% SET class = 'menuLinks' %]
+  [%~ END ~%]
   <p>[%|loc%]Here you can edit your list's configuration parameters.[% END %]</p>
-[% ELSE %]
+[%~ ELSE ~%]
   <form class="bold_label"  action="[% path_cgi %]" method="post">
-    <fieldset>
-      <input type="hidden" name="serial" value="[% serial %]" />
-      [% FOREACH p = param %]
-
-        [% IF p.may_edit != 'hidden' %]
-
-          [% IF p.changed == '1' %]
-            <div class="CurrentBlock">
-          [% ELSE %]
-            <div class="block">
-          [% END %]
-
-          <h4>
-          [% IF p.title %]
-            [% p.title %]
-            [% IF is_listmaster %]
-              ([% p.name %])
-            [% END %]
-          [% ELSE %]
-            [% p.name %]
-          [% END %]
-          [% IF is_listmaster %]
-            [% IF p.default == '1' %]
-              [%|loc%](default)[%END%]
-            [% END %]
-          [% END %]
-          <span class="edit_list_request_help">
-          [% IF p.type == 'scenario' %]
-            [% IF is_listmaster %]
-              &nbsp;<a class="input" href="[% 'dump_scenario' | url_rel([list,p.name]) %]" title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END%]</a>
-            [% END %]
-          [% END %]
-          <a  href="[% 'nomenu/help/editlist' | url_rel %]#[% p.name %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
-          </span>
-          </h4>
-
-          <div class="edit_list_request_enum">
-
-                    [% IF p.occurrence == 'multiple' %]
-                      <!-- Multiple params -->
-
-                      [% IF p.type == 'enum' %]
-                          <!-- set -->[% ppaths = [p.name]; pitem = p; val = p.value %]
-                          [% IF pitem.may_edit == 'write' %]
-                            <select name="multiple_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]" multiple="multiple" size="[% val.size %]"
-                             [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
-                            [% FOREACH enum = val ~%]
-                              <option value="[% enum.key %]"
-                               [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
-                               [%~ IF pitem.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[% END %]>
-                              [%~ IF enum.value.title ~%]
-                                [% enum.value.title %]
-                              [%~ ELSE ~%]
-                                [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-                              [%~ END ~%]
-                              </option>
-                            [% END %]
-                            </select>
-                          [% ELSIF pitem.may_edit == 'read' %]
-                            [% FOREACH enum = val ~%]
-                              [% IF enum.value.selected == '1' ~%]
-                                [%~ IF pitem.field_type == 'lang' %]<span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">[% END ~%]
-                                [% IF enum.value.title ~%]
-                                  [% enum.value.title %]
-                                [%~ ELSE ~%]
-                                  [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-                                [%~ END %]
-                                [%~ IF pitem.field_type == 'lang' %]</span>[% END %]
-                              [%~ END %]
-                            [%~ END %]
-                          [% END %]
-                          <!-- end set -->
-                      [% ELSE %]
-                        [% o_INDEX = 0 %]
-                        [% FOREACH o = p.value %]
-
-                          <!-- Foreach occurrence -->
-
-                            [% IF p.type == 'paragraph' %]
-                              <!-- ParagrapH -->
-                                 <span class="divider"></span>
-                              [% FOREACH key = o.value %]
-
-                                [% IF key.may_edit != 'hidden' %] 
-
-                                      <label for="param.[% p.name %].[% o_INDEX %].[% key.name %]">
-                                        [% IF key.title %]
-                                          [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
-                                        [% ELSE %]
-                                          [% key.name %][%|loc%]:[%END%]
-                                        [% END %]
-                                      </label>
-
-                                      [% IF key.type == 'enum' %]
-                                        <!-- enum -->[% ppaths = [p.name,o_INDEX,key.name]; pitem = key; val = key.value %]
-                                        [% IF pitem.may_edit == 'write' %]
-                                          <select name="single_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]"
-                                           [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
-                                          [% FOREACH enum = val ~%]
-                                            <option value="[% enum.key %]"
-                                             [%~ IF enum.value.selected == '1' %] selected="selected"[% END ~%]
-                                             [%~ IF pitem.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[%END%]>
-                                            [%~ IF enum.value.title ~%]
-                                              [% enum.value.title %]
-                                            [%~ ELSE ~%]
-                                              [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-                                            [%~ END ~%]
-                                            </option>
-                                          [% END %]
-                                          </select>
-                                        [% ELSIF pitem.may_edit == 'read' %]
-                                          [% FOREACH enum = val ~%]
-                                            [% IF enum.value.selected == '1' ~%]
-                                              [% IF pitem.field_type == 'lang' %]<span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">[% END ~%]
-                                              [% IF enum.value.title ~%]
-                                                [% enum.value.title %]
-                                              [%~ ELSE ~%]
-                                                [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-                                              [%~ END %]
-                                              [%~ IF pitem.field_type == 'lang' %]</span>[% END %]
-                                            [%~ END %]
-                                          [%~ END %]
-                                        [% END %]
-                                        <!-- end enum -->
-                                      [% ELSIF key.type == 'datasource' %]
-                                        <!-- datasource -->[% ppaths = [p.name,o_INDEX,key.name]; pitem = key; val = key.value %]
-                                        [% IF pitem.may_edit == 'write' %]
-                                          <select name="single_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]">
-                                          [% FOREACH source = val ~%]
-                                            <option value="[% source.value.name %]"
-                                             [%~ IF source.value.selected == '1' %] selected="selected"[% END %]>
-                                            [%~ source.value.title %] ([% source.value.name %])</option>
-                                          [% END %]
-                                          </select>
-                                        [% ELSIF pitem.may_edit == 'read' %]
-                                          [% FOREACH source = val ~%]
-                                            [% IF source.value.selected == '1' ~%]
-                                              [% source.value.title %] ([% source.value.name %])
-                                            [%~ END %]
-                                          [%~ END %]
-                                        [% END %]
-                                        <!-- end datasource -->
-                                      [% ELSE %]
-                                        <!-- scalar -->[% ppaths = [p.name,o_INDEX,key.name]; pitem = key; val = key.value %]
-                                        [% IF pitem.may_edit == 'write' %]
-                                          <input name="single_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]"
-                                           value="[% val %]" size="[% pitem.length %]"
-                                           [%~ IF pitem.field_type == 'password' %] type="password"
-                                           [%~ ELSE %] type="text"
-                                           [%~ END %]
-                                           [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %] />
-                                        [% ELSIF pitem.may_edit == 'read' %]
-                                          [% IF pitem.field_type == 'lang' %]<span class="neutral" lang="[%val%]" xml:lang="[%val%]">[% END ~%]
-                                          [% IF pitem.field_type ~%]
-                                            [% val | optdesc(pitem.field_type,is_listmaster) %]
-                                          [%~ ELSE ~%]
-                                            [% val %]
-                                          [%~ END %]
-                                          [%~ IF pitem.field_type == 'lang' %]</span>[% END %]
-                                        [% END %]
-                                        [% pitem.unit %]
-                                        <!-- end scalar -->
-                                      [% END %]
-                                  
-                                [% END %]
-                              [% END %]
-                            [% ELSE %]
-                                  <!-- scalar -->[% ppaths = [p.name,o_INDEX]; pitem = p; val = o.value %]
-                                  [% IF pitem.may_edit == 'write' %]
-                                    <input name="single_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]"
-                                     value="[% val %]" size="[% pitem.length %]"
-                                     [%~ IF pitem.field_type == 'password' %] type="password"
-                                     [%~ ELSE %] type="text"
-                                     [%~ END %]
-                                     [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %] />
-                                  [% ELSIF pitem.may_edit == 'read' %]
-                                    [% IF pitem.field_type == 'lang' %]<span class="neutral" lang="[%val%]" xml:lang="[%val%]">[% END ~%]
-                                    [% IF pitem.field_type ~%]
-                                      [% val | optdesc(pitem.field_type,is_listmaster) %]
-                                    [%~ ELSE ~%]
-                                      [% val %]
-                                    [%~ END %]
-                                    [%~ IF pitem.field_type == 'lang' %]</span>[% END %]
-                                  [% END %]
-                                  [% pitem.unit %]
-                                  <!-- end scalar -->
-                            [% END %]
-                            [% o_INDEX = o_INDEX + 1 %]
-                          [% END %]
-                          <!-- END Foreach occurrence -->
-                        [%END%]
-
-                        <!-- ENDIF Enum -->
-
-                      [% ELSE %]
-                        <!-- Single params -->
-                          [% IF p.type == 'scenario' %]
-                            <!-- scenario -->[% ppaths = [p.name]; pitem = p; val = p.value %]
-                            [% IF pitem.may_edit == 'write' %]
-                              <select name="single_param.[% ppaths.join('.') %].name" id="param.[% ppaths.join('.') %]">
-                                [% FOREACH scenario = val ~%]
-                                  [% UNLESS scenario.value.name == 'default' ~%]
-                                    <option value="[% scenario.value.name %]"
-                                     [%~ IF scenario.value.selected == '1' %] selected="selected"[% END %]>
-                                    [% scenario.value.web_title %] ([% scenario.value.name %])</option>
-                                  [%~ END %]
-                                [% END %]
-                              </select>
-                            [% ELSIF pitem.may_edit == 'read' %]
-                              [% FOREACH scenario = val ~%]
-                                [% IF scenario.value.selected == '1' ~%]
-                                  [% scenario.value.web_title %] ([% scenario.value.name %])
-                                [%~ END %]
-                              [%~ END %]
-                            [% END %]
-                            <!-- end scenario -->
-                          [% ELSIF p.type == 'task' %]
-                            <!-- task -->[% ppaths = [p.name]; pitem = p; val = p.value %]
-                            [% IF pitem.may_edit == 'write' %]
-                              <select name="single_param.[% ppaths.join('.') %].name" id="param.[% ppaths.join('.') %]">
-                              [% FOREACH task = val ~%]
-                                <option value="[% task.value.name %]"
-                                 [%~ IF task.value.selected == '1' %] selected="selected"[% END %]>
-                                [%~ task.value.title %] ([% task.value.name %])</option>
-                              [% END %]
-                              </select>
-                            [% ELSIF pitem.may_edit == 'read' %]
-                              [% FOREACH task = val ~%]
-                                [% IF task.value.selected == '1' ~%]
-                                  [% task.value.title %] ([% task.value.name %])
-                                [%~ END %]
-                              [%~ END %]
-                            [% END %]
-                            <!-- end task -->
-                          [% ELSIF p.type == 'datasource' %]
-                            <!-- datasource -->[% ppaths = [p.name]; pitem = p; val = p.value %]
-                            [% IF pitem.may_edit == 'write' %]
-                              <select name="single_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]">
-                              [% FOREACH source = val ~%]
-                                <option value="[% source.value.name %]"
-                                 [%~ IF source.value.selected == '1' %] selected="selected"[% END %]>
-                                [%~ source.value.title %] ([% source.value.name %])</option>
-                              [% END %]
-                              </select>
-                            [% ELSIF pitem.may_edit == 'read' %]
-                              [% FOREACH source = val ~%]
-                                [% IF source.value.selected == '1' ~%]
-                                  [% source.value.title %] ([% source.value.name %])
-                                [%~ END %]
-                              [%~ END %]
-                            [% END %]
-                            <!-- end datasource -->
-                          [% ELSIF p.type == 'paragraph' %]
-                              <!-- Paragraph -->
-                              [% FOREACH key = p.value %]
-                                [% IF key.may_edit != 'hidden' %] 
-                                      <label for="param.[% p.name %].[% key.name %]">
-                                        [% IF key.title %]
-                                          [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
-                                        [% ELSE %]
-                                          [% key.name %][%|loc%]:[%END%]
-                                        [% END %]
-                                      </label>
-
-                                      [% IF key.type == 'scenario' %]
-                                        <!-- scenario -->[% ppaths = [p.name,key.name]; pitem = key; val = key.value %]
-                                        [% IF pitem.may_edit == 'write' %]
-                                          <select name="single_param.[% ppaths.join('.') %].name" id="param.[% ppaths.join('.') %]">
-                                          [% FOREACH scenario = val ~%]
-                                            [% UNLESS scenario.value.name == 'default' ~%]
-                                              <option value="[% scenario.value.name %]"
-                                               [%~ IF scenario.value.selected == '1' %] selected="selected"[% END %]>
-                                              [%~ scenario.value.web_title %] ([% scenario.value.name %])</option>
-                                            [%~ END %]
-                                          [% END %]
-                                          </select>
-                                        [% ELSIF pitem.may_edit == 'read' %]
-                                          [% FOREACH scenario = val ~%]
-                                            [% IF scenario.value.selected == '1' ~%]
-                                              [% scenario.value.web_title %] ([% scenario.value.name %])
-                                            [%~ END %]
-                                          [%~ END %]
-                                        [% END %]
-                                        <!-- end scenario -->
-                                      [% ELSIF key.type == 'task' %]
-                                        <!-- task -->[% ppaths = [p.name,key.name]; pitem = key; val = key.value %]
-                                        [% IF pitem.may_edit == 'write' %]
-                                          <select name="single_param.[% ppaths.join('.') %].name" id="param.[% ppaths.join('.') %]">
-                                          [% FOREACH task = val ~%]
-                                            <option value="[% task.value.name %]"
-                                            [%~ IF task.value.selected == '1' %] selected="selected"[% END %]>
-                                            [%~ task.value.title %] ([% task.value.name %])</option>
-                                          [% END %]
-                                          </select>
-                                        [% ELSIF pitem.may_edit == 'read' %]
-                                          [% FOREACH task = val ~%]
-                                            [% IF task.value.selected == '1' ~%]
-                                              [% task.value.title %] ([% task.value.name %])
-                                            [%~ END %]
-                                          [%~ END %]
-                                        [% END %]
-                                        <!-- end task -->
-                                      [% ELSIF key.type == 'datasource' %]
-                                        <!-- datasource -->[% ppaths = [p.name,key.name]; pitem = key; val = key.value %]
-                                        [% IF pitem.may_edit == 'write' %]
-                                          <select name="single_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]">
-                                          [% FOREACH source = val ~%]
-                                            <option value="[% source.value.name %]"
-                                             [%~ IF source.value.selected == '1' %] selected="selected"[% END %]>
-                                            [%~ source.value.title %] ([% source.value.name %])</option>
-                                          [% END %]
-                                          </select>
-                                        [% ELSIF pitem.may_edit == 'read' %]
-                                          [% FOREACH source = val ~%]
-                                            [% IF source.value.selected == '1' ~%]
-                                              [% source.value.title %] ([% source.value.name %])
-                                            [%~ END %]
-                                          [%~ END %]
-                                        [% END %]
-                                        <!-- end datasource -->
-                                      [% ELSIF key.type == 'enum' %]
-                                        [% IF key.occurrence == 'multiple' %]
-                                          <!-- set -->[% ppaths = [p.name,key.name]; pitem = key; val = key.value %]
-                                          [% IF pitem.may_edit == 'write' %]
-                                            <select name="multiple_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]" multiple="multiple" size="[% val.size %]"
-                                             [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
-                                            [% FOREACH enum = val ~%]
-                                              <option value="[% enum.key %]"
-                                               [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
-                                               [%~ IF pitem.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[%END%]>
-                                              [%~ IF enum.value.title ~%]
-                                                [% enum.value.title %]
-                                              [%~ ELSE ~%]
-                                                [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-                                              [%~ END ~%]
-                                              </option>
-                                            [% END %]
-                                            </select>
-                                          [% ELSIF pitem.may_edit == 'read' %]
-                                            [% FOREACH enum = val ~%]
-                                              [% IF enum.value.selected == '1' ~%]
-                                                [% IF pitem.field_type == 'lang' %]<span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">[% END ~%]
-                                                [%~ IF enum.value.title ~%]
-                                                  [% enum.value.title %]
-                                                [%~ ELSE ~%]
-                                                  [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-                                                [%~ END %]
-                                                [%~ IF pitem.field_type == 'lang' %]</span>[% END %]
-                                              [%~ END %]
-                                            [% END %]
-                                          [% END %]
-                                          <!-- end set -->
-                                        [% ELSE %]
-                                          <!-- enum -->[% ppaths = [p.name,key.name]; pitem = key; val = key.value %]
-                                          [% IF pitem.may_edit == 'write' %]
-                                            <select name="single_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]"
-                                             [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
-                                            [% FOREACH enum = val ~%]
-                                              <option value="[% enum.key %]"
-                                               [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
-                                               [%~ IF pitem.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[%END%]>
-                                              [%~ IF enum.value.title ~%]
-                                                [% enum.value.title %]
-                                              [%~ ELSE ~%]
-                                                [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-                                              [%~ END ~%]
-                                              </option>
-                                            [% END %]
-                                            </select>
-                                          [% ELSIF pitem.may_edit == 'read' %]
-                                            [% FOREACH enum = val ~%]
-                                              [% IF enum.value.selected == '1' ~%]
-                                                [% IF pitem.field_type == 'lang' %]<span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">[% END ~%]
-                                                [% IF enum.value.title ~%]
-                                                  [% enum.value.title %]
-                                                [%~ ELSE ~%]
-                                                  [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-                                                [%~ END %]
-                                                [%~ IF pitem.field_type == 'lang' %]</span>[% END %]
-                                              [%~ END %]
-                                            [%~ END %]
-                                          [% END %]
-                                          <!-- end enum -->
-                                        [% END %]
-                                      [% ELSE %]
-                                        <!-- scalar -->[% ppaths = [p.name,key.name]; pitem = key; val = key.value %]
-                                        [% IF pitem.may_edit == 'write' %]
-                                          <input name="single_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]"
-                                           value="[% val %]" size="[% pitem.length %]"
-                                           [%~ IF pitem.field_type == 'password' %] type="password"
-                                           [%~ ELSE %] type="text"
-                                           [%~ END %]
-                                           [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %] />
-                                        [% ELSIF pitem.may_edit == 'read' %]
-                                          [% IF pitem.field_type == 'lang' %]<span class="neutral" lang="[%val%]" xml:lang="[%val%]">[% END ~%]
-                                          [% IF pitem.field_type ~%]
-                                            [% val | optdesc(pitem.field_type,is_listmaster) %]
-                                          [%~ ELSE ~%]
-                                            [% val %]
-                                          [%~ END %]
-                                          [%~ IF pitem.field_type == 'lang' %]</span>[% END %]
-                                        [% END %]
-                                        [% pitem.unit %]
-                                        <!-- end scalar -->
-                                      [% END %]
-                              [% END %]
-                            [% END %]
-                          [% ELSIF p.type == 'enum' %]
-                            <!-- enum -->[% ppaths = [p.name]; pitem = p; val = p.value %]
-                            [% IF pitem.may_edit == 'write' %]
-                              <select name="single_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]"
-                               [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
-                              [% FOREACH enum = val ~%]
-                                <option value="[% enum.key %]"
-                                 [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
-                                 [%~ IF pitem.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[%END%]>
-                                [%~ IF enum.value.title ~%]
-                                  [% enum.value.title %]
-                                [%~ ELSE ~%]
-                                  [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-                                [%~ END ~%]
-                                </option>
-                              [% END %]
-                              </select>
-                            [% ELSIF pitem.may_edit == 'read' %]
-                              [% FOREACH enum = val ~%]
-                                [% IF enum.value.selected == '1' ~%]
-                                  [% IF pitem.field_type == 'lang' %]<span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">[% END ~%]
-                                  [% IF enum.value.title ~%]
-                                    [% enum.value.title %]
-                                  [%~ ELSE ~%]
-                                    [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-                                  [%~ END %]
-                                  [%~ IF pitem.field_type == 'lang' %]</span>[% END %]
-                                [%~ END %]
-                              [%~ END %]
-                            [% END %]
-                            <!-- end enum -->
-                          [% ELSE %]
-                            <!-- scalar -->[% ppaths = [p.name]; pitem = p; val = p.value %]
-                            [% IF pitem.may_edit == 'write' %]
-                              <input name="single_param.[% ppaths.join('.') %]" id="param.[% ppaths.join('.') %]"
-                               value="[% val %]" size="[% pitem.length %]"
-                               [%~ IF pitem.field_type == 'password' %] type="password"
-                               [%~ ELSE %] type="text"
-                               [%~ END %]
-                               [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %] />
-                            [% ELSIF pitem.may_edit == 'read' %]
-                              [% IF pitem.field_type == 'lang' %]<span class="neutral" lang="[% val %]" xml:lang="[% val %]">[% END ~%]
-                              [% IF pitem.field_type ~%]
-                                [% val | optdesc(pitem.field_type,is_listmaster) %]
-                              [%~ ELSE ~%]
-                                [% val %]
-                              [%~ END %]
-                              [%~ IF pitem.field_type == 'lang' %]</span>[% END %]
-                            [% END %]
-                            [% pitem.unit %]
-                            <!-- end scalar -->
-                          [% END %]
-
-                      [% END %]
-          </div>[%# class="edit_list_request_enum" #%]
-          [% IF p.default == '1' %]
-            <div class="default" style="clear: both;"><span>[%|loc%]default[%END%]</span></div>
-          [% END %]
-
-          </div>
+  <fieldset>
+  <input type="hidden" name="serial" value="[% serial %]" />
+  [% FOREACH p = param %]
+    [% IF p.may_edit != 'hidden' %]
+      [% IF p.changed == '1' %]
+        <div class="CurrentBlock">
+      [% ELSE %]
+        <div class="block">
+      [% END %]
+      <h4>
+      [% IF p.title %]
+        [% p.title %]
+        [% IF is_listmaster %]
+          ([% p.name %])
+        [% END %]
+      [% ELSE %]
+        [% p.name %]
+      [% END %]
+      [% IF is_listmaster %]
+        [% IF p.default == '1' %]
+          [%|loc%](default)[%END%]
         [% END %]
       [% END %]
-
-      <input type="hidden" name="list" value="[% list %]" />
-      <input type="hidden" name="group" value="[% group %]" />
-      <input type="hidden" name="action" value="edit_list" />
-      [% IF is_form_editable == '1' %]
-        <input class="MainMenuLinks" type="submit" name="action_edit_list" value="[%|loc%]Update[%END%]" />
+      <span class="edit_list_request_help">
+      [% IF p.type == 'scenario' %]
+        [% IF is_listmaster %]
+          &nbsp;<a class="input" href="[% 'dump_scenario' | url_rel([list,p.name]) %]" title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END%]</a>
+        [% END %]
       [% END %]
-    </fieldset>
+      <a  href="[% 'nomenu/help/editlist' | url_rel %]#[% p.name %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
+      </span>
+      </h4>
+
+      <div class="edit_list_request_enum">
+      [% IF p.occurrence == 'multiple' %]
+
+        <!-- Multiple params -->
+        [% IF p.type == 'enum' %]
+          [% PROCESS EditListSet 
+             ppaths=[p.name]
+             pitem=p
+             val=p.value
+          %]
+        [% ELSE %]
+          [% o_INDEX = 0 %]
+        [% FOREACH o = p.value %]
+
+          <!-- Foreach occurrence -->
+            [% IF p.type == 'paragraph' %]
+
+              <!-- ParagrapH -->
+              <span class="divider"></span>
+              [% FOREACH key = o.value %]
+                [% IF key.may_edit != 'hidden' %] 
+                  <label for="param.[% p.name %].[% o_INDEX %].[% key.name %]">
+                  [% IF key.title %]
+                    [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
+                  [% ELSE %]
+                    [% key.name %][%|loc%]:[%END%]
+                  [% END %]
+                  </label>
+
+                  [% IF key.type == 'enum' %]
+                    [% PROCESS EditListEnum 
+                       ppaths=[p.name,o_INDEX,key.name]
+                       pitem=key
+                       val=key.value
+                    %]
+                  [% ELSIF key.type == 'datasource' %]
+                    [% PROCESS EditListDatasource 
+                       ppaths=[p.name,o_INDEX,key.name]
+                       pitem=key
+                       val=key.value
+                    %]
+                  [% ELSE %]
+                    [% PROCESS EditListScalar 
+                       ppaths=[p.name,o_INDEX,key.name]
+                       pitem=key
+                       val=key.value
+                    %]
+                  [% END %]
+                [% END %]
+              [% END %]
+            [% ELSE %]
+              [% PROCESS EditListScalar 
+                 ppaths=[p.name,o_INDEX]
+                 pitem=p
+                 val=o.value
+              %]
+            [% END %]
+            [% o_INDEX = o_INDEX + 1 %]
+          [% END %]
+          <!-- END Foreach occurrence -->
+        [%END%]
+        <!-- ENDIF Enum -->
+      [% ELSE %]
+
+        <!-- Single params -->
+        [% IF p.type == 'scenario' %]
+          [% PROCESS EditListScenario 
+             ppaths=[p.name]
+             pitem=p
+             val=p.value
+          %]
+        [% ELSIF p.type == 'task' %]
+          [% PROCESS EditListTask 
+             ppaths=[p.name]
+             pitem=p
+             val=p.value
+          %]
+        [% ELSIF p.type == 'datasource' %]
+          [% PROCESS EditListDatasource 
+             ppaths=[p.name]
+             pitem=p
+             val=p.value
+          %]
+        [% ELSIF p.type == 'paragraph' %]
+
+          <!-- Paragraph -->
+          [% FOREACH key = p.value %]
+            [% IF key.may_edit != 'hidden' %] 
+              <label for="param.[% p.name %].[% key.name %]">
+              [% IF key.title %]
+                [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
+              [% ELSE %]
+                [% key.name %][%|loc%]:[%END%]
+              [% END %]
+              </label>
+
+              [% IF key.type == 'scenario' %]
+                [% PROCESS EditListScenario 
+                   ppaths=[p.name,key.name]
+                   pitem=key
+                   val=key.value
+                %]
+              [% ELSIF key.type == 'task' %]
+                [% PROCESS EditListTask 
+                   ppaths=[p.name,key.name]
+                   pitem=key
+                   val=key.value
+                %]
+              [% ELSIF key.type == 'datasource' %]
+                [% PROCESS EditListDatasource 
+                   ppaths=[p.name,key.name]
+                   pitem=key
+                   val=key.value
+                %]
+              [% ELSIF key.type == 'enum' %]
+                [% IF key.occurrence == 'multiple' %]
+                  [% PROCESS EditListSet 
+                     ppaths=[p.name,key.name]
+                     pitem=key
+                     val=key.value
+                  %]
+                [% ELSE %]
+                  [% PROCESS EditListEnum 
+                     ppaths=[p.name,key.name]
+                     pitem=key
+                     val=key.value
+                  %]
+                [% END %]
+              [% ELSE %]
+                [% PROCESS EditListScalar 
+                   ppaths=[p.name,key.name]
+                   pitem=key
+                   val=key.value
+                %]
+              [% END %]
+            [% END %]
+          [% END %]
+        [% ELSIF p.type == 'enum' %]
+          [% PROCESS EditListEnum 
+             ppaths=[p.name]
+             pitem=p
+             val=p.value
+          %]
+        [% ELSE %]
+          [% PROCESS EditListScalar 
+             ppaths=[p.name]
+             pitem=p
+             val=p.value
+          %]
+        [% END %]
+      [% END %]
+      </div>[%# class="edit_list_request_enum" #%]
+
+      [% IF p.default == '1' %]
+        <div class="default" style="clear: both;"><span>[%|loc%]default[%END%]</span></div>
+      [% END %]
+      </div>
+    [% END %]
+  [% END %]
+
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="group" value="[% group %]" />
+  <input type="hidden" name="action" value="edit_list" />
+  [% IF is_form_editable == '1' %]
+    <input class="MainMenuLinks" type="submit" name="action_edit_list"
+     value="[%|loc%]Update[%END%]" />
+  [% END %]
+  </fieldset>
   </form>
-[% END %]
+[%~ END %]
 
 </div >
+
+[%# Block definitions ~%]
+
+[%~ BLOCK EditListSet ~%]
+  <!-- set -->[%# ppaths,pitem,val %]
+  [% IF pitem.may_edit == 'write' %]
+    <select name="multiple_param.[% ppaths.join('.') %]"
+     id="param.[% ppaths.join('.') %]"
+     multiple="multiple" size="[% val.size %]"
+     [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
+    [% FOREACH enum = val ~%]
+      <option value="[% enum.key %]"
+       [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
+       [%~ IF pitem.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[% END %]>
+      [%~ IF enum.value.title ~%]
+        [% enum.value.title %]
+      [%~ ELSE ~%]
+        [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
+      [%~ END ~%]
+      </option>
+    [% END %]
+    </select>
+  [% ELSIF pitem.may_edit == 'read' %]
+    [% FOREACH enum = val ~%]
+      [% IF enum.value.selected == '1' ~%]
+        [%~ IF pitem.field_type == 'lang' ~%]
+          <span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">
+        [%~ END ~%]
+        [% IF enum.value.title ~%]
+          [% enum.value.title %]
+        [%~ ELSE ~%]
+          [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
+        [%~ END %]
+        [%~ IF pitem.field_type == 'lang' ~%]
+          </span>
+        [%~ END %]
+      [%~ END %]
+    [%~ END %]
+  [% END %]
+  <!-- end set -->
+[%~ END ~%]
+
+[%~ BLOCK EditListEnum ~%]
+  <!-- enum -->[%# ppaths, pitem, val %]
+  [% IF pitem.may_edit == 'write' %]
+    <select name="single_param.[% ppaths.join('.') %]"
+     id="param.[% ppaths.join('.') %]"
+     [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
+    [% FOREACH enum = val ~%]
+      <option value="[% enum.key %]"
+       [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
+       [%~ IF pitem.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[%END%]>
+      [%~ IF enum.value.title ~%]
+        [% enum.value.title %]
+      [%~ ELSE ~%]
+        [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
+      [%~ END ~%]
+      </option>
+    [% END %]
+    </select>
+  [% ELSIF pitem.may_edit == 'read' %]
+    [% FOREACH enum = val ~%]
+      [% IF enum.value.selected == '1' ~%]
+        [% IF pitem.field_type == 'lang' ~%]
+          <span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">
+        [%~ END ~%]
+        [% IF enum.value.title ~%]
+          [% enum.value.title %]
+        [%~ ELSE ~%]
+          [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
+        [%~ END %]
+        [%~ IF pitem.field_type == 'lang' ~%]
+          </span>
+        [%~ END %]
+      [%~ END %]
+    [%~ END %]
+  [% END %]
+  <!-- end enum -->
+[%~ END ~%]
+
+[%~ BLOCK EditListScenario ~%]
+  <!-- scenario -->[%# ppaths, pitem, val %]
+  [% IF pitem.may_edit == 'write' %]
+    <select name="single_param.[% ppaths.join('.') %].name"
+     id="param.[% ppaths.join('.') %]">
+    [% FOREACH scenario = val ~%]
+      [% UNLESS scenario.value.name == 'default' ~%]
+        <option value="[% scenario.value.name %]"
+         [%~ IF scenario.value.selected == '1' %] selected="selected"[% END %]>
+        [%~ scenario.value.web_title %] ([% scenario.value.name %])</option>
+      [%~ END %]
+    [% END %]
+    </select>
+  [% ELSIF pitem.may_edit == 'read' %]
+    [% FOREACH scenario = val ~%]
+      [% IF scenario.value.selected == '1' ~%]
+        [% scenario.value.web_title %] ([% scenario.value.name %])
+      [%~ END %]
+    [%~ END %]
+  [% END %]
+  <!-- end scenario -->
+[%~ END ~%]
+
+[%~ BLOCK EditListTask ~%]
+  <!-- task -->[%# ppaths, pitem, val %]
+  [% IF pitem.may_edit == 'write' %]
+    <select name="single_param.[% ppaths.join('.') %].name"
+     id="param.[% ppaths.join('.') %]">
+    [% FOREACH task = val ~%]
+      <option value="[% task.value.name %]"
+       [%~ IF task.value.selected == '1' %] selected="selected"[% END %]>
+      [%~ task.value.title %] ([% task.value.name %])</option>
+    [% END %]
+    </select>
+  [% ELSIF pitem.may_edit == 'read' %]
+    [% FOREACH task = val ~%]
+      [% IF task.value.selected == '1' ~%]
+        [% task.value.title %] ([% task.value.name %])
+      [%~ END %]
+    [%~ END %]
+  [% END %]
+  <!-- end task -->
+[%~ END ~%]
+
+[%~ BLOCK EditListDatasource ~%]
+  <!-- datasource -->[%# ppaths, pitem, val %]
+  [% IF pitem.may_edit == 'write' %]
+    <select name="single_param.[% ppaths.join('.') %]"
+     id="param.[% ppaths.join('.') %]">
+    [% FOREACH source = val ~%]
+      <option value="[% source.value.name %]"
+       [%~ IF source.value.selected == '1' %] selected="selected"[% END %]>
+      [%~ source.value.title %] ([% source.value.name %])</option>
+    [% END %]
+    </select>
+  [% ELSIF pitem.may_edit == 'read' %]
+    [% FOREACH source = val ~%]
+      [% IF source.value.selected == '1' ~%]
+        [% source.value.title %] ([% source.value.name %])
+      [%~ END %]
+    [%~ END %]
+  [% END %]
+  <!-- end datasource -->
+[%~ END ~%]
+
+[%~ BLOCK EditListScalar ~%]
+  <!-- scalar -->[%# ppaths, pitem, val %]
+  [% IF pitem.may_edit == 'write' %]
+    <input name="single_param.[% ppaths.join('.') %]"
+     id="param.[% ppaths.join('.') %]"
+     value="[% val %]" size="[% pitem.length %]"
+     [%~ IF pitem.field_type == 'password' %] type="password"
+     [%~ ELSE %] type="text"
+     [%~ END %]
+     [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %] />
+  [% ELSIF pitem.may_edit == 'read' %]
+    [% IF pitem.field_type == 'lang' ~%]
+      <span class="neutral" lang="[% val %]" xml:lang="[% val %]">
+    [%~ END ~%]
+    [% IF pitem.field_type ~%]
+      [% val | optdesc(pitem.field_type,is_listmaster) %]
+    [%~ ELSE ~%]
+      [% val %]
+    [%~ END %]
+    [%~ IF pitem.field_type == 'lang' ~%]
+      </span>
+    [%~ END %]
+  [% END %]
+  [% pitem.unit %]
+  <!-- end scalar -->
+[%~ END ~%]
+
 <!-- end edit_list_request.tt2 -->
