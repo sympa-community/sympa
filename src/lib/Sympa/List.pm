@@ -673,10 +673,6 @@ sub save_config {
     $self->{'admin'}{'update'} = {
         'email'      => $email,
         'date_epoch' => time,
-        'date'       => $language->gettext_strftime(
-            "%d %b %Y at %H:%M:%S",
-            localtime time
-        ),
     };
 
     unless (

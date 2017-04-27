@@ -4595,7 +4595,6 @@ sub do_lists {
         $list_info->{'host'}    = $list->{'admin'}{'host'};
         $list_info->{'date_epoch'} =
             $list->{'admin'}{'creation'}{'date_epoch'};
-        $list_info->{'date'}   = $list->{'admin'}{'creation'}{'date'};
         $list_info->{'topics'} = $list->{'admin'}{'topics'};
 
         if (    $param->{'user'}{'email'}
@@ -10320,9 +10319,8 @@ sub do_get_pending_lists {
             $list->{'admin'}{'subject'};
         $param->{'pending'}{$list->{'name'}}{'by'} =
             $list->{'admin'}{'creation'}{'email'};
-        $param->{'pending'}{$list->{'name'}}{'date'} =
-            $language->gettext_strftime("%d %b %y  %H:%M",
-            localtime($list->{'admin'}{'creation'}{'date_epoch'}));
+        $param->{'pending'}{$list->{'name'}}{'date_epoch'} =
+            $list->{'admin'}{'creation'}{'date_epoch'};
     }
 
     return 1;
@@ -10365,16 +10363,15 @@ sub do_get_latest_lists {
             {
             'name'          => $list->{'name'},
             'subject'       => $list->{'admin'}{'subject'},
-            'creation_date' => $list->{'admin'}{'creation'}{'date_epoch'}
+            'creation_date_epoch' =>
+                $list->{'admin'}{'creation'}{'date_epoch'}
             };
     }
 
-    foreach my $l (sort { $b->{'creation_date'} <=> $a->{'creation_date'} }
-        @unordered_lists) {
+    foreach my $l (sort {
+        $b->{'creation_date_epoch'} <=> $a->{'creation_date_epoch'}
+        } @unordered_lists) {
         push @{$param->{'latest_lists'}}, $l;
-        $l->{'creation_date'} =
-            $language->gettext_strftime("%d %b %Y",
-            localtime($l->{'creation_date'}));
     }
 
     return 1;
@@ -10427,10 +10424,6 @@ sub do_get_inactive_lists {
             ),
             'creation_date_epoch' =>
                 $list->{'admin'}{'creation'}{'date_epoch'},
-            'creation_date' => $language->gettext_strftime(
-                "%d %b %Y",
-                localtime($list->{'admin'}{'creation'}{'date_epoch'})
-            ),
             };
     }
 
@@ -10457,16 +10450,14 @@ sub do_get_biggest_lists {
             {
             'name'          => $list->{'name'},
             'subject'       => $list->{'admin'}{'subject'},
-            'creation_date' => $list->{'admin'}{'creation'}{'date_epoch'},
-            'subscribers'   => $list->get_total
+            'creation_date_epoch' =>
+                $list->{'admin'}{'creation'}{'date_epoch'},
+            'subscribers' => $list->get_total
             };
     }
 
     foreach my $l (sort { $b->{'subscribers'} <=> $a->{'subscribers'} }
         @unordered_lists) {
-        $l->{'creation_date'} =
-            $language->gettext_strftime("%d %b %Y",
-            localtime($l->{'creation_date'}));
         push @{$param->{'biggest_lists'}}, $l;
     }
 
@@ -10499,7 +10490,8 @@ sub do_set_pending_list_request {
     $param->{'list_info'}         = $list_dir . '/info';
     $param->{'list_subject'}      = $list->{'admin'}{'subject'};
     $param->{'list_request_by'}   = $list->{'admin'}{'creation'}{'email'};
-    $param->{'list_request_date'} = $list->{'admin'}{'creation'}{'date'};
+    $param->{'list_request_date_epoch'} =
+        $list->{'admin'}{'creation'}{'date_epoch'};
     $param->{'list_serial'}       = $list->{'admin'}{'serial'};
     $param->{'list_status'}       = $list->{'admin'}{'status'};
 
@@ -18326,13 +18318,10 @@ sub do_review_family {
 
         push @{$param->{'family_lists'}},
             {
-            'name'               => $flist->{'name'},
-            'status'             => $flist->{'admin'}{'status'},
-            'instantiation_date' => $language->gettext_strftime(
-                "%d %b %Y at %H:%M:%S",
-                localtime $flist->{'admin'}{'latest_instantiation'}
-                    {'date_epoch'}
-            ),
+            'name'                     => $flist->{'name'},
+            'status'                   => $flist->{'admin'}{'status'},
+            'instantiation_date_epoch' =>
+                $flist->{'admin'}{'latest_instantiation'}{'date_epoch'},
             'subject' => $flist->{'admin'}{'subject'},
             };
     }
