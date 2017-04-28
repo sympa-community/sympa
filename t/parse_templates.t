@@ -16,7 +16,8 @@ my $params = {
     languages   => {size => 2},
     total_group => 2,
     rows        => 2,
-    reply_to_header => {value => 'all', other_email => 'xxx@xxx',},
+    reply_to_header         => {value => 'all', other_email => 'xxx@xxx',},
+    list_request_date_epoch => 0,
 };
 
 my @def_tt2 = _templates('default', '*.tt2 sympa.wsdl');
