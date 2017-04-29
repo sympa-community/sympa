@@ -150,6 +150,12 @@ sub __list_params_apply_family {
 
             if (1 == scalar @constr) {
                 $pitem->{default} = $constr[0];
+
+                # Choose more restrictive privilege.
+                # See also _get_schema_apply_privilege().
+                $pitem->{privilege} = 'read'
+                    if not $pitem->{privilege}
+                        or 'read' lt $pitem->{privilege};
             } elsif (exists $pitem->{default} and defined $pitem->{default}) {
                 delete $pitem->{default}
                     unless grep { $pitem->{default} eq $_ } @constr;
@@ -316,7 +322,49 @@ sub _apply_defaults {
 
 sub get_schema {
     my $self = shift;
-    return Sympa::Tools::Data::clone_var($self->{_pinfo});
+    my $user = shift;
+
+    my $pinfo = Sympa::Tools::Data::clone_var($self->{_pinfo});
+    if ($user) {
+        foreach my $pname (_keys($pinfo)) {
+            $self->_get_schema_apply_privilege($pinfo->{$pname}, [$pname],
+                $user, undef);
+        }
+    }
+    $pinfo;
+}
+
+# Apply privilege on each parameter.
+sub _get_schema_apply_privilege {
+    my $self   = shift;
+    my $pitem  = shift;
+    my $pnames = shift;
+    my $user   = shift;
+    my $priv_p = shift;
+
+    my $list = $self->{context};
+
+    # Choose most restrictive privilege.
+    # Trick:
+    # "hidden", "read" and "write" precede others in reverse dictionary order.
+    my $priv = $list->may_edit(_pfullname($pnames), $user);
+    $priv = $priv_p
+        if not $priv
+            or ($priv_p and $priv_p lt $priv);
+    $pitem->{privilege} = $priv
+        if not $pitem->{privilege}
+            or ($priv and $priv lt $pitem->{privilege});
+    $pitem->{privilege} ||= 'hidden';    # Implicit default
+
+    if (ref $pitem->{format} eq 'HASH') {
+        foreach my $key (_keys($pitem->{format})) {
+            $self->_get_schema_apply_privilege(
+                $pitem->{format}->{$key},
+                [@$pnames, $key],
+                $user, $pitem->{privilege}
+            );
+        }
+    }
 }
 
 sub keys {
@@ -402,11 +450,8 @@ sub _sanitize_changes {
 
     my $list = $self->{context};
 
-    my $authz = sub {
-        my $ppaths = shift;
-        'write' eq $list->may_edit(_pfullname($ppaths), $user);
-    };
-    my $pinfo = $self->{_pinfo};
+    # Apply privileges: {privilege} will keep 'hidden', 'read' or 'write'.
+    my $pinfo = $self->get_schema($user);
 
     # Undefined {_config} means list creation.
     # Empty hashref means loading existing config.
@@ -438,24 +483,21 @@ sub _sanitize_changes {
             if ($pii->{occurrence} =~ /n$/) {
                 if (ref $pii->{format} eq 'ARRAY') {
                     @r =
-                        $self->_sanitize_changes_set($curi, $newi, $pii, $ppi,
-                        $authz);
+                        $self->_sanitize_changes_set($curi, $newi, $pii,
+                        $ppi);
                 } else {
                     @r =
                         $self->_sanitize_changes_array($curi, $newi, $pii,
-                        $ppi, $authz, loading => $loading);
+                        $ppi, loading => $loading);
                 }
             } elsif (ref $pii->{format} eq 'HASH') {
                 @r = $self->_sanitize_changes_paragraph(
-                    $curi, $newi, $pii,
-                    $ppi,  $authz,
+                    $curi, $newi, $pii, $ppi,
                     init    => (not defined $curi),
                     loading => $loading
                 );
             } else {
-                @r =
-                    $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi,
-                    $authz);
+                @r = $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi);
             }
 
             # Omit removal if current configuration is already empty.
@@ -473,11 +515,10 @@ sub _sanitize_changes_set {
     my $new    = shift;
     my $pitem  = shift;
     my $ppaths = shift;
-    my $authz  = shift;
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $authz->($ppaths);
+    return () unless $pitem->{privilege} eq 'write';
 
     my $list = $self->{context};
 
@@ -529,12 +570,11 @@ sub _sanitize_changes_array {
     my $new     = shift;
     my $pitem   = shift;
     my $ppaths  = shift;
-    my $authz   = shift;
     my %options = @_;
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $authz->($ppaths);
+    return () unless $pitem->{privilege} eq 'write';
 
     my $i   = -1;
     my %ret = map {
@@ -546,14 +586,11 @@ sub _sanitize_changes_array {
         if (ref $pitem->{format} eq 'HASH') {
             @r = $self->_sanitize_changes_paragraph(
                 $curi, $_, $pitem, $ppi,
-                $authz,
                 init    => (not defined $curi),
                 loading => $options{loading}
             );
         } else {
-            @r =
-                $self->_sanitize_changes_leaf($curi, $_, $pitem, $ppi,
-                $authz);
+            @r = $self->_sanitize_changes_leaf($curi, $_, $pitem, $ppi);
         }
 
         # Omit removal if current configuration is already empty.
@@ -583,12 +620,11 @@ sub _sanitize_changes_paragraph {
     my $new     = shift;
     my $pitem   = shift;
     my $ppaths  = shift;
-    my $authz   = shift;
     my %options = @_;
 
     return () unless ref $new eq 'HASH';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $authz->($ppaths);
+    return () unless $pitem->{privilege} eq 'write';
 
     $self->_apply_defaults($cur, $pitem->{format},
         init => ($options{init} and not $options{loading}));
@@ -616,24 +652,21 @@ sub _sanitize_changes_paragraph {
             if ($pii->{occurrence} =~ /n$/) {
                 if (ref $pii->{format} eq 'ARRAY') {
                     @r =
-                        $self->_sanitize_changes_set($curi, $newi, $pii, $ppi,
-                        $authz);
+                        $self->_sanitize_changes_set($curi, $newi, $pii,
+                        $ppi);
                 } else {
                     @r =
                         $self->_sanitize_changes_array($curi, $newi, $pii,
-                        $ppi, $authz, loading => $options{loading});
+                        $ppi, loading => $options{loading});
                 }
             } elsif (ref $pii->{format} eq 'HASH') {
                 @r = $self->_sanitize_changes_paragraph(
-                    $curi, $newi, $pii,
-                    $ppi,  $authz,
+                    $curi, $newi, $pii, $ppi,
                     init    => (not defined $curi),
                     loading => $options{loading}
                 );
             } else {
-                @r =
-                    $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi,
-                    $authz);
+                @r = $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi);
             }
 
             # Omit removal if current configuration is already empty.
@@ -669,11 +702,10 @@ sub _sanitize_changes_leaf {
     my $new    = shift;
     my $pitem  = shift;
     my $ppaths = shift;
-    my $authz  = shift;
 
     return () if ref $new eq 'ARRAY';    # Sanity check: Hashref or scalar
     return () if $pitem->{obsolete};
-    return () unless $authz->($ppaths);
+    return () unless $pitem->{privilege} eq 'write';
 
     my $list = $self->{context};
 
@@ -1227,7 +1259,7 @@ Gets all submitted changes.
 Note that returned value is the real reference to internal information.
 Any modifications might break it.
 
-=item get_schema ( )
+=item get_schema ( [ $user ] )
 
 I<Instance method>.
 TDB.

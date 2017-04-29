@@ -2599,6 +2599,16 @@ Visibility mode of list memeber.
 
 TBD.
 
+Introduced on Sympa 6.2.17.
+
+=item privilege
+
+I<Dynamically assigned>.
+Privilege for specified user:
+C<'write'>, C<'read'> or C<'hidden'>.
+
+Introduced on Sympa 6.2.17.
+
 =back
 
 =back
