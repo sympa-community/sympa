@@ -5617,6 +5617,7 @@ sub _include_users_ldap_2level {
                 'fliter2',     $filter2,
                 'ldap_attrs2', $ldap_attrs2
                 };
+            next;
         }
 
         ## returns a reference to a HASH where the keys are the DNs
