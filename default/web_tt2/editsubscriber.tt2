@@ -28,20 +28,26 @@
 
   <label for="reception">[%|loc%]Receiving:[%END%]  </label>
   <select name="reception" id="reception">
-  [% FOREACH r = reception %]
-    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
+  [% FOREACH r = reception ~%]
+    <option value="[% r.key %]"
+     [%~ IF r.value.selected %] selected="selected"[% END %]>
+    [%~ r.key | optdesc('reception') ~%]
+    </option>
   [% END %]
   </select>
 
   <label for="visibility">[%|loc%]Visibility:[%END%]  </label>
   <select id="visibility" name="visibility">
-  [% FOREACH r = visibility %]
-    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
+  [% FOREACH r = visibility ~%]
+    <option value="[% r.key %]"
+     [%~ IF r.value.selected %] selected="selected"[% END %]>
+    [%~ r.key | optdesc('visibility') ~%]
+    </option>
   [% END %]
   </select>
 
-  <label>[%|loc%]Language:[%END%]  </label>[% current_subscriber.lang %]
-
+  <label>[%|loc%]Language:[%END%]  </label>
+  [% current_subscriber.lang | optdesc('lang') %]
 
   [% IF pictures_display ~%]
     [% IF current_subscriber.pictures_url || current_subscriber.email == user.email ~%]

@@ -269,11 +269,7 @@
       <option value="[% enum.key %]"
        [%~ IF enum.value.selected == '1' %] selected="selected"[% END %]
        [%~ IF pitem.field_type == 'lang' %] lang="[%enum.key%]" xml:lang="[%enum.key%]"[%END%]>
-      [%~ IF enum.value.title ~%]
-        [% enum.value.title %]
-      [%~ ELSE ~%]
-        [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-      [%~ END ~%]
+      [%~ enum.key | optdesc(pitem.field_type,is_listmaster) ~%]
       </option>
     [% END %]
     </select>
@@ -283,11 +279,7 @@
         [% IF pitem.field_type == 'lang' ~%]
           <span class="neutral" lang="[%enum.key%]" xml:lang="[%enum.key%]">
         [%~ END ~%]
-        [% IF enum.value.title ~%]
-          [% enum.value.title %]
-        [%~ ELSE ~%]
-          [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
-        [%~ END %]
+        [% enum.key | optdesc(pitem.field_type,is_listmaster) %]
         [%~ IF pitem.field_type == 'lang' ~%]
           </span>
         [%~ END %]

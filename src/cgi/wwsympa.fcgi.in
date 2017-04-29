@@ -1847,20 +1847,12 @@ while ($query = new_loop()) {
 
     ## Available languages
     $param->{'languages'} = {};
-    $language->push_lang();
+    $language->push_lang;
     foreach my $lang (Sympa::get_supported_languages($robot)) {
         next unless $lang = $language->set_lang($lang);
-        $param->{'languages'}{$lang}{'complete'} = $language->native_name
-            || $lang;
-        # compatibility: 6.1.
-        $param->{'languages'}{$lang}{'lang_tag'} = $lang;
+        $param->{'languages'}{$lang} = {};
     }
     if (my $lang = $language->set_lang($param->{'lang'})) {    #current lang
-        $param->{'languages'}{$lang}{'complete'} = $language->native_name
-            || $lang;
-        # compatibility: 6.1.
-        $param->{'languages'}{$lang}{'lang_tag'} = $lang;
-
         $param->{'languages'}{$lang}{'selected'} = 'selected="selected"';
     }
     $language->pop_lang;
@@ -6005,8 +5997,6 @@ sub do_suboptions {
         localtime($s->{'update_date'}));
 
     foreach $m ($list->available_reception_mode) {
-        $param->{'reception'}{$m}{'description'} =
-            Sympa::ListOpt::get_title($m, 'reception');
         if ($s->{'reception'} eq $m) {
             $param->{'reception'}{$m}{'selected'} = ' selected';
             if ($m =~ /^(mail|notice|not_me|txt|html|urlize)$/i) {
@@ -6018,8 +6008,6 @@ sub do_suboptions {
     }
 
     foreach $m (qw(conceal noconceal)) {
-        $param->{'visibility'}{$m}{'description'} =
-            Sympa::ListOpt::get_title($m, 'visibility');
         if ($s->{'visibility'} eq $m) {
             $param->{'visibility'}{$m}{'selected'} = ' selected';
         } else {
@@ -6861,16 +6849,13 @@ sub do_ls_templates {
 
     foreach my $file (keys %{$param->{'templates'}}) {
         foreach my $level (keys %{$param->{'templates'}{$file}}) {
-            $language->push_lang;
             foreach my $subdir (keys %{$param->{'templates'}{$file}{$level}})
             {
-                my $lang = $language->set_lang($subdir); # allow unknown lang.
-                $param->{'lang_per_level'}{$level}{$subdir} = {
-                    'title' => ($lang ? $language->native_name : ''),
-                    'lang' => $lang,
-                };
+                # Allow unknown lang.
+                my $lang = Sympa::Language::canonic_lang($subdir);
+                $param->{'lang_per_level'}{$level}{$subdir} =
+                    {lang => ($lang || $subdir)};
             }
-            $language->pop_lang;
         }
     }
 
@@ -7005,18 +6990,8 @@ sub do_view_template {
     my $tpl_lang = $in{'tpl_lang'} || 'default';
     $param->{'tpl_lang'} = $tpl_lang;
     unless ($tpl_lang eq 'default') {
-        $language->push_lang;
-
-        if (my $lang = $language->set_lang($tpl_lang)) { # allow unknown lang.
-            $param->{'tpl_lang_title'} = $language->native_name || $tpl_lang;
-            $param->{'tpl_lang_lang'} = $lang;
-        } else {
-            $param->{'tpl_lang_title'} = $tpl_lang;
-            $param->{'tpl_lang_lang'} =
-                Sympa::Language::canonic_lang($tpl_lang);
-        }
-
-        $language->pop_lang;
+        # Allow unknown lang.
+        $param->{'tpl_lang_lang'} = Sympa::Language::canonic_lang($tpl_lang);
     }
 
     return 1;
@@ -7136,18 +7111,8 @@ sub do_copy_template {
     my $tpl_lang = $in{'tpl_lang_out'} || 'default';
     $param->{'tpl_lang'} = $in{'tpl_lang'} = $tpl_lang;
     unless ($tpl_lang eq 'default') {
-        $language->push_lang;
-
-        if (my $lang = $language->set_lang($tpl_lang)) { # allow unknown lang.
-            $param->{'tpl_lang_title'} = $language->native_name || $tpl_lang;
-            $param->{'tpl_lang_lang'} = $lang;
-        } else {
-            $param->{'tpl_lang_title'} = $tpl_lang;
-            $param->{'tpl_lang_lang'} =
-                Sympa::Language::caonic_lang($tpl_lang);
-        }
-
-        $language->pop_lang;
+        # Allow unknown lang.
+        $param->{'tpl_lang_lang'} = Sympa::Language::caonic_lang($tpl_lang);
     }
 
     $param->{'scope'} = $in{'scope'} = $in{'scope_out'};
@@ -11066,13 +11031,9 @@ sub do_editsubscriber {
 
     ## Get language from user_table
     my $user = Sympa::User::get_global_user($in{'email'});
-    $language->push_lang($user->{'lang'});
-    $param->{'current_subscriber'}{'lang'} = $language->native_name;
-    $language->pop_lang;
+    $param->{'current_subscriber'}{'lang'} = $user->{'lang'};
 
     foreach my $m ($list->available_reception_mode) {
-        $param->{'reception'}{$m}{'description'} =
-            Sympa::ListOpt::get_title($m, 'reception');
         if ($param->{'current_subscriber'}{'reception'} eq $m) {
             $param->{'reception'}{$m}{'selected'} = ' selected';
         } else {
@@ -11081,8 +11042,6 @@ sub do_editsubscriber {
     }
 
     foreach my $m (qw(conceal noconceal)) {
-        $param->{'visibility'}{$m}{'description'} =
-            Sympa::ListOpt::get_title($m, 'visibility');
         if ($param->{'current_subscriber'}{'visibility'} eq $m) {
             $param->{'visibility'}{$m}{'selected'} = ' selected';
         } else {
@@ -15964,8 +15923,6 @@ sub _set_my_lists_info {
             $member_info->{'reception'}  ||= 'mail';
             $member_info->{'visibility'} ||= 'noconceal';
             foreach my $mode ($list->available_reception_mode) {
-                $param->{'reception'}{$list->{'name'}}{$mode}{'description'}
-                    = Sympa::ListOpt::get_title($mode, 'reception');
                 if ($member_info->{'reception'} eq $mode) {
                     $param->{'reception'}{$list->{'name'}}{$mode}{'selected'}
                         = ' selected';
