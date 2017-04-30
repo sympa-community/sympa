@@ -1,6 +1,10 @@
 <!-- $Id$ -->
 
-[%- IF subtitle %]<h3>[% subtitle %]</h3>[% END -%]
+[% IF topic ~%]
+  <h3>[% topic | optdesc('listtopic') %]</h3>
+[%~ ELSIF subtitle ~%]
+  <h3>[% subtitle %]</h3>
+[%~ END %]
 
 [% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] %]
 [% all_letters = [] %]

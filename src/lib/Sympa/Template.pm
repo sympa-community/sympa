@@ -238,6 +238,7 @@ sub _optdesc_func {
     my $type    = shift;
     my $withval = shift;
 
+    my $that = $self->{context};
     my $encode_html = ($self->{subdir} && $self->{subdir} eq 'web_tt2');
 
     return sub {
@@ -246,7 +247,8 @@ sub _optdesc_func {
         return undef unless $x =~ /\S/;
         $x =~ s/^\s+//;
         $x =~ s/\s+$//;
-        my $title = Sympa::ListOpt::get_title($x, $type, $withval);
+        my $title = Sympa::ListOpt::get_option_description($that, $x, $type,
+            $withval);
         $encode_html ? Sympa::Tools::Text::encode_html($title) : $title;
     };
 }

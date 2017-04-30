@@ -256,7 +256,9 @@ my %list_status = (
 );
 
 # Old name: Sympa::List::get_option_title().
-sub get_title {
+# Old name: Sympa::ListOpt::get_title().
+sub get_option_description {
+    my $that    = shift;
     my $option  = shift;
     my $type    = shift || '';
     my $withval = shift || 0;
@@ -278,6 +280,20 @@ sub get_title {
             $title = $language->native_name;
         }
         $language->pop_lang;
+    } elsif ($type eq 'listtopic' or $type eq 'listtopic:leaf') {
+        my $robot_id;
+        if (ref $that eq 'Sympa::List') {
+            $robot_id = $that->{'domain'};
+        } elsif ($that and $that ne '*') {
+            $robot_id = $that;
+        } else {
+            $robot_id = '*';
+        }
+        if ($type eq 'listtopic') {
+            $title = Sympa::Robot::topic_get_title($robot_id, $option);
+        } else {
+            $title = [Sympa::Robot::topic_get_title($robot_id, $option)]->[-1];
+        }
     } elsif ($type eq 'password') {
         return '*' x length($option);    # return
     } elsif ($type eq 'unixtime') {
@@ -323,7 +339,7 @@ configuration.
 
 =over
 
-=item get_title ( $value, [ $type, [ $withval ] ] )
+=item get_option_description ( $that, $value, [ $type, [ $withval ] ] )
 
 I<Function>.
 Gets i18n-ed title of option.
@@ -332,6 +348,10 @@ Language context must be set in advance (See L<Sympa::Language>).
 Parameters:
 
 =over
+
+=item $that
+
+Context, instance of L<Sympa::List>, Robot or Site.
 
 =item $value
 

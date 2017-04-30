@@ -230,7 +230,8 @@ our %pinfo = (
         order        => 10.07,
         'group'      => 'description',
         'gettext_id' => "Topics for the list",
-        'format'     => [],     # Sympa::Robot::load_topics() called later
+        'format'     => [],     # Sympa::Robot::topic_keys() called later
+        'field_type' => 'listtopic',
         'split_char' => ',',
         'occurrence' => '0-n'
     },
@@ -2584,6 +2585,10 @@ Reception mode of list member.
 =item C<'status'>
 
 Status of list.
+
+=item C<'listtopic'>
+
+List topic.
 
 =item C<'unixtime'>
 

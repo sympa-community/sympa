@@ -4527,36 +4527,16 @@ sub do_lists {
         $all_lists = [map { $lists{$_} } sort keys %lists];
         $param->{'subtitle'} = $language->gettext('Your lists');
     } elsif ($in{'topic'}) {
-        my %topics = Sympa::Robot::load_topics($robot);
-        $param->{'topic'} = $in{'topic'};
-        if ($in{'subtopic'}) {
-            $param->{'subtopic'} = $in{'subtopic'};
-            $param->{'subtitle'} = $language->gettext_sprintf(
-                '%s / %s',
-                $topics{$in{'topic'}}{'current_title'},
-                $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'}
-                    || $in{'subtopic'}
-            );
-        } elsif ($topics{$in{'topic'}}{'current_title'}) {
-            $param->{'subtitle'} = $topics{$in{'topic'}}{'current_title'};
-        } elsif ($in{'topic'} eq 'others' or $in{'topic'} eq 'topicsless') {
-            $param->{'subtitle'} = $language->gettext('Others');
-        } else {
-            $param->{'subtitle'} = $in{'topic'};
-        }
+        my $topic = join '/', grep {$_} ($in{'topic'}, $in{'subtopic'});
+        $param->{'topic'} = $topic;
 
-        ## Filter lists by topic.
-        ## topic argument 'topicsless' or 'other' means 'lists with topic
-        ## "other" or without topics'.
-        ## no topic argument; List all lists
+        # Filter lists by topic.
+        # topic argument 'topicsless' or 'other' means 'lists with topic
+        # "other" or without topics'.
+        # no topic argument; List all lists
         my $options = {};
-        if ($in{'topic'}) {
-            if ($in{'subtopic'}) {
-                $options->{'filter'} =
-                    ['topics' => "$in{'topic'}/$in{'subtopic'}"];
-            } else {
-                $options->{'filter'} = ['topics' => $in{'topic'}];
-            }
+        if ($topic) {
+            $options->{'filter'} = ['topics' => $topic];
         }
         $all_lists = Sympa::List::get_lists($robot, %$options);
     } else {
@@ -10889,23 +10869,11 @@ sub do_create_list_request {
         || [];
     #XXX}
 
-    my %topics;
-    unless (%topics = Sympa::Robot::load_topics($robot)) {
-        Sympa::Report::reject_report_web('intern',
-            'unable_to_load_list_of_topics',
-            {}, $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
+    my %topics = map { ($_ => {}) } Sympa::Robot::topic_keys($robot);
+    if ($in{'topics'} and exists $topics{$in{'topics'}}) {
+        $topics{$in{'topics'}}->{selected} = 1;
     }
-    $param->{'list_of_topics'} = \%topics;
-
-    if ($in{'topics'}) {
-        my ($topic, $subtopic) = split('/', $in{'topics'});
-        if ($subtopic) {
-            $param->{'list_of_topics'}{$topic}{'sub'}{$subtopic}{'selected'}
-                = 1;
-        } else {
-            $param->{'list_of_topics'}{$topic}{'selected'} = 1;
-        }
-    }
+    $param->{'list_of_topics'} = {%topics};
 
     unless ($param->{'list_list_tpl'} =
         Sympa::Tools::WWW::get_list_list_tpl($robot)) {
@@ -11984,8 +11952,11 @@ sub _prepare_edit_form {
         }
     }
 
+    my $config = Sympa::List::Config->new($list, config => $list->{'admin'});
+    my $pinfo = $config->get_schema($param->{'user'}{'email'});
+
     ## For each parameter defined in List.pm, retrieve and prepare for editing
-    foreach my $pname (sort Sympa::List::by_order keys %{$pinfo}) {
+    foreach my $pname ($config->keys) {
         # Skip comments and default values.
         next if grep { $pname eq $_ } qw(comment defaults);
 
@@ -12018,45 +11989,8 @@ sub _prepare_edit_form {
         ## variable %changed_params.
         $p->{'changed'} = $::changed_params{$pname};
 
-        ## Exceptions...too many
-        if ($pname eq 'topics') {
-            $p->{'type'} = 'enum';
-
-            my @topics;
-            foreach my $topic (sort keys %{$p->{'value'}}) {
-                push @topics, $topic if $p->{'value'}{$topic}{'selected'};
-            }
-            delete $p->{'value'};
-            my %list_of_topics = Sympa::Robot::load_topics($robot);
-
-            if (defined $p->{'constraint'}) {
-                _restrict_values(\%list_of_topics, $p->{'constraint'});
-            }
-
-            foreach my $topic (keys %list_of_topics) {
-                $p->{'value'}{$topic}{'selected'} = 0;
-                $p->{'value'}{$topic}{'title'} =
-                    $list_of_topics{$topic}{'current_title'};
-
-                if ($list_of_topics{$topic}{'sub'}) {
-                    foreach
-                        my $subtopic (keys %{$list_of_topics{$topic}{'sub'}})
-                    {
-                        $p->{'value'}{"$topic/$subtopic"}{'selected'} = 0;
-                        $p->{'value'}{"$topic/$subtopic"}{'title'} =
-                            "$list_of_topics{$topic}{'current_title'}/$list_of_topics{$topic}{'sub'}{$subtopic}{'current_title'}";
-                    }
-                }
-            }
-            foreach my $selected_topic (@topics) {
-                next unless (defined $selected_topic);
-                $p->{'value'}{$selected_topic}{'selected'} = 1;
-                $p->{'value'}{$selected_topic}{'title'} =
-                    $language->gettext_sprintf("Unknown (%s)",
-                    $selected_topic)
-                    unless (defined $p->{'value'}{$selected_topic}{'title'});
-            }
-        } elsif ($pname eq 'digest') {
+        # Exception.
+        if ($pname eq 'digest') {
             foreach my $v (@{$p->{'value'}}) {
                 next unless ($v->{'name'} eq 'days');
                 if (ref($v->{'value'}) eq 'ARRAY') {
@@ -12308,7 +12242,7 @@ sub _prepare_data {
             }
 
         } else {
-            if ($restrict && ($name ne 'topics')) {
+            if ($restrict) {
                 $p_glob->{'type'} = 'enum';
 
                 foreach my $elt (keys %{$constraint}) {
