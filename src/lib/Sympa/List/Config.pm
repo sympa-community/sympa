@@ -67,10 +67,61 @@ sub _list_params {
     my $list = $self->{context};
 
     my $pinfo = Sympa::Robot::list_params($list->{'domain'});
+    $self->_list_params_init_defaults($pinfo);
+
     $self->_list_params_apply_family($pinfo)
         unless $options{no_family};
 
     return $pinfo;
+}
+
+# Initialize default values.
+sub _list_params_init_defaults {
+    my $self  = shift;
+    my $phash = shift;
+
+    foreach my $key (_keys($phash)) {
+        my $pii = $phash->{$key};
+
+        if (ref $pii->{format} eq 'HASH') {
+            $self->_list_params_init_defaults($pii->{format});
+        } elsif (exists $pii->{default}) {
+            $pii->{default} = $self->_get_default($pii);
+        }
+    }
+}
+
+sub _get_default {
+    my $self  = shift;
+    my $pitem = shift;
+
+    my $val;
+    my $list = $self->{context};
+
+    my $default = $pitem->{default};
+    if (ref $default eq 'HASH' and exists $default->{conf}) {
+        $val = Conf::get_robot_conf($list->{'domain'}, $default->{conf});
+    } else {
+        $val = $default;
+    }
+
+    if ($pitem->{occurrence} =~ /n$/) {    # The set or the array of scalars
+        unless (defined $val) {
+            $val = [];
+        } else {
+            my $re = quotemeta($pitem->{split_char} || ',');
+            $val = [split /\s*$re\s*/, $val];
+        }
+        return $val;
+    } elsif ($pitem->{scenario} or $pitem->{task}) {
+        unless (defined $val) {
+            return undef;
+        } else {
+            return {name => $val};
+        }
+    } else {
+        return $val;
+    }
 }
 
 sub _list_params_apply_family {
@@ -99,7 +150,7 @@ sub __list_params_apply_family {
     my $ret = 0;
     if (ref $pitem->{format} eq 'HASH') {
         foreach my $key (_keys($pitem->{format})) {
-            if ($self->_list_params_apply_family(
+            if ($self->__list_params_apply_family(
                     $pitem->{format}->{$key},
                     [@$pnames, $key], $family
                 )
@@ -149,8 +200,13 @@ sub __list_params_apply_family {
             }
 
             if (1 == scalar @constr) {
-                $pitem->{default} = $constr[0];
-
+                if ($pitem->{occurrence} =~ /n$/) {
+                    $pitem->{default} = [@constr];
+                } elsif ($pitem->{scenario} or $pitem->{task}) {
+                    $pitem->{default} = {name => $constr[0]};
+                } else {
+                    $pitem->{default} = $constr[0];
+                }
                 # Choose more restrictive privilege.
                 # See also _get_schema_apply_privilege().
                 $pitem->{privilege} = 'read'
@@ -243,52 +299,6 @@ sub get_changeset {
     return $self->{_changes};
 }
 
-# Gets default for the set or the array of scalars.
-sub _get_default_multiple {
-    my $self  = shift;
-    my $pitem = shift;
-
-    my $val;
-    my $list = $self->{context};
-
-    my $default = $pitem->{default};
-    if (ref $default eq 'HASH' and exists $default->{conf}) {
-        $val = Conf::get_robot_conf($list->{'domain'}, $default->{conf});
-    } else {
-        $val = $default;
-    }
-
-    unless (defined $val) {
-        $val = [];
-    } else {
-        my $re = quotemeta($pitem->{split_char} || ',');
-        $val = [split /\s*$re\s*/, $val];
-    }
-
-    return $val;
-}
-
-sub _get_default_leaf {
-    my $self  = shift;
-    my $pitem = shift;
-
-    my $val;
-    my $list = $self->{context};
-
-    my $default = $pitem->{default};
-    if (ref $default eq 'HASH' and exists $default->{conf}) {
-        $val = Conf::get_robot_conf($list->{'domain'}, $default->{conf});
-    } else {
-        $val = $default;
-    }
-
-    if (defined $val and ($pitem->{scenario} or $pitem->{task})) {
-        return {name => $val};
-    } else {
-        return $val;
-    }
-}
-
 # Apply default values, if elements are mandatory and are scalar.
 # The init option means list/node creation.
 sub _apply_defaults {
@@ -304,17 +314,14 @@ sub _apply_defaults {
             next;
         } elsif (ref $pii->{format} eq 'HASH') {    # Not a scalar
             next;
-        } elsif ($pii->{occurrence} =~ /n$/) {
-            if (exists $pii->{default}) {
-                $cur->{$key} = $self->_get_default_multiple($pii)
-                    if $options{init}
-                        or $pii->{occurrence} =~ /^1/;
-            }
-        } else {
-            if (exists $pii->{default}) {
-                $cur->{$key} = $self->_get_default_leaf($pii)
-                    if $options{init}
-                        or $pii->{occurrence} =~ /^1/;
+        } elsif (exists $pii->{default}) {
+            if ($options{init} or $pii->{occurrence} =~ /^1/) {
+                if (ref $pii->{default}) {
+                    $cur->{$key} =
+                        Sympa::Tools::Data::clone_var($pii->{default});
+                } else {
+                    $cur->{$key} = $pii->{default};
+                }
             }
         }
     }
