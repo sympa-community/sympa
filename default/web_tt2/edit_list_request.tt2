@@ -40,7 +40,7 @@
     [%~ END %]
     [%~ IF is_listmaster && pS.default_value %] [%|loc%](default)[%END%][% END %]
     <span class="edit_list_request_help">
-    [% IF pS.type == 'scenario' ~%]
+    [% IF pS.scenario ~%]
       [% IF is_listmaster ~%]
         &nbsp;<a class="input"
          href="[% 'dump_scenario' | url_rel([list,pS.name]) %]"
