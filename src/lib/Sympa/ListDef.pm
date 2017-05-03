@@ -2614,6 +2614,13 @@ C<'write'>, C<'read'> or C<'hidden'>.
 
 Introduced on Sympa 6.2.17.
 
+=item enum
+
+I<Automatically assigned>.
+TBD.
+
+Introdueced on Sympa 6.2.17.
+
 =back
 
 =back
