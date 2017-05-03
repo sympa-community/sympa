@@ -278,6 +278,9 @@
     <select name="single_param.[% ppaths.join('.') %]"
      id="param.[% ppaths.join('.') %]"
      [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
+    [% IF pitem.occurrence.match('^0') ~%]
+      <option value=""></option>
+    [%~ END %]
     [% FOREACH enum = pitem.format ~%]
       <option value="[% enum %]"
        [%~ IF enum == val %] selected="selected"[% END %]
@@ -363,6 +366,9 @@
   [% IF pitem.privilege == 'write' ~%]
     <select name="single_param.[% ppaths.join('.') %]"
      id="param.[% ppaths.join('.') %]">
+    [% IF pitem.occurrence.match('^0') ~%]
+      <option value=""></option>
+    [%~ END %]
     [% FOREACH source = pitem.format ~%]
       <option value="[% source.value.name %]"
        [%~ IF source.value.name == val %] selected="selected"[% END %]>

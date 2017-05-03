@@ -96,18 +96,21 @@ our %pinfo = (
                 'order'      => 4,
                 'gettext_id' => "profile",
                 'format'     => ['privileged', 'normal'],
+                'occurrence' => '1',
                 'default'    => 'normal'
             },
             'reception' => {
                 'order'      => 5,
                 'gettext_id' => "reception mode",
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 6,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             }
         },
@@ -135,18 +138,21 @@ our %pinfo = (
                 'order'      => 4,
                 'gettext_id' => 'reception mode',
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 5,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             },
             'profile' => {
                 'order'      => 3,
                 'gettext_id' => 'profile',
                 'format'     => ['privileged', 'normal'],
+                'occurrence' => '1',
                 'default'    => 'normal'
             }
         },
@@ -171,12 +177,14 @@ our %pinfo = (
                 'order'      => 4,
                 'gettext_id' => "reception mode",
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 5,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             },
             'gecos' => {
@@ -216,12 +224,14 @@ our %pinfo = (
                 'order'      => 3,
                 'gettext_id' => 'reception mode',
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 5,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             }
         },
@@ -254,6 +264,7 @@ our %pinfo = (
         'format' => [],    ## Sympa::get_supported_languages() called later
         'file_format' => '\w+(\-\w+)*',
         'field_type'  => 'lang',
+        'occurrence'  => '1',
         'default'     => {'conf' => 'lang'}
     },
 
@@ -282,6 +293,7 @@ our %pinfo = (
         'gettext_id' => "Priority",
         'format'     => [0 .. 9, 'z'],
         'length'     => 1,
+        'occurrence' => '1',
         'default'    => {'conf' => 'default_list_priority'}
     },
 
@@ -379,13 +391,15 @@ our %pinfo = (
                     'urlize',  'not_me'
                 ],
                 'field_type' => 'reception',
-                'default' => 'mail'
+                'occurrence' => '1',
+                'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 2,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
                 'field_type' => 'visibility',
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             }
         },
@@ -436,7 +450,7 @@ our %pinfo = (
         'group'      => 'sending',
         'gettext_id' => "Message tagging",
         'format'     => ['required_sender', 'required_moderator', 'optional'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => 'optional'
     },
 
@@ -535,7 +549,7 @@ our %pinfo = (
         'group'      => 'sending',
         'gettext_id' => "Allow message personalization",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => {'conf' => 'merge_feature'}
     },
 
@@ -544,7 +558,7 @@ our %pinfo = (
         'group'      => 'sending',
         'gettext_id' => "Reject mail from automates (crontab, etc)?",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => {'conf' => 'reject_mail_from_automates_feature'}
     },
 
@@ -691,6 +705,7 @@ our %pinfo = (
         'group'      => 'archives',
         'gettext_id' => "Store distributed messages into archive",
         'format'     => ['on', 'off'],
+        'occurrence' => '1',
         'default'    => {'conf' => 'process_archive'},
     },
     'web_archive' => {
@@ -775,6 +790,7 @@ our %pinfo = (
         'group'      => 'archives',
         'gettext_id' => "Archive encrypted mails as cleartext",
         'format'     => ['original', 'decrypted'],
+        'occurrence' => '1',
         'default'    => 'original'
     },
 
@@ -783,6 +799,7 @@ our %pinfo = (
         'group'      => 'archives',
         'gettext_id' => "email address protection method",
         'format'     => ['cookie', 'javascript', 'at', 'none'],
+        'occurrence' => '1',
         'default' => {'conf' => 'web_archive_spam_protection'}
     },
 
@@ -829,13 +846,15 @@ our %pinfo = (
             'action' => {
                 'order'      => 2,
                 'gettext_id' => "action for this population",
-                'format'  => ['remove_bouncers', 'notify_bouncers', 'none'],
-                'default' => 'notify_bouncers'
+                'format' => ['remove_bouncers', 'notify_bouncers', 'none'],
+                'occurrence' => '1',
+                'default'    => 'notify_bouncers'
             },
             'notification' => {
                 'order'      => 3,
                 'gettext_id' => "notification",
                 'format'     => ['none', 'owner', 'listmaster'],
+                'occurrence' => '1',
                 'default'    => 'owner'
             }
         }
@@ -858,12 +877,14 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "action for this population",
                 'format'  => ['remove_bouncers', 'notify_bouncers', 'none'],
-                'default' => 'remove_bouncers'
+                'occurrence' => '1',
+                'default'    => 'remove_bouncers'
             },
             'notification' => {
                 'order'      => 3,
                 'gettext_id' => "notification",
                 'format'     => ['none', 'owner', 'listmaster'],
+                'occurrence' => '1',
                 'default'    => 'owner'
             }
         }
@@ -875,7 +896,8 @@ our %pinfo = (
         'gettext_id' => "percentage of list members in VERP mode",
         'format' =>
             ['100%', '50%', '33%', '25%', '20%', '10%', '5%', '2%', '0%'],
-        'default' => {'conf' => 'verp_rate'}
+        'occurrence' => '1',
+        'default'    => {'conf' => 'verp_rate'}
     },
 
     'tracking' => {
@@ -888,6 +910,7 @@ our %pinfo = (
                 'gettext_id' =>
                     "tracking message by delivery status notification",
                 'format' => ['on', 'off'],
+                'occurrence' => '1',
                 'default' =>
                     {'conf' => 'tracking_delivery_status_notification'}
             },
@@ -896,6 +919,7 @@ our %pinfo = (
                 'gettext_id' =>
                     "tracking message by message disposition notification",
                 'format' => ['on', 'on_demand', 'off'],
+                'occurrence' => '1',
                 'default' =>
                     {'conf' => 'tracking_message_disposition_notification'}
             },
@@ -940,7 +964,7 @@ our %pinfo = (
         'gettext_id' =>
             "Notify subscribers when they are included from a data source?",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => 'off',
     },
 
@@ -1135,8 +1159,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1150,6 +1175,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1163,8 +1189,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1187,6 +1213,7 @@ our %pinfo = (
                 'order'      => 5,
                 'gettext_id' => "search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout' => {
@@ -1214,6 +1241,7 @@ our %pinfo = (
                 'order'      => 9,
                 'gettext_id' => "selection (if multiple)",
                 'format'     => ['all', 'first'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'nosync_time_ranges' => {
@@ -1254,8 +1282,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1269,6 +1298,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1282,8 +1312,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1332,6 +1362,7 @@ our %pinfo = (
                 'order'      => 9,
                 'gettext_id' => "first-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex1' => {
@@ -1350,6 +1381,7 @@ our %pinfo = (
                 'order'      => 12,
                 'gettext_id' => "second-level search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout2' => {
@@ -1377,6 +1409,7 @@ our %pinfo = (
                 'order'      => 16,
                 'gettext_id' => "second-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex2' => {
@@ -1557,8 +1590,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1572,6 +1606,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1585,8 +1620,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1609,6 +1644,7 @@ our %pinfo = (
                 'order'      => 5,
                 'gettext_id' => "search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout' => {
@@ -1642,6 +1678,7 @@ our %pinfo = (
                 'order'      => 10,
                 'gettext_id' => "selection (if multiple)",
                 'format'     => ['all', 'first'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'nosync_time_ranges' => {
@@ -1682,8 +1719,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1697,6 +1735,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1710,8 +1749,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1734,6 +1773,7 @@ our %pinfo = (
                 'order'      => 5,
                 'gettext_id' => "first-level search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout1' => {
@@ -1760,6 +1800,7 @@ our %pinfo = (
                 'order'      => 9,
                 'gettext_id' => "first-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex1' => {
@@ -1778,6 +1819,7 @@ our %pinfo = (
                 'order'      => 12,
                 'gettext_id' => "second-level search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout2' => {
@@ -1805,6 +1847,7 @@ our %pinfo = (
                 'order'      => 16,
                 'gettext_id' => "second-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex2' => {
@@ -1925,7 +1968,7 @@ our %pinfo = (
         'gettext_comment' =>
             "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be some custom scenario to be updated",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default' => {'conf' => 'dkim_feature'}
     },
 
@@ -2173,7 +2216,7 @@ our %pinfo = (
         'gettext_id' =>
             "Allow picture display? (must be enabled for the current robot)",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default' => {'conf' => 'pictures_feature'}
     },
 
@@ -2190,6 +2233,7 @@ our %pinfo = (
         'group'      => 'other',
         'gettext_id' => "email address protection method",
         'format'     => ['at', 'javascript', 'none'],
+        'occurrence' => '1',
         'default'    => 'javascript'
     },
 
