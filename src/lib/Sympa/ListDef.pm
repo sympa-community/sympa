@@ -77,7 +77,8 @@ our %pinfo = (
                 'format'     => Sympa::Regexps::email(),
                 'occurrence' => '1',
                 'length'     => 30,
-                validations  => ['list_special_addresses'],
+                validations =>
+                    [qw(list_special_addresses unique_paragraph_key)],
             },
             'gecos' => {
                 'order'      => 2,
@@ -163,7 +164,8 @@ our %pinfo = (
                 'format'     => Sympa::Regexps::email(),
                 'occurrence' => '1',
                 'length'     => 30,
-                validations  => ['list_editor_address'],
+                validations =>
+                    [qw(list_editor_address unique_paragraph_key)],
             },
             'reception' => {
                 'order'      => 4,

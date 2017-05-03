@@ -435,10 +435,8 @@ sub submit {
         return '';
     }
 
-    my $validity = $self->_validate_changes($changes, $errors);
     $self->{_changes} = $changes;
-
-    return $validity;
+    return $self->_validate_changes($changes, $errors);
 }
 
 # Sanitizes parsed input including changes.
@@ -933,6 +931,42 @@ my %validations = (
         return 'topic_other'
             if lc $new eq 'other';
     },
+    # Avoid duplicate parameter values in the array.
+    unique_paragraph_key => sub {
+        my $self   = shift;
+        my $new    = shift;
+        my $pitem  = shift;
+        my $ppaths = shift;
+
+        my @p_ppaths = (@$ppaths);
+        my $keyname  = pop @p_ppaths;
+        my $i        = pop @p_ppaths;
+        return unless defined $i and $i =~ /\A\d+\z/;
+        return if $i == 0;
+
+        my ($p_cur) = $self->get(join '.', @p_ppaths);
+        $p_cur ||= [];
+        my @p_curkeys = map { $_->{$keyname} } @$p_cur;
+
+        my ($p_new) = $self->get_change(join '.', @p_ppaths);
+        my %p_newkeys =
+            map {
+                  (exists $p_new->{$_}->{$keyname})
+                ? ($_ => $p_new->{$_}->{$keyname})
+                : ()
+            } (CORE::keys %$p_new);
+
+        foreach my $j (0 .. $i - 1) {
+            next unless exists $p_newkeys{$j};
+            $p_curkeys[$j] = $p_newkeys{$j};
+        }
+        foreach my $j (0 .. $i - 1) {
+            next unless defined $p_curkeys[$j];
+            if ($p_curkeys[$j] eq $new) {
+                return qw(unique_paragraph_key omit);
+            }
+        }
+    },
 );
 
 # Validates leaf.
@@ -978,15 +1012,16 @@ sub _validate_changes_leaf {
         }
         foreach my $validation (@{$pitem->{validations} || []}) {
             next unless ref $validations{$validation} eq 'CODE';
-            my $validity = $validations{$validation}->($self, $new);
-            next unless $validity;
+            my ($error, $validity) =
+                $validations{$validation}->($self, $new, $pitem, $ppaths);
+            next unless $error;
 
             push @$errors,
                 [
-                'user', $validity,
+                'user', $error,
                 {p_info => $pitem, p_paths => $ppaths, value => $new}
                 ];
-            return 'invalid';
+            return $validity || 'invalid';
         }
     }
 
