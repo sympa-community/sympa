@@ -111,11 +111,13 @@
           <!-- end paragraph -->
           </div>
 
-          <div class="small-3 large-2 columns">
-          [% PROCESS EditListArrayDel
-             ppaths=[pS.name,oI]
-          %]
-          </div>
+          [% UNLESS pS.occurrence.match('^1') && pV.size() == 1 ~%] 
+            <div class="small-3 large-2 columns">
+            [% PROCESS EditListArrayDel
+               ppaths=[pS.name,oI]
+            %]
+            </div>
+          [%~ END %]
 
           </div>
           <span class="divider"></span>
@@ -131,11 +133,13 @@
           %]
           </div>
  
-          <div class="small-3 large-2 columns">
-          [% PROCESS EditListArrayDel
-             ppaths=[pS.name,oI]
-          %]
-          </div>
+          [% UNLESS pS.occurrence.match('^1') && pV.size() == 1 ~%] 
+            <div class="small-3 large-2 columns">
+            [% PROCESS EditListArrayDel
+               ppaths=[pS.name,oI]
+            %]
+            </div>
+          [%~ END %]
 
           </div>
         [%~ END %]
@@ -341,7 +345,7 @@
     <select name="single_param.[% ppaths.join('.') %]"
      id="param.[% ppaths.join('.') %]"
      [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
-    [% IF pitem.occurrence.match('^0') ~%]
+    [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
       <option value=""></option>
     [%~ END %]
     [% FOREACH enum = pitem.format ~%]
@@ -402,7 +406,7 @@
   [% IF pitem.privilege == 'write' ~%]
     <select name="single_param.[% ppaths.join('.') %].name"
      id="param.[% ppaths.join('.') %]">
-    [% IF pitem.occurrence.match('^0') ~%]
+    [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
       <option value=""></option>
     [%~ END %]
     [% FOREACH task = pitem.format ~%]
@@ -429,7 +433,7 @@
   [% IF pitem.privilege == 'write' ~%]
     <select name="single_param.[% ppaths.join('.') %]"
      id="param.[% ppaths.join('.') %]">
-    [% IF pitem.occurrence.match('^0') ~%]
+    [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
       <option value=""></option>
     [%~ END %]
     [% FOREACH source = pitem.format ~%]
