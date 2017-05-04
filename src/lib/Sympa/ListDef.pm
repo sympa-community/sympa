@@ -1221,6 +1221,7 @@ our %pinfo = (
                 'gettext_id'   => "connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter' => {
@@ -1343,6 +1344,7 @@ our %pinfo = (
                 'gettext_id'   => "first-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter1' => {
@@ -1389,6 +1391,7 @@ our %pinfo = (
                 'gettext_id'   => "second-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter2' => {
@@ -1652,6 +1655,7 @@ our %pinfo = (
                 'gettext_id'   => "connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter' => {
@@ -1781,6 +1785,7 @@ our %pinfo = (
                 'gettext_id'   => "first-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter1' => {
@@ -1827,6 +1832,7 @@ our %pinfo = (
                 'gettext_id'   => "second-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter2' => {

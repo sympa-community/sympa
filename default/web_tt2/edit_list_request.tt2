@@ -40,14 +40,14 @@
     [%~ END %]
     [%~ IF is_listmaster && pS.default_value %] [%|loc%](default)[%END%][% END %]
     <span class="edit_list_request_help">
-    [% IF pS.scenario ~%]
-      [% IF is_listmaster ~%]
-        &nbsp;<a class="input"
-         href="[% 'dump_scenario' | url_rel([list,pS.name]) %]"
-         title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END~%]
-        </a>
-      [%~ END %]
+
+    [%~ IF pS.scenario && is_listmaster ~%]
+      &nbsp;<a class="input"
+       href="[% 'dump_scenario' | url_rel([list,pS.name]) %]"
+       title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END~%]
+      </a>
     [%~ END %]
+
     <a href="[% 'nomenu/help/editlist' | url_rel %]#[% pS.name %]"
      title="[%|loc%]Open in a new window[%END%]"
      onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')"
@@ -88,10 +88,11 @@
             <label for="param.[% pS.name %].[% oI %].[% kS.name %]">
             [% IF kS.title ~%]
               [% kS.title %]
-              [%~ IF is_listmaster %] ([% kS.name %])[% END %][%|loc%]:[%END%]
+              [%~ IF is_listmaster %] ([% kS.name %])[% END %]
             [%~ ELSE ~%]
-              [% kS.name %][%|loc%]:[%END%]
-            [%~ END %]
+              [% kS.name %]
+            [%~ END ~%]
+            [%|loc%]:[%END%]
             </label>
 
             [% IF kS.type == 'set' ~%]
@@ -115,6 +116,7 @@
             <div class="small-3 large-2 columns">
             [% PROCESS EditListArrayDel
                ppaths=[pS.name,oI]
+               pitem=pS
             %]
             </div>
           [%~ END %]
@@ -137,6 +139,7 @@
             <div class="small-3 large-2 columns">
             [% PROCESS EditListArrayDel
                ppaths=[pS.name,oI]
+               pitem=pS
             %]
             </div>
           [%~ END %]
@@ -160,10 +163,11 @@
             <label for="param.[% pS.name %].[% oI %].[% kS.name %]">
             [% IF kS.title ~%]
               [% kS.title %]
-              [%~ IF is_listmaster %] ([% kS.name %])[% END %][%|loc%]:[%END%]
+              [%~ IF is_listmaster %] ([% kS.name %])[% END %]
             [%~ ELSE ~%]
-              [% kS.name %][%|loc%]:[%END%]
-            [%~ END %]
+              [% kS.name ~%]
+            [%~ END ~%]
+            [%|loc%]:[%END%]
             </label>
 
             [% IF kS.type == 'set' ~%]
@@ -214,10 +218,11 @@
           <label for="param.[% pS.name %].[% kS.name %]">
           [% IF kS.title ~%]
             [% kS.title %]
-            [%~ IF is_listmaster %] ([% kS.name %])[% END %][%|loc%]:[%END%]
+            [%~ IF is_listmaster %] ([% kS.name %])[% END %]
           [%~ ELSE ~%]
-            [% kS.name %][%|loc%]:[%END%]
-          [%~ END %]
+            [% kS.name %]
+          [%~ END ~%]
+          [%|loc%]:[%END%]
           </label>
 
           [% IF kS.type == 'set' ~%]
@@ -315,13 +320,15 @@
   <!-- end set -->
 [%~ END ~%]
 
-[%~ BLOCK EditListArrayDel # (ppaths) ~%]
+[%~ BLOCK EditListArrayDel # (ppaths,pitem) ~%]
   <!-- del -->
-  <input type="checkbox" name="deleted_param.[% ppaths.join('.') %]"
-   id="del.[% ppaths.join('.') %]"
-   class="fadeIfChecked" data-selector="#item\.[% ppaths.join('\\.') %]"
-   value="del" />
-  <label for="del.[% ppaths.join('.') %]">[%|loc%]Delete[%END%]</label>
+  [% IF pitem.privilege == 'write' ~%]
+    <input type="checkbox" name="deleted_param.[% ppaths.join('.') %]"
+     id="del.[% ppaths.join('.') %]"
+     class="fadeIfChecked" data-selector="#item\.[% ppaths.join('\\.') %]"
+     value="del" />
+    <label for="del.[% ppaths.join('.') %]">[%|loc%]Delete[%END%]</label>
+  [%~ END %]
   <!-- end del -->
 [%~ END ~%]
 
@@ -458,6 +465,9 @@
 [%~ BLOCK EditListScalar # (ppaths,pitem,val) ~%]
   <!-- scalar -->
   [% IF pitem.privilege == 'write' ~%]
+    [% IF pitem.unit ~%]
+      <span style="display:inline-block">[%# FIXME %]
+    [%~ END %]
     <input name="single_param.[% ppaths.join('.') %]"
      id="param.[% ppaths.join('.') %]"
      value="[% val %]" size="[% pitem.length %]"
@@ -465,6 +475,11 @@
      [%~ ELSE %] type="text"
      [%~ END %]
      [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %] />
+    [% IF pitem.unit ~%]
+      </span>
+    [%~ END %]
+
+    [% pitem.unit %]
   [%~ ELSE ~%]
     [% IF pitem.field_type == 'lang' ~%]
       <span class="neutral" lang="[% val %]" xml:lang="[% val %]">
@@ -477,7 +492,11 @@
     [%~ IF pitem.field_type == 'lang' ~%]
       </span>
     [%~ END %]
-  [%~ END %] [% pitem.unit %]
+
+    [% IF val.length() ~%]
+      [% pitem.unit %]
+    [%~ END %]
+  [%~ END %]
   <!-- end scalar -->
 [%~ END ~%]
 
