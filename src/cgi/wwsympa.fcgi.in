@@ -11753,6 +11753,31 @@ sub _deserialize_changes {
         eval sprintf '$new_admin->%s = $value', join('->', @subscripts);
     }
 
+    # Deleted parameters or paragraphs.
+    foreach my $key (sort keys %in) {
+        next unless $key =~ /\Adeleted_param[.](\S+)\z/;
+        my $name = $1;
+        next unless defined $in{$key} and $in{$key} =~ /\S/;
+
+        my @subscripts = map {
+            if (/\A\d+\z/) {
+                sprintf '[%s]', $_;
+            } elsif (/\A[-\w]+\z/) {
+                sprintf "{'%s'}", $_;
+            } else {
+                "{''}";
+            }
+        } split /[.]/, $name;
+        my $var = sprintf '$new_admin->%s', join('->', @subscripts);
+
+        if (eval "exists $var and ref $var eq 'HASH'") {
+            my %hash = map {($_ => undef)} keys %{eval $var};
+            eval "$var = {%hash}";
+        } else {
+            eval "$var = undef";
+        }
+    }
+
     return $new_admin;
 }
 

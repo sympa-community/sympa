@@ -57,14 +57,19 @@
     </span>
     </h4>
 
-    <div class="edit_list_request_enum">
-
     [% IF pS.type == 'set' ~%]
+      <div class="row">
+
+      <div id="item.[% pS.name %]"
+       class="small-9 large-10 columns">
       [% PROCESS EditListSet 
          ppaths=[pS.name]
          pitem=pS
          val=pV
       %]
+      </div>
+
+      </div>
     [%~ ELSIF pS.occurrence.match('n$') ~%]
 
       <!-- array -->
@@ -72,8 +77,10 @@
 
       [% FOREACH oV = pV ~%]
         [% IF pS.type == 'paragraph' ~%]
-          <span class="divider"></span>
+          <div class="row">
 
+          <div id="item.[% pS.name %].[% oI %]"
+           class="small-9 large-10 columns">
           <!-- paragraph -->
           [% FOREACH kS = pS.format ~%]
             [% SET kV = oV.${kS.name} ~%]
@@ -102,12 +109,35 @@
             [%~ END %]
           [% END %]
           <!-- end paragraph -->
+          </div>
+
+          <div class="small-3 large-2 columns">
+          [% PROCESS EditListArrayDel
+             ppaths=[pS.name,oI]
+          %]
+          </div>
+
+          </div>
+          <span class="divider"></span>
         [%~ ELSE ~%]
+          <div class="row">
+
+          <div id="item.[% pS.name %].[% oI %]"
+           class="small-9 large-10 columns">
           [% PROCESS EditListLeaf
              ppaths=[pS.name,oI]
              pitem=pS
              val=oV
           %]
+          </div>
+ 
+          <div class="small-3 large-2 columns">
+          [% PROCESS EditListArrayDel
+             ppaths=[pS.name,oI]
+          %]
+          </div>
+
+          </div>
         [%~ END %]
         [%~ oI = oI + 1 %]
       [% END %]
@@ -115,8 +145,10 @@
       [%# Additional empty section. ~%]
       [% IF pS.privilege == 'write' ~%]
         [% IF pS.type == 'paragraph' ~%]
-          <span class="divider"></span>
+          <div class="row">
 
+          <div id="item.[% pS.name %].[% oI %]"
+           class="small-9 large-10 columns">
           <!-- paragraph -->
           [% FOREACH kS = pS.format ~%]
             [% SET kV = kS.default # Default value. ~%]
@@ -145,19 +177,32 @@
             [%~ END %]
           [% END %]
           <!-- end paragraph -->
+          </div>
+
+          </div>
         [%~ ELSE ~%]
+          <div class="row">
+
+          <div id="item.[% pS.name %].[% oI %]"
+           class="small-9 large-10 columns">
           [% PROCESS EditListLeaf
              ppaths=[pS.name,oI]
              pitem=pS
              val=UNDEF # Empty value.
           %]
+          </div>
+
+          </div>
         [%~ END %]
       [%~ END %]
 
       <!-- end array -->
     [%~ ELSE ~%]
       [% IF pS.type == 'paragraph' ~%]
+        <div class="row">
 
+        <div id="item.[% pS.name %]"
+         class="small-9 large-10 columns">
         <!-- paragraph -->
         [% FOREACH kS = pS.format ~%]
           [% SET kV = pV.${kS.name} ~%]
@@ -186,20 +231,28 @@
           [%~ END %]
         [% END %]
         <!-- end paragraph -->
+        </div>
+
+        </div>
       [%~ ELSIF pS.type == 'leaf' ~%]
+        <div class="row">
+
+        <div id="item.[% pS.name %]"
+         class="small-9 large-10 columns">
         [% PROCESS EditListLeaf
            ppaths=[pS.name]
            pitem=pS
            val=pV
         %]
+        </div>
+
+        </div>
       [%~ END %]
     [% END %]
 
-    </div>
-
     [% IF pS.default_value ~%]
-      <div class="default" style="clear: both;">
-      <span>[%|loc%]default[%END%]</span>
+      <div class="row">
+      <div class="columns">[%|loc%]default[%END%]</div>
       </div>
     [%~ END %]
     </div>
@@ -256,6 +309,16 @@
     [%~ END %]
   [%~ END %]
   <!-- end set -->
+[%~ END ~%]
+
+[%~ BLOCK EditListArrayDel # (ppaths) ~%]
+  <!-- del -->
+  <input type="checkbox" name="deleted_param.[% ppaths.join('.') %]"
+   id="del.[% ppaths.join('.') %]"
+   class="fadeIfChecked" data-selector="#item\.[% ppaths.join('\\.') %]"
+   value="del" />
+  <label for="del.[% ppaths.join('.') %]">[%|loc%]Delete[%END%]</label>
+  <!-- end del -->
 [%~ END ~%]
 
 [%~ BLOCK EditListLeaf # (ppaths,pitem,val) ~%]
