@@ -77,6 +77,7 @@ our %pinfo = (
                 'format'     => Sympa::Regexps::email(),
                 'occurrence' => '1',
                 'length'     => 30,
+                filters      => ['canonic_email'],
                 validations =>
                     [qw(list_special_addresses unique_paragraph_key)],
             },
@@ -170,6 +171,7 @@ our %pinfo = (
                 'format'     => Sympa::Regexps::email(),
                 'occurrence' => '1',
                 'length'     => 30,
+                filters      => ['canonic_email'],
                 validations =>
                     [qw(list_editor_address unique_paragraph_key)],
             },
@@ -245,7 +247,8 @@ our %pinfo = (
         'format'     => [],     # Sympa::Robot::topic_keys() called later
         'field_type' => 'listtopic',
         'split_char' => ',',
-        'occurrence' => '0-n'
+        'occurrence' => '0-n',
+        filters      => ['lc'],
     },
 
     'host' => {
@@ -253,6 +256,7 @@ our %pinfo = (
         'group'      => 'description',
         'gettext_id' => "Internet domain",
         'format'     => Sympa::Regexps::host(),
+        filters      => ['canonic_domain'],
         'default'    => {'conf' => 'host'},
         'length'     => 20
     },
@@ -265,6 +269,7 @@ our %pinfo = (
         'file_format' => '\w+(\-\w+)*',
         'field_type'  => 'lang',
         'occurrence'  => '1',
+        filters       => ['canonic_lang'],
         'default'     => {'conf' => 'lang'}
     },
 
@@ -2651,6 +2656,12 @@ The time in second from Unix epoch.
 Visibility mode of list memeber.
 
 =back
+
+=item filters
+
+TBD.
+
+Introduced on Sympa 6.2.17.
 
 =item validations
 

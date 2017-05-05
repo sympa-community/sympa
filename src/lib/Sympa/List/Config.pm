@@ -700,6 +700,30 @@ sub _sanitize_changes_paragraph {
     }
 }
 
+my %filters = (
+    canonic_domain => sub {
+        my $self = shift;
+        my $new  = shift;
+        return lc $new;    #FIXME:how about i18n'ed domains?
+    },
+    canonic_email => sub {
+        my $self = shift;
+        my $new  = shift;
+        return Sympa::Tools::Text::canonic_email($new);
+    },
+    canonic_lang => sub {
+        my $self = shift;
+        my $new  = shift;
+        $new = Sympa::Language::canonic_lang($new);    # be scalar
+        return $new;
+    },
+    lc => sub {
+        my $self = shift;
+        my $new  = shift;
+        return lc $new;
+    },
+);
+
 # Sanitizes leaf.
 sub _sanitize_changes_leaf {
     my $self   = shift;
@@ -721,14 +745,25 @@ sub _sanitize_changes_leaf {
         $cur = ($cur || {})->{name};
         $new = ($new || {})->{name};
     }
+
     # Resolve synonym.
     if (defined $new and ref $pitem->{synonym} eq 'HASH') {
         my $synonym = $pitem->{synonym}->{$new};
         $new = $synonym if defined $synonym;
     }
+    # Apply filters.
+    if (defined $new) {
+        my $f_new = $new;
+        foreach my $filter (@{$pitem->{filters} || []}) {
+            next unless ref $filters{$filter} eq 'CODE';
+            $f_new = $filters{$filter}->($self, $f_new);
+            last unless defined $f_new;
+        }
+        $new = $f_new if defined $f_new;
+    }
 
     if (Sympa::Tools::Data::smart_eq($cur, $new)) {
-        return ();                                     # Not changed
+        return ();    # Not changed
     }
 
     if ($pitem->{scenario} or $pitem->{task}) {
