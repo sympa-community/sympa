@@ -137,10 +137,6 @@ sub _list_params_apply_family {
     }
 }
 
-# Adds additional constraint by family to pinfo.
-# The family constraint
-# * restricts options for particular scalar parameters to the set of values,
-# * makes occurrence of them be required.
 sub __list_params_apply_family {
     my $self   = shift;
     my $pitem  = shift;
@@ -752,6 +748,8 @@ sub _sanitize_changes_leaf {
         $new = $synonym if defined $synonym;
     }
     # Apply filters.
+    # Note: Erroneous values are overlooked and _not_ eliminated in this step.
+    # We should eliminate them in the step of validation.
     if (defined $new) {
         my $f_new = $new;
         foreach my $filter (@{$pitem->{filters} || []}) {
@@ -1220,7 +1218,7 @@ Sympa::List::Config - List configuration
   my $validity = $config->submit({...}, $user, $errors);
   $config->commit($errors);
   
-  my $value = $config->get('owner.0.gecos');
+  my ($value) = $config->get('owner.0.gecos');
   my @keys  = $config->keys('owner');
 
 =head1 DESCRIPTION
@@ -1246,7 +1244,6 @@ Context.  An instance of L<Sympa::List> class.
 =item config =E<gt> $initial_config
 
 Initial configuration.
-Note:
 
 =over
 
@@ -1266,9 +1263,11 @@ so that default parameter values except optional ones
 =item *
 
 Otherwise, default parameter values are completed
-only when the new paragraph node will be added.
+only when the new paragraph node will be added by submit().
 
 =back
+
+Note that initial configuration will never be sanitized.
 
 =item copy =E<gt> 1
 
@@ -1280,6 +1279,7 @@ instead of real reference.
 Won't apply family constraint.
 By default, the constraint will be applied if the list is belonging to
 family.
+See also L</"Family constraint">.
 
 =back
 
@@ -1295,8 +1295,10 @@ Parameter:
 =item $ppath
 
 Parameter path,
-e.g. C<'owner.0.email'> specifys "email" parameter of
-the first "owner" paragraph.
+e.g.: C<'owner.0.email'> specifys "email" parameter of
+the first "owner" paragraph;
+C<'owner.0'> specifys the first "owner" paragraph;
+C<'owner'> specifys the array of all "owner" paragraph.
 
 =back
 
@@ -1328,6 +1330,9 @@ If value won't be changed, returns empty list in array context
 and C<undef> in scalar context.
 If value would be deleted, returns C<undef>.
 
+Changes on the array are given by hashref
+with keys as affected indexes of the array.
+
 =item get_changeset ( )
 
 I<Instance method>.
@@ -1339,7 +1344,20 @@ Any modifications might break it.
 =item get_schema ( [ $user ] )
 
 I<Instance method>.
-TDB.
+Get configuration schema as hashref.
+See L<Sympa::ListDef> about structure of schema.
+
+Parameter:
+
+=over
+
+=item $user
+
+Email address of a user.
+If specified, adds C<'privilege'> attribute taken from L<edit_list.conf(5)>
+for the user.
+
+=back
 
 =item keys ( [ $pname ] )
 
@@ -1352,7 +1370,7 @@ Parameter:
 
 =item $pname
 
-Full parameter name.
+Full parameter name, e.g. C<'owner'>.
 If omitted or false value,
 returns keys of top-level parameters.
 
@@ -1368,17 +1386,108 @@ i.e. it is not the paragraph, empty list.
 
 I<Instance method>.
 Submits change and verifys it.
-TBD.
+Submission is done by:
+
+=over
+
+=item *
+
+Sanitizing changes:
+
+Omits unknown parameters,
+resolves parameter aliases,
+omits malformed change information,
+omits obsoleted parameters,
+omits changes on unwritable parameters,
+removes nodes under which required children nodes will be removed,
+resolves synonym of input values,
+canonicalizes inputs (see L</"Filters">),
+and omits identical changes.
+
+=item *
+
+Verifying changes:
+
+Omits removal of mandatory parameters,
+checks format of inputs,
+and performs additional validations (see L</"Validations">).
+
+=back
+
+Parameters:
+
+=over
+
+=item $new
+
+Changes to be submitted, hashref.
+
+=item $user
+
+Email of the user requesting submission.
+
+=item \@errors
+
+If errors occur, they will be pushed in this arrayref.
+Each element is arrayref C<[ I<type>, I<error>, I<info> ]>:
+
+=over
+
+=item I<type>
+
+One of C<'user'> (failure), C<'intern'> (internal failure)
+and C<'notice'> (successful notice).
+
+=item I<error>
+
+A keyword to determine error.
+
+=item I<info>
+
+Optional hashref with keys:
+C<p_info> for schema item of parameter;
+C<p_paths> for elements of parameter path;
+C<value> for erroneous value (optional).
+
+=back
+
+=back
+
+Returns:
+
+If no changes found (or all changes were omitted), an empty string C<''>.
+If any errors found in input, C<'invalid'>.
+Otherwise, C<'valid'>.
+
+In case any changes are submitted,
+changeset may be accessible by get_change() or get_changeset().
 
 =item commit ( [ \@errors ] )
 
 I<Instance method>.
-Merges change verified by sbumit() into actual configuration.
-TBD.
+Merges changes set by sbumit() into actual configuration.
+
+Parameter:
+
+=over
+
+=item \@errors
+
+Arrayref.
+See \@errors in submit().
+
+=back
+
+Returns:
+
+None.
+Errors will be stored in arrayref.
 
 =back
 
 =head2 Attribute
+
+Instance of L<Sympa::List::Config> has following attribute.
 
 =over
 
@@ -1387,6 +1496,138 @@ TBD.
 Context, L<Sympa::List> instance.
 
 =back
+
+=head2 Structure of configuration
+
+Configuration on the memory is represented by a hashref,
+with its keys as node names and values as node values.
+
+=head3 Node types
+
+Each node of configuration has one of following four types.
+Some of them can include other type of nodes recursively.
+
+=over
+
+=item Set (multiple enumerated values)
+
+Arrayref.
+In the schema, defined with:
+
+=over
+
+=item *
+
+{occurrence}: C<'0-n'> or C<'1-n'>.
+
+=item *
+
+{format}: Arrayref.
+
+=back
+
+List of unique items not considering order.
+Items are scalars, and cannot be special values (scenario or task).
+The set cannot contain paragraphs, sets or arrays.
+
+=item Array (multiple values)
+
+Arrayref.
+In the schema, defined with:
+
+=over
+
+=item *
+
+{occurrence}: C<'0-n'> or C<'1-n'>.
+
+=item *
+
+{format}: Regexp or hashref.
+
+=back
+
+List of the same type of nodes in order.
+Type of all nodes can be one of paragraph,
+scalar or special value (scenario or task).
+The array cannot contain sets or arrays.
+
+=item Paragraph (structured value)
+
+Hashref.
+In the schema, defined with:
+
+=over
+
+=item *
+
+{occurrence}: If the node is an item of array, C<'0-n'> or C<'1-n'>.
+Otherwise, C<'0-1'> or C<'1'>.
+
+=item *
+
+{format}: Hashref.
+
+=back
+
+Compound node of one or more named nodes.
+Paragraph can contain any type of nodes, and each of their names and types
+are defined as member of {format} item in schema.
+
+=item Leaf (simple value)
+
+Scalar, or hashref for special value (scenario or task).
+In the schema, defined with:
+
+=over
+
+=item *
+
+{occurrence}: If the node is an item of array, C<'0-n'> or C<'1-n'>.
+Otherwise, C<'0-1'> or C<'1'>.
+
+=item *
+
+{format}: If the node is an item of array, regexp.
+Otherwise, regexp or arrayref.
+
+=back
+
+Scalar or special value (scenario or task).
+Leaf cannot contain any other nodes.
+
+=back
+
+=head2 Family constraint
+
+The family (see L<Sympa::Family>) adds additional constraint to schema.
+The family constraint
+
+=over
+
+=item *
+
+restricts options for particular scalar parameters to the set of values
+or single value,
+
+=item *
+
+makes occurrence of them be required (C<'1'> or C<'1-n'>), and
+
+=item *
+
+if the occurrence became C<'1'>,
+makes their privilege be unwritable (C<'read'> if it was not C<'hidden'>).
+
+=back
+
+=head2 Filters
+
+TBD.
+
+=head2 Validations
+
+TBD.
 
 =head1 SEE ALSO
 
