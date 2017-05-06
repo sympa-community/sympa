@@ -348,9 +348,13 @@ sub _get_schema_apply_privilege {
     my $list = $self->{context};
 
     # Choose most restrictive privilege.
-    # Trick:
-    # "hidden", "read" and "write" precede others in reverse dictionary order.
+    # - Trick: "hidden", "read" and "write" precede others in reverse
+    #   dictionary order.
+    # - Internal parameters are not editable anyway.
     my $priv = $list->may_edit(_pfullname($pnames), $user);
+    $priv = 'read'
+        if $pitem->{internal}
+            and (not $priv or 'read' lt $priv);
     $priv = $priv_p
         if not $priv
             or ($priv_p and $priv_p lt $priv);
