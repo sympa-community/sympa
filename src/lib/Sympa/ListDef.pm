@@ -391,8 +391,8 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "reception mode",
                 'format'     => [
-                    'digest',  'digestplain', 'mail', 'nomail',
-                    'summary', 'notice',      'txt',  'html',
+                    'mail',    'notice', 'digest', 'digestplain',
+                    'summary', 'nomail', 'txt',    'html',
                     'urlize',  'not_me'
                 ],
                 'field_type' => 'reception',
@@ -2009,15 +2009,16 @@ our %pinfo = (
                 'default'    => {'conf' => 'dkim_selector'}
             },
             'header_list' => {
-                'order' => 4,
+                'obsolete' => 1,        # Not yet implemented
+                'order'    => 4,
                 'gettext_id' =>
-                    'List of headers to be included ito the message for signature',
+                    'List of headers to be included into the message for signature',
                 'gettext_comment' =>
                     'You should probably use the default value which is the value recommended by RFC4871',
                 'format'     => '\S+',
-                'occurrence' => '0-1',
+                'occurrence' => '1-n',
+                'split_char' => ':',    #FIXME
                 #'default'    => {'conf' => 'dkim_header_list'},
-                'obsolete' => 1,
             },
             'signer_domain' => {
                 'order' => 5,
