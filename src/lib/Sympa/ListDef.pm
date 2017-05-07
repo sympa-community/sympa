@@ -2474,6 +2474,9 @@ sub cleanup {
                 keys %{$v->{'format'}{$k}{synonym} || {}};
         }
 
+        next if $v->{format}{$k}{'obsolete'};
+
+        #FIXME
         if (($v->{'file_format'}{$k}{'occurrence'} =~ /n$/)
             && $v->{'file_format'}{$k}{'split_char'}) {
             my $format = $v->{'file_format'}{$k}{'file_format'};
