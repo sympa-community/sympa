@@ -11640,7 +11640,7 @@ sub do_edit_list {
     my $data_source_updated = 1
         if grep { $config->get_change($_) }
             grep { $_ =~ /\Ainclude_/ or $_ eq 'ttl' }
-            keys %$pinfo;
+            $config->keys;
 
     # Update config in memory.
     $config->commit;
