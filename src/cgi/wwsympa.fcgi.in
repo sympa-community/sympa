@@ -982,7 +982,7 @@ my %filtering = (
     #XXX'editsubscriber' => {'email' => 'fix_escape_uri'},
     ## Required because outgoing parameters have been html-escaped in
     ## edit_list_request
-    'edit_list' => {'*param*' => 'unescape_html'},
+    #'edit_list' => {'*param*' => 'unescape_html'},
     ## Remove leading/trailing white spaces and lowercase
     'change_email' => {'*email' => 'normalize'},
 );
@@ -2430,15 +2430,14 @@ sub get_parameters {
             #            Sympa::Tools::Text::qencode_filename($tokens[$i]);
             #    }
             #    $in{$p} = join '/', @tokens;
-            #}
-            if ($filtering_action eq 'unescape_html') {
-                $in{$p} = Sympa::Tools::Text::unescape_chars($in{$p});
-                #} elsif ($filtering_action eq 'fix_escape_uri') {
-                #    # Sympa::Tools::Text::escape_chars() replaces '/' with
-                #    # %A5 ('¥' character).  This should be transformed into a
-                #    # '/' again.
-                #    $in{$p} =~ s{/}{\xa5}g;
-            } elsif ($filtering_action eq 'normalize') {
+            #} elsif ($filtering_action eq 'unescape_html') {
+            #    $in{$p} = Sympa::Tools::Text::unescape_chars($in{$p});
+            #} elsif ($filtering_action eq 'fix_escape_uri') {
+            #    # Sympa::Tools::Text::escape_chars() replaces '/' with
+            #    # %A5 ('¥' character).  This should be transformed into a
+            #    # '/' again.
+            #    $in{$p} =~ s{/}{\xa5}g;
+            if ($filtering_action eq 'normalize') {
                 $in{$p} =~ s/^\$+//;    ## remove leading \s
                 $in{$p} =~ s/\$+$//;    ## remove trailing \s
                 $in{$p} = lc($in{$p});  ## lowercase
