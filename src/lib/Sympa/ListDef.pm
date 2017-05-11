@@ -77,7 +77,9 @@ our %pinfo = (
                 'format'     => Sympa::Regexps::email(),
                 'occurrence' => '1',
                 'length'     => 30,
-                validations  => ['list_special_addresses'],
+                filters      => ['canonic_email'],
+                validations =>
+                    [qw(list_special_addresses unique_paragraph_key)],
             },
             'gecos' => {
                 'order'      => 2,
@@ -95,18 +97,21 @@ our %pinfo = (
                 'order'      => 4,
                 'gettext_id' => "profile",
                 'format'     => ['privileged', 'normal'],
+                'occurrence' => '1',
                 'default'    => 'normal'
             },
             'reception' => {
                 'order'      => 5,
                 'gettext_id' => "reception mode",
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 6,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             }
         },
@@ -134,18 +139,21 @@ our %pinfo = (
                 'order'      => 4,
                 'gettext_id' => 'reception mode',
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 5,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             },
             'profile' => {
                 'order'      => 3,
                 'gettext_id' => 'profile',
                 'format'     => ['privileged', 'normal'],
+                'occurrence' => '1',
                 'default'    => 'normal'
             }
         },
@@ -163,18 +171,22 @@ our %pinfo = (
                 'format'     => Sympa::Regexps::email(),
                 'occurrence' => '1',
                 'length'     => 30,
-                validations  => ['list_editor_address'],
+                filters      => ['canonic_email'],
+                validations =>
+                    [qw(list_editor_address unique_paragraph_key)],
             },
             'reception' => {
                 'order'      => 4,
                 'gettext_id' => "reception mode",
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 5,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             },
             'gecos' => {
@@ -214,12 +226,14 @@ our %pinfo = (
                 'order'      => 3,
                 'gettext_id' => 'reception mode',
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 5,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             }
         },
@@ -230,9 +244,11 @@ our %pinfo = (
         order        => 10.07,
         'group'      => 'description',
         'gettext_id' => "Topics for the list",
-        'format'     => [],     # Sympa::Robot::load_topics() called later
+        'format'     => [],     # Sympa::Robot::topic_keys() called later
+        'field_type' => 'listtopic',
         'split_char' => ',',
-        'occurrence' => '0-n'
+        'occurrence' => '0-n',
+        filters      => ['lc'],
     },
 
     'host' => {
@@ -240,6 +256,7 @@ our %pinfo = (
         'group'      => 'description',
         'gettext_id' => "Internet domain",
         'format'     => Sympa::Regexps::host(),
+        filters      => ['canonic_domain'],
         'default'    => {'conf' => 'host'},
         'length'     => 20
     },
@@ -250,6 +267,9 @@ our %pinfo = (
         'gettext_id' => "Language of the list",
         'format' => [],    ## Sympa::get_supported_languages() called later
         'file_format' => '\w+(\-\w+)*',
+        'field_type'  => 'lang',
+        'occurrence'  => '1',
+        filters       => ['canonic_lang'],
         'default'     => {'conf' => 'lang'}
     },
 
@@ -278,6 +298,7 @@ our %pinfo = (
         'gettext_id' => "Priority",
         'format'     => [0 .. 9, 'z'],
         'length'     => 1,
+        'occurrence' => '1',
         'default'    => {'conf' => 'default_list_priority'}
     },
 
@@ -310,6 +331,7 @@ our %pinfo = (
                 'gettext_id'  => "days",
                 'format'      => [0 .. 6],
                 'file_format' => '1|2|3|4|5|6|7',
+                'field_type'  => 'dayofweek',
                 'occurrence'  => '1-n'
             },
             'hour' => {
@@ -351,6 +373,7 @@ our %pinfo = (
                     'summary', 'nomail', 'txt',    'html',
                     'urlize',  'not_me'
                 ],
+                'field_type' => 'reception',
                 'occurrence' => '1-n',
                 'split_char' => ',',
                 'default' =>
@@ -368,16 +391,20 @@ our %pinfo = (
                 'order'      => 1,
                 'gettext_id' => "reception mode",
                 'format'     => [
-                    'digest',  'digestplain', 'mail', 'nomail',
-                    'summary', 'notice',      'txt',  'html',
+                    'mail',    'notice', 'digest', 'digestplain',
+                    'summary', 'nomail', 'txt',    'html',
                     'urlize',  'not_me'
                 ],
-                'default' => 'mail'
+                'field_type' => 'reception',
+                'occurrence' => '1',
+                'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 2,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'field_type' => 'visibility',
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             }
         },
@@ -428,7 +455,7 @@ our %pinfo = (
         'group'      => 'sending',
         'gettext_id' => "Message tagging",
         'format'     => ['required_sender', 'required_moderator', 'optional'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => 'optional'
     },
 
@@ -527,7 +554,7 @@ our %pinfo = (
         'group'      => 'sending',
         'gettext_id' => "Allow message personalization",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => {'conf' => 'merge_feature'}
     },
 
@@ -536,7 +563,7 @@ our %pinfo = (
         'group'      => 'sending',
         'gettext_id' => "Reject mail from automates (crontab, etc)?",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => {'conf' => 'reject_mail_from_automates_feature'}
     },
 
@@ -683,6 +710,7 @@ our %pinfo = (
         'group'      => 'archives',
         'gettext_id' => "Store distributed messages into archive",
         'format'     => ['on', 'off'],
+        'occurrence' => '1',
         'default'    => {'conf' => 'process_archive'},
     },
     'web_archive' => {
@@ -767,6 +795,7 @@ our %pinfo = (
         'group'      => 'archives',
         'gettext_id' => "Archive encrypted mails as cleartext",
         'format'     => ['original', 'decrypted'],
+        'occurrence' => '1',
         'default'    => 'original'
     },
 
@@ -775,6 +804,7 @@ our %pinfo = (
         'group'      => 'archives',
         'gettext_id' => "email address protection method",
         'format'     => ['cookie', 'javascript', 'at', 'none'],
+        'occurrence' => '1',
         'default' => {'conf' => 'web_archive_spam_protection'}
     },
 
@@ -821,13 +851,15 @@ our %pinfo = (
             'action' => {
                 'order'      => 2,
                 'gettext_id' => "action for this population",
-                'format'  => ['remove_bouncers', 'notify_bouncers', 'none'],
-                'default' => 'notify_bouncers'
+                'format' => ['remove_bouncers', 'notify_bouncers', 'none'],
+                'occurrence' => '1',
+                'default'    => 'notify_bouncers'
             },
             'notification' => {
                 'order'      => 3,
                 'gettext_id' => "notification",
                 'format'     => ['none', 'owner', 'listmaster'],
+                'occurrence' => '1',
                 'default'    => 'owner'
             }
         }
@@ -850,12 +882,14 @@ our %pinfo = (
                 'order'      => 2,
                 'gettext_id' => "action for this population",
                 'format'  => ['remove_bouncers', 'notify_bouncers', 'none'],
-                'default' => 'remove_bouncers'
+                'occurrence' => '1',
+                'default'    => 'remove_bouncers'
             },
             'notification' => {
                 'order'      => 3,
                 'gettext_id' => "notification",
                 'format'     => ['none', 'owner', 'listmaster'],
+                'occurrence' => '1',
                 'default'    => 'owner'
             }
         }
@@ -867,7 +901,8 @@ our %pinfo = (
         'gettext_id' => "percentage of list members in VERP mode",
         'format' =>
             ['100%', '50%', '33%', '25%', '20%', '10%', '5%', '2%', '0%'],
-        'default' => {'conf' => 'verp_rate'}
+        'occurrence' => '1',
+        'default'    => {'conf' => 'verp_rate'}
     },
 
     'tracking' => {
@@ -880,6 +915,7 @@ our %pinfo = (
                 'gettext_id' =>
                     "tracking message by delivery status notification",
                 'format' => ['on', 'off'],
+                'occurrence' => '1',
                 'default' =>
                     {'conf' => 'tracking_delivery_status_notification'}
             },
@@ -888,6 +924,7 @@ our %pinfo = (
                 'gettext_id' =>
                     "tracking message by message disposition notification",
                 'format' => ['on', 'on_demand', 'off'],
+                'occurrence' => '1',
                 'default' =>
                     {'conf' => 'tracking_message_disposition_notification'}
             },
@@ -932,7 +969,7 @@ our %pinfo = (
         'gettext_id' =>
             "Notify subscribers when they are included from a data source?",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => 'off',
     },
 
@@ -1127,8 +1164,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1142,6 +1180,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1155,8 +1194,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1179,6 +1218,7 @@ our %pinfo = (
                 'order'      => 5,
                 'gettext_id' => "search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout' => {
@@ -1186,6 +1226,7 @@ our %pinfo = (
                 'gettext_id'   => "connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter' => {
@@ -1206,6 +1247,7 @@ our %pinfo = (
                 'order'      => 9,
                 'gettext_id' => "selection (if multiple)",
                 'format'     => ['all', 'first'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'nosync_time_ranges' => {
@@ -1246,8 +1288,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1261,6 +1304,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1274,8 +1318,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1305,6 +1349,7 @@ our %pinfo = (
                 'gettext_id'   => "first-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter1' => {
@@ -1324,6 +1369,7 @@ our %pinfo = (
                 'order'      => 9,
                 'gettext_id' => "first-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex1' => {
@@ -1342,6 +1388,7 @@ our %pinfo = (
                 'order'      => 12,
                 'gettext_id' => "second-level search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout2' => {
@@ -1349,6 +1396,7 @@ our %pinfo = (
                 'gettext_id'   => "second-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter2' => {
@@ -1369,6 +1417,7 @@ our %pinfo = (
                 'order'      => 16,
                 'gettext_id' => "second-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex2' => {
@@ -1549,8 +1598,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1564,6 +1614,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1577,8 +1628,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1601,6 +1652,7 @@ our %pinfo = (
                 'order'      => 5,
                 'gettext_id' => "search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout' => {
@@ -1608,6 +1660,7 @@ our %pinfo = (
                 'gettext_id'   => "connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter' => {
@@ -1634,6 +1687,7 @@ our %pinfo = (
                 'order'      => 10,
                 'gettext_id' => "selection (if multiple)",
                 'format'     => ['all', 'first'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'nosync_time_ranges' => {
@@ -1674,8 +1728,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1689,6 +1744,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1702,8 +1758,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1726,6 +1782,7 @@ our %pinfo = (
                 'order'      => 5,
                 'gettext_id' => "first-level search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout1' => {
@@ -1733,6 +1790,7 @@ our %pinfo = (
                 'gettext_id'   => "first-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter1' => {
@@ -1752,6 +1810,7 @@ our %pinfo = (
                 'order'      => 9,
                 'gettext_id' => "first-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex1' => {
@@ -1770,6 +1829,7 @@ our %pinfo = (
                 'order'      => 12,
                 'gettext_id' => "second-level search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout2' => {
@@ -1777,6 +1837,7 @@ our %pinfo = (
                 'gettext_id'   => "second-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter2' => {
@@ -1797,6 +1858,7 @@ our %pinfo = (
                 'order'      => 16,
                 'gettext_id' => "second-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex2' => {
@@ -1917,7 +1979,7 @@ our %pinfo = (
         'gettext_comment' =>
             "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be some custom scenario to be updated",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default' => {'conf' => 'dkim_feature'}
     },
 
@@ -1947,15 +2009,16 @@ our %pinfo = (
                 'default'    => {'conf' => 'dkim_selector'}
             },
             'header_list' => {
-                'order' => 4,
+                'obsolete' => 1,        # Not yet implemented
+                'order'    => 4,
                 'gettext_id' =>
-                    'List of headers to be included ito the message for signature',
+                    'List of headers to be included into the message for signature',
                 'gettext_comment' =>
                     'You should probably use the default value which is the value recommended by RFC4871',
                 'format'     => '\S+',
-                'occurrence' => '0-1',
+                'occurrence' => '1-n',
+                'split_char' => ':',    #FIXME
                 #'default'    => {'conf' => 'dkim_header_list'},
-                'obsolete' => 1,
             },
             'signer_domain' => {
                 'order' => 5,
@@ -2087,6 +2150,7 @@ our %pinfo = (
         'group'      => 'other',
         'gettext_id' => "Secret string for generating unique keys",
         'format'     => '\S+',
+        'field_type' => 'password',
         'length'     => 15,
         'default'    => {'conf' => 'cookie'}
     },
@@ -2131,15 +2195,18 @@ our %pinfo = (
                 'occurrence' => '0-1'
             },
             'date' => {
-                'order'      => 2,
+                #'order'      => 2,
+                'obsolete'   => 1,
                 'gettext_id' => 'date',
                 'format'     => '.+'
             },
             'date_epoch' => {
                 'order'      => 3,
-                'gettext_id' => 'epoch date',
+                'gettext_id' => 'date',
                 'format'     => '\d+',
-                'occurrence' => '1'
+                'field_type' => 'unixtime',
+                'occurrence' => '1',
+                'length'     => 10,
             }
         },
         'internal' => 1
@@ -2161,7 +2228,7 @@ our %pinfo = (
         'gettext_id' =>
             "Allow picture display? (must be enabled for the current robot)",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default' => {'conf' => 'pictures_feature'}
     },
 
@@ -2178,6 +2245,7 @@ our %pinfo = (
         'group'      => 'other',
         'gettext_id' => "email address protection method",
         'format'     => ['at', 'javascript', 'none'],
+        'occurrence' => '1',
         'default'    => 'javascript'
     },
 
@@ -2188,12 +2256,15 @@ our %pinfo = (
         'format'     => {
             'date_epoch' => {
                 'order'      => 3,
-                'gettext_id' => "epoch date",
+                'gettext_id' => "date",
                 'format'     => '\d+',
-                'occurrence' => '1'
+                'field_type' => 'unixtime',
+                'occurrence' => '1',
+                'length'     => 10,
             },
             'date' => {
-                'order'      => 2,
+                #'order'      => 2,
+                'obsolete'   => 1,
                 'gettext_id' => "human readable",
                 'format'     => '.+'
             },
@@ -2222,17 +2293,19 @@ our %pinfo = (
                 'length'     => 30
             },
             'date' => {
-                'order'      => 2,
+                #'order'      => 2,
+                'obsolete'   => 1,
                 'gettext_id' => 'date',
                 'format'     => '.+',
                 'length'     => 30
             },
             'date_epoch' => {
                 'order'      => 3,
-                'gettext_id' => 'epoch date',
+                'gettext_id' => 'date',
                 'format'     => '\d+',
+                'field_type' => 'unixtime',
                 'occurrence' => '1',
-                'length'     => 8
+                'length'     => 10,
             }
         },
         'internal' => 1,
@@ -2244,6 +2317,7 @@ our %pinfo = (
         'gettext_id' => "Status of the list",
         'format' =>
             ['open', 'closed', 'pending', 'error_config', 'family_closed'],
+        'field_type' => 'status',
         'default'  => 'open',
         'internal' => 1
     },
@@ -2400,6 +2474,9 @@ sub cleanup {
                 keys %{$v->{'format'}{$k}{synonym} || {}};
         }
 
+        next if $v->{format}{$k}{'obsolete'};
+
+        #FIXME
         if (($v->{'file_format'}{$k}{'occurrence'} =~ /n$/)
             && $v->{'file_format'}{$k}{'split_char'}) {
             my $format = $v->{'file_format'}{$k}{'file_format'};
@@ -2459,7 +2536,7 @@ Or arrayref containing all possible values of parameter.
 If the parameter is paragraph, value of this item is a hashref containing
 definitions of sub-parameters.
 
-See also L</"Node types">.
+See also L<Sympa::List::Config/"Node types">.
 
 =item file_format
 
@@ -2505,7 +2582,7 @@ Occurrence of the parameter in the config file
 possible values: C<0-1>, C<1>, C<0-n> and C<1-n>.
 Example: A list may have multiple owner.
 
-See also L</"Node types">.
+See also L<Sympa::List::Config/"Node types">.
 
 =item gettext_id
 
@@ -2546,103 +2623,81 @@ that should always be saved in the config file.
 
 =item field_type
 
-Used to select passwords web input type.
+Used to special treatment of parameter value to show it.
+
+=over
+
+=item C<'dayofweek'>
+
+Day of week, C<0> - C<6>.
+
+=item C<'lang'>
+
+Language tag.
+
+=item C<'password'>
+
+The value to be concealed.
+
+=item C<'reception'>
+
+Reception mode of list member.
+
+=item C<'status'>
+
+Status of list.
+
+=item C<'listtopic'>
+
+List topic.
+
+=item C<'unixtime'>
+
+The time in second from Unix epoch.
+
+=item C<'visibility'>
+
+Visibility mode of list memeber.
+
+=back
+
+Most of field types were introduced on Sympa 6.2.17.
+
+=item filters
+
+See L<Sympa::List::Config/"Filters">.
+
+Introduced on Sympa 6.2.17.
 
 =item validations
 
+See L<Sympa::List::Config/"Validations">.
+
+Introduced on Sympa 6.2.17.
+
+=item privilege
+
+I<Dynamically assigned>.
+Privilege for specified user:
+C<'write'>, C<'read'> or C<'hidden'>.
+
+Introduced on Sympa 6.2.17.
+
+=item enum
+
+I<Automatically assigned>.
 TBD.
 
-=back
+Introdueced on Sympa 6.2.17.
 
 =back
-
-=head2 Node types
-
-Each node of configuration has one of following four types.
-Some of them can include other type of nodes recursively.
-
-=over
-
-=item Set (multiple enumerated values)
-
-=over
-
-=item *
-
-{occurrence}: C<'0-n'> or C<'1-n'>.
-
-=item *
-
-{format}: Arrayref.
-
-=back
-
-List of unique items not considering order.
-Items are scalars, and cannot be special values (scenario or task).
-The set cannot contain paragraphs, sets or arrays.
-
-=item Array (multiple values)
-
-=over
-
-=item *
-
-{occurrence}: C<'0-n'> or C<'1-n'>.
-
-=item *
-
-{format}: Regexp or hashref.
-
-=back
-
-List of the same type of nodes in order.
-Type of all nodes can be one of paragraph,
-scalar or special value (scenario or task).
-The array cannot contain sets or arrays.
-
-=item Paragraph (structured value)
-
-=over
-
-=item *
-
-{occurrence}: If the node is an item of array, C<'0-n'> or C<'1-n'>.
-Otherwise, C<'0-1'> or C<'1'>.
-
-=item *
-
-{format}: Hashref.
-
-=back
-
-Compound node of one or more named nodes.
-Paragraph can contain any type of nodes, and each of their names and types
-are defined as member of {format}.
-
-=item Leaf (simple value)
-
-=over
-
-=item *
-
-{occurrence}: If the node is an item of array, C<'0-n'> or C<'1-n'>.
-Otherwise, C<'0-1'> or C<'1'>.
-
-=item *
-
-{format}: If the node is an item of array, regexp.
-Otherwise, regexp or arrayref.
-
-=back
-
-Scalar or special value (scenario or task).
-Leaf cannot contain any other nodes.
 
 =back
 
 =head1 SEE ALSO
 
 L<config(5)>,
+L<Sympa::List::Config>,
 L<Sympa::ListOpt>.
 
 =head1 HISTORY

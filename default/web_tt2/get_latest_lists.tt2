@@ -16,7 +16,7 @@
 [% ELSE %]
   <tr class="color0">[% SET dark = 1 %]
 [% END %]
-<td>[% list.creation_date %]</td>
+<td>[% list.creation_date_epoch | optdesc('unixtime') %]</td>
 <td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
 <td>[% list.subject %]</td>
 </tr>

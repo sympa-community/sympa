@@ -67,10 +67,61 @@ sub _list_params {
     my $list = $self->{context};
 
     my $pinfo = Sympa::Robot::list_params($list->{'domain'});
+    $self->_list_params_init_defaults($pinfo);
+
     $self->_list_params_apply_family($pinfo)
         unless $options{no_family};
 
     return $pinfo;
+}
+
+# Initialize default values.
+sub _list_params_init_defaults {
+    my $self  = shift;
+    my $phash = shift;
+
+    foreach my $key (_keys($phash)) {
+        my $pii = $phash->{$key};
+
+        if (ref $pii->{format} eq 'HASH') {
+            $self->_list_params_init_defaults($pii->{format});
+        } elsif (exists $pii->{default}) {
+            $pii->{default} = $self->_get_default($pii);
+        }
+    }
+}
+
+sub _get_default {
+    my $self  = shift;
+    my $pitem = shift;
+
+    my $val;
+    my $list = $self->{context};
+
+    my $default = $pitem->{default};
+    if (ref $default eq 'HASH' and exists $default->{conf}) {
+        $val = Conf::get_robot_conf($list->{'domain'}, $default->{conf});
+    } else {
+        $val = $default;
+    }
+
+    if ($pitem->{occurrence} =~ /n$/) {    # The set or the array of scalars
+        unless (defined $val) {
+            $val = [];
+        } else {
+            my $re = quotemeta($pitem->{split_char} || ',');
+            $val = [split /\s*$re\s*/, $val];
+        }
+        return $val;
+    } elsif ($pitem->{scenario} or $pitem->{task}) {
+        unless (defined $val) {
+            return undef;
+        } else {
+            return {name => $val};
+        }
+    } else {
+        return $val;
+    }
 }
 
 sub _list_params_apply_family {
@@ -86,10 +137,6 @@ sub _list_params_apply_family {
     }
 }
 
-# Adds additional constraint by family to pinfo.
-# The family constraint
-# * restricts options for particular scalar parameters to the set of values,
-# * makes occurrence of them be required.
 sub __list_params_apply_family {
     my $self   = shift;
     my $pitem  = shift;
@@ -99,7 +146,7 @@ sub __list_params_apply_family {
     my $ret = 0;
     if (ref $pitem->{format} eq 'HASH') {
         foreach my $key (_keys($pitem->{format})) {
-            if ($self->_list_params_apply_family(
+            if ($self->__list_params_apply_family(
                     $pitem->{format}->{$key},
                     [@$pnames, $key], $family
                 )
@@ -149,7 +196,18 @@ sub __list_params_apply_family {
             }
 
             if (1 == scalar @constr) {
-                $pitem->{default} = $constr[0];
+                if ($pitem->{occurrence} =~ /n$/) {
+                    $pitem->{default} = [@constr];
+                } elsif ($pitem->{scenario} or $pitem->{task}) {
+                    $pitem->{default} = {name => $constr[0]};
+                } else {
+                    $pitem->{default} = $constr[0];
+                }
+                # Choose more restrictive privilege.
+                # See also _get_schema_apply_privilege().
+                $pitem->{privilege} = 'read'
+                    if not $pitem->{privilege}
+                        or 'read' lt $pitem->{privilege};
             } elsif (exists $pitem->{default} and defined $pitem->{default}) {
                 delete $pitem->{default}
                     unless grep { $pitem->{default} eq $_ } @constr;
@@ -237,52 +295,6 @@ sub get_changeset {
     return $self->{_changes};
 }
 
-# Gets default for the set or the array of scalars.
-sub _get_default_multiple {
-    my $self  = shift;
-    my $pitem = shift;
-
-    my $val;
-    my $list = $self->{context};
-
-    my $default = $pitem->{default};
-    if (ref $default eq 'HASH' and exists $default->{conf}) {
-        $val = Conf::get_robot_conf($list->{'domain'}, $default->{conf});
-    } else {
-        $val = $default;
-    }
-
-    unless (defined $val) {
-        $val = [];
-    } else {
-        my $re = quotemeta($pitem->{split_char} || ',');
-        $val = [split /\s*$re\s*/, $val];
-    }
-
-    return $val;
-}
-
-sub _get_default_leaf {
-    my $self  = shift;
-    my $pitem = shift;
-
-    my $val;
-    my $list = $self->{context};
-
-    my $default = $pitem->{default};
-    if (ref $default eq 'HASH' and exists $default->{conf}) {
-        $val = Conf::get_robot_conf($list->{'domain'}, $default->{conf});
-    } else {
-        $val = $default;
-    }
-
-    if (defined $val and ($pitem->{scenario} or $pitem->{task})) {
-        return {name => $val};
-    } else {
-        return $val;
-    }
-}
-
 # Apply default values, if elements are mandatory and are scalar.
 # The init option means list/node creation.
 sub _apply_defaults {
@@ -298,17 +310,14 @@ sub _apply_defaults {
             next;
         } elsif (ref $pii->{format} eq 'HASH') {    # Not a scalar
             next;
-        } elsif ($pii->{occurrence} =~ /n$/) {
-            if (exists $pii->{default}) {
-                $cur->{$key} = $self->_get_default_multiple($pii)
-                    if $options{init}
-                        or $pii->{occurrence} =~ /^1/;
-            }
-        } else {
-            if (exists $pii->{default}) {
-                $cur->{$key} = $self->_get_default_leaf($pii)
-                    if $options{init}
-                        or $pii->{occurrence} =~ /^1/;
+        } elsif (exists $pii->{default}) {
+            if ($options{init} or $pii->{occurrence} =~ /^1/) {
+                if (ref $pii->{default}) {
+                    $cur->{$key} =
+                        Sympa::Tools::Data::clone_var($pii->{default});
+                } else {
+                    $cur->{$key} = $pii->{default};
+                }
             }
         }
     }
@@ -316,7 +325,53 @@ sub _apply_defaults {
 
 sub get_schema {
     my $self = shift;
-    return Sympa::Tools::Data::clone_var($self->{_pinfo});
+    my $user = shift;
+
+    my $pinfo = Sympa::Tools::Data::clone_var($self->{_pinfo});
+    if ($user) {
+        foreach my $pname (_keys($pinfo)) {
+            $self->_get_schema_apply_privilege($pinfo->{$pname}, [$pname],
+                $user, undef);
+        }
+    }
+    $pinfo;
+}
+
+# Apply privilege on each parameter.
+sub _get_schema_apply_privilege {
+    my $self   = shift;
+    my $pitem  = shift;
+    my $pnames = shift;
+    my $user   = shift;
+    my $priv_p = shift;
+
+    my $list = $self->{context};
+
+    # Choose most restrictive privilege.
+    # - Trick: "hidden", "read" and "write" precede others in reverse
+    #   dictionary order.
+    # - Internal parameters are not editable anyway.
+    my $priv = $list->may_edit(_pfullname($pnames), $user);
+    $priv = 'read'
+        if $pitem->{internal}
+            and (not $priv or 'read' lt $priv);
+    $priv = $priv_p
+        if not $priv
+            or ($priv_p and $priv_p lt $priv);
+    $pitem->{privilege} = $priv
+        if not $pitem->{privilege}
+            or ($priv and $priv lt $pitem->{privilege});
+    $pitem->{privilege} ||= 'hidden';    # Implicit default
+
+    if (ref $pitem->{format} eq 'HASH') {
+        foreach my $key (_keys($pitem->{format})) {
+            $self->_get_schema_apply_privilege(
+                $pitem->{format}->{$key},
+                [@$pnames, $key],
+                $user, $pitem->{privilege}
+            );
+        }
+    }
 }
 
 sub keys {
@@ -380,10 +435,8 @@ sub submit {
         return '';
     }
 
-    my $validity = $self->_validate_changes($changes, $errors);
     $self->{_changes} = $changes;
-
-    return $validity;
+    return $self->_validate_changes($changes, $errors);
 }
 
 # Sanitizes parsed input including changes.
@@ -402,11 +455,8 @@ sub _sanitize_changes {
 
     my $list = $self->{context};
 
-    my $authz = sub {
-        my $ppaths = shift;
-        'write' eq $list->may_edit(_pfullname($ppaths), $user);
-    };
-    my $pinfo = $self->{_pinfo};
+    # Apply privileges: {privilege} will keep 'hidden', 'read' or 'write'.
+    my $pinfo = $self->get_schema($user);
 
     # Undefined {_config} means list creation.
     # Empty hashref means loading existing config.
@@ -438,24 +488,21 @@ sub _sanitize_changes {
             if ($pii->{occurrence} =~ /n$/) {
                 if (ref $pii->{format} eq 'ARRAY') {
                     @r =
-                        $self->_sanitize_changes_set($curi, $newi, $pii, $ppi,
-                        $authz);
+                        $self->_sanitize_changes_set($curi, $newi, $pii,
+                        $ppi);
                 } else {
                     @r =
                         $self->_sanitize_changes_array($curi, $newi, $pii,
-                        $ppi, $authz, loading => $loading);
+                        $ppi, loading => $loading);
                 }
             } elsif (ref $pii->{format} eq 'HASH') {
                 @r = $self->_sanitize_changes_paragraph(
-                    $curi, $newi, $pii,
-                    $ppi,  $authz,
+                    $curi, $newi, $pii, $ppi,
                     init    => (not defined $curi),
                     loading => $loading
                 );
             } else {
-                @r =
-                    $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi,
-                    $authz);
+                @r = $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi);
             }
 
             # Omit removal if current configuration is already empty.
@@ -473,11 +520,10 @@ sub _sanitize_changes_set {
     my $new    = shift;
     my $pitem  = shift;
     my $ppaths = shift;
-    my $authz  = shift;
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $authz->($ppaths);
+    return () unless $pitem->{privilege} eq 'write';
 
     my $list = $self->{context};
 
@@ -529,12 +575,11 @@ sub _sanitize_changes_array {
     my $new     = shift;
     my $pitem   = shift;
     my $ppaths  = shift;
-    my $authz   = shift;
     my %options = @_;
 
     return () unless ref $new eq 'ARRAY';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $authz->($ppaths);
+    return () unless $pitem->{privilege} eq 'write';
 
     my $i   = -1;
     my %ret = map {
@@ -546,14 +591,11 @@ sub _sanitize_changes_array {
         if (ref $pitem->{format} eq 'HASH') {
             @r = $self->_sanitize_changes_paragraph(
                 $curi, $_, $pitem, $ppi,
-                $authz,
                 init    => (not defined $curi),
                 loading => $options{loading}
             );
         } else {
-            @r =
-                $self->_sanitize_changes_leaf($curi, $_, $pitem, $ppi,
-                $authz);
+            @r = $self->_sanitize_changes_leaf($curi, $_, $pitem, $ppi);
         }
 
         # Omit removal if current configuration is already empty.
@@ -583,12 +625,11 @@ sub _sanitize_changes_paragraph {
     my $new     = shift;
     my $pitem   = shift;
     my $ppaths  = shift;
-    my $authz   = shift;
     my %options = @_;
 
     return () unless ref $new eq 'HASH';    # Sanity check
     return () if $pitem->{obsolete};
-    return () unless $authz->($ppaths);
+    return () unless $pitem->{privilege} eq 'write';
 
     $self->_apply_defaults($cur, $pitem->{format},
         init => ($options{init} and not $options{loading}));
@@ -616,24 +657,21 @@ sub _sanitize_changes_paragraph {
             if ($pii->{occurrence} =~ /n$/) {
                 if (ref $pii->{format} eq 'ARRAY') {
                     @r =
-                        $self->_sanitize_changes_set($curi, $newi, $pii, $ppi,
-                        $authz);
+                        $self->_sanitize_changes_set($curi, $newi, $pii,
+                        $ppi);
                 } else {
                     @r =
                         $self->_sanitize_changes_array($curi, $newi, $pii,
-                        $ppi, $authz, loading => $options{loading});
+                        $ppi, loading => $options{loading});
                 }
             } elsif (ref $pii->{format} eq 'HASH') {
                 @r = $self->_sanitize_changes_paragraph(
-                    $curi, $newi, $pii,
-                    $ppi,  $authz,
+                    $curi, $newi, $pii, $ppi,
                     init    => (not defined $curi),
                     loading => $options{loading}
                 );
             } else {
-                @r =
-                    $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi,
-                    $authz);
+                @r = $self->_sanitize_changes_leaf($curi, $newi, $pii, $ppi);
             }
 
             # Omit removal if current configuration is already empty.
@@ -662,6 +700,30 @@ sub _sanitize_changes_paragraph {
     }
 }
 
+my %filters = (
+    canonic_domain => sub {
+        my $self = shift;
+        my $new  = shift;
+        return lc $new;    #FIXME:how about i18n'ed domains?
+    },
+    canonic_email => sub {
+        my $self = shift;
+        my $new  = shift;
+        return Sympa::Tools::Text::canonic_email($new);
+    },
+    canonic_lang => sub {
+        my $self = shift;
+        my $new  = shift;
+        $new = Sympa::Language::canonic_lang($new);    # be scalar
+        return $new;
+    },
+    lc => sub {
+        my $self = shift;
+        my $new  = shift;
+        return lc $new;
+    },
+);
+
 # Sanitizes leaf.
 sub _sanitize_changes_leaf {
     my $self   = shift;
@@ -669,11 +731,10 @@ sub _sanitize_changes_leaf {
     my $new    = shift;
     my $pitem  = shift;
     my $ppaths = shift;
-    my $authz  = shift;
 
     return () if ref $new eq 'ARRAY';    # Sanity check: Hashref or scalar
     return () if $pitem->{obsolete};
-    return () unless $authz->($ppaths);
+    return () unless $pitem->{privilege} eq 'write';
 
     my $list = $self->{context};
 
@@ -684,14 +745,27 @@ sub _sanitize_changes_leaf {
         $cur = ($cur || {})->{name};
         $new = ($new || {})->{name};
     }
+
     # Resolve synonym.
     if (defined $new and ref $pitem->{synonym} eq 'HASH') {
         my $synonym = $pitem->{synonym}->{$new};
         $new = $synonym if defined $synonym;
     }
+    # Apply filters.
+    # Note: Erroneous values are overlooked and _not_ eliminated in this step.
+    # We should eliminate them in the step of validation.
+    if (defined $new) {
+        my $f_new = $new;
+        foreach my $filter (@{$pitem->{filters} || []}) {
+            next unless ref $filters{$filter} eq 'CODE';
+            $f_new = $filters{$filter}->($self, $f_new);
+            last unless defined $f_new;
+        }
+        $new = $f_new if defined $f_new;
+    }
 
     if (Sympa::Tools::Data::smart_eq($cur, $new)) {
-        return ();                                     # Not changed
+        return ();    # Not changed
     }
 
     if ($pitem->{scenario} or $pitem->{task}) {
@@ -894,6 +968,42 @@ my %validations = (
         return 'topic_other'
             if lc $new eq 'other';
     },
+    # Avoid duplicate parameter values in the array.
+    unique_paragraph_key => sub {
+        my $self   = shift;
+        my $new    = shift;
+        my $pitem  = shift;
+        my $ppaths = shift;
+
+        my @p_ppaths = (@$ppaths);
+        my $keyname  = pop @p_ppaths;
+        my $i        = pop @p_ppaths;
+        return unless defined $i and $i =~ /\A\d+\z/;
+        return if $i == 0;
+
+        my ($p_cur) = $self->get(join '.', @p_ppaths);
+        $p_cur ||= [];
+        my @p_curkeys = map { $_->{$keyname} } @$p_cur;
+
+        my ($p_new) = $self->get_change(join '.', @p_ppaths);
+        my %p_newkeys =
+            map {
+                  (exists $p_new->{$_}->{$keyname})
+                ? ($_ => $p_new->{$_}->{$keyname})
+                : ()
+            } (CORE::keys %$p_new);
+
+        foreach my $j (0 .. $i - 1) {
+            next unless exists $p_newkeys{$j};
+            $p_curkeys[$j] = $p_newkeys{$j};
+        }
+        foreach my $j (0 .. $i - 1) {
+            next unless defined $p_curkeys[$j];
+            if ($p_curkeys[$j] eq $new) {
+                return qw(unique_paragraph_key omit);
+            }
+        }
+    },
 );
 
 # Validates leaf.
@@ -939,15 +1049,16 @@ sub _validate_changes_leaf {
         }
         foreach my $validation (@{$pitem->{validations} || []}) {
             next unless ref $validations{$validation} eq 'CODE';
-            my $validity = $validations{$validation}->($self, $new);
-            next unless $validity;
+            my ($error, $validity) =
+                $validations{$validation}->($self, $new, $pitem, $ppaths);
+            next unless $error;
 
             push @$errors,
                 [
-                'user', $validity,
+                'user', $error,
                 {p_info => $pitem, p_paths => $ppaths, value => $new}
                 ];
-            return 'invalid';
+            return $validity || 'invalid';
         }
     }
 
@@ -1111,7 +1222,7 @@ Sympa::List::Config - List configuration
   my $validity = $config->submit({...}, $user, $errors);
   $config->commit($errors);
   
-  my $value = $config->get('owner.0.gecos');
+  my ($value) = $config->get('owner.0.gecos');
   my @keys  = $config->keys('owner');
 
 =head1 DESCRIPTION
@@ -1137,7 +1248,6 @@ Context.  An instance of L<Sympa::List> class.
 =item config =E<gt> $initial_config
 
 Initial configuration.
-Note:
 
 =over
 
@@ -1157,9 +1267,11 @@ so that default parameter values except optional ones
 =item *
 
 Otherwise, default parameter values are completed
-only when the new paragraph node will be added.
+only when the new paragraph node will be added by submit().
 
 =back
+
+Note that initial configuration will never be sanitized.
 
 =item copy =E<gt> 1
 
@@ -1171,6 +1283,7 @@ instead of real reference.
 Won't apply family constraint.
 By default, the constraint will be applied if the list is belonging to
 family.
+See also L</"Family constraint">.
 
 =back
 
@@ -1186,8 +1299,10 @@ Parameter:
 =item $ppath
 
 Parameter path,
-e.g. C<'owner.0.email'> specifys "email" parameter of
-the first "owner" paragraph.
+e.g.: C<'owner.0.email'> specifys "email" parameter of
+the first "owner" paragraph;
+C<'owner.0'> specifys the first "owner" paragraph;
+C<'owner'> specifys the array of all "owner" paragraph.
 
 =back
 
@@ -1219,6 +1334,9 @@ If value won't be changed, returns empty list in array context
 and C<undef> in scalar context.
 If value would be deleted, returns C<undef>.
 
+Changes on the array are given by hashref
+with keys as affected indexes of the array.
+
 =item get_changeset ( )
 
 I<Instance method>.
@@ -1227,10 +1345,23 @@ Gets all submitted changes.
 Note that returned value is the real reference to internal information.
 Any modifications might break it.
 
-=item get_schema ( )
+=item get_schema ( [ $user ] )
 
 I<Instance method>.
-TDB.
+Get configuration schema as hashref.
+See L<Sympa::ListDef> about structure of schema.
+
+Parameter:
+
+=over
+
+=item $user
+
+Email address of a user.
+If specified, adds C<'privilege'> attribute taken from L<edit_list.conf(5)>
+for the user.
+
+=back
 
 =item keys ( [ $pname ] )
 
@@ -1243,7 +1374,7 @@ Parameter:
 
 =item $pname
 
-Full parameter name.
+Full parameter name, e.g. C<'owner'>.
 If omitted or false value,
 returns keys of top-level parameters.
 
@@ -1259,17 +1390,108 @@ i.e. it is not the paragraph, empty list.
 
 I<Instance method>.
 Submits change and verifys it.
-TBD.
+Submission is done by:
+
+=over
+
+=item *
+
+Sanitizing changes:
+
+Omits unknown parameters,
+resolves parameter aliases,
+omits malformed change information,
+omits obsoleted parameters,
+omits changes on unwritable parameters,
+removes nodes under which required children nodes will be removed,
+resolves synonym of input values,
+canonicalizes inputs (see L</"Filters">),
+and omits identical changes.
+
+=item *
+
+Verifying changes:
+
+Omits removal of mandatory parameters,
+checks format of inputs,
+and performs additional validations (see L</"Validations">).
+
+=back
+
+Parameters:
+
+=over
+
+=item $new
+
+Changes to be submitted, hashref.
+
+=item $user
+
+Email of the user requesting submission.
+
+=item \@errors
+
+If errors occur, they will be pushed in this arrayref.
+Each element is arrayref C<[ I<type>, I<error>, I<info> ]>:
+
+=over
+
+=item I<type>
+
+One of C<'user'> (failure), C<'intern'> (internal failure)
+and C<'notice'> (successful notice).
+
+=item I<error>
+
+A keyword to determine error.
+
+=item I<info>
+
+Optional hashref with keys:
+C<p_info> for schema item of parameter;
+C<p_paths> for elements of parameter path;
+C<value> for erroneous value (optional).
+
+=back
+
+=back
+
+Returns:
+
+If no changes found (or all changes were omitted), an empty string C<''>.
+If any errors found in input, C<'invalid'>.
+Otherwise, C<'valid'>.
+
+In case any changes are submitted,
+changeset may be accessible by get_change() or get_changeset().
 
 =item commit ( [ \@errors ] )
 
 I<Instance method>.
-Merges change verified by sbumit() into actual configuration.
-TBD.
+Merges changes set by sbumit() into actual configuration.
+
+Parameter:
+
+=over
+
+=item \@errors
+
+Arrayref.
+See \@errors in submit().
+
+=back
+
+Returns:
+
+None.
+Errors will be stored in arrayref.
 
 =back
 
 =head2 Attribute
+
+Instance of L<Sympa::List::Config> has following attribute.
 
 =over
 
@@ -1278,6 +1500,138 @@ TBD.
 Context, L<Sympa::List> instance.
 
 =back
+
+=head2 Structure of configuration
+
+Configuration on the memory is represented by a hashref,
+with its keys as node names and values as node values.
+
+=head3 Node types
+
+Each node of configuration has one of following four types.
+Some of them can include other type of nodes recursively.
+
+=over
+
+=item Set (multiple enumerated values)
+
+Arrayref.
+In the schema, defined with:
+
+=over
+
+=item *
+
+{occurrence}: C<'0-n'> or C<'1-n'>.
+
+=item *
+
+{format}: Arrayref.
+
+=back
+
+List of unique items not considering order.
+Items are scalars, and cannot be special values (scenario or task).
+The set cannot contain paragraphs, sets or arrays.
+
+=item Array (multiple values)
+
+Arrayref.
+In the schema, defined with:
+
+=over
+
+=item *
+
+{occurrence}: C<'0-n'> or C<'1-n'>.
+
+=item *
+
+{format}: Regexp or hashref.
+
+=back
+
+List of the same type of nodes in order.
+Type of all nodes can be one of paragraph,
+scalar or special value (scenario or task).
+The array cannot contain sets or arrays.
+
+=item Paragraph (structured value)
+
+Hashref.
+In the schema, defined with:
+
+=over
+
+=item *
+
+{occurrence}: If the node is an item of array, C<'0-n'> or C<'1-n'>.
+Otherwise, C<'0-1'> or C<'1'>.
+
+=item *
+
+{format}: Hashref.
+
+=back
+
+Compound node of one or more named nodes.
+Paragraph can contain any type of nodes, and each of their names and types
+are defined as member of {format} item in schema.
+
+=item Leaf (simple value)
+
+Scalar, or hashref for special value (scenario or task).
+In the schema, defined with:
+
+=over
+
+=item *
+
+{occurrence}: If the node is an item of array, C<'0-n'> or C<'1-n'>.
+Otherwise, C<'0-1'> or C<'1'>.
+
+=item *
+
+{format}: If the node is an item of array, regexp.
+Otherwise, regexp or arrayref.
+
+=back
+
+Scalar or special value (scenario or task).
+Leaf cannot contain any other nodes.
+
+=back
+
+=head2 Family constraint
+
+The family (see L<Sympa::Family>) adds additional constraint to schema.
+The family constraint
+
+=over
+
+=item *
+
+restricts options for particular scalar parameters to the set of values
+or single value,
+
+=item *
+
+makes occurrence of them be required (C<'1'> or C<'1-n'>), and
+
+=item *
+
+if the occurrence became C<'1'>,
+makes their privilege be unwritable (C<'read'> if it was not C<'hidden'>).
+
+=back
+
+=head2 Filters
+
+TBD.
+
+=head2 Validations
+
+TBD.
 
 =head1 SEE ALSO
 

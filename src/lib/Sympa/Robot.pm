@@ -183,7 +183,7 @@ sub load_topics {
 
     unless ($conf_file) {
         $log->syslog('err', 'No topics.conf defined');
-        return undef;
+        return;
     }
 
     my $topics = {};
@@ -198,12 +198,12 @@ sub load_topics {
 
         unless (-r $conf_file) {
             $log->syslog('err', 'Unable to read %s', $conf_file);
-            return undef;
+            return;
         }
 
         unless (open(FILE, "<", $conf_file)) {
             $log->syslog('err', 'Unable to open config file %s', $conf_file);
-            return undef;
+            return;
         }
 
         ## Rough parsing
@@ -243,7 +243,7 @@ sub load_topics {
 
         unless ($#rough_data > -1) {
             $log->syslog('notice', 'No topic defined in %s', $conf_file);
-            return undef;
+            return;
         }
 
         ## Analysis
@@ -251,7 +251,7 @@ sub load_topics {
             my @tree = split '/', $topic->{'name'};
 
             if ($#tree == 0) {
-                my $title = _get_topic_titles($topic);
+                my $title = _load_topics_get_title($topic);
                 $list_of_topics{$robot}{$tree[0]}{'title'} = $title;
                 $list_of_topics{$robot}{$tree[0]}{'visibility'} =
                     $topic->{'visibility'} || 'default';
@@ -260,7 +260,7 @@ sub load_topics {
                     $topic->{'order'};
             } else {
                 my $subtopic = join('/', @tree[1 .. $#tree]);
-                my $title = _get_topic_titles($topic);
+                my $title = _load_topics_get_title($topic);
                 my $visibility = $topic->{'visibility'} || 'default';
                 $list_of_topics{$robot}{$tree[0]}{'sub'}{$subtopic} =
                     _add_topic($subtopic, $title, $visibility);
@@ -322,7 +322,8 @@ sub load_topics {
     return %{$list_of_topics{$robot}};
 }
 
-sub _get_topic_titles {
+# Old name: _get_topic_titles().
+sub _load_topics_get_title {
     my $topic = shift;
 
     my $title;
@@ -357,6 +358,72 @@ sub _add_topic {
     }
 }
 
+sub topic_keys {
+    my $robot_id = shift;
+
+    my %topics = Sympa::Robot::load_topics($robot_id);
+    return map {
+        my $topic = $_;
+        if ($topics{$topic}->{sub}) {
+            (   $topic,
+                map { $topic . '/' . $_ } sort keys %{$topics{$topic}->{sub}}
+            );
+        } else {
+            ($topic);
+        }
+    } sort keys %topics;
+}
+
+sub topic_get_title {
+    my $robot_id = shift;
+    my $topic = shift;
+
+    my $tinfo = {Sympa::Robot::load_topics($robot_id)};
+    return unless %$tinfo;
+
+    my @ttitles;
+    my @tpaths = split '/', $topic;
+
+    while (1) {
+        my $t = shift @tpaths;
+        unless (exists $tinfo->{$t}) {
+            @ttitles = ();
+            last;
+        } elsif (not @tpaths) {
+            push @ttitles, (_topic_get_title($tinfo->{$t}) || $t);
+            last;
+        } elsif (not $tinfo->{$t}->{sub}) {
+            @ttitles = ();
+            last;
+        } else {
+            push @ttitles, (_topic_get_title($tinfo->{$t}) || $t);
+            $tinfo = $tinfo->{$t}->{sub};
+        }
+    }
+
+    return @ttitles if wantarray;
+    return join ' / ', @ttitles;
+}
+
+sub _topic_get_title {
+    my $titem = shift;
+
+    return undef unless $titem and exists $titem->{title};
+
+    foreach my $lang (Sympa::Language::implicated_langs($language->get_lang)) {
+        return $titem->{title}->{$lang}
+            if $titem->{title}->{$lang};
+    }
+    if ($titem->{title}->{gettext}) {
+        return $language->gettext($titem->{title}->{gettext});
+    } elsif ($titem->{title}->{default}) {
+        return $titem->{title}->{default};
+    } else {
+        return undef;
+    }
+}
+
+
 =over 4
 
 =item list_params
@@ -375,17 +442,7 @@ sub list_params {
     my $pinfo = Sympa::Tools::Data::clone_var(\%Sympa::ListDef::pinfo);
     $pinfo->{lang}{format} = [Sympa::get_supported_languages($robot_id)];
 
-    my %topics = Sympa::Robot::load_topics($robot_id);
-    my @topics = map {
-        my $topic = $_;
-        if ($topics{$topic}->{sub}) {
-            (   $topic,
-                map { $topic . '/' . $_ } sort keys %{$topics{$topic}->{sub}}
-            );
-        } else {
-            ($topic);
-        }
-    } sort keys %topics;
+    my @topics = Sympa::Robot::topic_keys($robot_id);
     $pinfo->{topics}{format} = [@topics];
     # Compat.
     $pinfo->{topics}{file_format} = sprintf '(%s)(,(%s))*',

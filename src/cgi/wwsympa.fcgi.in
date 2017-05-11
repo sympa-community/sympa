@@ -982,7 +982,7 @@ my %filtering = (
     #XXX'editsubscriber' => {'email' => 'fix_escape_uri'},
     ## Required because outgoing parameters have been html-escaped in
     ## edit_list_request
-    'edit_list' => {'*param*' => 'unescape_html'},
+    #'edit_list' => {'*param*' => 'unescape_html'},
     ## Remove leading/trailing white spaces and lowercase
     'change_email' => {'*email' => 'normalize'},
 );
@@ -1847,20 +1847,12 @@ while ($query = new_loop()) {
 
     ## Available languages
     $param->{'languages'} = {};
-    $language->push_lang();
+    $language->push_lang;
     foreach my $lang (Sympa::get_supported_languages($robot)) {
         next unless $lang = $language->set_lang($lang);
-        $param->{'languages'}{$lang}{'complete'} = $language->native_name
-            || $lang;
-        # compatibility: 6.1.
-        $param->{'languages'}{$lang}{'lang_tag'} = $lang;
+        $param->{'languages'}{$lang} = {};
     }
     if (my $lang = $language->set_lang($param->{'lang'})) {    #current lang
-        $param->{'languages'}{$lang}{'complete'} = $language->native_name
-            || $lang;
-        # compatibility: 6.1.
-        $param->{'languages'}{$lang}{'lang_tag'} = $lang;
-
         $param->{'languages'}{$lang}{'selected'} = 'selected="selected"';
     }
     $language->pop_lang;
@@ -2438,15 +2430,14 @@ sub get_parameters {
             #            Sympa::Tools::Text::qencode_filename($tokens[$i]);
             #    }
             #    $in{$p} = join '/', @tokens;
-            #}
-            if ($filtering_action eq 'unescape_html') {
-                $in{$p} = Sympa::Tools::Text::unescape_chars($in{$p});
-                #} elsif ($filtering_action eq 'fix_escape_uri') {
-                #    # Sympa::Tools::Text::escape_chars() replaces '/' with
-                #    # %A5 ('¥' character).  This should be transformed into a
-                #    # '/' again.
-                #    $in{$p} =~ s{/}{\xa5}g;
-            } elsif ($filtering_action eq 'normalize') {
+            #} elsif ($filtering_action eq 'unescape_html') {
+            #    $in{$p} = Sympa::Tools::Text::unescape_chars($in{$p});
+            #} elsif ($filtering_action eq 'fix_escape_uri') {
+            #    # Sympa::Tools::Text::escape_chars() replaces '/' with
+            #    # %A5 ('¥' character).  This should be transformed into a
+            #    # '/' again.
+            #    $in{$p} =~ s{/}{\xa5}g;
+            if ($filtering_action eq 'normalize') {
                 $in{$p} =~ s/^\$+//;    ## remove leading \s
                 $in{$p} =~ s/\$+$//;    ## remove trailing \s
                 $in{$p} = lc($in{$p});  ## lowercase
@@ -4535,36 +4526,16 @@ sub do_lists {
         $all_lists = [map { $lists{$_} } sort keys %lists];
         $param->{'subtitle'} = $language->gettext('Your lists');
     } elsif ($in{'topic'}) {
-        my %topics = Sympa::Robot::load_topics($robot);
-        $param->{'topic'} = $in{'topic'};
-        if ($in{'subtopic'}) {
-            $param->{'subtopic'} = $in{'subtopic'};
-            $param->{'subtitle'} = $language->gettext_sprintf(
-                '%s / %s',
-                $topics{$in{'topic'}}{'current_title'},
-                $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'}
-                    || $in{'subtopic'}
-            );
-        } elsif ($topics{$in{'topic'}}{'current_title'}) {
-            $param->{'subtitle'} = $topics{$in{'topic'}}{'current_title'};
-        } elsif ($in{'topic'} eq 'others' or $in{'topic'} eq 'topicsless') {
-            $param->{'subtitle'} = $language->gettext('Others');
-        } else {
-            $param->{'subtitle'} = $in{'topic'};
-        }
+        my $topic = join '/', grep {$_} ($in{'topic'}, $in{'subtopic'});
+        $param->{'topic'} = $topic;
 
-        ## Filter lists by topic.
-        ## topic argument 'topicsless' or 'other' means 'lists with topic
-        ## "other" or without topics'.
-        ## no topic argument; List all lists
+        # Filter lists by topic.
+        # topic argument 'topicsless' or 'other' means 'lists with topic
+        # "other" or without topics'.
+        # no topic argument; List all lists
         my $options = {};
-        if ($in{'topic'}) {
-            if ($in{'subtopic'}) {
-                $options->{'filter'} =
-                    ['topics' => "$in{'topic'}/$in{'subtopic'}"];
-            } else {
-                $options->{'filter'} = ['topics' => $in{'topic'}];
-            }
+        if ($topic) {
+            $options->{'filter'} = ['topics' => $topic];
         }
         $all_lists = Sympa::List::get_lists($robot, %$options);
     } else {
@@ -4595,7 +4566,6 @@ sub do_lists {
         $list_info->{'host'}    = $list->{'admin'}{'host'};
         $list_info->{'date_epoch'} =
             $list->{'admin'}{'creation'}{'date_epoch'};
-        $list_info->{'date'}   = $list->{'admin'}{'creation'}{'date'};
         $list_info->{'topics'} = $list->{'admin'}{'topics'};
 
         if (    $param->{'user'}{'email'}
@@ -6006,8 +5976,6 @@ sub do_suboptions {
         localtime($s->{'update_date'}));
 
     foreach $m ($list->available_reception_mode) {
-        $param->{'reception'}{$m}{'description'} =
-            Sympa::ListOpt::get_title($m, 'reception');
         if ($s->{'reception'} eq $m) {
             $param->{'reception'}{$m}{'selected'} = ' selected';
             if ($m =~ /^(mail|notice|not_me|txt|html|urlize)$/i) {
@@ -6019,8 +5987,6 @@ sub do_suboptions {
     }
 
     foreach $m (qw(conceal noconceal)) {
-        $param->{'visibility'}{$m}{'description'} =
-            Sympa::ListOpt::get_title($m, 'visibility');
         if ($s->{'visibility'} eq $m) {
             $param->{'visibility'}{$m}{'selected'} = ' selected';
         } else {
@@ -6862,16 +6828,13 @@ sub do_ls_templates {
 
     foreach my $file (keys %{$param->{'templates'}}) {
         foreach my $level (keys %{$param->{'templates'}{$file}}) {
-            $language->push_lang;
             foreach my $subdir (keys %{$param->{'templates'}{$file}{$level}})
             {
-                my $lang = $language->set_lang($subdir); # allow unknown lang.
-                $param->{'lang_per_level'}{$level}{$subdir} = {
-                    'title' => ($lang ? $language->native_name : ''),
-                    'lang' => $lang,
-                };
+                # Allow unknown lang.
+                my $lang = Sympa::Language::canonic_lang($subdir);
+                $param->{'lang_per_level'}{$level}{$subdir} =
+                    {lang => ($lang || $subdir)};
             }
-            $language->pop_lang;
         }
     }
 
@@ -7006,18 +6969,8 @@ sub do_view_template {
     my $tpl_lang = $in{'tpl_lang'} || 'default';
     $param->{'tpl_lang'} = $tpl_lang;
     unless ($tpl_lang eq 'default') {
-        $language->push_lang;
-
-        if (my $lang = $language->set_lang($tpl_lang)) { # allow unknown lang.
-            $param->{'tpl_lang_title'} = $language->native_name || $tpl_lang;
-            $param->{'tpl_lang_lang'} = $lang;
-        } else {
-            $param->{'tpl_lang_title'} = $tpl_lang;
-            $param->{'tpl_lang_lang'} =
-                Sympa::Language::canonic_lang($tpl_lang);
-        }
-
-        $language->pop_lang;
+        # Allow unknown lang.
+        $param->{'tpl_lang_lang'} = Sympa::Language::canonic_lang($tpl_lang);
     }
 
     return 1;
@@ -7137,18 +7090,8 @@ sub do_copy_template {
     my $tpl_lang = $in{'tpl_lang_out'} || 'default';
     $param->{'tpl_lang'} = $in{'tpl_lang'} = $tpl_lang;
     unless ($tpl_lang eq 'default') {
-        $language->push_lang;
-
-        if (my $lang = $language->set_lang($tpl_lang)) { # allow unknown lang.
-            $param->{'tpl_lang_title'} = $language->native_name || $tpl_lang;
-            $param->{'tpl_lang_lang'} = $lang;
-        } else {
-            $param->{'tpl_lang_title'} = $tpl_lang;
-            $param->{'tpl_lang_lang'} =
-                Sympa::Language::caonic_lang($tpl_lang);
-        }
-
-        $language->pop_lang;
+        # Allow unknown lang.
+        $param->{'tpl_lang_lang'} = Sympa::Language::caonic_lang($tpl_lang);
     }
 
     $param->{'scope'} = $in{'scope'} = $in{'scope_out'};
@@ -10320,9 +10263,8 @@ sub do_get_pending_lists {
             $list->{'admin'}{'subject'};
         $param->{'pending'}{$list->{'name'}}{'by'} =
             $list->{'admin'}{'creation'}{'email'};
-        $param->{'pending'}{$list->{'name'}}{'date'} =
-            $language->gettext_strftime("%d %b %y  %H:%M",
-            localtime($list->{'admin'}{'creation'}{'date_epoch'}));
+        $param->{'pending'}{$list->{'name'}}{'date_epoch'} =
+            $list->{'admin'}{'creation'}{'date_epoch'};
     }
 
     return 1;
@@ -10365,16 +10307,15 @@ sub do_get_latest_lists {
             {
             'name'          => $list->{'name'},
             'subject'       => $list->{'admin'}{'subject'},
-            'creation_date' => $list->{'admin'}{'creation'}{'date_epoch'}
+            'creation_date_epoch' =>
+                $list->{'admin'}{'creation'}{'date_epoch'}
             };
     }
 
-    foreach my $l (sort { $b->{'creation_date'} <=> $a->{'creation_date'} }
-        @unordered_lists) {
+    foreach my $l (sort {
+        $b->{'creation_date_epoch'} <=> $a->{'creation_date_epoch'}
+        } @unordered_lists) {
         push @{$param->{'latest_lists'}}, $l;
-        $l->{'creation_date'} =
-            $language->gettext_strftime("%d %b %Y",
-            localtime($l->{'creation_date'}));
     }
 
     return 1;
@@ -10427,10 +10368,6 @@ sub do_get_inactive_lists {
             ),
             'creation_date_epoch' =>
                 $list->{'admin'}{'creation'}{'date_epoch'},
-            'creation_date' => $language->gettext_strftime(
-                "%d %b %Y",
-                localtime($list->{'admin'}{'creation'}{'date_epoch'})
-            ),
             };
     }
 
@@ -10457,16 +10394,14 @@ sub do_get_biggest_lists {
             {
             'name'          => $list->{'name'},
             'subject'       => $list->{'admin'}{'subject'},
-            'creation_date' => $list->{'admin'}{'creation'}{'date_epoch'},
-            'subscribers'   => $list->get_total
+            'creation_date_epoch' =>
+                $list->{'admin'}{'creation'}{'date_epoch'},
+            'subscribers' => $list->get_total
             };
     }
 
     foreach my $l (sort { $b->{'subscribers'} <=> $a->{'subscribers'} }
         @unordered_lists) {
-        $l->{'creation_date'} =
-            $language->gettext_strftime("%d %b %Y",
-            localtime($l->{'creation_date'}));
         push @{$param->{'biggest_lists'}}, $l;
     }
 
@@ -10499,7 +10434,8 @@ sub do_set_pending_list_request {
     $param->{'list_info'}         = $list_dir . '/info';
     $param->{'list_subject'}      = $list->{'admin'}{'subject'};
     $param->{'list_request_by'}   = $list->{'admin'}{'creation'}{'email'};
-    $param->{'list_request_date'} = $list->{'admin'}{'creation'}{'date'};
+    $param->{'list_request_date_epoch'} =
+        $list->{'admin'}{'creation'}{'date_epoch'};
     $param->{'list_serial'}       = $list->{'admin'}{'serial'};
     $param->{'list_status'}       = $list->{'admin'}{'status'};
 
@@ -10932,23 +10868,11 @@ sub do_create_list_request {
         || [];
     #XXX}
 
-    my %topics;
-    unless (%topics = Sympa::Robot::load_topics($robot)) {
-        Sympa::Report::reject_report_web('intern',
-            'unable_to_load_list_of_topics',
-            {}, $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
+    my %topics = map { ($_ => {}) } Sympa::Robot::topic_keys($robot);
+    if ($in{'topics'} and exists $topics{$in{'topics'}}) {
+        $topics{$in{'topics'}}->{selected} = 1;
     }
-    $param->{'list_of_topics'} = \%topics;
-
-    if ($in{'topics'}) {
-        my ($topic, $subtopic) = split('/', $in{'topics'});
-        if ($subtopic) {
-            $param->{'list_of_topics'}{$topic}{'sub'}{$subtopic}{'selected'}
-                = 1;
-        } else {
-            $param->{'list_of_topics'}{$topic}{'selected'} = 1;
-        }
-    }
+    $param->{'list_of_topics'} = {%topics};
 
     unless ($param->{'list_list_tpl'} =
         Sympa::Tools::WWW::get_list_list_tpl($robot)) {
@@ -11074,13 +10998,9 @@ sub do_editsubscriber {
 
     ## Get language from user_table
     my $user = Sympa::User::get_global_user($in{'email'});
-    $language->push_lang($user->{'lang'});
-    $param->{'current_subscriber'}{'lang'} = $language->native_name;
-    $language->pop_lang;
+    $param->{'current_subscriber'}{'lang'} = $user->{'lang'};
 
     foreach my $m ($list->available_reception_mode) {
-        $param->{'reception'}{$m}{'description'} =
-            Sympa::ListOpt::get_title($m, 'reception');
         if ($param->{'current_subscriber'}{'reception'} eq $m) {
             $param->{'reception'}{$m}{'selected'} = ' selected';
         } else {
@@ -11089,8 +11009,6 @@ sub do_editsubscriber {
     }
 
     foreach my $m (qw(conceal noconceal)) {
-        $param->{'visibility'}{$m}{'description'} =
-            Sympa::ListOpt::get_title($m, 'visibility');
         if ($param->{'current_subscriber'}{'visibility'} eq $m) {
             $param->{'visibility'}{$m}{'selected'} = ' selected';
         } else {
@@ -11721,7 +11639,7 @@ sub do_edit_list {
     my $data_source_updated = 1
         if grep { $config->get_change($_) }
             grep { $_ =~ /\Ainclude_/ or $_ eq 'ttl' }
-            keys %$pinfo;
+            $config->keys;
 
     # Update config in memory.
     $config->commit;
@@ -11834,6 +11752,31 @@ sub _deserialize_changes {
         eval sprintf '$new_admin->%s = $value', join('->', @subscripts);
     }
 
+    # Deleted parameters or paragraphs.
+    foreach my $key (sort keys %in) {
+        next unless $key =~ /\Adeleted_param[.](\S+)\z/;
+        my $name = $1;
+        next unless defined $in{$key} and $in{$key} =~ /\S/;
+
+        my @subscripts = map {
+            if (/\A\d+\z/) {
+                sprintf '[%s]', $_;
+            } elsif (/\A[-\w]+\z/) {
+                sprintf "{'%s'}", $_;
+            } else {
+                "{''}";
+            }
+        } split /[.]/, $name;
+        my $var = sprintf '$new_admin->%s', join('->', @subscripts);
+
+        if (eval "exists $var and ref $var eq 'HASH'") {
+            my %hash = map {($_ => undef)} keys %{eval $var};
+            eval "$var = {%hash}";
+        } else {
+            eval "$var = undef";
+        }
+    }
+
     return $new_admin;
 }
 
@@ -11940,533 +11883,131 @@ sub _notify_added_admin {
     }
 }
 
-#=head2 sub do_edit_list_request
-#
-#Sends back the list config edition form.
-#
-#=head3 Arguments
-#
-#=over
-#
-#=item * I<None>
-#
-#=back
-#
-#=head3 Return
-#
-#=over
-#
-#=item * I<1>, if no problem is encountered
-#
-#=item * I<undef>, if anything goes wrong
-#
-#=item * I<'loginrequest'> if no user is logged in at the time the function is called.
-#
-#=back
-#
-#=cut
-
-## Send back the list config edition form
+# Sends back the list config edition form.
 sub do_edit_list_request {
     wwslog('info', '(%s)', $in{'group'});
 
-    if ($in{'group'}) {
-        $param->{'group'} = $in{'group'};
-        _prepare_edit_form($list);
-    }
+    return 1 unless $in{'group'};
 
-    #    print "Content-type: text/plain\n\n";
-    #    Sympa::Tools::Data::dump_var(\%pinfo,0);
-    #    Sympa::Tools::Data::dump_var($list->{'admin'},0);
-    #    Sympa::Tools::Data::dump_var($param->{'param'},0);
+    my $config = Sympa::List::Config->new($list, config => $list->{'admin'});
+    my $schema = $config->get_schema($param->{'user'}{'email'});
 
-    $param->{'serial'} = $list->{'admin'}{'serial'};
+    my @schema = map {
+        # Skip comments and default values.
+        # Skip parameters belonging to another group.
+        if (   $_ eq 'comment'
+            or $_ eq 'defaults'
+            or $schema->{$_}->{group} ne $in{'group'}) {
+            ();
+        } else {
+            my @p = _do_edit_list_request($config, $schema->{$_}, [$_]);
+            if (@p) {
+                # Store if the parameter is still at its default value or not.
+                # Store the change state of this parameter.
+                # FIXME:Multiple levels of keys should be possible.
+                $p[0]->{'default_value'} = $config->get('defaults')->{$_};
+                $p[0]->{'changed'}       = $::changed_params{$_};
+            }
+            @p;
+        }
+    } $config->keys;
+
+    # If at least one param was editable, make the update button appear in
+    # the form.
+    $param->{'is_form_editable'} =
+        grep { $_->{privilege} eq 'write' } @schema;
+    $param->{'config_schema'} = [@schema];
+    $param->{'config_values'} = {
+        map {
+            my @value = $config->get($_->{name});
+            @value ? ($_->{name} => $value[0]) : ();
+            } @schema
+    };
+
+    $param->{'group'}  = $in{'group'};
+    $param->{'serial'} = $config->get('serial');
 
     return 1;
+}
+
+sub _do_edit_list_request {
+    my $config = shift;
+    my $pitem  = shift;
+    my $pnames = shift;
+
+    # Skip obsolete parameters and alias names.
+    # Skip hidden parameters.
+    return () if $pitem->{obsolete};
+    return () if $pitem->{privilege} eq 'hidden';
+
+    $pitem->{name}  = $pnames->[-1];
+    $pitem->{title} = $language->gettext($pitem->{gettext_id})
+        if exists $pitem->{gettext_id};
+    $pitem->{comment} = $language->gettext($pitem->{gettext_comment})
+        if exists $pitem->{gettext_comment};
+    $pitem->{unit} = $language->gettext($pitem->{gettext_unit})
+        if exists $pitem->{gettext_unit};
+
+    if (ref $pitem->{format} eq 'ARRAY' and $pitem->{occurrence} =~ /n$/) {
+        $pitem->{type} = 'set';
+    } elsif (ref $pitem->{format} eq 'HASH') {
+        $pitem->{type} = 'paragraph';
+
+        my @format = map {
+            _do_edit_list_request(
+                $config,
+                $pitem->{format}->{$_},
+                [@$pnames, $_]
+            );
+        } $config->keys(join '.', @$pnames);
+
+        if (@format) {
+            $pitem->{format} = [@format];
+        } else {
+            return ();
+        }
+    } else {
+        $pitem->{type} = 'leaf';
+
+        $pitem->{enum} = 1
+            if ref $pitem->{format} eq 'ARRAY';
+
+        if ($pitem->{scenario}) {
+            my $scenarios =
+                $list->load_scenario_list($pitem->{scenario}, $robot);
+            my $list_of_scenario = {};
+            # Only get required scenario attributes.
+            foreach my $scenario (keys %{$scenarios}) {
+                $list_of_scenario->{$scenario} = {
+                    name  => $scenarios->{$scenario}{name},
+                    title => $scenarios->{$scenario}->get_current_title()
+                };
+            }
+            $pitem->{format} = $list_of_scenario;
+        } elsif ($pitem->{task}) {
+            my $list_of_task =
+                $list->load_task_list($pitem->{task}, $robot);
+            $pitem->{format} = $list_of_task;
+        } elsif ($pitem->{datasource}) {
+            my $list_of_data_sources = $list->load_data_sources_list($robot);
+            $pitem->{format} = $list_of_data_sources;
+        }
+    }
+
+    return ($pitem);
 }
 
 # No longer used.
 #sub _check_new_values;
 
-#=head2 sub _prepare_edit_form(LIST)
-#
-#Prepares config data to be sent in the edition form. Adds to the parameters array a hash for each parameter to be edited.
-#
-#=head3 Arguments
-#
-#=over
-#
-#=item * I<$list>, a List object
-#
-#=back
-#
-#=head3 Return
-#
-#=over
-#
-#=item * I<1>, if no problem is encountered
-#
-#=item * I<undef>, if anything goes wrong
-#
-#=back
-#
-#=cut
+# DEPRECATED.
+#sub _prepare_edit_form;
 
-## Prepare config data to be sent in the
-## edition form
-sub _prepare_edit_form {
-    my $list        = shift;
-    my $list_config = Sympa::Tools::Data::dup_var($list->{'admin'});
-    my $family;
-    my $is_form_editable = '0';
+# DEPRECATED.
+#sub _prepare_data;
 
-    ## If the list belongs to a family, check if the said family can be
-    ## retrieved.
-    if (defined $list_config->{'family_name'}) {
-        unless ($family = $list->get_family()) {
-            Sympa::Report::reject_report_web('intern', 'unable_get_family',
-                {}, $param->{'action'}, $list, $param->{'user'}{'email'},
-                $robot);
-            wwslog('info', 'Impossible to get list %s\'s family',
-                $list->{'name'});
-            return undef;
-        }
-    }
-
-    ## For each parameter defined in List.pm, retrieve and prepare for editing
-    foreach my $pname (sort Sympa::List::by_order keys %{$pinfo}) {
-        # Skip comments and default values.
-        next if grep { $pname eq $_ } qw(comment defaults);
-
-        # Skip parameters belonging to another group.
-        next if $in{'group'} and $pinfo->{$pname}{'group'} ne $in{'group'};
-
-        # Skip obsolete parameters and alias names.
-        next if $pinfo->{$pname}{'obsolete'};
-
-        ## Check whether the parameter can be edited by the logged user.
-        my $may_edit = $list->may_edit($pname, $param->{'user'}{'email'});
-
-        ## Valid form global edit status as soon as at least one editable
-        ## parameter is found.
-        if ($may_edit eq 'write') {
-            $is_form_editable = '1';
-        }
-
-        # Store in $p a reference to the hash containing the information
-        # relative to the parameter editing.
-        my $p =
-            _prepare_data($pname, $pinfo->{$pname}, $list_config->{$pname},
-            $may_edit, $family);
-        next unless defined $p;
-
-        ## Store if the parameter is still at its default value or not.
-        $p->{'default'} = $list_config->{'defaults'}{$pname};
-
-        ## Store the change state of this parameter, taken from the global
-        ## variable %changed_params.
-        $p->{'changed'} = $::changed_params{$pname};
-
-        ## Exceptions...too many
-        if ($pname eq 'topics') {
-            $p->{'type'} = 'enum';
-
-            my @topics;
-            foreach my $topic (sort keys %{$p->{'value'}}) {
-                push @topics, $topic if $p->{'value'}{$topic}{'selected'};
-            }
-            delete $p->{'value'};
-            my %list_of_topics = Sympa::Robot::load_topics($robot);
-
-            if (defined $p->{'constraint'}) {
-                _restrict_values(\%list_of_topics, $p->{'constraint'});
-            }
-
-            foreach my $topic (keys %list_of_topics) {
-                $p->{'value'}{$topic}{'selected'} = 0;
-                $p->{'value'}{$topic}{'title'} =
-                    $list_of_topics{$topic}{'current_title'};
-
-                if ($list_of_topics{$topic}{'sub'}) {
-                    foreach
-                        my $subtopic (keys %{$list_of_topics{$topic}{'sub'}})
-                    {
-                        $p->{'value'}{"$topic/$subtopic"}{'selected'} = 0;
-                        $p->{'value'}{"$topic/$subtopic"}{'title'} =
-                            "$list_of_topics{$topic}{'current_title'}/$list_of_topics{$topic}{'sub'}{$subtopic}{'current_title'}";
-                    }
-                }
-            }
-            foreach my $selected_topic (@topics) {
-                next unless (defined $selected_topic);
-                $p->{'value'}{$selected_topic}{'selected'} = 1;
-                $p->{'value'}{$selected_topic}{'title'} =
-                    $language->gettext_sprintf("Unknown (%s)",
-                    $selected_topic)
-                    unless (defined $p->{'value'}{$selected_topic}{'title'});
-            }
-        } elsif ($pname eq 'digest') {
-            foreach my $v (@{$p->{'value'}}) {
-                next unless ($v->{'name'} eq 'days');
-                if (ref($v->{'value'}) eq 'ARRAY') {
-                    $log->syslog('debug2',
-                        'Empty digest parameter. Putting a dummy value');
-                    $v->{'value'} = undef;
-                    $v->{'type'}  = 'enum';
-                } else {
-                    foreach my $day (keys %{$v->{'value'}}) {
-                        my $t =
-                            $language->gettext_strftime("%A",
-                            gmtime(0 + ($day + 3) * (3600 * 24)));
-                        $t = sprintf '%s (%s)', $t,
-                            $day
-                            if Sympa::is_listmaster($list,
-                            $param->{'user'}{'email'});
-                        $v->{'value'}{$day}{'title'} = $t;
-                    }
-                }
-            }
-        } elsif ($pname eq 'lang') {
-            $language->push_lang;
-            foreach my $lang (keys %{$p->{'value'}}) {
-                $language->set_lang($lang);
-                my $t = $language->native_name || $lang;
-                $t = sprintf '%s (%s)', $t, $lang
-                    if Sympa::is_listmaster($list, $param->{'user'}{'email'});
-                $p->{'value'}{$lang}{'title'} = $t;
-                # compatibility: 6.1.
-                $p->{'value'}{$lang}{'lang_tag'} = $lang;
-            }
-            $language->pop_lang;
-        } elsif ($pname eq 'available_user_options'
-            or $pname eq 'default_user_options') {
-            foreach my $v (@{$p->{'value'}}) {
-                if ($v->{'name'} eq 'reception') {
-                    foreach my $x (keys %{$v->{'value'}}) {
-                        $v->{'value'}{$x}{'title'} =
-                            Sympa::ListOpt::get_title(
-                            $x,
-                            'reception',
-                            Sympa::is_listmaster(
-                                $list, $param->{'user'}{'email'}
-                            )
-                            );
-                    }
-                } elsif ($v->{'name'} eq 'visibility') {
-                    foreach my $x (keys %{$v->{'value'}}) {
-                        $v->{'value'}{$x}{'title'} =
-                            Sympa::ListOpt::get_title(
-                            $x,
-                            'visibility',
-                            Sympa::is_listmaster(
-                                $list, $param->{'user'}{'email'}
-                            )
-                            );
-                    }
-                }
-            }
-        } elsif ($pname eq 'status') {
-            foreach my $x (keys %{$p->{'value'}}) {
-                $p->{'value'}{$x}{'title'} =
-                    Sympa::ListOpt::get_title($x, 'status',
-                    Sympa::is_listmaster($list, $param->{'user'}{'email'}));
-            }
-        }
-
-        push @{$param->{'param'}}, $p;
-    }
-
-    ## If at least one param was editable, make the update button appear in
-    ## the form.
-    $param->{'is_form_editable'} = $is_form_editable;
-    return 1;
-}
-
-#=head2 sub _prepare_data(STRING $name, HASH_Ref $struct, SCALAR $data, STRING $may_edit, FAMILY $family, STRING $main_p)
-#
-#Returns a reference to a hash containing the data used to edit the parameter (of name $name, corresponding to the structure $struct in pinfo, with the $may_edit editing status) containing the data in the Sympa web interface.
-#
-#=head3 Arguments
-#
-#=over
-#
-#=item * I<$name> (STRING), the name of the parameter processed
-#
-#=item * I<$struct> (HASH_Ref), a ref to the hash describing this parameter in %Sympa::ListDef::pinfo
-#
-#=item * I<$data> (), the value(s) taken by this parameter in the current list. Can be a reference to a list or the value of a single parameter.
-#
-#=item * I<$may_edit> (STRING), the editing status of this parameter in the current context.
-#
-#=item * I<$family> (FAMILY), the family the list belongs to.
-#
-#=item * I<$main_p> (STRING), the prefix composing the complete name of the parameter.
-#
-#=back
-#
-#=head3 Return
-#
-#=over
-#
-#=item * I<$p_glob>, a reference to a hash containing the data used to edit the parameter.
-#
-#=back
-#
-#=cut
-
-sub _prepare_data {
-    my ($name, $struct, $data, $may_edit, $family, $main_p) = @_;
-    #    wwslog('debug2', '(%s, %s)', $name, $data);
-    # $family and $main_p (recursive call) are optionnal
-    # if $main_p is needed, $family also
-    return undef if $struct->{'obsolete'};
-
-    ## Prepare data structure for the parser
-    my $p_glob = {'name' => $name};
-
-    ## Check if some family constraint modify the editing rights.
-    my $restrict = 0;
-    my $constraint;
-    if ((ref($family) eq 'Sympa::Family') && ($may_edit eq 'write')) {
-
-        if ($main_p && defined $pinfo->{$main_p}) {
-            if (ref($pinfo->{$main_p}{'format'}) eq 'HASH') {
-                # composed parameter
-                $constraint = $family->get_param_constraint(
-                    "$main_p.$p_glob->{'name'}");
-            }
-        } else {    # simple parameter
-            if (ref($pinfo->{$p_glob->{'name'}}{'format'}) ne 'HASH') {
-                # simple parameter
-                $constraint =
-                    $family->get_param_constraint($p_glob->{'name'});
-            }
-        }
-        if ($constraint eq '0') {    # free parameter
-            $p_glob->{'may_edit'} = 'write';
-
-        } elsif (ref($constraint) eq 'HASH') {    # controlled parameter
-            $p_glob->{'may_edit'} = 'write';
-            $restrict = 1;
-
-        } else {                                  # fixed parameter
-            $p_glob->{'may_edit'} = 'read';
-        }
-
-    } else {
-        $p_glob->{'may_edit'} = $may_edit;
-    }
-
-    ## Naming the parameter.
-    if ($struct->{'gettext_id'}) {
-        $p_glob->{'title'} = $language->gettext($struct->{'gettext_id'});
-    } else {
-        $p_glob->{'title'} = $name;
-    }
-    if ($struct->{'gettext_comment'}) {
-        $p_glob->{'comment'} =
-            $language->gettext($struct->{'gettext_comment'});
-    }
-
-    ## Occurrences : if the parameter can have multiple occurrences,
-    ## its values are transfered into the array pointed by $data2
-    ## if they were given in arguments (if not, an empty array is created).
-    ## if it is a single occurrence parameter, an array is created with
-    ## its single value.
-
-    my $data2;
-    if ($struct->{'occurrence'} =~ /n$/) {
-        $p_glob->{'occurrence'} = 'multiple';
-        $data2 = $data || [];
-
-        if ($may_edit eq 'write') {
-            # Add an empty entry.
-            unless (grep { $name eq $_ }
-                qw(days reception rfc2369_header_fields topics)) {
-                my $empty_entry;
-                if (ref($struct->{'format'}) eq 'HASH') {
-                    # Structured parameter.
-                    foreach my $sub_parameter (keys %{$struct->{'format'}}) {
-                        # Use default value if defined.
-                        if ($struct->{'format'}{$sub_parameter}{'default'}) {
-                            $empty_entry->{$sub_parameter} =
-                                $struct->{'format'}{$sub_parameter}
-                                {'default'};
-                        }
-                    }
-                    $empty_entry->{is_empty} = 1;
-                } else {
-                    # Simple parameter.
-                    $empty_entry = undef;
-                }
-
-                push @{$data2}, $empty_entry;
-            }
-        }
-    } else {
-        $data2 = [$data];
-    }
-
-    my @all_p;
-
-    ## Foreach occurrence of param
-    foreach my $d (@{$data2}) {
-        my $p = {};
-
-        ## Type of data
-        if ($struct->{'scenario'}) {
-            $p_glob->{'type'} = 'scenario';
-            my $list_of_scenario;
-
-            my $tmp_list_of_scenario =
-                $list->load_scenario_list($struct->{'scenario'}, $robot);
-
-            ## Only get required scenario attributes
-            foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-                $list_of_scenario->{$scenario} = {
-                    'name'      => $tmp_list_of_scenario->{$scenario}{'name'},
-                    'web_title' => $tmp_list_of_scenario->{$scenario}
-                        ->get_current_title()
-                };
-            }
-
-            $list_of_scenario->{$d->{'name'}}{'selected'} = 1;
-
-            $p->{'value'} = $list_of_scenario;
-
-            if ($restrict) {
-                _restrict_values($p->{'value'}, $constraint);
-            }
-
-        } elsif ($struct->{'task'}) {
-            $p_glob->{'type'} = 'task';
-            my $list_of_task =
-                $list->load_task_list($struct->{'task'}, $robot);
-
-            $list_of_task->{$d->{'name'}}{'selected'} = 1;
-
-            $p->{'value'} = $list_of_task;
-
-            if ($restrict) {
-                _restrict_values($p->{'value'}, $constraint);
-            }
-
-        } elsif ($struct->{'datasource'}) {
-            $p_glob->{'type'} = 'datasource';
-            my $list_of_data_sources = $list->load_data_sources_list($robot);
-
-            $list_of_data_sources->{$d}{'selected'} = 1;
-
-            $p->{'value'} = $list_of_data_sources;
-
-            if ($restrict) {
-                _restrict_values($p->{'value'}, $constraint);
-            }
-
-        } elsif (ref($struct->{'format'}) eq 'HASH') {
-            $p_glob->{'type'} = 'paragraph';
-            unless (ref($d) eq 'HASH') {
-                $d = {};
-            }
-
-            $p->{is_empty} = delete $d->{is_empty};
-            foreach my $k (
-                sort {
-                    $struct->{'format'}{$a}{'order'}
-                        <=> $struct->{'format'}{$b}{'order'}
-                }
-                keys %{$struct->{'format'}}
-                ) {
-                ## Prepare data recursively
-                my $m_e =
-                    $list->may_edit("$name.$k", $param->{'user'}{'email'});
-                my $v = _prepare_data($k, $struct->{'format'}{$k},
-                    $d->{$k}, $m_e, $family, $name);
-                next unless defined $v;
-                push @{$p->{'value'}}, $v;
-            }
-
-        } elsif ((ref($struct->{'format'}) eq 'ARRAY')
-            || ($restrict && ($main_p eq 'msg_topic' && $name eq 'keywords')))
-        {
-            $p_glob->{'type'} = 'enum';
-
-            unless (defined $p_glob->{'value'}) {
-                ## Initialize
-                foreach my $elt (@{$struct->{'format'}}) {
-                    $p_glob->{'value'}{$elt}{'selected'} = 0;
-                }
-            }
-            if (ref($d)) {
-                next unless (ref($d) eq 'ARRAY');
-                foreach my $v (@{$d}) {
-                    $p_glob->{'value'}{$v}{'selected'} = 1;
-                }
-            } else {
-                $p_glob->{'value'}{$d}{'selected'} = 1 if (defined $d);
-            }
-
-            if ($restrict) {
-                _restrict_values($p_glob->{'value'}, $constraint);
-            }
-
-        } else {
-            if ($restrict && ($name ne 'topics')) {
-                $p_glob->{'type'} = 'enum';
-
-                foreach my $elt (keys %{$constraint}) {
-                    $elt =~ s/"/&quot;/;
-                    $p->{'value'}{$elt}{'selected'} = 0;
-                }
-
-                $d =~ s/"/&quot;/;
-                $p->{'value'}{$d}{'selected'} = 1;
-                $p->{'length'} = $struct->{'length'};
-                $p->{'unit'} = $language->gettext($struct->{'gettext_unit'});
-
-            } else {
-
-                $d =~ s/"/&quot;/;
-                $p_glob->{'type'}  = 'scalar';
-                $p->{'value'}      = $d;
-                $p->{'length'}     = $struct->{'length'};
-                $p->{'field_type'} = $struct->{'field_type'};
-                my $l = length($p->{'value'});
-                $p->{'hidden_field'} = '*' x $l;
-                $p->{'unit'} = $language->gettext($struct->{'gettext_unit'});
-                if ($restrict) {    # for topics
-                    $p_glob->{'constraint'} = $constraint;
-                }
-            }
-        }
-
-        push @all_p, $p;
-    }
-
-    if (   ($p_glob->{'occurrence'} eq 'multiple')
-        && ($p_glob->{'type'} ne 'enum')) {
-        $p_glob->{'value'} = \@all_p;
-    } else {
-        foreach my $k (keys %{$all_p[0]}) {
-            $p_glob->{$k} = $all_p[0]->{$k};
-        }
-    }
-
-    return $p_glob;
-}
-
-## Restrict allowed values in the hash
-sub _restrict_values {
-    my $values  = shift;    #ref on hash of values
-    my $allowed = shift;    #ref on hash of allowed values
-    wwslog('debug3', '');
-
-    foreach my $v (keys %{$values}) {
-        unless (defined $allowed->{$v}) {
-            delete $values->{$v};
-        }
-    }
-}
+# No longer used.
+#sub _restrict_values;
 
 ## NOT USED anymore (expect chinese)
 sub do_close_list_request {
@@ -16028,8 +15569,6 @@ sub _set_my_lists_info {
             $member_info->{'reception'}  ||= 'mail';
             $member_info->{'visibility'} ||= 'noconceal';
             foreach my $mode ($list->available_reception_mode) {
-                $param->{'reception'}{$list->{'name'}}{$mode}{'description'}
-                    = Sympa::ListOpt::get_title($mode, 'reception');
                 if ($member_info->{'reception'} eq $mode) {
                     $param->{'reception'}{$list->{'name'}}{$mode}{'selected'}
                         = ' selected';
@@ -18382,13 +17921,10 @@ sub do_review_family {
 
         push @{$param->{'family_lists'}},
             {
-            'name'               => $flist->{'name'},
-            'status'             => $flist->{'admin'}{'status'},
-            'instantiation_date' => $language->gettext_strftime(
-                "%d %b %Y at %H:%M:%S",
-                localtime $flist->{'admin'}{'latest_instantiation'}
-                    {'date_epoch'}
-            ),
+            'name'                     => $flist->{'name'},
+            'status'                   => $flist->{'admin'}{'status'},
+            'instantiation_date_epoch' =>
+                $flist->{'admin'}{'latest_instantiation'}{'date_epoch'},
             'subject' => $flist->{'admin'}{'subject'},
             };
     }

@@ -575,6 +575,19 @@ $(function() {
     });
 });
 
+/* If checked, fade off item specified by data-selector. */
+$(function() {
+    $('.fadeIfChecked').each(function(){
+        var selector = $(this).data('selector');
+        $(this).on('change', function(){
+            if ($(this).prop('checked'))
+                $(selector).fadeTo('normal', 0.3);
+            else
+                $(selector).fadeTo('normal', 1);
+        });
+    });
+});
+
 /* Top button. */
 $(function() {
     var scrollTopInner = $('<span class="scroll-top-inner">' +

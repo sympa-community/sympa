@@ -10,7 +10,9 @@
   <div>
   <select id="lang" name="lang" class="neutral">
     [% FOREACH l = languages %]
-      <option value="[% l.key %]" lang="[% l.key %]" xml:lang="[% l.key %]" [% l.value.selected %]>[% l.value.complete %]</option>
+      <option value="[% l.key %]" lang="[% l.key %]" xml:lang="[% l.key %]"
+       [%~ IF l.value.selected %] selected="selected"[% END %]>
+      [%~ l.key | optdesc('lang') %]</option>
     [% END %]
   </select>
   </div>
@@ -18,7 +20,9 @@
   <div>
   <select name="cookie_delay" id="cookie_delay">
     [% FOREACH period = cookie_periods %]
-      <option value="[% period.value %]" [% period.selected %]>[% period.desc %]</option>
+      <option value="[% period.value %]"
+       [%~ IF period.selected %] selected="selected"[% END %]>
+      [%~ period.desc %]</option>
     [% END %]
   </select>
   </div>
