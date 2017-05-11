@@ -48,14 +48,20 @@
       </a>
     [%~ END %]
 
-    <a href="[% 'nomenu/help/editlist' | url_rel %]#[% pS.name %]"
-     title="[%|loc%]Open in a new window[%END%]"
-     onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')"
-     target="wws_help">
-    <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
-    </a>
+    [%~ IF pS.comment ~%]
+      <a href="#" class="accordionButton"
+       data-selector="#help\.[% pS.name %]">
+      <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+      </a>
+    [%~ END ~%]
     </span>
     </h4>
+
+    [% IF pS.comment ~%]
+      <div id="help.[% pS.name %]" class="panel radius">
+      <p>[% pS.comment.replace('\n', '</p><p>') %]</p>
+      </div>
+    [%~ END ~%]
 
     [% IF pS.type == 'set' ~%]
       <div class="row">
@@ -92,8 +98,21 @@
             [%~ ELSE ~%]
               [% kS.name %]
             [%~ END ~%]
+
+            [% IF kS.comment ~%]
+              <a href="#" class="accordionButton"
+               data-selector="#help\.[% pS.name %]\.[% kS.name %]">
+              <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+              </a>
+            [%~ END ~%]
             [%|loc%]:[%END%]
             </label>
+
+            [% IF kS.comment ~%]
+              <div id="help.[% pS.name %].[% kS.name %]" class="panel radius">
+              <p>[% kS.comment.replace('\n', '</p><p>') %]</p>
+              </div>
+            [%~ END ~%]
 
             [% IF kS.type == 'set' ~%]
               [% PROCESS EditListSet
@@ -165,10 +184,23 @@
               [% kS.title %]
               [%~ IF is_listmaster %] ([% kS.name %])[% END %]
             [%~ ELSE ~%]
-              [% kS.name ~%]
+              [% kS.name %]
+            [%~ END ~%]
+
+            [% IF kS.comment ~%]
+              <a href="#" class="accordionButton"
+               data-selector="#help\.[% pS.name %]\.[% kS.name %]">
+              <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+              </a>
             [%~ END ~%]
             [%|loc%]:[%END%]
             </label>
+
+            [% IF kS.comment ~%]
+              <div id="help.[% pS.name %].[% kS.name %]" class="panel radius">
+              <p>[% kS.comment.replace('\n', '</p><p>') %]</p>
+              </div>
+            [%~ END ~%]
 
             [% IF kS.type == 'set' ~%]
               [% PROCESS EditListSet
@@ -222,8 +254,21 @@
           [%~ ELSE ~%]
             [% kS.name %]
           [%~ END ~%]
+
+          [% IF kS.comment ~%]
+            <a href="#" class="accordionButton"
+             data-selector="#help\.[% pS.name %]\.[% kS.name %]">
+            <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+            </a>
+          [%~ END ~%]
           [%|loc%]:[%END%]
           </label>
+
+          [% IF kS.comment ~%]
+            <div id="help.[% pS.name %].[% kS.name %]" class="panel radius">
+            <p>[% kS.comment.replace('\n', '</p><p>') %]</p>
+            </div>
+          [%~ END ~%]
 
           [% IF kS.type == 'set' ~%]
             [% PROCESS EditListSet 
