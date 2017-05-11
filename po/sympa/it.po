@@ -8859,8 +8859,14 @@ msgstr ""
 "directory."
 
 #: default/web_tt2/skinsedit.tt2:8
-msgid "So if you want to preserve some site customization from being overwriten when starting a new sympa version, css_path and css_url should not point to the same directory."
-msgstr "Quindi, se volete fare in modo che le personalizzazioni del sito non vengano sovrascritte quando si passa una nuova versione sympa, css_path e css_url non devono puntare alla stessa directory."
+msgid ""
+"So if you want to preserve some site customization from being overwriten "
+"when starting a new sympa version, css_path and css_url should not point to "
+"the same directory."
+msgstr ""
+"Quindi, se volete fare in modo che le personalizzazioni del sito non vengano "
+"sovrascritte quando si passa una nuova versione sympa, css_path e css_url "
+"non devono puntare alla stessa directory."
 
 #: default/web_tt2/skinsedit.tt2:11
 msgid ""
@@ -14094,6 +14100,81 @@ msgstr ""
 msgid "Searches are limited to 50 results, except when using a @domain mask."
 msgstr ""
 
+#: default/web_tt2/help_editlist.tt2:84
+#, fuzzy
+msgid ""
+"FYI: Defining editors will not make the list moderated; you will have to set "
+"the \"send\" parameter."
+msgstr ""
+"NB: Indicare i moderatori non rende la lista moderata. Devi anche impostare "
+"il parametro \"send\""
+
+#: default/web_tt2/help_editlist.tt2:101
+#, fuzzy
+msgid ""
+"Include subscribers from this file.  The file should contain one e-mail "
+"address per line (lines beginning with a \"#\" are ignored)."
+msgstr ""
+"Questo parametro viene interpretato solo se il valore di user_data_source è "
+"impostato a include. Il file deve contenere un indirizzi email per riga (le "
+"righe che iniziano per # sono ignorate)"
+
+#: default/web_tt2/help_editlist.tt2:103
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a two-level query returning a list of "
+"subscribers. Usually the first-level query returns a list of DNs and the "
+"second-level queries convert the DNs into e-mail addresses. This feature "
+"requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Questo paragrafo definisce i parametri per un'interrogazione a due livelli "
+"che restituiscono un elenco di iscritti. Di solito la prima interrogazione "
+"restitutisce un elenco di DN e la seconda li converte in indirizzi email."
+"Questo paragrafo viene usato solo se user_data_source è impostato a include."
+"Questa caratteristica richiede il modulo Perl Net::LDAP (perlldap)"
+
+#: default/web_tt2/help_editlist.tt2:105
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a query returning a list of "
+"subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Questo paragrafo definisce i parametri per un'interrogazione LDAP che "
+"restituisce un elenco di iscritti.Questo paragrafo viene usato solo se "
+"user_data_source è impostato a include.Questa caratteristica richiedere il "
+"modulo Perl Net::LDAP (perlldap)"
+
+#: default/web_tt2/help_editlist.tt2:107
+#, fuzzy
+msgid ""
+"Include subscribers from other list. All subscribers of list listname become "
+"subscribers of the current list. You may include as many lists as required, "
+"using one include_sympa_list paragraph for each included list. Any list at "
+"all may be included; you may therefore include lists which are also defined "
+"by the inclusion of other lists. Be careful, however, not to include list A "
+"in list B and then list B in list A, since this will give rise to an "
+"infinite loop."
+msgstr ""
+"Questo parametro viene interpretato solo se il valore di user_data_source è "
+"impostato a include. Tutti gli iscritti della lista listname diventano "
+"iscritti della lista in questione. Si possono includere tutte le liste che "
+"si vogliono, usando un include_list listname per ogni lista da includere. "
+"Ogni tipo di lista può essere incluso, la definizione di user_data_source "
+"delle liste incluse non è rilevante, e quindi si possono includere liste "
+"definite a loro volta includendo altre liste. Fa' però attenzione a non "
+"includere la lista A nella lista B e quindi la lista B nella lista A, perché "
+"questo darà il via ad un ciclo infinito."
+
+#: default/web_tt2/help_editlist.tt2:112
+#, fuzzy
+msgid ""
+"This parameter is used to begin a paragraph defining the SQL query "
+"parameters. "
+msgstr ""
+"Questo parametro viene interpretato solo se il valore di user_data_source è "
+"impostato a include, ed è usato per dare inizio ad un paragrafo che "
+"definisce un'interrogazione SQL"
+
 #~ msgid ""
 #~ "There are new shared documents in list %1: \n"
 #~ "\t%2\n"
@@ -16202,6 +16283,17 @@ msgstr ""
 #~ "presente in questa lista, Sympa utilizza il modo stabilito dal parametro "
 #~ "default_user_options."
 
+msgid ""
+"Only these modes will be allowed "
+"for the subscribers of this list. If a subscriber has a reception mode "
+"not in the list, Sympa uses the mode specified in the "
+"default_user_options paragraph."
+msgstr ""
+"Solo questi modi saranno permessi "
+"agli iscritti alla lista. Se un iscritto ha un modo di recezione non "
+"presente in questa lista, Sympa utilizza il modo stabilito dal parametro "
+"default_user_options."
+
 #~ msgid "This paragraph defines bounce management parameters:"
 #~ msgstr "Questo paragrafo definisce il parametri di gestione dei rifiuti"
 
@@ -16257,6 +16349,12 @@ msgstr ""
 #~ "comportamento automatico per la gestione dei rifiuti.<br>\n"
 #~ "   Il livello 1 è il livello piú basso di indirizzi rifiutati.\n"
 
+#, fuzzy
+msgid ""
+"Level 1 is the lower level of bouncing users"
+msgstr ""
+"   Il livello 1 è il livello piú basso di indirizzi rifiutati.\n"
+
 #~ msgid "Each bouncing user have a score (from 0 to 100)."
 #~ msgstr "Ciascun indirizzo respinto ha un punteggio (da 0 a 100)"
 
@@ -16292,6 +16390,12 @@ msgstr ""
 #~ "Il paragrafo del livello X definisce il comportamento automatico per la "
 #~ "gestione dei rifiuti. <br/>\n"
 #~ "   Il livello 2 è il livello piú alto di rifiuto.\n"
+
+#, fuzzy
+msgid ""
+"Level 2 is the highest level of bouncing users"
+msgstr ""
+"   Il livello 2 è il livello piú alto di rifiuto.\n"
 
 #, fuzzy
 #~ msgid ""
@@ -16452,6 +16556,13 @@ msgstr ""
 #~ msgstr ""
 #~ "Nome di dominio della lista. Il valore predefinito è il dominio del robot "
 #~ "stabilito nel file robot.conf relativo o nel file /etc/sympa.conf"
+
+msgid ""
+"Domain name of the list, default is the robot domain name set in the "
+"related robot.conf file or in file sympa.conf."
+msgstr ""
+"Nome di dominio della lista. Il valore predefinito è il dominio del robot "
+"stabilito nel file robot.conf relativo o nel file sympa.conf"
 
 #~ msgid ""
 #~ "This parameter will be interpreted only if the user_data_source value is "

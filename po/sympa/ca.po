@@ -8480,8 +8480,14 @@ msgstr ""
 "mateix directori ."
 
 #: default/web_tt2/skinsedit.tt2:8
-msgid "So if you want to preserve some site customization from being overwriten when starting a new sympa version, css_path and css_url should not point to the same directory."
-msgstr "Per tant, si voleu preservar algun espai personalitzat de ser sobreescrit quan s'iniciï una nova versió de sympa, el css_path i css_url no poden apuntar al mateix directori ."
+msgid ""
+"So if you want to preserve some site customization from being overwriten "
+"when starting a new sympa version, css_path and css_url should not point to "
+"the same directory."
+msgstr ""
+"Per tant, si voleu preservar algun espai personalitzat de ser sobreescrit "
+"quan s'iniciï una nova versió de sympa, el css_path i css_url no poden "
+"apuntar al mateix directori ."
 
 #: default/web_tt2/skinsedit.tt2:11
 msgid ""
@@ -13488,6 +13494,862 @@ msgstr ""
 #: ../src/sympa_wizard.pl.in:453
 msgid "used to compute MD5 digests for passwords, etc"
 msgstr ""
+
+#: default/web_tt2/help_editlist.tt2:9
+msgid "Privilege for adding (ADD command) a subscriber to the list"
+msgstr "Privilegi per a afegir (ordre ADD) a subscriptor a la llista"
+
+#: default/web_tt2/help_editlist.tt2:11
+msgid ""
+"To hide the sender's email address before distributing the message. It is "
+"replaced by the provided email address."
+msgstr ""
+"Per a amagar la direcció de correu del remitent abans de distribuir el "
+"missatge. Es reemplaça per la direcció de correu donada."
+
+#: default/web_tt2/help_editlist.tt2:13
+msgid "Privilege for reading mail archives and frequency of archiving"
+msgstr "Privilegi per a llegir arxius de correu i freqüencia d'arxivament"
+
+#: default/web_tt2/help_editlist.tt2:15
+msgid ""
+"The available_user_options parameter starts a paragraph to define available "
+"options for the subscribers of the list."
+msgstr ""
+"El paràmetre avaible_user_options comença un paràgraf per a definir les "
+"opcions disponibles que tenen els subscriptors de la llista."
+
+#: default/web_tt2/help_editlist.tt2:17
+msgid "Default value: reception mail,notice,digest,digestplain,summary,nomail"
+msgstr ""
+"Valor predeterminat: reception mail,notice,digest,digestplain,summary,nomail"
+
+#: default/web_tt2/help_editlist.tt2:18
+msgid ""
+"<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
+"summary, nomail), separated by commas. Only these modes will be allowed for "
+"the subscribers of this list. If a subscriber has a reception mode not in "
+"the list, sympa uses the mode specified in the default_user_options "
+"paragraph."
+msgstr ""
+"<em>modelist</em> és una llista de modes (mail, notice, digest, digestplain, "
+"summary, nomail), separats per comes. Només es permitiran aquests modes per "
+"als subscriptors d'aquesta llista. Si un subscriptor té un mode de recepció "
+"que no està en la llista, sympa empra el mode especificat en el paràgraf "
+"default_user_options."
+
+#: default/web_tt2/help_editlist.tt2:18
+msgid ""
+"Only these modes will be allowed for "
+"the subscribers of this list. If a subscriber has a reception mode not in "
+"the list, Sympa uses the mode specified in the default_user_options "
+"paragraph."
+msgstr ""
+"Només es permitiran aquests modes per "
+"als subscriptors d'aquesta llista. Si un subscriptor té un mode de recepció "
+"que no està en la llista, sympa empra el mode especificat en el paràgraf "
+"default_user_options."
+
+#: default/web_tt2/help_editlist.tt2:22
+msgid "This paragraph defines bounce management parameters:"
+msgstr ""
+"Aquest paràgraf defineix la gestió dels paràmetres dels missatges retornats:"
+
+#: default/web_tt2/help_editlist.tt2:24
+msgid "Default value: bounce_warn_rate robot parameter"
+msgstr "Valor predeterminat: paràmetre de robot bounce_warn_rate"
+
+#: default/web_tt2/help_editlist.tt2:25
+msgid ""
+"The list owner receives a warning whenever a message is distributed and the "
+"number (percentage) of bounces exceeds this value."
+msgstr ""
+"El propietari de la llista rep un avís cada vegada que es distribueix un "
+"missatge i el nombre (percentatge) de retornats excedeix el valor."
+
+#: default/web_tt2/help_editlist.tt2:27
+msgid "Default value: bounce_halt_rate robot parameter"
+msgstr "Valor predeterminat: paràmetre de robot bounce_halt_rate"
+
+#: default/web_tt2/help_editlist.tt2:28
+msgid ""
+"NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
+"will be halted, i.e. they are retained for subsequent moderation."
+msgstr ""
+"ENCARA NO S'HA USAT. Si la quantitat de retornats arriba a halt_rate, es "
+"detindran els missatges per a la llista, per ex. es retenen per què siguen "
+"moderats."
+
+#: default/web_tt2/help_editlist.tt2:130 default/web_tt2/help_editlist.tt2:137
+#: default/web_tt2/help_editlist.tt2:30 default/web_tt2/help_editlist.tt2:40
+#: default/web_tt2/help_editlist.tt2:43 default/web_tt2/help_editlist.tt2:46
+#: default/web_tt2/help_editlist.tt2:56 default/web_tt2/help_editlist.tt2:59
+#: default/web_tt2/help_editlist.tt2:62
+msgid "Default value:"
+msgstr "Valor predeterminat:"
+
+#: default/web_tt2/help_editlist.tt2:31
+msgid ""
+"Name of the task template used to remove old bounces. Useful for removing "
+"bounced subscriber email. If some messages are distributed without receiving "
+"new bounce messages, the subscriber's email seems to be OK again. Active if "
+"task_manager.pl is running."
+msgstr ""
+"El nom de les tasques de les plantilles que s'empren per a eliminar els "
+"retornats antics. Són útils per a eliminar els correus de subscriptors "
+"retornats. Si es distribueixen alguns missatges sense que es reba un nou "
+"missatge retornat, sembla que el correu del subscriptor torna a estar bé. "
+"Activeu-ho si funciona task_manager.pl."
+
+#: default/web_tt2/help_editlist.tt2:37
+msgid ""
+"The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
+"management.<br />\n"
+"\tLevel 1 is the lower level of bouncing users"
+msgstr ""
+"Els paràgrafs Bouncers_level1 defineixen el comportament automàtic de la "
+"gestió de retornats.<br />\n"
+"\t El nivell 1 és el més baix per a usuaris amb retornats"
+
+#: default/web_tt2/help_editlist.tt2:37
+msgid ""
+"Level 1 is the lower level of bouncing users"
+msgstr ""
+"\t El nivell 1 és el més baix per a usuaris amb retornats"
+
+#: default/web_tt2/help_editlist.tt2:41 default/web_tt2/help_editlist.tt2:57
+msgid "Each bouncing user have a score (from 0 to 100)."
+msgstr "Cada subscriptor amb retornats té una puntuació (de 0 a 100)."
+
+#: default/web_tt2/help_editlist.tt2:41
+msgid ""
+"This parameter defines a lower limit for each category of bouncing users.For "
+"example, level 1 begins from 45 to level_2_treshold."
+msgstr ""
+"Aquest paràmetre defineix un límit més baix per cada categoria de "
+"subscriptors amb retornats.Per exemple, el nivell 1 comença a partir de 45 "
+"fins al level_2_treshold."
+
+#: default/web_tt2/help_editlist.tt2:44
+msgid ""
+"This parameter defines which task is automaticaly applied on level 1 "
+"bouncers."
+msgstr ""
+"Aquest paràmetre defineix quines mesures s'han d'aplicar automàticament als "
+"subscriptors amb retornats de nivell 1."
+
+#: default/web_tt2/help_editlist.tt2:47
+msgid ""
+"When automatic task is executed on level 1 bouncers, a notification email "
+"can be send to listowner or listmaster."
+msgstr ""
+"Quan s'executa una mesura en els subscriptors amb retornats de nivell 1, es "
+"pot enviar una notificació per correu al propietari o administrador de la "
+"llista."
+
+#: default/web_tt2/help_editlist.tt2:53
+msgid ""
+"The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
+"management.<br />\n"
+"\tLevel 2 is the highest level of bouncing users"
+msgstr ""
+"Els paràgrafs Bouncers_levelX defineixen el comportament automàtic de la "
+"gestió de retornats.<br />\n"
+"\t El nivell 2 és el més alt per a usuaris amb retornats"
+
+#: default/web_tt2/help_editlist.tt2:53
+msgid ""
+"Level 2 is the highest level of bouncing users"
+msgstr ""
+"\t El nivell 2 és el més alt per a usuaris amb retornats"
+
+#: default/web_tt2/help_editlist.tt2:57
+msgid ""
+"This parameter defines the score range defining each category of bouncing "
+"users.For example, level 2 is for users with a score between 80 and 100."
+msgstr ""
+"Aquest paràmetre defineix el rang de puntuació per definir cada categoria "
+"d'usuaris amb retornats.Per exemple, el nivell 2 és per a usuaris amb una "
+"puntuació de 80 a 100."
+
+#: default/web_tt2/help_editlist.tt2:60
+msgid ""
+"This parameter defines which task is automaticaly applied on level 2 "
+"bouncers."
+msgstr ""
+"Aquest paràmetre defineix quines mesures s'han d'aplicar automàticament als "
+"subscriptors amb retornats de nivell 2."
+
+#: default/web_tt2/help_editlist.tt2:63
+msgid ""
+"When automatic task is executed on level 2 bouncers, a notification email "
+"can be send to listowner or listmaster."
+msgstr ""
+"Quan s'executa una mesura en els subscriptors amb retornats de nivell 2, es "
+"pot enviar una notificació per correu al propietari o administrador de la "
+"llista."
+
+#: default/web_tt2/help_editlist.tt2:67
+msgid ""
+"This parameter is a confidential item for generating authentication keys for "
+"administrative commands (ADD, DELETE, etc.). This parameter should remain "
+"concealed, even for owners. The cookie is applied to all list owners, and is "
+"only taken into account when the owner has the auth parameter."
+msgstr ""
+"Aquest paràmetre és un element confidencial per a generar claus "
+"d'autentificació per a ordres administratives (ADD, DELETE, etc.). Aquest "
+"paràmetre ha de romandre ocult, fins i tot per als propietaris. La galeta "
+"s'aplica a tots els propietaris de la llista i només es té en compte quan el "
+"propietari té el paràmetre auth."
+
+#: default/web_tt2/help_editlist.tt2:69
+msgid ""
+"This parameter is optional. The headers specified will be added to the "
+"headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
+"it is possible to put several custom header lines in the configuration file "
+"at the same time."
+msgstr ""
+"Aquest paràmetre és opcional. Les capçaleres especificades s'afegiran a les "
+"capçaleres dels missatges que es distribueixen a través de la llista. Amb la "
+"versió 1.2.2 de Sympa, és pot posar al mateix temps més d'una capçalera "
+"personalitzada en el fitxer de configuració."
+
+#: default/web_tt2/help_editlist.tt2:71
+msgid ""
+"This parameter is optional. It specifies a string which is added to the "
+"subject of distributed messages (intended to help users who do not use "
+"automatic tools to sort incoming messages). This string will be surrounded "
+"by [] characters."
+msgstr ""
+"Aquest paràmetre és opcional. Especifica una cadena que s'afegeix a "
+"l'assumpte dels missatges distribuïts (està destinat als usuaris que no "
+"utilitzen eines automàtiques per a classificar els missatges d'entrada). "
+"Aquesta cadena apareixerà entre els caràcters []."
+
+#: default/web_tt2/help_editlist.tt2:73
+msgid ""
+"The default_user_options parameter starts a paragraph to define a default "
+"profile for the subscribers of the list."
+msgstr ""
+"El paràmetre default_user_options comença un paràgraf per a definir un "
+"perfil predeterminat per als subscriptors de la llista."
+
+#: default/web_tt2/help_editlist.tt2:75
+msgid "Mail reception mode."
+msgstr "Mode de recepció de correus."
+
+#: default/web_tt2/help_editlist.tt2:76
+msgid "Visibility of the subscriber with the REVIEW command."
+msgstr "Visibilitat del subscriptor amb l'ordre REVIEW."
+
+#: default/web_tt2/help_editlist.tt2:79
+msgid "This parameter specifies who is authorized to use the DEL command."
+msgstr ""
+"Aquest paràmetre especifica qui està autoritzat per a emprar l'ordre DEL."
+
+#: default/web_tt2/help_editlist.tt2:81
+msgid ""
+"Definition of digest mode. If this parameter is present, subscribers can "
+"select the option of receiving messages in multipart/digest MIME format, or "
+"as a plain text digest. Messages are then grouped together, and compiled "
+"messages are sent to subscribers according to the frequency selected with "
+"this parameter."
+msgstr ""
+"Definició del mode resumit. Si el paràmetre està present, els subscriptors "
+"poden seleccionar la opció de rebre missatges multipart/reumit en format "
+"MIME o com un resum en text net. Aleshores, els missatges s'agrupen i els "
+"missatges compilats s'envien als subscriptors segons la freqüència "
+"seleccionada amb aquest paràmetre."
+
+#: default/web_tt2/help_editlist.tt2:83
+msgid ""
+"Editors are responsible for moderating messages. If the mailing list is "
+"moderated, messages posted to the list will first be passed to the editors, "
+"who will decide whether to distribute or reject it."
+msgstr ""
+"Els editors són els responsables de moderar els missatges. Si la llista de "
+"correu està moderada, els missatges publicats en la llista primer passaran "
+"pels editors, que decidiran si el distribueixen o el rebutgen."
+
+#: default/web_tt2/help_editlist.tt2:84
+#, fuzzy
+msgid ""
+"FYI: Defining editors will not make the list moderated; you will have to set "
+"the \"send\" parameter."
+msgstr ""
+"Informació: Elegir editors no farà que la llista estiga moderada; haureu de "
+"configurar el paràmetre «enviar»."
+
+#: default/web_tt2/help_editlist.tt2:85
+msgid ""
+"FYI: If the list is moderated, any editor can distribute or reject a message "
+"without the knowledge or consent of the other editors. Messages that have "
+"not been distributed or rejected will remain in the moderation spool until "
+"they are acted on."
+msgstr ""
+"Informació: Si la llista està moderada, qualsevol editor pot distribuir o "
+"rebutjar un missatge sense que ho sapiguen o donen el seu consentiment la "
+"resta d'editors. Els missatges que no s'han distribuit o que s'han rebutjat "
+"romandran en l'eina de gestió de cues per moderar fins que s'activen."
+
+#: default/web_tt2/help_editlist.tt2:87
+msgid ""
+"This parameter states which model is used to create an expire task. An "
+"expire task regularly checks the subscription or resubscription  date of "
+"subscribers and asks them to renew their subscription. If they don't they "
+"are deleted."
+msgstr ""
+"Aquest paràmetre indica que model per crear una tasca de venciment. Una "
+"tasca de venciment normalment revisa les dates de subscripció o re-"
+"subscripció de l'usuari i els demana que renoven la subscripció. Si no ho "
+"fan, se'ls elimina."
+
+#: default/web_tt2/help_editlist.tt2:89
+msgid ""
+"List owners may decide to add message headers or footers to messages sent "
+"via the list. This parameter defines the way a footer/header is added to a "
+"message."
+msgstr ""
+"Els propietaris de la llista poden decidir si afegeixen caçaleres o pues de "
+"pàgina als missatges que s'envien a la llita. Aquest paràmetre indica la "
+"manera com s'afegeix una capçalera o un peu de pàgina."
+
+#: default/web_tt2/help_editlist.tt2:92
+msgid "The default value. Sympa will add the footer/header as a new MIME part."
+msgstr ""
+"El valor per defecte. Sympa afegirà la capçalera o el peu de pàgina com a "
+"una part nova de MIME."
+
+#: default/web_tt2/help_editlist.tt2:95
+msgid ""
+"Sympa will not create new MIME parts, but will try to append the header/"
+"footer to the body of the message. Predefined message-footers will be "
+"ignored. Headers/footers may be appended to text/plain messages only."
+msgstr ""
+"Sympa no crea noves parts de MIME, però intenta afegir la capçalera o el peu "
+"de pàgina al cos del missatge. Els peus de pàgina predefinits s'ignoren. Les "
+"capçaleres i els peus de pàgina només s'afegeixen a missatges de text o text "
+"net."
+
+#: default/web_tt2/help_editlist.tt2:99
+msgid ""
+"Domain name of the list, default is the robot domain name set in the related "
+"robot.conf file or in file /etc/sympa.conf."
+msgstr ""
+"El nom de domini predeterminat de la llista és el nom de domini robot que "
+"s'especifica en el fitxer relacionat robot.conf o en l'arxiu /etc/sympa.conf."
+
+#: default/web_tt2/help_editlist.tt2:99
+msgid ""
+"Domain name of the list, default is the robot domain name set in the related "
+"robot.conf file or in file sympa.conf."
+msgstr ""
+"El nom de domini predeterminat de la llista és el nom de domini robot que "
+"s'especifica en el fitxer relacionat robot.conf o en l'arxiu sympa.conf."
+
+#: default/web_tt2/help_editlist.tt2:101
+#, fuzzy
+msgid ""
+"Include subscribers from this file.  The file should contain one e-mail "
+"address per line (lines beginning with a \"#\" are ignored)."
+msgstr ""
+"Aquest paràmetre només s'interpreta si el valor user_data_source està "
+"configurat per què s'incloga. El fitxer només pot incloure una direcció de "
+"correu elecrtrònic per línia (s'ignoren les línies que comence per «#»)."
+
+#: default/web_tt2/help_editlist.tt2:103
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a two-level query returning a list of "
+"subscribers. Usually the first-level query returns a list of DNs and the "
+"second-level queries convert the DNs into e-mail addresses. This feature "
+"requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Aquest paràgraf indica els paràmetres per a una consulta de nivell dos que "
+"retorna una llista de subscriptors. Normalment les consultes de nivell ú "
+"retornen una llista de DNS i les consultes de nivell dos converteixen el DNS "
+"en adreces de correu electrònic. Aquest paràgraf només s'utilitza si el "
+"valor user_data_source està configurat per què s'incloga. Aquesta fnució "
+"requereix el mòdul NET::LDAP (perlldap) PERL."
+
+#: default/web_tt2/help_editlist.tt2:105
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a query returning a list of "
+"subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Aquest paràgraf indica els paràmetres per a una consulta que retorna una "
+"llista de subscriptors. Aquest paràgraf només s'utilitza si el valor "
+"user_data_source està configurat per què s'incloga. Aquesta fnució requereix "
+"el mòdul NET::LDAP (perlldap) PERL."
+
+#: default/web_tt2/help_editlist.tt2:107
+#, fuzzy
+msgid ""
+"Include subscribers from other list. All subscribers of list listname become "
+"subscribers of the current list. You may include as many lists as required, "
+"using one include_sympa_list paragraph for each included list. Any list at "
+"all may be included; you may therefore include lists which are also defined "
+"by the inclusion of other lists. Be careful, however, not to include list A "
+"in list B and then list B in list A, since this will give rise to an "
+"infinite loop."
+msgstr ""
+"Aquest paràmetre només s'interpreta si el valor user_data_source està "
+"configurat per què s'incloga. Tots els subscriptors de la llista "
+"nomdelallista es converteixen en subscriptors de la llista actual. Es poden "
+"afegir totes les llistes que es vulguen, només cal posar una línia amb "
+"include_list nomdelallista per cada llista que es vulga afegir. Es pot "
+"incluir qualsevol llista; la definició de user_data_source de la llista "
+"incluida és irrellevant i potser es vulga incluire llistes que estiguen "
+"definides per la inclusió d'altres llistes. No obstant això, aneu amb compte "
+"de no incluir la llista A en la llista B i la B en la A, ja que sinò "
+"entrareu en un bucle infinit."
+
+#: default/web_tt2/help_editlist.tt2:109
+msgid ""
+"Sympa can contact another Sympa service using HTTPS to fetch a remote list "
+"in order to include each member of a remote list as subscriber. You may "
+"include as many lists as required, using one include_remote_sympa_list "
+"paragraph for each included list. Be careful, however, not to give rise to "
+"an infinite loop resulting from cross includes."
+msgstr ""
+"Sympa pot contactar amb altre servidor de Sympa emprant HTTPS per a recollir "
+"una llista remota per a incluir a cada membre en una llista remota com a "
+"subscriptor. Es poden incluir totes les llistes que es culguen, mitjançant "
+"el paràgraf de include_remote_sympa_list per a cada llista que s'incloga. No "
+"obstant això, aneu amb compte i no entreu en un bucle infinit com a resultat "
+"de inclusions creuades."
+
+#: default/web_tt2/help_editlist.tt2:110
+msgid ""
+"For this operation, one Sympa site acts as a server while the other one acs "
+"as client. On the server side, the only setting needed is to give permission "
+"to the remote Sympa to review the list. This is controlled by the review "
+"scenario."
+msgstr ""
+"Per a aquesta acció, un lloc de Sympa fa de servidor mentre que l'altre fa "
+"de client. Per al que fa de servidor, només cal que es done permís al Sympa "
+"remot per a revisar la llista. Això està controlat per l'escenari de revisió."
+
+#: default/web_tt2/help_editlist.tt2:112
+#, fuzzy
+msgid ""
+"This parameter is used to begin a paragraph defining the SQL query "
+"parameters. "
+msgstr ""
+"Aquest paràmetre només s'interpreta si el valor user_data_source està "
+"configurat per què s'incloga i s'empra per a començar el paràgraf per "
+"definir els paràmetres de consulta SQL. "
+
+#: default/web_tt2/help_editlist.tt2:114
+msgid ""
+"This parameter defines the language used for the list. It is used to "
+"initialize a user's language preference; Sympa command reports are extracted "
+"from the associated message catalog."
+msgstr ""
+"Aquest paràmetre especifica la llengua que s'usa en la llista. S'empra per "
+"inicialitzar les preferències de llengua de l'usuari; les llistes d'ordres "
+"de Sympa s'han extret del catàleg de missatges associat."
+
+#: default/web_tt2/help_editlist.tt2:116
+msgid "Maximum size of a message in 8-bit bytes."
+msgstr "Tamany màxim d'un missatge en 8-bit bytes."
+
+#: default/web_tt2/help_editlist.tt2:118
+msgid ""
+"Owners are managing subscribers of the list. They may review subscribers and "
+"add or delete email addresses from the mailing list. If you are a privileged "
+"owner of the list, you can choose other owners for the mailing list. "
+"Privileged owners may edit a few more options than other owners. "
+msgstr ""
+"Els propietaris gestionen els subscriptors de la llista. Poden revisar els "
+"subscriptors i afegir o eliminar adreces de correu de la llista de correu. "
+"Si s'és un propietari amb privilegis de la llista, es pot triar altres "
+"propietaris per a la llista de correu. Els propietaris amb privilegis poden "
+"canviar algunes opcions més que la resta de propietaris. "
+
+#: default/web_tt2/help_editlist.tt2:120
+msgid ""
+"The priority with which Sympa will process messages for this list. This "
+"level of priority is applied while the message is going through the spool. "
+"The z priority will freeze the message in the spool."
+msgstr ""
+"Sympa té un mecanisme de prioritat per a processar els missatges de la "
+"llista. El nivell de prioritat s'aplica al missatge mentre és en la cua de "
+"tasques. El nivell de prioritat z deixarà el missatge en la cua de tasques."
+
+#: default/web_tt2/help_editlist.tt2:122
+msgid "This parameter specifies who is authorized to use the remind command."
+msgstr ""
+"Aquest paràmetre especifica qui està autoritzat per a emprar l'ordre de "
+"REMIND."
+
+#: default/web_tt2/help_editlist.tt2:124
+msgid "Same as welcome_return_path, but applied to remind messages."
+msgstr ""
+"Igual que welcome_return_path, però aplicat als missatges recordatoris."
+
+#: default/web_tt2/help_editlist.tt2:126
+msgid ""
+"This parameter states which model is used to create a remind task. A remind "
+"task regularly sends  subscribers a message which reminds them of their list "
+"subscriptions."
+msgstr ""
+"Aquest paràmetre indica que model s'utilitza per a crear una tasca de "
+"recordatori. Una tasca de recordatori normalment envia als subscriptors un "
+"missatge que els recorda les subscripcions a les llistes."
+
+#: default/web_tt2/help_editlist.tt2:128
+msgid ""
+"The reply_to_header parameter starts a paragraph defining what Sympa will "
+"place in the Reply-To: SMTP header field of the messages it distributes."
+msgstr ""
+"El paràmetre reply_to_header comença un paràgraf que defineix allò que Sympa "
+"posarà en el camp de la capçalera de Respon a: SMTP dels missatges que "
+"distribueix."
+
+#: default/web_tt2/help_editlist.tt2:131
+msgid ""
+"This parameter indicates whether the Reply-To: field should indicate the "
+"sender of the message (sender), the list itself (list), both list and sender "
+"(all) or an arbitrary e-mail address (defined by the other_email parameter)."
+msgstr ""
+"Aquest paràmetre indica si el camp de Respon a ha d'indicar el remitent del "
+"missatge (remitent), la llista (llista), el remitent i la llista (tots) o "
+"una adreça de correu arbitrària (definida pel paràmetre other_mail)."
+
+#: default/web_tt2/help_editlist.tt2:132
+msgid ""
+"Note: it is inadvisable to change this parameter, and particularly "
+"inadvisable to set it to list. Experience has shown it to be almost "
+"inevitable that users, mistakenly believing that they are replying only to "
+"the sender, will send private messages to a list. This can lead, at the very "
+"least, to embarrassment, and sometimes to more serious consequences."
+msgstr ""
+"Nota: És recomana no canviar aquest paràmetre i encara menys que s'elegeixi "
+"la llista. L'experiència demostra que és quasi inevitable que els usuaris "
+"envien missatges privats a la llista per error quan creien que enviaven una "
+"resposta només al remitent. Com a mínim, això pot resultar en malentesos i, "
+"de vegades, pot tenir greus conseqüències."
+
+#: default/web_tt2/help_editlist.tt2:134
+msgid "an_email_address"
+msgstr "an_email_address (adreça de correu)"
+
+#: default/web_tt2/help_editlist.tt2:135
+msgid ""
+"If value was set to other_email, this parameter defines the e-mail address "
+"used."
+msgstr ""
+"Si el valor configurat era other_mail, aquest paràmetre indica l'adreça de "
+"correu emprada."
+
+#: default/web_tt2/help_editlist.tt2:138
+msgid ""
+"The default is to respect (preserve) the existing Reply-To: SMTP header "
+"field in incoming messages. If set to forced, Reply-To: SMTP header field "
+"will be overwritten."
+msgstr ""
+"Per defecte, es respecta (conserva) el camp de capçalera de Respon a: SMTP "
+"que hi havia en els missatges d'entrada. Si es configura per força, el camp "
+"de capçalera Respon a: SMTP es sobreescriurà."
+
+#: default/web_tt2/help_editlist.tt2:142
+msgid ""
+"This parameter specifies who can access the list of members. Since "
+"subscriber addresses can be abused by spammers, it is strongly recommended "
+"that you only authorize owners or subscribers to access the subscriber list. "
+msgstr ""
+"Aquest paràmetre especifica qui pot accedir a la llista de membres. És "
+"important que només autoritzeu els propietaris o els usuaris per a accedir a "
+"la llista de subscriptors, ja que els emissors de correu brossa podrien "
+"aprofitar-se'n. "
+
+#: default/web_tt2/help_editlist.tt2:144
+msgid "This parameter specifies who can send messages to the list."
+msgstr "Aquest paràmetre especifíca qui pot enviar missatges a la llista."
+
+#: default/web_tt2/help_editlist.tt2:146
+msgid ""
+"This paragraph defines read and edit access to the shared document "
+"repository."
+msgstr ""
+"Aquest paràgraf indica qui pot llegir i editar el dipòsit de documents "
+"compartits."
+
+#: default/web_tt2/help_editlist.tt2:148
+msgid ""
+"There is a need to protect Sympa web sites against spambots which collect "
+"email addresses from public web sites. Various methods are available in "
+"Sympa and you can choose to use them with the spam_protection and "
+"web_archive_spam_protection parameters. Possible value are:"
+msgstr ""
+"Cal protegir els llocs web de Sympa contra els programes generadors de "
+"correu brossa que recopilen adreces de correu de llocs web públics. En Sympa "
+"hi ha diversos mètodes i es pot elegir entre els paràmetres spam_protection "
+"i web_archive_protection. Els possibles valors són:"
+
+#: default/web_tt2/help_editlist.tt2:150
+msgid ""
+"the address is hidden using a javascript. A user who enables javascript can "
+"see a nice mailto address where others have nothing."
+msgstr ""
+"l'adreça s'amaga emprant javascript. Un usuari que activa javascript pot "
+"veure l'adreça del camp «Per a» mentre que la resta no veu res."
+
+#: default/web_tt2/help_editlist.tt2:151
+msgid "the @ char is replaced by the string \" AT \"."
+msgstr "el caràcter de @ es remplaça per la cadena «AT»."
+
+#: default/web_tt2/help_editlist.tt2:152
+msgid "no protection against spammer."
+msgstr "sense protecció contra els emissors de correu brossa."
+
+#: default/web_tt2/help_editlist.tt2:155
+msgid ""
+"This parameter indicates the subject of the list, which is sent in response "
+"to the LISTS mail command. The subject is a free form text limited to one "
+"line."
+msgstr ""
+"Aquest paràmetre indica l'assumpte de la llista, que s'envia com a resposta "
+"a les ordres de correu LISTS. L'assumpte és un camp de text lliure que està "
+"limitat a una línia."
+
+#: default/web_tt2/help_editlist.tt2:157
+msgid "The subscribe parameter defines the rules for subscribing to the list."
+msgstr ""
+"El paràmetre de subscripció indica les normes per subsciure's a la llista."
+
+#: default/web_tt2/help_editlist.tt2:159
+msgid ""
+"This parameter allows the classification of lists. You may define multiple "
+"topics as well as hierarchical ones. WWSympa's list of public lists uses "
+"this parameter."
+msgstr ""
+"Aquest paràmetre permet classificar llistes. Es poden definir temes "
+"múltiples o jeràrquics. La llista de WWSympa de llistes públiques empra "
+"aquest paràmetre."
+
+#: default/web_tt2/help_editlist.tt2:161
+msgid ""
+"Sympa caches user data extracted using the include parameter. Their TTL "
+"(time-to-live) within Sympa can be controlled using this parameter. The "
+"default value is 3600"
+msgstr ""
+"Sympa emmagatzema dades d'usuaris mitjançant el paràmetre include. El temps "
+"de vida (time-to-live) que tenen en Sympa es pot controlar emprant el "
+"paràmetre TTL. El valor predeterminat és 3600"
+
+#: default/web_tt2/help_editlist.tt2:163
+msgid ""
+"This parameter specifies the unsubscription method for the list. Use "
+"open_notify or auth_notify to allow owner notification of each unsubscribe "
+"command."
+msgstr ""
+"Aquest paràmetre especifica el métode de donada de baixa de la llista. "
+"Utilitza open_notify o auth_notify per què el propietari reba una "
+"notificació per cada ordre de donada de baixa."
+
+#: default/web_tt2/help_editlist.tt2:165
+msgid ""
+"This parameter indicates whether the list should feature in the output "
+"generated in response to a LISTS command or should be shown in the list "
+"overview of the web-interface."
+msgstr ""
+"Aquest paràmetre indica si la llista ha d'apareixer en el resultat generat "
+"com a resposta a l'ordre LISTS o si ha d'apareixer en la interfície web de "
+"la llista."
+
+#: default/web_tt2/help_editlist.tt2:167
+msgid "Defines who can access the web archive for the list."
+msgstr "Com especificar qui pot accedir a l'arxiu web de la llista."
+
+#: default/web_tt2/help_editlist.tt2:169
+msgid ""
+"Idem spam_protection is provided but it can be used only for web archives. "
+"Access requires a cookie, and users must submit a small form in order to "
+"receive a cookie before browsing the archives. This blocks all robot, even "
+"google and co."
+msgstr ""
+"Igual que spam_protection, però es pot emprar només per a arxiuswebs. Per a "
+"accedir es necessita una galeta i els usuaris han de trametre un breu "
+"formualri per a rebre la galeta abans de navegar enrte els arxius. Això "
+"bloqueja tots els robots, fins i tot google i co."
+
+#: default/web_tt2/help_editlist.tt2:171
+msgid ""
+"If set to unique, the welcome message is sent using a unique return path in "
+"order to remove the subscriber immediately in the case of a bounce."
+msgstr ""
+"Si es configura com a «unique», el missatge de benvinguda s'envia emprant "
+"només un camí de retorn per a eliminar el subscriptor de seguida en cas que "
+"es retorne el missatge."
+
+#: default/web_tt2/help_editlist.tt2:173
+msgid ""
+"This paragraph defines a topic used to tag a message of a list, named by "
+"msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
+"The msg_topic.keywords entry is optional and allows automatic tagging. This "
+"should be a list of keywords, separated by ','."
+msgstr ""
+"Aquest paràgraf indica el tema que s'utilitza per etiquetar el missatge "
+"d'una llista, amb el nom de msg_topic.name («other» és una paraula "
+"reservada), el títol que té és msg_topic.title. L'entrada msg_topic.keywords "
+"és opcional i permet l'etiquetació automàtica. Aquest hauria d'incloure una "
+"llista de paraules clau, separades per «,»."
+
+#: default/web_tt2/help_editlist.tt2:175
+msgid ""
+"This parameter indicates which part of the message is used to perform "
+"automatic tagging."
+msgstr ""
+"Aquest paràmetre indica que part del muissatge s'empra per fer l'etiquetació "
+"automàtica."
+
+#: default/web_tt2/help_editlist.tt2:177
+msgid ""
+"This parameter indicates if the tagging is optional or required for a list."
+msgstr ""
+"Aquest paràmetre indica si l'etiquetació és opcional o obligatoria per a una "
+"llista."
+
+msgid ""
+"Each bouncing user have a score (from 0 to 100).\n"
+"This parameter defines a lower limit for each category of bouncing users.For "
+"example, level 1 begins from 45 to level_2_treshold."
+msgstr ""
+"Cada subscriptor amb retornats té una puntuació (de 0 a 100).\n"
+"Aquest paràmetre defineix un límit més baix per cada categoria de "
+"subscriptors amb retornats.Per exemple, el nivell 1 comença a partir de 45 "
+"fins al level_2_treshold."
+
+msgid ""
+"Each bouncing user have a score (from 0 to 100).\n"
+"This parameter defines the score range defining each category of bouncing "
+"users.For example, level 2 is for users with a score between 80 and 100."
+msgstr ""
+"Cada subscriptor amb retornats té una puntuació (de 0 a 100).\n"
+"Aquest paràmetre defineix el rang de puntuació per definir cada categoria "
+"d'usuaris amb retornats.Per exemple, el nivell 2 és per a usuaris amb una "
+"puntuació de 80 a 100."
+
+#, fuzzy
+msgid ""
+"Editors are responsible for moderating messages. If the mailing list is "
+"moderated, messages posted to the list will first be passed to the editors, "
+"who will decide whether to distribute or reject it.\n"
+"FYI: Defining editors will not make the list moderated; you will have to set "
+"the \"send\" parameter.\n"
+"FYI: If the list is moderated, any editor can distribute or reject a message "
+"without the knowledge or consent of the other editors. Messages that have "
+"not been distributed or rejected will remain in the moderation spool until "
+"they are acted on."
+msgstr ""
+"Els editors són els responsables de moderar els missatges. Si la llista de "
+"correu està moderada, els missatges publicats en la llista primer passaran "
+"pels editors, que decidiran si el distribueixen o el rebutgen.\n"
+"FYI: Defining editors will not make the list moderated; you will have to set "
+"the \"send\" parameter.\n"
+"Informació: Si la llista està moderada, qualsevol editor pot distribuir o "
+"rebutjar un missatge sense que ho sapiguen o donen el seu consentiment la "
+"resta d'editors. Els missatges que no s'han distribuit o que s'han rebutjat "
+"romandran en l'eina de gestió de cues per moderar fins que s'activen."
+
+msgid ""
+"List owners may decide to add message headers or footers to messages sent "
+"via the list. This parameter defines the way a footer/header is added to a "
+"message.\n"
+"mime: \n"
+"The default value. Sympa will add the footer/header as a new MIME part.\n"
+"append: \n"
+"Sympa will not create new MIME parts, but will try to append the header/"
+"footer to the body of the message. Predefined message-footers will be "
+"ignored. Headers/footers may be appended to text/plain messages only."
+msgstr ""
+"Els propietaris de la llista poden decidir si afegeixen caçaleres o pues de "
+"pàgina als missatges que s'envien a la llita. Aquest paràmetre indica la "
+"manera com s'afegeix una capçalera o un peu de pàgina.\n"
+"mime: \n"
+"El valor per defecte. Sympa afegirà la capçalera o el peu de pàgina com a "
+"una part nova de MIME.\n"
+"append: \n"
+"Sympa no crea noves parts de MIME, però intenta afegir la capçalera o el peu "
+"de pàgina al cos del missatge. Els peus de pàgina predefinits s'ignoren. Les "
+"capçaleres i els peus de pàgina només s'afegeixen a missatges de text o text "
+"net."
+
+msgid ""
+"Privilege for reading mail archives and frequency of archiving\n"
+"Defines who can access the web archive for the list."
+msgstr ""
+"Privilegi per a llegir arxius de correu i freqüencia d'arxivament\n"
+"Com especificar qui pot accedir a l'arxiu web de la llista."
+
+msgid ""
+"Sympa can contact another Sympa service using HTTPS to fetch a remote list "
+"in order to include each member of a remote list as subscriber. You may "
+"include as many lists as required, using one include_remote_sympa_list "
+"paragraph for each included list. Be careful, however, not to give rise to "
+"an infinite loop resulting from cross includes.\n"
+"For this operation, one Sympa site acts as a server while the other one acs "
+"as client. On the server side, the only setting needed is to give permission "
+"to the remote Sympa to review the list. This is controlled by the review "
+"scenario."
+msgstr ""
+"Sympa pot contactar amb altre servidor de Sympa emprant HTTPS per a recollir "
+"una llista remota per a incluir a cada membre en una llista remota com a "
+"subscriptor. Es poden incluir totes les llistes que es culguen, mitjançant "
+"el paràgraf de include_remote_sympa_list per a cada llista que s'incloga. No "
+"obstant això, aneu amb compte i no entreu en un bucle infinit com a resultat "
+"de inclusions creuades.\n"
+"Per a aquesta acció, un lloc de Sympa fa de servidor mentre que l'altre fa "
+"de client. Per al que fa de servidor, només cal que es done permís al Sympa "
+"remot per a revisar la llista. Això està controlat per l'escenari de revisió."
+
+msgid ""
+"There is a need to protect Sympa web sites against spambots which collect "
+"email addresses from public web sites. Various methods are available in "
+"Sympa and you can choose to use them with the spam_protection and "
+"web_archive_spam_protection parameters. Possible value are:\n"
+"javascript: \n"
+"the address is hidden using a javascript. A user who enables javascript can "
+"see a nice mailto address where others have nothing.\n"
+"at: \n"
+"the @ char is replaced by the string \" AT \".\n"
+"none: \n"
+"no protection against spammer."
+msgstr ""
+"Cal protegir els llocs web de Sympa contra els programes generadors de "
+"correu brossa que recopilen adreces de correu de llocs web públics. En Sympa "
+"hi ha diversos mètodes i es pot elegir entre els paràmetres spam_protection "
+"i web_archive_protection. Els possibles valors són:\n"
+"javascript: \n"
+"l'adreça s'amaga emprant javascript. Un usuari que activa javascript pot "
+"veure l'adreça del camp «Per a» mentre que la resta no veu res.\n"
+"at: \n"
+"el caràcter de @ es remplaça per la cadena «AT».\n"
+"none: \n"
+"sense protecció contra els emissors de correu brossa."
+
+msgid ""
+"This parameter indicates whether the Reply-To: field should indicate the "
+"sender of the message (sender), the list itself (list), both list and sender "
+"(all) or an arbitrary e-mail address (defined by the other_email "
+"parameter).\n"
+"Note: it is inadvisable to change this parameter, and particularly "
+"inadvisable to set it to list. Experience has shown it to be almost "
+"inevitable that users, mistakenly believing that they are replying only to "
+"the sender, will send private messages to a list. This can lead, at the very "
+"least, to embarrassment, and sometimes to more serious consequences."
+msgstr ""
+"Aquest paràmetre indica si el camp de Respon a ha d'indicar el remitent del "
+"missatge (remitent), la llista (llista), el remitent i la llista (tots) o "
+"una adreça de correu arbitrària (definida pel paràmetre other_mail).\n"
+"Nota: És recomana no canviar aquest paràmetre i encara menys que s'elegeixi "
+"la llista. L'experiència demostra que és quasi inevitable que els usuaris "
+"envien missatges privats a la llista per error quan creien que enviaven una "
+"resposta només al remitent. Com a mínim, això pot resultar en malentesos i, "
+"de vegades, pot tenir greus conseqüències."
 
 #~ msgid ""
 #~ "There are new shared documents in list %1: \n"

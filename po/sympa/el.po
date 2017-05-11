@@ -8554,8 +8554,14 @@ msgstr ""
 "css_path και css_url δεν πρέπει να δείχνουν στον ίδιο φάκελο."
 
 #: default/web_tt2/skinsedit.tt2:8
-msgid "So if you want to preserve some site customization from being overwriten when starting a new sympa version, css_path and css_url should not point to the same directory."
-msgstr "Οπότε εάν θέλετε οι προσαρμογές να διατηρηθούν κατα την εγκατάσταση νέας έκδοσης του sympa, οι παράμετροι css_path και css_url δεν πρέπει να δείχνουν στον ίδιο φάκελο."
+msgid ""
+"So if you want to preserve some site customization from being overwriten "
+"when starting a new sympa version, css_path and css_url should not point to "
+"the same directory."
+msgstr ""
+"Οπότε εάν θέλετε οι προσαρμογές να διατηρηθούν κατα την εγκατάσταση νέας "
+"έκδοσης του sympa, οι παράμετροι css_path και css_url δεν πρέπει να δείχνουν "
+"στον ίδιο φάκελο."
 
 #: default/web_tt2/skinsedit.tt2:11
 msgid ""
@@ -13711,6 +13717,49 @@ msgstr ""
 msgid "(top-level)"
 msgstr ""
 
+#: default/web_tt2/help_editlist.tt2:130 default/web_tt2/help_editlist.tt2:137
+#: default/web_tt2/help_editlist.tt2:30 default/web_tt2/help_editlist.tt2:40
+#: default/web_tt2/help_editlist.tt2:43 default/web_tt2/help_editlist.tt2:46
+#: default/web_tt2/help_editlist.tt2:56 default/web_tt2/help_editlist.tt2:59
+#: default/web_tt2/help_editlist.tt2:62
+msgid "Default value:"
+msgstr "Προκαθορισμένη τιμή"
+
+#: default/web_tt2/help_editlist.tt2:84
+#, fuzzy
+msgid ""
+"FYI: Defining editors will not make the list moderated; you will have to set "
+"the \"send\" parameter."
+msgstr ""
+"FYI: Ο ορισμός των συντακτών δεν μετατρέπει τη λίστα σε συντονιζόμενη ; θα "
+"πρέπει να ορίσετε την παράμετρο \"send\""
+
+#: default/web_tt2/help_editlist.tt2:103
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a two-level query returning a list of "
+"subscribers. Usually the first-level query returns a list of DNs and the "
+"second-level queries convert the DNs into e-mail addresses. This feature "
+"requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Η συγκεκριμένη παράγραφος ορίζει παραμέτρους ενός ερωτήματος δύο επιπέδων "
+"που επιστρέφει μία λίστα συνδρομητών. Συνήθως το ερώτημα πρώτου επιπέδου "
+"επιστρέφει μία λίστα από DNs και το ερώτημα δεύτερου επιπέδου μετατρέπει τα "
+"DNs σε ηλεκτρονικές διευθύνσεις. Η παράγραφος αυτή χρησιμοποιείται αν η "
+"παράμετρος user_data_source έχει τεθεί ως include. Το χαρακτηριστικό αυτό "
+"απαιτεί το τμήμα PERL Net::LDAP (perlldap)."
+
+#: default/web_tt2/help_editlist.tt2:105
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a query returning a list of "
+"subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Η συγκεκριμένη παράγραφος ορίζει παραμέτρους ενός ερωτήματος που επιστρέφει "
+"μία λίστα από συνδρομητής. Η παράγραφος χρησιμοποιείται μόνο αν η παράμετρος "
+"user_data_source έχει τεθεί ως include. Το χαρακτηριστικό αυτό απαιτεί το "
+"τμήμα PERL Net::LDAP (perlldap)."
+
 #~ msgid ""
 #~ "There are new shared documents in list %1: \n"
 #~ "\t%2\n"
@@ -15549,6 +15598,17 @@ msgstr ""
 #~ "απόδειξη παραλαβής στη λίστα, το λογισμικό sympa χρησιμοποιεί τον τρόπο "
 #~ "που έχει καθοριστεί στην παράγραφο default_user_options."
 
+msgid ""
+"Only these modes will be allowed "
+"for the subscribers of this list. If a subscriber has a reception mode "
+"not in the list, Sympa uses the mode specified in the "
+"default_user_options paragraph."
+msgstr ""
+"Μόνο αυτοί οι τρόποι επιτρέπονται στους "
+"συνδρομητές της λίστας. Αν ένας συνδρομητής δεν έχει ως τρόπο την "
+"απόδειξη παραλαβής στη λίστα, το λογισμικό sympa χρησιμοποιεί τον τρόπο "
+"που έχει καθοριστεί στην παράγραφο default_user_options."
+
 #~ msgid "This paragraph defines bounce management parameters:"
 #~ msgstr ""
 #~ "Η συγκεκριμένη παράγραφος ορίζει παραμέτρους διαχείρισης των bouncesQ"
@@ -15588,6 +15648,11 @@ msgstr ""
 #~ "διαχείρισης bounces. <br/>\n"
 #~ "\tΕπίπεδο 1 είναι το κατώτερο επίπεδο bouncing χρηστών."
 
+msgid ""
+"Level 1 is the lower level of bouncing users"
+msgstr ""
+"\tΕπίπεδο 1 είναι το κατώτερο επίπεδο bouncing χρηστών."
+
 #, fuzzy
 #~ msgid ""
 #~ "This parameter defines a lower limit for each category of bouncing users."
@@ -15605,6 +15670,11 @@ msgstr ""
 #~ "Η παράγραφος Bouncers_levelX ορίζει την αυτόματη συμπεριφορά της "
 #~ "διαχείρισης bounces. <br/>\n"
 #~ "\tΕπίπεδο 2 είναι το ανώτερο επίπεδο bouncing χρηστών."
+
+msgid ""
+"Level 2 is the highest level of bouncing users"
+msgstr ""
+"\tΕπίπεδο 2 είναι το ανώτερο επίπεδο bouncing χρηστών."
 
 #, fuzzy
 #~ msgid ""
@@ -15699,6 +15769,14 @@ msgstr ""
 #~ "Όνομα περιοχής της λίστας, το προκαθορισμένο είναι το όνομα περιοχής "
 #~ "robot, το οποίο έχει οριστεί στο αρχείο robot.conf ή στο αρχείο /etc/"
 #~ "sympa.conf."
+
+msgid ""
+"Domain name of the list, default is the robot domain name set in the "
+"related robot.conf file or in file sympa.conf."
+msgstr ""
+"Όνομα περιοχής της λίστας, το προκαθορισμένο είναι το όνομα περιοχής "
+"robot, το οποίο έχει οριστεί στο αρχείο robot.conf ή στο αρχείο "
+"sympa.conf."
 
 #~ msgid ""
 #~ "This paragraph defines parameters for a two-level query returning a list "

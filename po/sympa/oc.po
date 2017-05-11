@@ -13385,6 +13385,81 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Font desconeguda"
 
+#: default/web_tt2/help_editlist.tt2:84
+#, fuzzy
+msgid ""
+"FYI: Defining editors will not make the list moderated; you will have to set "
+"the \"send\" parameter."
+msgstr ""
+"Remarca : definir de moderators basta pas per far que la tièra siá \"moderada"
+"\", vos cal tanben editar lo paramètre \"send\""
+
+#: default/web_tt2/help_editlist.tt2:101
+#, fuzzy
+msgid ""
+"Include subscribers from this file.  The file should contain one e-mail "
+"address per line (lines beginning with a \"#\" are ignored)."
+msgstr ""
+"Aquel paramètre es pas emplegat que se lo paramètre 'user_data_source' es "
+"posicionat a 'include'. Lo fichièr sonat deu caber una adreiça de "
+"messatjariá a  cada linha (las linhas que començan per \"#\" s'ignoran). "
+
+#: default/web_tt2/help_editlist.tt2:103
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a two-level query returning a list of "
+"subscribers. Usually the first-level query returns a list of DNs and the "
+"second-level queries convert the DNs into e-mail addresses. This feature "
+"requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Aquel paragraf definís los paramètres d'una recerca de dos nivèls que torna "
+"una tièra d'abonats. Generalament, lo primièr nivèl torna una tièra de DNs e "
+"lo second nivèl convertís las DNs en adreiças electronicas. Se ten compte "
+"d'aquel paragraf sonque se lo paramètre user_data_source es posicionat a "
+"\"include\". Aquò demanda d'en primièr d'installar lo modul Perl Net::LDAP "
+"al servidor.avoir été préalablement installé sur le serveur."
+
+#: default/web_tt2/help_editlist.tt2:105
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a query returning a list of "
+"subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Aquel paragraf definís los paramètres d'una recerca que torna una tièra "
+"d'abonats. Se ten compte d'aquel paragraf sonque se lo paramètre "
+"user_data_source es posicionat a \"include\". Aquò demanda d'en primièr "
+"d'installar lo modul Perl Net::LDAP al servidor."
+
+#: default/web_tt2/help_editlist.tt2:107
+#, fuzzy
+msgid ""
+"Include subscribers from other list. All subscribers of list listname become "
+"subscribers of the current list. You may include as many lists as required, "
+"using one include_sympa_list paragraph for each included list. Any list at "
+"all may be included; you may therefore include lists which are also defined "
+"by the inclusion of other lists. Be careful, however, not to include list A "
+"in list B and then list B in list A, since this will give rise to an "
+"infinite loop."
+msgstr ""
+"Aquel paramètre es pas emplegat que se lo paramètre 'user_data_source' es "
+"posicionat a 'include'. Los abonats de la tièra precisada seràn abonats a la "
+"tièra correnta. Podètz tant de tièras coma vos fa mestièr. Quina tièra que "
+"siá  se pòt inclure, que que siá sa definicion del paramètre "
+"user_data_source. Valent a dire qu'una tièra se pòt inclure a una tièra ela "
+"meteissa inclusa a una autra tièra. Atencion ça que la, d'inclure pas una "
+"tièra A a una tièra B e la tièra B a la tièra A, qu'aquò generariá una bocla "
+"infinida."
+
+#: default/web_tt2/help_editlist.tt2:112
+#, fuzzy
+msgid ""
+"This parameter is used to begin a paragraph defining the SQL query "
+"parameters. "
+msgstr ""
+"Aquel paramètre es pas emplegat que se lo paramètre 'user_data_source' es "
+"posicionat a 'include'. Definís una requista SQL que tòrna una tièra "
+"d'adreiças de messatjariá."
+
 #~ msgid "List Administration Panel"
 #~ msgstr "Administracion de lista"
 
@@ -15464,6 +15539,16 @@ msgstr "Font desconeguda"
 #~ "poiràn pas accedir qu'a aqueles biaisses. En cas qu'un abonat aja causit "
 #~ "un biais non autorizat, emplegarà lo biais predefinit per la tièra."
 
+msgid ""
+"Only these modes will be allowed "
+"for the subscribers of this list. If a subscriber has a reception mode "
+"not in the list, Sympa uses the mode specified in the "
+"default_user_options paragraph."
+msgstr ""
+"Los abonats de la tièra "
+"poiràn pas accedir qu'a aqueles biaisses. En cas qu'un abonat aja causit "
+"un biais non autorizat, emplegarà lo biais predefinit per la tièra."
+
 #~ msgid "This paragraph defines bounce management parameters:"
 #~ msgstr ""
 #~ "Aquel paragraf definís los paramètres de gestion dels abonats en error :"
@@ -15514,6 +15599,11 @@ msgstr "Font desconeguda"
 #~ "automatica de las adreiças en error. <br>\n"
 #~ "\tLo nivèl 1 correspond al nivèl d'error mai feble."
 
+msgid ""
+"Level 1 is the lower level of bouncing users"
+msgstr ""
+"\tLo nivèl 1 correspond al nivèl d'error mai feble."
+
 #~ msgid "Each bouncing user have a score (from 0 to 100)."
 #~ msgstr "Cada abonnat amb error, a un total  (de 0 a 100)"
 
@@ -15549,6 +15639,11 @@ msgstr "Font desconeguda"
 #~ "Lo paragraf \"bouncers_level2\" definís lo compòrtament per la gestion "
 #~ "automatica de las adreiças en error. <br>\n"
 #~ "\tLo nivèl 2 correspond al nivèl d'error mai bèl."
+
+msgid ""
+"Level 2 is the highest level of bouncing users"
+msgstr ""
+"\tLo nivèl 2 correspond al nivèl d'error mai bèl."
 
 #~ msgid ""
 #~ "This parameter defines the score range defining each category of bouncing "
@@ -15708,6 +15803,14 @@ msgstr "Font desconeguda"
 #~ "Lo nom de domèni de la tièra, lo nom predefinit es lo domèni del robòt, "
 #~ "reglat als fichièrs de configuracion del servidor (robot.conf o /etc/"
 #~ "sympa.conf) "
+
+msgid ""
+"Domain name of the list, default is the robot domain name set in the "
+"related robot.conf file or in file sympa.conf."
+msgstr ""
+"Lo nom de domèni de la tièra, lo nom predefinit es lo domèni del robòt, "
+"reglat als fichièrs de configuracion del servidor (robot.conf o "
+"sympa.conf) "
 
 #~ msgid ""
 #~ "This parameter will be interpreted only if the user_data_source value is "
