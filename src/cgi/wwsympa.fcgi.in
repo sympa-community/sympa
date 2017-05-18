@@ -107,7 +107,6 @@ our $plugins;
 
 my $loop = 0;
 my ($robot, $robot_object);
-my $pinfo;
 my $ip;
 my $rss;
 my $ajax;
@@ -1044,7 +1043,6 @@ while ($query = new_loop()) {
     undef $list;
     undef $robot;
     undef $robot_object;
-    undef $pinfo;
     undef $ip;
     undef $rss;
     undef $ajax;
@@ -1134,7 +1132,6 @@ while ($query = new_loop()) {
     # Not yet implemented
     ### Create Robot object
     #$robot_object = new Robot $robot;
-    $pinfo = Sympa::Robot::list_params($robot);
 
     ## Default robot
     if ($robot eq $Conf::Conf{'host'}) {    #FIXME:Use domain.
@@ -4151,31 +4148,8 @@ sub do_loginrequest {
 sub do_help {
     wwslog('info', '(%s)', $in{'help_topic'});
 
-    ## Contextual help
-    if ($in{'help_topic'}) {
-        if ($in{'help_topic'} eq 'editlist') {
-            foreach my $pname (sort Sympa::List::by_order keys %{$pinfo}) {
-                next if grep { $pname eq $_ } qw(comment defaults);
-                # Skip obsoleted parameters and alias names.
-                next if $pinfo->{$pname}{'obsolete'};
-
-                if ($pinfo->{$pname}{'gettext_id'}) {
-                    $param->{'param'}{$pname}{'title'} =
-                        $language->gettext($pinfo->{$pname}{'gettext_id'});
-                } else {
-                    $param->{'param'}{$pname}{'title'} = $pname;
-                }
-                if ($pinfo->{$pname}{'gettext_comment'}) {
-                    $param->{'param'}{$pname}{'comment'} =
-                        $language->gettext(
-                        $pinfo->{$pname}{'gettext_comment'});
-                }
-            }
-        }
-
-        $param->{'help_topic'} = $in{'help_topic'};
-    }
-
+    $param->{'help_topic'} = $in{'help_topic'}
+        if $in{'help_topic'};
     return 1;
 }
 

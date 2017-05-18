@@ -8665,8 +8665,14 @@ msgstr ""
 "css_path és css_url paraméternek nem szabad ugyanoda mutatnia."
 
 #: default/web_tt2/skinsedit.tt2:8
-msgid "So if you want to preserve some site customization from being overwriten when starting a new sympa version, css_path and css_url should not point to the same directory."
-msgstr "Tehát ha meg szeretné tartani az oldal testreszabásait elkerülve, hogy az új Sympa indítása felülírja, akkor a css_path és css_url paraméternek nem szabad ugyanoda mutatnia."
+msgid ""
+"So if you want to preserve some site customization from being overwriten "
+"when starting a new sympa version, css_path and css_url should not point to "
+"the same directory."
+msgstr ""
+"Tehát ha meg szeretné tartani az oldal testreszabásait elkerülve, hogy az új "
+"Sympa indítása felülírja, akkor a css_path és css_url paraméternek nem "
+"szabad ugyanoda mutatnia."
 
 #: default/web_tt2/skinsedit.tt2:11
 msgid ""
@@ -14079,6 +14085,81 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
+#: default/web_tt2/help_editlist.tt2:84
+#, fuzzy
+msgid ""
+"FYI: Defining editors will not make the list moderated; you will have to set "
+"the \"send\" parameter."
+msgstr ""
+"Figyelem: szerkesztők beállítása nem teszi a listát automatikusan "
+"moderálttá; megfelelően be kell állítania a küldés (send) paramétert."
+
+#: default/web_tt2/help_editlist.tt2:101
+#, fuzzy
+msgid ""
+"Include subscribers from this file.  The file should contain one e-mail "
+"address per line (lines beginning with a \"#\" are ignored)."
+msgstr ""
+"Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
+"include (beágyazás). A állománynak soronként egy e-mail címet kell "
+"tartalmaznia (a \"#\"-tel kezdődő sorok figyelmen kívül lesznek hagyva)."
+
+#: default/web_tt2/help_editlist.tt2:103
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a two-level query returning a list of "
+"subscribers. Usually the first-level query returns a list of DNs and the "
+"second-level queries convert the DNs into e-mail addresses. This feature "
+"requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Ez a bekezdés egy kétszintű lekérdezés paramétereit adja meg, ami tagok egy "
+"listáját adja vissza. Általában az első szintű lekérdezés DN-ek listáját "
+"adja vissza, és a második szintű lekérdezések átalakítják ezeket a DN-eket e-"
+"mail címekké. Ez a bekezdés csak akkor használatos, ha a user_data_source "
+"include-ra (beágyazás) van állítva. Ehhez az opcióhoz a Net::LDAP (perlldap) "
+"PERL modul szükséges."
+
+#: default/web_tt2/help_editlist.tt2:105
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a query returning a list of "
+"subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Ez a bekezdés egy lekérdezés paramétereit adja meg, ami tagok egy listáját "
+"adja vissza. Ez a bekezdés csak akkor használatos, ha a user_data_source "
+"include-ra (beágyazás) van állítva. Ehhez az opcióhoz a Net::LDAP (perlldap) "
+"PERL modul szükséges."
+
+#: default/web_tt2/help_editlist.tt2:107
+#, fuzzy
+msgid ""
+"Include subscribers from other list. All subscribers of list listname become "
+"subscribers of the current list. You may include as many lists as required, "
+"using one include_sympa_list paragraph for each included list. Any list at "
+"all may be included; you may therefore include lists which are also defined "
+"by the inclusion of other lists. Be careful, however, not to include list A "
+"in list B and then list B in list A, since this will give rise to an "
+"infinite loop."
+msgstr ""
+"Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
+"include (beágyazás). A listanév lista minden tagja az aktuális lista tagja "
+"lesz. Annyi listát ágyazhat be, amennyit csak akar, egy include_list "
+"listanév sort használva minden beágyazott listánál. Bármilyen lista "
+"beágyazható, a beágyazott lista user_data_source beállítása nem számít, így "
+"beágyazhat olyan listát, ami más listák beágyazásával jött létre. Ugyanakkor "
+"vigyázzon, ne ágyazza be A listába B listát, és B listába A listát, mivel ez "
+"végtelen ciklushoz vezet."
+
+#: default/web_tt2/help_editlist.tt2:112
+#, fuzzy
+msgid ""
+"This parameter is used to begin a paragraph defining the SQL query "
+"parameters. "
+msgstr ""
+"Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
+"include (beágyazás), és egy bekezdést nyit, ami megadja egy SQL lekérdezés "
+"paramétereit."
+
 #~ msgid ""
 #~ "There are new shared documents in list %1: \n"
 #~ "\t%2\n"
@@ -16044,6 +16125,17 @@ msgstr ""
 #~ "van beállítva, ami nincs a listában, akkor a sympa azt a módot használja, "
 #~ "ami a default_user_options bekezdésben található."
 
+msgid ""
+"Only these modes will be allowed "
+"for the subscribers of this list. If a subscriber has a reception mode "
+"not in the list, Sympa uses the mode specified in the "
+"default_user_options paragraph."
+msgstr ""
+"Csak ezek a módok "
+"engedélyezettek a lista tagjainak. Ha egy tagnak olyan kézbesítési mód "
+"van beállítva, ami nincs a listában, akkor a sympa azt a módot használja, "
+"ami a default_user_options bekezdésben található."
+
 #~ msgid "This paragraph defines bounce management parameters:"
 #~ msgstr "Ez a bekezdés a visszapattanás-kezelés paramétereit adja meg:"
 
@@ -16095,6 +16187,11 @@ msgstr ""
 #~ "meg.<br />\n"
 #~ "\tAz egyes szint a visszapattanások legalacsonyabb szintje."
 
+msgid ""
+"Level 1 is the lower level of bouncing users"
+msgstr ""
+"\tAz egyes szint a visszapattanások legalacsonyabb szintje."
+
 #, fuzzy
 #~ msgid ""
 #~ "This parameter defines a lower limit for each category of bouncing users."
@@ -16128,6 +16225,11 @@ msgstr ""
 #~ "A bouncers_levelX bekezdés a visszapattanások automatikus kezelését adja "
 #~ "meg.<br />\n"
 #~ "\tAz kettes szint a visszapattanások legmagasabb szintje."
+
+msgid ""
+"Level 2 is the highest level of bouncing users"
+msgstr ""
+"\tAz kettes szint a visszapattanások legmagasabb szintje."
 
 #, fuzzy
 #~ msgid ""
@@ -16292,6 +16394,14 @@ msgstr ""
 #~ "A lista tartományneve, alapértelmezett a robot tartományneve, ami a "
 #~ "megfelelő robot.conf állományban vagy az /etc/sympa.conf-ban van "
 #~ "beállítva."
+
+msgid ""
+"Domain name of the list, default is the robot domain name set in the "
+"related robot.conf file or in file sympa.conf."
+msgstr ""
+"A lista tartományneve, alapértelmezett a robot tartományneve, ami a "
+"megfelelő robot.conf állományban vagy az sympa.conf-ban van "
+"beállítva."
 
 #~ msgid ""
 #~ "This parameter will be interpreted only if the user_data_source value is "

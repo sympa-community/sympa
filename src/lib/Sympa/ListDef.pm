@@ -50,6 +50,8 @@ our %pinfo = (
         order        => 10.01,
         'group'      => 'description',
         'gettext_id' => "Subject of the list",
+        'gettext_comment' =>
+            'This parameter indicates the subject of the list, which is sent in response to the LISTS mail command. The subject is a free form text limited to one line.',
         'format'     => '.+',
         'occurrence' => '1',
         'length'     => 50
@@ -59,6 +61,8 @@ our %pinfo = (
         order        => 10.02,
         'group'      => 'description',
         'gettext_id' => "Visibility of the list",
+        'gettext_comment' =>
+            'This parameter indicates whether the list should feature in the output generated in response to a LISTS command or should be shown in the list overview of the web-interface.',
         'scenario'   => 'visibility',
         'synonym'    => {
             'public'  => 'noconceal',
@@ -70,6 +74,8 @@ our %pinfo = (
         order        => 10.03,
         'group'      => 'description',
         'gettext_id' => "Owner",
+        'gettext_comment' =>
+            'Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. ',
         'format'     => {
             'email' => {
                 'order'      => 1,
@@ -164,6 +170,8 @@ our %pinfo = (
         order        => 10.05,
         'group'      => 'description',
         'gettext_id' => "Moderators",
+        'gettext_comment' =>
+            "Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it.\nFYI: Defining editors will not make the list moderated; you will have to set the \"send\" parameter.\nFYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on.",
         'format'     => {
             'email' => {
                 'order'      => 1,
@@ -244,6 +252,8 @@ our %pinfo = (
         order        => 10.07,
         'group'      => 'description',
         'gettext_id' => "Topics for the list",
+        'gettext_comment' =>
+            "This parameter allows the classification of lists. You may define multiple topics as well as hierarchical ones. WWSympa's list of public lists uses this parameter.",
         'format'     => [],     # Sympa::Robot::topic_keys() called later
         'field_type' => 'listtopic',
         'split_char' => ',',
@@ -255,6 +265,8 @@ our %pinfo = (
         order        => 10.08,
         'group'      => 'description',
         'gettext_id' => "Internet domain",
+        'gettext_comment' =>
+            'Domain name of the list, default is the robot domain name set in the related robot.conf file or in file sympa.conf.',
         'format'     => Sympa::Regexps::host(),
         filters      => ['canonic_domain'],
         'default'    => {'conf' => 'host'},
@@ -265,6 +277,8 @@ our %pinfo = (
         order        => 10.09,
         'group'      => 'description',
         'gettext_id' => "Language of the list",
+        'gettext_comment' =>
+            "This parameter defines the language used for the list. It is used to initialize a user's language preference; Sympa command reports are extracted from the associated message catalog.",
         'format' => [],    ## Sympa::get_supported_languages() called later
         'file_format' => '\w+(\-\w+)*',
         'field_type'  => 'lang',
@@ -296,6 +310,8 @@ our %pinfo = (
         order        => 10.12,
         'group'      => 'description',
         'gettext_id' => "Priority",
+        'gettext_comment' =>
+            'The priority with which Sympa will process messages for this list. This level of priority is applied while the message is going through the spool. The z priority will freeze the message in the spool.',
         'format'     => [0 .. 9, 'z'],
         'length'     => 1,
         'occurrence' => '1',
@@ -308,6 +324,8 @@ our %pinfo = (
         order        => 20.01,
         'group'      => 'sending',
         'gettext_id' => "Who can send messages",
+        'gettext_comment' =>
+            'This parameter specifies who can send messages to the list.',
         'scenario'   => 'send'
     },
 
@@ -324,6 +342,8 @@ our %pinfo = (
         order         => 20.03,
         'group'       => 'sending',
         'gettext_id'  => "Digest frequency",
+        'gettext_comment' =>
+            'Definition of digest mode. If this parameter is present, subscribers can select the option of receiving messages in multipart/digest MIME format, or as a plain text digest. Messages are then grouped together, and compiled messages are sent to subscribers according to the frequency selected with this parameter.',
         'file_format' => '\d+(\s*,\s*\d+)*\s+\d+:\d+',
         'format'      => {
             'days' => {
@@ -368,6 +388,8 @@ our %pinfo = (
         'format'     => {
             'reception' => {
                 'gettext_id' => "reception mode",
+                'gettext_comment' =>
+                    'Only these modes will be allowed for the subscribers of this list. If a subscriber has a reception mode not in the list, Sympa uses the mode specified in the default_user_options paragraph.',
                 'format'     => [
                     'mail',    'notice', 'digest', 'digestplain',
                     'summary', 'nomail', 'txt',    'html',
@@ -386,10 +408,12 @@ our %pinfo = (
         order        => 20.06,
         'group'      => 'sending',
         'gettext_id' => "Subscription profile",
+        'gettext_comment' => 'Default profile for the subscribers of the list.',
         'format'     => {
             'reception' => {
                 'order'      => 1,
                 'gettext_id' => "reception mode",
+                'gettext_comment' => 'Mail reception mode.',
                 'format'     => [
                     'mail',    'notice', 'digest', 'digestplain',
                     'summary', 'nomail', 'txt',    'html',
@@ -402,6 +426,7 @@ our %pinfo = (
             'visibility' => {
                 'order'      => 2,
                 'gettext_id' => "visibility",
+                    'gettext_comment' => 'Visibility of the subscriber.',
                 'format'     => ['conceal', 'noconceal'],
                 'field_type' => 'visibility',
                 'occurrence' => '1',
@@ -414,6 +439,8 @@ our %pinfo = (
         order        => 20.07,
         'group'      => 'sending',
         'gettext_id' => "Topics for message categorization",
+        'gettext_comment' =>
+            "This paragraph defines a topic used to tag a message of a list, named by msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. The msg_topic.keywords entry is optional and allows automatic tagging. This should be a list of keywords, separated by ','.",
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -445,6 +472,8 @@ our %pinfo = (
         'group' => 'sending',
         'gettext_id' =>
             "Defines to which part of messages topic keywords are applied",
+        'gettext_comment' =>
+            'This parameter indicates which part of the message is used to perform automatic tagging.',
         'format'     => ['subject', 'body', 'subject_and_body'],
         'occurrence' => '0-1',
         'default'    => 'subject'
@@ -454,6 +483,8 @@ our %pinfo = (
         order        => 20.09,
         'group'      => 'sending',
         'gettext_id' => "Message tagging",
+        'gettext_comment' =>
+            'This parameter indicates if the tagging is optional or required for a list.',
         'format'     => ['required_sender', 'required_moderator', 'optional'],
         'occurrence' => '1',
         'default'    => 'optional'
@@ -482,10 +513,14 @@ our %pinfo = (
         order        => 20.10,
         'group'      => 'sending',
         'gettext_id' => "Reply address",
+        'gettext_comment' =>
+            'This defines what Sympa will place in the Reply-To: SMTP header field of the messages it distributes.',
         'format'     => {
             'value' => {
                 'order'      => 1,
                 'gettext_id' => "value",
+                'gettext_comment' =>
+                    "This parameter indicates whether the Reply-To: field should indicate the sender of the message (sender), the list itself (list), both list and sender (all) or an arbitrary e-mail address (defined by the other_email parameter).\nNote: it is inadvisable to change this parameter, and particularly inadvisable to set it to list. Experience has shown it to be almost inevitable that users, mistakenly believing that they are replying only to the sender, will send private messages to a list. This can lead, at the very least, to embarrassment, and sometimes to more serious consequences.",
                 'format'     => ['sender', 'list', 'all', 'other_email'],
                 'default'    => 'sender',
                 'occurrence' => '1'
@@ -493,11 +528,15 @@ our %pinfo = (
             'other_email' => {
                 'order'      => 2,
                 'gettext_id' => "other email address",
+                'gettext_comment' =>
+                    'If value was set to other_email, this parameter defines the e-mail address used.',
                 'format'     => Sympa::Regexps::email()
             },
             'apply' => {
                 'order'      => 3,
                 'gettext_id' => "respect of existing header field",
+                'gettext_comment' =>
+                    'The default is to respect (preserve) the existing Reply-To: SMTP header field in incoming messages. If set to forced, Reply-To: SMTP header field will be overwritten.',
                 'format'     => ['forced', 'respect'],
                 'default'    => 'respect'
             }
@@ -508,6 +547,8 @@ our %pinfo = (
         order        => 20.11,
         'group'      => 'sending',
         'gettext_id' => "Anonymous sender",
+        'gettext_comment' =>
+        "To hide the sender's email address before distributing the message. It is replaced by the provided email address.",
         'format'     => '.+'
     },
 
@@ -515,6 +556,8 @@ our %pinfo = (
         order        => 20.12,
         'group'      => 'sending',
         'gettext_id' => "Custom header field",
+        'gettext_comment' =>
+            'This parameter is optional. The headers specified will be added to the headers of messages distributed via the list. As of release 1.2.2 of Sympa, it is possible to put several custom header lines in the configuration file at the same time.',
         'format'     => '\S+:\s+.*',
         'occurrence' => '0-n',
         'length'     => 30
@@ -525,6 +568,8 @@ our %pinfo = (
         order        => 20.13,
         'group'      => 'sending',
         'gettext_id' => "Subject tagging",
+        'gettext_comment' =>
+            'This parameter is optional. It specifies a string which is added to the subject of distributed messages (intended to help users who do not use automatic tools to sort incoming messages). This string will be surrounded by [] characters.',
         'format'     => '.+',
         'length'     => 15
     },
@@ -534,6 +579,8 @@ our %pinfo = (
         order        => 20.14,
         'group'      => 'sending',
         'gettext_id' => "Attachment type",
+        'gettext_comment' =>
+            "List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.\nmime: \nThe default value. Sympa will add the footer/header as a new MIME part.\nappend: \nSympa will not create new MIME parts, but will try to append the header/footer to the body of the message. Predefined message-footers will be ignored. Headers/footers may be appended to text/plain messages only.",
         'format'     => ['mime', 'append'],
         'default'    => 'mime'
     },
@@ -542,6 +589,8 @@ our %pinfo = (
         order          => 20.15,
         'group'        => 'sending',
         'gettext_id'   => "Maximum message size",
+        'gettext_comment' =>
+            'Maximum size of a message in 8-bit bytes.',
         'gettext_unit' => 'bytes',
         'format'       => '\d+',
         'length'       => 8,
@@ -629,6 +678,8 @@ our %pinfo = (
         order        => 30.02,
         'group'      => 'command',
         'gettext_id' => "Who can subscribe to the list",
+        'gettext_comment' =>
+            'The subscribe parameter defines the rules for subscribing to the list.',
         'scenario'   => 'subscribe'
     },
     'subscription' => {'obsolete' => 'subscribe'},
@@ -637,6 +688,8 @@ our %pinfo = (
         order        => 30.03,
         'group'      => 'command',
         'gettext_id' => "Who can add subscribers",
+        'gettext_comment' =>
+            'Privilege for adding (ADD command) a subscriber to the list',
         'scenario'   => 'add'
     },
 
@@ -644,6 +697,8 @@ our %pinfo = (
         order        => 30.04,
         'group'      => 'command',
         'gettext_id' => "Who can unsubscribe",
+        'gettext_comment' =>
+            'This parameter specifies the unsubscription method for the list. Use open_notify or auth_notify to allow owner notification of each unsubscribe command.',
         'scenario'   => 'unsubscribe'
     },
     'unsubscription' => {'obsolete' => 'unsubscribe'},
@@ -666,6 +721,8 @@ our %pinfo = (
         order        => 30.07,
         'group'      => 'command',
         'gettext_id' => "Who can start a remind process",
+        'gettext_comment' =>
+            'This parameter specifies who is authorized to use the remind command.',
         'scenario'   => 'remind'
     },
 
@@ -673,6 +730,8 @@ our %pinfo = (
         order        => 30.08,
         'group'      => 'command',
         'gettext_id' => "Who can review subscribers",
+        'gettext_comment' =>
+            'This parameter specifies who can access the list of members. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. ',
         'scenario'   => 'review',
         'synonym'    => {'open' => 'public'}
     },
@@ -681,6 +740,8 @@ our %pinfo = (
         order        => 30.09,
         'group'      => 'command',
         'gettext_id' => "Shared documents",
+        'gettext_comment' =>
+            'This paragraph defines read and edit access to the shared document repository.',
         'format'     => {
             'd_read' => {
                 'order'      => 1,
@@ -746,6 +807,8 @@ our %pinfo = (
         order        => 40.02,
         'group'      => 'archives',
         'gettext_id' => "Archives",
+        'gettext_comment' =>
+            "Privilege for reading mail archives and frequency of archiving\nDefines who can access the web archive for the list.",
         'format'     => {
             'period' => {
                 'order'      => 1,
@@ -803,6 +866,8 @@ our %pinfo = (
         order        => 40.04,
         'group'      => 'archives',
         'gettext_id' => "email address protection method",
+        'gettext_comment' =>
+            'Idem spam_protection is provided but it can be used only for web archives. Access requires a cookie, and users must submit a small form in order to receive a cookie before browsing the archives. This blocks all robot, even google and co.',
         'format'     => ['cookie', 'javascript', 'at', 'none'],
         'occurrence' => '1',
         'default' => {'conf' => 'web_archive_spam_protection'}
@@ -818,6 +883,8 @@ our %pinfo = (
             'warn_rate' => {
                 'order'        => 1,
                 'gettext_id'   => "warn rate",
+                'gettext_comment' =>
+                    'The list owner receives a warning whenever a message is distributed and the number (percentage) of bounces exceeds this value.',
                 'gettext_unit' => '%',
                 'format'       => '\d+',
                 'length'       => 3,
@@ -826,6 +893,8 @@ our %pinfo = (
             'halt_rate' => {
                 'order'        => 2,
                 'gettext_id'   => "halt rate",
+                'gettext_comment' =>
+                    'NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation.',
                 'gettext_unit' => '%',
                 'format'       => '\d+',
                 'length'       => 3,
@@ -839,10 +908,13 @@ our %pinfo = (
         order        => 50.02,
         'group'      => 'bounces',
         'gettext_id' => "Management of bouncers, 1st level",
+        'gettext_comment' => 'Level 1 is the lower level of bouncing users',
         'format'     => {
             'rate' => {
                 'order'        => 1,
                 'gettext_id'   => "threshold",
+                'gettext_comment' =>
+                    "Each bouncing user have a score (from 0 to 100).\nThis parameter defines a lower limit for each category of bouncing users.For example, level 1 begins from 45 to level_2_treshold.",
                 'gettext_unit' => 'points',
                 'format'       => '\d+',
                 'length'       => 2,
@@ -851,6 +923,8 @@ our %pinfo = (
             'action' => {
                 'order'      => 2,
                 'gettext_id' => "action for this population",
+                'gettext_comment' =>
+                   'This parameter defines which task is automaticaly applied on level 1 bouncers.',
                 'format' => ['remove_bouncers', 'notify_bouncers', 'none'],
                 'occurrence' => '1',
                 'default'    => 'notify_bouncers'
@@ -858,6 +932,8 @@ our %pinfo = (
             'notification' => {
                 'order'      => 3,
                 'gettext_id' => "notification",
+                'gettext_comment' =>
+                    'When automatic task is executed on level 1 bouncers, a notification email can be send to listowner or listmaster.',
                 'format'     => ['none', 'owner', 'listmaster'],
                 'occurrence' => '1',
                 'default'    => 'owner'
@@ -869,10 +945,13 @@ our %pinfo = (
         order        => 50.03,
         'group'      => 'bounces',
         'gettext_id' => "Management of bouncers, 2nd level",
+        'gettext_comment' => 'Level 2 is the highest level of bouncing users',
         'format'     => {
             'rate' => {
                 'order'        => 1,
                 'gettext_id'   => "threshold",
+                'gettext_comment' =>
+                    "Each bouncing user have a score (from 0 to 100).\nThis parameter defines the score range defining each category of bouncing users.For example, level 2 is for users with a score between 80 and 100.",
                 'gettext_unit' => 'points',
                 'format'       => '\d+',
                 'length'       => 2,
@@ -881,6 +960,8 @@ our %pinfo = (
             'action' => {
                 'order'      => 2,
                 'gettext_id' => "action for this population",
+                'gettext_comment' =>
+                    'This parameter defines which task is automaticaly applied on level 2 bouncers.',
                 'format'  => ['remove_bouncers', 'notify_bouncers', 'none'],
                 'occurrence' => '1',
                 'default'    => 'remove_bouncers'
@@ -888,6 +969,8 @@ our %pinfo = (
             'notification' => {
                 'order'      => 3,
                 'gettext_id' => "notification",
+                'gettext_comment' =>
+                    'When automatic task is executed on level 2 bouncers, a notification email can be send to listowner or listmaster.',
                 'format'     => ['none', 'owner', 'listmaster'],
                 'occurrence' => '1',
                 'default'    => 'owner'
@@ -949,6 +1032,8 @@ our %pinfo = (
         order        => 50.06,
         'group'      => 'bounces',
         'gettext_id' => "Welcome return-path",
+        'gettext_comment' =>
+            'If set to unique, the welcome message is sent using a unique return path in order to remove the subscriber immediately in the case of a bounce.',
         'format'     => ['unique', 'owner'],
         'default'    => {'conf' => 'welcome_return_path'}
     },
@@ -957,6 +1042,8 @@ our %pinfo = (
         order        => 50.07,
         'group'      => 'bounces',
         'gettext_id' => "Return-path of the REMIND command",
+        'gettext_comment' =>
+            'Same as welcome_return_path, but applied to remind messages.',
         'format'     => ['unique', 'owner'],
         'default'    => {'conf' => 'remind_return_path'}
     },
@@ -995,6 +1082,8 @@ our %pinfo = (
         order        => 60.04,
         'group'      => 'data_source',
         'gettext_id' => "File inclusion",
+        'gettext_comment' =>
+            'Include subscribers from this file.  The file should contain one e-mail address per line (lines beginning with a "#" are ignored).',
         'format'     => '\S+',
         'occurrence' => '0-n',
         'length'     => 20,
@@ -1050,6 +1139,8 @@ our %pinfo = (
         order        => 60.06,
         'group'      => 'data_source',
         'gettext_id' => "List inclusion",
+        'gettext_comment' =>
+            'Include subscribers from other list. All subscribers of list listname become subscribers of the current list. You may include as many lists as required, using one include_sympa_list paragraph for each included list. Any list at all may be included; you may therefore include lists which are also defined by the inclusion of other lists. Be careful, however, not to include list A in list B and then list B in list A, since this will give rise to an infinite loop.',
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -1077,6 +1168,8 @@ our %pinfo = (
         order        => 60.07,
         'group'      => 'data_source',
         'gettext_id' => "remote list inclusion",
+        'gettext_comment' =>
+            "Sympa can contact another Sympa service using HTTPS to fetch a remote list in order to include each member of a remote list as subscriber. You may include as many lists as required, using one include_remote_sympa_list paragraph for each included list. Be careful, however, not to give rise to an infinite loop resulting from cross includes.\nFor this operation, one Sympa site acts as a server while the other one acs as client. On the server side, the only setting needed is to give permission to the remote Sympa to review the list. This is controlled by the review scenario.",
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -1140,6 +1233,8 @@ our %pinfo = (
         order        => 60.08,
         'group'      => 'data_source',
         'gettext_id' => "LDAP query inclusion",
+        'gettext_comment' =>
+            'This paragraph defines parameters for a query returning a list of subscribers. This feature requires the Net::LDAP (perlldap) PERL module.',
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -1264,6 +1359,8 @@ our %pinfo = (
         order        => 60.09,
         'group'      => 'data_source',
         'gettext_id' => "LDAP 2-level query inclusion",
+        'gettext_comment' =>
+            'This paragraph defines parameters for a two-level query returning a list of subscribers. Usually the first-level query returns a list of DNs and the second-level queries convert the DNs into e-mail addresses. This feature requires the Net::LDAP (perlldap) PERL module.',
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -1441,6 +1538,8 @@ our %pinfo = (
         order        => 60.10,
         'group'      => 'data_source',
         'gettext_id' => "SQL query inclusion",
+        'gettext_comment' =>
+            'This parameter is used to define the SQL query parameters. ',
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -1555,6 +1654,8 @@ our %pinfo = (
         order          => 60.12,
         'group'        => 'data_source',
         'gettext_id'   => "Inclusions timeout",
+        'gettext_comment' =>
+            'Sympa caches user data extracted using the include parameter. Their TTL (time-to-live) within Sympa can be controlled using this parameter. The default value is 3600',
         'gettext_unit' => 'seconds',
         'format'       => '\d+',
         'default'      => 3600,
@@ -2149,6 +2250,8 @@ our %pinfo = (
         order        => 90.02,
         'group'      => 'other',
         'gettext_id' => "Secret string for generating unique keys",
+        'gettext_comment' =>
+            'This parameter is a confidential item for generating authentication keys for administrative commands (ADD, DELETE, etc.). This parameter should remain concealed, even for owners. The cookie is applied to all list owners, and is only taken into account when the owner has the auth parameter.',
         'format'     => '\S+',
         'field_type' => 'password',
         'length'     => 15,
@@ -2180,6 +2283,8 @@ our %pinfo = (
         order        => 90.05,
         'group'      => 'other',
         'gettext_id' => "Periodical subscription expiration task",
+        'gettext_comment' =>
+            "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.",
         'task'       => 'expire'
     },
 
@@ -2236,6 +2341,8 @@ our %pinfo = (
         order        => 90.08,
         'group'      => 'other',
         'gettext_id' => 'Periodical subscription reminder task',
+        'gettext_comment' =>
+            'This parameter states which model is used to create a remind task. A remind task regularly sends  subscribers a message which reminds them of their list subscriptions.',
         'task'       => 'remind',
         'default'    => {'conf' => 'default_remind_task'}
     },
@@ -2244,6 +2351,8 @@ our %pinfo = (
         order        => 90.09,
         'group'      => 'other',
         'gettext_id' => "email address protection method",
+        'gettext_comment' =>
+            "There is a need to protect Sympa web sites against spambots which collect email addresses from public web sites. Various methods are available in Sympa and you can choose to use them with the spam_protection and web_archive_spam_protection parameters. Possible value are:\njavascript: \nthe address is hidden using a javascript. A user who enables javascript can see a nice mailto address where others have nothing.\nat: \nthe \@ char is replaced by the string \" AT \".\nnone: \nno protection against spammer.",
         'format'     => ['at', 'javascript', 'none'],
         'occurrence' => '1',
         'default'    => 'javascript'

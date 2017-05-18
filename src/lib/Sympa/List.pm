@@ -8473,7 +8473,7 @@ sub get_db_field_type {
 ############ THIS IS RELATED TO NEW LOAD_ADMIN_FILE #############
 
 ## Sort function for writing config files
-sub by_order {
+sub _by_order {
     (($Sympa::ListDef::pinfo{$main::a || ''}{'order'} || 0)
         <=> ($Sympa::ListDef::pinfo{$main::b || ''}{'order'} || 0))
         || (($main::a || '') cmp($main::b || ''));
@@ -9133,7 +9133,7 @@ sub _save_list_config_file {
     }
     $fd->print("\n");
 
-    foreach my $key (sort by_order keys %{$self->{'admin'}}) {
+    foreach my $key (sort _by_order keys %{$self->{'admin'}}) {
 
         next if ($key =~ /^(comment|defaults)$/);
         next unless (defined $self->{'admin'}{$key});

@@ -8370,8 +8370,14 @@ msgstr ""
 "Sympa, parametry css_path i css_url nie powinny wskazywać na ten sam katalog."
 
 #: default/web_tt2/skinsedit.tt2:8
-msgid "So if you want to preserve some site customization from being overwriten when starting a new sympa version, css_path and css_url should not point to the same directory."
-msgstr "Jeśli więc chcesz uchronić indywidualne ustawienia strony przez nadpisaniem, podczas aktualizacji Sympa, parametry css_path i css_url nie powinny wskazywać na ten sam katalog."
+msgid ""
+"So if you want to preserve some site customization from being overwriten "
+"when starting a new sympa version, css_path and css_url should not point to "
+"the same directory."
+msgstr ""
+"Jeśli więc chcesz uchronić indywidualne ustawienia strony przez nadpisaniem, "
+"podczas aktualizacji Sympa, parametry css_path i css_url nie powinny "
+"wskazywać na ten sam katalog."
 
 #: default/web_tt2/skinsedit.tt2:11
 msgid ""
@@ -13663,6 +13669,107 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
+#: default/web_tt2/help_editlist.tt2:17
+msgid "Default value: reception mail,notice,digest,digestplain,summary,nomail"
+msgstr ""
+"Wartość domyślna: reception mail,notice,digest,digestplain,summary,nomail"
+
+#: default/web_tt2/help_editlist.tt2:84
+msgid ""
+"FYI: Defining editors will not make the list moderated; you will have to set "
+"the \"send\" parameter."
+msgstr ""
+"Do Twojej wiadomości: Definiowanie redaktorów (edytorów) nie wystarczy, aby "
+"lista była moderowana; będziesz musiał ustawić parametr \"send\"."
+
+#: default/web_tt2/help_editlist.tt2:101
+#, fuzzy
+msgid ""
+"Include subscribers from this file.  The file should contain one e-mail "
+"address per line (lines beginning with a \"#\" are ignored)."
+msgstr ""
+"Ten parametr będzie interpretowany tylko jeśli wartość user_data_source jest "
+"ustawiona do uwzględnienia. Plik powinien zawierać jeden adres e-mail na "
+"linijkę (linie rozpoczynające się od \"#\" są ignorowane)."
+
+#: default/web_tt2/help_editlist.tt2:103
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a two-level query returning a list of "
+"subscribers. Usually the first-level query returns a list of DNs and the "
+"second-level queries convert the DNs into e-mail addresses. This feature "
+"requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Ten paragraf definiuje parametry dla dwupoziomowego zapytania zwracającego "
+"listę subskrybentów. Zwykle zapytanie pierwszego poziomu zwraca listę DNów a "
+"zapytanie drugiego poziomu konwertuje DNy w adresy emailowe. Ten paragraf "
+"jest używany tylko jeśli user_data_source jest ustawione do uwzględnienia. "
+"Ta opcja wymaga modułu perlowego Net::LDAP (perlldap)."
+
+#: default/web_tt2/help_editlist.tt2:105
+#, fuzzy
+msgid ""
+"This paragraph defines parameters for a query returning a list of "
+"subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+"Ten paragraf definiuje parametry dla zapytania zwracającego listę "
+"subskrybentów. Ten paragraf jest używany tylko, gdy user_data_source jest "
+"ustawione do uwzględnienia. Ta opcja wymaga modułu perlowego Net::LDAP "
+"(perlldap)."
+
+#: default/web_tt2/help_editlist.tt2:107
+#, fuzzy
+msgid ""
+"Include subscribers from other list. All subscribers of list listname become "
+"subscribers of the current list. You may include as many lists as required, "
+"using one include_sympa_list paragraph for each included list. Any list at "
+"all may be included; you may therefore include lists which are also defined "
+"by the inclusion of other lists. Be careful, however, not to include list A "
+"in list B and then list B in list A, since this will give rise to an "
+"infinite loop."
+msgstr ""
+"Ten parametr będzie interpretowany tylko jeśli user_data_source jest "
+"ustawione do uwzględnienia. Wszyscy subskrybenci listy nazwa listy zostaną "
+"subskrybentami aktualnej listy. Możesz uwzględnić tak dużo list, ile "
+"potrzebne, korzystając z jednej linii nazwy listy include_list (???) dla "
+"każdej uwzględnianej listy. Jakakolwiek lista może zostać uwzględniona; "
+"definicja user_data_source uwzględnionych list jest nieistotna i dlatego "
+"możesz uwzględniać listy, które są także definiowane poprzez zawieranie "
+"innych list. Bądź jednak ostrożny by nie uwzględniać listy A w liście B, a "
+"potem listy B w liście A, ponieważ powstanie nieskończona pętla."
+
+#: default/web_tt2/help_editlist.tt2:112
+#, fuzzy
+msgid ""
+"This parameter is used to begin a paragraph defining the SQL query "
+"parameters. "
+msgstr ""
+"Ten parametr będzie interpretowany tylko jeśli wartość user_data_source jest "
+"ustawiona do uwzględnienia i jest wykorzystywany do rozpoczęcia paragrafu "
+"definiującego parametry zapytania SQL."
+
+#, fuzzy
+msgid ""
+"Editors are responsible for moderating messages. If the mailing list is "
+"moderated, messages posted to the list will first be passed to the editors, "
+"who will decide whether to distribute or reject it.\n"
+"FYI: Defining editors will not make the list moderated; you will have to set "
+"the \"send\" parameter.\n"
+"FYI: If the list is moderated, any editor can distribute or reject a message "
+"without the knowledge or consent of the other editors. Messages that have "
+"not been distributed or rejected will remain in the moderation spool until "
+"they are acted on."
+msgstr ""
+"Editors are responsible for moderating messages. If the mailing list is "
+"moderated, messages posted to the list will first be passed to the editors, "
+"who will decide whether to distribute or reject it.\n"
+"Do Twojej wiadomości: Definiowanie redaktorów (edytorów) nie wystarczy, aby "
+"lista była moderowana; będziesz musiał ustawić parametr \"send\".\n"
+"FYI: If the list is moderated, any editor can distribute or reject a message "
+"without the knowledge or consent of the other editors. Messages that have "
+"not been distributed or rejected will remain in the moderation spool until "
+"they are acted on."
+
 #~ msgid ""
 #~ "There are new shared documents in list %1: \n"
 #~ "\t%2\n"
@@ -15892,6 +15999,11 @@ msgstr ""
 #~ "management.<br />\n"
 #~ "\tLevel 1 is the lower level of bouncing users"
 
+msgid ""
+"Level 1 is the lower level of bouncing users"
+msgstr ""
+"\tLevel 1 is the lower level of bouncing users"
+
 #~ msgid "Each bouncing user have a score (from 0 to 100)."
 #~ msgstr "Each bouncing user have a score (from 0 to 100)."
 
@@ -15924,6 +16036,11 @@ msgstr ""
 #~ "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
 #~ "management.<br />\n"
 #~ "\tLevel 2 is the highest level of bouncing users"
+
+msgid ""
+"Level 2 is the highest level of bouncing users"
+msgstr ""
+"\tLevel 2 is the highest level of bouncing users"
 
 #~ msgid ""
 #~ "This parameter defines the score range defining each category of bouncing "
@@ -16077,6 +16194,13 @@ msgstr ""
 #~ msgstr ""
 #~ "Domain name of the list, default is the robot domain name set in the "
 #~ "related robot.conf file or in file /etc/sympa.conf."
+
+msgid ""
+"Domain name of the list, default is the robot domain name set in the "
+"related robot.conf file or in file sympa.conf."
+msgstr ""
+"Domain name of the list, default is the robot domain name set in the "
+"related robot.conf file or in file sympa.conf."
 
 #~ msgid ""
 #~ "This parameter will be interpreted only if the user_data_source value is "

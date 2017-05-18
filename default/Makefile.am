@@ -237,7 +237,6 @@ nobase_default_DATA = \
 	web_tt2/help_admin.tt2 \
 	web_tt2/help_arc.tt2 \
 	web_tt2/help_editfile.tt2 \
-	web_tt2/help_editlist.tt2 \
 	web_tt2/help_faq.tt2 \
 	web_tt2/help_faqadmin.tt2 \
 	web_tt2/help_faquser.tt2 \
