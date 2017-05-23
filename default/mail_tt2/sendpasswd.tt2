@@ -1,4 +1,4 @@
-[%# $Id$ ~%]
+[%# sendpasswd.tt2 ~%]
 To: [% newuser.email %]
 [% IF action == 'subrequest' -%]
 Subject: [% FILTER qencode %][%|loc(conf.title,list)%]%1 / subscribing to %2[%END%][%END%]
