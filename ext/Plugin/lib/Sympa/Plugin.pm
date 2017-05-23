@@ -216,8 +216,7 @@ sub registerListSource($)
 
             Sympa::ListDef::cleanup($header, $fields);
             $Sympa::ListDef::pinfo{$header} = $fields;
-            $fields->{order} = @Sympa::ListDef::param_order;  # to late for init
-            push @Sympa::ListDef::param_order, $header;
+            $fields->{order} = 90.90; #FIXME
         }
     }
 
