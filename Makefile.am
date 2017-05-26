@@ -64,6 +64,9 @@ EXTRA_DIST = \
 	important_changes.pl \
 	META.json.pl \
 	META.json \
+	NEWS.md \
+	OChangeLog \
+	ONEWS \
 	sympa.spec.pl \
 	sympa.spec \
 	etc_README \
