@@ -27,6 +27,59 @@ msgstr ""
 "X-Rosetta-Version: 0.1\n"
 "X-POOTLE-MTIME: 1358173984.000000\n"
 
+#: default/web_tt2/help.tt2:11
+msgid "Subscriber, moderator and owner documentation"
+msgstr "Τεκμηρίωση συνδρομητή, ιδιοκτήτη και συντονιστή"
+
+#: default/web_tt2/help.tt2:13
+msgid "In this documentation, you will find:"
+msgstr "Σε αυτό την τεκμηρίωση θα βρείτε:"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:15
+msgid ""
+"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
+msgstr ""
+"μία <a href=\"%1/help/introduction\">γενική εισαγωγή</a στις λίστες "
+"ηλεκτρονικού ταχυδρομείου."
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:16
+msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr ""
+"ένας <a href=\"%1/help/user\">οδηγός χρήστη<a/> για τη χρήση του Sympa."
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:17
+msgid ""
+"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
+msgstr ""
+"ένας <a href=\"%1/help/admin\">οδηγός διαχειριστή</a> για τη χρήση του Sympa."
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
+msgid ""
+"If you want to perform a particular task, take a look at the list of all <a "
+"href=\"%1/help/introduction#features\">available features</a> in the mailing "
+"list management software Sympa."
+msgstr ""
+"Αν επιθυμείτε να εκτελέσετε μία συγκεκριμένη εργασία, επισκευθείτε τη λίστα "
+"με όλα <a href=\"%1/help/introduction#features\">τα διαθέσιμα χαρακτηριστικά "
+"</a> λογισμικού διαχείρισης λιστών Sympa. "
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
+msgid ""
+"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
+"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
+"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
+"\"Frequently asked questions\">FAQ</acronym></a>."
+msgstr ""
+"Αν αντιμετωπίζετε προβλήματα, δείτε το <a href=\"%1/help/faquser\"> "
+"FAQ<acronym title=\"Frequently asked questions\">χρηστών ή το <a href=\"%1/"
+"help/faqadmin\">FAQ  <acronym title=\"Frequently asked questions"
+"\">διαχειριστών</acronym></a>."
+
 #: default/web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
 msgstr ""
@@ -1615,623 +1668,8 @@ msgstr ""
 "Υποσέλιδο μηνύματος : ίδιο με <em>Κεφαλίδα μηνύματος,</em> αλλά "
 "επισυναπτόμενο στο τέλος του μηνύματος."
 
-#: default/web_tt2/help_editlist.tt2:6
-msgid ":"
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:9
-msgid "Privilege for adding (ADD command) a subscriber to the list"
-msgstr "Προνόμιο για την προσθήκη (εντολή ADD) ενός συνδρομητή στη λίστα"
-
-#: default/web_tt2/help_editlist.tt2:11
-msgid ""
-"To hide the sender's email address before distributing the message. It is "
-"replaced by the provided email address."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:13
-msgid "Privilege for reading mail archives and frequency of archiving"
-msgstr "Προνόμιο για την ανάγνωση των αρχείων και της συχνότητας αρχειοθέτησης"
-
-#: default/web_tt2/help_editlist.tt2:15
-msgid ""
-"The available_user_options parameter starts a paragraph to define available "
-"options for the subscribers of the list."
-msgstr ""
-"Η παράμετρος available_user_options ξεκινά την παράγραφο ορισμού των "
-"διαθέσιμων επιλογών για τους συνδρομητές της λίστας."
-
-#: default/web_tt2/help_editlist.tt2:17
-msgid "Default value: reception mail,notice,digest,digestplain,summary,nomail"
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:18
-msgid ""
-"<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
-"summary, nomail), separated by commas. Only these modes will be allowed for "
-"the subscribers of this list. If a subscriber has a reception mode not in "
-"the list, sympa uses the mode specified in the default_user_options "
-"paragraph."
-msgstr ""
-"<em>Λίστα τρόπων</em> είναι μία λίστα τρόπων (μήνυμα, απόδειξη παραλαβής, "
-"επισκόπηση, επισκόπηση κοινή, περίληψη, χωρίς μήνυμα), οι οποίοι "
-"διαχωρίζονται με κόμμα. Μόνο αυτοί οι τρόποι επιτρέπονται στους συνδρομητές "
-"της λίστας. Αν ένας συνδρομητής δεν έχει ως τρόπο την απόδειξη παραλαβής στη "
-"λίστα, το λογισμικό sympa χρησιμοποιεί τον τρόπο που έχει καθοριστεί στην "
-"παράγραφο default_user_options."
-
-#: default/web_tt2/help_editlist.tt2:22
-msgid "This paragraph defines bounce management parameters:"
-msgstr "Η συγκεκριμένη παράγραφος ορίζει παραμέτρους διαχείρισης των bouncesQ"
-
-#: default/web_tt2/help_editlist.tt2:24
-msgid "Default value: bounce_warn_rate robot parameter"
-msgstr "Πρκαθορισμένη τιμή:  bounce_warn_rate robot parameter"
-
-#: default/web_tt2/help_editlist.tt2:25
-msgid ""
-"The list owner receives a warning whenever a message is distributed and the "
-"number (percentage) of bounces exceeds this value."
-msgstr ""
-"Ο ιδιοκτήτης της λίστας λαμβάνει μία προειδοποίηση όταν ένα μήνυμα "
-"διανέμεται και όταν το ποσοστό των bounces ξεπερνά αυτή την τιμή."
-
-#: default/web_tt2/help_editlist.tt2:27
-msgid "Default value: bounce_halt_rate robot parameter"
-msgstr "Πρκαθορισμένη τιμή: bounce_halt_rate robot parameter"
-
-#: default/web_tt2/help_editlist.tt2:28
-msgid ""
-"NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
-"will be halted, i.e. they are retained for subsequent moderation."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:130 default/web_tt2/help_editlist.tt2:137
-#: default/web_tt2/help_editlist.tt2:30 default/web_tt2/help_editlist.tt2:40
-#: default/web_tt2/help_editlist.tt2:43 default/web_tt2/help_editlist.tt2:46
-#: default/web_tt2/help_editlist.tt2:56 default/web_tt2/help_editlist.tt2:59
-#: default/web_tt2/help_editlist.tt2:62
-msgid "Default value:"
-msgstr "Προκαθορισμένη τιμή"
-
-#: default/web_tt2/help_editlist.tt2:31
-#, fuzzy
-msgid ""
-"Name of the task template used to remove old bounces. Useful for removing "
-"bounced subscriber email. If some messages are distributed without receiving "
-"new bounce messages, the subscriber's email seems to be OK again. Active if "
-"task_manager.pl is running."
-msgstr ""
-"#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
-"Όνομα της πρότυπης εργασίας για την αφαίρεση παλαιών bounces. Χρήσιμη για "
-"την αφαίρεση bounces ενός συνδρομητή αν κάποια μηνύματα διανέμονται χωρίς "
-"λήψη νέων bounces. Σε αυτή την περίπτωση, πιθανόν να διορθώθηκαν πλέον τα "
-"προβληματα με το συνδρομητή                        .\n"
-"Ενεργή εργασία αν εκτελείται το task_manager.pl"
-
-#: default/web_tt2/help_editlist.tt2:37
-msgid ""
-"The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 1 is the lower level of bouncing users"
-msgstr ""
-"Η παράγραφος Bouncers_level1 ορίζει την αυτόματη συμπεριφορά της διαχείρισης "
-"bounces. <br/>\n"
-"\tΕπίπεδο 1 είναι το κατώτερο επίπεδο bouncing χρηστών."
-
-#: default/web_tt2/help_editlist.tt2:41 default/web_tt2/help_editlist.tt2:57
-msgid "Each bouncing user have a score (from 0 to 100)."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:41
-#, fuzzy
-msgid ""
-"This parameter defines a lower limit for each category of bouncing users.For "
-"example, level 1 begins from 45 to level_2_treshold."
-msgstr ""
-"#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
-"Κάθε bouncing χρήστης έχει ένα σκορ (μεταξύ 0 και 100). Η παράμετρος αυτή "
-"ορίζει το κατώτερο κάθε κατηγορίας bouncing χρηστών. Για παράδειγμα το "
-"επίπεδο 1 ξεκινά από 45 έως το level_2_treshold"
-
-#: default/web_tt2/help_editlist.tt2:44
-msgid ""
-"This parameter defines which task is automaticaly applied on level 1 "
-"bouncers."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:47
-msgid ""
-"When automatic task is executed on level 1 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:53
-msgid ""
-"The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 2 is the highest level of bouncing users"
-msgstr ""
-"Η παράγραφος Bouncers_levelX ορίζει την αυτόματη συμπεριφορά της διαχείρισης "
-"bounces. <br/>\n"
-"\tΕπίπεδο 2 είναι το ανώτερο επίπεδο bouncing χρηστών."
-
-#: default/web_tt2/help_editlist.tt2:57
-#, fuzzy
-msgid ""
-"This parameter defines the score range defining each category of bouncing "
-"users.For example, level 2 is for users with a score between 80 and 100."
-msgstr ""
-"#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
-"Κάθε bouncing χρήστης έχει ένα σκορ (μεταξύ 0 και 100). Η παράμετρος αυτή "
-"ορίζει το όριο μεταξύ των κατηγοριών των bouncing χρηστών. Για παράδειγμα το "
-"επίπεδο 2 είναι για τους χρήστες με σκορ μεταξύ 80 και 100."
-
-#: default/web_tt2/help_editlist.tt2:60
-msgid ""
-"This parameter defines which task is automaticaly applied on level 2 "
-"bouncers."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:63
-msgid ""
-"When automatic task is executed on level 2 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:67
-msgid ""
-"This parameter is a confidential item for generating authentication keys for "
-"administrative commands (ADD, DELETE, etc.). This parameter should remain "
-"concealed, even for owners. The cookie is applied to all list owners, and is "
-"only taken into account when the owner has the auth parameter."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:69
-msgid ""
-"This parameter is optional. The headers specified will be added to the "
-"headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
-"it is possible to put several custom header lines in the configuration file "
-"at the same time."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:71
-msgid ""
-"This parameter is optional. It specifies a string which is added to the "
-"subject of distributed messages (intended to help users who do not use "
-"automatic tools to sort incoming messages). This string will be surrounded "
-"by [] characters."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:73
-msgid ""
-"The default_user_options parameter starts a paragraph to define a default "
-"profile for the subscribers of the list."
-msgstr ""
-"Η παράμετρος default_user_options ξενικά την παράγραφο ορισμού του "
-"προκαθορισμένου προφίλ των συνδρομητών της λίστας."
-
-#: default/web_tt2/help_editlist.tt2:75
-msgid "Mail reception mode."
-msgstr "Τρόπος παραβαλής μηνύματος."
-
-#: default/web_tt2/help_editlist.tt2:76
-msgid "Visibility of the subscriber with the REVIEW command."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:79
-msgid "This parameter specifies who is authorized to use the DEL command."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:81
-#, fuzzy
-msgid ""
-"Definition of digest mode. If this parameter is present, subscribers can "
-"select the option of receiving messages in multipart/digest MIME format, or "
-"as a plain text digest. Messages are then grouped together, and compiled "
-"messages are sent to subscribers according to the frequency selected with "
-"this parameter."
-msgstr ""
-"#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
-"Καθορισμός του τρόπου επισκόπησης. Αν τεθεί η παρούσα παράμετρος, οι "
-"συνδρομητές έχουν την επιλογή λήψης μηνυμάτων επισκόπησης σε μορφή MIME, ή "
-"ως επισκόπηση απλού κειμένου. Στη συνέχεια γίνεται η σύνταξη των μηνυμάτων "
-"και τα μηνύματα αποστέλλονται στους συνδρομητές ανάλογα με τη συχνότητα που "
-"ορίζει η συγκεκριμένη παράμετρος."
-
-#: default/web_tt2/help_editlist.tt2:83
-msgid ""
-"Editors are responsible for moderating messages. If the mailing list is "
-"moderated, messages posted to the list will first be passed to the editors, "
-"who will decide whether to distribute or reject it."
-msgstr ""
-"Οι συντάκτες είναι υπεύθυνοι για το συντονισμό των μηνυμάτων. Αν μία λίστα "
-"είναι συντονιζόμενη, τα μηνύματα που αποστέλλονται στη λίστα ελέγχονται από "
-"τους συντάκτες, οι οποίοι αποφασίζουν αν θα διανεμηθούν ή αν θα απορριφθούν."
-
-#: default/web_tt2/help_editlist.tt2:84
-#, fuzzy
-msgid ""
-"FYI: Defining editors will not make the list moderated; you will have to set "
-"the \"send\" parameter."
-msgstr ""
-"FYI: Ο ορισμός των συντακτών δεν μετατρέπει τη λίστα σε συντονιζόμενη ; θα "
-"πρέπει να ορίσετε την παράμετρο \"send\""
-
-#: default/web_tt2/help_editlist.tt2:85
-msgid ""
-"FYI: If the list is moderated, any editor can distribute or reject a message "
-"without the knowledge or consent of the other editors. Messages that have "
-"not been distributed or rejected will remain in the moderation spool until "
-"they are acted on."
-msgstr ""
-"FYI: Αν η λίστα είναι συντονιζόμενη, κάθε συντάκτης μπορεί να διανέμει ή να "
-"απορρίψει ένα μήνυμα χωρίς τη γνώση ή τη συγκατάθεση των υπόλοιπων "
-"συντακτών. Τα μηνύματα που δεν έχουν διανεμηθεί ή απορριφθεί θα παραμείνουν "
-"στην περιοχή συντονισμού έως ότου επεξεργαστούν."
-
-#: default/web_tt2/help_editlist.tt2:87
-msgid ""
-"This parameter states which model is used to create an expire task. An "
-"expire task regularly checks the subscription or resubscription  date of "
-"subscribers and asks them to renew their subscription. If they don't they "
-"are deleted."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:89
-msgid ""
-"List owners may decide to add message headers or footers to messages sent "
-"via the list. This parameter defines the way a footer/header is added to a "
-"message."
-msgstr ""
-"Οι ιδιοκτήτες της λίστας έχουν τη δυνατότητα προσθήκης κεφαλίδας και "
-"υποσέλιδου στα μηνύματα που αποστέλλονται μέσω της λίστας. Η συγκεκριμένη "
-"παράμετρος ορίζει τον τρόπο προσθήκης κεφαλίδας/υποσέλιδου στο μήνυμα."
-
-#: default/web_tt2/help_editlist.tt2:92
-msgid "The default value. Sympa will add the footer/header as a new MIME part."
-msgstr ""
-"Η προκαθορισμένη τιμή. Το λογισμικό Sympa θα προσθέσει την κεφαλίδα/"
-"υποσέλιδο ως ένα νέο τμήμα MIME."
-
-#: default/web_tt2/help_editlist.tt2:95
-msgid ""
-"Sympa will not create new MIME parts, but will try to append the header/"
-"footer to the body of the message. Predefined message-footers will be "
-"ignored. Headers/footers may be appended to text/plain messages only."
-msgstr ""
-"Το λογισμικό Sympa δε θα δημιουργήσει νέα τμήματα MIME, αλλά θα προσπαθήσει "
-"να προσθέσει κεφαλίδα/υποσέλιδο στο σώμα του μηνύματος. Τα προκαθορισμένα "
-"υποσέλιδα θα αγνοηθούν. Κεφαλίδες/υποσέλιδα μπορούν να προστεθούν μόνο σε "
-"μηνύματα απλού κειμένου."
-
-#: default/web_tt2/help_editlist.tt2:99
-msgid ""
-"Domain name of the list, default is the robot domain name set in the related "
-"robot.conf file or in file /etc/sympa.conf."
-msgstr ""
-"Όνομα περιοχής της λίστας, το προκαθορισμένο είναι το όνομα περιοχής robot, "
-"το οποίο έχει οριστεί στο αρχείο robot.conf ή στο αρχείο /etc/sympa.conf."
-
-#: default/web_tt2/help_editlist.tt2:101
-msgid ""
-"Include subscribers from this file.  The file should contain one e-mail "
-"address per line (lines beginning with a \"#\" are ignored)."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:103
-#, fuzzy
-msgid ""
-"This paragraph defines parameters for a two-level query returning a list of "
-"subscribers. Usually the first-level query returns a list of DNs and the "
-"second-level queries convert the DNs into e-mail addresses. This feature "
-"requires the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"Η συγκεκριμένη παράγραφος ορίζει παραμέτρους ενός ερωτήματος δύο επιπέδων "
-"που επιστρέφει μία λίστα συνδρομητών. Συνήθως το ερώτημα πρώτου επιπέδου "
-"επιστρέφει μία λίστα από DNs και το ερώτημα δεύτερου επιπέδου μετατρέπει τα "
-"DNs σε ηλεκτρονικές διευθύνσεις. Η παράγραφος αυτή χρησιμοποιείται αν η "
-"παράμετρος user_data_source έχει τεθεί ως include. Το χαρακτηριστικό αυτό "
-"απαιτεί το τμήμα PERL Net::LDAP (perlldap)."
-
-#: default/web_tt2/help_editlist.tt2:105
-#, fuzzy
-msgid ""
-"This paragraph defines parameters for a query returning a list of "
-"subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"Η συγκεκριμένη παράγραφος ορίζει παραμέτρους ενός ερωτήματος που επιστρέφει "
-"μία λίστα από συνδρομητής. Η παράγραφος χρησιμοποιείται μόνο αν η παράμετρος "
-"user_data_source έχει τεθεί ως include. Το χαρακτηριστικό αυτό απαιτεί το "
-"τμήμα PERL Net::LDAP (perlldap)."
-
-#: default/web_tt2/help_editlist.tt2:107
-msgid ""
-"Include subscribers from other list. All subscribers of list listname become "
-"subscribers of the current list. You may include as many lists as required, "
-"using one include_sympa_list paragraph for each included list. Any list at "
-"all may be included; you may therefore include lists which are also defined "
-"by the inclusion of other lists. Be careful, however, not to include list A "
-"in list B and then list B in list A, since this will give rise to an "
-"infinite loop."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:109
-#, fuzzy
-msgid ""
-"Sympa can contact another Sympa service using HTTPS to fetch a remote list "
-"in order to include each member of a remote list as subscriber. You may "
-"include as many lists as required, using one include_remote_sympa_list "
-"paragraph for each included list. Be careful, however, not to give rise to "
-"an infinite loop resulting from cross includes."
-msgstr ""
-"#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
-"Το λογισμικό Sympa μπορεί να επικοινωνήσει με μία άλλη Sympa υπηρεσία με "
-"χρήση https για την πρόσκτηση μίας απομακρυσμένης λίστας ώστε να "
-"συμπεριλάβει κάθε μέλος της ως συνδρομητή. Μπορούν να συμπεριληφθούν όσες "
-"λίστες απαιτούνται με τη χρήση της παραγράφου include_remote_sympa_list για "
-"κάθε μία συμπεριλαμβανόμενη λίστα. Προσοχή απαιτείται για την αποφυγή "
-"ατέρμονων βρόγχων."
-
-#: default/web_tt2/help_editlist.tt2:110
-#, fuzzy
-msgid ""
-"For this operation, one Sympa site acts as a server while the other one acs "
-"as client. On the server side, the only setting needed is to give permission "
-"to the remote Sympa to review the list. This is controlled by the review "
-"scenario."
-msgstr ""
-"#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
-"Με την τρέχουσα ενέργεια, ένα Sympa site λειτουργεί ως εξυπηρετητής ενώ ένα "
-"άλλο ως πελάτης. Στην πλευρά του εξυπηρετητή, η μόνη απαιτούμενη ρύθμιση "
-"είναι η παροχή δικαιωμάτων πρόσβασης στο απομακρυσμένο λογισμικό Sympa να "
-"επιθεωρεί (review) τη λίστα. Αυτό ελέγχεται με το σενάριο review."
-
-#: default/web_tt2/help_editlist.tt2:112
-msgid ""
-"This parameter is used to begin a paragraph defining the SQL query "
-"parameters. "
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:114
-msgid ""
-"This parameter defines the language used for the list. It is used to "
-"initialize a user's language preference; Sympa command reports are extracted "
-"from the associated message catalog."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:116
-msgid "Maximum size of a message in 8-bit bytes."
-msgstr "Μέγιστο μέγεθος μηνύματος σε bytes."
-
-#: default/web_tt2/help_editlist.tt2:118
-msgid ""
-"Owners are managing subscribers of the list. They may review subscribers and "
-"add or delete email addresses from the mailing list. If you are a privileged "
-"owner of the list, you can choose other owners for the mailing list. "
-"Privileged owners may edit a few more options than other owners. "
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:120
-msgid ""
-"The priority with which Sympa will process messages for this list. This "
-"level of priority is applied while the message is going through the spool. "
-"The z priority will freeze the message in the spool."
-msgstr ""
-"Η προτεραιότητα με την οποία το λογισμικό Sympa θα επεξεργαστεί τα μηνύματα "
-"της συγκεκριμένης λίστας. Το επίπεδο προτεραιότητας εφαρμόζεται κατά το "
-"πέρασμα από τη spool. Η προτεραιότητα z θα παγώσει το μήνυμα στη spool."
-
-#: default/web_tt2/help_editlist.tt2:122
-msgid "This parameter specifies who is authorized to use the remind command."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:124
-msgid "Same as welcome_return_path, but applied to remind messages."
-msgstr ""
-"Ταυτόσημη με την παράμετρο welcome_return_path, αλλά χρησιμοποιείται στα "
-"μηνύματα υπενθύμισης."
-
-#: default/web_tt2/help_editlist.tt2:126
-msgid ""
-"This parameter states which model is used to create a remind task. A remind "
-"task regularly sends  subscribers a message which reminds them of their list "
-"subscriptions."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:128
-msgid ""
-"The reply_to_header parameter starts a paragraph defining what Sympa will "
-"place in the Reply-To: SMTP header field of the messages it distributes."
-msgstr ""
-"Η παράμετρος reply_to_header ξεκινά την παράγραφο ορισμού αυτών που θα θέσει "
-"το λογισμικό Sympa στο SMPT πεδίο επικεφαλίδας Reply-To: των μηνυμάτων που "
-"διανέμει."
-
-#: default/web_tt2/help_editlist.tt2:131
-msgid ""
-"This parameter indicates whether the Reply-To: field should indicate the "
-"sender of the message (sender), the list itself (list), both list and sender "
-"(all) or an arbitrary e-mail address (defined by the other_email parameter)."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:132
-msgid ""
-"Note: it is inadvisable to change this parameter, and particularly "
-"inadvisable to set it to list. Experience has shown it to be almost "
-"inevitable that users, mistakenly believing that they are replying only to "
-"the sender, will send private messages to a list. This can lead, at the very "
-"least, to embarrassment, and sometimes to more serious consequences."
-msgstr ""
-"Σημείωση: συστήνεται ηαλλαγή της συγκεκριμένης παραμέτρου και ιδιαίτερη η "
-"ρύθμιση του ως λίστα. Η εμπειρία έχει δείξει ότι οι περισσότεροι χρήστες που "
-"λανθασμένα πιστεύουν ότι απαντούν στο αποστολέα, αποστέλλον ιδιωτικά "
-"μηνύματα σε λίστα. Αυτό μπορεί να οδηγήσει, στην πλειοψηφία των περιπτώσεων, "
-"σε αμηχανία, και σε ειδικές περιπτώσεις να επιφέρει σημαντικές συνέπειες."
-
-#: default/web_tt2/help_editlist.tt2:134
-msgid "an_email_address"
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:135
-msgid ""
-"If value was set to other_email, this parameter defines the e-mail address "
-"used."
-msgstr ""
-"Αν οριστεί ως άλλη_διεύθυνση (other_email), η παράμετρος ορίζει τη "
-"χρησιμοποιούμενη διεύθυνση ηλεκτρονικού ταχυδρομείου."
-
-#: default/web_tt2/help_editlist.tt2:138
-msgid ""
-"The default is to respect (preserve) the existing Reply-To: SMTP header "
-"field in incoming messages. If set to forced, Reply-To: SMTP header field "
-"will be overwritten."
-msgstr ""
-"Ο προκαθορισμένος ορισμός είναι η διατήρηση του υπάρχοντος πεδίου "
-"επικεφαλίδας SMTP Reply-To: των εισερχόμενων μηνυμάτων. Αν τεθεί το "
-"συγκεκριμένο, το επικεφαλίδας SMTP Reply-To: θα αντικατασταθεί."
-
-#: default/web_tt2/help_editlist.tt2:142
-msgid ""
-"This parameter specifies who can access the list of members. Since "
-"subscriber addresses can be abused by spammers, it is strongly recommended "
-"that you only authorize owners or subscribers to access the subscriber list. "
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:144
-msgid "This parameter specifies who can send messages to the list."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:146
-msgid ""
-"This paragraph defines read and edit access to the shared document "
-"repository."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:148
-#, fuzzy
-msgid ""
-"There is a need to protect Sympa web sites against spambots which collect "
-"email addresses from public web sites. Various methods are available in "
-"Sympa and you can choose to use them with the spam_protection and "
-"web_archive_spam_protection parameters. Possible value are:"
-msgstr ""
-"#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
-"Υπάρχει ανάγκη προστασίας του Sympa ιστότοπου από τα spambot που συλλέγουν "
-"ηλεκτρονικές διευθύνση από δημόσιους ιστότοπους. Το λογισμικό Sympa διαθέτει "
-"διάφορες μεθόδους, τις οποίες μπορείτε να επιλέξετε με τις παραμέτρους "
-"spam_protection και web_archive_spam_protection.  Πιθανές τιμές είναι:"
-
-#: default/web_tt2/help_editlist.tt2:150
-msgid ""
-"the address is hidden using a javascript. A user who enables javascript can "
-"see a nice mailto address where others have nothing."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:151
-msgid "the @ char is replaced by the string \" AT \"."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:152
-msgid "no protection against spammer."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:155
-msgid ""
-"This parameter indicates the subject of the list, which is sent in response "
-"to the LISTS mail command. The subject is a free form text limited to one "
-"line."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:157
-msgid "The subscribe parameter defines the rules for subscribing to the list."
-msgstr "Η παράμετρος συνδρομής ορίζει τους κανόνες συνδρομής στη λίστα."
-
-#: default/web_tt2/help_editlist.tt2:159
-msgid ""
-"This parameter allows the classification of lists. You may define multiple "
-"topics as well as hierarchical ones. WWSympa's list of public lists uses "
-"this parameter."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:161
-msgid ""
-"Sympa caches user data extracted using the include parameter. Their TTL "
-"(time-to-live) within Sympa can be controlled using this parameter. The "
-"default value is 3600"
-msgstr ""
-"Το λογισμικό Sympa αποθηκεύει σε λανθάνουσα μνήμη τα στοιχείων των χρηστών "
-"που εξάγονται με τη χρήση της παραμέτρου συμπερίληψης. Ο χρόνος ζωής τους "
-"μπορεί να οριστεί από το λογισμικό Sympa μέσω της συγκεκριμένης παραμέτρου. "
-"Η προκαθορισμένη τιμή είναι 3600"
-
-#: default/web_tt2/help_editlist.tt2:163
-msgid ""
-"This parameter specifies the unsubscription method for the list. Use "
-"open_notify or auth_notify to allow owner notification of each unsubscribe "
-"command."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:165
-msgid ""
-"This parameter indicates whether the list should feature in the output "
-"generated in response to a LISTS command or should be shown in the list "
-"overview of the web-interface."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:167
-msgid "Defines who can access the web archive for the list."
-msgstr "Καθορισμός πρόσβασης στο web αρχείο της λίστας."
-
-#: default/web_tt2/help_editlist.tt2:169
-#, fuzzy
-msgid ""
-"Idem spam_protection is provided but it can be used only for web archives. "
-"Access requires a cookie, and users must submit a small form in order to "
-"receive a cookie before browsing the archives. This blocks all robot, even "
-"google and co."
-msgstr ""
-"#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
-"Ταυτόσημο με το spam_protection αλλά περιορίζεται στο web Αρχείο. Μία "
-"επιπλέον τιμή είναι διαθέσιμη: cookie, η οποία σημαίνει ότι οι χρήστες θα "
-"πρέπει να συμπληρώνουν μία φόρμα ώστε να λάβουν το cookie πριν την πλοήγηση "
-"στο Αρχείο. Η δυνατότητα αυτή εμποδίζει όλα τα robot, συμπεριλαμβανομένου "
-"και του google."
-
-#: default/web_tt2/help_editlist.tt2:171
-msgid ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
-msgstr ""
-"Αν οριστεί ως μοναδικό (unique), το μήνυμα καλωσορίσματος χρησιμοποιεί ένα "
-"μοναδικό μονοπάτι για την απευθείας διαγραφή του συνδρομητή σε περίπτωση "
-"bounce."
-
-#: default/web_tt2/help_editlist.tt2:173
-msgid ""
-"This paragraph defines a topic used to tag a message of a list, named by "
-"msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
-"The msg_topic.keywords entry is optional and allows automatic tagging. This "
-"should be a list of keywords, separated by ','."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:175
-msgid ""
-"This parameter indicates which part of the message is used to perform "
-"automatic tagging."
-msgstr ""
-
-#: default/web_tt2/help_editlist.tt2:177
-msgid ""
-"This parameter indicates if the tagging is optional or required for a list."
+#: default/web_tt2/help_faq.tt2:4
+msgid "User and admin FAQ"
 msgstr ""
 
 #: default/web_tt2/help_faqadmin.tt2:3
@@ -2282,34 +1720,6 @@ msgid ""
 "As a last resort, <strong>contact the listmaster</strong>, who will check "
 "the mail server logs in order to find the cause of the problem."
 msgstr ""
-
-#: default/web_tt2/help_faq.tt2:4
-msgid "User and admin FAQ"
-msgstr ""
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
-msgid ""
-"If you want to perform a particular task, take a look at the list of all <a "
-"href=\"%1/help/introduction#features\">available features</a> in the mailing "
-"list management software Sympa."
-msgstr ""
-"Αν επιθυμείτε να εκτελέσετε μία συγκεκριμένη εργασία, επισκευθείτε τη λίστα "
-"με όλα <a href=\"%1/help/introduction#features\">τα διαθέσιμα χαρακτηριστικά "
-"</a> λογισμικού διαχείρισης λιστών Sympa. "
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
-msgid ""
-"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
-"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
-"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
-"\"Frequently asked questions\">FAQ</acronym></a>."
-msgstr ""
-"Αν αντιμετωπίζετε προβλήματα, δείτε το <a href=\"%1/help/faquser\"> "
-"FAQ<acronym title=\"Frequently asked questions\">χρηστών ή το <a href=\"%1/"
-"help/faqadmin\">FAQ  <acronym title=\"Frequently asked questions"
-"\">διαχειριστών</acronym></a>."
 
 #: default/web_tt2/help_faquser.tt2:3
 msgid "Users Frequently Asked Questions"
@@ -4954,181 +4364,6 @@ msgstr ""
 msgid "Click \"Resume\"."
 msgstr ""
 
-#: default/web_tt2/help.tt2:11
-msgid "Subscriber, moderator and owner documentation"
-msgstr "Τεκμηρίωση συνδρομητή, ιδιοκτήτη και συντονιστή"
-
-#: default/web_tt2/help.tt2:13
-msgid "In this documentation, you will find:"
-msgstr "Σε αυτό την τεκμηρίωση θα βρείτε:"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:15
-msgid ""
-"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
-msgstr ""
-"μία <a href=\"%1/help/introduction\">γενική εισαγωγή</a στις λίστες "
-"ηλεκτρονικού ταχυδρομείου."
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:16
-msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
-msgstr ""
-"ένας <a href=\"%1/help/user\">οδηγός χρήστη<a/> για τη χρήση του Sympa."
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:17
-msgid ""
-"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
-msgstr ""
-"ένας <a href=\"%1/help/admin\">οδηγός διαχειριστή</a> για τη χρήση του Sympa."
-
-#: default/web_tt2/help_user_options.tt2:3
-#, fuzzy
-msgid ""
-"This is a description of the reception modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-msgstr ""
-"#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
-"#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
-"Αυτή είναι η περιγραφή των τρόπων παραλαβής που διαθέτει το λογισμικό Sympa. "
-"Οι επιλογές είναι αμοιβαίως αποκλειόμενες, που σημαίνει ότι δεν μπορούν να "
-"οριστούν ταυτόχρονα δύο διαφορετικοί τρόποι παραλαβής. Μόνο ορισμένοι τρόποι "
-"παραλαβής είναι διαθέσιμοι για συγκεκριμένες λίστες."
-
-#: default/web_tt2/help_user_options.tt2:7
-msgid "Digest"
-msgstr "Επισκόπηση"
-
-#: default/web_tt2/help_user_options.tt2:10
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-msgstr ""
-"Σε αντιδιαστολή με την λήψη μεμονωμένων μηνυμάτων από τη λίστα, ο "
-"συνδρομητής θα λαμβάνει περιοδικά\n"
-"μία Επισκόπηση. Η Επισκόπηση συγκεντρώνει μία ομάδα μηνυμάτων της λίστας με "
-"χρήση μορφής multipart/digest MIME."
-
-#: default/web_tt2/help_user_options.tt2:12
-#: default/web_tt2/help_user_options.tt2:20
-msgid "The sending interval for these Digests is defined by the list owner."
-msgstr ""
-"Η περίοδο αποστολής της Επισκόπησης ορίζεται από τον ιδιοκτήτη της λίστας."
-
-#: default/web_tt2/help_user_options.tt2:14
-msgid "DigestPlain"
-msgstr "Επισκόπηση απλού κειμένου"
-
-#: default/web_tt2/help_user_options.tt2:18
-msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-msgstr ""
-"Παρόμοια με την επιλογή Επισκόπηση καθώς ο συνδρομητής θα λαμβάνει "
-"περιοδικά\n"
-"το σύνολο των μηνυμάτων σε μήνυμα  Επισκόπησης. Με την επιλογή Απλή "
-"Επισκόπηση το μήνυμα επισκόπησης θα αποστέλλεται σε μορφή απλού κειμένου,\n"
-"χωρίς τις επισυνάψεις. Ο τρόπος της Απλής Επισκόπησης είναι χρήσιμος στην "
-"περίπτωση που το λογισμικό ηλεκτρονικού ταχυδρομείου\n"
-"δεν παρουσιάζει ορθά τα μηνύματα με μορφή επισκόπησης."
-
-#: default/web_tt2/help_user_options.tt2:22
-msgid "Summary"
-msgstr "Περίληψη"
-
-#: default/web_tt2/help_user_options.tt2:26
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-msgstr ""
-"Σε αντιδιαστολή με την λήψη μεμονωμένων μηνυμάτων από τη λίστα, ο "
-"συνδρομητής θα λαμβάνει περιοδικά\n"
-"μία λίστα των μηνυμάτων. Ο τρόπος αυτός είναι παραπλήσιος της Επισκόπησης,\n"
-"αλλά οι συνδρομητές λαμβάνουν μόνο τη λίστα των μηνυμάτων."
-
-#: default/web_tt2/help_user_options.tt2:29
-msgid "Nomail"
-msgstr "Δεν υπάρχει μήνυμα"
-
-#: default/web_tt2/help_user_options.tt2:31
-msgid ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-msgstr ""
-"Ο τρόπος χρησιμοποιείται όταν ένας συνδρομητής δεν επιθυμεί πλέον να "
-"λαμβάνει μηνύματα από τη λίστα, αλλά εν τούτοις επιθυμεί να διατηρηθεί η "
-"δυνατότητα να αποστείλει στη λίστα. Επομένως, ο τρόπος αυτός προλαμβάνει την "
-"αφαίρεση και τη μετέπειτα εκ νέου εγγραφή  ενός χρήστη."
-
-#: default/web_tt2/help_user_options.tt2:36
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-msgstr ""
-"Ο τρόπος αυτό χρησιμοποιείται όταν ένας συνδρομητής επιθυμεί τη λήψη των "
-"μηνυμάτων, τα οποία αποστέλλονται ταυτόχρονα σε μορφή HTML και σε απλού "
-"κειμένου,\n"
-"μόνο σε μορφή απλού κειμένου."
-
-#: default/web_tt2/help_user_options.tt2:41
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-msgstr ""
-"Ο τρόπος αυτό χρησιμοποιείται όταν ένας συνδρομητής επιθυμεί τη λήψη των "
-"μηνυμάτων, τα οποία αποστέλλονται ταυτόχρονα σε μορφή HTML και σε απλού "
-"κειμένου,\n"
-"μόνο σε μορφή HTML."
-
-#: default/web_tt2/help_user_options.tt2:46
-msgid ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-msgstr ""
-"Ο συγκεκριμένος τρόπος χρησιμοποιείται όταν ένας συνδρομητής δεν επιθυμεί να "
-"λαμβάνει επισυναπτόμενα αρχεία. Τα επισυναπτόμενα αρχεία\n"
-"αντικαθίστανται από ένα URL που οδηγεί προς το αρχείο που είναι αποθηκευμένο "
-"στον ιστότοπο της λίστας."
-
-#: default/web_tt2/help_user_options.tt2:51
-msgid ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-msgstr ""
-"Ο τρόπος χρησιμοποιείται όταν ένας συνδρομητής δεν επιθυμεί την παραλαβή "
-"αντιγράφων των μηνυμάτων που έχει στείλει στη\n"
-"λίστα."
-
-#: default/web_tt2/help_user_options.tt2:56
-msgid ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
-msgstr ""
-"Ο τρόπος αυτό χρησιμοποιείται  κυρίως για την ακύρωση των τρόπων nomail, "
-"summary ή digest. Αν ένας συνδρομητής ήταν\n"
-"σε τρόπο nomail, τώρα θα λαμβάνει πάλι μεμονωμένα μηνύματα από τη λίστα."
-
 #: default/web_tt2/help_user.tt2:3
 msgid "Mailing lists - User Guide"
 msgstr ""
@@ -5855,6 +5090,511 @@ msgstr ""
 #: default/web_tt2/help_user.tt2:179
 msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
 msgstr ""
+
+#: default/web_tt2/help_user_options.tt2:3
+#, fuzzy
+msgid ""
+"This is a description of the reception modes available in Sympa. These "
+"options are mutually exclusive, which means that you can't set two different "
+"receive modes at the same time. Only some of the modes might be available to "
+"specific mailing lists."
+msgstr ""
+"#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
+"#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
+"Αυτή είναι η περιγραφή των τρόπων παραλαβής που διαθέτει το λογισμικό Sympa. "
+"Οι επιλογές είναι αμοιβαίως αποκλειόμενες, που σημαίνει ότι δεν μπορούν να "
+"οριστούν ταυτόχρονα δύο διαφορετικοί τρόποι παραλαβής. Μόνο ορισμένοι τρόποι "
+"παραλαβής είναι διαθέσιμοι για συγκεκριμένες λίστες."
+
+#: default/web_tt2/help_user_options.tt2:7
+msgid "Digest"
+msgstr "Επισκόπηση"
+
+#: default/web_tt2/help_user_options.tt2:10
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber "
+"will periodically \n"
+"receive batched messages in a Digest. This Digest compiles a group of "
+"messages from the list, using\n"
+"the multipart/digest MIME format."
+msgstr ""
+"Σε αντιδιαστολή με την λήψη μεμονωμένων μηνυμάτων από τη λίστα, ο "
+"συνδρομητής θα λαμβάνει περιοδικά\n"
+"μία Επισκόπηση. Η Επισκόπηση συγκεντρώνει μία ομάδα μηνυμάτων της λίστας με "
+"χρήση μορφής multipart/digest MIME."
+
+#: default/web_tt2/help_user_options.tt2:12
+#: default/web_tt2/help_user_options.tt2:20
+msgid "The sending interval for these Digests is defined by the list owner."
+msgstr ""
+"Η περίοδο αποστολής της Επισκόπησης ορίζεται από τον ιδιοκτήτη της λίστας."
+
+#: default/web_tt2/help_user_options.tt2:14
+msgid "DigestPlain"
+msgstr "Επισκόπηση απλού κειμένου"
+
+#: default/web_tt2/help_user_options.tt2:18
+msgid ""
+"Similar to the Digest option in that the subscriber will periodically \n"
+"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
+"a plain text \n"
+"format, with all attachments stripped out. DigestPlain is useful if your "
+"email software doesn't\n"
+"display multipart/digest format messages well."
+msgstr ""
+"Παρόμοια με την επιλογή Επισκόπηση καθώς ο συνδρομητής θα λαμβάνει "
+"περιοδικά\n"
+"το σύνολο των μηνυμάτων σε μήνυμα  Επισκόπησης. Με την επιλογή Απλή "
+"Επισκόπηση το μήνυμα επισκόπησης θα αποστέλλεται σε μορφή απλού κειμένου,\n"
+"χωρίς τις επισυνάψεις. Ο τρόπος της Απλής Επισκόπησης είναι χρήσιμος στην "
+"περίπτωση που το λογισμικό ηλεκτρονικού ταχυδρομείου\n"
+"δεν παρουσιάζει ορθά τα μηνύματα με μορφή επισκόπησης."
+
+#: default/web_tt2/help_user_options.tt2:22
+msgid "Summary"
+msgstr "Περίληψη"
+
+#: default/web_tt2/help_user_options.tt2:26
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber "
+"will periodically \n"
+"receive a list of messages. This mode is very close to the Digest reception "
+"mode but the \n"
+"subscriber receives only the list of messages."
+msgstr ""
+"Σε αντιδιαστολή με την λήψη μεμονωμένων μηνυμάτων από τη λίστα, ο "
+"συνδρομητής θα λαμβάνει περιοδικά\n"
+"μία λίστα των μηνυμάτων. Ο τρόπος αυτός είναι παραπλήσιος της Επισκόπησης,\n"
+"αλλά οι συνδρομητές λαμβάνουν μόνο τη λίστα των μηνυμάτων."
+
+#: default/web_tt2/help_user_options.tt2:29
+msgid "Nomail"
+msgstr "Δεν υπάρχει μήνυμα"
+
+#: default/web_tt2/help_user_options.tt2:31
+msgid ""
+"This mode is used when a subscriber no longer wishes to receive mail from "
+"the list, but nevertheless wishes to retain the ability to post to the list. "
+"This mode therefore prevents the subscriber from unsubscribing and "
+"subscribing later on."
+msgstr ""
+"Ο τρόπος χρησιμοποιείται όταν ένας συνδρομητής δεν επιθυμεί πλέον να "
+"λαμβάνει μηνύματα από τη λίστα, αλλά εν τούτοις επιθυμεί να διατηρηθεί η "
+"δυνατότητα να αποστείλει στη λίστα. Επομένως, ο τρόπος αυτός προλαμβάνει την "
+"αφαίρεση και τη μετέπειτα εκ νέου εγγραφή  ενός χρήστη."
+
+#: default/web_tt2/help_user_options.tt2:36
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both "
+"HTML and plain text formats\n"
+"only in plain text format."
+msgstr ""
+"Ο τρόπος αυτό χρησιμοποιείται όταν ένας συνδρομητής επιθυμεί τη λήψη των "
+"μηνυμάτων, τα οποία αποστέλλονται ταυτόχρονα σε μορφή HTML και σε απλού "
+"κειμένου,\n"
+"μόνο σε μορφή απλού κειμένου."
+
+#: default/web_tt2/help_user_options.tt2:41
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both "
+"HTML and plain text formats\n"
+"only in HTML format."
+msgstr ""
+"Ο τρόπος αυτό χρησιμοποιείται όταν ένας συνδρομητής επιθυμεί τη λήψη των "
+"μηνυμάτων, τα οποία αποστέλλονται ταυτόχρονα σε μορφή HTML και σε απλού "
+"κειμένου,\n"
+"μόνο σε μορφή HTML."
+
+#: default/web_tt2/help_user_options.tt2:46
+msgid ""
+"This mode is used when a subscriber does not want to receive attached files. "
+"The attached files are \n"
+"replaced by a URL leading to the file stored on the list site."
+msgstr ""
+"Ο συγκεκριμένος τρόπος χρησιμοποιείται όταν ένας συνδρομητής δεν επιθυμεί να "
+"λαμβάνει επισυναπτόμενα αρχεία. Τα επισυναπτόμενα αρχεία\n"
+"αντικαθίστανται από ένα URL που οδηγεί προς το αρχείο που είναι αποθηκευμένο "
+"στον ιστότοπο της λίστας."
+
+#: default/web_tt2/help_user_options.tt2:51
+msgid ""
+"This mode is used when a subscriber does not want to receive copies of "
+"messages that he or she has sent to \n"
+"the list."
+msgstr ""
+"Ο τρόπος χρησιμοποιείται όταν ένας συνδρομητής δεν επιθυμεί την παραλαβή "
+"αντιγράφων των μηνυμάτων που έχει στείλει στη\n"
+"λίστα."
+
+#: default/web_tt2/help_user_options.tt2:56
+msgid ""
+"This option is used mainly to cancel the nomail, summary or digest modes. If "
+"the subscriber was \n"
+"in nomail mode, he or she will again receive individual mail messages from "
+"the list."
+msgstr ""
+"Ο τρόπος αυτό χρησιμοποιείται  κυρίως για την ακύρωση των τρόπων nomail, "
+"summary ή digest. Αν ένας συνδρομητής ήταν\n"
+"σε τρόπο nomail, τώρα θα λαμβάνει πάλι μεμονωμένα μηνύματα από τη λίστα."
+
+#~ msgid "Privilege for adding (ADD command) a subscriber to the list"
+#~ msgstr "Προνόμιο για την προσθήκη (εντολή ADD) ενός συνδρομητή στη λίστα"
+
+#~ msgid "Privilege for reading mail archives and frequency of archiving"
+#~ msgstr ""
+#~ "Προνόμιο για την ανάγνωση των αρχείων και της συχνότητας αρχειοθέτησης"
+
+#~ msgid ""
+#~ "The available_user_options parameter starts a paragraph to define "
+#~ "available options for the subscribers of the list."
+#~ msgstr ""
+#~ "Η παράμετρος available_user_options ξεκινά την παράγραφο ορισμού των "
+#~ "διαθέσιμων επιλογών για τους συνδρομητές της λίστας."
+
+#~ msgid ""
+#~ "<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
+#~ "summary, nomail), separated by commas. Only these modes will be allowed "
+#~ "for the subscribers of this list. If a subscriber has a reception mode "
+#~ "not in the list, sympa uses the mode specified in the "
+#~ "default_user_options paragraph."
+#~ msgstr ""
+#~ "<em>Λίστα τρόπων</em> είναι μία λίστα τρόπων (μήνυμα, απόδειξη παραλαβής, "
+#~ "επισκόπηση, επισκόπηση κοινή, περίληψη, χωρίς μήνυμα), οι οποίοι "
+#~ "διαχωρίζονται με κόμμα. Μόνο αυτοί οι τρόποι επιτρέπονται στους "
+#~ "συνδρομητές της λίστας. Αν ένας συνδρομητής δεν έχει ως τρόπο την "
+#~ "απόδειξη παραλαβής στη λίστα, το λογισμικό sympa χρησιμοποιεί τον τρόπο "
+#~ "που έχει καθοριστεί στην παράγραφο default_user_options."
+
+#~ msgid "This paragraph defines bounce management parameters:"
+#~ msgstr ""
+#~ "Η συγκεκριμένη παράγραφος ορίζει παραμέτρους διαχείρισης των bouncesQ"
+
+#~ msgid "Default value: bounce_warn_rate robot parameter"
+#~ msgstr "Πρκαθορισμένη τιμή:  bounce_warn_rate robot parameter"
+
+#~ msgid ""
+#~ "The list owner receives a warning whenever a message is distributed and "
+#~ "the number (percentage) of bounces exceeds this value."
+#~ msgstr ""
+#~ "Ο ιδιοκτήτης της λίστας λαμβάνει μία προειδοποίηση όταν ένα μήνυμα "
+#~ "διανέμεται και όταν το ποσοστό των bounces ξεπερνά αυτή την τιμή."
+
+#~ msgid "Default value: bounce_halt_rate robot parameter"
+#~ msgstr "Πρκαθορισμένη τιμή: bounce_halt_rate robot parameter"
+
+#~ msgid "Default value:"
+#~ msgstr "Προκαθορισμένη τιμή"
+
+#, fuzzy
+#~ msgid ""
+#~ "Name of the task template used to remove old bounces. Useful for removing "
+#~ "bounced subscriber email. If some messages are distributed without "
+#~ "receiving new bounce messages, the subscriber's email seems to be OK "
+#~ "again. Active if task_manager.pl is running."
+#~ msgstr ""
+#~ "#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "Όνομα της πρότυπης εργασίας για την αφαίρεση παλαιών bounces. Χρήσιμη για "
+#~ "την αφαίρεση bounces ενός συνδρομητή αν κάποια μηνύματα διανέμονται χωρίς "
+#~ "λήψη νέων bounces. Σε αυτή την περίπτωση, πιθανόν να διορθώθηκαν πλέον τα "
+#~ "προβληματα με το συνδρομητή                        .\n"
+#~ "Ενεργή εργασία αν εκτελείται το task_manager.pl"
+
+#~ msgid ""
+#~ "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 1 is the lower level of bouncing users"
+#~ msgstr ""
+#~ "Η παράγραφος Bouncers_level1 ορίζει την αυτόματη συμπεριφορά της "
+#~ "διαχείρισης bounces. <br/>\n"
+#~ "\tΕπίπεδο 1 είναι το κατώτερο επίπεδο bouncing χρηστών."
+
+#, fuzzy
+#~ msgid ""
+#~ "This parameter defines a lower limit for each category of bouncing users."
+#~ "For example, level 1 begins from 45 to level_2_treshold."
+#~ msgstr ""
+#~ "#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "Κάθε bouncing χρήστης έχει ένα σκορ (μεταξύ 0 και 100). Η παράμετρος αυτή "
+#~ "ορίζει το κατώτερο κάθε κατηγορίας bouncing χρηστών. Για παράδειγμα το "
+#~ "επίπεδο 1 ξεκινά από 45 έως το level_2_treshold"
+
+#~ msgid ""
+#~ "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 2 is the highest level of bouncing users"
+#~ msgstr ""
+#~ "Η παράγραφος Bouncers_levelX ορίζει την αυτόματη συμπεριφορά της "
+#~ "διαχείρισης bounces. <br/>\n"
+#~ "\tΕπίπεδο 2 είναι το ανώτερο επίπεδο bouncing χρηστών."
+
+#, fuzzy
+#~ msgid ""
+#~ "This parameter defines the score range defining each category of bouncing "
+#~ "users.For example, level 2 is for users with a score between 80 and 100."
+#~ msgstr ""
+#~ "#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "Κάθε bouncing χρήστης έχει ένα σκορ (μεταξύ 0 και 100). Η παράμετρος αυτή "
+#~ "ορίζει το όριο μεταξύ των κατηγοριών των bouncing χρηστών. Για παράδειγμα "
+#~ "το επίπεδο 2 είναι για τους χρήστες με σκορ μεταξύ 80 και 100."
+
+#~ msgid ""
+#~ "The default_user_options parameter starts a paragraph to define a default "
+#~ "profile for the subscribers of the list."
+#~ msgstr ""
+#~ "Η παράμετρος default_user_options ξενικά την παράγραφο ορισμού του "
+#~ "προκαθορισμένου προφίλ των συνδρομητών της λίστας."
+
+#~ msgid "Mail reception mode."
+#~ msgstr "Τρόπος παραβαλής μηνύματος."
+
+#, fuzzy
+#~ msgid ""
+#~ "Definition of digest mode. If this parameter is present, subscribers can "
+#~ "select the option of receiving messages in multipart/digest MIME format, "
+#~ "or as a plain text digest. Messages are then grouped together, and "
+#~ "compiled messages are sent to subscribers according to the frequency "
+#~ "selected with this parameter."
+#~ msgstr ""
+#~ "#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "Καθορισμός του τρόπου επισκόπησης. Αν τεθεί η παρούσα παράμετρος, οι "
+#~ "συνδρομητές έχουν την επιλογή λήψης μηνυμάτων επισκόπησης σε μορφή MIME, "
+#~ "ή ως επισκόπηση απλού κειμένου. Στη συνέχεια γίνεται η σύνταξη των "
+#~ "μηνυμάτων και τα μηνύματα αποστέλλονται στους συνδρομητές ανάλογα με τη "
+#~ "συχνότητα που ορίζει η συγκεκριμένη παράμετρος."
+
+#~ msgid ""
+#~ "Editors are responsible for moderating messages. If the mailing list is "
+#~ "moderated, messages posted to the list will first be passed to the "
+#~ "editors, who will decide whether to distribute or reject it."
+#~ msgstr ""
+#~ "Οι συντάκτες είναι υπεύθυνοι για το συντονισμό των μηνυμάτων. Αν μία "
+#~ "λίστα είναι συντονιζόμενη, τα μηνύματα που αποστέλλονται στη λίστα "
+#~ "ελέγχονται από τους συντάκτες, οι οποίοι αποφασίζουν αν θα διανεμηθούν ή "
+#~ "αν θα απορριφθούν."
+
+#, fuzzy
+#~ msgid ""
+#~ "FYI: Defining editors will not make the list moderated; you will have to "
+#~ "set the \"send\" parameter."
+#~ msgstr ""
+#~ "FYI: Ο ορισμός των συντακτών δεν μετατρέπει τη λίστα σε συντονιζόμενη ; "
+#~ "θα πρέπει να ορίσετε την παράμετρο \"send\""
+
+#~ msgid ""
+#~ "FYI: If the list is moderated, any editor can distribute or reject a "
+#~ "message without the knowledge or consent of the other editors. Messages "
+#~ "that have not been distributed or rejected will remain in the moderation "
+#~ "spool until they are acted on."
+#~ msgstr ""
+#~ "FYI: Αν η λίστα είναι συντονιζόμενη, κάθε συντάκτης μπορεί να διανέμει ή "
+#~ "να απορρίψει ένα μήνυμα χωρίς τη γνώση ή τη συγκατάθεση των υπόλοιπων "
+#~ "συντακτών. Τα μηνύματα που δεν έχουν διανεμηθεί ή απορριφθεί θα "
+#~ "παραμείνουν στην περιοχή συντονισμού έως ότου επεξεργαστούν."
+
+#~ msgid ""
+#~ "List owners may decide to add message headers or footers to messages sent "
+#~ "via the list. This parameter defines the way a footer/header is added to "
+#~ "a message."
+#~ msgstr ""
+#~ "Οι ιδιοκτήτες της λίστας έχουν τη δυνατότητα προσθήκης κεφαλίδας και "
+#~ "υποσέλιδου στα μηνύματα που αποστέλλονται μέσω της λίστας. Η συγκεκριμένη "
+#~ "παράμετρος ορίζει τον τρόπο προσθήκης κεφαλίδας/υποσέλιδου στο μήνυμα."
+
+#~ msgid ""
+#~ "The default value. Sympa will add the footer/header as a new MIME part."
+#~ msgstr ""
+#~ "Η προκαθορισμένη τιμή. Το λογισμικό Sympa θα προσθέσει την κεφαλίδα/"
+#~ "υποσέλιδο ως ένα νέο τμήμα MIME."
+
+#~ msgid ""
+#~ "Sympa will not create new MIME parts, but will try to append the header/"
+#~ "footer to the body of the message. Predefined message-footers will be "
+#~ "ignored. Headers/footers may be appended to text/plain messages only."
+#~ msgstr ""
+#~ "Το λογισμικό Sympa δε θα δημιουργήσει νέα τμήματα MIME, αλλά θα "
+#~ "προσπαθήσει να προσθέσει κεφαλίδα/υποσέλιδο στο σώμα του μηνύματος. Τα "
+#~ "προκαθορισμένα υποσέλιδα θα αγνοηθούν. Κεφαλίδες/υποσέλιδα μπορούν να "
+#~ "προστεθούν μόνο σε μηνύματα απλού κειμένου."
+
+#~ msgid ""
+#~ "Domain name of the list, default is the robot domain name set in the "
+#~ "related robot.conf file or in file /etc/sympa.conf."
+#~ msgstr ""
+#~ "Όνομα περιοχής της λίστας, το προκαθορισμένο είναι το όνομα περιοχής "
+#~ "robot, το οποίο έχει οριστεί στο αρχείο robot.conf ή στο αρχείο /etc/"
+#~ "sympa.conf."
+
+#, fuzzy
+#~ msgid ""
+#~ "This paragraph defines parameters for a two-level query returning a list "
+#~ "of subscribers. Usually the first-level query returns a list of DNs and "
+#~ "the second-level queries convert the DNs into e-mail addresses. This "
+#~ "feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "Η συγκεκριμένη παράγραφος ορίζει παραμέτρους ενός ερωτήματος δύο επιπέδων "
+#~ "που επιστρέφει μία λίστα συνδρομητών. Συνήθως το ερώτημα πρώτου επιπέδου "
+#~ "επιστρέφει μία λίστα από DNs και το ερώτημα δεύτερου επιπέδου μετατρέπει "
+#~ "τα DNs σε ηλεκτρονικές διευθύνσεις. Η παράγραφος αυτή χρησιμοποιείται αν "
+#~ "η παράμετρος user_data_source έχει τεθεί ως include. Το χαρακτηριστικό "
+#~ "αυτό απαιτεί το τμήμα PERL Net::LDAP (perlldap)."
+
+#, fuzzy
+#~ msgid ""
+#~ "This paragraph defines parameters for a query returning a list of "
+#~ "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "Η συγκεκριμένη παράγραφος ορίζει παραμέτρους ενός ερωτήματος που "
+#~ "επιστρέφει μία λίστα από συνδρομητής. Η παράγραφος χρησιμοποιείται μόνο "
+#~ "αν η παράμετρος user_data_source έχει τεθεί ως include. Το χαρακτηριστικό "
+#~ "αυτό απαιτεί το τμήμα PERL Net::LDAP (perlldap)."
+
+#, fuzzy
+#~ msgid ""
+#~ "Sympa can contact another Sympa service using HTTPS to fetch a remote "
+#~ "list in order to include each member of a remote list as subscriber. You "
+#~ "may include as many lists as required, using one "
+#~ "include_remote_sympa_list paragraph for each included list. Be careful, "
+#~ "however, not to give rise to an infinite loop resulting from cross "
+#~ "includes."
+#~ msgstr ""
+#~ "#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "Το λογισμικό Sympa μπορεί να επικοινωνήσει με μία άλλη Sympa υπηρεσία με "
+#~ "χρήση https για την πρόσκτηση μίας απομακρυσμένης λίστας ώστε να "
+#~ "συμπεριλάβει κάθε μέλος της ως συνδρομητή. Μπορούν να συμπεριληφθούν όσες "
+#~ "λίστες απαιτούνται με τη χρήση της παραγράφου include_remote_sympa_list "
+#~ "για κάθε μία συμπεριλαμβανόμενη λίστα. Προσοχή απαιτείται για την αποφυγή "
+#~ "ατέρμονων βρόγχων."
+
+#, fuzzy
+#~ msgid ""
+#~ "For this operation, one Sympa site acts as a server while the other one "
+#~ "acs as client. On the server side, the only setting needed is to give "
+#~ "permission to the remote Sympa to review the list. This is controlled by "
+#~ "the review scenario."
+#~ msgstr ""
+#~ "#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "Με την τρέχουσα ενέργεια, ένα Sympa site λειτουργεί ως εξυπηρετητής ενώ "
+#~ "ένα άλλο ως πελάτης. Στην πλευρά του εξυπηρετητή, η μόνη απαιτούμενη "
+#~ "ρύθμιση είναι η παροχή δικαιωμάτων πρόσβασης στο απομακρυσμένο λογισμικό "
+#~ "Sympa να επιθεωρεί (review) τη λίστα. Αυτό ελέγχεται με το σενάριο review."
+
+#~ msgid "Maximum size of a message in 8-bit bytes."
+#~ msgstr "Μέγιστο μέγεθος μηνύματος σε bytes."
+
+#~ msgid ""
+#~ "The priority with which Sympa will process messages for this list. This "
+#~ "level of priority is applied while the message is going through the "
+#~ "spool. The z priority will freeze the message in the spool."
+#~ msgstr ""
+#~ "Η προτεραιότητα με την οποία το λογισμικό Sympa θα επεξεργαστεί τα "
+#~ "μηνύματα της συγκεκριμένης λίστας. Το επίπεδο προτεραιότητας εφαρμόζεται "
+#~ "κατά το πέρασμα από τη spool. Η προτεραιότητα z θα παγώσει το μήνυμα στη "
+#~ "spool."
+
+#~ msgid "Same as welcome_return_path, but applied to remind messages."
+#~ msgstr ""
+#~ "Ταυτόσημη με την παράμετρο welcome_return_path, αλλά χρησιμοποιείται στα "
+#~ "μηνύματα υπενθύμισης."
+
+#~ msgid ""
+#~ "The reply_to_header parameter starts a paragraph defining what Sympa will "
+#~ "place in the Reply-To: SMTP header field of the messages it distributes."
+#~ msgstr ""
+#~ "Η παράμετρος reply_to_header ξεκινά την παράγραφο ορισμού αυτών που θα "
+#~ "θέσει το λογισμικό Sympa στο SMPT πεδίο επικεφαλίδας Reply-To: των "
+#~ "μηνυμάτων που διανέμει."
+
+#~ msgid ""
+#~ "Note: it is inadvisable to change this parameter, and particularly "
+#~ "inadvisable to set it to list. Experience has shown it to be almost "
+#~ "inevitable that users, mistakenly believing that they are replying only "
+#~ "to the sender, will send private messages to a list. This can lead, at "
+#~ "the very least, to embarrassment, and sometimes to more serious "
+#~ "consequences."
+#~ msgstr ""
+#~ "Σημείωση: συστήνεται ηαλλαγή της συγκεκριμένης παραμέτρου και ιδιαίτερη η "
+#~ "ρύθμιση του ως λίστα. Η εμπειρία έχει δείξει ότι οι περισσότεροι χρήστες "
+#~ "που λανθασμένα πιστεύουν ότι απαντούν στο αποστολέα, αποστέλλον ιδιωτικά "
+#~ "μηνύματα σε λίστα. Αυτό μπορεί να οδηγήσει, στην πλειοψηφία των "
+#~ "περιπτώσεων, σε αμηχανία, και σε ειδικές περιπτώσεις να επιφέρει "
+#~ "σημαντικές συνέπειες."
+
+#~ msgid ""
+#~ "If value was set to other_email, this parameter defines the e-mail "
+#~ "address used."
+#~ msgstr ""
+#~ "Αν οριστεί ως άλλη_διεύθυνση (other_email), η παράμετρος ορίζει τη "
+#~ "χρησιμοποιούμενη διεύθυνση ηλεκτρονικού ταχυδρομείου."
+
+#~ msgid ""
+#~ "The default is to respect (preserve) the existing Reply-To: SMTP header "
+#~ "field in incoming messages. If set to forced, Reply-To: SMTP header field "
+#~ "will be overwritten."
+#~ msgstr ""
+#~ "Ο προκαθορισμένος ορισμός είναι η διατήρηση του υπάρχοντος πεδίου "
+#~ "επικεφαλίδας SMTP Reply-To: των εισερχόμενων μηνυμάτων. Αν τεθεί το "
+#~ "συγκεκριμένο, το επικεφαλίδας SMTP Reply-To: θα αντικατασταθεί."
+
+#, fuzzy
+#~ msgid ""
+#~ "There is a need to protect Sympa web sites against spambots which collect "
+#~ "email addresses from public web sites. Various methods are available in "
+#~ "Sympa and you can choose to use them with the spam_protection and "
+#~ "web_archive_spam_protection parameters. Possible value are:"
+#~ msgstr ""
+#~ "#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "Υπάρχει ανάγκη προστασίας του Sympa ιστότοπου από τα spambot που "
+#~ "συλλέγουν ηλεκτρονικές διευθύνση από δημόσιους ιστότοπους. Το λογισμικό "
+#~ "Sympa διαθέτει διάφορες μεθόδους, τις οποίες μπορείτε να επιλέξετε με τις "
+#~ "παραμέτρους spam_protection και web_archive_spam_protection.  Πιθανές "
+#~ "τιμές είναι:"
+
+#~ msgid ""
+#~ "The subscribe parameter defines the rules for subscribing to the list."
+#~ msgstr "Η παράμετρος συνδρομής ορίζει τους κανόνες συνδρομής στη λίστα."
+
+#~ msgid ""
+#~ "Sympa caches user data extracted using the include parameter. Their TTL "
+#~ "(time-to-live) within Sympa can be controlled using this parameter. The "
+#~ "default value is 3600"
+#~ msgstr ""
+#~ "Το λογισμικό Sympa αποθηκεύει σε λανθάνουσα μνήμη τα στοιχείων των "
+#~ "χρηστών που εξάγονται με τη χρήση της παραμέτρου συμπερίληψης. Ο χρόνος "
+#~ "ζωής τους μπορεί να οριστεί από το λογισμικό Sympa μέσω της συγκεκριμένης "
+#~ "παραμέτρου. Η προκαθορισμένη τιμή είναι 3600"
+
+#~ msgid "Defines who can access the web archive for the list."
+#~ msgstr "Καθορισμός πρόσβασης στο web αρχείο της λίστας."
+
+#, fuzzy
+#~ msgid ""
+#~ "Idem spam_protection is provided but it can be used only for web "
+#~ "archives. Access requires a cookie, and users must submit a small form in "
+#~ "order to receive a cookie before browsing the archives. This blocks all "
+#~ "robot, even google and co."
+#~ msgstr ""
+#~ "#-#-#-#-#  blank_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "#-#-#-#-#  tmp_web_help_el.po (sympa)  #-#-#-#-#\n"
+#~ "Ταυτόσημο με το spam_protection αλλά περιορίζεται στο web Αρχείο. Μία "
+#~ "επιπλέον τιμή είναι διαθέσιμη: cookie, η οποία σημαίνει ότι οι χρήστες θα "
+#~ "πρέπει να συμπληρώνουν μία φόρμα ώστε να λάβουν το cookie πριν την "
+#~ "πλοήγηση στο Αρχείο. Η δυνατότητα αυτή εμποδίζει όλα τα robot, "
+#~ "συμπεριλαμβανομένου και του google."
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "Αν οριστεί ως μοναδικό (unique), το μήνυμα καλωσορίσματος χρησιμοποιεί "
+#~ "ένα μοναδικό μονοπάτι για την απευθείας διαγραφή του συνδρομητή σε "
+#~ "περίπτωση bounce."
 
 #~ msgid "No Comment"
 #~ msgstr "Ουδέν σχόλιο"
