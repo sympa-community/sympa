@@ -1858,12 +1858,10 @@ msgid "List inclusion"
 msgstr "Inclusión de Lista"
 
 #: src/lib/Sympa/ListDef.pm:1156
-#, fuzzy
 msgid "list name to include"
-msgstr "Lista de direcciones excluidas"
+msgstr "Nombre de la lista a incluir "
 
 #: src/lib/Sympa/ListDef.pm:1163
-#, fuzzy
 msgid "filter definition"
 msgstr "Definición de la lista"
 
@@ -3580,9 +3578,8 @@ msgid "used to construct various singleton classes."
 msgstr "utilizado para construir varias clases únicas."
 
 #: src/lib/Sympa/ModDef.pm:67
-#, fuzzy
 msgid "used to make copy of internal data structures."
-msgstr "utilizado para copiar jerarquias de archivos"
+msgstr "utilizado para hacer copia de estructuras internas de datos."
 
 #: src/lib/Sympa/ModDef.pm:73
 msgid ""
@@ -3620,13 +3617,13 @@ msgid "used to decode date and time in message headers"
 msgstr "utilizado para procesar la fecha y hora en cabeceras del mensaje"
 
 #: src/lib/Sympa/ModDef.pm:110
-#, fuzzy
 msgid ""
 "CSV database driver, required if you include list members, owners or editors "
 "from CSV file."
 msgstr ""
-"Controlador de base de datos ODBC, necesario si te conectas a una base de "
-"datos por ODBC."
+"Controlador de base de datos CSV, necesario si se incluyen miembros de "
+"listas, propietarios o editores desde un fichero en formato CSV (Comma "
+"Separated Values: Valores Separados por Comas)."
 
 #: src/lib/Sympa/ModDef.pm:115
 msgid "ODBC database driver, required if you connect to a database via ODBC."
@@ -3882,7 +3879,7 @@ msgstr "usado para obtener la hora con una precisión inferior al segundo"
 
 #: src/lib/Sympa/ModDef.pm:389
 msgid "Normalizes file names represented by Unicode"
-msgstr ""
+msgstr "Normaliza los nombres de ficheros que estén en formato Unicode."
 
 #: src/lib/Sympa/ModDef.pm:396
 msgid "Used to create URI containing non URI-canonical characters."
@@ -4201,19 +4198,16 @@ msgid "Unable to add users in list %s : %s"
 msgstr "Imposible añadir usuarios en la lista %s : %s"
 
 #: src/cgi/wwsympa.fcgi.in:13711 src/cgi/wwsympa.fcgi.in:14183
-#, fuzzy
 msgid "New file"
-msgstr "Archivo de ayuda"
+msgstr "Fichero nuevo"
 
 #: src/cgi/wwsympa.fcgi.in:13715
-#, fuzzy
 msgid "New directory"
-msgstr "Carpeta"
+msgstr "Carpeta nueva"
 
 #: src/cgi/wwsympa.fcgi.in:14189
-#, fuzzy
 msgid "New bookmark"
-msgstr "Crear un marcador"
+msgstr "Nuevo marcador"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -4340,9 +4334,8 @@ msgid "email2@dom2 Name2"
 msgstr "email2@dom2  Nombre 2"
 
 #: default/web_tt2/add_request.tt2:9
-#, fuzzy
 msgid "..."
-msgstr "Más..."
+msgstr "..."
 
 #: default/web_tt2/add_request.tt2:15 default/web_tt2/confirm_action.tt2:12
 #: default/web_tt2/modform.tt2:73 default/web_tt2/modform.tt2:74
@@ -4437,12 +4430,13 @@ msgid ""
 "Closing or renaming this list is impossible, because it is included by other "
 "mailing list(s)."
 msgstr ""
+"No es posible cerrar o renombrar esta lista porque está incluida en otra u "
+"otras listas."
 
 #. (list)
 #: default/web_tt2/admin.tt2:42
-#, fuzzy
 msgid "View lists including %1"
-msgstr "inclusión de lista remota"
+msgstr "Ver listas que incluyan %1"
 
 #: default/web_tt2/admin.tt2:48 default/web_tt2/confirm_action.tt2:30
 msgid "Remove List"
@@ -5174,9 +5168,8 @@ msgid "Quiet (don't send welcome email)"
 msgstr "Silencio (no envía email de bienvenida)"
 
 #: default/web_tt2/confirm_action.tt2:160
-#, fuzzy
 msgid "Download deleted archives"
-msgstr "Descargar archivos"
+msgstr "Descargar archivos borrados"
 
 #: default/web_tt2/confirm_action.tt2:169
 #: default/web_tt2/editsubscriber.tt2:90 default/web_tt2/review.tt2:109
@@ -5442,9 +5435,8 @@ msgstr "copiar la configuración de la lista"
 
 #: default/web_tt2/d_control.tt2:10 default/web_tt2/d_editfile.tt2:10
 #: default/web_tt2/d_properties.tt2:10 default/web_tt2/d_read.tt2:11
-#, fuzzy
 msgid "Root folder"
-msgstr "Carpeta vacía"
+msgstr "Carpeta raíz"
 
 #. (shared_doc.name)
 #: default/web_tt2/d_control.tt2:32
@@ -5471,9 +5463,8 @@ msgstr "Descripción: %1"
 
 #: default/web_tt2/d_control.tt2:47 default/web_tt2/d_properties.tt2:53
 #: default/web_tt2/d_read.tt2:43
-#, fuzzy
 msgid "browse"
-msgstr "base"
+msgstr "mostrar"
 
 #: default/web_tt2/d_control.tt2:51 default/web_tt2/d_control.tt2:54
 #: default/web_tt2/d_editfile.tt2:45 default/web_tt2/d_properties.tt2:57
@@ -6137,9 +6128,8 @@ msgid "Reset errors"
 msgstr "Borrar los errores"
 
 #: default/web_tt2/error.tt2:3
-#, fuzzy
 msgid "Error"
-msgstr "Errores:"
+msgstr "Error"
 
 #. (i_err.action)
 #: default/web_tt2/error.tt2:11
@@ -6185,9 +6175,8 @@ msgstr "La exportación falló para la lista '%1'"
 
 #. (name)
 #: default/web_tt2/error.tt2:20
-#, fuzzy
 msgid "Cannot create '%1'."
-msgstr "No se pueden crear documentos compatidos para la lista '%1'. "
+msgstr "No se puede crear '%1'. "
 
 #. (name)
 #: default/mail_tt2/listmaster_notification.tt2:408
@@ -6872,12 +6861,10 @@ msgid "Calendar"
 msgstr "Calendario"
 
 #: default/web_tt2/head_javascript.tt2:15
-#, fuzzy
 msgid "Close"
-msgstr "Cerrarla"
+msgstr "Cerrar"
 
 #: default/web_tt2/head_javascript.tt2:17
-#, fuzzy
 msgid "Su:Mo:Tu:We:Th:Fr:Sa"
 msgstr "Dom:Lun:Mar:Mie:Jue:Vie:Sab"
 
@@ -6947,15 +6934,13 @@ msgstr "Búsqueda de lista(s)"
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
-#, fuzzy
 msgid "Lists including %1"
-msgstr "inclusión de lista remota"
+msgstr "Listas que incluyen %1"
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:5
-#, fuzzy
 msgid "Following lists are including list %1."
-msgstr "inclusión de lista remota"
+msgstr "La lista %1 está incluida en las listas siguientes"
 
 #: default/mail_tt2/command_report.tt2:143 default/mail_tt2/info_report.tt2:31
 #: default/web_tt2/including_lists.tt2:22
@@ -6984,20 +6969,17 @@ msgstr "Suscriptor"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:39
-#, fuzzy
 msgid "(and %1 lists)"
-msgstr "Índice de listas"
+msgstr "(y listas de %1)"
 
 #. (invisible_count)
 #: default/web_tt2/including_lists.tt2:41
-#, fuzzy
 msgid "(%1 lists)"
-msgstr "Mis listas"
+msgstr "(listas de %1)"
 
 #: default/web_tt2/including_lists.tt2:47
-#, fuzzy
 msgid "No lists."
-msgstr "Nuevas listas"
+msgstr "Ninguna lista."
 
 #: default/web_tt2/info.tt2:11 default/web_tt2/review.tt2:5
 msgid "Administrative Options"
@@ -8333,9 +8315,8 @@ msgstr "Tamaño de página"
 
 #: default/web_tt2/review.tt2:167 default/web_tt2/reviewbouncing.tt2:56
 #: default/web_tt2/viewlogs.tt2:252
-#, fuzzy
 msgid "Change"
-msgstr "Anular"
+msgstr "Cambiar "
 
 #: default/web_tt2/review.tt2:172 default/web_tt2/reviewbouncing.tt2:139
 #: default/web_tt2/reviewbouncing.tt2:63 default/web_tt2/viewlogs.tt2:258
@@ -9401,7 +9382,7 @@ msgstr ""
 #: default/web_tt2/suspend_request.tt2:93 default/web_tt2/viewlogs.tt2:32
 #: default/web_tt2/viewlogs.tt2:37
 msgid "dd-mm-yyyy"
-msgstr ""
+msgstr "dd-mm-yyyy"
 
 #: default/web_tt2/suboptions.tt2:115 default/web_tt2/suspend_request.tt2:94
 msgid "Suspend my membership indefinitely"
@@ -9700,9 +9681,8 @@ msgid "Notification"
 msgstr "Notificación"
 
 #: default/web_tt2/tracking.tt2:52 default/web_tt2/viewbounce.tt2:3
-#, fuzzy
 msgid "View notification"
-msgstr "notificación"
+msgstr "Ver aviso"
 
 #: default/mail_tt2/listmaster_notification.tt2:310
 #: default/web_tt2/tt2_error.tt2:63
@@ -9738,7 +9718,7 @@ msgstr "Mensaje ID"
 
 #: default/web_tt2/viewlogs.tt2:23
 msgid "matching with:"
-msgstr ""
+msgstr "que coincida con:"
 
 #: default/web_tt2/viewlogs.tt2:28
 msgid "Search by date from:"
@@ -13902,6 +13882,9 @@ msgstr ""
 "que Sympa pondrá en el campo de encabezamiento Reply-To: SMTP de los "
 "mensajes que distribuye."
 
+msgid "View held message"
+msgstr "Ver mensaje retenido"
+
 #~ msgid "%d %b %y at %H:%M:%S"
 #~ msgstr "%d %b %Y a las %H:%M:%S"
 
@@ -13922,10 +13905,6 @@ msgstr ""
 
 #~ msgid " on %1"
 #~ msgstr "el %1"
-
-#, fuzzy
-#~ msgid "View held message"
-#~ msgstr "Mensaje de Bienvenida"
 
 #~ msgid "Your are subscriber of list %1@%2 with  email %3"
 #~ msgstr "Eres suscriptor de la lista %1@%2 con la dirección %3"
