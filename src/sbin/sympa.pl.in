@@ -807,7 +807,7 @@ if ($main::options{'dump'}) {
         $log->syslog('notice', 'Loading list %s...', $main::options{'list'});
         my $list =
             Sympa::List->new($main::options{'list'}, '',
-            {'reload_config' => 1});
+            {'reload_config' => 1, 'force_sync_admin' => 1});
         unless (defined $list) {
             print STDERR
                 "Error : incorrect list name '$main::options{'list'}'\n";
@@ -815,7 +815,7 @@ if ($main::options{'dump'}) {
         }
     } else {
         $log->syslog('notice', "Loading ALL lists...");
-        my $all_lists = Sympa::List::get_lists('*', 'reload_config' => 1);
+        my $all_lists = Sympa::List::get_lists('*', 'reload_config' => 1, 'force_sync_admin' => 1);
     }
     $log->syslog('notice', '...Done.');
 
