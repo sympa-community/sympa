@@ -2406,18 +2406,16 @@ msgstr ""
 "el modo especificado en el párrafo default_user_options."
 
 #: src/lib/Sympa/ListDef.pm:414
-#, fuzzy
 msgid "Default profile for the subscribers of the list."
-msgstr "Tu avatar en la lista de suscriptores"
+msgstr "Perfil por defecto para los suscriptores de la lista."
 
 #: src/lib/Sympa/ListDef.pm:419
 msgid "Mail reception mode."
 msgstr "Modo de recepción de correo"
 
 #: src/lib/Sympa/ListDef.pm:432
-#, fuzzy
 msgid "Visibility of the subscriber."
-msgstr "Visibilidad de la lista"
+msgstr "Visibilidad del suscriptor."
 
 #: src/lib/Sympa/ListDef.pm:479
 msgid ""
@@ -2435,14 +2433,12 @@ msgstr ""
 "lista."
 
 #: src/lib/Sympa/ListDef.pm:520
-#, fuzzy
 msgid ""
 "This defines what Sympa will place in the Reply-To: SMTP header field of the "
 "messages it distributes."
 msgstr ""
-"El parámetro reply_to_header da comienzo a un párrafo en el que se define lo "
-"que Sympa pondrá en el campo de encabezamiento Reply-To: SMTP de los "
-"mensajes que distribuye."
+"Define lo que Sympa establecerá en el campo de cabecera SMTP Reply-To: de "
+"los mensajes que distribuye."
 
 #: src/lib/Sympa/ListDef.pm:535
 msgid ""
@@ -2676,7 +2672,6 @@ msgstr ""
 "ignoradas)"
 
 #: src/lib/Sympa/ListDef.pm:1146
-#, fuzzy
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
 "subscribers of the current list. You may include as many lists as required, "
@@ -2689,9 +2684,9 @@ msgstr ""
 "Incluye suscriptores de otra lista. Todos los suscriptores de la lista "
 "\"nombrelista\" se vuelven suscriptores de la lista actual. Puedes incluir "
 "tantas listas como sea necesario, utilizando una línea \"include_list "
-"nombrelista\" para cada lista incluída. Cualquier lista puede ser incluída; "
+"nombrelista\" para cada lista incluida. Cualquier lista puede ser incluida; "
 "por lo cual se pueden incluir listas definidas por la inclusión de otras "
-"listas. Tenga cuidado, sin embargo, de no incluir la lista A en la lista B y "
+"listas. Sin embargo, tenga cuidado de no incluir la lista A en la lista B y "
 "la lista B en la lista A, ya que eso daría lugar a un bucle infinito."
 
 #: src/lib/Sympa/ListDef.pm:1217
@@ -2746,11 +2741,9 @@ msgstr ""
 "(perlldap). "
 
 #: src/lib/Sympa/ListDef.pm:1545
-#, fuzzy
 msgid "This parameter is used to define the SQL query parameters. "
 msgstr ""
-"Este parámetro es utilizado para iniciar un párrafo definiendo los "
-"parámetros de consulta SQL. "
+"Este parámetro es utilizado para definir los parámetros de consulta SQL. "
 
 #: src/lib/Sympa/ListDef.pm:1661
 msgid ""
@@ -2767,9 +2760,8 @@ msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr "Un conjunto de parámetros para definir la firma DKIM saliente"
 
 #: src/lib/Sympa/ListDef.pm:2119
-#, fuzzy
 msgid "List of headers to be included into the message for signature"
-msgstr "Lista de cabeceras a ser incluidas en el mensaje a la firma"
+msgstr "Lista de campos cabecera que serán incluidos en el mensaje a la firma"
 
 #: src/lib/Sympa/ListDef.pm:2121
 msgid ""
@@ -8806,9 +8798,8 @@ msgstr "Este proceso FastCGI (%1) ha servido %2 páginas desde %3."
 
 #. (list_request_by,list_request_date)
 #: default/web_tt2/set_pending_list_request.tt2:11
-#, fuzzy
 msgid "List requested by %1 on %2"
-msgstr "Lista solicitada por"
+msgstr "Lista solicitada por %1 el %2"
 
 #: default/web_tt2/set_pending_list_request.tt2:23
 msgid "Close it"
@@ -8999,20 +8990,19 @@ msgid "Cascading Style Sheet"
 msgstr "Hojas de Estilo en Cascada (CSS)"
 
 #: default/web_tt2/skinsedit.tt2:6
-#, fuzzy
 msgid ""
 "static css installation succeed. Reload the current page and/or check sympa "
 "logs to be sure that static css a really in use."
 msgstr ""
-"CSS estáticos instalados. Actualiza la página actual y/o verifica la "
-"bitácora de sympa para asegurarte que se toman en cuenta estos CSS."
+"Instalación correcta de la hoja de estilos CSS estática. Recarga la página "
+"actual y/o verifica la bitácora de sympa para asegurarte que se usan esta "
+"hoja de estilo CSS estática."
 
 #: default/web_tt2/skinsedit.tt2:9
 msgid "Colors"
 msgstr "Colores"
 
 #: default/web_tt2/skinsedit.tt2:13
-#, fuzzy
 msgid ""
 "Use the color editor in order to change defined colors. First select the "
 "color you want to change and pick a color,then apply it using the test "
@@ -9021,13 +9011,13 @@ msgid ""
 "them in a new static CSS.\n"
 msgstr ""
 "Utiliza el editor de colores para cambiar los colores definidos. Selecciona "
-"primero el color que quieres modificar, luego cambia su valor y presiona el "
-"botón «test». El nuevo color no queda verdaderamente instalado, pero será "
-"utilizado mientras dure tu sesión. Cuando estés satisfecho, puedes guardar "
-"tus cambios en una nueva hoja de estilos CSS estática.\n"
+"primero el color que quieres modificar seleccionándolo, luego aplícalo "
+"presionando el botón «Probar». El nuevo color no queda verdaderamente "
+"instalado, pero será utilizado mientras dure tu sesión. Cuando estés "
+"satisfecho, puedes guardar tus cambios en una nueva hoja de estilos CSS "
+"estática.\n"
 
 #: default/web_tt2/skinsedit.tt2:18
-#, fuzzy
 msgid ""
 "\n"
 "Be careful: the CSS file is overwritten using css.tt2 template, usually this "
@@ -9035,9 +9025,10 @@ msgid ""
 "erased when doing this."
 msgstr ""
 "\n"
-"OjO: se reemplaza el archivo CSS a partir del modelo css.tt2. En general, "
-"este modelo proviene de la distribución de Sympa. Corres el riesgo de perder "
-"tus modificaciones al efectuar esta acción."
+"Cuidado: se reemplaza el archivo CSS a partir del modelo css.tt2. En "
+"general, este archivo proviene de la distribución del programa Sympa, así "
+"que corres el riesgo de perder tu hoja de estilo CSS personalizada al "
+"efectuar esta acción."
 
 #: default/web_tt2/skinsedit.tt2:19
 msgid ""
@@ -9088,11 +9079,11 @@ msgstr ""
 "prueba cambiar los colores en tu sesión y ver como queda.    "
 
 #: default/web_tt2/skinsedit.tt2:57
-#, fuzzy
 msgid ""
 "This table displays every color used in Sympa, with their hexadecimal code "
 msgstr ""
-"Esta tabla muestra los colores utilizados en Sympa, con su código hexadecimal"
+"Esta tabla muestra los colores utilizados en Sympa, con su código "
+"hexadecimal "
 
 #: default/web_tt2/skinsedit.tt2:59
 msgid "parameter"
@@ -9296,9 +9287,8 @@ msgid "No operation recorded in this field yet."
 msgstr "Aún ninguna operación registrada en este campo."
 
 #: default/web_tt2/subindex.tt2:10 default/web_tt2/subindex.tt2:3
-#, fuzzy
 msgid "List of subscriptions to moderate"
-msgstr "Listado de suscripciones por moderar"
+msgstr "Listado de suscripciones para moderar"
 
 #: default/web_tt2/subindex.tt2:57 default/web_tt2/subindex.tt2:69
 msgid "No subscription requests"
@@ -11068,14 +11058,13 @@ msgstr ""
 "STATS <lista>                    * Para consultar las estadísticas de <lista>"
 
 #: default/mail_tt2/helpfile.tt2:52
-#, fuzzy
 msgid ""
 "REMIND <list>                   * Send a reminder message to each subscriber "
 "(this is a way to inform anyone what is their real subscribing email)."
 msgstr ""
-"REMIND <lista>   * Envía un mensaje recordatorio a cada suscriptor (esta es "
-"la forma de informar a alguien de cuál es su verdadero correo electrónico de "
-"suscripción)."
+"REMIND <lista>                   * Envía un mensaje recordatorio a cada "
+"suscriptor (esta es la forma de informar a cualquier persona de cuál es su "
+"verdadero correo electrónico de suscripción)."
 
 #: default/mail_tt2/helpfile.tt2:56
 msgid "DISTribute <list> <key>        * Moderation: to validate a message"
@@ -11645,13 +11634,12 @@ msgstr "Cambio del correo electrónico de un dueño/moderador"
 
 #. (previous_email,new_email)
 #: default/mail_tt2/listmaster_notification.tt2:229
-#, fuzzy
 msgid ""
 "Member %1 has changed their owner/editor email address to %2. This change "
 "has been performed for the following lists:"
 msgstr ""
-"El miembro %1 dueño/moderador ha cambiado su dirección de correo electrónico "
-"a %2. Este cambio ha sido realizado para las listas siguientes:"
+"El miembro %1 ha cambiado su dirección de correo electrónico de dueño/"
+"moderador a %2. Este cambio ha sido realizado para las listas siguientes:"
 
 #. (list.name)
 #: default/mail_tt2/listmaster_notification.tt2:236
@@ -11662,7 +11650,6 @@ msgstr ""
 
 #. (current_email,new_email,datasource)
 #: default/mail_tt2/listmaster_notification.tt2:240
-#, fuzzy
 msgid ""
 "Admin %1 could not change their admin email address (new email address is %"
 "2) because he is included via a the following data sources: %3.\n"
@@ -11670,12 +11657,12 @@ msgid ""
 "If you are able to do so, you should probably update these data sources with "
 "this person's new email address."
 msgstr ""
-"El/la administrador/a %1 no logró modificar su dirección de correo (la nueva "
-"dirección es %2) porque está suscrito a la lista a partir de una fuente de "
-"datos externa: %3\n"
+"El administrador %1 no pudo modificar su dirección de correo elecrónico (la "
+"nueva dirección es %2) porque está suscrito a la lista a partir de una "
+"fuente de datos externa: %3\n"
 "\n"
-"En la medida de lo posible, deberías actualizar esta fuente de datos con la "
-"nueva dirección de correo."
+"Si puedes hacerlo, deberías actualizar esta fuente de datos con la nueva "
+"dirección de correo electrónico de esta persona."
 
 #. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:246
@@ -12175,17 +12162,16 @@ msgstr "Información: comando %1 para la lista \"%2\" de %3 %4"
 
 #. (who,gecos,list.name)
 #: default/mail_tt2/listowner_notification.tt2:34
-#, fuzzy
 msgid ""
 "WARNING: %1 %2 failed to unsubscribe from %3 because their address was not "
 "found in the list.\n"
 "You may help this person looking for similar email in subscriber list using "
 "the following link :"
 msgstr ""
-"CUIDADO: %1 %2 no logró darse de baja de la lista %3 porque no se encontró "
-"su dirección en la lista.\n"
-"Quizás puedas darle una mano a esa persona buscando direcciones similares en "
-"la lista, que encontrarás en esta página: "
+"PRECAUCIÓN: %1 %2 no logró darse de baja de la lista %3 porque no se "
+"encontró su dirección en la lista.\n"
+"Quizás puedas ayudar a esa persona buscando correos electrónicos similares "
+"en la lista de suscriptores, que encontrarás en el siguiente enlace:"
 
 #. (list.name)
 #: default/mail_tt2/listowner_notification.tt2:39
@@ -12327,7 +12313,6 @@ msgstr "Lista %1: error al cambiar la dirección de correo"
 
 #. (current_email,new_email,datasource)
 #: default/mail_tt2/listowner_notification.tt2:140
-#, fuzzy
 msgid ""
 "User %1 could not change their member email address (new email address is %"
 "2) because he is included via a the following data sources: %3.\n"
@@ -12335,12 +12320,12 @@ msgid ""
 "If you are able to do so, you should probably update these data sources with "
 "this person's new email address."
 msgstr ""
-"La persona %1 no logró modificar su dirección de correo (la nueva dirección "
-"es %2) porque está suscrito a la lista a partir de una fuente de datos "
-"externa: %3\n"
+"El usuario %1 no pudo cambiar su dirección de correo electrónico (la nueva "
+"dirección de correo electrónico es %2) porque está suscrito a la lista a "
+"partir de una fuente de datos externa: %3\n"
 "\n"
-"En la medida de lo posible, deberías actualizar esta fuente de datos con la "
-"nueva dirección de correo."
+"Si puedes hacerlo, deberías actualizar esta fuente de datos con la nueva "
+"dirección de correo de esta persona."
 
 #. (list.name)
 #: default/mail_tt2/listowner_notification.tt2:143
