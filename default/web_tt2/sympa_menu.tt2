@@ -41,7 +41,7 @@
 				[% IF help_topic == 'faq' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
 				<li class="[% class %]"><a href="[% 'help/faq' | url_rel %]" title="[%|loc%]Frequently asked questions[%END%]"><i class="fa fa-question"></i> [%|loc%]FAQ[%END%]</a></li>
 				[% SET class = '' %]
-				[% IF is_listmaster %]<li class="[% class %]"><a href="mailto:sympa-feedback@listes.renater.fr" data-tooltip aria-haspopup="true" title="[%|loc%]Give us feedback about this new Sympa version[%END%]"><i class="fa fa-comments"></i> [%|loc%]Feedback[%END%]</a></li>[% END %]
+				[% IF is_listmaster %]<li class="[% class %]"><a href="mailto:sympa-developpers@listes.renater.fr" data-tooltip aria-haspopup="true" title="[%|loc%]Give us feedback about this new Sympa version[%END%]"><i class="fa fa-comments"></i> [%|loc%]Feedback[%END%]</a></li>[% END %]
 		[% IF top_menu %]
 			</ul>
 		</li>
