@@ -1337,7 +1337,9 @@ our %pinfo = (
             'attrs' => {
                 'order'      => 8,
                 'gettext_id' => "extracted attribute",
-                'format'     => '\w+(\s*,\s*\w+)?',
+                'format'     => Sympa::Regexps::ldap_attrdesc()
+                    . '(\s*,\s*'
+                    . Sympa::Regexps::ldap_attrdesc() . ')?',
                 'default'    => 'mail',
                 'length'     => 50
             },
@@ -1462,7 +1464,7 @@ our %pinfo = (
             'attrs1' => {
                 'order'      => 8,
                 'gettext_id' => "first-level extracted attribute",
-                'format'     => '\w+',
+                'format'     => Sympa::Regexps::ldap_attrdesc(),
                 'length'     => 15
             },
             'select1' => {
@@ -1509,7 +1511,9 @@ our %pinfo = (
             'attrs2' => {
                 'order'      => 15,
                 'gettext_id' => "second-level extracted attribute",
-                'format'     => '\w+(\s*,\s*\w+)?',
+                'format'     => Sympa::Regexps::ldap_attrdesc()
+                    . '(\s*,\s*'
+                    . Sympa::Regexps::ldap_attrdesc() . ')?',
                 'default'    => 'mail',
                 'length'     => 50
             },
@@ -1777,7 +1781,7 @@ our %pinfo = (
             'attrs' => {
                 'order'      => 8,
                 'gettext_id' => "extracted attribute",
-                'format'     => '\w+',
+                'format'     => Sympa::Regexps::ldap_attrdesc(),
                 'default'    => 'mail',
                 'length'     => 15
             },
@@ -1907,7 +1911,7 @@ our %pinfo = (
             'attrs1' => {
                 'order'      => 8,
                 'gettext_id' => "first-level extracted attribute",
-                'format'     => '\w+',
+                'format'     => Sympa::Regexps::ldap_attrdesc(),
                 'length'     => 15
             },
             'select1' => {
@@ -1954,7 +1958,7 @@ our %pinfo = (
             'attrs2' => {
                 'order'      => 15,
                 'gettext_id' => "second-level extracted attribute",
-                'format'     => '\w+',
+                'format'     => Sympa::Regexps::ldap_attrdesc(),
                 'default'    => 'mail',
                 'length'     => 15
             },
