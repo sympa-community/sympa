@@ -38,6 +38,7 @@ use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::LockedFile;
 use Sympa::Log;
+use Sympa::Regexps;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
@@ -1002,8 +1003,10 @@ sub _load_auth {
             'bind_password'   => '.+',
             'get_dn_by_uid_filter'        => '.+',
             'get_dn_by_email_filter'      => '.+',
-            'email_attribute'             => '\w+',
-            'alternative_email_attribute' => '(\w+)(,\w+)*',
+            'email_attribute'             => Sympa::Regexps::ldap_attrdesc(),
+            'alternative_email_attribute' => Sympa::Regexps::ldap_attrdesc()
+                . '(\s*,\s*'
+                . Sympa::Regexps::ldap_attrdesc() . ')*',
             'scope'                       => 'base|one|sub',
             'authentication_info_url'     => 'http(s)?:/.*',
             'use_tls'                     => 'starttls|ldaps|none',
@@ -1041,7 +1044,7 @@ sub _load_auth {
             'suffix'        => '.+',
             'scope'         => 'base|one|sub',
             'get_email_by_uid_filter' => '.+',
-            'email_attribute'         => '\w+',
+            'email_attribute'         => Sympa::Regexps::ldap_attrdesc(),
             'use_tls'                 => 'starttls|ldaps|none',
             'use_ssl'                 => '1',                     # Obsoleted
             'use_start_tls'           => '1',                     # Obsoleted
@@ -1068,7 +1071,7 @@ sub _load_auth {
             'suffix'        => '.+',
             'scope'         => 'base|one|sub',
             'get_email_by_uid_filter' => '.+',
-            'email_attribute'         => '\w+',
+            'email_attribute'         => Sympa::Regexps::ldap_attrdesc(),
             'use_tls'                 => 'starttls|ldaps|none',
             'use_ssl'                 => '1',                     # Obsoleted
             'use_start_tls'           => '1',                     # Obsoleted
