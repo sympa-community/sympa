@@ -6395,62 +6395,57 @@ msgstr ""
 msgid "Digest"
 msgstr "Bilduma"
 
-#: default/web_tt2/help_user_options.tt2:10
+#: default/web_tt2/help_user_options.tt2:8
 msgid ""
 "Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
+"will periodically receive batched messages in a Digest. This Digest compiles "
+"a group of messages from the list, using the multipart/digest MIME format."
 msgstr ""
 "Eposta mezuak banaka jaso beharrean, harpidedunak periodikoki mezuen multzo "
 "bat jasoko du bilduma batean. Bilduma honek zerrendako mezu multzo bat "
 "elkartzen ditu multipart/digest MIME formatua erabiliz."
 
-#: default/web_tt2/help_user_options.tt2:12
-#: default/web_tt2/help_user_options.tt2:20
+#: default/web_tt2/help_user_options.tt2:10
+#: default/web_tt2/help_user_options.tt2:15
 msgid "The sending interval for these Digests is defined by the list owner."
 msgstr "Bilduma hauek bidaltzeko maiztasuna zerrendaren jabeak definitzen du."
 
-#: default/web_tt2/help_user_options.tt2:14
+#: default/web_tt2/help_user_options.tt2:12
 msgid "DigestPlain"
 msgstr "BildumaHutsa"
 
-#: default/web_tt2/help_user_options.tt2:18
+#: default/web_tt2/help_user_options.tt2:13
 msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
+"Similar to the Digest option in that the subscriber will periodically "
 "receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
+"a plain text format, with all attachments stripped out. DigestPlain is "
+"useful if your email software doesn't display multipart/digest format "
+"messages well."
 msgstr ""
 "Bilduma aukeraren antzekoa, harpidedunek periodikoki mezuen multzoak jasoko "
 "dituzte bilduma batean. BildumaHutsa-rekin bilduma testu hutseko formatuan "
 "bidaltzen da, eranskin guztiak kenduta. Erabilgarria zure eposta bezeroak "
 "multipart/digest formatua ez badu ongi bistaratzen."
 
-#: default/web_tt2/help_user_options.tt2:22
+#: default/web_tt2/help_user_options.tt2:17
 msgid "Summary"
 msgstr "Laburpena"
 
-#: default/web_tt2/help_user_options.tt2:26
+#: default/web_tt2/help_user_options.tt2:19
 msgid ""
 "Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
+"will periodically receive a list of messages. This mode is very close to the "
+"Digest reception mode but the subscriber receives only the list of messages."
 msgstr ""
 "Eposta mezuak banaka jaso beharrean, harpidedunak periodikoki mezuen "
 "zerrenda bat jasoko du. Bilduma moduaren oso antzekoa, baina harpidedunak "
 "mezuen zerrenda jasotzen du bakarrik."
 
-#: default/web_tt2/help_user_options.tt2:29
+#: default/web_tt2/help_user_options.tt2:22
 msgid "Nomail"
 msgstr "Epostarik ez"
 
-#: default/web_tt2/help_user_options.tt2:31
+#: default/web_tt2/help_user_options.tt2:24
 msgid ""
 "This mode is used when a subscriber no longer wishes to receive mail from "
 "the list, but nevertheless wishes to retain the ability to post to the list. "
@@ -6461,52 +6456,126 @@ msgstr ""
 "zerrendara idazteko aukera mantentzen du. Modu honekin harpideduna ez-"
 "harpidetu eta berriro harpidetu behar izatea saihesten du."
 
-#: default/web_tt2/help_user_options.tt2:36
+#: default/web_tt2/help_user_options.tt2:28
 msgid ""
 "This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
+"HTML and plain text formats only in plain text format."
 msgstr ""
 "Modu honetan harpidedunak mezu guztiak testu soilean jasotzen ditu, bai HTML "
 "formatuko mezuak bai testu soilekoak."
 
-#: default/web_tt2/help_user_options.tt2:41
+#: default/web_tt2/help_user_options.tt2:32
 msgid ""
 "This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
+"HTML and plain text formats only in HTML format."
 msgstr ""
 "Modu honetan harpidedunak mezu guztiak HTML formatuan jasotzen ditu, bai "
 "HTML formatuko mezuak bai testu soilekoak."
 
-#: default/web_tt2/help_user_options.tt2:46
+#: default/web_tt2/help_user_options.tt2:36
 msgid ""
 "This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
+"The attached files are replaced by a URL leading to the file stored on the "
+"list site."
 msgstr ""
 "Modu honetan harpidedunak ez ditu eranskinak jasotzen. Eranskinak zerrendako "
 "webgunean gordeta dagoen fitxategirako estekagatik aldatzen dira."
 
-#: default/web_tt2/help_user_options.tt2:51
+#: default/web_tt2/help_user_options.tt2:40
 msgid ""
 "This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
+"messages that he or she has sent to the list."
 msgstr ""
 "Modu honetan harpidedunak ez ditu berak zerrendara bidalitako mezuen kopiak "
 "jasotzen."
 
-#: default/web_tt2/help_user_options.tt2:56
+#: default/web_tt2/help_user_options.tt2:44
 msgid ""
 "This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
+"the subscriber was in nomail mode, he or she will again receive individual "
+"mail messages from the list."
 msgstr ""
 "Aukera hau 'epostarik ez', laburpen edo bilduma moduak ezeztatzeko balio du. "
 "Harpideduna 'epostarik ez' moduan bazegoen zerrendara bidalitako mezu "
 "bakoitza jasoko du berriz. "
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive batched messages in a Digest. This Digest compiles a group of "
+#~ "messages from the list, using\n"
+#~ "the multipart/digest MIME format."
+#~ msgstr ""
+#~ "Eposta mezuak banaka jaso beharrean, harpidedunak periodikoki mezuen "
+#~ "multzo bat jasoko du bilduma batean. Bilduma honek zerrendako mezu multzo "
+#~ "bat elkartzen ditu multipart/digest MIME formatua erabiliz."
+
+#~ msgid ""
+#~ "Similar to the Digest option in that the subscriber will periodically \n"
+#~ "receive batched messages in a Digest. With DigestPlain the Digest is sent "
+#~ "in a plain text \n"
+#~ "format, with all attachments stripped out. DigestPlain is useful if your "
+#~ "email software doesn't\n"
+#~ "display multipart/digest format messages well."
+#~ msgstr ""
+#~ "Bilduma aukeraren antzekoa, harpidedunek periodikoki mezuen multzoak "
+#~ "jasoko dituzte bilduma batean. BildumaHutsa-rekin bilduma testu hutseko "
+#~ "formatuan bidaltzen da, eranskin guztiak kenduta. Erabilgarria zure "
+#~ "eposta bezeroak multipart/digest formatua ez badu ongi bistaratzen."
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive a list of messages. This mode is very close to the Digest "
+#~ "reception mode but the \n"
+#~ "subscriber receives only the list of messages."
+#~ msgstr ""
+#~ "Eposta mezuak banaka jaso beharrean, harpidedunak periodikoki mezuen "
+#~ "zerrenda bat jasoko du. Bilduma moduaren oso antzekoa, baina harpidedunak "
+#~ "mezuen zerrenda jasotzen du bakarrik."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in plain text format."
+#~ msgstr ""
+#~ "Modu honetan harpidedunak mezu guztiak testu soilean jasotzen ditu, bai "
+#~ "HTML formatuko mezuak bai testu soilekoak."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in HTML format."
+#~ msgstr ""
+#~ "Modu honetan harpidedunak mezu guztiak HTML formatuan jasotzen ditu, bai "
+#~ "HTML formatuko mezuak bai testu soilekoak."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive attached "
+#~ "files. The attached files are \n"
+#~ "replaced by a URL leading to the file stored on the list site."
+#~ msgstr ""
+#~ "Modu honetan harpidedunak ez ditu eranskinak jasotzen. Eranskinak "
+#~ "zerrendako webgunean gordeta dagoen fitxategirako estekagatik aldatzen "
+#~ "dira."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive copies of "
+#~ "messages that he or she has sent to \n"
+#~ "the list."
+#~ msgstr ""
+#~ "Modu honetan harpidedunak ez ditu berak zerrendara bidalitako mezuen "
+#~ "kopiak jasotzen."
+
+#~ msgid ""
+#~ "This option is used mainly to cancel the nomail, summary or digest modes. "
+#~ "If the subscriber was \n"
+#~ "in nomail mode, he or she will again receive individual mail messages "
+#~ "from the list."
+#~ msgstr ""
+#~ "Aukera hau 'epostarik ez', laburpen edo bilduma moduak ezeztatzeko balio "
+#~ "du. Harpideduna 'epostarik ez' moduan bazegoen zerrendara bidalitako mezu "
+#~ "bakoitza jasoko du berriz. "
 
 #~ msgid ":"
 #~ msgstr ":"

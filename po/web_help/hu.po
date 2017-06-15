@@ -5716,13 +5716,11 @@ msgstr ""
 msgid "Digest"
 msgstr "Digest (kivonat)"
 
-#: default/web_tt2/help_user_options.tt2:10
+#: default/web_tt2/help_user_options.tt2:8
 msgid ""
 "Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
+"will periodically receive batched messages in a Digest. This Digest compiles "
+"a group of messages from the list, using the multipart/digest MIME format."
 msgstr ""
 "Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a beállítással "
 "elérhető, hogy a leveleket\n"
@@ -5731,24 +5729,23 @@ msgstr ""
 "a listára érkezett leveleket összefűzve multipart/digest MIME formátumban "
 "tartalmazza."
 
-#: default/web_tt2/help_user_options.tt2:12
-#: default/web_tt2/help_user_options.tt2:20
+#: default/web_tt2/help_user_options.tt2:10
+#: default/web_tt2/help_user_options.tt2:15
 msgid "The sending interval for these Digests is defined by the list owner."
 msgstr ""
 "A digest levelek küldésének gyakoriságát a lista tulajdonosa határozza meg."
 
-#: default/web_tt2/help_user_options.tt2:14
+#: default/web_tt2/help_user_options.tt2:12
 msgid "DigestPlain"
 msgstr "Digestplain (sima kivonat)"
 
-#: default/web_tt2/help_user_options.tt2:18
+#: default/web_tt2/help_user_options.tt2:13
 msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
+"Similar to the Digest option in that the subscriber will periodically "
 "receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
+"a plain text format, with all attachments stripped out. DigestPlain is "
+"useful if your email software doesn't display multipart/digest format "
+"messages well."
 msgstr ""
 "Hasonlít a kivonat választáshoz abban, hogy a tag időszakosan\n"
 "összefűzött üzeneteket kap kivonat formájában. Digestplainnel a kivonat sima "
@@ -5758,17 +5755,15 @@ msgstr ""
 "ha az e-mail programja nem kezeli rendesen a többrészes/kivonat (multipart/"
 "digest) formátumú leveleket."
 
-#: default/web_tt2/help_user_options.tt2:22
+#: default/web_tt2/help_user_options.tt2:17
 msgid "Summary"
 msgstr "Summary (összegzés)"
 
-#: default/web_tt2/help_user_options.tt2:26
+#: default/web_tt2/help_user_options.tt2:19
 msgid ""
 "Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
+"will periodically receive a list of messages. This mode is very close to the "
+"Digest reception mode but the subscriber receives only the list of messages."
 msgstr ""
 "Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a beállítással "
 "elérhető, hogy a továbbiakban \n"
@@ -5777,11 +5772,11 @@ msgstr ""
 "a kivonat (digest) küldési módra, de attól eltérően itt csak a levelek "
 "listája kerül kézbesítésre."
 
-#: default/web_tt2/help_user_options.tt2:29
+#: default/web_tt2/help_user_options.tt2:22
 msgid "Nomail"
 msgstr "Nomail (nincs levél)"
 
-#: default/web_tt2/help_user_options.tt2:31
+#: default/web_tt2/help_user_options.tt2:24
 msgid ""
 "This mode is used when a subscriber no longer wishes to receive mail from "
 "the list, but nevertheless wishes to retain the ability to post to the list. "
@@ -5794,59 +5789,148 @@ msgstr ""
 "leveleket ne kapja meg, és nem kell később feliratkoznia, hogy leveleket "
 "küldhessen a listára."
 
-#: default/web_tt2/help_user_options.tt2:36
+#: default/web_tt2/help_user_options.tt2:28
 msgid ""
 "This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
+"HTML and plain text formats only in plain text format."
 msgstr ""
 "Ez a mód akkor lehet hasznos, ha a felhasználó csak sima szöveges "
 "formátumban szeretné megkapni az üzeneteket\n"
 "függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL formátumban "
 "érkeztek."
 
-#: default/web_tt2/help_user_options.tt2:41
+#: default/web_tt2/help_user_options.tt2:32
 msgid ""
 "This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
+"HTML and plain text formats only in HTML format."
 msgstr ""
 "Ez a mód akkor lehet hasznos, ha a felhasználó csak HTML formátumban "
 "szeretné megkapni az üzeneteket\n"
 "függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL formátumban "
 "érkeztek."
 
-#: default/web_tt2/help_user_options.tt2:46
+#: default/web_tt2/help_user_options.tt2:36
 msgid ""
 "This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
+"The attached files are replaced by a URL leading to the file stored on the "
+"list site."
 msgstr ""
 "Ez a mód akkor lehet hasznos, ha a egy tag nem akar a listáról csatolt "
 "állományokat fogadni.\n"
 "Ilyenkor az állomány helyett egy URL jelenik meg, ami az eredeti "
 "csatolmányhoz vezet."
 
-#: default/web_tt2/help_user_options.tt2:51
+#: default/web_tt2/help_user_options.tt2:40
 msgid ""
 "This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
+"messages that he or she has sent to the list."
 msgstr ""
 "Ez a mód akkor lehet hasznos, ha egy tag nem akar másolatot kapni a listára "
 "küldött, tőle származó levelekről."
 
-#: default/web_tt2/help_user_options.tt2:56
+#: default/web_tt2/help_user_options.tt2:44
 msgid ""
 "This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
+"the subscriber was in nomail mode, he or she will again receive individual "
+"mail messages from the list."
 msgstr ""
 "Ezzel a beállítással a nomail, summary vagy digest módokat lehet "
 "megszüntetni. Ha a felhasználó\n"
 "nomail módban volt, akkor ezzel a beállítással ismét egyenként meg fogja "
 "kapnia lista leveleit."
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive batched messages in a Digest. This Digest compiles a group of "
+#~ "messages from the list, using\n"
+#~ "the multipart/digest MIME format."
+#~ msgstr ""
+#~ "Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a "
+#~ "beállítással elérhető, hogy a leveleket\n"
+#~ "adott időközönként összefűzve, egyben, kivonatként (digest) kaphassuk meg."
+#~ "A kivonatforma\n"
+#~ "a listára érkezett leveleket összefűzve multipart/digest MIME formátumban "
+#~ "tartalmazza."
+
+#~ msgid ""
+#~ "Similar to the Digest option in that the subscriber will periodically \n"
+#~ "receive batched messages in a Digest. With DigestPlain the Digest is sent "
+#~ "in a plain text \n"
+#~ "format, with all attachments stripped out. DigestPlain is useful if your "
+#~ "email software doesn't\n"
+#~ "display multipart/digest format messages well."
+#~ msgstr ""
+#~ "Hasonlít a kivonat választáshoz abban, hogy a tag időszakosan\n"
+#~ "összefűzött üzeneteket kap kivonat formájában. Digestplainnel a kivonat "
+#~ "sima szöveg\n"
+#~ "formájában lesz kézbesítve, minden csatolmány nélkül. A digestplain "
+#~ "hasznos,\n"
+#~ "ha az e-mail programja nem kezeli rendesen a többrészes/kivonat "
+#~ "(multipart/digest) formátumú leveleket."
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive a list of messages. This mode is very close to the Digest "
+#~ "reception mode but the \n"
+#~ "subscriber receives only the list of messages."
+#~ msgstr ""
+#~ "Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a "
+#~ "beállítással elérhető, hogy a továbbiakban \n"
+#~ "csak a levelek listáját kapjuk meg adott időközönként. Ez a mód nagyon "
+#~ "hasonlít\n"
+#~ "a kivonat (digest) küldési módra, de attól eltérően itt csak a levelek "
+#~ "listája kerül kézbesítésre."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in plain text format."
+#~ msgstr ""
+#~ "Ez a mód akkor lehet hasznos, ha a felhasználó csak sima szöveges "
+#~ "formátumban szeretné megkapni az üzeneteket\n"
+#~ "függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL "
+#~ "formátumban érkeztek."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in HTML format."
+#~ msgstr ""
+#~ "Ez a mód akkor lehet hasznos, ha a felhasználó csak HTML formátumban "
+#~ "szeretné megkapni az üzeneteket\n"
+#~ "függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL "
+#~ "formátumban érkeztek."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive attached "
+#~ "files. The attached files are \n"
+#~ "replaced by a URL leading to the file stored on the list site."
+#~ msgstr ""
+#~ "Ez a mód akkor lehet hasznos, ha a egy tag nem akar a listáról csatolt "
+#~ "állományokat fogadni.\n"
+#~ "Ilyenkor az állomány helyett egy URL jelenik meg, ami az eredeti "
+#~ "csatolmányhoz vezet."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive copies of "
+#~ "messages that he or she has sent to \n"
+#~ "the list."
+#~ msgstr ""
+#~ "Ez a mód akkor lehet hasznos, ha egy tag nem akar másolatot kapni a "
+#~ "listára küldött, tőle származó levelekről."
+
+#~ msgid ""
+#~ "This option is used mainly to cancel the nomail, summary or digest modes. "
+#~ "If the subscriber was \n"
+#~ "in nomail mode, he or she will again receive individual mail messages "
+#~ "from the list."
+#~ msgstr ""
+#~ "Ezzel a beállítással a nomail, summary vagy digest módokat lehet "
+#~ "megszüntetni. Ha a felhasználó\n"
+#~ "nomail módban volt, akkor ezzel a beállítással ismét egyenként meg fogja "
+#~ "kapnia lista leveleit."
 
 # nlsref 16,73
 #~ msgid "Privilege for adding (ADD command) a subscriber to the list"
