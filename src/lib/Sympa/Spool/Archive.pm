@@ -75,7 +75,7 @@ See also L<Sympa::Spool/"Public methods">.
 
 =item next ( )
 
-Order is controled by delivery date, then by reception date.
+Order is controlled by delivery date, then by reception date.
 
 =back
 

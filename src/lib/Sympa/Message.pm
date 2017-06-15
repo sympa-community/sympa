@@ -3362,7 +3362,7 @@ If it is C<0>, the field will be prepended.
 =item delete_header ( $field, [ $index ] )
 
 I<Instance method>.
-Deletes all occurences of the header field named $field.
+Deletes all occurrences of the header field named $field.
 
 =item replace_header ( $field, $value, [ $index ] )
 
@@ -3375,7 +3375,7 @@ I<Instance method>.
 Gets header of the message as L<MIME::Head> instance.
 
 Note that returned value is real reference to internal data structure.
-Even if it was changed, string representaion of message may not be updated.
+Even if it was changed, string representation of message may not be updated.
 Alternatively, use L</add_header>(), L</delete_header>() or
 L</replace_header>() to modify header.
 
@@ -3409,7 +3409,7 @@ I<Instance method>.
 Gets message content as MIME entity (L<MIME::Entity> instance).
 
 Note that returned value is real reference to internal data structure.
-Even if it was changed, string representaion of message may not be updated.
+Even if it was changed, string representation of message may not be updated.
 Below is better way to modify message.
 
     my $entity = $message->as_entity->dup;

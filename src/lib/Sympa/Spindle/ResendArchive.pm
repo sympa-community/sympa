@@ -165,7 +165,7 @@ Context (List), archive and message ID to specify the message in archive.
 
 NOT YET IMPLEMENTED.
 
-If this option is set, automatic replys reporting result of processing
+If this option is set, automatic replies reporting result of processing
 to the user (see L</"resent_by">) will not be sent.
 
 =back

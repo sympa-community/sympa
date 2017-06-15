@@ -68,7 +68,7 @@ See also L<Sympa::Spool/"Public methods">.
 =item next ( )
 
 I<Instance method>.
-Order is controled by modification time of files and delivery date, then
+Order is controlled by modification time of files and delivery date, then
 messages with possiblly higher priority are chosen.
 Messages with lowest priority (C<z> or C<Z>) are skipped.
 

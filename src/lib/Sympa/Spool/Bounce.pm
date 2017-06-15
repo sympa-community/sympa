@@ -69,7 +69,7 @@ See also L<Sympa::Spool/"Public methods">.
 
 =item next ( )
 
-Order is controled by modification time of files and delivery date.
+Order is controlled by modification time of files and delivery date.
 
 =item store ( $message, [ original =E<gt> $original ] )
 

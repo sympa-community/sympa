@@ -143,7 +143,7 @@ Creates new instance of L<Sympa::Spool::Digest> related to the list $list.
 
 =item next ( )
 
-Order is controled by delivery date, then by reception date.
+Order is controlled by delivery date, then by reception date.
 
 =back
 

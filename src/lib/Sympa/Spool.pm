@@ -572,7 +572,7 @@ Creates new instance of the class.
 =item next ( [ no_lock =E<gt> 1 ] )
 
 I<Instance method>.
-Gets next message to process, order is controled by name of spool file and
+Gets next message to process, order is controlled by name of spool file and
 so on.
 Message will be locked to prevent multiple proccessing of a single message.
 

@@ -135,7 +135,7 @@ See also L<Sympa::Spool/"Public methods">.
 If the pairs describing metadatas are specified,
 contents returned by next() are filtered by them.
 
-Order of items returned by next() is controled by time of submission.
+Order of items returned by next() is controlled by time of submission.
 
 =item quarantine ( )
 

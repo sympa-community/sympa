@@ -1045,7 +1045,7 @@ our @params = (
     },
     {   'name'       => 'db_additional_subscriber_fields',
         'sample'     => 'billing_delay,subscription_expiration',
-        'gettext_id' => 'Database private extention to subscriber table',
+        'gettext_id' => 'Database private extension to subscriber table',
         'file'       => 'sympa.conf',
         'gettext_comment' =>
             'You need to extend the database format with these fields',
@@ -1053,7 +1053,7 @@ our @params = (
     },
     {   'name'       => 'db_additional_user_fields',
         'sample'     => 'age,address',
-        'gettext_id' => 'Database private extention to user table',
+        'gettext_id' => 'Database private extension to user table',
         'file'       => 'sympa.conf',
         'gettext_comment' =>
             'You need to extend the database format with these fields',
@@ -1626,7 +1626,7 @@ Description of the parameter.
 
 =item gettext_comment =E<gt> STRING
 
-Additionnal advice concerning the parameter.
+Additional advice concerning the parameter.
 
 =item sample =E<gt> STRING
 

@@ -136,7 +136,7 @@ it has not been decorated (adding custom subject etc.) nor archived yet.
 I<Message hook>.
 Message had been archived, however, it has not been distributed to users
 including digest spool; message has not been signed nor encrypted (if
-nessessary).
+necessary).
 
 =back
 

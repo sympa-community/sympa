@@ -90,7 +90,7 @@ See also L<Sympa::Spool/"Public methods">.
 =item next ( )
 
 Returns next instance of L<Sympa::Spool::Digest>.
-Order is controled by modification times of spool directories.
+Order is controlled by modification times of spool directories.
 Spool directory is locked to prevent processing by multiple processes.
 
 =item quarantine ( )

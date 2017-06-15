@@ -146,7 +146,7 @@ my %full_db_struct = (
             'include_sources_subscriber' => {
                 'struct' => 'varchar(50)',
                 'doc' =>
-                    'comma seperated list of datasource that contain this subscriber',
+                    'comma separated list of datasource that contain this subscriber',
                 'order' => 19,
             },
             'custom_attribute_subscriber' => {
@@ -209,7 +209,7 @@ my %full_db_struct = (
             },
             'lang_user' => {
                 'struct' => 'varchar(10)',
-                'doc'    => 'user langage preference',
+                'doc'    => 'user language preference',
                 'order'  => 9,
             },
             'attributes_user' => {
@@ -417,7 +417,7 @@ my %full_db_struct = (
             },
         },
         'doc' =>
-            'Exclusion table is used in order to manage unsubscription for subsceriber inclued from an external data source.',
+            'Exclusion table is used in order to manage unsubscription for subsceriber included from an external data source.',
         'order' => 5,
     },
     'inclusion_table' => {
@@ -450,7 +450,7 @@ my %full_db_struct = (
             },
         },
         'doc' =>
-            'Inclusion table is used in order to manage lists inclued from / including subscribers of other lists.',
+            'Inclusion table is used in order to manage lists included from / including subscribers of other lists.',
         'order' => 4,
     },
     'session_table' => {
@@ -1209,7 +1209,7 @@ Following types are recognized:
 
 =item varchar(I<length>)
 
-Text with length upto I<length>.  I<length> must be lower than 2^16 - 2.
+Text with length up to I<length>.  I<length> must be lower than 2^16 - 2.
 
 =item int(1)
 
@@ -1221,7 +1221,7 @@ Unix time.
 
 =item int(I<cols>)
 
-Integer with columns upto I<cols>, with its value from -2^31 to 2^31 - 1.
+Integer with columns up to I<cols>, with its value from -2^31 to 2^31 - 1.
 
 =item tinyint
 
@@ -1241,15 +1241,15 @@ IEEE floating point number, 8 bytes.
 
 =item enum
 
-Keyword with length upto 20 o.
+Keyword with length up to 20 o.
 
 =item text
 
-Text with length upto 500 o.
+Text with length up to 500 o.
 
 =item longtext
 
-Text with length upto 2^32 - 4 o.
+Text with length up to 2^32 - 4 o.
 
 =item datetime
 
@@ -1257,7 +1257,7 @@ Timestamp.
 
 =item mediumblob
 
-Binary data with length upto 2^24 - 3 o.
+Binary data with length up to 2^24 - 3 o.
 
 =back
 

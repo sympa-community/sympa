@@ -430,7 +430,7 @@ Creates new instance of L<Sympa::Bulk>.
 =item next ( )
 
 I<Instance method>.
-Gets next packet to process, order is controled by message priority, then by
+Gets next packet to process, order is controlled by message priority, then by
 packet priority, then by delivery date, then by reception date.
 Packets with future delivery date are ignored.
 Packet will be locked to prevent multiple proccessing of a single packet.

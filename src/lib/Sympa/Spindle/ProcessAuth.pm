@@ -142,7 +142,7 @@ spool.
 
 =item quiet =E<gt> 1
 
-If this option is set, automatic replys reporting result of processing
+If this option is set, automatic replies reporting result of processing
 to the user (see L</"confirmed_by">) will not be sent.
 
 =item scenario_context =E<gt> {context...}
