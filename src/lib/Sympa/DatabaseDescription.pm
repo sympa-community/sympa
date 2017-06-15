@@ -152,7 +152,7 @@ my %full_db_struct = (
             'custom_attribute_subscriber' => {
                 'struct' => 'text',
                 'doc'    => 'FIXME',
-                'order'  => 10,
+                'order'  => 20,
             },
 
         },
