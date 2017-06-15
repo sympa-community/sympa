@@ -61,6 +61,7 @@ noinst_SCRIPTS = \
 	xt/pod-spelling.t
 
 EXTRA_DIST = \
+	AUTHORS.md \
 	important_changes.pl \
 	META.json.pl \
 	META.json \

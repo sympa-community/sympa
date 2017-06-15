@@ -130,7 +130,7 @@ make DESTDIR=%{buildroot}
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 mv %{buildroot}%{_docdir}/%{name} __doc
-cp -p AUTHORS COPYING NEWS.md OChangeLog ONEWS README __doc/
+cp -p AUTHORS.md COPYING NEWS.md OChangeLog ONEWS README __doc/
 
 %check
 %if 0%{?do_check}
