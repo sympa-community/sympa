@@ -84,6 +84,29 @@ sub process {
     my $sdm = Sympa::DatabaseManager->instance
         or die 'Can\'t connect to database';
 
+    # Checking if bulkmailer_table exits
+    my @tables;
+    my $list_of_tables;
+    if ($list_of_tables = $sdm->get_tables()) {
+        @tables = @{$list_of_tables};
+    } else {
+        @tables = ();
+    }
+    my $found = 0;
+    foreach my $t (@tables) {
+        if ($t eq "bulkmailer_table") {
+            $found = 1;
+            last;
+        }
+    }
+    if ($found == 0) {
+        $log->syslog(
+            'notice',
+            'bulkmailer table not found in database, bulk spool of your Sympa is probably up-to-date'
+        );
+        exit 0;
+    }
+
     my $sth = $sdm->do_prepared_query(
         q{SELECT *
           FROM bulkmailer_table

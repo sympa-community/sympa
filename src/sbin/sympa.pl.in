@@ -232,9 +232,8 @@ if ($main::options{'upgrade_config_location'}) {
 
     ## Check that the data structure is uptodate
     unless (Conf::data_structure_uptodate()) {
-        printf STDERR
+        printf STDOUT
             "Data structure was not updated; you should run sympa.pl --upgrade to run the upgrade process.\n";
-        exit 1;
     }
 
     exit 0;
@@ -777,7 +776,7 @@ if ($main::options{'dump'}) {
     $main::options{'to'}   ||= Sympa::Constants::VERSION;
 
     if ($main::options{'from'} eq $main::options{'to'}) {
-        $log->syslog('err', 'Current version: %s; no upgrade is required',
+        $log->syslog('notice', 'Current version: %s; no upgrade is required',
             $main::options{'to'});
         exit 0;
     } else {
