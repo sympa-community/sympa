@@ -3,8 +3,7 @@ To: [% to %]
 [% IF type == 'auto_notify_bouncers' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Your bouncing address in list %1[%END%][%END%]
 
-[%|loc(list.name,to,subscriber.first_bounce)%]Messages from list %1 that were sent to your address %2
-have generated non-delivery reports since %3. 
+[%|loc(list.name,to,subscriber.first_bounce)%]Messages from list %1 that were sent to your address %2 have generated non-delivery reports since %3. 
 If this problem persists, you will be automatically unsubscribed from the list.[%END%]
 
 [%|loc%]You can contact list owner:[%END%] [% list.name %]-request@[% conf.host %]
@@ -46,8 +45,7 @@ Subject: [% FILTER qencode %][%|loc%]Changing your subscriber email address[%END
 [% ELSIF type == 'ticket_to_signoff' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Unsubscribing from list %1[%END%][%END%]
 [% IF context == 'auto_signoff'%]
-[%|loc(list.name,ip)%]Somebody (probably you) requested to unsubscribe you from list %1.
-This query was issued from the IP number '%2'.
+[%|loc(list.name,ip)%]Somebody (probably you) requested to unsubscribe you from list %1. This query was issued from the IP number '%2'.
 To confirm and get removed from the list, please click the link below: [%END%] 
 [% ELSE %]
 [%|loc(list.name)%]You have requested to be removed from list %1. To confirm and get removed from the list, please click the link below: [%END%] 
@@ -57,8 +55,7 @@ To confirm and get removed from the list, please click the link below: [%END%]
 [% ELSIF type == 'ticket_to_family_signoff' -%]
 Subject: [% FILTER qencode %][%|loc(family)%]Unsubscribing from family %1[%END%][%END%]
 [% IF context == 'family_signoff'%]
-[%|loc(family,ip)%]Somebody (probably you) requested to unsubscribe you from family %1.
-This query was issued from the IP number '%2'.
+[%|loc(family,ip)%]Somebody (probably you) requested to unsubscribe you from family %1. This query was issued from the IP number '%2'.
 To confirm and get removed from all the lists of this family, please click the link below: [%END%] 
 [% ELSE %]
 [%|loc(family)%]You have requested to be removed from family %1. To confirm and get removed from all the lists of this family, please click the link below: [%END%] 
@@ -69,10 +66,8 @@ To confirm and get removed from all the lists of this family, please click the l
 [% ELSIF type == 'hundred_percent_error' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]No valid receipient in list %1[%END%][%END%]
 
-[%|loc(list.name, conf.listmaster_email, list.domain) %]
-You message to list %1 could not be delivered. All the subscribers to this list have their address in error.
-Please contact the listmaster (%2@%3) to fix this probem before re-posting your message.
-[% END %]
+[%|loc(list.name, conf.listmaster_email, list.domain) %]You message to list %1 could not be delivered. All the subscribers to this list have their address in error.
+Please contact the listmaster (%2@%3) to fix this probem before re-posting your message.[% END %]
 
 [% ELSIF type == 'plugin' -%]
 [%- TRY -%][%- INCLUDE $entry -%]

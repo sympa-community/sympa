@@ -1,8 +1,7 @@
 <!-- sigrequest.tt2 -->
 
   [% IF status == 'user.email' %]
-      [%|loc(list)%]You asked to be unsubscribed  from list %1[%END%]. <br />[%|loc%]To confirm
-      your request, please click the button below:[%END%]<br />
+      [%|loc(list)%]You asked to be unsubscribed  from list %1[%END%]. <br />[%|loc%]To confirm your request, please click the button below:[%END%]<br />
 	<br />
 
 	<form action="[% path_cgi %]" method="post">
@@ -17,8 +16,7 @@
 
       [%|loc(list,email)%]You are not subscribed to list %1 with e-mail address %2[%END%].
       <br /><br />
-      [%|loc%]You might have subscribed with another address.
-      Please contact the list owner to help you unsubscribe:[%END%]
+      [%|loc%]You might have subscribed with another address. Please contact the list owner to help you unsubscribe:[%END%]
       [% '' | mailto("${list}-request@${conf.host}") %]
       
   [% ELSIF ! email %]

@@ -29,9 +29,7 @@ X-Loop: [% conf.email %]@[% conf.host %]
 [%|loc%]Your message contain a DKIM signature. It was succesfully verified[%END%]
 
 [% ELSIF notice.entry == 'sent_to_owner' -%]
-[%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's
-owners for approval. You will receive a notification when you have
-been subscribed (or unsubscribed) to the list.[%END-%]
+[%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's owners for approval. You will receive a notification when you have been subscribed (or unsubscribed) to the list.[%END-%]
 
 [% ELSIF notice.entry == 'updated_info' -%]
 [%|loc(notice.email,notice.listname)%]Information regarding user %1 has been updated for list %2.[%END%]
@@ -112,8 +110,7 @@ been subscribed (or unsubscribed) to the list.[%END-%]
   [%|loc%]Command not understood: ignoring end of message.[%END%]
 
 [% ELSIF u_err.entry == 'no_verify_sign' -%]
-  [%|loc%]Your message was not a multipart/signed message or Sympa could not verify the signature 
-(be aware that Sympa can't check signature if you use the subject header to write a command).[%END-%]
+  [%|loc%]Your message was not a multipart/signed message or Sympa could not verify the signature (be aware that Sympa can't check signature if you use the subject header to write a command).[%END-%]
 
 [% ELSIF u_err.entry == 'syntax_errors' -%]
   [%|loc%]Command syntax error.[%END%]

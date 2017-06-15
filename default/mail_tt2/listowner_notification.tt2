@@ -10,8 +10,7 @@ To: [% to %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 archive quota exceeded[%END%][%END%]
 
 [%|loc(list.name,list.host,size,conf.host,conf.listmaster_email)%]%1 archive quota exceeded. 
-Total size used for %1@%2 archive is %3 Bytes. Messages
-are no longer being web-archived. Please contact %5@%4. [%END%]
+Total size used for %1@%2 archive is %3 Bytes. Messages are no longer being web-archived. Please contact %5@%4.[%END%]
 
 [% ELSIF type == 'arc_quota_95' -%]
 Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning: archive %2% full[%END%][%END%]
@@ -49,9 +48,8 @@ Some of the customizations have been removed because they no longer respect the 
 Subject: [% FILTER qencode %][%|loc(list.name)%]Subscription request to list %1[%END%][%END%]
 
 [%|loc(list.name)-%]Dear owner of list %1,
- 
-A user asked to be added as a subscriber to your list. In order to list and manage
-pending subscription requests you should click on the following link:[%END%]
+
+A user asked to be added as a subscriber to your list. In order to list and manage pending subscription requests you should click on the following link:[%END%]
 
 [% 'ticket' | url_abs([one_time_ticket]) %]
 
@@ -75,8 +73,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]UNsubscription request from list
 
 [%|loc(list.name)-%]Dear owner of list %1,
 
-A user asked to be deleted from your list. If this is OK 
-with you, you should click on the following link:[% END %]
+A user asked to be deleted from your list. If this is OK with you, you should click on the following link:[% END %]
 
 [% 'ticket' | url_abs([one_time_ticket]) %]
 

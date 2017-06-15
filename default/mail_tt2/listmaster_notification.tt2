@@ -193,8 +193,7 @@ Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%
 'default' is no more accepted for a population.[%END%]
 
 [%|loc(param0)%]Refer to documentation to adapt %1.[%END%]
-[%|loc(param0)%]Until then we recommend your remove %1;
-default configuration will be used.[%END%]
+[%|loc(param0)%]Until then we recommend your remove %1; default configuration will be used.[%END%]
 
 [% ELSIF type == 'sync_include_failed' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Failed to include members for list '%1'[%END%][%END%]
