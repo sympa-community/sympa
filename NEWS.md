@@ -1,8 +1,33 @@
 # Change Log
 
-## [6.2.17b.1](https://github.com/sympa-community/sympa/tree/sympa-6.2) (2017-05-29)
+## [6.2.17b.2](https://github.com/sympa-community/sympa/tree/6.2.17b.2) (2017-06-15)
 
-[Full Changelog](https://github.com/sympa-community/sympa/compare/3a644d4...HEAD)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.17b.1...6.2.17b.2)
+
+**Changes:**
+
+- Renaming Norwegian translation catalogs: Dropping region suffix "\_NO" to be "nb" and "nn". [[999ae07](https://github.com/sympa-community/sympa/commit/999ae07)]
+- [change] Translation site and feedback contact have moved. [[c044e96](https://github.com/sympa-community/sympa/commit/c044e96)]
+
+**Fixed bugs:**
+
+- include\_ldap\_query parameter attrs not valid \(6.2.17b1\) [\#22](https://github.com/sympa-community/sympa/issues/22)
+- Editing Moderators Requires Restart to Take Effect [\#7](https://github.com/sympa-community/sympa/issues/7)
+- Editor should always be translated to Modérateur in fr [\#19](https://github.com/sympa-community/sympa/pull/19) ([jcdelepine](https://github.com/jcdelepine))
+- Fixed bugs on Debian Project (see Full Changelog for details):
+  - Make the build reproducible (Chris Lamb)
+  - Fix log severity in some command line tools used in postinst (Emmanuel Bouthenot)
+  - Fix various typos in documentation and manpages (Emmanuel Bouthenot)
+  - Remove reference to a template which no longer exists (Emmanuel Bouthenot)
+
+**Merged pull requests:**
+
+- Issue \#22: Parameters for LDAP attribute description are too restrictive [\#23](https://github.com/sympa-community/sympa/pull/23) ([ikedas](https://github.com/ikedas))
+
+
+## [6.2.17b.1](https://github.com/sympa-community/sympa/tree/6.2.17b.1) (2017-05-29)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/3a644d4...6.2.17b.1)
 
 **Implemented enhancements:**
 
@@ -60,4 +85,4 @@ Chrome and Internet Explorer.
   - \[12848\] \[\#10808\] \[Reported by X. Bachelot\] Suppressing some warnings by C compiler at build time.
 
 ---
-See the files ONEWS and OChangeLog about earlier history.
+See the files [ONEWS](ONEWS) and [OChangeLog](OChangeLog) about earlier history.
