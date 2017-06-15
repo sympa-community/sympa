@@ -808,7 +808,7 @@ our @params = (
 ##    },
     {   'name' => 'supported_lang',
         'default' =>
-            'ca,cs,de,el,es,et,en-US,fr,fi,hu,it,ja,ko,nl,nb,oc,pl,pt-BR,ru,sv,tr,vi,zh-CN,zh-TW',
+            'ca,cs,de,el,en-US,es,et,eu,fi,fr,gl,hu,it,ja,ko,nb,nl,oc,pl,pt-BR,ru,sv,tr,vi,zh-CN,zh-TW',
         'gettext_id' => 'Supported languages',
         'vhost'      => '1',
         'file'       => 'sympa.conf',
