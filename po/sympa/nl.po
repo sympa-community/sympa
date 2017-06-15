@@ -15,17 +15,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2013-01-10 21:19+0000\n"
-"Last-Translator: Kwadro Naut <kwadronaut@autistici.org>\n"
+"PO-Revision-Date: 2017-06-12 09:23+0000\n"
+"Last-Translator: kwadronaut <sympa@chocovax.net>\n"
 "Language-Team: Nederlands\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.1\n"
+"X-Generator: Pootle 2.8\n"
 "plural-forms: nplurals=2; plural=n != 1\n"
-"X-POOTLE-MTIME: 1357852743.000000\n"
+"X-POOTLE-MTIME: 1497259422.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -43,11 +43,10 @@ msgstr ""
 #: src/lib/Sympa/Message/Template.pm:106 src/lib/Sympa/Message/Template.pm:96
 #: src/lib/Sympa/Message/Template.pm:99 src/libexec/alias_manager.pl.in:101
 msgid "%d %b %Y"
-msgstr ""
+msgstr "%d %b %Y"
 
 #: src/libexec/ldap_alias_manager.pl.in:42
 #: src/libexec/mysql_alias_manager.pl.in:28
-#, fuzzy
 msgid "The configuration file contains errors.\n"
 msgstr "Het configuratiebestand bevat fouten.\n"
 
@@ -1539,11 +1538,12 @@ msgid "Archives"
 msgstr "Archieven"
 
 #: src/lib/Sympa/ListDef.pm:814
-#, fuzzy
 msgid ""
 "Privilege for reading mail archives and frequency of archiving\n"
 "Defines who can access the web archive for the list."
-msgstr "Toelating om mail archieven te lezen en de frequenty tot archivering"
+msgstr ""
+"Toelating om mailarchieven te lezen en de frequentie van archivering\n"
+"Bepaalt wie toegang heeft tot het webarchief van deze lijst"
 
 #: src/lib/Sympa/ListDef.pm:818
 msgid "frequency"
@@ -1584,15 +1584,14 @@ msgid "threshold"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:920
-#, fuzzy
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
 "This parameter defines a lower limit for each category of bouncing users.For "
 "example, level 1 begins from 45 to level_2_treshold."
 msgstr ""
-"Elke \"bouncing\" gebruiker heeft een score (van 0 tot 100). Deze parameter "
-"definieert de laagste grens van elke categorie.  Bvb: Level 1 begint vanaf "
-"45 tot level_2_treshold."
+"Elke \"bouncing\" gebruiker heeft een score (van 0 tot 100).\n"
+"Deze parameter definieert de laagste grens van elke categorie. Bvb: Level 1 "
+"begint vanaf 45 tot level_2_treshold."
 
 #: src/lib/Sympa/ListDef.pm:928 src/lib/Sympa/ListDef.pm:965
 msgid "action for this population"
@@ -1607,15 +1606,14 @@ msgid "Management of bouncers, 2nd level"
 msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:957
-#, fuzzy
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
 "This parameter defines the score range defining each category of bouncing "
 "users.For example, level 2 is for users with a score between 80 and 100."
 msgstr ""
-"Elke \"bouncing\" gebruiker heeft een score van 0 tot 100.  De parameter "
-"definieert de bepaald hoe groot elke categorie is.  Bvb: level 2 is voor "
-"gebruikers met een score tussen 80 en 100"
+"Elke \"onbestelbare\" gebruiker heeft een score van 0 tot 100.\n"
+"Deze parameter bepaalt hoe groot elke categorie is. Bvb.: level 2 is voor "
+"gebruikers met een score tussen 80 en 100."
 
 #: src/lib/Sympa/ListDef.pm:987
 msgid "percentage of list members in VERP mode"

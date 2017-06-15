@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2016-01-15 16:03+0000\n"
-"Last-Translator: dverdin <david.verdin@renater.fr>\n"
+"PO-Revision-Date: 2017-06-14 20:28+0000\n"
+"Last-Translator: Bellengier <sylvain.bellengier@hotmail.fr>\n"
 "Language-Team: Français\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 2.7\n"
+"X-Generator: Pootle 2.8\n"
 "Projct-Id-Version: fr\n"
-"X-POOTLE-MTIME: 1452873781.000000\n"
+"X-POOTLE-MTIME: 1497472086.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -1313,9 +1313,11 @@ msgstr ""
 "Janvier:Février:Mars:Avril:Mai:Juin:Juillet:Août:Septembre:Octobre:Novembre:"
 "Décembre"
 
+# Tout dépend du contexte d'utilisation.
+# Après une heure donnée, on peut préciser soit "du matin" pour AM soit "de l'après-midi" ou "du soir" pour PM
 #: src/lib/Sympa/Language.pm:636
 msgid "AM:PM"
-msgstr "-"
+msgstr "Avant midi : Après midi"
 
 #: src/lib/Sympa/Language.pm:726
 msgid "Lorem ipsum dolor sit amet."
@@ -1934,12 +1936,11 @@ msgstr "Inclusion d'une liste"
 #: src/lib/Sympa/ListDef.pm:1156
 #, fuzzy
 msgid "list name to include"
-msgstr "Liste des adresses exclues"
+msgstr "Nom de liste à exclure"
 
 #: src/lib/Sympa/ListDef.pm:1163
-#, fuzzy
 msgid "filter definition"
-msgstr "Définition de la liste"
+msgstr "Définition du filtre"
 
 # nlsref 16,206
 #: src/lib/Sympa/ListDef.pm:1173
@@ -2532,9 +2533,8 @@ msgstr ""
 "mode de réception par défaut pour la liste."
 
 #: src/lib/Sympa/ListDef.pm:414
-#, fuzzy
 msgid "Default profile for the subscribers of the list."
-msgstr "Votre avatar dans la liste des abonnés"
+msgstr "Profil par défaut pour les abonnés de la liste."
 
 # nlsref 16,19
 #: src/lib/Sympa/ListDef.pm:419
@@ -2543,9 +2543,8 @@ msgstr "mode de réception des messages"
 
 # nlsref 16,82
 #: src/lib/Sympa/ListDef.pm:432
-#, fuzzy
 msgid "Visibility of the subscriber."
-msgstr "Visibilité de la liste"
+msgstr "Visibilité de l'abonné."
 
 #: src/lib/Sympa/ListDef.pm:479
 msgid ""
@@ -2875,10 +2874,8 @@ msgstr ""
 "Cette fonctionnalité nécessite l’emploi du module Perl Net::LDAP (perlldap)."
 
 #: src/lib/Sympa/ListDef.pm:1545
-#, fuzzy
 msgid "This parameter is used to define the SQL query parameters. "
-msgstr ""
-"Ce paramètre définit une requête SQL retournant une liste d'adresses email."
+msgstr "Ce paramètre sert à définir les paramètres de la requête SQL."
 
 #: src/lib/Sympa/ListDef.pm:1661
 msgid ""
@@ -2895,9 +2892,8 @@ msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr "Un ensemble de paramètres pour définir la signature DKIM sortante."
 
 #: src/lib/Sympa/ListDef.pm:2119
-#, fuzzy
 msgid "List of headers to be included into the message for signature"
-msgstr "Liste des entêtes SMTP qui doivent être inclus dans la signature DKIM."
+msgstr "Liste des entêtes à inclure dans le message de signature."
 
 #: src/lib/Sympa/ListDef.pm:2121
 msgid ""
@@ -3733,9 +3729,8 @@ msgid "used to construct various singleton classes."
 msgstr "Utilisé pour créer des classes en mode singleton."
 
 #: src/lib/Sympa/ModDef.pm:67
-#, fuzzy
 msgid "used to make copy of internal data structures."
-msgstr "Utilisé pour copier des hiérarchies de fichiers"
+msgstr "Utilisé pour créer une copie des structures de données internes."
 
 #: src/lib/Sympa/ModDef.pm:73
 msgid ""
