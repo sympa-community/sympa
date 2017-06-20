@@ -69,6 +69,7 @@ EXTRA_DIST = \
 	NEWS.md \
 	OChangeLog \
 	ONEWS \
+	README.md \
 	sympa.spec.pl \
 	sympa.spec \
 	etc_README \
