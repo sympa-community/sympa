@@ -63,6 +63,7 @@ noinst_SCRIPTS = \
 EXTRA_DIST = \
 	AUTHORS.md \
 	important_changes.pl \
+	INSTALL.md \
 	META.json.pl \
 	META.json \
 	NEWS.md \
@@ -180,7 +181,7 @@ nextstep:
 	@echo "#        $(sbindir)/sympa_wizard.pl --check"
 	@echo "#"
 	@echo "# FIRST INSTALLATION:"
-	@echo "#    * Check the INSTALL file."
+	@echo "#    * Check the INSTALL.md file."
 	@echo "#    * Run the wizard to define some required parameters that can't be guessed."
 	@echo "#        $(sbindir)/sympa_wizard.pl"
 	@echo "#"
