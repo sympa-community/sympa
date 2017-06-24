@@ -860,7 +860,6 @@ msgid "This is useful for defining ORACLE_HOME "
 msgstr "OracleでORACLE_HOMEを定義するのに使えます。"
 
 #: src/lib/Sympa/ConfDef.pm:1051
-#, fuzzy
 msgid "Database private extension to subscriber table"
 msgstr "subscriberテーブルでのデータベース独自拡張"
 
@@ -870,7 +869,6 @@ msgstr ""
 "ここに記述したフィールドは、自分でデータベースに追加する必要があります。"
 
 #: src/lib/Sympa/ConfDef.pm:1059
-#, fuzzy
 msgid "Database private extension to user table"
 msgstr "userテーブルでのデータベース独自拡張"
 
@@ -8824,7 +8822,6 @@ msgid "Colors"
 msgstr "色"
 
 #: default/web_tt2/skinsedit.tt2:12
-#, fuzzy
 msgid ""
 "Use the color editor in order to change defined colors. First select the "
 "color you want to change and pick a color,then apply it using the test "
@@ -8835,16 +8832,14 @@ msgstr ""
 "決まっている色を変えるには色エディタを使います。まず、変えたい色を選択し、色"
 "を選び、テストボタンを使って適用します。新しい色は実際にはインストールされ"
 "ず、セッションが終わるまでだけ有効です。選んだ色あいが気に入ったら、それを新"
-"たな静的 CSS に保存します。\n"
+"たな静的 CSS に保存します。"
 
 #: default/web_tt2/skinsedit.tt2:16
-#, fuzzy
 msgid ""
 "Be careful: the CSS file is overwritten using css.tt2 template, usually this "
 "file is coming from Sympa distribution so your CSS customization may be "
 "erased when doing this."
 msgstr ""
-"\n"
 "ご注意ください。CSS ファイルを css.tt2 テンプレート (通常は Sympa の配布物に"
 "入っていたものと同じ) を使って上書きします。CSS にカスタマイズを加えていたの"
 "なら、それは消えてしまいます。"
@@ -11967,16 +11962,14 @@ msgstr "リスト %1 の投稿保管庫は容量制限を超えました"
 
 #. (list.name,list.host,size,conf.host,conf.listmaster_email)
 #: default/mail_tt2/listowner_notification.tt2:13
-#, fuzzy
 msgid ""
 "%1 archive quota exceeded. \n"
 "Total size used for %1@%2 archive is %3 Bytes. Messages are no longer being "
 "web-archived. Please contact %5@%4."
 msgstr ""
 "%1 の投稿保管庫は容量制限を超えました。\n"
-"%1@%2 の投稿保管庫の合計サイズは %3 バイトです。\n"
-"これ以上投稿保管庫にメッセージを入れることはできません。%5@%4 に連絡してくだ"
-"さい。"
+"%1@%2 の投稿保管庫の合計サイズは %3 バイトです。これ以上投稿保管庫にメッセー"
+"ジを入れることはできません。%5@%4 に連絡してください。"
 
 # 「容量制限の」補う
 #. (list.name,rate)
@@ -12736,17 +12729,16 @@ msgstr ""
 
 #. (list.name, conf.listmaster_email, list.domain)
 #: default/mail_tt2/user_notification.tt2:70
-#, fuzzy
 msgid ""
 "You message to list %1 could not be delivered. All the subscribers to this "
 "list have their address in error.\n"
 "Please contact the listmaster (%2@%3) to fix this probem before re-posting "
 "your message."
 msgstr ""
-"\n"
 "あなたが %1 メーリングリストに送ったメッセージは配送されませんでした。このリ"
-"ストの全ての読者に配送上の問題があります。メッセージを送りなおす前に、リスト"
-"システム管理者 <%2@%3> に連絡して問題を解消してください。\n"
+"ストの全ての読者に配送上の問題があります。\n"
+"メッセージを送りなおす前に、リストシステム管理者 %2@%3 に連絡して問題を解消し"
+"てください。"
 
 #: default/mail_tt2/user_notification.tt2:75
 msgid "report message error on plugin"
