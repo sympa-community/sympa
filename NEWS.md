@@ -1,5 +1,19 @@
 # Change Log
 
+## [6.2.18](https://github.com/sympa-community/sympa/tree/6.2.18) (2017-06-25)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.17b.1...6.2.18)
+
+**Changes:**
+
+- Moving INSTALL to INSTALL.md and slightly updating content. [[506c435](https://github.com/sympa-community/sympa/commit/506c435)]
+- Added euskara (Basque) and galego (Galician) to default of supported languages (supported_lang). [[ff700f7](https://github.com/sympa-community/sympa/commit/ff700f7)]
+
+**Closed issues:**
+
+- Version number for next stable release [\#21](https://github.com/sympa-community/sympa/issues/21)
+
+
 ## [6.2.17b.2](https://github.com/sympa-community/sympa/tree/6.2.17b.2) (2017-06-15)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.17b.1...6.2.17b.2)
