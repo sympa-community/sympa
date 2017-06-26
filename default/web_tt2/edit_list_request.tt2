@@ -1,52 +1,599 @@
 <!-- edit_list_request.tt2 -->
+[%# Block definitions ~%]
+
+[%~ BLOCK EditListSet # (ppaths,pitem,val) ~%]
+  <!-- set -->
+  [% IF pitem.privilege == 'write' ~%]
+    <select name="multiple_param.[% ppaths.join('.') %]"
+     id="param.[% ppaths.join('.') %]"
+     multiple="multiple" size="[% pitem.format.size() %]"
+     [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
+    [% FOREACH enum = pitem.format ~%]
+      <option value="[% enum %]"
+       [%~ FOREACH v = val ~%]
+         [%~ IF enum == v %] selected="selected"[% END %]
+       [%~ END %]
+       [%~ IF pitem.field_type == 'lang' %] lang="[% enum %]"
+         xml:lang="[% enum %]"[% END %]>
+      [%~ enum | optdesc(pitem.field_type,is_listmaster) ~%]
+      </option>
+    [% END %]
+    </select>
+  [%~ ELSE ~%]
+    [% FOREACH enum = pitem.format ~%]
+      [% FOREACH v = val ~%]
+        [% IF enum == v ~%]
+          [%~ IF pitem.field_type == 'lang' ~%]
+            <span class="neutral" lang="[% enum %]" xml:lang="[% enum %]">
+          [%~ END ~%]
+          [% enum | optdesc(pitem.field_type,is_listmaster) %]
+          [%~ IF pitem.field_type == 'lang' ~%]
+            </span>
+          [%~ END %]
+
+          [%~ LAST %]
+        [%~ END %]
+      [% END %]
+    [%~ END %]
+  [%~ END %]
+  <!-- end set -->
+[%~ END ~%]
+
+[%~ BLOCK EditListArrayDel # (ppaths,pitem) ~%]
+  <!-- del -->
+  [% IF pitem.privilege == 'write' ~%]
+    <input type="checkbox" name="deleted_param.[% ppaths.join('.') %]"
+     id="del.[% ppaths.join('.') %]"
+     class="fadeIfChecked" data-selector="#item\.[% ppaths.join('\\.') %]"
+     value="del" />
+    <label for="del.[% ppaths.join('.') %]">[%|loc%]Delete[%END%]</label>
+  [%~ END %]
+  <!-- end del -->
+[%~ END ~%]
+
+[%~ BLOCK EditListLeaf # (ppaths,pitem,val) ~%]
+  [% IF pitem.enum ~%]
+    [% PROCESS EditListEnum %]
+  [%~ ELSIF pitem.scenario ~%]
+    [% PROCESS EditListScenario %]
+  [%~ ELSIF pitem.task ~%]
+    [% PROCESS EditListTask %]
+  [%~ ELSIF pitem.datasource ~%]
+    [% PROCESS EditListDatasource %]
+  [%~ ELSE ~%]
+    [% PROCESS EditListScalar %]
+  [%~ END %]
+[%~ END ~%]
+
+[%~ BLOCK EditListEnum # (ppaths,pitem,val) ~%]
+  <!-- enum -->
+  [% IF pitem.privilege == 'write' ~%]
+    <select name="single_param.[% ppaths.join('.') %]"
+     id="param.[% ppaths.join('.') %]"
+     [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
+    [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
+      <option value=""></option>
+    [%~ END %]
+    [% FOREACH enum = pitem.format ~%]
+      <option value="[% enum %]"
+       [%~ IF enum == val %] selected="selected"[% END %]
+       [%~ IF pitem.field_type == 'lang' %] lang="[% enum %]"
+       xml:lang="[% enum %]"[%END%]>
+      [%~ enum | optdesc(pitem.field_type,is_listmaster) ~%]
+      </option>
+    [% END %]
+    </select>
+  [%~ ELSE ~%]
+    [% FOREACH enum = pitem.format ~%]
+      [% IF enum == val ~%]
+        [% IF pitem.field_type == 'lang' ~%]
+          <span class="neutral" lang="[% enum %]" xml:lang="[% enum %]">
+        [%~ END ~%]
+        [% enum | optdesc(pitem.field_type,is_listmaster) %]
+        [%~ IF pitem.field_type == 'lang' ~%]
+          </span>
+        [%~ END %]
+
+        [%~ LAST %]
+      [%~ END %]
+    [%~ END %]
+  [%~ END %]
+  <!-- end enum -->
+[%~ END ~%]
+
+[%~ BLOCK EditListScenario # (ppaths,pitem,val) ~%]
+  <!-- scenario -->
+  [% IF pitem.privilege == 'write' ~%]
+    <select name="single_param.[% ppaths.join('.') %].name"
+     id="param.[% ppaths.join('.') %]">
+    [% FOREACH scenario = pitem.format ~%]
+      [% UNLESS scenario.value.name == 'default' ~%]
+        <option value="[% scenario.value.name %]"
+         [%~ IF scenario.value.name == val.name %] selected="selected"[% END %]>
+        [%~ scenario.value.title %]
+        [%~ IF is_listmaster %] ([% scenario.value.name %])[% END ~%]
+        </option>
+      [%~ END %]
+    [% END %]
+    </select>
+  [%~ ELSE ~%]
+    [% FOREACH scenario = pitem.format ~%]
+      [% IF scenario.value.name == val.name ~%]
+        [% scenario.value.title %]
+        [%~ IF is_listmaster %] ([% scenario.value.name %])[% END %]
+      [%~ END %]
+    [%~ END %]
+  [%~ END %]
+  <!-- end scenario -->
+[%~ END ~%]
+
+[%~ BLOCK EditListTask # (ppaths,pitem,val) ~%]
+  <!-- task -->
+  [% IF pitem.privilege == 'write' ~%]
+    <select name="single_param.[% ppaths.join('.') %].name"
+     id="param.[% ppaths.join('.') %]">
+    [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
+      <option value=""></option>
+    [%~ END %]
+    [% FOREACH task = pitem.format ~%]
+      <option value="[% task.value.name %]"
+       [%~ IF task.value.name == val.name %] selected="selected"[% END %]>
+      [%~ task.value.title %]
+      [%~ IF is_listmaster %] ([% task.value.name %])[% END ~%]
+      </option>
+    [% END %]
+    </select>
+  [%~ ELSE ~%]
+    [% FOREACH task = pitem.format ~%]
+      [% IF task.value.name == val.name ~%]
+        [% task.value.title %]
+        [%~ IF is_listmaster %] ([% task.value.name %])[% END %]
+      [%~ END %]
+    [%~ END %]
+  [%~ END %]
+  <!-- end task -->
+[%~ END ~%]
+
+[%~ BLOCK EditListDatasource # (ppaths,pitem,val) ~%]
+  <!-- datasource -->
+  [% IF pitem.privilege == 'write' ~%]
+    <select name="single_param.[% ppaths.join('.') %]"
+     id="param.[% ppaths.join('.') %]">
+    [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
+      <option value=""></option>
+    [%~ END %]
+    [% FOREACH source = pitem.format ~%]
+      <option value="[% source.value.name %]"
+       [%~ IF source.value.name == val %] selected="selected"[% END %]>
+      [%~ source.value.title %]
+      [%~ IF is_listmaster %] ([% source.value.name %])[% END ~%]
+      </option>
+    [% END %]
+    </select>
+  [%~ ELSE ~%]
+    [% FOREACH source = pitem.format ~%]
+      [% IF source.value.name == val ~%]
+        [% source.value.title %]
+        [%~ IF is_listmaster %] ([% source.value.name %])[% END %]
+      [%~ END %]
+    [%~ END %]
+  [%~ END %]
+  <!-- end datasource -->
+[%~ END ~%]
+
+[%~ BLOCK EditListScalar # (ppaths,pitem,val) ~%]
+  <!-- scalar -->
+  [% IF pitem.privilege == 'write' ~%]
+    [% IF pitem.unit ~%]
+      <span style="display:inline-block">[%# FIXME %]
+    [%~ END %]
+    <input name="single_param.[% ppaths.join('.') %]"
+     id="param.[% ppaths.join('.') %]"
+     value="[% val %]" size="[% pitem.length %]"
+     [%~ IF pitem.field_type == 'password' %] type="password"
+     [%~ ELSE %] type="text"
+     [%~ END %]
+     [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %] />
+    [% IF pitem.unit ~%]
+      </span>
+    [%~ END %]
+
+    [% pitem.unit %]
+  [%~ ELSE ~%]
+    [% IF pitem.field_type == 'lang' ~%]
+      <span class="neutral" lang="[% val %]" xml:lang="[% val %]">
+    [%~ END ~%]
+    [% IF pitem.field_type ~%]
+      [% val | optdesc(pitem.field_type,is_listmaster) %]
+    [%~ ELSE ~%]
+      [% val %]
+    [%~ END %]
+    [%~ IF pitem.field_type == 'lang' ~%]
+      </span>
+    [%~ END %]
+
+    [% IF val.length() ~%]
+      [% pitem.unit %]
+    [%~ END %]
+  [%~ END %]
+  <!-- end scalar -->
+[%~ END ~%]
+
+
+
+
+
+
+
+
+
 [% IF path_info.match('/data_source$') ~%]
 
 <!-- code -->
 <div id="datasources">
   <div class="ds-col ds-col--left">
     <sympa-list>
-        <li class="ds-list-item">
-          <span class="ds-list-item__title">Data sources settings</span>
-          <span class="ds-list-item__subtitle">General syncing parameters</span>
-          <span class="ds-list-item__action">
-            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-          </span>
-        </li>
-        <li class="ds-list-item">
-          <span class="ds-list-item__title">Add new data source</span>
-          <span class="ds-list-item__subtitle">Import data from external source</span>
-          <span class="ds-list-item__action">
-            <i class="fa fa-plus" aria-hidden="true"></i>
-          </span>
-        </li>
+      <sympa-list-item
+        title="Data sources settings"
+        subtitle="General syncing parameters"
+        @click.native="changePage('settings')"
+      ></sympa-list-item>
+      <sympa-list-item
+        title="Add new data source"
+        subtitle="Import data from external source"
+        icon="plus"
+        @click.native="changePage('new')"
+      ></sympa-list-item>
     </sympa-list>
     <sympa-list-title>Members</sympa-list-title>
     <sympa-list>
-        <li class="ds-list-item">
-          <span class="ds-list-item__title">Data sources settings</span>
-          <span class="ds-list-item__subtitle">General syncing parameters</span>
-          <span class="ds-list-item__action">
-            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-          </span>
-        </li>
-        <li class="ds-list-item">
-          <span class="ds-list-item__title">Data sources settings</span>
-          <span class="ds-list-item__subtitle">General syncing parameters</span>
-          <span class="ds-list-item__action">
-            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-          </span>
-        </li>
-        <li class="ds-list-item">
-          <span class="ds-list-item__title">Data sources settings</span>
-          <span class="ds-list-item__subtitle">General syncing parameters</span>
-          <span class="ds-list-item__action">
-            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-          </span>
-        </li>
+
     </sympa-list>
   </div>
   <div class="ds-col ds-col--right">
-    <h2>{{ page }}</h2>
+    <div v-show="page === 'new'">
+      <h2>Add new data source</h2>
+      <p>Choose a type for the new data source:</p>
+      <label><input type="radio" value="include_remote_file" v-model="newDatasourceType"> Remote file</label>
+      <label><input type="radio" value="include_sympa_list" v-model="newDatasourceType"> Sympa list</label>
+      <label><input type="radio" value="include_remote_sympa_list" v-model="newDatasourceType"> Remote Sympa list</label>
+      <label><input type="radio" value="include_ldap_query" v-model="newDatasourceType"> LDAP query</label>
+      <label><input type="radio" value="include_ldap_2level_query" v-model="newDatasourceType"> LDAP 2-level query</label>
+      <label><input type="radio" value="include_sql_query" v-model="newDatasourceType"> SQL query</label>
+      <label><input type="radio" value="include_voot_group" v-model="newDatasourceType"> VOOT group</label>
+      <label><input type="radio" value="include_ldap_ca" v-model="newDatasourceType"> Extract users attributes by LDAP query</label>
+      <label><input type="radio" value="include_ldap_2level_ca" v-model="newDatasourceType"> Extract users attributes by LDAP 2-level query</label>
+      <label><input type="radio" value="include_sql_ca" v-model="newDatasourceType"> Extract users attributes by SQL query</label>
+      <button @click="addNext">Next</button>
+    </div>
+
+
+<div class="block" v-show="showForm">
+
+  <h2>[%|loc%]Edit List Configuration[%END%]
+  <a href="[% 'nomenu/help/listconfig' | url_rel %]"
+   title="[%|loc%]Open in a new window[%END%]"
+   onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')"
+   target="wws_help">
+  <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+  </a>
+  </h2>
+
+  [% IF !group ~%]
+    [% IF GROUP == 'description' ~%]
+      [% SET class = 'menuLinksCurrentPage' %]
+    [%~ ELSE ~%]
+      [% SET class = 'menuLinks' %]
+    [%~ END ~%]
+    <p>
+    [%|loc%]Here you can edit your list's configuration parameters.[% END %]
+    </p>
+  [%~ ELSE ~%]
+    <form class="bold_label" action="[% path_cgi %]" method="post">
+    <fieldset>
+    <input type="hidden" name="serial" value="[% serial %]" />
+    [% FOREACH pS = config_schema ~%]
+      [% SET pV = config_values.${pS.name} ~%]
+
+      [% IF pS.changed ~%]
+        <div class="CurrentBlock">
+      [%~ ELSE ~%]
+        <div class="block" v-show="showBlocks.includes('[% pS.name %]')">
+      [%~ END ~%]
+      <h4>
+      [% IF pS.title ~%]
+        [% pS.title %]
+        [%~ IF is_listmaster %] ([% pS.name %])[% END %]
+      [%~ ELSE ~%]
+        [% pS.name %]
+      [%~ END %]
+      [%~ IF is_listmaster && pS.default_value %] [%|loc%](default)[%END%][% END %]
+      <span class="edit_list_request_help">
+
+      [%~ IF pS.scenario && is_listmaster ~%]
+        &nbsp;<a class="input"
+         href="[% 'dump_scenario' | url_rel([list,pS.name]) %]"
+         title="[%|loc%]scenario source[%END%]">[%|loc%]scenario source[%END~%]
+        </a>
+      [%~ END %]
+
+      [%~ IF pS.comment ~%]
+        <a href="#" class="accordionButton"
+         data-selector="#help\.[% pS.name %]">
+        <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+        </a>
+      [%~ END ~%]
+      </span>
+      </h4>
+
+      [% IF pS.comment ~%]
+        <div id="help.[% pS.name %]" class="panel radius">
+        <p>[% pS.comment.replace('\n', '</p><p>') %]</p>
+        </div>
+      [%~ END ~%]
+
+      [% IF pS.type == 'set' ~%]
+        <div class="row">
+
+        <div id="item.[% pS.name %]"
+         class="small-9 large-10 columns">
+        [% PROCESS EditListSet
+           ppaths=[pS.name]
+           pitem=pS
+           val=pV
+        %]
+        </div>
+
+        </div>
+      [%~ ELSIF pS.occurrence.match('n$') ~%]
+
+        <!-- array -->
+        [% oI = 0 ~%]
+
+        [% FOREACH oV = pV ~%]
+          [% IF pS.type == 'paragraph' ~%]
+            <div class="row">
+
+            <div id="item.[% pS.name %].[% oI %]"
+             class="small-9 large-10 columns">
+            <!-- paragraph -->
+            [% FOREACH kS = pS.format ~%]
+              [% SET kV = oV.${kS.name} ~%]
+
+              <label for="param.[% pS.name %].[% oI %].[% kS.name %]">
+              [% IF kS.title ~%]
+                [% kS.title %]
+                [%~ IF is_listmaster %] ([% kS.name %])[% END %]
+              [%~ ELSE ~%]
+                [% kS.name %]
+              [%~ END ~%]
+
+              [% IF kS.comment ~%]
+                <a href="#" class="accordionButton"
+                 data-selector="#help\.[% pS.name %]\.[% kS.name %]">
+                <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+                </a>
+              [%~ END ~%]
+              [%|loc%]:[%END%]
+              </label>
+
+              [% IF kS.comment ~%]
+                <div id="help.[% pS.name %].[% kS.name %]" class="panel radius">
+                <p>[% kS.comment.replace('\n', '</p><p>') %]</p>
+                </div>
+              [%~ END ~%]
+
+              [% IF kS.type == 'set' ~%]
+                [% PROCESS EditListSet
+                   ppaths=[pS.name,oI,kS.name]
+                   pitem=kS
+                   val=kV
+                %]
+              [%~ ELSIF kS.type == 'leaf' ~%]
+                [% PROCESS EditListLeaf
+                   ppaths=[pS.name,oI,kS.name]
+                   pitem=kS
+                   val=kV
+                %]
+              [%~ END %]
+            [% END %]
+            <!-- end paragraph -->
+            </div>
+
+            [% UNLESS pS.occurrence.match('^1') && pV.size() == 1 ~%]
+              <div class="small-3 large-2 columns">
+              [% PROCESS EditListArrayDel
+                 ppaths=[pS.name,oI]
+                 pitem=pS
+              %]
+              </div>
+            [%~ END %]
+
+            </div>
+            <span class="divider"></span>
+          [%~ ELSE ~%]
+            <div class="row">
+
+            <div id="item.[% pS.name %].[% oI %]"
+             class="small-9 large-10 columns">
+            [% PROCESS EditListLeaf
+               ppaths=[pS.name,oI]
+               pitem=pS
+               val=oV
+            %]
+            </div>
+
+            [% UNLESS pS.occurrence.match('^1') && pV.size() == 1 ~%]
+              <div class="small-3 large-2 columns">
+              [% PROCESS EditListArrayDel
+                 ppaths=[pS.name,oI]
+                 pitem=pS
+              %]
+              </div>
+            [%~ END %]
+
+            </div>
+          [%~ END %]
+          [%~ oI = oI + 1 %]
+        [% END %]
+
+        [%# Additional empty section. ~%]
+        [% IF pS.privilege == 'write' ~%]
+          [% IF pS.type == 'paragraph' ~%]
+            <div class="row">
+
+            <div id="item.[% pS.name %].[% oI %]"
+             class="small-9 large-10 columns">
+            <!-- paragraph -->
+            [% FOREACH kS = pS.format ~%]
+              [% SET kV = kS.default # Default value. ~%]
+
+              <label for="param.[% pS.name %].[% oI %].[% kS.name %]">
+              [% IF kS.title ~%]
+                [% kS.title %]
+                [%~ IF is_listmaster %] ([% kS.name %])[% END %]
+              [%~ ELSE ~%]
+                [% kS.name %]
+              [%~ END ~%]
+
+              [% IF kS.comment ~%]
+                <a href="#" class="accordionButton"
+                 data-selector="#help\.[% pS.name %]\.[% kS.name %]">
+                <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+                </a>
+              [%~ END ~%]
+              [%|loc%]:[%END%]
+              </label>
+
+              [% IF kS.comment ~%]
+                <div id="help.[% pS.name %].[% kS.name %]" class="panel radius">
+                <p>[% kS.comment.replace('\n', '</p><p>') %]</p>
+                </div>
+              [%~ END ~%]
+
+              [% IF kS.type == 'set' ~%]
+                [% PROCESS EditListSet
+                   ppaths=[pS.name,oI,kS.name]
+                   pitem=kS
+                   val=kV
+                %]
+              [%~ ELSIF kS.type == 'leaf' ~%]
+                [% PROCESS EditListLeaf
+                   ppaths=[pS.name,oI,kS.name]
+                   pitem=kS
+                   val=kV
+                %]
+              [%~ END %]
+            [% END %]
+            <!-- end paragraph -->
+            </div>
+
+            </div>
+          [%~ ELSE ~%]
+            <div class="row">
+
+            <div id="item.[% pS.name %].[% oI %]"
+             class="small-9 large-10 columns">
+            [% PROCESS EditListLeaf
+               ppaths=[pS.name,oI]
+               pitem=pS
+               val=UNDEF # Empty value.
+            %]
+            </div>
+
+            </div>
+          [%~ END %]
+        [%~ END %]
+
+        <!-- end array -->
+      [%~ ELSE ~%]
+        [% IF pS.type == 'paragraph' ~%]
+          <div class="row">
+
+          <div id="item.[% pS.name %]"
+           class="small-9 large-10 columns">
+          <!-- paragraph -->
+          [% FOREACH kS = pS.format ~%]
+            [% SET kV = pV.${kS.name} ~%]
+
+            <label for="param.[% pS.name %].[% kS.name %]">
+            [% IF kS.title ~%]
+              [% kS.title %]
+              [%~ IF is_listmaster %] ([% kS.name %])[% END %]
+            [%~ ELSE ~%]
+              [% kS.name %]
+            [%~ END ~%]
+
+            [% IF kS.comment ~%]
+              <a href="#" class="accordionButton"
+               data-selector="#help\.[% pS.name %]\.[% kS.name %]">
+              <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+              </a>
+            [%~ END ~%]
+            [%|loc%]:[%END%]
+            </label>
+
+            [% IF kS.comment ~%]
+              <div id="help.[% pS.name %].[% kS.name %]" class="panel radius">
+              <p>[% kS.comment.replace('\n', '</p><p>') %]</p>
+              </div>
+            [%~ END ~%]
+
+            [% IF kS.type == 'set' ~%]
+              [% PROCESS EditListSet
+                 ppaths=[pS.name,kS.name]
+                 pitem=kS
+                 val=kV
+              %]
+            [%~ ELSIF kS.type == 'leaf' ~%]
+              [% PROCESS EditListLeaf
+                 ppaths=[pS.name,kS.name]
+                 pitem=kS
+                 val=kV
+              %]
+            [%~ END %]
+          [% END %]
+          <!-- end paragraph -->
+          </div>
+
+          </div>
+        [%~ ELSIF pS.type == 'leaf' ~%]
+          <div class="row">
+
+          <div id="item.[% pS.name %]"
+           class="small-9 large-10 columns">
+          [% PROCESS EditListLeaf
+             ppaths=[pS.name]
+             pitem=pS
+             val=pV
+          %]
+          </div>
+
+          </div>
+        [%~ END %]
+      [% END %]
+
+      [% IF pS.default_value ~%]
+        <div class="row">
+        <div class="columns">[%|loc%]default[%END%]</div>
+        </div>
+      [%~ END %]
+      </div>
+    [% END %]
+
+    <input type="hidden" name="list" value="[% list %]" />
+    <input type="hidden" name="group" value="[% group %]" />
+    <input type="hidden" name="action" value="edit_list" />
+    [% IF is_form_editable ~%]
+      <input class="MainMenuLinks" type="submit" name="action_edit_list"
+       value="[%|loc%]Update[%END%]" />
+    [%~ END %]
+    </fieldset>
+    </form>
+  [%~ END %]
+
+  </div >
+
   </div>
 </div>
 
@@ -60,6 +607,14 @@
 
 .ds-col {
   box-sizing: border-box;
+}
+
+.ds-list-title {
+  font-size: 14px;
+  color: #999;
+  line-height: 32px;
+  margin-bottom: 5px;
+  font-weight: 700;
 }
 
 .ds-list {
@@ -125,22 +680,82 @@
 <script src="//unpkg.com/vue"></script>
 <script>
 // components
+Vue.component('sympa-list-title', {
+  template: `<p class="ds-list-title">
+    <slot></slot>
+  </p>`,
+});
+
 Vue.component('sympa-list', {
   template: `<ul class="ds-list">
     <slot></slot>
   </ul>`,
 });
 
-Vue.component('sympa-list-title', {
-  template: `<p><slot></slot></p>`,
+Vue.component('sympa-list-item', {
+  props: ['title', 'subtitle', 'icon'],
+  data() {
+    return {
+      faicon: 'fa-arrow-right',
+    };
+  },
+  template: `<li class="ds-list-item">
+    <span class="ds-list-item__title">
+      {{ title }}
+    </span>
+    <span class="ds-list-item__subtitle">
+      {{ subtitle }}
+    </span>
+    <span class="ds-list-item__action">
+      <i aria-hidden="true" class="fa" :class="faicon"></i>
+    </span>
+  </li>`,
+  created() {
+    this.faicon = this.icon ? `fa-${this.icon}` : 'fa-arrow-right';
+  },
 });
-
 
 // main instance
 var app = new Vue({
   el: '#datasources',
   data: {
     page: 'settings',
+    blocksGroups: {
+      settings: [
+        'inclusion_notification_feature',
+        'member_include',
+        'sql_fetch_timeout',
+        'include_file',
+        'ttl',
+        'distribution_ttl'
+      ],
+    },
+    showForm: true,
+    showBlocks: [],
+    newDatasourceType: '',
+  },
+  methods: {
+    changePage(pagename) {
+      this.page = pagename;
+      this.showForm = true;
+      if (pagename === 'settings') {
+        this.showBlocks = this.blocksGroups.settings;
+      } else if (pagename === 'new') {
+        this.showForm = false;
+        this.showBlocks = [];
+      } else if (pagename.match('^new/')) {
+        const newPagename = pagename.slice('new/'.length);
+        this.showBlocks = [newPagename];
+      } else {
+        this.showBlocks = [pagename];
+      }
+    },
+    addNext() {
+      this.changePage(`new/${this.newDatasourceType}`);
+    },
+  },
+  created() {
+    this.showBlocks = this.blocksGroups.settings;
   },
 });
 </script>
@@ -472,226 +1087,6 @@ var app = new Vue({
   [%~ END %]
 
   </div >
-
-  [%# Block definitions ~%]
-
-  [%~ BLOCK EditListSet # (ppaths,pitem,val) ~%]
-    <!-- set -->
-    [% IF pitem.privilege == 'write' ~%]
-      <select name="multiple_param.[% ppaths.join('.') %]"
-       id="param.[% ppaths.join('.') %]"
-       multiple="multiple" size="[% pitem.format.size() %]"
-       [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
-      [% FOREACH enum = pitem.format ~%]
-        <option value="[% enum %]"
-         [%~ FOREACH v = val ~%]
-           [%~ IF enum == v %] selected="selected"[% END %]
-         [%~ END %]
-         [%~ IF pitem.field_type == 'lang' %] lang="[% enum %]"
-           xml:lang="[% enum %]"[% END %]>
-        [%~ enum | optdesc(pitem.field_type,is_listmaster) ~%]
-        </option>
-      [% END %]
-      </select>
-    [%~ ELSE ~%]
-      [% FOREACH enum = pitem.format ~%]
-        [% FOREACH v = val ~%]
-          [% IF enum == v ~%]
-            [%~ IF pitem.field_type == 'lang' ~%]
-              <span class="neutral" lang="[% enum %]" xml:lang="[% enum %]">
-            [%~ END ~%]
-            [% enum | optdesc(pitem.field_type,is_listmaster) %]
-            [%~ IF pitem.field_type == 'lang' ~%]
-              </span>
-            [%~ END %]
-
-            [%~ LAST %]
-          [%~ END %]
-        [% END %]
-      [%~ END %]
-    [%~ END %]
-    <!-- end set -->
-  [%~ END ~%]
-
-  [%~ BLOCK EditListArrayDel # (ppaths,pitem) ~%]
-    <!-- del -->
-    [% IF pitem.privilege == 'write' ~%]
-      <input type="checkbox" name="deleted_param.[% ppaths.join('.') %]"
-       id="del.[% ppaths.join('.') %]"
-       class="fadeIfChecked" data-selector="#item\.[% ppaths.join('\\.') %]"
-       value="del" />
-      <label for="del.[% ppaths.join('.') %]">[%|loc%]Delete[%END%]</label>
-    [%~ END %]
-    <!-- end del -->
-  [%~ END ~%]
-
-  [%~ BLOCK EditListLeaf # (ppaths,pitem,val) ~%]
-    [% IF pitem.enum ~%]
-      [% PROCESS EditListEnum %]
-    [%~ ELSIF pitem.scenario ~%]
-      [% PROCESS EditListScenario %]
-    [%~ ELSIF pitem.task ~%]
-      [% PROCESS EditListTask %]
-    [%~ ELSIF pitem.datasource ~%]
-      [% PROCESS EditListDatasource %]
-    [%~ ELSE ~%]
-      [% PROCESS EditListScalar %]
-    [%~ END %]
-  [%~ END ~%]
-
-  [%~ BLOCK EditListEnum # (ppaths,pitem,val) ~%]
-    <!-- enum -->
-    [% IF pitem.privilege == 'write' ~%]
-      <select name="single_param.[% ppaths.join('.') %]"
-       id="param.[% ppaths.join('.') %]"
-       [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
-      [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
-        <option value=""></option>
-      [%~ END %]
-      [% FOREACH enum = pitem.format ~%]
-        <option value="[% enum %]"
-         [%~ IF enum == val %] selected="selected"[% END %]
-         [%~ IF pitem.field_type == 'lang' %] lang="[% enum %]"
-         xml:lang="[% enum %]"[%END%]>
-        [%~ enum | optdesc(pitem.field_type,is_listmaster) ~%]
-        </option>
-      [% END %]
-      </select>
-    [%~ ELSE ~%]
-      [% FOREACH enum = pitem.format ~%]
-        [% IF enum == val ~%]
-          [% IF pitem.field_type == 'lang' ~%]
-            <span class="neutral" lang="[% enum %]" xml:lang="[% enum %]">
-          [%~ END ~%]
-          [% enum | optdesc(pitem.field_type,is_listmaster) %]
-          [%~ IF pitem.field_type == 'lang' ~%]
-            </span>
-          [%~ END %]
-
-          [%~ LAST %]
-        [%~ END %]
-      [%~ END %]
-    [%~ END %]
-    <!-- end enum -->
-  [%~ END ~%]
-
-  [%~ BLOCK EditListScenario # (ppaths,pitem,val) ~%]
-    <!-- scenario -->
-    [% IF pitem.privilege == 'write' ~%]
-      <select name="single_param.[% ppaths.join('.') %].name"
-       id="param.[% ppaths.join('.') %]">
-      [% FOREACH scenario = pitem.format ~%]
-        [% UNLESS scenario.value.name == 'default' ~%]
-          <option value="[% scenario.value.name %]"
-           [%~ IF scenario.value.name == val.name %] selected="selected"[% END %]>
-          [%~ scenario.value.title %]
-          [%~ IF is_listmaster %] ([% scenario.value.name %])[% END ~%]
-          </option>
-        [%~ END %]
-      [% END %]
-      </select>
-    [%~ ELSE ~%]
-      [% FOREACH scenario = pitem.format ~%]
-        [% IF scenario.value.name == val.name ~%]
-          [% scenario.value.title %]
-          [%~ IF is_listmaster %] ([% scenario.value.name %])[% END %]
-        [%~ END %]
-      [%~ END %]
-    [%~ END %]
-    <!-- end scenario -->
-  [%~ END ~%]
-
-  [%~ BLOCK EditListTask # (ppaths,pitem,val) ~%]
-    <!-- task -->
-    [% IF pitem.privilege == 'write' ~%]
-      <select name="single_param.[% ppaths.join('.') %].name"
-       id="param.[% ppaths.join('.') %]">
-      [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
-        <option value=""></option>
-      [%~ END %]
-      [% FOREACH task = pitem.format ~%]
-        <option value="[% task.value.name %]"
-         [%~ IF task.value.name == val.name %] selected="selected"[% END %]>
-        [%~ task.value.title %]
-        [%~ IF is_listmaster %] ([% task.value.name %])[% END ~%]
-        </option>
-      [% END %]
-      </select>
-    [%~ ELSE ~%]
-      [% FOREACH task = pitem.format ~%]
-        [% IF task.value.name == val.name ~%]
-          [% task.value.title %]
-          [%~ IF is_listmaster %] ([% task.value.name %])[% END %]
-        [%~ END %]
-      [%~ END %]
-    [%~ END %]
-    <!-- end task -->
-  [%~ END ~%]
-
-  [%~ BLOCK EditListDatasource # (ppaths,pitem,val) ~%]
-    <!-- datasource -->
-    [% IF pitem.privilege == 'write' ~%]
-      <select name="single_param.[% ppaths.join('.') %]"
-       id="param.[% ppaths.join('.') %]">
-      [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
-        <option value=""></option>
-      [%~ END %]
-      [% FOREACH source = pitem.format ~%]
-        <option value="[% source.value.name %]"
-         [%~ IF source.value.name == val %] selected="selected"[% END %]>
-        [%~ source.value.title %]
-        [%~ IF is_listmaster %] ([% source.value.name %])[% END ~%]
-        </option>
-      [% END %]
-      </select>
-    [%~ ELSE ~%]
-      [% FOREACH source = pitem.format ~%]
-        [% IF source.value.name == val ~%]
-          [% source.value.title %]
-          [%~ IF is_listmaster %] ([% source.value.name %])[% END %]
-        [%~ END %]
-      [%~ END %]
-    [%~ END %]
-    <!-- end datasource -->
-  [%~ END ~%]
-
-  [%~ BLOCK EditListScalar # (ppaths,pitem,val) ~%]
-    <!-- scalar -->
-    [% IF pitem.privilege == 'write' ~%]
-      [% IF pitem.unit ~%]
-        <span style="display:inline-block">[%# FIXME %]
-      [%~ END %]
-      <input name="single_param.[% ppaths.join('.') %]"
-       id="param.[% ppaths.join('.') %]"
-       value="[% val %]" size="[% pitem.length %]"
-       [%~ IF pitem.field_type == 'password' %] type="password"
-       [%~ ELSE %] type="text"
-       [%~ END %]
-       [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %] />
-      [% IF pitem.unit ~%]
-        </span>
-      [%~ END %]
-
-      [% pitem.unit %]
-    [%~ ELSE ~%]
-      [% IF pitem.field_type == 'lang' ~%]
-        <span class="neutral" lang="[% val %]" xml:lang="[% val %]">
-      [%~ END ~%]
-      [% IF pitem.field_type ~%]
-        [% val | optdesc(pitem.field_type,is_listmaster) %]
-      [%~ ELSE ~%]
-        [% val %]
-      [%~ END %]
-      [%~ IF pitem.field_type == 'lang' ~%]
-        </span>
-      [%~ END %]
-
-      [% IF val.length() ~%]
-        [% pitem.unit %]
-      [%~ END %]
-    [%~ END %]
-    <!-- end scalar -->
-  [%~ END ~%]
 
 [%~ END %]
 <!-- end edit_list_request.tt2 -->
