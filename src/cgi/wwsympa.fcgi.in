@@ -79,6 +79,7 @@ use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::SharedDocument;
+use Sympa::Spindle::ProcessRequest;
 use Sympa::Spindle::ResendArchive;
 use Sympa::Spool::Archive;
 use Sympa::Spool::Auth;
@@ -168,7 +169,7 @@ our %comm = (
     'sso_login_succeeded'    => 'do_sso_login_succeeded',
     'subscribe'              => 'do_subscribe',
     'multiple_subscribe'     => 'do_multiple_subscribe',
-    'subrequest'             => 'do_subrequest',
+    #'subrequest'             => 'do_subrequest',
     'subindex'               => 'do_subindex',
     'suboptions'             => 'do_suboptions',
     'signoff'                => 'do_signoff',
@@ -340,6 +341,10 @@ our %comm = (
     'automatic_lists'            => 'do_automatic_lists',
 );
 
+my %comm_aliases = (
+    'subrequest' => 'subscribe',
+);
+
 my %auth_action = (
     'logout'              => 1,
     'loginrequest'        => 1,
@@ -411,9 +416,8 @@ our %action_args = (
     'home'          => [],
     'help'          => ['help_topic'],
     'show_cert'     => [],
-    'subscribe'     => ['list', 'email', 'passwd'],
+    'subscribe'     => ['list'],
     #'subrequest' => ['list','email'],
-    'subrequest' => ['list'],
     'subindex'   => ['list'],
     'ignoresub'  => ['list', '@email', '@gecos'],
     'signoff'    => ['list', 'email', 'passwd'],
@@ -622,7 +626,6 @@ our %required_args = (
     'stats'                  => ['param.list'],
     'subindex'               => ['param.list',       'param.user.email'],
     'suboptions'             => ['param.list',       'param.user.email'],
-    'subrequest'             => ['param.list'],
     'subscribe'              => ['param.list'],
     'subscriber_count'       => ['param.list'],
     'suspend'                => ['param.list',       'param.user.email'],
@@ -1573,6 +1576,9 @@ while ($query = new_loop()) {
 
     ## Action
     my $action = $in{'action'};
+    # Resolve alias.
+    $action = $comm_aliases{$action}
+        while $action and exists $comm_aliases{$action};
 
     # Store current action in the session in order to redirect after a login
     # or other temporary actions.
@@ -5592,292 +5598,101 @@ sub do_viewfile {
     return 1;
 }
 
-####################################################
-# do_subscribe
-####################################################
 # Subscribes a user to the list
-#
-# IN : -
-#
-# OUT :'subrequest'|'login'|'info'|$in{'previous_action'}
-#     | undef
-####################################################
-## TOTO: accepter nouveaux users
+# IN : email, gecos, custom_attribute.
+# OUT :'subscribe' | 'info' | $in{'previous_action'} | undef
 sub do_subscribe {
     wwslog('info', '(%s)', $in{'email'});
 
     return undef if purely_closed('subscribe');    #FIXME: mv this to Scenario
+
+    if (    $param->{'user'}{'email'}
+        and $list->is_list_member($param->{'user'}{'email'})) {
+        # Already subscribed and logged in.
+        return 1;
+    }
+
+    my ($sender, $email, $gecos, $lang, $md5_check);
     if ($param->{'user'} and $param->{'user'}{'email'}) {
-        if ($list->{'admin'}{'custom_attribute'}) {
-            # This variable is set in the subrequest form.
-            # If not set, it means that the user has not been prompted to
-            # provide custom_attributes.
-            unless ($in{'via_subrequest'}) {
-                wwslog('notice', 'Returning subrequest form');
-                return "subrequest";
-            }
-            unless (
-                _check_custom_attribute(
-                    $list, $param->{action}, $in{custom_attribute}
+        $email = $param->{'user'}{'email'};
+        $gecos = $in{'gecos'} || $param->{'user'}{'gecos'};
+    } else {
+        # User is not autenticated.
+        $email = Sympa::Tools::Text::canonic_email($in{'email'});
+        $gecos = $in{'gecos'};
+    }
+
+    @{$param}{qw(email gecos custom_attribute)} =
+        ($email, $gecos, $in{'custom_attribute'});
+
+    if ($list->{'admin'}{'custom_attribute'}
+        and not _check_custom_attribute(
+            $list, $param->{'action'}, $in{'custom_attribute'}
+        )
+        ) {
+        wwslog('notice', "Missing required custom attributes");
+        return 1;
+    }
+    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+        return 1;
+    }
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => $param->{'user'}{'email'},
+        previous_action => ($in{'previous_action'} || 'info')
+    );
+    return $next_action unless $next_action eq '1';
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context => $list,
+        action  => 'subscribe',
+        sender  => $email,
+        email   => $email,
+        gecos   => $gecos,
+        (   $in{'custom_attribute'}
+            ? (custom_attribute => $in{'custom_attribute'})
+            : ()
+        ),
+        (   $param->{'user'}{'email'}
+            ? ( lang => ($param->{'user'}{'lang'} || $param->{'lang'}),
+                md5_check => 1
                 )
-                ) {
-                wwslog('notice', "Missing required custom attributes");
-                return 'subrequest';
-            }
-        }
+            : (lang => $param->{'lang'})
+        ),
+        scenario_context => {
+            sender      => $email,
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'},
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        wwslog('err', 'Failed to add user');
+        return undef;
+    }
 
-        unless ($in{'via_subrequest'}) {
-            # Action confirmed?
-            my $next_action = $session->confirm_action(
-                $in{'action'}, $in{'response_action'},
-                arg             => $param->{'user'}{'email'},
-                previous_action => ($in{'previous_action'} || 'info')
-            );
-            return $next_action unless $next_action eq '1';
-        }
-
-        if ($param->{'is_subscriber'}) {
-            Sympa::Report::reject_report_web('user', 'already_subscriber',
-                {'list' => $list->{'name'}},
-                $param->{'action'}, $list);
-            wwslog('info', '%s already subscriber',
-                $param->{'user'}{'email'});
-            web_db_log(
-                {   'parameters' => $in{'email'},
-                    'status'     => 'error',
-                    'error_type' => 'already_subscriber'
-                }
-            );
-            return undef;
-        }
-        my $result = Sympa::Scenario::request_action(
-            $list,
-            'subscribe',
-            $param->{'auth_method'},
-            {   'sender'      => $param->{'user'}{'email'},
-                'remote_host' => $param->{'remote_host'},
-                'remote_addr' => $param->{'remote_addr'}
-            }
-        );
-        my $sub_is;
-        my $reason;
-        if (ref($result) eq 'HASH') {
-            $sub_is = $result->{'action'};
-            $reason = $result->{'reason'};
-        }
-        if ($sub_is =~ /reject/) {
-            Sympa::Report::reject_report_web('auth', $reason, {},
-                $param->{'action'}, $list);
-            wwslog('info', 'Subscribe closed');
-            web_db_log(
-                {   'parameters' => $in{'email'},
-                    'status'     => 'error',
-                    'error_type' => 'authorization'
-                }
-            );
-            return undef;
-        }
-
-        $param->{'may_subscribe'} = 1;
-
-        if ($sub_is =~ /owner/) {
-            my $spool_req = Sympa::Spool::Auth->new;
-            my $request   = Sympa::Request->new(
-                context          => $list,
-                action           => 'add',
-                custom_attribute => $in{custom_attribute},
-                email            => $param->{'user'}{'email'},
-                gecos            => $param->{'user'}{'gecos'},
-                sender           => $param->{'user'}{'email'},
-            );
-            my $keyauth = $spool_req->store($request);
-
-            $list->send_notify_to_owner(
-                'subrequest',
-                {   'who'              => $param->{'user'}{'email'},
-                    'keyauth'          => $keyauth,
-                    'replyto'          => Sympa::get_address($list, 'sympa'),
-                    'custom_attribute' => $in{custom_attribute},
-                    'gecos'            => $param->{'user'}{'gecos'},
-                    'ip'               => $ip
-                }
-            );
-
-            Sympa::Report::notice_report_web('sent_to_owner', {},
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
                 $param->{'action'});
-            wwslog('info', 'Subscribe sent to owners');
-
-            return 'info';
-        } elsif ($sub_is =~ /do_it/) {
-            if ($param->{'is_subscriber'}) {
-                unless (
-                    $list->update_list_member(
-                        $param->{'user'}{'email'},
-                        subscribed  => 1,
-                        update_date => time
-                    )
-                    ) {
-                    Sympa::Report::reject_report_web(
-                        'intern',
-                        'update_subscriber_db_failed',
-                        {'sub' => $param->{'user'}{'email'}},
-                        $param->{'action'},
-                        $list,
-                        $param->{'user'}{'email'},
-                        $robot
-                    );
-                    wwslog('info', 'Update failed');
-                    web_db_log(
-                        {   'parameters' => $in{'email'},
-                            'status'     => 'error',
-                            'error_type' => 'internal'
-                        }
-                    );
-                    return undef;
-                }
-            } else {
-                # If a list is not 'open' and allow_subscribe_if_pending
-                # has been set to 'off', returns undef.
-                unless (
-                    $list->{'admin'}{'status'} eq 'open'
-                    or Conf::get_robot_conf(
-                        $robot, 'allow_subscribe_if_pending'
-                    ) eq 'on'
-                    ) {
-                    Sympa::Report::reject_report_web('user', 'list_not_open',
-                        {'status' => $list->{'admin'}{'status'}},
-                        $param->{'action'});
-                    wwslog('info', 'List not open');
-                    web_db_log(
-                        {   'target_email' => $in{'email'},
-                            'status'       => 'error',
-                            'error_type'   => 'list_not_open'
-                        }
-                    );
-                    return undef;
-                }
-
-                my $defaults = $list->get_default_user_options();
-                my $u;
-                %{$u} = %{$defaults};
-                $u->{'email'}    = $param->{'user'}{'email'};
-                $u->{'gecos'}    = $param->{'user'}{'gecos'} || $in{'gecos'};
-                $u->{'date'}     = $u->{'update_date'} = time;
-                $u->{'password'} = $param->{'user'}{'password'};
-                if (my $reason = Sympa::Tools::Password::password_validation(
-                        $u->{'password'}
-                    )
-                    ) {
-                    Sympa::Report::reject_report_web('user',
-                        'passwd_validation', {'reason' => $reason},
-                        $param->{'action'});
-                    wwslog('info', 'Password validation');
-                    web_db_log(
-                        {   'status'     => 'error',
-                            'error_type' => 'bad_parameter'
-                        }
-                    );
-                    return undef;
-                }
-                $u->{custom_attribute} = $in{custom_attribute}
-                    if $in{custom_attribute};
-                $u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
-                $u->{'parameter'} = 'manual subscription';
-
-                $list->add_list_member($u);
-                if (defined $list->{'add_outcome'}{'errors'}) {
-                    if (defined $list->{'add_outcome'}{'errors'}
-                        {'max_list_members_exceeded'}) {
-                        Sympa::Report::reject_report_web(
-                            'user',
-                            'max_list_members_exceeded',
-                            {   max_list_members =>
-                                    $list->{'admin'}{'max_list_members'},
-                                list  => $list->{'name'},
-                                'sub' => $param->{'user'}{'email'}
-                            },
-                            $param->{'action'},
-                            $list,
-                            $param->{'user'}{'email'},
-                            $robot
-                        );
-                    } else {
-                        my $error = $language->gettext_sprintf(
-                            'Unable to add user %s in list %s : %s',
-                            $u->{'email'},
-                            $list->{'name'},
-                            $list->{'add_outcome'}{'errors'}{'error_message'}
-                        );
-                        Sympa::Report::reject_report_web(
-                            'intern',
-                            $error,
-                            {'sub' => $param->{'user'}{'email'}},
-                            $param->{'action'},
-                            $list,
-                            $param->{'user'}{'email'},
-                            $robot
-                        );
-                    }
-                    wwslog(
-                        'info',
-                        'Subscribe failed: %s',
-                        $list->{'add_outcome'}{'errors'}{'error_message'}
-                    );
-                    web_db_log(
-                        {   'parameters' => $in{'email'},
-                            'status'     => 'error',
-                            'error_type' => 'internal'
-                        }
-                    );
-                    return "info";
-                }
-            }
-
-            unless ($sub_is =~ /quiet/i) {
-                unless (
-                    $list->send_probe_to_user(
-                        'welcome', $param->{'user'}{'email'}
-                    )
-                    ) {
-                    wwslog(
-                        'notice',
-                        'Unable to send "welcome" probe to %s',
-                        $param->{'user'}{'email'}
-                    );
-                }
-            }
-
-            if ($sub_is =~ /notify/) {
-                $list->send_notify_to_owner(
-                    'notice',
-                    {   'who'     => $param->{'user'}{'email'},
-                        'gecos'   => $param->{'user'}{'gecos'},
-                        'command' => 'subscribe'
-                    }
-                );
-            }
-
-        }
-    } else {    # user is not autenticated
-
-        if ($in{'email'} && $in{'passwd'}) {
-            $in{'previous_action'} = 'subscribe';
-            $in{'previous_list'}   = $param->{'list'};
-            return 'login';
+        } elsif ($report->[1] eq 'user'
+            and $report->[2] eq 'already_subscriber') {
+            # To prevent sniffing users, fake "You requested a subscription"
+            # notice.
+            Sympa::Report::notice_report_web('sent_to_user', {},
+                $param->{'action'});
         } else {
-            return 'subrequest';
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
         }
     }
-
-    Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
-    web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
-
-    if ($in{'previous_action'}) {
-        return $in{'previous_action'};
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+        web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
     }
 
-#    return 'suboptions';
-    return 'info';
+    return ($in{'previous_action'} || 'info');
 }
 
 ####################################################
@@ -5991,78 +5806,8 @@ sub do_suboptions {
     return 1;
 }
 
-## Subscription request (user not authenticated)
-sub do_subrequest {
-    wwslog('info', '(%s, %s)', $in{'email'}, $in{custom_attribute});
-
-    return undef if (purely_closed('subscribe'));
-    $param->{'custom_attribute'} = $in{custom_attribute}
-        if $in{custom_attribute};
-
-    # Auth ?
-    if ($param->{'user'}{'email'}) {
-        # Subscriber ?
-        if ($param->{'is_subscriber'}) {
-            $param->{'status'} = 'auth_subscribed';
-        } else {
-            $param->{'status'} = 'auth';
-        }
-        return 1;
-    }
-    # Provided email parameter ?
-    unless ($in{'email'}) {
-        $param->{'status'} = 'notauth_noemail';
-        return 1;
-    }
-    # Valid email address?
-    unless (Sympa::Tools::Text::valid_email($in{'email'})) {
-        Sympa::Report::reject_report_web('user', 'incorrect_email',
-            {'email' => $in{'email'}},
-            $param->{'action'}, $list);
-        wwslog('info', 'Incorrect email %s', $in{'email'});
-        web_db_log(
-            {   'target_email' => $in{'email'},
-                'status'       => 'error',
-                'error_type'   => 'incorrect_email'
-            }
-        );
-        $param->{'status'} = 'notauth_noemail';
-        return 1;
-    }
-
-    # Subscriber ?
-    if ($list->is_list_member($in{'email'})) {
-        # To prevent sniffing users, fake "You requested a subscription"
-        # notice.
-        $param->{'login_error'} = 'ticket_sent';
-        $param->{'status'}      = 'notauth_passwordsent';
-        return 1;
-    }
-
-    $param->{'login_error'}       = 'ticket_sent';
-    $param->{'request_from_host'} = $ip;
-    $param->{'newuser'}           = Sympa::User::get_global_user($in{'email'})
-        if Sympa::User::is_global_user($in{'email'});
-    unless ($param->{'newuser'}) {
-        $param->{'newuser'} =
-            {'email' => Sympa::Tools::Text::canonic_email($in{'email'})};
-    }
-    # Need to send a password by email
-    $param->{'one_time_ticket'} = Sympa::Ticket::create(
-        $in{'email'}, $robot,
-        'subscribe/' . $list->{'name'},
-        $param->{'request_from_host'}
-    );
-    unless (Sympa::send_file($robot, 'sendpasswd', $in{'email'}, $param)) {
-        wwslog('notice', 'Unable to send template "sendpasswd" to %s',
-            $in{'email'});
-        $param->{'login_error'} = 'unable_to_send_ticket';
-    }
-    # do_requestpasswd();
-    $param->{'status'} = 'notauth_passwordsent';
-
-    return 1;
-}
+#OBSOLETED. Now 'subrequest' is an alias of 'subscribe'.
+#sub do_subrequest;
 
 sub do_auto_signoff {
     wwslog('info', '');

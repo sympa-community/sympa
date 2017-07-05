@@ -31,6 +31,9 @@ X-Loop: [% conf.email %]@[% conf.host %]
 [% ELSIF notice.entry == 'sent_to_owner' -%]
 [%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's owners for approval. You will receive a notification when you have been subscribed (or unsubscribed) to the list.[%END-%]
 
+[% ELSIF notice.entry == 'sent_to_user' -%]
+[%|loc%]To confirm your identity and prevent anyone from subscribing you to this list against your will, a message containing an validation link was sent to the e-mail address you provided.[%END%]
+
 [% ELSIF notice.entry == 'updated_info' -%]
 [%|loc(notice.email,notice.listname)%]Information regarding user %1 has been updated for list %2.[%END%]
 

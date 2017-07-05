@@ -84,6 +84,10 @@ sub _twist {
         $self->add_stash($request, 'intern');
         return undef;
     }
+
+    $self->add_stash($request, 'notice', 'sent_to_user')
+        unless $request->{quiet};
+
     $log->syslog(
         'info',
         '%s for %s from %s, auth requested (%.2f seconds)',

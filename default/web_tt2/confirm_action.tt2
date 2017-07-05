@@ -212,7 +212,12 @@
 [%~ ELSIF confirm_action == 'signoff' ~%]
   <input type="hidden" name="email" value="[% email %]" />
 [%~ ELSIF confirm_action == 'subscribe' ~%]
-  <input type="hidden" name="email" value="[% user.email %]" />
+  <input type="hidden" name="email" value="[% email %]" />
+  <input type="hidden" name="gecos" value="[% gecos %]" />
+  [% FOREACH i = custom_attribute ~%]
+    <input type="hidden" name="custom_attribute.[% i.key %]"
+     value="[% i.value %]" />
+  [%~ END %]
 [%~ END %]
   <input type="hidden" name="action" value="[% confirm_action %]" />
   <input type="hidden" name="list" value="[% list %]" />

@@ -14,6 +14,13 @@
 <i class="fi-eye"></i> 
 [%|loc%]Your request has been forwarded to the list owner[%END%]
 
+[% ELSIF notice.msg == 'sent_to_user' %]
+    <div  data-alert class="alert-box info radius">
+<p><i class="fi-eye"></i> 
+[%|loc(list)%]You requested a subscription to list %1[%END%]</p>
+<p>[%|loc%]To confirm your identity and prevent anyone from subscribing you to this list against your will, a message containing an validation link was sent to the e-mail address you provided.[%END%]</p>
+<p>[%|loc(list)%]Check your mailbox for new messages and click this link. This will confirm your subscription to list %1.[%END%]</p>
+
 [% ELSIF notice.msg == 'add_performed' %]
     <div  data-alert class="alert-box success radius">
 <i class="fi-check"></i> 

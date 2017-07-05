@@ -106,7 +106,7 @@
     [% END %]
 [% ELSE %]
   [% IF may_subscribe %]
-    [% IF action == 'subrequest' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+    [% IF action == 'subscribe' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% 'subscribe' | url_rel([list],{previous_action=>action}) %]">[%|loc%]Subscribe[%END%]</a></li>
   [% END %]
 

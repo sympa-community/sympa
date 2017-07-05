@@ -304,7 +304,7 @@ nobase_default_DATA = \
 	web_tt2/stats.tt2 \
 	web_tt2/subindex.tt2 \
 	web_tt2/suboptions.tt2 \
-	web_tt2/subrequest.tt2 \
+	web_tt2/subscribe.tt2 \
 	web_tt2/subscriber_table.tt2 \
 	web_tt2/suspend_request.tt2 \
 	web_tt2/sympa_menu.tt2 \
