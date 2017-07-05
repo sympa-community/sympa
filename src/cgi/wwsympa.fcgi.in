@@ -5612,7 +5612,7 @@ sub do_subscribe {
         return 1;
     }
 
-    my ($sender, $email, $gecos, $lang, $md5_check);
+    my ($email, $gecos);
     if ($param->{'user'} and $param->{'user'}{'email'}) {
         $email = $param->{'user'}{'email'};
         $gecos = $in{'gecos'} || $param->{'user'}{'gecos'};
@@ -5640,7 +5640,7 @@ sub do_subscribe {
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg             => $param->{'user'}{'email'},
+        arg             => join(',', grep {$_} ($email, $gecos)),
         previous_action => ($in{'previous_action'} || 'info')
     );
     return $next_action unless $next_action eq '1';
@@ -5656,10 +5656,8 @@ sub do_subscribe {
             : ()
         ),
         (   $param->{'user'}{'email'}
-            ? ( lang => ($param->{'user'}{'lang'} || $param->{'lang'}),
-                md5_check => 1
-                )
-            : (lang => $param->{'lang'})
+            ? (md5_check => 1)
+            : ()
         ),
         scenario_context => {
             sender      => $email,
