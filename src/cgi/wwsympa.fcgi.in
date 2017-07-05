@@ -177,7 +177,7 @@ our %comm = (
     'family_signoff'         => 'do_family_signoff',
     'family_signoff_request' => 'do_family_signoff_request',
     #XXX'multiple_signoff' => 'do_multiple_signoff',
-    'sigrequest' => 'do_sigrequest',
+    #'sigrequest' => 'do_sigrequest',
     'sigindex'   => 'do_sigindex',
     'ignoresub'  => 'do_ignoresub',
     'ignoresig'  => 'do_ignoresig',
@@ -342,6 +342,7 @@ our %comm = (
 );
 
 my %comm_aliases = (
+    'sigrequest' => 'signoff',
     'subrequest' => 'subscribe',
 );
 
@@ -424,7 +425,7 @@ our %action_args = (
     'auto_signoff'           => ['list',   'email'],
     'family_signoff'         => ['family', 'email'],
     'family_signoff_request' => ['family', 'email'],
-    'sigrequest'             => ['list',   'email'],
+    #'sigrequest'             => ['list',   'email'],
     'sigindex'               => ['list'],
     'ignoresig'              => ['list',   '@email'],
     'set'                => ['list', 'email', 'reception', 'gecos'],
@@ -620,7 +621,6 @@ our %required_args = (
     'setpref'   => ['param.user.email'],
     'sigindex'               => ['param.list',       'param.user.email'],
     'signoff'                => ['param.list'],
-    'sigrequest'             => ['param.list'],
     'skinsedit'              => ['param.user.email'],
     'sso_login'              => ['auth_service_name'],
     'stats'                  => ['param.list'],
@@ -5905,52 +5905,34 @@ sub do_family_signoff {
     }
     return 1;
 }
-####################################################
-# do_signoff
-####################################################
+
 # Unsubcribes a user from a list
-#
-# IN : -
-#
-# OUT : 'sigrequest' | 'login' | 'info'
-#
-####################################################
-## Unsubscribe from list
+# IN : email
+# OUT : 'signoff' | 'info' | undef
 sub do_signoff {
-    wwslog('info', '');
+    wwslog('info', '(%s)', $in{'email'});
 
-    return undef if (purely_closed('unsubscribe'));
+    return undef if purely_closed('unsubscribe');  #FIXME: mv this to Scenario
 
-    my $email = $param->{'user'}{'email'} || $in{'email'};
-    unless ($email) {
-        return 'sigrequest';
-    } elsif (not $param->{'user'}{'email'} and $in{'passwd'}) {    #FIXME
-        # Perform login first.
-        $in{'previous_action'} = 'signoff';
-        $in{'previous_list'}   = $param->{'list'};
-        return 'login';
+    if (    $param->{'user'}{'email'}
+        and not $list->is_list_member($param->{'user'}{'email'})) {
+        # Not yet subscribed and already logged in.
+        return 1;
     }
 
-    # The check below will no longer be performed: Don't check if the user is
-    # registered so that an attempt to sniff users in user_table will fail.
-    #if (not $param->{'user'}{'email'}
-    #    and Sympa::User::is_global_user($email)) {
-    #    Sympa::Report::reject_report_web('user', 'no_user', {},
-    #        $param->{'action'});
-    #    wwslog('info', 'Need auth for user %s', $email);
-    #    web_db_log(
-    #        {   'target_email' => $email,
-    #            'status'       => 'error',
-    #            'error_type'   => 'authentication'
-    #        }
-    #    );
-    #    return undef;
-    #}
-    #XXX# No passwd
-    #XXXSympa::Tools::WWW::init_passwd($robot, $email,
-    #XXX    {'lang' => $param->{'lang'}});
+    my $email;
+    if ($param->{'user'} and $param->{'user'}{'email'}) {
+        $email = $param->{'user'}{'email'};
+    } else {
+        # User is not autenticated.
+        $email = Sympa::Tools::Text::canonic_email($in{'email'});
+    }
 
-    $param->{'email'} = $email;
+    $param->{email} = $email;
+
+    unless ($email and Sympa::Tools::Text::valid_email($email)) {
+        return 1;
+    }
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -5960,22 +5942,48 @@ sub do_signoff {
     );
     return $next_action unless $next_action eq '1';
 
-    my %result = unsubscribe($email, $list);
-    if ($result{'success'} == 1) {
-        Sympa::Report::notice_report_web($result{'details'}, {},
-            $param->{'action'});
-        $param->{'is_subscriber'} = 0;
-        $param->{'may_signoff'}   = 0;
-    } else {
-        Sympa::Report::reject_report_web(
-            $result{'category_error'},
-            $result{'reason_error'},
-            {%{$result{'details_error'} || {}}, 'list' => $list->{'name'}},
-            $param->{'action'},
-            $list
-        );
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context => $list,
+        action  => 'signoff',
+        sender  => $email,
+        email   => $email,
+        (   $param->{'user'}{'email'}
+            ? (md5_check => 1)
+            : ()
+        ),
+        scenario_context => {
+            sender      => $email,
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'},
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        wwslog('err', 'Failed to delete user');
+        return undef;
     }
-    return Conf::get_robot_conf($robot, 'default_home');
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } elsif ($report->[1] eq 'user'
+            and grep { $report->[2] eq $_ }
+            qw(user_not_subscriber not_subscriber)) {
+            # To prevent sniffing users, fake "We've sent validation link"
+            # notice.
+            Sympa::Report::notice_report_web('sent_to_user', {},
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+        web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
+    }
+
+    return ($in{'previous_action'} || 'info');
 }
 
 ## Unsubscribe current user from a list.
@@ -6111,50 +6119,8 @@ sub unsubscribe {
     return %report;
 }
 
-## Unsubscription request (user not authenticated)
-sub do_sigrequest {
-    wwslog('info', '(%s)', $in{'email'});
-
-    return undef if (purely_closed('unsubscribe'));
-    ## If user is authenticated then redirect him to the signoff action but
-    ## get a confirmation (via the sigrequest web page) first
-    if ($param->{'user'}{'email'}) {
-        return 1;
-    }
-
-    ## Not auth & no email => return the sigrequest web form to get the user
-    ## email
-    unless ($in{'email'}) {
-        return 1;
-    }
-    ## valid email address?
-    unless (Sympa::Tools::Text::valid_email($in{'email'})) {
-        Sympa::Report::reject_report_web('user', 'incorrect_email',
-            {'email' => $in{'email'}},
-            $param->{'action'}, $list);
-        wwslog('info', 'Incorrect email %s', $in{'email'});
-        web_db_log(
-            {   'target_email' => $in{'email'},
-                'status'       => 'error',
-                'error_type'   => 'incorrect_email'
-            }
-        );
-        return 1;
-    }
-
-    # To prevent sniffing subscribers using signoff link, we always respond
-    # "We've sent you an email including a validation link" to anonymous user,
-    # but the email will be sent only if the user was really a subscriber.
-    if ($list->is_list_member($in{'email'})) {
-        Sympa::send_notify_to_user($list, 'ticket_to_signoff', $in{'email'},
-            {ip => $ip})
-            or return undef;
-    }
-
-    $param->{'email'} = $in{'email'};
-
-    return 1;
-}
+#OBSOLETED: Now an alias of 'signoff'.
+#sub do_sigrequest;
 
 ## Update of password
 sub do_setpasswd {

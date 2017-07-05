@@ -112,7 +112,7 @@
 
   [% IF ! user.email %]
     [% IF action == 'signoff' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'sigrequest' | url_rel([list]) %]">[%|loc%]Unsubscribe[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'signoff' | url_rel([list]) %]">[%|loc%]Unsubscribe[%END%]</a></li>
   [% END %]
 
 [% END %]

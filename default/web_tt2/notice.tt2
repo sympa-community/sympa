@@ -17,10 +17,14 @@
 [% ELSIF notice.msg == 'sent_to_user' %]
     <div  data-alert class="alert-box info radius">
 <p><i class="fi-eye"></i> 
-[%|loc(list)%]You requested a subscription to list %1[%END%]</p>
-<p>[%|loc%]To confirm your identity and prevent anyone from subscribing you to this list against your will, a message containing an validation link was sent to the e-mail address you provided.[%END%]</p>
-<p>[%|loc(list)%]Check your mailbox for new messages and click this link. This will confirm your subscription to list %1.[%END%]</p>
-
+  [% IF notice.action == 'subscribe' ~%]
+    <p>[%|loc(list)%]You requested a subscription to list %1[%END%]</p>
+    <p>[%|loc%]To confirm your identity and prevent anyone from subscribing you to this list against your will, a message containing an validation link was sent to the e-mail address you provided.[%END%]</p>
+    <p>[%|loc(list)%]Check your mailbox for new messages and click this link. This will confirm your subscription to list %1.[%END%]</p>
+  [%~ ELSIF notice.action == 'signoff' ~%]
+    <p>[%|loc(list)%]We need to check your identity before validating your unsubscription request for list %1. If you have a user account you should login or create an account. <br/>Otherwise we can send you an email with a validation link inside; please provide your email address below to receive this validation link.[%END%]</p>
+    <p>[%|loc%]We've sent you an email including a validation link. You should check your mailbox to read this email and use this validation link.[%END%]</p>
+  [%~ END %]
 [% ELSIF notice.msg == 'add_performed' %]
     <div  data-alert class="alert-box success radius">
 <i class="fi-check"></i> 
