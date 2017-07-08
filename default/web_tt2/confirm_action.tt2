@@ -25,6 +25,25 @@
   <p><strong>
     [%|loc%]Do you really want to delete Selected Archives?[%END%]
   </strong></p>
+[%~ ELSIF confirm_action == 'auth' ~%]
+  <h2><i class="fa fa-check-square"></i>
+  [% IF heldaction == 'add' ~%]
+    [%|loc%]Add subscribers[%END%]
+  [%~ ELSIF heldaction == 'del' ~%]
+    [%|loc%]Delete selected email addresses[%END%]
+  [%~ ELSIF heldaction == 'remind' || heldaction == 'global_remind' ~%]
+    [%|loc%]Remind all subscribers[%END%]
+  [%~ ELSIF heldaction == 'signoff' ~%]
+    [%|loc%]Unsubscribe[%END%]
+  [%~ ELSIF heldaction == 'subscribe' ~%]
+    [%|loc%]Subscribe[%END%]
+  [%~ ELSE ~%]
+    [%|loc%]Validation[%END%]
+  [%~ END %]
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want this action to be taken?[%END%]
+  </strong></p>
 [%~ ELSIF confirm_action == 'close_list' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Remove List[%END%]
@@ -159,6 +178,10 @@
     <input type="checkbox" id="zip" name="zip" value="1" checked="checked" />
     <label for="zip">[%|loc%]Download deleted archives[%END%]</label>
   </div>
+[%~ ELSIF confirm_action == 'auth' ~%]
+  <input type="hidden" name="id" value="[% id %]" />
+  <input type="hidden" name="heldaction" value="[% heldaction %]" />
+  <input type="hidden" name="email" value="[% email %]" />
 [%~ ELSIF confirm_action == 'del' ~%]
   [% FOREACH e = email ~%]
     <input type="hidden" name="email" value="[% e %]" />
@@ -228,6 +251,15 @@
       value="[%|loc%]I am not a spammer[%END%]" />
   </div>
   <p>[%|loc%]This button aims at protecting mailing lists archives against Spam Harvester.[%END%]</p>
+[%~ ELSIF confirm_action == 'auth' ~%]
+  <div>
+    <input class="MainMenuLinks" type="submit"
+      id="response_action_confirm" name="response_action_confirm"
+      value="[%|loc%]Confirm[%END%]" />
+    <input class="MainMenuLinks" type="submit"
+      id="response_action_cancel" name="response_action_cancel"
+      value="[%|loc%]Cancel[%END%]" />
+  </div>
 [%~ ELSE ~%]
   <div>
     <input class="MainMenuLinks" type="submit"

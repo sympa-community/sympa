@@ -339,6 +339,7 @@ our %comm = (
     'automatic_lists_management' => 'do_automatic_lists_management',
     'automatic_lists_request'    => 'do_automatic_lists_request',
     'automatic_lists'            => 'do_automatic_lists',
+    'auth'                       => 'do_auth',
 );
 
 my %comm_aliases = (
@@ -492,6 +493,7 @@ our %action_args = (
     'automatic_lists_management'         => [],
     'automatic_lists_request'            => ['family'],
     'automatic_lists'                    => [],
+    'auth'                               => ['id', 'heldaction'],
 );
 
 ## Define the required parameters for each action
@@ -516,6 +518,7 @@ our %required_args = (
     'arcsearch'               => ['param.list'],
     'arcsearch_form'          => ['param.list'],
     'arcsearch_id'            => ['param.list'],
+    'auth'                    => ['id', 'heldaction', 'email'],
     'automatic_lists_request' => ['family'],
     'automatic_lists'         => ['family'],
     'attach'                  => ['param.list'],
@@ -18105,6 +18108,57 @@ sub do_automatic_lists {
 
     $in{'list'} = $listname;
     return 'compose_mail';
+}
+
+sub do_auth {
+    wwslog('info', '(%s, %s, %s)', $in{'id'}, $in{'heldaction'}, $in{'email'});
+
+    my $keyauth    = $in{'id'};
+    my $heldaction = $in{'heldaction'};
+    my $email      = Sympa::Tools::Text::canonic_email($in{'email'});
+
+    my $default_home = Conf::get_robot_conf($robot, 'default_home');
+    return $default_home
+        unless $keyauth
+            and $heldaction
+            and $email
+            and Sympa::Tools::Text::valid_email($email);
+
+    @{$param}{qw(id heldaction email)} = ($keyauth, $heldaction, $email);
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => "$keyauth,$heldaction,$email",
+        previous_action => $default_home
+    );
+    return $next_action unless $next_action eq '1';
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context => $robot,
+        action  => 'auth',
+        keyauth => $keyauth,
+        sender  => $email,
+        scenario_context => {},
+    );
+    unless ($spindle and $spindle->spin) {
+        return $default_home;
+    }
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+    }
+
+    return $default_home;
 }
 
 sub prevent_visibility_bypass {

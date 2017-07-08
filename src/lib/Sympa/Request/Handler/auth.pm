@@ -45,11 +45,17 @@ sub _twist {
     my $key    = $request->{keyauth};
     my $sender = $request->{sender};
 
-    my $req     = $request->{request};             # Request to be authorized.
+    # Optional $request->{request} is given by Sympa::Request::Message to
+    # check if "cmd" argument of e-mail command matches with held request.
+    my $req     = $request->{request};
     my $spindle = Sympa::Spindle::ProcessAuth->new(
-        context      => $req->{context},
-        action       => $req->{action},
-        email        => $req->{email},
+        (   $req
+            ? ( context => $req->{context},
+                action  => $req->{action},
+                email   => $req->{email}
+                )
+            : ()
+        ),
         keyauth      => $key,
         confirmed_by => $sender,
 
@@ -81,7 +87,8 @@ Sympa::Request::Handler::auth - auth request handler
 
 =head1 DESCRIPTION
 
-Fetchs the request matching with {request} attribute from held request spool,
+Fetchs the request matching with {authkey} and optional {request} attributes
+from held request spool,
 and if succeeded, processes it with C<md5> authentication level.
 
 =head1 SEE ALSO
