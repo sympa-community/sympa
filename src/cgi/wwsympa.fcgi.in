@@ -168,7 +168,7 @@ our %comm = (
     'sso_login'              => 'do_sso_login',
     'sso_login_succeeded'    => 'do_sso_login_succeeded',
     'subscribe'              => 'do_subscribe',
-    'multiple_subscribe'     => 'do_multiple_subscribe',
+    #'multiple_subscribe'     => 'do_multiple_subscribe',
     #'subrequest'             => 'do_subrequest',
     'subindex'               => 'do_subindex',
     'suboptions'             => 'do_suboptions',
@@ -176,7 +176,7 @@ our %comm = (
     'auto_signoff'           => 'do_auto_signoff',
     'family_signoff'         => 'do_family_signoff',
     'family_signoff_request' => 'do_family_signoff_request',
-    #XXX'multiple_signoff' => 'do_multiple_signoff',
+    #XXX'multiple_signoff'    => 'do_multiple_signoff',
     #'sigrequest' => 'do_sigrequest',
     'sigindex'   => 'do_sigindex',
     'ignoresub'  => 'do_ignoresub',
@@ -422,8 +422,8 @@ our %action_args = (
     #'subrequest' => ['list','email'],
     'subindex'   => ['list'],
     'ignoresub'  => ['list', '@email', '@gecos'],
-    'signoff'    => ['list', 'email', 'passwd'],
-    'auto_signoff'           => ['list',   'email'],
+    'signoff'    => ['list'],
+    'auto_signoff'           => ['list'],
     'family_signoff'         => ['family', 'email'],
     'family_signoff_request' => ['family', 'email'],
     #'sigrequest'             => ['list',   'email'],
@@ -475,8 +475,6 @@ our %action_args = (
     'rss_request'     => ['list'],
     'request_topic'       => ['list', 'authkey'],
     'tag_topic_by_sender' => ['list'],
-    'multiple_subscribe'  => ['lists'],
-    'multiple_signoff'    => ['lists'],
     'ticket'              => ['ticket'],
     'change_email'        => ['email'],
     'manage_template' => ['subaction', 'list', 'message_template'],
@@ -519,6 +517,7 @@ our %required_args = (
     'arcsearch_form'          => ['param.list'],
     'arcsearch_id'            => ['param.list'],
     'auth'                    => ['id', 'heldaction', 'email'],
+    'auto_signoff'            => ['param.list', 'email'],
     'automatic_lists_request' => ['family'],
     'automatic_lists'         => ['family'],
     'attach'                  => ['param.list'],
@@ -586,7 +585,6 @@ our %required_args = (
         ['param.list', 'param.user.email', 'message_template', 'content'],
     'modindex'           => ['param.list',       'param.user.email'],
     'docindex'           => ['param.list',       'param.user.email'],
-    'multiple_subscribe' => ['param.list'],
     'pref'               => ['param.user.email'],
     'purge_list'         => ['param.user.email', 'selected_lists'],
     'rebuildallarc'      => ['param.user.email'],
@@ -5696,38 +5694,9 @@ sub do_subscribe {
     return ($in{'previous_action'} || 'info');
 }
 
-####################################################
-# do_multiple_subscribe
-####################################################
-# Subscribes a user to each lists
-#
-# IN : lists a array of lists
-#
-# OUT :'subrequest'|'login'|'info'|$in{'previous_action'}
-#     | undef
-####################################################
-sub do_multiple_subscribe {
-    wwslog('info', '(%s)', $in{'email'});
+# No longer used.
+#sub do_multiple_subscribe;
 
-    ## Not authenticated
-    unless (defined $param->{'user'} && $param->{'user'}{'email'}) {
-        ## no email
-        unless ($in{'email'}) {
-            return 'lists';
-        }
-    }
-
-    my @lists = split /\0/, $in{'lists'};
-    my $total;
-    my %results;
-
-    foreach my $requested_list (@lists) {
-        my $param->{'list'} = Sympa::List->new($requested_list, $robot);
-        $results{'requested_list'} = do_subscribe();
-    }
-}
-
-## Subscription request (user not authenticated)
 sub do_suboptions {
     wwslog('info', '');
 
@@ -5810,57 +5779,66 @@ sub do_suboptions {
 #OBSOLETED. Now 'subrequest' is an alias of 'subscribe'.
 #sub do_subrequest;
 
+# Unsubcribes a user from a list, without authentication.
+# This function will be used for unsubscription link in such as the message
+# footer.
 sub do_auto_signoff {
-    wwslog('info', '');
-    ## If the URL isn't valid, then go to home page. No need to guide the
-    ## user: this function is supposed to be used by clicking on autocreated
-    ## URL only.
-    return Conf::get_robot_conf($robot, 'default_home') unless $in{'email'};
+    wwslog('info', '(%s)', $in{'email'});
+    # If the URL isn't valid, then go to home page. No need to guide the
+    # user: this function is supposed to be used by clicking on autocreated
+    # URL only.
+    my $default_home = Conf::get_robot_conf($robot, 'default_home');
+    return $default_home if purely_closed('unsubscribe');   #FIXME
+    my $email = Sympa::Tools::Text::canonic_email($in{'email'});
+    return $default_home
+        unless $email and Sympa::Tools::Text::valid_email($email);
 
-    ## If unsubscribe is forbidden, reject the request. Other
-
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'unsubscribe',
-        $param->{'auth_method'},
-        {   'sender'      => $in{'email'},
-            'remote_host' => $param->{'remote_host'},
-            'remote_addr' => $param->{'remote_addr'}
-        }
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => $email,
+        previous_action => $default_home
     );
-    my $sig_is;
-    my $reason;
-    if (ref($result) eq 'HASH') {
-        $sig_is = $result->{'action'};
-        $reason = $result->{'reason'};
-    }
+    return $next_action unless $next_action eq '1';
 
-    if ($sig_is =~ /reject/) {
-        Sympa::Report::reject_report_web('auth', $reason, {},
-            $param->{'action'}, $list);
-        wwslog('info', '%s may not signoff from %s',
-            $in{'email'}, $param->{'list'});
-        web_db_log(
-            {   'status'     => 'error',
-                'error_type' => 'authorization'
-            }
-        );
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context => $list,
+        action  => 'signoff',
+        sender  => $email,
+        email   => $email,
+        scenario_context => {
+            sender      => $email,
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'},
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        wwslog('err', 'Failed to delete user');
         return undef;
     }
 
-    ## Send the confirmation email to the user.
-
-    if ($list->is_list_member($in{'email'})) {
-        Sympa::send_notify_to_user($list, 'ticket_to_signoff', $in{'email'},
-            {context => 'auto_signoff', ip => $ip})
-            or return undef;
-    } else {
-        return Conf::get_robot_conf($robot, 'default_home');
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } elsif ($report->[1] eq 'user'
+            and grep { $report->[2] eq $_ }
+            qw(user_not_subscriber not_subscriber)) {
+            # To prevent sniffing users, fake "We've sent validation link"
+            # notice.
+            Sympa::Report::notice_report_web('sent_to_user', {},
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
     }
-    $param->{'signing_off_email'} = $in{'email'};
-    # If OK, return the page displaying the information to the user.
-    return 1;
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+        web_db_log({'parameters' => $in{'email'}, 'status' => 'success'});
+    }
 
+    return $default_home;
 }
 
 sub do_family_signoff_request {
@@ -5989,138 +5967,8 @@ sub do_signoff {
     return ($in{'previous_action'} || 'info');
 }
 
-## Unsubscribe current user from a list.
-sub unsubscribe {
-    my $email = shift;
-    my $list  = shift;
-
-    my %report = (success => 1, details => '');
-
-    unless ($list->is_list_member($email)) {
-        wwslog('info', '%s not subscribed to %s', $email, $list);
-        web_db_log(
-            {   'status'     => 'error',
-                'error_type' => 'not_subscriber'
-            }
-        );
-        $report{'success'}        = 0;
-        $report{'category_error'} = 'user';
-        $report{'reason_error'}   = 'not_subscribed';
-        $report{'details_error'}  = {};
-        return %report;
-    }
-
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'unsubscribe',
-        $param->{'auth_method'},
-        {   'sender'      => $param->{'user'}{'email'},
-            'remote_host' => $param->{'remote_host'},
-            'remote_addr' => $param->{'remote_addr'}
-        }
-    );
-    my $sig_is;
-    my $reason;
-    if (ref($result) eq 'HASH') {
-        $sig_is = $result->{'action'};
-        $reason = $result->{'reason'};
-    }
-
-    $param->{'may_signoff'} = 1 if ($sig_is =~ /do_it|owner/);
-
-    if ($sig_is =~ /reject/) {
-        wwslog('info', '%s may not signoff from %s', $email, $list);
-        web_db_log(
-            {   'status'     => 'error',
-                'error_type' => 'authorization'
-            }
-        );
-        $report{'success'}        = 0;
-        $report{'category_error'} = 'auth';
-        $report{'reason_error'}   = $reason;
-        $report{'details_error'}  = {};
-        return %report;
-    } elsif ($sig_is =~ /owner/) {
-        my $spool_req = Sympa::Spool::Auth->new;
-        my $request   = Sympa::Request->new(
-            context => $list,
-            action  => 'del',
-            email   => $email,
-            sender  => $param->{'user'}{'email'},
-        );
-        my $keyauth = $spool_req->store($request);
-
-        $list->send_notify_to_owner(
-            'sigrequest',
-            {   'who'     => $param->{'user'}{'email'},
-                'keyauth' => $keyauth,
-            }
-        );
-
-        wwslog('info', 'Signoff sent to owner');
-        $report{'success'} = 1;
-        $report{'details'} = 'sent_to_owner';
-        return %report;
-    } else {
-        # If a list is not 'open' and allow_subscribe_if_pending has been set
-        # to 'off' returns error report.
-        unless ($list->{'admin'}{'status'} eq 'open'
-            or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
-            'on') {
-            wwslog('info', 'List not open');
-            web_db_log(
-                {   'target_email' => $in{'email'},
-                    'status'       => 'error',
-                    'error_type'   => 'list_not_open'
-                }
-            );
-            $report{'success'}        = 0;
-            $report{'category_error'} = 'user';
-            $report{'reason_error'}   = 'list_not_open',
-                $report{'details_error'} =
-                {'status' => $list->{'admin'}{'status'}};
-            return %report;
-        }
-
-        unless (
-            $list->delete_list_member(
-                'users'     => [$email],
-                'exclude'   => ' 1',
-                'operation' => 'signoff',
-            )
-            ) {
-            wwslog('info', 'Signoff failed');
-            web_db_log(
-                {   'status'     => 'error',
-                    'error_type' => 'internal'
-                }
-            );
-            $report{'success'}        = 0;
-            $report{'category_error'} = 'intern';
-            $report{'reason_error'}   = 'delete_subscriber_db_failed';
-            $report{'details_error'}  = {'sub' => $email};
-            return %report;
-        }
-
-        if ($sig_is =~ /notify/) {
-            $list->send_notify_to_owner(
-                'notice',
-                {   'who'     => $email,
-                    'gecos'   => '',
-                    'command' => 'signoff'
-                }
-            );
-        }
-
-        unless (Sympa::send_file($list, 'bye', $email, {})) {
-            wwslog('notice', 'Unable to send template \'bye\' to %s', $email);
-        }
-    }
-    web_db_log({'status' => 'success'});
-    $report{'success'} = 1;
-    $report{'details'} = 'performed';
-    return %report;
-}
+# No longer used.
+#sub unsubscribe;
 
 #OBSOLETED: Now an alias of 'signoff'.
 #sub do_sigrequest;
@@ -15487,58 +15335,6 @@ sub do_suspend_request_action {
         }
         Sympa::Report::notice_report_web('performed', {},
             "Resume the subscription for the list(s)");
-
-    }
-    ## Unsubscribe from the selected lists
-    elsif ($in{'sub_action'} eq 'signoff') {
-
-        # lists selected
-        @lists = split /\0/, $in{'listname'};
-        my $report = "";
-        foreach my $line (@lists) {
-
-            my $unsub_list = Sympa::List->new($line, $robot);
-            unless ($unsub_list) {
-                wwslog('info', 'List %s unknown', $unsub_list);
-                return undef;
-            }
-
-            my %result = unsubscribe($param->{'user'}{'email'}, $unsub_list);
-            if ($result{'success'} == 1) {
-                if ($result{'details'} eq 'sent_to_owner') {
-                    $report .= $language->gettext_sprintf(
-                        "Your unsubscription request to list %s was sent to the list owner.",
-                        $unsub_list->{'name'}
-                    );
-                } else {
-                    $report .= $language->gettext_sprintf(
-                        "You were successfully unsubscribed from list %s.",
-                        $unsub_list->{'name'});
-                }
-            } else {
-                if ($result{'category_error'} eq 'auth') {
-                    $report .= $language->gettext_sprintf(
-                        "Unsubscription from list %s denied: Unsubscription from this list is closed.",
-                        $unsub_list->{'name'}
-                    );
-                } else {
-                    $report .= $language->gettext_sprintf(
-                        "Unsubscription from list %s failed.",
-                        $unsub_list->{'name'});
-                }
-            }
-            $report .= "\n";
-
-        }
-        if ($lists[0] eq '') {
-            Sympa::Report::reject_report_web('user', 'missing_arg',
-                {'argument' => 'must picked one or more list(s)'},
-                $param->{'action'});
-            wwslog('info', 'Must picked one or more list(s)');
-            return $previous_action;
-        }
-
-        Sympa::Report::notice_report_web($report, {}, '');
     } else {
         Sympa::Report::reject_report_web('user', 'unknown_action', {},
             $in{'sub_action'}, $list);

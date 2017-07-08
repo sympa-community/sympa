@@ -41,17 +41,6 @@ Subject: [% FILTER qencode %][%|loc%]Changing your subscriber email address[%END
 [%|loc%]You have requested to change your subscriber email address. To confirm your new email address with the SYMPA server, please click the link below:[%END%] 
   [% 'ticket' | url_abs([one_time_ticket]) %]
 
-
-[% ELSIF type == 'ticket_to_signoff' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Unsubscribing from list %1[%END%][%END%]
-[% IF context == 'auto_signoff'%]
-[%|loc(list.name,ip)%]Somebody (probably you) requested to unsubscribe you from list %1. This query was issued from the IP number '%2'.
-To confirm and get removed from the list, please click the link below: [%END%] 
-[% ELSE %]
-[%|loc(list.name)%]You have requested to be removed from list %1. To confirm and get removed from the list, please click the link below: [%END%] 
-[% END %]
-  [% 'ticket' | url_abs([one_time_ticket]) %]
-
 [% ELSIF type == 'ticket_to_family_signoff' -%]
 Subject: [% FILTER qencode %][%|loc(family)%]Unsubscribing from family %1[%END%][%END%]
 [% IF context == 'family_signoff'%]

@@ -522,13 +522,7 @@ sub send_notify_to_user {
         $param->{'to'}   = $user;
         $param->{'type'} = $operation;
 
-        if ($operation eq 'ticket_to_signoff') {
-            $param->{one_time_ticket} =
-                Sympa::Ticket::create($user, $robot_id,
-                'signoff/' . $list->{'name'},
-                $param->{ip})
-                or return undef;
-        } elsif ($operation eq 'ticket_to_family_signoff') {
+        if ($operation eq 'ticket_to_family_signoff') {
             $param->{one_time_ticket} =
                 Sympa::Ticket::create($user, $robot_id,
                 'family_signoff/' . $param->{family} . '/' . $user,

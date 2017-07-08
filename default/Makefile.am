@@ -189,7 +189,6 @@ nobase_default_DATA = \
 	web_tt2/arcsearch.tt2 \
 	web_tt2/arc.tt2 \
 	web_tt2/aside_menu.tt2 \
-	web_tt2/auto_signoff.tt2 \
 	web_tt2/automatic_lists_management_request.tt2 \
 	web_tt2/automatic_lists_request.tt2 \
 	web_tt2/automatic_lists.tt2 \

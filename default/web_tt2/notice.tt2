@@ -17,7 +17,10 @@
 [% ELSIF notice.msg == 'sent_to_user' %]
     <div  data-alert class="alert-box info radius">
 <p><i class="fi-eye"></i> 
-  [% IF notice.action == 'subscribe' ~%]
+  [% IF notice.action == 'auto_signoff' ~%]
+    <p>[%|loc(email,list)%]You clicked a link to unsubscribe the address %1 from list %2.[% END %]</p>
+    <p>[%|loc(list)%]A confirmation was just sent to this address. By clicking the link it contains, you will be definitively unsubscribed from list %1[% END %]</p>
+  [%~ ELSIF notice.action == 'subscribe' ~%]
     <p>[%|loc(list)%]You requested a subscription to list %1[%END%]</p>
     <p>[%|loc%]To confirm your identity and prevent anyone from subscribing you to this list against your will, a message containing an validation link was sent to the e-mail address you provided.[%END%]</p>
     <p>[%|loc(list)%]Check your mailbox for new messages and click this link. This will confirm your subscription to list %1.[%END%]</p>
