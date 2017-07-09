@@ -1694,40 +1694,13 @@ sub send_notify_to_owner {
                     );
                 }
             }
-        } elsif ($operation eq 'subrequest') {
+        } elsif ($operation eq 'sigrequest' or $operation eq 'subrequest') {
+            # Sends notifications by each so that auth links with owners'
+            # addresses will be included.
             foreach my $owner (@rcpt) {
-                $param->{'one_time_ticket'} = Sympa::Ticket::create(
-                    $owner,
-                    $robot,
-                    'subindex/'
-                        . Sympa::Tools::Text::encode_uri($self->{'name'}),
-                    $param->{'ip'}
-                );
                 unless (
                     Sympa::send_file(
-                        $self, 'listowner_notification', [$owner], $param
-                    )
-                    ) {
-                    $log->syslog(
-                        'notice',
-                        'Unable to send template "listowner_notification" to %s list owner %s',
-                        $self,
-                        $owner
-                    );
-                }
-            }
-        } elsif ($operation eq 'sigrequest') {
-            foreach my $owner (@rcpt) {
-                $param->{'one_time_ticket'} = Sympa::Ticket::create(
-                    $owner,
-                    $robot,
-                    'sigindex/'
-                        . Sympa::Tools::Text::encode_uri($self->{'name'}),
-                    $param->{'ip'}
-                );
-                unless (
-                    Sympa::send_file(
-                        $self, 'listowner_notification', [$owner], $param
+                        $self, 'listowner_notification', $owner, $param
                     )
                     ) {
                     $log->syslog(

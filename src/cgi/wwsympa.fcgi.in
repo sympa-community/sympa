@@ -491,7 +491,7 @@ our %action_args = (
     'automatic_lists_management'         => [],
     'automatic_lists_request'            => ['family'],
     'automatic_lists'                    => [],
-    'auth'                               => ['id', 'heldaction'],
+    'auth'                               => ['id', 'heldaction', 'listname'],
 );
 
 ## Define the required parameters for each action
@@ -17907,25 +17907,26 @@ sub do_automatic_lists {
 }
 
 sub do_auth {
-    wwslog('info', '(%s, %s, %s)', $in{'id'}, $in{'heldaction'}, $in{'email'});
+    wwslog('info', '(%s, %s, %s, %s)',
+        $in{'id'}, $in{'heldaction'}, $in{'listname'}, $in{'email'});
 
     my $keyauth    = $in{'id'};
     my $heldaction = $in{'heldaction'};
+    my $listname   = $in{'listname'};
     my $email      = Sympa::Tools::Text::canonic_email($in{'email'});
 
     my $default_home = Conf::get_robot_conf($robot, 'default_home');
     return $default_home
-        unless $keyauth
-            and $heldaction
-            and $email
-            and Sympa::Tools::Text::valid_email($email);
+        unless $email and Sympa::Tools::Text::valid_email($email);
 
-    @{$param}{qw(id heldaction email)} = ($keyauth, $heldaction, $email);
+    @{$param}{qw(id heldaction listname email)} =
+        ($keyauth, $heldaction, $listname, $email);
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg             => "$keyauth,$heldaction,$email",
+        arg =>
+            join(',', grep {$_} ($keyauth, $heldaction, $listname, $email)),
         previous_action => $default_home
     );
     return $next_action unless $next_action eq '1';
