@@ -17931,11 +17931,15 @@ sub do_auth {
     return $next_action unless $next_action eq '1';
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context => $robot,
-        action  => 'auth',
-        keyauth => $keyauth,
-        sender  => $email,
-        scenario_context => {},
+        context          => $robot,
+        action           => 'auth',
+        keyauth          => $keyauth,
+        sender           => $email,
+        scenario_context => {
+            sender      => $email,
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        },
     );
     unless ($spindle and $spindle->spin) {
         return $default_home;
