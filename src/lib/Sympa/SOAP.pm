@@ -39,7 +39,7 @@ use Sympa::Request;
 use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
-use Sympa::Spool::Auth;
+use Sympa::Spindle::ProcessRequest;
 use Sympa::Template;
 use Sympa::Tools::Password;
 use Sympa::Tools::Text;
@@ -1285,28 +1285,23 @@ sub fullReview {
 }
 
 sub signoff {
+    $log->syslog('notice', '(%s, %s)', @_);
     my ($class, $listname) = @_;
 
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = $ENV{'SYMPA_ROBOT'};
-
-    $log->syslog('notice', '(%s, %s)', $listname, $sender);
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
-
     unless ($listname) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Incorrect number of parameters.')
             ->faultdetail('Use : <list> ');
     }
-
     my $list = Sympa::List->new($listname, $robot);
-
-    ## Is this list defined
     unless ($list) {
         $log->syslog('info', 'Sign off from %s for %s refused, list unknown',
             $listname, $sender);
@@ -1314,139 +1309,56 @@ sub signoff {
             ->faultdetail("List $listname unknown");
     }
 
-    if ($listname eq '*') {
-        my $success;
-        foreach my $list (Sympa::List::get_which($sender, $robot, 'member')) {
-            my $l = $list->{'name'};
-
-            $success ||= signoff($l, $sender);
-        }
-        return SOAP::Data->name('result')->value($success);
-    }
-
-    $list = Sympa::List->new($listname, $robot);
-
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'unsubscribe',
-        'md5',
-        {   'email'                   => $sender,
-            'sender'                  => $sender,
-            'remote_application_name' => $ENV{'remote_application_name'}
-        }
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'signoff',
+        sender           => $sender,
+        email            => $sender,
+        md5_check        => 1,
+        scenario_context => {
+            sender                  => $sender,
+            remote_application_name => $ENV{remote_application_name},
+        },
     );
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    die SOAP::Fault->faultcode('Server')->faultstring('No action available.')
-        unless (defined $action);
-
-    if ($action =~ /reject/i) {
-        my $reason_string = get_reason_string($result->{'reason'}, $robot);
-        $log->syslog(
-            'info',
-            'Sign off from %s for the email %s of the user %s refused (not allowed)',
-            $listname,
-            $sender,
-            $sender
-        );
-        die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
-            ->faultdetail($reason_string);
+    unless ($spindle and $spindle->spin) {
+        die SOAP::Fault->faultcode('Server')->faultstring('Internal error');
     }
-    if ($action =~ /do_it/i) {
-        ## Now check if we know this email on the list and
-        ## remove it if found, otherwise just reject the
-        ## command.
-        unless ($list->is_list_member($sender)) {
-            $log->syslog('info', 'Sign off %s from %s refused, not on list',
-                $listname, $sender);
 
-            ## Tell the owner somebody tried to unsubscribe
-            if ($action =~ /notify/i) {
-                $list->send_notify_to_owner('warn-signoff',
-                    {'who' => $sender});
-            }
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'auth') {
+            my $reason_string = get_reason_string($report->[2], $robot);
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
-                ->faultdetail(
-                "Email address $sender has not been found on the list $list->{'name'}. You did perhaps subscribe using a different address ?"
-                );
+                ->faultdetail($reason_string);
+        } elsif ($report->[1] eq 'intern') {
+            die SOAP::Fault->faultcode('Server')
+                ->faultstring('Internal error');
+        } elsif ($report->[1] eq 'notice') {
+            return SOAP::Data->name('result')->type('boolean')->value(1);
+        } elsif ($report->[1] eq 'user') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Undef')
+                ->faultdetail($report->[2]);
         }
-
-        # If a list is not 'open' and allow_subscribe_if_pending has been set
-        # to 'off' returns error report.
-        unless ($list->{'admin'}{'status'} eq 'open'
-            or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
-            'on') {
-            my $error =
-                sprintf 'Service unavailable because list status is \'%s\'',
-                $list->{'admin'}{'status'};
-            $log->syslog('info', 'List %s not open', $list);
-            die SOAP::Fault::faultcode("Server")
-                ->faultstring('List not open')->faultdetail($error);
-        }
-
-        ## Really delete and rewrite to disk.
-        $list->delete_list_member(
-            'users'     => [$sender],
-            'exclude'   => '1',
-            'operation' => 'signoff'
-        );
-
-        ## Notify the owner
-        if ($action =~ /notify/i) {
-            $list->send_notify_to_owner(
-                'notice',
-                {   'who'     => $sender,
-                    'command' => 'signoff'
-                }
-            );
-        }
-
-        ## Send bye.tpl to sender
-        unless (Sympa::send_file($list, 'bye', $sender, {})) {
-            $log->syslog('err', 'Unable to send template "bye" to %s',
-                $sender);
-        }
-
-        $log->syslog('info', 'Sign off %s from %s accepted',
-            $listname, $sender);
-
-        return SOAP::Data->name('result')->type('boolean')->value(1);
     }
-
-    $log->syslog('info',
-        'Sign off %s from %s aborted, unknown requested action in scenario',
-        $listname, $sender);
-    die SOAP::Fault->faultcode('Server')->faultstring('Undef')->faultdetail(
-        "Sign off %s from %s aborted because unknown requested action in scenario",
-        $listname, $sender
-    );
+    return SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub subscribe {
+    $log->syslog('notice', '(%s, %s, %s)', @_);
     my ($class, $listname, $gecos) = @_;
 
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = $ENV{'SYMPA_ROBOT'};
-
-    $log->syslog('info', '(%s, %s, %s)', $listname, $sender, $gecos);
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('User not authenticated')
             ->faultdetail('You should login first');
     }
-
     unless ($listname) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <list> [user gecos]');
     }
-
-    $log->syslog('notice', '(%s, %s)', $listname, $sender);
-
-    ## Load the list if not already done, and reject the
-    ## subscription if this list is unknown to us.
     my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
         $log->syslog('info',
@@ -1456,182 +1368,38 @@ sub subscribe {
             ->faultdetail("List $listname unknown");
     }
 
-    ## This is a really minimalistic handling of the comments,
-    ## it is far away from RFC-822 completeness.
-    $gecos =~ s/"/\\"/g;
-    $gecos = "\"$gecos\"" if ($gecos =~ /[<>\(\)]/);
-
-    ## query what to do with this subscribtion request
-    my $result = Sympa::Scenario::request_action(
-        $list,
-        'subscribe',
-        'md5',
-        {   'sender'                  => $sender,
-            'remote_application_name' => $ENV{'remote_application_name'}
-        }
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'subscribe',
+        sender           => $sender,
+        email            => $sender,
+        gecos            => $gecos,
+        md5_check        => 1,
+        scenario_context => {
+            sender                  => $sender,
+            remote_application_name => $ENV{remote_application_name},
+        },
     );
-    my $action;
-    $action = $result->{'action'} if (ref($result) eq 'HASH');
-
-    die SOAP::Fault->faultcode('Server')->faultstring('No action available.')
-        unless (defined $action);
-
-    $log->syslog('debug2', 'SOAP subscribe action: %s', $action);
-
-    if ($action =~ /reject/i) {
-        my $reason_string = get_reason_string($result->{'reason'}, $robot);
-        $log->syslog('info',
-            'SOAP subscribe to %s from %s refused (not allowed)',
-            $listname, $sender);
-        die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
-            ->faultdetail($reason_string);
+    unless ($spindle and $spindle->spin) {
+        die SOAP::Fault->faultcode('Server')->faultstring('Internal error');
     }
-    if ($action =~ /owner/i) {
-        my $spool_req = Sympa::Spool::Auth->new;
-        my $request   = Sympa::Request->new(
-            context => $list,
-            action  => 'add',
-            email   => $sender,
-            gecos   => $gecos,
-            sender  => $sender,
-        );
-        my $keyauth = $spool_req->store($request);
 
-        $list->send_notify_to_owner(
-            'subrequest',
-            {   'who'     => $sender,
-                'keyauth' => $keyauth,
-                'replyto' => Sympa::get_address($robot),
-                'gecos'   => $gecos
-            }
-        );
-
-        $log->syslog('info', '%s from %s forwarded to the owners of the list',
-            $listname, $sender);
-        return SOAP::Data->name('result')->type('boolean')->value(1);
-    }
-    if ($action =~ /request_auth/i) {
-        my $request = Sympa::Request->new(
-            context => $list,
-            action  => 'subscribe',
-            email   => $sender,
-            gecos   => $gecos,
-            sender  => $sender,
-        );
-        my $spool_req = Sympa::Spool::Auth->new;
-        my $keyauth;
-        unless ($keyauth = $spool_req->store($request)) {
-            #XXX FIXME: Check if failed!
-        }
-
-        # Send notice to the user.
-        my $cmd_line = $request->cmd_line(canonic => 1);
-        unless (
-            Sympa::send_file(
-                $list,
-                'request_auth',
-                $sender,
-                {   cmd => $cmd_line,
-                    # Compat. <= 6.2.14.
-                    command => sprintf('AUTH %s %s', $keyauth, $cmd_line),
-                    keyauth => $keyauth,
-                    type    => $request->{action},
-                    to      => $sender,
-                    auto_submitted => 'auto-replied',
-                }
-            )
-            ) {
-            #XXX FIXME: Check if failed!
-        }
-
-        $log->syslog('info', '%s from %s, auth requested', $listname,
-            $sender);
-        return SOAP::Data->name('result')->type('boolean')->value(1);
-    }
-    if ($action =~ /do_it/i) {
-
-        my $is_sub = $list->is_list_member($sender);
-
-        unless (defined($is_sub)) {
-            $log->syslog('err', 'User lookup failed');
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'auth') {
+            my $reason_string = get_reason_string($report->[2], $robot);
+            die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
+                ->faultdetail($reason_string);
+        } elsif ($report->[1] eq 'intern') {
+            die SOAP::Fault->faultcode('Server')
+                ->faultstring('Internal error');
+        } elsif ($report->[1] eq 'notice') {
+            return SOAP::Data->name('result')->type('boolean')->value(1);
+        } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
-                ->faultdetail("SOAP subscribe : user lookup failed");
+                ->faultdetail($report->[2]);
         }
-
-        if ($is_sub) {
-            # Only updates the date.  Options remain the same.
-            my %update = (update_date => time);
-            $update{gecos} = $gecos if defined $gecos and $gecos =~ /\S/;
-
-            unless ($list->update_list_member($sender, %update)) {
-                $log->syslog('err', 'User update failed');
-                die SOAP::Fault->faultcode('Server')->faultstring('Undef.')
-                    ->faultdetail("SOAP subscribe : update user failed");
-            }
-        } else {
-            # If a list is not 'open' and allow_subscribe_if_pending has been
-            # set to 'off' returns error report.
-            unless ($list->{'admin'}{'status'} eq 'open'
-                or
-                Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
-                'on') {
-                my $error =
-                    sprintf
-                    'Service unavailable because list status is \'%s\'',
-                    $list->{'admin'}{'status'};
-                $log->syslog('info', 'List %s not open', $list);
-                die SOAP::Fault::faultcode("Server")
-                    ->faultstring('List not open')->faultdetail($error);
-            }
-
-            my $u;
-            my $defaults = $list->get_default_user_options();
-            %{$u} = %{$defaults};
-            $u->{'email'} = $sender;
-            $u->{'gecos'} = $gecos;
-            $u->{'date'}  = $u->{'update_date'} = time;
-
-            die SOAP::Fault->faultcode('Server')->faultstring('Undef')
-                ->faultdetail("SOAP subscribe : add user failed")
-                unless $list->add_list_member($u);
-        }
-
-        my $u = Sympa::User->new($sender);
-        unless ($u->lang) {
-            $u->lang($list->{'admin'}{'lang'});
-            $u->save();
-        }
-
-        ## Now send the welcome file to the user
-        unless ($action =~ /quiet/i) {
-            unless ($list->send_probe_to_user('welcome', $sender)) {
-                $log->syslog('err', 'Unable to send template "bye" to %s',
-                    $sender);
-            }
-        }
-
-        ## If requested send notification to owners
-        if ($action =~ /notify/i) {
-            $list->send_notify_to_owner(
-                'notice',
-                {   'who'     => $sender,
-                    'gecos'   => $gecos,
-                    'command' => 'subscribe'
-                }
-            );
-        }
-        $log->syslog('info', '%s from %s accepted', $listname, $sender);
-
-        return SOAP::Data->name('result')->type('boolean')->value(1);
     }
-
-    $log->syslog('info',
-        '%s from %s aborted, unknown requested action in scenario',
-        $listname, $sender);
-    die SOAP::Fault->faultcode('Server')->faultstring('Undef')->faultdetail(
-        "SOAP subscribe : %s from %s aborted because unknown requested action in scenario",
-        $listname, $sender
-    );
+    return SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 ## Which list the user is subscribed to
