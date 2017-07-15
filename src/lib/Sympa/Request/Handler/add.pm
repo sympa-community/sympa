@@ -58,6 +58,14 @@ sub _twist {
 
     $language->set_lang($list->{'admin'}{'lang'});
 
+    unless (Sympa::Tools::Text::valid_email($email)) {
+        $self->add_stash($request, 'user', 'incorrect_email',
+            {'email' => $email});
+        $log->syslog('err',
+            'ADD command rejected; incorrect email "%s"', $email);
+        return undef;
+    }
+
     if ($list->is_list_member($email)) {
         $self->add_stash($request, 'user', 'already_subscriber',
             {'email' => $email});
@@ -67,16 +75,18 @@ sub _twist {
         return undef;
     }
 
-    # If a list is not 'open' and allow_subscribe_if_pending has been set to
-    # 'off' returns undef.
-    unless ($list->{'admin'}{'status'} eq 'open'
-        or
-        Conf::get_robot_conf($list->{'domain'}, 'allow_subscribe_if_pending')
-        eq 'on') {
-        $self->add_stash($request, 'user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}});
-        $log->syslog('info', 'List %s not open', $list);
-        return undef;
+    unless ($request->{force}) {
+        # If a list is not 'open' and allow_subscribe_if_pending has been set
+        # to 'off' returns undef.
+        unless ($list->{'admin'}{'status'} eq 'open'
+            or Conf::get_robot_conf($list->{'domain'},
+                'allow_subscribe_if_pending') eq 'on'
+            ) {
+            $self->add_stash($request, 'user', 'list_not_open',
+                {'status' => $list->{'admin'}{'status'}});
+            $log->syslog('info', 'List %s not open', $list);
+            return undef;
+        }
     }
 
     my $u;
@@ -164,6 +174,30 @@ Sympa::Request::Handler::add - add request handler
 Adds a user to a list (requested by another user). Verifies
 the proper authorization and sends acknowledgements unless
 quiet add.
+
+=head2 Attributes
+
+See also L<Sympa::Request/"Attributes">.
+
+=over
+
+=item {email}
+
+I<Mandatory>.
+E-mail of the user to be added.
+
+=item {force}
+
+I<Optional>.
+If true value is specified,
+users will be added even if the list is closed.
+
+=item {gecos}
+
+I<Optional>.
+Display name of the user to be added.
+
+=back
 
 =head1 SEE ALSO
 

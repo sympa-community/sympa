@@ -91,6 +91,7 @@ nobase_modules_DATA = \
 	Sympa/Request/Handler/global_set.pm \
 	Sympa/Request/Handler/global_signoff.pm \
 	Sympa/Request/Handler/help.pm \
+	Sympa/Request/Handler/import.pm \
 	Sympa/Request/Handler/index.pm \
 	Sympa/Request/Handler/info.pm \
 	Sympa/Request/Handler/invite.pm \

@@ -202,7 +202,7 @@ our %comm = (
     'viewfile'         => 'do_viewfile',
     'set'              => 'do_set',
     'admin'            => 'do_admin',
-    'add_request'      => 'do_add_request',
+    'import'           => 'do_import',
     'add'              => 'do_add',
     'add_fromsub'      => 'do_add_fromsub',
     'del'              => 'do_del',
@@ -345,6 +345,7 @@ our %comm = (
 my %comm_aliases = (
     'sigrequest' => 'signoff',
     'subrequest' => 'subscribe',
+    'add_request' => 'import',
 );
 
 my %auth_action = (
@@ -393,10 +394,10 @@ our %action_args = (
     'd_install_shared' => ['list',            'id'],
     'modindex'         => ['list'],
     'docindex'         => ['list'],
-    'viewmod'     => ['list', 'id', '@file'],
-    'viewfile'    => ['list', 'file'],
-    'add'         => ['list', 'email'],
-    'add_request' => ['list'],
+    'viewmod'  => ['list', 'id', '@file'],
+    'viewfile' => ['list', 'file'],
+    'add'      => ['list', 'email'],
+    'import'   => ['list'],
     'del' => ['list', 'email'],
     #'editsubscriber' =>
     #    ['list', 'email', 'previous_action', 'custom_attribute'],
@@ -509,7 +510,7 @@ our %required_args = (
     'active_lists'            => ['for|count'],
     'admin'                   => ['param.list', 'param.user.email'],
     'add'                     => ['param.list', 'param.user.email'],
-    'add_request'             => ['param.list', 'param.user.email'],
+    'import'                  => ['param.list', 'param.user.email'],
     'arc'                     => ['param.list'],
     'arc_delete'              => ['param.user.email', 'param.list'],
     'arc_download'            => ['param.user.email', 'param.list'],
@@ -721,13 +722,13 @@ our %required_privileges = (
 # listowner admin menu | serveradmin -> server_admin menu | none list or
 # your_list menu)
 my %action_type = (
-    'review'      => 'admin',
-    'search'      => 'admin',
-    'viewfile'    => 'admin',
-    'admin'       => 'admin',
-    'add_request' => 'admin',
-    'add'         => 'admin',
-    'del'         => 'admin',
+    'review'   => 'admin',
+    'search'   => 'admin',
+    'viewfile' => 'admin',
+    'admin'    => 'admin',
+    'import'   => 'admin',
+    'add'      => 'admin',
+    'del'      => 'admin',
     # 'modindex' =>'admin',
     'reject'             => 'admin',
     'reject_notify'      => 'admin',
@@ -7071,14 +7072,62 @@ sub do_skinsedit {
     return 1;
 }
 
-## Multiple add
-sub do_add_request {
-    wwslog('info', '(%s)', $in{'email'});
+# Adds multiple users to a list.
+sub do_import {
+    wwslog('info', '(...)');
 
-    ## Access control
-    return undef unless (defined check_authz('do_add_request', 'add'));
+    my $content;
+    my $fh = $query->upload('uploaded_file');
+    if (defined $fh) {
+        my $ioh = $fh->handle;
+        $content = do { local $RS; <$ioh> };
+    } else {
+        $content = $in{'dump'};
+    }
 
-    return 1;
+    $param->{'dump'} = $content;
+    $param->{'quiet'} = $in{'quiet'};
+
+    return 1 unless $content and $content =~ /\S/;
+
+    ## Action confirmed?
+    #my $next_action = $session->confirm_action(
+    #    $in{'action'}, $in{'response_action'},
+    #    arg             => $in{'dump'},
+    #    previous_action => ($in{'previous_action'} || 'reviw'),
+    #);
+    #return $next_action unless $next_action eq '1';
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'import',
+        dump             => $content,
+        sender           => $param->{'user'}{'email'},
+        md5_check        => 1,
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        return $in{'previous_action'} || 'review';
+    }
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+    }
+
+    return $in{'previous_action'} || 'review';
 }
 
 ####################################################
