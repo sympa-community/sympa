@@ -5701,33 +5701,20 @@ sub do_subscribe {
 sub do_suboptions {
     wwslog('info', '');
 
-    unless ($param->{'is_subscriber'}) {
-        Sympa::Report::reject_report_web('user', 'not_subscriber',
-            {'list' => $list->{'name'}},
-            $param->{'action'}, $list);
-        wwslog(
-            'info',
-            '%s not subscribed to %s',
-            $param->{'user'}{'email'},
-            $param->{'list'}
-        );
-        return undef;
-    }
-
     my ($s, $m);
 
     unless ($s = $list->get_list_member($param->{'user'}{'email'})) {
         Sympa::Report::reject_report_web(
-            'intern',
-            'subscriber_not_found',
-            {'email' => $param->{'user'}{'email'}},
+            'user',
+            'not_subscriber',
+            {list => $list->{'name'}},
             $param->{'action'},
             $list,
             $param->{'user'}{'email'},
             $robot
         );
         wwslog('info', 'Subscriber %s not found', $param->{'user'}{'email'});
-        return undef;
+        return $in{'previous_action'} || 'info';
     }
 
     $s->{'reception'}  ||= 'mail';

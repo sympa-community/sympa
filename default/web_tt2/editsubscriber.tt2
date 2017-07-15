@@ -61,7 +61,10 @@
       </a>
     [%~ END %]
     [% IF current_subscriber.email == user.email ~%]
-      <p><a href="[% 'suboptions' | url_rel([list]) %]" title="">[%|loc%]Changing your picture for this list[%END%]</a></p>
+      <p>
+      <a href="[% 'suboptions' | url_rel([list],{previous_action=>action}) %]"
+       title="">[%|loc%]Changing your picture for this list[%END%]</a>
+      </p>
     [%~ END %]
   [%~ END %]
 
