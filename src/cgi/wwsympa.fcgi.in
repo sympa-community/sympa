@@ -10513,11 +10513,11 @@ sub do_editsubscriber {
     my $subscriber;
 
     unless ($subscriber = $list->get_list_member($in{'email'})) {
-        Sympa::Report::reject_report_web('intern', 'subscriber_not_found',
+        Sympa::Report::reject_report_web('user', 'user_not_subscriber',
             {'email' => $in{'email'}},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'Subscriber %s not found', $in{'email'});
-        return undef;
+        return $in{'previous_action'} || 'review';
     }
 
     $param->{'current_subscriber'} = $subscriber;
