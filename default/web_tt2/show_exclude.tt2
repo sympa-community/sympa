@@ -38,6 +38,9 @@
     </table>
 
     [% IF may_add ~%]
+    [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
+        'off', add cannot be performed. ~%]
+    [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
     <div>
       <input class="MainMenuLinks toggleButton" type="button"
         value="[%|loc%]Toggle Selection[%END%]" />
@@ -49,6 +52,7 @@
       <label for="quiet_exclusion">[%|loc%]quiet[%END%] </label>
       <input type="hidden" name="previous_action" value="[% action %]" />
     </div>
+    [%~ END %]
     [%~ END %]
   </fieldset>
   </form>

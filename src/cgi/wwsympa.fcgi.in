@@ -7138,250 +7138,57 @@ sub do_import {
     return $in{'previous_action'} || 'review';
 }
 
-####################################################
-#  do_add
-####################################################
-#  Adds a user to a list (requested by an other user)
-#
-# IN : -
-#
-# OUT : 'loginrequest'
-#      | ($in{'previous_action'} || 'review')
-#      | undef
-####################################################
-## TODO: vérifier validité email
+# Adds a user to a list (requested by another user).
 sub do_add {
     wwslog('info', '(%s)', $in{'email'});
 
-    my %user;
+    # Access control.
+    return undef unless defined check_authz('do_add', 'add');
 
-    ## If a list is not 'open' and allow_subscribe_if_pending has been set to
-    ## 'off' returns undef.
-    unless ($list->{'admin'}{'status'} eq 'open'
-        or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq 'on')
-    {
-        Sympa::Report::reject_report_web('user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}},
-            $param->{'action'});
-        wwslog('info', 'List not open');
-        web_db_log(
-            {   'target_email' => $in{'email'},
-                'status'       => 'error',
-                'error_type'   => 'list_not_open'
-            }
-        );
-        return undef;
-    }
+    my $email = Sympa::Tools::Text::canonic_email($in{'email'});
+    return $in{'previous_action'} || 'review' unless $email;
 
-    my @emails = split /\0/, $in{'email'};
+    $param->{'email'} = $email;
+    $param->{'quiet'} = $in{'quiet'};
 
-    if ($in{'previous_action'} and $in{'previous_action'} eq 'show_exclude') {
-        $param->{'email'} = [@emails];
-        $param->{'quiet'} = $in{'quiet'};
-
-        # Action confirmed?
-        my $next_action = $session->confirm_action(
-            $in{'action'}, $in{'response_action'},
-            arg             => join(',', sort @emails),
-            previous_action => $in{'previous_action'}
-        );
-        return $next_action unless $next_action eq '1';
-    }
-
-    my $email_regexp = Sympa::Regexps::email();
-    if ($in{'dump'}) {
-        foreach (split /\n/, $in{'dump'}) {
-            if (/^\s*($email_regexp)(\s+(.*))?\s*$/) {
-                $user{Sympa::Tools::Text::canonic_email($1)} = $5;
-            }
-        }
-    } elsif ($in{'email'} =~ /,/) {
-        foreach my $pair (split /\0/, $in{'email'}) {
-            if ($pair =~ /^($email_regexp)(,(.*))?\s*$/) {
-                $user{Sympa::Tools::Text::canonic_email($1)} = $5;
-            }
-        }
-    } elsif ($in{'email'}) {
-        foreach my $email (split /\0/, $in{'email'}) {
-            $user{Sympa::Tools::Text::canonic_email($email)} = $in{'gecos'};
-        }
-    } else {
-        Sympa::Report::reject_report_web('user', 'no_email', {},
-            $param->{'action'});
-        wwslog('info', 'No email');
-        web_db_log(
-            {   'target_email' => $in{'email'},
-                'status'       => 'error',
-                'error_type'   => 'no_email'
-            }
-        );
-        return undef;
-    }
-
-    my ($total, @new_users, @added_users);
-    my $comma_emails;
-    foreach my $email (keys %user) {
-        my $result = Sympa::Scenario::request_action(
-            $list, 'add',
-            $param->{'auth_method'},
-            {   'sender'      => $param->{'user'}{'email'},
-                'email'       => $in{'email'},
-                'remote_host' => $param->{'remote_host'},
-                'remote_addr' => $param->{'remote_addr'}
-            }
-        );
-        my $add_is;
-        my $reason;
-        if (ref($result) eq 'HASH') {
-            $add_is = $result->{'action'};
-            $reason = $result->{'reason'};
-        }
-
-        unless ($add_is =~ /do_it/) {
-            Sympa::Report::reject_report_web('auth', $reason, {},
-                $param->{'action'}, $list);
-            wwslog('info', '%s may not add', $param->{'user'}{'email'});
-            web_db_log(
-                {   'target_email' => $in{'email'},
-                    'status'       => 'error',
-                    'error_type'   => 'internal'
-                }
-            );
-            next;
-        }
-
-        unless (Sympa::Tools::Text::valid_email($email)) {
-            Sympa::Report::reject_report_web('user', 'incorrect_email',
-                {'email' => $email},
-                $param->{'action'}, $list);
-            wwslog('info', 'Incorrect email %s', $email);
-            web_db_log(
-                {   'target_email' => $in{'email'},
-                    'status'       => 'error',
-                    'error_type'   => 'incorrect_email'
-                }
-            );
-            next;
-        }
-
-        my $user_entry = $list->get_list_member($email);
-
-        if (defined($user_entry)) {
-            Sympa::Report::reject_report_web('user',
-                'user_already_subscriber',
-                {'list' => $list->{'name'}, 'email' => $email},
-                $param->{'action'}, $list);
-            wwslog('info', '%s already subscriber', $email);
-            web_db_log(
-                {   'target_email' => $in{'email'},
-                    'status'       => 'error',
-                    'error_type'   => 'already_subscriber'
-                }
-            );
-            next;
-        }
-
-        my $u2       = Sympa::User::get_global_user($email);
-        my $defaults = $list->get_default_user_options();
-        my $u;
-        %{$u} = %{$defaults};
-        $u->{'email'}    = $email;
-        $u->{'gecos'}    = $user{$email} || $u2->{'gecos'};
-        $u->{'date'}     = $u->{'update_date'} = time;
-        $u->{'password'} = $u2->{'password'}
-            || Sympa::Tools::Password::tmp_passwd($email);
-
-        ##if (my $reason =
-        ##    Sympa::Tools::Password::password_validation($u->{'password'})) {
-        ##    Sympa::Report::reject_report_web('user', 'passwd_validation',
-        ##        {'reason' => $reason},
-        ##        $param->{'action'});
-        ##    wwslog('info', 'Password validation');
-        ##    web_db_log(
-        ##        {   'status'     => 'error',
-        ##            'error_type' => 'bad_parameter'
-        ##        }
-        ##    );
-        ##    return undef;
-        ##}
-        ##
-        $u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
-        if ($comma_emails) {
-            $comma_emails = $comma_emails . ',' . $email;
-        } else {
-            $comma_emails = $email;
-        }
-
-        ##
-        push @new_users, $u;
-        ## List only email addresses ; used later to remove pending
-        ## subrequests
-        push @added_users, $email;
-
-        unless ($in{'quiet'} || $add_is =~ /quiet/i) {
-            unless ($list->send_probe_to_user('welcome', $email)) {
-                wwslog('err', 'Unable to send "welcome" probe to %s', $email);
-            }
-        }
-    }
-
-    $list->add_list_member(@new_users);
-    $total = $list->{'add_outcome'}{'added_members'};
-    if (defined $list->{'add_outcome'}{'errors'}) {
-        if (defined $list->{'add_outcome'}{'errors'}
-            {'max_list_members_exceeded'}) {
-            Sympa::Report::reject_report_web(
-                'user',
-                'max_list_members_exceeded',
-                {   max_list_members => $list->{'admin'}{'max_list_members'},
-                    list             => $list->{'name'},
-                    'sub'            => $param->{'user'}{'email'}
-                },
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-        } else {
-            my $error = $language->gettext_sprintf(
-                "Unable to add users in list %s : %s",
-                $list->{'name'},
-                $list->{'add_outcome'}{'errors'}{'error_message'});
-            Sympa::Report::reject_report_web('intern', $error,
-                {'sub' => $param->{'user'}{'email'}},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-        }
-        wwslog(
-            'info',
-            'Subscribe failed: %s',
-            $list->{'add_outcome'}{'errors'}{'error_message'}
-        );
-        web_db_log(
-            {   'parameters' => $in{'email'},
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return 'info';
-    }
-
-    Sympa::Report::notice_report_web('add_performed', {'total' => $total},
-        $param->{'action'});
-    web_db_log(
-        {   'target_email' => $in{'email'},
-            'status'       => 'success'
-        }
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => $email,
+        previous_action => $in{'previous_action'}
     );
+    return $next_action unless $next_action eq '1';
 
-    foreach my $email (@added_users) {
-        web_db_log(
-            {   'target_email' => $email,
-                'status'       => 'success'
-            }
-        );
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'add',
+        email            => $email,
+        sender           => $param->{'user'}{'email'},
+        md5_check        => 1,
+        scenario_context => {
+            email       => $email,
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        return $in{'previous_action'} || 'review';
     }
 
-    $in{'list'} = $in{'previous_list'} if ($in{'previous_list'});
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+    }
+
     return $in{'previous_action'} || 'review';
 }
 
@@ -8178,21 +7985,14 @@ sub do_distribute {
     return 'modindex';
 }
 
-####################################################
-#  do_add_frommod
-####################################################
-#  add user from moderation index
-#
-####################################################
+# Adds user from moderation index.
 sub do_add_frommod {
     wwslog('info', '(%s)', $in{'id'});
 
     my @ids = split /\0/, $in{'id'};
     $param->{'id'} = [@ids];
 
-    my @emails;
-    # Load message list.
-    $in{'dump'} = '';
+    my @users;
     foreach my $id (@ids) {
         next unless $id and $id =~ /\A\w+\z/;
 
@@ -8219,18 +8019,18 @@ sub do_add_frommod {
             next;
         }
         my $email = $message->{sender};
-        next unless defined $email and $email =~ /\S/;
-        my $fullname = $message->{gecos};
+        next unless $email and Sympa::Tools::Text::valid_email($email);
+        my $fullname = $message->{gecos}
+            if defined $message->{gecos} and $message->{gecos} =~ /\S/;
 
-        if (defined $fullname and $fullname =~ /\S/) {
-            $in{'dump'} .= "$email $fullname\n";
-        } else {
-            $in{'dump'} .= "$email\n";
-        }
-
-        push @emails, $email;
+        push @users,
+            (   defined $fullname
+              ? {email => $email, gecos => $fullname}
+              : {email => $email});
     }
-    $param->{'email'} = [@emails];
+    return 'modindex' unless @users;
+
+    $param->{'email'} = [@users];
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -8240,10 +8040,41 @@ sub do_add_frommod {
     );
     return $next_action unless $next_action eq '1';
 
-    if ($in{'dump'}) {
-        delete $in{'email'};
-        $in{'previous_list'} = $list->{'name'};
-        do_add();
+    my $stash = [];
+    my $processed = 0;
+    foreach my $u (@users) {
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'add',
+            email            => $u->{email},
+            gecos            => $u->{gecos},
+            sender           => $param->{'user'}{'email'},
+            md5_check        => 1,
+            scenario_context => {
+                email       => $u->{email},
+                sender      => $param->{'user'}{'email'},
+                remote_host => $param->{'remote_host'},
+                remote_addr => $param->{'remote_addr'}
+            },
+            stash => $stash,
+        );
+        $processed += $spindle->spin if $spindle;
+    }
+    unless ($processed) {
+        return 'modindex';
+    }
+
+    foreach my $report (@$stash) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@$stash) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
     }
 
     return 'modindex';

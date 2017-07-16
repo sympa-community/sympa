@@ -1,18 +1,26 @@
 <!-- confirm_action.tt2 -->
 [% IF confirm_action == 'add' ~%]
-  [%# Confirmation is required only by show_exclude action. ~%]
-  <h2><i class="fa fa-check-circle"></i>
-    [%|loc%]Restore selected email addresses[%END%]"
-  </h2>
-  <p><strong>
-    [%|loc%]Do you really want to restore subscription for ALL selected addresses?[%END%]
-  </strong></p>
+  [% IF previous_action == 'show_exclude' ~%]
+    <h2><i class="fa fa-check-circle"></i>
+      [%|loc%]Restore selected email addresses[%END%]"
+    </h2>
+    <p><strong>
+      [%|loc%]Do you really want to restore subscription for ALL selected addresses?[%END%]
+    </strong></p>
+  [%~ ELSE ~%]
+    <h2><i class="fa fa-check-circle"></i>
+      [%|loc%]Add subscribers[%END%]
+    </h2>
+    <p><strong>
+      [%|loc(email.0)%]Dou you really want to add %1?[%END%] 
+    </strong></p>
+  [%~ END %]
 [%~ ELSIF confirm_action == 'add_frommod' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Add subscribers[%END%] 
   </h2>
   <p><strong>
-    [%|loc(email.0)%]Dou you really want to add %1?[%END%] 
+    [%|loc(email.0.email)%]Dou you really want to add %1?[%END%] 
   </strong></p>
 [%~ ELSIF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -159,9 +167,7 @@
 
 <form action="[% path_cgi %]" method="POST">
 [% IF confirm_action == 'add' ~%]
-  [% FOREACH e = email ~%]
-    <input type="hidden" name="email" value="[% e %]" />
-  [%~ END %]
+  <input type="hidden" name="email" value="[% email %]" />
   <div>
     <input type="checkbox" id="quiet" type="checkbox" name="quiet" value="1"
       [% IF quiet %]checked="checked"[%END%] />

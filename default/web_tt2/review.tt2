@@ -33,22 +33,38 @@
     <input type="hidden" name="list" value="[% list %]" />
   </form>
   <hr>
-  <h3>[%|loc%]Add Subscribers[%END%]</h3>
-  <form action="[% path_cgi %]" method="post">
-  <h4>[%|loc%]To add an individual user:[%END%]</h4>
-  <fieldset>
-   <input type="hidden" name="previous_action" value="review" />
-   <input type="hidden" name="list" value="[% list %]" />
-   <input type="hidden" name="action" value="add" />
-   <label for="email_search">[%|loc%]Email address:[%END%]</label>
-   <input id="email_search" type="text" name="email" size="35" />
-    <input id="quietly" type="checkbox" name="quiet" /><label for="quietly">[%|loc%]Quiet (don't send welcome email)[%END%]</label><br />
-    <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" />
-  </fieldset>
-  </form>
-  <h4>[%|loc%]To add multiple users:[%END%]</h4>
-  <p>[%|loc%]Click the Multiple Add button below to bulk-add users using a form.  (Alternatively, consider using a data-source such as SQL or an Active Directory Group).[%END%]
-  <br /><a class="button" href="[% 'import' | url_rel([list]) %]">[%|loc%]Multiple add[%END%]</a>
+  [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
+      'off', add cannot be performed. ~%]
+  [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
+    <h3>[%|loc%]Add Subscribers[%END%]</h3>
+    <form action="[% path_cgi %]" method="POST">
+    <h4>[%|loc%]To add an individual user:[%END%]</h4>
+    <fieldset>
+    <input type="hidden" name="previous_action" value="review" />
+    <input type="hidden" name="list" value="[% list %]" />
+    <input type="hidden" name="action" value="add" />
+    <div>
+      <label for="email_search">[%|loc%]Email address:[%END%]</label>
+      <input id="email_search" type="text" name="email" size="35" />
+    </div>
+    <div>
+      <input id="quietly" type="checkbox" name="quiet" />
+      <label for="quietly">
+        [%|loc%]Quiet (don't send welcome email)[%END%]
+      </label>
+      <input class="MainMenuLinks" type="submit" name="action_add"
+       value="[%|loc%]Add[%END%]" />
+    </div>
+    </fieldset>
+    </form>
+    <h4>[%|loc%]To add multiple users:[%END%]</h4>
+    <p>[%|loc%]Click the Multiple Add button below to bulk-add users using a form.  (Alternatively, consider using a data-source such as SQL or an Active Directory Group).[%END%]</p>
+    <div>
+      <a class="button" href="[% 'import' | url_rel([list]) %]">
+        [%|loc%]Multiple add[%END%]
+      </a>
+    </div>
+  [%~ END %]
 [% END %]
 
 <hr>
