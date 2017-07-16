@@ -204,9 +204,9 @@ our %comm = (
     'admin'            => 'do_admin',
     'import'           => 'do_import',
     'add'              => 'do_add',
-    'add_fromsub'      => 'do_add_fromsub',
+    'auth_add'         => 'do_authowner',
     'del'              => 'do_del',
-    'del_fromsig'      => 'do_del_fromsig',
+    'auth_del'         => 'do_authowner',
     'modindex'         => 'do_modindex',
     'docindex'         => 'do_docindex',
     'reject'           => 'do_reject',
@@ -343,9 +343,11 @@ our %comm = (
 );
 
 my %comm_aliases = (
-    'sigrequest' => 'signoff',
-    'subrequest' => 'subscribe',
+    'add_fromsub' => 'auth_add',
     'add_request' => 'import',
+    'del_fromsig' => 'auth_del',
+    'sigrequest'  => 'signoff',
+    'subrequest'  => 'subscribe',
 );
 
 my %auth_action = (
@@ -494,6 +496,8 @@ our %action_args = (
     'automatic_lists_request'            => ['family'],
     'automatic_lists'                    => [],
     'auth'                               => ['id', 'heldaction', 'listname'],
+    'auth_add'                           => ['list'],
+    'auth_del'                           => ['list'],
 );
 
 ## Define the required parameters for each action
@@ -519,6 +523,8 @@ our %required_args = (
     'arcsearch_form'          => ['param.list'],
     'arcsearch_id'            => ['param.list'],
     'auth'                    => ['id', 'heldaction', 'email'],
+    'auth_add'                => ['param.list', 'param.user.email'],
+    'auth_del'                => ['param.list', 'param.user.email'],
     'auto_signoff'            => ['param.list', 'email'],
     'automatic_lists_request' => ['family'],
     'automatic_lists'         => ['family'],
@@ -654,6 +660,8 @@ our %required_privileges = (
     'arc_delete'         => ['owner'],
     'arc_download'       => ['owner'],
     'arc_manage'         => ['owner'],
+    'auth_add'           => ['owner'],
+    'auth_del'           => ['owner'],
     'blacklist'          => ['owner',  'editor'],
     'close_list'         => ['privileged_owner'],
     'close_list_request' => ['privileged_owner'],
@@ -7377,126 +7385,9 @@ sub do_add {
     return $in{'previous_action'} || 'review';
 }
 
-####################################################
-#  do_add_fromsub
-####################################################
-#  add user from subscription request index
-#
-####################################################
-sub do_add_fromsub {
-    wwslog('info', '(%s)', $in{'id'});
-
-    # If a list is not 'open' and allow_subscribe_if_pending has been set to
-    # 'off', returns undef.
-    unless ($list->{'admin'}{'status'} eq 'open'
-        or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq 'on')
-    {
-        Sympa::Report::reject_report_web('user', 'list_not_open',
-            {status => $list->{'admin'}{'status'}},
-            $param->{'action'});
-        wwslog('info', 'List not open');
-        web_db_log(
-            {   target_email => $in{'email'},
-                status       => 'error',
-                error_type   => 'list_not_open'
-            }
-        );
-        return undef;
-    }
-
-    my $total = 0;
-    foreach my $id (split /\0/, $in{'id'}) {
-        next unless $id and $id =~ /\A\w+\z/;
-
-        my $spool_req = Sympa::Spool::Auth->new(
-            context => $list,
-            keyauth => $id,
-            action  => 'add'
-        );
-        my ($request, $handle);
-        while (1) {
-            ($request, $handle) = $spool_req->next;
-            last unless $handle;
-            last if $request;
-        }
-        unless ($request) {
-            Sympa::Report::reject_report_web('user', 'already_added', {},
-                $param->{'action'});
-            wwslog('err',
-                'No request with authkey %s.  It may be already subscribed',
-                $id);
-            web_db_log(
-                {   parameters => $id,
-                    status     => 'error',
-                    error_type => 'internal'
-                }
-            );
-            next;
-        }
-        next unless defined $request->{email} and $request->{email} =~ /\S/;
-
-        $list->add_list_member(
-            {   email            => $request->{email},
-                gecos            => $request->{gecos},
-                custom_attribute => $request->{custom_attribute},
-            }
-        );
-        if ($list->{'add_outcome'}{'errors'}) {
-            wwslog(
-                'info',
-                'Subscribe failed: %s',
-                $list->{'add_outcome'}{'errors'}{'error_message'}
-            );
-            web_db_log(
-                {   parameters => $in{'email'},
-                    status     => 'error',
-                    error_type => 'user'
-                }
-            );
-            if ($list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'})
-            {
-                Sympa::Report::reject_report_web(
-                    'user',
-                    'max_list_members_exceeded',
-                    {   max_list_members =>
-                            $list->{'admin'}{'max_list_members'},
-                        list => $list->{'name'},
-                        sub  => $param->{'user'}{'email'}
-                    },
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-                last;
-            } else {
-                my $error = $language->gettext_sprintf(
-                    "Unable to add users in list %s : %s",
-                    $list->{'name'},
-                    $list->{'add_outcome'}{'errors'}{'error_message'});
-                Sympa::Report::reject_report_web(
-                    'intern',
-                    $error,
-                    {sub => $param->{'user'}{'email'}},
-                    $param->{'action'},
-                    $list,
-                    $param->{'user'}{'email'},
-                    $robot
-                );
-            }
-        } else {
-            $spool_req->remove($handle);
-            web_db_log({target => $request->{email}, status => 'success'});
-            $total++;
-        }
-    }
-    if ($total) {
-        Sympa::Report::notice_report_web('add_performed', {total => $total},
-            $param->{'action'});
-    }
-
-    return 'subindex';
-}
+# Adds user(s) from subscription request index.
+# No longer used. Use do_authowner().
+#sub do_add_fromsub;
 
 ####################################################
 #  do_del
@@ -7648,103 +7539,61 @@ sub do_del {
     return $in{'previous_action'} || 'review';
 }
 
-####################################################
-#  do_del_fromsig
-####################################################
-#  delete user in signoff request index
-#
-####################################################
-sub do_del_fromsig {
+# Deletes user(s) in signoff request index.
+# No longer used. Use do_authowner().
+#sub do_del_fromsig;
+
+# By owner, authorizes held subscription/unsubscription requests.
+sub do_authowner {
     wwslog('info', '(%s)', $in{'id'});
 
-    # If a list is not 'open' and allow_subscribe_if_pending has been set to
-    # 'off', returns undef.
-    unless ($list->{'admin'}{'status'} eq 'open'
-        or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq 'on')
-    {
-        Sympa::Report::reject_report_web('user', 'list_not_open',
-            {status => $list->{'admin'}{'status'}},
-            $param->{'action'});
-        wwslog('info', 'List not open');
-        web_db_log(
-            {   target_email => $in{'email'},
-                status       => 'error',
-                error_type   => 'list_not_open'
-            }
-        );
-        return undef;
-    }
+    my $previous_action =
+          ($param->{'action'} eq 'auth_add') ? 'subindex'
+        : ($param->{'action'} eq 'auth_del') ? 'sigindex'
+        : 'adimn';
 
-    my @ids = split /\0/, $in{'id'};
+    my @ids = grep {$_} split /\0/, $in{'id'};
+    return $previous_action unless @ids;
+
     $param->{'id'} = [@ids];
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
         arg             => join(',', sort @ids),
-        previous_action => 'sigindex'
+        previous_action => $previous_action,
     );
     return $next_action unless $next_action eq '1';
 
-    my $total = 0;
-    foreach my $id (@ids) {
-        next unless $id and $id =~ /\A\w+\z/;
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $robot,
+        action           => 'auth',
+        keyauth          => [@ids],
+        sender           => $param->{'user'}{'email'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        return $previous_action;
+    }
 
-        my $spool_req = Sympa::Spool::Auth->new(
-            context => $list,
-            keyauth => $id,
-            action  => 'del'
-        );
-        my ($request, $handle);
-        while (1) {
-            ($request, $handle) = $spool_req->next;
-            last unless $handle;
-            last if $request;
-        }
-        unless ($request) {
-            Sympa::Report::reject_report_web('user', 'already_deleted', {},
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
                 $param->{'action'});
-            wwslog('err',
-                'No request with authkey %s.  It may be already deleted',
-                $id);
-            web_db_log(
-                {   parameters => $id,
-                    status     => 'error',
-                    error_type => 'internal'
-                }
-            );
-            next;
-        }
-        next unless defined $request->{email} and $request->{email} =~ /\S/;
-
-        my $status = $list->delete_list_member(
-            users     => [$request->{email}],
-            exclude   => '1',
-            operation => 'del',
-        );
-        unless ($status) {
-            wwslog('info', 'Deletion failed: %s');
-            web_db_log(
-                {   parameters => $request->{email},
-                    status     => 'error',
-                    error_type => 'user'
-                }
-            );
-            Sympa::Report::reject_report_web('intern',
-                {sig => $request->{email}},
-                $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         } else {
-            $spool_req->remove($handle);
-            web_db_log({target => $request->{email}, status => 'success'});
-            $total++;
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
         }
     }
-    if ($total) {
-        Sympa::Report::notice_report_web('del_performed', {total => $total},
-            $param->{'action'});
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
     }
 
-    return 'sigindex';
+    return $previous_action;
 }
 
 ####################################################

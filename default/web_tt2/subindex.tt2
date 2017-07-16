@@ -61,7 +61,12 @@
 <input type="hidden" name="previous_list" value="[% list %]" />
 <input class="MainMenuLinks toggleButton" type="button"
   value="[%|loc%]Toggle Selection[%END%]" />
-<input class="MainMenuLinks" type="submit" name="action_add_fromsub" value="[%|loc%]Add selected addresses[%END%]" />
+  [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
+      'off', add cannot be performed. ~%]
+  [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
+    <input class="MainMenuLinks" type="submit" name="action_auth_add"
+     value="[%|loc%]Add selected addresses[%END%]" />
+  [%~ END %]
 <input class="MainMenuLinks" type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />
 </fieldset>
 </form>

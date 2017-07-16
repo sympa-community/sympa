@@ -58,7 +58,14 @@
   <p><strong>
     [%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]
   </strong></p>
-[%~ ELSIF confirm_action == 'del_fromsig' ~%]
+[%~ ELSIF confirm_action == 'auth_add' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Add subscribers[%END%] 
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to add selected users?[%END%] 
+  </strong></p>
+[%~ ELSIF confirm_action == 'auth_del' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Delete selected addresses[%END%]
   </h2>
@@ -183,6 +190,14 @@
   <input type="hidden" name="heldaction" value="[% heldaction %]" />
   <input type="hidden" name="listname" value="[% listname %]" />
   <input type="hidden" name="email" value="[% email %]" />
+[%~ ELSIF confirm_action == 'auth_add' ~%]
+  [% FOREACH i = id ~%]
+    <input type="hidden" name="id" value="[% i %]" />
+  [%~ END %]
+[%~ ELSIF confirm_action == 'auth_del' ~%]
+  [% FOREACH i = id ~%]
+    <input type="hidden" name="id" value="[% i %]" />
+  [%~ END %]
 [%~ ELSIF confirm_action == 'del' ~%]
   [% FOREACH e = email ~%]
     <input type="hidden" name="email" value="[% e %]" />
@@ -192,10 +207,6 @@
       [% IF quiet %]checked="checked"[%END%] />
     <label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label>
   </div>
-[%~ ELSIF confirm_action == 'del_fromsig' ~%]
-  [% FOREACH i = id ~%]
-    <input type="hidden" name="id" value="[% i %]" />
-  [%~ END %]
 [%~ ELSIF confirm_action == 'distribute' ~%]
   [% FOREACH i = id ~%]
     <input type="hidden" name="id" value="[% i %]" />
