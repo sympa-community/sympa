@@ -91,6 +91,12 @@ Fetchs the request matching with {authkey} and optional {request} attributes
 from held request spool,
 and if succeeded, processes it with C<md5> authentication level.
 
+=head1 CAVEAT
+
+Auth request handler itself never check privileges:
+It trust in senders if valid authorization key is specified.
+Access to this handler should be restricted sufficiently by applications.
+
 =head1 SEE ALSO
 
 L<Sympa::Request::Handler>, L<Sympa::Spindle::ProcessAuth>.
