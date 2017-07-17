@@ -822,124 +822,42 @@ sub add {
             ->faultdetail("Undefined list");
     }
 
-    # check authorization
-
-    my $result = Sympa::Scenario::request_action(
-        $list, 'add', 'md5',
-        {   'sender'                  => $sender,
-            'email'                   => $email,
-            'remote_host'             => $ENV{'REMOTE_HOST'},
-            'remote_addr'             => $ENV{'REMOTE_ADDR'},
-            'remote_application_name' => $ENV{'remote_application_name'}
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'add',
+        sender           => $sender,
+        email            => $email,
+        gecos            => $gecos,
+        quiet            => $quiet,
+        md5_check        => 1,
+        scenario_contest => {
+            sender                  => $sender,
+            email                   => $email,
+            remote_host             => $ENV{'REMOTE_HOST'},
+            remote_addr             => $ENV{'REMOTE_ADDR'},
+            remote_application_name => $ENV{'remote_application_name'}
         }
     );
-
-    my $action;
-    my $reason;
-    if (ref($result) eq 'HASH') {
-        $action = $result->{'action'};
-        $reason = $result->{'reason'};
+    unless ($spindle and $spindle->spin) {
+        die SOAP::Fault->faultcode('Server')->faultstring('Internal error');
     }
 
-    unless (defined $action) {
-        $log->syslog('info', 'Add %s@%s %s from %s: scenario error',
-            $listname, $robot, $email, $sender);
-        die SOAP::Fault->faultcode('Server')->faultstring('scenario error')
-            ->faultdetail(
-            "sender $sender email $email remote $ENV{'remote_application_name'} "
-            );
-    }
-
-    unless ($action =~ /do_it/) {
-        my $reason_string = get_reason_string($reason, $robot);
-        $log->syslog('info', 'Add %s@%s %s from %s refused (not allowed)',
-            $listname, $robot, $email, $sender);
-        die SOAP::Fault->faultcode('Client')->faultstring('Not allowed')
-            ->faultdetail($reason_string);
-    }
-
-    if ($list->is_list_member($email)) {
-        $log->syslog('err',
-            'Add %s@%s %s from %s: Failed, user already member of the list',
-            $listname, $robot, $email, $sender);
-        my $error = "User already member of list $listname";
-        die SOAP::Fault->faultcode('Server')
-            ->faultstring('Unable to add user')->faultdetail($error);
-
-    } else {
-        # If a list is not 'open' and allow_subscribe_if_pending has been set
-        # to 'off' returns error report.
-        unless ($list->{'admin'}{'status'} eq 'open'
-            or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq
-            'on') {
-            my $error =
-                sprintf 'Service unavailable because list status is \'%s\'',
-                $list->{'admin'}{'status'};
-            $log->syslog('info', 'List %s not open', $list);
-            die SOAP::Fault::faultcode("Server")
-                ->faultstring('List not open')->faultdetail($error);
-        }
-
-        my $u;
-        my $defaults = $list->get_default_user_options();
-        my $u2       = Sympa::User->new($email);
-        %{$u} = %{$defaults};
-        $u->{'email'} = $email;
-        $u->{'gecos'} = $gecos || $u2->gecos;
-        $u->{'date'}  = $u->{'update_date'} = time;
-
-        # If Password validation is enabled check the submitted password
-        # against the site configured constraints
-        if ($u2->{'password'}) {
-            if (my $result =
-                Sympa::Tools::Password::password_validation($u->{'password'}))
-            {
-                $log->syslog('info', 'add %s@%s %s from %s : scenario error',
-                    $listname, $robot, $email, $sender);
-                die SOAP::Fault->faultcode('Server')
-                    ->faultstring('Weak password')
-                    ->faultdetail('Weak password: ' . $result);
-            }
-            $u->{'password'} = $u2->{'password'};
-        } else {
-            $u->{'password'} = Sympa::Tools::Password::tmp_passwd($email);
-        }
-
-        $u->{'lang'} = $u2->lang || $list->{'admin'}{'lang'};
-
-        $list->add_list_member($u);
-        if (defined $list->{'add_outcome'}{'errors'}) {
-            $log->syslog('info', 'Add %s@%s %s from %s: Unable to add user',
-                $listname, $robot, $email, $sender);
-            my $error = sprintf "Unable to add user %s in list %s: %s",
-                $email, $listname,
-                $list->{'add_outcome'}{'errors'}{'error_message'};
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'auth') {
+            my $reason_string = get_reason_string($report->[2], $robot);
+            die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
+                ->faultdetail($reason_string);
+        } elsif ($report->[1] eq 'intern') {
             die SOAP::Fault->faultcode('Server')
-                ->faultstring('Unable to add user')->faultdetail($error);
+                ->faultstring('Internal error');
+        } elsif ($report->[1] eq 'notice') {
+            return SOAP::Data->name('result')->type('boolean')->value(1);
+        } elsif ($report->[1] eq 'user') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Undef')
+                ->faultdetail($report->[2]);
         }
     }
-
-    ## Now send the welcome file to the user if it exists and notification is
-    ## supposed to be sent.
-    unless ($quiet || $action =~ /quiet/i) {
-        unless ($list->send_probe_to_user('welcome', $email)) {
-            $log->syslog('notice', 'Unable to send "welcome" probe to %s',
-                $email);
-        }
-    }
-
-    $log->syslog('info', 'ADD %s %s from %s accepted (%d subscribers)',
-        $list->{'name'}, $email, $sender, $list->get_total());
-    if ($action =~ /notify/i) {
-        $list->send_notify_to_owner(
-            'notice',
-            {   'who'     => $email,
-                'gecos'   => $gecos,
-                'command' => 'add',
-                'by'      => $sender
-            }
-        );
-    }
+    return SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub del {
@@ -987,108 +905,41 @@ sub del {
             ->faultdetail("Undefined list");
     }
 
-    # check authorization
-
-    my $result = Sympa::Scenario::request_action(
-        $list, 'del', 'md5',
-        {   'sender'                  => $sender,
-            'email'                   => $email,
-            'remote_host'             => $ENV{'REMOTE_HOST'},
-            'remote_addr'             => $ENV{'REMOTE_ADDR'},
-            'remote_application_name' => $ENV{'remote_application_name'}
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'del',
+        sender           => $sender,
+        email            => $email,
+        quiet            => $quiet,
+        md5_check        => 1,
+        scenario_contest => {
+            sender                  => $sender,
+            email                   => $email,
+            remote_host             => $ENV{'REMOTE_HOST'},
+            remote_addr             => $ENV{'REMOTE_ADDR'},
+            remote_application_name => $ENV{'remote_application_name'}
         }
     );
-
-    my $action;
-    my $reason;
-    if (ref($result) eq 'HASH') {
-        $action = $result->{'action'};
-        $reason = $result->{'reason'};
+    unless ($spindle and $spindle->spin) {
+        die SOAP::Fault->faultcode('Server')->faultstring('Internal error');
     }
 
-    unless (defined $action) {
-        $log->syslog('info', 'Del %s@%s %s from %s: scenario error',
-            $listname, $robot, $email, $sender);
-        die SOAP::Fault->faultcode('Server')->faultstring('scenario error')
-            ->faultdetail(
-            "sender $sender email $email remote $ENV{'remote_application_name'} "
-            );
-    }
-
-    unless ($action =~ /do_it/) {
-        my $reason_string = get_reason_string($reason, $robot);
-        $log->syslog('info',
-            'Del %s@%s %s from %s by %srefused (not allowed)',
-            $listname, $robot, $email, $sender,
-            $ENV{'remote_application_name'});
-        die SOAP::Fault->faultcode('Client')->faultstring('Not allowed')
-            ->faultdetail($reason_string);
-    }
-
-    my $user_entry = $list->get_list_member($email);
-    unless ((defined $user_entry)) {
-        $log->syslog('info', 'DEL %s %s from %s refused, not on list',
-            $listname, $email, $sender);
-        die SOAP::Fault->faultcode('Client')->faultstring('Not subscribed')
-            ->faultdetail('Not member of list or not subscribed');
-    }
-
-    # If a list is not 'open' and allow_subscribe_if_pending has been set
-    # to 'off' returns error report.
-    unless ($list->{'admin'}{'status'} eq 'open'
-        or Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq 'on')
-    {
-        my $error =
-            sprintf 'Service unavailable because list status is \'%s\'',
-            $list->{'admin'}{'status'};
-        $log->syslog('info', 'List %s not open', $list);
-        die SOAP::Fault::faultcode("Server")->faultstring('List not open')
-            ->faultdetail($error);
-    }
-
-    # Really delete and rewrite to disk.
-    unless (
-        $list->delete_list_member(
-            'users'     => [$email],
-            'exclude'   => '1',
-            'operation' => 'del'
-        )
-        ) {
-        my $error =
-            "Unable to delete user $email from list $listname for command 'del'";
-        $log->syslog('info', 'DEL %s %s from %s failed, ' . $error);
-        die SOAP::Fault->faultcode('Server')
-            ->faultstring('Unable to remove subscriber information')
-            ->faultdetail('Database access failed');
-    }
-
-    ## Send a notice to the removed user, unless the owner indicated
-    ## quiet del.
-    unless ($quiet || $action =~ /quiet/i) {
-        unless (
-            Sympa::send_file(
-                $list, 'removed',
-                $email, {'auto_submitted' => 'auto-generated'}
-            )
-            ) {
-            $log->syslog('notice', 'Unable to send template "removed" to %s',
-                $email);
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'auth') {
+            my $reason_string = get_reason_string($report->[2], $robot);
+            die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
+                ->faultdetail($reason_string);
+        } elsif ($report->[1] eq 'intern') {
+            die SOAP::Fault->faultcode('Server')
+                ->faultstring('Internal error');
+        } elsif ($report->[1] eq 'notice') {
+            return SOAP::Data->name('result')->type('boolean')->value(1);
+        } elsif ($report->[1] eq 'user') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Undef')
+                ->faultdetail($report->[2]);
         }
     }
-
-    $log->syslog('info', 'DEL %s %s from %s accepted (%d subscribers)',
-        $listname, $email, $sender, $list->get_total());
-    if ($action =~ /notify/i) {
-        $list->send_notify_to_owner(
-            'notice',
-            {   'who'     => $email,
-                'gecos'   => "",
-                'command' => 'del',
-                'by'      => $sender
-            }
-        );
-    }
-    return 1;
+    return SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub review {
