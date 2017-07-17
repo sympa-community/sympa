@@ -32,6 +32,7 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Tracking;
 
 use base qw(Sympa::Request::Handler);
 
@@ -98,6 +99,13 @@ sub _twist {
         );
         $self->add_stash($request, 'intern');
         return undef;
+    }
+
+    # Only when deletion was done by request, bounce information will be
+    # cleared.  Note that tracking information will be kept.
+    my $tracking = Sympa::Tracking->new(context => $list);
+    if ($tracking) {
+        $tracking->remove_message_by_email($who);
     }
 
     ## Send a notice to the removed user, unless the owner indicated

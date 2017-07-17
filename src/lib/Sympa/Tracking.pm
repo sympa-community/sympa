@@ -467,6 +467,28 @@ sub find_notification_id_by_message {
     return $pk_notifications[0];
 }
 
+sub remove_message_by_email {
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $self  = shift;
+    my $email = shift;
+
+    $email = Sympa::Tools::Text::canonic_email($email);
+    return undef unless $email;
+
+    my $bounce_dir    = $self->{directory};
+    my $escaped_email = Sympa::Tools::Text::escape_chars($email);
+    my $ret = unlink sprintf('%s/%s', $bounce_dir, $escaped_email);
+
+    # Remove HTML view.
+    Sympa::Tools::File::remove_dir(
+        join('/',
+            $Conf::Conf{'viewmail_dir'}, 'bounce',
+            $self->{context}->get_id,    $escaped_email)
+    );
+
+    return $ret;
+}
+
 ##############################################
 #   remove_message_by_id
 ##############################################
@@ -741,6 +763,11 @@ True value if storing succeed.  Otherwise false.
 =item find_notification_id_by_message
 
 TBD.
+
+=item remove_message_by_email
+
+TBD.
+Introduced on Sympa 6.2.19b.
 
 =item remove_message_by_id
 
