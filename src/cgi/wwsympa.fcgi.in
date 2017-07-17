@@ -7111,6 +7111,7 @@ sub do_import {
         action           => 'import',
         dump             => $content,
         sender           => $param->{'user'}{'email'},
+        quiet            => $param->{'quiet'},
         md5_check        => 1,
         scenario_context => {
             sender      => $param->{'user'}{'email'},
@@ -7169,6 +7170,7 @@ sub do_add {
             action           => 'add',
             email            => $email,
             sender           => $param->{'user'}{'email'},
+            quiet            => $param->{'quiet'},
             md5_check        => 1,
             scenario_context => {
                 email       => $email,
@@ -7235,6 +7237,7 @@ sub do_del {
             action           => 'del',
             email            => $email,
             sender           => $param->{'user'}{'email'},
+            quiet            => $param->{'quiet'},
             md5_check        => 1,
             scenario_context => {
                 email       => $email,

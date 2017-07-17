@@ -197,6 +197,11 @@ users will be added even if the list is closed.
 I<Optional>.
 Display name of the user to be added.
 
+=item {quiet}
+
+I<Optional>.
+Don't notify addition to the user.
+
 =back
 
 =head1 SEE ALSO

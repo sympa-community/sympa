@@ -67,16 +67,19 @@ sub _twist {
         return undef;
     }
 
-    # If a list is not 'open' and allow_subscribe_if_pending has been set to
-    # 'off' returns undef.
-    unless ($list->{'admin'}{'status'} eq 'open'
-        or
-        Conf::get_robot_conf($list->{'domain'}, 'allow_subscribe_if_pending')
-        eq 'on') {
-        $self->add_stash($request, 'user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}});
-        $log->syslog('info', 'List %s not open', $list);
-        return undef;
+    unless ($request->{force}) {
+        # If a list is not 'open' and allow_subscribe_if_pending has been set
+        # to 'off' returns undef.
+        unless (
+            $list->{'admin'}{'status'} eq 'open'
+            or Conf::get_robot_conf($list->{'domain'},
+                'allow_subscribe_if_pending') eq 'on'
+            ) {
+            $self->add_stash($request, 'user', 'list_not_open',
+                {'status' => $list->{'admin'}{'status'}});
+            $log->syslog('info', 'List %s not open', $list);
+            return undef;
+        }
     }
 
     # Really delete and rewrite to disk.
@@ -153,6 +156,30 @@ Sympa::Request::Handler::del - del request handler
 Removes a user from a list (requested by another user).
 Verifies the authorization and sends acknowledgements
 unless quiet is specified.
+
+=head2 Attributes
+
+See also L<Sympa::Request::Handler/"Attributes">.
+
+=over
+
+=item {email}
+
+I<Mandatory>.
+E-mail of the user to be deleted.
+
+=item {force}
+
+I<Optional>.
+If true value is specified,
+users will be deleted even if the list is closed.
+
+=item {quiet}
+
+I<Optional>.
+Don't notify addition to the user.
+
+=back
 
 =head1 SEE ALSO
 
