@@ -167,7 +167,9 @@
 
 <form action="[% path_cgi %]" method="POST">
 [% IF confirm_action == 'add' ~%]
-  <input type="hidden" name="email" value="[% email %]" />
+  [% FOREACH e = email ~%]
+    <input type="hidden" name="email" value="[% e %]" />
+  [%~ END %]
   <div>
     <input type="checkbox" id="quiet" type="checkbox" name="quiet" value="1"
       [% IF quiet %]checked="checked"[%END%] />
