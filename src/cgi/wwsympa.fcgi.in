@@ -2398,7 +2398,7 @@ sub get_parameters {
                 close DUMP;
 
                 Sympa::Report::reject_report_web('user', 'syntax_errors',
-                    {'params' => $p},
+                    {p_name => $p},
                     '', '');
                 wwslog(
                     'err',
@@ -2767,7 +2767,7 @@ sub check_param_in {
         ## Create a new List instance.
         unless ($list = Sympa::List->new($in{'list'}, $robot)) {
             Sympa::Report::reject_report_web('user', 'unknown_list',
-                {'list' => $in{'list'}},
+                {listname => $in{'list'}},
                 $param->{'action'}, '');
             wwslog('info', 'Unknown list %s', $in{'list'});
             return undef;
@@ -2786,7 +2786,7 @@ sub check_param_in {
         ## Create a new Sympa::List instance.
         unless ($list = Sympa::List->new($in{'list'}, $robot, {})) {
             Sympa::Report::reject_report_web('user', 'unknown_list',
-                {'list' => $in{'list'}},
+                {listname => $in{'list'}},
                 $param->{'action'}, '');
             wwslog('info', 'Unknown list %s', $in{'list'});
             return undef;
@@ -5303,7 +5303,7 @@ sub do_set {
 
     unless ($list->is_list_member($email)) {
         Sympa::Report::reject_report_web('user', 'not_subscriber',
-            {'list' => $param->{'list'}},
+            {email => $email, listname => $param->{'list'}},
             $param->{'action'}, $list);
         wwslog('info', '%s not subscriber of list %s',
             $email, $param->{'list'});
@@ -5321,7 +5321,10 @@ sub do_set {
         Sympa::Report::reject_report_web(
             'user',
             'not_available_reception_mode',
-            {'recpetion_mode' => $reception},
+            {   reception_modes => [$list->available_reception_mode],
+                recpetion_mode  => $reception,
+                listname        => $list->{'name'},
+            },
             $param->{'action'}, $list
         );
         return undef;
@@ -5358,7 +5361,7 @@ sub do_set {
         ## Check if new email is already subscribed
         if ($list->is_list_member($in{'new_email'})) {
             Sympa::Report::reject_report_web('user', 'already_subscriber',
-                {'list' => $list->{'name'}},
+                {email => $in{'new_email'}, listname => $list->{'name'}},
                 $param->{'action'}, $list);
             wwslog('info', '%s already subscriber', $in{'new_email'});
             web_db_log(
@@ -5489,7 +5492,7 @@ sub _check_custom_attribute {
             or ($ca->{type} eq 'string'  and $value =~ /\A.+\z/)
             or ($ca->{type} eq 'text'    and length $value)) {
             Sympa::Report::reject_report_web('user', 'syntax_errors',
-                {'params' => $ca->{name}}, $action);
+                {p_name => $ca->{name}}, $action);
             wwslog('info', 'Syntax error in parameter "%s"', $ca->{id});
             web_db_log(
                 {   'parameters' => $ca->{id},
@@ -5716,7 +5719,7 @@ sub do_suboptions {
         Sympa::Report::reject_report_web(
             'user',
             'not_subscriber',
-            {list => $list->{'name'}},
+            {email => $param->{'user'}{'email'}, listname => $list->{'name'}},
             $param->{'action'},
             $list,
             $param->{'user'}{'email'},
@@ -5789,6 +5792,8 @@ sub do_auto_signoff {
     my $email = Sympa::Tools::Text::canonic_email($in{'email'});
     return $default_home
         unless $email and Sympa::Tools::Text::valid_email($email);
+
+    $param->{'email'} = $email;
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -6529,7 +6534,7 @@ sub do_copy_template {
             unless ($list_out =
                 Sympa::List->new($in{'list_out'}, $robot, {just_try => 1})) {
                 Sympa::Report::reject_report_web('user', 'unknown_list',
-                    {'list' => $in{'list_out'}},
+                    {listname => $in{'list_out'}},
                     $param->{'action'}, '');
                 wwslog('info', 'Unknown list %s', $in{'list_out'});
                 web_db_log(
@@ -7684,7 +7689,8 @@ sub do_reject {
         }
 
         unless ($message) {
-            Sympa::Report::reject_report_web('user', 'already_moderated', {},
+            Sympa::Report::reject_report_web('user', 'already_moderated',
+                {key => $id, listname => $list->{'name'}},
                 $param->{'action'});
             wwslog('err', 'Unable to get message with <%s> for list %s',
                 $id, $list);
@@ -7839,7 +7845,8 @@ sub do_distribute {
         }
 
         unless ($message) {
-            Sympa::Report::reject_report_web('user', 'already_moderated', {},
+            Sympa::Report::reject_report_web('user', 'already_moderated',
+                {key => $id, listname => $list->{'name'}},
                 $param->{'action'});
             wwslog('err', 'Unable to find message with <%s> for list %s',
                 $id, $list);
@@ -7930,7 +7937,8 @@ sub do_add_frommod {
             last if $message;    # Won't check {validated} metadata.
         }
         unless ($message) {
-            Sympa::Report::reject_report_web('user', 'already_moderated', {},
+            Sympa::Report::reject_report_web('user', 'already_moderated',
+                {key => $id, listname => $list->{'name'}},
                 $param->{'action'});
             wwslog('err',
                 'No message with authkey %s.  It may be already moderated',
@@ -8082,7 +8090,8 @@ sub do_viewmod {
         last if $message and not $message->{validated};
     }
     unless ($message) {
-        Sympa::Report::reject_report_web('user', 'already_moderated', {},
+        Sympa::Report::reject_report_web('user', 'already_moderated',
+            {key => $id, listname => $list->{'name'}},
             $param->{'action'});
         wwslog('err', 'Unable to get message with <%s> for list %s',
             $id, $list);
@@ -10155,7 +10164,7 @@ sub do_editsubscriber {
 
     unless ($subscriber = $list->get_list_member($in{'email'})) {
         Sympa::Report::reject_report_web('user', 'user_not_subscriber',
-            {'email' => $in{'email'}},
+            {email => $in{'email'}, listname => $list->{'name'}},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'Subscriber %s not found', $in{'email'});
         return $in{'previous_action'} || 'review';
@@ -10517,7 +10526,7 @@ sub do_resetbounce {
 
         unless ($list->is_list_member($email)) {
             Sympa::Report::reject_report_web('user', 'user_not_subscriber',
-                {'email' => $email},
+                {email => $email, listname => $list->{'name'}},
                 $param->{'action'}, $list);
             wwslog('info', '%s not subscribed', $email);
             web_db_log(
@@ -15550,7 +15559,8 @@ sub do_request_topic {
         last if $message;
     }
     unless ($message) {
-        Sympa::Report::reject_report_web('intern', 'already_confirmed', {},
+        Sympa::Report::reject_report_web('intern', 'already_confirmed',
+            {key => $in{'authkey'}},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('notice', 'Cannot get message with key <%s> for list %s',
             $in{'authkey'}, $list);
@@ -15592,7 +15602,8 @@ sub do_tag_topic_by_sender {
         last if $message;
     }
     unless ($message) {
-        Sympa::Report::reject_report_web('intern', 'already_confirmed', {},
+        Sympa::Report::reject_report_web('intern', 'already_confirmed',
+            {key => $in{'authkey'}},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('info', 'cannot get message with key <%s> for list %s',
             $in{'authkey'}, $list);
@@ -15668,7 +15679,7 @@ sub do_search_user {
 
     if ($in{'email'} =~ /[<>\\\*\$]/) {
         Sympa::Report::reject_report_web('user', 'syntax_errors',
-            {'params' => 'email'},
+            {p_name => 'email'},
             $param->{'action'});
         wwslog('err', 'Syntax error');
         return undef;

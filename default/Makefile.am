@@ -353,6 +353,7 @@ nobase_default_DATA = \
 	mail_tt2/remind.tt2 \
 	mail_tt2/removed.tt2 \
 	mail_tt2/request_auth.tt2 \
+	mail_tt2/report.tt2 \
 	mail_tt2/review.tt2 \
 	mail_tt2/send_auth.tt2 \
 	mail_tt2/sendpasswd.tt2 \
@@ -406,5 +407,7 @@ install-data-hook:
 	$(LN_S) -f lists.tt2 search_list.tt2; \
 	rm -f authorization_reject.tt2; \
 	$(LN_S) -f ../mail_tt2/authorization_reject.tt2; \
+	rm -f report.tt2; \
+	$(LN_S) -f ../mail_tt2/report.tt2; \
 	test -f css_ie.tt2 || echo '' >> css_ie.tt2
 

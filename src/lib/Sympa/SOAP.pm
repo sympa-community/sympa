@@ -512,7 +512,8 @@ sub info {
         unless (defined $action);
 
     if ($action =~ /reject/i) {
-        my $reason_string = get_reason_string($result->{'reason'}, $robot);
+        my $reason_string = get_reason_string(
+            [{action => 'info'}, 'auth', $result->{'reason'}], $robot);
         $log->syslog('info', 'Info %s from %s refused (not allowed)',
             $listname, $sender);
         die SOAP::Fault->faultcode('Server')->faultstring('Not allowed')
@@ -843,8 +844,8 @@ sub add {
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
+        my $reason_string = get_reason_string($report, $robot);
         if ($report->[1] eq 'auth') {
-            my $reason_string = get_reason_string($report->[2], $robot);
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail($reason_string);
         } elsif ($report->[1] eq 'intern') {
@@ -854,7 +855,7 @@ sub add {
             return SOAP::Data->name('result')->type('boolean')->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
-                ->faultdetail($report->[2]);
+                ->faultdetail($reason_string);
         }
     }
     return SOAP::Data->name('result')->type('boolean')->value(1);
@@ -925,8 +926,8 @@ sub del {
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
+        my $reason_string = get_reason_string($report, $robot);
         if ($report->[1] eq 'auth') {
-            my $reason_string = get_reason_string($report->[2], $robot);
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail($reason_string);
         } elsif ($report->[1] eq 'intern') {
@@ -936,7 +937,7 @@ sub del {
             return SOAP::Data->name('result')->type('boolean')->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
-                ->faultdetail($report->[2]);
+                ->faultdetail($reason_string);
         }
     }
     return SOAP::Data->name('result')->type('boolean')->value(1);
@@ -992,7 +993,8 @@ sub review {
         unless (defined $action);
 
     if ($action =~ /reject/i) {
-        my $reason_string = get_reason_string($result->{'reason'}, $robot);
+        my $reason_string = get_reason_string(
+            [{action => 'review'}, 'auth', $result->{'reason'}], $robot);
         $log->syslog('info', 'Review %s from %s refused (not allowed)',
             $listname, $sender);
         die SOAP::Fault->faultcode('Server')->faultstring('Not allowed')
@@ -1176,8 +1178,8 @@ sub signoff {
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
+        my $reason_string = get_reason_string($report, $robot);
         if ($report->[1] eq 'auth') {
-            my $reason_string = get_reason_string($report->[2], $robot);
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail($reason_string);
         } elsif ($report->[1] eq 'intern') {
@@ -1187,7 +1189,7 @@ sub signoff {
             return SOAP::Data->name('result')->type('boolean')->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
-                ->faultdetail($report->[2]);
+                ->faultdetail($reason_string);
         }
     }
     return SOAP::Data->name('result')->type('boolean')->value(1);
@@ -1236,8 +1238,8 @@ sub subscribe {
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
+        my $reason_string = get_reason_string($report, $robot);
         if ($report->[1] eq 'auth') {
-            my $reason_string = get_reason_string($report->[2], $robot);
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail($reason_string);
         } elsif ($report->[1] eq 'intern') {
@@ -1247,7 +1249,7 @@ sub subscribe {
             return SOAP::Data->name('result')->type('boolean')->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
-                ->faultdetail($report->[2]);
+                ->faultdetail($reason_string);
         }
     }
     return SOAP::Data->name('result')->type('boolean')->value(1);
@@ -1592,14 +1594,22 @@ sub struct_to_soap {
 }
 
 sub get_reason_string {
-    my ($reason, $robot) = @_;
+    my $report = shift;
+    my $robot  = shift;
 
-    my $data = {'reason' => $reason};
+    my $data = {
+        report_type  => $report->[1],
+        report_entry => $report->[2],
+        report_param => {
+            action => $report->[0]->{action},
+            %{$report->[3] || {}},
+        },
+    };
     my $string;
 
     my $template =
         Sympa::Template->new($robot, subdir => 'mail_tt2');    # FIXME: lang?
-    unless ($template->parse($data, 'authorization_reject.tt2', \$string)) {
+    unless ($template->parse($data, 'report.tt2', \$string)) {
         my $error = $template->{last_error};
         $error = $error->as_string if ref $error;
         Sympa::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);

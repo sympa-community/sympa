@@ -42,7 +42,7 @@ sub _twist {
     my $request = shift;
 
     $log->syslog('notice', 'Unknown command found: %s', $request->{cmd_line});
-    $self->add_stash($request, 'user', 'unknown_action');
+    $self->add_stash($request, 'user', 'unknown_command');
     return undef;
 }
 

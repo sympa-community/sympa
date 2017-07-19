@@ -68,7 +68,7 @@ sub _twist {
 
     if ($list->is_list_member($email)) {
         $self->add_stash($request, 'user', 'already_subscriber',
-            {'email' => $email, list => $list->{'name'}});
+            {'email' => $email});
         $log->syslog('err',
             'ADD command rejected; user "%s" already member of list "%s"',
             $email, $which);

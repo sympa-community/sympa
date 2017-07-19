@@ -52,6 +52,13 @@
   <p><strong>
     [%|loc%]Do you really want this action to be taken?[%END%]
   </strong></p>
+[%~ ELSIF confirm_action == 'auto_signoff' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Unsubscribe[%END%]
+  </h2>
+  <p><strong>
+    [%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]
+  </strong></p>
 [%~ ELSIF confirm_action == 'close_list' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Remove List[%END%]
@@ -206,6 +213,8 @@
   [% FOREACH i = id ~%]
     <input type="hidden" name="id" value="[% i %]" />
   [%~ END %]
+[%~ ELSIF confirm_action == 'auto_signoff' ~%]
+  <input type="hidden" name="email" value="[% email %]" />
 [%~ ELSIF confirm_action == 'del' ~%]
   [% FOREACH e = email ~%]
     <input type="hidden" name="email" value="[% e %]" />

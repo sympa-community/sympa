@@ -105,7 +105,10 @@ Note, however, that many viruses fake sender's e-mail address, so it is possible
 [%|loc(list.name)%]Your message for list '%1' (attached below) was rejected.
 You are not allowed to send this message for the following reason:[%END%]
 
- [% PROCESS authorization_reject.tt2 -%]
+ [% PROCESS report.tt2
+    report_type='auth'
+    report_entry=reason
+ -%]
 
 [%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
 

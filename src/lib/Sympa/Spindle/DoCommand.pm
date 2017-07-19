@@ -176,7 +176,7 @@ sub _twist {
 
         # Send the reply message.
         my $reports = $spindle->{stash};
-        if (grep { $_ and $_->[1] eq 'user' and $_->[2] eq 'unknown_action' }
+        if (grep { $_ and $_->[1] eq 'user' and $_->[2] eq 'unknown_command' }
             @{$spindle->{stash} || []}) {
             $log->db_log(
                 'robot' => $robot,
