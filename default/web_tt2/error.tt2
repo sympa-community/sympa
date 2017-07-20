@@ -36,7 +36,7 @@
     [% PROCESS report.tt2
        report_type='user'
        report_entry=u_err.msg
-       reort_param=u_err
+       report_param=u_err
     %]
   [%~ END ~%]
   [% IF error_msg.match('\S') ~%]
