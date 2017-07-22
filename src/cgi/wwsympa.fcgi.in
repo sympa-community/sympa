@@ -975,34 +975,8 @@ our %in_regexp = (
 ## of expressions
 our %in_negative_regexp = ('arc_file' => '^(arctxt|\.)');
 
-## List some required filtering of incoming parameters, depending on current
-## action
-## Paramater can be '*' or 'param*'
-## Like Q-encoding
-my %filtering = (
-    #XXX'd_reject_shared' => {'id' => 'qencode'},
-    #XXX'd_install_shared' => {'id' => 'qencode'},
-    #XXX'd_read' => {'path' => 'qencode'},
-    #XXX'd_create_child' => {'new_name' => 'qencode', 'path' => 'qencode'},
-    #XXX'd_unzip' => {'path' => 'qencode'},
-    #XXX'd_editfile' => {'path' => 'qencode'},
-    #XXX'd_properties' => {'path' => 'qencode'},
-    #XXX'd_update' => {'path' => 'qencode'},
-    #XXX'd_describe' => {'path' => 'qencode'},
-    #XXX'd_delete' => {'path' => 'qencode'},
-    #XXX'd_rename' => {'path' => 'qencode', 'new_name' => 'qencode'},
-    #XXX'd_control' => {'path' => 'qencode'},
-    #XXX'd_change_access' => {'path' => 'qencode'},
-    #XXX'd_set_owner' => {'path' => 'qencode'},
-    #XXX'requestpasswd' => {'email' => 'fix_escape_uri'},
-    #XXX'viewbounce' => {'email' => 'fix_escape_uri'},
-    #XXX'editsubscriber' => {'email' => 'fix_escape_uri'},
-    ## Required because outgoing parameters have been html-escaped in
-    ## edit_list_request
-    #'edit_list' => {'*param*' => 'unescape_html'},
-    ## Remove leading/trailing white spaces and lowercase
-    #XXX'move_user' => {'*email' => 'normalize'},
-);
+# No longer used as of 6.2.19b.
+#my %filtering;
 
 ## Set locale configuration
 my $language = Sympa::Language->instance;
@@ -2418,50 +2392,6 @@ sub get_parameters {
     $in{custom_attribute} = $custom_attribute;
     $in{custom_input}     = $custom_input;
     $in{plugin}           = $plugin;
-
-    ## For shared-related actions, Q-encode filenames
-    ## This required for filenames that include non ascii characters
-    if (defined $filtering{$in{'action'}}) {
-
-        my %apply_to;    ## Build list of parameters filters apply to
-        foreach my $p (keys %{$filtering{$in{'action'}}}) {
-            if ($p =~ /\*/) {    ## use of wildcar
-                my $p_regexp = $p;
-                $p_regexp =~ s/\*/\.\*/g;    ## Turn wildcar into a regexp
-                foreach my $in_key (keys %in) {
-                    if ($in_key =~ /^$p_regexp$/) {
-                        $apply_to{$in_key} = $filtering{$in{'action'}}{$p};
-                    }
-                }
-            } else {
-                $apply_to{$p} = $filtering{$in{'action'}}{$p};
-            }
-        }
-
-        foreach my $p (keys %apply_to) {
-            my $filtering_action = $apply_to{$p};
-            #if ($filtering_action eq 'qencode') {
-            #    ## Q-encode file path
-            #    my @tokens = split /\//, $in{$p};
-            #    foreach my $i (0 .. $#tokens) {
-            #        $tokens[$i] =
-            #            Sympa::Tools::Text::qencode_filename($tokens[$i]);
-            #    }
-            #    $in{$p} = join '/', @tokens;
-            #} elsif ($filtering_action eq 'unescape_html') {
-            #    $in{$p} = Sympa::Tools::Text::unescape_chars($in{$p});
-            #} elsif ($filtering_action eq 'fix_escape_uri') {
-            #    # Sympa::Tools::Text::escape_chars() replaces '/' with
-            #    # %A5 ('¥' character).  This should be transformed into a
-            #    # '/' again.
-            #    $in{$p} =~ s{/}{\xa5}g;
-            if ($filtering_action eq 'normalize') {
-                $in{$p} =~ s/^\$+//;    ## remove leading \s
-                $in{$p} =~ s/\$+$//;    ## remove trailing \s
-                $in{$p} = lc($in{$p});  ## lowercase
-            }
-        }
-    }
 
     return 1;
 }
