@@ -528,12 +528,6 @@ sub send_notify_to_user {
                 'family_signoff/' . $param->{family} . '/' . $user,
                 $param->{ip})
                 or return undef;
-        } elsif ($operation eq 'ticket_to_send') {
-            $param->{'one_time_ticket'} =
-                Sympa::Ticket::create($user, $robot_id,
-                'change_email/' . $param->{email},
-                $param->{ip})
-                or return undef;
         }
 
         unless (Sympa::send_file($that, 'user_notification', $user, $param)) {

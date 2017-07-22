@@ -85,7 +85,7 @@ sub _twist {
         return undef;
     }
 
-    $self->add_stash($request, 'notice', 'sent_to_user')
+    $self->add_stash($request, 'notice', 'sent_to_user', {email => $to})
         unless $request->{quiet};
 
     $log->syslog(

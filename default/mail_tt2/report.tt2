@@ -96,6 +96,12 @@
 [%|loc()%]The 'invite' feature is restricted to list subscribers.[%END%]
 [%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
+[%~ ELSIF reason == 'move_user_closed' ~%]
+[%|loc()%]The 'move_user' feature is unavailable.[%END%]
+
+[%~ ELSIF reason == 'move_user_listmaster' ~%]
+[%|loc()%]Changing user's email is not allowed.[%END%]
+
 [%~ ELSIF report_entry == 'remind_listmaster' ~%]
 [%|loc()%]The 'remind' feature is restricted to listmaster.[%END%]
 
@@ -298,7 +304,11 @@
   [%|loc%]Your request has been forwarded to the list owner[%END%]
 
 [%~ ELSIF report_entry == 'sent_to_user' ~%]
-[%|loc%]To confirm your identity and prevent anyone from subscribing you to this list against your will, a message containing an validation link was sent to the e-mail address you provided.[%END%]
+  [% IF report_param.email ~%]
+    [%|loc(report_param.email)%]Your request has been forwarded to the user %1[%END%]
+  [%~ ELSE ~%]
+    [%|loc%]To confirm your identity and prevent anyone from subscribing you to this list against your will, a message containing an validation link was sent to the e-mail address you provided.[%END%]
+  [%~ END %]
 
 [%~###~%]
 [%~ ELSIF report_entry == 'sent_to_user' ~%]
@@ -766,11 +776,20 @@ Warning: this message may already have been sent by one of the list's editor.[%E
 [%~ ELSIF report_entry == 'invalid_filename' ~%]
   [%|loc(report_param.filename)%]Invalid filename: '%1'[%END%]
 
+[%~ ELSIF report_entry == 'change_member_email_failed' ~%]
+  [%|loc(report_param.email,report_param.listname)%]Failed to update member email '%1' in list '%2'.[%END%]
+
 [%~ ELSIF report_entry == 'change_member_email_failed_included' ~%]
   [%|loc(report_param.listname)%]Failed to update member email in list '%1', list owner has been notified.[%END%]
 
+[%~ ELSIF report_entry == 'change_member_email_failed_deleting' ~%]
+  [%|loc(report_param.email,report_param.listname)%]Failed to delete member email '%1' in list '%2'.[%END%]
+
 [%~ ELSIF report_entry == 'change_admin_email_failed_included' ~%]
   [%|loc(report_param.listname)%]Failed to update admin email in list '%1', list owner has been notified.[%END%]
+
+[%~ ELSIF report_entry == 'no_email_changed' ~%]
+[%|loc%]Address was not changed.[%END%]
 
 [%~ ELSIF report_entry == 'merge_failed' ~%]
   [%|loc(report_param.error)%]Your message cannot be personalized due to error: %1.  Please check template syntax.[%END%]

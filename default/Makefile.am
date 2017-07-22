@@ -114,6 +114,9 @@ nobase_default_DATA = \
 	scenari/invite.owner \
 	scenari/invite.private \
 	scenari/invite.public \
+	scenari/move_user.auth \
+	scenari/move_user.closed \
+	scenari/move_user.listmaster \
 	scenari/remind.listmaster \
 	scenari/remind.listmasterdkim \
 	scenari/remind.owner \

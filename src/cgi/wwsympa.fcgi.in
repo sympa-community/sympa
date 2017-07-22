@@ -291,8 +291,7 @@ our %comm = (
     'dump_scenario'        => 'do_dump_scenario',
     'dump'                 => 'do_dump',
     'remind'               => 'do_remind',
-    'change_email'         => 'do_change_email',
-    'change_email_request' => 'do_change_email_request',
+    'move_user'            => 'do_move_user',
     'load_cert'            => 'do_load_cert',
     'compose_mail'         => 'do_compose_mail',
     'send_mail'            => 'do_send_mail',
@@ -343,11 +342,13 @@ our %comm = (
 );
 
 my %comm_aliases = (
-    'add_fromsub' => 'auth_add',
-    'add_request' => 'import',
-    'del_fromsig' => 'auth_del',
-    'sigrequest'  => 'signoff',
-    'subrequest'  => 'subscribe',
+    'add_fromsub'          => 'auth_add',
+    'add_request'          => 'import',
+    'change_email'         => 'move_user',
+    'change_email_request' => 'move_user',
+    'del_fromsig'          => 'auth_del',
+    'sigrequest'           => 'signoff',
+    'subrequest'           => 'subscribe',
 );
 
 my %auth_action = (
@@ -480,7 +481,7 @@ our %action_args = (
     'request_topic'       => ['list', 'authkey'],
     'tag_topic_by_sender' => ['list'],
     'ticket'              => ['ticket'],
-    'change_email'        => ['email'],
+    'move_user'           => [],
     'manage_template' => ['subaction', 'list', 'message_template'],
     'rt_delete'       => ['list',          'message_template'],
     'rt_edit'         => ['list',          'message_template'],
@@ -530,8 +531,7 @@ our %required_args = (
     'automatic_lists'         => ['family'],
     'attach'                  => ['param.list'],
     'blacklist'               => ['param.list'],
-    'change_email'            => ['param.user.email'],
-    'change_email_request'    => ['param.user.email', 'new_email'],
+    'move_user'               => ['param.user.email', 'current_email|old_email', 'email|new_email'],
     'close_list'              => ['param.user.email', 'param.list'],
     'close_list_request'      => ['param.user.email', 'param.list'],
     'compose_mail'            => ['param.user.email', 'param.list'],
@@ -904,6 +904,7 @@ our %in_regexp = (
     'family'      => Sympa::Regexps::family_name(),
 
     # Email addresses
+    'current_email' => Sympa::Regexps::email(),
     'email'      => Sympa::Regexps::email() . '|' . Sympa::Regexps::uid(),
     'init_email' => Sympa::Regexps::email(),
     'old_email'  => Sympa::Regexps::email(),
@@ -1000,7 +1001,7 @@ my %filtering = (
     ## edit_list_request
     #'edit_list' => {'*param*' => 'unescape_html'},
     ## Remove leading/trailing white spaces and lowercase
-    'change_email' => {'*email' => 'normalize'},
+    #XXX'move_user' => {'*email' => 'normalize'},
 );
 
 ## Set locale configuration
@@ -14379,281 +14380,77 @@ sub do_delete_pictures {
     }
 }
 
-####################################################
-#  do_change_email_request
-####################################################
-#  Checks a user's new email address and passes it
-#  to 'change_email'
-#
-# IN : -
-#
-# OUT : '1' | 'change_email'
-#
-####################################################
-## Checks a users new email address by sending a ticket to the new email
-## address
-## and demanding that they click it to verify. Leads to 'change_email'
-sub do_change_email_request {
-    wwslog('info', '(%s)', $in{'new_email'});
+# No longer used: use do_move_user().
+#sub do_change_email_request;
 
-    $param->{'new_email'} = $in{'new_email'};
-    Sympa::send_notify_to_user($robot, 'ticket_to_send', $in{'new_email'},
-        {email => $param->{'user'}{'email'}, ip => $ip})
-        or return undef;
-    return '1';
-}
+# No longer used: use do_move_user().
+#sub do_change_email;
 
-####################################################
-#  do_change_email
-####################################################
-#  Changes a user's email address in Sympa environment
-#
-# IN : -
-#
-# OUT : '1' | 'pref' | undef
-#
-####################################################
-## Change a user's email address in Sympa environment
-sub do_change_email {
-    wwslog('info', '(%s)', $in{'email'});
+## Changes a user's email address in Sympa environment
+sub do_move_user {
+    wwslog('info', '(%s, %s)', $in{'current_email'}, $in{'email'});
 
-    my ($old_email, $new_email);
-    my $edited_by_listmaster;
+    my ($current_email, $email);
+    if ($in{'old_email'} and $in{'new_email'}) {
+        # Compatibility to 6.1.x or earlier.
+        $current_email = Sympa::Tools::Text::canonic_email($in{'old_email'});
+        $email = Sympa::Tools::Text::canonic_email($in{'new_email'});
+    } elsif ($in{'current_email'} and $in{'email'}) {
+        $current_email =
+            Sympa::Tools::Text::canonic_email($in{'current_email'});
+        $email = Sympa::Tools::Text::canonic_email($in{'email'});
+    }
+    $param->{'current_email'} = $current_email;
+    $param->{'email'}         = $email;
 
-    unless ($in{'email'} || ($in{'old_email'} && $in{'new_email'})) {
-        Sympa::Report::reject_report_web('user', 'Missing argument',
-            {}, $param->{'action'});
-        wwslog('err',
-            "Lacking parameter : $in{'email'} or $in{'old_email'} or $in{'new_email'} "
-        );
-        web_db_log(
-            {   'parameters' => $in{'email'},
-                $in{'old_email'}, $in{'new_email'},
-                'status'     => 'error',
-                'error_type' => 'user'
-            }
-        );
+    unless (Sympa::Tools::Text::valid_email($current_email)
+        and Sympa::Tools::Text::valid_email($email)) {
+        return $in{'previous_action'} || 'pref';
     }
 
-    ##  There are two ways to access this function 'change_email'. One from
-    ##  the preferences page and one from the serveradmin page
-    ## If the process comes from server admin it needs the variables
-    ## 'old_email' and 'new_email'.
-    if ($in{'old_email'} && $in{'new_email'}) {
-        ## if variables old_email and new_email are present
-        ## $edited_by_listmaster is set to one
-        ## so that at the end of the function we can return to the SympaAdmin
-        ## page
-        ## instead of the preferences page
-        $edited_by_listmaster = 1;
-        unless (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
-            Sympa::Report::reject_report_web('auth', 'User is not Listmaster',
-                {}, $param->{'action'});
-            wwslog('err', 'Not listmaster');
-            web_db_log(
-                {   'parameters' => $in{'email'},
-                    'status'     => 'error',
-                    'error_type' => 'authorization'
-                }
-            );
-            return undef;
-        }
-
-        $old_email = $in{'old_email'};
-        $new_email = $in{'new_email'};
-    } else {
-        $old_email = $in{'email'};
-        $new_email = $param->{'user'}{'email'};
-    }
-
-    my ($password, $newuser);
-
-    if ($newuser = Sympa::User::get_global_user($old_email)) {
-
-        $password = $newuser->{'password'};
-    }
-
-    ## Do the change_email
-    my ($status, $failed_for) = Sympa::Admin::change_user_email(
-        current_email => $old_email,
-        new_email     => $new_email,
-        robot         => $robot
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $param->{'action'}, $in{'response_action'},
+        arg             => "$current_email,$email",
+        previous_action => ($in{'previous_action'} || 'pref'),
     );
-    unless (defined $status) {
+    return $next_action unless $next_action eq '1';
+
+    # Do the move_user
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context => $robot,
+        action  => 'move_user',
+        current_email => $current_email,
+        email => $email,
+        sender => $param->{'user'}{'email'},
+        md5_check => 1,
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'},
+            current_email => $current_email,
+            email => $email,
+        }
+    );
+    unless ($spindle and $spindle->spin) {
         wwslog('err', 'Failed to change user email address');
         return undef;
     }
 
-    foreach my $failed_list (@$failed_for) {
-        Sympa::Report::reject_report_web(
-            'user',
-            'change_member_email_failed_included',
-            {'listname' => $failed_list->{'name'}},
-            $param->{'action'},
-            $failed_list,
-            $old_email,
-            $robot
-        );
-        web_db_log(
-            {   'robot'        => $in{'robot'},
-                'list'         => $failed_list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => $new_email,
-                'target_email' => $new_email,
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $old_email,
-            }
-        );
-    }
-
-    Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
-
-    ## Change email as list OWNER/MODERATOR
-    my %updated_lists;
-    foreach my $role ('owner', 'editor') {
-        foreach my $list (Sympa::List::get_which($old_email, $robot, $role)) {
-
-            ## Check if admin is include via an external datasource
-            my ($admin_user) =
-                @{$list->get_admins($role, filter => [email => $old_email])};
-            if ($admin_user and $admin_user->{'included'}) {
-                ## Notify listmaster
-                Sympa::send_notify_to_listmaster(
-                    $list,
-                    'failed_to_change_included_admin',
-                    {   'current_email' => $old_email,
-                        'new_email'     => $new_email,
-                        'datasource' =>
-                            $list->get_datasource_name($admin_user->{'id'})
-                    }
-                );
-
-                Sympa::Report::reject_report_web(
-                    'user',
-                    'change_admin_email_failed_included',
-                    {'listname' => $list->{'name'}},
-                    $param->{'action'},
-                    $list,
-                    $old_email,
-                    $robot
-                );
-                wwslog(
-                    'err',
-                    'Could not change %s email for list %s because admin is included',
-                    $role,
-                    $list->{'name'}
-                );
-                next;
-            }
-
-            ## Go through owners/editors of the list
-            foreach my $admin (@{$list->{'admin'}{$role}}) {
-                next unless (lc($admin->{'email'}) eq lc($old_email));
-
-                ## Update entry with new email address
-                $admin->{'email'} = $new_email;
-                $updated_lists{$list->{'name'}}++;
-            }
-
-            ## Update Db cache for the list
-            $list->sync_include_admin();
-            $list->save_config($param->{'session'}{'email'});
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
         }
     }
-    ## Notify listmasters that list owners/moderators email have changed
-    if (keys %updated_lists) {
-        Sympa::send_notify_to_listmaster(
-            $robot,
-            'listowner_email_changed',
-            {   'list'           => $list,
-                'previous_email' => $old_email,
-                'new_email'      => $new_email,
-                'updated_lists'  => keys %updated_lists
-            }
-        );
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
     }
 
-    ## Update User_table and remove existing entry first (to avoid duplicate
-    ## entries)
-    Sympa::User::delete_global_user($new_email,);
-
-    unless (
-        Sympa::User::update_global_user(
-            $old_email,
-            {   'email' => $new_email,
-
-            }
-        )
-        ) {
-        Sympa::Report::reject_report_web(
-            'intern',
-            'update_user_db_failed',
-            {   'user'      => $param->{'user'},
-                'old_email' => $old_email
-            },
-            $param->{'action'},
-            '',
-            $old_email,
-            $robot
-        );
-        wwslog('info', 'Update failed');
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "$new_email",
-                'target_email' => "$new_email",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $old_email,
-            }
-        );
-        return undef;
-    }
-
-    ## Update netidmap_table
-    unless (
-        Sympa::Robot::update_email_netidmap_db(
-            $robot, $old_email, $new_email
-        )
-        ) {
-        Sympa::Report::reject_report_web(
-            'intern',
-            'update_netidmap_failed',
-            {   'user'      => $param->{'user'},
-                'old_email' => $old_email
-            },
-            $param->{'action'},
-            '',
-            $param->{'user'}{'email'},
-            $robot
-        );
-        wwslog('info', 'Update failed');
-        web_db_log(
-            {   'target_email' => $old_email,
-                'status'       => 'error',
-                'error_type'   => 'internal'
-            }
-        );
-        return undef;
-    }
-
-    if ($edited_by_listmaster == 1) {
-        return 'serveradmin';
-    }
-
-    if ($in{'previous_action'}) {
-        $in{'list'} = $in{'previous_list'};
-        return $in{'previous_action'};
-    } elsif ($edited_by_listmaster == 1) {
-        return 'serveradmin';
-    }
-
-    return 'pref';
-
+    return $in{'previous_action'} || 'pref';
 }
 
 sub do_suspend {
