@@ -39,8 +39,13 @@
 <p>[%|loc%]You can update your email address for all your list memberships at once. If you are also list owner or list moderator your email address for these roles will also be updated.[%END%]</p>
 <form action="[% path_cgi %]" method="post">
 <fieldset>
-<label for="new_email">[%|loc%]New email address:[%END%]  </label><input id="new_email" name="new_email" size="25" />
-<input class="MainMenuLinks" type="submit" name="action_change_email_request" value="[%|loc%]Change Email[%END%]" />
+<div>
+  <label for="new_email">[%|loc%]New email address:[%END%] </label>
+  <input id="new_email" name="email" size="25" />
+</div>
+<input type="hidden" name="current_email" value="[% user.email %] />
+<input class="MainMenuLinks" type="submit" name="action_move_user"
+ value="[%|loc%]Change Email[%END%]" />
 </fieldset>
 </form>
 <br /> 

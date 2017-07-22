@@ -106,6 +106,17 @@
   <p><strong>
     [%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%]
   </strong></p>
+[%~ ELSIF confirm_action == 'move_user' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Changing user's email[%END%]
+  </h2>
+  <p><strong>
+    [% IF user.email == current_email ~%]
+      [%|loc(email)%]Are you sure you wish to change your email to %1?[%END%]
+    [%~ ELSE ~%]
+      [%|loc(current_email,email)%]Are you sure you wish to change a user's email %1 to %2?[%END%]
+    [%~ END %]
+  </strong></p>
 [%~ ELSIF confirm_action == 'remind' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Remind all subscribers[%END%]
@@ -244,6 +255,14 @@
   <input type="hidden" name="d_admin" value="[% d_admin %]" />
 [%~ ELSIF confirm_action == 'd_delete' ~%]
   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
+[%~ ELSIF confirm_action == 'move_user' ~%]
+  <input type="hidden" name="current_email" value="[% current_email %]" />
+  <input type="hidden" name="email" value="[% email %]" />
+  <div>
+    [%|loc%]Changing your email address is a sensitive operation so we need to verify your email.[%END%]
+    [%|loc(email)%]To this end we will send you an email to this address: %1 with a validation link.[%END%]
+    [%|loc%]You shoukd check your mailbox now.[%END%]
+  </div>
 [%~ ELSIF confirm_action == 'remove_arc' ~%]
   <input type="hidden" name="yyyy" value="[% yyyy %]" />
   <input type="hidden" name="month" value="[% month %]" />
