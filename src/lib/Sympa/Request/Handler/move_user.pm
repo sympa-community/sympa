@@ -242,15 +242,26 @@ Sympa::Request::Handler::move_user - change user's email
 
 =head1 DESCRIPTION
 
-Changes a user email address for both their memberships and ownerships.
+Changes a user email address for both their memberships and ownerships
+on particular robot.
 
-# IN  : - current_email : current user email address
-#       - email     : new user email address
-#
-# OUT : - status(scalar)          : status of the subroutine
-#       - failed_for(arrayref)    : list of lists for which the change could
-#       not be done (because user was
-#                                   included or for authorization reasons)
+=head2 Attributes
+
+See also L<Sympa::Request/"Attributes">.
+
+=over
+
+=item {current_email}
+
+I<Mandatory>.
+Current user email address.
+
+=item {email}
+
+I<Mandatory>.
+New user email address.
+
+=back
 
 =head1 SEE ALSO
 
