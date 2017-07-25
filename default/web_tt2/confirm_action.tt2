@@ -39,6 +39,8 @@
     [%|loc%]Add subscribers[%END%]
   [%~ ELSIF heldaction == 'del' ~%]
     [%|loc%]Delete selected email addresses[%END%]
+  [%~ ELSIF heldaction == 'move_user' ~%]
+    [%|loc%]Changing user's email[%END%]
   [%~ ELSIF heldaction == 'remind' || heldaction == 'global_remind' ~%]
     [%|loc%]Remind all subscribers[%END%]
   [%~ ELSIF heldaction == 'signoff' ~%]
