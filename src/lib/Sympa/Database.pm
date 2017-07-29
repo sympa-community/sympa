@@ -152,7 +152,7 @@ sub connect {
 
     unless ($self->ping) {
         unless ($persistent_connection_of{$self->{_id}}) {
-            $log->syslog('err', 'Can\'t connect to Database %s', $self);
+            $log->syslog('err', 'Can\'t connect to Database %s: %s', $self, $DBI::errstr);
             $self->{_status} = 'failed';
             return undef;
         }
