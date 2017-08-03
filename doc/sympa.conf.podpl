@@ -30,7 +30,8 @@ foreach my $param (@Sympa::ConfDef::params) {
         my $scenario = $name
             if exists $param->{'scenario'} and $param->{'scenario'};
 
-        $parameters .= sprintf "=item %s\n\n", $param->{'name'};
+        #$parameters .= sprintf "=item %s\n\n", $param->{'name'};
+        $parameters .= sprintf "=head4 %s\n\n", $param->{'name'};
         if (defined $default) {
             $parameters .= sprintf "(Default value: C<%s>)\n",
                 _escape_pod($default);
@@ -55,14 +56,14 @@ foreach my $param (@Sympa::ConfDef::params) {
         $parameters .= sprintf "%s\n\n", _escape_pod($advice)
             if defined $advice;
     } else {
-        $parameters .= "=back\n\n" unless $first_section;
+        #$parameters .= "=back\n\n" unless $first_section;
         $first_section = 0;
         $parameters .= sprintf "=head3 %s\n\n",
             _escape_pod($param->{'gettext_id'});
-        $parameters .= "=over\n\n";
+        #$parameters .= "=over\n\n";
     }
 }
-$parameters .= "=back\n\n" unless $first_section;
+#$parameters .= "=back\n\n" unless $first_section;
 
 printf do { local $RS; <DATA> }, Sympa::Constants::CONFIG(),
     $parameters,
