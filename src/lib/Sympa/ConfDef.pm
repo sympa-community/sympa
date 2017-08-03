@@ -1520,12 +1520,10 @@ our @params = (
     },
     # { your_lists_size: not yet implemented. }
     {   'name'       => 'http_host',
-        'gettext_id' => 'Web domain of a virtual host',
-        'sample'     => 'host.domain.tld',
-        'default'    => 'host.domain.tld',
+        'gettext_id' => 'URL behind proxy',
         'vhost'      => '1',
-        'edit'       => '1',
         'file'       => 'sympa.conf',
+        'optional'   => '1',
     },
     {   'name' => 'password_validation',
         'gettext_id' =>

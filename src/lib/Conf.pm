@@ -317,8 +317,8 @@ sub load_robots {
         } else {
             $param->{'config_hash'}{'robots'}{$robot} = $robot_conf;
         }
-        _check_double_url_usage(
-            {'config_hash' => $param->{'config_hash'}{'robots'}{$robot}});
+        #_check_double_url_usage(
+        #    {'config_hash' => $param->{'config_hash'}{'robots'}{$robot}});
     }
     return undef if ($exiting);
     return 1;
@@ -2377,36 +2377,8 @@ sub _set_listmasters_entry {
     return $number_of_valid_email;
 }
 
-sub _check_double_url_usage {
-    my $param = shift;
-    my ($host, $path);
-    if (Sympa::Tools::Data::smart_eq(
-            $param->{'config_hash'}{'http_host'},
-            qr/^([^\/]+)(\/.*)$/
-        )
-        ) {
-        $param->{'config_hash'}{'http_host'} =~ qr/^([^\/]+)(\/.*)$/;
-        ($host, $path) = ($1, $2);
-    } else {
-        ($host, $path) = ($param->{'config_hash'}{'http_host'}, '/');
-    }
-
-    ## Warn listmaster if another virtual host is defined with the same host
-    ## +path
-    if (defined $Conf{'robot_by_http_host'}{$host}{$path}) {
-        $log->syslog(
-            'err',
-            'Two virtual hosts (%s and %s) are mapped via a single URL "%s%s"',
-            $Conf{'robot_by_http_host'}{$host}{$path},
-            $param->{'config_hash'}{'robot_name'},
-            $host,
-            $path
-        );
-    }
-
-    $Conf{'robot_by_http_host'}{$host}{$path} =
-        $param->{'config_hash'}{'robot_name'};
-}
+# No longer used.
+#sub _check_double_url_usage;
 
 sub _parse_custom_robot_parameters {
     my $param           = shift;
