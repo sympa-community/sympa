@@ -178,10 +178,10 @@ our %comm = (
     'family_signoff_request' => 'do_family_signoff_request',
     #XXX'multiple_signoff'    => 'do_multiple_signoff',
     #'sigrequest' => 'do_sigrequest',
-    'sigindex'   => 'do_sigindex',
-    'ignoresub'  => 'do_ignoresub',
-    'ignoresig'  => 'do_ignoresig',
-    'my'         => 'do_my',
+    'sigindex' => 'do_sigindex',
+    'decl_add' => 'do_decl_add',
+    'decl_del' => 'do_decl_del',
+    'my'       => 'do_my',
     #'which' => 'do_which',
     'lists'            => 'do_lists',
     'lists_categories' => 'do_lists_categories',
@@ -204,9 +204,9 @@ our %comm = (
     'admin'            => 'do_admin',
     'import'           => 'do_import',
     'add'              => 'do_add',
-    'auth_add'         => 'do_authowner',
+    'auth_add'         => 'do_auth_add',
     'del'              => 'do_del',
-    'auth_del'         => 'do_authowner',
+    'auth_del'         => 'do_auth_del',
     'modindex'         => 'do_modindex',
     'docindex'         => 'do_docindex',
     'reject'           => 'do_reject',
@@ -346,6 +346,8 @@ my %comm_aliases = (
     'add_request'          => 'import',
     'change_email'         => 'move_user',
     'change_email_request' => 'move_user',
+    'ignoresig'            => 'decl_del',
+    'ignoresub'            => 'decl_add',
     'del_fromsig'          => 'auth_del',
     'sigrequest'           => 'signoff',
     'subrequest'           => 'subscribe',
@@ -426,14 +428,14 @@ our %action_args = (
     'subscribe'     => ['list'],
     #'subrequest' => ['list','email'],
     'subindex'   => ['list'],
-    'ignoresub'  => ['list', '@email', '@gecos'],
+    'decl_add'  => ['list'],
     'signoff'    => ['list'],
     'auto_signoff'           => ['list'],
     'family_signoff'         => ['family', 'email'],
     'family_signoff_request' => ['family', 'email'],
     #'sigrequest'             => ['list',   'email'],
     'sigindex'               => ['list'],
-    'ignoresig'              => ['list',   '@email'],
+    'decl_del'              => ['list'],
     'set'                => ['list', 'email', 'reception', 'gecos'],
     'serveradmin'        => ['subaction'],
     'set_session_email'  => ['email'],
@@ -573,8 +575,8 @@ our %required_args = (
     'get_latest_lists'   => ['param.user.email'],
     'get_biggest_lists'  => ['param.user.email'],
     'get_pending_lists'  => ['param.user.email'],
-    'ignoresig'            => ['param.list', 'param.user.email'],
-    'ignoresub'            => ['param.list', 'param.user.email'],
+    'decl_del'             => ['param.list', 'param.user.email'],
+    'decl_add'             => ['param.list', 'param.user.email'],
     'including_lists'      => ['param.list', 'param.user.email'],
     'info'                 => ['param.list'],
     'install_pending_list' => ['param.user.email'],
@@ -660,8 +662,8 @@ our %required_privileges = (
     'arc_delete'         => ['owner'],
     'arc_download'       => ['owner'],
     'arc_manage'         => ['owner'],
-    'auth_add'           => ['owner'],
-    'auth_del'           => ['owner'],
+    'auth_add'           => ['owner', 'editor'],
+    'auth_del'           => ['owner', 'editor'],
     'blacklist'          => ['owner',  'editor'],
     'close_list'         => ['privileged_owner'],
     'close_list_request' => ['privileged_owner'],
@@ -680,8 +682,8 @@ our %required_privileges = (
     'get_latest_lists'     => ['listmaster'],
     'get_biggest_lists'    => ['listmaster'],
     'get_pending_lists'    => ['listmaster'],
-    'ignoresig'            => ['owner', 'editor'],
-    'ignoresub'            => ['owner', 'editor'],
+    'decl_del'             => ['owner', 'editor'],
+    'decl_add'             => ['owner', 'editor'],
     'including_lists'      => ['owner', 'listmaster'],
     'install_pending_list' => ['listmaster'],
     'edit_config'          => ['listmaster'],
@@ -763,8 +765,8 @@ my %action_type = (
     'remind'             => 'admin',
     #'subindex' => 'admin',
     'stats'                              => 'admin',
-    'ignoresig'                          => 'admin',
-    'ignoresub'                          => 'admin',
+    'decl_del'                           => 'admin',
+    'decl_add'                           => 'admin',
     'rename_list'                        => 'admin',
     'copy_list'                          => 'admin',
     'rename_list_request'                => 'admin',
@@ -7105,9 +7107,55 @@ sub do_add {
     return $in{'previous_action'} || 'review';
 }
 
-# Adds user(s) from subscription request index.
-# No longer used. Use do_authowner().
-#sub do_add_fromsub;
+# By owner, authorizes held subscribe (add) requests.
+# Old name: do_add_fromsub().
+sub do_auth_add {
+    wwslog('info', '(%s)', $in{'id'});
+
+    my @ids = grep {$_ and /\A\w+\z/} split /\0/, $in{'id'};
+    return ($in{'previous_action'} || 'subindex') unless @ids;
+
+    $param->{'id'} = [@ids];
+
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', sort @ids),
+        previous_action => ($in{'previous_action'} || 'subindex'),
+    );
+    return $next_action unless $next_action eq '1';
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $robot,
+        action           => 'auth',
+        keyauth          => [@ids],
+        request          => {context => $list, action => 'add'},
+        sender           => $param->{'user'}{'email'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        return ($in{'previous_action'} || 'subindex');
+    }
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+    }
+
+    return ($in{'previous_action'} || 'subindex');
+}
 
 # Deletes user(s) from a list (requested by owner)
 sub do_del {
@@ -7174,21 +7222,13 @@ sub do_del {
     return $in{'previous_action'} || 'review';
 }
 
-# Deletes user(s) in signoff request index.
-# No longer used. Use do_authowner().
-#sub do_del_fromsig;
-
-# By owner, authorizes held subscription/unsubscription requests.
-sub do_authowner {
+# By owner, authorizes held signoff (del) requests.
+# Old name: do_del_fromsig().
+sub do_auth_del {
     wwslog('info', '(%s)', $in{'id'});
 
-    my $previous_action =
-          ($param->{'action'} eq 'auth_add') ? 'subindex'
-        : ($param->{'action'} eq 'auth_del') ? 'sigindex'
-        : 'adimn';
-
-    my @ids = grep {$_} split /\0/, $in{'id'};
-    return $previous_action unless @ids;
+    my @ids = grep {$_ and /\A\w+\z/} split /\0/, $in{'id'};
+    return ($in{'previous_action'} || 'sigindex') unless @ids;
 
     $param->{'id'} = [@ids];
 
@@ -7196,7 +7236,7 @@ sub do_authowner {
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
         arg             => join(',', sort @ids),
-        previous_action => $previous_action,
+        previous_action => ($in{'previous_action'} || 'sigindex'),
     );
     return $next_action unless $next_action eq '1';
 
@@ -7204,6 +7244,7 @@ sub do_authowner {
         context          => $robot,
         action           => 'auth',
         keyauth          => [@ids],
+        request          => {context => $list, action => 'del'},
         sender           => $param->{'user'}{'email'},
         scenario_context => {
             sender      => $param->{'user'}{'email'},
@@ -7212,7 +7253,7 @@ sub do_authowner {
         },
     );
     unless ($spindle and $spindle->spin) {
-        return $previous_action;
+        return ($in{'previous_action'} || 'sigindex');
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
@@ -7228,7 +7269,7 @@ sub do_authowner {
         Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
     }
 
-    return $previous_action;
+    return ($in{'previous_action'} || 'sigindex');
 }
 
 ####################################################
@@ -15648,39 +15689,54 @@ sub do_subindex {
     return 1;
 }
 
-sub do_ignoresub {
-    wwslog('info', '');
+# By owner, declines held subscribe (add) requests.
+# Old name: do_ignoresub().
+sub do_decl_add {
+    wwslog('info', '(%s)', $in{'id'});
 
-    foreach my $id (split /\0/, $in{'id'}) {
-        next unless $id and $id =~ /\A\w+\z/;
+    my @ids = grep {$_ and /\A\w+\z/} split /\0/, $in{'id'};
+    return ($in{'previous_action'} || 'subindex') unless @ids;
 
-        my $spool_req = Sympa::Spool::Auth->new(
-            context => $list,
-            keyauth => $id,
-            action  => 'add'
-        );
-        while (1) {
-            my ($request, $handle) = $spool_req->next;
-            last unless $handle;
-            next unless $request;
+    $param->{'id'} = [@ids];
 
-            $spool_req->remove($handle);
-        }
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', sort @ids),
+        previous_action => ($in{'previous_action'} || 'subindex'),
+    );
+    return $next_action unless $next_action eq '1';
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $robot,
+        action           => 'decl',
+        keyauth          => [@ids],
+        request          => {context => $list, action => 'add'},
+        sender           => $param->{'user'}{'email'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        return ($in{'previous_action'} || 'subindex');
     }
 
-    web_db_log(
-        {   'robot'        => $robot,
-            'list'         => $list->{'name'},
-            'action'       => $param->{'action'},
-            'parameters'   => "",
-            'target_email' => "",
-            'msg_id'       => '',
-            'status'       => 'success',
-            'error_type'   => '',
-            'user_email'   => $param->{'user'}{'email'},
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
         }
-    );
-    return 'subindex';
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+    }
+
+    return ($in{'previous_action'} || 'subindex');
 }
 
 sub do_sigindex {
@@ -15723,39 +15779,54 @@ sub do_sigindex {
     return 1;
 }
 
-sub do_ignoresig {
-    wwslog('info', '');
+# By owner, declines held signoff (del) requests.
+# Old name: do_ignoresig().
+sub do_decl_del {
+    wwslog('info', '(%s)', $in{'id'});
 
-    foreach my $id (split /\0/, $in{'id'}) {
-        next unless $id and $id =~ /\A\w+\z/;
+    my @ids = grep {$_ and /\A\w+\z/} split /\0/, $in{'id'};
+    return ($in{'previous_action'} || 'sigindex') unless @ids;
 
-        my $spool_req = Sympa::Spool::Auth->new(
-            context => $list,
-            keyauth => $id,
-            action  => 'del'
-        );
-        while (1) {
-            my ($request, $handle) = $spool_req->next;
-            last unless $handle;
-            next unless $request;
+    $param->{'id'} = [@ids];
 
-            $spool_req->remove($handle);
-        }
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', sort @ids),
+        previous_action => ($in{'previous_action'} || 'sigindex'),
+    );
+    return $next_action unless $next_action eq '1';
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $robot,
+        action           => 'decl',
+        keyauth          => [@ids],
+        request          => {context => $list, action => 'del'},
+        sender           => $param->{'user'}{'email'},
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'}
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        return ($in{'previous_action'} || 'sigindex');
     }
 
-    web_db_log(
-        {   'robot'        => $robot,
-            'list'         => $list->{'name'},
-            'action'       => $param->{'action'},
-            'parameters'   => "",
-            'target_email' => "",
-            'msg_id'       => '',
-            'status'       => 'success',
-            'error_type'   => '',
-            'user_email'   => $param->{'user'}{'email'},
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
         }
-    );
-    return 'sigindex';
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+    }
+
+    return ($in{'previous_action'} || 'sigindex');
 }
 
 sub do_stats {
