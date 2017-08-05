@@ -78,18 +78,21 @@ workflow of Sympa.  For more details see documentation on each class.
 
  <<sympa_msg.pl>>
  
-                 *2
-                 :                             +-> (reject)
-   (message) => [ProcessMessage]              /
-                              \              /---> [ToAuth] => Auth
-          *3 (AUTH)            +-> [AuthorizeRequest]
-          :                   /              \---> [ToAuthOwner] => Auth
- Auth => [ProcessAuth] ------+                \
-                            /                  +-> [DispatchRequest]
-                           /                                \
-                          /                          (request handler)
- Request::Collection =>  /                                      :
-           [ProcessRequest]                                     *3
+                  *2
+                  :
+ (message) => [ProcessMessage] -+              +-> (reject)
+                                 \            /
+      *3 (AUTH)                   \          /---> [ToAuth] => Auth
+         (DECL)    +-> (decline)   +-> [AuthorizeRequest]
+          :       /               /          \---> [ToAuthOwner] => Auth
+ Auth => [ProcessAuth]           /            \
+                  \             /              +-> [DispatchRequest]
+                   +-----------+                            \
+                              /                      (request handler)
+ <<wwsympa.fcgi, SOAP>>      /                                  :
+                            /                                   *3
+ Request::Collection       / 
+        => [ProcessRequest]
 
 =begin comment
 
