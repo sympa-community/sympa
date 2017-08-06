@@ -2016,14 +2016,6 @@ sub _infer_server_specific_parameter_values {
         };
     }
 
-    ## Default SOAP URL corresponds to default robot
-    if ($param->{'config_hash'}{'soap_url'}) {
-        my $url = $param->{'config_hash'}{'soap_url'};
-        $url =~ s/^http(s)?:\/\/(.+)$/$2/;
-        $param->{'config_hash'}{'robot_by_soap_url'}{$url} =
-            $param->{'config_hash'}{'domain'};
-    }
-
     return 1;
 }
 
@@ -2105,13 +2097,6 @@ sub _infer_robot_parameter_values {
         $param->{'config_hash'}{'blacklist'}{$action} = 1;
     }
 
-    ## Create a hash to deduce robot from SOAP url
-    if ($param->{'config_hash'}{'soap_url'}) {
-        my $url = $param->{'config_hash'}{'soap_url'};
-        $url =~ s/^http(s)?:\/\/(.+)$/$2/;
-        $Conf{'robot_by_soap_url'}{$url} =
-            $param->{'config_hash'}{'robot_name'};
-    }
     # Hack because multi valued parameters are not available for Sympa 6.1.
     if (defined $param->{'config_hash'}{'automatic_list_families'}) {
         my @families = split ';',
