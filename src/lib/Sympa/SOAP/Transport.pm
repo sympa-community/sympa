@@ -30,6 +30,7 @@ use SOAP::Transport::HTTP;
 
 use Sympa::Session;
 use Sympa::Tools::File;
+use Sympa::Tools::WWW;
 
 # 'base' pragma doesn't work here
 our @ISA = qw(SOAP::Transport::HTTP::FCGI);
@@ -38,16 +39,9 @@ sub request {
     my $self = shift;
 
     if (my $request = $_[0]) {
-
-        ## Select appropriate robot
-        if ($Conf::Conf{'robot_by_soap_url'}
-            {$ENV{'SERVER_NAME'} . $ENV{'SCRIPT_NAME'}}) {
-            $ENV{'SYMPA_ROBOT'} =
-                $Conf::Conf{'robot_by_soap_url'}
-                {$ENV{'SERVER_NAME'} . $ENV{'SCRIPT_NAME'}};
-        } else {
-            $ENV{'SYMPA_ROBOT'} = $Conf::Conf{'host'};
-        }
+        # Select appropriate robot.
+        $ENV{'SYMPA_ROBOT'} =
+            Sympa::Tools::WWW::get_robot('soap_url_local', 'soap_url');
 
         ## Empty cache of the List.pm module
         Sympa::List::init_list_cache();

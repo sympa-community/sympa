@@ -110,7 +110,7 @@ our $session;
 our $plugins;
 
 my $loop = 0;
-my ($robot, $robot_object);
+my $robot;
 my $ip;
 my $rss;
 my $ajax;
@@ -1034,7 +1034,6 @@ while ($query = new_loop()) {
     undef $param;
     undef $list;
     undef $robot;
-    undef $robot_object;
     undef $ip;
     undef $rss;
     undef $ajax;
@@ -1095,58 +1094,15 @@ while ($query = new_loop()) {
         $log->syslog('debug3', 'Changed Param: %s', $k);
     }
 
-    ## Parse CGI parameters
-    #    &CGI::ReadParse();
-
     # Determin robot.
     # N.B. As of 6.2.15, the http_host parameter will match with the host name
     # and path locally detected by server.  If remotely detected host name
     # and / or path should be differ, the proxy must adjust them.
-    my $request_host = Sympa::Tools::WWW::get_server_name() || '';
-    my $request_path = $ENV{'REQUEST_URI'} || '';
-    if ($request_host) {
-        my $selected_path = '';
-        foreach my $rid (Sympa::List::get_robots()) {
-            my $local_url = Conf::get_robot_conf($rid, 'http_host');
-            unless ($local_url) {
-                $local_url = Conf::get_robot_conf($rid, 'wwsympa_url');
-            } elsif ($local_url =~ m{\A[-+\w]+:}) {
-                ;
-            } elsif ($local_url =~ m{\A//}) {
-                $local_url = 'http:' . $local_url;
-            } else {
-                $local_url = 'http://' . $local_url;
-            }
-            next unless $local_url;
+    $robot = Sympa::Tools::WWW::get_robot('http_host', 'wwsympa_url');
 
-            my $uri = URI->new($local_url);
-            next
-                unless $uri
-                    and $uri->scheme
-                    and grep { $uri->scheme eq $_ } qw(http https);
-
-            my $host = lc ($uri->host || '');
-            my $path = $uri->path || '/';
-            #FIXME:might need percent-decode hosts and paths
-            next
-                unless $request_host eq $host
-                    and 0 == index $request_path, $path;
-
-            # The longest path wins.
-            ($robot, $selected_path) = ($rid, $path)
-                if length $selected_path < length $path;
-        }
-    }
-    $robot ||= $Conf::Conf{'domain'};
-
-    # Not yet implemented
-    ### Create Robot object
-    #$robot_object = new Robot $robot;
-
-    ## Default robot
-    if ($robot eq $Conf::Conf{'host'}) {    #FIXME:Use domain.
-        $param->{'default_robot'} = 1;
-    }
+    # Default robot.
+    $param->{'default_robot'} = 1
+        if $robot eq $Conf::Conf{'domain'};
 
     $ip = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'} || 'undef';
 

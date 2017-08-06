@@ -31,12 +31,14 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 use File::Path qw();
+use URI;
 
 use Sympa;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
+use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Regexps;
@@ -220,11 +222,59 @@ sub get_my_url {
         . $original_path_info;
 }
 
+# Determine robot.
+sub get_robot {
+    my @keys = @_;
+
+    my $request_host = _get_server_name();
+    my $request_path = $ENV{'REQUEST_URI'} || '';
+    my $robot_id;
+
+    if (defined $request_host and length $request_host) {
+        my $selected_path = '';
+        foreach my $rid (Sympa::List::get_robots()) {
+            my $local_url;
+            foreach my $key (@keys) {
+                $local_url = Conf::get_robot_conf($rid, $key);
+                last if $local_url;
+            }
+            next unless $local_url;
+
+            if ($local_url =~ m{\A[-+\w]+:}) {
+                ;
+            } elsif ($local_url =~ m{\A//}) {
+                $local_url = 'http:' . $local_url;
+            } else {
+                $local_url = 'http://' . $local_url;
+            }
+
+            my $uri = URI->new($local_url);
+            next
+                unless $uri
+                    and $uri->scheme
+                    and grep { $uri->scheme eq $_ } qw(http https);
+
+            my $host = lc ($uri->host || '');
+            my $path = $uri->path || '/';
+            #FIXME:might need percent-decode hosts and/or paths
+            next
+                unless $request_host eq $host
+                    and 0 == index $request_path, $path;
+
+            # The longest path wins.
+            ($robot_id, $selected_path) = ($rid, $path)
+                if length $selected_path < length $path;
+        }
+    }
+
+    return (defined $robot_id) ? $robot_id : $Conf::Conf{'domain'};
+}
+
 # Old name: (part of) get_header_field() in wwsympa.fcgi.
 # NOTE: As of 6.2.15, less trustworthy "X-Forwarded-Server:" request field is
 # _no longer_ referred and this function returns only locally detected server
 # name.
-sub get_server_name {
+sub _get_server_name {
     my $server = $ENV{SERVER_NAME};
     return undef unless defined $server and length $server;
 
