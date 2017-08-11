@@ -281,8 +281,8 @@ our @params = (
         'optional' => '1',
         'vhost'    => '1',
     },
-    {   'name'    => 'static_content_path',
-        'default' => Sympa::Constants::STATICDIR,
+    {   'name'      => 'static_content_path',
+        'default_s' => '$STATICDIR',
         'gettext_id' =>
             'Directory for storing static contents (CSS, members pictures, documentation) directly delivered by HTTP server',
         'vhost' => '1',
@@ -349,13 +349,13 @@ our @params = (
     {'gettext_id' => 'Directories'},
 
     {   'name'       => 'home',
-        'default'    => Sympa::Constants::EXPLDIR,
+        'default_s'  => '$EXPLDIR',
         'gettext_id' => 'Directory containing mailing lists subdirectories',
         'file'       => 'sympa.conf',
         'edit'       => '1',
     },
-    {   'name'    => 'etc',
-        'default' => Sympa::Constants::SYSCONFDIR,
+    {   'name'      => 'etc',
+        'default_s' => '$SYSCONFDIR',
         'gettext_id' =>
             'Directory for configuration files; it also contains scenari/ and templates/ directories',
         'file' => 'sympa.conf',
@@ -526,15 +526,15 @@ our @params = (
             'Max. number of different domains per call to Sendmail',
         'file' => 'sympa.conf',
     },
-    {   'name'    => 'alias_manager',
-        'default' => Sympa::Constants::SBINDIR . '/alias_manager.pl',
+    {   'name'      => 'alias_manager',
+        'default_s' => '$SBINDIR/alias_manager.pl',
     },
     {   'name'            => 'db_list_cache',
         'default'         => 'off',
         'gettext_comment' => 'Whether or not to cache lists in the database',
     },
-    {   'name'    => 'sendmail_aliases',
-        'default' => Sympa::Constants::SENDMAIL_ALIASES,
+    {   'name'      => 'sendmail_aliases',
+        'default_s' => '$SENDMAIL_ALIASES',
         'gettext_id' =>
             'Path of the file that contains all list related aliases',
         'vhost' => '1',
@@ -688,13 +688,13 @@ our @params = (
     {'gettext_id' => 'Spool related'},
 
     {   'name'       => 'spool',
-        'default'    => Sympa::Constants::SPOOLDIR,
+        'default_s'  => '$SPOOLDIR',
         'gettext_id' => 'Directory containing various specialized spools',
         'file'       => 'sympa.conf',
         'gettext_comment' => 'All spool are created at runtime by sympa.pl',
     },
     {   'name'       => 'queue',
-        'default'    => Sympa::Constants::SPOOLDIR . '/msg',
+        'default_s'  => '$SPOOLDIR/msg',
         'gettext_id' => 'Directory for message incoming spool',
         'file'       => 'sympa.conf',
     },
@@ -703,53 +703,53 @@ our @params = (
 #        'file'    => 'sympa.conf',
 #    },
     {   'name'       => 'queuemod',
-        'default'    => Sympa::Constants::SPOOLDIR . '/moderation',
+        'default_s'  => '$SPOOLDIR/moderation',
         'gettext_id' => 'Directory for moderation spool',
         'file'       => 'sympa.conf',
     },
     {   'name'       => 'queuedigest',
-        'default'    => Sympa::Constants::SPOOLDIR . '/digest',
+        'default_s'  => '$SPOOLDIR/digest',
         'gettext_id' => 'Directory for digest spool',
         'file'       => 'sympa.conf',
     },
     {   'name'       => 'queueauth',
-        'default'    => Sympa::Constants::SPOOLDIR . '/auth',
+        'default_s'  => '$SPOOLDIR/auth',
         'gettext_id' => 'Directory for authentication spool',
         'file'       => 'sympa.conf',
     },
     {   'name'       => 'queueoutgoing',
-        'default'    => Sympa::Constants::SPOOLDIR . '/outgoing',
+        'default_s'  => '$SPOOLDIR/outgoing',
         'gettext_id' => 'Directory for archive spool',
         'file'       => 'sympa.conf',
     },
     {   'name'       => 'queuesubscribe',
-        'default'    => Sympa::Constants::SPOOLDIR . '/subscribe',
+        'default_s'  => '$SPOOLDIR/subscribe',
         'gettext_id' => 'Directory for subscription spool',
         'file'       => 'sympa.conf',
     },
     {   'name'       => 'queuetopic',
-        'default'    => Sympa::Constants::SPOOLDIR . '/topic',
+        'default_s'  => '$SPOOLDIR/topic',
         'gettext_id' => 'Directory for topic spool',
         'file'       => 'sympa.conf',
     },
     ##{ queuesignoff: not yet implemented. },
     {   'name'       => 'queuebounce',
-        'default'    => Sympa::Constants::SPOOLDIR . '/bounce',
+        'default_s'  => '$SPOOLDIR/bounce',
         'gettext_id' => 'Directory for bounce incoming spool',
         'file'       => 'sympa.conf',
     },
     {   'name'       => 'queuetask',
-        'default'    => Sympa::Constants::SPOOLDIR . '/task',
+        'default_s'  => '$SPOOLDIR/task',
         'gettext_id' => 'Directory for task spool',
         'file'       => 'sympa.conf',
     },
     {   'name'       => 'queueautomatic',
-        'default'    => Sympa::Constants::SPOOLDIR . '/automatic',
+        'default_s'  => '$SPOOLDIR/automatic',
         'gettext_id' => 'Directory for automatic list creation spool',
         'file'       => 'sympa.conf',
     },
     {   'name'       => 'queuebulk',
-        'default'    => Sympa::Constants::SPOOLDIR . '/bulk',
+        'default_s'  => '$SPOOLDIR/bulk',
         'gettext_id' => 'Directory for message outgoing spool',
         'file'       => 'sympa.conf',
     },
@@ -757,13 +757,13 @@ our @params = (
         'default'         => '5',
         'gettext_comment' => 'Must not be 0.',
     },
-    {   'name'    => 'tmpdir',
-        'default' => Sympa::Constants::SPOOLDIR . '/tmp',
+    {   'name'      => 'tmpdir',
+        'default_s' => '$SPOOLDIR/tmp',
         'gettext_id' =>
             'Temporary directory used by antivirus plugins, MHonArc etc.',
     },
-    {   name    => 'viewmail_dir',
-        default => Sympa::Constants::SPOOLDIR . '/viewmail',
+    {   name        => 'viewmail_dir',
+        'default_s' => '$SPOOLDIR/viewmail',
         'gettext_id' =>
             'Directory containing HTML file generated by MHonArc while displaying messages other than archives',
         file => 'sympa.conf',
@@ -866,7 +866,7 @@ our @params = (
         'default' => '-owner',
     },
     {   'name'            => 'bounce_path',
-        'default'         => Sympa::Constants::BOUNCEDIR,
+        'default_s'       => '$BOUNCEDIR',
         'gettext_id'      => 'Directory for storing bounces',
         'file'            => 'wwsympa.conf',
         'gettext_comment' => 'Better if not in a critical partition',
@@ -1185,7 +1185,7 @@ our @params = (
     #    'file'    => 'sympa.conf',
     #},
     {   'name'       => 'ssl_cert_dir',
-        'default'    => Sympa::Constants::EXPLDIR . '/X509-user-certs',
+        'default_s'  => '$EXPLDIR/X509-user-certs',
         'gettext_id' => 'Directory containing user certificates',
         'file'       => 'sympa.conf',
     },
@@ -1359,7 +1359,7 @@ our @params = (
     {'gettext_id' => 'Web interface parameters'},
 
     {   'name'            => 'arc_path',
-        'default'         => Sympa::Constants::ARCDIR,
+        'default_s'       => '$ARCDIR',
         'gettext_id'      => 'Directory for storing HTML archives',
         'file'            => 'wwsympa.conf',
         'edit'            => '1',
@@ -1576,6 +1576,24 @@ our @params = (
 ##        'default'  => 'fr,ca,be,ch,uk,edu,*,com',
 ##    },
 );
+
+_apply_defaults();
+
+sub _apply_defaults {
+    foreach my $param (@params) {
+        next unless exists $param->{default_s};
+
+        my $default = $param->{default_s};
+        $default =~ s{\$(\w\w+)}{
+            my $func = Sympa::Constants->can($1);
+            die sprintf 'Can\'t locate object method "%s" via package "%s"',
+                $1, 'Sympa::Constants'
+                unless $func;
+            $func->()
+        }eg;
+        $param->{default} = $default;
+    }
+}
 
 1;
 __END__

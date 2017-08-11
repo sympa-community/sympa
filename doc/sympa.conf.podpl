@@ -12,9 +12,11 @@ my $parameters = '';
 my $first_section = 1;
 foreach my $param (@Sympa::ConfDef::params) {
     if (exists $param->{'name'}) {
-        my $name    = $param->{'name'};
-        my $default = $param->{'default'}
-            if exists $param->{'default'};
+        my $name = $param->{'name'};
+        my $default =
+              (exists $param->{'default_s'}) ? $param->{'default_s'}
+            : (exists $param->{'default'})   ? $param->{'default'}
+            :                                  undef;
         my $query = $param->{'gettext_id'}
             if exists $param->{'gettext_id'};
         my $advice = $param->{'gettext_comment'}
@@ -65,9 +67,8 @@ foreach my $param (@Sympa::ConfDef::params) {
 }
 #$parameters .= "=back\n\n" unless $first_section;
 
-printf do { local $RS; <DATA> }, Sympa::Constants::CONFIG(),
-    $parameters,
-    Sympa::Constants::CONFIG(), Sympa::Constants::SYSCONFDIR();
+printf do { local $RS; <DATA> }, Sympa::Constants::CONFIG(), $parameters,
+    Sympa::Constants::CONFIG();
 
 exit 0;
 
@@ -123,7 +124,7 @@ For more details of each parameter see Reference Manual.
 
 Sympa main configuration file.
 
-=item F<%s/E<lt>robot nameE<gt>/robot.conf>
+=item F<$SYSCONFDIR/E<lt>robot nameE<gt>/robot.conf>
 
 Configuration specific to each virtual host.
 

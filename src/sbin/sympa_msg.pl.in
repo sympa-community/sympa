@@ -458,7 +458,7 @@ of F<--CONFIG-->.
 =item B<-l>, B<--lang=>I<lang>
 
 Set this option to use a language for Sympa. The corresponding
-gettext catalog file must be located in F<--localedir-->
+gettext catalog file must be located in F<$LOCALEDIR>
 directory.
 
 =item B<--log_level=>I<level>
@@ -515,7 +515,7 @@ Print the version number.
 
 F<--CONFIG--> main configuration file.
 
-F<--piddir--/sympa_msg.pid> this file contains the process ID
+F<$PIDDIR/sympa_msg.pid> this file contains the process ID
 of F<sympa_msg.pl>.
 
 =head1 SEE ALSO

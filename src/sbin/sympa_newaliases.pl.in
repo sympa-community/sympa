@@ -212,7 +212,7 @@ They may be overridden by robot.conf of each virtual robot.
 
 Source text of alias database.
 
-Default value is F<--SENDMAIL_ALIASES-->.
+Default value is F<$SENDMAIL_ALIASES>.
 
 =item aliases_program
 
@@ -274,7 +274,7 @@ On other failures, returns with 1.
 
 Sympa site configuration.
 
-=item F<--libexecdir--/sympa_newaliases-wrapper>
+=item F<$LIBEXECDIR/sympa_newaliases-wrapper>
 
 Set UID wrapper for sympa_newaliases.pl.
 
