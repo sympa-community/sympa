@@ -26,11 +26,7 @@
   [% FOREACH pS = config_schema ~%]
     [% SET pV = config_values.${pS.name} ~%]
 
-    [% IF pS.changed ~%]
-      <div class="CurrentBlock">
-    [%~ ELSE ~%]
-      <div class="block">
-    [%~ END ~%]
+    <div class="block">
     <h4>
     [% IF pS.title ~%]
       [% pS.title %]

@@ -39,7 +39,6 @@ use Sympa::Message::Template;
 use Sympa::Process;
 use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
-use Sympa::Tools::Text;
 use Sympa::Tracking;
 
 use base qw(Sympa::Spindle);
@@ -211,26 +210,8 @@ sub _twist {
         ? $self->{log_level}
         : Conf::get_robot_conf($robot, 'log_level');
 
-    #HASH which will contain the attributes of the subscriber
-    my $data;
-    # Initialization of the HASH $data. It will be used by parse_tt2 to
-    # personalized messages.
-    # Note that message ID which can be anonymized should be taken from
-    # message header instead of {message_id} attribute.
-    my $msg_id = Sympa::Tools::Text::canonic_message_id(
-        $message->get_header('Message-ID'));
-    $data = {
-        'messageid' => $msg_id,
-        'listname'  => $listname,
-        'robot'     => $robot,
-        #XXX'to'        => $message->{rcpt}, #XXX Insecure
-        'wwsympa_url' => Conf::get_robot_conf($robot, 'wwsympa_url'),
-    };
-
     # Contain all the subscribers
     my @rcpts = @{$message->{rcpt}};
-    ## Use an intermediate handler to encode to filesystem_encoding
-    my $user;
 
     # Message transformation should be done in the folowing order:
     #  -1 headers modifications (done in sympa.pl)
@@ -424,20 +405,8 @@ sub _twist {
 }
 
 # Old name: trace_smime() in bulk.pl.
-# Note: Currently never used.
-sub _trace_smime {
-    my $message = shift;
-    my $where   = shift;
-
-    my $result = $message->check_smime_signature;
-    return if defined $result and $result == 0;
-
-    unless ($result) {
-        $log->syslog('debug', 'Signature S/MIME NOT OK (%s)', $where);
-    } else {
-        $log->syslog('debug', 'Signature S/MIME OK (%s)', $where);
-    }
-}
+# No longer used.
+#sub _trace_smime;
 
 1;
 __END__

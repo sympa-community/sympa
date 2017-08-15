@@ -1005,8 +1005,6 @@ unless (Conf::data_structure_uptodate()) {
     );
 }
 
-our %changed_params;
-
 our %in;
 my $query;
 
@@ -1028,8 +1026,6 @@ $log->syslog('info', 'WWSympa started, process %d', $PID);
 my $loop_count;
 my $start_time = time;
 while ($query = new_loop()) {
-
-    undef %::changed_params;
 
     undef $param;
     undef $list;
@@ -1089,10 +1085,6 @@ while ($query = new_loop()) {
 
     ## Get params in a hash
     %in = $query->Vars;
-
-    foreach my $k (keys %::changed_params) {
-        $log->syslog('debug3', 'Changed Param: %s', $k);
-    }
 
     # Determin robot.
     # N.B. As of 6.2.15, the http_host parameter will match with the host name
@@ -10793,11 +10785,6 @@ sub do_edit_list {
         return undef;
     }
 
-    ## Tag changed parameters
-    foreach my $pname (keys %{$config->get_changeset}) {
-        $::changed_params{$pname} = 1;
-    }
-
     ## Save stats
     $list->savestats();
 
@@ -10996,10 +10983,8 @@ sub do_edit_list_request {
             my @p = _do_edit_list_request($config, $schema->{$_}, [$_]);
             if (@p) {
                 # Store if the parameter is still at its default value or not.
-                # Store the change state of this parameter.
                 # FIXME:Multiple levels of keys should be possible.
                 $p[0]->{'default_value'} = $config->get('defaults')->{$_};
-                $p[0]->{'changed'}       = $::changed_params{$_};
             }
             @p;
         }
