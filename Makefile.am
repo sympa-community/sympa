@@ -108,17 +108,22 @@ installdir:
 		fi; \
 	done
 	@echo "Creating writable directories"
-	-@for dir in $(expldir) $(spooldir) $(spooldir)/msg $(spooldir)/digest \
-		$(spooldir)/moderation $(spooldir)/auth \
-		$(spooldir)/outgoing $(spooldir)/tmp $(spooldir)/task \
-		$(spooldir)/bulk \
-		$(bouncedir) $(arcdir) $(piddir) $(staticdir) $(staticdir)/js $(sysconfdir); do \
+	-@for dir in $(expldir) $(spooldir) $(bouncedir) $(arcdir) $(piddir) \
+		$(staticdir) $(staticdir)/js $(sysconfdir); do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
 		fi; \
 		chown $(USER) $(DESTDIR)$$dir; \
 		chgrp $(GROUP) $(DESTDIR)$$dir; \
+	done
+	-@for subdir in automatic bounce msg task tmp; do \
+		if [ ! -d $(DESTDIR)$(spooldir)/$$subdir ] ; then \
+			echo "Creating $(DESTDIR)$(spooldir)/$$subdir"; \
+			$(INSTALL) -d -m 750 $(DESTDIR)$(spooldir)/$$subdir; \
+		fi; \
+		chown $(USER) $(DESTDIR)$(spooldir)/$$subdir; \
+		chgrp $(GROUP) $(DESTDIR)$(spooldir)/$$subdir; \
 	done
 
 sympa_wizard.pl.inst: $(top_srcdir)/src/sbin/sympa_wizard.pl.in Makefile
