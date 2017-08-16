@@ -615,7 +615,7 @@ AC_CONFIG_FILES([
 ])
 
 AC_CONFIG_SUBDIRS([src/smtpc])
-SMTPC_CONFIGURE_OPTIONS="--bindir=$libexecdir --program-prefix=sympa_"
+SMTPC_CONFIGURE_OPTIONS="--program-prefix=sympa_"
 export SMTPC_CONFIGURE_OPTIONS
 
 AC_OUTPUT
