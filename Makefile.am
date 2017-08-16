@@ -94,9 +94,9 @@ authorcheck:
 
 install-data-hook: installdir installconfig nextstep importantchanges
 if SMTPC
-	-@chown $(USER) $(DESTDIR)$(libexecdir)/sympa_smtpc
-	-@chgrp $(GROUP) $(DESTDIR)$(libexecdir)/sympa_smtpc
-	-@chmod 750 $(DESTDIR)$(libexecdir)/sympa_smtpc
+	-@chown $(USER) $(DESTDIR)$(bindir)/sympa_smtpc
+	-@chgrp $(GROUP) $(DESTDIR)$(bindir)/sympa_smtpc
+	-@chmod 750 $(DESTDIR)$(bindir)/sympa_smtpc
 endif
 
 installdir:
