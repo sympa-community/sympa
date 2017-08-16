@@ -10939,12 +10939,13 @@ sub _notify_added_admin {
         my %previous_emails = map {
             ($_->{email} => 1)
         } @{$config->get($admin_type) || []};
-        my %new_emails = map {
-            ($_->{email} => 1)
-        } grep {$_} values %{$config->get_change($admin_type) || {}};
+        my @new_emails =
+            grep {$_}
+            map  { $_->{email} }
+            grep {$_} values %{$config->get_change($admin_type) || {}};
 
         # Compare with new entries.
-        foreach my $email (keys %new_emails) {
+        foreach my $email (@new_emails) {
             unless ($previous_emails{$email}) {
                 # Notify the new list owner/editor
                 Sympa::send_notify_to_user(
