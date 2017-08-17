@@ -2071,4 +2071,15 @@ If 1, the parameter is the name of scenario.
 
 L<sympa.conf(5)>, L<robot.conf(5)>.
 
+=head1 HISTORY
+
+L<confdef> was separated from L<Conf> on Sympa 6.0a,
+and renamed to L<Sympa::ConfDef> on 6.2a.39.
+
+Descriptions of parameters in this source file were partially taken from
+chapters "sympa.conf parameters" in
+I<Sympa, Mailing List Management Software - Reference manual>, written by
+Serge Aumont, Stefan Hornburg, Soji Ikeda, Olivier SalaE<252>n and
+David Verdin.
+
 =cut

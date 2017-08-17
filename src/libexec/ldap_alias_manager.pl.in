@@ -3,24 +3,24 @@
 # vim:ft=perl:et:sw=4
 # $Id$
 
-#Author: Philippe Baumgart
-#Company: BT
-#License: GPL
-#Version: 1.0
-## This version of alias_manager.pl has been customized by Ludovic Marcotte,
-## Kazuo Moriwaka and Francis Lachapelle
-## Modified by Philippe Baumgart:
-## Added  Optional LDAPS support
-## Added LDAP configuration stored in a separate config file
-## --defaultdir--/ldap_alias_manager.conf
+# Sympa - SYsteme de Multi-Postage Automatique
 #
-# Modified by Roland Hopferwieser:
-#   Use template for entry definition
-#   Added simulation mode
-#	Bugfix for ldap_ssl = 0
-#Purpose: It has the ability to add/remove list aliases in an LDAP directory
-# You should edit all the --defaultdir--/ldap_alias_manager.conf to use your
-# own LDAP directory
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
 use warnings;
@@ -387,3 +387,49 @@ sub finalize_ldap {
         $ldap_connection = undef;
     }
 }
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+ldap_alias_manager, ldap_alias_manager.pl - LDAP alias manager
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 FILES
+
+=over
+
+=item F<ldap_alias_manager.conf>
+
+Configuration file of ldap_alias_manager.
+
+=item F<ldap_alias_entry.tt2>
+
+Template for ldap entries.
+
+=back
+
+=head SEE ALSO
+
+alias_manager(8).
+
+=head1 HISTORY
+
+F<ldap_alias_manager> appeared on Sympa 5.2b2.
+
+It was originally written by Philippe Baumgart, British Telecom.
+And it was customized by
+Ludovic Marcotte, Kazuo Moriwaka and Francis Lachapelle.
+
+Philippe Baumgart added optional LDAPS support
+and configuration stored in a separate config file F<ldap_alias_manager.conf>.
+
+Roland Hopferwieser added template for entry definition
+and simulation mode.
+
+=cut
