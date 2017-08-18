@@ -1291,19 +1291,20 @@ sub get_digest_recipients_per_mode {
                 domain => $self->{'domain'},
             }
         );
-        ## test to know if the rcpt suspended her subscription for this list
-        ## if yes, don't send the message
-        if (defined $user_data->{'suspend'}
-            and $user_data->{'suspend'} + 0) {
-            if ($user_data->{'startdate'} <= time
-                and (time <= $user_data->{'enddate'}
-                    or !$user_data->{'enddate'})
+        # Test to know if the rcpt suspended her subscription for this list.
+        # If yes, don't send the message.
+        if ($user_data and $user_data->{'suspend'}) {
+            if ((   not $user_data->{'startdate'}
+                    or $user_data->{'startdate'} <= time
+                )
+                and (not $user_data->{'enddate'}
+                    or time <= $user_data->{'enddate'})
                 ) {
                 next;
-            } elsif ($user_data->{'enddate'} < time
-                and $user_data->{'enddate'}) {
-                ## If end date is < time, update the BDD by deleting the
-                ## suspending's data
+            } elsif ($user_data->{'enddate'}
+                and $user_data->{'enddate'} < time) {
+                # If end date is < time, update subscriber by deleting the
+                # suspension setting.
                 $self->restore_suspended_subscription($user->{'email'});
             }
         }
@@ -1381,21 +1382,21 @@ sub get_recipients_per_mode {
             }
         );
 
-        # test to know if the rcpt suspended her subscription for this list
-        # if yes, don't send the message
-        if (    $user_data
-            and defined $user_data->{'suspend'}
-            and $user_data->{'suspend'} + 0) {
-            if (($user_data->{'startdate'} <= time)
-                && (   (time <= $user_data->{'enddate'})
-                    || (!$user_data->{'enddate'}))
+        # Test to know if the rcpt suspended her subscription for this list.
+        # if yes, don't send the message.
+        if ($user_data and $user_data->{'suspend'}) {
+            if ((   not $user_data->{'startdate'}
+                    or $user_data->{'startdate'} <= time
+                )
+                and (not $user_data->{'enddate'}
+                    or time <= $user_data->{'enddate'})
                 ) {
                 push @tabrcpt_nomail_verp, $user->{'email'};
                 next;
-            } elsif (($user_data->{'enddate'} < time)
-                && ($user_data->{'enddate'})) {
-                ## If end date is < time, update the BDD by deleting the
-                ## suspending's data
+            } elsif ($user_data->{'enddate'}
+                and $user_data->{'enddate'} < time) {
+                # If end date is < time, update subscriber by deleting the
+                # suspension setting.
                 $self->restore_suspended_subscription($user->{'email'});
             }
         }
