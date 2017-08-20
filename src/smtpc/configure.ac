@@ -46,5 +46,5 @@ AC_CHECK_FUNC([getaddrinfo], [],
 
 fi
 
-AC_CONFIG_FILES([Makefile smtpc.1])
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

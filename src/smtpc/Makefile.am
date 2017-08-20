@@ -9,9 +9,9 @@ smtpc_SOURCES = \
 	sockstr.h \
 	utf8.c \
 	utf8.h
-man1_MANS = smtpc.1
+dist_doc_DATA = smtpc.1.md
 
-EXTRA_DIST = configure.gnu smtpc.1.in
+EXTRA_DIST = configure.gnu
 CLEANFILES = $(bin_PROGRAMS) *~ *.bak core.*
 
 smtpc.o: sockstr.h utf8.h
