@@ -98,7 +98,7 @@ our @params = (
         'file'       => 'sympa.conf',
         'edit'       => '1',
         'gettext_comment' =>
-            "If set to \"on\", enables support of legacy character set according to \"charset.conf\" configuration file.\nIn some language environments, legacy encoding (character set) can be preferred for e-mail messages: for example iso-2022-jp in Japanese language.",
+            "If set to \"on\", enables support of legacy character set according to charset.conf(5) configuration file.\nIn some language environments, legacy encoding (character set) can be preferred for e-mail messages: for example iso-2022-jp in Japanese language.",
     },
 
     {'gettext_id' => 'Database related'},
@@ -996,7 +996,7 @@ our @params = (
         'gettext_id' => 'Directory for storing bounces',
         'file'       => 'wwsympa.conf',
         'gettext_comment' =>
-            "The directory where bounced.pl daemon will store the last bouncing message for each user. A message is stored in the file:\n  <bounce_path>/<list name>\@<mail domain name>/<email address>\nor, if tracking is enabled:  <bounce_path>/<list name>\@<mail domain name>/<email address>_<envelope ID>\nUsers can access to these messages using web interface in the bounce management page.\nDon't confuse with \"queuebounce\" parameter which defines the spool here incoming error reports are stored and picked by bounced.pl daemon.",
+            "The directory where bounced.pl daemon will store the last bouncing message for each user. A message is stored in the file: <bounce_path>/<list name>\@<mail domain name>/<email address>, or, if tracking is enabled: <bounce_path>/<list name>\@<mail domain name>/<email address>_<envelope ID>.\nUsers can access to these messages using web interface in the bounce management page.\nDon't confuse with \"queuebounce\" parameter which defines the spool where incoming error reports are stored and picked by bounced.pl daemon.",
     },
 
     {   'name'       => 'arc_path',
@@ -1667,7 +1667,10 @@ our @params = (
 
     # Sympa services: Optional features
 
-    {'gettext_id' => 'S/MIME and TLS'},
+    {   'gettext_id' => 'S/MIME and TLS',
+        'gettext_comment' =>
+            "S/MIME authentication, decryption and re-encryption. It requires these external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\nTLS client authentication. It requires an external module: IO-Socket-SSL.",
+    },
 
 #    {   'name'       => 'openssl',
 #        'sample'     => '/usr/bin/ssl',
@@ -1715,7 +1718,10 @@ our @params = (
         'file'       => 'sympa.conf',
     },
 
-    {'gettext_id' => 'Data sources setup'},
+    {   'gettext_id' => 'Data sources setup',
+        'gettext_comment' =>
+            'Including subscribers, owners and editors from datasources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-SOcket-SSL.',
+    },
 
     {   'name'       => 'default_sql_fetch_timeout',
         'gettext_id' => 'Default of SQL fetch timeout',
@@ -1725,7 +1731,10 @@ our @params = (
         'default' => '300',
     },
 
-    {'gettext_id' => 'DKIM'},
+    {   'gettext_id' => 'DKIM',
+        'gettext_comment' =>
+            'DKIM signature verification and re-signing. It requires an external module: Mail-DKIM.',
+    },
 
     {   'name'       => 'dkim_feature',
         'gettext_id' => 'Enable DKIM',
@@ -1796,7 +1805,10 @@ our @params = (
     #        'from:sender:reply-to:subject:date:message-id:to:cc:list-id:list-help:list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:in-reply-to:references:resent-date:resent-from:resent-sender:resent-to:resent-cc:resent-message-id:mime-version:content-type:content-transfer-encoding:content-id:content-description',
     #},
 
-    {'gettext_id' => 'DMARC protection'},
+    {   'gettext_id' => 'DMARC protection',
+        'gettext_comment' =>
+            'Processes originator addresses to avoid some domains\' excessive DMARC protection.  This feature requires external module: Net-DNS.',
+    },
 
     {   'name'       => 'dmarc_protection_mode',
         'gettext_id' => 'Test mode(s) for DMARC Protection',
@@ -1831,7 +1843,10 @@ our @params = (
         'optional'   => '1',
     },
 
-    {'gettext_id' => 'List address verification'},
+    {   'gettext_id' => 'List address verification',
+        'gettext_comment' =>
+            'Checks if ailias with the same name as the list to be created already exists on the SMTP server. This feature requires external module: Net-SMTP.',
+    },
 
     {   'name'     => 'list_check_helo',
         'optional' => '1',
@@ -1889,7 +1904,10 @@ our @params = (
 
     # Web interface: Optional features
 
-    {'gettext_id' => 'Password validation'},
+    {   'gettext_id' => 'Password validation',
+        'gettext_comment' =>
+            'Checks if the password the users sbmitted has sufficient strength. This feature requires external module: Data-Password.',
+    },
 
     {   'name'       => 'password_validation',
         'gettext_id' => 'Password validation',
@@ -1902,7 +1920,10 @@ our @params = (
         'optional' => '1',
     },
 
-    {'gettext_id' => 'Authentication with LDAP'},
+    {   'gettext_id' => 'Authentication with LDAP',
+        'gettext_comment' =>
+            'Authnticates users based on the directory on LDAP server. This feature requires external module: Net-LDAP. And also, if secure connection (LDAPS) is required: IO-Socket-SSL.',
+    },
 
     {   'name'       => 'ldap_force_canonical_email',
         'default'    => '1',
@@ -1913,7 +1934,10 @@ our @params = (
         'vhost' => '1',
     },
 
-    {'gettext_id' => 'SOAP HTTP interface'},
+    {   'gettext_id' => 'SOAP HTTP interface',
+        'gettext_comment' =>
+            'Provides some functions of Sympa through SOAP HTTP interface. This feature requires external module: SOAP-Lite.',
+    },
 
     {   'name'       => 'soap_url',
         'sample'     => 'http://web.example.org/sympasoap',

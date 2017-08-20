@@ -16,26 +16,26 @@ while (my ($pname, $pitem) = each %Sympa::ListDef::pinfo) {
 my $parameters = '';
 
 foreach my $param (@Sympa::ConfDef::params) {
-    if (exists $param->{'name'}) {
-        my $name = $param->{'name'};
+    if (exists $param->{name}) {
+        my $name = $param->{name};
         my $default =
-              (exists $param->{'default_s'}) ? $param->{'default_s'}
-            : (exists $param->{'default'})   ? $param->{'default'}
-            :                                  undef;
-        my $query = $param->{'gettext_id'}
-            if exists $param->{'gettext_id'};
-        my $advice = $param->{'gettext_comment'}
-            if exists $param->{'gettext_comment'};
-        my $example = $param->{'sample'}
-            if exists $param->{'sample'};
+              (exists $param->{default_s}) ? $param->{default_s}
+            : (exists $param->{default})   ? $param->{default}
+            :                                undef;
+        my $query = $param->{gettext_id}
+            if exists $param->{gettext_id};
+        my $advice = $param->{gettext_comment}
+            if exists $param->{gettext_comment};
+        my $example = $param->{sample}
+            if exists $param->{sample};
         my $optional = 1
-            if exists $param->{'optional'} and $param->{'optional'};
+            if exists $param->{optional} and $param->{optional};
         my $vhost = 1
-            if exists $param->{'vhost'} and $param->{'vhost'};
+            if exists $param->{vhost} and $param->{vhost};
         my $multiple = 1
-            if exists $param->{'multiple'} and $param->{'multiple'};
+            if exists $param->{multiple} and $param->{multiple};
         my $scenario = $name
-            if exists $param->{'scenario'} and $param->{'scenario'};
+            if exists $param->{scenario} and $param->{scenario};
 
         if ($name eq 'color_0') {
             $parameters .= "=head4 C<color_0>, ..., C<color_15>\n\n";
@@ -52,7 +52,7 @@ foreach my $param (@Sympa::ConfDef::params) {
         } elsif ($name =~ /\Amain_menu_custom_button_/) {
             next;
         } else {
-            $parameters .= sprintf "=head4 C<%s>\n\n", $param->{'name'};
+            $parameters .= sprintf "=head4 C<%s>\n\n", $param->{name};
         }
         $parameters .= sprintf "%s\n\n", _escape_pod($query)
             if defined $query;
@@ -114,7 +114,10 @@ foreach my $param (@Sympa::ConfDef::params) {
         }
     } else {
         $parameters .= sprintf "=head2 %s\n\n",
-            _escape_pod($param->{'gettext_id'});
+            _escape_pod($param->{gettext_id});
+        $parameters .= sprintf "%s\n\n",
+            join("\n\n", split "\n", _escape_pod($param->{gettext_comment}))
+            if exists $param->{gettext_comment};
     }
 }
 
@@ -127,6 +130,8 @@ sub _get_overrides {
     my $pname  = shift;
     my $pitem  = shift;
     my $pnames = shift;
+
+    return () if $pitem->{obsolete};
 
     my %ov;
     if (exists $pitem->{format} and ref $pitem->{format} eq 'HASH') {
