@@ -1,5 +1,34 @@
 # Change Log
 
+## [6.2.19b.1](https://github.com/sympa-community/sympa/tree/6.2.19b.1)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.18...6.2.19b.1)
+
+**Changes**
+
+- WWSympa: The "change_email" function deprecated by 6.2 was restored as "move_user".  Check Listmaster Admin Menu (serveradmin) and User preferences (pref) pages.
+
+**Implemented enhancements:**
+
+- Make "http\_host" parameter optional [\#36](https://github.com/sympa-community/sympa/pull/36) ([ikedas](https://github.com/ikedas))
+- WWSympa: Improving "add", "del" etc. functions. Adding "import" function [\#30](https://github.com/sympa-community/sympa/pull/30) ([ikedas](https://github.com/ikedas))
+- WWSympa: Improving subscribe, signoff and auth functions [\#26](https://github.com/sympa-community/sympa/pull/26) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- sympa\_msg: uninitialized value [\#40](https://github.com/sympa-community/sympa/issues/40)
+- Sympa 6.2.16 - Unsubscribe Does Not Work [\#29](https://github.com/sympa-community/sympa/issues/29)
+- Update smtpc to 0.2: A bug fix and a change [\#42](https://github.com/sympa-community/sympa/pull/42) ([ikedas](https://github.com/ikedas))
+- Several errors by "make install" [\#39](https://github.com/sympa-community/sympa/pull/39) ([ikedas](https://github.com/ikedas))
+- WWSympa: Improving "add", "del" etc. functions. Adding "import" function [\#30](https://github.com/sympa-community/sympa/pull/30) ([ikedas](https://github.com/ikedas))
+- WWSympa: Improving subscribe, signoff and auth functions [\#26](https://github.com/sympa-community/sympa/pull/26) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Issue \#40: Warning on uninitialized value during delivery to the list [\#41](https://github.com/sympa-community/sympa/pull/41) ([ikedas](https://github.com/ikedas))
+- Add DBI error string to error message "Can't connect to Database" [\#35](https://github.com/sympa-community/sympa/pull/35) ([racke](https://github.com/racke))
+- Issue \#25: Restoring the function to change an email over all lists [\#33](https://github.com/sympa-community/sympa/pull/33) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.18](https://github.com/sympa-community/sympa/tree/6.2.18) (2017-06-25)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.17b.1...6.2.18)
