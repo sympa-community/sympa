@@ -13316,7 +13316,7 @@ msgstr ""
 "Tei defineerinud veebilehte, mille põhjal soovite oma uudiskirja luua. Palun "
 "sisestage kas URL või üleslaaditav fail."
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -13325,6 +13325,12 @@ msgstr ""
 "Sisestasite nii veebilehe aadressi kui üleslaaditava faili nime. Sympa ei "
 "oska valida, kuma neist tahate saata. Palun täitke vaid üks väli. Kas "
 "veebilehe aadress VÕI failinimi."
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
+msgstr ""
 
 #. (report_param.argument)
 #: default/mail_tt2/report.tt2:583
@@ -14817,14 +14823,6 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Tundmatu teenusepakkuja."
 
-#: src/lib/Sympa/ConfDef.pm:646
-msgid ""
-"The number of seconds a bulk sleeps between starting a new loop if it didn't "
-"find a message to send."
-msgstr ""
-"Pausi pikkus sekundites kaua hulgikirja protsess magab enne uuesti "
-"käivitumist juhul kui ta hetkel ühtegi kirja ei leia."
-
 #: src/lib/Sympa/ConfDef.pm:817
 msgid ""
 "This is the set of language that will be proposed to your users for the "
@@ -14832,67 +14830,13 @@ msgid ""
 "packages installed."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:51
-msgid "Local part of sympa email address"
-msgstr "sympa e-posti aadressi kohalik osa"
-
 #: src/lib/Sympa/ConfDef.pm:64
 msgid "This parameter is used for display name in the \"From:\" header"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:82
-msgid "URL of main Web page"
-msgstr "põhilehe URL"
-
 #: src/lib/Sympa/ConfDef.pm:94
 msgid "This setting can be overridden by each list"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:295
-msgid "URL mapped with the static_content_path directory defined above"
-msgstr "Üleval kirjeldatud kaustale static_content_path vastav URL"
-
-#: src/lib/Sympa/ConfDef.pm:336
-msgid ""
-"Used to define a custom parameter for your server. Do not forget the "
-"semicolon between the param name and the param value."
-msgstr ""
-"Kasutatakse isikupärase serveri sätete defineerimiseks. Ärge unustage "
-"semikoolonit sätte nime ja väärtuse vahel."
-
-#: src/lib/Sympa/ConfDef.pm:362
-msgid "Syslog facility for sympa"
-msgstr "Sympa syslog vahendid"
-
-#: src/lib/Sympa/ConfDef.pm:365
-msgid "Do not forget to edit syslog.conf"
-msgstr "Ärge unustage muuta faili syslog.conf"
-
-#: src/lib/Sympa/ConfDef.pm:376
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr "Syslogiga suhtlemise moodus (unix | inet)"
-
-#: src/lib/Sympa/ConfDef.pm:442
-msgid ""
-"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
-"powerful systems."
-msgstr ""
-"Sisestatud väärtus on üsna väike, võite seda suurendada 100, 200 või isegi "
-"300ni võimsamates süsteemides."
-
-#: src/lib/Sympa/ConfDef.pm:487
-msgid "Setting this parameter to \"none\" will hide the blacklist feature"
-msgstr ""
-"Määrates väärtuseks \"none\" keelab musta nimekirja kasutamise võimaluse"
-
-#: src/lib/Sympa/ConfDef.pm:492
-msgid ""
-"If set, when a list editor report a spam, this external script is run by "
-"wwsympa or sympa, the spam is sent into script stdin"
-msgstr ""
-"Kui on seatud ja listi moderaator teavitab rämpspostist, käivitatakse see "
-"väline skript wwsympa või sympa poolt saates  rämpskirja skripti stdin "
-"sisendisse."
 
 #: src/lib/Sympa/ConfDef.pm:514
 msgid ""
@@ -14919,27 +14863,6 @@ msgid ""
 "Type of alias database.  \"btree\", \"dbm\", \"hash\" and so on.  Available "
 "when aliases_program is \"makemap\", \"postalias\" or \"postmap\""
 msgstr ""
-
-# nlsref 15,4
-#: src/lib/Sympa/ConfDef.pm:555
-msgid "Specify header fields to be removed before message distribution"
-msgstr "Määrake päise väljad, mis eemaldatakse enne kirja laialisaatmist"
-
-#: src/lib/Sympa/ConfDef.pm:565
-msgid "Reject mail from automates (crontab, etc) sent to a list?"
-msgstr "Kas lükata automaatide  (crontab jne) kirjad tagasi?"
-
-#: src/lib/Sympa/ConfDef.pm:579
-msgid ""
-"SMTP server to which Sympa verify if alias with the same name as the list to "
-"be created"
-msgstr ""
-"SMTP server mille abil Sympa kontrollib kas sama nimega listi ei ole juba "
-"olemas"
-
-#: src/lib/Sympa/ConfDef.pm:591
-msgid "SMTP HELO (EHLO) parameter used for alias verification"
-msgstr "SMTP HELO (EHLO) sätted aliase kontrollimiseks"
 
 #: src/lib/Sympa/ConfDef.pm:594
 msgid "Default value is the host part of list_check_smtp parameter."
@@ -14979,10 +14902,6 @@ msgid ""
 "Keep it small if you expect brutal increases in the message sending load."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:666
-msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr "Tellijate vaikimisi piirarv (0 näitab limiidi puudumist)"
-
 #: src/lib/Sympa/ConfDef.pm:686
 msgid "Directory containing various specialized spools"
 msgstr ""
@@ -14990,10 +14909,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:688
 msgid "All spool are created at runtime by sympa.pl"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:825
-msgid "This is the default language used by Sympa"
-msgstr "See on Sympa vaikekeel"
 
 #: src/lib/Sympa/ConfDef.pm:830
 msgid "If set to \"on\", enables support of legacy character set"
@@ -15059,15 +14974,6 @@ msgstr ""
 msgid "Number of months that elapse before statistics are expired"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1124
-msgid "Default timeout while performing a fetch for an include_sql_query sync"
-msgstr "Andmebaasipäringu include_sql_query ajalimiit"
-
-#: src/lib/Sympa/ConfDef.pm:1204
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "Lisage DKIM allkiri listist tulnud kirjadele"
-
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Location of the file where DKIM private key is stored"
 msgstr ""
@@ -15100,14 +15006,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1278
 msgid "Email to use for replacement From header"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1294
-msgid ""
-"supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
-"Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
-msgstr ""
-"toetatud antiviiruse programmid: Clam AntiVirus/clamscan & clamdscan, McAfee/"
-"uvscan, Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
 
 #: src/lib/Sympa/ConfDef.pm:1299
 msgid "Antivirus plugin command argument"
@@ -15216,13 +15114,102 @@ msgstr ""
 msgid "Attempt to exceed the max number of members (%1) for this list"
 msgstr ""
 
-#: default/web_tt2/subrequest.tt2:10
-msgid "Please fill in the form below and then click the validation button"
-msgstr "Palun täitke vorm ja vajutage valideerimise nupule"
-
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid ""
+#~ "The number of seconds a bulk sleeps between starting a new loop if it "
+#~ "didn't find a message to send."
+#~ msgstr ""
+#~ "Pausi pikkus sekundites kaua hulgikirja protsess magab enne uuesti "
+#~ "käivitumist juhul kui ta hetkel ühtegi kirja ei leia."
+
+#~ msgid "Local part of sympa email address"
+#~ msgstr "sympa e-posti aadressi kohalik osa"
+
+#~ msgid "URL of main Web page"
+#~ msgstr "põhilehe URL"
+
+#~ msgid "URL mapped with the static_content_path directory defined above"
+#~ msgstr "Üleval kirjeldatud kaustale static_content_path vastav URL"
+
+#~ msgid ""
+#~ "Used to define a custom parameter for your server. Do not forget the "
+#~ "semicolon between the param name and the param value."
+#~ msgstr ""
+#~ "Kasutatakse isikupärase serveri sätete defineerimiseks. Ärge unustage "
+#~ "semikoolonit sätte nime ja väärtuse vahel."
+
+#~ msgid "Syslog facility for sympa"
+#~ msgstr "Sympa syslog vahendid"
+
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "Ärge unustage muuta faili syslog.conf"
+
+#~ msgid "Communication mode with syslogd (unix | inet)"
+#~ msgstr "Syslogiga suhtlemise moodus (unix | inet)"
+
+#~ msgid ""
+#~ "Proposed value is quite low, you can rise it up to 100, 200 or even 300 "
+#~ "with powerful systems."
+#~ msgstr ""
+#~ "Sisestatud väärtus on üsna väike, võite seda suurendada 100, 200 või "
+#~ "isegi 300ni võimsamates süsteemides."
+
+#~ msgid "Setting this parameter to \"none\" will hide the blacklist feature"
+#~ msgstr ""
+#~ "Määrates väärtuseks \"none\" keelab musta nimekirja kasutamise võimaluse"
+
+#~ msgid ""
+#~ "If set, when a list editor report a spam, this external script is run by "
+#~ "wwsympa or sympa, the spam is sent into script stdin"
+#~ msgstr ""
+#~ "Kui on seatud ja listi moderaator teavitab rämpspostist, käivitatakse see "
+#~ "väline skript wwsympa või sympa poolt saates  rämpskirja skripti stdin "
+#~ "sisendisse."
+
+# nlsref 15,4
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr "Määrake päise väljad, mis eemaldatakse enne kirja laialisaatmist"
+
+#~ msgid "Reject mail from automates (crontab, etc) sent to a list?"
+#~ msgstr "Kas lükata automaatide  (crontab jne) kirjad tagasi?"
+
+#~ msgid ""
+#~ "SMTP server to which Sympa verify if alias with the same name as the list "
+#~ "to be created"
+#~ msgstr ""
+#~ "SMTP server mille abil Sympa kontrollib kas sama nimega listi ei ole juba "
+#~ "olemas"
+
+#~ msgid "SMTP HELO (EHLO) parameter used for alias verification"
+#~ msgstr "SMTP HELO (EHLO) sätted aliase kontrollimiseks"
+
+#~ msgid ""
+#~ "Default limit for the number of subscribers per list (0 means no limit)"
+#~ msgstr "Tellijate vaikimisi piirarv (0 näitab limiidi puudumist)"
+
+#~ msgid "This is the default language used by Sympa"
+#~ msgstr "See on Sympa vaikekeel"
+
+#~ msgid ""
+#~ "Default timeout while performing a fetch for an include_sql_query sync"
+#~ msgstr "Andmebaasipäringu include_sql_query ajalimiit"
+
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "Lisage DKIM allkiri listist tulnud kirjadele"
+
+#~ msgid ""
+#~ "supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
+#~ "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
+#~ msgstr ""
+#~ "toetatud antiviiruse programmid: Clam AntiVirus/clamscan & clamdscan, "
+#~ "McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
+
+#~ msgid "Please fill in the form below and then click the validation button"
+#~ msgstr "Palun täitke vorm ja vajutage valideerimise nupule"
 
 #~ msgid "Main robot hostname"
 #~ msgstr "Põhiserveri nimi"

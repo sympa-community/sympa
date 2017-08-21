@@ -13689,11 +13689,17 @@ msgstr ""
 "Avètz pas especificat cap de font per vòstra letra d'informacion. Indicatz "
 "una URL o un fichièr de telecargar."
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
@@ -15209,10 +15215,6 @@ msgid ""
 "packages installed."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:51
-msgid "Local part of sympa email address"
-msgstr "Partida locala de l'adreça email de Sympa"
-
 #: src/lib/Sympa/ConfDef.pm:64
 msgid "This parameter is used for display name in the \"From:\" header"
 msgstr ""
@@ -15226,10 +15228,6 @@ msgid ""
 "Sympa will associate listmaster privileges to these email addresses (mail "
 "and web interfaces). Some error reports may also be sent to these addresses."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:82
-msgid "URL of main Web page"
-msgstr "URL de la pagina web principala"
 
 #: src/lib/Sympa/ConfDef.pm:94
 msgid "This setting can be overridden by each list"
@@ -15270,18 +15268,6 @@ msgid ""
 "Directory for configuration files; it also contains scenari/ and templates/ "
 "directories"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:362
-msgid "Syslog facility for sympa"
-msgstr "Facilitat syslog emplegada per Sympa"
-
-#: src/lib/Sympa/ConfDef.pm:365
-msgid "Do not forget to edit syslog.conf"
-msgstr "Doblidetz pas d'editar edit_list.conf"
-
-#: src/lib/Sympa/ConfDef.pm:376
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr "Mòde de comunicacion amb syslog (unix | inet)"
 
 #: src/lib/Sympa/ConfDef.pm:416
 msgid "Umask used for file creation by Sympa"
@@ -15362,12 +15348,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:549
 msgid "Specify which rfc2369 mailing list headers to add"
 msgstr ""
-
-# nlsref 15,4
-#: src/lib/Sympa/ConfDef.pm:555
-#, fuzzy
-msgid "Specify header fields to be removed before message distribution"
-msgstr "Difusion de messatge"
 
 #: src/lib/Sympa/ConfDef.pm:565
 msgid "Reject mail from automates (crontab, etc) sent to a list?"
@@ -15453,10 +15433,6 @@ msgid ""
 "messages other than archives"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:821
-msgid "Default language (one of supported languages)"
-msgstr "Lenga per defaut (una de las lengas suportadas)"
-
 #: src/lib/Sympa/ConfDef.pm:825
 msgid "This is the default language used by Sympa"
 msgstr ""
@@ -15536,13 +15512,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1124
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1204
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr ""
-"Inserir una signatura DKIM als messatges de servici, als messatges de listas "
-"o als dos."
 
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Location of the file where DKIM private key is stored"
@@ -15728,6 +15697,35 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Partida locala de l'adreça email de Sympa"
+
+#~ msgid "URL of main Web page"
+#~ msgstr "URL de la pagina web principala"
+
+#~ msgid "Syslog facility for sympa"
+#~ msgstr "Facilitat syslog emplegada per Sympa"
+
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "Doblidetz pas d'editar edit_list.conf"
+
+#~ msgid "Communication mode with syslogd (unix | inet)"
+#~ msgstr "Mòde de comunicacion amb syslog (unix | inet)"
+
+# nlsref 15,4
+#, fuzzy
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr "Difusion de messatge"
+
+#~ msgid "Default language (one of supported languages)"
+#~ msgstr "Lenga per defaut (una de las lengas suportadas)"
+
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr ""
+#~ "Inserir una signatura DKIM als messatges de servici, als messatges de "
+#~ "listas o als dos."
 
 #~ msgid "Main robot hostname"
 #~ msgstr "Nom de l'òste del robòt principal"

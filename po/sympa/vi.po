@@ -13357,11 +13357,17 @@ msgid ""
 "Please specify either an URL or a file to upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
@@ -14913,11 +14919,6 @@ msgstr ""
 msgid "Main robot hostname"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:51
-#, fuzzy
-msgid "Local part of sympa email address"
-msgstr "Hãy cung cấp địa chỉ thư điện tử"
-
 #: src/lib/Sympa/ConfDef.pm:55
 msgid "Effective address will be [EMAIL]@[HOST]"
 msgstr ""
@@ -14939,11 +14940,6 @@ msgid ""
 "Sympa will associate listmaster privileges to these email addresses (mail "
 "and web interfaces). Some error reports may also be sent to these addresses."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:82
-#, fuzzy
-msgid "URL of main Web page"
-msgstr "Trang quản trị %1"
 
 #: src/lib/Sympa/ConfDef.pm:94
 msgid "This setting can be overridden by each list"
@@ -14992,11 +14988,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:362
 msgid "Syslog facility for sympa"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:365
-#, fuzzy
-msgid "Do not forget to edit syslog.conf"
-msgstr "sai định dạng edit_list.conf"
 
 #: src/lib/Sympa/ConfDef.pm:372
 msgid "0: normal, 2,3,4: for debug"
@@ -15085,11 +15076,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:549
 msgid "Specify which rfc2369 mailing list headers to add"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:555
-#, fuzzy
-msgid "Specify header fields to be removed before message distribution"
-msgstr "Thời hạn bao gồm thư cần phát"
 
 #: src/lib/Sympa/ConfDef.pm:565
 msgid "Reject mail from automates (crontab, etc) sent to a list?"
@@ -15275,12 +15261,6 @@ msgstr ""
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1204
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "Đang gửi một thư cho hộp thư chung"
-
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Location of the file where DKIM private key is stored"
 msgstr ""
@@ -15438,13 +15418,33 @@ msgstr ""
 msgid "Attempt to exceed the max number of members (%1) for this list"
 msgstr ""
 
-#: default/web_tt2/subrequest.tt2:10
-msgid "Please fill in the form below and then click the validation button"
-msgstr "Hãy điền vào đơn dưới đây, sau đó bấm nút thẩm tra"
-
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Hãy cung cấp địa chỉ thư điện tử"
+
+#, fuzzy
+#~ msgid "URL of main Web page"
+#~ msgstr "Trang quản trị %1"
+
+#, fuzzy
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "sai định dạng edit_list.conf"
+
+#, fuzzy
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr "Thời hạn bao gồm thư cần phát"
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "Đang gửi một thư cho hộp thư chung"
+
+#~ msgid "Please fill in the form below and then click the validation button"
+#~ msgstr "Hãy điền vào đơn dưới đây, sau đó bấm nút thẩm tra"
 
 #, fuzzy
 #~ msgid "System related"

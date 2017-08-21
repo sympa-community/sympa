@@ -13328,7 +13328,7 @@ msgstr ""
 "Ez duzu zure aldizkaria sortzeko erabili nahi duzun web orria definitu. "
 "Mesedez adierazi URL bat edo igo fitxategia."
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -13337,6 +13337,12 @@ msgstr ""
 "URLa eta igotzeko fitxategia, biak adierazi dituzu. Sympak ezin du erabaki "
 "zein nahi duzu. Bete formularioa bietako batekin bakarrik mesedez, web orri "
 "bat EDO igotzeko fitxategia."
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
+msgstr ""
 
 #. (report_param.argument)
 #: default/mail_tt2/report.tt2:583
@@ -14832,111 +14838,6 @@ msgid ""
 "find a message to send."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:51
-msgid "Local part of sympa email address"
-msgstr "Sympa eposta helbidearen zati lokala"
-
-#: src/lib/Sympa/ConfDef.pm:64
-msgid "This parameter is used for display name in the \"From:\" header"
-msgstr "Parametro hau izena erakusteko erabiltzen da \"Nork\" burukoan"
-
-#: src/lib/Sympa/ConfDef.pm:82
-msgid "URL of main Web page"
-msgstr "Orrialde nagusiaren URLa"
-
-#: src/lib/Sympa/ConfDef.pm:295
-msgid "URL mapped with the static_content_path directory defined above"
-msgstr "Aurretik definitutako eduki estatikoaren direktorioa mapeatzeko URLa"
-
-#: src/lib/Sympa/ConfDef.pm:336
-msgid ""
-"Used to define a custom parameter for your server. Do not forget the "
-"semicolon between the param name and the param value."
-msgstr ""
-"Zerbitzarian balio berezi bat definitzeko balio du. Ez ahaztu bi puntu "
-"jartzeaz parametroaren eta balioaren artean."
-
-#: src/lib/Sympa/ConfDef.pm:362
-msgid "Syslog facility for sympa"
-msgstr "Sympak erabiltzeko syslog tresna"
-
-#: src/lib/Sympa/ConfDef.pm:365
-msgid "Do not forget to edit syslog.conf"
-msgstr "Ez ahaztu syslog.conf editatzeaz"
-
-#: src/lib/Sympa/ConfDef.pm:376
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr "Syslogd-rekin komunikatzeko modua (unix | inet)"
-
-#: src/lib/Sympa/ConfDef.pm:442
-#, fuzzy
-msgid ""
-"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
-"powerful systems."
-msgstr ""
-"Proposatutako  balioa nahiko baxua da, 100, 200 edo 300era igo daiteke, "
-"sistema potenteenetan"
-
-#: src/lib/Sympa/ConfDef.pm:487
-msgid "Setting this parameter to \"none\" will hide the blacklist feature"
-msgstr ""
-"Parametro hau \"none\"-ra ezarriz zerrenda beltzen aukera ezkutatuko da"
-
-#: src/lib/Sympa/ConfDef.pm:492
-msgid ""
-"If set, when a list editor report a spam, this external script is run by "
-"wwsympa or sympa, the spam is sent into script stdin"
-msgstr ""
-"Gaituz gero, zerrenda editoreren bat spam eposta bat topatuz gero, kanpo "
-"script hau exekutatuko dute wwsympak edo sympak, spam-a scriptaren sarrerara "
-"bidaliz"
-
-#: src/lib/Sympa/ConfDef.pm:520
-msgid "Max. number of different domains per call to Sendmail"
-msgstr ""
-"Sendmail-eri egindako dei bakoitzean bidaliko diren domeinu kopuru maximoa."
-
-#: src/lib/Sympa/ConfDef.pm:539
-msgid ""
-"Program used to update alias database.  \"makemap\", \"newaliases\", "
-"\"postalias\", \"postmap\" or full path to custom program"
-msgstr ""
-"Aliasen datu basea eguneratzeko erabiliko den programa. \"makemap\", "
-"\"newaliases\", \"postalias\", \"postmap\" edo beste programa baterako bide "
-"osoa"
-
-#: src/lib/Sympa/ConfDef.pm:545
-msgid ""
-"Type of alias database.  \"btree\", \"dbm\", \"hash\" and so on.  Available "
-"when aliases_program is \"makemap\", \"postalias\" or \"postmap\""
-msgstr ""
-"Aliasen datu basearen mota. \"btree\", \"dbm\", \"hash\" etab. Erabilgarri "
-"aliases_program  \"makemap\", \"postalias\" or \"postmap\" denean."
-
-#: src/lib/Sympa/ConfDef.pm:555
-msgid "Specify header fields to be removed before message distribution"
-msgstr "Mezua bidali baino lehen kenduko diren goiburu eremuak zehaztu"
-
-#: src/lib/Sympa/ConfDef.pm:565
-msgid "Reject mail from automates (crontab, etc) sent to a list?"
-msgstr "Automatek (crontab, etab.) zerrendara bidalitako mezuak gaitzetsi?"
-
-#: src/lib/Sympa/ConfDef.pm:579
-msgid ""
-"SMTP server to which Sympa verify if alias with the same name as the list to "
-"be created"
-msgstr ""
-"Sortuko den zerrendaren izen berdina duen aliasa dagoen egiaztatzeko  SMTP "
-"zerbitzaria"
-
-#: src/lib/Sympa/ConfDef.pm:591
-msgid "SMTP HELO (EHLO) parameter used for alias verification"
-msgstr "Aliasa egiaztatzeko erabiliko den SMTP HELO (EHLO) parametroa"
-
-#: src/lib/Sympa/ConfDef.pm:594
-msgid "Default value is the host part of list_check_smtp parameter."
-msgstr "Defektuz list_check_smtp pamaetroaren ostalari zatia."
-
 #: src/lib/Sympa/ConfDef.pm:609
 msgid "Bulk mailer"
 msgstr ""
@@ -14966,32 +14867,9 @@ msgid ""
 "Number of seconds a master bulk waits between two packets number checks."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:657
-msgid ""
-"Keep it small if you expect brutal increases in the message sending load."
-msgstr ""
-"Txikia mantendu mezuen bidalketa karga izugarri hantizea espero baduzu."
-
-#: src/lib/Sympa/ConfDef.pm:666
-msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr ""
-"Zerrenden harpidedun kopuruaren defektuzko muga (0 mugarik gabe esan nahi du)"
-
-#: src/lib/Sympa/ConfDef.pm:825
-msgid "This is the default language used by Sympa"
-msgstr "Hau da Sympa-k erabiliko duen hizkuntza lehenetsia"
-
-#: src/lib/Sympa/ConfDef.pm:830
-msgid "If set to \"on\", enables support of legacy character set"
-msgstr "\"on\" jartzen bada zaharkitutako karaktere multzoak onartzen dira"
-
 #: src/lib/Sympa/ConfDef.pm:833
 msgid "See also charset.conf(5) manpage"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:876
-msgid "Task name for expiration of old bounces"
-msgstr "Errebote zaharraz kentzeko ataza izena"
 
 #: src/lib/Sympa/ConfDef.pm:983
 msgid ""
@@ -15003,150 +14881,241 @@ msgstr ""
 msgid "Be careful to the case"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1046
-msgid "This is useful for defining ORACLE_HOME "
-msgstr "ORACLE_HOME definitzeko lagungarria "
-
 #: src/lib/Sympa/ConfDef.pm:1085
 msgid "Number of months that elapse before statistics are expired"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1124
-msgid "Default timeout while performing a fetch for an include_sql_query sync"
-msgstr "include_sql_query sinkronizazio bat egiteko defektuzko denbora muga."
-
-#: src/lib/Sympa/ConfDef.pm:1204
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "Mezuan robotaren, zerrendaren edo bien DKIM sinadura txertatu"
-
-#: src/lib/Sympa/ConfDef.pm:1239
-msgid "The \"i=\" tag as defined in rfc 4871, default is null"
-msgstr "4871 rfc-an definitutako \"i=\" etiketa, defektuz null"
-
-#: src/lib/Sympa/ConfDef.pm:1260
-msgid ""
-"Do not set unless you want to use DMARC protection.  This is a comma "
-"separated list of test modes; if multiple are selected then protection is "
-"activated if ANY match.  Do not use dmarc_* modes unless you have a local "
-"DNS cache as they do a DNS lookup for each received message."
-msgstr ""
-"Ez gaitu DMARC babesa nahi ez baduzu. Komaz bereizitako test moduak dira; "
-"bat baino gehiago zehazten bada EDOZEIN betetzean babesa gaitzen da. Ez "
-"erabili dmark_* modurik DNS katxea ez baduzu, jasotako mezu bakoitzeko DNS "
-"eskaera bat egiten delako."
-
-#: src/lib/Sympa/ConfDef.pm:1263
-msgid "Regexp for domain name match"
-msgstr "Domeinu izenarentzako expresio erregularra"
-
-#: src/lib/Sympa/ConfDef.pm:1294
-#, fuzzy
-msgid ""
-"supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
-"Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
-msgstr ""
-"erabili daitezkeen antibirusak: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and "
-"Trend Micro/VirusWall"
-
-#: src/lib/Sympa/ConfDef.pm:1299
-msgid "Antivirus plugin command argument"
-msgstr "Antibirus pluginaren komando argumentuak"
-
-#: src/lib/Sympa/ConfDef.pm:1322
-msgid ""
-"If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
-"spams, name of this header (example X-Spam-Status)"
-msgstr ""
-"Spam filtroek (spamassassin edo j-chkmail adib.) spam-a etiketatzeko smtp "
-"goiburuak erabiltzen badituzte, hemen adierazi (adibidez X-Spam-Status)"
-
-#: src/lib/Sympa/ConfDef.pm:1330
-msgid "Regexp applied on this header to verify message is a spam (example Yes)"
-msgstr ""
-"Mezua spam-a dela egiaztatzeko goiburuari aplikatuko zaion expresio "
-"erregularra (adibidez Yes)"
-
-#: src/lib/Sympa/ConfDef.pm:1338
-msgid ""
-"Regexp applied on this header to verify message is NOT a spam (example No)"
-msgstr ""
-"Mezua spam-a ez dela egiaztatzeko goiburuari aplikatuko zaion expresio "
-"erregularra (adibidez No)"
-
-#: src/lib/Sympa/ConfDef.pm:1346
-msgid ""
-"Messages are supposed to be filtered by an antispam that add one more "
-"headers to messages. This parameter is used to select a special scenario in "
-"order to decide the message spam status: ham, spam or unsure. This parameter "
-"replace antispam_tag_header_name, antispam_tag_header_spam_regexp and "
-"antispam_tag_header_ham_regexp."
-msgstr ""
-"Mezuak antispam batetik pasako direla suposatzen da, eta honek goiburu bat "
-"edo gehiago gehituko dizkiela. Parametro hau eszenatoki berezi bat "
-"hautatzeko erabiltzen da, mezuaren spam izaera erabakitzeko : ona, spam-a "
-"edo ziurgabea. Parametro honek antispam_tag_header_name, "
-"antispam_tag_header_spam_regexp eta antispam_tag_header_ham_regexp ordezten "
-"ditu."
-
-#: src/lib/Sympa/ConfDef.pm:1357
-msgid "Directory for storing HTML archives"
-msgstr "HTML artxiboak gordetzeko karpeta"
-
-#: src/lib/Sympa/ConfDef.pm:1395
-msgid ""
-"Activates a custom archiver to use instead of MHonArc. The value of this "
-"parameter is the absolute path on the file system to the script of the "
-"custom archiver."
-msgstr ""
-"MHonArc-en ordezko artxibatzailea gaitzen du. Balioa pertsonalizatutako "
-"artxibatzailko fitxategiaren bide absolutua da."
-
-#: src/lib/Sympa/ConfDef.pm:1427
-msgid "Path to MHonArc mail2html plugin"
-msgstr "MHonArc mail2html pluginaren bidea"
-
-#: src/lib/Sympa/ConfDef.pm:1430
-msgid "This is required for HTML mail archiving"
-msgstr "Hau beharrezkoa da HTML eposta artxibatzeko"
-
-#: src/lib/Sympa/ConfDef.pm:1441
-msgid "duration before the one time tickets are expired"
-msgstr "erabilera bakarreko tiketak iraungitzeko tartea"
-
-#: src/lib/Sympa/ConfDef.pm:1467
-msgid "Title of main Web page"
-msgstr "Orri nagusiaren izenburua"
-
-#: src/lib/Sympa/ConfDef.pm:1482
-msgid ""
-"URL path to the javascript file making the WYSIWYG HTML editor available.  "
-"Relative path under <static_content_url> or absolute path"
-msgstr ""
-"javascript WYSIWYG editorearen fitxategiaren bidea. <static_content_url> "
-"azpiko bide erlatiboa edo bide absolutua"
-
-#: src/lib/Sympa/ConfDef.pm:1506
-msgid "This module provide much faster web interface"
-msgstr "Modulu honek web interfaze asko azkartzen du"
-
-#: src/lib/Sympa/ConfDef.pm:1510
-msgid ""
-"Default number of lines of the array displaying the log entries in the logs "
-"page"
-msgstr "Log-en orrian agertuko diren logen kopurua"
 
 #: src/lib/Sympa/ConfDef.pm:1517
 msgid "Web domain of a virtual host"
 msgstr ""
 
-#: default/web_tt2/subrequest.tt2:10
-msgid "Please fill in the form below and then click the validation button"
-msgstr "Bete azpiko formularioa eta sakatu baieztapen botoia mesedez"
-
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Sympa eposta helbidearen zati lokala"
+
+#~ msgid "This parameter is used for display name in the \"From:\" header"
+#~ msgstr "Parametro hau izena erakusteko erabiltzen da \"Nork\" burukoan"
+
+#~ msgid "URL of main Web page"
+#~ msgstr "Orrialde nagusiaren URLa"
+
+#~ msgid "URL mapped with the static_content_path directory defined above"
+#~ msgstr ""
+#~ "Aurretik definitutako eduki estatikoaren direktorioa mapeatzeko URLa"
+
+#~ msgid ""
+#~ "Used to define a custom parameter for your server. Do not forget the "
+#~ "semicolon between the param name and the param value."
+#~ msgstr ""
+#~ "Zerbitzarian balio berezi bat definitzeko balio du. Ez ahaztu bi puntu "
+#~ "jartzeaz parametroaren eta balioaren artean."
+
+#~ msgid "Syslog facility for sympa"
+#~ msgstr "Sympak erabiltzeko syslog tresna"
+
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "Ez ahaztu syslog.conf editatzeaz"
+
+#~ msgid "Communication mode with syslogd (unix | inet)"
+#~ msgstr "Syslogd-rekin komunikatzeko modua (unix | inet)"
+
+#, fuzzy
+#~ msgid ""
+#~ "Proposed value is quite low, you can rise it up to 100, 200 or even 300 "
+#~ "with powerful systems."
+#~ msgstr ""
+#~ "Proposatutako  balioa nahiko baxua da, 100, 200 edo 300era igo daiteke, "
+#~ "sistema potenteenetan"
+
+#~ msgid "Setting this parameter to \"none\" will hide the blacklist feature"
+#~ msgstr ""
+#~ "Parametro hau \"none\"-ra ezarriz zerrenda beltzen aukera ezkutatuko da"
+
+#~ msgid ""
+#~ "If set, when a list editor report a spam, this external script is run by "
+#~ "wwsympa or sympa, the spam is sent into script stdin"
+#~ msgstr ""
+#~ "Gaituz gero, zerrenda editoreren bat spam eposta bat topatuz gero, kanpo "
+#~ "script hau exekutatuko dute wwsympak edo sympak, spam-a scriptaren "
+#~ "sarrerara bidaliz"
+
+#~ msgid "Max. number of different domains per call to Sendmail"
+#~ msgstr ""
+#~ "Sendmail-eri egindako dei bakoitzean bidaliko diren domeinu kopuru "
+#~ "maximoa."
+
+#~ msgid ""
+#~ "Program used to update alias database.  \"makemap\", \"newaliases\", "
+#~ "\"postalias\", \"postmap\" or full path to custom program"
+#~ msgstr ""
+#~ "Aliasen datu basea eguneratzeko erabiliko den programa. \"makemap\", "
+#~ "\"newaliases\", \"postalias\", \"postmap\" edo beste programa baterako "
+#~ "bide osoa"
+
+#~ msgid ""
+#~ "Type of alias database.  \"btree\", \"dbm\", \"hash\" and so on.  "
+#~ "Available when aliases_program is \"makemap\", \"postalias\" or \"postmap"
+#~ "\""
+#~ msgstr ""
+#~ "Aliasen datu basearen mota. \"btree\", \"dbm\", \"hash\" etab. "
+#~ "Erabilgarri aliases_program  \"makemap\", \"postalias\" or \"postmap\" "
+#~ "denean."
+
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr "Mezua bidali baino lehen kenduko diren goiburu eremuak zehaztu"
+
+#~ msgid "Reject mail from automates (crontab, etc) sent to a list?"
+#~ msgstr "Automatek (crontab, etab.) zerrendara bidalitako mezuak gaitzetsi?"
+
+#~ msgid ""
+#~ "SMTP server to which Sympa verify if alias with the same name as the list "
+#~ "to be created"
+#~ msgstr ""
+#~ "Sortuko den zerrendaren izen berdina duen aliasa dagoen egiaztatzeko  "
+#~ "SMTP zerbitzaria"
+
+#~ msgid "SMTP HELO (EHLO) parameter used for alias verification"
+#~ msgstr "Aliasa egiaztatzeko erabiliko den SMTP HELO (EHLO) parametroa"
+
+#~ msgid "Default value is the host part of list_check_smtp parameter."
+#~ msgstr "Defektuz list_check_smtp pamaetroaren ostalari zatia."
+
+#~ msgid ""
+#~ "Keep it small if you expect brutal increases in the message sending load."
+#~ msgstr ""
+#~ "Txikia mantendu mezuen bidalketa karga izugarri hantizea espero baduzu."
+
+#~ msgid ""
+#~ "Default limit for the number of subscribers per list (0 means no limit)"
+#~ msgstr ""
+#~ "Zerrenden harpidedun kopuruaren defektuzko muga (0 mugarik gabe esan nahi "
+#~ "du)"
+
+#~ msgid "This is the default language used by Sympa"
+#~ msgstr "Hau da Sympa-k erabiliko duen hizkuntza lehenetsia"
+
+#~ msgid "If set to \"on\", enables support of legacy character set"
+#~ msgstr "\"on\" jartzen bada zaharkitutako karaktere multzoak onartzen dira"
+
+#~ msgid "Task name for expiration of old bounces"
+#~ msgstr "Errebote zaharraz kentzeko ataza izena"
+
+#~ msgid "This is useful for defining ORACLE_HOME "
+#~ msgstr "ORACLE_HOME definitzeko lagungarria "
+
+#~ msgid ""
+#~ "Default timeout while performing a fetch for an include_sql_query sync"
+#~ msgstr ""
+#~ "include_sql_query sinkronizazio bat egiteko defektuzko denbora muga."
+
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "Mezuan robotaren, zerrendaren edo bien DKIM sinadura txertatu"
+
+#~ msgid "The \"i=\" tag as defined in rfc 4871, default is null"
+#~ msgstr "4871 rfc-an definitutako \"i=\" etiketa, defektuz null"
+
+#~ msgid ""
+#~ "Do not set unless you want to use DMARC protection.  This is a comma "
+#~ "separated list of test modes; if multiple are selected then protection is "
+#~ "activated if ANY match.  Do not use dmarc_* modes unless you have a local "
+#~ "DNS cache as they do a DNS lookup for each received message."
+#~ msgstr ""
+#~ "Ez gaitu DMARC babesa nahi ez baduzu. Komaz bereizitako test moduak dira; "
+#~ "bat baino gehiago zehazten bada EDOZEIN betetzean babesa gaitzen da. Ez "
+#~ "erabili dmark_* modurik DNS katxea ez baduzu, jasotako mezu bakoitzeko "
+#~ "DNS eskaera bat egiten delako."
+
+#~ msgid "Regexp for domain name match"
+#~ msgstr "Domeinu izenarentzako expresio erregularra"
+
+#, fuzzy
+#~ msgid ""
+#~ "supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
+#~ "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
+#~ msgstr ""
+#~ "erabili daitezkeen antibirusak: McAfee/uvscan, Fsecure/fsav, Sophos, AVP "
+#~ "and Trend Micro/VirusWall"
+
+#~ msgid "Antivirus plugin command argument"
+#~ msgstr "Antibirus pluginaren komando argumentuak"
+
+#~ msgid ""
+#~ "If a spam filter (like spamassassin or j-chkmail) add a smtp headers to "
+#~ "tag spams, name of this header (example X-Spam-Status)"
+#~ msgstr ""
+#~ "Spam filtroek (spamassassin edo j-chkmail adib.) spam-a etiketatzeko smtp "
+#~ "goiburuak erabiltzen badituzte, hemen adierazi (adibidez X-Spam-Status)"
+
+#~ msgid ""
+#~ "Regexp applied on this header to verify message is a spam (example Yes)"
+#~ msgstr ""
+#~ "Mezua spam-a dela egiaztatzeko goiburuari aplikatuko zaion expresio "
+#~ "erregularra (adibidez Yes)"
+
+#~ msgid ""
+#~ "Regexp applied on this header to verify message is NOT a spam (example No)"
+#~ msgstr ""
+#~ "Mezua spam-a ez dela egiaztatzeko goiburuari aplikatuko zaion expresio "
+#~ "erregularra (adibidez No)"
+
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an antispam that add one more "
+#~ "headers to messages. This parameter is used to select a special scenario "
+#~ "in order to decide the message spam status: ham, spam or unsure. This "
+#~ "parameter replace antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Mezuak antispam batetik pasako direla suposatzen da, eta honek goiburu "
+#~ "bat edo gehiago gehituko dizkiela. Parametro hau eszenatoki berezi bat "
+#~ "hautatzeko erabiltzen da, mezuaren spam izaera erabakitzeko : ona, spam-a "
+#~ "edo ziurgabea. Parametro honek antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp eta antispam_tag_header_ham_regexp "
+#~ "ordezten ditu."
+
+#~ msgid "Directory for storing HTML archives"
+#~ msgstr "HTML artxiboak gordetzeko karpeta"
+
+#~ msgid ""
+#~ "Activates a custom archiver to use instead of MHonArc. The value of this "
+#~ "parameter is the absolute path on the file system to the script of the "
+#~ "custom archiver."
+#~ msgstr ""
+#~ "MHonArc-en ordezko artxibatzailea gaitzen du. Balioa pertsonalizatutako "
+#~ "artxibatzailko fitxategiaren bide absolutua da."
+
+#~ msgid "Path to MHonArc mail2html plugin"
+#~ msgstr "MHonArc mail2html pluginaren bidea"
+
+#~ msgid "This is required for HTML mail archiving"
+#~ msgstr "Hau beharrezkoa da HTML eposta artxibatzeko"
+
+#~ msgid "duration before the one time tickets are expired"
+#~ msgstr "erabilera bakarreko tiketak iraungitzeko tartea"
+
+#~ msgid "Title of main Web page"
+#~ msgstr "Orri nagusiaren izenburua"
+
+#~ msgid ""
+#~ "URL path to the javascript file making the WYSIWYG HTML editor "
+#~ "available.  Relative path under <static_content_url> or absolute path"
+#~ msgstr ""
+#~ "javascript WYSIWYG editorearen fitxategiaren bidea. <static_content_url> "
+#~ "azpiko bide erlatiboa edo bide absolutua"
+
+#~ msgid "This module provide much faster web interface"
+#~ msgstr "Modulu honek web interfaze asko azkartzen du"
+
+#~ msgid ""
+#~ "Default number of lines of the array displaying the log entries in the "
+#~ "logs page"
+#~ msgstr "Log-en orrian agertuko diren logen kopurua"
+
+#~ msgid "Please fill in the form below and then click the validation button"
+#~ msgstr "Bete azpiko formularioa eta sakatu baieztapen botoia mesedez"
 
 #~ msgid ""
 #~ "This is the set of language that will be proposed to your users for the "

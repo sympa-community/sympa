@@ -13533,7 +13533,7 @@ msgstr ""
 "You didn't define the web page you want to use to create your newsletter. "
 "Please specify either an URL or a file to upload."
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 #, fuzzy
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
@@ -13542,6 +13542,12 @@ msgid ""
 msgstr ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with a web page or a file to upload."
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
+msgstr ""
 
 #. (report_param.argument)
 #: default/mail_tt2/report.tt2:583
@@ -15087,12 +15093,6 @@ msgstr ""
 msgid "Main robot hostname"
 msgstr ""
 
-# rtb
-#: src/lib/Sympa/ConfDef.pm:51
-#, fuzzy
-msgid "Local part of sympa email address"
-msgstr "Please provide an email address"
-
 #: src/lib/Sympa/ConfDef.pm:55
 msgid "Effective address will be [EMAIL]@[HOST]"
 msgstr ""
@@ -15114,11 +15114,6 @@ msgid ""
 "Sympa will associate listmaster privileges to these email addresses (mail "
 "and web interfaces). Some error reports may also be sent to these addresses."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:82
-#, fuzzy
-msgid "URL of main Web page"
-msgstr "main page;"
 
 #: src/lib/Sympa/ConfDef.pm:94
 msgid "This setting can be overridden by each list"
@@ -15164,11 +15159,6 @@ msgstr ""
 msgid "Syslog facility for sympa"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:365
-#, fuzzy
-msgid "Do not forget to edit syslog.conf"
-msgstr "incorrect format of edit_list.conf"
-
 #: src/lib/Sympa/ConfDef.pm:372
 msgid "0: normal, 2,3,4: for debug"
 msgstr ""
@@ -15195,15 +15185,6 @@ msgstr ""
 msgid ""
 "Max. number of Sendmail processes (launched by Sympa) running simultaneously"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:442
-#, fuzzy
-msgid ""
-"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
-"powerful systems."
-msgstr ""
-"Proposed value is quite low; you can raise it up to 100, 200 or even 300 on "
-"powerful systems."
 
 #: src/lib/Sympa/ConfDef.pm:462
 msgid "Defines the name of the family the automatic lists are based on."
@@ -15260,16 +15241,6 @@ msgstr ""
 msgid "Specify which rfc2369 mailing list headers to add"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:555
-#, fuzzy
-msgid "Specify header fields to be removed before message distribution"
-msgstr "Inclusions timeout for message distribution"
-
-#: src/lib/Sympa/ConfDef.pm:565
-#, fuzzy
-msgid "Reject mail from automates (crontab, etc) sent to a list?"
-msgstr "Reject mail from automatic processes (crontab, etc)?"
-
 #: src/lib/Sympa/ConfDef.pm:579
 msgid ""
 "SMTP server to which Sympa verify if alias with the same name as the list to "
@@ -15289,11 +15260,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:594
 msgid "Default value is the host part of list_check_smtp parameter."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:617
-#, fuzzy
-msgid "Default priority for a packet to be sent by bulk."
-msgstr "Default rejection message"
 
 #: src/lib/Sympa/ConfDef.pm:625
 msgid ""
@@ -15443,17 +15409,6 @@ msgstr ""
 msgid "Number of months that elapse before statistics are expired"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1124
-#, fuzzy
-msgid "Default timeout while performing a fetch for an include_sql_query sync"
-msgstr "Timeout for fetch of include_sql_query"
-
-#: src/lib/Sympa/ConfDef.pm:1204
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "Insert DKIM signature to messages sent to the list"
-
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Location of the file where DKIM private key is stored"
 msgstr ""
@@ -15521,11 +15476,6 @@ msgid ""
 "antispam_tag_header_ham_regexp."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1357
-#, fuzzy
-msgid "Directory for storing HTML archives"
-msgstr "directory of lists"
-
 #: src/lib/Sympa/ConfDef.pm:1366
 msgid ""
 "Default index organization when entering the web archive: either threaded or "
@@ -15563,11 +15513,6 @@ msgstr ""
 msgid "Password case (insensitive | sensitive)"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1467
-#, fuzzy
-msgid "Title of main Web page"
-msgstr "main page;"
-
 #: src/lib/Sympa/ConfDef.pm:1482
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
@@ -15602,13 +15547,63 @@ msgstr ""
 msgid "Attempt to exceed the max number of members (%1) for this list"
 msgstr ""
 
-#: default/web_tt2/subrequest.tt2:10
-msgid "Please fill in the form below and then click the validation button"
-msgstr "Please fill in the form below and then click the validation button"
-
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+# rtb
+#, fuzzy
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Please provide an email address"
+
+#, fuzzy
+#~ msgid "URL of main Web page"
+#~ msgstr "main page;"
+
+#, fuzzy
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "incorrect format of edit_list.conf"
+
+#, fuzzy
+#~ msgid ""
+#~ "Proposed value is quite low, you can rise it up to 100, 200 or even 300 "
+#~ "with powerful systems."
+#~ msgstr ""
+#~ "Proposed value is quite low; you can raise it up to 100, 200 or even 300 "
+#~ "on powerful systems."
+
+#, fuzzy
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr "Inclusions timeout for message distribution"
+
+#, fuzzy
+#~ msgid "Reject mail from automates (crontab, etc) sent to a list?"
+#~ msgstr "Reject mail from automatic processes (crontab, etc)?"
+
+#, fuzzy
+#~ msgid "Default priority for a packet to be sent by bulk."
+#~ msgstr "Default rejection message"
+
+#, fuzzy
+#~ msgid ""
+#~ "Default timeout while performing a fetch for an include_sql_query sync"
+#~ msgstr "Timeout for fetch of include_sql_query"
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "Insert DKIM signature to messages sent to the list"
+
+#, fuzzy
+#~ msgid "Directory for storing HTML archives"
+#~ msgstr "directory of lists"
+
+#, fuzzy
+#~ msgid "Title of main Web page"
+#~ msgstr "main page;"
+
+#~ msgid "Please fill in the form below and then click the validation button"
+#~ msgstr "Please fill in the form below and then click the validation button"
 
 #, fuzzy
 #~ msgid "Directory containing mailing lists subdirectories"

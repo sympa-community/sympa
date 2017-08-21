@@ -13148,11 +13148,17 @@ msgid ""
 "Please specify either an URL or a file to upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
@@ -14628,32 +14634,11 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Ukjent feil."
 
-#: src/lib/Sympa/ConfDef.pm:646
-msgid ""
-"The number of seconds a bulk sleeps between starting a new loop if it didn't "
-"find a message to send."
-msgstr ""
-"Antallet sekunder masseutsendelsesprosessen venter med å starte en ny løkke, "
-"hvis den ikke finner nye e-poster å sende."
-
-#: src/lib/Sympa/ConfDef.pm:51
-msgid "Local part of sympa email address"
-msgstr "Lokal del av Sympa-e-postadressen"
-
-#: src/lib/Sympa/ConfDef.pm:64
-msgid "This parameter is used for display name in the \"From:\" header"
-msgstr ""
-"Denne parameteren brukes til å sette navnet som skal vises i «From:»-feltet"
-
 #: src/lib/Sympa/ConfDef.pm:73
 msgid ""
 "Sympa will associate listmaster privileges to these email addresses (mail "
 "and web interfaces). Some error reports may also be sent to these addresses."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:82
-msgid "URL of main Web page"
-msgstr "Adressen til hovednettsiden"
 
 #: src/lib/Sympa/ConfDef.pm:295
 msgid "URL mapped with the static_content_path directory defined above"
@@ -14662,40 +14647,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:310
 msgid "Secret used by Sympa to make MD5 fingerprint in web cookies secure"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:336
-msgid ""
-"Used to define a custom parameter for your server. Do not forget the "
-"semicolon between the param name and the param value."
-msgstr ""
-"Brukes for å definere et selvvalgt parameter for tjeneren. Ikke glem "
-"semikolon mellom parameternavn og parameterverdi. "
-
-#: src/lib/Sympa/ConfDef.pm:362
-msgid "Syslog facility for sympa"
-msgstr "Syslog-fasiliteter for Sympa"
-
-#: src/lib/Sympa/ConfDef.pm:365
-msgid "Do not forget to edit syslog.conf"
-msgstr "Ikke glem å redigere syslog.conf"
-
-#: src/lib/Sympa/ConfDef.pm:376
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr "Kommunikasjonsmodus mot syslogd (unix | inet)"
-
-#: src/lib/Sympa/ConfDef.pm:442
-msgid ""
-"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
-"powerful systems."
-msgstr ""
-"Den foreslåtte verdien er ganske lav, du kan øke den til 100, 200 eller til "
-"og med 300 på et kraftig system. "
-
-#: src/lib/Sympa/ConfDef.pm:487
-msgid "Setting this parameter to \"none\" will hide the blacklist feature"
-msgstr ""
-"Om dette parameteret blir satt til «ingen» blir svartelistefunksjonaliteten "
-"skjult"
 
 #: src/lib/Sympa/ConfDef.pm:492
 msgid ""
@@ -14709,10 +14660,6 @@ msgid ""
 "file allows a different tuning per destination domain."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:520
-msgid "Max. number of different domains per call to Sendmail"
-msgstr "Maksimalt antall forskjellige domener per kall til Sendmail"
-
 #: src/lib/Sympa/ConfDef.pm:539
 msgid ""
 "Program used to update alias database.  \"makemap\", \"newaliases\", "
@@ -14725,17 +14672,6 @@ msgid ""
 "when aliases_program is \"makemap\", \"postalias\" or \"postmap\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:555
-msgid "Specify header fields to be removed before message distribution"
-msgstr ""
-"Spesifiser hvilke felt i meldingshodet som skal fjernes før distribuering av "
-"meldingen"
-
-#: src/lib/Sympa/ConfDef.pm:565
-msgid "Reject mail from automates (crontab, etc) sent to a list?"
-msgstr ""
-"Avvis e-post fra automatiske prosesser (crontab, osv) sendt til en liste?"
-
 #: src/lib/Sympa/ConfDef.pm:579
 msgid ""
 "SMTP server to which Sympa verify if alias with the same name as the list to "
@@ -14747,27 +14683,6 @@ msgid ""
 "Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-"
 "standard port."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:591
-msgid "SMTP HELO (EHLO) parameter used for alias verification"
-msgstr "SMTP HELO (EHLO)-parameter brukt for aliasverifisering"
-
-#: src/lib/Sympa/ConfDef.pm:594
-msgid "Default value is the host part of list_check_smtp parameter."
-msgstr "Standardverdi er tjenerdelen av list_check_smtp-parameteret."
-
-#: src/lib/Sympa/ConfDef.pm:617
-msgid "Default priority for a packet to be sent by bulk."
-msgstr ""
-"Standard prioritet for pakker som skal leveres til masseutsendelsesprosessen."
-
-#: src/lib/Sympa/ConfDef.pm:625
-msgid ""
-"Minimum number of packets in database before the bulk forks to increase "
-"sending rate"
-msgstr ""
-"Minimum antall pakker i databasen før masseutsendelsesprosessen tvinges til "
-"å starte en ny prosess. Dette øker utsendelsesraten"
 
 #: src/lib/Sympa/ConfDef.pm:639
 msgid ""
@@ -14788,14 +14703,6 @@ msgstr ""
 msgid ""
 "Keep it small if you expect brutal increases in the message sending load."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:666
-msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr "Standardgrense for antall medlemmer per liste (0 betyr ingen grense)"
-
-#: src/lib/Sympa/ConfDef.pm:825
-msgid "This is the default language used by Sympa"
-msgstr "Dette er standardspråket brukt av Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:830
 msgid "If set to \"on\", enables support of legacy character set"
@@ -14861,114 +14768,13 @@ msgstr ""
 msgid "With SQLite, the name of the DB corresponds to the DB file"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1046
-msgid "This is useful for defining ORACLE_HOME "
-msgstr "Dette er nyttig for å definere ORACLE_HOME"
-
-#: src/lib/Sympa/ConfDef.pm:1085
-msgid "Number of months that elapse before statistics are expired"
-msgstr "Antall måneder før statistikk utløper"
-
 #: src/lib/Sympa/ConfDef.pm:1124
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1204
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "Hvem kan abonnere på listen"
-
-#: src/lib/Sympa/ConfDef.pm:1226
-msgid ""
-"The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
-msgstr ""
-"\"d=\"-taggen som definert i rfc 4781, standard er domenenavnet til den "
-"virtuelle tjeneren"
-
 #: src/lib/Sympa/ConfDef.pm:1232
 msgid "The selector"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1239
-msgid "The \"i=\" tag as defined in rfc 4871, default is null"
-msgstr "\"i=\"-taggen som definert i rfc 4871, standard er null"
-
-#: src/lib/Sympa/ConfDef.pm:1260
-#, fuzzy
-msgid ""
-"Do not set unless you want to use DMARC protection.  This is a comma "
-"separated list of test modes; if multiple are selected then protection is "
-"activated if ANY match.  Do not use dmarc_* modes unless you have a local "
-"DNS cache as they do a DNS lookup for each received message."
-msgstr ""
-"Ikke sett med mindre du ønsker å bruke DMARC-beskyttelse. Dette er en "
-"kommaseparert liste over testmodus: dersom flere er valgt, blir beskyttelsen "
-"akivert om minst én treffer. Ikke bruk dmarc_*-modus med mindre du har en "
-"lokal DNS-hurtiglagring siden de gjør et DNS-oppslag for hver motatte "
-"beskjed. "
-
-#: src/lib/Sympa/ConfDef.pm:1263
-#, fuzzy
-msgid "Regexp for domain name match"
-msgstr "Regexp for domenenavn-samsvar"
-
-#: src/lib/Sympa/ConfDef.pm:1294
-#, fuzzy
-msgid ""
-"supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
-"Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
-msgstr ""
-"støttede antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP og Trend Micro/"
-"VirusWall"
-
-#: src/lib/Sympa/ConfDef.pm:1299
-#, fuzzy
-msgid "Antivirus plugin command argument"
-msgstr "Kommandolinjeargument for antivirusprogramtillegg"
-
-#: src/lib/Sympa/ConfDef.pm:1322
-#, fuzzy
-msgid ""
-"If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
-"spams, name of this header (example X-Spam-Status)"
-msgstr ""
-"Hvis et spamfilter (slik som SpamAssassin eller j-chkmail) legger til et "
-"smtp-meldingshode for å markere spam, navngi dette meldingshodet (for "
-"eksempel X-Spam-Status)"
-
-#: src/lib/Sympa/ConfDef.pm:1330
-#, fuzzy
-msgid "Regexp applied on this header to verify message is a spam (example Yes)"
-msgstr ""
-"Regexp anvendes på dette meldingshodet for å bekrefte at meldingen er spam "
-"(eksempel Yes)"
-
-#: src/lib/Sympa/ConfDef.pm:1338
-#, fuzzy
-msgid ""
-"Regexp applied on this header to verify message is NOT a spam (example No)"
-msgstr ""
-"Regexp anvendes på dette meldingshodet for å bekrefte at meldingen IKKE er "
-"spam (eksempel No)"
-
-#: src/lib/Sympa/ConfDef.pm:1346
-msgid ""
-"Messages are supposed to be filtered by an antispam that add one more "
-"headers to messages. This parameter is used to select a special scenario in "
-"order to decide the message spam status: ham, spam or unsure. This parameter "
-"replace antispam_tag_header_name, antispam_tag_header_spam_regexp and "
-"antispam_tag_header_ham_regexp."
-msgstr ""
-"Meldinger skal filtreres av et antispam program som legger til ett eller "
-"flere meldingshoder på medlingene. Denne parameteren brukes for å velge et "
-"spesielt scenario for å bestemme meldingsstatus: ham (ikke-spam), spam eller "
-"usikker. Dette parametere erstatter antispam_tag_header_name, "
-"antispam_tag_header_spam_regexp og antispam_tag_header_ham_regexp."
-
-#: src/lib/Sympa/ConfDef.pm:1357
-msgid "Directory for storing HTML archives"
-msgstr "Katalog for lagring av HTML-arkiv"
 
 #: src/lib/Sympa/ConfDef.pm:1366
 msgid ""
@@ -14995,33 +14801,9 @@ msgstr ""
 msgid "Default is to use previously defined sympa log facility."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1427
-msgid "Path to MHonArc mail2html plugin"
-msgstr "Stil til MHonArc mail2html tillegget"
-
-#: src/lib/Sympa/ConfDef.pm:1430
-msgid "This is required for HTML mail archiving"
-msgstr "Dette er påkrevd for arkivering av HTML-e-post"
-
-#: src/lib/Sympa/ConfDef.pm:1441
-msgid "duration before the one time tickets are expired"
-msgstr "tid før engangsbillettene uløper"
-
 #: src/lib/Sympa/ConfDef.pm:1452
 msgid "Password case (insensitive | sensitive)"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1467
-msgid "Title of main Web page"
-msgstr "Tittel til hovedsiden"
-
-#: src/lib/Sympa/ConfDef.pm:1482
-msgid ""
-"URL path to the javascript file making the WYSIWYG HTML editor available.  "
-"Relative path under <static_content_url> or absolute path"
-msgstr ""
-"URL-sti til javascriptfilen som gjør WYSIWYG-HTML-editoren tilgjengelig. "
-"Relativ sti under <static_content_url> eller absolutt sti"
 
 #: src/lib/Sympa/ConfDef.pm:1484
 msgid ""
@@ -15031,10 +14813,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1503
 msgid "Is FastCGI module for HTTP server installed (0 | 1)"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1506
-msgid "This module provide much faster web interface"
-msgstr "Denne modulen gjør nettsiden mye raskere"
 
 #: src/lib/Sympa/ConfDef.pm:1510
 msgid ""
@@ -15057,10 +14835,6 @@ msgstr ""
 #: default/web_tt2/error.tt2:81
 msgid "Attempt to exceed the max number of members (%1) for this list"
 msgstr ""
-
-#: default/web_tt2/subrequest.tt2:10
-msgid "Please fill in the form below and then click the validation button"
-msgstr "Vennligst fyll i formen under og trykk så på valideringsknappen"
 
 #: default/mail_tt2/listowner_notification.tt2:59
 #: default/mail_tt2/listowner_notification.tt2:83
@@ -15096,6 +14870,202 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#~ msgid ""
+#~ "The number of seconds a bulk sleeps between starting a new loop if it "
+#~ "didn't find a message to send."
+#~ msgstr ""
+#~ "Antallet sekunder masseutsendelsesprosessen venter med å starte en ny "
+#~ "løkke, hvis den ikke finner nye e-poster å sende."
+
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Lokal del av Sympa-e-postadressen"
+
+#~ msgid "This parameter is used for display name in the \"From:\" header"
+#~ msgstr ""
+#~ "Denne parameteren brukes til å sette navnet som skal vises i «From:»-feltet"
+
+#~ msgid "URL of main Web page"
+#~ msgstr "Adressen til hovednettsiden"
+
+#~ msgid ""
+#~ "Used to define a custom parameter for your server. Do not forget the "
+#~ "semicolon between the param name and the param value."
+#~ msgstr ""
+#~ "Brukes for å definere et selvvalgt parameter for tjeneren. Ikke glem "
+#~ "semikolon mellom parameternavn og parameterverdi. "
+
+#~ msgid "Syslog facility for sympa"
+#~ msgstr "Syslog-fasiliteter for Sympa"
+
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "Ikke glem å redigere syslog.conf"
+
+#~ msgid "Communication mode with syslogd (unix | inet)"
+#~ msgstr "Kommunikasjonsmodus mot syslogd (unix | inet)"
+
+#~ msgid ""
+#~ "Proposed value is quite low, you can rise it up to 100, 200 or even 300 "
+#~ "with powerful systems."
+#~ msgstr ""
+#~ "Den foreslåtte verdien er ganske lav, du kan øke den til 100, 200 eller "
+#~ "til og med 300 på et kraftig system. "
+
+#~ msgid "Setting this parameter to \"none\" will hide the blacklist feature"
+#~ msgstr ""
+#~ "Om dette parameteret blir satt til «ingen» blir "
+#~ "svartelistefunksjonaliteten skjult"
+
+#~ msgid "Max. number of different domains per call to Sendmail"
+#~ msgstr "Maksimalt antall forskjellige domener per kall til Sendmail"
+
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr ""
+#~ "Spesifiser hvilke felt i meldingshodet som skal fjernes før distribuering "
+#~ "av meldingen"
+
+#~ msgid "Reject mail from automates (crontab, etc) sent to a list?"
+#~ msgstr ""
+#~ "Avvis e-post fra automatiske prosesser (crontab, osv) sendt til en liste?"
+
+#~ msgid "SMTP HELO (EHLO) parameter used for alias verification"
+#~ msgstr "SMTP HELO (EHLO)-parameter brukt for aliasverifisering"
+
+#~ msgid "Default value is the host part of list_check_smtp parameter."
+#~ msgstr "Standardverdi er tjenerdelen av list_check_smtp-parameteret."
+
+#~ msgid "Default priority for a packet to be sent by bulk."
+#~ msgstr ""
+#~ "Standard prioritet for pakker som skal leveres til "
+#~ "masseutsendelsesprosessen."
+
+#~ msgid ""
+#~ "Minimum number of packets in database before the bulk forks to increase "
+#~ "sending rate"
+#~ msgstr ""
+#~ "Minimum antall pakker i databasen før masseutsendelsesprosessen tvinges "
+#~ "til å starte en ny prosess. Dette øker utsendelsesraten"
+
+#~ msgid ""
+#~ "Default limit for the number of subscribers per list (0 means no limit)"
+#~ msgstr ""
+#~ "Standardgrense for antall medlemmer per liste (0 betyr ingen grense)"
+
+#~ msgid "This is the default language used by Sympa"
+#~ msgstr "Dette er standardspråket brukt av Sympa"
+
+#~ msgid "This is useful for defining ORACLE_HOME "
+#~ msgstr "Dette er nyttig for å definere ORACLE_HOME"
+
+#~ msgid "Number of months that elapse before statistics are expired"
+#~ msgstr "Antall måneder før statistikk utløper"
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "Hvem kan abonnere på listen"
+
+#~ msgid ""
+#~ "The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
+#~ msgstr ""
+#~ "\"d=\"-taggen som definert i rfc 4781, standard er domenenavnet til den "
+#~ "virtuelle tjeneren"
+
+#~ msgid "The \"i=\" tag as defined in rfc 4871, default is null"
+#~ msgstr "\"i=\"-taggen som definert i rfc 4871, standard er null"
+
+#, fuzzy
+#~ msgid ""
+#~ "Do not set unless you want to use DMARC protection.  This is a comma "
+#~ "separated list of test modes; if multiple are selected then protection is "
+#~ "activated if ANY match.  Do not use dmarc_* modes unless you have a local "
+#~ "DNS cache as they do a DNS lookup for each received message."
+#~ msgstr ""
+#~ "Ikke sett med mindre du ønsker å bruke DMARC-beskyttelse. Dette er en "
+#~ "kommaseparert liste over testmodus: dersom flere er valgt, blir "
+#~ "beskyttelsen akivert om minst én treffer. Ikke bruk dmarc_*-modus med "
+#~ "mindre du har en lokal DNS-hurtiglagring siden de gjør et DNS-oppslag for "
+#~ "hver motatte beskjed. "
+
+#, fuzzy
+#~ msgid "Regexp for domain name match"
+#~ msgstr "Regexp for domenenavn-samsvar"
+
+#, fuzzy
+#~ msgid ""
+#~ "supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
+#~ "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
+#~ msgstr ""
+#~ "støttede antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP og Trend "
+#~ "Micro/VirusWall"
+
+#, fuzzy
+#~ msgid "Antivirus plugin command argument"
+#~ msgstr "Kommandolinjeargument for antivirusprogramtillegg"
+
+#, fuzzy
+#~ msgid ""
+#~ "If a spam filter (like spamassassin or j-chkmail) add a smtp headers to "
+#~ "tag spams, name of this header (example X-Spam-Status)"
+#~ msgstr ""
+#~ "Hvis et spamfilter (slik som SpamAssassin eller j-chkmail) legger til et "
+#~ "smtp-meldingshode for å markere spam, navngi dette meldingshodet (for "
+#~ "eksempel X-Spam-Status)"
+
+#, fuzzy
+#~ msgid ""
+#~ "Regexp applied on this header to verify message is a spam (example Yes)"
+#~ msgstr ""
+#~ "Regexp anvendes på dette meldingshodet for å bekrefte at meldingen er "
+#~ "spam (eksempel Yes)"
+
+#, fuzzy
+#~ msgid ""
+#~ "Regexp applied on this header to verify message is NOT a spam (example No)"
+#~ msgstr ""
+#~ "Regexp anvendes på dette meldingshodet for å bekrefte at meldingen IKKE "
+#~ "er spam (eksempel No)"
+
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an antispam that add one more "
+#~ "headers to messages. This parameter is used to select a special scenario "
+#~ "in order to decide the message spam status: ham, spam or unsure. This "
+#~ "parameter replace antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Meldinger skal filtreres av et antispam program som legger til ett eller "
+#~ "flere meldingshoder på medlingene. Denne parameteren brukes for å velge "
+#~ "et spesielt scenario for å bestemme meldingsstatus: ham (ikke-spam), spam "
+#~ "eller usikker. Dette parametere erstatter antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp og antispam_tag_header_ham_regexp."
+
+#~ msgid "Directory for storing HTML archives"
+#~ msgstr "Katalog for lagring av HTML-arkiv"
+
+#~ msgid "Path to MHonArc mail2html plugin"
+#~ msgstr "Stil til MHonArc mail2html tillegget"
+
+#~ msgid "This is required for HTML mail archiving"
+#~ msgstr "Dette er påkrevd for arkivering av HTML-e-post"
+
+#~ msgid "duration before the one time tickets are expired"
+#~ msgstr "tid før engangsbillettene uløper"
+
+#~ msgid "Title of main Web page"
+#~ msgstr "Tittel til hovedsiden"
+
+#~ msgid ""
+#~ "URL path to the javascript file making the WYSIWYG HTML editor "
+#~ "available.  Relative path under <static_content_url> or absolute path"
+#~ msgstr ""
+#~ "URL-sti til javascriptfilen som gjør WYSIWYG-HTML-editoren tilgjengelig. "
+#~ "Relativ sti under <static_content_url> eller absolutt sti"
+
+#~ msgid "This module provide much faster web interface"
+#~ msgstr "Denne modulen gjør nettsiden mye raskere"
+
+#~ msgid "Please fill in the form below and then click the validation button"
+#~ msgstr "Vennligst fyll i formen under og trykk så på valideringsknappen"
 
 #~ msgid ""
 #~ "This is the set of language that will be proposed to your users for the "

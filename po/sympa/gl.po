@@ -12605,11 +12605,17 @@ msgid ""
 "Please specify either an URL or a file to upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
@@ -14022,50 +14028,6 @@ msgstr ""
 msgid "Unknown provider."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:646
-msgid ""
-"The number of seconds a bulk sleeps between starting a new loop if it didn't "
-"find a message to send."
-msgstr ""
-"O número de segundos que un proceso bulk agarda entre execución e execución "
-"se non atopa ningunha mensaxe sen enviar."
-
-#: src/lib/Sympa/ConfDef.pm:51
-msgid "Local part of sympa email address"
-msgstr "Parte local do enderezo de correo electrónico de Sympa"
-
-#: src/lib/Sympa/ConfDef.pm:64
-msgid "This parameter is used for display name in the \"From:\" header"
-msgstr "Este parámetro úsase para mostrar o nome na cabeceira \"De:\""
-
-#: src/lib/Sympa/ConfDef.pm:82
-msgid "URL of main Web page"
-msgstr "URL da páxina web principal"
-
-#: src/lib/Sympa/ConfDef.pm:295
-msgid "URL mapped with the static_content_path directory defined above"
-msgstr "URL asociado ao directorio static_content_path definido anteriormente"
-
-#: src/lib/Sympa/ConfDef.pm:336
-msgid ""
-"Used to define a custom parameter for your server. Do not forget the "
-"semicolon between the param name and the param value."
-msgstr ""
-"Utilizado para definir un parámetro predefinido no servidor. Non esqueza o "
-"punto e coma entre o nome e o valor do parámetro."
-
-#: src/lib/Sympa/ConfDef.pm:362
-msgid "Syslog facility for sympa"
-msgstr "Funcionalidade syslog para sympa"
-
-#: src/lib/Sympa/ConfDef.pm:365
-msgid "Do not forget to edit syslog.conf"
-msgstr "Non esqueza editar syslog.conf"
-
-#: src/lib/Sympa/ConfDef.pm:376
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr "Modo de comunicación con syslogd (unix | inet)"
-
 #: src/lib/Sympa/ConfDef.pm:416
 msgid "Umask used for file creation by Sympa"
 msgstr ""
@@ -14121,10 +14083,6 @@ msgid ""
 "Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf "
 "file allows a different tuning per destination domain."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:520
-msgid "Max. number of different domains per call to Sendmail"
-msgstr "Número máximo de diferentes dominios para chamar a Sendmail."
 
 #: src/lib/Sympa/ConfDef.pm:528
 msgid "Whether or not to cache lists in the database"
@@ -14239,14 +14197,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:721
 msgid "Directory for subscription spool"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:825
-msgid "This is the default language used by Sympa"
-msgstr "Este é o idioma predefinido de Sympa"
-
-#: src/lib/Sympa/ConfDef.pm:830
-msgid "If set to \"on\", enables support of legacy character set"
-msgstr "Se se activa, habilítase o soporte para caracteres antigos"
 
 #: src/lib/Sympa/ConfDef.pm:833
 msgid "See also charset.conf(5) manpage"
@@ -14415,10 +14365,6 @@ msgid ""
 "replace antispam_tag_header_name, antispam_tag_header_spam_regexp and "
 "antispam_tag_header_ham_regexp."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1357
-msgid "Directory for storing HTML archives"
-msgstr "Directorio de almacenamento dos ficheiros HTML"
 
 #: src/lib/Sympa/ConfDef.pm:1366
 msgid ""
@@ -14595,6 +14541,54 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#~ msgid ""
+#~ "The number of seconds a bulk sleeps between starting a new loop if it "
+#~ "didn't find a message to send."
+#~ msgstr ""
+#~ "O número de segundos que un proceso bulk agarda entre execución e "
+#~ "execución se non atopa ningunha mensaxe sen enviar."
+
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Parte local do enderezo de correo electrónico de Sympa"
+
+#~ msgid "This parameter is used for display name in the \"From:\" header"
+#~ msgstr "Este parámetro úsase para mostrar o nome na cabeceira \"De:\""
+
+#~ msgid "URL of main Web page"
+#~ msgstr "URL da páxina web principal"
+
+#~ msgid "URL mapped with the static_content_path directory defined above"
+#~ msgstr ""
+#~ "URL asociado ao directorio static_content_path definido anteriormente"
+
+#~ msgid ""
+#~ "Used to define a custom parameter for your server. Do not forget the "
+#~ "semicolon between the param name and the param value."
+#~ msgstr ""
+#~ "Utilizado para definir un parámetro predefinido no servidor. Non esqueza "
+#~ "o punto e coma entre o nome e o valor do parámetro."
+
+#~ msgid "Syslog facility for sympa"
+#~ msgstr "Funcionalidade syslog para sympa"
+
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "Non esqueza editar syslog.conf"
+
+#~ msgid "Communication mode with syslogd (unix | inet)"
+#~ msgstr "Modo de comunicación con syslogd (unix | inet)"
+
+#~ msgid "Max. number of different domains per call to Sendmail"
+#~ msgstr "Número máximo de diferentes dominios para chamar a Sendmail."
+
+#~ msgid "This is the default language used by Sympa"
+#~ msgstr "Este é o idioma predefinido de Sympa"
+
+#~ msgid "If set to \"on\", enables support of legacy character set"
+#~ msgstr "Se se activa, habilítase o soporte para caracteres antigos"
+
+#~ msgid "Directory for storing HTML archives"
+#~ msgstr "Directorio de almacenamento dos ficheiros HTML"
 
 #~ msgid ""
 #~ "This is the set of language that will be proposed to your users for the "

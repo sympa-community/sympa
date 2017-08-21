@@ -12822,11 +12822,17 @@ msgid ""
 "Please specify either an URL or a file to upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
@@ -14278,11 +14284,6 @@ msgstr ""
 msgid "Main robot hostname"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:51
-#, fuzzy
-msgid "Local part of sympa email address"
-msgstr "البريد الألكتروني"
-
 #: src/lib/Sympa/ConfDef.pm:55
 msgid "Effective address will be [EMAIL]@[HOST]"
 msgstr ""
@@ -14356,11 +14357,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:362
 msgid "Syslog facility for sympa"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:365
-#, fuzzy
-msgid "Do not forget to edit syslog.conf"
-msgstr "صيغة خاطئه في ملف edit_list.conf"
 
 #: src/lib/Sympa/ConfDef.pm:372
 msgid "0: normal, 2,3,4: for debug"
@@ -14450,11 +14446,6 @@ msgstr ""
 msgid "Specify which rfc2369 mailing list headers to add"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:555
-#, fuzzy
-msgid "Specify header fields to be removed before message distribution"
-msgstr "الإدراج تخطى الوقت المسموح به لتوزيع الرساله"
-
 #: src/lib/Sympa/ConfDef.pm:565
 msgid "Reject mail from automates (crontab, etc) sent to a list?"
 msgstr ""
@@ -14528,11 +14519,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:688
 msgid "All spool are created at runtime by sympa.pl"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:711
-#, fuzzy
-msgid "Directory for authentication spool"
-msgstr "مسموح لمديري القائمة مع التوثيق فقط"
 
 #: src/lib/Sympa/ConfDef.pm:757
 msgid "Temporary directory used by antivirus plugins, MHonArc etc."
@@ -14651,15 +14637,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1124
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1204
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr ""
-"\n"
-"أو ارسل بريد  إلى 1%  بالعنوان التالي \n"
-"AUTH %2 DEL %3 %4\n"
 
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Location of the file where DKIM private key is stored"
@@ -14930,6 +14907,30 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#, fuzzy
+#~ msgid "Local part of sympa email address"
+#~ msgstr "البريد الألكتروني"
+
+#, fuzzy
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "صيغة خاطئه في ملف edit_list.conf"
+
+#, fuzzy
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr "الإدراج تخطى الوقت المسموح به لتوزيع الرساله"
+
+#, fuzzy
+#~ msgid "Directory for authentication spool"
+#~ msgstr "مسموح لمديري القائمة مع التوثيق فقط"
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr ""
+#~ "\n"
+#~ "أو ارسل بريد  إلى 1%  بالعنوان التالي \n"
+#~ "AUTH %2 DEL %3 %4\n"
 
 #, fuzzy
 #~ msgid "System related"

@@ -14225,11 +14225,17 @@ msgid ""
 "Please specify either an URL or a file to upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
@@ -15869,11 +15875,6 @@ msgstr ""
 msgid "Main robot hostname"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:51
-#, fuzzy
-msgid "Local part of sympa email address"
-msgstr "Trimite adresa ta email"
-
 #: src/lib/Sympa/ConfDef.pm:55
 msgid "Effective address will be [EMAIL]@[HOST]"
 msgstr ""
@@ -15895,11 +15896,6 @@ msgid ""
 "Sympa will associate listmaster privileges to these email addresses (mail "
 "and web interfaces). Some error reports may also be sent to these addresses."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:82
-#, fuzzy
-msgid "URL of main Web page"
-msgstr "%1. Pagina de administrare"
 
 #: src/lib/Sympa/ConfDef.pm:94
 msgid "This setting can be overridden by each list"
@@ -16041,12 +16037,6 @@ msgstr ""
 msgid "Specify which rfc2369 mailing list headers to add"
 msgstr ""
 
-# nlsref 15,4
-#: src/lib/Sympa/ConfDef.pm:555
-#, fuzzy
-msgid "Specify header fields to be removed before message distribution"
-msgstr "footer pentru mesaj"
-
 #: src/lib/Sympa/ConfDef.pm:565
 msgid "Reject mail from automates (crontab, etc) sent to a list?"
 msgstr ""
@@ -16124,11 +16114,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:688
 msgid "All spool are created at runtime by sympa.pl"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:711
-#, fuzzy
-msgid "Directory for authentication spool"
-msgstr "La autentificare("
 
 #: src/lib/Sympa/ConfDef.pm:757
 msgid "Temporary directory used by antivirus plugins, MHonArc etc."
@@ -16239,12 +16224,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1124
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1204
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "Trimitere mesaje   : %1"
 
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Location of the file where DKIM private key is stored"
@@ -16435,6 +16414,28 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#, fuzzy
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Trimite adresa ta email"
+
+#, fuzzy
+#~ msgid "URL of main Web page"
+#~ msgstr "%1. Pagina de administrare"
+
+# nlsref 15,4
+#, fuzzy
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr "footer pentru mesaj"
+
+#, fuzzy
+#~ msgid "Directory for authentication spool"
+#~ msgstr "La autentificare("
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "Trimitere mesaje   : %1"
 
 #, fuzzy
 #~ msgid "System related"

@@ -12490,11 +12490,17 @@ msgid ""
 "Please specify either an URL or a file to upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
@@ -13936,11 +13942,6 @@ msgid ""
 "and web interfaces). Some error reports may also be sent to these addresses."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:82
-#, fuzzy
-msgid "URL of main Web page"
-msgstr "Página de Administração %1"
-
 #: src/lib/Sympa/ConfDef.pm:94
 msgid "This setting can be overridden by each list"
 msgstr ""
@@ -14175,11 +14176,6 @@ msgstr ""
 msgid "Directory for authentication spool"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:721
-#, fuzzy
-msgid "Directory for subscription spool"
-msgstr " As %1 ultimas listas "
-
 #: src/lib/Sympa/ConfDef.pm:757
 msgid "Temporary directory used by antivirus plugins, MHonArc etc."
 msgstr ""
@@ -14309,12 +14305,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1152
 msgid "S/MIME configuration"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1204
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr " As ultimas menssagens "
 
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Location of the file where DKIM private key is stored"
@@ -14606,6 +14596,19 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#, fuzzy
+#~ msgid "URL of main Web page"
+#~ msgstr "Página de Administração %1"
+
+#, fuzzy
+#~ msgid "Directory for subscription spool"
+#~ msgstr " As %1 ultimas listas "
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr " As ultimas menssagens "
 
 #, fuzzy
 #~ msgid "You were successfully unsubscribed from list %s."

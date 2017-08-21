@@ -12494,11 +12494,17 @@ msgid ""
 "Please specify either an URL or a file to upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
@@ -13915,11 +13921,6 @@ msgstr ""
 msgid "Main robot hostname"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:51
-#, fuzzy
-msgid "Local part of sympa email address"
-msgstr "alamat surat"
-
 #: src/lib/Sympa/ConfDef.pm:55
 msgid "Effective address will be [EMAIL]@[HOST]"
 msgstr ""
@@ -14180,11 +14181,6 @@ msgstr ""
 msgid "Directory for authentication spool"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:721
-#, fuzzy
-msgid "Directory for subscription spool"
-msgstr "Mengatur Penika Bawah"
-
 #: src/lib/Sympa/ConfDef.pm:757
 msgid "Temporary directory used by antivirus plugins, MHonArc etc."
 msgstr ""
@@ -14306,12 +14302,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1124
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1204
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "# pesan"
 
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Location of the file where DKIM private key is stored"
@@ -14584,11 +14574,6 @@ msgstr ""
 msgid "password: %1"
 msgstr ""
 
-#: default/mail_tt2/user_notification.tt2:39
-#, fuzzy
-msgid "Changing your subscriber email address"
-msgstr "alamat surat"
-
 #: default/mail_tt2/user_notification.tt2:41
 msgid ""
 "You have requested to change your subscriber email address. To confirm your "
@@ -14609,6 +14594,23 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#, fuzzy
+#~ msgid "Local part of sympa email address"
+#~ msgstr "alamat surat"
+
+#, fuzzy
+#~ msgid "Directory for subscription spool"
+#~ msgstr "Mengatur Penika Bawah"
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "# pesan"
+
+#, fuzzy
+#~ msgid "Changing your subscriber email address"
+#~ msgstr "alamat surat"
 
 #, fuzzy
 #~ msgid "Bounce related"

@@ -13453,7 +13453,7 @@ msgstr ""
 "No especificaste la página web que quieres utilizar para crear tu boletín de "
 "noticias. Por favor, especifica una URL o un archivo para subir. "
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -13462,6 +13462,12 @@ msgstr ""
 "Has indicado tanto una URL como un archivo para subir. Sympa no puede elegir "
 "cual enviar. Por favor, rellena el formulario con solo uno de ellos. Una "
 "página web o un archivo para subir.  "
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
+msgstr ""
 
 #. (report_param.argument)
 #: default/mail_tt2/report.tt2:583
@@ -14971,321 +14977,282 @@ msgstr "Imposible cargar el cliente. La configuración debe estar errónea."
 msgid "Unknown provider."
 msgstr "Fuente desconocida."
 
-#: src/lib/Sympa/ConfDef.pm:646
-msgid ""
-"The number of seconds a bulk sleeps between starting a new loop if it didn't "
-"find a message to send."
-msgstr ""
-"El número de segundos que un proceso bulk espera entre ejecuciones si no "
-"encuentra ningún mensaje para enviar."
+#~ msgid ""
+#~ "The number of seconds a bulk sleeps between starting a new loop if it "
+#~ "didn't find a message to send."
+#~ msgstr ""
+#~ "El número de segundos que un proceso bulk espera entre ejecuciones si no "
+#~ "encuentra ningún mensaje para enviar."
 
-#: src/lib/Sympa/ConfDef.pm:51
-msgid "Local part of sympa email address"
-msgstr "Parte local de la dirección de correo electrónico de Sympa"
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Parte local de la dirección de correo electrónico de Sympa"
 
-#: src/lib/Sympa/ConfDef.pm:64
-msgid "This parameter is used for display name in the \"From:\" header"
-msgstr ""
-"Este parámero es usado para visualizar el nombre en la cabecera \"From:\""
+#~ msgid "This parameter is used for display name in the \"From:\" header"
+#~ msgstr ""
+#~ "Este parámero es usado para visualizar el nombre en la cabecera \"From:\""
 
-#: src/lib/Sympa/ConfDef.pm:82
-msgid "URL of main Web page"
-msgstr "URL de la página web principal"
+#~ msgid "URL of main Web page"
+#~ msgstr "URL de la página web principal"
 
-#: src/lib/Sympa/ConfDef.pm:295
-msgid "URL mapped with the static_content_path directory defined above"
-msgstr "URL asociada a la carpeta static_content_path que acabamos de definir"
+#~ msgid "URL mapped with the static_content_path directory defined above"
+#~ msgstr ""
+#~ "URL asociada a la carpeta static_content_path que acabamos de definir"
 
-#: src/lib/Sympa/ConfDef.pm:336
-msgid ""
-"Used to define a custom parameter for your server. Do not forget the "
-"semicolon between the param name and the param value."
-msgstr ""
-"Utilizado para definir parámetros por defecto en tu servidor. No te olvides "
-"del punto y coma entre el nombre y el valor del parámetro."
+#~ msgid ""
+#~ "Used to define a custom parameter for your server. Do not forget the "
+#~ "semicolon between the param name and the param value."
+#~ msgstr ""
+#~ "Utilizado para definir parámetros por defecto en tu servidor. No te "
+#~ "olvides del punto y coma entre el nombre y el valor del parámetro."
 
-#: src/lib/Sympa/ConfDef.pm:362
-msgid "Syslog facility for sympa"
-msgstr "Funcionalidad Syslog para sympa"
+#~ msgid "Syslog facility for sympa"
+#~ msgstr "Funcionalidad Syslog para sympa"
 
-#: src/lib/Sympa/ConfDef.pm:365
-msgid "Do not forget to edit syslog.conf"
-msgstr "No te olvides de modificar edit_list.conf"
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "No te olvides de modificar edit_list.conf"
 
-#: src/lib/Sympa/ConfDef.pm:376
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr "Modo de comunicación con syslogd (unix | inet)"
+#~ msgid "Communication mode with syslogd (unix | inet)"
+#~ msgstr "Modo de comunicación con syslogd (unix | inet)"
 
-#: src/lib/Sympa/ConfDef.pm:442
-msgid ""
-"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
-"powerful systems."
-msgstr ""
-"El valor propuesto es un poco bajo, puedes aumentarlo hasta 100, 200 o "
-"incluso 300 para sistemas grandes."
+#~ msgid ""
+#~ "Proposed value is quite low, you can rise it up to 100, 200 or even 300 "
+#~ "with powerful systems."
+#~ msgstr ""
+#~ "El valor propuesto es un poco bajo, puedes aumentarlo hasta 100, 200 o "
+#~ "incluso 300 para sistemas grandes."
 
-#: src/lib/Sympa/ConfDef.pm:487
-msgid "Setting this parameter to \"none\" will hide the blacklist feature"
-msgstr ""
-"Configurando este parámetro a \"none\" ocultará la funcionalidad de lista "
-"negra"
+#~ msgid "Setting this parameter to \"none\" will hide the blacklist feature"
+#~ msgstr ""
+#~ "Configurando este parámetro a \"none\" ocultará la funcionalidad de lista "
+#~ "negra"
 
-#: src/lib/Sympa/ConfDef.pm:492
-msgid ""
-"If set, when a list editor report a spam, this external script is run by "
-"wwsympa or sympa, the spam is sent into script stdin"
-msgstr ""
-"Si se configura, cuando un moderador de la lista informa de un spam, wwsympa "
-"o sympa ejecuta este programa externo enviando el spam a su entrada estándar"
+#~ msgid ""
+#~ "If set, when a list editor report a spam, this external script is run by "
+#~ "wwsympa or sympa, the spam is sent into script stdin"
+#~ msgstr ""
+#~ "Si se configura, cuando un moderador de la lista informa de un spam, "
+#~ "wwsympa o sympa ejecuta este programa externo enviando el spam a su "
+#~ "entrada estándar"
 
-#: src/lib/Sympa/ConfDef.pm:520
-msgid "Max. number of different domains per call to Sendmail"
-msgstr "Máximo número de dominios diferentes por invocación de Sendmail."
+#~ msgid "Max. number of different domains per call to Sendmail"
+#~ msgstr "Máximo número de dominios diferentes por invocación de Sendmail."
 
-#: src/lib/Sympa/ConfDef.pm:539
-msgid ""
-"Program used to update alias database.  \"makemap\", \"newaliases\", "
-"\"postalias\", \"postmap\" or full path to custom program"
-msgstr ""
-"Programa utilizado para actualizar la base de datos de alias.  \"makemap\", "
-"\"newaliases\", \"postalias\", \"postmap\" o ruta de acceso completa a otro "
-"programa"
+#~ msgid ""
+#~ "Program used to update alias database.  \"makemap\", \"newaliases\", "
+#~ "\"postalias\", \"postmap\" or full path to custom program"
+#~ msgstr ""
+#~ "Programa utilizado para actualizar la base de datos de alias.  \"makemap"
+#~ "\", \"newaliases\", \"postalias\", \"postmap\" o ruta de acceso completa "
+#~ "a otro programa"
 
-#: src/lib/Sympa/ConfDef.pm:545
-msgid ""
-"Type of alias database.  \"btree\", \"dbm\", \"hash\" and so on.  Available "
-"when aliases_program is \"makemap\", \"postalias\" or \"postmap\""
-msgstr ""
-"Tipo de base de datos de alias.  \"btree\", \"dbm\", \"hash\", etc.  "
-"Disponible cuando aliases_program es \"makemap\", \"postalias\" o \"postmap\""
+#~ msgid ""
+#~ "Type of alias database.  \"btree\", \"dbm\", \"hash\" and so on.  "
+#~ "Available when aliases_program is \"makemap\", \"postalias\" or \"postmap"
+#~ "\""
+#~ msgstr ""
+#~ "Tipo de base de datos de alias.  \"btree\", \"dbm\", \"hash\", etc.  "
+#~ "Disponible cuando aliases_program es \"makemap\", \"postalias\" o "
+#~ "\"postmap\""
 
-#: src/lib/Sympa/ConfDef.pm:555
-msgid "Specify header fields to be removed before message distribution"
-msgstr ""
-"Especifica qué encabezados deben ser suprimidos de los mensajes antes de su "
-"distribución"
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr ""
+#~ "Especifica qué encabezados deben ser suprimidos de los mensajes antes de "
+#~ "su distribución"
 
-#: src/lib/Sympa/ConfDef.pm:565
-msgid "Reject mail from automates (crontab, etc) sent to a list?"
-msgstr "¿Se rechaza correo automatizado (crontab, etc) enviado a la lista?"
+#~ msgid "Reject mail from automates (crontab, etc) sent to a list?"
+#~ msgstr "¿Se rechaza correo automatizado (crontab, etc) enviado a la lista?"
 
-#: src/lib/Sympa/ConfDef.pm:579
-msgid ""
-"SMTP server to which Sympa verify if alias with the same name as the list to "
-"be created"
-msgstr ""
-"Si este parámetro se define con la dirección de un servidor SMTP, Sympa "
-"verifica si el alias de una lista cuya creación fue pedida existe en este "
-"servidor."
+#~ msgid ""
+#~ "SMTP server to which Sympa verify if alias with the same name as the list "
+#~ "to be created"
+#~ msgstr ""
+#~ "Si este parámetro se define con la dirección de un servidor SMTP, Sympa "
+#~ "verifica si el alias de una lista cuya creación fue pedida existe en este "
+#~ "servidor."
 
-#: src/lib/Sympa/ConfDef.pm:591
-msgid "SMTP HELO (EHLO) parameter used for alias verification"
-msgstr ""
-"Parámetro HELO (EHLO), de SMTP, que se usará para la verificación de un alias"
+#~ msgid "SMTP HELO (EHLO) parameter used for alias verification"
+#~ msgstr ""
+#~ "Parámetro HELO (EHLO), de SMTP, que se usará para la verificación de un "
+#~ "alias"
 
-#: src/lib/Sympa/ConfDef.pm:594
-msgid "Default value is the host part of list_check_smtp parameter."
-msgstr ""
-"El valor predeterminado es la parte \"equipo\" del parámetro list_check_smtp."
+#~ msgid "Default value is the host part of list_check_smtp parameter."
+#~ msgstr ""
+#~ "El valor predeterminado es la parte \"equipo\" del parámetro "
+#~ "list_check_smtp."
 
-#: src/lib/Sympa/ConfDef.pm:617
-msgid "Default priority for a packet to be sent by bulk."
-msgstr "Prioridad predeterminada para que un paquete sea enviado por bulk."
+#~ msgid "Default priority for a packet to be sent by bulk."
+#~ msgstr "Prioridad predeterminada para que un paquete sea enviado por bulk."
 
-#: src/lib/Sympa/ConfDef.pm:625
-msgid ""
-"Minimum number of packets in database before the bulk forks to increase "
-"sending rate"
-msgstr ""
-"Número mínimo de paquetes en base de datos antes de que el proceso bulk cree "
-"nuevos procesos para incremental el ratio de envío"
+#~ msgid ""
+#~ "Minimum number of packets in database before the bulk forks to increase "
+#~ "sending rate"
+#~ msgstr ""
+#~ "Número mínimo de paquetes en base de datos antes de que el proceso bulk "
+#~ "cree nuevos procesos para incremental el ratio de envío"
 
-#: src/lib/Sympa/ConfDef.pm:639
-msgid ""
-"The number of seconds a slave bulk will remain running without processing a "
-"message before it spontaneously dies."
-msgstr ""
-"El número de segundos que un proceso hijo bulk permanecerá ejectuándose sin "
-"procesar ningún mensaje antes de morir espontáneamente."
+#~ msgid ""
+#~ "The number of seconds a slave bulk will remain running without processing "
+#~ "a message before it spontaneously dies."
+#~ msgstr ""
+#~ "El número de segundos que un proceso hijo bulk permanecerá ejectuándose "
+#~ "sin procesar ningún mensaje antes de morir espontáneamente."
 
-#: src/lib/Sympa/ConfDef.pm:657
-msgid ""
-"Keep it small if you expect brutal increases in the message sending load."
-msgstr ""
-"Mantener bajo si esperas un incremento brutal en la carga de envío de "
-"mensajes."
+#~ msgid ""
+#~ "Keep it small if you expect brutal increases in the message sending load."
+#~ msgstr ""
+#~ "Mantener bajo si esperas un incremento brutal en la carga de envío de "
+#~ "mensajes."
 
-#: src/lib/Sympa/ConfDef.pm:666
-msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr ""
-"Límite por defecto para el número de suscriptores por lista (0 significa "
-"ilimitado)"
+#~ msgid ""
+#~ "Default limit for the number of subscribers per list (0 means no limit)"
+#~ msgstr ""
+#~ "Límite por defecto para el número de suscriptores por lista (0 significa "
+#~ "ilimitado)"
 
-#: src/lib/Sympa/ConfDef.pm:825
-msgid "This is the default language used by Sympa"
-msgstr "Esto es el idioma por omisión de Sympa"
+#~ msgid "This is the default language used by Sympa"
+#~ msgstr "Esto es el idioma por omisión de Sympa"
 
-#: src/lib/Sympa/ConfDef.pm:830
-msgid "If set to \"on\", enables support of legacy character set"
-msgstr ""
-"Si se pone a \"on\", habilita el soporte del conjunto de caracteres antiguos"
+#~ msgid "If set to \"on\", enables support of legacy character set"
+#~ msgstr ""
+#~ "Si se pone a \"on\", habilita el soporte del conjunto de caracteres "
+#~ "antiguos"
 
-#: src/lib/Sympa/ConfDef.pm:876
-msgid "Task name for expiration of old bounces"
-msgstr "Nombre de la tarea para expirar viejos rebotes"
+#~ msgid "Task name for expiration of old bounces"
+#~ msgstr "Nombre de la tarea para expirar viejos rebotes"
 
-#: src/lib/Sympa/ConfDef.pm:983
-msgid ""
-"Max number of daemons processing incoming spool that will run on the same "
-"server"
-msgstr ""
-"Número máximo de procesos inspeccionando el contenedor de mensajes entrantes "
-"que se ejecutarán en el mismo servidor"
+#~ msgid ""
+#~ "Max number of daemons processing incoming spool that will run on the same "
+#~ "server"
+#~ msgstr ""
+#~ "Número máximo de procesos inspeccionando el contenedor de mensajes "
+#~ "entrantes que se ejecutarán en el mismo servidor"
 
-#: src/lib/Sympa/ConfDef.pm:1046
-msgid "This is useful for defining ORACLE_HOME "
-msgstr "Esto es útil para definir ORACLE_HOME "
+#~ msgid "This is useful for defining ORACLE_HOME "
+#~ msgstr "Esto es útil para definir ORACLE_HOME "
 
-#: src/lib/Sympa/ConfDef.pm:1085
-msgid "Number of months that elapse before statistics are expired"
-msgstr ""
-"Número de meses que transcurren antes de que las estadísticas se expiren"
+#~ msgid "Number of months that elapse before statistics are expired"
+#~ msgstr ""
+#~ "Número de meses que transcurren antes de que las estadísticas se expiren"
 
-#: src/lib/Sympa/ConfDef.pm:1124
-msgid "Default timeout while performing a fetch for an include_sql_query sync"
-msgstr "Tiempo de espera entre dos sincronizaciones para un include_sql_query"
+#~ msgid ""
+#~ "Default timeout while performing a fetch for an include_sql_query sync"
+#~ msgstr ""
+#~ "Tiempo de espera entre dos sincronizaciones para un include_sql_query"
 
-#: src/lib/Sympa/ConfDef.pm:1204
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr ""
-"Inserta una firma DKIM al mensaje desde el robot, desde la lista o ambos"
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr ""
+#~ "Inserta una firma DKIM al mensaje desde el robot, desde la lista o ambos"
 
-#: src/lib/Sympa/ConfDef.pm:1239
-msgid "The \"i=\" tag as defined in rfc 4871, default is null"
-msgstr ""
-"La etiqueta \"i=\" como está definida en el RFC 4871, por defecto es null"
+#~ msgid "The \"i=\" tag as defined in rfc 4871, default is null"
+#~ msgstr ""
+#~ "La etiqueta \"i=\" como está definida en el RFC 4871, por defecto es null"
 
-#: src/lib/Sympa/ConfDef.pm:1260
-msgid ""
-"Do not set unless you want to use DMARC protection.  This is a comma "
-"separated list of test modes; if multiple are selected then protection is "
-"activated if ANY match.  Do not use dmarc_* modes unless you have a local "
-"DNS cache as they do a DNS lookup for each received message."
-msgstr ""
-"No lo configure a menos que quiera usar la protección DMARC.  Esta es una "
-"lista separada por comas de modos de prueba; si selecciona múltiples "
-"entonces la protección es activada si coincide alguna.  No utilice los modos "
-"dmarc_* a menos que tenga una cache local de DNS ya que hacen una búsqueda "
-"DNS para cada mensaje recibido."
+#~ msgid ""
+#~ "Do not set unless you want to use DMARC protection.  This is a comma "
+#~ "separated list of test modes; if multiple are selected then protection is "
+#~ "activated if ANY match.  Do not use dmarc_* modes unless you have a local "
+#~ "DNS cache as they do a DNS lookup for each received message."
+#~ msgstr ""
+#~ "No lo configure a menos que quiera usar la protección DMARC.  Esta es una "
+#~ "lista separada por comas de modos de prueba; si selecciona múltiples "
+#~ "entonces la protección es activada si coincide alguna.  No utilice los "
+#~ "modos dmarc_* a menos que tenga una cache local de DNS ya que hacen una "
+#~ "búsqueda DNS para cada mensaje recibido."
 
-#: src/lib/Sympa/ConfDef.pm:1263
-msgid "Regexp for domain name match"
-msgstr "Regexp para coincidir el nombre de dominio"
+#~ msgid "Regexp for domain name match"
+#~ msgstr "Regexp para coincidir el nombre de dominio"
 
-#: src/lib/Sympa/ConfDef.pm:1294
-msgid ""
-"supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
-"Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
-msgstr ""
-"antivirus soportados: Antivirus Clam/clamscan y clamdscan, McAfee/uvscan, "
-"Fsecure/fsav, Sophos, AVP y Trend Micro/VirusWall"
+#~ msgid ""
+#~ "supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
+#~ "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
+#~ msgstr ""
+#~ "antivirus soportados: Antivirus Clam/clamscan y clamdscan, McAfee/uvscan, "
+#~ "Fsecure/fsav, Sophos, AVP y Trend Micro/VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:1299
-msgid "Antivirus plugin command argument"
-msgstr "Argumento del comando del plug-in antivirus"
+#~ msgid "Antivirus plugin command argument"
+#~ msgstr "Argumento del comando del plug-in antivirus"
 
-#: src/lib/Sympa/ConfDef.pm:1322
-msgid ""
-"If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
-"spams, name of this header (example X-Spam-Status)"
-msgstr ""
-"Si un filtro de correo basura (como spamassassin o j-chkmail) añade unas "
-"cabeceras SMTP de etiquetas de correo basura, nombre de esta cabecera "
-"(ejemplo X-Spam-Status)"
+#~ msgid ""
+#~ "If a spam filter (like spamassassin or j-chkmail) add a smtp headers to "
+#~ "tag spams, name of this header (example X-Spam-Status)"
+#~ msgstr ""
+#~ "Si un filtro de correo basura (como spamassassin o j-chkmail) añade unas "
+#~ "cabeceras SMTP de etiquetas de correo basura, nombre de esta cabecera "
+#~ "(ejemplo X-Spam-Status)"
 
-#: src/lib/Sympa/ConfDef.pm:1330
-msgid "Regexp applied on this header to verify message is a spam (example Yes)"
-msgstr ""
-"Regexp que se aplica al encabezado para verificar si el mensaje es "
-"indeseable (spam). Ejemplo: Yes"
+#~ msgid ""
+#~ "Regexp applied on this header to verify message is a spam (example Yes)"
+#~ msgstr ""
+#~ "Regexp que se aplica al encabezado para verificar si el mensaje es "
+#~ "indeseable (spam). Ejemplo: Yes"
 
-#: src/lib/Sympa/ConfDef.pm:1338
-msgid ""
-"Regexp applied on this header to verify message is NOT a spam (example No)"
-msgstr ""
-"Regexp que se aplica al encabezado para verificar si el mensaje NO es "
-"indeseable (spam). Ejemplo: NO"
+#~ msgid ""
+#~ "Regexp applied on this header to verify message is NOT a spam (example No)"
+#~ msgstr ""
+#~ "Regexp que se aplica al encabezado para verificar si el mensaje NO es "
+#~ "indeseable (spam). Ejemplo: NO"
 
-#: src/lib/Sympa/ConfDef.pm:1346
-msgid ""
-"Messages are supposed to be filtered by an antispam that add one more "
-"headers to messages. This parameter is used to select a special scenario in "
-"order to decide the message spam status: ham, spam or unsure. This parameter "
-"replace antispam_tag_header_name, antispam_tag_header_spam_regexp and "
-"antispam_tag_header_ham_regexp."
-msgstr ""
-"Se supone que los mensajes son filtrados por un antispam que añade una o más "
-"cabeceras a los mensajes. Este parámetro se utiliza para seleccionar un "
-"escenario especial para decidir el estado del correo basura: ham, spam o "
-"unsure. Este parámetro reemplaza antispam_tag_header_name, "
-"antispam_tag_header_spam_regexp y antispam_tag_header_ham_regexp."
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an antispam that add one more "
+#~ "headers to messages. This parameter is used to select a special scenario "
+#~ "in order to decide the message spam status: ham, spam or unsure. This "
+#~ "parameter replace antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Se supone que los mensajes son filtrados por un antispam que añade una o "
+#~ "más cabeceras a los mensajes. Este parámetro se utiliza para seleccionar "
+#~ "un escenario especial para decidir el estado del correo basura: ham, spam "
+#~ "o unsure. Este parámetro reemplaza antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp y antispam_tag_header_ham_regexp."
 
-#: src/lib/Sympa/ConfDef.pm:1357
-msgid "Directory for storing HTML archives"
-msgstr "Carpeta donde se guardan los archivos HTML"
+#~ msgid "Directory for storing HTML archives"
+#~ msgstr "Carpeta donde se guardan los archivos HTML"
 
-#: src/lib/Sympa/ConfDef.pm:1395
-msgid ""
-"Activates a custom archiver to use instead of MHonArc. The value of this "
-"parameter is the absolute path on the file system to the script of the "
-"custom archiver."
-msgstr ""
-"Activa un archivador personalizado para utilizar en lugar de MHonArc. El "
-"valor de este parámetro es la ruta de acceso absoluta en el sistema de "
-"archivos para el guión del archivador personalizado."
+#~ msgid ""
+#~ "Activates a custom archiver to use instead of MHonArc. The value of this "
+#~ "parameter is the absolute path on the file system to the script of the "
+#~ "custom archiver."
+#~ msgstr ""
+#~ "Activa un archivador personalizado para utilizar en lugar de MHonArc. El "
+#~ "valor de este parámetro es la ruta de acceso absoluta en el sistema de "
+#~ "archivos para el guión del archivador personalizado."
 
-#: src/lib/Sympa/ConfDef.pm:1427
-msgid "Path to MHonArc mail2html plugin"
-msgstr "Camino al plugin mail2html de MHonArc"
+#~ msgid "Path to MHonArc mail2html plugin"
+#~ msgstr "Camino al plugin mail2html de MHonArc"
 
-#: src/lib/Sympa/ConfDef.pm:1430
-msgid "This is required for HTML mail archiving"
-msgstr "Esto es necesario para el archivado de correo HTML"
+#~ msgid "This is required for HTML mail archiving"
+#~ msgstr "Esto es necesario para el archivado de correo HTML"
 
 # Los tickets de un solo uso están caducados.
-#: src/lib/Sympa/ConfDef.pm:1441
-msgid "duration before the one time tickets are expired"
-msgstr "la duración de los tickets de un solo uso están expirados."
+#~ msgid "duration before the one time tickets are expired"
+#~ msgstr "la duración de los tickets de un solo uso están expirados."
 
-#: src/lib/Sympa/ConfDef.pm:1467
-msgid "Title of main Web page"
-msgstr "Título de la página Web principal"
+#~ msgid "Title of main Web page"
+#~ msgstr "Título de la página Web principal"
 
-#: src/lib/Sympa/ConfDef.pm:1482
-msgid ""
-"URL path to the javascript file making the WYSIWYG HTML editor available.  "
-"Relative path under <static_content_url> or absolute path"
-msgstr ""
-"Dirección URL al archivo javascript que suministra el editor HTML WYSIWYG.  "
-"Dirección relativa bajo <static_content_url> o dirección absoluta."
+#~ msgid ""
+#~ "URL path to the javascript file making the WYSIWYG HTML editor "
+#~ "available.  Relative path under <static_content_url> or absolute path"
+#~ msgstr ""
+#~ "Dirección URL al archivo javascript que suministra el editor HTML "
+#~ "WYSIWYG.  Dirección relativa bajo <static_content_url> o dirección "
+#~ "absoluta."
 
-#: src/lib/Sympa/ConfDef.pm:1506
-msgid "This module provide much faster web interface"
-msgstr "Este módulo suministra mucho más rápido la interfaz web"
+#~ msgid "This module provide much faster web interface"
+#~ msgstr "Este módulo suministra mucho más rápido la interfaz web"
 
-#: src/lib/Sympa/ConfDef.pm:1510
-msgid ""
-"Default number of lines of the array displaying the log entries in the logs "
-"page"
-msgstr ""
-"Número de líneas por defecto de las entradas en la tabla que visualiza la "
-"bitácora (archivo log)"
+#~ msgid ""
+#~ "Default number of lines of the array displaying the log entries in the "
+#~ "logs page"
+#~ msgstr ""
+#~ "Número de líneas por defecto de las entradas en la tabla que visualiza la "
+#~ "bitácora (archivo log)"
 
-#: default/web_tt2/subrequest.tt2:10
-msgid "Please fill in the form below and then click the validation button"
-msgstr ""
-"Favor llenar el formulario a continuación y presionar el botón de validación."
+#~ msgid "Please fill in the form below and then click the validation button"
+#~ msgstr ""
+#~ "Favor llenar el formulario a continuación y presionar el botón de "
+#~ "validación."
 
 #~ msgid ""
 #~ "This is the set of language that will be proposed to your users for the "

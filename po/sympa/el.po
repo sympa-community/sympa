@@ -13549,7 +13549,7 @@ msgstr ""
 "Δεν ορίσατε την web σελίδα που θέλετε να χρησιμοποιήσετε για τη δημιουργία "
 "του newsetter. Παρακαλώ ορίστε είτε το URL ή ένα αρχείο για ανέβασμα."
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -13558,6 +13558,12 @@ msgstr ""
 "Ορίσατε και URL και αρχείο για ανέβασμα. Το Sympa δεν μπορεί να αποφασίσει "
 "ποιο από τα δυο θα στείλει. Παρακαλώ συμπληρώστε τη φόρμα με ένα από τα δυο "
 "μόνο. Μια web σελίδα Ή ένα αρχείο για ανέβασμα."
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
+msgstr ""
 
 #. (report_param.argument)
 #: default/mail_tt2/report.tt2:583
@@ -15079,88 +15085,17 @@ msgstr "Αδυναμία φόρτωσης καταναλωτή, ίσως η δι
 msgid "Unknown provider."
 msgstr "Άγνωστος παροχέας."
 
-#: src/lib/Sympa/ConfDef.pm:646
-msgid ""
-"The number of seconds a bulk sleeps between starting a new loop if it didn't "
-"find a message to send."
-msgstr ""
-"Αριθμός δευτερολέπτων που ένας bulk κοιμάται πριν ξεκινήσει νέο βρόχο "
-"εξυπηρέτησης εάν δεν έχει βρει μήνυμα να στείλει."
-
-#: src/lib/Sympa/ConfDef.pm:51
-#, fuzzy
-msgid "Local part of sympa email address"
-msgstr "Παρακαλούμε συμπληρώστε τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας"
-
 #: src/lib/Sympa/ConfDef.pm:64
 msgid "This parameter is used for display name in the \"From:\" header"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:82
-#, fuzzy
-msgid "URL of main Web page"
-msgstr "% σελίδα διαχειριστή"
 
 #: src/lib/Sympa/ConfDef.pm:94
 msgid "This setting can be overridden by each list"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:295
-msgid "URL mapped with the static_content_path directory defined above"
-msgstr "URL συνδεδεμένο με το παραπάνω φάκελο static_content_path"
-
-#: src/lib/Sympa/ConfDef.pm:336
-msgid ""
-"Used to define a custom parameter for your server. Do not forget the "
-"semicolon between the param name and the param value."
-msgstr ""
-"Χρήση για ορισμό προσαρμοσμένης παραμέτρου για τον εξυπηρετητή σας. Μην "
-"ξεχάσετε το ελληνικό ερωτηματικό ανάμεσα στο όνομα και στην τιμή της "
-"παραμέτρου."
-
-#: src/lib/Sympa/ConfDef.pm:362
-msgid "Syslog facility for sympa"
-msgstr "Syslog για το Sympa"
-
-#: src/lib/Sympa/ConfDef.pm:365
-msgid "Do not forget to edit syslog.conf"
-msgstr "Μην ξεχάσατε να επεξεργαστείτε το syslog.conf"
-
-#: src/lib/Sympa/ConfDef.pm:376
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr "Μέθοδος επικοινωνίας με syslogd (unix | inet)"
-
-#: src/lib/Sympa/ConfDef.pm:442
-#, fuzzy
-msgid ""
-"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
-"powerful systems."
-msgstr ""
-"Η τιμή είναι αρκετά μικρή, μπορείτε να την αυξήσετε σε 100, 200 ή ακόμα και "
-"300 σε πιο δυνατά συστήματα."
-
 #: src/lib/Sympa/ConfDef.pm:462
 msgid "Defines the name of the family the automatic lists are based on."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:487
-msgid "Setting this parameter to \"none\" will hide the blacklist feature"
-msgstr ""
-"Ρυθμίζοντας αυτή τη παράμετρο σε \"καμία\" θα κρυφτεί η λειτουργικότητα της "
-"μαύρης λίστας"
-
-#: src/lib/Sympa/ConfDef.pm:492
-msgid ""
-"If set, when a list editor report a spam, this external script is run by "
-"wwsympa or sympa, the spam is sent into script stdin"
-msgstr ""
-"Εάν οριστεί, όταν ένας συντονιστής αναφέρει spam, θα τρέχει αυτό το "
-"εξωτερικό πρόγραμμα από το sympa ή wwsympa, και το spam θα στέλνεται στο "
-"stdin script"
-
-#: src/lib/Sympa/ConfDef.pm:520
-msgid "Max. number of different domains per call to Sendmail"
-msgstr "Μέγιστος αριθμός διαφορετικών τομέων ανά κλήση στο Sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:539
 msgid ""
@@ -15174,129 +15109,15 @@ msgid ""
 "when aliases_program is \"makemap\", \"postalias\" or \"postmap\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:555
-#, fuzzy
-msgid "Specify header fields to be removed before message distribution"
-msgstr "Αριθμός μηνύματος"
-
-#: src/lib/Sympa/ConfDef.pm:565
-msgid "Reject mail from automates (crontab, etc) sent to a list?"
-msgstr "Απόρριψη μηνυμάτων από αυτόματα (crontab,etc) που στέλνονται σε λίστα;"
-
-#: src/lib/Sympa/ConfDef.pm:579
-msgid ""
-"SMTP server to which Sympa verify if alias with the same name as the list to "
-"be created"
-msgstr ""
-"Εξυπηρετητής SMTP με τον οποίο το Sympa θα ελέγχει εάν υπάρχει ίδιο alias με "
-"τη λίστα που δημιουργείται"
-
-#: src/lib/Sympa/ConfDef.pm:591
-msgid "SMTP HELO (EHLO) parameter used for alias verification"
-msgstr "SMTP HELO (EHLO) παράμετρος για χρήση στον έλεγχο alias"
-
-#: src/lib/Sympa/ConfDef.pm:594
-msgid "Default value is the host part of list_check_smtp parameter."
-msgstr ""
-"Προεπιλεγμένη τιμή είναι το κομμάτι host της τιμής της παραμέτρου "
-"list_check_smtp."
-
-#: src/lib/Sympa/ConfDef.pm:617
-msgid "Default priority for a packet to be sent by bulk."
-msgstr "Προεπιλεγμένη προτεραιότητα πακέτου απεσταλμένου με bulk."
-
-#: src/lib/Sympa/ConfDef.pm:625
-msgid ""
-"Minimum number of packets in database before the bulk forks to increase "
-"sending rate"
-msgstr ""
-"Ελάχιστος αριθμός πακέτων στη βάση δεδομένων πριν το bulk διαιρεθεί για να "
-"αυξήσει τον ρυθμό αποστολής"
-
-#: src/lib/Sympa/ConfDef.pm:639
-msgid ""
-"The number of seconds a slave bulk will remain running without processing a "
-"message before it spontaneously dies."
-msgstr ""
-"Αριθμός δευτερολέπτων που ένας slave bulk θα συνεχίσει να τρέχει χωρίς να "
-"επεξεργάζεται μήνυμα πριν κλείσει."
-
-#: src/lib/Sympa/ConfDef.pm:657
-msgid ""
-"Keep it small if you expect brutal increases in the message sending load."
-msgstr ""
-"Κρατήστε το μικρό εάν περιμένετε απότομες αυξήσεις στον φόρτο αποστολής "
-"μηνυμάτων."
-
-#: src/lib/Sympa/ConfDef.pm:666
-msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr ""
-"Προεπιλεγμένο όριο για τον αριθμό των συνδρομητών ανά λίστα (0 σημαίνει "
-"χωρίς όριο)"
-
 #: src/lib/Sympa/ConfDef.pm:762
 msgid ""
 "Directory containing HTML file generated by MHonArc while displaying "
 "messages other than archives"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:825
-msgid "This is the default language used by Sympa"
-msgstr "Αυτή είναι η προεπιλεγμένη γλώσσα που χρησιμοποιεί το Sympa"
-
-#: src/lib/Sympa/ConfDef.pm:830
-msgid "If set to \"on\", enables support of legacy character set"
-msgstr "Εάν είναι \"on\", ενεργοποιεί υποστήριξη για legacy γραμματοσειρές"
-
 #: src/lib/Sympa/ConfDef.pm:833
 msgid "See also charset.conf(5) manpage"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:876
-msgid "Task name for expiration of old bounces"
-msgstr "Όνομα ενέργειας για λήξη παλιών bounces"
-
-#: src/lib/Sympa/ConfDef.pm:983
-#, fuzzy
-msgid ""
-"Max number of daemons processing incoming spool that will run on the same "
-"server"
-msgstr "Μέγιστος αριθμός bulk που θα τρέχουν στον ίδιο εξυπηρετητή"
-
-#: src/lib/Sympa/ConfDef.pm:1046
-msgid "This is useful for defining ORACLE_HOME "
-msgstr "Χρήσιμο για τον ορισμό του ORACLE_HOME "
-
-#: src/lib/Sympa/ConfDef.pm:1085
-#, fuzzy
-msgid "Number of months that elapse before statistics are expired"
-msgstr ""
-"Αριθμός μηνών που πρέπει να περάσουν για να λήξει ένα αρχείο καταγραφής"
-
-#: src/lib/Sympa/ConfDef.pm:1124
-msgid "Default timeout while performing a fetch for an include_sql_query sync"
-msgstr ""
-"Προεπιλεγμένος χρόνος λήξης λήψης δεδομένων από ένα συγχρονισμό "
-"include_sql_query"
-
-#: src/lib/Sympa/ConfDef.pm:1204
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "Αποστολή μηνυμάτων : %1"
-
-#: src/lib/Sympa/ConfDef.pm:1226
-msgid ""
-"The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
-msgstr ""
-"Όπως ορίζεται στο rfc 4871, η προεπιλεγμένη τιμή της ετικέτας \"d=\" είναι "
-"το όνομα του τομέα του εικονικού εξυπηρετητή"
-
-#: src/lib/Sympa/ConfDef.pm:1239
-msgid "The \"i=\" tag as defined in rfc 4871, default is null"
-msgstr ""
-"Όπως ορίζεται στο rfc 4871, η προεπιλεγμένη τιμή της ετικέτας \"i=\" είναι "
-"το κενό"
 
 #: src/lib/Sympa/ConfDef.pm:1260
 msgid ""
@@ -15318,118 +15139,261 @@ msgstr ""
 msgid "Email to use for replacement From header"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1294
-#, fuzzy
-msgid ""
-"supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
-"Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
-msgstr ""
-"υποστηριζόμενα antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP και Trend "
-"Micro/VirusWall"
-
-#: src/lib/Sympa/ConfDef.pm:1299
-msgid "Antivirus plugin command argument"
-msgstr "ορίσματα εντολής antivirus"
-
-#: src/lib/Sympa/ConfDef.pm:1322
-msgid ""
-"If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
-"spams, name of this header (example X-Spam-Status)"
-msgstr ""
-"Εάν ένα φίλτρο spam (όπως το spamassassin ή το j-chkmail) προσθέσει "
-"κεφαλίδες smtp για να επισημάνει spam, το όνομα αυτής της ετικέτας "
-"(παράδειγμα X-Spam-Status)"
-
-#: src/lib/Sympa/ConfDef.pm:1330
-msgid "Regexp applied on this header to verify message is a spam (example Yes)"
-msgstr ""
-"Εφαρμογή αυτής της regexp στη κεφαλίδα για επιβεβαίωση ότι το μήνυμα είναι "
-"spam (παράδειγμα Yes)"
-
-#: src/lib/Sympa/ConfDef.pm:1338
-msgid ""
-"Regexp applied on this header to verify message is NOT a spam (example No)"
-msgstr ""
-"Εφαρμογή αυτής της regexp στη κεφαλίδα για επιβεβαίωση ότι το μήνυμα ΔΕΝ "
-"είναι spam (παράδειγμα No)"
-
-#: src/lib/Sympa/ConfDef.pm:1346
-msgid ""
-"Messages are supposed to be filtered by an antispam that add one more "
-"headers to messages. This parameter is used to select a special scenario in "
-"order to decide the message spam status: ham, spam or unsure. This parameter "
-"replace antispam_tag_header_name, antispam_tag_header_spam_regexp and "
-"antispam_tag_header_ham_regexp."
-msgstr ""
-"Τα μηνύματα υποτίθεται ότι φιλτράρονται από antispam που προσθέτουν μια ή "
-"περισσότερες κεφαλίδες στα μηνύματα. Αυτή η παράμετρος χρησιμοποιείται για "
-"την επιλογή ειδικού σεναρίου προκειμένου να αποφασιστεί η κατάσταση spam του "
-"μηνύματος: ham, spam, ή unsure. Αυτή η παράμετρος αντικαθιστά τα "
-"antispam_tag_header_name, antispam_tag_header_spam_regexp και "
-"antispam_tag_header_ham_regexp."
-
-#: src/lib/Sympa/ConfDef.pm:1357
-msgid "Directory for storing HTML archives"
-msgstr "Φάκελος αποθήκευσης αρχείου HTML"
-
-#: src/lib/Sympa/ConfDef.pm:1395
-msgid ""
-"Activates a custom archiver to use instead of MHonArc. The value of this "
-"parameter is the absolute path on the file system to the script of the "
-"custom archiver."
-msgstr ""
-"Ενεργοποιεί ένα προσαρμοσμένο αρχειοθετητή για χρήση αντί του MHonArc. Η "
-"τιμή αυτής της παραμέτρου είναι η απόλυτη διαδρομή στο εκτελέσιμο πρόγραμμα "
-"αυτού του αρχειοθετητή."
-
-#: src/lib/Sympa/ConfDef.pm:1427
-msgid "Path to MHonArc mail2html plugin"
-msgstr "Διαδρομή για το πρόσθετο MHonArc mail2html"
-
-#: src/lib/Sympa/ConfDef.pm:1430
-msgid "This is required for HTML mail archiving"
-msgstr "Αυτό είναι απαραίτητο για HTML αρχειοθέτηση μηνυμάτων"
-
 #: src/lib/Sympa/ConfDef.pm:1441
 msgid "duration before the one time tickets are expired"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1467
-msgid "Title of main Web page"
-msgstr "Τίτλος κεντρικής σελίδας Web"
-
-#: src/lib/Sympa/ConfDef.pm:1482
-#, fuzzy
-msgid ""
-"URL path to the javascript file making the WYSIWYG HTML editor available.  "
-"Relative path under <static_content_url> or absolute path"
-msgstr ""
-"Διαδρομή για το αρχείο javascript που κάνει τον επεξεργαστή WYSIWYG διαθέσιμο"
 
 #: src/lib/Sympa/ConfDef.pm:1484
 msgid ""
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1506
-msgid "This module provide much faster web interface"
-msgstr "Αυτό το module προσφέρει πολύ γρηγορότερο web περιβάλλον"
-
-#: src/lib/Sympa/ConfDef.pm:1510
-msgid ""
-"Default number of lines of the array displaying the log entries in the logs "
-"page"
-msgstr ""
-"Προεπιλεγμένος αριθμός γραμμών του πίνακα που προβάλει εγγραφές των αρχείων "
-"καταγραφής στην αντίστοιχη σελίδα"
-
-#: default/web_tt2/subrequest.tt2:10
-msgid "Please fill in the form below and then click the validation button"
-msgstr "Συμπληρώστε την παρακάτω φόρμα και πατήστε το κουμπί επιβεβαίωσης"
-
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid ""
+#~ "The number of seconds a bulk sleeps between starting a new loop if it "
+#~ "didn't find a message to send."
+#~ msgstr ""
+#~ "Αριθμός δευτερολέπτων που ένας bulk κοιμάται πριν ξεκινήσει νέο βρόχο "
+#~ "εξυπηρέτησης εάν δεν έχει βρει μήνυμα να στείλει."
+
+#, fuzzy
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Παρακαλούμε συμπληρώστε τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας"
+
+#, fuzzy
+#~ msgid "URL of main Web page"
+#~ msgstr "% σελίδα διαχειριστή"
+
+#~ msgid "URL mapped with the static_content_path directory defined above"
+#~ msgstr "URL συνδεδεμένο με το παραπάνω φάκελο static_content_path"
+
+#~ msgid ""
+#~ "Used to define a custom parameter for your server. Do not forget the "
+#~ "semicolon between the param name and the param value."
+#~ msgstr ""
+#~ "Χρήση για ορισμό προσαρμοσμένης παραμέτρου για τον εξυπηρετητή σας. Μην "
+#~ "ξεχάσετε το ελληνικό ερωτηματικό ανάμεσα στο όνομα και στην τιμή της "
+#~ "παραμέτρου."
+
+#~ msgid "Syslog facility for sympa"
+#~ msgstr "Syslog για το Sympa"
+
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "Μην ξεχάσατε να επεξεργαστείτε το syslog.conf"
+
+#~ msgid "Communication mode with syslogd (unix | inet)"
+#~ msgstr "Μέθοδος επικοινωνίας με syslogd (unix | inet)"
+
+#, fuzzy
+#~ msgid ""
+#~ "Proposed value is quite low, you can rise it up to 100, 200 or even 300 "
+#~ "with powerful systems."
+#~ msgstr ""
+#~ "Η τιμή είναι αρκετά μικρή, μπορείτε να την αυξήσετε σε 100, 200 ή ακόμα "
+#~ "και 300 σε πιο δυνατά συστήματα."
+
+#~ msgid "Setting this parameter to \"none\" will hide the blacklist feature"
+#~ msgstr ""
+#~ "Ρυθμίζοντας αυτή τη παράμετρο σε \"καμία\" θα κρυφτεί η λειτουργικότητα "
+#~ "της μαύρης λίστας"
+
+#~ msgid ""
+#~ "If set, when a list editor report a spam, this external script is run by "
+#~ "wwsympa or sympa, the spam is sent into script stdin"
+#~ msgstr ""
+#~ "Εάν οριστεί, όταν ένας συντονιστής αναφέρει spam, θα τρέχει αυτό το "
+#~ "εξωτερικό πρόγραμμα από το sympa ή wwsympa, και το spam θα στέλνεται στο "
+#~ "stdin script"
+
+#~ msgid "Max. number of different domains per call to Sendmail"
+#~ msgstr "Μέγιστος αριθμός διαφορετικών τομέων ανά κλήση στο Sendmail"
+
+#, fuzzy
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr "Αριθμός μηνύματος"
+
+#~ msgid "Reject mail from automates (crontab, etc) sent to a list?"
+#~ msgstr ""
+#~ "Απόρριψη μηνυμάτων από αυτόματα (crontab,etc) που στέλνονται σε λίστα;"
+
+#~ msgid ""
+#~ "SMTP server to which Sympa verify if alias with the same name as the list "
+#~ "to be created"
+#~ msgstr ""
+#~ "Εξυπηρετητής SMTP με τον οποίο το Sympa θα ελέγχει εάν υπάρχει ίδιο alias "
+#~ "με τη λίστα που δημιουργείται"
+
+#~ msgid "SMTP HELO (EHLO) parameter used for alias verification"
+#~ msgstr "SMTP HELO (EHLO) παράμετρος για χρήση στον έλεγχο alias"
+
+#~ msgid "Default value is the host part of list_check_smtp parameter."
+#~ msgstr ""
+#~ "Προεπιλεγμένη τιμή είναι το κομμάτι host της τιμής της παραμέτρου "
+#~ "list_check_smtp."
+
+#~ msgid "Default priority for a packet to be sent by bulk."
+#~ msgstr "Προεπιλεγμένη προτεραιότητα πακέτου απεσταλμένου με bulk."
+
+#~ msgid ""
+#~ "Minimum number of packets in database before the bulk forks to increase "
+#~ "sending rate"
+#~ msgstr ""
+#~ "Ελάχιστος αριθμός πακέτων στη βάση δεδομένων πριν το bulk διαιρεθεί για "
+#~ "να αυξήσει τον ρυθμό αποστολής"
+
+#~ msgid ""
+#~ "The number of seconds a slave bulk will remain running without processing "
+#~ "a message before it spontaneously dies."
+#~ msgstr ""
+#~ "Αριθμός δευτερολέπτων που ένας slave bulk θα συνεχίσει να τρέχει χωρίς να "
+#~ "επεξεργάζεται μήνυμα πριν κλείσει."
+
+#~ msgid ""
+#~ "Keep it small if you expect brutal increases in the message sending load."
+#~ msgstr ""
+#~ "Κρατήστε το μικρό εάν περιμένετε απότομες αυξήσεις στον φόρτο αποστολής "
+#~ "μηνυμάτων."
+
+#~ msgid ""
+#~ "Default limit for the number of subscribers per list (0 means no limit)"
+#~ msgstr ""
+#~ "Προεπιλεγμένο όριο για τον αριθμό των συνδρομητών ανά λίστα (0 σημαίνει "
+#~ "χωρίς όριο)"
+
+#~ msgid "This is the default language used by Sympa"
+#~ msgstr "Αυτή είναι η προεπιλεγμένη γλώσσα που χρησιμοποιεί το Sympa"
+
+#~ msgid "If set to \"on\", enables support of legacy character set"
+#~ msgstr "Εάν είναι \"on\", ενεργοποιεί υποστήριξη για legacy γραμματοσειρές"
+
+#~ msgid "Task name for expiration of old bounces"
+#~ msgstr "Όνομα ενέργειας για λήξη παλιών bounces"
+
+#, fuzzy
+#~ msgid ""
+#~ "Max number of daemons processing incoming spool that will run on the same "
+#~ "server"
+#~ msgstr "Μέγιστος αριθμός bulk που θα τρέχουν στον ίδιο εξυπηρετητή"
+
+#~ msgid "This is useful for defining ORACLE_HOME "
+#~ msgstr "Χρήσιμο για τον ορισμό του ORACLE_HOME "
+
+#, fuzzy
+#~ msgid "Number of months that elapse before statistics are expired"
+#~ msgstr ""
+#~ "Αριθμός μηνών που πρέπει να περάσουν για να λήξει ένα αρχείο καταγραφής"
+
+#~ msgid ""
+#~ "Default timeout while performing a fetch for an include_sql_query sync"
+#~ msgstr ""
+#~ "Προεπιλεγμένος χρόνος λήξης λήψης δεδομένων από ένα συγχρονισμό "
+#~ "include_sql_query"
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "Αποστολή μηνυμάτων : %1"
+
+#~ msgid ""
+#~ "The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
+#~ msgstr ""
+#~ "Όπως ορίζεται στο rfc 4871, η προεπιλεγμένη τιμή της ετικέτας \"d=\" "
+#~ "είναι το όνομα του τομέα του εικονικού εξυπηρετητή"
+
+#~ msgid "The \"i=\" tag as defined in rfc 4871, default is null"
+#~ msgstr ""
+#~ "Όπως ορίζεται στο rfc 4871, η προεπιλεγμένη τιμή της ετικέτας \"i=\" "
+#~ "είναι το κενό"
+
+#, fuzzy
+#~ msgid ""
+#~ "supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
+#~ "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
+#~ msgstr ""
+#~ "υποστηριζόμενα antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP και "
+#~ "Trend Micro/VirusWall"
+
+#~ msgid "Antivirus plugin command argument"
+#~ msgstr "ορίσματα εντολής antivirus"
+
+#~ msgid ""
+#~ "If a spam filter (like spamassassin or j-chkmail) add a smtp headers to "
+#~ "tag spams, name of this header (example X-Spam-Status)"
+#~ msgstr ""
+#~ "Εάν ένα φίλτρο spam (όπως το spamassassin ή το j-chkmail) προσθέσει "
+#~ "κεφαλίδες smtp για να επισημάνει spam, το όνομα αυτής της ετικέτας "
+#~ "(παράδειγμα X-Spam-Status)"
+
+#~ msgid ""
+#~ "Regexp applied on this header to verify message is a spam (example Yes)"
+#~ msgstr ""
+#~ "Εφαρμογή αυτής της regexp στη κεφαλίδα για επιβεβαίωση ότι το μήνυμα "
+#~ "είναι spam (παράδειγμα Yes)"
+
+#~ msgid ""
+#~ "Regexp applied on this header to verify message is NOT a spam (example No)"
+#~ msgstr ""
+#~ "Εφαρμογή αυτής της regexp στη κεφαλίδα για επιβεβαίωση ότι το μήνυμα ΔΕΝ "
+#~ "είναι spam (παράδειγμα No)"
+
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an antispam that add one more "
+#~ "headers to messages. This parameter is used to select a special scenario "
+#~ "in order to decide the message spam status: ham, spam or unsure. This "
+#~ "parameter replace antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Τα μηνύματα υποτίθεται ότι φιλτράρονται από antispam που προσθέτουν μια ή "
+#~ "περισσότερες κεφαλίδες στα μηνύματα. Αυτή η παράμετρος χρησιμοποιείται "
+#~ "για την επιλογή ειδικού σεναρίου προκειμένου να αποφασιστεί η κατάσταση "
+#~ "spam του μηνύματος: ham, spam, ή unsure. Αυτή η παράμετρος αντικαθιστά τα "
+#~ "antispam_tag_header_name, antispam_tag_header_spam_regexp και "
+#~ "antispam_tag_header_ham_regexp."
+
+#~ msgid "Directory for storing HTML archives"
+#~ msgstr "Φάκελος αποθήκευσης αρχείου HTML"
+
+#~ msgid ""
+#~ "Activates a custom archiver to use instead of MHonArc. The value of this "
+#~ "parameter is the absolute path on the file system to the script of the "
+#~ "custom archiver."
+#~ msgstr ""
+#~ "Ενεργοποιεί ένα προσαρμοσμένο αρχειοθετητή για χρήση αντί του MHonArc. Η "
+#~ "τιμή αυτής της παραμέτρου είναι η απόλυτη διαδρομή στο εκτελέσιμο "
+#~ "πρόγραμμα αυτού του αρχειοθετητή."
+
+#~ msgid "Path to MHonArc mail2html plugin"
+#~ msgstr "Διαδρομή για το πρόσθετο MHonArc mail2html"
+
+#~ msgid "This is required for HTML mail archiving"
+#~ msgstr "Αυτό είναι απαραίτητο για HTML αρχειοθέτηση μηνυμάτων"
+
+#~ msgid "Title of main Web page"
+#~ msgstr "Τίτλος κεντρικής σελίδας Web"
+
+#, fuzzy
+#~ msgid ""
+#~ "URL path to the javascript file making the WYSIWYG HTML editor "
+#~ "available.  Relative path under <static_content_url> or absolute path"
+#~ msgstr ""
+#~ "Διαδρομή για το αρχείο javascript που κάνει τον επεξεργαστή WYSIWYG "
+#~ "διαθέσιμο"
+
+#~ msgid "This module provide much faster web interface"
+#~ msgstr "Αυτό το module προσφέρει πολύ γρηγορότερο web περιβάλλον"
+
+#~ msgid ""
+#~ "Default number of lines of the array displaying the log entries in the "
+#~ "logs page"
+#~ msgstr ""
+#~ "Προεπιλεγμένος αριθμός γραμμών του πίνακα που προβάλει εγγραφές των "
+#~ "αρχείων καταγραφής στην αντίστοιχη σελίδα"
+
+#~ msgid "Please fill in the form below and then click the validation button"
+#~ msgstr "Συμπληρώστε την παρακάτω φόρμα και πατήστε το κουμπί επιβεβαίωσης"
 
 #~ msgid ""
 #~ "This is the set of language that will be proposed to your users for the "

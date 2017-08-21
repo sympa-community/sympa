@@ -13219,11 +13219,17 @@ msgid ""
 "Please specify either an URL or a file to upload."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
 "upload."
+msgstr ""
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
@@ -14727,140 +14733,9 @@ msgid ""
 "find a message to send."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:51
-msgid "Local part of sympa email address"
-msgstr "Lokal del av Sympa e-postadress, listnamnet,"
-
-#: src/lib/Sympa/ConfDef.pm:64
-msgid "This parameter is used for display name in the \"From:\" header"
-msgstr "Denna parameter används för visningsnamn på \"Från:\"-headern"
-
-#: src/lib/Sympa/ConfDef.pm:82
-msgid "URL of main Web page"
-msgstr "URL för den huvudsakliga startsidan"
-
-#: src/lib/Sympa/ConfDef.pm:295
-msgid "URL mapped with the static_content_path directory defined above"
-msgstr "URL mappad med static_content_path katalog definierad ovan"
-
-#: src/lib/Sympa/ConfDef.pm:336
-msgid ""
-"Used to define a custom parameter for your server. Do not forget the "
-"semicolon between the param name and the param value."
-msgstr ""
-"Används för att egendefiniera en parameter för er server. Glöm inte att "
-"semikolon mellan parameternamn och parametervärde."
-
-#: src/lib/Sympa/ConfDef.pm:362
-msgid "Syslog facility for sympa"
-msgstr "Syslog-möjlighet för Sympa"
-
-#: src/lib/Sympa/ConfDef.pm:365
-msgid "Do not forget to edit syslog.conf"
-msgstr "Glöm inte att redigera syslog.conf"
-
-#: src/lib/Sympa/ConfDef.pm:376
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr "Kommunikationsläge med syslogd (unix | inet)"
-
-#: src/lib/Sympa/ConfDef.pm:442
-msgid ""
-"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
-"powerful systems."
-msgstr ""
-"Förslaget värde är ganska lågt, du kan öka till 100, 200 eller t.o.m. 300 "
-"med kraftfulla system"
-
-#: src/lib/Sympa/ConfDef.pm:487
-msgid "Setting this parameter to \"none\" will hide the blacklist feature"
-msgstr ""
-"Sätt denna parameter till \"none\" för att gömma svartlist-funktionaliteten"
-
-#: src/lib/Sympa/ConfDef.pm:492
-msgid ""
-"If set, when a list editor report a spam, this external script is run by "
-"wwsympa or sympa, the spam is sent into script stdin"
-msgstr ""
-"Detta externa skript körs av wwsympa eller sympa om denna är satt när en "
-"list-moderator rapporterar spammejl. Spammet skickas till skriptets stdin."
-
-#: src/lib/Sympa/ConfDef.pm:520
-msgid "Max. number of different domains per call to Sendmail"
-msgstr "Max. antal olika domäner per anrop till \"Sendmail\""
-
-#: src/lib/Sympa/ConfDef.pm:539
-msgid ""
-"Program used to update alias database.  \"makemap\", \"newaliases\", "
-"\"postalias\", \"postmap\" or full path to custom program"
-msgstr ""
-"Det program som används för att uppdatera alias-databasen. \"makemap\", "
-"\"newaliases\", \"postalias\", \"postmap\" eller fullständig sökväg till "
-"annat program."
-
-#: src/lib/Sympa/ConfDef.pm:545
-msgid ""
-"Type of alias database.  \"btree\", \"dbm\", \"hash\" and so on.  Available "
-"when aliases_program is \"makemap\", \"postalias\" or \"postmap\""
-msgstr ""
-"Vilken typ av alias-databas. \"btree\", \"dbm\", \"hash\" och så vidare. "
-"Tillgängligt när aliases_program är \"makemap\", \"postalias\" eller "
-"\"postmap\"."
-
-#: src/lib/Sympa/ConfDef.pm:555
-#, fuzzy
-msgid "Specify header fields to be removed before message distribution"
-msgstr "Inkluderings-tidsgräns uppnådd för meddelandedistribution"
-
-#: src/lib/Sympa/ConfDef.pm:565
-#, fuzzy
-msgid "Reject mail from automates (crontab, etc) sent to a list?"
-msgstr "Avslå automatiserad e-post (crontab, osv)?"
-
-#: src/lib/Sympa/ConfDef.pm:579
-msgid ""
-"SMTP server to which Sympa verify if alias with the same name as the list to "
-"be created"
-msgstr ""
-"SMTP server som Sympa meddelar att alias med samma namn som listan ska "
-"skapas."
-
-#: src/lib/Sympa/ConfDef.pm:591
-msgid "SMTP HELO (EHLO) parameter used for alias verification"
-msgstr "SMTP HELO (EHLO) parameter som används för alias-bekräftelse."
-
 #: src/lib/Sympa/ConfDef.pm:594
 msgid "Default value is the host part of list_check_smtp parameter."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:617
-msgid "Default priority for a packet to be sent by bulk."
-msgstr "Standardprioritet för ett paket skickat av bulk-processen."
-
-#: src/lib/Sympa/ConfDef.pm:625
-msgid ""
-"Minimum number of packets in database before the bulk forks to increase "
-"sending rate"
-msgstr ""
-"Minimum antal paket i databasen innan bulk-processen utökar sig själv för "
-"att öka utskickstempot."
-
-#: src/lib/Sympa/ConfDef.pm:639
-msgid ""
-"The number of seconds a slave bulk will remain running without processing a "
-"message before it spontaneously dies."
-msgstr ""
-"Antalet sekunder en slav-bulk-process lever utan att ha bearbetat ett "
-"meddelande."
-
-#: src/lib/Sympa/ConfDef.pm:657
-msgid ""
-"Keep it small if you expect brutal increases in the message sending load."
-msgstr "Håll det koncist om du förväntar stor plötsligt ökning av meddelanden."
-
-#: src/lib/Sympa/ConfDef.pm:666
-msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr ""
-"Standardgräns för antalet prenumeranter per lista (0 innebär gränslöst)"
 
 #: src/lib/Sympa/ConfDef.pm:762
 msgid ""
@@ -14967,17 +14842,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1085
 msgid "Number of months that elapse before statistics are expired"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1124
-#, fuzzy
-msgid "Default timeout while performing a fetch for an include_sql_query sync"
-msgstr "Hämtning av include_sql_query tog för lång tid"
-
-#: src/lib/Sympa/ConfDef.pm:1204
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "Lägg till DKIM-signatur för meddelanden skickade till listan"
 
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Location of the file where DKIM private key is stored"
@@ -15135,13 +14999,134 @@ msgstr ""
 msgid "Attempt to exceed the max number of members (%1) for this list"
 msgstr ""
 
-#: default/web_tt2/subrequest.tt2:10
-msgid "Please fill in the form below and then click the validation button"
-msgstr "Fyll i formuläret nedan och klicka på valideringsknappen"
-
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Lokal del av Sympa e-postadress, listnamnet,"
+
+#~ msgid "This parameter is used for display name in the \"From:\" header"
+#~ msgstr "Denna parameter används för visningsnamn på \"Från:\"-headern"
+
+#~ msgid "URL of main Web page"
+#~ msgstr "URL för den huvudsakliga startsidan"
+
+#~ msgid "URL mapped with the static_content_path directory defined above"
+#~ msgstr "URL mappad med static_content_path katalog definierad ovan"
+
+#~ msgid ""
+#~ "Used to define a custom parameter for your server. Do not forget the "
+#~ "semicolon between the param name and the param value."
+#~ msgstr ""
+#~ "Används för att egendefiniera en parameter för er server. Glöm inte att "
+#~ "semikolon mellan parameternamn och parametervärde."
+
+#~ msgid "Syslog facility for sympa"
+#~ msgstr "Syslog-möjlighet för Sympa"
+
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "Glöm inte att redigera syslog.conf"
+
+#~ msgid "Communication mode with syslogd (unix | inet)"
+#~ msgstr "Kommunikationsläge med syslogd (unix | inet)"
+
+#~ msgid ""
+#~ "Proposed value is quite low, you can rise it up to 100, 200 or even 300 "
+#~ "with powerful systems."
+#~ msgstr ""
+#~ "Förslaget värde är ganska lågt, du kan öka till 100, 200 eller t.o.m. 300 "
+#~ "med kraftfulla system"
+
+#~ msgid "Setting this parameter to \"none\" will hide the blacklist feature"
+#~ msgstr ""
+#~ "Sätt denna parameter till \"none\" för att gömma svartlist-"
+#~ "funktionaliteten"
+
+#~ msgid ""
+#~ "If set, when a list editor report a spam, this external script is run by "
+#~ "wwsympa or sympa, the spam is sent into script stdin"
+#~ msgstr ""
+#~ "Detta externa skript körs av wwsympa eller sympa om denna är satt när en "
+#~ "list-moderator rapporterar spammejl. Spammet skickas till skriptets stdin."
+
+#~ msgid "Max. number of different domains per call to Sendmail"
+#~ msgstr "Max. antal olika domäner per anrop till \"Sendmail\""
+
+#~ msgid ""
+#~ "Program used to update alias database.  \"makemap\", \"newaliases\", "
+#~ "\"postalias\", \"postmap\" or full path to custom program"
+#~ msgstr ""
+#~ "Det program som används för att uppdatera alias-databasen. \"makemap\", "
+#~ "\"newaliases\", \"postalias\", \"postmap\" eller fullständig sökväg till "
+#~ "annat program."
+
+#~ msgid ""
+#~ "Type of alias database.  \"btree\", \"dbm\", \"hash\" and so on.  "
+#~ "Available when aliases_program is \"makemap\", \"postalias\" or \"postmap"
+#~ "\""
+#~ msgstr ""
+#~ "Vilken typ av alias-databas. \"btree\", \"dbm\", \"hash\" och så vidare. "
+#~ "Tillgängligt när aliases_program är \"makemap\", \"postalias\" eller "
+#~ "\"postmap\"."
+
+#, fuzzy
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr "Inkluderings-tidsgräns uppnådd för meddelandedistribution"
+
+#, fuzzy
+#~ msgid "Reject mail from automates (crontab, etc) sent to a list?"
+#~ msgstr "Avslå automatiserad e-post (crontab, osv)?"
+
+#~ msgid ""
+#~ "SMTP server to which Sympa verify if alias with the same name as the list "
+#~ "to be created"
+#~ msgstr ""
+#~ "SMTP server som Sympa meddelar att alias med samma namn som listan ska "
+#~ "skapas."
+
+#~ msgid "SMTP HELO (EHLO) parameter used for alias verification"
+#~ msgstr "SMTP HELO (EHLO) parameter som används för alias-bekräftelse."
+
+#~ msgid "Default priority for a packet to be sent by bulk."
+#~ msgstr "Standardprioritet för ett paket skickat av bulk-processen."
+
+#~ msgid ""
+#~ "Minimum number of packets in database before the bulk forks to increase "
+#~ "sending rate"
+#~ msgstr ""
+#~ "Minimum antal paket i databasen innan bulk-processen utökar sig själv för "
+#~ "att öka utskickstempot."
+
+#~ msgid ""
+#~ "The number of seconds a slave bulk will remain running without processing "
+#~ "a message before it spontaneously dies."
+#~ msgstr ""
+#~ "Antalet sekunder en slav-bulk-process lever utan att ha bearbetat ett "
+#~ "meddelande."
+
+#~ msgid ""
+#~ "Keep it small if you expect brutal increases in the message sending load."
+#~ msgstr ""
+#~ "Håll det koncist om du förväntar stor plötsligt ökning av meddelanden."
+
+#~ msgid ""
+#~ "Default limit for the number of subscribers per list (0 means no limit)"
+#~ msgstr ""
+#~ "Standardgräns för antalet prenumeranter per lista (0 innebär gränslöst)"
+
+#, fuzzy
+#~ msgid ""
+#~ "Default timeout while performing a fetch for an include_sql_query sync"
+#~ msgstr "Hämtning av include_sql_query tog för lång tid"
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "Lägg till DKIM-signatur för meddelanden skickade till listan"
+
+#~ msgid "Please fill in the form below and then click the validation button"
+#~ msgstr "Fyll i formuläret nedan och klicka på valideringsknappen"
 
 #~ msgid ""
 #~ "This is the set of language that will be proposed to your users for the "

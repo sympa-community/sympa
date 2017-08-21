@@ -13597,7 +13597,7 @@ msgstr ""
 "Et määritellyt WWW-osoitetta, jota haluat käyttää uutiskirjeessäsi. Ole hyvä "
 "ja määrittele WWW-osoite tai lähtettävä tiedosto."
 
-#: default/mail_tt2/report.tt2:577 default/mail_tt2/report.tt2:580
+#: default/mail_tt2/report.tt2:577
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -13606,6 +13606,12 @@ msgstr ""
 "Määrittelit sekä WWW-osoitteen että lähetettävän tiedoston. Sympa ei voi "
 "valita kumpaa käytetään. Määrittele lomakkeelle vain toinen: WWW-osoite tai "
 "lähetettävä tiedosto."
+
+#: default/mail_tt2/report.tt2:580
+msgid ""
+"The page could not be parsed properly. Please check the content of web page "
+"or file you submitted."
+msgstr ""
 
 #. (report_param.argument)
 #: default/mail_tt2/report.tt2:583
@@ -15160,11 +15166,6 @@ msgstr ""
 msgid "Main robot hostname"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:51
-#, fuzzy
-msgid "Local part of sympa email address"
-msgstr "Ole hyvä ja anna sähköpostiosoite"
-
 #: src/lib/Sympa/ConfDef.pm:55
 msgid "Effective address will be [EMAIL]@[HOST]"
 msgstr ""
@@ -15186,11 +15187,6 @@ msgid ""
 "Sympa will associate listmaster privileges to these email addresses (mail "
 "and web interfaces). Some error reports may also be sent to these addresses."
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:82
-#, fuzzy
-msgid "URL of main Web page"
-msgstr "%1 hallintasivun osoite"
 
 #: src/lib/Sympa/ConfDef.pm:94
 msgid "This setting can be overridden by each list"
@@ -15239,11 +15235,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:362
 msgid "Syslog facility for sympa"
 msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:365
-#, fuzzy
-msgid "Do not forget to edit syslog.conf"
-msgstr "Virheellinen muoto tiedostossa edit_list.conf"
 
 #: src/lib/Sympa/ConfDef.pm:372
 msgid "0: normal, 2,3,4: for debug"
@@ -15332,12 +15323,6 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:549
 msgid "Specify which rfc2369 mailing list headers to add"
 msgstr ""
-
-# nlsref 15,4
-#: src/lib/Sympa/ConfDef.pm:555
-#, fuzzy
-msgid "Specify header fields to be removed before message distribution"
-msgstr "Viestin jakelu"
 
 #: src/lib/Sympa/ConfDef.pm:565
 msgid "Reject mail from automates (crontab, etc) sent to a list?"
@@ -15519,12 +15504,6 @@ msgstr ""
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1204
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "Lähetetään viestiä listalle"
-
 #: src/lib/Sympa/ConfDef.pm:1219
 msgid "Location of the file where DKIM private key is stored"
 msgstr ""
@@ -15675,13 +15654,34 @@ msgstr ""
 msgid "Attempt to exceed the max number of members (%1) for this list"
 msgstr ""
 
-#: default/web_tt2/subrequest.tt2:10
-msgid "Please fill in the form below and then click the validation button"
-msgstr "Täytä allaoleva lomake ja klikkaa tarkistuspainiketta"
-
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Ole hyvä ja anna sähköpostiosoite"
+
+#, fuzzy
+#~ msgid "URL of main Web page"
+#~ msgstr "%1 hallintasivun osoite"
+
+#, fuzzy
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "Virheellinen muoto tiedostossa edit_list.conf"
+
+# nlsref 15,4
+#, fuzzy
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr "Viestin jakelu"
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "Lähetetään viestiä listalle"
+
+#~ msgid "Please fill in the form below and then click the validation button"
+#~ msgstr "Täytä allaoleva lomake ja klikkaa tarkistuspainiketta"
 
 #, fuzzy
 #~ msgid "System related"
