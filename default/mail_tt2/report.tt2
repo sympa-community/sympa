@@ -577,7 +577,7 @@ Warning: this message may already have been sent by one of the list's editor.[%E
   [%|loc()%]You specified both an URL and a file to upload. Sympa can't choose which one to send. Please fill the form with one of them only. A web page OR a file to upload.[%END%]
 
 [%~ ELSIF report_entry == 'unable_to_parse' ~%]
-  [%|loc()%]You specified both an URL and a file to upload. Sympa can't choose which one to send. Please fill the form with one of them only. A web page OR a file to upload.[%END%]
+  [%|loc()%]The page could not be parsed properly. Please check the content of web page or file you submitted.[%END%]
 
 [%~ ELSIF report_entry == 'wrong_value' ~%]
   [%|loc(report_param.argument)%]Wrong value for parameter %1[%END%]
