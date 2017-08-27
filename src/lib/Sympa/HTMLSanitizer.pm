@@ -48,8 +48,8 @@ sub new {
             EscapeFiltered  => 0,
         }
     );
-    $self->{_shsURLPrefix} =
-        URI->new(Sympa::get_url($robot_id))->canonical->as_string;
+    $self->{_shsAllowedOrigin} =
+        URI->new(Sympa::get_url($robot_id))->canonical->authority;
 
     return $self;
 }
@@ -59,18 +59,19 @@ sub validate_src_attribute {
     my $self = shift;
     my $text = shift;
 
-    # Allow only cid URLs and local links in src attribute.
-    $text = URI->new($text)->canonical->as_string;
-    return $text if 0 == index $text, 'cid:';
-    if (my $url_prefix = $self->{_shsURLPrefix}) {
-        return $text
-            if $text eq $url_prefix
-            or 0 == index($text, $url_prefix . '/')
-            or 0 == index($text, $url_prefix . '?')
-            or 0 == index($text, $url_prefix . '#');
-    }
+    my $uri = URI->new($text)->canonical;
+    # Allow only cid URLs, local URLs and links with the same origin, i.e.
+    # URLs with the same host etc.
+    return $text if $uri->scheme and $uri->scheme eq 'cid';
+    return $text unless $uri->authority;
+    return $text if $uri->authority eq $self->{_shsAllowedOrigin};
 
     return undef;
+}
+
+# Overridden method.
+sub validate_href_attribute {
+    goto &validate_src_attribute;    # "&" required.
 }
 
 # This method is specific to this subclass.
