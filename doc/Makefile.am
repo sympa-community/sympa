@@ -38,35 +38,45 @@ nobase_doc_DATA = \
 man1_MANS = \
 	sympa_toc.1
 man5_MANS = \
+	auth.conf.5 \
+	automatic_lists_description.conf.5 \
 	charset.conf.5 \
+	crawlers_detection.conf.5 \
+	edit_list.conf.5 \
+	ldap_alias_manager.conf.5 \
 	list_config.5 \
+	nrcpt_by_domain.conf.5 \
 	sympa.conf.5 \
-	sympa_database.5
+	sympa_database.5 \
+	sympa.wsdl.5 \
+	topics.conf.5 \
+	trusted_applications.conf.5
 
 EXTRA_DIST = $(nobase_doc_DATA) \
-	charset.conf.podin \
+	auth.conf.pod \
+	automatic_lists_description.conf.pod \
+	charset.conf.pod \
+	crawlers_detection.conf.pod \
+	edit_list.conf.pod \
+	ldap_alias_manager.conf.pod \
 	list_config.podpl \
+	nrcpt_by_domain.conf.pod \
 	sympa.conf.podpl \
 	sympa_database.podpl \
-	sympa_toc.pod
+	sympa_toc.pod \
+	sympa.wsdl.pod \
+	topics.conf.pod \
+	trusted_applications.conf.pod
 
 CLEANFILES = $(man1_MANS) $(man5_MANS)
 
 .pod.1:
 	$(AM_V_GEN)$(POD2MAN) --section=1 --center="sympa $(VERSION)" \
 		--lax --release="$(VERSION)" $*.pod $@
-
-.podin.5:
-	$(AM_V_GEN)rm -f $*.pod
-	@$(SED) \
-		-e 's|--defaultdir--|$(defaultdir)|' \
-		-e 's|--sysconfdir--|$(sysconfdir)|' \
-		-e 's|--CONFIG--|$(CONFIG)|' \
-		< $(srcdir)/$< > $*.pod
-	@rm -f $@
-	@$(POD2MAN) --section=5 --center="sympa $(VERSION)" \
+.pod.5:
+	$(AM_V_GEN)$(POD2MAN) --section=5 --center="sympa $(VERSION)" \
 		--lax --release="$(VERSION)" $*.pod $@
-	@rm -f $*.pod
+
 .podpl.5:
 	$(AM_V_GEN)rm -f $*.pod
 	@PERL5LIB=$(top_srcdir)/src/lib; export PERL5LIB; \

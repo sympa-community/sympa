@@ -33,7 +33,6 @@ nobase_default_DATA = \
 	create_list.conf \
 	edit_list.conf \
 	ldap_alias_entry.tt2 \
-	ldap_alias_manager.conf \
 	mhonarc-ressources.tt2 \
 	mime.types \
 	nrcpt_by_domain.conf \
