@@ -43,6 +43,9 @@ sub new {
     my $self = $class->SUPER::new(
         {   Context  => 'Document',
             AllowSrc => 1,
+            AllowHref       => 1,
+            AllowRelURL     => 1,
+            EscapeFiltered  => 0,
         }
     );
     $self->{_shsURLPrefix} =
