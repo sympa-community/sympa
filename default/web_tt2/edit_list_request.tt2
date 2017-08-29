@@ -229,13 +229,31 @@
 
 [% IF path_info.match('/data_source$') ~%]
 <style>
-.radiobox {
+.radiobox > input[type=radio] {
+  display: none;
+}
+
+.radiobox > input[type=radio] + label {
+  text-transform: uppercase;
+  margin: 4px;
+  font-size: 14px;
+  display: block;
+  background: #fff;
+  color: rgba(0, 0, 0, .5);
+  border-radius: 2px;
+  padding: 8px;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.radiobox > input[type=radio]:checked + label {
   background: #004b94;
   color: #fff;
 }
 
-.radiobox > input[type=radio] {
-  display: none;
+.radiobox > input[type=radio]:disabled + label {
+  opacity: .4;
 }
 
 .caps {
@@ -586,9 +604,15 @@ Vue.component('sympa-datasources', {
       <div v-if="page === 'new'">
         <h1>{{ strings.settings.add }}</h1>
         <h2>{{ strings.settings.ds_destination }}</h2>
-        <label v-for="(name, value) in strings.categories" class="radiobox"><input type="radio" v-model="new_source.for" :value="value"> {{ name }}</label>
+        <div v-for="(name, value) in strings.categories" class="radiobox">
+          <input type="radio" :id="'radiobox-dest-' + value" v-model="new_source.for" :value="value">
+          <label :for="'radiobox-dest-' +value">{{ name }}</label>
+        </div>
         <h2>{{ strings.settings.ds_type }}</h2>
-        <label v-for="(name, value) in strings.sources" class="radiobox"><input type="radio" v-model="new_source.type" :value="value"> {{ name }}</label>
+        <div v-for="(name, value) in strings.sources" class="radiobox">
+          <input type="radio" :id="'radiobox-type-' + value" v-model="new_source.type" :value="value">
+          <label :for="'radiobox-type-' + value">{{ name }}</label>
+        </div>
         <button @click="changePage('new/next')">{{ strings.settings.next }}</button>
       </div>
 
