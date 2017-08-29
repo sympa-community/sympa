@@ -39,11 +39,13 @@ man1_MANS = \
 	sympa_toc.1
 man5_MANS = \
 	charset.conf.5 \
+	list_config.5 \
 	sympa.conf.5 \
 	sympa_database.5
 
 EXTRA_DIST = $(nobase_doc_DATA) \
 	charset.conf.podin \
+	list_config.podpl \
 	sympa.conf.podpl \
 	sympa_database.podpl \
 	sympa_toc.pod
