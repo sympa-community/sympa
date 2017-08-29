@@ -95,7 +95,7 @@ sub validate_src_attribute {
     # Allow only cid URLs, local URLs and links with the same origin, i.e.
     # URLs with the same host etc.
     return $text if $uri->scheme and $uri->scheme eq 'cid';
-    return $text unless $uri->authority;
+    return $text unless $uri->can('authority') and $uri->authority;
     return $text if $uri->authority =~ $self->{_shsAllowedOriginRe};
 
     return undef;
