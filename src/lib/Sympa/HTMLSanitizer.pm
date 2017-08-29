@@ -32,6 +32,7 @@ use Scalar::Util qw();
 use URI;
 
 use Sympa;
+use Conf;
 use Sympa::Tools::Text;
 
 # Returns a specialized HTML::StripScripts::Parser object built with the
@@ -48,8 +49,39 @@ sub new {
             EscapeFiltered  => 0,
         }
     );
-    $self->{_shsURLPrefix} =
-        URI->new(Sympa::get_url($robot_id))->canonical->as_string;
+
+    my @allowed_origins = (
+        Sympa::get_url($robot_id),
+        split /\s*,\s*/,
+        (Conf::get_robot_conf($robot_id, 'allowed_external_origin') || '')
+    );
+    $self->{_shsAllowedOriginRe} = '\A(?:' . join(
+        '|',
+        map {
+            my $uri;
+            unless (defined $_ and length $_) {
+                ;
+            } elsif (m{\A[-+\w]+:}) {
+                $uri = URI->new($_)->canonical;
+            } elsif ($_ =~ m{\A//}) {
+                $uri = URI->new('http:' . $_)->canonical;
+            } else {
+                $uri = URI->new('http://' . $_)->canonical;
+            }
+
+            if ($uri
+                and ($uri->scheme eq 'http' or $uri->scheme eq 'https')) {
+                my $regexp = $uri->authority;
+                # Escape metacharacters except wildcard '*'.
+                $regexp =~
+                    s/([^\s\w\x80-\xFF])/($1 eq '*') ? '.*' : "\\$1"/eg;
+
+                ($regexp);
+            } else {
+                ();
+            }
+            } @allowed_origins
+    ) . ')\z';
 
     return $self;
 }
@@ -59,18 +91,19 @@ sub validate_src_attribute {
     my $self = shift;
     my $text = shift;
 
-    # Allow only cid URLs and local links in src attribute.
-    $text = URI->new($text)->canonical->as_string;
-    return $text if 0 == index $text, 'cid:';
-    if (my $url_prefix = $self->{_shsURLPrefix}) {
-        return $text
-            if $text eq $url_prefix
-            or 0 == index($text, $url_prefix . '/')
-            or 0 == index($text, $url_prefix . '?')
-            or 0 == index($text, $url_prefix . '#');
-    }
+    my $uri = URI->new($text)->canonical;
+    # Allow only cid URLs, local URLs and links with the same origin, i.e.
+    # URLs with the same host etc.
+    return $text if $uri->scheme and $uri->scheme eq 'cid';
+    return $text unless $uri->can('authority') and $uri->authority;
+    return $text if $uri->authority =~ $self->{_shsAllowedOriginRe};
 
     return undef;
+}
+
+# Overridden method.
+sub validate_href_attribute {
+    goto &validate_src_attribute;    # "&" required.
 }
 
 # This method is specific to this subclass.

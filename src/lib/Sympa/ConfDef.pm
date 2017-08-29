@@ -411,6 +411,15 @@ our @params = (
         'default'      => 10240,     ## 10 kiB,
         'vhost'        => '1',
     },
+    {   'name'       => 'allowed_external_origin',
+        'gettext_id' => 'Allowed external links in sanitized HTML',
+        'gettext_comment' =>
+            'When the HTML content of a message must be sanitized, links ("href" or "src" attributes) with the hosts listed in this parameter will not be scrubbed. If "*" character is included, it matches any subdomains. Single "*" allows any hosts.',
+        'split_char' => ',',
+        'optional'   => '1',
+        'sample'     => '*.example.org,www.example.com',
+        'vhost'      => '1',
+    },
 
     {   'name'       => 'sympa_packet_priority',
         'gettext_id' => 'Default priority for a packet',
