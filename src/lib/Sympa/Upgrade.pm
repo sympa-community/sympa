@@ -1368,11 +1368,17 @@ sub upgrade {
                 next;
             }
 
-            my $spool_digest = Sympa::Spool::Digest->new(%$metadata);
-            next unless $spool_digest;
-
             rename $Conf::Conf{'queuedigest'} . '/' . $filename,
                 $Conf::Conf{'queuedigest'} . '/' . $filename . '_migrated';
+
+            my $spool_digest = Sympa::Spool::Digest->new(%$metadata);
+            unless ($spool_digest) {
+                rename $Conf::Conf{'queuedigest'} . '/'
+                    . $filename
+                    . '_migrated',
+                    $Conf::Conf{'queuedigest'} . '/' . $filename;
+                next;
+            }
 
             local $RS = "\n\n" . $digest_separator . "\n\n";
             open my $fh, '<',
