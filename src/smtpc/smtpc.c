@@ -226,7 +226,7 @@ static int parse_options(int *argcptr, char ***argvptr)
 			return -1;
 		    }
 
-		    if (*p == ':' && ++p != '\0')
+		    if (*p == ':' && *(++p) != '\0')
 			options.servname = p;
 		    else if (*p != '\0') {
 			fprintf(stderr, "Malformed port \"%s\"\n", p);
@@ -269,7 +269,7 @@ static int parse_options(int *argcptr, char ***argvptr)
 			return -1;
 		    }
 
-		    if (*p == ':' && ++p != '\0')
+		    if (*p == ':' && *(++p) != '\0')
 			options.servname = p;
 		    else if (*p != '\0') {
 			fprintf(stderr, "Malformed port \"%s\"\n", p);
