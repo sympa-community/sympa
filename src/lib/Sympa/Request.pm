@@ -43,7 +43,7 @@ my %attrmap = (
     gecos  => 'X-Sympa-Display-Name',
     sender => 'X-Sympa-Sender',
 );
-my @optattrs = qw(arc reception visibility);
+my @optattrs = qw(arc current_email reception visibility);
 
 sub new {
     my $class = shift;

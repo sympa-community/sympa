@@ -119,7 +119,8 @@ sub _twist {
         $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);    # Overwrite.
         $request->{notify} = ($action =~ /,\s*notify\b/i);
         return ['Sympa::Spindle::DispatchRequest'];
-    } elsif ($action =~ /\Arequest_auth\b(?:\s*[[]\s*(\S+)\s*[]])?/i) {
+    } elsif (
+        $action =~ /\Arequest_auth\b(?:\s*[(]\s*[[]\s*(\S+)\s*[]]\s*[)])?/i) {
         my $to = $1;
         if ($to and $to eq 'email') {
             $request->{sender_to_confirm} = $request->{email};
