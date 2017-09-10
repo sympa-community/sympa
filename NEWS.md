@@ -1,5 +1,29 @@
 # Change Log
 
+## [6.2.19b.2](https://github.com/sympa-community/sympa/tree/6.2.19b.2) (2017-09-10)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.19b.1...6.2.19b.2)
+
+**Implemented enhancements:**
+
+- Additional bug fixes and enhancements for PR \#45 [\#48](https://github.com/sympa-community/sympa/pull/48) ([ikedas](https://github.com/ikedas))
+- Activating options in XSS Parser [\#45](https://github.com/sympa-community/sympa/pull/45) ([almarin](https://github.com/almarin))
+
+**Fixed bugs:**
+
+- smtpc build warnings [\#50](https://github.com/sympa-community/sympa/issues/50)
+- Additional bug fixes and enhancements for PR \\#45 [\#48](https://github.com/sympa-community/sympa/pull/48) ([ikedas](https://github.com/ikedas))
+- \[bug\] Upgrading from Sympa prior to 6.2b.5, digest spool could not be upgraded \[[8c2b5dd](https://github.com/sympa-community/sympa/commit/8c2b5ddd21b87096ef77fab64cbbe4e028a41eb2)\]
+
+**Closed issues:**
+
+- Language change won't affect, 6.2.18 [\#46](https://github.com/sympa-community/sympa/issues/46)
+- SMIME digital signatures in HTML formatted emails show tampering [\#16](https://github.com/sympa-community/sympa/issues/16)
+
+**Merged pull requests:**
+
+- Issue \#25: move\_user function was broken [\#55](https://github.com/sympa-community/sympa/pull/55) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.19b.1](https://github.com/sympa-community/sympa/tree/6.2.19b.1)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.18...6.2.19b.1)
