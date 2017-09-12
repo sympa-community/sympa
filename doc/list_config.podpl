@@ -191,8 +191,14 @@ sub _format {
         $parameters .= "=back\n\n";
     } elsif (exists $pinfo->{gettext_unit}) {
         $parameters .= sprintf "Number of %s.\n\n", $pinfo->{gettext_unit};
-    } elsif (exists $pinfo->{format}) {
-        $parameters .= sprintf "C<%s>\n\n", _escape_pod($pinfo->{format});
+    } elsif (exists $pinfo->{format_s} or exists $pinfo->{format}) {
+        my $format =
+              (exists $pinfo->{format_s})
+            ? $pinfo->{format_s}
+            : $pinfo->{format};
+        $format =~ s/\A\(\?\^:(.*)\)\z/$1/
+	    or $format =~ s/\A\(\?-xism:(.*)\)\z/$1/;
+        $parameters .= sprintf "/C<%s>/\n\n", _escape_pod($format);
     }
 }
 

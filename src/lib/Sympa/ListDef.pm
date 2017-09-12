@@ -83,7 +83,7 @@ our %pinfo = (
             'email' => {
                 'order'      => 1,
                 'gettext_id' => "email address",
-                'format'     => Sympa::Regexps::email(),
+                format_s     => '$email',
                 'occurrence' => '1',
                 'length'     => 30,
                 filters      => ['canonic_email'],
@@ -179,12 +179,11 @@ our %pinfo = (
             'email' => {
                 'order'      => 1,
                 'gettext_id' => "email address",
-                'format'     => Sympa::Regexps::email(),
+                format_s     => '$email',
                 'occurrence' => '1',
                 'length'     => 30,
                 filters      => ['canonic_email'],
-                validations =>
-                    [qw(list_editor_address unique_paragraph_key)],
+                validations => [qw(list_editor_address unique_paragraph_key)],
             },
             'reception' => {
                 'order'      => 4,
@@ -270,7 +269,7 @@ our %pinfo = (
         'gettext_id' => "Internet domain",
         'gettext_comment' =>
             'Domain name of the list, default is the robot domain name set in the related robot.conf file or in file sympa.conf.',
-        'format'     => Sympa::Regexps::host(),
+        format_s  => '$host',
         filters      => ['canonic_domain'],
         'default'    => {'conf' => 'host'},
         'length'     => 20
@@ -294,7 +293,7 @@ our %pinfo = (
         order        => 10.10,
         'group'      => 'description',
         'gettext_id' => 'Family name',
-        'format'     => Sympa::Regexps::family_name(),
+        format_s     => '$family_name',
         'occurrence' => '0-1',
         'internal'   => 1
     },
@@ -411,7 +410,8 @@ our %pinfo = (
         order        => 20.06,
         'group'      => 'sending',
         'gettext_id' => "Subscription profile",
-        'gettext_comment' => 'Default profile for the subscribers of the list.',
+        'gettext_comment' =>
+            'Default profile for the subscribers of the list.',
         'format'     => {
             'reception' => {
                 'order'      => 1,
@@ -533,7 +533,7 @@ our %pinfo = (
                 'gettext_id' => "other email address",
                 'gettext_comment' =>
                     'If value was set to other_email, this parameter defines the e-mail address used.',
-                'format'     => Sympa::Regexps::email()
+                format_s => '$email',
             },
             'apply' => {
                 'order'      => 3,
@@ -592,8 +592,7 @@ our %pinfo = (
         order          => 20.15,
         'group'        => 'sending',
         'gettext_id'   => "Maximum message size",
-        'gettext_comment' =>
-            'Maximum size of a message in 8-bit bytes.',
+        'gettext_comment' => 'Maximum size of a message in 8-bit bytes.',
         'gettext_unit' => 'bytes',
         'format'       => '\d+',
         'length'       => 8,
@@ -1131,9 +1130,7 @@ our %pinfo = (
     'include_list' => {
         'group'      => 'data_source',
         'gettext_id' => "List inclusion",
-        'format'     => Sympa::Regexps::listname() . '(\@'
-            . Sympa::Regexps::host()
-            . ')?(\s+filter\s+.+)?',
+        format_s     => '$listname(\@$host)?(\s+filter\s+.+)?',
         'occurrence' => '0-n',
         'obsolete'   => 1,       # 2.2.6 - 6.2.15.
     },
@@ -1154,8 +1151,7 @@ our %pinfo = (
             'listname' => {
                 'order'      => 2,
                 'gettext_id' => "list name to include",
-                'format'     => Sympa::Regexps::listname() . '(\@'
-                    . Sympa::Regexps::host() . ')?',
+                format_s     => '$listname(\@$host)?',
                 'occurrence' => '1'
             },
             'filter' => {
@@ -1183,7 +1179,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 1.5,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::host(),
+                format_s     => '$host',
                 'occurrence' => '1'
             },
             'port' => {
@@ -1248,7 +1244,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_or_url(),
+                format_s     => '$multiple_host_or_url',
                 'occurrence' => '1'
             },
             'port' => {
@@ -1337,9 +1333,7 @@ our %pinfo = (
             'attrs' => {
                 'order'      => 8,
                 'gettext_id' => "extracted attribute",
-                'format'     => Sympa::Regexps::ldap_attrdesc()
-                    . '(\s*,\s*'
-                    . Sympa::Regexps::ldap_attrdesc() . ')?',
+                format_s     => '$ldap_attrdesc(\s*,\s*$ldap_attrdesc)?',
                 'default'    => 'mail',
                 'length'     => 50
             },
@@ -1353,7 +1347,7 @@ our %pinfo = (
             'nosync_time_ranges' => {
                 'order'      => 10,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -1376,7 +1370,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_or_url(),
+                format_s     => '$multiple_host_or_url',
                 'occurrence' => '1'
             },
             'port' => {
@@ -1464,7 +1458,7 @@ our %pinfo = (
             'attrs1' => {
                 'order'      => 8,
                 'gettext_id' => "first-level extracted attribute",
-                'format'     => Sympa::Regexps::ldap_attrdesc(),
+                format_s     => '$ldap_attrdesc',
                 'length'     => 15
             },
             'select1' => {
@@ -1511,9 +1505,7 @@ our %pinfo = (
             'attrs2' => {
                 'order'      => 15,
                 'gettext_id' => "second-level extracted attribute",
-                'format'     => Sympa::Regexps::ldap_attrdesc()
-                    . '(\s*,\s*'
-                    . Sympa::Regexps::ldap_attrdesc() . ')?',
+                format_s     => '$ldap_attrdesc(\s*,\s*$ldap_attrdesc)?',
                 'default'    => 'mail',
                 'length'     => 50
             },
@@ -1534,7 +1526,7 @@ our %pinfo = (
             'nosync_time_ranges' => {
                 'order'      => 18,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -1563,7 +1555,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::host(),
+                format_s     => '$host',
                 # Not required for ODBC
                 # 'occurrence' => '1'
             },
@@ -1604,7 +1596,7 @@ our %pinfo = (
             'sql_query' => {
                 'order'      => 8,
                 'gettext_id' => "SQL query",
-                'format'     => Sympa::Regexps::sql_query(),
+                format_s     => '$sql_query',
                 'occurrence' => '1',
                 'length'     => 50
             },
@@ -1617,7 +1609,7 @@ our %pinfo = (
             'nosync_time_ranges' => {
                 'order'      => 10,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -1692,7 +1684,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_or_url(),
+                format_s     => '$multiple_host_or_url',
                 'occurrence' => '1'
             },
             'port' => {
@@ -1781,7 +1773,7 @@ our %pinfo = (
             'attrs' => {
                 'order'      => 8,
                 'gettext_id' => "extracted attribute",
-                'format'     => Sympa::Regexps::ldap_attrdesc(),
+                format_s     => '$ldap_attrdesc',
                 'default'    => 'mail',
                 'length'     => 15
             },
@@ -1801,7 +1793,7 @@ our %pinfo = (
             'nosync_time_ranges' => {
                 'order'      => 11,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -1822,7 +1814,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 1,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_or_url(),
+                format_s     => '$multiple_host_or_url',
                 'occurrence' => '1'
             },
             'port' => {
@@ -1911,7 +1903,7 @@ our %pinfo = (
             'attrs1' => {
                 'order'      => 8,
                 'gettext_id' => "first-level extracted attribute",
-                'format'     => Sympa::Regexps::ldap_attrdesc(),
+                format_s     => '$ldap_attrdesc',
                 'length'     => 15
             },
             'select1' => {
@@ -1958,7 +1950,7 @@ our %pinfo = (
             'attrs2' => {
                 'order'      => 15,
                 'gettext_id' => "second-level extracted attribute",
-                'format'     => Sympa::Regexps::ldap_attrdesc(),
+                format_s     => '$ldap_attrdesc',
                 'default'    => 'mail',
                 'length'     => 15
             },
@@ -1985,7 +1977,7 @@ our %pinfo = (
             'nosync_time_ranges' => {
                 'order'      => 19,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -2012,7 +2004,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::host(),
+                format_s     => '$host',
                 'occurrence' => '1'
             },
             'db_port' => {
@@ -2052,7 +2044,7 @@ our %pinfo = (
             'sql_query' => {
                 'order'      => 8,
                 'gettext_id' => "SQL query",
-                'format'     => Sympa::Regexps::sql_query(),
+                format_s     => '$sql_query',
                 'occurrence' => '1',
                 'length'     => 50
             },
@@ -2071,7 +2063,7 @@ our %pinfo = (
             'nosync_time_ranges' => {
                 'order'      => 11,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -2303,7 +2295,7 @@ our %pinfo = (
             'email' => {
                 'order'      => 1,
                 'gettext_id' => 'who ran the instantiation',
-                'format'     => 'listmaster|' . Sympa::Regexps::email(),
+                format_s     => 'listmaster|$email',
                 'occurrence' => '0-1'
             },
             'date' => {
@@ -2387,7 +2379,7 @@ our %pinfo = (
             'email' => {
                 'order'      => 1,
                 'gettext_id' => "who created the list",
-                'format'     => 'listmaster|' . Sympa::Regexps::email(),
+                format_s     => 'listmaster|$email',
                 'occurrence' => '1'
             }
         },
@@ -2403,8 +2395,7 @@ our %pinfo = (
             'email' => {
                 'order'      => 1,
                 'gettext_id' => 'who updated the config',
-                'format'     => '(listmaster|automatic|'
-                    . Sympa::Regexps::email() . ')',
+                format_s     => '(listmaster|automatic|$email)',
                 'occurrence' => '0-1',
                 'length'     => 30
             },
@@ -2518,19 +2509,23 @@ sub cleanup {
         }
     }
 
-    ## Scenario format
-    if ($v->{'scenario'}) {
+    if (exists $v->{format_s}) {
+        my $format = $v->{format_s};
+        if ($format =~ /\A\$(\w+)\z/) {
+            $format = Sympa::Regexps->can($1)->();
+        } else {
+            $format =~ s/\$(\w+)/Sympa::Regexps->can($1)->()/eg;
+        }
+        $v->{format} = $format;
+    } elsif ($v->{'scenario'}) {
+        # Scenario format
         $v->{'format'}  = Sympa::Regexps::scenario();
         $v->{'default'} = 'default';
-    }
-
-    ## Task format
-    if ($v->{'task'}) {
+    } elsif ($v->{'task'}) {
+        # Task format
         $v->{'format'} = Sympa::Regexps::task();
-    }
-
-    ## Datasource format
-    if ($v->{'datasource'}) {
+    } elsif ($v->{'datasource'}) {
+        # Datasource format
         $v->{'format'} = Sympa::Regexps::datasource();
     }
 
@@ -2562,25 +2557,28 @@ sub cleanup {
             }
         }
 
-        ## Scenario format
-        if (ref($v->{'format'}{$k})
-            && $v->{'format'}{$k}{'scenario'}) {
-            $v->{'format'}{$k}{'format'}  = Sympa::Regexps::scenario();
-            $v->{'format'}{$k}{'default'} = 'default'
-                unless ($p eq 'web_archive' and $k eq 'access')
-                or ($p eq 'archive' and $k eq 'web_access');
-        }
-
-        ## Task format
-        if (ref($v->{'format'}{$k})
-            && $v->{'format'}{$k}{'task'}) {
-            $v->{'format'}{$k}{'format'} = Sympa::Regexps::task();
-        }
-
-        ## Datasource format
-        if (ref($v->{'format'}{$k})
-            && $v->{'format'}{$k}{'datasource'}) {
-            $v->{'format'}{$k}{'format'} = Sympa::Regexps::datasource();
+        if (ref $v->{'format'}{$k}) {
+            if (exists $v->{'format'}{$k}{format_s}) {
+                my $format = $v->{'format'}{$k}{format_s};
+                if ($format =~ /\A\$(\w+)\z/) {
+                    $format = Sympa::Regexps->can($1)->();
+                } else {
+                    $format =~ s/\$(\w+)/Sympa::Regexps->can($1)->()/eg;
+                }
+                $v->{'format'}{$k}{format} = $format;
+            } elsif ($v->{'format'}{$k}{'scenario'}) {
+                # Scenario format
+                $v->{'format'}{$k}{'format'}  = Sympa::Regexps::scenario();
+                $v->{'format'}{$k}{'default'} = 'default'
+                    unless ($p eq 'web_archive' and $k eq 'access')
+                    or ($p eq 'archive' and $k eq 'web_access');
+            } elsif ($v->{'format'}{$k}{'task'}) {
+                # Task format
+                $v->{'format'}{$k}{'format'} = Sympa::Regexps::task();
+            } elsif ($v->{'format'}{$k}{'datasource'}) {
+                # Datasource format
+                $v->{'format'}{$k}{'format'} = Sympa::Regexps::datasource();
+            }
         }
 
         ## Enumeration
@@ -2645,14 +2643,23 @@ List parameters format accepts the following keywords :
 
 =item format
 
-Regexp aplied to the configuration file entry;
-some common regexps are defined in L<Sympa::Regexps>.
+Regexp applied to the configuration file entry.
 Or arrayref containing all possible values of parameter.
 
-If the parameter is paragraph, value of this item is a hashref containing
+Or, if the parameter is paragraph, value of this item is a hashref containing
 definitions of sub-parameters.
 
 See also L<Sympa::List::Config/"Node types">.
+
+=item format_s
+
+Template of regexp applied to the configuration file entry;
+see also L</format>.
+
+Subpatterns C<$word> indicate the name of pattern defined in
+L<Sympa::Regexps>.
+
+This was introduced on Sympa 6.2.19b.2.
 
 =item file_format
 
