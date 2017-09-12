@@ -1199,8 +1199,8 @@ our @params = (
     {   'name'       => 'stats_expiration_period',
         'gettext_id' => 'Max age of statistics information in database',
         'gettext_comment' =>
-            'Number of days that elapse before statistics information are expired',
-        'gettext_unit' => 'days',
+            'Number of months that elapse before statistics information are expired',
+        'gettext_unit' => 'months',
         'default'      => '3',
     },
 
