@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Sympa-6.1.20+, 6.2.16+\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2017-09-08 07:03+0000\n"
+"PO-Revision-Date: 2017-09-11 09:26+0000\n"
 "Last-Translator: IKEDA Soji <ikeda@conversion.co.jp>\n"
 "Language-Team: 日本語\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1504854186.000000\n"
+"X-POOTLE-MTIME: 1505121973.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -25,10 +25,10 @@ msgstr ""
 #: src/cgi/wwsympa.fcgi.in:10072 src/cgi/wwsympa.fcgi.in:10075
 #: src/cgi/wwsympa.fcgi.in:10108 src/cgi/wwsympa.fcgi.in:10110
 #: src/cgi/wwsympa.fcgi.in:10397 src/cgi/wwsympa.fcgi.in:10400
-#: src/cgi/wwsympa.fcgi.in:14434 src/cgi/wwsympa.fcgi.in:14438
-#: src/cgi/wwsympa.fcgi.in:15624 src/cgi/wwsympa.fcgi.in:15700
-#: src/cgi/wwsympa.fcgi.in:15787 src/cgi/wwsympa.fcgi.in:16996
-#: src/cgi/wwsympa.fcgi.in:16998 src/cgi/wwsympa.fcgi.in:4953
+#: src/cgi/wwsympa.fcgi.in:14435 src/cgi/wwsympa.fcgi.in:14439
+#: src/cgi/wwsympa.fcgi.in:15625 src/cgi/wwsympa.fcgi.in:15701
+#: src/cgi/wwsympa.fcgi.in:15788 src/cgi/wwsympa.fcgi.in:16997
+#: src/cgi/wwsympa.fcgi.in:16999 src/cgi/wwsympa.fcgi.in:4953
 #: src/cgi/wwsympa.fcgi.in:5021 src/cgi/wwsympa.fcgi.in:5632
 #: src/cgi/wwsympa.fcgi.in:5634 src/cgi/wwsympa.fcgi.in:8724
 #: src/cgi/wwsympa.fcgi.in:9452 src/cgi/wwsympa.fcgi.in:9500
@@ -64,7 +64,7 @@ msgstr "パラメータ定義がおかしいです。%s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:1917 src/lib/Sympa/Upgrade.pm:1961
+#: src/lib/Sympa/Upgrade.pm:1923 src/lib/Sympa/Upgrade.pm:1967
 #: src/lib/Sympa/Upgrade.pm:945 src/sbin/sympa_wizard.pl.in:400
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
@@ -331,7 +331,7 @@ msgid ""
 "adds \"Archived-At:\" header field defined in RFC 5064."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:448
+#: src/lib/Sympa/ConfDef.pm:457
 msgid ""
 "The number of seconds a bulk worker sleeps between starting a new loop if it "
 "didn't find a message to send.\n"
@@ -341,7 +341,7 @@ msgstr ""
 "に待つ時間 (秒)。\n"
 "サーバの反応をよくしたければ、小さい値にしておきます。"
 
-#: src/lib/Sympa/ConfDef.pm:456
+#: src/lib/Sympa/ConfDef.pm:465
 msgid ""
 "Number of seconds a master bulk daemon waits between two packets number "
 "checks.\n"
@@ -350,7 +350,7 @@ msgstr ""
 "マスタのbulkデーモンがパケット数の検査の合間に待つ時間 (秒)。\n"
 "メッセージ配送の負荷が激増しそうなら、小さい値にしておきます。"
 
-#: src/lib/Sympa/ConfDef.pm:469
+#: src/lib/Sympa/ConfDef.pm:478
 msgid ""
 "Absolute path to sendmail command line utility (e.g.: a binary named "
 "\"sendmail\" is distributed with Postfix).\n"
@@ -359,7 +359,7 @@ msgid ""
 "be a replacement to sendmail binary."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:477
+#: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
 "included, because they will be included by Sympa.\n"
@@ -367,7 +367,7 @@ msgid ""
 "parameter, \"--esmtp\" or \"--lmtp\" option is required."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:496
+#: src/lib/Sympa/ConfDef.pm:505
 msgid ""
 "Maximum number of simultaneous child processes spawned by Sympa. This is the "
 "main load control parameter. \n"
@@ -379,7 +379,7 @@ msgstr ""
 "初期値はかなり低めにしてあります。100、200と増やしてもかまいません。パワーの"
 "あるシステムなら300くらいにしてもかまいません。"
 
-#: src/lib/Sympa/ConfDef.pm:560
+#: src/lib/Sympa/ConfDef.pm:569
 msgid ""
 "If enabled, distributed messages via lists will be archived. Otherwise "
 "archiving is disabled.\n"
@@ -387,7 +387,7 @@ msgid ""
 "removed and will be accessible according to access settings by each list."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:582
+#: src/lib/Sympa/ConfDef.pm:591
 msgid ""
 "Activates a custom archiver to use instead of MHonArc. The value of this "
 "parameter is the absolute path to the executable file.\n"
@@ -405,7 +405,7 @@ msgstr ""
 "「--file ファイル名」\n"
 "投稿保管庫に入れるメッセージへの絶対パス。"
 
-#: src/lib/Sympa/ConfDef.pm:632
+#: src/lib/Sympa/ConfDef.pm:641
 msgid ""
 "Uses variable envelope return path (VERP) to detect bouncing subscriber "
 "addresses.\n"
@@ -415,7 +415,7 @@ msgid ""
 "enabled for a list or a message, VERP is applied for 100% of subscribers."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:733
+#: src/lib/Sympa/ConfDef.pm:742
 msgid ""
 "The prefix to consist the return-path of probe messages used for bounce "
 "management, when variable envelope return path (VERP) is enabled. VERP "
@@ -423,7 +423,7 @@ msgid ""
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:815
+#: src/lib/Sympa/ConfDef.pm:824
 msgid ""
 "Defines the families the automatic lists are based on. It is a character "
 "string structured as follows:\n"
@@ -437,7 +437,7 @@ msgid ""
 "* for templates: [% family.name %]"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:999
+#: src/lib/Sympa/ConfDef.pm:1008
 msgid ""
 "The directory where bounced.pl daemon will store the last bouncing message "
 "for each user. A message is stored in the file: <bounce_path>/<list "
@@ -449,22 +449,21 @@ msgid ""
 "incoming error reports are stored and picked by bounced.pl daemon."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1131
+#: src/lib/Sympa/ConfDef.pm:1140
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which mail "
 "interface of Sympa accepts mail commands.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1138
+#: src/lib/Sympa/ConfDef.pm:1147
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which "
 "listmasters receive messages.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1143
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1152
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the parameter name and the parameter value.\n"
@@ -472,9 +471,11 @@ msgid ""
 "variable \"conf.custom_robot_parameter.<param_name>\""
 msgstr ""
 "サーバごとのカスタムパラメータを定義するのに使います。パラメータの名前と値の"
-"間にセミコロンを入れるのを忘れないように。"
+"間にセミコロンを入れるのを忘れないように。\n"
+"カスタムパラメータの値には、ウェブテンプレートから変数「conf."
+"custom_robot_parameter.<パラメータ名>」としてアクセスできます。"
 
-#: src/lib/Sympa/ConfDef.pm:1162
+#: src/lib/Sympa/ConfDef.pm:1171
 msgid ""
 "binary_file: Sympa processes will maintain a binary version of the list "
 "configuration, \"config.bin\" file on local disk. If you manage a big amount "
@@ -482,14 +483,14 @@ msgid ""
 "You can recreate cache by running \"sympa.pl --reload_list_config\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1168
+#: src/lib/Sympa/ConfDef.pm:1177
 msgid ""
 "Note that \"list_table\" database table should be filled at the first time "
 "by running:\n"
 "  # sympa.pl --sync_list_db"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1210
+#: src/lib/Sympa/ConfDef.pm:1219
 msgid ""
 "This allows generated authentication keys to differ from a site to another. "
 "It is also used for encryption of user passwords stored in the database. The "
@@ -501,13 +502,13 @@ msgid ""
 "parameter was changed."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1430
+#: src/lib/Sympa/ConfDef.pm:1439
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1528
+#: src/lib/Sympa/ConfDef.pm:1537
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -518,17 +519,18 @@ msgid ""
 "for seconds."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1561
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1570
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
 "WYSIWYG HTMLエディタを有効にするためのJavaScriptファイルのパス。"
-"<static_content_url> からの相対パスか、絶対パス"
+"<static_content_url> からの相対パスか、絶対パス。\n"
+"例は TinyMCE 4 を <static_content_path>/js/tinymce/ 配下にインストールしたと"
+"きのものです。"
 
-#: src/lib/Sympa/ConfDef.pm:1602
+#: src/lib/Sympa/ConfDef.pm:1611
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -537,7 +539,7 @@ msgid ""
 "Should not be changed! May invalid all user password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1633
+#: src/lib/Sympa/ConfDef.pm:1642
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -546,8 +548,7 @@ msgid ""
 "parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1648
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1657
 msgid ""
 "These values are supported:\n"
 "javascript: the address is hidden using a javascript. Users who enable "
@@ -555,21 +556,14 @@ msgid ""
 "at: the \"@\" character is replaced by the string \"AT\".\n"
 "none: no protection against spam harvesters."
 msgstr ""
-"メーリングリストのウェブサイトを、一般公開のウェブサイトから電子メールアドレ"
-"スを収集するソフトウェア (「spambot」などと呼びます) から保護する必要がありま"
-"す。そのためにさまざまな方法をとることができます。spam_protection パラメータ"
-"や web_archive_spam_protection パラメータで方法を選べます。次の値があります"
-"——\n"
-"javascript: \n"
-"javaScript を使ってアドレスを隠します。javaScript を使える人ならちゃんとメー"
-"ルアドレスを見ることができますが、そうでない人にはなにも見えません。\n"
-"at: \n"
-"「@」という文字を「 AT 」に置き換えます。\n"
-"none: \n"
-"スパム送信者対策をしません"
+"次の値に対応しています。\n"
+"「JavaScriptを使う (javascript)」: javaScript を使ってアドレスを隠します。"
+"javaScript を使える人ならちゃんとメールアドレスを見ることができますが、そうで"
+"ない人にはなにも見えません。\n"
+"「『@』を置き換え (at)」: 「@」という文字を「 AT 」に置き換えます。\n"
+"「何もしない (none)」: スパム送信者対策をしません。"
 
-#: src/lib/Sympa/ConfDef.pm:1655
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1664
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
@@ -577,11 +571,12 @@ msgid ""
 "browsing the web archive."
 msgstr ""
 "「メール アドレス保護手法 (spam_protection)」と同様ですが、投稿保管庫のみに適"
-"用されます。「HTTPクッキーを使う (cookie)」にすると、利用者は投稿保管庫の中を"
-"見る前に簡単なフォームでクッキーを受け取らなければならなくなります。これで、"
-"Google をはじめあらゆる検索エンジン情報収集ソフトウェアから守れます。"
+"用されます。\n"
+"加えて、次の値を使えます。\n"
+"「HTTPクッキーを使う (cookie)」にすると、利用者は投稿保管庫の中を見る前に簡単"
+"なフォームでクッキーを受け取らなければならなくなります。"
 
-#: src/lib/Sympa/ConfDef.pm:1672
+#: src/lib/Sympa/ConfDef.pm:1681
 msgid ""
 "S/MIME authentication, decryption and re-encryption. It requires these "
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
@@ -591,7 +586,7 @@ msgstr ""
 "OpenSSL-X509、Crypt-SMIME。\n"
 "TLSクライアント認証。次の外部モジュールが必要です。Crypt-OpenSSL-X509。"
 
-#: src/lib/Sympa/ConfDef.pm:1696
+#: src/lib/Sympa/ConfDef.pm:1705
 msgid ""
 "CA certificates in this directory are used for client authentication.\n"
 "The certificates need to have names including hash of subject, or symbolic "
@@ -599,7 +594,7 @@ msgid ""
 "\" script bundled in OpenSSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1820
+#: src/lib/Sympa/ConfDef.pm:1829
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
@@ -612,7 +607,7 @@ msgstr ""
 "モードを使わないでください。メッセージが届くたびにDNSへの問い合わせが発生する"
 "ためです。"
 
-#: src/lib/Sympa/ConfDef.pm:1865
+#: src/lib/Sympa/ConfDef.pm:1874
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -621,7 +616,7 @@ msgid ""
 "standard port (25) will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1870
+#: src/lib/Sympa/ConfDef.pm:1879
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -654,11 +649,12 @@ msgid "Default language"
 msgstr "言語の初期値"
 
 #: src/lib/Sympa/ConfDef.pm:64
-#, fuzzy
 msgid ""
 "This is the default language used by Sympa. One of supported languages "
 "should be chosen."
-msgstr "Sympaが使う言語の初期値です。"
+msgstr ""
+"Sympaが使う言語の初期値です。対応言語 (supported_language) のうちの一つにしま"
+"す。"
 
 #: src/lib/Sympa/ConfDef.pm:69
 msgid "Supported languages"
@@ -687,11 +683,12 @@ msgid "Display name of Sympa"
 msgstr "Sympaの表示名"
 
 #: src/lib/Sympa/ConfDef.pm:93
-#, fuzzy
 msgid ""
 "This parameter is used for display name in the \"From:\" header field for "
 "the messages sent by Sympa itself."
-msgstr "このパラメータは「From:」ヘッダの表示名に使います"
+msgstr ""
+"このパラメータは、Sympa自身が送るメッセージの「From:」ヘッダフィールドの表示"
+"名に使います。"
 
 #: src/lib/Sympa/ConfDef.pm:97
 msgid "Support of legacy character set"
@@ -874,8 +871,8 @@ msgid ""
 "Incoming messages smaller than this size is allowed distribution by Sympa."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1638 src/lib/Sympa/ConfDef.pm:276
-#: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:597
+#: src/lib/Sympa/ConfDef.pm:1647 src/lib/Sympa/ConfDef.pm:276
+#: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:596
 msgid "bytes"
 msgstr "バイト"
 
@@ -980,14 +977,14 @@ msgstr "受信メッセージキューを走査する間隔"
 msgid "Must not be 0."
 msgstr "0にはできません。"
 
-#: src/lib/Sympa/ConfDef.pm:358 src/lib/Sympa/ConfDef.pm:441
-#: src/lib/Sympa/ConfDef.pm:449 src/lib/Sympa/ConfDef.pm:457
-#: src/lib/Sympa/ConfDef.pm:757 src/lib/Sympa/ConfDef.pm:778
-#: src/lib/Sympa/ConfDef.pm:785 src/lib/Sympa/ListDef.pm:1070
-#: src/lib/Sympa/ListDef.pm:1325 src/lib/Sympa/ListDef.pm:1452
-#: src/lib/Sympa/ListDef.pm:1499 src/lib/Sympa/ListDef.pm:1666
-#: src/lib/Sympa/ListDef.pm:1676 src/lib/Sympa/ListDef.pm:1769
-#: src/lib/Sympa/ListDef.pm:1899 src/lib/Sympa/ListDef.pm:1946
+#: src/lib/Sympa/ConfDef.pm:358 src/lib/Sympa/ConfDef.pm:450
+#: src/lib/Sympa/ConfDef.pm:458 src/lib/Sympa/ConfDef.pm:466
+#: src/lib/Sympa/ConfDef.pm:766 src/lib/Sympa/ConfDef.pm:787
+#: src/lib/Sympa/ConfDef.pm:794 src/lib/Sympa/ListDef.pm:1069
+#: src/lib/Sympa/ListDef.pm:1321 src/lib/Sympa/ListDef.pm:1446
+#: src/lib/Sympa/ListDef.pm:1493 src/lib/Sympa/ListDef.pm:1658
+#: src/lib/Sympa/ListDef.pm:1668 src/lib/Sympa/ListDef.pm:1761
+#: src/lib/Sympa/ListDef.pm:1891 src/lib/Sympa/ListDef.pm:1938
 msgid "seconds"
 msgstr "秒"
 
@@ -1031,19 +1028,31 @@ msgid ""
 "than this size will be urlized."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:416
+#: src/lib/Sympa/ConfDef.pm:415
+msgid "Allowed external links in sanitized HTML"
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:417
+msgid ""
+"When the HTML content of a message must be sanitized, links (\"href\" or "
+"\"src\" attributes) with the hosts listed in this parameter will not be "
+"scrubbed. If \"*\" character is included, it matches any subdomains. Single "
+"\"*\" allows any hosts."
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:425
 msgid "Default priority for a packet"
 msgstr "送信パケットの優先度の初期値"
 
-#: src/lib/Sympa/ConfDef.pm:421
+#: src/lib/Sympa/ConfDef.pm:430
 msgid "The default priority set to a packet to be sent by the bulk."
 msgstr "bulkデーモンで送信するパケットの優先度の初期値。"
 
-#: src/lib/Sympa/ConfDef.pm:425
+#: src/lib/Sympa/ConfDef.pm:434
 msgid "Fork threshold of bulk daemon"
 msgstr "bulkデーモンがforkする閾値"
 
-#: src/lib/Sympa/ConfDef.pm:428
+#: src/lib/Sympa/ConfDef.pm:437
 msgid ""
 "The minimum number of packets before bulk daemon forks the new worker to "
 "increase sending rate."
@@ -1051,15 +1060,15 @@ msgstr ""
 "bulkデーモンがワーカをforkして配送頻度を上げるには、最低何個のパケットがあれ"
 "ばよいか。"
 
-#: src/lib/Sympa/ConfDef.pm:432
+#: src/lib/Sympa/ConfDef.pm:441
 msgid "Maximum number of bulk workers"
 msgstr "bulkデーモンのワーカの数の上限"
 
-#: src/lib/Sympa/ConfDef.pm:437
+#: src/lib/Sympa/ConfDef.pm:446
 msgid "Idle timeout of bulk workers"
 msgstr "bulkデーモンのワーカーの無処理タイムアウト"
 
-#: src/lib/Sympa/ConfDef.pm:440
+#: src/lib/Sympa/ConfDef.pm:449
 msgid ""
 "The number of seconds a bulk worker will remain running without processing a "
 "message before it spontaneously exists."
@@ -1067,39 +1076,39 @@ msgstr ""
 "bulkデーモンのあるワーカがメッセージを処理せずに実行を続けられる時間。これを"
 "過ぎると終了します。"
 
-#: src/lib/Sympa/ConfDef.pm:445
+#: src/lib/Sympa/ConfDef.pm:454
 msgid "Sleep time of bulk workers"
 msgstr "bulkワーカーの休止時間"
 
-#: src/lib/Sympa/ConfDef.pm:453
+#: src/lib/Sympa/ConfDef.pm:462
 msgid "Interval between checks of packet numbers"
 msgstr "パケットの数を調べる間隔"
 
-#: src/lib/Sympa/ConfDef.pm:467
+#: src/lib/Sympa/ConfDef.pm:476
 msgid "Path to sendmail"
 msgstr "sendmailのパス"
 
-#: src/lib/Sympa/ConfDef.pm:475
+#: src/lib/Sympa/ConfDef.pm:484
 msgid "Command line parameters passed to sendmail"
 msgstr "sendmailに渡すコマンドライン引数"
 
-#: src/lib/Sympa/ConfDef.pm:480
+#: src/lib/Sympa/ConfDef.pm:489
 msgid "Log invocation of sendmail"
 msgstr "sendmailのログを送出"
 
-#: src/lib/Sympa/ConfDef.pm:482
+#: src/lib/Sympa/ConfDef.pm:491
 msgid "This can be overwritten by \"-m\" option for sympa.pl."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:493
+#: src/lib/Sympa/ConfDef.pm:502
 msgid "Maximum number of sendmail processes"
 msgstr "Sendmailプロセスの数の上限"
 
-#: src/lib/Sympa/ConfDef.pm:500
+#: src/lib/Sympa/ConfDef.pm:509
 msgid "Maximum number of recipients per call to sendmail"
 msgstr "Sendmailの呼び出しごとの宛先数の上限"
 
-#: src/lib/Sympa/ConfDef.pm:502
+#: src/lib/Sympa/ConfDef.pm:511
 msgid ""
 "This grouping factor makes it possible for the sendmail processes to "
 "optimize the number of SMTP sessions for message distribution. If needed, "
@@ -1107,81 +1116,80 @@ msgid ""
 "\"nrcpt_by_domain.conf\" configuration file."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:508
+#: src/lib/Sympa/ConfDef.pm:517
 msgid "Maximum number of different mail domains per call to sendmail"
 msgstr "Sendmailの呼び出しごとの宛先ドメイン数の上限"
 
-#: default/web_tt2/nav.tt2:127 src/lib/Sympa/ConfDef.pm:512
+#: default/web_tt2/nav.tt2:127 src/lib/Sympa/ConfDef.pm:521
 msgid "Privileges"
 msgstr "権限"
 
-#: src/lib/Sympa/ConfDef.pm:517
+#: src/lib/Sympa/ConfDef.pm:526
 msgid "Who is able to create lists"
 msgstr "リストを作成できるのは"
 
-#: src/lib/Sympa/ConfDef.pm:522
+#: src/lib/Sympa/ConfDef.pm:531
 msgid ""
 "Defines who can create lists (or request list creation) by creating new "
 "lists or by renaming or copying existing lists."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:526
+#: src/lib/Sympa/ConfDef.pm:535
 msgid "Allow adding subscribers to a list not open"
 msgstr "稼働中でないリストに読者を追加できるか"
 
-#: src/lib/Sympa/ConfDef.pm:528
+#: src/lib/Sympa/ConfDef.pm:537
 msgid ""
 "If set to \"off\", adding subscribers to, or removing subscribers from a "
 "list with status other than \"open\" is forbidden."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:533
+#: src/lib/Sympa/ConfDef.pm:542
 msgid "Who is able to send remind messages over all lists"
 msgstr "全リストに対する読者登録確認を送信できるのは"
 
-#: src/lib/Sympa/ConfDef.pm:539
+#: src/lib/Sympa/ConfDef.pm:548
 msgid "Who is able to change user's email"
 msgstr "人の電子メールアドレスを変更できるのは"
 
-#: src/lib/Sympa/ConfDef.pm:544
+#: src/lib/Sympa/ConfDef.pm:553
 msgid "Use blacklist"
 msgstr "ブラックリストの使用"
 
-#: src/lib/Sympa/ConfDef.pm:551
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:560
 msgid ""
 "List of operations separated by comma for which blacklist filter is "
 "applied.  Setting this parameter to \"none\" will hide the blacklist feature."
 msgstr ""
-"このパラメータを「none」に設定すると、ブラックリスト機能は画面に出なくなりま"
-"す"
+"ブラックリストを適用する操作 (複数あるときはカンマで区切る)。このパラメータを"
+"「何もしない (none)」に設定すると、ブラックリスト機能は画面に出なくなります。"
 
 #: default/web_tt2/my.tt2:48 default/web_tt2/nav.tt2:129
 #: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:102
-#: default/web_tt2/suspend_request.tt2:61 src/lib/Sympa/ConfDef.pm:554
-#: src/lib/Sympa/ListDef.pm:812
+#: default/web_tt2/suspend_request.tt2:61 src/lib/Sympa/ConfDef.pm:563
+#: src/lib/Sympa/ListDef.pm:811
 msgid "Archives"
 msgstr "投稿保管庫"
 
-#: src/lib/Sympa/ConfDef.pm:558 src/lib/Sympa/ListDef.pm:775
+#: src/lib/Sympa/ConfDef.pm:567 src/lib/Sympa/ListDef.pm:774
 msgid "Store distributed messages into archive"
 msgstr "配送したメッセージを投稿保管庫に格納する"
 
-#: src/lib/Sympa/ConfDef.pm:566
+#: src/lib/Sympa/ConfDef.pm:575
 msgid "Default disk quota for lists' archive"
 msgstr "リストの投稿保管庫の容量制限の初期値"
 
-#: src/lib/Sympa/ConfDef.pm:1540 src/lib/Sympa/ConfDef.pm:567
-#: src/lib/Sympa/ListDef.pm:762 src/lib/Sympa/ListDef.pm:794
-#: src/lib/Sympa/ListDef.pm:844
+#: src/lib/Sympa/ConfDef.pm:1549 src/lib/Sympa/ConfDef.pm:576
+#: src/lib/Sympa/ListDef.pm:761 src/lib/Sympa/ListDef.pm:793
+#: src/lib/Sympa/ListDef.pm:843
 msgid "Kbytes"
 msgstr "キロバイト"
 
-#: src/lib/Sympa/ConfDef.pm:572
+#: src/lib/Sympa/ConfDef.pm:581
 msgid "Ignore \"X-no-archive:\" header field"
 msgstr "「X-no-archive:」ヘッダフィールドを無視する"
 
-#: src/lib/Sympa/ConfDef.pm:574
+#: src/lib/Sympa/ConfDef.pm:583
 msgid ""
 "Sympa's default behavior is to skip archiving of incoming messages that have "
 "an \"X-no-archive:\" header field set. This parameter allows to change this "
@@ -1189,32 +1197,32 @@ msgid ""
 msgstr ""
 
 # 仮訳
-#: src/lib/Sympa/ConfDef.pm:580
+#: src/lib/Sympa/ConfDef.pm:589
 msgid "Custom archiver"
 msgstr "カスタムのアーカイブ プログラム"
 
-#: src/lib/Sympa/ConfDef.pm:588
+#: src/lib/Sympa/ConfDef.pm:597
 msgid "Path to MHonArc mail-to-HTML converter"
 msgstr "メール-HTML変換をするMHonArcのパス"
 
-#: src/lib/Sympa/ConfDef.pm:591
+#: src/lib/Sympa/ConfDef.pm:600
 msgid "This is required for HTML mail archiving."
 msgstr "HTMLの投稿保管庫に必要です。"
 
-#: src/lib/Sympa/ConfDef.pm:597
+#: src/lib/Sympa/ConfDef.pm:606
 msgid "File containing archived PID while running"
 msgstr "archivedデーモンの動作中にPIDを格納するファイル"
 
-#: src/lib/Sympa/ConfDef.pm:601
+#: src/lib/Sympa/ConfDef.pm:610
 msgid "Bounce management and tracking"
 msgstr "配送エラー管理とメッセージ追跡"
 
-#: src/lib/Sympa/ConfDef.pm:605
+#: src/lib/Sympa/ConfDef.pm:614
 #, fuzzy
 msgid "Default bounce warn rate"
 msgstr "初期値: bounce_warn_rate ロボットパラメータ"
 
-#: src/lib/Sympa/ConfDef.pm:607 src/lib/Sympa/ListDef.pm:890
+#: src/lib/Sympa/ConfDef.pm:616 src/lib/Sympa/ListDef.pm:889
 msgid ""
 "The list owner receives a warning whenever a message is distributed and the "
 "number (percentage) of bounces exceeds this value."
@@ -1222,12 +1230,12 @@ msgstr ""
 "配送したメッセージのうち配送エラーを起こした数 (パーセント) がこの値を超えた"
 "ら、リストのオーナーに警告を送ります。"
 
-#: src/lib/Sympa/ConfDef.pm:613
+#: src/lib/Sympa/ConfDef.pm:622
 #, fuzzy
 msgid "Default bounce halt rate"
 msgstr "初期値: bounce_halt_rate ロボットパラメータ"
 
-#: src/lib/Sympa/ConfDef.pm:616 src/lib/Sympa/ListDef.pm:900
+#: src/lib/Sympa/ConfDef.pm:625 src/lib/Sympa/ListDef.pm:899
 msgid ""
 "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
 "will be halted, i.e. they are retained for subsequent moderation."
@@ -1235,51 +1243,51 @@ msgstr ""
 "未実装。配送エラー率が停止レートに達すると、リスト宛てのメッセージを止めま"
 "す、つまり、投稿は保管されてその後のモデレーションを待ちます。"
 
-#: src/lib/Sympa/ConfDef.pm:619
+#: src/lib/Sympa/ConfDef.pm:628
 msgid "Default bounce management threshold, 1st level"
 msgstr "配送エラーの管理の閾値の初期値、第一段階"
 
-#: src/lib/Sympa/ConfDef.pm:624
+#: src/lib/Sympa/ConfDef.pm:633
 msgid "Default bounce management threshold, 2nd level"
 msgstr "配送エラーの管理の閾値の初期値、第二段階"
 
-#: src/lib/Sympa/ConfDef.pm:630
+#: src/lib/Sympa/ConfDef.pm:639
 msgid "Percentage of list members in VERP mode"
 msgstr "リストの読者へ配送するメッセージのうち、VERP 方式で送るものの割合"
 
-#: src/lib/Sympa/ConfDef.pm:638
+#: src/lib/Sympa/ConfDef.pm:647
 msgid "Tracking message by delivery status notification (DSN)"
 msgstr "配送状況通知 (DSN) によるメッセージの追跡"
 
-#: src/lib/Sympa/ConfDef.pm:643
+#: src/lib/Sympa/ConfDef.pm:652
 msgid "Tracking message by message disposition notification (MDN)"
 msgstr "メッセージ開封通知 (MDN) によるメッセージの追跡"
 
-#: src/lib/Sympa/ConfDef.pm:647
+#: src/lib/Sympa/ConfDef.pm:656
 msgid "Max age of tracking information"
 msgstr "メッセージ追跡情報の有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:649
+#: src/lib/Sympa/ConfDef.pm:658
 msgid "Tracking information are removed after this number of days"
 msgstr "メッセージ追跡情報はこの日数が経つと削除する"
 
-#: src/lib/Sympa/ConfDef.pm:1021 src/lib/Sympa/ConfDef.pm:1028
-#: src/lib/Sympa/ConfDef.pm:1035 src/lib/Sympa/ConfDef.pm:1042
-#: src/lib/Sympa/ConfDef.pm:1049 src/lib/Sympa/ConfDef.pm:1057
-#: src/lib/Sympa/ConfDef.pm:1064 src/lib/Sympa/ConfDef.pm:1072
-#: src/lib/Sympa/ConfDef.pm:1079 src/lib/Sympa/ConfDef.pm:1086
-#: src/lib/Sympa/ConfDef.pm:1093 src/lib/Sympa/ConfDef.pm:1194
-#: src/lib/Sympa/ConfDef.pm:650 src/lib/Sympa/ConfDef.pm:721
-#: src/lib/Sympa/ConfDef.pm:728 src/lib/Sympa/ListDef.pm:1026
-#: src/lib/Sympa/ListDef.pm:2250 src/lib/Sympa/ListDef.pm:354
+#: src/lib/Sympa/ConfDef.pm:1030 src/lib/Sympa/ConfDef.pm:1037
+#: src/lib/Sympa/ConfDef.pm:1044 src/lib/Sympa/ConfDef.pm:1051
+#: src/lib/Sympa/ConfDef.pm:1058 src/lib/Sympa/ConfDef.pm:1066
+#: src/lib/Sympa/ConfDef.pm:1073 src/lib/Sympa/ConfDef.pm:1081
+#: src/lib/Sympa/ConfDef.pm:1088 src/lib/Sympa/ConfDef.pm:1095
+#: src/lib/Sympa/ConfDef.pm:1102 src/lib/Sympa/ConfDef.pm:659
+#: src/lib/Sympa/ConfDef.pm:730 src/lib/Sympa/ConfDef.pm:737
+#: src/lib/Sympa/ListDef.pm:1025 src/lib/Sympa/ListDef.pm:2242
+#: src/lib/Sympa/ListDef.pm:353
 msgid "days"
 msgstr "日"
 
-#: src/lib/Sympa/ConfDef.pm:655
+#: src/lib/Sympa/ConfDef.pm:664
 msgid "Remove bouncing new subscribers"
 msgstr "エラーを起こした新規登録読者を削除"
 
-#: src/lib/Sympa/ConfDef.pm:658 src/lib/Sympa/ListDef.pm:1039
+#: src/lib/Sympa/ConfDef.pm:667 src/lib/Sympa/ListDef.pm:1038
 msgid ""
 "If set to unique, the welcome message is sent using a unique return path in "
 "order to remove the subscriber immediately in the case of a bounce."
@@ -1287,21 +1295,21 @@ msgstr ""
 "ここを「配送エラー処理 (unique)」に設定した場合、歓迎メッセージの送信元を読者"
 "ごとに変えて送信します。そして、配送エラーがおきた場合には読者を削除します。"
 
-#: src/lib/Sympa/ConfDef.pm:662
+#: src/lib/Sympa/ConfDef.pm:671
 msgid "Remove subscribers bouncing remind message"
 msgstr "読者登録確認がエラーを起こした読者を削除"
 
-#: src/lib/Sympa/ConfDef.pm:665 src/lib/Sympa/ListDef.pm:1049
+#: src/lib/Sympa/ConfDef.pm:674 src/lib/Sympa/ListDef.pm:1048
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr ""
 "「歓迎メッセージの配送エラー返送先 (welcome_return_path)」と同様ですが、読者"
 "登録確認メッセージに適用します。"
 
-#: src/lib/Sympa/ConfDef.pm:668 src/lib/Sympa/ListDef.pm:2350
+#: src/lib/Sympa/ConfDef.pm:677 src/lib/Sympa/ListDef.pm:2342
 msgid "Periodical subscription reminder task"
 msgstr "読者登録確認の定期発送タスク"
 
-#: src/lib/Sympa/ConfDef.pm:670
+#: src/lib/Sympa/ConfDef.pm:679
 msgid ""
 "This task regularly sends subscribers a message which reminds them of their "
 "list subscriptions."
@@ -1309,199 +1317,195 @@ msgstr ""
 "このタスクは、読者が登録中のリストを忘れないように読者登録情報を定期的に送信"
 "します。"
 
-#: src/lib/Sympa/ConfDef.pm:676
+#: src/lib/Sympa/ConfDef.pm:685
 msgid "File containing bounced PID while running"
 msgstr "bouncedデーモンの動作中にPIDを格納するファイル"
 
-#: src/lib/Sympa/ConfDef.pm:682
+#: src/lib/Sympa/ConfDef.pm:691
 msgid "Task for expiration of old bounces"
 msgstr "古い配送エラーを消去するタスク"
 
-#: src/lib/Sympa/ConfDef.pm:684
+#: src/lib/Sympa/ConfDef.pm:693
 msgid ""
 "This task resets bouncing information for addresses not bouncing in the last "
 "10 days after the latest message distribution."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:688
+#: src/lib/Sympa/ConfDef.pm:697
 msgid "Task for cleaning invalidated bounces"
 msgstr "無効になった配送エラーを消去するタスク"
 
-#: src/lib/Sympa/ConfDef.pm:690
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:699
 msgid "This task deletes bounce information for unsubscribed users."
-msgstr "読者限定。読者以外は投稿を確認"
+msgstr "登録解除した人の配送エラー情報を削除するタスク。"
 
-#: src/lib/Sympa/ConfDef.pm:694
+#: src/lib/Sympa/ConfDef.pm:703
 msgid "Task for updating bounce scores"
 msgstr "配送エラー得点を更新するタスク"
 
-#: src/lib/Sympa/ConfDef.pm:696
+#: src/lib/Sympa/ConfDef.pm:705
 msgid ""
 "This task scans all bouncing users for all lists, and updates "
 "\"bounce_score_subscriber\" field in \"subscriber_table\" table. The scores "
 "may be used for management of bouncers."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:700
+#: src/lib/Sympa/ConfDef.pm:709
 msgid "Task for management of bouncers"
 msgstr "配送エラーを起こした読者を管理するタスク"
 
-#: src/lib/Sympa/ConfDef.pm:702
+#: src/lib/Sympa/ConfDef.pm:711
 msgid ""
 "This task executes actions on bouncing users configured by each list, "
 "according to their scores."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1177 src/lib/Sympa/ConfDef.pm:706
+#: src/lib/Sympa/ConfDef.pm:1186 src/lib/Sympa/ConfDef.pm:715
 msgid "Task for cleaning tables"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:708
+#: src/lib/Sympa/ConfDef.pm:717
 msgid ""
 "This task cleans old tracking information from \"notification_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:712
+#: src/lib/Sympa/ConfDef.pm:721
 msgid "Minimum number of bounces"
 msgstr "配送エラー数の上限"
 
-#: src/lib/Sympa/ConfDef.pm:714
+#: src/lib/Sympa/ConfDef.pm:723
 msgid ""
 "The minimum number of bounces received to update bounce score of a user."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:718
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:727
 msgid "Minimum bouncing period"
-msgstr "エラーを起こしている人に通知する"
+msgstr "配送エラー期間の下限"
 
-#: src/lib/Sympa/ConfDef.pm:720
+#: src/lib/Sympa/ConfDef.pm:729
 msgid ""
 "The minimum period for which bouncing lasted to update bounce score of a "
 "user."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:725
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:734
 msgid "Delay of bounces"
-msgstr "配送エラー数"
+msgstr "配送エラー報告のタイムラグ"
 
-#: src/lib/Sympa/ConfDef.pm:727
+#: src/lib/Sympa/ConfDef.pm:736
 msgid ""
 "Average time for a bounce sent back to mailing list server after a post was "
 "sent to a list. Usually bounces are sent back on the same day as the "
 "original message."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:737
+#: src/lib/Sympa/ConfDef.pm:746
 msgid "Suffix of list return address"
 msgstr "メーリングリストの配送エラー返送先アドレスのサフィクス"
 
-#: src/lib/Sympa/ConfDef.pm:739
+#: src/lib/Sympa/ConfDef.pm:748
 msgid ""
 "The suffix appended to the list name to consist the return-path of messages "
 "distributed through the list. This address will receive all non-delivery "
 "reports (also called bounces)."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:745
+#: src/lib/Sympa/ConfDef.pm:754
 msgid "Loop prevention"
 msgstr "メールループ防止"
 
-#: src/lib/Sympa/ConfDef.pm:748
+#: src/lib/Sympa/ConfDef.pm:757
 msgid "Maximum number of responses to command message"
 msgstr "コマンド メッセージへの応答数の上限"
 
-#: src/lib/Sympa/ConfDef.pm:750
+#: src/lib/Sympa/ConfDef.pm:759
 msgid ""
 "The maximum number of command reports sent to an email address. Messages are "
 "stored in \"bad\" subdirectory of incoming message spool, and reports are "
 "not longer sent."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:754
+#: src/lib/Sympa/ConfDef.pm:763
 msgid "Delay before counting responses to command message"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:756
+#: src/lib/Sympa/ConfDef.pm:765
 msgid ""
 "This parameter defines the delay in seconds before decrementing the counter "
 "of reports sent to an email address."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:761
+#: src/lib/Sympa/ConfDef.pm:770
 msgid "Decrementing factor of responses to command message"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:763
+#: src/lib/Sympa/ConfDef.pm:772
 msgid ""
 "The decrementation factor (from 0 to 1), used to determine the new report "
 "counter after expiration of the delay."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:767
+#: src/lib/Sympa/ConfDef.pm:776
 msgid "Regular expression to prevent loop"
 msgstr "メールループを停めるための正規表現"
 
-#: src/lib/Sympa/ConfDef.pm:769
+#: src/lib/Sympa/ConfDef.pm:778
 msgid ""
 "If the sender address matches the regular expression, then the message is "
 "rejected."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:775
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:784
 msgid "Expiration period of message ID table"
-msgstr "モデレーション待ちメッセージの有効期限"
+msgstr "メッセージIDテーブルの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:777
+#: src/lib/Sympa/ConfDef.pm:786
 msgid ""
 "Expiration period of entries in the table maintained by sympa_msg.pl daemon "
 "to prevent delivery of duplicate messages caused by loop."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:782
+#: src/lib/Sympa/ConfDef.pm:791
 msgid "Cleanup interval of message ID table"
 msgstr "メッセージIDテーブルを消去する間隔"
 
-#: src/lib/Sympa/ConfDef.pm:784
+#: src/lib/Sympa/ConfDef.pm:793
 msgid ""
 "Interval between cleanups of the table maintained by sympa_msg.pl daemon to "
 "prevent delivery of duplicate messages caused by loop."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:789
+#: src/lib/Sympa/ConfDef.pm:798
 msgid "Automatic lists"
 msgstr "自動リスト"
 
-#: src/lib/Sympa/ConfDef.pm:792
+#: src/lib/Sympa/ConfDef.pm:801
 msgid "Remove empty automatic list"
 msgstr "自動リストが空なら削除する"
 
-#: src/lib/Sympa/ConfDef.pm:794
+#: src/lib/Sympa/ConfDef.pm:803
 msgid ""
 "If set to \"if_empty\", then Sympa will remove automatically created mailing "
 "lists just after their creation, if they contain no list member."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:800
+#: src/lib/Sympa/ConfDef.pm:809
 msgid "Automatic list"
 msgstr "自動リスト"
 
-#: src/lib/Sympa/ConfDef.pm:805
+#: src/lib/Sympa/ConfDef.pm:814
 msgid "Who is able to create automatic list"
 msgstr "自動リストを作成できるのは"
 
-#: src/lib/Sympa/ConfDef.pm:813
+#: src/lib/Sympa/ConfDef.pm:822
 msgid "Definition of automatic list families"
 msgstr "自動リストの設定族"
 
-#: src/lib/Sympa/ConfDef.pm:821
+#: src/lib/Sympa/ConfDef.pm:830
 msgid "Parsed files for families"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:823
+#: src/lib/Sympa/ConfDef.pm:832
 msgid ""
 "comma-separated list of files that will be parsed by Sympa when "
 "instantiating a family (no space allowed in file names)"
@@ -1509,15 +1513,15 @@ msgstr ""
 "設定族のインストールの際にSympaが処理するファイル (複数の場合はカンマで区切"
 "る)。ファイル名にはスペースを使えません"
 
-#: src/lib/Sympa/ConfDef.pm:831 src/lib/Sympa/ConfDef.pm:834
+#: src/lib/Sympa/ConfDef.pm:840 src/lib/Sympa/ConfDef.pm:843
 msgid "Tag based spam filtering"
 msgstr "タグ付けによるスパム排除"
 
-#: src/lib/Sympa/ConfDef.pm:840
+#: src/lib/Sympa/ConfDef.pm:849
 msgid "Header field to tag spams"
 msgstr "スパムの印になるヘッダフィールド"
 
-#: src/lib/Sympa/ConfDef.pm:842
+#: src/lib/Sympa/ConfDef.pm:851
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a header field to tag "
 "spams, name of this header field (example X-Spam-Status)"
@@ -1526,22 +1530,22 @@ msgstr ""
 "ダフィールドを追加しているとき、そのヘッダフィールドの名前 (たとえば「X-Spam-"
 "Status」)。"
 
-#: src/lib/Sympa/ConfDef.pm:850
+#: src/lib/Sympa/ConfDef.pm:859
 msgid "Regular expression to check header field to tag spams"
 msgstr "スパムの印になるヘッダフィールドを検査する正規表現"
 
-#: src/lib/Sympa/ConfDef.pm:852
+#: src/lib/Sympa/ConfDef.pm:861
 msgid ""
 "Regular expression applied on this header to verify message is a spam "
 "(example Yes)"
 msgstr ""
 "そのヘッダでメッセージがスパムかどうか確認する正規表現 (たとえば「Yes」)。"
 
-#: src/lib/Sympa/ConfDef.pm:859
+#: src/lib/Sympa/ConfDef.pm:868
 msgid "Regular expression to determine spam or ham."
 msgstr "スパムか非スパムかを判定する正規表現"
 
-#: src/lib/Sympa/ConfDef.pm:861
+#: src/lib/Sympa/ConfDef.pm:870
 msgid ""
 "Regular expression applied on this header field to verify message is NOT a "
 "spam (example No)"
@@ -1549,12 +1553,12 @@ msgstr ""
 "そのヘッダフィールドでメッセージがスパム*ではない*かどうか確認する正規表現 "
 "(たとえば「No」)。"
 
-#: src/lib/Sympa/ConfDef.pm:868
+#: src/lib/Sympa/ConfDef.pm:877
 #, fuzzy
 msgid "Name of header field to inform"
 msgstr "電子メールアドレスの項目 (LDAPの属性名かSQLの列名)"
 
-#: src/lib/Sympa/ConfDef.pm:870
+#: src/lib/Sympa/ConfDef.pm:879
 msgid ""
 "Messages are supposed to be filtered by an spam filter that add one more "
 "headers to messages. This parameter is used to select a special scenario in "
@@ -1568,126 +1572,126 @@ msgstr ""
 "このパラメータは次のパラメータを置き換えます。antispam_tag_header_name、"
 "antispam_tag_header_spam_regexp、antispam_tag_header_ham_regexp。"
 
-#: src/lib/Sympa/ConfDef.pm:877
+#: src/lib/Sympa/ConfDef.pm:886
 msgid "Directories"
 msgstr "ディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:881
+#: src/lib/Sympa/ConfDef.pm:890
 msgid "List home"
 msgstr "リスト ホーム ディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:882
+#: src/lib/Sympa/ConfDef.pm:891
 msgid "Base directory of list configurations."
 msgstr "リスト設定のベースディレクトリ。"
 
-#: src/lib/Sympa/ConfDef.pm:888
+#: src/lib/Sympa/ConfDef.pm:897
 msgid "Directory for configuration files"
 msgstr "設定ファイルのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:890
+#: src/lib/Sympa/ConfDef.pm:899
 msgid "Base directory of global configuration (except \"sympa.conf\")."
 msgstr "全体設定 (sympa.conf以外) のベースディレクトリ。"
 
-#: src/lib/Sympa/ConfDef.pm:903
+#: src/lib/Sympa/ConfDef.pm:912
 msgid "Base directory of spools"
 msgstr "キューのベースディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:906
+#: src/lib/Sympa/ConfDef.pm:915
 msgid ""
 "Base directory of all spools which are created at runtime. This directory "
 "must be writable by Sympa user."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:910
+#: src/lib/Sympa/ConfDef.pm:919
 msgid "Directory for message incoming spool"
 msgstr "メッセージ受け付け用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:912
+#: src/lib/Sympa/ConfDef.pm:921
 msgid ""
 "This spool is used both by \"queue\" program and \"sympa_msg.pl\" daemon.\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:917
+#: src/lib/Sympa/ConfDef.pm:926
 msgid "Directory for moderation spool"
 msgstr "モデレーション用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:922
+#: src/lib/Sympa/ConfDef.pm:931
 msgid "Directory for digest spool"
 msgstr "まとめ読み用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:927
+#: src/lib/Sympa/ConfDef.pm:936
 msgid "Directory for held message spool"
 msgstr "確認待ちメッセージ用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:929 src/lib/Sympa/ConfDef.pm:936
-#: src/lib/Sympa/ConfDef.pm:948 src/lib/Sympa/ConfDef.pm:979
+#: src/lib/Sympa/ConfDef.pm:938 src/lib/Sympa/ConfDef.pm:945
+#: src/lib/Sympa/ConfDef.pm:957 src/lib/Sympa/ConfDef.pm:988
 msgid "This parameter is named such by historical reason."
 msgstr "過去の行きがかりから、このパラメータにはこのような名前がついています。"
 
-#: src/lib/Sympa/ConfDef.pm:934
+#: src/lib/Sympa/ConfDef.pm:943
 msgid "Directory for archive spool"
 msgstr "投稿保管庫用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:946
+#: src/lib/Sympa/ConfDef.pm:955
 msgid "Directory for held request spool"
 msgstr "確認待ち中のコマンド用のディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:953
+#: src/lib/Sympa/ConfDef.pm:962
 msgid "Directory for topic spool"
 msgstr "トピック用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:958
+#: src/lib/Sympa/ConfDef.pm:967
 msgid "Directory for bounce incoming spool"
 msgstr "バウンス受け付け用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:960
+#: src/lib/Sympa/ConfDef.pm:969
 msgid ""
 "This spool is used both by \"bouncequeue\" program and \"bounced.pl\" daemon."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:965
+#: src/lib/Sympa/ConfDef.pm:974
 msgid "Directory for task spool"
 msgstr "タスク用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:970
+#: src/lib/Sympa/ConfDef.pm:979
 msgid "Directory for automatic list creation spool"
 msgstr "リスト自動作成用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:972
+#: src/lib/Sympa/ConfDef.pm:981
 msgid ""
 "This spool is used both by \"familyqueue\" program and \"sympa_automatic.pl"
 "\" daemon."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:977
+#: src/lib/Sympa/ConfDef.pm:986
 msgid "Directory for message outgoing spool"
 msgstr "メッセージ送出用キューのディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:985
+#: src/lib/Sympa/ConfDef.pm:994
 msgid ""
 "Temporary directory used by external programs such as virus scanner. Also, "
 "outputs to daemons' standard error are redirected to the files under this "
 "directory."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:989
+#: src/lib/Sympa/ConfDef.pm:998
 msgid "Directory to cache formatted messages"
 msgstr "整形ずみメッセージをキャッシュするディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:991
+#: src/lib/Sympa/ConfDef.pm:1000
 msgid ""
 "Base directory path of directories where HTML view of messages are cached."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:996
+#: src/lib/Sympa/ConfDef.pm:1005
 msgid "Directory for storing bounces"
 msgstr "配送エラーメッセージを格納するディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1004
+#: src/lib/Sympa/ConfDef.pm:1013
 msgid "Directory for storing archives"
 msgstr "投稿を保管するディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1008
+#: src/lib/Sympa/ConfDef.pm:1017
 msgid ""
 "Where to store HTML archives. This parameter is used by the \"archived.pl\" "
 "daemon. It is a good idea to install the archive outside the web document "
@@ -1695,369 +1699,363 @@ msgid ""
 "prevented."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1013
+#: src/lib/Sympa/ConfDef.pm:1022
 msgid "Task for cleaning spools"
 msgstr "キューを掃除するタスク"
 
-#: src/lib/Sympa/ConfDef.pm:1014
+#: src/lib/Sympa/ConfDef.pm:1023
 msgid "This task cleans old content in spools."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1018
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1027
 msgid "Max age of incoming bad messages"
-msgstr "拒否メッセージの管理"
+msgstr "不正な受け入れメッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1020
+#: src/lib/Sympa/ConfDef.pm:1029
 msgid ""
 "Number of days \"bad\" messages are kept in message incoming spool (as "
 "specified by \"queue\" parameter). Sympa keeps messages rejected for various "
 "reasons (badly formatted, looping etc.)."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1025
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1034
 msgid "Max age of bad messages for archives"
-msgstr "配送したメッセージを投稿保管庫に格納する"
+msgstr "不正な投稿保管庫用メッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1027
+#: src/lib/Sympa/ConfDef.pm:1036
 msgid ""
 "Number of days \"bad\" messages are kept in message archive spool (as "
 "specified by \"queueoutgoing\" parameter). Sympa keeps messages rejected for "
 "various reasons (unable to create archive directory, to copy file etc.)."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1032
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1041
 msgid "Max age of bad bounce messages"
-msgstr "拒否メッセージの管理"
+msgstr "不正な配送エラーメッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1034
+#: src/lib/Sympa/ConfDef.pm:1043
 msgid ""
 "Number of days \"bad\" messages are kept in bounce spool (as specified by "
 "\"queuebounce\" parameter). Sympa keeps messages rejected for various "
 "reasons (unknown original sender, unknown report type)."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1039
+#: src/lib/Sympa/ConfDef.pm:1048
 msgid "Max age of moderated messages"
 msgstr "モデレーション待ちメッセージの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1041
+#: src/lib/Sympa/ConfDef.pm:1050
 msgid ""
 "Number of days messages are kept in moderation spool (as specified by "
 "\"queuemod\" parameter). Beyond this deadline, messages that have not been "
 "processed are deleted."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1046
+#: src/lib/Sympa/ConfDef.pm:1055
 msgid "Max age of held messages"
 msgstr "確認待ちメッセージの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1048
+#: src/lib/Sympa/ConfDef.pm:1057
 msgid ""
 "Number of days messages are kept in held message spool (as specified by "
 "\"queueauth\" parameter). Beyond this deadline, messages that have not been "
 "confirmed are deleted."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1054
+#: src/lib/Sympa/ConfDef.pm:1063
 msgid "Max age of held requests"
 msgstr "申込の保留期間"
 
-#: src/lib/Sympa/ConfDef.pm:1056
+#: src/lib/Sympa/ConfDef.pm:1065
 msgid ""
 "Number of days requests are kept in held request spool (as specified by "
 "\"queuesubscribe\" parameter). Beyond this deadline, requests that have not "
 "been validated nor declined are deleted."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1061
+#: src/lib/Sympa/ConfDef.pm:1070
 msgid "Max age of tagged topics"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1063
+#: src/lib/Sympa/ConfDef.pm:1072
 msgid ""
 "Number of days (automatically or manually) tagged topics are kept in topic "
 "spool (as specified by \"queuetopic\" parameter). Beyond this deadline, "
 "tagging is forgotten."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1069
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1078
 msgid "Max age of incoming bad messages in automatic list creation spool"
-msgstr "リスト自動作成用キューのディレクトリ"
+msgstr "不正なリスト自動作成用メッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1071
+#: src/lib/Sympa/ConfDef.pm:1080
 msgid ""
 "Number of days \"bad\" messages are kept in automatic list creation spool "
 "(as specified by \"queueautomatic\" parameter). Sympa keeps messages "
 "rejected for various reasons (badly formatted, looping etc.)."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1076
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1085
 msgid "Max age of outgoing bad messages"
-msgstr "拒否メッセージの管理"
+msgstr "不正な送出メッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1078
+#: src/lib/Sympa/ConfDef.pm:1087
 msgid ""
 "Number of days \"bad\" messages are kept in message outgoing spool (as "
 "specified by \"queuebulk\" parameter). Sympa keeps messages rejected for "
 "various reasons (failed personalization, bad configuration on MTA etc.)."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1083
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1092
 msgid "Max age of bad messages in digest spool"
-msgstr "メッセージの最大サイズ (バイト単位)"
+msgstr "不正なまとめ読み用メッセージの保管期限"
 
-#: src/lib/Sympa/ConfDef.pm:1085
+#: src/lib/Sympa/ConfDef.pm:1094
 msgid ""
 "Number of days \"bad\" messages are kept in digest spool (as specified by "
 "\"queuedigest\" parameter). Sympa keeps messages rejected for various "
 "reasons (syntax errors in \"digest.tt2\" template etc.)."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1090
+#: src/lib/Sympa/ConfDef.pm:1099
 msgid "Max age of temporary files"
 msgstr "一時ファイルの保存期間"
 
-#: src/lib/Sympa/ConfDef.pm:1092
+#: src/lib/Sympa/ConfDef.pm:1101
 msgid ""
 "Number of days files in temporary directory (as specified by \"tmpdir\" "
 "parameter), including standard error logs, are kept."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1100
+#: src/lib/Sympa/ConfDef.pm:1109
 msgid "File containing Sympa PID while running"
 msgstr "Sympaの動作中にPIDを格納しておくファイル"
 
-#: src/lib/Sympa/ConfDef.pm:1118
+#: src/lib/Sympa/ConfDef.pm:1127
 msgid "File containing task_manager PID while running"
 msgstr "task_managerデーモンの実行中にPIDを保存するファイル"
 
-#: src/lib/Sympa/ConfDef.pm:1122
+#: src/lib/Sympa/ConfDef.pm:1131
 msgid "Miscelaneous"
 msgstr "その他"
 
-#: src/lib/Sympa/ConfDef.pm:1126
+#: src/lib/Sympa/ConfDef.pm:1135
 msgid "Local part of Sympa email address"
 msgstr "Sympaの電子メール アドレスのローカル部"
 
-#: src/lib/Sympa/ConfDef.pm:1135
+#: src/lib/Sympa/ConfDef.pm:1144
 msgid "Local part of listmaster email address"
 msgstr "リストシステム管理者の電子メール アドレスのローカル部"
 
-#: src/lib/Sympa/ConfDef.pm:1141
+#: src/lib/Sympa/ConfDef.pm:1150
 msgid "Custom robot parameter"
 msgstr "仮想ドメインのカスタムパラメータ"
 
-#: src/lib/Sympa/ConfDef.pm:1154
+#: src/lib/Sympa/ConfDef.pm:1163
 msgid "flock | nfs"
 msgstr "( flock | nfs )"
 
-#: src/lib/Sympa/ConfDef.pm:1158
+#: src/lib/Sympa/ConfDef.pm:1167
 msgid "Use of binary cache of list configuration"
 msgstr "リストの設定をキャッシュする"
 
-#: src/lib/Sympa/ConfDef.pm:1166
+#: src/lib/Sympa/ConfDef.pm:1175
 msgid "Use database cache to search lists"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1171
+#: src/lib/Sympa/ConfDef.pm:1180
 msgid "Task for expiring inactive users"
 msgstr "活動のない人を消去するタスク"
 
-#: src/lib/Sympa/ConfDef.pm:1173
+#: src/lib/Sympa/ConfDef.pm:1182
 msgid ""
 "This task removes rows in the \"user_table\" table which hove not "
 "corresponding entries in the \"subscriber_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1179
+#: src/lib/Sympa/ConfDef.pm:1188
 msgid "This task cleans old logs from \"logs_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1183
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1192
 msgid "Max age of logs in database"
-msgstr "データベース名"
+msgstr "データベースログの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1185
+#: src/lib/Sympa/ConfDef.pm:1194
 msgid "Number of months that elapse before a log is expired"
 msgstr "運用記録を消去するまでの月数"
 
-#: src/lib/Sympa/ConfDef.pm:1186 src/lib/Sympa/ListDef.pm:852
+#: src/lib/Sympa/ConfDef.pm:1195 src/lib/Sympa/ConfDef.pm:1203
+#: src/lib/Sympa/ListDef.pm:851
 msgid "months"
 msgstr "ヶ月"
 
-#: src/lib/Sympa/ConfDef.pm:1191
+#: src/lib/Sympa/ConfDef.pm:1200
 msgid "Max age of statistics information in database"
 msgstr "統計情報のデータベース保存期間"
 
-#: src/lib/Sympa/ConfDef.pm:1193
+#: src/lib/Sympa/ConfDef.pm:1202
 #, fuzzy
-msgid "Number of days that elapse before statistics information are expired"
-msgstr "統計を消去するまでの月数"
+msgid "Number of months that elapse before statistics information are expired"
+msgstr "統計を消去するまでの日数"
 
-#: src/lib/Sympa/ConfDef.pm:1200
+#: src/lib/Sympa/ConfDef.pm:1209
 msgid "Umask"
 msgstr "ファイル作成パーミッションのマスク値 (umask)"
 
-#: src/lib/Sympa/ConfDef.pm:1202
+#: src/lib/Sympa/ConfDef.pm:1211
 msgid ""
 "Default mask for file creation (see umask(2)). Note that it will be "
 "interpreted as an octal value."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1207 src/lib/Sympa/ListDef.pm:2259
+#: src/lib/Sympa/ConfDef.pm:1216 src/lib/Sympa/ListDef.pm:2251
 msgid "Secret string for generating unique keys"
 msgstr "ユニークキーを生成するための秘密の文字列"
 
-#: src/lib/Sympa/ConfDef.pm:1214
+#: src/lib/Sympa/ConfDef.pm:1223
 msgid "Web interface parameters"
 msgstr "ウェブ インタフェースのパラメータ"
 
-#: src/lib/Sympa/ConfDef.pm:1220
+#: src/lib/Sympa/ConfDef.pm:1229
 msgid "URL prefix of web interface"
 msgstr "ウェブ インタフェースのURLプリフィクス"
 
-#: src/lib/Sympa/ConfDef.pm:1225
+#: src/lib/Sympa/ConfDef.pm:1234
 msgid "This is used to construct URLs of web interface."
 msgstr "ウェブ インタフェースでURLに使われます。"
 
-#: src/lib/Sympa/ConfDef.pm:1228
+#: src/lib/Sympa/ConfDef.pm:1237
 msgid "URL prefix of WWSympa behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1235
+#: src/lib/Sympa/ConfDef.pm:1244
 msgid "URL for static contents"
 msgstr "静的コンテンツのURL"
 
-#: src/lib/Sympa/ConfDef.pm:1237
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1246
 msgid "HTTP server have to map it with \"static_content_path\" directory."
-msgstr "上で決めた static_content_path のディレクトリに対応する URL"
+msgstr ""
+"HTTPサーバはこのパスを static_content_path のディレクトリと対応させなければい"
+"けません。"
 
-#: src/lib/Sympa/ConfDef.pm:1244
+#: src/lib/Sympa/ConfDef.pm:1253
 msgid "Directory for static contents"
 msgstr "静的コンテンツを格納するディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1251
+#: src/lib/Sympa/ConfDef.pm:1260
 msgid "System log facility for web interface"
 msgstr "ウェブインタフェース用のsyslogファシリティ"
 
-#: src/lib/Sympa/ConfDef.pm:1253
+#: src/lib/Sympa/ConfDef.pm:1262
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1259
+#: src/lib/Sympa/ConfDef.pm:1268
 msgid "Enable FastCGI"
 msgstr "FastCGIを有効にする"
 
-#: src/lib/Sympa/ConfDef.pm:1263
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1272
 msgid ""
 "Is FastCGI module for HTTP server installed. This module provide much faster "
 "web interface."
-msgstr "このモジュールを使うとウェブインタフェースが非常に高速になります。"
+msgstr ""
+"HTTPサーバにFastCGIモジュールをインストールしているか。このモジュールを使うと"
+"ウェブインタフェースが非常に高速になります。"
 
-#: src/lib/Sympa/ConfDef.pm:1266
+#: src/lib/Sympa/ConfDef.pm:1275
 msgid "Web interface parameters: Appearances"
 msgstr "ウェブ インタフェースのパラメータ——外見"
 
-#: src/lib/Sympa/ConfDef.pm:1269
+#: src/lib/Sympa/ConfDef.pm:1278
 msgid "Custom logo"
 msgstr "ロゴマーク"
 
-#: src/lib/Sympa/ConfDef.pm:1271
+#: src/lib/Sympa/ConfDef.pm:1280
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1278
+#: src/lib/Sympa/ConfDef.pm:1287
 msgid "Custom favicon"
 msgstr "ファビコン"
 
-#: src/lib/Sympa/ConfDef.pm:1279
+#: src/lib/Sympa/ConfDef.pm:1288
 msgid "URL of favicon image"
 msgstr "ファビコン画像のURL"
 
-#: src/lib/Sympa/ConfDef.pm:1285
+#: src/lib/Sympa/ConfDef.pm:1294
 msgid "Directory for static style sheets (CSS)"
 msgstr "スタイルシート (CSS) のディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1287
+#: src/lib/Sympa/ConfDef.pm:1296
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
 "customized CSS files."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1292
+#: src/lib/Sympa/ConfDef.pm:1301
 msgid "URL for style sheets (CSS)"
 msgstr "スタイルシート (CSS) のURL"
 
-#: src/lib/Sympa/ConfDef.pm:1294
+#: src/lib/Sympa/ConfDef.pm:1303
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1299
+#: src/lib/Sympa/ConfDef.pm:1308
 msgid "Colors for web interface"
 msgstr "ウェブインタフェースの配色"
 
-#: src/lib/Sympa/ConfDef.pm:1301
+#: src/lib/Sympa/ConfDef.pm:1310
 msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1382
+#: src/lib/Sympa/ConfDef.pm:1391
 msgid "Colors for web interface, obsoleted"
 msgstr "ウェブインタフェースの配色 (廃用)"
 
-#: src/lib/Sympa/ConfDef.pm:1419
+#: src/lib/Sympa/ConfDef.pm:1428
 msgid "Type of main web page"
 msgstr "メインページの種類"
 
-#: src/lib/Sympa/ConfDef.pm:1421
+#: src/lib/Sympa/ConfDef.pm:1430
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1428
+#: src/lib/Sympa/ConfDef.pm:1437
 msgid "Default index organization of web archive"
 msgstr "ウェブ投稿保管庫の初期の表示順"
 
-#: src/lib/Sympa/ConfDef.pm:1436
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1445
 msgid "Size of review page"
-msgstr "メインページの表題"
+msgstr "読者登録一覧ページでの表示件数"
 
-#: src/lib/Sympa/ConfDef.pm:1438
+#: src/lib/Sympa/ConfDef.pm:1447
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr "読者一覧ページで表示する利用者の列ごとの数の初期値"
 
-#: src/lib/Sympa/ConfDef.pm:1444
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1453
 msgid "Size of viewlogs page"
-msgstr "メインページの表題"
+msgstr "運用記録ページの表示件数"
 
-#: src/lib/Sympa/ConfDef.pm:1446
+#: src/lib/Sympa/ConfDef.pm:1455
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
 msgstr "運用記録ページで表示するログの行数の初期値。"
 
-#: src/lib/Sympa/ConfDef.pm:1452
+#: src/lib/Sympa/ConfDef.pm:1461
 msgid "Custom menus"
 msgstr "カスタム メニュー"
 
-#: src/lib/Sympa/ConfDef.pm:1454
+#: src/lib/Sympa/ConfDef.pm:1463
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file but you "
 "can also edit the these parameters in order to add up to 3 button. Each "
@@ -2065,15 +2063,15 @@ msgid ""
 "a target."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1494
+#: src/lib/Sympa/ConfDef.pm:1503
 msgid "Web interface parameters: Miscelaneous"
 msgstr "ウェブ インタフェースのパラメータ——その他"
 
-#: src/lib/Sympa/ConfDef.pm:1501
+#: src/lib/Sympa/ConfDef.pm:1510
 msgid "HTTP cookies validity domain"
 msgstr "HTTPクッキーの有効ドメイン"
 
-#: src/lib/Sympa/ConfDef.pm:1503
+#: src/lib/Sympa/ConfDef.pm:1512
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -2081,41 +2079,41 @@ msgid ""
 "authentication process is shared with an application running on another host."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1509
+#: src/lib/Sympa/ConfDef.pm:1518
 msgid "HTTP cookies lifetime"
 msgstr "HTTPクッキーの寿命"
 
-#: src/lib/Sympa/ConfDef.pm:1511
+#: src/lib/Sympa/ConfDef.pm:1520
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser session."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1516
+#: src/lib/Sympa/ConfDef.pm:1525
 msgid "Average interval to refresh HTTP session ID."
 msgstr "HTTPセッションIDを更新する平均の間隔。0 にすると毎回更新します。"
 
-#: src/lib/Sympa/ConfDef.pm:1520
+#: src/lib/Sympa/ConfDef.pm:1529
 msgid "Task for cleaning old sessions"
 msgstr "古いセッションを消去するタスク"
 
-#: src/lib/Sympa/ConfDef.pm:1522
+#: src/lib/Sympa/ConfDef.pm:1531
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1526
+#: src/lib/Sympa/ConfDef.pm:1535
 msgid "Max age of sessions"
 msgstr "セッションの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1539
+#: src/lib/Sympa/ConfDef.pm:1548
 msgid "Default disk quota for shared repository"
 msgstr "共有文書置き場の容量制限の初期値"
 
-#: src/lib/Sympa/ConfDef.pm:1549
+#: src/lib/Sympa/ConfDef.pm:1558
 msgid "Use HTML editor"
 msgstr "HTMLエディタを使う"
 
-#: src/lib/Sympa/ConfDef.pm:1551
+#: src/lib/Sympa/ConfDef.pm:1560
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
@@ -2123,23 +2121,23 @@ msgstr ""
 "「on」に設定すると、利用者がJavaScriptのWYSIWYGエディタを使ってHTMLでメッセー"
 "ジを投稿できるようになります。"
 
-#: src/lib/Sympa/ConfDef.pm:1559
+#: src/lib/Sympa/ConfDef.pm:1568
 msgid "URL of HTML editor"
 msgstr "HTMLエディタの使用"
 
-#: src/lib/Sympa/ConfDef.pm:1568
+#: src/lib/Sympa/ConfDef.pm:1577
 msgid "HTML editor initialization"
 msgstr "HTMLエディタの初期化"
 
-#: src/lib/Sympa/ConfDef.pm:1570
+#: src/lib/Sympa/ConfDef.pm:1579
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr "WYSIWYG HTMLエディタを有効にし、設定するJavaScriptコード。"
 
-#: src/lib/Sympa/ConfDef.pm:1589
+#: src/lib/Sympa/ConfDef.pm:1598
 msgid "Count limit of wrong password submission"
 msgstr "パスワード間違いの回数の上限"
 
-#: src/lib/Sympa/ConfDef.pm:1591
+#: src/lib/Sympa/ConfDef.pm:1600
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -2148,24 +2146,24 @@ msgid ""
 "performs so many tries."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1598
+#: src/lib/Sympa/ConfDef.pm:1607
 msgid "Password case"
 msgstr "パスワードの大文字小文字を区別する"
 
-#: src/lib/Sympa/ConfDef.pm:1609
+#: src/lib/Sympa/ConfDef.pm:1618
 msgid "Age of one time ticket"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1611
+#: src/lib/Sympa/ConfDef.pm:1620
 msgid "Duration before the one time tickets are expired"
 msgstr "一時チケットの有効期間"
 
-#: src/lib/Sympa/ConfDef.pm:1615
+#: src/lib/Sympa/ConfDef.pm:1624
 #, fuzzy
 msgid "Restrict access to one time ticket"
 msgstr "オーナーのみ。本人確認あり"
 
-#: src/lib/Sympa/ConfDef.pm:1617
+#: src/lib/Sympa/ConfDef.pm:1626
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
@@ -2173,27 +2171,27 @@ msgstr ""
 "すでに誰かがアクセスした一時チケットへのアクセスを制限するか (one_time | "
 "remote_addr | open)"
 
-#: src/lib/Sympa/ConfDef.pm:1631
+#: src/lib/Sympa/ConfDef.pm:1640
 msgid "Pictures"
 msgstr "ピクチャ"
 
-#: src/lib/Sympa/ConfDef.pm:1637
+#: src/lib/Sympa/ConfDef.pm:1646
 msgid "The maximum size of uploaded picture"
 msgstr "アップロードするピクチャのサイズ上限"
 
-#: src/lib/Sympa/ConfDef.pm:1646
+#: src/lib/Sympa/ConfDef.pm:1655
 msgid "Protect web interface against spam harvesters"
 msgstr "スパム送信者対策"
 
-#: src/lib/Sympa/ConfDef.pm:1653
+#: src/lib/Sympa/ConfDef.pm:1662
 msgid "Protect web archive against spam harvesters"
 msgstr "投稿保管庫でのスパム送信者対策"
 
-#: src/lib/Sympa/ConfDef.pm:1661
+#: src/lib/Sympa/ConfDef.pm:1670
 msgid "Script to report spam"
 msgstr "スパム報告スクリプト"
 
-#: src/lib/Sympa/ConfDef.pm:1663
+#: src/lib/Sympa/ConfDef.pm:1672
 msgid ""
 "If set, when a list editor report undetected spams for list moderation, this "
 "external script is invoked and the message is injected into standard input "
@@ -2202,43 +2200,43 @@ msgstr ""
 "設定すると、リストのモデレータがスパムを報告したときに、WWSympaやSympaがこの"
 "外部スクリプトを起動し、スパムの内容をスクリプトの標準入力に送ります。"
 
-#: src/lib/Sympa/ConfDef.pm:1670
+#: src/lib/Sympa/ConfDef.pm:1679
 msgid "S/MIME and TLS"
 msgstr "S/MIME および TLS"
 
-#: src/lib/Sympa/ConfDef.pm:1677
+#: src/lib/Sympa/ConfDef.pm:1686
 msgid "Path to OpenSSL"
 msgstr "OpenSSLのパス"
 
-#: src/lib/Sympa/ConfDef.pm:1685
+#: src/lib/Sympa/ConfDef.pm:1694
 msgid "File containing trusted CA certificates"
 msgstr "信頼できる認証局の証明書を含むファイル"
 
-#: src/lib/Sympa/ConfDef.pm:1687
+#: src/lib/Sympa/ConfDef.pm:1696
 msgid "This can be used alternatively and/or additionally to \"capath\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1694
+#: src/lib/Sympa/ConfDef.pm:1703
 msgid "Directory containing trusted CA certificates"
 msgstr "信頼できる認証局の証明書が置かれるディレクトリ"
 
-#: src/lib/Sympa/ConfDef.pm:1703
+#: src/lib/Sympa/ConfDef.pm:1712
 msgid "Password used to crypt lists private keys"
 msgstr "リストの秘密鍵の暗号化パスワード"
 
-#: src/lib/Sympa/ConfDef.pm:1705
+#: src/lib/Sympa/ConfDef.pm:1714
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1717
+#: src/lib/Sympa/ConfDef.pm:1726
 msgid "Directory containing user certificates"
 msgstr "利用者の証明書が置かれるディレクトリ"
 
-#: default/web_tt2/nav.tt2:133 src/lib/Sympa/ConfDef.pm:1721
+#: default/web_tt2/nav.tt2:133 src/lib/Sympa/ConfDef.pm:1730
 msgid "Data sources setup"
 msgstr "データソース"
 
-#: src/lib/Sympa/ConfDef.pm:1723
+#: src/lib/Sympa/ConfDef.pm:1732
 msgid ""
 "Including subscribers, owners and editors from datasources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
@@ -2246,39 +2244,39 @@ msgid ""
 "secure connection (LDAPS) to LDAP server is required: IO-SOcket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1727
+#: src/lib/Sympa/ConfDef.pm:1736
 msgid "Default of SQL fetch timeout"
 msgstr "SQLでの取り込みタイムアウトの初期値"
 
-#: src/lib/Sympa/ConfDef.pm:1729
+#: src/lib/Sympa/ConfDef.pm:1738
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr "include_sql_query による同期実行時の取得タイムアウト初期値。"
 
-#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1734
+#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1743
 msgid "DKIM"
 msgstr "DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1736
+#: src/lib/Sympa/ConfDef.pm:1745
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1740
+#: src/lib/Sympa/ConfDef.pm:1749
 msgid "Enable DKIM"
 msgstr "DKIM対応を有効にする"
 
-#: src/lib/Sympa/ConfDef.pm:1742
+#: src/lib/Sympa/ConfDef.pm:1751
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1749
+#: src/lib/Sympa/ConfDef.pm:1758
 msgid "Which service messages to be signed"
 msgstr "署名するサービスメッセージは"
 
-#: src/lib/Sympa/ConfDef.pm:1751
+#: src/lib/Sympa/ConfDef.pm:1760
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
@@ -2286,19 +2284,19 @@ msgstr ""
 "ロボットが送信するもの、リストで配信されるもの、両方のいずれかのサービスメッ"
 "セージにDKIM署名を付けます。"
 
-#: src/lib/Sympa/ConfDef.pm:1758
+#: src/lib/Sympa/ConfDef.pm:1767
 msgid "File path for DKIM private key"
 msgstr "DKIM秘密鍵のファイルのパス"
 
-#: src/lib/Sympa/ConfDef.pm:1760
+#: src/lib/Sympa/ConfDef.pm:1769
 msgid "The file must contain a PEM encoded private key"
 msgstr "ファイルには PEM 形式の秘密鍵を入れておかなければなりません。"
 
-#: src/lib/Sympa/ConfDef.pm:1767
+#: src/lib/Sympa/ConfDef.pm:1776
 msgid "Which messages delivered via lists to be signed"
 msgstr "リスト経由のメッセージで署名するのは"
 
-#: src/lib/Sympa/ConfDef.pm:1769
+#: src/lib/Sympa/ConfDef.pm:1778
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2311,32 +2309,30 @@ msgstr ""
 "「md5_authenticated_messages」、「smime_authenticated_messages」、"
 "「dkim_authenticated_messages」、「editor_validated_messages」。"
 
-#: src/lib/Sympa/ConfDef.pm:1776
+#: src/lib/Sympa/ConfDef.pm:1785
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr "RFC 4871の定義での「i=」タグ"
 
-#: src/lib/Sympa/ConfDef.pm:1778
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1787
 msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. Default is virtual "
 "host domain name"
 msgstr ""
-"DKIM の \"d=\" タグ。署名者のドメイン。\"d=\" にはリストのドメインを必ず含め"
-"なければなりません"
+"DKIM の \"d=\" タグ。署名者のドメイン。初期値は仮想ホストのドメイン名。"
 
-#: src/lib/Sympa/ConfDef.pm:1784
+#: src/lib/Sympa/ConfDef.pm:1793
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr "RFC 4871の定義での「i=」タグ"
 
-#: src/lib/Sympa/ConfDef.pm:1785
+#: src/lib/Sympa/ConfDef.pm:1794
 msgid "Default is null."
 msgstr "初期値は空。"
 
-#: src/lib/Sympa/ConfDef.pm:1790 src/lib/Sympa/ListDef.pm:2112
+#: src/lib/Sympa/ConfDef.pm:1799 src/lib/Sympa/ListDef.pm:2104
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "DKIM公開鍵をDNSで探す際のセレクタ"
 
-#: src/lib/Sympa/ConfDef.pm:1792
+#: src/lib/Sympa/ConfDef.pm:1801
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -2346,11 +2342,11 @@ msgstr ""
 "た値を設定してください。<セレクタ>._domainkey.自分のドメイン というクエリで "
 "DKIM 公開鍵を取得できることを確認してください。"
 
-#: src/lib/Sympa/ConfDef.pm:1808
+#: src/lib/Sympa/ConfDef.pm:1817
 msgid "DMARC protection"
 msgstr "DMARC保護"
 
-#: src/lib/Sympa/ConfDef.pm:1810
+#: src/lib/Sympa/ConfDef.pm:1819
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
 "protection.  This feature requires external module: Net-DNS."
@@ -2358,52 +2354,51 @@ msgstr ""
 "一部のドメインでの過剰なDMARC保護を回避するため、メッセージの送信元アドレスを"
 "処理するパラメータ。この機能には追加モジュール Net-DNS が必要です。"
 
-#: src/lib/Sympa/ConfDef.pm:1814
+#: src/lib/Sympa/ConfDef.pm:1823
 msgid "Test mode(s) for DMARC Protection"
 msgstr "DMARC保護の検査モード"
 
-#: src/lib/Sympa/ConfDef.pm:1823
+#: src/lib/Sympa/ConfDef.pm:1832
 msgid "Regular expression for domain name match"
 msgstr "ドメイン名に一致する正規表現"
 
-#: src/lib/Sympa/ConfDef.pm:1828
+#: src/lib/Sympa/ConfDef.pm:1837
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "これはdomain_regex保護モードで使われています"
 
-#: src/lib/Sympa/ConfDef.pm:1831 src/lib/Sympa/ListDef.pm:2222
+#: src/lib/Sympa/ConfDef.pm:1840 src/lib/Sympa/ListDef.pm:2214
 msgid "New From name format"
 msgstr "送信者名書き換えの形式"
 
-#: src/lib/Sympa/ConfDef.pm:1833
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1842
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
-msgstr "書き換えた送信者の名前の形式"
+msgstr "書き換えたFromヘッダフィールドでの送信者の名前に使う書式です。"
 
-#: src/lib/Sympa/ConfDef.pm:1840 src/lib/Sympa/ListDef.pm:2206
+#: src/lib/Sympa/ConfDef.pm:1849 src/lib/Sympa/ListDef.pm:2198
 msgid "New From address"
 msgstr "新しい送信者アドレス:"
 
-#: src/lib/Sympa/ConfDef.pm:1846
+#: src/lib/Sympa/ConfDef.pm:1855
 msgid "List address verification"
 msgstr "リストアドレス検証"
 
-#: src/lib/Sympa/ConfDef.pm:1848
+#: src/lib/Sympa/ConfDef.pm:1857
 msgid ""
 "Checks if ailias with the same name as the list to be created already exists "
 "on the SMTP server. This feature requires external module: Net-SMTP."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1854
+#: src/lib/Sympa/ConfDef.pm:1863
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "アドレス検証に使うSMTP HELO (EHLO) パラメータ"
 
-#: src/lib/Sympa/ConfDef.pm:1857
+#: src/lib/Sympa/ConfDef.pm:1866
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr "初期値はlist_check_smtpパラメータのホスト部です。"
 
-#: src/lib/Sympa/ConfDef.pm:1862
+#: src/lib/Sympa/ConfDef.pm:1871
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
@@ -2411,19 +2406,19 @@ msgstr ""
 "作成しようとしているリストと同じ名前のエイリアスがないか確認するために問い合"
 "わせるSMTPサーバ"
 
-#: src/lib/Sympa/ConfDef.pm:1868
+#: src/lib/Sympa/ConfDef.pm:1877
 msgid "Address suffixes to verify"
 msgstr "検査するアドレスのサフィクス"
 
-#: src/lib/Sympa/ConfDef.pm:1876
+#: src/lib/Sympa/ConfDef.pm:1885
 msgid "Antivirus plug-in"
 msgstr "ウィルス検出プラグイン"
 
-#: src/lib/Sympa/ConfDef.pm:1881
+#: src/lib/Sympa/ConfDef.pm:1890
 msgid "Path to the antivirus scanner engine"
 msgstr "ウィルススキャナエンジンのパス"
 
-#: src/lib/Sympa/ConfDef.pm:1886
+#: src/lib/Sympa/ConfDef.pm:1895
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
@@ -2432,15 +2427,15 @@ msgstr ""
 "clamdscan)、McAfee (uvscan)、Fsecure (fsav)、Sophos、AVP、Trend Micro/"
 "VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:1891
+#: src/lib/Sympa/ConfDef.pm:1900
 msgid "Antivirus plugin command line arguments"
 msgstr "ウィルス検出ソフトウェアのコマンドライン引数"
 
-#: src/lib/Sympa/ConfDef.pm:1898
+#: src/lib/Sympa/ConfDef.pm:1907
 msgid "Notify sender if virus checker detects malicious content"
 msgstr "ウィルス検出ソフトウェアが有害なコンテンツを検出したら送信者に通知する"
 
-#: src/lib/Sympa/ConfDef.pm:1902
+#: src/lib/Sympa/ConfDef.pm:1911
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
@@ -2448,17 +2443,17 @@ msgstr ""
 "「送信者」はメッセージの送り手に返信。「delivery_status」は配送状況通知を返"
 "信。または「何もしない」。"
 
-#: src/lib/Sympa/ConfDef.pm:1907 src/lib/Sympa/ConfDef.pm:1913
+#: src/lib/Sympa/ConfDef.pm:1916 src/lib/Sympa/ConfDef.pm:1922
 msgid "Password validation"
 msgstr "パスワード強度検査"
 
-#: src/lib/Sympa/ConfDef.pm:1909
+#: src/lib/Sympa/ConfDef.pm:1918
 msgid ""
 "Checks if the password the users sbmitted has sufficient strength. This "
 "feature requires external module: Data-Password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1915
+#: src/lib/Sympa/ConfDef.pm:1924
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -2468,23 +2463,22 @@ msgstr ""
 "できます。 <http://search.cpan.org/~razinf/Data-Password-1.07/Password."
 "pm#VARIABLES>"
 
-#: src/lib/Sympa/ConfDef.pm:1923
+#: src/lib/Sympa/ConfDef.pm:1932
 msgid "Authentication with LDAP"
 msgstr "LDAP による認証"
 
-#: src/lib/Sympa/ConfDef.pm:1925
+#: src/lib/Sympa/ConfDef.pm:1934
 msgid ""
 "Authnticates users based on the directory on LDAP server. This feature "
 "requires external module: Net-LDAP. And also, if secure connection (LDAPS) "
 "is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1930
-#, fuzzy
+#: src/lib/Sympa/ConfDef.pm:1939
 msgid "Use canonical email address for LDAP authentication"
-msgstr "あなたのメール アドレスを認証サービスから取得するのに失敗しました。"
+msgstr "LDAP認証で正規化された電子メールアドレスを使う"
 
-#: src/lib/Sympa/ConfDef.pm:1932
+#: src/lib/Sympa/ConfDef.pm:1941
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2496,53 +2490,49 @@ msgstr ""
 "使われます。真に設定すると、LDAPサーバが返した電子メールアドレス (複数あれば"
 "最初のもの) が使われます。"
 
-#: src/lib/Sympa/ConfDef.pm:1937
+#: src/lib/Sympa/ConfDef.pm:1946
 msgid "SOAP HTTP interface"
 msgstr "SOAP HTTP インタフェース"
 
-#: src/lib/Sympa/ConfDef.pm:1939
+#: src/lib/Sympa/ConfDef.pm:1948
 msgid ""
 "Provides some functions of Sympa through SOAP HTTP interface. This feature "
 "requires external module: SOAP-Lite."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1944
+#: src/lib/Sympa/ConfDef.pm:1953
 msgid "URL of SympaSOAP"
 msgstr "SOAP HTTPインタフェースのURL"
 
-#: src/lib/Sympa/ConfDef.pm:1948
+#: src/lib/Sympa/ConfDef.pm:1957
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1951
+#: src/lib/Sympa/ConfDef.pm:1960
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1958
+#: src/lib/Sympa/ConfDef.pm:1967
 #, fuzzy
 msgid "Obsoleted parameters"
 msgstr "カスタムパラメータ"
 
-#: src/lib/Sympa/ConfDef.pm:1987
+#: src/lib/Sympa/ConfDef.pm:1996
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr "リストが自動リストであるかどうか区別できるようにするための接頭辞"
 
-#: src/lib/Sympa/ConfDef.pm:1993
+#: src/lib/Sympa/ConfDef.pm:2002
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
 msgstr "リスト読者のデータソース自動同期のタイムアウトの初期値"
 
-#: src/lib/Sympa/ConfDef.pm:1999
+#: src/lib/Sympa/ConfDef.pm:2008
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
 msgstr "リスト読者のデータソース変更時の同期のタイムアウトの初期値"
-
-#: src/lib/Sympa/ConfOpt.pm:3
-msgid "Site customization"
-msgstr "サイト設定"
 
 #: default/mhonarc-ressources.tt2:678 src/lib/Sympa/Language.pm:618
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
@@ -2608,11 +2598,11 @@ msgstr "オーナー"
 msgid "email address"
 msgstr "メール アドレス"
 
-#: src/lib/Sympa/ListDef.pm:205 src/lib/Sympa/ListDef.pm:95
+#: src/lib/Sympa/ListDef.pm:204 src/lib/Sympa/ListDef.pm:95
 msgid "name"
 msgstr "名前"
 
-#: src/lib/Sympa/ListDef.pm:101 src/lib/Sympa/ListDef.pm:211
+#: src/lib/Sympa/ListDef.pm:101 src/lib/Sympa/ListDef.pm:210
 msgid "private information"
 msgstr "非公開メモ"
 
@@ -2621,13 +2611,13 @@ msgid "profile"
 msgstr "特権"
 
 #: src/lib/Sympa/ListDef.pm:114 src/lib/Sympa/ListDef.pm:149
-#: src/lib/Sympa/ListDef.pm:191 src/lib/Sympa/ListDef.pm:238
-#: src/lib/Sympa/ListDef.pm:393 src/lib/Sympa/ListDef.pm:418
+#: src/lib/Sympa/ListDef.pm:190 src/lib/Sympa/ListDef.pm:237
+#: src/lib/Sympa/ListDef.pm:392 src/lib/Sympa/ListDef.pm:418
 msgid "reception mode"
 msgstr "受け取りモード"
 
 #: src/lib/Sympa/ListDef.pm:121 src/lib/Sympa/ListDef.pm:156
-#: src/lib/Sympa/ListDef.pm:198 src/lib/Sympa/ListDef.pm:245
+#: src/lib/Sympa/ListDef.pm:197 src/lib/Sympa/ListDef.pm:244
 #: src/lib/Sympa/ListDef.pm:431
 msgid "visibility"
 msgstr "見えかた"
@@ -2659,11 +2649,11 @@ msgstr ""
 "く、投稿を承認して配送したり、拒否したりできます。モデレーションキューに留"
 "まっている投稿は、配送することも拒否することもできます。"
 
-#: src/lib/Sympa/ListDef.pm:257
+#: src/lib/Sympa/ListDef.pm:256
 msgid "Topics for the list"
 msgstr "リストのトピック"
 
-#: src/lib/Sympa/ListDef.pm:259
+#: src/lib/Sympa/ListDef.pm:258
 msgid ""
 "This parameter allows the classification of lists. You may define multiple "
 "topics as well as hierarchical ones. WWSympa's list of public lists uses "
@@ -2673,15 +2663,15 @@ msgstr ""
 "もできます。分野の中にさらに分野を作ることもできます。公開メーリングリスト一"
 "覧で、このパラメータを使います。"
 
-#: src/lib/Sympa/ListDef.pm:270
+#: src/lib/Sympa/ListDef.pm:269
 msgid "Internet domain"
 msgstr "インターネットドメイン"
 
-#: src/lib/Sympa/ListDef.pm:282
+#: src/lib/Sympa/ListDef.pm:281
 msgid "Language of the list"
 msgstr "リストの言語"
 
-#: src/lib/Sympa/ListDef.pm:284
+#: src/lib/Sympa/ListDef.pm:283
 msgid ""
 "This parameter defines the language used for the list. It is used to "
 "initialize a user's language preference; Sympa command reports are extracted "
@@ -2690,43 +2680,43 @@ msgstr ""
 "リストで使う言語を決めます。 利用者の言語についての個人設定を初期化するのに使"
 "います。コマンドの実行結果は、その言語のメッセージカタログで作成します。"
 
-#: src/lib/Sympa/ListDef.pm:305
+#: src/lib/Sympa/ListDef.pm:304
 msgid "Maximum number of list members"
 msgstr "読者数の上限"
 
-#: src/lib/Sympa/ListDef.pm:315
+#: src/lib/Sympa/ListDef.pm:314
 msgid "Priority"
 msgstr "優先度"
 
-#: src/lib/Sympa/ListDef.pm:329
+#: src/lib/Sympa/ListDef.pm:328
 msgid "Who can send messages"
 msgstr "メッセージを送ることができるのは"
 
-#: src/lib/Sympa/ListDef.pm:338
+#: src/lib/Sympa/ListDef.pm:337
 msgid "Delivery time (hh:mm)"
 msgstr "配送時刻 (hh:mm)"
 
-#: src/lib/Sympa/ListDef.pm:347
+#: src/lib/Sympa/ListDef.pm:346
 msgid "Digest frequency"
 msgstr "まとめ読み送信をする時期"
 
-#: src/lib/Sympa/ListDef.pm:362
+#: src/lib/Sympa/ListDef.pm:361
 msgid "hour"
 msgstr "時"
 
-#: src/lib/Sympa/ListDef.pm:369
+#: src/lib/Sympa/ListDef.pm:368
 msgid "minute"
 msgstr "分"
 
-#: src/lib/Sympa/ListDef.pm:380
+#: src/lib/Sympa/ListDef.pm:379
 msgid "Digest maximum number of messages"
 msgstr "まとめ読み内の最大メッセージ数"
 
-#: src/lib/Sympa/ListDef.pm:390
+#: src/lib/Sympa/ListDef.pm:389
 msgid "Available subscription options"
 msgstr "読者が利用できる受け取りモード"
 
-#: src/lib/Sympa/ListDef.pm:413
+#: src/lib/Sympa/ListDef.pm:412
 msgid "Subscription profile"
 msgstr "読者の初期設定"
 
@@ -2859,84 +2849,84 @@ msgstr ""
 msgid "Maximum message size"
 msgstr "最大メッセージサイズ"
 
-#: src/lib/Sympa/ListDef.pm:607
+#: src/lib/Sympa/ListDef.pm:606
 msgid "Allow message personalization"
 msgstr "メッセージを個別化できるようにする"
 
-#: src/lib/Sympa/ListDef.pm:616
+#: src/lib/Sympa/ListDef.pm:615
 msgid "Reject mail from automates (crontab, etc)?"
 msgstr "自動処理 (cronジョブなど) で送られるメールを拒否するか"
 
-#: src/lib/Sympa/ListDef.pm:645
+#: src/lib/Sympa/ListDef.pm:644
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369ヘッダフィールド"
 
-#: src/lib/Sympa/ListDef.pm:676
+#: src/lib/Sympa/ListDef.pm:675
 msgid "Who can view list information"
 msgstr "リストの案内を見ることができるのは"
 
-#: src/lib/Sympa/ListDef.pm:683
+#: src/lib/Sympa/ListDef.pm:682
 msgid "Who can subscribe to the list"
 msgstr "リストに読者登録できるのは"
 
-#: src/lib/Sympa/ListDef.pm:693
+#: src/lib/Sympa/ListDef.pm:692
 msgid "Who can add subscribers"
 msgstr "読者を追加できるのは"
 
-#: src/lib/Sympa/ListDef.pm:702
+#: src/lib/Sympa/ListDef.pm:701
 msgid "Who can unsubscribe"
 msgstr "登録解除できるのは"
 
-#: src/lib/Sympa/ListDef.pm:712
+#: src/lib/Sympa/ListDef.pm:711
 msgid "Who can delete subscribers"
 msgstr "読者を削除できるのは"
 
-#: src/lib/Sympa/ListDef.pm:719
+#: src/lib/Sympa/ListDef.pm:718
 msgid "Who can invite people"
 msgstr "招待できるのは"
 
-#: src/lib/Sympa/ListDef.pm:726
+#: src/lib/Sympa/ListDef.pm:725
 msgid "Who can start a remind process"
 msgstr "登録確認処理を開始できるのは"
 
-#: src/lib/Sympa/ListDef.pm:735
+#: src/lib/Sympa/ListDef.pm:734
 msgid "Who can review subscribers"
 msgstr "読者一覧を見ることができるのは"
 
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_read.tt2:2
 #: default/web_tt2/d_upload.tt2:2 default/web_tt2/list_menu.tt2:146
-#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:745
+#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:744
 msgid "Shared documents"
 msgstr "共有文書置き場"
 
-#: src/lib/Sympa/ListDef.pm:751
+#: src/lib/Sympa/ListDef.pm:750
 msgid "Who can view"
 msgstr "見ることができるのは"
 
-#: src/lib/Sympa/ListDef.pm:756
+#: src/lib/Sympa/ListDef.pm:755
 msgid "Who can edit"
 msgstr "変更できるのは"
 
-#: src/lib/Sympa/ListDef.pm:761 src/lib/Sympa/ListDef.pm:793
-#: src/lib/Sympa/ListDef.pm:843
+#: src/lib/Sympa/ListDef.pm:760 src/lib/Sympa/ListDef.pm:792
+#: src/lib/Sympa/ListDef.pm:842
 msgid "quota"
 msgstr "容量制限"
 
-#: src/lib/Sympa/ListDef.pm:783
+#: src/lib/Sympa/ListDef.pm:782
 msgid "Web archives"
 msgstr "ウェブ投稿保管庫"
 
-#: src/lib/Sympa/ListDef.pm:787 src/lib/Sympa/ListDef.pm:825
-#: src/lib/Sympa/ListDef.pm:832
+#: src/lib/Sympa/ListDef.pm:786 src/lib/Sympa/ListDef.pm:824
+#: src/lib/Sympa/ListDef.pm:831
 msgid "access right"
 msgstr "アクセス権限"
 
-#: src/lib/Sympa/ListDef.pm:802 src/lib/Sympa/ListDef.pm:851
+#: src/lib/Sympa/ListDef.pm:801 src/lib/Sympa/ListDef.pm:850
 msgid "Maximum number of month archived"
 msgstr "投稿保管庫に保管する最大月数"
 
-#: src/lib/Sympa/ListDef.pm:814
+#: src/lib/Sympa/ListDef.pm:813
 msgid ""
 "Privilege for reading mail archives and frequency of archiving\n"
 "Defines who can access the web archive for the list."
@@ -2944,43 +2934,43 @@ msgstr ""
 "メールで投稿保管庫の中を見られる権限、投稿保管庫を改める時期、ウェブ上の投稿"
 "保管庫の中を見られる人を決めます。"
 
-#: src/lib/Sympa/ListDef.pm:818
+#: src/lib/Sympa/ListDef.pm:817
 msgid "frequency"
 msgstr "時期"
 
-#: src/lib/Sympa/ListDef.pm:837
+#: src/lib/Sympa/ListDef.pm:836
 msgid "access right by mail commands"
 msgstr "メールコマンドによるアクセス権限"
 
-#: src/lib/Sympa/ListDef.pm:862
+#: src/lib/Sympa/ListDef.pm:861
 msgid "Archive encrypted mails as cleartext"
 msgstr "暗号化メールを平文で投稿保管庫に保管"
 
-#: src/lib/Sympa/ListDef.pm:2360 src/lib/Sympa/ListDef.pm:871
+#: src/lib/Sympa/ListDef.pm:2352 src/lib/Sympa/ListDef.pm:870
 msgid "email address protection method"
 msgstr "メール アドレス保護手法"
 
-#: src/lib/Sympa/ListDef.pm:884
+#: src/lib/Sympa/ListDef.pm:883
 msgid "Bounces management"
 msgstr "配送エラー管理"
 
-#: src/lib/Sympa/ListDef.pm:888
+#: src/lib/Sympa/ListDef.pm:887
 msgid "warn rate"
 msgstr "警告レート"
 
-#: src/lib/Sympa/ListDef.pm:898
+#: src/lib/Sympa/ListDef.pm:897
 msgid "halt rate"
 msgstr "停止レート"
 
-#: src/lib/Sympa/ListDef.pm:913
+#: src/lib/Sympa/ListDef.pm:912
 msgid "Management of bouncers, 1st level"
 msgstr "配送エラーの管理、第一段階"
 
-#: src/lib/Sympa/ListDef.pm:918 src/lib/Sympa/ListDef.pm:955
+#: src/lib/Sympa/ListDef.pm:917 src/lib/Sympa/ListDef.pm:954
 msgid "threshold"
 msgstr "下限"
 
-#: src/lib/Sympa/ListDef.pm:920
+#: src/lib/Sympa/ListDef.pm:919
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
 "This parameter defines a lower limit for each category of bouncing users.For "
@@ -2991,19 +2981,19 @@ msgstr ""
 "ます。例えば 45 点にすると、第一段階は 45 点から第二段階の下限 (下記) の間と"
 "決まります。"
 
-#: src/lib/Sympa/ListDef.pm:928 src/lib/Sympa/ListDef.pm:965
+#: src/lib/Sympa/ListDef.pm:927 src/lib/Sympa/ListDef.pm:964
 msgid "action for this population"
 msgstr "この段階での処理"
 
-#: src/lib/Sympa/ListDef.pm:937 src/lib/Sympa/ListDef.pm:974
+#: src/lib/Sympa/ListDef.pm:936 src/lib/Sympa/ListDef.pm:973
 msgid "notification"
 msgstr "通知"
 
-#: src/lib/Sympa/ListDef.pm:950
+#: src/lib/Sympa/ListDef.pm:949
 msgid "Management of bouncers, 2nd level"
 msgstr "配送エラーの管理、第二段階"
 
-#: src/lib/Sympa/ListDef.pm:957
+#: src/lib/Sympa/ListDef.pm:956
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
 "This parameter defines the score range defining each category of bouncing "
@@ -3014,102 +3004,102 @@ msgstr ""
 "点を決めます。例えば 80 点にすると、第二段階は 80 点から 100 点の間と決まりま"
 "す。"
 
-#: src/lib/Sympa/ListDef.pm:987
+#: src/lib/Sympa/ListDef.pm:986
 msgid "percentage of list members in VERP mode"
 msgstr "リストの読者へ配送するメッセージのうち、VERP 方式で送るものの割合"
 
-#: src/lib/Sympa/ListDef.pm:997
+#: src/lib/Sympa/ListDef.pm:996
 msgid "Message tracking feature"
 msgstr "メッセージ追跡機能"
 
-#: src/lib/Sympa/ListDef.pm:1002
+#: src/lib/Sympa/ListDef.pm:1001
 msgid "tracking message by delivery status notification"
 msgstr "配送状況通知 (DSN) によるメッセージの追跡"
 
-#: src/lib/Sympa/ListDef.pm:1011
+#: src/lib/Sympa/ListDef.pm:1010
 msgid "tracking message by message disposition notification"
 msgstr "メッセージ開封通知 (MDN) によるメッセージの追跡"
 
-#: src/lib/Sympa/ListDef.pm:1019
+#: src/lib/Sympa/ListDef.pm:1018
 msgid "who can view message tracking"
 msgstr "メッセージ追跡状況を見ることができるのは"
 
-#: src/lib/Sympa/ListDef.pm:1025
+#: src/lib/Sympa/ListDef.pm:1024
 msgid "Tracking datas are removed after this number of days"
 msgstr "追跡データはこの日数が経つと削除する"
 
-#: src/lib/Sympa/ListDef.pm:1037
+#: src/lib/Sympa/ListDef.pm:1036
 msgid "Welcome return-path"
 msgstr "歓迎メッセージの配送エラー返送先"
 
-#: src/lib/Sympa/ListDef.pm:1047
+#: src/lib/Sympa/ListDef.pm:1046
 msgid "Return-path of the REMIND command"
 msgstr "読者登録確認の配送エラー返送先"
 
-#: src/lib/Sympa/ListDef.pm:1060
+#: src/lib/Sympa/ListDef.pm:1059
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "データソースから取り込んだらその読者に知らせるか"
 
-#: src/lib/Sympa/ListDef.pm:1069
+#: src/lib/Sympa/ListDef.pm:1068
 msgid "Timeout for fetch of include_sql_query"
 msgstr "「SQLクエリでの取り込み (include_sql_query)」の取得タイムアウト "
 
-#: src/lib/Sympa/ListDef.pm:1078
+#: src/lib/Sympa/ListDef.pm:1077
 msgid "User data source"
 msgstr "ユーザデータソース"
 
-#: src/lib/Sympa/ListDef.pm:1087
+#: src/lib/Sympa/ListDef.pm:1086
 msgid "File inclusion"
 msgstr "ファイルからの取り込み"
 
-#: src/lib/Sympa/ListDef.pm:1098
+#: src/lib/Sympa/ListDef.pm:1097
 msgid "Remote file inclusion"
 msgstr "外部ファイルからの取り込み"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:51 src/lib/Sympa/ListDef.pm:1102
-#: src/lib/Sympa/ListDef.pm:1150 src/lib/Sympa/ListDef.pm:1179
-#: src/lib/Sympa/ListDef.pm:1244 src/lib/Sympa/ListDef.pm:1372
-#: src/lib/Sympa/ListDef.pm:1553 src/lib/Sympa/ListDef.pm:1634
-#: src/lib/Sympa/ListDef.pm:1688 src/lib/Sympa/ListDef.pm:1818
-#: src/lib/Sympa/ListDef.pm:2002
+#: ext/VOOT/lib/Sympa/VOOT.pm:51 src/lib/Sympa/ListDef.pm:1101
+#: src/lib/Sympa/ListDef.pm:1147 src/lib/Sympa/ListDef.pm:1175
+#: src/lib/Sympa/ListDef.pm:1240 src/lib/Sympa/ListDef.pm:1366
+#: src/lib/Sympa/ListDef.pm:1545 src/lib/Sympa/ListDef.pm:1626
+#: src/lib/Sympa/ListDef.pm:1680 src/lib/Sympa/ListDef.pm:1810
+#: src/lib/Sympa/ListDef.pm:1994
 msgid "short name for this source"
 msgstr "このデータソースの略称"
 
-#: src/lib/Sympa/ListDef.pm:1108
+#: src/lib/Sympa/ListDef.pm:1107
 msgid "data location URL"
 msgstr "データの場所 (URL)"
 
-#: src/lib/Sympa/ListDef.pm:1115 src/lib/Sympa/ListDef.pm:1300
-#: src/lib/Sympa/ListDef.pm:1428 src/lib/Sympa/ListDef.pm:1594
-#: src/lib/Sympa/ListDef.pm:1744 src/lib/Sympa/ListDef.pm:1874
-#: src/lib/Sympa/ListDef.pm:2042
+#: src/lib/Sympa/ListDef.pm:1114 src/lib/Sympa/ListDef.pm:1296
+#: src/lib/Sympa/ListDef.pm:1422 src/lib/Sympa/ListDef.pm:1586
+#: src/lib/Sympa/ListDef.pm:1736 src/lib/Sympa/ListDef.pm:1866
+#: src/lib/Sympa/ListDef.pm:2034
 msgid "remote user"
 msgstr "リモートユーザ"
 
-#: src/lib/Sympa/ListDef.pm:1121 src/lib/Sympa/ListDef.pm:1305
-#: src/lib/Sympa/ListDef.pm:1433 src/lib/Sympa/ListDef.pm:1600
-#: src/lib/Sympa/ListDef.pm:1749 src/lib/Sympa/ListDef.pm:1879
-#: src/lib/Sympa/ListDef.pm:2048
+#: src/lib/Sympa/ListDef.pm:1120 src/lib/Sympa/ListDef.pm:1301
+#: src/lib/Sympa/ListDef.pm:1427 src/lib/Sympa/ListDef.pm:1592
+#: src/lib/Sympa/ListDef.pm:1741 src/lib/Sympa/ListDef.pm:1871
+#: src/lib/Sympa/ListDef.pm:2040
 msgid "remote password"
 msgstr "リモートパスワード"
 
-#: src/lib/Sympa/ListDef.pm:1133 src/lib/Sympa/ListDef.pm:1144
+#: src/lib/Sympa/ListDef.pm:1132 src/lib/Sympa/ListDef.pm:1141
 msgid "List inclusion"
 msgstr "他のリストからの取り込み"
 
-#: src/lib/Sympa/ListDef.pm:1156
+#: src/lib/Sympa/ListDef.pm:1153
 msgid "list name to include"
 msgstr "取り込むリスト"
 
-#: src/lib/Sympa/ListDef.pm:1163
+#: src/lib/Sympa/ListDef.pm:1159
 msgid "filter definition"
 msgstr "フィルタ定義"
 
-#: src/lib/Sympa/ListDef.pm:1173
+#: src/lib/Sympa/ListDef.pm:1169
 msgid "remote list inclusion"
 msgstr "外部のリストからの取り込み"
 
-#: src/lib/Sympa/ListDef.pm:1175
+#: src/lib/Sympa/ListDef.pm:1171
 msgid ""
 "Sympa can contact another Sympa service using HTTPS to fetch a remote list "
 "in order to include each member of a remote list as subscriber. You may "
@@ -3131,199 +3121,199 @@ msgstr ""
 "する権限を与えることだけです。「読者一覧を見ることができるのは (review)」シナ"
 "リオでこの動作を制御します。"
 
-#: src/lib/Sympa/ListDef.pm:1185 src/lib/Sympa/ListDef.pm:1250
-#: src/lib/Sympa/ListDef.pm:1378 src/lib/Sympa/ListDef.pm:1565
-#: src/lib/Sympa/ListDef.pm:1694 src/lib/Sympa/ListDef.pm:1824
-#: src/lib/Sympa/ListDef.pm:2014
+#: src/lib/Sympa/ListDef.pm:1181 src/lib/Sympa/ListDef.pm:1246
+#: src/lib/Sympa/ListDef.pm:1372 src/lib/Sympa/ListDef.pm:1557
+#: src/lib/Sympa/ListDef.pm:1686 src/lib/Sympa/ListDef.pm:1816
+#: src/lib/Sympa/ListDef.pm:2006
 msgid "remote host"
 msgstr "リモートホスト"
 
-#: src/lib/Sympa/ListDef.pm:1191 src/lib/Sympa/ListDef.pm:1256
-#: src/lib/Sympa/ListDef.pm:1384 src/lib/Sympa/ListDef.pm:1700
-#: src/lib/Sympa/ListDef.pm:1830
+#: src/lib/Sympa/ListDef.pm:1187 src/lib/Sympa/ListDef.pm:1252
+#: src/lib/Sympa/ListDef.pm:1378 src/lib/Sympa/ListDef.pm:1692
+#: src/lib/Sympa/ListDef.pm:1822
 msgid "remote port"
 msgstr "リモートポート"
 
-#: src/lib/Sympa/ListDef.pm:1198
+#: src/lib/Sympa/ListDef.pm:1194
 msgid "remote path of sympa list dump"
 msgstr "Sympa リストダンプのリモートパス"
 
-#: src/lib/Sympa/ListDef.pm:1206
+#: src/lib/Sympa/ListDef.pm:1202
 msgid "certificate for authentication by remote Sympa"
 msgstr "外部の Sympa で認証してログインする"
 
-#: src/lib/Sympa/ListDef.pm:1238
+#: src/lib/Sympa/ListDef.pm:1234
 msgid "LDAP query inclusion"
 msgstr "LDAPクエリでの取り込み"
 
-#: src/lib/Sympa/ListDef.pm:1312 src/lib/Sympa/ListDef.pm:1756
+#: src/lib/Sympa/ListDef.pm:1308 src/lib/Sympa/ListDef.pm:1748
 msgid "suffix"
 msgstr "ベース識別名"
 
-#: src/lib/Sympa/ListDef.pm:1317 src/lib/Sympa/ListDef.pm:1761
+#: src/lib/Sympa/ListDef.pm:1313 src/lib/Sympa/ListDef.pm:1753
 msgid "search scope"
 msgstr "検索スコープ"
 
-#: src/lib/Sympa/ListDef.pm:1324 src/lib/Sympa/ListDef.pm:1768
+#: src/lib/Sympa/ListDef.pm:1320 src/lib/Sympa/ListDef.pm:1760
 msgid "connection timeout"
 msgstr "接続タイムアウト"
 
-#: src/lib/Sympa/ListDef.pm:1332 src/lib/Sympa/ListDef.pm:1776
+#: src/lib/Sympa/ListDef.pm:1328 src/lib/Sympa/ListDef.pm:1768
 msgid "filter"
 msgstr "フィルタ"
 
-#: src/lib/Sympa/ListDef.pm:1339 src/lib/Sympa/ListDef.pm:1783
+#: src/lib/Sympa/ListDef.pm:1335 src/lib/Sympa/ListDef.pm:1775
 msgid "extracted attribute"
 msgstr "取得属性"
 
-#: src/lib/Sympa/ListDef.pm:1348 src/lib/Sympa/ListDef.pm:1796
+#: src/lib/Sympa/ListDef.pm:1342 src/lib/Sympa/ListDef.pm:1788
 msgid "selection (if multiple)"
 msgstr "複数該当した場合の対象"
 
-#: src/lib/Sympa/ListDef.pm:1355 src/lib/Sympa/ListDef.pm:1536
-#: src/lib/Sympa/ListDef.pm:1619 src/lib/Sympa/ListDef.pm:1803
-#: src/lib/Sympa/ListDef.pm:1987 src/lib/Sympa/ListDef.pm:2073
+#: src/lib/Sympa/ListDef.pm:1349 src/lib/Sympa/ListDef.pm:1528
+#: src/lib/Sympa/ListDef.pm:1611 src/lib/Sympa/ListDef.pm:1795
+#: src/lib/Sympa/ListDef.pm:1979 src/lib/Sympa/ListDef.pm:2065
 msgid "Time ranges when inclusion is not allowed"
 msgstr "取り込みを休止する時間帯"
 
-#: src/lib/Sympa/ListDef.pm:1366
+#: src/lib/Sympa/ListDef.pm:1360
 msgid "LDAP 2-level query inclusion"
 msgstr "LDAP二段階クエリでの取り込み"
 
-#: src/lib/Sympa/ListDef.pm:1440 src/lib/Sympa/ListDef.pm:1886
+#: src/lib/Sympa/ListDef.pm:1434 src/lib/Sympa/ListDef.pm:1878
 msgid "first-level suffix"
 msgstr "第一段階のベース識別名"
 
-#: src/lib/Sympa/ListDef.pm:1445 src/lib/Sympa/ListDef.pm:1891
+#: src/lib/Sympa/ListDef.pm:1439 src/lib/Sympa/ListDef.pm:1883
 msgid "first-level search scope"
 msgstr "第一段階の検索スコープ"
 
-#: src/lib/Sympa/ListDef.pm:1451 src/lib/Sympa/ListDef.pm:1898
+#: src/lib/Sympa/ListDef.pm:1445 src/lib/Sympa/ListDef.pm:1890
 msgid "first-level connection timeout"
 msgstr "第一段階の接続タイムアウト"
 
-#: src/lib/Sympa/ListDef.pm:1459 src/lib/Sympa/ListDef.pm:1906
+#: src/lib/Sympa/ListDef.pm:1453 src/lib/Sympa/ListDef.pm:1898
 msgid "first-level filter"
 msgstr "第一段階のフィルタ"
 
-#: src/lib/Sympa/ListDef.pm:1466 src/lib/Sympa/ListDef.pm:1913
+#: src/lib/Sympa/ListDef.pm:1460 src/lib/Sympa/ListDef.pm:1905
 msgid "first-level extracted attribute"
 msgstr "第一段階で取得する属性"
 
-#: src/lib/Sympa/ListDef.pm:1472 src/lib/Sympa/ListDef.pm:1919
+#: src/lib/Sympa/ListDef.pm:1466 src/lib/Sympa/ListDef.pm:1911
 msgid "first-level selection"
 msgstr "第一段階の対象"
 
-#: src/lib/Sympa/ListDef.pm:1479 src/lib/Sympa/ListDef.pm:1926
+#: src/lib/Sympa/ListDef.pm:1473 src/lib/Sympa/ListDef.pm:1918
 msgid "first-level regular expression"
 msgstr "第一段階の正規表現"
 
-#: src/lib/Sympa/ListDef.pm:1486 src/lib/Sympa/ListDef.pm:1933
+#: src/lib/Sympa/ListDef.pm:1480 src/lib/Sympa/ListDef.pm:1925
 msgid "second-level suffix template"
 msgstr "第二段階のベース識別名テンプレート"
 
-#: src/lib/Sympa/ListDef.pm:1491 src/lib/Sympa/ListDef.pm:1938
+#: src/lib/Sympa/ListDef.pm:1485 src/lib/Sympa/ListDef.pm:1930
 msgid "second-level search scope"
 msgstr "第二段階の検索スコープ"
 
-#: src/lib/Sympa/ListDef.pm:1498 src/lib/Sympa/ListDef.pm:1945
+#: src/lib/Sympa/ListDef.pm:1492 src/lib/Sympa/ListDef.pm:1937
 msgid "second-level connection timeout"
 msgstr "第二段階の接続タイムアウト"
 
-#: src/lib/Sympa/ListDef.pm:1506 src/lib/Sympa/ListDef.pm:1953
+#: src/lib/Sympa/ListDef.pm:1500 src/lib/Sympa/ListDef.pm:1945
 msgid "second-level filter template"
 msgstr "第二段階のフィルタテンプレート"
 
-#: src/lib/Sympa/ListDef.pm:1513 src/lib/Sympa/ListDef.pm:1960
+#: src/lib/Sympa/ListDef.pm:1507 src/lib/Sympa/ListDef.pm:1952
 msgid "second-level extracted attribute"
 msgstr "第二段階で取得する属性"
 
-#: src/lib/Sympa/ListDef.pm:1522 src/lib/Sympa/ListDef.pm:1967
+#: src/lib/Sympa/ListDef.pm:1514 src/lib/Sympa/ListDef.pm:1959
 msgid "second-level selection"
 msgstr "第二段階の対象"
 
-#: src/lib/Sympa/ListDef.pm:1529 src/lib/Sympa/ListDef.pm:1974
+#: src/lib/Sympa/ListDef.pm:1521 src/lib/Sympa/ListDef.pm:1966
 msgid "second-level regular expression"
 msgstr "第二段階の正規表現"
 
-#: src/lib/Sympa/ListDef.pm:1547
+#: src/lib/Sympa/ListDef.pm:1539
 msgid "SQL query inclusion"
 msgstr "SQLクエリでの取り込み"
 
-#: src/lib/Sympa/ListDef.pm:1559 src/lib/Sympa/ListDef.pm:2008
+#: src/lib/Sympa/ListDef.pm:1551 src/lib/Sympa/ListDef.pm:2000
 msgid "database type"
 msgstr "データベースの種類"
 
-#: src/lib/Sympa/ListDef.pm:1572 src/lib/Sympa/ListDef.pm:2020
+#: src/lib/Sympa/ListDef.pm:1564 src/lib/Sympa/ListDef.pm:2012
 msgid "database port"
 msgstr "データベースのポート番号"
 
-#: src/lib/Sympa/ListDef.pm:1577 src/lib/Sympa/ListDef.pm:2025
+#: src/lib/Sympa/ListDef.pm:1569 src/lib/Sympa/ListDef.pm:2017
 msgid "database name"
 msgstr "データベース名"
 
-#: src/lib/Sympa/ListDef.pm:1583 src/lib/Sympa/ListDef.pm:2031
+#: src/lib/Sympa/ListDef.pm:1575 src/lib/Sympa/ListDef.pm:2023
 msgid "connection options"
 msgstr "接続オプション"
 
-#: src/lib/Sympa/ListDef.pm:1589 src/lib/Sympa/ListDef.pm:2037
+#: src/lib/Sympa/ListDef.pm:1581 src/lib/Sympa/ListDef.pm:2029
 msgid "environment variables for database connection"
 msgstr "データベース接続の環境変数"
 
-#: src/lib/Sympa/ListDef.pm:1606 src/lib/Sympa/ListDef.pm:2054
+#: src/lib/Sympa/ListDef.pm:1598 src/lib/Sympa/ListDef.pm:2046
 msgid "SQL query"
 msgstr "SQLクエリ"
 
-#: src/lib/Sympa/ListDef.pm:1614 src/lib/Sympa/ListDef.pm:2062
+#: src/lib/Sympa/ListDef.pm:1606 src/lib/Sympa/ListDef.pm:2054
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "データベース格納ディレクトリ (DBD::CSVの場合のみ)"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1630
+#: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1622
 msgid "VOOT group inclusion"
 msgstr "VOOTグループの取り込み"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1640
+#: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1632
 msgid "user"
 msgstr "人"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1646
+#: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1638
 msgid "provider"
 msgstr "プロバイダ"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1652
+#: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1644
 msgid "group"
 msgstr "グループ"
 
-#: src/lib/Sympa/ListDef.pm:1663
+#: src/lib/Sympa/ListDef.pm:1655
 msgid "Inclusions timeout"
 msgstr "読み込みタイムアウト"
 
-#: src/lib/Sympa/ListDef.pm:1675
+#: src/lib/Sympa/ListDef.pm:1667
 msgid "Inclusions timeout for message distribution"
 msgstr "メッセージ配信の際の取り込み時間制限"
 
-#: src/lib/Sympa/ListDef.pm:1684
+#: src/lib/Sympa/ListDef.pm:1676
 msgid "LDAP query custom attribute"
 msgstr "LDAPクエリによるカスタム属性"
 
-#: src/lib/Sympa/ListDef.pm:1790 src/lib/Sympa/ListDef.pm:1981
-#: src/lib/Sympa/ListDef.pm:2067
+#: src/lib/Sympa/ListDef.pm:1782 src/lib/Sympa/ListDef.pm:1973
+#: src/lib/Sympa/ListDef.pm:2059
 msgid "Name of email entry"
 msgstr "電子メールアドレスの項目 (LDAPの属性名かSQLの列名)"
 
-#: src/lib/Sympa/ListDef.pm:1814
+#: src/lib/Sympa/ListDef.pm:1806
 msgid "LDAP 2-level query custom attribute"
 msgstr "LDAP二段階クエリによるカスタム属性"
 
-#: src/lib/Sympa/ListDef.pm:1998
+#: src/lib/Sympa/ListDef.pm:1990
 msgid "SQL query custom attribute"
 msgstr "SQLクエリによるカスタム属性"
 
-#: src/lib/Sympa/ListDef.pm:2086
+#: src/lib/Sympa/ListDef.pm:2078
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "リストへ送るメッセージにDKIM署名を付ける"
 
-#: src/lib/Sympa/ListDef.pm:2088
+#: src/lib/Sympa/ListDef.pm:2080
 msgid ""
 "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be "
 "some custom scenario to be updated"
@@ -3331,19 +3321,19 @@ msgstr ""
 "DKIM を有効または無効にする。この機能を使うには Mail::DKIM をインストールして"
 "おく必要があります。カスタムシナリオを更新する必要もあるかもしれません。"
 
-#: src/lib/Sympa/ListDef.pm:2097
+#: src/lib/Sympa/ListDef.pm:2089
 msgid "DKIM configuration"
 msgstr "DKIMの設定"
 
-#: src/lib/Sympa/ListDef.pm:2103
+#: src/lib/Sympa/ListDef.pm:2095
 msgid "File path for list DKIM private key"
 msgstr "リストのDKIM秘密鍵のファイルのパス"
 
-#: src/lib/Sympa/ListDef.pm:2105
+#: src/lib/Sympa/ListDef.pm:2097
 msgid "The file must contain a RSA pem encoded private key"
 msgstr "ファイルには PEM 形式の RSA 秘密鍵を入れておかなければなりません"
 
-#: src/lib/Sympa/ListDef.pm:2114
+#: src/lib/Sympa/ListDef.pm:2106
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -3353,12 +3343,12 @@ msgstr ""
 "た値を設定してください。<セレクタ>._domainkey.自分のドメイン というクエリで "
 "DKIM 公開鍵を取得できることを確認してください。"
 
-#: src/lib/Sympa/ListDef.pm:2158
+#: src/lib/Sympa/ListDef.pm:2150
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr "リストへ送るメッセージのうち、DKIMで署名するもの"
 
-#: src/lib/Sympa/ListDef.pm:2160
+#: src/lib/Sympa/ListDef.pm:2152
 msgid ""
 "This parameter controls in which case messages must be signed using DKIM, "
 "you may sign every message choosing 'any' or a subset. The parameter value "
@@ -3368,19 +3358,19 @@ msgstr ""
 "ジ」でいつも署名するようにも、一部だけにもできます。複数のキーワードを指定す"
 "るときはカンマで区切ります"
 
-#: src/lib/Sympa/ListDef.pm:2188
+#: src/lib/Sympa/ListDef.pm:2180
 msgid "Protection modes"
 msgstr "保護モード"
 
-#: src/lib/Sympa/ListDef.pm:2198
+#: src/lib/Sympa/ListDef.pm:2190
 msgid "Match domain regexp"
 msgstr "ドメインが正規表現に一致"
 
-#: src/lib/Sympa/ListDef.pm:2229
+#: src/lib/Sympa/ListDef.pm:2221
 msgid "DMARC Protection"
 msgstr "DMARC保護機能"
 
-#: src/lib/Sympa/ListDef.pm:2232
+#: src/lib/Sympa/ListDef.pm:2224
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
@@ -3388,23 +3378,23 @@ msgstr ""
 "一部のドメインでの過剰なDMARC保護を回避するため、メッセージの送信元アドレスを"
 "処理するパラメータ"
 
-#: src/lib/Sympa/ListDef.pm:2240
+#: src/lib/Sympa/ListDef.pm:2232
 msgid "Account"
 msgstr "アカウント"
 
-#: src/lib/Sympa/ListDef.pm:2249
+#: src/lib/Sympa/ListDef.pm:2241
 msgid "Expiration of unmoderated messages"
 msgstr "モデレーション待ちメッセージの有効期限"
 
-#: src/lib/Sympa/ListDef.pm:2271
+#: src/lib/Sympa/ListDef.pm:2263
 msgid "custom parameters"
 msgstr "カスタムパラメータ"
 
-#: src/lib/Sympa/ListDef.pm:2292
+#: src/lib/Sympa/ListDef.pm:2284
 msgid "Periodical subscription expiration task"
 msgstr "定期的な読者登録期限切れタスク"
 
-#: src/lib/Sympa/ListDef.pm:2294
+#: src/lib/Sympa/ListDef.pm:2286
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -3415,17 +3405,17 @@ msgstr ""
 "す。読者登録期限切れタスクは、定期的に読者の登録日と再登録日を調べ、読者登録"
 "を継続するか問い合わせ、継続しないのなら削除します。"
 
-#: src/lib/Sympa/ListDef.pm:2331
+#: src/lib/Sympa/ListDef.pm:2323
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "メール自動処理プログラムが引き起こすメールループを停めるための正規表現"
 
-#: src/lib/Sympa/ListDef.pm:2341
+#: src/lib/Sympa/ListDef.pm:2333
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr ""
 "ピクチャを表示するようにするか (現在のロボットでは有効にしないと表示されませ"
 "ん)"
 
-#: src/lib/Sympa/ListDef.pm:2362
+#: src/lib/Sympa/ListDef.pm:2354
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
 "email addresses from public web sites. Various methods are available in "
@@ -3452,61 +3442,61 @@ msgstr ""
 "none: \n"
 "スパム送信者対策をしません"
 
-#: src/lib/Sympa/ListDef.pm:2371
+#: src/lib/Sympa/ListDef.pm:2363
 msgid "Creation of the list"
 msgstr "リストの作成"
 
-#: src/lib/Sympa/ListDef.pm:2312 src/lib/Sympa/ListDef.pm:2317
-#: src/lib/Sympa/ListDef.pm:2375 src/lib/Sympa/ListDef.pm:2414
-#: src/lib/Sympa/ListDef.pm:2420
+#: src/lib/Sympa/ListDef.pm:2304 src/lib/Sympa/ListDef.pm:2309
+#: src/lib/Sympa/ListDef.pm:2367 src/lib/Sympa/ListDef.pm:2405
+#: src/lib/Sympa/ListDef.pm:2411
 msgid "date"
 msgstr "日付"
 
-#: src/lib/Sympa/ListDef.pm:2384
+#: src/lib/Sympa/ListDef.pm:2376
 msgid "human readable"
 msgstr "日時"
 
-#: src/lib/Sympa/ListDef.pm:2389
+#: src/lib/Sympa/ListDef.pm:2381
 msgid "who created the list"
 msgstr "リスト作成者"
 
-#: src/lib/Sympa/ListDef.pm:2401
+#: src/lib/Sympa/ListDef.pm:2393
 msgid "Last update of config"
 msgstr "設定の最終更新"
 
-#: src/lib/Sympa/ListDef.pm:2433
+#: src/lib/Sympa/ListDef.pm:2424
 msgid "Status of the list"
 msgstr "リストの状況"
 
-#: src/lib/Sympa/ListDef.pm:2444
+#: src/lib/Sympa/ListDef.pm:2435
 msgid "Serial number of the config"
 msgstr "設定の連番"
 
-#: src/lib/Sympa/ListDef.pm:2454
+#: src/lib/Sympa/ListDef.pm:2445
 msgid "Custom user attributes"
 msgstr "利用者属性の追加"
 
-#: src/lib/Sympa/ListDef.pm:2458
+#: src/lib/Sympa/ListDef.pm:2449
 msgid "internal identifier"
 msgstr "内部名"
 
-#: src/lib/Sympa/ListDef.pm:2465
+#: src/lib/Sympa/ListDef.pm:2456
 msgid "label"
 msgstr "見出し"
 
-#: src/lib/Sympa/ListDef.pm:2472
+#: src/lib/Sympa/ListDef.pm:2463
 msgid "additional comment"
 msgstr "追加説明"
 
-#: src/lib/Sympa/ListDef.pm:2478
+#: src/lib/Sympa/ListDef.pm:2469
 msgid "type"
 msgstr "種類"
 
-#: src/lib/Sympa/ListDef.pm:2485
+#: src/lib/Sympa/ListDef.pm:2476
 msgid "possible attribute values (if enum is used)"
 msgstr "属性が取りうる値 (enum を使う場合)"
 
-#: src/lib/Sympa/ListDef.pm:2491
+#: src/lib/Sympa/ListDef.pm:2482
 msgid "is the attribute optional?"
 msgstr "属性は省略可能か"
 
@@ -3553,19 +3543,19 @@ msgstr "データソース"
 msgid "datasource parameters"
 msgstr "データソースのパラメータ"
 
-#: src/lib/Sympa/ListDef.pm:222
+#: src/lib/Sympa/ListDef.pm:221
 msgid "Moderators defined in an external data source"
 msgstr "モデレータを外部データソースで決める"
 
-#: src/lib/Sympa/ListDef.pm:1221 src/lib/Sympa/ListDef.pm:226
+#: src/lib/Sympa/ListDef.pm:1217 src/lib/Sympa/ListDef.pm:225
 msgid "the data source"
 msgstr "データソース"
 
-#: src/lib/Sympa/ListDef.pm:1227 src/lib/Sympa/ListDef.pm:232
+#: src/lib/Sympa/ListDef.pm:1223 src/lib/Sympa/ListDef.pm:231
 msgid "data source parameters"
 msgstr "データソースのパラメータ"
 
-#: src/lib/Sympa/ListDef.pm:272
+#: src/lib/Sympa/ListDef.pm:271
 msgid ""
 "Domain name of the list, default is the robot domain name set in the related "
 "robot.conf file or in file sympa.conf."
@@ -3573,16 +3563,16 @@ msgstr ""
 "リストのインターネットドメイン名。初期値は関連する robot.conf (または sympa."
 "conf) に設定してあるロボットのドメイン名です。"
 
-#: src/lib/Sympa/ListDef.pm:296
+#: src/lib/Sympa/ListDef.pm:295
 msgid "Family name"
 msgstr "設定族の名前"
 
 # max_list_membersリストパラメータの助数詞
-#: src/lib/Sympa/ListDef.pm:306
+#: src/lib/Sympa/ListDef.pm:305
 msgid "list members"
 msgstr "名"
 
-#: src/lib/Sympa/ListDef.pm:317
+#: src/lib/Sympa/ListDef.pm:316
 msgid ""
 "The priority with which Sympa will process messages for this list. This "
 "level of priority is applied while the message is going through the spool. "
@@ -3592,11 +3582,11 @@ msgstr ""
 "レベルは、メッセージがキューを通過する際に適用されます。「メッセージをキュー"
 "に留める (z)」にすると、メッセージはキューに留まり、配送されません。"
 
-#: src/lib/Sympa/ListDef.pm:331
+#: src/lib/Sympa/ListDef.pm:330
 msgid "This parameter specifies who can send messages to the list."
 msgstr "このパラメータでは、誰がリストに投稿できるかを指定します。"
 
-#: src/lib/Sympa/ListDef.pm:349
+#: src/lib/Sympa/ListDef.pm:348
 msgid ""
 "Definition of digest mode. If this parameter is present, subscribers can "
 "select the option of receiving messages in multipart/digest MIME format, or "
@@ -3610,11 +3600,11 @@ msgstr ""
 "このパラメータで設定した周期で読者にまとまって送られるようになります。"
 
 # unit
-#: src/lib/Sympa/ListDef.pm:381
+#: src/lib/Sympa/ListDef.pm:380
 msgid "messages"
 msgstr "通"
 
-#: src/lib/Sympa/ListDef.pm:395
+#: src/lib/Sympa/ListDef.pm:394
 msgid ""
 "Only these modes will be allowed for the subscribers of this list. If a "
 "subscriber has a reception mode not in the list, Sympa uses the mode "
@@ -3703,39 +3693,39 @@ msgstr ""
 "は投稿の連番に、それぞれ置き換えます。そうしてできたものを、[] で囲んで表題 "
 "(Subject) の前につけます。"
 
-#: src/lib/Sympa/ListDef.pm:596
+#: src/lib/Sympa/ListDef.pm:595
 msgid "Maximum size of a message in 8-bit bytes."
 msgstr "メッセージの最大サイズ (バイト単位)"
 
-#: src/lib/Sympa/ListDef.pm:625
+#: src/lib/Sympa/ListDef.pm:624
 msgid "Incoming SMTP header fields to be removed"
 msgstr "メッセージを受け取ったときに削除するヘッダフィールド"
 
-#: src/lib/Sympa/ListDef.pm:635
+#: src/lib/Sympa/ListDef.pm:634
 msgid "Outgoing SMTP header fields to be removed"
 msgstr "メッセージを送り出すときに削除するヘッダフィールド"
 
-#: src/lib/Sympa/ListDef.pm:656
+#: src/lib/Sympa/ListDef.pm:655
 msgid "Hook modules for message processing"
 msgstr "メッセージ処理のためのフックモジュール"
 
-#: src/lib/Sympa/ListDef.pm:660
+#: src/lib/Sympa/ListDef.pm:659
 msgid "A hook on the messages before distribution"
 msgstr "配送直前のメッセージフック"
 
-#: src/lib/Sympa/ListDef.pm:665
+#: src/lib/Sympa/ListDef.pm:664
 msgid "A hook on the messages just after archiving"
 msgstr "投稿保管庫への保存直後のメッセージフック"
 
-#: src/lib/Sympa/ListDef.pm:685
+#: src/lib/Sympa/ListDef.pm:684
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr "読者登録パラメータでは、リストへの読者登録のしかたを決めます。"
 
-#: src/lib/Sympa/ListDef.pm:695
+#: src/lib/Sympa/ListDef.pm:694
 msgid "Privilege for adding (ADD command) a subscriber to the list"
 msgstr "(ADD コマンドにより) 読者をリストに追加できる権限"
 
-#: src/lib/Sympa/ListDef.pm:704
+#: src/lib/Sympa/ListDef.pm:703
 msgid ""
 "This parameter specifies the unsubscription method for the list. Use "
 "open_notify or auth_notify to allow owner notification of each unsubscribe "
@@ -3745,11 +3735,11 @@ msgstr ""
 "オーナーへの報告が必要な場合は「オーナーに報告する」となっているシナリオをお"
 "使いください。"
 
-#: src/lib/Sympa/ListDef.pm:728
+#: src/lib/Sympa/ListDef.pm:727
 msgid "This parameter specifies who is authorized to use the remind command."
 msgstr "このパラメータは、登録確認コマンドを使ってよい人を指定します。"
 
-#: src/lib/Sympa/ListDef.pm:737
+#: src/lib/Sympa/ListDef.pm:736
 msgid ""
 "This parameter specifies who can access the list of members. Since "
 "subscriber addresses can be abused by spammers, it is strongly recommended "
@@ -3759,7 +3749,7 @@ msgstr ""
 "用することもありうるので、読者一覧へはリストのオーナーと読者のみがアクセスで"
 "きるようにすることを強くお勧めします。"
 
-#: src/lib/Sympa/ListDef.pm:747
+#: src/lib/Sympa/ListDef.pm:746
 msgid ""
 "This paragraph defines read and edit access to the shared document "
 "repository."
@@ -3767,7 +3757,7 @@ msgstr ""
 "ここでは、共有文書置き場へのアクセス権限 (読める人、変更できる人) を決めま"
 "す。"
 
-#: src/lib/Sympa/ListDef.pm:873
+#: src/lib/Sympa/ListDef.pm:872
 msgid ""
 "Idem spam_protection is provided but it can be used only for web archives. "
 "Access requires a cookie, and users must submit a small form in order to "
@@ -3779,26 +3769,26 @@ msgstr ""
 "見る前に簡単なフォームでクッキーを受け取らなければならなくなります。これで、"
 "Google をはじめあらゆる検索エンジン情報収集ソフトウェアから守れます。"
 
-#: src/lib/Sympa/ListDef.pm:891 src/lib/Sympa/ListDef.pm:901
+#: src/lib/Sympa/ListDef.pm:890 src/lib/Sympa/ListDef.pm:900
 msgid "%"
 msgstr "パーセント"
 
-#: src/lib/Sympa/ListDef.pm:914
+#: src/lib/Sympa/ListDef.pm:913
 msgid "Level 1 is the lower level of bouncing users"
 msgstr "第一段階は、配送エラーを起こしている読者の初期の段階です。"
 
-#: src/lib/Sympa/ListDef.pm:921 src/lib/Sympa/ListDef.pm:958
+#: src/lib/Sympa/ListDef.pm:920 src/lib/Sympa/ListDef.pm:957
 msgid "points"
 msgstr "点"
 
-#: src/lib/Sympa/ListDef.pm:930
+#: src/lib/Sympa/ListDef.pm:929
 msgid ""
 "This parameter defines which task is automaticaly applied on level 1 "
 "bouncers."
 msgstr ""
 "第一段階の配送エラーを起こしている読者に自動的に適用するタスクを決めます。"
 
-#: src/lib/Sympa/ListDef.pm:939
+#: src/lib/Sympa/ListDef.pm:938
 msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
 "can be send to listowner or listmaster."
@@ -3806,11 +3796,11 @@ msgstr ""
 "第一段階の配送エラーを起こしている読者について自動タスクを実行した際に、リス"
 "トオーナーまたはリストシステム管理者に報告の電子メールを送れます。"
 
-#: src/lib/Sympa/ListDef.pm:951
+#: src/lib/Sympa/ListDef.pm:950
 msgid "Level 2 is the highest level of bouncing users"
 msgstr "第二段階は、配送エラーを起こしている読者のより進んだ段階です。"
 
-#: src/lib/Sympa/ListDef.pm:967
+#: src/lib/Sympa/ListDef.pm:966
 msgid ""
 "This parameter defines which task is automaticaly applied on level 2 "
 "bouncers."
@@ -3818,7 +3808,7 @@ msgstr ""
 "このパラメータで、第二段階の配送エラーを起こしている読者に自動的に適用するタ"
 "スクを決めます。"
 
-#: src/lib/Sympa/ListDef.pm:976
+#: src/lib/Sympa/ListDef.pm:975
 msgid ""
 "When automatic task is executed on level 2 bouncers, a notification email "
 "can be send to listowner or listmaster."
@@ -3826,7 +3816,7 @@ msgstr ""
 "第二段階の配送エラーを起こしている読者について自動タスクを実行した際に、リス"
 "トオーナーまたはリストシステム管理者に報告の電子メールを送れます。"
 
-#: src/lib/Sympa/ListDef.pm:1089
+#: src/lib/Sympa/ListDef.pm:1088
 msgid ""
 "Include subscribers from this file.  The file should contain one e-mail "
 "address per line (lines beginning with a \"#\" are ignored)."
@@ -3834,7 +3824,7 @@ msgstr ""
 "ここで設定したファイルから読者を取り込みます。ファイル形式は1行につきひとつの"
 "電子メールアドレスです (行頭が「#」のものは無視されます)。"
 
-#: src/lib/Sympa/ListDef.pm:1146
+#: src/lib/Sympa/ListDef.pm:1143
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
 "subscribers of the current list. You may include as many lists as required, "
@@ -3851,11 +3841,11 @@ msgstr ""
 "取り込み、さらに A メーリングリストに B メーリングリストを取り込むと、無限"
 "ループを引き起こします。ご注意ください。"
 
-#: src/lib/Sympa/ListDef.pm:1217
+#: src/lib/Sympa/ListDef.pm:1213
 msgid "Users included from parameterizable data sources"
 msgstr "パラメータつき外部ソースから取り込み"
 
-#: src/lib/Sympa/ListDef.pm:1240
+#: src/lib/Sympa/ListDef.pm:1236
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
@@ -3863,32 +3853,32 @@ msgstr ""
 "ここでは、読者一覧を返すクエリのパラメータを設定します。この機能には Net::"
 "LDAP (perlldap) Perl モジュールが必要です。"
 
-#: src/lib/Sympa/ListDef.pm:1263 src/lib/Sympa/ListDef.pm:1391
-#: src/lib/Sympa/ListDef.pm:1707 src/lib/Sympa/ListDef.pm:1837
+#: src/lib/Sympa/ListDef.pm:1259 src/lib/Sympa/ListDef.pm:1385
+#: src/lib/Sympa/ListDef.pm:1699 src/lib/Sympa/ListDef.pm:1829
 msgid "use TLS (formerly SSL)"
 msgstr "TLS (SSL) を使う"
 
-#: src/lib/Sympa/ListDef.pm:1271 src/lib/Sympa/ListDef.pm:1399
-#: src/lib/Sympa/ListDef.pm:1715 src/lib/Sympa/ListDef.pm:1845
+#: src/lib/Sympa/ListDef.pm:1267 src/lib/Sympa/ListDef.pm:1393
+#: src/lib/Sympa/ListDef.pm:1707 src/lib/Sympa/ListDef.pm:1837
 msgid "use SSL (LDAPS)"
 msgstr "SSL (LDAPS) を使う"
 
-#: src/lib/Sympa/ListDef.pm:1278 src/lib/Sympa/ListDef.pm:1406
-#: src/lib/Sympa/ListDef.pm:1722 src/lib/Sympa/ListDef.pm:1852
+#: src/lib/Sympa/ListDef.pm:1274 src/lib/Sympa/ListDef.pm:1400
+#: src/lib/Sympa/ListDef.pm:1714 src/lib/Sympa/ListDef.pm:1844
 msgid "SSL version"
 msgstr "SSLのバージョン"
 
-#: src/lib/Sympa/ListDef.pm:1286 src/lib/Sympa/ListDef.pm:1414
-#: src/lib/Sympa/ListDef.pm:1730 src/lib/Sympa/ListDef.pm:1860
+#: src/lib/Sympa/ListDef.pm:1282 src/lib/Sympa/ListDef.pm:1408
+#: src/lib/Sympa/ListDef.pm:1722 src/lib/Sympa/ListDef.pm:1852
 msgid "SSL ciphers used"
 msgstr "利用するSSL暗号方式"
 
-#: src/lib/Sympa/ListDef.pm:1292 src/lib/Sympa/ListDef.pm:1420
-#: src/lib/Sympa/ListDef.pm:1736 src/lib/Sympa/ListDef.pm:1866
+#: src/lib/Sympa/ListDef.pm:1288 src/lib/Sympa/ListDef.pm:1414
+#: src/lib/Sympa/ListDef.pm:1728 src/lib/Sympa/ListDef.pm:1858
 msgid "Certificate verification"
 msgstr "証明書の検証"
 
-#: src/lib/Sympa/ListDef.pm:1368
+#: src/lib/Sympa/ListDef.pm:1362
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
@@ -3899,11 +3889,11 @@ msgstr ""
 "のクエリで識別名 (DN) の一覧を取得し、第二段階で識別名を電子メールアドレスに"
 "変換します。この機能には Net::LDAP (perlldap) Perl モジュールが必要です。"
 
-#: src/lib/Sympa/ListDef.pm:1549
+#: src/lib/Sympa/ListDef.pm:1541
 msgid "This parameter is used to define the SQL query parameters. "
 msgstr "このパラメータを使って、SQL クエリのパラメータを決めます。"
 
-#: src/lib/Sympa/ListDef.pm:1665
+#: src/lib/Sympa/ListDef.pm:1657
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
@@ -3913,26 +3903,26 @@ msgstr ""
 "のパラメータを使用することで Sympa の中でのユーザデータの TTL (有効期間) を制"
 "御することができます。初期値は 3600 です。"
 
-#: src/lib/Sympa/ListDef.pm:2099
+#: src/lib/Sympa/ListDef.pm:2091
 msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr "配送するメッセージへの DKIM 署名を決定するパラメータ"
 
-#: src/lib/Sympa/ListDef.pm:2123
+#: src/lib/Sympa/ListDef.pm:2115
 msgid "List of headers to be included into the message for signature"
 msgstr "メッセージで署名の対象とするヘッダの一覧"
 
-#: src/lib/Sympa/ListDef.pm:2125
+#: src/lib/Sympa/ListDef.pm:2117
 msgid ""
 "You should probably use the default value which is the value recommended by "
 "RFC4871"
 msgstr "初期値 (RFC 4871 での推奨値) を使うべきかもしれません"
 
-#: src/lib/Sympa/ListDef.pm:2134
+#: src/lib/Sympa/ListDef.pm:2126
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 "DKIM の \"d=\" タグ。初期値のままにしておかなければならないこともあります"
 
-#: src/lib/Sympa/ListDef.pm:2136
+#: src/lib/Sympa/ListDef.pm:2128
 msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. the list domain "
 "MUST be included in the \"d=\" domain"
@@ -3940,11 +3930,11 @@ msgstr ""
 "DKIM の \"d=\" タグ。署名者のドメイン。\"d=\" にはリストのドメインを必ず含め"
 "なければなりません"
 
-#: src/lib/Sympa/ListDef.pm:2144
+#: src/lib/Sympa/ListDef.pm:2136
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr "DKIM の \"i=\" タグ。空のままにしておかなければならないこともあります"
 
-#: src/lib/Sympa/ListDef.pm:2146
+#: src/lib/Sympa/ListDef.pm:2138
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
@@ -3954,7 +3944,7 @@ msgstr ""
 "4871 ではリストで配布するメッセージの初期値に i=<リスト名>-request@<ドメイン"
 "> を推奨しているからです"
 
-#: src/lib/Sympa/ListDef.pm:2193
+#: src/lib/Sympa/ListDef.pm:2185
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular expression"
 "\" (domain_regex) matches the specified Domain regexp; \"DKIM signature "
@@ -3968,11 +3958,11 @@ msgstr ""
 "ジ、「DMARCポリシ○○」 (dmarc_*) では指定したDMARCポリシを持つドメインの送信"
 "者、「すべて」 (all) はすべてのメッセージが、それぞれ実行対象になります。"
 
-#: src/lib/Sympa/ListDef.pm:2200
+#: src/lib/Sympa/ListDef.pm:2192
 msgid "Regexp match pattern for From domain"
 msgstr "送信者ドメインに一致させる正規表現パターン"
 
-#: src/lib/Sympa/ListDef.pm:2209
+#: src/lib/Sympa/ListDef.pm:2201
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
@@ -3982,13 +3972,13 @@ msgstr ""
 "スです。これは送信者秘匿に似ていますが、もとの送信者アドレスはFromヘッダの表"
 "示名に残ります。"
 
-#: src/lib/Sympa/ListDef.pm:2225
+#: src/lib/Sympa/ListDef.pm:2217
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header."
 msgstr "書き換えた送信者の名前の形式"
 
-#: src/lib/Sympa/ListDef.pm:2261
+#: src/lib/Sympa/ListDef.pm:2253
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -4000,23 +3990,23 @@ msgstr ""
 "す。クッキーはすべてのリストのオーナーに適用されますが、オーナーが本人確認パ"
 "ラメータを送ったときにだけ考慮されます。"
 
-#: src/lib/Sympa/ListDef.pm:2275
+#: src/lib/Sympa/ListDef.pm:2267
 msgid "var name"
 msgstr "変数名"
 
-#: src/lib/Sympa/ListDef.pm:2281
+#: src/lib/Sympa/ListDef.pm:2273
 msgid "var value"
 msgstr "値"
 
-#: src/lib/Sympa/ListDef.pm:2301
+#: src/lib/Sympa/ListDef.pm:2293
 msgid "Latest family instantiation"
 msgstr "最新の設定族"
 
-#: src/lib/Sympa/ListDef.pm:2305
+#: src/lib/Sympa/ListDef.pm:2297
 msgid "who ran the instantiation"
 msgstr "設定族の変更を実行した人"
 
-#: src/lib/Sympa/ListDef.pm:2352
+#: src/lib/Sympa/ListDef.pm:2344
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
@@ -4026,7 +4016,7 @@ msgstr ""
 "タスクは、読者が登録中のリストを忘れないように読者登録情報を定期的に送信しま"
 "す。"
 
-#: src/lib/Sympa/ListDef.pm:2405
+#: src/lib/Sympa/ListDef.pm:2397
 msgid "who updated the config"
 msgstr "設定の最終更新者"
 
@@ -5016,7 +5006,7 @@ msgstr "(日付不明)"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16266
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16267
 #: src/lib/Sympa/SharedDocument.pm:343
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
@@ -5292,59 +5282,59 @@ msgstr "%H:%M:%S"
 msgid "Your lists"
 msgstr "あなたが関わっているリスト"
 
-#: src/cgi/wwsympa.fcgi.in:12812 src/cgi/wwsympa.fcgi.in:13284
+#: src/cgi/wwsympa.fcgi.in:12813 src/cgi/wwsympa.fcgi.in:13285
 msgid "New file"
 msgstr "新規ファイル"
 
-#: src/cgi/wwsympa.fcgi.in:12816
+#: src/cgi/wwsympa.fcgi.in:12817
 msgid "New directory"
 msgstr "新規ディレクトリ"
 
-#: src/cgi/wwsympa.fcgi.in:13290
+#: src/cgi/wwsympa.fcgi.in:13291
 msgid "New bookmark"
 msgstr "新規ブックマーク"
 
-#: src/cgi/wwsympa.fcgi.in:15768
+#: src/cgi/wwsympa.fcgi.in:15769
 msgid "Mail sending"
 msgstr "メール送信"
 
-#: src/cgi/wwsympa.fcgi.in:15770
+#: src/cgi/wwsympa.fcgi.in:15771
 msgid "Subscription additions"
 msgstr "読者登録"
 
-#: src/cgi/wwsympa.fcgi.in:15771
+#: src/cgi/wwsympa.fcgi.in:15772
 msgid "Unsubscription"
 msgstr "登録解除"
 
-#: src/cgi/wwsympa.fcgi.in:15772
+#: src/cgi/wwsympa.fcgi.in:15773
 msgid "Users deleted by admin"
 msgstr "オーナーが削除した人"
 
-#: src/cgi/wwsympa.fcgi.in:15774
+#: src/cgi/wwsympa.fcgi.in:15775
 msgid "Users deleted automatically"
 msgstr "自動的に削除した人"
 
-#: src/cgi/wwsympa.fcgi.in:15775
+#: src/cgi/wwsympa.fcgi.in:15776
 msgid "File uploading"
 msgstr "ファイル アップロード"
 
-#: src/cgi/wwsympa.fcgi.in:15776
+#: src/cgi/wwsympa.fcgi.in:15777
 msgid "File creation"
 msgstr "ファイル作成"
 
-#: src/cgi/wwsympa.fcgi.in:15777
+#: src/cgi/wwsympa.fcgi.in:15778
 msgid "Directory creation"
 msgstr "ディレクトリ作成"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16245 src/cgi/wwsympa.fcgi.in:16247
+#: src/cgi/wwsympa.fcgi.in:16246 src/cgi/wwsympa.fcgi.in:16248
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:17005
+#: src/cgi/wwsympa.fcgi.in:17006
 msgid "topic (%s)"
 msgstr "トピック (%s)"
 
@@ -9018,9 +9008,8 @@ msgid "New user email address: "
 msgstr "新しいメール アドレス:"
 
 #: default/web_tt2/serveradmin.tt2:86
-#, fuzzy
 msgid "Update user's email"
-msgstr "登録状況を更新"
+msgstr "この人のアドレスを変更"
 
 #: default/web_tt2/serveradmin.tt2:91
 msgid "Impersonate another User"
@@ -9727,9 +9716,8 @@ msgid "You want to subscribe to list %1"
 msgstr "%1 メーリングリストに読者登録しようとしています"
 
 #: default/web_tt2/subscribe.tt2:12
-#, fuzzy
 msgid "Please fill in the form below and then click the validation button:"
-msgstr "下の欄に必要事項を入力して、確認ボタンをクリックしてください"
+msgstr "下の欄に必要事項を入力して、確認ボタンをクリックしてください。"
 
 #. (list)
 #. (report_param.listname)
@@ -12049,7 +12037,6 @@ msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/listowner_notification.tt2:52
-#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
@@ -12057,9 +12044,9 @@ msgid ""
 "you, you should click on the following link:"
 msgstr ""
 "%1 メーリングリストのオーナーさんへ\n"
-" \n"
-"ある人から、あなたがオーナーをしているリストから削除してほしいとの申し出があ"
-"りました。構わないのであれば、下記のリンクをクリックしてください:"
+"\n"
+"ある人から、あなたがオーナーをしているリストに追加してほしいとの申し出があり"
+"ました。構わないのであれば、下記のリンクをクリックしてください:"
 
 #: default/mail_tt2/listowner_notification.tt2:63
 msgid "The user has provided the following informations:"
@@ -12798,8 +12785,9 @@ msgstr ""
 "い。"
 
 #: default/mail_tt2/report.tt2:324
+#, fuzzy
 msgid ""
-"We've sent you an email including a validation link. You should check your "
+"We've sent you an email including a validation link. Please check your "
 "mailbox to read this email and use this validation link."
 msgstr ""
 "確認用リンクの入ったメールを送りました。自分のメールボックスを確認してその"
@@ -13231,6 +13219,8 @@ msgid ""
 "The page could not be parsed properly. Please check the content of web page "
 "or file you submitted."
 msgstr ""
+"ページを正しく解析できませんでした。入力したウェブページやファイルの内容を確"
+"認してください。"
 
 #. (report_param.argument)
 #: default/mail_tt2/report.tt2:583
@@ -13540,9 +13530,8 @@ msgstr "「%1」というファイル名は使えません"
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:780
-#, fuzzy
 msgid "Failed to update member email '%1' in list '%2'."
-msgstr "リスト「%1」に読者を入れられません"
+msgstr "リスト「%2」に読者「%1」を入れられません。"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:783
@@ -13554,9 +13543,8 @@ msgstr ""
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:786
-#, fuzzy
 msgid "Failed to delete member email '%1' in list '%2'."
-msgstr "リスト「%1」に読者を入れられません"
+msgstr "リスト「%2」から読者「%1」を削除できません。"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:789
@@ -14706,9 +14694,30 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "そのようなプロバイダは知りません。"
 
+#: src/lib/Sympa/ConfDef.pm:1193
+msgid "Number of days that elapse before statistics information are expired"
+msgstr "統計を消去するまでの日数"
+
+#: default/mail_tt2/report.tt2:324
+msgid ""
+"We've sent you an email including a validation link. You should check your "
+"mailbox to read this email and use this validation link."
+msgstr ""
+"確認用リンクの入ったメールを送りました。自分のメールボックスを確認してその"
+"メールにある確認用リンクを使ってください。"
+
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid "Site customization"
+#~ msgstr "サイト設定"
+
+#~ msgid "You shoukd check your mailbox now."
+#~ msgstr "メールボックスの新着メールを確認してください。"
+
+#~ msgid "Send to selected receipient"
+#~ msgstr "選択した宛先へ送る"
 
 #~ msgid ""
 #~ "The number of seconds a bulk sleeps between starting a new loop if it "
