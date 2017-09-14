@@ -321,7 +321,7 @@
 [%|loc(report_param.listname)%]Check your mailbox for new messages and click this link. This will confirm your subscription to list %1.[%END%]
 [%~ ELSIF report_param.action == 'signoff' ~%]
 [%|loc(report_param.listname)%]We need to check your identity before validating your unsubscription request for list %1. If you have a user account you should login or create an account. <br/>Otherwise we can send you an email with a validation link inside; please provide your email address below to receive this validation link.[%END%]
-[%|loc%]We've sent you an email including a validation link. You should check your mailbox to read this email and use this validation link.[%END%]
+[%|loc%]We've sent you an email including a validation link. Please check your mailbox to read this email and use this validation link.[%END%]
 [%~ END %]
 
 [%~ ELSIF report_entry == 'add_performed' ~%]
