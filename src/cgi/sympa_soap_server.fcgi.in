@@ -41,7 +41,7 @@ use Sympa::Log;
 use Sympa::SOAP;
 use Sympa::SOAP::Transport;
 
-my $birthday = time;
+my $birthday = [stat $PROGRAM_NAME]->[9];
 
 ## Load sympa config
 unless (Conf::load()) {
@@ -88,7 +88,7 @@ my $server = Sympa::SOAP::Transport->new();
 $server->dispatch_with({'urn:sympasoap' => 'Sympa::SOAP'});
 #$server->dispatch_to('--modulesdir--', 'Sympa::SOAP');
 
-$server->handle($birthday);
+$server->handle($birthday, $PROGRAM_NAME);
 
 __END__
 

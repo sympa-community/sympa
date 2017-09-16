@@ -31,12 +31,14 @@ use strict;
 use warnings;
 use SOAP::Transport::HTTP;
 
+use Sympa::Log;
 use Sympa::Session;
-use Sympa::Tools::File;
 use Sympa::Tools::WWW;
 
 # 'base' pragma doesn't work here
 our @ISA = qw(SOAP::Transport::HTTP::FCGI);
+
+my $log = Sympa::Log->instance;
 
 sub request {
     my $self = shift;
@@ -97,25 +99,30 @@ sub response {
 }
 
 ## Redefine FCGI's handle subroutine
-sub handle ($$) {
+sub handle ($$$) {
     my $self     = shift->new;
     my $birthday = shift;
+    my $myname   = shift;
 
     my ($r1, $r2);
     my $fcgirq = $self->{_fcgirq};
 
-    ## If fastcgi changed on disk, die
-    ## Apache will restart the process
     while (($r1 = $fcgirq->Accept()) >= 0) {
 
         $r2 = $self->SOAP::Transport::HTTP::CGI::handle;
 
-        if (Sympa::Tools::File::get_mtime($ENV{'SCRIPT_FILENAME'}) >
-            $birthday) {
-            exit(0);
+        # Exit if script itself has changed.
+        if (defined $birthday and $myname) {
+            my $age = [stat $myname]->[9];
+            if (defined $age and $birthday != $age) {
+                $log->syslog(
+                    'notice',
+                    'Exiting because %s has changed since FastCGI server started',
+                    $myname
+                );
+                exit(0);
+            }
         }
-        # print
-        # "Set-Cookie: sympa_altemails=olivier.salaun%40cru.fr; path=/; expires=Tue , 19-Oct-2004 14 :08:19 GMT\n";
     }
     return undef;
 }
