@@ -29,6 +29,7 @@ package Sympa::SOAP::Transport;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use SOAP::Transport::HTTP;
 
 use Sympa::Log;
@@ -39,6 +40,18 @@ use Sympa::Tools::WWW;
 our @ISA = qw(SOAP::Transport::HTTP::FCGI);
 
 my $log = Sympa::Log->instance;
+
+sub new {
+    my $class = shift;
+    return $class if ref $class;
+    my %options = @_;
+
+    my $self = $class->SUPER::new();
+    $self->{_ss_birthday} = [stat $PROGRAM_NAME]->[9] if $PROGRAM_NAME;
+    $self->{_ss_cookie_expire} = $options{cookie_expire} || 0;
+
+    $self;
+}
 
 sub request {
     my $self = shift;
@@ -86,11 +99,9 @@ sub response {
 
     if (my $response = $_[0]) {
         if (defined $ENV{'SESSION_ID'}) {
-            my $expire = $main::param->{'user'}{'cookie_delay'}
-                || $Conf::Conf{'cookie_expire'};
             my $cookie =
                 Sympa::Session::soap_cookie2($ENV{'SESSION_ID'},
-                $ENV{'SERVER_NAME'}, $expire);
+                $ENV{'SERVER_NAME'}, $self->{_ss_cookie_expire});
             $response->headers->push_header('Set-Cookie2' => $cookie);
         }
     }
@@ -99,10 +110,8 @@ sub response {
 }
 
 ## Redefine FCGI's handle subroutine
-sub handle ($$$) {
-    my $self     = shift->new;
-    my $birthday = shift;
-    my $myname   = shift;
+sub handle {
+    my $self = shift->new;
 
     my ($r1, $r2);
     my $fcgirq = $self->{_fcgirq};
@@ -112,13 +121,14 @@ sub handle ($$$) {
         $r2 = $self->SOAP::Transport::HTTP::CGI::handle;
 
         # Exit if script itself has changed.
-        if (defined $birthday and $myname) {
-            my $age = [stat $myname]->[9];
+        my $birthday = $self->{_ss_birthday};
+        if (defined $birthday and $PROGRAM_NAME) {
+            my $age = [stat $PROGRAM_NAME]->[9];
             if (defined $age and $birthday != $age) {
                 $log->syslog(
                     'notice',
                     'Exiting because %s has changed since FastCGI server started',
-                    $myname
+                    $PROGRAM_NAME
                 );
                 exit(0);
             }
