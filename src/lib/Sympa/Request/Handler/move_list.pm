@@ -219,7 +219,10 @@ sub _move {
         return undef;
     }
 
-    # Rename archive.
+    my $sdm = Sympa::DatabaseManager->instance;
+
+    # Try renaming archive.
+    # Continue even if there are some troubles.
     my $arc_dir = $current_list->get_archive_dir;
     my $new_arc_dir =
           Conf::get_robot_conf($robot_id, 'arc_path') . '/'
@@ -229,13 +232,11 @@ sub _move {
         unless (File::Copy::move($arc_dir, $new_arc_dir)) {
             $log->syslog('err', 'Unable to rename archive %s to %s',
                 $arc_dir, $new_arc_dir);
-            # continue even if there is some troubles with archives
-            #$self->add_stash($request, 'intern');
-            #return undef;
         }
     }
 
-    # Rename bounces.
+    # Try renaming bounces and tracking information.
+    # Continue even if there are some troubles.
     my $bounce_dir = $current_list->get_bounce_dir;
     my $new_bounce_dir =
           Conf::get_robot_conf($robot_id, 'bounce_path') . '/'
@@ -247,8 +248,30 @@ sub _move {
                 $bounce_dir, $new_bounce_dir);
         }
     }
-
-    my $sdm = Sympa::DatabaseManager->instance;
+    unless (
+        $sdm
+        and $sdm->do_prepared_query(
+            q{UPDATE notification_table
+              SET list_notification = ?, robot_notification = ?
+              WHERE list_notification = ? AND robot_notification = ?},
+            $listname,               $robot_id,
+            $current_list->{'name'}, $current_list->{'domain'}
+        )
+        ) {
+        $log->syslog(
+            'err',
+            'Unable to transfer tracking information from list %s to list %s@%s',
+            $current_list,
+            $listname,
+            $robot_id
+        );
+    }
+    # Remove HTML view.
+    Sympa::Tools::File::remove_dir(
+        sprintf '%s/%s/%s',
+        $Conf::Conf{'viewmail_dir'},
+        'bounce', $current_list->get_id
+    );
 
     # If subscribtion are stored in database rewrite the database.
     unless (
@@ -275,6 +298,13 @@ sub _move {
             $current_list->{'name'}, $current_list->{'domain'}
         )
         and $sdm->do_prepared_query(
+            q{UPDATE exclusion_table
+              SET list_exclusion = ?, robot_exclusion = ?
+              WHERE list_exclusion = ? AND robot_exclusion = ?},
+            $listname,               $robot_id,
+            $current_list->{'name'}, $current_list->{'domain'}
+        )
+        and $sdm->do_prepared_query(
             q{UPDATE inclusion_table
               SET target_inclusion = ?
               WHERE target_inclusion = ?},
@@ -289,6 +319,7 @@ sub _move {
     }
 
     # Move stats.
+    # Continue even if there are some troubles.
     unless (
         $sdm
         and $sdm->do_prepared_query(
