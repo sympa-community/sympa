@@ -11215,13 +11215,13 @@ sub do_move_list {
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
-        $in{'action'}, $in{'response_action'},
+        'move_list', $in{'response_action'},
         arg             => $in{'new_listname'} . '@' . $in{'new_robot'},
         previous_action => ($in{'previous_action'} || 'admin')
     );
     return $next_action unless $next_action eq '1';
 
-    my $spindle = Sympa::Spindle::ProcessRequest(
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
         context      => $in{'new_robot'},
         action       => 'move_list',
         listname     => $in{'new_listname'},
