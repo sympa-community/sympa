@@ -11269,19 +11269,21 @@ sub do_move_list {
         $param->{'auto_aliases'} = 0;
     }
 
-    my $new_list = Sympa::List->new($in{'new_listname'}, $in{'new_robot'});
+    # Switch to new list context.
+    $list  = Sympa::List->new($in{'new_listname'}, $in{'new_robot'});
+    $robot = $list->{'domain'};
+    $param->{'list'} = $in{'new_listname'};
+
     if ($in{'new_robot'} eq $robot) {
         $param->{'redirect_to'} = Sympa::get_url(
-            $new_list, 'admin',
+            $list, 'admin',
             nomenu    => $param->{'nomenu'},
             authority => 'local'
         );
     } else {
         $param->{'redirect_to'} =
-            Sympa::get_url($new_list, 'admin', nomenu => $param->{'nomenu'});
+            Sympa::get_url($list, 'admin', nomenu => $param->{'nomenu'});
     }
-
-    $param->{'list'} = $in{'new_listname'};
 
     return 1;
 }

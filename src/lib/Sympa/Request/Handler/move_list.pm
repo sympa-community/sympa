@@ -35,6 +35,14 @@ use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Regexps;
+use Sympa::Spool::Archive;
+use Sympa::Spool::Auth;
+use Sympa::Spool::Automatic;
+use Sympa::Spool::Bounce;
+use Sympa::Spool::Digest::Collection;
+use Sympa::Spool::Held;
+use Sympa::Spool::Incoming;
+use Sympa::Spool::Moderation;
 use Sympa::Tools::File;
 
 use base qw(Sympa::Request::Handler);
@@ -208,11 +216,11 @@ sub _move {
     _modify_custom_subject($request, $current_list);
     $current_list->save_config($sender);
 
-    # Start moving list
-    unless (File::Copy::move($current_list->{'dir'}, $new_dir)) {
+    # Start moving list.
+    unless (Sympa::Tools::File::copy_dir($current_list->{'dir'}, $new_dir)) {
         $log->syslog(
             'err',
-            'Unable to rename %s to %s: %m',
+            'Unable to copy %s to %s: %m',
             $current_list->{'dir'}, $new_dir
         );
         $self->add_stash($request, 'intern');
@@ -221,30 +229,30 @@ sub _move {
 
     my $sdm = Sympa::DatabaseManager->instance;
 
+    my $fake_list = bless {
+        name   => $listname,
+        domain => $robot_id,
+        dir    => $new_dir,
+    } => 'Sympa::List';
+
     # Try renaming archive.
     # Continue even if there are some troubles.
-    my $arc_dir = $current_list->get_archive_dir;
-    my $new_arc_dir =
-          Conf::get_robot_conf($robot_id, 'arc_path') . '/'
-        . $listname . '@'
-        . $robot_id;
+    my $arc_dir     = $current_list->get_archive_dir;
+    my $new_arc_dir = $fake_list->get_archive_dir;
     if (-d $arc_dir and $arc_dir ne $new_arc_dir) {
         unless (File::Copy::move($arc_dir, $new_arc_dir)) {
-            $log->syslog('err', 'Unable to rename archive %s to %s',
+            $log->syslog('err', 'Unable to rename archive %s to %s: %m',
                 $arc_dir, $new_arc_dir);
         }
     }
 
     # Try renaming bounces and tracking information.
     # Continue even if there are some troubles.
-    my $bounce_dir = $current_list->get_bounce_dir;
-    my $new_bounce_dir =
-          Conf::get_robot_conf($robot_id, 'bounce_path') . '/'
-        . $listname . '@'
-        . $robot_id;
+    my $bounce_dir     = $current_list->get_bounce_dir;
+    my $new_bounce_dir = $fake_list->get_bounce_dir;
     if (-d $bounce_dir and $bounce_dir ne $new_bounce_dir) {
         unless (File::Copy::move($bounce_dir, $new_bounce_dir)) {
-            $log->syslog('err', 'Unable to rename bounces from %s to %s',
+            $log->syslog('err', 'Unable to rename bounces from %s to %s: %m',
                 $bounce_dir, $new_bounce_dir);
         }
     }
@@ -266,7 +274,7 @@ sub _move {
             $robot_id
         );
     }
-    # Remove HTML view.
+    # Clear old HTML view.
     Sympa::Tools::File::remove_dir(
         sprintf '%s/%s/%s',
         $Conf::Conf{'viewmail_dir'},
@@ -343,100 +351,82 @@ sub _move {
     }
 
     # Rename files in spools.
-    my $current_listname = $current_list->{'name'};
-    my $current_list_id  = $current_list->get_id;
-    my $list_id          = $listname . '@' . $robot_id;
-
-    ## Auth & Mod  spools
-    foreach my $spool (
-        'queueauth',      'queuemod',
-        'queuetask',      'queuebounce',
-        'queue',          'queueoutgoing',
-        'queuesubscribe', 'queueautomatic',
-        'queuedigest'
+    # Continue even if there are some troubles.
+    foreach my $spool_class (
+        qw(Sympa::Spool::Automatic Sympa::Spool::Bounce Sympa::Spool::Incoming
+        Sympa::Spool::Auth Sympa::Spool::Held Sympa::Spool::Moderation
+        Sympa::Spool::Archive Sympa::Spool::Digest::Collection)
         ) {
-        unless (opendir(DIR, $Conf::Conf{$spool})) {
-            $log->syslog('err', 'Unable to open "%s" spool: %m',
-                $Conf::Conf{$spool});
-        }
+        my $spool = $spool_class->new(context => $current_list);
+        next unless $spool;
 
-        foreach my $file (sort readdir(DIR)) {
+        while (1) {
+            my ($message, $handle) = $spool->next;
+            last unless $handle;
             next
-                unless ($file =~ /^$current_listname\_/
-                || $file =~ /^$current_listname/
-                || $file =~ /^$current_listname\./
-                || $file =~ /^$current_list_id\./
-                || $file =~ /^\.$current_list_id\_/
-                || $file =~ /^$current_list_id\_/
-                || $file =~ /\.$current_listname$/);
+                unless $message
+                    and ref $message->{context} eq 'Sympa::List'
+                    and $message->{context}->get_id eq $current_list->get_id;
 
-            my $newfile = $file;
-            if ($file =~ /^$current_listname\_/) {
-                $newfile =~ s/^$current_listname\_/$listname\_/;
-            } elsif ($file =~ /^$current_listname/) {
-                $newfile =~ s/^$current_listname/$listname/;
-            } elsif ($file =~ /^$current_listname\./) {
-                $newfile =~ s/^$current_listname\./$listname\./;
-            } elsif ($file =~ /^$current_list_id\./) {
-                $newfile =~ s/^$current_list_id\./$list_id\./;
-            } elsif ($file =~ /^$current_list_id\_/) {
-                $newfile =~ s/^$current_list_id\_/$list_id\_/;
-            } elsif ($file =~ /^\.$current_list_id\_/) {
-                $newfile =~ s/^\.$current_list_id\_/\.$list_id\_/;
-            } elsif ($file =~ /\.$current_listname$/) {
-                $newfile =~ s/\.$current_listname$/\.$listname/;
-            }
+            # Remove old HTML view if any (For moderation spool).
+            $spool->html_remove($message) if $spool->can('html_remove');
 
-            ## Rename file
-            unless (
-                File::Copy::move(
-                    $Conf::Conf{$spool} . '/' . $file,
-                    $Conf::Conf{$spool} . '/' . $newfile
-                )
-                ) {
-                $log->syslog(
-                    'err',
-                    'Unable to rename %s to %s: %m',
-                    "$Conf::Conf{$spool}/$newfile",
-                    "$Conf::Conf{$spool}/$newfile"
-                );
-                next;
+            # Rename message in spool.
+            $message->{context} = $fake_list;
+            my $marshalled = Sympa::Spool::marshal_metadata($message,
+                $spool->_marshal_format, $spool->_marshal_keys);
+            unless ($handle->rename($spool->{directory} . '/' . $marshalled))
+            {
+                $log->syslog('err',
+                    'Cannot rename message in %s from %s to %s: %m',
+                    $spool, $handle->basename, $marshalled);
             }
         }
-
-        close DIR;
     }
-    ## Digest spool
-    if (-f "$Conf::Conf{'queuedigest'}/$current_listname") {
-        unless (
-            File::Copy::move(
-                $Conf::Conf{'queuedigest'} . '/' . $current_listname,
-                $Conf::Conf{'queuedigest'} . '/' . $listname
-            )
-            ) {
-            $log->syslog(
-                'err',
-                'Unable to rename %s to %s: %m',
-                "$Conf::Conf{'queuedigest'}/$current_listname",
-                "$Conf::Conf{'queuedigest'}/$listname"
-            );
-            next;
+
+    # Rename files in task spool.
+    # Continue even if there are some troubles.
+    my $dh;
+    my $queuetask = $Conf::Conf{'queuetask'};
+    unless (opendir $dh, $queuetask) {
+        $log->syslog('err', 'Unable to open task spool %s: %m', $queuetask);
+    } else {
+        my $current_list_id = $current_list->get_id;
+        my $new_list_id     = $fake_list->get_id;
+
+        foreach my $file (sort readdir $dh) {
+            next
+                unless $file =~
+                    /^(\d+)\.(\w*)\.(\w+)\.([^\s\@]+)(?:\@([\w\.\-]+))?$/;
+            my ($date, $label, $model, $listname, $domain) =
+                ($1, $2, $3, $4, $5);
+            $domain ||= $Conf::Conf{'domain'};
+            next unless $listname . '@' . $domain eq $current_list_id;
+
+            my $newfile = sprintf '%s.%s.%s.%s', $date, $label, $model,
+                $new_list_id;
+            unless (rename $queuetask . '/' . $file,
+                $queuetask . '/' . $newfile) {
+                $log->syslog('err',
+                    'Unable to rename file in %s from %s to %s: %m',
+                    $queuetask, $file, $newfile);
+            }
         }
-    } elsif (-f "$Conf::Conf{'queuedigest'}/$current_list_id") {
-        unless (
-            File::Copy::move(
-                $Conf::Conf{'queuedigest'} . '/' . $current_list_id,
-                $Conf::Conf{'queuedigest'} . '/' . $list_id
-            )
-            ) {
-            $log->syslog(
-                'err',
-                'Unable to rename %s to %s: %m',
-                $Conf::Conf{'queuedigest'} . '/' . $current_list_id,
-                $Conf::Conf{'queuedigest'} . '/' . $list_id
-            );
-            next;
-        }
+
+        close $dh;
+    }
+
+    # End moving list.
+    my $lock_fh;
+    unless (
+        $lock_fh =
+        Sympa::LockedFile->new($current_list->{'dir'} . '/' . 'config',
+            5, '+<')
+        and $lock_fh->unlink
+        and Sympa::Tools::File::del_dir($current_list->{'dir'})
+        ) {
+        $log->syslog('err', 'Unable to remove %s: %m',
+            $current_list->{'dir'});
     }
 
     return 1;
