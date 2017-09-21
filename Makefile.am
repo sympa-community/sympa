@@ -65,6 +65,7 @@ noinst_SCRIPTS = \
 
 EXTRA_DIST = \
 	AUTHORS.md \
+	CONTRIBUTING.md \
 	important_changes.pl \
 	INSTALL.md \
 	META.json.pl \
