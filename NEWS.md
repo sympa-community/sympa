@@ -1,5 +1,33 @@
 # Change Log
 
+## [6.2.20](https://github.com/sympa-community/sympa/tree/6.2.20) (2017-09-22)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.19b.2...6.2.20)
+
+**Changes:**
+
+- [change] Translation guide was moved: https://translate.sympa.org/pages/help \[[067f611](https://github.com/sympa-community/sympa/commit/067f6117b402caca4df7a733d39c1134e288d1f5)\]
+
+**Fixed bugs:**
+
+- Button label confusing on form to send HTML page  [\#54](https://github.com/sympa-community/sympa/issues/54)
+- Text change / typo fix in change\_email\_request template [\#52](https://github.com/sympa-community/sympa/issues/52)
+- smtpc build warnings [\#50](https://github.com/sympa-community/sympa/issues/50)
+- Sympa doesn't log DBI error on connect [\#34](https://github.com/sympa-community/sympa/issues/34)
+- Internal server error in WebUI when email has removed from list [\#28](https://github.com/sympa-community/sympa/issues/28)
+- Missing Function "action\_change\_email" on serveradmin.tt2 [\#25](https://github.com/sympa-community/sympa/issues/25)
+- Bounced crash - missing Encode::HanExtra [\#8](https://github.com/sympa-community/sympa/issues/8)
+- FCGI scripts will not always restart when they are updated [\#58](https://github.com/sympa-community/sympa/pull/58) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- MHonArc depedency not detected [\#59](https://github.com/sympa-community/sympa/issues/59)
+
+**Merged pull requests:**
+
+- Issue \#25: move\_user function was broken [\#55](https://github.com/sympa-community/sympa/pull/55) ([ikedas](https://github.com/ikedas))
+- Issue \#37: WWSympa/edit\_list: Removing owner may cause crash. [\#38](https://github.com/sympa-community/sympa/pull/38) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.19b.2](https://github.com/sympa-community/sympa/tree/6.2.19b.2) (2017-09-10)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.19b.1...6.2.19b.2)
@@ -24,7 +52,7 @@
 
 - Issue \#25: move\_user function was broken [\#55](https://github.com/sympa-community/sympa/pull/55) ([ikedas](https://github.com/ikedas))
 
-## [6.2.19b.1](https://github.com/sympa-community/sympa/tree/6.2.19b.1)
+## [6.2.19b.1](https://github.com/sympa-community/sympa/tree/6.2.19b.1) (2017-08-21)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.18...6.2.19b.1)
 
