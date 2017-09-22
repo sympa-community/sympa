@@ -25,7 +25,7 @@ You may help us translating user interface of Sympa to your languages:
 
 To add or correct translations, you have to sign up.
 
-More about translation, please see the [Translation Guide](https://www.sympa.org/translating_sympa).
+More about translation, please see the [Translation Guide](https://translate.sympa.org/pages/help).
 
 Incubating new documentation
 -------------------------------
