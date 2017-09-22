@@ -41,8 +41,6 @@ use Sympa::Log;
 use Sympa::SOAP;
 use Sympa::SOAP::Transport;
 
-my $birthday = time;
-
 ## Load sympa config
 unless (Conf::load()) {
     printf STDERR
@@ -83,12 +81,8 @@ my $all_lists = Sympa::List::get_lists('*');
 #    Soap part
 ##############################################################################
 
-my $server = Sympa::SOAP::Transport->new();
-
-$server->dispatch_with({'urn:sympasoap' => 'Sympa::SOAP'});
-#$server->dispatch_to('--modulesdir--', 'Sympa::SOAP');
-
-$server->handle($birthday);
+Sympa::SOAP::Transport->new(cookie_expire => $Conf::Conf{'cookie_expire'})
+    ->dispatch_with({'urn:sympasoap' => 'Sympa::SOAP'})->handle;
 
 __END__
 

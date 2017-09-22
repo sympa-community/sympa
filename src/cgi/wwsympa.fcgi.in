@@ -1008,7 +1008,7 @@ unless (Conf::data_structure_uptodate()) {
 our %in;
 my $query;
 
-my $birthday = time;
+my $birthday = [stat $PROGRAM_NAME]->[9];
 
 my $bulk = Sympa::Bulk->new;
 
@@ -1965,14 +1965,15 @@ while ($query = new_loop()) {
         send_html('main.tt2');
     }
 
-    # exit if wwsympa.fcgi itself has changed
-    if ($ENV{'SCRIPT_FILENAME'}
-        and Sympa::Tools::File::get_mtime($ENV{'SCRIPT_FILENAME'}) >
-        $birthday) {
-        $log->syslog('notice',
-            'Exiting because %s has changed since fastcgi server started',
-            $ENV{'SCRIPT_FILENAME'});
-        exit(0);
+    # Exit if wwsympa.fcgi itself has changed.
+    if (defined $birthday) {
+        my $age = [stat $PROGRAM_NAME]->[9];
+        if (defined $age and $birthday != $age) {
+            $log->syslog('notice',
+                'Exiting because %s has changed since FastCGI server started',
+                $PROGRAM_NAME);
+            exit(0);
+        }
     }
 
 }
