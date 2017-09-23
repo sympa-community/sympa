@@ -384,12 +384,15 @@ sub _move {
         }
     }
 
+    my $queue;
+    my $dh;
+
     # Rename files in task spool.
     # Continue even if there are some troubles.
-    my $dh;
-    my $queuetask = $Conf::Conf{'queuetask'};
-    unless (opendir $dh, $queuetask) {
-        $log->syslog('err', 'Unable to open task spool %s: %m', $queuetask);
+    #FIXME: Refactor to use Sympa::Spool subclass.
+    $queue = $Conf::Conf{'queuetask'};
+    unless (opendir $dh, $queue) {
+        $log->syslog('err', 'Unable to open task spool %s: %m', $queue);
     } else {
         my $current_list_id = $current_list->get_id;
         my $new_list_id     = $fake_list->get_id;
@@ -405,11 +408,35 @@ sub _move {
 
             my $newfile = sprintf '%s.%s.%s.%s', $date, $label, $model,
                 $new_list_id;
-            unless (rename $queuetask . '/' . $file,
-                $queuetask . '/' . $newfile) {
+            unless (rename $queue . '/' . $file, $queue . '/' . $newfile) {
                 $log->syslog('err',
                     'Unable to rename file in %s from %s to %s: %m',
-                    $queuetask, $file, $newfile);
+                    $queue, $file, $newfile);
+            }
+        }
+
+        close $dh;
+    }
+
+    # Rename files in topic spool.
+    # Continue even if there are some troubles.
+    #FIXME: Refactor to use Sympa::Spool subclass.
+    $queue = $Conf::Conf{'queuetopic'};
+    unless (opendir $dh, $queue) {
+        $log->syslog('err', 'Unable to open topic spool %s: %m', $queue);
+    } else {
+        my $current_list_id = $current_list->get_id;
+        my $new_list_id     = $fake_list->get_id;
+
+        foreach my $file (sort readdir $dh) {
+            next unless 0 == index $file, $current_list_id . '.';
+
+            my $newfile = sprintf '%s.%s', $new_list_id,
+                substr($file, length($current_list_id) + 1);
+            unless (rename $queue . '/' . $file, $queue . '/' . $newfile) {
+                $log->syslog('err',
+                    'Unable to rename file in %s from %s to %s: %m',
+                    $queue, $file, $newfile);
             }
         }
 
