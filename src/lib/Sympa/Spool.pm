@@ -93,6 +93,14 @@ sub _create {
 
 sub _init {1}
 
+sub marshal {
+    my $self    = shift;
+    my $message = shift;
+
+    return Sympa::Spool::marshal_metadata($message, $self->_marshal_format,
+        $self->_marshal_keys);
+}
+
 sub next {
     my $self    = shift;
     my %options = @_;
@@ -124,10 +132,7 @@ sub next {
             next unless $handle;
         }
 
-        $metadata = Sympa::Spool::unmarshal_metadata(
-            $self->{directory},     $marshalled,
-            $self->_marshal_regexp, $self->_marshal_keys
-        );
+        $metadata = $self->unmarshal($marshalled);
 
         if ($metadata) {
             next unless $self->_filter($metadata);
@@ -244,10 +249,7 @@ sub store {
         $message, $self, $marshalled);
 
     if ($self->_store_key) {
-        my $metadata = Sympa::Spool::unmarshal_metadata(
-            $self->{directory},     $marshalled,
-            $self->_marshal_regexp, $self->_marshal_keys
-        );
+        my $metadata = $self->unmarshal($marshalled);
         return $metadata ? $metadata->{$self->_store_key} : undef;
     }
     return $marshalled;
@@ -256,6 +258,16 @@ sub store {
 sub _filter_pre {1}
 
 sub _store_key {undef}
+
+sub unmarshal {
+    my $self       = shift;
+    my $marshalled = shift;
+
+    return Sympa::Spool::unmarshal_metadata(
+        $self->{directory},     $marshalled,
+        $self->_marshal_regexp, $self->_marshal_keys
+    );
+}
 
 # Low-level functions.
 
@@ -572,6 +584,24 @@ This module is the base class for spool subclasses of Sympa.
 I<Constructor>.
 Creates new instance of the class.
 
+=item marshal ( $message )
+
+I<Instance method>.
+Gets marshalled key (file name) of the message.
+
+Parameters:
+
+=over
+
+=item $message
+
+Message to be marshalled.
+
+=back
+
+Note:
+This method was added on Sympa 6.2.21b.
+
 =item next ( [ no_lock =E<gt> 1 ] )
 
 I<Instance method>.
@@ -686,6 +716,28 @@ Returns:
 
 If storing succeeded, marshalled metadata (file name) of the message.
 Otherwise C<undef>.
+
+=item unmarshal ( $marshalled )
+
+I<Instance method>.
+Gets metadata from marshalled key (file name).
+
+Parameters:
+
+=over
+
+=item $marshalled
+
+Marshalled key.
+
+=back
+
+Returns:
+
+Hashref containing metadata.
+
+Note:
+This method was added on Sympa 6.2.21b.
 
 =back
 
