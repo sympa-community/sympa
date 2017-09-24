@@ -373,8 +373,7 @@ sub _move {
 
             # Rename message in spool.
             $message->{context} = $fake_list;
-            my $marshalled = Sympa::Spool::marshal_metadata($message,
-                $spool->_marshal_format, $spool->_marshal_keys);
+            my $marshalled = $spool->marshal($message, keep_keys => 1);
             unless ($handle->rename($spool->{directory} . '/' . $marshalled))
             {
                 $log->syslog('err',
