@@ -50,13 +50,19 @@ sub _init {
     my $self  = shift;
     my $state = shift;
 
-    if ($state == 1) {
+    if ($state == 0) {
+        # Initialize priority to process.
+        $self->{_highest_priority} = 'z';
+    } elsif ($state == 1) {
         Sympa::List::init_list_cache();
         # Process grouped notifications.
         Sympa::Alarm->instance->flush;
     } elsif ($state == 2) {
         ## Free zombie sendmail process.
         #Sympa::Process->instance->reap_child;
+    } elsif ($state == 3) {
+        # Initialize priority to process.
+        $self->{_highest_priority} = 'z';
     }
 
     1;
@@ -93,7 +99,16 @@ sub _twist {
     my $self    = shift;
     my $message = shift;
 
-    my $status;
+    # Omit messages which may not be processed.
+    # - z and Z are a null priority, so files stay in queue and are
+    #   processed only if renamed by administrator.
+    return 0 if lc($message->{priority} || '') eq 'z';
+    # - Lazily seek highest priority: Messages with lower priority than
+    #   those already found are skipped.
+    if (length($message->{priority} || '')) {
+        return 0 if $self->{_highest_priority} lt $message->{priority};
+        $self->{_highest_priority} = $message->{priority};
+    }
 
     unless (defined $message->{'message_id'}
         and length $message->{'message_id'}) {
@@ -418,6 +433,24 @@ If the list a message is bound for has not been there and list creation is
 authorized, it will be created.  Then the message is stored into incoming
 message spool again and waits for processing by
 L<Sympa::Spindle::ProcessIncoming>.
+
+Order to process messages in source spool are controlled by modification time
+of files and delivery date (See L<Sympa::Spool::Automatic>).
+Some messages are skipped according to these priorities:
+
+=over
+
+=item *
+
+Messages with lowest priority (C<z> or C<Z>) are skipped.
+
+=item *
+
+Messages with possiblly higher priority are chosen.
+This is done by skipping messages with lower priority than those already
+found.
+
+=back
 
 =head2 Public methods
 

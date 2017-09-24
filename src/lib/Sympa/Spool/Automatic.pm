@@ -70,10 +70,7 @@ See also L<Sympa::Spool/"Public methods">.
 
 =item next ( )
 
-I<Instance method>.
-Order is controlled by modification time of files and delivery date, then
-messages with possiblly higher priority are chosen.
-Messages with lowest priority (C<z> or C<Z>) are skipped.
+Order is controlled by modification time of files and delivery date.
 
 =item store ( $message, [ original =E<gt> $original ] )
 
