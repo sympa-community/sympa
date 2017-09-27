@@ -29,6 +29,7 @@ use File::Copy qw();
 
 use Sympa;
 use Sympa::Admin;
+use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
@@ -361,7 +362,7 @@ sub _move {
         next unless $spool;
 
         while (1) {
-            my ($message, $handle) = $spool->next;
+            my ($message, $handle) = $spool->next(no_filter => 1);
             last unless $handle;
             next
                 unless $message
@@ -440,6 +441,51 @@ sub _move {
         }
 
         close $dh;
+    }
+
+    # Rename files in outgoing spool.
+    # Continue even if there are some troubles.
+    my $spool = Sympa::Bulk->new;
+    while (1) {
+        my ($message, $handle) = $spool->next(no_filter => 1);
+        last unless $handle;
+        next
+            unless $message
+                and ref $message->{context} eq 'Sympa::List'
+                and $message->{context}->get_id eq $current_list->get_id;
+
+        my $pct_directory =
+            $spool->{pct_directory} . '/' . $handle->basename(1);
+        my $msg_file = $spool->{msg_directory} . '/' . $handle->basename(1);
+        my $pct_file = $pct_directory . '/' . $handle->basename;
+
+        # Rename message in spool.
+        $message->{context} = $fake_list;
+        my $marshalled = Sympa::Spool::marshal_metadata(
+            $message,
+            '%s.%s.%d.%f.%s@%s_%s,%ld,%d',
+            [   qw(priority packet_priority date time localpart domainpart tag pid rand)
+            ]
+        );
+        my $new_pct_directory = $spool->{pct_directory} . '/' . $marshalled;
+        my $new_msg_file      = $spool->{msg_directory} . '/' . $marshalled;
+        my $new_pct_file      = $new_pct_directory . '/' . $handle->basename;
+
+        File::Copy::cp($msg_file, $new_msg_file)
+            unless -e $new_msg_file;
+
+        mkdir $new_pct_directory unless -d $new_pct_directory;
+        unless (-d $new_pct_directory and $handle->rename($new_pct_file)) {
+            $log->syslog('err',
+                'Cannot rename message in %s from %s to %s: %m',
+                $spool, $pct_file, $new_pct_file);
+            next;
+        }
+
+        if (rmdir $pct_directory) {
+            # No more packet.
+            unlink $msg_file;
+        }
     }
 
     # End moving list.
