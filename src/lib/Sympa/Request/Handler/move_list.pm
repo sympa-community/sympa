@@ -504,6 +504,7 @@ sub _move {
     return 1;
 }
 
+# Old name: Sympa::Admin::clone_list_as_empty() etc.
 sub _copy {
     my $self    = shift;
     my $request = shift;
@@ -515,39 +516,9 @@ sub _copy {
     my $sender       = $request->{sender};
     my $pending      = $request->{pending};
 
-    # If we are in 'copy' mode, create a new list.
-    my $new_list;
-    unless (
-        $new_list = _clone_list_as_empty(
-            $current_list, $listname, $robot_id, $sender, $new_dir
-        )
-        ) {
-        $log->syslog('err', 'Unable to load %s while renaming', $listname);
-        $self->add_stash($request, 'intern');
-        return undef;
-    }
-
-    # Set list status to pending if creation list is moderated.
-    # Save config file for the new() later to reload it.
-    $new_list->{'admin'}{'status'} = 'pending'
-        if $pending;
-    _modify_custom_subject($request, $new_list);
-    $new_list->save_config($sender);
-
-    return 1;
-}
-
-# Old name: Sympa::Admin::clone_list_as_empty().
-sub _clone_list_as_empty {
-    $log->syslog('debug2', '(%s,%s,%s,%s,%s)', @_);
-    my $current_list = shift;
-    my $listname     = shift;
-    my $robot_id     = shift;
-    my $sender       = shift;
-    my $new_dir      = shift;
-
     unless (mkdir $new_dir, 0775) {
         $log->syslog('err', 'Failed to create directory %s: %m', $new_dir);
+        $self->add_stash($request, 'intern');
         return undef;
     }
     chmod 0775, $new_dir;
@@ -564,6 +535,7 @@ sub _clone_list_as_empty {
                     'Failed to copy_directory %s: %m',
                     $new_dir . '/' . $subdir
                 );
+                $self->add_stash($request, 'intern');
                 return undef;
             }
         }
@@ -581,6 +553,7 @@ sub _clone_list_as_empty {
                 'Failed to copy %s: %m',
                 $new_dir . '/' . $file
             );
+            $self->add_stash($request, 'intern');
             return undef;
         }
     }
@@ -599,6 +572,7 @@ sub _clone_list_as_empty {
                     'Failed to copy %s: %m',
                     $new_dir . '/' . $file
                 );
+                $self->add_stash($request, 'intern');
                 return undef;
             }
         }
@@ -609,13 +583,21 @@ sub _clone_list_as_empty {
     unless ($new_list =
         Sympa::List->new($listname, $robot_id, {'reload_config' => 1})) {
         $log->syslog('info', 'Unable to load %s while renamming', $listname);
+        $self->add_stash($request, 'intern');
         return undef;
     }
     $new_list->{'admin'}{'serial'} = 0;
     $new_list->{'admin'}{'creation'}{'email'} = $sender if ($sender);
     $new_list->{'admin'}{'creation'}{'date_epoch'} = time;
+
+    # Set list status to pending if creation list is moderated.
+    # Save config file for the new() later to reload it.
+    $new_list->{'admin'}{'status'} = 'pending'
+        if $pending;
+    _modify_custom_subject($request, $new_list);
     $new_list->save_config($sender);
-    return $new_list;
+
+    return 1;
 }
 
 sub _modify_custom_subject {
@@ -684,6 +666,6 @@ L<Sympa::Spindle::ProcessRequest>.
 
 =head1 HISTORY
 
-L<Sympa::Request::Handler::move_list> appeared on Sympa 6.2.19b.
+L<Sympa::Request::Handler::move_list> appeared on Sympa 6.2.21b.
 
 =cut
