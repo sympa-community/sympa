@@ -95,7 +95,7 @@ sub _twist {
     # Check listname on SMTP server.
     # Do not test if listname did not change.
     my $res;
-    unless ($current_list->{'name'} eq $listname) {
+    unless ($current_list->get_id eq $listname . '@' . $robot_id) {
         $res = Sympa::Admin::list_check_smtp($listname, $robot_id);
         unless (defined $res) {
             $log->syslog('err', 'Can\'t check list %.128s on %.128s',
@@ -104,7 +104,7 @@ sub _twist {
             return undef;
         }
     }
-    if ($res or $current_list->{'name'} eq $listname) {
+    if ($res or $current_list->get_id eq $listname . '@' . $robot_id) {
         $log->syslog('err',
             'Could not rename list %s: new list %s on %s already exist',
             $current_list, $listname, $robot_id);
