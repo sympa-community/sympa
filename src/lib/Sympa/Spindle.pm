@@ -113,7 +113,6 @@ sub spin {
         last if $self->{finish};
     }
 
-    $self->_init(3);
     return $processed;
 }
 
@@ -264,16 +263,12 @@ source spool class must implement new() and next().
 I<Instance method>.
 Additional processing
 when the spindle class is instantiated ($state is 0), before spin() processes
-next object in source spool ($state is 1),
-after it processed object ($state is 2),
-or when scanning source spool finished or terminated ($state is 3).
+next object in source spool ($state is 1) or after it processed object
+($state is 2).
 
 If it returns false value, new() will return C<undef> (when $state is 0)
 or spin() will terminate processing (when $state is 1).
 By default it always returns C<1>.
-
-Note:
-$state 3 was added on Sympa 6.2.21b.1.
 
 =item _on_garbage ( $handle )
 

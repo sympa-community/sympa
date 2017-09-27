@@ -41,6 +41,9 @@ sub _directories {
     };
 }
 
+use constant _filter => 1;
+use constant _init   => 1;
+
 1;
 __END__
 

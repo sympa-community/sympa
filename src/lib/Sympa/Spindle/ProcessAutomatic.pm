@@ -50,19 +50,13 @@ sub _init {
     my $self  = shift;
     my $state = shift;
 
-    if ($state == 0) {
-        # Initialize priority to process.
-        $self->{_highest_priority} = 'z';
-    } elsif ($state == 1) {
+    if ($state == 1) {
         Sympa::List::init_list_cache();
         # Process grouped notifications.
         Sympa::Alarm->instance->flush;
     } elsif ($state == 2) {
         ## Free zombie sendmail process.
         #Sympa::Process->instance->reap_child;
-    } elsif ($state == 3) {
-        # Initialize priority to process.
-        $self->{_highest_priority} = 'z';
     }
 
     1;
@@ -98,17 +92,6 @@ sub _on_success {
 sub _twist {
     my $self    = shift;
     my $message = shift;
-
-    # Omit messages which may not be processed.
-    # - z and Z are a null priority, so files stay in queue and are
-    #   processed only if renamed by administrator.
-    return 0 if lc($message->{priority} || '') eq 'z';
-    # - Lazily seek highest priority: Messages with lower priority than
-    #   those already found are skipped.
-    if (length($message->{priority} || '')) {
-        return 0 if $self->{_highest_priority} lt $message->{priority};
-        $self->{_highest_priority} = $message->{priority};
-    }
 
     unless (defined $message->{'message_id'}
         and length $message->{'message_id'}) {
@@ -435,8 +418,9 @@ message spool again and waits for processing by
 L<Sympa::Spindle::ProcessIncoming>.
 
 Order to process messages in source spool are controlled by modification time
-of files and delivery date (See L<Sympa::Spool::Automatic>).
-Some messages are skipped according to these priorities:
+of files and delivery date.
+Some messages are skipped according to these priorities
+(See L<Sympa::Spool::Automatic>):
 
 =over
 

@@ -77,7 +77,7 @@ my $spool_dir = $spool->{directory};
 mkdir "$spool_dir/moved", 0755 unless -d "$spool_dir/moved";
 
 while (1) {
-    my ($message, $handle) = $spool->next;
+    my ($message, $handle) = $spool->next(no_filter => 1);
 
     if ($message and $handle) {
         my $status = process($message);

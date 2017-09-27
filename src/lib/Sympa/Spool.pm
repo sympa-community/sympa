@@ -135,7 +135,11 @@ sub next {
         $metadata = $self->unmarshal($marshalled);
 
         if ($metadata) {
-            next unless $self->_filter($metadata);
+            if ($options{no_filter}) {
+                $self->_filter($metadata);
+            } else {
+                next unless $self->_filter($metadata);
+            }
 
             if ($self->_is_collection) {
                 $message = $self->_generator->new(%$metadata);
@@ -602,7 +606,7 @@ Message to be marshalled.
 Note:
 This method was added on Sympa 6.2.21b.
 
-=item next ( [ no_lock =E<gt> 1 ] )
+=item next ( [ no_filter =E<gt> 1 ], [ no_lock =E<gt> 1 ] )
 
 I<Instance method>.
 Gets next message to process, order is controlled by name of spool file and
@@ -612,6 +616,10 @@ Message will be locked to prevent multiple proccessing of a single message.
 Parameters:
 
 =over
+
+=item no_filter =E<gt> 1
+
+Won't skip messages when filter defined by _filter() returns false.
 
 =item no_lock =E<gt> 1
 
@@ -992,5 +1000,6 @@ It as the base class appeared on Sympa 6.2.6.
 build_glob_pattern(), size(), _glob_pattern() and _store_key()
 were introduced on Sympa 6.2.8.
 _filter_pre() was introduced on Sympa 6.2.10.
+C<no_filter> option of next() was introduced on Sympa 6.2.21b.
 
 =cut

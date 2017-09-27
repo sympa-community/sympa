@@ -88,7 +88,8 @@ sub _create_spool {
 }
 
 sub next {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     unless ($self->{_metadatas}) {
         my $cwd = Cwd::getcwd();
@@ -131,8 +132,10 @@ sub next {
         );
 
         if ($metadata) {
-            # Skip messages not yet to be delivered.
-            next unless $metadata->{date} <= time;
+            unless ($options{no_filter}) {
+                # Skip messages not yet to be delivered.
+                next unless $metadata->{date} <= time;
+            }
 
             my $msg_file = Sympa::Spool::marshal_metadata(
                 $metadata,
@@ -430,12 +433,13 @@ L<Sympa::Bulk> implements the spool for bulk sending.
 I<Constructor>.
 Creates new instance of L<Sympa::Bulk>.
 
-=item next ( )
+=item next ( [ no_filter =E<gt> 1 ] )
 
 I<Instance method>.
 Gets next packet to process, order is controlled by message priority, then by
 packet priority, then by delivery date, then by reception date.
-Packets with future delivery date are ignored.
+Packets with future delivery date are ignored
+(if C<no_filter> option is I<not> set).
 Packet will be locked to prevent multiple proccessing of a single packet.
 
 Parameters:

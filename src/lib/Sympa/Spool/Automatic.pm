@@ -68,9 +68,13 @@ See also L<Sympa::Spool/"Public methods">.
 
 =over
 
-=item next ( )
+=item next ( [ no_filter =E<gt> 1 ], [ no_lock =E<gt> 1 ] )
 
-Order is controlled by modification time of files and delivery date.
+I<Instance method>.
+Order is controlled by modification time of files and delivery date, then,
+if C<no_filter> is I<not> set,
+messages with possiblly higher priority are chosen and
+messages with lowest priority (C<z> or C<Z>) are skipped.
 
 =item store ( $message, [ original =E<gt> $original ] )
 
