@@ -45,7 +45,8 @@ sub _twist {
     my $request = shift;
 
     # Skip authorization unless specific scenario is defined.
-    if ($request->{error} or not $request->handler->action_scenario) {
+    if ($request->{error} or not $request->handler->action_scenario
+        or ($self->{scenario_context} and $self->{scenario_context}{skip})) {
         return ['Sympa::Spindle::DispatchRequest'];
     }
 
