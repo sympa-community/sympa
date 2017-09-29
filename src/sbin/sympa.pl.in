@@ -513,7 +513,7 @@ if ($main::options{'dump'}) {
         );
         unless ($spindle and $spindle->spin) {
             printf STDERR
-                'Failed to change user email address in virtual robot %s\n',
+                "Failed to change user email address in virtual robot %s\n",
                 $robot;
         }
     }
