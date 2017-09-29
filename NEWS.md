@@ -1,5 +1,15 @@
 # Change Log
 
+## [6.2.22](https://github.com/sympa-community/sympa/tree/6.2.22) (2017-10-01)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.20...6.2.22)
+
+**Fixed bugs:**
+
+- "sympa.pl --change\_user\_email" was broken [\#65](https://github.com/sympa-community/sympa/pull/65) ([ikedas](https://github.com/ikedas))
+
+- upgrade\_send\_spool.pl could leave some messages not upgraded \[[diff](https://github.com/sympa-community/sympa/compare/6.2.20...ce1f94d239062b845524de60a84a711af29d1ec6)\]
+
 ## [6.2.20](https://github.com/sympa-community/sympa/tree/6.2.20) (2017-09-22)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.19b.2...6.2.20)
