@@ -125,6 +125,16 @@ sub _twist {
         }
     }
 
+    if (   $listname eq Conf::get_robot_conf($robot_id, 'email')
+        or $listname eq Conf::get_robot_conf($robot_id, 'listmaster_email')) {
+        $log->syslog('err',
+            'Incorrect listname %s matches one of service aliases',
+            $listname);
+        $self->add_stash($request, 'user', 'listname_matches_aliases',
+            {new_listname => $listname});
+        return undef;
+    }
+
     # Rename or create this list directory itself.
     my $new_dir;
     my $home = $Conf::Conf{'home'};
