@@ -55,9 +55,9 @@ sub _twist {
     }
 
     if ($current_email eq $email) {
-        $self->add_stash($request, 'notice', 'no_email_changed',
-            {email => $email});
         $log->syslog('info', 'No change on email');
+        $self->add_stash($request, 'user', 'no_email_changed',
+            {email => $email});
         return 1;
     }
 

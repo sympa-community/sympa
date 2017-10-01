@@ -494,34 +494,26 @@ if ($main::options{'dump'}) {
 
     exit 0;
 } elsif ($main::options{'change_user_email'}) {
-
-    unless ($main::options{'current_email'}
-        && $main::options{'new_email'}) {
+    unless ($main::options{'current_email'} and $main::options{'new_email'}) {
         print STDERR "Missing current_email or new_email parameter\n";
         exit 1;
     }
 
-    foreach my $robot (Sympa::List::get_robots()) {
-        printf STDOUT "Doing processing for virtual robot %s...\n", $robot;
-        my $spindle = Sympa::Spindle::ProcessRequest->new(
-            context       => $robot,
-            action        => 'move_user',
-            current_email => $main::options{'current_email'},
-            email         => $main::options{'new_email'},
-            sender        => Sympa::get_address('*', 'listmaster'),
-            scenario_context => {skip => 1},
-        );
-        unless ($spindle and $spindle->spin) {
-            printf STDERR
-                "Failed to change user email address in virtual robot %s\n",
-                $robot;
-        }
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => [Sympa::List::get_robots()],
+        action           => 'move_user',
+        current_email    => $main::options{'current_email'},
+        email            => $main::options{'new_email'},
+        sender           => Sympa::get_address('*', 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Failed to change user email address %s to %s\n",
+            $main::options{'current_email'}, $main::options{'new_email'};
+        exit 1;
     }
-
-    printf STDOUT "Email address %s has been changed to %s\n",
-        $main::options{'current_email'}, $main::options{'new_email'};
-
     exit 0;
+
 } elsif ($main::options{'purge_list'}) {
 
     my ($listname, $robotname) = split /\@/, $main::options{'purge_list'};
