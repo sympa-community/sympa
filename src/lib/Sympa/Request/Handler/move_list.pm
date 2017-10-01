@@ -72,7 +72,8 @@ sub _twist {
 
     # Check new listname syntax.
     my $listname_re = Sympa::Regexps::listname();
-    unless ($listname =~ /^$listname_re$/i
+    unless (defined $listname
+        and $listname =~ /^$listname_re$/i
         and length $listname <= Sympa::Constants::LIST_LEN()) {
         $log->syslog('err', 'Incorrect listname %s', $listname);
         $self->add_stash($request, 'user', 'incorrect_listname',
@@ -334,6 +335,7 @@ sub _move {
         $log->syslog('err',
             'Unable to rename list %s to %s@%s in the database',
             $current_list, $listname, $robot_id);
+        $self->add_stash($request, 'intern');
         return undef;
     }
 

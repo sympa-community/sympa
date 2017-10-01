@@ -542,49 +542,44 @@ if ($main::options{'dump'}) {
 
     exit 0;
 } elsif ($main::options{'rename_list'}) {
-
-    ## TODO A completer
-
-    my ($listname, $robotname) = split /\@/, $main::options{'rename_list'};
-    my $list = Sympa::List->new($listname, $robotname);
-
-    unless (defined $list) {
-        print STDERR "Incorrect list name $main::options{'rename_list'}\n";
+    my $current_list =
+        Sympa::List->new(split(/\@/, $main::options{'rename_list'}, 2),
+        {just_try => 1});
+    unless ($current_list) {
+        printf STDERR "Incorrect list name %s\n",
+            $main::options{'rename_list'};
         exit 1;
     }
 
-    unless ($main::options{'new_listname'}) {
+    my $listname = $main::options{'new_listname'};
+    unless (defined $listname and length $listname) {
         print STDERR "Missing parameter new_listname\n";
         exit 1;
     }
 
-    unless ($main::options{'new_listrobot'}) {
-        print STDERR "Missing parameter new_listrobot\n";
-        exit 1;
+    my $robot_id = $main::options{'new_listrobot'};
+    unless (defined $robot_id) {
+        $robot_id = $current_list->{'domain'};
+    } else {
+        unless (length $robot_id and Conf::valid_robot($robot_id)) {
+            print STDERR "Unknown robot \"%s\"\n";
+            exit 1;
+        }
     }
 
-    my ($new_listname, $new_robotname) =
-        ($main::options{'new_listname'}, $main::options{'new_listrobot'});
-
-    my $result = Sympa::Admin::rename_list(
-        list         => $list,
-        new_listname => $new_listname,
-        new_robot    => $new_robotname,
-        options      => {'skip_authz' => 1},
-        user_email   => 'listmaster@' . $robotname,
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $robot_id,
+        action           => 'move_list',
+        current_list     => $current_list,
+        listname         => $listname,
+        sender           => Sympa::get_address($robot_id, 'listmaster'),
+        scenario_context => {skip => 1},
     );
-
-    unless ($result == 1) {
-        printf STDERR "Could not rename list %s to %s: %s\@%s\n",
-            $main::options{'rename_list'},   $main::options{'new_listname'},
-            $main::options{'new_listrobot'}, $result;
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Could not rename list %s to %s%s\n",
+            $current_list->get_id, $listname, $robot_id;
         exit 1;
     }
-
-    printf STDOUT "List %s has been renamed to %s\@%s\n",
-        $main::options{'rename_list'}, $main::options{'new_listname'},
-        $main::options{'new_listrobot'};
-
     exit 0;
 
 } elsif ($main::options{'test_database_message_buffer'}) {
@@ -1009,6 +1004,34 @@ sub _load {
     unless (Conf::checkfiles_as_root()) {
         die "Missing files\n";
     }
+}
+
+sub _report {
+    my $spindle = shift;
+
+    my @reports = @{$spindle->{stash} || []};
+    @reports = ([undef, 'notice', 'performed']) unless @reports;
+
+    my $template = Sympa::Template->new('*', subdir => 'mail_tt2');
+    foreach my $report (@reports) {
+        my ($request, $report_type, $report_entry, $report_param) = @$report;
+        my $action = $request ? $request->{action} : 'sympa';
+        my $message = '';
+        $template->parse(
+            {   report_type  => $report_type,
+                report_entry => $report_entry,
+                report_param => ($report_param || {}),
+            },
+            'report.tt2',
+            \$message
+        );
+        $message ||= $report_entry;
+        $message =~ s/\n/ /g;
+
+        printf STDERR "%s [%s] %s\n", $action, $report_type, $message;
+    }
+
+    return (grep { $_->[1] ne 'notice' } @reports) ? undef : 1;
 }
 
 # DEPRECATED.  Use Sympa::Spindle::ProcessDigest class.
