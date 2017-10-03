@@ -93,8 +93,6 @@ sub _twist {
     my $self    = shift;
     my $message = shift;
 
-    my $status;
-
     unless (defined $message->{'message_id'}
         and length $message->{'message_id'}) {
         $log->syslog('err', 'Message %s has no message ID', $message);
@@ -418,6 +416,25 @@ If the list a message is bound for has not been there and list creation is
 authorized, it will be created.  Then the message is stored into incoming
 message spool again and waits for processing by
 L<Sympa::Spindle::ProcessIncoming>.
+
+Order to process messages in source spool are controlled by modification time
+of files and delivery date.
+Some messages are skipped according to these priorities
+(See L<Sympa::Spool::Automatic>):
+
+=over
+
+=item *
+
+Messages with lowest priority (C<z> or C<Z>) are skipped.
+
+=item *
+
+Messages with possiblly higher priority are chosen.
+This is done by skipping messages with lower priority than those already
+found.
+
+=back
 
 =head2 Public methods
 

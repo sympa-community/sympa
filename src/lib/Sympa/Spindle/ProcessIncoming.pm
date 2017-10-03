@@ -470,6 +470,25 @@ L<Sympa::Spindle::DoMessage> for ordinal post.
 
 =back
 
+Order to process messages in source spool are controlled by modification time
+of files and delivery date.
+Some messages are skipped according to these priorities
+(See L<Sympa::Spool::Incoming>):
+
+=over
+
+=item *
+
+Messages with lowest priority (C<z> or C<Z>) are skipped.
+
+=item *
+
+Messages with possiblly higher priority are chosen.
+This is done by skipping messages with lower priority than those already
+found.
+
+=back
+
 =head2 Public methods
 
 See also L<Sympa::Spindle/"Public methods">.

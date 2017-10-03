@@ -93,6 +93,14 @@ sub _create {
 
 sub _init {1}
 
+sub marshal {
+    my $self    = shift;
+    my $message = shift;
+
+    return Sympa::Spool::marshal_metadata($message, $self->_marshal_format,
+        $self->_marshal_keys);
+}
+
 sub next {
     my $self    = shift;
     my %options = @_;
@@ -124,13 +132,14 @@ sub next {
             next unless $handle;
         }
 
-        $metadata = Sympa::Spool::unmarshal_metadata(
-            $self->{directory},     $marshalled,
-            $self->_marshal_regexp, $self->_marshal_keys
-        );
+        $metadata = $self->unmarshal($marshalled);
 
         if ($metadata) {
-            next unless $self->_filter($metadata);
+            if ($options{no_filter}) {
+                $self->_filter($metadata);
+            } else {
+                next unless $self->_filter($metadata);
+            }
 
             if ($self->_is_collection) {
                 $message = $self->_generator->new(%$metadata);
@@ -244,10 +253,7 @@ sub store {
         $message, $self, $marshalled);
 
     if ($self->_store_key) {
-        my $metadata = Sympa::Spool::unmarshal_metadata(
-            $self->{directory},     $marshalled,
-            $self->_marshal_regexp, $self->_marshal_keys
-        );
+        my $metadata = $self->unmarshal($marshalled);
         return $metadata ? $metadata->{$self->_store_key} : undef;
     }
     return $marshalled;
@@ -256,6 +262,16 @@ sub store {
 sub _filter_pre {1}
 
 sub _store_key {undef}
+
+sub unmarshal {
+    my $self       = shift;
+    my $marshalled = shift;
+
+    return Sympa::Spool::unmarshal_metadata(
+        $self->{directory},     $marshalled,
+        $self->_marshal_regexp, $self->_marshal_keys
+    );
+}
 
 # Low-level functions.
 
@@ -572,7 +588,25 @@ This module is the base class for spool subclasses of Sympa.
 I<Constructor>.
 Creates new instance of the class.
 
-=item next ( [ no_lock =E<gt> 1 ] )
+=item marshal ( $message )
+
+I<Instance method>.
+Gets marshalled key (file name) of the message.
+
+Parameters:
+
+=over
+
+=item $message
+
+Message to be marshalled.
+
+=back
+
+Note:
+This method was added on Sympa 6.2.21b.
+
+=item next ( [ no_filter =E<gt> 1 ], [ no_lock =E<gt> 1 ] )
 
 I<Instance method>.
 Gets next message to process, order is controlled by name of spool file and
@@ -582,6 +616,10 @@ Message will be locked to prevent multiple proccessing of a single message.
 Parameters:
 
 =over
+
+=item no_filter =E<gt> 1
+
+Won't skip messages when filter defined by _filter() returns false.
 
 =item no_lock =E<gt> 1
 
@@ -686,6 +724,28 @@ Returns:
 
 If storing succeeded, marshalled metadata (file name) of the message.
 Otherwise C<undef>.
+
+=item unmarshal ( $marshalled )
+
+I<Instance method>.
+Gets metadata from marshalled key (file name).
+
+Parameters:
+
+=over
+
+=item $marshalled
+
+Marshalled key.
+
+=back
+
+Returns:
+
+Hashref containing metadata.
+
+Note:
+This method was added on Sympa 6.2.21b.
 
 =back
 
@@ -940,5 +1000,6 @@ It as the base class appeared on Sympa 6.2.6.
 build_glob_pattern(), size(), _glob_pattern() and _store_key()
 were introduced on Sympa 6.2.8.
 _filter_pre() was introduced on Sympa 6.2.10.
+C<no_filter> option of next() was introduced on Sympa 6.2.21b.
 
 =cut

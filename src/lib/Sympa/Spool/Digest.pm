@@ -59,10 +59,7 @@ sub _init {
         my $metadatas = $self->_load || [];
         my $metadata;
         while (my $marshalled = shift @$metadatas) {
-            $metadata = Sympa::Spool::unmarshal_metadata(
-                $self->{directory},     $marshalled,
-                $self->_marshal_regexp, $self->_marshal_keys
-            );
+            $metadata = $self->unmarshal($marshalled);
             last if $metadata;
         }
         $self->{time} = $metadata ? $metadata->{time} : undef;

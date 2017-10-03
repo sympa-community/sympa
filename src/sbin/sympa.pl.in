@@ -50,6 +50,7 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Spindle::ProcessDigest;
+use Sympa::Spindle::ProcessRequest;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Upgrade;
@@ -502,22 +503,18 @@ if ($main::options{'dump'}) {
 
     foreach my $robot (Sympa::List::get_robots()) {
         printf STDOUT "Doing processing for virtual robot %s...\n", $robot;
-        my ($status, $failed_for) = Sympa::Admin::change_user_email(
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context       => $robot,
+            action        => 'move_user',
             current_email => $main::options{'current_email'},
-            new_email     => $main::options{'new_email'},
-            robot         => $robot
+            email         => $main::options{'new_email'},
+            sender        => Sympa::get_address('*', 'listmaster'),
+            scenario_context => {skip => 1},
         );
-        unless (defined $status) {
+        unless ($spindle and $spindle->spin) {
             printf STDERR
-                "Failed to change user email address in virtual robot %s'}\n",
+                "Failed to change user email address in virtual robot %s\n",
                 $robot;
-            exit 1;
-        }
-
-        foreach my $failed_list (@$failed_for) {
-            printf STDERR
-                "Failed to change user email address for list %s'}\n",
-                $failed_list->{'name'};
         }
     }
 
