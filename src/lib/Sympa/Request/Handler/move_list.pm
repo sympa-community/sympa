@@ -229,69 +229,12 @@ sub _move {
     $current_list->save_config($sender);
 
     # Start moving list.
-    unless (Sympa::Tools::File::copy_dir($current_list->{'dir'}, $new_dir)) {
-        $log->syslog(
-            'err',
-            'Unable to copy %s to %s: %m',
-            $current_list->{'dir'}, $new_dir
-        );
-        $self->add_stash($request, 'intern');
-        return undef;
-    }
-
-    my $sdm = Sympa::DatabaseManager->instance;
-
+    my $sdm       = Sympa::DatabaseManager->instance;
     my $fake_list = bless {
         name   => $listname,
         domain => $robot_id,
         dir    => $new_dir,
     } => 'Sympa::List';
-
-    # Try renaming archive.
-    # Continue even if there are some troubles.
-    my $arc_dir     = $current_list->get_archive_dir;
-    my $new_arc_dir = $fake_list->get_archive_dir;
-    if (-d $arc_dir and $arc_dir ne $new_arc_dir) {
-        unless (File::Copy::move($arc_dir, $new_arc_dir)) {
-            $log->syslog('err', 'Unable to rename archive %s to %s: %m',
-                $arc_dir, $new_arc_dir);
-        }
-    }
-
-    # Try renaming bounces and tracking information.
-    # Continue even if there are some troubles.
-    my $bounce_dir     = $current_list->get_bounce_dir;
-    my $new_bounce_dir = $fake_list->get_bounce_dir;
-    if (-d $bounce_dir and $bounce_dir ne $new_bounce_dir) {
-        unless (File::Copy::move($bounce_dir, $new_bounce_dir)) {
-            $log->syslog('err', 'Unable to rename bounces from %s to %s: %m',
-                $bounce_dir, $new_bounce_dir);
-        }
-    }
-    unless (
-        $sdm
-        and $sdm->do_prepared_query(
-            q{UPDATE notification_table
-              SET list_notification = ?, robot_notification = ?
-              WHERE list_notification = ? AND robot_notification = ?},
-            $listname,               $robot_id,
-            $current_list->{'name'}, $current_list->{'domain'}
-        )
-        ) {
-        $log->syslog(
-            'err',
-            'Unable to transfer tracking information from list %s to list %s@%s',
-            $current_list,
-            $listname,
-            $robot_id
-        );
-    }
-    # Clear old HTML view.
-    Sympa::Tools::File::remove_dir(
-        sprintf '%s/%s/%s',
-        $Conf::Conf{'viewmail_dir'},
-        'bounce', $current_list->get_id
-    );
 
     # If subscribtion are stored in database rewrite the database.
     unless (
@@ -500,17 +443,61 @@ sub _move {
         }
     }
 
-    # End moving list.
-    my $lock_fh;
+    # Try renaming archive.
+    # Continue even if there are some troubles.
+    my $arc_dir     = $current_list->get_archive_dir;
+    my $new_arc_dir = $fake_list->get_archive_dir;
+    if (-d $arc_dir and $arc_dir ne $new_arc_dir) {
+        unless (File::Copy::move($arc_dir, $new_arc_dir)) {
+            $log->syslog('err', 'Unable to rename archive %s to %s: %m',
+                $arc_dir, $new_arc_dir);
+        }
+    }
+
+    # Try renaming bounces and tracking information.
+    # Continue even if there are some troubles.
+    my $bounce_dir     = $current_list->get_bounce_dir;
+    my $new_bounce_dir = $fake_list->get_bounce_dir;
+    if (-d $bounce_dir and $bounce_dir ne $new_bounce_dir) {
+        unless (File::Copy::move($bounce_dir, $new_bounce_dir)) {
+            $log->syslog('err', 'Unable to rename bounces from %s to %s: %m',
+                $bounce_dir, $new_bounce_dir);
+        }
+    }
     unless (
-        $lock_fh =
-        Sympa::LockedFile->new($current_list->{'dir'} . '/' . 'config',
-            5, '+<')
-        and $lock_fh->unlink
-        and Sympa::Tools::File::del_dir($current_list->{'dir'})
+        $sdm
+        and $sdm->do_prepared_query(
+            q{UPDATE notification_table
+              SET list_notification = ?, robot_notification = ?
+              WHERE list_notification = ? AND robot_notification = ?},
+            $listname,               $robot_id,
+            $current_list->{'name'}, $current_list->{'domain'}
+        )
         ) {
-        $log->syslog('err', 'Unable to remove %s: %m',
-            $current_list->{'dir'});
+        $log->syslog(
+            'err',
+            'Unable to transfer tracking information from list %s to list %s@%s',
+            $current_list,
+            $listname,
+            $robot_id
+        );
+    }
+    # Clear old HTML view.
+    Sympa::Tools::File::remove_dir(
+        sprintf '%s/%s/%s',
+        $Conf::Conf{'viewmail_dir'},
+        'bounce', $current_list->get_id
+    );
+
+    # End moving list.
+    unless (File::Copy::move($current_list->{'dir'}, $new_dir)) {
+        $log->syslog(
+            'err',
+            'Unable to rename %s to %s: %m',
+            $current_list->{'dir'}, $new_dir
+        );
+        $self->add_stash($request, 'intern');
+        return undef;
     }
 
     return 1;
