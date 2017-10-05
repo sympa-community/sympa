@@ -5827,9 +5827,11 @@ sub _include_users_sql {
         = @_;
 
     my $sth;
+    my $sourceSqlQuoteTmp = $source->{'sql_query'};
+    $sourceSqlQuoteTmp =~ s/%/%%/g; # Taking '%' into account in queries
     unless ($db
         and $db->connect()
-        and $sth = $db->do_query($source->{'sql_query'})) {
+        and $sth = $db->do_query($sourceSqlQuoteTmp)) {
         $log->syslog(
             'err',
             'Unable to connect to SQL datasource with parameters host: %s, database: %s',
