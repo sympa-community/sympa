@@ -391,54 +391,36 @@ if ($main::options{'dump'}) {
 
     exit 0;
 } elsif ($main::options{'import'}) {
-    my ($list, $total);
-
-    ## The parameter should be a list address
+    #FIXME The parameter should be a list address.
     unless ($main::options{'import'} =~ /\@/) {
-        $log->syslog(
-            'err',
-            'Incorrect list address %s',
-            $main::options{'import'}
-        );
-        exit;
-    }
-
-    unless ($list = Sympa::List->new($main::options{'import'})) {
-        $log->syslog('err', 'Unknown list name %s', $main::options{'import'});
+        printf STDERR "Incorrect list address %s\n", $main::options{'import'};
         exit 1;
     }
-
-    ## Read imported data from STDIN
-    while (<STDIN>) {
-        next if /^\s*$/;
-        next if /^\s*\#/;
-
-        unless (/^\s*((\S+|\".*\")@\S+)(\s*(\S.*))?\s*$/) {
-            printf STDERR "Not an email address: %s\n", $_;
-        }
-
-        my $email = lc($1);
-        my $gecos = $4;
-        my $u;
-        my $defaults = $list->get_default_user_options();
-        %{$u} = %{$defaults};
-        $u->{'email'} = $email;
-        $u->{'gecos'} = $gecos;
-
-        $list->add_list_member($u);
-        if (defined $list->{'add_outcome'}{'errors'}) {
-            printf STDERR "\nCould not add %s. %s\n", $email,
-                $list->{'add_outcome'}{'errors'}{'error_message'};
-            next;
-        }
-        print STDERR '+';
-
-        $total++;
+    my $list;
+    unless ($list = Sympa::List->new($main::options{'import'})) {
+        printf STDERR "Unknown list name %s\n", $main::options{'import'};
+        exit 1;
     }
+    my $dump = do { local $RS; <STDIN> };
 
-    printf STDERR "Total imported subscribers: %d\n", $total;
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'import',
+        dump             => $dump,
+        force            => 1,
+        sender           => Sympa::get_address($list, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin) {
+        printf STDERR "Failed to add email addresses to %s\n", $list;
+        exit 1;
+    }
+    my $status = _report($spindle);
+    printf STDERR "Total imported subscribers: %d\n",
+        scalar(grep { $_->[1] eq 'notice' and $_->[2] eq 'now_subscriber' }
+        @{$spindle->{stash} || []});
+    exit($status ? 0 : 1);
 
-    exit 0;
 } elsif ($main::options{'md5_encode_password'}) {
     printf STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
 
