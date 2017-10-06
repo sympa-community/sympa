@@ -28,6 +28,7 @@ nobase_static_DATA = \
 	external/jquery.jqplot.css \
 	external/jquery.jqplot.min.js \
 	external/jquery.js \
+	external/jquery-migrate.js \
 	external/jquery-ui.css \
 	external/jquery-ui.js \
 	external/modernizr.custom.js \
