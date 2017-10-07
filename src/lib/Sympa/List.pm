@@ -5568,7 +5568,7 @@ sub _include_users_ldap_2level {
             'search',
             base   => "$suffix2",
             filter => "$filter2",
-            attrs  => ["$ldap_attrs2"],    # FIXME: multiple attrs?
+            attrs  => [@ldap_attrs2],
             scope  => "$ldap_scope2"
         );
         unless ($mesg) {
