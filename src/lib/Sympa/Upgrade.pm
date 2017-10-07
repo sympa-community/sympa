@@ -923,7 +923,6 @@ sub upgrade {
             'password_case'              => 'NO',
             'review_page_size'           => 'yes',
             'title'                      => 'NO',
-            'use_fast_cgi'               => 'yes',
             'use_html_editor'            => 'NO',
             'viewlogs_page_size'         => 'yes',
             'wws_path'                   => undef,
@@ -940,6 +939,7 @@ sub upgrade {
             'task_manager_pidfile' => 'No more used',
             'archived_pidfile'     => 'No more used',
             'bounced_pidfile'      => 'No more used',
+            'use_fast_cgi'         => 'No longer used', # 6.2.25b deprecated
         );
 
         ## Set language of new file content

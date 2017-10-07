@@ -38,6 +38,7 @@ use strict;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 
 use Archive::Zip qw();
+use CGI::Fast qw();
 use DateTime;
 use DateTime::Format::Mail;
 use Digest::MD5;
@@ -109,7 +110,6 @@ our $robot_id;
 our $session;
 our $plugins;
 
-my $loop = 0;
 my $robot;
 my $ip;
 my $rss;
@@ -138,12 +138,6 @@ if (eval "require Sympa::Plugin::Manager") {
 }
 
 Sympa::Alarm->instance->{use_bulk} = 1;
-
-if ($Conf::Conf{'use_fast_cgi'}) {
-    require CGI::Fast;
-} else {
-    require CGI;
-}
 
 # hash of all the description files already loaded
 # format :
@@ -1022,10 +1016,11 @@ $log->syslog('info', 'WWSympa started, process %d', $PID);
 #XXX## Incoming data is utf8-encoded
 #XXXbinmode STDIN, ":utf8";
 
-## Main loop
-my $loop_count;
+# Main loop.
+my $loop_count = 0;
 my $start_time = time;
-while ($query = new_loop()) {
+while ($query = CGI::Fast->new) {
+    $loop_count++;
 
     undef $param;
     undef $list;
@@ -2092,21 +2087,8 @@ sub _crash_handler {
     exit 0;
 }
 
-sub new_loop {
-    $loop++;
-    my $query;
-
-    if ($Conf::Conf{'use_fast_cgi'}) {
-        $query = CGI::Fast->new;
-        $loop_count++;
-    } else {
-        return undef if ($loop > 1);
-
-        $query = CGI->new;
-    }
-
-    return $query;
-}
+# No longer used.
+#sub new_loop;
 
 # DEPRECATED.  Use Sympa::Tools::WWW::get_server_name() or
 # Sympa::Tools::WWW::get_http_host().
@@ -17412,7 +17394,7 @@ wwsympa, wwsympa.fcgi - WWSympa, Sympa's web interface
 
 =head1 DESCRIPTION 
 
-This CGI/FastCGI script completely handles all aspects of the Sympa web interface.
+This FastCGI script completely handles all aspects of the Sympa web interface.
 
 To know details on WWSympa, see Reference Manual:
 L<https://www.sympa.org/manual/web-interface>.
