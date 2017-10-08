@@ -137,9 +137,18 @@ sub upgrade {
 
     ## Empty the admin_table entries and recreate them
     $log->syslog('notice', 'Rebuilding the admin_table...');
-    Sympa::List::delete_all_list_admin();
-    foreach my $list (@$all_lists) {
-        $list->sync_include_admin();
+
+    if (@$all_lists) {
+        Sympa::List::delete_all_list_admin();
+
+        foreach my $list (@$all_lists) {
+            delete $list->{_admin_cache};
+            $list->sync_include_admin();
+        }
+    }
+    else {
+        ## Prevent empty admin table (GH #71)
+        $log->syslog('notice', 'Skipping rebuild, no list config files found');
     }
 
     ## Migration to tt2
