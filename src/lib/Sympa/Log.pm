@@ -547,7 +547,18 @@ sub get_first_db_log {
         $statement .= sprintf "AND list_logs = '%s' ", $select->{'list'};
     }
 
-    $statement .= 'ORDER BY date_logs, usec_logs ';
+    # Unknown sort key as 'date'.
+    my $sortby = $select->{'sortby'};
+    unless (
+        $sortby
+        and grep { $sortby eq $_ }
+        qw(date robot list action parameters target_email msg_id
+        status error_type user_email client daemon)
+        ) {
+        $sortby = 'date';
+    }
+    $statement .= sprintf 'ORDER BY %s ',
+	($sortby eq 'date' ? 'date_logs, usec_logs' : $sortby . '_logs');
 
     my $sth;
     unless ($sth = $sdm->do_query($statement)) {
