@@ -222,8 +222,10 @@ sub get_id {
 
     join ';', map {
         my $val = $self->{$_};
-        if (ref $val) {
+        if (Scalar::Util::blessed($val) and $val->can('get_id')) {
             sprintf '%s=%s', $_, $val->get_id;
+        } elsif (ref $val) {
+            sprintf '%s=%s', $_, ref $val;
         } else {
             sprintf '%s=%s', $_, $val;
         }
