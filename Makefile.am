@@ -67,19 +67,15 @@ EXTRA_DIST = \
 	AUTHORS.md \
 	CONTRIBUTING.md \
 	INSTALL.md \
-	META.json.pl \
-	META.json \
 	NEWS.md \
 	OChangeLog \
 	ONEWS \
 	README.md \
-	sympa.spec.pl \
-	sympa.spec \
 	etc_README \
 	$(check_SCRIPTS) $(check_DATA) \
 	$(noinst_SCRIPTS)
 
-CLEANFILES = META.json sympa.spec sympa_wizard.pl.inst
+CLEANFILES = sympa_wizard.pl.inst
 
 MSGFMT=@MSGFMT@
 .po.mo:
@@ -204,12 +200,4 @@ uninstall-hook:
 
 dist-hook:
 	$(MAKE) check
-
-META.json: META.json.pl Makefile src/lib/Sympa/ModDef.pm
-	cd src/lib; $(MAKE) Sympa/Constants.pm
-	$(PERL) META.json.pl > META.json
-
-sympa.spec: sympa.spec.pl Makefile src/lib/Sympa/ModDef.pm
-	cd src/lib; $(MAKE) Sympa/Constants.pm
-	$(PERL) sympa.spec.pl > sympa.spec
 
