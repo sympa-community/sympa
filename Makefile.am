@@ -66,7 +66,6 @@ noinst_SCRIPTS = \
 EXTRA_DIST = \
 	AUTHORS.md \
 	CONTRIBUTING.md \
-	important_changes.pl \
 	INSTALL.md \
 	META.json.pl \
 	META.json \
@@ -80,7 +79,7 @@ EXTRA_DIST = \
 	$(check_SCRIPTS) $(check_DATA) \
 	$(noinst_SCRIPTS)
 
-CLEANFILES = META.json previous_sympa_version sympa.spec sympa_wizard.pl.inst
+CLEANFILES = META.json sympa.spec sympa_wizard.pl.inst
 
 MSGFMT=@MSGFMT@
 .po.mo:
@@ -96,7 +95,7 @@ authorcheck:
 	PERL5LIB=src/lib; export PERL5LIB; \
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
-install-data-hook: installdir installconfig nextstep importantchanges
+install-data-hook: installdir installconfig nextstep
 if SMTPC
 	-@chown $(USER) $(DESTDIR)$(bindir)/sympa_smtpc
 	-@chgrp $(GROUP) $(DESTDIR)$(bindir)/sympa_smtpc
@@ -198,14 +197,6 @@ nextstep:
 	@echo "#    * Run this script to upgrade your data structures:"
 	@echo "#        $(sbindir)/sympa.pl --upgrade"
 	@echo "#######################################################"
-
-importantchanges:
-	@if test -f $(top_srcdir)/previous_sympa_version; then \
-		export PREVIOUS=`$(CAT) $(top_srcdir)/previous_sympa_version`; \
-	fi; \
-	$(PERL) $(top_srcdir)/important_changes.pl \
-		--current=$(VERSION) \
-		--previous=$${PREVIOUS};
 
 uninstall-hook:
 	rm -f $(DESTDIR)$(confdir)/sympa.conf
