@@ -5568,7 +5568,7 @@ sub _include_users_ldap_2level {
             'search',
             base   => "$suffix2",
             filter => "$filter2",
-            attrs  => ["$ldap_attrs2"],    # FIXME: multiple attrs?
+            attrs  => [@ldap_attrs2],
             scope  => "$ldap_scope2"
         );
         unless ($mesg) {
@@ -5714,7 +5714,7 @@ sub _include_sql_ca {
         $source->{'email_entry'}
     );
 
-    my $sth     = $db->do_query($source->{'sql_query'});
+    my $sth     = $db->do_prepared_query($source->{'sql_query'});
     my $mailkey = $source->{'email_entry'};
     my $ca      = $sth->fetchall_hashref($mailkey);
     my $result;
@@ -5829,7 +5829,7 @@ sub _include_users_sql {
     my $sth;
     unless ($db
         and $db->connect()
-        and $sth = $db->do_query($source->{'sql_query'})) {
+        and $sth = $db->do_prepared_query($source->{'sql_query'})) {
         $log->syslog(
             'err',
             'Unable to connect to SQL datasource with parameters host: %s, database: %s',
