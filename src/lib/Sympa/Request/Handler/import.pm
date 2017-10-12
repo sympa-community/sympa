@@ -89,6 +89,13 @@ sub _twist {
             stash => $self->{stash},
         );
         $spindle and $processed += $spindle->spin;
+
+        last
+            if grep {
+            $_->[1] eq 'intern'
+                or $_->[1] eq 'user' and ($_->[2] eq 'list_not_open'
+                or $_->[2] eq 'max_list_members_exceeded')
+            } @{$self->{stash} || []};
     }
     unless ($processed) {    # No message
         $log->syslog('info', 'Import %s from %s failed, no e-mails to add',

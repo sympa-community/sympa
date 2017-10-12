@@ -123,6 +123,11 @@ sub _twist {
         $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);    # Overwrite.
         $request->{notify} = ($action =~ /,\s*notify\b/i);
         return ['Sympa::Spindle::DispatchRequest'];
+    } elsif ($action =~ /\Alistmaster\b/i) {
+        # Special case for move_list and create_list.
+        $request->{pending} = 'pending';
+        $request->{notify} = ($action =~ /,\s*notify\b/i);
+        return ['Sympa::Spindle::DispatchRequest'];
     } elsif (
         $action =~ /\Arequest_auth\b(?:\s*[(]\s*[[]\s*(\S+)\s*[]]\s*[)])?/i) {
         my $to = $1;
@@ -131,6 +136,7 @@ sub _twist {
         }
         return ['Sympa::Spindle::ToAuth'];
     } elsif ($action =~ /\Aowner\b/i and ref $that eq 'Sympa::List') {
+        # Special case for subscribe and signoff.
         $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);
         return ['Sympa::Spindle::ToAuthOwner'];
     } elsif ($action =~ /\Areject\b/i) {

@@ -34,6 +34,14 @@ use Conf;
 
 use base qw(Sympa::Spool);
 
+sub new {
+    my $class   = shift;
+    my %options = @_;
+
+    return undef unless ref $options{context} eq 'Sympa::List';
+    $class->SUPER::new(%options);
+}
+
 sub _directories {
     my $self    = shift;
     my %options = @_;

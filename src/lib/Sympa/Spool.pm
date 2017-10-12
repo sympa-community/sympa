@@ -96,9 +96,10 @@ sub _init {1}
 sub marshal {
     my $self    = shift;
     my $message = shift;
+    my %options = @_;
 
     return Sympa::Spool::marshal_metadata($message, $self->_marshal_format,
-        $self->_marshal_keys);
+        $self->_marshal_keys, %options);
 }
 
 sub next {
@@ -437,6 +438,7 @@ sub marshal_metadata {
     my $message        = shift;
     my $marshal_format = shift;
     my $marshal_keys   = shift;
+    my %options        = @_;
 
     #FIXME: Currently only "sympa@DOMAIN" and "LISTNAME(-TYPE)@DOMAIN" are
     # supported.
@@ -456,6 +458,14 @@ sub marshal_metadata {
             $localpart;
         } elsif ($_ eq 'domainpart') {
             $domainpart;
+        } elsif (lc $_ ne $_
+            and $options{keep_keys}
+            and exists $message->{lc $_}
+            and defined $message->{lc $_}
+            and !ref($message->{lc $_})) {
+            # If keep_keys is set, use metadata instead of auto-generated
+            # values.
+            $message->{lc $_};
         } elsif ($_ eq 'AUTHKEY') {
             Digest::MD5::md5_hex(time . (int rand 46656) . $domainpart);
         } elsif ($_ eq 'KEYAUTH') {
@@ -588,7 +598,7 @@ This module is the base class for spool subclasses of Sympa.
 I<Constructor>.
 Creates new instance of the class.
 
-=item marshal ( $message )
+=item marshal ( $message, [ keep_keys =E<gt> 1 ] )
 
 I<Instance method>.
 Gets marshalled key (file name) of the message.
@@ -601,10 +611,11 @@ Parameters:
 
 Message to be marshalled.
 
-=back
+=item keep_keys =E<gt> 1
 
-Note:
-This method was added on Sympa 6.2.21b.
+See marshal_metadata().
+
+=back
 
 =item next ( [ no_filter =E<gt> 1 ], [ no_lock =E<gt> 1 ] )
 
@@ -744,9 +755,6 @@ Returns:
 
 Hashref containing metadata.
 
-Note:
-This method was added on Sympa 6.2.21b.
-
 =back
 
 =head2 Properties
@@ -811,7 +819,8 @@ The keys C<localpart> and C<domainpart> are special.
 Following keys are derived from them:
 C<context>, C<listname>, C<listtype>, C<priority>.
 
-=item marshal_metadata ( $message, $marshal_format, $marshal_keys )
+=item marshal_metadata ( $message, $marshal_format, $marshal_keys,
+[ keep_keys =E<gt> 1 ] )
 
 I<Function>.
 Marshals metadata.
@@ -821,6 +830,7 @@ and metadatas indexed by keys in arrayref $marshal_keys.
 If key is uppercase, it means auto-generated value:
 C<'AUTHKEY'>, C<'KEYAUTH'>, C<'PID'>, C<'RAND'>, C<'TIME'>.
 Otherwise it means metadata or property of $message.
+If C<keep_keys> option (added on 6.2.21b) is set, forces using latter.
 
 sprintf() is executed under C<C> locale:
 Full stop (C<.>) is always used for decimal point in floating point number.
@@ -1000,6 +1010,7 @@ It as the base class appeared on Sympa 6.2.6.
 build_glob_pattern(), size(), _glob_pattern() and _store_key()
 were introduced on Sympa 6.2.8.
 _filter_pre() was introduced on Sympa 6.2.10.
-C<no_filter> option of next() was introduced on Sympa 6.2.21b.
+marshal(), unmarshal() and C<no_filter> option of next()
+were introduced on Sympa 6.2.21b.
 
 =cut

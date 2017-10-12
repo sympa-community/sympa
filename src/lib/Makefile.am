@@ -83,6 +83,7 @@ nobase_modules_DATA = \
 	Sympa/Request/Handler/add.pm \
 	Sympa/Request/Handler/auth.pm \
 	Sympa/Request/Handler/confirm.pm \
+	Sympa/Request/Handler/decl.pm \
 	Sympa/Request/Handler/del.pm \
 	Sympa/Request/Handler/distribute.pm \
 	Sympa/Request/Handler/finished.pm \
@@ -98,6 +99,7 @@ nobase_modules_DATA = \
 	Sympa/Request/Handler/last.pm \
 	Sympa/Request/Handler/lists.pm \
 	Sympa/Request/Handler/modindex.pm \
+	Sympa/Request/Handler/move_list.pm \
 	Sympa/Request/Handler/move_user.pm \
 	Sympa/Request/Handler/reject.pm \
 	Sympa/Request/Handler/remind.pm \
