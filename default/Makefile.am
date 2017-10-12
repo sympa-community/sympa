@@ -139,6 +139,8 @@ nobase_default_DATA = \
 	scenari/send.intranetorprivate \
 	scenari/send.newsletter \
 	scenari/send.newsletterkeyonly \
+	scenari/send.ownerkey \
+	scenari/send.owners \
 	scenari/send.private \
 	scenari/send.privateandeditorkey \
 	scenari/send.privateandnomultipartoreditorkey \

@@ -138,6 +138,9 @@
 [%~ ELSIF report_entry == 'send_editor' ~%]
 [%|loc()%]Message distribution for this list is restricted to list moderators.[%END%]
 
+[%~ ELSIF report_entry == 'send_owner' ~%]
+[%|loc()%]Message distribution for this list is restricted to list owners.[%END%]
+
 [%~ ELSIF report_entry == 'send_multipart' ~%]
 [%|loc()%]Multipart messages are not allowed in this list.[%END%]
 
