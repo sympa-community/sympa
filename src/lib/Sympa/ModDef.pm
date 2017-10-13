@@ -52,9 +52,11 @@ our %cpan_modules = (
     'CGI::Fast' => {
         required_version => '1.08',        # At least version with CGI 3.51
         package_name     => 'CGI-Fast',    # Module name as of 2.xx.
+        mandatory        => 1,
         'gettext_id' =>
             "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install FCGI module",
     },
+    # CGI::Util is included in CGI.
     'Class::Singleton' => {
         required_version => '1.03',
         package_name     => 'Class-Singleton',
@@ -185,6 +187,7 @@ our %cpan_modules = (
     'FCGI' => {
         required_version => '0.67',
         package_name     => 'CGI-Fast',    # Parent module name
+        mandatory        => 1,
         'gettext_id' =>
             "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install the associated FastCGI frontend, e.g. mod_fcgid for Apache.",
     },

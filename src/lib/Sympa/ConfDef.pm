@@ -1263,14 +1263,6 @@ our @params = (
         'file' => 'wwsympa.conf',
         'edit' => '1',
     },
-    {   'name'       => 'use_fast_cgi',
-        'default'    => '1',
-        'gettext_id' => 'Enable FastCGI',
-        'file'       => 'wwsympa.conf',
-        'edit'       => '1',
-        'gettext_comment' =>
-            'Is FastCGI module for HTTP server installed. This module provide much faster web interface.',
-    },
 
     {'gettext_id' => 'Web interface parameters: Appearances'},
 
@@ -2016,6 +2008,14 @@ our @params = (
     {   'name'    => 'edit_list',                #FIXME:maybe not used
         'default' => 'owner',
         'file'    => 'sympa.conf',
+    },
+    {   'name'       => 'use_fast_cgi',
+        'default'    => '1',
+        'gettext_id' => 'Enable FastCGI',
+        'file'       => 'wwsympa.conf',
+        'edit'       => '1',
+        'gettext_comment' =>
+            'Is FastCGI module for HTTP server installed. This module provide much faster web interface.',
     },
 
 ## Not implemented yet.
