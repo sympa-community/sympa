@@ -577,14 +577,18 @@ sub dgettext {
         return '8bit';
     }
 
-    return $msgid unless $self->{lang} and $self->{lang} ne 'en';
+    my $gettext_locale;
+    unless ($self->{lang} and $self->{lang} ne 'en') {
+        $gettext_locale = 'en_US';
+    } else {
+        $gettext_locale = $self->{locale};
 
-    ## Workaround for nb/nn.
-    my $locale = $self->{locale};
-    $locale =~ s/^(nb|nn)\b/${1}_NO/;
+        # Workaround for nb/nn.
+        $gettext_locale =~ s/^(nb|nn)\b/${1}_NO/;
+    }
 
     local %ENV;
-    $ENV{'LANGUAGE'} = $locale;
+    $ENV{'LANGUAGE'} = $gettext_locale;
     return Locale::Messages::dgettext($textdomain, $msgid);
 }
 
