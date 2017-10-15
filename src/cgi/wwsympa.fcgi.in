@@ -5522,6 +5522,11 @@ sub do_subscribe {
     @{$param}{qw(email gecos custom_attribute)} =
         ($email, $gecos, $in{'custom_attribute'});
 
+    # Initial access. show empty form.
+    unless ($in{'email'}) {
+        return 1;
+    }
+
     if ($list->{'admin'}{'custom_attribute'}
         and not _check_custom_attribute(
             $list, $param->{'action'}, $in{'custom_attribute'}
