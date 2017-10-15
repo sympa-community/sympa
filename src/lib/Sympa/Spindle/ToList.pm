@@ -203,7 +203,6 @@ sub _send_msg {
         my $total = $list->get_total('nocache');
         unless ($total and 0 < $total) {
             $log->syslog('info', 'No subscriber in list %s', $list);
-            $list->savestats;
             return 0;
         }
 
@@ -247,7 +246,6 @@ sub _send_msg {
         unless ($available_recipients) {
             $log->syslog('info', 'No subscriber for sending msg in list %s',
                 $list);
-            $list->savestats;
             return 0;
         }
     } else {

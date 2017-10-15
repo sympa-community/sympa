@@ -328,7 +328,7 @@ sub _twist {
             }
             return undef;
         }
-        unless ($list->get_total() > 0) {
+        unless ($list->get_total) {
             $log->syslog('err',
                 'Dynamic list %s from %s family has ZERO subscribers',
                 $list, $dyn_list_family);

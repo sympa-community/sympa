@@ -161,7 +161,7 @@ Returns an array with the Reply-To values.
 
 Returns a default option of the list for subscription.
 
-=item get_total ()
+=item get_total ( [ 'nocache' ] )
 
 Returns the number of subscribers to the list.
 
@@ -502,8 +502,9 @@ sub savestats {
         return undef;
     }
 
-    printf $lock_fh "%d %.0f %.0f %.0f %d %d %d\n",
-        @{$self->{'stats'}}, $self->{'total'}, $self->{'last_sync'},
+    # Note: fifth field (total) was deprecated.
+    printf $lock_fh "%d %.0f %.0f %.0f 0 %d %d\n",
+        @{$self->{'stats'}}, $self->{'last_sync'},
         $self->{'last_sync_admin_user'};
 
     ## Release the lock
@@ -620,6 +621,59 @@ sub get_next_sequence {
     return $stats->[0];
 }
 
+sub _cache_publish_expiry {
+    my $self = shift;
+    my $type = shift;
+
+    if ($type eq 'member') {
+        # Touch status file.
+        my $fh;
+        open $fh, '>', $self->{'dir'} . '/.last_change.member'
+            and close $fh;
+    }
+}
+
+sub _cache_read_expiry {
+    my $self = shift;
+    my $type = shift;
+
+    if ($type eq 'member') {
+        $self->_cache_publish_expiry('member')
+            unless -e $self->{'dir'} . '/.last_change.member';
+        return [stat $self->{'dir'} . '/.last_change.member']->[9];
+    }
+}
+
+sub _cache_get {
+    my $self   = shift;
+    my $type   = shift;
+
+    my $cached = $self->{_cached}{$type};
+
+    my $lasttime = $self->{_mtime}{$type};
+    my $mtime;
+    if ($type eq 'total') {
+        $mtime = $self->_cache_read_expiry('member');
+    } else {
+        die 'bug in logic. Ask developer';
+    }
+    $self->{_mtime}{$type} = $mtime;
+
+    return undef
+        unless defined $lasttime and defined $mtime;
+    return undef
+        if $lasttime < $mtime;
+    return $cached;
+}
+
+sub _cache_put {
+    my $self  = shift;
+    my $type  = shift;
+    my $value = shift;
+
+    return $self->{_cached}{$type} = $value;
+}
+
 # Old name: List::extract_verp_rcpt().
 # Moved to: Sympa::Spindle::DistributeMessage::_extract_verp_rcpt().
 #sub _extract_verp_rcpt;
@@ -642,10 +696,11 @@ sub dump {
     }
 
     # Note: "subscribers" file was deprecated.
-    $self->{'_mtime'} = {
-        'config' => Sympa::Tools::File::get_mtime($self->{'dir'} . '/config'),
-        'stats'  => Sympa::Tools::File::get_mtime($self->{'dir'} . '/stats'),
-    };
+    # FIXME:Are these lines required?
+    $self->{'_mtime'}{'config'} =
+        Sympa::Tools::File::get_mtime($self->{'dir'} . '/config');
+    $self->{'_mtime'}{'stats'} =
+        Sympa::Tools::File::get_mtime($self->{'dir'} . '/stats');
 
     return 1;
 }
@@ -887,23 +942,17 @@ sub load {
         if ((-r "$self->{'dir'}/cert.pem")
         || (-r "$self->{'dir'}/cert.pem.enc"));
 
-    ## Load stats file if first new() or stats file changed
-    my ($stats, $total);
+    # Load stats file if first new() or stats file changed.
     my $stats_file = $self->{'dir'} . '/stats';
     if (!-e $stats_file or $time_stats > $last_time_stats) {
-        (   $stats, $total, $self->{'last_sync'},
-            $self->{'last_sync_admin_user'}
-        ) = _load_stats_file($stats_file);
+        ($self->{'stats'}, $self->{'last_sync'},
+        $self->{'last_sync_admin_user'}) =
+            _load_stats_file($stats_file);
         $last_time_stats = $time_stats;
-
-        $self->{'stats'} = $stats if (defined $stats);
-        $self->{'total'} = $total if (defined $total);
     }
 
-    $self->{'_mtime'} = {
-        'config' => $last_time_config,
-        'stats'  => $last_time_stats,
-    };
+    $self->{'_mtime'}{'config'} = $last_time_config;
+    $self->{'_mtime'}{'stats'}  = $last_time_stats;
 
     $list_of_lists{$self->{'domain'}}{$name} = $self;
     return $config_reloaded;
@@ -2082,8 +2131,7 @@ sub delete_list_member {
         $total--;
     }
 
-    $self->{'total'} += $total;
-    $self->savestats();
+    $self->_cache_publish_expiry('member');
     delete_list_member_picture($self, shift(@u));
     return (-1 * $total);
 
@@ -2181,18 +2229,36 @@ sub get_default_user_options {
     return undef;
 }
 
-## Returns the number of subscribers to the list
+# Returns the number of subscribers of a list.
 sub get_total {
     my $self   = shift;
-    my $name   = $self->{'name'};
     my $option = shift;
-    $log->syslog('debug3', '(%s)', $name);
 
-    if ($option and $option eq 'nocache') {
-        $self->{'total'} = $self->_load_total_db($option);
+    my $total = $self->_cache_get('total');
+    if (defined $total and not($option and $option eq 'nocache')) {
+        return $total;
     }
 
-    return $self->{'total'};
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT COUNT(*)
+              FROM subscriber_table
+              WHERE list_subscriber = ? AND robot_subscriber = ?},
+            $self->{'name'}, $self->{'domain'}
+        )
+        ) {
+        $log->syslog('err', 'Unable to get subscriber count for list %s',
+            $self);
+        return $total;      # Return cache probably outdated.
+    }
+    $total = $self->_cache_put('total', $sth->fetchrow);
+    $sth->finish;
+
+    return $total;
 }
 
 ## Returns a hash for a given user
@@ -2767,15 +2833,6 @@ sub get_first_list_member {
         $sth = pop @sth_stack;
     }
 
-    ## If no offset (for LIMIT) was used, update total of subscribers
-    unless ($offset) {
-        my $total = $self->_load_total_db('nocache');
-        if ($total != $self->{'total'}) {
-            $self->{'total'} = $total;
-            $self->savestats();
-        }
-    }
-
     return $user;
 }
 
@@ -3302,18 +3359,6 @@ sub get_members {
                 );
             }
             $user->{custom_attribute} = $custom_attr;
-        }
-    }
-
-    # If no offset nor limit was used, update total of subscribers.
-    if (    $role eq 'member'
-        and not $offset
-        and not $limit
-        and not $cond) {
-        my $total = $self->_load_total_db('nocache');
-        if ($total != $self->{'total'}) {
-            $self->{'total'} = $total;
-            $self->savestats();
         }
     }
 
@@ -3844,8 +3889,9 @@ sub update_list_admin {
 
 ## Adds a list member ; no overwrite.
 sub add_list_member {
-    my ($self, @new_users) = @_;
-    $log->syslog('debug2', '%s', $self->{'name'});
+    $log->syslog('debug2', '%s, ...', @_);
+    my $self = shift;
+    my @new_users = @_;
 
     my $name = $self->{'name'};
 
@@ -3855,7 +3901,7 @@ sub add_list_member {
     $self->{'add_outcome'}{'remaining_members_to_add'} =
         $self->{'add_outcome'}{'expected_number_of_added_users'};
 
-    my $current_list_members_count = $self->get_total();
+    my $current_list_members_count = $self->get_total; #FIXME: high db load
 
     my $sdm = Sympa::DatabaseManager->instance;
 
@@ -4020,8 +4066,7 @@ sub add_list_member {
         $current_list_members_count++;
     }
 
-    $self->{'total'} += $self->{'add_outcome'}{'added_members'};
-    $self->savestats();
+    $self->_cache_publish_expiry('member');
     $self->_create_add_error_string() if ($self->{'add_outcome'}{'errors'});
     return 1;
 }
@@ -4581,34 +4626,19 @@ sub _load_stats_file {
     my $file = shift;
     $log->syslog('debug3', '(%s)', $file);
 
-    ## Create the initial stats array.
-    my ($stats, $total, $last_sync, $last_sync_admin_user);
-
-    if (open(L, $file)) {
-        if (<L> =~
-            /^(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(\s+(\d+))?(\s+(\d+))?(\s+(\d+))?/)
-        {
-            $stats                = [$1, $2, $3, $4];
-            $total                = $6;
-            $last_sync            = $8;
-            $last_sync_admin_user = $10;
-
-        } else {
-            $stats                = [0, 0, 0, 0];
-            $total                = 0;
-            $last_sync            = 0;
-            $last_sync_admin_user = 0;
+    if (open my $fh, '<', $file) {
+        my $line = do { local $RS; <$fh> };
+        close $fh;
+        my @fields = split /\s+/, $line;
+        if (4 <= scalar @fields) {
+            # Returns ([sequence, numsent, bytes, numsent*bytes], last_sync,
+            #     last_sync_admin_user).
+            # $fields[4] (total) was deprecated.
+            return ([@fields[0 .. 3]], $fields[5], $fields[6]);
         }
-        close(L);
-    } else {
-        $stats                = [0, 0, 0, 0];
-        $total                = 0;
-        $last_sync            = 0;
-        $last_sync_admin_user = 0;
     }
 
-    ## Return the array.
-    return ($stats, $total, $last_sync, $last_sync_admin_user);
+    return ([0, 0, 0, 0], 0, 0);
 }
 
 ## Loads the list of subscribers.
@@ -7067,8 +7097,8 @@ sub sync_include {
         return undef;
     }
 
-    ## Get and save total of subscribers
-    $self->{'total'}     = $self->_load_total_db('nocache');
+    # Get and save total of subscribers.
+    $self->_cache_publish_expiry('member');
     $self->{'last_sync'} = time;
     $self->savestats();
     $self->sync_include_ca($option and $option eq 'purge');
@@ -7542,49 +7572,8 @@ sub _inclusion_loop {
     return 0;
 }
 
-sub _load_total_db {
-    my $self   = shift;
-    my $option = shift;
-    $log->syslog('debug2', '(%s)', $self->{'name'});
-
-    ## Use session cache
-    if (($option ne 'nocache')
-        && (defined $list_cache{'load_total_db'}{$self->{'domain'}}
-            {$self->{'name'}})
-        ) {
-        return $list_cache{'load_total_db'}{$self->{'domain'}}
-            {$self->{'name'}};
-    }
-
-    push @sth_stack, $sth;
-    my $sdm = Sympa::DatabaseManager->instance;
-
-    ## Query the Database
-    unless (
-        $sdm
-        and $sth = $sdm->do_prepared_query(
-            q{SELECT count(*)
-              FROM subscriber_table
-              WHERE list_subscriber = ? AND robot_subscriber = ?},
-            $self->{'name'}, $self->{'domain'}
-        )
-        ) {
-        $log->syslog('debug', 'Unable to get subscriber count for list %s@%s',
-            $self->{'name'}, $self->{'domain'});
-        return undef;
-    }
-
-    my $total = $sth->fetchrow;
-
-    $sth->finish();
-
-    $sth = pop @sth_stack;
-
-    ## Set session cache
-    $list_cache{'load_total_db'}{$self->{'domain'}}{$self->{'name'}} = $total;
-
-    return $total;
-}
+# Merged into Sympa::List::get_total().
+#sub _load_total_db;
 
 ## Writes the user list to disk
 sub _save_list_members_file {
@@ -8067,9 +8056,9 @@ sub get_lists {
             }
         } elsif ($key eq 'total') {
             if ($desc) {
-                push @keys_perl, sprintf '$b->{"total"} <=> $a->{"total"}';
+                push @keys_perl, '$b->get_total <=> $a->get_total';
             } else {
-                push @keys_perl, sprintf '$a->{"total"} <=> $b->{"total"}';
+                push @keys_perl, '$a->get_total <=> $b->get_total';
             }
         } else {
             $log->syslog('err', 'bug in logic.  Ask developer: $key=%s',
@@ -9451,7 +9440,7 @@ sub close_list {
     $self->{'admin'}{'defaults'}{'status'} = 0;
 
     $self->save_config($email);
-    $self->savestats();
+    $self->savestats();     #FIXME: required?
 
     $self->remove_aliases();
 

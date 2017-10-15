@@ -214,7 +214,7 @@ sub _move {
     my $sender       = $request->{sender};
     my $pending      = $request->{pending};
 
-    $current_list->savestats();
+    $current_list->savestats;   #FIXME: required?
 
     # Remove aliases and dump subscribers.
     Sympa::Admin::remove_aliases($current_list);

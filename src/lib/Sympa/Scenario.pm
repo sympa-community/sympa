@@ -823,9 +823,12 @@ sub verify {
         elsif ($value =~ /\[list\-\>([\w\-]+)\]/i) {
             my $param = $1;
 
-            if ($param eq 'name' or $param eq 'total') {
-                my $val = $list->{$param};
-                $value =~ s/\[list\-\>$param\]/$val/;
+            if ($param eq 'name') {
+                my $val = $list->{'name'};
+                $value =~ s/\[list\-\>name\]/$val/;
+            } elsif ($param eq 'total') {
+                my $val = $list->get_total;
+                $value =~ s/\[list\-\>total\]/$val/;
             } elsif ($param eq 'address') {
                 my $val = Sympa::get_address($list);
                 $value =~ s/\[list\-\>$param\]/$val/;

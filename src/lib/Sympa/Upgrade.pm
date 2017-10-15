@@ -754,7 +754,6 @@ sub upgrade {
                     "$list->{'dir'}/subscribers");
 
                 $list->{'admin'}{'user_data_source'} = 'include2';
-                $list->{'total'} = 0;
 
                 ## Add users to the DB
                 $list->add_list_member(@users);
