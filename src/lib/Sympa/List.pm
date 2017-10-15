@@ -502,10 +502,9 @@ sub savestats {
         return undef;
     }
 
-    # Note: fifth field (total) was deprecated.
-    printf $lock_fh "%d %.0f %.0f %.0f 0 %d %d\n",
-        @{$self->{'stats'}}, $self->{'last_sync'},
-        $self->{'last_sync_admin_user'};
+    # Note: 5th and 6th fields (total and last_sync) were deprecated.
+    printf $lock_fh "%d %.0f %.0f %.0f 0 0 %d\n",
+        @{$self->{'stats'}}, $self->{'last_sync_admin_user'};
 
     ## Release the lock
     unless ($lock_fh->close) {
@@ -625,12 +624,18 @@ sub _cache_publish_expiry {
     my $self = shift;
     my $type = shift;
 
+    my $stat_file;
     if ($type eq 'member') {
-        # Touch status file.
-        my $fh;
-        open $fh, '>', $self->{'dir'} . '/.last_change.member'
-            and close $fh;
+        $stat_file = $self->{'dir'} . '/.last_change.member';
+    } elsif ($type eq 'last_sync') {
+        $stat_file = $self->{'dir'} . '/.last_sync.member';
+    } else {
+        die 'bug in logic. Ask developer';
     }
+
+    # Touch status file.
+    my $fh;
+    open $fh, '>', $stat_file and close $fh;
 }
 
 sub _cache_read_expiry {
@@ -638,17 +643,22 @@ sub _cache_read_expiry {
     my $type = shift;
 
     if ($type eq 'member') {
-        $self->_cache_publish_expiry('member')
-            unless -e $self->{'dir'} . '/.last_change.member';
-        return [stat $self->{'dir'} . '/.last_change.member']->[9];
+        # If changes have never been done, just now is assumed.
+        my $stat_file = $self->{'dir'} . '/.last_change.member';
+        $self->_cache_publish_expiry('member') unless -e $stat_file;
+        return [stat $stat_file]->[9];
+    } elsif ($type eq 'last_sync') {
+        # If syncs have never been done, earliest time is assumed.
+        return Sympa::Tools::File::get_mtime(
+            $self->{'dir'} . '/.last_sync.member');
+    } else {
+        die 'bug in logic. Ask developer';
     }
 }
 
 sub _cache_get {
     my $self   = shift;
     my $type   = shift;
-
-    my $cached = $self->{_cached}{$type};
 
     my $lasttime = $self->{_mtime}{$type};
     my $mtime;
@@ -659,11 +669,9 @@ sub _cache_get {
     }
     $self->{_mtime}{$type} = $mtime;
 
-    return undef
-        unless defined $lasttime and defined $mtime;
-    return undef
-        if $lasttime < $mtime;
-    return $cached;
+    return undef unless defined $lasttime and defined $mtime;
+    return undef if $lasttime < $mtime;
+    return $self->{_cached}{$type};
 }
 
 sub _cache_put {
@@ -808,14 +816,10 @@ sub load {
     # Last modification of list config ($last_time_config) and stats
     # ($last_time_stats) on memory cache.
     # Note: "subscribers" file was deprecated.
-    my ($last_time_config, $last_time_stats);
-    if ($self->{'_mtime'}) {
-        $last_time_config = $self->{'_mtime'}{'config'};
-        $last_time_stats  = $self->{'_mtime'}{'stats'};
-    } else {
-        $last_time_config = POSIX::INT_MIN();
-        $last_time_stats  = POSIX::INT_MIN();
-    }
+    my $last_time_config = $self->{'_mtime'}{'config'};
+    my $last_time_stats  = $self->{'_mtime'}{'stats'};
+    $last_time_config = POSIX::INT_MIN() unless defined $last_time_config;
+    $last_time_stats  = POSIX::INT_MIN() unless defined $last_time_stats;
 
     my $time_config = Sympa::Tools::File::get_mtime("$self->{'dir'}/config");
     my $time_config_bin =
@@ -945,8 +949,7 @@ sub load {
     # Load stats file if first new() or stats file changed.
     my $stats_file = $self->{'dir'} . '/stats';
     if (!-e $stats_file or $time_stats > $last_time_stats) {
-        ($self->{'stats'}, $self->{'last_sync'},
-        $self->{'last_sync_admin_user'}) =
+        ($self->{'stats'}, $self->{'last_sync_admin_user'}) =
             _load_stats_file($stats_file);
         $last_time_stats = $time_stats;
     }
@@ -4631,14 +4634,14 @@ sub _load_stats_file {
         close $fh;
         my @fields = split /\s+/, $line;
         if (4 <= scalar @fields) {
-            # Returns ([sequence, numsent, bytes, numsent*bytes], last_sync,
+            # Returns ([sequence, numsent, bytes, numsent*bytes],
             #     last_sync_admin_user).
-            # $fields[4] (total) was deprecated.
-            return ([@fields[0 .. 3]], $fields[5], $fields[6]);
+            # $fields[4 .. 5] (total, last_sync) were deprecated.
+            return ([@fields[0 .. 3]], $fields[6]);
         }
     }
 
-    return ([0, 0, 0, 0], 0, 0);
+    return ([0, 0, 0, 0], 0);
 }
 
 ## Loads the list of subscribers.
@@ -7099,8 +7102,7 @@ sub sync_include {
 
     # Get and save total of subscribers.
     $self->_cache_publish_expiry('member');
-    $self->{'last_sync'} = time;
-    $self->savestats();
+    $self->_cache_publish_expiry('last_sync');
     $self->sync_include_ca($option and $option eq 'purge');
 
     return 1;
@@ -7168,7 +7170,7 @@ sub on_the_fly_sync_include {
         || $self->{'admin'}{'ttl'};
     $log->syslog('debug2', '(%s)', $pertinent_ttl);
     if (not $options{'use_ttl'}
-        or $self->{'last_sync'} < time - $pertinent_ttl) {
+        or $self->_cache_read_expiry('last_sync') < time - $pertinent_ttl) {
         $log->syslog('notice', "Synchronizing list members...");
         my $return_value = $self->sync_include();
         if ($return_value) {
