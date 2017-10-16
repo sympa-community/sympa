@@ -52,6 +52,8 @@
       <label for="quietly">
         [%|loc%]Quiet (don't send welcome email)[%END%]
       </label>
+    </div>
+    <div>
       <input class="MainMenuLinks" type="submit" name="action_add"
        value="[%|loc%]Add[%END%]" />
     </div>
@@ -60,9 +62,11 @@
     <h4>[%|loc%]To add multiple users:[%END%]</h4>
     <p>[%|loc%]Click the Multiple Add button below to bulk-add users using a form.  (Alternatively, consider using a data-source such as SQL or an Active Directory Group).[%END%]</p>
     <div>
+    <p>
       <a class="button" href="[% 'import' | url_rel([list]) %]">
         [%|loc%]Multiple add[%END%]
       </a>
+    </p>
     </div>
   [%~ END %]
 [% END %]
@@ -119,7 +123,8 @@
   <div>
     <input class="MainMenuLinks" type="submit" name="action_del"
       value="[%|loc%]Delete selected email addresses[%END%]" />
-    <br />
+  </div>
+  <div>
     <input type="checkbox" id="quiet" name="quiet" />
     <label for="quiet">
       [%|loc%]Quiet (don't send deletion email)[%END%]
