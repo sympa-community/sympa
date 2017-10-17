@@ -393,10 +393,12 @@ sub new {
     my $pertinent_ttl = $list->{'admin'}{'distribution_ttl'}
         || $list->{'admin'}{'ttl'};
     if ($status
-        && ((     !$options->{'skip_sync_admin'}
-                && $list->{'last_sync_admin_user'} < time - $pertinent_ttl
+        and (
+            (   not $options->{'skip_sync_admin'}
+                and $list->_cache_read_expiry('last_sync_admin_user') <
+                time - $pertinent_ttl
             )
-            || $options->{'force_sync_admin'}
+            or $options->{'force_sync_admin'}
         )
         ) {
         ## Update admin_table
@@ -502,9 +504,9 @@ sub savestats {
         return undef;
     }
 
-    # Note: 5th and 6th fields (total and last_sync) were deprecated.
-    printf $lock_fh "%d %.0f %.0f %.0f 0 0 %d\n",
-        @{$self->{'stats'}}, $self->{'last_sync_admin_user'};
+    # Note: The last three fields total, last_sync and last_sync_admin_user
+    # were deprecated.
+    printf $lock_fh "%d %.0f %.0f %.0f\n", @{$self->{'stats'}};
 
     ## Release the lock
     unless ($lock_fh->close) {
@@ -629,6 +631,10 @@ sub _cache_publish_expiry {
         $stat_file = $self->{'dir'} . '/.last_change.member';
     } elsif ($type eq 'last_sync') {
         $stat_file = $self->{'dir'} . '/.last_sync.member';
+    } elsif ($type eq 'admin_user') {
+        $stat_file = $self->{'dir'} . '/.last_change.admin';
+    } elsif ($type eq 'last_sync_admin_user') {
+        $stat_file = $self->{'dir'} . '/.last_sync.admin';
     } else {
         die 'bug in logic. Ask developer';
     }
@@ -651,6 +657,15 @@ sub _cache_read_expiry {
         # If syncs have never been done, earliest time is assumed.
         return Sympa::Tools::File::get_mtime(
             $self->{'dir'} . '/.last_sync.member');
+    } elsif ($type eq 'admin_user') {
+        # If changes have never been done, just now is assumed.
+        my $stat_file = $self->{'dir'} . '/.last_change.admin';
+        $self->_cache_publish_expiry('admin_user') unless -e $stat_file;
+        return [stat $stat_file]->[9];
+    } elsif ($type eq 'last_sync_admin_user') {
+        # If syncs have never been done, earliest time is assumed.
+        return Sympa::Tools::File::get_mtime(
+            $self->{'dir'} . '/.last_sync.admin');
     } else {
         die 'bug in logic. Ask developer';
     }
@@ -949,8 +964,7 @@ sub load {
     # Load stats file if first new() or stats file changed.
     my $stats_file = $self->{'dir'} . '/stats';
     if (!-e $stats_file or $time_stats > $last_time_stats) {
-        ($self->{'stats'}, $self->{'last_sync_admin_user'}) =
-            _load_stats_file($stats_file);
+        $self->{'stats'} = _load_stats_file($stats_file);
         $last_time_stats = $time_stats;
     }
 
@@ -2147,9 +2161,6 @@ sub delete_list_admin {
     my $name  = $self->{'name'};
     my $total = 0;
 
-    $self->{_admin_cache} ||= {};
-    delete $self->{_admin_cache}{$role};    # Reset cache
-
     foreach my $who (@u) {
         $who = Sympa::Tools::Text::canonic_email($who);
         my $statement;
@@ -2175,10 +2186,13 @@ sub delete_list_admin {
         $total--;
     }
 
+    $self->_cache_publish_expiry('admin_user');
+
     return (-1 * $total);
 }
 
 ## Delete all admin_table entries
+#FIXME: DANGEROUS FUNCTION.
 sub delete_all_list_admin {
     $log->syslog('debug2', '');
 
@@ -2964,83 +2978,67 @@ sub get_admins {
     my $role    = lc(shift || '');
     my %options = @_;
 
+    my $admin_user = $self->_get_admins;
+    return unless $admin_user;    # Returns void.
+
     my %query = @{$options{filter} || []};
     $query{email} = Sympa::Tools::Text::canonic_email($query{email})
         if defined $query{email};
 
-    # Fill caches.
-    $self->{_admin_cache} ||= {};
+    my @users;
     if ($role eq 'editor') {
-        unless ($self->{_admin_cache}{$role}) {
-            delete $self->{_admin_cache}{actual_editor};
-            delete $self->{_admin_cache}{receptive_editor};
-            $self->{_admin_cache}{$role} = $self->_get_basic_admins($role);
-        }
+        @users =
+            grep { $_ and $_->{role} eq 'editor' } @{$admin_user || []};
     } elsif ($role eq 'owner') {
-        unless ($self->{_admin_cache}{$role}) {
-            delete $self->{_admin_cache}{actual_editor};
-            delete $self->{_admin_cache}{privileged_owner};
-            delete $self->{_admin_cache}{receptive_editor};
-            delete $self->{_admin_cache}{receptive_owner};
-            $self->{_admin_cache}{$role} = $self->_get_basic_admins($role);
-        }
+        @users =
+            grep { $_ and $_->{role} eq 'owner' } @{$admin_user || []};
     } elsif ($role eq 'actual_editor') {
-        $self->get_admins('owner');
-        $self->get_admins('editor');
-        unless ($self->{_admin_cache}{$role}) {
-            if (@{$self->{_admin_cache}{editor} || []}) {
-                $self->{_admin_cache}{$role} = $self->{_admin_cache}{editor};
-            } else {
-                $self->{_admin_cache}{$role} = $self->{_admin_cache}{owner};
-            }
-        }
+        @users =
+            grep { $_ and $_->{role} eq 'editor' } @{$admin_user || []};
+        @users = grep { $_ and $_->{role} eq 'owner' } @{$admin_user || []}
+            unless @users;
     } elsif ($role eq 'privileged_owner') {
-        $self->get_admins('owner');
-        unless ($self->{_admin_cache}{$role}) {
-            $self->{_admin_cache}{$role} =
-                [grep { $_->{profile} and $_->{profile} eq 'privileged' }
-                    @{$self->{_admin_cache}{owner} || []}];
-        }
+        @users = grep {
+                    $_
+                and $_->{role} eq 'owner'
+                and $_->{profile}
+                and $_->{profile} eq 'privileged'
+        } @{$admin_user || []};
     } elsif ($role eq 'receptive_editor') {
-        $self->get_admins('owner');
-        $self->get_admins('editor');
-        unless ($self->{_admin_cache}{$role}) {
-            my @users =
-                grep { ($_->{reception} || 'mail') ne 'nomail' }
-                @{$self->{_admin_cache}{editor} || []};
-            @users =
-                grep { ($_->{reception} || 'mail') ne 'nomail' }
-                @{$self->{_admin_cache}{owner} || []}
-                unless @users;
-            $self->{_admin_cache}{$role} = [@users];
-        }
+        @users = grep {
+                    $_
+                and $_->{role} eq 'editor'
+                and ($_->{reception} || 'mail') ne 'nomail'
+        } @{$admin_user || []};
+        @users = grep {
+                    $_
+                and $_->{role} eq 'owner'
+                and ($_->{reception} || 'mail') ne 'nomail'
+            } @{$admin_user || []}
+            unless @users;
     } elsif ($role eq 'receptive_owner') {
-        $self->get_admins('owner');
-        unless ($self->{_admin_cache}{$role}) {
-            $self->{_admin_cache}{$role} =
-                [grep { ($_->{reception} || 'mail') ne 'nomail' }
-                    @{$self->{_admin_cache}{owner}}];
-        }
+        @users = grep {
+                    $_
+                and $_->{role} eq 'owner'
+                and ($_->{reception} || 'mail') ne 'nomail'
+        } @{$admin_user || []};
     } else {
         die sprintf 'Unknown role "%s"', $role;
     }
 
-    my $admin_user = $self->{_admin_cache}{$role};
-    return unless $admin_user;    # Returns void.
-
     if (defined $query{email}) {
-        $admin_user =
-            [grep { ($_->{email} || '') eq $query{email} } @$admin_user];
+        @users = grep { ($_->{email} || '') eq $query{email} } @users;
     }
 
-    return wantarray ? @$admin_user : $admin_user;
+    return wantarray ? @users : [@users];
 }
 
-# Old name: Sympa::List::get_first_list_admin() and
-# Sympa::List::get_next_list_admin().
-sub _get_basic_admins {
+sub _get_admins {
     my $self = shift;
-    my $role = shift;
+
+    my $admin_user = $self->_cache_get('admin_user');
+    return $admin_user
+        if $admin_user and @{$admin_user || []};
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
@@ -3057,22 +3055,20 @@ sub _get_basic_admins {
                          included_admin AS included,
                          include_sources_admin AS id
                   FROM admin_table
-                  WHERE list_admin = ? AND robot_admin = ? AND role_admin = ?
+                  WHERE list_admin = ? AND robot_admin = ?
                   ORDER BY user_admin},
                 $sdm->get_canonical_read_date('date_admin'),
                 $sdm->get_canonical_read_date('update_admin'),
             ),
             $self->{'name'},
-            $self->{'domain'},
-            $role
+            $self->{'domain'}
         )
         ) {
-        $log->syslog('err', 'Unable to get admins having role %s for list %s',
-            $role, $self);
-        return undef;
+        $log->syslog('err', 'Unable to get admins for list %s', $self);
+        # Return cache probably outdated.
+        return $self->{_cached}{admin_user};
     }
-
-    my $admin_user = $sth->fetchall_arrayref({}) || [];
+    $admin_user = $sth->fetchall_arrayref({}) || [];
     $sth->finish;
 
     foreach my $user (@$admin_user) {
@@ -3085,7 +3081,7 @@ sub _get_basic_admins {
         $user->{'update_date'} ||= $user->{'date'};
     }
 
-    return $admin_user;
+    return $self->_cache_put('admin_user', $admin_user);
 }
 
 =over
@@ -3864,9 +3860,8 @@ sub update_list_admin {
         }
     }
 
-    ## Reset session cache
-    $self->{_admin_cache} ||= {};
-    delete $self->{_admin_cache}{$role};
+    # Reset session cache.
+    $self->_cache_publish_expiry('admin_user');
 
     return 1;
 }
@@ -4092,9 +4087,6 @@ sub add_list_admin {
     my $name  = $self->{'name'};
     my $total = 0;
 
-    $self->{_admin_cache} ||= {};
-    delete $self->{_admin_cache}{$role};    # Reset cache
-
     foreach my $new_admin_user (@new_admin_users) {
         my $who =
             Sympa::Tools::Text::canonic_email($new_admin_user->{'email'});
@@ -4174,6 +4166,8 @@ sub add_list_admin {
         }
         $total++;
     }
+
+    $self->_cache_publish_expiry('admin_user');
 
     return $total;
 }
@@ -4621,14 +4615,14 @@ sub _load_stats_file {
         close $fh;
         my @fields = split /\s+/, $line;
         if (4 <= scalar @fields) {
-            # Returns ([sequence, numsent, bytes, numsent*bytes],
-            #     last_sync_admin_user).
-            # $fields[4 .. 5] (total, last_sync) were deprecated.
-            return ([@fields[0 .. 3]], $fields[6]);
+            # Returns [sequence, numsent, bytes, numsent*bytes].
+            # $fields[4 .. 6] (total, last_sync, last_sync_admin_user) were
+            # deprecated.
+            return [@fields[0 .. 3]];
         }
     }
 
-    return ([0, 0, 0, 0], 0);
+    return [0, 0, 0, 0];
 }
 
 ## Loads the list of subscribers.
@@ -7441,8 +7435,8 @@ sub sync_include_admin {
         }
     }
 
-    $self->{'last_sync_admin_user'} = time;
-    $self->savestats();
+    $self->_cache_publish_expiry('admin_user');
+    $self->_cache_publish_expiry('last_sync_admin_user');
 
     return scalar @{$self->get_admins('owner')};
 }

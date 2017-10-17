@@ -142,8 +142,7 @@ sub upgrade {
         Sympa::List::delete_all_list_admin();
 
         foreach my $list (@$all_lists) {
-            delete $list->{_admin_cache};
-            $list->sync_include_admin();
+            $list->sync_include_admin;
         }
     }
     else {
