@@ -662,10 +662,10 @@ sub _cache_get {
 
     my $lasttime = $self->{_mtime}{$type};
     my $mtime;
-    if ($type eq 'total') {
+    if ($type eq 'total' or $type eq 'is_list_member') {
         $mtime = $self->_cache_read_expiry('member');
     } else {
-        die 'bug in logic. Ask developer';
+        $mtime = $self->_cache_read_expiry($type);
     }
     $self->{_mtime}{$type} = $mtime;
 
@@ -2089,7 +2089,6 @@ sub delete_list_member {
 
         }
 
-        $list_cache{'is_list_member'}{$self->{'domain'}}{$name}{$who} = undef;
         $list_cache{'get_list_member'}{$self->{'domain'}}{$name}{$who} =
             undef;
 
@@ -3522,24 +3521,21 @@ sub is_admin {
 
 ## Is the indicated person a subscriber to the list?
 sub is_list_member {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my ($self, $who) = @_;
     $who = Sympa::Tools::Text::canonic_email($who);
-    $log->syslog('debug3', '(%s)', $who);
 
-    return undef unless ($self && $who);
+    return undef unless $who;
 
-    my $name = $self->{'name'};
-
-    push @sth_stack, $sth;
-    my $sdm = Sympa::DatabaseManager->instance;
-
-    ## Use cache
-    if (defined $list_cache{'is_list_member'}{$self->{'domain'}}{$name}{$who})
-    {
-        return $list_cache{'is_list_member'}{$self->{'domain'}}{$name}{$who};
+    my $is_list_member = $self->_cache_get('is_list_member');
+    if (defined $is_list_member and defined $is_list_member->{$who}) {
+        return $is_list_member->{$who};
     }
+    $is_list_member ||= {};
 
-    ## Query the Database
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+
     unless (
         $sdm
         and $sth = $sdm->do_prepared_query(
@@ -3547,29 +3543,22 @@ sub is_list_member {
               FROM subscriber_table
               WHERE list_subscriber = ? AND robot_subscriber = ? AND
                     user_subscriber = ?},
-            $name, $self->{'domain'}, $who
+            $self->{'name'}, $self->{'domain'}, $who
         )
         ) {
         $log->syslog(
             'err',
-            'Unable to check chether user %s is subscribed to list %s@%s: %s',
+            'Unable to check chether user %s is subscribed to list %s',
             $who,
-            $name,
-            $self->{'domain'}
+            $self
         );
         return undef;
     }
+    $is_list_member->{$who} = $sth->fetchrow;
+    $self->_cache_put('is_list_member', $is_list_member);
+    $sth->finish;
 
-    my $is_user = $sth->fetchrow;
-
-    $sth->finish();
-
-    $sth = pop @sth_stack;
-
-    ## Set cache
-    $list_cache{'is_list_member'}{$self->{'domain'}}{$name}{$who} = $is_user;
-
-    return $is_user;
+    return $is_list_member->{$who};
 }
 
 ## Sets new values for the given user (except gecos)
@@ -3960,8 +3949,6 @@ sub add_list_member {
             $new_user->{'password'} = Sympa::Tools::Password::crypt_password(
                 $new_user->{'password'});
         }
-
-        $list_cache{'is_list_member'}{$self->{'domain'}}{$name}{$who} = undef;
 
         ## Either is_included or is_subscribed must be set
         ## default is is_subscriber for backward compatibility reason
