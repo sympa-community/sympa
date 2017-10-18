@@ -3038,6 +3038,7 @@ sub _get_admins {
         $sdm and $sth = $sdm->do_prepared_query(
             sprintf(
                 q{SELECT user_admin AS email, comment_admin AS gecos,
+                         role_admin AS "role",
                          reception_admin AS reception,
                          visibility_admin AS visibility,
                          %s AS "date", %s AS update_date,
