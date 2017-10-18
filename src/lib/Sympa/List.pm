@@ -128,14 +128,14 @@ Saves the indicated list object to the disk files.
 
 =item savestats ()
 
+B<Deprecated> on 6.2.23b.
+
 Saves updates the statistics file on disk.
 
-=item update_stats( BYTES )
+=item update_stats( count, [ sent, bytes, sent_by_bytes ] )
 
-Updates the stats, argument is number of bytes, returns the next
-sequence number. Does nothing if no stats.
-
-This method was DEPRECATED.
+Updates the stats, argument is number of bytes, returns list fo the updated
+values.  Returns zeroes if failed.
 
 =item delete_list_member ( ARRAY )
 
@@ -278,10 +278,9 @@ its messages, i.e. process_archive parameter is set to "on".
 
 Returns true value if the list is included in another list(s).
 
-=item get_stats ( OPTION )
+=item get_stats ( )
 
-Returns either a formatted printable strings or an array whith
-the statistics. OPTION can be 'text' or 'array'.
+Returns array of the statistics.
 
 =item print_info ( FDNAME )
 
@@ -452,7 +451,6 @@ sub set_status_error_config {
         # No more save config in error...
         # $self->save_config(tools::get_address($self->{'domain'},
         #     'listmaster'));
-        # $self->savestats();
         $log->syslog('err',
             'The list %s is set in status error_config: %s(%s)',
             $self, $msg, join(', ', @param));
@@ -483,41 +481,9 @@ sub set_status_family_closed {
     return 1;
 }
 
-## Saves the statistics data to disk.
-sub savestats {
-    $log->syslog('debug2', '(%s)', @_);
-    my $self = shift;
-
-    # Be sure the list has been loaded.
-    my $dir = $self->{'dir'};
-    return undef unless $list_of_lists{$self->{'domain'}}{$self->{'name'}};
-
-    unless (ref($self->{'stats'}) eq 'ARRAY') {
-        $log->syslog('err', 'Incorrect parameter %s', $self->{'stats'});
-        return undef;
-    }
-
-    ## Lock file
-    my $lock_fh = Sympa::LockedFile->new($dir . '/stats', 2, '>');
-    unless ($lock_fh) {
-        $log->syslog('err', 'Could not create new lock');
-        return undef;
-    }
-
-    # Note: The last three fields total, last_sync and last_sync_admin_user
-    # were deprecated.
-    printf $lock_fh "%d %.0f %.0f %.0f\n", @{$self->{'stats'}};
-
-    ## Release the lock
-    unless ($lock_fh->close) {
-        return undef;
-    }
-
-    ## Changed on disk
-    $self->{'_mtime'}{'stats'} = time;
-
-    return 1;
-}
+# Saves the statistics data to disk.
+# Deprecated. Use Sympa::List::update_stats().
+#sub savestats;
 
 ## msg count.
 # Old name: increment_msg_count().
@@ -609,17 +575,56 @@ sub get_latest_distribution_date {
 ## Input  : num of bytes of msg
 ## Output : num of msgs sent
 # Old name: List::update_stats().
-sub get_next_sequence {
-    $log->syslog('debug3', '(%s)', @_);
-    my $self = shift;
+# No longer used. Use Sympa::List::update_stats(1);
+#sub get_next_sequence;
 
-    my $stats = $self->{'stats'};
-    $stats->[0]++;
+sub get_stats {
+    my $self  = shift;
 
-    ## Update 'msg_count' file, used for bounces management
-    $self->_increment_msg_count();
+    my @stats;
+    my $lock_fh = Sympa::LockedFile->new($self->{'dir'} . '/stats', 2, '<');
+    if ($lock_fh) {
+        @stats = split /\s+/, do { my $line = <$lock_fh>; $line };
+        $lock_fh->close;
+    }
 
-    return $stats->[0];
+    foreach my $i ((0 .. 3)) {
+        $stats[$i] = 0 unless $stats[$i];
+    }
+    return @stats[0 .. 3];
+}
+
+sub update_stats {
+    $log->syslog('debug2', '(%s, %s, %s, %s, %s)', @_);
+    my $self  = shift;
+    my @diffs = @_;
+
+    my $lock_fh = Sympa::LockedFile->new($self->{'dir'} . '/stats', 2, '+>>');
+    unless ($lock_fh) {
+        $log->syslog('err', 'Could not create new lock');
+        return;
+    }
+
+    # Update stats file.
+    # Note: The last three fields total, last_sync and last_sync_admin_user
+    # were deprecated.
+    seek $lock_fh, 0, 0;
+    my @stats = split /\s+/, do { my $line = <$lock_fh>; $line };
+    foreach my $i ((0 .. 3)) {
+        $stats[$i] ||= 0;
+        $stats[$i] += $diffs[$i] if $diffs[$i];
+    }
+    seek $lock_fh, 0, 0;
+    truncate $lock_fh, 0;
+    printf $lock_fh "%d %.0f %.0f %.0f\n", @stats;
+
+    return unless $lock_fh->close;
+
+    if ($diffs[0]) {
+        $self->_increment_msg_count;
+    }
+
+    return @stats;
 }
 
 sub _cache_publish_expiry {
@@ -718,12 +723,10 @@ sub dump {
         return undef;
     }
 
-    # Note: "subscribers" file was deprecated.
+    # Note: "subscribers" file was deprecated. No need to load "stats" file.
     # FIXME:Are these lines required?
     $self->{'_mtime'}{'config'} =
         Sympa::Tools::File::get_mtime($self->{'dir'} . '/config');
-    $self->{'_mtime'}{'stats'} =
-        Sympa::Tools::File::get_mtime($self->{'dir'} . '/stats');
 
     return 1;
 }
@@ -828,18 +831,14 @@ sub load {
         return undef;
     }
 
-    # Last modification of list config ($last_time_config) and stats
-    # ($last_time_stats) on memory cache.
-    # Note: "subscribers" file was deprecated.
+    # Last modification of list config ($last_time_config) on memory cache.
+    # Note: "subscribers" file was deprecated. No need to load "stats" file.
     my $last_time_config = $self->{'_mtime'}{'config'};
-    my $last_time_stats  = $self->{'_mtime'}{'stats'};
     $last_time_config = POSIX::INT_MIN() unless defined $last_time_config;
-    $last_time_stats  = POSIX::INT_MIN() unless defined $last_time_stats;
 
     my $time_config = Sympa::Tools::File::get_mtime("$self->{'dir'}/config");
     my $time_config_bin =
         Sympa::Tools::File::get_mtime("$self->{'dir'}/config.bin");
-    my $time_stats = Sympa::Tools::File::get_mtime("$self->{'dir'}/stats");
     my $main_config_time =
         Sympa::Tools::File::get_mtime(Sympa::Constants::CONFIG);
     # my $web_config_time  = Sympa::Tools::File::get_mtime(Sympa::Constants::WWSCONFIG);
@@ -961,15 +960,7 @@ sub load {
         if ((-r "$self->{'dir'}/cert.pem")
         || (-r "$self->{'dir'}/cert.pem.enc"));
 
-    # Load stats file if first new() or stats file changed.
-    my $stats_file = $self->{'dir'} . '/stats';
-    if (!-e $stats_file or $time_stats > $last_time_stats) {
-        $self->{'stats'} = _load_stats_file($stats_file);
-        $last_time_stats = $time_stats;
-    }
-
     $self->{'_mtime'}{'config'} = $last_time_config;
-    $self->{'_mtime'}{'stats'}  = $last_time_stats;
 
     $list_of_lists{$self->{'domain'}}{$name} = $self;
     return $config_reloaded;
@@ -4606,24 +4597,8 @@ sub load_data_sources_list {
 }
 
 ## Loads the statistics information
-sub _load_stats_file {
-    my $file = shift;
-    $log->syslog('debug3', '(%s)', $file);
-
-    if (open my $fh, '<', $file) {
-        my $line = do { local $RS; <$fh> };
-        close $fh;
-        my @fields = split /\s+/, $line;
-        if (4 <= scalar @fields) {
-            # Returns [sequence, numsent, bytes, numsent*bytes].
-            # $fields[4 .. 6] (total, last_sync, last_sync_admin_user) were
-            # deprecated.
-            return [@fields[0 .. 3]];
-        }
-    }
-
-    return [0, 0, 0, 0];
-}
+# No longer used.
+#sub _load_stats_file;
 
 ## Loads the list of subscribers.
 sub _load_list_members_file {
@@ -9423,7 +9398,6 @@ sub close_list {
     $self->{'admin'}{'defaults'}{'status'} = 0;
 
     $self->save_config($email);
-    $self->savestats();     #FIXME: required?
 
     $self->remove_aliases();
 

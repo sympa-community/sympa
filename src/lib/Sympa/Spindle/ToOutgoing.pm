@@ -45,13 +45,9 @@ sub _twist {
         my $list = $message->{context};
 
         # Add number and size of digests sent to total in stats file.
-        # Note: $list->savestats() should be executed when spindle finished
-        #       (see Sympa::Spindle::ProcessDigest).
         my $numsent = scalar @{$message->{rcpt} || []};
         my $bytes = length $message->as_string;
-        $list->{'stats'}[1] += $numsent;
-        $list->{'stats'}[2] += $bytes;
-        $list->{'stats'}[3] += $bytes * $numsent;
+        $list->update_stats(0, $numsent, $bytes, $bytes * $numsent);
     }
 
     $status ? 1 : undef;

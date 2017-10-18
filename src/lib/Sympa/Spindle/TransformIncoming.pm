@@ -56,7 +56,7 @@ sub _twist {
     my $robot = $list->{'domain'};
 
     # Update msg_count, and returns the new X-Sequence, if any.
-    $message->{xsequence} = $list->get_next_sequence;
+    ($message->{xsequence}) = $list->update_stats(1);
 
     ## Loading info msg_topic file if exists, add X-Sympa-Topic
     my $topic;
