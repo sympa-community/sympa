@@ -309,8 +309,6 @@ foreach my $t (qw(subscriber_table admin_table)) {
 
 # This is the generic hash which keeps all lists in memory.
 my %list_of_lists  = ();
-my %list_of_robots = ();
-my %edit_list_conf = ();
 
 ## Creates an object.
 sub new {
@@ -669,6 +667,8 @@ sub _cache_read_expiry {
         # If syncs have never been done, earliest time is assumed.
         return Sympa::Tools::File::get_mtime(
             $self->{'dir'} . '/.last_sync.admin');
+    } elsif ($type eq 'edit_list_conf') {
+        return [Sympa::search_fullpath($self, 'edit_list.conf')]->[9];
     } else {
         die 'bug in logic. Ask developer';
     }
@@ -4062,29 +4062,20 @@ sub add_list_admin {
 
 ## May the indicated user edit the indicated list parameter or not?
 sub may_edit {
+    $log->syslog('debug3', '(%s, %s, %s)', @_);
+    my $self      = shift;
+    my $parameter = shift;
+    my $who       = shift;
 
-    my ($self, $parameter, $who) = @_;
-    $log->syslog('debug3', '(%s, %s)', $parameter, $who);
+    # Load edit_list.conf: Track by file, not domain (file may come from
+    # server, robot, family or list context).
+    my $edit_list_conf = $self->_cache_get('edit_list_conf');
+    unless ($edit_list_conf) {
+        $self->_cache_put('edit_list_conf', $self->_load_edit_list_conf);
+    }
+    $edit_list_conf ||= {};
 
     my $role;
-
-    return undef unless ($self);
-
-    my $edit_conf;
-
-    # Load edit_list.conf: track by file, not domain (file may come from
-    # server, robot, family or list context)
-    my $edit_conf_file = Sympa::search_fullpath($self, 'edit_list.conf');
-    if (!$edit_list_conf{$edit_conf_file}
-        or Sympa::Tools::File::get_mtime($edit_conf_file) >
-        $Sympa::Robot::mtime{'edit_list_conf'}{$edit_conf_file}) {
-
-        $edit_conf = $edit_list_conf{$edit_conf_file} =
-            $self->_load_edit_list_conf;
-        $Sympa::Robot::mtime{'edit_list_conf'}{$edit_conf_file} = time;
-    } else {
-        $edit_conf = $edit_list_conf{$edit_conf_file};
-    }
 
     ## What privilege?
     if (Sympa::is_listmaster($self, $who)) {
@@ -4104,20 +4095,19 @@ sub may_edit {
     ## What privilege does he/she has?
     my ($what, @order);
 
-    if (   ($parameter =~ /^(\w+)\.(\w+)$/)
-        && ($parameter !~ /\.tt2$/)) {
+    if ($parameter =~ /^(\w+)\.(\w+)$/ and $parameter !~ /\.tt2$/) {
         my $main_parameter = $1;
         @order = (
-            $edit_conf->{$parameter}{$role},
-            $edit_conf->{$main_parameter}{$role},
-            $edit_conf->{'default'}{$role},
-            $edit_conf->{'default'}{'default'}
+            $edit_list_conf->{$parameter}{$role},
+            $edit_list_conf->{$main_parameter}{$role},
+            $edit_list_conf->{'default'}{$role},
+            $edit_list_conf->{'default'}{'default'}
         );
     } else {
         @order = (
-            $edit_conf->{$parameter}{$role},
-            $edit_conf->{'default'}{$role},
-            $edit_conf->{'default'}{'default'}
+            $edit_list_conf->{$parameter}{$role},
+            $edit_list_conf->{'default'}{$role},
+            $edit_list_conf->{'default'}{'default'}
         );
     }
 
@@ -4130,127 +4120,11 @@ sub may_edit {
     return ('user', 'hidden');
 }
 
-## May the indicated user edit a paramter while creating a new list
-## Dev note: This sub is never called. Shall we remove it?
-# sa cette procédure est appelée nul part, je lui ajoute malgrès tout le
-# paramêtre robot
-# edit_conf devrait être aussi dépendant du robot
-sub may_create_parameter {
+# Never used.
+#sub may_create_parameter;
 
-    my ($self, $parameter, $who, $robot) = @_;
-    $log->syslog('debug3', '(%s, %s, %s)', $parameter, $who, $robot);
-
-    if (Sympa::is_listmaster($robot, $who)) {
-        return 1;
-    }
-    my $edit_conf = $self->_load_edit_list_conf;
-    $edit_conf->{$parameter} ||= $edit_conf->{'default'};
-    if (!$edit_conf->{$parameter}) {
-        $log->syslog('notice', 'Privilege for parameter %s undefined',
-            $parameter);
-        return undef;
-    }
-    if ($edit_conf->{$parameter} =~ /^(owner|privileged_owner)$/i) {
-        return 1;
-    } else {
-        return 0;
-    }
-
-}
-
-## May the indicated user do something with the list or not?
-## Action can be : send, review, index, get
-##                 add, del, reconfirm, purge
 # OBSOLETED: No longer used.
-sub may_do {
-    my ($self, $action, $who) = @_;
-    $log->syslog('debug3', '(%s, %s)', $action, $who);
-
-    my $i;
-
-    ## Just in case.
-    return undef unless ($self && $action);
-    my $admin = $self->{'admin'};
-    return undef unless ($admin);
-
-    $action =~ y/A-Z/a-z/;
-    $who =~ y/A-Z/a-z/;
-
-    if ($action =~ /^(index|get)$/io) {
-        my $arc_access = $admin->{'archive'}{'mail_access'};
-        if ($arc_access =~ /^public$/io) {
-            return 1;
-        } elsif ($arc_access =~ /^private$/io) {
-            return 1 if $self->is_list_member($who);
-            return 1 if $self->is_admin('owner', $who);
-            return Sympa::is_listmaster($self, $who);
-        } elsif ($arc_access =~ /^owner$/io) {
-            return 1 if $self->is_admin('owner', $who);
-            return Sympa::is_listmaster($self, $who);
-        }
-        return undef;
-    }
-
-    if ($action =~ /^(review)$/io) {
-        foreach $i (@{$admin->{'review'}}) {
-            if ($i =~ /^public$/io) {
-                return 1;
-            } elsif ($i =~ /^private$/io) {
-                return 1 if $self->is_list_member($who);
-                return $self->is_admin('owner', $who);
-            } elsif ($i =~ /^owner$/io) {
-                return 1 if Sympa::is_listmaster($self, $who);
-                return $self->is_admin('owner', $who);
-            }
-            return undef;
-        }
-    }
-
-    if ($action =~ /^send$/io) {
-        if ($admin->{'send'} =~
-            /^(private|privateorpublickey|privateoreditorkey)$/i) {
-
-            return undef
-                unless $self->is_list_member($who)
-                or $self->is_admin('owner', $who);
-        } elsif (
-            $admin->{'send'} =~ /^(editor|editorkey|privateoreditorkey)$/i) {
-            return undef unless $self->is_admin('actual_editor', $who);
-        } elsif (
-            $admin->{'send'} =~ /^(editorkeyonly|publickey|privatekey)$/io) {
-            return undef;
-        }
-        return 1;
-    }
-
-    if ($action =~ /^(add|del|remind|reconfirm|purge)$/io) {
-        return $self->is_admin('owner', $who)
-            || Sympa::is_listmaster($self, $who);
-    }
-
-    if ($action =~ /^(modindex)$/io) {
-        return undef unless $self->is_admin('actual_editor', $who);
-        return 1;
-    }
-
-    if ($action =~ /^auth$/io) {
-        if ($admin->{'send'} =~ /^(privatekey)$/io) {
-            return 1
-                if $self->is_list_member($who)
-                or $self->is_admin('owner', $who)
-                or Sympa::is_listmaster($self, $who);
-        } elsif ($admin->{'send'} =~ /^(privateorpublickey)$/io) {
-            return 1
-                unless $self->is_list_member($who)
-                or $self->is_admin('owner', $who)
-                or Sympa::is_listmaster($self, $who);
-        } elsif ($admin->{'send'} =~ /^(publickey)$/io) {
-            return 1;
-        }
-        return undef;    #authent
-    }
-    return undef;
-}
+#sub may_do;
 
 ## Does the list support digest mode
 sub is_digest {
