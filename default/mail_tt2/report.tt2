@@ -799,6 +799,12 @@ Warning: this message may already have been sent by one of the list's editors.[%
 [%~ ELSIF report_entry == 'merge_failed' ~%]
   [%|loc(report_param.error)%]Your message cannot be personalized due to error: %1.  Please check template syntax.[%END%]
 
+[%~ ELSIF report_entry == 'owner_domain' ~%]
+  [%|loc(report_param.value,report_param.owner_domain)%]%1: all list owners must be in the following domains: %2.[%END%]
+
+[%~ ELSIF report_entry == 'owner_domain_min' ~%]
+  [%|loc(report_param.value,report_param.owner_domain_min,report_param.owner_domain)%]Unable to reduce the number of list owners in required domains to %1. Domains that count toward the minimum requirement of %2: %3[%END%]
+
 [%~ END ~%]
 
 [%~ END ~%]

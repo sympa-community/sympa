@@ -320,6 +320,31 @@ our %pinfo = (
         'default'    => {'conf' => 'default_list_priority'}
     },
 
+    'owner_domain' => {
+        order        => 10.13,
+        'group'      => 'description',
+        'gettext_id' => "Required domains for list owners",
+        'gettext_comment' =>
+            'Restrict list ownership to addresses in the specified domains.',
+        'format'     => '[\w\.\- ]+', # same as Sympa::Regexps::host plus space
+        'length'     => 72,
+        'occurrence' => '0-1',
+        'split_char' => ' ',
+        'default'    => {'conf' => 'owner_domain'},
+    },
+
+    'owner_domain_min' => {
+        order        => 10.14,
+        'group'      => 'description',
+        'gettext_id' => "Minimum owners in required domains",
+        'gettext_comment' =>
+            'Require list ownership by a minimum number of addresses in the specified domains.',
+        'format'     => '\d+',
+        'length'     => 2,
+        'occurrence' => '0-1',
+        'default'    => {'conf' => 'owner_domain_min'},
+    },
+
     ### Sending page ###
 
     'send' => {
