@@ -705,7 +705,8 @@ sub verify {
         # per list, and each call triggers a copy of the pinfo hash.
         # Profiling shows that this scales poorly with thousands of lists.
         # Briefly cache the list params data to avoid this overhead.
-        if (time > $picache->{$robot}{'expires'}) {
+        
+        if (time > ($picache->{$robot}{'expires'} || 0)) {
             $log->syslog('debug', 'robot %s pinfo cache refresh', $robot);
             $picache->{$robot}{'pinfo'} = Sympa::Robot::list_params($robot);
             $picache->{$robot}{'expires'} = (time + $picache_refresh);
