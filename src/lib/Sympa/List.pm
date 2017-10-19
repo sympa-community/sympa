@@ -1342,24 +1342,13 @@ sub get_digest_recipients_per_mode {
         $user;
         $user = $self->get_next_list_member()
         ) {
-        my $user_data = get_list_member_no_object(
-            {   email  => $user->{'email'},
-                name   => $self->{'name'},
-                domain => $self->{'domain'},
-            }
-        );
         # Test to know if the rcpt suspended her subscription for this list.
         # If yes, don't send the message.
-        if ($user_data and $user_data->{'suspend'}) {
-            if ((   not $user_data->{'startdate'}
-                    or $user_data->{'startdate'} <= time
-                )
-                and (not $user_data->{'enddate'}
-                    or time <= $user_data->{'enddate'})
-                ) {
+        if ($user and $user->{'suspend'}) {
+            if ((not $user->{'startdate'} or $user->{'startdate'} <= time)
+                and (not $user->{'enddate'} or time <= $user->{'enddate'})) {
                 next;
-            } elsif ($user_data->{'enddate'}
-                and $user_data->{'enddate'} < time) {
+            } elsif ($user->{'enddate'} and $user->{'enddate'} < time) {
                 # If end date is < time, update subscriber by deleting the
                 # suspension setting.
                 $self->restore_suspended_subscription($user->{'email'});
@@ -1432,26 +1421,14 @@ sub get_recipients_per_mode {
                 'Skipping user with no email address in list %s', $self);
             next;
         }
-        my $user_data = get_list_member_no_object(
-            {   email  => $user->{'email'},
-                name   => $self->{'name'},
-                domain => $self->{'domain'},
-            }
-        );
-
         # Test to know if the rcpt suspended her subscription for this list.
         # if yes, don't send the message.
-        if ($user_data and $user_data->{'suspend'}) {
-            if ((   not $user_data->{'startdate'}
-                    or $user_data->{'startdate'} <= time
-                )
-                and (not $user_data->{'enddate'}
-                    or time <= $user_data->{'enddate'})
-                ) {
+        if ($user and $user->{'suspend'}) {
+            if ((not $user->{'startdate'} or $user->{'startdate'} <= time)
+                and (not $user->{'enddate'} or time <= $user->{'enddate'})) {
                 push @tabrcpt_nomail_verp, $user->{'email'};
                 next;
-            } elsif ($user_data->{'enddate'}
-                and $user_data->{'enddate'} < time) {
+            } elsif ($user->{'enddate'} and $user->{'enddate'} < time) {
                 # If end date is < time, update subscriber by deleting the
                 # suspension setting.
                 $self->restore_suspended_subscription($user->{'email'});
@@ -2094,8 +2071,7 @@ sub delete_list_member {
 
         }
 
-        $list_cache{'get_list_member'}{$self->{'domain'}}{$name}{$who} =
-            undef;
+        delete $list_cache{'get_list_member'}{$self->{'domain'}}{$name}{$who};
 
         ## Delete record in SUBSCRIBER
         unless (
@@ -2386,11 +2362,7 @@ sub insert_delete_exclusion {
 
     if ($action eq 'insert') {
         ## INSERT only if $user->{'included'} eq '1'
-        my $options;
-        $options->{'email'}  = $email;
-        $options->{'name'}   = $name;
-        $options->{'domain'} = $robot_id;
-        my $user = get_list_member_no_object($options);
+        my $user = $self->get_list_member($email);
         my $date = time;
 
         if ($user->{'included'} eq '1') {
@@ -2533,58 +2505,6 @@ sub get_exclusion {
     return $data_exclu;
 }
 
-######################################################################
-###  get_list_member                                                  #
-## Returns a subscriber of the list.
-## Options :
-##    probe : don't log error if user does not exist
-##    #
-######################################################################
-sub get_list_member {
-    my $self    = shift;
-    my $email   = Sympa::Tools::Text::canonic_email(shift);
-    my %options = @_;
-
-    $log->syslog('debug2', '(%s)', $email);
-
-    my $name = $self->{'name'};
-
-    ## Use session cache
-    if (defined $list_cache{'get_list_member'}{$self->{'domain'}}{$name}
-        {$email}) {
-        return $list_cache{'get_list_member'}{$self->{'domain'}}{$name}
-            {$email};
-    }
-
-    my $options;
-    $options->{'email'}  = $email;
-    $options->{'name'}   = $self->{'name'};
-    $options->{'domain'} = $self->{'domain'};
-
-    my $user = get_list_member_no_object($options);
-
-    unless (defined $user) {
-        return undef;
-    } else {
-        unless ($user) {
-            $log->syslog('debug',
-                'User %s was not found in the subscribers of list %s@%s',
-                $email, $self->{'name'}, $self->{'domain'});
-            return undef;
-        } else {
-            $user->{'reception'} =
-                $self->{'admin'}{'default_user_options'}{'reception'}
-                unless (
-                $self->is_available_reception_mode($user->{'reception'}));
-        }
-
-        ## Set session cache
-        $list_cache{'get_list_member'}{$self->{'domain'}}{$self->{'name'}}
-            {$email} = $user;
-    }
-    return $user;
-}
-
 # Mapping between var and field names.
 sub _map_list_member_cols {
     my %map_field = (
@@ -2637,33 +2557,16 @@ sub _list_member_cols {
     } sort keys %map_field;
 }
 
-######################################################################
-###  get_list_member_no_object                                        #
-## Get details regarding a subscriber.                               #
-# IN:                                                                #
-#   - a single reference to a hash with the following keys:          #
-#     * email : the subscriber email                                 #
-#     * name: the name of the list                                   #
-#     * domain: the virtual host under which the list is installed.  #
-# OUT:                                                               #
-#   - undef if something went wrong.                                 #
-#   - a hash containing the user details otherwise                   #
-######################################################################
-
-sub get_list_member_no_object {
-    my $options = shift;
-    $log->syslog('debug2', '(%s, %s, %s)', $options->{'name'},
-        $options->{'email'}, $options->{'domain'});
-
-    my $name = $options->{'name'};
-
-    my $email = Sympa::Tools::Text::canonic_email($options->{'email'});
+sub get_list_member {
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $self  = shift;
+    my $email = Sympa::Tools::Text::canonic_email(shift);
 
     ## Use session cache
-    if (defined $list_cache{'get_list_member'}{$options->{'domain'}}{$name}
-        {$email}) {
-        return $list_cache{'get_list_member'}{$options->{'domain'}}{$name}
-            {$email};
+    if (defined $list_cache{'get_list_member'}{$self->{'domain'}}
+        {$self->{'name'}}{$email}) {
+        return $list_cache{'get_list_member'}{$self->{'domain'}}
+            {$self->{'name'}}{$email};
     }
 
     my $sdm = Sympa::DatabaseManager->instance;
@@ -2680,19 +2583,22 @@ sub get_list_member_no_object {
                 _list_member_cols($sdm)
             ),
             $email,
-            $name,
-            $options->{'domain'}
+            $self->{'name'},
+            $self->{'domain'}
         )
         ) {
         $log->syslog('err', 'Unable to gather information for user: %s',
-            $email, $name, $options->{'domain'});
+            $email, $self);
         return undef;
     }
     my $user = $sth->fetchrow_hashref('NAME_lc');
     if (defined $user) {
         $sth->finish;
 
-        $user->{'reception'}   ||= 'mail';
+        $user->{'reception'} ||= 'mail';
+        $user->{'reception'} =
+            $self->{'admin'}{'default_user_options'}{'reception'}
+            unless $self->is_available_reception_mode($user->{'reception'});
         $user->{'update_date'} ||= $user->{'date'};
         $log->syslog(
             'debug2',
@@ -2711,22 +2617,26 @@ sub get_list_member_no_object {
 
         if ($error) {
             $log->syslog('err',
-                "An error occurred while fetching the data from the database."
+                'An error occurred while fetching the data from the database: %s',
+                $sth->errstr
             );
             return undef;
         } else {
-            $log->syslog('debug2',
-                "No user with the email %s is subscribed to list %s@%s",
-                $email, $name, $options->{'domain'});
-            return 0;
+            $log->syslog('debug',
+                'User %s was not found in the subscribers of list %s',
+                $email, $self);
+            return undef;
         }
     }
 
     # Set session cache
-    $list_cache{'get_list_member'}{$options->{'domain'}}{$name}{$email} =
-        $user;
+    $list_cache{'get_list_member'}{$self->{'domain'}}{$self->{'name'}}
+        {$email} = $user;
     return $user;
 }
+
+# Deprecated. Merged into get_list_member(),
+#sub get_list_member_no_object;
 
 ## Returns an admin user of the list.
 # OBSOLETED.  Use get_admins().
@@ -2754,9 +2664,8 @@ sub get_first_list_member {
     $offset     = $data->{'offset'};
     $sql_regexp = $data->{'sql_regexp'};
 
-    $log->syslog('debug2', '(%s, %s, %s)', $self->{'name'}, $sortby, $offset);
+    $log->syslog('debug2', '(%s, %s, %s)', $self, $sortby, $offset);
 
-    my $name = $self->{'name'};
     my $statement;
 
     my $sdm = Sympa::DatabaseManager->instance;
@@ -2775,7 +2684,7 @@ sub get_first_list_member {
           FROM subscriber_table
           WHERE list_subscriber = %s AND robot_subscriber = %s %s},
         _list_member_cols($sdm),
-        $sdm->quote($name),
+        $sdm->quote($self->{'name'}),
         $sdm->quote($self->{'domain'}),
         ($selection || '');
 
@@ -2796,8 +2705,7 @@ sub get_first_list_member {
     push @sth_stack, $sth;
 
     unless ($sdm and $sth = $sdm->do_query($statement)) {
-        $log->syslog('err', 'Unable to get members of list %s@%s',
-            $name, $self->{'domain'});
+        $log->syslog('err', 'Unable to get members of list %s', $self);
         return undef;
     }
 
@@ -2820,16 +2728,14 @@ sub get_first_list_member {
     my $user = $sth->fetchrow_hashref('NAME_lc');
     if (defined $user) {
         $log->syslog('err',
-            'Warning: Entry with empty email address in list %s',
-            $self->{'name'})
-            if (!$user->{'email'});
+            'Warning: Entry with empty email address in list %s', $self)
+            unless $user->{'email'};
         $user->{'reception'} ||= 'mail';
         $user->{'reception'} =
             $self->{'admin'}{'default_user_options'}{'reception'}
-            unless ($self->is_available_reception_mode($user->{'reception'}));
+            unless $self->is_available_reception_mode($user->{'reception'});
         $user->{'update_date'} ||= $user->{'date'};
 
-        ######################################################################
         if (defined $user->{custom_attribute}) {
             $user->{'custom_attribute'} =
                 Sympa::Tools::Data::decode_custom_attribute(
@@ -2861,7 +2767,7 @@ sub get_next_list_member {
     unless (defined $sth) {
         $log->syslog('err',
             'No handle defined, get_first_list_member(%s) was not run',
-            $self->{'name'});
+            $self);
         return undef;
     }
 
@@ -2869,17 +2775,14 @@ sub get_next_list_member {
 
     if (defined $user) {
         $log->syslog('err',
-            'Warning: Entry with empty email address in list %s',
-            $self->{'name'})
-            if (!$user->{'email'});
+            'Warning: Entry with empty email address in list %s', $self)
+            unless $user->{'email'};
         $user->{'reception'} ||= 'mail';
-        unless ($self->is_available_reception_mode($user->{'reception'})) {
-            $user->{'reception'} =
-                $self->{'admin'}{'default_user_options'}{'reception'};
-        }
+        $user->{'reception'} =
+            $self->{'admin'}{'default_user_options'}{'reception'}
+            unless $self->is_available_reception_mode($user->{'reception'});
         $user->{'update_date'} ||= $user->{'date'};
 
-        $log->syslog('debug2', '(email = %s)', $user->{'email'});
         if (defined $user->{custom_attribute}) {
             my $custom_attr = Sympa::Tools::Data::decode_custom_attribute(
                 $user->{'custom_attribute'});
