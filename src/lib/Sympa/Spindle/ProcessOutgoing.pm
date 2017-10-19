@@ -70,11 +70,7 @@ sub _init {
             ? $self->{log_level}
             : $Conf::Conf{'log_level'};
 
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
-
-        Sympa::List::init_list_cache();
-        # Process grouped notifications
+        # Process grouped notifications.
         Sympa::Alarm->instance->flush;
 
         unless ($process->{detached}) {

@@ -294,8 +294,6 @@ currently selected descriptor.
 ## Database and SQL statement handlers
 my ($sth, @sth_stack);
 
-my %list_cache;
-
 # DB fields with numeric type.
 # We should not do quote() for these while inserting data.
 my %db_struct = Sympa::DatabaseDescription::full_db_struct();
@@ -2068,12 +2066,9 @@ sub delete_list_member {
         if ($exclude) {
             ## Insert in exclusion_table if $user->{'included'} eq '1'
             $self->insert_delete_exclusion($who, 'insert');
-
         }
 
-        delete $list_cache{'get_list_member'}{$self->{'domain'}}{$name}{$who};
-
-        ## Delete record in SUBSCRIBER
+        # Delete record in subscriber_table.
         unless (
             $sdm
             and $sdm->do_prepared_query(
@@ -2562,13 +2557,6 @@ sub get_list_member {
     my $self  = shift;
     my $email = Sympa::Tools::Text::canonic_email(shift);
 
-    ## Use session cache
-    if (defined $list_cache{'get_list_member'}{$self->{'domain'}}
-        {$self->{'name'}}{$email}) {
-        return $list_cache{'get_list_member'}{$self->{'domain'}}
-            {$self->{'name'}}{$email};
-    }
-
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
 
@@ -2629,9 +2617,6 @@ sub get_list_member {
         }
     }
 
-    # Set session cache
-    $list_cache{'get_list_member'}{$self->{'domain'}}{$self->{'name'}}
-        {$email} = $user;
     return $user;
 }
 
@@ -3460,7 +3445,6 @@ sub update_list_member {
     $values = {@_} unless ref $values eq 'HASH';
 
     my ($field, $value, $table);
-    my $name = $self->{'name'};
 
     # Mapping between var and field names.
     my %map_field = _map_list_member_cols();
@@ -3592,9 +3576,6 @@ sub update_list_member {
             }
         }
     }
-
-    ## Reset session cache
-    $list_cache{'get_list_member'}{$self->{'domain'}}{$name}{$who} = undef;
 
     return 1;
 }
@@ -4076,11 +4057,8 @@ sub add_list_admin {
 #sub check_list_authz;
 
 ## Initialize internal list cache
-sub init_list_cache {
-    $log->syslog('debug2', '');
-
-    undef %list_cache;
-}
+# Deprecated. No longer used.
+#sub init_list_cache;
 
 ## May the indicated user edit the indicated list parameter or not?
 sub may_edit {
@@ -10004,9 +9982,6 @@ sub new {
             return undef;
         }
     }
-
-    ## Initialize internal list cache
-    undef %list_cache;
 
     # create a new Robot object
     bless $robot, $pkg;

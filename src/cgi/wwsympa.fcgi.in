@@ -1041,10 +1041,7 @@ while ($query = new_loop()) {
     $log->{level} = $Conf::Conf{'log_level'};
     $language->set_lang(Sympa::best_language('*'));
 
-    ## Empty cache of the List.pm module
-    Sympa::List::init_list_cache();
-
-    # Process grouped notifications
+    # Process grouped notifications.
     Sympa::Alarm->instance->flush;
 
     ## Check effective ID

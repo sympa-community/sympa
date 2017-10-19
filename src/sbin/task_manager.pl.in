@@ -253,10 +253,7 @@ foreach (keys %asgn_commands) {
 while (!$end) {
     my $current_date = time;    # current epoch date
 
-    ## Empty cache of the List.pm module
-    Sympa::List::init_list_cache();
-
-    # Process grouped notifications
+    # Process grouped notifications.
     Sympa::Alarm->instance->flush;
 
     ## List all tasks
@@ -403,9 +400,6 @@ while (!$end) {
     }
 
     sleep 60;
-
-    ## Free zombie sendmail processes
-    #Sympa::Process->instance->reap_child;
 }
 
 # Purge grouped notifications

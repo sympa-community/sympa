@@ -61,9 +61,6 @@ sub request {
         $ENV{'SYMPA_ROBOT'} =
             Sympa::Tools::WWW::get_robot('soap_url_local', 'soap_url');
 
-        ## Empty cache of the List.pm module
-        Sympa::List::init_list_cache();
-
         my $session;
         ## Existing session or new one
         if (Sympa::Session::get_session_cookie($ENV{'HTTP_COOKIE'})) {
