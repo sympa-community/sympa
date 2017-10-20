@@ -14231,6 +14231,8 @@ sub do_move_user {
     $param->{'current_email'} = $current_email;
     $param->{'email'}         = $email;
 
+    $param->{'previous_action'} = $in{'previous_action'} || 'pref';
+
     unless (Sympa::Tools::Text::valid_email($current_email)
         and Sympa::Tools::Text::valid_email($email)) {
         return $in{'previous_action'} || 'pref';
