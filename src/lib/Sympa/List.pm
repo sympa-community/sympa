@@ -668,7 +668,7 @@ sub _cache_read_expiry {
         return Sympa::Tools::File::get_mtime(
             $self->{'dir'} . '/.last_sync.admin');
     } elsif ($type eq 'edit_list_conf') {
-        return [Sympa::search_fullpath($self, 'edit_list.conf')]->[9];
+        return [stat Sympa::search_fullpath($self, 'edit_list.conf')]->[9];
     } else {
         die 'bug in logic. Ask developer';
     }
