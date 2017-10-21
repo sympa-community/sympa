@@ -1805,7 +1805,9 @@ sub _load_ldap_configuration {
         return;
     }
 
-    my @valid_options    = qw(host suffix filter scope bind_dn bind_password);
+    my @valid_options    = qw(host suffix filter scope bind_dn bind_password
+                              use_tls ssl_version ssl_ciphers ssl_cert ssl_key
+                              ca_verify ca_path ca_file);
     my @required_options = qw(host suffix filter);
 
     my %valid_options    = map { $_ => 1 } @valid_options;
