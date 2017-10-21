@@ -49,6 +49,9 @@ my $log = Sympa::Log->instance;
 my %all_scenarios;
 my %persistent_cache;
 
+my $picache = {};
+my $picache_refresh = 10;
+
 ## Creates a new object
 ## Supported parameters : function, robot, name, directory, file_path, options
 ## Output object has the following entries : name, file_path, rules, date,
@@ -698,7 +701,17 @@ sub verify {
 
     my $pinfo;
     if ($robot) {
-        $pinfo = Sympa::Robot::list_params($robot);
+        # Generating the lists index creates multiple calls to verify()
+        # per list, and each call triggers a copy of the pinfo hash.
+        # Profiling shows that this scales poorly with thousands of lists.
+        # Briefly cache the list params data to avoid this overhead.
+        
+        if (time > ($picache->{$robot}{'expires'} || 0)) {
+            $log->syslog('debug', 'robot %s pinfo cache refresh', $robot);
+            $picache->{$robot}{'pinfo'} = Sympa::Robot::list_params($robot);
+            $picache->{$robot}{'expires'} = (time + $picache_refresh);
+        }
+        $pinfo = $picache->{$robot}{'pinfo'};
     } else {
         $pinfo = {};
     }
