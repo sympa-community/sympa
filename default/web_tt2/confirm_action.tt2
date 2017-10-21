@@ -325,6 +325,7 @@
 [%~ END %]
   <input type="hidden" name="action" value="[% confirm_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="previous_action" value="[% previous_action %]" />
 [% IF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
   <div>
     <input class="MainMenuLinks" type="submit"
