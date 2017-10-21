@@ -1988,6 +1988,10 @@ span.bottom_page, p.bottom_page{
 .top-bar, .top-bar-section ul li, .top-bar-section li:not(.has-form) a:not(.button){
     background-color: [% color_6 %];
 }
+/* properly set active list item color when not hovered */
+.top-bar-section li.active:not(.has-form) a:not(.button){
+    background-color: [% color_5%];
+}
 .top-bar .top-bar-section li:not(.has-form) a:not(.button):hover{
     background-color: [% color_5%];
 }
