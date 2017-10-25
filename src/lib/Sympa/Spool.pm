@@ -830,7 +830,7 @@ and metadatas indexed by keys in arrayref $marshal_keys.
 If key is uppercase, it means auto-generated value:
 C<'AUTHKEY'>, C<'KEYAUTH'>, C<'PID'>, C<'RAND'>, C<'TIME'>.
 Otherwise it means metadata or property of $message.
-If C<keep_keys> option (added on 6.2.21b) is set, forces using latter.
+If C<keep_keys> option (added on 6.2.23b) is set, forces using latter.
 
 sprintf() is executed under C<C> locale:
 Full stop (C<.>) is always used for decimal point in floating point number.
@@ -1011,6 +1011,6 @@ build_glob_pattern(), size(), _glob_pattern() and _store_key()
 were introduced on Sympa 6.2.8.
 _filter_pre() was introduced on Sympa 6.2.10.
 marshal(), unmarshal() and C<no_filter> option of next()
-were introduced on Sympa 6.2.21b.
+were introduced on Sympa 6.2.22.
 
 =cut

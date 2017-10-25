@@ -49,12 +49,8 @@ sub _init {
     my $state = shift;
 
     if ($state == 1) {
-        Sympa::List::init_list_cache();
         # Process grouped notifications.
         Sympa::Alarm->instance->flush;
-    } elsif ($state == 2) {
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
     }
 
     1;

@@ -214,8 +214,6 @@ sub _move {
     my $sender       = $request->{sender};
     my $pending      = $request->{pending};
 
-    $current_list->savestats();
-
     # Remove aliases and dump subscribers.
     Sympa::Admin::remove_aliases($current_list);
     $current_list->_save_list_members_file(
@@ -665,6 +663,6 @@ L<Sympa::Spindle::ProcessRequest>.
 
 =head1 HISTORY
 
-L<Sympa::Request::Handler::move_list> appeared on Sympa 6.2.21b.
+L<Sympa::Request::Handler::move_list> appeared on Sympa 6.2.23b.
 
 =cut

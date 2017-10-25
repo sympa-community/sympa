@@ -203,7 +203,6 @@ sub _send_msg {
         my $total = $list->get_total('nocache');
         unless ($total and 0 < $total) {
             $log->syslog('info', 'No subscriber in list %s', $list);
-            $list->savestats;
             return 0;
         }
 
@@ -247,7 +246,6 @@ sub _send_msg {
         unless ($available_recipients) {
             $log->syslog('info', 'No subscriber for sending msg in list %s',
                 $list);
-            $list->savestats;
             return 0;
         }
     } else {
@@ -314,9 +312,7 @@ sub _send_msg {
             # Add number and size of messages sent to total in stats file.
             my $numsent = scalar @selected_tabrcpt;
             my $bytes   = length $new_message->as_string;
-            $list->{'stats'}->[1] += $numsent;
-            $list->{'stats'}->[2] += $bytes;
-            $list->{'stats'}->[3] += $bytes * $numsent;
+            $list->update_stats(0, $numsent, $bytes, $bytes * $numsent);
         } else {
             $log->syslog(
                 'notice',
@@ -360,9 +356,7 @@ sub _send_msg {
             # Add number and size of messages sent to total in stats file.
             my $numsent = scalar @verp_selected_tabrcpt;
             my $bytes   = length $new_message->as_string;
-            $list->{'stats'}->[1] += $numsent;
-            $list->{'stats'}->[2] += $bytes;
-            $list->{'stats'}->[3] += $bytes * $numsent;
+            $list->update_stats(0, $numsent, $bytes, $bytes * $numsent);
         } else {
             $log->syslog('notice',
                 'No VERP subscribers left to distribute message to list %s',
@@ -384,7 +378,6 @@ sub _send_msg {
             );
         }
     }
-    $list->savestats;
     return $numstored;
 }
 

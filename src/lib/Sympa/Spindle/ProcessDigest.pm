@@ -218,8 +218,6 @@ sub _distribute_digest {
         }
     }
 
-    $list->savestats();
-
     return 1;
 }
 

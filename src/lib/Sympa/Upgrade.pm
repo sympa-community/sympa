@@ -142,8 +142,7 @@ sub upgrade {
         Sympa::List::delete_all_list_admin();
 
         foreach my $list (@$all_lists) {
-            delete $list->{_admin_cache};
-            $list->sync_include_admin();
+            $list->sync_include_admin;
         }
     }
     else {
@@ -754,7 +753,6 @@ sub upgrade {
                     "$list->{'dir'}/subscribers");
 
                 $list->{'admin'}{'user_data_source'} = 'include2';
-                $list->{'total'} = 0;
 
                 ## Add users to the DB
                 $list->add_list_member(@users);

@@ -253,10 +253,7 @@ foreach (keys %asgn_commands) {
 while (!$end) {
     my $current_date = time;    # current epoch date
 
-    ## Empty cache of the List.pm module
-    Sympa::List::init_list_cache();
-
-    # Process grouped notifications
+    # Process grouped notifications.
     Sympa::Alarm->instance->flush;
 
     ## List all tasks
@@ -403,9 +400,6 @@ while (!$end) {
     }
 
     sleep 60;
-
-    ## Free zombie sendmail processes
-    #Sympa::Process->instance->reap_child;
 }
 
 # Purge grouped notifications
@@ -2066,22 +2060,18 @@ sub sync_include {
 
     my $list = $task->{'list_object'};
 
-    $list->sync_include();
-    $list->sync_include_admin()
-        if (
-        (   defined $list->{'admin'}{'editor_include'}
-            && $#{$list->{'admin'}{'editor_include'}} > -1
-        )
-        || (defined $list->{'admin'}{'owner_include'}
-            && $#{$list->{'admin'}{'owner_include'}} > -1)
-        );
+    $list->sync_include;
+    $list->sync_include_admin
+        if @{$list->{'admin'}{'editor_include'} || []}
+            or @{$list->{'admin'}{'owner_include'} || []};
 
-    if (!$list->has_include_data_sources()
-        && (!$list->{'last_sync'}
-            || ($list->{'last_sync'} > (stat("$list->{'dir'}/config"))[9]))
+    if (not $list->has_include_data_sources
+        and (not -e $list->{'dir'} . '/.last_sync.member'
+            or [stat $list->{'dir'} . '/.last_sync.member']->[9] >
+            [stat $list->{'dir'} . '/config']->[9])
         ) {
         $log->syslog('debug', 'List %s no more require sync_include task',
-            $list->{'name'});
+            $list);
         return -1;
     }
 }

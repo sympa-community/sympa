@@ -47,9 +47,7 @@ sub _twist {
         # Add number and size of digests sent to total in stats file.
         my $numsent = scalar @{$message->{rcpt} || []};
         my $bytes = length $message->as_string;
-        $list->{'stats'}[1] += $numsent;
-        $list->{'stats'}[2] += $bytes;
-        $list->{'stats'}[3] += $bytes * $numsent;
+        $list->update_stats(0, $numsent, $bytes, $bytes * $numsent);
     }
 
     $status ? 1 : undef;

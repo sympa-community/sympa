@@ -1036,10 +1036,7 @@ while ($query = CGI::Fast->new) {
     $log->{level} = $Conf::Conf{'log_level'};
     $language->set_lang(Sympa::best_language('*'));
 
-    ## Empty cache of the List.pm module
-    Sympa::List::init_list_cache();
-
-    # Process grouped notifications
+    # Process grouped notifications.
     Sympa::Alarm->instance->flush;
 
     ## Check effective ID
@@ -2764,7 +2761,7 @@ sub check_param_in {
             $param->{'mod_total_shared'} =
                 $shared_doc->count_moderated_descendants;
 
-            if ($param->{'total'} > 0) {
+            if ($param->{'total'}) {
                 $param->{'bounce_total'} = $list->get_total_bouncing();
                 $param->{'bounce_rate'} =
                     $param->{'bounce_total'} * 100 / $param->{'total'};
@@ -10815,9 +10812,6 @@ sub do_edit_list {
         return undef;
     }
 
-    ## Save stats
-    $list->savestats();
-
     Sympa::Report::notice_report_web('list_config_updated', {},
         $param->{'action'});
     web_db_log({'status' => 'success'});
@@ -11399,12 +11393,8 @@ sub do_restore_list {
     }
     my @users = Sympa::List::_load_list_members_file(
         $list->{'dir'} . '/subscribers.closed.dump');
-    ## Insert users in database
-    foreach my $user (@users) {
-        $list->add_list_member($user);
-    }
-
-    $list->savestats();
+    # Insert users in database
+    $list->add_list_member(@users);
 
     my $aliases = Sympa::Admin::install_aliases($list);
     if ($aliases == 1) {

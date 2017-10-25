@@ -49,11 +49,12 @@ sub _twist {
     my $robot    = $list->{'domain'};
     my $sender   = $request->{sender};
 
+    my @stats = $list->get_stats;
     my %stats = (
-        'msg_rcv'   => $list->{'stats'}[0],
-        'msg_sent'  => $list->{'stats'}[1],
-        'byte_rcv'  => sprintf('%9.2f', ($list->{'stats'}[2] / 1024 / 1024)),
-        'byte_sent' => sprintf('%9.2f', ($list->{'stats'}[3] / 1024 / 1024))
+        'msg_rcv'   => $stats[0],
+        'msg_sent'  => $stats[1],
+        'byte_rcv'  => sprintf('%9.2f', ($stats[2] / 1024 / 1024)),
+        'byte_sent' => sprintf('%9.2f', ($stats[3] / 1024 / 1024))
     );
 
     unless (

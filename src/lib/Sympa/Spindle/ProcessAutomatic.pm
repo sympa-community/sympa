@@ -51,12 +51,8 @@ sub _init {
     my $state = shift;
 
     if ($state == 1) {
-        Sympa::List::init_list_cache();
         # Process grouped notifications.
         Sympa::Alarm->instance->flush;
-    } elsif ($state == 2) {
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
     }
 
     1;
@@ -328,7 +324,7 @@ sub _twist {
             }
             return undef;
         }
-        unless ($list->get_total() > 0) {
+        unless ($list->get_total) {
             $log->syslog('err',
                 'Dynamic list %s from %s family has ZERO subscribers',
                 $list, $dyn_list_family);
