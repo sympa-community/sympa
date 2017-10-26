@@ -9701,210 +9701,77 @@ sub do_create_list {
         $in{'template'}
     );
 
-    ## Check that all the needed arguments are present.
-    ## This is checked here because it requires to return the incomplete form
-    ## to the user
-    foreach my $arg ('listname', 'subject', 'template', 'info', 'topics') {
-        unless ($in{$arg}) {
-            Sympa::Report::reject_report_web('user', 'missing_arg',
-                {'argument' => $arg},
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context      => $robot,
+        action       => 'create_list',
+        listname     => $in{'listname'},
+        parameters => {
+            owner => [{
+                email => $param->{'user'}{'email'},
+                gecos => $param->{'user'}{'gecos'},
+            }],
+            subject        => $in{'subject'},
+            creation_email => $param->{'user'}{'email'},
+            lang           => $param->{'lang'},
+            status         => $param->{'status'}, #FIXME
+            template       => $in{'template'},
+            topics         => $in{'topics'},
+            description    => $in{'info'},
+            custom_input   => $in{'custom_input'},
+        },
+        sender       => $param->{'user'}{'email'},
+        (   $param->{'user'}{'email'}
+            ? (md5_check => 1)
+            : ()
+        ),
+
+        scenario_context => {
+            sender             => $param->{'user'}{'email'},
+            candidate_listname => $in{'listname'},
+            candidate_subject  => $in{'subject'},
+            candidate_template => $in{'template'},
+            candidate_info     => $in{'info'},
+            candidate_topics   => $in{'topics'},
+            remote_host        => $param->{'remote_host'},
+            remote_addr        => $param->{'remote_addr'},
+        }
+    );
+
+    unless ($spindle and $spindle->spin) {
+        return 'create_list_request';
+    }
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
                 $param->{'action'});
-            wwslog('info', 'Missing param %s', $arg);
-            web_db_log(
-                {   'parameters' => $in{'listname'},
-                    'list'       => $in{'listname'},
-                    'status'     => 'error',
-                    'error_type' => 'missing_parameter'
-                }
-            );
-            return 'create_list_request';
-        }
-    }
-
-    # Check length.
-    if (Sympa::Constants::LIST_LEN() < length($in{'listname'})) {
-        Sympa::Report::reject_report_web('user', 'wrong_value',
-            {'argument' => 'listname'},
-            $param->{'action'});
-        wwslog('info', 'Too long listname');
-        web_db_log(
-            {   'parameters' => $in{'listname'},
-                'status'     => 'error',
-                'error_type' => 'wrong_value',     #FIXME
-            }
-        );
-        return 'create_list_request';
-    }
-
-    ## Lowercase listname if required
-    if ($in{'listname'} =~ /[A-Z]/) {
-        $in{'listname'} = lc($in{'listname'});
-        Sympa::Report::notice_report_web('listname_lowercased', {},
-            $param->{'action'});
-    }
-
-    my $result = Sympa::Scenario::request_action(
-        $robot,
-        'create_list',
-        $param->{'auth_method'},
-        {   'sender'             => $param->{'user'}{'email'},
-            'candidate_listname' => $in{'listname'},
-            'candidate_subject'  => $in{'subject'},
-            'candidate_template' => $in{'template'},
-            'candidate_info'     => $in{'info'},
-            'candidate_topics'   => $in{'topics'},
-            'remote_host'        => $param->{'remote_host'},
-            'remote_addr'        => $param->{'remote_addr'}
-        }
-    );
-    if (ref($result) eq 'HASH') {
-        $param->{'create_action'} = $result->{'action'};
-        $param->{'reason'}        = $result->{'reason'};
-    }
-
-    wwslog('info', ', get action: %s', $param->{'create_action'});
-
-    ## If the action is forbidden, stop here.
-    if ($param->{'create_action'} =~ /reject/) {
-        Sympa::Report::reject_report_web('auth', $param->{'reason'}, {},
-            $param->{'action'}, $list);
-        wwslog('info', 'Not allowed');
-        web_db_log(
-            {   'parameters' => $in{'listname'},
-                'list'       => $in{'listname'},
-                'status'     => 'error',
-                'error_type' => 'authorization'
-            }
-        );
-        return 'home';
-
-        ## If the action is reserved to listmaster, note that it will have to
-        ## be moderated
-    } elsif ($param->{'create_action'} =~ /listmaster/i) {
-        $param->{'status'} = 'pending';
-
-        ## If the action is plainly authorized, note that it will be executed.
-    } elsif ($param->{'create_action'} =~ /do_it/i) {
-        $param->{'status'} = 'open';
-
-        ## If the action hasn't an authorization status, stop here.
-    } else {
-        Sympa::Report::reject_report_web('intern',
-            'internal_scenario_error_create_list',
-            {}, $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
-        wwslog('info', 'Internal error in scenario create_list');
-        web_db_log(
-            {   'parameters' => $in{'listname'},
-                'list'       => $in{'listname'},
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return 'create_list_request';
-    }
-
-    ## 'other' topic means no topic
-    $in{'topics'} = undef if ($in{'topics'} eq 'other');
-
-    ## Store creation parameters.
-    my %owner;
-    $owner{'email'} = $param->{'user'}{'email'};
-    $owner{'gecos'} = $param->{'user'}{'gecos'};
-
-    my $parameters;
-    push @{$parameters->{'owner'}}, \%owner;
-    $parameters->{'listname'}       = $in{'listname'};
-    $parameters->{'subject'}        = $in{'subject'};
-    $parameters->{'creation_email'} = $param->{'user'}{'email'};
-    $parameters->{'lang'}           = $param->{'lang'};
-    $parameters->{'status'}         = $param->{'status'};
-    $parameters->{'topics'}         = $in{'topics'};
-    $parameters->{'description'}    = $in{'info'};
-    $parameters->{'custom_input'}   = $in{'custom_input'};
-
-    # Create list
-    if (my $testlist = Sympa::List->new($in{'listname'}, $robot)) {
-        Sympa::Report::reject_report_web('user', 'list_already_exists',
-            {'new_listname' => $in{'listname'}},
-            $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
-        wwslog('info', 'Requested list %s already exist (from %s)',
-            $in{'listname'}, $param->{'user'}{'email'});
-        web_db_log(
-            {   'parameters' => $in{'listname'},
-                'list'       => $in{'listname'},
-                'status'     => 'error',
-                'error_type' => 'user'
-            }
-        );
-        return 'create_list_request';
-    }
-    my $resul =
-        Sympa::Admin::create_list_old($parameters, $in{'template'}, $robot,
-        'web', $param->{'user'}{'email'});
-    unless (defined $resul) {
-        Sympa::Report::reject_report_web('intern', 'create_list', {},
-            $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
-        wwslog('info', 'Unable to create list %s for %s',
-            $in{'listname'}, $param->{'user'}{'email'});
-        web_db_log(
-            {   'parameters' => $in{'listname'},
-                'list'       => $in{'listname'},
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return 'create_list_request';
-    }
-
-    ## Create list object
-    $in{'list'} = $in{'listname'};
-    check_param_in();
-
-    if ($param->{'create_action'} =~ /do_it/i) {
-        if ($resul->{'aliases'} == 1) {
-            $param->{'auto_aliases'} = 1;
         } else {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'failed_to_install_aliases',
-                {'listname' => $in{'listname'}},
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Failed to install list aliases');
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
         }
     }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+    }
 
-    ## notify listmaster
-    my $list = Sympa::List->new($in{'listname'}, $robot);
-    unless (defined $list) {
-        wwslog('info', 'Failed to create list object for list "%s"',
-            $in{'listname'});
-        Sympa::Report::reject_report_web('intern', 'create_list', {},
-            $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
+    if (grep { $_->[1] ne 'notice' } @{$spindle->{stash} || []}) {
         return 'create_list_request';
     }
 
-    if ($param->{'create_action'} =~ /notify/) {
-        wwslog('info', 'Notify listmaster');
-
-        Sympa::send_notify_to_listmaster($list, 'request_list_creation',
-            {'email' => $param->{'user'}{'email'}});
+    # Were aliases installed?
+    if (grep { $_->[1] eq 'notice' and $_->[2] eq 'auto_aliases' }
+        @{$spindle->{stash} || []}) {
+        $param->{'auto_aliases'} = 1;
+    } else {
+        $param->{'auto_aliases'} = 0;
     }
 
-    web_db_log(
-        {   'parameters' => $in{'listname'},
-            'list'       => $in{'listname'},
-            'status'     => 'success'
-        }
-    );
+    # Switch to new list context.
+    $list  = Sympa::List->new($in{'listname'}, $robot);
+    $param->{'list'} = $in{'listname'};
+    $param->{'redirect_to'} =
+        Sympa::get_url($list, 'admin', nomenu => $param->{'nomenu'});
 
-    $in{'list'} = $resul->{'list'}{'name'};
-    check_param_in();
-
-    $param->{'listname'} = $resul->{'list'}{'name'};
     return 1;
 }
 

@@ -627,7 +627,7 @@ Warning: this message may already have been sent by one of the list's editor.[%E
 [%~ ELSIF report_entry == 'passwd_validation' ~%]
   [%|loc(report_param.reason)%]The password you typed does not match this sites standards of strength: %1. Please pick a stronger password.[%END%]
 
-[%~ ELSIF report_entry == 'wrong_input_path' ~%]
+[%~ ELSIF report_entry == 'unknown_template' ~%]
   [%|loc(report_param.tpl)%]Provided path is incorrect for template '%1'[%END%]
 
 [%~ ELSIF report_entry == 'cannot_open_file' ~%]

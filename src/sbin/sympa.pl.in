@@ -39,7 +39,6 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
-use Sympa::Admin;
 use Conf;
 use Sympa::Config_XML;
 use Sympa::Constants;
@@ -579,46 +578,34 @@ if ($main::options{'dump'}) {
         print STDERR "Error : missing 'input_file' parameter\n";
         exit 1;
     }
-
-    unless (open INFILE, $main::options{'input_file'}) {
-        print STDERR "Unable to open $main::options{'input_file'}) file";
+    my $fh;
+    unless (open $fh, '<', $main::options{'input_file'}) {
+        print STDERR "Unable to open %s: %s\n", $main::options{'input_file'},
+            $ERRNO;
         exit 1;
     }
-
-    my $config = Sympa::Config_XML->new(\*INFILE);
+    my $config = Sympa::Config_XML->new($fh);
     unless (defined $config->createHash()) {
-        print STDERR "Error in representation data with these xml data\n";
+        print STDERR "Error in representation data with these XML data\n";
         exit 1;
     }
-
     my $hash = $config->getHash();
+    close $fh;
 
-    close INFILE;
-
-    # Check length.
-    if ($hash->{'config'}{'listname'}
-        and Sympa::Constants::LIST_LEN() <
-        length($hash->{'config'}{'listname'})) {
-        print STDERR "Too long list name\n";
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context    => $robot,
+        action     => 'create_list',
+        listname   => $hash->{config}{listname},
+        parameters => {%{$hash->{config} || {}}, template => $hash->{type}},
+        sender     => Sympa::get_address($robot, 'listmaster'),
+        scenario_context => {skip => 1}
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Could not create list %s\n", $hash->{config}{listname};
         exit 1;
     }
+    exit 0;
 
-    my $resul =
-        Sympa::Admin::create_list_old($hash->{'config'}, $hash->{'type'},
-        $robot, "command_line");
-    unless (defined $resul) {
-        print STDERR "Could not create list with these xml data\n";
-        exit 1;
-    }
-
-    if (!defined($resul->{'aliases'}) || $resul->{'aliases'} == 1) {
-        printf STDOUT "List has been created \n";
-        exit 0;
-    } else {
-        printf STDOUT
-            "List has been created, required aliases :\n $resul->{'aliases'} \n";
-        exit 0;
-    }
 } elsif ($main::options{'instantiate_family'}) {
     my $robot = $main::options{'robot'} || $Conf::Conf{'host'};
 
