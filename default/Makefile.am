@@ -195,9 +195,6 @@ nobase_default_DATA = \
 	web_tt2/arcsearch.tt2 \
 	web_tt2/arc.tt2 \
 	web_tt2/aside_menu.tt2 \
-	web_tt2/automatic_lists_management_request.tt2 \
-	web_tt2/automatic_lists_request.tt2 \
-	web_tt2/automatic_lists.tt2 \
 	web_tt2/blacklist.tt2 \
 	web_tt2/button_footer.tt2 \
 	web_tt2/button_header.tt2 \
@@ -210,6 +207,7 @@ nobase_default_DATA = \
 	web_tt2/confirm_action.tt2 \
 	web_tt2/copy_template.tt2 \
 	web_tt2/crash.tt2 \
+	web_tt2/create_automatic_list_request.tt2 \
 	web_tt2/create_list_request.tt2 \
 	web_tt2/create_list.tt2 \
 	web_tt2/css.tt2 \

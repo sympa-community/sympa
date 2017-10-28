@@ -62,18 +62,18 @@
 		[% SET family_li = '' %]
 		[% SET owns_family = 0 %]
 		[% FOREACH alf IN conf.automatic_list_families.keys %]
-			[% IF action == 'automatic_lists_request' && family.name == conf.automatic_list_families.$alf.name %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]  
-			[% IF session.is_family_owner.$alf %]
+			[% IF action == 'create_automatic_list_request' && family.name == conf.automatic_list_families.$alf.name %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]  
+			[% IF may_create_automatic_list.$alf %]
 			[% display = conf.automatic_list_families.$alf.display %]
 			[% name = conf.automatic_list_families.$alf.name %]
 			[% family_li = BLOCK ~%]
 			  [% family_li ~%]
-			  <li class="[% class %]"><a href="[% 'automatic_lists_request' | url_rel([name]) %]" ><i class="fa fa-list-alt"></i> [% display %]</a></li>
+			  <li class="[% class %]"><a href="[% 'create_automatic_list_request' | url_rel([name]) %]" ><i class="fa fa-list-alt"></i> [% display %]</a></li>
 			[%~ END %]
 			[% owns_family = 1 %]
 			[% END %]
 		[% END %]
-			[% IF top_menu %][% IF action == 'automatic_lists_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %][% END %]
+			[% IF top_menu %][% IF action == 'create_automatic_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %][% END %]
 			[% IF owns_family %]
 			<li class="has-dropdown [% class %]">
 				<a href="#"><i class="fa fa-list-alt"></i> [%|loc%]Lists Families[%END%]</a>

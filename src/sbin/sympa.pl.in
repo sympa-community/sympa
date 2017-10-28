@@ -585,12 +585,12 @@ if ($main::options{'dump'}) {
         exit 1;
     }
     my $config = Sympa::Config_XML->new($fh);
+    close $fh;
     unless (defined $config->createHash()) {
         print STDERR "Error in representation data with these XML data\n";
         exit 1;
     }
     my $hash = $config->getHash();
-    close $fh;
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context    => $robot,
@@ -656,7 +656,6 @@ if ($main::options{'dump'}) {
 
     exit 0;
 } elsif ($main::options{'add_list'}) {
-
     my $robot = $main::options{'robot'} || $Conf::Conf{'host'};
 
     my $family_name;
@@ -665,13 +664,11 @@ if ($main::options{'dump'}) {
         exit 1;
     }
 
-    print STDOUT
-        "\n************************************************************\n";
-
     my $family;
     unless ($family = Sympa::Family->new($family_name, $robot)) {
         print STDERR
-            "The family $family_name does not exist, impossible to add a list\n";
+            "The family %s does not exist, impossible to add a list\n",
+            $family_name;
         exit 1;
     }
 
@@ -679,33 +676,43 @@ if ($main::options{'dump'}) {
         print STDERR "Error : missing 'input_file' parameter\n";
         exit 1;
     }
+    my $fh;
+    unless (open $fh, '<', $main::options{'input_file'}) {
+        printf STDERR "\n Impossible to open input file  : %s\n", $ERRNO;
+        exit 1;
+    }
+    # get list data
+    my $config = Sympa::Config_XML->new($fh);
+    close $fh;
+    unless (defined $config->createHash()) {
+        print STDERR "Error in representation data with these XML data\n";
+        exit 1;
+    }
+    my $hash = $config->getHash();
 
-    unless (open INFILE, $main::options{'input_file'}) {
-        print STDERR "\n Impossible to open input file  : $ERRNO \n";
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context => $family,
+        action  => 'create_automatic_list',
+        listname => $hash->{config}{listname},
+        parameters => $hash->{config},
+        sender     => Sympa::get_address($family, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        print STDERR "Impossible to add a list %s to the family %s\n",
+            $hash->{config}{listname}, $family_name;
         exit 1;
     }
 
-    my $result;
-    unless ($result = $family->add_list(\*INFILE)) {
-        print STDERR
-            "\nImpossible to add a list to the family : action stopped \n";
-        exit 1;
+    my $list = Sympa::List->new($hash->{config}{listname}, $family->{'robot'});
+    unless (File::Copy::copy($main::options{'input_file'},
+        $list->{'dir'} . '/instance.xml')) {
+        $list->set_status_error_config('error_copy_file', $family->{'name'});
+        print STDERR "Impossible to copy the XML file in the list directory, the list is set in status error_config.\n";
     }
 
-    print STDOUT
-        "\n************************************************************\n";
-
-    unless (defined $result->{'ok'}) {
-        printf STDERR "\n%s\n", join("\n", @{$result->{'string_info'}});
-        print STDERR "\n The action has been stopped because of error :\n";
-        printf STDERR "\n%s\n", join("\n", @{$result->{'string_error'}});
-        exit 1;
-    }
-
-    close INFILE;
-
-    print STDOUT "\n%s\n", join("\n", @{$result->{'string_info'}});
     exit 0;
+
 } elsif ($main::options{'sync_include'}) {
 
     my $list = Sympa::List->new($main::options{'sync_include'});
@@ -992,7 +999,7 @@ sub _report {
         printf STDERR "%s [%s] %s\n", $action, $report_type, $message;
     }
 
-    return (grep { $_->[1] ne 'notice' } @reports) ? undef : 1;
+    return $spindle->success ? 1 : undef;
 }
 
 # DEPRECATED.  Use Sympa::Spindle::ProcessDigest class.

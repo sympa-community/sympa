@@ -1435,23 +1435,10 @@ sub load_automatic_lists_description {
             },
         },
     );
-    # find appropriate automatic_lists_description.tt2 file
-    my $config;
-    if (defined $robot) {
-        $config =
-              $Conf{'etc'} . '/'
-            . $robot
-            . '/families/'
-            . $family
-            . '/automatic_lists_description.conf';
-    } else {
-        $config =
-              $Conf{'etc'}
-            . '/families/'
-            . $family
-            . '/automatic_lists_description.conf';
-    }
-    return undef unless (-r $config);
+    # find appropriate automatic_lists_description.conf file
+    my $config = Sympa::search_fullpath($robot,
+        'automatic_lists_description.conf', subdir => ('families/' . $family));
+    return undef unless $config;
     my $description =
         load_generic_conf_file($config, \%automatic_lists_params);
 

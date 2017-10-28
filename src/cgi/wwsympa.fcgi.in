@@ -327,25 +327,27 @@ our %comm = (
     # 'lca' stands for 'list_custom_action'. I used a short name to make it
     # discrete in a URL.
     'lca' => 'do_lca',
-    'automatic_lists_management_request' =>
-        'do_automatic_lists_management_request',
-    'automatic_lists_management' => 'do_automatic_lists_management',
-    'automatic_lists_request'    => 'do_automatic_lists_request',
-    'automatic_lists'            => 'do_automatic_lists',
-    'auth'                       => 'do_auth',
+    #XXX'automatic_lists_management_request' =>
+    #XXX    'do_automatic_lists_management_request',
+    #XXX'automatic_lists_management'    => 'do_automatic_lists_management',
+    'create_automatic_list'         => 'do_create_automatic_list',
+    'create_automatic_list_request' => 'do_create_automatic_list_request',
+    'auth'                          => 'do_auth',
 );
 
 my %comm_aliases = (
-    'add_fromsub'          => 'auth_add',
-    'add_request'          => 'import',
-    'change_email'         => 'move_user',
-    'change_email_request' => 'move_user',
-    'ignoresig'            => 'decl_del',
-    'ignoresub'            => 'decl_add',
-    'del_fromsig'          => 'auth_del',
-    'rename_list'          => 'move_list',
-    'sigrequest'           => 'signoff',
-    'subrequest'           => 'subscribe',
+    'add_fromsub'             => 'auth_add',
+    'add_request'             => 'import',
+    'automatic_lists'         => 'create_automatic_list',
+    'automatic_lists_request' => 'create_automatic_list_request',
+    'change_email'            => 'move_user',
+    'change_email_request'    => 'move_user',
+    'ignoresig'               => 'decl_del',
+    'ignoresub'               => 'decl_add',
+    'del_fromsig'             => 'auth_del',
+    'rename_list'             => 'move_list',
+    'sigrequest'              => 'signoff',
+    'subrequest'              => 'subscribe',
 );
 
 my %auth_action = (
@@ -489,10 +491,10 @@ our %action_args = (
     'show_exclude'    => ['list'],
     'ca'              => ['custom_action', '@cap'],
     'lca'                                => ['custom_action', 'list', '@cap'],
-    'automatic_lists_management_request' => [],
-    'automatic_lists_management'         => [],
-    'automatic_lists_request'            => ['family'],
-    'automatic_lists'                    => [],
+    #XXX'automatic_lists_management_request' => [],
+    #XXX'automatic_lists_management'         => [],
+    'create_automatic_list'              => ['family'],
+    'create_automatic_list_request'      => ['family'],
     'auth'                               => ['id', 'heldaction', 'listname'],
     'auth_add'                           => ['list'],
     'auth_del'                           => ['list'],
@@ -524,8 +526,6 @@ our %required_args = (
     'auth_add'                => ['param.list', 'param.user.email'],
     'auth_del'                => ['param.list', 'param.user.email'],
     'auto_signoff'            => ['param.list', 'email'],
-    'automatic_lists_request' => ['family'],
-    'automatic_lists'         => ['family'],
     'attach'                  => ['param.list'],
     'blacklist'               => ['param.list'],
     'move_user'               => ['param.user.email', 'current_email|old_email', 'email|new_email'],
@@ -534,8 +534,10 @@ our %required_args = (
     'compose_mail'            => ['param.user.email', 'param.list'],
     'copy_template'           => ['webormail'],
     ## other required parameters are checked in the subroutine
-    'create_list'         => ['param.user.email'],
-    'create_list_request' => ['param.user.email'],
+    'create_automatic_list'         => ['param.user.email', 'family'],
+    'create_automatic_list_request' => ['param.user.email', 'family'],
+    'create_list'                   => ['param.user.email'],
+    'create_list_request'           => ['param.user.email'],
     #XXX'css' => [],
     'd_admin'         => ['param.list', 'param.user.email'],
     'd_change_access' => ['param.list', 'param.user.email'],
@@ -719,8 +721,8 @@ our %required_privileges = (
     'viewbounce'               => ['owner', 'editor'],
     'viewlogs'                 => ['owner', 'editor'],
     'viewmod' => ['editor', 'owner', 'listmaster'],
-    'automatic_lists_management_request' => ['listmaster'],
-    'automatic_lists_management'         => ['listmaster'],
+    #XXX'automatic_lists_management_request' => ['listmaster'],
+    #XXX'automatic_lists_management'         => ['listmaster'],
 );
 
 # this definition is used to choose the left side menu type (admin ->
@@ -791,8 +793,8 @@ my %action_type = (
     'editfile'                           => 'serveradmin',    #FIXME: admin?
     'unset_dumpvars'                     => 'serveradmin',
     'set_dumpvars'                       => 'serveradmin',
-    'automatic_lists_management_request' => 'serveradmin',
-    'automatic_lists_management'         => 'serveradmin',
+    #XXX'automatic_lists_management_request' => 'serveradmin',
+    #XXX'automatic_lists_management'         => 'serveradmin',
 );
 
 # Actions that are not used in return of login,
@@ -1295,29 +1297,6 @@ while ($query = CGI::Fast->new) {
     my $oauth_token = $session->{'oauth_token'} || '';
     $in{'oauth_token'} = delete $session->{'oauth_token'}
         if $oauth_token ne '' && $session->{'email'} ne 'nobody';
-
-    $session->{'is_family_owner'} = undef;
-    my $automatic_list_families =
-        Conf::get_robot_conf($robot, 'automatic_list_families');
-    if (defined $automatic_list_families) {
-        foreach my $key (keys %{$automatic_list_families}) {
-            my $family;
-            if ($family = Sympa::Family->new($key, $robot)) {
-                if ($family->is_allowed_to_create_automatic_lists(
-                        (   'auth_level' => 'md5',
-                            'sender'     => $session->{'email'},
-                            'message'    => undef,
-                            'listname'   => ''
-                        )
-                    )
-                    ) {
-                    $session->{'is_family_owner'}{$key} = 1;
-                } else {
-                    $session->{'is_family_owner'}{$key} = undef;
-                }
-            }
-        }
-    }
 
     $param->{'session'} = $session->as_hashref();
 
@@ -2856,6 +2835,31 @@ sub check_param_in {
     } else {
         undef($param->{'may_create_list'});
     }
+
+    # Check if the current user can create automatic list.
+    $param->{'may_create_automatic_list'} = {};
+    my $automatic_list_families =
+        Conf::get_robot_conf($robot, 'automatic_list_families');
+    foreach my $key (keys %{$automatic_list_families || {}}) {
+        my $family = Sympa::Family->new($key, $robot);
+        next unless $family;
+
+        my $result = Sympa::Scenario::request_action(
+            $family->{'robot'}, 'automatic_list_creation',
+            $param->{'auth_method'},
+            {   'sender'             => $param->{'user'}{'email'},
+                'message'            => undef,
+                'family'             => $family,
+                'automatic_listname' => '',
+            }
+        );
+        my $r_action = $result->{'action'} if ref $result eq 'HASH';
+        $param->{'may_create_automatic_list'}{$key} = 1
+            if $r_action and $r_action =~ /do_it/;
+    }
+    # Compat. <= 6.2.22.
+    $param->{'session'}{'is_family_owner'} =
+        $param->{'may_create_automatic_list'};
 
     return 1;
 
@@ -16940,20 +16944,14 @@ sub do_maintenance {
     return 1;
 }
 
-sub do_automatic_lists_management_request {
-    wwslog('notice', 'Starting');
-    $param->{'automatic_lists_description'} =
-        Conf::load_automatic_lists_description();
-    return 1;
-}
+# Never used.
+#sub do_automatic_lists_management_request;
 
-sub do_automatic_lists_management {
-    wwslog('notice', 'Starting');
+# Never used.
+#sub do_automatic_lists_management;
 
-    return 1;
-}
-
-sub do_automatic_lists_request {
+# Old name: do_automatic_lists_request().
+sub do_create_automatic_list_request {
     wwslog('notice', 'Starting');
     # check authorization
     my $family;
@@ -16961,24 +16959,9 @@ sub do_automatic_lists_request {
         wwslog('err',
             'Failed to instantiate family %s. This family does not exist',
             $in{'family'});
-        Sympa::send_notify_to_listmaster(
-            $robot,
-            'automatic_list_creation_failed',
-            [   "Failed to instantiate family $in{'family'}. This family does not exist."
-            ]
-        );
         return undef;
     }
-
-    unless (
-        $family->is_allowed_to_create_automatic_lists(
-            (   'auth_level' => 'md5',
-                'sender'     => $session->{'email'},
-                'message'    => undef,
-                'listname'   => ''
-            )
-        )
-        ) {
+    unless ($param->{'may_create_automatic_list'}{$family->{'name'}}) {
         Sympa::Report::reject_report_web('auth',
             "You are not allowed to create list in this family",
             {}, $param->{'action'});
@@ -16992,65 +16975,90 @@ sub do_automatic_lists_request {
     return 1;
 }
 
-sub do_automatic_lists {
-    wwslog('notice', 'Starting');
+# Old name: do_automatic_lists().
+sub do_create_automatic_list {
+    wwslog('notice', '(%s)', $in{'family'});
     my $family_name = $in{'family'};
-    my $family;
 
+    # Automatic creation of a mailing list, based on a family.
+    my $family;
+    unless ($family = Sympa::Family->new($family_name, $robot)) {
+        $log->syslog('err',
+            'Failed to create the dynamic list: Family %s does not exist',
+            $family_name
+        );
+        return undef;
+    }
+    $param->{'family'} = $family;
+
+    my $family_config =
+        (Conf::get_robot_conf($robot, 'automatic_list_families') || {})
+        ->{$family_name};
     my @list_name_parts;
-    my $families_config =
-        Conf::get_robot_conf($robot, 'automatic_list_families');
-    my $family_config = $families_config->{$family_name};
-    my $listname =
-        $family_config->{'prefix'} . $family_config->{'prefix_separator'};
     foreach my $input (keys %in) {
-        next unless ($input =~ /automatic_list_part_(\d+)/);
+        next unless $input =~ /automatic_list_part_(\d+)/;
         $list_name_parts[$1] = $in{$input};
     }
-    foreach my $list_name_part (@list_name_parts) {
-        $listname .= "$list_name_part$family_config->{'classes_separator'}";
+    while (@list_name_parts
+        and not(defined $list_name_parts[$#list_name_parts]
+            and length $list_name_parts[$#list_name_parts])) {
+        pop @list_name_parts;
     }
-    my $sep = $family_config->{'classes_separator'} . '$';
-    if ($listname =~ /(.*)($sep)/) {
-        $listname = $1;
+    my $listname =
+        $family_config->{'prefix'} . $family_config->{'prefix_separator'} .
+        join($family_config->{'classes_separator'}, @list_name_parts);
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context        => $family,
+        action         => 'create_automatic_list',
+        listname       => $listname,
+        parameters     => {},
+        abort_on_error => 1,
+        sender         => $param->{'user'}{'email'},
+        md5_check      => 1,
+        scenario_context => {
+            sender             => $param->{'user'}{'email'},
+            message            => undef,
+            family             => $family,
+            automatic_listname => $listname,
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        wwslog('err', 'Failed to create the dynamic list %s', $listname);
+        return 'create_automatic_list_request';
+    }
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } elsif ($report->[1] eq 'user'
+            and $report->[2] eq 'list_already_exists') {
+            # Pass the list already exists.
+            ;
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+    } elsif (grep {$_->[1] eq 'user' and $_->[2] eq 'list_already_exists' }
+        @{$spindle->{stash} || []}) {
+        ;
+    } elsif (not $spindle->success) {
+        $log->syslog('err', 'Failed to create the dynamic list %s',
+            $listname);
+        Sympa::send_notify_to_listmaster(
+            $robot,
+            'automatic_list_creation_failed',
+            ["Failed to create the dynamic list $listname."]
+        );
+        return 'create_automatic_list_request';
     }
 
     $list = Sympa::List->new($listname, $robot);
-    unless (defined $list) {
-        ## Automatic creation of a mailing list, based on a family
-        unless ($family = Sympa::Family->new($family_name, $robot)) {
-            $log->syslog('err',
-                "Failed to create the dynamic list $listname: family $family_name does not exist."
-            );
-            Sympa::send_notify_to_listmaster(
-                $robot,
-                'automatic_list_creation_failed',
-                [   "Failed to create the dynamic list $listname: family $family_name does not exist."
-                ]
-            );
-            return undef;
-        }
-
-        unless (
-            $list = $family->create_automatic_list(
-                (   'listname'   => $listname,
-                    'auth_level' => 'md5',
-                    'sender'     => $session->{'email'}
-                )
-            )
-            ) {
-            $log->syslog('err', 'Failed to create the dynamic list %s',
-                $listname);
-            Sympa::send_notify_to_listmaster(
-                $robot,
-                'automatic_list_creation_failed',
-                ["Failed to create the dynamic list $listname."]
-            );
-            return undef;
-        }
-    }
-
-    $in{'list'} = $listname;
+    $in{'list'} = $list ? $list->{'name'} : undef;
     return 'compose_mail';
 }
 

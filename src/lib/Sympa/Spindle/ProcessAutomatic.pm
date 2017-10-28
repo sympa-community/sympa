@@ -241,23 +241,27 @@ sub _twist {
             return undef;
         }
 
-        my $auth_level =
-              $message->{'smime_signed'} ? 'smime'
-            : $message->{'md5_check'}    ? 'md5'
-            : $message->{'dkim_pass'}    ? 'dkim'
-            :                              'smtp';
-        if ($list = $dyn_family->create_automatic_list(
-                (   'listname'   => $listname,
-                    'auth_level' => $auth_level,
-                    'sender'     => $sender,
-                    'message'    => $message
-                )
-            )
-            ) {
-            # Overwrite context of the message.
-            $message->{context} = $list;
-            $dyn_just_created = 1;
-        } else {
+        my $spindle_req = Sympa::Spindle::ProcessRequest->new(
+            context      => $dyn_family,
+            action       => 'create_automatic_list',
+            listname     => $listname,
+            parameters   => {},
+            sender       => $sender,
+            smime_signed => $message->{'smime_signed'},
+            md5_check    => $message->{'md5_check'},
+            dkim_pass    => $message->{'dkim_pass'},
+            scenario_context => {
+                sender             => $sender,
+                message            => $message,
+                family             => $dyn_family,
+                automatic_listname => $listname,
+            },
+        );
+        unless ($spindle_req and $spindle_req->spin) {
+            $log->syslog('err', 'Cannot create dynamic list %s', $listname);
+            return undef;
+        } elsif (not($spindle_req->success
+            and $list = Sympa::List->new($listname, $dyn_family->{robot}))) {
             $log->syslog('err',
                 'Unable to create list %s. Message %s ignored',
                 $listname, $message);
@@ -283,6 +287,10 @@ sub _twist {
                 'user_email'   => $sender
             );
             return undef;
+        } else {
+            # Overwrite context of the message.
+            $message->{context} = $list;
+            $dyn_just_created = 1;
         }
     }
 
