@@ -25,7 +25,6 @@ package Sympa::Request::Handler::create_automatic_list;
 
 use strict;
 use warnings;
-use Encode qw();
 use English qw(-no_match_vars);
 
 use Sympa;

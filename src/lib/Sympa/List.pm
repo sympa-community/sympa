@@ -455,27 +455,15 @@ sub set_status_error_config {
     }
 }
 
-## set the list in status family_closed and send a notify to owners
-sub set_status_family_closed {
-    $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my $self    = shift;
-    my $message = shift;    # 'close_list', 'purge_list': Currently unused.
-    my @param   = @_;       # No longer used.
-
-    unless ($self->{'admin'}{'status'} eq 'family_closed') {
-        my $updater = Sympa::get_address($self->{'domain'}, 'listmaster');
-
-        unless ($self->close_list($updater, 'family_closed')) {
-            $log->syslog('err',
-                'Impossible to set the list %s in status family_closed');
-            return undef;
-        }
-        $log->syslog('info', 'The list "%s" is set in status family_closed',
-            $self->{'name'});
-        $self->send_notify_to_owner('list_closed_family', {});
-    }
-    return 1;
+# Destroy multiton instance. FIXME
+sub destroy_multiton {
+    my $self = shift;
+    delete $list_of_lists{$self->{'domain'}}{$self->{'name'}};
 }
+
+## set the list in status family_closed and send a notify to owners
+# Deprecated.  Use Sympa::Request::Handler::close_list handler.
+#sub set_status_family_closed;
 
 # Saves the statistics data to disk.
 # Deprecated. Use Sympa::List::update_stats().
@@ -9101,141 +9089,12 @@ sub remove_task {
     return 1;
 }
 
-## Close the list (remove from DB, remove aliases, change status to 'closed'
-## or 'family_closed')
-sub close_list {
-    my ($self, $email, $status) = @_;
-
-    return undef
-        unless ($self
-        && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
-
-    # If list is included by another list, then it cannot be removed.
-    if ($self->is_included) {
-        $log->syslog('err',
-            'List %s is included by other list: cannot close it', $self);
-        return undef;
-    }
-
-    ## Dump subscribers, unless list is already closed
-    unless ($self->{'admin'}{'status'} eq 'closed') {
-        $self->_save_list_members_file(
-            "$self->{'dir'}/subscribers.closed.dump");
-    }
-
-    ## Delete users
-    my @users;
-    for (
-        my $user = $self->get_first_list_member();
-        $user;
-        $user = $self->get_next_list_member()
-        ) {
-        push @users, $user->{'email'};
-    }
-    $self->delete_list_member('users' => \@users);
-
-    ## Remove entries from admin_table
-    foreach my $role (qw(editor owner)) {
-        $self->delete_list_admin($role, $self->get_admins_email($role));
-    }
-
-    ## Change status & save config
-    $self->{'admin'}{'status'} = 'closed';
-
-    if (defined $status) {
-        foreach my $s ('family_closed', 'closed') {
-            if ($status eq $s) {
-                $self->{'admin'}{'status'} = $status;
-                last;
-            }
-        }
-    }
-
-    $self->{'admin'}{'defaults'}{'status'} = 0;
-
-    $self->save_config($email);
-
-    $self->remove_aliases();
-
-    #log in stat_table to make staistics
-    $log->add_stat(
-        'robot'     => $self->{'domain'},
-        'list'      => $self->{'name'},
-        'operation' => 'close_list',
-        'parameter' => '',
-        'mail'      => $email,
-    );
-
-    return 1;
-}
+# Deprecated. Use Sympa::Request::Handler::close_list handler.
+#sub close_list;
 
 ## Remove the list
-sub purge {
-    my ($self, $email) = @_;
-
-    return undef
-        unless ($self
-        && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
-
-    ## Remove tasks for this list
-    Sympa::Task::list_tasks($Conf::Conf{'queuetask'});
-    foreach my $task (Sympa::Task::get_tasks_by_list($self->get_id)) {
-        unlink $task->{'filepath'};
-    }
-
-    ## Close the list first, just in case...
-    $self->close_list();
-
-    if ($self->{'name'}) {
-        #FIXME: Lock directories to remove them safely.
-        my $error;
-        File::Path::remove_tree($self->get_archive_dir, {error => \$error});
-        File::Path::remove_tree($self->get_digest_spool_dir,
-            {error => \$error});
-        File::Path::remove_tree($self->get_bounce_dir, {error => \$error});
-    }
-
-    ## Clean list table if needed
-    #if ($Conf::Conf{'db_list_cache'} eq 'on') {
-    my $sdm = Sympa::DatabaseManager->instance;
-    unless (
-        $sdm
-        and $sdm->do_prepared_query(
-            q{DELETE FROM list_table
-                  WHERE name_list = ? AND robot_list = ?},
-            $self->{'name'}, $self->{'domain'}
-        )
-        ) {
-        $log->syslog('err', 'Cannot remove list %s from table', $self);
-    }
-    #}
-    unless (
-        $sdm
-        and $sdm->do_prepared_query(
-            q{DELETE FROM inclusion_table
-              WHERE target_inclusion = ?},
-            $self->get_id
-        )
-        ) {
-        $log->syslog('err', 'Cannot remove list %s from table', $self);
-    }
-
-    ## Clean memory cache
-    delete $list_of_lists{$self->{'domain'}}{$self->{'name'}};
-
-    Sympa::Tools::File::remove_dir($self->{'dir'});
-
-    #log ind stat table to make statistics
-    $log->add_stat(
-        'robot'     => $self->{'domain'},
-        'list'      => $self->{'name'},
-        'operation' => 'purge_list',
-        'parameter' => '',
-        'mail'      => $email
-    );
-
-    return 1;
-}
+# Deprecated. Use Sympa::Request::Handler::close_list handler.
+#sub purge;
 
 ## Remove list aliases
 sub remove_aliases {

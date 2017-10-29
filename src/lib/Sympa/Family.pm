@@ -725,9 +725,15 @@ sub close_family {
             next;
         }
 
-        unless (
-            $list->set_status_family_closed('close_list', $self->{'name'})) {
-            push(@impossible_close, $list->{'name'});
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context      => $self->{'robot'},
+            action       => 'close_list',
+            current_list => $list,
+            sender       => Sympa::get_address($self, 'listmaster'),
+            scenario_context => {skip => 1},
+        );
+        unless ($spindle and $spindle->spin and $spindle->success) {
+            push @impossible_close, $list->{'name'};
             next;
         }
         push(@close_ok, $list->{'name'});
@@ -1025,15 +1031,16 @@ sub instantiate {
             #}
         }
         if ($options{close_unknown} or $answer eq 'y') {
-            unless (
-                $list->set_status_family_closed(
-                    'close_list', $self->{'name'}
-                )
-                ) {
-                push(
-                    @{$self->{'family_closed'}{'impossible'}},
-                    $list->{'name'}
-                );
+            my $spindle = Sympa::Spindle::ProcessRequest->new(
+                context => $self->{'robot'},
+                action  => 'close_list',
+                current_list => $list,
+                sender     => Sympa::get_address($self, 'listmaster'),
+                scenario_context => {skip => 1},
+            );
+            unless ($spindle and $spindle->spin and $spindle->success) {
+                push @{$self->{'family_closed'}{'impossible'}},
+                    $list->{'name'};
             }
             push(@{$self->{'family_closed'}{'ok'}}, $list->{'name'});
 

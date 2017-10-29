@@ -708,19 +708,41 @@ sub closeList {
             ->faultdetail("Not allowed");
     }
 
-    if ($list->{'admin'}{'status'} eq 'closed') {
-        $log->syslog('info', 'Already closed');
-        die SOAP::Fault->faultcode('Client')
-            ->faultstring('list allready closed')
-            ->faultdetail("list $listname all ready closed");
-    } elsif ($list->{'admin'}{'status'} eq 'pending') {
-        $log->syslog('info', 'Closing a pending list makes it purged');
-        $list->purge($sender);
-    } else {
-        $list->close_list($sender);
-        $log->syslog('info', 'List %s closed', $listname);
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'close_list',
+        current_list     => $list,
+        mode =>
+            (($list->{'admin'}{'status'} eq 'pending') ? 'purge' : 'close'),
+        sender           => $sender,
+        md5_check        => 1,
+        scenario_contest => {
+            sender                  => $sender,
+            remote_host             => $ENV{'REMOTE_HOST'},
+            remote_addr             => $ENV{'REMOTE_ADDR'},
+            remote_application_name => $ENV{'remote_application_name'}
+        }
+    );
+    unless ($spindle and $spindle->spin) {
+        die SOAP::Fault->faultcode('Server')->faultstring('Internal error');
     }
-    return 1;
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        my $reason_string = get_reason_string($report, $robot);
+        if ($report->[1] eq 'auth') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
+                ->faultdetail($reason_string);
+        } elsif ($report->[1] eq 'intern') {
+            die SOAP::Fault->faultcode('Server')
+                ->faultstring('Internal error');
+        } elsif ($report->[1] eq 'notice') {
+            return SOAP::Data->name('result')->type('boolean')->value(1);
+        } elsif ($report->[1] eq 'user') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Undef')
+                ->faultdetail($reason_string);
+        }
+    }
+    return SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub add {

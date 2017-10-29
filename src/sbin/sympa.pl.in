@@ -446,34 +446,27 @@ if ($main::options{'dump'}) {
 
     exit 0;
 } elsif ($main::options{'close_list'}) {
-
-    my ($listname, $robotname) = split /\@/, $main::options{'close_list'};
-    my $list = Sympa::List->new($listname, $robotname);
-
-    unless (defined $list) {
-        print STDERR "Incorrect list name $main::options{'close_list'}\n";
+    my ($listname, $robot_id) = split /\@/, $main::options{'close_list'}, 2;
+    my $current_list = Sympa::List->new($listname, $robot_id);
+    unless ($current_list) {
+        printf STDERR "Incorrect list name %s.\n",
+            $main::options{'close_list'};
         exit 1;
     }
 
-    if ($list->{'admin'}{'family_name'}) {
-        unless (
-            $list->set_status_family_closed('close_list', $list->{'name'})) {
-            print STDERR
-                "Could not close list $main::options{'close_list'}\n";
-            exit 1;
-        }
-    } else {
-        unless ($list->close_list()) {
-            print STDERR
-                "Could not close list $main::options{'close_list'}\n";
-            exit 1;
-        }
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $robot_id,
+        action           => 'close_list',
+        current_list     => $current_list,
+        sender           => Sympa::get_address($robot_id, 'listmaster'),
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Could not close list %s\n", $current_list->get_id;
+        exit 1;
     }
-
-    printf STDOUT "List %s has been closed, aliases have been removed\n",
-        $list->{'name'};
-
     exit 0;
+
 } elsif ($main::options{'change_user_email'}) {
     unless ($main::options{'current_email'} and $main::options{'new_email'}) {
         print STDERR "Missing current_email or new_email parameter\n";
@@ -496,24 +489,26 @@ if ($main::options{'dump'}) {
     exit 0;
 
 } elsif ($main::options{'purge_list'}) {
-
-    my ($listname, $robotname) = split /\@/, $main::options{'purge_list'};
-    my $list = Sympa::List->new($listname, $robotname);
-
-    unless (defined $list) {
+    my ($listname, $robot_id) = split /\@/, $main::options{'purge_list'}, 2;
+    my $current_list = Sympa::List->new($listname, $robot_id);
+    unless ($current_list) {
         print STDERR "Incorrect list name $main::options{'purge_list'}\n";
         exit 1;
     }
 
-    unless ($list->purge) {
-        print STDERR "Could not purge list $main::options{'purge_list'}\n";
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $robot_id,
+        action           => 'close_list',
+        current_list     => $current_list,
+        mode             => 'purge',
+        scenario_context => {skip => 1},
+    );
+    unless ($spindle and $spindle->spin and _report($spindle)) {
+        printf STDERR "Could not purge list %s\n", $current_list->get_id;
         exit 1;
     }
-
-    printf STDOUT "List %s has been purged, aliases have been removed\n",
-        $list->{'name'};
-
     exit 0;
+
 } elsif ($main::options{'rename_list'}) {
     my $current_list =
         Sympa::List->new(split(/\@/, $main::options{'rename_list'}, 2),
