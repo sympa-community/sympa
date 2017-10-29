@@ -148,6 +148,13 @@
       [%|loc(current_email,email)%]Are you sure you wish to change a user's email %1 to %2?[%END%]
     [%~ END %]
   </strong></p>
+[%~ ELSIF confirm_action == 'purge_list' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Purge selected lists[%END%]
+  </h2>
+  <p><strong>
+    [%|loc%]Are you sure you wish to purge selected lists?[%END%]
+  </strong></p>
 [%~ ELSIF confirm_action == 'remind' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Remind all subscribers[%END%]
@@ -299,6 +306,10 @@
   <input type="hidden" name="new_listname" value="[% new_listname %]" />
   <input type="hidden" name="new_robot" value="[% new_robot %]" />
   <input type="hidden" name="mode" value="[% mode %]" />
+[%~ ELSIF confirm_action == 'purge_list' ~%]
+  [% FOREACH l = selected_lists ~%]
+    <input type="hidden" name="selected_lists" value="[% l %]" />
+  [%~ END %]
 [%~ ELSIF confirm_action == 'remove_arc' ~%]
   <input type="hidden" name="yyyy" value="[% yyyy %]" />
   <input type="hidden" name="month" value="[% month %]" />
