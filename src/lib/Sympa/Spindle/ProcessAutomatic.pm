@@ -36,7 +36,6 @@ use Sympa::Family;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
-use Sympa::Process;
 use Sympa::Spindle::ProcessRequest;
 use Sympa::Spool::Incoming;
 use Sympa::Tools::Data;

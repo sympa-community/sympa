@@ -37,13 +37,10 @@ use Conf;
 use Sympa::Constants;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Request;
-use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::Spindle::ProcessRequest;
 use Sympa::Template;
-use Sympa::Tools::Password;
 use Sympa::Tools::Text;
 use Sympa::User;
 

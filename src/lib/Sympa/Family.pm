@@ -50,20 +50,16 @@ use Sympa;
 use Sympa::Admin;
 use Conf;
 use Sympa::Config_XML;
-use Sympa::Constants;
 use Sympa::DatabaseManager;
-use Sympa::Language;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Regexps;
-use Sympa::Scenario;
 use Sympa::Spindle::ProcessRequest;
 use Sympa::Template;
 use Sympa::Tools::File;
 
-my $language = Sympa::Language->instance;
-my $log      = Sympa::Log->instance;
+my $log = Sympa::Log->instance;
 
 my %list_of_families;
 my @uncompellable_param = (
