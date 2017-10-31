@@ -9547,10 +9547,8 @@ sub add_list_header {
             if (defined $options{arc} and length $options{arc}) {
                 $arc = $options{arc};
             } else {
-                my @now  = localtime(time);
-                my $yyyy = sprintf '%04d', 1900 + $now[5];
-                my $mm   = sprintf '%02d', $now[4] + 1;
-                $arc = sprintf '%s-%s', $yyyy, $mm;
+                my @now = localtime time;
+                $arc = sprintf '%04d-%02d', 1900 + $now[5], $now[4] + 1;
             }
             $message->add_header(
                 'Archived-At',
