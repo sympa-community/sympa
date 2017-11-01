@@ -5874,7 +5874,12 @@ sub do_setpasswd {
                 'error_type' => 'missing_parameter'
             }
         );
-        return undef;
+        if ($in{'previous_action'}) {
+            $in{'list'} = $in{'previous_list'};
+            return $in{'previous_action'};
+        } else {
+            return 'pref';
+        }
     }
 
     unless ($in{'newpasswd1'} eq $in{'newpasswd2'}) {
@@ -5886,7 +5891,12 @@ sub do_setpasswd {
                 'error_type' => 'bad_parameter'
             }
         );
-        return undef;
+        if ($in{'previous_action'}) {
+            $in{'list'} = $in{'previous_list'};
+            return $in{'previous_action'};
+        } else {
+            return 'pref';
+        }
     }
 
     if (my $reason =
@@ -5896,7 +5906,12 @@ sub do_setpasswd {
             $param->{'action'});
         wwslog('info', 'Password validation');
         web_db_log({'status' => 'error', 'error_type' => 'bad_parameter'});
-        return undef;
+        if ($in{'previous_action'}) {
+            $in{'list'} = $in{'previous_list'};
+            return $in{'previous_action'};
+        } else {
+            return 'pref';
+        }
     }
 
     if (Sympa::User::is_global_user($param->{'user'}{'email'})) {
