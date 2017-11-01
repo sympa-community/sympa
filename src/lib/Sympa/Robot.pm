@@ -204,7 +204,8 @@ sub load_topics {
             return;
         }
 
-        unless (open(FILE, "<", $conf_file)) {
+        my $fh;
+        unless (open $fh, '<', $conf_file) {
             $log->syslog('err', 'Unable to open config file %s', $conf_file);
             return;
         }
@@ -212,29 +213,29 @@ sub load_topics {
         ## Rough parsing
         my $index = 0;
         my (@rough_data, $topic);
-        while (<FILE>) {
-            Encode::from_to($_, $Conf::Conf{'filesystem_encoding'}, 'utf8');
-            if (/\A(others|topicsless)\s*\z/) {
+        while (my $line = <$fh>) {
+            Encode::from_to($line, $Conf::Conf{'filesystem_encoding'}, 'utf8');
+            if ($line =~ /\A(others|topicsless)\s*\z/i) {
                 # "others" and "topicsless" are reserved words. Ignore.
                 next;
-            } elsif (/^([\-\w\/]+)\s*$/) {
+            } elsif ($line =~ /^([\-\w\/]+)\s*$/) {
                 $index++;
                 $topic = {
-                    'name'  => $1,
+                    'name'  => lc($1),
                     'order' => $index
                 };
-            } elsif (/^([\w\.]+)\s+(.+)\s*$/) {
-                next unless (defined $topic->{'name'});
+            } elsif ($line =~ /^([\w\.]+)\s+(.+)\s*$/) {
+                next unless defined $topic->{'name'};
 
                 $topic->{$1} = $2;
-            } elsif (/^\s*$/) {
+            } elsif ($line =~ /^\s*$/) {
                 next unless defined $topic->{'name'};
 
                 push @rough_data, $topic;
                 $topic = {};
             }
         }
-        close FILE;
+        close $fh;
 
         ## Last topic
         if (defined $topic->{'name'}) {
