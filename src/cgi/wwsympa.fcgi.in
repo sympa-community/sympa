@@ -54,7 +54,6 @@ use Data::Dumper;    # tentative
 BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
 use Sympa;
-use Sympa::Admin;
 use Sympa::Alarm;
 use Sympa::Archive;
 use Sympa::Auth;
@@ -262,8 +261,8 @@ our %comm = (
     'search_list_request'  => 'do_search_list_request',
     'show_cert'            => 'do_show_cert',
     'close_list'           => 'do_close_list',
+    'open_list'            => 'do_open_list',
     'purge_list'           => 'do_purge_list',
-    'restore_list'         => 'do_restore_list',
     'upload_pictures'      => 'do_upload_pictures',
     'delete_pictures'      => 'do_delete_pictures',
     'd_read'               => 'do_d_read',
@@ -343,6 +342,7 @@ my %comm_aliases = (
     'ignoresub'               => 'decl_add',
     'del_fromsig'             => 'auth_del',
     'rename_list'             => 'move_list',
+    'restore_list'            => 'open_list',
     'sigrequest'              => 'signoff',
     'subrequest'              => 'subscribe',
 );
@@ -600,10 +600,10 @@ our %required_args = (
         ['param.user.email', 'param.list', 'new_listname', 'new_robot'],
     'copy_list' =>
         ['param.user.email', 'param.list', 'new_listname', 'new_robot'],
+    'open_list'           => ['param.user.email', 'param.list'],
     'rename_list_request' => ['param.user.email', 'param.list'],
     'request_topic'       => ['param.list',       'authkey'],
     'resetbounce'  => ['param.list',       'param.user.email', 'email'],
-    'restore_list' => ['param.user.email', 'param.list'],
     'review'          => ['param.list'],
     'review_family'   => ['param.user.email', 'family_name'],
     'reviewbouncing'  => ['param.list'],
@@ -695,9 +695,9 @@ our %required_privileges = (
     'remove_template' => ['listmaster'],
     'move_list'     => ['privileged_owner'],
     'copy_list'                => ['owner', 'listmaster'],
+    'open_list'                => ['listmaster'],
     'rename_list_request'      => ['privileged_owner'],
     'resetbounce'              => ['owner', 'editor'],
-    'restore_list'             => ['listmaster'],
     'review_family'            => ['listmaster'],
     'reviewbouncing'           => ['owner', 'editor'],
     'search_user'              => ['listmaster'],
@@ -747,12 +747,12 @@ my %action_type = (
     'resetbounce'        => 'admin',
     'scenario_test'      => 'admin',
     'close_list'         => 'admin',
-    'restore_list'       => 'admin',
     'd_admin'            => 'admin',
     'd_reject_shared'    => 'admin',
     'd_install_shared'   => 'admin',
     'dump_scenario'      => 'admin',
     'dump'               => 'admin',
+    'open_list'          => 'admin',
     'remind'             => 'admin',
     #'subindex' => 'admin',
     'stats'                              => 'admin',
@@ -9560,109 +9560,16 @@ sub do_set_pending_list_request {
     return 1;
 }
 
-## show a list parameters
+# Show a list parameters.
+# Kept for comaptibility <= 6.2.22.
 sub do_install_pending_list {
-    wwslog('info', '(%s, %s, %s)', $in{'list'}, $in{'status'}, $in{'notify'});
+    my $status = $in{'status'};
 
-    unless ($in{'status'}
-        && (($in{'status'} eq 'open') || ($in{'status'} eq 'closed'))) {
-        Sympa::Report::reject_report_web('user', 'missing_arg',
-            {'argument' => 'status'},
-            $param->{'action'});
-        wwslog('info', 'Missing status parameter',);
-        web_db_log(
-            {   'parameters' => "$in{'status'},$in{'notify'}",
-                'status'     => 'error',
-                'error_type' => 'missing_parameter'
-            }
-        );
-        return undef;
-    }
-
-    if ($list->{'admin'}{'status'} eq $in{'status'}) {
-        Sympa::Report::reject_report_web('user', 'didnt_change_anything', {},
-            $param->{'action'});
-        wwslog('info', 'Didn\'t change really the status, nothing to do');
-        web_db_log(
-            {   'parameters' => "$in{'status'},$in{'notify'}",
-                'status'     => 'error',
-                'error_type' => 'didnt_change_anything'
-            }
-        );
-        return undef;
-    }
-
-    $list->{'admin'}{'status'} = $in{'status'};
-
-    #    open TMP, ">/tmp/dump1";
-    #    Sympa::Tools::Data::dump_var ($list->{'admin'}, 0, \*TMP);
-    #    close TMP;
-
-    unless ($list->save_config($param->{'user'}{'email'})) {
-        Sympa::Report::reject_report_web('intern', 'cannot_save_config',
-            {'listname' => $list->{'name'}},
-            $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-        wwslog('info', 'Cannot save config file');
-        web_db_log(
-            {   'parameters' => "$in{'status'},$in{'notify'}",
-                'status'     => 'error',
-                'error_type' => 'internal'
-            }
-        );
-        return undef;
-    }
-
-    #    open TMP, ">/tmp/dump2";
-    #    Sympa::Tools::Data::dump_var ($list->{'admin'}, 0, \*TMP);
-    #    close TMP;
-
-    ## create the aliases
-    if ($in{'status'} eq 'open') {
-        my $aliases = Sympa::Admin::install_aliases($list);
-        if ($aliases == 1) {
-            $param->{'auto_aliases'} = 1;
-        } else {
-            Sympa::Report::reject_report_web(
-                'intern',
-                'failed_to_install_aliases',
-                {'listname' => $list->{'name'}},
-                $param->{'action'},
-                $list,
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Failed to install list aliases');
-        }
-
-    }
-
-    # Notify listmasters and (optionally) owners
-    if ($in{'status'} eq 'open') {
-        Sympa::send_notify_to_listmaster($list, 'list_created',
-            [$list->{'name'}]);
-        $list->send_notify_to_owner('list_created', [$list->{'name'}])
-            if $in{'notify'};
-    } elsif ($in{'status'} eq 'closed') {
-        Sympa::send_notify_to_listmaster($list, 'list_rejected',
-            [$list->{'name'}]);
-        $list->send_notify_to_owner('list_rejected', [$list->{'name'}])
-            if $in{'notify'};
-    }
-
-    $param->{'status'} = $in{'status'};
-
-    if ($in{'status'} eq 'closed') {
-        web_db_stat_log(operation => 'list_rejected');
-    }
-
-    $list = $param->{'list'} = $in{'list'} = undef;
-    return 'get_pending_lists';
-    web_db_log(
-        {   'parameters' => "$in{'status'},$in{'notify'}",
-            'status'     => 'success'
-        }
-    );
-    return 1;
+    $in{'mode'} = 'install';
+    return
+          ($status eq 'closed') ? 'close_list'
+        : ($status eq 'open')   ? 'open_list'
+        :                         undef;
 }
 
 #=head2 sub do_create_list
@@ -11134,7 +11041,7 @@ sub do_purge_list {
     # Action confirmed?
     my $next_action = $session->confirm_action(
         'purge_list', $in{'response_action'},
-        arg             => join(',', @$param->{'selected_lists'}),
+        arg             => join(',', @{$param->{'selected_lists'} || []}),
         previous_action => 'get_closed_lists',
     );
     return $next_action unless $next_action eq '1';
@@ -11184,17 +11091,20 @@ sub do_purge_list {
 }
 
 sub do_close_list {
-    wwslog('info', '(%s)', $list->{'name'});
+    wwslog('info', '(%s, mode=%s)', $list, $in{'mode'});
+    my $mode = $in{'mode'} || 'close';
+
+    $param->{'mode'} = $mode;
+    $param->{'previous_action'} = $in{'previous_action'} || 'admin';
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
         arg             => $list->{'name'},
-        previous_action => 'admin'
+        previous_action => ($in{'previous_action'} || 'admin')
     );
     return $next_action unless $next_action eq '1';
 
-    my $mode = ($list->{'admin'}{'status'} eq 'pending') ? 'purge' : 'close';
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context      => $robot,
         action       => 'close_list',
@@ -11214,7 +11124,7 @@ sub do_close_list {
     );
     unless ($spindle and $spindle->spin) {
         wwslog('err', 'Cannot close list %s', $list);
-        return 'admin';
+        return $in{'previous_action'} || 'admin';
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
@@ -11229,67 +11139,79 @@ sub do_close_list {
     unless (@{$spindle->{stash} || []}) {
         Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
     } elsif (not $spindle->success) {
-        return 'admin';
+        return $in{'previous_action'} || 'admin';
     }
 
     web_db_log({'status' => 'success'});
-    return ($mode eq 'purge') ? 'home' : 'admin';
+
+    if ($mode eq 'purge') {
+        return 'home';
+    } elsif ($mode eq 'install') {
+        return 'get_pending_lists';
+    } else {
+        return $in{'previous_action'} || 'admin';
+    }
 }
 
-sub do_restore_list {
-    wwslog('info', '');
+# Old name: do_restore_list().
+sub do_open_list {
+    wwslog('info', '(mode=%s)', $in{'mode'});
+    my $mode = $in{'mode'} || 'open';
 
-    unless ($list->{'admin'}{'status'} eq 'closed') {
-        Sympa::Report::reject_report_web('user', 'not_closed', {},
-            $param->{'action'}, $list);
-        wwslog('info', 'List not closed');
-        web_db_log(
-            {   'status'     => 'error',
-                'error_type' => 'not_closed'
-            }
-        );
-        return undef;
-    }
+    $param->{'mode'} = $mode;
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
         $in{'action'}, $in{'response_action'},
-        arg             => $list->{'name'},
-        previous_action => 'admin'
+        arg             => join(',', $list->{'name'}, $mode),
+        previous_action => ($in{'previous_action'} || 'admin')
     );
     return $next_action unless $next_action eq '1';
 
-    ## Change status & save config
-    $list->{'admin'}{'status'} = 'open';
-    $list->save_config($param->{'user'}{'email'});
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context      => $robot,
+        action       => 'open_list',
+        current_list => $list,
+        mode         => $mode,
+        sender       => $param->{'user'}{'email'},
+        (   $param->{'user'}{'email'}
+            ? (md5_check => 1)
+            : ()
+        ),
 
-    unless (-f $list->{'dir'} . '/subscribers.closed.dump') {
-        wwslog('notice', 'No subscribers to restore');
-        web_db_log(
-            {   'status'     => 'error',
-                'error_type' => 'no_subscribers'
-            }
-        );
-    }
-    my @users = Sympa::List::_load_list_members_file(
-        $list->{'dir'} . '/subscribers.closed.dump');
-    # Insert users in database
-    $list->add_list_member(@users);
-
-    my $aliases = Sympa::Admin::install_aliases($list);
-    if ($aliases == 1) {
-        $param->{'auto_aliases'} = 1;
-    } else {
-        $param->{'aliases'}      = $aliases;
-        $param->{'auto_aliases'} = 0;
+        scenario_context => {
+            sender      => $param->{'user'}{'email'},
+            remote_host => $param->{'remote_host'},
+            remote_addr => $param->{'remote_addr'},
+        },
+    );
+    unless ($spindle and $spindle->spin) {
+        return $in{'previous_action'} || 'admin';
     }
 
-    Sympa::Report::notice_report_web('list_restored', {}, $param->{'action'});
+    foreach my $report (@{$spindle->{stash} || []}) {
+        if ($report->[1] eq 'notice') {
+            Sympa::Report::notice_report_web(@{$report}[2, 3],
+                $param->{'action'});
+        } else {
+            Sympa::Report::reject_report_web(@{$report}[1 .. 3],
+                $param->{action});
+        }
+    }
+    unless (@{$spindle->{stash} || []}) {
+        Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
+    }
+    unless ($spindle->success) {
+        return $in{'previous_action'} || 'admin';
+    }
+
     web_db_log({'status' => 'success'});
 
-    web_db_stat_log();
-
-    return 'admin';
+    if ($mode eq 'install') {
+        return 'get_pending_lists';
+    } else {
+        return $in{'previous_action'} || 'admin';
+    }
 }
 
 # Moved to Sympa::SharedDocument::_load_desc_file().

@@ -49,6 +49,7 @@ sub _twist {
     my $list   = $request->{current_list};
     my $sender = $request->{sender};
     my $mode   = $request->{mode} || 'close';
+    my $notify = $request->{notify};
 
     # If list is included by another list, then it cannot be removed.
     if ($list->is_included) {
@@ -81,11 +82,40 @@ sub _twist {
             if $list->{'admin'}{'family_name'};
 
         $log->add_stat(
-            'robot'     => $list->{'domain'},
-            'list'      => $list->{'name'},
-            'operation' => 'close_list',
-            'parameter' => '',
-            'mail'      => $sender,
+            robot     => $list->{'domain'},
+            list      => $list->{'name'},
+            operation => 'close_list',
+            parameter => '',
+            mail      => $sender,
+            client    => $self->{scenario_context}->{remote_addr},
+        );
+    } elsif ($mode eq 'install') {
+        unless ($list->{'admin'}{'status'} eq 'pending') {
+            $log->syslog('err',
+                'Didn\'t change really the status, nothing to do');
+            $self->add_stash('user', 'didnt_change_anything',
+                {listname => $list->{'name'}});
+            return undef;
+        }
+
+        Sympa::send_notify_to_listmaster($list, 'list_rejected',
+            [$list->{'name'}]);
+        $list->send_notify_to_owner('list_rejected', [$list->{'name'}])
+            if $notify;
+
+        _close($self, $request);
+        $log->syslog(
+            'info', 'The list %s is set in status %s',
+            $list,  $list->{'admin'}{'status'}
+        );
+
+        $log->add_stat(
+            robot     => $list->{'domain'},
+            list      => $list->{'name'},
+            operation => 'list_rejected',
+            parameter => '',
+            mail      => $sender,
+            client    => $self->{scenario_context}->{remote_addr},
         );
     } elsif ($mode eq 'purge') {
         unless (grep { $list->{'admin'}{'status'} eq $_ }
@@ -98,11 +128,12 @@ sub _twist {
             {listname => $list->{'name'}});
 
         $log->add_stat(
-            'robot'     => $list->{'domain'},
-            'list'      => $list->{'name'},
-            'operation' => 'purge_list',
-            'parameter' => '',
-            'mail'      => $sender
+            robot     => $list->{'domain'},
+            list      => $list->{'name'},
+            operation => 'purge_list',
+            parameter => '',
+            mail      => $sender,
+            client    => $self->{scenario_context}->{remote_addr},
         );
     } else {
         die 'bug in logic. Ask developer';
@@ -144,7 +175,15 @@ sub _close {
     $list->{'admin'}{'status'} =
         $list->{'admin'}{'family_name'} ? 'family_closed' : 'closed';
     $list->{'admin'}{'defaults'}{'status'} = 0;    #FIXME
-    $list->save_config($sender || Sympa::get_address($list, 'listmaster'));
+    unless (
+        $list->save_config(
+            $sender || Sympa::get_address($list, 'listmaster')
+        )
+        ) {
+        $self->add_stash($request, 'intern', 'cannot_save_config',
+            {'listname' => $list->{'name'}});
+        $log->syslog('info', 'Cannot save config file');
+    }
 
     return 1;
 }

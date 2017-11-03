@@ -55,7 +55,6 @@ use constant _action_scenario => 'create_list';
 
 # Old name: Sympa::Admin::rename_list().
 sub _twist {
-    $log->syslog('info', '',);
     my $self    = shift;
     my $request = shift;
 

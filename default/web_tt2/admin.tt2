@@ -30,9 +30,10 @@
   [% IF list_conf.status == 'closed' ~%]
     <form name="manage_list_status" action="[% path_cgi %]" method="post">
     <div>
-    <input class="MainMenuLinks" type="submit" name="action_restore_list"
+    <input class="MainMenuLinks" type="submit" name="action_open_list"
       value="[%|loc%]Restore List[%END%]" />
     [%|loc%]This list is currently closed. Clicking this button will make it active again.[%END%]
+    <input type="hidden" name="previous_action" value="[% action %]"/>
     <input type="hidden" name="list" value="[% list %]"/>
     </div>
     </form>

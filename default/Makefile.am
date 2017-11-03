@@ -255,7 +255,6 @@ nobase_default_DATA = \
 	web_tt2/import.tt2 \
 	web_tt2/including_lists.tt2 \
 	web_tt2/info.tt2 \
-	web_tt2/install_pending_list.tt2 \
 	web_tt2/latest_arc.tt2 \
 	web_tt2/latest_d_read.tt2 \
 	web_tt2/latest_lists.tt2 \
