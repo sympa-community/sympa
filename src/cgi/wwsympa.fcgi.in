@@ -11092,7 +11092,13 @@ sub do_purge_list {
 
 sub do_close_list {
     wwslog('info', '(%s, mode=%s)', $list, $in{'mode'});
-    my $mode = $in{'mode'} || 'close';
+    my $mode = $in{'mode'};
+
+    # Sanitize parameter: non-listmasters are allowed "close" mode only.
+    $mode = 'close'
+        unless Sympa::is_listmaster($list, $param->{'user'}{'email'});
+    $mode = 'close'
+        unless $mode and grep {$mode eq $_} qw(close install);
 
     $param->{'mode'} = $mode;
     $param->{'previous_action'} = $in{'previous_action'} || 'admin';
@@ -11144,9 +11150,7 @@ sub do_close_list {
 
     web_db_log({'status' => 'success'});
 
-    if ($mode eq 'purge') {
-        return 'home';
-    } elsif ($mode eq 'install') {
+    if ($mode eq 'install') {
         return 'get_pending_lists';
     } else {
         return $in{'previous_action'} || 'admin';
@@ -11156,9 +11160,14 @@ sub do_close_list {
 # Old name: do_restore_list().
 sub do_open_list {
     wwslog('info', '(mode=%s)', $in{'mode'});
-    my $mode = $in{'mode'} || 'open';
+    my $mode = $in{'mode'};
+
+    # Sanitize parameter.
+    $mode = 'open'
+        unless $mode and grep {$mode eq $_} qw(open install);
 
     $param->{'mode'} = $mode;
+    $param->{'previous_action'} = $in{'previous_action'} || 'admin';
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
