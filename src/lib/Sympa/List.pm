@@ -9095,36 +9095,8 @@ sub remove_task {
 #sub purge;
 
 ## Remove list aliases
-sub remove_aliases {
-    my $self = shift;
-
-    return undef
-        unless $self
-        and $list_of_lists{$self->{'domain'}}{$self->{'name'}}
-        and Conf::get_robot_conf($self->{'domain'}, 'sendmail_aliases') !~
-        /^none$/i;
-
-    my $alias_manager = $Conf::Conf{'alias_manager'};
-
-    unless (-x $alias_manager) {
-        $log->syslog('err', 'Cannot run alias_manager %s', $alias_manager);
-        return undef;
-    }
-
-    my $status =
-        system($alias_manager, 'del', $self->{'name'},
-        $self->{'admin'}{'host'}) >> 8;
-    if ($status) {
-        $log->syslog('err', 'Failed to remove aliases; status %d: %m',
-            $status);
-        return undef;
-    }
-
-    $log->syslog('info', 'Aliases for list %s removed successfully',
-        $self->{'name'});
-
-    return 1;
-}
+# Deprecated. Use Sympa::Aliases::del().
+#sub remove_aliases;
 
 ##
 ## bounce management actions

@@ -47,7 +47,7 @@ use Term::ProgressBar;
 use XML::LibXML;
 
 use Sympa;
-use Sympa::Admin;
+use Sympa::Aliases;
 use Conf;
 use Sympa::Config_XML;
 use Sympa::DatabaseManager;
@@ -457,16 +457,15 @@ sub modify_list {
 
     if ($result->{'aliases'} == 1) {
         push @{$return->{'string_info'}},
-            "The $list->{'name'} list has been modified.";
-
+            sprintf('The %s list has been modified.', $list->{'name'});
     } elsif ($result->{'install_remove'} eq 'install') {
         push @{$return->{'string_info'}},
-            "List $list->{'name'} has been modified, required aliases :\n $result->{'aliases'} ";
-
+            sprintf('List %s has been modified, required aliases.',
+                $list->{'name'});
     } else {
         push @{$return->{'string_info'}},
-            "List $list->{'name'} has been modified, aliases need to be removed : \n $result->{'aliases'}";
-
+            sprintf('List %s has been modified, aliases need to be removed.',
+                $list->{'name'});
     }
 
     ## config_changes
@@ -2113,15 +2112,12 @@ sub _update_existing_list {
 
     if ($result->{'aliases'} == 1) {
         push(@{$self->{'updated_lists'}{'aliases_ok'}}, $list->{'name'});
-
     } elsif ($result->{'install_remove'} eq 'install') {
         $self->{'updated_lists'}{'aliases_to_install'}{$list->{'name'}} =
-            $result->{'aliases'};
-
+            $list->{'name'};
     } else {
         $self->{'updated_lists'}{'aliases_to_remove'}{$list->{'name'}} =
-            $result->{'aliases'};
-
+            $list->{'name'};
     }
 
     ## config_changes
@@ -2353,15 +2349,14 @@ sub _set_status_changes {
     if ($list->{'admin'}{'status'} eq 'open') {
         unless ($old_status eq 'open') {
             $result->{'install_remove'} = 'install';
-            $result->{'aliases'} = Sympa::Admin::install_aliases($list);
+            $result->{'aliases'} = Sympa::Aliases->new->add($list);
         }
     }
 
-    if (   ($list->{'admin'}{'status'} eq 'pending')
-        && (($old_status eq 'open') || ($old_status eq 'error_config'))) {
+    if (   $list->{'admin'}{'status'} eq 'pending'
+        and ($old_status eq 'open' or $old_status eq 'error_config')) {
         $result->{'install_remove'} = 'remove';
-        $result->{'aliases'} =
-            Sympa::Admin::remove_aliases($list, $self->{'robot'});
+        $result->{'aliases'} = Sympa::Aliases->new->del($list);
     }
 
     ### subscribers

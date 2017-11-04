@@ -28,7 +28,7 @@ use warnings;
 use File::Path qw();
 
 use Sympa;
-use Sympa::Admin;
+use Sympa::Aliases;
 use Sympa::DatabaseManager;
 use Sympa::Log;
 use Sympa::Task;
@@ -88,8 +88,7 @@ sub _twist {
     $list->add_list_member(@users);
 
     # Install new aliases.
-    my $aliases = Sympa::Admin::install_aliases($list);
-    if ($aliases and $aliases == 1) {
+    if (Sympa::Aliases->new->add($list)) {
         $self->add_stash($request, 'notice', 'auto_aliases');
     } else {
         ;

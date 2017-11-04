@@ -30,8 +30,8 @@ nobase_dist_modules_DATA = \
 	Sympa/Internals/Workflow.pod
 nobase_modules_DATA = \
 	Sympa.pm \
-	Sympa/Admin.pm \
 	Sympa/Alarm.pm \
+	Sympa/Aliases.pm \
 	Sympa/Archive.pm \
 	Sympa/Auth.pm \
 	Sympa/Bulk.pm \
