@@ -149,6 +149,16 @@ sub _on_garbage {
     $self->{distaff}->quarantine($handle);
 }
 
+sub success {
+    my $self = shift;
+
+    my $stash = $self->{stash} || [];
+    return (
+        grep { $_->[1] eq 'intern' or $_->[1] eq 'auth' or $_->[1] eq 'user' }
+            @$stash
+    ) ? 0 : 1;
+}
+
 sub _twist {0}
 
 1;

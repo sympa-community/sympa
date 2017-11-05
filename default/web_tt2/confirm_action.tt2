@@ -63,7 +63,11 @@
   </strong></p>
 [%~ ELSIF confirm_action == 'close_list' ~%]
   <h2><i class="fa fa-check-circle"></i>
-    [%|loc%]Remove List[%END%]
+    [%~ IF mode == 'install' ~%]
+      [%|loc%]Reject List[%END%]
+    [%~ ELSE ~%]
+      [%|loc%]Remove List[%END%]
+    [%~ END %]
   </h2>
   <p><strong>
     [%|loc(list)%]Are you sure you wish to close list %1?[%END%]
@@ -148,6 +152,28 @@
       [%|loc(current_email,email)%]Are you sure you wish to change a user's email %1 to %2?[%END%]
     [%~ END %]
   </strong></p>
+[%~ ELSIF confirm_action == 'open_list' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [% IF mode == 'install' ~%]
+      [%|loc%]Install List[%END%]
+    [%~ ELSE ~%]
+      [%|loc%]Restore List[%END%]
+    [%~ END %]
+  </h2>
+  <p><strong>
+    [% IF mode == 'install' ~%]
+      [%|loc(list)%]Are you sure you wish to install list %1?[%END%]
+    [%~ ELSE ~%]
+      [%|loc(list)%]Are you sure you wish to restore list %1?[%END%]
+    [%~ END %]
+  </strong></p>
+[%~ ELSIF confirm_action == 'purge_list' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Purge selected lists[%END%]
+  </h2>
+  <p><strong>
+    [%|loc%]Are you sure you wish to purge selected lists?[%END%]
+  </strong></p>
 [%~ ELSIF confirm_action == 'remind' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Remind all subscribers[%END%]
@@ -176,13 +202,6 @@
   </h2>
   <p><strong>
     [%|loc(template_name)%]Do you really want to remove %1?[%END%]
-  </strong></p>
-[%~ ELSIF confirm_action == 'restore_list' ~%]
-  <h2><i class="fa fa-check-circle"></i>
-    [%|loc%]Restore List[%END%]
-  </h2>
-  <p><strong>
-    [%|loc(list)%]Are you sure you wish to restore list %1?[%END%]
   </strong></p>
 [%~ ELSIF confirm_action == 'rt_delete' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -250,6 +269,9 @@
   [%~ END %]
 [%~ ELSIF confirm_action == 'auto_signoff' ~%]
   <input type="hidden" name="email" value="[% email %]" />
+[%~ ELSIF confirm_action == 'close_list' ~%]
+  <input type="hidden" name="mode" value="[% mode %]" />
+  <input type="hidden" name="notify" value="[% notify %]" />
 [%~ ELSIF confirm_action == 'decl_add' ~%]
   [% FOREACH i = id ~%]
     <input type="hidden" name="id" value="[% i %]" />
@@ -299,6 +321,13 @@
   <input type="hidden" name="new_listname" value="[% new_listname %]" />
   <input type="hidden" name="new_robot" value="[% new_robot %]" />
   <input type="hidden" name="mode" value="[% mode %]" />
+[%~ ELSIF confirm_action == 'open_list' ~%]
+  <input type="hidden" name="mode" value="[% mode %]" />
+  <input type="hidden" name="notify" value="[% notify %]" />
+[%~ ELSIF confirm_action == 'purge_list' ~%]
+  [% FOREACH l = selected_lists ~%]
+    <input type="hidden" name="selected_lists" value="[% l %]" />
+  [%~ END %]
 [%~ ELSIF confirm_action == 'remove_arc' ~%]
   <input type="hidden" name="yyyy" value="[% yyyy %]" />
   <input type="hidden" name="month" value="[% month %]" />

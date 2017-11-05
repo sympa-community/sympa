@@ -195,9 +195,6 @@ nobase_default_DATA = \
 	web_tt2/arcsearch.tt2 \
 	web_tt2/arc.tt2 \
 	web_tt2/aside_menu.tt2 \
-	web_tt2/automatic_lists_management_request.tt2 \
-	web_tt2/automatic_lists_request.tt2 \
-	web_tt2/automatic_lists.tt2 \
 	web_tt2/blacklist.tt2 \
 	web_tt2/button_footer.tt2 \
 	web_tt2/button_header.tt2 \
@@ -205,11 +202,11 @@ nobase_default_DATA = \
 	web_tt2/change_email.tt2 \
 	web_tt2/change_email_request.tt2 \
 	web_tt2/choosepasswd.tt2 \
-	web_tt2/close_list.tt2 \
 	web_tt2/compose_mail.tt2 \
 	web_tt2/confirm_action.tt2 \
 	web_tt2/copy_template.tt2 \
 	web_tt2/crash.tt2 \
+	web_tt2/create_automatic_list_request.tt2 \
 	web_tt2/create_list_request.tt2 \
 	web_tt2/create_list.tt2 \
 	web_tt2/css.tt2 \
@@ -257,7 +254,6 @@ nobase_default_DATA = \
 	web_tt2/import.tt2 \
 	web_tt2/including_lists.tt2 \
 	web_tt2/info.tt2 \
-	web_tt2/install_pending_list.tt2 \
 	web_tt2/latest_arc.tt2 \
 	web_tt2/latest_d_read.tt2 \
 	web_tt2/latest_lists.tt2 \

@@ -36,7 +36,7 @@ use Sympa::Family;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
-use Sympa::Process;
+use Sympa::Spindle::ProcessRequest;
 use Sympa::Spool::Incoming;
 use Sympa::Tools::Data;
 
@@ -241,23 +241,27 @@ sub _twist {
             return undef;
         }
 
-        my $auth_level =
-              $message->{'smime_signed'} ? 'smime'
-            : $message->{'md5_check'}    ? 'md5'
-            : $message->{'dkim_pass'}    ? 'dkim'
-            :                              'smtp';
-        if ($list = $dyn_family->create_automatic_list(
-                (   'listname'   => $listname,
-                    'auth_level' => $auth_level,
-                    'sender'     => $sender,
-                    'message'    => $message
-                )
-            )
-            ) {
-            # Overwrite context of the message.
-            $message->{context} = $list;
-            $dyn_just_created = 1;
-        } else {
+        my $spindle_req = Sympa::Spindle::ProcessRequest->new(
+            context      => $dyn_family,
+            action       => 'create_automatic_list',
+            listname     => $listname,
+            parameters   => {},
+            sender       => $sender,
+            smime_signed => $message->{'smime_signed'},
+            md5_check    => $message->{'md5_check'},
+            dkim_pass    => $message->{'dkim_pass'},
+            scenario_context => {
+                sender             => $sender,
+                message            => $message,
+                family             => $dyn_family,
+                automatic_listname => $listname,
+            },
+        );
+        unless ($spindle_req and $spindle_req->spin) {
+            $log->syslog('err', 'Cannot create dynamic list %s', $listname);
+            return undef;
+        } elsif (not($spindle_req->success
+            and $list = Sympa::List->new($listname, $dyn_family->{robot}))) {
             $log->syslog('err',
                 'Unable to create list %s. Message %s ignored',
                 $listname, $message);
@@ -283,6 +287,10 @@ sub _twist {
                 'user_email'   => $sender
             );
             return undef;
+        } else {
+            # Overwrite context of the message.
+            $message->{context} = $list;
+            $dyn_just_created = 1;
         }
     }
 
@@ -309,18 +317,13 @@ sub _twist {
             );
             # purge the unwanted empty automatic list
             if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
-                $list->close_list();
-                # verifier pour tt ce bloc si supprime bien tout
-                $list->purge();
-                # but what about list_of_lists ?
-                if (exists $Sympa::List::list_of_lists{$list->{'domain'}}
-                    {$list->{'name'}}) {    # test à virer si ok
-                    delete $Sympa::List::list_of_lists{$list->{'domain'}}
-                        {$list->{'name'}};
-                    $log->syslog('err',
-                        'La liste a été trouvée dans la list_of_lists',
-                        $list, $dyn_list_family);
-                }
+                Sympa::Spindle::ProcessRequest->new(
+                    context      => $robot,
+                    action       => 'close_list',
+                    current_list => $list,
+                    mode         => 'purge',
+                    scenario_context => {skip => 1},
+                )->spin;
             }
             return undef;
         }
@@ -343,18 +346,13 @@ sub _twist {
             );
             # purge the unwanted empty automatic list
             if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
-                $list->close_list();
-                # verifier pour tt ce bloc si supprime bien tout
-                $list->purge();
-                # but what about list_of_lists ?
-                if (exists $Sympa::List::list_of_lists{$list->{'domain'}}
-                    {$list->{'name'}}) {    # test à virer si ok
-                    delete $Sympa::List::list_of_lists{$list->{'domain'}}
-                        {$list->{'name'}};
-                    $log->syslog('err',
-                        'La liste a été trouvée dans la list_of_lists',
-                        $list, $dyn_list_family);
-                }
+                Sympa::Spindle::ProcessRequest->new(
+                    context      => $robot,
+                    action       => 'close_list',
+                    current_list => $list,
+                    mode         => 'purge',
+                    scenario_context => {skip => 1},
+                )->spin;
             }
             return undef;
         }

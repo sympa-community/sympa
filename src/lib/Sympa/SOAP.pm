@@ -32,19 +32,15 @@ use warnings;
 use Encode qw();
 
 use Sympa;
-use Sympa::Admin;
 use Sympa::Auth;
 use Conf;
 use Sympa::Constants;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::Request;
-use Sympa::Robot;
 use Sympa::Scenario;
 use Sympa::Session;
 use Sympa::Spindle::ProcessRequest;
 use Sympa::Template;
-use Sympa::Tools::Password;
 use Sympa::Tools::Text;
 use Sympa::User;
 
@@ -564,6 +560,9 @@ sub info {
 }
 
 sub createList {
+    $log->syslog('info', 
+        '(%s, listname=%s, subject=%s, template=%s, description=%s, topics=%s)',
+        @_);
     my $class       = shift;
     my $listname    = shift;
     my $subject     = shift;
@@ -575,19 +574,6 @@ sub createList {
     my $robot                   = $ENV{'SYMPA_ROBOT'};
     my $remote_application_name = $ENV{'remote_application_name'};
 
-    $log->syslog(
-        'info',
-        '(list = %s\@%s, subject = %s, template = %s, description = %s, topics = %s) From %s via proxy application %s',
-        $listname,
-        $robot,
-        $subject,
-        $list_tpl,
-        $description,
-        $topics,
-        $sender,
-        $remote_application_name
-    );
-
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('User not specified')
@@ -598,24 +584,6 @@ sub createList {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <list>');
-    }
-
-    # Check length.
-    if (Sympa::Constants::LIST_LEN() < length $listname) {
-        die SOAP::Fault->faultcode('Client')->faultstring('Too long value')
-            ->faultdetail('List name is too long');
-    }
-
-    $log->syslog('debug', '(%s, %s)', $listname, $robot);
-
-    my $list = Sympa::List->new($listname, $robot);
-    if ($list) {
-        $log->syslog('info',
-            'Create_list %s@%s from %s refused, list already exist',
-            $listname, $robot, $sender);
-        die SOAP::Fault->faultcode('Client')
-            ->faultstring('List already exists')
-            ->faultdetail("List $listname already exists");
     }
 
     my $reject;
@@ -639,12 +607,30 @@ sub createList {
             ->faultstring('Missing parameter')
             ->faultdetail("Missing required parameter(s) : $reject");
     }
-    # check authorization
-    my $result = Sympa::Scenario::request_action(
-        $robot,
-        'create_list',
-        'md5',
-        {   'sender'                  => $sender,
+
+    my $user = Sympa::User::get_global_user($sender)
+        if Sympa::User::is_global_user($sender);
+
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context      => $robot,
+        action       => 'create_list',
+        listname     => $listname,
+        parameters => {
+            owner => [{
+                email => $sender,
+                gecos => ($user ? $user->{gecos} : undef),
+            }],
+            subject        => $subject,
+            creation_email => $sender,
+            template       => $list_tpl,
+            topics         => $topics,
+            description    => $description,
+        },
+        sender    => $sender,
+        md5_check => 1,
+
+        scenario_context => {
+            'sender'                  => $sender,
             'candidate_listname'      => $listname,
             'candidate_subject'       => $subject,
             'candidate_template'      => $list_tpl,
@@ -655,67 +641,26 @@ sub createList {
             'remote_application_name' => $ENV{'remote_application_name'}
         }
     );
-    my $r_action;
-    my $reason;
-    if (ref($result) eq 'HASH') {
-        $r_action = $result->{'action'};
-        $reason   = $result->{'reason'};
-    }
-    unless ($r_action =~ /do_it|listmaster/) {
-        $log->syslog('info', 'Create_list %s@%s from %s refused, reason %s',
-            $listname, $robot, $sender, $reason);
-        die SOAP::Fault->faultcode('Server')
-            ->faultstring('Authorization reject')
-            ->faultdetail("Authorization reject : $reason");
+    unless ($spindle and $spindle->spin) {
+        die SOAP::Fault->faultcode('Server')->faultstring('Internal error');
     }
 
-    # prepare parameters
-    my $param = {};
-    $param->{'user'}{'email'} = $sender;
-    if (Sympa::User::is_global_user($param->{'user'}{'email'})) {
-        $param->{'user'} = Sympa::User::get_global_user($sender);
-    }
-    my $parameters;
-    $parameters->{'creation_email'} = $sender;
-    my %owner;
-    $owner{'email'} = $param->{'user'}{'email'};
-    $owner{'gecos'} = $param->{'user'}{'gecos'};
-    push @{$parameters->{'owner'}}, \%owner;
-
-    $parameters->{'listname'}    = $listname;
-    $parameters->{'subject'}     = $subject;
-    $parameters->{'description'} = $description;
-    $parameters->{'topics'}      = $topics;
-
-    if ($r_action =~ /listmaster/i) {
-        $param->{'status'} = 'pending';
-    } elsif ($r_action =~ /do_it/i) {
-        $param->{'status'} = 'open';
-    }
-
-    ## create liste
-    my $resul =
-        Sympa::Admin::create_list_old($parameters, $list_tpl, $robot, "soap");
-    unless (defined $resul
-        and $list = Sympa::List->new($listname, $robot)) {
-        $log->syslog('info', 'Unable to create list %s@%s from %s',
-            $listname, $robot, $sender);
-        die SOAP::Fault->faultcode('Server')
-            ->faultstring('unable to create list')
-            ->faultdetail('unable to create list');
-    }
-
-    ## notify listmaster
-    if ($param->{'create_action'} =~ /notify/) {
-        if (Sympa::send_notify_to_listmaster(
-                $list, 'request_list_creation', {'email' => $sender}
-            )
-            ) {
-            $log->syslog('info', 'Notify listmaster for list creation');
+    foreach my $report (@{$spindle->{stash} || []}) {
+        my $reason_string = get_reason_string($report, $robot);
+        if ($report->[1] eq 'auth') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
+                ->faultdetail($reason_string);
+        } elsif ($report->[1] eq 'intern') {
+            die SOAP::Fault->faultcode('Server')
+                ->faultstring('Internal error');
+        } elsif ($report->[1] eq 'notice') {
+            return SOAP::Data->name('result')->type('boolean')->value(1);
+        } elsif ($report->[1] eq 'user') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Undef')
+                ->faultdetail($reason_string);
         }
     }
     return SOAP::Data->name('result')->type('boolean')->value(1);
-
 }
 
 sub closeList {
@@ -760,19 +705,41 @@ sub closeList {
             ->faultdetail("Not allowed");
     }
 
-    if ($list->{'admin'}{'status'} eq 'closed') {
-        $log->syslog('info', 'Already closed');
-        die SOAP::Fault->faultcode('Client')
-            ->faultstring('list allready closed')
-            ->faultdetail("list $listname all ready closed");
-    } elsif ($list->{'admin'}{'status'} eq 'pending') {
-        $log->syslog('info', 'Closing a pending list makes it purged');
-        $list->purge($sender);
-    } else {
-        $list->close_list($sender);
-        $log->syslog('info', 'List %s closed', $listname);
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $list,
+        action           => 'close_list',
+        current_list     => $list,
+        mode =>
+            (($list->{'admin'}{'status'} eq 'pending') ? 'purge' : 'close'),
+        sender           => $sender,
+        md5_check        => 1,
+        scenario_contest => {
+            sender                  => $sender,
+            remote_host             => $ENV{'REMOTE_HOST'},
+            remote_addr             => $ENV{'REMOTE_ADDR'},
+            remote_application_name => $ENV{'remote_application_name'}
+        }
+    );
+    unless ($spindle and $spindle->spin) {
+        die SOAP::Fault->faultcode('Server')->faultstring('Internal error');
     }
-    return 1;
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        my $reason_string = get_reason_string($report, $robot);
+        if ($report->[1] eq 'auth') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
+                ->faultdetail($reason_string);
+        } elsif ($report->[1] eq 'intern') {
+            die SOAP::Fault->faultcode('Server')
+                ->faultstring('Internal error');
+        } elsif ($report->[1] eq 'notice') {
+            return SOAP::Data->name('result')->type('boolean')->value(1);
+        } elsif ($report->[1] eq 'user') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Undef')
+                ->faultdetail($reason_string);
+        }
+    }
+    return SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub add {
