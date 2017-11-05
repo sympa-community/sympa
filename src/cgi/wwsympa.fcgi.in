@@ -9658,7 +9658,7 @@ sub do_create_list {
         Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
     }
 
-    if (grep { $_->[1] ne 'notice' } @{$spindle->{stash} || []}) {
+    unless ($spindle->success) {
         return 'create_list_request';
     }
 
