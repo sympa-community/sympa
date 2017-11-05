@@ -208,7 +208,6 @@ nobase_default_DATA = \
 	web_tt2/crash.tt2 \
 	web_tt2/create_automatic_list_request.tt2 \
 	web_tt2/create_list_request.tt2 \
-	web_tt2/create_list.tt2 \
 	web_tt2/css.tt2 \
 	web_tt2/d_control.tt2 \
 	web_tt2/d_editfile.tt2 \
