@@ -164,6 +164,10 @@ used by L<Sympa::Spindle::ToList> to whom distribute message.
 
 Context (List), archive and message ID to specify the message in archive.
 
+Note:
+C<arc> parameter will be used by a latter part of processing,
+L<Sympa::Spindle::TransofrmOutgoing> to construct C<Archived-At> field.
+
 =item quiet =E<gt> 1
 
 NOT YET IMPLEMENTED.

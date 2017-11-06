@@ -127,7 +127,8 @@ sub _twist {
     }
 
     # Add RFC5064 Archived-At: header field
-    $list->add_list_header($message, 'archived_at');
+    # Sympa::Spindle::ResendArchive will give "arc" parameter.
+    $list->add_list_header($message, 'archived_at', arc => $self->{arc});
 
     ## Remove outgoing header fields
     ## Useful to remove some header fields that Sympa has set

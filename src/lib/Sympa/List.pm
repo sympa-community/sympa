@@ -9325,6 +9325,7 @@ sub add_list_header {
     my $self    = shift;
     my $message = shift;
     my $field   = shift;
+    my %options = @_;
 
     my $robot = $self->{'domain'};
 
@@ -9399,16 +9400,20 @@ sub add_list_header {
             my $message_id = Sympa::Tools::Text::canonic_message_id(
                 $message->get_header('Message-Id'));
 
-            my @now  = localtime(time);
-            my $yyyy = sprintf '%04d', 1900 + $now[5];
-            my $mm   = sprintf '%02d', $now[4] + 1;
+            my $arc;
+            if (defined $options{arc} and length $options{arc}) {
+                $arc = $options{arc};
+            } else {
+                my @now = localtime time;
+                $arc = sprintf '%04d-%02d', 1900 + $now[5], $now[4] + 1;
+            }
             $message->add_header(
                 'Archived-At',
                 sprintf(
                     '<%s>',
                     Sympa::get_url(
                         $self, 'arcsearch_id',
-                        paths => ["$yyyy-$mm", $message_id]
+                        paths => [$arc, $message_id]
                     )
                 )
             );
