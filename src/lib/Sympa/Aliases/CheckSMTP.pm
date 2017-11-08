@@ -47,17 +47,18 @@ sub check {
     my $smtp_helo = Conf::get_robot_conf($robot_id, 'list_check_helo')
         || $smtp_relay;
     $smtp_helo =~ s/:[-\w]+$// if $smtp_helo;
-    my $suffixes = Conf::get_robot_conf($robot_id, 'list_check_suffixes');
-    return 0
-        unless $smtp_relay and $suffixes;
-    $log->syslog('debug2', '(%s, %s)', $name, $robot_id);
-    my @suf = split /\s*,\s*/, $suffixes;
-    return 0 unless @suf;    #FIXME
 
+    my @suffixes = split /\s*,\s*/,
+        (Conf::get_robot_conf($robot_id, 'list_check_suffixes') || '');
     my @addresses = (
-        $name . '@' . $robot_id,
-        map { $name . '-' . $_ . '@' . $robot_id } @suf
+        sprintf('%s@%s', $name, $robot_id),
+        map { sprintf('%s-%s@%s', $name, $_, $robot_id) } @suffixes
     );
+    my $return_address = sprintf '%s%s@%s', $name,
+        (Conf::get_robot_conf($robot_id, 'return_path_suffix') || ''),
+        $robot_id;
+    push @addresses, $return_address
+        unless grep { $return_address eq $_ } @addresses;
 
     unless ($Net::SMTP::VERSION) {
         $log->syslog('err',
