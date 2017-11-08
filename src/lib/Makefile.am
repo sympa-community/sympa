@@ -195,10 +195,10 @@ EXTRA_DIST = \
 	Sympa/Internals.podpl \
 	$(nobase_modules_DATA)
 
-CLEANFILES = Sympa/Constants.pm *.$(man3ext)
+CLEANFILES = Sympa/Constants.pm Sympa/Internals.pod *.$(man3ext)
 
 Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
-	[ -d Sympa ] || mkdir Sympa
+	@[ -d Sympa ] || mkdir Sympa
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--VERSION--|$(VERSION)|' \
@@ -223,6 +223,7 @@ Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 		< $(srcdir)/$@.in > $@
 
 Sympa/Internals.pod: Sympa/Internals.podpl Sympa/Constants.pm.in $(nobase_modules_DATA)
+	@[ -d Sympa ] || mkdir Sympa
 	@rm -f $@
 	$(AM_V_GEN)$(PERL) $< Sympa/Constants.pm.in $(nobase_modules_DATA) > $@
 
