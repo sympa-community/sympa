@@ -32,6 +32,9 @@ nobase_modules_DATA = \
 	Sympa.pm \
 	Sympa/Alarm.pm \
 	Sympa/Aliases.pm \
+	Sympa/Aliases/CheckSMTP.pm \
+	Sympa/Aliases/External.pm \
+	Sympa/Aliases/Template.pm \
 	Sympa/Archive.pm \
 	Sympa/Auth.pm \
 	Sympa/Bulk.pm \

@@ -29,6 +29,7 @@ use File::Path qw();
 
 use Sympa;
 use Sympa::Aliases;
+use Conf;
 use Sympa::DatabaseManager;
 use Sympa::Log;
 use Sympa::Task;
@@ -149,7 +150,9 @@ sub _close {
     my $list   = $request->{current_list};
     my $sender = $request->{sender};
 
-    Sympa::Aliases->new->del($list);
+    my $aliases = Sympa::Aliases->new(
+        Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
+    $aliases->del($list) if $aliases;
 
     # Dump subscribers.
     $list->_save_list_members_file(

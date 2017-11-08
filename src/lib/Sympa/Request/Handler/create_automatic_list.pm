@@ -93,7 +93,9 @@ sub _twist {
     }
 
     ## Check listname on SMTP server
-    my $res = Sympa::Aliases->new->check($listname, $robot_id);
+    my $aliases =
+        Sympa::Aliases->new(Conf::get_robot_conf($robot_id, 'alias_manager'));
+    my $res = $aliases->check($listname, $robot_id) if $aliases;
     unless (defined $res) {
         $log->syslog('err', 'Can\'t check list %.128s on %s',
             $listname, $robot_id);
@@ -255,8 +257,11 @@ sub _twist {
     $list->{'admin'}{'family_name'} = $family->{'name'};
 
     if ($list->{'admin'}{'status'} eq 'open') {
-        Sympa::Aliases->new->add($list);
-        $self->add_stash($request, 'notice', 'auto_aliases');
+        my $aliases = Sympa::Aliases->new(
+            Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
+        if ($aliases and $aliases->add($list)) {
+            $self->add_stash($request, 'notice', 'auto_aliases');
+        }
     } else {
         ;
     }

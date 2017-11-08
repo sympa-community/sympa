@@ -461,11 +461,11 @@ sub modify_list {
     } elsif ($result->{'install_remove'} eq 'install') {
         push @{$return->{'string_info'}},
             sprintf('List %s has been modified, required aliases.',
-                $list->{'name'});
+            $list->{'name'});
     } else {
         push @{$return->{'string_info'}},
             sprintf('List %s has been modified, aliases need to be removed.',
-                $list->{'name'});
+            $list->{'name'});
     }
 
     ## config_changes
@@ -559,8 +559,8 @@ sub modify_list {
 # Old name: Sympa::Admin::update_list().
 sub _update_list {
     $log->syslog('info', '(%s, %s, %s)', @_);
-    my $self = shift;
-    my $list = shift;
+    my $self  = shift;
+    my $list  = shift;
     my $param = shift;
 
     my $robot = $self->{'robot'};
@@ -632,8 +632,7 @@ sub _update_list {
             my $file_content;
 
             my $template =
-                Sympa::Template->new(undef,
-                include_path => [$self->{'dir'}]);
+                Sympa::Template->new(undef, include_path => [$self->{'dir'}]);
             my $tt_result =
                 $template->parse($param, $file . ".tt2", \$file_content);
             unless ($tt_result) {
@@ -721,10 +720,10 @@ sub close_family {
         }
 
         my $spindle = Sympa::Spindle::ProcessRequest->new(
-            context      => $self->{'robot'},
-            action       => 'close_list',
-            current_list => $list,
-            sender       => Sympa::get_address($self, 'listmaster'),
+            context          => $self->{'robot'},
+            action           => 'close_list',
+            current_list     => $list,
+            sender           => Sympa::get_address($self, 'listmaster'),
             scenario_context => {skip => 1},
         );
         unless ($spindle and $spindle->spin and $spindle->success) {
@@ -917,11 +916,11 @@ sub instantiate {
 
             ## Create the list
             my $spindle = Sympa::Spindle::ProcessRequest->new(
-                context => $self,
-                action  => 'create_automatic_list',
-                listname => $hash_list->{config}{listname},
-                parameters => $hash_list->{config},
-                sender     => Sympa::get_address($self, 'listmaster'),
+                context          => $self,
+                action           => 'create_automatic_list',
+                listname         => $hash_list->{config}{listname},
+                parameters       => $hash_list->{config},
+                sender           => Sympa::get_address($self, 'listmaster'),
                 scenario_context => {skip => 1},
             );
             unless ($spindle and $spindle->spin and $spindle->success) {
@@ -931,8 +930,8 @@ sub instantiate {
                 );
                 next;
             }
-            $list = Sympa::List->new(
-                $hash_list->{config}{listname}, $self->{'robot'});
+            $list = Sympa::List->new($hash_list->{config}{listname},
+                $self->{'robot'});
 
             ## aliases
             if (grep { $_->[1] eq 'notice' and $_->[2] eq 'auto_aliases' }
@@ -942,8 +941,8 @@ sub instantiate {
                     $list->{'name'}
                 );
             } else {
-                $self->{'created_lists'}{'without_aliases'}{$list->{'name'}}
-                    = $list->{'name'};
+                $self->{'created_lists'}{'without_aliases'}{$list->{'name'}} =
+                    $list->{'name'};
             }
 
             # config_changes
@@ -1027,10 +1026,10 @@ sub instantiate {
         }
         if ($options{close_unknown} or $answer eq 'y') {
             my $spindle = Sympa::Spindle::ProcessRequest->new(
-                context => $self->{'robot'},
-                action  => 'close_list',
-                current_list => $list,
-                sender     => Sympa::get_address($self, 'listmaster'),
+                context          => $self->{'robot'},
+                action           => 'close_list',
+                current_list     => $list,
+                sender           => Sympa::get_address($self, 'listmaster'),
                 scenario_context => {skip => 1},
             );
             unless ($spindle and $spindle->spin and $spindle->success) {
@@ -2345,18 +2344,19 @@ sub _set_status_changes {
         $list->{'admin'}{'status'} = 'open';
     }
 
-    ## aliases
+    # Aliases.
+    my $aliases = Sympa::Aliases->new(
+        Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
     if ($list->{'admin'}{'status'} eq 'open') {
         unless ($old_status eq 'open') {
             $result->{'install_remove'} = 'install';
-            $result->{'aliases'} = Sympa::Aliases->new->add($list);
+            $result->{'aliases'} = ($aliases and $aliases->add($list));
         }
     }
-
-    if (   $list->{'admin'}{'status'} eq 'pending'
+    if ($list->{'admin'}{'status'} eq 'pending'
         and ($old_status eq 'open' or $old_status eq 'error_config')) {
         $result->{'install_remove'} = 'remove';
-        $result->{'aliases'} = Sympa::Aliases->new->del($list);
+        $result->{'aliases'} = ($aliases and $aliases->del($list));
     }
 
     ### subscribers

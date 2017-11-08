@@ -26,194 +26,118 @@ package Sympa::Aliases;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-BEGIN { eval 'use Net::SMTP'; }
 
-use Conf;
 use Sympa::Constants;
 use Sympa::Log;
 
 my $log = Sympa::Log->instance;
 
 sub new {
-    bless {} => shift;
-}
+    my $class   = shift;
+    my $type    = shift;
+    my %options = @_;
 
-# OLd name: Sympa::Admin::list_check_smtp().
-sub check {
-    $log->syslog('debug2', '(%s, %s, %s)', @_);
-    my $self     = shift;
-    my $name     = shift;
-    my $robot_id = shift;
+    return undef unless $type;
 
-    my $conf = '';
-    my $smtp;
+    # Special cases:
+    # - To disable aliases management, specify "none" as $type.
+    # - "External" module is used for full path to program.
+    # - However, "Template" module is used instead of obsoleted program
+    #   alias_manager.pl.
+    return bless {} => $class if $type eq 'none';
 
-    my $smtp_relay = Conf::get_robot_conf($robot_id, 'list_check_smtp');
-    my $smtp_helo  = Conf::get_robot_conf($robot_id, 'list_check_helo')
-        || $smtp_relay;
-    $smtp_helo =~ s/:[-\w]+$// if $smtp_helo;
-    my $suffixes = Conf::get_robot_conf($robot_id, 'list_check_suffixes');
-    return 0
-        unless $smtp_relay and $suffixes;
-    $log->syslog('debug2', '(%s, %s)', $name, $robot_id);
-    my @suf = split /\s*,\s*/, $suffixes;
-    return 0 unless @suf;    #FIXME
-
-    my @addresses = (
-        $name . '@' . $robot_id,
-        map { $name . '-' . $_ . '@' . $robot_id } @suf
-    );
-
-    unless ($Net::SMTP::VERSION) {
-        $log->syslog('err',
-            'Unable to use Net library, Net::SMTP required, install it first'
-        );
-        return undef;
+    if ($type eq Sympa::Constants::SBINDIR() . '/alias_manager.pl') {
+        $type = 'Sympa::Aliases::Template';
+    } elsif (0 == index $type, '/' and -x $type) {
+        $options{program} = $type;
+        $type = 'Sympa::Aliases::External';
     }
-    if ($smtp = Net::SMTP->new(
-            $smtp_relay,
-            Hello   => $smtp_helo,
-            Timeout => 30
-        )
-        ) {
-        $smtp->mail('');
-        foreach my $address (@addresses) {
-            $conf = $smtp->to($address);
-            last if $conf;
+
+    # Returns appropriate subclasses.
+    if ($type !~ /[^\w:]/) {
+        $type = sprintf 'Sympa::Aliases::%s', $type unless $type =~ /::/;
+        unless (eval sprintf('require %s', $type)
+            and $type->isa('Sympa::Aliases')) {
+            $log->syslog(
+                'err', 'Unable to use %s module: %s',
+                $type, $EVAL_ERROR || 'Not a Sympa::Aliases class'
+            );
+            return undef;
         }
-        $smtp->quit();
-        return $conf;
-    }
-    return undef;
-}
-
-# Old name: Sympa::Admin::install_aliases().
-sub add {
-    $log->syslog('debug', '(%s, %s)', @_);
-    my $self = shift;
-    my $list = shift;
-
-    return 1
-        if lc Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') eq
-            'none';
-
-    my $alias_manager = $Conf::Conf{'alias_manager'};
-    $log->syslog('debug2', '%s add %s %s', $alias_manager, $list->{'name'},
-        $list->{'admin'}{'host'});
-
-    unless (-x $alias_manager) {
-        $log->syslog('err', 'Failed to install aliases: %m');
-        return undef;
-    }
-
-    #FIXME: 'host' parameter is passed to alias_manager: no 'domain'
-    # parameter to determine robot.
-    my $status =
-        system($alias_manager, 'add', $list->{'name'},
-        $list->{'admin'}{'host'}) >> 8;
-
-    if ($status == 0) {
-        $log->syslog('info', 'Aliases installed successfully');
-        return 1;
-    }
-
-    if ($status == 1) {
-        $log->syslog('err', 'Configuration file %s has errors',
-            Conf::get_sympa_conf());
-    } elsif ($status == 2) {
-        $log->syslog('err',
-            'Internal error: Incorrect call to alias_manager');
-    } elsif ($status == 3) {
-        # Won't occur
-        $log->syslog('err',
-            'Could not read sympa config file, report to httpd error_log');
-    } elsif ($status == 4) {
-        # Won't occur
-        $log->syslog('err',
-            'Could not get default domain, report to httpd error_log');
-    } elsif ($status == 5) {
-        $log->syslog('err', 'Unable to append to alias file');
-    } elsif ($status == 6) {
-        $log->syslog('err', 'Unable to run newaliases');
-    } elsif ($status == 7) {
-        $log->syslog('err',
-            'Unable to read alias file, report to httpd error_log');
-    } elsif ($status == 8) {
-        $log->syslog('err',
-            'Could not create temporay file, report to httpd error_log');
-    } elsif ($status == 13) {
-        $log->syslog('info', 'Some of list aliases already exist');
-    } elsif ($status == 14) {
-        $log->syslog('err',
-            'Can not open lock file, report to httpd error_log');
-    } elsif ($status == 15) {
-        $log->syslog('err', 'The parser returned empty aliases');
-    } else {
-        $log->syslog('err', 'Unknown error %s while running alias manager %s',
-            $status, $alias_manager);
+        return bless {%options} => $type;
     }
 
     return undef;
 }
 
-# Old names: Sympa::Admin::remove_aliases() & Sympa::List::remove_aliases().
-sub del {
-    $log->syslog('info', '(%s, %s)', @_);
-    my $self = shift;
-    my $list = shift;
+sub check {0}
 
-    return 1
-        if lc Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') eq
-            'none';
+sub add {0}
 
-    my $alias_manager = $Conf::Conf{'alias_manager'};
-
-    unless (-x $alias_manager) {
-        $log->syslog('err', 'Cannot run alias_manager %s', $alias_manager);
-        return undef;
-    }
-
-    my $status =
-        system($alias_manager, 'del', $list->{'name'},
-        $list->{'admin'}{'host'}) >> 8;
-
-    if ($status == 0) {
-        $log->syslog('info', 'Aliases for list %s removed successfully',
-            $list);
-        return 1;
-    } else {
-        $log->syslog('err', 'Failed to remove aliases; status %d: %m',
-            $status);
-        return undef;
-    }
-}
+sub del {0}
 
 1;
 __END__
 
 =encoding utf-8
 
-=head1 NAME 
+=head1 NAME
 
 Sympa::Aliases - Base class for alias management
 
+=head1 SYNOPSIS
+
+  package Sympa::Aliases::FOO;
+  
+  use base qw(Sympa::Aliases);
+  
+  sub check { ... }
+  sub add { ... }
+  sub del { ... }
+  
+  1;
+
 =head1 DESCRIPTION 
 
-TBD.
+This module is the base class for subclasses to manage list aliases of Sympa.
 
 =head2 Methods
 
 =over
 
-=item new ( )
+=item new ( $type, [ key =E<gt> value, ... ] )
 
 I<Constructor>.
 Creates new instance of L<Sympa::Aliases>.
 
+Returns one of appropriate subclasses according to $type:
+
+=over
+
+=item C<'none'>
+
+No aliases management.
+
+=item Full path to executable
+
+Use external program to manage aliases.
+See L<Sympa::Aliases::External>.
+
+=item Name of subclass
+
+Use a subclass C<Sympa::Aliases::I<name>> to manage aliases.
+
+=back
+
+For invalid types returns C<undef>.
+
+Optional C<I<key> =E<gt> I<value>> pairs are included in the instance as
+hash entries.
+
 =item check ($listname, $robot_id)
 
-I<Instance method>.
-Checks if the requested list exists already using SMTP 'rcpt to'.
+I<Instance method>, I<overridable>.
+Checks if the addresses of requested list exist already.
 
 Parameters:
 
@@ -231,11 +155,15 @@ List's robot.
 
 Returns:
 
-L<Net::SMTP> object or false value.
+True value if one of addresses exists.
+C<0> if none found.
+C<undef> if something wrong happened.
+
+By default, this method always returns C<0>.
 
 =item add ($list)
 
-I<Instance method>.
+I<Instance method>, I<overridable>.
 Installs aliases for the list $list.
 
 Parameters:
@@ -250,11 +178,15 @@ An instance of L<Sympa::List>.
 
 Returns:
 
-C<undef> if not applicable or aliases not installed. or C<1> if OK.
+C<1> if installation succeeded.
+C<0> if there were no aliases to be installed.
+C<undef> if not applicable.
+
+By default, this method always returns C<0>.
 
 =item del ($list)
 
-I<Instance method>.
+I<Instance method>, I<overridable>.
 Removes aliases for the list $list.
 
 Parameters:
@@ -269,10 +201,19 @@ An instance of L<Sympa::List>.
 
 Returns:
 
-C<undef> if not applicable. C<1> (if ok) or concated string of alias not
-removed.
+C<1> if removal succeeded.
+C<0> if there were no aliases to be removed.
+C<undef> if not applicable.
+
+By default, this method always returns C<0>.
 
 =back
+
+=head1 SEE ALSO
+
+L<Sympa::Aliases::CheckSMTP>,
+L<Sympa::Aliases::External>,
+L<Sympa::Aliases::Template>.
 
 =head1 HISTORY
 
