@@ -40,13 +40,9 @@ sub add {
     my $self = shift;
     my $list = shift;
 
-    #FIXME: 'host' parameter is passed to the program: No 'domain'
-    # parameter to determine robot.
     my $program = $self->{program};
-    system($program, 'add', $list->{'name'},
-        $list->{'admin'}{'host'},
-        ($self->{file} ? ($self->{file}) : ())
-    );
+    system($program, 'add', $list->{'name'}, $list->{'domain'},
+        ($self->{file} ? ($self->{file}) : ()));
     if ($CHILD_ERROR & 127) {
         $log->syslog('err', '%s was terminated by signal %d',
             $program, $CHILD_ERROR & 127);
@@ -66,13 +62,9 @@ sub del {
     my $self = shift;
     my $list = shift;
 
-    #FIXME: 'host' parameter is passed to the program: No 'domain'
-    # parameter to determine robot.
     my $program = $self->{program};
-    system($program, 'del', $list->{'name'},
-        $list->{'admin'}{'host'},
-        ($self->{file} ? ($self->{file}) : ())
-    );
+    system($program, 'del', $list->{'name'}, $list->{'domain'},
+        ($self->{file} ? ($self->{file}) : ()));
     if ($CHILD_ERROR & 127) {
         $log->syslog('err', '%s was terminated by signal %d',
             $program, $CHILD_ERROR & 127);
@@ -180,7 +172,7 @@ See L<Sympa::Aliases::CheckSMTP>.
 
 Invokes program with command line arguments:
 
-  /path/to/program add | del listname hostname [ file ]
+  /path/to/program add | del listname domain [ file ]
 
 If processing succeed, program should exit with status 0.
 Otherwise it may exit with non-zero status (see also L</"Constants">).

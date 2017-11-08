@@ -53,6 +53,7 @@ sub _aliases {
         'date' => $language->gettext_strftime('%d %b %Y', localtime time),
         'list' => {
             'domain' => $domain,
+            'host'   => $list->{'admin'}{'host'},
             'name'   => $listname,
         },
         'robot'             => $domain,
