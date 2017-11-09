@@ -32,6 +32,8 @@ use Sympa::Log;
 
 my $log = Sympa::Log->instance;
 
+# Sympa::Aliases is the proxy class of subclasses.
+# The constructor may be overridden by _new() method.
 sub new {
     my $class   = shift;
     my $type    = shift;
@@ -44,7 +46,7 @@ sub new {
     # - "External" module is used for full path to program.
     # - However, "Template" module is used instead of obsoleted program
     #   alias_manager.pl.
-    return bless {} => $class if $type eq 'none';
+    return $class->_new if $type eq 'none';
 
     if ($type eq Sympa::Constants::SBINDIR() . '/alias_manager.pl') {
         $type = 'Sympa::Aliases::Template';
@@ -64,10 +66,17 @@ sub new {
             );
             return undef;
         }
-        return bless {%options} => $type;
+        return $type->_new(%options);
     }
 
     return undef;
+}
+
+sub _new {
+    my $class   = shift;
+    my %options = @_;
+
+    return bless {%options} => $class;
 }
 
 sub check {0}
