@@ -87,6 +87,9 @@ sub _twist {
     # Insert users in database.
     $list->add_list_member(@users);
 
+    # Restore admins
+    $list->sync_include_admin;
+
     # Install new aliases.
     my $aliases = Sympa::Admin::install_aliases($list);
     if ($aliases and $aliases == 1) {
