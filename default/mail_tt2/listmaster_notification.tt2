@@ -338,13 +338,13 @@ Subject: [% FILTER qencode %][%|loc(list.name, list.host)%]Listmaster: list %1@%
 
 [%|loc%]See the logs for more details.[%END%]
 
-[%|loc%]Check the bounces in this list:[% END %] [% 'reviewbouncing' | url_abs([listname]) %]
+[%|loc%]Check the bounces in this list:[% END %] [% 'reviewbouncing' | url_abs([list.name]) %]
 
 [% ELSIF type == 'automatic_list_creation_failed' -%]
 Subject: [% FILTER qencode %][%|loc%]Listmaster: internal server error [%END%][%END%]
 
-[% IF listname -%]
-[%|loc(listname,family,robot,msg_id)%]Failed to process message. Unable to create the dynamic list %1 on family %2@%3. Message <%4> was ignored.[%END%]
+[% IF list.name -%]
+[%|loc(list.name,family,robot,msg_id)%]Failed to process message. Unable to create the dynamic list %1 on family %2@%3. Message <%4> was ignored.[%END%]
 [%- ELSE -%]
 [%|loc(family,robot,msg_id)%]Failed to process message: family %1@%2 does not exist. Unable to create the dynamic list.  Message <%3> was ignored.[%END%]
 [%- END -%]
