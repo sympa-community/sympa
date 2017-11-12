@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Sympa-6.2\n"
+"Project-Id-Version: sympa-6.2\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
 "PO-Revision-Date: 2017-08-08 05:55+0000\n"
 "Last-Translator: cquemeras <cquemeras@medicalistes.fr>\n"
@@ -11,7 +11,6 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1502171715.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -510,14 +509,14 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1562
-#, fuzzy
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
 "URL vers le script générant l'éditeur HTML WYSIWYG. Relatif à "
-"<static_content_url> ou chemin absolu."
+"<static_content_url> ou chemin absolu.\n"
+"L'exemple est pour TinyMCE 4 installé sous <static_content_path>/js/tinymce/."
 
 #: src/lib/Sympa/ConfDef.pm:1603
 msgid ""
@@ -527,6 +526,12 @@ msgid ""
 "LDAP.\n"
 "Should not be changed! May invalid all user password."
 msgstr ""
+"\"insensitive\" ou \"sensitive\".\n"
+"Si la valeur est \"insensitive\", la vérification du mot de passe par "
+"WWSympa sera insensible à la casse. Ceci ne concerne que les mots de passe "
+"stockés dans la base de données Sympa, et non pas dans un annuaire LDAP. \n"
+"Ne devrait pas être modifié ! Cela pourrait invalider l'ensemble des mots de "
+"passe des utilisateurs. "
 
 #: src/lib/Sympa/ConfDef.pm:1634
 msgid ""
@@ -536,9 +541,13 @@ msgid ""
 "Pictures are stored in a directory specified by the \"static_content_path\" "
 "parameter."
 msgstr ""
+"Active ou désactive la fonctionnalité des avatars par défaut. Si elle est "
+"active, les abonnés peuvent charger leur image sur le serveur (depuis la "
+"page \"options d'abonné\") pour l'utiliser comme un avatar. \n"
+"Les avatars sont stockés dans un répertoire définis par le paramètre "
+"static_content_path\". "
 
 #: src/lib/Sympa/ConfDef.pm:1649
-#, fuzzy
 msgid ""
 "These values are supported:\n"
 "javascript: the address is hidden using a javascript. Users who enable "
@@ -546,30 +555,27 @@ msgid ""
 "at: the \"@\" character is replaced by the string \"AT\".\n"
 "none: no protection against spam harvesters."
 msgstr ""
-"Il est nécessaire de protéger le serveur de listes contre les robots de "
-"collectages d'adresses email destinés au spam. Plusieurs méthodes sont "
-"proposées par Sympa. Les valeurs possibles sont :\n"
-"javascript: \n"
-"l'adresse email est dissimulée en utilisant javascript. L'utilisateur ayant "
-"activé javascript dans son navigateur voit les adresses email affichées "
-"normalement.\n"
-"at: \n"
-"le caractère @ est remplacé par la chaîne \"AT\".\n"
-"none: \n"
-"pas de protection contre le spam"
+"Il est nécessaire de protéger le serveur de listes contre les robots "
+"pratiquant la collecte d'adresses email destinée au spam. Plusieurs méthodes "
+"sont proposées par Sympa. Les valeurs possibles sont :\n"
+"javascript: l'adresse email est dissimulée en utilisant javascript. Les "
+"utilisateurs ayant activé javascript dans leur navigateur voient les "
+"adresses électroniques affichées normalement, tandis que les autres ne "
+"voient rien.\n"
+"at: le caractère @ est remplacé par la chaîne \"AT\".\n"
+"none: pas de protection contre le spam."
 
 #: src/lib/Sympa/ConfDef.pm:1656
-#, fuzzy
 msgid ""
 "The same as \"spam_protection\", but restricted to the web archive.\n"
 "In addition to it:\n"
 "cookie: users must submit a small form in order to receive a cookie before "
 "browsing the web archive."
 msgstr ""
-"Identique au paramètre \"spam_protection\" mais pour les archives web. Un "
-"choix supplémentaire est proposé \"cookie\" qui ajoute un formulaire "
-"(positionnant un cookie) à l'entrèe des archives. Ce système bloque tous les "
-"robots, y compris Google."
+"Identique au paramètre \"spam_protection\" mais pour les archives web.\n"
+"Un choix supplémentaire est proposé : \n"
+"cookie : ajoute un formulaire (positionnant un cookie) à l'entrée des "
+"archives, afin de bloquer tous les robots, y compris Google."
 
 #: src/lib/Sympa/ConfDef.pm:1673
 msgid ""
@@ -577,6 +583,10 @@ msgid ""
 "external modules: Crypt-OpenSSL-X509 and Crypt-SMIME.\n"
 "TLS client authentication. It requires an external module: IO-Socket-SSL."
 msgstr ""
+"Authentification S/MIME, déchiffrement et re-chiffrement. Cela nécessite ces "
+"modules externes : Crypt-OpenSSL-X509 et Crypt-SMIME.\n"
+"Authentification du client par TLS. Cela nécessite un module externe : IO-"
+"Socket-SSL."
 
 #: src/lib/Sympa/ConfDef.pm:1697
 msgid ""
@@ -585,17 +595,21 @@ msgid ""
 "links to them with such names. The links may be created by using \"c_rehash"
 "\" script bundled in OpenSSL."
 msgstr ""
+"L'authentification du client utilise les certificats d'autorités (CA) de ce "
+"répertoire. \n"
+"Les certificats doivent avoir des noms incluant l'empreinte (hash) du sujet, "
+"ou bien il doit exister des liens symboliques vers eux avec ces noms. Ces "
+"liens peuvent être crées par le script \"c_rehash\" fourni avec OpenSSL. "
 
 #: src/lib/Sympa/ConfDef.pm:1821
-#, fuzzy
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
 "This is a comma separated list of test modes; if multiple are selected then "
 "protection is activated if ANY match.  Do not use dmarc_* modes unless you "
 "have a local DNS cache as they do a DNS lookup for each received message."
 msgstr ""
-"Ne pas activer à moins que vous vouliez utiliser la protection DMARC. La "
-"valeur du paramètre doit être une suite de modes de test séparés par des "
+"Ne pas activer à moins que vous vouliez utiliser la protection DMARC.\n"
+"La valeur du paramètre doit être une suite de modes de test séparés par des "
 "virgules ; si vous en définissez plusieurs, la protection est activée si au "
 "moins l'un des tests est vérifié. N'utilisez pas les modes dmarc_* si vous "
 "ne disposez pas d'un cache DNS local puisqu'il effectuent une vérification "
@@ -609,6 +623,11 @@ msgid ""
 "\"mail.example.org:25\" or \"203.0.113.1:25\".  If port is not specified, "
 "standard port (25) will be used."
 msgstr ""
+"Ceci est nécessaire si vous exécutez Sympa sur un serveur mais que vous "
+"gérez tous vos messages sur un relais de messagerie séparé. \n"
+"La valeur par défaut est le FQDN réel du serveur. Le numéro du port peut "
+"être spécifié comme \"mail.example.org:25\" ou \"203.0.113.1:25\". Si le "
+"port n'est pas spécifié, le port standard (25) sera utilisé. "
 
 #: src/lib/Sympa/ConfDef.pm:1871
 msgid ""
@@ -617,21 +636,23 @@ msgid ""
 "This parameter is used with the \"list_check_smtp\" parameter. It is also "
 "used to check list names at list creation time."
 msgstr ""
+"List des suffixes qui sont utilisées pour les adresses des listes, c'est-à-"
+"dire \"maliste-request\", \"maliste-owner\", etc. \n"
+"Ce paramètre est couplé avec \"list_check_smtp\". Il sert aussi à vérifier "
+"les noms des listes, lors de la création de la liste. "
 
 # nlsref 15,13
 #: src/lib/Sympa/ConfDef.pm:38
-#, fuzzy
 msgid "Service description"
-msgstr "description de la liste"
+msgstr "description du service"
 
 #: src/lib/Sympa/ConfDef.pm:41
 msgid "Primary mail domain name"
-msgstr ""
+msgstr "Nom du domaine principal de messagerie"
 
 #: src/lib/Sympa/ConfDef.pm:49
-#, fuzzy
 msgid "Email addresses of listmasters"
-msgstr "liste cachée sauf aux listmasters"
+msgstr "Adresses électroniques des administrateurs de listes. "
 
 #: src/lib/Sympa/ConfDef.pm:55
 msgid ""
@@ -640,18 +661,24 @@ msgid ""
 "Listmasters can be defined for each virtual host, however, the default "
 "listmasters will have privileges to manage all virtual hosts."
 msgstr ""
+"Adresses électroniques des administrateurs de listes (= \"listmasters\", "
+"utilisateurs autorisés à effectuer des commandes globales sur le serveur). "
+"Également, certains messages d'erreur peuvent être envoyés à ces adresses. "
+"Les administrateurs de liste peuvent être définis pour chaque hôte virtuel ; "
+"cependant, les administrateurs par défaut ont les privilèges nécessaires "
+"pour gérer l'ensemble des hôtes virtuels. "
 
 #: src/lib/Sympa/ConfDef.pm:59
-#, fuzzy
 msgid "Default language"
-msgstr "Valider"
+msgstr "Langue par défaut"
 
 #: src/lib/Sympa/ConfDef.pm:64
-#, fuzzy
 msgid ""
 "This is the default language used by Sympa. One of supported languages "
 "should be chosen."
-msgstr "Ceci est la langue par défaut utilisée par Sympa"
+msgstr ""
+"Ceci est la langue par défaut utilisée par Sympa. Elle devrait être choisie "
+"parmi les langues supportées. "
 
 #: src/lib/Sympa/ConfDef.pm:69
 msgid "Supported languages"
@@ -665,7 +692,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:79
 msgid "Title of service"
-msgstr ""
+msgstr "Titre du service"
 
 #: src/lib/Sympa/ConfDef.pm:81
 msgid ""
@@ -710,6 +737,8 @@ msgid ""
 "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\", \"Sybase\" and "
 "\"SQLite\"."
 msgstr ""
+"Les types de bases de données supportées sont : \"MySQL\", \"PostgreSQL\", "
+"\"Oracle\", \"Sybase\" et \"SQLite\"."
 
 #: src/lib/Sympa/ConfDef.pm:123
 msgid "Hostname of the database server"
@@ -720,6 +749,9 @@ msgid ""
 "With PostgreSQL, you can also use the path to Unix Socket Directory, e.g. \"/"
 "var/run/postgresql\" for connection with Unix domain socket."
 msgstr ""
+"Avec PostgreSQL, vous pouvez aussi utiliser un chemin vers le répertoire des "
+"sockets Unix, par exemple \"/var/run/postgresql\" pour une connexion avec "
+"les sockets du domaine Unix."
 
 #: src/lib/Sympa/ConfDef.pm:131
 msgid "Port of the database server"
@@ -734,6 +766,8 @@ msgid ""
 "With SQLite, this must be the full path to database file. With Oracle "
 "Database, this must be Oracle SID."
 msgstr ""
+"Avec SQLite, ce doit être le chemin complet vers le fichier de la base de "
+"donnée. Avec une base Oracle, ce doit être le SID Oracle."
 
 # nlsref 16,148
 #: src/lib/Sympa/ConfDef.pm:146
@@ -755,9 +789,8 @@ msgstr ""
 
 # nlsref 16,46
 #: src/lib/Sympa/ConfDef.pm:161
-#, fuzzy
 msgid "Database options"
-msgstr "port utilisé"
+msgstr "Options de base de données"
 
 #: src/lib/Sympa/ConfDef.pm:163
 msgid ""
@@ -765,6 +798,10 @@ msgid ""
 "(DSN) fed to database driver. Check the related DBD documentation to learn "
 "about the available options."
 msgstr ""
+"Si ces options sont définies, elles seront ajoutées au DSN (Data Source Name "
+"= nom de la source de données) associé au pilote de la base de données. "
+"Vérifiez la documentation du DBD pour avoir la liste des options "
+"disponibles. "
 
 # nlsref 16,148
 #: src/lib/Sympa/ConfDef.pm:169
@@ -772,19 +809,18 @@ msgid "Environment variables setting for database"
 msgstr "variable d'environnement pour la connexion à la base de données"
 
 #: src/lib/Sympa/ConfDef.pm:172
-#, fuzzy
 msgid ""
 "With Oracle Database, this is useful for defining ORACLE_HOME and NLS_LANG."
-msgstr "C'est utile pour définir ORACLE_HOME"
+msgstr ""
+"Avec la base de données Oracle, cela sert à définir ORACLE_HOME et NLS_LANG."
 
 #: src/lib/Sympa/ConfDef.pm:178
-#, fuzzy
 msgid "Database processing timeout"
-msgstr "Base de données"
+msgstr "Timeout des traitements de la base de données"
 
 #: src/lib/Sympa/ConfDef.pm:180
 msgid "Currently, this parameter may be used for SQLite only."
-msgstr ""
+msgstr "Actuellement, ce paramètre ne peut être utilisé que pour SQLite."
 
 #: src/lib/Sympa/ConfDef.pm:185
 #, fuzzy
@@ -807,9 +843,8 @@ msgid "System log facility for Sympa"
 msgstr "Facilité syslog employée pour Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:209
-#, fuzzy
 msgid "Do not forget to configure syslog server."
-msgstr "N'oubliez pas d'éditer edit_list.conf"
+msgstr "N'oubliez pas de configurer le serveur syslog."
 
 #: src/lib/Sympa/ConfDef.pm:213
 #, fuzzy
@@ -822,14 +857,12 @@ msgstr "Verbosité des logs"
 
 # nlsref 16,7
 #: src/lib/Sympa/ConfDef.pm:227
-#, fuzzy
 msgid "Alias management"
-msgstr "Gestion de la liste noire"
+msgstr "Gestion des alias"
 
 #: src/lib/Sympa/ConfDef.pm:231
-#, fuzzy
 msgid "Program used to update alias database"
-msgstr "Impossible de mettre à jour la base de données."
+msgstr "Programme utilisé pour mettre à jour la base des alias. "
 
 #: src/lib/Sympa/ConfDef.pm:233
 #, fuzzy
@@ -3381,9 +3414,8 @@ msgid "List inclusion"
 msgstr "Inclusion d'une liste"
 
 #: src/lib/Sympa/ListDef.pm:1153
-#, fuzzy
 msgid "list name to include"
-msgstr "Nom de liste à exclure"
+msgstr "Nom de liste à inclure"
 
 #: src/lib/Sympa/ListDef.pm:1159
 msgid "filter definition"
@@ -10518,7 +10550,7 @@ msgstr "FAQ"
 
 #: default/web_tt2/sympa_menu.tt2:44
 msgid "Give us feedback about this new Sympa version"
-msgstr "Donnez nous notre avis sur cette version de Sympa."
+msgstr "Donnez-nous votre avis sur cette version de Sympa."
 
 #: default/web_tt2/sympa_menu.tt2:44
 msgid "Feedback"
@@ -15510,6 +15542,13 @@ msgstr "Source inconnue."
 
 #~ msgid "on %1"
 #~ msgstr "A : %1"
+
+#~ msgid ""
+#~ "auth.conf error: either email_http_header or ldap_host/"
+#~ "ldap_get_email_by_uid_filter entries should be defined."
+#~ msgstr ""
+#~ "erreur dans auth.conf : vous devez renseigner email_http_header ou "
+#~ "ldap_host/ldap_get_email_by_uid_filter."
 
 #, fuzzy
 #~ msgid "Number of days that elapse before statistics information are expired"
