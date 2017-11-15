@@ -29,7 +29,7 @@ use Encode qw();
 use English qw(-no_match_vars);
 
 use Sympa;
-use Sympa::Admin;
+use Sympa::Aliases;
 use Conf;
 use Sympa::Constants;
 use Sympa::List;
@@ -118,7 +118,9 @@ sub _twist {
     }
 
     ## Check listname on SMTP server
-    my $res = Sympa::Admin::list_check_smtp($listname, $robot_id);
+    my $aliases =
+        Sympa::Aliases->new(Conf::get_robot_conf($robot_id, 'alias_manager'));
+    my $res = $aliases->check($listname, $robot_id) if $aliases;
     unless (defined $res) {
         $log->syslog('err', 'Can\'t check list %.128s on %s',
             $listname, $robot_id);
@@ -240,9 +242,11 @@ sub _twist {
 
     if ($list->{'admin'}{'status'} eq 'open') {
         # Install new aliases.
-        Sympa::Admin::install_aliases($list);
-
-        $self->add_stash($request, 'notice', 'auto_aliases');
+        my $aliases = Sympa::Aliases->new(
+            Conf::get_robot_conf($robot_id, 'alias_manager'));
+        if ($aliases and $aliases->add($list)) {
+            $self->add_stash($request, 'notice', 'auto_aliases');
+        }
     } elsif ($list->{'admin'}{'status'} eq 'pending') {
         # Notify listmaster that creation list is moderated.
         Sympa::send_notify_to_listmaster($list, 'request_list_creation',

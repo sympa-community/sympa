@@ -28,7 +28,8 @@ use warnings;
 use File::Path qw();
 
 use Sympa;
-use Sympa::Admin;
+use Sympa::Aliases;
+use Conf;
 use Sympa::DatabaseManager;
 use Sympa::Log;
 use Sympa::Task;
@@ -88,8 +89,9 @@ sub _twist {
     $list->add_list_member(@users);
 
     # Install new aliases.
-    my $aliases = Sympa::Admin::install_aliases($list);
-    if ($aliases and $aliases == 1) {
+    my $aliases = Sympa::Aliases->new(
+        Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
+    if ($aliases and $aliases->add($list)) {
         $self->add_stash($request, 'notice', 'auto_aliases');
     } else {
         ;

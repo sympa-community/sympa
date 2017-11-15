@@ -28,7 +28,7 @@ use warnings;
 use File::Copy qw();
 
 use Sympa;
-use Sympa::Admin;
+use Sympa::Aliases;
 use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
@@ -96,7 +96,9 @@ sub _twist {
     # Do not test if listname did not change.
     my $res;
     unless ($current_list->get_id eq $listname . '@' . $robot_id) {
-        $res = Sympa::Admin::list_check_smtp($listname, $robot_id);
+        my $aliases = Sympa::Aliases->new(
+            Conf::get_robot_conf($robot_id, 'alias_manager'));
+        $res = $aliases->check($listname, $robot_id) if $aliases;
         unless (defined $res) {
             $log->syslog('err', 'Can\'t check list %.128s on %.128s',
                 $listname, $robot_id);
@@ -171,9 +173,11 @@ sub _twist {
 
     if ($list->{'admin'}{'status'} eq 'open') {
         # Install new aliases.
-        Sympa::Admin::install_aliases($list);
-
-        $self->add_stash($request, 'notice', 'auto_aliases');
+        my $aliases = Sympa::Aliases->new(
+            Conf::get_robot_conf($robot_id, 'alias_manager'));
+        if ($aliases and $aliases->add($list)) {
+            $self->add_stash($request, 'notice', 'auto_aliases');
+        }
     } elsif ($list->{'admin'}{'status'} eq 'pending') {
         # Notify listmaster that creation list is moderated.
         Sympa::send_notify_to_listmaster(
@@ -214,7 +218,9 @@ sub _move {
     my $pending      = $request->{pending};
 
     # Remove aliases and dump subscribers.
-    Sympa::Admin::remove_aliases($current_list);
+    my $aliases = Sympa::Aliases->new(
+        Conf::get_robot_conf($current_list->{'domain'}, 'alias_manager'));
+    $aliases->del($current_list) if $aliases;
     $current_list->_save_list_members_file(
         $current_list->{'dir'} . '/subscribers.closed.dump');
 
