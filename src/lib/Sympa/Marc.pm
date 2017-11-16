@@ -1,6 +1,7 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
+
+# This file is part of Sympa, see top-level README.md file for details
 
 package Sympa::Marc;
 

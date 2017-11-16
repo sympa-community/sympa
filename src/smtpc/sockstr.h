@@ -1,6 +1,6 @@
 /* $Id$ */
 /*
- * Sympa - SYsteme de Multi-Postage Automatique
+ * Sympa - This file is part of Sympa, see top-level README.md file for details
  *
  * Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
  * Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,

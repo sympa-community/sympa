@@ -1,4 +1,8 @@
 #! /usr/bin/perl
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+
+# This file is part of Sympa, see top-level README.md file for details
 
 ## This script should be run on server where Sympa 4.1 has been running
 ## Sympa 4.1 included a bug that lead to incorrect archiving of messages
