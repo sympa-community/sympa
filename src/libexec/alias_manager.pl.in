@@ -111,7 +111,9 @@ F<sympa.conf> or F<robot.conf> is recommended.
 
 =head1 SYNOPSIS
 
-S<B<alias_manager.pl> B<add> E<124> B<del> I<listname> I<domain> [ I<file> ]>
+S<C<alias_manager.pl> C<add> I<listname> I<domain> [ I<file> ]>
+
+S<C<alias_manager.pl> C<del> I<listname> I<domain> [ I<file> ]>
 
 =head1 DESCRIPTION
 
@@ -124,18 +126,18 @@ Alias management is performed only if it was setup in F<--CONFIG-->
 Administrators using MTA functionalities to manage aliases (ie
 virtual_regexp and transport_regexp with postfix) can disable alias
 management by setting
-C<sendmail_aliases> configuration parameter to B<none>.
+C<sendmail_aliases> configuration parameter to C<none>.
 
 =head1 OPTIONS
 
 =over 4
 
-=item B<add> I<listname> I<domain>
+=item C<add> I<listname> I<domain> [ I<file> ]
 
 Add the set of aliases for the mailing list I<listname> in the
 domain I<domain>.
 
-=item B<del> I<listname> I<domain>
+=item C<del> I<listname> I<domain> [ I<file> ]
 
 Remove the set of aliases for the mailing list I<listname> in the
 domain I<domain>.

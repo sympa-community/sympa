@@ -177,10 +177,10 @@ sympa_newaliases, sympa_newaliases.pl - Alias database maintenance
 
 =head1 DESCRIPTION
 
-sympa_newaliases is a program to maintain alias database.
+F<sympa_newaliases.pl> is a program to maintain alias database.
 
-It is typically called by
-L<alias_manager(8)> via sympa_newaliases-wrapper,
+It is typically invoked from
+L<Sympa::Aliases::Template> module via sympa_newaliases-wrapper,
 then updates alias database.
 
 =head1 OPTIONS
@@ -189,16 +189,16 @@ F<sympa_newaliases.pl> may run with following options.
 
 =over
 
-=item B<--domain=>I<domain>
+=item C<--domain=>I<domain>
 
 Name of virtual robot on which aliases will be updated.
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force sympa_newaliases to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Print this help message.
 
@@ -291,6 +291,6 @@ IKEDA Soji <ikeda@conversion.co.jp>.
 
 =head1 SEE ALSO
 
-L<alias_manager(8)>.
+L<Sympa::Aliases::Template>.
 
 =cut

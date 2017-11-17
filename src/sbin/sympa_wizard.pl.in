@@ -691,44 +691,44 @@ sympa_wizard, sympa_wizard.pl - Help Performing Sympa Initial Setup
     
 =head1 SYNOPSIS
 
-S<B<sympa_wizard.pl>>
-    S<[B<--batch> [I<key>=I<value> ...]]>
-    S<[B<--check>]>
-    S<[B<--create> [B<--target=>I<file>]]>
-    S<[B<--display>]>
-    S<[B<-h, --help>]>
-    S<[B<-v, --version>]>
+C<sympa_wizard.pl>
+S<[ C<--batch> [ I<key>=I<value> ... ] ]>
+S<[ C<--check> ]>
+S<[ C<--create> [ C<--target=>I<file> ] ]>
+S<[ C<--display> ]>
+S<[ C<-h, --help> ]>
+S<[ C<-v, --version> ]>
 
 =head1 OPTIONS
 
 =over 4
 
-=item sympa_wizard.pl
+=item C<sympa_wizard.pl>
 
 Edit current Sympa configuration.
 
-=item sympa_wizard.pl --batch I<key>=I<value> ...
+=item C<sympa_wizard.pl> C<--batch> I<key>=I<value> ...
 
 Edit in batch mode.
 Arguments would include pairs of parameter name and value.
 
-=item sympa_wizard.pl --check
+=item C<sympa_wizard.pl> C<--check>
 
 Check CPAN modules needed for running Sympa.
 
-=item sympa_wizard.pl --create [--target file]
+=item C<sympa_wizard.pl> C<--create> [ C<--target> I<file> ]
 
 Creates a new F<sympa.conf> configuration file.
 
-=item sympa_wizard.pl --display
+=item C<sympa_wizard.pl> C<--display>
 
 Outputs all configuration parameters.
 
-=item sympa_wizard.pl --help
+=item C<sympa_wizard.pl> C<--help>
 
 Display usage instructions.
 
-=item sympa_wizard.pl --version
+=item C<sympa_wizard.pl> C<--version>
 
 Print version number.
 

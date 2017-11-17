@@ -425,10 +425,11 @@ sympa_msg, sympa_msg.pl - Daemon to handle incoming messages
 
 =head1 SYNOPSIS
 
-S<B<sympa_msg.pl> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
-      S<[ B<-k, --keepcopy>=I<directory> ]>
-      S<[ B<-l, --lang>=I<lang> ]> [ B<-m, --mail> ]
-      S<[ B<-h, --help> ]> [ B<-v, --version> ]
+C<sympa_msg.pl> S<[ C<-d>, C<--debug> ]>
+S<[ C<-f>, C<--file>=I<another.sympa.conf> ]>
+S<[ C<-k>, C<--keepcopy>=I<directory> ]>
+S<[ C<-l>, C<--lang>=I<lang> ]> S<[ C<-m>, C<--mail> ]>
+S<[ C<-h>, C<--help> ]> S<[ C<-v>, C<--version> ]>
 
 =head1 DESCRIPTION
 
@@ -449,22 +450,22 @@ options is included below.
 
 =over 4
 
-=item B<-d>, B<--debug>
+=item C<-d>, C<--debug>
 
 Enable debug mode.
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force Sympa to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-l>, B<--lang=>I<lang>
+=item C<-l>, C<--lang=>I<lang>
 
 Set this option to use a language for Sympa. The corresponding
 gettext catalog file must be located in F<$LOCALEDIR>
 directory.
 
-=item B<--log_level=>I<level>
+=item C<--log_level=>I<level>
 
 Sets Sympa log level.
 
@@ -474,29 +475,30 @@ F<sympa_msg.pl> may run in daemon mode with following options.
 
 =over 4
 
-=item B<--foreground>
+=item C<--foreground>
 
 The process remains attached to the TTY.
 
-=item B<-k>, B<--keepcopy=>F<directory>
+=item C<-k>, C<--keepcopy=>F<directory>
 
 This option tells Sympa to keep a copy of every incoming message, 
 instead of deleting them. `directory' is the directory to 
 store messages.
 
-=item B<-m>, B<--mail>
+=item C<-m>, C<--mail>
 
 Sympa will log calls to sendmail, including recipients. This option is
 useful for keeping track of each mail sent (log files may grow faster
 though).
 
-=item B<--service=process_command>|B<process_message>|B<process_creation>
+=item C<--service=>I<service>
 
 B<Note>:
 This option was deprecated.
 
-Process is dedicated to messages distribution, commands or to automatic lists
-creation (default three of them).
+Process is dedicated to messages distribution (C<process_message>),
+commands (C<process_command>) or to automatic lists
+creation (C<process_creation>, default three of them).
 
 =back
 
@@ -504,11 +506,11 @@ With following options F<sympa_msg.pl> will print some information and exit.
 
 =over 4
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Print this help message.
 
-=item B<-v>, B<--version>
+=item C<-v>, C<--version>
 
 Print the version number.
 

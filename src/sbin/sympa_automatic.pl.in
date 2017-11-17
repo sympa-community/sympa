@@ -315,10 +315,11 @@ sympa_automatic, sympa_automatic.pl - Automatic list creation daemon
 
 =head1 SYNOPSIS
 
-S<B<sympa_automatic.pl> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
-      S<[ B<-k, --keepcopy>=I<directory> ]>
-      S<[ [ B<-m, --mail> ]>
-      S<[ B<-h, --help> ]> [ B<-v, --version> ]
+C<sympa_automatic.pl> S<[ C<-d, --debug> ]>
+S<[ C<-f, --file>=I<another.sympa.conf> ]>
+S<[ C<-k, --keepcopy>=I<directory> ]>
+S<[ [ C<-m, --mail> ]>
+S<[ C<-h, --help> ]> S<[ C<-v, --version> ]>
 
 =head1 DESCRIPTION
 
@@ -335,16 +336,16 @@ F<sympa_automatic.pl> may run with following options in general.
 
 =over 4
 
-=item B<-d>, B<--debug>
+=item C<-d>, C<--debug>
 
 Enable debug mode.
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force Sympa to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<--log_level=>I<level>
+=item C<--log_level=>I<level>
 
 Sets Sympa log level.
 
@@ -354,17 +355,17 @@ F<sympa_automatic.pl> may run in daemon mode with following options.
 
 =over 4
 
-=item B<--foreground>
+=item C<--foreground>
 
 The process remains attached to the TTY.
 
-=item B<-k>, B<--keepcopy=>F<directory>
+=item C<-k>, C<--keepcopy=>I<directory>
 
 This option tells Sympa to keep a copy of every incoming message, 
 instead of deleting them. `directory' is the directory to 
 store messages.
 
-=item B<-m>, B<--mail>
+=item C<-m>, C<--mail>
 
 Sympa will log calls to sendmail, including recipients. This option is
 useful for keeping track of each mail sent (log files may grow faster
@@ -376,11 +377,11 @@ With following options F<sympa_automatic.pl> will print some information and exi
 
 =over 4
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Print this help message.
 
-=item B<-v>, B<--version>
+=item C<-v>, C<--version>
 
 Print the version number.
 
