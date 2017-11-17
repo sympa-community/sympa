@@ -2086,7 +2086,7 @@ task_manager, task_manager.pl - Daemon to Process Periodical Sympa Tasks
 
 =head1 SYNOPSIS
 
-S<B<task_manager.pl> [ B<--foreground> ] [ B<--debug> ]>
+C<task_manager.pl> S<[ C<--foreground> ]> S<[ C<--debug> ]>
 
 =head1 DESCRIPTION
 
@@ -2096,24 +2096,24 @@ XXX @todo doc
 
 =over 4
 
-=item B<-d>, B<--debug>
+=item C<-d>, C<--debug>
 
 Sets the debug mode
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force task_manager to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-F>, B<--foreground>
+=item C<-F>, C<--foreground>
 
 Prevents the script from being daemonized
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Prints this help message.
 
-=item B<--log_level=>I<level>
+=item C<--log_level=>I<level>
 
 Set log level.
 

@@ -232,7 +232,7 @@ bounced, bounced.pl - Mailing List Bounce Processing Daemon for Sympa
 
 =head1 SYNOPSIS
 
-S<B<bounced> [ B<--foreground> ] [ B<--debug> ]>
+C<bounced.pl> S<[ C<--foreground> ]> S<[ C<--debug> ]>
 
 =head1 DESCRIPTION
 
@@ -251,24 +251,24 @@ options is included below.
 
 =over 5
 
-=item B<-F>, B<--foreground>
+=item C<-F>, C<--foreground>
 
 Do not detach TTY.
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force bounced to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-d>, B<--debug>
+=item C<-d>, C<--debug>
 
 Run the program in a debug mode.
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Print this help message.
 
-=item B<--log_level=>I<level>
+=item C<--log_level=>I<level>
 
 Sets daemon log level.
 

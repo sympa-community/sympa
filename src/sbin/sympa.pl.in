@@ -1053,15 +1053,15 @@ sympa, sympa.pl - Command line utility to manage Sympa
 
 =head1 SYNOPSIS
 
-S<B<sympa.pl> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
-      S<[ B<-l, --lang>=I<lang> ]> [ B<-m, --mail> ]
-      S<[ B<-h, --help> ]> [ B<-v, --version> ]
-      S<>
-      S<[ B<--import>=I<listname> ]>
-      S<[ B<--close_list>=I<list[@robot]> ]>
-      S<[ B<--purge_list>=I<list[@robot]> ]>
-      S<[ B<--lowercase> ] [ B<--make_alias_file> ]>
-      S<[ B<--dump>=I<listname> | ALL ]>
+C<sympa.pl> S<[ C<-d, --debug> ]> S<[ C<-f, --file>=I<another.sympa.conf> ]>
+S<[ C<-l, --lang>=I<lang> ]> S<[ C<-m, --mail> ]>
+S<[ C<-h, --help> ]> S<[ C<-v, --version> ]>
+S<>
+S<[ C<--import>=I<listname> ]>
+S<[ C<--close_list>=I<list>[I<@robot>] ]>
+S<[ C<--purge_list>=I<list>[I<@robot>] ]>
+S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
+S<[ C<--dump>=I<listname> | ALL ]>
 
 =head1 DESCRIPTION
 
@@ -1077,22 +1077,22 @@ F<sympa.pl> may run with following options in general.
 
 =over 4
 
-=item B<-d>, B<--debug>
+=item C<-d>, C<--debug>
 
 Enable debug mode.
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force Sympa to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-l>, B<--lang=>I<lang>
+=item C<-l>, C<--lang=>I<lang>
 
 Set this option to use a language for Sympa. The corresponding
 gettext catalog file must be located in F<$LOCALEDIR>
 directory.
 
-=item B<--log_level=>I<level>
+=item C<--log_level=>I<level>
 
 Sets Sympa log level.
 
@@ -1102,55 +1102,55 @@ With the following options F<sympa.pl> will run in batch mode:
 
 =over 4
 
-=item B<--add_list=>I<family_name> B<--robot=>I<robot_name>
-    B<--input_file=>I</path/to/file.xml>
+=item C<--add_list=>I<family_name> C<--robot=>I<robot_name>
+C<--input_file=>I</path/to/file.xml>
 
 Add the list described by the file.xml under robot_name, to the family
 family_name.
 
-=item B<--change_user_email> B<--current_email=>I<xx> B<--new_email=>I<xx>
+=item C<--change_user_email> C<--current_email=>I<xx> C<--new_email=>I<xx>
 
 Changes a user email address in all Sympa  databases (subscriber_table,
 list config, etc) for all virtual robots.
 
-=item B<--close_family=>I<family_name> B<--robot=>I<robot_name>
+=item C<--close_family=>I<family_name> C<--robot=>I<robot_name>
 
 Close lists of family_name family under robot_name.      
 
-=item B<--close_list=>I<list[@robot]>
+=item C<--close_list=>I<list>[I<@robot>]
 
 Close the list (changing its status to closed), remove aliases and remove
 subscribers from DB (a dump is created in the list directory to allow
 restoring the list)
 
-=item B<--conf_2_db>
+=item C<--conf_2_db>
 
 Load sympa.conf and each robot.conf into database.
 
-=item B<--create_list> B<--robot=>I<robot_name>
-    B<--input_file=>I</path/to/file.xml >
+=item C<--create_list> C<--robot=>I<robot_name>
+C<--input_file=>I</path/to/file.xml >
 
 Create a list with the XML file under robot robot_name.
 
-=item B<--dump=>I<list>@I<dom>|C<ALL>
+=item C<--dump=>I<list>@I<dom>|C<ALL>
 
 Dumps subscribers of for `listname' list or all lists. Subscribers are 
 dumped in subscribers.db.dump.
 
 =begin comment
 
-=item B<--export_list> [B<--robot=>I<robot_name>]
+=item C<--export_list> [ C<--robot=>I<robot_name> ]
 
 B<Not fully implemented>.
 
 =end comment
 
-=item B<--health_check>
+=item C<--health_check>
 
 Check if F<sympa.conf>, F<robot.conf> of virtual robots and database structure
 are correct.  If any errors occur, exits with non-zero status.
 
-=item B<--import=>I<list>@I<dom>
+=item C<--import=>I<list>@I<dom>
 
 Import subscribers in the list. Data are read from standard input.
 The imported data should contain one entry per line : the first field
@@ -1164,24 +1164,24 @@ Sample:
     john.steward@some.company.com           John - accountant
     mary.blacksmith@another.company.com     Mary - secretary
 
-=item B<--instantiate_family=>I<family_name> B<--robot=>I<robot_name>
-    B<--input_file=>I</path/to/file.xml> [B<--close_unknown>] [B<--quiet>]
+=item C<--instantiate_family=>I<family_name> C<--robot=>I<robot_name>
+C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ]
 
 Instantiate family_name lists described in the file.xml under robot_name.
 The family directory must exist; automatically close undefined lists in a
 new instantiation if --close_unknown is specified; do not print report if
 C<--quiet> is specified.
 
-=item B<--lowercase>
+=item C<--lowercase>
 
 Lowercases email addresses in database.
 
-=item B<--make_alias_file> [ B<--robot> robot ]
+=item C<--make_alias_file> [ C<--robot> robot ]
 
 Create an aliases file in /tmp/ with all list aliases. It uses the
 F<list_aliases.tt2> template  (useful when list_aliases.tt2 was changed).
 
-=item B<--md5_encode_password>
+=item C<--md5_encode_password>
 
 Rewrite password in C<user_table> of database using MD5 fingerprint.
 YOU CAN'T UNDO unless you save this table first.
@@ -1189,54 +1189,54 @@ YOU CAN'T UNDO unless you save this table first.
 B<Note> that this option was obsoleted.
 Use L<upgrade_sympa_password(1)>.
 
-=item B<--modify_list=>I<family_name> B<--robot=>I<robot_name>
-    B<--input_file=>I</path/to/file.xml>
+=item C<--modify_list=>I<family_name> C<--robot=>I<robot_name>
+C<--input_file=>I</path/to/file.xml>
 
 Modify the existing list installed under the robot robot_name and that
 belongs to the family family_name. The new description is in the C<file.xml>.
 
-=item B<--purge_list>=I<list>[@I<robot>]
+=item C<--purge_list>=I<list>[@I<robot>]
 
 Remove the list (remove archive, configuration files, users and owners in admin table. Restore is not possible after this operation.
 
-=item B<--reload_list_config>
-    [B<--list=>I<mylist>@I<mydom>] [B<--robot=>I<mydom>]
+=item C<--reload_list_config>
+[ C<--list=>I<mylist>@I<mydom> ] [ C<--robot=>I<mydom> ]
 
 Recreates all F<config.bin> files or cache in C<list_table>.
 You should run this command if you edit authorization scenarios.
 The list and robot parameters are optional.
 
-=item B<--rename_list=>I<listname>@I<robot>
-    B<--new_listname=>I<newlistname> B<--new_listrobot=>I<newrobot>
+=item C<--rename_list=>I<listname>@I<robot>
+C<--new_listname=>I<newlistname> C<--new_listrobot=>I<newrobot>
 
 Renames a list or move it to another virtual robot.
 
-=item B<--send_digest> [B<--keep_digest>]
+=item C<--send_digest> [ C<--keep_digest> ]
 
 Send digest right now.
-If B<--keep_digest> is specified, stocked digest will not be removed.
+If C<--keep_digest> is specified, stocked digest will not be removed.
 
-=item B<--sync_include=>I<listname>@I<robot>
+=item C<--sync_include=>I<listname>@I<robot>
 
 Trigger the list members update.
 
-=item B<--sync_list_db> [ B<--list=>I<listname>@I<robot> ]
+=item C<--sync_list_db> [ C<--list=>I<listname>@I<robot> ]
 
 Syncs filesystem list configs to the database cache of list configs,
 optionally syncs an individual list if specified.
 
-=item B<--test_database_message_buffer>
+=item C<--test_database_message_buffer>
 
 B<Note>:
 This option was deprecated.
 
 Test the database message buffer size.
 
-=item B<--upgrade> [B<--from=>I<X>] [B<--to=>I<Y>]
+=item C<--upgrade> [ C<--from=>I<X> ] [ C<--to=>I<Y> ]
 
 Runs Sympa maintenance script to upgrade from version I<X> to version I<Y>.
 
-=item B<--upgrade_shared> [B<--list=>I<X>] [B<--robot=>I<Y>]>
+=item C<--upgrade_shared> [ C<--list=>I<X> ] [ C<--robot=>I<Y> ]
 
 B<Note>:
 This option was deprecated.
@@ -1250,16 +1250,16 @@ With following options F<sympa.pl> will print some information and exit.
 
 =over 4
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Print this help message.
 
-=item B<--md5_digest=>I<password>
+=item C<--md5_digest=>I<password>
 
 Output a MD5 digest of a password (useful for SOAP client trusted
 application).
 
-=item B<-v>, B<--version>
+=item C<-v>, C<--version>
 
 Print the version number.
 
