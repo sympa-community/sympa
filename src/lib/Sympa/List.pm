@@ -386,6 +386,7 @@ sub new {
     my $pertinent_ttl = $list->{'admin'}{'distribution_ttl'}
         || $list->{'admin'}{'ttl'};
     if ($status
+        and grep {$list->{'admin'}{'status'} eq $_} qw(open pending)
         and (
             (   not $options->{'skip_sync_admin'}
                 and $list->_cache_read_expiry('last_sync_admin_user') <

@@ -88,6 +88,9 @@ sub _twist {
     # Insert users in database.
     $list->add_list_member(@users);
 
+    # Restore admins
+    $list->sync_include_admin;
+
     # Install new aliases.
     my $aliases = Sympa::Aliases->new(
         Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
