@@ -17,7 +17,6 @@ msgstr ""
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1505121973.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -665,6 +664,8 @@ msgid ""
 "All supported languages for the user interface. Languages proper locale "
 "information not installed are ignored."
 msgstr ""
+"ユーザインタフェースが対応する言語全て。適切な翻訳カタログがインストールされ"
+"ていないものは無視されます。"
 
 #: src/lib/Sympa/ConfDef.pm:79
 msgid "Title of service"
@@ -1896,7 +1897,7 @@ msgstr "統計情報のデータベース保存期間"
 
 #: src/lib/Sympa/ConfDef.pm:1202
 msgid "Number of months that elapse before statistics information are expired"
-msgstr "統計を消去するまでの日月数"
+msgstr "統計を消去するまでの月数"
 
 #: src/lib/Sympa/ConfDef.pm:1209
 msgid "Umask"
@@ -1926,7 +1927,7 @@ msgstr "ウェブ インタフェースでURLに使われます。"
 
 #: src/lib/Sympa/ConfDef.pm:1237
 msgid "URL prefix of WWSympa behind proxy"
-msgstr ""
+msgstr "ウェブインタフェースのURLプリフィクス (プロキシ配下)"
 
 #: src/lib/Sympa/ConfDef.pm:1244
 msgid "URL for static contents"
@@ -2212,7 +2213,7 @@ msgstr "リストの秘密鍵の暗号化パスワード"
 
 #: src/lib/Sympa/ConfDef.pm:1706
 msgid "If not defined, Sympa assumes that list private keys are not encrypted."
-msgstr ""
+msgstr "設定しなければ、Sympaは秘密鍵を暗号化されていないものとして扱います。"
 
 #: src/lib/Sympa/ConfDef.pm:1718
 msgid "Directory containing user certificates"
@@ -2496,7 +2497,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1952
 msgid "URL of SympaSOAP behind proxy"
-msgstr ""
+msgstr "SOAP HTTPインタフェースのURL (プロキシ配下)"
 
 #: src/lib/Sympa/ConfDef.pm:1959
 #, fuzzy
@@ -6053,9 +6054,8 @@ msgid "Do you really want to unsubscribe from list %1?"
 msgstr "本当に %1 メーリングリストの登録解除をしてよいのですか。"
 
 #: default/web_tt2/confirm_action.tt2:67
-#, fuzzy
 msgid "Reject List"
-msgstr "リストの閉鎖"
+msgstr "リストの拒否"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:73
@@ -6071,20 +6071,17 @@ msgid "Do you really want to add selected users?"
 msgstr "本当に、選択した人たちを追加してよいのですか。"
 
 #: default/web_tt2/confirm_action.tt2:98
-#, fuzzy
 msgid "Ignore subscription requests"
-msgstr "読者登録申込はありません"
+msgstr "読者登録申込を無視"
 
 #: default/web_tt2/confirm_action.tt2:101
 #: default/web_tt2/confirm_action.tt2:108
-#, fuzzy
 msgid "Do you really want to ignore selected requests?"
-msgstr "本当に、選択した人たちを追加してよいのですか。"
+msgstr "本当に、選択した申込を無視してよいのですか。"
 
 #: default/web_tt2/confirm_action.tt2:105
-#, fuzzy
 msgid "Ignore deletion requests"
-msgstr "読者登録申込はありません"
+msgstr "登録解除申込を無視"
 
 #: default/web_tt2/confirm_action.tt2:112 default/web_tt2/modform.tt2:10
 #: default/web_tt2/modform.tt2:12 default/web_tt2/modform.tt2:9
@@ -6112,14 +6109,12 @@ msgid "Do you really want to delete %1?"
 msgstr "本当に %1 を削除してよいのですか。"
 
 #: default/web_tt2/confirm_action.tt2:132
-#, fuzzy
 msgid "Copy List"
-msgstr "リストの閉鎖"
+msgstr "リストの複写"
 
 #: default/web_tt2/confirm_action.tt2:139
-#, fuzzy
 msgid "Do you really want to copy this list?"
-msgstr "本当にこのリストを移動してよいのですか。"
+msgstr "本当にこのリストを複写してよいのですか。"
 
 #: default/web_tt2/confirm_action.tt2:141
 msgid "Do you really want to rename this list?"
@@ -6136,15 +6131,13 @@ msgid "Are you sure you wish to change a user's email %1 to %2?"
 msgstr "本当に、この人の電子メールアドレス %1 を %2 に変えてよいのですか。"
 
 #: default/web_tt2/confirm_action.tt2:158
-#, fuzzy
 msgid "Install List"
-msgstr "設置する"
+msgstr "リストを設置"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:165
-#, fuzzy
 msgid "Are you sure you wish to install list %1?"
-msgstr "%1メーリングリストが再開してしまいますが、それでよいのですか。"
+msgstr "%1メーリングリストを設置してよいですか。"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:167
@@ -6154,12 +6147,11 @@ msgstr "%1メーリングリストが再開してしまいますが、それで�
 #: default/web_tt2/confirm_action.tt2:172
 #: default/web_tt2/get_closed_lists.tt2:38
 msgid "Purge selected lists"
-msgstr "選択したリストを削除"
+msgstr "選択したリストを抹消"
 
 #: default/web_tt2/confirm_action.tt2:175
-#, fuzzy
 msgid "Are you sure you wish to purge selected lists?"
-msgstr "%1メーリングリストが再開してしまいますが、それでよいのですか。"
+msgstr "選択したメーリングリストを抹消してよいのですか。"
 
 #. (total)
 #: default/web_tt2/confirm_action.tt2:182
@@ -12501,9 +12493,8 @@ msgid "Message distribution for this list is restricted to list moderators."
 msgstr "メッセージをこのリストへ発送できるのは、リストのモデレータだけです。"
 
 #: default/mail_tt2/report.tt2:142
-#, fuzzy
 msgid "Message distribution for this list is restricted to list owners."
-msgstr "メッセージをこのリストへ発送できるのは、リストのモデレータだけです。"
+msgstr "メッセージをこのリストへ発送できるのは、リストのオーナーだけです。"
 
 #: default/mail_tt2/report.tt2:145
 msgid "Multipart messages are not allowed in this list."
@@ -14252,14 +14243,12 @@ msgid "Newsletter, restricted to moderators after confirmation"
 msgstr "ニュースレター --- モデレータのみ。その前に投稿を確認"
 
 #: default/scenari/send.owner:1
-#, fuzzy
 msgid "Restricted to list owners only"
 msgstr "リストのオーナーのみ"
 
 #: default/scenari/send.ownerauth:1
-#, fuzzy
 msgid "Restricted to list owners with previous MD5 authentication"
-msgstr "パスワードで本人確認できた読者のみ"
+msgstr "パスワードで本人確認できたオーナーのみ"
 
 #: default/scenari/send.private_smime:1
 msgid "restricted to subscribers and checked smime signature"

@@ -19,7 +19,6 @@ msgstr ""
 "X-Generator: Pootle 2.7\n"
 "X-Rosetta-Version: 0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-POOTLE-MTIME: 1452873856.000000\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -255,6 +254,9 @@ msgid ""
 "However, since version 5.3b.5, Sympa will not shorten field size if it "
 "already have been longer than the size defined in database definition."
 msgstr ""
+"Auto: atualiza as estruturas da tabela do banco de dados automaticamente.\n"
+"No entanto, desde a versão 5.3b.5, a Sympa não encurtará o tamanho do campo "
+"se já tiver sido maior que o tamanho definido na definição do banco de dados."
 
 #: src/lib/Sympa/ConfDef.pm:189
 msgid ""
@@ -267,6 +269,15 @@ msgid ""
 "editable by the list owner. This parameter is a comma-separated list.\n"
 "You need to extend the database format with these fields"
 msgstr ""
+"Adiciona mais campos à tabela \"subscriber_table\". Sympa reconhece os "
+"campos definidos com este parâmetro. Você poderá usá-los a partir de modelos "
+"e cenários: \n"
+"* para cenários: [subscriber->field] \n"
+"* para modelos: [% subscriber.field%] \n"
+"Esses campos também aparecerão na página de revisão dos membros da lista e "
+"serão editáveis pelo proprietário da lista. Este parâmetro é uma lista "
+"separada por vírgulas.\n"
+"Você precisa estender o formato do banco de dados com esses campos"
 
 #: src/lib/Sympa/ConfDef.pm:198
 msgid ""
@@ -4344,9 +4355,8 @@ msgid "add a new MIME part"
 msgstr ""
 
 #: src/lib/Sympa/ListOpt.pm:163
-#, fuzzy
 msgid "append to message body"
-msgstr "%1 acessos no Corpo da mensagem"
+msgstr "anexar ao corpo da mensagem"
 
 #: default/scenari/unsubscribe.open:1 src/lib/Sympa/ListOpt.pm:166
 msgid "open"
@@ -4738,16 +4748,14 @@ msgstr "[ Texto convertido do HTML ]\n"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3073
-#, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
-msgstr "Lista para linha direta (Hotline)"
+msgstr "%s via o endereço do proprietário da lista de endereços %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3077
-#, fuzzy
 msgid "%s via Editor Address of %s Mailing List"
-msgstr "Lista para linha direta (Hotline)"
+msgstr "%s via editor de endereços da lista de endereços %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -4758,44 +4766,38 @@ msgstr ""
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3089
-#, fuzzy
 msgid "via Owner Address of %s Mailing List"
-msgstr "Lista para linha direta (Hotline)"
+msgstr "%s via o endereço do proprietário da lista de endereços"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3093
-#, fuzzy
 msgid "via Editor Address of %s Mailing List"
-msgstr "Lista para linha direta (Hotline)"
+msgstr "via editor de endereços da lista de endereços %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3097
-#, fuzzy
 msgid "via %s Mailing List"
-msgstr "Lista para linha direta (Hotline)"
+msgstr "via lista de endereços %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3103 src/lib/Sympa/Message.pm:3119
-#, fuzzy
 msgid "Owner Address of %s Mailing List"
-msgstr "Lista para linha direta (Hotline)"
+msgstr "Endereço do proprietário da lista de endereços %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3107 src/lib/Sympa/Message.pm:3123
-#, fuzzy
 msgid "Editor Address of %s Mailing List"
-msgstr "Lista para linha direta (Hotline)"
+msgstr "Editor de endereço da lista %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/lib/Sympa/Message.pm:3110 src/lib/Sympa/Message.pm:3126
-#, fuzzy
 msgid "%s Mailing List"
-msgstr "Lista para linha direta (Hotline)"
+msgstr "Lista de discussão %s"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
@@ -4979,9 +4981,8 @@ msgid "internal use for string processing"
 msgstr "Diretório para armazenar mensagens de retorno (bounces)"
 
 #: src/lib/Sympa/ModDef.pm:248 src/lib/Sympa/ModDef.pm:268
-#, fuzzy
 msgid "required when including members of a remote list"
-msgstr "Falha ao incluir membros para a lista '%1'"
+msgstr "Falha ao incluir membros para a lista"
 
 #: src/lib/Sympa/ModDef.pm:257
 msgid "set of various subroutines to handle scalar"
@@ -5171,9 +5172,8 @@ msgid "[Image:%s]"
 msgstr "[ Imagem%s ]"
 
 #: src/lib/Sympa/HTML/FormatText.pm:47
-#, fuzzy
 msgid "[Image]"
-msgstr "[ Imagem%s ]"
+msgstr "[ Imagem]"
 
 #: src/lib/Sympa/Message/Plugin.pm:152
 #, fuzzy
@@ -5442,9 +5442,8 @@ msgstr "%d/%m/%Y %H:%M:%S"
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
 #: src/cgi/wwsympa.fcgi.in:16773
-#, fuzzy
 msgid "topic (%s)"
-msgstr "tópicos"
+msgstr "tópicos (%s)"
 
 #. (count)
 #: default/web_tt2/active_lists.tt2:18 default/web_tt2/active_lists.tt2:5
@@ -5574,9 +5573,8 @@ msgstr ""
 
 #. (list)
 #: default/web_tt2/admin.tt2:43
-#, fuzzy
 msgid "View lists including %1"
-msgstr "lista de inclusão remota"
+msgstr "Ver listas incluindo %1"
 
 #: default/web_tt2/admin.tt2:49 default/web_tt2/confirm_action.tt2:69
 msgid "Remove List"
@@ -5905,14 +5903,13 @@ msgstr "A lista de proibições atual tem %1 linha(s)"
 
 #. (conf.use_blacklist)
 #: default/web_tt2/blacklist.tt2:13
-#, fuzzy
 msgid ""
 "Operation requested by users which email is listed in the blacklist file are "
 "rejected. The blacklist is in use for the following operation: %1."
 msgstr ""
-"As operações requisitadas por usuários que têm seus emails no arquivo de "
-"lista negra são rejeitadas. A\n"
-" lista de proibições está em uso para a seguinte operação:"
+"A operação solicitada pelos usuários queo e-mail estiver listado no arquivo "
+"da lista negra são rejeitados. A lista negra está em uso para a seguinte "
+"operação: %1."
 
 #: default/web_tt2/blacklist.tt2:15
 msgid "Syntax:"
@@ -6183,9 +6180,8 @@ msgid "Subscribe"
 msgstr "Inscrever"
 
 #: default/web_tt2/confirm_action.tt2:55
-#, fuzzy
 msgid "Do you really want this action to be taken?"
-msgstr "Você realmente quer remover %1?"
+msgstr "Você realmente quer que essa ação seja tomada?"
 
 #. (list)
 #: default/web_tt2/confirm_action.tt2:218
@@ -6210,9 +6206,8 @@ msgstr ""
 "selecionados?"
 
 #: default/web_tt2/confirm_action.tt2:87
-#, fuzzy
 msgid "Do you really want to add selected users?"
-msgstr "Você realmente quer remover %1?"
+msgstr "Você realmente deseja adicionar usuários selecionados?"
 
 #: default/web_tt2/confirm_action.tt2:98
 #, fuzzy
@@ -6278,9 +6273,8 @@ msgstr "Você tem certeza que quer restaurar a lista %1?"
 
 #. (current_email,email)
 #: default/web_tt2/confirm_action.tt2:152
-#, fuzzy
 msgid "Are you sure you wish to change a user's email %1 to %2?"
-msgstr "Você tem certeza que quer fechar a lista %1?"
+msgstr "Tem certeza de que deseja alterar o e-mail do usuário %1 para %2?"
 
 #: default/web_tt2/confirm_action.tt2:158
 #, fuzzy
@@ -6537,9 +6531,8 @@ msgid "Internal Server Error"
 msgstr "Erro do servidor"
 
 #: default/web_tt2/crash.tt2:63
-#, fuzzy
 msgid "Sympa encountered an internal error."
-msgstr " Usuário %1 encontrou um erro interno do servidor"
+msgstr "Sympa encontrou um erro interno do servidor"
 
 #: default/web_tt2/crash.tt2:64 default/web_tt2/tt2_error.tt2:65
 msgid "Please contact the listmaster."
@@ -7603,9 +7596,8 @@ msgstr "Sem notificação"
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
-#, fuzzy
 msgid "Lists including %1"
-msgstr "lista de inclusão remota"
+msgstr "Listas incluindo %1"
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:5
