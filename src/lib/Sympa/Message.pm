@@ -2764,7 +2764,7 @@ sub _do_text_plain {
     if ($EVAL_ERROR) {
         # mmm, what to do if it fails?
         $string .= $language->gettext_sprintf(
-            "** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
+            "** Warning: A message part is using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
             $charset->as_string
         );
         $thispart =~ s/[^\x00-\x7F]/?/g;
@@ -2829,7 +2829,7 @@ sub _do_text_html {
         } else {
             # mmm, what to do if it fails?
             $string .= $language->gettext_sprintf(
-                "** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
+                "** Warning: A message part is using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
                 $charset->as_string
             );
             $body =~ s/[^\x00-\x7F]/?/g;

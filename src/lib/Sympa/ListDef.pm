@@ -612,7 +612,7 @@ our %pinfo = (
     'reject_mail_from_automates_feature' => {
         order        => 20.18,
         'group'      => 'sending',
-        'gettext_id' => "Reject mail from automates (crontab, etc)?",
+        'gettext_id' => "Reject mail from automatic processes (crontab, etc)?",
         'format'     => ['on', 'off'],
         'occurrence' => '1',
         'default'    => {'conf' => 'reject_mail_from_automates_feature'}

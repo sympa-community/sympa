@@ -72,7 +72,7 @@ our %filenames = (
     'invite.tt2'        => {'gettext_id' => "subscribing invitation message"},
     'helpfile.tt2'      => {'gettext_id' => "help file"},
     'lists.tt2'         => {'gettext_id' => "directory of lists"},
-    'global_remind.tt2' => {'gettext_id' => "global remind message"},
+    'global_remind.tt2' => {'gettext_id' => "global reminder message"},
     'summary.tt2'       => {'gettext_id' => "summary message"},
     'info'              => {'gettext_id' => "list description"},
     'homepage'          => {'gettext_id' => "list homepage"},

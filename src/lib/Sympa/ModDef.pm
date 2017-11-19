@@ -353,7 +353,7 @@ our %cpan_modules = (
         required_version => '0.712',
         package_name     => 'SOAP-Lite',
         'gettext_id' =>
-            'required if you want to run the Sympa SOAP server that provides ML services via a "web service"',
+            'required if you want to run the Sympa SOAP server that provides mailing list services via a "web service"',
     },
     'Sys::Syslog' => {
         required_version => '0.03',

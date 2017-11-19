@@ -240,7 +240,7 @@ my %reception_mode = (
     'html'        => {'gettext_id' => 'html-only mode'},
     'urlize'      => {'gettext_id' => 'urlize mode'},
     'nomail'      => {'gettext_id' => 'no mail'},
-    'not_me'      => {'gettext_id' => 'you do not receive your own posts'}
+    'not_me'      => {'gettext_id' => 'not receiving your own posts'}
 );
 
 # Values for subscriber visibility mode.

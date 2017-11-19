@@ -37,10 +37,10 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Management of list %1[%END%][%EN
 [% ELSIF type == 'ticket_to_family_signoff' -%]
 Subject: [% FILTER qencode %][%|loc(family)%]Unsubscribing from family %1[%END%][%END%]
 [% IF context == 'family_signoff'%]
-[%|loc(family,ip)%]Somebody (probably you) requested to unsubscribe you from family %1. This query was issued from the IP number '%2'.
-To confirm and get removed from all the lists of this family, please click the link below: [%END%] 
+[%|loc(family,ip)%]Somebody (probably you) requested to unsubscribe you from family %1. This query was issued from the IP address %2.
+To confirm and be removed from all the lists of this family, please click the link below: [%END%] 
 [% ELSE %]
-[%|loc(family)%]You have requested to be removed from family %1. To confirm and get removed from all the lists of this family, please click the link below: [%END%] 
+[%|loc(family)%]You have requested to be removed from family %1. To confirm and be removed from all the lists of this family, please click the link below: [%END%] 
 [% END %]
   [% 'ticket' | url_abs([one_time_ticket]) %]
 
@@ -48,8 +48,8 @@ To confirm and get removed from all the lists of this family, please click the l
 [% ELSIF type == 'hundred_percent_error' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]No valid receipient in list %1[%END%][%END%]
 
-[%|loc(list.name, conf.listmaster_email, list.domain) %]You message to list %1 could not be delivered. All the subscribers to this list have their address in error.
-Please contact the listmaster (%2@%3) to fix this probem before re-posting your message.[% END %]
+[%|loc(list.name, conf.listmaster_email, list.domain) %]Your message to list %1 could not be delivered. All the subscribers to this list have their address in error.
+Please contact the listmaster (%2@%3) to fix this problem before re-posting your message.[% END %]
 
 [% ELSIF type == 'plugin' -%]
 [%- TRY -%][%- INCLUDE $entry -%]

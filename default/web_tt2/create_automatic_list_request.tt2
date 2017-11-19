@@ -1,7 +1,7 @@
 <!-- create_automatic_list_request.tt2 -->
 <div>
 <h1>[% family.display %]</h1>
-<p>[%|loc%]In this form, you will be able to create and / or access lists created on the basis of parameters you will defined.[% END %]</p>
+<p>[%|loc%]With this form, you can create and / or access lists created on the basis of parameters you define.[% END %]</p>
 <form action="[% path_cgi %]" method="post" class="add-request"
  name="create_automatic_list">
 [% FOREACH p = family.description.class ~%]

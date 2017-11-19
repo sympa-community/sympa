@@ -70,7 +70,7 @@
     [%~ END %]
   </h2>
   <p><strong>
-    [%|loc(list)%]Are you sure you wish to close list %1?[%END%]
+    [%|loc(list)%]Are you sure you wish to close the %1 list?[%END%]
   </strong></p>
 [%~ ELSIF confirm_action == 'del' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -191,7 +191,7 @@
   </h2>
   <p><strong>
     [% IF 1 < msgid.size ~%]
-      [%|loc%]Do you really want to delete these messages ?[%END%]
+      [%|loc%]Do you really want to delete these messages?[%END%]
     [%~ ELSE ~%]
       [%|loc%]Do you really want to delete this message ?[%END%]
     [%~ END %]
@@ -208,7 +208,7 @@
     [%|loc%]Delete[%END%]
   </h2>
   <p><strong>
-    [%|loc(message_template)%]Do you really want to delete message %1?[%END%]
+    [%|loc(message_template)%]Do you really want to delete this message?[%END%]
   </strong></p>
 [%~ ELSIF confirm_action == 'signoff' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -296,7 +296,7 @@
   [% IF topic_required ~%]
     <h3>[%|loc%]This list is configured to require topic(s).[%END%]</h3>
   [%~ END %]
-  <p>[%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute:[%END%]</p>
+  <p>[%|loc%]Please select one or more topic(s) that corresponds to the messages you wish to distribute:[%END%]</p>
   <ul>
   [% FOREACH t = listconf.msg_topic ~%]
     [% NEXT UNLESS t && t.name ~%]
@@ -313,7 +313,7 @@
   <input type="hidden" name="current_email" value="[% current_email %]" />
   <input type="hidden" name="email" value="[% email %]" />
   <div>
-    [%|loc%]Changing your email address is a sensitive operation so we need to verify your email.[%END%]
+    [%|loc%]Changing your email address is an important operation. Therefore, we need to verify that it is really your email address.[%END%]
     [%|loc(email)%]To this end we will send you an email to this address: %1 with a validation link.[%END%]
     [%|loc%]Please check your mailbox now.[%END%]
   </div>
@@ -361,7 +361,7 @@
       id="response_action_confirm" name="response_action_confirm"
       value="[%|loc%]I am not a spammer[%END%]" />
   </div>
-  <p>[%|loc%]This button aims at protecting mailing lists archives against Spam Harvester.[%END%]</p>
+  <p>[%|loc%]This button tries to protect the mailing list archives against address harvesting by a spammer.[%END%]</p>
 [%~ ELSIF confirm_action == 'auth' ~%]
   <div>
     <input class="MainMenuLinks" type="submit"

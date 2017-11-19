@@ -1,7 +1,7 @@
 <!-- ticket.tt2 -->
 
 [% IF user.email %]
-<h3>[%|loc%]The link you used is unvalid[%END%]</h3>
+<h3>[%|loc%]The link you used is invalid[%END%]</h3>
 [% ELSE %]
 <h3>[%|loc%]Sorry, this operation can't be performed[%END%]</h3>
 [%END%]
@@ -22,7 +22,7 @@
 [%END%]
 
 [% IF ticket_context.result == 'expired' -%]
-[%|loc(ticket_context.printable_date)%]The validation link has expired[%END%].
+[%|loc(ticket_context.printable_date)%]The requested ticket has expired.[%END%]
 [% IF user.email %]
 <br/>[%|loc%]However, as you are logged in already, you can probably perform the action you requested anyway.[%END%]
 [% ELSE %]
@@ -31,7 +31,7 @@
 [%END%]
 
 [% IF ticket_context.result == 'not_found' -%]
-[%|loc(ticket_context.printable_date)%]The validation link has an unknow format or has expired[%END%].
+[%|loc(ticket_context.printable_date)%]The requested authentication ticket is unrecognized or has expired.[%END%].
 [% IF user.email %]
 <br/>[%|loc%]However, as you are logged in already, you can probably perform the action you requested anyway.[%END%]
 [% ELSE %]

@@ -10,7 +10,7 @@
 	        <option value="[% sc.key %]" [% sc.value.selected %]>[% sc.key %]</option>
 	      [% END %]
 	  </select><br />
-      <label for="listname">[%|loc%]Listname:[%END%]  </label>
+      <label for="listname">[%|loc%]List name:[%END%]  </label>
 	  <select id="listname" name="listname">
 	      [% FOREACH l = listname %]
 	        <option value="[% l.key %]"[% l.value.selected %] >[% l.key %]</option>

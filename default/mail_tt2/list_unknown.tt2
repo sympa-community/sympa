@@ -12,7 +12,7 @@ Content-Description: Notification
 
 	[% list %]
 
-[%|loc%]To find out the correct listname, ask for this server's lists directory:[%END%]
+[%|loc%]To find out the correct list name, ask for this server's lists directory:[%END%]
 
 	[% | mailtourl({subject => 'WHICH'}) ~%]
 	  [% conf.email %]@[% conf.host %]

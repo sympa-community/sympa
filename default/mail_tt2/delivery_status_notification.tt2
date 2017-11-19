@@ -95,7 +95,7 @@ Thank you for your attention.[%END%]
 
 [%|loc(virus_name,recipient,sender)%]Our viruschecker found a virus named %1 in a message addressed to %2 and that seems to be yours (From: %3).[%END%]
 
-[%|loc%]We stopped delivery of this email.[%END%]
+[%|loc%]Delivery of this message has been blocked.[%END%]
 
 [%|loc%]It may be useful to check your system for viruses.
 
@@ -117,7 +117,7 @@ You are not allowed to send this message for the following reason:[%END%]
 
 	[% recipient %]
 
-[%|loc%]To find out the correct listname, ask for this server's lists directory:[%END%]
+[%|loc%]To find out the correct list name, ask for this server's lists directory:[%END%]
 
 	[% | mailtourl({subject => 'WHICH'}) ~%]
 	  [% conf.email %]@[% conf.host %]

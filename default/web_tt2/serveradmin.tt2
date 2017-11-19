@@ -72,12 +72,12 @@
   <form class="bold_label" action="[% path_cgi %]" method="post">
   <fieldset>
   <div>
-    <label for="current_email">[%|loc%]Current user email address: [%END%]
+    <label for="current_email">[%|loc%]Current email address:[%END%]
     </label>
     <input id="current_email" type="text" name="current_email" size="30" />
   </div>
   <div>
-    <label for="email">[%|loc%]New user email address: [%END%]</label>
+    <label for="email">[%|loc%]New email address:[%END%]</label>
     <input id="email" type="text" name="email" size="30" />
   </div>
   <input type="hidden" name="action" value="move_user" />
@@ -223,10 +223,10 @@
 [% IF subaction == 'translation' %]
 <h2>[%|loc%]Translating Sympa[%END%]</h2><br />
 <div>
-[%|loc%]Sympa is designed to allow easy internationalization of its user interface (service mail messages and web interface). All translations for one language are gathered in a single PO file that can be manipulated by standard GNU gettext tools.[%END%]
+[%|loc%]Sympa is designed to allow easy internationalization of its user interface (service email messages and web interface). All translations for a language are gathered into a single PO file that can be manipulated by the standard GNU gettext tools.[%END%]
 </div>
 <div>
-[%|loc%]Check our translation FAQ if you wish to translate Sympa GUI in your native language: [%END%] <a href="https://translate.sympa.org/pages/help">https://translate.sympa.org/pages/help</a>
+[%|loc%]Check our translation FAQ if you wish to translate the Sympa GUI into your native language: [%END%] <a href="https://translate.sympa.org/pages/help">https://translate.sympa.org/pages/help</a>
 </div>
 [% END %] 
 
