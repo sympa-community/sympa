@@ -1,5 +1,53 @@
 # Change Log
 
+## [6.2.23b.1](https://github.com/sympa-community/sympa/tree/6.2.23b.1) (2017-11-20)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.22...6.2.23b.1)
+
+**Changes:**
+
+- "`%`" sign in SQL data source no longer need escaping by duplicating it, i.e. "`%%`". Administrators on the sites allowing SQL datasources are recommended to check datasource settings and modify them as necessity. [\#66](https://github.com/sympa-community/sympa/pull/66)
+- WWSympa: FastCGI support became mandatory. CGI mode was deprecated. [\#69](https://github.com/sympa-community/sympa/issues/69)
+- `important_changes.pl` in source distribution was removed. Notable changes will no longer be noticed during building process. [\#73](https://github.com/sympa-community/sympa/issues/73)
+- `sympa.spec` and `META.json` will no longer be bundled in source distribution. [\#77](https://github.com/sympa-community/sympa/pull/77)
+- Bundled jQuery libraries were upgraded to jquery 3.2.1, jquery-migrate 3.0.1 and jquery-ui 1.12.1 to avoid XSS vulnerability. [\#78](https://github.com/sympa-community/sympa/issues/78)
+- Now `topics.conf` treats topic names ignoring cases. Previously names including uppercase letters were ignored.  [\#91](https://github.com/sympa-community/sympa/issues/91)
+- `alias_manager.pl` was obsoleted. Alias files will be updated by internal module directly. Though `alias_manager.pl` is still available for backward compatibility, it will be removed in the future. [\#118](https://github.com/sympa-community/sympa/pull/118)
+- Several typos and bad wordings in English translation catalog were corrected. Some phrases in default templates, scenarios and tasks were changed. \[[1e2e094](https://github.com/sympa-community/sympa/commit/1e2e0941fd771a702b7d04f2166bbe59d90ca6cd)\]
+
+**Implemented enhancements:**
+
+- Refactoring alias manager: Obsolete alias\_manager.pl [\#118](https://github.com/sympa-community/sympa/pull/118) ([ikedas](https://github.com/ikedas))
+- Suppress saving stats file, and solve problem about on-memory cache [\#105](https://github.com/sympa-community/sympa/pull/105) ([ikedas](https://github.com/ikedas))
+- Cache list info in Sympa::Scenario::verify to reduce overhead of pinfo… [\#97](https://github.com/sympa-community/sympa/pull/97) ([mpkut](https://github.com/mpkut))
+- Feature: add scenari to restrict message submission to list owners [\#96](https://github.com/sympa-community/sympa/pull/96) ([mpkut](https://github.com/mpkut))
+- Add use\_tls, ssl, version etc to valid LDAP options in Scenario.pm [\#95](https://github.com/sympa-community/sympa/pull/95) ([mpkut](https://github.com/mpkut))
+- When fallback language "en" is used, use "en\_US" translation catalog [\#84](https://github.com/sympa-community/sympa/pull/84) ([ikedas](https://github.com/ikedas))
+- Refactoring requests more [\#81](https://github.com/sympa-community/sympa/pull/81) ([ikedas](https://github.com/ikedas))
+
+**Fixed bugs:**
+
+- Archived-At: field on resent messages in archive are wrong. [\#111](https://github.com/sympa-community/sympa/issues/111)
+- Review.tt2 button correction. [\#98](https://github.com/sympa-community/sympa/issues/98)
+- Change redirect after incorrect choosepasswd - UX suggestion [\#93](https://github.com/sympa-community/sympa/issues/93)
+- Topic names in topics.conf with uppercase are ignored [\#91](https://github.com/sympa-community/sympa/issues/91)
+- Fix ridiculous English spelling for spam protection button [\#80](https://github.com/sympa-community/sympa/issues/80)
+- Change Redirect After List Admin Updates a User's Email - UX Suggestion [\#76](https://github.com/sympa-community/sympa/issues/76)
+- important\_changes.pl is broken [\#73](https://github.com/sympa-community/sympa/issues/73)
+- Log list not sorted for date [\#70](https://github.com/sympa-community/sympa/issues/70)
+- include\_ldap\_query and include\_ldap\_2level\_query behaving differently [\#63](https://github.com/sympa-community/sympa/issues/63)
+- Responsive table breaks form submission [\#61](https://github.com/sympa-community/sympa/issues/61)
+- Changes on POD format for transition to Markdown [\#123](https://github.com/sympa-community/sympa/pull/123) ([ikedas](https://github.com/ikedas))
+- Insignificant bugs related to cache [\#120](https://github.com/sympa-community/sympa/pull/120) ([ikedas](https://github.com/ikedas))
+- Refactoring alias manager: Obsolete alias\_manager.pl [\#118](https://github.com/sympa-community/sympa/pull/118) ([ikedas](https://github.com/ikedas))
+- Refactoring requests 5 [\#109](https://github.com/sympa-community/sympa/pull/109) ([ikedas](https://github.com/ikedas))
+- Suppress saving stats file, and solve problem about on-memory cache [\#105](https://github.com/sympa-community/sympa/pull/105) ([ikedas](https://github.com/ikedas))
+- Old variable names used in listmaster error mail [\#104](https://github.com/sympa-community/sympa/pull/104) ([sivertkh](https://github.com/sivertkh))
+- Fix CSS attributes for un-hovered navigation menu items using color\_5 [\#94](https://github.com/sympa-community/sympa/pull/94) ([mpkut](https://github.com/mpkut))
+- Bugs on subscribe request with custom attributes and/or authorization [\#89](https://github.com/sympa-community/sympa/pull/89) ([ikedas](https://github.com/ikedas))
+- Refactoring requests more [\#81](https://github.com/sympa-community/sympa/pull/81) ([ikedas](https://github.com/ikedas))
+- "%" sign in SQL data source would be escaped [\#66](https://github.com/sympa-community/sympa/pull/66) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.22](https://github.com/sympa-community/sympa/tree/6.2.22) (2017-10-01)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.20...6.2.22)
