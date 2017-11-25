@@ -1424,16 +1424,7 @@ sub prepare_message_according_to_mode {
 
     my $robot_id = $list->{'domain'};
 
-    if ($mode eq 'mail') {
-        ##Prepare message for normal reception mode
-        ## Add a footer
-        unless ($self->{'protected'}) {
-            my $entity = $self->as_entity->dup;
-
-            _decorate_parts($entity, $list);
-            $self->set_entity($entity);
-        }
-    } elsif ($mode eq 'nomail'
+    if ($mode eq 'nomail'
         or $mode eq 'summary'
         or $mode eq 'digest'
         or $mode eq 'digestplain') {
@@ -1450,16 +1441,6 @@ sub prepare_message_according_to_mode {
         my $entity = $self->as_entity->dup;
 
         if (_as_singlepart($entity, 'text/plain')) {
-            $log->syslog('notice', 'Multipart message changed to singlepart');
-        }
-        ## Add a footer
-        _decorate_parts($entity, $list);
-        $self->set_entity($entity);
-    } elsif ($mode eq 'html') {
-        ##Prepare message for html reception mode
-        my $entity = $self->as_entity->dup;
-
-        if (_as_singlepart($entity, 'text/html')) {
             $log->syslog('notice', 'Multipart message changed to singlepart');
         }
         ## Add a footer
@@ -1482,8 +1463,15 @@ sub prepare_message_according_to_mode {
         ## Add a footer
         _decorate_parts($entity, $list);
         $self->set_entity($entity);
-    } else {
-        die sprintf 'Unknown variable/reception mode %s', $mode;
+    } else { # 'mail'
+        # Prepare message for normal reception mode,
+        # and add a footer.
+        unless ($self->{'protected'}) {
+            my $entity = $self->as_entity->dup;
+
+            _decorate_parts($entity, $list);
+            $self->set_entity($entity);
+        }
     }
 
     return $self;
@@ -3712,7 +3700,8 @@ Customized text, or C<undef> if error occurred.
 
 I<Instance method>.
 Transforms the message according to reception mode:
-C<'mail'>, C<'notice'>, C<'txt'> or C<'html'>.
+C<'mail'>, C<'notice'> or C<'txt'>.
+Note: 'html' mode was deprecated as of 6.2.23b.2.
 
 By C<'nomail'>, C<'digest'>, C<'digestplain'> or C<'summary'> mode,
 the message is not modified.
