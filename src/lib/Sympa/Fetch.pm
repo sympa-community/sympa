@@ -47,12 +47,6 @@ sub get_https {
     my $trusted_ca_file = $ssl_data->{'cafile'};
     my $trusted_ca_path = $ssl_data->{'capath'};
 
-    #unless (-r $trusted_ca_file or -d $trusted_ca_path) {
-    #    $log->syslog('err', 'Incorrect access to cafile %s or capath %s',
-    #        $trusted_ca_file, $trusted_ca_path);
-    #    return undef;
-    #}
-
     unless ($IO::Socket::SSL::VERSION) {
         $log->syslog('err',
             'Unable to use SSL library, IO::Socket::SSL required, install it first'

@@ -81,25 +81,6 @@ sub _connect {
             $log->syslog('err', 'Can\'t load IO::Socket::SSL');
             return undef;
         }
-
-        # Earlier releases of IO::Socket::SSL would fallback SSL_verify_mode
-        # to SSL_VERIFY_NONE when there are no usable CAfile nor CApath.
-        # However, recent releases won't: They simply deny connection.
-        # As a workaround, make ca_file or ca_path parameter mandatory unless
-        # "none" is explicitly assigned to ca_verify parameter.
-        #
-        # Update on 6.2.23b.2: If CAfile or CApath is not specified, system
-        # default will be used, but if undef was specified, system default
-        # would be disabled. Now undef won't be specified and the check below
-        # is useless.
-
-        #unless ($self->{ca_verify} and $self->{ca_verify} eq 'none') {
-        #    unless ($self->{ca_file} or $self->{ca_path}) {
-        #        $log->syslog('err',
-        #            'Neither ca_file nor ca_path parameter is specified');
-        #        return undef;
-        #    }
-        #}
     }
 
     # new() with multiple alternate hosts needs perl-ldap >= 0.27.

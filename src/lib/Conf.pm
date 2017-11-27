@@ -825,21 +825,6 @@ sub checkfiles {
         }
     }
 
-    ### Check cafile and capath access
-    #if (defined $Conf{'cafile'} && $Conf{'cafile'}) {
-    #    unless (-f $Conf{'cafile'} && -r $Conf{'cafile'}) {
-    #        $log->syslog('err', 'Cannot access cafile %s', $Conf{'cafile'});
-    #        $config_err++;
-    #    }
-    #}
-
-    #if (defined $Conf{'capath'} && $Conf{'capath'}) {
-    #    unless (-d $Conf{'capath'} && -x $Conf{'capath'}) {
-    #        $log->syslog('err', 'Cannot access capath %s', $Conf{'capath'});
-    #        $config_err++;
-    #    }
-    #}
-
     # Check if directory parameters point to the same directory.
     my @keys = qw(bounce_path etc home
         queue queueauth queuebounce queuebulk queuedigest
@@ -1906,12 +1891,6 @@ sub _infer_server_specific_parameter_values {
     my $param = shift;
 
     $param->{'config_hash'}{'robot_name'} = '';
-
-    #unless (defined $param->{'config_hash'}{'cafile'}
-    #    or defined $param->{'config_hash'}{'capath'}) {
-    #    $param->{'config_hash'}{'cafile'} =
-    #        Sympa::Constants::DEFAULTDIR . '/ca-bundle.crt';
-    #}
 
     unless (
         Sympa::Tools::Data::smart_eq(
