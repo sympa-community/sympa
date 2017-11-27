@@ -334,33 +334,19 @@ sub GetLdapParameter {
 sub initialize_ldap {
 
     if ($ldap_ssl eq '1') {
-        if ($ldap_cachain) {
-            unless (
-                $ldap_connection = Net::LDAPS->new(
-                    $ldap_host,
-                    version    => 3,
-                    verify     => 'require',
-                    sslversion => $ldap_ssl_version,
-                    cafile     => $ldap_cachain
-                )
-                ) {
-                print STDERR
-                    "Can't connect to LDAP server using SSL or unable to verify Server certificate for $ldap_host: $EVAL_ERROR\n";
-                return 0;
-            }
-        } else {
-            unless (
-                $ldap_connection = Net::LDAPS->new(
-                    $ldap_host,
-                    version    => 3,
-                    verify     => 'none',
-                    sslversion => $ldap_ssl_version
-                )
-                ) {
-                print STDERR
-                    "Can't connect to LDAP server using SSL for $ldap_host: $EVAL_ERROR\n";
-                return 0;
-            }
+        unless (
+            $ldap_connection = Net::LDAPS->new(
+                $ldap_host,
+                version    => 3,
+                verify     => ($ldap_cachain ? 'require' : 'none'),
+                sslversion => $ldap_ssl_version,
+                ($ldap_cachain ? (cafile => $ldap_cachain) : ())
+            )
+            ) {
+            printf STDERR
+                "Can't connect to LDAP server using SSL or unable to verify Server certificate for %s: %s\n",
+                $ldap_host, $EVAL_ERROR;
+            return 0;
         }
     } else {
         unless ($ldap_connection = Net::LDAP->new($ldap_host, version => 3)) {

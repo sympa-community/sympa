@@ -26,12 +26,14 @@ package Sympa::Fetch;
 
 use strict;
 use warnings;
+BEGIN { eval 'use IO::Socket::SSL'; }
+BEGIN { eval 'use LWP::UserAgent'; }
 
 use Sympa::Log;
 
 my $log = Sympa::Log->instance;
 
-# request a document using https, return status and content
+# Requests a document using https, returns status and content.
 sub get_https {
     $log->syslog('debug2', '(%s, %s, %s, %s, %s, %s)', @_);
     my $host        = shift;
@@ -45,28 +47,25 @@ sub get_https {
     my $trusted_ca_file = $ssl_data->{'cafile'};
     my $trusted_ca_path = $ssl_data->{'capath'};
 
-    unless (-r ($trusted_ca_file) || (-d $trusted_ca_path)) {
+    #unless (-r $trusted_ca_file or -d $trusted_ca_path) {
+    #    $log->syslog('err', 'Incorrect access to cafile %s or capath %s',
+    #        $trusted_ca_file, $trusted_ca_path);
+    #    return undef;
+    #}
+
+    unless ($IO::Socket::SSL::VERSION) {
         $log->syslog('err',
-            "error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path"
+            'Unable to use SSL library, IO::Socket::SSL required, install it first'
         );
         return undef;
     }
 
-    unless (eval "require IO::Socket::SSL") {
+    unless ($LWP::UserAgent::VERSION) {
         $log->syslog('err',
-            "Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first"
+            'Unable to use LWP library, LWP::UserAgent required, install it first'
         );
         return undef;
     }
-    require IO::Socket::SSL;
-
-    unless (eval "require LWP::UserAgent") {
-        $log->syslog('err',
-            "Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first"
-        );
-        return undef;
-    }
-    require LWP::UserAgent;
 
     my $ssl_socket;
 
@@ -76,12 +75,12 @@ sub get_https {
         SSL_cert_file   => $client_cert,
         SSL_key_file    => $client_key,
         SSL_passwd_cb   => sub { return ($key_passwd) },
-        SSL_ca_file     => $trusted_ca_file,
-        SSL_ca_path     => $trusted_ca_path,
-        PeerAddr        => $host,
-        PeerPort        => $port,
-        Proto           => 'tcp',
-        Timeout         => '5'
+        ($trusted_ca_file ? (SSL_ca_file => $trusted_ca_file) : ()),
+        ($trusted_ca_path ? (SSL_ca_path => $trusted_ca_path) : ()),
+        PeerAddr => $host,
+        PeerPort => $port,
+        Proto    => 'tcp',
+        Timeout  => '5'
     );
 
     unless ($ssl_socket) {
@@ -121,7 +120,8 @@ sub get_https {
     return (@result);
 }
 
-# request a document using https, return status and content
+# Requests a document using https, returns status and content.
+# NEVER USED.
 sub get_https2 {
     my $host = shift;
     my $port = shift;

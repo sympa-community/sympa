@@ -87,13 +87,19 @@ sub _connect {
         # However, recent releases won't: They simply deny connection.
         # As a workaround, make ca_file or ca_path parameter mandatory unless
         # "none" is explicitly assigned to ca_verify parameter.
-        unless ($self->{ca_verify} and $self->{ca_verify} eq 'none') {
-            unless ($self->{ca_file} or $self->{ca_path}) {
-                $log->syslog('err',
-                    'Neither ca_file nor ca_path parameter is specified');
-                return undef;
-            }
-        }
+        #
+        # Update on 6.2.23b.2: If CAfile or CApath is not specified, system
+        # default will be used, but if undef was specified, system default
+        # would be disabled. Now undef won't be specified and the check below
+        # is useless.
+
+        #unless ($self->{ca_verify} and $self->{ca_verify} eq 'none') {
+        #    unless ($self->{ca_file} or $self->{ca_path}) {
+        #        $log->syslog('err',
+        #            'Neither ca_file nor ca_path parameter is specified');
+        #        return undef;
+        #    }
+        #}
     }
 
     # new() with multiple alternate hosts needs perl-ldap >= 0.27.
@@ -105,8 +111,8 @@ sub _connect {
             : ($self->{ca_verify} eq 'required') ? 'require'
             :                                      $self->{ca_verify}
         ),
-        capath     => $self->{'ca_path'},
-        cafile     => $self->{'ca_file'},
+        ($self->{'ca_path'} ? (capath => $self->{'ca_path'}) : ()),
+        ($self->{'ca_file'} ? (cafile => $self->{'ca_file'}) : ()),
         sslversion => $self->{'ssl_version'},
         ciphers    => $self->{'ssl_ciphers'},
         clientcert => $self->{'ssl_cert'},
@@ -132,8 +138,8 @@ sub _connect {
                 : ($self->{ca_verify} eq 'required') ? 'require'
                 :                                      $self->{ca_verify}
             ),
-            capath     => $self->{'ca_path'},
-            cafile     => $self->{'ca_file'},
+            ($self->{'ca_path'} ? (capath => $self->{'ca_path'}) : ()),
+            ($self->{'ca_file'} ? (cafile => $self->{'ca_file'}) : ()),
             sslversion => $self->{'ssl_version'},
             ciphers    => $self->{'ssl_ciphers'},
             clientcert => $self->{'ssl_cert'},
