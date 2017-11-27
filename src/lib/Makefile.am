@@ -58,7 +58,6 @@ nobase_modules_DATA = \
 	Sympa/DatabaseManager.pm \
 	Sympa/Datasource.pm \
 	Sympa/Family.pm \
-	Sympa/Fetch.pm \
 	Sympa/HTML/FormatText.pm \
 	Sympa/HTMLDecorator.pm \
 	Sympa/HTMLSanitizer.pm \
