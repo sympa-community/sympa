@@ -2006,7 +2006,7 @@ our @params = (
         'file'    => 'sympa.conf',
     },
     {   'name'       => 'owner_domain',
-        'sample'     => 'domain1.tld,domain2.tld',
+        'sample'     => 'domain1.tld domain2.tld',
         'gettext_id' => 'List of required domains for list owner addresses',
         'file'       => 'sympa.conf',
         'optional'   => '1',
