@@ -43,7 +43,7 @@ msgstr "Erreur de définition du paramètre ; %s\n"
 #: src/lib/Sympa/Upgrade.pm:1933 src/lib/Sympa/Upgrade.pm:1977
 #: src/lib/Sympa/Upgrade.pm:955 src/sbin/sympa_wizard.pl.in:400
 msgid "%d.%b.%Y-%H.%M.%S"
-msgstr "%d %b %Y %H:%M:%S"
+msgstr "%d %b. %Y %H:%M:%S"
 
 # nlsref 3,1
 #: src/sbin/sympa_wizard.pl.in:404
@@ -216,13 +216,14 @@ msgstr ""
 "ce module ? [o/N]"
 
 #: src/lib/Sympa/ConfDef.pm:101
-#, fuzzy
 msgid ""
 "If set to \"on\", enables support of legacy character set according to "
 "charset.conf(5) configuration file.\n"
 "In some language environments, legacy encoding (character set) can be "
 "preferred for e-mail messages: for example iso-2022-jp in Japanese language."
 msgstr ""
+"Si définit sur la valeur \"on\", active le support des anciennes table de "
+"caractère sur le base du fichier de configuration charset.conf(5).\n"
 "Pour certaines langues, les anciennes tables de caractères sont préférables "
 "pour encoder les messages: par exemple iso-2022-jp pour le japonais"
 
@@ -308,23 +309,24 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:457
-#, fuzzy
 msgid ""
 "The number of seconds a bulk worker sleeps between starting a new loop if it "
 "didn't find a message to send.\n"
 "Keep it small if you want your server to be reactive."
 msgstr ""
 "La durée, en secondes, pendant laquelle un processus bulk attend avant de "
-"commencer une nouvelle boucle s'il n'a pas trouvé de message à envoyer"
+"commencer une nouvelle boucle s'il n'a pas trouvé de message à envoyer.\n"
+"Cette durée doit rester courte si vous voulez que le serveur soit réactif."
 
 #: src/lib/Sympa/ConfDef.pm:465
-#, fuzzy
 msgid ""
 "Number of seconds a master bulk daemon waits between two packets number "
 "checks.\n"
 "Keep it small if you expect brutal increases in the message sending load."
 msgstr ""
-"Gardez cette valeur faible si vous vous attendez à des pics d'activité "
+"Le nombre de secondes pendant lesquelles le démon bulk maître attend entre "
+"deux vérifications du nombre de paquets en attente d'expédition.\n"
+"Cette valeur doit etre faible si vous vous attendez à des pics d'activité "
 "brutaux."
 
 #: src/lib/Sympa/ConfDef.pm:478
