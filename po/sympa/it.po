@@ -11838,7 +11838,7 @@ msgstr "Struttura database aggiornata"
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:72
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
 "La struttura del database è aggiornata; controlla i log per maggiori "
@@ -15370,7 +15370,7 @@ msgid "daily update of the certificate revocation list"
 msgstr "Aggiornamento quotidiano dell'elenco delle revoche dei certificati."
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr "Controllo giornaliero degli indirizzi non validi"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -15385,7 +15385,7 @@ msgstr ""
 
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
 #, fuzzy
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr "Eliminazione mensile degli indirizzi errrati degli utenti disiscritti"
 
 #: default/global_task_models/purge_session_table.daily.task:1
@@ -15396,7 +15396,7 @@ msgstr ""
 
 #: default/global_task_models/purge_spools.daily.task:1
 #, fuzzy
-msgid "daily delete unuseful items from any spool"
+msgid "daily deletion of unuseful items from any spool"
 msgstr ""
 "cancellazione quotidiana da tutte le tabelle degli elementi non utilizzati"
 
@@ -15406,7 +15406,7 @@ msgstr ""
 "cancellazione quotidiana da tutte le tabelle degli elementi non utilizzati"
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr "Elimina le voci orfane nella tabella degli utenti ogni mese"
 
 #: default/list_task_models/expire.yearly.task:1
@@ -15426,7 +15426,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "Il promemoria viene inviato agli iscritti una volta all'anno"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "Aggiorna l'elenco degli utenti"
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -15648,6 +15648,17 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "Provider sconosciuto."
 
+#: default/global_task_models/purge_orphan_bounces.monthly.task:1
+#, fuzzy
+msgid "delete monthly bounces for unsubscribed addresses"
+msgstr "Eliminazione mensile degli indirizzi errrati degli utenti disiscritti"
+
+#: default/global_task_models/purge_spools.daily.task:1
+#, fuzzy
+msgid "daily delete unuseful items from any spool"
+msgstr ""
+"cancellazione quotidiana da tutte le tabelle degli elementi non utilizzati"
+
 #: src/lib/Sympa/ModDef.pm:353
 msgid ""
 "required if you want to run the Sympa SOAP server that provides ML services "
@@ -15705,6 +15716,22 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid ""
+#~ "The database structure has been updated, Check the log file for further "
+#~ "details: "
+#~ msgstr ""
+#~ "La struttura del database è aggiornata; controlla i log per maggiori "
+#~ "dettagli:"
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr "Controllo giornaliero degli indirizzi non validi"
+
+#~ msgid "purge of orphan entries in user table every month"
+#~ msgstr "Elimina le voci orfane nella tabella degli utenti ogni mese"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "Aggiorna l'elenco degli utenti"
 
 #, fuzzy
 #~ msgid ""

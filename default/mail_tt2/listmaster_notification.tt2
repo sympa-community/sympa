@@ -69,7 +69,7 @@ Subject: [% FILTER qencode %][%|loc%]Upgrade procedures failed[%END%][%END%]
 Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
 X-Sympa-NoWrap: yes
 
-[%|wrap(0,0)%][%|loc(db_name)%]The database structure has been updated, Check the log file for further details: [%END%][%END#wrap%]
+[%|wrap(0,0)%][%|loc(db_name)%]The database structure has been updated. Check the log file for further details: [%END%][%END#wrap%]
 
 [% FOREACH report_item IN report -%]
 [% report_item %]

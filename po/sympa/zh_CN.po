@@ -11273,7 +11273,7 @@ msgstr "数据库结构已更新"
 #: default/mail_tt2/listmaster_notification.tt2:72
 #, fuzzy
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr "更新了数据库结构；为得到更多细节检查日志文件："
 
@@ -14499,7 +14499,7 @@ msgid "daily update of the certificate revocation list"
 msgstr "每日更新证书废止邮件列表"
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr "每日评估退信的用户"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -14513,7 +14513,7 @@ msgid "daily deletion of outdated tickets"
 msgstr "每日删除超过sympa.conf/session_expiration_period  设定的期限的会话"
 
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr "每月删除未订阅地址的退信"
 
 #: default/global_task_models/purge_session_table.daily.task:1
@@ -14521,15 +14521,16 @@ msgid "daily termination of outdated sessions"
 msgstr "每日删除超过sympa.conf/session_expiration_period  设定的期限的会话"
 
 #: default/global_task_models/purge_spools.daily.task:1
-msgid "daily delete unuseful items from any spool"
-msgstr ""
+#, fuzzy
+msgid "daily deletion of unuseful items from any spool"
+msgstr "每日删除超过sympa.conf/session_expiration_period  设定的期限的会话"
 
 #: default/global_task_models/purge_tables.daily.task:1
 msgid "daily deletion of unuseful items from table"
 msgstr ""
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr "在用户表里每月清除单个词条"
 
 #: default/list_task_models/expire.yearly.task:1
@@ -14549,7 +14550,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "提醒邮件每年发送到订阅者"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "基于TTL的邮件列表成员更新"
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -14764,6 +14765,18 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "未知"
+
+#. (db_name)
+#: default/mail_tt2/listmaster_notification.tt2:72
+#, fuzzy
+msgid ""
+"The database structure has been updated, Check the log file for further "
+"details: "
+msgstr "更新了数据库结构；为得到更多细节检查日志文件："
+
+#: default/global_task_models/purge_spools.daily.task:1
+msgid "daily delete unuseful items from any spool"
+msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:615
 msgid "Reject mail from automates (crontab, etc)?"
@@ -15507,6 +15520,18 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr "每日评估退信的用户"
+
+#~ msgid "delete monthly bounces for unsubscribed addresses"
+#~ msgstr "每月删除未订阅地址的退信"
+
+#~ msgid "purge of orphan entries in user table every month"
+#~ msgstr "在用户表里每月清除单个词条"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "基于TTL的邮件列表成员更新"
 
 #, fuzzy
 #~ msgid ""

@@ -11233,7 +11233,7 @@ msgstr ""
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:72
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
 
@@ -14563,7 +14563,7 @@ msgid "daily update of the certificate revocation list"
 msgstr ""
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr "Konference neobsahuje vrácené (bounce) adresy"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -14575,7 +14575,7 @@ msgid "daily deletion of outdated tickets"
 msgstr ""
 
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr "smazat záznam o vrácených adresách u odhlášených členů za měsíc"
 
 #: default/global_task_models/purge_session_table.daily.task:1
@@ -14584,7 +14584,7 @@ msgid "daily termination of outdated sessions"
 msgstr "Vypršení nemoderované zprávy"
 
 #: default/global_task_models/purge_spools.daily.task:1
-msgid "daily delete unuseful items from any spool"
+msgid "daily deletion of unuseful items from any spool"
 msgstr ""
 
 #: default/global_task_models/purge_tables.daily.task:1
@@ -14592,7 +14592,7 @@ msgid "daily deletion of unuseful items from table"
 msgstr ""
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr "smazat bezprizorní položky v tabulce uživatelů každý měsíc"
 
 #: default/list_task_models/expire.yearly.task:1
@@ -14612,7 +14612,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "zasílat připomínku každý rok"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "Obnov seznam členů, používajících TTL aut."
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -14832,6 +14832,17 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Unknown"
+
+#. (db_name)
+#: default/mail_tt2/listmaster_notification.tt2:72
+msgid ""
+"The database structure has been updated, Check the log file for further "
+"details: "
+msgstr ""
+
+#: default/global_task_models/purge_spools.daily.task:1
+msgid "daily delete unuseful items from any spool"
+msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:615
 msgid "Reject mail from automates (crontab, etc)?"
@@ -15828,6 +15839,18 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr "Konference neobsahuje vrácené (bounce) adresy"
+
+#~ msgid "delete monthly bounces for unsubscribed addresses"
+#~ msgstr "smazat záznam o vrácených adresách u odhlášených členů za měsíc"
+
+#~ msgid "purge of orphan entries in user table every month"
+#~ msgstr "smazat bezprizorní položky v tabulce uživatelů každý měsíc"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "Obnov seznam členů, používajících TTL aut."
 
 #, fuzzy
 #~ msgid "you do not receive your own posts"

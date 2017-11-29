@@ -11196,7 +11196,7 @@ msgstr "Databasestrukturen er oppdatert"
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:72
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
 
@@ -14369,7 +14369,7 @@ msgid "daily update of the certificate revocation list"
 msgstr ""
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr "Daglig evaluering av brukere med returmeldinger"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -14383,7 +14383,7 @@ msgstr ""
 
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
 #, fuzzy
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr "slett returmeldinger for ikke-medlemsadresser månedlig"
 
 #: default/global_task_models/purge_session_table.daily.task:1
@@ -14392,15 +14392,16 @@ msgid "daily termination of outdated sessions"
 msgstr "Utløpsdato for umodererte meldinger"
 
 #: default/global_task_models/purge_spools.daily.task:1
-msgid "daily delete unuseful items from any spool"
-msgstr ""
+#, fuzzy
+msgid "daily deletion of unuseful items from any spool"
+msgstr "slett logger eldre enn 3 måneder daglig"
 
 #: default/global_task_models/purge_tables.daily.task:1
 msgid "daily deletion of unuseful items from table"
 msgstr ""
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr ""
 
 #: default/list_task_models/expire.yearly.task:1
@@ -14420,7 +14421,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "påminnelses-e-post sendes abonnentene hvert år"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "Oppdatering av listemedlemmen basert på TTL-en"
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -14636,6 +14637,26 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Ukjent feil."
+
+#. (db_name)
+#: default/mail_tt2/listmaster_notification.tt2:72
+msgid ""
+"The database structure has been updated, Check the log file for further "
+"details: "
+msgstr ""
+
+#: default/global_task_models/purge_orphan_bounces.monthly.task:1
+#, fuzzy
+msgid "delete monthly bounces for unsubscribed addresses"
+msgstr "slett returmeldinger for ikke-medlemsadresser månedlig"
+
+#: default/global_task_models/purge_spools.daily.task:1
+msgid "daily delete unuseful items from any spool"
+msgstr ""
+
+#: default/global_task_models/purge_user_table.monthly.task:1
+msgid "purge of orphan entries in user table every month"
+msgstr ""
 
 #: src/lib/Sympa/ModDef.pm:353
 msgid ""
@@ -15254,6 +15275,12 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr "Daglig evaluering av brukere med returmeldinger"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "Oppdatering av listemedlemmen basert på TTL-en"
 
 #, fuzzy
 #~ msgid ""

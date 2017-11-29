@@ -11297,7 +11297,7 @@ msgstr "Datu base egitura eguneratuta"
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:72
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
 "Datu basearen egitura eguneratu da; aztertu log fitxategiak informazio "
@@ -14542,7 +14542,7 @@ msgid "daily update of the certificate revocation list"
 msgstr ""
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr "Errebotatzen duten erabiltzaileen eguneroko azterketa"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -14556,7 +14556,7 @@ msgstr ""
 "eguneroko ezabaketa "
 
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr "harpidetu gabeko erreboteen hileroko ezabaketa"
 
 #: default/global_task_models/purge_session_table.daily.task:1
@@ -14566,8 +14566,10 @@ msgstr ""
 "eguneroko ezabaketa"
 
 #: default/global_task_models/purge_spools.daily.task:1
-msgid "daily delete unuseful items from any spool"
+#, fuzzy
+msgid "daily deletion of unuseful items from any spool"
 msgstr ""
+"edozein tauletako erabilgarriak ez diren elementuen eguneroko ezabaketa"
 
 #: default/global_task_models/purge_tables.daily.task:1
 msgid "daily deletion of unuseful items from table"
@@ -14575,7 +14577,7 @@ msgstr ""
 "edozein tauletako erabilgarriak ez diren elementuen eguneroko ezabaketa"
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr "erabiltzaile taulan umezurtz dauden sarreren hileroko ezabaketa"
 
 #: default/list_task_models/expire.yearly.task:1
@@ -14595,7 +14597,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "urtero harpidedunei mezu oroigarrien bidalketa"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "TTLren arabera zerrendako kideak eguneratu"
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -14818,6 +14820,10 @@ msgstr "Ezin kontsumitzailea kargatu, konfigurazioa okerra izan daiteke."
 msgid "Unknown provider."
 msgstr "Hornitzaile ezezaguna."
 
+#: default/global_task_models/purge_spools.daily.task:1
+msgid "daily delete unuseful items from any spool"
+msgstr ""
+
 #: default/web_tt2/admin.tt2:18
 msgid "Manages non-delivery reports (also called bounces)."
 msgstr ""
@@ -14897,6 +14903,25 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid ""
+#~ "The database structure has been updated, Check the log file for further "
+#~ "details: "
+#~ msgstr ""
+#~ "Datu basearen egitura eguneratu da; aztertu log fitxategiak informazio "
+#~ "gehiagorako:"
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr "Errebotatzen duten erabiltzaileen eguneroko azterketa"
+
+#~ msgid "delete monthly bounces for unsubscribed addresses"
+#~ msgstr "harpidetu gabeko erreboteen hileroko ezabaketa"
+
+#~ msgid "purge of orphan entries in user table every month"
+#~ msgstr "erabiltzaile taulan umezurtz dauden sarreren hileroko ezabaketa"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "TTLren arabera zerrendako kideak eguneratu"
 
 #, fuzzy
 #~ msgid ""

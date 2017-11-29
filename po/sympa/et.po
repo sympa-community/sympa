@@ -11217,7 +11217,7 @@ msgstr "Andmebaasi struktuur uuendatud"
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:72
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
 "Andmebaasi struktuur uuendati; vaadake logifaile täpsemate detailide jaoks: "
@@ -14533,7 +14533,7 @@ msgid "daily update of the certificate revocation list"
 msgstr "iga päev värskendatakse sertifikaadi tühistusnimekirja"
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr "Igapäevane kättetoimetamata kirjade määratlemine"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -14547,7 +14547,7 @@ msgstr ""
 "sympa.conf/one_time_ticket_table_ttl"
 
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr ""
 "kustutada igakuiselt kättetoimetamata kirjade info tellimuse lõpetanud "
 "kasutajate kohta"
@@ -14561,7 +14561,7 @@ msgstr ""
 
 #: default/global_task_models/purge_spools.daily.task:1
 #, fuzzy
-msgid "daily delete unuseful items from any spool"
+msgid "daily deletion of unuseful items from any spool"
 msgstr ""
 "igapäevaselt kustutatakse kogu ebavajalik info kõikidest andmebaasi "
 "tabelitest"
@@ -14573,7 +14573,7 @@ msgstr ""
 "tabelitest"
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr "iga kuu kustutatakse kasutajate tabelis orvuks jäänud kirjed"
 
 #: default/list_task_models/expire.yearly.task:1
@@ -14593,7 +14593,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "meeldetuletuskiri saadetakse tellijatele iga aasta"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "Kasutajate nimekirja uuendatakse TTL alusel"
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -14805,6 +14805,13 @@ msgstr ""
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Tundmatu teenusepakkuja."
+
+#: default/global_task_models/purge_spools.daily.task:1
+#, fuzzy
+msgid "daily delete unuseful items from any spool"
+msgstr ""
+"igapäevaselt kustutatakse kogu ebavajalik info kõikidest andmebaasi "
+"tabelitest"
 
 #: src/lib/Sympa/ModDef.pm:353
 msgid ""
@@ -15130,6 +15137,27 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid ""
+#~ "The database structure has been updated, Check the log file for further "
+#~ "details: "
+#~ msgstr ""
+#~ "Andmebaasi struktuur uuendati; vaadake logifaile täpsemate detailide "
+#~ "jaoks: "
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr "Igapäevane kättetoimetamata kirjade määratlemine"
+
+#~ msgid "delete monthly bounces for unsubscribed addresses"
+#~ msgstr ""
+#~ "kustutada igakuiselt kättetoimetamata kirjade info tellimuse lõpetanud "
+#~ "kasutajate kohta"
+
+#~ msgid "purge of orphan entries in user table every month"
+#~ msgstr "iga kuu kustutatakse kasutajate tabelis orvuks jäänud kirjed"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "Kasutajate nimekirja uuendatakse TTL alusel"
 
 #, fuzzy
 #~ msgid ""

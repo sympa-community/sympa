@@ -11320,7 +11320,7 @@ msgstr "Struktura bazy danych zaktualizowana"
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:72
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
 "Struktura bazy danych została zaktualizowana; sprawdź plik logów dla "
@@ -14631,7 +14631,7 @@ msgid "daily update of the certificate revocation list"
 msgstr "codzienna aktualizacja listy unieważnionych certyfikatów"
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr "Dzienna ocena odbitych użytkowników"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -14645,7 +14645,7 @@ msgstr ""
 "one_time_ticket_table_ttl"
 
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr "usuń miesięczne odbicia dla niezasubskrybowanych adresów"
 
 #: default/global_task_models/purge_session_table.daily.task:1
@@ -14656,7 +14656,7 @@ msgstr ""
 
 #: default/global_task_models/purge_spools.daily.task:1
 #, fuzzy
-msgid "daily delete unuseful items from any spool"
+msgid "daily deletion of unuseful items from any spool"
 msgstr "dzienne usuwanie przestarzałych wpisów z wszystkich tabel"
 
 #: default/global_task_models/purge_tables.daily.task:1
@@ -14664,7 +14664,7 @@ msgid "daily deletion of unuseful items from table"
 msgstr "dzienne usuwanie przestarzałych wpisów z wszystkich tabel"
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr "czyszczenie wpisów sierot w tablicy użytkownika każdego miesiąca"
 
 #: default/list_task_models/expire.yearly.task:1
@@ -14684,7 +14684,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "wiadomość przypominająca wysyłana do subskrybentów każdego roku"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "Aktualizacja subskrybentów listy oparta na TTL"
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -14903,6 +14903,11 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Nieznany błąd."
+
+#: default/global_task_models/purge_spools.daily.task:1
+#, fuzzy
+msgid "daily delete unuseful items from any spool"
+msgstr "dzienne usuwanie przestarzałych wpisów z wszystkich tabel"
 
 #: src/lib/Sympa/ModDef.pm:353
 msgid ""
@@ -15231,6 +15236,25 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid ""
+#~ "The database structure has been updated, Check the log file for further "
+#~ "details: "
+#~ msgstr ""
+#~ "Struktura bazy danych została zaktualizowana; sprawdź plik logów dla "
+#~ "dalszych szczegółów:"
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr "Dzienna ocena odbitych użytkowników"
+
+#~ msgid "delete monthly bounces for unsubscribed addresses"
+#~ msgstr "usuń miesięczne odbicia dla niezasubskrybowanych adresów"
+
+#~ msgid "purge of orphan entries in user table every month"
+#~ msgstr "czyszczenie wpisów sierot w tablicy użytkownika każdego miesiąca"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "Aktualizacja subskrybentów listy oparta na TTL"
 
 #, fuzzy
 #~ msgid ""

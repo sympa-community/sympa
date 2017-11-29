@@ -11577,7 +11577,7 @@ msgstr "L'estructura de la banca de donadas es estada actualizada"
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:72
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
 "L'estructura de la banca de donadas a estada actualizada; consultatz los "
@@ -14919,7 +14919,7 @@ msgid "daily update of the certificate revocation list"
 msgstr "actualizacion quotidiana de las listas de revocacion"
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr " Notacion quotidiana dels abonats en error"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -14932,7 +14932,7 @@ msgid "daily deletion of outdated tickets"
 msgstr "supression quotidiana dels logs "
 
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr "Suprimir las errors per las adreças desabonadas"
 
 #: default/global_task_models/purge_session_table.daily.task:1
@@ -14941,8 +14941,9 @@ msgid "daily termination of outdated sessions"
 msgstr "supression quotidiana dels logs "
 
 #: default/global_task_models/purge_spools.daily.task:1
-msgid "daily delete unuseful items from any spool"
-msgstr ""
+#, fuzzy
+msgid "daily deletion of unuseful items from any spool"
+msgstr "supression quotidiana dels logs "
 
 #: default/global_task_models/purge_tables.daily.task:1
 #, fuzzy
@@ -14950,7 +14951,7 @@ msgid "daily deletion of unuseful items from table"
 msgstr "supression quotidiana dels logs "
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr "supression de las entradas orfanèlas de la taula user cada mes"
 
 #: default/list_task_models/expire.yearly.task:1
@@ -14970,7 +14971,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "mandadís d'un messatge de rapèl cada an als abonats de la lista"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "Actualizacion de la lista dels abonats basada sus TTL"
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -15186,6 +15187,10 @@ msgstr ""
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Font desconeguda"
+
+#: default/global_task_models/purge_spools.daily.task:1
+msgid "daily delete unuseful items from any spool"
+msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:615
 msgid "Reject mail from automates (crontab, etc)?"
@@ -15815,6 +15820,25 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#~ msgid ""
+#~ "The database structure has been updated, Check the log file for further "
+#~ "details: "
+#~ msgstr ""
+#~ "L'estructura de la banca de donadas a estada actualizada; consultatz los "
+#~ "fichièrs jornal per aver mai d'informacions : "
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr " Notacion quotidiana dels abonats en error"
+
+#~ msgid "delete monthly bounces for unsubscribed addresses"
+#~ msgstr "Suprimir las errors per las adreças desabonadas"
+
+#~ msgid "purge of orphan entries in user table every month"
+#~ msgstr "supression de las entradas orfanèlas de la taula user cada mes"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "Actualizacion de la lista dels abonats basada sus TTL"
 
 #, fuzzy
 #~ msgid ""

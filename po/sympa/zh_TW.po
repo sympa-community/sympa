@@ -11285,7 +11285,7 @@ msgstr "數據庫結構已更新"
 #: default/mail_tt2/listmaster_notification.tt2:72
 #, fuzzy
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr "更新了數據庫結構；為得到更多細節檢查日志文件："
 
@@ -14520,7 +14520,7 @@ msgid "daily update of the certificate revocation list"
 msgstr "每日更新證書廢止郵件列表"
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr "每日評估退信的用戶"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -14533,7 +14533,7 @@ msgid "daily deletion of outdated tickets"
 msgstr ""
 
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr "月度刪除為未訂閱的地址退信"
 
 #: default/global_task_models/purge_session_table.daily.task:1
@@ -14542,15 +14542,16 @@ msgid "daily termination of outdated sessions"
 msgstr "未監管的郵件失效"
 
 #: default/global_task_models/purge_spools.daily.task:1
-msgid "daily delete unuseful items from any spool"
-msgstr ""
+#, fuzzy
+msgid "daily deletion of unuseful items from any spool"
+msgstr "每日刪除長于3個月的日志"
 
 #: default/global_task_models/purge_tables.daily.task:1
 msgid "daily deletion of unuseful items from table"
 msgstr ""
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr "在用戶表裡每月清除單個詞條"
 
 #: default/list_task_models/expire.yearly.task:1
@@ -14570,7 +14571,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "提醒郵件每年發送到訂閱者"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "基于TTL的郵件列表成員更新"
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -14785,6 +14786,18 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "未知"
+
+#. (db_name)
+#: default/mail_tt2/listmaster_notification.tt2:72
+#, fuzzy
+msgid ""
+"The database structure has been updated, Check the log file for further "
+"details: "
+msgstr "更新了數據庫結構；為得到更多細節檢查日志文件："
+
+#: default/global_task_models/purge_spools.daily.task:1
+msgid "daily delete unuseful items from any spool"
+msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:615
 msgid "Reject mail from automates (crontab, etc)?"
@@ -15557,6 +15570,18 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr "每日評估退信的用戶"
+
+#~ msgid "delete monthly bounces for unsubscribed addresses"
+#~ msgstr "月度刪除為未訂閱的地址退信"
+
+#~ msgid "purge of orphan entries in user table every month"
+#~ msgstr "在用戶表裡每月清除單個詞條"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "基于TTL的郵件列表成員更新"
 
 #, fuzzy
 #~ msgid ""

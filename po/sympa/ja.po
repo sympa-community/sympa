@@ -11143,7 +11143,7 @@ msgstr "データベースの構成を更新しました"
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:72
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
 "データベースの構成を更新しました。さらに詳しいことはログファイルをご確認くだ"
@@ -14387,7 +14387,7 @@ msgid "daily update of the certificate revocation list"
 msgstr "毎日、証明書破棄リスト (CRL) を更新"
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr "毎日、配送エラーを起こしている人に対する処理を実行"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -14400,7 +14400,7 @@ msgstr "毎日、期限を過ぎたチケットを削除"
 
 # cf. src/task_manager.pl.in::purge_orphan_bounces()
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr "毎月、登録解除されたメール アドレスに対する配送エラーを削除"
 
 #: default/global_task_models/purge_session_table.daily.task:1
@@ -14408,7 +14408,7 @@ msgid "daily termination of outdated sessions"
 msgstr "毎日、期限を過ぎたセッションを終了"
 
 #: default/global_task_models/purge_spools.daily.task:1
-msgid "daily delete unuseful items from any spool"
+msgid "daily deletion of unuseful items from any spool"
 msgstr "毎日、キューの不要な項目を削除"
 
 #: default/global_task_models/purge_tables.daily.task:1
@@ -14416,7 +14416,7 @@ msgid "daily deletion of unuseful items from table"
 msgstr "毎日、テーブルの不要な項目を削除"
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr "毎月、ユーザ テーブル内で利用者登録のないエントリを抹消"
 
 #: default/list_task_models/expire.yearly.task:1
@@ -14436,7 +14436,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "毎年、登録確認を読者に送る"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "TTL に基いたリスト読者の更新"
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -14652,6 +14652,29 @@ msgstr "そのようなプロバイダは知りません。"
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid ""
+#~ "The database structure has been updated, Check the log file for further "
+#~ "details: "
+#~ msgstr ""
+#~ "データベースの構成を更新しました。さらに詳しいことはログファイルをご確認く"
+#~ "ださい: "
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr "毎日、配送エラーを起こしている人に対する処理を実行"
+
+# cf. src/task_manager.pl.in::purge_orphan_bounces()
+#~ msgid "delete monthly bounces for unsubscribed addresses"
+#~ msgstr "毎月、登録解除されたメール アドレスに対する配送エラーを削除"
+
+#~ msgid "daily delete unuseful items from any spool"
+#~ msgstr "毎日、キューの不要な項目を削除"
+
+#~ msgid "purge of orphan entries in user table every month"
+#~ msgstr "毎月、ユーザ テーブル内で利用者登録のないエントリを抹消"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "TTL に基いたリスト読者の更新"
 
 #~ msgid "Reject mail from automates (crontab, etc)?"
 #~ msgstr "自動処理 (cronジョブなど) で送られるメールを拒否するか"

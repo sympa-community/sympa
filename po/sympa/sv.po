@@ -11153,7 +11153,7 @@ msgstr "Databasstrukturen uppdaterad"
 #. (db_name)
 #: default/mail_tt2/listmaster_notification.tt2:72
 msgid ""
-"The database structure has been updated, Check the log file for further "
+"The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
 "Databasstrukturen har uppdaterats; se loggfilerna för mer information: "
@@ -14441,7 +14441,7 @@ msgid "daily update of the certificate revocation list"
 msgstr "dagliga uppdateringar av certifikatrevokeringslistan"
 
 #: default/global_task_models/eval_bouncers.daily.task:1
-msgid "Daily evaluation of bouncing users"
+msgid "daily evaluation of bouncing users"
 msgstr "Daglig utvärdering av studsande prenumeranter"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
@@ -14455,7 +14455,7 @@ msgstr ""
 "dagligen"
 
 #: default/global_task_models/purge_orphan_bounces.monthly.task:1
-msgid "delete monthly bounces for unsubscribed addresses"
+msgid "monthly deletion of bounces for unsubscribed addresses"
 msgstr "ta bort studsar för oprenumererade adresser månatligen"
 
 #: default/global_task_models/purge_session_table.daily.task:1
@@ -14466,7 +14466,7 @@ msgstr ""
 
 #: default/global_task_models/purge_spools.daily.task:1
 #, fuzzy
-msgid "daily delete unuseful items from any spool"
+msgid "daily deletion of unuseful items from any spool"
 msgstr "ta bort onyttiga saker från alla tabeller dagligen"
 
 #: default/global_task_models/purge_tables.daily.task:1
@@ -14474,7 +14474,7 @@ msgid "daily deletion of unuseful items from table"
 msgstr "ta bort onyttiga saker från alla tabeller dagligen"
 
 #: default/global_task_models/purge_user_table.monthly.task:1
-msgid "purge of orphan entries in user table every month"
+msgid "monthly purge of orphan entries in user table"
 msgstr "ta bort föräldralösa poster i användartabellen varje månad"
 
 #: default/list_task_models/expire.yearly.task:1
@@ -14494,7 +14494,7 @@ msgid "reminder message sent to subscribers every year"
 msgstr "påminnelsemeddelanden skickas till prenumeranter varje år"
 
 #: default/list_task_models/sync_include.ttl.task:1
-msgid "Update of list members based on the TTL"
+msgid "update of list members based on the TTL"
 msgstr "Uppdatering av listmedlemmar baserad på TTL"
 
 #: default/create_list_templates/confidential/comment.tt2:4
@@ -14711,6 +14711,11 @@ msgstr ""
 #, fuzzy
 msgid "Unknown provider."
 msgstr "Okänt fel."
+
+#: default/global_task_models/purge_spools.daily.task:1
+#, fuzzy
+msgid "daily delete unuseful items from any spool"
+msgstr "ta bort onyttiga saker från alla tabeller dagligen"
 
 #: src/lib/Sympa/ModDef.pm:353
 msgid ""
@@ -15023,6 +15028,24 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#~ msgid ""
+#~ "The database structure has been updated, Check the log file for further "
+#~ "details: "
+#~ msgstr ""
+#~ "Databasstrukturen har uppdaterats; se loggfilerna för mer information: "
+
+#~ msgid "Daily evaluation of bouncing users"
+#~ msgstr "Daglig utvärdering av studsande prenumeranter"
+
+#~ msgid "delete monthly bounces for unsubscribed addresses"
+#~ msgstr "ta bort studsar för oprenumererade adresser månatligen"
+
+#~ msgid "purge of orphan entries in user table every month"
+#~ msgstr "ta bort föräldralösa poster i användartabellen varje månad"
+
+#~ msgid "Update of list members based on the TTL"
+#~ msgstr "Uppdatering av listmedlemmar baserad på TTL"
 
 #, fuzzy
 #~ msgid ""
