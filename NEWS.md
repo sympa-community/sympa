@@ -1,5 +1,25 @@
 # Change Log
 
+## [6.2.23b.2](https://github.com/sympa-community/sympa/tree/6.2.23b.2) (2017-11-30)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.23b.1...6.2.23b.2)
+
+**Fixed bugs:**
+
+- Perl dies when changing priveleged list owners via web interface [\#37](https://github.com/sympa-community/sympa/issues/37)
+- Fix listname typo [\#121](https://github.com/sympa-community/sympa/pull/121) ([jean1](https://github.com/jean1))
+
+**Merged pull requests:**
+
+- Before rebuilding admin\_table, won't clear it \#71 [\#130](https://github.com/sympa-community/sympa/pull/130) ([ikedas](https://github.com/ikedas))
+- Remove outdated ca-bundle.crt and use system default \#116 [\#129](https://github.com/sympa-community/sympa/pull/129) ([ikedas](https://github.com/ikedas))
+- Remove "html" reception mode \#125 [\#127](https://github.com/sympa-community/sympa/pull/127) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- version 6.2.22, problem with virtual hosts [\#106](https://github.com/sympa-community/sympa/issues/106)
+- Database connections not being closed [\#6](https://github.com/sympa-community/sympa/issues/6)
+
 ## [6.2.23b.1](https://github.com/sympa-community/sympa/tree/6.2.23b.1) (2017-11-20)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.22...6.2.23b.1)
