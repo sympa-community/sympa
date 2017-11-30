@@ -2127,8 +2127,8 @@ sub delete_list_admin {
     return (-1 * $total);
 }
 
-## Delete all admin_table entries
-#FIXME: DANGEROUS FUNCTION.
+# Delete all admin_table entries.
+# OBSOLETED: No longer used.
 sub delete_all_list_admin {
     $log->syslog('debug2', '');
 

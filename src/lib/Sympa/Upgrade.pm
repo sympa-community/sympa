@@ -138,15 +138,12 @@ sub upgrade {
     ## Empty the admin_table entries and recreate them
     $log->syslog('notice', 'Rebuilding the admin_table...');
 
-    if (@$all_lists) {
-        Sympa::List::delete_all_list_admin();
-
+    if ($all_lists and @$all_lists) {
         foreach my $list (@$all_lists) {
             $list->sync_include_admin;
         }
-    }
-    else {
-        ## Prevent empty admin table (GH #71)
+    } else {
+        # Prevent empty admin table (GH #71).
         $log->syslog('notice', 'Skipping rebuild, no list config files found');
     }
 
