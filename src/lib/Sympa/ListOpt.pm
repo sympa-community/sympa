@@ -237,7 +237,6 @@ my %reception_mode = (
     'summary'     => {'gettext_id' => 'summary mode'},
     'notice'      => {'gettext_id' => 'notice mode'},
     'txt'         => {'gettext_id' => 'text-only mode'},
-    'html'        => {'gettext_id' => 'html-only mode'},
     'urlize'      => {'gettext_id' => 'urlize mode'},
     'nomail'      => {'gettext_id' => 'no mail'},
     'not_me'      => {'gettext_id' => 'not receiving your own posts'}

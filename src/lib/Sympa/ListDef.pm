@@ -394,14 +394,15 @@ our %pinfo = (
                     'Only these modes will be allowed for the subscribers of this list. If a subscriber has a reception mode not in the list, Sympa uses the mode specified in the default_user_options paragraph.',
                 'format'     => [
                     'mail',    'notice', 'digest', 'digestplain',
-                    'summary', 'nomail', 'txt',    'html',
-                    'urlize',  'not_me'
+                    'summary', 'nomail', 'txt',    'urlize',
+                    'not_me'
                 ],
+                'synonym'    => {'html' => 'mail'},
                 'field_type' => 'reception',
                 'occurrence' => '1-n',
                 'split_char' => ',',
                 'default' =>
-                    'mail,notice,digest,digestplain,summary,nomail,txt,html,urlize,not_me'
+                    'mail,notice,digest,digestplain,summary,nomail,txt,urlize,not_me'
             }
         }
     },
@@ -419,9 +420,10 @@ our %pinfo = (
                 'gettext_comment' => 'Mail reception mode.',
                 'format'     => [
                     'mail',    'notice', 'digest', 'digestplain',
-                    'summary', 'nomail', 'txt',    'html',
-                    'urlize',  'not_me'
+                    'summary', 'nomail', 'txt',    'urlize',
+                    'not_me'
                 ],
+                'synonym'    => {'html' => 'mail'},
                 'field_type' => 'reception',
                 'occurrence' => '1',
                 'default'    => 'mail'

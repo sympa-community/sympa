@@ -1388,7 +1388,6 @@ sub get_recipients_per_mode {
     my (@tabrcpt_mail,        @tabrcpt_mail_verp,
         @tabrcpt_notice,      @tabrcpt_notice_verp,
         @tabrcpt_txt,         @tabrcpt_txt_verp,
-        @tabrcpt_html,        @tabrcpt_html_verp,
         @tabrcpt_urlize,      @tabrcpt_urlize_verp,
         @tabrcpt_digestplain, @tabrcpt_digestplain_verp,
         @tabrcpt_digest,      @tabrcpt_digest_verp,
@@ -1486,12 +1485,6 @@ sub get_recipients_per_mode {
             } else {
                 push @tabrcpt_txt, $user->{'email'};
             }
-        } elsif ($user->{'reception'} eq 'html') {
-            if ($user->{'bounce_address'}) {
-                push @tabrcpt_html_verp, $user->{'email'};
-            } else {
-                push @tabrcpt_html, $user->{'email'};
-            }
         } elsif ($user->{'reception'} eq 'urlize') {
             if ($user->{'bounce_address'}) {
                 push @tabrcpt_urlize_verp, $user->{'email'};
@@ -1511,12 +1504,10 @@ sub get_recipients_per_mode {
         unless @tabrcpt_mail
         or @tabrcpt_notice
         or @tabrcpt_txt
-        or @tabrcpt_html
         or @tabrcpt_urlize
         or @tabrcpt_mail_verp
         or @tabrcpt_notice_verp
         or @tabrcpt_txt_verp
-        or @tabrcpt_html_verp
         or @tabrcpt_urlize_verp;
 
     my $available_recipients;
@@ -1532,10 +1523,6 @@ sub get_recipients_per_mode {
     $available_recipients->{'txt'}{'noverp'} = \@tabrcpt_txt if @tabrcpt_txt;
     $available_recipients->{'txt'}{'verp'} = \@tabrcpt_txt_verp
         if @tabrcpt_txt_verp;
-    $available_recipients->{'html'}{'noverp'} = \@tabrcpt_html
-        if @tabrcpt_html;
-    $available_recipients->{'html'}{'verp'} = \@tabrcpt_html_verp
-        if @tabrcpt_html_verp;
     $available_recipients->{'urlize'}{'noverp'} = \@tabrcpt_urlize
         if @tabrcpt_urlize;
     $available_recipients->{'urlize'}{'verp'} = \@tabrcpt_urlize_verp
@@ -8891,9 +8878,10 @@ sub is_msg_topic_tagging_required {
 ####################################################
 # Select users subscribed to a topic that is in
 # the topic list incoming when reception mode is 'mail', 'notice', 'not_me',
-# 'txt', 'html' or 'urlize', and the other
+# 'txt' or 'urlize', and the other
 # subscribers (recpetion mode different from 'mail'), 'mail' and no topic
-# subscription
+# subscription.
+# Note: 'html' mode was deprecated as of 6.2.23b.2.
 #
 # IN : -$self(+) : ref(List)
 #      -$string_topic(+) : string splitted by ','
