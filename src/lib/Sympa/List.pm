@@ -36,6 +36,7 @@ use IO::Scalar;
 use LWP::UserAgent;
 use POSIX qw();
 use Storable qw();
+BEGIN { eval 'use IO::Socket::SSL'; }
 
 use Sympa;
 use Conf;
@@ -46,7 +47,6 @@ use Sympa::DatabaseDescription;
 use Sympa::DatabaseManager;
 use Sympa::Datasource;
 use Sympa::Family;
-use Sympa::Fetch;
 use Sympa::Language;
 use Sympa::List::Config;
 use Sympa::ListDef;
@@ -4413,7 +4413,7 @@ sub _include_users_remote_sympa_list {
     my $email;
 
     foreach my $line (
-        Sympa::Fetch::get_https(
+        _get_https(
             $host, $port, $path,
             $cert_file,
             $key_file,
@@ -4491,6 +4491,74 @@ sub _include_users_remote_sympa_list {
         '%d included users from list (%d subscribers) https://%s:%s%s',
         $total, $get_total, $host, $port, $path);
     return $total;
+}
+
+# Requests a document using HTTPS. Returns status and content.
+# Old name: Sympa::Fetch::get_https().
+sub _get_https {
+    $log->syslog('debug2', '(%s, %s, %s, %s, %s, %s)', @_);
+    my $host        = shift;
+    my $port        = shift;
+    my $path        = shift;
+    my $client_cert = shift;
+    my $client_key  = shift;
+    my $ssl_data    = shift;
+
+    my $key_passwd      = $ssl_data->{'key_passwd'};
+    my $trusted_ca_file = $ssl_data->{'cafile'};
+    my $trusted_ca_path = $ssl_data->{'capath'};
+
+    unless ($IO::Socket::SSL::VERSION) {
+        $log->syslog('err',
+            'Unable to use SSL library. IO::Socket::SSL required. Install it first'
+        );
+        return undef;
+    }
+
+    my $ssl_socket = IO::Socket::SSL->new(
+        SSL_use_cert    => 1,
+        SSL_verify_mode => 0x01,
+        SSL_cert_file   => $client_cert,
+        SSL_key_file    => $client_key,
+        SSL_passwd_cb   => sub { return ($key_passwd) },
+        ($trusted_ca_file ? (SSL_ca_file => $trusted_ca_file) : ()),
+        ($trusted_ca_path ? (SSL_ca_path => $trusted_ca_path) : ()),
+        PeerAddr => $host,
+        PeerPort => $port,
+        Proto    => 'tcp',
+        Timeout  => '5'
+    );
+
+    unless ($ssl_socket) {
+        $log->syslog('err', 'Error %s unable to connect https://%s:%s/',
+            IO::Socket::SSL::errstr(), $host, $port);
+        return undef;
+    }
+    $log->syslog('debug', 'Connected to https://%s:%s/',
+        IO::Socket::SSL::errstr(), $host, $port);
+
+    if (ref($ssl_socket) eq "IO::Socket::SSL") {
+        my $subject_name = $ssl_socket->peer_certificate("subject");
+        my $issuer_name  = $ssl_socket->peer_certificate("issuer");
+        my $cipher       = $ssl_socket->get_cipher();
+        $log->syslog('debug',
+            'SSL peer certificate %s issued by %s. Cipher used %s',
+            $subject_name, $issuer_name, $cipher);
+    }
+
+    print $ssl_socket "GET $path HTTP/1.0\nHost: $host\n\n";
+    $log->syslog('debug', 'Requested GET %s HTTP/1.1', $path);
+
+    $log->syslog('debug', 'Get_https reading answer');
+    my @result;
+    while (my $line = $ssl_socket->getline) {
+        push @result, $line;
+    }
+
+    $ssl_socket->close(SSL_no_shutdown => 1);
+    $log->syslog('debug', 'Disconnected');
+
+    return (@result);
 }
 
 ## include a list as subscribers.

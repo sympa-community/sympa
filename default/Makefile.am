@@ -27,7 +27,6 @@ nobase_nodist_default_DATA = \
 	list_aliases.tt2
 nobase_default_DATA = \
 	auth.conf \
-	ca-bundle.crt \
 	charset.conf \
 	crawlers_detection.conf \
 	create_list.conf \

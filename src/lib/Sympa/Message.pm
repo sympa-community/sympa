@@ -1135,8 +1135,8 @@ sub check_smime_signature {
     # First step is to check if message signing is OK.
     my $smime = Crypt::SMIME->new;
     eval {    # Crypt::SMIME >= 0.15 is required.
-        $smime->setPublicKeyStore(grep { defined $_ }
-                ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
+        $smime->setPublicKeyStore(grep { defined $_ and length $_ }
+            ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
     };
     unless (eval { $smime->check($self->as_string) }) {
         $log->syslog('err', '%s: Unable to verify S/MIME signature: %s',

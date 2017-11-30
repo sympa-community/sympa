@@ -81,19 +81,6 @@ sub _connect {
             $log->syslog('err', 'Can\'t load IO::Socket::SSL');
             return undef;
         }
-
-        # Earlier releases of IO::Socket::SSL would fallback SSL_verify_mode
-        # to SSL_VERIFY_NONE when there are no usable CAfile nor CApath.
-        # However, recent releases won't: They simply deny connection.
-        # As a workaround, make ca_file or ca_path parameter mandatory unless
-        # "none" is explicitly assigned to ca_verify parameter.
-        unless ($self->{ca_verify} and $self->{ca_verify} eq 'none') {
-            unless ($self->{ca_file} or $self->{ca_path}) {
-                $log->syslog('err',
-                    'Neither ca_file nor ca_path parameter is specified');
-                return undef;
-            }
-        }
     }
 
     # new() with multiple alternate hosts needs perl-ldap >= 0.27.
@@ -105,8 +92,8 @@ sub _connect {
             : ($self->{ca_verify} eq 'required') ? 'require'
             :                                      $self->{ca_verify}
         ),
-        capath     => $self->{'ca_path'},
-        cafile     => $self->{'ca_file'},
+        ($self->{'ca_path'} ? (capath => $self->{'ca_path'}) : ()),
+        ($self->{'ca_file'} ? (cafile => $self->{'ca_file'}) : ()),
         sslversion => $self->{'ssl_version'},
         ciphers    => $self->{'ssl_ciphers'},
         clientcert => $self->{'ssl_cert'},
@@ -132,8 +119,8 @@ sub _connect {
                 : ($self->{ca_verify} eq 'required') ? 'require'
                 :                                      $self->{ca_verify}
             ),
-            capath     => $self->{'ca_path'},
-            cafile     => $self->{'ca_file'},
+            ($self->{'ca_path'} ? (capath => $self->{'ca_path'}) : ()),
+            ($self->{'ca_file'} ? (cafile => $self->{'ca_file'}) : ()),
             sslversion => $self->{'ssl_version'},
             ciphers    => $self->{'ssl_ciphers'},
             clientcert => $self->{'ssl_cert'},
