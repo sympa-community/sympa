@@ -72,6 +72,7 @@ sub _new {
     return bless {%params} => $class;
 }
 
+# Note: uri() method need perl-ldap >= 0.34.
 sub _connect {
     my $self = shift;
 
@@ -108,9 +109,6 @@ sub _connect {
         return undef;
     }
 
-    # scheme() and uri() need perl-ldap >= 0.34.
-    my $host_entry = sprintf '%s://%s', $connection->scheme, $connection->uri;
-
     # START_TLS if requested.
     if ($self->{use_tls} eq 'starttls') {
         my $mesg = $connection->start_tls(
@@ -136,7 +134,7 @@ sub _connect {
                 $self->{_error_string} = 'Unknown';
             }
             $log->syslog('err', 'Failed to start TLS with LDAP server %s: %s',
-                $host_entry, $self->error);
+                $connection->uri, $self->error);
             $connection->unbind;
             return undef;
         }
@@ -162,11 +160,11 @@ sub _connect {
             $self->{_error_string} = 'Unknown';
         }
         $log->syslog('err', 'Failed to bind to LDAP server %s: %s',
-            $host_entry, $self->error);
+            $connection->uri, $self->error);
         $connection->unbind;
         return undef;
     }
-    $log->syslog('debug3', 'Bound to LDAP host "%s"', $host_entry);
+    $log->syslog('debug3', 'Bound to LDAP host "%s"', $connection->uri);
 
     delete $self->{_error_code};
     delete $self->{_error_string};
