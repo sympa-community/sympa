@@ -31,6 +31,7 @@ use strict;
 use warnings;
 use base qw(Class::Singleton);
 
+use Encode qw();
 use Locale::Messages;
 use POSIX qw();
 
@@ -688,6 +689,7 @@ sub gettext_strftime {
         POSIX::setlocale(POSIX::LC_TIME(), $self->{locale_time});
     }
     my $ret = POSIX::strftime($format, @args);
+    Encode::_utf8_off($ret);
 
     POSIX::setlocale(POSIX::LC_TIME(), $orig_locale);
     return $ret;
