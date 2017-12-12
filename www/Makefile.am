@@ -65,7 +65,6 @@ nobase_static_DATA = \
 	external/foundation/js/foundation/responsive-tables.js \
 	external/foundation/js/vendor/fastclick.js \
 	external/foundation/js/vendor/jquery.cookie.js \
-	external/foundation/js/vendor/jquery.js \
 	external/foundation/js/vendor/modernizr.js \
 	external/foundation/js/vendor/placeholder.js \
 	external/html5shiv/html5shiv.js \
@@ -418,3 +417,9 @@ nobase_static_DATA = \
 	js/sympa.js
 
 EXTRA_DIST = $(nobase_static_DATA)
+
+# Use recent release of jQuery; remove one distributed with Foundation.
+install-data-hook:
+	cd $(DESTDIR)$(staticdir); \
+	rm -f external/foundation/js/vendor/jquery.js
+
