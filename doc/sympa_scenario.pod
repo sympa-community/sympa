@@ -1,0 +1,322 @@
+=encoding utf-8
+
+=head1 NAME
+
+sympa_scenario - Authorization scenario
+
+=head1 DESCRIPTION
+
+=head2 File format
+
+Basically, a scenario file is composed of titles on the first lines and a set
+of rules on the following lines.
+
+Rules consist of one or more line in the form:
+
+  condition authentication_methods -> action
+
+Some terms of conditions may take one or more arguments.
+The arguments are variables or literals (see L</"Terms of conditions">,
+L</"Variables">).
+
+Authentication methods is a comma-separated list of one or more methods
+(see L</"Authentication methods">).
+
+Some actions may have optional modifiers (see L</Actions and modifiers>).
+
+=head3 Terms of conditions
+
+=over
+
+=item C<true> C<(> C<)>
+
+Always returns true.
+
+=item C<equal> C<(> I<var1>C<,> I<var2> C<)>
+
+Tests if two arguments are equial.
+
+=item C<less_than> C<(> I<var1>C<,> I<var2> C<)>
+
+Tests if I<var1> is less than I<var2>.
+
+=item C<match> C<(> I<var>C<,> C</>I<perl_regexp>C</> C<)>
+
+Tests if I<var> matches with I<perl_regexp>.
+
+I<perl_regexp> is a perl regular expression.
+Don't forget to escape special characters (C<^>, C<$>, C<{>, C<(>, ...):
+Check L<perlre(1)> for regular expression syntax.
+It can contain the string C<[host]> (interpreted at run time as the list or
+robot domain). 
+
+=item C<search> C<(> I<named_filter_file>C<,> I<var>C<)>
+
+Tests if I<var> is found by named filter.
+
+I<named_filter_file> is a file name ending with C<.ldap>, C<.sql> or C<.txt>.
+
+=item C<is_subscriber> C<(> I<listname>C<,> I<var> C<)>
+
+=item C<is_owner> C<(> I<listname>C<,> I<var> C<)>
+
+=item C<is_editor> C<(> I<listname>C<,> I<var> C<)>
+
+Tests if I<var> is the subscriber, owner or editor of the list I<listname>.
+I<listname> is the variable C<[listname]> or list address, "I<name>" or
+"I<name>C<@>I<domain>".
+
+=item C<is_listmaster> C<(> I<var> C<)>
+
+Tests if I<var> is the listmaster. 
+
+=item C<older> C<(> I<date>C<,> I<date> C<)>
+
+Returns true if first date is anterior to the second date
+
+I<date> is Unix time or the string
+"I<n>C<y>I<n>C<m>I<n>C<d>I<n>C<h>I<n>C<min>I<n>C<sec>", where each I<n> is a
+number.
+
+=item C<newer> C<(> I<date>C<,> I<date> C<)>
+
+Returns true if first date is posterior to the second 
+
+=item C<verify_netmask> C<(> I<network_block> C<)>
+
+Allows the user to configure their local network to only be accessible to
+those that are members of it. 
+
+=item C<CustomCondition::>I<package_name> C<(> I<arguments>, ... C<)>
+
+Evaluates custom condition.
+I<package_name> is the name of a perl package in
+F<$SYSCONFDIR/custom_conditions/> (lowercase).
+
+=back
+
+=head3 Variables
+
+=over
+
+=item C<[is_bcc]>
+
+Set to 1 if the list is neither in To: nor Cc: field.
+
+=item C<[sender]>
+
+The email address of the current user (used on web or mail interface).
+Default value is "nobody".
+
+=item C<[previous_email]>
+
+Old email when changing subscription email in preference page.
+
+=item C<[user_attributes-E<gt>>I<user_attributes_key_word>C<]>
+
+I<user_attributes_key_word> is one of the names of user attributes provided
+by the SSO system via environment variables.
+Available only if user authenticated with a C<generic_sso>.
+
+=item C<[env-E<gt>>I<env_var>C<]> 
+ 
+I<env_var> is the name of CGI environment variable (note that it is
+case-sensitive).
+
+=item C<[msg_header-E<gt>>I<field_name>C<][>I<index>C<]>
+
+Value of message header field, available only when evaluating the
+authorization scenario for sending messages.
+It can be used, for example, to require editor validation for multipart
+messages.
+Optional I<index> may be integer (may be less than C<0>) to choose particular
+entry from multile fields.
+
+=item C<[msg_part-E<gt>type]>
+
+=item C<[msg_part-E<gt>body]>
+
+The MIME content types and bodies; the body is available for MIME parts
+in text/xxx format only.
+
+=item C<[msg_encrypted]>
+
+Set to "C<smime>" if the message was S/MIME encrypted.
+
+=item C<[topic-auto]>
+
+Topic of the message if it has been automatically tagged.
+
+=item C<[topic-sender]>
+
+Topic of the message if it has been tagged by sender.
+
+=item C<[topic-editor]>
+
+Topic of the message if it has been tagged by editor.
+
+=item C<[topic]>
+
+Topic of the message.
+This variable has a value if any of the previous
+[topic-*] variable has a value.
+
+=item C<[topic-needed]>
+
+The message has not got any topic and message topic are required for the list.
+
+=item C<[custom_vars-E<gt>>I<custom_var_name>C<]>
+
+Allows you to introduce custom parameters in your scenario.
+I<custom_var_name> is the name of the custom parameter you want to use.
+
+=back
+
+=head3 Actions and modifiers
+
+Actions:
+
+C<do_it>, C<listmaster>, C<request_auth>, C<editor>, C<editorkey>, C<owner> or
+C<reject>.
+
+Modifiers:
+
+=over
+
+=item C<(reason=>I<reason_key>C<)>
+
+Only for C<reject> action.
+Matches a key in F<mail_tt2/authorization_reject.tt2> template corresponding
+to an information message about the reason of the reject of the user
+
+=item C<(tt2=>I<tpl_name>C<)>
+
+Only for C<reject> action.
+Corresponding template (I<tpl_name>C<.tt2>) is sent to the sender.
+
+=item C<notify>
+
+Sends a notification to list owner.
+
+=item C<quiet>
+
+Sends no notification to the message sender.
+
+=back
+
+=head2 Formal syntax
+
+# Below is the formal syntax definition by argumented BNF.
+
+rule : condition spaces auth_list "->" action
+
+# Condition
+
+condition : "!" condition  
+    | "true" "(" ")"  
+    | "equal" "(" var "," var ")"  
+    | "less_than" "(" var "," var ")"  
+    | "match" "(" var "," "/" perl_regexp "/" ")"  
+    | "search" "(" named_filter_file ")"  
+    | "is_subscriber" "(" listname "," var ")"  
+    | "is_owner" "(" listname "," var ")"  
+    | "is_editor" "(" listname "," var ")"  
+    | "is_listmaster" "(" var ")"  
+    | "older" "(" date "," date ")"  
+    | "newer" "(" date "," date ")"  
+    | "verify_netmask" "(" network_block ")"
+    | "CustomCondition::" package_name "(" var* ")"
+
+var : "[email]"  
+    | "[sender]"  
+    | "[user->" user_key_word "]"  
+    | "[previous_email]"  
+    | "[user_attributes->" user_attributes_keyword "]"  
+    | "[subscriber->" subscriber_key_word "]"  
+    | "[list->" list_key_word "]" | "[env->" env_var "]"  
+    | "[conf->" conf_key_word "]"  
+    | "[msg_header->" field_name "][" index "]"  
+    | "[msg_header->" field_name "]"  
+    | "[msg_body]"  
+    | "[msg_part->type]" | "[msg_part->body]" | "[msg_encrypted]"  
+    | "[is_bcc]" | "[current_date]"  
+    | "[topic-auto]" | "[topic-sender]" | "[topic-editor]"  
+    | "[topic]" | "[topic-needed]"  
+    | "[custom_vars->" custom_var_name "]" | string
+
+listname : "[listname]"  
+    | listname_string | listname_string "@" domain_string
+
+user_key_word : "email" | "gecos" | "lang" | "password" | "cookie_delay_user"  
+    | additional_user_fields
+
+subscriber_key_word : "email" | "gecos" | "bounce" | "reception"  
+    | "visibility" | "date" | "update_date"  
+    | additional_subscriber_fields
+
+list_key_word : "name" | "host" | "address" | "lang" | "max_size"  
+    | "priority" | "reply_to" | "status" | "subject" | "account"  
+    | "total"
+
+conf_key_word : "domain" | "email" | "listmaster"  
+    | "default_list_priority" | "sympa_priority" | "request_priority"  
+    | "lang" | "max_size"
+
+=begin comment
+
+date : date_element [ "+"|"-" date_element ]
+
+date_element : epoch_date | var | date_expr
+
+epoch_date : integer
+
+date_expr : integer "y" integer "m" integer "d" integer "h" integer "min" integer "sec"
+
+=end comment
+
+# Authentication methods
+
+auth_list : auth "," auth_list | auth | ""
+
+auth : "smtp" | "dkim" | "md5" | "smime"
+
+# Actions
+
+action : "do_it" [ "," "notify" ]  
+    | "do_it" [ "," "quiet" ]  
+    | "reject(reason=" reason_key ")" [ "," "quiet" ]  
+    | "reject(tt2=" tpl_name ")" [ "," "quiet" ]  
+    | "request_auth"  
+    | "owner"  
+    | "editor"  
+    | "editorkey" [ "," "quiet" ]  
+    | "listmaster"
+
+=head1 FILES
+
+=over
+
+=item $EXPLDIRC</>I<list path>C</scenari>
+
+=item $SYSCONFDIRC</>I<virtual host>C</scenari>
+
+=item $SYSCONFDIRC</scenari>
+
+=item $DEFAULTDIRC</scenari>
+
+Path of scenario files: List, robot and site levels, and distribution defaults.
+
+=back
+
+=head1 SEE ALSO
+
+L<Sympa::Scenario>.
+
+=head1 HISTORY
+
+Original contents of this document were partially taken from
+a chapter "Authorization scenarios" in
+I<Sympa, Mailing List Management Software - Reference manual>.
+
+=cut
+
