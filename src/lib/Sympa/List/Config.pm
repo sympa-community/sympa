@@ -31,6 +31,8 @@ use Sympa::Robot;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
 
+my $log = Sympa::Log->instance;
+
 sub new {
     my $class   = shift;
     my $context = shift;
@@ -774,6 +776,84 @@ sub _sanitize_changes_leaf {
     }
 }
 
+#
+# Global validations examine the entire configuration for semantic errors or
+# requirements that can't be detected within a single paragraph.
+#
+# The 'owner_domain' option is an example of this need. The restriction applies
+# to the entire set of owner addresses, not just a single owner.
+#
+# Error data is returned in a hashref with the usual keys.
+#
+my %global_validations = (
+    owner_domain => sub {
+        my $self = shift;
+        my $new  = shift;
+
+        my $pinfo = $self->{_pinfo};
+        my $loglevel = 'debug'; # was set to 'info' during development
+
+        # gather parameters
+        my $owner_domain = $self->get('owner_domain');
+        if (defined($self->get_change('owner_domain'))) {
+            $owner_domain = $self->get_change('owner_domain');
+        }
+        (my $domainrex = "[.\@]($owner_domain)\$") =~ s/ /|/g;
+
+        my $owner_domain_min = $self->get('owner_domain_min');
+        if (defined($self->get_change('owner_domain_min'))) {
+            $owner_domain_min = $self->get_change('owner_domain_min');
+        }
+        $owner_domain_min ||= 0;
+
+        # if no owner_domain setting, do nothing
+        return if ($owner_domain =~ /^\s*$/);
+
+        # calculate updated owner list, including deletions
+        my @owner = map { $_->{'email'} } @{$self->get('owner')};
+        my $changes = $self->get_change('owner');
+        map { $owner[$_] = $changes->{$_}->{'email'} } CORE::keys %$changes;
+        @owner = grep defined, @owner;
+
+        # count matches and non-matches
+        my @non_matching_owners = grep {!/$domainrex/} @owner;
+        my @matching_owners = grep {/$domainrex/} @owner;
+
+        my $non_matching_count = 1 + $#non_matching_owners;
+        my $matching_owner_count = 1 + $#matching_owners;
+
+        # logging
+        $log->syslog($loglevel, "owner_domain: $owner_domain");
+        $log->syslog($loglevel, "owner_domain_min: $owner_domain_min");
+        $log->syslog($loglevel, "owners: " . join(",", @owner));
+        $log->syslog($loglevel, "total owners: " . ($#owner + 1));
+        $log->syslog($loglevel, "domainrex: $domainrex");
+        $log->syslog($loglevel, "matching_owners: " . join(",", @matching_owners));
+        $log->syslog($loglevel, "matching_owner_count: $matching_owner_count");
+        $log->syslog($loglevel, "non_matching_owners: " . join(",", @non_matching_owners));
+        $log->syslog($loglevel, "non_matching_count: $non_matching_count");
+
+        # apply different rules based on min domain requirement
+        if ($owner_domain_min == 0) {
+            return ('owner_domain',
+                    {p_info => $pinfo->{'owner'},
+                     p_paths => ['owner'],
+                     owner_domain => $owner_domain,
+                     value => join(' ', @non_matching_owners)})
+                unless ($non_matching_count == 0);
+        } else {
+            return ('owner_domain_min',
+                    {p_info => $pinfo->{'owner'},
+                     p_paths => ['owner'],
+                     owner_domain => $owner_domain,
+                     owner_domain_min => $owner_domain_min,
+                     value => $matching_owner_count})
+                unless ($matching_owner_count >= $owner_domain_min);
+        }
+        return '';
+    },
+    );
+
 # Validates changes on list configuration.
 # Context:
 # - $list: An instance of Sympa::List.
@@ -815,6 +895,18 @@ sub _validate_changes {
         $ret = 'invalid' if $r eq 'invalid';
     }
 
+    # review the entire new configuration as a whole
+    foreach my $validation (CORE::keys %global_validations) {
+        next unless ref $global_validations{$validation} eq 'CODE';
+        my ($error, $err_info) = $global_validations{$validation}->($self, $new);
+        next unless $error;
+
+        push @$errors,
+                [
+                 'user', $error, $err_info
+                ];
+        $ret = 'invalid';
+    }
     return '' unless %$new;
     return $ret;
 }

@@ -52,6 +52,7 @@ man5_MANS = \
 	sympa.conf.5 \
 	sympa_database.5 \
 	sympa.wsdl.5 \
+	sympa_scenario.5 \
 	topics.conf.5 \
 	trusted_applications.conf.5
 
@@ -66,6 +67,7 @@ EXTRA_DIST = $(nobase_doc_DATA) \
 	nrcpt_by_domain.conf.pod \
 	sympa.conf.podpl \
 	sympa_database.podpl \
+	sympa_scenario.pod \
 	sympa_toc.pod \
 	sympa.wsdl.pod \
 	topics.conf.pod \
