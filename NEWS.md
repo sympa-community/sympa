@@ -1,5 +1,29 @@
 # Change Log
 
+## [6.2.23b.3](https://github.com/sympa-community/sympa/tree/6.2.23b.3)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.23b.2...6.2.23b.3)
+
+**Changes:**
+
+- If `ca_file` and `ca_path` parameters are not specified, CA certificate stores defined by OpenSSL on each system will be used. Previously no certificate stores were not chosen in such case. [\#116](https://github.com/sympa-community/sympa/issues/116)
+- The "html" reception mode was deprecated. Now it became just a synonym of "mail" (normal) reception mode. [\#125](https://github.com/sympa-community/sympa/issues/125)
+
+**Implemented enhancements:**
+
+- Feature: optionally restrict list ownership to specific domains \(owner\_domain\) [\#131](https://github.com/sympa-community/sympa/pull/131) ([mpkut](https://github.com/mpkut))
+
+**Fixed bugs:**
+
+- Cosmetic issue in error message with ldap driver [\#132](https://github.com/sympa-community/sympa/issues/132)
+- No attach recived from mailing list where subscribes are set hmtl-only mode option [\#125](https://github.com/sympa-community/sympa/issues/125)
+- default/ca-bundle.crt is outdated [\#116](https://github.com/sympa-community/sympa/issues/116)
+- Characters in pages are garbled \(get "mojibake"\) with Perl 5.22.0 or later [\#134](https://github.com/sympa-community/sympa/pull/134) ([ikedas](https://github.com/ikedas))
+
+**Merged pull requests:**
+
+- Issue \#78 quickfix [\#139](https://github.com/sympa-community/sympa/pull/139) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.23b.2](https://github.com/sympa-community/sympa/tree/6.2.23b.2) (2017-11-30)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.23b.1...6.2.23b.2)
