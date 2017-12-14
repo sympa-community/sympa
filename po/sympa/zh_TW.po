@@ -42,8 +42,8 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:1933 src/lib/Sympa/Upgrade.pm:1977
-#: src/lib/Sympa/Upgrade.pm:955 src/sbin/sympa_wizard.pl.in:400
+#: src/lib/Sympa/Upgrade.pm:1930 src/lib/Sympa/Upgrade.pm:1974
+#: src/lib/Sympa/Upgrade.pm:952 src/sbin/sympa_wizard.pl.in:400
 #, fuzzy
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
@@ -796,7 +796,7 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1639 src/lib/Sympa/ConfDef.pm:276
-#: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:596
+#: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:623
 #, fuzzy
 msgid "bytes"
 msgstr "再見！"
@@ -900,11 +900,11 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:358 src/lib/Sympa/ConfDef.pm:450
 #: src/lib/Sympa/ConfDef.pm:458 src/lib/Sympa/ConfDef.pm:466
 #: src/lib/Sympa/ConfDef.pm:766 src/lib/Sympa/ConfDef.pm:787
-#: src/lib/Sympa/ConfDef.pm:794 src/lib/Sympa/ListDef.pm:1069
-#: src/lib/Sympa/ListDef.pm:1321 src/lib/Sympa/ListDef.pm:1446
-#: src/lib/Sympa/ListDef.pm:1493 src/lib/Sympa/ListDef.pm:1658
-#: src/lib/Sympa/ListDef.pm:1668 src/lib/Sympa/ListDef.pm:1761
-#: src/lib/Sympa/ListDef.pm:1891 src/lib/Sympa/ListDef.pm:1938
+#: src/lib/Sympa/ConfDef.pm:794 src/lib/Sympa/ListDef.pm:1096
+#: src/lib/Sympa/ListDef.pm:1348 src/lib/Sympa/ListDef.pm:1473
+#: src/lib/Sympa/ListDef.pm:1520 src/lib/Sympa/ListDef.pm:1685
+#: src/lib/Sympa/ListDef.pm:1695 src/lib/Sympa/ListDef.pm:1788
+#: src/lib/Sympa/ListDef.pm:1918 src/lib/Sympa/ListDef.pm:1965
 msgid "seconds"
 msgstr ""
 
@@ -1094,11 +1094,11 @@ msgstr ""
 #: default/web_tt2/my.tt2:48 default/web_tt2/nav.tt2:129
 #: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:102
 #: default/web_tt2/suspend_request.tt2:61 src/lib/Sympa/ConfDef.pm:563
-#: src/lib/Sympa/ListDef.pm:811
+#: src/lib/Sympa/ListDef.pm:838
 msgid "Archives"
 msgstr "歸檔"
 
-#: src/lib/Sympa/ConfDef.pm:567 src/lib/Sympa/ListDef.pm:774
+#: src/lib/Sympa/ConfDef.pm:567 src/lib/Sympa/ListDef.pm:801
 #, fuzzy
 msgid "Store distributed messages into archive"
 msgstr "發送信息"
@@ -1109,8 +1109,8 @@ msgid "Default disk quota for lists' archive"
 msgstr "編輯拒絕郵件"
 
 #: src/lib/Sympa/ConfDef.pm:1541 src/lib/Sympa/ConfDef.pm:576
-#: src/lib/Sympa/ListDef.pm:761 src/lib/Sympa/ListDef.pm:793
-#: src/lib/Sympa/ListDef.pm:843
+#: src/lib/Sympa/ListDef.pm:788 src/lib/Sympa/ListDef.pm:820
+#: src/lib/Sympa/ListDef.pm:870
 msgid "Kbytes"
 msgstr ""
 
@@ -1152,7 +1152,7 @@ msgstr "退信管理"
 msgid "Default bounce warn rate"
 msgstr "缺省值：bounce_warn_rate郵件系統參量"
 
-#: src/lib/Sympa/ConfDef.pm:616 src/lib/Sympa/ListDef.pm:889
+#: src/lib/Sympa/ConfDef.pm:616 src/lib/Sympa/ListDef.pm:916
 msgid ""
 "The list owner receives a warning whenever a message is distributed and the "
 "number (percentage) of bounces exceeds this value."
@@ -1165,7 +1165,7 @@ msgstr ""
 msgid "Default bounce halt rate"
 msgstr "輸入模板"
 
-#: src/lib/Sympa/ConfDef.pm:625 src/lib/Sympa/ListDef.pm:899
+#: src/lib/Sympa/ConfDef.pm:625 src/lib/Sympa/ListDef.pm:926
 msgid ""
 "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
 "will be halted, i.e. they are retained for subsequent moderation."
@@ -1211,8 +1211,8 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1088 src/lib/Sympa/ConfDef.pm:1095
 #: src/lib/Sympa/ConfDef.pm:1102 src/lib/Sympa/ConfDef.pm:659
 #: src/lib/Sympa/ConfDef.pm:730 src/lib/Sympa/ConfDef.pm:737
-#: src/lib/Sympa/ListDef.pm:1025 src/lib/Sympa/ListDef.pm:2242
-#: src/lib/Sympa/ListDef.pm:353
+#: src/lib/Sympa/ListDef.pm:1052 src/lib/Sympa/ListDef.pm:2269
+#: src/lib/Sympa/ListDef.pm:378
 msgid "days"
 msgstr "星期幾"
 
@@ -1221,7 +1221,7 @@ msgstr "星期幾"
 msgid "Remove bouncing new subscribers"
 msgstr "遠程用戶"
 
-#: src/lib/Sympa/ConfDef.pm:667 src/lib/Sympa/ListDef.pm:1038
+#: src/lib/Sympa/ConfDef.pm:667 src/lib/Sympa/ListDef.pm:1065
 msgid ""
 "If set to unique, the welcome message is sent using a unique return path in "
 "order to remove the subscriber immediately in the case of a bounce."
@@ -1234,11 +1234,11 @@ msgstr ""
 msgid "Remove subscribers bouncing remind message"
 msgstr "週期性訂閱提醒任務"
 
-#: src/lib/Sympa/ConfDef.pm:674 src/lib/Sympa/ListDef.pm:1048
+#: src/lib/Sympa/ConfDef.pm:674 src/lib/Sympa/ListDef.pm:1075
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr "同welcome_return_path一樣，但應用于提醒郵件。"
 
-#: src/lib/Sympa/ConfDef.pm:677 src/lib/Sympa/ListDef.pm:2342
+#: src/lib/Sympa/ConfDef.pm:677 src/lib/Sympa/ListDef.pm:2369
 msgid "Periodical subscription reminder task"
 msgstr "週期性訂閱提醒任務"
 
@@ -1848,7 +1848,7 @@ msgid "Number of months that elapse before a log is expired"
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1195 src/lib/Sympa/ConfDef.pm:1203
-#: src/lib/Sympa/ListDef.pm:851
+#: src/lib/Sympa/ListDef.pm:878
 #, fuzzy
 msgid "months"
 msgstr "其它"
@@ -1872,7 +1872,7 @@ msgid ""
 "interpreted as an octal value."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1216 src/lib/Sympa/ListDef.pm:2251
+#: src/lib/Sympa/ConfDef.pm:1216 src/lib/Sympa/ListDef.pm:2278
 msgid "Secret string for generating unique keys"
 msgstr "生成密鑰的秘密字符串"
 
@@ -2286,7 +2286,7 @@ msgstr ""
 msgid "Default is null."
 msgstr "缺省值："
 
-#: src/lib/Sympa/ConfDef.pm:1791 src/lib/Sympa/ListDef.pm:2104
+#: src/lib/Sympa/ConfDef.pm:1791 src/lib/Sympa/ListDef.pm:2131
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr ""
 
@@ -2319,7 +2319,7 @@ msgstr ""
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1832 src/lib/Sympa/ListDef.pm:2214
+#: src/lib/Sympa/ConfDef.pm:1832 src/lib/Sympa/ListDef.pm:2241
 msgid "New From name format"
 msgstr ""
 
@@ -2329,7 +2329,7 @@ msgid ""
 "header field."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1841 src/lib/Sympa/ListDef.pm:2198
+#: src/lib/Sympa/ConfDef.pm:1841 src/lib/Sympa/ListDef.pm:2225
 #, fuzzy
 msgid "New From address"
 msgstr "新的郵件地址："
@@ -2478,57 +2478,82 @@ msgid ""
 "members with data sources."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2014
+#: src/lib/Sympa/ConfDef.pm:2010
+msgid "List of required domains for list owner addresses"
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:2017
+msgid ""
+"Restrict list ownership to addresses in the specified domains. This can be "
+"used to reserve list ownership to a group of trusted users from a set of "
+"domains associated with an organization, while allowing editors and "
+"subscribers from the Internet at large."
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:2022
+msgid "Minimum number of list owners that must match owner_domain restriction"
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:2029
+msgid ""
+"Minimum number of list owners that must satisfy the owner_domain "
+"restriction.  The default of zero (0) means *all* list owners must match. "
+"Setting to 1 requires only one list owner to match owner_domain; all other "
+"owners can be from any domain. This setting can be used to ensure that there "
+"is always at least one known contact point for a mailing list."
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:2038
 msgid "Enable FastCGI"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2018
+#: src/lib/Sympa/ConfDef.pm:2042
 msgid ""
 "Is FastCGI module for HTTP server installed. This module provide much faster "
 "web interface."
 msgstr ""
 
-#: default/mhonarc-ressources.tt2:678 src/lib/Sympa/Language.pm:625
+#: default/mhonarc-ressources.tt2:678 src/lib/Sympa/Language.pm:626
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "天:一:二:三:四:五:六"
 
 #: default/mhonarc-ressources.tt2:661 default/web_tt2/head_javascript.tt2:16
-#: src/lib/Sympa/Language.pm:630 src/lib/Sympa/ListOpt.pm:276
+#: src/lib/Sympa/Language.pm:631 src/lib/Sympa/ListOpt.pm:275
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "星期天:星期一:星期二:星期三:星期四:星期五:星期六"
 
 #: default/mhonarc-ressources.tt2:700 default/web_tt2/head_javascript.tt2:22
-#: src/lib/Sympa/Language.pm:634
+#: src/lib/Sympa/Language.pm:635
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
 msgstr "1月:2月:3月:4月:5月:6月:7月:8月:9月:10月:11月:12月"
 
-#: default/mhonarc-ressources.tt2:683 src/lib/Sympa/Language.pm:639
+#: default/mhonarc-ressources.tt2:683 src/lib/Sympa/Language.pm:640
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
 msgstr "1月:2月:3月:4月:5月:6月:7月:8月:9月:10月:11月:12月"
 
-#: src/lib/Sympa/Language.pm:643
+#: src/lib/Sympa/Language.pm:644
 msgid "AM:PM"
 msgstr "上午:下午"
 
-#: src/lib/Sympa/Language.pm:733
+#: src/lib/Sympa/Language.pm:735
 msgid "Lorem ipsum dolor sit amet."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3928
+#: src/lib/Sympa/List.pm:3915
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: src/lib/Sympa/List.pm:3935
+#: src/lib/Sympa/List.pm:3922
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3939
+#: src/lib/Sympa/List.pm:3926
 msgid "Added %s users out of %s required."
 msgstr ""
 
@@ -2565,13 +2590,13 @@ msgstr "配置"
 
 #: src/lib/Sympa/ListDef.pm:114 src/lib/Sympa/ListDef.pm:149
 #: src/lib/Sympa/ListDef.pm:190 src/lib/Sympa/ListDef.pm:237
-#: src/lib/Sympa/ListDef.pm:392 src/lib/Sympa/ListDef.pm:418
+#: src/lib/Sympa/ListDef.pm:417 src/lib/Sympa/ListDef.pm:444
 msgid "reception mode"
 msgstr "接收模式"
 
 #: src/lib/Sympa/ListDef.pm:121 src/lib/Sympa/ListDef.pm:156
 #: src/lib/Sympa/ListDef.pm:197 src/lib/Sympa/ListDef.pm:244
-#: src/lib/Sympa/ListDef.pm:431
+#: src/lib/Sympa/ListDef.pm:458
 msgid "visibility"
 msgstr "可見性"
 
@@ -2634,43 +2659,52 @@ msgstr "新的郵件列表"
 msgid "Priority"
 msgstr "優先級"
 
-#: src/lib/Sympa/ListDef.pm:328
+#: src/lib/Sympa/ListDef.pm:326
+#, fuzzy
+msgid "Required domains for list owners"
+msgstr "僅限郵件列表所有者"
+
+#: src/lib/Sympa/ListDef.pm:339
+msgid "Minimum owners in required domains"
+msgstr ""
+
+#: src/lib/Sympa/ListDef.pm:353
 msgid "Who can send messages"
 msgstr "發送信息"
 
-#: src/lib/Sympa/ListDef.pm:337
+#: src/lib/Sympa/ListDef.pm:362
 msgid "Delivery time (hh:mm)"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:346
+#: src/lib/Sympa/ListDef.pm:371
 msgid "Digest frequency"
 msgstr "摘要頻率"
 
-#: src/lib/Sympa/ListDef.pm:361
+#: src/lib/Sympa/ListDef.pm:386
 msgid "hour"
 msgstr "小時"
 
-#: src/lib/Sympa/ListDef.pm:368
+#: src/lib/Sympa/ListDef.pm:393
 msgid "minute"
 msgstr "分鐘"
 
-#: src/lib/Sympa/ListDef.pm:379
+#: src/lib/Sympa/ListDef.pm:404
 msgid "Digest maximum number of messages"
 msgstr "郵件最大數字摘要"
 
-#: src/lib/Sympa/ListDef.pm:389
+#: src/lib/Sympa/ListDef.pm:414
 msgid "Available subscription options"
 msgstr "可提供的訂閱選項"
 
-#: src/lib/Sympa/ListDef.pm:412
+#: src/lib/Sympa/ListDef.pm:438
 msgid "Subscription profile"
 msgstr "訂閱模式"
 
-#: src/lib/Sympa/ListDef.pm:444
+#: src/lib/Sympa/ListDef.pm:471
 msgid "Topics for message categorization"
 msgstr "郵件分類的主題"
 
-#: src/lib/Sympa/ListDef.pm:446
+#: src/lib/Sympa/ListDef.pm:473
 msgid ""
 "This paragraph defines a topic used to tag a message of a list, named by "
 "msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
@@ -2681,39 +2715,39 @@ msgstr ""
 "個保留字），它的郵件頭信息是msg_topic.title。msg_topic.keywords詞條是可選的並"
 "允許自動角注。這應該是一個關鍵詞列表，由','隔開。"
 
-#: src/lib/Sympa/ListDef.pm:450
+#: src/lib/Sympa/ListDef.pm:477
 msgid "Message topic name"
 msgstr "郵件主題名稱"
 
-#: src/lib/Sympa/ListDef.pm:458
+#: src/lib/Sympa/ListDef.pm:485
 msgid "Message topic keywords"
 msgstr "郵件主題關鍵詞"
 
-#: src/lib/Sympa/ListDef.pm:464
+#: src/lib/Sympa/ListDef.pm:491
 msgid "Message topic title"
 msgstr "郵件主題題目"
 
-#: src/lib/Sympa/ListDef.pm:477
+#: src/lib/Sympa/ListDef.pm:504
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr "定義了郵件主題關健詞的哪個部分是應用的"
 
-#: src/lib/Sympa/ListDef.pm:488
+#: src/lib/Sympa/ListDef.pm:515
 msgid "Message tagging"
 msgstr "郵件角注"
 
-#: src/lib/Sympa/ListDef.pm:498 src/lib/Sympa/ListDef.pm:518
+#: src/lib/Sympa/ListDef.pm:525 src/lib/Sympa/ListDef.pm:545
 msgid "Reply address"
 msgstr "回復地址"
 
-#: src/lib/Sympa/ListDef.pm:508
+#: src/lib/Sympa/ListDef.pm:535
 msgid "Forced reply address"
 msgstr "強制回復地址"
 
-#: default/web_tt2/edit_config.tt2:19 src/lib/Sympa/ListDef.pm:524
+#: default/web_tt2/edit_config.tt2:19 src/lib/Sympa/ListDef.pm:551
 msgid "value"
 msgstr "值"
 
-#: src/lib/Sympa/ListDef.pm:526
+#: src/lib/Sympa/ListDef.pm:553
 #, fuzzy
 msgid ""
 "This parameter indicates whether the Reply-To: field should indicate the "
@@ -2730,37 +2764,37 @@ msgstr ""
 "避免的，用戶錯誤地相信他們僅對發送者回復，將發送私人的郵件到郵件列表。這可能"
 "導致，極少數情況下產生尷尬，或更加嚴重的後果。"
 
-#: src/lib/Sympa/ListDef.pm:533 src/lib/Sympa/ListOpt.pm:55
+#: src/lib/Sympa/ListDef.pm:560 src/lib/Sympa/ListOpt.pm:55
 msgid "other email address"
 msgstr "其它郵件"
 
-#: src/lib/Sympa/ListDef.pm:540
+#: src/lib/Sympa/ListDef.pm:567
 msgid "respect of existing header field"
 msgstr "遵守現有郵件頭信息字段"
 
-#: src/lib/Sympa/ListDef.pm:552
+#: src/lib/Sympa/ListDef.pm:579
 msgid "Anonymous sender"
 msgstr "匿名發送者"
 
-#: src/lib/Sympa/ListDef.pm:554
+#: src/lib/Sympa/ListDef.pm:581
 msgid ""
 "To hide the sender's email address before distributing the message. It is "
 "replaced by the provided email address."
 msgstr "在分發郵件之前隱藏發送者的郵件地址。它被提供的郵件地址取代。"
 
-#: src/lib/Sympa/ListDef.pm:561
+#: src/lib/Sympa/ListDef.pm:588
 msgid "Custom header field"
 msgstr "定制郵件頭信息字段"
 
-#: src/lib/Sympa/ListDef.pm:573
+#: src/lib/Sympa/ListDef.pm:600
 msgid "Subject tagging"
 msgstr "郵件頭信息角注"
 
-#: src/lib/Sympa/ListDef.pm:584
+#: src/lib/Sympa/ListDef.pm:611
 msgid "Attachment type"
 msgstr "附件類型"
 
-#: src/lib/Sympa/ListDef.pm:586
+#: src/lib/Sympa/ListDef.pm:613
 #, fuzzy
 msgid ""
 "List owners may decide to add message headers or footers to messages sent "
@@ -2776,132 +2810,132 @@ msgstr ""
 "Sympa不會創建新的MIME部分，但會設法在郵件上添附郵件頭信息／頁腳。被預定義的郵"
 "件頁腳將被忽略。郵件頭信息／頁腳僅會被添附在純文本郵件中。"
 
-#: src/lib/Sympa/ListDef.pm:594
+#: src/lib/Sympa/ListDef.pm:621
 msgid "Maximum message size"
 msgstr "最大郵件大小"
 
-#: src/lib/Sympa/ListDef.pm:606
+#: src/lib/Sympa/ListDef.pm:633
 #, fuzzy
 msgid "Allow message personalization"
 msgstr "郵件分類的主題"
 
-#: src/lib/Sympa/ListDef.pm:615
+#: src/lib/Sympa/ListDef.pm:642
 msgid "Reject mail from automatic processes (crontab, etc)?"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:644
+#: src/lib/Sympa/ListDef.pm:671
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369郵件頭信息字段"
 
-#: src/lib/Sympa/ListDef.pm:675
+#: src/lib/Sympa/ListDef.pm:702
 msgid "Who can view list information"
 msgstr "查看郵件列表信息"
 
-#: src/lib/Sympa/ListDef.pm:682
+#: src/lib/Sympa/ListDef.pm:709
 msgid "Who can subscribe to the list"
 msgstr "訂閱郵件列表"
 
-#: src/lib/Sympa/ListDef.pm:692
+#: src/lib/Sympa/ListDef.pm:719
 msgid "Who can add subscribers"
 msgstr "添加訂閱者"
 
-#: src/lib/Sympa/ListDef.pm:701
+#: src/lib/Sympa/ListDef.pm:728
 msgid "Who can unsubscribe"
 msgstr "退訂"
 
-#: src/lib/Sympa/ListDef.pm:711
+#: src/lib/Sympa/ListDef.pm:738
 msgid "Who can delete subscribers"
 msgstr "刪除訂閱者"
 
-#: src/lib/Sympa/ListDef.pm:718
+#: src/lib/Sympa/ListDef.pm:745
 msgid "Who can invite people"
 msgstr "邀請"
 
-#: src/lib/Sympa/ListDef.pm:725
+#: src/lib/Sympa/ListDef.pm:752
 msgid "Who can start a remind process"
 msgstr "啟動提醒過程"
 
-#: src/lib/Sympa/ListDef.pm:734
+#: src/lib/Sympa/ListDef.pm:761
 msgid "Who can review subscribers"
 msgstr "查看訂閱者"
 
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_read.tt2:2
 #: default/web_tt2/d_upload.tt2:2 default/web_tt2/list_menu.tt2:146
-#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:744
+#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:771
 msgid "Shared documents"
 msgstr "共享文檔"
 
-#: src/lib/Sympa/ListDef.pm:750
+#: src/lib/Sympa/ListDef.pm:777
 msgid "Who can view"
 msgstr "查看"
 
-#: src/lib/Sympa/ListDef.pm:755
+#: src/lib/Sympa/ListDef.pm:782
 msgid "Who can edit"
 msgstr "編輯"
 
-#: src/lib/Sympa/ListDef.pm:760 src/lib/Sympa/ListDef.pm:792
-#: src/lib/Sympa/ListDef.pm:842
+#: src/lib/Sympa/ListDef.pm:787 src/lib/Sympa/ListDef.pm:819
+#: src/lib/Sympa/ListDef.pm:869
 msgid "quota"
 msgstr "配額"
 
-#: src/lib/Sympa/ListDef.pm:782
+#: src/lib/Sympa/ListDef.pm:809
 msgid "Web archives"
 msgstr "網頁歸檔"
 
-#: src/lib/Sympa/ListDef.pm:786 src/lib/Sympa/ListDef.pm:824
-#: src/lib/Sympa/ListDef.pm:831
+#: src/lib/Sympa/ListDef.pm:813 src/lib/Sympa/ListDef.pm:851
+#: src/lib/Sympa/ListDef.pm:858
 msgid "access right"
 msgstr "訪問權限"
 
-#: src/lib/Sympa/ListDef.pm:801 src/lib/Sympa/ListDef.pm:850
+#: src/lib/Sympa/ListDef.pm:828 src/lib/Sympa/ListDef.pm:877
 msgid "Maximum number of month archived"
 msgstr "月歸檔最大數"
 
-#: src/lib/Sympa/ListDef.pm:813
+#: src/lib/Sympa/ListDef.pm:840
 #, fuzzy
 msgid ""
 "Privilege for reading mail archives and frequency of archiving\n"
 "Defines who can access the web archive for the list."
 msgstr "讀取郵件歸檔和歸檔頻率的特權"
 
-#: src/lib/Sympa/ListDef.pm:817
+#: src/lib/Sympa/ListDef.pm:844
 msgid "frequency"
 msgstr "頻率"
 
-#: src/lib/Sympa/ListDef.pm:836
+#: src/lib/Sympa/ListDef.pm:863
 msgid "access right by mail commands"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:861
+#: src/lib/Sympa/ListDef.pm:888
 msgid "Archive encrypted mails as cleartext"
 msgstr "保存加密郵件為非加密明文"
 
-#: src/lib/Sympa/ListDef.pm:2352 src/lib/Sympa/ListDef.pm:870
+#: src/lib/Sympa/ListDef.pm:2379 src/lib/Sympa/ListDef.pm:897
 msgid "email address protection method"
 msgstr "郵件地址保護模式"
 
-#: src/lib/Sympa/ListDef.pm:883
+#: src/lib/Sympa/ListDef.pm:910
 msgid "Bounces management"
 msgstr "退信管理"
 
-#: src/lib/Sympa/ListDef.pm:887
+#: src/lib/Sympa/ListDef.pm:914
 msgid "warn rate"
 msgstr "警告率"
 
-#: src/lib/Sympa/ListDef.pm:897
+#: src/lib/Sympa/ListDef.pm:924
 msgid "halt rate"
 msgstr "停止率"
 
-#: src/lib/Sympa/ListDef.pm:912
+#: src/lib/Sympa/ListDef.pm:939
 msgid "Management of bouncers, 1st level"
 msgstr "退信訂閱者管理，最低水平"
 
-#: src/lib/Sympa/ListDef.pm:917 src/lib/Sympa/ListDef.pm:954
+#: src/lib/Sympa/ListDef.pm:944 src/lib/Sympa/ListDef.pm:981
 msgid "threshold"
 msgstr "下限"
 
-#: src/lib/Sympa/ListDef.pm:919
+#: src/lib/Sympa/ListDef.pm:946
 #, fuzzy
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
@@ -2910,19 +2944,19 @@ msgid ""
 msgstr ""
 "這個參量為每組退信的用戶定義了一個底限. 例如第1級從45開始到level_2_treshold。"
 
-#: src/lib/Sympa/ListDef.pm:927 src/lib/Sympa/ListDef.pm:964
+#: src/lib/Sympa/ListDef.pm:954 src/lib/Sympa/ListDef.pm:991
 msgid "action for this population"
 msgstr "處理"
 
-#: src/lib/Sympa/ListDef.pm:936 src/lib/Sympa/ListDef.pm:973
+#: src/lib/Sympa/ListDef.pm:1000 src/lib/Sympa/ListDef.pm:963
 msgid "notification"
 msgstr "通知"
 
-#: src/lib/Sympa/ListDef.pm:949
+#: src/lib/Sympa/ListDef.pm:976
 msgid "Management of bouncers, 2nd level"
 msgstr "退信訂閱者管理，二級水平"
 
-#: src/lib/Sympa/ListDef.pm:956
+#: src/lib/Sympa/ListDef.pm:983
 #, fuzzy
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
@@ -2932,107 +2966,107 @@ msgstr ""
 "這個參量定義了每個退信用戶類別的比分範圍。例如，第2級是用戶比分在80和100之"
 "間。"
 
-#: src/lib/Sympa/ListDef.pm:986
+#: src/lib/Sympa/ListDef.pm:1013
 msgid "percentage of list members in VERP mode"
 msgstr "在VERP模式下郵件列表成員百分比"
 
-#: src/lib/Sympa/ListDef.pm:996
+#: src/lib/Sympa/ListDef.pm:1023
 #, fuzzy
 msgid "Message tracking feature"
 msgstr "郵件角注"
 
-#: src/lib/Sympa/ListDef.pm:1001
+#: src/lib/Sympa/ListDef.pm:1028
 msgid "tracking message by delivery status notification"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1010
+#: src/lib/Sympa/ListDef.pm:1037
 msgid "tracking message by message disposition notification"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1018
+#: src/lib/Sympa/ListDef.pm:1045
 #, fuzzy
 msgid "who can view message tracking"
 msgstr "郵件角注"
 
-#: src/lib/Sympa/ListDef.pm:1024
+#: src/lib/Sympa/ListDef.pm:1051
 msgid "Tracking datas are removed after this number of days"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1036
+#: src/lib/Sympa/ListDef.pm:1063
 msgid "Welcome return-path"
 msgstr "歡迎返回路徑"
 
-#: src/lib/Sympa/ListDef.pm:1046
+#: src/lib/Sympa/ListDef.pm:1073
 msgid "Return-path of the REMIND command"
 msgstr "REMIND命令的返回路徑"
 
-#: src/lib/Sympa/ListDef.pm:1059
+#: src/lib/Sympa/ListDef.pm:1086
 #, fuzzy
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "訂閱參量定義了訂閱到郵件列表的規則。"
 
-#: src/lib/Sympa/ListDef.pm:1068
+#: src/lib/Sympa/ListDef.pm:1095
 msgid "Timeout for fetch of include_sql_query"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1077
+#: src/lib/Sympa/ListDef.pm:1104
 msgid "User data source"
 msgstr "用戶數據來源"
 
-#: src/lib/Sympa/ListDef.pm:1086
+#: src/lib/Sympa/ListDef.pm:1113
 msgid "File inclusion"
 msgstr "文件包含"
 
-#: src/lib/Sympa/ListDef.pm:1097
+#: src/lib/Sympa/ListDef.pm:1124
 msgid "Remote file inclusion"
 msgstr "遠程的文件包含"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:51 src/lib/Sympa/ListDef.pm:1101
-#: src/lib/Sympa/ListDef.pm:1147 src/lib/Sympa/ListDef.pm:1175
-#: src/lib/Sympa/ListDef.pm:1240 src/lib/Sympa/ListDef.pm:1366
-#: src/lib/Sympa/ListDef.pm:1545 src/lib/Sympa/ListDef.pm:1626
-#: src/lib/Sympa/ListDef.pm:1680 src/lib/Sympa/ListDef.pm:1810
-#: src/lib/Sympa/ListDef.pm:1994
+#: ext/VOOT/lib/Sympa/VOOT.pm:51 src/lib/Sympa/ListDef.pm:1128
+#: src/lib/Sympa/ListDef.pm:1174 src/lib/Sympa/ListDef.pm:1202
+#: src/lib/Sympa/ListDef.pm:1267 src/lib/Sympa/ListDef.pm:1393
+#: src/lib/Sympa/ListDef.pm:1572 src/lib/Sympa/ListDef.pm:1653
+#: src/lib/Sympa/ListDef.pm:1707 src/lib/Sympa/ListDef.pm:1837
+#: src/lib/Sympa/ListDef.pm:2021
 msgid "short name for this source"
 msgstr "這個來源的縮寫名稱"
 
-#: src/lib/Sympa/ListDef.pm:1107
+#: src/lib/Sympa/ListDef.pm:1134
 msgid "data location URL"
 msgstr "數據位置URL"
 
-#: src/lib/Sympa/ListDef.pm:1114 src/lib/Sympa/ListDef.pm:1296
-#: src/lib/Sympa/ListDef.pm:1422 src/lib/Sympa/ListDef.pm:1586
-#: src/lib/Sympa/ListDef.pm:1736 src/lib/Sympa/ListDef.pm:1866
-#: src/lib/Sympa/ListDef.pm:2034
+#: src/lib/Sympa/ListDef.pm:1141 src/lib/Sympa/ListDef.pm:1323
+#: src/lib/Sympa/ListDef.pm:1449 src/lib/Sympa/ListDef.pm:1613
+#: src/lib/Sympa/ListDef.pm:1763 src/lib/Sympa/ListDef.pm:1893
+#: src/lib/Sympa/ListDef.pm:2061
 msgid "remote user"
 msgstr "遠程用戶"
 
-#: src/lib/Sympa/ListDef.pm:1120 src/lib/Sympa/ListDef.pm:1301
-#: src/lib/Sympa/ListDef.pm:1427 src/lib/Sympa/ListDef.pm:1592
-#: src/lib/Sympa/ListDef.pm:1741 src/lib/Sympa/ListDef.pm:1871
-#: src/lib/Sympa/ListDef.pm:2040
+#: src/lib/Sympa/ListDef.pm:1147 src/lib/Sympa/ListDef.pm:1328
+#: src/lib/Sympa/ListDef.pm:1454 src/lib/Sympa/ListDef.pm:1619
+#: src/lib/Sympa/ListDef.pm:1768 src/lib/Sympa/ListDef.pm:1898
+#: src/lib/Sympa/ListDef.pm:2067
 msgid "remote password"
 msgstr "遠程口令"
 
-#: src/lib/Sympa/ListDef.pm:1132 src/lib/Sympa/ListDef.pm:1141
+#: src/lib/Sympa/ListDef.pm:1159 src/lib/Sympa/ListDef.pm:1168
 msgid "List inclusion"
 msgstr "郵件列表包含"
 
-#: src/lib/Sympa/ListDef.pm:1153
+#: src/lib/Sympa/ListDef.pm:1180
 #, fuzzy
 msgid "list name to include"
 msgstr "文件夾目錄"
 
-#: src/lib/Sympa/ListDef.pm:1159
+#: src/lib/Sympa/ListDef.pm:1186
 #, fuzzy
 msgid "filter definition"
 msgstr "郵件列表定義"
 
-#: src/lib/Sympa/ListDef.pm:1169
+#: src/lib/Sympa/ListDef.pm:1196
 msgid "remote list inclusion"
 msgstr "遠程郵件列表包含"
 
-#: src/lib/Sympa/ListDef.pm:1171
+#: src/lib/Sympa/ListDef.pm:1198
 #, fuzzy
 msgid ""
 "Sympa can contact another Sympa service using HTTPS to fetch a remote list "
@@ -3050,283 +3084,283 @@ msgstr ""
 "include_remote_sympa_list為每張包含的郵件列表分段。請小心不要提升cross "
 "includes十死循環。"
 
-#: src/lib/Sympa/ListDef.pm:1181 src/lib/Sympa/ListDef.pm:1246
-#: src/lib/Sympa/ListDef.pm:1372 src/lib/Sympa/ListDef.pm:1557
-#: src/lib/Sympa/ListDef.pm:1686 src/lib/Sympa/ListDef.pm:1816
-#: src/lib/Sympa/ListDef.pm:2006
+#: src/lib/Sympa/ListDef.pm:1208 src/lib/Sympa/ListDef.pm:1273
+#: src/lib/Sympa/ListDef.pm:1399 src/lib/Sympa/ListDef.pm:1584
+#: src/lib/Sympa/ListDef.pm:1713 src/lib/Sympa/ListDef.pm:1843
+#: src/lib/Sympa/ListDef.pm:2033
 msgid "remote host"
 msgstr "遠程主機"
 
-#: src/lib/Sympa/ListDef.pm:1187 src/lib/Sympa/ListDef.pm:1252
-#: src/lib/Sympa/ListDef.pm:1378 src/lib/Sympa/ListDef.pm:1692
-#: src/lib/Sympa/ListDef.pm:1822
+#: src/lib/Sympa/ListDef.pm:1214 src/lib/Sympa/ListDef.pm:1279
+#: src/lib/Sympa/ListDef.pm:1405 src/lib/Sympa/ListDef.pm:1719
+#: src/lib/Sympa/ListDef.pm:1849
 msgid "remote port"
 msgstr "遠程端口"
 
-#: src/lib/Sympa/ListDef.pm:1194
+#: src/lib/Sympa/ListDef.pm:1221
 msgid "remote path of sympa list dump"
 msgstr "sympa郵件列表轉儲的遠程路徑"
 
-#: src/lib/Sympa/ListDef.pm:1202
+#: src/lib/Sympa/ListDef.pm:1229
 msgid "certificate for authentication by remote Sympa"
 msgstr "由遠程的Sympa身份驗證的證書"
 
-#: src/lib/Sympa/ListDef.pm:1234
+#: src/lib/Sympa/ListDef.pm:1261
 msgid "LDAP query inclusion"
 msgstr "LDAP查詢內容"
 
-#: src/lib/Sympa/ListDef.pm:1308 src/lib/Sympa/ListDef.pm:1748
+#: src/lib/Sympa/ListDef.pm:1335 src/lib/Sympa/ListDef.pm:1775
 msgid "suffix"
 msgstr "詞尾"
 
-#: src/lib/Sympa/ListDef.pm:1313 src/lib/Sympa/ListDef.pm:1753
+#: src/lib/Sympa/ListDef.pm:1340 src/lib/Sympa/ListDef.pm:1780
 msgid "search scope"
 msgstr "查找範圍"
 
-#: src/lib/Sympa/ListDef.pm:1320 src/lib/Sympa/ListDef.pm:1760
+#: src/lib/Sympa/ListDef.pm:1347 src/lib/Sympa/ListDef.pm:1787
 msgid "connection timeout"
 msgstr "連接超時"
 
-#: src/lib/Sympa/ListDef.pm:1328 src/lib/Sympa/ListDef.pm:1768
+#: src/lib/Sympa/ListDef.pm:1355 src/lib/Sympa/ListDef.pm:1795
 msgid "filter"
 msgstr "過濾器"
 
-#: src/lib/Sympa/ListDef.pm:1335 src/lib/Sympa/ListDef.pm:1775
+#: src/lib/Sympa/ListDef.pm:1362 src/lib/Sympa/ListDef.pm:1802
 msgid "extracted attribute"
 msgstr "提取的屬性"
 
-#: src/lib/Sympa/ListDef.pm:1342 src/lib/Sympa/ListDef.pm:1788
+#: src/lib/Sympa/ListDef.pm:1369 src/lib/Sympa/ListDef.pm:1815
 msgid "selection (if multiple)"
 msgstr "選項（如果有多項）"
 
-#: src/lib/Sympa/ListDef.pm:1349 src/lib/Sympa/ListDef.pm:1528
-#: src/lib/Sympa/ListDef.pm:1611 src/lib/Sympa/ListDef.pm:1795
-#: src/lib/Sympa/ListDef.pm:1979 src/lib/Sympa/ListDef.pm:2065
+#: src/lib/Sympa/ListDef.pm:1376 src/lib/Sympa/ListDef.pm:1555
+#: src/lib/Sympa/ListDef.pm:1638 src/lib/Sympa/ListDef.pm:1822
+#: src/lib/Sympa/ListDef.pm:2006 src/lib/Sympa/ListDef.pm:2092
 #, fuzzy
 msgid "Time ranges when inclusion is not allowed"
 msgstr "不允許添加用戶到郵件列表。"
 
-#: src/lib/Sympa/ListDef.pm:1360
+#: src/lib/Sympa/ListDef.pm:1387
 msgid "LDAP 2-level query inclusion"
 msgstr "LDAP 2-level 查詢內容"
 
-#: src/lib/Sympa/ListDef.pm:1434 src/lib/Sympa/ListDef.pm:1878
+#: src/lib/Sympa/ListDef.pm:1461 src/lib/Sympa/ListDef.pm:1905
 msgid "first-level suffix"
 msgstr "第1級詞尾"
 
-#: src/lib/Sympa/ListDef.pm:1439 src/lib/Sympa/ListDef.pm:1883
+#: src/lib/Sympa/ListDef.pm:1466 src/lib/Sympa/ListDef.pm:1910
 msgid "first-level search scope"
 msgstr "第1級查找範圍"
 
-#: src/lib/Sympa/ListDef.pm:1445 src/lib/Sympa/ListDef.pm:1890
+#: src/lib/Sympa/ListDef.pm:1472 src/lib/Sympa/ListDef.pm:1917
 msgid "first-level connection timeout"
 msgstr "第1級連接超時"
 
-#: src/lib/Sympa/ListDef.pm:1453 src/lib/Sympa/ListDef.pm:1898
+#: src/lib/Sympa/ListDef.pm:1480 src/lib/Sympa/ListDef.pm:1925
 msgid "first-level filter"
 msgstr "第1級過濾器"
 
-#: src/lib/Sympa/ListDef.pm:1460 src/lib/Sympa/ListDef.pm:1905
+#: src/lib/Sympa/ListDef.pm:1487 src/lib/Sympa/ListDef.pm:1932
 msgid "first-level extracted attribute"
 msgstr "第1級提取的屬性"
 
-#: src/lib/Sympa/ListDef.pm:1466 src/lib/Sympa/ListDef.pm:1911
+#: src/lib/Sympa/ListDef.pm:1493 src/lib/Sympa/ListDef.pm:1938
 msgid "first-level selection"
 msgstr "第1級選項"
 
-#: src/lib/Sympa/ListDef.pm:1473 src/lib/Sympa/ListDef.pm:1918
+#: src/lib/Sympa/ListDef.pm:1500 src/lib/Sympa/ListDef.pm:1945
 msgid "first-level regular expression"
 msgstr "第1級正規表達式"
 
-#: src/lib/Sympa/ListDef.pm:1480 src/lib/Sympa/ListDef.pm:1925
+#: src/lib/Sympa/ListDef.pm:1507 src/lib/Sympa/ListDef.pm:1952
 msgid "second-level suffix template"
 msgstr "第2級詞尾模板"
 
-#: src/lib/Sympa/ListDef.pm:1485 src/lib/Sympa/ListDef.pm:1930
+#: src/lib/Sympa/ListDef.pm:1512 src/lib/Sympa/ListDef.pm:1957
 msgid "second-level search scope"
 msgstr "第2級查找範圍"
 
-#: src/lib/Sympa/ListDef.pm:1492 src/lib/Sympa/ListDef.pm:1937
+#: src/lib/Sympa/ListDef.pm:1519 src/lib/Sympa/ListDef.pm:1964
 msgid "second-level connection timeout"
 msgstr "第2級連接超時"
 
-#: src/lib/Sympa/ListDef.pm:1500 src/lib/Sympa/ListDef.pm:1945
+#: src/lib/Sympa/ListDef.pm:1527 src/lib/Sympa/ListDef.pm:1972
 msgid "second-level filter template"
 msgstr "第2級過濾模板"
 
-#: src/lib/Sympa/ListDef.pm:1507 src/lib/Sympa/ListDef.pm:1952
+#: src/lib/Sympa/ListDef.pm:1534 src/lib/Sympa/ListDef.pm:1979
 msgid "second-level extracted attribute"
 msgstr "第2級提取的屬性"
 
-#: src/lib/Sympa/ListDef.pm:1514 src/lib/Sympa/ListDef.pm:1959
+#: src/lib/Sympa/ListDef.pm:1541 src/lib/Sympa/ListDef.pm:1986
 msgid "second-level selection"
 msgstr "第2級選項"
 
-#: src/lib/Sympa/ListDef.pm:1521 src/lib/Sympa/ListDef.pm:1966
+#: src/lib/Sympa/ListDef.pm:1548 src/lib/Sympa/ListDef.pm:1993
 msgid "second-level regular expression"
 msgstr "第2級正則表達式"
 
-#: src/lib/Sympa/ListDef.pm:1539
+#: src/lib/Sympa/ListDef.pm:1566
 msgid "SQL query inclusion"
 msgstr "SQL查詢包含"
 
-#: src/lib/Sympa/ListDef.pm:1551 src/lib/Sympa/ListDef.pm:2000
+#: src/lib/Sympa/ListDef.pm:1578 src/lib/Sympa/ListDef.pm:2027
 msgid "database type"
 msgstr "數據庫類型"
 
-#: src/lib/Sympa/ListDef.pm:1564 src/lib/Sympa/ListDef.pm:2012
+#: src/lib/Sympa/ListDef.pm:1591 src/lib/Sympa/ListDef.pm:2039
 msgid "database port"
 msgstr "數據庫端口"
 
-#: src/lib/Sympa/ListDef.pm:1569 src/lib/Sympa/ListDef.pm:2017
+#: src/lib/Sympa/ListDef.pm:1596 src/lib/Sympa/ListDef.pm:2044
 msgid "database name"
 msgstr "數據庫名稱"
 
-#: src/lib/Sympa/ListDef.pm:1575 src/lib/Sympa/ListDef.pm:2023
+#: src/lib/Sympa/ListDef.pm:1602 src/lib/Sympa/ListDef.pm:2050
 msgid "connection options"
 msgstr "連接選項"
 
-#: src/lib/Sympa/ListDef.pm:1581 src/lib/Sympa/ListDef.pm:2029
+#: src/lib/Sympa/ListDef.pm:1608 src/lib/Sympa/ListDef.pm:2056
 #, fuzzy
 msgid "environment variables for database connection"
 msgstr "數據庫連接的環境變量"
 
-#: src/lib/Sympa/ListDef.pm:1598 src/lib/Sympa/ListDef.pm:2046
+#: src/lib/Sympa/ListDef.pm:1625 src/lib/Sympa/ListDef.pm:2073
 msgid "SQL query"
 msgstr "SQL查詢"
 
-#: src/lib/Sympa/ListDef.pm:1606 src/lib/Sympa/ListDef.pm:2054
+#: src/lib/Sympa/ListDef.pm:1633 src/lib/Sympa/ListDef.pm:2081
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "數據庫被存放的目錄（僅限DBD::CSV）"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1622
+#: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1649
 #, fuzzy
 msgid "VOOT group inclusion"
 msgstr "SQL查詢包含"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1632
+#: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1659
 #, fuzzy
 msgid "user"
 msgstr "用戶"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1638
+#: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1665
 #, fuzzy
 msgid "provider"
 msgstr "配置"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1644
+#: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1671
 msgid "group"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1655
+#: src/lib/Sympa/ListDef.pm:1682
 msgid "Inclusions timeout"
 msgstr "包含操作超時值"
 
-#: src/lib/Sympa/ListDef.pm:1667
+#: src/lib/Sympa/ListDef.pm:1694
 #, fuzzy
 msgid "Inclusions timeout for message distribution"
 msgstr "郵件發行"
 
-#: src/lib/Sympa/ListDef.pm:1676
+#: src/lib/Sympa/ListDef.pm:1703
 #, fuzzy
 msgid "LDAP query custom attribute"
 msgstr "LDAP查詢內容"
 
-#: src/lib/Sympa/ListDef.pm:1782 src/lib/Sympa/ListDef.pm:1973
-#: src/lib/Sympa/ListDef.pm:2059
+#: src/lib/Sympa/ListDef.pm:1809 src/lib/Sympa/ListDef.pm:2000
+#: src/lib/Sympa/ListDef.pm:2086
 msgid "Name of email entry"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1806
+#: src/lib/Sympa/ListDef.pm:1833
 #, fuzzy
 msgid "LDAP 2-level query custom attribute"
 msgstr "LDAP 2-level 查詢內容"
 
-#: src/lib/Sympa/ListDef.pm:1990
+#: src/lib/Sympa/ListDef.pm:2017
 #, fuzzy
 msgid "SQL query custom attribute"
 msgstr "提取的屬性"
 
-#: src/lib/Sympa/ListDef.pm:2078
+#: src/lib/Sympa/ListDef.pm:2105
 #, fuzzy
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "發送信息：%1"
 
-#: src/lib/Sympa/ListDef.pm:2080
+#: src/lib/Sympa/ListDef.pm:2107
 msgid ""
 "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be "
 "some custom scenario to be updated"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2089
+#: src/lib/Sympa/ListDef.pm:2116
 #, fuzzy
 msgid "DKIM configuration"
 msgstr "配置文件"
 
-#: src/lib/Sympa/ListDef.pm:2095
+#: src/lib/Sympa/ListDef.pm:2122
 msgid "File path for list DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2097
+#: src/lib/Sympa/ListDef.pm:2124
 msgid "The file must contain a RSA pem encoded private key"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2106
+#: src/lib/Sympa/ListDef.pm:2133
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for <selector>._domainkey.your_domain"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2150
+#: src/lib/Sympa/ListDef.pm:2177
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2152
+#: src/lib/Sympa/ListDef.pm:2179
 msgid ""
 "This parameter controls in which case messages must be signed using DKIM, "
 "you may sign every message choosing 'any' or a subset. The parameter value "
 "is a comma separated list of keywords"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2180
+#: src/lib/Sympa/ListDef.pm:2207
 #, fuzzy
 msgid "Protection modes"
 msgstr "接收模式"
 
-#: src/lib/Sympa/ListDef.pm:2190
+#: src/lib/Sympa/ListDef.pm:2217
 msgid "Match domain regexp"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2221
+#: src/lib/Sympa/ListDef.pm:2248
 msgid "DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2224
+#: src/lib/Sympa/ListDef.pm:2251
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2232
+#: src/lib/Sympa/ListDef.pm:2259
 msgid "Account"
 msgstr "帳號"
 
-#: src/lib/Sympa/ListDef.pm:2241
+#: src/lib/Sympa/ListDef.pm:2268
 msgid "Expiration of unmoderated messages"
 msgstr "未監管的郵件失效"
 
-#: src/lib/Sympa/ListDef.pm:2263
+#: src/lib/Sympa/ListDef.pm:2290
 #, fuzzy
 msgid "custom parameters"
 msgstr "錯誤參量"
 
-#: src/lib/Sympa/ListDef.pm:2284
+#: src/lib/Sympa/ListDef.pm:2311
 msgid "Periodical subscription expiration task"
 msgstr "週期性訂閱超期任務"
 
-#: src/lib/Sympa/ListDef.pm:2286
+#: src/lib/Sympa/ListDef.pm:2313
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -3336,16 +3370,16 @@ msgstr ""
 "這個參量陳述哪個模型用于創建到期任務。到期任務通常檢查訂閱者訂閱或重新訂閱的"
 "日期和要求他們更新他們的訂閱。如果他們不更新就會被刪除。"
 
-#: src/lib/Sympa/ListDef.pm:2323
+#: src/lib/Sympa/ListDef.pm:2350
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "運用規則的表達式防止郵件系統循環"
 
-#: src/lib/Sympa/ListDef.pm:2333
+#: src/lib/Sympa/ListDef.pm:2360
 #, fuzzy
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr "允許圖片顯示（必須被當前郵件系統激活）"
 
-#: src/lib/Sympa/ListDef.pm:2354
+#: src/lib/Sympa/ListDef.pm:2381
 #, fuzzy
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
@@ -3364,63 +3398,63 @@ msgstr ""
 "可以選擇他們與spam_protection和web_archive_spam_protection參量一起使用。可能"
 "的值是："
 
-#: src/lib/Sympa/ListDef.pm:2363
+#: src/lib/Sympa/ListDef.pm:2390
 msgid "Creation of the list"
 msgstr "創建郵件列表"
 
-#: src/lib/Sympa/ListDef.pm:2304 src/lib/Sympa/ListDef.pm:2309
-#: src/lib/Sympa/ListDef.pm:2367 src/lib/Sympa/ListDef.pm:2405
-#: src/lib/Sympa/ListDef.pm:2411
+#: src/lib/Sympa/ListDef.pm:2331 src/lib/Sympa/ListDef.pm:2336
+#: src/lib/Sympa/ListDef.pm:2394 src/lib/Sympa/ListDef.pm:2432
+#: src/lib/Sympa/ListDef.pm:2438
 msgid "date"
 msgstr "日期"
 
-#: src/lib/Sympa/ListDef.pm:2376
+#: src/lib/Sympa/ListDef.pm:2403
 msgid "human readable"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2381
+#: src/lib/Sympa/ListDef.pm:2408
 #, fuzzy
 msgid "who created the list"
 msgstr "配置的最近更新人"
 
-#: src/lib/Sympa/ListDef.pm:2393
+#: src/lib/Sympa/ListDef.pm:2420
 msgid "Last update of config"
 msgstr "配置的最近更新"
 
-#: src/lib/Sympa/ListDef.pm:2424
+#: src/lib/Sympa/ListDef.pm:2451
 msgid "Status of the list"
 msgstr "郵件列表的狀態"
 
-#: src/lib/Sympa/ListDef.pm:2435
+#: src/lib/Sympa/ListDef.pm:2462
 msgid "Serial number of the config"
 msgstr "配置的序列號"
 
-#: src/lib/Sympa/ListDef.pm:2445
+#: src/lib/Sympa/ListDef.pm:2472
 msgid "Custom user attributes"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2449
+#: src/lib/Sympa/ListDef.pm:2476
 msgid "internal identifier"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2456
+#: src/lib/Sympa/ListDef.pm:2483
 msgid "label"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2463
+#: src/lib/Sympa/ListDef.pm:2490
 msgid "additional comment"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2469
+#: src/lib/Sympa/ListDef.pm:2496
 #, fuzzy
 msgid "type"
 msgstr "鍵入"
 
-#: src/lib/Sympa/ListDef.pm:2476
+#: src/lib/Sympa/ListDef.pm:2503
 msgid "possible attribute values (if enum is used)"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2482
+#: src/lib/Sympa/ListDef.pm:2509
 msgid "is the attribute optional?"
 msgstr ""
 
@@ -3471,12 +3505,12 @@ msgstr "數據來源參量"
 msgid "Moderators defined in an external data source"
 msgstr "外部數據來源監管員"
 
-#: src/lib/Sympa/ListDef.pm:1217 src/lib/Sympa/ListDef.pm:225
+#: src/lib/Sympa/ListDef.pm:1244 src/lib/Sympa/ListDef.pm:225
 #, fuzzy
 msgid "the data source"
 msgstr "數據來源"
 
-#: src/lib/Sympa/ListDef.pm:1223 src/lib/Sympa/ListDef.pm:231
+#: src/lib/Sympa/ListDef.pm:1250 src/lib/Sympa/ListDef.pm:231
 #, fuzzy
 msgid "data source parameters"
 msgstr "數據來源參量"
@@ -3507,11 +3541,21 @@ msgstr ""
 "Sympa為這張郵件列表處理郵件的優先級。當郵件經過隊列時這個水平的優先級是應用"
 "的。z優先級將在隊列中凍結郵件。"
 
-#: src/lib/Sympa/ListDef.pm:330
+#: src/lib/Sympa/ListDef.pm:328
+msgid "Restrict list ownership to addresses in the specified domains."
+msgstr ""
+
+#: src/lib/Sympa/ListDef.pm:341
+msgid ""
+"Require list ownership by a minimum number of addresses in the specified "
+"domains."
+msgstr ""
+
+#: src/lib/Sympa/ListDef.pm:355
 msgid "This parameter specifies who can send messages to the list."
 msgstr "這個參量指定誰可以發送郵件到郵件列表。"
 
-#: src/lib/Sympa/ListDef.pm:348
+#: src/lib/Sympa/ListDef.pm:373
 msgid ""
 "Definition of digest mode. If this parameter is present, subscribers can "
 "select the option of receiving messages in multipart/digest MIME format, or "
@@ -3523,12 +3567,12 @@ msgstr ""
 "選項或作為一個純文本郵件摘要。然後一起編組郵件，並編寫郵件發送到根據這個參量"
 "頻率選擇的訂閱者。"
 
-#: src/lib/Sympa/ListDef.pm:380
+#: src/lib/Sympa/ListDef.pm:405
 #, fuzzy
 msgid "messages"
 msgstr "＃郵件"
 
-#: src/lib/Sympa/ListDef.pm:394
+#: src/lib/Sympa/ListDef.pm:419
 msgid ""
 "Only these modes will be allowed for the subscribers of this list. If a "
 "subscriber has a reception mode not in the list, Sympa uses the mode "
@@ -3537,32 +3581,32 @@ msgstr ""
 "僅這些模式將允許這張郵件列表的訂閱者使用。如果訂閱者有一個接收模式不在這張郵"
 "件列表中，sympa將使用在default_user_options指定的模式段。"
 
-#: src/lib/Sympa/ListDef.pm:414
+#: src/lib/Sympa/ListDef.pm:440
 #, fuzzy
 msgid "Default profile for the subscribers of the list."
 msgstr "您沒有訂閱郵件列表%1"
 
-#: src/lib/Sympa/ListDef.pm:419
+#: src/lib/Sympa/ListDef.pm:445
 msgid "Mail reception mode."
 msgstr "郵件接收模式。"
 
-#: src/lib/Sympa/ListDef.pm:432
+#: src/lib/Sympa/ListDef.pm:459
 #, fuzzy
 msgid "Visibility of the subscriber."
 msgstr "郵件列表的可見性"
 
-#: src/lib/Sympa/ListDef.pm:479
+#: src/lib/Sympa/ListDef.pm:506
 msgid ""
 "This parameter indicates which part of the message is used to perform "
 "automatic tagging."
 msgstr "這個參量表明在郵件的哪個部分執行自動角注。"
 
-#: src/lib/Sympa/ListDef.pm:490
+#: src/lib/Sympa/ListDef.pm:517
 msgid ""
 "This parameter indicates if the tagging is optional or required for a list."
 msgstr "這個參量表明在郵件列表中角注是可選的還是必需的。"
 
-#: src/lib/Sympa/ListDef.pm:520
+#: src/lib/Sympa/ListDef.pm:547
 #, fuzzy
 msgid ""
 "This defines what Sympa will place in the Reply-To: SMTP header field of the "
@@ -3571,13 +3615,13 @@ msgstr ""
 "reply_to_header參量開始一段來定義Sympa將放置在Reply-To:SMTP分發出去的郵件的郵"
 "件頭信息字段。"
 
-#: src/lib/Sympa/ListDef.pm:535
+#: src/lib/Sympa/ListDef.pm:562
 msgid ""
 "If value was set to other_email, this parameter defines the e-mail address "
 "used."
 msgstr "如果值設定了other_email，這個參量定義郵件地址。"
 
-#: src/lib/Sympa/ListDef.pm:542
+#: src/lib/Sympa/ListDef.pm:569
 msgid ""
 "The default is to respect (preserve) the existing Reply-To: SMTP header "
 "field in incoming messages. If set to forced, Reply-To: SMTP header field "
@@ -3586,7 +3630,7 @@ msgstr ""
 "缺省是遵守（保存）現有的Reply-To:傳入郵件的SMTP郵件頭信息字段。如果設制成強制"
 "的，Reply-To:SMTP郵件頭信息字段將被重寫。"
 
-#: src/lib/Sympa/ListDef.pm:563
+#: src/lib/Sympa/ListDef.pm:590
 msgid ""
 "This parameter is optional. The headers specified will be added to the "
 "headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
@@ -3596,7 +3640,7 @@ msgstr ""
 "這個參量是可選的。指定的郵件頭信息將添加到通過郵件列表分發的郵件頭信息。如發"
 "行Sympa 1.2.2，同時把幾條定制郵件頭信息行放在配置文件中是可能的。"
 
-#: src/lib/Sympa/ListDef.pm:575
+#: src/lib/Sympa/ListDef.pm:602
 msgid ""
 "This parameter is optional. It specifies a string which is added to the "
 "subject of distributed messages (intended to help users who do not use "
@@ -3606,41 +3650,41 @@ msgstr ""
 "這個參量是可選的。它指定添加到分發的郵件標題的串（幫助不使用自動工具給傳入郵"
 "件排序的用戶）。這串將由﹝﹞字符包圍。"
 
-#: src/lib/Sympa/ListDef.pm:595
+#: src/lib/Sympa/ListDef.pm:622
 msgid "Maximum size of a message in 8-bit bytes."
 msgstr "用8位字節的郵件的最大大小。"
 
-#: src/lib/Sympa/ListDef.pm:624
+#: src/lib/Sympa/ListDef.pm:651
 msgid "Incoming SMTP header fields to be removed"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:634
+#: src/lib/Sympa/ListDef.pm:661
 msgid "Outgoing SMTP header fields to be removed"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:655
+#: src/lib/Sympa/ListDef.pm:682
 msgid "Hook modules for message processing"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:659
+#: src/lib/Sympa/ListDef.pm:686
 #, fuzzy
 msgid "A hook on the messages before distribution"
 msgstr "郵件發行"
 
-#: src/lib/Sympa/ListDef.pm:664
+#: src/lib/Sympa/ListDef.pm:691
 #, fuzzy
 msgid "A hook on the messages just after archiving"
 msgstr "郵件角注"
 
-#: src/lib/Sympa/ListDef.pm:684
+#: src/lib/Sympa/ListDef.pm:711
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr "訂閱參量定義了訂閱到郵件列表的規則。"
 
-#: src/lib/Sympa/ListDef.pm:694
+#: src/lib/Sympa/ListDef.pm:721
 msgid "Privilege for adding (ADD command) a subscriber to the list"
 msgstr "添加（添加命令）訂閱者到郵件列表的特權"
 
-#: src/lib/Sympa/ListDef.pm:703
+#: src/lib/Sympa/ListDef.pm:730
 msgid ""
 "This parameter specifies the unsubscription method for the list. Use "
 "open_notify or auth_notify to allow owner notification of each unsubscribe "
@@ -3649,11 +3693,11 @@ msgstr ""
 "這個參量為郵件列表指定取消訂閱模式。用open_notify或auth_notify允許每個退訂命"
 "令的所有者通知。"
 
-#: src/lib/Sympa/ListDef.pm:727
+#: src/lib/Sympa/ListDef.pm:754
 msgid "This parameter specifies who is authorized to use the remind command."
 msgstr "這個參量指定誰被批準使用提醒命令。"
 
-#: src/lib/Sympa/ListDef.pm:736
+#: src/lib/Sympa/ListDef.pm:763
 msgid ""
 "This parameter specifies who can access the list of members. Since "
 "subscriber addresses can be abused by spammers, it is strongly recommended "
@@ -3662,13 +3706,13 @@ msgstr ""
 "這個參量指定誰能訪問成員郵件列表。因為訂閱者地址會被垃圾郵件制造者濫用，強烈"
 "推薦您只批準所有者或訂閱者訪問訂閱者郵件列表。"
 
-#: src/lib/Sympa/ListDef.pm:746
+#: src/lib/Sympa/ListDef.pm:773
 msgid ""
 "This paragraph defines read and edit access to the shared document "
 "repository."
 msgstr "該段定義了對共享文檔庫的讀取和編輯。"
 
-#: src/lib/Sympa/ListDef.pm:872
+#: src/lib/Sympa/ListDef.pm:899
 msgid ""
 "Idem spam_protection is provided but it can be used only for web archives. "
 "Access requires a cookie, and users must submit a small form in order to "
@@ -3678,27 +3722,27 @@ msgstr ""
 "提供Idem spam_protection但它只可被用作網頁歸檔。訪問要求cookie，為了能在瀏覽"
 "歸檔之前收到cookie，用戶必須提交一個小表。這阻攔所有robot，甚至Google等"
 
-#: src/lib/Sympa/ListDef.pm:890 src/lib/Sympa/ListDef.pm:900
+#: src/lib/Sympa/ListDef.pm:917 src/lib/Sympa/ListDef.pm:927
 #, fuzzy
 msgid "%"
 msgstr "%A"
 
-#: src/lib/Sympa/ListDef.pm:913
+#: src/lib/Sympa/ListDef.pm:940
 #, fuzzy
 msgid "Level 1 is the lower level of bouncing users"
 msgstr "每日評估退信的用戶"
 
-#: src/lib/Sympa/ListDef.pm:920 src/lib/Sympa/ListDef.pm:957
+#: src/lib/Sympa/ListDef.pm:947 src/lib/Sympa/ListDef.pm:984
 msgid "points"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:929
+#: src/lib/Sympa/ListDef.pm:956
 msgid ""
 "This parameter defines which task is automaticaly applied on level 1 "
 "bouncers."
 msgstr "這個參量定義了自動在第1級退信用戶上應用的任務。"
 
-#: src/lib/Sympa/ListDef.pm:938
+#: src/lib/Sympa/ListDef.pm:965
 msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
 "can be send to listowner or listmaster."
@@ -3706,18 +3750,18 @@ msgstr ""
 "當自動任務在第1級退信訂閱者中執行，通知郵件可以發送到郵件列表所有者或郵件列表"
 "管理員。"
 
-#: src/lib/Sympa/ListDef.pm:950
+#: src/lib/Sympa/ListDef.pm:977
 #, fuzzy
 msgid "Level 2 is the highest level of bouncing users"
 msgstr "郵件列表沒有退信的訂閱者"
 
-#: src/lib/Sympa/ListDef.pm:966
+#: src/lib/Sympa/ListDef.pm:993
 msgid ""
 "This parameter defines which task is automaticaly applied on level 2 "
 "bouncers."
 msgstr "這個參量定義了自動在第2級退信用戶上應用的任務。"
 
-#: src/lib/Sympa/ListDef.pm:975
+#: src/lib/Sympa/ListDef.pm:1002
 msgid ""
 "When automatic task is executed on level 2 bouncers, a notification email "
 "can be send to listowner or listmaster."
@@ -3725,7 +3769,7 @@ msgstr ""
 "當自動任務在第2級退信訂閱者中執行，通知郵件可以發送到郵件列表所有者或郵件列表"
 "管理員。"
 
-#: src/lib/Sympa/ListDef.pm:1088
+#: src/lib/Sympa/ListDef.pm:1115
 #, fuzzy
 msgid ""
 "Include subscribers from this file.  The file should contain one e-mail "
@@ -3734,7 +3778,7 @@ msgstr ""
 "這個參量僅當user_data_source的值設置成包含時被解釋執行。文件應該包含一個郵件"
 "的每一行（由a〞#〞開始的行將被忽略）。"
 
-#: src/lib/Sympa/ListDef.pm:1143
+#: src/lib/Sympa/ListDef.pm:1170
 #, fuzzy
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
@@ -3752,12 +3796,12 @@ msgstr ""
 "它郵件列表定義的郵件列表。然而小心，不要包含郵件列表A在郵件列表B中而郵件列表B"
 "又在郵件列表A，因為這將提升一個死循環。"
 
-#: src/lib/Sympa/ListDef.pm:1213
+#: src/lib/Sympa/ListDef.pm:1240
 #, fuzzy
 msgid "Users included from parameterizable data sources"
 msgstr "外在數據來源所有者"
 
-#: src/lib/Sympa/ListDef.pm:1236
+#: src/lib/Sympa/ListDef.pm:1263
 #, fuzzy
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
@@ -3766,33 +3810,33 @@ msgstr ""
 "該段定義了從一組訂閱者返回的查詢的參量。該段僅用于如果user_data_source被配置"
 "成包含。這個功能要求Net::LDAP (perlldap) PERL模塊。"
 
-#: src/lib/Sympa/ListDef.pm:1259 src/lib/Sympa/ListDef.pm:1385
-#: src/lib/Sympa/ListDef.pm:1699 src/lib/Sympa/ListDef.pm:1829
+#: src/lib/Sympa/ListDef.pm:1286 src/lib/Sympa/ListDef.pm:1412
+#: src/lib/Sympa/ListDef.pm:1726 src/lib/Sympa/ListDef.pm:1856
 msgid "use TLS (formerly SSL)"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1267 src/lib/Sympa/ListDef.pm:1393
-#: src/lib/Sympa/ListDef.pm:1707 src/lib/Sympa/ListDef.pm:1837
+#: src/lib/Sympa/ListDef.pm:1294 src/lib/Sympa/ListDef.pm:1420
+#: src/lib/Sympa/ListDef.pm:1734 src/lib/Sympa/ListDef.pm:1864
 msgid "use SSL (LDAPS)"
 msgstr "用SSL（LDAPS）"
 
-#: src/lib/Sympa/ListDef.pm:1274 src/lib/Sympa/ListDef.pm:1400
-#: src/lib/Sympa/ListDef.pm:1714 src/lib/Sympa/ListDef.pm:1844
+#: src/lib/Sympa/ListDef.pm:1301 src/lib/Sympa/ListDef.pm:1427
+#: src/lib/Sympa/ListDef.pm:1741 src/lib/Sympa/ListDef.pm:1871
 msgid "SSL version"
 msgstr "SSL版本"
 
-#: src/lib/Sympa/ListDef.pm:1282 src/lib/Sympa/ListDef.pm:1408
-#: src/lib/Sympa/ListDef.pm:1722 src/lib/Sympa/ListDef.pm:1852
+#: src/lib/Sympa/ListDef.pm:1309 src/lib/Sympa/ListDef.pm:1435
+#: src/lib/Sympa/ListDef.pm:1749 src/lib/Sympa/ListDef.pm:1879
 msgid "SSL ciphers used"
 msgstr "使用了SSL暗號"
 
-#: src/lib/Sympa/ListDef.pm:1288 src/lib/Sympa/ListDef.pm:1414
-#: src/lib/Sympa/ListDef.pm:1728 src/lib/Sympa/ListDef.pm:1858
+#: src/lib/Sympa/ListDef.pm:1315 src/lib/Sympa/ListDef.pm:1441
+#: src/lib/Sympa/ListDef.pm:1755 src/lib/Sympa/ListDef.pm:1885
 #, fuzzy
 msgid "Certificate verification"
 msgstr "證書有效期"
 
-#: src/lib/Sympa/ListDef.pm:1362
+#: src/lib/Sympa/ListDef.pm:1389
 #, fuzzy
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
@@ -3804,12 +3848,12 @@ msgstr ""
 "查詢將DNs轉換成郵件地址。該段僅用于如果user_data_source設置成包含。這個功能要"
 "求Net::LDAP (perlldap) PERL模塊。"
 
-#: src/lib/Sympa/ListDef.pm:1541
+#: src/lib/Sympa/ListDef.pm:1568
 #, fuzzy
 msgid "This parameter is used to define the SQL query parameters. "
 msgstr "css_path參量被定義，值是"
 
-#: src/lib/Sympa/ListDef.pm:1657
+#: src/lib/Sympa/ListDef.pm:1684
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
@@ -3818,42 +3862,42 @@ msgstr ""
 "Sympa貯藏由包含參量提取的用戶數據。他們的TTL（有效時間）在Sympa之內用這個參量"
 "是可控的。缺省值是3600"
 
-#: src/lib/Sympa/ListDef.pm:2091
+#: src/lib/Sympa/ListDef.pm:2118
 msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2115
+#: src/lib/Sympa/ListDef.pm:2142
 msgid "List of headers to be included into the message for signature"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2117
+#: src/lib/Sympa/ListDef.pm:2144
 msgid ""
 "You should probably use the default value which is the value recommended by "
 "RFC4871"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2126
+#: src/lib/Sympa/ListDef.pm:2153
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2128
+#: src/lib/Sympa/ListDef.pm:2155
 msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. the list domain "
 "MUST be included in the \"d=\" domain"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2136
+#: src/lib/Sympa/ListDef.pm:2163
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2138
+#: src/lib/Sympa/ListDef.pm:2165
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2185
+#: src/lib/Sympa/ListDef.pm:2212
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular expression"
 "\" (domain_regex) matches the specified Domain regexp; \"DKIM signature "
@@ -3862,24 +3906,24 @@ msgid ""
 "DMARC policy as given; \"all\" (all) matches all messages."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2192
+#: src/lib/Sympa/ListDef.pm:2219
 msgid "Regexp match pattern for From domain"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2201
+#: src/lib/Sympa/ListDef.pm:2228
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
 "preserves the original sender details in the From address phrase."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2217
+#: src/lib/Sympa/ListDef.pm:2244
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2253
+#: src/lib/Sympa/ListDef.pm:2280
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -3890,25 +3934,25 @@ msgstr ""
 "量應該是隱藏的，甚至是所有者。cookie被應用于所有郵件列表所有者，並且只有當所"
 "有者驗證參量時才考慮到。"
 
-#: src/lib/Sympa/ListDef.pm:2267
+#: src/lib/Sympa/ListDef.pm:2294
 #, fuzzy
 msgid "var name"
 msgstr "名稱"
 
-#: src/lib/Sympa/ListDef.pm:2273
+#: src/lib/Sympa/ListDef.pm:2300
 #, fuzzy
 msgid "var value"
 msgstr "值"
 
-#: src/lib/Sympa/ListDef.pm:2293
+#: src/lib/Sympa/ListDef.pm:2320
 msgid "Latest family instantiation"
 msgstr "最新的Family例證"
 
-#: src/lib/Sympa/ListDef.pm:2297
+#: src/lib/Sympa/ListDef.pm:2324
 msgid "who ran the instantiation"
 msgstr "誰運行例證"
 
-#: src/lib/Sympa/ListDef.pm:2344
+#: src/lib/Sympa/ListDef.pm:2371
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
@@ -3917,7 +3961,7 @@ msgstr ""
 "這個參量說明哪個模型用于創建提醒任務。提醒任務通常發送給訂閱者一個提醒他們郵"
 "件列表的信息訂閱的郵件。"
 
-#: src/lib/Sympa/ListDef.pm:2397
+#: src/lib/Sympa/ListDef.pm:2424
 msgid "who updated the config"
 msgstr "配置的最近更新人"
 
@@ -4380,52 +4424,47 @@ msgid "text-only mode"
 msgstr "只許文本模式"
 
 #: src/lib/Sympa/ListOpt.pm:240
-#, fuzzy
-msgid "html-only mode"
-msgstr "僅限html模式"
-
-#: src/lib/Sympa/ListOpt.pm:241
 msgid "urlize mode"
 msgstr "urlize模式"
 
-#: src/lib/Sympa/ListOpt.pm:242
+#: src/lib/Sympa/ListOpt.pm:241
 #, fuzzy
 msgid "no mail"
 msgstr "Nomail"
 
-#: src/lib/Sympa/ListOpt.pm:243
+#: src/lib/Sympa/ListOpt.pm:242
 msgid "not receiving your own posts"
 msgstr "不接收自己發的郵件"
 
-#: src/lib/Sympa/ListOpt.pm:248
+#: src/lib/Sympa/ListOpt.pm:247
 msgid "listed in the list review page"
 msgstr "列入郵件列表查看頁"
 
-#: src/lib/Sympa/ListOpt.pm:249
+#: src/lib/Sympa/ListOpt.pm:248
 msgid "concealed"
 msgstr "隱藏"
 
-#: src/lib/Sympa/ListOpt.pm:254
+#: src/lib/Sympa/ListOpt.pm:253
 #, fuzzy
 msgid "in operation"
 msgstr "監管"
 
-#: src/lib/Sympa/ListOpt.pm:255
+#: src/lib/Sympa/ListOpt.pm:254
 #, fuzzy
 msgid "list not yet activated"
 msgstr "郵件列表還未被激活"
 
-#: src/lib/Sympa/ListOpt.pm:256
+#: src/lib/Sympa/ListOpt.pm:255
 #, fuzzy
 msgid "erroneous configuration"
 msgstr "配置文件"
 
-#: src/lib/Sympa/ListOpt.pm:257
+#: src/lib/Sympa/ListOpt.pm:256
 #, fuzzy
 msgid "closed family instance"
 msgstr "最新的Family例證"
 
-#: src/lib/Sympa/ListOpt.pm:258
+#: src/lib/Sympa/ListOpt.pm:257
 #, fuzzy
 msgid "closed list"
 msgstr "關閉的郵件列表"
@@ -4436,7 +4475,7 @@ msgstr "關閉的郵件列表"
 #: src/cgi/wwsympa.fcgi.in:2868 src/cgi/wwsympa.fcgi.in:3144
 #: src/cgi/wwsympa.fcgi.in:3168 src/cgi/wwsympa.fcgi.in:3326
 #: src/cgi/wwsympa.fcgi.in:6177 src/cgi/wwsympa.fcgi.in:6180
-#: src/cgi/wwsympa.fcgi.in:9112 src/lib/Sympa/ListOpt.pm:303
+#: src/cgi/wwsympa.fcgi.in:9112 src/lib/Sympa/ListOpt.pm:302
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日 %H時%M分%S秒"
 
@@ -4447,7 +4486,7 @@ msgstr "%Y年%m月%d日 %H時%M分%S秒"
 msgid "%d %b %Y  %H:%M"
 msgstr "%Y年%m月%d日　%H:%M"
 
-#: src/lib/Sympa/Message.pm:2683
+#: src/lib/Sympa/Message.pm:2671
 #, fuzzy
 msgid ""
 "----- Malformed message ignored -----\n"
@@ -4456,12 +4495,12 @@ msgstr ""
 "－－－－－%s發送的原來的郵件的結尾－－－－－\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:2693
+#: src/lib/Sympa/Message.pm:2681
 #, fuzzy
 msgid "[Unknown]"
 msgstr "未知"
 
-#: src/lib/Sympa/Message.pm:2724
+#: src/lib/Sympa/Message.pm:2712
 #, fuzzy
 msgid ""
 "\n"
@@ -4474,41 +4513,41 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2726
+#: src/lib/Sympa/Message.pm:2714
 #, fuzzy
 msgid "Date: %s\n"
 msgstr "日期：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2727
+#: src/lib/Sympa/Message.pm:2715
 #, fuzzy
 msgid "From: %s\n"
 msgstr "從：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2728
+#: src/lib/Sympa/Message.pm:2716
 #, fuzzy
 msgid "To: %s\n"
 msgstr "收件人：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2729
+#: src/lib/Sympa/Message.pm:2717
 msgid "Cc: %s\n"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2730
+#: src/lib/Sympa/Message.pm:2718
 #, fuzzy
 msgid "Subject: %s\n"
 msgstr "標題：%1"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2738
+#: src/lib/Sympa/Message.pm:2726
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -4518,7 +4557,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2767 src/lib/Sympa/Message.pm:2832
+#: src/lib/Sympa/Message.pm:2755 src/lib/Sympa/Message.pm:2820
 #, fuzzy
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
@@ -4531,7 +4570,7 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:2788
+#: src/lib/Sympa/Message.pm:2776
 #, fuzzy
 msgid ""
 "\n"
@@ -4540,7 +4579,7 @@ msgstr ""
 "\n"
 "%（類型s%的附件是包含在這裡的）\n"
 
-#: src/lib/Sympa/Message.pm:2797
+#: src/lib/Sympa/Message.pm:2785
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -4548,14 +4587,14 @@ msgstr ""
 "\n"
 "－－－－－遞交情況報告－－－－－\n"
 
-#: src/lib/Sympa/Message.pm:2800
+#: src/lib/Sympa/Message.pm:2788
 #, fuzzy
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
 msgstr "－－－－－發送狀態報告的結尾－－－－－\n"
 
-#: src/lib/Sympa/Message.pm:2814 src/lib/Sympa/Message.pm:2847
+#: src/lib/Sympa/Message.pm:2802 src/lib/Sympa/Message.pm:2835
 #, fuzzy
 msgid ""
 "\n"
@@ -4564,79 +4603,79 @@ msgstr ""
 "\n"
 "﹝ ＊＊ 無法處理HTML郵件部分 ＊＊ ﹞\n"
 
-#: src/lib/Sympa/Message.pm:2851
+#: src/lib/Sympa/Message.pm:2839
 msgid "[ Text converted from HTML ]\n"
 msgstr "﹝從HTML轉換的文本﹞\n"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3073
+#: src/lib/Sympa/Message.pm:3061
 #, fuzzy
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3077
+#: src/lib/Sympa/Message.pm:3065
 #, fuzzy
 msgid "%s via Editor Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3081
+#: src/lib/Sympa/Message.pm:3069
 msgid "%s via %s Mailing List"
 msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3089
+#: src/lib/Sympa/Message.pm:3077
 #, fuzzy
 msgid "via Owner Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3093
+#: src/lib/Sympa/Message.pm:3081
 #, fuzzy
 msgid "via Editor Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3097
+#: src/lib/Sympa/Message.pm:3085
 #, fuzzy
 msgid "via %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3103 src/lib/Sympa/Message.pm:3119
+#: src/lib/Sympa/Message.pm:3091 src/lib/Sympa/Message.pm:3107
 #, fuzzy
 msgid "Owner Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3107 src/lib/Sympa/Message.pm:3123
+#: src/lib/Sympa/Message.pm:3095 src/lib/Sympa/Message.pm:3111
 #, fuzzy
 msgid "Editor Address of %s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3110 src/lib/Sympa/Message.pm:3126
+#: src/lib/Sympa/Message.pm:3098 src/lib/Sympa/Message.pm:3114
 #, fuzzy
 msgid "%s Mailing List"
 msgstr "熱線郵件列表"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/Message.pm:3115 src/lib/Sympa/Message.pm:3131
+#: src/lib/Sympa/Message.pm:3103 src/lib/Sympa/Message.pm:3119
 msgid "on behalf of %s"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3148
+#: src/lib/Sympa/Message.pm:3136
 #, fuzzy
 msgid "Anonymous"
 msgstr "匿名發送者"
@@ -4951,22 +4990,22 @@ msgstr "（未知日期）"
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
-#: src/lib/Sympa/Upgrade.pm:1033
+#: src/lib/Sympa/Upgrade.pm:1030
 #, fuzzy
 msgid "Unknown parameter"
 msgstr "錯誤參量"
 
-#: src/lib/Sympa/Upgrade.pm:1051
+#: src/lib/Sympa/Upgrade.pm:1048
 msgid "Migration from wwsympa.conf"
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1063
+#: src/lib/Sympa/Upgrade.pm:1060
 msgid ""
 "Migrated Parameters\n"
 "Following parameters were migrated from wwsympa.conf."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1072
+#: src/lib/Sympa/Upgrade.pm:1069
 msgid ""
 "Overrididing Parameters\n"
 "Following parameters existed both in sympa.conf and  wwsympa.conf.  Previous "
@@ -4974,7 +5013,7 @@ msgid ""
 "be disabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1081
+#: src/lib/Sympa/Upgrade.pm:1078
 msgid ""
 "Duplicate of sympa.conf\n"
 "These parameters were found in both sympa.conf and wwsympa.conf.  Previous "
@@ -4982,13 +5021,13 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1090
+#: src/lib/Sympa/Upgrade.pm:1087
 msgid ""
 "Old Parameters\n"
 "These parameters are no longer used."
 msgstr ""
 
-#: src/lib/Sympa/Upgrade.pm:1099
+#: src/lib/Sympa/Upgrade.pm:1096
 msgid ""
 "Unknown Parameters\n"
 "Though these parameters were found in wwsympa.conf, they were ignored.  You "
@@ -13649,6 +13688,19 @@ msgid ""
 "syntax."
 msgstr ""
 
+#. (report_param.value,report_param.owner_domain)
+#: default/mail_tt2/report.tt2:803
+#, fuzzy
+msgid "%1: all list owners must be in the following domains: %2."
+msgstr "無法發送您的郵件到郵件列表〞%1〞，因為以下原因："
+
+#. (report_param.value,report_param.owner_domain_min,report_param.owner_domain)
+#: default/mail_tt2/report.tt2:806
+msgid ""
+"Unable to reduce the number of list owners in required domains to %1. "
+"Domains that count toward the minimum requirement of %2: %3"
+msgstr ""
+
 #. (conf.title,list.name)
 #: default/mail_tt2/request_auth.tt2:6
 msgid "%1 / unsubscribing from %2"
@@ -14787,14 +14839,6 @@ msgstr ""
 msgid "Unknown provider."
 msgstr "未知"
 
-#. (db_name)
-#: default/mail_tt2/listmaster_notification.tt2:72
-#, fuzzy
-msgid ""
-"The database structure has been updated, Check the log file for further "
-"details: "
-msgstr "更新了數據庫結構；為得到更多細節檢查日志文件："
-
 #: default/global_task_models/purge_spools.daily.task:1
 msgid "daily delete unuseful items from any spool"
 msgstr ""
@@ -15570,6 +15614,16 @@ msgid ""
 "You have requested to be removed from list %1. To confirm and get removed "
 "from the list, please click the link below: "
 msgstr ""
+
+#, fuzzy
+#~ msgid "html-only mode"
+#~ msgstr "僅限html模式"
+
+#, fuzzy
+#~ msgid ""
+#~ "The database structure has been updated, Check the log file for further "
+#~ "details: "
+#~ msgstr "更新了數據庫結構；為得到更多細節檢查日志文件："
 
 #~ msgid "Daily evaluation of bouncing users"
 #~ msgstr "每日評估退信的用戶"
@@ -18885,10 +18939,6 @@ msgstr ""
 #~ msgstr "您確定要關閉%1郵件列表嗎？"
 
 #, fuzzy
-#~ msgid "The blacklist is in use for the following operation:"
-#~ msgstr "無法發送您的郵件到郵件列表〞%1〞，因為以下原因："
-
-#, fuzzy
 #~ msgid ""
 #~ "This server provides you access to your environment on mailing list "
 #~ "server %1@%2. Starting from this web page, you can perform subscription "
@@ -18941,3 +18991,7 @@ msgstr ""
 #~ "\n"
 #~ "有用戶請求作為訂閱者添加到您的郵件列表中。如果您接受的話，\n"
 #~ "您可以單擊此連接下面的 URL："
+
+#, fuzzy
+#~ msgid "The blacklist is in use for the following operation:"
+#~ msgstr "無法發送您的郵件到郵件列表〞%1〞，因為以下原因："
