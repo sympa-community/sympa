@@ -3,10 +3,33 @@
 
 <!-- moderation of messages -->
 [% IF mod_message %]
+
+<form id="moderate_mails" action="[% path_cgi %]" method="post" name="moderate_mails"> </form>
+<fieldset class="toggleContainer" data-toggle-selector="input[name='id']">
+    <input type="hidden" name="list" value="[% list %]" form="moderate_mails" />
+  <p>
+    <input class="MainMenuLinks" type="submit" form="moderate_mails" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
+  </p>
+  <p>
+    <input class="MainMenuLinks" type="submit" form="moderate_mails" name="action_reject" value="[%|loc%]Reject[%END%]" />
+    <input type="hidden" name="from_modindex" value="from_modindex" form="moderate_mails" />
+      <select  name="message_template" form="moderate_mails">
+       <option  value="reject_quiet"[%- IF msg.value.spam_status == 'spam' -%] [% one_template_is_selected = '1' %]selected="selected"[% END %]>[%|loc %]No notification[%END%]</option>
+       <option  value="reject">[%|loc %]Server default rejection message[%END%]</option>
+       [% FOREACH file = available_files %]
+       <option  value="reject_[%  file  %]" [% IF file == default_reject_template %] selected="selected" [%END%] > [% file  %]</option>
+       [%- END- %]
+      </select>
+   <br />
+  </p>
+  <p>
+    <input type=checkbox name="blacklist" form="moderate_mails" />[%|loc %]Add to blacklist[%END%]
+  </p>
+
  <table  class="responsive listOfItems">
  <caption>[%|loc%]Listing messages to moderate[%END%]</caption>
       <tr>
-	<th>[%|loc%]Actions[%END%]</th>
+      <th><a href="#" data-tooltip aria-haspopup="true" title="[%|loc%]Toggle Selection[%END%]" class="toggleButton"><i class="fa fa-check-square-o"></i> </a></th>
      [%- IF conf.antispam_feature == 'on' -%]
 	<th>[%|loc%]Spam[%END%]</th>	
      [%- END -%]
@@ -14,6 +37,7 @@
 	<th>[%|loc%]Subject[%END%]</th>
         <th>[%|loc%]Date[%END%]</th>
 	<th>[%|loc%]Size[%END%]</th>
+	<th>[%|loc%]Actions[%END%]</th>
       </tr>	 
 
     [% line_count = 0 ~%]
@@ -27,9 +51,9 @@
 	  [% dark = '1' %]
           <tr class="color0">
 	[% END %]
-          <td class="text-left">
-           [% PROCESS modform.tt2 mod_display_message = 0 %]
-          </td>
+     <td>
+        <input type="checkbox" name="id" value="[% msg.key %]"form="moderate_mails" />
+     </td>
         [%- IF conf.antispam_feature == 'on' -%]	
 	 <td>
 	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="[%|loc%]junk[%END%]" />
@@ -37,7 +61,6 @@
 	  [%- END -%]
 	</td>
 	[%- END -%]
-
 	  <td>
 	    [% IF msg.value.gecos %]
 	    [% msg.value.gecos %] &lt;[% msg.value.from %]&gt;
@@ -61,12 +84,20 @@
 	    [% END %]
 	  </td>
 	  <td>[% msg.value.size %] kb</td>
+      <td class="text-left">
+        [% PROCESS modform.tt2 mod_display_message = 0 %]
+      </td>
 	</tr>
     [% END %] 
   </table>
+  <p>
+  <input class="MainMenuLinks toggleButton" type="button" value="[%|loc%]Toggle Selection[%END%]" form="moderate_mails" />
+  </p>
+
 [% ELSE %]
 <p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No messages to moderate[%END%]</p>
 [% END %]
+</fieldset>
 <br />
 <h2>[%|loc%]Moderation management[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
