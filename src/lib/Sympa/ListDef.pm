@@ -302,6 +302,8 @@ our %pinfo = (
         order          => 10.11,
         'group'        => 'description',
         'gettext_id'   => "Maximum number of list members",
+        'gettext_comment' =>
+            'limit for the number of subscribers. 0 means no limit.',
         'gettext_unit' => 'list members',
         'format'       => '\d+',
         'length'       => 8,
@@ -318,31 +320,6 @@ our %pinfo = (
         'length'     => 1,
         'occurrence' => '1',
         'default'    => {'conf' => 'default_list_priority'}
-    },
-
-    'owner_domain' => {
-        order        => 10.13,
-        'group'      => 'description',
-        'gettext_id' => "Required domains for list owners",
-        'gettext_comment' =>
-            'Restrict list ownership to addresses in the specified domains.',
-        'format'     => '[\w\.\- ]+', # same as Sympa::Regexps::host plus space
-        'length'     => 72,
-        'occurrence' => '0-1',
-        'split_char' => ' ',
-        'default'    => {'conf' => 'owner_domain'},
-    },
-
-    'owner_domain_min' => {
-        order        => 10.14,
-        'group'      => 'description',
-        'gettext_id' => "Minimum owners in required domains",
-        'gettext_comment' =>
-            'Require list ownership by a minimum number of addresses in the specified domains.',
-        'format'     => '\d+',
-        'length'     => 2,
-        'occurrence' => '0-1',
-        'default'    => {'conf' => 'owner_domain_min'},
     },
 
     ### Sending page ###
@@ -694,7 +671,7 @@ our %pinfo = (
         },
     },
 
-    ### Command page ###
+    ### Privileges page ###
 
     'info' => {
         order        => 30.01,
@@ -763,6 +740,31 @@ our %pinfo = (
             'This parameter specifies who can access the list of members. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. ',
         'scenario'   => 'review',
         'synonym'    => {'open' => 'public'}
+    },
+
+    'owner_domain' => {
+        order        => 30.085,
+        'group'      => 'command',
+        'gettext_id' => "Required domains for list owners",
+        'gettext_comment' =>
+            'Restrict list ownership to addresses in the specified domains.',
+        'format_s'   => '$host( +$host)*',
+        'length'     => 72,
+        'occurrence' => '0-1',
+        'split_char' => ' ',
+        'default'    => {'conf' => 'owner_domain'},
+    },
+
+    'owner_domain_min' => {
+        order        => 30.086,
+        'group'      => 'command',
+        'gettext_id' => "Minimum owners in required domains",
+        'gettext_comment' =>
+            'Require list ownership by a minimum number of addresses in the specified domains.',
+        'format'     => '\d+',
+        'length'     => 2,
+        'occurrence' => '0-1',
+        'default'    => {'conf' => 'owner_domain_min'},
     },
 
     'shared_doc' => {
@@ -1692,6 +1694,8 @@ our %pinfo = (
         order          => 60.13,
         'group'        => 'data_source',
         'gettext_id'   => "Inclusions timeout for message distribution",
+        'gettext_comment' =>
+            "This parameter defines the delay since the last synchronization after which the user's list will be updated before performing either of following actions:\n* Reviewing list members\n* Message distribution",
         'gettext_unit' => 'seconds',
         'format'       => '\d+',
         'length'       => 6
