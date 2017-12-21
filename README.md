@@ -24,3 +24,26 @@ minutes pour envoyer un message à 90% des abonnés, lorsque le réseau est
 disponible bien évidemment.
 
 La documentation : https://www.sympa.org/manual/
+
+------------------------------------------------------------------------------
+
+Projects related to Sympa
+-------------------------
+
+  - [Sympa](https://github.com/sympa-community/sympa)
+
+    Sympa, Mailing List Management Software
+
+  - [Sympa-Ansible](https://github.com/sympa-community/sympa-ansible)
+
+    Generic install of Sympa with Ansible
+
+  - [sympa-community.github.io](https://github.com/sympa-community/sympa-community.github.io)
+
+    Incubating the new Sympa documentation site
+
+  - More projects are found in the page below.
+
+----
+[The Sympa Community](https://github.com/sympa-community)
+
