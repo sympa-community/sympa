@@ -1,5 +1,18 @@
 # Change Log
 
+## [6.2.24](https://github.com/sympa-community/sympa/tree/6.2.24)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.23b.3...6.2.24)
+
+**Fixed bugs:**
+
+- Bundled jquery-ui library is vulnerable to an XSS [\#78](https://github.com/sympa-community/sympa/issues/78)
+- Editing Moderators Requires Restart to Take Effect [\#7](https://github.com/sympa-community/sympa/issues/7)
+
+**Closed issues:**
+
+- Notify owner's list when a non-member sends on a mailing list [\#142](https://github.com/sympa-community/sympa/issues/142)
+
 ## [6.2.23b.3](https://github.com/sympa-community/sympa/tree/6.2.23b.3)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.23b.2...6.2.23b.3)
