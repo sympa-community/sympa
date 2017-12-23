@@ -108,7 +108,7 @@ installdir:
 	done
 	@echo "Creating writable directories"
 	-@for dir in $(expldir) $(spooldir) $(bouncedir) $(arcdir) $(piddir) \
-		$(staticdir) $(staticdir)/js $(sysconfdir); do \
+		$(sysconfdir); do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
