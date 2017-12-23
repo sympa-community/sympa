@@ -422,4 +422,13 @@ EXTRA_DIST = $(nobase_static_DATA)
 install-data-hook:
 	cd $(DESTDIR)$(staticdir); \
 	rm -f external/foundation/js/vendor/jquery.js
+	@echo "Creating writable directories"
+	-@for dir in $(staticdir)/css; do \
+		if [ ! -d $(DESTDIR)$$dir ] ; then \
+			echo "Creating $(DESTDIR)$$dir"; \
+			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
+		fi; \
+		chown $(USER) $(DESTDIR)$$dir; \
+		chgrp $(GROUP) $(DESTDIR)$$dir; \
+	done
 
