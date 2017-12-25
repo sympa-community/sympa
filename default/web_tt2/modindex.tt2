@@ -26,70 +26,84 @@
     <input type=checkbox name="blacklist" form="moderate_mails" />[%|loc %]Add to blacklist[%END%]
   </p>
 
- <table  class="responsive listOfItems">
- <caption>[%|loc%]Listing messages to moderate[%END%]</caption>
-      <tr>
-      <th><a href="#" data-tooltip aria-haspopup="true" title="[%|loc%]Toggle Selection[%END%]" class="toggleButton"><i class="fa fa-check-square-o"></i> </a></th>
-     [%- IF conf.antispam_feature == 'on' -%]
-	<th>[%|loc%]Spam[%END%]</th>	
-     [%- END -%]
-	<th >[%|loc%]Author[%END%]</th>
-	<th>[%|loc%]Subject[%END%]</th>
-        <th>[%|loc%]Date[%END%]</th>
-	<th>[%|loc%]Size[%END%]</th>
-	<th>[%|loc%]Actions[%END%]</th>
-      </tr>	 
+  <h3>[%|loc%]Listing messages to moderate[%END%]</h3>
 
-    [% line_count = 0 ~%]
-    [% FOREACH msg = spool %]
+  <div class="row">
+    <div class="small-2 medium-1 columns">
+      <a href="#" data-tooltip aria-haspopup="true"
+       title="[%|loc%]Toggle Selection[%END%]"
+       class="toggleButton"><i class="fa fa-check-square-o"></i></a>&nbsp;&nbsp;
+    </div>
+    <div class="small-4 medium-4 columns">
+      <strong>[%|loc%]Author[%END%]</strong>
+    </div>
+    <div class="small-6 medium-3 columns">
+      <strong>[%|loc%]Subject[%END%]</strong>
+    </div>
+    <div class="medium-2 columns show-for-medium-up">
+      <strong>[%|loc%]Date[%END%]</strong>
+    </div>
+    <div class="medium-2 columns show-for-medium-up">
+      <strong>[%|loc%]Size[%END%]</strong>
+    </div>
+  </div>
 
-        [% line_count = line_count + 1 %]	
-        [% IF dark == '1' %]
-	  [% dark = '0' %]
-	  <tr>
-	[% ELSE %]
-	  [% dark = '1' %]
-          <tr class="color0">
-	[% END %]
-     <td>
-        <input type="checkbox" name="id" value="[% msg.key %]"form="moderate_mails" />
-     </td>
-        [%- IF conf.antispam_feature == 'on' -%]	
-	 <td>
-	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="[%|loc%]junk[%END%]" />
-	  [%- ELSE -%]&nbsp;
-	  [%- END -%]
-	</td>
-	[%- END -%]
-	  <td>
-	    [% IF msg.value.gecos %]
-	    [% msg.value.gecos %] &lt;[% msg.value.from %]&gt;
-	    [% ELSE %]
-	    [% msg.value.from %]
-	    [% END %]
-	  </td>
-	  <td>
-	    [% UNLESS msg.value.subject.length %]
-	      <i>[%|loc%]No subject[%END%]</i>
-	    [% ELSE %]
-	      [% msg.value.subject %]
-	    [% END %]
-	  </td>
+  [% FOREACH msg = spool ~%]
+    <div class="row">
+      <div class="columns"><hr /></div>
+    </div>
+    <div class="row">
+      <div class="small-2 medium-1 columns">
+        <input type="checkbox" name="id" value="[% msg.key %]"
+         form="moderate_mails" />
 
-	  <td>
-	    [% IF msg.value.date %]
-	      [% msg.value.date %]
-	    [% ELSE %]
-	      &nbsp;
-	    [% END %]
-	  </td>
-	  <td>[% msg.value.size %] kb</td>
-      <td class="text-left">
-        [% PROCESS modform.tt2 mod_display_message = 0 %]
-      </td>
-	</tr>
-    [% END %] 
-  </table>
+        [%~# Button to load AJAX content into reveal modal with Foundation ~%]
+        <a href="[% 'ajax/viewmod' | url_rel([list,msg.key]) %]"
+         data-reveal-id="mainviewmod" data-reveal-ajax="true"
+         data-tooltip aria-haspopup="true"
+         title="[%|loc%]view[%END%]"><i class="fa fa-eye"></i></a>
+
+        [%~ IF conf.antispam_feature == 'on' ~%]
+          [% IF msg.value.spam_status == 'spam' ~%]
+            <span data-tooltip title="[%|loc%]Spam[%END%]">
+              <i class="fa fa-ban text-error"></i>
+            </span>
+          [%~ ELSE ~%]
+            &nbsp;
+          [%~ END %]
+        [%~ END %]
+      </div>
+      <div class="small-4 medium-4 columns">
+        [% IF msg.value.gecos ~%]
+          <span data-tooltip
+           title="[% msg.value.gecos %] &lt;[% msg.value.from %]&gt;">
+            [% msg.value.gecos %] &lt;[% msg.value.from %]&gt;
+          </span>
+        [%~ ELSE ~%]
+          <span data-tooltip
+           title="[% msg.value.from %]">[% msg.value.from %]</span>
+        [%~ END %]
+      </div>
+      <div class="small-6 medium-3 columns">
+        [% UNLESS msg.value.subject.length ~%]
+          <i>[%|loc%]No subject[%END%]</i>
+        [%~ ELSE ~%]
+          [% msg.value.subject %]
+        [%~ END %]
+      </div>
+      <div class="small-11 medium-2 columns">
+        [% UNLESS msg.value.date ~%]
+          <i>[%|loc%](unknown date)[%END%]</i>
+        [%~ ELSE ~%]
+          [% msg.value.date %]
+        [%~ END %]
+      </div>
+      <div class="show-for-medium-up medium-2 columns">
+        [% msg.value.size %] [%|loc%]Kbytes[%END%]
+      </div>
+    </div>
+  [% END %] 
+
   <p>
   <input class="MainMenuLinks toggleButton" type="button" value="[%|loc%]Toggle Selection[%END%]" form="moderate_mails" />
   </p>
