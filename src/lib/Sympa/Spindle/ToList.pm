@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -433,9 +433,44 @@ Sympa::Spindle::ToList - Process to distribute messages to list members
 
 =head1 DESCRIPTION
 
-TBD.
+This class executes the last stage of message transformation to be sent
+through the list.
+Transformation processes by this class are done in the following order:
+
+=over
+
+=item *
+
+Classifies recipients for whom message is delivered by each reception mode,
+filters recipients by topics (see also L<Sympa::Topic>), and choose
+message tracking modes if necessary.
+
+=item *
+
+Transforms message by each reception mode.
+
+=item *
+
+Enables DMARC protection (according to
+L<C<dmarc_protection>|list_config(5)/dmarc_protection>
+list configuration parameter),
+message personalization (according to
+L<C<merge_feature>|list_config(5)/merge_feature>
+list configuration parameter) and/or
+re-encryption by S/MIME (if original message was encrypted).
+
+=item *
+
+Alters envelope sender of the message to I<list>C<-owner> address.
+
+=back
+
+Then stores message into outgoing spool (see L<Sympa::Bulk>)
+with classified packets of recipients.
 
 =head1 SEE ALSO
+
+L<Sympa::INternals::Workflow>.
 
 L<Sympa::Bulk>,
 L<Sympa::Message>,

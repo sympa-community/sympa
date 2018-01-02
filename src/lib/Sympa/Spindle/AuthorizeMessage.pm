@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -361,7 +364,37 @@ Workflow to authorize messages bound for lists
 L<Sympa::Spindle::AuthorizeMessage> authorizes messages and stores them
 into confirmation spool, moderation spool or the lists.
 
-TBD
+=over
+
+=item *
+
+Messages fetched from incoming (C<msg>) spool or held (C<auth>) spool may be
+passed to this class (messages fetched from moderation spool won't be passed
+to this class).
+
+=item *
+
+Then this class checks the message with C<send> scenario.
+
+=item *
+
+According to the results of scenario processing, each message is passed
+to any of classes for succeeding processing:
+L<Sympa::Spindle::DistributeMessage> for C<do_it> (except if tagging topics
+is required or when personalization failed);
+L<Sympa::Spindle::ToHeld> for C<request_auth> (except if personalization
+failed);
+L<Sympa::Spindle::ToModeration> for C<editorkey> (except if personalization
+failed);
+L<ympa::Spindle::ToEditor> for C<editor>;
+otherwise reject it.
+
+=back
+
+If the message was confirmed, i.e. it has been fetched from held spool and
+at last decided to be distributed, C<X-Validation-By> header field is added.
+If the message at last will be distributed, C<{shelved}> attribute (see
+L<Sympa::Message>) is added as necessity.
 
 =head2 Public methods
 
@@ -381,6 +414,8 @@ Not implemented.
 =back
 
 =head1 SEE ALSO
+
+L<Sympa::Internals::Workflow>.
 
 L<Sympa::Message>, L<Sympa::Scenario>, L<Sympa::Spindle::DistributeMessage>,
 L<Sympa::Spindle::DoMessage>, L<Sympa::Spindle::ProcessHeld>,
