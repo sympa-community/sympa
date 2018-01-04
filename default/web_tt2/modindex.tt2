@@ -1,11 +1,11 @@
 <!-- modindex.tt2 -->
 <h2>[%|loc%]Listing messages to moderate[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
-<!-- moderation of messages -->
-[% IF mod_message %]
-
-<form id="moderate_mails" action="[% path_cgi %]" method="post" name="moderate_mails"> </form>
-<fieldset class="toggleContainer" data-toggle-selector="input[name='id']">
+[%# moderation of messages ~%]
+[% IF mod_message ~%]
+  <form id="moderate_mails" name="moderate_mails" action="[% path_cgi %]"
+   method="POST">
+  <fieldset class="toggleContainer" data-toggle-selector="input[name='id']">
     <input type="hidden" name="list" value="[% list %]" form="moderate_mails" />
   <p>
     <input class="MainMenuLinks" type="submit" form="moderate_mails" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
@@ -105,14 +105,19 @@
   [% END %] 
 
   <p>
-  <input class="MainMenuLinks toggleButton" type="button" value="[%|loc%]Toggle Selection[%END%]" form="moderate_mails" />
+    <input class="MainMenuLinks toggleButton" type="button"
+     value="[%|loc%]Toggle Selection[%END%]" form="moderate_mails" />
   </p>
 
-[% ELSE %]
-<p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No messages to moderate[%END%]</p>
-[% END %]
-</fieldset>
-<br />
+  </fieldset>
+  </form>
+
+[%~ ELSE ~%]
+  <p class="small-8 small-centered columns alert-box info text-center">
+    [%|loc%]No messages to moderate[%END%]
+  </p>
+[%~ END %]
+
 <h2>[%|loc%]Moderation management[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderation_management">
