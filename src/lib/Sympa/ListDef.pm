@@ -1688,7 +1688,7 @@ our %pinfo = (
             'Sympa caches user data extracted using the include parameter. Their TTL (time-to-live) within Sympa can be controlled using this parameter. The default value is 3600',
         'gettext_unit' => 'seconds',
         'format'       => '\d+',
-        'default'      => 3600,
+        'default'      => {'conf' => 'default_ttl'},
         'length'       => 6
     },
 

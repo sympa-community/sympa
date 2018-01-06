@@ -1754,6 +1754,13 @@ our @params = (
         'file'    => 'sympa.conf',
         'default' => '300',
     },
+    {   'name'       => 'default_ttl',
+        'gettext_id' => 'Default of inclusion timeout',
+        'gettext_comment' =>
+            'Default timeout between two scheduled synchronizations of list members with data sources.',
+        'file'    => 'sympa.conf',
+        'default' => '3600',
+    },
 
     {   'gettext_id' => 'DKIM',
         'gettext_comment' =>
@@ -2011,12 +2018,6 @@ our @params = (
             'Defines the prefix allowing to recognize that a list is an automatic list.',
         'file'     => 'sympa.conf',
         'optional' => '1',
-    },
-    {   'name' => 'default_ttl',    #FIXME: maybe not used
-        'gettext_id' =>
-            'Default timeout between two scheduled synchronizations of list members with data sources.',
-        'file'    => 'sympa.conf',
-        'default' => '3600',
     },
     {   'name' => 'default_distribution_ttl',    #FIXME: maybe not used
         'gettext_id' =>
