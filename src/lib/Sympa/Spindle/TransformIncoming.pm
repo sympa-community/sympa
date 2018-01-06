@@ -295,7 +295,7 @@ Then this class passes the message to the next stage of transformation.
 
 =item *
 
-Transformation by this class can break integrity by S/MIME signature,
+Transformation by this class can break integrity of DKIM signature,
 because some header fields including C<From>, C<Message-ID> and C<Subject> may
 be altered.
 

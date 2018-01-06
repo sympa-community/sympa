@@ -225,7 +225,7 @@ L<Sympa::Spindle::ToList>.
 
 =item *
 
-Transformation by this class can break integrity by S/MIME signature,
+Transformation by this class can break integrity of DKIM signature,
 because some header fields may be removed according to
 C<remove_outgoing_headers> list configuration parameter.
 

@@ -337,6 +337,8 @@ our %pinfo = (
         order        => 20.02,
         'group'      => 'sending',
         'gettext_id' => "Delivery time (hh:mm)",
+        'gettext_comment' =>
+            'If this parameter is present, non-digest messages will be delivered to subscribers at this time: When this time has been past, delivery is postponed to the same time in next day.',
         'format'     => '[0-2]?\d\:[0-6]\d',
         'occurrence' => '0-1',
         'length'     => 5

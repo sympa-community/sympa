@@ -468,6 +468,10 @@ Alters envelope sender of the message to I<list>C<-owner> address.
 Then stores message into outgoing spool (see L<Sympa::Bulk>)
 with classified packets of recipients.
 
+This cass updates statistics information of the list (with digest delivery,
+L<Sympa::Spindle::ToOutgoing> will update it).
+
+
 =head1 SEE ALSO
 
 L<Sympa::INternals::Workflow>.
