@@ -622,7 +622,7 @@ See marshal_metadata().
 I<Instance method>.
 Gets next message to process, order is controlled by name of spool file and
 so on.
-Message will be locked to prevent multiple proccessing of a single message.
+Message will be locked to prevent multiple processing of a single message.
 
 Parameters:
 

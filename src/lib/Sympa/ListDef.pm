@@ -2746,7 +2746,7 @@ Title reference in NLS catalogs.
 
 =item gettext_comment
 
-Deescription text of a parameter.
+Description text of a parameter.
 
 =item group
 
@@ -2813,7 +2813,7 @@ The time in second from Unix epoch.
 
 =item C<'visibility'>
 
-Visibility mode of list memeber.
+Visibility mode of list member.
 
 =back
 
@@ -2844,7 +2844,7 @@ Introduced on Sympa 6.2.17.
 I<Automatically assigned>.
 TBD.
 
-Introdueced on Sympa 6.2.17.
+Introduced on Sympa 6.2.17.
 
 =back
 

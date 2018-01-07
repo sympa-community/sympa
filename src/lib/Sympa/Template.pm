@@ -705,7 +705,7 @@ Generates folded text.
 
 =item init
 
-Indentation (or its length) of each paragraphm if any.
+Indentation (or its length) of each paragraph if any.
 
 =item subs
 

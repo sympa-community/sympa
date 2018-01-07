@@ -333,7 +333,7 @@ Adds or removes aliases of list $list.
 If constructor was called with C<file> option, it will be used as aliases
 file and F<sympa_newaliases> utility will not be executed.
 Otherwise, value of C<sendmail_aliases> parameter will be used as aliases
-file and F<sympa_newaliases> utility will be execeuted to update
+file and F<sympa_newaliases> utility will be executed to update
 alias database.
 If C<sendmail_aliases> parameter is set to C<none>, aliases will never be
 updated.

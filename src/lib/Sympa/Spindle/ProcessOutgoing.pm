@@ -429,7 +429,7 @@ L<Sympa::Spindle::ProcessOutgoing> defines workflow to distribute messages
 in outgoing spool using mailer.
 
 If messages are stored into incoming spool, sooner or later
-L<Sympa::Spindle::ProcessIncoming> fetches them, modifys header and body of
+L<Sympa::Spindle::ProcessIncoming> fetches them, modifies header and body of
 them, shelves several transformations, and at last stores altered messages
 into outgoing spool.
 

@@ -178,7 +178,7 @@ my %full_db_struct = (
             },
             'password_user' => {
                 'struct' => 'varchar(40)',
-                'doc'    => 'password are stored as fringer print',
+                'doc'    => 'password are stored as finger print',
                 'order'  => 2,
             },
             'last_login_date_user' => {
@@ -420,7 +420,7 @@ my %full_db_struct = (
             },
         },
         'doc' =>
-            'Exclusion table is used in order to manage unsubscription for subsceriber included from an external data source.',
+            'Exclusion table is used in order to manage unsubscription for subscriber included from an external data source.',
         'order' => 5,
     },
     'inclusion_table' => {
@@ -880,7 +880,7 @@ my %full_db_struct = (
             'profile_admin' => {
                 'struct' => "enum('privileged','normal')",
                 'doc' =>
-                    'privilege level for this owner, value //normal// or //privileged//. The related privilege are listed in editlist.conf. ',
+                    'privilege level for this owner, value //normal// or //privileged//. The related privilege are listed in edit_list.conf. ',
                 'order' => 5,
             },
             'date_admin' => {
@@ -1165,7 +1165,7 @@ __END__
 
 =head1 NAME
 
-Sympa::DatabaseDescription - Dafinition of core database structure
+Sympa::DatabaseDescription - Definition of core database structure
 
 =head1 DESCRIPTION
 
@@ -1181,7 +1181,7 @@ I<Function>.
 Returns a heshref containing definitions of all tables.
 Each item has the name of table as key and definition as value.
 
-Each definition is hashref containig following keys:
+Each definition is hashref containing following keys:
 
 =over
 
@@ -1199,7 +1199,7 @@ TBD.
 
 =back
 
-C<fields> item is hasref which may contain following items.
+C<fields> item is hashref which may contain following items.
 
 =over
 

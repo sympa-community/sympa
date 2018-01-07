@@ -1151,7 +1151,7 @@ our @params = (
 ##        'file'     => 'wwsympa.conf',
 ##    },
 
-    {'gettext_id' => 'Miscelaneous'},
+    {'gettext_id' => 'Miscellaneous'},
 
     {   'name'       => 'email',
         'default'    => 'sympa',
@@ -1515,7 +1515,7 @@ our @params = (
         'vhost'    => '1',
     },
 
-    {'gettext_id' => 'Web interface parameters: Miscelaneous'},
+    {'gettext_id' => 'Web interface parameters: Miscellaneous'},
 
     # Session and cookie:
 

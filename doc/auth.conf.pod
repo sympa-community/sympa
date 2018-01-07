@@ -331,7 +331,7 @@ comma-separated list of header field names.
 =item C<http_header_prefix>
 
 Only environment variables starting with the defined prefix will be kept. 
-Another option is to list HTTP header fields explicitely using 
+Another option is to list HTTP header fields explicitly using
 C<http_header_list> parameter.
 
 =item C<email_http_header>
@@ -391,7 +391,7 @@ not defined>:
 =item C<ldap_host>
 
 The LDAP host Sympa will connect to fetch user email. The C<ldap_host> 
-include the port number and it may be a comma separated list of redondant 
+include the port number and it may be a comma separated list of redundant
 hosts.
 
 =item C<ldap_bind_dn>
@@ -441,7 +441,7 @@ paragraph may also be used for C<generic_sso>.
 
 Note that Sympa will act as a CAS client to validate CAS tickets. During this 
 exchange, Sympa will check the CAS server X.509 certificate. Therefore you 
-should ensure that the certificate autority of the CAS server is known by 
+should ensure that the certificate authority of the CAS server is known by
 Sympa ; this should be configured through the L<cafile|sympa.conf(5)/cafile> 
 or L<capath|sympa.conf(5)/capath> F<sympa.conf> configuration parameters.
 
@@ -526,7 +526,7 @@ The proxy validate service path, only used by the Sympa SOAP server.
 
 The LDAP host Sympa will connect to fetch user email when user uid is return 
 by CAS service. The C<ldap_host> includes the port number and it may be a 
-comma separated list of redondant hosts.
+comma separated list of redundant hosts.
 
 =item C<ldap_bind_dn>
 

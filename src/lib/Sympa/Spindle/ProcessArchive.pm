@@ -383,7 +383,7 @@ Sympa::Spindle::ProcessArchive - Workflow of archive storage
 =head1 DESCRIPTION
 
 L<Sympa::Spindle::ProcessArchive> defines workflow to store messages into
-archves.
+archives.
 
 When spin() method is invoked, messages kept in archive spool are
 processed.

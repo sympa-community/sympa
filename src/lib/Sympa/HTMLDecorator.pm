@@ -286,7 +286,7 @@ __END__
 
 Sympa::HTMLDecorator - Decorating HTML texts
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Sympa::HTMLDecorator;
   $decorator = Sympa::HTMLDecorator->instance;
@@ -308,7 +308,7 @@ Returns singleton instance of this class.
 =item decorate ( $html, email =E<gt> $mode )
 
 I<Instance method>.
-Modifys HTML text.
+Modifies HTML text.
 
 Parameters:
 

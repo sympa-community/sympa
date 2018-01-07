@@ -250,7 +250,7 @@ See also L<Sympa::Spindle::Incoming/"Public methods">.
 
 =item spin ( )
 
-In most cases, L<Sympa::Spindle::ProcessIncoming> splices meessages
+In most cases, L<Sympa::Spindle::ProcessIncoming> splices messages
 to this class.  These methods are not used in ordinal case.
 
 =back

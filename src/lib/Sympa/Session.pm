@@ -1009,7 +1009,7 @@ A hashref including attributes of instance (see L</Attributes>).
 =item confirm_action ( $action, $response, [ arg =E<gt> $arg, ]
 [ previous_action =E<gt> $previous_action ] )
 
-I<Instance metrhod>.
+I<Instance method>.
 Check if action has been confirmed.
 
 Confirmation follows two steps:

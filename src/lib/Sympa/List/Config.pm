@@ -1350,7 +1350,7 @@ so that default parameter values will be completed.
 
 =item *
 
-When exisiting list will be instantiated and config will be loaded,
+When existing list will be instantiated and config will be loaded,
 C<{}> (default) would be specified
 so that default parameter values except optional ones
 (with occurrence C<'0-1'> or C<'0-n'>) will be completed.
@@ -1390,10 +1390,10 @@ Parameter:
 =item $ppath
 
 Parameter path,
-e.g.: C<'owner.0.email'> specifys "email" parameter of
+e.g.: C<'owner.0.email'> specifies "email" parameter of
 the first "owner" paragraph;
-C<'owner.0'> specifys the first "owner" paragraph;
-C<'owner'> specifys the array of all "owner" paragraph.
+C<'owner.0'> specifies the first "owner" paragraph;
+C<'owner'> specifies the array of all "owner" paragraph.
 
 =back
 
@@ -1480,7 +1480,7 @@ i.e. it is not the paragraph, empty list.
 =item submit ( $new, $user, \@errors )
 
 I<Instance method>.
-Submits change and verifys it.
+Submits change and verifies it.
 Submission is done by:
 
 =over

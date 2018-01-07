@@ -386,7 +386,7 @@ L<Sympa::Spindle::ToHeld> for C<request_auth> (except if personalization
 failed);
 L<Sympa::Spindle::ToModeration> for C<editorkey> (except if personalization
 failed);
-L<ympa::Spindle::ToEditor> for C<editor>;
+L<Sympa::Spindle::ToEditor> for C<editor>;
 otherwise reject it.
 
 =back
@@ -405,7 +405,7 @@ See also L<Sympa::Spindle/"Public methods">.
 =item new ( key =E<gt> value, ... )
 
 In most cases, L<Sympa::Spindle::DoMessage>
-splices meessages to this class.  This method is not used in ordinal case.
+splices messages to this class.  This method is not used in ordinal case.
 
 =item spin ( )
 

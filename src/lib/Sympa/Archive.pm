@@ -1045,7 +1045,7 @@ I<Instance method>.
 Gets a message from archive.
 select_archive() must be called in advance.
 
-Message will be locked to prevent multiple proccessing of a single message.
+Message will be locked to prevent multiple processing of a single message.
 
 Parameter:
 
@@ -1053,7 +1053,7 @@ Parameter:
 
 =item message_id =E<gt> $message_id
 
-Message ID of the message to be feteched.
+Message ID of the message to be fetched.
 
 =back
 
@@ -1074,7 +1074,7 @@ Parameter:
 
 =item file =E<gt> $filename
 
-File name of the message to be feteched.
+File name of the message to be fetched.
 
 =back
 
@@ -1095,7 +1095,7 @@ I<Instance method>.
 Gets next message in archive.
 select_archive() must be called in advance.
 
-Message will be locked to prevent multiple proccessing of a single message.
+Message will be locked to prevent multiple processing of a single message.
 
 Parameters:
 

@@ -652,7 +652,7 @@ sub add_global_user {
     return 1;
 }
 
-=head2 Miscelaneous
+=head2 Miscellaneous
 
 =over 4
 

@@ -41,14 +41,14 @@ Any options not listed here are silently ignored.
 
 * `-f` _envelope_@_sen.der_, `-f`_envelope_@_sen.der_
 
-    Specifys envelope sender.
+    Specifies envelope sender.
     This option is required.
 
     To specify "null envelope sender", use a separate empty argument or "`<>`".
 
 * `--iam` _host.name_
 
-    Specifys host name or IP address literal used in EHLO or LHLO request.
+    Specifies host name or IP address literal used in EHLO or LHLO request.
     Default is "`localhost`".
 
 * `--lmtp` _host_[:_port_], `--lmtp` _path_
@@ -72,11 +72,11 @@ Any options not listed here are silently ignored.
 
     Enables support for SMTPUTF8 extension.
     **smtpc** detects valid UTF-8 sequence in envelope and message header,
-    then requests this extension as neccessity.
+    then requests this extension as necessity.
 
 * `-V` _envid_, `-V`_envid_
 
-    Specifys envelope ID.
+    Specifies envelope ID.
 
 * `--verbose`
 
@@ -88,7 +88,7 @@ Any options not listed here are silently ignored.
     Remainder of command line arguments are considered to be recipient
     addresses, even if any of them begin with "`-`".
 
-* _recipent_@_add.ress_ ...
+* _recipient_@_add.ress_ ...
 
     Recipients to whom the message would be delivered.
     At least one recipient is required.

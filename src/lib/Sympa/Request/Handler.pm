@@ -59,7 +59,7 @@ __END__
 
 Sympa::Request::Handler - Base class of request handler classes
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   package Sympa::Request::Handler::foo;
   use base qw(Sympa::Request::Handler);

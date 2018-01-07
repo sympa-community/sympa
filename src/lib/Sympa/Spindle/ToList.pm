@@ -474,7 +474,7 @@ L<Sympa::Spindle::ToOutgoing> will update it).
 
 =head1 SEE ALSO
 
-L<Sympa::INternals::Workflow>.
+L<Sympa::Internals::Workflow>.
 
 L<Sympa::Bulk>,
 L<Sympa::Message>,
