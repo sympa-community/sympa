@@ -51,6 +51,9 @@ owner
 [% FOREACH e = editor -%]
 editor
   email [% e.email %]
+  [% IF e.gecos -%] 
+  gecos [% e.gecos %]
+  [% END %]
 
 [% END %]
 [% END %]
