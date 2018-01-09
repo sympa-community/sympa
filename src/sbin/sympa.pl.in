@@ -587,8 +587,10 @@ if ($main::options{'dump'}) {
     my $hash = $config->getHash();
     # Compatibility: single topic on 6.2.24 or earlier.
     $hash->{config}{topics} ||= $hash->{config}{topic};
-    # "moderator" is documented as single editor.
-    $hash->{config}{editor} ||= [$hash->{config}{moderator}];
+    # In old documentation "moderator" was single or multiple editors.
+    my $mod = $hash->{config}{moderator};
+    $hash->{config}{editor} ||=
+        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context    => $robot,
@@ -689,8 +691,10 @@ if ($main::options{'dump'}) {
     my $hash = $config->getHash();
     # Compatibility: single topic on 6.2.24 or earlier.
     $hash->{config}{topics} ||= $hash->{config}{topic};
-    # "moderator" is documented as single editor.
-    $hash->{config}{editor} ||= [$hash->{config}{moderator}];
+    # In old documentation "moderator" was single or multiple editors.
+    my $mod = $hash->{config}{moderator};
+    $hash->{config}{editor} ||=
+        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
         context => $family,

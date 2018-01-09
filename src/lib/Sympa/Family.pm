@@ -347,8 +347,10 @@ sub modify_list {
     my $hash_list = $config->getHash();
     # Compatibility: single topic on 6.2.24 or earlier.
     $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
-    # "moderator" is documented as single editor.
-    $hash_list->{config}{editor} ||= [$hash_list->{config}{moderator}];
+    # In old documentation "moderator" was single or multiple editors.
+    my $mod = $hash_list->{config}{moderator};
+    $hash_list->{config}{editor} ||=
+        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
     #getting list
     my $list;
@@ -880,8 +882,10 @@ sub instantiate {
         my $hash_list = $config->getHash();
         # Compatibility: single topic on 6.2.24 or earlier.
         $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
-        # "moderator" is documented as single editor.
-        $hash_list->{config}{editor} ||= [$hash_list->{config}{moderator}];
+        # In old documentation "moderator" was single or multiple editors.
+        my $mod = $hash_list->{config}{moderator};
+        $hash_list->{config}{editor} ||=
+            (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
         if ($list) {
             ## LIST ALREADY EXISTING
@@ -1066,8 +1070,10 @@ sub instantiate {
             my $hash_list = $config->getHash();
             # Compatibility: single topic on 6.2.24 or earlier.
             $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
-            # "moderator" is documented as single editor.
-            $hash_list->{config}{editor} ||= [$hash_list->{config}{moderator}];
+            # In old documentation "moderator" was single or multiple editors.
+            my $mod = $hash_list->{config}{moderator};
+            $hash_list->{config}{editor} ||=
+            (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
             my $result = $self->_update_existing_list($list, $hash_list);
             unless (defined $result) {
