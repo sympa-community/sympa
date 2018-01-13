@@ -291,7 +291,7 @@ msgid ""
 "0: Only main operations are logged\n"
 "3: Almost everything is logged."
 msgstr ""
-"Establece la cantidad de bitácora (logs).\n"
+"Establece la cantidad del registro (logs).\n"
 "0: Solo operaciones principales son registradas.\n"
 "3: Casi todo es registrado."
 
@@ -376,7 +376,7 @@ msgid ""
 msgstr ""
 "El número de segundos que un proceso de correo masivo espera entre "
 "ejecuciones si no encuentra ningún mensaje para enviar.\n"
-"Manten un valor pequeño si quieres que tu servidor se reactive."
+"Mantén un valor pequeño si quieres que tu servidor se reactive."
 
 #: src/lib/Sympa/ConfDef.pm:465
 msgid ""
@@ -384,7 +384,7 @@ msgid ""
 "checks.\n"
 "Keep it small if you expect brutal increases in the message sending load."
 msgstr ""
-"Número de segundos que un demonio maestro de correo masivo espera entre dos "
+"Número de segundos que un proceso maestro de correo masivo espera entre dos "
 "comprobaciones de número de paquete.\n"
 "Mantenlo bajo si esperas un incremento brutal en la carga de envío de "
 "mensajes."
@@ -525,14 +525,14 @@ msgid ""
 "Don't confuse with \"queuebounce\" parameter which defines the spool where "
 "incoming error reports are stored and picked by bounced.pl daemon."
 msgstr ""
-"El directorio donde el demonio bounced.pl almacenará el último mensaje de "
+"El directorio donde el proceso bounced.pl almacenará el último mensaje de "
 "rebote para cada usuario. Se almacena un mensaje en el archivo: <ruta "
 "rebote>/<nombre_lista>@<dominio>/<email>, o, si el seguimiento está "
 "habilitado: <ruta rebote>/<nombre_lista>@<dominio>/<email>_<ID del sobre> .\n"
 "Los usuarios pueden acceder a estos mensajes usando la interfaz web en la "
 "página de administración de rebote.\n"
 "No confunda con el parámetro \"queuebounce\" que define el spool donde los "
-"informes de errores entrantes son almacenados y recogidos por el daemon "
+"informes de errores entrantes son almacenados y recogidos por el proceso "
 "bounced.pl."
 
 #: src/lib/Sympa/ConfDef.pm:1163
@@ -950,11 +950,11 @@ msgstr "Extensión privada de base de datos a la tabla de usuarios"
 #: default/web_tt2/nav.tt2:48 default/web_tt2/serveradmin.tt2:120
 #: src/lib/Sympa/ConfDef.pm:202
 msgid "System log"
-msgstr "Bitácora (log del sistema)"
+msgstr "Registro (log) del sistema"
 
 #: src/lib/Sympa/ConfDef.pm:206
 msgid "System log facility for Sympa"
-msgstr "Facilidad de registro del sistema para Sympa"
+msgstr "Facilidad del registro (log) del sistema para Sympa"
 
 #: src/lib/Sympa/ConfDef.pm:209
 msgid "Do not forget to configure syslog server."
@@ -966,7 +966,7 @@ msgstr "Modo de comunicación con el servidor syslog"
 
 #: src/lib/Sympa/ConfDef.pm:220
 msgid "Log verbosity"
-msgstr "Verbosidad del registro"
+msgstr "Verbosidad del registro (log)"
 
 #: src/lib/Sympa/ConfDef.pm:227
 msgid "Alias management"
@@ -1041,9 +1041,8 @@ msgid "bytes"
 msgstr "bytes"
 
 #: src/lib/Sympa/ConfDef.pm:284
-#, fuzzy
 msgid "Reject mail sent from automated services to list"
-msgstr "¿Se rechaza correo automatizado (crontab, etc) enviado a la lista?"
+msgstr "Rechazar correo enviado por servicios automatizados a la lista"
 
 #: src/lib/Sympa/ConfDef.pm:295
 msgid "Header field name(s) used to determine sender of the messages"
@@ -1073,55 +1072,64 @@ msgstr ""
 "lugar de \"Return-Path\"."
 
 #: src/lib/Sympa/ConfDef.pm:302
-#, fuzzy
 msgid "Reject misaddressed commands"
-msgstr "Rechazar la direcciones seleccionadas"
+msgstr "Rechazar los comandos mal dirigidos"
 
 #: src/lib/Sympa/ConfDef.pm:304
 msgid ""
 "When a mail command is sent to a list, by default Sympa rejects this "
 "message. This feature can be turned off setting this parameter to \"ignore\"."
 msgstr ""
+"Cuando un comando de correo se envía a la lista, Sympa rechaza este mensaje "
+"de forma predetermidada. Esta característica se puede evitar configurando el "
+"parámetro a \"ignore\"."
 
 #: src/lib/Sympa/ConfDef.pm:309
 msgid "Regular expression matching with misaddressed commands"
-msgstr ""
+msgstr "Expresión regular que coincide con los comandos mal dirigidos"
 
 #: src/lib/Sympa/ConfDef.pm:311
 msgid ""
 "Perl regular expression applied on messages subject and body to detect "
 "misaddressed commands."
 msgstr ""
+"Expresión regular en Perl aplicada al asunto y cuerpo de los mensajes para "
+"detectar comandos mal dirigidos."
 
 #: src/lib/Sympa/ConfDef.pm:316
-#, fuzzy
 msgid "Priority for command messages"
-msgstr "Prioridad por defecto para los mensajes de la lista"
+msgstr "Prioridad por los mensajes de comandos"
 
 #: src/lib/Sympa/ConfDef.pm:318
 msgid "Priority applied to messages sent to Sympa command address."
 msgstr ""
+"Prioridad aplicada a los mensajes enviados a las direcciones de comandos de "
+"Sympa."
 
 #: src/lib/Sympa/ConfDef.pm:324
 msgid "Priority for messages bound for list owners"
 msgstr ""
+"Prioridad para los mensajes rebotados para los propietarios de la lista"
 
 #: src/lib/Sympa/ConfDef.pm:326
 msgid ""
 "Priority for processing of messages bound for \"LIST-request\" address, i.e. "
 "owners of the list"
 msgstr ""
+"Prioridad de procesamiento de los mensajes rebotados para la dirección "
+"\"LISTA-request\", por ejemplo los propietarios de la lista."
 
 #: src/lib/Sympa/ConfDef.pm:332
-#, fuzzy
 msgid "Priority for non-VERP bounces"
-msgstr "Carpeta para el almacenamiento de mensajes rebotados"
+msgstr "Prioridad para rebotes no-VERP"
 
 #: src/lib/Sympa/ConfDef.pm:334
 msgid ""
 "Priority for processing of messages bound for \"LIST-owner\" address, i.e. "
 "non-delivery reports (bounces)."
 msgstr ""
+"Prioridad para el procesamiento de mensajes rebotas para la dirección "
+"\"LISTA-owner\", por ejemplo informes de no entrega (rebotes)."
 
 #: src/lib/Sympa/ConfDef.pm:340
 msgid "Default priority for list messages"
@@ -1130,22 +1138,21 @@ msgstr "Prioridad predeterminada para los mensajes de la lista"
 #: src/lib/Sympa/ConfDef.pm:342
 msgid "Priority for processing of messages posted to list addresses."
 msgstr ""
+"Prioridad de procesamiento de mensajes enviados a la dirección de la lista."
 
 #: src/lib/Sympa/ConfDef.pm:349
-#, fuzzy
 msgid "Max number of sympa.pl workers"
-msgstr "Número máximo de miembros de la lista"
+msgstr "Número máximo de procesos sympa.pl"
 
 #: src/lib/Sympa/ConfDef.pm:351
-#, fuzzy
 msgid "Max number of workers of sympa.pl daemon processing incoming spool."
 msgstr ""
-"Número máximo de procesos inspeccionando el contenedor de mensajes entrantes "
-"que se ejecutarán en el mismo servidor"
+"Número máximo de procesos del programa sympa.pl procesando el contenedor de "
+"mensajes entrantes."
 
 #: src/lib/Sympa/ConfDef.pm:356
 msgid "Interval between scanning incoming message spool"
-msgstr ""
+msgstr "Intervalo entre búsquedas de mensajes entrantes en el contenedor"
 
 #: src/lib/Sympa/ConfDef.pm:357
 msgid "Must not be 0."
@@ -1198,17 +1205,19 @@ msgstr "Campos de encabezado del RFC 2369"
 
 #: src/lib/Sympa/ConfDef.pm:407
 msgid "Minimum size to be urlized"
-msgstr ""
+msgstr "Tamaño mínimo para ser convertido en url"
 
 #: src/lib/Sympa/ConfDef.pm:409
 msgid ""
 "When a subscriber chose \"urlize\" reception mode, attachments not smaller "
 "than this size will be urlized."
 msgstr ""
+"Cuando un suscriptor elige el modo de recepción \"urlize\", los adjuntos "
+"mayores a este tamaño se convertirán en url."
 
 #: src/lib/Sympa/ConfDef.pm:415
 msgid "Allowed external links in sanitized HTML"
-msgstr ""
+msgstr "Se permiten enlaces externos en HTML desinfectado"
 
 #: src/lib/Sympa/ConfDef.pm:417
 msgid ""
@@ -1217,6 +1226,10 @@ msgid ""
 "scrubbed. If \"*\" character is included, it matches any subdomains. Single "
 "\"*\" allows any hosts."
 msgstr ""
+"Cuando el contenido HTML de un mensaje se debe desinfectar, los enlaces "
+"(atributos \"href\" o \"src\") con los servidores listados en este parámetro "
+"no serán limpiados. Si se incluye el carácter \"*\", este se corresponderá "
+"con cualquier subdominio. Un único \"*\" permite cualquier servidor."
 
 #: src/lib/Sympa/ConfDef.pm:425
 msgid "Default priority for a packet"
@@ -1230,69 +1243,63 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:434
 msgid "Fork threshold of bulk daemon"
-msgstr ""
+msgstr "Umbral de divisiones del proceso de correo masivo"
 
 #: src/lib/Sympa/ConfDef.pm:437
-#, fuzzy
 msgid ""
 "The minimum number of packets before bulk daemon forks the new worker to "
 "increase sending rate."
 msgstr ""
-"Número mínimo de paquetes en base de datos antes de que el proceso bulk cree "
-"nuevos procesos para incremental el ratio de envío"
+"El número mínimo de paquetes antes de que el proceso de correo masivo cree "
+"nuevos procesos para incrementar la tasa de envío."
 
 #: src/lib/Sympa/ConfDef.pm:441
-#, fuzzy
 msgid "Maximum number of bulk workers"
-msgstr "Número máximo de miembros de la lista"
+msgstr "Número máximo de procesos de correo masivo"
 
 #: src/lib/Sympa/ConfDef.pm:446
 msgid "Idle timeout of bulk workers"
-msgstr ""
+msgstr "Tiempo de inactividad de los procesos de correo masivo"
 
 #: src/lib/Sympa/ConfDef.pm:449
-#, fuzzy
 msgid ""
 "The number of seconds a bulk worker will remain running without processing a "
 "message before it spontaneously exists."
 msgstr ""
-"El número de segundos que un proceso hijo bulk permanecerá ejectuándose sin "
-"procesar ningún mensaje antes de morir espontáneamente."
+"El número de segundos que un proceso de correo masivo seguirá ejecutándose "
+"sin procesar ningún mensaje antes de morir espontáneamente."
 
 #: src/lib/Sympa/ConfDef.pm:454
 msgid "Sleep time of bulk workers"
-msgstr ""
+msgstr "Tiempo de inactividad de los procesos de correo masivo"
 
 #: src/lib/Sympa/ConfDef.pm:462
 msgid "Interval between checks of packet numbers"
-msgstr ""
+msgstr "Intervalo entre comprobaciones de los números de paquete"
 
 #: src/lib/Sympa/ConfDef.pm:476
-#, fuzzy
 msgid "Path to sendmail"
-msgstr "Ruta de acceso a OpenSSL"
+msgstr "Ruta de acceso a sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:484
 msgid "Command line parameters passed to sendmail"
-msgstr ""
+msgstr "Parámetros de la línea de comandos pasados a sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:489
 msgid "Log invocation of sendmail"
-msgstr ""
+msgstr "Activación del registro (log) de sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:491
 msgid "This can be overwritten by \"-m\" option for sympa.pl."
-msgstr ""
+msgstr "Esto se puede sobreescribir con la opción \"-m\" para sympa.pl."
 
 #: src/lib/Sympa/ConfDef.pm:502
-#, fuzzy
 msgid "Maximum number of sendmail processes"
-msgstr "Número máximo de miembros de la lista"
+msgstr "Número máximo de procesos sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:509
-#, fuzzy
 msgid "Maximum number of recipients per call to sendmail"
-msgstr "Máximo número de dominios diferentes por invocación de Sendmail."
+msgstr "Número máximo de destinatarios por llamada a sendmail"
 
 #: src/lib/Sympa/ConfDef.pm:511
 msgid ""
@@ -2095,6 +2102,9 @@ msgid ""
 "Number of days files in temporary directory (as specified by \"tmpdir\" "
 "parameter), including standard error logs, are kept."
 msgstr ""
+"Número de días que se mantienen archivados en la carpeta temporal "
+"(especificado por el parámetro \"tmpdir\"), incluyendo los registros (logs) "
+"de error estándar."
 
 #: src/lib/Sympa/ConfDef.pm:1132
 msgid "File containing Sympa PID while running"
@@ -2106,7 +2116,7 @@ msgstr "Archivo conteniendo el PID del task_manager mientras se ejecuta"
 
 #: src/lib/Sympa/ConfDef.pm:1154
 #, fuzzy
-msgid "Miscellaneous"
+msgid "Miscelaneous"
 msgstr "Varios"
 
 #: src/lib/Sympa/ConfDef.pm:1158
@@ -2149,15 +2159,16 @@ msgstr ""
 #: src/lib/Sympa/ConfDef.pm:1211
 msgid "This task cleans old logs from \"logs_table\" table."
 msgstr ""
+"Esta tarea limpia registros (logs) antiguos de la tabla \"logs_table\"."
 
 #: src/lib/Sympa/ConfDef.pm:1215
-#, fuzzy
 msgid "Max age of logs in database"
-msgstr "Nombre de la base de datos"
+msgstr "Antigüedad máxima de los registros (logs) en base de datos"
 
 #: src/lib/Sympa/ConfDef.pm:1217
 msgid "Number of months that elapse before a log is expired"
-msgstr "Número de meses que transcurren antes de que un log sea expirado"
+msgstr ""
+"Número de meses que transcurren antes de que un registro (log) sea expirado"
 
 #: src/lib/Sympa/ConfDef.pm:1218 src/lib/Sympa/ConfDef.pm:1226
 #: src/lib/Sympa/ListDef.pm:880
@@ -2222,15 +2233,16 @@ msgid "Directory for static contents"
 msgstr "Carpeta para el almacenamiento de mensajes rebotados"
 
 #: src/lib/Sympa/ConfDef.pm:1283
-#, fuzzy
 msgid "System log facility for web interface"
-msgstr "Funcionalidad Syslog para sympa"
+msgstr "Facilidad del registro (log) del sistema para la interfaz web"
 
 #: src/lib/Sympa/ConfDef.pm:1285
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
 msgstr ""
+"Facilidad del registro (log) del systema para WWSympa, archived.pl y bounced."
+"pl. De forma predeterminada se usa el valor del parámetro \"syslog\"."
 
 #: src/lib/Sympa/ConfDef.pm:1290
 #, fuzzy
@@ -2238,13 +2250,13 @@ msgid "Web interface parameters: Appearances"
 msgstr "Parámetros de la Interfaz Web"
 
 #: src/lib/Sympa/ConfDef.pm:1293
-#, fuzzy
 msgid "Custom logo"
-msgstr "Bitácora (log del sistema)"
+msgstr "Logotipo personalizado"
 
 #: src/lib/Sympa/ConfDef.pm:1295
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
+"Código HTML para insertar un logotipo en la pagina de una interfaz web."
 
 #: src/lib/Sympa/ConfDef.pm:1302
 #, fuzzy
@@ -2319,18 +2331,16 @@ msgstr ""
 "revisión"
 
 #: src/lib/Sympa/ConfDef.pm:1468
-#, fuzzy
 msgid "Size of viewlogs page"
-msgstr "Título de la página Web principal"
+msgstr "Tamaño de la página de visualización de registros (logs)"
 
 #: src/lib/Sympa/ConfDef.pm:1470
-#, fuzzy
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
 msgstr ""
-"Número de líneas por defecto de las entradas en la tabla que visualiza la "
-"bitácora (archivo log)"
+"Número de líneas predeterminadas de las entradas en la tabla que visualiza "
+"los registros (logs) en la página de registros (logs)."
 
 #: src/lib/Sympa/ConfDef.pm:1476
 #, fuzzy
@@ -2347,7 +2357,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1518
 #, fuzzy
-msgid "Web interface parameters: Miscellaneous"
+msgid "Web interface parameters: Miscelaneous"
 msgstr "Parámetros de la Interfaz Web"
 
 #: src/lib/Sympa/ConfDef.pm:1525
@@ -2431,6 +2441,11 @@ msgid ""
 "users that will probably uses the renew password service before they "
 "performs so many tries."
 msgstr ""
+"Si se alcanza este límite, la cuenta se bloquea hasta que el usuario renueve "
+"su contraseña. El valor por defecto se elige en acorde para bloquear robots "
+"que intentan acceder usando la estrategia de fuerza bruta. Este valor nunca "
+"de debería alcanzar por usuarios reales que usarán el servicio de renovación "
+"de contraseña después de intentarlo muchas veces."
 
 #: src/lib/Sympa/ConfDef.pm:1622
 #, fuzzy
@@ -2537,12 +2552,13 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1751
 msgid "Default of SQL fetch timeout"
-msgstr ""
+msgstr "Tiempo de espera predeterminado para la búsqueda SQL"
 
 #: src/lib/Sympa/ConfDef.pm:1753
-#, fuzzy
 msgid "Default timeout while performing a fetch with include_sql_query."
-msgstr "Tiempo de espera entre dos sincronizaciones para un include_sql_query"
+msgstr ""
+"Tiempo de espera predeterminado al realizar una búsqueda con "
+"include_sql_query."
 
 #: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1758
 msgid "DKIM"
@@ -2850,16 +2866,16 @@ msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
 msgstr ""
-"Tiempo de espera entre dos sincronizaciones programadas de miembros de la "
-"lista con fuentes de datos."
+"Tiempo de espera predeterminado entre dos sincronizaciones programadas de "
+"miembros de la lista con fuentes de datos."
 
 #: src/lib/Sympa/ConfDef.pm:2023
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
 msgstr ""
-"Tiempo de espera entre dos sincronizaciones de acción desencadenada de "
-"miembros de la lista con fuentes de datos."
+"Tiempo de espera predeterminado entre dos sincronizaciones de acción "
+"desencadenada de miembros de la lista con fuentes de datos."
 
 #: src/lib/Sympa/ConfDef.pm:2038
 msgid "Enable FastCGI"
@@ -3395,8 +3411,7 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:1097
 msgid "Timeout for fetch of include_sql_query"
-msgstr ""
-"Plazo de espera (timeout) para la recuperación de datos con include_sql_query"
+msgstr "Tiempo de espera para la búsqueda con include_sql_query"
 
 #: src/lib/Sympa/ListDef.pm:1106
 msgid "User data source"
@@ -3511,7 +3526,7 @@ msgstr "alcance de búsqueda"
 
 #: src/lib/Sympa/ListDef.pm:1349 src/lib/Sympa/ListDef.pm:1791
 msgid "connection timeout"
-msgstr "timeout de conexión"
+msgstr "Tiempo de espera de la conexión"
 
 #: src/lib/Sympa/ListDef.pm:1357 src/lib/Sympa/ListDef.pm:1799
 msgid "filter"
@@ -3545,7 +3560,7 @@ msgstr "ambito de búsqueda de primer nivel"
 
 #: src/lib/Sympa/ListDef.pm:1474 src/lib/Sympa/ListDef.pm:1921
 msgid "first-level connection timeout"
-msgstr "timeout de conexión de primer nivel"
+msgstr "Tiempo de espera para la conexión de primer nivel"
 
 #: src/lib/Sympa/ListDef.pm:1482 src/lib/Sympa/ListDef.pm:1929
 msgid "first-level filter"
@@ -3573,7 +3588,7 @@ msgstr "ambito de búsqueda de segundo nivel"
 
 #: src/lib/Sympa/ListDef.pm:1521 src/lib/Sympa/ListDef.pm:1968
 msgid "second-level connection timeout"
-msgstr "timeout de conexión de segundo nivel"
+msgstr "Tiempo de espera para la conexión de segundo nivel"
 
 #: src/lib/Sympa/ListDef.pm:1529 src/lib/Sympa/ListDef.pm:1976
 msgid "second-level filter template"
@@ -3641,13 +3656,11 @@ msgstr "grupo"
 
 #: src/lib/Sympa/ListDef.pm:1684
 msgid "Inclusions timeout"
-msgstr "Expiración de las inclusiones (timeout)"
+msgstr "Tiempo de espera para las inclusiones"
 
 #: src/lib/Sympa/ListDef.pm:1696
 msgid "Inclusions timeout for message distribution"
-msgstr ""
-"Plazo máximo a partir de una sincronización antes que ésta sea provocada por "
-"el envío de un mensaje"
+msgstr "Tiempo de espera de las incusiones para la distribución del mensaje"
 
 #: src/lib/Sympa/ListDef.pm:1698
 msgid ""
@@ -5376,8 +5389,7 @@ msgstr ""
 #: src/lib/Sympa/ModDef.pm:362
 msgid "used to record system log via syslog"
 msgstr ""
-"utilizado para registrar en la bitácora (archivo log) del sistema por medio "
-"de syslog"
+"utilizado para registrar los registros (logs) del sistema por medio de syslog"
 
 #: src/lib/Sympa/ModDef.pm:369
 msgid ""
@@ -5889,11 +5901,11 @@ msgstr ""
 
 #: default/web_tt2/admin.tt2:21
 msgid "Logs:"
-msgstr "Bitácora (Logs):"
+msgstr "Registros (Logs):"
 
 #: default/web_tt2/admin.tt2:21
 msgid "A tool for exploring the list logs."
-msgstr "Una herramienta para explorar la bitácora de esta lista (logs). "
+msgstr "Una herramienta para explorar los registros (logs) de la lista. "
 
 #: default/web_tt2/admin.tt2:27
 msgid "Drastic operations"
@@ -6219,7 +6231,7 @@ msgstr "Campo de búsqueda extendido:"
 #: default/web_tt2/footer.tt2:4 default/web_tt2/header.tt2:12
 #: default/web_tt2/header.tt2:23
 msgid "SYMPA logo"
-msgstr "Logo SYMPA"
+msgstr "Logotipo de SYMPA"
 
 #: default/web_tt2/aside_menu.tt2:59
 msgid "List Options Menu"
@@ -8323,7 +8335,7 @@ msgstr "Ayuda acerca de la autenticación"
 
 #: default/web_tt2/loginbanner.tt2:148 default/web_tt2/loginbanner.tt2:155
 msgid "First login?"
-msgstr "¿Primer  acceso?"
+msgstr "¿Primer acceso?"
 
 #: default/web_tt2/loginbanner.tt2:151 default/web_tt2/loginbanner.tt2:158
 msgid "Lost password?"
@@ -8696,7 +8708,7 @@ msgstr "Gestión de archivos"
 
 #: default/web_tt2/nav.tt2:162
 msgid "Logs"
-msgstr "Bitácora (Logs)"
+msgstr "Registros (Logs)"
 
 #: default/web_tt2/nav.tt2:181
 msgid "Send a message"
@@ -9526,24 +9538,24 @@ msgstr "Reconstruir TODOS los archivos"
 
 #: default/web_tt2/serveradmin.tt2:121
 msgid "Sympa log level"
-msgstr "Nivel de bitácora (log)"
+msgstr "Nivel de registro (log) de Sympa"
 
 #: default/web_tt2/serveradmin.tt2:122
 msgid ""
 "Set debug level for logs written to disk.  This setting is temporary, "
 "applying only for the lifetime of the fastcgi session hosting this interface."
 msgstr ""
-"Configura el nivel de depuración para la bitácora (archivo log) escrito en "
-"disco.  Esta configuración es temporal, aplicala solo para el tiempo de vida "
-"del almacenaje de la sesión fastcgi de la interfaz."
+"Configura el nivel de depuración para el registro (log) escrito en disco.  "
+"Esta configuración es temporal y solo se aplica durante el tiempo de vida de "
+"la sesión fastcgi que aloja esta interfaz."
 
 #: default/web_tt2/serveradmin.tt2:125
 msgid "Log level:"
-msgstr "Nivel de bitácora (logs):"
+msgstr "Nivel de registro (log):"
 
 #: default/web_tt2/serveradmin.tt2:131
 msgid "Set log level"
-msgstr "Definir el nivel de bitácora (log)"
+msgstr "Definir el nivel de registro (log)"
 
 #: default/web_tt2/serveradmin.tt2:140
 msgid "Edit default list template"
@@ -9795,8 +9807,8 @@ msgid ""
 "logs to be sure that static css a really in use."
 msgstr ""
 "Instalación correcta de la hoja de estilos CSS estática. Recarga la página "
-"actual y/o verifica la bitácora de sympa para asegurarte que se usan esta "
-"hoja de estilo CSS estática."
+"actual y/o verifica los registros (logs) de sympa para asegurarte que se usa "
+"esta hoja de estilo CSS estática."
 
 #: default/web_tt2/skinsedit.tt2:9
 msgid "Colors"
@@ -9909,7 +9921,7 @@ msgid "Text background color"
 msgstr "Color de fondo del texto"
 
 #: default/web_tt2/skinsedit.tt2:72
-msgid "Miscellaneous texts font color"
+msgid "Miscelaneous texts font color"
 msgstr "Color de las fuentes de texto diversas"
 
 #: default/web_tt2/skinsedit.tt2:78
@@ -10396,7 +10408,7 @@ msgid ""
 "However, as you are logged in already, you can probably perform the action "
 "you requested anyway."
 msgstr ""
-"No obstante, al ya estar conectad@, probablemente puedas efectuar la acción "
+"No obstante, al ya estar conectado, probablemente puedas efectuar la acción "
 "que has solicitado."
 
 #. (ticket_context.printable_date)
@@ -10473,7 +10485,7 @@ msgstr "Fecha de notificación: %1"
 
 #: default/web_tt2/viewlogs.tt2:4
 msgid "Logs view"
-msgstr "Vista de bitácora (logs)"
+msgstr "Vista de registros (logs)"
 
 #: default/web_tt2/viewlogs.tt2:11
 msgid "Search by:"
@@ -10551,7 +10563,7 @@ msgstr "%1 resultados"
 
 #: default/web_tt2/viewlogs.tt2:90
 msgid "Logs table"
-msgstr "Tabla de bitácora (Logs)"
+msgstr "Tabla de registros (Logs)"
 
 #: default/web_tt2/viewlogs.tt2:102
 msgid "List"
@@ -11564,7 +11576,7 @@ msgstr "Errores:"
 #: default/mail_tt2/listmaster_notification.tt2:58
 #: default/mail_tt2/listmaster_notification.tt2:66
 msgid "Check log file for further details."
-msgstr "Revisar la bitácora (log) para más detalles."
+msgstr "Revisar el archivo de registro para más detalles."
 
 #: default/mail_tt2/listmaster_notification.tt2:61
 msgid "Upgrade procedures failed"
@@ -11587,8 +11599,8 @@ msgid ""
 "The database structure has been updated. Check the log file for further "
 "details: "
 msgstr ""
-"La estructura de la base de datos fue actualizada; verifica la bitácora "
-"(logs) para mayores detalles: "
+"La estructura de la base de datos ha sido actualizada. Verifica el archivo "
+"de registro para mayores detalles: "
 
 #: default/mail_tt2/listmaster_notification.tt2:79
 msgid "CSS files have been updated"
@@ -11597,8 +11609,8 @@ msgstr "Los archivos CSS han sido actualizados"
 #: default/mail_tt2/listmaster_notification.tt2:81
 msgid "Static CSS files have been updated.  Check log file for details."
 msgstr ""
-"Los archivos CSS estáticos han sido actualizados.  Comprueba la bitácora "
-"(log) para mayor detalle. "
+"Los archivos CSS estáticos han sido actualizados.  Comprueba el archivo de "
+"registro para mayor detalle. "
 
 #: default/mail_tt2/listmaster_notification.tt2:84
 msgid "CSS update failed"
@@ -11644,7 +11656,7 @@ msgid ""
 "log files !!"
 msgstr ""
 "Sympa falló al guardar un mensaje <%1> en el servidor de correo masivo. "
-"¡Deberías comprobar la bitácora (log)!"
+"¡Deberías comprobar los archivos de registro (log)!"
 
 #. (message_id)
 #: default/mail_tt2/listmaster_notification.tt2:111
@@ -11653,7 +11665,7 @@ msgid ""
 "log files!!"
 msgstr ""
 "Sympa falló al procesar un mensaje <%1> en el contenedor de correo masivo. "
-"¡Deberías comprobar la bitácora (archivo log)!"
+"¡Deberías comprobar los archivos de registro (log)!"
 
 #: default/mail_tt2/listmaster_notification.tt2:114
 msgid "Loop detected"
@@ -11699,7 +11711,7 @@ msgstr "%1 imposible"
 #: default/mail_tt2/listmaster_notification.tt2:422
 #: default/mail_tt2/listmaster_notification.tt2:434
 msgid "See the logs for more details."
-msgstr "Consulta la bitácora (logs) para más detalles."
+msgstr "Consulta los registros (logs) para más detalles."
 
 #: default/mail_tt2/listmaster_notification.tt2:151
 msgid "Unable to create directory"
@@ -11785,7 +11797,9 @@ msgstr "- Fuente de datos '%2' (tipo %1)"
 #: default/mail_tt2/listmaster_notification.tt2:209
 #: default/mail_tt2/listmaster_notification.tt2:215
 msgid "Check Sympa log files for more precise information"
-msgstr "Revisar la bitácora (log) de Sympa para mayor información."
+msgstr ""
+"Revisar los archivos de registro (log) de Sympa para una información más "
+"precisa."
 
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:212
@@ -11837,7 +11851,8 @@ msgstr "El estado de la lista ha sido modificado a error_config."
 #: default/mail_tt2/listmaster_notification.tt2:304
 #: default/mail_tt2/listmaster_notification.tt2:311
 msgid "Check the Sympa log files for more information."
-msgstr "Revisar la bitácora (log) de Sympa para mayor información. "
+msgstr ""
+"Revisar los archivos de registro (log) de Sympa para mayor información. "
 
 #. (param0)
 #: default/mail_tt2/listmaster_notification.tt2:226
@@ -14880,7 +14895,7 @@ msgstr "Evaluación diaria de usuarios rebotados"
 
 #: default/global_task_models/purge_logs_table.daily.task:1
 msgid "daily deletion of outdated logs"
-msgstr "supresión cotidiana de la bitácora (logs)"
+msgstr "eliminación diaria de los registros (logs) caducados"
 
 #: default/global_task_models/purge_one_time_ticket_table.daily.task:1
 msgid "daily deletion of outdated tickets"
@@ -15153,6 +15168,15 @@ msgstr "Imposible cargar el cliente. La configuración debe estar errónea."
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Fuente desconocida."
+
+#: src/lib/Sympa/ConfDef.pm:1518
+#, fuzzy
+msgid "Web interface parameters: Miscellaneous"
+msgstr "Parámetros de la Interfaz Web"
+
+#: default/web_tt2/skinsedit.tt2:72
+msgid "Miscellaneous texts font color"
+msgstr "Color de las fuentes de texto diversas"
 
 #~ msgid "html-only mode"
 #~ msgstr "recepción sólo en formato HTML"

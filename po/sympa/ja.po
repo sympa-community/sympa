@@ -1844,7 +1844,7 @@ msgid "File containing task_manager PID while running"
 msgstr "task_managerデーモンの実行中にPIDを保存するファイル"
 
 #: src/lib/Sympa/ConfDef.pm:1154
-msgid "Miscellaneous"
+msgid "Miscelaneous"
 msgstr "その他"
 
 #: src/lib/Sympa/ConfDef.pm:1158
@@ -1990,6 +1990,9 @@ msgid ""
 "\"css.tt2\" template. Therefore, this is not a good place to store "
 "customized CSS files."
 msgstr ""
+"静的スタイルシートファイルはアップグレード後に新しいcss.tt2によって更新されま"
+"す。ですから、カスタマイズしたスタイルシートファイルをこの場所に置くことはお"
+"勧めしません。"
 
 #: src/lib/Sympa/ConfDef.pm:1316
 msgid "URL for style sheets (CSS)"
@@ -2000,6 +2003,8 @@ msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with \"css_path"
 "\"."
 msgstr ""
+"自動生成される静的スタイルシートを使うために、HTTPサーバはこの場所を"
+"「css_path」のディレクトリに対応づけなければなりません。"
 
 #: src/lib/Sympa/ConfDef.pm:1323
 msgid "Colors for web interface"
@@ -2010,6 +2015,8 @@ msgid ""
 "Colors are used in style sheet (CSS). They may be changed using web "
 "interface by listmasters."
 msgstr ""
+"色はスタイルシート (CSS) で使います。リストマスターはウェブインタフェースを"
+"使ってこれらの色を変えることができます。"
 
 #: src/lib/Sympa/ConfDef.pm:1406
 msgid "Colors for web interface, obsoleted"
@@ -2021,7 +2028,7 @@ msgstr "メインページの種類"
 
 #: src/lib/Sympa/ConfDef.pm:1445
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
-msgstr ""
+msgstr "「lists」でリストの一覧ページ。「home」でホームページ。"
 
 #: src/lib/Sympa/ConfDef.pm:1452
 msgid "Default index organization of web archive"
@@ -2059,7 +2066,7 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1518
-msgid "Web interface parameters: Miscellaneous"
+msgid "Web interface parameters: Miscelaneous"
 msgstr "ウェブ インタフェースのパラメータ——その他"
 
 #: src/lib/Sympa/ConfDef.pm:1525
@@ -2900,13 +2907,12 @@ msgid "Who can review subscribers"
 msgstr "読者一覧を見ることができるのは"
 
 #: src/lib/Sympa/ListDef.pm:748
-#, fuzzy
 msgid "Required domains for list owners"
-msgstr "リストのオーナーのみ"
+msgstr "リストのオーナーのドメインを限定"
 
 #: src/lib/Sympa/ListDef.pm:761
 msgid "Minimum owners in required domains"
-msgstr ""
+msgstr "オーナーのドメインを制限しているときの、オーナー数の下限。"
 
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_read.tt2:2
@@ -3592,9 +3598,8 @@ msgid "Family name"
 msgstr "設定族の名前"
 
 #: src/lib/Sympa/ListDef.pm:306
-#, fuzzy
 msgid "limit for the number of subscribers. 0 means no limit."
-msgstr "リストあたりの読者数上限の初期値 (0で無制限)。"
+msgstr "読者数の上限 (0で無制限)。"
 
 # max_list_membersリストパラメータの助数詞
 #: src/lib/Sympa/ListDef.pm:307
@@ -3780,13 +3785,13 @@ msgstr ""
 
 #: src/lib/Sympa/ListDef.pm:750
 msgid "Restrict list ownership to addresses in the specified domains."
-msgstr ""
+msgstr "リストのオーナーを指定したドメインのアドレスに制限する。"
 
 #: src/lib/Sympa/ListDef.pm:763
 msgid ""
 "Require list ownership by a minimum number of addresses in the specified "
 "domains."
-msgstr ""
+msgstr "リストのオーナーのドメインを制限しているときの、オーナー数の下限。"
 
 #: src/lib/Sympa/ListDef.pm:775
 msgid ""
@@ -9455,7 +9460,7 @@ msgid "Text background color"
 msgstr "テキストの背景色"
 
 #: default/web_tt2/skinsedit.tt2:72
-msgid "Miscellaneous texts font color"
+msgid "Miscelaneous texts font color"
 msgstr "その他のテキストの文字色"
 
 #: default/web_tt2/skinsedit.tt2:78
@@ -13580,9 +13585,8 @@ msgstr "メッセージを個別化できません。%1. テンプレートの�
 
 #. (report_param.value,report_param.owner_domain)
 #: default/mail_tt2/report.tt2:803
-#, fuzzy
 msgid "%1: all list owners must be in the following domains: %2."
-msgstr "次の操作にブラックリストを使います。"
+msgstr "%1: リストのオーナーのドメインは次のいずれかでなければなりません。%2。"
 
 #. (report_param.value,report_param.owner_domain_min,report_param.owner_domain)
 #: default/mail_tt2/report.tt2:806
@@ -14719,6 +14723,14 @@ msgstr "そのようなプロバイダは知りません。"
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:1518
+msgid "Web interface parameters: Miscellaneous"
+msgstr "ウェブ インタフェースのパラメータ——その他"
+
+#: default/web_tt2/skinsedit.tt2:72
+msgid "Miscellaneous texts font color"
+msgstr "その他のテキストの文字色"
 
 #~ msgid "html-only mode"
 #~ msgstr "HTML のみ"
