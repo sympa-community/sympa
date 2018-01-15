@@ -4069,6 +4069,7 @@ sub do_redirect {
 
     #$session->set_cookie('localhost','session');
     $session->set_cookie($param->{'cookie_domain'}, 'session');
+    print "Status: 302 Moved\n";
     print "Location: $redirect_to\n\n";
     $param->{'bypass'} = 'extreme';
     return 1;
