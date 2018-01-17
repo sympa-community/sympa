@@ -58,7 +58,7 @@ sub _twist {
     my $sender   = $request->{sender};
 
     # Obligatory parameters.
-    foreach my $arg (qw(subject template description topics)) {
+    foreach my $arg (qw(subject template topics)) {
         unless (defined $param->{$arg} and $param->{$arg} =~ /\S/) {
             $self->add_stash($request, 'user', 'missing_arg',
                 {argument => $arg});
@@ -67,7 +67,11 @@ sub _twist {
         }
     }
     # The 'other' topic means no topic.
-    delete $request->{topics} if $request->{topics} eq 'other';
+    $param->{topics} = lc $param->{topics};
+    delete $param->{topics} if $param->{topics} eq 'other';
+    # Sanytize editor.
+    $param->{editor} =
+        [grep { ref $_ eq 'HASH' and $_->{email} } @{$param->{editor} || []}];
 
     # owner.email || owner_include.source
     _check_owner_defined($param);
