@@ -162,7 +162,7 @@ if ($main::options{'upgrade_config_location'}) {
         }
     }
 
-    printf "Sympa configuration moved to $dir\n";
+    printf "Sympa configuration moved to %s\n", $dir;
     exit 0;
 } elsif ($main::options{'health_check'}) {
     ## Health check
@@ -385,7 +385,7 @@ if ($main::options{'dump'}) {
     exit 0;
 } elsif ($main::options{'md5_digest'}) {
     my $md5 = Digest::MD5::md5_hex($main::options{'md5_digest'});
-    printf "md5 digest : $md5 \n";
+    printf "md5 digest : %s \n", $md5;
 
     exit 0;
 } elsif ($main::options{'import'}) {
@@ -420,7 +420,7 @@ if ($main::options{'dump'}) {
     exit($status ? 0 : 1);
 
 } elsif ($main::options{'md5_encode_password'}) {
-    printf STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
+    print STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
 
     exit 0;
 } elsif ($main::options{'lowercase'}) {
@@ -491,7 +491,8 @@ if ($main::options{'dump'}) {
     my ($listname, $robot_id) = split /\@/, $main::options{'purge_list'}, 2;
     my $current_list = Sympa::List->new($listname, $robot_id);
     unless ($current_list) {
-        print STDERR "Incorrect list name $main::options{'purge_list'}\n";
+        printf STDERR
+            "Incorrect list name %s\n", $main::options{'purge_list'};
         exit 1;
     }
 
@@ -529,7 +530,7 @@ if ($main::options{'dump'}) {
         $robot_id = $current_list->{'domain'};
     } else {
         unless (length $robot_id and Conf::valid_robot($robot_id)) {
-            print STDERR "Unknown robot \"%s\"\n";
+            printf STDERR "Unknown robot \"%s\"\n", $robot_id;
             exit 1;
         }
     }
@@ -543,14 +544,14 @@ if ($main::options{'dump'}) {
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
-        printf STDERR "Could not rename list %s to %s%s\n",
+        printf STDERR "Could not rename list %s to %s\@%s\n",
             $current_list->get_id, $listname, $robot_id;
         exit 1;
     }
     exit 0;
 
 } elsif ($main::options{'test_database_message_buffer'}) {
-    printf
+    print
         "Deprecated.  Size of messages no longer limited by database packet size.\n";
     exit 1;
 } elsif ($main::options{'conf_2_db'}) {
@@ -574,7 +575,7 @@ if ($main::options{'dump'}) {
     }
     my $fh;
     unless (open $fh, '<', $main::options{'input_file'}) {
-        print STDERR "Unable to open %s: %s\n", $main::options{'input_file'},
+        printf STDERR "Unable to open %s: %s\n", $main::options{'input_file'},
             $ERRNO;
         exit 1;
     }
@@ -616,8 +617,9 @@ if ($main::options{'dump'}) {
     }
     my $family;
     unless ($family = Sympa::Family->new($family_name, $robot)) {
-        print STDERR
-            "The family $family_name does not exist, impossible instantiation\n";
+        printf STDERR
+            "The family %s does not exist, impossible instantiation\n",
+            $family_name;
         exit 1;
     }
 
@@ -627,7 +629,8 @@ if ($main::options{'dump'}) {
     }
 
     unless (-r $main::options{'input_file'}) {
-        print STDERR "Unable to read $main::options{'input_file'} file";
+        printf STDERR
+            "Unable to read %s file\n", $main::options{'input_file'};
         exit 1;
     }
 
@@ -666,7 +669,7 @@ if ($main::options{'dump'}) {
 
     my $family;
     unless ($family = Sympa::Family->new($family_name, $robot)) {
-        print STDERR
+        printf STDERR
             "The family %s does not exist, impossible to add a list\n",
             $family_name;
         exit 1;
@@ -705,7 +708,7 @@ if ($main::options{'dump'}) {
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and _report($spindle)) {
-        print STDERR "Impossible to add a list %s to the family %s\n",
+        printf STDERR "Impossible to add a list %s to the family %s\n",
             $hash->{config}{listname}, $family_name;
         exit 1;
     }
@@ -724,7 +727,8 @@ if ($main::options{'dump'}) {
     my $list = Sympa::List->new($main::options{'sync_include'});
 
     unless (defined $list) {
-        print STDERR "Incorrect list name $main::options{'sync_include'}\n";
+        printf STDERR
+            "Incorrect list name %s\n", $main::options{'sync_include'};
         exit 1;
     }
 
@@ -767,7 +771,7 @@ if ($main::options{'dump'}) {
     exit 0;
 
 } elsif ($main::options{'upgrade_shared'}) {
-    printf STDERR "Obsoleted.  Use upgrade_shared_repository.pl.\n";
+    print STDERR "Obsoleted.  Use upgrade_shared_repository.pl.\n";
 
     exit 0;
 } elsif ($main::options{'reload_list_config'}) {
@@ -777,8 +781,8 @@ if ($main::options{'dump'}) {
             Sympa::List->new($main::options{'list'}, '',
             {'reload_config' => 1, 'force_sync_admin' => 1});
         unless (defined $list) {
-            print STDERR
-                "Error : incorrect list name '$main::options{'list'}'\n";
+            printf STDERR
+                "Error : incorrect list name '%s'\n", $main::options{'list'};
             exit 1;
         }
     } else {
@@ -806,8 +810,9 @@ elsif ($main::options{'modify_list'}) {
 
     my $family;
     unless ($family = Sympa::Family->new($family_name, $robot)) {
-        print STDERR
-            "The family $family_name does not exist, impossible to modify the list.\n";
+        printf STDERR
+            "The family %s does not exist, impossible to modify the list.\n",
+            $family_name;
         exit 1;
     }
 
@@ -817,7 +822,8 @@ elsif ($main::options{'modify_list'}) {
     }
 
     unless (open INFILE, $main::options{'input_file'}) {
-        print STDERR "Unable to open $main::options{'input_file'}) file";
+        printf STDERR
+            "Unable to open %s file\n", $main::options{'input_file'};
         exit 1;
     }
 
@@ -855,8 +861,9 @@ elsif ($main::options{'close_family'}) {
     }
     my $family;
     unless ($family = Sympa::Family->new($family_name, $robot)) {
-        print STDERR
-            "The family $family_name does not exist, impossible family closure\n";
+        printf STDERR
+            "The family %s does not exist, impossible family closure\n",
+            $family_name;
         exit 1;
     }
 
@@ -875,7 +882,7 @@ elsif ($main::options{'sync_list_db'}) {
     if (length($listname) > 1) {
         my $list = Sympa::List->new($listname);
         unless (defined $list) {
-            print STDOUT "\nList '$listname' does not exist. \n";
+            printf STDOUT "\nList '%s' does not exist. \n", $listname;
             exit 1;
         }
         $list->_update_list_db;
