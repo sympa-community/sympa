@@ -384,7 +384,7 @@ Auxiliary program to update alias database.
 
 L<Sympa::Aliases>,
 L<Sympa::Aliases::CheckSMTP>,
-L<sympa_newaliases(8)>.
+L<sympa_newaliases(1)>.
 
 =head1 HISTORY
 

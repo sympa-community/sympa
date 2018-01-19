@@ -2852,7 +2852,7 @@ Introduced on Sympa 6.2.17.
 
 =head1 SEE ALSO
 
-L<config(5)>,
+L<list_config(5)>,
 L<Sympa::List::Config>,
 L<Sympa::ListOpt>.
 

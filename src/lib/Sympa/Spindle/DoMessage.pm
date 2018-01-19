@@ -192,7 +192,7 @@ TBD
 
 =head2 Public methods
 
-See also L<Sympa::Spindle::Incoming/"Public methods">.
+See also L<Sympa::Spindle::ProcessIncoming/"Public methods">.
 
 =over
 
