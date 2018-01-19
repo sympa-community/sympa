@@ -5681,11 +5681,10 @@ sub _load_list_members_from_include {
         }
 
         if ($include_member and %$include_member) {
-            my @types = keys %{$include_member};
-            my $type  = $types[0];                    #FIXME: Gets random key?
-            my @defs  = @{$include_member->{$type}};
-            my $def   = $defs[0];
-            push @{$sources->{$type}}, $def;
+            foreach my $type (@sources_providing_listmembers) {
+                my $defs = $include_member->{$type};
+                push @{$sources->{$type}}, @$defs if $defs and @$defs;
+            }
         }
     }
 
