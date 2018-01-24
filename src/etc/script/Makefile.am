@@ -67,7 +67,7 @@ sympa: sympa.in Makefile
 	$(AM_V_GEN)$(SED) \
 		-e 's|--USER--|$(USER)|' \
 		-e 's|--GROUP--|$(GROUP)|' \
-		-e 's|--libexecdir--|$(libexecdir)|' \
+		-e 's|--execcgidir--|$(execcgidir)|' \
 		-e 's|--piddir--|$(piddir)|' \
 		-e 's|--sbindir--|$(sbindir)|' \
 		< $(srcdir)/$@in > $@
