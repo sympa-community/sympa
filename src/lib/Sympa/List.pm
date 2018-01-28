@@ -2770,7 +2770,7 @@ sub get_next_list_member {
 
 =over
 
-=item get_admins ( $role, [ filter => \@filters ] )
+=item get_admins ( $role, [ filter =E<gt> \@filters ], [ no_cache =E<gt> 1 ] )
 
 I<Instance method>.
 Gets users of the list with one of following roles.
@@ -2813,7 +2813,15 @@ Optional filter may be:
 
 Limit result to the user with their e-mail $email.
 
+=item [subscribed =E<gt> $boolean]
+
+Limit result to the user be configured in list config file.
+
 =back
+
+Optional C<no_cache> option disables caching on memory and gets recent
+information from dataase.
+Note that this option should be used carefully.
 
 Returns:
 
@@ -2831,12 +2839,24 @@ sub get_admins {
     my $role    = lc(shift || '');
     my %options = @_;
 
-    my $admin_user = $self->_get_admins;
+    my $admin_user = $self->_cache_get('admin_user')
+        unless $options{no_cache};
+    unless ($admin_user and @{$admin_user || []}) {
+        $admin_user = $self->_get_admins;   # Get recent admins from database
+        if ($admin_user) {
+            $self->_cache_put('admin_user', $admin_user);
+        } else {
+            # If failed, reuse cache probably outdated.
+            $admin_user = $self->{_cached}{admin_user};
+        }
+    }
     return unless $admin_user;    # Returns void.
 
     my %query = @{$options{filter} || []};
     $query{email} = Sympa::Tools::Text::canonic_email($query{email})
         if defined $query{email};
+    $query{subscribed} = !!$query{subscribed}
+        if exists $query{subscribed};
 
     my @users;
     if ($role eq 'editor') {
@@ -2882,16 +2902,16 @@ sub get_admins {
     if (defined $query{email}) {
         @users = grep { ($_->{email} || '') eq $query{email} } @users;
     }
+    if (exists $query{subscribed}) {
+        @users = grep { !!($_->{subscribed}) eq $query{subscribed} } @users;
+    }
 
     return wantarray ? @users : [@users];
 }
 
+# Get recent admins from database.
 sub _get_admins {
     my $self = shift;
-
-    my $admin_user = $self->_cache_get('admin_user');
-    return $admin_user
-        if $admin_user and @{$admin_user || []};
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
@@ -2919,10 +2939,9 @@ sub _get_admins {
         )
         ) {
         $log->syslog('err', 'Unable to get admins for list %s', $self);
-        # Return cache probably outdated.
-        return $self->{_cached}{admin_user};
+        return undef;
     }
-    $admin_user = $sth->fetchall_arrayref({}) || [];
+    my $admin_user = $sth->fetchall_arrayref({}) || [];
     $sth->finish;
 
     foreach my $user (@$admin_user) {
@@ -2935,7 +2954,7 @@ sub _get_admins {
         $user->{'update_date'} ||= $user->{'date'};
     }
 
-    return $self->_cache_put('admin_user', $admin_user);
+    return $admin_user;
 }
 
 =over

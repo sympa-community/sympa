@@ -10785,6 +10785,26 @@ sub do_edit_list_request {
 
     return 1 unless $in{'group'};
 
+    # Sync owner/editor in list config with database. FIXME
+    my $static_owner =
+        $list->get_admins('owner', no_cache => 1, filter => [subscribed => 1]);
+    if ($static_owner) {
+        my @subparams = qw(email gecos info profile reception visibility);
+        foreach my $u (@$static_owner) {
+            $u = {map { $_ => $u->{$_} } @subparams};
+        }
+        $list->{'admin'}{'owner'} = $static_owner;
+    }
+    my $static_editor =
+        $list->get_admins('editor', no_cache => 1, filter => [subscribed => 1]);
+    if ($static_editor) {
+        my @subparams = qw(email gecos info reception visibility);
+        foreach my $u (@$static_editor) {
+            $u = {map { $_ => $u->{$_} } @subparams};
+        }
+        $list->{'admin'}{'editor'} = $static_editor;
+    }
+
     my $config = Sympa::List::Config->new($list, config => $list->{'admin'});
     my $schema = $config->get_schema($param->{'user'}{'email'});
 
