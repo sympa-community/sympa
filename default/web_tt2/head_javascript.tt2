@@ -43,25 +43,16 @@ var lang = '[% lang %]';
 <script type="text/javascript" src="[% static_content_url %]/external/html5shiv/html5shiv.js"></script>
 <![endif]-->
 <script type="text/javascript" src="[% static_content_url %]/external/respondjs/respond.min.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/vendor/modernizr.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/vendor/fastclick.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/vendor/placeholder.js"></script>
-[%IF 0%]<script src="[% static_content_url %]/external/foundation/js/vendor/jquery.js"></script>[%END%]
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.topbar.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.reveal.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.tooltip.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.accordion.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/responsive-tables.js"></script>
+[%IF 0%]<script src="[% static_content_url %]/external/foundation/js/vendor/jquery.js"></script>[%END~%]
+<script src="[% static_content_url %]/external/foundation/js/vendor/what-input.js"></script>
+<script src="[% static_content_url %]/external/foundation/js/vendor/foundation.min.js"></script>
 [%# Loading foundation. ~%]
 <script>
 <!--
-$(function() {
 $(document).foundation({
     topbar: {
         back_text: '<i class="fa fa-undo"></i> [%|loc%]Back[%END%]'
     }
-});
 });
 //-->
 </script>
