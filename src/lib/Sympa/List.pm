@@ -6966,7 +6966,7 @@ sub sync_include_admin {
     foreach my $role ('owner', 'editor') {
         ## Load a hash with the old admin users
         my $old_admin_users =
-            {map { ($_->{'email'} => $_) } $self->get_admins($role)};
+            {map { ($_->{'email'} => $_) } $self->get_admins($role, no_cache => 1)};
 
         ## Load a hash with the new admin user list from an include source(s)
         my $new_admin_users_include;
