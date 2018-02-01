@@ -13,10 +13,13 @@ function refresh_mom_and_die() {
 /* Show error dialog.  It may be closed only when javascript is enabled. */
 $(function() {
     var closeButton =
-        $('<a class="close-reveal-modal" aria-label="' + sympa.closeText
-            + '">&#215;</a>');
+        $('<a class="close-button" data-close aria-label="' + sympa.closeText
+            + '" aria-hidden="true">&times;</a>');
     $('#ErrorMsg').append(closeButton);
-    $('#ErrorMsg').foundation('reveal', 'open');
+    $('#ErrorMsg').each(function(){
+        var revealModal = new Foundation.Reveal($(this));
+        revealModal.open();
+    });
 });
 
 /*
