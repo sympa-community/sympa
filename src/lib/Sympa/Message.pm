@@ -3271,7 +3271,7 @@ __END__
 
 Sympa::Message - Mail message embedding for internal use in Sympa
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Sympa::Message;
   my $message = Sympa::Message->new($serialized, context => $list);
@@ -3374,7 +3374,7 @@ L</replace_header>() to modify header.
 
 I<Instance method>.
 Gets spam status according to spam_status scenario
-and sets it as {smap_status} attribute.
+and sets it as {spam_status} attribute.
 
 =item dkim_sign ( dkim_d =E<gt> $d, [ dkim_i =E<gt> $i ],
 dkim_selector =E<gt> $selector, dkim_privatekey =E<gt> $privatekey )
@@ -3391,7 +3391,7 @@ and sets or clears {dkim_pass} item of the message object.
 =item remove_invalid_dkim_signature ( )
 
 I<Instance method>.
-Verifys DKIM signatures included in the message,
+Verifies DKIM signatures included in the message,
 and if any of them are invalid, removes them.
 
 =item as_entity ( )
@@ -3556,7 +3556,7 @@ them.
 I<Instance method>.
 Decrypts message using private key of user.
 
-Note that this method modifys Message object.
+Note that this method modifies Message object.
 
 Parameters:
 
@@ -3573,7 +3573,7 @@ If decrypting succeeded, {smime_crypted} item is set.
 I<Instance method>.
 Encrypts message using certificate of user.
 
-Note that this method modifys Message object.
+Note that this method modifies Message object.
 
 Parameters:
 
@@ -3608,7 +3608,7 @@ Otherwise false value.
 =item check_smime_signature ( )
 
 I<Instance method>.
-Verifys S/MIME signature of the message,
+Verifies S/MIME signature of the message,
 and if verification succeeded, sets {smime_signed} item true.
 
 Parameters:
@@ -4087,6 +4087,6 @@ was initially written by Chris Hastie.  It appeared on Sympa 4.2b.1.
 
   (c) Chris Hastie 2004 - 2008.
 
-Renamed and merged L<Sympa::Message> appeard on Sympa 6.2.
+Renamed and merged L<Sympa::Message> appeared on Sympa 6.2.
 
 =cut

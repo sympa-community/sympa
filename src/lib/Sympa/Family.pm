@@ -345,6 +345,12 @@ sub modify_list {
     }
 
     my $hash_list = $config->getHash();
+    # Compatibility: single topic on 6.2.24 or earlier.
+    $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
+    # In old documentation "moderator" was single or multiple editors.
+    my $mod = $hash_list->{config}{moderator};
+    $hash_list->{config}{editor} ||=
+        (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
     #getting list
     my $list;
@@ -874,6 +880,12 @@ sub instantiate {
 
         ## stores the list config into the hash referenced by $hash_list.
         my $hash_list = $config->getHash();
+        # Compatibility: single topic on 6.2.24 or earlier.
+        $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
+        # In old documentation "moderator" was single or multiple editors.
+        my $mod = $hash_list->{config}{moderator};
+        $hash_list->{config}{editor} ||=
+            (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
         if ($list) {
             ## LIST ALREADY EXISTING
@@ -1056,6 +1068,12 @@ sub instantiate {
                 next;
             }
             my $hash_list = $config->getHash();
+            # Compatibility: single topic on 6.2.24 or earlier.
+            $hash_list->{config}{topics} ||= $hash_list->{config}{topic};
+            # In old documentation "moderator" was single or multiple editors.
+            my $mod = $hash_list->{config}{moderator};
+            $hash_list->{config}{editor} ||=
+            (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
 
             my $result = $self->_update_existing_list($list, $hash_list);
             unless (defined $result) {

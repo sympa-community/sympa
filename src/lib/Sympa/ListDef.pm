@@ -337,6 +337,8 @@ our %pinfo = (
         order        => 20.02,
         'group'      => 'sending',
         'gettext_id' => "Delivery time (hh:mm)",
+        'gettext_comment' =>
+            'If this parameter is present, non-digest messages will be delivered to subscribers at this time: When this time has been past, delivery is postponed to the same time in next day.',
         'format'     => '[0-2]?\d\:[0-6]\d',
         'occurrence' => '0-1',
         'length'     => 5
@@ -1686,7 +1688,7 @@ our %pinfo = (
             'Sympa caches user data extracted using the include parameter. Their TTL (time-to-live) within Sympa can be controlled using this parameter. The default value is 3600',
         'gettext_unit' => 'seconds',
         'format'       => '\d+',
-        'default'      => 3600,
+        'default'      => {'conf' => 'default_ttl'},
         'length'       => 6
     },
 
@@ -2744,7 +2746,7 @@ Title reference in NLS catalogs.
 
 =item gettext_comment
 
-Deescription text of a parameter.
+Description text of a parameter.
 
 =item group
 
@@ -2811,7 +2813,7 @@ The time in second from Unix epoch.
 
 =item C<'visibility'>
 
-Visibility mode of list memeber.
+Visibility mode of list member.
 
 =back
 
@@ -2842,7 +2844,7 @@ Introduced on Sympa 6.2.17.
 I<Automatically assigned>.
 TBD.
 
-Introdueced on Sympa 6.2.17.
+Introduced on Sympa 6.2.17.
 
 =back
 
@@ -2850,7 +2852,7 @@ Introdueced on Sympa 6.2.17.
 
 =head1 SEE ALSO
 
-L<config(5)>,
+L<list_config(5)>,
 L<Sympa::List::Config>,
 L<Sympa::ListOpt>.
 

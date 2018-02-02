@@ -440,7 +440,7 @@ Gets next packet to process, order is controlled by message priority, then by
 packet priority, then by delivery date, then by reception date.
 Packets with future delivery date are ignored
 (if C<no_filter> option is I<not> set).
-Packet will be locked to prevent multiple proccessing of a single packet.
+Packet will be locked to prevent multiple processing of a single packet.
 
 Parameters:
 

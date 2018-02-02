@@ -499,7 +499,7 @@ Returns formatted (and encoded) name-addr as RFC5322 3.4.
 I<Function>.
 Returns canonical form of e-mail address.
 
-Leading and trailing whilte spaces are removed.
+Leading and trailing white spaces are removed.
 Latin letters without accents are lower-cased.
 
 For malformed inputs returns C<undef>.

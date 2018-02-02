@@ -565,7 +565,7 @@ msgid ""
 "\" script bundled in OpenSSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1844
+#: src/lib/Sympa/ConfDef.pm:1851
 #, fuzzy
 msgid ""
 "Do not set unless you want to use DMARC protection.\n"
@@ -578,7 +578,7 @@ msgstr ""
 "erabili dmark_* modurik DNS katxea ez baduzu, jasotako mezu bakoitzeko DNS "
 "eskaera bat egiten delako."
 
-#: src/lib/Sympa/ConfDef.pm:1889
+#: src/lib/Sympa/ConfDef.pm:1896
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -587,7 +587,7 @@ msgid ""
 "standard port (25) will be used."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1894
+#: src/lib/Sympa/ConfDef.pm:1901
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -865,7 +865,7 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1662 src/lib/Sympa/ConfDef.pm:276
-#: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:600
+#: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:602
 msgid "bytes"
 msgstr "byteak"
 
@@ -969,11 +969,11 @@ msgstr "Ezin da 0 izan."
 #: src/lib/Sympa/ConfDef.pm:358 src/lib/Sympa/ConfDef.pm:450
 #: src/lib/Sympa/ConfDef.pm:458 src/lib/Sympa/ConfDef.pm:466
 #: src/lib/Sympa/ConfDef.pm:789 src/lib/Sympa/ConfDef.pm:810
-#: src/lib/Sympa/ConfDef.pm:817 src/lib/Sympa/ListDef.pm:1098
-#: src/lib/Sympa/ListDef.pm:1350 src/lib/Sympa/ListDef.pm:1475
-#: src/lib/Sympa/ListDef.pm:1522 src/lib/Sympa/ListDef.pm:1687
-#: src/lib/Sympa/ListDef.pm:1699 src/lib/Sympa/ListDef.pm:1792
-#: src/lib/Sympa/ListDef.pm:1922 src/lib/Sympa/ListDef.pm:1969
+#: src/lib/Sympa/ConfDef.pm:817 src/lib/Sympa/ListDef.pm:1100
+#: src/lib/Sympa/ListDef.pm:1352 src/lib/Sympa/ListDef.pm:1477
+#: src/lib/Sympa/ListDef.pm:1524 src/lib/Sympa/ListDef.pm:1689
+#: src/lib/Sympa/ListDef.pm:1701 src/lib/Sympa/ListDef.pm:1794
+#: src/lib/Sympa/ListDef.pm:1924 src/lib/Sympa/ListDef.pm:1971
 msgid "seconds"
 msgstr "segundu"
 
@@ -1192,11 +1192,11 @@ msgstr ""
 #: default/web_tt2/my.tt2:48 default/web_tt2/nav.tt2:129
 #: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:102
 #: default/web_tt2/suspend_request.tt2:61 src/lib/Sympa/ConfDef.pm:586
-#: src/lib/Sympa/ListDef.pm:840
+#: src/lib/Sympa/ListDef.pm:842
 msgid "Archives"
 msgstr "Artxiboak"
 
-#: src/lib/Sympa/ConfDef.pm:590 src/lib/Sympa/ListDef.pm:803
+#: src/lib/Sympa/ConfDef.pm:590 src/lib/Sympa/ListDef.pm:805
 msgid "Store distributed messages into archive"
 msgstr "Gorde bidalitako mezuak artxiboan"
 
@@ -1205,9 +1205,9 @@ msgstr "Gorde bidalitako mezuak artxiboan"
 msgid "Default disk quota for lists' archive"
 msgstr "Partekatutako biltegiarentzako defektuzko disko kuota"
 
-#: src/lib/Sympa/ConfDef.pm:1564 src/lib/Sympa/ConfDef.pm:599
-#: src/lib/Sympa/ListDef.pm:790 src/lib/Sympa/ListDef.pm:822
-#: src/lib/Sympa/ListDef.pm:872
+#: default/web_tt2/modindex.tt2:102 src/lib/Sympa/ConfDef.pm:1564
+#: src/lib/Sympa/ConfDef.pm:599 src/lib/Sympa/ListDef.pm:792
+#: src/lib/Sympa/ListDef.pm:824 src/lib/Sympa/ListDef.pm:874
 msgid "Kbytes"
 msgstr "Kbytes"
 
@@ -1251,7 +1251,7 @@ msgstr "Erreboteen kudeaketa"
 msgid "Default bounce warn rate"
 msgstr "Defektuzko balioa: roboten bounce_warn_rate parametroa"
 
-#: src/lib/Sympa/ConfDef.pm:639 src/lib/Sympa/ListDef.pm:918
+#: src/lib/Sympa/ConfDef.pm:639 src/lib/Sympa/ListDef.pm:920
 msgid ""
 "The list owner receives a warning whenever a message is distributed and the "
 "number (percentage) of bounces exceeds this value."
@@ -1264,7 +1264,7 @@ msgstr ""
 msgid "Default bounce halt rate"
 msgstr "Defektuzko balioa: roboten bounce_halt_rate parametroa"
 
-#: src/lib/Sympa/ConfDef.pm:648 src/lib/Sympa/ListDef.pm:928
+#: src/lib/Sympa/ConfDef.pm:648 src/lib/Sympa/ListDef.pm:930
 msgid ""
 "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
 "will be halted, i.e. they are retained for subsequent moderation."
@@ -1312,8 +1312,8 @@ msgstr "egun hauek pasatzean jarraipen datuak ezabatzen dira"
 #: src/lib/Sympa/ConfDef.pm:1111 src/lib/Sympa/ConfDef.pm:1118
 #: src/lib/Sympa/ConfDef.pm:1125 src/lib/Sympa/ConfDef.pm:682
 #: src/lib/Sympa/ConfDef.pm:753 src/lib/Sympa/ConfDef.pm:760
-#: src/lib/Sympa/ListDef.pm:1054 src/lib/Sympa/ListDef.pm:2273
-#: src/lib/Sympa/ListDef.pm:355
+#: src/lib/Sympa/ListDef.pm:1056 src/lib/Sympa/ListDef.pm:2275
+#: src/lib/Sympa/ListDef.pm:357
 msgid "days"
 msgstr "egun"
 
@@ -1322,7 +1322,7 @@ msgstr "egun"
 msgid "Remove bouncing new subscribers"
 msgstr "errebotatzen duten erabiltzaileak kendu"
 
-#: src/lib/Sympa/ConfDef.pm:690 src/lib/Sympa/ListDef.pm:1067
+#: src/lib/Sympa/ConfDef.pm:690 src/lib/Sympa/ListDef.pm:1069
 msgid ""
 "If set to unique, the welcome message is sent using a unique return path in "
 "order to remove the subscriber immediately in the case of a bounce."
@@ -1335,11 +1335,11 @@ msgstr ""
 msgid "Remove subscribers bouncing remind message"
 msgstr "Harpidetzaren oroitzapen periodikoaren ataza"
 
-#: src/lib/Sympa/ConfDef.pm:697 src/lib/Sympa/ListDef.pm:1077
+#: src/lib/Sympa/ConfDef.pm:697 src/lib/Sympa/ListDef.pm:1079
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr "welcome_return_path-en berdina, baina oroitzapen mezuetara aplikatuta."
 
-#: src/lib/Sympa/ConfDef.pm:700 src/lib/Sympa/ListDef.pm:2373
+#: src/lib/Sympa/ConfDef.pm:700 src/lib/Sympa/ListDef.pm:2375
 msgid "Periodical subscription reminder task"
 msgstr "Harpidetzaren oroitzapen periodikoaren ataza"
 
@@ -1909,9 +1909,8 @@ msgid "File containing task_manager PID while running"
 msgstr ""
 "Symparen exekuzioan zehar task_manager-aren PID-a gordeko den fitxategia"
 
-#: src/lib/Sympa/ConfDef.pm:1154
-#, fuzzy
-msgid "Miscelaneous"
+#: default/web_tt2/nav.tt2:141 src/lib/Sympa/ConfDef.pm:1154
+msgid "Miscellaneous"
 msgstr "Denetarik"
 
 #: src/lib/Sympa/ConfDef.pm:1158
@@ -1965,7 +1964,7 @@ msgid "Number of months that elapse before a log is expired"
 msgstr "Log bat iraungitzeko pasako diren hilabete kopurua"
 
 #: src/lib/Sympa/ConfDef.pm:1218 src/lib/Sympa/ConfDef.pm:1226
-#: src/lib/Sympa/ListDef.pm:880
+#: src/lib/Sympa/ListDef.pm:882
 msgid "months"
 msgstr ""
 
@@ -1989,7 +1988,7 @@ msgid ""
 "interpreted as an octal value."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1239 src/lib/Sympa/ListDef.pm:2282
+#: src/lib/Sympa/ConfDef.pm:1239 src/lib/Sympa/ListDef.pm:2284
 msgid "Secret string for generating unique keys"
 msgstr "Gako bakarrak sortzeko sekretua"
 
@@ -2147,7 +2146,7 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1518
 #, fuzzy
-msgid "Web interface parameters: Miscelaneous"
+msgid "Web interface parameters: Miscellaneous"
 msgstr "Web interfazearen parametroak"
 
 #: src/lib/Sympa/ConfDef.pm:1525
@@ -2345,52 +2344,65 @@ msgstr ""
 msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr "include_sql_query sinkronizazio bat egiteko defektuzko denbora muga."
 
-#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1758
+#: src/lib/Sympa/ConfDef.pm:1758
+#, fuzzy
+msgid "Default of inclusion timeout"
+msgstr "Txertatzeen denbora muga"
+
+#: src/lib/Sympa/ConfDef.pm:1760
+msgid ""
+"Default timeout between two scheduled synchronizations of list members with "
+"data sources."
+msgstr ""
+"Datu iturridun kideen zerrenden programatutako sinkronizazioen arteko "
+"defektuzko denbora muga."
+
+#: default/web_tt2/nav.tt2:135 src/lib/Sympa/ConfDef.pm:1765
 msgid "DKIM"
 msgstr "DKIM"
 
-#: src/lib/Sympa/ConfDef.pm:1760
+#: src/lib/Sympa/ConfDef.pm:1767
 msgid ""
 "DKIM signature verification and re-signing. It requires an external module: "
 "Mail-DKIM."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1764
+#: src/lib/Sympa/ConfDef.pm:1771
 msgid "Enable DKIM"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1766
+#: src/lib/Sympa/ConfDef.pm:1773
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1773
+#: src/lib/Sympa/ConfDef.pm:1780
 msgid "Which service messages to be signed"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1775
+#: src/lib/Sympa/ConfDef.pm:1782
 #, fuzzy
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
 msgstr "Mezuan robotaren, zerrendaren edo bien DKIM sinadura txertatu"
 
-#: src/lib/Sympa/ConfDef.pm:1782
+#: src/lib/Sympa/ConfDef.pm:1789
 #, fuzzy
 msgid "File path for DKIM private key"
 msgstr "Zerrendako DKIM gako pribatuaren fitxategiaren bidea"
 
-#: src/lib/Sympa/ConfDef.pm:1784
+#: src/lib/Sympa/ConfDef.pm:1791
 #, fuzzy
 msgid "The file must contain a PEM encoded private key"
 msgstr "Fitxategiak RSA pem kodeketadun gako pribatua izan behar du"
 
-#: src/lib/Sympa/ConfDef.pm:1791
+#: src/lib/Sympa/ConfDef.pm:1798
 msgid "Which messages delivered via lists to be signed"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1793
+#: src/lib/Sympa/ConfDef.pm:1800
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -2399,12 +2411,12 @@ msgid ""
 "\"editor_validated_messages\"."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1800
+#: src/lib/Sympa/ConfDef.pm:1807
 #, fuzzy
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr "4871 rfc-an definitutako \"i=\" etiketa, defektuz null"
 
-#: src/lib/Sympa/ConfDef.pm:1802
+#: src/lib/Sympa/ConfDef.pm:1809
 #, fuzzy
 msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. Default is virtual "
@@ -2413,21 +2425,21 @@ msgstr ""
 "DKIM \"d=\" etiketa entitate sinatzailearen domeinua da. Zerrendaren "
 "domeinua \"d=\" domeinuan egon BEHAR du"
 
-#: src/lib/Sympa/ConfDef.pm:1808
+#: src/lib/Sympa/ConfDef.pm:1815
 #, fuzzy
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr "4871 rfc-an definitutako \"i=\" etiketa, defektuz null"
 
-#: src/lib/Sympa/ConfDef.pm:1809
+#: src/lib/Sympa/ConfDef.pm:1816
 #, fuzzy
 msgid "Default is null."
 msgstr "Defektuzko balioa:"
 
-#: src/lib/Sympa/ConfDef.pm:1814 src/lib/Sympa/ListDef.pm:2135
+#: src/lib/Sympa/ConfDef.pm:1821 src/lib/Sympa/ListDef.pm:2137
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "DKIM gakok publikorako DNS bilaketaren hautatzailea"
 
-#: src/lib/Sympa/ConfDef.pm:1816
+#: src/lib/Sympa/ConfDef.pm:1823
 #, fuzzy
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
@@ -2438,12 +2450,12 @@ msgstr ""
 "da. Nahi duzun balioa jar dezakezu, baina egiaztatu <hautatzailea>."
 "_domainkey.your_domain erabiliz DKIM gako publikoa eskuratu dezakezula"
 
-#: src/lib/Sympa/ConfDef.pm:1832
+#: src/lib/Sympa/ConfDef.pm:1839
 #, fuzzy
 msgid "DMARC protection"
 msgstr "DMARC babesa"
 
-#: src/lib/Sympa/ConfDef.pm:1834
+#: src/lib/Sympa/ConfDef.pm:1841
 #, fuzzy
 msgid ""
 "Processes originator addresses to avoid some domains' excessive DMARC "
@@ -2452,24 +2464,24 @@ msgstr ""
 "'Nork' helbidea nola kudeatzeko parametroa, domeinu batzuen gehiegizko DMARC "
 "babesa saihesteko."
 
-#: src/lib/Sympa/ConfDef.pm:1838
+#: src/lib/Sympa/ConfDef.pm:1845
 msgid "Test mode(s) for DMARC Protection"
 msgstr "DMARC babeserako froga modua(k)"
 
-#: src/lib/Sympa/ConfDef.pm:1847
+#: src/lib/Sympa/ConfDef.pm:1854
 #, fuzzy
 msgid "Regular expression for domain name match"
 msgstr "Domeinu izenarentzako expresio erregularra"
 
-#: src/lib/Sympa/ConfDef.pm:1852
+#: src/lib/Sympa/ConfDef.pm:1859
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr "Hau \"domain_regex\" babes moduan erabiltzen da."
 
-#: src/lib/Sympa/ConfDef.pm:1855 src/lib/Sympa/ListDef.pm:2245
+#: src/lib/Sympa/ConfDef.pm:1862 src/lib/Sympa/ListDef.pm:2247
 msgid "New From name format"
 msgstr "'Nork' izen berriaren formatua"
 
-#: src/lib/Sympa/ConfDef.pm:1857
+#: src/lib/Sympa/ConfDef.pm:1864
 #, fuzzy
 msgid ""
 "This is the format to be used for the sender name part of the new From "
@@ -2478,32 +2490,32 @@ msgstr ""
 "Hau 'Nork' goiburu berriko bidaltzailearen izen zatirako erabiliko den "
 "formatua da."
 
-#: src/lib/Sympa/ConfDef.pm:1864 src/lib/Sympa/ListDef.pm:2229
+#: src/lib/Sympa/ConfDef.pm:1871 src/lib/Sympa/ListDef.pm:2231
 msgid "New From address"
 msgstr "'Nork' helbide berria"
 
-#: src/lib/Sympa/ConfDef.pm:1870
+#: src/lib/Sympa/ConfDef.pm:1877
 #, fuzzy
 msgid "List address verification"
 msgstr "Ziurtagiriaren iraungitze data"
 
-#: src/lib/Sympa/ConfDef.pm:1872
+#: src/lib/Sympa/ConfDef.pm:1879
 msgid ""
 "Checks if ailias with the same name as the list to be created already exists "
 "on the SMTP server. This feature requires external module: Net-SMTP."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1878
+#: src/lib/Sympa/ConfDef.pm:1885
 #, fuzzy
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr "Aliasa egiaztatzeko erabiliko den SMTP HELO (EHLO) parametroa"
 
-#: src/lib/Sympa/ConfDef.pm:1881
+#: src/lib/Sympa/ConfDef.pm:1888
 #, fuzzy
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr "Defektuz list_check_smtp pamaetroaren ostalari zatia."
 
-#: src/lib/Sympa/ConfDef.pm:1886
+#: src/lib/Sympa/ConfDef.pm:1893
 #, fuzzy
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
@@ -2512,19 +2524,19 @@ msgstr ""
 "Sortuko den zerrendaren izen berdina duen aliasa dagoen egiaztatzeko  SMTP "
 "zerbitzaria"
 
-#: src/lib/Sympa/ConfDef.pm:1892
+#: src/lib/Sympa/ConfDef.pm:1899
 msgid "Address suffixes to verify"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1900
+#: src/lib/Sympa/ConfDef.pm:1907
 msgid "Antivirus plug-in"
 msgstr "Antibirus plugina"
 
-#: src/lib/Sympa/ConfDef.pm:1905
+#: src/lib/Sympa/ConfDef.pm:1912
 msgid "Path to the antivirus scanner engine"
 msgstr "Antibirus miaketa motorraren bidea"
 
-#: src/lib/Sympa/ConfDef.pm:1910
+#: src/lib/Sympa/ConfDef.pm:1917
 #, fuzzy
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
@@ -2533,33 +2545,33 @@ msgstr ""
 "erabili daitezkeen antibirusak: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and "
 "Trend Micro/VirusWall"
 
-#: src/lib/Sympa/ConfDef.pm:1915
+#: src/lib/Sympa/ConfDef.pm:1922
 #, fuzzy
 msgid "Antivirus plugin command line arguments"
 msgstr "Antibirus pluginaren komando argumentuak"
 
-#: src/lib/Sympa/ConfDef.pm:1922
+#: src/lib/Sympa/ConfDef.pm:1929
 msgid "Notify sender if virus checker detects malicious content"
 msgstr "Bidaltzailea ohartarazi eduki gaiztoa topatzen bada"
 
-#: src/lib/Sympa/ConfDef.pm:1926
+#: src/lib/Sympa/ConfDef.pm:1933
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1931 src/lib/Sympa/ConfDef.pm:1937
+#: src/lib/Sympa/ConfDef.pm:1938 src/lib/Sympa/ConfDef.pm:1944
 #, fuzzy
 msgid "Password validation"
 msgstr "Pasahitz berria berriz:"
 
-#: src/lib/Sympa/ConfDef.pm:1933
+#: src/lib/Sympa/ConfDef.pm:1940
 msgid ""
 "Checks if the password the users sbmitted has sufficient strength. This "
 "feature requires external module: Data-Password."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1939
+#: src/lib/Sympa/ConfDef.pm:1946
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password (http://search."
@@ -2569,24 +2581,24 @@ msgstr ""
 "teknikak.Aukerak Data::Passwork-etik datoz (http://search.cpan.org/~razinf/"
 "Data-Password-1.07/Password.pm#VARIABLES)"
 
-#: src/lib/Sympa/ConfDef.pm:1947
+#: src/lib/Sympa/ConfDef.pm:1954
 #, fuzzy
 msgid "Authentication with LDAP"
 msgstr "Autentifikazio laguntza"
 
-#: src/lib/Sympa/ConfDef.pm:1949
+#: src/lib/Sympa/ConfDef.pm:1956
 msgid ""
 "Authnticates users based on the directory on LDAP server. This feature "
 "requires external module: Net-LDAP. And also, if secure connection (LDAPS) "
 "is required: IO-Socket-SSL."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1954
+#: src/lib/Sympa/ConfDef.pm:1961
 #, fuzzy
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Ezin autentifikazio zerbitzutik zure eposta helbidea lortu."
 
-#: src/lib/Sympa/ConfDef.pm:1956
+#: src/lib/Sympa/ConfDef.pm:1963
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -2598,48 +2610,40 @@ msgstr ""
 "emandako emaila erabiliko da erabiltzailea autentifikatzeko. Bestela LDAP "
 "zerbitzariak emandako lehenbiziko eposta erabiliko da."
 
-#: src/lib/Sympa/ConfDef.pm:1961
+#: src/lib/Sympa/ConfDef.pm:1968
 #, fuzzy
 msgid "SOAP HTTP interface"
 msgstr "Web interfazea"
 
-#: src/lib/Sympa/ConfDef.pm:1963
+#: src/lib/Sympa/ConfDef.pm:1970
 msgid ""
 "Provides some functions of Sympa through SOAP HTTP interface. This feature "
 "requires external module: SOAP-Lite."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1968
+#: src/lib/Sympa/ConfDef.pm:1975
 msgid "URL of SympaSOAP"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1972
+#: src/lib/Sympa/ConfDef.pm:1979
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1975
+#: src/lib/Sympa/ConfDef.pm:1982
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1982
+#: src/lib/Sympa/ConfDef.pm:1989
 #, fuzzy
 msgid "Obsoleted parameters"
 msgstr "pertsonalizatutako parametroak"
 
-#: src/lib/Sympa/ConfDef.pm:2011
+#: src/lib/Sympa/ConfDef.pm:2018
 msgid ""
 "Defines the prefix allowing to recognize that a list is an automatic list."
 msgstr "Zerrenda bat automatikoa dela jakiteko erabiltzen den aurrizkia."
 
-#: src/lib/Sympa/ConfDef.pm:2017
-msgid ""
-"Default timeout between two scheduled synchronizations of list members with "
-"data sources."
-msgstr ""
-"Datu iturridun kideen zerrenden programatutako sinkronizazioen arteko "
-"defektuzko denbora muga."
-
-#: src/lib/Sympa/ConfDef.pm:2023
+#: src/lib/Sympa/ConfDef.pm:2024
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -2647,11 +2651,11 @@ msgstr ""
 "Datu iturridun kideen zerrenden ekintzengatik aktibatutako sinkronizazioen "
 "arteko defektuzko denbora muga."
 
-#: src/lib/Sympa/ConfDef.pm:2038
+#: src/lib/Sympa/ConfDef.pm:2039
 msgid "Enable FastCGI"
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:2042
+#: src/lib/Sympa/ConfDef.pm:2043
 #, fuzzy
 msgid ""
 "Is FastCGI module for HTTP server installed. This module provide much faster "
@@ -2737,13 +2741,13 @@ msgstr "profila"
 
 #: src/lib/Sympa/ListDef.pm:114 src/lib/Sympa/ListDef.pm:149
 #: src/lib/Sympa/ListDef.pm:190 src/lib/Sympa/ListDef.pm:237
-#: src/lib/Sympa/ListDef.pm:394 src/lib/Sympa/ListDef.pm:421
+#: src/lib/Sympa/ListDef.pm:396 src/lib/Sympa/ListDef.pm:423
 msgid "reception mode"
 msgstr "jasotze modua"
 
 #: src/lib/Sympa/ListDef.pm:121 src/lib/Sympa/ListDef.pm:156
 #: src/lib/Sympa/ListDef.pm:197 src/lib/Sympa/ListDef.pm:244
-#: src/lib/Sympa/ListDef.pm:435
+#: src/lib/Sympa/ListDef.pm:437
 msgid "visibility"
 msgstr "ikusgaitasuna"
 
@@ -2820,35 +2824,35 @@ msgstr "Zeinek bidali ahal ditu mezuak"
 msgid "Delivery time (hh:mm)"
 msgstr "Bidalketa ordua (oo:mm)"
 
-#: src/lib/Sympa/ListDef.pm:348
+#: src/lib/Sympa/ListDef.pm:350
 msgid "Digest frequency"
 msgstr "Bilduma maiztasuna"
 
-#: src/lib/Sympa/ListDef.pm:363
+#: src/lib/Sympa/ListDef.pm:365
 msgid "hour"
 msgstr "ordu"
 
-#: src/lib/Sympa/ListDef.pm:370
+#: src/lib/Sympa/ListDef.pm:372
 msgid "minute"
 msgstr "minutu"
 
-#: src/lib/Sympa/ListDef.pm:381
+#: src/lib/Sympa/ListDef.pm:383
 msgid "Digest maximum number of messages"
 msgstr "Bildumako mezu kopuru maximoa"
 
-#: src/lib/Sympa/ListDef.pm:391
+#: src/lib/Sympa/ListDef.pm:393
 msgid "Available subscription options"
 msgstr "Harpidetze aukerak"
 
-#: src/lib/Sympa/ListDef.pm:415
+#: src/lib/Sympa/ListDef.pm:417
 msgid "Subscription profile"
 msgstr "Harpidetza profila"
 
-#: src/lib/Sympa/ListDef.pm:448
+#: src/lib/Sympa/ListDef.pm:450
 msgid "Topics for message categorization"
 msgstr "Mezu kategorizaziorako mintzagaia"
 
-#: src/lib/Sympa/ListDef.pm:450
+#: src/lib/Sympa/ListDef.pm:452
 msgid ""
 "This paragraph defines a topic used to tag a message of a list, named by "
 "msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
@@ -2861,40 +2865,40 @@ msgstr ""
 "automatikoa ahalbidetzen du. Hau gako-hitzen zerrenda bat izan beharko luke, "
 "',' karaktereaz bereizita."
 
-#: src/lib/Sympa/ListDef.pm:454
+#: src/lib/Sympa/ListDef.pm:456
 msgid "Message topic name"
 msgstr "Mezu mintzagaiaren izena"
 
-#: src/lib/Sympa/ListDef.pm:462
+#: src/lib/Sympa/ListDef.pm:464
 msgid "Message topic keywords"
 msgstr "Mezu mintzagaiaren gako hitzak"
 
-#: src/lib/Sympa/ListDef.pm:468
+#: src/lib/Sympa/ListDef.pm:470
 msgid "Message topic title"
 msgstr "Mezu mintzagaiaren izenburua"
 
-#: src/lib/Sympa/ListDef.pm:481
+#: src/lib/Sympa/ListDef.pm:483
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
 "Mintzagai gako hitzak mezuaren ze zatietara aplikatzen diren definitzen du"
 
-#: src/lib/Sympa/ListDef.pm:492
+#: src/lib/Sympa/ListDef.pm:494
 msgid "Message tagging"
 msgstr "Mezuen etiketatzea"
 
-#: src/lib/Sympa/ListDef.pm:502 src/lib/Sympa/ListDef.pm:522
+#: src/lib/Sympa/ListDef.pm:504 src/lib/Sympa/ListDef.pm:524
 msgid "Reply address"
 msgstr "Erantzun helbidea"
 
-#: src/lib/Sympa/ListDef.pm:512
+#: src/lib/Sympa/ListDef.pm:514
 msgid "Forced reply address"
 msgstr "Derrigortutako erantzun helbidea"
 
-#: default/web_tt2/edit_config.tt2:19 src/lib/Sympa/ListDef.pm:528
+#: default/web_tt2/edit_config.tt2:19 src/lib/Sympa/ListDef.pm:530
 msgid "value"
 msgstr "balioa"
 
-#: src/lib/Sympa/ListDef.pm:530
+#: src/lib/Sympa/ListDef.pm:532
 msgid ""
 "This parameter indicates whether the Reply-To: field should indicate the "
 "sender of the message (sender), the list itself (list), both list and sender "
@@ -2916,19 +2920,19 @@ msgstr ""
 "bidaliko dutela. Hau gutxienez lotsagarria izan daiteke, eta batzutan "
 "ondorio larriak izan ditzake."
 
-#: src/lib/Sympa/ListDef.pm:537 src/lib/Sympa/ListOpt.pm:55
+#: src/lib/Sympa/ListDef.pm:539 src/lib/Sympa/ListOpt.pm:55
 msgid "other email address"
 msgstr "beste eposta helbidea"
 
-#: src/lib/Sympa/ListDef.pm:544
+#: src/lib/Sympa/ListDef.pm:546
 msgid "respect of existing header field"
 msgstr "aurreko goiburu eremua mantendu"
 
-#: src/lib/Sympa/ListDef.pm:556
+#: src/lib/Sympa/ListDef.pm:558
 msgid "Anonymous sender"
 msgstr "Bidaltzaile anonimoa"
 
-#: src/lib/Sympa/ListDef.pm:558
+#: src/lib/Sympa/ListDef.pm:560
 msgid ""
 "To hide the sender's email address before distributing the message. It is "
 "replaced by the provided email address."
@@ -2936,19 +2940,19 @@ msgstr ""
 "Mezua bidali baino lehen bidaltzailearen eposta helbidea ezkutatzeko. "
 "Emandako eposta helbidearengatik ordezten da."
 
-#: src/lib/Sympa/ListDef.pm:565
+#: src/lib/Sympa/ListDef.pm:567
 msgid "Custom header field"
 msgstr "Goiburu pertsonalizatuta"
 
-#: src/lib/Sympa/ListDef.pm:577
+#: src/lib/Sympa/ListDef.pm:579
 msgid "Subject tagging"
 msgstr "Gaia etiketatzea"
 
-#: src/lib/Sympa/ListDef.pm:588
+#: src/lib/Sympa/ListDef.pm:590
 msgid "Attachment type"
 msgstr "Eranskin mota"
 
-#: src/lib/Sympa/ListDef.pm:590
+#: src/lib/Sympa/ListDef.pm:592
 msgid ""
 "List owners may decide to add message headers or footers to messages sent "
 "via the list. This parameter defines the way a footer/header is added to a "
@@ -2971,98 +2975,98 @@ msgstr ""
 "saiatuko da. Aurredefinitutako mezu oinak ezikusiko dira. Goiburuak/oinak "
 "testu hutseko mezuetara bakarrik gehitzea gerta liteke."
 
-#: src/lib/Sympa/ListDef.pm:598
+#: src/lib/Sympa/ListDef.pm:600
 msgid "Maximum message size"
 msgstr "Mezuaren tamaina maximoa"
 
-#: src/lib/Sympa/ListDef.pm:610
+#: src/lib/Sympa/ListDef.pm:612
 #, fuzzy
 msgid "Allow message personalization"
 msgstr "Mezuen pertsonalizazioa ahalbidetu"
 
-#: src/lib/Sympa/ListDef.pm:619
+#: src/lib/Sympa/ListDef.pm:621
 msgid "Reject mail from automatic processes (crontab, etc)?"
 msgstr "Automaten epostak baztertu (crontab, etc)?"
 
-#: src/lib/Sympa/ListDef.pm:648
+#: src/lib/Sympa/ListDef.pm:650
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369 goiburu eremuak"
 
-#: src/lib/Sympa/ListDef.pm:679
+#: src/lib/Sympa/ListDef.pm:681
 msgid "Who can view list information"
 msgstr "Zeinek ikus dezake zerrendako informazioa"
 
-#: src/lib/Sympa/ListDef.pm:686
+#: src/lib/Sympa/ListDef.pm:688
 msgid "Who can subscribe to the list"
 msgstr "Zein harpidetu daiteke"
 
-#: src/lib/Sympa/ListDef.pm:696
+#: src/lib/Sympa/ListDef.pm:698
 msgid "Who can add subscribers"
 msgstr "Zeinek gehitu ahal ditu harpidedunak"
 
-#: src/lib/Sympa/ListDef.pm:705
+#: src/lib/Sympa/ListDef.pm:707
 msgid "Who can unsubscribe"
 msgstr "Zein ez-harpidetu daiteke"
 
-#: src/lib/Sympa/ListDef.pm:715
+#: src/lib/Sympa/ListDef.pm:717
 msgid "Who can delete subscribers"
 msgstr "Zeinek ezabatu ahal ditu harpidedunak"
 
-#: src/lib/Sympa/ListDef.pm:722
+#: src/lib/Sympa/ListDef.pm:724
 msgid "Who can invite people"
 msgstr "Zeinek gonbidatu ahal du"
 
-#: src/lib/Sympa/ListDef.pm:729
+#: src/lib/Sympa/ListDef.pm:731
 msgid "Who can start a remind process"
 msgstr "Zeinek hasi ahal du oroitzapen prozesu bat"
 
-#: src/lib/Sympa/ListDef.pm:738
+#: src/lib/Sympa/ListDef.pm:740
 msgid "Who can review subscribers"
 msgstr "Zeinek ikus ditzake harpidedunak"
 
-#: src/lib/Sympa/ListDef.pm:748
+#: src/lib/Sympa/ListDef.pm:750
 #, fuzzy
 msgid "Required domains for list owners"
 msgstr "zerrenda jabeentzat mugatuta"
 
-#: src/lib/Sympa/ListDef.pm:761
+#: src/lib/Sympa/ListDef.pm:763
 msgid "Minimum owners in required domains"
 msgstr ""
 
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_read.tt2:2
 #: default/web_tt2/d_upload.tt2:2 default/web_tt2/list_menu.tt2:146
-#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:773
+#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:775
 msgid "Shared documents"
 msgstr "Partekatutako dokumentuak"
 
-#: src/lib/Sympa/ListDef.pm:779
+#: src/lib/Sympa/ListDef.pm:781
 msgid "Who can view"
 msgstr "Zeinek ikus dezake"
 
-#: src/lib/Sympa/ListDef.pm:784
+#: src/lib/Sympa/ListDef.pm:786
 msgid "Who can edit"
 msgstr "Zeinek edita dezake"
 
-#: src/lib/Sympa/ListDef.pm:789 src/lib/Sympa/ListDef.pm:821
-#: src/lib/Sympa/ListDef.pm:871
+#: src/lib/Sympa/ListDef.pm:791 src/lib/Sympa/ListDef.pm:823
+#: src/lib/Sympa/ListDef.pm:873
 msgid "quota"
 msgstr "kuota"
 
-#: src/lib/Sympa/ListDef.pm:811
+#: src/lib/Sympa/ListDef.pm:813
 msgid "Web archives"
 msgstr "Web artxiboak"
 
-#: src/lib/Sympa/ListDef.pm:815 src/lib/Sympa/ListDef.pm:853
-#: src/lib/Sympa/ListDef.pm:860
+#: src/lib/Sympa/ListDef.pm:817 src/lib/Sympa/ListDef.pm:855
+#: src/lib/Sympa/ListDef.pm:862
 msgid "access right"
 msgstr "atzipen baimenak"
 
-#: src/lib/Sympa/ListDef.pm:830 src/lib/Sympa/ListDef.pm:879
+#: src/lib/Sympa/ListDef.pm:832 src/lib/Sympa/ListDef.pm:881
 msgid "Maximum number of month archived"
 msgstr "Artxibatuko diren hilabete kopuru maximoa"
 
-#: src/lib/Sympa/ListDef.pm:842
+#: src/lib/Sympa/ListDef.pm:844
 msgid ""
 "Privilege for reading mail archives and frequency of archiving\n"
 "Defines who can access the web archive for the list."
@@ -3070,43 +3074,43 @@ msgstr ""
 "Eposta artxiboak irakurtzeko baimena eta artxibatzeko maiztasuna\n"
 "Zerrendako web artxiboa zeinez atzitu dezakeen zehazten du."
 
-#: src/lib/Sympa/ListDef.pm:846
+#: src/lib/Sympa/ListDef.pm:848
 msgid "frequency"
 msgstr "maiztasuna"
 
-#: src/lib/Sympa/ListDef.pm:865
+#: src/lib/Sympa/ListDef.pm:867
 msgid "access right by mail commands"
 msgstr "posta bidezko atzipen baimenak"
 
-#: src/lib/Sympa/ListDef.pm:890
+#: src/lib/Sympa/ListDef.pm:892
 msgid "Archive encrypted mails as cleartext"
 msgstr "Zifratutako mezuak testu hutsean gorde"
 
-#: src/lib/Sympa/ListDef.pm:2383 src/lib/Sympa/ListDef.pm:899
+#: src/lib/Sympa/ListDef.pm:2385 src/lib/Sympa/ListDef.pm:901
 msgid "email address protection method"
 msgstr "eposta helbidea babesteko modua"
 
-#: src/lib/Sympa/ListDef.pm:912
+#: src/lib/Sympa/ListDef.pm:914
 msgid "Bounces management"
 msgstr "Erreboteen kudeaketa"
 
-#: src/lib/Sympa/ListDef.pm:916
+#: src/lib/Sympa/ListDef.pm:918
 msgid "warn rate"
 msgstr "ohartarazpen tasa"
 
-#: src/lib/Sympa/ListDef.pm:926
+#: src/lib/Sympa/ListDef.pm:928
 msgid "halt rate"
 msgstr "gelditze tasa"
 
-#: src/lib/Sympa/ListDef.pm:941
+#: src/lib/Sympa/ListDef.pm:943
 msgid "Management of bouncers, 1st level"
 msgstr "Erreboteen kudeaketa, 1.go maila"
 
-#: src/lib/Sympa/ListDef.pm:946 src/lib/Sympa/ListDef.pm:983
+#: src/lib/Sympa/ListDef.pm:948 src/lib/Sympa/ListDef.pm:985
 msgid "threshold"
 msgstr "muga"
 
-#: src/lib/Sympa/ListDef.pm:948
+#: src/lib/Sympa/ListDef.pm:950
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
 "This parameter defines a lower limit for each category of bouncing users.For "
@@ -3116,19 +3120,19 @@ msgstr ""
 "Parametro honek errebotatzen duten erabiltzaileen azpiko muga definitzen du. "
 "Adibidez, 1 maila 45etik level_2_treshold-era doa."
 
-#: src/lib/Sympa/ListDef.pm:956 src/lib/Sympa/ListDef.pm:993
+#: src/lib/Sympa/ListDef.pm:958 src/lib/Sympa/ListDef.pm:995
 msgid "action for this population"
 msgstr "populazio honetarako ekintza"
 
-#: src/lib/Sympa/ListDef.pm:1002 src/lib/Sympa/ListDef.pm:965
+#: src/lib/Sympa/ListDef.pm:1004 src/lib/Sympa/ListDef.pm:967
 msgid "notification"
 msgstr "ohartarazpena"
 
-#: src/lib/Sympa/ListDef.pm:978
+#: src/lib/Sympa/ListDef.pm:980
 msgid "Management of bouncers, 2nd level"
 msgstr "Erreboteen kudeaketa, 2. maila"
 
-#: src/lib/Sympa/ListDef.pm:985
+#: src/lib/Sympa/ListDef.pm:987
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
 "This parameter defines the score range defining each category of bouncing "
@@ -3138,104 +3142,104 @@ msgstr ""
 "Parametro honek errebotatzen duten erabiltzaileak taldekatzeko puntuazio "
 "tarteak definitzen ditu. Adibidez, 2 maila 80tik 100era doa."
 
-#: src/lib/Sympa/ListDef.pm:1015
+#: src/lib/Sympa/ListDef.pm:1017
 msgid "percentage of list members in VERP mode"
 msgstr "VERP moduan dauden zerrenda kideen ehunekoa"
 
-#: src/lib/Sympa/ListDef.pm:1025
+#: src/lib/Sympa/ListDef.pm:1027
 msgid "Message tracking feature"
 msgstr "Mezuen jarraipena"
 
-#: src/lib/Sympa/ListDef.pm:1030
+#: src/lib/Sympa/ListDef.pm:1032
 msgid "tracking message by delivery status notification"
 msgstr "mezuen jarraipena bidalketa egoeraren jakinarazpen bidez"
 
-#: src/lib/Sympa/ListDef.pm:1039
+#: src/lib/Sympa/ListDef.pm:1041
 msgid "tracking message by message disposition notification"
 msgstr "mezuen jarraipena bidalketa tankeraren jakinarazpen bidez"
 
-#: src/lib/Sympa/ListDef.pm:1047
+#: src/lib/Sympa/ListDef.pm:1049
 msgid "who can view message tracking"
 msgstr "zeinek ikusi ahal du mezuen jarraipena"
 
-#: src/lib/Sympa/ListDef.pm:1053
+#: src/lib/Sympa/ListDef.pm:1055
 msgid "Tracking datas are removed after this number of days"
 msgstr "egun hauek pasatzean jarraipen datuak ezabatzen dira"
 
-#: src/lib/Sympa/ListDef.pm:1065
+#: src/lib/Sympa/ListDef.pm:1067
 msgid "Welcome return-path"
 msgstr "Ongietorri itzul-bidea"
 
-#: src/lib/Sympa/ListDef.pm:1075
+#: src/lib/Sympa/ListDef.pm:1077
 msgid "Return-path of the REMIND command"
 msgstr "REMIND komandoarentzako itzul-bidea"
 
-#: src/lib/Sympa/ListDef.pm:1088
+#: src/lib/Sympa/ListDef.pm:1090
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "Harpidedunak ohartarazi datu iturri batetik txertatzen direnean?"
 
-#: src/lib/Sympa/ListDef.pm:1097
+#: src/lib/Sympa/ListDef.pm:1099
 msgid "Timeout for fetch of include_sql_query"
 msgstr "include_sql_query eskuratzeko denbora muga"
 
-#: src/lib/Sympa/ListDef.pm:1106
+#: src/lib/Sympa/ListDef.pm:1108
 msgid "User data source"
 msgstr "Erabiltzaileen datu iturria"
 
-#: src/lib/Sympa/ListDef.pm:1115
+#: src/lib/Sympa/ListDef.pm:1117
 msgid "File inclusion"
 msgstr "Fitxategi txertatzea"
 
-#: src/lib/Sympa/ListDef.pm:1126
+#: src/lib/Sympa/ListDef.pm:1128
 msgid "Remote file inclusion"
 msgstr "Urruneko fitxategi txertatzea"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:51 src/lib/Sympa/ListDef.pm:1130
-#: src/lib/Sympa/ListDef.pm:1176 src/lib/Sympa/ListDef.pm:1204
-#: src/lib/Sympa/ListDef.pm:1269 src/lib/Sympa/ListDef.pm:1395
-#: src/lib/Sympa/ListDef.pm:1574 src/lib/Sympa/ListDef.pm:1655
-#: src/lib/Sympa/ListDef.pm:1711 src/lib/Sympa/ListDef.pm:1841
-#: src/lib/Sympa/ListDef.pm:2025
+#: ext/VOOT/lib/Sympa/VOOT.pm:51 src/lib/Sympa/ListDef.pm:1132
+#: src/lib/Sympa/ListDef.pm:1178 src/lib/Sympa/ListDef.pm:1206
+#: src/lib/Sympa/ListDef.pm:1271 src/lib/Sympa/ListDef.pm:1397
+#: src/lib/Sympa/ListDef.pm:1576 src/lib/Sympa/ListDef.pm:1657
+#: src/lib/Sympa/ListDef.pm:1713 src/lib/Sympa/ListDef.pm:1843
+#: src/lib/Sympa/ListDef.pm:2027
 msgid "short name for this source"
 msgstr "iturburu honetarako izen laburra"
 
-#: src/lib/Sympa/ListDef.pm:1136
+#: src/lib/Sympa/ListDef.pm:1138
 msgid "data location URL"
 msgstr "datuen kokapen URLa"
 
-#: src/lib/Sympa/ListDef.pm:1143 src/lib/Sympa/ListDef.pm:1325
-#: src/lib/Sympa/ListDef.pm:1451 src/lib/Sympa/ListDef.pm:1615
-#: src/lib/Sympa/ListDef.pm:1767 src/lib/Sympa/ListDef.pm:1897
-#: src/lib/Sympa/ListDef.pm:2065
+#: src/lib/Sympa/ListDef.pm:1145 src/lib/Sympa/ListDef.pm:1327
+#: src/lib/Sympa/ListDef.pm:1453 src/lib/Sympa/ListDef.pm:1617
+#: src/lib/Sympa/ListDef.pm:1769 src/lib/Sympa/ListDef.pm:1899
+#: src/lib/Sympa/ListDef.pm:2067
 msgid "remote user"
 msgstr "urruneko erabiltzailea"
 
-#: src/lib/Sympa/ListDef.pm:1149 src/lib/Sympa/ListDef.pm:1330
-#: src/lib/Sympa/ListDef.pm:1456 src/lib/Sympa/ListDef.pm:1621
-#: src/lib/Sympa/ListDef.pm:1772 src/lib/Sympa/ListDef.pm:1902
-#: src/lib/Sympa/ListDef.pm:2071
+#: src/lib/Sympa/ListDef.pm:1151 src/lib/Sympa/ListDef.pm:1332
+#: src/lib/Sympa/ListDef.pm:1458 src/lib/Sympa/ListDef.pm:1623
+#: src/lib/Sympa/ListDef.pm:1774 src/lib/Sympa/ListDef.pm:1904
+#: src/lib/Sympa/ListDef.pm:2073
 msgid "remote password"
 msgstr "urruneko pasahitza"
 
-#: src/lib/Sympa/ListDef.pm:1161 src/lib/Sympa/ListDef.pm:1170
+#: src/lib/Sympa/ListDef.pm:1163 src/lib/Sympa/ListDef.pm:1172
 msgid "List inclusion"
 msgstr "Zerrenda txertatzea"
 
-#: src/lib/Sympa/ListDef.pm:1182
+#: src/lib/Sympa/ListDef.pm:1184
 #, fuzzy
 msgid "list name to include"
 msgstr "Baztertuen zerrenda"
 
-#: src/lib/Sympa/ListDef.pm:1188
+#: src/lib/Sympa/ListDef.pm:1190
 #, fuzzy
 msgid "filter definition"
 msgstr "Zerrenda definizioa"
 
-#: src/lib/Sympa/ListDef.pm:1198
+#: src/lib/Sympa/ListDef.pm:1200
 msgid "remote list inclusion"
 msgstr "urruneko zerrenda txertatzea"
 
-#: src/lib/Sympa/ListDef.pm:1200
+#: src/lib/Sympa/ListDef.pm:1202
 msgid ""
 "Sympa can contact another Sympa service using HTTPS to fetch a remote list "
 "in order to include each member of a remote list as subscriber. You may "
@@ -3257,178 +3261,178 @@ msgstr ""
 "zerrenda ikusteko baimena emateko da. Hau berrikuspen eszenatokian kontrola "
 "daiteke."
 
-#: src/lib/Sympa/ListDef.pm:1210 src/lib/Sympa/ListDef.pm:1275
-#: src/lib/Sympa/ListDef.pm:1401 src/lib/Sympa/ListDef.pm:1586
-#: src/lib/Sympa/ListDef.pm:1717 src/lib/Sympa/ListDef.pm:1847
-#: src/lib/Sympa/ListDef.pm:2037
+#: src/lib/Sympa/ListDef.pm:1212 src/lib/Sympa/ListDef.pm:1277
+#: src/lib/Sympa/ListDef.pm:1403 src/lib/Sympa/ListDef.pm:1588
+#: src/lib/Sympa/ListDef.pm:1719 src/lib/Sympa/ListDef.pm:1849
+#: src/lib/Sympa/ListDef.pm:2039
 msgid "remote host"
 msgstr "urruneko ostalaria"
 
-#: src/lib/Sympa/ListDef.pm:1216 src/lib/Sympa/ListDef.pm:1281
-#: src/lib/Sympa/ListDef.pm:1407 src/lib/Sympa/ListDef.pm:1723
-#: src/lib/Sympa/ListDef.pm:1853
+#: src/lib/Sympa/ListDef.pm:1218 src/lib/Sympa/ListDef.pm:1283
+#: src/lib/Sympa/ListDef.pm:1409 src/lib/Sympa/ListDef.pm:1725
+#: src/lib/Sympa/ListDef.pm:1855
 msgid "remote port"
 msgstr "urruneko portua"
 
-#: src/lib/Sympa/ListDef.pm:1223
+#: src/lib/Sympa/ListDef.pm:1225
 msgid "remote path of sympa list dump"
 msgstr "sympa zerrenda iraulgitzeko urruneko bidea"
 
-#: src/lib/Sympa/ListDef.pm:1231
+#: src/lib/Sympa/ListDef.pm:1233
 msgid "certificate for authentication by remote Sympa"
 msgstr "urruneko sympa autentikatzeko ziurtagiria"
 
-#: src/lib/Sympa/ListDef.pm:1263
+#: src/lib/Sympa/ListDef.pm:1265
 msgid "LDAP query inclusion"
 msgstr "LDAP galdera txertatzea"
 
-#: src/lib/Sympa/ListDef.pm:1337 src/lib/Sympa/ListDef.pm:1779
+#: src/lib/Sympa/ListDef.pm:1339 src/lib/Sympa/ListDef.pm:1781
 msgid "suffix"
 msgstr "atzizkia"
 
-#: src/lib/Sympa/ListDef.pm:1342 src/lib/Sympa/ListDef.pm:1784
+#: src/lib/Sympa/ListDef.pm:1344 src/lib/Sympa/ListDef.pm:1786
 msgid "search scope"
 msgstr "bilaketa eremua"
 
-#: src/lib/Sympa/ListDef.pm:1349 src/lib/Sympa/ListDef.pm:1791
+#: src/lib/Sympa/ListDef.pm:1351 src/lib/Sympa/ListDef.pm:1793
 msgid "connection timeout"
 msgstr "konexioaren denbora muga"
 
-#: src/lib/Sympa/ListDef.pm:1357 src/lib/Sympa/ListDef.pm:1799
+#: src/lib/Sympa/ListDef.pm:1359 src/lib/Sympa/ListDef.pm:1801
 msgid "filter"
 msgstr "iragazkia"
 
-#: src/lib/Sympa/ListDef.pm:1364 src/lib/Sympa/ListDef.pm:1806
+#: src/lib/Sympa/ListDef.pm:1366 src/lib/Sympa/ListDef.pm:1808
 msgid "extracted attribute"
 msgstr "aterako den atributua"
 
-#: src/lib/Sympa/ListDef.pm:1371 src/lib/Sympa/ListDef.pm:1819
+#: src/lib/Sympa/ListDef.pm:1373 src/lib/Sympa/ListDef.pm:1821
 msgid "selection (if multiple)"
 msgstr "hautapena (anizkoitza denean)"
 
-#: src/lib/Sympa/ListDef.pm:1378 src/lib/Sympa/ListDef.pm:1557
-#: src/lib/Sympa/ListDef.pm:1640 src/lib/Sympa/ListDef.pm:1826
-#: src/lib/Sympa/ListDef.pm:2010 src/lib/Sympa/ListDef.pm:2096
+#: src/lib/Sympa/ListDef.pm:1380 src/lib/Sympa/ListDef.pm:1559
+#: src/lib/Sympa/ListDef.pm:1642 src/lib/Sympa/ListDef.pm:1828
+#: src/lib/Sympa/ListDef.pm:2012 src/lib/Sympa/ListDef.pm:2098
 msgid "Time ranges when inclusion is not allowed"
 msgstr "Txertatzea debekatzeko denbora tarteak"
 
-#: src/lib/Sympa/ListDef.pm:1389
+#: src/lib/Sympa/ListDef.pm:1391
 msgid "LDAP 2-level query inclusion"
 msgstr "LDAP 2-mailako galdera txertatzea"
 
-#: src/lib/Sympa/ListDef.pm:1463 src/lib/Sympa/ListDef.pm:1909
+#: src/lib/Sympa/ListDef.pm:1465 src/lib/Sympa/ListDef.pm:1911
 msgid "first-level suffix"
 msgstr "lehen-mailako atzizkia"
 
-#: src/lib/Sympa/ListDef.pm:1468 src/lib/Sympa/ListDef.pm:1914
+#: src/lib/Sympa/ListDef.pm:1470 src/lib/Sympa/ListDef.pm:1916
 msgid "first-level search scope"
 msgstr "lehen-mailako bilaketa eremua"
 
-#: src/lib/Sympa/ListDef.pm:1474 src/lib/Sympa/ListDef.pm:1921
+#: src/lib/Sympa/ListDef.pm:1476 src/lib/Sympa/ListDef.pm:1923
 msgid "first-level connection timeout"
 msgstr "lehen-mailako konexioaren denbora muga"
 
-#: src/lib/Sympa/ListDef.pm:1482 src/lib/Sympa/ListDef.pm:1929
+#: src/lib/Sympa/ListDef.pm:1484 src/lib/Sympa/ListDef.pm:1931
 msgid "first-level filter"
 msgstr "lehen-mailako iragazkia"
 
-#: src/lib/Sympa/ListDef.pm:1489 src/lib/Sympa/ListDef.pm:1936
+#: src/lib/Sympa/ListDef.pm:1491 src/lib/Sympa/ListDef.pm:1938
 msgid "first-level extracted attribute"
 msgstr "lehen-mailatik aterako den atributua"
 
-#: src/lib/Sympa/ListDef.pm:1495 src/lib/Sympa/ListDef.pm:1942
+#: src/lib/Sympa/ListDef.pm:1497 src/lib/Sympa/ListDef.pm:1944
 msgid "first-level selection"
 msgstr "lehen-mailako hautapena"
 
-#: src/lib/Sympa/ListDef.pm:1502 src/lib/Sympa/ListDef.pm:1949
+#: src/lib/Sympa/ListDef.pm:1504 src/lib/Sympa/ListDef.pm:1951
 msgid "first-level regular expression"
 msgstr "lehen-mailako espresio erregularra"
 
-#: src/lib/Sympa/ListDef.pm:1509 src/lib/Sympa/ListDef.pm:1956
+#: src/lib/Sympa/ListDef.pm:1511 src/lib/Sympa/ListDef.pm:1958
 msgid "second-level suffix template"
 msgstr "bigarren-mailako atzizki txantiloia"
 
-#: src/lib/Sympa/ListDef.pm:1514 src/lib/Sympa/ListDef.pm:1961
+#: src/lib/Sympa/ListDef.pm:1516 src/lib/Sympa/ListDef.pm:1963
 msgid "second-level search scope"
 msgstr "bigarren-mailako bilaketa eremua"
 
-#: src/lib/Sympa/ListDef.pm:1521 src/lib/Sympa/ListDef.pm:1968
+#: src/lib/Sympa/ListDef.pm:1523 src/lib/Sympa/ListDef.pm:1970
 msgid "second-level connection timeout"
 msgstr "bigarren-mailako konexioaren denbora muga"
 
-#: src/lib/Sympa/ListDef.pm:1529 src/lib/Sympa/ListDef.pm:1976
+#: src/lib/Sympa/ListDef.pm:1531 src/lib/Sympa/ListDef.pm:1978
 msgid "second-level filter template"
 msgstr "bigarren-mailako iragazki txantiloia"
 
-#: src/lib/Sympa/ListDef.pm:1536 src/lib/Sympa/ListDef.pm:1983
+#: src/lib/Sympa/ListDef.pm:1538 src/lib/Sympa/ListDef.pm:1985
 msgid "second-level extracted attribute"
 msgstr "bigarren-mailatik aterako den atributua"
 
-#: src/lib/Sympa/ListDef.pm:1543 src/lib/Sympa/ListDef.pm:1990
+#: src/lib/Sympa/ListDef.pm:1545 src/lib/Sympa/ListDef.pm:1992
 msgid "second-level selection"
 msgstr "bigarren-mailako hautapena"
 
-#: src/lib/Sympa/ListDef.pm:1550 src/lib/Sympa/ListDef.pm:1997
+#: src/lib/Sympa/ListDef.pm:1552 src/lib/Sympa/ListDef.pm:1999
 msgid "second-level regular expression"
 msgstr "bigarren-mailako espresio erregularra"
 
-#: src/lib/Sympa/ListDef.pm:1568
+#: src/lib/Sympa/ListDef.pm:1570
 msgid "SQL query inclusion"
 msgstr "SQL galdera txertatzea"
 
-#: src/lib/Sympa/ListDef.pm:1580 src/lib/Sympa/ListDef.pm:2031
+#: src/lib/Sympa/ListDef.pm:1582 src/lib/Sympa/ListDef.pm:2033
 msgid "database type"
 msgstr "datu base mota"
 
-#: src/lib/Sympa/ListDef.pm:1593 src/lib/Sympa/ListDef.pm:2043
+#: src/lib/Sympa/ListDef.pm:1595 src/lib/Sympa/ListDef.pm:2045
 msgid "database port"
 msgstr "datu basearen portua"
 
-#: src/lib/Sympa/ListDef.pm:1598 src/lib/Sympa/ListDef.pm:2048
+#: src/lib/Sympa/ListDef.pm:1600 src/lib/Sympa/ListDef.pm:2050
 msgid "database name"
 msgstr "datu basearen izena"
 
-#: src/lib/Sympa/ListDef.pm:1604 src/lib/Sympa/ListDef.pm:2054
+#: src/lib/Sympa/ListDef.pm:1606 src/lib/Sympa/ListDef.pm:2056
 msgid "connection options"
 msgstr "konexio aukerak"
 
-#: src/lib/Sympa/ListDef.pm:1610 src/lib/Sympa/ListDef.pm:2060
+#: src/lib/Sympa/ListDef.pm:1612 src/lib/Sympa/ListDef.pm:2062
 msgid "environment variables for database connection"
 msgstr "datu baserako konexiorako inguruneko aldagaiak"
 
-#: src/lib/Sympa/ListDef.pm:1627 src/lib/Sympa/ListDef.pm:2077
+#: src/lib/Sympa/ListDef.pm:1629 src/lib/Sympa/ListDef.pm:2079
 msgid "SQL query"
 msgstr "SQL galdera"
 
-#: src/lib/Sympa/ListDef.pm:1635 src/lib/Sympa/ListDef.pm:2085
+#: src/lib/Sympa/ListDef.pm:1637 src/lib/Sympa/ListDef.pm:2087
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "Datu basea duen fitxategia (DBD::CSV-rako bakarrik)"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1651
+#: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1653
 msgid "VOOT group inclusion"
 msgstr "VOOT talde txertatzea"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1661
+#: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1663
 msgid "user"
 msgstr "erabiltzailea"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1667
+#: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1669
 msgid "provider"
 msgstr "hornitzailea"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1673
+#: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1675
 msgid "group"
 msgstr "taldea"
 
-#: src/lib/Sympa/ListDef.pm:1684
+#: src/lib/Sympa/ListDef.pm:1686
 msgid "Inclusions timeout"
 msgstr "Txertatzeen denbora muga"
 
-#: src/lib/Sympa/ListDef.pm:1696
+#: src/lib/Sympa/ListDef.pm:1698
 msgid "Inclusions timeout for message distribution"
 msgstr "Mezuen bidalketarako txertatzeen denbora muga"
 
-#: src/lib/Sympa/ListDef.pm:1698
+#: src/lib/Sympa/ListDef.pm:1700
 msgid ""
 "This parameter defines the delay since the last synchronization after which "
 "the user's list will be updated before performing either of following "
@@ -3437,28 +3441,28 @@ msgid ""
 "* Message distribution"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1707
+#: src/lib/Sympa/ListDef.pm:1709
 msgid "LDAP query custom attribute"
 msgstr "LDAP galderaren atributu pertsonalizatua"
 
-#: src/lib/Sympa/ListDef.pm:1813 src/lib/Sympa/ListDef.pm:2004
-#: src/lib/Sympa/ListDef.pm:2090
+#: src/lib/Sympa/ListDef.pm:1815 src/lib/Sympa/ListDef.pm:2006
+#: src/lib/Sympa/ListDef.pm:2092
 msgid "Name of email entry"
 msgstr "eposta eremuaren izena"
 
-#: src/lib/Sympa/ListDef.pm:1837
+#: src/lib/Sympa/ListDef.pm:1839
 msgid "LDAP 2-level query custom attribute"
 msgstr "LDAP 2-mailako galderaren atributu pertsonalizatua"
 
-#: src/lib/Sympa/ListDef.pm:2021
+#: src/lib/Sympa/ListDef.pm:2023
 msgid "SQL query custom attribute"
 msgstr "SQL galderako atributu pertsonalizatua"
 
-#: src/lib/Sympa/ListDef.pm:2109
+#: src/lib/Sympa/ListDef.pm:2111
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "Zerrendara bidalitako mezuei DKIM sinadura txertatu"
 
-#: src/lib/Sympa/ListDef.pm:2111
+#: src/lib/Sympa/ListDef.pm:2113
 msgid ""
 "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be "
 "some custom scenario to be updated"
@@ -3466,19 +3470,19 @@ msgstr ""
 "DKIM gaitu/ezgaitu. Ezaugarri honek Mail::DKIM instalatuta behar du eta "
 "baliteke pertsonalizatutako eszenatoki eguneratu behar izatea"
 
-#: src/lib/Sympa/ListDef.pm:2120
+#: src/lib/Sympa/ListDef.pm:2122
 msgid "DKIM configuration"
 msgstr "DKIM konfigurazioa"
 
-#: src/lib/Sympa/ListDef.pm:2126
+#: src/lib/Sympa/ListDef.pm:2128
 msgid "File path for list DKIM private key"
 msgstr "Zerrendako DKIM gako pribatuaren fitxategiaren bidea"
 
-#: src/lib/Sympa/ListDef.pm:2128
+#: src/lib/Sympa/ListDef.pm:2130
 msgid "The file must contain a RSA pem encoded private key"
 msgstr "Fitxategiak RSA pem kodeketadun gako pribatua izan behar du"
 
-#: src/lib/Sympa/ListDef.pm:2137
+#: src/lib/Sympa/ListDef.pm:2139
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -3488,12 +3492,12 @@ msgstr ""
 "da. Nahi duzun balioa jar dezakezu, baina egiaztatu <hautatzailea>."
 "_domainkey.your_domain erabiliz DKIM gako publikoa eskuratu dezakezula"
 
-#: src/lib/Sympa/ListDef.pm:2181
+#: src/lib/Sympa/ListDef.pm:2183
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr "DKIM erabiliz sinatuko diren zerrendako mezuen kategoriak."
 
-#: src/lib/Sympa/ListDef.pm:2183
+#: src/lib/Sympa/ListDef.pm:2185
 msgid ""
 "This parameter controls in which case messages must be signed using DKIM, "
 "you may sign every message choosing 'any' or a subset. The parameter value "
@@ -3503,19 +3507,19 @@ msgstr ""
 "du, 'any' edo azpitaldea hautatu ahal duzu. Parametroaren balioa gako hitzen "
 "komaz bereiztutako zerrenda da"
 
-#: src/lib/Sympa/ListDef.pm:2211
+#: src/lib/Sympa/ListDef.pm:2213
 msgid "Protection modes"
 msgstr "Babes moduak"
 
-#: src/lib/Sympa/ListDef.pm:2221
+#: src/lib/Sympa/ListDef.pm:2223
 msgid "Match domain regexp"
 msgstr "Domeinuko espresio erregularra"
 
-#: src/lib/Sympa/ListDef.pm:2252
+#: src/lib/Sympa/ListDef.pm:2254
 msgid "DMARC Protection"
 msgstr "DMARC babesa"
 
-#: src/lib/Sympa/ListDef.pm:2255
+#: src/lib/Sympa/ListDef.pm:2257
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
@@ -3523,23 +3527,23 @@ msgstr ""
 "'Nork' helbidea nola kudeatzeko parametroa, domeinu batzuen gehiegizko DMARC "
 "babesa saihesteko."
 
-#: src/lib/Sympa/ListDef.pm:2263
+#: src/lib/Sympa/ListDef.pm:2265
 msgid "Account"
 msgstr "Kontua"
 
-#: src/lib/Sympa/ListDef.pm:2272
+#: src/lib/Sympa/ListDef.pm:2274
 msgid "Expiration of unmoderated messages"
 msgstr "Moderatu gabeko mezuen iraungitzea"
 
-#: src/lib/Sympa/ListDef.pm:2294
+#: src/lib/Sympa/ListDef.pm:2296
 msgid "custom parameters"
 msgstr "pertsonalizatutako parametroak"
 
-#: src/lib/Sympa/ListDef.pm:2315
+#: src/lib/Sympa/ListDef.pm:2317
 msgid "Periodical subscription expiration task"
 msgstr "Harpidetzaren iraungitze perdiodikoaren ataza"
 
-#: src/lib/Sympa/ListDef.pm:2317
+#: src/lib/Sympa/ListDef.pm:2319
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -3551,15 +3555,15 @@ msgstr ""
 "harpidetza datak egiaztatzen ditu eta beraien harpidetzak berritzeko "
 "eskatzen die. Berritzen ez dutenak ezabatzen dira."
 
-#: src/lib/Sympa/ListDef.pm:2354
+#: src/lib/Sympa/ListDef.pm:2356
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "Robotekin begiztak saihesteko espresio erregularra"
 
-#: src/lib/Sympa/ListDef.pm:2364
+#: src/lib/Sympa/ListDef.pm:2366
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr "Irudien bistaratzea gaitu? (uneko robotarentzat gaitu behar da)"
 
-#: src/lib/Sympa/ListDef.pm:2385
+#: src/lib/Sympa/ListDef.pm:2387
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
 "email addresses from public web sites. Various methods are available in "
@@ -3585,61 +3589,61 @@ msgstr ""
 "none: \n"
 "spammerren kontrako babesik ez."
 
-#: src/lib/Sympa/ListDef.pm:2394
+#: src/lib/Sympa/ListDef.pm:2396
 msgid "Creation of the list"
 msgstr "Zerrendaren sorrera"
 
-#: src/lib/Sympa/ListDef.pm:2335 src/lib/Sympa/ListDef.pm:2340
-#: src/lib/Sympa/ListDef.pm:2398 src/lib/Sympa/ListDef.pm:2436
-#: src/lib/Sympa/ListDef.pm:2442
+#: src/lib/Sympa/ListDef.pm:2337 src/lib/Sympa/ListDef.pm:2342
+#: src/lib/Sympa/ListDef.pm:2400 src/lib/Sympa/ListDef.pm:2438
+#: src/lib/Sympa/ListDef.pm:2444
 msgid "date"
 msgstr "data"
 
-#: src/lib/Sympa/ListDef.pm:2407
+#: src/lib/Sympa/ListDef.pm:2409
 msgid "human readable"
 msgstr "gizakientzako irakurgarri"
 
-#: src/lib/Sympa/ListDef.pm:2412
+#: src/lib/Sympa/ListDef.pm:2414
 msgid "who created the list"
 msgstr "zeinek sortu duen zerrenda"
 
-#: src/lib/Sympa/ListDef.pm:2424
+#: src/lib/Sympa/ListDef.pm:2426
 msgid "Last update of config"
 msgstr "Konfigurazioaren azken eguneraketa"
 
-#: src/lib/Sympa/ListDef.pm:2455
+#: src/lib/Sympa/ListDef.pm:2457
 msgid "Status of the list"
 msgstr "Zerrendaren egoera"
 
-#: src/lib/Sympa/ListDef.pm:2466
+#: src/lib/Sympa/ListDef.pm:2468
 msgid "Serial number of the config"
 msgstr "Konfigurazioaren serie zenbakia"
 
-#: src/lib/Sympa/ListDef.pm:2476
+#: src/lib/Sympa/ListDef.pm:2478
 msgid "Custom user attributes"
 msgstr "Erabiltzaileen pertsonalizatutako atributuak"
 
-#: src/lib/Sympa/ListDef.pm:2480
+#: src/lib/Sympa/ListDef.pm:2482
 msgid "internal identifier"
 msgstr "barneko identifikadorea"
 
-#: src/lib/Sympa/ListDef.pm:2487
+#: src/lib/Sympa/ListDef.pm:2489
 msgid "label"
 msgstr "etiketa"
 
-#: src/lib/Sympa/ListDef.pm:2494
+#: src/lib/Sympa/ListDef.pm:2496
 msgid "additional comment"
 msgstr "ohar gehigarria"
 
-#: src/lib/Sympa/ListDef.pm:2500
+#: src/lib/Sympa/ListDef.pm:2502
 msgid "type"
 msgstr "mota"
 
-#: src/lib/Sympa/ListDef.pm:2507
+#: src/lib/Sympa/ListDef.pm:2509
 msgid "possible attribute values (if enum is used)"
 msgstr "aukerazko atributu balioak ('enum' erabiltzen bada)"
 
-#: src/lib/Sympa/ListDef.pm:2513
+#: src/lib/Sympa/ListDef.pm:2515
 msgid "is the attribute optional?"
 msgstr "aukerazko atributua da?"
 
@@ -3691,11 +3695,11 @@ msgstr "datu iturriaren parametroak"
 msgid "Moderators defined in an external data source"
 msgstr "Kanpoko datu iturrian definitutako moderatzaileak"
 
-#: src/lib/Sympa/ListDef.pm:1246 src/lib/Sympa/ListDef.pm:225
+#: src/lib/Sympa/ListDef.pm:1248 src/lib/Sympa/ListDef.pm:225
 msgid "the data source"
 msgstr "datu iturria"
 
-#: src/lib/Sympa/ListDef.pm:1252 src/lib/Sympa/ListDef.pm:231
+#: src/lib/Sympa/ListDef.pm:1254 src/lib/Sympa/ListDef.pm:231
 msgid "data source parameters"
 msgstr "datu iturriaren parametroak"
 
@@ -3735,7 +3739,14 @@ msgstr ""
 msgid "This parameter specifies who can send messages to the list."
 msgstr "Parametro honek zerrendara zeinek idatzi ahal duen zehazten du."
 
-#: src/lib/Sympa/ListDef.pm:350
+#: src/lib/Sympa/ListDef.pm:341
+msgid ""
+"If this parameter is present, non-digest messages will be delivered to "
+"subscribers at this time: When this time has been past, delivery is "
+"postponed to the same time in next day."
+msgstr ""
+
+#: src/lib/Sympa/ListDef.pm:352
 msgid ""
 "Definition of digest mode. If this parameter is present, subscribers can "
 "select the option of receiving messages in multipart/digest MIME format, or "
@@ -3748,11 +3759,11 @@ msgstr ""
 "ahalbidetzen die. Parametro honek zehazten duen maiztasunarekin mezuak "
 "taldekatzen dira eta harpidedunei bidaltzen zaizkie."
 
-#: src/lib/Sympa/ListDef.pm:382
+#: src/lib/Sympa/ListDef.pm:384
 msgid "messages"
 msgstr "mezuak"
 
-#: src/lib/Sympa/ListDef.pm:396
+#: src/lib/Sympa/ListDef.pm:398
 msgid ""
 "Only these modes will be allowed for the subscribers of this list. If a "
 "subscriber has a reception mode not in the list, Sympa uses the mode "
@@ -3762,21 +3773,21 @@ msgstr ""
 "Harpidedun batek zerrendan ez dagoen jasoera mota bat badu sympak "
 "default_user_options-en zehaztutakoa erabiliko du."
 
-#: src/lib/Sympa/ListDef.pm:417
+#: src/lib/Sympa/ListDef.pm:419
 #, fuzzy
 msgid "Default profile for the subscribers of the list."
 msgstr "Harpidedunen zerrendako zure irudia"
 
-#: src/lib/Sympa/ListDef.pm:422
+#: src/lib/Sympa/ListDef.pm:424
 msgid "Mail reception mode."
 msgstr "Eposta jasotzeko modua."
 
-#: src/lib/Sympa/ListDef.pm:436
+#: src/lib/Sympa/ListDef.pm:438
 #, fuzzy
 msgid "Visibility of the subscriber."
 msgstr "Zerrendaren ikusgaitasuna"
 
-#: src/lib/Sympa/ListDef.pm:483
+#: src/lib/Sympa/ListDef.pm:485
 msgid ""
 "This parameter indicates which part of the message is used to perform "
 "automatic tagging."
@@ -3784,14 +3795,14 @@ msgstr ""
 "Parametro honek etiketatze automatikorako mezuaren zein zati erabiliko den "
 "zehazten du."
 
-#: src/lib/Sympa/ListDef.pm:494
+#: src/lib/Sympa/ListDef.pm:496
 msgid ""
 "This parameter indicates if the tagging is optional or required for a list."
 msgstr ""
 "Parametro honekin zerrendan etiketatzea aukerakoa edo derrigorrezkoa den "
 "zehazten da."
 
-#: src/lib/Sympa/ListDef.pm:524
+#: src/lib/Sympa/ListDef.pm:526
 #, fuzzy
 msgid ""
 "This defines what Sympa will place in the Reply-To: SMTP header field of the "
@@ -3800,7 +3811,7 @@ msgstr ""
 "reply_to_header parametroak Sympa-k bidaltzen dituen mezuen Reply-To: "
 "goiburuan zer jarriko den zehazten du."
 
-#: src/lib/Sympa/ListDef.pm:539
+#: src/lib/Sympa/ListDef.pm:541
 msgid ""
 "If value was set to other_email, this parameter defines the e-mail address "
 "used."
@@ -3808,7 +3819,7 @@ msgstr ""
 "Balioa other_email-era ezarri bazen, parametro honek erabiliko den eposta "
 "helbidea zehazten du."
 
-#: src/lib/Sympa/ListDef.pm:546
+#: src/lib/Sympa/ListDef.pm:548
 msgid ""
 "The default is to respect (preserve) the existing Reply-To: SMTP header "
 "field in incoming messages. If set to forced, Reply-To: SMTP header field "
@@ -3817,7 +3828,7 @@ msgstr ""
 "Defektuz sartzen diren mezuetan datorren Reply-to: SMTP goiburua mantentzen "
 "da. Derrigortutakoa jartzen bada Reply-To: SMTP goiburua gainidatziko da."
 
-#: src/lib/Sympa/ListDef.pm:567
+#: src/lib/Sympa/ListDef.pm:569
 msgid ""
 "This parameter is optional. The headers specified will be added to the "
 "headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
@@ -3828,7 +3839,7 @@ msgstr ""
 "diren mezuei gehituko zaizkie. Symparen 1.2.2 bertsiotik aurrera goiburu "
 "lerro bat baino gehiago jarri daitezke aldi berean. "
 
-#: src/lib/Sympa/ListDef.pm:579
+#: src/lib/Sympa/ListDef.pm:581
 msgid ""
 "This parameter is optional. It specifies a string which is added to the "
 "subject of distributed messages (intended to help users who do not use "
@@ -3840,40 +3851,40 @@ msgstr ""
 "erabiltzaileentzat laguntzeko). Karaktere katea [] karaktereen artean joango "
 "da."
 
-#: src/lib/Sympa/ListDef.pm:599
+#: src/lib/Sympa/ListDef.pm:601
 msgid "Maximum size of a message in 8-bit bytes."
 msgstr "Mezu baten tamaina maximoa 8 bitetako bytetan."
 
-#: src/lib/Sympa/ListDef.pm:628
+#: src/lib/Sympa/ListDef.pm:630
 msgid "Incoming SMTP header fields to be removed"
 msgstr "Sartzen diren mezuetatik kenduko diren SMTP goiburuak"
 
-#: src/lib/Sympa/ListDef.pm:638
+#: src/lib/Sympa/ListDef.pm:640
 msgid "Outgoing SMTP header fields to be removed"
 msgstr "Irtetzen diren mezuetatik kenduko diren SMTP goiburuak"
 
-#: src/lib/Sympa/ListDef.pm:659
+#: src/lib/Sympa/ListDef.pm:661
 msgid "Hook modules for message processing"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:663
+#: src/lib/Sympa/ListDef.pm:665
 msgid "A hook on the messages before distribution"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:668
+#: src/lib/Sympa/ListDef.pm:670
 #, fuzzy
 msgid "A hook on the messages just after archiving"
 msgstr "# mezua"
 
-#: src/lib/Sympa/ListDef.pm:688
+#: src/lib/Sympa/ListDef.pm:690
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr "Parametro honek zerrendara harpidetzeko erregelak zehazten ditu."
 
-#: src/lib/Sympa/ListDef.pm:698
+#: src/lib/Sympa/ListDef.pm:700
 msgid "Privilege for adding (ADD command) a subscriber to the list"
 msgstr "Harpidedun bat zerrendara gehitzeko (ADD komandoa) baimena"
 
-#: src/lib/Sympa/ListDef.pm:707
+#: src/lib/Sympa/ListDef.pm:709
 msgid ""
 "This parameter specifies the unsubscription method for the list. Use "
 "open_notify or auth_notify to allow owner notification of each unsubscribe "
@@ -3882,12 +3893,12 @@ msgstr ""
 "Parametro honek ez-harpedetzeko modua zehazten du. Erabili open_notify edo "
 "auth_notify jabeari ez-harpidetze komando bakoitzaz ohartarazteko."
 
-#: src/lib/Sympa/ListDef.pm:731
+#: src/lib/Sympa/ListDef.pm:733
 msgid "This parameter specifies who is authorized to use the remind command."
 msgstr ""
 "Parametro honek oroitzapen komandoa zeinek erabili ahal duen zehazten du."
 
-#: src/lib/Sympa/ListDef.pm:740
+#: src/lib/Sympa/ListDef.pm:742
 msgid ""
 "This parameter specifies who can access the list of members. Since "
 "subscriber addresses can be abused by spammers, it is strongly recommended "
@@ -3897,17 +3908,17 @@ msgstr ""
 "ek harpidedunen helbideak ez atzitzeko, oso gomendagarria da baimena jabe "
 "edo harpidedunei bakarrik ematea."
 
-#: src/lib/Sympa/ListDef.pm:750
+#: src/lib/Sympa/ListDef.pm:752
 msgid "Restrict list ownership to addresses in the specified domains."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:763
+#: src/lib/Sympa/ListDef.pm:765
 msgid ""
 "Require list ownership by a minimum number of addresses in the specified "
 "domains."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:775
+#: src/lib/Sympa/ListDef.pm:777
 msgid ""
 "This paragraph defines read and edit access to the shared document "
 "repository."
@@ -3915,7 +3926,7 @@ msgstr ""
 "Hemen partekatutako dokumentuen biltegia irakurri eta editatzeko baimenak "
 "zehazten ditu."
 
-#: src/lib/Sympa/ListDef.pm:901
+#: src/lib/Sympa/ListDef.pm:903
 msgid ""
 "Idem spam_protection is provided but it can be used only for web archives. "
 "Access requires a cookie, and users must submit a small form in order to "
@@ -3927,19 +3938,19 @@ msgstr ""
 "artxiboak nabigatzeko cookiea jasotzeko. Honek robot guztiak gelditzen ditu, "
 "baita google eta antzekoak."
 
-#: src/lib/Sympa/ListDef.pm:919 src/lib/Sympa/ListDef.pm:929
+#: src/lib/Sympa/ListDef.pm:921 src/lib/Sympa/ListDef.pm:931
 msgid "%"
 msgstr "%"
 
-#: src/lib/Sympa/ListDef.pm:942
+#: src/lib/Sympa/ListDef.pm:944
 msgid "Level 1 is the lower level of bouncing users"
 msgstr "\t1 Maila errebotatzen duten erabiltzaileen azpiko maila da"
 
-#: src/lib/Sympa/ListDef.pm:949 src/lib/Sympa/ListDef.pm:986
+#: src/lib/Sympa/ListDef.pm:951 src/lib/Sympa/ListDef.pm:988
 msgid "points"
 msgstr "puntu"
 
-#: src/lib/Sympa/ListDef.pm:958
+#: src/lib/Sympa/ListDef.pm:960
 msgid ""
 "This parameter defines which task is automaticaly applied on level 1 "
 "bouncers."
@@ -3947,7 +3958,7 @@ msgstr ""
 "Parametro honek 1 mailako erreboteei automatikoki zein ataza aplikatuko "
 "zaien zehazten du."
 
-#: src/lib/Sympa/ListDef.pm:967
+#: src/lib/Sympa/ListDef.pm:969
 msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
 "can be send to listowner or listmaster."
@@ -3955,11 +3966,11 @@ msgstr ""
 "1 mailako erreboteengan ataza automatiko bat exekutatzen denean ohartarazpen "
 "mezua bidali ahal zaie zerrenda jabe edo zerrenden kudeatzaileei."
 
-#: src/lib/Sympa/ListDef.pm:979
+#: src/lib/Sympa/ListDef.pm:981
 msgid "Level 2 is the highest level of bouncing users"
 msgstr "\t2 Maila errebotatzen duten erabiltzaileen goiko maila da"
 
-#: src/lib/Sympa/ListDef.pm:995
+#: src/lib/Sympa/ListDef.pm:997
 msgid ""
 "This parameter defines which task is automaticaly applied on level 2 "
 "bouncers."
@@ -3967,7 +3978,7 @@ msgstr ""
 "Parametro honek 2 mailako erreboteei automatikoki zein ataza aplikatuko "
 "zaien zehazten du."
 
-#: src/lib/Sympa/ListDef.pm:1004
+#: src/lib/Sympa/ListDef.pm:1006
 msgid ""
 "When automatic task is executed on level 2 bouncers, a notification email "
 "can be send to listowner or listmaster."
@@ -3975,7 +3986,7 @@ msgstr ""
 "2 mailako erreboteengan ataza automatiko bat exekutatzen denean ohartarazpen "
 "mezua bidali ahal zaie zerrenda jabe edo zerrenden kudeatzaileei."
 
-#: src/lib/Sympa/ListDef.pm:1117
+#: src/lib/Sympa/ListDef.pm:1119
 msgid ""
 "Include subscribers from this file.  The file should contain one e-mail "
 "address per line (lines beginning with a \"#\" are ignored)."
@@ -3984,7 +3995,7 @@ msgstr ""
 "eduki beharko luke lerro bakoitzean (\"#\" batekin hasten diren lerroak "
 "ezikusten dira)."
 
-#: src/lib/Sympa/ListDef.pm:1172
+#: src/lib/Sympa/ListDef.pm:1174
 #, fuzzy
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
@@ -4003,11 +4014,11 @@ msgstr ""
 "txertatu eta B zerrenda A zerrendan txertatzearekin, etengabeko begizta bat "
 "sortuko delako."
 
-#: src/lib/Sympa/ListDef.pm:1242
+#: src/lib/Sympa/ListDef.pm:1244
 msgid "Users included from parameterizable data sources"
 msgstr "Parametrizatutako data iturrietatik txertatutako erabiltzaileak"
 
-#: src/lib/Sympa/ListDef.pm:1265
+#: src/lib/Sympa/ListDef.pm:1267
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
@@ -4015,33 +4026,33 @@ msgstr ""
 "Hemen harpidedunen zerrenda bat jasotzeko galderaren parametroak zehazten "
 "dira. Net::LDAP (perlldap) PERL modulua behar du."
 
-#: src/lib/Sympa/ListDef.pm:1288 src/lib/Sympa/ListDef.pm:1414
-#: src/lib/Sympa/ListDef.pm:1730 src/lib/Sympa/ListDef.pm:1860
+#: src/lib/Sympa/ListDef.pm:1290 src/lib/Sympa/ListDef.pm:1416
+#: src/lib/Sympa/ListDef.pm:1732 src/lib/Sympa/ListDef.pm:1862
 msgid "use TLS (formerly SSL)"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1296 src/lib/Sympa/ListDef.pm:1422
-#: src/lib/Sympa/ListDef.pm:1738 src/lib/Sympa/ListDef.pm:1868
+#: src/lib/Sympa/ListDef.pm:1298 src/lib/Sympa/ListDef.pm:1424
+#: src/lib/Sympa/ListDef.pm:1740 src/lib/Sympa/ListDef.pm:1870
 msgid "use SSL (LDAPS)"
 msgstr "SSL erabili (LDAPS)"
 
-#: src/lib/Sympa/ListDef.pm:1303 src/lib/Sympa/ListDef.pm:1429
-#: src/lib/Sympa/ListDef.pm:1745 src/lib/Sympa/ListDef.pm:1875
+#: src/lib/Sympa/ListDef.pm:1305 src/lib/Sympa/ListDef.pm:1431
+#: src/lib/Sympa/ListDef.pm:1747 src/lib/Sympa/ListDef.pm:1877
 msgid "SSL version"
 msgstr "SSL bertsioa"
 
-#: src/lib/Sympa/ListDef.pm:1311 src/lib/Sympa/ListDef.pm:1437
-#: src/lib/Sympa/ListDef.pm:1753 src/lib/Sympa/ListDef.pm:1883
+#: src/lib/Sympa/ListDef.pm:1313 src/lib/Sympa/ListDef.pm:1439
+#: src/lib/Sympa/ListDef.pm:1755 src/lib/Sympa/ListDef.pm:1885
 msgid "SSL ciphers used"
 msgstr "Erabilitako SSL zifratzea"
 
-#: src/lib/Sympa/ListDef.pm:1317 src/lib/Sympa/ListDef.pm:1443
-#: src/lib/Sympa/ListDef.pm:1759 src/lib/Sympa/ListDef.pm:1889
+#: src/lib/Sympa/ListDef.pm:1319 src/lib/Sympa/ListDef.pm:1445
+#: src/lib/Sympa/ListDef.pm:1761 src/lib/Sympa/ListDef.pm:1891
 #, fuzzy
 msgid "Certificate verification"
 msgstr "Ziurtagiriaren iraungitze data"
 
-#: src/lib/Sympa/ListDef.pm:1391
+#: src/lib/Sympa/ListDef.pm:1393
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
@@ -4053,12 +4064,12 @@ msgstr ""
 "bat ematen du eta bigarren mailako galderak DNak eposta bihurtzen ditu. "
 "Honek Net::LDAP (perlldap) PERL modulua behar du."
 
-#: src/lib/Sympa/ListDef.pm:1570
+#: src/lib/Sympa/ListDef.pm:1572
 #, fuzzy
 msgid "This parameter is used to define the SQL query parameters. "
 msgstr "Parametro hau SQL galderen parametroak zehazteko erabiltzen da."
 
-#: src/lib/Sympa/ListDef.pm:1686
+#: src/lib/Sympa/ListDef.pm:1688
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
@@ -4068,15 +4079,15 @@ msgstr ""
 "honekin beraien TTLa (bizi iraupena) kontrolatu daiteke. Defektuzko balioa "
 "3600 da."
 
-#: src/lib/Sympa/ListDef.pm:2122
+#: src/lib/Sympa/ListDef.pm:2124
 msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr "Irteerako DKIM sinadura definitzeko parametro sorta"
 
-#: src/lib/Sympa/ListDef.pm:2146
+#: src/lib/Sympa/ListDef.pm:2148
 msgid "List of headers to be included into the message for signature"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2148
+#: src/lib/Sympa/ListDef.pm:2150
 msgid ""
 "You should probably use the default value which is the value recommended by "
 "RFC4871"
@@ -4084,11 +4095,11 @@ msgstr ""
 "Ziur aski defektuzko balioa erabili beharko zenuke, 4871 RFC-an gomendatu "
 "bezala"
 
-#: src/lib/Sympa/ListDef.pm:2157
+#: src/lib/Sympa/ListDef.pm:2159
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr "DKIM \"d=\" etiketa, defektuzko balioa utzi beharko zenuke"
 
-#: src/lib/Sympa/ListDef.pm:2159
+#: src/lib/Sympa/ListDef.pm:2161
 msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. the list domain "
 "MUST be included in the \"d=\" domain"
@@ -4096,11 +4107,11 @@ msgstr ""
 "DKIM \"d=\" etiketa entitate sinatzailearen domeinua da. Zerrendaren "
 "domeinua \"d=\" domeinuan egon BEHAR du"
 
-#: src/lib/Sympa/ListDef.pm:2167
+#: src/lib/Sympa/ListDef.pm:2169
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr "DKIM \"i=\" etiketa, parametro hau hutsik utzi beharko zenuke"
 
-#: src/lib/Sympa/ListDef.pm:2169
+#: src/lib/Sympa/ListDef.pm:2171
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
@@ -4110,7 +4121,7 @@ msgstr ""
 "RFC-an gomendatu bezala. Zerrendatik bidalitako mezuentzako defektuz "
 "i=<zerrendaizena>-request@<domeinua> da."
 
-#: src/lib/Sympa/ListDef.pm:2216
+#: src/lib/Sympa/ListDef.pm:2218
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular expression"
 "\" (domain_regex) matches the specified Domain regexp; \"DKIM signature "
@@ -4125,11 +4136,11 @@ msgstr ""
 "duten bidaltzaileen domeinuak alderatzen ditu; \"dena\" (dena) mezu guztiak "
 "hartzen ditu."
 
-#: src/lib/Sympa/ListDef.pm:2223
+#: src/lib/Sympa/ListDef.pm:2225
 msgid "Regexp match pattern for From domain"
 msgstr "'Nork' domeinurako espresio erregularra"
 
-#: src/lib/Sympa/ListDef.pm:2232
+#: src/lib/Sympa/ListDef.pm:2234
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
@@ -4139,7 +4150,7 @@ msgstr ""
 "zerrendaren helbidea da. Anonimizazioaren antzera baina jatorrizko "
 "bidaltzailearen detaileak 'Nork' helbide esaldian mantentzen ditu."
 
-#: src/lib/Sympa/ListDef.pm:2248
+#: src/lib/Sympa/ListDef.pm:2250
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header."
@@ -4147,7 +4158,7 @@ msgstr ""
 "Hau 'Nork' goiburu berriko bidaltzailearen izen zatirako erabiliko den "
 "formatua da."
 
-#: src/lib/Sympa/ListDef.pm:2284
+#: src/lib/Sympa/ListDef.pm:2286
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -4159,23 +4170,23 @@ msgstr ""
 "luke, baita jabeengandik ere. Cookie-a jabe guztiei aplikatzen zaie, eta "
 "jabeak auth parametroa duenean bakarrik hartzen da kontutan."
 
-#: src/lib/Sympa/ListDef.pm:2298
+#: src/lib/Sympa/ListDef.pm:2300
 msgid "var name"
 msgstr "aldagai izena"
 
-#: src/lib/Sympa/ListDef.pm:2304
+#: src/lib/Sympa/ListDef.pm:2306
 msgid "var value"
 msgstr "aldagai balioa"
 
-#: src/lib/Sympa/ListDef.pm:2324
+#: src/lib/Sympa/ListDef.pm:2326
 msgid "Latest family instantiation"
 msgstr "Azken familia instantzia"
 
-#: src/lib/Sympa/ListDef.pm:2328
+#: src/lib/Sympa/ListDef.pm:2330
 msgid "who ran the instantiation"
 msgstr "zeinek abiatu du instantzia"
 
-#: src/lib/Sympa/ListDef.pm:2375
+#: src/lib/Sympa/ListDef.pm:2377
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
@@ -4185,7 +4196,7 @@ msgstr ""
 "du. Oroitzapen ataza batek periodikoki mezuak bidaltzen dizkie harpidedunei "
 "zein zerrendatan harpidetuta dauden adierazteko."
 
-#: src/lib/Sympa/ListDef.pm:2428
+#: src/lib/Sympa/ListDef.pm:2430
 msgid "who updated the config"
 msgstr "zeinek eguneratu du konfigurazioa"
 
@@ -5189,8 +5200,8 @@ msgstr ""
 msgid "used to compute case-folding search keys"
 msgstr ""
 
-#: src/lib/Sympa/Process.pm:418 src/lib/Sympa/Process.pm:421
-#: src/lib/Sympa/Template.pm:171
+#: default/web_tt2/modindex.tt2:96 src/lib/Sympa/Process.pm:418
+#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:171
 msgid "(unknown date)"
 msgstr "(data ezezaguna)"
 
@@ -5598,7 +5609,7 @@ msgstr "Sortze data"
 #: default/web_tt2/get_biggest_lists.tt2:8
 #: default/web_tt2/get_inactive_lists.tt2:10
 #: default/web_tt2/get_latest_lists.tt2:10 default/web_tt2/latest_arc.tt2:20
-#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:14
+#: default/web_tt2/latest_lists.tt2:22 default/web_tt2/modindex.tt2:41
 #: default/web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Gaia"
@@ -5758,8 +5769,8 @@ msgstr "Zerrendako artxiboa"
 #: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/edit_list_request.tt2:6 default/web_tt2/editfile.tt2:4
 #: default/web_tt2/editsubscriber.tt2:58 default/web_tt2/latest_d_read.tt2:31
-#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/modindex.tt2:2
-#: default/web_tt2/modindex.tt2:71 default/web_tt2/picture_upload.tt2:21
+#: default/web_tt2/latest_d_read.tt2:35 default/web_tt2/modindex.tt2:121
+#: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
 #: default/web_tt2/suboptions.tt2:20 default/web_tt2/subscriber_table.tt2:120
@@ -5778,7 +5789,7 @@ msgstr "Leiho berrian ireki"
 #: default/web_tt2/edit_list_request.tt2:257
 #: default/web_tt2/edit_list_request.tt2:50
 #: default/web_tt2/edit_list_request.tt2:9 default/web_tt2/editfile.tt2:4
-#: default/web_tt2/modindex.tt2:2 default/web_tt2/modindex.tt2:71
+#: default/web_tt2/modindex.tt2:121 default/web_tt2/modindex.tt2:2
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
 #: default/web_tt2/suboptions.tt2:100 default/web_tt2/suboptions.tt2:21
@@ -5971,7 +5982,7 @@ msgid "Sender"
 msgstr "Bidaltzailea"
 
 #: default/web_tt2/arcsearch_form.tt2:51 default/web_tt2/docindex.tt2:19
-#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:15
+#: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:44
 #: default/web_tt2/sigindex.tt2:17 default/web_tt2/subindex.tt2:18
 #: default/web_tt2/viewlogs.tt2:94 default/web_tt2/viewlogs.tt2:97
 msgid "Date"
@@ -6333,6 +6344,7 @@ msgstr "Harpidetza eskaerarik ez"
 
 #: default/web_tt2/confirm_action.tt2:112 default/web_tt2/modform.tt2:10
 #: default/web_tt2/modform.tt2:12 default/web_tt2/modform.tt2:9
+#: default/web_tt2/modindex.tt2:11
 msgid "Distribute"
 msgstr "Bidali"
 
@@ -6917,7 +6929,7 @@ msgstr "Dokumentua"
 
 #: default/web_tt2/d_read.tt2:91 default/web_tt2/d_read.tt2:93
 #: default/web_tt2/docindex.tt2:20 default/web_tt2/latest_d_read.tt2:21
-#: default/web_tt2/modindex.tt2:13
+#: default/web_tt2/modindex.tt2:38
 msgid "Author"
 msgstr "Egilea"
 
@@ -6931,7 +6943,7 @@ msgstr "Tamaina (Kb)"
 msgid "Last update"
 msgstr "Azken eguneraketa"
 
-#: default/web_tt2/d_read.tt2:107 default/web_tt2/modindex.tt2:9
+#: default/web_tt2/d_read.tt2:107
 #, fuzzy
 msgid "Actions"
 msgstr "Ekintza"
@@ -7038,7 +7050,7 @@ msgstr "Instalatu"
 
 #: default/web_tt2/docindex.tt2:49 default/web_tt2/docindex.tt2:9
 #: default/web_tt2/modform.tt2:18 default/web_tt2/modform.tt2:47
-#: default/web_tt2/modform.tt2:49
+#: default/web_tt2/modform.tt2:49 default/web_tt2/modindex.tt2:14
 msgid "Reject"
 msgstr "Gaitzetsi"
 
@@ -7053,7 +7065,8 @@ msgstr "Moderatzeke dauden partekatutako dokumentuen zerrenda"
 #: default/mhonarc-ressources.tt2:215 default/mhonarc-ressources.tt2:333
 #: default/web_tt2/docindex.tt2:17 default/web_tt2/docindex.tt2:46
 #: default/web_tt2/get_closed_lists.tt2:15
-#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/review.tt2:121
+#: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:109
+#: default/web_tt2/modindex.tt2:34 default/web_tt2/review.tt2:121
 #: default/web_tt2/reviewbouncing.tt2:162
 #: default/web_tt2/reviewbouncing.tt2:83 default/web_tt2/show_exclude.tt2:20
 #: default/web_tt2/show_exclude.tt2:46 default/web_tt2/sigindex.tt2:14
@@ -7066,7 +7079,7 @@ msgstr "Hautapena alderantzikatu"
 msgid "Path"
 msgstr "Bidea"
 
-#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:16
+#: default/web_tt2/docindex.tt2:22 default/web_tt2/modindex.tt2:47
 msgid "Size"
 msgstr "Tamaina"
 
@@ -7848,7 +7861,7 @@ msgstr " Zerrenda honetako azken mezuak "
 msgid "From"
 msgstr "Nork"
 
-#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:50
+#: default/web_tt2/latest_arc.tt2:27 default/web_tt2/modindex.tt2:89
 msgid "No subject"
 msgstr "Gairik ez"
 
@@ -8179,7 +8192,7 @@ msgid "template name"
 msgstr "txantiloi izena"
 
 #: default/web_tt2/ls_templates.tt2:109 default/web_tt2/modform.tt2:59
-#: default/web_tt2/tracking.tt2:40
+#: default/web_tt2/modindex.tt2:64 default/web_tt2/tracking.tt2:40
 msgid "view"
 msgstr "ikusi"
 
@@ -8277,11 +8290,11 @@ msgstr "Mezua gaitzesten"
 msgid "Choose notification:"
 msgstr "Ohartarazpena aukeratu:"
 
-#: default/web_tt2/modform.tt2:28
+#: default/web_tt2/modform.tt2:28 default/web_tt2/modindex.tt2:17
 msgid "No notification"
 msgstr "Ohartarazpenik ez"
 
-#: default/web_tt2/modform.tt2:32
+#: default/web_tt2/modform.tt2:32 default/web_tt2/modindex.tt2:18
 msgid "Server default rejection message"
 msgstr "Zerbitzariaren lehenetsitako gaitzespen mezua"
 
@@ -8299,36 +8312,36 @@ msgid ""
 "spoofed, if you really want to send this notification, please confirm "
 msgstr ""
 
-#: default/web_tt2/modindex.tt2:2 default/web_tt2/modindex.tt2:7
+#: default/web_tt2/modindex.tt2:2 default/web_tt2/modindex.tt2:29
 msgid "Listing messages to moderate"
 msgstr "Moderatzeke dauden mezuen zerrenda"
 
-#: default/web_tt2/modindex.tt2:11
+#: default/web_tt2/modindex.tt2:26
+msgid "Add to blacklist"
+msgstr "Zerrenda beltzera gehitu"
+
+#: default/web_tt2/modindex.tt2:68
 msgid "Spam"
 msgstr "Spam"
 
-#: default/web_tt2/modindex.tt2:35
-msgid "junk"
-msgstr "zaborra"
-
-#: default/web_tt2/modindex.tt2:68
+#: default/web_tt2/modindex.tt2:117
 #, fuzzy
 msgid "No messages to moderate"
 msgstr "Moderatzeke dauden mezuen zerrenda"
 
-#: default/web_tt2/modindex.tt2:71
+#: default/web_tt2/modindex.tt2:121
 msgid "Moderation management"
 msgstr "Moderazioaren kudeaketa"
 
-#: default/web_tt2/modindex.tt2:77
+#: default/web_tt2/modindex.tt2:127
 msgid "edit blacklist"
 msgstr "zerrenda beltza editatu"
 
-#: default/web_tt2/modindex.tt2:79
+#: default/web_tt2/modindex.tt2:129
 msgid "Manage rejection messages"
 msgstr "Gaitzespen mezuak kudeatu"
 
-#: default/web_tt2/modindex.tt2:84 default/web_tt2/viewmod.tt2:2
+#: default/web_tt2/modindex.tt2:134 default/web_tt2/viewmod.tt2:2
 msgid "Current message"
 msgstr "Oraingo mezua"
 
@@ -8457,10 +8470,6 @@ msgstr "Zerrendaren deskribapena/hasiera orria"
 #: default/web_tt2/nav.tt2:139
 msgid "Message templates"
 msgstr "Mezu txantiloiak"
-
-#: default/web_tt2/nav.tt2:141
-msgid "Miscellaneous"
-msgstr "Denetarik"
 
 #: default/web_tt2/nav.tt2:146
 msgid "Manage Subscribers"
@@ -9692,8 +9701,9 @@ msgid "Text background color"
 msgstr "Testuaren atzeko kolorea"
 
 #: default/web_tt2/skinsedit.tt2:72
-msgid "Miscelaneous texts font color"
-msgstr ""
+#, fuzzy
+msgid "Miscellaneous texts font color"
+msgstr "Denetarik"
 
 #: default/web_tt2/skinsedit.tt2:78
 msgid "Titles and buttons color"
@@ -14887,6 +14897,10 @@ msgstr "Ezin kontsumitzailea kargatu, konfigurazioa okerra izan daiteke."
 msgid "Unknown provider."
 msgstr "Hornitzaile ezezaguna."
 
+#: default/web_tt2/skinsedit.tt2:72
+msgid "Miscelaneous texts font color"
+msgstr ""
+
 #: default/global_task_models/purge_spools.daily.task:1
 msgid "daily delete unuseful items from any spool"
 msgstr ""
@@ -14970,6 +14984,13 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Miscelaneous"
+#~ msgstr "Denetarik"
+
+#~ msgid "junk"
+#~ msgstr "zaborra"
 
 #~ msgid "html-only mode"
 #~ msgstr "html-bakarrik modua"
@@ -17933,9 +17954,6 @@ msgstr ""
 
 #~ msgid "Reject without notification "
 #~ msgstr "Ohartarazi gabe gaitzetsi"
-
-#~ msgid "Add to blacklist"
-#~ msgstr "Zerrenda beltzera gehitu"
 
 #~ msgid "Reject and blacklist sender"
 #~ msgstr "Gaitzetsi eta bidaltzailea zerrenda beltzera gehitu"

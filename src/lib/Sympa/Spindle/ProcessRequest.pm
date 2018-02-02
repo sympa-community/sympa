@@ -67,7 +67,7 @@ Sympa::Spindle::ProcessRequest - Workflow of request processing
 
 L<Sympa::Spindle::ProcessRequest> defines workflow to process requests.
 
-When spin() method is invoked, it genarates requests and processes them.
+When spin() method is invoked, it generates requests and processes them.
 
 TBD.
 

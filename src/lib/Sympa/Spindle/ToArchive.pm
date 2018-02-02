@@ -84,9 +84,32 @@ Sympa::Spindle::ToArchive - Process to store messages into archiving spool
 
 =head1 DESCRIPTION
 
-TBD.
+This class stores message into archive spool (SPOOLDIR/outgoing).
+However, in any of following cases, message won't be stored:
+
+=over
+
+=item *
+
+C<process_archive> list parameter is I<not> C<on>, i.e. archiving is disabled.
+
+=item *
+
+C<ignore_x_no_archive_header_feature> list parameter is I<not> C<on>,
+and the message has any of these fields:
+
+  X-no-archive: yes
+  Restrict: no-external-archive
+
+=back
+
+When message was originally encrypted,
+then if C<archive_crypted_msg> list parameter is I<not> C<original>, decrypted
+message will be stored.  Otherwise original message will be stored.
 
 =head1 SEE ALSO
+
+L<Sympa::Internals::Workflow>.
 
 L<Sympa::Message>,
 L<Sympa::Spindle>, L<Sympa::Spindle::DistributeMessage>,

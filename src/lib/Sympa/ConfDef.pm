@@ -1151,7 +1151,7 @@ our @params = (
 ##        'file'     => 'wwsympa.conf',
 ##    },
 
-    {'gettext_id' => 'Miscelaneous'},
+    {'gettext_id' => 'Miscellaneous'},
 
     {   'name'       => 'email',
         'default'    => 'sympa',
@@ -1515,7 +1515,7 @@ our @params = (
         'vhost'    => '1',
     },
 
-    {'gettext_id' => 'Web interface parameters: Miscelaneous'},
+    {'gettext_id' => 'Web interface parameters: Miscellaneous'},
 
     # Session and cookie:
 
@@ -1753,6 +1753,13 @@ our @params = (
             'Default timeout while performing a fetch with include_sql_query.',
         'file'    => 'sympa.conf',
         'default' => '300',
+    },
+    {   'name'       => 'default_ttl',
+        'gettext_id' => 'Default of inclusion timeout',
+        'gettext_comment' =>
+            'Default timeout between two scheduled synchronizations of list members with data sources.',
+        'file'    => 'sympa.conf',
+        'default' => '3600',
     },
 
     {   'gettext_id' => 'DKIM',
@@ -2011,12 +2018,6 @@ our @params = (
             'Defines the prefix allowing to recognize that a list is an automatic list.',
         'file'     => 'sympa.conf',
         'optional' => '1',
-    },
-    {   'name' => 'default_ttl',    #FIXME: maybe not used
-        'gettext_id' =>
-            'Default timeout between two scheduled synchronizations of list members with data sources.',
-        'file'    => 'sympa.conf',
-        'default' => '3600',
     },
     {   'name' => 'default_distribution_ttl',    #FIXME: maybe not used
         'gettext_id' =>

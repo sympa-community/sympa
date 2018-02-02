@@ -207,7 +207,7 @@ See also L<Sympa::Spindle/"Public methods">.
 =item new ( key =E<gt> value, ... )
 
 In most cases, L<Sympa::Spindle::ProcessMessage>
-splices meessages to this class.  This method is not used in ordinal case.
+splices messages to this class.  This method is not used in ordinal case.
 
 =item spin ( )
 

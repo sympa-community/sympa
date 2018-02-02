@@ -293,7 +293,7 @@ sub _twist {
     # AOL.
     if (    $eff_type eq 'multipart/report'
         and $report_type eq 'feedback-report') {
-        # Prepare entity to analyze.
+        # Prepare entity to analyse.
         # Not extract message/* parts.
         my $parser = MIME::Parser->new;
         $parser->extract_nested_messages(0);
@@ -644,7 +644,7 @@ sub _parse_multipart_report {
     my $message       = shift;
     my @subpart_types = @_;
 
-    # Prepare entity to analyze.
+    # Prepare entity to analyse.
     # Not extract message/* parts.
     my $parser = MIME::Parser->new;
     $parser->extract_nested_messages(0);
@@ -1782,7 +1782,7 @@ with envelope ID, and increase bounce score.
 =item *
 
 Others, and messages are E-mail Feedback Report.
-Reports are analyzed, and if opt-out report is found and list configuration
+Reports are analysed, and if opt-out report is found and list configuration
 allows it, original recipient will be deleted.
 
 =back

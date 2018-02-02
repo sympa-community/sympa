@@ -532,7 +532,7 @@ our %required_args = (
     ## other required parameters are checked in the subroutine
     'create_automatic_list'         => ['param.user.email', 'family'],
     'create_automatic_list_request' => ['param.user.email', 'family'],
-    'create_list'                   => ['param.user.email'],
+    'create_list'                   => ['param.user.email', 'info'],
     'create_list_request'           => ['param.user.email'],
     #XXX'css' => [],
     'd_admin'         => ['param.list', 'param.user.email'],
@@ -1448,7 +1448,7 @@ while ($query = CGI::Fast->new) {
                         $cas_server->getServerLoginGatewayURL($return_url);
 
                     if ($redirect_url =~ /http(s)+\:\//i) {
-                        $in{'action'} = 'redirect';
+                        $in{'action'} = 'redirect';                 #FIXME
                         $param->{'redirect_to'} = $redirect_url;
 
                         last;
@@ -1507,7 +1507,8 @@ while ($query = CGI::Fast->new) {
     # - A lot of other methods where used in the past (before session was
     #   introduced in Sympa). We must clean all.
     # N.B.: Location to where redirect should respect local authority.
-    unless ($temporary_actions{$action} or $ENV{'REQUEST_METHOD'} ne 'GET') {
+    if (not $temporary_actions{$action}
+        and $ENV{'REQUEST_METHOD'} eq 'GET') {
         my $redirect_url =
             Sympa::Tools::WWW::get_my_url($robot, authority => 'local');
         $redirect_url =~ s/[?].*\z//;
@@ -1562,7 +1563,7 @@ while ($query = CGI::Fast->new) {
 
             unless ($comm{$action}) {
                 if (my $list = Sympa::List->new($action, $robot)) {
-                    do_redirect(
+                    _redirect(
                         Sympa::get_url(
                             $list, 'info',
                             nomenu    => $param->{'nomenu'},
@@ -1927,7 +1928,7 @@ while ($query = CGI::Fast->new) {
         # close FILE;
     } elsif ($param->{'redirect_to'}) {
         $log->syslog('notice', 'Redirecting to %s', $param->{'redirect_to'});
-        print "Location: $param->{'redirect_to'}\n\n";
+        _redirect($param->{'redirect_to'});
     } else {
         prepare_report_user();
         send_html('main.tt2');
@@ -3434,9 +3435,14 @@ sub do_login {
 
     web_db_stat_log();
 
-    do_redirect($session->{'redirect_url'});
-    return;
-
+    _redirect(
+        $session->{'redirect_url'} || Sympa::get_url(
+            $robot, undef,
+            nomenu    => $param->{'nomenu'},
+            authority => 'local'
+        )
+    );
+    return 1;
 }
 
 ## Login WWSympa
@@ -3494,12 +3500,9 @@ sub do_sso_login {
         my $redirect_url = $cas_server->getServerLoginURL($service);
         wwslog('info', '(%s)', $redirect_url);
         if ($redirect_url =~ /http(s)+\:\//i) {
-            $in{'action'}           = 'redirect';
+            $in{'action'}           = 'redirect';       #FIXME
             $param->{'redirect_to'} = $redirect_url;
-            $param->{'bypass'}      = 'extreme';
-            $session->set_cookie($param->{'cookie_domain'}, 'session');
-            #$session->set_cookie('localhost','session');
-            print "Location: $param->{'redirect_to'}\n\n";
+            _redirect($redirect_url);
         }
 
     } elsif (
@@ -3539,11 +3542,9 @@ sub do_sso_login {
             );
 
             wwslog('info', 'Redirect user to %s', $service);
-            $in{'action'}           = 'redirect';
+            $in{'action'}           = 'redirect';       #FIXME
             $param->{'redirect_to'} = $service;
-            $param->{'bypass'}      = 'extreme';
-            print "Location: $param->{'redirect_to'}\n\n";
-
+            _redirect($service);
             return 1;
         }
 
@@ -3877,8 +3878,14 @@ sub do_sso_login {
         ## Required to provide logout feature if available
         $session->{'sso_id'} = $in{'auth_service_name'};
 
-        do_redirect($session->{'redirect_url'});
-        return;
+        _redirect(
+            $session->{'redirect_url'} || Sympa::get_url(
+                $robot, undef,
+                nomenu    => $param->{'nomenu'},
+                authority => 'local'
+            )
+        );
+        return 1;
     } else {
         ## Unknown SSO service
         Sympa::Report::reject_report_web(
@@ -3938,8 +3945,14 @@ sub do_sso_login_succeeded {
         $param->{'back_to_mom'} = 1;
         return 1;
     } else {
-        do_redirect($session->{'redirect_url'});
-        return;
+        _redirect(
+            $session->{'redirect_url'} || Sympa::get_url(
+                $robot, undef,
+                nomenu    => $param->{'nomenu'},
+                authority => 'local'
+            )
+        );
+        return 1;
     }
 }
 
@@ -4051,24 +4064,19 @@ sub do_help {
     return 1;
 }
 
+#FIXME: Would be obsoleted. Used internally only.
+sub do_redirect {
+    _redirect($param->{'redirect_to'});
+    return 1; 
+}
+
 # update session cookie and redirect the client to redirect_to parameter or
 # glob var;
-sub do_redirect {
-
+sub _redirect {
     my $redirect_to = shift;
-    wwslog('info', '(%s)', $redirect_to);
 
-    $redirect_to ||= $param->{'redirect_to'};
-    # Because of some bug Sympa did redirection to an empty URL.  Lines below
-    # should prevent it.
-    $redirect_to ||= Sympa::get_url(
-        $robot, undef,
-        nomenu    => $param->{'nomenu'},
-        authority => 'local'
-    );
-
-    #$session->set_cookie('localhost','session');
     $session->set_cookie($param->{'cookie_domain'}, 'session');
+    print "Status: 302 Moved\n";
     print "Location: $redirect_to\n\n";
     $param->{'bypass'} = 'extreme';
     return 1;
@@ -4095,15 +4103,14 @@ sub do_logout {
         my $cas_server =
             $Conf::Conf{'auth_services'}{$robot}[$session->{'cas_server'}]
             {'cas_server'};
+        delete $session->{'cas_server'};
 
-        $in{'action'} = 'redirect';
         my $return_url = Sympa::Tools::WWW::get_my_url($robot);
         $return_url =~ s{/logout\b}{};
-
-        $param->{'redirect_to'} =
+        my $redirect_url =
             $cas_server->getServerLogoutURL($return_url);
-
-        delete $session->{'cas_server'};
+        $in{'action'} = 'redirect';                     #FIXME
+        $param->{'redirect_to'} = $redirect_url;
         return 'redirect';
     } elsif (defined $session->{'sso_id'}) {
         # this user was logged using a generic_sso
@@ -4125,11 +4132,9 @@ sub do_logout {
         ## Remove sso_id
         delete $session->{'sso_id'};
 
-        if ($sso->{'logout_url'}) {
-
-            $in{'action'} = 'redirect';
+        if ($sso->{logout_url}) {
+            $in{'action'} = 'redirect';                         #FIXME
             $param->{'redirect_to'} = $sso->{'logout_url'};
-
             return 'redirect';
         }
     }

@@ -246,7 +246,7 @@ __END__
 
 Sympa::Request - Requests for operation
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Sympa::Request;
   my $request = Sympa::Request->new($serialized, context => $list);
@@ -254,7 +254,7 @@ Sympa::Request - Requests for operation
 
 =head1 DESCRIPTION
 
-L<Sympa::Request> inmplements serializable object representing requests by
+L<Sympa::Request> implements serializable object representing requests by
 users.
 
 =head2 Methods

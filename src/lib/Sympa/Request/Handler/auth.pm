@@ -85,7 +85,7 @@ Sympa::Request::Handler::auth - auth request handler
 
 =head1 DESCRIPTION
 
-Fetchs the request matching with {authkey} and optional {request} attributes
+Fetches the request matching with {authkey} and optional {request} attributes
 from held request spool,
 and if succeeded, processes it with C<md5> authentication level.
 

@@ -427,7 +427,7 @@ Messages with lowest priority (C<z> or C<Z>) are skipped.
 
 =item *
 
-Messages with possiblly higher priority are chosen.
+Messages with possibly higher priority are chosen.
 This is done by skipping messages with lower priority than those already
 found.
 

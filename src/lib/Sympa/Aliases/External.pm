@@ -107,7 +107,7 @@ sub _error {
     } elsif ($status == Sympa::Aliases::ERR_READ_ALIAS()) {
         $log->syslog('err', '(%d) Unable to read existing aliases', $status);
     } elsif ($status == Sympa::Aliases::ERR_CREATE_TEMP()) {
-        $log->syslog('err', '(%d) Could not create temporay file', $status);
+        $log->syslog('err', '(%d) Could not create temporary file', $status);
     } elsif ($status == Sympa::Aliases::ERR_ALIAS_EXISTS()) {
         $log->syslog('info', '(%d) Some of list aliases already exist',
             $status);
@@ -207,7 +207,7 @@ Unable to read existing aliases.
 
 =item ERR_CREATE_TEMP
 
-Could not create temporay file.
+Could not create temporary file.
 
 =item ERR_ALIAS_EXISTS
 

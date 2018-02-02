@@ -45,7 +45,7 @@ Always returns true.
 
 =item C<equal> C<(> I<var1>C<,> I<var2> C<)>
 
-Tests if two arguments are equial.
+Tests if two arguments are equal.
 
 =item C<is_subscriber> C<(> I<listname>C<,> I<var> C<)>
 
@@ -148,7 +148,7 @@ authorization scenario for sending messages.
 It can be used, for example, to require editor validation for multipart
 messages.
 Optional I<index> may be integer (may be less than C<0>) to choose particular
-entry from multile fields.
+entry from multiple fields.
 
 =item C<[msg_part-E<gt>type]>
 
@@ -254,7 +254,7 @@ The operation is held and waits for approval by list owner.
 
 =item C<reject>
 
-Denys operation.
+Denies operation.
 
 =item C<request_auth>
 
@@ -283,14 +283,14 @@ Sends a notification to list owner.
 
 Sends no notification to the message sender.
 
-=item C<(reason=>I<reason_key>C<)>
+=item C<(reason='>I<reason_key>C<')>
 
 Only for C<reject> action.
 Matches a key in F<mail_tt2/authorization_reject.tt2> template corresponding
 to an information message about the reason of the reject of the user.
 I<reason_key> have to be a static string enclosed by C<'...'>.
 
-=item C<(tt2=>I<tpl_name>C<)>
+=item C<(tt2='>I<tpl_name>C<')>
 
 Only for C<reject> action.
 Corresponding template (I<tpl_name>C<.tt2>) is sent to the sender.

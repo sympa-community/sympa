@@ -288,14 +288,14 @@ By default it always returns C<1>.
 I<Instance method>, I<overridable>.
 Executes process when object could not be deserialized (new() method of object
 failed).
-By default, quarantines object calling quearantine() method of source spool.
+By default, quarantines object calling quarantine() method of source spool.
 
 =item _on_failure ( $message, $handle )
 
 I<Instance method>, I<overridable>.
 Executes process when processing of $message failed (_twist() returned
 C<undef>).
-By default, quarantines object calling quearantine() method of source spool.
+By default, quarantines object calling quarantine() method of source spool.
 
 =item _on_skip ( $message, $handle )
 
@@ -319,7 +319,7 @@ spindle as values.
 =item _twist ( $message )
 
 I<Instance method>, I<mandatory>.
-Processes an object: Typically, modifys object or creates another object and
+Processes an object: Typically, modifies object or creates another object and
 stores it into appropriate spool.
 
 Parameter:
@@ -340,7 +340,7 @@ True value on success; C<0> if processing skipped; C<undef> on failure.
 As of Sympa 6.2.13, _twist() may also return the reference to array including
 name(s) of other classes:
 In this case spin() and twist() will call _twist() method of given classes in
-order (not coercing spindle object into them) and uses retruned false value
+order (not coercing spindle object into them) and uses returned false value
 at first or true value at last.
 
 =back

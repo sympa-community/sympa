@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use Cwd qw();
 use English qw(-no_match_vars);
 
 use Sympa::ConfDef;
@@ -10,13 +11,13 @@ use Sympa::ListOpt;
 
 my @groups = (
     [description => 'List definition'],
-    [sending => 'Sending/receiving setup'],
-    [command => 'Privileges'],
-    [archives => 'Archives'],
-    [bounces => 'Bounces'],
+    [sending     => 'Sending/receiving setup'],
+    [command     => 'Privileges'],
+    [archives    => 'Archives'],
+    [bounces     => 'Bounces'],
     [data_source => 'Data sources setup'],
-    [dkim => 'DKIM'],
-    [other => 'Miscellaneous'],
+    [dkim        => 'DKIM'],
+    [other       => 'Miscellaneous'],
 );
 
 my %overrides;
@@ -28,19 +29,21 @@ foreach my $pitem (@Sympa::ConfDef::params) {
 my $parameters = '';
 
 foreach my $g (@groups) {
-   my ($group, $gdesc) = @$g;
-   $parameters .= sprintf "=head2 %s\n\n", $gdesc;
+    my ($group, $gdesc) = @$g;
+    $parameters .= sprintf "=head2 %s\n\n", $gdesc;
 
-  my $pinfo = {%Sympa::ListDef::pinfo};
-  foreach my $key (_keys($pinfo)) {
-    next unless $pinfo->{$key}->{group} and $pinfo->{$key}->{group} eq $group;
+    my $pinfo = {%Sympa::ListDef::pinfo};
+    foreach my $key (_keys($pinfo)) {
+        next
+            unless $pinfo->{$key}->{group}
+                and $pinfo->{$key}->{group} eq $group;
 
-    my $pii = $pinfo->{$key};
-    my $ppi = [$key];
+        my $pii = $pinfo->{$key};
+        my $ppi = [$key];
 
-    $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($key);
-    _render($pii, $ppi);
-  }
+        $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($key);
+        _render($pii, $ppi);
+    }
 }
 
 printf do { local $RS; <DATA> }, $parameters;
@@ -179,8 +182,31 @@ sub _format {
             || $pinfo->{field_type};
         $parameters .= sprintf "%s\n\n", $desc;
     } elsif (exists $pinfo->{scenario}) {
-        $parameters .= sprintf "Name of C<%s> scenario.\n\n",
+        my $function = $pinfo->{scenario};
+        my $cwd      = Cwd::getcwd();
+        chdir '../default/scenari/' or die $ERRNO;
+        $parameters .= sprintf "Name of C<%s> scenario:\n\n",
             $pinfo->{scenario};
+
+        $parameters .= "=over\n\n";
+        my @names = sort map {
+            my $file = [split m{/}, $_]->[-1];
+            substr $file, 1 + length $function
+        } <$function.*>;
+        foreach my $name (@names) {
+            my $fh;
+            open $fh, '<', "$function.$name" or die $ERRNO;
+            my $content = do { local $RS; <$fh> };
+            close $fh;
+            if ($content =~ /(?:\A|\n)title(?:[.][-\w]+)\s+(.+)/) {
+                $parameters .= sprintf "=item C<%s> - %s\n\n", $name, $1;
+            } else {
+                $parameters .= sprintf "=item C<%s>\n\n", $name;
+            }
+        }
+        $parameters .= "=back\n\n";
+
+        chdir $cwd;
     } elsif (ref $pinfo->{format} eq 'ARRAY') {
         $parameters .= "=over\n\n";
         foreach my $item (@{$pinfo->{format}}) {
@@ -193,11 +219,11 @@ sub _format {
         $parameters .= sprintf "Number of %s.\n\n", $pinfo->{gettext_unit};
     } elsif (exists $pinfo->{format_s} or exists $pinfo->{format}) {
         my $format =
-              (exists $pinfo->{format_s})
+            (exists $pinfo->{format_s})
             ? $pinfo->{format_s}
             : $pinfo->{format};
         $format =~ s/\A\(\?\^:(.*)\)\z/$1/
-	    or $format =~ s/\A\(\?-xism:(.*)\)\z/$1/;
+            or $format =~ s/\A\(\?-xism:(.*)\)\z/$1/;
         $parameters .= sprintf "/C<%s>/\n\n", _escape_pod($format);
     }
 }
@@ -216,9 +242,11 @@ sub _default {
                 sprintf
                 "Value of L<C<%s>|sympa.conf(5)/%s> parameter in F<sympa.conf>%s.\n\n",
                 $pinfo->{default}->{conf}, $pinfo->{default}->{conf},
-                ($overrides{$pinfo->{default}->{conf}}
+                (
+                $overrides{$pinfo->{default}->{conf}}
                 ? ' or F<robot.conf>'
-                : '');
+                : ''
+                );
         } else {
             $parameters .= sprintf "C<%s>\n\n", $pinfo->{default};
         }
@@ -279,7 +307,7 @@ On single line parameters,
 each line has the form "I<parameter> I<value>".
 I<value> may contain spaces but may not contain newlines.
 
-Several parameters may have multiple vlues.
+Several parameters may have multiple values.
 If it's the case, values may be separated by comma (C<,>)
 or parameter lines may be repeated.
 Some of parameters must have one or more of limited values.

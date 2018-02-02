@@ -482,7 +482,7 @@ __END__
 
 Sympa::Message::Template - Mail message generated from template
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Sympa::Message::Template;
   my $message = Sympa::Message::Template->new(
@@ -516,7 +516,7 @@ Template filename (without extension).
 
 Scalar or arrayref: SMTP "RCPT TO:" field.
 
-If it is a scalar, trys to retrieve information of the user
+If it is a scalar, tries to retrieve information of the user
 (See also L<Sympa::User>.
 
 =item data =E<gt> $data

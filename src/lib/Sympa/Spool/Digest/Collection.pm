@@ -102,7 +102,7 @@ Does nothing.
 
 =item remove ( $handle )
 
-Trys to remove directory of spool.
+Tries to remove directory of spool.
 If succeeded, returns true value.
 Otherwise returns false value.
 

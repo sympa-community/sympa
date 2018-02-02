@@ -979,10 +979,10 @@ Parameter:
 
 =item $lang, ...
 
-Language tags or similer things.
+Language tags or similar things.
 Old style "locale" by Sympa (see also L</Compatibility>) will also be
 accepted.
-If multiple tags are specified, this function trys each of them in order.
+If multiple tags are specified, this function tries each of them in order.
 
 Note that C<'en'> will always succeed.  Thus, putting it at the end of
 argument list may be useful.
@@ -1006,7 +1006,7 @@ This function of Sympa 6.2a or earlier returned old style "locale" names.
 =item native_name ( )
 
 I<Instance method>.
-Get the name of the language, ie the one defined in the catalog.
+Get the name of the language, i.e. the one defined in the catalog.
 
 Parameters:
 

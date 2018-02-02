@@ -93,7 +93,7 @@ sub new {
 
         #FIXME: At present, conversion by qencode_filename() /
         # qdecode_filename() may not be bijective.  So we take the first one
-        # of (possiblly multiple) matching paths insted of taking encoded one.
+        # of (possibly multiple) matching paths insted of taking encoded one.
         my ($self) = $parent->get_children(%options, name => $name);
         return $self;
     }
@@ -1161,7 +1161,7 @@ Don't omit nodes with zero size.
 
 Returns:
 
-(Possiblly empty) list of child nodes.
+(Possibly empty) list of child nodes.
 
 =item get_moderated_descendants ( )
 
@@ -1222,7 +1222,7 @@ If renaming failed, returns false value and sets $ERRNO ($!).
 
 =item rmdir ( )
 
-I<instalce method>.
+I<instance method>.
 Removes directory from repository.
 Directory must be empty.
 
@@ -1238,7 +1238,7 @@ Creates or updates property description of the node.
 
 =item unlink ( )
 
-I<instalce method>.
+I<instance method>.
 Removes file from repository.
 
 Returns:

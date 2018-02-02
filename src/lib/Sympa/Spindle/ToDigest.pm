@@ -65,9 +65,14 @@ Sympa::Spindle::ToDigest - Process to store messages into digest spool
 
 =head1 DESCRIPTION
 
-TBD.
+If the list is configured to perform digest delivery, this class stores it
+into digest spool (F<SPOOLDIR/digest/list@domain>).
+
+However, ecrypted messages will be ignored.
 
 =head1 SEE ALSO
+
+L<Sympa::Internals::Workflow>.
 
 L<Sympa::Message>,
 L<Sympa::Spindle>, L<Sympa::Spindle::DistributeMessage>,
