@@ -583,6 +583,7 @@ Warning: this message may already have been sent by one of the list's editors.[%
 
 [%~ ELSIF report_entry == 'unable_to_parse' ~%]
   [%|loc()%]The page could not be parsed properly. Please check the content of web page or file you submitted.[%END%]
+  [% report_param.error %]
 
 [%~ ELSIF report_entry == 'wrong_value' ~%]
   [%|loc(report_param.argument)%]Wrong value for parameter %1[%END%]

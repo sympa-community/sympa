@@ -14747,13 +14747,16 @@ sub do_send_mail {
         # parse return the MIME::Lite part to send
         my $part = eval { $mail_html->parse($page_source) };
         unless ($part) {
-            Sympa::Report::reject_report_web('user', 'unable_to_parse', {},
+            my $error = join("\n", $mail_html->errstr) || 'Unknown error';
+            Sympa::Report::reject_report_web('user', 'unable_to_parse',
+                {error => $error},
                 $param->{'action'});
             wwslog(
                 'info',
-                'A MIME part could not be created with the supplied data, %s, %s',
+                'A MIME part could not be created with the supplied data, %s, %s: %s',
                 $in{'url'},
-                $in{'uploaded_file'}
+                $in{'uploaded_file'},
+                $error
             );
             return undef;
         }
