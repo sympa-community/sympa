@@ -372,15 +372,7 @@ nobase_static_DATA = \
 	fonts/foundation-icons/svgs/fi-zoom-in.svg \
 	fonts/foundation-icons/svgs/fi-zoom-out.svg \
 	fonts/Raleway/OFL.txt \
-	fonts/Raleway/Raleway-Bold.ttf \
-	fonts/Raleway/Raleway-ExtraBold.ttf \
-	fonts/Raleway/Raleway-ExtraLight.ttf \
-	fonts/Raleway/Raleway-Heavy.ttf \
-	fonts/Raleway/Raleway-Light.ttf \
-	fonts/Raleway/Raleway-Medium.ttf \
 	fonts/Raleway/Raleway-Regular.ttf \
-	fonts/Raleway/Raleway-SemiBold.ttf \
-	fonts/Raleway/Raleway-Thin.ttf \
 	icons/arc.png \
 	icons/back.png \
 	icons/begin.png \
