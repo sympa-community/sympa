@@ -423,7 +423,7 @@ install-data-hook:
 	cd $(DESTDIR)$(staticdir); \
 	rm -f external/foundation/js/vendor/jquery.js
 	@echo "Creating writable directories"
-	-@for dir in $(staticdir)/css; do \
+	-@for dir in $(staticdir)/css $(staticdir)/pictures; do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
