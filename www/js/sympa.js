@@ -530,14 +530,25 @@ $(function() {
     $('#date_to').datepicker(options);
 });
 
-/* Add "Close" button to popup showing bounce. */
+/* Emulates AJAX reveal modal button of Foundation 5. */
+/* The element specified by data-reveal-id is the container of content
+ * specified by href attribute of the item which have data-reveal-ajax="true".
+ */
 $(function() {
-    $('#edit, #mainviewbounce, #mainviewmod')
-    .on('opened.fndtn.reveal', function(){
-        var closeButton =
-            $('<a class="close-reveal-modal" aria-label="' + sympa.closeText
-                + '">&#215;</a>');
-        $(this).append(closeButton);
+    $('a[data-reveal-ajax="true"]').on('click', function(){
+        var revealId = '#' + $(this).data('reveal-id');
+        $.ajax($(this).attr('href')).done(function(content){
+            $(revealId).html(content);
+            var revealModal = new Foundation.Reveal($(revealId));
+            revealModal.open();
+            /* Add "Close" button to popup. */
+            var closeButton =
+                $('<a class="close-button" data-close aria-label="'
+                    + sympa.closeText + '" aria-hidden="true">&times;</a>');
+            $(revealId).append(closeButton);
+        });
+
+        return false;
     });
 });
 
