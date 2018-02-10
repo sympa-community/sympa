@@ -12,15 +12,17 @@
   </p>
   <p>
     <input class="MainMenuLinks" type="submit" form="moderate_mails" name="action_reject" value="[%|loc%]Reject[%END%]" />
-    <input type="hidden" name="from_modindex" value="from_modindex" form="moderate_mails" />
-      <select  name="message_template" form="moderate_mails">
-       <option  value="reject_quiet"[%- IF msg.value.spam_status == 'spam' -%] [% one_template_is_selected = '1' %]selected="selected"[% END %]>[%|loc %]No notification[%END%]</option>
-       <option  value="reject">[%|loc %]Server default rejection message[%END%]</option>
-       [% FOREACH file = available_files %]
-       <option  value="reject_[%  file  %]" [% IF file == default_reject_template %] selected="selected" [%END%] > [% file  %]</option>
-       [%- END- %]
-      </select>
-   <br />
+    <select name="message_template" form="moderate_mails">
+    <option value="reject_quiet"
+     [%~ IF msg.value.spam_status == 'spam' %] selected="selected"[% END ~%]
+    >[%|loc %]No notification[%END%]</option>
+    <option value="reject">[%|loc %]Server default rejection message[%END%]</option>
+    [% FOREACH file = available_files %]
+      <option  value="reject_[%  file  %]"
+       [%~ IF file == default_reject_template %] selected="selected"[%END ~%]
+      > [% file  %]</option>
+    [%- END- %]
+    </select>
   </p>
   <p>
     <input type=checkbox name="blacklist" form="moderate_mails" /> [%|loc %]Add to blacklist[%END%]
