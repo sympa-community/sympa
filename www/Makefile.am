@@ -45,31 +45,12 @@ nobase_static_DATA = \
 	external/font-awesome/fonts/fontawesome-webfont.woff2 \
 	external/foundation/css/foundation.css \
 	external/foundation/css/foundation.min.css \
-	external/foundation/css/normalize.css \
-	external/foundation/css/responsive-tables.css \
+	external/foundation/css/foundation-float.css \
+	external/foundation/css/foundation-float.min.css \
 	external/foundation/js/foundation.min.js \
-	external/foundation/js/foundation/foundation.abide.js \
-	external/foundation/js/foundation/foundation.accordion.js \
-	external/foundation/js/foundation/foundation.alert.js \
-	external/foundation/js/foundation/foundation.clearing.js \
-	external/foundation/js/foundation/foundation.dropdown.js \
-	external/foundation/js/foundation/foundation.equalizer.js \
-	external/foundation/js/foundation/foundation.interchange.js \
-	external/foundation/js/foundation/foundation.joyride.js \
-	external/foundation/js/foundation/foundation.js \
-	external/foundation/js/foundation/foundation.magellan.js \
-	external/foundation/js/foundation/foundation.offcanvas.js \
-	external/foundation/js/foundation/foundation.orbit.js \
-	external/foundation/js/foundation/foundation.reveal.js \
-	external/foundation/js/foundation/foundation.slider.js \
-	external/foundation/js/foundation/foundation.tab.js \
-	external/foundation/js/foundation/foundation.tooltip.js \
-	external/foundation/js/foundation/foundation.topbar.js \
-	external/foundation/js/foundation/responsive-tables.js \
-	external/foundation/js/vendor/fastclick.js \
-	external/foundation/js/vendor/jquery.cookie.js \
-	external/foundation/js/vendor/modernizr.js \
-	external/foundation/js/vendor/placeholder.js \
+	external/foundation/js/vendor/foundation.js \
+	external/foundation/js/vendor/foundation.min.js \
+	external/foundation/js/vendor/what-input.js \
 	external/html5shiv/html5shiv.js \
 	external/images/ui-bg_flat_0_aaaaaa_40x100.png \
 	external/images/ui-bg_flat_75_ffffff_40x100.png \
