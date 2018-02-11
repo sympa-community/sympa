@@ -6,7 +6,7 @@
 	 
  	 <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
 
-<p>[%|loc(conf.pictures_max_size / 1024)%]You can upload your picture below. It will be available in the list review page. The picture should use a standard format (GIF, JPG, JPEG or PNG) and the file size should not exceed %1 Kb.[%END%]</p><br />
+<p>[%|loc(conf.pictures_max_size / 1024)%]You can upload your picture below. It will be available in the list review page. The picture should use a standard format (GIF, JPEG or PNG) and the file size should not exceed %1 Kb.[%END%]</p><br />
 
 	 <fieldset>
            <label for="uploaded_file"><input id="uploaded_file" type="file" name="uploaded_file"/></label>
