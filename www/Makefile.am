@@ -372,7 +372,7 @@ nobase_static_DATA = \
 	fonts/foundation-icons/svgs/fi-zoom-in.svg \
 	fonts/foundation-icons/svgs/fi-zoom-out.svg \
 	fonts/Raleway/OFL.txt \
-	fonts/Raleway/Raleway-Regular.ttf \
+	fonts/Raleway/Raleway-Regular.otf \
 	icons/arc.png \
 	icons/back.png \
 	icons/begin.png \
