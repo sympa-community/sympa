@@ -1,5 +1,33 @@
 # Change Log
 
+## [6.2.25b.1](https://github.com/sympa-community/sympa/tree/6.2.25b.1)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.24...6.2.25b.1)
+
+**Implemented enhancements:**
+
+- Restore default\_ttl parameter [\#145](https://github.com/sympa-community/sympa/issues/145)
+- moderation UI doesn't allow mass operations [\#122](https://github.com/sympa-community/sympa/issues/122)
+
+**Fixed bugs:**
+
+- Hardcoded max picture size in picture\_upload.tt2 [\#180](https://github.com/sympa-community/sympa/issues/180)
+- Synchronize members with data source and task manager crash randomly [\#166](https://github.com/sympa-community/sympa/issues/166)
+- there is a 'f' missing in a print function [\#159](https://github.com/sympa-community/sympa/issues/159)
+- $localstatedir/sympa/static\_content/css directory not created at install time [\#148](https://github.com/sympa-community/sympa/issues/148)
+- Create $staticdir/pictures directory [\#189](https://github.com/sympa-community/sympa/pull/189) ([xavierba](https://github.com/xavierba))
+- "libexecdir" is misleadingly used instead of "execcgidir" [\#165](https://github.com/sympa-community/sympa/pull/165) ([ikedas](https://github.com/ikedas))
+- WWSympa: Redirect without Status field may bring to empty page [\#164](https://github.com/sympa-community/sympa/pull/164) ([ikedas](https://github.com/ikedas))
+- Inconsistencies in implementation and documentation of typical list profile \(create list templates\) [\#157](https://github.com/sympa-community/sympa/pull/157) ([ikedas](https://github.com/ikedas))
+
+**Closed issues:**
+
+- RAM consumption is too damn high [\#24](https://github.com/sympa-community/sympa/issues/24)
+
+**Merged pull requests:**
+
+-  Update bundled Raleway font with OTF flavour  [\#191](https://github.com/sympa-community/sympa/pull/191) ([xavierba](https://github.com/xavierba))
+
 ## [6.2.24](https://github.com/sympa-community/sympa/tree/6.2.24)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.23b.3...6.2.24)
