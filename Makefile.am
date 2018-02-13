@@ -171,7 +171,7 @@ installconfig: installdir sympa_wizard.pl.inst
 			-e 's|--sysconfdir--|$(sysconfdir)|' \
 			-e 's|--defaultdir--|$(defaultdir)|' \
 			etc_README > $(DESTDIR)$(sysconfdir)/README; \
-		chmod 444 $(DESTDIR)$(sysconfdir)/README; \
+		chmod 644 $(DESTDIR)$(sysconfdir)/README; \
 	fi
 
 nextstep: 
