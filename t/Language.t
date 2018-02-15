@@ -10,8 +10,9 @@
 use strict;
 use warnings;
 use Test::More;
+use FindBin;
+use lib ("$FindBin::Bin/../src/lib",'t/stub');
 
-use lib qw(t/stub);
 use Sympa::Language;
 
 my %tests = (
@@ -199,7 +200,7 @@ my %tests = (
     ## Emulated strftime()
     gettext_strftime =>
         [['%a, %d %b %Y' => "\xC4\x8Ct 01. Led 1970", 'emulated strftime'],],
- 
+
     ## Failed if utf8 flag set
     gettext_strftime_noutf8 => [['%a, %d %b %Y'],],
 );
@@ -308,4 +309,3 @@ foreach my $test (@{$tests{gettext_strftime_noutf8}}) {
     ok(!Encode::is_utf8($language->gettext_strftime($test->[0], gmtime 0)),
         "!is_utf8 gettext_strftime($test->[0])");
 }
-

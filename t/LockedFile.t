@@ -4,6 +4,9 @@
 
 use strict;
 use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../src/lib";
+
 use English qw(-no_match_vars);
 use File::Temp;
 use Test::More;
@@ -74,10 +77,13 @@ sub attempt_parallel_lock {
     my ($file, $mode) = @_;
 
     my $code = <<EOF;
+use FindBin;
+use lib "$FindBin::Bin/../src/lib";
+use Sympa::LockedFile;
 my \$lock = Sympa::LockedFile->new("$file", -1, "$mode");
 exit !!\$lock;
 EOF
-    my @command = ($EXECUTABLE_NAME, "-MSympa::LockedFile", "-e", $code);
+    my @command = ($EXECUTABLE_NAME, "-e", $code);
     system(@command);
     return $CHILD_ERROR >> 8;
 }
