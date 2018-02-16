@@ -8,8 +8,6 @@ use Cwd qw();
 use English qw(-no_match_vars);
 use Test::More;
 use XML::LibXML;
-use FindBin;
-use lib "$FindBin::Bin/../src/lib";
 
 use Sympa::Template;
 
