@@ -4,8 +4,6 @@
 # $Id: tools_smime.t 8874 2013-03-14 18:59:35Z rousse $
 
 use strict;
-use FindBin;
-use lib "$FindBin::Bin/../src/lib";
 
 use English qw(-no_match_vars);
 use File::Temp;

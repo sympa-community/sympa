@@ -4,8 +4,6 @@
 
 use strict;
 use warnings;
-use FindBin;
-use lib "$FindBin::Bin/../src/lib";
 use Encode qw();
 use Test::More;
 
