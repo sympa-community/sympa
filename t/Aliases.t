@@ -6,8 +6,8 @@ use strict;
 use warnings;
 use Test::More;
 
-plan tests => 1;
+plan tests => 2;
 
-BEGIN {
-  use_ok('Sympa::Aliases');
-}
+use_ok('Sympa::Aliases');
+
+ok(Sympa::Aliases->new(type => 'Sympa::Aliases::Template',));

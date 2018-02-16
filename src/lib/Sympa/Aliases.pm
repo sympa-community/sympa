@@ -23,58 +23,52 @@
 
 package Sympa::Aliases;
 
-use Sympatic;
+use Sympatic -oo;
 
 use Sympa::Constants;
 use Sympa::Log;
+use MooX::TypeTiny;
+use Types::Standard qw(Str HashRef);
 
-my $log = Sympa::Log->instance;
+has 'class' => (
+  is  => 'ro',
+  isa => Str,
+);
+
+has 'type' => (
+  is        => 'ro',
+  isa       => Str,
+  required  => 1,
+);
+
+has 'options' => (
+  is  => 'ro',
+  isa => HashRef,
+);
+
+has 'log' => (
+  is      => 'ro',
+  default => sub {return Sympa::Log->instance},
+);
 
 # Sympa::Aliases is the proxy class of subclasses.
 # The constructor may be overridden by _new() method.
-sub new {
-    my $class   = shift;
-    my $type    = shift;
-    my %options = @_;
-
-    return undef unless $type;
+sub BUILD {
+  my ($self) = @_;
 
     # Special cases:
-    # - To disable aliases management, specify "none" as $type.
+    # - To disable aliases management, specify "none" as $self->type().
     # - "External" module is used for full path to program.
     # - However, "Template" module is used instead of obsoleted program
     #   alias_manager.pl.
-    return $class->_new if $type eq 'none';
+    #return $self->class()->_new() if $self->class() eq 'none';
 
-    if ($type eq Sympa::Constants::SBINDIR() . '/alias_manager.pl') {
-        $type = 'Sympa::Aliases::Template';
-    } elsif (0 == index $type, '/' and -x $type) {
-        $options{program} = $type;
-        $type = 'Sympa::Aliases::External';
+    if ($self->type() eq Sympa::Constants::SBINDIR() . '/alias_manager.pl') {
+        $self->type('Sympa::Aliases::Template');
+    } elsif (0 == index $self->type(), '/' and -x $self->type()) {
+        $self->options()->set('program', $self->type());
+        $self->type('Sympa::Aliases::External');
     }
-
-    # Returns appropriate subclasses.
-    if ($type !~ /[^\w:]/) {
-        $type = sprintf 'Sympa::Aliases::%s', $type unless $type =~ /::/;
-        unless (eval sprintf('require %s', $type)
-            and $type->isa('Sympa::Aliases')) {
-            $log->syslog(
-                'err', 'Unable to use %s module: %s',
-                $type, $EVAL_ERROR || 'Not a Sympa::Aliases class'
-            );
-            return undef;
-        }
-        return $type->_new(%options);
-    }
-
-    return undef;
-}
-
-sub _new {
-    my $class   = shift;
-    my %options = @_;
-
-    return bless {%options} => $class;
 }
 
 sub check {0}
@@ -112,12 +106,12 @@ This module is the base class for subclasses to manage list aliases of Sympa.
 
 =over
 
-=item new ( $type, [ key =E<gt> value, ... ] )
+=item new ( $self->type(), [ key =E<gt> value, ... ] )
 
 I<Constructor>.
 Creates new instance of L<Sympa::Aliases>.
 
-Returns one of appropriate subclasses according to $type:
+Returns one of appropriate subclasses according to $self->type():
 
 =over
 
