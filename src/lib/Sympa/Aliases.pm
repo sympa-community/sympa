@@ -23,9 +23,7 @@
 
 package Sympa::Aliases;
 
-use strict;
-use warnings;
-use English qw(-no_match_vars);
+use Sympatic;
 
 use Sympa::Constants;
 use Sympa::Log;
@@ -97,16 +95,16 @@ Sympa::Aliases - Base class for alias management
 =head1 SYNOPSIS
 
   package Sympa::Aliases::FOO;
-  
+
   use base qw(Sympa::Aliases);
-  
+
   sub check { ... }
   sub add { ... }
   sub del { ... }
-  
+
   1;
 
-=head1 DESCRIPTION 
+=head1 DESCRIPTION
 
 This module is the base class for subclasses to manage list aliases of Sympa.
 
@@ -232,4 +230,4 @@ Sympa 3.1b.13.
 L<Sympa::Aliases> module as an OO-based class appeared on Sympa 6.2.23b,
 and it obsoleted F<alias_manager.pl>.
 
-=cut 
+=cut
