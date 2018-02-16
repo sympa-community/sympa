@@ -29,6 +29,7 @@ SUBDIRS += src/smtpc
 endif
 
 check_SCRIPTS = \
+	t/Aliases.t \
 	t/Language.t \
 	t/LockedFile.t \
 	t/Regexps.t \
@@ -174,7 +175,7 @@ installconfig: installdir sympa_wizard.pl.inst
 		chmod 444 $(DESTDIR)$(sysconfdir)/README; \
 	fi
 
-nextstep: 
+nextstep:
 	@echo ""
 	@echo "** You can find documentation at:"
 	@echo "** http://www.sympa.org/manual/"
@@ -200,4 +201,3 @@ uninstall-hook:
 
 dist-hook:
 	$(MAKE) check
-
