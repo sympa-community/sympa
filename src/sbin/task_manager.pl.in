@@ -436,9 +436,9 @@ sub create {
     } else {
         $object = '_global';
         $task_file =
-              $spool_task . '/'
-            . $date . '.'
-            . $label . '.'
+              $spool_task . '/' 
+            . $date . '.' 
+            . $label . '.' 
             . $model . '.'
             . $object;
     }
@@ -1294,25 +1294,11 @@ sub _db_log_del {
     return 1;
 }
 
-## remove sessions from session_table if older than $Conf::Conf{'session_table_ttl'}
-sub purge_session_table {
-
-    $log->syslog('info', '');
-    my $removed = _purge_old_sessions('*');
-    unless (defined $removed) {
-        $log->syslog('err', 'Failed to remove old sessions');
-        return undef;
-    }
-    $log->syslog('notice', '%s row removed in session_table', $removed);
-    return 1;
-}
-
-# Remove old sessions from a particular robot or from all robots.
-# Delay is a parameter in seconds.
+# Remove sessions from session_table if older than session_table_ttl or
+# anonymous_session_table_ttl.
 # Old name: Sympa::Session::purge_old_sessions().
-sub _purge_old_sessions {
-    $log->syslog('debug2', '(%s)', @_);
-    my $robot = shift;
+sub purge_session_table {
+    $log->syslog('info', '()');
 
     my $delay =
         Sympa::Tools::Time::duration_conv($Conf::Conf{'session_table_ttl'});
@@ -1320,12 +1306,12 @@ sub _purge_old_sessions {
         $Conf::Conf{'anonymous_session_table_ttl'});
 
     unless ($delay) {
-        $log->syslog('info', '(%s) Exit with delay null', $robot);
-        return;
+        $log->syslog('info', 'Exit with delay null');
+        return undef;
     }
     unless ($anonymous_delay) {
-        $log->syslog('info', '(%s) Exit with anonymous delay null', $robot);
-        return;
+        $log->syslog('info', 'Exit with anonymous delay null');
+        return undef;
     }
 
     my @sessions;
@@ -1333,14 +1319,10 @@ sub _purge_old_sessions {
     my $sdm = Sympa::DatabaseManager->instance;
     unless ($sdm) {
         $log->syslog('err', 'Unavailable database connection');
-        return;
+        return undef;
     }
 
     my (@conditions, @anonymous_conditions);
-    push @conditions, sprintf('robot_session = %s', $sdm->quote($robot))
-        if $robot and $robot ne '*';
-    @anonymous_conditions = @conditions;
-
     push @conditions, sprintf('%d > date_session', time - $delay) if $delay;
     push @anonymous_conditions,
         sprintf('%d > date_session', time - $anonymous_delay)
@@ -1361,8 +1343,7 @@ sub _purge_old_sessions {
         $anonymous_condition;
 
     unless ($sth = $sdm->do_query($count_statement)) {
-        $log->syslog('err', 'Unable to count old session for robot %s',
-            $robot);
+        $log->syslog('err', 'Unable to count old session');
         return undef;
     }
 
@@ -1371,27 +1352,30 @@ sub _purge_old_sessions {
         $log->syslog('debug', 'No sessions to expire');
     } else {
         unless ($sth = $sdm->do_query($statement)) {
-            $log->syslog('err', 'Unable to purge old sessions for robot %s',
-                $robot);
+            $log->syslog('err', 'Unable to purge old sessions');
             return undef;
         }
     }
     unless ($sth = $sdm->do_query($anonymous_count_statement)) {
-        $log->syslog('err', 'Unable to count anonymous sessions for robot %s',
-            $robot);
+        $log->syslog('err', 'Unable to count anonymous sessions');
         return undef;
     }
     my $anonymous_total = $sth->fetchrow;
     if ($anonymous_total == 0) {
         $log->syslog('debug', 'No anonymous sessions to expire');
-        return $total;
+    } else {
+        unless ($sth = $sdm->do_query($anonymous_statement)) {
+            $log->syslog('err', 'Unable to purge anonymous sessions');
+            return undef;
+        }
     }
-    unless ($sth = $sdm->do_query($anonymous_statement)) {
-        $log->syslog('err', 'Unable to purge anonymous sessions for robot %s',
-            $robot);
-        return undef;
-    }
-    return $total + $anonymous_total;
+
+    $log->syslog(
+        'notice',
+        '%s row removed in session_table',
+        $total + $anonymous_total
+    );
+    return 1;
 }
 
 # Remove messages from spools if older than duration given by configuration.
