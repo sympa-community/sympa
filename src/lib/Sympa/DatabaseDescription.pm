@@ -106,11 +106,18 @@ my %full_db_struct = (
                 'not_null' => 1,
                 'order'    => 11,
             },
-            'update_subscriber' => {
-                'struct' => 'datetime',
+            # Obsoleted as of 6.2.25b.2. Use update_epoch_subscriber.
+            #'update_subscriber' => {
+            #    'struct' => 'datetime',
+            #    'doc' =>
+            #        'the latest date where subscription is confirmed by subscriber',
+            #    'order' => 12,
+            #},
+            'update_epoch_subscriber' => {
+                'struct' => 'int(11)',
                 'doc' =>
-                    'the latest date where subscription is confirmed by subscriber',
-                'order' => 12,
+                    'the last time when subscription is confirmed by subscriber',
+                'order' => 12.5,
             },
             'comment_subscriber' => {
                 'struct' => 'varchar(150)',
@@ -889,10 +896,16 @@ my %full_db_struct = (
                 'not_null' => 1,
                 'order'    => 6,
             },
-            'update_admin' => {
-                'struct' => 'datetime',
-                'doc'    => 'last update timestamp',
-                'order'  => 7,
+            # Obsoleted as of 6.2.25b.2. Use update_epoch_admin.
+            #'update_admin' => {
+            #    'struct' => 'datetime',
+            #    'doc'    => 'last update timestamp',
+            #    'order'  => 7,
+            #},
+            'update_epoch_admin' => {
+                'struct' => 'int(11)',
+                'doc'    => 'last update time',
+                'order'  => 7.5,
             },
             'reception_admin' => {
                 'struct' => 'varchar(20)',

@@ -1727,6 +1727,33 @@ sub upgrade {
         );
     }
 
+    if (lower_version($previous_version, '6.2.25b.2')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        $log->syslog('notice', 'Upgrading subscriber_table.');
+        # update_subscriber (datetime) was obsoleted.
+        # Use update_epoch_subscriber (int).
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE subscriber_table
+                  SET update_epoch_subscriber = %s
+                  WHERE update_subscriber IS NOT NULL},
+                $sdm->get_canonical_read_date('update_subscriber')
+            )
+        );
+        $log->syslog('notice', 'Upgrading admin_table.');
+        # update_admin (datetime) was obsoleted.
+        # Use update_epoch_admin (int).
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE admin_table
+                  SET update_epoch_admin = %s
+                  WHERE update_admin IS NOT NULL},
+                $sdm->get_canonical_read_date('update_admin')
+            )
+        );
+    }
+
     # GH Issue #43: Preliminary notice on abolishment of "host" list parameter.
     if (lower_version($previous_version, '6.2.28')) {
         my $all_lists = Sympa::List::get_lists('*');
