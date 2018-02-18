@@ -1727,6 +1727,21 @@ sub upgrade {
         );
     }
 
+    # GH Issue #43: Preliminary notice on abolishment of "host" list parameter.
+    if (lower_version($previous_version, '6.2.28')) {
+        my $all_lists = Sympa::List::get_lists('*');
+        foreach my $list (@{$all_lists || []}) {
+            if (    $list->{'admin'}{'host'}
+                and $list->{'admin'}{'host'} ne $list->{'domain'}) {
+                $log->syslog(
+                    'notice',
+                    'NOTICE: %s: "host" parameter will be deprecated on Sympa 6.2.28. Please check list configuration and aliases',
+                    $list
+                );
+            }
+        }
+    }
+
     return 1;
 }
 
