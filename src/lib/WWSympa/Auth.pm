@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Auth;
+package WWSympa::Auth;
 
 use strict;
 use warnings;
@@ -32,7 +32,7 @@ use Sympa;
 use Conf;
 use Sympa::Database;
 use Sympa::Log;
-use Sympa::Report;
+use WWSympa::Report;
 use Sympa::Robot;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
@@ -76,7 +76,7 @@ sub check_auth {
             };
 
         } else {
-            Sympa::Report::reject_report_web('user', 'incorrect_passwd', {})
+            WWSympa::Report::reject_report_web('user', 'incorrect_passwd', {})
                 unless ($ENV{'SYMPA_SOAP'});
             $log->syslog('err', "Incorrect LDAP password");
             return undef;
@@ -129,7 +129,7 @@ sub authentication {
         # too many wrong login attemp
         Sympa::User::update_global_user($email,
             {wrong_login_count => $user->{'wrong_login_count'} + 1});
-        Sympa::Report::reject_report_web('user', 'too_many_wrong_login', {})
+        WWSympa::Report::reject_report_web('user', 'too_many_wrong_login', {})
             unless ($ENV{'SYMPA_SOAP'});
         $log->syslog('err',
             'Login is blocked: too many wrong password submission for %s',
@@ -181,7 +181,7 @@ sub authentication {
     Sympa::User::update_global_user($email,
         {wrong_login_count => ($user->{'wrong_login_count'} || 0) + 1});
 
-    Sympa::Report::reject_report_web('user', 'incorrect_passwd', {})
+    WWSympa::Report::reject_report_web('user', 'incorrect_passwd', {})
         unless $ENV{'SYMPA_SOAP'};
     $log->syslog('err', 'Incorrect password for user %s', $email);
 

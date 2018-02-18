@@ -25,24 +25,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::SOAP;
+package WWSympa::SOAP;
 
 use strict;
 use warnings;
 use Encode qw();
 
 use Sympa;
-use Sympa::Auth;
 use Conf;
 use Sympa::Constants;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
-use Sympa::Session;
 use Sympa::Spindle::ProcessRequest;
 use Sympa::Template;
 use Sympa::Tools::Text;
 use Sympa::User;
+use WWSympa::Auth;
+use WWSympa::Session;
 
 ## Define types of SOAP type listType
 my %types = (
@@ -183,7 +183,7 @@ sub login {
     ## Set an env var to find out if in a SOAP context
     $ENV{'SYMPA_SOAP'} = 1;
 
-    my $user = Sympa::Auth::check_auth($robot, $email, $passwd);
+    my $user = WWSympa::Auth::check_auth($robot, $email, $passwd);
 
     unless ($user) {
         $log->syslog('notice', 'Login authentication failed');
@@ -192,9 +192,9 @@ sub login {
             ->faultdetail("Incorrect password for user $email or bad login");
     }
 
-    ## Create Sympa::Session object
-    my $session = Sympa::Session->new($robot,
-        {'cookie' => Sympa::Session::encrypt_session_id($ENV{'SESSION_ID'})});
+    ## Create WWSympa::Session object
+    my $session = WWSympa::Session->new($robot,
+        {'cookie' => WWSympa::Session::encrypt_session_id($ENV{'SESSION_ID'})});
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
     $session->store();
@@ -204,7 +204,7 @@ sub login {
 
     ## Also return the cookie value
     return SOAP::Data->name('result')->type('string')
-        ->value(Sympa::Session::encrypt_session_id($ENV{'SESSION_ID'}));
+        ->value(WWSympa::Session::encrypt_session_id($ENV{'SESSION_ID'}));
 }
 
 sub casLogin {
@@ -273,7 +273,7 @@ sub casLogin {
 
     ## Now fetch email attribute from LDAP
     unless ($email =
-        Sympa::Auth::get_email_by_net_id($robot, $cas_id, {'uid' => $user})) {
+        WWSympa::Auth::get_email_by_net_id($robot, $cas_id, {'uid' => $user})) {
         $log->syslog('err',
             'Could not get email address from LDAP for user %s', $user);
         die SOAP::Fault->faultcode('Server')
@@ -281,9 +281,9 @@ sub casLogin {
             ->faultdetail("Could not get email address from LDAP directory");
     }
 
-    ## Create Sympa::Session object
-    my $session = Sympa::Session->new($robot,
-        {'cookie' => Sympa::Session::encrypt_session_id($ENV{'SESSION_ID'})});
+    ## Create WWSympa::Session object
+    my $session = WWSympa::Session->new($robot,
+        {'cookie' => WWSympa::Session::encrypt_session_id($ENV{'SESSION_ID'})});
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
     $session->store();
@@ -293,7 +293,7 @@ sub casLogin {
 
     ## Also return the cookie value
     return SOAP::Data->name('result')->type('string')
-        ->value(Sympa::Session::encrypt_session_id($ENV{'SESSION_ID'}));
+        ->value(WWSympa::Session::encrypt_session_id($ENV{'SESSION_ID'}));
 }
 
 ## Used to call a service as an authenticated user without using HTTP cookies
@@ -319,7 +319,7 @@ sub authenticateAndRun {
     ## Provided email is not trusted, we fetch the user email from the
     ## session_table instead
     my $session =
-        Sympa::Session->new($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
+        WWSympa::Session->new($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
     if (defined $session) {
         $email      = $session->{'email'};
         $session_id = $session->{'id_session'};
@@ -351,7 +351,7 @@ sub getUserEmailByCookie {
     }
 
     my $session =
-        Sympa::Session->new($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
+        WWSympa::Session->new($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
 
     unless (defined $session && ($session->{'email'} ne 'unkown')) {
         $log->syslog('err', 'Failed to load session for %s', $cookie);
@@ -388,7 +388,7 @@ sub authenticateRemoteAppAndRun {
             ->faultdetail('Use : <appname> <apppassword> <vars> <service>');
     }
     my ($proxy_vars, $set_vars) =
-        Sympa::Auth::remote_app_check_password($appname, $apppassword, $robot,
+        WWSympa::Auth::remote_app_check_password($appname, $apppassword, $robot,
         $service);
 
     unless (defined $proxy_vars) {

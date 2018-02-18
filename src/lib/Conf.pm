@@ -2609,7 +2609,7 @@ sub _load_wwsconf {
     return $wwsconf;
 }
 
-# MOVED: Use Sympa::Tools::WWW::update_css().
+# MOVED: Use WWSympa::Tools::update_css().
 #sub update_css;
 
 # lazy loading on demand
