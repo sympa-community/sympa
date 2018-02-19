@@ -30,6 +30,7 @@ endif
 
 check_SCRIPTS = \
 	t/Aliases.t \
+	t/Aliases_CheckSMTP.t \
 	t/Language.t \
 	t/LockedFile.t \
 	t/Regexps.t \
