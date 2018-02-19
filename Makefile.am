@@ -82,7 +82,7 @@ MSGFMT=@MSGFMT@
 .po.mo:
 	$(MSGFMT) -o $@ $<
 
-check-local:
+check-local: $(check_DATA)
 	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
 	PERL5LIB=src/lib; export PERL5LIB; \
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
