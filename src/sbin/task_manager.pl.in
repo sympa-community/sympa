@@ -434,13 +434,8 @@ sub create {
         $task_file = "$spool_task/$date.$label.$model.$list_name\@$robot";
         $object    = 'list';
     } else {
-        $object = '_global';
-        $task_file =
-              $spool_task . '/' 
-            . $date . '.' 
-            . $label . '.' 
-            . $model . '.'
-            . $object;
+        $object    = '_global';
+        $task_file = "$spool_task/$date.$label.$model.$object";
     }
 
     ## model recovery
