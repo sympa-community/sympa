@@ -23,8 +23,10 @@
 
 package Sympa::Aliases::CheckSMTP;
 
-use strict;
-use warnings;
+use Sympatic -oo;
+
+extends 'Sympa::Aliases';
+
 BEGIN { eval 'use Net::SMTP'; }
 
 use Conf;
@@ -99,7 +101,7 @@ Sympa::Aliases::CheckSMTP - Alias management: Check addresses using SMTP
   my $aliases = Sympa::Aliases->new('CheckSMTP');
   $aliases->check('listname', 'domain');
 
-=head1 DESCRIPTION 
+=head1 DESCRIPTION
 
 TBD.
 
@@ -167,4 +169,4 @@ C<list_check_helo> parameter was added by S. Ikeda on Sympa 6.1.5.
 
 L<Sympa::Aliases::CheckSMTP> as a separate module appeared on Sympa 6.2.23b.
 
-=cut 
+=cut
