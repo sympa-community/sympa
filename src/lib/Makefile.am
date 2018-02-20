@@ -220,6 +220,8 @@ Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 		-e 's|--modulesdir--|$(modulesdir)|' \
 		-e 's|--defaultdir--|$(defaultdir)|' \
 		-e 's|--staticdir--|$(staticdir)|' \
+		-e 's|--cssdir--|$(cssdir)|' \
+		-e 's|--picturesdir--|$(picturesdir)|' \
 		-e 's|--arcdir--|$(arcdir)|' \
 		-e 's|--bouncedir--|$(bouncedir)|' \
 		< $(srcdir)/$@.in > $@

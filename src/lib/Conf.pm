@@ -854,7 +854,7 @@ sub checkfiles {
 
     # Create pictures dir if useful for each robot.
     foreach my $robot (keys %{$Conf{'robots'}}) {
-        my $dir = get_robot_conf($robot, 'static_content_path');
+        my $dir = get_robot_conf($robot, 'pictures_path');
         if ($dir ne '' && -d $dir) {
             unless (-f $dir . '/index.html') {
                 unless (open(FF, ">$dir" . '/index.html')) {
@@ -870,8 +870,7 @@ sub checkfiles {
             # create picture dir
             if (get_robot_conf($robot, 'pictures_feature') eq 'on') {
                 my $pictures_dir =
-                    get_robot_conf($robot, 'static_content_path')
-                    . '/pictures';
+                    get_robot_conf($robot, 'pictures_path');
                 unless (-d $pictures_dir) {
                     unless (mkdir($pictures_dir, 0775)) {
                         $log->syslog('err', 'Unable to create directory %s',
@@ -2037,11 +2036,11 @@ sub _infer_robot_parameter_values {
     my $final_separator = '';
     $final_separator = '/' if ($param->{'config_hash'}{'robot_name'});
     $param->{'config_hash'}{'css_url'} ||=
-          $param->{'config_hash'}{'static_content_url'} . '/css'
+          $param->{'config_hash'}{'css_url'}
         . $final_separator
         . $param->{'config_hash'}{'robot_name'};
     $param->{'config_hash'}{'css_path'} ||=
-          $param->{'config_hash'}{'static_content_path'} . '/css'
+          $param->{'config_hash'}{'css_path'}
         . $final_separator
         . $param->{'config_hash'}{'robot_name'};
 
