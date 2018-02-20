@@ -5,12 +5,15 @@
 use strict;
 use warnings;
 use Test::More;
+use Test::Exception;
 
-plan tests => 5;
+plan tests => 6;
 
 use_ok('Sympa::Aliases');
 
-ok(my $alias_manager = Sympa::Aliases->new(type => 'Sympa::Aliases::Template',));
+throws_ok(sub{Sympa::Aliases->new()}, qr/Missing required arguments/, 'Exception thrown when type argument no provided.');
+
+ok(my $alias_manager = Sympa::Aliases->new(type => 'Sympa::Aliases::Template'), 'Alais manager object created');
 
 is($alias_manager->check(), 0, 'check sub on the base class returns 0');
 
