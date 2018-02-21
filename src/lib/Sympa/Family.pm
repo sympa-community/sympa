@@ -2363,8 +2363,9 @@ sub _set_status_changes {
     }
 
     # Aliases.
-    my $module = Conf::get_robot_conf($list->{'domain'}, 'alias_manager_description');
-    my $aliases = "Sympa::Aliases::$module"->new(type => 'dude');
+    my $module = Conf::get_robot_conf($list->{'domain'}, 'alias_manager_description')->{'module'};
+    my $options = Conf::get_robot_conf($list->{'domain'}, 'alias_manager_description')->{'options'};
+    my $aliases = "Sympa::Aliases::$module"->new(options => $options);
     if ($list->{'admin'}{'status'} eq 'open') {
         unless ($old_status eq 'open') {
             $result->{'install_remove'} = 'install';
