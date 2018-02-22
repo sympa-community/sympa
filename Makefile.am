@@ -30,7 +30,8 @@ endif
 
 check_SCRIPTS = \
 	t/Aliases.t \
-	t/Aliases_CheckSMTP.t \
+	t/Aliases_External.t \
+	t/Aliases_Template.t \
 	t/Conf.t \
 	t/Family.t \
 	t/Language.t \

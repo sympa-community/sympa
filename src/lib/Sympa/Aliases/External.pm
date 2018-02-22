@@ -27,7 +27,7 @@ use Sympatic -oo;
 use Types::Standard qw (Str);
 use MooX::TypeTiny;
 
-extends 'Sympa::Aliases::CheckSMTP';
+extends 'Sympa::Aliases';
 
 has 'program' => (
     is => 'ro',

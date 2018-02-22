@@ -26,7 +26,7 @@ package Sympa::Aliases::Template;
 
 use Sympatic -oo;
 
-extends 'Sympa::Aliases::CheckSMTP';
+extends 'Sympa::Aliases';
 
 use Conf;
 use Sympa::Constants;
