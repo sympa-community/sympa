@@ -159,6 +159,8 @@ sub _close {
         $aliases = Sympa::Aliases::External->new(
             program => $config_alias_manager
         );
+    }else {
+        $aliases = Sympa::Aliases->new(no_alias => 1);
     }
 
     $aliases->del($list) if $aliases;

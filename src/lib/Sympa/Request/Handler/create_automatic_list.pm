@@ -102,6 +102,8 @@ sub _twist {
         $aliases = Sympa::Aliases::External->new(
             program => $config_alias_manager
         );
+    }else {
+        $aliases = Sympa::Aliases->new(no_alias => 1);
     }
 
     my $res = $aliases->check($listname, $robot_id) if $aliases;
@@ -275,6 +277,8 @@ sub _twist {
             $aliases = Sympa::Aliases::External->new(
                 program => $config_alias_manager
             );
+        }else {
+            $aliases = Sympa::Aliases->new(no_alias => 1);
         }
 
         if ($aliases and $aliases->add($list)) {
