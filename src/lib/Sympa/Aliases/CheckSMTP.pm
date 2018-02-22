@@ -31,56 +31,6 @@ BEGIN { eval 'use Net::SMTP'; }
 
 use Conf;
 
-# Old name: Sympa::Admin::list_check_smtp().
-sub check {
-    my $self     = shift;
-    my $name     = shift;
-    my $robot_id = shift;
-    $self->log()->syslog('debug2', '(%s, %s, %s)', @_);
-
-    my $smtp_relay = Conf::get_robot_conf($robot_id, 'list_check_smtp');
-    return 0 unless defined $smtp_relay and length $smtp_relay;
-
-    my $smtp_helo = Conf::get_robot_conf($robot_id, 'list_check_helo')
-        || $smtp_relay;
-    $smtp_helo =~ s/:[-\w]+$// if $smtp_helo;
-
-    my @suffixes = split /\s*,\s*/,
-        (Conf::get_robot_conf($robot_id, 'list_check_suffixes') || '');
-    my @addresses = (
-        sprintf('%s@%s', $name, $robot_id),
-        map { sprintf('%s-%s@%s', $name, $_, $robot_id) } @suffixes
-    );
-    my $return_address = sprintf '%s%s@%s', $name,
-        (Conf::get_robot_conf($robot_id, 'return_path_suffix') || ''),
-        $robot_id;
-    push @addresses, $return_address
-        unless grep { $return_address eq $_ } @addresses;
-
-    unless ($Net::SMTP::VERSION) {
-        $self->log()->syslog('err',
-            'Unable to use Net library, Net::SMTP required, install it first'
-        );
-        return undef;
-    }
-    if (my $smtp = Net::SMTP->new(
-            $smtp_relay,
-            Hello   => $smtp_helo,
-            Timeout => 30
-        )
-        ) {
-        $smtp->mail('');
-        my $conf = 0;
-        foreach my $address (@addresses) {
-            $conf = $smtp->to($address);
-            last if $conf;
-        }
-        $smtp->quit();
-        return $conf;
-    }
-    return undef;
-}
-
 1;
 __END__
 
