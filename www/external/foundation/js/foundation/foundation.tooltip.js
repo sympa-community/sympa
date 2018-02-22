@@ -53,11 +53,19 @@
       return matchMedia(Foundation.media_queries['large']).matches;
     },
 
+    isInitted : false,
+
     events : function (instance) {
       var self = this,
           S = self.S;
 
       self.create(this.S(instance));
+
+      if (this.isInitted) {
+        return;
+      }
+
+      this.isInitted = true;
 
       function _startShow(elt, $this, immediate) {
         if (elt.timer) {
