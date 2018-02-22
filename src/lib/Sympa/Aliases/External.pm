@@ -23,34 +23,35 @@
 
 package Sympa::Aliases::External;
 
-use strict;
-use warnings;
-use English qw(-no_match_vars);
+use Sympatic -oo;
+use Types::Standard qw (Str);
+use MooX::TypeTiny;
 
-use Conf;
-use Sympa::Log;
+extends 'Sympa::Aliases::CheckSMTP';
 
-use base qw(Sympa::Aliases::CheckSMTP);
-
-my $log = Sympa::Log->instance;
+has 'program' => (
+    is => 'ro',
+    isa => Str,
+    required => 1,
+);
 
 # Old name: Sympa::Admin::install_aliases().
 sub add {
-    $log->syslog('debug', '(%s, %s)', @_);
     my $self = shift;
     my $list = shift;
+    $self->log()->syslog('debug', '(%s, %s)', $self, $list);
 
-    my $program = $self->{program};
+    my $program = $self->program();
     system($program, 'add', $list->{'name'}, $list->{'domain'},
         ($self->{file} ? ($self->{file}) : ()));
     if ($CHILD_ERROR & 127) {
-        $log->syslog('err', '%s was terminated by signal %d',
+        $self->log()->syslog('err', '%s was terminated by signal %d',
             $program, $CHILD_ERROR & 127);
         return undef;
     } elsif ($CHILD_ERROR) {
-        return _error($CHILD_ERROR >> 8, $ERRNO);
+        return $self->_error($CHILD_ERROR >> 8, $ERRNO);
     } else {
-        $log->syslog('info', 'Aliases for list %s installed successfully',
+        $self->log()->syslog('info', 'Aliases for list %s installed successfully',
             $list);
         return 1;
     }
@@ -58,21 +59,21 @@ sub add {
 
 # Old names: Sympa::Admin::remove_aliases() & Sympa::List::remove_aliases().
 sub del {
-    $log->syslog('info', '(%s, %s)', @_);
     my $self = shift;
     my $list = shift;
+    $self->log()->syslog('info', '(%s, %s)', $self, $list);
 
-    my $program = $self->{program};
+    my $program = $self->program();
     system($program, 'del', $list->{'name'}, $list->{'domain'},
         ($self->{file} ? ($self->{file}) : ()));
     if ($CHILD_ERROR & 127) {
-        $log->syslog('err', '%s was terminated by signal %d',
+        $self->log()->syslog('err', '%s was terminated by signal %d',
             $program, $CHILD_ERROR & 127);
         return undef;
     } elsif ($CHILD_ERROR) {
-        return _error($CHILD_ERROR >> 8, $ERRNO);
+        return $self->_error($CHILD_ERROR >> 8, $ERRNO);
     } else {
-        $log->syslog('info', 'Aliases for list %s removed successfully',
+        $self->log()->syslog('info', 'Aliases for list %s removed successfully',
             $list);
         return 1;
     }
@@ -90,40 +91,41 @@ use constant ERR_ALIASES_EMPTY => 15;
 use constant ERR_OTHER         => 127;
 
 sub _error {
+    my $self = shift;
     my $status = shift;
     my $errno  = shift;
 
     unless ($status) {
-        $log->syslog('info', 'Aliases installed successfully');
+        $self->log()->syslog('info', 'Aliases installed successfully');
         return 1;
     } elsif ($status == Sympa::Aliases::ERR_CONFIG()) {
-        $log->syslog('err', '(%d) Configuration file has errors', $status);
+        $self->log()->syslog('err', '(%d) Configuration file has errors', $status);
     } elsif ($status == Sympa::Aliases::ERR_PARAMETER()) {
-        $log->syslog('err', '(%d) Incorrect call to program', $status);
+        $self->log()->syslog('err', '(%d) Incorrect call to program', $status);
     } elsif ($status == Sympa::Aliases::ERR_WRITE_ALIAS()) {
-        $log->syslog('err', '(%d) Unable to append to alias', $status);
+        $self->log()->syslog('err', '(%d) Unable to append to alias', $status);
     } elsif ($status == Sympa::Aliases::ERR_NEWALIASES()) {
-        $log->syslog('err', '(%d) Unable to run newaliases program', $status);
+        $self->log()->syslog('err', '(%d) Unable to run newaliases program', $status);
     } elsif ($status == Sympa::Aliases::ERR_READ_ALIAS()) {
-        $log->syslog('err', '(%d) Unable to read existing aliases', $status);
+        $self->log()->syslog('err', '(%d) Unable to read existing aliases', $status);
     } elsif ($status == Sympa::Aliases::ERR_CREATE_TEMP()) {
-        $log->syslog('err', '(%d) Could not create temporary file', $status);
+        $self->log()->syslog('err', '(%d) Could not create temporary file', $status);
     } elsif ($status == Sympa::Aliases::ERR_ALIAS_EXISTS()) {
-        $log->syslog('info', '(%d) Some of list aliases already exist',
+        $self->log()->syslog('info', '(%d) Some of list aliases already exist',
             $status);
     } elsif ($status == Sympa::Aliases::ERR_LOCK()) {
-        $log->syslog('err', '(%d) Can not lock resource', $status);
+        $self->log()->syslog('err', '(%d) Can not lock resource', $status);
     } elsif ($status == Sympa::Aliases::ERR_ALIASES_EMPTY()) {
-        $log->syslog('err', '(%d) The parser returned empty aliases',
+        $self->log()->syslog('err', '(%d) The parser returned empty aliases',
             $status);
     } elsif ($status == Sympa::Aliases::ERR_OTHER()) {
-        $log->syslog('err', '(%d) Error', $status);
+        $self->log()->syslog('err', '(%d) Error', $status);
     } elsif ($errno) {
-        $log->syslog('err',
+        $self->log()->syslog('err',
             '(%d) Unknown error %s while running alias manager: %s',
             $status, $errno);
     } else {
-        $log->syslog('err',
+        $self->log()->syslog('err',
             '(%d) Unknown error %s while running alias manager', $status);
     }
 
@@ -143,18 +145,18 @@ Alias management: Updating aliases by external program
 =head1 SYNOPSIS
 
   use Sympa::Aliases;
-  
+
   my $aliases = Sympa::Aliases->new('/path/to/program',
       [ file => 'file' ] );
   # or,
   my $aliases = Sympa::Aliases->new('External',
       program => '/path/to/program', [ file => 'file' ] );
-  
+
   $aliases->check('listname', 'domain');
   $aliases->add($list);
   $aliases->del($list);
 
-=head1 DESCRIPTION 
+=head1 DESCRIPTION
 
 L<Sympa::Aliases::External> manages list aliases using external program.
 
@@ -232,4 +234,4 @@ L<Sympa::Aliases::CheckSMTP>.
 
 L<Sympa::Aliases::External> module appeared on Sympa 6.2.23b.
 
-=cut 
+=cut

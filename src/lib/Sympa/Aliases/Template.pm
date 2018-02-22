@@ -24,9 +24,9 @@
 
 package Sympa::Aliases::Template;
 
-use strict;
-use warnings;
-use English qw(-no_match_vars);
+use Sympatic -oo;
+
+extends 'Sympa::Aliases::CheckSMTP';
 
 use Conf;
 use Sympa::Constants;
@@ -35,10 +35,7 @@ use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Template;
 
-use base qw(Sympa::Aliases::CheckSMTP);
-
 my $language = Sympa::Language->instance;
-my $log      = Sympa::Log->instance;
 my $alias_wrapper =
     Sympa::Constants::LIBEXECDIR . '/sympa_newaliases-wrapper';
 
@@ -66,7 +63,7 @@ sub _aliases {
     my $aliases_dump;
     my $template = Sympa::Template->new($domain);
     unless ($template->parse($data, 'list_aliases.tt2', \$aliases_dump)) {
-        $log->syslog(
+        $self->log()->syslog(
             'err',
             'Can\'t parse list_aliases.tt2: %s',
             $template->{last_error}
@@ -76,7 +73,7 @@ sub _aliases {
 
     my @aliases = split /\n/, $aliases_dump;
     unless (@aliases) {
-        $log->syslog('err', 'No aliases defined');
+        $self->log()->syslog('err', 'No aliases defined');
         return;
     }
     return @aliases;
@@ -94,7 +91,7 @@ sub add {
     my $lock_fh;
     my $lock_file = Sympa::Constants::PIDDIR() . '/alias_manager.lock';
     unless ($lock_fh = Sympa::LockedFile->new($lock_file, 5, '+')) {
-        $log->syslog('err', 'Can\'t lock %s', $lock_file);
+        $self->log()->syslog('err', 'Can\'t lock %s', $lock_file);
         return undef;
     }
 
@@ -106,14 +103,14 @@ sub add {
     return undef unless @aliases;
 
     ## Check existing aliases
-    if (_already_defined($alias_file, @aliases)) {
-        $log->syslog('err', 'Some alias already exist');
+    if ($self->_already_defined($alias_file, @aliases)) {
+        $self->log()->syslog('err', 'Some alias already exist');
         return undef;
     }
 
     my $fh;
     unless (open $fh, '>>', $alias_file) {
-        $log->syslog('err', 'Unable to append to %s: %m', $alias_file);
+        $self->log()->syslog('err', 'Unable to append to %s: %m', $alias_file);
         return undef;
     }
 
@@ -126,17 +123,17 @@ sub add {
     unless ($self->{file}) {
         system($alias_wrapper, '--domain=' . $list->{'domain'});
         if ($CHILD_ERROR == -1) {
-            $log->syslog('err', 'Failed to execute sympa_newaliases: %m');
+            $self->log()->syslog('err', 'Failed to execute sympa_newaliases: %m');
             return undef;
         } elsif ($CHILD_ERROR & 127) {
-            $log->syslog(
+            $self->log()->syslog(
                 'err',
                 'sympa_newaliases was terminated by signal %d',
                 $CHILD_ERROR & 127
             );
             return undef;
         } elsif ($CHILD_ERROR) {
-            $log->syslog(
+            $self->log()->syslog(
                 'err',
                 'sympa_newaliases exited with status %d',
                 $CHILD_ERROR >> 8
@@ -163,7 +160,7 @@ sub del {
     my $lock_fh;
     my $lock_file = Sympa::Constants::PIDDIR() . '/alias_manager.lock';
     unless ($lock_fh = Sympa::LockedFile->new($lock_file, 5, '+')) {
-        $log->syslog('err', 'Can\'t lock %s', $lock_file);
+        $self->log()->syslog('err', 'Can\'t lock %s', $lock_file);
         return undef;
     }
 
@@ -178,13 +175,13 @@ sub del {
 
     my $ifh;
     unless (open $ifh, '<', $alias_file) {
-        $log->syslog('err', 'Could not read %s: %m', $alias_file);
+        $self->log()->syslog('err', 'Could not read %s: %m', $alias_file);
         return undef;
     }
 
     my $ofh;
     unless (open $ofh, '>', $tmp_alias_file) {
-        $log->syslog('err', 'Could not create %s: %m', $tmp_alias_file);
+        $self->log()->syslog('err', 'Could not create %s: %m', $tmp_alias_file);
         return undef;
     }
 
@@ -213,16 +210,16 @@ sub del {
     close $ofh;
 
     unless (@deleted_lines) {
-        $log->syslog('err', 'No matching line in %s', $alias_file);
+        $self->log()->syslog('err', 'No matching line in %s', $alias_file);
         return 0;
     }
     # Replace old aliases file.
     unless (open $ifh, '<', $tmp_alias_file) {
-        $log->syslog('err', 'Could not read %s: %m', $tmp_alias_file);
+        $self->log()->syslog('err', 'Could not read %s: %m', $tmp_alias_file);
         return undef;
     }
     unless (open $ofh, '>', $alias_file) {
-        $log->syslog('err', 'Could not overwrite %s: %m', $alias_file);
+        $self->log()->syslog('err', 'Could not overwrite %s: %m', $alias_file);
         return undef;
     }
     print $ofh do { local $RS; <$ifh> };
@@ -234,17 +231,17 @@ sub del {
     unless ($self->{file}) {
         system($alias_wrapper, '--domain=' . $list->{'domain'});
         if ($CHILD_ERROR == -1) {
-            $log->syslog('err', 'Failed to execute sympa_newaliases: %m');
+            $self->log()->syslog('err', 'Failed to execute sympa_newaliases: %m');
             return undef;
         } elsif ($CHILD_ERROR & 127) {
-            $log->syslog(
+            $self->log()->syslog(
                 'err',
                 'sympa_newaliases was terminated by signal %d',
                 $CHILD_ERROR & 127
             );
             return undef;
         } elsif ($CHILD_ERROR) {
-            $log->syslog(
+            $self->log()->syslog(
                 'err',
                 'sympa_newaliases exited with status %d',
                 $CHILD_ERROR >> 8
@@ -262,12 +259,13 @@ sub del {
 # Check if an alias is already defined.
 # Old name: already_defined() in alias_manager.pl.
 sub _already_defined {
+    my $self = shift;
     my $alias_file = shift;
     my @aliases    = @_;
 
     my $fh;
     unless (open $fh, '<', $alias_file) {
-        $log->syslog('err', 'Could not read %s: %m', $alias_file);
+        $self->log()->syslog('err', 'Could not read %s: %m', $alias_file);
         return undef;
     }
 
@@ -282,7 +280,7 @@ sub _already_defined {
             next unless ($_ =~ /^([^\s:]+)[\s:]/);
             my $new_left_side = $1;
             if ($left_side eq $new_left_side) {
-                $log->syslog('info', 'Alias already defined: %s', $left_side);
+                $self->log()->syslog('info', 'Alias already defined: %s', $left_side);
                 $ret++;
             }
         }

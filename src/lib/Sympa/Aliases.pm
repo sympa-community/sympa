@@ -27,49 +27,11 @@ use Sympatic -oo;
 
 use Sympa::Constants;
 use Sympa::Log;
-use MooX::TypeTiny;
-use Types::Standard qw(Str HashRef);
-
-has 'class' => (
-  is  => 'ro',
-  isa => Str,
-);
-
-has 'type' => (
-  is        => 'ro',
-  isa       => Str,
-  required  => 1,
-);
-
-has 'options' => (
-  is  => 'ro',
-  isa => HashRef,
-);
 
 has 'log' => (
   is      => 'ro',
   default => sub {return Sympa::Log->instance},
 );
-
-# Sympa::Aliases is the proxy class of subclasses.
-# The constructor may be overridden by _new() method.
-sub BUILD {
-  my ($self) = @_;
-
-    # Special cases:
-    # - To disable aliases management, specify "none" as $self->type().
-    # - "External" module is used for full path to program.
-    # - However, "Template" module is used instead of obsoleted program
-    #   alias_manager.pl.
-    #return $self->class()->_new() if $self->class() eq 'none';
-
-    if ($self->type() eq Sympa::Constants::SBINDIR() . '/alias_manager.pl') {
-        $self->type('Sympa::Aliases::Template');
-    } elsif (0 == index $self->type(), '/' and -x $self->type()) {
-        $self->options()->set('program', $self->type());
-        $self->type('Sympa::Aliases::External');
-    }
-}
 
 sub check {0}
 

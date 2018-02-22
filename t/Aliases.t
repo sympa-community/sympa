@@ -7,11 +7,9 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
-plan tests => 6;
+plan tests => 5;
 
 use_ok('Sympa::Aliases');
-
-throws_ok(sub{Sympa::Aliases->new()}, qr/Missing required arguments/, 'Exception thrown when type argument no provided.');
 
 ok(my $alias_manager = Sympa::Aliases->new(type => 'Sympa::Aliases::Template'), 'Alais manager object created');
 

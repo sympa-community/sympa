@@ -92,8 +92,17 @@ sub _twist {
     $list->sync_include_admin;
 
     # Install new aliases.
-    my $aliases = Sympa::Aliases->new(
-        Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
+    my $aliases;
+    my $config_alias_manager = Conf::get_robot_conf($list->{'domain'}, 'alias_manager');
+
+    if ( $config_alias_manager eq Sympa::Constants::SBINDIR() . '/alias_manager.pl') {
+       $aliases = Sympa::Aliases::Template->new();
+    } elsif (0 == index $config_alias_manager, '/' and -x $config_alias_manager) {
+        $aliases = Sympa::Aliases::External->new(
+            program => $config_alias_manager
+        );
+    }
+
     if ($aliases and $aliases->add($list)) {
         $self->add_stash($request, 'notice', 'auto_aliases');
     } else {

@@ -122,8 +122,17 @@ sub _twist {
     }
 
     ## Check listname on SMTP server
-    my $aliases =
-        Sympa::Aliases->new(Conf::get_robot_conf($robot_id, 'alias_manager'));
+    my $aliases;
+    my $config_alias_manager = Conf::get_robot_conf($robot_id, 'alias_manager');
+
+    if ( $config_alias_manager eq Sympa::Constants::SBINDIR() . '/alias_manager.pl') {
+       $aliases = Sympa::Aliases::Template->new();
+    } elsif (0 == index $config_alias_manager, '/' and -x $config_alias_manager) {
+        $aliases = Sympa::Aliases::External->new(
+            program => $config_alias_manager
+        );
+    }
+
     my $res = $aliases->check($listname, $robot_id) if $aliases;
     unless (defined $res) {
         $log->syslog('err', 'Can\'t check list %.128s on %s',

@@ -30,18 +30,13 @@ extends 'Sympa::Aliases';
 BEGIN { eval 'use Net::SMTP'; }
 
 use Conf;
-use Sympa::Log;
-
-use base qw(Sympa::Aliases);
-
-my $log = Sympa::Log->instance;
 
 # Old name: Sympa::Admin::list_check_smtp().
 sub check {
-    $log->syslog('debug2', '(%s, %s, %s)', @_);
     my $self     = shift;
     my $name     = shift;
     my $robot_id = shift;
+    $self->log()->syslog('debug2', '(%s, %s, %s)', @_);
 
     my $smtp_relay = Conf::get_robot_conf($robot_id, 'list_check_smtp');
     return 0 unless defined $smtp_relay and length $smtp_relay;
@@ -63,7 +58,7 @@ sub check {
         unless grep { $return_address eq $_ } @addresses;
 
     unless ($Net::SMTP::VERSION) {
-        $log->syslog('err',
+        $self->log()->syslog('err',
             'Unable to use Net library, Net::SMTP required, install it first'
         );
         return undef;
