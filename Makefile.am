@@ -24,9 +24,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SUBDIRS = src default doc po www
-if SMTPC
-SUBDIRS += src/smtpc
-endif
 
 check_SCRIPTS = \
 	t/Language.t \
@@ -92,11 +89,6 @@ authorcheck:
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
 install-data-hook: installdir installconfig nextstep
-if SMTPC
-	-@chown $(USER) $(DESTDIR)$(bindir)/sympa_smtpc
-	-@chgrp $(GROUP) $(DESTDIR)$(bindir)/sympa_smtpc
-	-@chmod 750 $(DESTDIR)$(bindir)/sympa_smtpc
-endif
 
 installdir:
 	@echo "Creating plugin directory"
