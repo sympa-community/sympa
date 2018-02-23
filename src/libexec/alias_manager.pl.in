@@ -80,7 +80,13 @@ my $language = Sympa::Language->instance;
 $language->set_lang(Conf::get_robot_conf($domain, 'lang'),
     $Conf::Conf{'lang'}, 'en');
 
-my $aliases = Sympa::Aliases::Template->new(file => $file);
+my $aliases;
+if(lc Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') eq 'none') {
+    $aliases = Sympa::Aliases->new(no_alias => 1);
+}else{
+    $aliases = Sympa::Aliases::Template->new(file => $file);
+}
+
 if ($operation eq 'add') {
     exit 127 unless $aliases and defined $aliases->add($list);
 } elsif ($operation eq 'del') {
