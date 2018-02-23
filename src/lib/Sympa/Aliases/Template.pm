@@ -32,7 +32,6 @@ use Conf;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::LockedFile;
-use Sympa::Log;
 use Sympa::Template;
 
 my $language = Sympa::Language->instance;
