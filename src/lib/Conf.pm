@@ -1981,20 +1981,6 @@ sub _infer_server_specific_parameter_values {
             }
         };
     }
-    if($param->{'config_hash'}{'alias_manager'}) {
-      if ($param->{'config_hash'}{'alias_manager'} eq
-          Sympa::Constants::SBINDIR() . '/alias_manager.pl') {
-              $param->{'config_hash'}{'alias_manager_description'}
-                  = {'module' => 'Template'};
-      } elsif (0 == index $param->{'config_hash'}{'alias_manager'}, '/'
-          and -x $param->{'config_hash'}{'alias_manager'}) {
-              $param->{'config_hash'}{'alias_manager_description'}
-                  = {'module' => 'External', options => { program => $param->{'config_hash'}{'alias_manager'}}};
-      }
-    }else{
-        $param->{'config_hash'}{'alias_manager_description'}
-                  = {'module' => 'Template'};
-    }
 
     return 1;
 }
@@ -2098,21 +2084,6 @@ sub _infer_robot_parameter_values {
         }
         $param->{'config_hash'}{'automatic_list_families'} =
             \%families_description;
-    }
-
-    if($param->{'config_hash'}{'alias_manager'}) {
-      if ($param->{'config_hash'}{'alias_manager'} eq
-          Sympa::Constants::SBINDIR() . '/alias_manager.pl') {
-              $param->{'config_hash'}{'alias_manager_description'}
-                  = {'module' => 'Template'};
-      } elsif (0 == index $param->{'config_hash'}{'alias_manager'}, '/'
-          and -x $param->{'config_hash'}{'alias_manager'}) {
-              $param->{'config_hash'}{'alias_manager_description'}
-                  = {'module' => 'External', options => { program => $param->{'config_hash'}{'alias_manager'}}};
-      }
-    }else{
-        $param->{'config_hash'}{'alias_manager_description'}
-                  = {'module' => 'Template'};
     }
 
     # canonicalize language
