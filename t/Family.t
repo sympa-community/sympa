@@ -6,6 +6,6 @@ use strict;
 use warnings;
 use Test::More;
 
-plan tests => 1;
-
 use_ok('Sympa::Family');
+
+done_testing();
