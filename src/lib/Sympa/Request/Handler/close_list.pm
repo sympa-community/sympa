@@ -154,9 +154,10 @@ sub _close {
         Conf::get_robot_conf($list->{'domain'}, 'alias_manager'));
     $aliases->del($list) if $aliases;
 
-    # Dump subscribers.
-    $list->_save_list_members_file(
-        $list->{'dir'} . '/subscribers.closed.dump');
+    # Dump users.
+    $list->dump_user('member');
+    $list->dump_user('owner');
+    $list->dump_user('editor');
 
     ## Delete users
     my @users;
