@@ -42,6 +42,11 @@ check_SCRIPTS = \
 	t/Database_LDAP.t \
 	t/parse_templates.t \
 	t/pod-syntax.t \
+  t/Request_Handler_open_list.t \
+  t/Request_Handler_move_list.t \
+  t/Request_Handler_create_list.t \
+  t/Request_Handler_create_automatic_list.t \
+  t/Request_Handler_close_list.t \
 	t/tools_data.t \
 	t/tools_file.t \
 	t/Tools_Password.t \
