@@ -305,7 +305,7 @@ if ($main::options{'dump'}) {
     }
 
     foreach my $list (@$all_lists) {
-        unless ($list->dump()) {
+        unless ($list->dump_user('member')) {
             print STDERR "Could not dump list(s)\n";
         }
     }
@@ -1154,7 +1154,10 @@ Create a list with the XML file under robot robot_name.
 =item C<--dump=>I<list>@I<dom>|C<ALL>
 
 Dumps subscribers of for `listname' list or all lists. Subscribers are 
-dumped in subscribers.db.dump.
+dumped in F<member.dump>.
+
+Note: On Sympa prior to 6.2.25b.2, subscribers were dumped in
+F<subscribers.db.dump>.
 
 =begin comment
 

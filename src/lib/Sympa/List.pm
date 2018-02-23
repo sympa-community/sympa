@@ -142,6 +142,12 @@ Delete the indicated users from the list.
 =item delete_list_admin ( ROLE, ARRAY )
 
 Delete the indicated admin user with the predefined role from the list.
+ROLE may be C<'owner'> or C<'editor'>.
+
+=item dump_user ( ROLE )
+
+Dump user information in user store into file C<I<$role>.dump> under
+list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
 
 =item get_cookie ()
 
@@ -197,6 +203,11 @@ the list.
 
 OBSOLETED.
 Use get_admins().
+
+=item suck_user ( ROLE )
+
+Import user information into user store from file C<I<$role>.dump> under
+list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
 
 =item update_list_member ( $email, key =E<gt> value, ... )
 
@@ -695,24 +706,61 @@ sub _cache_put {
 # Moved to: Sympa::Spindle::DistributeMessage::_extract_verp_rcpt().
 #sub _extract_verp_rcpt;
 
-## Dumps a copy of lists to disk, in text format
-sub dump {
+# Dumps a copy of list users to disk, in text format.
+# Old name: Sympa::List::dump() which dumped only members.
+sub dump_user {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $self = shift;
-    $log->syslog('debug2', '(%s)', $self->{'name'});
+    my $role = shift;
 
-    unless (defined $self) {
-        $log->syslog('err', 'Unknown list');
+    die 'bug in logic. Ask developer'
+        unless grep {$role eq $_} qw(member owner editor);
+
+    my $file = $self->{'dir'} . '/' . $role . '.dump';
+
+    unlink $file . '.old' if -e $file . '.old';
+    rename $file, $file . '.old' if -e $file;
+    my $lock_fh = Sympa::LockedFile->new($file, 5, '>');
+    unless ($lock_fh) {
+        $log->syslog('err', 'Failed to save file %s.new: %s', $file,
+            Sympa::LockedFile->last_error);
         return undef;
     }
 
-    my $user_file_name = "$self->{'dir'}/subscribers.db.dump";
-
-    unless ($self->_save_list_members_file($user_file_name)) {
-        $log->syslog('err', 'Failed to save file %s', $user_file_name);
-        return undef;
+    if ($role eq 'member') {
+        my $user;
+        for (
+            $user = $self->get_first_list_member();
+            $user;
+            $user = $self->get_next_list_member()
+            ) {
+            foreach my $k (
+                qw(date update_date email gecos
+                reception visibility)) {
+                printf $lock_fh "%s %s\n", $k, $user->{$k}
+                    if defined $user->{$k} and length $user->{$k};
+    
+            }
+            print $lock_fh "\n";
+        }
+    } else {
+        foreach my $user (@{$self->_get_admins || []}) {
+            next unless $user->{role} eq $role;
+            foreach my $k (
+                qw(date update_date email gecos profile
+                reception visibility info
+                subscribed included id)
+                ) {
+                printf $lock_fh "%s %s\n", $k, $user->{$k}
+                    if defined $user->{$k} and length $user->{$k};
+    
+            }
+            print $lock_fh "\n";
+        }
     }
 
-    # Note: "subscribers" file was deprecated. No need to load "stats" file.
+    $lock_fh->close;
+
     # FIXME:Are these lines required?
     $self->{'_mtime'}{'config'} =
         Sympa::Tools::File::get_mtime($self->{'dir'} . '/config');
@@ -4319,37 +4367,96 @@ sub load_data_sources_list {
 # No longer used.
 #sub _load_stats_file;
 
-## Loads the list of subscribers.
-sub _load_list_members_file {
-    my $file = shift;
-    $log->syslog('debug2', '(%s)', $file);
+## Loads the list of users.
+# Old name:: Sympa::List::_load_list_members_file($file) which loaded members.
+sub suck_user {
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $self = shift;
+    my $role = shift;
 
-    ## Open the file and switch to paragraph mode.
-    open(L, $file) || return undef;
+    die 'bug in logic. Ask developer'
+        unless grep {$role eq $_} qw(member owner editor);
 
-    ## Process the lines
-    local $RS;
-    my $data = <L>;
+    my $file = $self->{'dir'} . '/' . $role . '.dump';
 
-    my @users;
-    foreach (split /\n\n/, $data) {
-        my (%user, $email);
-        $user{'email'} = $email = $1 if (/^\s*email\s+(.+)\s*$/om);
-        $user{'gecos'}       = $1 if (/^\s*gecos\s+(.+)\s*$/om);
-        $user{'date'}        = $1 if (/^\s*date\s+(\d+)\s*$/om);
-        $user{'update_date'} = $1 if (/^\s*update_date\s+(\d+)\s*$/om);
-        $user{'reception'}   = $1
-            if (
-            /^\s*reception\s+(digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/om
-            );
-        $user{'visibility'} = $1
-            if (/^\s*visibility\s+(conceal|noconceal)\s*$/om);
+    # Open the file and switch to paragraph mode.
+    my $lock_fh = Sympa::LockedFile->new($file, 5, '<') or return;
+    local $RS = '';
 
-        push @users, \%user;
+    my $user;
+    while (my $para = <$lock_fh>) {
+        if ($role eq 'member') {
+            $user = {
+                map {
+                    #FIMXE:Define appropriate schema.
+                    if (/^\s*email\s+(.+)\s*$/) {
+                        (email => $1);
+                    } elsif (/^\s*gecos\s+(.+)\s*$/) {
+                        (gecos => $1);
+                    } elsif (/^\s*date\s+(\d+)\s*$/) {
+                        (date => $1);
+                    } elsif (/^\s*update_date\s+(\d+)\s*$/) {
+                        (update_date => $1);
+                    } elsif (
+                        /^\s*reception\s+(digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/
+                        ) {
+                        (reception => $1);
+                    } elsif (/^\s*visibility\s+(conceal|noconceal)\s*$/) {
+                        (visibility => $1);
+                    } else {
+                        ();
+                    }
+                    } split /\n/, $para
+            };
+        } else {
+            my $r;
+            $user = {
+                map {
+                    #FIMXE:Define appropriate schema.
+                    if (/^\s*role\s+(owner|editor)\s*$/) {
+                        $r = $1;
+                        ();
+                    } elsif (/^\s*email\s+(.+)\s*$/) {
+                        (email => $1);
+                    } elsif (/^\s*gecos\s+(.+)\s*$/) {
+                        (gecos => $1);
+                    } elsif (/^\s*profile\s+(normal|privileged)\s*$/) {
+                        (gecos => $1);
+                    } elsif (/^\s*date\s+(\d+)\s*$/) {
+                        (date => $1);
+                    } elsif (/^\s*update_date\s+(\d+)\s*$/) {
+                        (update_date => $1);
+                    } elsif (
+                        /^\s*reception\s+(mail|nomail)\s*$/
+                        ) {
+                        (reception => $1);
+                    } elsif (/^\s*visibility\s+(conceal|noconceal)\s*$/) {
+                        (visibility => $1);
+                    } elsif (/^\s*info\s+(.+)\s*$/) {
+                        (info => $1);
+                    } elsif (/^\s*subscribed\s+(\S+)\s*$/) {
+                        (subscribed => !!$1);
+                    } elsif (/^\s*included\s+(\S+)*$/) {
+                        (included => !!$1);
+                    } elsif (/^\s*id\s+(.+)*$/) {
+                        (id => $1);
+                    } else {
+                        ();
+                    }
+                    } split /\n/, $para
+            };
+            next unless $r and $r eq $role;
+        }
+        next unless %$user;
+
+        if ($role eq 'member') {
+            $self->add_list_member($user);
+        } else {
+            $self->add_list_admin($role, $user);
+        }
     }
-    close(L);
+    $lock_fh->close;
 
-    return @users;
 }
 
 ## include a remote sympa list as subscribers.

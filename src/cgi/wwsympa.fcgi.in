@@ -15918,8 +15918,8 @@ sub do_dump {
         return undef;
     }
 
-    $list->dump();
-    $param->{'file'} = $list->{'dir'} . '/subscribers.db.dump';
+    $list->dump_user('member');
+    $param->{'file'} = $list->{'dir'} . '/member.dump';
 
     if ($in{'format'} eq 'light') {
         unless (open(DUMP, $param->{'file'})) {
@@ -15948,7 +15948,7 @@ sub do_dump {
         }
         close LIGHTDUMP;
         close DUMP;
-        $param->{'file'} = "$list->{'dir'}/subscribers.db.dump.light";
+        $param->{'file'} = $list->{'dir'} . '/member.dump.light';
 
     } else {
         $param->{'file'} = "$list->{'dir'}/select.dump";
