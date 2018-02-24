@@ -7416,35 +7416,8 @@ sub _inclusion_loop {
 #sub _load_total_db;
 
 ## Writes the user list to disk
-sub _save_list_members_file {
-    my ($self, $file) = @_;
-    $log->syslog('debug3', '(%s)', $file);
-
-    my ($k, $s);
-
-    $log->syslog('debug2', 'Saving user file %s', $file);
-
-    rename("$file", "$file.old");
-    open my $fh, '>', $file or return undef;
-
-    for (
-        $s = $self->get_first_list_member();
-        $s;
-        $s = $self->get_next_list_member()
-        ) {
-        foreach $k (
-            'date',      'update_date', 'email', 'gecos',
-            'reception', 'visibility'
-            ) {
-            printf $fh "%s %s\n", $k, $s->{$k}
-                if defined $s->{$k} and length $s->{$k};
-
-        }
-        print $fh "\n";
-    }
-    close $fh;
-    return 1;
-}
+# Depreceted.  Use Sympa::List::dump_user().
+#sub _save_list_members_file;
 
 ## Does the real job : stores the message given as an argument into
 ## the digest of the list.
