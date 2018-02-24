@@ -728,18 +728,17 @@ sub dump_user {
     }
 
     if ($role eq 'member') {
+        my %map_field = _map_list_member_cols();
+
         my $user;
         for (
             $user = $self->get_first_list_member();
             $user;
             $user = $self->get_next_list_member()
             ) {
-            foreach my $k (
-                qw(date update_date email gecos
-                reception visibility)) {
+            foreach my $k (sort keys %map_field) {
                 printf $lock_fh "%s %s\n", $k, $user->{$k}
                     if defined $user->{$k} and length $user->{$k};
-    
             }
             print $lock_fh "\n";
         }
@@ -4382,80 +4381,54 @@ sub suck_user {
     my $lock_fh = Sympa::LockedFile->new($file, 5, '<') or return;
     local $RS = '';
 
-    my $user;
-    while (my $para = <$lock_fh>) {
-        if ($role eq 'member') {
-            $user = {
-                map {
-                    #FIMXE:Define appropriate schema.
-                    if (/^\s*email\s+(.+)\s*$/) {
-                        (email => $1);
-                    } elsif (/^\s*gecos\s+(.+)\s*$/) {
-                        (gecos => $1);
-                    } elsif (/^\s*date\s+(\d+)\s*$/) {
-                        (date => $1);
-                    } elsif (/^\s*update_date\s+(\d+)\s*$/) {
-                        (update_date => $1);
-                    } elsif (
-                        /^\s*reception\s+(digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/
-                        ) {
-                        (reception => $1);
-                    } elsif (/^\s*visibility\s+(conceal|noconceal)\s*$/) {
-                        (visibility => $1);
-                    } else {
-                        ();
-                    }
-                    } split /\n/, $para
-            };
-        } else {
-            my $r;
-            $user = {
-                map {
-                    #FIMXE:Define appropriate schema.
-                    if (/^\s*role\s+(owner|editor)\s*$/) {
-                        $r = $1;
-                        ();
-                    } elsif (/^\s*email\s+(.+)\s*$/) {
-                        (email => $1);
-                    } elsif (/^\s*gecos\s+(.+)\s*$/) {
-                        (gecos => $1);
-                    } elsif (/^\s*profile\s+(normal|privileged)\s*$/) {
-                        (gecos => $1);
-                    } elsif (/^\s*date\s+(\d+)\s*$/) {
-                        (date => $1);
-                    } elsif (/^\s*update_date\s+(\d+)\s*$/) {
-                        (update_date => $1);
-                    } elsif (
-                        /^\s*reception\s+(mail|nomail)\s*$/
-                        ) {
-                        (reception => $1);
-                    } elsif (/^\s*visibility\s+(conceal|noconceal)\s*$/) {
-                        (visibility => $1);
-                    } elsif (/^\s*info\s+(.+)\s*$/) {
-                        (info => $1);
-                    } elsif (/^\s*subscribed\s+(\S+)\s*$/) {
-                        (subscribed => !!$1);
-                    } elsif (/^\s*included\s+(\S+)*$/) {
-                        (included => !!$1);
-                    } elsif (/^\s*id\s+(.+)*$/) {
-                        (id => $1);
-                    } else {
-                        ();
-                    }
-                    } split /\n/, $para
-            };
-            next unless $r and $r eq $role;
-        }
-        next unless %$user;
+    if ($role eq 'member') {
+        my %map_field = _map_list_member_cols();
 
-        if ($role eq 'member') {
+        while (my $para = <$lock_fh>) {
+            my $user = {
+                map {
+                    #FIMXE: Define appropriate schema.
+                    if (/^\s*(suspend|subscribed|included)\s+(\S+)\s*$/) {
+                        ($1 => !!$2);
+                    } elsif (/^\s*(date|update_date|startdate|enddate|bounce_score|number_messages)\s+(\d+)\s*$/
+                        or /^\s*(reception)\s+(mail|digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/
+                        or /^\s*(visibility)\s+(conceal|noconceal)\s*$/
+                        or (/^\s*(\w+)\s+(.+)\s*$/ and $map_field{$1})) {
+                        ($1 => $2);
+                    } else {
+                        ();
+                    }
+                    } split /\n/, $para
+            };
+            next unless $user->{email};
+
             $self->add_list_member($user);
-        } else {
+        }
+    } else {
+        while (my $para = <$lock_fh>) {
+            my $user = {
+                map {
+                    #FIMXE:Define appropriate schema.
+                    if (/^\s*(subscribed|included)\s+(\S+)\s*$/) {
+                        ($1 => !!$2);
+                    } elsif (/^\s*(email|gecos|info|id)\s+(.+)\s*$/
+                        or /^\s*(profile)\s+(normal|privileged)\s*$/
+                        or /^\s*(date|update_date)\s+(\d+)\s*$/
+                        or /^\s*(reception)\s+(mail|nomail)\s*$/
+                        or /^\s*(visibility)\s+(conceal|noconceal)\s*$/) {
+                        ($1 => $2);
+                    } else {
+                        ();
+                    }
+                    } split /\n/, $para
+            };
+            next unless $user->{email};
+
             $self->add_list_admin($role, $user);
         }
     }
-    $lock_fh->close;
 
+    $lock_fh->close;
 }
 
 ## include a remote sympa list as subscribers.
