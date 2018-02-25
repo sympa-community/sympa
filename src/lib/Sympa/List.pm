@@ -743,13 +743,11 @@ sub dump_users {
             print $lock_fh "\n";
         }
     } else {
+        my %map_field = _map_list_admin_cols();
+
         foreach my $user (@{$self->_get_admins || []}) {
             next unless $user->{role} eq $role;
-            foreach my $k (
-                qw(date update_date email gecos profile
-                reception visibility info
-                subscribed included id)
-                ) {
+            foreach my $k (sort keys %map_field) {
                 printf $lock_fh "%s %s\n", $k, $user->{$k}
                     if defined $user->{$k} and length $user->{$k};
     
@@ -2179,21 +2177,7 @@ sub delete_list_admin {
 
 # Delete all admin_table entries.
 # OBSOLETED: No longer used.
-sub delete_all_list_admin {
-    $log->syslog('debug2', '');
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    my $sth;
-
-    ## Delete record in ADMIN
-    unless ($sdm
-        and $sth = $sdm->do_prepared_query(q{DELETE FROM admin_table})) {
-        $log->syslog('err', 'Unable to remove all admin from database');
-        return undef;
-    }
-
-    return 1;
-}
+#sub delete_all_list_admin;
 
 # OBSOLETED: This may no longer be used.
 # Returns the cookie for a list, if any.
@@ -2812,6 +2796,52 @@ sub get_next_list_member {
     return $user;
 }
 
+# Mapping between var and field names.
+sub _map_list_admin_cols {
+    my %map_field = (
+        update_date => 'update_epoch_admin',
+        gecos       => 'comment_admin',
+        email       => 'user_admin',
+        id          => 'include_sources_admin',
+    );
+
+    foreach my $f (
+        keys %{
+            {Sympa::DatabaseDescription::full_db_struct()}
+            ->{'admin_table'}->{fields}
+        }
+        ) {
+        next
+            if $f eq 'list_admin'
+                or $f eq 'robot_admin'
+                or $f eq 'role_admin';
+
+        my $k = {reverse %map_field}->{$f};
+        unless ($k) {
+            $k = $f;
+            $k =~ s/_admin\z//;
+            $map_field{$k} = $f;
+        }
+    }
+
+    return %map_field;
+}
+
+sub _list_admin_cols {
+    my $sdm = shift;
+
+    my %map_field = _map_list_admin_cols();
+    return join ', ', map {
+        my $col;
+        if ($_ eq 'date') {
+            $col = $sdm->get_canonical_read_date($map_field{$_});
+        } else {
+            $col = $map_field{$_};
+        }
+        ($col eq $_) ? $col : sprintf('%s AS "%s"', $col, $_);
+    } sort keys %map_field;
+}
+
 ## Loop for all subsequent admin users with the role defined in
 ## get_first_list_admin.
 #DEPRECATED: Merged into _get_basic_admins().  Use get_admins() instead.
@@ -2953,19 +2983,13 @@ sub _get_admins {
 
     unless (
         $sdm and $sth = $sdm->do_prepared_query(
-            q{SELECT user_admin AS email, comment_admin AS gecos,
-                     role_admin AS "role",
-                     reception_admin AS reception,
-                     visibility_admin AS visibility,
-                     date_epoch_admin AS "date",
-                     update_epoch_admin AS update_date,
-                     info_admin AS info, profile_admin AS profile,
-                     subscribed_admin AS subscribed,
-                     included_admin AS included,
-                     include_sources_admin AS id
-              FROM admin_table
-              WHERE list_admin = ? AND robot_admin = ?
-              ORDER BY user_admin},
+            sprintf(
+                q{SELECT %s, role_admin AS "role"
+                  FROM admin_table
+                  WHERE list_admin = ? AND robot_admin = ?
+                  ORDER BY user_admin},
+                _list_admin_cols($sdm)
+            ),
             $self->{'name'},
             $self->{'domain'}
         )
