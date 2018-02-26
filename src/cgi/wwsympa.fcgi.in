@@ -2617,33 +2617,18 @@ sub prepare_report_user {
 sub check_param_in {
     wwslog('debug2', '');
 
-    ## Lowercase list name
-    $in{'list'} =~ tr/A-Z/a-z/;
-
-    ## In case the variable was multiple
-    if ($in{'list'} =~ /^(\S+)\0/) {
-        $in{'list'} = $1;
-
-        ## Create a new List instance.
-        unless ($list = Sympa::List->new($in{'list'}, $robot)) {
-            Sympa::Report::reject_report_web('user', 'unknown_list',
-                {listname => $in{'list'}},
-                $param->{'action'}, '');
-            wwslog('info', 'Unknown list %s', $in{'list'});
-            return undef;
-        }
-
-        ## Set lang to list lang
-        $language->set_lang($list->{'admin'}{'lang'});
-    }
-
-    ## listmaster has owner and editor privileges for the list
+    # listmaster has owner and editor privileges for the list.
     if (Sympa::is_listmaster($robot, $param->{'user'}{'email'})) {
         $param->{'is_listmaster'} = 1;
     }
 
-    if ($in{'list'}) {
-        ## Create a new Sympa::List instance.
+    if (defined $in{'list'} and length $in{'list'}) {
+        # Lowercase list name.
+        $in{'list'} =~ tr/A-Z/a-z/;
+        # In case the variable was multiple.
+        $in{'list'} = $1 if $in{'list'} =~ /^(\S+)\0/;
+
+        # Create a new Sympa::List instance.
         unless ($list = Sympa::List->new($in{'list'}, $robot, {})) {
             # To prevent sniffing lists, we won't notice error to users.
             return undef;
