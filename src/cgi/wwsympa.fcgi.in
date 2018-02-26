@@ -1536,10 +1536,15 @@ while ($query = CGI::Fast->new) {
         ## Session loop
         while ($action) {
             unless (check_param_in()) {
-                Sympa::Report::reject_report_web('user', 'wrong_param', {},
-                    $action, $list);
-                wwslog('info', 'Wrong parameters');
-                last;
+                wwslog('info', 'Unknown list "%s"', $in{'list'});
+                if ($action eq 'info') {
+                    # To prevent sniffing lists, don't notice error to users.
+                    $action = Conf::get_robot_conf($robot, 'default_home');
+                } else {
+                    Sympa::Report::reject_report_web('user', 'unknown_list',
+                        {listname => $in{'list'}}, $action, $list);
+                    last;
+                }
             }
 
             $param->{'host'} = $list->{'admin'}{'host'}
@@ -2600,7 +2605,7 @@ sub prepare_report_user {
 #
 #=over
 #
-#=item * I<undef> if the process encounters problems.
+#=item * I<undef> if list parameter is specified and list is unknown
 #
 #=item * I<1> if everything goes well
 #
@@ -2640,10 +2645,7 @@ sub check_param_in {
     if ($in{'list'}) {
         ## Create a new Sympa::List instance.
         unless ($list = Sympa::List->new($in{'list'}, $robot, {})) {
-            Sympa::Report::reject_report_web('user', 'unknown_list',
-                {listname => $in{'list'}},
-                $param->{'action'}, '');
-            wwslog('info', 'Unknown list %s', $in{'list'});
+            # To prevent sniffing lists, we won't notice error to users.
             return undef;
         }
 
@@ -4704,7 +4706,10 @@ sub do_info {
     ## Access control
     unless (defined check_authz('do_info', 'info')) {
         delete $param->{'list'};
-        return undef;
+        
+        # To prevent sniffing lists, we behave the same as when list was
+        # unknown.
+        return Conf::get_robot_conf($robot, 'default_home');
     }
 
     ## Get List Description
