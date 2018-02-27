@@ -2631,7 +2631,7 @@ sub check_param_in {
         }
 
         # Gather list configuration information for further output.
-        $param->{'list'}      = $in{'list'};
+        $param->{'list'}      = $list->{'name'};
         $param->{'subtitle'}  = $list->{'admin'}{'subject'};
         $param->{'subscribe'} = $list->{'admin'}{'subscribe'}{'name'};
         #FIXME: Use Sympa::Scenario::get_current_title().
