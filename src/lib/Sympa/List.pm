@@ -315,7 +315,11 @@ sub new {
     $log->syslog('debug2', '(%s, %s, %s)', $name, $robot,
         join('/', keys %$options));
 
-    $name = lc($name);
+    # Lowercase list name.
+    $name = lc $name;
+    # In case the variable was multiple. FIXME:required?
+    $name = $1 if $name =~ /^(\S+)\0/;
+
     ## Allow robot in the name
     if ($name =~ /\@/) {
         my @parts = split /\@/, $name;

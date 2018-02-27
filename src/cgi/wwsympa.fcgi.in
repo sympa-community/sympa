@@ -1535,40 +1535,28 @@ while ($query = CGI::Fast->new) {
     } else {
         ## Session loop
         while ($action) {
-            unless (check_param_in()) {
-                wwslog('info', 'Unknown list "%s"', $in{'list'});
-                if ($action eq 'info') {
-                    # To prevent sniffing lists, don't notice error to users.
-                    $action = Conf::get_robot_conf($robot, 'default_home');
-                } else {
-                    Sympa::Report::reject_report_web('user', 'unknown_list',
-                        {listname => $in{'list'}}, $action, $list);
-                    last;
+            if (defined $in{'list'} and length $in{'list'}) {
+                # Create a new Sympa::List instance.
+                unless ($list = Sympa::List->new($robot, $in{'list'})) {
+                    wwslog('info', 'Unknown list "%s"', $in{'list'});
+                    if ($action eq 'info') {
+                        # To prevent sniffing lists, don't notice error to
+                        # users.
+                        $action =
+                            Conf::get_robot_conf($robot, 'default_home');
+                    } else {
+                        Sympa::Report::reject_report_web('user',
+                            'unknown_list',
+                            {listname => $in{'list'}}, $action, $list);
+                        last;
+                    }
                 }
             }
 
-            $param->{'host'} = $list->{'admin'}{'host'}
-                if (ref($list) eq 'Sympa::List');
-            $param->{'host'} ||= $robot;
-            $param->{'domain'} = $list->{'domain'}
-                if (ref($list) eq 'Sympa::List');
-
-            # Set best content language
-            my $user_lang = $param->{'user'}{'lang'} if $param->{'user'};
-            my $lang_context = (ref $list eq 'Sympa::List') ? $list : $robot;
-            $param->{'lang'} =
-                $language->set_lang($session->{'lang'}, $user_lang,
-                Sympa::best_language($lang_context));
-            # compatibility concern: old-style locale.
-            $param->{'locale'} =
-                Sympa::Language::lang2oldlocale($param->{'lang'});
-            # compatibility concern: for 6.1.
-            $param->{'lang_tag'} = $param->{'lang'};
-
-            export_topics($robot);
+            check_param_in();
 
             unless ($comm{$action}) {
-                # Previously we search the list using value of action here.
+                # Previously we searched the list using value of action here.
                 # To prevent sniffing lists, we no longer do.
                 Sympa::Report::reject_report_web('user', 'unknown_action', {},
                     $action, $list);
@@ -2587,7 +2575,7 @@ sub prepare_report_user {
 #=head2 sub check_param_in
 #
 #Checks parameters contained in the global variable $in. It is the process used to analyze the incoming parameters.
-#Use it to create a List object and initialize output parameters.
+#Use it just after List object is created and initialize output parameters.
 #
 #=head3 Arguments
 #
@@ -2601,9 +2589,7 @@ sub prepare_report_user {
 #
 #=over
 #
-#=item * I<undef> if list parameter is specified and list is unknown
-#
-#=item * I<1> if everything goes well
+#=item C<1>
 #
 #=back
 #
@@ -2618,20 +2604,14 @@ sub check_param_in {
         $param->{'is_listmaster'} = 1;
     }
 
-    if (defined $in{'list'} and length $in{'list'}) {
-        # Lowercase list name.
-        $in{'list'} =~ tr/A-Z/a-z/;
-        # In case the variable was multiple.
-        $in{'list'} = $1 if $in{'list'} =~ /^(\S+)\0/;
-
-        # Create a new Sympa::List instance.
-        unless ($list = Sympa::List->new($in{'list'}, $robot, {})) {
-            # To prevent sniffing lists, we won't notice error to users.
-            return undef;
-        }
-
+    unless (ref $list eq 'Sympa::List') {
+        $param->{'host'} = $robot;
+    } else {
         # Gather list configuration information for further output.
-        $param->{'list'}      = $list->{'name'};
+        $param->{'list'}   = $list->{'name'};
+        $param->{'domain'} = $list->{'domain'};
+        $param->{'host'}   = $list->{'admin'}{'host'};
+
         $param->{'subtitle'}  = $list->{'admin'}{'subject'};
         $param->{'subscribe'} = $list->{'admin'}{'subscribe'}{'name'};
         #FIXME: Use Sympa::Scenario::get_current_title().
@@ -2840,8 +2820,21 @@ sub check_param_in {
     $param->{'session'}{'is_family_owner'} =
         $param->{'may_create_automatic_list'};
 
-    return 1;
+    # Set best content language.
+    my $user_lang = $param->{'user'}{'lang'} if $param->{'user'};
+    my $lang_context = (ref $list eq 'Sympa::List') ? $list : $robot;
+    $param->{'lang'} =
+        $language->set_lang($session->{'lang'}, $user_lang,
+        Sympa::best_language($lang_context));
+    # compatibility concern: old-style locale.
+    $param->{'locale'} =
+        Sympa::Language::lang2oldlocale($param->{'lang'});
+    # compatibility concern: for 6.1.
+    $param->{'lang_tag'} = $param->{'lang'};
 
+    export_topics($robot);
+
+    return 1;
 }
 
 ## Prepare outgoing params
