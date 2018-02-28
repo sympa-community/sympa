@@ -219,11 +219,12 @@ Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 		-e 's|--scriptdir--|$(scriptdir)|' \
 		-e 's|--modulesdir--|$(modulesdir)|' \
 		-e 's|--defaultdir--|$(defaultdir)|' \
+		-e 's|--arcdir--|$(arcdir)|' \
+		-e 's|--bouncedir--|$(bouncedir)|' \
+		-e 's|--execcgidir--|$(execcgidir)|' \
 		-e 's|--staticdir--|$(staticdir)|' \
 		-e 's|--cssdir--|$(cssdir)|' \
 		-e 's|--picturesdir--|$(picturesdir)|' \
-		-e 's|--arcdir--|$(arcdir)|' \
-		-e 's|--bouncedir--|$(bouncedir)|' \
 		< $(srcdir)/$@.in > $@
 
 Sympa/Internals.pod: Sympa/Internals.podpl Sympa/Constants.pm.in $(nobase_modules_DATA)
