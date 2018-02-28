@@ -11113,7 +11113,8 @@ sub do_purge_list {
 
 sub do_close_list {
     wwslog('info', '(%s, mode=%s)', $list, $in{'mode'});
-    my $mode = $in{'mode'};
+    my $mode   = $in{'mode'};
+    my $notify = !!$in{'notify'};
 
     # Sanitize parameter: non-listmasters are allowed "close" mode only.
     $mode = 'close'
@@ -11123,6 +11124,7 @@ sub do_close_list {
 
     $param->{'mode'} = $mode;
     $param->{'previous_action'} = $in{'previous_action'} || 'admin';
+    $param->{'notify'} = $notify;
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -11137,6 +11139,7 @@ sub do_close_list {
         action       => 'close_list',
         current_list => $list,
         mode         => $mode,
+        notify       => $notify,
         sender       => $param->{'user'}{'email'},
         (   $param->{'user'}{'email'}
             ? (md5_check => 1)
@@ -11184,7 +11187,8 @@ sub do_close_list {
 # Old name: do_restore_list().
 sub do_open_list {
     wwslog('info', '(mode=%s)', $in{'mode'});
-    my $mode = $in{'mode'};
+    my $mode   = $in{'mode'};
+    my $notify = !!$in{'notify'};
 
     # Sanitize parameter.
     $mode = 'open'
@@ -11192,6 +11196,7 @@ sub do_open_list {
 
     $param->{'mode'} = $mode;
     $param->{'previous_action'} = $in{'previous_action'} || 'admin';
+    $param->{'notify'} = $notify;
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
@@ -11206,6 +11211,7 @@ sub do_open_list {
         action       => 'open_list',
         current_list => $list,
         mode         => $mode,
+        notify       => $notify,
         sender       => $param->{'user'}{'email'},
         (   $param->{'user'}{'email'}
             ? (md5_check => 1)
