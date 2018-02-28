@@ -61,6 +61,8 @@ if test "$fhs" = "yes"; then
     execcgidir=$libdir/sympa/cgi
     expldir=$localstatedir/lib/sympa/list_data
     staticdir=$localstatedir/lib/sympa/static_content
+    cssdir=$localstatedir/lib/sympa/static_content/css
+    picturesdir=$localstatedir/lib/sympa/static_content/pictures
     spooldir=$localstatedir/spool/sympa
     arcdir=$localstatedir/lib/sympa/arc
     bouncedir=$localstatedir/lib/sympa/bounce
@@ -94,6 +96,8 @@ else
     expldir=$prefix/list_data
     spooldir=$prefix/spool
     staticdir=$prefix/static_content
+    cssdir=$prefix/static_content/css
+    picturesdir=$prefix/static_content/pictures
     arcdir=$prefix/arc
     bouncedir=$prefix/bounce
     confdir=/etc/sympa
@@ -112,6 +116,8 @@ AC_SUBST(execcgidir)
 AC_SUBST(expldir)
 AC_SUBST(spooldir)
 AC_SUBST(staticdir)
+AC_SUBST(cssdir)
+AC_SUBST(picturesdir)
 AC_SUBST(arcdir)
 AC_SUBST(bouncedir)
 AC_SUBST(localedir)
@@ -333,6 +339,24 @@ AC_ARG_WITH(
 	[static data @<:@PREFIX/static_content@:>@]
     ),
     [staticdir="$withval"]
+)
+
+AC_ARG_WITH(
+    cssdir,
+    AS_HELP_STRING(
+	[--with-cssdir=DIR],
+	[generated css  @<:@PREFIX/static_content/css@:>@]
+    ),
+    [cssdir="$withval"]
+)
+
+AC_ARG_WITH(
+    picturesdir,
+    AS_HELP_STRING(
+	[--with-picturesdir=DIR],
+	[subscribers pictures  @<:@PREFIX/static_content/pictures@:>@]
+    ),
+    [picturesdir="$withval"]
 )
 
 CONFIG=$confdir/sympa.conf

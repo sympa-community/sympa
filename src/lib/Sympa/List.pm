@@ -1773,16 +1773,16 @@ sub send_notify_to_owner {
 sub get_picture_path {
     my $self = shift;
     return join '/',
-        Conf::get_robot_conf($self->{'domain'}, 'static_content_path'),
-        'pictures', $self->get_id, @_;
+        Conf::get_robot_conf($self->{'domain'}, 'pictures_path'),
+        $self->get_id, @_;
 }
 
 # Note: This would be moved to Robot package.
 sub get_picture_url {
     my $self = shift;
     return join '/',
-        Conf::get_robot_conf($self->{'domain'}, 'static_content_url'),
-        'pictures', $self->get_id, @_;
+        Conf::get_robot_conf($self->{'domain'}, 'pictures_url'),
+        $self->get_id, @_;
 }
 
 =over 4
