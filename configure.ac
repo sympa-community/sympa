@@ -124,22 +124,6 @@ AC_SUBST(localedir)
 AC_SUBST(confdir)
 AC_SUBST(docdir)
 
-## Disable smtpc command line utility
-AC_ARG_ENABLE(
-    smtpc,
-    AS_HELP_STRING(
-        [--disable-smtpc],
-        [do not install smtpc command line utility (default is yes)]
-    ),
-    [case "$enableval" in
-     yes) smtpc=true;;
-     no) smtpc=false;;
-     *) smtpc=true;;
-     esac],
-    [smtpc=true]
-)
-AM_CONDITIONAL([SMTPC], [test x$smtpc = xtrue])
-
 # allow user to redefine some of them
 AC_ARG_WITH(
     confdir,
@@ -640,9 +624,5 @@ AC_CONFIG_FILES([
     src/sbin/Makefile
     www/Makefile
 ])
-
-AC_CONFIG_SUBDIRS([src/smtpc])
-SMTPC_CONFIGURE_OPTIONS="--program-prefix=sympa_"
-export SMTPC_CONFIGURE_OPTIONS
 
 AC_OUTPUT
