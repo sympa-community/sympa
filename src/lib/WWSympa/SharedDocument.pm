@@ -25,7 +25,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::SharedDocument;
+package WWSympa::SharedDocument;
 
 use strict;
 use warnings;
@@ -386,7 +386,7 @@ sub create_child {
 
     $options{type} ||= 'directory';
 
-    if (not Sympa::SharedDocument::valid_name($new_name)) {
+    if (not WWSympa::SharedDocument::valid_name($new_name)) {
         $ERRNO = POSIX::EINVAL();
         return undef;
     }
@@ -864,7 +864,7 @@ sub rename {
         $ERRNO = POSIX::EPERM();
         return undef;
     }
-    if (not Sympa::SharedDocument::valid_name($new_name)
+    if (not WWSympa::SharedDocument::valid_name($new_name)
         or ($self->{type} eq 'url' and $new_name !~ /[.]url\z/)) {
         $ERRNO = POSIX::EINVAL();
         return undef;
@@ -1016,13 +1016,13 @@ __END__
 
 =head1 NAME
 
-Sympa::SharedDocument - Shared document repository and its nodes
+WWSympa::SharedDocument - Shared document repository and its nodes
 
 =head1 SYNOPSIS
 
-  use Sympa::SharedDocument;
+  use WWSympa::SharedDocument;
   
-  $shared = Sympa::SharedDocument->new($list, $path);
+  $shared = WWSympa::SharedDocument->new($list, $path);
   
   %access = $shared->get_privileges('read', $email, 'md5', {...});
   @children = $shared->get_children;
@@ -1030,7 +1030,7 @@ Sympa::SharedDocument - Shared document repository and its nodes
 
 =head1 DESCRIPTION
 
-L<Sympa::SharedDocument> implements shared document repository of lists.
+L<WWSympa::SharedDocument> implements shared document repository of lists.
 
 =head2 Methods
 
@@ -1291,7 +1291,7 @@ Existing files and directories may have the name not allowed by this function.
 
 =head2 Attributes
 
-Instance of L<Sympa::SharedDocument> may have following attributes.
+Instance of L<WWSympa::SharedDocument> may have following attributes.
 
 =over
 
@@ -1356,7 +1356,7 @@ given by property description.
 
 =item {parent}
 
-Parent node if any.  L<Sympa::SharedDocument> instance.
+Parent node if any.  L<WWSympa::SharedDocument> instance.
 
 =item {paths}
 
@@ -1447,5 +1447,7 @@ L<SharedDocument> module appeared on Sympa 5.2b.2.
 
 Rewritten L<Sympa::SharedDocument> began to provide OO interface on
 Sympa 6.2.17.
+
+It was renamed to L<WWSympa::SharedDocument> on Sympa 6.2.25b.2.
 
 =cut

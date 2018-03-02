@@ -25,7 +25,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::SOAP::Transport;
+package WWSympa::SOAP::Transport;
 
 use strict;
 use warnings;
@@ -33,8 +33,8 @@ use English qw(-no_match_vars);
 use SOAP::Transport::HTTP;
 
 use Sympa::Log;
-use Sympa::Session;
-use Sympa::Tools::WWW;
+use WWSympa::Session;
+use WWSympa::Tools;
 
 # 'base' pragma doesn't work here
 our @ISA = qw(SOAP::Transport::HTTP::FCGI);
@@ -59,20 +59,20 @@ sub request {
     if (my $request = $_[0]) {
         # Select appropriate robot.
         $ENV{'SYMPA_ROBOT'} =
-            Sympa::Tools::WWW::get_robot('soap_url_local', 'soap_url');
+            WWSympa::Tools::get_robot('soap_url_local', 'soap_url');
 
         my $session;
         ## Existing session or new one
-        if (Sympa::Session::get_session_cookie($ENV{'HTTP_COOKIE'})) {
-            $session = Sympa::Session->new(
+        if (WWSympa::Session::get_session_cookie($ENV{'HTTP_COOKIE'})) {
+            $session = WWSympa::Session->new(
                 $ENV{'SYMPA_ROBOT'},
-                {   'cookie' => Sympa::Session::get_session_cookie(
+                {   'cookie' => WWSympa::Session::get_session_cookie(
                         $ENV{'HTTP_COOKIE'}
                     )
                 }
             );
         } else {
-            $session = Sympa::Session->new($ENV{'SYMPA_ROBOT'}, {});
+            $session = WWSympa::Session->new($ENV{'SYMPA_ROBOT'}, {});
             $session->store() if (defined $session);
             ## Note that id_session changes each time it is saved in the DB
             $session->renew()
@@ -97,7 +97,7 @@ sub response {
     if (my $response = $_[0]) {
         if (defined $ENV{'SESSION_ID'}) {
             my $cookie =
-                Sympa::Session::soap_cookie2($ENV{'SESSION_ID'},
+                WWSympa::Session::soap_cookie2($ENV{'SESSION_ID'},
                 $ENV{'SERVER_NAME'}, $self->{_ss_cookie_expire});
             $response->headers->push_header('Set-Cookie2' => $cookie);
         }

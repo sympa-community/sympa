@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Session;
+package WWSympa::Session;
 
 use strict;
 use warnings;
@@ -35,7 +35,6 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Tools::Data;
 use Sympa::Tools::Password;
-use Sympa::Tools::Time;
 
 # this structure is used to define which session attributes are stored in a
 # dedicated database col where others are compiled in col 'data_session'
@@ -93,10 +92,10 @@ sub new {
             return undef;
         }
         if ($status eq 'not_found') {
-            # Start a Sympa::Session->new(may be a fake cookie).
+            # Start a WWSympa::Session->new(may be a fake cookie).
             $log->syslog('info', 'Ignoring unknown session cookie "%s"',
                 $cookie);
-            return (Sympa::Session->new($robot));
+            return (WWSympa::Session->new($robot));
         }
     } else {
         # create a new session context
@@ -473,91 +472,8 @@ sub renew {
     return 1;
 }
 
-## remove old sessions from a particular robot or from all robots.
-## delay is a parameter in seconds
-sub purge_old_sessions {
-    $log->syslog('debug2', '(%s)', @_);
-    my $robot = shift;
-
-    my $delay =
-        Sympa::Tools::Time::duration_conv($Conf::Conf{'session_table_ttl'});
-    my $anonymous_delay = Sympa::Tools::Time::duration_conv(
-        $Conf::Conf{'anonymous_session_table_ttl'});
-
-    unless ($delay) {
-        $log->syslog('info', '(%s) Exit with delay null', $robot);
-        return;
-    }
-    unless ($anonymous_delay) {
-        $log->syslog('info', '(%s) Exit with anonymous delay null', $robot);
-        return;
-    }
-
-    my @sessions;
-    my $sth;
-    my $sdm = Sympa::DatabaseManager->instance;
-    unless ($sdm) {
-        $log->syslog('err', 'Unavailable database connection');
-        return;
-    }
-
-    my (@conditions, @anonymous_conditions);
-    push @conditions, sprintf('robot_session = %s', $sdm->quote($robot))
-        if $robot and $robot ne '*';
-    @anonymous_conditions = @conditions;
-
-    push @conditions, sprintf('%d > date_session', time - $delay) if $delay;
-    push @anonymous_conditions,
-        sprintf('%d > date_session', time - $anonymous_delay)
-        if $anonymous_delay;
-
-    my $condition           = join ' AND ', @conditions;
-    my $anonymous_condition = join ' AND ', @anonymous_conditions,
-        "email_session = 'nobody'", 'hit_session = 1';
-
-    my $count_statement =
-        sprintf q{SELECT COUNT(*) FROM session_table WHERE %s}, $condition;
-    my $anonymous_count_statement =
-        sprintf q{SELECT COUNT(*) FROM session_table WHERE %s},
-        $anonymous_condition;
-
-    my $statement = sprintf q{DELETE FROM session_table WHERE %s}, $condition;
-    my $anonymous_statement = sprintf q{DELETE FROM session_table WHERE %s},
-        $anonymous_condition;
-
-    unless ($sth = $sdm->do_query($count_statement)) {
-        $log->syslog('err', 'Unable to count old session for robot %s',
-            $robot);
-        return undef;
-    }
-
-    my $total = $sth->fetchrow;
-    if ($total == 0) {
-        $log->syslog('debug', 'No sessions to expire');
-    } else {
-        unless ($sth = $sdm->do_query($statement)) {
-            $log->syslog('err', 'Unable to purge old sessions for robot %s',
-                $robot);
-            return undef;
-        }
-    }
-    unless ($sth = $sdm->do_query($anonymous_count_statement)) {
-        $log->syslog('err', 'Unable to count anonymous sessions for robot %s',
-            $robot);
-        return undef;
-    }
-    my $anonymous_total = $sth->fetchrow;
-    if ($anonymous_total == 0) {
-        $log->syslog('debug', 'No anonymous sessions to expire');
-        return $total;
-    }
-    unless ($sth = $sdm->do_query($anonymous_statement)) {
-        $log->syslog('err', 'Unable to purge anonymous sessions for robot %s',
-            $robot);
-        return undef;
-    }
-    return $total + $anonymous_total;
-}
+# Deprecated. Use purge_session_table() in task_manager.pl.
+#sub purge_old_sessions;
 
 # Moved to: Sympa::Ticket::purge_old_tickets().
 #sub purge_old_tickets;
@@ -615,7 +531,7 @@ sub list_sessions {
 ## Subroutine to get session cookie value
 sub get_session_cookie {
     my $http_cookie = shift;
-    return Sympa::Session::_generic_get_cookie($http_cookie, 'sympa_session');
+    return WWSympa::Session::_generic_get_cookie($http_cookie, 'sympa_session');
 }
 
 ## Generic subroutine to set a cookie
@@ -759,7 +675,7 @@ sub decrypt_session_id {
 #    name=>NAME, value=>VALUE, expires=>EXPIRES, domain=>DOMAIN, path=>PATH);
 
 # Sets an HTTP cookie to be sent to a SOAP client
-# DEPRECATED: Use Sympa::Session::soap_cookie2().
+# DEPRECATED: Use WWSympa::Session::soap_cookie2().
 #sub set_cookie_soap($session_id, $http_domain, $expire);
 
 ## returns Message Authentication Check code
@@ -931,14 +847,14 @@ __END__
 
 =head1 NAME
 
-Sympa::Session - Web session
+WWSympa::Session - Web session
 
 =head1 SYNOPSIS
 
-  use Sympa::Session;
+  use WWSympa::Session;
   
-  my $session = Sympa::Session->new($robot,
-      {cookie => Sympa::Session::get_session_cookie($ENV{'HTTP_COOKIE'})}
+  my $session = WWSympa::Session->new($robot,
+      {cookie => WWSympa::Session::get_session_cookie($ENV{'HTTP_COOKIE'})}
   );
   $session->renew();
   $session->store();
@@ -962,7 +878,7 @@ Sympa::Session - Web session
 
 =head1 DESCRIPTION
 
-L<Sympa::Session> provides web session for Sympa web interface.
+L<WWSympa::Session> provides web session for Sympa web interface.
 HTTP cookie is required to determine users.
 Session store is used to keep users' personal data.
 
@@ -1120,7 +1036,7 @@ TBD.
 =item purge_old_sessions ( )
 
 I<Function>.
-TBD.
+Deprecated.
 
 =back
 
@@ -1136,7 +1052,8 @@ L<Sympa::DatabaseManager>.
 
 L<SympaSession> appeared on Sympa 5.4a3.
 
-It was renamed to L<Sympa::Session> on Sympa 6.2a.41.
+It was renamed to L<Sympa::Session> on Sympa 6.2a.41,
+then L<WWSympa::Session> on 6.2.25b.2.
 
 L</"confirm_action"> method was added on Sympa 6.2.17.
 

@@ -25,7 +25,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Tools::WWW;
+package WWSympa::Tools;
 
 use strict;
 use warnings;
@@ -178,7 +178,7 @@ our %bounce_status = (
 #sub load_mime_types();
 
 ## Returns user information extracted from the cookie
-# Deprecated.  Use Sympa::Session->new etc.
+# Deprecated.  Use WWSympa::Session->new etc.
 #sub get_email_from_cookie;
 
 # NO LONGER USED.
@@ -330,7 +330,7 @@ sub get_http_host {
 # DEPRECATED: No longer used.
 #sub merge_edit;
 
-# Moved: Use Sympa::SharedDocument::_load_desc_file().
+# Moved: Use WWSympa::SharedDocument::_load_desc_file().
 #sub get_desc_file;
 
 # DEPRECATED: No longer used.
@@ -339,7 +339,7 @@ sub get_http_host {
 # DEPRECATED: No longer used (a subroutine of get_directory_content()).
 #sub select_my_files;
 
-# Moved to Sympa::SharedDocument::_get_icon().
+# Moved to WWSympa::SharedDocument::_get_icon().
 #sub get_icon;
 
 # Moved to: Conf::get_mime_type().

@@ -36,7 +36,6 @@ nobase_modules_DATA = \
 	Sympa/Aliases/External.pm \
 	Sympa/Aliases/Template.pm \
 	Sympa/Archive.pm \
-	Sympa/Auth.pm \
 	Sympa/Bulk.pm \
 	Sympa/CommandDef.pm \
 	Conf.pm \
@@ -69,8 +68,6 @@ nobase_modules_DATA = \
 	Sympa/LockedFile.pm \
 	Sympa/Log.pm \
 	Sympa/Mailer.pm \
-	Sympa/Marc.pm \
-	Sympa/Marc/Search.pm \
 	Sympa/Message.pm \
 	Sympa/Message/Plugin.pm \
 	Sympa/Message/Plugin/FixEncoding.pm \
@@ -78,7 +75,6 @@ nobase_modules_DATA = \
 	Sympa/ModDef.pm \
 	Sympa/Process.pm \
 	Sympa/Regexps.pm \
-	Sympa/Report.pm \
 	Sympa/Request.pm \
 	Sympa/Request/Collection.pm \
 	Sympa/Request/Handler.pm \
@@ -120,10 +116,6 @@ nobase_modules_DATA = \
 	Sympa/Request/Message.pm \
 	Sympa/Robot.pm \
 	Sympa/Scenario.pm \
-	Sympa/SharedDocument.pm \
-	Sympa/Session.pm \
-	Sympa/SOAP.pm \
-	Sympa/SOAP/Transport.pm \
 	Sympa/Spindle.pm \
 	Sympa/Spindle/AuthorizeMessage.pm \
 	Sympa/Spindle/AuthorizeRequest.pm \
@@ -179,11 +171,19 @@ nobase_modules_DATA = \
 	Sympa/Tools/SMIME.pm \
 	Sympa/Tools/Text.pm \
 	Sympa/Tools/Time.pm \
-	Sympa/Tools/WWW.pm \
 	Sympa/Topic.pm \
 	Sympa/Tracking.pm \
 	Sympa/Upgrade.pm \
-	Sympa/User.pm
+	Sympa/User.pm \
+	WWSympa/Auth.pm \
+	WWSympa/Marc.pm \
+	WWSympa/Marc/Search.pm \
+	WWSympa/Report.pm \
+	WWSympa/SharedDocument.pm \
+	WWSympa/Session.pm \
+	WWSympa/SOAP.pm \
+	WWSympa/SOAP/Transport.pm \
+	WWSympa/Tools.pm
 
 man3dir = $(mandir)/man3
 man3ext = 3Sympa
