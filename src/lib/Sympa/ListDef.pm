@@ -841,7 +841,7 @@ our %pinfo = (
         'group'      => 'archives',
         'gettext_id' => "Archives",
         'gettext_comment' =>
-            "Privilege for reading mail archives and frequency of archiving\nDefines who can access the web archive for the list.",
+            "Privilege for reading mail archives and frequency of archiving.\nDefines who can access the list's web archive.",
         'format'     => {
             'period' => {
                 'order'      => 1,
@@ -2110,7 +2110,7 @@ our %pinfo = (
         'group'      => 'dkim',
         'gettext_id' => "Insert DKIM signature to messages sent to the list",
         'gettext_comment' =>
-            "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be some custom scenario to be updated",
+            "Enable/Disable DKIM. This feature requires Mail::DKIM to be installed, and maybe some custom scenario to be updated",
         'format'     => ['on', 'off'],
         'occurrence' => '1',
         'default' => {'conf' => 'dkim_feature'}
@@ -2215,14 +2215,14 @@ our %pinfo = (
                 'occurrence' => '0-n',
                 'default'    => {'conf' => 'dmarc_protection_mode'},
                 'gettext_comment' =>
-                    'Select one or more operation modes.  "Domain matching regular expression" (domain_regex) matches the specified Domain regexp; "DKIM signature exists" (dkim_signature) matches any message with a DKIM signature header; "DMARC policy ..." (dmarc_*) matches messages from sender domains with a DMARC policy as given; "all" (all) matches all messages.',
+                    'Select one or more operation modes.  "Domain matching regular expression" (domain_regex) matches the specified Domain regular expression; "DKIM signature exists" (dkim_signature) matches any message with a DKIM signature header; "DMARC policy ..." (dmarc_*) matches messages from sender domains with a DMARC policy as given; "all" (all) matches all messages.',
                 'order' => 1
             },
             'domain_regex' => {
                 'format'          => '.+',
-                'gettext_id'      => "Match domain regexp",
+                'gettext_id'      => "Match domain regular expression",
                 'occurrence'      => '0-1',
-                'gettext_comment' => 'Regexp match pattern for From domain',
+                'gettext_comment' => 'Regular expression match pattern for From domain',
                 'order'           => 2,
                 'default' => {'conf' => 'dmarc_protection_domain_regex'},
             },
