@@ -828,7 +828,7 @@ our %in_regexp = (
     'blacklist'            => '.*',
 
     ## Integer
-    'page' => '\d+',
+    'page' => '\d+|owner|editor',
     'size' => '\d+',
 
     ## Free data
@@ -905,6 +905,7 @@ our %in_regexp = (
     'new_email'  => Sympa::Regexps::email(),
     'sender'     => Sympa::Regexps::email(),
     'fromaddr'   => Sympa::Regexps::email(),
+    'del_emails' => '.*',
     'to' => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
     'automatic_list_part_*' => '[\w\-\.\+]*',
 
@@ -4737,6 +4738,75 @@ sub do_subscriber_count {
 ## Subscribers' list
 sub do_review {
     wwslog('info', '(%s)', $in{'page'});
+
+    $param->{'page'} = $in{'page'} || 1;
+    if ($param->{'page'} eq 'owner') {
+        return _review_user('owner');
+    } elsif ($in{'page'} eq 'editor') {
+        return _review_user('editor');
+    } else {
+        return _review_member();
+    }
+}
+
+# List of owners / editors
+sub _review_user {
+    wwslog('info', '(%s)', @_);
+    my $role = shift;
+
+    # Access control
+    return undef
+        unless Sympa::is_listmaster($list, $param->{'user'}{'email'})
+            or $list->is_admin('owner', $param->{'user'}{'email'});
+
+    # Delete/add users.
+    my @del_users = grep {$_} map { Sympa::Tools::Text::canonic_email($_) }
+        split /\0/, $in{'del_emails'};
+    my $new_users = [
+        grep { $_ and $_->{email} }
+        @{(_deserialize_changes() || {})->{user} || []}
+    ];
+    foreach my $email (@del_users) {
+        next if grep {$email eq $_->{email}} @$new_users;
+        $list->delete_list_admin($role, $email);
+    }
+    foreach my $user (@{(ref $new_users eq 'ARRAY') ? $new_users : []}) {
+        my $email = $user->{email};
+        if (grep {$email eq $_} @del_users) {
+            ; #FIXME: Update user?
+        } else {
+            unless ($list->add_list_admin($role, $user)) {
+                #FIXME: Report error
+            } else {
+                # Notify the new list owner/editor
+                Sympa::send_notify_to_user(
+                    $list,
+                    'added_as_listadmin',
+                    $email,
+                    {   admin_type => $role,
+                        delegator  => $param->{'user'}{'email'}
+                    }
+                );
+                Sympa::Report::notice_report_web('user_notified',
+                    {'notified_user' => $email},
+                    $param->{'action'});
+            }
+        }
+    }
+
+    # Users list
+    my $users =
+        [grep { $_->{role} eq $role } @{$list->get_current_admins || []}];
+    foreach my $user (@$users) {
+        $user->{sources} = $list->get_datasource_name($user->{id})
+            if $user->{id};
+    }
+    $param->{($role eq 'owner') ? 'owners' : 'editors'} = $users;
+
+    return 1;
+}
+
+sub _review_member {
     my $record;
     my @users;
     my $size;

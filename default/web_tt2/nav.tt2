@@ -141,10 +141,30 @@
              <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'other']) %]" >[%|loc%]Miscellaneous[%END%]</a></li>
           </ul>
     </li>
-[% IF is_owner %]
-[% IF action == 'review' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a  href="[% 'review' | url_rel([list]) %]">[%|loc%]Manage Subscribers[%END%]</a></li>
-[% END %]
+  [% IF is_owner ~%]
+    <li class="has-dropdown [% IF action == 'review' %]active[%END%]">
+      <a href="#">
+        [%|loc%]Users[%END%]
+      </a>
+      <ul class="dropdown">
+        <li [% IF page.match('^\d+$') %]class="active"[%END%]>
+          <a  href="[% 'review' | url_rel([list]) %]" >
+            [%|loc%]Subscribers[%END%]
+          </a>
+        </li>
+        <li [% IF page == 'owner' %]class="active"[%END%]>
+          <a  href="[% 'review' | url_rel([list,'owner']) %]" >
+            [%|loc%]Owners[%END%]
+          </a>
+        </li>
+        <li [% IF page == 'editor' %]class="active"[%END%]>
+          <a  href="[% 'review' | url_rel([list,'editor']) %]" >
+            [%|loc%]Editors[%END%]
+          </a>
+        </li>
+      </ul>
+    </li>
+  [%~ END %]
 [% IF conf.use_blacklist != 'none' %]
 [% IF action == 'blacklist' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a  href="[% 'blacklist' | url_rel([list]) %]" >[%|loc%]Blacklist[%END%]</a></li>

@@ -745,7 +745,7 @@ sub dump_users {
     } else {
         my %map_field = _map_list_admin_cols();
 
-        foreach my $user (@{$self->_get_admins || []}) {
+        foreach my $user (@{$self->get_current_admins || []}) {
             next unless $user->{role} eq $role;
             foreach my $k (sort keys %map_field) {
                 printf $lock_fh "%s %s\n", $k, $user->{$k}
@@ -2908,7 +2908,8 @@ sub get_admins {
 
     my $admin_user = $self->_cache_get('admin_user');
     unless ($admin_user and @{$admin_user || []}) {
-        $admin_user = $self->_get_admins;   # Get recent admins from database
+        # Get recent admins from database.
+        $admin_user = $self->get_current_admins;
         if ($admin_user) {
             $self->_cache_put('admin_user', $admin_user);
         } else {
@@ -2970,8 +2971,9 @@ sub get_admins {
     return wantarray ? @users : [@users];
 }
 
-# Get recent admins from database.
-sub _get_admins {
+# Get all admins passing cache.
+# Note: Use with care. This increases database load.
+sub get_current_admins {
     my $self = shift;
 
     my $sdm = Sympa::DatabaseManager->instance;
@@ -4031,6 +4033,9 @@ sub add_list_admin {
 
         $new_admin_user->{'subscribed'} ||= 0;
         $new_admin_user->{'included'}   ||= 0;
+
+        $new_admin_user->{'reception'}  ||= 'mail';
+        $new_admin_user->{'visibility'} ||= 'noconceal';
 
         my $sdm = Sympa::DatabaseManager->instance;
 
