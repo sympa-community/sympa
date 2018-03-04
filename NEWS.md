@@ -1,6 +1,39 @@
 # Change Log
 
-## [6.2.25b.1](https://github.com/sympa-community/sympa/tree/6.2.25b.1)
+## [6.2.25b.2](https://github.com/sympa-community/sympa/tree/6.2.25b.2) (2018-03-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.1...6.2.25b.2)
+
+**Changes:**
+
+- Parameters to specify location of CSS and subscriber pictures were introduced [\#172](https://github.com/sympa-community/sympa/issues/172). If you have specified `--with-staticdir` configure option or `static_content_path` parameter, you have to fix up. See [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html) for details.
+- smtpc (sympa_smtpc) is no longer bundled.  It was moved to [an independent repository](https://github.com/ikedas/smtpc.git) [\#201](https://github.com/sympa-community/sympa/issues/201).
+
+- On 6.2.28 (the next of next stable), it is planned that "host" list parameter will be deprecated [\#43](https://github.com/sympa-community/sympa/issues/43).  Notice may be shown during upgrading process.
+
+**Implemented enhancements:**
+
+- Location of static\_content and css directories [\#172](https://github.com/sympa-community/sympa/issues/172)
+
+**Fixed bugs:**
+
+- Notification not sent to the owner when a list is confirmed by a listmaster [\#212](https://github.com/sympa-community/sympa/issues/212)
+- Firefox freezes on "Edit robot config" page [\#206](https://github.com/sympa-community/sympa/issues/206)
+- Language test fails [\#195](https://github.com/sympa-community/sympa/issues/195)
+- Change bundled Raleway font from TTF to OTF [\#190](https://github.com/sympa-community/sympa/issues/190)
+- Sending an html page to the list from URL doesn't work on 6.2.18 [\#44](https://github.com/sympa-community/sympa/issues/44)
+
+**Closed issues:**
+
+- opensmtpd setup documentation [\#32](https://github.com/sympa-community/sympa/issues/32)
+
+**Merged pull requests:**
+
+- Add Language.t to list of tests for Travis. [\#209](https://github.com/sympa-community/sympa/pull/209) ([racke](https://github.com/racke))
+- Use standard 644 perms for $sysconfdir/README [\#203](https://github.com/sympa-community/sympa/pull/203) ([xavierba](https://github.com/xavierba))
+- Issue \#43: Preliminary notice on abolishment of "host" list parameter. [\#202](https://github.com/sympa-community/sympa/pull/202) ([ikedas](https://github.com/ikedas))
+
+## [6.2.25b.1](https://github.com/sympa-community/sympa/tree/6.2.25b.1) (2018-02-12)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.24...6.2.25b.1)
 
@@ -28,7 +61,7 @@
 
 -  Update bundled Raleway font with OTF flavour  [\#191](https://github.com/sympa-community/sympa/pull/191) ([xavierba](https://github.com/xavierba))
 
-## [6.2.24](https://github.com/sympa-community/sympa/tree/6.2.24)
+## [6.2.24](https://github.com/sympa-community/sympa/tree/6.2.24) (2017-12-21)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.23b.3...6.2.24)
 
@@ -41,7 +74,7 @@
 
 - Notify owner's list when a non-member sends on a mailing list [\#142](https://github.com/sympa-community/sympa/issues/142)
 
-## [6.2.23b.3](https://github.com/sympa-community/sympa/tree/6.2.23b.3)
+## [6.2.23b.3](https://github.com/sympa-community/sympa/tree/6.2.23b.3) (2017-12-14)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.23b.2...6.2.23b.3)
 
