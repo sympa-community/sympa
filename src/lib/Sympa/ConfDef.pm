@@ -475,7 +475,7 @@ our @params = (
         'default'    => '/usr/sbin/sendmail',
         'gettext_id' => 'Path to sendmail',
         'gettext_comment' =>
-            "Absolute path to sendmail command line utility (e.g.: a binary named \"sendmail\" is distributed with Postfix).\nSympa expects this binary to be sendmail compatible (exim, Postfix, qmail and so on provide it). Sympa also bundles \"sympa_smtpc\" program which may be a replacement to sendmail binary.",
+            "Absolute path to sendmail command line utility (e.g.: a binary named \"sendmail\" is distributed with Postfix).\nSympa expects this binary to be sendmail compatible (exim, Postfix, qmail and so on provide it).",
         'file' => 'sympa.conf',
         'edit' => '1',
     },
@@ -483,7 +483,7 @@ our @params = (
         'default'    => '-oi -odi -oem',
         'gettext_id' => 'Command line parameters passed to sendmail',
         'gettext_comment' =>
-            "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not included, because they will be included by Sympa.\nNote: If the path to sympa_smtpc is set as a value of \"sendmail\" parameter, \"--esmtp\" or \"--lmtp\" option is required.",
+            "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not included, because they will be included by Sympa.",
     },
     {   'name'       => 'log_smtp',
         'gettext_id' => 'Log invocation of sendmail',

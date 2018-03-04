@@ -309,6 +309,10 @@ msgid ""
 "be a replacement to sendmail binary."
 msgstr ""
 
+#: src/lib/Sympa/ConfDef.pm:478
+msgid "Absolute path to sendmail command line utility (e.g.: a binary named \"sendmail\" is distributed with Postfix).\nSympa expects this binary to be sendmail compatible (exim, Postfix, qmail and so on provide it)."
+msgstr "Absolute path to sendmail command line utility (e.g.: a binary named \"sendmail\" is distributed with Postfix).\nSympa expects this binary to be sendmail compatible (exim, Postfix, qmail and so on provide it)."
+
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
 "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
@@ -316,6 +320,10 @@ msgid ""
 "Note: If the path to sympa_smtpc is set as a value of \"sendmail\" "
 "parameter, \"--esmtp\" or \"--lmtp\" option is required."
 msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:486
+msgid "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not included, because they will be included by Sympa."
+msgstr "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not included, because they will be included by Sympa."
 
 #: src/lib/Sympa/ConfDef.pm:505
 #, fuzzy
@@ -11954,7 +11962,12 @@ msgstr ""
 #. (name)
 #: default/mail_tt2/listmaster_notification.tt2:362
 msgid "Unkown authentication service %1."
-msgstr "Unkown authentication service %1."
+msgstr "Unknown authentication service %1."
+
+#. (name)
+#: default/mail_tt2/listmaster_notification.tt2:362
+msgid "Unknown authentication service %1."
+msgstr "Unknown authentication service %1."
 
 #. (user)
 #: default/mail_tt2/listmaster_notification.tt2:363
