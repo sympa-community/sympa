@@ -1,4 +1,17 @@
 <!-- review.tt2 -->
+
+[% IF page.match('^\d*$') ~%]
+  [% PROCESS ReviewMembers ~%]
+[%~ ELSIF page == 'owner' ~%]
+  [% PROCESS ReviewUsers
+     users = owners %]
+[%~ ELSIF page == 'editor' ~%]
+  [% PROCESS ReviewUsers
+     users = editors %]
+[%~ END %]
+
+[%~ BLOCK ReviewMembers # (members) ~%]
+
 [% IF is_owner %]
 <h2>[%|loc%]Manage list members[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
@@ -206,4 +219,192 @@
 [% END %]
 
 [% END %]
+
+[%~ END #ReviewMembers %]
+
+[%~ BLOCK ReviewUsers # (users) ~%]
+  <h2>
+  [% IF page == 'owner' ~%]
+    [%|loc%]Owners[%END%]
+  [%~ ELSIF page == 'editor' ~%]
+    [%|loc%]Moderators[%END%]
+  [%~ END %]
+  </h2>
+
+  <form action="[% path_cgi %]" method="POST">
+  <fieldset role="table">
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="action" value="review" />
+  <input type="hidden" name="page" value="[% page %]" />
+
+  <div class="row" role="row">
+  <div class="small-10 medium-11 columns">
+    <div class="small-6 medium-4 columns" role="columnheader">
+      <label>[%|loc%]Email[%END%]</label>
+    </div>
+
+    <div class="small-6 medium-4 columns" role="columnheader">
+      <label>[%|loc%]Name[%END%]</label>
+    </div>
+
+    <div class="medium-2 columns show-for-medium-up" role="columnheader">
+      <label>[%|loc%]Reception[%END%]</label>
+    </div>
+
+    <div class="medium-2 columns show-for-medium-up" role="columnheader">
+      <label>[%|loc%]Visibility[%END%]</label>
+    </div>
+
+    [% IF is_privileged_owner ~%]
+      <div class="columns" role="columnheader">
+        <label>[%|loc%]private information[%END%]</label>
+      </div>
+    [%~ END %]
+
+    <div class="columns" role="separator"> 
+      <hr>
+    </div>
+  </div>
+
+  [% IF is_privileged_owner ~%]
+    <div class="small-2 medium-1 columns" role="columnheader">
+      <label title="[%|loc%]Delete[%END%]">
+        <i class="fa fa-user-times"></i>
+      </label>
+    </div>
+  [%~ END %]
+  </div>
+
+  [% IF users.size() ~%]
+    [% SET idx = 0 ~%]
+    [% FOREACH u = users ~%]
+      <div class="row" role="row">
+      <div class="small-10 medium-11 columns" id="item.user.[% idx %]">
+        <div class="small-6 medium-4 columns" role="cell">
+          <span class="show-for-medium-up">
+          [%~ IF page == 'owner' && u.profile == 'privileged' ~%]
+            <i class="fa fa-fw fa-star"
+             title="[%|loc%]Privileged owner[%END%]"></i>
+          [%~ ELSIF page == 'owner' ~%]
+            <i class="fa fa-fw" title="[%|loc%]Owner[%END%]"></i>
+          [%~ ELSIF page == 'editor' ~%]
+            <i class="fa fa-fw" title="[%|loc%]Moderator[%END%]"></i>
+          [%~ END %]
+          </span>
+          [% u.email %]
+        </div>
+
+        <div class="small-6 medium-4 columns" role="cell">
+          [% u.gecos || '&nbsp;' %]
+        </div>
+
+        <div class="medium-2 columns show-for-medium-up" role="cell">
+          [% u.reception | optdesc %]
+        </div>
+
+        <div class="medium-2 columns show-for-medium-up" role="cell">
+          [% u.visibility | optdesc %]
+        </div>
+
+        [% IF is_privileged_owner ~%]
+          <div class="columns" role="cell">
+            [% u.info %]
+          </div>
+        [%~ END %]
+
+        <div class="columns" role="separator"> 
+          <hr>
+        </div>
+      </div>
+
+      [% IF is_privileged_owner ~%]
+      <div class="small-2 medium-1 columns" role="cell">
+        [% IF u.subscribed ~%]
+          <input type="checkbox" name="del_emails"
+           id="del.user.[% idx %]"
+           class="fadeIfChecked" data-selector="#item\.user\.[% idx %]"
+           title="[%|loc%]Delete[%END%]"
+           value="[% u.email %]" />
+        [%~ ELSIF u.included ~%]
+          &nbspo;
+        [%~ END %]
+      </div>
+      [%~ END %]
+      </div>
+
+      [%~ SET idx = idx + 1 %]
+    [%~ END %]
+  [%~ ELSE ~%]
+    <p
+     class="small-12 medium-8 medium-centered columns alert-box info text-center">
+    [% IF page == 'owner' ~%]
+      [%|loc%]List has no owners[%END%]
+    [%~ ELSIF page == 'editor' ~%]
+      [%|loc%]List has no moderators[%END%]
+    [%~ END %]
+    </p>
+  [%~ END %]
+
+  <h3>
+  [% IF page == 'owner' ~%]
+    [%|loc%]Add owners[%END%]
+  [%~ ELSIF page == 'editor' ~%]
+    [%|loc%]Add momderators[%END%]
+  [%~ END %]
+  </h3>
+
+  [% IF is_privileged_owner ~%]
+    <div class="row" id="item.user.0.new" role="row">
+    <div class="small-10 medium-11 columns">
+      [% IF page == 'owner' ~%]
+        <div class="columns show-for-medium-up" role="cell">
+          <input type="checkbox"
+           name="single_param.user.0.profile" id="param.user.0.profile"
+           value="privileged" />
+          <label for="param.user.0.profile">[% 'privileged' | optdesc %]</label>
+        </div>
+      [%~ END %]
+
+      <div class="small-6 medium-4 columns" role="cell">
+        <label for="param.user.0.email">[%|loc%]Email[%END%]
+        <input type="text"
+         name="single_param.user.0.email" id="param.user.0.email" />
+      </div>
+
+      <div class="small-6 medium-4 columns" role="cell">
+        <label for="param.user.0.gecos">[%|loc%]Name[%END%]
+        <input name="single_param.user.0gecos" id="param.user.0.gecos" />
+      </div>
+
+      <div class="medium-2 columns show-for-medium-up" role="cell">
+        <input type="checkbox"
+         name="single_param.user.0.reception" id="param.user.0.reception"
+         value="nomail" />
+        <label for="param.user.0.reception">[% 'nomail' | optdesc %]</label>
+      </div>
+
+      <div class="medium-2 columns show-for-medium-up" role="cell">
+        <input type="checkbox"
+         name="single_param.user.0.visibility" id="param.user.0.visibility"
+         value="conceal" />
+        <label for="param.user.0.visibility">[% 'conceal' | optdesc %]</label>
+      </div>
+
+      <div class="columns" role="cell">
+        <label for="param.user.0.info">[%|loc%]private information[%END%]</label>
+        <input type="text"
+         name="single_param.user.0.info" id="param.user.0.info" />
+      </div>
+    </div>
+
+    </div>
+  [%~ END %]
+
+  <input class="MainMenuLInks" type="submit" name="action_review"
+   value="[%|loc%]Update[%END%]" />
+
+  </fieldset>
+  </form>
+[%~ END#ReviewUsers ~%]
+
 <!-- end review.tt2 -->
