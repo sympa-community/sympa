@@ -1,12 +1,12 @@
 # Change Log
 
-## [6.2.25b.2](https://github.com/sympa-community/sympa/tree/6.2.25b.2) (2018-03-XX)
+## [6.2.25b.2](https://github.com/sympa-community/sympa/tree/6.2.25b.2) (2018-03-05)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.1...6.2.25b.2)
 
 **Changes:**
 
-- Parameters to specify location of CSS and subscriber pictures were introduced [\#172](https://github.com/sympa-community/sympa/issues/172). If you have specified `--with-staticdir` configure option or `static_content_path` parameter, you have to fix up. See [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html) for details.
+- Parameters to specify location of CSS and subscriber pictures were introduced [\#172](https://github.com/sympa-community/sympa/issues/172). If you have specified `--with-staticdir` configure option or `static_content_path` parameter, you may have to fix up. See [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html) for details.
 - smtpc (sympa_smtpc) is no longer bundled.  It was moved to [an independent repository](https://github.com/ikedas/smtpc.git) [\#201](https://github.com/sympa-community/sympa/issues/201).
 
 - On 6.2.28 (the next of next stable), it is planned that "host" list parameter will be deprecated [\#43](https://github.com/sympa-community/sympa/issues/43).  Notice may be shown during upgrading process.
