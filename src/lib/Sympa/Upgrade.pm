@@ -1727,28 +1727,49 @@ sub upgrade {
         );
     }
 
-    if (lower_version($previous_version, '6.2.25b.2')) {
+    # Database field type datetime was deprecated.  Unix time will be used.
+    if (lower_version($previous_version, '6.2.25b.3')) {
         my $sdm = Sympa::DatabaseManager->instance;
 
         $log->syslog('notice', 'Upgrading subscriber_table.');
-        # update_subscriber (datetime) was obsoleted.
-        # Use update_epoch_subscriber (int).
+        # date_subscriber & update_subscriber (datetime) was obsoleted.
+        # Use date_epoch_subscriber & update_epoch_subscriber (int).
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE subscriber_table
+                  SET date_epoch_subscriber = %s
+                  WHERE date_subscriber IS NOT NULL AND
+                        date_epoch_subscriber IS NULL},
+                $sdm->get_canonical_read_date('date_subscriber')
+            )
+        );
         $sdm->do_prepared_query(
             sprintf(
                 q{UPDATE subscriber_table
                   SET update_epoch_subscriber = %s
-                  WHERE update_subscriber IS NOT NULL},
+                  WHERE update_subscriber IS NOT NULL AND
+                        update_epoch_subscriber IS NULL},
                 $sdm->get_canonical_read_date('update_subscriber')
             )
         );
         $log->syslog('notice', 'Upgrading admin_table.');
-        # update_admin (datetime) was obsoleted.
-        # Use update_epoch_admin (int).
+        # date_admin & update_admin (datetime) was obsoleted.
+        # Use date_epoch_admin & update_epoch_admin (int).
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE admin_table
+                  SET date_epoch_admin = %s
+                  WHERE date_admin IS NOT NULL AND
+                        date_epoch_admin IS NULL},
+                $sdm->get_canonical_read_date('date_admin')
+            )
+        );
         $sdm->do_prepared_query(
             sprintf(
                 q{UPDATE admin_table
                   SET update_epoch_admin = %s
-                  WHERE update_admin IS NOT NULL},
+                  WHERE update_admin IS NOT NULL AND
+                        update_epoch_admin IS NULL},
                 $sdm->get_canonical_read_date('update_admin')
             )
         );

@@ -100,11 +100,17 @@ my %full_db_struct = (
                 'doc'    => 'FIXME',
                 'order'  => 10,
             },
-            'date_subscriber' => {
-                'struct'   => 'datetime',
+            #'date_subscriber' => {
+            #    'struct'   => 'datetime',
+            #    'doc'      => 'date of subscription',
+            #    'not_null' => 1,
+            #    'order'    => 11,
+            #},
+            'date_epoch_subscriber' => {
+                'struct'   => 'int(11)',
                 'doc'      => 'date of subscription',
                 'not_null' => 1,
-                'order'    => 11,
+                'order'    => 11.5,
             },
             # Obsoleted as of 6.2.25b.2. Use update_epoch_subscriber.
             #'update_subscriber' => {
@@ -890,11 +896,17 @@ my %full_db_struct = (
                     'privilege level for this owner, value //normal// or //privileged//. The related privilege are listed in edit_list.conf. ',
                 'order' => 5,
             },
-            'date_admin' => {
-                'struct'   => 'datetime',
+            #'date_admin' => {
+            #    'struct'   => 'datetime',
+            #    'doc'      => 'date this user become a list admin',
+            #    'not_null' => 1,
+            #    'order'    => 6,
+            #},
+            'date_epoch_admin' => {
+                'struct'   => 'int(11)',
                 'doc'      => 'date this user become a list admin',
                 'not_null' => 1,
-                'order'    => 6,
+                'order'    => 6.5,
             },
             # Obsoleted as of 6.2.25b.2. Use update_epoch_admin.
             #'update_admin' => {
