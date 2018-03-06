@@ -1740,7 +1740,7 @@ sub upgrade {
                   SET date_epoch_subscriber = %s
                   WHERE date_subscriber IS NOT NULL AND
                         date_epoch_subscriber IS NULL},
-                $sdm->get_canonical_read_date('date_subscriber')
+                _get_canonical_read_date($sdm, 'date_subscriber')
             )
         );
         $sdm->do_prepared_query(
@@ -1749,7 +1749,7 @@ sub upgrade {
                   SET update_epoch_subscriber = %s
                   WHERE update_subscriber IS NOT NULL AND
                         update_epoch_subscriber IS NULL},
-                $sdm->get_canonical_read_date('update_subscriber')
+                _get_canonical_read_date($sdm, 'update_subscriber')
             )
         );
         $log->syslog('notice', 'Upgrading admin_table.');
@@ -1761,7 +1761,7 @@ sub upgrade {
                   SET date_epoch_admin = %s
                   WHERE date_admin IS NOT NULL AND
                         date_epoch_admin IS NULL},
-                $sdm->get_canonical_read_date('date_admin')
+                _get_canonical_read_date($sdm, 'date_admin')
             )
         );
         $sdm->do_prepared_query(
@@ -1770,7 +1770,7 @@ sub upgrade {
                   SET update_epoch_admin = %s
                   WHERE update_admin IS NOT NULL AND
                         update_epoch_admin IS NULL},
-                $sdm->get_canonical_read_date('update_admin')
+                _get_canonical_read_date($sdm, 'update_admin')
             )
         );
     }
@@ -2047,6 +2047,54 @@ sub save_web_tt2 {
     $log->syslog('notice', '%s directory saved as %s',
         $dir, "$dir.upgrade$date");
     return 1;
+}
+
+sub _get_canonical_read_date {
+    my $sdm    = shift;
+    my $target = shift;
+
+    if ($sdm->isa('Sympa::DatabaseDriver::MySQL')) {
+        return sprintf 'UNIX_TIMESTAMP(%s)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Oracle')) {
+        return
+            sprintf
+            q{((to_number(to_char(%s,'J')) - to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) * 86400) +to_number(to_char(%s,'SSSSS'))},
+            $target, $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::PostgreSQL')) {
+        return sprintf 'date_part(\'epoch\',%s)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::SQLite')) {
+        return $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Sybase')) {
+        return sprintf 'datediff(second, \'01/01/1970\',%s)', $target;
+    } else {
+	# Unknown driver
+        return $target;
+    }
+}
+
+# No yet used.
+sub _get_cacnonical_write_date {
+    my $sdm    = shift;
+    my $target = shift;
+
+    if ($sdm->isa('Sympa::DatabaseDriver::MySQL')) {
+        return sprintf 'FROM_UNIXTIME(%d)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Oracle')) {
+        return
+            sprintf
+            q{to_date(to_char(floor(%s/86400) + to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) || ':' ||to_char(mod(%s,86400)), 'J:SSSSS')},
+            $target, $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::PostgreSQL')) {
+        return sprintf '\'epoch\'::timestamp with time zone + \'%d sec\'',
+            $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::SQLite')) {
+        return $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Sybase')) {
+        return sprintf 'dateadd(second,%s,\'01/01/1970\')', $target;
+    } else {
+	# Unknown driver
+        return $target;
+    }
 }
 
 1;

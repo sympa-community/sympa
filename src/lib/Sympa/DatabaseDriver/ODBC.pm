@@ -38,12 +38,8 @@ sub build_connect_string {
     return 'DBI:ODBC:' . $self->{'db_name'};
 }
 
-sub get_formatted_date {
-    my $self  = shift;
-    my $param = shift;
-
-    die 'Not yet implemented: This is required by Sympa';
-}
+# DEPRECATED.  Never implemented.
+#sub get_formatted_date;
 
 sub translate_type {
     my $self = shift;

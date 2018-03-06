@@ -1282,6 +1282,8 @@ Text with length up to 2^32 - 4 o.
 =item datetime
 
 Timestamp.
+B<Deprecated> as of Sympa 6.2.25b.3.
+Use C<int(11)> (Unix time) instead.
 
 =item mediumblob
 
