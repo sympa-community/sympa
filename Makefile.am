@@ -115,7 +115,8 @@ installdir:
 		chown $(USER) $(DESTDIR)$$dir; \
 		chgrp $(GROUP) $(DESTDIR)$$dir; \
 	done
-	-@for subdir in automatic bounce msg task tmp; do \
+	-@for subdir in automatic bounce bulk digest moderation msg outgoing \
+		subscribe task tmp viewmail; do\
 		if [ ! -d $(DESTDIR)$(spooldir)/$$subdir ] ; then \
 			echo "Creating $(DESTDIR)$(spooldir)/$$subdir"; \
 			$(INSTALL) -d -m 750 $(DESTDIR)$(spooldir)/$$subdir; \
