@@ -2770,7 +2770,7 @@ sub get_next_list_member {
 
 =over
 
-=item get_admins ( $role, [ filter =E<gt> \@filters ], [ no_cache =E<gt> 1 ] )
+=item get_admins ( $role, [ filter =E<gt> \@filters ] )
 
 I<Instance method>.
 Gets users of the list with one of following roles.
@@ -2813,15 +2813,7 @@ Optional filter may be:
 
 Limit result to the user with their e-mail $email.
 
-=item [subscribed =E<gt> $boolean]
-
-Limit result to the user be configured in list config file.
-
 =back
-
-Optional C<no_cache> option disables caching on memory and gets recent
-information from dataase.
-Note that this option should be used carefully.
 
 Returns:
 
@@ -2839,8 +2831,7 @@ sub get_admins {
     my $role    = lc(shift || '');
     my %options = @_;
 
-    my $admin_user = $self->_cache_get('admin_user')
-        unless $options{no_cache};
+    my $admin_user = $self->_cache_get('admin_user');
     unless ($admin_user and @{$admin_user || []}) {
         $admin_user = $self->_get_admins;   # Get recent admins from database
         if ($admin_user) {
@@ -2855,8 +2846,6 @@ sub get_admins {
     my %query = @{$options{filter} || []};
     $query{email} = Sympa::Tools::Text::canonic_email($query{email})
         if defined $query{email};
-    $query{subscribed} = !!$query{subscribed}
-        if exists $query{subscribed};
 
     my @users;
     if ($role eq 'editor') {
@@ -2901,9 +2890,6 @@ sub get_admins {
 
     if (defined $query{email}) {
         @users = grep { ($_->{email} || '') eq $query{email} } @users;
-    }
-    if (exists $query{subscribed}) {
-        @users = grep { !!($_->{subscribed}) eq $query{subscribed} } @users;
     }
 
     return wantarray ? @users : [@users];
@@ -6964,9 +6950,12 @@ sub sync_include_admin {
 
     ## don't care about listmaster role
     foreach my $role ('owner', 'editor') {
-        ## Load a hash with the old admin users
-        my $old_admin_users =
-            {map { ($_->{'email'} => $_) } $self->get_admins($role, no_cache => 1)};
+        # Load a hash with the old admin users.
+        my $old_admin_users = {
+            map { ($_->{'email'} => $_) }
+                grep { $_ and $_->{'role'} and $_->{'role'} eq $role }
+                @{$self->_get_admins || []}
+        };
 
         ## Load a hash with the new admin user list from an include source(s)
         my $new_admin_users_include;

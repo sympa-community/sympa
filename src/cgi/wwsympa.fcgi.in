@@ -10785,25 +10785,28 @@ sub do_edit_list_request {
 
     return 1 unless $in{'group'};
 
-    # Sync owner/editor in list config with database. FIXME
+    # Sync owner/editor in list config with database.
+    # FIXME: TENTATIVE FIX.
+    my @static_admins =
+        grep {$_ and $_->{'subscribed'}} @{$list->_get_admins || []};
+    my @subparams;
+    # Current static owners.
     my $static_owner =
-        $list->get_admins('owner', no_cache => 1, filter => [subscribed => 1]);
-    if ($static_owner) {
-        my @subparams = qw(email gecos info profile reception visibility);
-        foreach my $u (@$static_owner) {
-            $u = {map { $_ => $u->{$_} } @subparams};
-        }
-        $list->{'admin'}{'owner'} = $static_owner;
+        [grep { $->{'role'} and $->{'role'} eq 'owner' } @static_admins];
+    @subparams = qw(email gecos info profile reception visibility);
+    foreach my $u (@$static_owner) {
+        $u = {map { $_ => $u->{$_} } @subparams};
     }
+    $list->{'admin'}{'owner'} = $static_owner;
+    # Current static editors.
     my $static_editor =
-        $list->get_admins('editor', no_cache => 1, filter => [subscribed => 1]);
-    if ($static_editor) {
-        my @subparams = qw(email gecos info reception visibility);
-        foreach my $u (@$static_editor) {
-            $u = {map { $_ => $u->{$_} } @subparams};
-        }
-        $list->{'admin'}{'editor'} = $static_editor;
+        [grep { $->{'role'} and $->{'role'} eq 'editor' } @static_admins];
+    @subparams = qw(email gecos info reception visibility);
+    foreach my $u (@$static_editor) {
+        $u = {map { $_ => $u->{$_} } @subparams};
     }
+    $list->{'admin'}{'editor'} = $static_editor;
+    # FIXME: END OF TENTATIVE FIX.
 
     my $config = Sympa::List::Config->new($list, config => $list->{'admin'});
     my $schema = $config->get_schema($param->{'user'}{'email'});
