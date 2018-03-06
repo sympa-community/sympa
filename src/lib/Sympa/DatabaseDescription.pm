@@ -920,7 +920,7 @@ my %full_db_struct = (
             'included_admin' => {
                 'struct' => 'int(1)',
                 'doc' =>
-                    'set to 1 if user is admin by an external data source',
+                    'set to 1 if user is admin by an external data source. Note that included_admin and subscribed_admin can both value 1',
                 'order' => 12,
             },
             'include_sources_admin' => {
