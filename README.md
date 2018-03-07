@@ -42,7 +42,11 @@ Projects related to Sympa
 
     Incubating the new Sympa documentation site
 
-  - More projects are found in the page below.
+  - [Translate Sympa](https://translate.sympa.org)
+
+    Translating user interface of Sympa to your languages
+
+- More projects are found in the page below.
 
 ----
 [The Sympa Community](https://github.com/sympa-community)
