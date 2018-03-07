@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Carp qw();
 use Digest::MD5;
+BEGIN { eval 'use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64)'; }
 
 use Conf;
 use Sympa::DatabaseDescription;
@@ -292,17 +293,69 @@ Returns the password finger print.
 =cut
 
 # Old name: Sympa::Auth::password_fingerprint().
-# Note: This proc may allow future replacement of md5 by sha1 or ...
+#
+# Password fingerprint functions are stored in a table. Currently supported
+# algorithms are the default 'md5', and 'bcrypt'.
+#
+# If the algorithm uses a salt (e.g. bcrypt) and the second parameter $salt
+# is not provided, a random one will be generated.
+#
+
+my %fingerprint_hashes = (
+    # default is to use MD5, which does not use a salt
+    'md5' => sub {
+        my ($pwd, $salt) = @_;
+
+        # salt parameter is not used for MD5 hashes
+        return Digest::MD5::md5_hex($pwd);
+    },
+    # bcrypt uses a salt and has a configurable "cost" parameter
+    'bcrypt' => sub {
+        my ($pwd, $salt) = @_;
+
+        die "bcrypt support unavailable: install Crypt::Eksblowfish::Bcrypt"
+            unless $Crypt::Eksblowfish::Bcrypt::VERSION;
+
+        # A bcrypt-encrypted password contains the settings at the front.
+        # If this not look like a settings string, create one.
+        unless ($salt =~ m#\A\$2(a?)\$([0-9]{2})\$([./A-Za-z0-9]{22})#x) {
+            my $bcrypt_cost = Conf::get_robot_conf('*', 'bcrypt_cost');
+            my $cost = sprintf("%02d", 0 + $bcrypt_cost);
+	    my $newsalt = "";
+
+            for my $i (0..15) {
+                $newsalt .= chr(rand(256));
+            }
+            $newsalt = '$2a$' . $cost . '$' . en_base64($newsalt);
+            $log->syslog('debug', "bcrypt: create new salt: cost $cost salt \"$salt\" salt \"$newsalt\"");
+
+	    $salt = $newsalt;
+        }
+
+        my $fingerprint = bcrypt($pwd, $salt);
+        my $match = ($fingerprint eq $salt) ? "yes" : "no";
+
+        $log->syslog('debug', "bcrypt: match $match salt $salt fingerprint $fingerprint");
+
+        return $fingerprint;
+    }
+);
+
 sub password_fingerprint {
 
-    $log->syslog('debug', '');
+    my ($pwd, $salt) = @_;
 
-    my $pwd = shift;
+    $log->syslog('debug', "password_fingerprint: salt $salt");
+
     if (Conf::get_robot_conf('*', 'password_case') eq 'insensitive') {
-        return Digest::MD5::md5_hex(lc $pwd);
-    } else {
-        return Digest::MD5::md5_hex($pwd);
+        $pwd = lc($pwd);
     }
+
+    my $password_hash = Conf::get_robot_conf('*', 'password_hash');
+    die "password_fingerprint: unknown password_hash \"$password_hash\""
+        unless defined($fingerprint_hashes{$password_hash});
+
+    return $fingerprint_hashes{$password_hash}->($pwd, $salt);
 }
 
 ############################################################################
@@ -508,9 +561,10 @@ sub update_global_user {
 
     $who = Sympa::Tools::Text::canonic_email($who);
 
-    ## use md5 fingerprint to store password
+    ## use hash fingerprint to store password
+    ## hashes that use salts will randomly generate one
     $values->{'password'} =
-        Sympa::User::password_fingerprint($values->{'password'})
+        Sympa::User::password_fingerprint($values->{'password'},'')
         if ($values->{'password'});
 
     ## Canonicalize lang if possible.
@@ -587,9 +641,10 @@ sub add_global_user {
 
     my ($field, $value);
 
-    ## encrypt password
+    ## encrypt password with the configured password hash algorithm
+    ## an empty salt means generate a new random one
     $values->{'password'} =
-        Sympa::User::password_fingerprint($values->{'password'})
+        Sympa::User::password_fingerprint($values->{'password'},'')
         if ($values->{'password'});
 
     ## Canonicalize lang if possible
