@@ -77,6 +77,12 @@ our %cpan_modules = (
         'gettext_id' =>
             'this module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.',
     },
+    'Crypt::Eksblowfish' => {
+        required_version => '0.009',
+        package_name     => 'Crypt-Eksblowfish',
+        'gettext_id' =>
+            'used to encrypt passwords with the Bcrypt hash algorithm',
+    },
     'Crypt::OpenSSL::X509' => {
         required_version => '1.800.1',
         package_name     => 'Crypt-OpenSSL-X509',
