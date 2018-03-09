@@ -307,7 +307,12 @@ my %fingerprint_hashes = (
         my ($pwd, $salt) = @_;
 
         # salt parameter is not used for MD5 hashes
-        return Digest::MD5::md5_hex($pwd);
+        my $fingerprint = Digest::MD5::md5_hex($pwd);
+        my $match = ($fingerprint eq $salt) ? "yes" : "no";
+
+        $log->syslog('debug', "md5: match $match salt \"$salt\" fingerprint $fingerprint");
+
+	return $fingerprint;
     },
     # bcrypt uses a salt and has a configurable "cost" parameter
     'bcrypt' => sub {
@@ -344,18 +349,81 @@ my %fingerprint_hashes = (
 sub password_fingerprint {
 
     my ($pwd, $salt) = @_;
+    my $password_hash;
+    my $hash_type;
 
-    $log->syslog('debug', "password_fingerprint: salt $salt");
+    $log->syslog('debug', "salt \"$salt\"");
 
     if (Conf::get_robot_conf('*', 'password_case') eq 'insensitive') {
         $pwd = lc($pwd);
     }
 
-    my $password_hash = Conf::get_robot_conf('*', 'password_hash');
+    # preserve the hash type if we can determine it, else use system default
+    if (defined($salt) && defined($hash_type = hash_type($salt))) {
+        $password_hash = $hash_type;
+    } else  {
+        $password_hash = Conf::get_robot_conf('*', 'password_hash');
+    }
+
+    $log->syslog('debug', "hash_type \"$hash_type\", password_hash = \"$password_hash\"");
+
     die "password_fingerprint: unknown password_hash \"$password_hash\""
         unless defined($fingerprint_hashes{$password_hash});
 
     return $fingerprint_hashes{$password_hash}->($pwd, $salt);
+}
+
+=over 4
+
+=item hash_type ( )
+
+detect the type of password fingerprint used for a hashed password
+
+Returns undef if no supported hash type is detected
+
+=back
+
+=cut
+
+sub hash_type {
+    my $hash = shift;
+
+    return 'md5'    if ($hash =~ /^[a-f0-9]{32}$/i);
+    return 'bcrypt' if ($hash =~ m#\A\$2(a?)\$([0-9]{2})\$([./A-Za-z0-9]{22})#);
+    return undef;
+}
+
+=over 4
+
+=item update_password_hash ( )
+
+If needed, update the hash used for the user's encrypted password entry
+
+=back
+
+=cut
+
+sub update_password_hash {
+    my ($user, $pwd) = @_;
+
+    return unless (Conf::get_robot_conf('*', 'password_hash_update'));
+
+    # here if configured to check and update the password hash algorithm
+
+    my $user_hash = hash_type($user->{'password'});
+    my $system_hash = Conf::get_robot_conf('*', 'password_hash');
+
+    return if (defined($user_hash) && ($user_hash eq $system_hash));
+
+    # note that we directly use the callback for the hash type
+    # instead of using any other logic to determine which to call
+
+    $log->syslog('debug', 'update password hash for %s from %s to %s',
+                 $user->{'email'}, $user_hash, $system_hash);
+
+    # note that we use the cleartext password here, not the hash
+    update_global_user($user->{'email'}, {password => $pwd});
+
 }
 
 ############################################################################

@@ -1647,6 +1647,14 @@ our @params = (
         'gettext_comment' =>
             "\"md5\" or \"bcrypt\".\nIf set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", bcrypt hashes will be used instead. This only concerns passwords stored in the Sympa database, not the ones in LDAP.\nShould not be changed! May invalid all user passwords.",
     },
+    {   'name'       => 'password_hash_update',
+        'default'    => '1',
+        'gettext_id' => 'Update password hashing algorithm when users log in',
+        'file'       => 'wwsympa.conf',
+        #vhost      => '1', # per-robot config is impossible.
+        'gettext_comment' =>
+            "On successful login, update the encrypted user password to use the algorithm specified by \"password_hash\". This allows for a graceful transition to a new password hash algorithm. A value of 0 disables updating of existing password hashes.  New and reset passwords will use the \"password_hash\" setting in all cases.",
+    },
     {   'name'       => 'bcrypt_cost',
         'default'    => '12',
         'gettext_id' => 'Bcrypt hash cost',
