@@ -564,7 +564,7 @@ sub update_global_user {
     ## use hash fingerprint to store password
     ## hashes that use salts will randomly generate one
     $values->{'password'} =
-        Sympa::User::password_fingerprint($values->{'password'},'')
+        Sympa::User::password_fingerprint($values->{'password'}, undef)
         if ($values->{'password'});
 
     ## Canonicalize lang if possible.
@@ -642,9 +642,9 @@ sub add_global_user {
     my ($field, $value);
 
     ## encrypt password with the configured password hash algorithm
-    ## an empty salt means generate a new random one
+    ## an salt of 'undef' means generate a new random one
     $values->{'password'} =
-        Sympa::User::password_fingerprint($values->{'password'},'')
+        Sympa::User::password_fingerprint($values->{'password'}, undef)
         if ($values->{'password'});
 
     ## Canonicalize lang if possible
