@@ -70,12 +70,6 @@ nobase_default_DATA = \
 	list_task_models/remind.monthly.task \
 	list_task_models/remind.yearly.task \
 	list_task_models/sync_include.ttl.task \
-	scenari/access_web_archive.closed \
-	scenari/access_web_archive.intranet \
-	scenari/access_web_archive.listmaster \
-	scenari/access_web_archive.owner \
-	scenari/access_web_archive.private \
-	scenari/access_web_archive.public \
 	scenari/add.auth \
 	scenari/add.authdkim \
 	scenari/add.closed \
@@ -86,6 +80,12 @@ nobase_default_DATA = \
 	scenari/archive_mail_access.owner \
 	scenari/archive_mail_access.private \
 	scenari/archive_mail_access.public \
+	scenari/archive_web_access.closed \
+	scenari/archive_web_access.intranet \
+	scenari/archive_web_access.listmaster \
+	scenari/archive_web_access.owner \
+	scenari/archive_web_access.private \
+	scenari/archive_web_access.public \
 	scenari/automatic_list_creation.listmaster \
 	scenari/automatic_list_creation.public \
 	scenari/automatic_list_creation.family_owner \

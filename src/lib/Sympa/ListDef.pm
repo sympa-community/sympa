@@ -815,7 +815,7 @@ our %pinfo = (
             'access' => {
                 'order'      => 1,
                 'gettext_id' => "access right",
-                'scenario'   => 'access_web_archive',
+                'scenario'   => 'archive_web_access',
                 'obsolete'   => 1,                    # Use archive.web_access
             },
             'quota' => {
@@ -860,7 +860,7 @@ our %pinfo = (
             'web_access' => {
                 'order'      => 3,
                 'gettext_id' => "access right",
-                'scenario'   => 'access_web_archive'
+                'scenario'   => 'archive_web_access'
             },
             'mail_access' => {
                 'order'      => 4,
