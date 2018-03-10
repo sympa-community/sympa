@@ -2,7 +2,7 @@
 # vim:ft=perl:et:sw=4
 # $Id$
 
-package Sympa::Marc::Search;
+package Sympa::WWW::Marc::Search;
 
 use strict;
 use warnings;
@@ -11,7 +11,7 @@ use English qw(-no_match_vars);
 use File::Find qw();
 use HTML::Entities qw();
 
-use base qw(Sympa::Marc);
+use base qw(Sympa::WWW::Marc);
 
 our $VERSION = "4.3+Sympa-6.2";
 our ($AUTOLOAD, @MSGFILES);
@@ -53,7 +53,7 @@ my %fields = (
 
 sub new {
     my $class = shift;
-    my $self  = Sympa::Marc->new(\%fields);
+    my $self  = Sympa::WWW::Marc->new(\%fields);
     bless $self, $class;
     return $self;
 }
@@ -489,7 +489,7 @@ __END__
 
 =head1 NAME
 
-Sympa::Marc::Search - Search archives of Sympa
+Sympa::WWW::Marc::Search - Search archives of Sympa
 
 =head1 SYNOPSIS
 
@@ -501,7 +501,7 @@ TBD.
 
 =head1 HISTORY
 
-L<Sympa::Marc::Search> was originally taken from
+L<Sympa::WWW::Marc::Search> was originally taken from
 L<Marc::Search> in MHonArc Search Engine by Eric D. Friedman:
 L<http://www.mhonarc.org/contrib/marc-search/>.
 
