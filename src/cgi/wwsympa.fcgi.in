@@ -1169,6 +1169,9 @@ while ($query = CGI::Fast->new) {
     # Compat.: deprecated attributes of Robot.
     $param->{'conf'}{'sympa'} = Sympa::get_address($robot);
     $param->{'conf'}{'request'} = Sympa::get_address($robot, 'owner');
+    # Compat <= 6.2.16: CSS related.
+    $param->{'css_path'} = sprintf '%s/%s', $Conf::Conf{'css_path'}, $robot;
+    $param->{'css_url'}  = sprintf '%s/%s', $Conf::Conf{'css_url'}, $robot;
 
     foreach my $auth (keys %{$Conf::Conf{'cas_id'}{$robot}}) {
         $log->syslog('debug2', 'CAS authentication service %s', $auth);
@@ -1241,31 +1244,6 @@ while ($query = CGI::Fast->new) {
 
     # Propagate plugins parameters
     $param->{'plugin'} = $in{'plugin'};
-
-    # # Static content
-    # $param->{'static_content_url'} =
-    #     Conf::get_robot_conf($robot, 'static_content_url');
-
-    ## CSS related
-    $param->{'css_path'} = Conf::get_robot_conf($robot, 'css_path');
-    $param->{'css_url'}  = Conf::get_robot_conf($robot, 'css_url');
-
-    ## If CSS file not found, let Sympa do the job...
-    #unless ($param->{'css_path'} and -f $param->{'css_path'} . '/style.css') {
-    #    wwslog(
-    #        'err',
-    #        'Could not find CSS file %s, using default CSS',
-    #        $param->{'css_path'} . '/style.css'
-    #    ) if $param->{'css_path'};    # Notice only if path was defined.
-    #    $param->{'css_url'} =
-    #        Sympa::get_url($robot, 'css', authority => 'omit');
-    #}
-
-    wwslog(
-        'info',
-        'Parameter css_url "%s" seems strange, it must be the url of a directory not a css file',
-        $param->{'css_url'}
-    ) if $param->{'css_url'} =~ /\.css$/;
 
     $session = Sympa::Session->new(
         $robot,

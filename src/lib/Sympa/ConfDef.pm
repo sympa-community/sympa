@@ -1310,16 +1310,12 @@ our @params = (
         'gettext_id' => 'Directory for static style sheets (CSS)',
         'gettext_comment' =>
             'After an upgrade, static CSS files are upgraded with the newly installed "css.tt2" template. Therefore, this is not a good place to store customized CSS files.',
-        'optional' => '1',
-        'vhost'    => '1',
     },
     {   'name'       => 'css_url',
         'default'    => '/static-sympa/css',
         'gettext_id' => 'URL for style sheets (CSS)',
         'gettext_comment' =>
             'To use auto-generated static CSS, HTTP server have to map it with "css_path".',
-        'optional' => '1',
-        'vhost'    => '1',
     },
     {   'name'       => 'pictures_path',
         'default_s'  => '$PICTURESDIR',

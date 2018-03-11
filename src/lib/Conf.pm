@@ -2032,18 +2032,6 @@ sub _infer_robot_parameter_values {
     $param->{'config_hash'}{'static_content_path'} ||=
         $Conf{'static_content_path'};
 
-    ## CSS
-    my $final_separator = '';
-    $final_separator = '/' if ($param->{'config_hash'}{'robot_name'});
-    $param->{'config_hash'}{'css_url'} ||=
-          $param->{'config_hash'}{'css_url'}
-        . $final_separator
-        . $param->{'config_hash'}{'robot_name'};
-    $param->{'config_hash'}{'css_path'} ||=
-          $param->{'config_hash'}{'css_path'}
-        . $final_separator
-        . $param->{'config_hash'}{'robot_name'};
-
     unless ($param->{'config_hash'}{'email'}) {
         $param->{'config_hash'}{'email'} = $Conf{'email'};
     }

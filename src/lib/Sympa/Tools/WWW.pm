@@ -724,10 +724,8 @@ sub _get_css_url {
         $template_path =
             Sympa::search_fullpath($robot, 'css.tt2', subdir => 'web_tt2');
         unless ($template_path) {    # Impossible case.
-            my $url =
-                Sympa::Tools::Text::weburl(
-                Conf::get_robot_conf($robot, 'css_url'),
-                ['style.css']);
+            my $url = Sympa::Tools::Text::weburl($Conf::Conf{'css_url'},
+                [$robot, 'style.css']);
             return ($url);
         }
     }
@@ -744,10 +742,7 @@ sub _get_css_url {
 
     my ($dir, $path, $url);
     if (%colors) {
-        $dir =
-            sprintf '%s/%s/%s',
-            Conf::get_robot_conf($robot, 'static_content_path'),
-            'css', $robot;
+        $dir = sprintf '%s/%s', $Conf::Conf{'css_path'}, $robot;
         # Expire old files.
         if (opendir my $dh, $dir) {
             foreach my $file (readdir $dh) {
@@ -761,33 +756,29 @@ sub _get_css_url {
             closedir $dh;
         }
 
-        $path = $dir . '/style.' . $hash . '.css';
-        $url  = Sympa::Tools::Text::weburl(
-            Conf::get_robot_conf($robot, 'static_content_url'),
-            ['css', $robot, 'style.' . $hash . '.css']
-        );
+        $path = sprintf '%s/style.%s.css', $dir, $hash;
+        $url = Sympa::Tools::Text::weburl($Conf::Conf{'css_url'},
+            [$robot, sprintf 'style.%s.css', $hash]);
     } elsif ($lang) {
-        $dir =
-            sprintf '%s/%s/%s/%s',
-            Conf::get_robot_conf($robot, 'static_content_path'),
-            'css', $robot, $lang;
+        $dir = sprintf '%s/%s/%s', $Conf::Conf{'css_path'}, $robot, $lang;
 
-        $path = $dir . '/lang.css';
-        $url  = Sympa::Tools::Text::weburl(
-            Conf::get_robot_conf($robot, 'static_content_url'),
-            ['css', $robot, $lang, 'lang.css'],
+        $path = sprintf '%s/lang.css', $dir;
+        $url = Sympa::Tools::Text::weburl(
+            $Conf::Conf{'css_url'},
+            [$robot, $lang, 'lang.css'],
             query => {h => $hash}
         );
     } else {
         # Use css_path and css_url parameters so that the user may provide
         # their own CSS.
-        $dir = Conf::get_robot_conf($robot, 'css_path');
+        $dir = sprintf '%s/%s', $Conf::Conf{'css_path'}, $robot;
 
         $path = $dir . '/style.css';
-        $url =
-            Sympa::Tools::Text::weburl(
-            Conf::get_robot_conf($robot, 'css_url'),
-            ['style.css'], query => {h => $hash});
+        $url  = Sympa::Tools::Text::weburl(
+            $Conf::Conf{'css_url'},
+            [$robot, 'style.css'],
+            query => {h => $hash}
+        );
     }
 
     # Update the CSS if it is missing or if css.tt2 or configuration was
