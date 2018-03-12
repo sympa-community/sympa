@@ -8065,10 +8065,10 @@ sub get_which {
 
 ### moderation for shared
 
-# DEPRECATED: Use {status} attribute of Sympa::SharedDocument instance.
+# DEPRECATED: Use {status} attribute of Sympa::WWW::SharedDocument instance.
 #sub get_shared_status;
 
-# DEPRECATED: Use Sympa::SharedDocument::get_moderated_descendants().
+# DEPRECATED: Use Sympa::WWW::SharedDocument::get_moderated_descendants().
 #sub get_shared_moderated;
 
 # DEPRECATED: Subroutine of get_shared_moderated().
@@ -9009,7 +9009,7 @@ sub select_list_members_for_topic {
 # DEPRECATED.  Use Sympa::Spool::Auth::remove().
 #sub delete_subscription_request;
 
-# OBSOLETED: Use Sympa::SharedDocument::get_size().
+# OBSOLETED: Use Sympa::WWW::SharedDocument::get_size().
 #sub get_shared_size;
 
 # OBSOLETED: Use Sympa::Archive::get_size().
@@ -9185,7 +9185,7 @@ sub notify_bouncers {
     return 1;
 }
 
-# DDEPRECATED: Use Sympa::SharedDocument::create().
+# DDEPRECATED: Use Sympa::WWW::SharedDocument::create().
 #sub create_shared;
 
 ## check if a list  has include-type data sources

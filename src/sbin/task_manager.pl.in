@@ -45,7 +45,6 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Process;
 use Sympa::Scenario;
-use Sympa::Session;
 use Sympa::Spool;
 use Sympa::Task;
 use Sympa::Ticket;
@@ -435,13 +434,8 @@ sub create {
         $task_file = "$spool_task/$date.$label.$model.$list_name\@$robot";
         $object    = 'list';
     } else {
-        $object = '_global';
-        $task_file =
-              $spool_task . '/'
-            . $date . '.'
-            . $label . '.'
-            . $model . '.'
-            . $object;
+        $object    = '_global';
+        $task_file = "$spool_task/$date.$label.$model.$object";
     }
 
     ## model recovery
@@ -1295,16 +1289,87 @@ sub _db_log_del {
     return 1;
 }
 
-## remove sessions from session_table if older than $Conf::Conf{'session_table_ttl'}
+# Remove sessions from session_table if older than session_table_ttl or
+# anonymous_session_table_ttl.
+# Old name: Sympa::Session::purge_old_sessions().
 sub purge_session_table {
+    $log->syslog('info', '()');
 
-    $log->syslog('info', '');
-    my $removed = Sympa::Session::purge_old_sessions('*');
-    unless (defined $removed) {
-        $log->syslog('err', 'Failed to remove old sessions');
+    my $delay =
+        Sympa::Tools::Time::duration_conv($Conf::Conf{'session_table_ttl'});
+    my $anonymous_delay = Sympa::Tools::Time::duration_conv(
+        $Conf::Conf{'anonymous_session_table_ttl'});
+
+    unless ($delay) {
+        $log->syslog('info', 'Exit with delay null');
         return undef;
     }
-    $log->syslog('notice', '%s row removed in session_table', $removed);
+    unless ($anonymous_delay) {
+        $log->syslog('info', 'Exit with anonymous delay null');
+        return undef;
+    }
+
+    my @sessions;
+    my $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
+    unless ($sdm) {
+        $log->syslog('err', 'Unavailable database connection');
+        return undef;
+    }
+
+    my (@conditions, @anonymous_conditions);
+    push @conditions, sprintf('%d > date_session', time - $delay) if $delay;
+    push @anonymous_conditions,
+        sprintf('%d > date_session', time - $anonymous_delay)
+        if $anonymous_delay;
+
+    my $condition           = join ' AND ', @conditions;
+    my $anonymous_condition = join ' AND ', @anonymous_conditions,
+        "email_session = 'nobody'", 'hit_session = 1';
+
+    my $count_statement =
+        sprintf q{SELECT COUNT(*) FROM session_table WHERE %s}, $condition;
+    my $anonymous_count_statement =
+        sprintf q{SELECT COUNT(*) FROM session_table WHERE %s},
+        $anonymous_condition;
+
+    my $statement = sprintf q{DELETE FROM session_table WHERE %s}, $condition;
+    my $anonymous_statement = sprintf q{DELETE FROM session_table WHERE %s},
+        $anonymous_condition;
+
+    unless ($sth = $sdm->do_query($count_statement)) {
+        $log->syslog('err', 'Unable to count old session');
+        return undef;
+    }
+
+    my $total = $sth->fetchrow;
+    if ($total == 0) {
+        $log->syslog('debug', 'No sessions to expire');
+    } else {
+        unless ($sth = $sdm->do_query($statement)) {
+            $log->syslog('err', 'Unable to purge old sessions');
+            return undef;
+        }
+    }
+    unless ($sth = $sdm->do_query($anonymous_count_statement)) {
+        $log->syslog('err', 'Unable to count anonymous sessions');
+        return undef;
+    }
+    my $anonymous_total = $sth->fetchrow;
+    if ($anonymous_total == 0) {
+        $log->syslog('debug', 'No anonymous sessions to expire');
+    } else {
+        unless ($sth = $sdm->do_query($anonymous_statement)) {
+            $log->syslog('err', 'Unable to purge anonymous sessions');
+            return undef;
+        }
+    }
+
+    $log->syslog(
+        'notice',
+        '%s row removed in session_table',
+        $total + $anonymous_total
+    );
     return 1;
 }
 
