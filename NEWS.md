@@ -1,5 +1,30 @@
 # Change Log
 
+## [6.2.25b.3](https://github.com/sympa-community/sympa/tree/6.2.25b.3) (2018-03-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.2...6.2.25b.3)
+
+**Changes:**
+
+- Parameters to specify location of CSS and subscriber pictures were introduced [\#172](https://github.com/sympa-community/sympa/issues/172). If you have specified `--with-staticdir` configure option or `static_content_path`/`static_content_url` parameter, you may have to fix up. See [Upgrading notes](https://sympa-community.github.io/manual/upgrade/notes.html) for details.
+- `css_url` and `css_path` parameters in `robot.conf` are no longer available: Those in `sympa.conf` are used [\#172](https://github.com/sympa-community/sympa/issues/172). Also see notes above.
+- `access_web_archive.*` scenarios are renamed to `archive_web_access.*` [\#216](https://github.com/sympa-community/sympa/issues/216). If you have customized any of these scenarios, you have to rename them under config directory.
+- Web interface: If a user try to access info page of list, they will be silently redirected to home page, both when access is restricted and when list does not exist [\#193](https://github.com/sympa-community/sympa/issues/193). This behavior is intended not to expose existence of lists.
+
+**Implemented enhancements:**
+
+- Location of static\_content and css directories [\#172](https://github.com/sympa-community/sympa/issues/172)
+- Feature: support for Bcrypt password hashes [\#225](https://github.com/sympa-community/sympa/pull/225) ([mpkut](https://github.com/mpkut))
+
+**Fixed bugs:**
+
+- Unify scenario names [\#216](https://github.com/sympa-community/sympa/issues/216)
+- Rejection message returned when suscribing to a list restricted info access [\#193](https://github.com/sympa-community/sympa/issues/193)
+
+**Merged pull requests:**
+
+- Deprecate datetime field type in database [\#223](https://github.com/sympa-community/sympa/pull/223) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.25b.2](https://github.com/sympa-community/sympa/tree/6.2.25b.2) (2018-03-05)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.1...6.2.25b.2)
