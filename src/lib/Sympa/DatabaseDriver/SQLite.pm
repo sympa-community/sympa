@@ -79,17 +79,8 @@ sub get_substring_clause {
 # DEPRECATED.
 #sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
-sub get_formatted_date {
-    my $self  = shift;
-    my $param = shift;
-    $log->syslog('debug', 'Building SQL date formatting');
-    if (lc($param->{'mode'}) eq 'read' or lc($param->{'mode'}) eq 'write') {
-        return $param->{'target'};
-    } else {
-        $log->syslog('err', "Unknown date format mode %s", $param->{'mode'});
-        return undef;
-    }
-}
+# DEPRECATED.
+#sub get_formatted_date;
 
 sub is_autoinc {
     my $self  = shift;

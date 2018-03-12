@@ -88,25 +88,8 @@ sub get_substring_clause {
 #DEPRECATED.
 #sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
-sub get_formatted_date {
-    my $self  = shift;
-    my $param = shift;
-    $log->syslog('debug', 'Building SQL date formatting');
-    if (lc($param->{'mode'}) eq 'read') {
-        return
-            sprintf
-            q{((to_number(to_char(%s,'J')) - to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) * 86400) +to_number(to_char(%s,'SSSSS'))},
-            $param->{'target'}, $param->{'target'};
-    } elsif (lc($param->{'mode'}) eq 'write') {
-        return
-            sprintf
-            q{to_date(to_char(floor(%s/86400) + to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) || ':' ||to_char(mod(%s,86400)), 'J:SSSSS')},
-            $param->{'target'}, $param->{'target'};
-    } else {
-        $log->syslog('err', "Unknown date format mode %s", $param->{'mode'});
-        return undef;
-    }
-}
+#DEPRECATED.
+#sub get_formatted_date;
 
 sub is_autoinc {
     my $self  = shift;

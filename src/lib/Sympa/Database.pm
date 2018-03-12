@@ -473,22 +473,16 @@ sub quote {
 ## This sub takes a single argument: the name of the field to be used in
 ## the query.
 ##
-sub get_canonical_write_date {
-    my $self  = shift;
-    my $field = shift;
-    return $self->get_formatted_date({'mode' => 'write', 'target' => $field});
-}
+# Moved to Sympa::Upgrade::_get_canonical_write_date().
+#sub get_canonical_write_date;
 
 ## Returns a character string corresponding to the expression to use in
 ## a write query (e.g. UPDATE or INSERT) for the value given as argument.
 ## This sub takes a single argument: the value of the date to be used in
 ## the query.
 ##
-sub get_canonical_read_date {
-    my $self  = shift;
-    my $value = shift;
-    return $self->get_formatted_date({'mode' => 'read', 'target' => $value});
-}
+# Moved to Sympa::Upgrade::_get_canonical_read_date().
+#sub get_canonical_read_date;
 
 # We require that user also matches (except SQLite).
 sub get_id {

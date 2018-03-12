@@ -2481,7 +2481,8 @@ sub get_exclusion {
 # Mapping between var and field names.
 sub _map_list_member_cols {
     my %map_field = (
-        update_date => 'update_subscriber',
+        date        => 'date_epoch_subscriber',
+        update_date => 'update_epoch_subscriber',
         gecos       => 'comment_subscriber',
         email       => 'user_subscriber',
         id          => 'include_sources_subscriber',
@@ -2520,12 +2521,7 @@ sub _list_member_cols {
 
     my %map_field = _map_list_member_cols();
     return join ', ', map {
-        my $col;
-        if ($_ eq 'date' or $_ eq 'update_date') {
-            $col = $sdm->get_canonical_read_date($map_field{$_});
-        } else {
-            $col = $map_field{$_};
-        }
+        my $col = $map_field{$_};
         ($col eq $_) ? $col : sprintf('%s AS "%s"', $col, $_);
     } sort keys %map_field;
 }
@@ -2908,22 +2904,19 @@ sub _get_admins {
 
     unless (
         $sdm and $sth = $sdm->do_prepared_query(
-            sprintf(
-                q{SELECT user_admin AS email, comment_admin AS gecos,
-                         role_admin AS "role",
-                         reception_admin AS reception,
-                         visibility_admin AS visibility,
-                         %s AS "date", %s AS update_date,
-                         info_admin AS info, profile_admin AS profile,
-                         subscribed_admin AS subscribed,
-                         included_admin AS included,
-                         include_sources_admin AS id
-                  FROM admin_table
-                  WHERE list_admin = ? AND robot_admin = ?
-                  ORDER BY user_admin},
-                $sdm->get_canonical_read_date('date_admin'),
-                $sdm->get_canonical_read_date('update_admin'),
-            ),
+            q{SELECT user_admin AS email, comment_admin AS gecos,
+                     role_admin AS "role",
+                     reception_admin AS reception,
+                     visibility_admin AS visibility,
+                     date_epoch_admin AS "date",
+                     update_epoch_admin AS update_date,
+                     info_admin AS info, profile_admin AS profile,
+                     subscribed_admin AS subscribed,
+                     included_admin AS included,
+                     include_sources_admin AS id
+              FROM admin_table
+              WHERE list_admin = ? AND robot_admin = ?
+              ORDER BY user_admin},
             $self->{'name'},
             $self->{'domain'}
         )
@@ -3441,11 +3434,7 @@ sub update_list_member {
         die sprintf 'Unknown database field %s', $field
             unless $map_field{$field};
 
-        if ($field eq 'date' or $field eq 'update_date') {
-            push @set_list,
-                sprintf('%s = %s',
-                $map_field{$field}, $sdm->get_canonical_write_date($value));
-        } elsif ($field eq 'custom_attribute') {
+        if ($field eq 'custom_attribute') {
             push @set_list, sprintf('%s = ?', $map_field{$field});
             push @val_list,
                 Sympa::Tools::Data::encode_custom_attribute($value);
@@ -3576,8 +3565,8 @@ sub update_list_admin {
     my %map_field = (
         reception   => 'reception_admin',
         visibility  => 'visibility_admin',
-        date        => 'date_admin',
-        update_date => 'update_admin',
+        date        => 'date_epoch_admin',
+        update_date => 'update_epoch_admin',
         gecos       => 'comment_admin',
         password    => 'password_user',
         email       => 'user_admin',
@@ -3629,18 +3618,14 @@ sub update_list_admin {
             }
 
             if ($map_table{$field} eq $table) {
-                if ($field eq 'date' || $field eq 'update_date') {
-                    $value = $sdm->get_canonical_write_date($value);
-                } elsif ($value and $value eq 'NULL') {    # get_null_value?
+                if ($value and $value eq 'NULL') {    #FIXME:get_null_value?
                     if ($Conf::Conf{'db_type'} eq 'mysql') {
                         $value = '\N';
                     }
+                } elsif ($numeric_field{$map_field{$field}}) {
+                    $value ||= 0;    #FIXME:Can't have a null value
                 } else {
-                    if ($numeric_field{$map_field{$field}}) {
-                        $value ||= 0;    ## Can't have a null value
-                    } else {
-                        $value = $sdm->quote($value);
-                    }
+                    $value = $sdm->quote($value);
                 }
                 my $set = sprintf "%s=%s", $map_field{$field}, $value;
 
@@ -3845,30 +3830,25 @@ sub add_list_member {
         unless (
             $sdm
             and $sdm->do_prepared_query(
-                sprintf(
-                    q{INSERT INTO subscriber_table
-                      (user_subscriber, comment_subscriber,
-                       list_subscriber, robot_subscriber,
-                       date_subscriber, update_subscriber,
-                       reception_subscriber, topics_subscriber,
-                       visibility_subscriber, subscribed_subscriber,
-                       included_subscriber, include_sources_subscriber,
-                       custom_attribute_subscriber,
-                       suspend_subscriber,
-                       suspend_start_date_subscriber,
-                       suspend_end_date_subscriber,
-                       number_messages_subscriber)
-                      VALUES (?, ?, ?, ?, %s, %s, ?, ?, ?, ?, ?, ?, ?,
-                              ?, ?, ?, 0)},
-                    $sdm->get_canonical_write_date($new_user->{'date'}),
-                    $sdm->get_canonical_write_date(
-                        $new_user->{'update_date'}
-                    )
-                ),
+                q{INSERT INTO subscriber_table
+                  (user_subscriber, comment_subscriber,
+                   list_subscriber, robot_subscriber,
+                   date_epoch_subscriber, update_epoch_subscriber,
+                   reception_subscriber, topics_subscriber,
+                   visibility_subscriber, subscribed_subscriber,
+                   included_subscriber, include_sources_subscriber,
+                   custom_attribute_subscriber,
+                   suspend_subscriber,
+                   suspend_start_date_subscriber,
+                   suspend_end_date_subscriber,
+                   number_messages_subscriber)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)},
                 $who,
                 $new_user->{'gecos'},
                 $name,
                 $self->{'domain'},
+                $new_user->{'date'},
+                $new_user->{'update_date'},
                 $new_user->{'reception'},
                 $new_user->{'topics'},
                 $new_user->{'visibility'},
@@ -3987,24 +3967,20 @@ sub add_list_admin {
         unless (
             $sdm
             and $sdm->do_prepared_query(
-                sprintf(
-                    q{INSERT INTO admin_table
-                      (user_admin, comment_admin, list_admin, robot_admin,
-                       date_admin, update_admin, reception_admin,
-                       visibility_admin,
-                       subscribed_admin,
-                       included_admin, include_sources_admin,
-                       role_admin, info_admin, profile_admin)
-                      VALUES (?, ?, ?, ?, %s, %s, ?, ?, ?, ?, ?, ?, ?, ?)},
-                    $sdm->get_canonical_write_date($new_admin_user->{'date'}),
-                    $sdm->get_canonical_write_date(
-                        $new_admin_user->{'update_date'}
-                    )
-                ),
+                q{INSERT INTO admin_table
+                  (user_admin, comment_admin, list_admin, robot_admin,
+                   date_epoch_admin, update_epoch_admin, reception_admin,
+                   visibility_admin,
+                   subscribed_admin,
+                   included_admin, include_sources_admin,
+                   role_admin, info_admin, profile_admin)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
                 $who,
                 $new_admin_user->{'gecos'},
                 $name,
                 $self->{'domain'},
+                $new_admin_user->{'date'},
+                $new_admin_user->{'update_date'},
                 $new_admin_user->{'reception'},
                 $new_admin_user->{'visibility'},
                 $new_admin_user->{'subscribed'},

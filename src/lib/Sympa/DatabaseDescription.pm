@@ -100,17 +100,30 @@ my %full_db_struct = (
                 'doc'    => 'FIXME',
                 'order'  => 10,
             },
-            'date_subscriber' => {
-                'struct'   => 'datetime',
+            #'date_subscriber' => {
+            #    'struct'   => 'datetime',
+            #    'doc'      => 'date of subscription',
+            #    'not_null' => 1,
+            #    'order'    => 11,
+            #},
+            'date_epoch_subscriber' => {
+                'struct'   => 'int(11)',
                 'doc'      => 'date of subscription',
                 'not_null' => 1,
-                'order'    => 11,
+                'order'    => 11.5,
             },
-            'update_subscriber' => {
-                'struct' => 'datetime',
+            # Obsoleted as of 6.2.25b.2. Use update_epoch_subscriber.
+            #'update_subscriber' => {
+            #    'struct' => 'datetime',
+            #    'doc' =>
+            #        'the latest date where subscription is confirmed by subscriber',
+            #    'order' => 12,
+            #},
+            'update_epoch_subscriber' => {
+                'struct' => 'int(11)',
                 'doc' =>
-                    'the latest date where subscription is confirmed by subscriber',
-                'order' => 12,
+                    'the last time when subscription is confirmed by subscriber',
+                'order' => 12.5,
             },
             'comment_subscriber' => {
                 'struct' => 'varchar(150)',
@@ -883,16 +896,28 @@ my %full_db_struct = (
                     'privilege level for this owner, value //normal// or //privileged//. The related privilege are listed in edit_list.conf. ',
                 'order' => 5,
             },
-            'date_admin' => {
-                'struct'   => 'datetime',
+            #'date_admin' => {
+            #    'struct'   => 'datetime',
+            #    'doc'      => 'date this user become a list admin',
+            #    'not_null' => 1,
+            #    'order'    => 6,
+            #},
+            'date_epoch_admin' => {
+                'struct'   => 'int(11)',
                 'doc'      => 'date this user become a list admin',
                 'not_null' => 1,
-                'order'    => 6,
+                'order'    => 6.5,
             },
-            'update_admin' => {
-                'struct' => 'datetime',
-                'doc'    => 'last update timestamp',
-                'order'  => 7,
+            # Obsoleted as of 6.2.25b.2. Use update_epoch_admin.
+            #'update_admin' => {
+            #    'struct' => 'datetime',
+            #    'doc'    => 'last update timestamp',
+            #    'order'  => 7,
+            #},
+            'update_epoch_admin' => {
+                'struct' => 'int(11)',
+                'doc'    => 'last update time',
+                'order'  => 7.5,
             },
             'reception_admin' => {
                 'struct' => 'varchar(20)',
@@ -1257,6 +1282,8 @@ Text with length up to 2^32 - 4 o.
 =item datetime
 
 Timestamp.
+B<Deprecated> as of Sympa 6.2.25b.3.
+Use C<int(11)> (Unix time) instead.
 
 =item mediumblob
 

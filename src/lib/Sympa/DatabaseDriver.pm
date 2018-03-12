@@ -144,6 +144,8 @@ This method was deprecated.
 
 =item get_formatted_date ( { mode => $mode, target => $target } )
 
+B<Deprecated> as of Sympa 6.2.25b.3.
+
 I<Mandatory for SQL driver>.
 Returns a character string corresponding to the expression to use in a query
 involving a date.
