@@ -1292,7 +1292,7 @@ sub upgrade {
             }
 
             # CSS would be regenerated...
-            my $dir = Conf::get_robot_conf($robot, 'css_path');
+            my $dir = $Conf::Conf{'css_path'} . '/' . $robot;
             rename $dir . '/style.css', $dir . '/style.css.' . time
                 if -f $dir . '/style.css';
         }
