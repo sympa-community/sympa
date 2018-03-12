@@ -1639,6 +1639,30 @@ our @params = (
         'gettext_comment' =>
             "\"insensitive\" or \"sensitive\".\nIf set to \"insensitive\", WWSympa's password check will be insensitive. This only concerns passwords stored in the Sympa database, not the ones in LDAP.\nShould not be changed! May invalid all user password.",
     },
+    {   'name'       => 'password_hash',
+        'default'    => 'md5',
+        'gettext_id' => 'Password hashing algorithm',
+        'file'       => 'wwsympa.conf',
+        #vhost      => '1', # per-robot config is impossible.
+        'gettext_comment' =>
+            "\"md5\" or \"bcrypt\".\nIf set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", bcrypt hashes will be used instead. This only concerns passwords stored in the Sympa database, not the ones in LDAP.\nShould not be changed! May invalid all user passwords.",
+    },
+    {   'name'       => 'password_hash_update',
+        'default'    => '1',
+        'gettext_id' => 'Update password hashing algorithm when users log in',
+        'file'       => 'wwsympa.conf',
+        #vhost      => '1', # per-robot config is impossible.
+        'gettext_comment' =>
+            "On successful login, update the encrypted user password to use the algorithm specified by \"password_hash\". This allows for a graceful transition to a new password hash algorithm. A value of 0 disables updating of existing password hashes.  New and reset passwords will use the \"password_hash\" setting in all cases.",
+    },
+    {   'name'       => 'bcrypt_cost',
+        'default'    => '12',
+        'gettext_id' => 'Bcrypt hash cost',
+        'file'       => 'wwsympa.conf',
+        #vhost      => '1', # per-robot config is impossible.
+        'gettext_comment' =>
+            "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" parameter of the bcrypt hash function. The default of 12 is expected to require approximately 250ms to calculate the password hash on a 3.2GHz CPU. This only concerns passwords stored in the Sympa database, not the ones in LDAP.\nCan be changed but any new cost setting will only apply to new passwords.",
+    },
 
     # One time ticket
 

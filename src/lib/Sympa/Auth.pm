@@ -147,9 +147,11 @@ sub authentication {
         ## the user passwords
         ## Other backends are Single Sign-On solutions
         if ($auth_service->{'auth_type'} eq 'user_table') {
-            my $fingerprint = Sympa::User::password_fingerprint($pwd);
+            my $fingerprint =
+                Sympa::User::password_fingerprint($pwd, $user->{'password'});
 
             if ($fingerprint eq $user->{'password'}) {
+                Sympa::User::update_password_hash($user, $pwd);
                 Sympa::User::update_global_user($email,
                     {wrong_login_count => 0});
                 return {

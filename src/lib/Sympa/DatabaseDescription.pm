@@ -190,7 +190,7 @@ my %full_db_struct = (
                 'order'  => 3,
             },
             'password_user' => {
-                'struct' => 'varchar(40)',
+                'struct' => 'varchar(64)',
                 'doc'    => 'password are stored as finger print',
                 'order'  => 2,
             },
