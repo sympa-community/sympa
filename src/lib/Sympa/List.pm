@@ -1773,21 +1773,14 @@ sub send_notify_to_owner {
     return 1;
 }
 
-# Note: This would be moved to Robot package.
+# FIXME:This might be moved to Sympa::WWW namespace.
 sub get_picture_path {
     my $self = shift;
-    return join '/',
-        Conf::get_robot_conf($self->{'domain'}, 'pictures_path'),
-        $self->get_id, @_;
+    return join '/', $Conf::Conf{'pictures_path'}, $self->get_id, @_;
 }
 
-# Note: This would be moved to Robot package.
-sub get_picture_url {
-    my $self = shift;
-    return join '/',
-        Conf::get_robot_conf($self->{'domain'}, 'pictures_url'),
-        $self->get_id, @_;
-}
+# No longer used.  Use Sympa::List::find_picture_url().
+#sub get_picture_url;
 
 =over 4
 
@@ -1800,6 +1793,7 @@ Returns the type of a pictures according to the user.
 =cut
 
 # Old name: tools::pictures_filename()
+# FIXME:This might be moved to Sympa::WWW namespace.
 sub find_picture_filenames {
     my $self  = shift;
     my $email = shift;
@@ -1816,6 +1810,7 @@ sub find_picture_filenames {
     return @ret;
 }
 
+# FIXME:This might be moved to Sympa::WWW namespace.
 sub find_picture_paths {
     my $self  = shift;
     my $email = shift;
@@ -1836,13 +1831,16 @@ Find pictures URL
 =cut
 
 # Old name: tools::make_pictures_url().
+# FIXME:This might be moved to Sympa::WWW namespace.
 sub find_picture_url {
     my $self  = shift;
     my $email = shift;
 
     my ($filename) = $self->find_picture_filenames($email);
     return undef unless $filename;
-    return $self->get_picture_url($filename);
+
+    return Sympa::Tools::Text::weburl(
+        $Conf::Conf{'pictures_url'}, [$self->get_id, $filename]);
 }
 
 =over
@@ -1855,6 +1853,7 @@ Deletes a member's picture file.
 
 =cut
 
+# FIXME:This might be moved to Sympa::WWW namespace.
 sub delete_list_member_picture {
     $log->syslog('debug2', '(%s, %s)', @_);
     my $self  = shift;

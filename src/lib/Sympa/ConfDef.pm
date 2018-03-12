@@ -1320,14 +1320,12 @@ our @params = (
     {   'name'       => 'pictures_path',
         'default_s'  => '$PICTURESDIR',
         'gettext_id' => 'Directory for subscribers pictures',
-        'vhost'      => '1',
     },
     {   'name'       => 'pictures_url',
         'default'    => '/static-sympa/pictures',
         'gettext_id' => 'URL for subscribers pictures',
         'gettext_comment' =>
             'HTTP server have to map it with "pictures_path" directory.',
-        'vhost' => '1',
     },
     {   'name'       => 'color_0',
         'gettext_id' => 'Colors for web interface',
@@ -1666,6 +1664,7 @@ our @params = (
         'gettext_comment' =>
             "Enables or disables the pictures feature by default.  If enabled, subscribers can upload their picture (from the \"Subscriber option\" page) to use as an avatar.\nPictures are stored in a directory specified by the \"static_content_path\" parameter.",
         'default' => 'on',
+        'vhost'   => '1',
     },
     {   'name'         => 'pictures_max_size',
         'gettext_id'   => 'The maximum size of uploaded picture',

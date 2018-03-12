@@ -852,45 +852,26 @@ sub checkfiles {
         }
     }
 
-    # Create pictures dir if useful for each robot.
-    foreach my $robot (keys %{$Conf{'robots'}}) {
-        my $dir = get_robot_conf($robot, 'pictures_path');
-        if ($dir ne '' && -d $dir) {
-            unless (-f $dir . '/index.html') {
-                unless (open(FF, ">$dir" . '/index.html')) {
-                    $log->syslog(
-                        'err',
-                        'Unable to create %s/index.html as an empty file to protect directory: %m',
-                        $dir
-                    );
-                }
-                close FF;
-            }
+    # Create pictures directory. FIXME: Would be created on demand.
+    my $pictures_dir = $Conf::Conf{'pictures_path'};
+    unless (-d $pictures_dir) {
+        unless (mkdir $pictures_dir, 0775) {
+            $log->syslog('err', 'Unable to create directory %s',
+                $pictures_dir);
+            $config_err++;
+        } else {
+            chmod 0775, $pictures_dir;  # set masked bits.
 
-            # create picture dir
-            if (get_robot_conf($robot, 'pictures_feature') eq 'on') {
-                my $pictures_dir =
-                    get_robot_conf($robot, 'pictures_path');
-                unless (-d $pictures_dir) {
-                    unless (mkdir($pictures_dir, 0775)) {
-                        $log->syslog('err', 'Unable to create directory %s',
-                            $pictures_dir);
-                        $config_err++;
-                    }
-                    chmod 0775, $pictures_dir;
-
-                    my $index_path = $pictures_dir . '/index.html';
-                    unless (-f $index_path) {
-                        unless (open(FF, ">$index_path")) {
-                            $log->syslog(
-                                'err',
-                                'Unable to create %s as an empty file to protect directory',
-                                $index_path
-                            );
-                        }
-                        close FF;
-                    }
-                }
+            my $index_path = $pictures_dir . '/index.html';
+            my $fh;
+            unless (open $fh, '>', $index_path) {
+                $log->syslog(
+                    'err',
+                    'Unable to create %s as an empty file to protect directory',
+                    $index_path
+                );
+            } else {
+                close $fh;
             }
         }
     }
