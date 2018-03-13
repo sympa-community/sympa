@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.25b.3](https://github.com/sympa-community/sympa/tree/6.2.25b.3) (2018-03-XX)
+## [6.2.25b.3](https://github.com/sympa-community/sympa/tree/6.2.25b.3) (2018-03-13)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.2...6.2.25b.3)
 
