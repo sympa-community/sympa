@@ -2033,21 +2033,18 @@ msgstr ""
 "「css_path」のディレクトリに対応づけなければなりません。"
 
 #: src/lib/Sympa/ConfDef.pm:1322
-#, fuzzy
 msgid "Directory for subscribers pictures"
-msgstr "読者登録用キューのディレクトリ"
+msgstr "読者のピクチャ用のディレクトリ"
 
 #: src/lib/Sympa/ConfDef.pm:1326
-#, fuzzy
 msgid "URL for subscribers pictures"
-msgstr "読者登録した日"
+msgstr "読者のピクチャ用のURL"
 
 #: src/lib/Sympa/ConfDef.pm:1328
-#, fuzzy
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr ""
-"HTTPサーバはこのパスを static_content_path のディレクトリと対応させなければい"
-"けません。"
+"HTTPサーバはこのパスを pictures_path のディレクトリと対応させなければいけませ"
+"ん。"
 
 #: src/lib/Sympa/ConfDef.pm:1331
 msgid "Colors for web interface"
@@ -2309,9 +2306,8 @@ msgid "Default timeout while performing a fetch with include_sql_query."
 msgstr "include_sql_query による同期実行時の取得タイムアウト初期値。"
 
 #: src/lib/Sympa/ConfDef.pm:1791
-#, fuzzy
 msgid "Default of inclusion timeout"
-msgstr "SQLでの取り込みタイムアウトの初期値"
+msgstr "取り込みタイムアウトの初期値"
 
 #: src/lib/Sympa/ConfDef.pm:1793
 msgid ""
@@ -14790,113 +14786,6 @@ msgstr ""
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "そのようなプロバイダは知りません。"
-
-#: src/lib/Sympa/ConfDef.pm:576
-msgid "Minimum number of list owners that must match owner_domain restriction"
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:583
-msgid ""
-"Minimum number of list owners that must satisfy the owner_domain "
-"restriction.  The default of zero (0) means *all* list owners must match. "
-"Setting to 1 requires only one list owner to match owner_domain; all other "
-"owners can be from any domain. This setting can be used to ensure that there "
-"is always at least one known contact point for a mailing list."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:771
-msgid ""
-"The suffix appended to the list name to consist the return-path of messages "
-"distributed through the list. This address will receive all non-delivery "
-"reports (also called bounces)."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:944
-msgid ""
-"This spool is used both by \"queue\" program and \"sympa_msg.pl\" daemon.\""
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1040
-msgid ""
-"Where to store HTML archives. This parameter is used by the \"archived.pl\" "
-"daemon. It is a good idea to install the archive outside the web document "
-"hierarchy to ensure accesses passing WWSympa's access control will be "
-"prevented."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1205
-msgid ""
-"This task removes rows in the \"user_table\" table which hove not "
-"corresponding entries in the \"subscriber_table\" table."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1492
-msgid ""
-"You may modify the main menu content by editing the menu.tt2 file but you "
-"can also edit the these parameters in order to add up to 3 button. Each "
-"button is defined by a title (the text in the button), an URL and optionally "
-"a target."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1549
-msgid ""
-"This is the default value when not set explicitly by users. \"0\" means the "
-"cookie may be retained during browser session."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1761
-msgid ""
-"Including subscribers, owners and editors from datasources. Appropriate "
-"database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
-"DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if "
-"secure connection (LDAPS) to LDAP server is required: IO-SOcket-SSL."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1893
-msgid ""
-"Checks if ailias with the same name as the list to be created already exists "
-"on the SMTP server. This feature requires external module: Net-SMTP."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1954
-msgid ""
-"Checks if the password the users sbmitted has sufficient strength. This "
-"feature requires external module: Data-Password."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1970
-msgid ""
-"Authnticates users based on the directory on LDAP server. This feature "
-"requires external module: Net-LDAP. And also, if secure connection (LDAPS) "
-"is required: IO-Socket-SSL."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:1984
-msgid ""
-"Provides some functions of Sympa through SOAP HTTP interface. This feature "
-"requires external module: SOAP-Lite."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:478
-msgid ""
-"Absolute path to sendmail command line utility (e.g.: a binary named "
-"\"sendmail\" is distributed with Postfix).\n"
-"Sympa expects this binary to be sendmail compatible (exim, Postfix, qmail "
-"and so on provide it). Sympa also bundles \"sympa_smtpc\" program which may "
-"be a replacement to sendmail binary."
-msgstr ""
-
-#: src/lib/Sympa/ConfDef.pm:486
-msgid ""
-"Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
-"included, because they will be included by Sympa.\n"
-"Note: If the path to sympa_smtpc is set as a value of \"sendmail\" "
-"parameter, \"--esmtp\" or \"--lmtp\" option is required."
-msgstr ""
-
-#: default/mail_tt2/listowner_notification.tt2:56
-msgid "${conf.email}@${conf.host}"
-msgstr ""
 
 #~ msgid ""
 #~ "The minimum number of packets before bulk daemon forks the new worker to "
