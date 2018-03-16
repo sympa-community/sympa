@@ -165,7 +165,10 @@ sub maketext {
 
 sub locdatetime {
     my ($fmt, $arg) = @_;
-    if ($arg !~
+
+    if ($arg =~ /\A\d+\z/) {
+        return sub { $language->gettext_strftime($_[0], localtime $arg); };
+    } elsif ($arg !~
         /^(\d{4})\D(\d\d?)(?:\D(\d\d?)(?:\D(\d\d?)\D(\d\d?)(?:\D(\d\d?))?)?)?/
         ) {
         return sub { $language->gettext("(unknown date)"); };
