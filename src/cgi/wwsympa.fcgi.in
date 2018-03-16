@@ -5561,7 +5561,7 @@ sub do_suboptions {
 
     my ($s, $m);
 
-    unless ($s = $list->get_list_member($param->{'user'}{'email'})) {
+    unless ($s = $param->{'subscriber'}) {
         Sympa::WWW::Report::reject_report_web(
             'user',
             'not_subscriber',
@@ -5574,14 +5574,6 @@ sub do_suboptions {
         wwslog('info', 'Subscriber %s not found', $param->{'user'}{'email'});
         return $in{'previous_action'} || 'info';
     }
-
-    $s->{'reception'}  ||= 'mail';
-    $s->{'visibility'} ||= 'noconceal';
-    $s->{'date'} =
-        $language->gettext_strftime("%d %b %Y", localtime($s->{'date'}));
-    $s->{'update_date'} =
-        $language->gettext_strftime("%d %b %Y",
-        localtime($s->{'update_date'}));
 
     foreach $m ($list->available_reception_mode) {
         if ($s->{'reception'} eq $m) {
@@ -5601,8 +5593,6 @@ sub do_suboptions {
             $param->{'visibility'}{$m}{'selected'} = '';
         }
     }
-
-    $param->{'subscriber'} = $s;
 
     #msg_topic
     $param->{'sub_user_topic'} = 0;

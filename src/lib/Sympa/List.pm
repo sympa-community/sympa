@@ -2560,6 +2560,7 @@ sub get_list_member {
         $user->{'reception'} =
             $self->{'admin'}{'default_user_options'}{'reception'}
             unless $self->is_available_reception_mode($user->{'reception'});
+        $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
         $log->syslog(
             'debug2',
@@ -2692,6 +2693,7 @@ sub get_first_list_member {
         $user->{'reception'} =
             $self->{'admin'}{'default_user_options'}{'reception'}
             unless $self->is_available_reception_mode($user->{'reception'});
+        $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
 
         if (defined $user->{custom_attribute}) {
@@ -2739,6 +2741,7 @@ sub get_next_list_member {
         $user->{'reception'} =
             $self->{'admin'}{'default_user_options'}{'reception'}
             unless $self->is_available_reception_mode($user->{'reception'});
+        $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
 
         if (defined $user->{custom_attribute}) {
@@ -2933,6 +2936,7 @@ sub _get_admins {
             'Warning: Entry with empty email address in list %s', $self)
             unless defined $user->{'email'};
         $user->{'reception'}   ||= 'mail';
+        $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
     }
 
@@ -3198,6 +3202,7 @@ sub get_members {
         $user->{reception} =
             $self->{'admin'}{'default_user_options'}{'reception'}
             unless $self->is_available_reception_mode($user->{reception});
+        $user->{visibility}  ||= 'noconceal';
         $user->{update_date} ||= $user->{date};
 
         if (defined $user->{custom_attribute}) {
