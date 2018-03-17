@@ -5,8 +5,10 @@
   <label for="gecos">[%|loc%]Name:[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" />
   [% PROCESS edit_attributes.tt2 %]
 
-  <label> [%|loc%]Member since:[%END%] </label> [% subscriber.date %]
-  <label> [%|loc%]Last update:[%END%] </label> [% subscriber.update_date %]
+  <label> [%|loc%]Member since:[%END%] </label>
+  [%|locdt(subscriber.date)%]%d %b %Y[%END%]
+  <label> [%|loc%]Last update:[%END%] </label>
+  [%|locdt(subscriber.update_date)%]%d %b %Y[%END%]
   <label for="reception"> [%|loc%]Receiving mode:[%END%] </label>
   <div>
   <select name="reception" id="reception">
@@ -81,11 +83,11 @@
   <p>[%|loc%]Your subscription is suspended.[%END%]</p>
 
   <label>[%|loc%]From:[%END%] </label>
-  [% subscriber.startdate %]
+  [%|locdt(subscriber.startdate)%]%d %b %Y[%END%]
 
   <label>[%|loc%]To:[%END%] </label>
   [% IF subscriber.enddate %]
-    [% subscriber.enddate %]
+    [%|locdt(subscriber.enddate)%]%d %b %Y[%END%]
   [% ELSE %]
     [%|loc%]Indefinite end date[% END %]
   [% END %]
