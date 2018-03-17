@@ -83,11 +83,11 @@
   <p>[%|loc%]Your subscription is suspended.[%END%]</p>
 
   <label>[%|loc%]From:[%END%] </label>
-  [% subscriber.startdate %]
+  [%|locdt(subscriber.startdate)%]%d %b %Y[%END%]
 
   <label>[%|loc%]To:[%END%] </label>
   [% IF subscriber.enddate %]
-    [% subscriber.enddate %]
+    [%|locdt(subscriber.enddate)%]%d %b %Y[%END%]
   [% ELSE %]
     [%|loc%]Indefinite end date[% END %]
   [% END %]
