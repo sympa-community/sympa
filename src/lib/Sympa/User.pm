@@ -326,7 +326,7 @@ my %fingerprint_hashes = (
 
         # A bcrypt-encrypted password contains the settings at the front.
         # If this not look like a settings string, create one.
-        unless ($salt =~ m#\A\$2(a?)\$([0-9]{2})\$([./A-Za-z0-9]{22})#x) {
+        unless (defined($salt) && $salt =~ m#\A\$2(a?)\$([0-9]{2})\$([./A-Za-z0-9]{22})#x) {
             my $bcrypt_cost = Conf::get_robot_conf('*', 'bcrypt_cost');
             my $cost = sprintf("%02d", 0 + $bcrypt_cost);
 	    my $newsalt = "";
@@ -335,7 +335,7 @@ my %fingerprint_hashes = (
                 $newsalt .= chr(rand(256));
             }
             $newsalt = '$2a$' . $cost . '$' . en_base64($newsalt);
-            $log->syslog('debug', "bcrypt: create new salt: cost $cost salt \"$salt\" salt \"$newsalt\"");
+            $log->syslog('debug', "bcrypt: create new salt: cost $cost \"$newsalt\"");
 
 	    $salt = $newsalt;
         }
@@ -352,23 +352,26 @@ my %fingerprint_hashes = (
 sub password_fingerprint {
 
     my ($pwd, $salt) = @_;
-    my $password_hash;
-    my $hash_type;
 
-    $log->syslog('debug', "salt \"$salt\"");
+    $log->syslog('debug', "salt \"%s\"", $salt);
+
+    my $password_hash = Conf::get_robot_conf('*', 'password_hash');
+    my $password_hash_update = 
+        Conf::get_robot_conf('*', 'password_hash_update');
 
     if (Conf::get_robot_conf('*', 'password_case') eq 'insensitive') {
         $pwd = lc($pwd);
     }
 
-    # preserve the hash type if we can determine it, else use system default
-    if (defined($salt) && defined($hash_type = hash_type($salt))) {
-        $password_hash = $hash_type;
-    } else  {
-        $password_hash = Conf::get_robot_conf('*', 'password_hash');
-    }
+    # If updating hashes, honor the hash type implied by $salt. This lets
+    # the user successfully log in, after which the hash can be updated
 
-    $log->syslog('debug', "hash_type \"$hash_type\", password_hash = \"$password_hash\"");
+    if ($password_hash_update) {
+        if (defined($salt) && defined(my $hash_type = hash_type($salt))) {
+            $log->syslog('debug', "honoring  hash_type %s", $hash_type);
+            $password_hash = $hash_type;
+        }
+    }
 
     die "password_fingerprint: unknown password_hash \"$password_hash\""
         unless defined($fingerprint_hashes{$password_hash});
