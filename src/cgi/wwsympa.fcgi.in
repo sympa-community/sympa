@@ -3119,7 +3119,7 @@ sub do_ticket {
         $session->{'email'} = lc($param->{'ticket_context'}{'email'});
         $param->{'user'} = Sympa::User::get_global_user($session->{'email'});
         $param->{'user'}{'email'} = $session->{'email'};
-        $param->{'last_login _host'} = $param->{'user'}{'last_login_host'};
+        $param->{'last_login_host'} = $param->{'user'}{'last_login_host'};
         $param->{'last_login_date'} =
             $language->gettext_strftime("%d %b %Y at %H:%M:%S",
             localtime($param->{'user'}{'last_login_date'}))
