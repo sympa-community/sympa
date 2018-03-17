@@ -166,16 +166,16 @@ sub maketext {
 sub locdatetime {
     my ($fmt, $arg) = @_;
 
-    if ($arg =~ /\A\d+\z/) {
+    if (defined $arg and $arg =~ /\A-?\d+\z/) {
         return sub { $language->gettext_strftime($_[0], localtime $arg); };
-    } elsif ($arg !~
-        /^(\d{4})\D(\d\d?)(?:\D(\d\d?)(?:\D(\d\d?)\D(\d\d?)(?:\D(\d\d?))?)?)?/
+    } elsif (defined $arg and $arg =~
+        /\A(\d{4})\D(\d\d?)(?:\D(\d\d?)(?:\D(\d\d?)\D(\d\d?)(?:\D(\d\d?))?)?)?/
         ) {
-        return sub { $language->gettext("(unknown date)"); };
-    } else {
         my @arg =
             ($6 || 0, $5 || 0, $4 || 0, $3 || 1, $2 - 1, $1 - 1900, 0, 0, 0);
         return sub { $language->gettext_strftime($_[0], @arg); };
+    } else {
+        return sub { $language->gettext("(unknown date)"); };
     }
 }
 
