@@ -1,5 +1,13 @@
 # Change Log
 
+## [6.2.26](https://github.com/sympa-community/sympa/tree/HEAD) (2018-03-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.3...HEAD)
+
+**Fixed bugs:**
+
+- Date in 'subscriber option' in epoch format [\#230](https://github.com/sympa-community/sympa/issues/230)
+
 ## [6.2.25b.3](https://github.com/sympa-community/sympa/tree/6.2.25b.3) (2018-03-13)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.2...6.2.25b.3)
