@@ -383,9 +383,9 @@ msgstr ""
 msgid ""
 "Defines the families the automatic lists are based on. It is a character "
 "string structured as follows:\n"
-"* each family is separated from the other by a semi-column (;)\n"
+"* each family is separated from the other by a semicolon (;)\n"
 "* inside a family definition, each field is separated from the other by a "
-"column (:)\n"
+"colon (:)\n"
 "* each field has the structure: \"<field name>=<filed value>\"\n"
 "Basically, each time Sympa uses the automatic lists families, the values "
 "defined in this parameter will be available in the family object.\n"
@@ -2756,17 +2756,17 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3903
+#: src/lib/Sympa/List.pm:3908
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr "Προσπάθεια υπέρβασης μέγιστου αριθμού συνδρομητών (%s) για τη λίστα."
 
-#: src/lib/Sympa/List.pm:3910
+#: src/lib/Sympa/List.pm:3915
 msgid "Attempts to add some users in database failed."
 msgstr "Απέτυχε προσπάθεια προσθήκης χρηστών στη βάση δεδομένων."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3914
+#: src/lib/Sympa/List.pm:3919
 msgid "Added %s users out of %s required."
 msgstr "Προστέθηκαν %s χρήστες από σύνολο %s."
 
@@ -4712,11 +4712,11 @@ msgstr "Κλειστή λίστα"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10032 src/cgi/wwsympa.fcgi.in:1201
+#: src/cgi/wwsympa.fcgi.in:10022 src/cgi/wwsympa.fcgi.in:1201
 #: src/cgi/wwsympa.fcgi.in:2824 src/cgi/wwsympa.fcgi.in:3100
 #: src/cgi/wwsympa.fcgi.in:3124 src/cgi/wwsympa.fcgi.in:3282
-#: src/cgi/wwsympa.fcgi.in:6140 src/cgi/wwsympa.fcgi.in:6143
-#: src/cgi/wwsympa.fcgi.in:9075 src/lib/Sympa/ListOpt.pm:302
+#: src/cgi/wwsympa.fcgi.in:6130 src/cgi/wwsympa.fcgi.in:6133
+#: src/cgi/wwsympa.fcgi.in:9065 src/lib/Sympa/ListOpt.pm:302
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
@@ -5220,7 +5220,7 @@ msgid "used to compute case-folding search keys"
 msgstr ""
 
 #: default/web_tt2/modindex.tt2:96 src/lib/Sympa/Process.pm:418
-#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:171
+#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:178
 #, fuzzy
 msgid "(unknown date)"
 msgstr "%1 : άγνωστη ενέργεια"
@@ -5269,19 +5269,24 @@ msgid ""
 "may simply remove them."
 msgstr ""
 
+#. (subscriber.date)
+#. (subscriber.update_date)
+#. (subscriber.startdate)
+#. (subscriber.enddate)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10173 src/cgi/wwsympa.fcgi.in:10176
-#: src/cgi/wwsympa.fcgi.in:14186 src/cgi/wwsympa.fcgi.in:14190
-#: src/cgi/wwsympa.fcgi.in:15379 src/cgi/wwsympa.fcgi.in:15470
-#: src/cgi/wwsympa.fcgi.in:15572 src/cgi/wwsympa.fcgi.in:16762
-#: src/cgi/wwsympa.fcgi.in:16764 src/cgi/wwsympa.fcgi.in:4897
-#: src/cgi/wwsympa.fcgi.in:4965 src/cgi/wwsympa.fcgi.in:5581
-#: src/cgi/wwsympa.fcgi.in:5583 src/cgi/wwsympa.fcgi.in:8727
-#: src/cgi/wwsympa.fcgi.in:9454 src/cgi/wwsympa.fcgi.in:9502
-#: src/cgi/wwsympa.fcgi.in:9818 src/cgi/wwsympa.fcgi.in:9821
-#: src/cgi/wwsympa.fcgi.in:9848 src/cgi/wwsympa.fcgi.in:9851
-#: src/cgi/wwsympa.fcgi.in:9884 src/cgi/wwsympa.fcgi.in:9886
+#: default/web_tt2/suboptions.tt2:11 default/web_tt2/suboptions.tt2:86
+#: default/web_tt2/suboptions.tt2:9 default/web_tt2/suboptions.tt2:90
+#: src/cgi/wwsympa.fcgi.in:10163 src/cgi/wwsympa.fcgi.in:10166
+#: src/cgi/wwsympa.fcgi.in:14176 src/cgi/wwsympa.fcgi.in:14180
+#: src/cgi/wwsympa.fcgi.in:15369 src/cgi/wwsympa.fcgi.in:15460
+#: src/cgi/wwsympa.fcgi.in:15562 src/cgi/wwsympa.fcgi.in:16752
+#: src/cgi/wwsympa.fcgi.in:16754 src/cgi/wwsympa.fcgi.in:4897
+#: src/cgi/wwsympa.fcgi.in:4965 src/cgi/wwsympa.fcgi.in:8717
+#: src/cgi/wwsympa.fcgi.in:9444 src/cgi/wwsympa.fcgi.in:9492
+#: src/cgi/wwsympa.fcgi.in:9808 src/cgi/wwsympa.fcgi.in:9811
+#: src/cgi/wwsympa.fcgi.in:9838 src/cgi/wwsympa.fcgi.in:9841
+#: src/cgi/wwsympa.fcgi.in:9874 src/cgi/wwsympa.fcgi.in:9876
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:96 src/lib/Sympa/Message/Template.pm:99
 msgid "%d %b %Y"
@@ -5312,7 +5317,7 @@ msgstr "Πίνακας περιεχομένων:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7268 src/cgi/wwsympa.fcgi.in:8015
+#: src/cgi/wwsympa.fcgi.in:7258 src/cgi/wwsympa.fcgi.in:8005
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5356,7 +5361,7 @@ msgstr ""
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16036
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16026
 #: src/lib/Sympa/WWW/SharedDocument.pm:343
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
@@ -5517,67 +5522,67 @@ msgstr "%H:%M:%S"
 msgid "Your lists"
 msgstr "Οι λίστες μου"
 
-#: src/cgi/wwsympa.fcgi.in:12562 src/cgi/wwsympa.fcgi.in:13034
+#: src/cgi/wwsympa.fcgi.in:12552 src/cgi/wwsympa.fcgi.in:13024
 #, fuzzy
 msgid "New file"
 msgstr "αρχείο βοήθειας"
 
-#: src/cgi/wwsympa.fcgi.in:12566
+#: src/cgi/wwsympa.fcgi.in:12556
 #, fuzzy
 msgid "New directory"
 msgstr "Κατάλογος"
 
-#: src/cgi/wwsympa.fcgi.in:13040
+#: src/cgi/wwsympa.fcgi.in:13030
 #, fuzzy
 msgid "New bookmark"
 msgstr "Προσθήκη σελιδοδείκτη"
 
-#: src/cgi/wwsympa.fcgi.in:15553
+#: src/cgi/wwsympa.fcgi.in:15543
 msgid "Mail sending"
 msgstr "Αποστολή μηνύματος"
 
-#: src/cgi/wwsympa.fcgi.in:15555
+#: src/cgi/wwsympa.fcgi.in:15545
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Περίληψη συνδρομής"
 
-#: src/cgi/wwsympa.fcgi.in:15556
+#: src/cgi/wwsympa.fcgi.in:15546
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Εκκρεμείς εγγραφές συνδρομητών"
 
-#: src/cgi/wwsympa.fcgi.in:15557
+#: src/cgi/wwsympa.fcgi.in:15547
 msgid "Users deleted by admin"
 msgstr "Χρήστες διαγραμμένοι από διαχειριστή"
 
-#: src/cgi/wwsympa.fcgi.in:15559
+#: src/cgi/wwsympa.fcgi.in:15549
 #, fuzzy
 msgid "Users deleted automatically"
 msgstr "Χρήστες διαγραμμένοι από διαχειριστή"
 
-#: src/cgi/wwsympa.fcgi.in:15560
+#: src/cgi/wwsympa.fcgi.in:15550
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15561
+#: src/cgi/wwsympa.fcgi.in:15551
 #, fuzzy
 msgid "File creation"
 msgstr "Συμπερίληψη αρχείου"
 
-#: src/cgi/wwsympa.fcgi.in:15562
+#: src/cgi/wwsympa.fcgi.in:15552
 #, fuzzy
 msgid "Directory creation"
 msgstr "Το αρχείο %1 βρίσκεται σε αναμονή συντονισμού"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16018 src/cgi/wwsympa.fcgi.in:16020
+#: src/cgi/wwsympa.fcgi.in:16008 src/cgi/wwsympa.fcgi.in:16010
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16771
+#: src/cgi/wwsympa.fcgi.in:16761
 #, fuzzy
 msgid "topic (%s)"
 msgstr "θέματα"
@@ -5790,7 +5795,7 @@ msgstr "Αρχείο λιστών"
 #: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:20 default/web_tt2/subscriber_table.tt2:120
+#: default/web_tt2/suboptions.tt2:22 default/web_tt2/subscriber_table.tt2:120
 msgid "Open in a new window"
 msgstr "Άνοιγμα σε νέο παράθυρο"
 
@@ -5809,8 +5814,8 @@ msgstr "Άνοιγμα σε νέο παράθυρο"
 #: default/web_tt2/modindex.tt2:121 default/web_tt2/modindex.tt2:2
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:100 default/web_tt2/suboptions.tt2:21
-#: default/web_tt2/suboptions.tt2:79 default/web_tt2/suspend_request.tt2:5
+#: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:23
+#: default/web_tt2/suboptions.tt2:81 default/web_tt2/suspend_request.tt2:5
 msgid "Help"
 msgstr "Βοήθεια"
 
@@ -6883,7 +6888,7 @@ msgid "Bookmark URL"
 msgstr "URL Σελιδοδείκτη"
 
 #: default/web_tt2/d_editfile.tt2:73 default/web_tt2/edit_list_request.tt2:316
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/suboptions.tt2:71
+#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/suboptions.tt2:73
 msgid "Update"
 msgstr "Ανανέωση"
 
@@ -7409,7 +7414,7 @@ msgstr "Όνομα:"
 msgid "Subscribed since:"
 msgstr "Ημερομηνία εγγραφής:"
 
-#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:9
+#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:10
 msgid "Last update:"
 msgstr "Τελευταία ενημέρωση:"
 
@@ -7417,7 +7422,7 @@ msgstr "Τελευταία ενημέρωση:"
 msgid "Receiving:"
 msgstr "Παραλαβή:"
 
-#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:57
+#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:59
 msgid "Visibility:"
 msgstr "Ορατότητα:"
 
@@ -10029,81 +10034,81 @@ msgstr "Παράμετροι λίστας"
 msgid "Member since:"
 msgstr "Ημερομηνία εγγραφής:"
 
-#: default/web_tt2/suboptions.tt2:10
+#: default/web_tt2/suboptions.tt2:12
 msgid "Receiving mode:"
 msgstr "Τρόποι παραλαβής:"
 
-#: default/web_tt2/suboptions.tt2:27
+#: default/web_tt2/suboptions.tt2:29
 msgid "Topic subscription:"
 msgstr "Συνδρομή θέματος:"
 
-#: default/web_tt2/suboptions.tt2:39 default/web_tt2/suboptions.tt2:41
+#: default/web_tt2/suboptions.tt2:41 default/web_tt2/suboptions.tt2:43
 msgid "Other (messages not tagged) "
 msgstr "Άλλο (μη επισημασμένο μήνυμα) "
 
-#: default/web_tt2/suboptions.tt2:48
+#: default/web_tt2/suboptions.tt2:50
 msgid "Disable topics subscription"
 msgstr "Απενεργοποίηση συνδρομής θεμάτων"
 
-#: default/web_tt2/suboptions.tt2:53
+#: default/web_tt2/suboptions.tt2:55
 msgid "Only possible for direct reception modes."
 msgstr "Διαθέσιμο μόνο για τρόπους άμεσης παραλαβής."
 
-#: default/web_tt2/suboptions.tt2:78
+#: default/web_tt2/suboptions.tt2:80
 #, fuzzy
 msgid "Restore subscription"
 msgstr "Συνέχιση των συνδρομών μου"
 
-#: default/web_tt2/suboptions.tt2:81
+#: default/web_tt2/suboptions.tt2:83
 #, fuzzy
 msgid "Your subscription is suspended."
 msgstr "Η ηλεκτρονική διεύθυνση της συνδρομής σας είναι %1"
 
-#: default/web_tt2/suboptions.tt2:105 default/web_tt2/suboptions.tt2:83
+#: default/web_tt2/suboptions.tt2:107 default/web_tt2/suboptions.tt2:85
 #: default/web_tt2/suspend_request.tt2:84
 msgid "From:"
 msgstr "Από:"
 
-#: default/web_tt2/suboptions.tt2:110 default/web_tt2/suboptions.tt2:86
+#: default/web_tt2/suboptions.tt2:112 default/web_tt2/suboptions.tt2:88
 #: default/web_tt2/suspend_request.tt2:89
 msgid "To:"
 msgstr "Προς:"
 
-#: default/web_tt2/suboptions.tt2:90
+#: default/web_tt2/suboptions.tt2:92
 #, fuzzy
 msgid "Indefinite end date"
 msgstr "αόριστος χρόνος λήξης"
 
-#: default/web_tt2/suboptions.tt2:97
+#: default/web_tt2/suboptions.tt2:99
 #, fuzzy
 msgid "Resume my subscription"
 msgstr "Συνέχιση των συνδρομών μου"
 
-#: default/web_tt2/suboptions.tt2:99
+#: default/web_tt2/suboptions.tt2:101
 #, fuzzy
 msgid "Suspend subscription"
 msgstr "Αναστολή των συνδρομών μου"
 
-#: default/web_tt2/suboptions.tt2:102
+#: default/web_tt2/suboptions.tt2:104
 msgid ""
 "You can suspend your membership by using the button below. The suspend "
 "option prevents delivery of emails, this can be useful if you are out of the "
 "office for some time."
 msgstr ""
 
-#: default/web_tt2/suboptions.tt2:109 default/web_tt2/suboptions.tt2:113
-#: default/web_tt2/suboptions.tt2:114 default/web_tt2/suspend_request.tt2:88
+#: default/web_tt2/suboptions.tt2:111 default/web_tt2/suboptions.tt2:115
+#: default/web_tt2/suboptions.tt2:116 default/web_tt2/suspend_request.tt2:88
 #: default/web_tt2/suspend_request.tt2:92
 #: default/web_tt2/suspend_request.tt2:93 default/web_tt2/viewlogs.tt2:32
 #: default/web_tt2/viewlogs.tt2:37
 msgid "dd-mm-yyyy"
 msgstr ""
 
-#: default/web_tt2/suboptions.tt2:115 default/web_tt2/suspend_request.tt2:94
+#: default/web_tt2/suboptions.tt2:117 default/web_tt2/suspend_request.tt2:94
 msgid "Suspend my membership indefinitely"
 msgstr ""
 
-#: default/web_tt2/suboptions.tt2:122 default/web_tt2/suspend_request.tt2:82
+#: default/web_tt2/suboptions.tt2:124 default/web_tt2/suspend_request.tt2:82
 msgid "Suspend my subscriptions"
 msgstr "Αναστολή των συνδρομών μου"
 
@@ -15207,6 +15212,20 @@ msgstr "Αδυναμία φόρτωσης καταναλωτή, ίσως η δι
 #: ext/OAuth1P/lib/Sympa/OAuth1/Provider/tt2/oauth_check.tt2:21
 msgid "Unknown provider."
 msgstr "Άγνωστος παροχέας."
+
+#: src/lib/Sympa/ConfDef.pm:847
+msgid ""
+"Defines the families the automatic lists are based on. It is a character "
+"string structured as follows:\n"
+"* each family is separated from the other by a semi-column (;)\n"
+"* inside a family definition, each field is separated from the other by a "
+"column (:)\n"
+"* each field has the structure: \"<field name>=<filed value>\"\n"
+"Basically, each time Sympa uses the automatic lists families, the values "
+"defined in this parameter will be available in the family object.\n"
+"* for scenarios: [family->name]\n"
+"* for templates: [% family.name %]"
+msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:576
 msgid "Minimum number of list owners that must match owner_domain restriction"

@@ -487,9 +487,9 @@ msgstr ""
 msgid ""
 "Defines the families the automatic lists are based on. It is a character "
 "string structured as follows:\n"
-"* each family is separated from the other by a semi-column (;)\n"
+"* each family is separated from the other by a semicolon (;)\n"
 "* inside a family definition, each field is separated from the other by a "
-"column (:)\n"
+"colon (:)\n"
 "* each field has the structure: \"<field name>=<filed value>\"\n"
 "Basically, each time Sympa uses the automatic lists families, the values "
 "defined in this parameter will be available in the family object.\n"
@@ -2981,17 +2981,17 @@ msgstr "Lorem ipsum dolor sit amet."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3903
+#: src/lib/Sympa/List.pm:3908
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr "Intento de superar el número máximo de miembros (%s) para esta lista."
 
-#: src/lib/Sympa/List.pm:3910
+#: src/lib/Sympa/List.pm:3915
 msgid "Attempts to add some users in database failed."
 msgstr "Intentos erróneos de añadir algunos usuarios en base de datos."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3914
+#: src/lib/Sympa/List.pm:3919
 msgid "Added %s users out of %s required."
 msgstr "%s usuarios añadidos de %s que se necesitan."
 
@@ -4951,11 +4951,11 @@ msgstr "lista cerrada"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10032 src/cgi/wwsympa.fcgi.in:1201
+#: src/cgi/wwsympa.fcgi.in:10022 src/cgi/wwsympa.fcgi.in:1201
 #: src/cgi/wwsympa.fcgi.in:2824 src/cgi/wwsympa.fcgi.in:3100
 #: src/cgi/wwsympa.fcgi.in:3124 src/cgi/wwsympa.fcgi.in:3282
-#: src/cgi/wwsympa.fcgi.in:6140 src/cgi/wwsympa.fcgi.in:6143
-#: src/cgi/wwsympa.fcgi.in:9075 src/lib/Sympa/ListOpt.pm:302
+#: src/cgi/wwsympa.fcgi.in:6130 src/cgi/wwsympa.fcgi.in:6133
+#: src/cgi/wwsympa.fcgi.in:9065 src/lib/Sympa/ListOpt.pm:302
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y a las %H:%M:%S"
 
@@ -5512,7 +5512,7 @@ msgid "used to compute case-folding search keys"
 msgstr "usado para calcular las claves de búsqueda en los casos de plegado"
 
 #: default/web_tt2/modindex.tt2:96 src/lib/Sympa/Process.pm:418
-#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:171
+#: src/lib/Sympa/Process.pm:421 src/lib/Sympa/Template.pm:178
 msgid "(unknown date)"
 msgstr "(fecha desconocida)"
 
@@ -5574,19 +5574,24 @@ msgstr ""
 "Estos parámetros que se encontraron en wwsympa.conf, se ignoraron.  Puedes "
 "simplemente eliminarlos."
 
+#. (subscriber.date)
+#. (subscriber.update_date)
+#. (subscriber.startdate)
+#. (subscriber.enddate)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10173 src/cgi/wwsympa.fcgi.in:10176
-#: src/cgi/wwsympa.fcgi.in:14186 src/cgi/wwsympa.fcgi.in:14190
-#: src/cgi/wwsympa.fcgi.in:15379 src/cgi/wwsympa.fcgi.in:15470
-#: src/cgi/wwsympa.fcgi.in:15572 src/cgi/wwsympa.fcgi.in:16762
-#: src/cgi/wwsympa.fcgi.in:16764 src/cgi/wwsympa.fcgi.in:4897
-#: src/cgi/wwsympa.fcgi.in:4965 src/cgi/wwsympa.fcgi.in:5581
-#: src/cgi/wwsympa.fcgi.in:5583 src/cgi/wwsympa.fcgi.in:8727
-#: src/cgi/wwsympa.fcgi.in:9454 src/cgi/wwsympa.fcgi.in:9502
-#: src/cgi/wwsympa.fcgi.in:9818 src/cgi/wwsympa.fcgi.in:9821
-#: src/cgi/wwsympa.fcgi.in:9848 src/cgi/wwsympa.fcgi.in:9851
-#: src/cgi/wwsympa.fcgi.in:9884 src/cgi/wwsympa.fcgi.in:9886
+#: default/web_tt2/suboptions.tt2:11 default/web_tt2/suboptions.tt2:86
+#: default/web_tt2/suboptions.tt2:9 default/web_tt2/suboptions.tt2:90
+#: src/cgi/wwsympa.fcgi.in:10163 src/cgi/wwsympa.fcgi.in:10166
+#: src/cgi/wwsympa.fcgi.in:14176 src/cgi/wwsympa.fcgi.in:14180
+#: src/cgi/wwsympa.fcgi.in:15369 src/cgi/wwsympa.fcgi.in:15460
+#: src/cgi/wwsympa.fcgi.in:15562 src/cgi/wwsympa.fcgi.in:16752
+#: src/cgi/wwsympa.fcgi.in:16754 src/cgi/wwsympa.fcgi.in:4897
+#: src/cgi/wwsympa.fcgi.in:4965 src/cgi/wwsympa.fcgi.in:8717
+#: src/cgi/wwsympa.fcgi.in:9444 src/cgi/wwsympa.fcgi.in:9492
+#: src/cgi/wwsympa.fcgi.in:9808 src/cgi/wwsympa.fcgi.in:9811
+#: src/cgi/wwsympa.fcgi.in:9838 src/cgi/wwsympa.fcgi.in:9841
+#: src/cgi/wwsympa.fcgi.in:9874 src/cgi/wwsympa.fcgi.in:9876
 #: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:106
 #: src/lib/Sympa/Message/Template.pm:96 src/lib/Sympa/Message/Template.pm:99
 msgid "%d %b %Y"
@@ -5614,7 +5619,7 @@ msgstr "Tabla de contenido:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7268 src/cgi/wwsympa.fcgi.in:8015
+#: src/cgi/wwsympa.fcgi.in:7258 src/cgi/wwsympa.fcgi.in:8005
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5658,7 +5663,7 @@ msgstr "contiene mas de %d caracteres principales en la secuencia"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16036
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16026
 #: src/lib/Sympa/WWW/SharedDocument.pm:343
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
@@ -5814,59 +5819,59 @@ msgstr "%H:%M:%S"
 msgid "Your lists"
 msgstr "Tus listas"
 
-#: src/cgi/wwsympa.fcgi.in:12562 src/cgi/wwsympa.fcgi.in:13034
+#: src/cgi/wwsympa.fcgi.in:12552 src/cgi/wwsympa.fcgi.in:13024
 msgid "New file"
 msgstr "Fichero nuevo"
 
-#: src/cgi/wwsympa.fcgi.in:12566
+#: src/cgi/wwsympa.fcgi.in:12556
 msgid "New directory"
 msgstr "Carpeta nueva"
 
-#: src/cgi/wwsympa.fcgi.in:13040
+#: src/cgi/wwsympa.fcgi.in:13030
 msgid "New bookmark"
 msgstr "Nuevo marcador"
 
-#: src/cgi/wwsympa.fcgi.in:15553
+#: src/cgi/wwsympa.fcgi.in:15543
 msgid "Mail sending"
 msgstr "Enviando un correo"
 
-#: src/cgi/wwsympa.fcgi.in:15555
+#: src/cgi/wwsympa.fcgi.in:15545
 msgid "Subscription additions"
 msgstr "Adiciones de suscripción"
 
-#: src/cgi/wwsympa.fcgi.in:15556
+#: src/cgi/wwsympa.fcgi.in:15546
 msgid "Unsubscription"
 msgstr "Darse de baja"
 
-#: src/cgi/wwsympa.fcgi.in:15557
+#: src/cgi/wwsympa.fcgi.in:15547
 msgid "Users deleted by admin"
 msgstr "Usuarios borrados por el administrador"
 
-#: src/cgi/wwsympa.fcgi.in:15559
+#: src/cgi/wwsympa.fcgi.in:15549
 msgid "Users deleted automatically"
 msgstr "Usuarios borrados automáticamente"
 
-#: src/cgi/wwsympa.fcgi.in:15560
+#: src/cgi/wwsympa.fcgi.in:15550
 msgid "File uploading"
 msgstr "Subida de archivo"
 
-#: src/cgi/wwsympa.fcgi.in:15561
+#: src/cgi/wwsympa.fcgi.in:15551
 msgid "File creation"
 msgstr "Creación de archivo"
 
-#: src/cgi/wwsympa.fcgi.in:15562
+#: src/cgi/wwsympa.fcgi.in:15552
 msgid "Directory creation"
 msgstr "Creación de carpeta"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16018 src/cgi/wwsympa.fcgi.in:16020
+#: src/cgi/wwsympa.fcgi.in:16008 src/cgi/wwsympa.fcgi.in:16010
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%d/%m/%Y/%H/%M/%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16771
+#: src/cgi/wwsympa.fcgi.in:16761
 msgid "topic (%s)"
 msgstr "Tema (%s)"
 
@@ -6077,7 +6082,7 @@ msgstr "Archivos de la lista"
 #: default/web_tt2/modindex.tt2:2 default/web_tt2/picture_upload.tt2:21
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:20 default/web_tt2/subscriber_table.tt2:120
+#: default/web_tt2/suboptions.tt2:22 default/web_tt2/subscriber_table.tt2:120
 msgid "Open in a new window"
 msgstr "Abrir en una nueva ventana"
 
@@ -6096,8 +6101,8 @@ msgstr "Abrir en una nueva ventana"
 #: default/web_tt2/modindex.tt2:121 default/web_tt2/modindex.tt2:2
 #: default/web_tt2/pref.tt2:3 default/web_tt2/rename_list_request.tt2:3
 #: default/web_tt2/review.tt2:3 default/web_tt2/reviewbouncing.tt2:2
-#: default/web_tt2/suboptions.tt2:100 default/web_tt2/suboptions.tt2:21
-#: default/web_tt2/suboptions.tt2:79 default/web_tt2/suspend_request.tt2:5
+#: default/web_tt2/suboptions.tt2:102 default/web_tt2/suboptions.tt2:23
+#: default/web_tt2/suboptions.tt2:81 default/web_tt2/suspend_request.tt2:5
 msgid "Help"
 msgstr "Ayuda"
 
@@ -7144,7 +7149,7 @@ msgid "Bookmark URL"
 msgstr "URL de marcador"
 
 #: default/web_tt2/d_editfile.tt2:73 default/web_tt2/edit_list_request.tt2:316
-#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/suboptions.tt2:71
+#: default/web_tt2/editsubscriber.tt2:89 default/web_tt2/suboptions.tt2:73
 msgid "Update"
 msgstr "Actualizar"
 
@@ -7662,7 +7667,7 @@ msgstr "Nombre:"
 msgid "Subscribed since:"
 msgstr "Suscrito desde:"
 
-#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:9
+#: default/web_tt2/editsubscriber.tt2:26 default/web_tt2/suboptions.tt2:10
 msgid "Last update:"
 msgstr "Última actualización:"
 
@@ -7670,7 +7675,7 @@ msgstr "Última actualización:"
 msgid "Receiving:"
 msgstr "Recepción:"
 
-#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:57
+#: default/web_tt2/editsubscriber.tt2:39 default/web_tt2/suboptions.tt2:59
 msgid "Visibility:"
 msgstr "Visibilidad:"
 
@@ -10187,57 +10192,57 @@ msgstr "Tus opciones para esta lista"
 msgid "Member since:"
 msgstr "Suscrito desde:"
 
-#: default/web_tt2/suboptions.tt2:10
+#: default/web_tt2/suboptions.tt2:12
 msgid "Receiving mode:"
 msgstr "Modo de recepción:"
 
-#: default/web_tt2/suboptions.tt2:27
+#: default/web_tt2/suboptions.tt2:29
 msgid "Topic subscription:"
 msgstr "Suscripción temática:"
 
-#: default/web_tt2/suboptions.tt2:39 default/web_tt2/suboptions.tt2:41
+#: default/web_tt2/suboptions.tt2:41 default/web_tt2/suboptions.tt2:43
 msgid "Other (messages not tagged) "
 msgstr "Otro (mensajes no marcados)"
 
-#: default/web_tt2/suboptions.tt2:48
+#: default/web_tt2/suboptions.tt2:50
 msgid "Disable topics subscription"
 msgstr "Desactivar la suscripción por temas"
 
-#: default/web_tt2/suboptions.tt2:53
+#: default/web_tt2/suboptions.tt2:55
 msgid "Only possible for direct reception modes."
 msgstr "Disponible sólo en modo de recepción estándar."
 
-#: default/web_tt2/suboptions.tt2:78
+#: default/web_tt2/suboptions.tt2:80
 msgid "Restore subscription"
 msgstr "Reactivar suscripción"
 
-#: default/web_tt2/suboptions.tt2:81
+#: default/web_tt2/suboptions.tt2:83
 msgid "Your subscription is suspended."
 msgstr "Tu suscripción está suspendida"
 
-#: default/web_tt2/suboptions.tt2:105 default/web_tt2/suboptions.tt2:83
+#: default/web_tt2/suboptions.tt2:107 default/web_tt2/suboptions.tt2:85
 #: default/web_tt2/suspend_request.tt2:84
 msgid "From:"
 msgstr "De:"
 
-#: default/web_tt2/suboptions.tt2:110 default/web_tt2/suboptions.tt2:86
+#: default/web_tt2/suboptions.tt2:112 default/web_tt2/suboptions.tt2:88
 #: default/web_tt2/suspend_request.tt2:89
 msgid "To:"
 msgstr "Para:"
 
-#: default/web_tt2/suboptions.tt2:90
+#: default/web_tt2/suboptions.tt2:92
 msgid "Indefinite end date"
 msgstr "Fecha de fin indefinida"
 
-#: default/web_tt2/suboptions.tt2:97
+#: default/web_tt2/suboptions.tt2:99
 msgid "Resume my subscription"
 msgstr "Reanudar mi suscripción"
 
-#: default/web_tt2/suboptions.tt2:99
+#: default/web_tt2/suboptions.tt2:101
 msgid "Suspend subscription"
 msgstr "Suspender mi suscripción"
 
-#: default/web_tt2/suboptions.tt2:102
+#: default/web_tt2/suboptions.tt2:104
 msgid ""
 "You can suspend your membership by using the button below. The suspend "
 "option prevents delivery of emails, this can be useful if you are out of the "
@@ -10247,19 +10252,19 @@ msgstr ""
 "de suspensión previene la entrega de correos electrónicos. Esto puede ser "
 "útil si estás fuera de la oficina por algún tiempo."
 
-#: default/web_tt2/suboptions.tt2:109 default/web_tt2/suboptions.tt2:113
-#: default/web_tt2/suboptions.tt2:114 default/web_tt2/suspend_request.tt2:88
+#: default/web_tt2/suboptions.tt2:111 default/web_tt2/suboptions.tt2:115
+#: default/web_tt2/suboptions.tt2:116 default/web_tt2/suspend_request.tt2:88
 #: default/web_tt2/suspend_request.tt2:92
 #: default/web_tt2/suspend_request.tt2:93 default/web_tt2/viewlogs.tt2:32
 #: default/web_tt2/viewlogs.tt2:37
 msgid "dd-mm-yyyy"
 msgstr "dd-mm-yyyy"
 
-#: default/web_tt2/suboptions.tt2:115 default/web_tt2/suspend_request.tt2:94
+#: default/web_tt2/suboptions.tt2:117 default/web_tt2/suspend_request.tt2:94
 msgid "Suspend my membership indefinitely"
 msgstr "Suspende mi suscripción indefinidamente"
 
-#: default/web_tt2/suboptions.tt2:122 default/web_tt2/suspend_request.tt2:82
+#: default/web_tt2/suboptions.tt2:124 default/web_tt2/suspend_request.tt2:82
 msgid "Suspend my subscriptions"
 msgstr "Suspender mis suscripciones"
 
@@ -15325,6 +15330,30 @@ msgid ""
 "Provides some functions of Sympa through SOAP HTTP interface. This feature "
 "requires external module: SOAP-Lite."
 msgstr ""
+
+#~ msgid ""
+#~ "Defines the families the automatic lists are based on. It is a character "
+#~ "string structured as follows:\n"
+#~ "* each family is separated from the other by a semi-column (;)\n"
+#~ "* inside a family definition, each field is separated from the other by a "
+#~ "column (:)\n"
+#~ "* each field has the structure: \"<field name>=<filed value>\"\n"
+#~ "Basically, each time Sympa uses the automatic lists families, the values "
+#~ "defined in this parameter will be available in the family object.\n"
+#~ "* for scenarios: [family->name]\n"
+#~ "* for templates: [% family.name %]"
+#~ msgstr ""
+#~ "Define las familias en las que se basan las listas automáticas. Es una "
+#~ "cadena de caracteres estructurada de la siguiente manera:\n"
+#~ "* cada familia está separada de la otra por un punto y coma (;)\n"
+#~ "* dentro de una definición de una familia, cada campo está separado del "
+#~ "otro por dos puntos (:) \n"
+#~ "* cada campo tiene la estructura: \"<nombre de campo>=<valor de campo>\"\n"
+#~ "Básicamente, cada vez que Sympa utiliza las familias de listas "
+#~ "automáticas, los valores definidos en este parámetro estarán disponibles "
+#~ "en el objeto de familia.\n"
+#~ "* para escenarios: [familia->nombre] \n"
+#~ "* para plantillas: [% familia.nombre %]"
 
 #, fuzzy
 #~ msgid "Tracking information are removed after this number of days"

@@ -844,7 +844,7 @@ our @params = (
             'name=family_one:prefix=f1:display=My automatic lists:prefix_separator=+:classes separator=-:family_owners_list=alist@domain.tld;name=family_two:prefix=f2:display=My other automatic lists:prefix_separator=+:classes separator=-:family_owners_list=anotherlist@domain.tld;',
         'gettext_id' => 'Definition of automatic list families',
         'gettext_comment' =>
-            "Defines the families the automatic lists are based on. It is a character string structured as follows:\n* each family is separated from the other by a semi-column (;)\n* inside a family definition, each field is separated from the other by a column (:)\n* each field has the structure: \"<field name>=<filed value>\"\nBasically, each time Sympa uses the automatic lists families, the values defined in this parameter will be available in the family object.\n* for scenarios: [family->name]\n* for templates: [% family.name %]",
+            "Defines the families the automatic lists are based on. It is a character string structured as follows:\n* each family is separated from the other by a semicolon (;)\n* inside a family definition, each field is separated from the other by a colon (:)\n* each field has the structure: \"<field name>=<filed value>\"\nBasically, each time Sympa uses the automatic lists families, the values defined in this parameter will be available in the family object.\n* for scenarios: [family->name]\n* for templates: [% family.name %]",
         'file'     => 'sympa.conf',
         'optional' => '1',
         'vhost'    => '1',
