@@ -1515,7 +1515,7 @@ while ($query = CGI::Fast->new) {
         while ($action) {
             if (defined $in{'list'} and length $in{'list'}) {
                 # Create a new Sympa::List instance.
-                unless ($list = Sympa::List->new($robot, $in{'list'})) {
+                unless ($list = Sympa::List->new($in{'list'}, $robot)) {
                     wwslog('info', 'Unknown list "%s"', $in{'list'});
                     if ($action eq 'info') {
                         # To prevent sniffing lists, don't notice error to
