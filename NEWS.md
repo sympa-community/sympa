@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.26](https://github.com/sympa-community/sympa/tree/HEAD) (2018-03-XX)
+## [6.2.26](https://github.com/sympa-community/sympa/tree/HEAD) (2018-03-20)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.3...HEAD)
 
