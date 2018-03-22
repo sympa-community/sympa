@@ -80,7 +80,7 @@ my $language = Sympa::Language->instance;
 $language->set_lang(Conf::get_robot_conf($domain, 'lang'),
     $Conf::Conf{'lang'}, 'en');
 
-my $aliases = Sympa::Aliases->new('Template', file => $file);
+my $aliases = Sympa::Aliases::Template->new(file => $file);
 if ($operation eq 'add') {
     exit 127 unless $aliases and defined $aliases->add($list);
 } elsif ($operation eq 'del') {
@@ -118,7 +118,7 @@ S<C<alias_manager.pl> C<del> I<listname> I<domain> [ I<file> ]>
 =head1 DESCRIPTION
 
 Alias_manager is a program that helps in installing aliases for newly
-created lists and deleting aliases for closed lists. 
+created lists and deleting aliases for closed lists.
 
 Alias management is performed only if it was setup in F<--CONFIG-->
 (C<sendmail_aliases> configuration parameter).
@@ -151,7 +151,7 @@ F<$SENDMAIL_ALIASES> sendmail aliases file.
 =head1 DOCUMENTATION
 
 The full documentation in HTML formats can be
-found in L<http://www.sympa.org/manual/>. 
+found in L<http://www.sympa.org/manual/>.
 
 The mailing lists (with web archives) can be accessed at
 http://listes.renater.fr/sympa/lists/informatique/sympa.

@@ -23,63 +23,75 @@
 
 package Sympa::Aliases;
 
-use strict;
-use warnings;
-use English qw(-no_match_vars);
+use Sympatic -oo;
 
 use Sympa::Constants;
 use Sympa::Log;
+use Conf;
 
-my $log = Sympa::Log->instance;
+has 'log' => (
+  is      => 'ro',
+  default => sub {return Sympa::Log->instance},
+);
 
-# Sympa::Aliases is the proxy class of subclasses.
-# The constructor may be overridden by _new() method.
-sub new {
-    my $class   = shift;
-    my $type    = shift;
-    my %options = @_;
+has 'no_alias' => (
+  is      => 'ro',
+  default => sub {0},
+);
 
-    return undef unless $type;
+# Old name: Sympa::Admin::list_check_smtp().
+sub check {
+    my $self     = shift;
+    my $name     = shift;
+    my $robot_id = shift;
+    $self->log()->syslog('debug2', '(%s, %s, %s)', @_);
 
-    # Special cases:
-    # - To disable aliases management, specify "none" as $type.
-    # - "External" module is used for full path to program.
-    # - However, "Template" module is used instead of obsoleted program
-    #   alias_manager.pl.
-    return $class->_new if $type eq 'none';
-
-    if ($type eq Sympa::Constants::SBINDIR() . '/alias_manager.pl') {
-        $type = 'Sympa::Aliases::Template';
-    } elsif (0 == index $type, '/' and -x $type) {
-        $options{program} = $type;
-        $type = 'Sympa::Aliases::External';
+    if ($self->no_alias()) {
+        return 0;
     }
 
-    # Returns appropriate subclasses.
-    if ($type !~ /[^\w:]/) {
-        $type = sprintf 'Sympa::Aliases::%s', $type unless $type =~ /::/;
-        unless (eval sprintf('require %s', $type)
-            and $type->isa('Sympa::Aliases')) {
-            $log->syslog(
-                'err', 'Unable to use %s module: %s',
-                $type, $EVAL_ERROR || 'Not a Sympa::Aliases class'
-            );
-            return undef;
+    my $smtp_relay = Conf::get_robot_conf($robot_id, 'list_check_smtp');
+    return 0 unless defined $smtp_relay and length $smtp_relay;
+
+    my $smtp_helo = Conf::get_robot_conf($robot_id, 'list_check_helo')
+        || $smtp_relay;
+    $smtp_helo =~ s/:[-\w]+$// if $smtp_helo;
+
+    my @suffixes = split /\s*,\s*/,
+        (Conf::get_robot_conf($robot_id, 'list_check_suffixes') || '');
+    my @addresses = (
+        sprintf('%s@%s', $name, $robot_id),
+        map { sprintf('%s-%s@%s', $name, $_, $robot_id) } @suffixes
+    );
+    my $return_address = sprintf '%s%s@%s', $name,
+        (Conf::get_robot_conf($robot_id, 'return_path_suffix') || ''),
+        $robot_id;
+    push @addresses, $return_address
+        unless grep { $return_address eq $_ } @addresses;
+
+    unless ($Net::SMTP::VERSION) {
+        $self->log()->syslog('err',
+            'Unable to use Net library, Net::SMTP required, install it first'
+        );
+        return undef;
+    }
+    if (my $smtp = Net::SMTP->new(
+            $smtp_relay,
+            Hello   => $smtp_helo,
+            Timeout => 30
+        )
+        ) {
+        $smtp->mail('');
+        my $conf = 0;
+        foreach my $address (@addresses) {
+            $conf = $smtp->to($address);
+            last if $conf;
         }
-        return $type->_new(%options);
+        $smtp->quit();
+        return $conf;
     }
-
     return undef;
 }
-
-sub _new {
-    my $class   = shift;
-    my %options = @_;
-
-    return bless {%options} => $class;
-}
-
-sub check {0}
 
 sub add {0}
 
@@ -97,16 +109,16 @@ Sympa::Aliases - Base class for alias management
 =head1 SYNOPSIS
 
   package Sympa::Aliases::FOO;
-  
+
   use base qw(Sympa::Aliases);
-  
+
   sub check { ... }
   sub add { ... }
   sub del { ... }
-  
+
   1;
 
-=head1 DESCRIPTION 
+=head1 DESCRIPTION
 
 This module is the base class for subclasses to manage list aliases of Sympa.
 
@@ -114,12 +126,12 @@ This module is the base class for subclasses to manage list aliases of Sympa.
 
 =over
 
-=item new ( $type, [ key =E<gt> value, ... ] )
+=item new ( $self->type(), [ key =E<gt> value, ... ] )
 
 I<Constructor>.
 Creates new instance of L<Sympa::Aliases>.
 
-Returns one of appropriate subclasses according to $type:
+Returns one of appropriate subclasses according to $self->type():
 
 =over
 
@@ -232,4 +244,4 @@ Sympa 3.1b.13.
 L<Sympa::Aliases> module as an OO-based class appeared on Sympa 6.2.23b,
 and it obsoleted F<alias_manager.pl>.
 
-=cut 
+=cut
