@@ -1,12 +1,16 @@
 # Change Log
 
-## [6.2.26](https://github.com/sympa-community/sympa/tree/HEAD) (2018-03-20)
+## [6.2.28](https://github.com/sympa-community/sympa/tree/6.2.28) (2018-03-22)
 
-[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.3...HEAD)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.3...6.2.28)
 
 **Fixed bugs:**
 
 - Date in 'subscriber option' in epoch format [\#230](https://github.com/sympa-community/sympa/issues/230)
+
+## [6.2.26](https://github.com/sympa-community/sympa/tree/6.2.26) (2018-03-20)
+
+Withdrawn.
 
 ## [6.2.25b.3](https://github.com/sympa-community/sympa/tree/6.2.25b.3) (2018-03-13)
 
