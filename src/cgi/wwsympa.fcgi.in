@@ -10740,7 +10740,7 @@ sub do_edit_list_request {
     my @subparams;
     # Current static owners.
     my $static_owner =
-        [grep { $->{'role'} and $->{'role'} eq 'owner' } @static_admins];
+        [grep { $_->{'role'} and $_->{'role'} eq 'owner' } @static_admins];
     @subparams = qw(email gecos info profile reception visibility);
     foreach my $u (@$static_owner) {
         $u = {map { $_ => $u->{$_} } @subparams};
@@ -10748,7 +10748,7 @@ sub do_edit_list_request {
     $list->{'admin'}{'owner'} = $static_owner;
     # Current static editors.
     my $static_editor =
-        [grep { $->{'role'} and $->{'role'} eq 'editor' } @static_admins];
+        [grep { $_->{'role'} and $_->{'role'} eq 'editor' } @static_admins];
     @subparams = qw(email gecos info reception visibility);
     foreach my $u (@$static_editor) {
         $u = {map { $_ => $u->{$_} } @subparams};
