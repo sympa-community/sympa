@@ -1775,15 +1775,33 @@ sub upgrade {
         );
     }
 
+    # GH Issue #240: PostgreSQL: Unable to edit owners/subscribers.
+    if (lower_version($previous_version, '6.2.30')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        # As the field date_admin and date_subscriber are no longer used but
+        # they have NOT NULL constraint, they should be deleted.
+        if ($sdm and $sdm->can('delete_field')) {
+            $sdm->delete_field(
+                {table => 'admin_table', field => 'date_admin'});
+            $sdm->delete_field(
+                {table => 'subscriber_table', field => 'date_subscriber'});
+        } else {
+            $log->syslog('err',
+                'Can\'t delete date_admin field in admin_table and date_subscriber field in subscriber_table.  You must delete them manually.'
+            );
+        }
+    }
+
     # GH Issue #43: Preliminary notice on abolishment of "host" list parameter.
-    if (lower_version($previous_version, '6.2.28')) {
+    if (lower_version($previous_version, '6.2.32')) {
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@{$all_lists || []}) {
             if (    $list->{'admin'}{'host'}
                 and $list->{'admin'}{'host'} ne $list->{'domain'}) {
                 $log->syslog(
                     'notice',
-                    'NOTICE: %s: "host" parameter will be deprecated on Sympa 6.2.28. Please check list configuration and aliases',
+                    'NOTICE: %s: "host" parameter will be deprecated on Sympa 6.2.32. Please check list configuration and aliases',
                     $list
                 );
             }
