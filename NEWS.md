@@ -1,5 +1,13 @@
 # Change Log
 
+## [6.2.30](https://github.com/sympa-community/sympa/tree/6.2.30) (2018-03-26)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.28...6.2.30)
+
+**Fixed bugs:**
+
+- PostgreSQL: Unable to edit owners/subscribers with 6.2.26 and 6.2.28 [\#240](https://github.com/sympa-community/sympa/issues/240)
+
 ## [6.2.28](https://github.com/sympa-community/sympa/tree/6.2.28) (2018-03-22)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.25b.3...6.2.28)
