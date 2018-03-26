@@ -1782,8 +1782,10 @@ sub upgrade {
         # As the field date_admin and date_subscriber are no longer used but
         # they have NOT NULL constraint, they should be deleted.
         if ($sdm and $sdm->can('delete_field')) {
+            $log->syslog('notice', 'Upgrading admin_table');
             $sdm->delete_field(
                 {table => 'admin_table', field => 'date_admin'});
+            $log->syslog('notice', 'Upgrading subscriber_table');
             $sdm->delete_field(
                 {table => 'subscriber_table', field => 'date_subscriber'});
         } else {
