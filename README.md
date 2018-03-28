@@ -10,7 +10,7 @@ lists. For a list with 20 000 subscribers, it takes 5 minutes to send a
 message to 90% of subscribers, of course considering that the network is 
 available.
 
-Documentation: https://www.sympa.org/manual/
+Documentation: https://sympa-community.github.io/
 
 ------------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ adapté aux grandes listes. Avec une liste de 20 000 abonnés, il faut 5
 minutes pour envoyer un message à 90% des abonnés, lorsque le réseau est 
 disponible bien évidemment.
 
-La documentation : https://www.sympa.org/manual/
+La documentation : https://sympa-community.github.io/
 
 ------------------------------------------------------------------------------
 

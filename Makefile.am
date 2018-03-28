@@ -169,7 +169,7 @@ installconfig: installdir sympa_wizard.pl.inst
 nextstep: 
 	@echo ""
 	@echo "** You can find documentation at:"
-	@echo "** http://www.sympa.org/manual/"
+	@echo "** https://sympa-community.github.io/manual/"
 	@echo ""
 	@echo "#########################################################"
 	@echo "# CHECK YOU HAVE ALL THE NEEDED MODULES:"
