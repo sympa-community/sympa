@@ -348,6 +348,8 @@ our %cpan_modules = (
         'gettext_id' =>
             'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
     },
+    # Net::LDAP::Entry, Net::LDAP::Util and Net::LDAPS are included in
+    # perl-ldap.
     'Net::SMTP' => {
         package_name => 'libnet',
         'gettext_id' =>

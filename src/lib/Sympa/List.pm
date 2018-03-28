@@ -5250,11 +5250,24 @@ sub _include_users_ldap_2level {
 
     my ($suffix2, $filter2);
     foreach my $attr (@attrs) {
-        # Escape LDAP characters occurring in attribute
-        my $escaped_attr = $attr;
-        $escaped_attr =~ s/([\\\(\*\)\0])/sprintf "\\%02X", ord($1)/eg;
+        my $escaped_attr;
 
+        # Escape LDAP characters occurring in attribute for search base.
+        if ($ldap_suffix2 =~ /[[]attrs1[]]\z/) {
+            # [attrs1] should be a DN, because it is search base or its root.
+            $escaped_attr = $db->canonical_dn($attr);
+            unless (defined $escaped_attr) {
+                $log->syslog('err', 'Attribute value is not a DN: %s', $attr);
+                next;
+            }
+        } else {
+            # [attrs1] may be an attributevalue in DN.
+            $escaped_attr = $db->escape_dn_value($attr);
+        }
         ($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$escaped_attr/g;
+
+        # Escape LDAP characters occurring in attribute for search filter.
+        $escaped_attr = $db->escape_filter_value($attr);
         ($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$escaped_attr/g;
 
         $log->syslog('debug2',
