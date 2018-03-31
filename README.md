@@ -42,6 +42,10 @@ Projects related to Sympa
 
     Incubating the new Sympa documentation site
 
+  - [sympa-contribs](https://github.com/sympa-community/sympa-contribs)
+
+    A repository for contributions to Sympa that won't fit in the code but could be useful to others anyway
+
   - [Translate Sympa](https://translate.sympa.org)
 
     Translating user interface of Sympa to your languages
