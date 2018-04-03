@@ -65,7 +65,7 @@ sub _twist {
 
     my $context = $self->{scenario_context}
         or die 'bug in logic. Ask developer';
-    # Suppress target email kept only in request.
+    # Add target email kept only in request to context.
     # FIXME: $request and $context would be merged in some future
     $context = {email => $request->{email}, %$context}
         if exists $request->{email};
