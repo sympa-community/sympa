@@ -1238,6 +1238,7 @@ our @params = (
         'sample'     => '123456789',
         'gettext_id' => 'Secret string for generating unique keys',
         'file'       => 'sympa.conf',
+        'obfuscated' => '1',
         'gettext_comment' =>
             "This allows generated authentication keys to differ from a site to another. It is also used for encryption of user passwords stored in the database. The presence of this string is one reason why access to \"sympa.conf\" needs to be restricted to the \"sympa\" user.\nNote that changing this parameter will break all HTTP cookies stored in users' browsers, as well as all user passwords and lists X509 private keys. To prevent a catastrophe, Sympa refuses to start if this \"cookie\" parameter was changed.",
         'optional' => '1',
@@ -1760,9 +1761,10 @@ our @params = (
         'gettext_id' => 'Password used to crypt lists private keys',
         'gettext_comment' =>
             'If not defined, Sympa assumes that list private keys are not encrypted.',
-        'file'     => 'sympa.conf',
-        'edit'     => '1',
-        'optional' => '1',
+        'file'       => 'sympa.conf',
+        'edit'       => '1',
+        'obfuscated' => '1',
+        'optional'   => '1',
     },
     # Not yet implemented
     #{   'name'    => 'crl_dir',
