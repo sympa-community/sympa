@@ -2368,6 +2368,18 @@ sub _save_binary_cache {
         }
         return undef;
     }
+    eval { chmod(0640, $param->{'target_file'}); };
+    if ($EVAL_ERROR) {
+        $log->syslog(
+            'err',
+            'Failed to change mode of the binary file %s. error: %s',
+            $param->{'target_file'}, $EVAL_ERROR
+        );
+        unless ($lock_fh->close()) {
+            return undef;
+        }
+        return undef;
+    }
     unless ($lock_fh->close()) {
         return undef;
     }
