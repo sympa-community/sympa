@@ -406,7 +406,7 @@ sub delete_binaries {
         push @files, "$Conf{'etc'}/$robot/robot.conf";
     }
     foreach my $c_file (@files) {
-        my $binary_file = $c_file . ".bin";
+        my $binary_file = $c_file . $binary_file_extension;
         if (-f $binary_file) {
             if (-w $binary_file) {
                 unlink $binary_file;
@@ -2332,11 +2332,16 @@ sub _replace_file_value_by_db_value {
 # Returns 1 or undef if something went wrong.
 sub _save_binary_cache {
     my $param = shift;
+
+    # Prevent world-readability to protect secure parameters like "cookie".
+    my $umask = umask(umask | 007);
     my $lock_fh = Sympa::LockedFile->new($param->{'target_file'}, 2, '>');
     unless ($lock_fh) {
         $log->syslog('err', 'Could not create new lock');
+        umask $umask;
         return undef;
     }
+    umask $umask;
 
     eval { Storable::store_fd($param->{'conf_to_save'}, $lock_fh); };
     if ($EVAL_ERROR) {
@@ -2345,9 +2350,7 @@ sub _save_binary_cache {
             'Failed to save the binary config %s. error: %s',
             $param->{'target_file'}, $EVAL_ERROR
         );
-        unless ($lock_fh->close()) {
-            return undef;
-        }
+        $lock_fh->close;
         return undef;
     }
     eval {
@@ -2363,14 +2366,11 @@ sub _save_binary_cache {
             'Failed to change owner of the binary file %s. error: %s',
             $param->{'target_file'}, $EVAL_ERROR
         );
-        unless ($lock_fh->close()) {
-            return undef;
-        }
+        $lock_fh->close;
         return undef;
     }
-    unless ($lock_fh->close()) {
-        return undef;
-    }
+
+    $lock_fh->close;
     return 1;
 }
 
