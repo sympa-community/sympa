@@ -713,7 +713,7 @@ sub closeList {
             (($list->{'admin'}{'status'} eq 'pending') ? 'purge' : 'close'),
         sender           => $sender,
         md5_check        => 1,
-        scenario_contest => {
+        scenario_context => {
             sender                  => $sender,
             remote_host             => $ENV{'REMOTE_HOST'},
             remote_addr             => $ENV{'REMOTE_ADDR'},
@@ -801,7 +801,7 @@ sub add {
         gecos            => $gecos,
         quiet            => $quiet,
         md5_check        => 1,
-        scenario_contest => {
+        scenario_context => {
             sender                  => $sender,
             email                   => $email,
             remote_host             => $ENV{'REMOTE_HOST'},
@@ -883,7 +883,7 @@ sub del {
         email            => $email,
         quiet            => $quiet,
         md5_check        => 1,
-        scenario_contest => {
+        scenario_context => {
             sender                  => $sender,
             email                   => $email,
             remote_host             => $ENV{'REMOTE_HOST'},
