@@ -14038,6 +14038,11 @@ sub do_move_user {
         and Sympa::Tools::Text::valid_email($email)) {
         return $in{'previous_action'} || 'pref';
     }
+    # Prevent changing addresses of others unless user is listmaster.
+    unless (Sympa::is_listmaster($robot, $param->{'user'}{'email'})
+        or $param->{'user'}{'email'} eq $current_email) {
+        return $in{'previous_action'} || 'pref';
+    }
 
     # Action confirmed?
     my $next_action = $session->confirm_action(
