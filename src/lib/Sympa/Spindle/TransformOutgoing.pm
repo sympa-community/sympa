@@ -137,7 +137,16 @@ sub _twist {
     ## Useful to remove some header fields that Sympa has set
     if ($list->{'admin'}{'remove_outgoing_headers'}) {
         foreach my $field (@{$list->{'admin'}{'remove_outgoing_headers'}}) {
-            $message->delete_header($field);
+            my ($f, $v) = split /\s*:\s*/, $field;
+            if (defined $v) {
+                my @values = $message->get_header($f);
+                my $i;
+                for ($i = $#values; 0 <= $i; $i--) {
+                    $message->delete_header($f, $i) if $values[$i] eq $v;
+                }
+            } else {
+                $message->delete_header($field);
+            }
         }
     }
 
