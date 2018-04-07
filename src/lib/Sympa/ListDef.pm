@@ -272,7 +272,8 @@ our %pinfo = (
         format_s  => '$host',
         filters      => ['canonic_domain'],
         'default'    => {'conf' => 'host'},
-        'length'     => 20
+        'length'     => 20,
+        'obsolete'   => 1
     },
 
     'lang' => {

@@ -59,21 +59,21 @@
   <language>[% lang %]</language>
   <lastBuildDate>[% date %]</lastBuildDate>
   <generator>Sympa[% version %]</generator>
-  <webMaster>listmaster@[% conf.host %]</webMaster>
+  <webMaster>[% conf.listmaster_email %]@[% domain %]</webMaster>
   <docs>http://web.resource.org/rss/1.0/spec</docs>
 
 
 [% IF action == 'latest_lists' -%]
  [% FOREACH l = latest_lists -%]
   <item>
-    <title>[% l.name %]@[% l.host %] - [% l.subject | xml %]</title>
+    <title>[% l.name %]@[% domain %] - [% l.subject | xml %]</title>
     <link>[% 'info' | url_abs([l.name]) %]</link>
   </item>
  [% END -%]
 [% ELSIF action == 'active_lists' -%]
  [% FOREACH l = active_lists -%]
   <item>
-    <title>[%|loc(l.name,l.host,l.subject,l.msg_count)%]%1@%2 - %3: %4 messages[%END%]	[% IF l.average -%] - [%|loc(l.average)%]%1 by day [%END%][%END%]</title>
+    <title>[%|loc(l.name,domain,l.subject,l.msg_count)%]%1@%2 - %3: %4 messages[%END%]	[% IF l.average -%] - [%|loc(l.average)%]%1 by day [%END%][%END%]</title>
     <link>[% 'info' | url_abs([l.name]) %]</link>
   </item>
  [% END -%]

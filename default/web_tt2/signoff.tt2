@@ -3,7 +3,7 @@
   <p>[%|loc(list,email)%]You are not subscribed to list %1 with e-mail address %2[%END%]</p>
   <p>[%|loc%]You might have subscribed with another address. Please contact the list owner to help you unsubscribe:[%END%]</p>
   <blockquote>
-  <p>[% '' | mailto("${list}-request@${conf.host}") %]</p>
+  <p>[% '' | mailto("${list}-request@${domain}") %]</p>
   </blockquote>
   <p><a href="[% (previous_action || 'info') | url_rel([list]) %]">
     [%|loc%]Back[%END%]

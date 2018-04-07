@@ -6,7 +6,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Your bouncing address in list %1
 [%|loc(list.name,to,subscriber.first_bounce)%]Messages from list %1 that were sent to your address %2 have generated non-delivery reports since %3. 
 If this problem persists, you will be automatically unsubscribed from the list.[%END%]
 
-[%|loc%]You can contact list owner:[%END%] [% list.name %]-request@[% conf.host %]
+[%|loc%]You can contact list owner:[%END%] [% list.name %]-request@[% domain %]
 
 
 [% ELSIF type == 'deleted_msg_topics' -%]
@@ -26,9 +26,9 @@ Deleted topic(s) is(are):[%END%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Management of list %1[%END%][%END%]
 
 [% IF admin_type == 'owner' %]
-[%|loc(delegator,list.name,list.host)%]You have been delegated the responsability of list owner by %1 for list %2@%3.[%END%]
+[%|loc(delegator,list.name,domain)%]You have been delegated the responsability of list owner by %1 for list %2@%3.[%END%]
 [% ELSE %]
-[%|loc(delegator,list.name,list.host)%]You have been delegated the responsability of list moderator by %1 for list %2@%3.[%END%]
+[%|loc(delegator,list.name,domain)%]You have been delegated the responsability of list moderator by %1 for list %2@%3.[%END%]
 [% END %]
 
 [%|loc%]The list homepage:[%END%] [% 'info' | url_abs([list.name]) %]
@@ -48,7 +48,7 @@ To confirm and be removed from all the lists of this family, please click the li
 [% ELSIF type == 'hundred_percent_error' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]No valid receipient in list %1[%END%][%END%]
 
-[%|loc(list.name, conf.listmaster_email, list.domain) %]Your message to list %1 could not be delivered. All the subscribers to this list have their address in error.
+[%|loc(list.name,conf.listmaster_email,domain) %]Your message to list %1 could not be delivered. All the subscribers to this list have their address in error.
 Please contact the listmaster (%2@%3) to fix this problem before re-posting your message.[% END %]
 
 [% ELSIF type == 'plugin' -%]

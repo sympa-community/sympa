@@ -62,14 +62,17 @@ sub new {
     die 'Parameter $tpl is not defined'
         unless defined $tpl and length $tpl;
 
-    my ($list, $robot_id);
+    my ($list, $robot_id, $domain);
     if (ref $that eq 'Sympa::List') {
         $robot_id = $that->{'domain'};
         $list     = $that;
+        $domain   = $that->{'domain'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
+        $domain   = Conf::get_robot_conf($that, 'domain');
     } else {
         $robot_id = '*';
+        $domain   = $Conf::Conf{'domain'};
     }
 
     my $data = Sympa::Tools::Data::dup_var($context);
@@ -136,29 +139,34 @@ sub new {
     }
 
     foreach my $p (
-        'email',       'gecos', 'host', 'listmaster',
+        'email',       'gecos', 'listmaster',
         'wwsympa_url', 'title', 'listmaster_email'
         ) {
         $data->{'conf'}{$p} = Conf::get_robot_conf($robot_id, $p);
     }
+    $data->{'domain'} = $domain;
+    $data->{'conf'}{'version'} = Sympa::Constants::VERSION();
+    $data->{'sender'} ||= $who;
+
     # Compat.: Deprecated attributes of Robot.
     $data->{'conf'}{'sympa'} = Sympa::get_address($robot_id);
     $data->{'conf'}{'request'} = Sympa::get_address($robot_id, 'owner');
-
-    $data->{'conf'}{'version'} = Sympa::Constants::VERSION();
-
-    $data->{'sender'} ||= $who;
+    # No longer used.
+    $data->{'robot_domain'} = $domain;
+    # Compat. < 6.2.32
+    $data->{'conf'}{'host'} = $domain;
 
     if ($list) {
         $data->{'list'}{'lang'}    = $list->{'admin'}{'lang'};
         $data->{'list'}{'name'}    = $list->{'name'};
-        $data->{'list'}{'domain'}  = $data->{'robot_domain'} = $robot_id;
-        $data->{'list'}{'host'}    = $list->{'admin'}{'host'};
         $data->{'list'}{'subject'} = $list->{'admin'}{'subject'};
         $data->{'list'}{'owner'}   = [$list->get_admins('owner')];
         $data->{'list'}{'dir'} = $list->{'dir'};    #FIXME: Required?
         $data->{'list'}{'family'} = {name => $list->get_family->{'name'}}
             if $list->get_family;
+        # Compat. < 6.2.32
+        $data->{'list'}{'domain'} = $list->{'domain'};
+        $data->{'list'}{'host'}   = $list->{'domain'};
     }
 
     # Sign mode
@@ -175,8 +183,6 @@ sub new {
         } else {
             $data->{'fromlist'} = Sympa::get_address($list, 'owner');
         }
-    } else {
-        $data->{'robot_domain'} = Conf::get_robot_conf($robot_id, 'domain');
     }
     $data->{'boundary'} = '----------=_' . Sympa::unique_message_id($robot_id)
         unless $data->{'boundary'};

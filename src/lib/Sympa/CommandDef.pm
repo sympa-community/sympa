@@ -118,9 +118,9 @@ our %comms = (
             if ($r->{domainpart}) {
                 my $host;
                 if (ref $r->{context} eq 'Sympa::List') {
-                    $host = $r->{context}->{'admin'}{'host'};
+                    $host = $r->{context}->{'domain'};
                 } else {
-                    $host = Conf::get_robot_conf($r->{context}, 'host');
+                    $host = Conf::get_robot_conf($r->{context}, 'domain');
                 }
                 return undef unless lc $r->{domainpart} eq $host;
             }
@@ -220,9 +220,9 @@ our %comms = (
             if ($r->{domainpart}) {
                 my $host;
                 if (ref $r->{context} eq 'Sympa::List') {
-                    $host = $r->{context}->{'admin'}{'host'};
+                    $host = $r->{context}->{'domain'};
                 } else {
-                    $host = Conf::get_robot_conf($r->{context}, 'host');
+                    $host = Conf::get_robot_conf($r->{context}, 'domain');
                 }
                 return undef unless lc $r->{domainpart} eq $host;
             }

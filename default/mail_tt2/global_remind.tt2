@@ -11,7 +11,7 @@ X-Sympa-NoWrap: yes
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 [% FOREACH l = lists -%]
 [% l %]	[% | mailtourl({subject => "sig ${l} ${user.email}"}) ~%]
-  [% conf.email %]@[% conf.host %]
+  [% conf.email %]@[% domain %]
 [%~ END %]
 [% END -%]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

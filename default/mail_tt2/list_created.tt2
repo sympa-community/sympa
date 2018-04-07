@@ -1,7 +1,7 @@
 [%# list_created.tt2 ~%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]%1 mailing list creation[%END%][%END%]
 
-[%|loc(list.name,list.host)%]%1@%2 mailing list has been activated by listmaster.[%END%]
+[%|loc(list.name,domain)%]%1@%2 mailing list has been activated by listmaster.[%END%]
 
 [%|loc%]homepage[%END%]
 [% 'info' | url_abs([list.name]) %]
