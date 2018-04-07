@@ -742,8 +742,12 @@ sub verify {
     if (defined($context->{'list_object'})) {
         $list = $context->{'list_object'};
         $context->{'listname'} = $list->{'name'};
+        $context->{'domain'} = $list->{'domain'};
 
-        $context->{'host'} = $list->{'admin'}{'host'};
+        # Compat.<6.2.32
+        $context->{'host'} = $list->{'domain'};
+    } else {
+        $context->{'domain'} = Conf::get_robot_conf($robot || '*', 'domain');
     }
 
     if ($context->{'message'}) {
@@ -815,6 +819,10 @@ sub verify {
         elsif ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
             my $conf_key = $1;
             my $conf_value;
+
+            # Compat. < 6.2.32
+            $conf_key = 'domain' if $conf_key and $conf_key eq 'host';
+
             if (scalar(
                     grep { $_->{'name'} and $_->{'name'} eq $conf_key }
                         @Sympa::ConfDef::params
@@ -1286,11 +1294,10 @@ sub verify {
             return -1 * $negation;
         }
 
-        if ($regexp =~ /\[host\]/) {
-            my $reghost = Conf::get_robot_conf($robot, 'host');
-            $reghost =~ s/\./\\./g;
-            $regexp =~ s/\[host\]/$reghost/g;
-        }
+        my $reghost = Conf::get_robot_conf($robot, 'domain');
+        $reghost =~ s/\./\\./g;
+        # "[host]" as alias of "[domain]": Compat. < 6.2.32
+        $regexp =~ s/[[](?:domain|host)[]]/$reghost/g;
 
         # wrap matches with eval{} to avoid crash by malformed regexp.
         my $r = 0;

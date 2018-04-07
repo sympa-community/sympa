@@ -49,7 +49,7 @@
 			<li>[%|helploc%]<strong>You are <a href="#notsubscribedanymore">not subscribed to the list anymore</a></strong>.[%END%]</li>
 			<li>[%|helploc%]<strong>You are using another address</strong> than the one with which you are subscribed to the list.[%END%]</li>
 			<li>[%|helploc%]<strong>If the list is a moderated list, the distribution of the message depends on the moderators' availability</strong>: they can not monitor the list night and day! Thus the distribution of your message might be a bit delayed.[%END%]</li>
-			<li>[%|helploc(conf.host)%]<strong>If the list is a moderated list, your message might have been rejected by a moderator</strong>. In case you received no notice, you can possibly send a message to nameofthelist-request@%1 to ask for an explanation.[%END%]</li>
+			<li>[%|helploc(domain)%]<strong>If the list is a moderated list, your message might have been rejected by a moderator</strong>. In case you received no notice, you can possibly send a message to nameofthelist-request@%1 to ask for an explanation.[%END%]</li>
 			<li>[%|helploc%]<strong>The message you are trying to send does not fulfill the conditions to be distributed</strong> on the list: it may be too large, contain a forbidden type of attachment or even contain any type of attachment (in case attachments are forbidden on the list).[%END%]</li>
 			<li>[%|helploc%]<strong>The problem may also come from your email account</strong>:[%END%]
 			<ul>
@@ -69,5 +69,5 @@
 		</ul>
 
 		<h4><a name="contactadmin"></a>[%|helploc%]You want to contact list owners[%END%]</h4>
-		<p>[%|helploc(conf.host)%]The list owners and moderators' names are mentioned in the left menu. However, you should never write directly to a list owner or moderator: first, the person to whom you are writing might be absent, and furthermore, it is better to inform all owners and moderators of your request. When you have a question or remark, <strong>the address you should write to is: nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of the list).[%END%]</p>
+		<p>[%|helploc(domain)%]The list owners and moderators' names are mentioned in the left menu. However, you should never write directly to a list owner or moderator: first, the person to whom you are writing might be absent, and furthermore, it is better to inform all owners and moderators of your request. When you have a question or remark, <strong>the address you should write to is: nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of the list).[%END%]</p>
 <!-- end help_faquser.tt2 -->

@@ -1,11 +1,11 @@
 [%# listmaster_notification.tt2 ~%]
 To: [% FILTER qencode %][%|loc%]Listmaster[%END%] <[% to %]>[%END%]
 [% IF type == 'request_list_creation' -%]
-Subject: [% FILTER qencode %][%|loc(list.name,list.host,email)%]List "%1@%2" creation request from %3[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name,domain,email)%]List "%1@%2" creation request from %3[%END%][%END%]
 
 [%|loc(email,list.name)%]%1 requested creation of list "%2"[%END%]
 
-[% list.name %]@[% list.host %]
+[% list.name %]@[% domain %]
 [% list.subject %]
 [% 'info' | url_abs([list.name]) %]
 
@@ -171,7 +171,7 @@ Content-Disposition: inline
 
 [%|loc%]Sympa could not handle email feedback report.[%END%]
 
-[%|loc(list.name,list.host)%]List: %1@%2[%END%]
+[%|loc(list.name,domain)%]List: %1@%2[%END%]
 [%|loc(error)%]Error: %1[%END%]
 [%|loc(feedback_type)%]Feedback type: %1[%END%]
 [%|loc%]See the logs for more details.[%END%]
@@ -315,7 +315,7 @@ Subject: [% FILTER qencode %][%|loc%]Failed to parse web template[%END%][%END%]
 Subject: [% FILTER qencode %][%|loc%]Listmaster: internal server error [%END%][%END%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
-([%action%][% IF msg_id %] - MSG_ID[%|loc%]:[%END%] [%msg_id%][%END%][% IF cmd %] - COMMAND[%|loc%]:[%END%] [%cmd%][%END%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%list.host%][%END%])[%|loc%]:[%END%]
+([%action%][% IF msg_id %] - MSG_ID[%|loc%]:[%END%] [%msg_id%][%END%][% IF cmd %] - COMMAND[%|loc%]:[%END%] [%cmd%][%END%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%domain%][%END%])[%|loc%]:[%END%]
 
 [%IF error%][%error%]
 [%END%]  
@@ -330,9 +330,9 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [%|loc%]See the logs for more details.[%END%]
 
 [% ELSIF type == 'hundred_percent_error' -%]
-Subject: [% FILTER qencode %][%|loc(list.name, list.host)%]Listmaster: list %1@%2 at 100 percents error [%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name,domain)%]Listmaster: list %1@%2 at 100 percents error [%END%][%END%]
 
-[%|loc(list.name, list.host)%]The list %1@%2 has 100 percents of its users in error. Something unusual must have happened.[%END%]
+[%|loc(list.name,domain)%]The list %1@%2 has 100 percents of its users in error. Something unusual must have happened.[%END%]
 
 [%|loc(sender)%]The user %1, who tried to send a mail to this list, has been warned, as well as the list owners.[%END%]
 
@@ -354,7 +354,7 @@ Subject: [% FILTER qencode %][%|loc%]Listmaster: internal server error [%END%][%
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server error [%END%][%END%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
-([%|loc%]Web interface[%END%] - ACTION[%|loc%]:[%END%] [%action%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%conf.host%][%END%])[%|loc%]:[%END%]
+([%|loc%]Web interface[%END%] - ACTION[%|loc%]:[%END%] [%action%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%domain%][%END%])[%|loc%]:[%END%]
 
 [%IF error == 'chdir_error' %][%|loc%]Unable to change directory.[%END%]
 [%ELSIF error == 'no_authentication_service_name' %][%|loc%]The authentication server name is not defined.[%END%]
@@ -426,7 +426,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: system error [%END%][%END%]
 
 [%|loc(who)%] User %1 has encountered a system error[%END%]
-([%|loc%]Web interface[%END%] - ACTION[%|loc%]:[%END%] [%action%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%conf.host%][%END%])[%|loc%]:[%END%]
+([%|loc%]Web interface[%END%] - ACTION[%|loc%]:[%END%] [%action%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%domain%][%END%])[%|loc%]:[%END%]
 
 [%IF error == 'a' %]
 [%ELSIF error%][% error %]

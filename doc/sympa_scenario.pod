@@ -72,8 +72,11 @@ Tests if I<var> matches with I<perl_regexp>.
 I<perl_regexp> is a perl regular expression.
 Don't forget to escape special characters (C<^>, C<$>, C<{>, C<(>, ...):
 Check L<perlre(1)> for regular expression syntax.
-It can contain the string C<[host]> (interpreted at run time as the list or
+It can contain the string C<[domain]> (interpreted at run time as the list or
 robot domain). 
+
+Note:
+Sympa prior to 6.2.32 recognized C<[host]> instead of C<[domain]>.
 
 =item C<newer> C<(> I<date>C<,> I<date> C<)>
 
@@ -121,6 +124,14 @@ I<custom_var_name> is the name of the custom parameter you want to use.
 =item C<[date]>
 
 Date of reception of the message.
+
+=item C<[domain]>
+
+Mail domain of current list.
+
+Note:
+This variable was introduced by Sympa 6.2.32.
+Previous versions used a variable C<[conf-E<gt>host]> (obsoleted) instead.
 
 =item C<[env-E<gt>>I<env_var>C<]> 
  
@@ -372,7 +383,7 @@ subscriber_key_word : "email"
 
 list_key_word : "name"  
     | "address"  
-    | "host"  
+    | "domain"  
     | "lang"  
     | "max_size"  
     | "priority"  

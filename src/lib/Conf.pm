@@ -1998,15 +1998,14 @@ sub _load_server_specific_secondary_config_files {
 sub _infer_robot_parameter_values {
     my $param = shift;
 
-    # 'host' and 'domain' are mandatory and synonym.$Conf{'host'} is
-    # still widely used even if the doc requires domain.
-    $param->{'config_hash'}{'host'} = $param->{'config_hash'}{'domain'}
-        if (defined $param->{'config_hash'}{'domain'});
+    # 'domain' is mandatory, and synonym 'host' may be still used
+    # even if the doc requires domain.
     $param->{'config_hash'}{'domain'} = $param->{'config_hash'}{'host'}
-        if (defined $param->{'config_hash'}{'host'});
+        if not defined $param->{'config_hash'}{'domain'}
+            and defined $param->{'config_hash'}{'host'};
 
     $param->{'config_hash'}{'wwsympa_url'} ||=
-        "http://$param->{'config_hash'}{'host'}/sympa";
+        sprintf 'http://%s/sympa', $param->{'config_hash'}{'domain'};
 
     $param->{'config_hash'}{'static_content_url'} ||=
         $Conf{'static_content_url'};
@@ -2019,12 +2018,12 @@ sub _infer_robot_parameter_values {
     # Obsoleted. Use get_address().
     $param->{'config_hash'}{'sympa'} =
           $param->{'config_hash'}{'email'} . '@'
-        . $param->{'config_hash'}{'host'};
+        . $param->{'config_hash'}{'domain'};
     # Obsoleted. Use get_address('owner').
     $param->{'config_hash'}{'request'} =
           $param->{'config_hash'}{'email'}
         . '-request@'
-        . $param->{'config_hash'}{'host'};
+        . $param->{'config_hash'}{'domain'};
 
     # split action list for blacklist usage
     foreach my $action (split(/,/, $Conf{'use_blacklist'})) {
@@ -2211,7 +2210,7 @@ sub _load_single_robot_config {
         _dump_non_robot_parameters(
             {'config_hash' => $robot_conf, 'robot' => $robot});
 
-        ## Default for 'host' is the domain
+        #FIXME: They may be no longer used.  Kept for possible compatibility.
         $robot_conf->{'host'}       ||= $robot;
         $robot_conf->{'robot_name'} ||= $robot;
 
@@ -2264,7 +2263,7 @@ sub _set_listmasters_entry {
                 $log->syslog(
                     'err',
                     'Robot %s config: Listmaster address "%s" is not a valid email',
-                    $param->{'config_hash'}{'host'},
+                    $param->{'config_hash'}{'domain'},
                     $lismaster_address
                 );
             }
@@ -2287,7 +2286,7 @@ sub _set_listmasters_entry {
         $log->syslog(
             'err',
             'Robot %s config: All the listmasters addresses found were not valid. Out of %s addresses provided, %s only are valid email addresses',
-            $param->{'config_hash'}{'host'},
+            $param->{'config_hash'}{'domain'},
             $number_of_email_provided,
             $number_of_valid_email
         );

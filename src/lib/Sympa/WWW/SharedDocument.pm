@@ -332,7 +332,8 @@ sub as_hashref {
     my %hash = %$self;
     $hash{context} = {
         name => $self->{context}->{'name'},
-        host => $self->{context}->{'admin'}{'host'},
+        # Compat. < 6.2.32
+        host => $self->{context}->{'domain'},
     };
     $hash{parent} = $self->{parent}->as_hashref if $self->{parent};
     $hash{paths} = [@{$self->{paths}}];

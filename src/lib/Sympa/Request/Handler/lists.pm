@@ -84,7 +84,8 @@ sub _twist {
         if ($action eq 'do_it') {
             $lists->{$list->{'name'}}{'subject'} =
                 $list->{'admin'}{'subject'};
-            $lists->{$list->{'name'}}{'host'} = $list->{'admin'}{'host'};
+            # Compat. < 6.2.32
+            $lists->{$list->{'name'}}{'host'} = $list->{'domain'};
         }
     }
 

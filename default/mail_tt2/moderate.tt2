@@ -1,8 +1,8 @@
 [%# moderate.tt2 ~%]
 From: [% fromlist %]
-To: [% list.name %]-editor@[% list.host %]
+To: [% list.name %]-editor@[% domain %]
 Subject: [% FILTER qencode %][%|loc(list.name,msg_from)%]Message for list %1 from %2 to be approved[%END%][%END%]
-Reply-To: [% conf.email %]@[% conf.host %]
+Reply-To: [% conf.email %]@[% domain %]
 [% IF spam_status != 'spam' -%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 
@@ -27,16 +27,16 @@ Content-Disposition: inline
 [% IF method == 'md5' && ! request_topic -%]
 [%|loc(list.name)%]To distribute the attached message in list %1:[%END%]
 <[% | mailtourl({subject => "DISTRIBUTE ${list.name} ${modkey}"}) ~%]
-  [% conf.email %]@[% conf.host %]
+  [% conf.email %]@[% domain %]
 [%~ END %]>
-[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
+[%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
 DISTRIBUTE [% list.name %] [% modkey %]
 
 [%|loc%]To reject it (it will be removed):[%END%]
 <[% | mailtourl({subject => "REJECT ${list.name} ${modkey}"}) ~%]
-  [% conf.email %]@[% conf.host %]
+  [% conf.email %]@[% domain %]
 [%~ END %]>
-[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
+[%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
 REJECT [% list.name %] [% modkey %]
 [%END%]
 [%|loc%]The messages moderating documentation:[%END%] <[% 'help/admin' | url_abs %]#moderate>

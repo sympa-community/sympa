@@ -16,12 +16,12 @@
 	<p>[%|helploc%]The <strong>list creation request</strong> can be <strong>subject to conditions</strong>. Even though you meet those conditions, the <strong>list creation</strong> will nevertheless be <strong>subject to approval by the listmasters</strong>.[%END%]</p>
 	<p>[%|helploc%]To request the creation of a mailing list, do as follows:[%END%]</p>
 	<ol>
-		<li>[%|helploc(path_cgi,conf.host)%]Go to the <strong><a href="%1/home">list environment homepage</a></strong> and <a href="%1/help/user#sympa_auth"><strong>log on</strong></a>.[%END%]</li>
+		<li>[%|helploc(path_cgi,domain)%]Go to the <strong><a href="%1/home">list environment homepage</a></strong> and <a href="%1/help/user#sympa_auth"><strong>log on</strong></a>.[%END%]</li>
 		<li>[%|helploc%]In the top menu, <strong>click on the 'Create list' link</strong>.[%END%]<br/>
 	        <span class="retraitita">[%|helploc%]If this link does not display, it means that you do not have the privileges required to create a list.[%END%]</span></li>
-		<li>[%|helploc('',conf.host)%]Give your list a <strong>name</strong> (only enter the name without the '@' and the domain name; example: <em class="example">languages_spanish</em> and not <em class="example">languages_spanish@%2</em>).[%END%]<br />
+		<li>[%|helploc('',domain)%]Give your list a <strong>name</strong> (only enter the name without the '@' and the domain name; example: <em class="example">languages_spanish</em> and not <em class="example">languages_spanish@%2</em>).[%END%]<br />
 		<span class="retraitita">[%|helploc%]Do not use any spaces, accents or specials characters in list names: those characters might cause problems.[%END%]</span>
-		<span class="retraitita">[%|helploc('',conf.host)%]Choose an explicit yet short name: think of the subscribers who will have to type this name every time they will send a message to the list! If you manage a set of lists, you can prefix your lists' names with a common prefix; thus they will be sorted together and will be easily recognizable (example: <em class="example">xx-users@%2, xx-hotline@%2</em>, etc.).[%END%]</span></li>
+		<span class="retraitita">[%|helploc('',domain)%]Choose an explicit yet short name: think of the subscribers who will have to type this name every time they will send a message to the list! If you manage a set of lists, you can prefix your lists' names with a common prefix; thus they will be sorted together and will be easily recognizable (example: <em class="example">xx-users@%2, xx-hotline@%2</em>, etc.).[%END%]</span></li>
 		<li>[%|helploc%]Choose a <strong>list type</strong> among the predefined types (the predefined types are only examples of typical configurations that can be changed by the list owners after creation; it is even possible to configure the list beyond the options offered in the list administration module, by asking the listmasters).[%END%]</li>
 		<li>[%|helploc%]Enter a <strong>subject</strong> for your list. This subject will display as a header for all the list pages, and will also be visible on list index pages (list of lists, list of your subscriptions, etc.) and in the browser title bar.[%END%]<br />
 
@@ -138,7 +138,7 @@
 	
 
 	<p class="retraitita">[%|helploc%]If you want to subscribe people without letting them know through a notice, tick the 'Quiet' box. However, it is far better to warn people that you subscribe them![%END%]</p>
-	<p>[%|helploc(conf.email,conf.host)%]Even though you have the possibility to subscribe people to your mailing lists, it is always <strong>much better that people take the necessary steps to subscribe themselves</strong> to the list. You can also <strong>invite people to subscribe to the list</strong> through the INVITE command: send an email to %1@%2 and type the following command in the message body: <strong>invite nameofthelist emailaddress</strong> (example: <em class="example">invite list_example john.doe(@)fai.com</em>).[%END%]</p>
+	<p>[%|helploc(conf.email,domain)%]Even though you have the possibility to subscribe people to your mailing lists, it is always <strong>much better that people take the necessary steps to subscribe themselves</strong> to the list. You can also <strong>invite people to subscribe to the list</strong> through the INVITE command: send an email to %1@%2 and type the following command in the message body: <strong>invite nameofthelist emailaddress</strong> (example: <em class="example">invite list_example john.doe(@)fai.com</em>).[%END%]</p>
 	<p>[%|helploc%]To <strong>accept or reject the subscription requests to the list</strong>, click on '<strong>Pending subscriptions</strong>'. The list of all people who requested subscription to the list displays. To accept or reject a request, tick the box in front of a person's name and click on the button of your choice.[%END%]</p>
 	<p>[%|helploc%]To <strong>send a subscription reminder to all subscribers</strong>, click on the '<strong>Remind all</strong>' button. The subscription reminder message contains:[%END%]</p>
 	<ul>
@@ -218,7 +218,7 @@
 	<ul>
 		<li>[%|helploc%]<strong>Do not use any spaces, accents or specials characters</strong> in list names: those characters might cause problems.[%END%]</li>
 		<li>[%|helploc%]Choose an <strong>explicit yet short name</strong>: think of the subscribers who will have to type this name every time they will send a message to the list![%END%]</li>
-		<li>[%|helploc(conf.host)%]If you manage a set of lists, you can <strong>prefix your lists' names with a common prefix</strong>; thus they will be sorted together and will be easily recognizable (example: <em class="example">xx-users@%1, xx-hotline@%1.fr</em>, etc.).[%END%]</li>
+		<li>[%|helploc(domain)%]If you manage a set of lists, you can <strong>prefix your lists' names with a common prefix</strong>; thus they will be sorted together and will be easily recognizable (example: <em class="example">xx-users@%1, xx-hotline@%1.fr</em>, etc.).[%END%]</li>
 	</ul>
 
 

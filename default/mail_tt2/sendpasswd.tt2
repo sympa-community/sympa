@@ -4,7 +4,7 @@ Subject: [% FILTER qencode %][%|loc(conf.title)%]%1 / your environment[%END%][%E
 
 [%# A parameter request_from_host may be used to show remote host.
     However, use it carefully. ~%]
-[%|loc(conf.host)%]Someone, probably you, requested to allocate or renew your password for your list server account %1.[%END%]
+[%|loc(domain)%]Someone, probably you, requested to allocate or renew your password for your list server account %1.[%END%]
 [%|loc%]You may ignore this request or click on the following URL in order to choose your password.[%END%]: [% 'ticket' | url_abs([one_time_ticket]) %]
 
 [%|loc(conf.wwsympa_url,'/help')%]Help on Sympa: %1%2[%END%]

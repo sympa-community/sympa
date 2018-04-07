@@ -29,7 +29,7 @@
   [% IF dark == '1' %]<tr>[% SET dark = '0' %][% ELSE %]<tr class="color0">[% SET dark = '1' %][% END %]
 
    <td headers="list_name">
-     <a href="[% 'info' | url_rel([l.name]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.name %]@[% l.host %][% END %]</strong></a>
+     <a href="[% 'info' | url_rel([l.name]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.name %]@[% domain %][% END %]</strong></a>
    </td>
   <td class="text_center" headers="message"> [% l.msg_count %] </td>
   <td class="text_center" headers="average"> [% l.average %] </td>
