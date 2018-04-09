@@ -114,7 +114,7 @@
       <tr class="color0">
 	<td class="review_cels_mail">
           <a href="[% 'd_read' | url_rel([list,s.paths_d]) %]"> 
-            <img src="[% s.icon %]" alt="[% s.title %]" />
+            [% PROCESS SharedGetIcon shared_item = s %]
             [% s.name %]</a></td>
 	<td class="review_cels">
         [% IF s.owner ~%] 
@@ -178,27 +178,31 @@
       [% IF f.html ~%]
 	<td class="review_cels_mail">
         <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]"
-          title="[%|loc%]Open in a new window[%END%]" target="html_window">
-	  <img src="[% f.icon %]" alt="[% f.title %]" /> [% f.name %] </a>
+         title="[%|loc%]Open in a new window[%END%]" target="html_window">
+          [% PROCESS SharedGetIcon shared_item = f %]
+          [% f.name %] </a>
 	</td>
       [%~ ELSIF f.url ~%]
         <td class="review_cels_mail">
 	<a href="[% f.url %]" title="[%|loc%]Open in a new window[%END%]"
-          target="html_window">
-	  <img src="[% f.icon %]" alt="[% f.title %]" /> [% f.label %] </a>
+         target="html_window">
+          [% PROCESS SharedGetIcon shared_item = f %]
+          [% f.label %] </a>
 	</td>
       [%~ ELSE ~%]
 	[% IF f.moderate ~%]
 	  [% IF expert_page ~%]
 	    <td class="review_cels_mail">
 	    <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">
-	      <img src="[% f.icon %]" alt="[% f.title %]" /> [% f.name %] </a>
+              [% PROCESS SharedGetIcon shared_item = f %]
+              [% f.name %] </a>
 	    </td>
           [%~ END %] 
 	[%~ ELSE ~%]
 	  <td class="review_cels_mail">
 	  <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">
-	    <img src="[% f.icon %]" alt="[% f.title %]" /> [% f.name %] </a>
+            [% PROCESS SharedGetIcon shared_item = f %]
+            [% f.name %] </a>
 	  </td>  
 	[%~ END ~%]
       [% END %] 
@@ -377,5 +381,59 @@
     [%~ END %]
   [%~ END %]
   [%~ END %]
+
+[%~ BLOCK SharedGetIcon # (shared_item) ~%]
+  [% IF shared_item.type == 'directory' ~%]
+    <i class="fa fa-folder"
+     [%~ IF shared_item.title %] title="[% shared_item.title %]"
+     [%~ ELSE %] title="Icon of folder"
+     [%~ END %]></i>
+  [% ELSIF shared_item.type == 'url' ~%]
+    <i class="fa fa-link"
+     [%~ IF shared_item.title %] title="[% shared_item.title %]"
+     [%~ ELSE %] title="Icon of bookmark"
+     [%~ END %]></i>
+  [%~ ELSIF shared_item.mime_type == 'application/pdf' ~%]
+    <i class="fa fa-file-pdf-o"
+     [%~ IF shared_item.title %] title="[% shared_item.title %]"
+     [%~ ELSE %] title="Icon of PDF file"
+     [%~ END %]></i>
+  [%~ ELSIF shared_item.mime_type.search('application/') ~%]
+    <i class="fa fa-file-o"
+     [%~ IF shared_item.title %] title="[% shared_item.title %]"
+     [%~ ELSE %] title="Icon of file"
+     [%~ END %]></i>
+  [%~ ELSIF shared_item.mime_type.search('audio/') ~%]
+    <i class="fa fa-file-audio-o"
+     [%~ IF shared_item.title %] title="[% shared_item.title %]"
+     [%~ ELSE %] title="Icon of audio file"
+     [%~ END %]></i>
+  [%~ ELSIF shared_item.mime_type.search('image/') ~%]
+    <i class="fa fa-file-image-o"
+     [%~ IF shared_item.title %] title="[% shared_item.title %]"
+     [%~ ELSE %] title="Icon of image file"
+     [%~ END %]></i>
+  [%~ ELSIF shared_item.mime_type == 'text/html' ~%]
+    <i class="fa fa-file-code-o"
+     [%~ IF shared_item.title %] title="[% shared_item.title %]"
+     [%~ ELSE %] title="Icon of HTML file"
+     [%~ END %]></i>
+  [%~ ELSIF shared_item.mime_type.search('text/') ~%]
+    <i class="fa fa-file-text-o"
+     [%~ IF shared_item.title %] title="[% shared_item.title %]"
+     [%~ ELSE %] title="Icon of text file"
+     [%~ END %]></i>
+  [%~ ELSIF shared_item.mime_type.search('video/') ~%]
+    <i class="fa fa-file-video-o"
+     [%~ IF shared_item.title %] title="[% shared_item.title %]"
+     [%~ ELSE %] title="Icon of video file"
+     [%~ END %]></i>
+  [%~ ELSE ~%]
+    <i class="fa fa-file-o"
+     [%~ IF shared_item.title %] title="[% shared_item.title %]"
+     [%~ ELSE %] title="Icon of file"
+     [%~ END %]></i>
+  [%~ END %]
+[%~ END ~%]
 
 <!-- end d_read.tt2 -->

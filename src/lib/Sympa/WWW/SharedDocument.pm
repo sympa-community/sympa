@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -40,24 +40,6 @@ use Sympa::Scenario;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
-
-# Hash of the icons linked with a type of file.
-my %icons = (
-    'unknown'        => 'unknown.png',
-    'folder'         => 'folder.png',
-    'current_folder' => 'folder.open.png',
-    'application'    => 'unknown.png',
-    'octet-stream'   => 'binary.png',
-    'audio'          => 'sound1.png',
-    'image'          => 'image2.png',
-    'text'           => 'text.png',
-    'video'          => 'movie.png',
-    'father'         => 'back.png',
-    'sort'           => 'down.png',
-    'url'            => 'link.png',
-    'left'           => 'left.png',
-    'right'          => 'right.png',
-);
 
 # Creates a new object.
 sub new {
@@ -314,7 +296,29 @@ sub _load_desc_file {
     return %hash;
 }
 
+# Hash of the icons linked with a type of file.
+# Note: Image icons are no longer used by templates. This is kept for
+# backward compatibility.
+my %icons = (
+    'unknown'        => 'unknown.png',
+    'folder'         => 'folder.png',
+    'current_folder' => 'folder.open.png',
+    'application'    => 'unknown.png',
+    'octet-stream'   => 'binary.png',
+    'audio'          => 'sound1.png',
+    'image'          => 'image2.png',
+    'text'           => 'text.png',
+    'video'          => 'movie.png',
+    'father'         => 'back.png',
+    'sort'           => 'down.png',
+    'url'            => 'link.png',
+    'left'           => 'left.png',
+    'right'          => 'right.png',
+);
+
 # Old name: Sympa::Tools::WWW::get_icon().
+# Note: Image icons are no longer used by templates. This is kept for
+# backward compatibility.
 sub _get_icon {
     my $robot = shift || '*';
     my $type = shift;
