@@ -189,15 +189,19 @@
   </noscript>
   </fieldset>
   </form>
-   [% IF prev_page %]
-    <a href="[% 'review' | url_rel([list,prev_page,size,sortby]) %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
-   [% END %]
-   [% IF page %]
-     [%|loc(page,total_page)%]page %1 / %2[%END%]
-   [% END %]
-   [% IF next_page %]
-     <a href="[% 'review' | url_rel([list,next_page,size,sortby]) %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
-   [% END %]
+  [% IF prev_page ~%]
+    <a href="[% 'review' | url_rel([list,prev_page,size,sortby]) %]">
+    <i class="fa fa-caret-left fa-lg" title="[%|loc%]Previous page[%END%]"></i>
+    </a>
+  [%~ END %]
+  [% IF page ~%]
+    [%|loc(page,total_page)%]page %1 / %2[%END%]
+  [%~ END %]
+  [% IF next_page ~%]
+    <a href="[% 'review' | url_rel([list,next_page,size,sortby]) %]">
+    <i class="fa fa-caret-right fa-lg" title="[%|loc%]Next page[%END%]"></i>
+    </a>
+  [%~ END %]
 </div>
 [% END %]
 
