@@ -376,39 +376,12 @@ nobase_static_DATA = \
 	fonts/foundation-icons/svgs/fi-zoom-out.svg \
 	fonts/Raleway/OFL.txt \
 	fonts/Raleway/Raleway-Regular.otf \
-	icons/arc.png \
-	icons/back.png \
-	icons/begin.png \
-	icons/binary.png \
-	icons/config.png \
 	icons/crosshairs.png \
-	icons/datasources.png \
-	icons/down.png \
-	icons/end.png \
 	icons/favicon_sympa.png \
-	icons/folder.open.png \
-	icons/folder.png \
 	icons/h.png \
-	icons/image2.png \
-	icons/junk.png \
-	icons/left.png \
-	icons/link.png \
-	icons/locked.png \
-	icons/logo-s-lock.png \
-	icons/logo-s.png \
 	icons/logo_sympa.png \
-	icons/movie.png \
-	icons/new_list.png \
 	icons/position.png \
-	icons/right.png \
-	icons/search.png \
-	icons/sound1.png \
-	icons/spinner.gif \
-	icons/subscribe.png \
 	icons/sv.png \
-	icons/text.png \
-	icons/top.png \
-	icons/unknown.png \
 	js/sympa.js
 
 EXTRA_DIST = $(nobase_static_DATA)
