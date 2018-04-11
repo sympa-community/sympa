@@ -65,6 +65,10 @@ sub _twist {
 
     my $context = $self->{scenario_context}
         or die 'bug in logic. Ask developer';
+    # Add target email kept only in request to context.
+    # FIXME: $request and $context would be merged in some future
+    $context = {email => $request->{email}, %$context}
+        if exists $request->{email};
 
     # Call scenario: auth_method MD5 do not have any sense in
     # scenario because auth is performed by AUTH command.
