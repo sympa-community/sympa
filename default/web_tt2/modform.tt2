@@ -33,10 +33,10 @@
   </select>
   [% IF conf.reporting_spam_script_path %]
      [%- IF msg.value.spam_status != 'spam' -%]
-        <br /> <input id="signal_spam[% line_count %]" type=checkbox name="signal_spam" /><label for="signal_spam[% line_count %]">[%|loc %]Report message as undetected spam[%END%]</label>
+        <br /> <input id="signal_spam[% line_count %]" type=checkbox name="signal_spam" /> <label for="signal_spam[% line_count %]">[%|loc %]Report message as undetected spam[%END%]</label>
      [% END %] 
   [% END %] 
-  <br /> <input id="blacklist[% line_count %]" type=checkbox name="blacklist" /><label for="blacklist[% line_count %]">[%|loc %]Add sender to blacklist[%END%]</label>
+  <br /> <input id="blacklist[% line_count %]" type=checkbox name="blacklist" /> <label for="blacklist[% line_count %]">[%|loc %]Add sender to blacklist[%END%]</label>
 
   <div class="formError" style="display:none"  id="warningSpam[% line_count %]">
    <p class="alert-box info text-left"><input type="checkbox" name="iConfirm" value="1" /> [%|loc%]You should rejet spams quietly because the sender of a spam is often spoofed, if you really want to send this notification, please confirm [%END%]</p>
