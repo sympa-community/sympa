@@ -31,7 +31,7 @@
 [%END%]
 
 [% IF ticket_context.result == 'not_found' -%]
-[%|loc(ticket_context.printable_date)%]The requested authentication ticket is unrecognized or has expired.[%END%].
+[%|loc(ticket_context.printable_date)%]The requested authentication ticket is unrecognized or has expired.[%END%]
 [% IF user.email %]
 <br/>[%|loc%]However, as you are logged in already, you can probably perform the action you requested anyway.[%END%]
 [% ELSE %]
