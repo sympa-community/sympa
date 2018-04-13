@@ -4075,6 +4075,12 @@ sub may_edit {
     my $self      = shift;
     my $parameter = shift;
     my $who       = shift;
+    my %options   = @_;
+
+    # Special case for file edition.
+    if ($options{file}) {
+        $parameter = 'info.file' if $parameter eq 'info';
+    }
 
     # Load edit_list.conf: Track by file, not domain (file may come from
     # server, robot, family or list context).
