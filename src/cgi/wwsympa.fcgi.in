@@ -190,7 +190,6 @@ our %comm = (
     'firstpasswd'      => 'do_firstpasswd',
     'requestpasswd'    => 'do_requestpasswd',
     'choosepasswd'     => 'do_choosepasswd',
-    'viewfile'         => 'do_viewfile',
     'set'              => 'do_set',
     'admin'            => 'do_admin',
     'import'           => 'do_import',
@@ -669,6 +668,7 @@ our %required_privileges = (
     'edit_list'         => ['owner'],
     'edit_list_request' => ['owner'],
     'edit_template'     => ['listmaster'],
+    'editfile'             => ['owner', 'listmaster'],
     'editsubscriber'       => ['owner', 'editor'],
     'get_closed_lists'     => ['listmaster'],
     'get_inactive_lists'   => ['listmaster'],
@@ -701,6 +701,7 @@ our %required_privileges = (
     'resetbounce'              => ['owner', 'editor'],
     'review_family'            => ['listmaster'],
     'reviewbouncing'           => ['owner', 'editor'],
+    'savefile'                 => ['owner', 'listmaster'],
     'search_user'              => ['listmaster'],
     'serveradmin'              => ['listmaster'],
     'set_dumpvars'             => ['listmaster'],
@@ -5947,9 +5948,10 @@ sub do_admin {
         'message.header', 'remind.tt2',
         'invite.tt2',     'reject.tt2'
         ) {
-        next
-            unless (
-            $list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
+        my $fa = ($f eq 'info') ? 'info.file' : $f;
+        my ($role, $right) =
+            $list->may_edit($fa, $param->{'user'}{'email'});
+        next unless $right eq 'write';
         if ($Sympa::WWW::Tools::filenames{$f}{'gettext_id'}) {
             $param->{'files'}{$f}{'complete'} =
                 $language->gettext(
@@ -8085,12 +8087,9 @@ sub do_editfile {
             my $filename_for_auth = $f;
             $filename_for_auth = 'info.file'
                 if ($filename_for_auth eq 'info');
-            next
-                unless (
-                $list->may_edit(
-                    $filename_for_auth, $param->{'user'}{'email'}
-                ) eq 'write'
-                );
+            my ($role, $right) = $list->may_edit(
+                    $filename_for_auth, $param->{'user'}{'email'});
+            next unless $right eq 'write';
             if ($Sympa::WWW::Tools::filenames{$f}{'gettext_id'}) {
                 $param->{'files'}{$f}{'complete'} =
                     $language->gettext(
@@ -8260,10 +8259,21 @@ sub do_savefile {
 
     $param->{'subtitle'} = sprintf $param->{'subtitle'}, $in{'file'};
 
+    unless ($in{'file'} and $Sympa::WWW::Tools::filenames{$in{'file'}}) {
+        Sympa::WWW::Report::reject_report_web('user', 'file_not_editable',
+            {'file' => $in{'file'}},
+            $param->{'action'});
+        wwslog('info', 'File %s not editable', $in{'file'});
+        return undef;
+    }
+
     if ($param->{'list'}) {
-        unless ($list->is_admin('owner', $param->{'user'}{'email'})
-            or Sympa::is_listmaster($list, $param->{'user'}->{'email'})) {
-            Sympa::WWW::Report::reject_report_web('auth', 'action_owner', {},
+        my $fa = ($in{'file'} eq 'info') ? 'info.file' : $in{'file'};
+        my ($role, $right) =
+            $list->may_edit($fa, $param->{'user'}{'email'});
+        unless ($right eq 'write') {
+            Sympa::WWW::Report::reject_report_web('auth', 'edit_right',
+                {'role' => $role, 'right' => $right},
                 $param->{'action'}, $list);
             wwslog('err', 'Not allowed');
             web_db_log(
