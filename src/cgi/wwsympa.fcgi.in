@@ -393,7 +393,6 @@ our %action_args = (
     'modindex'         => ['list'],
     'docindex'         => ['list'],
     'viewmod'  => ['list', 'id', '@file'],
-    'viewfile' => ['list', 'file'],
     'add'      => ['list', 'email'],
     'import'   => ['list'],
     'del' => ['list', 'email'],
@@ -640,7 +639,6 @@ our %required_args = (
     'upload_pictures'        => ['param.user.email', 'param.list'],
     'view_template'          => ['webormail'],
     'viewbounce'             => ['param.list',       'email|file'],
-    'viewfile'               => ['file',             'param.list'],
     'viewlogs'               => ['param.list'],
     'viewmod' => ['param.list', 'param.user.email', 'id|idspam'],
     'wsdl'    => [],
@@ -727,7 +725,6 @@ our %required_privileges = (
 my %action_type = (
     'review'   => 'admin',
     'search'   => 'admin',
-    'viewfile' => 'admin',
     'admin'    => 'admin',
     'import'   => 'admin',
     'add'      => 'admin',
@@ -5428,31 +5425,8 @@ sub do_setpref {
 }
 
 ## Prendre en compte les défauts
-sub do_viewfile {
-    wwslog('info', '');
-
-    unless (defined $Sympa::WWW::Tools::filenames{$in{'file'}}) {
-        Sympa::WWW::Report::reject_report_web('user', 'file_not_editable',
-            {'file' => $in{'file'}},
-            $param->{'action'});
-        wwslog('info', 'File %s not editable', $in{'file'});
-        return undef;
-    }
-
-    $param->{'file'} = $in{'file'};
-
-    $param->{'filepath'} = $list->{'dir'} . '/' . $in{'file'};
-
-    if ((-e $param->{'filepath'}) and (!-r $param->{'filepath'})) {
-        Sympa::WWW::Report::reject_report_web('intern', 'cannot_read',
-            {'filepath' => $param->{'filepath'}},
-            $param->{'action'}, '', '', $robot);
-        wwslog('info', 'Cannot read %s', $param->{'filepath'});
-        return undef;
-    }
-
-    return 1;
-}
+# No longer used.
+#sub do_viewfile;
 
 # Subscribes a user to the list
 # IN : email, gecos, custom_attribute.
@@ -5929,6 +5903,7 @@ sub do_admin {
     wwslog('info', '');
 
     ## Messages edition
+    #FIXME: No longer used: Kept for backward compatibility.
     foreach my $f (
         'info',           'homepage',
         'welcome.tt2',    'bye.tt2',
@@ -5936,9 +5911,8 @@ sub do_admin {
         'message.header', 'remind.tt2',
         'invite.tt2',     'reject.tt2'
         ) {
-        my $fa = ($f eq 'info') ? 'info.file' : $f;
         my ($role, $right) =
-            $list->may_edit($fa, $param->{'user'}{'email'});
+            $list->may_edit($f, $param->{'user'}{'email'}, file => 1);
         next unless $right eq 'write';
         if ($Sympa::WWW::Tools::filenames{$f}{'gettext_id'}) {
             $param->{'files'}{$f}{'complete'} =
@@ -8072,11 +8046,8 @@ sub do_editfile {
 
     if (defined $files{$in{'file'}}) {
         foreach my $f (@{$files{$in{'file'}}}) {
-            my $filename_for_auth = $f;
-            $filename_for_auth = 'info.file'
-                if ($filename_for_auth eq 'info');
-            my ($role, $right) = $list->may_edit(
-                    $filename_for_auth, $param->{'user'}{'email'});
+            my ($role, $right) =
+                $list->may_edit($f, $param->{'user'}{'email'}, file => 1);
             next unless $right eq 'write';
             if ($Sympa::WWW::Tools::filenames{$f}{'gettext_id'}) {
                 $param->{'files'}{$f}{'complete'} =
@@ -8085,7 +8056,6 @@ sub do_editfile {
             } else {
                 $param->{'files'}{$f}{'complete'} = $f;
             }
-            $param->{'files'}{$f}{'selected'} = '';
         }
         return 1;
     }
@@ -8115,11 +8085,9 @@ sub do_editfile {
     }
 
     if ($param->{'list'}) {
-        my $filename_for_auth = $in{'file'};
-        $filename_for_auth = 'info.file' if ($filename_for_auth eq 'info');
         my ($role, $right) =
-            $list->may_edit($filename_for_auth, $param->{'user'}{'email'});
-
+            $list->may_edit($in{'file'}, $param->{'user'}{'email'},
+            file => 1);
         unless ($right eq 'write') {
             Sympa::WWW::Report::reject_report_web('auth', 'edit_right',
                 {'role' => $role, 'right' => $right},
@@ -8256,9 +8224,9 @@ sub do_savefile {
     }
 
     if ($param->{'list'}) {
-        my $fa = ($in{'file'} eq 'info') ? 'info.file' : $in{'file'};
         my ($role, $right) =
-            $list->may_edit($fa, $param->{'user'}{'email'});
+            $list->may_edit($in{'file'}, $param->{'user'}{'email'},
+            file => 1);
         unless ($right eq 'write') {
             Sympa::WWW::Report::reject_report_web('auth', 'edit_right',
                 {'role' => $role, 'right' => $right},
