@@ -10,9 +10,9 @@
   [% END %]
   <a class="actionMenuLinks" href="[% 'reviewbouncing' | url_rel([list]) %]">[%|loc%]Bounces[%END%]</a>
   [% IF action == 'search' %]
-     <a class="actionMenuLinks" href="[% 'dump' | url_rel([list,filter]) %]">[%|loc%]Dump[%END%]</a>
+     <a class="actionMenuLinks" href="[% 'export_member' | url_rel([list],{filter=>filter}) %]">[%|loc%]Dump[%END%]</a>
   [% ELSE %]
-     <a class="actionMenuLinks" href="[% 'dump' | url_rel([list,'light']) %]">[%|loc%]Dump[%END%]</a> 
+     <a class="actionMenuLinks" href="[% 'export_member' | url_rel([list,'light']) %]">[%|loc%]Dump[%END%]</a> 
   [% END %]
      <a class="actionMenuLinks" href="[% 'show_exclude' | url_rel([list]) %]">[%|loc%]Exclude[%END%]</a> 
   <br />
