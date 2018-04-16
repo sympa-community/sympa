@@ -57,7 +57,7 @@
 [% IF files.$item4 %]
 <a href="[% 'editfile' | url_rel([list,'invite.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Subscribing invitation message: sent to a person if someone uses the INVITE command to invite someone to subscribe.[%END%]<br />
 [% END %]
-
+<br />
 [% END %]
 
 [% item1 = 'message.footer'
@@ -71,7 +71,7 @@
 [% IF files.$item2 %]
 <a href="[% 'editfile' | url_rel([list,'message.header',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Message header: If this file is not empty, it is added as a MIME attachment at the beginning of each message distributed to the list.[%END%]<br />
 [% END %]
-
+<br />
 [% END %]
 
 [% item1 = 'bye.tt2'
