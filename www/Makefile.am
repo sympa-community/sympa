@@ -6,6 +6,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +31,7 @@ nobase_static_DATA = \
 	external/jquery.jqplot.css \
 	external/jquery.jqplot.min.js \
 	external/jquery.js \
+	external/jquery-migrate.js \
 	external/jquery-ui.css \
 	external/jquery-ui.js \
 	external/modernizr.custom.js \
@@ -64,7 +68,6 @@ nobase_static_DATA = \
 	external/foundation/js/foundation/responsive-tables.js \
 	external/foundation/js/vendor/fastclick.js \
 	external/foundation/js/vendor/jquery.cookie.js \
-	external/foundation/js/vendor/jquery.js \
 	external/foundation/js/vendor/modernizr.js \
 	external/foundation/js/vendor/placeholder.js \
 	external/html5shiv/html5shiv.js \
@@ -372,15 +375,7 @@ nobase_static_DATA = \
 	fonts/foundation-icons/svgs/fi-zoom-in.svg \
 	fonts/foundation-icons/svgs/fi-zoom-out.svg \
 	fonts/Raleway/OFL.txt \
-	fonts/Raleway/Raleway-Bold.ttf \
-	fonts/Raleway/Raleway-ExtraBold.ttf \
-	fonts/Raleway/Raleway-ExtraLight.ttf \
-	fonts/Raleway/Raleway-Heavy.ttf \
-	fonts/Raleway/Raleway-Light.ttf \
-	fonts/Raleway/Raleway-Medium.ttf \
-	fonts/Raleway/Raleway-Regular.ttf \
-	fonts/Raleway/Raleway-SemiBold.ttf \
-	fonts/Raleway/Raleway-Thin.ttf \
+	fonts/Raleway/Raleway-Regular.otf \
 	icons/arc.png \
 	icons/back.png \
 	icons/begin.png \
@@ -417,3 +412,25 @@ nobase_static_DATA = \
 	js/sympa.js
 
 EXTRA_DIST = $(nobase_static_DATA)
+
+# Use recent release of jQuery; remove one distributed with Foundation.
+install-data-hook:
+	cd $(DESTDIR)$(staticdir); \
+	rm -f external/foundation/js/vendor/jquery.js
+	@echo "Creating static_content directory"
+	-@for dir in $(staticdir); do \
+		if [ ! -d $(DESTDIR)$$dir ] ; then \
+			echo "Creating $(DESTDIR)$$dir"; \
+			$(INSTALL) -d -m 644 $(DESTDIR)$$dir; \
+		fi; \
+	done
+	@echo "Creating writable directories"
+	-@for dir in $(cssdir) $(picturesdir); do \
+		if [ ! -d $(DESTDIR)$$dir ] ; then \
+			echo "Creating $(DESTDIR)$$dir"; \
+			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
+		fi; \
+		chown $(USER) $(DESTDIR)$$dir; \
+		chgrp $(GROUP) $(DESTDIR)$$dir; \
+	done
+

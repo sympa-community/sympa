@@ -1,4 +1,4 @@
-[%# $Id$ ~%]
+[%# css.tt2 ~%]
 @charset "UTF-8";
 
 [% IF custom_css -%]
@@ -68,7 +68,7 @@ q:before, q:after {
     font-family: "Raleway";
     font-style: normal;
     font-weight: normal;
-    src: url("[% static_content_url %]/fonts/Raleway/Raleway-Regular.ttf") format("truetype");
+    src: url("[% static_content_url %]/fonts/Raleway/Raleway-Regular.otf") format("truetype");
 }
 
 /****/
@@ -389,6 +389,10 @@ div.reveal-modal form[id*="moderate_"]{
 	display: inline-block;
 }
 
+div.columns {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 /* Titles */
 h1,h2,h3,h4,h5,h6{
@@ -1124,6 +1128,7 @@ table td.review_cels_mail {
     font-size:1rem;
 }
 
+[%# No longer used.
 .edit_list_request_enum{ 
 	margin: 0 0 1rem;
 	padding-left: 1em;
@@ -1131,17 +1136,22 @@ table td.review_cels_mail {
 	font-size: 1em;
 }
 
+~%]
+[%# No longer used.
 .edit_list_request_enum span.divider:first-child { 
 	display:none;
 }
+~%]
 
+[%# No longer used.
  /*.edit_list_request_enum label{
 	display: block;
 	float: left;
 	width: 150px;
 }
 */
-                         
+~%]
+
 .list_admin { 
 	font-size: 1em;
 }
@@ -1981,6 +1991,10 @@ span.bottom_page, p.bottom_page{
 
 .top-bar, .top-bar-section ul li, .top-bar-section li:not(.has-form) a:not(.button){
     background-color: [% color_6 %];
+}
+/* properly set active list item color when not hovered */
+.top-bar-section li.active:not(.has-form) a:not(.button){
+    background-color: [% color_5%];
 }
 .top-bar .top-bar-section li:not(.has-form) a:not(.button):hover{
     background-color: [% color_5%];

@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -79,17 +82,8 @@ sub get_substring_clause {
 # DEPRECATED.
 #sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
-sub get_formatted_date {
-    my $self  = shift;
-    my $param = shift;
-    $log->syslog('debug', 'Building SQL date formatting');
-    if (lc($param->{'mode'}) eq 'read' or lc($param->{'mode'}) eq 'write') {
-        return $param->{'target'};
-    } else {
-        $log->syslog('err', "Unknown date format mode %s", $param->{'mode'});
-        return undef;
-    }
-}
+# DEPRECATED.
+#sub get_formatted_date;
 
 sub is_autoinc {
     my $self  = shift;

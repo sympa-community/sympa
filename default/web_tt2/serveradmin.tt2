@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- serveradmin.tt2 -->
 
 [% IF subaction == '' or subaction == 'm_lists' %]
 <h2>[%|loc%]Lists[%END%]</h2>
@@ -65,6 +65,27 @@
 <input type="submit" name="action_show_sessions" value="[%|loc%]Show Sessions[%END%]" />
 </fieldset>
 </form>
+
+  <hr>
+  <h2>[%|loc%]Changing user's email[%END%]</h2>
+  <p>[%|loc%]You can update a user's email address for all their list memberships at once. If they are also list owner or list moderator, their email address for these roles will also be updated.[%END%]</p>
+  <form class="bold_label" action="[% path_cgi %]" method="post">
+  <fieldset>
+  <div>
+    <label for="current_email">[%|loc%]Current email address:[%END%]
+    </label>
+    <input id="current_email" type="text" name="current_email" size="30" />
+  </div>
+  <div>
+    <label for="email">[%|loc%]New email address:[%END%]</label>
+    <input id="email" type="text" name="email" size="30" />
+  </div>
+  <input type="hidden" name="action" value="move_user" />
+  <input type="hidden" name="previous_action" value="serveradmin" />
+  <input class="MainMenuLinks" type="submit" name="action_move_user"
+   value="[%|loc%]Update user's email[%END%]" />
+  </fieldset>
+  </form>
 
 <hr>
 <h2>[%|loc%]Impersonate another User[%END%]</h2>
@@ -134,7 +155,7 @@
 </fieldset>
 </form>
 <br />
-<p><a class="actionMenuLinks" href="http://pootle.sympa.org/">[%|loc%]view translations[%END%]</a>
+<p><a class="actionMenuLinks" href="https://translate.sympa.org/">[%|loc%]view translations[%END%]</a>
 <a class="actionMenuLinks" href="[% 'ls_templates' | url_rel %]">[%|loc%]Customize templates[%END%]</a>
 </p>
 
@@ -202,10 +223,10 @@
 [% IF subaction == 'translation' %]
 <h2>[%|loc%]Translating Sympa[%END%]</h2><br />
 <div>
-[%|loc%]Sympa is designed to allow easy internationalization of its user interface (service mail messages and web interface). All translations for one language are gathered in a single PO file that can be manipulated by standard GNU gettext tools.[%END%]
+[%|loc%]Sympa is designed to allow easy internationalization of its user interface (service email messages and web interface). All translations for a language are gathered into a single PO file that can be manipulated by the standard GNU gettext tools.[%END%]
 </div>
 <div>
-[%|loc%]Check our translation FAQ if you wish to translate Sympa GUI in your native language: [%END%] <a href="http://www.sympa.org/translating_sympa">http://www.sympa.org/translating_sympa</a>
+[%|loc%]Check our translation FAQ if you wish to translate the Sympa GUI into your native language: [%END%] <a href="https://translate.sympa.org/pages/help">https://translate.sympa.org/pages/help</a>
 </div>
 [% END %] 
 

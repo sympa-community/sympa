@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="[% lang %]" xml:lang="[% lang %]">
-<!-- $Id$ -->
+<!-- main.tt2 -->
 <head>
 <meta charset="UTF-8" />
 <meta name="generator" content="Sympa [% version %]" />
@@ -61,10 +61,8 @@
   <div id="loading" class="medium-9 columns"></div>
 [%~ END %]
 
-    [% PROCESS aside_menu.tt2 %]
-    [% IF action == 'home' %]
-        [% PROCESS home.tt2 %]
-    [% ELSE %]
+  [% PROCESS aside_menu.tt2 %]
+  [% UNLESS action == 'home' ~%]
     [% IF top_menu %]
       [%~ IF not list ~%]
         <main id="content-inner" class="row">
@@ -84,17 +82,16 @@
        [% IF list_title %]<p><b>[%|loc%]Subject:[%END%]</b> [% list_title %] [% IF is_owner %]<a href="[% 'edit_list_request' | url_rel([list,'description']) %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>[% END %]</p>[% END %]
       [% END %]
 
-        [% PROCESS nav.tt2 %]
+    [% PROCESS nav.tt2 %]
+  [%~ END %]
 
-        [% PROCESS notice.tt2 IF notices %]
-        [% IF action == 'edit_list_request' %][% END %]
-        [% PROCESS "${action}.tt2" IF action %]
+  [% PROCESS notice.tt2 IF notices %]
+  [% PROCESS "${action}.tt2" IF action %]
+  [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
 
- [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
-
-[% IF top_menu %][% IF not list %][% END %][% END %]
-</main><!-- End content-inner -->
-    [% END %]
+  [% UNLESS action == 'home' ~%]
+    </main><!-- End content-inner -->
+  [%~ END %]
 
 <div class="displayNone"><a href="#top">[%|loc%]Top of Page[%END%]</a></div>
 <div class="scroll-top-wrapper "></div>

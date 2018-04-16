@@ -1,4 +1,4 @@
-[%# $Id$ ~%]
+[%# moderate.tt2 ~%]
 From: [% fromlist %]
 To: [% list.name %]-editor@[% list.host %]
 Subject: [% FILTER qencode %][%|loc(list.name,msg_from)%]Message for list %1 from %2 to be approved[%END%][%END%]
@@ -10,12 +10,12 @@ Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Disposition: inline
 [% END -%]
 
-[%|loc(list.name,msg_from)%]One new message from list %1 from %2 arrived. [%END%]
+[%|loc(list.name,msg_from)%]One new message for list %1 from %2 arrived. [%END%]
 [%- IF spam_status == 'spam' -%][%|loc%]This message has been tagged as spam[%END%][% END %]
 
 [% IF method == 'md5' -%]
-[%|loc(mod_spool_size)%]They are %1 messages awaiting moderation.[%END%] 
-[%|loc%]To browse the awaiting messages, you should click on the following link:[%END%] <[% 'ticket' | url_abs([one_time_ticket]) %]>
+[%|loc(mod_spool_size)%]%1 messages are awaiting moderation.[%END%] 
+[%|loc%]To view the messages, please click on the following URL:[%END%] <[% 'ticket' | url_abs([one_time_ticket]) %]>
 
 [% IF request_topic -%][%|loc()%]This mailing list is configured to require topics; that's probably why this message went through the moderation process.[%END%]
 

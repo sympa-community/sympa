@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -547,7 +550,18 @@ sub get_first_db_log {
         $statement .= sprintf "AND list_logs = '%s' ", $select->{'list'};
     }
 
-    $statement .= 'ORDER BY date_logs, usec_logs ';
+    # Unknown sort key as 'date'.
+    my $sortby = $select->{'sortby'};
+    unless (
+        $sortby
+        and grep { $sortby eq $_ }
+        qw(date robot list action parameters target_email msg_id
+        status error_type user_email client daemon)
+        ) {
+        $sortby = 'date';
+    }
+    $statement .= sprintf 'ORDER BY %s ',
+	($sortby eq 'date' ? 'date_logs, usec_logs' : $sortby . '_logs');
 
     my $sth;
     unless ($sth = $sdm->do_query($statement)) {

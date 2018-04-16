@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- scenario_test.tt2 -->
 
 <h3>[%|loc%]Scenario test module[%END%]</h3><br />
 <form action="[% path_cgi %]" method="post">
@@ -10,7 +10,7 @@
 	        <option value="[% sc.key %]" [% sc.value.selected %]>[% sc.key %]</option>
 	      [% END %]
 	  </select><br />
-      <label for="listname">[%|loc%]Listname:[%END%]  </label>
+      <label for="listname">[%|loc%]List name:[%END%]  </label>
 	  <select id="listname" name="listname">
 	      [% FOREACH l = listname %]
 	        <option value="[% l.key %]"[% l.value.selected %] >[% l.key %]</option>

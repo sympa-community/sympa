@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,7 +46,7 @@ my %attrmap = (
     gecos  => 'X-Sympa-Display-Name',
     sender => 'X-Sympa-Sender',
 );
-my @optattrs = qw(arc reception visibility);
+my @optattrs = qw(arc current_email reception visibility);
 
 sub new {
     my $class = shift;
@@ -219,14 +222,19 @@ sub get_id {
 
     join ';', map {
         my $val = $self->{$_};
-        if (ref $val) {
+        if (Scalar::Util::blessed($val) and $val->can('get_id')) {
             sprintf '%s=%s', $_, $val->get_id;
+        } elsif (ref $val eq 'HASH' and $_ eq 'request') {  #FIXME
+            sprintf '%s=<%s>', $_, get_id($val);
+        } elsif (ref $val) {
+            sprintf '%s=%s', $_, ref $val;
         } else {
             sprintf '%s=%s', $_, $val;
         }
         } grep {
         defined $self->{$_}
-        } qw(action context arc email reception visibility request error);
+        } qw(action context current_list listname arc mode email
+             reception visibility request error);
 }
 
 1;
@@ -238,7 +246,7 @@ __END__
 
 Sympa::Request - Requests for operation
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Sympa::Request;
   my $request = Sympa::Request->new($serialized, context => $list);
@@ -246,7 +254,7 @@ Sympa::Request - Requests for operation
 
 =head1 DESCRIPTION
 
-L<Sympa::Request> inmplements serializable object representing requests by
+L<Sympa::Request> implements serializable object representing requests by
 users.
 
 =head2 Methods

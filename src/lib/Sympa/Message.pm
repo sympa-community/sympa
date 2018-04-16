@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1132,8 +1135,8 @@ sub check_smime_signature {
     # First step is to check if message signing is OK.
     my $smime = Crypt::SMIME->new;
     eval {    # Crypt::SMIME >= 0.15 is required.
-        $smime->setPublicKeyStore(grep { defined $_ }
-                ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
+        $smime->setPublicKeyStore(grep { defined $_ and length $_ }
+            ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
     };
     unless (eval { $smime->check($self->as_string) }) {
         $log->syslog('err', '%s: Unable to verify S/MIME signature: %s',
@@ -1421,16 +1424,7 @@ sub prepare_message_according_to_mode {
 
     my $robot_id = $list->{'domain'};
 
-    if ($mode eq 'mail') {
-        ##Prepare message for normal reception mode
-        ## Add a footer
-        unless ($self->{'protected'}) {
-            my $entity = $self->as_entity->dup;
-
-            _decorate_parts($entity, $list);
-            $self->set_entity($entity);
-        }
-    } elsif ($mode eq 'nomail'
+    if ($mode eq 'nomail'
         or $mode eq 'summary'
         or $mode eq 'digest'
         or $mode eq 'digestplain') {
@@ -1447,16 +1441,6 @@ sub prepare_message_according_to_mode {
         my $entity = $self->as_entity->dup;
 
         if (_as_singlepart($entity, 'text/plain')) {
-            $log->syslog('notice', 'Multipart message changed to singlepart');
-        }
-        ## Add a footer
-        _decorate_parts($entity, $list);
-        $self->set_entity($entity);
-    } elsif ($mode eq 'html') {
-        ##Prepare message for html reception mode
-        my $entity = $self->as_entity->dup;
-
-        if (_as_singlepart($entity, 'text/html')) {
             $log->syslog('notice', 'Multipart message changed to singlepart');
         }
         ## Add a footer
@@ -1479,8 +1463,15 @@ sub prepare_message_according_to_mode {
         ## Add a footer
         _decorate_parts($entity, $list);
         $self->set_entity($entity);
-    } else {
-        die sprintf 'Unknown variable/reception mode %s', $mode;
+    } else { # 'mail'
+        # Prepare message for normal reception mode,
+        # and add a footer.
+        unless ($self->{'protected'}) {
+            my $entity = $self->as_entity->dup;
+
+            _decorate_parts($entity, $list);
+            $self->set_entity($entity);
+        }
     }
 
     return $self;
@@ -2761,7 +2752,7 @@ sub _do_text_plain {
     if ($EVAL_ERROR) {
         # mmm, what to do if it fails?
         $string .= $language->gettext_sprintf(
-            "** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
+            "** Warning: A message part is using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
             $charset->as_string
         );
         $thispart =~ s/[^\x00-\x7F]/?/g;
@@ -2826,7 +2817,7 @@ sub _do_text_html {
         } else {
             # mmm, what to do if it fails?
             $string .= $language->gettext_sprintf(
-                "** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
+                "** Warning: A message part is using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
                 $charset->as_string
             );
             $body =~ s/[^\x00-\x7F]/?/g;
@@ -3280,7 +3271,7 @@ __END__
 
 Sympa::Message - Mail message embedding for internal use in Sympa
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Sympa::Message;
   my $message = Sympa::Message->new($serialized, context => $list);
@@ -3362,7 +3353,7 @@ If it is C<0>, the field will be prepended.
 =item delete_header ( $field, [ $index ] )
 
 I<Instance method>.
-Deletes all occurences of the header field named $field.
+Deletes all occurrences of the header field named $field.
 
 =item replace_header ( $field, $value, [ $index ] )
 
@@ -3375,7 +3366,7 @@ I<Instance method>.
 Gets header of the message as L<MIME::Head> instance.
 
 Note that returned value is real reference to internal data structure.
-Even if it was changed, string representaion of message may not be updated.
+Even if it was changed, string representation of message may not be updated.
 Alternatively, use L</add_header>(), L</delete_header>() or
 L</replace_header>() to modify header.
 
@@ -3383,7 +3374,7 @@ L</replace_header>() to modify header.
 
 I<Instance method>.
 Gets spam status according to spam_status scenario
-and sets it as {smap_status} attribute.
+and sets it as {spam_status} attribute.
 
 =item dkim_sign ( dkim_d =E<gt> $d, [ dkim_i =E<gt> $i ],
 dkim_selector =E<gt> $selector, dkim_privatekey =E<gt> $privatekey )
@@ -3400,7 +3391,7 @@ and sets or clears {dkim_pass} item of the message object.
 =item remove_invalid_dkim_signature ( )
 
 I<Instance method>.
-Verifys DKIM signatures included in the message,
+Verifies DKIM signatures included in the message,
 and if any of them are invalid, removes them.
 
 =item as_entity ( )
@@ -3409,7 +3400,7 @@ I<Instance method>.
 Gets message content as MIME entity (L<MIME::Entity> instance).
 
 Note that returned value is real reference to internal data structure.
-Even if it was changed, string representaion of message may not be updated.
+Even if it was changed, string representation of message may not be updated.
 Below is better way to modify message.
 
     my $entity = $message->as_entity->dup;
@@ -3565,7 +3556,7 @@ them.
 I<Instance method>.
 Decrypts message using private key of user.
 
-Note that this method modifys Message object.
+Note that this method modifies Message object.
 
 Parameters:
 
@@ -3582,7 +3573,7 @@ If decrypting succeeded, {smime_crypted} item is set.
 I<Instance method>.
 Encrypts message using certificate of user.
 
-Note that this method modifys Message object.
+Note that this method modifies Message object.
 
 Parameters:
 
@@ -3617,7 +3608,7 @@ Otherwise false value.
 =item check_smime_signature ( )
 
 I<Instance method>.
-Verifys S/MIME signature of the message,
+Verifies S/MIME signature of the message,
 and if verification succeeded, sets {smime_signed} item true.
 
 Parameters:
@@ -3709,7 +3700,8 @@ Customized text, or C<undef> if error occurred.
 
 I<Instance method>.
 Transforms the message according to reception mode:
-C<'mail'>, C<'notice'>, C<'txt'> or C<'html'>.
+C<'mail'>, C<'notice'> or C<'txt'>.
+Note: 'html' mode was deprecated as of 6.2.23b.2.
 
 By C<'nomail'>, C<'digest'>, C<'digestplain'> or C<'summary'> mode,
 the message is not modified.
@@ -4095,6 +4087,6 @@ was initially written by Chris Hastie.  It appeared on Sympa 4.2b.1.
 
   (c) Chris Hastie 2004 - 2008.
 
-Renamed and merged L<Sympa::Message> appeard on Sympa 6.2.
+Renamed and merged L<Sympa::Message> appeared on Sympa 6.2.
 
 =cut

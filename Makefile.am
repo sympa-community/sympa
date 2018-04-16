@@ -6,6 +6,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,9 +24,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SUBDIRS = src default doc po www
-if SMTPC
-SUBDIRS += src/smtpc
-endif
 
 check_SCRIPTS = \
 	t/Language.t \
@@ -61,22 +61,24 @@ noinst_SCRIPTS = \
 	xt/pod-spelling.t
 
 EXTRA_DIST = \
-	important_changes.pl \
-	META.json.pl \
-	META.json \
-	sympa.spec.pl \
-	sympa.spec \
+	AUTHORS.md \
+	CONTRIBUTING.md \
+	INSTALL.md \
+	NEWS.md \
+	OChangeLog \
+	ONEWS \
+	README.md \
 	etc_README \
 	$(check_SCRIPTS) $(check_DATA) \
 	$(noinst_SCRIPTS)
 
-CLEANFILES = META.json previous_sympa_version sympa.spec sympa_wizard.pl.inst
+CLEANFILES = sympa_wizard.pl.inst
 
 MSGFMT=@MSGFMT@
 .po.mo:
 	$(MSGFMT) -o $@ $<
 
-check-local:
+check-local: $(check_DATA)
 	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
 	PERL5LIB=src/lib; export PERL5LIB; \
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
@@ -86,12 +88,7 @@ authorcheck:
 	PERL5LIB=src/lib; export PERL5LIB; \
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
-install-data-hook: installdir installconfig nextstep importantchanges
-if SMTPC
-	-chown $(USER) $(DESTDIR)$(libexecdir)/sympa_smtpc
-	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/sympa_smtpc
-	-chmod 750 $(DESTDIR)$(libexecdir)/sympa_smtpc
-endif
+install-data-hook: installdir installconfig nextstep
 
 installdir:
 	@echo "Creating plugin directory"
@@ -102,17 +99,22 @@ installdir:
 		fi; \
 	done
 	@echo "Creating writable directories"
-	@for dir in $(expldir) $(spooldir) $(spooldir)/msg $(spooldir)/digest \
-		$(spooldir)/moderation $(spooldir)/auth \
-		$(spooldir)/outgoing $(spooldir)/tmp $(spooldir)/task \
-		$(spooldir)/bulk \
-		$(bouncedir) $(arcdir) $(piddir) $(staticdir) $(staticdir)/js $(sysconfdir); do \
+	-@for dir in $(expldir) $(spooldir) $(bouncedir) $(arcdir) $(piddir) \
+		$(sysconfdir); do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
 		fi; \
-		chown $(USER) $(DESTDIR)$$dir || /bin/true; \
-		chgrp $(GROUP) $(DESTDIR)$$dir || /bin/true; \
+		chown $(USER) $(DESTDIR)$$dir; \
+		chgrp $(GROUP) $(DESTDIR)$$dir; \
+	done
+	-@for subdir in automatic bounce msg task tmp; do \
+		if [ ! -d $(DESTDIR)$(spooldir)/$$subdir ] ; then \
+			echo "Creating $(DESTDIR)$(spooldir)/$$subdir"; \
+			$(INSTALL) -d -m 750 $(DESTDIR)$(spooldir)/$$subdir; \
+		fi; \
+		chown $(USER) $(DESTDIR)$(spooldir)/$$subdir; \
+		chgrp $(GROUP) $(DESTDIR)$(spooldir)/$$subdir; \
 	done
 
 sympa_wizard.pl.inst: $(top_srcdir)/src/sbin/sympa_wizard.pl.in Makefile
@@ -123,38 +125,37 @@ sympa_wizard.pl.inst: $(top_srcdir)/src/sbin/sympa_wizard.pl.in Makefile
 
 installconfig: installdir sympa_wizard.pl.inst
 	@echo "Installing basic configuration ..."
-	export PERL5LIB=$(DESTDIR)$(modulesdir); \
+	-@export PERL5LIB=$(DESTDIR)$(modulesdir); \
 	if [ ! -f  $(DESTDIR)$(confdir)/sympa.conf ]; then \
 		echo "This looks like your first Sympa installation. The following wizard will assist you to create your first Sympa configuration.";\
 		if [ ! -d $(DESTDIR)$(confdir) ]; then \
 			$(INSTALL) -d -m 755 $(DESTDIR)$(confdir); \
 		fi; \
-		chown $(USER) $(DESTDIR)$(confdir) || /bin/true; \
-		chgrp $(GROUP) $(DESTDIR)$(confdir) || /bin/true; \
+		chown $(USER) $(DESTDIR)$(confdir); \
+		chgrp $(GROUP) $(DESTDIR)$(confdir); \
 		$(PERL) sympa_wizard.pl.inst \
 			--create sympa.conf \
-			--target $(DESTDIR)$(confdir)/sympa.conf \
-			|| /bin/true; \
-		chown $(USER) $(DESTDIR)$(confdir)/sympa.conf || /bin/true; \
-		chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf || /bin/true; \
-	fi; \
-	if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
+			--target $(DESTDIR)$(confdir)/sympa.conf; \
+		chown $(USER) $(DESTDIR)$(confdir)/sympa.conf; \
+		chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf; \
+	fi
+	-@if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
 		cd $(DESTDIR)$(sysconfdir); \
 		echo "# automatically created file" >> data_structure.version; \
 		echo "# you should not modify it" >> data_structure.version; \
 		echo $(VERSION) >> data_structure.version; \
-		chown $(USER) data_structure.version || /bin/true; \
-		chgrp $(GROUP) data_structure.version || /bin/true; \
+		chown $(USER) data_structure.version; \
+		chgrp $(GROUP) data_structure.version; \
 	fi
-	@for dir in create_list_templates custom_actions custom_conditions \
+	-@for dir in create_list_templates custom_actions custom_conditions \
 		data_sources families global_task_models list_task_models \
 		mail_tt2 scenari search_filters web_tt2; do \
 		if [ ! -d $(DESTDIR)$(sysconfdir)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(sysconfdir)/$$dir"; \
 			$(INSTALL) -d -m 755 $(DESTDIR)$(sysconfdir)/$$dir; \
 		fi; \
-		chown $(USER) $(DESTDIR)$(sysconfdir)/$$dir || /bin/true; \
-		chgrp $(GROUP) $(DESTDIR)$(sysconfdir)/$$dir || /bin/true; \
+		chown $(USER) $(DESTDIR)$(sysconfdir)/$$dir; \
+		chgrp $(GROUP) $(DESTDIR)$(sysconfdir)/$$dir; \
 	done
 	@if [ ! -e $(DESTDIR)$(sysconfdir)/README ]; then \
 		echo "Creating $(DESTDIR)$(sysconfdir)/README"; \
@@ -162,13 +163,13 @@ installconfig: installdir sympa_wizard.pl.inst
 			-e 's|--sysconfdir--|$(sysconfdir)|' \
 			-e 's|--defaultdir--|$(defaultdir)|' \
 			etc_README > $(DESTDIR)$(sysconfdir)/README; \
-		chmod 444 $(DESTDIR)$(sysconfdir)/README; \
+		chmod 644 $(DESTDIR)$(sysconfdir)/README; \
 	fi
 
 nextstep: 
 	@echo ""
 	@echo "** You can find documentation at:"
-	@echo "** http://www.sympa.org/documentation/manual/sympa-$(VERSION).pdf"
+	@echo "** https://sympa-community.github.io/manual/"
 	@echo ""
 	@echo "#########################################################"
 	@echo "# CHECK YOU HAVE ALL THE NEEDED MODULES:"
@@ -176,7 +177,7 @@ nextstep:
 	@echo "#        $(sbindir)/sympa_wizard.pl --check"
 	@echo "#"
 	@echo "# FIRST INSTALLATION:"
-	@echo "#    * Check the INSTALL file."
+	@echo "#    * Check the INSTALL.md file."
 	@echo "#    * Run the wizard to define some required parameters that can't be guessed."
 	@echo "#        $(sbindir)/sympa_wizard.pl"
 	@echo "#"
@@ -185,26 +186,10 @@ nextstep:
 	@echo "#        $(sbindir)/sympa.pl --upgrade"
 	@echo "#######################################################"
 
-importantchanges:
-	if test -f $(top_srcdir)/previous_sympa_version; then \
-		export PREVIOUS=`$(CAT) $(top_srcdir)/previous_sympa_version`; \
-	fi; \
-	$(PERL) $(top_srcdir)/important_changes.pl \
-		--current=$(VERSION) \
-		--previous=$${PREVIOUS};
-
 uninstall-hook:
 	rm -f $(DESTDIR)$(confdir)/sympa.conf
 	rm -f $(DESTDIR)$(confdir)/wwsympa.conf
 
 dist-hook:
 	$(MAKE) check
-
-META.json: META.json.pl Makefile src/lib/Sympa/ModDef.pm
-	cd src/lib; $(MAKE) Sympa/Constants.pm
-	$(PERL) META.json.pl > META.json
-
-sympa.spec: sympa.spec.pl Makefile src/lib/Sympa/ModDef.pm
-	cd src/lib; $(MAKE) Sympa/Constants.pm
-	$(PERL) sympa.spec.pl > sympa.spec
 

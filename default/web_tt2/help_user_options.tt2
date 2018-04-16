@@ -1,59 +1,23 @@
-<!-- $Id$ -->
+<!-- help_user_options.tt2 -->
+[% IF component.caller != 'help_user.tt2' ~%]
 <p>
 [%|helploc%]This is a description of the reception modes available in Sympa. These options are mutually exclusive, which means that you can't set two different receive modes at the same time. Only some of the modes might be available to specific mailing lists.[%END%]
 </p>
 <ul>
+[%~ END %]
 
-<li>[%|helploc%]Digest[%END%]<br />
-[%|helploc%]Instead of receiving individual mail messages from the list, the subscriber will periodically 
-receive batched messages in a Digest. This Digest compiles a group of messages from the list, using
-the multipart/digest MIME format.[%END%] 
-<br /><br />
-[%|helploc%]The sending interval for these Digests is defined by the list owner.[%END%]<br /><br /></li>
+<li>[%|helploc%]<strong>digest MIME format</strong>: instead of receiving the list messages in a normal manner, you will get a digest of them on a regular basis. This digest compiles a group of messages from the list, using multipart/digest <acronym lang="en" xml:lang="en" title="Multipurpose Internet Mail Extension">MIME</acronym> format. The digest frequency is set up by the list owner.[%END%]</li>
+<li>[%|helploc%]<strong>digest plain text format</strong>: instead of receiving the list messages in a normal manner, you will get a digest of them on a regular basis. This digest compiles a group of messages from the list, using plain text format. The digest frequency is set up by the list owner.[%END%]</li>
+<li>[%|helploc%]<strong>summary mode</strong>: instead of receiving the list messages in a normal manner, you will get a list of them on a regular basis. To read the messages, you will need to browse the online list archive.[%END%]</li>
+<li>[%|helploc%]<strong>notice mode</strong>: with this mode, you will receive all the messages with a blank body: this way you are informed of every message sent to the list real time, without risk of flooding your inbox.[%END%]</li>
+<li>[%|helploc%]<strong>no mail (useful for vacations)</strong>: this mode makes it possible not to receive the messages of the list. It is especially useful when you have no access to your email for a long time and want to remain subscribed to the list nevertheless.[%END%]</li>
+<li>[%|helploc%]<strong>text only mode</strong>: this mode allows you to receive only the text version (text/plain) of messages sent in both formats (plain text and <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym>).[%END%]</li>
+<li>[%|helploc%]<strong>HTML only mode</strong>: this mode allows you to receive only the <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym> version (text/html) of messages sent in both formats.[%END%]</li>
+<li>[%|helploc%]<strong>urlize mode</strong>: this mode allows you not to receive attached documents. However these documents are available in the list archive and you can access them through a <acronym title="Uniform Resource Locator" lang="en" xml:lang="en">URL</acronym> provided in the message.[%END%]</li>
+<li>[%|helploc%]<strong>you do not receive your own posts</strong>: this mode allows you not to receive a copy of your own messages.[%END%]</li>
+<li>[%|helploc%]<strong>standard (direct reception)</strong>: this mode is the default delivery mode; it cancels any other delivery mode.[%END%]</li>
 
-<li>[%|helploc%]DigestPlain[%END%]<br />
-[%|helploc%]Similar to the Digest option in that the subscriber will periodically 
-receive batched messages in a Digest. With DigestPlain the Digest is sent in a plain text 
-format, with all attachments stripped out. DigestPlain is useful if your email software doesn't
-display multipart/digest format messages well.[%END%]
-<br /><br />
-[%|helploc%]The sending interval for these Digests is defined by the list owner.[%END%]<br /><br /></li>
-	
-<li>[%|helploc%]Summary[%END%]<br /> 
-
-[%|helploc%]Instead of receiving individual mail messages from the list, the subscriber will periodically 
-receive a list of messages. This mode is very close to the Digest reception mode but the 
-subscriber receives only the list of messages.[%END%] 
-<br /><br /></li>
-
-<li>[%|helploc%]Nomail[%END%] <br />
-
-[%|helploc%]This mode is used when a subscriber no longer wishes to receive mail from the list, but nevertheless wishes to retain the ability to post to the list. This mode therefore prevents the subscriber from unsubscribing and subscribing later on.[%END%] <br /><br /></li>
-
-<li>Txt <br />
-
-[%|helploc%]This mode is used when a subscriber wishes to receive mails sent in both HTML and plain text formats
-only in plain text format.[%END%]<br /><br /></li>
-
-<li>Html<br /> 
-
-[%|helploc%]This mode is used when a subscriber wishes to receive mails sent in both HTML and plain text formats
-only in HTML format.[%END%]<br /><br /></li>
-
-<li>Urlize<br /> 
-
-[%|helploc%]This mode is used when a subscriber does not want to receive attached files. The attached files are 
-replaced by a URL leading to the file stored on the list site.[%END%] <br /><br /></li>
-
-<li>Not_me<br /> 
-
-[%|helploc%]This mode is used when a subscriber does not want to receive copies of messages that he or she has sent to 
-the list.[%END%] <br /><br /></li>
-
-<li>Normal<br />
-
-[%|helploc%]This option is used mainly to cancel the nomail, summary or digest modes. If the subscriber was 
-in nomail mode, he or she will again receive individual mail messages from the list.[%END%] <br /><br /></li>
-
+[% IF component.caller != 'help_user.tt2' ~%]
 </ul>
+[%~ END %]
 <!-- end help_user_options.tt2 -->

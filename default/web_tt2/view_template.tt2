@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- view_template.tt2 -->
 
 <h2>[%|loc%]Template edition system[%END%]</h2><br />
 <p>
@@ -29,8 +29,9 @@
 [%|loc%](This template is the default for all languages unless it is redefined for a specific language)[%END%]
 [%- ELSE -%]
 <strong class="neutral"
-lang="[%tpl_lang_lang%]" xml:lang="[%tpl_lang_lang%]"
-> [%tpl_lang_title%] ([%tpl_lang%]) </strong>
+ lang="[%tpl_lang_lang%]" xml:lang="[%tpl_lang_lang%]">
+[%~ tpl_lang | optdesc('lang',1) ~%]
+</strong>
 [%- END %]</li>
 </ul>
 </p><br />

@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -97,17 +100,30 @@ my %full_db_struct = (
                 'doc'    => 'FIXME',
                 'order'  => 10,
             },
-            'date_subscriber' => {
-                'struct'   => 'datetime',
+            #'date_subscriber' => {
+            #    'struct'   => 'datetime',
+            #    'doc'      => 'date of subscription',
+            #    'not_null' => 1,
+            #    'order'    => 11,
+            #},
+            'date_epoch_subscriber' => {
+                'struct'   => 'int(11)',
                 'doc'      => 'date of subscription',
                 'not_null' => 1,
-                'order'    => 11,
+                'order'    => 11.5,
             },
-            'update_subscriber' => {
-                'struct' => 'datetime',
+            # Obsoleted as of 6.2.25b.2. Use update_epoch_subscriber.
+            #'update_subscriber' => {
+            #    'struct' => 'datetime',
+            #    'doc' =>
+            #        'the latest date where subscription is confirmed by subscriber',
+            #    'order' => 12,
+            #},
+            'update_epoch_subscriber' => {
+                'struct' => 'int(11)',
                 'doc' =>
-                    'the latest date where subscription is confirmed by subscriber',
-                'order' => 12,
+                    'the last time when subscription is confirmed by subscriber',
+                'order' => 12.5,
             },
             'comment_subscriber' => {
                 'struct' => 'varchar(150)',
@@ -146,13 +162,13 @@ my %full_db_struct = (
             'include_sources_subscriber' => {
                 'struct' => 'varchar(50)',
                 'doc' =>
-                    'comma seperated list of datasource that contain this subscriber',
+                    'comma separated list of datasource that contain this subscriber',
                 'order' => 19,
             },
             'custom_attribute_subscriber' => {
                 'struct' => 'text',
                 'doc'    => 'FIXME',
-                'order'  => 10,
+                'order'  => 20,
             },
 
         },
@@ -174,8 +190,8 @@ my %full_db_struct = (
                 'order'  => 3,
             },
             'password_user' => {
-                'struct' => 'varchar(40)',
-                'doc'    => 'password are stored as fringer print',
+                'struct' => 'varchar(64)',
+                'doc'    => 'password are stored as finger print',
                 'order'  => 2,
             },
             'last_login_date_user' => {
@@ -209,7 +225,7 @@ my %full_db_struct = (
             },
             'lang_user' => {
                 'struct' => 'varchar(10)',
-                'doc'    => 'user langage preference',
+                'doc'    => 'user language preference',
                 'order'  => 9,
             },
             'attributes_user' => {
@@ -417,7 +433,7 @@ my %full_db_struct = (
             },
         },
         'doc' =>
-            'Exclusion table is used in order to manage unsubscription for subsceriber inclued from an external data source.',
+            'Exclusion table is used in order to manage unsubscription for subscriber included from an external data source.',
         'order' => 5,
     },
     'inclusion_table' => {
@@ -450,7 +466,7 @@ my %full_db_struct = (
             },
         },
         'doc' =>
-            'Inclusion table is used in order to manage lists inclued from / including subscribers of other lists.',
+            'Inclusion table is used in order to manage lists included from / including subscribers of other lists.',
         'order' => 4,
     },
     'session_table' => {
@@ -877,19 +893,31 @@ my %full_db_struct = (
             'profile_admin' => {
                 'struct' => "enum('privileged','normal')",
                 'doc' =>
-                    'privilege level for this owner, value //normal// or //privileged//. The related privilege are listed in editlist.conf. ',
+                    'privilege level for this owner, value //normal// or //privileged//. The related privilege are listed in edit_list.conf. ',
                 'order' => 5,
             },
-            'date_admin' => {
-                'struct'   => 'datetime',
+            #'date_admin' => {
+            #    'struct'   => 'datetime',
+            #    'doc'      => 'date this user become a list admin',
+            #    'not_null' => 1,
+            #    'order'    => 6,
+            #},
+            'date_epoch_admin' => {
+                'struct'   => 'int(11)',
                 'doc'      => 'date this user become a list admin',
                 'not_null' => 1,
-                'order'    => 6,
+                'order'    => 6.5,
             },
-            'update_admin' => {
-                'struct' => 'datetime',
-                'doc'    => 'last update timestamp',
-                'order'  => 7,
+            # Obsoleted as of 6.2.25b.2. Use update_epoch_admin.
+            #'update_admin' => {
+            #    'struct' => 'datetime',
+            #    'doc'    => 'last update timestamp',
+            #    'order'  => 7,
+            #},
+            'update_epoch_admin' => {
+                'struct' => 'int(11)',
+                'doc'    => 'last update time',
+                'order'  => 7.5,
             },
             'reception_admin' => {
                 'struct' => 'varchar(20)',
@@ -917,7 +945,7 @@ my %full_db_struct = (
             'included_admin' => {
                 'struct' => 'int(1)',
                 'doc' =>
-                    'set to 1 if user is admin by an external data source',
+                    'set to 1 if user is admin by an external data source. Note that included_admin and subscribed_admin can both value 1',
                 'order' => 12,
             },
             'include_sources_admin' => {
@@ -1162,7 +1190,7 @@ __END__
 
 =head1 NAME
 
-Sympa::DatabaseDescription - Dafinition of core database structure
+Sympa::DatabaseDescription - Definition of core database structure
 
 =head1 DESCRIPTION
 
@@ -1178,7 +1206,7 @@ I<Function>.
 Returns a heshref containing definitions of all tables.
 Each item has the name of table as key and definition as value.
 
-Each definition is hashref containig following keys:
+Each definition is hashref containing following keys:
 
 =over
 
@@ -1196,7 +1224,7 @@ TBD.
 
 =back
 
-C<fields> item is hasref which may contain following items.
+C<fields> item is hashref which may contain following items.
 
 =over
 
@@ -1209,7 +1237,7 @@ Following types are recognized:
 
 =item varchar(I<length>)
 
-Text with length upto I<length>.  I<length> must be lower than 2^16 - 2.
+Text with length up to I<length>.  I<length> must be lower than 2^16 - 2.
 
 =item int(1)
 
@@ -1221,7 +1249,7 @@ Unix time.
 
 =item int(I<cols>)
 
-Integer with columns upto I<cols>, with its value from -2^31 to 2^31 - 1.
+Integer with columns up to I<cols>, with its value from -2^31 to 2^31 - 1.
 
 =item tinyint
 
@@ -1241,23 +1269,25 @@ IEEE floating point number, 8 bytes.
 
 =item enum
 
-Keyword with length upto 20 o.
+Keyword with length up to 20 o.
 
 =item text
 
-Text with length upto 500 o.
+Text with length up to 500 o.
 
 =item longtext
 
-Text with length upto 2^32 - 4 o.
+Text with length up to 2^32 - 4 o.
 
 =item datetime
 
 Timestamp.
+B<Deprecated> as of Sympa 6.2.25b.3.
+Use C<int(11)> (Unix time) instead.
 
 =item mediumblob
 
-Binary data with length upto 2^24 - 3 o.
+Binary data with length up to 2^24 - 3 o.
 
 =back
 

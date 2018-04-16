@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,7 +42,6 @@ use Sympa::Message::Template;
 use Sympa::Process;
 use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
-use Sympa::Tools::Text;
 use Sympa::Tracking;
 
 use base qw(Sympa::Spindle);
@@ -68,11 +70,7 @@ sub _init {
             ? $self->{log_level}
             : $Conf::Conf{'log_level'};
 
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
-
-        Sympa::List::init_list_cache();
-        # Process grouped notifications
+        # Process grouped notifications.
         Sympa::Alarm->instance->flush;
 
         unless ($process->{detached}) {
@@ -211,26 +209,8 @@ sub _twist {
         ? $self->{log_level}
         : Conf::get_robot_conf($robot, 'log_level');
 
-    #HASH which will contain the attributes of the subscriber
-    my $data;
-    # Initialization of the HASH $data. It will be used by parse_tt2 to
-    # personalized messages.
-    # Note that message ID which can be anonymized should be taken from
-    # message header instead of {message_id} attribute.
-    my $msg_id = Sympa::Tools::Text::canonic_message_id(
-        $message->get_header('Message-ID'));
-    $data = {
-        'messageid' => $msg_id,
-        'listname'  => $listname,
-        'robot'     => $robot,
-        #XXX'to'        => $message->{rcpt}, #XXX Insecure
-        'wwsympa_url' => Conf::get_robot_conf($robot, 'wwsympa_url'),
-    };
-
     # Contain all the subscribers
     my @rcpts = @{$message->{rcpt}};
-    ## Use an intermediate handler to encode to filesystem_encoding
-    my $user;
 
     # Message transformation should be done in the folowing order:
     #  -1 headers modifications (done in sympa.pl)
@@ -424,20 +404,8 @@ sub _twist {
 }
 
 # Old name: trace_smime() in bulk.pl.
-# Note: Currently never used.
-sub _trace_smime {
-    my $message = shift;
-    my $where   = shift;
-
-    my $result = $message->check_smime_signature;
-    return if defined $result and $result == 0;
-
-    unless ($result) {
-        $log->syslog('debug', 'Signature S/MIME NOT OK (%s)', $where);
-    } else {
-        $log->syslog('debug', 'Signature S/MIME OK (%s)', $where);
-    }
-}
+# No longer used.
+#sub _trace_smime;
 
 1;
 __END__
@@ -461,7 +429,7 @@ L<Sympa::Spindle::ProcessOutgoing> defines workflow to distribute messages
 in outgoing spool using mailer.
 
 If messages are stored into incoming spool, sooner or later
-L<Sympa::Spindle::ProcessIncoming> fetches them, modifys header and body of
+L<Sympa::Spindle::ProcessIncoming> fetches them, modifies header and body of
 them, shelves several transformations, and at last stores altered messages
 into outgoing spool.
 

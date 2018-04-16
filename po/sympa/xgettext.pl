@@ -344,10 +344,11 @@ foreach my $file (@ordered_files) {
     $line = 1;
     pos($_) = 0;
     while (
-        /\G.*?(\'?)(gettext_comment|gettext_id|gettext_unit)\1\s*=>\s*\"([^\"]+)\"/sg
+        /\G.*?(\'?)(gettext_comment|gettext_id|gettext_unit)\1\s*=>\s*\"((\\.|[^\"])+)\"/sg
         ) {
         my $str = $3;
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
+        $str =~ s{(\\.)}{eval "\"$1\""}esg;
         &add_expression(
             {   'expression' => $str,
                 'filename'   => $filename,
@@ -359,10 +360,11 @@ foreach my $file (@ordered_files) {
     $line = 1;
     pos($_) = 0;
     while (
-        /\G.*?(\'?)(gettext_comment|gettext_id|gettext_unit)\1\s*=>\s*\'([^\']+)\'/sg
+        /\G.*?(\'?)(gettext_comment|gettext_id|gettext_unit)\1\s*=>\s*\'((\\.|[^\'])+)\'/sg
         ) {
         my $str = $3;
         $line += (() = ($& =~ /\n/g));    # cryptocontext!
+        $str =~ s{(\\.)}{eval "'$1'"}esg;
         &add_expression(
             {   'expression' => $str,
                 'filename'   => $filename,

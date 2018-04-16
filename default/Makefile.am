@@ -6,6 +6,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,13 +27,11 @@ nobase_nodist_default_DATA = \
 	list_aliases.tt2
 nobase_default_DATA = \
 	auth.conf \
-	ca-bundle.crt \
 	charset.conf \
 	crawlers_detection.conf \
 	create_list.conf \
 	edit_list.conf \
 	ldap_alias_entry.tt2 \
-	ldap_alias_manager.conf \
 	mhonarc-ressources.tt2 \
 	mime.types \
 	nrcpt_by_domain.conf \
@@ -69,12 +70,6 @@ nobase_default_DATA = \
 	list_task_models/remind.monthly.task \
 	list_task_models/remind.yearly.task \
 	list_task_models/sync_include.ttl.task \
-	scenari/access_web_archive.closed \
-	scenari/access_web_archive.intranet \
-	scenari/access_web_archive.listmaster \
-	scenari/access_web_archive.owner \
-	scenari/access_web_archive.private \
-	scenari/access_web_archive.public \
 	scenari/add.auth \
 	scenari/add.authdkim \
 	scenari/add.closed \
@@ -85,6 +80,12 @@ nobase_default_DATA = \
 	scenari/archive_mail_access.owner \
 	scenari/archive_mail_access.private \
 	scenari/archive_mail_access.public \
+	scenari/archive_web_access.closed \
+	scenari/archive_web_access.intranet \
+	scenari/archive_web_access.listmaster \
+	scenari/archive_web_access.owner \
+	scenari/archive_web_access.private \
+	scenari/archive_web_access.public \
 	scenari/automatic_list_creation.listmaster \
 	scenari/automatic_list_creation.public \
 	scenari/automatic_list_creation.family_owner \
@@ -114,6 +115,9 @@ nobase_default_DATA = \
 	scenari/invite.owner \
 	scenari/invite.private \
 	scenari/invite.public \
+	scenari/move_user.auth \
+	scenari/move_user.closed \
+	scenari/move_user.listmaster \
 	scenari/remind.listmaster \
 	scenari/remind.listmasterdkim \
 	scenari/remind.owner \
@@ -134,6 +138,8 @@ nobase_default_DATA = \
 	scenari/send.intranetorprivate \
 	scenari/send.newsletter \
 	scenari/send.newsletterkeyonly \
+	scenari/send.ownerauth \
+	scenari/send.owner \
 	scenari/send.private \
 	scenari/send.privateandeditorkey \
 	scenari/send.privateandnomultipartoreditorkey \
@@ -181,7 +187,6 @@ nobase_default_DATA = \
 	scenari/visibility.noconceal \
 	scenari/visibility.secret \
 	web_tt2/active_lists.tt2 \
-	web_tt2/add_request.tt2 \
 	web_tt2/admin.tt2 \
 	web_tt2/ajax.tt2 \
 	web_tt2/arc_manage.tt2 \
@@ -189,10 +194,6 @@ nobase_default_DATA = \
 	web_tt2/arcsearch.tt2 \
 	web_tt2/arc.tt2 \
 	web_tt2/aside_menu.tt2 \
-	web_tt2/auto_signoff.tt2 \
-	web_tt2/automatic_lists_management_request.tt2 \
-	web_tt2/automatic_lists_request.tt2 \
-	web_tt2/automatic_lists.tt2 \
 	web_tt2/blacklist.tt2 \
 	web_tt2/button_footer.tt2 \
 	web_tt2/button_header.tt2 \
@@ -200,13 +201,12 @@ nobase_default_DATA = \
 	web_tt2/change_email.tt2 \
 	web_tt2/change_email_request.tt2 \
 	web_tt2/choosepasswd.tt2 \
-	web_tt2/close_list.tt2 \
 	web_tt2/compose_mail.tt2 \
 	web_tt2/confirm_action.tt2 \
 	web_tt2/copy_template.tt2 \
 	web_tt2/crash.tt2 \
+	web_tt2/create_automatic_list_request.tt2 \
 	web_tt2/create_list_request.tt2 \
-	web_tt2/create_list.tt2 \
 	web_tt2/css.tt2 \
 	web_tt2/d_control.tt2 \
 	web_tt2/d_editfile.tt2 \
@@ -236,8 +236,6 @@ nobase_default_DATA = \
 	web_tt2/head_javascript.tt2 \
 	web_tt2/help_admin.tt2 \
 	web_tt2/help_arc.tt2 \
-	web_tt2/help_editfile.tt2 \
-	web_tt2/help_editlist.tt2 \
 	web_tt2/help_faq.tt2 \
 	web_tt2/help_faqadmin.tt2 \
 	web_tt2/help_faquser.tt2 \
@@ -251,9 +249,9 @@ nobase_default_DATA = \
 	web_tt2/help_user_options.tt2 \
 	web_tt2/help_user.tt2 \
 	web_tt2/home.tt2 \
+	web_tt2/import.tt2 \
 	web_tt2/including_lists.tt2 \
 	web_tt2/info.tt2 \
-	web_tt2/install_pending_list.tt2 \
 	web_tt2/latest_arc.tt2 \
 	web_tt2/latest_d_read.tt2 \
 	web_tt2/latest_lists.tt2 \
@@ -300,13 +298,13 @@ nobase_default_DATA = \
 	web_tt2/show_exclude.tt2 \
 	web_tt2/show_sessions.tt2 \
 	web_tt2/sigindex.tt2 \
-	web_tt2/sigrequest.tt2 \
+	web_tt2/signoff.tt2 \
 	web_tt2/skinsedit.tt2 \
 	web_tt2/sso_login.tt2 \
 	web_tt2/stats.tt2 \
 	web_tt2/subindex.tt2 \
 	web_tt2/suboptions.tt2 \
-	web_tt2/subrequest.tt2 \
+	web_tt2/subscribe.tt2 \
 	web_tt2/subscriber_table.tt2 \
 	web_tt2/suspend_request.tt2 \
 	web_tt2/sympa_menu.tt2 \
@@ -356,6 +354,7 @@ nobase_default_DATA = \
 	mail_tt2/remind.tt2 \
 	mail_tt2/removed.tt2 \
 	mail_tt2/request_auth.tt2 \
+	mail_tt2/report.tt2 \
 	mail_tt2/review.tt2 \
 	mail_tt2/send_auth.tt2 \
 	mail_tt2/sendpasswd.tt2 \
@@ -409,5 +408,7 @@ install-data-hook:
 	$(LN_S) -f lists.tt2 search_list.tt2; \
 	rm -f authorization_reject.tt2; \
 	$(LN_S) -f ../mail_tt2/authorization_reject.tt2; \
+	rm -f report.tt2; \
+	$(LN_S) -f ../mail_tt2/report.tt2; \
 	test -f css_ie.tt2 || echo '' >> css_ie.tt2
 

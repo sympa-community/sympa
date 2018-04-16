@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,6 +41,7 @@ use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::LockedFile;
 use Sympa::Log;
+use Sympa::Regexps;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
@@ -313,8 +317,8 @@ sub load_robots {
         } else {
             $param->{'config_hash'}{'robots'}{$robot} = $robot_conf;
         }
-        _check_double_url_usage(
-            {'config_hash' => $param->{'config_hash'}{'robots'}{$robot}});
+        #_check_double_url_usage(
+        #    {'config_hash' => $param->{'config_hash'}{'robots'}{$robot}});
     }
     return undef if ($exiting);
     return 1;
@@ -821,21 +825,6 @@ sub checkfiles {
         }
     }
 
-    ## Check cafile and capath access
-    if (defined $Conf{'cafile'} && $Conf{'cafile'}) {
-        unless (-f $Conf{'cafile'} && -r $Conf{'cafile'}) {
-            $log->syslog('err', 'Cannot access cafile %s', $Conf{'cafile'});
-            $config_err++;
-        }
-    }
-
-    if (defined $Conf{'capath'} && $Conf{'capath'}) {
-        unless (-d $Conf{'capath'} && -x $Conf{'capath'}) {
-            $log->syslog('err', 'Cannot access capath %s', $Conf{'capath'});
-            $config_err++;
-        }
-    }
-
     # Check if directory parameters point to the same directory.
     my @keys = qw(bounce_path etc home
         queue queueauth queuebounce queuebulk queuedigest
@@ -863,46 +852,26 @@ sub checkfiles {
         }
     }
 
-    # Create pictures dir if useful for each robot.
-    foreach my $robot (keys %{$Conf{'robots'}}) {
-        my $dir = get_robot_conf($robot, 'static_content_path');
-        if ($dir ne '' && -d $dir) {
-            unless (-f $dir . '/index.html') {
-                unless (open(FF, ">$dir" . '/index.html')) {
-                    $log->syslog(
-                        'err',
-                        'Unable to create %s/index.html as an empty file to protect directory: %m',
-                        $dir
-                    );
-                }
-                close FF;
-            }
+    # Create pictures directory. FIXME: Would be created on demand.
+    my $pictures_dir = $Conf::Conf{'pictures_path'};
+    unless (-d $pictures_dir) {
+        unless (mkdir $pictures_dir, 0775) {
+            $log->syslog('err', 'Unable to create directory %s',
+                $pictures_dir);
+            $config_err++;
+        } else {
+            chmod 0775, $pictures_dir;  # set masked bits.
 
-            # create picture dir
-            if (get_robot_conf($robot, 'pictures_feature') eq 'on') {
-                my $pictures_dir =
-                    get_robot_conf($robot, 'static_content_path')
-                    . '/pictures';
-                unless (-d $pictures_dir) {
-                    unless (mkdir($pictures_dir, 0775)) {
-                        $log->syslog('err', 'Unable to create directory %s',
-                            $pictures_dir);
-                        $config_err++;
-                    }
-                    chmod 0775, $pictures_dir;
-
-                    my $index_path = $pictures_dir . '/index.html';
-                    unless (-f $index_path) {
-                        unless (open(FF, ">$index_path")) {
-                            $log->syslog(
-                                'err',
-                                'Unable to create %s as an empty file to protect directory',
-                                $index_path
-                            );
-                        }
-                        close FF;
-                    }
-                }
+            my $index_path = $pictures_dir . '/index.html';
+            my $fh;
+            unless (open $fh, '>', $index_path) {
+                $log->syslog(
+                    'err',
+                    'Unable to create %s as an empty file to protect directory',
+                    $index_path
+                );
+            } else {
+                close $fh;
             }
         }
     }
@@ -1002,8 +971,10 @@ sub _load_auth {
             'bind_password'   => '.+',
             'get_dn_by_uid_filter'        => '.+',
             'get_dn_by_email_filter'      => '.+',
-            'email_attribute'             => '\w+',
-            'alternative_email_attribute' => '(\w+)(,\w+)*',
+            'email_attribute'             => Sympa::Regexps::ldap_attrdesc(),
+            'alternative_email_attribute' => Sympa::Regexps::ldap_attrdesc()
+                . '(\s*,\s*'
+                . Sympa::Regexps::ldap_attrdesc() . ')*',
             'scope'                       => 'base|one|sub',
             'authentication_info_url'     => 'http(s)?:/.*',
             'use_tls'                     => 'starttls|ldaps|none',
@@ -1041,7 +1012,7 @@ sub _load_auth {
             'suffix'        => '.+',
             'scope'         => 'base|one|sub',
             'get_email_by_uid_filter' => '.+',
-            'email_attribute'         => '\w+',
+            'email_attribute'         => Sympa::Regexps::ldap_attrdesc(),
             'use_tls'                 => 'starttls|ldaps|none',
             'use_ssl'                 => '1',                     # Obsoleted
             'use_start_tls'           => '1',                     # Obsoleted
@@ -1068,7 +1039,7 @@ sub _load_auth {
             'suffix'        => '.+',
             'scope'         => 'base|one|sub',
             'get_email_by_uid_filter' => '.+',
-            'email_attribute'         => '\w+',
+            'email_attribute'         => Sympa::Regexps::ldap_attrdesc(),
             'use_tls'                 => 'starttls|ldaps|none',
             'use_ssl'                 => '1',                     # Obsoleted
             'use_start_tls'           => '1',                     # Obsoleted
@@ -1429,23 +1400,10 @@ sub load_automatic_lists_description {
             },
         },
     );
-    # find appropriate automatic_lists_description.tt2 file
-    my $config;
-    if (defined $robot) {
-        $config =
-              $Conf{'etc'} . '/'
-            . $robot
-            . '/families/'
-            . $family
-            . '/automatic_lists_description.conf';
-    } else {
-        $config =
-              $Conf{'etc'}
-            . '/families/'
-            . $family
-            . '/automatic_lists_description.conf';
-    }
-    return undef unless (-r $config);
+    # find appropriate automatic_lists_description.conf file
+    my $config = Sympa::search_fullpath($robot,
+        'automatic_lists_description.conf', subdir => ('families/' . $family));
+    return undef unless $config;
     my $description =
         load_generic_conf_file($config, \%automatic_lists_params);
 
@@ -1914,12 +1872,6 @@ sub _infer_server_specific_parameter_values {
 
     $param->{'config_hash'}{'robot_name'} = '';
 
-    unless ((defined $param->{'config_hash'}{'cafile'})
-        || (defined $param->{'config_hash'}{'capath'})) {
-        $param->{'config_hash'}{'cafile'} =
-            Sympa::Constants::DEFAULTDIR . '/ca-bundle.crt';
-    }
-
     unless (
         Sympa::Tools::Data::smart_eq(
             $param->{'config_hash'}{'dkim_feature'}, 'on'
@@ -2010,14 +1962,6 @@ sub _infer_server_specific_parameter_values {
         };
     }
 
-    ## Default SOAP URL corresponds to default robot
-    if ($param->{'config_hash'}{'soap_url'}) {
-        my $url = $param->{'config_hash'}{'soap_url'};
-        $url =~ s/^http(s)?:\/\/(.+)$/$2/;
-        $param->{'config_hash'}{'robot_by_soap_url'}{$url} =
-            $param->{'config_hash'}{'domain'};
-    }
-
     return 1;
 }
 
@@ -2069,18 +2013,6 @@ sub _infer_robot_parameter_values {
     $param->{'config_hash'}{'static_content_path'} ||=
         $Conf{'static_content_path'};
 
-    ## CSS
-    my $final_separator = '';
-    $final_separator = '/' if ($param->{'config_hash'}{'robot_name'});
-    $param->{'config_hash'}{'css_url'} ||=
-          $param->{'config_hash'}{'static_content_url'} . '/css'
-        . $final_separator
-        . $param->{'config_hash'}{'robot_name'};
-    $param->{'config_hash'}{'css_path'} ||=
-          $param->{'config_hash'}{'static_content_path'} . '/css'
-        . $final_separator
-        . $param->{'config_hash'}{'robot_name'};
-
     unless ($param->{'config_hash'}{'email'}) {
         $param->{'config_hash'}{'email'} = $Conf{'email'};
     }
@@ -2099,13 +2031,6 @@ sub _infer_robot_parameter_values {
         $param->{'config_hash'}{'blacklist'}{$action} = 1;
     }
 
-    ## Create a hash to deduce robot from SOAP url
-    if ($param->{'config_hash'}{'soap_url'}) {
-        my $url = $param->{'config_hash'}{'soap_url'};
-        $url =~ s/^http(s)?:\/\/(.+)$/$2/;
-        $Conf{'robot_by_soap_url'}{$url} =
-            $param->{'config_hash'}{'robot_name'};
-    }
     # Hack because multi valued parameters are not available for Sympa 6.1.
     if (defined $param->{'config_hash'}{'automatic_list_families'}) {
         my @families = split ';',
@@ -2371,36 +2296,8 @@ sub _set_listmasters_entry {
     return $number_of_valid_email;
 }
 
-sub _check_double_url_usage {
-    my $param = shift;
-    my ($host, $path);
-    if (Sympa::Tools::Data::smart_eq(
-            $param->{'config_hash'}{'http_host'},
-            qr/^([^\/]+)(\/.*)$/
-        )
-        ) {
-        $param->{'config_hash'}{'http_host'} =~ qr/^([^\/]+)(\/.*)$/;
-        ($host, $path) = ($1, $2);
-    } else {
-        ($host, $path) = ($param->{'config_hash'}{'http_host'}, '/');
-    }
-
-    ## Warn listmaster if another virtual host is defined with the same host
-    ## +path
-    if (defined $Conf{'robot_by_http_host'}{$host}{$path}) {
-        $log->syslog(
-            'err',
-            'Two virtual hosts (%s and %s) are mapped via a single URL "%s%s"',
-            $Conf{'robot_by_http_host'}{$host}{$path},
-            $param->{'config_hash'}{'robot_name'},
-            $host,
-            $path
-        );
-    }
-
-    $Conf{'robot_by_http_host'}{$host}{$path} =
-        $param->{'config_hash'}{'robot_name'};
-}
+# No longer used.
+#sub _check_double_url_usage;
 
 sub _parse_custom_robot_parameters {
     my $param           = shift;
@@ -2680,7 +2577,7 @@ sub _load_wwsconf {
     return $wwsconf;
 }
 
-# MOVED: Use Sympa::Tools::WWW::update_css().
+# MOVED: Use Sympa::WWW::Tools::update_css().
 #sub update_css;
 
 # lazy loading on demand

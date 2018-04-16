@@ -1,31 +1,78 @@
-# #-#-#-#-#  blank_web_help_ja.po (sympa)  #-#-#-#-#
 # Sympa online help internationalisation.
 # Copyright (C) 2007
 # This file is distributed under the same license as Sympa.
 # FIRST AUTHOR <david.verdin@cru.fr>, 2007.
 #
-# #-#-#-#-#  tmp_web_help_ja.po (Sympa-5.4b.1)  #-#-#-#-#
 # Japanese translation for Sympa
 # Copyright (c) (c) 2005 Canonical Ltd, and Rosetta Contributors 2005
 # This file is distributed under the same license as the sympa package.
 # moriwaka <moriwaka@valinux.co.jp>, 2005.
 # Hatuka*nezumi <hatuka@nezumi.nu>, 2006-2010.
-# , fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Sympa-5.4.6, 6.0, 6.1a.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2016-01-15 16:05+0000\n"
-"Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
+"PO-Revision-Date: 2017-08-23 04:34+0000\n"
+"Last-Translator: IKEDA Soji <ikeda@conversion.co.jp>\n"
 "Language-Team: 日本語\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.7\n"
-"X-POOTLE-MTIME: 1452873917.000000\n"
+"X-Generator: Pootle 2.8\n"
+"X-POOTLE-MTIME: 1503462890.000000\n"
+
+#: default/web_tt2/help.tt2:11
+msgid "Subscriber, moderator and owner documentation"
+msgstr "読者、モデレータ、オーナー向けのドキュメント"
+
+#: default/web_tt2/help.tt2:13
+msgid "In this documentation, you will find:"
+msgstr "このドキュメントでは、次の事項について述べます:"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:15
+msgid ""
+"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
+msgstr "メーリング リストの<a href=\"%1/help/introduction\">一般的な紹介</a>;"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:16
+msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr "Sympa の使用についての<a href=\"%1/help/user\">ユーザ ガイド</a>。"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:17
+msgid ""
+"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
+msgstr "Sympa の使用についての<a href=\"%1/help/admin\">管理者ガイド</a>。"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
+msgid ""
+"If you want to perform a particular task, take a look at the list of all <a "
+"href=\"%1/help/introduction#features\">available features</a> in the mailing "
+"list management software Sympa."
+msgstr ""
+"特定のことがらを実現する方法を探しておられるのでしたら、メーリングリスト管理"
+"ソフトウェア Sympa で<a href=\"%1/help/introduction#features\">できること</a>"
+"の一覧をご覧ください。"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
+msgid ""
+"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
+"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
+"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
+"\"Frequently asked questions\">FAQ</acronym></a>."
+msgstr ""
+"なにか問題が起きているのでしたら、まず <a href=\"%1/help/faquser\">利用する方"
+"のための <acronym title=\"よくある質問。Frequently asked questions\">FAQ</"
+"acronym></a> か <a href=\"%1/help/faqadmin\">運営する方のための <acronym "
+"title=\"よくある質問。Frequently asked questions\">FAQ</acronym></a> をご覧に"
+"なってみてください。"
 
 #: default/web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
@@ -296,8 +343,9 @@ msgstr ""
 "申し込んだアドレスを使います。"
 
 #: default/web_tt2/help_admin.tt2:53
-msgid "Go to the information page of the list</strong> you want to manage."
-msgstr "</strong>運営したい<strong>リストの案内ページへ行きます</strong>。"
+msgid ""
+"<strong>Go to the information page of the list</strong> you want to manage."
+msgstr "運営したい<strong>リストの案内ページへ行きます</strong>。"
 
 #: default/web_tt2/help_admin.tt2:54
 msgid "In the left menu, <strong>click on the 'Admin' link</strong>."
@@ -1333,11 +1381,11 @@ msgstr ""
 # # "effectif</strong>."
 #: default/web_tt2/help_admin.tt2:216
 msgid ""
-"Be careful: when you rename a list, you have to let the listmasters know; "
-"otherwise, the change will not be effective</strong>."
+"<strong>Be careful: when you rename a list, you have to let the listmasters "
+"know; otherwise, the change will not be effective</strong>."
 msgstr ""
-"注意: リストを移動したときは、リストシステム管理者にも知らせてください。そう"
-"しないと変更が反映されないことがあります</strong>。"
+"<strong>注意: リストを移動したときは、リストシステム管理者にも知らせてくださ"
+"い。そうしないと変更が反映されないことがあります</strong>。"
 
 # # "Quelques conseils pour le choix des noms de vos listes :"
 #: default/web_tt2/help_admin.tt2:217
@@ -1607,8 +1655,9 @@ msgid "Reading the list archive online"
 msgstr "リストの投稿保管庫をウェブで読む"
 
 #: default/web_tt2/help_arc.tt2:4
-msgid "To read the messages sent to a list</strong>, you have two options:"
-msgstr "リストのメッセージを読む方法は</strong> 3 つあります——"
+msgid ""
+"<strong>To read the messages sent to a list</strong>, you have two options:"
+msgstr "<strong>リストのメッセージを読む方法は</strong> 3 つあります——"
 
 #: default/web_tt2/help_arc.tt2:6
 msgid "read the messages you receive <strong>in your email inbox</strong>;"
@@ -1630,8 +1679,8 @@ msgstr ""
 #. (path_cgi)
 #: default/web_tt2/help_arc.tt2:12 default/web_tt2/help_arc.tt2:77
 #: default/web_tt2/help_arc.tt2:93 default/web_tt2/help_shared.tt2:9
-#: default/web_tt2/help_user.tt2:101 default/web_tt2/help_user.tt2:129
-#: default/web_tt2/help_user.tt2:177 default/web_tt2/help_user.tt2:50
+#: default/web_tt2/help_user.tt2:101 default/web_tt2/help_user.tt2:120
+#: default/web_tt2/help_user.tt2:168 default/web_tt2/help_user.tt2:50
 msgid ""
 "Go to the list environment <strong><a href=\"%1/home\">homepage</a></strong> "
 "and <strong>log on</strong>."
@@ -1830,11 +1879,11 @@ msgstr "右向きの矢印で、より新しいものへと進みます。"
 # # "ces messages pour aller les consulter."
 #: default/web_tt2/help_arc.tt2:44
 msgid ""
-"Other messages belonging to the same thread as the message displayed are "
-"listed at its bottom</strong>. Click on their subject to read them."
+"<strong>Other messages belonging to the same thread as the message displayed "
+"are listed at its bottom</strong>. Click on their subject to read them."
 msgstr ""
-"メッセージの下部には、同じスレッドにあるメッセージの一覧が表示されます</"
-"strong>。表題をクリックすると読めます。"
+"<strong>メッセージの下部には、同じスレッドにあるメッセージの一覧が表示されま"
+"す</strong>。表題をクリックすると読めます。"
 
 # # "<strong>Pour revenir à l'index des messages, cliquez sur 'Chronologie' ou "
 # # "sur 'Conversation'</strong> suivant que vous souhaitez afficher un index "
@@ -1845,18 +1894,18 @@ msgstr ""
 # # "plus récents."
 #: default/web_tt2/help_arc.tt2:46
 msgid ""
-"To come back to the messages index, click on 'Chronological' or 'Thread'</"
-"strong> according to whether you want to display the index as a "
+"<strong>To come back to the messages index, click on 'Chronological' or "
+"'Thread'</strong> according to whether you want to display the index as a "
 "chronological history or as a thread. When there are too many messages to be "
 "displayed on a single page, <strong>you are brought to the index page "
 "displaying the message you just read</strong>, and not to the page "
 "displaying the latest messages."
 msgstr ""
-"メッセージ一覧に戻るには、「到着順」か「スレッド」をクリックします</strong>。"
-"これによって、メッセージ一覧を到着順にするかスレッド順にするかを選べます。"
-"メッセージが多くてひとつのページに表示しきれないときは、<strong>いま読んでい"
-"たメッセージのある一覧ページへ行きます</strong> (最新のメッセージのあるページ"
-"ではなく)。"
+"<strong>メッセージ一覧に戻るには、「到着順」か「スレッド」をクリックします</"
+"strong>。これによって、メッセージ一覧を到着順にするかスレッド順にするかを選べ"
+"ます。メッセージが多くてひとつのページに表示しきれないときは、<strong>いま読"
+"んでいたメッセージのある一覧ページへ行きます</strong> (最新のメッセージのある"
+"ページではなく)。"
 
 # # "<strong>Pour aller consulter les archives d'un autre mois, cliquez sur "
 # # "son numéro dans le calendrier</strong> situé en haut à gauche de votre "
@@ -2073,11 +2122,12 @@ msgstr ""
 # # "votre écran."
 #: default/web_tt2/help_arc.tt2:82
 msgid ""
-"Go to the message index of the month</strong> in which you want to search. "
-"To do that, use the calendar displayed at the top left of your screen."
+"<strong>Go to the message index of the month</strong> in which you want to "
+"search. To do that, use the calendar displayed at the top left of your "
+"screen."
 msgstr ""
-"検索したい月のメッセージ一覧へ行きます</strong>。これには、画面左上に表示され"
-"る暦を使います。"
+"<strong>検索したい月のメッセージ一覧へ行きます</strong>。これには、画面左上に"
+"表示される暦を使います。"
 
 # # "La recherche s'effectuera dans les archives du mois choisi et du mois "
 # # "précédent où des messages ont circulé. Si vous ne savez pas quand le "
@@ -2096,11 +2146,10 @@ msgstr ""
 # # "haut à gauche de votre écran."
 #: default/web_tt2/help_arc.tt2:84
 msgid ""
-"Enter your keywords</strong> in the search box in the upper right corner of "
-"your screen."
+"<strong>Enter your keywords</strong> in the search box in the upper right "
+"corner of your screen."
 msgstr ""
-"</strong>画面の右上にある検索ボックスに<string>探す語句を打ち込みます</"
-"strong>。"
+"画面の右上にある検索ボックスに<strong>探す語句を打ち込みます</strong>。"
 
 # # "Attention : le moteur de recherche traitera votre saisie comme une "
 # # "phrase. Si vous souhaitez chercher plusieurs mots non consécutifs, passez "
@@ -2274,10 +2323,11 @@ msgstr "見つかった言葉を含む本文の一部。"
 # # "vous suffit de cliquer sur son objet</strong>."
 #: default/web_tt2/help_arc.tt2:117
 msgid ""
-"To read one of the messages matching your search, you only need to click on "
-"its subject</strong>."
+"<strong>To read one of the messages matching your search, you only need to "
+"click on its subject</strong>."
 msgstr ""
-"見つかったメッセージは、どれでも表題をクリックするだけで読めます</strong>。"
+"<strong>見つかったメッセージは、どれでも表題をクリックするだけで読めます</"
+"strong>。"
 
 # # "Attention : avec Internet Explorer, si vous allez consulter un message à "
 # # "partir de la page de résultats, vous ne pourrez utiliser le bouton "
@@ -2302,753 +2352,9 @@ msgstr ""
 "いのであれば、メッセージを別のウィンドウで開き (リンクを右クリックし、「新し"
 "いウィンドウで開く」を選ぶ)、探した結果のウィンドウを残しておくようにします。"
 
-#: default/web_tt2/help_editfile.tt2:3
-msgid "Service messages description :"
-msgstr "サービスメッセージの説明——"
-
-#: default/web_tt2/help_editfile.tt2:6
-msgid ""
-"Welcome message: This message is sent to new subscribers. It can be\n"
-"a full MIME structured message (only for MIME gurus)."
-msgstr ""
-"歓迎メッセージ&mdash;&mdash;登録された読者に送るメッセージ。\n"
-"MIME の複雑なメッセージを書くこともできます (MIME の知識に精通している人な"
-"ら)。"
-
-#: default/web_tt2/help_editfile.tt2:9
-msgid ""
-"Unsubscribe message: This message is sent when users leave the list\n"
-"using the UNSUBSCRIBE command."
-msgstr ""
-"登録解除メッセージ&mdash;&mdash;誰かが UNSUBSCRIBE コマンドで登録解除したとき"
-"に、その人にこのメッセージを送ります。"
-
-#: default/web_tt2/help_editfile.tt2:13
-msgid ""
-"Deletion message: This message is sent to users when you\n"
-"remove them from the list using the DEL command (unless you hit the\n"
-"Quiet button."
-msgstr ""
-"削除メッセージ&mdash;&mdash;(「知らせない」にチェックを入れずに)\n"
-"読者を削除 (DEL コマンド) したときに、削除された人にこのメッセージを送りま"
-"す。"
-
-#: default/web_tt2/help_editfile.tt2:18
-msgid ""
-"Remind message: This message is sent to each subscriber\n"
-"when using the command  REMIND. It's very useful to help people who are\n"
-"confused about their own subscription emails or people who are not able to\n"
-"unsubscribe themselves."
-msgstr ""
-"登録確認メッセージ&mdash;&mdash;REMIND コマンドを使うと、このメッセージを全読"
-"者に送れます。\n"
-"読者登録している電子メールアドレスがわからなくなった人や、自分で登録解除がで"
-"きない\n"
-"人に便利です。"
-
-#: default/web_tt2/help_editfile.tt2:21
-msgid ""
-"Subscribing invitation message: sent to a person if someone  \n"
-"uses the INVITE command to invite someone to subscribe."
-msgstr ""
-"読者登録に招待するメッセージ&mdash;&mdash;誰かが INVITE コマンドを使って読者"
-"登録に招待すると、招待された人にこのメッセージを送ります。"
-
-#: default/web_tt2/help_editfile.tt2:24
-msgid "Other files/pages description:"
-msgstr "その他のファイルやページの説明——"
-
-#: default/web_tt2/help_editfile.tt2:28
-msgid ""
-"List homepage: HTML text to describe the list. It is printed on the\n"
-"right-hand side of the main list page. (default for this is the list "
-"description)"
-msgstr ""
-"リストのホームページ&mdash;&mdash;リストを説明するHTMLテキスト。 これはリスト"
-"のメインページの右側に表示されます (なければ、かわりに下の「リストの説明」が"
-"入ります)。"
-
-# # "List description : This text is sent as an answer to the mail command\n"
-# # "INFO. It can also be included in the <em>Welcome message</em>."
-#: default/web_tt2/help_editfile.tt2:31
-msgid ""
-"List description: This text is sent as an answer to the mail command\n"
-"INFO. It can also be included in the <em>Welcome message</em>."
-msgstr ""
-"リストの説明&mdash;&mdash;このテキストを INFO コマンドに対する返信として送り"
-"ます。また、<em>歓迎メッセージ</em>にもこのテキストが入ります。"
-
-#: default/web_tt2/help_editfile.tt2:34
-msgid ""
-"Message header: If this file is not empty, it is added as a MIME\n"
-"attachment at the beginning of each message distributed to the list."
-msgstr ""
-"メッセージの前付け&mdash;&mdash;このテキストが空でなければ、リストで配信する"
-"すべてのメッセージの先頭にMIME のパートとして追加します。"
-
-#: default/web_tt2/help_editfile.tt2:37
-msgid ""
-"Message footer: same as <em>Message header,</em> but attached at the\n"
-"end of the message."
-msgstr ""
-"メッセージの後付け&mdash;&mdash;<em>メッセージの前付け</em> と同様ですがメッ"
-"セージの最後に付けます。"
-
-#: default/web_tt2/help_editlist.tt2:6
-msgid ":"
-msgstr "&mdash;&mdash;"
-
-#: default/web_tt2/help_editlist.tt2:9
-msgid "Privilege for adding (ADD command) a subscriber to the list"
-msgstr "(ADD コマンドにより) 読者をリストに追加できる権限"
-
-#: default/web_tt2/help_editlist.tt2:11
-msgid ""
-"To hide the sender's email address before distributing the message. It is "
-"replaced by the provided email address."
-msgstr ""
-"メッセージを配信する前に、送信者の電子メールアドレスをここで指定した電子メー"
-"ルアドレスに置き換えて隠します。"
-
-#: default/web_tt2/help_editlist.tt2:13
-msgid "Privilege for reading mail archives and frequency of archiving"
-msgstr "投稿保管庫の中を見られる権限および投稿保管庫を改める時期"
-
-#: default/web_tt2/help_editlist.tt2:15
-msgid ""
-"The available_user_options parameter starts a paragraph to define available "
-"options for the subscribers of the list."
-msgstr ""
-"ここからは、リストの読者が使えるオプションを決めます。まず、"
-"available_user_options パラメータです。"
-
-# # "Default value: reception mail,notice,digest,digestplain,summary,nomail"
-#: default/web_tt2/help_editlist.tt2:17
-msgid "Default value: reception mail,notice,digest,digestplain,summary,nomail"
-msgstr "初期値: 受け取りモード mail,notice,digest,digestplain,summary,nomail"
-
-#: default/web_tt2/help_editlist.tt2:18
-msgid ""
-"<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
-"summary, nomail), separated by commas. Only these modes will be allowed for "
-"the subscribers of this list. If a subscriber has a reception mode not in "
-"the list, sympa uses the mode specified in the default_user_options "
-"paragraph."
-msgstr ""
-"<em>modelist</em> にはモード (mail, notice, digest, digestplain, summary, "
-"nomail) を指定します (複数のときは半角の「,」で区切ります)。\n"
-"このリストの読者は、ここで指定したモードだけを選べます。\n"
-"読者がこのリストの受け取りモードを設定しなければ、\n"
-"default_user_options に指定してあるモードを使います。"
-
-#: default/web_tt2/help_editlist.tt2:22
-msgid "This paragraph defines bounce management parameters:"
-msgstr "ここでは、配送エラー管理のパラメータを決めます——"
-
-#: default/web_tt2/help_editlist.tt2:24
-msgid "Default value: bounce_warn_rate robot parameter"
-msgstr "初期値: bounce_warn_rate ロボットパラメータ"
-
-#: default/web_tt2/help_editlist.tt2:25
-msgid ""
-"The list owner receives a warning whenever a message is distributed and the "
-"number (percentage) of bounces exceeds this value."
-msgstr ""
-"配送したメッセージのうち配送エラーを起こした数 (パーセント) がこの値を超えた"
-"ら、\n"
-"リストのオーナーに警告を送ります。"
-
-#: default/web_tt2/help_editlist.tt2:27
-msgid "Default value: bounce_halt_rate robot parameter"
-msgstr "初期値: bounce_halt_rate ロボットパラメータ"
-
-#: default/web_tt2/help_editlist.tt2:28
-msgid ""
-"NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
-"will be halted, i.e. they are retained for subsequent moderation."
-msgstr ""
-"未実装。\n"
-"配送エラー率が停止レートに達すると、リスト宛ての\n"
-"メッセージを止めます、つまり、投稿は保管されてその後のモデレーションを待ちま"
-"す"
-
-#: default/web_tt2/help_editlist.tt2:130 default/web_tt2/help_editlist.tt2:137
-#: default/web_tt2/help_editlist.tt2:30 default/web_tt2/help_editlist.tt2:40
-#: default/web_tt2/help_editlist.tt2:43 default/web_tt2/help_editlist.tt2:46
-#: default/web_tt2/help_editlist.tt2:56 default/web_tt2/help_editlist.tt2:59
-#: default/web_tt2/help_editlist.tt2:62
-msgid "Default value:"
-msgstr "初期値:"
-
-#: default/web_tt2/help_editlist.tt2:31
-msgid ""
-"Name of the task template used to remove old bounces. Useful for removing "
-"bounced subscriber email. If some messages are distributed without receiving "
-"new bounce messages, the subscriber's email seems to be OK again. Active if "
-"task_manager.pl is running."
-msgstr ""
-"古くなった配送エラー情報を削除するのに使うタスクテンプレートの名前。配送エ"
-"ラーを起こしていた読者の電子メールアドレスを削除するのに使います。メッセージ"
-"を配送しても新たな配送エラーが返ってこなくなったら、その読者の電子メールアド"
-"レスは復旧したと見なしてよいでしょう。このテンプレートは、task_manager.pl が"
-"動いていれば働きます。"
-
-#: default/web_tt2/help_editlist.tt2:37
-msgid ""
-"The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 1 is the lower level of bouncing users"
-msgstr ""
-"配送エラーの管理 (第一段階) では、配送エラー管理の自動的な動作を決めます。"
-"<br/>\n"
-"\t第一段階は、配送エラーを起こしている読者の初期の段階です。"
-
-#: default/web_tt2/help_editlist.tt2:41 default/web_tt2/help_editlist.tt2:57
-msgid "Each bouncing user have a score (from 0 to 100)."
-msgstr "配送エラーを起こしている人には点数 (0 点から 100 点) がついています。"
-
-#: default/web_tt2/help_editlist.tt2:41
-msgid ""
-"This parameter defines a lower limit for each category of bouncing users.For "
-"example, level 1 begins from 45 to level_2_treshold."
-msgstr ""
-"このパラメータで、配送エラーを起こしている人を初期段階に分類する最低点を決め"
-"ます。例えば 45 点にすると、第一段階は 45 点から level_2_treshold (下記) の間"
-"と決まります。"
-
-#: default/web_tt2/help_editlist.tt2:44
-msgid ""
-"This parameter defines which task is automaticaly applied on level 1 "
-"bouncers."
-msgstr ""
-"第一段階の配送エラーを起こしている読者に自動的に適用するタスクを決めます。"
-
-#: default/web_tt2/help_editlist.tt2:47
-msgid ""
-"When automatic task is executed on level 1 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-"第一段階の配送エラーを起こしている読者について自動タスクを実行した際に、リス"
-"トオーナーまたはリストシステム管理者に報告の電子メールを送れます。"
-
-#: default/web_tt2/help_editlist.tt2:53
-msgid ""
-"The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 2 is the highest level of bouncing users"
-msgstr ""
-"配送エラーの管理 (第X段階) では、配送エラー管理の自動的な動作を決めます。<br/"
-">\n"
-"\t第二段階は、配送エラーを起こしている読者のより進んだ段階です。"
-
-#: default/web_tt2/help_editlist.tt2:57
-msgid ""
-"This parameter defines the score range defining each category of bouncing "
-"users.For example, level 2 is for users with a score between 80 and 100."
-msgstr ""
-"このパラメータで、配送エラーを起こしている人を第二段階に分類する最低点と最高"
-"点を決めます。例えば 80 点にすると、第二段階は 80 点から 100 点の間と決まりま"
-"す。"
-
-#: default/web_tt2/help_editlist.tt2:60
-msgid ""
-"This parameter defines which task is automaticaly applied on level 2 "
-"bouncers."
-msgstr ""
-"このパラメータで、第二段階の配送エラーを起こしている読者に自動的に適用するタ"
-"スクを決めます。"
-
-#: default/web_tt2/help_editlist.tt2:63
-msgid ""
-"When automatic task is executed on level 2 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-"第二段階の配送エラーを起こしている読者について自動タスクを実行した際に、リス"
-"トオーナーまたはリストシステム管理者に報告の電子メールを送れます。"
-
-#: default/web_tt2/help_editlist.tt2:67
-msgid ""
-"This parameter is a confidential item for generating authentication keys for "
-"administrative commands (ADD, DELETE, etc.). This parameter should remain "
-"concealed, even for owners. The cookie is applied to all list owners, and is "
-"only taken into account when the owner has the auth parameter."
-msgstr ""
-"このパラメータは、管理コマンド (ADD、DELETE など) のための本人確認キーを生成"
-"するための隠し項目です。このパラメータは、オーナーに対しても隠しておくべきで"
-"す。クッキーはすべてのリストのオーナーに適用されますが、オーナーが本人確認パ"
-"ラメータを送ったときにだけ考慮されます。"
-
-#: default/web_tt2/help_editlist.tt2:69
-msgid ""
-"This parameter is optional. The headers specified will be added to the "
-"headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
-"it is possible to put several custom header lines in the configuration file "
-"at the same time."
-msgstr ""
-"このパラメータは、必要なければ入力しなくてかまいません。リストを通じて配信さ"
-"れるメッセージに、ここで指定したヘッダを付け加えます。Sympa 1.2.2 以降、複数"
-"のメッセージヘッダを設定できるようになりました。"
-
-# 訳者補足あり
-#: default/web_tt2/help_editlist.tt2:71
-msgid ""
-"This parameter is optional. It specifies a string which is added to the "
-"subject of distributed messages (intended to help users who do not use "
-"automatic tools to sort incoming messages). This string will be surrounded "
-"by [] characters."
-msgstr ""
-"このパラメータは、必要なければ入力しなくてかまいません。配送するメッセージの"
-"表題 (Subject) の前につける文字列を決めます (受け取ったメッセージを自動振り分"
-"けしていない人に便利です)。<!-- 訳者追加 -->[%list.name%] はリスト名に、[%"
-"list.sequence%] は投稿の連番に、それぞれ置き換えます。<!-- 追加おわり -->そう"
-"してできたものを、[] で囲んで表題 (Subject) の前につけます。"
-
-#: default/web_tt2/help_editlist.tt2:73
-msgid ""
-"The default_user_options parameter starts a paragraph to define a default "
-"profile for the subscribers of the list."
-msgstr ""
-"ここからは、リストの読者の初期設定を決めます。まず、default_user_options で"
-"す。"
-
-#: default/web_tt2/help_editlist.tt2:75
-msgid "Mail reception mode."
-msgstr "メール受け取りモード"
-
-#: default/web_tt2/help_editlist.tt2:76
-msgid "Visibility of the subscriber with the REVIEW command."
-msgstr "REVIEW コマンド (読者一覧) での読者の見えかた。"
-
-#: default/web_tt2/help_editlist.tt2:79
-msgid "This parameter specifies who is authorized to use the DEL command."
-msgstr "このパラメータで、DEL コマンド (読者削除) を使ってよい人を指定します。"
-
-#: default/web_tt2/help_editlist.tt2:81
-msgid ""
-"Definition of digest mode. If this parameter is present, subscribers can "
-"select the option of receiving messages in multipart/digest MIME format, or "
-"as a plain text digest. Messages are then grouped together, and compiled "
-"messages are sent to subscribers according to the frequency selected with "
-"this parameter."
-msgstr ""
-"まとめ読みモードについて決めます。このパラメータを設定すると、読者はまとめ読"
-"み (multipart/digest MIME 形式かプレインテキスト形式) でのメッセージの受け取"
-"りを選べるようになります。まとめ読みモードにすると、メッセージはまとめられ、"
-"このパラメータで設定した周期で読者にまとまって送られるようになります。"
-
-#: default/web_tt2/help_editlist.tt2:83
-msgid ""
-"Editors are responsible for moderating messages. If the mailing list is "
-"moderated, messages posted to the list will first be passed to the editors, "
-"who will decide whether to distribute or reject it."
-msgstr ""
-"モデレータは、メッセージのモデレーションを引き受ける人(たち)です。投稿がモデ"
-"レーションを受ける設定になっているリストでは、リストへのメッセージはまずモデ"
-"レータへ送られ、配送するかしないかはモデレータが決定します。"
-
-#: default/web_tt2/help_editlist.tt2:84
-msgid ""
-"FYI: Defining editors will not make the list moderated; you will have to set "
-"the \"send\" parameter."
-msgstr ""
-"参考: モデレータを決めただけで、リストへの投稿がモデレーションを受けるように"
-"なるわけではありません。「メッセージを送ることができるのは (send)」パラメータ"
-"を設定しなければなりません。"
-
-#: default/web_tt2/help_editlist.tt2:85
-msgid ""
-"FYI: If the list is moderated, any editor can distribute or reject a message "
-"without the knowledge or consent of the other editors. Messages that have "
-"not been distributed or rejected will remain in the moderation spool until "
-"they are acted on."
-msgstr ""
-"参考: リストへの投稿がモデレーションを受けるようになっている場合、モデレータ"
-"は誰でも、他のモデレータにあらかじめ知らせることなく、また同意も得ることな"
-"く、投稿を承認して配送したり、拒否したりできます。モデレーションキューに留"
-"まっている投稿は、配送することも拒否することもできます。"
-
-#: default/web_tt2/help_editlist.tt2:87
-msgid ""
-"This parameter states which model is used to create an expire task. An "
-"expire task regularly checks the subscription or resubscription  date of "
-"subscribers and asks them to renew their subscription. If they don't they "
-"are deleted."
-msgstr ""
-"このパラメータで、読者登録期限切れタスクを作成するのに使うモデルを指定しま"
-"す。読者登録期限切れタスクは、定期的に読者の登録日と再登録日を調べ、読者登録"
-"を継続するか問い合わせ、継続しないのなら削除します。"
-
-#: default/web_tt2/help_editlist.tt2:89
-msgid ""
-"List owners may decide to add message headers or footers to messages sent "
-"via the list. This parameter defines the way a footer/header is added to a "
-"message."
-msgstr ""
-"リストのオーナーは、リストを経由して配送されるメッセージに前付けや後付けを追"
-"加するようにできます。このパラメータでは、前付けや後付けをメッセージへ追加す"
-"るしかたを決めます。"
-
-#: default/web_tt2/help_editlist.tt2:92
-msgid "The default value. Sympa will add the footer/header as a new MIME part."
-msgstr "初期値。前付けや後付けを新たな MIME パートとして追加する。"
-
-#: default/web_tt2/help_editlist.tt2:95
-msgid ""
-"Sympa will not create new MIME parts, but will try to append the header/"
-"footer to the body of the message. Predefined message-footers will be "
-"ignored. Headers/footers may be appended to text/plain messages only."
-msgstr ""
-"新たな MIME パートを作成せずに、メッセージの本文に前付けや後付けを追加しよう"
-"とする。このとき、あらかじめ決めてあったメッセージの後付けは無視されます。前"
-"付けや後付けはプレインテキストのメッセージにのみ追加できます。"
-
-#: default/web_tt2/help_editlist.tt2:99
-msgid ""
-"Domain name of the list, default is the robot domain name set in the related "
-"robot.conf file or in file /etc/sympa.conf."
-msgstr ""
-"リストのインターネットドメイン名。初期値は関連する robot.conf (または sympa."
-"conf) に設定してあるロボットのドメイン名です。"
-
-#: default/web_tt2/help_editlist.tt2:101
-msgid ""
-"Include subscribers from this file.  The file should contain one e-mail "
-"address per line (lines beginning with a \"#\" are ignored)."
-msgstr ""
-"ここで設定したファイルから読者を取り込みます。ファイル形式は1行につきひとつの"
-"電子メールアドレスです (行頭が「#」のものは無視されます)。"
-
-#: default/web_tt2/help_editlist.tt2:103
-msgid ""
-"This paragraph defines parameters for a two-level query returning a list of "
-"subscribers. Usually the first-level query returns a list of DNs and the "
-"second-level queries convert the DNs into e-mail addresses. This feature "
-"requires the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"ここでは、読者一覧を返す 二段階クエリのパラメータを設定します。通常、第一段階"
-"のクエリで識別名 (DN) の一覧を取得し、第二段階で識別名を電子メールアドレスに"
-"変換します。この機能には Net::LDAP (perlldap) Perl モジュールが必要です。"
-
-#: default/web_tt2/help_editlist.tt2:105
-msgid ""
-"This paragraph defines parameters for a query returning a list of "
-"subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"ここでは、読者一覧を返すクエリのパラメータを設定します。この機能には Net::"
-"LDAP (perlldap) Perl モジュールが必要です。"
-
-#: default/web_tt2/help_editlist.tt2:107
-#, fuzzy
-msgid ""
-"Include subscribers from other list. All subscribers of list listname become "
-"subscribers of the current list. You may include as many lists as required, "
-"using one include_sympa_list paragraph for each included list. Any list at "
-"all may be included; you may therefore include lists which are also defined "
-"by the inclusion of other lists. Be careful, however, not to include list A "
-"in list B and then list B in list A, since this will give rise to an "
-"infinite loop."
-msgstr ""
-"他のリストから読者を取り込みます。設定したリストの読者はすべて、このリストの"
-"読者になります。取り込みたいリストについて一行ずつ include_list 行を書くこと"
-"で、いくつでも必要なだけリストを取り込むことができます。ほかのリストを取り込"
-"んでいるリストであっても、取り込むことができます。なお、A メーリングリストを "
-"B メーリングリストに取り込み、さらに A メーリングリストに B メーリングリスト"
-"を取り込むと、無限ループを引き起こします。ご注意ください。"
-
-#: default/web_tt2/help_editlist.tt2:109
-msgid ""
-"Sympa can contact another Sympa service using HTTPS to fetch a remote list "
-"in order to include each member of a remote list as subscriber. You may "
-"include as many lists as required, using one include_remote_sympa_list "
-"paragraph for each included list. Be careful, however, not to give rise to "
-"an infinite loop resulting from cross includes."
-msgstr ""
-"Sympa は、別の Sympa サービスに HTTPS プロトコルで接続し、そこのリストの読者"
-"を読者として取り込むこともできます。include_remote_sympa_list には、リストの"
-"名前を必要なだけ書くことができます。なお、そのときに取り込みの設定がお互いに"
-"取り込みあうようになっている場合、無限ループを引き起こします。ご注意くださ"
-"い。"
-
-#: default/web_tt2/help_editlist.tt2:110
-msgid ""
-"For this operation, one Sympa site acts as a server while the other one acs "
-"as client. On the server side, the only setting needed is to give permission "
-"to the remote Sympa to review the list. This is controlled by the review "
-"scenario."
-msgstr ""
-"この動作のために、ある Sympa がサーバとして動作し、もう一つの Sympa がクライ"
-"アントとして動作します。サーバ側で必要なことは、クライアントに読者一覧を参照"
-"する権限を与えることだけです。読者一覧シナリオでこの動作を制御します。 "
-
-#: default/web_tt2/help_editlist.tt2:112
-msgid ""
-"This parameter is used to begin a paragraph defining the SQL query "
-"parameters. "
-msgstr "ここから、SQL クエリを決める設定が始まります。"
-
-#: default/web_tt2/help_editlist.tt2:114
-msgid ""
-"This parameter defines the language used for the list. It is used to "
-"initialize a user's language preference; Sympa command reports are extracted "
-"from the associated message catalog."
-msgstr ""
-"リストで使う言語を決めます。 利用者の言語についての個人設定を初期化するのに使"
-"います。コマンドの実行結果は、その言語のメッセージカタログで作成します。"
-
-#: default/web_tt2/help_editlist.tt2:116
-msgid "Maximum size of a message in 8-bit bytes."
-msgstr "メッセージの最大サイズ (バイト単位)"
-
-#: default/web_tt2/help_editlist.tt2:118
-msgid ""
-"Owners are managing subscribers of the list. They may review subscribers and "
-"add or delete email addresses from the mailing list. If you are a privileged "
-"owner of the list, you can choose other owners for the mailing list. "
-"Privileged owners may edit a few more options than other owners. "
-msgstr ""
-"オーナーはリストの読者を管理しています。読者の一覧を見たり、リストに電子メー"
-"ルアドレスを追加したり削除したりできます。リストの特権オーナーなら、リストの"
-"他のオーナーを決めることもできます。特権オーナーは他のオーナーより詳細なオプ"
-"ションを設定することができます。 "
-
-#: default/web_tt2/help_editlist.tt2:120
-msgid ""
-"The priority with which Sympa will process messages for this list. This "
-"level of priority is applied while the message is going through the spool. "
-"The z priority will freeze the message in the spool."
-msgstr ""
-"メーリングリストシステムがリスト宛てメッセージを処理する優先度です。優先度の"
-"レベルは、メッセージがキューを通過する際に適用されます。優先度 z はメッセージ"
-"をキューにとどめておきます。"
-
-#: default/web_tt2/help_editlist.tt2:122
-msgid "This parameter specifies who is authorized to use the remind command."
-msgstr "このパラメータは、誰が登録確認コマンドを使ってよい人を指定します。"
-
-#: default/web_tt2/help_editlist.tt2:124
-msgid "Same as welcome_return_path, but applied to remind messages."
-msgstr "welcome_return_path と同様ですが、登録確認メッセージに適用します。"
-
-#: default/web_tt2/help_editlist.tt2:126
-msgid ""
-"This parameter states which model is used to create a remind task. A remind "
-"task regularly sends  subscribers a message which reminds them of their list "
-"subscriptions."
-msgstr ""
-"このパラメータで、登録確認タスクを作成するのに使うモデルを決めます。登録確認"
-"タスクは、読者が登録中のリストを忘れないように読者登録情報を定期的に送信しま"
-"す。"
-
-#: default/web_tt2/help_editlist.tt2:128
-msgid ""
-"The reply_to_header parameter starts a paragraph defining what Sympa will "
-"place in the Reply-To: SMTP header field of the messages it distributes."
-msgstr ""
-"配信するメッセージの返信先 (Reply-To: SMTP ヘッダフィールド) に設定するものを"
-"決めます。まずは reply_to_header パラメータからです。"
-
-#: default/web_tt2/help_editlist.tt2:131
-msgid ""
-"This parameter indicates whether the Reply-To: field should indicate the "
-"sender of the message (sender), the list itself (list), both list and sender "
-"(all) or an arbitrary e-mail address (defined by the other_email parameter)."
-msgstr ""
-"このパラメータで、Reply-To: フィールドに設定するアドレスにメッセージ投稿者の"
-"アドレスを指定する (sender) か、リスト自身のアドレス (list) か、list と "
-"sender の両方 (all) か、任意の電子メールアドレス (other_email パラメータで決"
-"まる) かを指定します。"
-
-#: default/web_tt2/help_editlist.tt2:132
-msgid ""
-"Note: it is inadvisable to change this parameter, and particularly "
-"inadvisable to set it to list. Experience has shown it to be almost "
-"inevitable that users, mistakenly believing that they are replying only to "
-"the sender, will send private messages to a list. This can lead, at the very "
-"least, to embarrassment, and sometimes to more serious consequences."
-msgstr ""
-"注意: 本パラメータを変更することはお勧めしません。とりわけ、リスト自身のアド"
-"レス (list) に設定することは絶対にお勧めしません。リストの誰かが送信者にだけ"
-"返信するつもりでメーリングリストに私的なメッセージを送ってしまうというトラブ"
-"ルが、必ずと言ってよいほど起こるのです。このようなことがあると、よくても当惑"
-"か、悪くするともっと深刻な事態を引き起こしかねません。"
-
-#: default/web_tt2/help_editlist.tt2:134
-msgid "an_email_address"
-msgstr "電子メールアドレス"
-
-#: default/web_tt2/help_editlist.tt2:135
-msgid ""
-"If value was set to other_email, this parameter defines the e-mail address "
-"used."
-msgstr ""
-"上で other_email にした場合、このパラメータで電子メールアドレスを決めます。"
-
-#: default/web_tt2/help_editlist.tt2:138
-msgid ""
-"The default is to respect (preserve) the existing Reply-To: SMTP header "
-"field in incoming messages. If set to forced, Reply-To: SMTP header field "
-"will be overwritten."
-msgstr ""
-"初期値 (default) は到着メッセージの Reply-To: SMTPヘッダフィールドに存在する"
-"メールアドレスを尊重 (保持) します。forced を設定すると Reply-To: SMTPヘッダ"
-"フィールドの値を上書きし、もともとあったメールアドレスは消えてしまいます。"
-
-#: default/web_tt2/help_editlist.tt2:142
-msgid ""
-"This parameter specifies who can access the list of members. Since "
-"subscriber addresses can be abused by spammers, it is strongly recommended "
-"that you only authorize owners or subscribers to access the subscriber list. "
-msgstr ""
-"読者一覧を見てよい人を指定します。読者のメールアドレス一覧をスパム送信者が悪"
-"用することもありうるので、読者一覧へはリストのオーナーと読者のみがアクセスで"
-"きるようにすることを強くお勧めします。 "
-
-#: default/web_tt2/help_editlist.tt2:144
-msgid "This parameter specifies who can send messages to the list."
-msgstr "このパラメータでは、誰がリストに投稿できるかを指定します。"
-
-#: default/web_tt2/help_editlist.tt2:146
-msgid ""
-"This paragraph defines read and edit access to the shared document "
-"repository."
-msgstr ""
-"ここでは、共有文書置き場へのアクセス権限 (読める人、変更できる人) を決めま"
-"す。"
-
-#: default/web_tt2/help_editlist.tt2:148
-msgid ""
-"There is a need to protect Sympa web sites against spambots which collect "
-"email addresses from public web sites. Various methods are available in "
-"Sympa and you can choose to use them with the spam_protection and "
-"web_archive_spam_protection parameters. Possible value are:"
-msgstr ""
-"メーリングリストのウェブサイトを、一般公開のウェブサイトから電子メールアドレ"
-"スを収集するソフトウェア (「spambot」などと呼びます) から保護する必要がありま"
-"す。そのためにさまざまな方法をとることができます。spam_protection パラメータ"
-"や web_archive_spam_protection パラメータで方法を選べます。次の値があります——"
-
-#: default/web_tt2/help_editlist.tt2:150
-msgid ""
-"the address is hidden using a javascript. A user who enables javascript can "
-"see a nice mailto address where others have nothing."
-msgstr ""
-"javaScript を使ってアドレスを隠します。javaScript を使える人ならちゃんとメー"
-"ルアドレスを見ることができますが、そうでない人にはなにも見えません。"
-
-#: default/web_tt2/help_editlist.tt2:151
-msgid "the @ char is replaced by the string \" AT \"."
-msgstr "「@」という文字を「 AT 」に置き換えます。"
-
-#: default/web_tt2/help_editlist.tt2:152
-msgid "no protection against spammer."
-msgstr "スパム送信者対策をしません"
-
-#: default/web_tt2/help_editlist.tt2:155
-msgid ""
-"This parameter indicates the subject of the list, which is sent in response "
-"to the LISTS mail command. The subject is a free form text limited to one "
-"line."
-msgstr ""
-"このパラメータには、リストの表題を指定します。ここに書いたものを、LISTS コマ"
-"ンドの実行結果として送ります。1行だけの文章ですが、中身はなにを書いてもかまい"
-"ません。"
-
-#: default/web_tt2/help_editlist.tt2:157
-msgid "The subscribe parameter defines the rules for subscribing to the list."
-msgstr "読者登録パラメータでは、リストへの読者登録のしかたを決めます。"
-
-#: default/web_tt2/help_editlist.tt2:159
-msgid ""
-"This parameter allows the classification of lists. You may define multiple "
-"topics as well as hierarchical ones. WWSympa's list of public lists uses "
-"this parameter."
-msgstr ""
-"このパラメータでリストを分野別に分けることができます。 複数の分野を決めること"
-"もできます。分野の中にさらに分野を作ることもできます。公開メーリングリスト一"
-"覧で、このパラメータを使います。"
-
-#: default/web_tt2/help_editlist.tt2:161
-msgid ""
-"Sympa caches user data extracted using the include parameter. Their TTL "
-"(time-to-live) within Sympa can be controlled using this parameter. The "
-"default value is 3600"
-msgstr ""
-"Sympa は、include パラメータを使って得たユーザデータをキャッシュします。\n"
-"このパラメータを使用することで Sympa の中でのユーザデータの TTL\n"
-"(有効期間) を制御することができます。\n"
-"初期値は 3600 です。"
-
-#: default/web_tt2/help_editlist.tt2:163
-msgid ""
-"This parameter specifies the unsubscription method for the list. Use "
-"open_notify or auth_notify to allow owner notification of each unsubscribe "
-"command."
-msgstr ""
-"このパラメータで、このリストでの登録解除のしかたを指定します。登録解除の際に"
-"オーナーへの報告が必要な場合は open_notify または auth_notify をお使いくださ"
-"い。"
-
-#: default/web_tt2/help_editlist.tt2:165
-msgid ""
-"This parameter indicates whether the list should feature in the output "
-"generated in response to a LISTS command or should be shown in the list "
-"overview of the web-interface."
-msgstr ""
-"このパラメータは、LISTS コマンドでの一覧にリストを出すか、また ウェブインタ"
-"フェースのリスト一覧ににリストを表示するかを設定します。"
-
-#: default/web_tt2/help_editlist.tt2:167
-msgid "Defines who can access the web archive for the list."
-msgstr "リストの投稿保管庫の中を見られる人を決めます。"
-
-#: default/web_tt2/help_editlist.tt2:169
-msgid ""
-"Idem spam_protection is provided but it can be used only for web archives. "
-"Access requires a cookie, and users must submit a small form in order to "
-"receive a cookie before browsing the archives. This blocks all robot, even "
-"google and co."
-msgstr ""
-"spam_protection と同様ですが、投稿保管庫のみに適用されます。上記の他に次の値"
-"があります<span lang=\"ja\" xml:lang=\"ja\">——</span>cookie にすると、利用者"
-"は投稿保管庫の中を見る前に簡単なフォームでクッキーを受け取らなければならなく"
-"なります。これで、Google をはじめあらゆる検索エンジン情報収集ソフトウェアから"
-"守れます。"
-
-#: default/web_tt2/help_editlist.tt2:171
-msgid ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
-msgstr ""
-"ここを unique に設定した場合、歓迎メッセージの送信元を読者ごとに変えて送信し"
-"ます。そして、配送エラーがおきた場合には読者を削除します。"
-
-#: default/web_tt2/help_editlist.tt2:173
-msgid ""
-"This paragraph defines a topic used to tag a message of a list, named by "
-"msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
-"The msg_topic.keywords entry is optional and allows automatic tagging. This "
-"should be a list of keywords, separated by ','."
-msgstr ""
-"ここでは、リストのメッセージにトピックの印をつけるトピックを決めます。名前は "
-"msg_topic.name になります (「other」は予約ずみの言葉なので使えません)。表題"
-"は msg_topic.title になります。msg_topic.keywords の項はなくてもかまいません"
-"が、あればこれを使って自動的にトピックの印をつけます。ここにはキーワードをい"
-"れます (複数のキーワードを並べるときは半角の「,」で区切ります)。"
-
-#: default/web_tt2/help_editlist.tt2:175
-msgid ""
-"This parameter indicates which part of the message is used to perform "
-"automatic tagging."
-msgstr ""
-"このパラメータで、メッセージのどの部分を使って自動的にトピックの印をつけるか"
-"を指定します。"
-
-#: default/web_tt2/help_editlist.tt2:177
-msgid ""
-"This parameter indicates if the tagging is optional or required for a list."
-msgstr ""
-"このパラメータで、このリストではトピックの印が必須か、なくてもよいかを指定し"
-"ます。"
+#: default/web_tt2/help_faq.tt2:4
+msgid "User and admin FAQ"
+msgstr "利用者と管理者のFAQ"
 
 #: default/web_tt2/help_faqadmin.tt2:3
 msgid "Administrators Frequently Asked Questions"
@@ -3118,35 +2424,6 @@ msgstr ""
 "トシステム管理者は、電子メールサーバのシステムログを調べて問題の原因をつきと"
 "めます。"
 
-#: default/web_tt2/help_faq.tt2:4
-msgid "User and admin FAQ"
-msgstr "利用者と管理者のFAQ"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
-msgid ""
-"If you want to perform a particular task, take a look at the list of all <a "
-"href=\"%1/help/introduction#features\">available features</a> in the mailing "
-"list management software Sympa."
-msgstr ""
-"特定のことがらを実現する方法を探しておられるのでしたら、メーリングリスト管理"
-"ソフトウェア Sympa で<a href=\"%1/help/introduction#features\">できること</a>"
-"の一覧をご覧ください。"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
-msgid ""
-"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
-"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
-"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
-"\"Frequently asked questions\">FAQ</acronym></a>."
-msgstr ""
-"なにか問題が起きているのでしたら、まず <a href=\"%1/help/faquser\">利用する方"
-"のための <acronym title=\"よくある質問。Frequently asked questions\">FAQ</"
-"acronym></a> か <a href=\"%1/help/faqadmin\">運営する方のための <acronym "
-"title=\"よくある質問。Frequently asked questions\">FAQ</acronym></a> をご覧に"
-"なってみてください。"
-
 #: default/web_tt2/help_faquser.tt2:3
 msgid "Users Frequently Asked Questions"
 msgstr "読者がかかえる問題"
@@ -3197,9 +2474,9 @@ msgstr ""
 #. (path_cgi)
 #: default/web_tt2/help_faquser.tt2:16
 msgid ""
-"<strong>You entered an incorrect password</strong>. If you forgot your "
-"password, you can reset it. To do so, follow the <a href=\"%1/renewpasswd"
-"\">Lost password?</a> link from the homepage."
+"<strong>You entered an incorrect password</strong>. If you have forgotten "
+"your password, you can reset it. To do so, follow the <a href=\"%1/"
+"renewpasswd\">Lost password?</a> link from the homepage."
 msgstr ""
 "<strong>正しいパスワードを打ち込んでいない</strong>。パスワードを忘れたとき"
 "は、再設定できます。それには、ホームページの<a href=\"%1/renewpasswd\">パス"
@@ -3512,8 +2789,8 @@ msgstr ""
 "り、それに返事をしたり、読んだりすることができます。"
 
 #: default/web_tt2/help_introduction.tt2:7
-msgid "Special cases:</strong>"
-msgstr "しかし、例外もあります:</strong>"
+msgid "<strong>Special cases:</strong>"
+msgstr "<strong>しかし、例外もあります:</strong>"
 
 #: default/web_tt2/help_introduction.tt2:9
 msgid ""
@@ -3665,14 +2942,13 @@ msgstr ""
 
 #: default/web_tt2/help_introduction.tt2:40
 msgid ""
-"search for mailing lists</strong> matching your main interests or your "
-"particular situation;"
-msgstr ""
-"</strong>自分の関心や事情にぴったり合った<strong>リストを探す</strong>。"
+"<strong>search for mailing lists</strong> matching your main interests or "
+"your particular situation;"
+msgstr "自分の関心や事情にぴったり合った<strong>リストを探す</strong>。"
 
 #: default/web_tt2/help_introduction.tt2:41
-msgid "manage your subscriptions</strong>:"
-msgstr "自分の読者登録を管理する</strong>——"
+msgid "<strong>manage your subscriptions</strong>:"
+msgstr "<strong>自分の読者登録を管理する</strong>——"
 
 #. (path_cgi)
 #: default/web_tt2/help_introduction.tt2:43
@@ -3905,16 +3181,16 @@ msgstr ""
 
 #: default/web_tt2/help_introduction.tt2:93
 msgid ""
-"List owners and moderators can turn to listmasters</strong> when they face a "
-"problem not dealt with by the documentation or for any comment. However, in "
-"order not to flood listmasters with messages, it is recommended that "
-"subscribers rather turn to list owners."
+"<strong>List owners and moderators can turn to listmasters</strong> when "
+"they face a problem not dealt with by the documentation or for any comment. "
+"However, in order not to flood listmasters with messages, it is recommended "
+"that subscribers rather turn to list owners."
 msgstr ""
-"</strong>使い方を調べても解決できないような問題が起こった場合など、メーリング"
-"リストシステムについて質問や意見があるとき、<strong>リストのオーナーやモデ"
-"レータは、リストシステム管理者に問い合わせることができます</strong>。ですが読"
-"者の方は、リストシステム管理者を質問責めにあわせないために、まずリストのオー"
-"ナーに問い合わせるようにしましょう。"
+"使い方を調べても解決できないような問題が起こった場合など、メーリングリストシ"
+"ステムについて質問や意見があるとき、<strong>リストのオーナーやモデレータは、"
+"リストシステム管理者に問い合わせることができます</strong>。ですが読者の方は、"
+"リストシステム管理者を質問責めにあわせないために、まずリストのオーナーに問い"
+"合わせるようにしましょう。"
 
 #: default/web_tt2/help_introduction.tt2:95
 msgid "Owners"
@@ -3922,13 +3198,13 @@ msgstr "オーナー"
 
 #: default/web_tt2/help_introduction.tt2:96
 msgid ""
-"The list owner is generally its creator</strong> or, failing him/her, the "
-"person who requested the list creation or who became responsible for it. "
-"<strong>His/her role</strong>:"
+"<strong>The list owner is generally its creator</strong> or, failing him/"
+"her, the person who requested the list creation or who became responsible "
+"for it. <strong>His/her role</strong>:"
 msgstr ""
-"リストを作った人がリストのオーナーもやることが多い</strong>ですが、リストの作"
-"成を申し込んだ人や作成に責任をもつ人のこともあります。<strong>オーナーの仕事"
-"は</strong>——"
+"<strong>リストを作った人がリストのオーナーもやることが多い</strong>ですが、リ"
+"ストの作成を申し込んだ人や作成に責任をもつ人のこともあります。<strong>オー"
+"ナーの仕事は</strong>——"
 
 #. (path_cgi)
 #: default/web_tt2/help_introduction.tt2:98
@@ -4954,22 +4230,22 @@ msgstr ""
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
 "sending <strong>%1@%2</strong> the following command: <span class=\"commande"
-"\"><strong>GET nameofthelist year-month</strong></span> (example: <em "
-"class=\"example\">GET list_example 2016-07</em>). Then you receive a "
-"compilation of all messages sent during the chosen month. This compilation "
-"is sent in plain text and contains <acronym lang=\"en\" xml:lang=\"en\" "
-"title=\"HyperText Markup Language\">HTML</acronym> tags instead of the "
-"original formatting; it also involves full headers for each message. The "
+"\"><strong>GET nameofthelist year-month</strong></span> (example: <em class="
+"\"example\">GET list_example 2016-07</em>). Then you receive a compilation "
+"of all messages sent during the chosen month. This compilation is sent in "
+"plain text and contains <acronym lang=\"en\" xml:lang=\"en\" title="
+"\"HyperText Markup Language\">HTML</acronym> tags instead of the original "
+"formatting; it also involves full headers for each message. The "
 "'<strong>Text archives</strong>' parameter allows you to define:"
 msgstr ""
 "<strong>電子メールで投稿保管庫の中を見る</strong>こともできます。<strong>%1@%"
 "2</strong> に次のコマンドを送ります: <span class=\"commande\"><strong>GET リ"
 "スト名 年-月</strong></span> (例: <em class=\"example\">GET list_example "
-"2016-07</em>)。すると、指定した月のメッセージをまとめて受け取れます。この"
-"まとめ読みはプレインテキストで届き、<acronym lang=\"en\" xml:lang=\"en\" "
-"title=\"HyperText Markup Language\">HTML</acronym> のタグもそのまま見えます"
-"し、メッセージのヘッダがすべて入っています。「<strong>テキスト投稿保管庫</"
-"strong>」パラメータで次のことを決めることができます。"
+"2016-07</em>)。すると、指定した月のメッセージをまとめて受け取れます。このまと"
+"め読みはプレインテキストで届き、<acronym lang=\"en\" xml:lang=\"en\" title="
+"\"HyperText Markup Language\">HTML</acronym> のタグもそのまま見えますし、メッ"
+"セージのヘッダがすべて入っています。「<strong>テキスト投稿保管庫</strong>」パ"
+"ラメータで次のことを決めることができます。"
 
 # # "<strong>qui a le droit</strong> de se faire envoyer par e-mail les "
 # # "archives récapitulatives des messages de la liste ;"
@@ -5452,10 +4728,10 @@ msgstr "<code>STATS <em>リスト</em></code>: リストの統計情報を見る
 
 #: default/web_tt2/help_mail_commands.tt2:60
 msgid ""
-"code>REMIND <em>list</em></code>: send to all subscribers a personalized "
+"<code>REMIND <em>list</em></code>: send to all subscribers a personalized "
 "reminder with the address with which he/she is subscribed to the list"
 msgstr ""
-"code>REMIND <em>リスト</em></code>: 読者それぞれに、本人が読者登録しているア"
+"<code>REMIND <em>リスト</em></code>: 読者それぞれに、本人が読者登録しているア"
 "ドレスを知らせるメッセージを送る"
 
 #: default/web_tt2/help_mail_commands.tt2:64
@@ -5480,7 +4756,7 @@ msgstr ""
 "<code>MODINDEX <em>リスト</em></code>: モデレーションを待っているメッセージの"
 "一覧を見る"
 
-#: default/web_tt2/help_sendmsg.tt2:3 default/web_tt2/help_user.tt2:158
+#: default/web_tt2/help_sendmsg.tt2:3 default/web_tt2/help_user.tt2:149
 msgid "Sending a message"
 msgstr "メッセージを送る"
 
@@ -5897,7 +5173,7 @@ msgstr ""
 "</a>では、ネチケットの一般原則を知ることができますし、参考になるページへのリ"
 "ンクもあります。"
 
-#: default/web_tt2/help_shared.tt2:3 default/web_tt2/help_user.tt2:161
+#: default/web_tt2/help_shared.tt2:3 default/web_tt2/help_user.tt2:152
 msgid "Using the shared document web space"
 msgstr "共有文書置き場を使う"
 
@@ -5946,13 +5222,13 @@ msgstr ""
 # # "<strong>fichiers</strong> et des <strong>signets</strong>."
 #: default/web_tt2/help_shared.tt2:14
 msgid ""
-"The 'Shared documents' section can contain three types of resources</"
+"<strong>The 'Shared documents' section can contain three types of resources</"
 "strong>: <strong>folders</strong>, <strong>files</strong> and "
 "<strong>bookmarks</strong>."
 msgstr ""
-"「共有文書置き場」のセクションには 3 種類のデータを入れられます</strong>。"
-"<strong>フォルダ</strong>、<strong>ファイル</strong>、<strong>ブックマーク</"
-"strong>です。"
+"<strong>「共有文書置き場」のセクションには 3 種類のデータを入れられます</"
+"strong>。<strong>フォルダ</strong>、<strong>ファイル</strong>、<strong>ブック"
+"マーク</strong>です。"
 
 # # "Les <strong>dossiers</strong> sont précédés de l'icône <img "
 # # "src=\"%1/folder.png\" style=\"border: 0px;\" title=\"Icône de dossier\" "
@@ -6099,16 +5375,16 @@ msgstr ""
 # # "nom de la colonne correspondante."
 #: default/web_tt2/help_shared.tt2:34
 msgid ""
-"You can sort documents and folders according to criteria</strong> other than "
-"the name of the document/folder: they can also be sorted according to their "
-"<strong>author</strong>, their <strong>size</strong> and their <strong>last "
-"update date</strong>. To sort documents according to the criterion of your "
-"choice, click on the name of the corresponding column."
+"<strong>You can sort documents and folders according to criteria</strong> "
+"other than the name of the document/folder: they can also be sorted "
+"according to their <strong>author</strong>, their <strong>size</strong> and "
+"their <strong>last update date</strong>. To sort documents according to the "
+"criterion of your choice, click on the name of the corresponding column."
 msgstr ""
-"文書やフォルダを他の順序で並べることもできます</strong>。名前順以外に、"
-"<strong>作者</strong>、<strong>サイズ</strong>、<strong>最終更新</strong>の日"
-"時で並べるようにもできます。並び順を変えるには、並べたい欄の名前をクリックし"
-"ます。"
+"<strong>文書やフォルダを他の順序で並べることもできます</strong>。名前順以外"
+"に、<strong>作者</strong>、<strong>サイズ</strong>、<strong>最終更新</strong>"
+"の日時で並べるようにもできます。並び順を変えるには、並べたい欄の名前をクリッ"
+"クします。"
 
 # # "Télécharger des documents à partir de l'espace de stockage partagé"
 #: default/web_tt2/help_shared.tt2:37
@@ -6122,8 +5398,9 @@ msgstr "文書をダウンロードするには、次のようにします。"
 
 # # "<strong>Allez à la section 'Documents partagés'</strong> de la liste qui "
 # # "vous intéresse."
-#: default/web_tt2/help_shared.tt2:40 default/web_tt2/help_shared.tt2:62
-#: default/web_tt2/help_shared.tt2:75 default/web_tt2/help_shared.tt2:87
+#: default/web_tt2/help_shared.tt2:40 default/web_tt2/help_shared.tt2:52
+#: default/web_tt2/help_shared.tt2:62 default/web_tt2/help_shared.tt2:75
+#: default/web_tt2/help_shared.tt2:87
 msgid ""
 "<strong>Go to the 'Shared documents' section</strong> of the list of your "
 "interest."
@@ -6190,43 +5467,39 @@ msgstr "フォルダを作成する"
 # # "<strong>Pour créer un dossier sur une liste</strong>, procédez comme suit "
 # # ":"
 #: default/web_tt2/help_shared.tt2:50
-msgid "To create a folder on a list</strong>, do as follows:"
-msgstr "フォルダを作成するには</strong>、次のようにします。"
-
-# # "<strong>Placez-vous dans le dossier où vous souhaitez créer votre "
-# # "dossier</strong>."
-#: default/web_tt2/help_shared.tt2:52
-msgid ""
-"Go to the 'Shared documents' section</strong> of the list of your interest."
-msgstr ""
-"</strong>目当てのリストの<strong>「共有文書置き場」のセクションへ行きます</"
-"strong>。"
+msgid "<strong>To create a folder on a list</strong>, do as follows:"
+msgstr "<strong>フォルダを作成するには</strong>、次のようにします。"
 
 # # "<strong>Entrez le nom du dossier</strong> dans le champ de texte associé "
 # # "à l'intitulé 'Créer un dossier'."
 #: default/web_tt2/help_shared.tt2:53
-msgid "Browse the folder in which you want to create a folder</strong>."
-msgstr "中にフォルダを作成したいフォルダへ行きます</strong>。"
+msgid ""
+"<strong>Browse the folder in which you want to create a folder</strong>."
+msgstr "<strong>中にフォルダを作成したいフォルダへ行きます</strong>。"
 
-# # "<strong>Cliquez sur le bouton 'Créer'</strong>."
-#: default/web_tt2/help_shared.tt2:54
-msgid "Switch to expert mode</strong>."
-msgstr "「詳細」を選びます</strong>。"
+# # "Attention : les propriétaires de listes peuvent définir des quotas, "
+# # "c'est-à-dire une <strong>taille maximale à ne pas dépasser pour l'espace "
+# # "de stockage partagé</strong>. Si vous essayez de publier ou de créer un "
+# # "document trop gros par rapport à l'espace restant, vous recevrez le "
+# # "message d'erreur suivant : « Le quota d'espace disque est dépassé »."
+#: default/web_tt2/help_shared.tt2:54 default/web_tt2/help_shared.tt2:64
+#: default/web_tt2/help_shared.tt2:77 default/web_tt2/help_shared.tt2:89
+msgid "<strong>Switch to expert mode</strong>."
+msgstr "<strong>「詳細」を選びます</strong>。"
 
 # # "Publier un fichier sur une liste"
 #: default/web_tt2/help_shared.tt2:55
 msgid ""
-"Enter the folder name</strong> in the text field close to the 'Create a new "
-"folder inside [name of the current folder]' label."
+"<strong>Enter the folder name</strong> in the text field close to the "
+"'Create a new folder inside [name of the current folder]' label."
 msgstr ""
-"</strong>「[現在のフォルダ名] フォルダの中に新しいフォルダを作る」のそばのテ"
-"キストボックスに<strong>フォルダ名を打ち込みます</strong>。"
+"「[現在のフォルダ名] フォルダの中に新しいフォルダを作る」のそばのテキストボッ"
+"クスに<strong>フォルダ名を打ち込みます</strong>。"
 
-# # "<strong>Pour publier un fichier sur une liste</strong>, procédez comme "
-# # "suit :"
-#: default/web_tt2/help_shared.tt2:56
-msgid "Click on the 'Create' button</strong>."
-msgstr "「作成」ボタンをクリックします</strong>。"
+# # "Éditer ou supprimer des documents dans l'espace de stockage partagé"
+#: default/web_tt2/help_shared.tt2:56 default/web_tt2/help_shared.tt2:91
+msgid "<strong>Click on the 'Create' button</strong>."
+msgstr "<strong>「作成」ボタンをクリックします</strong>。"
 
 # # "<strong>Placez-vous dans le dossier où vous souhaitez publier votre "
 # # "fichier</strong>. Créez un nouveau dossier si besoin est."
@@ -6251,16 +5524,6 @@ msgid ""
 msgstr ""
 "<strong>中にファイルをアップロードしたいフォルダへ行きます</strong>。フォルダ"
 "がなければ新たに作成します。"
-
-# # "Attention : les propriétaires de listes peuvent définir des quotas, "
-# # "c'est-à-dire une <strong>taille maximale à ne pas dépasser pour l'espace "
-# # "de stockage partagé</strong>. Si vous essayez de publier ou de créer un "
-# # "document trop gros par rapport à l'espace restant, vous recevrez le "
-# # "message d'erreur suivant : « Le quota d'espace disque est dépassé »."
-#: default/web_tt2/help_shared.tt2:64 default/web_tt2/help_shared.tt2:77
-#: default/web_tt2/help_shared.tt2:89
-msgid "<strong>Switch to expert mode</strong>."
-msgstr "<strong>「詳細」を選びます</strong>。"
 
 # # "Pour que les listes ne soient pas surchargées, essayez de "
 # # "<strong>supprimer au fur et à mesure les fichiers inutiles</strong>. Une "
@@ -6377,8 +5640,8 @@ msgstr "ファイルを作成する"
 # # "votre fichier dans la zone de texte 'Éditer  le fichier /nomdufichier' "
 # # "puis <strong>cliquez sur le bouton 'Publier'</strong>."
 #: default/web_tt2/help_shared.tt2:85
-msgid "To create a file on a list</strong>, do as follows:"
-msgstr "ファイルを作成するには</strong>、次のようにします。"
+msgid "<strong>To create a file on a list</strong>, do as follows:"
+msgstr "<strong>ファイルを作成するには</strong>、次のようにします。"
 
 # # "<strong>Important : les seuls fichiers qui peuvent être créés en ligne "
 # # "sur les listes sont des fichiers en texte brut. Vous ne pourrez en aucun "
@@ -6403,11 +5666,6 @@ msgid ""
 msgstr ""
 "「新しいファイルを作る」のそばのテキストボックスに<strong>ファイルの名前を打"
 "ち込みます</strong>。"
-
-# # "Éditer ou supprimer des documents dans l'espace de stockage partagé"
-#: default/web_tt2/help_shared.tt2:91
-msgid "<strong>Click on the 'Create' button</strong>."
-msgstr "<strong>「作成」ボタンをクリックします</strong>。"
 
 # # "En plus de publier des documents ou d'en télécharger, vous pouvez "
 # # "intervenir sur les fichiers et dossiers qui sont déjà en ligne :"
@@ -6960,7 +6218,7 @@ msgstr ""
 
 #: default/web_tt2/help_suspend.tt2:8
 msgid ""
-"Select a start date through the calendar that appears when you click on the "
+"Select a start date using the calendar that appears when you click on the "
 "\"start date\" field;"
 msgstr ""
 "「開始日」の欄をクリックするとカレンダーがでますので、そこから開始日を選びま"
@@ -6969,9 +6227,9 @@ msgstr ""
 #: default/web_tt2/help_suspend.tt2:9
 msgid ""
 "if you wish, you can specify the date when you want your subscription to "
-"resume. Do it using the \"end date\" field. You can click on \"indefinite.\" "
-"In this case, you will have to return to this page to resume your "
-"subscription;"
+"resume. Do it using the \"end date\" field. Alternatively, you can click on "
+"\"indefinite.\" In this case, you will have to return to this page to resume "
+"your subscription;"
 msgstr ""
 "受け取りを再開する日をあらかじめ決めてあるときは、「終了日」の欄で同じように"
 "選びます。「無期限」をクリックでき、その場合受け取りを再開したくなったらまた"
@@ -6979,8 +6237,8 @@ msgstr ""
 
 #: default/web_tt2/help_suspend.tt2:10
 msgid ""
-"Select the lists which you want to suspend your subscription for. The "
-"\"Toogle selection\" button allows you to invert the selection;"
+"Select the lists for which you wish to suspend your subscription. The "
+"\"Toggle selection\" button allows you to invert the selection;"
 msgstr ""
 "受け取りを休止したいリストを選びます。「選択を逆転」ボタンで選択を逆転できま"
 "す。"
@@ -6997,7 +6255,7 @@ msgstr "<strong>受け取りを再開するには</strong>、次の手順を踏�
 
 #: default/web_tt2/help_suspend.tt2:15
 msgid ""
-"Select the list(s) you want to reactivate. The \"Toogle selection\" button "
+"Select the list(s) you want to reactivate. The \"Toggle selection\" button "
 "allows you to invert the selection;"
 msgstr ""
 "受け取りを再開したいリストを選びます (複数可)。「選択を逆転」ボタンで選択を逆"
@@ -7006,164 +6264,6 @@ msgstr ""
 #: default/web_tt2/help_suspend.tt2:16
 msgid "Click \"Resume\"."
 msgstr "「再開」をクリックします。"
-
-#: default/web_tt2/help.tt2:11
-msgid "Subscriber, moderator and owner documentation"
-msgstr "読者、モデレータ、オーナー向けのドキュメント"
-
-#: default/web_tt2/help.tt2:13
-msgid "In this documentation, you will find:"
-msgstr "このドキュメントでは、次の事項について述べます:"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:15
-msgid ""
-"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
-msgstr "メーリング リストの<a href=\"%1/help/introduction\">一般的な紹介</a>;"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:16
-msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
-msgstr "Sympa の使用についての<a href=\"%1/help/user\">ユーザ ガイド</a>。"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:17
-msgid ""
-"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
-msgstr "Sympa の使用についての<a href=\"%1/help/admin\">管理者ガイド</a>。"
-
-#: default/web_tt2/help_user_options.tt2:3
-msgid ""
-"This is a description of the reception modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-msgstr ""
-"ここでは、お使いになれる受け取りモードについて説明します。これらの選択肢は互"
-"いに排他的です。つまり、同時に異なった2つのモードを設定することはできません。"
-"メーリングリストによっては、一部の選択肢しか選べないこともあります。"
-
-#: default/web_tt2/help_user_options.tt2:7
-msgid "Digest"
-msgstr "まとめ読み"
-
-#: default/web_tt2/help_user_options.tt2:10
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-msgstr ""
-"読者は、リストからメールメッセージを一通ずつ受け取る代わりに、定期的にまとめ"
-"て受け取ります。まとめ読みは、リストから送るメッセージを multipart/digest "
-"MIME形式でまとめたものです。"
-
-#: default/web_tt2/help_user_options.tt2:12
-#: default/web_tt2/help_user_options.tt2:20
-msgid "The sending interval for these Digests is defined by the list owner."
-msgstr "こういったまとめ読みを送信する間隔は、リストのオーナーが決めます。"
-
-#: default/web_tt2/help_user_options.tt2:14
-msgid "DigestPlain"
-msgstr "まとめ読み (プレイン)"
-
-#: default/web_tt2/help_user_options.tt2:18
-msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-msgstr ""
-"読者が定期的にまとまったメッセージを受け取る点は、\n"
-"普通のまとめ読みと同じです。まとめ読み (プレイン) では、まとめ読みを\n"
-"プレインテキスト形式で、添付ファイルを取り除いた状態で送ります。\n"
-"まとめ読み (プレイン) は、電子メールソフトウェアが multipart/digest 形式\n"
-"のメッセージをうまく表示できない場合に役立ちます。"
-
-#: default/web_tt2/help_user_options.tt2:22
-msgid "Summary"
-msgstr "メッセージの一覧"
-
-#: default/web_tt2/help_user_options.tt2:26
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-msgstr ""
-"リストからの個別のメールを受け取る代わりに、読者は定期的に\n"
-"メッセージの一覧を受け取ります。このモードはまとめ読みに近いものですが、\n"
-"読者はメッセージの一覧だけを受け取ります。"
-
-#: default/web_tt2/help_user_options.tt2:29
-msgid "Nomail"
-msgstr "なにも受け取らない"
-
-#: default/web_tt2/help_user_options.tt2:31
-msgid ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-msgstr ""
-"このモードは、読者がリストからのメール受け取りを希望しないがリストへの投稿は"
-"したいという場合に使います。さらに、たとえば休暇などで一時的にメールを読めな"
-"くなる読者が登録解除してまた読者登録するといったことを、しなくてすむようにし"
-"ます。"
-
-#: default/web_tt2/help_user_options.tt2:36
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-msgstr ""
-"このモードは、読者がHTMLとプレインテキストの両方で送信されたメールを\n"
-"プレインテキスト形式のみで受け取りたいときに使います。"
-
-#: default/web_tt2/help_user_options.tt2:41
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-msgstr ""
-"このモードは、読者がHTMLとプレインテキストの両方で送信されたメールを HTML\n"
-"形式のみで受け取りたいときに使います。"
-
-#: default/web_tt2/help_user_options.tt2:46
-msgid ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-msgstr ""
-"このモードは、読者が添付ファイルを受け取りたくないときに使います。\n"
-"添付ファイルはリストのウェブサイト上のファイル保存場所を示す URL に置き換えら"
-"れます。"
-
-#: default/web_tt2/help_user_options.tt2:51
-msgid ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-msgstr ""
-"このモードは、読者が自分の投稿したメッセージと同じものを受け取りたくない場合"
-"に\n"
-"使います。"
-
-#: default/web_tt2/help_user_options.tt2:56
-msgid ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
-msgstr ""
-"これは主に、nomail (なにも受け取らない)、summary (メッセージの一覧)、digest "
-"(まとめ読み) のいずれかのモードを取りやめるのに使います。\n"
-"読者が nomail (なにも受け取らない) モードにしていた場合、リストからのメッセー"
-"ジをまた一通ずつ受け取れるようになります。"
 
 #: default/web_tt2/help_user.tt2:3
 msgid "Mailing lists - User Guide"
@@ -7185,11 +6285,11 @@ msgstr ""
 
 #: default/web_tt2/help_user.tt2:7
 msgid ""
-"To perform actions related to mailing lists</strong> (subscribe, change your "
-"options, etc.), you have two options:"
+"<strong>To perform actions related to mailing lists</strong> (subscribe, "
+"change your options, etc.), you have two options:"
 msgstr ""
-"リストでなにかやりたいこと</strong> (読者登録、個人設定を変える、など) がある"
-"のなら、2 つのやりかたがあります——"
+"<strong>リストでなにかやりたいこと</strong> (読者登録、個人設定を変える、な"
+"ど) があるのなら、2 つのやりかたがあります——"
 
 #: default/web_tt2/help_user.tt2:9
 msgid "<strong>log on to the web environment</strong>;"
@@ -7269,8 +6369,9 @@ msgstr "リストへの読者登録のしかたは、とてもかんたんです
 
 #: default/web_tt2/help_user.tt2:28
 msgid ""
-"Choose the address</strong> with which you want to subscribe to the list."
-msgstr "</strong>リストの読者登録につかう<strong>アドレスを決める</strong>。"
+"<strong>Choose the address</strong> with which you want to subscribe to the "
+"list."
+msgstr "リストの読者登録につかう<strong>アドレスを決める</strong>。"
 
 #: default/web_tt2/help_user.tt2:29
 msgid ""
@@ -7319,12 +6420,12 @@ msgstr ""
 "strong> (「リスト名」を自分が読者登録したいリストの名前に置き換え、半角の空白"
 "を空けて、その後に自分自身の名前を書きます) と書く。"
 
-#: default/web_tt2/help_user.tt2:172 default/web_tt2/help_user.tt2:34
+#: default/web_tt2/help_user.tt2:163 default/web_tt2/help_user.tt2:34
 msgid "<strong>Leave the message body blank</strong>."
 msgstr ""
 "<strong>メッセージの本文は空にしておき</strong>、メッセージを送信する。"
 
-#: default/web_tt2/help_user.tt2:173 default/web_tt2/help_user.tt2:35
+#: default/web_tt2/help_user.tt2:164 default/web_tt2/help_user.tt2:35
 msgid ""
 "To save some time, you can also send several commands in a single message. "
 "To do that, follow the instructions available in the <a href=\"#howitworks"
@@ -7435,7 +6536,7 @@ msgstr ""
 msgid ""
 "<strong>Go to the information page of the list</strong> you want to "
 "subscribe to."
-msgstr "自分が読者登録したい<strong>リストの案内ページへ行きます</strong>\t。"
+msgstr "自分が読者登録したい<strong>リストの案内ページへ行きます</strong>。"
 
 #: default/web_tt2/help_user.tt2:52
 msgid "In the left menu, <strong>click on the 'Subscribe'</strong> link."
@@ -7494,11 +6595,12 @@ msgstr ""
 
 #: default/web_tt2/help_user.tt2:62
 msgid ""
-"<strong>If the unique authentication process does not apply to you, you can "
-"use your list password.</strong> In this case, log on through the classic "
-"method: enter the <strong>email address with which you subscribed to the "
-"list</strong> as a login and your <strong>list password</strong> in the "
-"'Password' field."
+"<strong>If the unique authentication process does not apply to you but you "
+"are already subscribed to lists</strong>, then you have been granted a list "
+"password (displayed in the list Charter you got when you subscribed to the "
+"list). In this case, log on through the classic method: enter the "
+"<strong>email address with which you subscribed to the list</strong> as a "
+"login and your <strong>list password</strong> in the 'Password' field."
 msgstr ""
 "<strong>一括認証の手続きがなければ、あなたのリスト用のパスワードを使います</"
 "strong>。この場合、普通のやりかたでログインをします。つまり、<strong>自分が読"
@@ -7507,9 +6609,9 @@ msgstr ""
 
 #: default/web_tt2/help_user.tt2:63
 msgid ""
-"If you do not remember your list password, click on 'Lost password?'. After "
-"you've provided your email address, a mail with a validation URL will be "
-"sent at that address."
+"If you do not remember your list password, click on 'Lost password?'. Then "
+"enter your email address and password. Shortly afterward you will receive an "
+"email with a validation link."
 msgstr ""
 "自分のリスト用パスワードが思い出せないときは、「パスワードを忘れた」をクリッ"
 "クします。そして、自分の電子メールアドレスを入力します。そのアドレスに確認用 "
@@ -7518,8 +6620,8 @@ msgstr ""
 #: default/web_tt2/help_user.tt2:65
 msgid ""
 "<strong>If the unique authentication process does not apply to you and you "
-"do no have a list password yet</strong>, click on '<strong>First login?</"
-"strong>' and type in your email address. A confirmation URL will be sent at "
+"do not have a list password yet</strong>, click on '<strong>First login?</"
+"strong>' and type in your email address. A confirmation URL will be sent to "
 "that address. Then you will be able to choose your password."
 msgstr ""
 "<strong>一括認証の手続きがなく、リストのパスワードもまだない</strong>、という"
@@ -7785,10 +6887,378 @@ msgstr ""
 "strong>受け取りモードを決める</strong> (モードは一度にひとつしか選べません。"
 "複数のモードは選べません)。次のようなモードがあります。"
 
+#: default/web_tt2/help_user.tt2:107
+msgid ""
+"<strong>suspended</strong>: this mode allows you to suspend your "
+"subscription to one or more lists for a specified or unspecified period. "
+"Unlike unsubscription, you can keep track of your subscription and "
+"reactivate it at any time by visiting the \"Manage your subscription\" "
+"section."
+msgstr ""
+"<strong>休止中</strong>: このモードにすると、あるリスト (複数可) からのメッ"
+"セージの受け取りを一定の期間休止できます。再開もできます。登録解除とはちがっ"
+"て、読者登録はしたままで「受け取りを休止/再開」からいつでも受け取りだけを休止"
+"したり再開したりできます。"
+
+# # "<strong>Référencé dans la liste des abonnés</strong> : vous serez visible "
+# # "dans la liste des abonnés (si l'accès à celle-ci est autorisé)."
+#: default/web_tt2/help_user.tt2:109
+msgid "<strong>Choose a visibility option</strong>:"
+msgstr "読者一覧での<strong>見えかた</strong>を決められます。"
+
+# # "<strong>Non visible</strong> : vous ne serez plus visible dans la liste "
+# # "des abonnés. Votre adresse e-mail sera néanmoins visible dans les "
+# # "archives des messages si vous en avez envoyé."
+#: default/web_tt2/help_user.tt2:111
+msgid ""
+"<strong>listed in the list review page</strong>: your name and email address "
+"will be displayed in the members list (if the list owner allowed subscribers "
+"to review the list members)."
+msgstr ""
+"<strong>読者一覧に載せる</strong> (noconceal): 自分の名前と電子メールアドレス"
+"が読者一覧に載ります (ただし、リストのオーナーが、読者一覧を読者が見られるよ"
+"うにしている場合)。"
+
+# # "<strong>Cliquez sur le bouton 'Mise à jour'</strong>."
+#: default/web_tt2/help_user.tt2:112
+msgid ""
+"<strong>concealed</strong>: your name and email address will not be "
+"displayed in the members list. However you email address will be visible in "
+"the list archive if you send messages."
+msgstr ""
+"<strong>読者一覧では隠す</strong> (conceal): 自分の名前と電子メールアドレスを"
+"読者一覧に載せません。ただし、メッセージを送れば投稿保管庫には電子メールアド"
+"レスが残ります。"
+
+# # "..."
+#: default/web_tt2/help_user.tt2:114
+msgid "<strong>Click on the 'Update' button</strong>."
+msgstr "<strong>「更新」ボタンをクリックします</strong>。"
+
+#: default/web_tt2/help_user.tt2:117
+msgid "Changing your general preferences"
+msgstr "個人設定を変える"
+
+# # "Les préférences générales sont relatives à l'ensemble de vos abonnements "
+# # "et à la manière dont se présente votre interface de listes Sympa. Pour "
+# # "modifier vos préférences, procédez comme suit :"
+#: default/web_tt2/help_user.tt2:118
+msgid ""
+"The general preferences apply to all your subscriptions as well as to the "
+"way your Sympa mailing list web interface displays. To change your "
+"preferences, do as follows:"
+msgstr ""
+"個人設定は、読者登録しているすべてのリストと、Sympa のウェブインタフェースで"
+"の表示にたいしてはたらきます。設定を変えるには次のようにします。"
+
+# * 6.1(?): "Your preferences" link has been moved to top bar.
+#
+# # "Dans la boîte en haut de la colonne de gauche, <strong>cliquez sur le "
+# # "lien 'Vos préférences'</strong>."
+#: default/web_tt2/help_user.tt2:121
+msgid ""
+"In the form displayed on top of the left column, <strong>click on the 'Your "
+"preferences' link</strong>."
+msgstr ""
+"画面の上のほうの<strong>「個人設定」のリンクをクリックします</strong>。"
+
+# # "<strong>Modifiez vos préférences</strong>."
+#: default/web_tt2/help_user.tt2:122
+msgid "<strong>Change your preferences</strong>."
+msgstr "<strong>設定を変えます</strong>。"
+
+# # "<strong>Cliquez sur 'Valider' pour chaque option</strong> que vous "
+# # "modifiez."
+#: default/web_tt2/help_user.tt2:123
+msgid "<strong>Click on 'Submit' for every option</strong> you change."
+msgstr ""
+"<strong>「設定」をクリックする</strong>と、オプションがすべて変わります。"
+
+# # "Vous pouvez modifier :"
+#: default/web_tt2/help_user.tt2:125
+msgid "You can change:"
+msgstr "次のものを変えられます。"
+
+# # "votre <strong>nom</strong> ; si vous vous abonnez à une liste depuis "
+# # "l'interface web du serveur de listes, le champ 'Nom' sera automatiquement "
+# # "renseigné dans la liste des abonnés ;"
+#: default/web_tt2/help_user.tt2:127
+msgid ""
+"your <strong>name</strong>; if you subscribe to a list from the mailing list "
+"server web interface, the 'Name' field will automatically be filled in in "
+"the members list;"
+msgstr ""
+"自分の<strong>名前</strong>。メーリングリストサーバのウェブインタフェースでリ"
+"ストに読者登録すると、登録したリストでの「名前」欄に自動的にこの名前が入りま"
+"す。"
+
+# # "la <strong>langue de l'interface de listes Sympa</strong> (le choix de la "
+# # "langue est disponible sur toutes les pages de l'interface de listes ; "
+# # "votre choix sera conservé même si vous modifiez la langue de l'interface "
+# # "sans passer par la page 'Préférences' ;"
+#: default/web_tt2/help_user.tt2:128
+msgid ""
+"the <strong>language in which the Sympa web interface is displayed</strong> "
+"(you can change language on every page of the web interface; your choice "
+"will remain even though you change the interface language on another page "
+"than the 'Preferences' page;"
+msgstr ""
+"<strong>Sympa のウェブインタフェースで表示に使う言語</strong> (ページを見てい"
+"る途中で言語を変えることもできますが、「個人設定」ページで変えた言語の設定は"
+"残ります)。"
+
+# # "la <strong>durée de vie du cookie stocké sur votre ordinateur par "
+# # "Sympa</strong> ('Expiration de la connexion'). Par défaut, la session "
+# # "expire lorsque vous fermez votre navigateur ; si vous utilisez les listes "
+# # "de manière intensive, nous vous conseillons de choisir une durée plus "
+# # "longue ;"
+#: default/web_tt2/help_user.tt2:129
+msgid ""
+"the <strong>lifetime of the cookie placed on your computer by Sympa</strong> "
+"('Connection expiration period'). By default, the session expires when you "
+"close your browser; if you use the mailing list service a lot, we advise you "
+"to choose a longer duration;"
+msgstr ""
+"<strong>Sympa が自分のコンピュータに入れるクッキーの有効期間</strong> (「接続"
+"の有効期間」)。最初は、ブラウザを終了するとセッションの期限が切れるようになっ"
+"ていますが、メーリングリストサービスをよく利用する方は、長い期間にしておくこ"
+"とをおすすめします。"
+
+# # "Un cookie est un petit fichier qu'un serveur web enregistre, le plus "
+# # "souvent temporairement, sur votre disque dur, pour vous identifier sur "
+# # "son service. Il contient quelques informations de référence vous "
+# # "concernant : nom, adresse e-mail, date de dernière connexion, etc."
+#: default/web_tt2/help_user.tt2:130
+msgid ""
+"A cookie is a small file a web server stores on your hard disk, most "
+"generally temporarily, in order to identify you as a user of its service. It "
+"contains a few pieces of personal information about you: name, email "
+"address, latest logon time, etc."
+msgstr ""
+"クッキーは、ウェブサーバがあなたのコンピュータのハードディスクに (ほとんどの"
+"場合は一時的に) 書き込む小さなファイルです。これによって、あなたがそのサーバ"
+"のサービスの利用者であることを識別します。これにはあなたに関する若干の個人情"
+"報 (名前、電子メールアドレス、最後にログインした時刻など) が入っています。"
+
+# # "l'<strong>adresse e-mail avec laquelle vous êtes abonné</strong> aux "
+# # "listes (si vous êtes abonné aux listes avec plusieurs adresses, l'adresse "
+# # "remplacée sera celle avec laquelle vous êtes authentifié) ;"
+#: default/web_tt2/help_user.tt2:131
+msgid ""
+"the <strong>email address with which you subscribed</strong> to the lists "
+"(if you subscribed with several email addresses, the address to be replaced "
+"will be the one you logged on with);"
+msgstr ""
+"リストに<strong>読者登録した電子メールアドレス</strong> (読者登録に複数のアド"
+"レスを使っているときは、ログインしているアドレスのみが変わります)。"
+
+# # "Attention : ceci modifiera vos abonnements à l'ensemble des listes. Si "
+# # "vous ne souhaitez changer d'adresse e-mail que pour une seule liste, il "
+# # "vaut mieux vous désabonner de cette liste et vous y réabonner avec "
+# # "l'adresse idoine."
+#: default/web_tt2/help_user.tt2:132
+msgid ""
+"Be careful: this will change your subscriptions to all your lists. If you "
+"want to change address for a single mailing list, you had better unsubscribe "
+"from that list and subscribe again with the right email address."
+msgstr ""
+"注意: 登録しているリストすべてのアドレスが変わります。特定のメーリングリスト"
+"でだけアドレスを変えたいのでしたら、いったんそのリストを登録解除し、正しい電"
+"子メールアドレスで読者登録しなおすとよいでしょう。"
+
+# # "votre <strong>mot de passe de listes</strong>."
+#: default/web_tt2/help_user.tt2:133
+msgid "your <strong>list password</strong>."
+msgstr "自分の<strong>メーリングリストのパスワード</strong>。"
+
+# # "La section '<strong>Vos autres adresses e-mail</strong>' équivaut à un "
+# # "changement d'adresse e-mail."
+#: default/web_tt2/help_user.tt2:135
+msgid ""
+"The '<strong>Your other email addresses</strong>' section acts like an email "
+"address change."
+msgstr ""
+"「<strong>他の電子メールアドレス</strong>」の項目で、アドレス変更と同じような"
+"ことができます。"
+
+#: default/web_tt2/help_user.tt2:137
+msgid "Searching for a mailing list"
+msgstr "リストを探す"
+
+# # "Vous pouvez avoir besoin de rechercher une liste. Pour cela, vous avez "
+# # "trois possibilités :"
+#: default/web_tt2/help_user.tt2:138
+msgid ""
+"You may need to search for a mailing list. To do that, you have three "
+"options:"
+msgstr ""
+"メーリングリストを探したいこともあるでしょう。これには 3 つのやりかたがありま"
+"す。"
+
+# # "<strong>parcourir les différentes rubriques</strong> listées en <a "
+# # "href=\"%1/home\">page d'accueil du serveur de listes</a> ;"
+#. (path_cgi)
+#: default/web_tt2/help_user.tt2:140
+msgid ""
+"<strong>browse the different sections</strong> displayed on the <a href=\"%1/"
+"home\">list environment homepage</a>;"
+msgstr ""
+"ウェブインタフェースの<strong><a href=\"%1/home\">ホームページ</a>のリンクか"
+"ら探す</strong>、"
+
+# # "rechercher une liste grâce au <strong>champ de recherche</strong> : la "
+# # "chaîne recherchée renverra tous les résultats trouvés dans les noms et "
+# # "les descriptions des listes (les descriptions des listes se résument "
+# # "généralement à une courte phrase) ;"
+#: default/web_tt2/help_user.tt2:141
+msgid ""
+"search for a list via the <strong>search box</strong>: the searched string "
+"will return all the lists whose name or description matches your search "
+"criteria (descriptions of the lists generally consist of a short sentence);"
+msgstr ""
+"ホームページの<strong>「リストを探す」を使う</strong>。探す条件に打ち込んだテ"
+"キストがリストの名前か説明に入っているものが、すべて出ます (リストの説明は、"
+"ふつうは簡単な文です)。"
+
+# # "cliquer sur l'onglet '<a href=\"%1/lists\">Liste des listes</a>' en haut "
+# # "de page pour <strong>afficher l'intégralité des listes</strong>."
+#. (path_cgi)
+#: default/web_tt2/help_user.tt2:142
+msgid ""
+"click on the '<a href=\"%1/lists\">List of lists</a>' tab on top of page to "
+"<strong>display all available lists</strong>."
+msgstr ""
+"ページ上部の「<a href=\"%1/lists\">リスト一覧</a>」タブをクリックして<strong>"
+"利用できるリストすべてを表示する</strong>。"
+
+# # "En fonction du domaine auquel appartient votre adresse (exemple : <em "
+# # "class=\"example\">cru.fr</em>, <em class=\"example\">fai.com</em>, etc.) "
+# # "et de l'endroit à partir duquel vous vous connectez, vous n'aurez pas "
+# # "accès aux mêmes listes. Vous pouvez malgré tout vous abonner aux listes "
+# # "qui vous sont cachées si vous connaissez leur nom. Pour cela, <a "
+# # "href=\"#abbo\">utilisez votre client de messagerie</a>."
+#: default/web_tt2/help_user.tt2:144
+msgid ""
+"According to the domain to which your email address belongs (example: <em "
+"class=\"example\">cru.fr</em>, <em class=\"example\">fai.com</em>, etc.) and "
+"to the location you log on from, you will not have access to the same lists. "
+"However you can subscribe to a list that does not display if you know its "
+"name. To do this, <a href=\"#subscribe\">use your email client</a>."
+msgstr ""
+"自分の電子メールアドレスのドメイン (たとえば <em class=\"example\">cru.fr</"
+"em>、<em class=\"example\">fai.com</em> など) や、どこからログインしたかに"
+"よって、同じリストでも一覧に表示されたりされなかったりする場合があります。で"
+"すが、表示されないリストでもリスト名を知っていれば読者登録できます。<a href="
+"\"#subscribe\">電子メールクライアントを使う</a>やりかたを見てください。"
+
+#: default/web_tt2/help_user.tt2:146
+msgid "Reading a list archive online"
+msgstr "ウェブで投稿保管庫の投稿を読む"
+
+# IEバグ回避のためリンクを段落冒頭に置かない
+#. (path_cgi)
+#: default/web_tt2/help_user.tt2:147
+msgid ""
+"Please refer to the <a href=\"%1/help/arc\"><strong>archive documentation</"
+"strong></a>."
+msgstr ""
+"やりかたは<a href=\"%1/help/arc\"><strong>投稿保管庫の説明</strong></a>を見て"
+"ください。"
+
+# IEバグ回避のためリンクを段落冒頭に置かない
+#. (path_cgi)
+#: default/web_tt2/help_user.tt2:150
+msgid ""
+"Please refer to the <a href=\"%1/help/sendmsg\"><strong>documentation about "
+"sending messages</strong></a>."
+msgstr ""
+"やりかたは<a href=\"%1/help/sendmsg\"><strong>メッセージの送りかたの説明</"
+"strong></a>を見てください。"
+
+# IEバグ回避のためリンクを段落冒頭に置かない
+#. (path_cgi)
+#: default/web_tt2/help_user.tt2:153
+msgid ""
+"Please refer to the <a href=\"%1/help/shared\"><strong>shared document web "
+"space documentation</strong></a>."
+msgstr ""
+"やりかたは<a href=\"%1/help/shared\"><strong>共有文書置き場の説明</strong></"
+"a>を見てください。"
+
+#: default/web_tt2/help_user.tt2:155
+msgid "Suspending or resuming your subscription of each list"
+msgstr "リストごとに受け取りを休止したり再開したりする"
+
+# IEバグ回避のためリンクを段落冒頭に置かない
+#. (path_cgi)
+#: default/web_tt2/help_user.tt2:156
+msgid ""
+"Please refer to the <a href=\"%1/help/suspend\"><strong>subscription "
+"management documentation</strong></a>."
+msgstr ""
+"やりかたは<a href=\"%1/help/suspend\"><strong>受け取り休止/再開の説明</"
+"strong></a>を見てください。"
+
+#: default/web_tt2/help_user.tt2:158
+msgid "Unsubscribing from lists"
+msgstr "リストの登録解除をする"
+
+#: default/web_tt2/help_user.tt2:159
+msgid "To unsubscribe from a list, do as follows:"
+msgstr "リストの登録解除をするには、次のようにしてください——"
+
+#. (conf.email,conf.host)
+#: default/web_tt2/help_user.tt2:161
+msgid ""
+"From the address with which you subscribed to the list, send a "
+"<strong>message to %1@%2</strong>."
+msgstr ""
+"リストに読者登録していたアドレスを解除するには、<strong>%1@%2 にメッセージを"
+"</strong>送ります。"
+
+#: default/web_tt2/help_user.tt2:162
+msgid ""
+"In the subject line of your email, type in: <strong>unsubscribe "
+"nameofthelist</strong> (replace 'nameofthelist' by the name of the list you "
+"want to unsubscribe from)."
+msgstr ""
+"メッセージの表題 (Subject) に、次のように書きます: <strong>unsubscribe リスト"
+"名</strong> (「リスト名」を、登録解除したいリストの名前で置き換えます)。"
+
+#: default/web_tt2/help_user.tt2:166
+msgid ""
+"You can also unsubscribe through the mailing list web interface (you will "
+"need to repeat the operation for each list you want to unsubscribe from):"
+msgstr ""
+"リストのウェブインタフェースで登録解除することもできます (登録解除したいリス"
+"トごとに同じ手順を繰り返されければいけません) ——"
+
+#: default/web_tt2/help_user.tt2:169
+msgid ""
+"<strong>Go to the information page of the list</strong> you want to "
+"unsubscribe from."
+msgstr "登録解除したい<strong>リストの案内ページへ行きます</strong>。"
+
+#: default/web_tt2/help_user.tt2:170
+msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
+msgstr ""
+"<strong>左側のメニューで、「登録解除」のリンクをクリックします</strong>。"
+
+#: default/web_tt2/help_user_options.tt2:4
+msgid ""
+"This is a description of the reception modes available in Sympa. These "
+"options are mutually exclusive, which means that you can't set two different "
+"receive modes at the same time. Only some of the modes might be available to "
+"specific mailing lists."
+msgstr ""
+"ここでは、お使いになれる受け取りモードについて説明します。これらの選択肢は互"
+"いに排他的です。つまり、同時に異なった2つのモードを設定することはできません。"
+"メーリングリストによっては、一部の選択肢しか選べないこともあります。"
+
 # # "<strong>Choisissez un mode de réception des messages</strong> (ces "
 # # "options sont exclusives, vous ne pouvez donc pas en sélectionner deux "
 # # "différentes) :"
-#: default/web_tt2/help_user.tt2:106
+#: default/web_tt2/help_user_options.tt2:9
 msgid ""
 "<strong>digest MIME format</strong>: instead of receiving the list messages "
 "in a normal manner, you will get a digest of them on a regular basis. This "
@@ -7810,7 +7280,7 @@ msgstr ""
 # # "title=\"Multipurpose Internet Mail Extension\">MIME</acronym> "
 # # "multipart/digest. La périodicité d'envoi des compilations est définie par "
 # # "le gestionnaire de la liste."
-#: default/web_tt2/help_user.tt2:107
+#: default/web_tt2/help_user_options.tt2:10
 msgid ""
 "<strong>digest plain text format</strong>: instead of receiving the list "
 "messages in a normal manner, you will get a digest of them on a regular "
@@ -7826,7 +7296,7 @@ msgstr ""
 # # "recevrez périodiquement une compilation, excepté qu'il s'agit cette fois "
 # # "uniquement d'un index des messages. Si vous souhaitez les lire dans leur "
 # # "entier, vous devrez aller consulter les archives de la liste en ligne."
-#: default/web_tt2/help_user.tt2:108
+#: default/web_tt2/help_user_options.tt2:11
 msgid ""
 "<strong>summary mode</strong>: instead of receiving the list messages in a "
 "normal manner, you will get a list of them on a regular basis. To read the "
@@ -7840,7 +7310,7 @@ msgstr ""
 # # "de ne plus recevoir les messages de la liste tout en y restant abonné. "
 # # "Cela évite par exemple de devoir se désabonner d'une liste pendant une "
 # # "période d'absence puis de se réabonner lorsque l'on revient."
-#: default/web_tt2/help_user.tt2:109
+#: default/web_tt2/help_user_options.tt2:12
 msgid ""
 "<strong>notice mode</strong>: with this mode, you will receive all the "
 "messages with a blank body: this way you are informed of every message sent "
@@ -7854,7 +7324,7 @@ msgstr ""
 # # "ne recevoir que la version texte (text/plain) des messages postés aux "
 # # "deux formats (texte et <acronym lang=\"en\" xml:lang=\"en\" "
 # # "title=\"HyperText Markup Language\">HTML</acronym>)."
-#: default/web_tt2/help_user.tt2:110
+#: default/web_tt2/help_user_options.tt2:13
 msgid ""
 "<strong>no mail (useful for vacations)</strong>: this mode makes it possible "
 "not to receive the messages of the list. It is especially useful when you "
@@ -7871,7 +7341,7 @@ msgstr ""
 # # "Markup Language\">HTML</acronym> (text/html) des messages postés aux deux "
 # # "formats (texte et <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText "
 # # "Markup Language\">HTML</acronym>)."
-#: default/web_tt2/help_user.tt2:111
+#: default/web_tt2/help_user_options.tt2:14
 msgid ""
 "<strong>text only mode</strong>: this mode allows you to receive only the "
 "text version (text/plain) of messages sent in both formats (plain text and "
@@ -7887,7 +7357,7 @@ msgstr ""
 # # "ne pas recevoir les documents attachés. Ceux-ci sont remplacés dans le "
 # # "message par une <acronym title=\"Uniform Resource Locator\" lang=\"en\" "
 # # "xml:lang=\"en\">URL</acronym> pointant vers l'interface web."
-#: default/web_tt2/help_user.tt2:112
+#: default/web_tt2/help_user_options.tt2:15
 msgid ""
 "<strong>HTML only mode</strong>: this mode allows you to receive only the "
 "<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
@@ -7900,7 +7370,7 @@ msgstr ""
 
 # # "<strong>Pour ne pas recevoir ses propres messages</strong> : ce mode "
 # # "permet de ne pas recevoir une copie de ses propres messages."
-#: default/web_tt2/help_user.tt2:113
+#: default/web_tt2/help_user_options.tt2:16
 msgid ""
 "<strong>urlize mode</strong>: this mode allows you not to receive attached "
 "documents. However these documents are available in the list archive and you "
@@ -7914,7 +7384,7 @@ msgstr ""
 
 # # "<strong>Normal</strong> : ce mode est le mode de réception par défaut ; "
 # # "il permet d'annuler les autres modes d'abonnement."
-#: default/web_tt2/help_user.tt2:114
+#: default/web_tt2/help_user_options.tt2:17
 msgid ""
 "<strong>you do not receive your own posts</strong>: this mode allows you not "
 "to receive a copy of your own messages."
@@ -7923,7 +7393,7 @@ msgstr ""
 "と、自分が投稿したものの写しを受け取らないようになります。"
 
 # # "<strong>Choisissez une option de visibilité</strong> :"
-#: default/web_tt2/help_user.tt2:115
+#: default/web_tt2/help_user_options.tt2:18
 msgid ""
 "<strong>standard (direct reception)</strong>: this mode is the default "
 "delivery mode; it cancels any other delivery mode."
@@ -7931,361 +7401,1205 @@ msgstr ""
 "<strong>標準 (直接受け取る)</strong> (mail): 最初はこの受け取りモードになって"
 "いて、ほかのモードははたらきません。"
 
-#: default/web_tt2/help_user.tt2:116
-msgid ""
-"<strong>suspended</strong>: this mode allows you to suspend your "
-"subscription to one or more lists for a specified period or not. Unlike "
-"unsubscription, you can keep track of your subscription and reactivate it at "
-"any time by visiting the \"Manage your subscription\" section."
-msgstr ""
-"<strong>休止中</strong>: このモードにすると、あるリスト (複数可) からのメッ"
-"セージの受け取りを一定の期間休止できます。再開もできます。登録解除とはちがっ"
-"て、読者登録はしたままで「受け取りを休止/再開」からいつでも受け取りだけを休止"
-"したり再開したりできます。"
+#~ msgid ""
+#~ "<strong>You entered an incorrect password</strong>. If you forgot your "
+#~ "password, you can reset it. To do so, follow the <a href=\"%1/renewpasswd"
+#~ "\">Lost password?</a> link from the homepage."
+#~ msgstr ""
+#~ "<strong>正しいパスワードを打ち込んでいない</strong>。パスワードを忘れたと"
+#~ "きは、再設定できます。それには、ホームページの<a href=\"%1/renewpasswd\">"
+#~ "パスワードを忘れた</a>のリンクを選びます。"
 
-# # "<strong>Référencé dans la liste des abonnés</strong> : vous serez visible "
-# # "dans la liste des abonnés (si l'accès à celle-ci est autorisé)."
-#: default/web_tt2/help_user.tt2:118
-msgid "<strong>Choose a visibility option</strong>:"
-msgstr "読者一覧での<strong>見えかた</strong>を決められます。"
+#~ msgid ""
+#~ "Select a start date through the calendar that appears when you click on "
+#~ "the \"start date\" field;"
+#~ msgstr ""
+#~ "「開始日」の欄をクリックするとカレンダーがでますので、そこから開始日を選び"
+#~ "ます。"
 
-# # "<strong>Non visible</strong> : vous ne serez plus visible dans la liste "
-# # "des abonnés. Votre adresse e-mail sera néanmoins visible dans les "
-# # "archives des messages si vous en avez envoyé."
-#: default/web_tt2/help_user.tt2:120
-msgid ""
-"<strong>listed in the list review page</strong>: your name and email address "
-"will be displayed in the members list (if the list owner allowed subscribers "
-"to review the list members)."
-msgstr ""
-"<strong>読者一覧に載せる</strong> (noconceal): 自分の名前と電子メールアドレス"
-"が読者一覧に載ります (ただし、リストのオーナーが、読者一覧を読者が見られるよ"
-"うにしている場合)。"
+#~ msgid ""
+#~ "if you wish, you can specify the date when you want your subscription to "
+#~ "resume. Do it using the \"end date\" field. You can click on \"indefinite."
+#~ "\" In this case, you will have to return to this page to resume your "
+#~ "subscription;"
+#~ msgstr ""
+#~ "受け取りを再開する日をあらかじめ決めてあるときは、「終了日」の欄で同じよう"
+#~ "に選びます。「無期限」をクリックでき、その場合受け取りを再開したくなったら"
+#~ "またこのページに来る必要があります。"
 
-# # "<strong>Cliquez sur le bouton 'Mise à jour'</strong>."
-#: default/web_tt2/help_user.tt2:121
-msgid ""
-"<strong>concealed</strong>: your name and email address will not be "
-"displayed in the members list. However you email address will be visible in "
-"the list archive if you send messages."
-msgstr ""
-"<strong>読者一覧では隠す</strong> (conceal): 自分の名前と電子メールアドレスを"
-"読者一覧に載せません。ただし、メッセージを送れば投稿保管庫には電子メールアド"
-"レスが残ります。"
+#~ msgid ""
+#~ "Select the lists which you want to suspend your subscription for. The "
+#~ "\"Toogle selection\" button allows you to invert the selection;"
+#~ msgstr ""
+#~ "受け取りを休止したいリストを選びます。「選択を逆転」ボタンで選択を逆転でき"
+#~ "ます。"
 
-# # "..."
-#: default/web_tt2/help_user.tt2:123
-msgid "<strong>Click on the 'Update' button</strong>."
-msgstr "<strong>「更新」ボタンをクリックします</strong>。"
+#~ msgid ""
+#~ "Select the list(s) you want to reactivate. The \"Toogle selection\" "
+#~ "button allows you to invert the selection;"
+#~ msgstr ""
+#~ "受け取りを再開したいリストを選びます (複数可)。「選択を逆転」ボタンで選択"
+#~ "を逆転できます。"
 
-#: default/web_tt2/help_user.tt2:126
-msgid "Changing your general preferences"
-msgstr "個人設定を変える"
+#~ msgid ""
+#~ "<strong>If the unique authentication process does not apply to you, you "
+#~ "can use your list password.</strong> In this case, log on through the "
+#~ "classic method: enter the <strong>email address with which you subscribed "
+#~ "to the list</strong> as a login and your <strong>list password</strong> "
+#~ "in the 'Password' field."
+#~ msgstr ""
+#~ "<strong>一括認証の手続きがなければ、あなたのリスト用のパスワードを使います"
+#~ "</strong>。この場合、普通のやりかたでログインをします。つまり、<strong>自"
+#~ "分が読者登録している電子メールアドレス</strong>と、<strong>リスト用のパス"
+#~ "ワード</strong>を打ち込みます。"
 
-# # "Les préférences générales sont relatives à l'ensemble de vos abonnements "
-# # "et à la manière dont se présente votre interface de listes Sympa. Pour "
-# # "modifier vos préférences, procédez comme suit :"
-#: default/web_tt2/help_user.tt2:127
-msgid ""
-"The general preferences apply to all your subscriptions as well as to the "
-"way your Sympa mailing list web interface displays. To change your "
-"preferences, do as follows:"
-msgstr ""
-"個人設定は、読者登録しているすべてのリストと、Sympa のウェブインタフェースで"
-"の表示にたいしてはたらきます。設定を変えるには次のようにします。"
+#~ msgid ""
+#~ "If you do not remember your list password, click on 'Lost password?'. "
+#~ "After you've provided your email address, a mail with a validation URL "
+#~ "will be sent at that address."
+#~ msgstr ""
+#~ "自分のリスト用パスワードが思い出せないときは、「パスワードを忘れた」をク"
+#~ "リックします。そして、自分の電子メールアドレスを入力します。そのアドレスに"
+#~ "確認用 URL の入った電子メールが送られてきます。"
 
-# * 6.1(?): "Your preferences" link has been moved to top bar.
-#
-# # "Dans la boîte en haut de la colonne de gauche, <strong>cliquez sur le "
-# # "lien 'Vos préférences'</strong>."
-#: default/web_tt2/help_user.tt2:130
-msgid ""
-"In the form displayed on top of the left column, <strong>click on the 'Your "
-"preferences' link</strong>."
-msgstr ""
-"画面の上のほうの<strong>「個人設定」のリンクをクリックします</strong>。"
+#~ msgid ""
+#~ "<strong>If the unique authentication process does not apply to you and "
+#~ "you do no have a list password yet</strong>, click on '<strong>First "
+#~ "login?</strong>' and type in your email address. A confirmation URL will "
+#~ "be sent at that address. Then you will be able to choose your password."
+#~ msgstr ""
+#~ "<strong>一括認証の手続きがなく、リストのパスワードもまだない</strong>、と"
+#~ "いうときは、「<strong>まだログインしたことがない</strong>」をクリックし、"
+#~ "自分の電子メールアドレスを打ち込みます。すると、確認用 URL の入った電子"
+#~ "メールがそのアドレスに届きます。そこで、パスワードを決めることができます。"
 
-# # "<strong>Modifiez vos préférences</strong>."
-#: default/web_tt2/help_user.tt2:131
-msgid "<strong>Change your preferences</strong>."
-msgstr "<strong>設定を変えます</strong>。"
+#~ msgid ""
+#~ "<strong>suspended</strong>: this mode allows you to suspend your "
+#~ "subscription to one or more lists for a specified period or not. Unlike "
+#~ "unsubscription, you can keep track of your subscription and reactivate it "
+#~ "at any time by visiting the \"Manage your subscription\" section."
+#~ msgstr ""
+#~ "<strong>休止中</strong>: このモードにすると、あるリスト (複数可) からの"
+#~ "メッセージの受け取りを一定の期間休止できます。再開もできます。登録解除とは"
+#~ "ちがって、読者登録はしたままで「受け取りを休止/再開」からいつでも受け取り"
+#~ "だけを休止したり再開したりできます。"
 
-# # "<strong>Cliquez sur 'Valider' pour chaque option</strong> que vous "
-# # "modifiez."
-#: default/web_tt2/help_user.tt2:132
-msgid "<strong>Click on 'Submit' for every option</strong> you change."
-msgstr ""
-"<strong>「設定」をクリックする</strong>と、オプションがすべて変わります。"
+#~ msgid "Go to the information page of the list</strong> you want to manage."
+#~ msgstr "</strong>運営したい<strong>リストの案内ページへ行きます</strong>。"
 
-# # "Vous pouvez modifier :"
-#: default/web_tt2/help_user.tt2:134
-msgid "You can change:"
-msgstr "次のものを変えられます。"
+# # "<strong>ATTENTION : lors du renommage d'une liste, vous devez informer "
+# # "les listmasters, sans quoi le changement de nom ne pourra être "
+# # "effectif</strong>."
+#~ msgid ""
+#~ "Be careful: when you rename a list, you have to let the listmasters know; "
+#~ "otherwise, the change will not be effective</strong>."
+#~ msgstr ""
+#~ "注意: リストを移動したときは、リストシステム管理者にも知らせてください。そ"
+#~ "うしないと変更が反映されないことがあります</strong>。"
 
-# # "votre <strong>nom</strong> ; si vous vous abonnez à une liste depuis "
-# # "l'interface web du serveur de listes, le champ 'Nom' sera automatiquement "
-# # "renseigné dans la liste des abonnés ;"
-#: default/web_tt2/help_user.tt2:136
-msgid ""
-"your <strong>name</strong>; if you subscribe to a list from the mailing list "
-"server web interface, the 'Name' field will automatically be filled in in "
-"the members list;"
-msgstr ""
-"自分の<strong>名前</strong>。メーリングリストサーバのウェブインタフェースでリ"
-"ストに読者登録すると、登録したリストでの「名前」欄に自動的にこの名前が入りま"
-"す。"
+#~ msgid "To read the messages sent to a list</strong>, you have two options:"
+#~ msgstr "リストのメッセージを読む方法は</strong> 3 つあります——"
 
-# # "la <strong>langue de l'interface de listes Sympa</strong> (le choix de la "
-# # "langue est disponible sur toutes les pages de l'interface de listes ; "
-# # "votre choix sera conservé même si vous modifiez la langue de l'interface "
-# # "sans passer par la page 'Préférences' ;"
-#: default/web_tt2/help_user.tt2:137
-msgid ""
-"the <strong>language in which the Sympa web interface is displayed</strong> "
-"(you can change language on every page of the web interface; your choice "
-"will remain even though you change the interface language on another page "
-"than the 'Preferences' page;"
-msgstr ""
-"<strong>Sympa のウェブインタフェースで表示に使う言語</strong> (ページを見てい"
-"る途中で言語を変えることもできますが、「個人設定」ページで変えた言語の設定は"
-"残ります)。"
+# # "<strong>Les messages appartenant au même fil de discussion que le message "
+# # "affiché sont signalés au bas du message</strong>. Cliquez sur l'objet de "
+# # "ces messages pour aller les consulter."
+#~ msgid ""
+#~ "Other messages belonging to the same thread as the message displayed are "
+#~ "listed at its bottom</strong>. Click on their subject to read them."
+#~ msgstr ""
+#~ "メッセージの下部には、同じスレッドにあるメッセージの一覧が表示されます</"
+#~ "strong>。表題をクリックすると読めます。"
 
-# # "la <strong>durée de vie du cookie stocké sur votre ordinateur par "
-# # "Sympa</strong> ('Expiration de la connexion'). Par défaut, la session "
-# # "expire lorsque vous fermez votre navigateur ; si vous utilisez les listes "
-# # "de manière intensive, nous vous conseillons de choisir une durée plus "
-# # "longue ;"
-#: default/web_tt2/help_user.tt2:138
-msgid ""
-"the <strong>lifetime of the cookie placed on your computer by Sympa</strong> "
-"('Connection expiration period'). By default, the session expires when you "
-"close your browser; if you use the mailing list service a lot, we advise you "
-"to choose a longer duration;"
-msgstr ""
-"<strong>Sympa が自分のコンピュータに入れるクッキーの有効期間</strong> (「接続"
-"の有効期間」)。最初は、ブラウザを終了するとセッションの期限が切れるようになっ"
-"ていますが、メーリングリストサービスをよく利用する方は、長い期間にしておくこ"
-"とをおすすめします。"
+# # "<strong>Pour revenir à l'index des messages, cliquez sur 'Chronologie' ou "
+# # "sur 'Conversation'</strong> suivant que vous souhaitez afficher un index "
+# # "sous forme de suivi chronologique ou sous forme de fil de discussion. Si "
+# # "les messages se répartissent sur plusieurs pages en raison de leur grand "
+# # "nombre, <strong>vous arrivez sur la page d'index contenant le message que "
+# # "vous venez de lire</strong> et non sur la page contenant les messages les "
+# # "plus récents."
+#~ msgid ""
+#~ "To come back to the messages index, click on 'Chronological' or 'Thread'</"
+#~ "strong> according to whether you want to display the index as a "
+#~ "chronological history or as a thread. When there are too many messages to "
+#~ "be displayed on a single page, <strong>you are brought to the index page "
+#~ "displaying the message you just read</strong>, and not to the page "
+#~ "displaying the latest messages."
+#~ msgstr ""
+#~ "メッセージ一覧に戻るには、「到着順」か「スレッド」をクリックします</"
+#~ "strong>。これによって、メッセージ一覧を到着順にするかスレッド順にするかを"
+#~ "選べます。メッセージが多くてひとつのページに表示しきれないときは、<strong>"
+#~ "いま読んでいたメッセージのある一覧ページへ行きます</strong> (最新のメッ"
+#~ "セージのあるページではなく)。"
 
-# # "Un cookie est un petit fichier qu'un serveur web enregistre, le plus "
-# # "souvent temporairement, sur votre disque dur, pour vous identifier sur "
-# # "son service. Il contient quelques informations de référence vous "
-# # "concernant : nom, adresse e-mail, date de dernière connexion, etc."
-#: default/web_tt2/help_user.tt2:139
-msgid ""
-"A cookie is a small file a web server stores on your hard disk, most "
-"generally temporarily, in order to identify you as a user of its service. It "
-"contains a few pieces of personal information about you: name, email "
-"address, latest logon time, etc."
-msgstr ""
-"クッキーは、ウェブサーバがあなたのコンピュータのハードディスクに (ほとんどの"
-"場合は一時的に) 書き込む小さなファイルです。これによって、あなたがそのサーバ"
-"のサービスの利用者であることを識別します。これにはあなたに関する若干の個人情"
-"報 (名前、電子メールアドレス、最後にログインした時刻など) が入っています。"
+# # "<strong>Allez à l'index des messages du mois</strong> dans lequel vous "
+# # "souhaitez rechercher. Pour cela, utilisez le calendrier situé en haut de "
+# # "votre écran."
+#~ msgid ""
+#~ "Go to the message index of the month</strong> in which you want to "
+#~ "search. To do that, use the calendar displayed at the top left of your "
+#~ "screen."
+#~ msgstr ""
+#~ "検索したい月のメッセージ一覧へ行きます</strong>。これには、画面左上に表示"
+#~ "される暦を使います。"
 
-# # "l'<strong>adresse e-mail avec laquelle vous êtes abonné</strong> aux "
-# # "listes (si vous êtes abonné aux listes avec plusieurs adresses, l'adresse "
-# # "remplacée sera celle avec laquelle vous êtes authentifié) ;"
-#: default/web_tt2/help_user.tt2:140
-msgid ""
-"the <strong>email address with which you subscribed</strong> to the lists "
-"(if you subscribed with several email addresses, the address to be replaced "
-"will be the one you logged on with);"
-msgstr ""
-"リストに<strong>読者登録した電子メールアドレス</strong> (読者登録に複数のアド"
-"レスを使っているときは、ログインしているアドレスのみが変わります)。"
+# # "<strong>Entrez des mots clés</strong> dans le champ de recherche situé en "
+# # "haut à gauche de votre écran."
+#~ msgid ""
+#~ "Enter your keywords</strong> in the search box in the upper right corner "
+#~ "of your screen."
+#~ msgstr ""
+#~ "</strong>画面の右上にある検索ボックスに<string>探す語句を打ち込みます</"
+#~ "strong>。"
 
-# # "Attention : ceci modifiera vos abonnements à l'ensemble des listes. Si "
-# # "vous ne souhaitez changer d'adresse e-mail que pour une seule liste, il "
-# # "vaut mieux vous désabonner de cette liste et vous y réabonner avec "
-# # "l'adresse idoine."
-#: default/web_tt2/help_user.tt2:141
-msgid ""
-"Be careful: this will change your subscriptions to all your lists. If you "
-"want to change address for a single mailing list, you had better unsubscribe "
-"from that list and subscribe again with the right email address."
-msgstr ""
-"注意: 登録しているリストすべてのアドレスが変わります。特定のメーリングリスト"
-"でだけアドレスを変えたいのでしたら、いったんそのリストを登録解除し、正しい電"
-"子メールアドレスで読者登録しなおすとよいでしょう。"
+# # "<strong>Pour consulter l'un des messages correspondant à la recherche, il "
+# # "vous suffit de cliquer sur son objet</strong>."
+#~ msgid ""
+#~ "To read one of the messages matching your search, you only need to click "
+#~ "on its subject</strong>."
+#~ msgstr ""
+#~ "見つかったメッセージは、どれでも表題をクリックするだけで読めます</"
+#~ "strong>。"
 
-# # "votre <strong>mot de passe de listes</strong>."
-#: default/web_tt2/help_user.tt2:142
-msgid "your <strong>list password</strong>."
-msgstr "自分の<strong>メーリングリストのパスワード</strong>。"
+#~ msgid "Service messages description :"
+#~ msgstr "サービスメッセージの説明——"
 
-# # "La section '<strong>Vos autres adresses e-mail</strong>' équivaut à un "
-# # "changement d'adresse e-mail."
-#: default/web_tt2/help_user.tt2:144
-msgid ""
-"The '<strong>Your other email addresses</strong>' section acts like an email "
-"address change."
-msgstr ""
-"「<strong>他の電子メールアドレス</strong>」の項目で、アドレス変更と同じような"
-"ことができます。"
+#~ msgid ""
+#~ "Welcome message: This message is sent to new subscribers. It can be\n"
+#~ "a full MIME structured message (only for MIME gurus)."
+#~ msgstr ""
+#~ "歓迎メッセージ&mdash;&mdash;登録された読者に送るメッセージ。\n"
+#~ "MIME の複雑なメッセージを書くこともできます (MIME の知識に精通している人な"
+#~ "ら)。"
 
-#: default/web_tt2/help_user.tt2:146
-msgid "Searching for a mailing list"
-msgstr "リストを探す"
+#~ msgid ""
+#~ "Unsubscribe message: This message is sent when users leave the list\n"
+#~ "using the UNSUBSCRIBE command."
+#~ msgstr ""
+#~ "登録解除メッセージ&mdash;&mdash;誰かが UNSUBSCRIBE コマンドで登録解除した"
+#~ "ときに、その人にこのメッセージを送ります。"
 
-# # "Vous pouvez avoir besoin de rechercher une liste. Pour cela, vous avez "
-# # "trois possibilités :"
-#: default/web_tt2/help_user.tt2:147
-msgid ""
-"You may need to search for a mailing list. To do that, you have three "
-"options:"
-msgstr ""
-"メーリングリストを探したいこともあるでしょう。これには 3 つのやりかたがありま"
-"す。"
+#~ msgid ""
+#~ "Deletion message: This message is sent to users when you\n"
+#~ "remove them from the list using the DEL command (unless you hit the\n"
+#~ "Quiet button."
+#~ msgstr ""
+#~ "削除メッセージ&mdash;&mdash;(「知らせない」にチェックを入れずに)\n"
+#~ "読者を削除 (DEL コマンド) したときに、削除された人にこのメッセージを送りま"
+#~ "す。"
 
-# # "<strong>parcourir les différentes rubriques</strong> listées en <a "
-# # "href=\"%1/home\">page d'accueil du serveur de listes</a> ;"
-#. (path_cgi)
-#: default/web_tt2/help_user.tt2:149
-msgid ""
-"<strong>browse the different sections</strong> displayed on the <a href=\"%1/"
-"home\">list environment homepage</a>;"
-msgstr ""
-"ウェブインタフェースの<strong><a href=\"%1/home\">ホームページ</a>のリンクか"
-"ら探す</strong>、"
+#~ msgid ""
+#~ "Remind message: This message is sent to each subscriber\n"
+#~ "when using the command  REMIND. It's very useful to help people who are\n"
+#~ "confused about their own subscription emails or people who are not able "
+#~ "to\n"
+#~ "unsubscribe themselves."
+#~ msgstr ""
+#~ "登録確認メッセージ&mdash;&mdash;REMIND コマンドを使うと、このメッセージを"
+#~ "全読者に送れます。\n"
+#~ "読者登録している電子メールアドレスがわからなくなった人や、自分で登録解除が"
+#~ "できない\n"
+#~ "人に便利です。"
 
-# # "rechercher une liste grâce au <strong>champ de recherche</strong> : la "
-# # "chaîne recherchée renverra tous les résultats trouvés dans les noms et "
-# # "les descriptions des listes (les descriptions des listes se résument "
-# # "généralement à une courte phrase) ;"
-#: default/web_tt2/help_user.tt2:150
-msgid ""
-"search for a list via the <strong>search box</strong>: the searched string "
-"will return all the lists whose name or description matches your search "
-"criteria (descriptions of the lists generally consist of a short sentence);"
-msgstr ""
-"ホームページの<strong>「リストを探す」を使う</strong>。探す条件に打ち込んだテ"
-"キストがリストの名前か説明に入っているものが、すべて出ます (リストの説明は、"
-"ふつうは簡単な文です)。"
+#~ msgid ""
+#~ "Subscribing invitation message: sent to a person if someone  \n"
+#~ "uses the INVITE command to invite someone to subscribe."
+#~ msgstr ""
+#~ "読者登録に招待するメッセージ&mdash;&mdash;誰かが INVITE コマンドを使って読"
+#~ "者登録に招待すると、招待された人にこのメッセージを送ります。"
 
-# # "cliquer sur l'onglet '<a href=\"%1/lists\">Liste des listes</a>' en haut "
-# # "de page pour <strong>afficher l'intégralité des listes</strong>."
-#. (path_cgi)
-#: default/web_tt2/help_user.tt2:151
-msgid ""
-"click on the '<a href=\"%1/lists\">List of lists</a>' tab on top of page to "
-"<strong>display all available lists</strong>."
-msgstr ""
-"ページ上部の「<a href=\"%1/lists\">リスト一覧</a>」タブをクリックして<strong>"
-"利用できるリストすべてを表示する</strong>。"
+#~ msgid "Other files/pages description:"
+#~ msgstr "その他のファイルやページの説明——"
 
-# # "En fonction du domaine auquel appartient votre adresse (exemple : <em "
-# # "class=\"example\">cru.fr</em>, <em class=\"example\">fai.com</em>, etc.) "
-# # "et de l'endroit à partir duquel vous vous connectez, vous n'aurez pas "
-# # "accès aux mêmes listes. Vous pouvez malgré tout vous abonner aux listes "
-# # "qui vous sont cachées si vous connaissez leur nom. Pour cela, <a "
-# # "href=\"#abbo\">utilisez votre client de messagerie</a>."
-#: default/web_tt2/help_user.tt2:153
-msgid ""
-"According to the domain to which your email address belongs (example: <em "
-"class=\"example\">cru.fr</em>, <em class=\"example\">fai.com</em>, etc.) and "
-"to the location you log on from, you will not have access to the same lists. "
-"However you can subscribe to a list that does not display if you know its "
-"name. To do this, <a href=\"#subscribe\">use your email client</a>."
-msgstr ""
-"自分の電子メールアドレスのドメイン (たとえば <em class=\"example\">cru.fr</"
-"em>、<em class=\"example\">fai.com</em> など) や、どこからログインしたかに"
-"よって、同じリストでも一覧に表示されたりされなかったりする場合があります。で"
-"すが、表示されないリストでもリスト名を知っていれば読者登録できます。<a href="
-"\"#subscribe\">電子メールクライアントを使う</a>やりかたを見てください。"
+#~ msgid ""
+#~ "List homepage: HTML text to describe the list. It is printed on the\n"
+#~ "right-hand side of the main list page. (default for this is the list "
+#~ "description)"
+#~ msgstr ""
+#~ "リストのホームページ&mdash;&mdash;リストを説明するHTMLテキスト。 これはリ"
+#~ "ストのメインページの右側に表示されます (なければ、かわりに下の「リストの説"
+#~ "明」が入ります)。"
 
-#: default/web_tt2/help_user.tt2:155
-msgid "Reading a list archive online"
-msgstr "ウェブで投稿保管庫の投稿を読む"
+# # "List description : This text is sent as an answer to the mail command\n"
+# # "INFO. It can also be included in the <em>Welcome message</em>."
+#~ msgid ""
+#~ "List description: This text is sent as an answer to the mail command\n"
+#~ "INFO. It can also be included in the <em>Welcome message</em>."
+#~ msgstr ""
+#~ "リストの説明&mdash;&mdash;このテキストを INFO コマンドに対する返信として送"
+#~ "ります。また、<em>歓迎メッセージ</em>にもこのテキストが入ります。"
 
-# IEバグ回避のためリンクを段落冒頭に置かない
-#. (path_cgi)
-#: default/web_tt2/help_user.tt2:156
-msgid ""
-"Please refer to the <a href=\"%1/help/arc\"><strong>archive documentation</"
-"strong></a>."
-msgstr ""
-"やりかたは<a href=\"%1/help/arc\"><strong>投稿保管庫の説明</strong></a>を見て"
-"ください。"
+#~ msgid ""
+#~ "Message header: If this file is not empty, it is added as a MIME\n"
+#~ "attachment at the beginning of each message distributed to the list."
+#~ msgstr ""
+#~ "メッセージの前付け&mdash;&mdash;このテキストが空でなければ、リストで配信す"
+#~ "るすべてのメッセージの先頭にMIME のパートとして追加します。"
 
-# IEバグ回避のためリンクを段落冒頭に置かない
-#. (path_cgi)
-#: default/web_tt2/help_user.tt2:159
-msgid ""
-"Please refer to the <a href=\"%1/help/sendmsg\"><strong>documentation about "
-"sending messages</strong></a>."
-msgstr ""
-"やりかたは<a href=\"%1/help/sendmsg\"><strong>メッセージの送りかたの説明</"
-"strong></a>を見てください。"
+#~ msgid ""
+#~ "Message footer: same as <em>Message header,</em> but attached at the\n"
+#~ "end of the message."
+#~ msgstr ""
+#~ "メッセージの後付け&mdash;&mdash;<em>メッセージの前付け</em> と同様ですが"
+#~ "メッセージの最後に付けます。"
 
-# IEバグ回避のためリンクを段落冒頭に置かない
-#. (path_cgi)
-#: default/web_tt2/help_user.tt2:162
-msgid ""
-"Please refer to the <a href=\"%1/help/shared\"><strong>shared document web "
-"space documentation</strong></a>."
-msgstr ""
-"やりかたは<a href=\"%1/help/shared\"><strong>共有文書置き場の説明</strong></"
-"a>を見てください。"
+#~ msgid "Special cases:</strong>"
+#~ msgstr "しかし、例外もあります:</strong>"
 
-#: default/web_tt2/help_user.tt2:164
-msgid "Suspending or resuming your subscription of each list"
-msgstr "リストごとに受け取りを休止したり再開したりする"
+#~ msgid ""
+#~ "search for mailing lists</strong> matching your main interests or your "
+#~ "particular situation;"
+#~ msgstr ""
+#~ "</strong>自分の関心や事情にぴったり合った<strong>リストを探す</strong>。"
 
-# IEバグ回避のためリンクを段落冒頭に置かない
-#. (path_cgi)
-#: default/web_tt2/help_user.tt2:165
-msgid ""
-"Please refer to the <a href=\"%1/help/suspend\"><strong>subscription "
-"management documentation</strong></a>."
-msgstr ""
-"やりかたは<a href=\"%1/help/suspend\"><strong>受け取り休止/再開の説明</"
-"strong></a>を見てください。"
+#~ msgid "manage your subscriptions</strong>:"
+#~ msgstr "自分の読者登録を管理する</strong>——"
 
-#: default/web_tt2/help_user.tt2:167
-msgid "Unsubscribing from lists"
-msgstr "リストの登録解除をする"
+#~ msgid ""
+#~ "List owners and moderators can turn to listmasters</strong> when they "
+#~ "face a problem not dealt with by the documentation or for any comment. "
+#~ "However, in order not to flood listmasters with messages, it is "
+#~ "recommended that subscribers rather turn to list owners."
+#~ msgstr ""
+#~ "</strong>使い方を調べても解決できないような問題が起こった場合など、メーリ"
+#~ "ングリストシステムについて質問や意見があるとき、<strong>リストのオーナーや"
+#~ "モデレータは、リストシステム管理者に問い合わせることができます</strong>。"
+#~ "ですが読者の方は、リストシステム管理者を質問責めにあわせないために、まずリ"
+#~ "ストのオーナーに問い合わせるようにしましょう。"
 
-#: default/web_tt2/help_user.tt2:168
-msgid "To unsubscribe from a list, do as follows:"
-msgstr "リストの登録解除をするには、次のようにしてください——"
+#~ msgid ""
+#~ "The list owner is generally its creator</strong> or, failing him/her, the "
+#~ "person who requested the list creation or who became responsible for it. "
+#~ "<strong>His/her role</strong>:"
+#~ msgstr ""
+#~ "リストを作った人がリストのオーナーもやることが多い</strong>ですが、リスト"
+#~ "の作成を申し込んだ人や作成に責任をもつ人のこともあります。<strong>オーナー"
+#~ "の仕事は</strong>——"
 
-#. (conf.email,conf.host)
-#: default/web_tt2/help_user.tt2:170
-msgid ""
-"From the address with which you subscribed to the list, send a "
-"<strong>message to %1@%2</strong>."
-msgstr ""
-"リストに読者登録していたアドレスを解除するには、<strong>%1@%2 にメッセージを"
-"</strong>送ります。"
+#~ msgid ""
+#~ "code>REMIND <em>list</em></code>: send to all subscribers a personalized "
+#~ "reminder with the address with which he/she is subscribed to the list"
+#~ msgstr ""
+#~ "code>REMIND <em>リスト</em></code>: 読者それぞれに、本人が読者登録している"
+#~ "アドレスを知らせるメッセージを送る"
 
-#: default/web_tt2/help_user.tt2:171
-msgid ""
-"In the subject line of your email, type in: <strong>unsubscribe "
-"nameofthelist</strong> (replace 'nameofthelist' by the name of the list you "
-"want to unsubscribe from)."
-msgstr ""
-"メッセージの表題 (Subject) に、次のように書きます: <strong>unsubscribe リスト"
-"名</strong> (「リスト名」を、登録解除したいリストの名前で置き換えます)。"
+# # "<strong>La section 'Documents partagés' peut contenir trois types de "
+# # "ressources</strong> : des <strong>dossiers</strong>, des "
+# # "<strong>fichiers</strong> et des <strong>signets</strong>."
+#~ msgid ""
+#~ "The 'Shared documents' section can contain three types of resources</"
+#~ "strong>: <strong>folders</strong>, <strong>files</strong> and "
+#~ "<strong>bookmarks</strong>."
+#~ msgstr ""
+#~ "「共有文書置き場」のセクションには 3 種類のデータを入れられます</strong>。"
+#~ "<strong>フォルダ</strong>、<strong>ファイル</strong>、<strong>ブックマーク"
+#~ "</strong>です。"
 
-#: default/web_tt2/help_user.tt2:175
-msgid ""
-"You can also unsubscribe through the mailing list web interface (you will "
-"need to repeat the operation for each list you want to unsubscribe from):"
-msgstr ""
-"リストのウェブインタフェースで登録解除することもできます (登録解除したいリス"
-"トごとに同じ手順を繰り返されければいけません) ——"
+# # "<strong>Vous pouvez trier les documents et les dossiers suivant d'autres "
+# # "critères</strong> que le nom du document/dossier : un tri en fonction de "
+# # "l'<strong>auteur</strong>, de la <strong>taille</strong> et de la "
+# # "<strong>date de dernière mise à jour</strong> est également disponible. "
+# # "Pour trier les documents selon le critère de votre choix, cliquez sur le "
+# # "nom de la colonne correspondante."
+#~ msgid ""
+#~ "You can sort documents and folders according to criteria</strong> other "
+#~ "than the name of the document/folder: they can also be sorted according "
+#~ "to their <strong>author</strong>, their <strong>size</strong> and their "
+#~ "<strong>last update date</strong>. To sort documents according to the "
+#~ "criterion of your choice, click on the name of the corresponding column."
+#~ msgstr ""
+#~ "文書やフォルダを他の順序で並べることもできます</strong>。名前順以外に、"
+#~ "<strong>作者</strong>、<strong>サイズ</strong>、<strong>最終更新</strong>"
+#~ "の日時で並べるようにもできます。並び順を変えるには、並べたい欄の名前をク"
+#~ "リックします。"
 
-#: default/web_tt2/help_user.tt2:178
-msgid ""
-"<strong>Go to the information page of the list</strong> you want to "
-"unsubscribe from."
-msgstr "登録解除したい<strong>リストの案内ページへ行きます</strong>。"
+# # "<strong>Pour créer un dossier sur une liste</strong>, procédez comme suit "
+# # ":"
+#~ msgid "To create a folder on a list</strong>, do as follows:"
+#~ msgstr "フォルダを作成するには</strong>、次のようにします。"
 
-#: default/web_tt2/help_user.tt2:179
-msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
-msgstr ""
-"<strong>左側のメニューで、「登録解除」のリンクをクリックします</strong>。"
+# # "<strong>Placez-vous dans le dossier où vous souhaitez créer votre "
+# # "dossier</strong>."
+#~ msgid ""
+#~ "Go to the 'Shared documents' section</strong> of the list of your "
+#~ "interest."
+#~ msgstr ""
+#~ "</strong>目当てのリストの<strong>「共有文書置き場」のセクションへ行きます"
+#~ "</strong>。"
+
+# # "<strong>Entrez le nom du dossier</strong> dans le champ de texte associé "
+# # "à l'intitulé 'Créer un dossier'."
+#~ msgid "Browse the folder in which you want to create a folder</strong>."
+#~ msgstr "中にフォルダを作成したいフォルダへ行きます</strong>。"
+
+# # "<strong>Cliquez sur le bouton 'Créer'</strong>."
+#~ msgid "Switch to expert mode</strong>."
+#~ msgstr "「詳細」を選びます</strong>。"
+
+# # "Publier un fichier sur une liste"
+#~ msgid ""
+#~ "Enter the folder name</strong> in the text field close to the 'Create a "
+#~ "new folder inside [name of the current folder]' label."
+#~ msgstr ""
+#~ "</strong>「[現在のフォルダ名] フォルダの中に新しいフォルダを作る」のそばの"
+#~ "テキストボックスに<strong>フォルダ名を打ち込みます</strong>。"
+
+# # "<strong>Pour publier un fichier sur une liste</strong>, procédez comme "
+# # "suit :"
+#~ msgid "Click on the 'Create' button</strong>."
+#~ msgstr "「作成」ボタンをクリックします</strong>。"
+
+# # "<strong>Entrez ou collez le texte</strong> que vous souhaitez mettre dans "
+# # "votre fichier dans la zone de texte 'Éditer  le fichier /nomdufichier' "
+# # "puis <strong>cliquez sur le bouton 'Publier'</strong>."
+#~ msgid "To create a file on a list</strong>, do as follows:"
+#~ msgstr "ファイルを作成するには</strong>、次のようにします。"
+
+#~ msgid ""
+#~ "To perform actions related to mailing lists</strong> (subscribe, change "
+#~ "your options, etc.), you have two options:"
+#~ msgstr ""
+#~ "リストでなにかやりたいこと</strong> (読者登録、個人設定を変える、など) が"
+#~ "あるのなら、2 つのやりかたがあります——"
+
+#~ msgid ""
+#~ "Choose the address</strong> with which you want to subscribe to the list."
+#~ msgstr ""
+#~ "</strong>リストの読者登録につかう<strong>アドレスを決める</strong>。"
+
+#~ msgid "Digest"
+#~ msgstr "まとめ読み"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically receive batched messages in a Digest. This "
+#~ "Digest compiles a group of messages from the list, using the multipart/"
+#~ "digest MIME format."
+#~ msgstr ""
+#~ "読者は、リストからメールメッセージを一通ずつ受け取る代わりに、定期的にまと"
+#~ "めて受け取ります。まとめ読みは、リストから送るメッセージを multipart/"
+#~ "digest MIME形式でまとめたものです。"
+
+#~ msgid "The sending interval for these Digests is defined by the list owner."
+#~ msgstr "こういったまとめ読みを送信する間隔は、リストのオーナーが決めます。"
+
+#~ msgid "DigestPlain"
+#~ msgstr "まとめ読み (プレイン)"
+
+#~ msgid ""
+#~ "Similar to the Digest option in that the subscriber will periodically "
+#~ "receive batched messages in a Digest. With DigestPlain the Digest is sent "
+#~ "in a plain text format, with all attachments stripped out. DigestPlain is "
+#~ "useful if your email software doesn't display multipart/digest format "
+#~ "messages well."
+#~ msgstr ""
+#~ "読者が定期的にまとまったメッセージを受け取る点は、\n"
+#~ "普通のまとめ読みと同じです。まとめ読み (プレイン) では、まとめ読みを\n"
+#~ "プレインテキスト形式で、添付ファイルを取り除いた状態で送ります。\n"
+#~ "まとめ読み (プレイン) は、電子メールソフトウェアが multipart/digest 形式\n"
+#~ "のメッセージをうまく表示できない場合に役立ちます。"
+
+#~ msgid "Summary"
+#~ msgstr "メッセージの一覧"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically receive a list of messages. This mode is "
+#~ "very close to the Digest reception mode but the subscriber receives only "
+#~ "the list of messages."
+#~ msgstr ""
+#~ "リストからの個別のメールを受け取る代わりに、読者は定期的に\n"
+#~ "メッセージの一覧を受け取ります。このモードはまとめ読みに近いものですが、\n"
+#~ "読者はメッセージの一覧だけを受け取ります。"
+
+#~ msgid "Nomail"
+#~ msgstr "なにも受け取らない"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber no longer wishes to receive mail from "
+#~ "the list, but nevertheless wishes to retain the ability to post to the "
+#~ "list. This mode therefore prevents the subscriber from unsubscribing and "
+#~ "subscribing later on."
+#~ msgstr ""
+#~ "このモードは、読者がリストからのメール受け取りを希望しないがリストへの投稿"
+#~ "はしたいという場合に使います。さらに、たとえば休暇などで一時的にメールを読"
+#~ "めなくなる読者が登録解除してまた読者登録するといったことを、しなくてすむよ"
+#~ "うにします。"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats only in plain text format."
+#~ msgstr ""
+#~ "このモードは、読者がHTMLとプレインテキストの両方で送信されたメールを\n"
+#~ "プレインテキスト形式のみで受け取りたいときに使います。"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats only in HTML format."
+#~ msgstr ""
+#~ "このモードは、読者がHTMLとプレインテキストの両方で送信されたメールを "
+#~ "HTML\n"
+#~ "形式のみで受け取りたいときに使います。"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive attached "
+#~ "files. The attached files are replaced by a URL leading to the file "
+#~ "stored on the list site."
+#~ msgstr ""
+#~ "このモードは、読者が添付ファイルを受け取りたくないときに使います。\n"
+#~ "添付ファイルはリストのウェブサイト上のファイル保存場所を示す URL に置き換"
+#~ "えられます。"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive copies of "
+#~ "messages that he or she has sent to the list."
+#~ msgstr ""
+#~ "このモードは、読者が自分の投稿したメッセージと同じものを受け取りたくない場"
+#~ "合に\n"
+#~ "使います。"
+
+#~ msgid ""
+#~ "This option is used mainly to cancel the nomail, summary or digest modes. "
+#~ "If the subscriber was in nomail mode, he or she will again receive "
+#~ "individual mail messages from the list."
+#~ msgstr ""
+#~ "これは主に、nomail (なにも受け取らない)、summary (メッセージの一覧)、"
+#~ "digest (まとめ読み) のいずれかのモードを取りやめるのに使います。\n"
+#~ "読者が nomail (なにも受け取らない) モードにしていた場合、リストからのメッ"
+#~ "セージをまた一通ずつ受け取れるようになります。"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive batched messages in a Digest. This Digest compiles a group of "
+#~ "messages from the list, using\n"
+#~ "the multipart/digest MIME format."
+#~ msgstr ""
+#~ "読者は、リストからメールメッセージを一通ずつ受け取る代わりに、定期的にまと"
+#~ "めて受け取ります。まとめ読みは、リストから送るメッセージを multipart/"
+#~ "digest MIME形式でまとめたものです。"
+
+#~ msgid ""
+#~ "Similar to the Digest option in that the subscriber will periodically \n"
+#~ "receive batched messages in a Digest. With DigestPlain the Digest is sent "
+#~ "in a plain text \n"
+#~ "format, with all attachments stripped out. DigestPlain is useful if your "
+#~ "email software doesn't\n"
+#~ "display multipart/digest format messages well."
+#~ msgstr ""
+#~ "読者が定期的にまとまったメッセージを受け取る点は、\n"
+#~ "普通のまとめ読みと同じです。まとめ読み (プレイン) では、まとめ読みを\n"
+#~ "プレインテキスト形式で、添付ファイルを取り除いた状態で送ります。\n"
+#~ "まとめ読み (プレイン) は、電子メールソフトウェアが multipart/digest 形式\n"
+#~ "のメッセージをうまく表示できない場合に役立ちます。"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive a list of messages. This mode is very close to the Digest "
+#~ "reception mode but the \n"
+#~ "subscriber receives only the list of messages."
+#~ msgstr ""
+#~ "リストからの個別のメールを受け取る代わりに、読者は定期的に\n"
+#~ "メッセージの一覧を受け取ります。このモードはまとめ読みに近いものですが、\n"
+#~ "読者はメッセージの一覧だけを受け取ります。"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in plain text format."
+#~ msgstr ""
+#~ "このモードは、読者がHTMLとプレインテキストの両方で送信されたメールを\n"
+#~ "プレインテキスト形式のみで受け取りたいときに使います。"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in HTML format."
+#~ msgstr ""
+#~ "このモードは、読者がHTMLとプレインテキストの両方で送信されたメールを "
+#~ "HTML\n"
+#~ "形式のみで受け取りたいときに使います。"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive attached "
+#~ "files. The attached files are \n"
+#~ "replaced by a URL leading to the file stored on the list site."
+#~ msgstr ""
+#~ "このモードは、読者が添付ファイルを受け取りたくないときに使います。\n"
+#~ "添付ファイルはリストのウェブサイト上のファイル保存場所を示す URL に置き換"
+#~ "えられます。"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive copies of "
+#~ "messages that he or she has sent to \n"
+#~ "the list."
+#~ msgstr ""
+#~ "このモードは、読者が自分の投稿したメッセージと同じものを受け取りたくない場"
+#~ "合に\n"
+#~ "使います。"
+
+#~ msgid ""
+#~ "This option is used mainly to cancel the nomail, summary or digest modes. "
+#~ "If the subscriber was \n"
+#~ "in nomail mode, he or she will again receive individual mail messages "
+#~ "from the list."
+#~ msgstr ""
+#~ "これは主に、nomail (なにも受け取らない)、summary (メッセージの一覧)、"
+#~ "digest (まとめ読み) のいずれかのモードを取りやめるのに使います。\n"
+#~ "読者が nomail (なにも受け取らない) モードにしていた場合、リストからのメッ"
+#~ "セージをまた一通ずつ受け取れるようになります。"
+
+#~ msgid ":"
+#~ msgstr "&mdash;&mdash;"
+
+#~ msgid "Privilege for adding (ADD command) a subscriber to the list"
+#~ msgstr "(ADD コマンドにより) 読者をリストに追加できる権限"
+
+#~ msgid ""
+#~ "To hide the sender's email address before distributing the message. It is "
+#~ "replaced by the provided email address."
+#~ msgstr ""
+#~ "メッセージを配信する前に、送信者の電子メールアドレスをここで指定した電子"
+#~ "メールアドレスに置き換えて隠します。"
+
+#~ msgid "Privilege for reading mail archives and frequency of archiving"
+#~ msgstr "投稿保管庫の中を見られる権限および投稿保管庫を改める時期"
+
+#~ msgid ""
+#~ "The available_user_options parameter starts a paragraph to define "
+#~ "available options for the subscribers of the list."
+#~ msgstr ""
+#~ "ここからは、リストの読者が使えるオプションを決めます。まず、"
+#~ "available_user_options パラメータです。"
+
+# # "Default value: reception mail,notice,digest,digestplain,summary,nomail"
+#~ msgid ""
+#~ "Default value: reception mail,notice,digest,digestplain,summary,nomail"
+#~ msgstr ""
+#~ "初期値: 受け取りモード mail,notice,digest,digestplain,summary,nomail"
+
+#~ msgid ""
+#~ "<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
+#~ "summary, nomail), separated by commas. Only these modes will be allowed "
+#~ "for the subscribers of this list. If a subscriber has a reception mode "
+#~ "not in the list, sympa uses the mode specified in the "
+#~ "default_user_options paragraph."
+#~ msgstr ""
+#~ "<em>modelist</em> にはモード (mail, notice, digest, digestplain, summary, "
+#~ "nomail) を指定します (複数のときは半角の「,」で区切ります)。\n"
+#~ "このリストの読者は、ここで指定したモードだけを選べます。\n"
+#~ "読者がこのリストの受け取りモードを設定しなければ、\n"
+#~ "default_user_options に指定してあるモードを使います。"
+
+#~ msgid "This paragraph defines bounce management parameters:"
+#~ msgstr "ここでは、配送エラー管理のパラメータを決めます——"
+
+#~ msgid "Default value: bounce_warn_rate robot parameter"
+#~ msgstr "初期値: bounce_warn_rate ロボットパラメータ"
+
+#~ msgid ""
+#~ "The list owner receives a warning whenever a message is distributed and "
+#~ "the number (percentage) of bounces exceeds this value."
+#~ msgstr ""
+#~ "配送したメッセージのうち配送エラーを起こした数 (パーセント) がこの値を超え"
+#~ "たら、\n"
+#~ "リストのオーナーに警告を送ります。"
+
+#~ msgid "Default value: bounce_halt_rate robot parameter"
+#~ msgstr "初期値: bounce_halt_rate ロボットパラメータ"
+
+#~ msgid ""
+#~ "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
+#~ "will be halted, i.e. they are retained for subsequent moderation."
+#~ msgstr ""
+#~ "未実装。\n"
+#~ "配送エラー率が停止レートに達すると、リスト宛ての\n"
+#~ "メッセージを止めます、つまり、投稿は保管されてその後のモデレーションを待ち"
+#~ "ます"
+
+#~ msgid "Default value:"
+#~ msgstr "初期値:"
+
+#~ msgid ""
+#~ "Name of the task template used to remove old bounces. Useful for removing "
+#~ "bounced subscriber email. If some messages are distributed without "
+#~ "receiving new bounce messages, the subscriber's email seems to be OK "
+#~ "again. Active if task_manager.pl is running."
+#~ msgstr ""
+#~ "古くなった配送エラー情報を削除するのに使うタスクテンプレートの名前。配送エ"
+#~ "ラーを起こしていた読者の電子メールアドレスを削除するのに使います。メッセー"
+#~ "ジを配送しても新たな配送エラーが返ってこなくなったら、その読者の電子メール"
+#~ "アドレスは復旧したと見なしてよいでしょう。このテンプレートは、"
+#~ "task_manager.pl が動いていれば働きます。"
+
+#~ msgid ""
+#~ "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 1 is the lower level of bouncing users"
+#~ msgstr ""
+#~ "配送エラーの管理 (第一段階) では、配送エラー管理の自動的な動作を決めます。"
+#~ "<br/>\n"
+#~ "\t第一段階は、配送エラーを起こしている読者の初期の段階です。"
+
+#~ msgid "Each bouncing user have a score (from 0 to 100)."
+#~ msgstr ""
+#~ "配送エラーを起こしている人には点数 (0 点から 100 点) がついています。"
+
+#~ msgid ""
+#~ "This parameter defines a lower limit for each category of bouncing users."
+#~ "For example, level 1 begins from 45 to level_2_treshold."
+#~ msgstr ""
+#~ "このパラメータで、配送エラーを起こしている人を初期段階に分類する最低点を決"
+#~ "めます。例えば 45 点にすると、第一段階は 45 点から level_2_treshold (下"
+#~ "記) の間と決まります。"
+
+#~ msgid ""
+#~ "This parameter defines which task is automaticaly applied on level 1 "
+#~ "bouncers."
+#~ msgstr ""
+#~ "第一段階の配送エラーを起こしている読者に自動的に適用するタスクを決めます。"
+
+#~ msgid ""
+#~ "When automatic task is executed on level 1 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+#~ msgstr ""
+#~ "第一段階の配送エラーを起こしている読者について自動タスクを実行した際に、リ"
+#~ "ストオーナーまたはリストシステム管理者に報告の電子メールを送れます。"
+
+#~ msgid ""
+#~ "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 2 is the highest level of bouncing users"
+#~ msgstr ""
+#~ "配送エラーの管理 (第X段階) では、配送エラー管理の自動的な動作を決めます。"
+#~ "<br/>\n"
+#~ "\t第二段階は、配送エラーを起こしている読者のより進んだ段階です。"
+
+#~ msgid ""
+#~ "This parameter defines the score range defining each category of bouncing "
+#~ "users.For example, level 2 is for users with a score between 80 and 100."
+#~ msgstr ""
+#~ "このパラメータで、配送エラーを起こしている人を第二段階に分類する最低点と最"
+#~ "高点を決めます。例えば 80 点にすると、第二段階は 80 点から 100 点の間と決"
+#~ "まります。"
+
+#~ msgid ""
+#~ "This parameter defines which task is automaticaly applied on level 2 "
+#~ "bouncers."
+#~ msgstr ""
+#~ "このパラメータで、第二段階の配送エラーを起こしている読者に自動的に適用する"
+#~ "タスクを決めます。"
+
+#~ msgid ""
+#~ "When automatic task is executed on level 2 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+#~ msgstr ""
+#~ "第二段階の配送エラーを起こしている読者について自動タスクを実行した際に、リ"
+#~ "ストオーナーまたはリストシステム管理者に報告の電子メールを送れます。"
+
+#~ msgid ""
+#~ "This parameter is a confidential item for generating authentication keys "
+#~ "for administrative commands (ADD, DELETE, etc.). This parameter should "
+#~ "remain concealed, even for owners. The cookie is applied to all list "
+#~ "owners, and is only taken into account when the owner has the auth "
+#~ "parameter."
+#~ msgstr ""
+#~ "このパラメータは、管理コマンド (ADD、DELETE など) のための本人確認キーを生"
+#~ "成するための隠し項目です。このパラメータは、オーナーに対しても隠しておくべ"
+#~ "きです。クッキーはすべてのリストのオーナーに適用されますが、オーナーが本人"
+#~ "確認パラメータを送ったときにだけ考慮されます。"
+
+#~ msgid ""
+#~ "This parameter is optional. The headers specified will be added to the "
+#~ "headers of messages distributed via the list. As of release 1.2.2 of "
+#~ "Sympa, it is possible to put several custom header lines in the "
+#~ "configuration file at the same time."
+#~ msgstr ""
+#~ "このパラメータは、必要なければ入力しなくてかまいません。リストを通じて配信"
+#~ "されるメッセージに、ここで指定したヘッダを付け加えます。Sympa 1.2.2 以降、"
+#~ "複数のメッセージヘッダを設定できるようになりました。"
+
+# 訳者補足あり
+#~ msgid ""
+#~ "This parameter is optional. It specifies a string which is added to the "
+#~ "subject of distributed messages (intended to help users who do not use "
+#~ "automatic tools to sort incoming messages). This string will be "
+#~ "surrounded by [] characters."
+#~ msgstr ""
+#~ "このパラメータは、必要なければ入力しなくてかまいません。配送するメッセージ"
+#~ "の表題 (Subject) の前につける文字列を決めます (受け取ったメッセージを自動"
+#~ "振り分けしていない人に便利です)。<!-- 訳者追加 -->[%list.name%] はリスト名"
+#~ "に、[%list.sequence%] は投稿の連番に、それぞれ置き換えます。<!-- 追加おわ"
+#~ "り -->そうしてできたものを、[] で囲んで表題 (Subject) の前につけます。"
+
+#~ msgid ""
+#~ "The default_user_options parameter starts a paragraph to define a default "
+#~ "profile for the subscribers of the list."
+#~ msgstr ""
+#~ "ここからは、リストの読者の初期設定を決めます。まず、default_user_options "
+#~ "です。"
+
+#~ msgid "Mail reception mode."
+#~ msgstr "メール受け取りモード"
+
+#~ msgid "Visibility of the subscriber with the REVIEW command."
+#~ msgstr "REVIEW コマンド (読者一覧) での読者の見えかた。"
+
+#~ msgid "This parameter specifies who is authorized to use the DEL command."
+#~ msgstr ""
+#~ "このパラメータで、DEL コマンド (読者削除) を使ってよい人を指定します。"
+
+#~ msgid ""
+#~ "Definition of digest mode. If this parameter is present, subscribers can "
+#~ "select the option of receiving messages in multipart/digest MIME format, "
+#~ "or as a plain text digest. Messages are then grouped together, and "
+#~ "compiled messages are sent to subscribers according to the frequency "
+#~ "selected with this parameter."
+#~ msgstr ""
+#~ "まとめ読みモードについて決めます。このパラメータを設定すると、読者はまとめ"
+#~ "読み (multipart/digest MIME 形式かプレインテキスト形式) でのメッセージの受"
+#~ "け取りを選べるようになります。まとめ読みモードにすると、メッセージはまとめ"
+#~ "られ、このパラメータで設定した周期で読者にまとまって送られるようになりま"
+#~ "す。"
+
+#~ msgid ""
+#~ "Editors are responsible for moderating messages. If the mailing list is "
+#~ "moderated, messages posted to the list will first be passed to the "
+#~ "editors, who will decide whether to distribute or reject it."
+#~ msgstr ""
+#~ "モデレータは、メッセージのモデレーションを引き受ける人(たち)です。投稿がモ"
+#~ "デレーションを受ける設定になっているリストでは、リストへのメッセージはまず"
+#~ "モデレータへ送られ、配送するかしないかはモデレータが決定します。"
+
+#~ msgid ""
+#~ "FYI: Defining editors will not make the list moderated; you will have to "
+#~ "set the \"send\" parameter."
+#~ msgstr ""
+#~ "参考: モデレータを決めただけで、リストへの投稿がモデレーションを受けるよう"
+#~ "になるわけではありません。「メッセージを送ることができるのは (send)」パラ"
+#~ "メータを設定しなければなりません。"
+
+#~ msgid ""
+#~ "FYI: If the list is moderated, any editor can distribute or reject a "
+#~ "message without the knowledge or consent of the other editors. Messages "
+#~ "that have not been distributed or rejected will remain in the moderation "
+#~ "spool until they are acted on."
+#~ msgstr ""
+#~ "参考: リストへの投稿がモデレーションを受けるようになっている場合、モデレー"
+#~ "タは誰でも、他のモデレータにあらかじめ知らせることなく、また同意も得ること"
+#~ "なく、投稿を承認して配送したり、拒否したりできます。モデレーションキューに"
+#~ "留まっている投稿は、配送することも拒否することもできます。"
+
+#~ msgid ""
+#~ "This parameter states which model is used to create an expire task. An "
+#~ "expire task regularly checks the subscription or resubscription  date of "
+#~ "subscribers and asks them to renew their subscription. If they don't they "
+#~ "are deleted."
+#~ msgstr ""
+#~ "このパラメータで、読者登録期限切れタスクを作成するのに使うモデルを指定しま"
+#~ "す。読者登録期限切れタスクは、定期的に読者の登録日と再登録日を調べ、読者登"
+#~ "録を継続するか問い合わせ、継続しないのなら削除します。"
+
+#~ msgid ""
+#~ "List owners may decide to add message headers or footers to messages sent "
+#~ "via the list. This parameter defines the way a footer/header is added to "
+#~ "a message."
+#~ msgstr ""
+#~ "リストのオーナーは、リストを経由して配送されるメッセージに前付けや後付けを"
+#~ "追加するようにできます。このパラメータでは、前付けや後付けをメッセージへ追"
+#~ "加するしかたを決めます。"
+
+#~ msgid ""
+#~ "The default value. Sympa will add the footer/header as a new MIME part."
+#~ msgstr "初期値。前付けや後付けを新たな MIME パートとして追加する。"
+
+#~ msgid ""
+#~ "Sympa will not create new MIME parts, but will try to append the header/"
+#~ "footer to the body of the message. Predefined message-footers will be "
+#~ "ignored. Headers/footers may be appended to text/plain messages only."
+#~ msgstr ""
+#~ "新たな MIME パートを作成せずに、メッセージの本文に前付けや後付けを追加しよ"
+#~ "うとする。このとき、あらかじめ決めてあったメッセージの後付けは無視されま"
+#~ "す。前付けや後付けはプレインテキストのメッセージにのみ追加できます。"
+
+#~ msgid ""
+#~ "Domain name of the list, default is the robot domain name set in the "
+#~ "related robot.conf file or in file /etc/sympa.conf."
+#~ msgstr ""
+#~ "リストのインターネットドメイン名。初期値は関連する robot.conf (または "
+#~ "sympa.conf) に設定してあるロボットのドメイン名です。"
+
+#~ msgid ""
+#~ "Include subscribers from this file.  The file should contain one e-mail "
+#~ "address per line (lines beginning with a \"#\" are ignored)."
+#~ msgstr ""
+#~ "ここで設定したファイルから読者を取り込みます。ファイル形式は1行につきひと"
+#~ "つの電子メールアドレスです (行頭が「#」のものは無視されます)。"
+
+#~ msgid ""
+#~ "This paragraph defines parameters for a two-level query returning a list "
+#~ "of subscribers. Usually the first-level query returns a list of DNs and "
+#~ "the second-level queries convert the DNs into e-mail addresses. This "
+#~ "feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "ここでは、読者一覧を返す 二段階クエリのパラメータを設定します。通常、第一"
+#~ "段階のクエリで識別名 (DN) の一覧を取得し、第二段階で識別名を電子メールアド"
+#~ "レスに変換します。この機能には Net::LDAP (perlldap) Perl モジュールが必要"
+#~ "です。"
+
+#~ msgid ""
+#~ "This paragraph defines parameters for a query returning a list of "
+#~ "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "ここでは、読者一覧を返すクエリのパラメータを設定します。この機能には Net::"
+#~ "LDAP (perlldap) Perl モジュールが必要です。"
+
+#~ msgid ""
+#~ "Include subscribers from other list. All subscribers of list listname "
+#~ "become subscribers of the current list. You may include as many lists as "
+#~ "required, using one include_sympa_list paragraph for each included list. "
+#~ "Any list at all may be included; you may therefore include lists which "
+#~ "are also defined by the inclusion of other lists. Be careful, however, "
+#~ "not to include list A in list B and then list B in list A, since this "
+#~ "will give rise to an infinite loop."
+#~ msgstr ""
+#~ "他のリストから読者を取り込みます。設定したリストの読者はすべて、このリスト"
+#~ "の読者になります。取り込みたいリストについて一行ずつ include_list 行を書く"
+#~ "ことで、いくつでも必要なだけリストを取り込むことができます。ほかのリストを"
+#~ "取り込んでいるリストであっても、取り込むことができます。なお、A メーリング"
+#~ "リストを B メーリングリストに取り込み、さらに A メーリングリストに B メー"
+#~ "リングリストを取り込むと、無限ループを引き起こします。ご注意ください。"
+
+#~ msgid ""
+#~ "Sympa can contact another Sympa service using HTTPS to fetch a remote "
+#~ "list in order to include each member of a remote list as subscriber. You "
+#~ "may include as many lists as required, using one "
+#~ "include_remote_sympa_list paragraph for each included list. Be careful, "
+#~ "however, not to give rise to an infinite loop resulting from cross "
+#~ "includes."
+#~ msgstr ""
+#~ "Sympa は、別の Sympa サービスに HTTPS プロトコルで接続し、そこのリストの読"
+#~ "者を読者として取り込むこともできます。include_remote_sympa_list には、リス"
+#~ "トの名前を必要なだけ書くことができます。なお、そのときに取り込みの設定がお"
+#~ "互いに取り込みあうようになっている場合、無限ループを引き起こします。ご注意"
+#~ "ください。"
+
+#~ msgid ""
+#~ "For this operation, one Sympa site acts as a server while the other one "
+#~ "acs as client. On the server side, the only setting needed is to give "
+#~ "permission to the remote Sympa to review the list. This is controlled by "
+#~ "the review scenario."
+#~ msgstr ""
+#~ "この動作のために、ある Sympa がサーバとして動作し、もう一つの Sympa がクラ"
+#~ "イアントとして動作します。サーバ側で必要なことは、クライアントに読者一覧を"
+#~ "参照する権限を与えることだけです。読者一覧シナリオでこの動作を制御しま"
+#~ "す。 "
+
+#~ msgid ""
+#~ "This parameter is used to begin a paragraph defining the SQL query "
+#~ "parameters. "
+#~ msgstr "ここから、SQL クエリを決める設定が始まります。"
+
+#~ msgid ""
+#~ "This parameter defines the language used for the list. It is used to "
+#~ "initialize a user's language preference; Sympa command reports are "
+#~ "extracted from the associated message catalog."
+#~ msgstr ""
+#~ "リストで使う言語を決めます。 利用者の言語についての個人設定を初期化するの"
+#~ "に使います。コマンドの実行結果は、その言語のメッセージカタログで作成しま"
+#~ "す。"
+
+#~ msgid "Maximum size of a message in 8-bit bytes."
+#~ msgstr "メッセージの最大サイズ (バイト単位)"
+
+#~ msgid ""
+#~ "Owners are managing subscribers of the list. They may review subscribers "
+#~ "and add or delete email addresses from the mailing list. If you are a "
+#~ "privileged owner of the list, you can choose other owners for the mailing "
+#~ "list. Privileged owners may edit a few more options than other owners. "
+#~ msgstr ""
+#~ "オーナーはリストの読者を管理しています。読者の一覧を見たり、リストに電子"
+#~ "メールアドレスを追加したり削除したりできます。リストの特権オーナーなら、リ"
+#~ "ストの他のオーナーを決めることもできます。特権オーナーは他のオーナーより詳"
+#~ "細なオプションを設定することができます。 "
+
+#~ msgid ""
+#~ "The priority with which Sympa will process messages for this list. This "
+#~ "level of priority is applied while the message is going through the "
+#~ "spool. The z priority will freeze the message in the spool."
+#~ msgstr ""
+#~ "メーリングリストシステムがリスト宛てメッセージを処理する優先度です。優先度"
+#~ "のレベルは、メッセージがキューを通過する際に適用されます。優先度 z はメッ"
+#~ "セージをキューにとどめておきます。"
+
+#~ msgid ""
+#~ "This parameter specifies who is authorized to use the remind command."
+#~ msgstr "このパラメータは、誰が登録確認コマンドを使ってよい人を指定します。"
+
+#~ msgid "Same as welcome_return_path, but applied to remind messages."
+#~ msgstr "welcome_return_path と同様ですが、登録確認メッセージに適用します。"
+
+#~ msgid ""
+#~ "This parameter states which model is used to create a remind task. A "
+#~ "remind task regularly sends  subscribers a message which reminds them of "
+#~ "their list subscriptions."
+#~ msgstr ""
+#~ "このパラメータで、登録確認タスクを作成するのに使うモデルを決めます。登録確"
+#~ "認タスクは、読者が登録中のリストを忘れないように読者登録情報を定期的に送信"
+#~ "します。"
+
+#~ msgid ""
+#~ "The reply_to_header parameter starts a paragraph defining what Sympa will "
+#~ "place in the Reply-To: SMTP header field of the messages it distributes."
+#~ msgstr ""
+#~ "配信するメッセージの返信先 (Reply-To: SMTP ヘッダフィールド) に設定するも"
+#~ "のを決めます。まずは reply_to_header パラメータからです。"
+
+#~ msgid ""
+#~ "This parameter indicates whether the Reply-To: field should indicate the "
+#~ "sender of the message (sender), the list itself (list), both list and "
+#~ "sender (all) or an arbitrary e-mail address (defined by the other_email "
+#~ "parameter)."
+#~ msgstr ""
+#~ "このパラメータで、Reply-To: フィールドに設定するアドレスにメッセージ投稿者"
+#~ "のアドレスを指定する (sender) か、リスト自身のアドレス (list) か、list と "
+#~ "sender の両方 (all) か、任意の電子メールアドレス (other_email パラメータで"
+#~ "決まる) かを指定します。"
+
+#~ msgid ""
+#~ "Note: it is inadvisable to change this parameter, and particularly "
+#~ "inadvisable to set it to list. Experience has shown it to be almost "
+#~ "inevitable that users, mistakenly believing that they are replying only "
+#~ "to the sender, will send private messages to a list. This can lead, at "
+#~ "the very least, to embarrassment, and sometimes to more serious "
+#~ "consequences."
+#~ msgstr ""
+#~ "注意: 本パラメータを変更することはお勧めしません。とりわけ、リスト自身のア"
+#~ "ドレス (list) に設定することは絶対にお勧めしません。リストの誰かが送信者に"
+#~ "だけ返信するつもりでメーリングリストに私的なメッセージを送ってしまうという"
+#~ "トラブルが、必ずと言ってよいほど起こるのです。このようなことがあると、よく"
+#~ "ても当惑か、悪くするともっと深刻な事態を引き起こしかねません。"
+
+#~ msgid "an_email_address"
+#~ msgstr "電子メールアドレス"
+
+#~ msgid ""
+#~ "If value was set to other_email, this parameter defines the e-mail "
+#~ "address used."
+#~ msgstr ""
+#~ "上で other_email にした場合、このパラメータで電子メールアドレスを決めま"
+#~ "す。"
+
+#~ msgid ""
+#~ "The default is to respect (preserve) the existing Reply-To: SMTP header "
+#~ "field in incoming messages. If set to forced, Reply-To: SMTP header field "
+#~ "will be overwritten."
+#~ msgstr ""
+#~ "初期値 (default) は到着メッセージの Reply-To: SMTPヘッダフィールドに存在す"
+#~ "るメールアドレスを尊重 (保持) します。forced を設定すると Reply-To: SMTP"
+#~ "ヘッダフィールドの値を上書きし、もともとあったメールアドレスは消えてしまい"
+#~ "ます。"
+
+#~ msgid ""
+#~ "This parameter specifies who can access the list of members. Since "
+#~ "subscriber addresses can be abused by spammers, it is strongly "
+#~ "recommended that you only authorize owners or subscribers to access the "
+#~ "subscriber list. "
+#~ msgstr ""
+#~ "読者一覧を見てよい人を指定します。読者のメールアドレス一覧をスパム送信者が"
+#~ "悪用することもありうるので、読者一覧へはリストのオーナーと読者のみがアクセ"
+#~ "スできるようにすることを強くお勧めします。 "
+
+#~ msgid "This parameter specifies who can send messages to the list."
+#~ msgstr "このパラメータでは、誰がリストに投稿できるかを指定します。"
+
+#~ msgid ""
+#~ "This paragraph defines read and edit access to the shared document "
+#~ "repository."
+#~ msgstr ""
+#~ "ここでは、共有文書置き場へのアクセス権限 (読める人、変更できる人) を決めま"
+#~ "す。"
+
+#~ msgid ""
+#~ "There is a need to protect Sympa web sites against spambots which collect "
+#~ "email addresses from public web sites. Various methods are available in "
+#~ "Sympa and you can choose to use them with the spam_protection and "
+#~ "web_archive_spam_protection parameters. Possible value are:"
+#~ msgstr ""
+#~ "メーリングリストのウェブサイトを、一般公開のウェブサイトから電子メールアド"
+#~ "レスを収集するソフトウェア (「spambot」などと呼びます) から保護する必要が"
+#~ "あります。そのためにさまざまな方法をとることができます。spam_protection パ"
+#~ "ラメータや web_archive_spam_protection パラメータで方法を選べます。次の値"
+#~ "があります——"
+
+#~ msgid ""
+#~ "the address is hidden using a javascript. A user who enables javascript "
+#~ "can see a nice mailto address where others have nothing."
+#~ msgstr ""
+#~ "javaScript を使ってアドレスを隠します。javaScript を使える人ならちゃんと"
+#~ "メールアドレスを見ることができますが、そうでない人にはなにも見えません。"
+
+#~ msgid "the @ char is replaced by the string \" AT \"."
+#~ msgstr "「@」という文字を「 AT 」に置き換えます。"
+
+#~ msgid "no protection against spammer."
+#~ msgstr "スパム送信者対策をしません"
+
+#~ msgid ""
+#~ "This parameter indicates the subject of the list, which is sent in "
+#~ "response to the LISTS mail command. The subject is a free form text "
+#~ "limited to one line."
+#~ msgstr ""
+#~ "このパラメータには、リストの表題を指定します。ここに書いたものを、LISTS コ"
+#~ "マンドの実行結果として送ります。1行だけの文章ですが、中身はなにを書いても"
+#~ "かまいません。"
+
+#~ msgid ""
+#~ "The subscribe parameter defines the rules for subscribing to the list."
+#~ msgstr "読者登録パラメータでは、リストへの読者登録のしかたを決めます。"
+
+#~ msgid ""
+#~ "This parameter allows the classification of lists. You may define "
+#~ "multiple topics as well as hierarchical ones. WWSympa's list of public "
+#~ "lists uses this parameter."
+#~ msgstr ""
+#~ "このパラメータでリストを分野別に分けることができます。 複数の分野を決める"
+#~ "こともできます。分野の中にさらに分野を作ることもできます。公開メーリングリ"
+#~ "スト一覧で、このパラメータを使います。"
+
+#~ msgid ""
+#~ "Sympa caches user data extracted using the include parameter. Their TTL "
+#~ "(time-to-live) within Sympa can be controlled using this parameter. The "
+#~ "default value is 3600"
+#~ msgstr ""
+#~ "Sympa は、include パラメータを使って得たユーザデータをキャッシュします。\n"
+#~ "このパラメータを使用することで Sympa の中でのユーザデータの TTL\n"
+#~ "(有効期間) を制御することができます。\n"
+#~ "初期値は 3600 です。"
+
+#~ msgid ""
+#~ "This parameter specifies the unsubscription method for the list. Use "
+#~ "open_notify or auth_notify to allow owner notification of each "
+#~ "unsubscribe command."
+#~ msgstr ""
+#~ "このパラメータで、このリストでの登録解除のしかたを指定します。登録解除の際"
+#~ "にオーナーへの報告が必要な場合は open_notify または auth_notify をお使いく"
+#~ "ださい。"
+
+#~ msgid ""
+#~ "This parameter indicates whether the list should feature in the output "
+#~ "generated in response to a LISTS command or should be shown in the list "
+#~ "overview of the web-interface."
+#~ msgstr ""
+#~ "このパラメータは、LISTS コマンドでの一覧にリストを出すか、また ウェブイン"
+#~ "タフェースのリスト一覧ににリストを表示するかを設定します。"
+
+#~ msgid "Defines who can access the web archive for the list."
+#~ msgstr "リストの投稿保管庫の中を見られる人を決めます。"
+
+#~ msgid ""
+#~ "Idem spam_protection is provided but it can be used only for web "
+#~ "archives. Access requires a cookie, and users must submit a small form in "
+#~ "order to receive a cookie before browsing the archives. This blocks all "
+#~ "robot, even google and co."
+#~ msgstr ""
+#~ "spam_protection と同様ですが、投稿保管庫のみに適用されます。上記の他に次の"
+#~ "値があります<span lang=\"ja\" xml:lang=\"ja\">——</span>cookie にすると、利"
+#~ "用者は投稿保管庫の中を見る前に簡単なフォームでクッキーを受け取らなければな"
+#~ "らなくなります。これで、Google をはじめあらゆる検索エンジン情報収集ソフト"
+#~ "ウェアから守れます。"
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "ここを unique に設定した場合、歓迎メッセージの送信元を読者ごとに変えて送信"
+#~ "します。そして、配送エラーがおきた場合には読者を削除します。"
+
+#~ msgid ""
+#~ "This paragraph defines a topic used to tag a message of a list, named by "
+#~ "msg_topic.name (\"other\" is a reserved word), its title is msg_topic."
+#~ "title. The msg_topic.keywords entry is optional and allows automatic "
+#~ "tagging. This should be a list of keywords, separated by ','."
+#~ msgstr ""
+#~ "ここでは、リストのメッセージにトピックの印をつけるトピックを決めます。名前"
+#~ "は msg_topic.name になります (「other」は予約ずみの言葉なので使えません)。"
+#~ "表題は msg_topic.title になります。msg_topic.keywords の項はなくてもかまい"
+#~ "ませんが、あればこれを使って自動的にトピックの印をつけます。ここにはキー"
+#~ "ワードをいれます (複数のキーワードを並べるときは半角の「,」で区切ります)。"
+
+#~ msgid ""
+#~ "This parameter indicates which part of the message is used to perform "
+#~ "automatic tagging."
+#~ msgstr ""
+#~ "このパラメータで、メッセージのどの部分を使って自動的にトピックの印をつける"
+#~ "かを指定します。"
+
+#~ msgid ""
+#~ "This parameter indicates if the tagging is optional or required for a "
+#~ "list."
+#~ msgstr ""
+#~ "このパラメータで、このリストではトピックの印が必須か、なくてもよいかを指定"
+#~ "します。"
+
+#~ msgid ""
+#~ "Include subscribers from other list. All subscribers of list listname "
+#~ "become subscribers of the current list. You may include as many lists as "
+#~ "required, using one include_list listname line for each included list. "
+#~ "Any list at all may be included; you may therefore include lists which "
+#~ "are also defined by the inclusion of other lists. Be careful, however, "
+#~ "not to include list A in list B and then list B in list A, since this "
+#~ "will give rise to an infinite loop."
+#~ msgstr ""
+#~ "他のリストから読者を取り込みます。設定したリストの読者はすべて、このリスト"
+#~ "の読者になります。取り込みたいリストについて一行ずつ include_list 行を書く"
+#~ "ことで、いくつでも必要なだけリストを取り込むことができます。ほかのリストを"
+#~ "取り込んでいるリストであっても、取り込むことができます。なお、A メーリング"
+#~ "リストを B メーリングリストに取り込み、さらに A メーリングリストに B メー"
+#~ "リングリストを取り込むと、無限ループを引き起こします。ご注意ください。"
+
+# # "Il est également possible d'<strong>accéder aux archives de la liste par "
+# # "e-mail</strong>, en envoyant à <strong>%1@%1</strong> la commande "
+# # "suivante : <span class=\"commande\"><strong>get nomdelaliste "
+# # "log.anneemois</strong></span> (exemple : <em class=\"example\">get "
+# # "cri-exemple log.200507</em>). L'abonné reçoit alors une compilation de "
+# # "tous les messages envoyés au cours du mois choisi. Cette compilation est "
+# # "envoyée en texte brut et contient des balises <acronym lang=\"en\" "
+# # "xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> à la "
+# # "place du formatage d'origine ; elle comprend également des en-têtes "
+# # "détaillés pour chaque message. Le paramètre '<strong>Archives "
+# # "textuelles</strong>' vous permet de définir :"
+#~ msgid ""
+#~ "It is also possible to <strong>access the list archive by email</strong>, "
+#~ "by sending <strong>%1@%2</strong> the following command: <span class="
+#~ "\"commande\"><strong>get nameofthelist log.yearmonth</strong></span> "
+#~ "(example: <em class=\"example\">get list_example log.200507</em>). Then "
+#~ "you receive a compilation of all messages sent during the chosen month. "
+#~ "This compilation is sent in plain text and contains <acronym lang=\"en\" "
+#~ "xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> tags "
+#~ "instead of the original formatting; it also involves full headers for "
+#~ "each message. The '<strong>Text archives</strong>' parameter allows you "
+#~ "to define:"
+#~ msgstr ""
+#~ "<strong>電子メールで投稿保管庫の中を見る</strong>こともできます。<strong>%"
+#~ "1@%2</strong> に次のコマンドを送ります: <span class=\"commande"
+#~ "\"><strong>get リスト名 log.年月</strong></span> (例: <em class=\"example"
+#~ "\">get list_example log.200507</em>)。すると、指定した月のメッセージをまと"
+#~ "めて受け取れます。このまとめ読みはプレインテキストで届き、<acronym lang="
+#~ "\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> "
+#~ "のタグもそのまま見えますし、メッセージのヘッダがすべて入っています。"
+#~ "「<strong>テキスト投稿保管庫</strong>」パラメータで次のことを決めることが"
+#~ "できます。"
+
+#~ msgid ""
+#~ "This is a description of the receivie modes available in Sympa. These "
+#~ "options are mutually exclusive, which means that you can't set two "
+#~ "different receive modes at the same time. Only some of the modes might be "
+#~ "available to specific mailing lists."
+#~ msgstr ""
+#~ "ここでは、お使いになれる受け取りモードについて説明します。これらの選択肢は"
+#~ "互いに排他的です。つまり、同時に異なった2つのモードを設定することはできま"
+#~ "せん。メーリングリストによっては、一部の選択肢しか選べないこともあります。"
 
 # 仮訳
 # See the comment for "Good Practices".

@@ -9,6 +9,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -83,6 +86,29 @@ sub process {
 
     my $sdm = Sympa::DatabaseManager->instance
         or die 'Can\'t connect to database';
+
+    # Checking if bulkmailer_table exits
+    my @tables;
+    my $list_of_tables;
+    if ($list_of_tables = $sdm->get_tables()) {
+        @tables = @{$list_of_tables};
+    } else {
+        @tables = ();
+    }
+    my $found = 0;
+    foreach my $t (@tables) {
+        if ($t eq "bulkmailer_table") {
+            $found = 1;
+            last;
+        }
+    }
+    if ($found == 0) {
+        $log->syslog(
+            'notice',
+            'bulkmailer table not found in database, bulk spool of your Sympa is probably up-to-date'
+        );
+        exit 0;
+    }
 
     my $sth = $sdm->do_prepared_query(
         q{SELECT *
@@ -231,7 +257,7 @@ __END__
 
 upgrade_bulk_spool, upgrade_bulk_spool.pl - Migrating messages in bulk tables
 
-=head1 SYNOMSIS
+=head1 SYNOPSIS
 
   upgrade_bulk_spool.pl [ --dry_run ]
 
@@ -255,7 +281,7 @@ Shows what will be done but won't really perform upgrade process.
 
 =head1 RETURN VALUE
 
-This program exits with status 0 if processing secceeded.
+This program exits with status 0 if processing succeeded.
 Otherwise exits with non-zero status.
 
 =head1 CONFIGURATION OPTIONS

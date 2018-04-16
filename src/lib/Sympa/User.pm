@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +31,7 @@ use strict;
 use warnings;
 use Carp qw();
 use Digest::MD5;
+BEGIN { eval 'use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64)'; }
 
 use Conf;
 use Sympa::DatabaseDescription;
@@ -292,17 +296,140 @@ Returns the password finger print.
 =cut
 
 # Old name: Sympa::Auth::password_fingerprint().
-# Note: This proc may allow future replacement of md5 by sha1 or ...
+#
+# Password fingerprint functions are stored in a table. Currently supported
+# algorithms are the default 'md5', and 'bcrypt'.
+#
+# If the algorithm uses a salt (e.g. bcrypt) and the second parameter $salt
+# is not provided, a random one will be generated.
+#
+
+my %fingerprint_hashes = (
+    # default is to use MD5, which does not use a salt
+    'md5' => sub {
+        my ($pwd, $salt) = @_;
+
+        # salt parameter is not used for MD5 hashes
+        my $fingerprint = Digest::MD5::md5_hex($pwd);
+        my $match = ($fingerprint eq $salt) ? "yes" : "no";
+
+        $log->syslog('debug', "md5: match $match salt \"$salt\" fingerprint $fingerprint");
+
+	return $fingerprint;
+    },
+    # bcrypt uses a salt and has a configurable "cost" parameter
+    'bcrypt' => sub {
+        my ($pwd, $salt) = @_;
+
+        die "bcrypt support unavailable: install Crypt::Eksblowfish::Bcrypt"
+            unless $Crypt::Eksblowfish::Bcrypt::VERSION;
+
+        # A bcrypt-encrypted password contains the settings at the front.
+        # If this not look like a settings string, create one.
+        unless (defined($salt) && $salt =~ m#\A\$2(a?)\$([0-9]{2})\$([./A-Za-z0-9]{22})#x) {
+            my $bcrypt_cost = Conf::get_robot_conf('*', 'bcrypt_cost');
+            my $cost = sprintf("%02d", 0 + $bcrypt_cost);
+	    my $newsalt = "";
+
+            for my $i (0..15) {
+                $newsalt .= chr(rand(256));
+            }
+            $newsalt = '$2a$' . $cost . '$' . en_base64($newsalt);
+            $log->syslog('debug', "bcrypt: create new salt: cost $cost \"$newsalt\"");
+
+	    $salt = $newsalt;
+        }
+
+        my $fingerprint = bcrypt($pwd, $salt);
+        my $match = ($fingerprint eq $salt) ? "yes" : "no";
+
+        $log->syslog('debug', "bcrypt: match $match salt $salt fingerprint $fingerprint");
+
+        return $fingerprint;
+    }
+);
+
 sub password_fingerprint {
 
-    $log->syslog('debug', '');
+    my ($pwd, $salt) = @_;
 
-    my $pwd = shift;
+    $log->syslog('debug', "salt \"%s\"", $salt);
+
+    my $password_hash = Conf::get_robot_conf('*', 'password_hash');
+    my $password_hash_update = 
+        Conf::get_robot_conf('*', 'password_hash_update');
+
     if (Conf::get_robot_conf('*', 'password_case') eq 'insensitive') {
-        return Digest::MD5::md5_hex(lc $pwd);
-    } else {
-        return Digest::MD5::md5_hex($pwd);
+        $pwd = lc($pwd);
     }
+
+    # If updating hashes, honor the hash type implied by $salt. This lets
+    # the user successfully log in, after which the hash can be updated
+
+    if ($password_hash_update) {
+        if (defined($salt) && defined(my $hash_type = hash_type($salt))) {
+            $log->syslog('debug', "honoring  hash_type %s", $hash_type);
+            $password_hash = $hash_type;
+        }
+    }
+
+    die "password_fingerprint: unknown password_hash \"$password_hash\""
+        unless defined($fingerprint_hashes{$password_hash});
+
+    return $fingerprint_hashes{$password_hash}->($pwd, $salt);
+}
+
+=over 4
+
+=item hash_type ( )
+
+detect the type of password fingerprint used for a hashed password
+
+Returns undef if no supported hash type is detected
+
+=back
+
+=cut
+
+sub hash_type {
+    my $hash = shift;
+
+    return 'md5'    if ($hash =~ /^[a-f0-9]{32}$/i);
+    return 'bcrypt' if ($hash =~ m#\A\$2(a?)\$([0-9]{2})\$([./A-Za-z0-9]{22})#);
+    return undef;
+}
+
+=over 4
+
+=item update_password_hash ( )
+
+If needed, update the hash used for the user's encrypted password entry
+
+=back
+
+=cut
+
+sub update_password_hash {
+    my ($user, $pwd) = @_;
+
+    return unless (Conf::get_robot_conf('*', 'password_hash_update'));
+
+    # here if configured to check and update the password hash algorithm
+
+    my $user_hash = hash_type($user->{'password'});
+    my $system_hash = Conf::get_robot_conf('*', 'password_hash');
+
+    return if (defined($user_hash) && ($user_hash eq $system_hash));
+
+    # note that we directly use the callback for the hash type
+    # instead of using any other logic to determine which to call
+
+    $log->syslog('debug', 'update password hash for %s from %s to %s',
+                 $user->{'email'}, $user_hash, $system_hash);
+
+    # note that we use the cleartext password here, not the hash
+    update_global_user($user->{'email'}, {password => $pwd});
+
 }
 
 ############################################################################
@@ -508,6 +635,7 @@ sub update_global_user {
 
     $who = Sympa::Tools::Text::canonic_email($who);
 
+
     ## Check whether password is already defined.
     my $sdm = Sympa::DatabaseManager->instance;
     unless ($sdm) {
@@ -609,9 +737,10 @@ sub add_global_user {
 
     my ($field, $value);
 
-    ## encrypt password
+    ## encrypt password with the configured password hash algorithm
+    ## an salt of 'undef' means generate a new random one
     $values->{'password'} =
-        Sympa::User::password_fingerprint($values->{'password'})
+        Sympa::User::password_fingerprint($values->{'password'}, undef)
         if ($values->{'password'});
 
     ## Canonicalize lang if possible
@@ -674,7 +803,7 @@ sub add_global_user {
     return 1;
 }
 
-=head2 Miscelaneous
+=head2 Miscellaneous
 
 =over 4
 

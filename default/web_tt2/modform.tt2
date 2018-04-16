@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- modform.tt2 -->
 
 <form class="noborder" action="[% path_cgi %]" method="POST"
   name="moderate_mail[% line_count %]" id="moderate_mail[% line_count %]">
@@ -33,7 +33,7 @@
   </select>
   [% IF conf.reporting_spam_script_path %]
      [%- IF msg.value.spam_status != 'spam' -%]
-        <br /> <input id="signal_spam[% line_count %]" type=checkbox name="signal_spam" /><label for="signal_spam[% line_count %]">[%|loc %]Report message as undetected spam [%END%]</label>
+        <br /> <input id="signal_spam[% line_count %]" type=checkbox name="signal_spam" /><label for="signal_spam[% line_count %]">[%|loc %]Report message as undetected spam[%END%]</label>
      [% END %] 
   [% END %] 
   <br /> <input id="blacklist[% line_count %]" type=checkbox name="blacklist" /><label for="blacklist[% line_count %]">[%|loc %]Add sender to blacklist[%END%]</label>

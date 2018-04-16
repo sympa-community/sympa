@@ -575,6 +575,40 @@ $(function() {
     });
 });
 
+/* If checked, fade off item specified by data-selector. */
+$(function() {
+    $('.fadeIfChecked').each(function(){
+        var selector = $(this).data('selector');
+        $(this).on('change', function(){
+            if ($(this).prop('checked'))
+                $(selector).fadeTo('normal', 0.3);
+            else
+                $(selector).fadeTo('normal', 1);
+        });
+    });
+});
+
+/* Help button to hide/show online help.
+   It may be closed only when javascript is enabled. */
+$(function() {
+    $('.accordionButton').each(function(){
+        var selector = $(this).data('selector');
+        $(this).on('click', function(){
+            $(selector).slideToggle('normal');
+            return false;
+        });
+
+        var closeButton =
+            $('<a href="#" aria-hidden="true">' + sympa.closeText + '</a>');
+        closeButton.on('click', function(){
+            $(selector).slideUp('normal');
+            return false;
+        });
+        $(selector).append(closeButton);
+        $(selector).hide();
+    });
+});
+
 /* Top button. */
 $(function() {
     var scrollTopInner = $('<span class="scroll-top-inner">' +

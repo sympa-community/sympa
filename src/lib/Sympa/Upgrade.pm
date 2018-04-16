@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -134,9 +137,14 @@ sub upgrade {
 
     ## Empty the admin_table entries and recreate them
     $log->syslog('notice', 'Rebuilding the admin_table...');
-    Sympa::List::delete_all_list_admin();
-    foreach my $list (@$all_lists) {
-        $list->sync_include_admin();
+
+    if ($all_lists and @$all_lists) {
+        foreach my $list (@$all_lists) {
+            $list->sync_include_admin;
+        }
+    } else {
+        # Prevent empty admin table (GH #71).
+        $log->syslog('notice', 'Skipping rebuild, no list config files found');
     }
 
     ## Migration to tt2
@@ -742,7 +750,6 @@ sub upgrade {
                     "$list->{'dir'}/subscribers");
 
                 $list->{'admin'}{'user_data_source'} = 'include2';
-                $list->{'total'} = 0;
 
                 ## Add users to the DB
                 $list->add_list_member(@users);
@@ -920,7 +927,6 @@ sub upgrade {
             'password_case'              => 'NO',
             'review_page_size'           => 'yes',
             'title'                      => 'NO',
-            'use_fast_cgi'               => 'yes',
             'use_html_editor'            => 'NO',
             'viewlogs_page_size'         => 'yes',
             'wws_path'                   => undef,
@@ -937,6 +943,7 @@ sub upgrade {
             'task_manager_pidfile' => 'No more used',
             'archived_pidfile'     => 'No more used',
             'bounced_pidfile'      => 'No more used',
+            'use_fast_cgi'         => 'No longer used', # 6.2.25b deprecated
         );
 
         ## Set language of new file content
@@ -1285,7 +1292,7 @@ sub upgrade {
             }
 
             # CSS would be regenerated...
-            my $dir = Conf::get_robot_conf($robot, 'css_path');
+            my $dir = $Conf::Conf{'css_path'} . '/' . $robot;
             rename $dir . '/style.css', $dir . '/style.css.' . time
                 if -f $dir . '/style.css';
         }
@@ -1368,11 +1375,17 @@ sub upgrade {
                 next;
             }
 
-            my $spool_digest = Sympa::Spool::Digest->new(%$metadata);
-            next unless $spool_digest;
-
             rename $Conf::Conf{'queuedigest'} . '/' . $filename,
                 $Conf::Conf{'queuedigest'} . '/' . $filename . '_migrated';
+
+            my $spool_digest = Sympa::Spool::Digest->new(%$metadata);
+            unless ($spool_digest) {
+                rename $Conf::Conf{'queuedigest'} . '/'
+                    . $filename
+                    . '_migrated',
+                    $Conf::Conf{'queuedigest'} . '/' . $filename;
+                next;
+            }
 
             local $RS = "\n\n" . $digest_separator . "\n\n";
             open my $fh, '<',
@@ -1714,6 +1727,89 @@ sub upgrade {
         );
     }
 
+    # Database field type datetime was deprecated.  Unix time will be used.
+    if (lower_version($previous_version, '6.2.25b.3')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        $log->syslog('notice', 'Upgrading subscriber_table.');
+        # date_subscriber & update_subscriber (datetime) was obsoleted.
+        # Use date_epoch_subscriber & update_epoch_subscriber (int).
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE subscriber_table
+                  SET date_epoch_subscriber = %s
+                  WHERE date_subscriber IS NOT NULL AND
+                        date_epoch_subscriber IS NULL},
+                _get_canonical_read_date($sdm, 'date_subscriber')
+            )
+        );
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE subscriber_table
+                  SET update_epoch_subscriber = %s
+                  WHERE update_subscriber IS NOT NULL AND
+                        update_epoch_subscriber IS NULL},
+                _get_canonical_read_date($sdm, 'update_subscriber')
+            )
+        );
+        $log->syslog('notice', 'Upgrading admin_table.');
+        # date_admin & update_admin (datetime) was obsoleted.
+        # Use date_epoch_admin & update_epoch_admin (int).
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE admin_table
+                  SET date_epoch_admin = %s
+                  WHERE date_admin IS NOT NULL AND
+                        date_epoch_admin IS NULL},
+                _get_canonical_read_date($sdm, 'date_admin')
+            )
+        );
+        $sdm->do_prepared_query(
+            sprintf(
+                q{UPDATE admin_table
+                  SET update_epoch_admin = %s
+                  WHERE update_admin IS NOT NULL AND
+                        update_epoch_admin IS NULL},
+                _get_canonical_read_date($sdm, 'update_admin')
+            )
+        );
+    }
+
+    # GH Issue #240: PostgreSQL: Unable to edit owners/subscribers.
+    if (lower_version($previous_version, '6.2.30')) {
+        my $sdm = Sympa::DatabaseManager->instance;
+
+        # As the field date_admin and date_subscriber are no longer used but
+        # they have NOT NULL constraint, they should be deleted.
+        if ($sdm and $sdm->can('delete_field')) {
+            $log->syslog('notice', 'Upgrading admin_table');
+            $sdm->delete_field(
+                {table => 'admin_table', field => 'date_admin'});
+            $log->syslog('notice', 'Upgrading subscriber_table');
+            $sdm->delete_field(
+                {table => 'subscriber_table', field => 'date_subscriber'});
+        } else {
+            $log->syslog('err',
+                'Can\'t delete date_admin field in admin_table and date_subscriber field in subscriber_table.  You must delete them manually.'
+            );
+        }
+    }
+
+    # GH Issue #43: Preliminary notice on abolishment of "host" list parameter.
+    if (lower_version($previous_version, '6.2.32')) {
+        my $all_lists = Sympa::List::get_lists('*');
+        foreach my $list (@{$all_lists || []}) {
+            if (    $list->{'admin'}{'host'}
+                and $list->{'admin'}{'host'} ne $list->{'domain'}) {
+                $log->syslog(
+                    'notice',
+                    'NOTICE: %s: "host" parameter will be deprecated on Sympa 6.2.32. Please check list configuration and aliases',
+                    $list
+                );
+            }
+        }
+    }
+
     return 1;
 }
 
@@ -1971,6 +2067,54 @@ sub save_web_tt2 {
     $log->syslog('notice', '%s directory saved as %s',
         $dir, "$dir.upgrade$date");
     return 1;
+}
+
+sub _get_canonical_read_date {
+    my $sdm    = shift;
+    my $target = shift;
+
+    if ($sdm->isa('Sympa::DatabaseDriver::MySQL')) {
+        return sprintf 'UNIX_TIMESTAMP(%s)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Oracle')) {
+        return
+            sprintf
+            q{((to_number(to_char(%s,'J')) - to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) * 86400) +to_number(to_char(%s,'SSSSS'))},
+            $target, $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::PostgreSQL')) {
+        return sprintf 'date_part(\'epoch\',%s)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::SQLite')) {
+        return $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Sybase')) {
+        return sprintf 'datediff(second, \'01/01/1970\',%s)', $target;
+    } else {
+	# Unknown driver
+        return $target;
+    }
+}
+
+# No yet used.
+sub _get_cacnonical_write_date {
+    my $sdm    = shift;
+    my $target = shift;
+
+    if ($sdm->isa('Sympa::DatabaseDriver::MySQL')) {
+        return sprintf 'FROM_UNIXTIME(%d)', $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Oracle')) {
+        return
+            sprintf
+            q{to_date(to_char(floor(%s/86400) + to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) || ':' ||to_char(mod(%s,86400)), 'J:SSSSS')},
+            $target, $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::PostgreSQL')) {
+        return sprintf '\'epoch\'::timestamp with time zone + \'%d sec\'',
+            $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::SQLite')) {
+        return $target;
+    } elsif ($sdm->isa('Sympa::DatabaseDriver::Sybase')) {
+        return sprintf 'dateadd(second,%s,\'01/01/1970\')', $target;
+    } else {
+	# Unknown driver
+        return $target;
+    }
 }
 
 1;

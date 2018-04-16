@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -56,12 +59,8 @@ sub _init {
     my $state = shift;
 
     if ($state == 1) {
-        Sympa::List::init_list_cache();
         # Process grouped notifications.
         Sympa::Alarm->instance->flush;
-    } elsif ($state == 2) {
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
     }
 
     1;
@@ -294,7 +293,7 @@ sub _twist {
     # AOL.
     if (    $eff_type eq 'multipart/report'
         and $report_type eq 'feedback-report') {
-        # Prepare entity to analyze.
+        # Prepare entity to analyse.
         # Not extract message/* parts.
         my $parser = MIME::Parser->new;
         $parser->extract_nested_messages(0);
@@ -645,7 +644,7 @@ sub _parse_multipart_report {
     my $message       = shift;
     my @subpart_types = @_;
 
-    # Prepare entity to analyze.
+    # Prepare entity to analyse.
     # Not extract message/* parts.
     my $parser = MIME::Parser->new;
     $parser->extract_nested_messages(0);
@@ -1783,7 +1782,7 @@ with envelope ID, and increase bounce score.
 =item *
 
 Others, and messages are E-mail Feedback Report.
-Reports are analyzed, and if opt-out report is found and list configuration
+Reports are analysed, and if opt-out report is found and list configuration
 allows it, original recipient will be deleted.
 
 =back

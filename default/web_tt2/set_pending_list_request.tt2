@@ -1,11 +1,14 @@
-<!-- $Id$ -->
+<!-- set_pending_list_request.tt2 -->
 
  <div class="block">
   <strong>
-   [%|loc%]Listname:[%END%] [% list %]<br />
+   [%|loc%]List name:[%END%] [% list %]<br />
    [%|loc%]Subject:[%END%] [% list_subject %]<br />
   </strong>
-   [%|loc%]List requested by[%END%] [% list_request_by %] [%|loc(list_request_date)%] on %1[%END%]<br />
+  [% list_request_date = BLOCK ~%]
+    [% list_request_date_epoch | optdesc('unixtime') %]
+  [%~ END ~%]
+  [%|loc(list_request_by,list_request_date)%]List requested by %1 on %2[%END%]<br />
  </div>
 
 [% IF is_listmaster %]
@@ -17,10 +20,14 @@
 <input type="hidden" name="serial" value="[% list_serial %]" />
 
 <ul id="set_pending_radio">
-<li><input id="status" type="radio" name="status" value="closed" /><label for="status">[%|loc%]Close it[%END%]</label></li>
-<li><input id="status2" type="radio" name="status" value="open" /><label for="status2">[%|loc%]Install it[%END%]</label></li>
+<li><input id="action_close" type="radio" name="action" value="close_list" />
+  <label for="action_close">[%|loc%]Close it[%END%]</label></li>
+<li><input id="action_open" type="radio" name="action" value="open_list" />
+  <label for="action_open">[%|loc%]Install it[%END%]</label></li>
 </ul>
-<input class="MainMenuLinks" type="submit" name="action_install_pending_list" value="[%|loc%]submit[%END%]" />
+<input type="hidden" name="mode" value="install" />
+<input type="hidden" name="previous_action" value="[% action %]" />
+<input class="MainMenuLinks" type="submit" value="[%|loc%]submit[%END%]" />
 <input id="notify" type="checkbox" name="notify" checked="checked" /><label for="notify">[%|loc%]notify owner[%END%]</label>
 </fieldset>
 </form>

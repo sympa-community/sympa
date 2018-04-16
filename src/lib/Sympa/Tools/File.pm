@@ -336,8 +336,8 @@ See a comment on L<Sympa::Tools::Text/qencode_filename>.
 =item remove_dir(@directories)
 
 Function for Removing a non-empty directory.
-It takes a variale number of arguments:
-It can be a list of directory or few direcoty paths.
+It takes a variable number of arguments:
+It can be a list of directory or few directory paths.
 
 =back
 

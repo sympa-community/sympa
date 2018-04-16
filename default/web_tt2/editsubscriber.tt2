@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- editsubscriber.tt2 -->
 <h2>[%|loc%]Subscriber information[%END%]</h2>
 
 <form action="[% path_cgi %]" method="post">
@@ -28,20 +28,26 @@
 
   <label for="reception">[%|loc%]Receiving:[%END%]  </label>
   <select name="reception" id="reception">
-  [% FOREACH r = reception %]
-    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
+  [% FOREACH r = reception ~%]
+    <option value="[% r.key %]"
+     [%~ IF r.value.selected %] selected="selected"[% END %]>
+    [%~ r.key | optdesc('reception') ~%]
+    </option>
   [% END %]
   </select>
 
   <label for="visibility">[%|loc%]Visibility:[%END%]  </label>
   <select id="visibility" name="visibility">
-  [% FOREACH r = visibility %]
-    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
+  [% FOREACH r = visibility ~%]
+    <option value="[% r.key %]"
+     [%~ IF r.value.selected %] selected="selected"[% END %]>
+    [%~ r.key | optdesc('visibility') ~%]
+    </option>
   [% END %]
   </select>
 
-  <label>[%|loc%]Language:[%END%]  </label>[% current_subscriber.lang %]
-
+  <label>[%|loc%]Language:[%END%]  </label>
+  [% current_subscriber.lang | optdesc('lang') %]
 
   [% IF pictures_display ~%]
     [% IF current_subscriber.pictures_url || current_subscriber.email == user.email ~%]
@@ -55,7 +61,10 @@
       </a>
     [%~ END %]
     [% IF current_subscriber.email == user.email ~%]
-      <p><a href="[% 'suboptions' | url_rel([list]) %]" title="">[%|loc%]Changing your picture for this list[%END%]</a></p>
+      <p>
+      <a href="[% 'suboptions' | url_rel([list],{previous_action=>action}) %]"
+       title="">[%|loc%]Changing your picture for this list[%END%]</a>
+      </p>
     [%~ END %]
   [%~ END %]
 

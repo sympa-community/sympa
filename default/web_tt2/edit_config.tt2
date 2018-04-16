@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- edit_config.tt2 -->
 
 <div class="block">
 <h2>[%|loc%]Edit robot config[%END%]</h2><br />
@@ -45,17 +45,26 @@
 [% END %]
 </td>
 <td>
-[% IF confparam.vhost == '1' %]
+[% IF confparam.vhost == '1' ~%]
   [% IF confparam.edit == '1' && removethistesttoenblefeature == '1' %]
-    <select name="robot">
-	[% FOREACH vr = robots %]<option value="[% vr.key %]" [% IF vr.key == robot %] selected="selected" [% END %]>[% vr.key %]</option>[% END %]
-    </select>
-  [% ELSE %]
-	[% robot %]
-  [% END %]
-[% ELSE %]
-	[%|loc%]main conf[%END%]
-[% END %]
+    [%~ IF robots ~%]
+      <select name="robot">
+        [% FOREACH vr = robots ~%]
+          <option value="[% vr.key %]"
+          [%~ IF vr.key == robot %] selected="selected" [% END ~%]
+          >[% vr.key %]</option>
+        [% END %]
+      </select>
+    [%~ ELSE ~%]
+      <input type="hidden" name="robot" value="[% robot %] />
+      [%~ robot %]
+    [%~ END %]
+  [%~ ELSE ~%]
+    [% robot %]
+  [%~ END %]
+[%~ ELSE ~%]
+  [%|loc%]main conf[%END%]
+[%~ END %]
 </td>
 <td>[% confparam.default %]</td>
 </form>

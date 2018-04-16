@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- review.tt2 -->
 [% IF is_owner %]
 <h2>[%|loc%]Manage list members[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
@@ -33,22 +33,42 @@
     <input type="hidden" name="list" value="[% list %]" />
   </form>
   <hr>
-  <h3>[%|loc%]Add Subscribers[%END%]</h3>
-  <form action="[% path_cgi %]" method="post">
-  <h4>[%|loc%]To add an individual user:[%END%]</h4>
-  <fieldset>
-   <input type="hidden" name="previous_action" value="review" />
-   <input type="hidden" name="list" value="[% list %]" />
-   <input type="hidden" name="action" value="add" />
-   <label for="email_search">[%|loc%]Email address:[%END%]</label>
-   <input id="email_search" type="text" name="email" size="35" />
-    <input id="quietly" type="checkbox" name="quiet" /><label for="quietly">[%|loc%]Quiet (don't send welcome email)[%END%]</label><br />
-    <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" />
-  </fieldset>
-  </form>
-  <h4>[%|loc%]To add multiple users:[%END%]</h4>
-  <p>[%|loc%]Click the Multiple Add button below to bulk-add users using a form.  (Alternatively, consider using a data-source such as SQL or an Active Directory Group).[%END%]
-  <br /><a class="button" href="[% 'add_request' | url_rel([list]) %]">[%|loc%]Multiple add[%END%]</a>
+  [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
+      'off', add cannot be performed. ~%]
+  [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
+    <h3>[%|loc%]Add Subscribers[%END%]</h3>
+    <form action="[% path_cgi %]" method="POST">
+    <h4>[%|loc%]To add an individual user:[%END%]</h4>
+    <fieldset>
+    <input type="hidden" name="previous_action" value="review" />
+    <input type="hidden" name="list" value="[% list %]" />
+    <input type="hidden" name="action" value="add" />
+    <div>
+      <label for="email_search">[%|loc%]Email address:[%END%]</label>
+      <input id="email_search" type="text" name="email" size="35" />
+    </div>
+    <div>
+      <input id="quietly" type="checkbox" name="quiet" />
+      <label for="quietly">
+        [%|loc%]Quiet (don't send welcome email)[%END%]
+      </label>
+    </div>
+    <div>
+      <input class="MainMenuLinks" type="submit" name="action_add"
+       value="[%|loc%]Add[%END%]" />
+    </div>
+    </fieldset>
+    </form>
+    <h4>[%|loc%]To add multiple users:[%END%]</h4>
+    <p>[%|loc%]Click the Multiple Add button below to bulk-add users using a form.  (Alternatively, consider using a data-source such as SQL or an Active Directory Group).[%END%]</p>
+    <div>
+    <p>
+      <a class="button" href="[% 'import' | url_rel([list]) %]">
+        [%|loc%]Multiple add[%END%]
+      </a>
+    </p>
+    </div>
+  [%~ END %]
 [% END %]
 
 <hr>
@@ -64,7 +84,7 @@
 
 [% IF action == 'search' %]
 [% IF too_many_select %]
-[%|loc%]Selection too wide, can not show selection[%END%]
+[%|loc%]Selection too wide, unable to display selection[%END%]
 [% END %]
 [% END %]
 </fieldset>
@@ -103,7 +123,8 @@
   <div>
     <input class="MainMenuLinks" type="submit" name="action_del"
       value="[%|loc%]Delete selected email addresses[%END%]" />
-    <br />
+  </div>
+  <div>
     <input type="checkbox" id="quiet" name="quiet" />
     <label for="quiet">
       [%|loc%]Quiet (don't send deletion email)[%END%]

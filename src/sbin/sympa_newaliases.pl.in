@@ -9,6 +9,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -174,10 +177,10 @@ sympa_newaliases, sympa_newaliases.pl - Alias database maintenance
 
 =head1 DESCRIPTION
 
-sympa_newaliases is a program to maintain alias database.
+F<sympa_newaliases.pl> is a program to maintain alias database.
 
-It is typically called by
-L<alias_manager(8)> via sympa_newaliases-wrapper,
+It is typically invoked from
+L<Sympa::Aliases::Template> module via sympa_newaliases-wrapper,
 then updates alias database.
 
 =head1 OPTIONS
@@ -186,16 +189,16 @@ F<sympa_newaliases.pl> may run with following options.
 
 =over
 
-=item B<--domain=>I<domain>
+=item C<--domain=>I<domain>
 
 Name of virtual robot on which aliases will be updated.
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force sympa_newaliases to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Print this help message.
 
@@ -212,7 +215,7 @@ They may be overridden by robot.conf of each virtual robot.
 
 Source text of alias database.
 
-Default value is F<--SENDMAIL_ALIASES-->.
+Default value is F<$SENDMAIL_ALIASES>.
 
 =item aliases_program
 
@@ -274,7 +277,7 @@ On other failures, returns with 1.
 
 Sympa site configuration.
 
-=item F<--libexecdir--/sympa_newaliases-wrapper>
+=item F<$LIBEXECDIR/sympa_newaliases-wrapper>
 
 Set UID wrapper for sympa_newaliases.pl.
 
@@ -288,6 +291,6 @@ IKEDA Soji <ikeda@conversion.co.jp>.
 
 =head1 SEE ALSO
 
-L<alias_manager(8)>.
+L<Sympa::Aliases::Template>.
 
 =cut

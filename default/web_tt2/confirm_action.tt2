@@ -1,18 +1,26 @@
-<!-- $Id$ -->
+<!-- confirm_action.tt2 -->
 [% IF confirm_action == 'add' ~%]
-  [%# Confirmation is required only by show_exclude action. ~%]
-  <h2><i class="fa fa-check-circle"></i>
-    [%|loc%]Restore selected email addresses[%END%]"
-  </h2>
-  <p><strong>
-    [%|loc%]Do you really want to restore subscription for ALL selected addresses?[%END%]
-  </strong></p>
+  [% IF previous_action == 'show_exclude' ~%]
+    <h2><i class="fa fa-check-circle"></i>
+      [%|loc%]Restore selected email addresses[%END%]"
+    </h2>
+    <p><strong>
+      [%|loc%]Do you really want to restore subscription for ALL selected addresses?[%END%]
+    </strong></p>
+  [%~ ELSE ~%]
+    <h2><i class="fa fa-check-circle"></i>
+      [%|loc%]Add subscribers[%END%]
+    </h2>
+    <p><strong>
+      [%|loc(email.0)%]Dou you really want to add %1?[%END%] 
+    </strong></p>
+  [%~ END %]
 [%~ ELSIF confirm_action == 'add_frommod' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Add subscribers[%END%] 
   </h2>
   <p><strong>
-    [%|loc(email.0)%]Dou you really want to add %1?[%END%] 
+    [%|loc(email.0.email)%]Dou you really want to add %1?[%END%] 
   </strong></p>
 [%~ ELSIF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -25,12 +33,44 @@
   <p><strong>
     [%|loc%]Do you really want to delete Selected Archives?[%END%]
   </strong></p>
-[%~ ELSIF confirm_action == 'close_list' ~%]
-  <h2><i class="fa fa-check-circle"></i>
-    [%|loc%]Remove List[%END%]
+[%~ ELSIF confirm_action == 'auth' ~%]
+  <h2><i class="fa fa-check-square"></i>
+  [% IF heldaction == 'add' ~%]
+    [%|loc%]Add subscribers[%END%]
+  [%~ ELSIF heldaction == 'del' ~%]
+    [%|loc%]Delete selected email addresses[%END%]
+  [%~ ELSIF heldaction == 'move_user' ~%]
+    [%|loc%]Changing user's email[%END%]
+  [%~ ELSIF heldaction == 'remind' || heldaction == 'global_remind' ~%]
+    [%|loc%]Remind all subscribers[%END%]
+  [%~ ELSIF heldaction == 'signoff' ~%]
+    [%|loc%]Unsubscribe[%END%]
+  [%~ ELSIF heldaction == 'subscribe' ~%]
+    [%|loc%]Subscribe[%END%]
+  [%~ ELSE ~%]
+    [% heldaction %]
+  [%~ END %]
   </h2>
   <p><strong>
-    [%|loc(list)%]Are you sure you wish to close list %1?[%END%]
+    [%|loc%]Do you really want this action to be taken?[%END%]
+  </strong></p>
+[%~ ELSIF confirm_action == 'auto_signoff' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Unsubscribe[%END%]
+  </h2>
+  <p><strong>
+    [%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]
+  </strong></p>
+[%~ ELSIF confirm_action == 'close_list' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%~ IF mode == 'install' ~%]
+      [%|loc%]Reject List[%END%]
+    [%~ ELSE ~%]
+      [%|loc%]Remove List[%END%]
+    [%~ END %]
+  </h2>
+  <p><strong>
+    [%|loc(list)%]Are you sure you wish to close the %1 list?[%END%]
   </strong></p>
 [%~ ELSIF confirm_action == 'del' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -39,12 +79,33 @@
   <p><strong>
     [%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]
   </strong></p>
-[%~ ELSIF confirm_action == 'del_fromsig' ~%]
+[%~ ELSIF confirm_action == 'auth_add' ~%]
   <h2><i class="fa fa-check-circle"></i>
-    [%|loc%]Delete selected addresses[%END%]
+    [%|loc%]Add subscribers[%END%] 
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to add selected users?[%END%] 
+  </strong></p>
+[%~ ELSIF confirm_action == 'auth_del' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Delete selected email addresses[%END%]
   </h2>
   <p><strong>
     [%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]
+  </strong></p>
+[%~ ELSIF confirm_action == 'decl_add' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Ignore subscription requests[%END%] 
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to ignore selected requests?[%END%] 
+  </strong></p>
+[%~ ELSIF confirm_action == 'decl_del' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Ignore deletion requests[%END%]
+  </h2>
+  <p><strong>
+    [%|loc%]Do you really want to ignore selected requests?[%END%]
   </strong></p>
 [%~ ELSIF confirm_action == 'distribute' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -65,6 +126,54 @@
   <p><strong>
     [%|loc(shared_doc.name)%]Do you really want to delete %1?[%END%]
   </strong></p>
+[%~ ELSIF confirm_action == 'move_list' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+  [% IF mode == 'copy' ~%]
+    [%|loc%]Copy List[%END%]
+  [%~ ELSE ~%]
+    [%|loc%]Rename List[%END%]
+  [%~ END %]
+  </h2>
+  <p><strong>
+  [% IF mode == 'copy' ~%]
+    [%|loc%]Do you really want to copy this list?[%END%]
+  [%~ ELSE ~%]
+    [%|loc%]Do you really want to rename this list?[%END%]
+  [%~ END %]
+  </strong></p>
+[%~ ELSIF confirm_action == 'move_user' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Changing user's email[%END%]
+  </h2>
+  <p><strong>
+    [% IF user.email == current_email ~%]
+      [%|loc(email)%]Are you sure you wish to change your email to %1?[%END%]
+    [%~ ELSE ~%]
+      [%|loc(current_email,email)%]Are you sure you wish to change a user's email %1 to %2?[%END%]
+    [%~ END %]
+  </strong></p>
+[%~ ELSIF confirm_action == 'open_list' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [% IF mode == 'install' ~%]
+      [%|loc%]Install List[%END%]
+    [%~ ELSE ~%]
+      [%|loc%]Restore List[%END%]
+    [%~ END %]
+  </h2>
+  <p><strong>
+    [% IF mode == 'install' ~%]
+      [%|loc(list)%]Are you sure you wish to install list %1?[%END%]
+    [%~ ELSE ~%]
+      [%|loc(list)%]Are you sure you wish to restore list %1?[%END%]
+    [%~ END %]
+  </strong></p>
+[%~ ELSIF confirm_action == 'purge_list' ~%]
+  <h2><i class="fa fa-check-circle"></i>
+    [%|loc%]Purge selected lists[%END%]
+  </h2>
+  <p><strong>
+    [%|loc%]Are you sure you wish to purge selected lists?[%END%]
+  </strong></p>
 [%~ ELSIF confirm_action == 'remind' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Remind all subscribers[%END%]
@@ -82,7 +191,7 @@
   </h2>
   <p><strong>
     [% IF 1 < msgid.size ~%]
-      [%|loc%]Do you really want to delete these messages ?[%END%]
+      [%|loc%]Do you really want to delete these messages?[%END%]
     [%~ ELSE ~%]
       [%|loc%]Do you really want to delete this message ?[%END%]
     [%~ END %]
@@ -94,26 +203,12 @@
   <p><strong>
     [%|loc(template_name)%]Do you really want to remove %1?[%END%]
   </strong></p>
-[%~ ELSIF confirm_action == 'rename_list' ~%]
-  <h2><i class="fa fa-check-circle"></i>
-    [%|loc%]Rename List[%END%]
-  </h2>
-  <p><strong>
-    [%|loc%]Do you really want to rename this list?[%END%]
-  </strong></p>
-[%~ ELSIF confirm_action == 'restore_list' ~%]
-  <h2><i class="fa fa-check-circle"></i>
-    [%|loc%]Restore List[%END%]
-  </h2>
-  <p><strong>
-    [%|loc(list)%]Are you sure you wish to restore list %1?[%END%]
-  </strong></p>
 [%~ ELSIF confirm_action == 'rt_delete' ~%]
   <h2><i class="fa fa-check-circle"></i>
     [%|loc%]Delete[%END%]
   </h2>
   <p><strong>
-    [%|loc(message_template)%]Do you really want to delete message %1?[%END%]
+    [%|loc(message_template)%]Do you really want to delete this message?[%END%]
   </strong></p>
 [%~ ELSIF confirm_action == 'signoff' ~%]
   <h2><i class="fa fa-check-circle"></i>
@@ -159,6 +254,32 @@
     <input type="checkbox" id="zip" name="zip" value="1" checked="checked" />
     <label for="zip">[%|loc%]Download deleted archives[%END%]</label>
   </div>
+[%~ ELSIF confirm_action == 'auth' ~%]
+  <input type="hidden" name="id" value="[% id %]" />
+  <input type="hidden" name="heldaction" value="[% heldaction %]" />
+  <input type="hidden" name="listname" value="[% listname %]" />
+  <input type="hidden" name="email" value="[% email %]" />
+[%~ ELSIF confirm_action == 'auth_add' ~%]
+  [% FOREACH i = id ~%]
+    <input type="hidden" name="id" value="[% i %]" />
+  [%~ END %]
+[%~ ELSIF confirm_action == 'auth_del' ~%]
+  [% FOREACH i = id ~%]
+    <input type="hidden" name="id" value="[% i %]" />
+  [%~ END %]
+[%~ ELSIF confirm_action == 'auto_signoff' ~%]
+  <input type="hidden" name="email" value="[% email %]" />
+[%~ ELSIF confirm_action == 'close_list' ~%]
+  <input type="hidden" name="mode" value="[% mode %]" />
+  <input type="hidden" name="notify" value="[% notify %]" />
+[%~ ELSIF confirm_action == 'decl_add' ~%]
+  [% FOREACH i = id ~%]
+    <input type="hidden" name="id" value="[% i %]" />
+  [%~ END %]
+[%~ ELSIF confirm_action == 'decl_del' ~%]
+  [% FOREACH i = id ~%]
+    <input type="hidden" name="id" value="[% i %]" />
+  [%~ END %]
 [%~ ELSIF confirm_action == 'del' ~%]
   [% FOREACH e = email ~%]
     <input type="hidden" name="email" value="[% e %]" />
@@ -168,10 +289,6 @@
       [% IF quiet %]checked="checked"[%END%] />
     <label for="quiet">[%|loc%]Quiet (don't send deletion email)[%END%]</label>
   </div>
-[%~ ELSIF confirm_action == 'del_fromsig' ~%]
-  [% FOREACH i = id ~%]
-    <input type="hidden" name="id" value="[% i %]" />
-  [%~ END %]
 [%~ ELSIF confirm_action == 'distribute' ~%]
   [% FOREACH i = id ~%]
     <input type="hidden" name="id" value="[% i %]" />
@@ -179,7 +296,7 @@
   [% IF topic_required ~%]
     <h3>[%|loc%]This list is configured to require topic(s).[%END%]</h3>
   [%~ END %]
-  <p>[%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute:[%END%]</p>
+  <p>[%|loc%]Please select one or more topic(s) that corresponds to the messages you wish to distribute:[%END%]</p>
   <ul>
   [% FOREACH t = listconf.msg_topic ~%]
     [% NEXT UNLESS t && t.name ~%]
@@ -192,6 +309,25 @@
   <input type="hidden" name="d_admin" value="[% d_admin %]" />
 [%~ ELSIF confirm_action == 'd_delete' ~%]
   <input type="hidden" name="path" value="[% shared_doc.paths.join("/") %]" />
+[%~ ELSIF confirm_action == 'move_user' ~%]
+  <input type="hidden" name="current_email" value="[% current_email %]" />
+  <input type="hidden" name="email" value="[% email %]" />
+  <div>
+    [%|loc%]Changing your email address is an important operation. Therefore, we need to verify that it is really your email address.[%END%]
+    [%|loc(email)%]To this end we will send you an email to this address: %1 with a validation link.[%END%]
+    [%|loc%]Please check your mailbox now.[%END%]
+  </div>
+[%~ ELSIF confirm_action == 'move_list' ~%]
+  <input type="hidden" name="new_listname" value="[% new_listname %]" />
+  <input type="hidden" name="new_robot" value="[% new_robot %]" />
+  <input type="hidden" name="mode" value="[% mode %]" />
+[%~ ELSIF confirm_action == 'open_list' ~%]
+  <input type="hidden" name="mode" value="[% mode %]" />
+  <input type="hidden" name="notify" value="[% notify %]" />
+[%~ ELSIF confirm_action == 'purge_list' ~%]
+  [% FOREACH l = selected_lists ~%]
+    <input type="hidden" name="selected_lists" value="[% l %]" />
+  [%~ END %]
 [%~ ELSIF confirm_action == 'remove_arc' ~%]
   <input type="hidden" name="yyyy" value="[% yyyy %]" />
   <input type="hidden" name="month" value="[% month %]" />
@@ -203,26 +339,51 @@
   <input type="hidden" name="scope" value="[% scope %]" />
   <input type="hidden" name="template_name" value="[% template_name %]" />
   <input type="hidden" name="tpl_lang" value="[% tpl_lang %]" />
-[%~ ELSIF confirm_action == 'rename_list' ~%]
-  <input type="hidden" name="new_listname" value="[% new_listname %]" />
-  <input type="hidden" name="new_robot" value="[% new_robot %]" />
 [%~ ELSIF confirm_action == 'rt_delete' ~%]
   <input type="hidden" name="message_template"
     value="[% message_template %]" />
 [%~ ELSIF confirm_action == 'signoff' ~%]
   <input type="hidden" name="email" value="[% email %]" />
 [%~ ELSIF confirm_action == 'subscribe' ~%]
-  <input type="hidden" name="email" value="[% user.email %]" />
+  <input type="hidden" name="email" value="[% email %]" />
+  <input type="hidden" name="gecos" value="[% gecos %]" />
+  [% FOREACH i = custom_attribute ~%]
+    <input type="hidden" name="custom_attribute.[% i.key %]"
+     value="[% i.value.value.replace('\n', '&#10;') %]" />
+  [%~ END %]
 [%~ END %]
   <input type="hidden" name="action" value="[% confirm_action %]" />
   <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="previous_action" value="[% previous_action %]" />
 [% IF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
   <div>
     <input class="MainMenuLinks" type="submit"
       id="response_action_confirm" name="response_action_confirm"
       value="[%|loc%]I am not a spammer[%END%]" />
   </div>
-  <p>[%|loc%]This button aims at protecting mailing lists archives against Spam Harvester.[%END%]</p>
+  <p>[%|loc%]This button tries to protect the mailing list archives against address harvesting by a spammer.[%END%]</p>
+[%~ ELSIF confirm_action == 'auth' ~%]
+  <div>
+    <input class="MainMenuLinks" type="submit"
+      id="response_action_confirm" name="response_action_confirm"
+      value="[%|loc%]Confirm[%END%]" />
+    <input class="MainMenuLinks" type="submit"
+      id="response_action_cancel" name="response_action_cancel"
+      value="[%|loc%]Cancel[%END%]" />
+  </div>
+  [% IF listname ~%]
+    <div>
+    [% IF heldaction == 'add' ~%]
+      <a href="[% 'subindex' | url_rel([listname]) %]">
+      [%|loc%]Review subscription requests[%END%]
+      </a>
+    [%~ ELSIF heldaction == 'del' ~%]
+      <a href="[% 'sigindex' | url_rel([listname]) %]">
+      [%|loc%]Review unsubscription requests[%END%]
+      </a>
+    [%~ END %]
+    </div>
+  [%~ END %]
 [%~ ELSE ~%]
   <div>
     <input class="MainMenuLinks" type="submit"

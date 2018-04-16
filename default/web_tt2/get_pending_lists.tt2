@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- get_pending_lists.tt2 -->
 
 <form name="myform" action="[% path_cgi %]" method="post">
 <fieldset>
@@ -24,7 +24,7 @@
 <td><a href="[% 'set_pending_list_request' | url_rel([list.key]) %]">[% list.key %]</a></td>
 <td>[% list.value.subject %]</td>
 <td>[% list.value.by %]</td>
-<td>[% list.value.date %]</td>
+<td>[% list.value.date_epoch | optdesc('unixtime') %]</td>
 </tr>
 [% END %]
 </table>

@@ -223,7 +223,7 @@ Sympa::LockedFile - Filehandle with locking
 
 =head1 DESCRIPTION
 
-This class implements a filehadle with locking.
+This class implements a filehandle with locking.
 
 =head2 Class Methods
 
@@ -289,8 +289,8 @@ lock will be stolen.
 =item $mode
 
 Mode to open file.
-If it implys any writing operations (C<'E<gt>'>, C<'E<gt>E<gt>'>,
-C<'+E<lt>'>, ...), trys to acquire exclusive lock (C<LOCK_EX>),
+If it implies any writing operations (C<'E<gt>'>, C<'E<gt>E<gt>'>,
+C<'+E<lt>'>, ...), tries to acquire exclusive lock (C<LOCK_EX>),
 otherwise shared lock (C<LOCK_SH>).
 
 Default is C<'E<lt>'>.

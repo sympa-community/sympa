@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -48,6 +51,9 @@ my $log = Sympa::Log->instance;
 
 my %all_scenarios;
 my %persistent_cache;
+
+my $picache = {};
+my $picache_refresh = 10;
 
 ## Creates a new object
 ## Supported parameters : function, robot, name, directory, file_path, options
@@ -698,7 +704,17 @@ sub verify {
 
     my $pinfo;
     if ($robot) {
-        $pinfo = Sympa::Robot::list_params($robot);
+        # Generating the lists index creates multiple calls to verify()
+        # per list, and each call triggers a copy of the pinfo hash.
+        # Profiling shows that this scales poorly with thousands of lists.
+        # Briefly cache the list params data to avoid this overhead.
+        
+        if (time > ($picache->{$robot}{'expires'} || 0)) {
+            $log->syslog('debug', 'robot %s pinfo cache refresh', $robot);
+            $picache->{$robot}{'pinfo'} = Sympa::Robot::list_params($robot);
+            $picache->{$robot}{'expires'} = (time + $picache_refresh);
+        }
+        $pinfo = $picache->{$robot}{'pinfo'};
     } else {
         $pinfo = {};
     }
@@ -823,9 +839,12 @@ sub verify {
         elsif ($value =~ /\[list\-\>([\w\-]+)\]/i) {
             my $param = $1;
 
-            if ($param eq 'name' or $param eq 'total') {
-                my $val = $list->{$param};
-                $value =~ s/\[list\-\>$param\]/$val/;
+            if ($param eq 'name') {
+                my $val = $list->{'name'};
+                $value =~ s/\[list\-\>name\]/$val/;
+            } elsif ($param eq 'total') {
+                my $val = $list->get_total;
+                $value =~ s/\[list\-\>total\]/$val/;
             } elsif ($param eq 'address') {
                 my $val = Sympa::get_address($list);
                 $value =~ s/\[list\-\>$param\]/$val/;
@@ -1805,7 +1824,9 @@ sub _load_ldap_configuration {
         return;
     }
 
-    my @valid_options    = qw(host suffix filter scope bind_dn bind_password);
+    my @valid_options    = qw(host suffix filter scope bind_dn bind_password
+                              use_tls ssl_version ssl_ciphers ssl_cert ssl_key
+                              ca_verify ca_path ca_file);
     my @required_options = qw(host suffix filter);
 
     my %valid_options    = map { $_ => 1 } @valid_options;

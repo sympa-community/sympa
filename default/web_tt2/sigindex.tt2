@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- sigindex.tt2 -->
 
 <h2>[%|loc%]Listing unsubscription to moderate[%END%]</h2>
 [% IF mod_signoff %]
@@ -56,10 +56,14 @@
       value="[%|loc%]Toggle Selection[%END%]" />
   </div>
   <div>
-    <input class="MainMenuLinks" type="submit" name="action_del_fromsig"
-      value="[%|loc%]Delete selected addresses[%END%]" />
-    <input class="MainMenuLinks" type="submit" name="action_ignoresig"
-      value="[%|loc%]Reject selected addresses[%END%]" />
+    [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
+        'off', del cannot be performed. ~%]
+    [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
+      <input class="MainMenuLinks" type="submit" name="action_auth_del"
+       value="[%|loc%]Delete selected addresses[%END%]" />
+    [%~ END %]
+    <input class="MainMenuLinks" type="submit" name="action_decl_del"
+     value="[%|loc%]Reject selected addresses[%END%]" />
   </div>
 </fieldset>
 </form>

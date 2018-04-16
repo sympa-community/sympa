@@ -1,0 +1,72 @@
+=encoding utf-8
+
+=head1 NAME
+
+edit_list.conf - Configuration of privileges to edit list configuration
+
+=head1 DESCRIPTION
+
+F<edit_list.conf> defines privileges to edit list configuration.
+
+F<$SYSCONFDIR/edit_list.conf> is main configuration.
+Several parameters defined in this file may be overridden by
+F<$SYSCONFDIR/E<lt>mail domain nameE<gt>/edit_list.conf>
+file for each mail domain, or by
+F<E<lt>list config directoryE<gt>/edit_list.conf> file for each mailing list.
+
+Format of F<edit_list.conf> is as following:
+
+=over
+
+=item *
+
+Lines beginning with C<#> and containing only spaces are ignored.
+
+=item *
+
+Each line has the form "I<parameter name> I<role> I<privilege>".
+
+=back
+
+I<parameter name> is a list parameter name (e.g. C<max_size>),
+paragraph name (C<owner>) or subparameter (C<owner.email)>).
+It may be a name of template (e.g. C<welcome.tt2>) or list configuration file
+(C<message.header>) except main configuration file (C<config>).
+
+I<role> is any of C<listmaster>, C<privileged_owner>, C<owner> or C<editor>.
+Multiple roles have to be separated by comma ("C<,>").
+
+I<privilege> is C<write>, C<read> or C<hidden>.
+
+Lines are checked in order, then matched line at the first time wins.
+Default privilege may be specified with special parameter name C<default>.
+
+=head1 FILES
+
+=over
+
+=item F<$DEFAULTDIR/edit_list.conf>
+
+Distribution default.  This file should not be edited.
+
+=item F<$SYSCONFDIR/edit_list.conf>
+
+=item F<$SYSCONFDIR/E<lt>mail domain nameE<gt>/edit_list.conf>
+
+=item F<$EXPLDIR/E<lt>list nameE<gt>/edit_list.conf> or
+F<$EXPLDIR/E<lt>mail domain nameE<gt>/E<lt>list nameE<gt>/edit_list.conf>
+
+Configuration files for site-wide default, by each domain or each list.
+
+=back
+
+=head1 SEE ALSO
+
+L<wwsympa(8)>.
+
+=head1 HISTORY
+
+This document was initially written by IKEDA Soji <ikeda@conversion.co.jp>.
+
+=cut
+

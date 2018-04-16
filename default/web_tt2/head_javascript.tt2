@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- head_javascript.tt2 -->
 [%#
 ## DEVELOPMENT WARNING
 ## Don't add javascript to this file, except if you need to initialize
@@ -29,6 +29,7 @@ var lang = '[% lang %]';
 
 [%# Now retrieving the javascript files ~%]
 <script src="[% static_content_url %]/external/jquery.js"></script>
+<script src="[% static_content_url %]/external/jquery-migrate.js"></script>
 <script src="[% static_content_url %]/external/jquery-ui.js"></script>
 <script src="[% static_content_url %]/external/jquery.jqplot.min.js"></script>
 <script src="[% static_content_url %]/external/jqplot.categoryAxisRenderer.min.js"></script>

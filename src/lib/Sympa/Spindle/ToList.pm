@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -203,7 +206,6 @@ sub _send_msg {
         my $total = $list->get_total('nocache');
         unless ($total and 0 < $total) {
             $log->syslog('info', 'No subscriber in list %s', $list);
-            $list->savestats;
             return 0;
         }
 
@@ -247,7 +249,6 @@ sub _send_msg {
         unless ($available_recipients) {
             $log->syslog('info', 'No subscriber for sending msg in list %s',
                 $list);
-            $list->savestats;
             return 0;
         }
     } else {
@@ -314,9 +315,7 @@ sub _send_msg {
             # Add number and size of messages sent to total in stats file.
             my $numsent = scalar @selected_tabrcpt;
             my $bytes   = length $new_message->as_string;
-            $list->{'stats'}->[1] += $numsent;
-            $list->{'stats'}->[2] += $bytes;
-            $list->{'stats'}->[3] += $bytes * $numsent;
+            $list->update_stats(0, $numsent, $bytes, $bytes * $numsent);
         } else {
             $log->syslog(
                 'notice',
@@ -360,9 +359,7 @@ sub _send_msg {
             # Add number and size of messages sent to total in stats file.
             my $numsent = scalar @verp_selected_tabrcpt;
             my $bytes   = length $new_message->as_string;
-            $list->{'stats'}->[1] += $numsent;
-            $list->{'stats'}->[2] += $bytes;
-            $list->{'stats'}->[3] += $bytes * $numsent;
+            $list->update_stats(0, $numsent, $bytes, $bytes * $numsent);
         } else {
             $log->syslog('notice',
                 'No VERP subscribers left to distribute message to list %s',
@@ -384,7 +381,6 @@ sub _send_msg {
             );
         }
     }
-    $list->savestats;
     return $numstored;
 }
 
@@ -437,9 +433,48 @@ Sympa::Spindle::ToList - Process to distribute messages to list members
 
 =head1 DESCRIPTION
 
-TBD.
+This class executes the last stage of message transformation to be sent
+through the list.
+Transformation processes by this class are done in the following order:
+
+=over
+
+=item *
+
+Classifies recipients for whom message is delivered by each reception mode,
+filters recipients by topics (see also L<Sympa::Topic>), and choose
+message tracking modes if necessary.
+
+=item *
+
+Transforms message by each reception mode.
+
+=item *
+
+Enables DMARC protection (according to
+L<C<dmarc_protection>|list_config(5)/dmarc_protection>
+list configuration parameter),
+message personalization (according to
+L<C<merge_feature>|list_config(5)/merge_feature>
+list configuration parameter) and/or
+re-encryption by S/MIME (if original message was encrypted).
+
+=item *
+
+Alters envelope sender of the message to I<list>C<-owner> address.
+
+=back
+
+Then stores message into outgoing spool (see L<Sympa::Bulk>)
+with classified packets of recipients.
+
+This cass updates statistics information of the list (with digest delivery,
+L<Sympa::Spindle::ToOutgoing> will update it).
+
 
 =head1 SEE ALSO
+
+L<Sympa::Internals::Workflow>.
 
 L<Sympa::Bulk>,
 L<Sympa::Message>,

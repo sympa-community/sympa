@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- dump_scenario.tt2 -->
 
 [% IF result %]
 <div class="block">
@@ -7,7 +7,7 @@
  [% ELSIF result == 'success_new_name' %]
     [%|loc%]new scenario is created but not loaded in the list config. Edit list config if you need to apply it for that list[%END%]
  [% ELSIF result == 'unchanged' %]
-     [%|loc%]new scenario is equal to previous one. Nothing done.[%END%]
+     [%|loc%]new scenario is the same as the previous one. Nothing done.[%END%]
  [% END %]
 </div>
 [% ELSE %]

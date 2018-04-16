@@ -1,6 +1,7 @@
 <?php 
 // Just a simple example of a PHP SOAP client for Sympa. 
-// You can check the Sympa SOAP API definition to design more complex code : http://www.sympa.org/manual/soap
+// You can check the Sympa SOAP API definition to design more complex code:
+// https://sympa-community.github.io/manual/customize/soap-api.html
 //
 // You need to install the php-soap module. 
 // If you are on a Fedora Core server, you can run "yum install php-soap"
@@ -145,7 +146,7 @@ echo "<P ALIGN=\"right\">
 <TR><TD ALIGN=\"left\">
 <I><center>This is a sample PHP interface for Sympa using SOAP (<A HREF=\"".$_SERVER['PHP_SELF']."?viewSource=1\">View source</A>)</center></I>
 </TD><TD ALIGN=\"right\">
-<A HREF=\"http://www.sympa.org\"><IMG BORDER=\"0\" SRC=\"http://www.sympa.org/logos/logo-sympa-150x49.gif\"></A></TD>
+<A HREF=\"http://www.sympa.org\"><IMG BORDER=\"0\" SRC=\"http://demo.sympa.org/static-sympa/icons/logo_sympa.png\"></A></TD>
 </TABLE>
 </P>";
 

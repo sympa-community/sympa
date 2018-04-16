@@ -1,9 +1,9 @@
-<!-- $Id$ -->
+<!-- list_panel.tt2 -->
 
 [% IF list_status == 'closed' || list_status == 'family_closed' %]
   <li class="menuLinks"><span class="bg_color_error">[%|loc%]Closed list[%END%]</span></li>
 [% ELSIF list_status == 'pending' %]
-  <li class="menuLinks"><span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span></li>
+  <li class="menuLinks"><span class="bg_color_error">[%|loc%]List not activated yet[%END%]</span></li>
 [% ELSIF list_status == 'error_config' %]
   <li class="menuLinks"><span class="bg_color_error">[%|loc%]Erroneous configuration[%END%]</span></li>
 [% END %]

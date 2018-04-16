@@ -12,6 +12,9 @@ BEGIN {
 }
 plan(skip_all => 'Test::Pod required') unless $Test::Pod::VERSION;
 
-my @files = (all_pod_files('src'), glob('doc/*.podin'), glob('doc/*.podpl'));
+my @files = (
+    all_pod_files('src'), glob('doc/*.pod'),
+    glob('doc/*.podin'),  glob('doc/*.podpl')
+);
 
 all_pod_files_ok(@files);

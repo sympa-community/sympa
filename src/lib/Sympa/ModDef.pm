@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,9 +55,11 @@ our %cpan_modules = (
     'CGI::Fast' => {
         required_version => '1.08',        # At least version with CGI 3.51
         package_name     => 'CGI-Fast',    # Module name as of 2.xx.
+        mandatory        => 1,
         'gettext_id' =>
             "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install FCGI module",
     },
+    # CGI::Util is included in CGI.
     'Class::Singleton' => {
         required_version => '1.03',
         package_name     => 'Class-Singleton',
@@ -71,6 +76,12 @@ our %cpan_modules = (
         package_name     => 'Crypt-CipherSaber',
         'gettext_id' =>
             'this module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.',
+    },
+    'Crypt::Eksblowfish' => {
+        required_version => '0.009',
+        package_name     => 'Crypt-Eksblowfish',
+        'gettext_id' =>
+            'used to encrypt passwords with the Bcrypt hash algorithm',
     },
     'Crypt::OpenSSL::X509' => {
         required_version => '1.800.1',
@@ -185,6 +196,7 @@ our %cpan_modules = (
     'FCGI' => {
         required_version => '0.67',
         package_name     => 'CGI-Fast',    # Parent module name
+        mandatory        => 1,
         'gettext_id' =>
             "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install the associated FastCGI frontend, e.g. mod_fcgid for Apache.",
     },
@@ -336,6 +348,8 @@ our %cpan_modules = (
         'gettext_id' =>
             'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
     },
+    # Net::LDAP::Entry, Net::LDAP::Util and Net::LDAPS are included in
+    # perl-ldap.
     'Net::SMTP' => {
         package_name => 'libnet',
         'gettext_id' =>
@@ -347,7 +361,7 @@ our %cpan_modules = (
         required_version => '0.712',
         package_name     => 'SOAP-Lite',
         'gettext_id' =>
-            'required if you want to run the Sympa SOAP server that provides ML services via a "web service"',
+            'required if you want to run the Sympa SOAP server that provides mailing list services via a "web service"',
     },
     'Sys::Syslog' => {
         required_version => '0.03',

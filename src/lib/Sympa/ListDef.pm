@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,15 +38,8 @@ our %default = (
     'length'     => 25
 );
 
-our @param_order =
-    qw (subject visibility info subscribe add unsubscribe del owner owner_include
-    send editor editor_include delivery_time account topics
-    host lang process_archive web_archive archive digest digest_max_size available_user_options
-    default_user_options msg_topic msg_topic_keywords_apply_on msg_topic_tagging reply_to_header reply_to forced_reply_to *
-    verp_rate tracking welcome_return_path remind_return_path user_data_source include_file include_remote_file
-    include_sympa_list include_remote_sympa_list include_ldap_query
-    include_ldap_2level_query include_sql_query include_voot_group ttl distribution_ttl creation update
-    status serial custom_attribute include_ldap_ca include_ldap_2level_ca include_sql_ca);
+# DEPRECATED. No longer used.
+#our @param_order;
 
 # List parameter alias names
 # DEPRECATED.  Use 'obsolete' elements.
@@ -54,16 +50,22 @@ our %pinfo = (
     ### Global definition page ###
 
     'subject' => {
+        order        => 10.01,
         'group'      => 'description',
         'gettext_id' => "Subject of the list",
+        'gettext_comment' =>
+            'This parameter indicates the subject of the list, which is sent in response to the LISTS mail command. The subject is a free form text limited to one line.',
         'format'     => '.+',
         'occurrence' => '1',
         'length'     => 50
     },
 
     'visibility' => {
+        order        => 10.02,
         'group'      => 'description',
         'gettext_id' => "Visibility of the list",
+        'gettext_comment' =>
+            'This parameter indicates whether the list should feature in the output generated in response to a LISTS command or should be shown in the list overview of the web-interface.',
         'scenario'   => 'visibility',
         'synonym'    => {
             'public'  => 'noconceal',
@@ -72,15 +74,21 @@ our %pinfo = (
     },
 
     'owner' => {
+        order        => 10.03,
         'group'      => 'description',
         'gettext_id' => "Owner",
+        'gettext_comment' =>
+            'Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. ',
         'format'     => {
             'email' => {
                 'order'      => 1,
                 'gettext_id' => "email address",
-                'format'     => Sympa::Regexps::email(),
+                format_s     => '$email',
                 'occurrence' => '1',
-                'length'     => 30
+                'length'     => 30,
+                filters      => ['canonic_email'],
+                validations =>
+                    [qw(list_special_addresses unique_paragraph_key)],
             },
             'gecos' => {
                 'order'      => 2,
@@ -98,18 +106,21 @@ our %pinfo = (
                 'order'      => 4,
                 'gettext_id' => "profile",
                 'format'     => ['privileged', 'normal'],
+                'occurrence' => '1',
                 'default'    => 'normal'
             },
             'reception' => {
                 'order'      => 5,
                 'gettext_id' => "reception mode",
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 6,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             }
         },
@@ -117,6 +128,7 @@ our %pinfo = (
     },
 
     'owner_include' => {
+        order        => 10.04,
         'group'      => 'description',
         'gettext_id' => 'Owners defined in an external data source',
         'format'     => {
@@ -136,18 +148,21 @@ our %pinfo = (
                 'order'      => 4,
                 'gettext_id' => 'reception mode',
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 5,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             },
             'profile' => {
                 'order'      => 3,
                 'gettext_id' => 'profile',
                 'format'     => ['privileged', 'normal'],
+                'occurrence' => '1',
                 'default'    => 'normal'
             }
         },
@@ -155,26 +170,33 @@ our %pinfo = (
     },
 
     'editor' => {
+        order        => 10.05,
         'group'      => 'description',
         'gettext_id' => "Moderators",
+        'gettext_comment' =>
+            "Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it.\nFYI: Defining editors will not make the list moderated; you will have to set the \"send\" parameter.\nFYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on.",
         'format'     => {
             'email' => {
                 'order'      => 1,
                 'gettext_id' => "email address",
-                'format'     => Sympa::Regexps::email(),
+                format_s     => '$email',
                 'occurrence' => '1',
-                'length'     => 30
+                'length'     => 30,
+                filters      => ['canonic_email'],
+                validations => [qw(list_editor_address unique_paragraph_key)],
             },
             'reception' => {
                 'order'      => 4,
                 'gettext_id' => "reception mode",
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 5,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             },
             'gecos' => {
@@ -194,6 +216,7 @@ our %pinfo = (
     },
 
     'editor_include' => {
+        order        => 10.06,
         'group'      => 'description',
         'gettext_id' => 'Moderators defined in an external data source',
         'format'     => {
@@ -213,12 +236,14 @@ our %pinfo = (
                 'order'      => 3,
                 'gettext_id' => 'reception mode',
                 'format'     => ['mail', 'nomail'],
+                'occurrence' => '1',
                 'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 5,
                 'gettext_id' => "visibility",
                 'format'     => ['conceal', 'noconceal'],
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             }
         },
@@ -226,40 +251,59 @@ our %pinfo = (
     },
 
     'topics' => {
+        order        => 10.07,
         'group'      => 'description',
         'gettext_id' => "Topics for the list",
-        'format'     => '[\-\w]+(\/[\-\w]+)?',
+        'gettext_comment' =>
+            "This parameter allows the classification of lists. You may define multiple topics as well as hierarchical ones. WWSympa's list of public lists uses this parameter.",
+        'format'     => [],     # Sympa::Robot::topic_keys() called later
+        'field_type' => 'listtopic',
         'split_char' => ',',
-        'occurrence' => '0-n'
+        'occurrence' => '0-n',
+        filters      => ['lc'],
     },
 
     'host' => {
+        order        => 10.08,
         'group'      => 'description',
         'gettext_id' => "Internet domain",
-        'format'     => Sympa::Regexps::host(),
+        'gettext_comment' =>
+            'Domain name of the list, default is the robot domain name set in the related robot.conf file or in file sympa.conf.',
+        format_s  => '$host',
+        filters      => ['canonic_domain'],
         'default'    => {'conf' => 'host'},
         'length'     => 20
     },
 
     'lang' => {
+        order        => 10.09,
         'group'      => 'description',
         'gettext_id' => "Language of the list",
+        'gettext_comment' =>
+            "This parameter defines the language used for the list. It is used to initialize a user's language preference; Sympa command reports are extracted from the associated message catalog.",
         'format' => [],    ## Sympa::get_supported_languages() called later
         'file_format' => '\w+(\-\w+)*',
+        'field_type'  => 'lang',
+        'occurrence'  => '1',
+        filters       => ['canonic_lang'],
         'default'     => {'conf' => 'lang'}
     },
 
     'family_name' => {
+        order        => 10.10,
         'group'      => 'description',
         'gettext_id' => 'Family name',
-        'format'     => Sympa::Regexps::family_name(),
+        format_s     => '$family_name',
         'occurrence' => '0-1',
         'internal'   => 1
     },
 
     'max_list_members' => {
+        order          => 10.11,
         'group'        => 'description',
         'gettext_id'   => "Maximum number of list members",
+        'gettext_comment' =>
+            'limit for the number of subscribers. 0 means no limit.',
         'gettext_unit' => 'list members',
         'format'       => '\d+',
         'length'       => 8,
@@ -267,32 +311,45 @@ our %pinfo = (
     },
 
     'priority' => {
+        order        => 10.12,
         'group'      => 'description',
         'gettext_id' => "Priority",
+        'gettext_comment' =>
+            'The priority with which Sympa will process messages for this list. This level of priority is applied while the message is going through the spool. The z priority will freeze the message in the spool.',
         'format'     => [0 .. 9, 'z'],
         'length'     => 1,
+        'occurrence' => '1',
         'default'    => {'conf' => 'default_list_priority'}
     },
 
     ### Sending page ###
 
     'send' => {
+        order        => 20.01,
         'group'      => 'sending',
         'gettext_id' => "Who can send messages",
+        'gettext_comment' =>
+            'This parameter specifies who can send messages to the list.',
         'scenario'   => 'send'
     },
 
     'delivery_time' => {
+        order        => 20.02,
         'group'      => 'sending',
         'gettext_id' => "Delivery time (hh:mm)",
+        'gettext_comment' =>
+            'If this parameter is present, non-digest messages will be delivered to subscribers at this time: When this time has been past, delivery is postponed to the same time in next day.',
         'format'     => '[0-2]?\d\:[0-6]\d',
         'occurrence' => '0-1',
         'length'     => 5
     },
 
     'digest' => {
+        order         => 20.03,
         'group'       => 'sending',
         'gettext_id'  => "Digest frequency",
+        'gettext_comment' =>
+            'Definition of digest mode. If this parameter is present, subscribers can select the option of receiving messages in multipart/digest MIME format, or as a plain text digest. Messages are then grouped together, and compiled messages are sent to subscribers according to the frequency selected with this parameter.',
         'file_format' => '\d+(\s*,\s*\d+)*\s+\d+:\d+',
         'format'      => {
             'days' => {
@@ -300,6 +357,7 @@ our %pinfo = (
                 'gettext_id'  => "days",
                 'format'      => [0 .. 6],
                 'file_format' => '1|2|3|4|5|6|7',
+                'field_type'  => 'dayofweek',
                 'occurrence'  => '1-n'
             },
             'hour' => {
@@ -320,6 +378,7 @@ our %pinfo = (
     },
 
     'digest_max_size' => {
+        order          => 20.04,
         'group'        => 'sending',
         'gettext_id'   => "Digest maximum number of messages",
         'gettext_unit' => 'messages',
@@ -329,57 +388,76 @@ our %pinfo = (
     },
 
     'available_user_options' => {
+        order        => 20.05,
         'group'      => 'sending',
         'gettext_id' => "Available subscription options",
         'format'     => {
             'reception' => {
                 'gettext_id' => "reception mode",
+                'gettext_comment' =>
+                    'Only these modes will be allowed for the subscribers of this list. If a subscriber has a reception mode not in the list, Sympa uses the mode specified in the default_user_options paragraph.',
                 'format'     => [
                     'mail',    'notice', 'digest', 'digestplain',
-                    'summary', 'nomail', 'txt',    'html',
-                    'urlize',  'not_me'
+                    'summary', 'nomail', 'txt',    'urlize',
+                    'not_me'
                 ],
+                'synonym'    => {'html' => 'mail'},
+                'field_type' => 'reception',
                 'occurrence' => '1-n',
                 'split_char' => ',',
                 'default' =>
-                    'mail,notice,digest,digestplain,summary,nomail,txt,html,urlize,not_me'
+                    'mail,notice,digest,digestplain,summary,nomail,txt,urlize,not_me'
             }
         }
     },
 
     'default_user_options' => {
+        order        => 20.06,
         'group'      => 'sending',
         'gettext_id' => "Subscription profile",
+        'gettext_comment' =>
+            'Default profile for the subscribers of the list.',
         'format'     => {
             'reception' => {
                 'order'      => 1,
                 'gettext_id' => "reception mode",
+                'gettext_comment' => 'Mail reception mode.',
                 'format'     => [
-                    'digest',  'digestplain', 'mail', 'nomail',
-                    'summary', 'notice',      'txt',  'html',
-                    'urlize',  'not_me'
+                    'mail',    'notice', 'digest', 'digestplain',
+                    'summary', 'nomail', 'txt',    'urlize',
+                    'not_me'
                 ],
-                'default' => 'mail'
+                'synonym'    => {'html' => 'mail'},
+                'field_type' => 'reception',
+                'occurrence' => '1',
+                'default'    => 'mail'
             },
             'visibility' => {
                 'order'      => 2,
                 'gettext_id' => "visibility",
+                    'gettext_comment' => 'Visibility of the subscriber.',
                 'format'     => ['conceal', 'noconceal'],
+                'field_type' => 'visibility',
+                'occurrence' => '1',
                 'default'    => 'noconceal'
             }
         },
     },
 
     'msg_topic' => {
+        order        => 20.07,
         'group'      => 'sending',
         'gettext_id' => "Topics for message categorization",
+        'gettext_comment' =>
+            "This paragraph defines a topic used to tag a message of a list, named by msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. The msg_topic.keywords entry is optional and allows automatic tagging. This should be a list of keywords, separated by ','.",
         'format'     => {
             'name' => {
                 'order'      => 1,
                 'gettext_id' => "Message topic name",
                 'format'     => '[\-\w]+',
                 'occurrence' => '1',
-                'length'     => 15
+                'length'     => 15,
+                validations  => ['reserved_msg_topic_name'],
             },
             'keywords' => {
                 'order'      => 2,
@@ -399,19 +477,25 @@ our %pinfo = (
     },
 
     'msg_topic_keywords_apply_on' => {
+        order   => 20.08,
         'group' => 'sending',
         'gettext_id' =>
             "Defines to which part of messages topic keywords are applied",
+        'gettext_comment' =>
+            'This parameter indicates which part of the message is used to perform automatic tagging.',
         'format'     => ['subject', 'body', 'subject_and_body'],
         'occurrence' => '0-1',
         'default'    => 'subject'
     },
 
     'msg_topic_tagging' => {
+        order        => 20.09,
         'group'      => 'sending',
         'gettext_id' => "Message tagging",
+        'gettext_comment' =>
+            'This parameter indicates if the tagging is optional or required for a list.',
         'format'     => ['required_sender', 'required_moderator', 'optional'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => 'optional'
     },
 
@@ -435,12 +519,17 @@ our %pinfo = (
     'forced_reply-to' => {'obsolete' => 'forced_reply_to'},
 
     'reply_to_header' => {
+        order        => 20.10,
         'group'      => 'sending',
         'gettext_id' => "Reply address",
+        'gettext_comment' =>
+            'This defines what Sympa will place in the Reply-To: SMTP header field of the messages it distributes.',
         'format'     => {
             'value' => {
                 'order'      => 1,
                 'gettext_id' => "value",
+                'gettext_comment' =>
+                    "This parameter indicates whether the Reply-To: field should indicate the sender of the message (sender), the list itself (list), both list and sender (all) or an arbitrary e-mail address (defined by the other_email parameter).\nNote: it is inadvisable to change this parameter, and particularly inadvisable to set it to list. Experience has shown it to be almost inevitable that users, mistakenly believing that they are replying only to the sender, will send private messages to a list. This can lead, at the very least, to embarrassment, and sometimes to more serious consequences.",
                 'format'     => ['sender', 'list', 'all', 'other_email'],
                 'default'    => 'sender',
                 'occurrence' => '1'
@@ -448,11 +537,15 @@ our %pinfo = (
             'other_email' => {
                 'order'      => 2,
                 'gettext_id' => "other email address",
-                'format'     => Sympa::Regexps::email()
+                'gettext_comment' =>
+                    'If value was set to other_email, this parameter defines the e-mail address used.',
+                format_s => '$email',
             },
             'apply' => {
                 'order'      => 3,
                 'gettext_id' => "respect of existing header field",
+                'gettext_comment' =>
+                    'The default is to respect (preserve) the existing Reply-To: SMTP header field in incoming messages. If set to forced, Reply-To: SMTP header field will be overwritten.',
                 'format'     => ['forced', 'respect'],
                 'default'    => 'respect'
             }
@@ -460,14 +553,20 @@ our %pinfo = (
     },
 
     'anonymous_sender' => {
+        order        => 20.11,
         'group'      => 'sending',
         'gettext_id' => "Anonymous sender",
+        'gettext_comment' =>
+        "To hide the sender's email address before distributing the message. It is replaced by the provided email address.",
         'format'     => '.+'
     },
 
     'custom_header' => {
+        order        => 20.12,
         'group'      => 'sending',
         'gettext_id' => "Custom header field",
+        'gettext_comment' =>
+            'This parameter is optional. The headers specified will be added to the headers of messages distributed via the list. As of release 1.2.2 of Sympa, it is possible to put several custom header lines in the configuration file at the same time.',
         'format'     => '\S+:\s+.*',
         'occurrence' => '0-n',
         'length'     => 30
@@ -475,23 +574,31 @@ our %pinfo = (
     'custom-header' => {'obsolete' => 'custom_header'},
 
     'custom_subject' => {
+        order        => 20.13,
         'group'      => 'sending',
         'gettext_id' => "Subject tagging",
+        'gettext_comment' =>
+            'This parameter is optional. It specifies a string which is added to the subject of distributed messages (intended to help users who do not use automatic tools to sort incoming messages). This string will be surrounded by [] characters.',
         'format'     => '.+',
         'length'     => 15
     },
     'custom-subject' => {'obsolete' => 'custom_subject'},
 
     'footer_type' => {
+        order        => 20.14,
         'group'      => 'sending',
         'gettext_id' => "Attachment type",
+        'gettext_comment' =>
+            "List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.\nmime: \nThe default value. Sympa will add the footer/header as a new MIME part.\nappend: \nSympa will not create new MIME parts, but will try to append the header/footer to the body of the message. Predefined message-footers will be ignored. Headers/footers may be appended to text/plain messages only.",
         'format'     => ['mime', 'append'],
         'default'    => 'mime'
     },
 
     'max_size' => {
+        order          => 20.15,
         'group'        => 'sending',
         'gettext_id'   => "Maximum message size",
+        'gettext_comment' => 'Maximum size of a message in 8-bit bytes.',
         'gettext_unit' => 'bytes',
         'format'       => '\d+',
         'length'       => 8,
@@ -500,22 +607,25 @@ our %pinfo = (
     'max-size' => {'obsolete' => 'max_size'},
 
     'merge_feature' => {
+        order        => 20.16,
         'group'      => 'sending',
         'gettext_id' => "Allow message personalization",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => {'conf' => 'merge_feature'}
     },
 
     'reject_mail_from_automates_feature' => {
+        order        => 20.18,
         'group'      => 'sending',
-        'gettext_id' => "Reject mail from automates (crontab, etc)?",
+        'gettext_id' => "Reject mail from automatic processes (crontab, etc)?",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => {'conf' => 'reject_mail_from_automates_feature'}
     },
 
     'remove_headers' => {
+        order        => 20.19,
         'group'      => 'sending',
         'gettext_id' => 'Incoming SMTP header fields to be removed',
         'format'     => '\S+',
@@ -525,6 +635,7 @@ our %pinfo = (
     },
 
     'remove_outgoing_headers' => {
+        order        => 20.20,
         'group'      => 'sending',
         'gettext_id' => 'Outgoing SMTP header fields to be removed',
         'format'     => '\S+',
@@ -534,6 +645,7 @@ our %pinfo = (
     },
 
     'rfc2369_header_fields' => {
+        order        => 20.21,
         'group'      => 'sending',
         'gettext_id' => "RFC 2369 Header fields",
         'format' =>
@@ -544,6 +656,7 @@ our %pinfo = (
     },
 
     'message_hook' => {
+        order        => 20.17,
         'group'      => 'sending',
         'gettext_id' => 'Hook modules for message processing',
         'format'     => {
@@ -560,62 +673,108 @@ our %pinfo = (
         },
     },
 
-    ### Command page ###
+    ### Privileges page ###
 
     'info' => {
+        order        => 30.01,
         'group'      => 'command',
         'gettext_id' => "Who can view list information",
         'scenario'   => 'info'
     },
 
     'subscribe' => {
+        order        => 30.02,
         'group'      => 'command',
         'gettext_id' => "Who can subscribe to the list",
+        'gettext_comment' =>
+            'The subscribe parameter defines the rules for subscribing to the list.',
         'scenario'   => 'subscribe'
     },
     'subscription' => {'obsolete' => 'subscribe'},
 
     'add' => {
+        order        => 30.03,
         'group'      => 'command',
         'gettext_id' => "Who can add subscribers",
+        'gettext_comment' =>
+            'Privilege for adding (ADD command) a subscriber to the list',
         'scenario'   => 'add'
     },
 
     'unsubscribe' => {
+        order        => 30.04,
         'group'      => 'command',
         'gettext_id' => "Who can unsubscribe",
+        'gettext_comment' =>
+            'This parameter specifies the unsubscription method for the list. Use open_notify or auth_notify to allow owner notification of each unsubscribe command.',
         'scenario'   => 'unsubscribe'
     },
     'unsubscription' => {'obsolete' => 'unsubscribe'},
 
     'del' => {
+        order        => 30.05,
         'group'      => 'command',
         'gettext_id' => "Who can delete subscribers",
         'scenario'   => 'del'
     },
 
     'invite' => {
+        order        => 30.06,
         'group'      => 'command',
         'gettext_id' => "Who can invite people",
         'scenario'   => 'invite'
     },
 
     'remind' => {
+        order        => 30.07,
         'group'      => 'command',
         'gettext_id' => "Who can start a remind process",
+        'gettext_comment' =>
+            'This parameter specifies who is authorized to use the remind command.',
         'scenario'   => 'remind'
     },
 
     'review' => {
+        order        => 30.08,
         'group'      => 'command',
         'gettext_id' => "Who can review subscribers",
+        'gettext_comment' =>
+            'This parameter specifies who can access the list of members. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. ',
         'scenario'   => 'review',
         'synonym'    => {'open' => 'public'}
     },
 
+    'owner_domain' => {
+        order        => 30.085,
+        'group'      => 'command',
+        'gettext_id' => "Required domains for list owners",
+        'gettext_comment' =>
+            'Restrict list ownership to addresses in the specified domains.',
+        'format_s'   => '$host( +$host)*',
+        'length'     => 72,
+        'occurrence' => '0-1',
+        'split_char' => ' ',
+        'default'    => {'conf' => 'owner_domain'},
+    },
+
+    'owner_domain_min' => {
+        order        => 30.086,
+        'group'      => 'command',
+        'gettext_id' => "Minimum owners in required domains",
+        'gettext_comment' =>
+            'Require list ownership by a minimum number of addresses in the specified domains.',
+        'format'     => '\d+',
+        'length'     => 2,
+        'occurrence' => '0-1',
+        'default'    => {'conf' => 'owner_domain_min'},
+    },
+
     'shared_doc' => {
+        order        => 30.09,
         'group'      => 'command',
         'gettext_id' => "Shared documents",
+        'gettext_comment' =>
+            'This paragraph defines read and edit access to the shared document repository.',
         'format'     => {
             'd_read' => {
                 'order'      => 1,
@@ -641,9 +800,11 @@ our %pinfo = (
     ### Archives page ###
 
     'process_archive' => {
+        order        => 40.01,
         'group'      => 'archives',
         'gettext_id' => "Store distributed messages into archive",
         'format'     => ['on', 'off'],
+        'occurrence' => '1',
         'default'    => {'conf' => 'process_archive'},
     },
     'web_archive' => {
@@ -654,7 +815,7 @@ our %pinfo = (
             'access' => {
                 'order'      => 1,
                 'gettext_id' => "access right",
-                'scenario'   => 'access_web_archive',
+                'scenario'   => 'archive_web_access',
                 'obsolete'   => 1,                    # Use archive.web_access
             },
             'quota' => {
@@ -676,8 +837,11 @@ our %pinfo = (
         }
     },
     'archive' => {
+        order        => 40.02,
         'group'      => 'archives',
         'gettext_id' => "Archives",
+        'gettext_comment' =>
+            "Privilege for reading mail archives and frequency of archiving.\nDefines who can access the list's web archive.",
         'format'     => {
             'period' => {
                 'order'      => 1,
@@ -696,7 +860,7 @@ our %pinfo = (
             'web_access' => {
                 'order'      => 3,
                 'gettext_id' => "access right",
-                'scenario'   => 'access_web_archive'
+                'scenario'   => 'archive_web_access'
             },
             'mail_access' => {
                 'order'      => 4,
@@ -723,28 +887,37 @@ our %pinfo = (
     },
 
     'archive_crypted_msg' => {
+        order        => 40.03,
         'group'      => 'archives',
         'gettext_id' => "Archive encrypted mails as cleartext",
         'format'     => ['original', 'decrypted'],
+        'occurrence' => '1',
         'default'    => 'original'
     },
 
     'web_archive_spam_protection' => {
+        order        => 40.04,
         'group'      => 'archives',
         'gettext_id' => "email address protection method",
+        'gettext_comment' =>
+            'Idem spam_protection is provided but it can be used only for web archives. Access requires a cookie, and users must submit a small form in order to receive a cookie before browsing the archives. This blocks all robot, even google and co.',
         'format'     => ['cookie', 'javascript', 'at', 'none'],
+        'occurrence' => '1',
         'default' => {'conf' => 'web_archive_spam_protection'}
     },
 
     ### Bounces page ###
 
     'bounce' => {
+        order        => 50.01,
         'group'      => 'bounces',
         'gettext_id' => "Bounces management",
         'format'     => {
             'warn_rate' => {
                 'order'        => 1,
                 'gettext_id'   => "warn rate",
+                'gettext_comment' =>
+                    'The list owner receives a warning whenever a message is distributed and the number (percentage) of bounces exceeds this value.',
                 'gettext_unit' => '%',
                 'format'       => '\d+',
                 'length'       => 3,
@@ -753,6 +926,8 @@ our %pinfo = (
             'halt_rate' => {
                 'order'        => 2,
                 'gettext_id'   => "halt rate",
+                'gettext_comment' =>
+                    'NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation.',
                 'gettext_unit' => '%',
                 'format'       => '\d+',
                 'length'       => 3,
@@ -763,12 +938,16 @@ our %pinfo = (
     },
 
     'bouncers_level1' => {
+        order        => 50.02,
         'group'      => 'bounces',
         'gettext_id' => "Management of bouncers, 1st level",
+        'gettext_comment' => 'Level 1 is the lower level of bouncing users',
         'format'     => {
             'rate' => {
                 'order'        => 1,
                 'gettext_id'   => "threshold",
+                'gettext_comment' =>
+                    "Each bouncing user have a score (from 0 to 100).\nThis parameter defines a lower limit for each category of bouncing users.For example, level 1 begins from 45 to level_2_treshold.",
                 'gettext_unit' => 'points',
                 'format'       => '\d+',
                 'length'       => 2,
@@ -777,25 +956,35 @@ our %pinfo = (
             'action' => {
                 'order'      => 2,
                 'gettext_id' => "action for this population",
-                'format'  => ['remove_bouncers', 'notify_bouncers', 'none'],
-                'default' => 'notify_bouncers'
+                'gettext_comment' =>
+                   'This parameter defines which task is automaticaly applied on level 1 bouncers.',
+                'format' => ['remove_bouncers', 'notify_bouncers', 'none'],
+                'occurrence' => '1',
+                'default'    => 'notify_bouncers'
             },
             'notification' => {
                 'order'      => 3,
                 'gettext_id' => "notification",
+                'gettext_comment' =>
+                    'When automatic task is executed on level 1 bouncers, a notification email can be send to listowner or listmaster.',
                 'format'     => ['none', 'owner', 'listmaster'],
+                'occurrence' => '1',
                 'default'    => 'owner'
             }
         }
     },
 
     'bouncers_level2' => {
+        order        => 50.03,
         'group'      => 'bounces',
         'gettext_id' => "Management of bouncers, 2nd level",
+        'gettext_comment' => 'Level 2 is the highest level of bouncing users',
         'format'     => {
             'rate' => {
                 'order'        => 1,
                 'gettext_id'   => "threshold",
+                'gettext_comment' =>
+                    "Each bouncing user have a score (from 0 to 100).\nThis parameter defines the score range defining each category of bouncing users.For example, level 2 is for users with a score between 80 and 100.",
                 'gettext_unit' => 'points',
                 'format'       => '\d+',
                 'length'       => 2,
@@ -804,27 +993,36 @@ our %pinfo = (
             'action' => {
                 'order'      => 2,
                 'gettext_id' => "action for this population",
+                'gettext_comment' =>
+                    'This parameter defines which task is automaticaly applied on level 2 bouncers.',
                 'format'  => ['remove_bouncers', 'notify_bouncers', 'none'],
-                'default' => 'remove_bouncers'
+                'occurrence' => '1',
+                'default'    => 'remove_bouncers'
             },
             'notification' => {
                 'order'      => 3,
                 'gettext_id' => "notification",
+                'gettext_comment' =>
+                    'When automatic task is executed on level 2 bouncers, a notification email can be send to listowner or listmaster.',
                 'format'     => ['none', 'owner', 'listmaster'],
+                'occurrence' => '1',
                 'default'    => 'owner'
             }
         }
     },
 
     'verp_rate' => {
+        order        => 50.04,
         'group'      => 'bounces',
         'gettext_id' => "percentage of list members in VERP mode",
         'format' =>
             ['100%', '50%', '33%', '25%', '20%', '10%', '5%', '2%', '0%'],
-        'default' => {'conf' => 'verp_rate'}
+        'occurrence' => '1',
+        'default'    => {'conf' => 'verp_rate'}
     },
 
     'tracking' => {
+        order        => 50.05,
         'group'      => 'bounces',
         'gettext_id' => "Message tracking feature",
         'format'     => {
@@ -833,6 +1031,7 @@ our %pinfo = (
                 'gettext_id' =>
                     "tracking message by delivery status notification",
                 'format' => ['on', 'off'],
+                'occurrence' => '1',
                 'default' =>
                     {'conf' => 'tracking_delivery_status_notification'}
             },
@@ -841,6 +1040,7 @@ our %pinfo = (
                 'gettext_id' =>
                     "tracking message by message disposition notification",
                 'format' => ['on', 'on_demand', 'off'],
+                'occurrence' => '1',
                 'default' =>
                     {'conf' => 'tracking_message_disposition_notification'}
             },
@@ -862,15 +1062,21 @@ our %pinfo = (
     },
 
     'welcome_return_path' => {
+        order        => 50.06,
         'group'      => 'bounces',
         'gettext_id' => "Welcome return-path",
+        'gettext_comment' =>
+            'If set to unique, the welcome message is sent using a unique return path in order to remove the subscriber immediately in the case of a bounce.',
         'format'     => ['unique', 'owner'],
         'default'    => {'conf' => 'welcome_return_path'}
     },
 
     'remind_return_path' => {
+        order        => 50.07,
         'group'      => 'bounces',
         'gettext_id' => "Return-path of the REMIND command",
+        'gettext_comment' =>
+            'Same as welcome_return_path, but applied to remind messages.',
         'format'     => ['unique', 'owner'],
         'default'    => {'conf' => 'remind_return_path'}
     },
@@ -878,15 +1084,17 @@ our %pinfo = (
     ### Datasources page ###
 
     'inclusion_notification_feature' => {
+        order   => 60.01,
         'group' => 'data_source',
         'gettext_id' =>
             "Notify subscribers when they are included from a data source?",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default'    => 'off',
     },
 
     'sql_fetch_timeout' => {
+        order          => 60.03,
         'group'        => 'data_source',
         'gettext_id'   => "Timeout for fetch of include_sql_query",
         'gettext_unit' => 'seconds',
@@ -904,14 +1112,18 @@ our %pinfo = (
     },
 
     'include_file' => {
+        order        => 60.04,
         'group'      => 'data_source',
         'gettext_id' => "File inclusion",
+        'gettext_comment' =>
+            'Include subscribers from this file.  The file should contain one e-mail address per line (lines beginning with a "#" are ignored).',
         'format'     => '\S+',
         'occurrence' => '0-n',
         'length'     => 20,
     },
 
     'include_remote_file' => {
+        order        => 60.05,
         'group'      => 'data_source',
         'gettext_id' => "Remote file inclusion",
         'format'     => {
@@ -949,16 +1161,17 @@ our %pinfo = (
     'include_list' => {
         'group'      => 'data_source',
         'gettext_id' => "List inclusion",
-        'format'     => Sympa::Regexps::listname() . '(\@'
-            . Sympa::Regexps::host()
-            . ')?(\s+filter\s+.+)?',
+        format_s     => '$listname(\@$host)?(\s+filter\s+.+)?',
         'occurrence' => '0-n',
         'obsolete'   => 1,       # 2.2.6 - 6.2.15.
     },
 
     'include_sympa_list' => {
+        order        => 60.06,
         'group'      => 'data_source',
         'gettext_id' => "List inclusion",
+        'gettext_comment' =>
+            'Include subscribers from other list. All subscribers of list listname become subscribers of the current list. You may include as many lists as required, using one include_sympa_list paragraph for each included list. Any list at all may be included; you may therefore include lists which are also defined by the inclusion of other lists. Be careful, however, not to include list A in list B and then list B in list A, since this will give rise to an infinite loop.',
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -969,8 +1182,7 @@ our %pinfo = (
             'listname' => {
                 'order'      => 2,
                 'gettext_id' => "list name to include",
-                'format'     => Sympa::Regexps::listname() . '(\@'
-                    . Sympa::Regexps::host() . ')?',
+                format_s     => '$listname(\@$host)?',
                 'occurrence' => '1'
             },
             'filter' => {
@@ -983,8 +1195,11 @@ our %pinfo = (
     },
 
     'include_remote_sympa_list' => {
+        order        => 60.07,
         'group'      => 'data_source',
         'gettext_id' => "remote list inclusion",
+        'gettext_comment' =>
+            "Sympa can contact another Sympa service using HTTPS to fetch a remote list in order to include each member of a remote list as subscriber. You may include as many lists as required, using one include_remote_sympa_list paragraph for each included list. Be careful, however, not to give rise to an infinite loop resulting from cross includes.\nFor this operation, one Sympa site acts as a server while the other one acs as client. On the server side, the only setting needed is to give permission to the remote Sympa to review the list. This is controlled by the review scenario.",
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -995,7 +1210,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 1.5,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::host(),
+                format_s     => '$host',
                 'occurrence' => '1'
             },
             'port' => {
@@ -1024,6 +1239,7 @@ our %pinfo = (
     },
 
     'member_include' => {
+        order        => 60.02,
         'group'      => 'data_source',
         'gettext_id' => 'Users included from parameterizable data sources',
         'format'     => {
@@ -1044,8 +1260,11 @@ our %pinfo = (
     },
 
     'include_ldap_query' => {
+        order        => 60.08,
         'group'      => 'data_source',
         'gettext_id' => "LDAP query inclusion",
+        'gettext_comment' =>
+            'This paragraph defines parameters for a query returning a list of subscribers. This feature requires the Net::LDAP (perlldap) PERL module.',
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -1056,7 +1275,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_or_url(),
+                format_s     => '$multiple_host_or_url',
                 'occurrence' => '1'
             },
             'port' => {
@@ -1070,8 +1289,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1085,6 +1305,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1098,8 +1319,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1122,6 +1343,7 @@ our %pinfo = (
                 'order'      => 5,
                 'gettext_id' => "search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout' => {
@@ -1129,6 +1351,7 @@ our %pinfo = (
                 'gettext_id'   => "connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter' => {
@@ -1141,7 +1364,7 @@ our %pinfo = (
             'attrs' => {
                 'order'      => 8,
                 'gettext_id' => "extracted attribute",
-                'format'     => '\w+(\s*,\s*\w+)?',
+                format_s     => '$ldap_attrdesc(\s*,\s*$ldap_attrdesc)?',
                 'default'    => 'mail',
                 'length'     => 50
             },
@@ -1149,12 +1372,13 @@ our %pinfo = (
                 'order'      => 9,
                 'gettext_id' => "selection (if multiple)",
                 'format'     => ['all', 'first'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'nosync_time_ranges' => {
                 'order'      => 10,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -1162,8 +1386,11 @@ our %pinfo = (
     },
 
     'include_ldap_2level_query' => {
+        order        => 60.09,
         'group'      => 'data_source',
         'gettext_id' => "LDAP 2-level query inclusion",
+        'gettext_comment' =>
+            'This paragraph defines parameters for a two-level query returning a list of subscribers. Usually the first-level query returns a list of DNs and the second-level queries convert the DNs into e-mail addresses. This feature requires the Net::LDAP (perlldap) PERL module.',
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -1174,7 +1401,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_or_url(),
+                format_s     => '$multiple_host_or_url',
                 'occurrence' => '1'
             },
             'port' => {
@@ -1188,8 +1415,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1203,6 +1431,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1216,8 +1445,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1247,6 +1476,7 @@ our %pinfo = (
                 'gettext_id'   => "first-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter1' => {
@@ -1259,13 +1489,14 @@ our %pinfo = (
             'attrs1' => {
                 'order'      => 8,
                 'gettext_id' => "first-level extracted attribute",
-                'format'     => '\w+',
+                format_s     => '$ldap_attrdesc',
                 'length'     => 15
             },
             'select1' => {
                 'order'      => 9,
                 'gettext_id' => "first-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex1' => {
@@ -1284,6 +1515,7 @@ our %pinfo = (
                 'order'      => 12,
                 'gettext_id' => "second-level search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout2' => {
@@ -1291,6 +1523,7 @@ our %pinfo = (
                 'gettext_id'   => "second-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter2' => {
@@ -1303,7 +1536,7 @@ our %pinfo = (
             'attrs2' => {
                 'order'      => 15,
                 'gettext_id' => "second-level extracted attribute",
-                'format'     => '\w+(\s*,\s*\w+)?',
+                format_s     => '$ldap_attrdesc(\s*,\s*$ldap_attrdesc)?',
                 'default'    => 'mail',
                 'length'     => 50
             },
@@ -1311,6 +1544,7 @@ our %pinfo = (
                 'order'      => 16,
                 'gettext_id' => "second-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex2' => {
@@ -1323,7 +1557,7 @@ our %pinfo = (
             'nosync_time_ranges' => {
                 'order'      => 18,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -1331,8 +1565,11 @@ our %pinfo = (
     },
 
     'include_sql_query' => {
+        order        => 60.10,
         'group'      => 'data_source',
         'gettext_id' => "SQL query inclusion",
+        'gettext_comment' =>
+            'This parameter is used to define the SQL query parameters. ',
         'format'     => {
             'name' => {
                 'order'      => 1,
@@ -1349,7 +1586,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::host(),
+                format_s     => '$host',
                 # Not required for ODBC
                 # 'occurrence' => '1'
             },
@@ -1390,7 +1627,7 @@ our %pinfo = (
             'sql_query' => {
                 'order'      => 8,
                 'gettext_id' => "SQL query",
-                'format'     => Sympa::Regexps::sql_query(),
+                format_s     => '$sql_query',
                 'occurrence' => '1',
                 'length'     => 50
             },
@@ -1403,7 +1640,7 @@ our %pinfo = (
             'nosync_time_ranges' => {
                 'order'      => 10,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -1411,6 +1648,7 @@ our %pinfo = (
     },
 
     'include_voot_group' => {
+        order        => 60.11,
         'group'      => 'data_source',
         'gettext_id' => "VOOT group inclusion",
         'format'     => {
@@ -1443,23 +1681,30 @@ our %pinfo = (
     },
 
     'ttl' => {
+        order          => 60.12,
         'group'        => 'data_source',
         'gettext_id'   => "Inclusions timeout",
+        'gettext_comment' =>
+            'Sympa caches user data extracted using the include parameter. Their TTL (time-to-live) within Sympa can be controlled using this parameter. The default value is 3600',
         'gettext_unit' => 'seconds',
         'format'       => '\d+',
-        'default'      => 3600,
+        'default'      => {'conf' => 'default_ttl'},
         'length'       => 6
     },
 
     'distribution_ttl' => {
+        order          => 60.13,
         'group'        => 'data_source',
         'gettext_id'   => "Inclusions timeout for message distribution",
+        'gettext_comment' =>
+            "This parameter defines the delay since the last synchronization after which the user's list will be updated before performing either of following actions:\n* Reviewing list members\n* Message distribution",
         'gettext_unit' => 'seconds',
         'format'       => '\d+',
         'length'       => 6
     },
 
     'include_ldap_ca' => {
+        order        => 60.14,
         'group'      => 'data_source',
         'gettext_id' => "LDAP query custom attribute",
         'format'     => {
@@ -1472,7 +1717,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_or_url(),
+                format_s     => '$multiple_host_or_url',
                 'occurrence' => '1'
             },
             'port' => {
@@ -1486,8 +1731,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1501,6 +1747,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1514,8 +1761,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1538,6 +1785,7 @@ our %pinfo = (
                 'order'      => 5,
                 'gettext_id' => "search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout' => {
@@ -1545,6 +1793,7 @@ our %pinfo = (
                 'gettext_id'   => "connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter' => {
@@ -1557,7 +1806,7 @@ our %pinfo = (
             'attrs' => {
                 'order'      => 8,
                 'gettext_id' => "extracted attribute",
-                'format'     => '\w+',
+                format_s     => '$ldap_attrdesc',
                 'default'    => 'mail',
                 'length'     => 15
             },
@@ -1571,12 +1820,13 @@ our %pinfo = (
                 'order'      => 10,
                 'gettext_id' => "selection (if multiple)",
                 'format'     => ['all', 'first'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'nosync_time_ranges' => {
                 'order'      => 11,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -1584,6 +1834,7 @@ our %pinfo = (
     },
 
     'include_ldap_2level_ca' => {
+        order        => 60.15,
         'group'      => 'data_source',
         'gettext_id' => "LDAP 2-level query custom attribute",
         'format'     => {
@@ -1596,7 +1847,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 1,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::multiple_host_or_url(),
+                format_s     => '$multiple_host_or_url',
                 'occurrence' => '1'
             },
             'port' => {
@@ -1610,8 +1861,9 @@ our %pinfo = (
                 'order'      => 2.4,
                 'gettext_id' => 'use TLS (formerly SSL)',
                 'format'     => ['starttls', 'ldaps', 'none'],
-                'default'    => 'none',
                 'synonym'    => {'yes' => 'ldaps', 'no' => 'none'},
+                'occurrence' => '1',
+                'default'    => 'none',
             },
             'use_ssl' => {
                 #'order'      => 2.5,
@@ -1625,6 +1877,7 @@ our %pinfo = (
                 'gettext_id' => 'SSL version',
                 'format' => ['sslv2', 'sslv3', 'tlsv1', 'tlsv1_1', 'tlsv1_2'],
                 'synonym' => {'tls' => 'tlsv1'},
+                'occurrence' => '1',
                 'default' => 'tlsv1'
             },
             'ssl_ciphers' => {
@@ -1638,8 +1891,8 @@ our %pinfo = (
                 'gettext_id' => 'Certificate verification',
                 'format'     => ['none', 'optional', 'required'],
                 'synonym'    => {'require' => 'required'},
+                'occurrence' => '1',
                 'default'    => 'required',
-                'occurrence' => '0-1'
             },
             'user' => {
                 'order'      => 3,
@@ -1662,6 +1915,7 @@ our %pinfo = (
                 'order'      => 5,
                 'gettext_id' => "first-level search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout1' => {
@@ -1669,6 +1923,7 @@ our %pinfo = (
                 'gettext_id'   => "first-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter1' => {
@@ -1681,13 +1936,14 @@ our %pinfo = (
             'attrs1' => {
                 'order'      => 8,
                 'gettext_id' => "first-level extracted attribute",
-                'format'     => '\w+',
+                format_s     => '$ldap_attrdesc',
                 'length'     => 15
             },
             'select1' => {
                 'order'      => 9,
                 'gettext_id' => "first-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex1' => {
@@ -1706,6 +1962,7 @@ our %pinfo = (
                 'order'      => 12,
                 'gettext_id' => "second-level search scope",
                 'format'     => ['base', 'one', 'sub'],
+                'occurrence' => '1',
                 'default'    => 'sub'
             },
             'timeout2' => {
@@ -1713,6 +1970,7 @@ our %pinfo = (
                 'gettext_id'   => "second-level connection timeout",
                 'gettext_unit' => 'seconds',
                 'format'       => '\w+',
+                'length'       => 6,
                 'default'      => 30
             },
             'filter2' => {
@@ -1725,7 +1983,7 @@ our %pinfo = (
             'attrs2' => {
                 'order'      => 15,
                 'gettext_id' => "second-level extracted attribute",
-                'format'     => '\w+',
+                format_s     => '$ldap_attrdesc',
                 'default'    => 'mail',
                 'length'     => 15
             },
@@ -1733,6 +1991,7 @@ our %pinfo = (
                 'order'      => 16,
                 'gettext_id' => "second-level selection",
                 'format'     => ['all', 'first', 'regex'],
+                'occurrence' => '1',
                 'default'    => 'first'
             },
             'regex2' => {
@@ -1751,7 +2010,7 @@ our %pinfo = (
             'nosync_time_ranges' => {
                 'order'      => 19,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -1759,6 +2018,7 @@ our %pinfo = (
     },
 
     'include_sql_ca' => {
+        order        => 60.16,
         'group'      => 'data_source',
         'gettext_id' => "SQL query custom attribute",
         'format'     => {
@@ -1777,7 +2037,7 @@ our %pinfo = (
             'host' => {
                 'order'      => 2,
                 'gettext_id' => "remote host",
-                'format'     => Sympa::Regexps::host(),
+                format_s     => '$host',
                 'occurrence' => '1'
             },
             'db_port' => {
@@ -1817,7 +2077,7 @@ our %pinfo = (
             'sql_query' => {
                 'order'      => 8,
                 'gettext_id' => "SQL query",
-                'format'     => Sympa::Regexps::sql_query(),
+                format_s     => '$sql_query',
                 'occurrence' => '1',
                 'length'     => 50
             },
@@ -1836,7 +2096,7 @@ our %pinfo = (
             'nosync_time_ranges' => {
                 'order'      => 11,
                 'gettext_id' => "Time ranges when inclusion is not allowed",
-                'format'     => Sympa::Regexps::time_ranges(),
+                format_s     => '$time_ranges',
                 'occurrence' => '0-1'
             }
         },
@@ -1846,16 +2106,18 @@ our %pinfo = (
     ### DKIM page ###
 
     'dkim_feature' => {
+        order        => 70.01,
         'group'      => 'dkim',
         'gettext_id' => "Insert DKIM signature to messages sent to the list",
         'gettext_comment' =>
-            "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be some custom scenario to be updated",
+            "Enable/Disable DKIM. This feature requires Mail::DKIM to be installed, and maybe some custom scenario to be updated",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default' => {'conf' => 'dkim_feature'}
     },
 
     'dkim_parameters' => {
+        order        => 70.02,
         'group'      => 'dkim',
         'gettext_id' => "DKIM configuration",
         'gettext_comment' =>
@@ -1880,15 +2142,16 @@ our %pinfo = (
                 'default'    => {'conf' => 'dkim_selector'}
             },
             'header_list' => {
-                'order' => 4,
+                'obsolete' => 1,        # Not yet implemented
+                'order'    => 4,
                 'gettext_id' =>
-                    'List of headers to be included ito the message for signature',
+                    'List of headers to be included into the message for signature',
                 'gettext_comment' =>
                     'You should probably use the default value which is the value recommended by RFC4871',
                 'format'     => '\S+',
-                'occurrence' => '0-1',
+                'occurrence' => '1-n',
+                'split_char' => ':',    #FIXME
                 #'default'    => {'conf' => 'dkim_header_list'},
-                'obsolete'   => 1,
             },
             'signer_domain' => {
                 'order' => 5,
@@ -1914,6 +2177,7 @@ our %pinfo = (
     },
 
     'dkim_signature_apply_on' => {
+        order   => 70.03,
         'group' => 'dkim',
         'gettext_id' =>
             "The categories of messages sent to the list that will be signed using DKIM.",
@@ -1930,6 +2194,7 @@ our %pinfo = (
     },
 
     'dmarc_protection' => {
+        order    => 70.04,
         'format' => {
             'mode' => {
                 'format' => [
@@ -1950,14 +2215,14 @@ our %pinfo = (
                 'occurrence' => '0-n',
                 'default'    => {'conf' => 'dmarc_protection_mode'},
                 'gettext_comment' =>
-                    'Select one or more operation modes.  "Domain matching regular expression" (domain_regex) matches the specified Domain regexp; "DKIM signature exists" (dkim_signature) matches any message with a DKIM signature header; "DMARC policy ..." (dmarc_*) matches messages from sender domains with a DMARC policy as given; "all" (all) matches all messages.',
+                    'Select one or more operation modes.  "Domain matching regular expression" (domain_regex) matches the specified Domain regular expression; "DKIM signature exists" (dkim_signature) matches any message with a DKIM signature header; "DMARC policy ..." (dmarc_*) matches messages from sender domains with a DMARC policy as given; "all" (all) matches all messages.',
                 'order' => 1
             },
             'domain_regex' => {
                 'format'          => '.+',
-                'gettext_id'      => "Match domain regexp",
+                'gettext_id'      => "Match domain regular expression",
                 'occurrence'      => '0-1',
-                'gettext_comment' => 'Regexp match pattern for From domain',
+                'gettext_comment' => 'Regular expression match pattern for From domain',
                 'order'           => 2,
                 'default' => {'conf' => 'dmarc_protection_domain_regex'},
             },
@@ -2004,6 +2269,7 @@ our %pinfo = (
     },
 
     'clean_delay_queuemod' => {
+        order          => 90.01,
         'group'        => 'other',
         'gettext_id'   => "Expiration of unmoderated messages",
         'gettext_unit' => 'days',
@@ -2013,14 +2279,19 @@ our %pinfo = (
     },
 
     'cookie' => {
+        order        => 90.02,
         'group'      => 'other',
         'gettext_id' => "Secret string for generating unique keys",
+        'gettext_comment' =>
+            'This parameter is a confidential item for generating authentication keys for administrative commands (ADD, DELETE, etc.). This parameter should remain concealed, even for owners. The cookie is applied to all list owners, and is only taken into account when the owner has the auth parameter.',
         'format'     => '\S+',
+        'field_type' => 'password',
         'length'     => 15,
         'default'    => {'conf' => 'cookie'}
     },
 
     'custom_vars' => {
+        order        => 90.04,
         'group'      => 'other',
         'gettext_id' => "custom parameters",
         'format'     => {
@@ -2041,37 +2312,45 @@ our %pinfo = (
     },
 
     'expire_task' => {
+        order        => 90.05,
         'group'      => 'other',
         'gettext_id' => "Periodical subscription expiration task",
+        'gettext_comment' =>
+            "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.",
         'task'       => 'expire'
     },
 
     'latest_instantiation' => {
+        order        => 99.01,
         'group'      => 'other',
         'gettext_id' => 'Latest family instantiation',
         'format'     => {
             'email' => {
                 'order'      => 1,
                 'gettext_id' => 'who ran the instantiation',
-                'format'     => 'listmaster|' . Sympa::Regexps::email(),
+                format_s     => 'listmaster|$email',
                 'occurrence' => '0-1'
             },
             'date' => {
-                'order'      => 2,
+                #'order'      => 2,
+                'obsolete'   => 1,
                 'gettext_id' => 'date',
                 'format'     => '.+'
             },
             'date_epoch' => {
                 'order'      => 3,
-                'gettext_id' => 'epoch date',
+                'gettext_id' => 'date',
                 'format'     => '\d+',
-                'occurrence' => '1'
+                'field_type' => 'unixtime',
+                'occurrence' => '1',
+                'length'     => 10,
             }
         },
         'internal' => 1
     },
 
     'loop_prevention_regex' => {
+        order   => 90.06,
         'group' => 'other',
         'gettext_id' =>
             "Regular expression applied to prevent loops with robots",
@@ -2081,47 +2360,59 @@ our %pinfo = (
     },
 
     'pictures_feature' => {
+        order   => 90.07,
         'group' => 'other',
         'gettext_id' =>
             "Allow picture display? (must be enabled for the current robot)",
         'format'     => ['on', 'off'],
-        'occurrence' => '0-1',
+        'occurrence' => '1',
         'default' => {'conf' => 'pictures_feature'}
     },
 
     'remind_task' => {
+        order        => 90.08,
         'group'      => 'other',
         'gettext_id' => 'Periodical subscription reminder task',
+        'gettext_comment' =>
+            'This parameter states which model is used to create a remind task. A remind task regularly sends  subscribers a message which reminds them of their list subscriptions.',
         'task'       => 'remind',
         'default'    => {'conf' => 'default_remind_task'}
     },
 
     'spam_protection' => {
+        order        => 90.09,
         'group'      => 'other',
         'gettext_id' => "email address protection method",
+        'gettext_comment' =>
+            "There is a need to protect Sympa web sites against spambots which collect email addresses from public web sites. Various methods are available in Sympa and you can choose to use them with the spam_protection and web_archive_spam_protection parameters. Possible value are:\njavascript: \nthe address is hidden using a javascript. A user who enables javascript can see a nice mailto address where others have nothing.\nat: \nthe \@ char is replaced by the string \" AT \".\nnone: \nno protection against spammer.",
         'format'     => ['at', 'javascript', 'none'],
+        'occurrence' => '1',
         'default'    => 'javascript'
     },
 
     'creation' => {
+        order        => 99.02,
         'group'      => 'other',
         'gettext_id' => "Creation of the list",
         'format'     => {
             'date_epoch' => {
                 'order'      => 3,
-                'gettext_id' => "epoch date",
+                'gettext_id' => "date",
                 'format'     => '\d+',
-                'occurrence' => '1'
+                'field_type' => 'unixtime',
+                'occurrence' => '1',
+                'length'     => 10,
             },
             'date' => {
-                'order'      => 2,
+                #'order'      => 2,
+                'obsolete'   => 1,
                 'gettext_id' => "human readable",
                 'format'     => '.+'
             },
             'email' => {
                 'order'      => 1,
                 'gettext_id' => "who created the list",
-                'format'     => 'listmaster|' . Sympa::Regexps::email(),
+                format_s     => 'listmaster|$email',
                 'occurrence' => '1'
             }
         },
@@ -2130,44 +2421,49 @@ our %pinfo = (
     },
 
     'update' => {
+        order        => 99.03,
         'group'      => 'other',
         'gettext_id' => "Last update of config",
         'format'     => {
             'email' => {
                 'order'      => 1,
                 'gettext_id' => 'who updated the config',
-                'format'     => '(listmaster|automatic|'
-                    . Sympa::Regexps::email() . ')',
+                format_s     => '(listmaster|automatic|$email)',
                 'occurrence' => '0-1',
                 'length'     => 30
             },
             'date' => {
-                'order'      => 2,
+                #'order'      => 2,
+                'obsolete'   => 1,
                 'gettext_id' => 'date',
                 'format'     => '.+',
                 'length'     => 30
             },
             'date_epoch' => {
                 'order'      => 3,
-                'gettext_id' => 'epoch date',
+                'gettext_id' => 'date',
                 'format'     => '\d+',
+                'field_type' => 'unixtime',
                 'occurrence' => '1',
-                'length'     => 8
+                'length'     => 10,
             }
         },
         'internal' => 1,
     },
 
     'status' => {
+        order        => 99.04,
         'group'      => 'other',
         'gettext_id' => "Status of the list",
         'format' =>
             ['open', 'closed', 'pending', 'error_config', 'family_closed'],
+        'field_type' => 'status',
         'default'  => 'open',
         'internal' => 1
     },
 
     'serial' => {
+        order        => 99.05,
         'group'      => 'other',
         'gettext_id' => "Serial number of the config",
         'format'     => '\d+',
@@ -2177,6 +2473,7 @@ our %pinfo = (
     },
 
     'custom_attribute' => {
+        order        => 90.03,
         'group'      => 'other',
         'gettext_id' => "Custom user attributes",
         'format'     => {
@@ -2216,7 +2513,9 @@ our %pinfo = (
             'optional' => {
                 'order'      => 6,
                 'gettext_id' => "is the attribute optional?",
-                'format'     => ['required', 'optional']
+                'format'     => ['required', 'optional'],
+                'default'    => 'optional',
+                'occurrence' => 1
             }
         },
         'occurrence' => '0-n'
@@ -2227,18 +2526,6 @@ _apply_defaults();
 
 ## Apply defaults to parameters definition (%pinfo)
 sub _apply_defaults {
-    return if exists $default{'order'};    # already loaded
-
-    ## Parameter order
-    foreach my $index (0 .. $#param_order) {
-        if ($param_order[$index] eq '*') {
-            $default{'order'} = $index;
-        } else {
-            $pinfo{$param_order[$index]}{'order'} = $index;
-        }
-    }
-
-    ## Parameters
     foreach my $p (keys %pinfo) {
         cleanup($p, $pinfo{$p});
     }
@@ -2255,19 +2542,23 @@ sub cleanup {
         }
     }
 
-    ## Scenario format
-    if ($v->{'scenario'}) {
+    if (exists $v->{format_s}) {
+        my $format = $v->{format_s};
+        if ($format =~ /\A\$(\w+)\z/) {
+            $format = Sympa::Regexps->can($1)->();
+        } else {
+            $format =~ s/\$(\w+)/Sympa::Regexps->can($1)->()/eg;
+        }
+        $v->{format} = $format;
+    } elsif ($v->{'scenario'}) {
+        # Scenario format
         $v->{'format'}  = Sympa::Regexps::scenario();
         $v->{'default'} = 'default';
-    }
-
-    ## Task format
-    if ($v->{'task'}) {
+    } elsif ($v->{'task'}) {
+        # Task format
         $v->{'format'} = Sympa::Regexps::task();
-    }
-
-    ## Datasource format
-    if ($v->{'datasource'}) {
+    } elsif ($v->{'datasource'}) {
+        # Datasource format
         $v->{'format'} = Sympa::Regexps::datasource();
     }
 
@@ -2299,25 +2590,28 @@ sub cleanup {
             }
         }
 
-        ## Scenario format
-        if (ref($v->{'format'}{$k})
-            && $v->{'format'}{$k}{'scenario'}) {
-            $v->{'format'}{$k}{'format'}  = Sympa::Regexps::scenario();
-            $v->{'format'}{$k}{'default'} = 'default'
-                unless ($p eq 'web_archive' and $k eq 'access')
-                or ($p eq 'archive' and $k eq 'web_access');
-        }
-
-        ## Task format
-        if (ref($v->{'format'}{$k})
-            && $v->{'format'}{$k}{'task'}) {
-            $v->{'format'}{$k}{'format'} = Sympa::Regexps::task();
-        }
-
-        ## Datasource format
-        if (ref($v->{'format'}{$k})
-            && $v->{'format'}{$k}{'datasource'}) {
-            $v->{'format'}{$k}{'format'} = Sympa::Regexps::datasource();
+        if (ref $v->{'format'}{$k}) {
+            if (exists $v->{'format'}{$k}{format_s}) {
+                my $format = $v->{'format'}{$k}{format_s};
+                if ($format =~ /\A\$(\w+)\z/) {
+                    $format = Sympa::Regexps->can($1)->();
+                } else {
+                    $format =~ s/\$(\w+)/Sympa::Regexps->can($1)->()/eg;
+                }
+                $v->{'format'}{$k}{format} = $format;
+            } elsif ($v->{'format'}{$k}{'scenario'}) {
+                # Scenario format
+                $v->{'format'}{$k}{'format'}  = Sympa::Regexps::scenario();
+                $v->{'format'}{$k}{'default'} = 'default'
+                    unless ($p eq 'web_archive' and $k eq 'access')
+                    or ($p eq 'archive' and $k eq 'web_access');
+            } elsif ($v->{'format'}{$k}{'task'}) {
+                # Task format
+                $v->{'format'}{$k}{'format'} = Sympa::Regexps::task();
+            } elsif ($v->{'format'}{$k}{'datasource'}) {
+                # Datasource format
+                $v->{'format'}{$k}{'format'} = Sympa::Regexps::datasource();
+            }
         }
 
         ## Enumeration
@@ -2327,6 +2621,9 @@ sub cleanup {
                 keys %{$v->{'format'}{$k}{synonym} || {}};
         }
 
+        next if $v->{format}{$k}{'obsolete'};
+
+        #FIXME
         if (($v->{'file_format'}{$k}{'occurrence'} =~ /n$/)
             && $v->{'file_format'}{$k}{'split_char'}) {
             my $format = $v->{'file_format'}{$k}{'file_format'};
@@ -2379,11 +2676,23 @@ List parameters format accepts the following keywords :
 
 =item format
 
-Regexp aplied to the configuration file entry;
-some common regexps are defined in L<Sympa::Regexps>.
+Regexp applied to the configuration file entry.
+Or arrayref containing all possible values of parameter.
 
-If the parameter is paragraph, value of this item is a hashref containing
+Or, if the parameter is paragraph, value of this item is a hashref containing
 definitions of sub-parameters.
+
+See also L<Sympa::List::Config/"Node types">.
+
+=item format_s
+
+Template of regexp applied to the configuration file entry;
+see also L</format>.
+
+Subpatterns C<$word> indicate the name of pattern defined in
+L<Sympa::Regexps>.
+
+This was introduced on Sympa 6.2.19b.2.
 
 =item file_format
 
@@ -2393,6 +2702,7 @@ the same in memory.
 =item split_char
 
 Character used to separate multiple parameters.
+Used with the set or the array of scalars.
 
 =item length
 
@@ -2406,6 +2716,10 @@ Tells that the parameter is a scenario, providing its name.
 
 Default value for the param ; may be a robot configuration
 parameter (conf).
+
+If occurrence is C<0-1> or C<0-n>,
+default value will be assigned
+only when list is created or new node is added to configuration.
 
 =item synonym
 
@@ -2424,13 +2738,15 @@ Occurrence of the parameter in the config file
 possible values: C<0-1>, C<1>, C<0-n> and C<1-n>.
 Example: A list may have multiple owner.
 
+See also L<Sympa::List::Config/"Node types">.
+
 =item gettext_id
 
 Title reference in NLS catalogs.
 
 =item gettext_comment
 
-Deescription text of a parameter.
+Description text of a parameter.
 
 =item group
 
@@ -2445,6 +2761,8 @@ As of 6.2.16, if the value is true value and is not C<1>,
 defines parameter alias name mainly for backward compatibility.
 
 =item obsolete_values
+
+B<Deprecated>.
 
 Defined obsolete values for a parameter.
 These values should not get proposed on the web interface
@@ -2461,7 +2779,72 @@ that should always be saved in the config file.
 
 =item field_type
 
-Used to select passwords web input type.
+Used to special treatment of parameter value to show it.
+
+=over
+
+=item C<'dayofweek'>
+
+Day of week, C<0> - C<6>.
+
+=item C<'lang'>
+
+Language tag.
+
+=item C<'password'>
+
+The value to be concealed.
+
+=item C<'reception'>
+
+Reception mode of list member.
+
+=item C<'status'>
+
+Status of list.
+
+=item C<'listtopic'>
+
+List topic.
+
+=item C<'unixtime'>
+
+The time in second from Unix epoch.
+
+=item C<'visibility'>
+
+Visibility mode of list member.
+
+=back
+
+Most of field types were introduced on Sympa 6.2.17.
+
+=item filters
+
+See L<Sympa::List::Config/"Filters">.
+
+Introduced on Sympa 6.2.17.
+
+=item validations
+
+See L<Sympa::List::Config/"Validations">.
+
+Introduced on Sympa 6.2.17.
+
+=item privilege
+
+I<Dynamically assigned>.
+Privilege for specified user:
+C<'write'>, C<'read'> or C<'hidden'>.
+
+Introduced on Sympa 6.2.17.
+
+=item enum
+
+I<Automatically assigned>.
+TBD.
+
+Introduced on Sympa 6.2.17.
 
 =back
 
@@ -2469,7 +2852,9 @@ Used to select passwords web input type.
 
 =head1 SEE ALSO
 
-L<config(5)>.
+L<list_config(5)>,
+L<Sympa::List::Config>,
+L<Sympa::ListOpt>.
 
 =head1 HISTORY
 

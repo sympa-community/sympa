@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -50,7 +53,10 @@ use constant multiple_host_with_port =>
 use constant multiple_host_or_url =>
     qr'([-\w]+://.+|[-.\w]+(:\d+)?)(,([-\w]+://.+|[-.\w]+(:\d+)?))*';
 use constant listname    => qr'[a-z0-9][a-z0-9\-\.\+_]*';
-use constant sql_query   => qr'(SELECT|select).*';
+
+use constant ldap_attrdesc => qr'\w[-\w]*(?:;[-\w]+)*'; # RFC2251, 4.1.5
+use constant sql_query     => qr'(SELECT|select).*';
+
 use constant scenario    => qr'[\w,\.\-]+';
 use constant task        => qr'\w+';
 use constant datasource  => qr'[\w-]+';

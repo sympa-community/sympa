@@ -1,4 +1,4 @@
-[%# $Id$ ~%]
+[%# send_auth.tt2 ~%]
 Reply-to: [% conf.email %]@[% conf.host %]
 [% IF request_topic -%]Subject: [% FILTER qencode %][%|loc(list.name)%]Tag your message for list %1[%END%][%END%]
 [% ELSE -%]Subject: [% FILTER qencode %]Confirm [% authkey %][%END%]
@@ -11,7 +11,7 @@ Content-Disposition: inline
 [% IF request_topic -%][%|loc(list.name)%]List %1 allows you to tag your messages, using a set of defined topics. To tag the attached message go to the following page:[%END%]
 
 [% 'request_topic' | url_abs([list.name,authkey]) %]
-[%- ELSE -%][%|loc(list.name)%]To distribute the attached message in list %1, follow the link below:[%END%]
+[%- ELSE -%][%|loc(list.name)%]To distribute the attached message in list %1, click on the URL:[%END%]
 
 [% | mailtourl({subject => "CONFIRM ${authkey}"}) ~%]
   [% conf.email %]@[% conf.host %]

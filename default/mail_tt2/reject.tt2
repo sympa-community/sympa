@@ -1,9 +1,8 @@
-[%# $Id$ ~%]
+[%# reject.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc%]Your message has been rejected.[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Your message has been rejected[%END%][%END%]
 
-[%|loc(list.name,list.host,rejected_by)%]Your message for list %1@%2
-has been rejected by the moderator (%3).[%END%]
+[%|loc(list.name,list.host,rejected_by)%]Your message for list %1@%2 has been rejected by the moderator (%3).[%END%]
 
 [%|loc(subject)%](Subject of your mail: %1)[%END%]
 

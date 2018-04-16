@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- compose_mail.tt2 -->
 [% IF !subaction %]
 	<h2>[%|loc%]Sending a message to the list[%END%] <a  href="[% 'nomenu/help/sendmsg' | url_rel %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 [% END %]
@@ -19,7 +19,7 @@
 		<input type="hidden" name="html_news_letter" value="[% subaction %]" />
 	[% END %]
 	<input type="hidden" name="action" value="send_mail"/>
-		<input class="MainMenuLinks" type="submit" name="sub_action_sendmailtolist" value="[%|loc%]Send to selected receipient[%END%]" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
+		<input class="MainMenuLinks" type="submit" name="sub_action_sendmailtolist" value="[%|loc%]Send to list[%END%]" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
 		<input class="MainMenuLinks" type="submit" name="sub_action_sendmailtome" value="[%|loc%]Send to me[%END%]" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
 	<br />
 
@@ -62,7 +62,7 @@
 		<b>[%|loc%]Messages customization: use the template syntax:[%END%] <a href="http://www.tt2.org">TT2</a></b><br />
 		[%|loc%]Below are some examples of TT2 parameters usable in messages.[%END%]<br/>
 		<ul>
-			<li> <b>[&#37; listname &#37;]</b>[%|loc%]: the listname; always available.[%END%]</li>
+			<li> <b>[&#37; listname &#37;]</b>[%|loc%]: the list name; always available.[%END%]</li>
 			<li> <b>[&#37; robot &#37;]</b>[%|loc%]: the name of the host the list is intalled on; always available.[%END%]</li>
 			<li> <b>[&#37; user.email &#37;]</b>[%|loc%]: the user email; always available.[%END%]</li>
 			<li> <b>[&#37; user.gecos &#37;]</b>[%|loc%]: the user name associated to her email; always available.[%END%]</li>

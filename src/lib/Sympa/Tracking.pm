@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -467,6 +470,28 @@ sub find_notification_id_by_message {
     return $pk_notifications[0];
 }
 
+sub remove_message_by_email {
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $self  = shift;
+    my $email = shift;
+
+    $email = Sympa::Tools::Text::canonic_email($email);
+    return undef unless $email;
+
+    my $bounce_dir    = $self->{directory};
+    my $escaped_email = Sympa::Tools::Text::escape_chars($email);
+    my $ret = unlink sprintf('%s/%s', $bounce_dir, $escaped_email);
+
+    # Remove HTML view.
+    Sympa::Tools::File::remove_dir(
+        join('/',
+            $Conf::Conf{'viewmail_dir'}, 'bounce',
+            $self->{context}->get_id,    $escaped_email)
+    );
+
+    return $ret;
+}
+
 ##############################################
 #   remove_message_by_id
 ##############################################
@@ -741,6 +766,11 @@ True value if storing succeed.  Otherwise false.
 =item find_notification_id_by_message
 
 TBD.
+
+=item remove_message_by_email
+
+TBD.
+Introduced on Sympa 6.2.19b.
 
 =item remove_message_by_id
 

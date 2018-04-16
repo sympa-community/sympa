@@ -9,6 +9,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
+# top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +45,6 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Process;
 use Sympa::Scenario;
-use Sympa::Session;
 use Sympa::Spool;
 use Sympa::Task;
 use Sympa::Ticket;
@@ -250,10 +252,7 @@ foreach (keys %asgn_commands) {
 while (!$end) {
     my $current_date = time;    # current epoch date
 
-    ## Empty cache of the List.pm module
-    Sympa::List::init_list_cache();
-
-    # Process grouped notifications
+    # Process grouped notifications.
     Sympa::Alarm->instance->flush;
 
     ## List all tasks
@@ -400,9 +399,6 @@ while (!$end) {
     }
 
     sleep 60;
-
-    ## Free zombie sendmail processes
-    #Sympa::Process->instance->reap_child;
 }
 
 # Purge grouped notifications
@@ -438,13 +434,8 @@ sub create {
         $task_file = "$spool_task/$date.$label.$model.$list_name\@$robot";
         $object    = 'list';
     } else {
-        $object = '_global';
-        $task_file =
-              $spool_task . '/'
-            . $date . '.'
-            . $label . '.'
-            . $model . '.'
-            . $object;
+        $object    = '_global';
+        $task_file = "$spool_task/$date.$label.$model.$object";
     }
 
     ## model recovery
@@ -1298,16 +1289,87 @@ sub _db_log_del {
     return 1;
 }
 
-## remove sessions from session_table if older than $Conf::Conf{'session_table_ttl'}
+# Remove sessions from session_table if older than session_table_ttl or
+# anonymous_session_table_ttl.
+# Old name: Sympa::Session::purge_old_sessions().
 sub purge_session_table {
+    $log->syslog('info', '()');
 
-    $log->syslog('info', '');
-    my $removed = Sympa::Session::purge_old_sessions('*');
-    unless (defined $removed) {
-        $log->syslog('err', 'Failed to remove old sessions');
+    my $delay =
+        Sympa::Tools::Time::duration_conv($Conf::Conf{'session_table_ttl'});
+    my $anonymous_delay = Sympa::Tools::Time::duration_conv(
+        $Conf::Conf{'anonymous_session_table_ttl'});
+
+    unless ($delay) {
+        $log->syslog('info', 'Exit with delay null');
         return undef;
     }
-    $log->syslog('notice', '%s row removed in session_table', $removed);
+    unless ($anonymous_delay) {
+        $log->syslog('info', 'Exit with anonymous delay null');
+        return undef;
+    }
+
+    my @sessions;
+    my $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
+    unless ($sdm) {
+        $log->syslog('err', 'Unavailable database connection');
+        return undef;
+    }
+
+    my (@conditions, @anonymous_conditions);
+    push @conditions, sprintf('%d > date_session', time - $delay) if $delay;
+    push @anonymous_conditions,
+        sprintf('%d > date_session', time - $anonymous_delay)
+        if $anonymous_delay;
+
+    my $condition           = join ' AND ', @conditions;
+    my $anonymous_condition = join ' AND ', @anonymous_conditions,
+        "email_session = 'nobody'", 'hit_session = 1';
+
+    my $count_statement =
+        sprintf q{SELECT COUNT(*) FROM session_table WHERE %s}, $condition;
+    my $anonymous_count_statement =
+        sprintf q{SELECT COUNT(*) FROM session_table WHERE %s},
+        $anonymous_condition;
+
+    my $statement = sprintf q{DELETE FROM session_table WHERE %s}, $condition;
+    my $anonymous_statement = sprintf q{DELETE FROM session_table WHERE %s},
+        $anonymous_condition;
+
+    unless ($sth = $sdm->do_query($count_statement)) {
+        $log->syslog('err', 'Unable to count old session');
+        return undef;
+    }
+
+    my $total = $sth->fetchrow;
+    if ($total == 0) {
+        $log->syslog('debug', 'No sessions to expire');
+    } else {
+        unless ($sth = $sdm->do_query($statement)) {
+            $log->syslog('err', 'Unable to purge old sessions');
+            return undef;
+        }
+    }
+    unless ($sth = $sdm->do_query($anonymous_count_statement)) {
+        $log->syslog('err', 'Unable to count anonymous sessions');
+        return undef;
+    }
+    my $anonymous_total = $sth->fetchrow;
+    if ($anonymous_total == 0) {
+        $log->syslog('debug', 'No anonymous sessions to expire');
+    } else {
+        unless ($sth = $sdm->do_query($anonymous_statement)) {
+            $log->syslog('err', 'Unable to purge anonymous sessions');
+            return undef;
+        }
+    }
+
+    $log->syslog(
+        'notice',
+        '%s row removed in session_table',
+        $total + $anonymous_total
+    );
     return 1;
 }
 
@@ -2063,22 +2125,18 @@ sub sync_include {
 
     my $list = $task->{'list_object'};
 
-    $list->sync_include();
-    $list->sync_include_admin()
-        if (
-        (   defined $list->{'admin'}{'editor_include'}
-            && $#{$list->{'admin'}{'editor_include'}} > -1
-        )
-        || (defined $list->{'admin'}{'owner_include'}
-            && $#{$list->{'admin'}{'owner_include'}} > -1)
-        );
+    $list->sync_include;
+    $list->sync_include_admin
+        if @{$list->{'admin'}{'editor_include'} || []}
+            or @{$list->{'admin'}{'owner_include'} || []};
 
-    if (!$list->has_include_data_sources()
-        && (!$list->{'last_sync'}
-            || ($list->{'last_sync'} > (stat("$list->{'dir'}/config"))[9]))
+    if (not $list->has_include_data_sources
+        and (not -e $list->{'dir'} . '/.last_sync.member'
+            or [stat $list->{'dir'} . '/.last_sync.member']->[9] >
+            [stat $list->{'dir'} . '/config']->[9])
         ) {
         $log->syslog('debug', 'List %s no more require sync_include task',
-            $list->{'name'});
+            $list);
         return -1;
     }
 }
@@ -2093,7 +2151,7 @@ task_manager, task_manager.pl - Daemon to Process Periodical Sympa Tasks
 
 =head1 SYNOPSIS
 
-S<B<task_manager.pl> [ B<--foreground> ] [ B<--debug> ]>
+C<task_manager.pl> S<[ C<--foreground> ]> S<[ C<--debug> ]>
 
 =head1 DESCRIPTION
 
@@ -2103,24 +2161,24 @@ XXX @todo doc
 
 =over 4
 
-=item B<-d>, B<--debug>
+=item C<-d>, C<--debug>
 
 Sets the debug mode
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force task_manager to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-F>, B<--foreground>
+=item C<-F>, C<--foreground>
 
 Prevents the script from being daemonized
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Prints this help message.
 
-=item B<--log_level=>I<level>
+=item C<--log_level=>I<level>
 
 Set log level.
 
@@ -2128,18 +2186,18 @@ Set log level.
 
 =head1 FILES
 
-F<--spooldir--/task/> directory for task spool.
+F<$SPOOLDIR/task/> directory for task spool.
 
-F<--piddir--/task_manager.pid> this file contains the process ID
+F<$PIDDIR/task_manager.pid> this file contains the process ID
 of F<task_manager.pl>.
 
 =head1 MORE DOCUMENTATION
 
-The full documentation in HTML and PDF formats can be
-found in L<http://www.sympa.org/manual/>.
+The full documentation in HTML format can be
+found in L<https://sympa-community.github.io/manual/>.
 
 The mailing lists (with web archives) can be accessed at
-L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+L<https://listes.renater.fr/sympa/lists/informatique/sympa>.
 
 =head1 BUGS
 

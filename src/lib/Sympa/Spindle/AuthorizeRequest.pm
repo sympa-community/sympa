@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +45,8 @@ sub _twist {
     my $request = shift;
 
     # Skip authorization unless specific scenario is defined.
-    if ($request->{error} or not $request->handler->action_scenario) {
+    if ($request->{error} or not $request->handler->action_scenario
+        or ($self->{scenario_context} and $self->{scenario_context}{skip})) {
         return ['Sympa::Spindle::DispatchRequest'];
     }
 
@@ -119,13 +123,20 @@ sub _twist {
         $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);    # Overwrite.
         $request->{notify} = ($action =~ /,\s*notify\b/i);
         return ['Sympa::Spindle::DispatchRequest'];
-    } elsif ($action =~ /\Arequest_auth\b(?:\s*[[]\s*(\S+)\s*[]])?/i) {
+    } elsif ($action =~ /\Alistmaster\b/i) {
+        # Special case for move_list and create_list.
+        $request->{pending} = 'pending';
+        $request->{notify} = ($action =~ /,\s*notify\b/i);
+        return ['Sympa::Spindle::DispatchRequest'];
+    } elsif (
+        $action =~ /\Arequest_auth\b(?:\s*[(]\s*[[]\s*(\S+)\s*[]]\s*[)])?/i) {
         my $to = $1;
         if ($to and $to eq 'email') {
             $request->{sender_to_confirm} = $request->{email};
         }
         return ['Sympa::Spindle::ToAuth'];
     } elsif ($action =~ /\Aowner\b/i and ref $that eq 'Sympa::List') {
+        # Special case for subscribe and signoff.
         $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);
         return ['Sympa::Spindle::ToAuthOwner'];
     } elsif ($action =~ /\Areject\b/i) {
@@ -196,7 +207,7 @@ See also L<Sympa::Spindle/"Public methods">.
 =item new ( key =E<gt> value, ... )
 
 In most cases, L<Sympa::Spindle::ProcessMessage>
-splices meessages to this class.  This method is not used in ordinal case.
+splices messages to this class.  This method is not used in ordinal case.
 
 =item spin ( )
 

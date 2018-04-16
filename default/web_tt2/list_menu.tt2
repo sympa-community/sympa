@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- list_menu.tt2 -->
 
 [%# Note: When is_listmaster is set, is_privileged_owner is also set. %]
 [%~ SET owner_item = owner.item(user.email) %]
@@ -106,13 +106,13 @@
     [% END %]
 [% ELSE %]
   [% IF may_subscribe %]
-    [% IF action == 'subrequest' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+    [% IF action == 'subscribe' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a href="[% 'subscribe' | url_rel([list],{previous_action=>action}) %]">[%|loc%]Subscribe[%END%]</a></li>
   [% END %]
 
   [% IF ! user.email %]
     [% IF action == 'signoff' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-    <li class="[% class %]"><a href="[% 'sigrequest' | url_rel([list]) %]">[%|loc%]Unsubscribe[%END%]</a></li>
+    <li class="[% class %]"><a href="[% 'signoff' | url_rel([list]) %]">[%|loc%]Unsubscribe[%END%]</a></li>
   [% END %]
 
 [% END %]

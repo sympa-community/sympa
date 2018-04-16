@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- pref.tt2 -->
 <div class="block">
 <h2><i class="fa fa-user"></i> [%|loc%]User preferences[%END%] <a href="[% 'nomenu/help/user' | url_rel %]#global_pref" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
@@ -10,7 +10,9 @@
   <div>
   <select id="lang" name="lang" class="neutral">
     [% FOREACH l = languages %]
-      <option value="[% l.key %]" lang="[% l.key %]" xml:lang="[% l.key %]" [% l.value.selected %]>[% l.value.complete %]</option>
+      <option value="[% l.key %]" lang="[% l.key %]" xml:lang="[% l.key %]"
+       [%~ IF l.value.selected %] selected="selected"[% END %]>
+      [%~ l.key | optdesc('lang') %]</option>
     [% END %]
   </select>
   </div>
@@ -18,7 +20,9 @@
   <div>
   <select name="cookie_delay" id="cookie_delay">
     [% FOREACH period = cookie_periods %]
-      <option value="[% period.value %]" [% period.selected %]>[% period.desc %]</option>
+      <option value="[% period.value %]"
+       [%~ IF period.selected %] selected="selected"[% END %]>
+      [%~ period.desc %]</option>
     [% END %]
   </select>
   </div>
@@ -32,11 +36,16 @@
 
 <h3>[%|loc%]Changing your email address[%END%]</h3>
 
-<p>[%|loc%]You can update your email address for all your list memberships at once. If you are also list owner or list moderator your email address for these roles will also be updated.[%END%]</p>
+<p>[%|loc%]You can update your email address for all your list memberships at once. Any list owner or list moderator email addresses will also be updated.[%END%]</p>
 <form action="[% path_cgi %]" method="post">
 <fieldset>
-<label for="new_email">[%|loc%]New email address:[%END%]  </label><input id="new_email" name="new_email" size="25" />
-<input class="MainMenuLinks" type="submit" name="action_change_email_request" value="[%|loc%]Change Email[%END%]" />
+<div>
+  <label for="new_email">[%|loc%]New email address:[%END%] </label>
+  <input id="new_email" name="email" size="25" />
+</div>
+<input type="hidden" name="current_email" value="[% user.email %]" />
+<input class="MainMenuLinks" type="submit" name="action_move_user"
+ value="[%|loc%]Change Email[%END%]" />
 </fieldset>
 </form>
 <br /> 

@@ -1,13 +1,13 @@
-<!-- $Id$ -->
+<!-- subindex.tt2 -->
 
-<h2>[%|loc%]Listing subscription to moderate[%END%]</h2>
+<h2>[%|loc%]List of subscriptions to moderate[%END%]</h2>
 [% IF mod_subscription %]
 <form class="noborder toggleContainer" data-toggle-selector="input[name='id']"
   action="[% path_cgi %]" method="POST" name="myform"> 
 <fieldset>
 <input type="hidden" name="list" value="[% list %]" />
     <table  class="responsive listOfItems">
-    <caption>[%|loc%]Listing subscription to moderate[%END%]</caption>
+    <caption>[%|loc%]List of subscriptions to moderate[%END%]</caption>
       <tr>
         <th><a href="#"
           data-tooltip aria-haspopup="true"
@@ -61,8 +61,14 @@
 <input type="hidden" name="previous_list" value="[% list %]" />
 <input class="MainMenuLinks toggleButton" type="button"
   value="[%|loc%]Toggle Selection[%END%]" />
-<input class="MainMenuLinks" type="submit" name="action_add_fromsub" value="[%|loc%]Add selected addresses[%END%]" />
-<input class="MainMenuLinks" type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />
+  [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
+      'off', add cannot be performed. ~%]
+  [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
+    <input class="MainMenuLinks" type="submit" name="action_auth_add"
+     value="[%|loc%]Add selected addresses[%END%]" />
+  [%~ END %]
+  <input class="MainMenuLinks" type="submit" name="action_decl_add"
+   value="[%|loc%]Reject selected addresses[%END%]" />
 </fieldset>
 </form>
 [% ELSE %]

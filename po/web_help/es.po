@@ -1,21 +1,16 @@
-# #-#-#-#-#  blank_web_help_es.po (sympa)  #-#-#-#-#
 # Sympa online help internationalisation.
 # Copyright (C) 2007
 # This file is distributed under the same license as Sympa.
 # FIRST AUTHOR <david.verdin@cru.fr>, 2007.
 #
-# #-#-#-#-#  tmp_web_help_es.po (PACKAGE VERSION)  #-#-#-#-#
-# #-#-#-#-#  es.po (PACKAGE VERSION)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL>, YEAR.
 #
-# #-#-#-#-#  es.po (PACKAGE VERSION)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL>, YEAR.
 #
-# #-#-#-#-#  es.po (PACKAGE VERSION)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -35,6 +30,60 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.7\n"
 "X-POOTLE-MTIME: 1452873911.000000\n"
+
+#: default/web_tt2/help.tt2:11
+msgid "Subscriber, moderator and owner documentation"
+msgstr "Documentación para el suscriptor, moderador y administrador"
+
+#: default/web_tt2/help.tt2:13
+msgid "In this documentation, you will find:"
+msgstr "En esta documentación encontrarás:"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:15
+msgid ""
+"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
+msgstr ""
+"una <a href=\"%1/help/introduction\">introducción general</a> a las listas "
+"de correo;"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:16
+msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr ""
+"una <a href=\"%1/help/user\">guía de usuario</a> acerca del uso de Sympa;"
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:17
+msgid ""
+"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
+msgstr ""
+"una <a href=\"%1/help/admin\">guía de administrador</a> sobre el uso de "
+"Sympa."
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
+msgid ""
+"If you want to perform a particular task, take a look at the list of all <a "
+"href=\"%1/help/introduction#features\">available features</a> in the mailing "
+"list management software Sympa."
+msgstr ""
+"Si deseas realizar una tarea determinada, revisa la lista de <a href=\"%1/"
+"help/introduction#features\">funciones disponibles</a> en el software de "
+"administración de listas de correo Sympa."
+
+#. (path_cgi)
+#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
+msgid ""
+"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
+"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
+"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
+"\"Frequently asked questions\">FAQ</acronym></a>."
+msgstr ""
+"Si experimentas cualquier problema, por favor, revisa la <a href=\"%1/help/"
+"faquser\"><acronym title=\"Preguntas Frecuentemente Formuladas\">FAQ</"
+"acronym> del usuario</a> o la <a href=\"%1/help/faqadmin\"><acronym title="
+"\"Preguntas Frecuentemente Formuladas\">FAQ</acronym> del administrador</a>."
 
 #: default/web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
@@ -309,9 +358,11 @@ msgstr ""
 "con la que solicitaste la creación de la lista."
 
 #: default/web_tt2/help_admin.tt2:53
-msgid "Go to the information page of the list</strong> you want to manage."
+msgid ""
+"<strong>Go to the information page of the list</strong> you want to manage."
 msgstr ""
-"Ve a la página de información de la lista</strong> que quieres gestionar."
+"<strong>Ve a la página de información de la lista</strong> que quieres "
+"gestionar."
 
 #: default/web_tt2/help_admin.tt2:54
 msgid "In the left menu, <strong>click on the 'Admin' link</strong>."
@@ -610,10 +661,10 @@ msgstr ""
 "Para permitir que los suscriptores publiquen documentos en el espacio web "
 "compartido, necesitas <strong>cambiar los permisos por defecto</strong>: en "
 "el módulo de administración de la lista, pincha en '<strong>Editar "
-"configuración de la lista</strong>' y luego en '<Privilegios</strong>'. Al "
-"principio de la página, existe un desplegable titulado '<a href=\"%1/help/"
-"listconfig#docsrights\"><strong>Quién puede editar</strong></a>'; elige la "
-"opción '<strong>Restringido a suscriptores</strong>'"
+"configuración de la lista</strong>' y luego en '<strong>Privilegios</"
+"strong>'. Al principio de la página, existe un desplegable titulado '<a href="
+"\"%1/help/listconfig#docsrights\"><strong>Quién puede editar</strong></a>'; "
+"elige la opción '<strong>Restringido a suscriptores</strong>'."
 
 #. (path_cgi)
 #: default/web_tt2/help_admin.tt2:111
@@ -683,7 +734,7 @@ msgstr ""
 
 #: default/web_tt2/help_admin.tt2:121
 msgid "<strong>email address</strong>;"
-msgstr "<strong>dirección de correo</strong;"
+msgstr "<strong>dirección de correo</strong>;"
 
 #: default/web_tt2/help_admin.tt2:122
 msgid ""
@@ -698,7 +749,7 @@ msgstr ""
 #: default/web_tt2/help_admin.tt2:123
 msgid "<strong>picture</strong> (if that feature was activated for the list);"
 msgstr ""
-"<stronG>foto</strong> (en caso de haberse activado esta funcionalidad para "
+"<strong>foto</strong> (en caso de haberse activado esta funcionalidad para "
 "la lista);"
 
 #: default/web_tt2/help_admin.tt2:124
@@ -1286,11 +1337,11 @@ msgstr ""
 
 #: default/web_tt2/help_admin.tt2:216
 msgid ""
-"Be careful: when you rename a list, you have to let the listmasters know; "
-"otherwise, the change will not be effective</strong>."
+"<strong>Be careful: when you rename a list, you have to let the listmasters "
+"know; otherwise, the change will not be effective</strong>."
 msgstr ""
-"Ten cuidado: cuando renombras una lista, tienes que notificárselo a los "
-"listmasters; en caso contrario, el cambio no será efectivo</strong>."
+"<strong>Ten cuidado: cuando renombras una lista, tienes que notificárselo a "
+"los listmasters; en caso contrario, el cambio no será efectivo</strong>."
 
 #: default/web_tt2/help_admin.tt2:217
 msgid "A few tips to name your lists:"
@@ -1523,8 +1574,10 @@ msgid "Reading the list archive online"
 msgstr "Lectura del archivo web de la lista"
 
 #: default/web_tt2/help_arc.tt2:4
-msgid "To read the messages sent to a list</strong>, you have two options:"
-msgstr "Para leer mensajes enviados a la lista</strong>, tienes dos opciones:"
+msgid ""
+"<strong>To read the messages sent to a list</strong>, you have two options:"
+msgstr ""
+"<strong>Para leer mensajes enviados a la lista</strong>, tienes dos opciones:"
 
 #: default/web_tt2/help_arc.tt2:6
 msgid "read the messages you receive <strong>in your email inbox</strong>;"
@@ -1548,8 +1601,8 @@ msgstr ""
 #. (path_cgi)
 #: default/web_tt2/help_arc.tt2:12 default/web_tt2/help_arc.tt2:77
 #: default/web_tt2/help_arc.tt2:93 default/web_tt2/help_shared.tt2:9
-#: default/web_tt2/help_user.tt2:101 default/web_tt2/help_user.tt2:129
-#: default/web_tt2/help_user.tt2:177 default/web_tt2/help_user.tt2:50
+#: default/web_tt2/help_user.tt2:101 default/web_tt2/help_user.tt2:120
+#: default/web_tt2/help_user.tt2:168 default/web_tt2/help_user.tt2:50
 msgid ""
 "Go to the list environment <strong><a href=\"%1/home\">homepage</a></strong> "
 "and <strong>log on</strong>."
@@ -1595,10 +1648,10 @@ msgid ""
 "only the latest messages display by default</strong>. <strong>To change "
 "page, click on the arrow links around the current page's number</strong>:"
 msgstr ""
-"Cuando hay <strong><demasiados mensajes para mostrar en una página, por "
-"defecto solo se mostrará el último mensaje</strong>. <strong>Para cambiar de "
-"página, pincha en las flechas situadas al rededor del número de página "
-"actual</strong>:"
+"Cuando hay <strong>demasiados mensajes para mostrar en una página, por "
+"defecto solo se mostrarán los últimos mensajes</strong>. <strong>Para "
+"cambiar de página, haz clic en las flechas situadas alrededor del número de "
+"página actual</strong>:"
 
 #: default/web_tt2/help_arc.tt2:22
 msgid "The '<strong>&lt;</strong>' arrow displays older messages."
@@ -1702,26 +1755,26 @@ msgstr ""
 
 #: default/web_tt2/help_arc.tt2:44
 msgid ""
-"Other messages belonging to the same thread as the message displayed are "
-"listed at its bottom</strong>. Click on their subject to read them."
+"<strong>Other messages belonging to the same thread as the message displayed "
+"are listed at its bottom</strong>. Click on their subject to read them."
 msgstr ""
-"El resto de mensajes pertenecientes a la misma conversación se mostrarán "
-"listados debajo</strong>. Pincha en sus asuntos para leerlos."
+"<strong>El resto de mensajes pertenecientes a la misma conversación se "
+"mostrarán listados debajo</strong>. Pincha en sus asuntos para leerlos."
 
 #: default/web_tt2/help_arc.tt2:46
 msgid ""
-"To come back to the messages index, click on 'Chronological' or 'Thread'</"
-"strong> according to whether you want to display the index as a "
+"<strong>To come back to the messages index, click on 'Chronological' or "
+"'Thread'</strong> according to whether you want to display the index as a "
 "chronological history or as a thread. When there are too many messages to be "
 "displayed on a single page, <strong>you are brought to the index page "
 "displaying the message you just read</strong>, and not to the page "
 "displaying the latest messages."
 msgstr ""
-"Para volver al índice de mensajes, pincha en 'Cronológico' o 'Conversación'</"
-"strong> según quieras mostrar el índice cronológicamente o por "
-"conversaciones. Cuando hay muchos mensajes mostrados en una misma página, "
-"<strong>se te dirige a la página índice mostrando el mensaje que acabas de "
-"leer</strong>, y no a la página mostrando el último mensaje."
+"<strong>Para volver al índice de mensajes, pincha en 'Cronológico' o "
+"'Conversación'</strong> según quieras mostrar el índice cronológicamente o "
+"por conversaciones. Cuando hay muchos mensajes mostrados en una misma "
+"página, <strong>se te dirige a la página índice mostrando el mensaje que "
+"acabas de leer</strong>, y no a la página mostrando el último mensaje."
 
 #: default/web_tt2/help_arc.tt2:48
 msgid ""
@@ -1758,9 +1811,9 @@ msgid ""
 "you log out: your logout depends on the value you set for the 'Connection "
 "expiration period' option on the 'Your preferences' page."
 msgstr ""
-"Ten cuidado: cuando pinchas en un enlace dentro de un mensaje, avandonarás "
+"Ten cuidado: cuando pinchas en un enlace dentro de un mensaje, abandonarás "
 "el entorno del servidor de listas de correo. Si no quieres hacer eso, abre "
-"el enlace en una nueva ventana o pestaña. Avandonando el entorno web del "
+"el enlace en una nueva ventana o pestaña. Abandonando el entorno web del "
 "servidor de listas de correo no significará que te desconectes (logout): tu "
 "desconexión dependerá del valor que tengas en la opción 'periodo de "
 "expiración de conexión' de la página 'Tus preferencias'."
@@ -1885,12 +1938,13 @@ msgstr ""
 
 #: default/web_tt2/help_arc.tt2:82
 msgid ""
-"Go to the message index of the month</strong> in which you want to search. "
-"To do that, use the calendar displayed at the top left of your screen."
+"<strong>Go to the message index of the month</strong> in which you want to "
+"search. To do that, use the calendar displayed at the top left of your "
+"screen."
 msgstr ""
-"Ve al índice de mensajes del mes</strong> sobre el que quieres realizar la "
-"búsqueda. Para hacer eso, utiliza el calendario mostrado en la parte "
-"superior izquierda de tu pantalla."
+"<strong>Ve al índice de mensajes del mes</strong> sobre el que quieres "
+"realizar la búsqueda. Para hacer eso, utiliza el calendario mostrado en la "
+"parte superior izquierda de tu pantalla."
 
 #: default/web_tt2/help_arc.tt2:83
 msgid ""
@@ -1904,11 +1958,11 @@ msgstr ""
 
 #: default/web_tt2/help_arc.tt2:84
 msgid ""
-"Enter your keywords</strong> in the search box in the upper right corner of "
-"your screen."
+"<strong>Enter your keywords</strong> in the search box in the upper right "
+"corner of your screen."
 msgstr ""
-"Introduce las palabras clavez</strong> en la casilla de búsqueda situada en "
-"la esquina superior derecha de tu pantalla."
+"<strong>Introduce las palabras clavez</strong> en la casilla de búsqueda "
+"situada en la esquina superior derecha de tu pantalla."
 
 #: default/web_tt2/help_arc.tt2:85
 msgid ""
@@ -2044,11 +2098,11 @@ msgstr ""
 
 #: default/web_tt2/help_arc.tt2:117
 msgid ""
-"To read one of the messages matching your search, you only need to click on "
-"its subject</strong>."
+"<strong>To read one of the messages matching your search, you only need to "
+"click on its subject</strong>."
 msgstr ""
-"Para leer alguno de los mensajes que coincidan con tu búsqueda, solo tienes "
-"que pinchar sobre su asunto</strong>."
+"<strong>Para leer alguno de los mensajes que coincidan con tu búsqueda, solo "
+"tienes que pinchar sobre su asunto</strong>."
 
 #: default/web_tt2/help_arc.tt2:118
 msgid ""
@@ -2067,770 +2121,9 @@ msgstr ""
 "botón derecho y seleccionando 'Abrir en una nueva ventana') para poder "
 "conservar la página de resultados de búsqueda."
 
-#: default/web_tt2/help_editfile.tt2:3
-msgid "Service messages description :"
-msgstr "Descripción del servicio de mensajes:"
-
-#: default/web_tt2/help_editfile.tt2:6
-msgid ""
-"Welcome message: This message is sent to new subscribers. It can be\n"
-"a full MIME structured message (only for MIME gurus)."
-msgstr ""
-"Mensaje de bienvenida: Se envía este mensaje a los recién suscritos. Puede "
-"ser un mensaje estructuradado en full MIME (sólo para los gurús de MIME)."
-
-#: default/web_tt2/help_editfile.tt2:9
-msgid ""
-"Unsubscribe message: This message is sent when users leave the list\n"
-"using the UNSUBSCRIBE command."
-msgstr ""
-"Mensaje de supresión: se envía este mensaje a los usuarios cuando\n"
-"se dan de baja de la lista usando el comando UNSUBSCRIBE."
-
-#: default/web_tt2/help_editfile.tt2:13
-msgid ""
-"Deletion message: This message is sent to users when you\n"
-"remove them from the list using the DEL command (unless you hit the\n"
-"Quiet button."
-msgstr ""
-"Mensaje de eliminación: Se manda este mensaje a los usuarios cuando\n"
-"se los saca de la lista usando el comando DEL (a menos que se seleccione la "
-"opción \n"
-"\"Silencioso\")"
-
-#: default/web_tt2/help_editfile.tt2:18
-msgid ""
-"Remind message: This message is sent to each subscriber\n"
-"when using the command  REMIND. It's very useful to help people who are\n"
-"confused about their own subscription emails or people who are not able to\n"
-"unsubscribe themselves."
-msgstr ""
-"Recordatorio: es un mensaje enviado a cada suscriptor cuando se utiliza el "
-"comando REMIND. Esto es útil para aclarar a las personas a cuales de las "
-"listas se encuentran suscritas."
-
-#: default/web_tt2/help_editfile.tt2:21
-msgid ""
-"Subscribing invitation message: sent to a person if someone  \n"
-"uses the INVITE command to invite someone to subscribe."
-msgstr ""
-"Mensaje de invitación de suscripción: enviado a una persona si alguien\n"
-"utiliza el comando INVITE para invitarlo a suscribirse."
-
-#: default/web_tt2/help_editfile.tt2:24
-msgid "Other files/pages description:"
-msgstr "Descripción de otros archivos/páginas:"
-
-#: default/web_tt2/help_editfile.tt2:28
-msgid ""
-"List homepage: HTML text to describe the list. It is printed on the\n"
-"right-hand side of the main list page. (default for this is the list "
-"description)"
-msgstr ""
-"Paguina principal: texto HTML describe la lista de correo. Este es ubicado a "
-"la izquierda de la pantalla.(por defecto para esta descripcion de la lista)"
-
-#: default/web_tt2/help_editfile.tt2:31
-msgid ""
-"List description: This text is sent as an answer to the mail command\n"
-"INFO. It can also be included in the <em>Welcome message</em>."
-msgstr ""
-"Descripción de la lista: Se puede obtener enviando un mensaje con el asunto "
-"\"INFO\" a la lista. y solo puede ser incluido en el"
-
-#: default/web_tt2/help_editfile.tt2:34
-msgid ""
-"Message header: If this file is not empty, it is added as a MIME\n"
-"attachment at the beginning of each message distributed to the list."
-msgstr ""
-"mensaje de cabecera: si este archivo no esta vacío, es agregado como MIME\n"
-"al comienzo de cada mensaje distribuido en la lista."
-
-#: default/web_tt2/help_editfile.tt2:37
-msgid ""
-"Message footer: same as <em>Message header,</em> but attached at the\n"
-"end of the message."
-msgstr ""
-"mensaje al pie :algunos son <em> Mensajes de cabecera,</em> pero puestos en "
-"el\n"
-"fin de el mensaje "
-
-#: default/web_tt2/help_editlist.tt2:6
-msgid ":"
-msgstr ":"
-
-#: default/web_tt2/help_editlist.tt2:9
-msgid "Privilege for adding (ADD command) a subscriber to the list"
-msgstr "Prvilegio para añadir (comando ADD) un suscriptor a la lista"
-
-#: default/web_tt2/help_editlist.tt2:11
-msgid ""
-"To hide the sender's email address before distributing the message. It is "
-"replaced by the provided email address."
-msgstr ""
-"Para ocultar la dirección de correo del remitente antes de distribuir el "
-"mensaje. Es reemplazada por la dirección de correo provista."
-
-#: default/web_tt2/help_editlist.tt2:13
-msgid "Privilege for reading mail archives and frequency of archiving"
-msgstr ""
-"Privilegio para leer los archivos de correo y periodicidad de archivado"
-
-#: default/web_tt2/help_editlist.tt2:15
-msgid ""
-"The available_user_options parameter starts a paragraph to define available "
-"options for the subscribers of the list."
-msgstr ""
-"El parámetro available_user_options empieza un párrafo para definir "
-"lasopciones disponibles para los suscriptores de la lista."
-
-#: default/web_tt2/help_editlist.tt2:17
-msgid "Default value: reception mail,notice,digest,digestplain,summary,nomail"
-msgstr ""
-"Valor por defecto: reception mail,notice,digest,digestplain,summary,nomail"
-
-#: default/web_tt2/help_editlist.tt2:18
-msgid ""
-"<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
-"summary, nomail), separated by commas. Only these modes will be allowed for "
-"the subscribers of this list. If a subscriber has a reception mode not in "
-"the list, sympa uses the mode specified in the default_user_options "
-"paragraph."
-msgstr ""
-"<em>modelist</em> es una lista de modos (mail, notice, digest, digestplain, "
-"summary, nomail), separados por comas. Solo se permitirán estos modos a los "
-"suscriptores de esta lista. Si un suscriptor tiene un modo de recepción que "
-"no está en la lista, sympa utiliza el modo especificado en el párrafo "
-"default_user_options."
-
-#: default/web_tt2/help_editlist.tt2:22
-msgid "This paragraph defines bounce management parameters:"
-msgstr "Este párrafo define los parámetros de gestión de rebotes:"
-
-#: default/web_tt2/help_editlist.tt2:24
-msgid "Default value: bounce_warn_rate robot parameter"
-msgstr "Valor por omisión: parámetro de robot bounce_warn_rate"
-
-#: default/web_tt2/help_editlist.tt2:25
-msgid ""
-"The list owner receives a warning whenever a message is distributed and the "
-"number (percentage) of bounces exceeds this value."
-msgstr ""
-"El dueño de la lista recibe una advertencia cada ver que un mensaje se "
-"distribuye y que el n&umero (porcentaje) de rebotes sobrepasa este valor. "
-
-#: default/web_tt2/help_editlist.tt2:27
-msgid "Default value: bounce_halt_rate robot parameter"
-msgstr "Valor por omisión: parámetro de robot bounce_halt_rate"
-
-#: default/web_tt2/help_editlist.tt2:28
-msgid ""
-"NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
-"will be halted, i.e. they are retained for subsequent moderation."
-msgstr ""
-"TODAVIA NO USADO. si la cantidad de errores  alcansados al halt_rate, los "
-"mensajes para la lista pueden ser cortados, i.e. ellos son retenidos para su "
-"subsecuente moderacion  "
-
-#: default/web_tt2/help_editlist.tt2:130 default/web_tt2/help_editlist.tt2:137
-#: default/web_tt2/help_editlist.tt2:30 default/web_tt2/help_editlist.tt2:40
-#: default/web_tt2/help_editlist.tt2:43 default/web_tt2/help_editlist.tt2:46
-#: default/web_tt2/help_editlist.tt2:56 default/web_tt2/help_editlist.tt2:59
-#: default/web_tt2/help_editlist.tt2:62
-msgid "Default value:"
-msgstr "Valor por omisión:"
-
-#: default/web_tt2/help_editlist.tt2:31
-msgid ""
-"Name of the task template used to remove old bounces. Useful for removing "
-"bounced subscriber email. If some messages are distributed without receiving "
-"new bounce messages, the subscriber's email seems to be OK again. Active if "
-"task_manager.pl is running."
-msgstr ""
-"El nombre de las tareas de la planillas usadas para remover viejos errores. "
-"Usadas para errores de email de los subscriptores removiendolos. si algunois "
-"mensajes son distribuidos si haber recibido nuevos mensajes de error, los "
-"email de los subscriptores   "
-
-#: default/web_tt2/help_editlist.tt2:37
-msgid ""
-"The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 1 is the lower level of bouncing users"
-msgstr ""
-"Los párrafos Bouncers_level1 definen el comportamiento automático de gestion "
-"de rebotes.<br />\n"
-"\tEl nivel 1 es el nivel más bajo de usuarios en rebote"
-
-#: default/web_tt2/help_editlist.tt2:41 default/web_tt2/help_editlist.tt2:57
-msgid "Each bouncing user have a score (from 0 to 100)."
-msgstr "Cada usuario en rrebote tiene un puntaje (de 0 a 100)."
-
-#: default/web_tt2/help_editlist.tt2:41
-msgid ""
-"This parameter defines a lower limit for each category of bouncing users.For "
-"example, level 1 begins from 45 to level_2_treshold."
-msgstr ""
-"Este parámetro define un límite inferior para cada categoría de usuarios en "
-"rebote. Por ejemplo, el nivel 1 empieza por 45 hasta level_2_treshold."
-
-#: default/web_tt2/help_editlist.tt2:44
-msgid ""
-"This parameter defines which task is automaticaly applied on level 1 "
-"bouncers."
-msgstr ""
-"Este parámetro define que medidas se aplican automáticamente para los "
-"usuarios en rebote de nivel 1. "
-
-#: default/web_tt2/help_editlist.tt2:47
-msgid ""
-"When automatic task is executed on level 1 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-"Cuando se ejecuta una tarea automática en los rebotados de nivel uno, se "
-"puede mandar un correo de notificación al dueño de lista o al listmaster.  "
-
-#: default/web_tt2/help_editlist.tt2:53
-msgid ""
-"The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 2 is the highest level of bouncing users"
-msgstr ""
-"Los párrafos Bouncers_levelX definen el comportamiento automático de gestión "
-"de rebotes.<br />\n"
-"\tEl nivel 2 es el nivel más alto de usuarios en rebote"
-
-#: default/web_tt2/help_editlist.tt2:57
-msgid ""
-"This parameter defines the score range defining each category of bouncing "
-"users.For example, level 2 is for users with a score between 80 and 100."
-msgstr ""
-"Este parámetro define el rango de puntaje que clasifica cada categoría de "
-"uruarios en rebote. Por ejemplo, el nivel 2 es para unsuarios con un puntaje "
-"entre 80 y 100."
-
-#: default/web_tt2/help_editlist.tt2:60
-msgid ""
-"This parameter defines which task is automaticaly applied on level 2 "
-"bouncers."
-msgstr ""
-"Este parámetro define que medidas se aplican automáticamente para los "
-"usuarios en rebote de nivel 2."
-
-#: default/web_tt2/help_editlist.tt2:63
-msgid ""
-"When automatic task is executed on level 2 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-"Cuando se ejecuta una tarea automática en los rebotados de nivel 2, se puede "
-"mandar un correo de notificación al dueño de lista o al listmaster.  "
-
-#: default/web_tt2/help_editlist.tt2:67
-msgid ""
-"This parameter is a confidential item for generating authentication keys for "
-"administrative commands (ADD, DELETE, etc.). This parameter should remain "
-"concealed, even for owners. The cookie is applied to all list owners, and is "
-"only taken into account when the owner has the auth parameter."
-msgstr ""
-"Este parámetro es un item confidencial para generar las claves de "
-"autenticación para los comandos (ADD, DELETE, etc.). Este parámetro debe "
-"manenerse oculto, incluso para los dueños. La cookie se aplica a todos los "
-"dueños de listas, y solo se toma en cuenta cuando el dueño tiene el "
-"parámetro auth."
-
-#: default/web_tt2/help_editlist.tt2:69
-msgid ""
-"This parameter is optional. The headers specified will be added to the "
-"headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
-"it is possible to put several custom header lines in the configuration file "
-"at the same time."
-msgstr ""
-"Este parámetro es opcional. El encabezado especificado será añadido al "
-"encabezado de los mensajes distribuidos a través de la lista. Desde la "
-"revisión 1.2.2 de Sympa, es posible poner simultáneamente varias líneas de "
-"encabezados personalizados en el archivo de configuración.  "
-
-#: default/web_tt2/help_editlist.tt2:71
-msgid ""
-"This parameter is optional. It specifies a string which is added to the "
-"subject of distributed messages (intended to help users who do not use "
-"automatic tools to sort incoming messages). This string will be surrounded "
-"by [] characters."
-msgstr ""
-"Este parámetro es opcional. Especifica una cadena que se agrega al asunto de "
-"los mensajes distribuidos (destinado a ayudar a los usuarios que no utilizan "
-"herramoentas automatizadas para clasificar sus mensajes). Esta cadena será "
-"rodeada por los caracteres []. "
-
-#: default/web_tt2/help_editlist.tt2:73
-msgid ""
-"The default_user_options parameter starts a paragraph to define a default "
-"profile for the subscribers of the list."
-msgstr ""
-"El parámetro default_user_options empieza un párrafopara definir un perfil "
-"por omisión de los suscriptores de la lista. "
-
-#: default/web_tt2/help_editlist.tt2:75
-msgid "Mail reception mode."
-msgstr "Modo de recepción de correo"
-
-#: default/web_tt2/help_editlist.tt2:76
-msgid "Visibility of the subscriber with the REVIEW command."
-msgstr "Visibilidad de los suscriptores utilizando el comando REVIEW."
-
-#: default/web_tt2/help_editlist.tt2:79
-msgid "This parameter specifies who is authorized to use the DEL command."
-msgstr ""
-"Este parámetro especifica quien está autorizado a utilizar el comando DEL."
-
-#: default/web_tt2/help_editlist.tt2:81
-msgid ""
-"Definition of digest mode. If this parameter is present, subscribers can "
-"select the option of receiving messages in multipart/digest MIME format, or "
-"as a plain text digest. Messages are then grouped together, and compiled "
-"messages are sent to subscribers according to the frequency selected with "
-"this parameter."
-msgstr ""
-"Definición del modo recopilación. Si este parámetro está presente, los "
-"suscriptores pueden seleccionar la opción de recepción de mensajes en el "
-"formato MIME multiparte o texto sin formato. Los mensajes entonces se "
-"agrupan y se envían a los suscriptores de acuerdo con la periodicidad "
-"seleccionada con este parámetro."
-
-#: default/web_tt2/help_editlist.tt2:83
-msgid ""
-"Editors are responsible for moderating messages. If the mailing list is "
-"moderated, messages posted to the list will first be passed to the editors, "
-"who will decide whether to distribute or reject it."
-msgstr ""
-"Los moderadores son responsables de moderar los mensajes. Si la lista es "
-"moderada; los mensajes enviados a la lista primero se pasan a los "
-"moderadores, quienes deciden si se distribuyen o se rechazan."
-
-#: default/web_tt2/help_editlist.tt2:84
-msgid ""
-"FYI: Defining editors will not make the list moderated; you will have to set "
-"the \"send\" parameter."
-msgstr ""
-"Información: La definición de moderadores no implica que la lista sea "
-"moderada; para ello debes configurar el parámetro \"send\""
-
-#: default/web_tt2/help_editlist.tt2:85
-msgid ""
-"FYI: If the list is moderated, any editor can distribute or reject a message "
-"without the knowledge or consent of the other editors. Messages that have "
-"not been distributed or rejected will remain in the moderation spool until "
-"they are acted on."
-msgstr ""
-"Información: Si la lista es moderada; cualquier moderador puede distribuir o "
-"rechazar un mensaje sin el conocimiento o consentimiento del resto de "
-"moderadores. Los mensajes que no fueron distribuidos ni rechazados "
-"permanecerán en el contenedor moderación hasta que alguien tome una decisión."
-
-#: default/web_tt2/help_editlist.tt2:87
-msgid ""
-"This parameter states which model is used to create an expire task. An "
-"expire task regularly checks the subscription or resubscription  date of "
-"subscribers and asks them to renew their subscription. If they don't they "
-"are deleted."
-msgstr ""
-"Este parámetro especifica que modelo se usa para crear una tarea de "
-"expiración. Una tarea de expiración verifica regularmente las fechas de  "
-"suscripción o de re-suscripción de los suscriptores y les solicita renovar "
-"su suscripción. De lo contrario, se los borra de la lista."
-
-#: default/web_tt2/help_editlist.tt2:89
-msgid ""
-"List owners may decide to add message headers or footers to messages sent "
-"via the list. This parameter defines the way a footer/header is added to a "
-"message."
-msgstr ""
-"Los dueños de la lista pueden añadir cabecera o pie de mensaje a los "
-"mensajes enviados a la lista. Este parámetro define la manera en que una "
-"cabecera/pie es añadida al mensaje"
-
-#: default/web_tt2/help_editlist.tt2:92
-msgid "The default value. Sympa will add the footer/header as a new MIME part."
-msgstr ""
-"El valor por omisión. Sympa añadirá el encabezado/pié de mensaje como una "
-"nueva parte MIME. "
-
-#: default/web_tt2/help_editlist.tt2:95
-msgid ""
-"Sympa will not create new MIME parts, but will try to append the header/"
-"footer to the body of the message. Predefined message-footers will be "
-"ignored. Headers/footers may be appended to text/plain messages only."
-msgstr ""
-"Sympa no creará nuevas partes MIME, sino que intentará agregar el encabezado/"
-"pie al cuerpo del mensaje. Los pies de mensajes predefinidos serán "
-"ignorados. Encabezados/piés sólo pueden ser agregados a los mensajes de "
-"texto sin formato. "
-
-#: default/web_tt2/help_editlist.tt2:99
-msgid ""
-"Domain name of the list, default is the robot domain name set in the related "
-"robot.conf file or in file /etc/sympa.conf."
-msgstr ""
-"Nombre de dominio de la lista, por defecto se utiliza el que se define en el "
-"archivo robot.conf correspondiente o en el fichero /etc/sympa.conf"
-
-#: default/web_tt2/help_editlist.tt2:101
-msgid ""
-"Include subscribers from this file.  The file should contain one e-mail "
-"address per line (lines beginning with a \"#\" are ignored)."
-msgstr ""
-"Incluye suscriptores de este archivo.  El archivo debe contener una "
-"dirección de e-mail por línea (las líneas que empiezan con un \"#\" son "
-"ignoradas)"
-
-#: default/web_tt2/help_editlist.tt2:103
-msgid ""
-"This paragraph defines parameters for a two-level query returning a list of "
-"subscribers. Usually the first-level query returns a list of DNs and the "
-"second-level queries convert the DNs into e-mail addresses. This feature "
-"requires the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"Este párrafo define parámetros para una consulta a dos niveles que devuelve "
-"una lista de suscriptores. Habitualmente la consulta de primer nivel "
-"devuelve una lista de DNs y la de segundo nivel convierte los DNs en "
-"direcciones de correo. Esta funcionalidad requiere el módulo PERL Net::LDAP "
-"(perlldap). "
-
-#: default/web_tt2/help_editlist.tt2:105
-msgid ""
-"This paragraph defines parameters for a query returning a list of "
-"subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"Este párrafo define los parámetros para una consulta que devuelve una lista "
-"de suscriptores. Esta funcionalidad requiere el módulo PERL Net::LDAP "
-"(perlldap)."
-
-#: default/web_tt2/help_editlist.tt2:107
-#, fuzzy
-msgid ""
-"Include subscribers from other list. All subscribers of list listname become "
-"subscribers of the current list. You may include as many lists as required, "
-"using one include_sympa_list paragraph for each included list. Any list at "
-"all may be included; you may therefore include lists which are also defined "
-"by the inclusion of other lists. Be careful, however, not to include list A "
-"in list B and then list B in list A, since this will give rise to an "
-"infinite loop."
-msgstr ""
-"Incluye suscriptores de otra lista. Todos los suscriptores de la lista "
-"\"nombrelista\" se vuelven suscriptores de la lista actual. Puedes incluir "
-"tantas listas como sea necesario, utilizando una línea \"include_list "
-"nombrelista\" para cada lista incluída. Cualquier lista puede ser incluída; "
-"por lo cual se pueden incluir listas definidas por la inclusión de otras "
-"listas. Tenga cuidado, sin embargo, de no incluir la lista A en la lista B y "
-"la lista B en la lista A, ya que eso daría lugar a un bucle infinito."
-
-#: default/web_tt2/help_editlist.tt2:109
-msgid ""
-"Sympa can contact another Sympa service using HTTPS to fetch a remote list "
-"in order to include each member of a remote list as subscriber. You may "
-"include as many lists as required, using one include_remote_sympa_list "
-"paragraph for each included list. Be careful, however, not to give rise to "
-"an infinite loop resulting from cross includes."
-msgstr ""
-"Sympa puede contactar a otro servicio Sympa utilizando HTTPS para recuperar "
-"una lista distante de manera a incuir cada uno de los miembros de la lista "
-"distante como suscriptor. Se pueden incluir tantas listas como necesario, "
-"utilizando un párrafo include_remote_sympa_list para cada lista incluída. "
-"Cuidado, sin embargo, en no dar lugar a un bucle infinito resultante de "
-"inclusiones cruzadas.  "
-
-#: default/web_tt2/help_editlist.tt2:110
-msgid ""
-"For this operation, one Sympa site acts as a server while the other one acs "
-"as client. On the server side, the only setting needed is to give permission "
-"to the remote Sympa to review the list. This is controlled by the review "
-"scenario."
-msgstr ""
-"Para esta operación, un sitio Sympa actúa como servidor mientras que el otro "
-"actúa de cliente. En el lado del servidor, lo único que se necesita "
-"configurar es el permiso al Sympa remoto de revisar la lista. Esto está "
-"controlado por el escenario 'review'."
-
-#: default/web_tt2/help_editlist.tt2:112
-msgid ""
-"This parameter is used to begin a paragraph defining the SQL query "
-"parameters. "
-msgstr ""
-"Este parámetro es utilizado para iniciar un párrafo definiendo los "
-"parámetros de consulta SQL. "
-
-#: default/web_tt2/help_editlist.tt2:114
-msgid ""
-"This parameter defines the language used for the list. It is used to "
-"initialize a user's language preference; Sympa command reports are extracted "
-"from the associated message catalog."
-msgstr ""
-"Este parámetro define el idioma usado para la lista. Se usa para inicializar "
-"la preferencia de idioma del usuario; los informes de comandos de Sympa son "
-"extraidos del catálogo de mensajes asociado."
-
-#: default/web_tt2/help_editlist.tt2:116
-msgid "Maximum size of a message in 8-bit bytes."
-msgstr "tamaño maximo de un mensaje en 8-bit bytes"
-
-#: default/web_tt2/help_editlist.tt2:118
-msgid ""
-"Owners are managing subscribers of the list. They may review subscribers and "
-"add or delete email addresses from the mailing list. If you are a privileged "
-"owner of the list, you can choose other owners for the mailing list. "
-"Privileged owners may edit a few more options than other owners. "
-msgstr ""
-"Los dueños gestionan los suscriptores de la lista. Pueden revisar los "
-"suscriptores, agregar o borrar direcciones de correo electrónico de la lista "
-"de correo. Si eres el dueño privilegiado de la lista, puedes agregar o "
-"suprimir otros dueños para la lista. Los dueños privilegiados pueden editar "
-"algunas opciones más que el resto de dueños.   "
-
-#: default/web_tt2/help_editlist.tt2:120
-msgid ""
-"The priority with which Sympa will process messages for this list. This "
-"level of priority is applied while the message is going through the spool. "
-"The z priority will freeze the message in the spool."
-msgstr ""
-"La prioridad con la que Sympa va a procesar los mensajes de esta lista. El "
-"nivel de prioridad se aplica cuando el mensaje pasa por el contenedor. La "
-"prioridad z congelará el mensaje en el contenedor."
-
-#: default/web_tt2/help_editlist.tt2:122
-msgid "This parameter specifies who is authorized to use the remind command."
-msgstr ""
-"Este parámetro especifica quien está autorizado a utilizar el comando REMIND "
-"(recordatorio)."
-
-#: default/web_tt2/help_editlist.tt2:124
-msgid "Same as welcome_return_path, but applied to remind messages."
-msgstr ""
-"Igual que welcome_return_path, pero aplicado a los mensajes de recordatorio."
-
-#: default/web_tt2/help_editlist.tt2:126
-msgid ""
-"This parameter states which model is used to create a remind task. A remind "
-"task regularly sends  subscribers a message which reminds them of their list "
-"subscriptions."
-msgstr ""
-"Este parámetro especifica que modelo se usa para crear una tarea de "
-"recordatorio. Una tarea de recordatorio manda regularmente a los "
-"suscriptores un recordatorio acerca de sus suscripciones a listas. "
-
-#: default/web_tt2/help_editlist.tt2:128
-msgid ""
-"The reply_to_header parameter starts a paragraph defining what Sympa will "
-"place in the Reply-To: SMTP header field of the messages it distributes."
-msgstr ""
-"El parámetro reply_to_header da comienzo a un párrafo en el que se define lo "
-"que Sympa pondrá en el campo de encabezamiento Reply-To: SMTP de los "
-"mensajes que distribuye."
-
-#: default/web_tt2/help_editlist.tt2:131
-msgid ""
-"This parameter indicates whether the Reply-To: field should indicate the "
-"sender of the message (sender), the list itself (list), both list and sender "
-"(all) or an arbitrary e-mail address (defined by the other_email parameter)."
-msgstr ""
-"Este parámetro indica si el campo Reply-To: debe indicar el remitente del "
-"mensaje (remitente), la propia lista (lista), ambos lista y remitente "
-"(todos) o una dirección de correo arbitraria (definida por el parámetro "
-"other_email)."
-
-#: default/web_tt2/help_editlist.tt2:132
-msgid ""
-"Note: it is inadvisable to change this parameter, and particularly "
-"inadvisable to set it to list. Experience has shown it to be almost "
-"inevitable that users, mistakenly believing that they are replying only to "
-"the sender, will send private messages to a list. This can lead, at the very "
-"least, to embarrassment, and sometimes to more serious consequences."
-msgstr ""
-"Nota: no es recomendable cambiar este parámetro, y aún menos recomendable "
-"que sea la lista. La experiencia demuestra que es casi inevitable que los "
-"usuarios, creyendo por error que le responden sólo al remitente, manden un "
-"mensaje privado a la lista. Esto puede llevar, como mínimo a malentendidos, "
-"y a veces puede llegar a tener serias consecuencias. "
-
-#: default/web_tt2/help_editlist.tt2:134
-msgid "an_email_address"
-msgstr "an_email_address (dirección de correo)"
-
-#: default/web_tt2/help_editlist.tt2:135
-msgid ""
-"If value was set to other_email, this parameter defines the e-mail address "
-"used."
-msgstr ""
-"Si el valor es \"other_email\"; este parámetro define la direcci&on de "
-"correo que se utiliza."
-
-#: default/web_tt2/help_editlist.tt2:138
-msgid ""
-"The default is to respect (preserve) the existing Reply-To: SMTP header "
-"field in incoming messages. If set to forced, Reply-To: SMTP header field "
-"will be overwritten."
-msgstr ""
-"Por omisión se respeta (se conserva) el campo de encabezado SMTP Reply-To: "
-"para los mensajes que llegan. Si se lo configura a 'forzado' (forced), el "
-"valor del encabezado SMTP Reply-To: será remplazado. "
-
-#: default/web_tt2/help_editlist.tt2:142
-msgid ""
-"This parameter specifies who can access the list of members. Since "
-"subscriber addresses can be abused by spammers, it is strongly recommended "
-"that you only authorize owners or subscribers to access the subscriber list. "
-msgstr ""
-"Este parámetro especifica quien tiene acceso a la lista de miembors. Como "
-"las direcciones de los suscriptores pueden ser utilizadas abusivamente por "
-"spammers, se recomienda fuertemente sólo autorizar a los dueños o a los "
-"suscriptores acceder a la lista de suscriptores.  "
-
-#: default/web_tt2/help_editlist.tt2:144
-msgid "This parameter specifies who can send messages to the list."
-msgstr "Este parámetro especifica quien puede mandar mensajes a la lista. "
-
-#: default/web_tt2/help_editlist.tt2:146
-msgid ""
-"This paragraph defines read and edit access to the shared document "
-"repository."
-msgstr ""
-"Este párrafo define el acceso de lectura y edición al repositorio de "
-"documentos compartidos."
-
-#: default/web_tt2/help_editlist.tt2:148
-msgid ""
-"There is a need to protect Sympa web sites against spambots which collect "
-"email addresses from public web sites. Various methods are available in "
-"Sympa and you can choose to use them with the spam_protection and "
-"web_archive_spam_protection parameters. Possible value are:"
-msgstr ""
-"Es necesario proteger los websites de Sympa contra los robots de spam que "
-"recopilan direcciones de correo electrónico de websites públicos. Hay varios "
-"métodos disponibles en Sympa y puedes elegir usarlos con los parámetros "
-"spam_protection y web_archive_spam_protection. Los valores posibles son:"
-
-#: default/web_tt2/help_editlist.tt2:150
-msgid ""
-"the address is hidden using a javascript. A user who enables javascript can "
-"see a nice mailto address where others have nothing."
-msgstr ""
-"se esconde la dirección utilizando un javascript. Un usuario que activa "
-"javascript verá unabonita dirección mailto mientras que los demás no verán "
-"nada."
-
-#: default/web_tt2/help_editlist.tt2:151
-msgid "the @ char is replaced by the string \" AT \"."
-msgstr "se remplaza el carácter @ por la cadena \" AT \"."
-
-#: default/web_tt2/help_editlist.tt2:152
-msgid "no protection against spammer."
-msgstr "sin protección contra spammers."
-
-#: default/web_tt2/help_editlist.tt2:155
-msgid ""
-"This parameter indicates the subject of the list, which is sent in response "
-"to the LISTS mail command. The subject is a free form text limited to one "
-"line."
-msgstr ""
-"Este parámetro indica el tema de la lista, que es enviado en respuesta al "
-"comando de correo LISTS. El tema es un campo de texto libre limitado a una "
-"línea."
-
-#: default/web_tt2/help_editlist.tt2:157
-msgid "The subscribe parameter defines the rules for subscribing to the list."
-msgstr ""
-"El parámetro de suscripción define las reglas para suscribirse a la lista."
-
-#: default/web_tt2/help_editlist.tt2:159
-msgid ""
-"This parameter allows the classification of lists. You may define multiple "
-"topics as well as hierarchical ones. WWSympa's list of public lists uses "
-"this parameter."
-msgstr ""
-"Este parámetro permite clasificar las listas. Puedes definir múltiples temas "
-"y también jerárquicos. La lista WWSympa de listas publicas usa este "
-"parámetro."
-
-#: default/web_tt2/help_editlist.tt2:161
-msgid ""
-"Sympa caches user data extracted using the include parameter. Their TTL "
-"(time-to-live) within Sympa can be controlled using this parameter. The "
-"default value is 3600"
-msgstr ""
-"Sympa maneja una cache con los datos de usuario extraídos utilizando el "
-"parámetro include. Su TTL (time-to-live, tiempo de vida) en Sympa puede ser "
-"controlado usando este parámetro. Su valor por defecto es de 3600."
-
-#: default/web_tt2/help_editlist.tt2:163
-msgid ""
-"This parameter specifies the unsubscription method for the list. Use "
-"open_notify or auth_notify to allow owner notification of each unsubscribe "
-"command."
-msgstr ""
-"Este parámetro especifica el método para anular la suscripción a la lista. "
-"Utiliza  open_notify o auth_notify para generar una notificación al dueño de "
-"cada comando de anulación de suscripción. "
-
-#: default/web_tt2/help_editlist.tt2:165
-msgid ""
-"This parameter indicates whether the list should feature in the output "
-"generated in response to a LISTS command or should be shown in the list "
-"overview of the web-interface."
-msgstr ""
-"Este parámetro indica si la lista debe aparecer en la respuesta generada a "
-"un comando LISTS y si debe ser mostrada el el listado de la interface web. "
-
-#: default/web_tt2/help_editlist.tt2:167
-msgid "Defines who can access the web archive for the list."
-msgstr "Define quien puede acceder a los archivos web de la lista"
-
-#: default/web_tt2/help_editlist.tt2:169
-msgid ""
-"Idem spam_protection is provided but it can be used only for web archives. "
-"Access requires a cookie, and users must submit a small form in order to "
-"receive a cookie before browsing the archives. This blocks all robot, even "
-"google and co."
-msgstr ""
-"Igual que spam_protection pero puede limitarse a los archivos web. El acceso "
-"requiere una \"cookie\", y los usuarios deben enviar un pequeño formulario "
-"para recibir esta \"cookie\" antes de poder recorrer los archivos. Esto "
-"bloquea todos los robots, inclusive a Google y Cía."
-
-#: default/web_tt2/help_editlist.tt2:171
-msgid ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
-msgstr ""
-"Si el valor es \"unique\", se envía el mensaje de bienvenida  utilizando una "
-"dirección de respuesta única generada específicamente, de manera a suprimir "
-"inmediatamente al suscriptor en caso de rebote."
-
-#: default/web_tt2/help_editlist.tt2:173
-msgid ""
-"This paragraph defines a topic used to tag a message of a list, named by "
-"msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
-"The msg_topic.keywords entry is optional and allows automatic tagging. This "
-"should be a list of keywords, separated by ','."
-msgstr ""
-"Este párrafo define un tema usado para etiquetar un mensaje de la lista, "
-"llamado msg_topic.name (\"other\" es una palabra reservada), su título es "
-"msg_topic.title. El campo msg_topic.keywords es opcional y permite "
-"etiquetado automático. Éste debería contener una lista de palabras clave, "
-"separadas por ','."
-
-#: default/web_tt2/help_editlist.tt2:175
-msgid ""
-"This parameter indicates which part of the message is used to perform "
-"automatic tagging."
-msgstr ""
-"Este parámetro indica que parte del mensaje es usada para llevar a cabo el "
-"etiquetado automático."
-
-#: default/web_tt2/help_editlist.tt2:177
-msgid ""
-"This parameter indicates if the tagging is optional or required for a list."
-msgstr ""
-"Este parámetro indica si el etiquetado es opcional o obligatorio para una "
-"lista."
+#: default/web_tt2/help_faq.tt2:4
+msgid "User and admin FAQ"
+msgstr "FAQ de usuario y administrador"
 
 #: default/web_tt2/help_faqadmin.tt2:3
 msgid "Administrators Frequently Asked Questions"
@@ -2878,9 +2171,9 @@ msgstr ""
 "<strong>Comprueba que la dirección de correo del suscriptor no genera "
 "rebotes</strong> en la página 'Rebotes'. Una dirección de correo de un "
 "suscriptor se considera que genera rebotes cuando los mensajes enviados a "
-"ella generan errores (llamados 'rebotes'). Esos errores pueden ser "
-"temporales (carpeta de entrada llena, servidor de correo no disponible) o "
-"permanente (no existe la cuenta de ese usuario). En cualquier caso, el "
+"ella generan registros de errores (llamados 'rebotes'). Esos errores pueden "
+"ser temporales (carpeta de entrada llena, servidor de correo no disponible) "
+"o permanente (no existe la cuenta de ese usuario). En cualquier caso, el "
 "servidor de listas de correo gestiona el borrado de direcciones que generan "
 "muchos errores."
 
@@ -2898,36 +2191,8 @@ msgid ""
 "the mail server logs in order to find the cause of the problem."
 msgstr ""
 "Como última opción, <strong>contacta con el listmaster</strong>, el cual "
-"podrá comprobar los logs del servidor para poder encontrar alguna causa del "
-"problema."
-
-#: default/web_tt2/help_faq.tt2:4
-msgid "User and admin FAQ"
-msgstr "FAQ de usuario y administrador"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:20 default/web_tt2/help_faq.tt2:6
-msgid ""
-"If you want to perform a particular task, take a look at the list of all <a "
-"href=\"%1/help/introduction#features\">available features</a> in the mailing "
-"list management software Sympa."
-msgstr ""
-"Si deseas realizar una tarea determinada, revisa la lista de <a href=\"%1/"
-"help/introduction#features\">funciones disponibles</a> en el software de "
-"administración de listas de correo Sympa."
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:21 default/web_tt2/help_faq.tt2:7
-msgid ""
-"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
-"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
-"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
-"\"Frequently asked questions\">FAQ</acronym></a>."
-msgstr ""
-"Si experimentas cualquier problema, por favor, revisa la <a href=\"%1/help/"
-"faquser\"><acronym title=\"Preguntas Frecuentemente Formuladas\">FAQ</"
-"acronym> del usuario</a> o la <a href=\"%1/help/faqadmin\"><acronym title="
-"\"Preguntas Frecuentemente Formuladas\">FAQ</acronym> del administrador</a>."
+"podrá comprobar los registros (logs) del servidor para poder encontrar "
+"alguna causa del problema."
 
 #: default/web_tt2/help_faquser.tt2:3
 msgid "Users Frequently Asked Questions"
@@ -2980,9 +2245,9 @@ msgstr ""
 #. (path_cgi)
 #: default/web_tt2/help_faquser.tt2:16
 msgid ""
-"<strong>You entered an incorrect password</strong>. If you forgot your "
-"password, you can reset it. To do so, follow the <a href=\"%1/renewpasswd"
-"\">Lost password?</a> link from the homepage."
+"<strong>You entered an incorrect password</strong>. If you have forgotten "
+"your password, you can reset it. To do so, follow the <a href=\"%1/"
+"renewpasswd\">Lost password?</a> link from the homepage."
 msgstr ""
 "<strong>Introduciste una contraseña incorrecta</strong>. Si has olvidado tu "
 "contraseña, puedes reestablecerla. Para hacerlo, utiliza el enlace <a href="
@@ -3304,8 +2569,8 @@ msgstr ""
 "puedes enviar mensajes, responderlos o simplemente leerlos sin participar."
 
 #: default/web_tt2/help_introduction.tt2:7
-msgid "Special cases:</strong>"
-msgstr "Casos especiales:</strong>"
+msgid "<strong>Special cases:</strong>"
+msgstr "<strong>Casos especiales:</strong>"
 
 #: default/web_tt2/help_introduction.tt2:9
 msgid ""
@@ -3462,15 +2727,15 @@ msgstr "Una vez suscrito a una lista de correo, puedes:"
 
 #: default/web_tt2/help_introduction.tt2:40
 msgid ""
-"search for mailing lists</strong> matching your main interests or your "
-"particular situation;"
+"<strong>search for mailing lists</strong> matching your main interests or "
+"your particular situation;"
 msgstr ""
-"buscar una lista de correo</strong> según tus intereses principales o tu "
-"situación particular;"
+"<strong>buscar una lista de correo</strong> según tus intereses principales "
+"o tu situación particular;"
 
 #: default/web_tt2/help_introduction.tt2:41
-msgid "manage your subscriptions</strong>:"
-msgstr "gestionar tus suscripciones</strong>:"
+msgid "<strong>manage your subscriptions</strong>:"
+msgstr "<strong>gestionar tus suscripciones</strong>:"
 
 #. (path_cgi)
 #: default/web_tt2/help_introduction.tt2:43
@@ -3712,16 +2977,16 @@ msgstr ""
 
 #: default/web_tt2/help_introduction.tt2:93
 msgid ""
-"List owners and moderators can turn to listmasters</strong> when they face a "
-"problem not dealt with by the documentation or for any comment. However, in "
-"order not to flood listmasters with messages, it is recommended that "
-"subscribers rather turn to list owners."
+"<strong>List owners and moderators can turn to listmasters</strong> when "
+"they face a problem not dealt with by the documentation or for any comment. "
+"However, in order not to flood listmasters with messages, it is recommended "
+"that subscribers rather turn to list owners."
 msgstr ""
-"Los dueños de la lista y los moderadores pueden notificar a los listmasters</"
-"strong> cuando encuentren algún problema que no esté relacionado con la "
-"documentación o con algún comentario. Sin embargo, para no inundar a los "
-"listmasters con mensajes, se recomienda que los suscriptores se pongan en "
-"contacto con los dueños de la lista"
+"<strong>Los dueños de la lista y los moderadores pueden notificar a los "
+"listmasters</strong> cuando encuentren algún problema que no esté "
+"relacionado con la documentación o con algún comentario. Sin embargo, para "
+"no inundar a los listmasters con mensajes, se recomienda que los "
+"suscriptores se pongan en contacto con los dueños de la lista"
 
 #: default/web_tt2/help_introduction.tt2:95
 msgid "Owners"
@@ -3729,12 +2994,12 @@ msgstr "Dueños"
 
 #: default/web_tt2/help_introduction.tt2:96
 msgid ""
-"The list owner is generally its creator</strong> or, failing him/her, the "
-"person who requested the list creation or who became responsible for it. "
-"<strong>His/her role</strong>:"
+"<strong>The list owner is generally its creator</strong> or, failing him/"
+"her, the person who requested the list creation or who became responsible "
+"for it. <strong>His/her role</strong>:"
 msgstr ""
-"El dueño de la lista suele ser su creador</strong> o, en su defecto, la "
-"persona que ha solicitado la creación de la lista o quien se haga "
+"<strong>El dueño de la lista suele ser su creador</strong> o, en su defecto, "
+"la persona que ha solicitado la creación de la lista o quien se haga "
 "responsable de ella. <strong>Su rol</strong>:"
 
 #. (path_cgi)
@@ -3761,7 +3026,7 @@ msgid ""
 "<strong>appoint one or several <a href=\"%1/help/listconfig#description"
 "\">moderators</a></strong>;"
 msgstr ""
-"<strong>establece uno o varios <a href(\"%1/help/listconfig#description"
+"<strong>establece uno o varios <a href=\"%1/help/listconfig#description"
 "\">moderadores</a></strong>;"
 
 #. (path_cgi)
@@ -3817,11 +3082,11 @@ msgid ""
 "is possibly followed by a notice to the sender in order to explain the "
 "reason for that rejection."
 msgstr ""
-"<strong>Los moderadores los nombra el dueño de la lista</strong>. Ellos se "
-"encargan de <a href=\"%1/help/admin#moderate\">controlar la relevancia de "
-"los mensajes</a></strong> enviados a la lista: despues de leerlos, "
-"<strong>eligen si los aceptan o los rechazan.</strong>. El proceso de "
-"moderación ocurre antes de que el mensaje se envíe a los suscriptores. El "
+"<strong>Los moderadores los nombra el dueño de la lista</strong>. Ellos "
+"<strong>se encargan de <a href=\"%1/help/admin#moderate\">controlar la "
+"relevancia de los mensajes</a></strong> enviados a la lista: después de "
+"leerlos, <strong>eligen si los aceptan o los rechazan</strong>. El proceso "
+"de moderación ocurre antes de que el mensaje se envíe a los suscriptores. El "
 "rechazo de un mensaje posiblemente va asociado a una notificación para el "
 "remitente con la intención de explicar la razón del rechazo."
 
@@ -3830,7 +3095,7 @@ msgid ""
 "A list can have <strong>one or several moderators</strong>; generally, the "
 "list owner is also a moderator."
 msgstr ""
-"Una lista puede tener <strong>uno o varios moderadores</stgrong>; "
+"Una lista puede tener <strong>uno o varios moderadores</strong>; "
 "generalmente, el dueño de la lista es también un moderador."
 
 #: default/web_tt2/help_introduction.tt2:112
@@ -4203,11 +3468,11 @@ msgid ""
 "in incoming messages. The '<strong>Respect</strong>' option preserves that "
 "field while the '<strong>Forced</strong>' option allows it to be overwritten."
 msgstr ""
-"El desplegable '<strong>Respetar una cabecera existente</strong>' te permite "
-"elegir cómo la cabecera SMTP 'Reply-To' se procesará en los mensajes "
-"enviados a la lista. La opción '<strong>Respetar</strong>' mantiene el valor "
-"de dicha casilla mientras que la opción '<strong>Forzar</strong>' permite "
-"sobre escribirla."
+"El desplegable '<strong>Respetar el campo de encabezado existente</strong>' "
+"te permite elegir cómo el campo SMTP de encabezado 'Reply-To' se procesará "
+"en los mensajes enviados a la lista. La opción '<strong>Respetar</strong>' "
+"mantiene el valor de dicho campo mientras que la opción '<strong>Forzar</"
+"strong>' permite sobreescribirla."
 
 #: default/web_tt2/help_listconfig.tt2:52
 msgid ""
@@ -4583,12 +3848,12 @@ msgstr ""
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
 "sending <strong>%1@%2</strong> the following command: <span class=\"commande"
-"\"><strong>GET nameofthelist year-month</strong></span> (example: <em "
-"class=\"example\">GET list_example 2016-07</em>). Then you receive a "
-"compilation of all messages sent during the chosen month. This compilation "
-"is sent in plain text and contains <acronym lang=\"en\" xml:lang=\"en\" "
-"title=\"HyperText Markup Language\">HTML</acronym> tags instead of the "
-"original formatting; it also involves full headers for each message. The "
+"\"><strong>GET nameofthelist year-month</strong></span> (example: <em class="
+"\"example\">GET list_example 2016-07</em>). Then you receive a compilation "
+"of all messages sent during the chosen month. This compilation is sent in "
+"plain text and contains <acronym lang=\"en\" xml:lang=\"en\" title="
+"\"HyperText Markup Language\">HTML</acronym> tags instead of the original "
+"formatting; it also involves full headers for each message. The "
 "'<strong>Text archives</strong>' parameter allows you to define:"
 msgstr ""
 "También es posible <strong>acceder al archivo de la lista por correo "
@@ -4830,8 +4095,8 @@ msgid ""
 msgstr ""
 "La opción '<strong>método de protección de las direcciones de correo</"
 "strong>' asegura que las direcciones de correo de los suscriptores no podrán "
-"ser recolectadas por robots de spam. Esta opción se aplicará a todas las "
-"páginas de la lista."
+"ser recolectadas por robots de correo basura. Esta opción se aplicará a "
+"todas las páginas de la lista."
 
 #: default/web_tt2/help_listconfig.tt2:175
 msgid ""
@@ -5037,7 +4302,7 @@ msgstr ""
 
 #: default/web_tt2/help_mail_commands.tt2:60
 msgid ""
-"code>REMIND <em>list</em></code>: send to all subscribers a personalized "
+"<code>REMIND <em>list</em></code>: send to all subscribers a personalized "
 "reminder with the address with which he/she is subscribed to the list"
 msgstr ""
 "<code>REMIND <em>lista</em></code>: envía a todos los suscriptores un "
@@ -5064,7 +4329,7 @@ msgstr ""
 "<code>MODINDEX <em>lista</em></code>: comprueba la lista de mensajes a "
 "moderar"
 
-#: default/web_tt2/help_sendmsg.tt2:3 default/web_tt2/help_user.tt2:158
+#: default/web_tt2/help_sendmsg.tt2:3 default/web_tt2/help_user.tt2:149
 msgid "Sending a message"
 msgstr "Enviar un mensaje"
 
@@ -5360,12 +4625,12 @@ msgid ""
 "or more generally illegal."
 msgstr ""
 "<strong>Algunos tipos de mensaje no son bienvenidos</strong> en listas de "
-"correo: anuncios, spam, mensajes comerciales, alertas de virus, mensajes de "
-"prueba, mensajes políticos o religiosos, hoaxes, insultantes, invasiones de "
-"privacidad, mensajes dañinos, engañosos o de alguna forma difamatorios, "
-"acosadores, ofensivos, abusivos, infractores, racistas, obscenos o profanos, "
-"promoción de discriminación, violencia u odio por alguna razón, contrarios a "
-"una buena moral, o ilegales de forma general."
+"correo: anuncios, correo basura, mensajes comerciales, alertas de virus, "
+"mensajes de prueba, mensajes políticos o religiosos, hoaxes, insultantes, "
+"invasiones de privacidad, mensajes dañinos, engañosos o de alguna forma "
+"difamatorios, acosadores, ofensivos, abusivos, infractores, racistas, "
+"obscenos o profanos, promoción de discriminación, violencia u odio por "
+"alguna razón, contrarios a una buena moral, o ilegales de forma general."
 
 #: default/web_tt2/help_sendmsg.tt2:45
 msgid ""
@@ -5453,7 +4718,7 @@ msgstr ""
 "\"http://en.wikipedia.org/wiki/Netiquette\">página de la wikipedia dedicada "
 "al Netiquete</a>."
 
-#: default/web_tt2/help_shared.tt2:3 default/web_tt2/help_user.tt2:161
+#: default/web_tt2/help_shared.tt2:3 default/web_tt2/help_user.tt2:152
 msgid "Using the shared document web space"
 msgstr "Utilizar el espacio web compartido de documentos"
 
@@ -5494,11 +4759,11 @@ msgstr ""
 
 #: default/web_tt2/help_shared.tt2:14
 msgid ""
-"The 'Shared documents' section can contain three types of resources</"
+"<strong>The 'Shared documents' section can contain three types of resources</"
 "strong>: <strong>folders</strong>, <strong>files</strong> and "
 "<strong>bookmarks</strong>."
 msgstr ""
-"La sección de 'Documentos compartidos' puede contener tres tipos de "
+"<strong>La sección de 'Documentos compartidos' puede contener tres tipos de "
 "recursos</strong>: <strong>carpetas</strong>, <strong>ficheros</strong> y "
 "<strong>marcadores (enlaces)</strong>."
 
@@ -5566,10 +4831,9 @@ msgid ""
 "access rights to some files/folders</strong>. Both the reading and writing "
 "rights can be restricted:"
 msgstr ""
-"<strong>Los dueños de la lista o los autores de los documentos</strong> "
-"puden restringir los derechos de acceso a determinados archivos/carpetas</"
-"strong>. Tanto los derechos de lectura como los de escritura pueden "
-"restringirse:"
+"<strong>Los dueños de la lista o los autores de los documentos pueden "
+"restringir los derechos de acceso a determinados archivos/carpetas</strong>. "
+"Tanto los derechos de lectura como los de escritura pueden restringirse:"
 
 #: default/web_tt2/help_shared.tt2:29
 msgid ""
@@ -5614,17 +4878,17 @@ msgstr ""
 
 #: default/web_tt2/help_shared.tt2:34
 msgid ""
-"You can sort documents and folders according to criteria</strong> other than "
-"the name of the document/folder: they can also be sorted according to their "
-"<strong>author</strong>, their <strong>size</strong> and their <strong>last "
-"update date</strong>. To sort documents according to the criterion of your "
-"choice, click on the name of the corresponding column."
+"<strong>You can sort documents and folders according to criteria</strong> "
+"other than the name of the document/folder: they can also be sorted "
+"according to their <strong>author</strong>, their <strong>size</strong> and "
+"their <strong>last update date</strong>. To sort documents according to the "
+"criterion of your choice, click on the name of the corresponding column."
 msgstr ""
-"Puedes ordenar los documentos y carpetas con otro criterio que sea distinto "
-"al del nombre</strong>: también pueden ordenarse según el <strong>autor</"
-"strong>, su <strong>tamaño</strong> así como la <strong>fecha de última "
-"modificación</strong>. Para ordenarlos según tu criterio, pincha en el "
-"nombre de la columna correspondiente."
+"<strong>Puedes ordenar los documentos y carpetas con otro criterio que sea "
+"distinto al del nombre</strong>: también pueden ordenarse según el "
+"<strong>autor</strong>, su <strong>tamaño</strong> así como la <strong>fecha "
+"de última modificación</strong>. Para ordenarlos según tu criterio, pincha "
+"en el nombre de la columna correspondiente."
 
 #: default/web_tt2/help_shared.tt2:37
 msgid "Downloading documents from the shared document web space"
@@ -5634,8 +4898,9 @@ msgstr "Descargar documentos desde el espacio web de documentos compartidos"
 msgid "To download a document from a list, do as follows:"
 msgstr "Para descargar un documento de una lista, haz lo siguiente:"
 
-#: default/web_tt2/help_shared.tt2:40 default/web_tt2/help_shared.tt2:62
-#: default/web_tt2/help_shared.tt2:75 default/web_tt2/help_shared.tt2:87
+#: default/web_tt2/help_shared.tt2:40 default/web_tt2/help_shared.tt2:52
+#: default/web_tt2/help_shared.tt2:62 default/web_tt2/help_shared.tt2:75
+#: default/web_tt2/help_shared.tt2:87
 msgid ""
 "<strong>Go to the 'Shared documents' section</strong> of the list of your "
 "interest."
@@ -5686,37 +4951,34 @@ msgid "Creating a folder on a list"
 msgstr "Creando una carpeta en una lista"
 
 #: default/web_tt2/help_shared.tt2:50
-msgid "To create a folder on a list</strong>, do as follows:"
-msgstr "Para crear una carpeta en una lista</strong>, haz lo siguiente:"
-
-#: default/web_tt2/help_shared.tt2:52
-msgid ""
-"Go to the 'Shared documents' section</strong> of the list of your interest."
+msgid "<strong>To create a folder on a list</strong>, do as follows:"
 msgstr ""
-"Dirígete a la sección de 'Documentos compartidos'</strong> de la lista que "
-"sea de tu interés."
+"<strong>Para crear una carpeta en una lista</strong>, haz lo siguiente:"
 
 #: default/web_tt2/help_shared.tt2:53
-msgid "Browse the folder in which you want to create a folder</strong>."
+msgid ""
+"<strong>Browse the folder in which you want to create a folder</strong>."
 msgstr ""
-"Explora la carpeta dentro de la cual quieres crear la nueva caperta</strong>."
+"<strong>Explora la carpeta dentro de la cual quieres crear la nueva caperta</"
+"strong>."
 
-#: default/web_tt2/help_shared.tt2:54
-msgid "Switch to expert mode</strong>."
-msgstr "Cambiar al modo experto</strong>."
+#: default/web_tt2/help_shared.tt2:54 default/web_tt2/help_shared.tt2:64
+#: default/web_tt2/help_shared.tt2:77 default/web_tt2/help_shared.tt2:89
+msgid "<strong>Switch to expert mode</strong>."
+msgstr "<strong>Cambiar al modo experto</strong>."
 
 #: default/web_tt2/help_shared.tt2:55
 msgid ""
-"Enter the folder name</strong> in the text field close to the 'Create a new "
-"folder inside [name of the current folder]' label."
+"<strong>Enter the folder name</strong> in the text field close to the "
+"'Create a new folder inside [name of the current folder]' label."
 msgstr ""
-"Introduce el nombre de la carpeta</strong> en el campo de texto situado "
-"cerca de la etiqueta 'Crear una nueva carpeta dentro de [nombre de la "
-"carpeta actual]'."
+"<strong>Introduce el nombre de la carpeta</strong> en el campo de texto "
+"situado cerca de la etiqueta 'Crear una nueva carpeta dentro de [nombre de "
+"la carpeta actual]'."
 
-#: default/web_tt2/help_shared.tt2:56
-msgid "Click on the 'Create' button</strong>."
-msgstr "Pincha en el botón 'Crear'</strong>"
+#: default/web_tt2/help_shared.tt2:56 default/web_tt2/help_shared.tt2:91
+msgid "<strong>Click on the 'Create' button</strong>."
+msgstr "<strong>Pincha en el botón 'Crear'</strong>."
 
 #: default/web_tt2/help_shared.tt2:59
 msgid "Uploading a file on a list"
@@ -5733,11 +4995,6 @@ msgid ""
 msgstr ""
 "<strong>Explora la carpeta dentro de la cual quieres subir el nuevo fichero</"
 "strong>. Crea una nueva carpeta si es necesario."
-
-#: default/web_tt2/help_shared.tt2:64 default/web_tt2/help_shared.tt2:77
-#: default/web_tt2/help_shared.tt2:89
-msgid "<strong>Switch to expert mode</strong>."
-msgstr "<strong>Cambiar al modo experto</strong>."
 
 #: default/web_tt2/help_shared.tt2:65
 msgid ""
@@ -5832,8 +5089,8 @@ msgid "Creating a file on a list"
 msgstr "Crear un fichero en una lista"
 
 #: default/web_tt2/help_shared.tt2:85
-msgid "To create a file on a list</strong>, do as follows:"
-msgstr "Para crear un fichero en una lista</strong>, haz lo siguiente:"
+msgid "<strong>To create a file on a list</strong>, do as follows:"
+msgstr "<strong>Para crear un fichero en una lista</strong>, haz lo siguiente:"
 
 #: default/web_tt2/help_shared.tt2:88
 msgid ""
@@ -5850,10 +5107,6 @@ msgid ""
 msgstr ""
 "<strong>Introduce un nombre de fichero</strong> en el campo de entrada cerca "
 "de la etiqueta 'Crear un nuevo fichero'."
-
-#: default/web_tt2/help_shared.tt2:91
-msgid "<strong>Click on the 'Create' button</strong>."
-msgstr "<strong>Pincha en el botón 'Crear'</strong>."
 
 #: default/web_tt2/help_shared.tt2:93
 msgid "You are brought to the file creation page."
@@ -6154,11 +5407,11 @@ msgid ""
 "message displays in order to let you go back on your decision: <strong>once "
 "deleted, the document will not be retrievable anymore</strong>."
 msgstr ""
-"<strong>Para borrar cualquier tipo de documento, pincha en el texto "
+"<strong>Para borrar cualquier tipo de documento, haga clic en el texto "
 "'Borrar'</strong> al lado del nombre del documento en la columna 'Borrar'. "
 "Un mensaje de confirmación se mostrará para permitir abortar tu decisión: "
-"<strong>una vez que sea borrado</strong>, el documento ya no podrá "
-"recuperarse</strong>."
+"<strong>una vez que sea borrado, el documento ya no podrá recuperarse</"
+"strong>."
 
 #: default/web_tt2/help_shared.tt2:139
 msgid ""
@@ -6223,13 +5476,14 @@ msgid ""
 "completed by subfolders for each lesson or each teacher within each year "
 "folder."
 msgstr ""
-"Ejemplo: si la lista está destinada a recolectar trabajos de estudiantes, "
+"Ejemplo: si la lista está destinada a recopilar trabajos de estudiantes, "
 "dichos estudiantes asistirán a las mismas lecciones y harán el mismo trabajo "
-"entre un año y otro. Debido a esto, podría ser interesante crear un fichero "
-"por cada año académico en el raíz del espacio web de documentos compartidos: "
-"esto le permitirá a los estudiantes revisar los trabajos y lecciones de años "
-"anteriores. También puede complementarse con la creación de subcarpetas por "
-"cada lección o cada profesor dentro de cada carpeta de año."
+"cada año. Debido a esto, podría ser interesante crear una carpeta por año "
+"académico en el raíz del espacio web de documentos compartidos: esto "
+"permitirá a los estudiantes revisar los trabajos y lecciones de años previos "
+"(siempre que los profesores <a href=\"#acces\">restrinjan el acceso</a> a "
+"recursos confidenciales). También puede complementarse con la creación de "
+"subcarpetas por cada lección o cada profesor dentro de cada carpeta anual."
 
 #: default/web_tt2/help_shared.tt2:148
 msgid ""
@@ -6286,7 +5540,7 @@ msgstr ""
 
 #: default/web_tt2/help_suspend.tt2:8
 msgid ""
-"Select a start date through the calendar that appears when you click on the "
+"Select a start date using the calendar that appears when you click on the "
 "\"start date\" field;"
 msgstr ""
 "Selecciona una fecha de inicio a través del calendario que aparece cuando "
@@ -6295,9 +5549,9 @@ msgstr ""
 #: default/web_tt2/help_suspend.tt2:9
 msgid ""
 "if you wish, you can specify the date when you want your subscription to "
-"resume. Do it using the \"end date\" field. You can click on \"indefinite.\" "
-"In this case, you will have to return to this page to resume your "
-"subscription;"
+"resume. Do it using the \"end date\" field. Alternatively, you can click on "
+"\"indefinite.\" In this case, you will have to return to this page to resume "
+"your subscription;"
 msgstr ""
 "si deseas, puedes especificar la fecha de cuando quieres que tu suscripción "
 "continúe. Hazlo usando el campo \"fecha fin\". Puedes hacer clic en "
@@ -6306,8 +5560,8 @@ msgstr ""
 
 #: default/web_tt2/help_suspend.tt2:10
 msgid ""
-"Select the lists which you want to suspend your subscription for. The "
-"\"Toogle selection\" button allows you to invert the selection;"
+"Select the lists for which you wish to suspend your subscription. The "
+"\"Toggle selection\" button allows you to invert the selection;"
 msgstr ""
 "Selecciona las listas para las que quieres suspender tu suscripción. El "
 "botón \"Toogle selection\" te permite invertir la selección;"
@@ -6327,7 +5581,7 @@ msgstr ""
 
 #: default/web_tt2/help_suspend.tt2:15
 msgid ""
-"Select the list(s) you want to reactivate. The \"Toogle selection\" button "
+"Select the list(s) you want to reactivate. The \"Toggle selection\" button "
 "allows you to invert the selection;"
 msgstr ""
 "Selecciona la(s) lista(s) que quieres reactivar. El botón \"Toogle selection"
@@ -6336,183 +5590,6 @@ msgstr ""
 #: default/web_tt2/help_suspend.tt2:16
 msgid "Click \"Resume\"."
 msgstr "Pulsar en \"Continuar\""
-
-#: default/web_tt2/help.tt2:11
-msgid "Subscriber, moderator and owner documentation"
-msgstr "Documentación para el suscriptor, moderador y administrador"
-
-#: default/web_tt2/help.tt2:13
-msgid "In this documentation, you will find:"
-msgstr "En esta documentación encontrarás:"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:15
-msgid ""
-"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
-msgstr ""
-"una <a href=\"%1/help/introduction\">introducción general</a> a las listas "
-"de correo;"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:16
-msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
-msgstr ""
-"una <a href=\"%1/help/user\">guía de usuario</a> acerca del uso de Sympa;"
-
-#. (path_cgi)
-#: default/web_tt2/help.tt2:17
-msgid ""
-"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
-msgstr ""
-"una <a href=\"%1/help/admin\">guía de administrador</a> sobre el uso de "
-"Sympa."
-
-#: default/web_tt2/help_user_options.tt2:3
-msgid ""
-"This is a description of the reception modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-msgstr ""
-"Esta es una descripción de los modos de recepción disponibles en Sympa. "
-"Estas opciones se excluyen mutuamente, lo que significa que no puedes "
-"configurar dos modos de recepción simultaneamente. Solo algunos de los modos "
-"podrían estar disponibles para listas de correo específicas. "
-
-#: default/web_tt2/help_user_options.tt2:7
-msgid "Digest"
-msgstr "Recopilación (Digest)"
-
-#: default/web_tt2/help_user_options.tt2:10
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-msgstr ""
-"En vez de recibir mensajes de correo individuales de la lista, el suscriptor "
-"recibirá periódicamente \n"
-"un lote de mensajes en una Recopilación. Esta recopilación aglutina un grupo "
-"de mensajes de la lista, \n"
-"utilizando el formato MIME multiparte."
-
-#: default/web_tt2/help_user_options.tt2:12
-#: default/web_tt2/help_user_options.tt2:20
-msgid "The sending interval for these Digests is defined by the list owner."
-msgstr ""
-"La periodicidad de envío de estas Recopilaciones la define el dueño de la "
-"lista."
-
-#: default/web_tt2/help_user_options.tt2:14
-msgid "DigestPlain"
-msgstr "RecopilaciónPlano (DigestPlain)"
-
-#: default/web_tt2/help_user_options.tt2:18
-msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-msgstr ""
-"Similar a la opción Recopilación en la que el usuario recibirá "
-"periódicamente los mensajes \n"
-"por lotes en una Recopilación. Con RecopilaciónPlano la recopilación se "
-"manda en texto \n"
-"sin formato, con todos los documentos adjuntos extraídos. RecopilaciónPlano "
-"es útil si tu \n"
-"programa de correo electrónico no muestra correctamente los mensajes con "
-"formato multipartes."
-
-#: default/web_tt2/help_user_options.tt2:22
-msgid "Summary"
-msgstr "Sumario"
-
-#: default/web_tt2/help_user_options.tt2:26
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-msgstr ""
-"En vez de recibir mensajes de correo individuales de la lista, el "
-"subscriptor recibirá periódicamente \n"
-"una lista de mensajes. Este modo es mas parecido al modo de recepción "
-"Recopilación pero el \n"
-"suscriptor recibe solo la lista de los mensajes."
-
-#: default/web_tt2/help_user_options.tt2:29
-msgid "Nomail"
-msgstr "Nomail"
-
-#: default/web_tt2/help_user_options.tt2:31
-msgid ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-msgstr ""
-"Este modo se usa cuando un subscriptor no quiere seguir recibiendo correo de "
-"la lista, pero sin embargo desea mantener la posibilidad de enviar mensajes "
-"a la lista. Este modo por lo tanto evita al subscriptor tener que cancelar "
-"la subscripción y darse de alta nuevamente más tarde."
-
-#: default/web_tt2/help_user_options.tt2:36
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-msgstr ""
-"Este modo se usa cuando un subscriptor solo desea recibir en texto sin "
-"formato, los correos enviados \n"
-"en el formato HTML y texto sin formato."
-
-#: default/web_tt2/help_user_options.tt2:41
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-msgstr ""
-"Este modo se usa cuando un subscriptor solo desea recibir en formato HTML, "
-"los correos enviados en \n"
-"el formato HTML y texto sin formato."
-
-#: default/web_tt2/help_user_options.tt2:46
-msgid ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-msgstr ""
-"Este modo se usa cuando un subscriptor no quiere recibir ficheros adjuntos. "
-"Los ficheros adjuntos son\n"
-"reemplazados por una URL que apunta al fichero compartido en la web de la "
-"lista."
-
-#: default/web_tt2/help_user_options.tt2:51
-msgid ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-msgstr ""
-"Este modo se usa cuando un subscriptor no quiere recibir copias de los "
-"mensajes que él/ella ha enviado a \n"
-"la lista."
-
-#: default/web_tt2/help_user_options.tt2:56
-msgid ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
-msgstr ""
-"Esta opción se usa principalmente para cancelar los modos nomail, resumen "
-"(summary) o \n"
-"recopilación (digest). Si el subscriptor estaba en modo nomail, él volverá a "
-"recibir mensajes \n"
-"de correo individuales de la lista."
 
 #: default/web_tt2/help_user.tt2:3
 msgid "Mailing lists - User Guide"
@@ -6534,15 +5611,15 @@ msgstr ""
 
 #: default/web_tt2/help_user.tt2:7
 msgid ""
-"To perform actions related to mailing lists</strong> (subscribe, change your "
-"options, etc.), you have two options:"
+"<strong>To perform actions related to mailing lists</strong> (subscribe, "
+"change your options, etc.), you have two options:"
 msgstr ""
-"Para realizar acciones relacionadas con las listas de correo</strong>"
+"<strong>Para realizar acciones relacionadas con las listas de correo</strong>"
 "(suscripción, chambiar tus opciones, etc.), tienes dos opciones:"
 
 #: default/web_tt2/help_user.tt2:9
 msgid "<strong>log on to the web environment</strong>;"
-msgstr "<strong>Entrar en el entorno web</stronG>;"
+msgstr "<strong>Entrar en el entorno web</strong>;"
 
 #. (conf.email,conf.host)
 #: default/web_tt2/help_user.tt2:10
@@ -6616,8 +5693,11 @@ msgstr "La suscripción a una lista de correo es muy simple:"
 
 #: default/web_tt2/help_user.tt2:28
 msgid ""
-"Choose the address</strong> with which you want to subscribe to the list."
-msgstr "Elige la dirección</strong> con la que quieres suscribirte a la lista."
+"<strong>Choose the address</strong> with which you want to subscribe to the "
+"list."
+msgstr ""
+"<strong>Elige la dirección</strong> con la que quieres suscribirte a la "
+"lista."
 
 #: default/web_tt2/help_user.tt2:29
 msgid ""
@@ -6666,19 +5746,19 @@ msgstr ""
 "Apellidos</strong> (cambia 'nombredelalista' por el nombre de la lista a la "
 "que te quieres suscribir e indica tu propio Nombre y Apellidos)."
 
-#: default/web_tt2/help_user.tt2:172 default/web_tt2/help_user.tt2:34
+#: default/web_tt2/help_user.tt2:163 default/web_tt2/help_user.tt2:34
 msgid "<strong>Leave the message body blank</strong>."
 msgstr "<strong>Deja el cuerpo del mensaje en blanco</strong>."
 
-#: default/web_tt2/help_user.tt2:173 default/web_tt2/help_user.tt2:35
+#: default/web_tt2/help_user.tt2:164 default/web_tt2/help_user.tt2:35
 msgid ""
 "To save some time, you can also send several commands in a single message. "
 "To do that, follow the instructions available in the <a href=\"#howitworks"
 "\">How the mailing list service works</a> section."
 msgstr ""
-"Para ahorrar tiempo, puedes enviar varios comandos en un mismo mensaje. Para "
-"hacer eso, sigue las instrucciones disponibles en la sección <a href="
-"\"howitworks\">Cómo funciona un servicio de listas de correo</a>"
+"Para ahorrar algo de tiempo, puedes enviar varios comandos en un mismo "
+"mensaje. Para hacer esto, sigue las instrucciones disponibles en la sección "
+"<a href=\"#howitworks\">Cómo funciona un servicio de listas de correo</a>."
 
 #. (conf.host)
 #: default/web_tt2/help_user.tt2:38
@@ -6845,11 +5925,12 @@ msgstr ""
 
 #: default/web_tt2/help_user.tt2:62
 msgid ""
-"<strong>If the unique authentication process does not apply to you, you can "
-"use your list password.</strong> In this case, log on through the classic "
-"method: enter the <strong>email address with which you subscribed to the "
-"list</strong> as a login and your <strong>list password</strong> in the "
-"'Password' field."
+"<strong>If the unique authentication process does not apply to you but you "
+"are already subscribed to lists</strong>, then you have been granted a list "
+"password (displayed in the list Charter you got when you subscribed to the "
+"list). In this case, log on through the classic method: enter the "
+"<strong>email address with which you subscribed to the list</strong> as a "
+"login and your <strong>list password</strong> in the 'Password' field."
 msgstr ""
 "<strong>Si no se aplica ningún proceso de autenticación única deberás "
 "utilizar tu contraseña de lista.</strong> En ese caso, entra a través del "
@@ -6859,9 +5940,9 @@ msgstr ""
 
 #: default/web_tt2/help_user.tt2:63
 msgid ""
-"If you do not remember your list password, click on 'Lost password?'. After "
-"you've provided your email address, a mail with a validation URL will be "
-"sent at that address."
+"If you do not remember your list password, click on 'Lost password?'. Then "
+"enter your email address and password. Shortly afterward you will receive an "
+"email with a validation link."
 msgstr ""
 "Si no recuerdas tu contraseña de lista, haz clic en '¿Contraseña perdida?'. "
 "Después de indicar tu dirección de correo, recibirás un correo con una URL "
@@ -6870,8 +5951,8 @@ msgstr ""
 #: default/web_tt2/help_user.tt2:65
 msgid ""
 "<strong>If the unique authentication process does not apply to you and you "
-"do no have a list password yet</strong>, click on '<strong>First login?</"
-"strong>' and type in your email address. A confirmation URL will be sent at "
+"do not have a list password yet</strong>, click on '<strong>First login?</"
+"strong>' and type in your email address. A confirmation URL will be sent to "
 "that address. Then you will be able to choose your password."
 msgstr ""
 "<strong>Si el proceso de autenticación única no se te aplica y no tienes una "
@@ -6898,10 +5979,10 @@ msgid ""
 "description for each of them, will be displayed in the 'Your lists' form on "
 "the left column."
 msgstr ""
-"Para ver todas las listas a las que estás suscrito, necesitas <a href="
-"\"#syma_auth\">acceder</a> primero. Posteriormente se mostrará un listado de "
-"todas tus listas, incluyendo una breve descripción de cada una de ellas, en "
-"el formulario \"Tus listas\" de la columna izquierda."
+"Para ver todas las listas a las que estás suscrito, necesitas primero <a "
+"href=\"#sympa_auth\">acceder</a>. Luego se mostrará un listado de todas tus "
+"listas, incluyendo una breve descripción de cada una de ellas, en el "
+"formulario \"Tus listas\" de la columna izquierda."
 
 #: default/web_tt2/help_user.tt2:73
 msgid ""
@@ -6930,7 +6011,8 @@ msgstr "leer el <a href=\"%1/help/arc\">archivo de mensajes de la lista</a>"
 #. (path_cgi)
 #: default/web_tt2/help_user.tt2:78
 msgid "<a href=\"%1/help/arc#arcsearch\">search in the message archive</a>;"
-msgstr "<a href=\"%1/help/arc#arcsearch>buscar en el archivo de mensajes</a>;"
+msgstr ""
+"<a href=\"%1/help/arc#arcsearch\">buscar en el archivo de mensajes</a>;"
 
 #. (path_cgi)
 #: default/web_tt2/help_user.tt2:79
@@ -7087,140 +6169,27 @@ msgid ""
 "strong>Choose a message delivery mode</strong> (those options are mutually "
 "exclusive, thus you can not select several of them):"
 msgstr ""
-"<strong>Cambia el modo de recepción de mensajes</strong> (estas opciones son "
+"strong>Cambia el modo de recepción de mensajes</strong> (estas opciones son "
 "mutuamente excluyentes, así que no puedes seleccionar varias a la vez):"
-
-#: default/web_tt2/help_user.tt2:106
-msgid ""
-"<strong>digest MIME format</strong>: instead of receiving the list messages "
-"in a normal manner, you will get a digest of them on a regular basis. This "
-"digest compiles a group of messages from the list, using multipart/digest "
-"<acronym lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail "
-"Extension\">MIME</acronym> format. The digest frequency is set up by the "
-"list owner."
-msgstr ""
-"<strong>recopilación en formato MIME</strong>: en vez de recibir los "
-"mensajes de la lista de forma normal, recibirás regularmente una "
-"recopilación de ellos. Esta recopilación aglutina un grupo de mensajes de la "
-"lista, utilizando el formato <atronym lang=\"en\" xml:lang=\"en\" title="
-"\"Multipurpose Internet Mail Extension\">MIME</acronym> multiparte. La "
-"periodicidad de la recopilación la establece el dueño de la lista."
 
 #: default/web_tt2/help_user.tt2:107
 msgid ""
-"<strong>digest plain text format</strong>: instead of receiving the list "
-"messages in a normal manner, you will get a digest of them on a regular "
-"basis. This digest compiles a group of messages from the list, using plain "
-"text format. The digest frequency is set up by the list owner."
+"<strong>suspended</strong>: this mode allows you to suspend your "
+"subscription to one or more lists for a specified or unspecified period. "
+"Unlike unsubscription, you can keep track of your subscription and "
+"reactivate it at any time by visiting the \"Manage your subscription\" "
+"section."
 msgstr ""
-"<strong>recopilación en texto sin formato</strong>: en vez de recibir los "
-"mensajes de la lista de forma normal, recibirás regularmente una "
-"recopilación de ellos. La recopilación aglutina un grupo de mensajes de la "
-"lista, utilizando texto sin formato. La periodicidad de la recopilación la "
-"establece el dueño de la lista."
-
-#: default/web_tt2/help_user.tt2:108
-msgid ""
-"<strong>summary mode</strong>: instead of receiving the list messages in a "
-"normal manner, you will get a list of them on a regular basis. To read the "
-"messages, you will need to browse the online list archive."
-msgstr ""
-"<strong>modo resumen</strong>: en vez de recibir los mensajes de la lista de "
-"forma normal, tendrás regularmente un listado de ellos. Para leer los "
-"mensajes, debes navegar por el archivo web de la lista."
+"<strong>suspendido</strong>: este modo le permite suspender su suscripción a "
+"una o más listas por un período determinado o no. A diferencia de darse de "
+"baja, puede realizar un seguimiento de su suscripción y reactivarla en "
+"cualquier momento visitando la sección \"Administrar su suscripción\"."
 
 #: default/web_tt2/help_user.tt2:109
-msgid ""
-"<strong>notice mode</strong>: with this mode, you will receive all the "
-"messages with a blank body: this way you are informed of every message sent "
-"to the list real time, without risk of flooding your inbox."
-msgstr ""
-"<strong>modo de notificación</strong>: con este modo, recibirás todos los "
-"mensajes con el cuerpo del mensaje en blanco: de esta forma se te informa de "
-"cada mensaje enviado a la lista en tiempo real, sin riesgo de inundar tu "
-"carpeta de entrada."
-
-#: default/web_tt2/help_user.tt2:110
-msgid ""
-"<strong>no mail (useful for vacations)</strong>: this mode makes it possible "
-"not to receive the messages of the list. It is especially useful when you "
-"have no access to your email for a long time and want to remain subscribed "
-"to the list nevertheless."
-msgstr ""
-"<strong>no mail (útil para las vacaciones)</strong>: este modo hace posible "
-"que no recibas mensajes de la lista. Es especialmente útil cuando no tienes "
-"acceso a tu correo durante un periodo largo de tiempo y sin embargo quieres "
-"mantenerte suscrito a la lista."
-
-#: default/web_tt2/help_user.tt2:111
-msgid ""
-"<strong>text only mode</strong>: this mode allows you to receive only the "
-"text version (text/plain) of messages sent in both formats (plain text and "
-"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
-"\">HTML</acronym>)."
-msgstr ""
-"<strong>modo sólo texto</strong>: este modo permite recibir únicamente la "
-"versión en texto (text/plain) de un mensaje enviado en varios formatos "
-"(texto sin formato y <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText "
-"Markup Language\">HTML</acronym>)."
-
-#: default/web_tt2/help_user.tt2:112
-msgid ""
-"<strong>HTML only mode</strong>: this mode allows you to receive only the "
-"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
-"\">HTML</acronym> version (text/html) of messages sent in both formats."
-msgstr ""
-"<strong>modo sólo HTML</strong>: este modo permite recibir sólo la versión "
-"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
-"\">HTML</acronym> de mensajes enviados en ambos formatos."
-
-#: default/web_tt2/help_user.tt2:113
-msgid ""
-"<strong>urlize mode</strong>: this mode allows you not to receive attached "
-"documents. However these documents are available in the list archive and you "
-"can access them through a <acronym title=\"Uniform Resource Locator\" lang="
-"\"en\" xml:lang=\"en\">URL</acronym> provided in the message."
-msgstr ""
-"<strong>modo URLizado</strong>: este modo permite no recibir documentos "
-"adjuntos. Sin embargo estos documentos están disponibles en el archivo de la "
-"lista y puedes acceder a ellos a travéz de la <acronym title=\"Uniform "
-"Resource Locator\" lang=\"en\" xml:lang=\"en\">URL</acronym> proporcionada "
-"en el mensaje."
-
-#: default/web_tt2/help_user.tt2:114
-msgid ""
-"<strong>you do not receive your own posts</strong>: this mode allows you not "
-"to receive a copy of your own messages."
-msgstr ""
-"<strong>no recibes tus propios mensajes</strong>: este modo permite no "
-"recibir una copia de tus propios mensajes."
-
-#: default/web_tt2/help_user.tt2:115
-msgid ""
-"<strong>standard (direct reception)</strong>: this mode is the default "
-"delivery mode; it cancels any other delivery mode."
-msgstr ""
-"<strong>estandar (recepción directa)</strong>: este modo es el modo de "
-"entrega por defecto; éste modo cancela cualquier otro modo de entrega:"
-
-#: default/web_tt2/help_user.tt2:116
-msgid ""
-"<strong>suspended</strong>: this mode allows you to suspend your "
-"subscription to one or more lists for a specified period or not. Unlike "
-"unsubscription, you can keep track of your subscription and reactivate it at "
-"any time by visiting the \"Manage your subscription\" section."
-msgstr ""
-"<strong> suspendido </ strong>: este modo le permite suspender su "
-"suscripción a una o más listas por un período determinado o no. A diferencia "
-"de darse de baja, puede realizar un seguimiento de su suscripción y "
-"reactivarla en cualquier momento visitando la sección \"Administrar su "
-"suscripción\"."
-
-#: default/web_tt2/help_user.tt2:118
 msgid "<strong>Choose a visibility option</strong>:"
 msgstr "<strong>Cambiar las opciones de visibilidad</strong>:"
 
-#: default/web_tt2/help_user.tt2:120
+#: default/web_tt2/help_user.tt2:111
 msgid ""
 "<strong>listed in the list review page</strong>: your name and email address "
 "will be displayed in the members list (if the list owner allowed subscribers "
@@ -7231,7 +6200,7 @@ msgstr ""
 "el dueño de la lista permitió a los suscriptores revisar los miembros de la "
 "lista)."
 
-#: default/web_tt2/help_user.tt2:121
+#: default/web_tt2/help_user.tt2:112
 msgid ""
 "<strong>concealed</strong>: your name and email address will not be "
 "displayed in the members list. However you email address will be visible in "
@@ -7241,15 +6210,15 @@ msgstr ""
 "la lista de suscriptores. Sin embargo, tu dirección de correo será visible "
 "en el archivo de mensajes de la lista si envías uno."
 
-#: default/web_tt2/help_user.tt2:123
+#: default/web_tt2/help_user.tt2:114
 msgid "<strong>Click on the 'Update' button</strong>."
 msgstr "<strong>Pincha en el botón 'Actualizar'</strong>."
 
-#: default/web_tt2/help_user.tt2:126
+#: default/web_tt2/help_user.tt2:117
 msgid "Changing your general preferences"
 msgstr "Cambiar tus preferencias generales"
 
-#: default/web_tt2/help_user.tt2:127
+#: default/web_tt2/help_user.tt2:118
 msgid ""
 "The general preferences apply to all your subscriptions as well as to the "
 "way your Sympa mailing list web interface displays. To change your "
@@ -7259,7 +6228,7 @@ msgstr ""
 "forma en que la interfaz de tu servidor de listas Sympa lo muestra. Para "
 "cambiar tus preferencias, haz lo siguiente:"
 
-#: default/web_tt2/help_user.tt2:130
+#: default/web_tt2/help_user.tt2:121
 msgid ""
 "In the form displayed on top of the left column, <strong>click on the 'Your "
 "preferences' link</strong>."
@@ -7267,20 +6236,20 @@ msgstr ""
 "En el formulario mostrado encima de la columna izquierda, <strong>haz clic "
 "en el enlace 'Tus preferencias'</strong>"
 
-#: default/web_tt2/help_user.tt2:131
+#: default/web_tt2/help_user.tt2:122
 msgid "<strong>Change your preferences</strong>."
 msgstr "<strong>Cambia tus preferencias</strong>"
 
-#: default/web_tt2/help_user.tt2:132
+#: default/web_tt2/help_user.tt2:123
 msgid "<strong>Click on 'Submit' for every option</strong> you change."
 msgstr ""
 "<strong>Pincha en el botón 'Enviar' de cada opción</strong> que cambias."
 
-#: default/web_tt2/help_user.tt2:134
+#: default/web_tt2/help_user.tt2:125
 msgid "You can change:"
 msgstr "Puedes cambiar:"
 
-#: default/web_tt2/help_user.tt2:136
+#: default/web_tt2/help_user.tt2:127
 msgid ""
 "your <strong>name</strong>; if you subscribe to a list from the mailing list "
 "server web interface, the 'Name' field will automatically be filled in in "
@@ -7290,7 +6259,7 @@ msgstr ""
 "web del servidor de listas, el campo 'Nombre' se rellenará automáticamente "
 "en la lista de suscriptores;"
 
-#: default/web_tt2/help_user.tt2:137
+#: default/web_tt2/help_user.tt2:128
 msgid ""
 "the <strong>language in which the Sympa web interface is displayed</strong> "
 "(you can change language on every page of the web interface; your choice "
@@ -7302,7 +6271,7 @@ msgstr ""
 "incluso si cambias el lenguaje en otra página distinta a la página de "
 "'Preferencias';"
 
-#: default/web_tt2/help_user.tt2:138
+#: default/web_tt2/help_user.tt2:129
 msgid ""
 "the <strong>lifetime of the cookie placed on your computer by Sympa</strong> "
 "('Connection expiration period'). By default, the session expires when you "
@@ -7314,7 +6283,7 @@ msgstr ""
 "caduca cuando cierras el navegador; si usas el servicio de listas con "
 "frecuencia, te recomendamos que elijas un tiempo de duración mas largo;"
 
-#: default/web_tt2/help_user.tt2:139
+#: default/web_tt2/help_user.tt2:130
 msgid ""
 "A cookie is a small file a web server stores on your hard disk, most "
 "generally temporarily, in order to identify you as a user of its service. It "
@@ -7326,7 +6295,7 @@ msgstr ""
 "un usuario del servicio. Contiene pequeñas piezas de información sobre tí: "
 "nombre, dirección de correo, última vez que accediste, etc."
 
-#: default/web_tt2/help_user.tt2:140
+#: default/web_tt2/help_user.tt2:131
 msgid ""
 "the <strong>email address with which you subscribed</strong> to the lists "
 "(if you subscribed with several email addresses, the address to be replaced "
@@ -7336,7 +6305,7 @@ msgstr ""
 "(si te suscribes con distintas direcciones de correo, la dirección se "
 "cambiará a la dirección con la que hayas entrado);"
 
-#: default/web_tt2/help_user.tt2:141
+#: default/web_tt2/help_user.tt2:132
 msgid ""
 "Be careful: this will change your subscriptions to all your lists. If you "
 "want to change address for a single mailing list, you had better unsubscribe "
@@ -7347,11 +6316,11 @@ msgstr ""
 "des de baja de la lista y te suscribas de nuevo con la dirección de correo "
 "electrónica correcta."
 
-#: default/web_tt2/help_user.tt2:142
+#: default/web_tt2/help_user.tt2:133
 msgid "your <strong>list password</strong>."
 msgstr "tu <strong>contraseña de lista</strong>."
 
-#: default/web_tt2/help_user.tt2:144
+#: default/web_tt2/help_user.tt2:135
 msgid ""
 "The '<strong>Your other email addresses</strong>' section acts like an email "
 "address change."
@@ -7359,11 +6328,11 @@ msgstr ""
 "La sección '<strong>Tus otras direcciones de correo</strong>' actua como un "
 "cambio de dirección de correo."
 
-#: default/web_tt2/help_user.tt2:146
+#: default/web_tt2/help_user.tt2:137
 msgid "Searching for a mailing list"
 msgstr "Buscar una lista de correo"
 
-#: default/web_tt2/help_user.tt2:147
+#: default/web_tt2/help_user.tt2:138
 msgid ""
 "You may need to search for a mailing list. To do that, you have three "
 "options:"
@@ -7372,7 +6341,7 @@ msgstr ""
 "opciones:"
 
 #. (path_cgi)
-#: default/web_tt2/help_user.tt2:149
+#: default/web_tt2/help_user.tt2:140
 msgid ""
 "<strong>browse the different sections</strong> displayed on the <a href=\"%1/"
 "home\">list environment homepage</a>;"
@@ -7380,7 +6349,7 @@ msgstr ""
 "<strong>navegar por las diferentes secciones</strong> mostradas en <a href="
 "\"%1/home\">el inicio del entorno web de la lista</a>;"
 
-#: default/web_tt2/help_user.tt2:150
+#: default/web_tt2/help_user.tt2:141
 msgid ""
 "search for a list via the <strong>search box</strong>: the searched string "
 "will return all the lists whose name or description matches your search "
@@ -7392,7 +6361,7 @@ msgstr ""
 "consisten en sentencias cortas);"
 
 #. (path_cgi)
-#: default/web_tt2/help_user.tt2:151
+#: default/web_tt2/help_user.tt2:142
 msgid ""
 "click on the '<a href=\"%1/lists\">List of lists</a>' tab on top of page to "
 "<strong>display all available lists</strong>."
@@ -7400,7 +6369,7 @@ msgstr ""
 "pinchar en la pestaña '<a href=\"%1/lists\">Lista de listas</a>' al inicio "
 "de la página para <strong>mostrar todas las listas disponibles</strong>."
 
-#: default/web_tt2/help_user.tt2:153
+#: default/web_tt2/help_user.tt2:144
 msgid ""
 "According to the domain to which your email address belongs (example: <em "
 "class=\"example\">cru.fr</em>, <em class=\"example\">fai.com</em>, etc.) and "
@@ -7415,12 +6384,12 @@ msgstr ""
 "nombre. Para hacer esto, <a href=\"#subscribe\">utiliza tu cliente de "
 "correo</a>."
 
-#: default/web_tt2/help_user.tt2:155
+#: default/web_tt2/help_user.tt2:146
 msgid "Reading a list archive online"
 msgstr "Leyendo un archivo web de la lista"
 
 #. (path_cgi)
-#: default/web_tt2/help_user.tt2:156
+#: default/web_tt2/help_user.tt2:147
 msgid ""
 "Please refer to the <a href=\"%1/help/arc\"><strong>archive documentation</"
 "strong></a>."
@@ -7429,7 +6398,7 @@ msgstr ""
 "archivo</strong></a>"
 
 #. (path_cgi)
-#: default/web_tt2/help_user.tt2:159
+#: default/web_tt2/help_user.tt2:150
 msgid ""
 "Please refer to the <a href=\"%1/help/sendmsg\"><strong>documentation about "
 "sending messages</strong></a>."
@@ -7438,7 +6407,7 @@ msgstr ""
 "envío de mensajes</strong></a>"
 
 #. (path_cgi)
-#: default/web_tt2/help_user.tt2:162
+#: default/web_tt2/help_user.tt2:153
 msgid ""
 "Please refer to the <a href=\"%1/help/shared\"><strong>shared document web "
 "space documentation</strong></a>."
@@ -7446,12 +6415,12 @@ msgstr ""
 "Por favor revisa la <a href=\"%1/help/shared\"><strong>documentación sobre "
 "espacio web compartido de documentos</strong></a>."
 
-#: default/web_tt2/help_user.tt2:164
+#: default/web_tt2/help_user.tt2:155
 msgid "Suspending or resuming your subscription of each list"
 msgstr "Suspendidiento o continuando tu suscripción de cada lista"
 
 #. (path_cgi)
-#: default/web_tt2/help_user.tt2:165
+#: default/web_tt2/help_user.tt2:156
 msgid ""
 "Please refer to the <a href=\"%1/help/suspend\"><strong>subscription "
 "management documentation</strong></a>."
@@ -7459,16 +6428,16 @@ msgstr ""
 "Por favor revisa la <a href=\"%1/help/suspend\"><strong>documentación de "
 "administración de la suscripción</strong></a>"
 
-#: default/web_tt2/help_user.tt2:167
+#: default/web_tt2/help_user.tt2:158
 msgid "Unsubscribing from lists"
 msgstr "Desuscripción de listas"
 
-#: default/web_tt2/help_user.tt2:168
+#: default/web_tt2/help_user.tt2:159
 msgid "To unsubscribe from a list, do as follows:"
 msgstr "Para darte de baja de una lista, haz lo siguiente:"
 
 #. (conf.email,conf.host)
-#: default/web_tt2/help_user.tt2:170
+#: default/web_tt2/help_user.tt2:161
 msgid ""
 "From the address with which you subscribed to the list, send a "
 "<strong>message to %1@%2</strong>."
@@ -7476,7 +6445,7 @@ msgstr ""
 "Desde la dirección de correo con la que estás suscrito a la lista, envía un "
 "<strong>mensaje a %1@%2</strong>."
 
-#: default/web_tt2/help_user.tt2:171
+#: default/web_tt2/help_user.tt2:162
 msgid ""
 "In the subject line of your email, type in: <strong>unsubscribe "
 "nameofthelist</strong> (replace 'nameofthelist' by the name of the list you "
@@ -7486,7 +6455,7 @@ msgstr ""
 "nombre_lista</strong> (cambia 'nombre_lista' por el nombre de la lista de la "
 "cual te quieres dar de baja)."
 
-#: default/web_tt2/help_user.tt2:175
+#: default/web_tt2/help_user.tt2:166
 msgid ""
 "You can also unsubscribe through the mailing list web interface (you will "
 "need to repeat the operation for each list you want to unsubscribe from):"
@@ -7495,7 +6464,7 @@ msgstr ""
 "correo (necesitarás repetir la operación por cada lista de la que te quieras "
 "dar de baja):"
 
-#: default/web_tt2/help_user.tt2:178
+#: default/web_tt2/help_user.tt2:169
 msgid ""
 "<strong>Go to the information page of the list</strong> you want to "
 "unsubscribe from."
@@ -7503,11 +6472,1347 @@ msgstr ""
 "<strong>Ve a la página de información de la lista</strong> de la que quieres "
 "darte de baja."
 
-#: default/web_tt2/help_user.tt2:179
+#: default/web_tt2/help_user.tt2:170
 msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
 msgstr ""
 "<strong>En el menú lateral izquierdo, haz clic en el enlace 'Darse de baja'</"
 "strong>."
+
+#: default/web_tt2/help_user_options.tt2:4
+msgid ""
+"This is a description of the reception modes available in Sympa. These "
+"options are mutually exclusive, which means that you can't set two different "
+"receive modes at the same time. Only some of the modes might be available to "
+"specific mailing lists."
+msgstr ""
+"Esta es una descripción de los modos de recepción disponibles en Sympa. "
+"Estas opciones se excluyen mutuamente, lo que significa que no puedes "
+"configurar dos modos de recepción simultaneamente. Solo algunos de los modos "
+"podrían estar disponibles para listas de correo específicas. "
+
+#: default/web_tt2/help_user_options.tt2:9
+msgid ""
+"<strong>digest MIME format</strong>: instead of receiving the list messages "
+"in a normal manner, you will get a digest of them on a regular basis. This "
+"digest compiles a group of messages from the list, using multipart/digest "
+"<acronym lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail "
+"Extension\">MIME</acronym> format. The digest frequency is set up by the "
+"list owner."
+msgstr ""
+"<strong>recopilación en formato MIME</strong>: en vez de recibir los "
+"mensajes de la lista de forma normal, recibirás regularmente una "
+"recopilación de ellos. Esta recopilación aglutina un grupo de mensajes de la "
+"lista, utilizando el formato <acronym lang=\"en\" xml:lang=\"en\" title="
+"\"Multipurpose Internet Mail Extension\">MIME</acronym> multiparte. La "
+"periodicidad de la recopilación la establece el dueño de la lista."
+
+#: default/web_tt2/help_user_options.tt2:10
+msgid ""
+"<strong>digest plain text format</strong>: instead of receiving the list "
+"messages in a normal manner, you will get a digest of them on a regular "
+"basis. This digest compiles a group of messages from the list, using plain "
+"text format. The digest frequency is set up by the list owner."
+msgstr ""
+"<strong>recopilación en texto sin formato</strong>: en vez de recibir los "
+"mensajes de la lista de forma normal, recibirás regularmente una "
+"recopilación de ellos. La recopilación aglutina un grupo de mensajes de la "
+"lista, utilizando texto sin formato. La periodicidad de la recopilación la "
+"establece el dueño de la lista."
+
+#: default/web_tt2/help_user_options.tt2:11
+msgid ""
+"<strong>summary mode</strong>: instead of receiving the list messages in a "
+"normal manner, you will get a list of them on a regular basis. To read the "
+"messages, you will need to browse the online list archive."
+msgstr ""
+"<strong>modo resumen</strong>: en vez de recibir los mensajes de la lista de "
+"forma normal, tendrás regularmente un listado de ellos. Para leer los "
+"mensajes, debes navegar por el archivo web de la lista."
+
+#: default/web_tt2/help_user_options.tt2:12
+msgid ""
+"<strong>notice mode</strong>: with this mode, you will receive all the "
+"messages with a blank body: this way you are informed of every message sent "
+"to the list real time, without risk of flooding your inbox."
+msgstr ""
+"<strong>modo de notificación</strong>: con este modo, recibirás todos los "
+"mensajes con el cuerpo del mensaje en blanco: de esta forma se te informa de "
+"cada mensaje enviado a la lista en tiempo real, sin riesgo de inundar tu "
+"carpeta de entrada."
+
+#: default/web_tt2/help_user_options.tt2:13
+msgid ""
+"<strong>no mail (useful for vacations)</strong>: this mode makes it possible "
+"not to receive the messages of the list. It is especially useful when you "
+"have no access to your email for a long time and want to remain subscribed "
+"to the list nevertheless."
+msgstr ""
+"<strong>no mail (útil para las vacaciones)</strong>: este modo hace posible "
+"que no recibas mensajes de la lista. Es especialmente útil cuando no tienes "
+"acceso a tu correo durante un periodo largo de tiempo y sin embargo quieres "
+"mantenerte suscrito a la lista."
+
+#: default/web_tt2/help_user_options.tt2:14
+msgid ""
+"<strong>text only mode</strong>: this mode allows you to receive only the "
+"text version (text/plain) of messages sent in both formats (plain text and "
+"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
+"\">HTML</acronym>)."
+msgstr ""
+"<strong>modo sólo texto</strong>: este modo permite recibir únicamente la "
+"versión en texto (text/plain) de un mensaje enviado en varios formatos "
+"(texto sin formato y <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText "
+"Markup Language\">HTML</acronym>)."
+
+#: default/web_tt2/help_user_options.tt2:15
+msgid ""
+"<strong>HTML only mode</strong>: this mode allows you to receive only the "
+"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
+"\">HTML</acronym> version (text/html) of messages sent in both formats."
+msgstr ""
+"<strong>modo sólo HTML</strong>: este modo permite recibir sólo la versión "
+"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
+"\">HTML</acronym> de mensajes enviados en ambos formatos."
+
+#: default/web_tt2/help_user_options.tt2:16
+msgid ""
+"<strong>urlize mode</strong>: this mode allows you not to receive attached "
+"documents. However these documents are available in the list archive and you "
+"can access them through a <acronym title=\"Uniform Resource Locator\" lang="
+"\"en\" xml:lang=\"en\">URL</acronym> provided in the message."
+msgstr ""
+"<strong>modo URLizado</strong>: este modo permite no recibir documentos "
+"adjuntos. Sin embargo estos documentos están disponibles en el archivo de la "
+"lista y puedes acceder a ellos a travéz de la <acronym title=\"Uniform "
+"Resource Locator\" lang=\"en\" xml:lang=\"en\">URL</acronym> proporcionada "
+"en el mensaje."
+
+#: default/web_tt2/help_user_options.tt2:17
+msgid ""
+"<strong>you do not receive your own posts</strong>: this mode allows you not "
+"to receive a copy of your own messages."
+msgstr ""
+"<strong>no recibes tus propios mensajes</strong>: este modo permite no "
+"recibir una copia de tus propios mensajes."
+
+#: default/web_tt2/help_user_options.tt2:18
+msgid ""
+"<strong>standard (direct reception)</strong>: this mode is the default "
+"delivery mode; it cancels any other delivery mode."
+msgstr ""
+"<strong>estandar (recepción directa)</strong>: este modo es el modo de "
+"entrega por defecto; éste modo cancela cualquier otro modo de entrega:"
+
+#~ msgid ""
+#~ "<strong>You entered an incorrect password</strong>. If you forgot your "
+#~ "password, you can reset it. To do so, follow the <a href=\"%1/renewpasswd"
+#~ "\">Lost password?</a> link from the homepage."
+#~ msgstr ""
+#~ "<strong>Introduciste una contraseña incorrecta</strong>. Si has olvidado "
+#~ "tu contraseña, puedes reestablecerla. Para hacerlo, utiliza el enlace <a "
+#~ "href=\"%1/renewpasswd\">¿Contraseña perdida?</a> de la página de inicio."
+
+#~ msgid ""
+#~ "Select a start date through the calendar that appears when you click on "
+#~ "the \"start date\" field;"
+#~ msgstr ""
+#~ "Selecciona una fecha de inicio a través del calendario que aparece cuando "
+#~ "haces clic en el campo \"fecha inicio\";"
+
+#~ msgid ""
+#~ "if you wish, you can specify the date when you want your subscription to "
+#~ "resume. Do it using the \"end date\" field. You can click on \"indefinite."
+#~ "\" In this case, you will have to return to this page to resume your "
+#~ "subscription;"
+#~ msgstr ""
+#~ "si deseas, puedes especificar la fecha de cuando quieres que tu "
+#~ "suscripción continúe. Hazlo usando el campo \"fecha fin\". Puedes hacer "
+#~ "clic en \"indefinido\". En este caso, tendrás que volver a esta página "
+#~ "para continuar tu suscripción;"
+
+#~ msgid ""
+#~ "Select the lists which you want to suspend your subscription for. The "
+#~ "\"Toogle selection\" button allows you to invert the selection;"
+#~ msgstr ""
+#~ "Selecciona las listas para las que quieres suspender tu suscripción. El "
+#~ "botón \"Toogle selection\" te permite invertir la selección;"
+
+#~ msgid ""
+#~ "Select the list(s) you want to reactivate. The \"Toogle selection\" "
+#~ "button allows you to invert the selection;"
+#~ msgstr ""
+#~ "Selecciona la(s) lista(s) que quieres reactivar. El botón \"Toogle "
+#~ "selection\" te permite invertir la selección;"
+
+#~ msgid ""
+#~ "<strong>If the unique authentication process does not apply to you, you "
+#~ "can use your list password.</strong> In this case, log on through the "
+#~ "classic method: enter the <strong>email address with which you subscribed "
+#~ "to the list</strong> as a login and your <strong>list password</strong> "
+#~ "in the 'Password' field."
+#~ msgstr ""
+#~ "<strong>Si no se aplica ningún proceso de autenticación única deberás "
+#~ "utilizar tu contraseña de lista.</strong> En ese caso, entra a través del "
+#~ "método clásico: introduce la <strong>dirección de correo con la que te "
+#~ "suscribiste a la lista</strong> como login y tu <strong>contraseña de "
+#~ "lista</strong> en la casilla 'Contraseña'."
+
+#~ msgid ""
+#~ "If you do not remember your list password, click on 'Lost password?'. "
+#~ "After you've provided your email address, a mail with a validation URL "
+#~ "will be sent at that address."
+#~ msgstr ""
+#~ "Si no recuerdas tu contraseña de lista, haz clic en '¿Contraseña "
+#~ "perdida?'. Después de indicar tu dirección de correo, recibirás un correo "
+#~ "con una URL de validación."
+
+#~ msgid ""
+#~ "<strong>If the unique authentication process does not apply to you and "
+#~ "you do no have a list password yet</strong>, click on '<strong>First "
+#~ "login?</strong>' and type in your email address. A confirmation URL will "
+#~ "be sent at that address. Then you will be able to choose your password."
+#~ msgstr ""
+#~ "<strong>Si el proceso de autenticación única no se te aplica y no tienes "
+#~ "una contraseña todavía</strong>, haga clic en '<strong>¿Primer acceso?</"
+#~ "strong>' y escribe tu dirección de correo electrónica. Recibirás una URL "
+#~ "de confirmación en esa dirección. Entonces podrás elegir tu contraseña."
+
+#~ msgid ""
+#~ "<strong>suspended</strong>: this mode allows you to suspend your "
+#~ "subscription to one or more lists for a specified period or not. Unlike "
+#~ "unsubscription, you can keep track of your subscription and reactivate it "
+#~ "at any time by visiting the \"Manage your subscription\" section."
+#~ msgstr ""
+#~ "<strong> suspendido </ strong>: este modo le permite suspender su "
+#~ "suscripción a una o más listas por un período determinado o no. A "
+#~ "diferencia de darse de baja, puede realizar un seguimiento de su "
+#~ "suscripción y reactivarla en cualquier momento visitando la sección "
+#~ "\"Administrar su suscripción\"."
+
+#~ msgid "Go to the information page of the list</strong> you want to manage."
+#~ msgstr ""
+#~ "Ve a la página de información de la lista</strong> que quieres gestionar."
+
+#~ msgid ""
+#~ "Be careful: when you rename a list, you have to let the listmasters know; "
+#~ "otherwise, the change will not be effective</strong>."
+#~ msgstr ""
+#~ "Ten cuidado: cuando renombras una lista, tienes que notificárselo a los "
+#~ "listmasters; en caso contrario, el cambio no será efectivo</strong>."
+
+#~ msgid "To read the messages sent to a list</strong>, you have two options:"
+#~ msgstr ""
+#~ "Para leer mensajes enviados a la lista</strong>, tienes dos opciones:"
+
+#~ msgid ""
+#~ "Other messages belonging to the same thread as the message displayed are "
+#~ "listed at its bottom</strong>. Click on their subject to read them."
+#~ msgstr ""
+#~ "El resto de mensajes pertenecientes a la misma conversación se mostrarán "
+#~ "listados debajo</strong>. Pincha en sus asuntos para leerlos."
+
+#~ msgid ""
+#~ "To come back to the messages index, click on 'Chronological' or 'Thread'</"
+#~ "strong> according to whether you want to display the index as a "
+#~ "chronological history or as a thread. When there are too many messages to "
+#~ "be displayed on a single page, <strong>you are brought to the index page "
+#~ "displaying the message you just read</strong>, and not to the page "
+#~ "displaying the latest messages."
+#~ msgstr ""
+#~ "Para volver al índice de mensajes, pincha en 'Cronológico' o "
+#~ "'Conversación'</strong> según quieras mostrar el índice cronológicamente "
+#~ "o por conversaciones. Cuando hay muchos mensajes mostrados en una misma "
+#~ "página, <strong>se te dirige a la página índice mostrando el mensaje que "
+#~ "acabas de leer</strong>, y no a la página mostrando el último mensaje."
+
+#~ msgid ""
+#~ "Go to the message index of the month</strong> in which you want to "
+#~ "search. To do that, use the calendar displayed at the top left of your "
+#~ "screen."
+#~ msgstr ""
+#~ "Ve al índice de mensajes del mes</strong> sobre el que quieres realizar "
+#~ "la búsqueda. Para hacer eso, utiliza el calendario mostrado en la parte "
+#~ "superior izquierda de tu pantalla."
+
+#~ msgid ""
+#~ "Enter your keywords</strong> in the search box in the upper right corner "
+#~ "of your screen."
+#~ msgstr ""
+#~ "Introduce las palabras clavez</strong> en la casilla de búsqueda situada "
+#~ "en la esquina superior derecha de tu pantalla."
+
+#~ msgid ""
+#~ "To read one of the messages matching your search, you only need to click "
+#~ "on its subject</strong>."
+#~ msgstr ""
+#~ "Para leer alguno de los mensajes que coincidan con tu búsqueda, solo "
+#~ "tienes que pinchar sobre su asunto</strong>."
+
+#~ msgid "Service messages description :"
+#~ msgstr "Descripción del servicio de mensajes:"
+
+#~ msgid ""
+#~ "Welcome message: This message is sent to new subscribers. It can be\n"
+#~ "a full MIME structured message (only for MIME gurus)."
+#~ msgstr ""
+#~ "Mensaje de bienvenida: Se envía este mensaje a los recién suscritos. "
+#~ "Puede ser un mensaje estructuradado en full MIME (sólo para los gurús de "
+#~ "MIME)."
+
+#~ msgid ""
+#~ "Unsubscribe message: This message is sent when users leave the list\n"
+#~ "using the UNSUBSCRIBE command."
+#~ msgstr ""
+#~ "Mensaje de supresión: se envía este mensaje a los usuarios cuando\n"
+#~ "se dan de baja de la lista usando el comando UNSUBSCRIBE."
+
+#~ msgid ""
+#~ "Deletion message: This message is sent to users when you\n"
+#~ "remove them from the list using the DEL command (unless you hit the\n"
+#~ "Quiet button."
+#~ msgstr ""
+#~ "Mensaje de eliminación: Se manda este mensaje a los usuarios cuando\n"
+#~ "se los saca de la lista usando el comando DEL (a menos que se seleccione "
+#~ "la opción \n"
+#~ "\"Silencioso\")"
+
+#~ msgid ""
+#~ "Remind message: This message is sent to each subscriber\n"
+#~ "when using the command  REMIND. It's very useful to help people who are\n"
+#~ "confused about their own subscription emails or people who are not able "
+#~ "to\n"
+#~ "unsubscribe themselves."
+#~ msgstr ""
+#~ "Recordatorio: es un mensaje enviado a cada suscriptor cuando se utiliza "
+#~ "el comando REMIND. Esto es útil para aclarar a las personas a cuales de "
+#~ "las listas se encuentran suscritas."
+
+#~ msgid ""
+#~ "Subscribing invitation message: sent to a person if someone  \n"
+#~ "uses the INVITE command to invite someone to subscribe."
+#~ msgstr ""
+#~ "Mensaje de invitación de suscripción: enviado a una persona si alguien\n"
+#~ "utiliza el comando INVITE para invitarlo a suscribirse."
+
+#~ msgid "Other files/pages description:"
+#~ msgstr "Descripción de otros archivos/páginas:"
+
+#~ msgid ""
+#~ "List homepage: HTML text to describe the list. It is printed on the\n"
+#~ "right-hand side of the main list page. (default for this is the list "
+#~ "description)"
+#~ msgstr ""
+#~ "Paguina principal: texto HTML describe la lista de correo. Este es "
+#~ "ubicado a la izquierda de la pantalla.(por defecto para esta descripcion "
+#~ "de la lista)"
+
+#~ msgid ""
+#~ "List description: This text is sent as an answer to the mail command\n"
+#~ "INFO. It can also be included in the <em>Welcome message</em>."
+#~ msgstr ""
+#~ "Descripción de la lista: Se puede obtener enviando un mensaje con el "
+#~ "asunto \"INFO\" a la lista. y solo puede ser incluido en el"
+
+#~ msgid ""
+#~ "Message header: If this file is not empty, it is added as a MIME\n"
+#~ "attachment at the beginning of each message distributed to the list."
+#~ msgstr ""
+#~ "mensaje de cabecera: si este archivo no esta vacío, es agregado como "
+#~ "MIME\n"
+#~ "al comienzo de cada mensaje distribuido en la lista."
+
+#~ msgid ""
+#~ "Message footer: same as <em>Message header,</em> but attached at the\n"
+#~ "end of the message."
+#~ msgstr ""
+#~ "mensaje al pie :algunos son <em> Mensajes de cabecera,</em> pero puestos "
+#~ "en el\n"
+#~ "fin de el mensaje "
+
+#~ msgid "Special cases:</strong>"
+#~ msgstr "Casos especiales:</strong>"
+
+#~ msgid ""
+#~ "search for mailing lists</strong> matching your main interests or your "
+#~ "particular situation;"
+#~ msgstr ""
+#~ "buscar una lista de correo</strong> según tus intereses principales o tu "
+#~ "situación particular;"
+
+#~ msgid "manage your subscriptions</strong>:"
+#~ msgstr "gestionar tus suscripciones</strong>:"
+
+#~ msgid ""
+#~ "List owners and moderators can turn to listmasters</strong> when they "
+#~ "face a problem not dealt with by the documentation or for any comment. "
+#~ "However, in order not to flood listmasters with messages, it is "
+#~ "recommended that subscribers rather turn to list owners."
+#~ msgstr ""
+#~ "Los dueños de la lista y los moderadores pueden notificar a los "
+#~ "listmasters</strong> cuando encuentren algún problema que no esté "
+#~ "relacionado con la documentación o con algún comentario. Sin embargo, "
+#~ "para no inundar a los listmasters con mensajes, se recomienda que los "
+#~ "suscriptores se pongan en contacto con los dueños de la lista"
+
+#~ msgid ""
+#~ "The list owner is generally its creator</strong> or, failing him/her, the "
+#~ "person who requested the list creation or who became responsible for it. "
+#~ "<strong>His/her role</strong>:"
+#~ msgstr ""
+#~ "El dueño de la lista suele ser su creador</strong> o, en su defecto, la "
+#~ "persona que ha solicitado la creación de la lista o quien se haga "
+#~ "responsable de ella. <strong>Su rol</strong>:"
+
+#~ msgid ""
+#~ "code>REMIND <em>list</em></code>: send to all subscribers a personalized "
+#~ "reminder with the address with which he/she is subscribed to the list"
+#~ msgstr ""
+#~ "<code>REMIND <em>lista</em></code>: envía a todos los suscriptores un "
+#~ "recordatorio personalizado con las direcciones con las que están "
+#~ "suscritos a la lista"
+
+#~ msgid ""
+#~ "The 'Shared documents' section can contain three types of resources</"
+#~ "strong>: <strong>folders</strong>, <strong>files</strong> and "
+#~ "<strong>bookmarks</strong>."
+#~ msgstr ""
+#~ "La sección de 'Documentos compartidos' puede contener tres tipos de "
+#~ "recursos</strong>: <strong>carpetas</strong>, <strong>ficheros</strong> y "
+#~ "<strong>marcadores (enlaces)</strong>."
+
+#~ msgid ""
+#~ "You can sort documents and folders according to criteria</strong> other "
+#~ "than the name of the document/folder: they can also be sorted according "
+#~ "to their <strong>author</strong>, their <strong>size</strong> and their "
+#~ "<strong>last update date</strong>. To sort documents according to the "
+#~ "criterion of your choice, click on the name of the corresponding column."
+#~ msgstr ""
+#~ "Puedes ordenar los documentos y carpetas con otro criterio que sea "
+#~ "distinto al del nombre</strong>: también pueden ordenarse según el "
+#~ "<strong>autor</strong>, su <strong>tamaño</strong> así como la "
+#~ "<strong>fecha de última modificación</strong>. Para ordenarlos según tu "
+#~ "criterio, pincha en el nombre de la columna correspondiente."
+
+#~ msgid "To create a folder on a list</strong>, do as follows:"
+#~ msgstr "Para crear una carpeta en una lista</strong>, haz lo siguiente:"
+
+#~ msgid ""
+#~ "Go to the 'Shared documents' section</strong> of the list of your "
+#~ "interest."
+#~ msgstr ""
+#~ "Dirígete a la sección de 'Documentos compartidos'</strong> de la lista "
+#~ "que sea de tu interés."
+
+#~ msgid "Browse the folder in which you want to create a folder</strong>."
+#~ msgstr ""
+#~ "Explora la carpeta dentro de la cual quieres crear la nueva caperta</"
+#~ "strong>."
+
+#~ msgid "Switch to expert mode</strong>."
+#~ msgstr "Cambiar al modo experto</strong>."
+
+#~ msgid ""
+#~ "Enter the folder name</strong> in the text field close to the 'Create a "
+#~ "new folder inside [name of the current folder]' label."
+#~ msgstr ""
+#~ "Introduce el nombre de la carpeta</strong> en el campo de texto situado "
+#~ "cerca de la etiqueta 'Crear una nueva carpeta dentro de [nombre de la "
+#~ "carpeta actual]'."
+
+#~ msgid "Click on the 'Create' button</strong>."
+#~ msgstr "Pincha en el botón 'Crear'</strong>"
+
+#~ msgid "To create a file on a list</strong>, do as follows:"
+#~ msgstr "Para crear un fichero en una lista</strong>, haz lo siguiente:"
+
+#~ msgid ""
+#~ "To perform actions related to mailing lists</strong> (subscribe, change "
+#~ "your options, etc.), you have two options:"
+#~ msgstr ""
+#~ "Para realizar acciones relacionadas con las listas de correo</strong>"
+#~ "(suscripción, chambiar tus opciones, etc.), tienes dos opciones:"
+
+#~ msgid ""
+#~ "Choose the address</strong> with which you want to subscribe to the list."
+#~ msgstr ""
+#~ "Elige la dirección</strong> con la que quieres suscribirte a la lista."
+
+#~ msgid "Digest"
+#~ msgstr "Recopilación (Digest)"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically receive batched messages in a Digest. This "
+#~ "Digest compiles a group of messages from the list, using the multipart/"
+#~ "digest MIME format."
+#~ msgstr ""
+#~ "En vez de recibir mensajes de correo individuales de la lista, el "
+#~ "suscriptor recibirá periódicamente \n"
+#~ "un lote de mensajes en una Recopilación. Esta recopilación aglutina un "
+#~ "grupo de mensajes de la lista, \n"
+#~ "utilizando el formato MIME multiparte."
+
+#~ msgid "The sending interval for these Digests is defined by the list owner."
+#~ msgstr ""
+#~ "La periodicidad de envío de estas Recopilaciones la define el dueño de la "
+#~ "lista."
+
+#~ msgid "DigestPlain"
+#~ msgstr "RecopilaciónPlano (DigestPlain)"
+
+#~ msgid ""
+#~ "Similar to the Digest option in that the subscriber will periodically "
+#~ "receive batched messages in a Digest. With DigestPlain the Digest is sent "
+#~ "in a plain text format, with all attachments stripped out. DigestPlain is "
+#~ "useful if your email software doesn't display multipart/digest format "
+#~ "messages well."
+#~ msgstr ""
+#~ "Similar a la opción Recopilación en la que el usuario recibirá "
+#~ "periódicamente los mensajes \n"
+#~ "por lotes en una Recopilación. Con RecopilaciónPlano la recopilación se "
+#~ "manda en texto \n"
+#~ "sin formato, con todos los documentos adjuntos extraídos. "
+#~ "RecopilaciónPlano es útil si tu \n"
+#~ "programa de correo electrónico no muestra correctamente los mensajes con "
+#~ "formato multipartes."
+
+#~ msgid "Summary"
+#~ msgstr "Sumario"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically receive a list of messages. This mode is "
+#~ "very close to the Digest reception mode but the subscriber receives only "
+#~ "the list of messages."
+#~ msgstr ""
+#~ "En vez de recibir mensajes de correo individuales de la lista, el "
+#~ "subscriptor recibirá periódicamente \n"
+#~ "una lista de mensajes. Este modo es mas parecido al modo de recepción "
+#~ "Recopilación pero el \n"
+#~ "suscriptor recibe solo la lista de los mensajes."
+
+#~ msgid "Nomail"
+#~ msgstr "Nomail"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber no longer wishes to receive mail from "
+#~ "the list, but nevertheless wishes to retain the ability to post to the "
+#~ "list. This mode therefore prevents the subscriber from unsubscribing and "
+#~ "subscribing later on."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor no quiere seguir recibiendo correo "
+#~ "de la lista, pero sin embargo desea mantener la posibilidad de enviar "
+#~ "mensajes a la lista. Este modo por lo tanto evita al subscriptor tener "
+#~ "que cancelar la subscripción y darse de alta nuevamente más tarde."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats only in plain text format."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor solo desea recibir en texto sin "
+#~ "formato, los correos enviados \n"
+#~ "en el formato HTML y texto sin formato."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats only in HTML format."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor solo desea recibir en formato "
+#~ "HTML, los correos enviados en \n"
+#~ "el formato HTML y texto sin formato."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive attached "
+#~ "files. The attached files are replaced by a URL leading to the file "
+#~ "stored on the list site."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor no quiere recibir ficheros "
+#~ "adjuntos. Los ficheros adjuntos son\n"
+#~ "reemplazados por una URL que apunta al fichero compartido en la web de la "
+#~ "lista."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive copies of "
+#~ "messages that he or she has sent to the list."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor no quiere recibir copias de los "
+#~ "mensajes que él/ella ha enviado a \n"
+#~ "la lista."
+
+#~ msgid ""
+#~ "This option is used mainly to cancel the nomail, summary or digest modes. "
+#~ "If the subscriber was in nomail mode, he or she will again receive "
+#~ "individual mail messages from the list."
+#~ msgstr ""
+#~ "Esta opción se usa principalmente para cancelar los modos nomail, resumen "
+#~ "(summary) o \n"
+#~ "recopilación (digest). Si el subscriptor estaba en modo nomail, él "
+#~ "volverá a recibir mensajes \n"
+#~ "de correo individuales de la lista."
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive batched messages in a Digest. This Digest compiles a group of "
+#~ "messages from the list, using\n"
+#~ "the multipart/digest MIME format."
+#~ msgstr ""
+#~ "En vez de recibir mensajes de correo individuales de la lista, el "
+#~ "suscriptor recibirá periódicamente \n"
+#~ "un lote de mensajes en una Recopilación. Esta recopilación aglutina un "
+#~ "grupo de mensajes de la lista, \n"
+#~ "utilizando el formato MIME multiparte."
+
+#~ msgid ""
+#~ "Similar to the Digest option in that the subscriber will periodically \n"
+#~ "receive batched messages in a Digest. With DigestPlain the Digest is sent "
+#~ "in a plain text \n"
+#~ "format, with all attachments stripped out. DigestPlain is useful if your "
+#~ "email software doesn't\n"
+#~ "display multipart/digest format messages well."
+#~ msgstr ""
+#~ "Similar a la opción Recopilación en la que el usuario recibirá "
+#~ "periódicamente los mensajes \n"
+#~ "por lotes en una Recopilación. Con RecopilaciónPlano la recopilación se "
+#~ "manda en texto \n"
+#~ "sin formato, con todos los documentos adjuntos extraídos. "
+#~ "RecopilaciónPlano es útil si tu \n"
+#~ "programa de correo electrónico no muestra correctamente los mensajes con "
+#~ "formato multipartes."
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive a list of messages. This mode is very close to the Digest "
+#~ "reception mode but the \n"
+#~ "subscriber receives only the list of messages."
+#~ msgstr ""
+#~ "En vez de recibir mensajes de correo individuales de la lista, el "
+#~ "subscriptor recibirá periódicamente \n"
+#~ "una lista de mensajes. Este modo es mas parecido al modo de recepción "
+#~ "Recopilación pero el \n"
+#~ "suscriptor recibe solo la lista de los mensajes."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in plain text format."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor solo desea recibir en texto sin "
+#~ "formato, los correos enviados \n"
+#~ "en el formato HTML y texto sin formato."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in HTML format."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor solo desea recibir en formato "
+#~ "HTML, los correos enviados en \n"
+#~ "el formato HTML y texto sin formato."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive attached "
+#~ "files. The attached files are \n"
+#~ "replaced by a URL leading to the file stored on the list site."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor no quiere recibir ficheros "
+#~ "adjuntos. Los ficheros adjuntos son\n"
+#~ "reemplazados por una URL que apunta al fichero compartido en la web de la "
+#~ "lista."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive copies of "
+#~ "messages that he or she has sent to \n"
+#~ "the list."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor no quiere recibir copias de los "
+#~ "mensajes que él/ella ha enviado a \n"
+#~ "la lista."
+
+#~ msgid ""
+#~ "This option is used mainly to cancel the nomail, summary or digest modes. "
+#~ "If the subscriber was \n"
+#~ "in nomail mode, he or she will again receive individual mail messages "
+#~ "from the list."
+#~ msgstr ""
+#~ "Esta opción se usa principalmente para cancelar los modos nomail, resumen "
+#~ "(summary) o \n"
+#~ "recopilación (digest). Si el subscriptor estaba en modo nomail, él "
+#~ "volverá a recibir mensajes \n"
+#~ "de correo individuales de la lista."
+
+#~ msgid ""
+#~ "Include subscribers from other list. All subscribers of list listname "
+#~ "become subscribers of the current list. You may include as many lists as "
+#~ "required, using one include_sympa_list paragraph for each included list. "
+#~ "Any list at all may be included; you may therefore include lists which "
+#~ "are also defined by the inclusion of other lists. Be careful, however, "
+#~ "not to include list A in list B and then list B in list A, since this "
+#~ "will give rise to an infinite loop."
+#~ msgstr ""
+#~ "Incluye suscriptores desde otra lista. Todos los suscriptores de la lista "
+#~ "\"nombrelista\" se vuelven suscriptores de la lista actual. Puedes "
+#~ "incluir tantas listas como sea necesario, utilizando una línea "
+#~ "\"include_list nombrelista\" para cada lista incluída. Cualquier lista "
+#~ "puede ser incluída; por lo cual se pueden incluir listas definidas por la "
+#~ "inclusión de otras listas. Tenga cuidado, sin embargo, de no incluir la "
+#~ "lista A en la lista B y la lista B en la lista A, ya que eso daría lugar "
+#~ "a un bucle infinito."
+
+#~ msgid ":"
+#~ msgstr ":"
+
+#~ msgid "Privilege for adding (ADD command) a subscriber to the list"
+#~ msgstr "Prvilegio para añadir (comando ADD) un suscriptor a la lista"
+
+#~ msgid ""
+#~ "To hide the sender's email address before distributing the message. It is "
+#~ "replaced by the provided email address."
+#~ msgstr ""
+#~ "Para ocultar la dirección de correo del remitente antes de distribuir el "
+#~ "mensaje. Es reemplazada por la dirección de correo provista."
+
+#~ msgid "Privilege for reading mail archives and frequency of archiving"
+#~ msgstr ""
+#~ "Privilegio para leer los archivos de correo y periodicidad de archivado"
+
+#~ msgid ""
+#~ "The available_user_options parameter starts a paragraph to define "
+#~ "available options for the subscribers of the list."
+#~ msgstr ""
+#~ "El parámetro available_user_options empieza un párrafo para definir "
+#~ "lasopciones disponibles para los suscriptores de la lista."
+
+#~ msgid ""
+#~ "Default value: reception mail,notice,digest,digestplain,summary,nomail"
+#~ msgstr ""
+#~ "Valor por defecto: reception mail,notice,digest,digestplain,summary,nomail"
+
+#~ msgid ""
+#~ "<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
+#~ "summary, nomail), separated by commas. Only these modes will be allowed "
+#~ "for the subscribers of this list. If a subscriber has a reception mode "
+#~ "not in the list, sympa uses the mode specified in the "
+#~ "default_user_options paragraph."
+#~ msgstr ""
+#~ "<em>modelist</em> es una lista de modos (mail, notice, digest, "
+#~ "digestplain, summary, nomail), separados por comas. Solo se permitirán "
+#~ "estos modos a los suscriptores de esta lista. Si un suscriptor tiene un "
+#~ "modo de recepción que no está en la lista, sympa utiliza el modo "
+#~ "especificado en el párrafo default_user_options."
+
+#~ msgid "This paragraph defines bounce management parameters:"
+#~ msgstr "Este párrafo define los parámetros de gestión de rebotes:"
+
+#~ msgid "Default value: bounce_warn_rate robot parameter"
+#~ msgstr "Valor por omisión: parámetro de robot bounce_warn_rate"
+
+#~ msgid ""
+#~ "The list owner receives a warning whenever a message is distributed and "
+#~ "the number (percentage) of bounces exceeds this value."
+#~ msgstr ""
+#~ "El dueño de la lista recibe una advertencia cada ver que un mensaje se "
+#~ "distribuye y que el n&umero (porcentaje) de rebotes sobrepasa este valor. "
+
+#~ msgid "Default value: bounce_halt_rate robot parameter"
+#~ msgstr "Valor por omisión: parámetro de robot bounce_halt_rate"
+
+#~ msgid ""
+#~ "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
+#~ "will be halted, i.e. they are retained for subsequent moderation."
+#~ msgstr ""
+#~ "TODAVIA NO USADO. si la cantidad de errores  alcansados al halt_rate, los "
+#~ "mensajes para la lista pueden ser cortados, i.e. ellos son retenidos para "
+#~ "su subsecuente moderacion  "
+
+#~ msgid "Default value:"
+#~ msgstr "Valor por omisión:"
+
+#~ msgid ""
+#~ "Name of the task template used to remove old bounces. Useful for removing "
+#~ "bounced subscriber email. If some messages are distributed without "
+#~ "receiving new bounce messages, the subscriber's email seems to be OK "
+#~ "again. Active if task_manager.pl is running."
+#~ msgstr ""
+#~ "El nombre de las tareas de la planillas usadas para remover viejos "
+#~ "errores. Usadas para errores de email de los subscriptores removiendolos. "
+#~ "si algunois mensajes son distribuidos si haber recibido nuevos mensajes "
+#~ "de error, los email de los subscriptores   "
+
+#~ msgid ""
+#~ "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 1 is the lower level of bouncing users"
+#~ msgstr ""
+#~ "Los párrafos Bouncers_level1 definen el comportamiento automático de "
+#~ "gestion de rebotes.<br />\n"
+#~ "\tEl nivel 1 es el nivel más bajo de usuarios en rebote"
+
+#~ msgid "Each bouncing user have a score (from 0 to 100)."
+#~ msgstr "Cada usuario en rrebote tiene un puntaje (de 0 a 100)."
+
+#~ msgid ""
+#~ "This parameter defines a lower limit for each category of bouncing users."
+#~ "For example, level 1 begins from 45 to level_2_treshold."
+#~ msgstr ""
+#~ "Este parámetro define un límite inferior para cada categoría de usuarios "
+#~ "en rebote. Por ejemplo, el nivel 1 empieza por 45 hasta level_2_treshold."
+
+#~ msgid ""
+#~ "This parameter defines which task is automaticaly applied on level 1 "
+#~ "bouncers."
+#~ msgstr ""
+#~ "Este parámetro define que medidas se aplican automáticamente para los "
+#~ "usuarios en rebote de nivel 1. "
+
+#~ msgid ""
+#~ "When automatic task is executed on level 1 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+#~ msgstr ""
+#~ "Cuando se ejecuta una tarea automática en los rebotados de nivel uno, se "
+#~ "puede mandar un correo de notificación al dueño de lista o al "
+#~ "listmaster.  "
+
+#~ msgid ""
+#~ "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 2 is the highest level of bouncing users"
+#~ msgstr ""
+#~ "Los párrafos Bouncers_levelX definen el comportamiento automático de "
+#~ "gestión de rebotes.<br />\n"
+#~ "\tEl nivel 2 es el nivel más alto de usuarios en rebote"
+
+#~ msgid ""
+#~ "This parameter defines the score range defining each category of bouncing "
+#~ "users.For example, level 2 is for users with a score between 80 and 100."
+#~ msgstr ""
+#~ "Este parámetro define el rango de puntaje que clasifica cada categoría de "
+#~ "uruarios en rebote. Por ejemplo, el nivel 2 es para unsuarios con un "
+#~ "puntaje entre 80 y 100."
+
+#~ msgid ""
+#~ "This parameter defines which task is automaticaly applied on level 2 "
+#~ "bouncers."
+#~ msgstr ""
+#~ "Este parámetro define que medidas se aplican automáticamente para los "
+#~ "usuarios en rebote de nivel 2."
+
+#~ msgid ""
+#~ "When automatic task is executed on level 2 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+#~ msgstr ""
+#~ "Cuando se ejecuta una tarea automática en los rebotados de nivel 2, se "
+#~ "puede mandar un correo de notificación al dueño de lista o al "
+#~ "listmaster.  "
+
+#~ msgid ""
+#~ "This parameter is a confidential item for generating authentication keys "
+#~ "for administrative commands (ADD, DELETE, etc.). This parameter should "
+#~ "remain concealed, even for owners. The cookie is applied to all list "
+#~ "owners, and is only taken into account when the owner has the auth "
+#~ "parameter."
+#~ msgstr ""
+#~ "Este parámetro es un item confidencial para generar las claves de "
+#~ "autenticación para los comandos (ADD, DELETE, etc.). Este parámetro debe "
+#~ "manenerse oculto, incluso para los dueños. La cookie se aplica a todos "
+#~ "los dueños de listas, y solo se toma en cuenta cuando el dueño tiene el "
+#~ "parámetro auth."
+
+#~ msgid ""
+#~ "This parameter is optional. The headers specified will be added to the "
+#~ "headers of messages distributed via the list. As of release 1.2.2 of "
+#~ "Sympa, it is possible to put several custom header lines in the "
+#~ "configuration file at the same time."
+#~ msgstr ""
+#~ "Este parámetro es opcional. El encabezado especificado será añadido al "
+#~ "encabezado de los mensajes distribuidos a través de la lista. Desde la "
+#~ "revisión 1.2.2 de Sympa, es posible poner simultáneamente varias líneas "
+#~ "de encabezados personalizados en el archivo de configuración.  "
+
+#~ msgid ""
+#~ "This parameter is optional. It specifies a string which is added to the "
+#~ "subject of distributed messages (intended to help users who do not use "
+#~ "automatic tools to sort incoming messages). This string will be "
+#~ "surrounded by [] characters."
+#~ msgstr ""
+#~ "Este parámetro es opcional. Especifica una cadena que se agrega al asunto "
+#~ "de los mensajes distribuidos (destinado a ayudar a los usuarios que no "
+#~ "utilizan herramoentas automatizadas para clasificar sus mensajes). Esta "
+#~ "cadena será rodeada por los caracteres []. "
+
+#~ msgid ""
+#~ "The default_user_options parameter starts a paragraph to define a default "
+#~ "profile for the subscribers of the list."
+#~ msgstr ""
+#~ "El parámetro default_user_options empieza un párrafopara definir un "
+#~ "perfil por omisión de los suscriptores de la lista. "
+
+#~ msgid "Mail reception mode."
+#~ msgstr "Modo de recepción de correo"
+
+#~ msgid "Visibility of the subscriber with the REVIEW command."
+#~ msgstr "Visibilidad de los suscriptores utilizando el comando REVIEW."
+
+#~ msgid "This parameter specifies who is authorized to use the DEL command."
+#~ msgstr ""
+#~ "Este parámetro especifica quien está autorizado a utilizar el comando DEL."
+
+#~ msgid ""
+#~ "Definition of digest mode. If this parameter is present, subscribers can "
+#~ "select the option of receiving messages in multipart/digest MIME format, "
+#~ "or as a plain text digest. Messages are then grouped together, and "
+#~ "compiled messages are sent to subscribers according to the frequency "
+#~ "selected with this parameter."
+#~ msgstr ""
+#~ "Definición del modo recopilación. Si este parámetro está presente, los "
+#~ "suscriptores pueden seleccionar la opción de recepción de mensajes en el "
+#~ "formato MIME multiparte o texto sin formato. Los mensajes entonces se "
+#~ "agrupan y se envían a los suscriptores de acuerdo con la periodicidad "
+#~ "seleccionada con este parámetro."
+
+#~ msgid ""
+#~ "Editors are responsible for moderating messages. If the mailing list is "
+#~ "moderated, messages posted to the list will first be passed to the "
+#~ "editors, who will decide whether to distribute or reject it."
+#~ msgstr ""
+#~ "Los moderadores son responsables de moderar los mensajes. Si la lista es "
+#~ "moderada; los mensajes enviados a la lista primero se pasan a los "
+#~ "moderadores, quienes deciden si se distribuyen o se rechazan."
+
+#~ msgid ""
+#~ "FYI: Defining editors will not make the list moderated; you will have to "
+#~ "set the \"send\" parameter."
+#~ msgstr ""
+#~ "Información: La definición de moderadores no implica que la lista sea "
+#~ "moderada; para ello debes configurar el parámetro \"send\""
+
+#~ msgid ""
+#~ "FYI: If the list is moderated, any editor can distribute or reject a "
+#~ "message without the knowledge or consent of the other editors. Messages "
+#~ "that have not been distributed or rejected will remain in the moderation "
+#~ "spool until they are acted on."
+#~ msgstr ""
+#~ "Información: Si la lista es moderada; cualquier moderador puede "
+#~ "distribuir o rechazar un mensaje sin el conocimiento o consentimiento del "
+#~ "resto de moderadores. Los mensajes que no fueron distribuidos ni "
+#~ "rechazados permanecerán en el contenedor moderación hasta que alguien "
+#~ "tome una decisión."
+
+#~ msgid ""
+#~ "This parameter states which model is used to create an expire task. An "
+#~ "expire task regularly checks the subscription or resubscription  date of "
+#~ "subscribers and asks them to renew their subscription. If they don't they "
+#~ "are deleted."
+#~ msgstr ""
+#~ "Este parámetro especifica que modelo se usa para crear una tarea de "
+#~ "expiración. Una tarea de expiración verifica regularmente las fechas de  "
+#~ "suscripción o de re-suscripción de los suscriptores y les solicita "
+#~ "renovar su suscripción. De lo contrario, se los borra de la lista."
+
+#~ msgid ""
+#~ "List owners may decide to add message headers or footers to messages sent "
+#~ "via the list. This parameter defines the way a footer/header is added to "
+#~ "a message."
+#~ msgstr ""
+#~ "Los dueños de la lista pueden añadir cabecera o pie de mensaje a los "
+#~ "mensajes enviados a la lista. Este parámetro define la manera en que una "
+#~ "cabecera/pie es añadida al mensaje"
+
+#~ msgid ""
+#~ "The default value. Sympa will add the footer/header as a new MIME part."
+#~ msgstr ""
+#~ "El valor por omisión. Sympa añadirá el encabezado/pié de mensaje como una "
+#~ "nueva parte MIME. "
+
+#~ msgid ""
+#~ "Sympa will not create new MIME parts, but will try to append the header/"
+#~ "footer to the body of the message. Predefined message-footers will be "
+#~ "ignored. Headers/footers may be appended to text/plain messages only."
+#~ msgstr ""
+#~ "Sympa no creará nuevas partes MIME, sino que intentará agregar el "
+#~ "encabezado/pie al cuerpo del mensaje. Los pies de mensajes predefinidos "
+#~ "serán ignorados. Encabezados/piés sólo pueden ser agregados a los "
+#~ "mensajes de texto sin formato. "
+
+#~ msgid ""
+#~ "Domain name of the list, default is the robot domain name set in the "
+#~ "related robot.conf file or in file /etc/sympa.conf."
+#~ msgstr ""
+#~ "Nombre de dominio de la lista, por defecto se utiliza el que se define en "
+#~ "el archivo robot.conf correspondiente o en el fichero /etc/sympa.conf"
+
+#~ msgid ""
+#~ "Include subscribers from this file.  The file should contain one e-mail "
+#~ "address per line (lines beginning with a \"#\" are ignored)."
+#~ msgstr ""
+#~ "Incluye suscriptores de este archivo.  El archivo debe contener una "
+#~ "dirección de e-mail por línea (las líneas que empiezan con un \"#\" son "
+#~ "ignoradas)"
+
+#~ msgid ""
+#~ "This paragraph defines parameters for a two-level query returning a list "
+#~ "of subscribers. Usually the first-level query returns a list of DNs and "
+#~ "the second-level queries convert the DNs into e-mail addresses. This "
+#~ "feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "Este párrafo define parámetros para una consulta a dos niveles que "
+#~ "devuelve una lista de suscriptores. Habitualmente la consulta de primer "
+#~ "nivel devuelve una lista de DNs y la de segundo nivel convierte los DNs "
+#~ "en direcciones de correo. Esta funcionalidad requiere el módulo PERL Net::"
+#~ "LDAP (perlldap). "
+
+#~ msgid ""
+#~ "This paragraph defines parameters for a query returning a list of "
+#~ "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "Este párrafo define los parámetros para una consulta que devuelve una "
+#~ "lista de suscriptores. Esta funcionalidad requiere el módulo PERL Net::"
+#~ "LDAP (perlldap)."
+
+#~ msgid ""
+#~ "Sympa can contact another Sympa service using HTTPS to fetch a remote "
+#~ "list in order to include each member of a remote list as subscriber. You "
+#~ "may include as many lists as required, using one "
+#~ "include_remote_sympa_list paragraph for each included list. Be careful, "
+#~ "however, not to give rise to an infinite loop resulting from cross "
+#~ "includes."
+#~ msgstr ""
+#~ "Sympa puede contactar a otro servicio Sympa utilizando HTTPS para "
+#~ "recuperar una lista distante de manera a incuir cada uno de los miembros "
+#~ "de la lista distante como suscriptor. Se pueden incluir tantas listas "
+#~ "como necesario, utilizando un párrafo include_remote_sympa_list para cada "
+#~ "lista incluída. Cuidado, sin embargo, en no dar lugar a un bucle infinito "
+#~ "resultante de inclusiones cruzadas.  "
+
+#~ msgid ""
+#~ "For this operation, one Sympa site acts as a server while the other one "
+#~ "acs as client. On the server side, the only setting needed is to give "
+#~ "permission to the remote Sympa to review the list. This is controlled by "
+#~ "the review scenario."
+#~ msgstr ""
+#~ "Para esta operación, un sitio Sympa actúa como servidor mientras que el "
+#~ "otro actúa de cliente. En el lado del servidor, lo único que se necesita "
+#~ "configurar es el permiso al Sympa remoto de revisar la lista. Esto está "
+#~ "controlado por el escenario 'review'."
+
+#~ msgid ""
+#~ "This parameter is used to begin a paragraph defining the SQL query "
+#~ "parameters. "
+#~ msgstr ""
+#~ "Este parámetro es utilizado para iniciar un párrafo definiendo los "
+#~ "parámetros de consulta SQL. "
+
+#~ msgid ""
+#~ "This parameter defines the language used for the list. It is used to "
+#~ "initialize a user's language preference; Sympa command reports are "
+#~ "extracted from the associated message catalog."
+#~ msgstr ""
+#~ "Este parámetro define el idioma usado para la lista. Se usa para "
+#~ "inicializar la preferencia de idioma del usuario; los informes de "
+#~ "comandos de Sympa son extraidos del catálogo de mensajes asociado."
+
+#~ msgid "Maximum size of a message in 8-bit bytes."
+#~ msgstr "tamaño maximo de un mensaje en 8-bit bytes"
+
+#~ msgid ""
+#~ "Owners are managing subscribers of the list. They may review subscribers "
+#~ "and add or delete email addresses from the mailing list. If you are a "
+#~ "privileged owner of the list, you can choose other owners for the mailing "
+#~ "list. Privileged owners may edit a few more options than other owners. "
+#~ msgstr ""
+#~ "Los dueños gestionan los suscriptores de la lista. Pueden revisar los "
+#~ "suscriptores, agregar o borrar direcciones de correo electrónico de la "
+#~ "lista de correo. Si eres el dueño privilegiado de la lista, puedes "
+#~ "agregar o suprimir otros dueños para la lista. Los dueños privilegiados "
+#~ "pueden editar algunas opciones más que el resto de dueños.   "
+
+#~ msgid ""
+#~ "The priority with which Sympa will process messages for this list. This "
+#~ "level of priority is applied while the message is going through the "
+#~ "spool. The z priority will freeze the message in the spool."
+#~ msgstr ""
+#~ "La prioridad con la que Sympa va a procesar los mensajes de esta lista. "
+#~ "El nivel de prioridad se aplica cuando el mensaje pasa por el contenedor. "
+#~ "La prioridad z congelará el mensaje en el contenedor."
+
+#~ msgid ""
+#~ "This parameter specifies who is authorized to use the remind command."
+#~ msgstr ""
+#~ "Este parámetro especifica quien está autorizado a utilizar el comando "
+#~ "REMIND (recordatorio)."
+
+#~ msgid "Same as welcome_return_path, but applied to remind messages."
+#~ msgstr ""
+#~ "Igual que welcome_return_path, pero aplicado a los mensajes de "
+#~ "recordatorio."
+
+#~ msgid ""
+#~ "This parameter states which model is used to create a remind task. A "
+#~ "remind task regularly sends  subscribers a message which reminds them of "
+#~ "their list subscriptions."
+#~ msgstr ""
+#~ "Este parámetro especifica que modelo se usa para crear una tarea de "
+#~ "recordatorio. Una tarea de recordatorio manda regularmente a los "
+#~ "suscriptores un recordatorio acerca de sus suscripciones a listas. "
+
+#~ msgid ""
+#~ "The reply_to_header parameter starts a paragraph defining what Sympa will "
+#~ "place in the Reply-To: SMTP header field of the messages it distributes."
+#~ msgstr ""
+#~ "El parámetro reply_to_header da comienzo a un párrafo en el que se define "
+#~ "lo que Sympa pondrá en el campo de encabezamiento Reply-To: SMTP de los "
+#~ "mensajes que distribuye."
+
+#~ msgid ""
+#~ "This parameter indicates whether the Reply-To: field should indicate the "
+#~ "sender of the message (sender), the list itself (list), both list and "
+#~ "sender (all) or an arbitrary e-mail address (defined by the other_email "
+#~ "parameter)."
+#~ msgstr ""
+#~ "Este parámetro indica si el campo Reply-To: debe indicar el remitente del "
+#~ "mensaje (remitente), la propia lista (lista), ambos lista y remitente "
+#~ "(todos) o una dirección de correo arbitraria (definida por el parámetro "
+#~ "other_email)."
+
+#~ msgid ""
+#~ "Note: it is inadvisable to change this parameter, and particularly "
+#~ "inadvisable to set it to list. Experience has shown it to be almost "
+#~ "inevitable that users, mistakenly believing that they are replying only "
+#~ "to the sender, will send private messages to a list. This can lead, at "
+#~ "the very least, to embarrassment, and sometimes to more serious "
+#~ "consequences."
+#~ msgstr ""
+#~ "Nota: no es recomendable cambiar este parámetro, y aún menos recomendable "
+#~ "que sea la lista. La experiencia demuestra que es casi inevitable que los "
+#~ "usuarios, creyendo por error que le responden sólo al remitente, manden "
+#~ "un mensaje privado a la lista. Esto puede llevar, como mínimo a "
+#~ "malentendidos, y a veces puede llegar a tener serias consecuencias. "
+
+#~ msgid "an_email_address"
+#~ msgstr "an_email_address (dirección de correo)"
+
+#~ msgid ""
+#~ "If value was set to other_email, this parameter defines the e-mail "
+#~ "address used."
+#~ msgstr ""
+#~ "Si el valor es \"other_email\"; este parámetro define la direcci&on de "
+#~ "correo que se utiliza."
+
+#~ msgid ""
+#~ "The default is to respect (preserve) the existing Reply-To: SMTP header "
+#~ "field in incoming messages. If set to forced, Reply-To: SMTP header field "
+#~ "will be overwritten."
+#~ msgstr ""
+#~ "Por omisión se respeta (se conserva) el campo de encabezado SMTP Reply-"
+#~ "To: para los mensajes que llegan. Si se lo configura a "
+#~ "'forzado' (forced), el valor del encabezado SMTP Reply-To: será "
+#~ "remplazado. "
+
+#~ msgid ""
+#~ "This parameter specifies who can access the list of members. Since "
+#~ "subscriber addresses can be abused by spammers, it is strongly "
+#~ "recommended that you only authorize owners or subscribers to access the "
+#~ "subscriber list. "
+#~ msgstr ""
+#~ "Este parámetro especifica quien tiene acceso a la lista de miembors. Como "
+#~ "las direcciones de los suscriptores pueden ser utilizadas abusivamente "
+#~ "por spammers, se recomienda fuertemente sólo autorizar a los dueños o a "
+#~ "los suscriptores acceder a la lista de suscriptores.  "
+
+#~ msgid "This parameter specifies who can send messages to the list."
+#~ msgstr "Este parámetro especifica quien puede mandar mensajes a la lista. "
+
+#~ msgid ""
+#~ "This paragraph defines read and edit access to the shared document "
+#~ "repository."
+#~ msgstr ""
+#~ "Este párrafo define el acceso de lectura y edición al repositorio de "
+#~ "documentos compartidos."
+
+#~ msgid ""
+#~ "There is a need to protect Sympa web sites against spambots which collect "
+#~ "email addresses from public web sites. Various methods are available in "
+#~ "Sympa and you can choose to use them with the spam_protection and "
+#~ "web_archive_spam_protection parameters. Possible value are:"
+#~ msgstr ""
+#~ "Es necesario proteger los websites de Sympa contra los robots de spam que "
+#~ "recopilan direcciones de correo electrónico de websites públicos. Hay "
+#~ "varios métodos disponibles en Sympa y puedes elegir usarlos con los "
+#~ "parámetros spam_protection y web_archive_spam_protection. Los valores "
+#~ "posibles son:"
+
+#~ msgid ""
+#~ "the address is hidden using a javascript. A user who enables javascript "
+#~ "can see a nice mailto address where others have nothing."
+#~ msgstr ""
+#~ "se esconde la dirección utilizando un javascript. Un usuario que activa "
+#~ "javascript verá unabonita dirección mailto mientras que los demás no "
+#~ "verán nada."
+
+#~ msgid "the @ char is replaced by the string \" AT \"."
+#~ msgstr "se remplaza el carácter @ por la cadena \" AT \"."
+
+#~ msgid "no protection against spammer."
+#~ msgstr "sin protección contra spammers."
+
+#~ msgid ""
+#~ "This parameter indicates the subject of the list, which is sent in "
+#~ "response to the LISTS mail command. The subject is a free form text "
+#~ "limited to one line."
+#~ msgstr ""
+#~ "Este parámetro indica el tema de la lista, que es enviado en respuesta al "
+#~ "comando de correo LISTS. El tema es un campo de texto libre limitado a "
+#~ "una línea."
+
+#~ msgid ""
+#~ "The subscribe parameter defines the rules for subscribing to the list."
+#~ msgstr ""
+#~ "El parámetro de suscripción define las reglas para suscribirse a la lista."
+
+#~ msgid ""
+#~ "This parameter allows the classification of lists. You may define "
+#~ "multiple topics as well as hierarchical ones. WWSympa's list of public "
+#~ "lists uses this parameter."
+#~ msgstr ""
+#~ "Este parámetro permite clasificar las listas. Puedes definir múltiples "
+#~ "temas y también jerárquicos. La lista WWSympa de listas publicas usa este "
+#~ "parámetro."
+
+#~ msgid ""
+#~ "Sympa caches user data extracted using the include parameter. Their TTL "
+#~ "(time-to-live) within Sympa can be controlled using this parameter. The "
+#~ "default value is 3600"
+#~ msgstr ""
+#~ "Sympa maneja una cache con los datos de usuario extraídos utilizando el "
+#~ "parámetro include. Su TTL (time-to-live, tiempo de vida) en Sympa puede "
+#~ "ser controlado usando este parámetro. Su valor por defecto es de 3600."
+
+#~ msgid ""
+#~ "This parameter specifies the unsubscription method for the list. Use "
+#~ "open_notify or auth_notify to allow owner notification of each "
+#~ "unsubscribe command."
+#~ msgstr ""
+#~ "Este parámetro especifica el método para anular la suscripción a la "
+#~ "lista. Utiliza  open_notify o auth_notify para generar una notificación "
+#~ "al dueño de cada comando de anulación de suscripción. "
+
+#~ msgid ""
+#~ "This parameter indicates whether the list should feature in the output "
+#~ "generated in response to a LISTS command or should be shown in the list "
+#~ "overview of the web-interface."
+#~ msgstr ""
+#~ "Este parámetro indica si la lista debe aparecer en la respuesta generada "
+#~ "a un comando LISTS y si debe ser mostrada el el listado de la interface "
+#~ "web. "
+
+#~ msgid "Defines who can access the web archive for the list."
+#~ msgstr "Define quien puede acceder a los archivos web de la lista"
+
+#~ msgid ""
+#~ "Idem spam_protection is provided but it can be used only for web "
+#~ "archives. Access requires a cookie, and users must submit a small form in "
+#~ "order to receive a cookie before browsing the archives. This blocks all "
+#~ "robot, even google and co."
+#~ msgstr ""
+#~ "Igual que spam_protection pero puede limitarse a los archivos web. El "
+#~ "acceso requiere una \"cookie\", y los usuarios deben enviar un pequeño "
+#~ "formulario para recibir esta \"cookie\" antes de poder recorrer los "
+#~ "archivos. Esto bloquea todos los robots, inclusive a Google y Cía."
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "Si el valor es \"unique\", se envía el mensaje de bienvenida  utilizando "
+#~ "una dirección de respuesta única generada específicamente, de manera a "
+#~ "suprimir inmediatamente al suscriptor en caso de rebote."
+
+#~ msgid ""
+#~ "This paragraph defines a topic used to tag a message of a list, named by "
+#~ "msg_topic.name (\"other\" is a reserved word), its title is msg_topic."
+#~ "title. The msg_topic.keywords entry is optional and allows automatic "
+#~ "tagging. This should be a list of keywords, separated by ','."
+#~ msgstr ""
+#~ "Este párrafo define un tema usado para etiquetar un mensaje de la lista, "
+#~ "llamado msg_topic.name (\"other\" es una palabra reservada), su título es "
+#~ "msg_topic.title. El campo msg_topic.keywords es opcional y permite "
+#~ "etiquetado automático. Éste debería contener una lista de palabras clave, "
+#~ "separadas por ','."
+
+#~ msgid ""
+#~ "This parameter indicates which part of the message is used to perform "
+#~ "automatic tagging."
+#~ msgstr ""
+#~ "Este parámetro indica que parte del mensaje es usada para llevar a cabo "
+#~ "el etiquetado automático."
+
+#~ msgid ""
+#~ "This parameter indicates if the tagging is optional or required for a "
+#~ "list."
+#~ msgstr ""
+#~ "Este parámetro indica si el etiquetado es opcional o obligatorio para una "
+#~ "lista."
+
+#, fuzzy
+#~ msgid ""
+#~ "The use of mailing lists naturally means respecting the rules of good "
+#~ "practices as regards email (the \"Netiquette\")."
+#~ msgstr ""
+#~ "El uso de listas de correo naturalmente implica respetar las reglas del "
+#~ "buen uso del correo electrónico."
+
+#~ msgid ""
+#~ "This is a description of the receivie modes available in Sympa. These "
+#~ "options are mutually exclusive, which means that you can't set two "
+#~ "different receive modes at the same time. Only some of the modes might be "
+#~ "available to specific mailing lists."
+#~ msgstr ""
+#~ "Esta es una descipción de los modos de recepción disponibles en Sympa. "
+#~ "Estas opciones se excluyen mutuamente, lo que significa que no puedes "
+#~ "configurar dos modos de recepción simultaneamente. Puede que sólo algunos "
+#~ "de los modos de recepción estés disponibles para tal o tal lista. "
+
+#~ msgid ""
+#~ "Include subscribers from other list. All subscribers of list listname "
+#~ "become subscribers of the current list. You may include as many lists as "
+#~ "required, using one include_list listname line for each included list. "
+#~ "Any list at all may be included; you may therefore include lists which "
+#~ "are also defined by the inclusion of other lists. Be careful, however, "
+#~ "not to include list A in list B and then list B in list A, since this "
+#~ "will give rise to an infinite loop."
+#~ msgstr ""
+#~ "Incluye suscriptores de otra lista. Todos los suscriptores de la lista "
+#~ "\"nombrelista\" se vuelven suscriptores de la lista actual. Puedes "
+#~ "incluir tantas listas como sea necesario, utilizando una línea "
+#~ "\"include_list nombrelista\" para cada lista incluída. Cualquier lista "
+#~ "puede ser incluída; por lo cual se pueden incluir listas definidas por la "
+#~ "inclusión de otras listas. Tenga cuidado, sin embargo, de no incluir la "
+#~ "lista A en la lista B y la lista B en la lista A, ya que eso daría lugar "
+#~ "a un bucle infinito."
+
+#~ msgid ""
+#~ "It is also possible to <strong>access the list archive by email</strong>, "
+#~ "by sending <strong>%1@%2</strong> the following command: <span class="
+#~ "\"commande\"><strong>get nameofthelist log.yearmonth</strong></span> "
+#~ "(example: <em class=\"example\">get list_example log.200507</em>). Then "
+#~ "you receive a compilation of all messages sent during the chosen month. "
+#~ "This compilation is sent in plain text and contains <acronym lang=\"en\" "
+#~ "xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> tags "
+#~ "instead of the original formatting; it also involves full headers for "
+#~ "each message. The '<strong>Text archives</strong>' parameter allows you "
+#~ "to define:"
+#~ msgstr ""
+#~ "También es posible <strong>acceder al archivo de la lista por correo "
+#~ "electrónico</strong>, enviando a <strong>%1@%2</strong> el siguiente "
+#~ "comando: <span class=\"commande\"><strong>get nombredelalista log.añomes</"
+#~ "strong></span> (example: <em class=\"example\">get list_example "
+#~ "log.200507</em>).  Entonces recibirás una recopilación de todos los "
+#~ "mensajes enviados durante el mes elegido. Esta recopilación se envía en "
+#~ "texto sin formato y contiene etiquetas <acronym lang=\"en\" xml:lang=\"en"
+#~ "\" title=\"HyperText Markup Language\">HTML</acronym> en vez del formato "
+#~ "original; también incluye todas las cabeceras de cada mensaje. Los "
+#~ "parámetros de '<strong>archivos de texto</strong>' te permiten definir:"
 
 #~ msgid "No Comment"
 #~ msgstr "Sin comentarios"
