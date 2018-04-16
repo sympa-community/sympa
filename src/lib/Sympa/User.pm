@@ -635,22 +635,44 @@ sub update_global_user {
 
     $who = Sympa::Tools::Text::canonic_email($who);
 
-    ## use hash fingerprint to store password
-    ## hashes that use salts will randomly generate one
-    $values->{'password'} =
-        Sympa::User::password_fingerprint($values->{'password'}, undef)
-        if ($values->{'password'});
 
-    ## Canonicalize lang if possible.
-    $values->{'lang'} = Sympa::Language::canonic_lang($values->{'lang'})
-        || $values->{'lang'}
-        if $values->{'lang'};
-
+    ## Check whether password is already defined.
     my $sdm = Sympa::DatabaseManager->instance;
     unless ($sdm) {
         $log->syslog('err', 'Unavailable database connection');
         return undef;
     }
+
+
+    push @sth_stack, $sth;
+
+    $sth = $sdm->do_query(
+        "SELECT password_user FROM user_table WHERE (email_user=%s)",
+        $sdm->quote($who)
+    );
+    unless (defined $sth) {
+        $log->syslog('err',
+            'Could not check password information for user %s in user_table', $who);
+        $sth = pop @sth_stack;
+        return undef;
+    }
+
+    my $current_password = $sth->fetchrow();
+
+    $sth = pop @sth_stack;
+
+    if ($values->{'password'}) {
+        if($current_password ne $values->{'password'}) {
+            ## use hash fingerprint to store password
+            ## hashes that use salts will randomly generate one
+            $values->{'password'} = Sympa::User::password_fingerprint($values->{'password'}, undef);
+        }
+    }
+
+    ## Canonicalize lang if possible.
+    $values->{'lang'} = Sympa::Language::canonic_lang($values->{'lang'})
+        || $values->{'lang'}
+        if $values->{'lang'};
 
     my ($field, $value);
 
