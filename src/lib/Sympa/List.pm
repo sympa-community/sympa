@@ -2799,6 +2799,7 @@ sub get_next_list_member {
 # Mapping between var and field names.
 sub _map_list_admin_cols {
     my %map_field = (
+        date        => 'date_epoch_admin',
         update_date => 'update_epoch_admin',
         gecos       => 'comment_admin',
         email       => 'user_admin',
@@ -2832,12 +2833,7 @@ sub _list_admin_cols {
 
     my %map_field = _map_list_admin_cols();
     return join ', ', map {
-        my $col;
-        if ($_ eq 'date') {
-            $col = $sdm->get_canonical_read_date($map_field{$_});
-        } else {
-            $col = $map_field{$_};
-        }
+        my $col = $map_field{$_};
         ($col eq $_) ? $col : sprintf('%s AS "%s"', $col, $_);
     } sort keys %map_field;
 }
@@ -7118,21 +7114,18 @@ sub _sync_include_user {
             unless (
                 $sdm
                 and $sth = $sdm->do_prepared_query(
-                    sprintf(
-                        q{INSERT INTO admin_table
-                          (user_admin, comment_admin,
-                           list_admin, robot_admin,
-                           date_admin, update_epoch_admin,
-                           reception_admin, visibility_admin,
-                           subscribed_admin, included_admin,
-                           include_sources_admin,
-                           role_admin, info_admin, profile_admin)
-                          VALUES (?, ?, ?, ?, %s, ?, ?, ?, 0, 1, ?, ?, ?, ?)},
-                        $sdm->get_canonical_write_date($time)
-                    ),
+                    q{INSERT INTO admin_table
+                      (user_admin, comment_admin,
+                       list_admin, robot_admin,
+                       date_epoch_admin, update_epoch_admin,
+                       reception_admin, visibility_admin,
+                       subscribed_admin, included_admin,
+                       include_sources_admin,
+                       role_admin, info_admin, profile_admin)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 1, ?, ?, ?, ?)},
                     $user->{email},     $user->{gecos},
                     $self->{'name'},    $self->{'domain'},
-                    $time,
+                    $time,              $time,
                     $user->{reception}, $user->{visibility},
                     $user->{id},
                     $role, $user->{info}, $user->{profile}
