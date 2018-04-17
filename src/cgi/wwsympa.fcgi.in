@@ -4787,7 +4787,7 @@ sub _review_user {
                         delegator  => $param->{'user'}{'email'}
                     }
                 );
-                Sympa::Report::notice_report_web('user_notified',
+                Sympa::WWW::Report::notice_report_web('user_notified',
                     {'notified_user' => $email},
                     $param->{'action'});
             }
