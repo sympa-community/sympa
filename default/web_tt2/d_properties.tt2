@@ -82,9 +82,9 @@
   <fieldset>
   <label for="content">
   [% IF shared_doc.type == 'directory' %]
-  [%|loc(fname)%]Describe directory '%1'[%END%]
+  [%|loc(shared_doc.name)%]Describe directory '%1'[%END%]
   [% ELSE %]
-  [%|loc(fname)%]Describe file '%1'[%END%]
+  [%|loc(shared_doc.name)%]Describe file '%1'[%END%]
   [% END %]
   </label>
   <input id="content" size="50" maxlength="100" name="content"
@@ -101,9 +101,9 @@
   <fieldset>
   <label for="new_name">
   [% IF shared_doc.type == 'directory' %]
-  [%|loc(fname)%]Rename directory %1[%END%]
+  [%|loc(shared_doc.name)%]Rename directory %1[%END%]
   [% ELSE %]
-  [%|loc(fname)%]Rename file %1[%END%]
+  [%|loc(shared_doc.name)%]Rename file %1[%END%]
   [% END %]
   </label>
   <input size="50" maxlength="100" name="new_name" />
