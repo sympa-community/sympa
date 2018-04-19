@@ -1,5 +1,21 @@
 # Change Log
 
+## [6.2.32](https://github.com/sympa-community/sympa/tree/6.2.32) (2018-04-19)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.30...6.2.32)
+
+**Implemented enhancements:**
+
+- Updates for bcrypt support [\#238](https://github.com/sympa-community/sympa/pull/238) ([mpkut](https://github.com/mpkut))
+- Duplicate precedence header tripping up Amazon SES [\#110](https://github.com/sympa-community/sympa/issues/110)
+
+**Fixed bugs:**
+
+- [2018-001](https://sympa-community.github.io/security/2018-001.html) Security breaches in template editing \[[c791843](https://github.com/sympa-community/sympa/commit/c7918437ef4b8ea04c7b92cc356601fc43beb901)\]
+- sympa\_soap\_client: bug in logic [\#244](https://github.com/sympa-community/sympa/issues/244)
+- Sympa ldap search escapes chars incorrect [\#234](https://github.com/sympa-community/sympa/issues/234)
+- Anyone can unsubscribe a member of a list with open scenario [\#233](https://github.com/sympa-community/sympa/issues/233)
+
 ## [6.2.30](https://github.com/sympa-community/sympa/tree/6.2.30) (2018-03-26)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.28...6.2.30)
