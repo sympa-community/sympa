@@ -848,17 +848,17 @@ sub html_format {
     my $list;
     my $robot;
     my $listname;
-    my $hostname;
+    my $domain;
     if (ref $that eq 'Sympa::List') {
         $list     = $that;
         $robot    = $that->{'domain'};
         $listname = $that->{'name'};
-        $hostname = $that->{'admin'}{'host'};
+        $domain   = $that->{'domain'};
     } elsif (!ref($that) and $that and $that ne '*') {
         $list     = '';
         $robot    = $that;
         $listname = '';
-        $hostname = Conf::get_robot_conf($that, 'host');
+        $domain   = Conf::get_robot_conf($that, 'domain');
     } else {
         die 'bug in logic.  Ask developer';
     }
@@ -911,7 +911,7 @@ sub html_format {
         '-rcfile'     => $mhonarc_ressources,
         '-definevars' => sprintf(
             "listname='%s' hostname=%s yyyy='' mois='' tag=%s with_tslice='' with_powered_by=''",
-            $listname, $hostname, $tag
+            $listname, $domain, $tag
         ),
         '-outdir'        => $destination_dir,
         '-attachmentdir' => $destination_dir,

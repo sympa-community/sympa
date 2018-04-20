@@ -9,21 +9,21 @@ To: [% to %]
 [% ELSIF type == 'arc_quota_exceeded' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 archive quota exceeded[%END%][%END%]
 
-[%|loc(list.name,list.host,size,conf.host,conf.listmaster_email)%]%1 archive quota exceeded. 
+[%|loc(list.name,domain,size,domain,conf.listmaster_email)%]%1 archive quota exceeded. 
 Total size used for %1@%2 archive is %3 Bytes. Messages are no longer being web-archived. Please contact %5@%4.[%END%]
 
 [% ELSIF type == 'arc_quota_95' -%]
 Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning: archive %2% full[%END%][%END%]
 
-[%|loc(rate2,list.name,list.host,rate)%]%2@%3 archives use %4% of allowed disk quota.[%END%]
+[%|loc(rate2,list.name,domain,rate)%]%2@%3 archives use %4% of allowed disk quota.[%END%]
 [%|loc(list.name,size)%]Total size used for %1@%2 Bytes.[%END%]
 
-[%|loc(conf.host,conf.listmaster_email)%]Messages are still archived but you should contact %2@%1[%END%]. 
+[%|loc(domain,conf.listmaster_email)%]Messages are still archived but you should contact %2@%1[%END%]. 
 
 [% ELSIF type == 'list_closed_family' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 is closed[%END%][%END%]
 
-[%|loc(list.name,list.host,list.family.name)%]%1@%2 is no longer an instance of family %3.
+[%|loc(list.name,domain,list.family.name)%]%1@%2 is no longer an instance of family %3.
 This list has been closed.[%END%]
 
 [% ELSIF type == 'warn-signoff' -%]
@@ -37,7 +37,7 @@ You may help this person looking for similar email in subscriber list using the 
 [% ELSIF type == 'erase_customizing' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" customizations have been removed[%END%][%END%]
 
-[%|loc(list.name,list.host,param0,param1,param2)%]List %1@%2 has been reinstantiated (family %3). 
+[%|loc(list.name,domain,param0,param1,param2)%]List %1@%2 has been reinstantiated (family %3). 
 Some of the customizations have been removed because they no longer respect the family rules:
 
      Parameters: %4
@@ -51,9 +51,9 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Subscription request to list %1[
 
 A user asked to be added as a subscriber to your list. If this is OK with you, you should click the following URL:[%END%]
 [% IF user_interfaces.size() == 1 && user_interfaces.0 == 'mail' -%]
-  [% "${conf.email}@${conf.host}" | mailtourl({subject=>"AUTH ${keyauth} ADD ${list.name} ${who} ${gecos}"}) %]
+  [% "${conf.email}@${domain}" | mailtourl({subject=>"AUTH ${keyauth} ADD ${list.name} ${who} ${gecos}"}) %]
 
-[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
+[%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
   AUTH [%keyauth%] ADD [%list.name%] [%who%] [%gecos%]
 [%- ELSE -%]
   [% 'auth' | url_abs([keyauth,'add',list.name],{email=>user.email}) %]
@@ -73,9 +73,9 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]UNsubscription request from list
 
 A user asked to be deleted from your list. If this is OK with you, you should click the following URL:[% END %]
 [% IF user_interfaces.size() == 1 && user_interfaces.0 == 'mail' -%]
-  [% "${conf.email}@${conf.host}" | mailtourl({subject=>"AUTH ${keyauth} DEL ${list.name} ${who}"}) %]
+  [% "${conf.email}@${domain}" | mailtourl({subject=>"AUTH ${keyauth} DEL ${list.name} ${who}"}) %]
 
-[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
+[%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
   AUTH [%keyauth%] DEL [%list.name%] [%who%]
 [%- ELSE -%]
   [% 'auth' | url_abs([keyauth,'del',list.name],{email=>user.email}) %]
@@ -133,7 +133,7 @@ If you are able to do so, you should probably update these data sources with thi
 [% ELSIF type == 'bad_named_filter' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to load named filter[%END%][%END%]
 
-[%|loc(list.name,list.host,filter)%]A named filter for list %1@%2 could not be loaded.  Check the filter definition in %3.[%END%]
+[%|loc(list.name,domain,filter)%]A named filter for list %1@%2 could not be loaded.  Check the filter definition in %3.[%END%]
 
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(list.name,type)%]List %1 / %2[%END%][%END%]

@@ -7,7 +7,7 @@
 	<p>[%|helploc%]<strong>To perform actions related to mailing lists</strong> (subscribe, change your options, etc.), you have two options:[%END%]</p>
 	<ul>
 		<li>[%|helploc%]<strong>log on to the web environment</strong>;[%END%]</li>
-		<li>[%|helploc(conf.email,conf.host)%]<strong>send commands by email</strong> to the Sympa mailing list manager at <strong>%1@%2</strong>.[%END%]</li>
+		<li>[%|helploc(conf.email,domain)%]<strong>send commands by email</strong> to the Sympa mailing list manager at <strong>%1@%2</strong>.[%END%]</li>
 	</ul>
 	<p>[%|helploc%]<strong>To send a command to Sympa</strong>, do as follows:[%END%]</p>
 	<ul>
@@ -28,14 +28,14 @@
 		<li>[%|helploc%]<strong>Choose the address</strong> with which you want to subscribe to the list.[%END%]<br />
 			<p class="retraitita">[%|helploc%]You should choose an address you can check frequently and which offers a large storage capacity for your email: some lists distribute many messages, which sometimes contain large attachments.[%END%]</p>
 			<p class="retraitita">[%|helploc%]Of course you can subscribe to the same list with several email addresses. Then you will need to redo the whole process with a different email address.[%END%]</p></li>
-			<li>[%|helploc(conf.email,conf.host)%]Send a <strong>message to %1@%2</strong> from the address you want to subscribe to the list.[%END%]<br />
+			<li>[%|helploc(conf.email,domain)%]Send a <strong>message to %1@%2</strong> from the address you want to subscribe to the list.[%END%]<br />
 			<p class="retraitita">[%|helploc%]Sympa is not a person but a mailing list management robot. Thus it is useless to send it loving words! ;-)[%END%]</p></li>
 		<li>[%|helploc%]In the subject line of your message, type in: <strong>subscribe nameofthelist Firstname Name</strong> (replace 'nameofthelist' by the name of the list you want to subscribe to and indicate your own first name and name).[%END%]</li>
 		<li>[%|helploc%]<strong>Leave the message body blank</strong>.[%END%]<br />
 			<p class="retraitita">[%|helploc%]To save some time, you can also send several commands in a single message. To do that, follow the instructions available in the <a href="#howitworks">How the mailing list service works</a> section.[%END%]</p></li>
 	</ol>
 
-	<p>[%|helploc(conf.host)%]<strong>After this, you will receive a message telling you whether your request was accepted or not</strong>: if the subscription to the list is subject to any approval, the list owner may choose not to subscribe you. If so, do not send several other requests: it is useless as the result will remain the same. You can possibly send a message directly to the list owner (nameofthelist-request@%1) to explain why you really want to subscribe to the list...[%END%]</p>
+	<p>[%|helploc(domain)%]<strong>After this, you will receive a message telling you whether your request was accepted or not</strong>: if the subscription to the list is subject to any approval, the list owner may choose not to subscribe you. If so, do not send several other requests: it is useless as the result will remain the same. You can possibly send a message directly to the list owner (nameofthelist-request@%1) to explain why you really want to subscribe to the list...[%END%]</p>
 	<p class="retraitita">[%|helploc%]Note: you will sometimes be asked to confirm your subscription request before it can be processed. If so, please conform to the instructions contained in the message you receive.[%END%]</p>
 	<p>[%|helploc%]According to the type of list (list with subscription subject to conditions or not) and to the availability of the list owner, <strong>you may not receive the notice immediately</strong>. It is useless to send several requests.[%END%]</p>
 	<p>[%|helploc%]<strong>If your request is accepted, the message you receive confirms your subscription to the list. This message</strong> (the list Charter) <strong>contains several pieces of essential information:</strong>[%END%]</p>
@@ -85,7 +85,7 @@
 	</ul>
 	<p><a name="subscribers"></a>[%|helploc%]The <strong>number of people subscribed</strong> to the list is permanently displayed in the <strong>left menu</strong>. <strong>To review the list members, click on the 'Review members' link</strong> in the left menu (if the list-owner decided to deny access to the members list, this link is not available). The subscribers list displays and shows the <strong>email address</strong> and <strong>name</strong> of each of the subscribers (the indication of the name depends on the subscription method used by the subscribers).[%END%]</p>
 	<p class="retraitita">[%|helploc%]By default, each page displays 25&#160;subscribers. You can browse through the pages by using the browsing arrows or display more subscribers per page. You may also wish to sort subscribers according to their email address, domain or name by clicking on the corresponding column header.[%END%]</p>
-	<p>[%|helploc(conf.host)%]<strong>The names of the list owners and moderators are displayed in the left menu</strong>. You should never write directly to a list owner or moderator. If you want to ask a question or make a comment, you should use the following address: <strong>nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of the list in question).[%END%]</p>
+	<p>[%|helploc(domain)%]<strong>The names of the list owners and moderators are displayed in the left menu</strong>. You should never write directly to a list owner or moderator. If you want to ask a question or make a comment, you should use the following address: <strong>nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of the list in question).[%END%]</p>
 	<p>[%|helploc%]To know <strong>when you subscribed to the list</strong> and <strong>when you last updated your subscriber options</strong>, <strong>click on the 'Subscriber options' link</strong> in the left menu.[%END%]</p>
 
 	<h3><a name="pref"></a>[%|helploc%]Managing your preferences[%END%]</h3>
@@ -158,7 +158,7 @@
 	<h3><a name="unsubscribe"></a>[%|helploc%]Unsubscribing from lists[%END%]</h3>
 	<p>[%|helploc%]To unsubscribe from a list, do as follows:[%END%]</p>
 	<ol>
-		<li>[%|helploc(conf.email,conf.host)%]From the address with which you subscribed to the list, send a <strong>message to %1@%2</strong>.[%END%]</li>
+		<li>[%|helploc(conf.email,domain)%]From the address with which you subscribed to the list, send a <strong>message to %1@%2</strong>.[%END%]</li>
 		<li>[%|helploc%]In the subject line of your email, type in: <strong>unsubscribe nameofthelist</strong> (replace 'nameofthelist' by the name of the list you want to unsubscribe from).[%END%]</li>
 		<li>[%|helploc%]<strong>Leave the message body blank</strong>.[%END%]<br />
 		<p class="retraitita">[%|helploc%]To save some time, you can also send several commands in a single message. To do that, follow the instructions available in the <a href="#howitworks">How the mailing list service works</a> section.[%END%]</p></li>

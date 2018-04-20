@@ -467,12 +467,12 @@ $POWERED_BY$
 
   ($tag$% IF list_conf.reply_to_header.apply == 'forced' %$tag$)
       ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
-          <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
+          <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% domain %$tag$)" />
       ($tag$% ELSIF list_conf.reply_to_header.value == 'other_email' %$tag$)
 	  ($tag$% SET oemail = list_conf.reply_to_header.other_email %$tag$)
           <input type="hidden" name="to" value="($tag$% oemail.replace('@',' ') %$tag$)" />
       ($tag$% ELSIF list_conf.reply_to_header.value == 'list' %$tag$)
-          <input type="hidden" name="to" value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
+          <input type="hidden" name="to" value="($tag$% list %$tag$) ($tag$% domain %$tag$)" />
       ($tag$% ELSIF list_conf.reply_to_header.value == 'sender' %$tag$)
           <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$" />
       ($tag$% END %$tag$)
@@ -485,13 +485,13 @@ $POWERED_BY$
 	($tag$%END%$tag$) />
       <label class="inlineLabel" for="to_sender">($tag$%|loc%$tag$)sender($tag$%END%$tag$)</label>
       <input id="to_list" type="radio" name="to"
-       value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)"
+       value="($tag$% list %$tag$) ($tag$% domain %$tag$)"
        ($tag$% IF list_conf.reply_to_header.value == 'list' %$tag$)
 	checked
 	($tag$%END%$tag$) />
       <label class="inlineLabel" for="to_list">($tag$%|loc%$tag$)list($tag$%END%$tag$)</label>
       <input id="to_both" type="radio" name="to"
-       value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)"
+       value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% domain %$tag$)"
        ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
 	checked
 	($tag$%END%$tag$) />

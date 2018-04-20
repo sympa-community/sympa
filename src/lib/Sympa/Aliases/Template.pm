@@ -52,15 +52,18 @@ sub _aliases {
     my $data = {
         'date' => $language->gettext_strftime('%d %b %Y', localtime time),
         'list' => {
-            'domain' => $domain,
-            'host'   => $list->{'admin'}{'host'},
             'name'   => $listname,
+            'domain' => $domain,
+            # Compat. < 6.2.32
+            'host' => $domain,
         },
-        'robot'             => $domain,
-        'default_domain'    => $Conf::Conf{'domain'},
         'is_default_domain' => ($domain eq $Conf::Conf{'domain'}),
         'return_path_suffix' =>
             Conf::get_robot_conf($domain, 'return_path_suffix'),
+
+        # No longer used by default.
+        'robot'             => $domain,
+        'default_domain'    => $Conf::Conf{'domain'},
     };
 
     my $aliases_dump;

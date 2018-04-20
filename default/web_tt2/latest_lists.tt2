@@ -30,7 +30,7 @@
   <tr class="color0">[% SET dark = 1 %]
 [% END %]
    <td>
-     <a href="[% 'info' | url_rel([l.name]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.name %]@[% l.host %][% END %]</strong></a>
+     <a href="[% 'info' | url_rel([l.name]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.name %]@[% domain %][% END %]</strong></a>
    </td>
 
   <td> [% l.date %] </td>

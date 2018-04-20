@@ -1110,7 +1110,6 @@ while ($query = CGI::Fast->new) {
     $param->{'conf'} = {};
     foreach my $p (
         'email',
-        'host',
         'soap_url',
         'wwsympa_url',
         'listmaster_email',
@@ -1170,6 +1169,8 @@ while ($query = CGI::Fast->new) {
     # Compat <= 6.2.16: CSS related.
     $param->{'css_path'} = sprintf '%s/%s', $Conf::Conf{'css_path'}, $robot;
     $param->{'css_url'}  = sprintf '%s/%s', $Conf::Conf{'css_url'}, $robot;
+    # Compat. < 6.2.32: "host" parameter was deprecated.
+    $param->{'conf'}{'host'} = Conf::get_robot_conf($robot, 'domain');
 
     foreach my $auth (keys %{$Conf::Conf{'cas_id'}{$robot}}) {
         $log->syslog('debug2', 'CAS authentication service %s', $auth);
@@ -1818,6 +1819,7 @@ while ($query = CGI::Fast->new) {
         $param->{'active'} = 1;
 
         if (defined $list) {
+            #FIXME: Not used by default.
             $param->{'list_conf'} = $list->{'admin'};
         }
 
@@ -1851,6 +1853,7 @@ while ($query = CGI::Fast->new) {
         $param->{'active'} = 1;
 
         if (defined $list) {
+            #FIXME: Probably not used by default.
             $param->{'list_conf'} = $list->{'admin'};
         }
 
@@ -2446,7 +2449,10 @@ sub send_html {
     }
 
     if (ref $list eq 'Sympa::List') {
-        $param->{'list_conf'} = $list->{'admin'};
+        $param->{'list_conf'} =
+            Sympa::Tools::Data::clone_var($list->{'admin'}); #FIXME
+        # Compat. < 6.2.32
+        $param->{'list_conf'}{'host'} = $list->{'domain'};
     }
 
     ## Trying to use custom_vars
@@ -2581,12 +2587,15 @@ sub check_param_in {
     }
 
     unless (ref $list eq 'Sympa::List') {
+        $param->{'domain'} = $robot;
+        # Compat. < 6.2.32
         $param->{'host'} = $robot;
     } else {
         # Gather list configuration information for further output.
         $param->{'list'}   = $list->{'name'};
         $param->{'domain'} = $list->{'domain'};
-        $param->{'host'}   = $list->{'admin'}{'host'};
+        # Compat. < 6.2.32
+        $param->{'host'} = $list->{'domain'};
 
         $param->{'subtitle'}  = $list->{'admin'}{'subject'};
         $param->{'subscribe'} = $list->{'admin'}{'subscribe'}{'name'};
@@ -4393,10 +4402,11 @@ sub do_lists {
 
         my $list_info = {};
         $list_info->{'subject'} = $list->{'admin'}{'subject'};
-        $list_info->{'host'}    = $list->{'admin'}{'host'};
         $list_info->{'date_epoch'} =
             $list->{'admin'}{'creation'}{'date_epoch'};
         $list_info->{'topics'} = $list->{'admin'}{'topics'};
+        #Compat.<6.2.32
+        $list_info->{'host'} = $list->{'domain'};
 
         if (    $param->{'user'}{'email'}
             and
@@ -4616,9 +4626,10 @@ sub do_including_lists {
                 next unless $action;
 
                 $which{$l->get_id} = {
-                    host    => $l->{'admin'}{'host'},
                     name    => $l->{'name'},
-                    robot   => $l->{'domain'},
+                    domain  => $l->{'domain'},
+                    host    => $l->{'domain'},  # Compat.<6.2.32
+                    robot   => $l->{'domain'},  # Compat.
                     subject => ($l->{'admin'}{'subject'} || $l->{'name'}),
                     url_abs => Sympa::get_url($l, 'info'),
                     url_rel =>
@@ -10345,10 +10356,11 @@ sub do_search_list {
 
         $record++;
         $param->{'which'}{$list->{'name'}} = {
-            'host'    => $list->{'admin'}{'host'},
             'subject' => $list->{'admin'}{'subject'},
             'admin'   => $is_admin,
-            'export'  => 'no'
+            'export'  => 'no',
+            # Compat. < 6.2.32
+            'host' => $list->{'domain'},
         };
     }
     $param->{'occurrence'} = $record;
@@ -14138,10 +14150,11 @@ sub _set_my_lists_info {
 
             my $l = $list->{'name'};
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
-            $which->{$l}{'host'}    = $list->{'admin'}{'host'};
             $which->{$l}{'is_subscriber'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.2.
             $which->{$l}{'info'} = 1;
+            # Compat. < 6.2.32 (Not used by default)
+            $which->{$l}{'host'} = $list->{'domain'};
 
             my $member_info =
                 $list->get_list_member($param->{'user'}{'email'});
@@ -14193,21 +14206,23 @@ sub _set_my_lists_info {
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
-            $which->{$l}{'host'}    = $list->{'admin'}{'host'};
             $which->{$l}{'is_owner'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.1.
             $which->{$l}{'info'}  = 1;
             $which->{$l}{'admin'} = 1;
+            # Compat. < 6.2.32 (Not used by default)
+            $which->{$l}{'host'} = $list->{'domain'};
         }
         foreach my $list (@{$get_which{editor}}) {
             my $l = $list->{'name'};
 
             $which->{$l}{'subject'} = $list->{'admin'}{'subject'};
-            $which->{$l}{'host'}    = $list->{'admin'}{'host'};
             $which->{$l}{'is_editor'} = 1;    # New on 6.2b.2.
             # Compat. < 6.2b.1.
             $which->{$l}{'info'}  = 1;
             $which->{$l}{'admin'} = 1;
+            # Compat. < 6.2.32 (Not used by default)
+            $which->{$l}{'host'} = $list->{'domain'};
         }
     }
 
@@ -15106,7 +15121,8 @@ sub do_search_user {
 
             next unless (defined $list);
             $param->{'which'}{$l}{'subject'} = $list->{'admin'}{'subject'};
-            $param->{'which'}{$l}{'host'}    = $list->{'admin'}{'host'};
+            # Compat. < 6.2.32
+            $param->{'which'}{$l}{'host'} = $list->{'domain'};
 
             # show the requestor role not the requested one
             if (   $list->is_admin('owner', $param->{'user'}{'email'})
@@ -16812,8 +16828,9 @@ sub get_server_details {
                 map {
                     my $r = $_;
                     (   $r => {
+                            (host => $r),   # Compat.<6.2.32
                             map { ($_ => Conf::get_robot_conf($r, $_)) }
-                                qw(host listmaster wwsympa_url)
+                                qw(listmaster wwsympa_url)
                         }
                         )
                     } @robots

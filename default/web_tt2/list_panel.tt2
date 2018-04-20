@@ -92,7 +92,7 @@
 
 <li>
   [% | obfuscate(listconf.spam_protection) ~%]
-    [% | mailto("${list}-request@${domain}") ~%][%# FIXME: Use host. ~%]
+    [% | mailto("${list}-request@${domain}") ~%]
       [%|loc%]Contact owners[%END%]
     [%~ END %]
   [%~ END %]

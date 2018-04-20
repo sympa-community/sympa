@@ -1040,7 +1040,7 @@ my %validations = (
             qw(owner editor return_path subscribe unsubscribe);
         push @special, map {
             sprintf '%s-%s@%s',
-                $list->{'name'}, lc $_, $list->{'admin'}{'host'}
+                $list->{'name'}, lc $_, $list->{'domain'}
             }
             split /[,\s]+/,
             Conf::get_robot_conf($list->{'domain'}, 'list_check_suffixes');

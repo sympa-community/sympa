@@ -808,8 +808,8 @@ sub load {
 
         $self->{'domain'} = $robot;
 
-        # default list host is robot domain
-        $self->{'admin'}{'host'} ||= $self->{'domain'};
+        # default list host is robot domain: Deprecated.
+        #XXX$self->{'admin'}{'host'} ||= $self->{'domain'};
         $self->{'name'} = $name;
     }
 
@@ -1659,7 +1659,6 @@ sub send_notify_to_owner {
     $log->syslog('debug2', '(%s, %s, %s)', @_);
     my ($self, $operation, $param) = @_;
 
-    my $host  = $self->{'admin'}{'host'};
     my @rcpt  = $self->get_admins_email('receptive_owner');
     my $robot = $self->{'domain'};
 
@@ -9370,7 +9369,7 @@ sub add_list_header {
 
     if ($field eq 'id') {
         $message->add_header('List-Id',
-            sprintf('<%s.%s>', $self->{'name'}, $self->{'admin'}{'host'}));
+            sprintf('<%s.%s>', $self->{'name'}, $self->{'domain'}));
     } elsif ($field eq 'help') {
         $message->add_header(
             'List-Help',

@@ -34,7 +34,7 @@ Subject: [% FILTER qencode %]AUTH [%keyauth%] [%cmd%][%END%]
 [%- END -%]
 
 [% IF user_interfaces.size() == 1 and user_interfaces.0 == 'mail' -%]
-[% sympa = BLOCK %][% conf.email %]@[% conf.host %][%END -%]
+[% sympa = BLOCK %][% conf.email %]@[% domain %][%END -%]
 [%|loc(sympa,"AUTH ${keyauth} ${cmd}") %]If you want this action to be taken, please
 
 - reply to this mail
