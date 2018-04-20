@@ -59,15 +59,19 @@
 </form>
 
 <div class="text-center">
-        [% IF prev_page %]
-	  <a href="[% 'reviewbouncing' | url_rel([list,prev_page,size]) %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]"></a>
-        [% END %]
-        [% IF page %]
-  	  [%|loc(page,total_page)%]page %1 / %2[%END%]
-        [% END %]
-        [% IF next_page %]
-	  <a href="[% 'reviewbouncing' | url_rel([list,next_page,size]) %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]"></a>
-        [% END %]
+[% IF prev_page ~%]
+  <a href="[% 'reviewbouncing' | url_rel([list,prev_page,size]) %]">
+  <i class="fa fa-caret-left fa-lg" title="[%|loc%]Previous page[%END%]"></i>
+  </a>
+[%~ END %]
+[% IF page ~%]
+  [%|loc(page,total_page)%]page %1 / %2[%END%]
+[%~ END %]
+[% IF next_page ~%]
+  <a href="[% 'reviewbouncing' | url_rel([list,next_page,size]) %]">
+  <i class="fa fa-caret-right fa-lg" title="[%|loc%]Next page[%END%]"></i>
+  </a>
+[%~ END %]
 </div>
 
 <form name="myform" action="[% path_cgi %]" method="POST"
@@ -134,17 +138,21 @@
 
         [% END %]
       </table>
-  <div class="text-center">
-        [% IF prev_page %]
-	  <a href="[% 'reviewbouncing' | url_rel([list,prev_page,size]) %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
-        [% END %]
-        [% IF page %]
-  	  [%|loc(page,total_page)%]page %1 / %2[%END%]
-        [% END %]
-        [% IF next_page %]
-	  <a href="[% 'reviewbouncing' | url_rel([list,next_page,size]) %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
-        [% END %]
-  </div>
+<div class="text-center">
+[% IF prev_page ~%]
+  <a href="[% 'reviewbouncing' | url_rel([list,prev_page,size]) %]">
+  <i class="fa fa-caret-left fa-lg" title="[%|loc%]Previous page[%END%]"></i>
+  </a>
+[%~ END %]
+[% IF page ~%]
+  [%|loc(page,total_page)%]page %1 / %2[%END%]
+[%~ END %]
+[% IF next_page ~%]
+  <a href="[% 'reviewbouncing' | url_rel([list,next_page,size]) %]">
+  <i class="fa fa-caret-right fa-lg" title="[%|loc%]Next page[%END%]"></i>
+  </a>
+[%~ END %]
+</div>
   [% IF is_owner %]
   <div>
     <input class="MainMenuLinks" type="submit" name="action_del"
