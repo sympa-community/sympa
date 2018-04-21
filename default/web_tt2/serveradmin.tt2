@@ -110,7 +110,7 @@
 <label for="list"></label><input id="list" type="text" name="list" size="20" /><div style="padding-top:1.0em; padding-bottom:0.25em; float:clear;"><input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" /></div>
 
 <h3>[%|loc%]Rebuild archives for all lists[%END%]</h3>
-<p><b>[%|loc%]Note:[%END%]</b> [%|loc%]As this option may take a long time to complete, it is recommended (if possible) to use this option during non-busy times.[%END%]
+<p><b>[%|loc%]Note:[%END%]</b> [%|loc%]As this option may take a long time to complete, it is recommended (if possible) to use it during non-busy times.[%END%]
 <div style="padding-bottom: 1.0em; float:clear;"> <input class="MainMenuLinks" type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" /></div>
 </fieldset>
 </form>
@@ -163,7 +163,7 @@
 
 <div>
 <h3>[%|loc%]Dump TT2 Variables[%END%]</h3>
-<p>[%|loc%]Toggle the dumping of available TT2 variables when rendering web interface pages.  This may be useful when developing or debugging custom TT2 templates.  This setting is temporary, applying only for the lifetime of the web interface fastcgi process.[%END%]</p>
+<p>[%|loc%]Toggle the dumping of available TT2 variables when rendering web interface pages. This may be useful when developing or debugging custom TT2 templates. This setting is temporary, applying only for the lifetime of the web interface fastcgi process.[%END%]</p>
 <form class="bold_label" action="[% path_cgi %]" method="post">
 <fieldset>
 [% IF dumpvars == 'true' %]

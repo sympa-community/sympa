@@ -58,4 +58,4 @@ Subject: [% FILTER qencode %][%|loc%]User guide[%END%][%END%]
  [%|loc%]MODINDEX <list>                 * Moderation: to view the list of messages to moderate[%END%]
 [%END#wrap%][% END %]
 
-[%|loc%]Powered by Sympa[%END%] [% conf.version %][%|loc%]:[%END%] http://www.sympa.org
+[%|loc(conf.version)%]Powered by Sympa %1[%END%][%|loc%]:[%END%] http://www.sympa.org

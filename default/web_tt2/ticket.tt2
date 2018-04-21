@@ -15,7 +15,7 @@
 
 <h3>[%|loc%]reason[%END%]</h3>
 [% IF ticket_context.result == 'closed' -%]
-[%|loc(ticket_context.status)%]The validation link has already been validated from host %1 .If you did not perform this validation, please report this confidentiality issue to your mail services administrator.[%END%] 
+[%|loc(ticket_context.status)%]The validation link has already been validated from host %1. If you did not perform this validation, please report this confidentiality issue to your mail services administrator.[%END%] 
 [% IF user.email %]
 <br/>[%|loc%]However, as you are logged in already, you can probably perform the action you requested anyway.[%END%]
 [%END%]

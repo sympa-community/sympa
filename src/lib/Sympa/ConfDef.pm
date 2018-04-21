@@ -483,7 +483,7 @@ our @params = (
         'default'    => '-oi -odi -oem',
         'gettext_id' => 'Command line parameters passed to sendmail',
         'gettext_comment' =>
-            "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not included, because they will be included by Sympa.",
+            "Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses should not be included, because they will be included by Sympa.",
     },
     {   'name'       => 'log_smtp',
         'gettext_id' => 'Log invocation of sendmail',
@@ -1777,7 +1777,7 @@ our @params = (
 
     {   'gettext_id' => 'Data sources setup',
         'gettext_comment' =>
-            'Including subscribers, owners and editors from datasources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL.',
+            'Including subscribers, owners and editors from data sources. Appropriate database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL.',
     },
 
     {   'name'       => 'default_sql_fetch_timeout',
