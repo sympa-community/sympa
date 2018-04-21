@@ -20,7 +20,7 @@
 		</ul></li>
 	</ul>
 
-	<p>[%|helploc(path_cgi)%]A description of all the commands you can send to Sympa is available at <a href="%1/help/mail_commands">%1/help/mail_commands</a>.[%END%]</p>
+	<p>[%|helploc%]A description of all the commands you can send to Sympa is available at <a href="mail_commands">mail_commands</a>.[%END%]</p>
 
 	<h3><a name="subscribe"></a>[%|helploc%]Subscribing to mailing lists[%END%]</h3>
 	<p>[%|helploc%]Subscribing to a mailing list is very simple:[%END%]</p>
@@ -47,7 +47,7 @@
 	<p>[%|helploc%]<strong>You should keep your subscription notice</strong>: you may need it later to remember your password or to send a precise command to Sympa (example: signoff command). More generally, <strong>we advise you to keep all your subscription notices to mailing lists</strong>.[%END%]</p>
 	<p>[%|helploc%]<strong>You can also subscribe to a list through the mailing list web interface</strong>. To do that, do as follows:[%END%]</p>
 	<ol>
-		<li>[%|helploc(path_cgi)%]Go to the list environment <strong><a href="%1/home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
+		<li>[%|helploc%]Go to the list environment <strong><a href="../home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
 		<li>[%|helploc%]<strong>Go to the information page of the list</strong> you want to subscribe to.[%END%]</li>
 		<li>[%|helploc%]In the left menu, <strong>click on the 'Subscribe'</strong> link.[%END%]</li>
 	</ol>
@@ -74,13 +74,13 @@
 	<p>[%|helploc%]From this information page, you can:[%END%]</p>
 	<ul>
 		<li>[%|helploc%]change your <a href="#options">subscriber options</a>;[%END%]</li>
-		<li>[%|helploc(path_cgi)%]read the <a href="%1/help/arc">list archive</a>;[%END%]</li>
-		<li>[%|helploc(path_cgi)%]<a href="%1/help/arc#arcsearch">search in the message archive</a>;[%END%]</li>
-		<li>[%|helploc(path_cgi)%]<a href="%1/help/sendmsg">send new messages</a>;[%END%]</li>
-		<li>[%|helploc(path_cgi)%]<a href="%1/help/shared#shared_read">download documents</a> from the shared document web space;[%END%]</li>
-		<li>[%|helploc(path_cgi)%]<a href="%1/help/shared#shared_upload">upload documents</a> in the shared document web space;[%END%]</li>
+		<li>[%|helploc%]read the <a href="arc">list archive</a>;[%END%]</li>
+		<li>[%|helploc%]<a href="arc#arcsearch">search in the message archive</a>;[%END%]</li>
+		<li>[%|helploc%]<a href="sendmsg">send new messages</a>;[%END%]</li>
+		<li>[%|helploc%]<a href="shared#shared_read">download documents</a> from the shared document web space;[%END%]</li>
+		<li>[%|helploc%]<a href="shared#shared_upload">upload documents</a> in the shared document web space;[%END%]</li>
 		<li>[%|helploc%]<a href="#subscribers">review members</a> of the list (if available);[%END%]</li>
-		<li>[%|helploc(path_cgi)%]<a href="%1/help/suspend">suspend or resume</a> your subscription of each list;[%END%]</li>
+		<li>[%|helploc%]<a href="suspend">suspend or resume</a> your subscription of each list;[%END%]</li>
 		<li>[%|helploc%]<a href="#unsubscribe">unsubscribe</a> from the list.[%END%]</li>
 	</ul>
 	<p><a name="subscribers"></a>[%|helploc%]The <strong>number of people subscribed</strong> to the list is permanently displayed in the <strong>left menu</strong>. <strong>To review the list members, click on the 'Review members' link</strong> in the left menu (if the list-owner decided to deny access to the members list, this link is not available). The subscribers list displays and shows the <strong>email address</strong> and <strong>name</strong> of each of the subscribers (the indication of the name depends on the subscription method used by the subscribers).[%END%]</p>
@@ -98,7 +98,7 @@
 	<h4><a name="options"></a>[%|helploc%]Changing your subscriber options[%END%]</h4>
 	<p>[%|helploc%]<strong>Your subscriber options can vary from a list to another</strong>. To change them, do as follows:[%END%]</p>
 	<ol>
-		<li>[%|helploc(path_cgi)%]Go to the list environment <strong><a href="%1/home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
+		<li>[%|helploc%]Go to the list environment <strong><a href="../home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
 		<li>[%|helploc%]<strong>Go to the information page of the list</strong> for which you want to change your subscriber options.[%END%]</li>
 		<li>[%|helploc%]In the left menu, <strong>click on the 'Subscriber options' link</strong>.[%END%]</li>
 		<li><a name="deliverymode"></a><[%|helploc%]strong>Choose a message delivery mode</strong> (those options are mutually exclusive, thus you can not select several of them):[%END%]
@@ -117,7 +117,7 @@
 	<h4><a name="global_pref"></a>[%|helploc%]Changing your general preferences[%END%]</h4>
 	<p>[%|helploc%]The general preferences apply to all your subscriptions as well as to the way your Sympa mailing list web interface displays. To change your preferences, do as follows:[%END%]</p>
 	<ol>
-		<li>[%|helploc(path_cgi)%]Go to the list environment <strong><a href="%1/home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
+		<li>[%|helploc%]Go to the list environment <strong><a href="../home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
 		<li>[%|helploc%]In the form displayed on top of the left column, <strong>click on the 'Your preferences' link</strong>.[%END%]</li>
 		<li>[%|helploc%]<strong>Change your preferences</strong>.[%END%]</li>
 		<li>[%|helploc%]<strong>Click on 'Submit' for every option</strong> you change.[%END%]</li>
@@ -137,23 +137,23 @@
 		<h3>[%|helploc%]Searching for a mailing list[%END%]</h3>
 		<p>[%|helploc%]You may need to search for a mailing list. To do that, you have three options:[%END%]</p>
 		<ul>
-			<li>[%|helploc(path_cgi)%]<strong>browse the different sections</strong> displayed on the <a href="%1/home">list environment homepage</a>;[%END%]</li>
+			<li>[%|helploc%]<strong>browse the different sections</strong> displayed on the <a href="../home">list environment homepage</a>;[%END%]</li>
 			<li>[%|helploc%]search for a list via the <strong>search box</strong>: the searched string will return all the lists whose name or description matches your search criteria (descriptions of the lists generally consist of a short sentence);[%END%]</li>
-			<li>[%|helploc(path_cgi)%]click on the '<a href="%1/lists">List of lists</a>' tab on top of page to <strong>display all available lists</strong>.[%END%]</li>
+			<li>[%|helploc%]click on the '<a href="../lists">List of lists</a>' tab on top of page to <strong>display all available lists</strong>.[%END%]</li>
 		</ul>
 		<p class="retraitita">[%|helploc%]According to the domain to which your email address belongs (example: <em class="example">cru.fr</em>, <em class="example">fai.com</em>, etc.) and to the location you log on from, you will not have access to the same lists. However you can subscribe to a list that does not display if you know its name. To do this, <a href="#subscribe">use your email client</a>.[%END%]</p>
 
 	<h3><a name="archives"></a>[%|helploc%]Reading a list archive online[%END%]</h3>
-	<p>[%|helploc(path_cgi)%]Please refer to the <a href="%1/help/arc"><strong>archive documentation</strong></a>.[%END%]</p>
+	<p>[%|helploc%]Please refer to the <a href="arc"><strong>archive documentation</strong></a>.[%END%]</p>
 
 	<h3><a name="sendmsg"></a>[%|helploc%]Sending a message[%END%]</h3>
-	<p>[%|helploc(path_cgi)%]Please refer to the <a href="%1/help/sendmsg"><strong>documentation about sending messages</strong></a>.[%END%]</p>
+	<p>[%|helploc%]Please refer to the <a href="sendmsg"><strong>documentation about sending messages</strong></a>.[%END%]</p>
 
 	<h3><a name="shared"></a>[%|helploc%]Using the shared document web space[%END%]</h3>
-	<p>[%|helploc(path_cgi)%]Please refer to the <a href="%1/help/shared"><strong>shared document web space documentation</strong></a>.[%END%]</p>
+	<p>[%|helploc%]Please refer to the <a href="shared"><strong>shared document web space documentation</strong></a>.[%END%]</p>
 
 	<h3><a name="suspend"></a>[%|helploc%]Suspending or resuming your subscription of each list[%END%]</h3>
-	<p>[%|helploc(path_cgi)%]Please refer to the <a href="%1/help/suspend"><strong>subscription management documentation</strong></a>.[%END%]</p>
+	<p>[%|helploc%]Please refer to the <a href="suspend"><strong>subscription management documentation</strong></a>.[%END%]</p>
 
 	<h3><a name="unsubscribe"></a>[%|helploc%]Unsubscribing from lists[%END%]</h3>
 	<p>[%|helploc%]To unsubscribe from a list, do as follows:[%END%]</p>
@@ -165,7 +165,7 @@
 	</ol>	
 	<p>[%|helploc%]You can also unsubscribe through the mailing list web interface (you will need to repeat the operation for each list you want to unsubscribe from):[%END%]</p>
 	<ol>
-		<li>[%|helploc(path_cgi)%]Go to the list environment <strong><a href="%1/home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
+		<li>[%|helploc%]Go to the list environment <strong><a href="../home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
 		<li>[%|helploc%]<strong>Go to the information page of the list</strong> you want to unsubscribe from.[%END%]</li>
 		<li>[%|helploc%]<strong>In the left menu, click on the 'Unsubscribe' link</strong>.[%END%]</li>
 	</ol>
