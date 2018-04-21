@@ -141,7 +141,7 @@ msgid "To request the creation of a mailing list, do as follows:"
 msgstr ""
 "Aby poprosić o utworzenie listy mailingowej, wykonaj następujące kroki:"
 
-#. (path_cgi,conf.host)
+#. (path_cgi)
 #: default/web_tt2/help_admin.tt2:19
 msgid ""
 "Go to the <strong><a href=\"%1/home\">list environment homepage</a></strong> "
@@ -163,7 +163,7 @@ msgstr ""
 "Jeśli nie widzisz tego linku, oznacza to że nie masz uprawnień do tworzenia "
 "list."
 
-#. ('',conf.host)
+#. ('',domain)
 #: default/web_tt2/help_admin.tt2:22
 msgid ""
 "Give your list a <strong>name</strong> (only enter the name without the '@' "
@@ -182,7 +182,7 @@ msgstr ""
 "Nie używaj spacji, akcentów lub znaków specjalnych w nazwach list: takie "
 "znaki mogą powodować problemy."
 
-#. ('',conf.host)
+#. ('',domain)
 #: default/web_tt2/help_admin.tt2:24
 msgid ""
 "Choose an explicit yet short name: think of the subscribers who will have to "
@@ -755,10 +755,10 @@ msgstr "<strong>ostatnia aktualizacja</strong> opcji subskrybenta."
 
 #: default/web_tt2/help_admin.tt2:131
 msgid ""
-"By default, each page displays 25&#160;subscribers. You can browse through "
-"the pages by using the browsing arrows or display more subscribers on each "
-"page. You may also wish to sort subscribers according to different criteria "
-"by clicking on the corresponding column header."
+"By default, each page displays 25 subscribers. You can browse through the "
+"pages by using the browsing arrows or display more subscribers on each page. "
+"You may also wish to sort subscribers according to different criteria by "
+"clicking on the corresponding column header."
 msgstr ""
 "Domyślnie każda strona wyświetla 25&#160;subskrybentów. Możesz nawigować "
 "pomiędzy stronami używając strzałek lub wyświetlać więcej subskrybentów na "
@@ -808,7 +808,7 @@ msgstr ""
 "Jeśli chcesz dodać ludzi bez wysyłania im informacji, zaznacz opcję 'Cisza'. "
 "Jednak dużo lepiej jest ostrzegać nowo dodanych subskrybentów!"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_admin.tt2:141
 msgid ""
 "Even though you have the possibility to subscribe people to your mailing "
@@ -1008,10 +1008,10 @@ msgstr ""
 
 #: default/web_tt2/help_admin.tt2:177
 msgid ""
-"To <strong>make addresses stop bouncing</strong>, select them by ticking "
-"their boxes and click on the '<strong>Reset errors for selected users</"
-"strong>' button. If the error remains, the addresses will be reported as "
-"bouncing again as soon as a message is posted on the list."
+"To <strong>make addresses stop being reported as bouncing</strong>, select "
+"them by ticking their boxes and click on the '<strong>Reset errors for "
+"selected users</strong>' button. If the error remains, the addresses will be "
+"reported as bouncing again as soon as a message is posted on the list."
 msgstr ""
 "Aby <strong>wyzerować liczniki błędu</strong>, zaznacz odpowiednie adresy i "
 "kliknij przycisk '<strong>Zresetuj błędy dla zaznaczonych użytkowników</"
@@ -1201,7 +1201,8 @@ msgid ""
 "The mailing list management robot Sympa can generate <strong>downloadable "
 "compressed archives (.ZIP format) of the messages sent to the list</strong>. "
 "To download those archives, <strong>select the months</strong> that interest "
-"you in the list and click on the '<strong>Download Zip file</strong>' button."
+"you in the list and click on the '<strong>Download .zip archive</strong>' "
+"button."
 msgstr ""
 "Oprogramowanie Sympa może generować <strong>skompresowane archiwum "
 "wiadomości w formacie ZIP</strong>. Aby pobrać archiwum, <strong>zaznacz "
@@ -1242,10 +1243,10 @@ msgstr ""
 
 #: default/web_tt2/help_admin.tt2:209
 msgid ""
-"From the 'Manage archive' page, you can also <strong>delete messages</"
+"From the 'Manage archives' page, you can also <strong>delete messages</"
 "strong> (deletion month by month and not message by message). To do that, "
 "<strong>select the months</strong> that interest you in the list and click "
-"on the '<strong>Delete selected months</strong>' button."
+"on the '<strong>Delete Selected Month(s)</strong>' button."
 msgstr ""
 "Na stronie 'Zarządzaj archiwum' możesz także <strong>usuwać wiadomości</"
 "strong> (miesiąc po miesiącu, nie wiadomość po wiadomości). Aby to zrobić, "
@@ -1314,7 +1315,7 @@ msgstr ""
 "Wybierz <strong>znaczącą i jednocześnie krótką nazwę</strong>: pamiętaj, że "
 "subskrybenci będą wpisywać nazwę przy każdym wysyłaniu wiadomości na listę!"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_admin.tt2:221
 msgid ""
 "If you manage a set of lists, you can <strong>prefix your lists' names with "
@@ -2354,7 +2355,7 @@ msgstr ""
 "dostępności moderatorów</strong>: nie są w stanie monitorować listy całą "
 "dobę! Dlatego dystrybucja wiadomości może być nieco opóźniona."
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_faquser.tt2:52
 msgid ""
 "<strong>If the list is a moderated list, your message might have been "
@@ -2443,7 +2444,7 @@ msgstr ""
 msgid "You want to contact list owners"
 msgstr "Chcesz skontaktować się z właścicielami listy"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_faquser.tt2:72
 msgid ""
 "The list owners and moderators' names are mentioned in the left menu. "
@@ -3724,7 +3725,7 @@ msgstr ""
 "Nawet jeśli wiadomości nie są archiwizowane, oczywiście nadal jest możliwe "
 "wysyłać wiadomości na listę."
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_listconfig.tt2:140
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
@@ -3985,7 +3986,7 @@ msgstr ""
 msgid "List of the commands of the Sympa mail interface"
 msgstr "Lista poleceń interfejsu mailowego Sympy"
 
-#. (conf.email ,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_mail_commands.tt2:5
 msgid "All commands are to be sent at %1@%2."
 msgstr "Wszystkie polecenia należy wysyłać na adres %1@%2."
@@ -4202,7 +4203,7 @@ msgstr ""
 msgid "Sending a message with an email client"
 msgstr "Wysyłanie wiadomości z klienta pocztowego"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_sendmsg.tt2:7
 msgid ""
 "To send a new message, it is very simple: <strong>from your email client or "
@@ -4602,11 +4603,10 @@ msgid ""
 "<strong>bookmarks</strong>."
 msgstr ""
 
-#. (icons_url)
 #: default/web_tt2/help_shared.tt2:16
 msgid ""
-"<strong>Folders</strong> are preceded by the icon <img src=\"%1/folder.png\" "
-"style=\"border: 0px;\" title=\"Icon of folder\" />."
+"<strong>Folders</strong> are preceded by the icon <i class=\"fa fa-folder\" "
+"title=\"Icon of folder\"> </i>."
 msgstr ""
 
 #: default/web_tt2/help_shared.tt2:18
@@ -4626,14 +4626,12 @@ msgid ""
 "\">upload</a> some."
 msgstr ""
 
-#. (icons_url)
 #: default/web_tt2/help_shared.tt2:22
 msgid ""
-"<strong>Bookmarks</strong> are preceded by the icon <img src=\"%1/link.png\" "
-"style=\"border: 0px;\" title=\"Icon of bookmark\" />. They consist of "
-"<strong>shortcuts providing a single-click access to a particular website</"
-"strong>. If you click on a bookmark label, the website linked will open in a "
-"new window."
+"<strong>Bookmarks</strong> are preceded by the icon <i class=\"fa fa-link\" "
+"title=\"Icon of bookmark\"> </i>. They consist of <strong>shortcuts "
+"providing a single-click access to a particular website</strong>. If you "
+"click on a bookmark label, the website linked will open in a new window."
 msgstr ""
 
 #: default/web_tt2/help_shared.tt2:25
@@ -5239,7 +5237,7 @@ msgstr ""
 msgid "<strong>log on to the web environment</strong>;"
 msgstr "<strong>po zalogowaniu do środowiska webowego</strong>;"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:10
 msgid ""
 "<strong>send commands by email</strong> to the Sympa mailing list manager at "
@@ -5337,7 +5335,7 @@ msgstr ""
 "takim wypadku cały proces subskrypcji trzeba wykonać dla każdego adresu z "
 "osobna."
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:31
 msgid ""
 "Send a <strong>message to %1@%2</strong> from the address you want to "
@@ -5379,7 +5377,7 @@ msgstr ""
 "Więcej informacji na ten temat znajduje się w sekcji <a href=\"#howitworks"
 "\">Jak działa lista mailingowa</a>."
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_user.tt2:38
 msgid ""
 "<strong>After this, you will receive a message telling you whether your "
@@ -5609,7 +5607,7 @@ msgstr ""
 "wysyłania wiadomości, itp.) o różnej długości w zależności od listy."
 
 #: default/web_tt2/help_user.tt2:74
-msgid "Form this information page, you can:"
+msgid "From this information page, you can:"
 msgstr "Na stronie informacyjnej możesz:"
 
 #: default/web_tt2/help_user.tt2:76
@@ -5690,7 +5688,7 @@ msgstr ""
 "stronie. Klikając na nagłówek odpowiedniej kolumny można sortować listę "
 "subskrybentów na podstawie adresu email, domeny lub nazwy."
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_user.tt2:88
 msgid ""
 "<strong>The names of the list owners and moderators are displayed in the "
@@ -5857,8 +5855,8 @@ msgstr "Możesz zmienić:"
 #: default/web_tt2/help_user.tt2:127
 msgid ""
 "your <strong>name</strong>; if you subscribe to a list from the mailing list "
-"server web interface, the 'Name' field will automatically be filled in in "
-"the members list;"
+"server web interface, the 'Name' field will automatically be filled in the "
+"members list;"
 msgstr ""
 "swoją <strong>nazwę</strong>; jeśli zapisałeś się na listę za pomocą "
 "interfejsu webowego, nazwa automatycznie uaktualni się na liście uczestników "
@@ -5869,7 +5867,7 @@ msgid ""
 "the <strong>language in which the Sympa web interface is displayed</strong> "
 "(you can change language on every page of the web interface; your choice "
 "will remain even though you change the interface language on another page "
-"than the 'Preferences' page;"
+"than the 'Preferences' page);"
 msgstr ""
 "<strong>język interfejsu webowego Sympy</strong> (język można zmieniać na "
 "każdej stronie interfejsu webowego; Twoja zmiana zostanie zachowana mimo "
@@ -6041,7 +6039,7 @@ msgstr "Wypisywanie się z list"
 msgid "To unsubscribe from a list, do as follows:"
 msgstr "Aby wypisać się z listy, wykonaj następujące kroki:"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:161
 msgid ""
 "From the address with which you subscribed to the list, send a "
@@ -6206,6 +6204,74 @@ msgid ""
 msgstr ""
 "<strong>standardowy (odbiór bezpośredni)</strong>: tryb domyślny, usuwa "
 "wszelkie inne ustawienia trybu odbierania."
+
+#~ msgid ""
+#~ "By default, each page displays 25&#160;subscribers. You can browse "
+#~ "through the pages by using the browsing arrows or display more "
+#~ "subscribers on each page. You may also wish to sort subscribers according "
+#~ "to different criteria by clicking on the corresponding column header."
+#~ msgstr ""
+#~ "Domyślnie każda strona wyświetla 25&#160;subskrybentów. Możesz nawigować "
+#~ "pomiędzy stronami używając strzałek lub wyświetlać więcej subskrybentów "
+#~ "na stronę. Klikając na nagłówek odpowiedniej kolumny można sortować "
+#~ "subskrybentów według danego kryterium."
+
+#~ msgid ""
+#~ "To <strong>make addresses stop bouncing</strong>, select them by ticking "
+#~ "their boxes and click on the '<strong>Reset errors for selected users</"
+#~ "strong>' button. If the error remains, the addresses will be reported as "
+#~ "bouncing again as soon as a message is posted on the list."
+#~ msgstr ""
+#~ "Aby <strong>wyzerować liczniki błędu</strong>, zaznacz odpowiednie adresy "
+#~ "i kliknij przycisk '<strong>Zresetuj błędy dla zaznaczonych użytkowników</"
+#~ "strong>'. Jeśli błąd nadal występuje, adresy będą ponownie oznaczone jako "
+#~ "wysyłające zwrotki, jak tylko na listę zostanie wysłana następna "
+#~ "wiadomość."
+
+#~ msgid ""
+#~ "The mailing list management robot Sympa can generate <strong>downloadable "
+#~ "compressed archives (.ZIP format) of the messages sent to the list</"
+#~ "strong>. To download those archives, <strong>select the months</strong> "
+#~ "that interest you in the list and click on the '<strong>Download Zip "
+#~ "file</strong>' button."
+#~ msgstr ""
+#~ "Oprogramowanie Sympa może generować <strong>skompresowane archiwum "
+#~ "wiadomości w formacie ZIP</strong>. Aby pobrać archiwum, <strong>zaznacz "
+#~ "miesiące</strong>, które Cię interesują i kliknij przycisk "
+#~ "'<strong>Pobierz plik ZIP</strong>'."
+
+#~ msgid ""
+#~ "From the 'Manage archive' page, you can also <strong>delete messages</"
+#~ "strong> (deletion month by month and not message by message). To do that, "
+#~ "<strong>select the months</strong> that interest you in the list and "
+#~ "click on the '<strong>Delete selected months</strong>' button."
+#~ msgstr ""
+#~ "Na stronie 'Zarządzaj archiwum' możesz także <strong>usuwać wiadomości</"
+#~ "strong> (miesiąc po miesiącu, nie wiadomość po wiadomości). Aby to "
+#~ "zrobić, <strong>zaznacz miesiące</strong> i kliknij przycisk "
+#~ "'<strong>Usuń zaznaczone miesiące</strong>'."
+
+#~ msgid "Form this information page, you can:"
+#~ msgstr "Na stronie informacyjnej możesz:"
+
+#~ msgid ""
+#~ "your <strong>name</strong>; if you subscribe to a list from the mailing "
+#~ "list server web interface, the 'Name' field will automatically be filled "
+#~ "in in the members list;"
+#~ msgstr ""
+#~ "swoją <strong>nazwę</strong>; jeśli zapisałeś się na listę za pomocą "
+#~ "interfejsu webowego, nazwa automatycznie uaktualni się na liście "
+#~ "uczestników listy;"
+
+#~ msgid ""
+#~ "the <strong>language in which the Sympa web interface is displayed</"
+#~ "strong> (you can change language on every page of the web interface; your "
+#~ "choice will remain even though you change the interface language on "
+#~ "another page than the 'Preferences' page;"
+#~ msgstr ""
+#~ "<strong>język interfejsu webowego Sympy</strong> (język można zmieniać na "
+#~ "każdej stronie interfejsu webowego; Twoja zmiana zostanie zachowana mimo "
+#~ "zmiany języka na stronie innej niż strona 'Preferencje');"
 
 #~ msgid ""
 #~ "<strong>You entered an incorrect password</strong>. If you forgot your "

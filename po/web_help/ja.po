@@ -131,7 +131,7 @@ msgstr ""
 msgid "To request the creation of a mailing list, do as follows:"
 msgstr "メーリングリストの作成を申し込むには、次のようにします——"
 
-#. (path_cgi,conf.host)
+#. (path_cgi)
 #: default/web_tt2/help_admin.tt2:19
 msgid ""
 "Go to the <strong><a href=\"%1/home\">list environment homepage</a></strong> "
@@ -155,7 +155,7 @@ msgstr ""
 "そういうタブが出ていないのであれば、あなたにはリスト作成を申し込めるような権"
 "限がないということです。"
 
-#. ('',conf.host)
+#. ('',domain)
 #: default/web_tt2/help_admin.tt2:22
 msgid ""
 "Give your list a <strong>name</strong> (only enter the name without the '@' "
@@ -174,7 +174,7 @@ msgstr ""
 "半角の英数字なら、リスト名に使えます。空白やたいていの特殊記号は使えません。"
 "また、漢字や仮名も使えません。さらに、英数字であっても全角文字は使えません。"
 
-#. ('',conf.host)
+#. ('',domain)
 #: default/web_tt2/help_admin.tt2:24
 msgid ""
 "Choose an explicit yet short name: think of the subscribers who will have to "
@@ -740,10 +740,10 @@ msgstr "読者登録の設定の<strong>最終更新日</strong>。"
 
 #: default/web_tt2/help_admin.tt2:131
 msgid ""
-"By default, each page displays 25&#160;subscribers. You can browse through "
-"the pages by using the browsing arrows or display more subscribers on each "
-"page. You may also wish to sort subscribers according to different criteria "
-"by clicking on the corresponding column header."
+"By default, each page displays 25 subscribers. You can browse through the "
+"pages by using the browsing arrows or display more subscribers on each page. "
+"You may also wish to sort subscribers according to different criteria by "
+"clicking on the corresponding column header."
 msgstr ""
 "最初は、一ページに 25 名ずつ表示するようになっています。矢印のリンクで他の"
 "ページを見たり、一ページに表示する人数を変えたりできます。また、項目の見出し"
@@ -795,7 +795,7 @@ msgstr ""
 "にチェックを入れておきます。ですが、読者登録したときに本人に知っておいてもら"
 "うことは、とても大事なのです。"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_admin.tt2:141
 msgid ""
 "Even though you have the possibility to subscribe people to your mailing "
@@ -1012,10 +1012,10 @@ msgstr ""
 # # "envoi de message."
 #: default/web_tt2/help_admin.tt2:177
 msgid ""
-"To <strong>make addresses stop bouncing</strong>, select them by ticking "
-"their boxes and click on the '<strong>Reset errors for selected users</"
-"strong>' button. If the error remains, the addresses will be reported as "
-"bouncing again as soon as a message is posted on the list."
+"To <strong>make addresses stop being reported as bouncing</strong>, select "
+"them by ticking their boxes and click on the '<strong>Reset errors for "
+"selected users</strong>' button. If the error remains, the addresses will be "
+"reported as bouncing again as soon as a message is posted on the list."
 msgstr ""
 "<strong>アドレスが配送エラーを起こさなくなったようなら</strong>、そのアドレス"
 "の横のチェックボックスにチェックを入れ、<strong>選んだ人のエラーをリセットす"
@@ -1261,7 +1261,8 @@ msgid ""
 "The mailing list management robot Sympa can generate <strong>downloadable "
 "compressed archives (.ZIP format) of the messages sent to the list</strong>. "
 "To download those archives, <strong>select the months</strong> that interest "
-"you in the list and click on the '<strong>Download Zip file</strong>' button."
+"you in the list and click on the '<strong>Download .zip archive</strong>' "
+"button."
 msgstr ""
 "メーリングリスト管理ロボット Sympa では、<strong>リストに届いたメッセージを圧"
 "縮書庫ファイル (.ZIP形式) としてダウンロードできます</strong>。書庫ファイルを"
@@ -1322,10 +1323,10 @@ msgstr ""
 # # "'<strong>Détruire les mois sélectionnés</strong>'."
 #: default/web_tt2/help_admin.tt2:209
 msgid ""
-"From the 'Manage archive' page, you can also <strong>delete messages</"
+"From the 'Manage archives' page, you can also <strong>delete messages</"
 "strong> (deletion month by month and not message by message). To do that, "
 "<strong>select the months</strong> that interest you in the list and click "
-"on the '<strong>Delete selected months</strong>' button."
+"on the '<strong>Delete Selected Month(s)</strong>' button."
 msgstr ""
 "「投稿保管庫の管理」ページで<strong>メッセージを削除する</strong>こともできま"
 "す (月ごとにまとめての削除で、メッセージひとつひとつではありません)。これをす"
@@ -1421,7 +1422,7 @@ msgstr ""
 # # "le nom de vos listes avec un préfixe commun</strong> afin qu'elles soient "
 # # "classées à la suite et clairement identifiables par tous (exemple : <em "
 # # "class=\"example\">sympa-users(@)cru.fr, sympa-fr(@)cru.fr</em>, etc.)."
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_admin.tt2:221
 msgid ""
 "If you manage a set of lists, you can <strong>prefix your lists' names with "
@@ -2656,7 +2657,7 @@ msgstr ""
 "送られません</strong>。モデレータだって、朝から晩までずっとメーリングリストを"
 "見ているわけではありません。メッセージが届くのが多少遅れることもあります。"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_faquser.tt2:52
 msgid ""
 "<strong>If the list is a moderated list, your message might have been "
@@ -2747,7 +2748,7 @@ msgstr ""
 msgid "You want to contact list owners"
 msgstr "リストに責任をもっているひとに問い合わせたい"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_faquser.tt2:72
 msgid ""
 "The list owners and moderators' names are mentioned in the left menu. "
@@ -4225,7 +4226,7 @@ msgstr ""
 # # "place du formatage d'origine ; elle comprend également des en-têtes "
 # # "détaillés pour chaque message. Le paramètre '<strong>Archives "
 # # "textuelles</strong>' vous permet de définir :"
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_listconfig.tt2:140
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
@@ -4557,7 +4558,7 @@ msgstr ""
 msgid "List of the commands of the Sympa mail interface"
 msgstr "Sympa のメールインタフェース用コマンド一覧"
 
-#. (conf.email ,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_mail_commands.tt2:5
 msgid "All commands are to be sent at %1@%2."
 msgstr "コマンドは全て、%1@%2 というアドレス宛てに送らなければなりません。"
@@ -4773,7 +4774,7 @@ msgstr ""
 msgid "Sending a message with an email client"
 msgstr "電子メールクライアントを使ってメッセージを送る"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_sendmsg.tt2:7
 msgid ""
 "To send a new message, it is very simple: <strong>from your email client or "
@@ -5233,14 +5234,13 @@ msgstr ""
 # # "Les <strong>dossiers</strong> sont précédés de l'icône <img "
 # # "src=\"%1/folder.png\" style=\"border: 0px;\" title=\"Icône de dossier\" "
 # # "/>."
-#. (icons_url)
 #: default/web_tt2/help_shared.tt2:16
 msgid ""
-"<strong>Folders</strong> are preceded by the icon <img src=\"%1/folder.png\" "
-"style=\"border: 0px;\" title=\"Icon of folder\" />."
+"<strong>Folders</strong> are preceded by the icon <i class=\"fa fa-folder\" "
+"title=\"Icon of folder\"> </i>."
 msgstr ""
-"<strong>フォルダ</strong>には <img src=\"%1/folder.png\" style=\"border: 0px;"
-"\" title=\"フォルダのアイコン\" /> のアイコンがつきます。"
+"<strong>フォルダ</strong>には <i class=\"fa fa-folder\" title=\"フォルダのア"
+"イコン\"> </i> のアイコンがつきます。"
 
 # # "<strong>Pour descendre dans un dossier, cliquez sur son nom</strong>."
 #: default/web_tt2/help_shared.tt2:18
@@ -5275,20 +5275,17 @@ msgstr ""
 # # "Il s'agit de <strong>raccourcis permettant d'aller d'un simple clic à un "
 # # "site web particulier</strong>. Si vous cliquez sur l'intitulé d'un "
 # # "signet, le site lié s'ouvrira dans une nouvelle fenêtre."
-#. (icons_url)
 #: default/web_tt2/help_shared.tt2:22
 msgid ""
-"<strong>Bookmarks</strong> are preceded by the icon <img src=\"%1/link.png\" "
-"style=\"border: 0px;\" title=\"Icon of bookmark\" />. They consist of "
-"<strong>shortcuts providing a single-click access to a particular website</"
-"strong>. If you click on a bookmark label, the website linked will open in a "
-"new window."
+"<strong>Bookmarks</strong> are preceded by the icon <i class=\"fa fa-link\" "
+"title=\"Icon of bookmark\"> </i>. They consist of <strong>shortcuts "
+"providing a single-click access to a particular website</strong>. If you "
+"click on a bookmark label, the website linked will open in a new window."
 msgstr ""
-"<strong>ブックマーク</strong>には <img src=\"%1/link.png\" style=\"border: "
-"0px;\" title=\"ブックマークのアイコン\" /> のアイコンがつきます。ブックマーク"
-"は<strong>特定のウェブサイトにクリックするだけで行けるようにするもの</strong>"
-"です。ブックマークの見出しをクリックすると、リンクされたウェブサイトが別の"
-"ウィンドウで開きます。"
+"<strong>ブックマーク</strong>には <i class=\"fa fa-link\" title=\"ブックマー"
+"クのアイコン\"> </i> のアイコンがつきます。ブックマークは<strong>特定のウェブ"
+"サイトにクリックするだけで行けるようにするもの</strong>です。ブックマークの見"
+"出しをクリックすると、リンクされたウェブサイトが別のウィンドウで開きます。"
 
 # # "Les fonctions d'édition et de création de documents, si elle vous sont "
 # # "ouvertes, sont accessibles via le <strong>Mode expert</strong>. Pour "
@@ -6295,7 +6292,7 @@ msgstr ""
 msgid "<strong>log on to the web environment</strong>;"
 msgstr "<strong>リストサーバのウェブを使う</strong>。"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:10
 msgid ""
 "<strong>send commands by email</strong> to the Sympa mailing list manager at "
@@ -6392,7 +6389,7 @@ msgstr ""
 "は、メールクライアントで別のアドレスの設定を使って、読者登録の手順を繰り返さ"
 "なければいけません。"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:31
 msgid ""
 "Send a <strong>message to %1@%2</strong> from the address you want to "
@@ -6435,7 +6432,7 @@ msgstr ""
 "には、<a href=\"#howitworks\">リストサービスのしくみ</a>の節で説明した手順で"
 "やってください。"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_user.tt2:38
 msgid ""
 "<strong>After this, you will receive a message telling you whether your "
@@ -6673,7 +6670,7 @@ msgstr ""
 
 # # "À partir de cette page d'information, vous pourrez :"
 #: default/web_tt2/help_user.tt2:74
-msgid "Form this information page, you can:"
+msgid "From this information page, you can:"
 msgstr "この案内ページでは、次のようなことができます——"
 
 # # "modifier vos <a href=\"#options\">options d'abonné</a> ;"
@@ -6780,7 +6777,7 @@ msgstr ""
 # # "question ou une remarque, l'adresse que vous devez utiliser est : "
 # # "<strong>nomdelaliste-request@%1</strong> (remplacez 'nomdelaliste' par le "
 # # "nom de la liste en question)."
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_user.tt2:88
 msgid ""
 "<strong>The names of the list owners and moderators are displayed in the "
@@ -6985,8 +6982,8 @@ msgstr "次のものを変えられます。"
 #: default/web_tt2/help_user.tt2:127
 msgid ""
 "your <strong>name</strong>; if you subscribe to a list from the mailing list "
-"server web interface, the 'Name' field will automatically be filled in in "
-"the members list;"
+"server web interface, the 'Name' field will automatically be filled in the "
+"members list;"
 msgstr ""
 "自分の<strong>名前</strong>。メーリングリストサーバのウェブインタフェースでリ"
 "ストに読者登録すると、登録したリストでの「名前」欄に自動的にこの名前が入りま"
@@ -7001,7 +6998,7 @@ msgid ""
 "the <strong>language in which the Sympa web interface is displayed</strong> "
 "(you can change language on every page of the web interface; your choice "
 "will remain even though you change the interface language on another page "
-"than the 'Preferences' page;"
+"than the 'Preferences' page);"
 msgstr ""
 "<strong>Sympa のウェブインタフェースで表示に使う言語</strong> (ページを見てい"
 "る途中で言語を変えることもできますが、「個人設定」ページで変えた言語の設定は"
@@ -7207,7 +7204,7 @@ msgstr "リストの登録解除をする"
 msgid "To unsubscribe from a list, do as follows:"
 msgstr "リストの登録解除をするには、次のようにしてください——"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:161
 msgid ""
 "From the address with which you subscribed to the list, send a "
@@ -7400,6 +7397,125 @@ msgid ""
 msgstr ""
 "<strong>標準 (直接受け取る)</strong> (mail): 最初はこの受け取りモードになって"
 "いて、ほかのモードははたらきません。"
+
+#~ msgid ""
+#~ "By default, each page displays 25&#160;subscribers. You can browse "
+#~ "through the pages by using the browsing arrows or display more "
+#~ "subscribers on each page. You may also wish to sort subscribers according "
+#~ "to different criteria by clicking on the corresponding column header."
+#~ msgstr ""
+#~ "最初は、一ページに 25 名ずつ表示するようになっています。矢印のリンクで他の"
+#~ "ページを見たり、一ページに表示する人数を変えたりできます。また、項目の見出"
+#~ "しをクリックすれば、読者をいろいろな順番で並べ替えることができます。"
+
+# # "Pour <strong>faire en sorte que des adresses ne soient plus en "
+# # "erreur</strong>, sélectionnez ces adresses en cochant les cases situées "
+# # "en bout de ligne et cliquez sur le bouton '<strong>Annuler les erreurs "
+# # "pour les abonnés sélectionnés</strong>'. Si l'erreur persiste, les "
+# # "adresses concernées seront de nouveau marquées en erreur lors du prochain "
+# # "envoi de message."
+#~ msgid ""
+#~ "To <strong>make addresses stop bouncing</strong>, select them by ticking "
+#~ "their boxes and click on the '<strong>Reset errors for selected users</"
+#~ "strong>' button. If the error remains, the addresses will be reported as "
+#~ "bouncing again as soon as a message is posted on the list."
+#~ msgstr ""
+#~ "<strong>アドレスが配送エラーを起こさなくなったようなら</strong>、そのアド"
+#~ "レスの横のチェックボックスにチェックを入れ、<strong>選んだ人のエラーをリ"
+#~ "セットする</strong>ボタンをクリックしてみましょう。その後もエラーが治まっ"
+#~ "ていなければ、リストにメッセージの投稿があるやいなやそのアドレスからエラー"
+#~ "が報告されます。"
+
+# # "L'automate de gestion de listes Sympa peut générer des <strong>archives "
+# # "compressées téléchargeables (format .ZIP) des messages envoyés sur la "
+# # "liste</strong>. Pour télécharger ces archives, <strong>sélectionnez les "
+# # "mois</strong> qui vous intéressent dans la liste et cliquez sur le bouton "
+# # "'<strong>Télécharger le Zip</strong>'."
+#~ msgid ""
+#~ "The mailing list management robot Sympa can generate <strong>downloadable "
+#~ "compressed archives (.ZIP format) of the messages sent to the list</"
+#~ "strong>. To download those archives, <strong>select the months</strong> "
+#~ "that interest you in the list and click on the '<strong>Download Zip "
+#~ "file</strong>' button."
+#~ msgstr ""
+#~ "メーリングリスト管理ロボット Sympa では、<strong>リストに届いたメッセージ"
+#~ "を圧縮書庫ファイル (.ZIP形式) としてダウンロードできます</strong>。書庫"
+#~ "ファイルをダウンロードするには、自分が欲しい<strong>月を選び</strong>、"
+#~ "「<strong>ZIP形式でダウンロード</strong>」ボタンをクリックします。"
+
+# # "À partir de la page 'Gérer les archives', vous pouvez également "
+# # "<strong>supprimer des messages</strong> (suppression mois par mois et non "
+# # "message par message). Pour cela, <strong>sélectionnez les mois</strong> "
+# # "qui vous intéressent dans la liste et cliquez sur le bouton "
+# # "'<strong>Détruire les mois sélectionnés</strong>'."
+#~ msgid ""
+#~ "From the 'Manage archive' page, you can also <strong>delete messages</"
+#~ "strong> (deletion month by month and not message by message). To do that, "
+#~ "<strong>select the months</strong> that interest you in the list and "
+#~ "click on the '<strong>Delete selected months</strong>' button."
+#~ msgstr ""
+#~ "「投稿保管庫の管理」ページで<strong>メッセージを削除する</strong>こともで"
+#~ "きます (月ごとにまとめての削除で、メッセージひとつひとつではありません)。"
+#~ "これをするには、一覧から消したい<strong>月を選び</strong>、「<strong>選択"
+#~ "した月を削除</strong>」ボタンをクリックします。"
+
+# # "Les <strong>dossiers</strong> sont précédés de l'icône <img "
+# # "src=\"%1/folder.png\" style=\"border: 0px;\" title=\"Icône de dossier\" "
+# # "/>."
+#~ msgid ""
+#~ "<strong>Folders</strong> are preceded by the icon <img src=\"%1/folder.png"
+#~ "\" style=\"border: 0px;\" title=\"Icon of folder\" />."
+#~ msgstr ""
+#~ "<strong>フォルダ</strong>には <img src=\"%1/folder.png\" style=\"border: "
+#~ "0px;\" title=\"フォルダのアイコン\" /> のアイコンがつきます。"
+
+# # "Les <strong>signets</strong> sont signalés par l'icône <img "
+# # "src=\"%1/link.png\" style=\"border: 0px;\" title=\"Icône de signet\" />. "
+# # "Il s'agit de <strong>raccourcis permettant d'aller d'un simple clic à un "
+# # "site web particulier</strong>. Si vous cliquez sur l'intitulé d'un "
+# # "signet, le site lié s'ouvrira dans une nouvelle fenêtre."
+#~ msgid ""
+#~ "<strong>Bookmarks</strong> are preceded by the icon <img src=\"%1/link.png"
+#~ "\" style=\"border: 0px;\" title=\"Icon of bookmark\" />. They consist of "
+#~ "<strong>shortcuts providing a single-click access to a particular "
+#~ "website</strong>. If you click on a bookmark label, the website linked "
+#~ "will open in a new window."
+#~ msgstr ""
+#~ "<strong>ブックマーク</strong>には <img src=\"%1/link.png\" style="
+#~ "\"border: 0px;\" title=\"ブックマークのアイコン\" /> のアイコンがつきま"
+#~ "す。ブックマークは<strong>特定のウェブサイトにクリックするだけで行けるよう"
+#~ "にするもの</strong>です。ブックマークの見出しをクリックすると、リンクされ"
+#~ "たウェブサイトが別のウィンドウで開きます。"
+
+# # "À partir de cette page d'information, vous pourrez :"
+#~ msgid "Form this information page, you can:"
+#~ msgstr "この案内ページでは、次のようなことができます——"
+
+# # "votre <strong>nom</strong> ; si vous vous abonnez à une liste depuis "
+# # "l'interface web du serveur de listes, le champ 'Nom' sera automatiquement "
+# # "renseigné dans la liste des abonnés ;"
+#~ msgid ""
+#~ "your <strong>name</strong>; if you subscribe to a list from the mailing "
+#~ "list server web interface, the 'Name' field will automatically be filled "
+#~ "in in the members list;"
+#~ msgstr ""
+#~ "自分の<strong>名前</strong>。メーリングリストサーバのウェブインタフェース"
+#~ "でリストに読者登録すると、登録したリストでの「名前」欄に自動的にこの名前が"
+#~ "入ります。"
+
+# # "la <strong>langue de l'interface de listes Sympa</strong> (le choix de la "
+# # "langue est disponible sur toutes les pages de l'interface de listes ; "
+# # "votre choix sera conservé même si vous modifiez la langue de l'interface "
+# # "sans passer par la page 'Préférences' ;"
+#~ msgid ""
+#~ "the <strong>language in which the Sympa web interface is displayed</"
+#~ "strong> (you can change language on every page of the web interface; your "
+#~ "choice will remain even though you change the interface language on "
+#~ "another page than the 'Preferences' page;"
+#~ msgstr ""
+#~ "<strong>Sympa のウェブインタフェースで表示に使う言語</strong> (ページを見"
+#~ "ている途中で言語を変えることもできますが、「個人設定」ページで変えた言語の"
+#~ "設定は残ります)。"
 
 #~ msgid ""
 #~ "<strong>You entered an incorrect password</strong>. If you forgot your "

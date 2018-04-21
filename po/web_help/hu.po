@@ -137,7 +137,7 @@ msgstr ""
 msgid "To request the creation of a mailing list, do as follows:"
 msgstr "Új lista létrehozásának igényléséhez a következőképpen kell eljárnia:"
 
-#. (path_cgi,conf.host)
+#. (path_cgi)
 #: default/web_tt2/help_admin.tt2:19
 msgid ""
 "Go to the <strong><a href=\"%1/home\">list environment homepage</a></strong> "
@@ -160,7 +160,7 @@ msgstr ""
 "Ha nincs olyan fül, amin ez a szöveg olvasható, akkor Önnek nincs "
 "jogosultsága új lista létrehozására."
 
-#. ('',conf.host)
+#. ('',domain)
 #: default/web_tt2/help_admin.tt2:22
 msgid ""
 "Give your list a <strong>name</strong> (only enter the name without the '@' "
@@ -180,7 +180,7 @@ msgstr ""
 "Ne használjon különleges karaktereket a listanevekben (pl. szóköz, ékezetes "
 "betűk, stb.): ezek többsége gondot okoz."
 
-#. ('',conf.host)
+#. ('',domain)
 #: default/web_tt2/help_admin.tt2:24
 msgid ""
 "Choose an explicit yet short name: think of the subscribers who will have to "
@@ -740,12 +740,19 @@ msgid "<strong>latest update</strong> of the subscriber options."
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:131
+#, fuzzy
 msgid ""
-"By default, each page displays 25&#160;subscribers. You can browse through "
-"the pages by using the browsing arrows or display more subscribers on each "
-"page. You may also wish to sort subscribers according to different criteria "
-"by clicking on the corresponding column header."
+"By default, each page displays 25 subscribers. You can browse through the "
+"pages by using the browsing arrows or display more subscribers on each page. "
+"You may also wish to sort subscribers according to different criteria by "
+"clicking on the corresponding column header."
 msgstr ""
+"Alapértelmezett esetben oldalanként 25 tag adatai jelennek meg. A megjelenő "
+"oldalak között jobbra ill. balra mutató nyilakkal navigálhat, de meg is "
+"növelheti az egy oldalon megjelenő adatsorok számát. A tagokat sorba "
+"rendezheti az email címek szerint, ezek tartománya (a @ utáni rész), vagy a "
+"személynevek szerint. Ehhez csak a táblázat megfelelő oszlopának fejlécére "
+"kell kattintani."
 
 #: default/web_tt2/help_admin.tt2:132
 msgid ""
@@ -780,7 +787,7 @@ msgid ""
 "subscribe them!"
 msgstr ""
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_admin.tt2:141
 msgid ""
 "Even though you have the possibility to subscribe people to your mailing "
@@ -933,10 +940,10 @@ msgstr ""
 
 #: default/web_tt2/help_admin.tt2:177
 msgid ""
-"To <strong>make addresses stop bouncing</strong>, select them by ticking "
-"their boxes and click on the '<strong>Reset errors for selected users</"
-"strong>' button. If the error remains, the addresses will be reported as "
-"bouncing again as soon as a message is posted on the list."
+"To <strong>make addresses stop being reported as bouncing</strong>, select "
+"them by ticking their boxes and click on the '<strong>Reset errors for "
+"selected users</strong>' button. If the error remains, the addresses will be "
+"reported as bouncing again as soon as a message is posted on the list."
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:178
@@ -1067,7 +1074,8 @@ msgid ""
 "The mailing list management robot Sympa can generate <strong>downloadable "
 "compressed archives (.ZIP format) of the messages sent to the list</strong>. "
 "To download those archives, <strong>select the months</strong> that interest "
-"you in the list and click on the '<strong>Download Zip file</strong>' button."
+"you in the list and click on the '<strong>Download .zip archive</strong>' "
+"button."
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:207
@@ -1092,10 +1100,10 @@ msgstr ""
 
 #: default/web_tt2/help_admin.tt2:209
 msgid ""
-"From the 'Manage archive' page, you can also <strong>delete messages</"
+"From the 'Manage archives' page, you can also <strong>delete messages</"
 "strong> (deletion month by month and not message by message). To do that, "
 "<strong>select the months</strong> that interest you in the list and click "
-"on the '<strong>Delete selected months</strong>' button."
+"on the '<strong>Delete Selected Month(s)</strong>' button."
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:210
@@ -1146,7 +1154,7 @@ msgid ""
 "list!"
 msgstr ""
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_admin.tt2:221
 msgid ""
 "If you manage a set of lists, you can <strong>prefix your lists' names with "
@@ -2012,7 +2020,7 @@ msgstr ""
 "átnézni a beérkezett leveleket. Emiatt a levelek kisebb-nagyobb késéssel "
 "kerülnek csak ki a listákra."
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_faquser.tt2:52
 msgid ""
 "<strong>If the list is a moderated list, your message might have been "
@@ -2105,7 +2113,7 @@ msgstr ""
 msgid "You want to contact list owners"
 msgstr "Kapcsolatba szeretne kerülni a lista tulajdonosaival"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_faquser.tt2:72
 msgid ""
 "The list owners and moderators' names are mentioned in the left menu. "
@@ -3272,7 +3280,7 @@ msgid ""
 "send messages to the list."
 msgstr ""
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_listconfig.tt2:140
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
@@ -3458,7 +3466,7 @@ msgstr ""
 "Azon parancsok listája, melyeket levélben küldhetünk el a Sympa program "
 "számára "
 
-#. (conf.email ,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_mail_commands.tt2:5
 msgid "All commands are to be sent at %1@%2."
 msgstr "A parancsokat tartalmazó leveleket mindig a %1@%2 címre küldjük."
@@ -3697,7 +3705,7 @@ msgstr ""
 msgid "Sending a message with an email client"
 msgstr ""
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_sendmsg.tt2:7
 msgid ""
 "To send a new message, it is very simple: <strong>from your email client or "
@@ -3990,11 +3998,10 @@ msgid ""
 "<strong>bookmarks</strong>."
 msgstr ""
 
-#. (icons_url)
 #: default/web_tt2/help_shared.tt2:16
 msgid ""
-"<strong>Folders</strong> are preceded by the icon <img src=\"%1/folder.png\" "
-"style=\"border: 0px;\" title=\"Icon of folder\" />."
+"<strong>Folders</strong> are preceded by the icon <i class=\"fa fa-folder\" "
+"title=\"Icon of folder\"> </i>."
 msgstr ""
 
 #: default/web_tt2/help_shared.tt2:18
@@ -4014,14 +4021,12 @@ msgid ""
 "\">upload</a> some."
 msgstr ""
 
-#. (icons_url)
 #: default/web_tt2/help_shared.tt2:22
 msgid ""
-"<strong>Bookmarks</strong> are preceded by the icon <img src=\"%1/link.png\" "
-"style=\"border: 0px;\" title=\"Icon of bookmark\" />. They consist of "
-"<strong>shortcuts providing a single-click access to a particular website</"
-"strong>. If you click on a bookmark label, the website linked will open in a "
-"new window."
+"<strong>Bookmarks</strong> are preceded by the icon <i class=\"fa fa-link\" "
+"title=\"Icon of bookmark\"> </i>. They consist of <strong>shortcuts "
+"providing a single-click access to a particular website</strong>. If you "
+"click on a bookmark label, the website linked will open in a new window."
 msgstr ""
 
 #: default/web_tt2/help_shared.tt2:25
@@ -4622,7 +4627,7 @@ msgstr ""
 msgid "<strong>log on to the web environment</strong>;"
 msgstr "<strong>bejelentkezni a webes felületre</strong>"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:10
 msgid ""
 "<strong>send commands by email</strong> to the Sympa mailing list manager at "
@@ -4717,7 +4722,7 @@ msgstr ""
 "Természetesen ugyanarra a listára több címmel is feliratkozhat. Ehhez a "
 "feliratkozást meg kell ismételnie a további címmel (címekkel)."
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:31
 msgid ""
 "Send a <strong>message to %1@%2</strong> from the address you want to "
@@ -4758,7 +4763,7 @@ msgstr ""
 "Több parancs is küldhető egy levélben. Ez <a href=\"#howitworks\">\"A "
 "levelezőlista-szolgáltatás működése\"</a> c. részben van dokumentálva."
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_user.tt2:38
 msgid ""
 "<strong>After this, you will receive a message telling you whether your "
@@ -4998,7 +5003,7 @@ msgstr ""
 "terjedelemben."
 
 #: default/web_tt2/help_user.tt2:74
-msgid "Form this information page, you can:"
+msgid "From this information page, you can:"
 msgstr "Erről az információs oldalról:"
 
 #: default/web_tt2/help_user.tt2:76
@@ -5086,7 +5091,7 @@ msgstr ""
 "személynevek szerint. Ehhez csak a táblázat megfelelő oszlopának fejlécére "
 "kell kattintani."
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_user.tt2:88
 msgid ""
 "<strong>The names of the list owners and moderators are displayed in the "
@@ -5261,8 +5266,8 @@ msgstr "A következő beállítások módosíthatók:"
 #: default/web_tt2/help_user.tt2:127
 msgid ""
 "your <strong>name</strong>; if you subscribe to a list from the mailing list "
-"server web interface, the 'Name' field will automatically be filled in in "
-"the members list;"
+"server web interface, the 'Name' field will automatically be filled in the "
+"members list;"
 msgstr ""
 "az <strong>Ön neve</strong>; ha a webes felületen iratkozik fel egy listára, "
 "akkor taglista lekérésekor a \"Név\" mező ezzel az értékkel fog "
@@ -5273,7 +5278,7 @@ msgid ""
 "the <strong>language in which the Sympa web interface is displayed</strong> "
 "(you can change language on every page of the web interface; your choice "
 "will remain even though you change the interface language on another page "
-"than the 'Preferences' page;"
+"than the 'Preferences' page);"
 msgstr ""
 "a <strong>nyelv, melyet a rendszer webes felülete használ</strong> (ez "
 "egyébként a webes felület minden oldalán megváltoztatható, és a változás "
@@ -5443,7 +5448,7 @@ msgstr "Listáról való leiratkozás"
 msgid "To unsubscribe from a list, do as follows:"
 msgstr "Ha le akar iratkozni egy listáról, a következőképpen teheti meg:"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:161
 msgid ""
 "From the address with which you subscribed to the list, send a "
@@ -5616,6 +5621,28 @@ msgstr ""
 "<strong>standard (közvetlen levélfogadás)</strong>: ez az alapértelmezett "
 "kézbesítési mód. Ennek beállításával hatástalaníthatjuk egy korábbi más "
 "beállításunkat."
+
+#~ msgid "Form this information page, you can:"
+#~ msgstr "Erről az információs oldalról:"
+
+#~ msgid ""
+#~ "your <strong>name</strong>; if you subscribe to a list from the mailing "
+#~ "list server web interface, the 'Name' field will automatically be filled "
+#~ "in in the members list;"
+#~ msgstr ""
+#~ "az <strong>Ön neve</strong>; ha a webes felületen iratkozik fel egy "
+#~ "listára, akkor taglista lekérésekor a \"Név\" mező ezzel az értékkel fog "
+#~ "automatikusan kitöltődni"
+
+#~ msgid ""
+#~ "the <strong>language in which the Sympa web interface is displayed</"
+#~ "strong> (you can change language on every page of the web interface; your "
+#~ "choice will remain even though you change the interface language on "
+#~ "another page than the 'Preferences' page;"
+#~ msgstr ""
+#~ "a <strong>nyelv, melyet a rendszer webes felülete használ</strong> (ez "
+#~ "egyébként a webes felület minden oldalán megváltoztatható, és a változás "
+#~ "érvényes marad a kijelentkezést követően is)"
 
 #~ msgid ""
 #~ "<strong>You entered an incorrect password</strong>. If you forgot your "
