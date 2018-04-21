@@ -128,7 +128,7 @@
 		<li>[%|helploc%]<strong>latest update</strong> of the subscriber options.[%END%]</li>
 	</ul>
 
-	<p class="retraitita">[%|helploc%]By default, each page displays 25&#160;subscribers. You can browse through the pages by using the browsing arrows or display more subscribers on each page. You may also wish to sort subscribers according to different criteria by clicking on the corresponding column header.[%END%]</p>
+	<p class="retraitita">[%|helploc%]By default, each page displays 25 subscribers. You can browse through the pages by using the browsing arrows or display more subscribers on each page. You may also wish to sort subscribers according to different criteria by clicking on the corresponding column header.[%END%]</p>
 	<p>[%|helploc%]To <strong>search a subscriber</strong>, enter all or part of his/her email address or name in the input field and click on the '<strong>Search</strong>' button.[%END%]</p>
 	<p>[%|helploc%]You can <strong>subscribe other people to the list</strong> from this page:[%END%]</p>
 	<ul>
@@ -174,7 +174,7 @@
 	<h4><a name="manage_bounces"></a>[%|helploc%]Managing bounces[%END%]</h4>
 	<p>[%|helploc%]When there is a <strong>problem with subscribers' email addresses</strong> (obsolete email addresses, addresses temporarily unavailable when messages were sent, inbox quota exceeded, etc.), the percentage of bouncing addresses displays in the left menu under the text '<strong>Error rate</strong>'. To check the bouncing addresses, go to the '<strong>Bounces</strong>' page of the list administration module.[%END%]</p>
 	<p>[%|helploc%]The Sympa software automatically manages bouncing subscribers: according to the number of errors and to the traffic on the list, bouncing subscribers are either notified, unsubscribed, or their score is reset to zero when their address stops bouncing.[%END%]</p>
-	<p>[%|helploc%]To <strong>make addresses stop bouncing</strong>, select them by ticking their boxes and click on the '<strong>Reset errors for selected users</strong>' button. If the error remains, the addresses will be reported as bouncing again as soon as a message is posted on the list.[%END%]</p>
+	<p>[%|helploc%]To <strong>make addresses stop being reported as bouncing</strong>, select them by ticking their boxes and click on the '<strong>Reset errors for selected users</strong>' button. If the error remains, the addresses will be reported as bouncing again as soon as a message is posted on the list.[%END%]</p>
 	<p>[%|helploc%]You can also <strong>unsubscribe subscribers whose addresses are still bouncing</strong>: too many bouncing addresses cause a considerable load on the mailing list server. To unsubscribe subscribers, select them by ticking the boxes in front of their names and click on the '<strong>Delete selected email addresses</strong>' button.[%END%]</p>	
 	<p class="retraitita">[%|helploc%]Tip: to select all subscribers at once, first make sure that they are all displayed on the page, and then click on the 'Toggle selection' button: all subscribers will be selected in a single click![%END%]</p>
 
@@ -203,10 +203,10 @@
 	
 
 	<h4><a name="manage_archives"></a>[%|helploc%]Managing the message archive[%END%]</h4>
-	<p>[%|helploc%]The mailing list management robot Sympa can generate <strong>downloadable compressed archives (.ZIP format) of the messages sent to the list</strong>. To download those archives, <strong>select the months</strong> that interest you in the list and click on the '<strong>Download Zip file</strong>' button.[%END%]</p>
+	<p>[%|helploc%]The mailing list management robot Sympa can generate <strong>downloadable compressed archives (.ZIP format) of the messages sent to the list</strong>. To download those archives, <strong>select the months</strong> that interest you in the list and click on the '<strong>Download .zip archive</strong>' button.[%END%]</p>
 	<p class="retraitita">[%|helploc%]Tip: in the 'Archive selection' list, to select all months during which messages have been sent, click on the first month, hold down the SHIFT key and click on the last month of the list.[%END%]</p>
 	<p>[%|helploc%]You will receive a file of the type '<strong>nameofthelist_archive.zip</strong>' containing <strong>folders named 'nameofthelist_year-month'</strong> (example: <em class="example">list_example_2005-06</em>) for each month. Inside each folder, <strong>the file names are numbers</strong> representing their position in the chronology of the messages sent (example: the file named '1' contains the first message sent in the month). The message files have <strong>no extension</strong>; use the text editor of your choice (Notepad, WordPad, Vim, etc.) to open them. <strong>Each file represents an entire message (full header)</strong>.[%END%]</p>
-	<p>[%|helploc%]From the 'Manage archive' page, you can also <strong>delete messages</strong> (deletion month by month and not message by message). To do that, <strong>select the months</strong> that interest you in the list and click on the '<strong>Delete selected months</strong>' button.[%END%]</p>
+	<p>[%|helploc%]From the 'Manage archives' page, you can also <strong>delete messages</strong> (deletion month by month and not message by message). To do that, <strong>select the months</strong> that interest you in the list and click on the '<strong>Delete Selected Month(s)</strong>' button.[%END%]</p>
 	<p class="retraitita">[%|helploc%]<strong>Be careful: this operation is irreversible!!! When you click on 'Delete selected months', keep in mind that you are not only deleting an archive file, but also the entire message archive of the selected month!!!</strong>[%END%]</p>
 	
 

@@ -134,13 +134,13 @@ our %pinfo = (
         'format'     => {
             'source' => {
                 'order'      => 1,
-                'gettext_id' => 'the datasource',
+                'gettext_id' => 'the data source',
                 'datasource' => 1,
                 'occurrence' => '1'
             },
             'source_parameters' => {
                 'order'      => 2,
-                'gettext_id' => 'datasource parameters',
+                'gettext_id' => 'data source parameters',
                 'format'     => '.*',
                 'occurrence' => '0-1'
             },
@@ -2159,7 +2159,7 @@ our %pinfo = (
                 'gettext_id' =>
                     'DKIM "d=" tag, you should probably use the default value',
                 'gettext_comment' =>
-                    'The DKIM "d=" tag, is the domain of the signing entity. the list domain MUST be included in the "d=" domain',
+                    'The DKIM "d=" tag, is the domain of the signing entity. The list domain MUST be included in the "d=" domain',
                 'format'     => '\S+',
                 'occurrence' => '0-1',
                 'default'    => {'conf' => 'dkim_signer_domain'}

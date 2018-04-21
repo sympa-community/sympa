@@ -84,7 +84,7 @@
 <a href="[% 'editfile' | url_rel([list,'bye.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Unsubscribe message: This message is sent when users leave the list.[%END%]<br />
 [% END %]
 [% IF files.$item2 %]
-<a href="[% 'editfile' | url_rel([list,'removed.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Deletion message: This message is sent to users when you remove them from the list using the DEL command (unless you select the Quiet option.[%END%]<br />
+<a href="[% 'editfile' | url_rel([list,'removed.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Deletion message: This message is sent to users when you remove them from the list using the DEL command (unless you select the Quiet option).[%END%]<br />
 [% END %]
 [% IF files.$item3 %]
 <a href="[% 'editfile' | url_rel([list,'your_infected_msg.tt2',previous_action]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Virus infection message: This message is sent to the sender of a message in which a virus was found.[%END%]<br />

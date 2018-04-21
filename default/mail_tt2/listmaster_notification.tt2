@@ -202,7 +202,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Failed to include members for li
 
 [%IF errors -%]
 [% FOREACH e = errors -%]
-[%|loc(e.type,e.name)%]- Datasource '%2' (type %1)[%END%]
+[%|loc(e.name,e.type)%]Include of data source %1 (type %2) failed.[%END%]
 [% END %]
 
 [%END -%]
@@ -411,9 +411,9 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [%ELSIF error == 'auth_msg_failed' %][%|loc(key,list.name)%]Unable to access the message authenticated with key '%1' for list '%2'.[%END%]
 [%ELSIF error == 'del_sub_request' %][%|loc(sub)%]Unable to delete subscription request for user '%1'.[%END%]
 [%ELSIF error == 'add_file_zip' %][%|loc(file)%]Unable to add file '%1' to archives.[%END%]
-[%ELSIF error == 'write_file_zip' %][%|loc(zipfile)%]Unable to write file zip '%1'.[%END%]
+[%ELSIF error == 'write_file_zip' %][%|loc(zipfile)%]Unable to write zip file '%1'.[%END%]
 [%ELSIF error == 'err_404' %][%|loc(zipfile)%]File not found.[%END%]
-[%ELSIF error == 'new_document_failed' %][%|loc(path,list.name)%]Unable to create a SharedDocument with path '%1' for list '%2'.[%END%]
+[%ELSIF error == 'new_document_failed' %][%|loc(path,list.name)%]Unable to create a Shared Document with path '%1' for list '%2'.[%END%]
 [%ELSIF error == 'cookie_error' %][%|loc%]Parameter cookie undefined, authentication failure.[%END%]
 [%ELSIF error == 'cookie_error_env' %][%|loc(env)%]Cookie error: '%1' undefined, authentication failure.[%END%]
 [%ELSIF error == 'unable_to_rename_list' %][%|loc(list.name,new_listname)%]Unable to rename list '%1' to '%2'.[%END%]
