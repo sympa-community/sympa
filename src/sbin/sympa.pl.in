@@ -60,7 +60,7 @@ srand(time());
 my %options;
 unless (
     GetOptions(
-        \%main::options,        'dump:s',
+        \%main::options,        'dump=s',
         'debug|d',              'log_level=s',
         'config|f=s',           'lang|l=s',
         'mail|m',               'help|h',
@@ -83,7 +83,8 @@ unless (
         'conf_2_db',            'export_list',
         'health_check',         'send_digest',
         'keep_digest',          'upgrade_config_location',
-        'role=s',               'suck',
+        'role=s',               'dump_users',
+        'restore_users',
     )
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -281,14 +282,11 @@ unless (Conf::checkfiles()) {
 }
 
 # Daemon called for dumping subscribers list
-if (defined $main::options{'dump'}) {
+if ($main::options{'dump'} or $main::options{'dump_users'}) {
     my $all_lists;
 
     # Compat. for old style "--dump=LIST".
-    my $list_id =
-        (length $main::options{'dump'})
-        ? $main::options{'dump'}
-        : $main::options{'list'};
+    my $list_id = $main::options{'dump'} || $main::options{'list'};
 
     if (defined $list_id and $list_id eq 'ALL') {
         $all_lists =
@@ -328,7 +326,7 @@ if (defined $main::options{'dump'}) {
 
     foreach my $list (@$all_lists) {
         foreach my $role (@roles) {
-            unless ($list->dump_user($role)) {
+            unless ($list->dump_users($role)) {
                 printf STDERR "%s: Could not dump list users (%s)\n",
                     $list->get_id, $role;
             } else {
@@ -339,7 +337,7 @@ if (defined $main::options{'dump'}) {
     }
 
     exit 0;
-} elsif ($main::options{'suck'}) {
+} elsif ($main::options{'restore_users'}) {
     my $all_lists;
 
     my $list_id = $main::options{'list'};
@@ -382,11 +380,11 @@ if (defined $main::options{'dump'}) {
 
     foreach my $list (@$all_lists) {
         foreach my $role (@roles) {
-            unless ($list->suck_user($role)) {
-                printf STDERR "%s: Could not suck list users (%s)\n",
+            unless ($list->restore_users($role)) {
+                printf STDERR "%s: Could not restore list users (%s)\n",
                     $list->get_id, $role;
             } else {
-                printf STDERR "%s: Sucked list users (%s)\n",
+                printf STDERR "%s: Restored list users (%s)\n",
                     $list->get_id, $role;
             }
         }
@@ -1162,8 +1160,8 @@ S<[ C<--import>=I<listname> ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
 S<[ C<--purge_list>=I<list>[I<@robot>] ]>
 S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
-S<[ C<--dump> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
-S<[ C<--suck> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
+S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
+S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 
 =head1 DESCRIPTION
 
@@ -1234,7 +1232,11 @@ C<--input_file=>I</path/to/file.xml >
 
 Create a list with the XML file under robot robot_name.
 
-=item C<--dump> C<--list=>I<list>@I<domain>|C<ALL> [ C<--role=>I<roles> ]
+=item C<--dump=>I<list>@I<domain>|C<ALL>
+
+Obsoleted option.  Use C<--dump_users>.
+
+=item C<--dump_users> C<--list=>I<list>@I<domain>|C<ALL> [ C<--role=>I<roles> ]
 
 Dumps users of a list or all lists.
 
@@ -1246,7 +1248,9 @@ Users are dumped in files I<role>C<.dump> in each list directory.
 Note: On Sympa prior to 6.2.31b.1, subscribers were dumped in
 F<subscribers.db.dump> file, and owners and moderators could not be dumped.
 
-See also C<--suck>.
+See also C<--restore_users>.
+
+Note: This option replaced C<--dump> on Sympa 6.2.34.
 
 =begin comment
 
@@ -1327,11 +1331,11 @@ Renames a list or move it to another virtual robot.
 Send digest right now.
 If C<--keep_digest> is specified, stocked digest will not be removed.
 
-=item C<--suck> C<--list=>I<list>@I<domain>|C<ALL> [ C<--role=>I<roles> ]
+=item C<--restore_users> C<--list=>I<list>@I<domain>|C<ALL> [ C<--role=>I<roles> ]
 
-Restore users from files dumped by C<--dump>.
+Restore users from files dumped by C<--dump_users>.
 
-Note: This option was added on Sympa 6.2.32.
+Note: This option was added on Sympa 6.2.34.
 
 =item C<--sync_include=>I<listname>@I<robot>
 

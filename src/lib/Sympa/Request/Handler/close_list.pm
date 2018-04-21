@@ -155,9 +155,9 @@ sub _close {
     $aliases->del($list) if $aliases;
 
     # Dump users.
-    $list->dump_user('member');
-    $list->dump_user('owner');
-    $list->dump_user('editor');
+    $list->dump_users('member');
+    $list->dump_users('owner');
+    $list->dump_users('editor');
 
     ## Delete users
     my @users;

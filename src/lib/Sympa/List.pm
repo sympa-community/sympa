@@ -144,7 +144,7 @@ Delete the indicated users from the list.
 Delete the indicated admin user with the predefined role from the list.
 ROLE may be C<'owner'> or C<'editor'>.
 
-=item dump_user ( ROLE )
+=item dump_users ( ROLE )
 
 Dump user information in user store into file C<I<$role>.dump> under
 list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
@@ -204,7 +204,7 @@ the list.
 OBSOLETED.
 Use get_admins().
 
-=item suck_user ( ROLE )
+=item restore_users ( ROLE )
 
 Import user information into user store from file C<I<$role>.dump> under
 list directory. ROLE may be C<'member'>, C<'owner'> or C<'editor'>.
@@ -708,7 +708,7 @@ sub _cache_put {
 
 # Dumps a copy of list users to disk, in text format.
 # Old name: Sympa::List::dump() which dumped only members.
-sub dump_user {
+sub dump_users {
     $log->syslog('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $role = shift;
@@ -4368,7 +4368,7 @@ sub load_data_sources_list {
 
 ## Loads the list of users.
 # Old name:: Sympa::List::_load_list_members_file($file) which loaded members.
-sub suck_user {
+sub restore_users {
     $log->syslog('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $role = shift;
@@ -7416,7 +7416,7 @@ sub _inclusion_loop {
 #sub _load_total_db;
 
 ## Writes the user list to disk
-# Depreceted.  Use Sympa::List::dump_user().
+# Depreceted.  Use Sympa::List::dump_users().
 #sub _save_list_members_file;
 
 ## Does the real job : stores the message given as an argument into

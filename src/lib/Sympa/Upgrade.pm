@@ -751,7 +751,7 @@ sub upgrade {
                     and rename $list->{'dir'} . '/subscribers',
                     $list->{'dir'} . '/member.dump'
                     ) {
-                    $list->suck_user('member');
+                    $list->restore_users('member');
 
                     my $total = $list->{'add_outcome'}{'added_members'};
                     if (defined $list->{'add_outcome'}{'errors'}) {
