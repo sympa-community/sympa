@@ -4021,6 +4021,17 @@ sub do_loginrequest {
 sub do_help {
     wwslog('info', '(%s)', $in{'help_topic'});
 
+    # Given partial top URI, redirect to base.
+    unless ($in{'help_topic'} or $ENV{REQUEST_URI} =~ /\/\z/) {
+        $param->{'redirect_to'} = Sympa::get_url(
+            $list, 'help',
+            nomenu    => $param->{'nomenu'},
+            paths     => [''],                  # Ends with '/'.
+            authority => 'local'
+        );
+        return 1;
+    }
+
     $param->{'help_topic'} = $in{'help_topic'}
         if $in{'help_topic'};
     return 1;
