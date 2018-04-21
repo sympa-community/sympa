@@ -100,9 +100,9 @@ sub _twist {
         }
     }
     # Load permanent users.
-    $list->suck_user('member');
-    $list->suck_user('owner');
-    $list->suck_user('editor');
+    $list->restore_users('member');
+    $list->restore_users('owner');
+    $list->restore_users('editor');
     # Load initial transitional owners/editors from external data sources.
     if ($mode eq 'install') {
         $list->sync_include_admin;
