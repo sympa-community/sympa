@@ -12,8 +12,8 @@
 		<h4>[%|helploc%]You can not log on to the mailing list web interface[%END%]</h4>
 		<p>[%|helploc%]This problem may be due to the following reasons:[%END%]</p>
 		<ul>
-			<li>[%|helploc(path_cgi)%]<strong>You have no password</strong>. To be given a password, follow the <a href="%1/firstpasswd">First login?</a> link from the homepage. You will receive your new password by email.[%END%]</li>
-			<li>[%|helploc(path_cgi)%]<strong>You entered an incorrect password</strong>. If you have forgotten your password, you can reset it. To do so, follow the <a href="%1/renewpasswd">Lost password?</a> link from the homepage.[%END%]</li>
+			<li>[%|helploc%]<strong>You have no password</strong>. To be given a password, follow the <a href="../firstpasswd">First login?</a> link from the homepage. You will receive your new password by email.[%END%]</li>
+			<li>[%|helploc%]<strong>You entered an incorrect password</strong>. If you have forgotten your password, you can reset it. To do so, follow the <a href="../renewpasswd">Lost password?</a> link from the homepage.[%END%]</li>
 
 			<li>[%|helploc%]<strong>You are not using the correct username</strong> (the email address with which you are subscribed to the list).[%END%]</li>
 		</ul>
@@ -28,16 +28,16 @@
 				<li>[%|helploc%]Maybe you are subscribed with an email address other than the one you are checking.[%END%]</li>
 				<li>[%|helploc%]Maybe your subscription request was rejected by the list owners.[%END%]</li>
 			</ul>
-			[%|helploc(path_cgi)%]In any case, try and <a href="%1/help/user#subscribe">subscribe</a> again.[%END%]</li>
+			[%|helploc%]In any case, try and <a href="user#subscribe">subscribe</a> again.[%END%]</li>
 			<li><a name="notsubscribedanymore"></a><strong>[%|helploc%]You are not subscribed to the list anymore[%END%]</strong>:
 			<ul>
-				<li>[%|helploc(path_cgi)%]If your address has been bouncing for a while, you might have been automatically unsubscribed by the system (or even by the list owners). Try and <a href="%1/help/user#subscribe">subscribe again</a> after ensuring that your email address will not be in trouble again.[%END%]</li>
+				<li>[%|helploc%]If your address has been bouncing for a while, you might have been automatically unsubscribed by the system (or even by the list owners). Try and <a href="user#subscribe">subscribe again</a> after ensuring that your email address will not be in trouble again.[%END%]</li>
 				<li>[%|helploc%]If you have not respected the different rules applying to the mailing list, the list owners might have "banned" you...[%END%]</li>
-				<li>[%|helploc(path_cgi)%]You might also have been arbitrarily unsubscribed by an ill-intentioned person, in case the list is not configured to send a confirmation request for any subscription and unsubscription request... In that case, try and <a href="%1/help/user#subscribe">subscribe</a> again.[%END%]</li>
+				<li>[%|helploc%]You might also have been arbitrarily unsubscribed by an ill-intentioned person, in case the list is not configured to send a confirmation request for any subscription and unsubscription request... In that case, try and <a href="user#subscribe">subscribe</a> again.[%END%]</li>
 			</ul>
-			<li>[%|helploc(path_cgi)%]<strong>Your <a href="%1/help/user#deliverymode">delivery mode</a> does not allow you to receive messages</strong>: for example, it is the case with the 'Nomail' delivery mode.[%END%]</li>
+			<li>[%|helploc%]<strong>Your <a href="user#deliverymode">delivery mode</a> does not allow you to receive messages</strong>: for example, it is the case with the 'Nomail' delivery mode.[%END%]</li>
 			<li>[%|helploc%]<strong>Your inbox is full</strong>. Be careful: when your inbox is not completely full, you receive only small messages, which makes it difficult to understand what actually is the problem... Furthermore, if your email address causes trouble on a regular basis, you might be unsubscribed by the list owners or by the system. Thus, you should clean your inbox frequently.[%END%]</li>
-			<li>[%|helploc(path_cgi)%]<strong>Your inbox is subject to some restrictions</strong>: it does not allow you to receive messages with attachments, bans some types of attachments or limits the maximum size of incoming messages; in that case, we advise you to choose the <a href="%1/help/user#deliverymode">Urlize delivery mode</a>.[%END%]</li>
+			<li>[%|helploc%]<strong>Your inbox is subject to some restrictions</strong>: it does not allow you to receive messages with attachments, bans some types of attachments or limits the maximum size of incoming messages; in that case, we advise you to choose the <a href="user#deliverymode">Urlize delivery mode</a>.[%END%]</li>
 		</ul>
 		
 		<!--Vérifier systèmes anti-virus, anti-spam-->
