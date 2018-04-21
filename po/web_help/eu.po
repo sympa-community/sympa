@@ -131,7 +131,7 @@ msgstr ""
 msgid "To request the creation of a mailing list, do as follows:"
 msgstr "Eposta zerrendaren sorrera eskatzeko ondokoa egin:"
 
-#. (path_cgi,conf.host)
+#. (path_cgi)
 #: default/web_tt2/help_admin.tt2:19
 msgid ""
 "Go to the <strong><a href=\"%1/home\">list environment homepage</a></strong> "
@@ -152,7 +152,7 @@ msgstr ""
 "Esteka hori ez bada agertzen, zerrendak sortzeko baimenik ez duzula esan "
 "nahi du"
 
-#. ('',conf.host)
+#. ('',domain)
 #: default/web_tt2/help_admin.tt2:22
 msgid ""
 "Give your list a <strong>name</strong> (only enter the name without the '@' "
@@ -171,7 +171,7 @@ msgstr ""
 "Ez erabili azentu, hutsune edo karaktere berezirik zerrenda izenetan, "
 "arazoak sortu ditzakete"
 
-#. ('',conf.host)
+#. ('',domain)
 #: default/web_tt2/help_admin.tt2:24
 msgid ""
 "Choose an explicit yet short name: think of the subscribers who will have to "
@@ -741,10 +741,10 @@ msgstr "harpidedunaren aukeren <strong>azken eguneraketa</strong>."
 
 #: default/web_tt2/help_admin.tt2:131
 msgid ""
-"By default, each page displays 25&#160;subscribers. You can browse through "
-"the pages by using the browsing arrows or display more subscribers on each "
-"page. You may also wish to sort subscribers according to different criteria "
-"by clicking on the corresponding column header."
+"By default, each page displays 25 subscribers. You can browse through the "
+"pages by using the browsing arrows or display more subscribers on each page. "
+"You may also wish to sort subscribers according to different criteria by "
+"clicking on the corresponding column header."
 msgstr ""
 "Defektuz, orri bakoitzak 25&#160;harpidedun erakusten ditu. Orrien artean "
 "nabigatzeko geziak erabili ahal dituzu edo orri bakoitzean harpidedun "
@@ -793,7 +793,7 @@ msgstr ""
 "Jendea ohartarazi gabe harpidetu nahi baduzu, sakatu 'Isila' botoia. Hala "
 "ere, askoz hobea da jendea harpidetu duzula adieraztea!"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_admin.tt2:141
 msgid ""
 "Even though you have the possibility to subscribe people to your mailing "
@@ -995,10 +995,10 @@ msgstr ""
 
 #: default/web_tt2/help_admin.tt2:177
 msgid ""
-"To <strong>make addresses stop bouncing</strong>, select them by ticking "
-"their boxes and click on the '<strong>Reset errors for selected users</"
-"strong>' button. If the error remains, the addresses will be reported as "
-"bouncing again as soon as a message is posted on the list."
+"To <strong>make addresses stop being reported as bouncing</strong>, select "
+"them by ticking their boxes and click on the '<strong>Reset errors for "
+"selected users</strong>' button. If the error remains, the addresses will be "
+"reported as bouncing again as soon as a message is posted on the list."
 msgstr ""
 "<strong>Helbideen erreboteak gelditzeko</strong>, gaitu bere kutxa eta "
 "klikatu '<strong>Hautatutako erabiltzailearen erroreak berrezarri</strong>' "
@@ -1186,7 +1186,8 @@ msgid ""
 "The mailing list management robot Sympa can generate <strong>downloadable "
 "compressed archives (.ZIP format) of the messages sent to the list</strong>. "
 "To download those archives, <strong>select the months</strong> that interest "
-"you in the list and click on the '<strong>Download Zip file</strong>' button."
+"you in the list and click on the '<strong>Download .zip archive</strong>' "
+"button."
 msgstr ""
 "Sympak, posta zerrenden kudeaketa robotak, <strong>zerrendara bidalitako "
 "mezuen artxibo konprimitua (.ZIP formatuan)</strong> sor dezake. Artxibo "
@@ -1227,10 +1228,10 @@ msgstr ""
 
 #: default/web_tt2/help_admin.tt2:209
 msgid ""
-"From the 'Manage archive' page, you can also <strong>delete messages</"
+"From the 'Manage archives' page, you can also <strong>delete messages</"
 "strong> (deletion month by month and not message by message). To do that, "
 "<strong>select the months</strong> that interest you in the list and click "
-"on the '<strong>Delete selected months</strong>' button."
+"on the '<strong>Delete Selected Month(s)</strong>' button."
 msgstr ""
 "'Artxiboa kudeatu' orritik <strong>mezuak ezabatu</strong> ahal dituzu "
 "(hilabeteka ezabatuz, mezuz mezu ezabatu ordez). Hori egiteko interesatzen "
@@ -1301,7 +1302,7 @@ msgstr ""
 "zerrendara mezu bat bidali nahi duten bakoitzean harpidedunek izen hau "
 "idatzi beharko dutela!"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_admin.tt2:221
 msgid ""
 "If you manage a set of lists, you can <strong>prefix your lists' names with "
@@ -2322,7 +2323,7 @@ msgstr ""
 "menpe dago</strong>: ezin dira gau eta egunez zerrenda aztertzen ibili! Zure "
 "mezuaren bidalketa apur bat atzeratu daiteke."
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_faquser.tt2:52
 msgid ""
 "<strong>If the list is a moderated list, your message might have been "
@@ -2409,7 +2410,7 @@ msgstr ""
 msgid "You want to contact list owners"
 msgstr "Zerrendako jabeekin kontaktatu nahi duzu"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_faquser.tt2:72
 msgid ""
 "The list owners and moderators' names are mentioned in the left menu. "
@@ -3682,7 +3683,7 @@ msgstr ""
 "Nahiz eta mezuak ez diren artxibatzen, posible da zerrendara mezuak "
 "bidaltzen jarraitzea."
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_listconfig.tt2:140
 msgid ""
 "It is also possible to <strong>access the list archive by email</strong>, by "
@@ -3936,7 +3937,7 @@ msgstr ""
 msgid "List of the commands of the Sympa mail interface"
 msgstr "Sympako eposta interfazeko komandoen zerrenda"
 
-#. (conf.email ,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_mail_commands.tt2:5
 msgid "All commands are to be sent at %1@%2."
 msgstr "Komando guztiak %1@%2 helbidera bidali behar dira."
@@ -4157,7 +4158,7 @@ msgstr ""
 msgid "Sending a message with an email client"
 msgstr "Eposta bezero batekin mezua bidaltzen"
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_sendmsg.tt2:7
 msgid ""
 "To send a new message, it is very simple: <strong>from your email client or "
@@ -4528,14 +4529,13 @@ msgstr ""
 "ditu</strong>: <strong>karpetak</strong>, <strong>fitxategiak</strong> eta "
 "<strong>laster-markak</strong>."
 
-#. (icons_url)
 #: default/web_tt2/help_shared.tt2:16
 msgid ""
-"<strong>Folders</strong> are preceded by the icon <img src=\"%1/folder.png\" "
-"style=\"border: 0px;\" title=\"Icon of folder\" />."
+"<strong>Folders</strong> are preceded by the icon <i class=\"fa fa-folder\" "
+"title=\"Icon of folder\"> </i>."
 msgstr ""
-"<strong>Karpetek</strong> <img src=\"%1/folder.png\" style=\"border: 0px;\" "
-"title=\"Icon of folder\" /> ikonoa dute aurrean."
+"<strong>Karpetek</strong> <i class=\"fa fa-folder\" title=\"Icon of folder"
+"\"> </i> ikonoa dute aurrean."
 
 #: default/web_tt2/help_shared.tt2:18
 msgid "<strong>To browse a folder, click on its name</strong>."
@@ -4559,19 +4559,17 @@ msgstr ""
 "<a href=\"#shared_read\">deskargatu</a> eta <a href=\"#shared_upload\">igo</"
 "a> ahal dituzu."
 
-#. (icons_url)
 #: default/web_tt2/help_shared.tt2:22
 msgid ""
-"<strong>Bookmarks</strong> are preceded by the icon <img src=\"%1/link.png\" "
-"style=\"border: 0px;\" title=\"Icon of bookmark\" />. They consist of "
-"<strong>shortcuts providing a single-click access to a particular website</"
-"strong>. If you click on a bookmark label, the website linked will open in a "
-"new window."
+"<strong>Bookmarks</strong> are preceded by the icon <i class=\"fa fa-link\" "
+"title=\"Icon of bookmark\"> </i>. They consist of <strong>shortcuts "
+"providing a single-click access to a particular website</strong>. If you "
+"click on a bookmark label, the website linked will open in a new window."
 msgstr ""
-"<strong>Laster-markak</strong><img src=\"%1/link.png\" style=\"border: 0px;"
-"\" title=\"Icon of bookmark\" /> ikonoa dute aurrean. <strong>Webgune jaki "
-"baterako lasterbideak dira</strong>. Laster-markan klikatzen baduzu webgunea "
-"orri berri batean irekiko zaizu."
+"<strong>Laster-markak</strong><i class=\"fa fa-link\" title=\"Icon of "
+"bookmark\"> </i> ikonoa dute aurrean. <strong>Webgune jaki baterako "
+"lasterbideak dira</strong>. Laster-markan klikatzen baduzu webgunea orri "
+"berri batean irekiko zaizu."
 
 #: default/web_tt2/help_shared.tt2:25
 msgid ""
@@ -5353,7 +5351,7 @@ msgstr ""
 msgid "<strong>log on to the web environment</strong>;"
 msgstr "<strong>web ingurunean izena eman</strong>;"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:10
 msgid ""
 "<strong>send commands by email</strong> to the Sympa mailing list manager at "
@@ -5446,7 +5444,7 @@ msgstr ""
 "Eposta zerrenda batera helbide bat baino gehiagorekin harpidetu zaitezke, "
 "noski. Helbide bakoitzeko prozesu osoa berregin beharko duzu orduan."
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:31
 msgid ""
 "Send a <strong>message to %1@%2</strong> from the address you want to "
@@ -5488,7 +5486,7 @@ msgstr ""
 "bakarrean. Horretarako, jarraitu <a href=\"#howitworks\">Nola dabil eposta "
 "zerrenden zerbitzua</a> ataleko instrukzioak."
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_user.tt2:38
 msgid ""
 "<strong>After this, you will receive a message telling you whether your "
@@ -5721,7 +5719,7 @@ msgstr ""
 "araberakoa da."
 
 #: default/web_tt2/help_user.tt2:74
-msgid "Form this information page, you can:"
+msgid "From this information page, you can:"
 msgstr "Informazio orri honetan honakoak egin ahal dituzu:"
 
 #: default/web_tt2/help_user.tt2:76
@@ -5801,7 +5799,7 @@ msgstr ""
 "ditzakezu. Harpidedunak eposta helbideagatik, domeinuagatik edo izenagatik "
 "ordenatu ahal dituzu dagokion zutabearen goiburuan klikatuz."
 
-#. (conf.host)
+#. (domain)
 #: default/web_tt2/help_user.tt2:88
 msgid ""
 "<strong>The names of the list owners and moderators are displayed in the "
@@ -5967,8 +5965,8 @@ msgstr "Aldatu ahal duzu:"
 #: default/web_tt2/help_user.tt2:127
 msgid ""
 "your <strong>name</strong>; if you subscribe to a list from the mailing list "
-"server web interface, the 'Name' field will automatically be filled in in "
-"the members list;"
+"server web interface, the 'Name' field will automatically be filled in the "
+"members list;"
 msgstr ""
 "zure <strong>izena</strong>; zerrenda batera eposta zerrenden zerbitzariko "
 "webetik harpidetzen zarenean 'Izena' eremua automatikoki beteko da kideen "
@@ -5979,7 +5977,7 @@ msgid ""
 "the <strong>language in which the Sympa web interface is displayed</strong> "
 "(you can change language on every page of the web interface; your choice "
 "will remain even though you change the interface language on another page "
-"than the 'Preferences' page;"
+"than the 'Preferences' page);"
 msgstr ""
 "<strong>Symparen web interfazeak erabiltzen duen hizkuntza</strong> (web "
 "interfazeko edozein orritan aldatu ahal duzu hizkuntza; zure aukera "
@@ -6146,7 +6144,7 @@ msgstr "Zerrendatik ez-harpidetzen"
 msgid "To unsubscribe from a list, do as follows:"
 msgstr "Zerrenda batetik ez-harpidetzeko ondokoa egin:"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/web_tt2/help_user.tt2:161
 msgid ""
 "From the address with which you subscribed to the list, send a "
@@ -6303,6 +6301,93 @@ msgid ""
 msgstr ""
 "<strong>estandarra (zuzenean jaso)</strong>: hau da defektuzko bidalketa "
 "modua; beste edozein bidalketa modu ezeztatzen du."
+
+#~ msgid ""
+#~ "By default, each page displays 25&#160;subscribers. You can browse "
+#~ "through the pages by using the browsing arrows or display more "
+#~ "subscribers on each page. You may also wish to sort subscribers according "
+#~ "to different criteria by clicking on the corresponding column header."
+#~ msgstr ""
+#~ "Defektuz, orri bakoitzak 25&#160;harpidedun erakusten ditu. Orrien artean "
+#~ "nabigatzeko geziak erabili ahal dituzu edo orri bakoitzean harpidedun "
+#~ "gehiago erakutsi. Harpidedunak irizpide ezberdinen arabera ordenatu ahal "
+#~ "dituzu baita ere, dagokion zutabearen goiburuan sakatuz."
+
+#~ msgid ""
+#~ "To <strong>make addresses stop bouncing</strong>, select them by ticking "
+#~ "their boxes and click on the '<strong>Reset errors for selected users</"
+#~ "strong>' button. If the error remains, the addresses will be reported as "
+#~ "bouncing again as soon as a message is posted on the list."
+#~ msgstr ""
+#~ "<strong>Helbideen erreboteak gelditzeko</strong>, gaitu bere kutxa eta "
+#~ "klikatu '<strong>Hautatutako erabiltzailearen erroreak berrezarri</"
+#~ "strong>' botoian. Erroreak jarraitzen badu helbidea berriro errebotatzen "
+#~ "markatuko da zerrendara mezu bat bidali bezain laster."
+
+#~ msgid ""
+#~ "The mailing list management robot Sympa can generate <strong>downloadable "
+#~ "compressed archives (.ZIP format) of the messages sent to the list</"
+#~ "strong>. To download those archives, <strong>select the months</strong> "
+#~ "that interest you in the list and click on the '<strong>Download Zip "
+#~ "file</strong>' button."
+#~ msgstr ""
+#~ "Sympak, posta zerrenden kudeaketa robotak, <strong>zerrendara bidalitako "
+#~ "mezuen artxibo konprimitua (.ZIP formatuan)</strong> sor dezake. Artxibo "
+#~ "hauek deskargatzeko, interesatzen zaizkizun <strong>hilabeteak hautatu</"
+#~ "strong> eta klikatu '<strong>Deskargatu Zip fitxategia</strong>' botoian."
+
+#~ msgid ""
+#~ "From the 'Manage archive' page, you can also <strong>delete messages</"
+#~ "strong> (deletion month by month and not message by message). To do that, "
+#~ "<strong>select the months</strong> that interest you in the list and "
+#~ "click on the '<strong>Delete selected months</strong>' button."
+#~ msgstr ""
+#~ "'Artxiboa kudeatu' orritik <strong>mezuak ezabatu</strong> ahal dituzu "
+#~ "(hilabeteka ezabatuz, mezuz mezu ezabatu ordez). Hori egiteko "
+#~ "interesatzen zaizkizun <strong>hilabeteak hautatu</strong> eta klikatu "
+#~ "'<strong>Hautatutako hilabetea(k) ezabatu</strong>' botoian."
+
+#~ msgid ""
+#~ "<strong>Folders</strong> are preceded by the icon <img src=\"%1/folder.png"
+#~ "\" style=\"border: 0px;\" title=\"Icon of folder\" />."
+#~ msgstr ""
+#~ "<strong>Karpetek</strong> <img src=\"%1/folder.png\" style=\"border: 0px;"
+#~ "\" title=\"Icon of folder\" /> ikonoa dute aurrean."
+
+#~ msgid ""
+#~ "<strong>Bookmarks</strong> are preceded by the icon <img src=\"%1/link.png"
+#~ "\" style=\"border: 0px;\" title=\"Icon of bookmark\" />. They consist of "
+#~ "<strong>shortcuts providing a single-click access to a particular "
+#~ "website</strong>. If you click on a bookmark label, the website linked "
+#~ "will open in a new window."
+#~ msgstr ""
+#~ "<strong>Laster-markak</strong><img src=\"%1/link.png\" style=\"border: "
+#~ "0px;\" title=\"Icon of bookmark\" /> ikonoa dute aurrean. <strong>Webgune "
+#~ "jaki baterako lasterbideak dira</strong>. Laster-markan klikatzen baduzu "
+#~ "webgunea orri berri batean irekiko zaizu."
+
+#~ msgid "Form this information page, you can:"
+#~ msgstr "Informazio orri honetan honakoak egin ahal dituzu:"
+
+#~ msgid ""
+#~ "your <strong>name</strong>; if you subscribe to a list from the mailing "
+#~ "list server web interface, the 'Name' field will automatically be filled "
+#~ "in in the members list;"
+#~ msgstr ""
+#~ "zure <strong>izena</strong>; zerrenda batera eposta zerrenden "
+#~ "zerbitzariko webetik harpidetzen zarenean 'Izena' eremua automatikoki "
+#~ "beteko da kideen zerrendan;"
+
+#~ msgid ""
+#~ "the <strong>language in which the Sympa web interface is displayed</"
+#~ "strong> (you can change language on every page of the web interface; your "
+#~ "choice will remain even though you change the interface language on "
+#~ "another page than the 'Preferences' page;"
+#~ msgstr ""
+#~ "<strong>Symparen web interfazeak erabiltzen duen hizkuntza</strong> (web "
+#~ "interfazeko edozein orritan aldatu ahal duzu hizkuntza; zure aukera "
+#~ "mantenduko da 'Hobespenak' ez den beste orriren batean hizkuntza aldatzen "
+#~ "baduzu ere;"
 
 #~ msgid ""
 #~ "<strong>You entered an incorrect password</strong>. If you forgot your "

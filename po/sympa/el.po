@@ -49,7 +49,7 @@ msgstr "Λάθος ορισμός παραμέτρου: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/lib/Sympa/Upgrade.pm:1993 src/lib/Sympa/Upgrade.pm:2037
+#: src/lib/Sympa/Upgrade.pm:2013 src/lib/Sympa/Upgrade.pm:2057
 #: src/lib/Sympa/Upgrade.pm:952 src/sbin/sympa_wizard.pl.in:400
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%d.%b.%Y-%H.%M.%S"
@@ -323,8 +323,8 @@ msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:486
 msgid ""
-"Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
-"included, because they will be included by Sympa."
+"Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses should "
+"not be included, because they will be included by Sympa."
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:505
@@ -864,7 +864,7 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/ConfDef.pm:1695 src/lib/Sympa/ConfDef.pm:276
-#: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:602
+#: src/lib/Sympa/ConfDef.pm:410 src/lib/Sympa/ListDef.pm:603
 msgid "bytes"
 msgstr "bytes"
 
@@ -970,11 +970,11 @@ msgstr "Δεν πρέπει να είναι 0."
 #: src/lib/Sympa/ConfDef.pm:358 src/lib/Sympa/ConfDef.pm:450
 #: src/lib/Sympa/ConfDef.pm:458 src/lib/Sympa/ConfDef.pm:466
 #: src/lib/Sympa/ConfDef.pm:789 src/lib/Sympa/ConfDef.pm:810
-#: src/lib/Sympa/ConfDef.pm:817 src/lib/Sympa/ListDef.pm:1100
-#: src/lib/Sympa/ListDef.pm:1352 src/lib/Sympa/ListDef.pm:1477
-#: src/lib/Sympa/ListDef.pm:1524 src/lib/Sympa/ListDef.pm:1689
-#: src/lib/Sympa/ListDef.pm:1701 src/lib/Sympa/ListDef.pm:1794
-#: src/lib/Sympa/ListDef.pm:1924 src/lib/Sympa/ListDef.pm:1971
+#: src/lib/Sympa/ConfDef.pm:817 src/lib/Sympa/ListDef.pm:1101
+#: src/lib/Sympa/ListDef.pm:1353 src/lib/Sympa/ListDef.pm:1478
+#: src/lib/Sympa/ListDef.pm:1525 src/lib/Sympa/ListDef.pm:1690
+#: src/lib/Sympa/ListDef.pm:1702 src/lib/Sympa/ListDef.pm:1795
+#: src/lib/Sympa/ListDef.pm:1925 src/lib/Sympa/ListDef.pm:1972
 msgid "seconds"
 msgstr "δευτερόλεπτα"
 
@@ -1204,11 +1204,11 @@ msgstr ""
 #: default/web_tt2/my.tt2:48 default/web_tt2/nav.tt2:129
 #: default/web_tt2/nav.tt2:46 default/web_tt2/serveradmin.tt2:102
 #: default/web_tt2/suspend_request.tt2:61 src/lib/Sympa/ConfDef.pm:586
-#: src/lib/Sympa/ListDef.pm:842
+#: src/lib/Sympa/ListDef.pm:843
 msgid "Archives"
 msgstr "Αρχείο"
 
-#: src/lib/Sympa/ConfDef.pm:590 src/lib/Sympa/ListDef.pm:805
+#: src/lib/Sympa/ConfDef.pm:590 src/lib/Sympa/ListDef.pm:806
 #, fuzzy
 msgid "Store distributed messages into archive"
 msgstr "Προστίθεται στα διανεμόμενα μηνύματα"
@@ -1219,8 +1219,8 @@ msgid "Default disk quota for lists' archives"
 msgstr "Προεπιλεγμένο όριο χώρου για κοινόχρηστα έγγραφα"
 
 #: default/web_tt2/modindex.tt2:102 src/lib/Sympa/ConfDef.pm:1572
-#: src/lib/Sympa/ConfDef.pm:599 src/lib/Sympa/ListDef.pm:792
-#: src/lib/Sympa/ListDef.pm:824 src/lib/Sympa/ListDef.pm:874
+#: src/lib/Sympa/ConfDef.pm:599 src/lib/Sympa/ListDef.pm:793
+#: src/lib/Sympa/ListDef.pm:825 src/lib/Sympa/ListDef.pm:875
 msgid "Kbytes"
 msgstr "Kbytes"
 
@@ -1264,7 +1264,7 @@ msgstr "Διαχείριση bounces"
 msgid "Default bounce warn rate"
 msgstr "Πρκαθορισμένη τιμή:  bounce_warn_rate robot parameter"
 
-#: src/lib/Sympa/ConfDef.pm:639 src/lib/Sympa/ListDef.pm:920
+#: src/lib/Sympa/ConfDef.pm:639 src/lib/Sympa/ListDef.pm:921
 msgid ""
 "The list owner receives a warning whenever a message is distributed and the "
 "number (percentage) of bounces exceeds this value."
@@ -1277,7 +1277,7 @@ msgstr ""
 msgid "Default bounce halt rate"
 msgstr "Προσαρμογή προτύπων"
 
-#: src/lib/Sympa/ConfDef.pm:648 src/lib/Sympa/ListDef.pm:930
+#: src/lib/Sympa/ConfDef.pm:648 src/lib/Sympa/ListDef.pm:931
 #, fuzzy
 msgid ""
 "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
@@ -1328,8 +1328,8 @@ msgstr "Δεδομένα παρακολουθήσεων αφαιρούνται �
 #: src/lib/Sympa/ConfDef.pm:1111 src/lib/Sympa/ConfDef.pm:1118
 #: src/lib/Sympa/ConfDef.pm:1125 src/lib/Sympa/ConfDef.pm:682
 #: src/lib/Sympa/ConfDef.pm:753 src/lib/Sympa/ConfDef.pm:760
-#: src/lib/Sympa/ListDef.pm:1056 src/lib/Sympa/ListDef.pm:2275
-#: src/lib/Sympa/ListDef.pm:357
+#: src/lib/Sympa/ListDef.pm:1057 src/lib/Sympa/ListDef.pm:2276
+#: src/lib/Sympa/ListDef.pm:358
 msgid "days"
 msgstr "ημέρες"
 
@@ -1338,7 +1338,7 @@ msgstr "ημέρες"
 msgid "Remove bouncing new subscribers"
 msgstr "απομακρυσμένος χρήστης"
 
-#: src/lib/Sympa/ConfDef.pm:690 src/lib/Sympa/ListDef.pm:1069
+#: src/lib/Sympa/ConfDef.pm:690 src/lib/Sympa/ListDef.pm:1070
 msgid ""
 "If set to unique, the welcome message is sent using a unique return path in "
 "order to remove the subscriber immediately in the case of a bounce."
@@ -1352,13 +1352,13 @@ msgstr ""
 msgid "Remove subscribers bouncing remind message"
 msgstr "Περιοδική εργασία λήξης συνδρομών"
 
-#: src/lib/Sympa/ConfDef.pm:697 src/lib/Sympa/ListDef.pm:1079
+#: src/lib/Sympa/ConfDef.pm:697 src/lib/Sympa/ListDef.pm:1080
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr ""
 "Ταυτόσημη με την παράμετρο welcome_return_path, αλλά χρησιμοποιείται στα "
 "μηνύματα υπενθύμισης."
 
-#: src/lib/Sympa/ConfDef.pm:700 src/lib/Sympa/ListDef.pm:2375
+#: src/lib/Sympa/ConfDef.pm:700 src/lib/Sympa/ListDef.pm:2376
 #, fuzzy
 msgid "Periodical subscription reminder task"
 msgstr "Περιοδική εργασία λήξης συνδρομών"
@@ -1984,7 +1984,7 @@ msgstr ""
 "Αριθμός μηνών που πρέπει να περάσουν για να λήξει ένα αρχείο καταγραφής"
 
 #: src/lib/Sympa/ConfDef.pm:1218 src/lib/Sympa/ConfDef.pm:1226
-#: src/lib/Sympa/ListDef.pm:882
+#: src/lib/Sympa/ListDef.pm:883
 #, fuzzy
 msgid "months"
 msgstr "πόντοι"
@@ -2010,7 +2010,7 @@ msgid ""
 "interpreted as an octal value."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1239 src/lib/Sympa/ListDef.pm:2284
+#: src/lib/Sympa/ConfDef.pm:1239 src/lib/Sympa/ListDef.pm:2285
 msgid "Secret string for generating unique keys"
 msgstr "Μυστική συμβολοσειρά για τη δημιουργία μοναδικών κλειδιών"
 
@@ -2388,7 +2388,7 @@ msgstr "Εγκατάσταση πηγών δεδομένων"
 
 #: src/lib/Sympa/ConfDef.pm:1780
 msgid ""
-"Including subscribers, owners and editors from datasources. Appropriate "
+"Including subscribers, owners and editors from data sources. Appropriate "
 "database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
 "DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if "
 "secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
@@ -2505,7 +2505,7 @@ msgstr ""
 msgid "Default is null."
 msgstr "Προκαθορισμένη τιμή"
 
-#: src/lib/Sympa/ConfDef.pm:1854 src/lib/Sympa/ListDef.pm:2137
+#: src/lib/Sympa/ConfDef.pm:1854 src/lib/Sympa/ListDef.pm:2138
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "Επιλογέας για ανεύρεση DNS ιδιωτικού κλειδιού DKIM"
 
@@ -2538,7 +2538,7 @@ msgstr ""
 msgid "This is used for the \"domain_regex\" protection mode."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1895 src/lib/Sympa/ListDef.pm:2247
+#: src/lib/Sympa/ConfDef.pm:1895 src/lib/Sympa/ListDef.pm:2248
 msgid "New From name format"
 msgstr ""
 
@@ -2548,7 +2548,7 @@ msgid ""
 "header field."
 msgstr ""
 
-#: src/lib/Sympa/ConfDef.pm:1904 src/lib/Sympa/ListDef.pm:2231
+#: src/lib/Sympa/ConfDef.pm:1904 src/lib/Sympa/ListDef.pm:2232
 #, fuzzy
 msgid "New From address"
 msgstr "Νέα διεύθυνση ηλεκτρονικού ταχυδρομείου:"
@@ -2756,17 +2756,17 @@ msgstr ""
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3908
+#: src/lib/Sympa/List.pm:3907
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr "Προσπάθεια υπέρβασης μέγιστου αριθμού συνδρομητών (%s) για τη λίστα."
 
-#: src/lib/Sympa/List.pm:3915
+#: src/lib/Sympa/List.pm:3914
 msgid "Attempts to add some users in database failed."
 msgstr "Απέτυχε προσπάθεια προσθήκης χρηστών στη βάση δεδομένων."
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/lib/Sympa/List.pm:3919
+#: src/lib/Sympa/List.pm:3918
 msgid "Added %s users out of %s required."
 msgstr "Προστέθηκαν %s χρήστες από σύνολο %s."
 
@@ -2803,13 +2803,13 @@ msgstr "προφίλ"
 
 #: src/lib/Sympa/ListDef.pm:114 src/lib/Sympa/ListDef.pm:149
 #: src/lib/Sympa/ListDef.pm:190 src/lib/Sympa/ListDef.pm:237
-#: src/lib/Sympa/ListDef.pm:396 src/lib/Sympa/ListDef.pm:423
+#: src/lib/Sympa/ListDef.pm:397 src/lib/Sympa/ListDef.pm:424
 msgid "reception mode"
 msgstr "τρόπος παραλαβής"
 
 #: src/lib/Sympa/ListDef.pm:121 src/lib/Sympa/ListDef.pm:156
 #: src/lib/Sympa/ListDef.pm:197 src/lib/Sympa/ListDef.pm:244
-#: src/lib/Sympa/ListDef.pm:437
+#: src/lib/Sympa/ListDef.pm:438
 msgid "visibility"
 msgstr "ορατότητα"
 
@@ -2850,63 +2850,63 @@ msgstr ""
 msgid "Internet domain"
 msgstr "Τομέας  Διαδικτύου"
 
-#: src/lib/Sympa/ListDef.pm:281
+#: src/lib/Sympa/ListDef.pm:282
 msgid "Language of the list"
 msgstr "Γλώσσας λίστας"
 
-#: src/lib/Sympa/ListDef.pm:283
+#: src/lib/Sympa/ListDef.pm:284
 msgid ""
 "This parameter defines the language used for the list. It is used to "
 "initialize a user's language preference; Sympa command reports are extracted "
 "from the associated message catalog."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:304
+#: src/lib/Sympa/ListDef.pm:305
 #, fuzzy
 msgid "Maximum number of list members"
 msgstr "Μετονομασία λίστας"
 
-#: src/lib/Sympa/ListDef.pm:316
+#: src/lib/Sympa/ListDef.pm:317
 msgid "Priority"
 msgstr "Προτεραιότητα"
 
-#: src/lib/Sympa/ListDef.pm:330
+#: src/lib/Sympa/ListDef.pm:331
 msgid "Who can send messages"
 msgstr "Ποιος μπορεί να στείλει μηνύματα"
 
-#: src/lib/Sympa/ListDef.pm:339
+#: src/lib/Sympa/ListDef.pm:340
 msgid "Delivery time (hh:mm)"
 msgstr "Ώρα παράδοσης (hh:mm)"
 
-#: src/lib/Sympa/ListDef.pm:350
+#: src/lib/Sympa/ListDef.pm:351
 msgid "Digest frequency"
 msgstr "Συχνότητα σύνοψης"
 
-#: src/lib/Sympa/ListDef.pm:365
+#: src/lib/Sympa/ListDef.pm:366
 msgid "hour"
 msgstr "ώρα"
 
-#: src/lib/Sympa/ListDef.pm:372
+#: src/lib/Sympa/ListDef.pm:373
 msgid "minute"
 msgstr "λεπτό"
 
-#: src/lib/Sympa/ListDef.pm:383
+#: src/lib/Sympa/ListDef.pm:384
 msgid "Digest maximum number of messages"
 msgstr "Μέγιστος αριθμός μηνυμάτων σύνοψης"
 
-#: src/lib/Sympa/ListDef.pm:393
+#: src/lib/Sympa/ListDef.pm:394
 msgid "Available subscription options"
 msgstr "Οι διαθέσιμες επιλογές συνδρομής"
 
-#: src/lib/Sympa/ListDef.pm:417
+#: src/lib/Sympa/ListDef.pm:418
 msgid "Subscription profile"
 msgstr "Προφίλ συνδρομητή"
 
-#: src/lib/Sympa/ListDef.pm:450
+#: src/lib/Sympa/ListDef.pm:451
 msgid "Topics for message categorization"
 msgstr "Θέματα για κατηγοριοποίηση μηνυμάτων"
 
-#: src/lib/Sympa/ListDef.pm:452
+#: src/lib/Sympa/ListDef.pm:453
 msgid ""
 "This paragraph defines a topic used to tag a message of a list, named by "
 "msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
@@ -2914,44 +2914,44 @@ msgid ""
 "should be a list of keywords, separated by ','."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:456
+#: src/lib/Sympa/ListDef.pm:457
 #, fuzzy
 msgid "Message topic name"
 msgstr "Μηνύματα προς συντονισμό :"
 
-#: src/lib/Sympa/ListDef.pm:464
+#: src/lib/Sympa/ListDef.pm:465
 msgid "Message topic keywords"
 msgstr "Λέξεις κλειδί θέματος μηνυμάτων"
 
-#: src/lib/Sympa/ListDef.pm:470
+#: src/lib/Sympa/ListDef.pm:471
 #, fuzzy
 msgid "Message topic title"
 msgstr "Μηνύματα προς συντονισμό :"
 
-#: src/lib/Sympa/ListDef.pm:483
+#: src/lib/Sympa/ListDef.pm:484
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
 "Καθορίζει σε ποιο μέρος των μηνυμάτων εφαρμόζονται οι λέξεις κλειδί του "
 "θέματος"
 
-#: src/lib/Sympa/ListDef.pm:494
+#: src/lib/Sympa/ListDef.pm:495
 #, fuzzy
 msgid "Message tagging"
 msgstr "Αριθμός μηνύματος"
 
-#: src/lib/Sympa/ListDef.pm:504 src/lib/Sympa/ListDef.pm:524
+#: src/lib/Sympa/ListDef.pm:505 src/lib/Sympa/ListDef.pm:525
 msgid "Reply address"
 msgstr "Διεύθυνση απάντησης"
 
-#: src/lib/Sympa/ListDef.pm:514
+#: src/lib/Sympa/ListDef.pm:515
 msgid "Forced reply address"
 msgstr "Επιβολή απαντητικής διεύθυνσης"
 
-#: default/web_tt2/edit_config.tt2:19 src/lib/Sympa/ListDef.pm:530
+#: default/web_tt2/edit_config.tt2:19 src/lib/Sympa/ListDef.pm:531
 msgid "value"
 msgstr "τιμή"
 
-#: src/lib/Sympa/ListDef.pm:532
+#: src/lib/Sympa/ListDef.pm:533
 #, fuzzy
 msgid ""
 "This parameter indicates whether the Reply-To: field should indicate the "
@@ -2970,37 +2970,37 @@ msgstr ""
 "μηνύματα σε λίστα. Αυτό μπορεί να οδηγήσει, στην πλειοψηφία των περιπτώσεων, "
 "σε αμηχανία, και σε ειδικές περιπτώσεις να επιφέρει σημαντικές συνέπειες."
 
-#: src/lib/Sympa/ListDef.pm:539 src/lib/Sympa/ListOpt.pm:55
+#: src/lib/Sympa/ListDef.pm:540 src/lib/Sympa/ListOpt.pm:55
 msgid "other email address"
 msgstr "άλλη διεύθυνση ηλεκτρονικής αλληλογραφίας"
 
-#: src/lib/Sympa/ListDef.pm:546
+#: src/lib/Sympa/ListDef.pm:547
 msgid "respect of existing header field"
 msgstr "σεβασμός υφιστάμενου πεδίου κεφαλίδας"
 
-#: src/lib/Sympa/ListDef.pm:558
+#: src/lib/Sympa/ListDef.pm:559
 msgid "Anonymous sender"
 msgstr "Ανώνυμος αποστολέας"
 
-#: src/lib/Sympa/ListDef.pm:560
+#: src/lib/Sympa/ListDef.pm:561
 msgid ""
 "To hide the sender's email address before distributing the message. It is "
 "replaced by the provided email address."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:567
+#: src/lib/Sympa/ListDef.pm:568
 msgid "Custom header field"
 msgstr "Προσαρμοσμένο πεδίου επικεφαλίδας"
 
-#: src/lib/Sympa/ListDef.pm:579
+#: src/lib/Sympa/ListDef.pm:580
 msgid "Subject tagging"
 msgstr "επισήμανση θέματος"
 
-#: src/lib/Sympa/ListDef.pm:590
+#: src/lib/Sympa/ListDef.pm:591
 msgid "Attachment type"
 msgstr "Τύπος επισύναψης"
 
-#: src/lib/Sympa/ListDef.pm:592
+#: src/lib/Sympa/ListDef.pm:593
 #, fuzzy
 msgid ""
 "List owners may decide to add message headers or footers to messages sent "
@@ -3018,141 +3018,141 @@ msgstr ""
 "υποσέλιδα θα αγνοηθούν. Κεφαλίδες/υποσέλιδα μπορούν να προστεθούν μόνο σε "
 "μηνύματα απλού κειμένου."
 
-#: src/lib/Sympa/ListDef.pm:600
+#: src/lib/Sympa/ListDef.pm:601
 msgid "Maximum message size"
 msgstr "Μέγιστο μέγεθος μηνύματος"
 
-#: src/lib/Sympa/ListDef.pm:612
+#: src/lib/Sympa/ListDef.pm:613
 #, fuzzy
 msgid "Allow message personalization"
 msgstr "Επιτρέπεται προσωποποίηση μηνυμάτων"
 
-#: src/lib/Sympa/ListDef.pm:621
+#: src/lib/Sympa/ListDef.pm:622
 msgid "Reject mail from automatic processes (crontab, etc)?"
 msgstr "Απορριπτικά μηνύματα από αυτόματα (crontab, etc);"
 
-#: src/lib/Sympa/ListDef.pm:650
+#: src/lib/Sympa/ListDef.pm:651
 msgid "RFC 2369 Header fields"
 msgstr "Πεδία Επικεφαλίδας κατά RFC 2369"
 
-#: src/lib/Sympa/ListDef.pm:681
+#: src/lib/Sympa/ListDef.pm:682
 msgid "Who can view list information"
 msgstr "Ποιος μπορεί να δει τις πληροφορίες της λίστας"
 
-#: src/lib/Sympa/ListDef.pm:688
+#: src/lib/Sympa/ListDef.pm:689
 msgid "Who can subscribe to the list"
 msgstr "Ποιος μπορεί να εγγραφεί στη λίστα"
 
-#: src/lib/Sympa/ListDef.pm:698
+#: src/lib/Sympa/ListDef.pm:699
 msgid "Who can add subscribers"
 msgstr "ποιος έχει τη δυνατότητα προσθήκης συνδρομητών"
 
-#: src/lib/Sympa/ListDef.pm:707
+#: src/lib/Sympa/ListDef.pm:708
 msgid "Who can unsubscribe"
 msgstr "Ποιος μπορεί να διαγραφεί από τη λίστα"
 
-#: src/lib/Sympa/ListDef.pm:717
+#: src/lib/Sympa/ListDef.pm:718
 msgid "Who can delete subscribers"
 msgstr "Ποιος μπορεί να διαγράψει συνδρομητές"
 
-#: src/lib/Sympa/ListDef.pm:724
+#: src/lib/Sympa/ListDef.pm:725
 msgid "Who can invite people"
 msgstr "Ποιος μπορεί να προσκαλέσει συνδρομητές"
 
-#: src/lib/Sympa/ListDef.pm:731
+#: src/lib/Sympa/ListDef.pm:732
 msgid "Who can start a remind process"
 msgstr "Ποιος μπορεί να ξεκινήσει διαδικασία υπενθύμισης"
 
-#: src/lib/Sympa/ListDef.pm:740
+#: src/lib/Sympa/ListDef.pm:741
 msgid "Who can review subscribers"
 msgstr "Ποιος μπορεί να κάνει ανασκόπηση συνδρομητών"
 
-#: src/lib/Sympa/ListDef.pm:750
+#: src/lib/Sympa/ListDef.pm:751
 #, fuzzy
 msgid "Required domains for list owners"
 msgstr "επιτρεπτό μόνο για τους ιδιοκτήτες λιστών"
 
-#: src/lib/Sympa/ListDef.pm:763
+#: src/lib/Sympa/ListDef.pm:764
 msgid "Minimum owners in required domains"
 msgstr ""
 
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_read.tt2:2
 #: default/web_tt2/d_upload.tt2:2 default/web_tt2/list_menu.tt2:146
-#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:775
+#: default/web_tt2/list_menu.tt2:148 src/lib/Sympa/ListDef.pm:776
 msgid "Shared documents"
 msgstr "Κοινόχρηστα έγγραφα"
 
-#: src/lib/Sympa/ListDef.pm:781
+#: src/lib/Sympa/ListDef.pm:782
 msgid "Who can view"
 msgstr "Ποιος μπορεί να κάνει προβολή"
 
-#: src/lib/Sympa/ListDef.pm:786
+#: src/lib/Sympa/ListDef.pm:787
 msgid "Who can edit"
 msgstr "Ποιος μπορεί να επεξεργαστεί"
 
-#: src/lib/Sympa/ListDef.pm:791 src/lib/Sympa/ListDef.pm:823
-#: src/lib/Sympa/ListDef.pm:873
+#: src/lib/Sympa/ListDef.pm:792 src/lib/Sympa/ListDef.pm:824
+#: src/lib/Sympa/ListDef.pm:874
 msgid "quota"
 msgstr "όριο"
 
-#: src/lib/Sympa/ListDef.pm:813
+#: src/lib/Sympa/ListDef.pm:814
 msgid "Web archives"
 msgstr "Αρχείο web"
 
-#: src/lib/Sympa/ListDef.pm:817 src/lib/Sympa/ListDef.pm:855
-#: src/lib/Sympa/ListDef.pm:862
+#: src/lib/Sympa/ListDef.pm:818 src/lib/Sympa/ListDef.pm:856
+#: src/lib/Sympa/ListDef.pm:863
 msgid "access right"
 msgstr "δικαίωμα πρόσβασης"
 
-#: src/lib/Sympa/ListDef.pm:832 src/lib/Sympa/ListDef.pm:881
+#: src/lib/Sympa/ListDef.pm:833 src/lib/Sympa/ListDef.pm:882
 msgid "Maximum number of month archived"
 msgstr "Μέγιστος αριθμός μηνών στο Αρχείο"
 
-#: src/lib/Sympa/ListDef.pm:844
+#: src/lib/Sympa/ListDef.pm:845
 #, fuzzy
 msgid ""
 "Privilege for reading mail archives and frequency of archiving.\n"
 "Defines who can access the list's web archive."
 msgstr "Προνόμιο για την ανάγνωση των αρχείων και της συχνότητας αρχειοθέτησης"
 
-#: src/lib/Sympa/ListDef.pm:848
+#: src/lib/Sympa/ListDef.pm:849
 msgid "frequency"
 msgstr "συχνότητα"
 
-#: src/lib/Sympa/ListDef.pm:867
+#: src/lib/Sympa/ListDef.pm:868
 msgid "access right by mail commands"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:892
+#: src/lib/Sympa/ListDef.pm:893
 msgid "Archive encrypted mails as cleartext"
 msgstr "Αρχειοθέτηση κρυπτογραφημένων μηνυμάτων ως μη-κρυπτογραφημένο κείμενο"
 
-#: src/lib/Sympa/ListDef.pm:2385 src/lib/Sympa/ListDef.pm:901
+#: src/lib/Sympa/ListDef.pm:2386 src/lib/Sympa/ListDef.pm:902
 msgid "email address protection method"
 msgstr "Μέθοδος προστασίας ηλεκτρονικών διευθύνσεων"
 
-#: src/lib/Sympa/ListDef.pm:914
+#: src/lib/Sympa/ListDef.pm:915
 msgid "Bounces management"
 msgstr "Διαχείριση bounces"
 
-#: src/lib/Sympa/ListDef.pm:918
+#: src/lib/Sympa/ListDef.pm:919
 msgid "warn rate"
 msgstr "όριο προειδοποίησης"
 
-#: src/lib/Sympa/ListDef.pm:928
+#: src/lib/Sympa/ListDef.pm:929
 msgid "halt rate"
 msgstr "όριο παύσης"
 
-#: src/lib/Sympa/ListDef.pm:943
+#: src/lib/Sympa/ListDef.pm:944
 msgid "Management of bouncers, 1st level"
 msgstr "Διαχείριση bounces, 1ο επίπεδο"
 
-#: src/lib/Sympa/ListDef.pm:948 src/lib/Sympa/ListDef.pm:985
+#: src/lib/Sympa/ListDef.pm:949 src/lib/Sympa/ListDef.pm:986
 msgid "threshold"
 msgstr "όριο"
 
-#: src/lib/Sympa/ListDef.pm:950
+#: src/lib/Sympa/ListDef.pm:951
 #, fuzzy
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
@@ -3163,19 +3163,19 @@ msgstr ""
 "ορίζει το κατώτερο κάθε κατηγορίας bouncing χρηστών. Για παράδειγμα το "
 "επίπεδο 1 ξεκινά από 45 έως το level_2_treshold"
 
-#: src/lib/Sympa/ListDef.pm:958 src/lib/Sympa/ListDef.pm:995
+#: src/lib/Sympa/ListDef.pm:959 src/lib/Sympa/ListDef.pm:996
 msgid "action for this population"
 msgstr "ενέργεια για αυτόν τον πληθυσμό"
 
-#: src/lib/Sympa/ListDef.pm:1004 src/lib/Sympa/ListDef.pm:967
+#: src/lib/Sympa/ListDef.pm:1005 src/lib/Sympa/ListDef.pm:968
 msgid "notification"
 msgstr "ειδοποίηση"
 
-#: src/lib/Sympa/ListDef.pm:980
+#: src/lib/Sympa/ListDef.pm:981
 msgid "Management of bouncers, 2nd level"
 msgstr "Διαχείριση bounces, 2ο επίπεδο"
 
-#: src/lib/Sympa/ListDef.pm:987
+#: src/lib/Sympa/ListDef.pm:988
 #, fuzzy
 msgid ""
 "Each bouncing user have a score (from 0 to 100).\n"
@@ -3186,108 +3186,108 @@ msgstr ""
 "ορίζει το όριο μεταξύ των κατηγοριών των bouncing χρηστών. Για παράδειγμα το "
 "επίπεδο 2 είναι για τους χρήστες με σκορ μεταξύ 80 και 100."
 
-#: src/lib/Sympa/ListDef.pm:1017
+#: src/lib/Sympa/ListDef.pm:1018
 msgid "percentage of list members in VERP mode"
 msgstr "ποσοστό μελών λίστας σε VERP"
 
-#: src/lib/Sympa/ListDef.pm:1027
+#: src/lib/Sympa/ListDef.pm:1028
 #, fuzzy
 msgid "Message tracking feature"
 msgstr "Αριθμός μηνύματος"
 
-#: src/lib/Sympa/ListDef.pm:1032
+#: src/lib/Sympa/ListDef.pm:1033
 msgid "tracking message by delivery status notification"
 msgstr "παρακολούθηση μηνύματος με αναφορά παράδοσης"
 
-#: src/lib/Sympa/ListDef.pm:1041
+#: src/lib/Sympa/ListDef.pm:1042
 #, fuzzy
 msgid "tracking message by message disposition notification"
 msgstr "παρακολούθηση μηνύματος με αναφορά παράδοσης"
 
-#: src/lib/Sympa/ListDef.pm:1049
+#: src/lib/Sympa/ListDef.pm:1050
 #, fuzzy
 msgid "who can view message tracking"
 msgstr "Αριθμός μηνύματος"
 
-#: src/lib/Sympa/ListDef.pm:1055
+#: src/lib/Sympa/ListDef.pm:1056
 msgid "Tracking datas are removed after this number of days"
 msgstr "Δεδομένα παρακολουθήσεων αφαιρούνται μετά από αυτόν τον αριθμό ημερών"
 
-#: src/lib/Sympa/ListDef.pm:1067
+#: src/lib/Sympa/ListDef.pm:1068
 msgid "Welcome return-path"
 msgstr "Return-path μηνύματος υποδοχής"
 
-#: src/lib/Sympa/ListDef.pm:1077
+#: src/lib/Sympa/ListDef.pm:1078
 msgid "Return-path of the REMIND command"
 msgstr "Return-Path εντολής REMIND"
 
-#: src/lib/Sympa/ListDef.pm:1090
+#: src/lib/Sympa/ListDef.pm:1091
 #, fuzzy
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "Η παράμετρος συνδρομής ορίζει τους κανόνες συνδρομής στη λίστα."
 
-#: src/lib/Sympa/ListDef.pm:1099
+#: src/lib/Sympa/ListDef.pm:1100
 msgid "Timeout for fetch of include_sql_query"
 msgstr "Χρόνος λήξης για λήψη include_sql_query"
 
-#: src/lib/Sympa/ListDef.pm:1108
+#: src/lib/Sympa/ListDef.pm:1109
 msgid "User data source"
 msgstr "πηγή δεδομένων χρήστη"
 
-#: src/lib/Sympa/ListDef.pm:1117
+#: src/lib/Sympa/ListDef.pm:1118
 msgid "File inclusion"
 msgstr "Συμπερίληψη αρχείου"
 
-#: src/lib/Sympa/ListDef.pm:1128
+#: src/lib/Sympa/ListDef.pm:1129
 msgid "Remote file inclusion"
 msgstr "Συμπερίληψη απομακρυσμένου αρχείου"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:51 src/lib/Sympa/ListDef.pm:1132
-#: src/lib/Sympa/ListDef.pm:1178 src/lib/Sympa/ListDef.pm:1206
-#: src/lib/Sympa/ListDef.pm:1271 src/lib/Sympa/ListDef.pm:1397
-#: src/lib/Sympa/ListDef.pm:1576 src/lib/Sympa/ListDef.pm:1657
-#: src/lib/Sympa/ListDef.pm:1713 src/lib/Sympa/ListDef.pm:1843
-#: src/lib/Sympa/ListDef.pm:2027
+#: ext/VOOT/lib/Sympa/VOOT.pm:51 src/lib/Sympa/ListDef.pm:1133
+#: src/lib/Sympa/ListDef.pm:1179 src/lib/Sympa/ListDef.pm:1207
+#: src/lib/Sympa/ListDef.pm:1272 src/lib/Sympa/ListDef.pm:1398
+#: src/lib/Sympa/ListDef.pm:1577 src/lib/Sympa/ListDef.pm:1658
+#: src/lib/Sympa/ListDef.pm:1714 src/lib/Sympa/ListDef.pm:1844
+#: src/lib/Sympa/ListDef.pm:2028
 msgid "short name for this source"
 msgstr "συντομογραφία αυτής της πηγής δεδομένων"
 
-#: src/lib/Sympa/ListDef.pm:1138
+#: src/lib/Sympa/ListDef.pm:1139
 msgid "data location URL"
 msgstr "διεύθυνση URL τοποθεσίας δεδομένων"
 
-#: src/lib/Sympa/ListDef.pm:1145 src/lib/Sympa/ListDef.pm:1327
-#: src/lib/Sympa/ListDef.pm:1453 src/lib/Sympa/ListDef.pm:1617
-#: src/lib/Sympa/ListDef.pm:1769 src/lib/Sympa/ListDef.pm:1899
-#: src/lib/Sympa/ListDef.pm:2067
+#: src/lib/Sympa/ListDef.pm:1146 src/lib/Sympa/ListDef.pm:1328
+#: src/lib/Sympa/ListDef.pm:1454 src/lib/Sympa/ListDef.pm:1618
+#: src/lib/Sympa/ListDef.pm:1770 src/lib/Sympa/ListDef.pm:1900
+#: src/lib/Sympa/ListDef.pm:2068
 msgid "remote user"
 msgstr "απομακρυσμένος χρήστης"
 
-#: src/lib/Sympa/ListDef.pm:1151 src/lib/Sympa/ListDef.pm:1332
-#: src/lib/Sympa/ListDef.pm:1458 src/lib/Sympa/ListDef.pm:1623
-#: src/lib/Sympa/ListDef.pm:1774 src/lib/Sympa/ListDef.pm:1904
-#: src/lib/Sympa/ListDef.pm:2073
+#: src/lib/Sympa/ListDef.pm:1152 src/lib/Sympa/ListDef.pm:1333
+#: src/lib/Sympa/ListDef.pm:1459 src/lib/Sympa/ListDef.pm:1624
+#: src/lib/Sympa/ListDef.pm:1775 src/lib/Sympa/ListDef.pm:1905
+#: src/lib/Sympa/ListDef.pm:2074
 msgid "remote password"
 msgstr "απομακρυσμένος κωδικός πρόσβασης"
 
-#: src/lib/Sympa/ListDef.pm:1163 src/lib/Sympa/ListDef.pm:1172
+#: src/lib/Sympa/ListDef.pm:1164 src/lib/Sympa/ListDef.pm:1173
 msgid "List inclusion"
 msgstr "Συμπερίληψη λίστας"
 
-#: src/lib/Sympa/ListDef.pm:1184
+#: src/lib/Sympa/ListDef.pm:1185
 #, fuzzy
 msgid "list name to include"
 msgstr "Κατάλογος εξαιρέσεων"
 
-#: src/lib/Sympa/ListDef.pm:1190
+#: src/lib/Sympa/ListDef.pm:1191
 #, fuzzy
 msgid "filter definition"
 msgstr "Ορισμός λίστας"
 
-#: src/lib/Sympa/ListDef.pm:1200
+#: src/lib/Sympa/ListDef.pm:1201
 msgid "remote list inclusion"
 msgstr "εισαγωγή απομακρυσμένης λίστας"
 
-#: src/lib/Sympa/ListDef.pm:1202
+#: src/lib/Sympa/ListDef.pm:1203
 #, fuzzy
 msgid ""
 "Sympa can contact another Sympa service using HTTPS to fetch a remote list "
@@ -3307,181 +3307,181 @@ msgstr ""
 "κάθε μία συμπεριλαμβανόμενη λίστα. Προσοχή απαιτείται για την αποφυγή "
 "ατέρμονων βρόγχων."
 
-#: src/lib/Sympa/ListDef.pm:1212 src/lib/Sympa/ListDef.pm:1277
-#: src/lib/Sympa/ListDef.pm:1403 src/lib/Sympa/ListDef.pm:1588
-#: src/lib/Sympa/ListDef.pm:1719 src/lib/Sympa/ListDef.pm:1849
-#: src/lib/Sympa/ListDef.pm:2039
+#: src/lib/Sympa/ListDef.pm:1213 src/lib/Sympa/ListDef.pm:1278
+#: src/lib/Sympa/ListDef.pm:1404 src/lib/Sympa/ListDef.pm:1589
+#: src/lib/Sympa/ListDef.pm:1720 src/lib/Sympa/ListDef.pm:1850
+#: src/lib/Sympa/ListDef.pm:2040
 msgid "remote host"
 msgstr "απομακρυσμένος κόμβος"
 
-#: src/lib/Sympa/ListDef.pm:1218 src/lib/Sympa/ListDef.pm:1283
-#: src/lib/Sympa/ListDef.pm:1409 src/lib/Sympa/ListDef.pm:1725
-#: src/lib/Sympa/ListDef.pm:1855
+#: src/lib/Sympa/ListDef.pm:1219 src/lib/Sympa/ListDef.pm:1284
+#: src/lib/Sympa/ListDef.pm:1410 src/lib/Sympa/ListDef.pm:1726
+#: src/lib/Sympa/ListDef.pm:1856
 msgid "remote port"
 msgstr "απομακρυσμένη θύρα"
 
-#: src/lib/Sympa/ListDef.pm:1225
+#: src/lib/Sympa/ListDef.pm:1226
 msgid "remote path of sympa list dump"
 msgstr "απομακρυσμένη διαδρομή για λήψη λιστών Sympa"
 
-#: src/lib/Sympa/ListDef.pm:1233
+#: src/lib/Sympa/ListDef.pm:1234
 msgid "certificate for authentication by remote Sympa"
 msgstr "πιστοποιητικό για ταυτοποίηση από απομακρυσμένο Sympa"
 
-#: src/lib/Sympa/ListDef.pm:1265
+#: src/lib/Sympa/ListDef.pm:1266
 msgid "LDAP query inclusion"
 msgstr "Συμπερίληψη ερωτήματος LDAP"
 
-#: src/lib/Sympa/ListDef.pm:1339 src/lib/Sympa/ListDef.pm:1781
+#: src/lib/Sympa/ListDef.pm:1340 src/lib/Sympa/ListDef.pm:1782
 msgid "suffix"
 msgstr "κατάληξη"
 
-#: src/lib/Sympa/ListDef.pm:1344 src/lib/Sympa/ListDef.pm:1786
+#: src/lib/Sympa/ListDef.pm:1345 src/lib/Sympa/ListDef.pm:1787
 msgid "search scope"
 msgstr "έκταση αναζήτησης"
 
-#: src/lib/Sympa/ListDef.pm:1351 src/lib/Sympa/ListDef.pm:1793
+#: src/lib/Sympa/ListDef.pm:1352 src/lib/Sympa/ListDef.pm:1794
 msgid "connection timeout"
 msgstr "λήξη χρονικού ορίου σύνδεσης"
 
-#: src/lib/Sympa/ListDef.pm:1359 src/lib/Sympa/ListDef.pm:1801
+#: src/lib/Sympa/ListDef.pm:1360 src/lib/Sympa/ListDef.pm:1802
 msgid "filter"
 msgstr "φίλτρο"
 
-#: src/lib/Sympa/ListDef.pm:1366 src/lib/Sympa/ListDef.pm:1808
+#: src/lib/Sympa/ListDef.pm:1367 src/lib/Sympa/ListDef.pm:1809
 msgid "extracted attribute"
 msgstr "παράμετρος που εξήχθη"
 
-#: src/lib/Sympa/ListDef.pm:1373 src/lib/Sympa/ListDef.pm:1821
+#: src/lib/Sympa/ListDef.pm:1374 src/lib/Sympa/ListDef.pm:1822
 msgid "selection (if multiple)"
 msgstr "επιλογή (αν πολλαπλά)"
 
-#: src/lib/Sympa/ListDef.pm:1380 src/lib/Sympa/ListDef.pm:1559
-#: src/lib/Sympa/ListDef.pm:1642 src/lib/Sympa/ListDef.pm:1828
-#: src/lib/Sympa/ListDef.pm:2012 src/lib/Sympa/ListDef.pm:2098
+#: src/lib/Sympa/ListDef.pm:1381 src/lib/Sympa/ListDef.pm:1560
+#: src/lib/Sympa/ListDef.pm:1643 src/lib/Sympa/ListDef.pm:1829
+#: src/lib/Sympa/ListDef.pm:2013 src/lib/Sympa/ListDef.pm:2099
 #, fuzzy
 msgid "Time ranges when inclusion is not allowed"
 msgstr ""
 "Η περίοδο αποστολής της Επισκόπησης ορίζεται από τον ιδιοκτήτη της λίστας."
 
-#: src/lib/Sympa/ListDef.pm:1391
+#: src/lib/Sympa/ListDef.pm:1392
 msgid "LDAP 2-level query inclusion"
 msgstr "Συμπερίληψη ερωτήματος LDAP δύο επιπέδων"
 
-#: src/lib/Sympa/ListDef.pm:1465 src/lib/Sympa/ListDef.pm:1911
+#: src/lib/Sympa/ListDef.pm:1466 src/lib/Sympa/ListDef.pm:1912
 msgid "first-level suffix"
 msgstr "κατάληξη πρώτου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1470 src/lib/Sympa/ListDef.pm:1916
+#: src/lib/Sympa/ListDef.pm:1471 src/lib/Sympa/ListDef.pm:1917
 msgid "first-level search scope"
 msgstr "έκταση αναζήτησης πρώτου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1476 src/lib/Sympa/ListDef.pm:1923
+#: src/lib/Sympa/ListDef.pm:1477 src/lib/Sympa/ListDef.pm:1924
 msgid "first-level connection timeout"
 msgstr "χρόνος λήξης σύνδεσης πρώτου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1484 src/lib/Sympa/ListDef.pm:1931
+#: src/lib/Sympa/ListDef.pm:1485 src/lib/Sympa/ListDef.pm:1932
 msgid "first-level filter"
 msgstr "φίλτρο πρώτου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1491 src/lib/Sympa/ListDef.pm:1938
+#: src/lib/Sympa/ListDef.pm:1492 src/lib/Sympa/ListDef.pm:1939
 msgid "first-level extracted attribute"
 msgstr "εξαγόμενη παράμετρος πρώτου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1497 src/lib/Sympa/ListDef.pm:1944
+#: src/lib/Sympa/ListDef.pm:1498 src/lib/Sympa/ListDef.pm:1945
 msgid "first-level selection"
 msgstr "επιλογή πρώτου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1504 src/lib/Sympa/ListDef.pm:1951
+#: src/lib/Sympa/ListDef.pm:1505 src/lib/Sympa/ListDef.pm:1952
 msgid "first-level regular expression"
 msgstr "regexp πρώτου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1511 src/lib/Sympa/ListDef.pm:1958
+#: src/lib/Sympa/ListDef.pm:1512 src/lib/Sympa/ListDef.pm:1959
 msgid "second-level suffix template"
 msgstr "πρότυπο κατάληξης δευτέρου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1516 src/lib/Sympa/ListDef.pm:1963
+#: src/lib/Sympa/ListDef.pm:1517 src/lib/Sympa/ListDef.pm:1964
 msgid "second-level search scope"
 msgstr "έκταση δράσης δευτέρου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1523 src/lib/Sympa/ListDef.pm:1970
+#: src/lib/Sympa/ListDef.pm:1524 src/lib/Sympa/ListDef.pm:1971
 msgid "second-level connection timeout"
 msgstr "χρόνος λήξης σύνδεσης δευτέρου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1531 src/lib/Sympa/ListDef.pm:1978
+#: src/lib/Sympa/ListDef.pm:1532 src/lib/Sympa/ListDef.pm:1979
 msgid "second-level filter template"
 msgstr "πρότυπο φίλτρου δευτέρου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1538 src/lib/Sympa/ListDef.pm:1985
+#: src/lib/Sympa/ListDef.pm:1539 src/lib/Sympa/ListDef.pm:1986
 msgid "second-level extracted attribute"
 msgstr "εξαγόμενη παράμετρος δευτέρου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1545 src/lib/Sympa/ListDef.pm:1992
+#: src/lib/Sympa/ListDef.pm:1546 src/lib/Sympa/ListDef.pm:1993
 msgid "second-level selection"
 msgstr "επιλογή δευτέρου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1552 src/lib/Sympa/ListDef.pm:1999
+#: src/lib/Sympa/ListDef.pm:1553 src/lib/Sympa/ListDef.pm:2000
 msgid "second-level regular expression"
 msgstr "regexp δευτέρου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:1570
+#: src/lib/Sympa/ListDef.pm:1571
 msgid "SQL query inclusion"
 msgstr "συμπερίληψη ερωτήματος SQL"
 
-#: src/lib/Sympa/ListDef.pm:1582 src/lib/Sympa/ListDef.pm:2033
+#: src/lib/Sympa/ListDef.pm:1583 src/lib/Sympa/ListDef.pm:2034
 msgid "database type"
 msgstr "τύπος βάσης δεδομένων"
 
-#: src/lib/Sympa/ListDef.pm:1595 src/lib/Sympa/ListDef.pm:2045
+#: src/lib/Sympa/ListDef.pm:1596 src/lib/Sympa/ListDef.pm:2046
 msgid "database port"
 msgstr "θύρα βάσης δεδομένων"
 
-#: src/lib/Sympa/ListDef.pm:1600 src/lib/Sympa/ListDef.pm:2050
+#: src/lib/Sympa/ListDef.pm:1601 src/lib/Sympa/ListDef.pm:2051
 msgid "database name"
 msgstr "όνομα βάσης δεδομένων"
 
-#: src/lib/Sympa/ListDef.pm:1606 src/lib/Sympa/ListDef.pm:2056
+#: src/lib/Sympa/ListDef.pm:1607 src/lib/Sympa/ListDef.pm:2057
 msgid "connection options"
 msgstr "επιλογές σύνδεσης"
 
-#: src/lib/Sympa/ListDef.pm:1612 src/lib/Sympa/ListDef.pm:2062
+#: src/lib/Sympa/ListDef.pm:1613 src/lib/Sympa/ListDef.pm:2063
 msgid "environment variables for database connection"
 msgstr "μεταβλητές περιβάλλοντος για σύνδεση βάσης δεδομένων"
 
-#: src/lib/Sympa/ListDef.pm:1629 src/lib/Sympa/ListDef.pm:2079
+#: src/lib/Sympa/ListDef.pm:1630 src/lib/Sympa/ListDef.pm:2080
 msgid "SQL query"
 msgstr "ερώτημα SQL"
 
-#: src/lib/Sympa/ListDef.pm:1637 src/lib/Sympa/ListDef.pm:2087
+#: src/lib/Sympa/ListDef.pm:1638 src/lib/Sympa/ListDef.pm:2088
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "Κατάλογος αποθήκευσης της βάσης δεδομένων (χρήση μόνο DBD::CSV)"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1653
+#: ext/VOOT/lib/Sympa/VOOT.pm:47 src/lib/Sympa/ListDef.pm:1654
 #, fuzzy
 msgid "VOOT group inclusion"
 msgstr "συμπερίληψη ερωτήματος SQL"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1663
+#: ext/VOOT/lib/Sympa/VOOT.pm:59 src/lib/Sympa/ListDef.pm:1664
 msgid "user"
 msgstr "χρήστης"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1669
+#: ext/VOOT/lib/Sympa/VOOT.pm:55 src/lib/Sympa/ListDef.pm:1670
 msgid "provider"
 msgstr "παροχέας"
 
-#: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1675
+#: ext/VOOT/lib/Sympa/VOOT.pm:63 src/lib/Sympa/ListDef.pm:1676
 msgid "group"
 msgstr "ομάδα"
 
-#: src/lib/Sympa/ListDef.pm:1686
+#: src/lib/Sympa/ListDef.pm:1687
 msgid "Inclusions timeout"
 msgstr "Λήξη χρόνου αναμονής συμπερίληψης"
 
-#: src/lib/Sympa/ListDef.pm:1698
+#: src/lib/Sympa/ListDef.pm:1699
 msgid "Inclusions timeout for message distribution"
 msgstr "χρόνος λήξης εισαγωγών για διανομή μηνυμάτων"
 
-#: src/lib/Sympa/ListDef.pm:1700
+#: src/lib/Sympa/ListDef.pm:1701
 msgid ""
 "This parameter defines the delay since the last synchronization after which "
 "the user's list will be updated before performing either of following "
@@ -3490,106 +3490,106 @@ msgid ""
 "* Message distribution"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1709
+#: src/lib/Sympa/ListDef.pm:1710
 #, fuzzy
 msgid "LDAP query custom attribute"
 msgstr "Συμπερίληψη ερωτήματος LDAP"
 
-#: src/lib/Sympa/ListDef.pm:1815 src/lib/Sympa/ListDef.pm:2006
-#: src/lib/Sympa/ListDef.pm:2092
+#: src/lib/Sympa/ListDef.pm:1816 src/lib/Sympa/ListDef.pm:2007
+#: src/lib/Sympa/ListDef.pm:2093
 msgid "Name of email entry"
 msgstr "Όνομα πεδίου ηλεκτρονικής αλληλογραφίας"
 
-#: src/lib/Sympa/ListDef.pm:1839
+#: src/lib/Sympa/ListDef.pm:1840
 #, fuzzy
 msgid "LDAP 2-level query custom attribute"
 msgstr "Συμπερίληψη ερωτήματος LDAP δύο επιπέδων"
 
-#: src/lib/Sympa/ListDef.pm:2023
+#: src/lib/Sympa/ListDef.pm:2024
 #, fuzzy
 msgid "SQL query custom attribute"
 msgstr "συμπερίληψη ερωτήματος SQL"
 
-#: src/lib/Sympa/ListDef.pm:2111
+#: src/lib/Sympa/ListDef.pm:2112
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "Προσθήκη υπογραφής DKIM σε μηνύματα που αποστέλλονται στη λίστα"
 
-#: src/lib/Sympa/ListDef.pm:2113
+#: src/lib/Sympa/ListDef.pm:2114
 msgid ""
 "Enable/Disable DKIM. This feature requires Mail::DKIM to be installed, and "
 "maybe some custom scenario to be updated"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2122
+#: src/lib/Sympa/ListDef.pm:2123
 msgid "DKIM configuration"
 msgstr "διαμόρφωση DKIM"
 
-#: src/lib/Sympa/ListDef.pm:2128
+#: src/lib/Sympa/ListDef.pm:2129
 msgid "File path for list DKIM private key"
 msgstr "Διαδρομή αρχείου για ιδιωτικό κλειδί DKIM της λίστας"
 
-#: src/lib/Sympa/ListDef.pm:2130
+#: src/lib/Sympa/ListDef.pm:2131
 msgid "The file must contain a RSA pem encoded private key"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2139
+#: src/lib/Sympa/ListDef.pm:2140
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for <selector>._domainkey.your_domain"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2183
+#: src/lib/Sympa/ListDef.pm:2184
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr ""
 "Οι κατηγορίες μηνυμάτων που αποστέλλονται στη λίστα θα είναι υπογεγραμμένες "
 "με DKIM."
 
-#: src/lib/Sympa/ListDef.pm:2185
+#: src/lib/Sympa/ListDef.pm:2186
 msgid ""
 "This parameter controls in which case messages must be signed using DKIM, "
 "you may sign every message choosing 'any' or a subset. The parameter value "
 "is a comma separated list of keywords"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2213
+#: src/lib/Sympa/ListDef.pm:2214
 #, fuzzy
 msgid "Protection modes"
 msgstr "τρόπος παραλαβής"
 
-#: src/lib/Sympa/ListDef.pm:2223
+#: src/lib/Sympa/ListDef.pm:2224
 #, fuzzy
 msgid "Match domain regular expression"
 msgstr "regexp πρώτου επιπέδου"
 
-#: src/lib/Sympa/ListDef.pm:2254
+#: src/lib/Sympa/ListDef.pm:2255
 msgid "DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2257
+#: src/lib/Sympa/ListDef.pm:2258
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2265
+#: src/lib/Sympa/ListDef.pm:2266
 msgid "Account"
 msgstr "Λογαριασμός"
 
-#: src/lib/Sympa/ListDef.pm:2274
+#: src/lib/Sympa/ListDef.pm:2275
 msgid "Expiration of unmoderated messages"
 msgstr "Λήξη μη συντονιζόμενων μηνυμάτων"
 
-#: src/lib/Sympa/ListDef.pm:2296
+#: src/lib/Sympa/ListDef.pm:2297
 msgid "custom parameters"
 msgstr "προσαρμοσμένες παράμετρους"
 
-#: src/lib/Sympa/ListDef.pm:2317
+#: src/lib/Sympa/ListDef.pm:2318
 msgid "Periodical subscription expiration task"
 msgstr "Περιοδική εργασία λήξης συνδρομών"
 
-#: src/lib/Sympa/ListDef.pm:2319
+#: src/lib/Sympa/ListDef.pm:2320
 msgid ""
 "This parameter states which model is used to create an expire task. An "
 "expire task regularly checks the subscription or resubscription  date of "
@@ -3597,17 +3597,17 @@ msgid ""
 "are deleted."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2356
+#: src/lib/Sympa/ListDef.pm:2357
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "Regexp που εφαρμόζεται για αποτροπή βρόχων με εξυπηρετητές"
 
-#: src/lib/Sympa/ListDef.pm:2366
+#: src/lib/Sympa/ListDef.pm:2367
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr ""
 "Να επιτρέπεται προβολή εικόνας; (πρέπει να είναι ενεργοποιημένο για τον "
 "τρέχον εξυπηρετητή)"
 
-#: src/lib/Sympa/ListDef.pm:2387
+#: src/lib/Sympa/ListDef.pm:2388
 #, fuzzy
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
@@ -3627,61 +3627,61 @@ msgstr ""
 "διάφορες μεθόδους, τις οποίες μπορείτε να επιλέξετε με τις παραμέτρους "
 "spam_protection και web_archive_spam_protection.  Πιθανές τιμές είναι:"
 
-#: src/lib/Sympa/ListDef.pm:2396
+#: src/lib/Sympa/ListDef.pm:2397
 msgid "Creation of the list"
 msgstr "Δημιουργία της λίστας"
 
-#: src/lib/Sympa/ListDef.pm:2337 src/lib/Sympa/ListDef.pm:2342
-#: src/lib/Sympa/ListDef.pm:2400 src/lib/Sympa/ListDef.pm:2438
-#: src/lib/Sympa/ListDef.pm:2444
+#: src/lib/Sympa/ListDef.pm:2338 src/lib/Sympa/ListDef.pm:2343
+#: src/lib/Sympa/ListDef.pm:2401 src/lib/Sympa/ListDef.pm:2439
+#: src/lib/Sympa/ListDef.pm:2445
 msgid "date"
 msgstr "ημερομηνία"
 
-#: src/lib/Sympa/ListDef.pm:2409
+#: src/lib/Sympa/ListDef.pm:2410
 msgid "human readable"
 msgstr "εύκολα αναγνώσιμο"
 
-#: src/lib/Sympa/ListDef.pm:2414
+#: src/lib/Sympa/ListDef.pm:2415
 msgid "who created the list"
 msgstr "που δημιούργησε τη λίστα"
 
-#: src/lib/Sympa/ListDef.pm:2426
+#: src/lib/Sympa/ListDef.pm:2427
 msgid "Last update of config"
 msgstr "Τελευταία ενημέρωση της διαμόρφωσης"
 
-#: src/lib/Sympa/ListDef.pm:2457
+#: src/lib/Sympa/ListDef.pm:2458
 msgid "Status of the list"
 msgstr "Κατάσταση της λίστας"
 
-#: src/lib/Sympa/ListDef.pm:2468
+#: src/lib/Sympa/ListDef.pm:2469
 msgid "Serial number of the config"
 msgstr "Σειριακός αριθμός της διαμόρφωσης"
 
-#: src/lib/Sympa/ListDef.pm:2478
+#: src/lib/Sympa/ListDef.pm:2479
 msgid "Custom user attributes"
 msgstr "Προσαρμοσμένες παράμετροι χρήστη"
 
-#: src/lib/Sympa/ListDef.pm:2482
+#: src/lib/Sympa/ListDef.pm:2483
 msgid "internal identifier"
 msgstr "εσωτερικό αναγνωριστικό"
 
-#: src/lib/Sympa/ListDef.pm:2489
+#: src/lib/Sympa/ListDef.pm:2490
 msgid "label"
 msgstr "επιγραφή"
 
-#: src/lib/Sympa/ListDef.pm:2496
+#: src/lib/Sympa/ListDef.pm:2497
 msgid "additional comment"
 msgstr "επιπρόσθετο σχόλιο"
 
-#: src/lib/Sympa/ListDef.pm:2502
+#: src/lib/Sympa/ListDef.pm:2503
 msgid "type"
 msgstr "τύπος"
 
-#: src/lib/Sympa/ListDef.pm:2509
+#: src/lib/Sympa/ListDef.pm:2510
 msgid "possible attribute values (if enum is used)"
 msgstr "πιθανές τιμές παραμέτρου (σε περίπτωση χρήσης enum)"
 
-#: src/lib/Sympa/ListDef.pm:2515
+#: src/lib/Sympa/ListDef.pm:2516
 msgid "is the attribute optional?"
 msgstr "είναι το χαρακτηριστικό προεραιτικό?"
 
@@ -3720,27 +3720,21 @@ msgstr ""
 msgid "Owners defined in an external data source"
 msgstr "Ιδιοκτήτες ορισμένοι σε εξωτερική πηγή δεδομένων"
 
-#: src/lib/Sympa/ListDef.pm:137
-msgid "the datasource"
-msgstr "πηγή δεδομένων"
-
-#: src/lib/Sympa/ListDef.pm:143
-msgid "datasource parameters"
-msgstr "παράμετροι πηγής δεδομένων"
-
-#: src/lib/Sympa/ListDef.pm:221
-msgid "Moderators defined in an external data source"
-msgstr "Συντονιστές ορισμένοι σε εξωτερική πηγή δεδομένων"
-
-#: src/lib/Sympa/ListDef.pm:1248 src/lib/Sympa/ListDef.pm:225
+#: src/lib/Sympa/ListDef.pm:1249 src/lib/Sympa/ListDef.pm:137
+#: src/lib/Sympa/ListDef.pm:225
 #, fuzzy
 msgid "the data source"
 msgstr "Πηγή δεδομένων"
 
-#: src/lib/Sympa/ListDef.pm:1254 src/lib/Sympa/ListDef.pm:231
+#: src/lib/Sympa/ListDef.pm:1255 src/lib/Sympa/ListDef.pm:143
+#: src/lib/Sympa/ListDef.pm:231
 #, fuzzy
 msgid "data source parameters"
 msgstr "Προτιμώ"
+
+#: src/lib/Sympa/ListDef.pm:221
+msgid "Moderators defined in an external data source"
+msgstr "Συντονιστές ορισμένοι σε εξωτερική πηγή δεδομένων"
 
 #: src/lib/Sympa/ListDef.pm:271
 msgid ""
@@ -3750,23 +3744,23 @@ msgstr ""
 "Όνομα περιοχής της λίστας, το προκαθορισμένο είναι το όνομα περιοχής robot, "
 "το οποίο έχει οριστεί στο αρχείο robot.conf ή στο αρχείο sympa.conf."
 
-#: src/lib/Sympa/ListDef.pm:295
+#: src/lib/Sympa/ListDef.pm:296
 msgid "Family name"
 msgstr "Όνομα οικογένειας"
 
-#: src/lib/Sympa/ListDef.pm:306
+#: src/lib/Sympa/ListDef.pm:307
 #, fuzzy
 msgid "limit for the number of subscribers. 0 means no limit."
 msgstr ""
 "Προεπιλεγμένο όριο για τον αριθμό των συνδρομητών ανά λίστα (0 σημαίνει "
 "χωρίς όριο)"
 
-#: src/lib/Sympa/ListDef.pm:307
+#: src/lib/Sympa/ListDef.pm:308
 #, fuzzy
 msgid "list members"
 msgstr "Ανασκόπηση"
 
-#: src/lib/Sympa/ListDef.pm:318
+#: src/lib/Sympa/ListDef.pm:319
 msgid ""
 "The priority with which Sympa will process messages for this list. This "
 "level of priority is applied while the message is going through the spool. "
@@ -3776,19 +3770,19 @@ msgstr ""
 "της συγκεκριμένης λίστας. Το επίπεδο προτεραιότητας εφαρμόζεται κατά το "
 "πέρασμα από τη spool. Η προτεραιότητα z θα παγώσει το μήνυμα στη spool."
 
-#: src/lib/Sympa/ListDef.pm:332
+#: src/lib/Sympa/ListDef.pm:333
 #, fuzzy
 msgid "This parameter specifies who can send messages to the list."
 msgstr "Η παράμετρος συνδρομής ορίζει τους κανόνες συνδρομής στη λίστα."
 
-#: src/lib/Sympa/ListDef.pm:341
+#: src/lib/Sympa/ListDef.pm:342
 msgid ""
 "If this parameter is present, non-digest messages will be delivered to "
 "subscribers at this time: When this time has been past, delivery is "
 "postponed to the same time in next day."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:352
+#: src/lib/Sympa/ListDef.pm:353
 #, fuzzy
 msgid ""
 "Definition of digest mode. If this parameter is present, subscribers can "
@@ -3803,12 +3797,12 @@ msgstr ""
 "και τα μηνύματα αποστέλλονται στους συνδρομητές ανάλογα με τη συχνότητα που "
 "ορίζει η συγκεκριμένη παράμετρος."
 
-#: src/lib/Sympa/ListDef.pm:384
+#: src/lib/Sympa/ListDef.pm:385
 #, fuzzy
 msgid "messages"
 msgstr "%Εικόνα(%s)"
 
-#: src/lib/Sympa/ListDef.pm:398
+#: src/lib/Sympa/ListDef.pm:399
 msgid ""
 "Only these modes will be allowed for the subscribers of this list. If a "
 "subscriber has a reception mode not in the list, Sympa uses the mode "
@@ -3819,32 +3813,32 @@ msgstr ""
 "sympa χρησιμοποιεί τον τρόπο που έχει καθοριστεί στην παράγραφο "
 "default_user_options."
 
-#: src/lib/Sympa/ListDef.pm:419
+#: src/lib/Sympa/ListDef.pm:420
 #, fuzzy
 msgid "Default profile for the subscribers of the list."
 msgstr "Η εικόνα σας στη λίστα συνδρομητών"
 
-#: src/lib/Sympa/ListDef.pm:424
+#: src/lib/Sympa/ListDef.pm:425
 msgid "Mail reception mode."
 msgstr "Τρόπος παραβαλής μηνύματος."
 
-#: src/lib/Sympa/ListDef.pm:438
+#: src/lib/Sympa/ListDef.pm:439
 #, fuzzy
 msgid "Visibility of the subscriber."
 msgstr "Ορατότητα της λίστας"
 
-#: src/lib/Sympa/ListDef.pm:485
+#: src/lib/Sympa/ListDef.pm:486
 msgid ""
 "This parameter indicates which part of the message is used to perform "
 "automatic tagging."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:496
+#: src/lib/Sympa/ListDef.pm:497
 msgid ""
 "This parameter indicates if the tagging is optional or required for a list."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:526
+#: src/lib/Sympa/ListDef.pm:527
 #, fuzzy
 msgid ""
 "This defines what Sympa will place in the Reply-To: SMTP header field of the "
@@ -3854,7 +3848,7 @@ msgstr ""
 "το λογισμικό Sympa στο SMPT πεδίο επικεφαλίδας Reply-To: των μηνυμάτων που "
 "διανέμει."
 
-#: src/lib/Sympa/ListDef.pm:541
+#: src/lib/Sympa/ListDef.pm:542
 msgid ""
 "If value was set to other_email, this parameter defines the e-mail address "
 "used."
@@ -3862,7 +3856,7 @@ msgstr ""
 "Αν οριστεί ως άλλη_διεύθυνση (other_email), η παράμετρος ορίζει τη "
 "χρησιμοποιούμενη διεύθυνση ηλεκτρονικού ταχυδρομείου."
 
-#: src/lib/Sympa/ListDef.pm:548
+#: src/lib/Sympa/ListDef.pm:549
 msgid ""
 "The default is to respect (preserve) the existing Reply-To: SMTP header "
 "field in incoming messages. If set to forced, Reply-To: SMTP header field "
@@ -3872,7 +3866,7 @@ msgstr ""
 "επικεφαλίδας SMTP Reply-To: των εισερχόμενων μηνυμάτων. Αν τεθεί το "
 "συγκεκριμένο, το επικεφαλίδας SMTP Reply-To: θα αντικατασταθεί."
 
-#: src/lib/Sympa/ListDef.pm:569
+#: src/lib/Sympa/ListDef.pm:570
 msgid ""
 "This parameter is optional. The headers specified will be added to the "
 "headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
@@ -3880,7 +3874,7 @@ msgid ""
 "at the same time."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:581
+#: src/lib/Sympa/ListDef.pm:582
 msgid ""
 "This parameter is optional. It specifies a string which is added to the "
 "subject of distributed messages (intended to help users who do not use "
@@ -3888,76 +3882,76 @@ msgid ""
 "by [] characters."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:601
+#: src/lib/Sympa/ListDef.pm:602
 msgid "Maximum size of a message in 8-bit bytes."
 msgstr "Μέγιστο μέγεθος μηνύματος σε bytes."
 
-#: src/lib/Sympa/ListDef.pm:630
+#: src/lib/Sympa/ListDef.pm:631
 msgid "Incoming SMTP header fields to be removed"
 msgstr "Πεδία κεφαλίδων εισερχομένων SMTP που θα αφαιρεθούν"
 
-#: src/lib/Sympa/ListDef.pm:640
+#: src/lib/Sympa/ListDef.pm:641
 msgid "Outgoing SMTP header fields to be removed"
 msgstr "Πεδία κεφαλίδων εξερχομένων SMTP που θα αφαιρεθούν"
 
-#: src/lib/Sympa/ListDef.pm:661
+#: src/lib/Sympa/ListDef.pm:662
 #, fuzzy
 msgid "Hook modules for message processing"
 msgstr "Φάκελος για αποθήκευση bounces"
 
-#: src/lib/Sympa/ListDef.pm:665
+#: src/lib/Sympa/ListDef.pm:666
 #, fuzzy
 msgid "A hook on the messages before distribution"
 msgstr "Διανομή μηνύματος"
 
-#: src/lib/Sympa/ListDef.pm:670
+#: src/lib/Sympa/ListDef.pm:671
 #, fuzzy
 msgid "A hook on the messages just after archiving"
 msgstr "Αριθμός μηνύματος"
 
-#: src/lib/Sympa/ListDef.pm:690
+#: src/lib/Sympa/ListDef.pm:691
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr "Η παράμετρος συνδρομής ορίζει τους κανόνες συνδρομής στη λίστα."
 
-#: src/lib/Sympa/ListDef.pm:700
+#: src/lib/Sympa/ListDef.pm:701
 msgid "Privilege for adding (ADD command) a subscriber to the list"
 msgstr "Προνόμιο για την προσθήκη (εντολή ADD) ενός συνδρομητή στη λίστα"
 
-#: src/lib/Sympa/ListDef.pm:709
+#: src/lib/Sympa/ListDef.pm:710
 msgid ""
 "This parameter specifies the unsubscription method for the list. Use "
 "open_notify or auth_notify to allow owner notification of each unsubscribe "
 "command."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:733
+#: src/lib/Sympa/ListDef.pm:734
 msgid "This parameter specifies who is authorized to use the remind command."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:742
+#: src/lib/Sympa/ListDef.pm:743
 msgid ""
 "This parameter specifies who can access the list of members. Since "
 "subscriber addresses can be abused by spammers, it is strongly recommended "
 "that you only authorize owners or subscribers to access the subscriber list. "
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:752
+#: src/lib/Sympa/ListDef.pm:753
 msgid "Restrict list ownership to addresses in the specified domains."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:765
+#: src/lib/Sympa/ListDef.pm:766
 msgid ""
 "Require list ownership by a minimum number of addresses in the specified "
 "domains."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:777
+#: src/lib/Sympa/ListDef.pm:778
 msgid ""
 "This paragraph defines read and edit access to the shared document "
 "repository."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:903
+#: src/lib/Sympa/ListDef.pm:904
 #, fuzzy
 msgid ""
 "Idem spam_protection is provided but it can be used only for web archives. "
@@ -3971,53 +3965,53 @@ msgstr ""
 "στο Αρχείο. Η δυνατότητα αυτή εμποδίζει όλα τα robot, συμπεριλαμβανομένου "
 "και του google."
 
-#: src/lib/Sympa/ListDef.pm:921 src/lib/Sympa/ListDef.pm:931
+#: src/lib/Sympa/ListDef.pm:922 src/lib/Sympa/ListDef.pm:932
 msgid "%"
 msgstr "%"
 
-#: src/lib/Sympa/ListDef.pm:944
+#: src/lib/Sympa/ListDef.pm:945
 msgid "Level 1 is the lower level of bouncing users"
 msgstr "\tΕπίπεδο 1 είναι το κατώτερο επίπεδο bouncing χρηστών."
 
-#: src/lib/Sympa/ListDef.pm:951 src/lib/Sympa/ListDef.pm:988
+#: src/lib/Sympa/ListDef.pm:952 src/lib/Sympa/ListDef.pm:989
 msgid "points"
 msgstr "πόντοι"
 
-#: src/lib/Sympa/ListDef.pm:960
+#: src/lib/Sympa/ListDef.pm:961
 msgid ""
 "This parameter defines which task is automaticaly applied on level 1 "
 "bouncers."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:969
+#: src/lib/Sympa/ListDef.pm:970
 msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
 "can be send to listowner or listmaster."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:981
+#: src/lib/Sympa/ListDef.pm:982
 msgid "Level 2 is the highest level of bouncing users"
 msgstr "\tΕπίπεδο 2 είναι το ανώτερο επίπεδο bouncing χρηστών."
 
-#: src/lib/Sympa/ListDef.pm:997
+#: src/lib/Sympa/ListDef.pm:998
 msgid ""
 "This parameter defines which task is automaticaly applied on level 2 "
 "bouncers."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1006
+#: src/lib/Sympa/ListDef.pm:1007
 msgid ""
 "When automatic task is executed on level 2 bouncers, a notification email "
 "can be send to listowner or listmaster."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1119
+#: src/lib/Sympa/ListDef.pm:1120
 msgid ""
 "Include subscribers from this file.  The file should contain one e-mail "
 "address per line (lines beginning with a \"#\" are ignored)."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1174
+#: src/lib/Sympa/ListDef.pm:1175
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
 "subscribers of the current list. You may include as many lists as required, "
@@ -4028,12 +4022,12 @@ msgid ""
 "infinite loop."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1244
+#: src/lib/Sympa/ListDef.pm:1245
 #, fuzzy
 msgid "Users included from parameterizable data sources"
 msgstr "Ιδιοκτήτες ορισμένοι σε εξωτερική πηγή δεδομένων"
 
-#: src/lib/Sympa/ListDef.pm:1267
+#: src/lib/Sympa/ListDef.pm:1268
 #, fuzzy
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
@@ -4044,35 +4038,35 @@ msgstr ""
 "user_data_source έχει τεθεί ως include. Το χαρακτηριστικό αυτό απαιτεί το "
 "τμήμα PERL Net::LDAP (perlldap)."
 
-#: src/lib/Sympa/ListDef.pm:1290 src/lib/Sympa/ListDef.pm:1416
-#: src/lib/Sympa/ListDef.pm:1732 src/lib/Sympa/ListDef.pm:1862
+#: src/lib/Sympa/ListDef.pm:1291 src/lib/Sympa/ListDef.pm:1417
+#: src/lib/Sympa/ListDef.pm:1733 src/lib/Sympa/ListDef.pm:1863
 msgid "use TLS (formerly SSL)"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:1298 src/lib/Sympa/ListDef.pm:1424
-#: src/lib/Sympa/ListDef.pm:1740 src/lib/Sympa/ListDef.pm:1870
+#: src/lib/Sympa/ListDef.pm:1299 src/lib/Sympa/ListDef.pm:1425
+#: src/lib/Sympa/ListDef.pm:1741 src/lib/Sympa/ListDef.pm:1871
 msgid "use SSL (LDAPS)"
 msgstr "χρήση SSL (LDAPS)"
 
-#: src/lib/Sympa/ListDef.pm:1305 src/lib/Sympa/ListDef.pm:1431
-#: src/lib/Sympa/ListDef.pm:1747 src/lib/Sympa/ListDef.pm:1877
+#: src/lib/Sympa/ListDef.pm:1306 src/lib/Sympa/ListDef.pm:1432
+#: src/lib/Sympa/ListDef.pm:1748 src/lib/Sympa/ListDef.pm:1878
 #, fuzzy
 msgid "SSL version"
 msgstr "συμπερίληψη ερωτήματος SQL"
 
-#: src/lib/Sympa/ListDef.pm:1313 src/lib/Sympa/ListDef.pm:1439
-#: src/lib/Sympa/ListDef.pm:1755 src/lib/Sympa/ListDef.pm:1885
+#: src/lib/Sympa/ListDef.pm:1314 src/lib/Sympa/ListDef.pm:1440
+#: src/lib/Sympa/ListDef.pm:1756 src/lib/Sympa/ListDef.pm:1886
 #, fuzzy
 msgid "SSL ciphers used"
 msgstr "Μέγεθος κλειδιού κρυπτογράφησης"
 
-#: src/lib/Sympa/ListDef.pm:1319 src/lib/Sympa/ListDef.pm:1445
-#: src/lib/Sympa/ListDef.pm:1761 src/lib/Sympa/ListDef.pm:1891
+#: src/lib/Sympa/ListDef.pm:1320 src/lib/Sympa/ListDef.pm:1446
+#: src/lib/Sympa/ListDef.pm:1762 src/lib/Sympa/ListDef.pm:1892
 #, fuzzy
 msgid "Certificate verification"
 msgstr "Ημερομηνία λήξης πιστοποιητικού"
 
-#: src/lib/Sympa/ListDef.pm:1393
+#: src/lib/Sympa/ListDef.pm:1394
 #, fuzzy
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
@@ -4087,12 +4081,12 @@ msgstr ""
 "παράμετρος user_data_source έχει τεθεί ως include. Το χαρακτηριστικό αυτό "
 "απαιτεί το τμήμα PERL Net::LDAP (perlldap)."
 
-#: src/lib/Sympa/ListDef.pm:1572
+#: src/lib/Sympa/ListDef.pm:1573
 #, fuzzy
 msgid "This parameter is used to define the SQL query parameters. "
 msgstr "Αυτή η παράμετρος χρησιμοποιείται σε αρχεία mail_tt2"
 
-#: src/lib/Sympa/ListDef.pm:1688
+#: src/lib/Sympa/ListDef.pm:1689
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
@@ -4103,45 +4097,48 @@ msgstr ""
 "μπορεί να οριστεί από το λογισμικό Sympa μέσω της συγκεκριμένης παραμέτρου. "
 "Η προκαθορισμένη τιμή είναι 3600"
 
-#: src/lib/Sympa/ListDef.pm:2124
+#: src/lib/Sympa/ListDef.pm:2125
 msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2148
+#: src/lib/Sympa/ListDef.pm:2149
 msgid "List of headers to be included into the message for signature"
 msgstr "Κατάλογος κεφαλίδων που θα προστεθούν στο μήνυμα για υπογραφή"
 
-#: src/lib/Sympa/ListDef.pm:2150
+#: src/lib/Sympa/ListDef.pm:2151
 msgid ""
 "You should probably use the default value which is the value recommended by "
 "RFC4871"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2159
+#: src/lib/Sympa/ListDef.pm:2160
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 "DKIM \"d=\" ετικέτα, πιθανότατα θα πρέπει να χρησιμοποιήσετε την "
 "προεπιλεγμένη τιμή"
 
-#: src/lib/Sympa/ListDef.pm:2161
+#: src/lib/Sympa/ListDef.pm:2162
+#, fuzzy
 msgid ""
-"The DKIM \"d=\" tag, is the domain of the signing entity. the list domain "
+"The DKIM \"d=\" tag, is the domain of the signing entity. The list domain "
 "MUST be included in the \"d=\" domain"
 msgstr ""
+"Όπως ορίζεται στο rfc 4871, η προεπιλεγμένη τιμή της ετικέτας \"d=\" είναι "
+"το όνομα του τομέα του εικονικού εξυπηρετητή"
 
-#: src/lib/Sympa/ListDef.pm:2169
+#: src/lib/Sympa/ListDef.pm:2170
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr ""
 "DKIM \"i=\" ετικέτα, πιθανότατα θα πρέπει να αφήσετε αυτή τη παράμετρο κενή"
 
-#: src/lib/Sympa/ListDef.pm:2171
+#: src/lib/Sympa/ListDef.pm:2172
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
 "by RFC 4871, default for list brodcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2218
+#: src/lib/Sympa/ListDef.pm:2219
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular expression"
 "\" (domain_regex) matches the specified Domain regular expression; \"DKIM "
@@ -4151,25 +4148,25 @@ msgid ""
 "messages."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2225
+#: src/lib/Sympa/ListDef.pm:2226
 #, fuzzy
 msgid "Regular expression match pattern for From domain"
 msgstr "Regexp που εφαρμόζεται για αποτροπή βρόχων με εξυπηρετητές"
 
-#: src/lib/Sympa/ListDef.pm:2234
+#: src/lib/Sympa/ListDef.pm:2235
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
 "preserves the original sender details in the From address phrase."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2250
+#: src/lib/Sympa/ListDef.pm:2251
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2286
+#: src/lib/Sympa/ListDef.pm:2287
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -4177,32 +4174,32 @@ msgid ""
 "only taken into account when the owner has the auth parameter."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2300
+#: src/lib/Sympa/ListDef.pm:2301
 #, fuzzy
 msgid "var name"
 msgstr "Όνομα σεναρίου"
 
-#: src/lib/Sympa/ListDef.pm:2306
+#: src/lib/Sympa/ListDef.pm:2307
 #, fuzzy
 msgid "var value"
 msgstr "Προκαθορισμένη τιμή"
 
-#: src/lib/Sympa/ListDef.pm:2326
+#: src/lib/Sympa/ListDef.pm:2327
 msgid "Latest family instantiation"
 msgstr "τελευταία εγκατάσταση οικογένειας"
 
-#: src/lib/Sympa/ListDef.pm:2330
+#: src/lib/Sympa/ListDef.pm:2331
 msgid "who ran the instantiation"
 msgstr "ποιος έκανε την εγκατάσταση"
 
-#: src/lib/Sympa/ListDef.pm:2377
+#: src/lib/Sympa/ListDef.pm:2378
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
 "subscriptions."
 msgstr ""
 
-#: src/lib/Sympa/ListDef.pm:2430
+#: src/lib/Sympa/ListDef.pm:2431
 msgid "who updated the config"
 msgstr "ποιος ενημέρωσε την διαμόρφωση"
 
@@ -4712,11 +4709,11 @@ msgstr "Κλειστή λίστα"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:10022 src/cgi/wwsympa.fcgi.in:1201
-#: src/cgi/wwsympa.fcgi.in:2824 src/cgi/wwsympa.fcgi.in:3100
-#: src/cgi/wwsympa.fcgi.in:3124 src/cgi/wwsympa.fcgi.in:3282
-#: src/cgi/wwsympa.fcgi.in:6130 src/cgi/wwsympa.fcgi.in:6133
-#: src/cgi/wwsympa.fcgi.in:9065 src/lib/Sympa/ListOpt.pm:302
+#: src/cgi/wwsympa.fcgi.in:10011 src/cgi/wwsympa.fcgi.in:1200
+#: src/cgi/wwsympa.fcgi.in:2831 src/cgi/wwsympa.fcgi.in:3107
+#: src/cgi/wwsympa.fcgi.in:3131 src/cgi/wwsympa.fcgi.in:3289
+#: src/cgi/wwsympa.fcgi.in:6117 src/cgi/wwsympa.fcgi.in:6120
+#: src/cgi/wwsympa.fcgi.in:9054 src/lib/Sympa/ListOpt.pm:302
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
@@ -5162,60 +5159,60 @@ msgid ""
 "it can also build mailing lists with LDAP-extracted members."
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:354
+#: src/lib/Sympa/ModDef.pm:356
 msgid ""
 "this is required if you set \"list_check_smtp\" sympa.conf parameter, used "
 "to check existing aliases before mailing list creation."
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:362
+#: src/lib/Sympa/ModDef.pm:364
 msgid ""
 "required if you want to run the Sympa SOAP server that provides mailing list "
 "services via a \"web service\""
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:368
+#: src/lib/Sympa/ModDef.pm:370
 msgid "used to record system log via syslog"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:375
+#: src/lib/Sympa/ModDef.pm:377
 msgid ""
 "Sympa template format, used for web pages and other mail, config file "
 "templates. See http://template-toolkit.org/."
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:381
+#: src/lib/Sympa/ModDef.pm:383
 msgid "used to show progress bar by command line utilities"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:388
+#: src/lib/Sympa/ModDef.pm:390
 msgid ""
 "used to fold lines in HTML mail composer and system messages, prior to Text::"
 "Wrap"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:394
+#: src/lib/Sympa/ModDef.pm:396
 msgid "used to get time with sub-second precision"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:401
+#: src/lib/Sympa/ModDef.pm:403
 msgid "Normalizes file names represented by Unicode"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:408
+#: src/lib/Sympa/ModDef.pm:410
 msgid "Used to create URI containing non URI-canonical characters."
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:412
+#: src/lib/Sympa/ModDef.pm:414
 msgid "libxml2-devel is needed to build the Perl code"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:416
+#: src/lib/Sympa/ModDef.pm:418
 msgid ""
 "used to parse list configuration templates and instanciate list families"
 msgstr ""
 
-#: src/lib/Sympa/ModDef.pm:424
+#: src/lib/Sympa/ModDef.pm:426
 msgid "used to compute case-folding search keys"
 msgstr ""
 
@@ -5277,18 +5274,18 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: default/web_tt2/suboptions.tt2:11 default/web_tt2/suboptions.tt2:86
 #: default/web_tt2/suboptions.tt2:9 default/web_tt2/suboptions.tt2:90
-#: src/cgi/wwsympa.fcgi.in:10163 src/cgi/wwsympa.fcgi.in:10166
-#: src/cgi/wwsympa.fcgi.in:14176 src/cgi/wwsympa.fcgi.in:14180
-#: src/cgi/wwsympa.fcgi.in:15369 src/cgi/wwsympa.fcgi.in:15460
-#: src/cgi/wwsympa.fcgi.in:15562 src/cgi/wwsympa.fcgi.in:16752
-#: src/cgi/wwsympa.fcgi.in:16754 src/cgi/wwsympa.fcgi.in:4897
-#: src/cgi/wwsympa.fcgi.in:4965 src/cgi/wwsympa.fcgi.in:8717
-#: src/cgi/wwsympa.fcgi.in:9444 src/cgi/wwsympa.fcgi.in:9492
-#: src/cgi/wwsympa.fcgi.in:9808 src/cgi/wwsympa.fcgi.in:9811
-#: src/cgi/wwsympa.fcgi.in:9838 src/cgi/wwsympa.fcgi.in:9841
-#: src/cgi/wwsympa.fcgi.in:9874 src/cgi/wwsympa.fcgi.in:9876
-#: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:106
-#: src/lib/Sympa/Message/Template.pm:96 src/lib/Sympa/Message/Template.pm:99
+#: src/cgi/wwsympa.fcgi.in:10152 src/cgi/wwsympa.fcgi.in:10155
+#: src/cgi/wwsympa.fcgi.in:14172 src/cgi/wwsympa.fcgi.in:14176
+#: src/cgi/wwsympa.fcgi.in:15368 src/cgi/wwsympa.fcgi.in:15459
+#: src/cgi/wwsympa.fcgi.in:15561 src/cgi/wwsympa.fcgi.in:16751
+#: src/cgi/wwsympa.fcgi.in:16753 src/cgi/wwsympa.fcgi.in:4906
+#: src/cgi/wwsympa.fcgi.in:4974 src/cgi/wwsympa.fcgi.in:8706
+#: src/cgi/wwsympa.fcgi.in:9433 src/cgi/wwsympa.fcgi.in:9481
+#: src/cgi/wwsympa.fcgi.in:9797 src/cgi/wwsympa.fcgi.in:9800
+#: src/cgi/wwsympa.fcgi.in:9827 src/cgi/wwsympa.fcgi.in:9830
+#: src/cgi/wwsympa.fcgi.in:9863 src/cgi/wwsympa.fcgi.in:9865
+#: src/lib/Sympa/Aliases/Template.pm:53 src/lib/Sympa/Message/Template.pm:102
+#: src/lib/Sympa/Message/Template.pm:109 src/lib/Sympa/Message/Template.pm:99
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
@@ -5317,7 +5314,7 @@ msgstr "Πίνακας περιεχομένων:"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:7258 src/cgi/wwsympa.fcgi.in:8005
+#: src/cgi/wwsympa.fcgi.in:7245 src/cgi/wwsympa.fcgi.in:7992
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5361,8 +5358,8 @@ msgstr ""
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16026
-#: src/lib/Sympa/WWW/SharedDocument.pm:343
+#: default/web_tt2/viewlogs.tt2:83 src/cgi/wwsympa.fcgi.in:16025
+#: src/lib/Sympa/WWW/SharedDocument.pm:348
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5513,76 +5510,76 @@ msgstr "Αρχείο της λίστας %1, έγγραφο %2"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:1203
+#: src/cgi/wwsympa.fcgi.in:1202
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4359
+#: src/cgi/wwsympa.fcgi.in:4366
 #, fuzzy
 msgid "Your lists"
 msgstr "Οι λίστες μου"
 
-#: src/cgi/wwsympa.fcgi.in:12552 src/cgi/wwsympa.fcgi.in:13024
+#: src/cgi/wwsympa.fcgi.in:12542 src/cgi/wwsympa.fcgi.in:13014
 #, fuzzy
 msgid "New file"
 msgstr "αρχείο βοήθειας"
 
-#: src/cgi/wwsympa.fcgi.in:12556
+#: src/cgi/wwsympa.fcgi.in:12546
 #, fuzzy
 msgid "New directory"
 msgstr "Κατάλογος"
 
-#: src/cgi/wwsympa.fcgi.in:13030
+#: src/cgi/wwsympa.fcgi.in:13020
 #, fuzzy
 msgid "New bookmark"
 msgstr "Προσθήκη σελιδοδείκτη"
 
-#: src/cgi/wwsympa.fcgi.in:15543
+#: src/cgi/wwsympa.fcgi.in:15542
 msgid "Mail sending"
 msgstr "Αποστολή μηνύματος"
 
-#: src/cgi/wwsympa.fcgi.in:15545
+#: src/cgi/wwsympa.fcgi.in:15544
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Περίληψη συνδρομής"
 
-#: src/cgi/wwsympa.fcgi.in:15546
+#: src/cgi/wwsympa.fcgi.in:15545
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Εκκρεμείς εγγραφές συνδρομητών"
 
-#: src/cgi/wwsympa.fcgi.in:15547
+#: src/cgi/wwsympa.fcgi.in:15546
 msgid "Users deleted by admin"
 msgstr "Χρήστες διαγραμμένοι από διαχειριστή"
 
-#: src/cgi/wwsympa.fcgi.in:15549
+#: src/cgi/wwsympa.fcgi.in:15548
 #, fuzzy
 msgid "Users deleted automatically"
 msgstr "Χρήστες διαγραμμένοι από διαχειριστή"
 
-#: src/cgi/wwsympa.fcgi.in:15550
+#: src/cgi/wwsympa.fcgi.in:15549
 msgid "File uploading"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15551
+#: src/cgi/wwsympa.fcgi.in:15550
 #, fuzzy
 msgid "File creation"
 msgstr "Συμπερίληψη αρχείου"
 
-#: src/cgi/wwsympa.fcgi.in:15552
+#: src/cgi/wwsympa.fcgi.in:15551
 #, fuzzy
 msgid "Directory creation"
 msgstr "Το αρχείο %1 βρίσκεται σε αναμονή συντονισμού"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/cgi/wwsympa.fcgi.in:16008 src/cgi/wwsympa.fcgi.in:16010
+#: src/cgi/wwsympa.fcgi.in:16007 src/cgi/wwsympa.fcgi.in:16009
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 
 #. This entry is a sprintf format
 #. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html
-#: src/cgi/wwsympa.fcgi.in:16761
+#: src/cgi/wwsympa.fcgi.in:16760
 #, fuzzy
 msgid "topic (%s)"
 msgstr "θέματα"
@@ -5787,7 +5784,7 @@ msgstr "Αρχείο λιστών"
 #: default/web_tt2/compose_mail.tt2:7
 #: default/web_tt2/create_list_request.tt2:6 default/web_tt2/d_control.tt2:2
 #: default/web_tt2/d_editfile.tt2:2 default/web_tt2/d_properties.tt2:2
-#: default/web_tt2/d_read.tt2:181 default/web_tt2/d_read.tt2:186
+#: default/web_tt2/d_read.tt2:181 default/web_tt2/d_read.tt2:187
 #: default/web_tt2/d_read.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/edit_list_request.tt2:6 default/web_tt2/editfile.tt2:4
 #: default/web_tt2/editsubscriber.tt2:58 default/web_tt2/latest_d_read.tt2:31
@@ -6296,7 +6293,7 @@ msgstr "Επιθυμείτε τη διαγραφή των επιλεγμένων
 
 #: default/web_tt2/confirm_action.tt2:41 default/web_tt2/confirm_action.tt2:77
 #: default/web_tt2/confirm_action.tt2:91 default/web_tt2/review.tt2:125
-#: default/web_tt2/reviewbouncing.tt2:151
+#: default/web_tt2/reviewbouncing.tt2:159
 msgid "Delete selected email addresses"
 msgstr "Διαγραφή επιλεγμένων διευθύνσεων"
 
@@ -6827,7 +6824,7 @@ msgstr "Διάκριση πεζών-κεφαλαίων:"
 
 #: default/web_tt2/d_control.tt2:51 default/web_tt2/d_control.tt2:54
 #: default/web_tt2/d_editfile.tt2:45 default/web_tt2/d_properties.tt2:57
-#: default/web_tt2/d_properties.tt2:60 default/web_tt2/d_read.tt2:256
+#: default/web_tt2/d_properties.tt2:60 default/web_tt2/d_read.tt2:260
 #: default/web_tt2/ls_templates.tt2:129 default/web_tt2/ls_templates.tt2:154
 #: default/web_tt2/ls_templates.tt2:179 default/web_tt2/search_user.tt2:66
 msgid "edit"
@@ -6835,20 +6832,20 @@ msgstr "επεξεργασία"
 
 #: default/web_tt2/d_control.tt2:60 default/web_tt2/d_editfile.tt2:50
 #: default/web_tt2/d_properties.tt2:66 default/web_tt2/d_read.tt2:134
-#: default/web_tt2/d_read.tt2:259 default/web_tt2/d_read.tt2:48
+#: default/web_tt2/d_read.tt2:263 default/web_tt2/d_read.tt2:48
 #: default/web_tt2/search_user.tt2:55
 msgid "delete"
 msgstr "διαγραφή"
 
 #: default/web_tt2/d_control.tt2:64 default/web_tt2/d_editfile.tt2:55
 #: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:143
-#: default/web_tt2/d_read.tt2:267 default/web_tt2/d_read.tt2:53
+#: default/web_tt2/d_read.tt2:271 default/web_tt2/d_read.tt2:53
 msgid "access"
 msgstr "πρόσβαση"
 
 #: default/web_tt2/d_control.tt2:69 default/web_tt2/d_editfile.tt2:60
 #: default/web_tt2/d_properties.tt2:75 default/web_tt2/d_read.tt2:152
-#: default/web_tt2/d_read.tt2:275 default/web_tt2/d_read.tt2:58
+#: default/web_tt2/d_read.tt2:279 default/web_tt2/d_read.tt2:58
 msgid "properties"
 msgstr "ιδιότητες"
 
@@ -6898,7 +6895,7 @@ msgid "Replace the file %1 with your file"
 msgstr "Αντικατάσταση του αρχείου %1 με το αρχείο σας"
 
 #: default/web_tt2/d_editfile.tt2:107 default/web_tt2/d_editfile.tt2:82
-#: default/web_tt2/d_read.tt2:353 default/web_tt2/d_read.tt2:371
+#: default/web_tt2/d_read.tt2:357 default/web_tt2/d_read.tt2:375
 msgid "Publish"
 msgstr "Έκδοση"
 
@@ -6994,76 +6991,76 @@ msgstr "Τελευταία ενημέρωση"
 msgid "Actions"
 msgstr "Ενέργεια"
 
-#: default/web_tt2/d_read.tt2:123 default/web_tt2/d_read.tt2:215
+#: default/web_tt2/d_read.tt2:123 default/web_tt2/d_read.tt2:219
 #: default/web_tt2/editsubscriber.tt2:107 default/web_tt2/latest_d_read.tt2:46
 msgid "Unknown"
 msgstr "Άγνωστο"
 
-#: default/web_tt2/d_read.tt2:208
+#: default/web_tt2/d_read.tt2:212
 msgid "to moderate"
 msgstr "για συντονισμό"
 
-#: default/web_tt2/d_read.tt2:245
+#: default/web_tt2/d_read.tt2:249
 msgid "moderate"
 msgstr "συντονισμός"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:297
+#: default/web_tt2/d_read.tt2:301
 msgid "Create a new folder inside folder %1"
 msgstr "Δημιουργία νέου φάκελου στον φάκελο %1"
 
-#: default/web_tt2/d_read.tt2:299
+#: default/web_tt2/d_read.tt2:303
 msgid "Create a new folder inside root folder"
 msgstr "Δημιουργία νέου καταλόγου στον κατάλογο ρίζας"
 
-#: default/web_tt2/d_read.tt2:302
+#: default/web_tt2/d_read.tt2:306
 msgid "Folder name"
 msgstr "Όνομα φακέλου"
 
-#: default/web_tt2/d_read.tt2:303 default/web_tt2/d_read.tt2:317
+#: default/web_tt2/d_read.tt2:307 default/web_tt2/d_read.tt2:321
 msgid "Create"
 msgstr "Δημιουργία"
 
-#: default/web_tt2/d_read.tt2:315
+#: default/web_tt2/d_read.tt2:319
 msgid "Create a new file"
 msgstr "Δημιουργία νέου αρχείου"
 
-#: default/web_tt2/d_read.tt2:316
+#: default/web_tt2/d_read.tt2:320
 msgid "File name"
 msgstr "Όνομα αρχείου"
 
-#: default/web_tt2/d_read.tt2:328
+#: default/web_tt2/d_read.tt2:332
 msgid "Add a bookmark"
 msgstr "Προσθήκη σελιδοδείκτη"
 
-#: default/web_tt2/d_read.tt2:329
+#: default/web_tt2/d_read.tt2:333
 #: ext/VOOT/lib/Sympa/VOOT/tt2/select_voot_groups_request.tt2:19
 msgid "title"
 msgstr "τίτλος"
 
-#: default/web_tt2/d_read.tt2:332
+#: default/web_tt2/d_read.tt2:336
 msgid "URL"
 msgstr " URL"
 
-#: default/web_tt2/d_read.tt2:333 default/web_tt2/review.tt2:58
+#: default/web_tt2/d_read.tt2:337 default/web_tt2/review.tt2:58
 msgid "Add"
 msgstr "Προσθήκη"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:347
+#: default/web_tt2/d_read.tt2:351
 msgid "Upload a file inside folder %1"
 msgstr "Ανέβασμα αρχείου στον κατάλογο %1"
 
-#: default/web_tt2/d_read.tt2:349
+#: default/web_tt2/d_read.tt2:353
 msgid "Upload a file inside folder SHARED"
 msgstr "Ανεβάστε ένα αρχείο στο ΚΟΙΝΟΧΡΟΙΣΤΟ φάκελο"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:365
+#: default/web_tt2/d_read.tt2:369
 msgid "Unzip a file inside the folder %1"
 msgstr "Αποσυμπίεση αρχείου μέσα στον φάκελο %1"
 
-#: default/web_tt2/d_read.tt2:367
+#: default/web_tt2/d_read.tt2:371
 msgid "Unzip a file inside the folder SHARED"
 msgstr "αποσυμπίεση αρχείου στο ΚΟΙΝΟΧΡΗΣΤΟ φάκελο"
 
@@ -7113,8 +7110,8 @@ msgstr "Κατάλογος διαμοιραζόμενων εγγράφων πρ�
 #: default/web_tt2/get_closed_lists.tt2:15
 #: default/web_tt2/get_closed_lists.tt2:37 default/web_tt2/modindex.tt2:109
 #: default/web_tt2/modindex.tt2:34 default/web_tt2/review.tt2:121
-#: default/web_tt2/reviewbouncing.tt2:162
-#: default/web_tt2/reviewbouncing.tt2:83 default/web_tt2/show_exclude.tt2:20
+#: default/web_tt2/reviewbouncing.tt2:170
+#: default/web_tt2/reviewbouncing.tt2:87 default/web_tt2/show_exclude.tt2:20
 #: default/web_tt2/show_exclude.tt2:46 default/web_tt2/sigindex.tt2:14
 #: default/web_tt2/sigindex.tt2:56 default/web_tt2/subindex.tt2:14
 #: default/web_tt2/subindex.tt2:63 default/web_tt2/subscriber_table.tt2:12
@@ -7382,7 +7379,7 @@ msgstr ""
 #: default/web_tt2/editfile.tt2:87
 msgid ""
 "Deletion message: This message is sent to users when you remove them from "
-"the list using the DEL command (unless you select the Quiet option."
+"the list using the DEL command (unless you select the Quiet option)."
 msgstr ""
 "Μήνυμα διαγραφής: Το μήνυμα αυτό θα αποσταλεί στους χρήστες όταν θα τους "
 "διαγράψετε από τη λίστα με τη χρήση της εντολής DEL (εκτός και επιλέξετε το "
@@ -7545,12 +7542,18 @@ msgstr ""
 #. (family)
 #: default/web_tt2/family_signoff_request.tt2:3
 msgid ""
-"A confirmation was just sent to this address. By clicking the link it "
-"contains, you will be completely unsubscribed from all the lists from family "
-"%1"
+"A confirmation request was just sent to this address. By clicking the link "
+"it contains, you will be completely unsubscribed from all the lists from "
+"family %1"
 msgstr ""
 "Μια επιβεβαίωση έχει σταλεί σε αυτή τη διεύθυνση. Ακολουθώντας τον σύνδεσμο "
 "που περιέχεται, θα διαγραφείτε από όλες τις λίστες της οικογένειας %1"
+
+#. (version)
+#. (conf.version)
+#: default/mail_tt2/helpfile.tt2:61 default/web_tt2/footer.tt2:6
+msgid "Powered by Sympa %1"
+msgstr "Βασισμένο σε Sympa %1"
 
 #: default/web_tt2/get_biggest_lists.tt2:4
 #, fuzzy
@@ -7738,7 +7741,7 @@ msgstr "email2@dom2 Name2"
 msgid "..."
 msgstr "Περισσότερα"
 
-#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:153
+#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:161
 #: default/web_tt2/search_user.tt2:56 default/web_tt2/show_exclude.tt2:52
 msgid "quiet"
 msgstr "αθόρυβα"
@@ -9005,7 +9008,7 @@ msgstr "Εξαίρεση χρηστών"
 msgid "List of exclude"
 msgstr "Κατάλογος εξαιρέσεων"
 
-#: default/web_tt2/review.tt2:141 default/web_tt2/reviewbouncing.tt2:85
+#: default/web_tt2/review.tt2:141 default/web_tt2/reviewbouncing.tt2:89
 #: default/web_tt2/show_exclude.tt2:23 default/web_tt2/sigindex.tt2:16
 #: default/web_tt2/subindex.tt2:16 default/web_tt2/subscriber_table.tt2:19
 #: default/web_tt2/subscriber_table.tt2:22 default/web_tt2/viewlogs.tt2:15
@@ -9027,21 +9030,21 @@ msgstr "Μέγεθος σελίδας"
 msgid "Change"
 msgstr "Άκυρο"
 
-#: default/web_tt2/review.tt2:193 default/web_tt2/reviewbouncing.tt2:139
-#: default/web_tt2/reviewbouncing.tt2:63 default/web_tt2/viewlogs.tt2:258
+#: default/web_tt2/review.tt2:194 default/web_tt2/reviewbouncing.tt2:144
+#: default/web_tt2/reviewbouncing.tt2:64 default/web_tt2/viewlogs.tt2:259
 msgid "Previous page"
 msgstr "Προηγούμενη σελίδα"
 
 #. (page,total_page)
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc-ressources.tt2:187 default/mhonarc-ressources.tt2:301
-#: default/web_tt2/review.tt2:196 default/web_tt2/reviewbouncing.tt2:142
-#: default/web_tt2/reviewbouncing.tt2:66 default/web_tt2/viewlogs.tt2:261
+#: default/web_tt2/review.tt2:198 default/web_tt2/reviewbouncing.tt2:148
+#: default/web_tt2/reviewbouncing.tt2:68 default/web_tt2/viewlogs.tt2:263
 msgid "page %1 / %2"
 msgstr "σελίδα %1 / %2"
 
-#: default/web_tt2/review.tt2:199 default/web_tt2/reviewbouncing.tt2:145
-#: default/web_tt2/reviewbouncing.tt2:69 default/web_tt2/viewlogs.tt2:264
+#: default/web_tt2/review.tt2:202 default/web_tt2/reviewbouncing.tt2:152
+#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:267
 msgid "Next page"
 msgstr "Επόμενη σελίδα"
 
@@ -9061,40 +9064,40 @@ msgstr "Ημερομηνία αρχικοποίησης"
 msgid "Manage bouncing list members"
 msgstr "Διαχείριση bouncing συνδρομητών"
 
-#: default/web_tt2/reviewbouncing.tt2:79
+#: default/web_tt2/reviewbouncing.tt2:83
 msgid "Table to display list bounces"
 msgstr "Πίνακας προβολής bounces λίστας"
 
-#: default/web_tt2/reviewbouncing.tt2:86
+#: default/web_tt2/reviewbouncing.tt2:90
 msgid "Bounce score"
 msgstr "Δείκτης Bounce"
 
-#: default/web_tt2/reviewbouncing.tt2:87
+#: default/web_tt2/reviewbouncing.tt2:91
 msgid "Details"
 msgstr "Λεπτομέρειες"
 
-#: default/web_tt2/reviewbouncing.tt2:90
+#: default/web_tt2/reviewbouncing.tt2:94
 #, fuzzy
 msgid "Number of bounces"
 msgstr "# bounces"
 
-#: default/web_tt2/reviewbouncing.tt2:91
+#: default/web_tt2/reviewbouncing.tt2:95
 msgid "First bounce"
 msgstr "Πρώτο Bounce"
 
-#: default/web_tt2/reviewbouncing.tt2:92
+#: default/web_tt2/reviewbouncing.tt2:96
 msgid "Last bounce"
 msgstr "Τελευταίο Bounce"
 
-#: default/web_tt2/reviewbouncing.tt2:119
+#: default/web_tt2/reviewbouncing.tt2:123
 msgid "no score"
 msgstr "χωρίς δείκτη"
 
-#: default/web_tt2/reviewbouncing.tt2:157
+#: default/web_tt2/reviewbouncing.tt2:165
 msgid "Reset errors for selected users"
 msgstr "Επαναφορά σφαλμάτων επιλεγμένων χρηστών"
 
-#: default/web_tt2/reviewbouncing.tt2:166
+#: default/web_tt2/reviewbouncing.tt2:174
 #, fuzzy
 msgid "No bouncing members"
 msgstr "Διαχείριση bouncing συνδρομητών"
@@ -9161,7 +9164,7 @@ msgstr "Τα %1 πιο πρόσφατα διαμοιραζόμενα έγγρα�
 msgid "Most recent shared documents"
 msgstr "Τα πιο πρόσφατα διαμοιραζόμενα έγγραφα "
 
-#. (l.name,l.host,l.subject,l.msg_count)
+#. (l.name,domain,l.subject,l.msg_count)
 #: default/web_tt2/rss.tt2:76
 msgid "%1@%2 - %3: %4 messages"
 msgstr "%1@%2 - %3 : %4 μηνύματα"
@@ -9427,7 +9430,7 @@ msgstr "Όνομα:"
 #: default/web_tt2/serveradmin.tt2:113
 msgid ""
 "As this option may take a long time to complete, it is recommended (if "
-"possible) to use this option during non-busy times."
+"possible) to use it during non-busy times."
 msgstr ""
 
 #: default/web_tt2/serveradmin.tt2:114
@@ -9478,9 +9481,9 @@ msgstr ""
 #: default/web_tt2/serveradmin.tt2:166
 msgid ""
 "Toggle the dumping of available TT2 variables when rendering web interface "
-"pages.  This may be useful when developing or debugging custom TT2 "
-"templates.  This setting is temporary, applying only for the lifetime of the "
-"web interface fastcgi process."
+"pages. This may be useful when developing or debugging custom TT2 templates. "
+"This setting is temporary, applying only for the lifetime of the web "
+"interface fastcgi process."
 msgstr ""
 
 #: default/web_tt2/serveradmin.tt2:170
@@ -9692,7 +9695,7 @@ msgstr ""
 
 #. (list)
 #: default/web_tt2/signoff.tt2:12
-msgid "You asked to be unsubscribed  from list %1"
+msgid "You asked to be unsubscribed from list %1"
 msgstr "Ζητήσατε την διαγραφή της συνδρομής σας από τη λίστα %1"
 
 #: default/web_tt2/signoff.tt2:13 default/web_tt2/subscribe.tt2:15
@@ -9905,12 +9908,12 @@ msgstr "χρώμα περιγράμματος:"
 
 #: default/web_tt2/skinsedit.tt2:130
 msgid ""
-"background color of list configuration edition navigation edition links."
+"background color of list configuration edition and navigation edition links"
 msgstr ""
 
 #: default/web_tt2/skinsedit.tt2:136
 msgid ""
-"background color of <b>current</b> list configuration edition navigation "
+"background color of <b>current</b> list configuration edition and navigation "
 "edition links."
 msgstr ""
 
@@ -10322,7 +10325,7 @@ msgstr "λόγος"
 #. (ticket_context.status)
 #: default/web_tt2/ticket.tt2:18
 msgid ""
-"The validation link has already been validated from host %1 .If you did not "
+"The validation link has already been validated from host %1. If you did not "
 "perform this validation, please report this confidentiality issue to your "
 "mail services administrator."
 msgstr ""
@@ -10592,7 +10595,7 @@ msgstr "Διαχείριση bouncing συνδρομητών:"
 msgid "Unsubscribed from %1"
 msgstr "Αποχώρηση συνδρομητή από τη λίστα %1"
 
-#. (user.email,list.name,list.host)
+#. (user.email,list.name,domain)
 #: default/mail_tt2/bye.tt2:4 default/mail_tt2/removed.tt2:4
 msgid "Your email address (%1) has been removed from list %2@%3"
 msgstr ""
@@ -10621,7 +10624,7 @@ msgstr "Το θέμα του πιστοποιητικού είναι:"
 msgid "You won't receive the signed messages from your lists."
 msgstr "Δεν θα λαμβάνετε υπογεγραμμένα μηνύματα στη λίστα."
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/mail_tt2/certif_warning.tt2:11
 msgid ""
 "To receive them again, renew your certificate with your certification "
@@ -10710,7 +10713,7 @@ msgstr ""
 msgid "Your document has been installed"
 msgstr "Το έγγραφό σας εγκαταστάθηκε."
 
-#. (filename,list.name,list.host,installed_by)
+#. (filename,list.name,domain,installed_by)
 #: default/mail_tt2/d_install_shared.tt2:5
 msgid "Your document %1 for list %2@%3 has been installed by %4 list editor."
 msgstr ""
@@ -10725,7 +10728,7 @@ msgstr "Ο χώρος απόθεσης των εγγράφων:"
 msgid "Your document has been rejected"
 msgstr "Το έγγραφό σας έχει απορριφθεί."
 
-#. (filename,list.name,list.host,rejected_by)
+#. (filename,list.name,domain,rejected_by)
 #: default/mail_tt2/d_reject_shared.tt2:4
 msgid "Your document %1 for list %2@%3 has been rejected by %4 list editor."
 msgstr ""
@@ -10849,21 +10852,21 @@ msgstr ""
 "Αδυναμία διανομής μηνύματος για τη λίστα '%1' λόγω εσωτερικού σφάλματος "
 "εξυπηρετητή."
 
-#. (list.name,list.host)
+#. (list.name,domain)
 #: default/mail_tt2/delivery_status_notification.tt2:113
 #: default/mail_tt2/delivery_status_notification.tt2:69
 msgid "For further information, please contact %1-request@%2"
 msgstr ""
 "Για περισσότερες πληροφορίες, παρακαλούμε επικοινωνήστε με %1-request@%2"
 
-#. (conf.listmaster_email,conf.host)
+#. (conf.listmaster_email,domain)
 #: default/mail_tt2/delivery_status_notification.tt2:126
 #: default/mail_tt2/delivery_status_notification.tt2:74
 #: default/mail_tt2/list_unknown.tt2:21
 msgid "For further information, please contact %1@%2"
 msgstr "Για περισσότερες πληροφορίες, επικοινωνήστε με %1@%2"
 
-#. (list.name,"${conf.email}@${conf.host}",list.host,cmd)
+#. (list.name,"${conf.email}@${domain}",domain,cmd)
 #: default/mail_tt2/delivery_status_notification.tt2:85
 #, fuzzy
 msgid ""
@@ -10991,7 +10994,7 @@ msgstr "%1 Σύνοψη %2"
 msgid "Removed from %1"
 msgstr "Αφαίρεση από τη λίστα %1"
 
-#. (user.email,list.name,list.host)
+#. (user.email,list.name,domain)
 #: default/mail_tt2/expire_deletion.tt2:6
 msgid ""
 "Your address (%1) has been removed from list\n"
@@ -11012,7 +11015,7 @@ msgstr "Μπορείτε να εγγραφείτε πάλι:"
 msgid "resubscription to %1"
 msgstr "επανεγγραφή στην %1"
 
-#. (list.name,list.host,user.email)
+#. (list.name,domain,user.email)
 #: default/mail_tt2/expire_warning1.tt2:4
 #: default/mail_tt2/expire_warning2.tt2:5
 msgid ""
@@ -11070,7 +11073,7 @@ msgstr ""
 "ταχυδρομείου, το οποίο αυτοματοποιεί τις λειτουργίες διαχείρισης όπως τις "
 "συνδρομές, το συντονισμό και τη διαχείριση αρχείου."
 
-#. (conf.sympa)
+#. ("${conf.email}@${domain}")
 #: default/mail_tt2/helpfile.tt2:11
 msgid "All commands must be sent to the electronic address %1"
 msgstr "Όλες οι εντολές πρέπει να αποσταλούν στην ηλεκτρονική διεύθυνση %1"
@@ -11255,9 +11258,9 @@ msgstr ""
 "MODINDEX <list> *Συντονισμός: ανατρέξτε στον κατάλογο των μηνυμάτων προς "
 "συντονισμό"
 
-#: default/mail_tt2/helpfile.tt2:61
-msgid "Powered by Sympa"
-msgstr "Βασισμένο σε Sympa"
+#: default/mail_tt2/helpfile.tt2:11
+msgid "${conf.email}@${domain}"
+msgstr ""
 
 #. (list.name)
 #: default/mail_tt2/index_archive.tt2:1
@@ -11269,7 +11272,7 @@ msgstr "Κατάλογος αρχείου της λίστας %1"
 msgid "INFO %1"
 msgstr "INFO %1"
 
-#. (list.name,list.host)
+#. (list.name,domain)
 #: default/mail_tt2/info_report.tt2:4
 msgid "Information regarding list %1@%2:"
 msgstr "Πληροφορίες λίστας %1@%2:"
@@ -11352,7 +11355,7 @@ msgstr "Η λίστα αυτή είναι για %1 και μάλλον σας �
 msgid "To subscribe, click the following URL:"
 msgstr "Για να γίνετε συνδρομητής απλά κάντε κλικ στον σύνδεσμο:"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/mail_tt2/invite.tt2:14
 #: default/mail_tt2/listowner_notification.tt2:56
 #: default/mail_tt2/listowner_notification.tt2:78
@@ -11372,7 +11375,7 @@ msgstr "Αν δεν επιθυμείτε την εγγραφή ως συνδρο
 msgid "%1 mailing list creation"
 msgstr "%1 δημιουργία λίστας ηλεκτρονικού ταχυδρομείου"
 
-#. (list.name,list.host)
+#. (list.name,domain)
 #: default/mail_tt2/list_created.tt2:4
 msgid "%1@%2 mailing list has been activated by listmaster."
 msgstr ""
@@ -11394,7 +11397,7 @@ msgstr "%1 σελίδα διαχειριστή"
 msgid "Rejected mailing list %1 creation"
 msgstr "%1 δημιουργία λίστας ηλεκτρονικού ταχυδρομείου"
 
-#. (list.name,list.host)
+#. (list.name,domain)
 #: default/mail_tt2/list_rejected.tt2:3
 msgid "%1@%2 mailing list has been rejected by listmaster."
 msgstr ""
@@ -11458,7 +11461,7 @@ msgstr ""
 "%1 \"%2\" επισημασμένες ενημερώσεις προς εσάς είναι επισυναπτόμενες σε αυτό "
 "το μήνυμα"
 
-#. (list.name,list.host,email)
+#. (list.name,domain,email)
 #: default/mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1@%2\" creation request from %3"
 msgstr "Αίτημα δημιουργίας λίστας \"%1@%2\" από %3"
@@ -11707,7 +11710,7 @@ msgid "Sympa could not handle email feedback report."
 msgstr ""
 "Το λογισμικό Sympa δε μπόρεσε να φορτώσει την οικογένεια %2 για τη λίστα %1."
 
-#. (list.name,list.host)
+#. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:174
 #, fuzzy
 msgid "List: %1@%2"
@@ -11760,10 +11763,10 @@ msgstr ""
 "Το λογισμικό Sympa δε μπόρεσε να συμπεριλάβει διαχειριστές από εξωτερικές "
 "πηγές δεδομένων. Η βάση δεδομένων ή ο εξυπηρετητής LDAP δεν ήταν προσβάσιμοι."
 
-#. (e.type,e.name)
+#. (e.name,e.type)
 #: default/mail_tt2/listmaster_notification.tt2:205
 #, fuzzy
-msgid "- Datasource '%2' (type %1)"
+msgid "Include of data source %1 (type %2) failed."
 msgstr "Η εισαγωγή από την πηγή δεδομένων %1 (τύπου %2) απέτυχε."
 
 #: default/mail_tt2/listmaster_notification.tt2:209
@@ -11948,13 +11951,13 @@ msgstr " Ο χρήστης %1 συνάντησε ένα εσωτερικό σφ�
 msgid "The following error occurred while managing bounces: %1"
 msgstr "Το παρακάτω σφάλμα προέκυψε κατά τη διαχείριση bounces: %&"
 
-#. (list.name, list.host)
+#. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:333
 #, fuzzy
 msgid "Listmaster: list %1@%2 at 100 percents error "
 msgstr "Διαχειριστής συστήματος: εσωτερικό σφάλμα εξυπηρετητή "
 
-#. (list.name, list.host)
+#. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:335
 msgid ""
 "The list %1@%2 has 100 percents of its users in error. Something unusual "
@@ -12281,7 +12284,7 @@ msgstr "Αδυναμία προσθήκης αρχείου '%1' στο αρχε�
 
 #. (zipfile)
 #: default/mail_tt2/listmaster_notification.tt2:414
-msgid "Unable to write file zip '%1'."
+msgid "Unable to write zip file '%1'."
 msgstr "Αδυναμία εγγραφής συμπιεσμένου αρχείου '%1'."
 
 #. (zipfile)
@@ -12293,7 +12296,7 @@ msgstr "Δεν βρέθηκε το αρχείο"
 
 #. (path,list.name)
 #: default/mail_tt2/listmaster_notification.tt2:416
-msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
+msgid "Unable to create a Shared Document with path '%1' for list '%2'."
 msgstr ""
 "Αδυναμία δημιουργίας κοινόχρηστου εγγράφου στη διαδρομή '%1' για τη λίστα '%"
 "2'."
@@ -12330,7 +12333,7 @@ msgstr " Ο χρήστης %1 αντιμετώπισε σφάλμα συστήμ
 msgid "List %1 archive quota exceeded"
 msgstr "Υπέρβαση ορίου μεγέθους αρχείου λίστας %1"
 
-#. (list.name,list.host,size,conf.host,conf.listmaster_email)
+#. (list.name,domain,size,domain,conf.listmaster_email)
 #: default/mail_tt2/listowner_notification.tt2:13
 #, fuzzy
 msgid ""
@@ -12349,7 +12352,7 @@ msgstr ""
 msgid "List \"%1\" warning: archive %2% full"
 msgstr "Προειδοποίηση λίστας \"%1\": αρχείο %2% πλήρες"
 
-#. (rate2,list.name,list.host,rate)
+#. (rate2,list.name,domain,rate)
 #: default/mail_tt2/listowner_notification.tt2:18
 msgid "%2@%3 archives use %4% of allowed disk quota."
 msgstr "Το αρχείο %2@%3 χρησιμοποιεί το %4% του επιτρεπτού μεγέθους του δίσκου"
@@ -12359,7 +12362,7 @@ msgstr "Το αρχείο %2@%3 χρησιμοποιεί το %4% του επι�
 msgid "Total size used for %1@%2 Bytes."
 msgstr "Συνολικός χώρος που χρησιμοποιείται για %1@%2 Bytes."
 
-#. (conf.host,conf.listmaster_email)
+#. (domain,conf.listmaster_email)
 #: default/mail_tt2/listowner_notification.tt2:21
 msgid "Messages are still archived but you should contact %2@%1"
 msgstr ""
@@ -12371,7 +12374,7 @@ msgstr ""
 msgid "List %1 is closed"
 msgstr "Η λίστα %1 έχει κλείσει"
 
-#. (list.name,list.host,list.family.name)
+#. (list.name,domain,list.family.name)
 #: default/mail_tt2/listowner_notification.tt2:27
 msgid ""
 "%1@%2 is no longer an instance of family %3.\n"
@@ -12404,7 +12407,7 @@ msgstr ""
 msgid "List \"%1\" customizations have been removed"
 msgstr "Οι προσαρμογές της λίστας \"%1\" έχουν αφαιρεθεί"
 
-#. (list.name,list.host,param0,param1,param2)
+#. (list.name,domain,param0,param1,param2)
 #: default/mail_tt2/listowner_notification.tt2:45
 msgid ""
 "List %1@%2 has been reinstantiated (family %3). \n"
@@ -12545,7 +12548,7 @@ msgstr ""
 msgid "List %1: Failed to load named filter"
 msgstr "Λίστα %1: Αποτυχία αλλαγής της ηλεκτρονικής διεύθυνσης διαχειριστή"
 
-#. (list.name,list.host,filter)
+#. (list.name,domain,filter)
 #: default/mail_tt2/listowner_notification.tt2:136
 msgid ""
 "A named filter for list %1@%2 could not be loaded.  Check the filter "
@@ -12561,7 +12564,7 @@ msgstr "Λίστα %1 / %2"
 msgid "Public lists"
 msgstr "Δημόσιες λίστες"
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/mail_tt2/lists.tt2:3
 msgid "Here is the list of lists from %1@%2"
 msgstr "Η λίστα των λιστών από %1@%2"
@@ -12649,7 +12652,7 @@ msgstr "Τεκμηρίωση για συντονισμό μηνυμάτων:"
 msgid "Moderation spool for list %1"
 msgstr "Ουρά μηνυμάτων προς συντονισμό για τη λίστα %1"
 
-#. (total,list.name,list.host)
+#. (total,list.name,domain)
 #: default/mail_tt2/modindex.tt2:9
 msgid "There are %1 messages to be moderated for list %2@%3"
 msgstr "Υπάρχουν %1 μηνύματα προς συντονισμό για τη λίστα %2@%3"
@@ -12658,7 +12661,7 @@ msgstr "Υπάρχουν %1 μηνύματα προς συντονισμό γι�
 msgid "Your message has been rejected"
 msgstr "Το μήνυμά σας έχει απορριφθεί."
 
-#. (list.name,list.host,rejected_by)
+#. (list.name,domain,rejected_by)
 #: default/mail_tt2/reject.tt2:5
 msgid "Your message for list %1@%2 has been rejected by the moderator (%3)."
 msgstr ""
@@ -12680,7 +12683,7 @@ msgstr "Έλεγχος %1 χρήσης λίστας:"
 msgid "Reminder of your subscription to %1"
 msgstr "Υπενθύμιση της συνδρομής σας στη λίστα %1"
 
-#. (list.name,list.host,user.email,user.password)
+#. (list.name,domain,user.email,user.password)
 #: default/mail_tt2/remind.tt2:5
 #, fuzzy
 msgid ""
@@ -14128,7 +14131,7 @@ msgstr ""
 msgid "REVIEW %1"
 msgstr ""
 
-#. (list.name,list.host)
+#. (list.name,domain)
 #: default/mail_tt2/review.tt2:4
 msgid "Here are the subscribers of %1@%2 mailing list:"
 msgstr "Οι συνδρομητές της λίστας %1@%2:"
@@ -14165,7 +14168,7 @@ msgstr ""
 msgid "%1 / your environment"
 msgstr "%1 / στο περιβάλλον σου"
 
-#. (conf.host)
+#. (domain)
 #: default/mail_tt2/sendpasswd.tt2:7
 #, fuzzy
 msgid ""
@@ -14301,7 +14304,7 @@ msgstr ""
 msgid "Management of list %1"
 msgstr "Διαχείριση της λίστας %1"
 
-#. (delegator,list.name,list.host)
+#. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:29
 #, fuzzy
 msgid ""
@@ -14309,7 +14312,7 @@ msgid ""
 "3."
 msgstr "Σας έχει εκχωρηθεί αρμοδιότητα ιδιοκτήτη της λίστας %2@%3 από τον %1."
 
-#. (delegator,list.name,list.host)
+#. (delegator,list.name,domain)
 #: default/mail_tt2/user_notification.tt2:31
 #, fuzzy
 msgid ""
@@ -14361,7 +14364,7 @@ msgstr ""
 msgid "No valid receipient in list %1"
 msgstr "Ενημέρωση θεμάτων στη λίστα %1"
 
-#. (list.name, conf.listmaster_email, list.domain)
+#. (list.name,conf.listmaster_email,domain)
 #: default/mail_tt2/user_notification.tt2:52
 msgid ""
 "Your message to list %1 could not be delivered. All the subscribers to this "
@@ -14379,7 +14382,7 @@ msgstr ""
 msgid "Welcome to list %1"
 msgstr "Καλώς ήλθατε στη λίστα %1"
 
-#. (list.name,list.host)
+#. (list.name,domain)
 #: default/mail_tt2/welcome.tt2:5
 msgid "Welcome to list %1@%2"
 msgstr "Καλώς ήλθατε στη λίστα %1@%2"
@@ -14409,7 +14412,7 @@ msgstr "Λίστες στις οποίες είστε ιδιοκτήτης:"
 msgid "Lists you are editor of:"
 msgstr "Λίστες στις οποίες είστε συντονιστής:"
 
-#. (list.name,list.host)
+#. (list.name,domain)
 #: default/mail_tt2/x509-user-cert-missing.tt2:3
 msgid "encrypted message for list %1@%2"
 msgstr "κρυπτογραφημένο μήνυμα για τη λίστα %1@%2"
@@ -14433,7 +14436,7 @@ msgstr ""
 "λιστών\n"
 "δεν είχε τη δυνατότητα πρόσβασης στο προσωπικό πιστοποιητικό σας (email %1)."
 
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 #: default/mail_tt2/x509-user-cert-missing.tt2:9
 msgid ""
 "Please, in order to receive future encrypted messages send a signed message "
@@ -14829,7 +14832,7 @@ msgstr "χρειάζεται ταυτοποίηση (στέλνεται ειδο
 
 #: default/scenari/subscribe.auth_notifydkim:1
 msgid ""
-"need authentication unless DKIM signature is OK. (notification is sent to "
+"need authentication unless DKIM signature is OK (notification is sent to "
 "owners)"
 msgstr ""
 "χρειάζεται ταυτοποίηση εκτός αν η DKIM υπογραφή είναι έγκυρη. (στέλνεται "
@@ -15213,6 +15216,51 @@ msgstr "Αδυναμία φόρτωσης καταναλωτή, ίσως η δι
 msgid "Unknown provider."
 msgstr "Άγνωστος παροχέας."
 
+#: src/lib/Sympa/ConfDef.pm:486
+msgid ""
+"Note that \"-f\", \"-N\" and \"-V\" options and recipient addresses need not "
+"included, because they will be included by Sympa."
+msgstr ""
+
+#: src/lib/Sympa/ConfDef.pm:1780
+msgid ""
+"Including subscribers, owners and editors from datasources. Appropriate "
+"database driver (DBD) modules are required: DBD-CSV, DBD-mysql, DBD-ODBC, "
+"DBD-Oracle, DBD-Pg, DBD-SQLite, DBD-Sybase and/or Net-LDAP. And also, if "
+"secure connection (LDAPS) to LDAP server is required: IO-Socket-SSL."
+msgstr ""
+
+#: src/lib/Sympa/ListDef.pm:2161
+msgid ""
+"The DKIM \"d=\" tag, is the domain of the signing entity. the list domain "
+"MUST be included in the \"d=\" domain"
+msgstr ""
+
+#: default/web_tt2/serveradmin.tt2:113
+msgid ""
+"As this option may take a long time to complete, it is recommended (if "
+"possible) to use this option during non-busy times."
+msgstr ""
+
+#: default/web_tt2/serveradmin.tt2:166
+msgid ""
+"Toggle the dumping of available TT2 variables when rendering web interface "
+"pages.  This may be useful when developing or debugging custom TT2 "
+"templates.  This setting is temporary, applying only for the lifetime of the "
+"web interface fastcgi process."
+msgstr ""
+
+#: default/web_tt2/skinsedit.tt2:130
+msgid ""
+"background color of list configuration edition navigation edition links."
+msgstr ""
+
+#: default/web_tt2/skinsedit.tt2:136
+msgid ""
+"background color of <b>current</b> list configuration edition navigation "
+"edition links."
+msgstr ""
+
 #: src/lib/Sympa/ConfDef.pm:847
 msgid ""
 "Defines the families the automatic lists are based on. It is a character "
@@ -15460,6 +15508,71 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:56
 msgid "${conf.email}@${conf.host}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "moderator"
+#~ msgstr "Συντονιστές"
+
+#, fuzzy
+#~ msgid "Delegated since:"
+#~ msgstr "Ημερομηνία εγγραφής:"
+
+#~ msgid "the datasource"
+#~ msgstr "πηγή δεδομένων"
+
+#~ msgid "datasource parameters"
+#~ msgstr "παράμετροι πηγής δεδομένων"
+
+#~ msgid ""
+#~ "Deletion message: This message is sent to users when you remove them from "
+#~ "the list using the DEL command (unless you select the Quiet option."
+#~ msgstr ""
+#~ "Μήνυμα διαγραφής: Το μήνυμα αυτό θα αποσταλεί στους χρήστες όταν θα τους "
+#~ "διαγράψετε από τη λίστα με τη χρήση της εντολής DEL (εκτός και επιλέξετε "
+#~ "το \"αθόρυβα\")."
+
+#~ msgid ""
+#~ "A confirmation was just sent to this address. By clicking the link it "
+#~ "contains, you will be completely unsubscribed from all the lists from "
+#~ "family %1"
+#~ msgstr ""
+#~ "Μια επιβεβαίωση έχει σταλεί σε αυτή τη διεύθυνση. Ακολουθώντας τον "
+#~ "σύνδεσμο που περιέχεται, θα διαγραφείτε από όλες τις λίστες της "
+#~ "οικογένειας %1"
+
+#~ msgid "You asked to be unsubscribed  from list %1"
+#~ msgstr "Ζητήσατε την διαγραφή της συνδρομής σας από τη λίστα %1"
+
+#~ msgid ""
+#~ "The validation link has already been validated from host %1 .If you did "
+#~ "not perform this validation, please report this confidentiality issue to "
+#~ "your mail services administrator."
+#~ msgstr ""
+#~ "Ο σύνδεσμος επιβεβαίωσης έχει ήδη χρησιμοποιηθεί από τον κόμβο %1. Εάν "
+#~ "δεν ήσασταν εσείς, παρακαλώ αναφέρετε αυτό το πρόβλημα εμπιστευτικότητας "
+#~ "στον διαχειριστή της υπηρεσίας ηλεκτρονικής αλληλογραφίας σας."
+
+#~ msgid "Powered by Sympa"
+#~ msgstr "Βασισμένο σε Sympa"
+
+#, fuzzy
+#~ msgid "- Datasource '%2' (type %1)"
+#~ msgstr "Η εισαγωγή από την πηγή δεδομένων %1 (τύπου %2) απέτυχε."
+
+#~ msgid "Unable to write file zip '%1'."
+#~ msgstr "Αδυναμία εγγραφής συμπιεσμένου αρχείου '%1'."
+
+#~ msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
+#~ msgstr ""
+#~ "Αδυναμία δημιουργίας κοινόχρηστου εγγράφου στη διαδρομή '%1' για τη λίστα "
+#~ "'%2'."
+
+#~ msgid ""
+#~ "need authentication unless DKIM signature is OK. (notification is sent to "
+#~ "owners)"
+#~ msgstr ""
+#~ "χρειάζεται ταυτοποίηση εκτός αν η DKIM υπογραφή είναι έγκυρη. (στέλνεται "
+#~ "ειδοποίηση στους ιδιοκτήτες)"
 
 #, fuzzy
 #~ msgid ""
@@ -20118,9 +20231,6 @@ msgstr ""
 #~ msgid "Everything about this list:"
 #~ msgstr "Το σύνολο των πληροφοριών για τη λίστα:"
 
-#~ msgid "Include of datasource %1 (type %2) failed."
-#~ msgstr "Η εισαγωγή από την πηγή δεδομένων %1 (τύπου %2) απέτυχε."
-
 #~ msgid "%1 : action succeeded"
 #~ msgstr "%1 : επιτυχής ενέργεια"
 
@@ -20347,3 +20457,6 @@ msgstr ""
 
 #~ msgid "You are subscribed since"
 #~ msgstr "Είστε συνδρομητής από"
+
+#~ msgid "Include of datasource %1 (type %2) failed."
+#~ msgstr "Η εισαγωγή από την πηγή δεδομένων %1 (τύπου %2) απέτυχε."

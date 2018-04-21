@@ -94,7 +94,7 @@ msgid "To request the creation of a mailing list, do as follows:"
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:19
-#. (path_cgi,conf.host)
+#. (path_cgi)
 msgid "Go to the <strong><a href=\"%1/home\">list environment homepage</a></strong> and <a href=\"%1/help/user#sympa_auth\"><strong>log on</strong></a>."
 msgstr ""
 
@@ -107,7 +107,7 @@ msgid "If this link does not display, it means that you do not have the privileg
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:22
-#. ('',conf.host)
+#. ('',domain)
 msgid "Give your list a <strong>name</strong> (only enter the name without the '@' and the domain name; example: <em class=\"example\">languages_spanish</em> and not <em class=\"example\">languages_spanish@%2</em>)."
 msgstr ""
 
@@ -116,7 +116,7 @@ msgid "Do not use any spaces, accents or specials characters in list names: thos
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:24
-#. ('',conf.host)
+#. ('',domain)
 msgid "Choose an explicit yet short name: think of the subscribers who will have to type this name every time they will send a message to the list! If you manage a set of lists, you can prefix your lists' names with a common prefix; thus they will be sorted together and will be easily recognizable (example: <em class=\"example\">xx-users@%2, xx-hotline@%2</em>, etc.)."
 msgstr ""
 
@@ -413,7 +413,7 @@ msgid "<strong>latest update</strong> of the subscriber options."
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:131
-msgid "By default, each page displays 25&#160;subscribers. You can browse through the pages by using the browsing arrows or display more subscribers on each page. You may also wish to sort subscribers according to different criteria by clicking on the corresponding column header."
+msgid "By default, each page displays 25 subscribers. You can browse through the pages by using the browsing arrows or display more subscribers on each page. You may also wish to sort subscribers according to different criteria by clicking on the corresponding column header."
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:132
@@ -437,7 +437,7 @@ msgid "If you want to subscribe people without letting them know through a notic
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:141
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 msgid "Even though you have the possibility to subscribe people to your mailing lists, it is always <strong>much better that people take the necessary steps to subscribe themselves</strong> to the list. You can also <strong>invite people to subscribe to the list</strong> through the INVITE command: send an email to %1@%2 and type the following command in the message body: <strong>invite nameofthelist emailaddress</strong> (example: <em class=\"example\">invite list_example john.doe(@)fai.com</em>)."
 msgstr ""
 
@@ -536,7 +536,7 @@ msgid "The Sympa software automatically manages bouncing subscribers: according 
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:177
-msgid "To <strong>make addresses stop bouncing</strong>, select them by ticking their boxes and click on the '<strong>Reset errors for selected users</strong>' button. If the error remains, the addresses will be reported as bouncing again as soon as a message is posted on the list."
+msgid "To <strong>make addresses stop being reported as bouncing</strong>, select them by ticking their boxes and click on the '<strong>Reset errors for selected users</strong>' button. If the error remains, the addresses will be reported as bouncing again as soon as a message is posted on the list."
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:178
@@ -606,7 +606,7 @@ msgid "Managing the message archive"
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:206
-msgid "The mailing list management robot Sympa can generate <strong>downloadable compressed archives (.ZIP format) of the messages sent to the list</strong>. To download those archives, <strong>select the months</strong> that interest you in the list and click on the '<strong>Download Zip file</strong>' button."
+msgid "The mailing list management robot Sympa can generate <strong>downloadable compressed archives (.ZIP format) of the messages sent to the list</strong>. To download those archives, <strong>select the months</strong> that interest you in the list and click on the '<strong>Download .zip archive</strong>' button."
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:207
@@ -618,7 +618,7 @@ msgid "You will receive a file of the type '<strong>nameofthelist_archive.zip</s
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:209
-msgid "From the 'Manage archive' page, you can also <strong>delete messages</strong> (deletion month by month and not message by message). To do that, <strong>select the months</strong> that interest you in the list and click on the '<strong>Delete selected months</strong>' button."
+msgid "From the 'Manage archives' page, you can also <strong>delete messages</strong> (deletion month by month and not message by message). To do that, <strong>select the months</strong> that interest you in the list and click on the '<strong>Delete Selected Month(s)</strong>' button."
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:210
@@ -654,7 +654,7 @@ msgid "Choose an <strong>explicit yet short name</strong>: think of the subscrib
 msgstr ""
 
 #: default/web_tt2/help_admin.tt2:221
-#. (conf.host)
+#. (domain)
 msgid "If you manage a set of lists, you can <strong>prefix your lists' names with a common prefix</strong>; thus they will be sorted together and will be easily recognizable (example: <em class=\"example\">xx-users@%1, xx-hotline@%1.fr</em>, etc.)."
 msgstr ""
 
@@ -1211,7 +1211,7 @@ msgid "<strong>If the list is a moderated list, the distribution of the message 
 msgstr ""
 
 #: default/web_tt2/help_faquser.tt2:52
-#. (conf.host)
+#. (domain)
 msgid "<strong>If the list is a moderated list, your message might have been rejected by a moderator</strong>. In case you received no notice, you can possibly send a message to nameofthelist-request@%1 to ask for an explanation."
 msgstr ""
 
@@ -1256,7 +1256,7 @@ msgid "You want to contact list owners"
 msgstr ""
 
 #: default/web_tt2/help_faquser.tt2:72
-#. (conf.host)
+#. (domain)
 msgid "The list owners and moderators' names are mentioned in the left menu. However, you should never write directly to a list owner or moderator: first, the person to whom you are writing might be absent, and furthermore, it is better to inform all owners and moderators of your request. When you have a question or remark, <strong>the address you should write to is: nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of the list)."
 msgstr ""
 
@@ -1992,7 +1992,7 @@ msgid "Even though messages stop being archived, it is naturally still possible 
 msgstr ""
 
 #: default/web_tt2/help_listconfig.tt2:140
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 msgid "It is also possible to <strong>access the list archive by email</strong>, by sending <strong>%1@%2</strong> the following command: <span class=\"commande\"><strong>GET nameofthelist year-month</strong></span> (example: <em class=\"example\">GET list_example 2016-07</em>). Then you receive a compilation of all messages sent during the chosen month. This compilation is sent in plain text and contains <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> tags instead of the original formatting; it also involves full headers for each message. The '<strong>Text archives</strong>' parameter allows you to define:"
 msgstr ""
 
@@ -2098,7 +2098,7 @@ msgid "List of the commands of the Sympa mail interface"
 msgstr ""
 
 #: default/web_tt2/help_mail_commands.tt2:5
-#. (conf.email ,conf.host)
+#. (conf.email,domain)
 msgid "All commands are to be sent at %1@%2."
 msgstr ""
 
@@ -2247,7 +2247,7 @@ msgid "Sending a message with an email client"
 msgstr ""
 
 #: default/web_tt2/help_sendmsg.tt2:7
-#. (conf.host)
+#. (domain)
 msgid "To send a new message, it is very simple: <strong>from your email client or a webmail, send a message to the list address</strong>. This address consists of the list name followed by the suffix '@%1' (example: <em class=\"example\">psycho_cognitive(@)%1</em>)."
 msgstr ""
 
@@ -2423,8 +2423,7 @@ msgid "<strong>The 'Shared documents' section can contain three types of resourc
 msgstr ""
 
 #: default/web_tt2/help_shared.tt2:16
-#. (icons_url)
-msgid "<strong>Folders</strong> are preceded by the icon <img src=\"%1/folder.png\" style=\"border: 0px;\" title=\"Icon of folder\" />."
+msgid "<strong>Folders</strong> are preceded by the icon <i class=\"fa fa-folder\" title=\"Icon of folder\"> </i>."
 msgstr ""
 
 #: default/web_tt2/help_shared.tt2:18
@@ -2440,8 +2439,7 @@ msgid "<strong>Files</strong> are preceded by icons related to each type of file
 msgstr ""
 
 #: default/web_tt2/help_shared.tt2:22
-#. (icons_url)
-msgid "<strong>Bookmarks</strong> are preceded by the icon <img src=\"%1/link.png\" style=\"border: 0px;\" title=\"Icon of bookmark\" />. They consist of <strong>shortcuts providing a single-click access to a particular website</strong>. If you click on a bookmark label, the website linked will open in a new window."
+msgid "<strong>Bookmarks</strong> are preceded by the icon <i class=\"fa fa-link\" title=\"Icon of bookmark\"> </i>. They consist of <strong>shortcuts providing a single-click access to a particular website</strong>. If you click on a bookmark label, the website linked will open in a new window."
 msgstr ""
 
 #: default/web_tt2/help_shared.tt2:25
@@ -2833,7 +2831,7 @@ msgid "<strong>log on to the web environment</strong>;"
 msgstr ""
 
 #: default/web_tt2/help_user.tt2:10
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 msgid "<strong>send commands by email</strong> to the Sympa mailing list manager at <strong>%1@%2</strong>."
 msgstr ""
 
@@ -2887,7 +2885,7 @@ msgid "Of course you can subscribe to the same list with several email addresses
 msgstr ""
 
 #: default/web_tt2/help_user.tt2:31
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 msgid "Send a <strong>message to %1@%2</strong> from the address you want to subscribe to the list."
 msgstr ""
 
@@ -2908,7 +2906,7 @@ msgid "To save some time, you can also send several commands in a single message
 msgstr ""
 
 #: default/web_tt2/help_user.tt2:38
-#. (conf.host)
+#. (domain)
 msgid "<strong>After this, you will receive a message telling you whether your request was accepted or not</strong>: if the subscription to the list is subject to any approval, the list owner may choose not to subscribe you. If so, do not send several other requests: it is useless as the result will remain the same. You can possibly send a message directly to the list owner (nameofthelist-request@%1) to explain why you really want to subscribe to the list..."
 msgstr ""
 
@@ -3001,7 +2999,7 @@ msgid "<strong>To look at a list information page, click on its name</strong>. T
 msgstr ""
 
 #: default/web_tt2/help_user.tt2:74
-msgid "Form this information page, you can:"
+msgid "From this information page, you can:"
 msgstr ""
 
 #: default/web_tt2/help_user.tt2:76
@@ -3050,7 +3048,7 @@ msgid "By default, each page displays 25&#160;subscribers. You can browse throug
 msgstr ""
 
 #: default/web_tt2/help_user.tt2:88
-#. (conf.host)
+#. (domain)
 msgid "<strong>The names of the list owners and moderators are displayed in the left menu</strong>. You should never write directly to a list owner or moderator. If you want to ask a question or make a comment, you should use the following address: <strong>nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of the list in question)."
 msgstr ""
 
@@ -3139,11 +3137,11 @@ msgid "You can change:"
 msgstr ""
 
 #: default/web_tt2/help_user.tt2:127
-msgid "your <strong>name</strong>; if you subscribe to a list from the mailing list server web interface, the 'Name' field will automatically be filled in in the members list;"
+msgid "your <strong>name</strong>; if you subscribe to a list from the mailing list server web interface, the 'Name' field will automatically be filled in the members list;"
 msgstr ""
 
 #: default/web_tt2/help_user.tt2:128
-msgid "the <strong>language in which the Sympa web interface is displayed</strong> (you can change language on every page of the web interface; your choice will remain even though you change the interface language on another page than the 'Preferences' page;"
+msgid "the <strong>language in which the Sympa web interface is displayed</strong> (you can change language on every page of the web interface; your choice will remain even though you change the interface language on another page than the 'Preferences' page);"
 msgstr ""
 
 #: default/web_tt2/help_user.tt2:129
@@ -3233,7 +3231,7 @@ msgid "To unsubscribe from a list, do as follows:"
 msgstr ""
 
 #: default/web_tt2/help_user.tt2:161
-#. (conf.email,conf.host)
+#. (conf.email,domain)
 msgid "From the address with which you subscribed to the list, send a <strong>message to %1@%2</strong>."
 msgstr ""
 
