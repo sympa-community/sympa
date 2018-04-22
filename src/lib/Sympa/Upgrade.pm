@@ -1795,21 +1795,6 @@ sub upgrade {
         }
     }
 
-    # GH Issue #43: The "host" parameter was deprecated.
-    if (lower_version($previous_version, '6.2.32')) {
-        my $all_lists = Sympa::List::get_lists('*');
-        foreach my $list (@{$all_lists || []}) {
-            if (    $list->{'admin'}{'host'}
-                and $list->{'admin'}{'host'} ne $list->{'domain'}) {
-                $log->syslog(
-                    'notice',
-                    'NOTICE: %s: "host" parameter has been deprecated by Sympa 6.2.32. Please check list configuration and aliases',
-                    $list
-                );
-            }
-        }
-    }
-
     return 1;
 }
 
