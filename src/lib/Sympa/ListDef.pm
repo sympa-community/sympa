@@ -74,54 +74,31 @@ our %pinfo = (
     },
 
     'owner' => {
-        order        => 10.03,
-        'group'      => 'description',
-        'gettext_id' => "Owner",
-        'gettext_comment' =>
-            'Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. ',
-        'format'     => {
+        obsolete => 1,
+        'format' => {
             'email' => {
-                'order'      => 1,
-                'gettext_id' => "email address",
-                format_s     => '$email',
-                'occurrence' => '1',
-                'length'     => 30,
-                filters      => ['canonic_email'],
-                validations =>
-                    [qw(list_special_addresses unique_paragraph_key)],
+                obsolete => 1,
+                format_s => '$email',
             },
             'gecos' => {
-                'order'      => 2,
-                'gettext_id' => "name",
-                'format'     => '.+',
-                'length'     => 30
+                obsolete => 1,
+                'format' => '.+',
             },
             'info' => {
-                'order'      => 3,
-                'gettext_id' => "private information",
-                'format'     => '.+',
-                'length'     => 30
+                obsolete => 1,
+                'format' => '.+',
             },
             'profile' => {
-                'order'      => 4,
-                'gettext_id' => "profile",
-                'format'     => ['privileged', 'normal'],
-                'occurrence' => '1',
-                'default'    => 'normal'
+                obsolete => 1,
+                'format' => ['privileged', 'normal'],
             },
             'reception' => {
-                'order'      => 5,
-                'gettext_id' => "reception mode",
-                'format'     => ['mail', 'nomail'],
-                'occurrence' => '1',
-                'default'    => 'mail'
+                obsolete => 1,
+                'format' => ['mail', 'nomail'],
             },
             'visibility' => {
-                'order'      => 6,
-                'gettext_id' => "visibility",
-                'format'     => ['conceal', 'noconceal'],
-                'occurrence' => '1',
-                'default'    => 'noconceal'
+                obsolete => 1,
+                'format' => ['conceal', 'noconceal'],
             }
         },
         'occurrence' => '1-n'
@@ -170,46 +147,27 @@ our %pinfo = (
     },
 
     'editor' => {
-        order        => 10.05,
-        'group'      => 'description',
-        'gettext_id' => "Moderators",
-        'gettext_comment' =>
-            "Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it.\nFYI: Defining editors will not make the list moderated; you will have to set the \"send\" parameter.\nFYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on.",
-        'format'     => {
+        obsolete => 1,
+        'format' => {
             'email' => {
-                'order'      => 1,
-                'gettext_id' => "email address",
-                format_s     => '$email',
-                'occurrence' => '1',
-                'length'     => 30,
-                filters      => ['canonic_email'],
-                validations => [qw(list_editor_address unique_paragraph_key)],
+                obsolete => 1,
+                format_s => '$email',
             },
             'reception' => {
-                'order'      => 4,
-                'gettext_id' => "reception mode",
-                'format'     => ['mail', 'nomail'],
-                'occurrence' => '1',
-                'default'    => 'mail'
+                obsolete => 1,
+                'format' => ['mail', 'nomail'],
             },
             'visibility' => {
-                'order'      => 5,
-                'gettext_id' => "visibility",
-                'format'     => ['conceal', 'noconceal'],
-                'occurrence' => '1',
-                'default'    => 'noconceal'
+                obsolete => 1,
+                'format' => ['conceal', 'noconceal'],
             },
             'gecos' => {
-                'order'      => 2,
-                'gettext_id' => "name",
-                'format'     => '.+',
-                'length'     => 30
+                obsolete => 1,
+                'format' => '.+',
             },
             'info' => {
-                'order'      => 3,
-                'gettext_id' => "private information",
-                'format'     => '.+',
-                'length'     => 30
+                obsolete => 1,
+                'format' => '.+',
             }
         },
         'occurrence' => '0-n'
@@ -2522,12 +2480,187 @@ our %pinfo = (
     }
 );
 
+our %user_info = (
+    owner => {
+        order      => 10.03,
+        group      => 'description',
+        gettext_id => "Owner",
+        gettext_comment =>
+            'Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. ',
+        format => {
+            email => {
+                order      => 1,
+                gettext_id => "email address",
+                format_s   => '$email',
+                occurrence => '1',
+                length     => 30,
+                filters    => ['canonic_email'],
+                validations =>
+                    [qw(list_special_addresses unique_paragraph_key)],
+            },
+            gecos => {
+                order      => 2,
+                gettext_id => "name",
+                format     => '.+',
+                length     => 30
+            },
+            info => {
+                order      => 3,
+                gettext_id => "private information",
+                format     => '.+',
+                length     => 30
+            },
+            profile => {
+                order      => 4,
+                gettext_id => "profile",
+                format     => ['privileged', 'normal'],
+                occurrence => '1',
+                default    => 'normal'
+            },
+            reception => {
+                order      => 5,
+                gettext_id => "reception mode",
+                format     => ['mail', 'nomail'],
+                occurrence => '1',
+                default    => 'mail'
+            },
+            visibility => {
+                order      => 6,
+                gettext_id => "visibility",
+                format     => ['conceal', 'noconceal'],
+                occurrence => '1',
+                default    => 'noconceal'
+            },
+            subscribed => {
+                order      => 11,
+                gettext_id => 'subscribed',
+                format     => ['0', '1'],
+                occurrence => '1',
+                default    => '1',
+                internal   => 1,
+            },
+            included => {
+                order      => 12,
+                gettext_id => 'included',
+                format     => ['0', '1'],
+                occurrence => '1',
+                default    => '0',
+                internal   => 1,
+            },
+            id => {
+                order      => 13,
+                gettext_id => 'name of external datasource',
+                internal   => 1,
+            },
+            date => {
+                order      => 14,
+                gettext_id => 'date this user become a list admin',
+                format     => '\d+',
+                field_type => 'unixtime',
+                internal   => 1,
+            },
+            update_date => {
+                order      => 15,
+                gettext_id => 'last update time',
+                format     => '\d+',
+                field_type => 'unixtime',
+                internal   => 1,
+            },
+        },
+        occurrence => '1-n'
+    },
+
+    editor => {
+        order      => 10.05,
+        group      => 'description',
+        gettext_id => "Moderators",
+        gettext_comment =>
+            "Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it.\nFYI: Defining editors will not make the list moderated; you will have to set the \"send\" parameter.\nFYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on.",
+        format => {
+            email => {
+                order       => 1,
+                gettext_id  => "email address",
+                format_s    => '$email',
+                occurrence  => '1',
+                length      => 30,
+                filters     => ['canonic_email'],
+                validations => [qw(list_editor_address unique_paragraph_key)],
+            },
+            gecos => {
+                order      => 2,
+                gettext_id => "name",
+                format     => '.+',
+                length     => 30
+            },
+            info => {
+                order      => 3,
+                gettext_id => "private information",
+                format     => '.+',
+                length     => 30
+            },
+            reception => {
+                order      => 4,
+                gettext_id => "reception mode",
+                format     => ['mail', 'nomail'],
+                occurrence => '1',
+                default    => 'mail'
+            },
+            visibility => {
+                order      => 5,
+                gettext_id => "visibility",
+                format     => ['conceal', 'noconceal'],
+                occurrence => '1',
+                default    => 'noconceal'
+            },
+            subscribed => {
+                order      => 11,
+                gettext_id => 'subscribed',
+                format     => ['0', '1'],
+                occurrence => '1',
+                default    => '1',
+                internal   => 1,
+            },
+            included => {
+                order      => 12,
+                gettext_id => 'included',
+                format     => ['0', '1'],
+                occurrence => '1',
+                default    => '0',
+                internal   => 1,
+            },
+            id => {
+                order      => 13,
+                gettext_id => 'name of external datasource',
+                internal   => 1,
+            },
+            date => {
+                order      => 14,
+                gettext_id => 'date this user become a list admin',
+                format     => '\d+',
+                field_type => 'unixtime',
+                internal   => 1,
+            },
+            update_date => {
+                order      => 15,
+                gettext_id => 'last update time',
+                format     => '\d+',
+                field_type => 'unixtime',
+                internal   => 1,
+            },
+        },
+        occurrence => '0-n'
+    },
+);
+
 _apply_defaults();
 
 ## Apply defaults to parameters definition (%pinfo)
 sub _apply_defaults {
     foreach my $p (keys %pinfo) {
         cleanup($p, $pinfo{$p});
+    }
+    foreach my $p (keys %user_info) {
+        cleanup($p, $user_info{$p});
     }
 }
 
