@@ -4,9 +4,11 @@
   [% PROCESS ReviewMembers ~%]
 [%~ ELSIF page == 'owner' ~%]
   [% PROCESS ReviewUsers
+     role = page
      users = owners %]
 [%~ ELSIF page == 'editor' ~%]
   [% PROCESS ReviewUsers
+     role = page
      users = editors %]
 [%~ END %]
 
@@ -222,11 +224,12 @@
 
 [%~ END #ReviewMembers %]
 
-[%~ BLOCK ReviewUsers # (users) ~%]
+[%~ BLOCK ReviewUsers # (role,users) ~%]
+
   <h2>
-  [% IF page == 'owner' ~%]
+  [% IF role == 'owner' ~%]
     [%|loc%]Owners[%END%]
-  [%~ ELSIF page == 'editor' ~%]
+  [%~ ELSIF role == 'editor' ~%]
     [%|loc%]Moderators[%END%]
   [%~ END %]
   </h2>
@@ -235,7 +238,7 @@
   <fieldset role="table">
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="action" value="review" />
-  <input type="hidden" name="page" value="[% page %]" />
+  <input type="hidden" name="page" value="[% role %]" />
 
   <div class="row" role="row">
   <div class="small-10 medium-11 columns">
@@ -282,16 +285,22 @@
       <div class="small-10 medium-11 columns" id="item.user.[% idx %]">
         <div class="small-6 medium-4 columns" role="cell">
           <span class="show-for-medium-up">
-          [%~ IF page == 'owner' && u.profile == 'privileged' ~%]
+          [%~ IF role == 'owner' && u.profile == 'privileged' ~%]
             <i class="fa fa-fw fa-star"
              title="[%|loc%]Privileged owner[%END%]"></i>
-          [%~ ELSIF page == 'owner' ~%]
+          [%~ ELSIF role == 'owner' ~%]
             <i class="fa fa-fw" title="[%|loc%]Owner[%END%]"></i>
-          [%~ ELSIF page == 'editor' ~%]
+          [%~ ELSIF role == 'editor' ~%]
             <i class="fa fa-fw" title="[%|loc%]Moderator[%END%]"></i>
           [%~ END %]
           </span>
-          [% u.email %]
+          [% IF is_privileged_owner ~%]
+            <a href="[% 'ajax/edit' | url_rel([list,role],{email=>u.email,previous_action=>action}) %]"
+             data-reveal-id="edit" data-reveal-ajax="true"
+             class="MainMenuLinks">[% u.email %]</a>
+          [%~ ELSE ~%]
+            [% u.email %]
+          [%~ END %]
         </div>
 
         <div class="small-6 medium-4 columns" role="cell">
@@ -337,26 +346,26 @@
   [%~ ELSE ~%]
     <p
      class="small-12 medium-8 medium-centered columns alert-box info text-center">
-    [% IF page == 'owner' ~%]
+    [% IF role == 'owner' ~%]
       [%|loc%]List has no owners[%END%]
-    [%~ ELSIF page == 'editor' ~%]
+    [%~ ELSIF role == 'editor' ~%]
       [%|loc%]List has no moderators[%END%]
     [%~ END %]
     </p>
   [%~ END %]
 
-  <h3>
-  [% IF page == 'owner' ~%]
-    [%|loc%]Add owners[%END%]
-  [%~ ELSIF page == 'editor' ~%]
-    [%|loc%]Add momderators[%END%]
-  [%~ END %]
-  </h3>
-
   [% IF is_privileged_owner ~%]
+    <h3>
+    [% IF role == 'owner' ~%]
+      [%|loc%]Add owners[%END%]
+    [%~ ELSIF role == 'editor' ~%]
+      [%|loc%]Add momderators[%END%]
+    [%~ END %]
+    </h3>
+
     <div class="row" id="item.user.0.new" role="row">
     <div class="small-10 medium-11 columns">
-      [% IF page == 'owner' ~%]
+      [% IF role == 'owner' ~%]
         <div class="columns show-for-medium-up" role="cell">
           <input type="checkbox"
            name="single_param.user.0.profile" id="param.user.0.profile"
@@ -405,6 +414,13 @@
 
   </fieldset>
   </form>
+
+  [%# AJAX modal dialog ~%]
+  <div id="edit" class="reveal-modal medium" data-reveal
+   aria-labelledby="[%|loc%]View user[%END%]" aria-hidden="true"
+   role="dialog">
+    [%# empty div that will display a content by AJAX. ~%]
+  </div>
 [%~ END#ReviewUsers ~%]
 
 <!-- end review.tt2 -->
