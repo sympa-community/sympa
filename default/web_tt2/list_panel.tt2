@@ -43,7 +43,10 @@
 
     [% IF is_priv %]
       <span>
-        <a href="[% 'edit_list_request' | url_rel([list,'description'],{},'owner') %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>
+        <a href="[% 'review' | url_rel([list,'owner']) %]">
+          <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]">
+          </i>
+        </a>
       </span>
     [% END %]
   </span>
@@ -78,7 +81,10 @@
 
     [% IF is_priv %]
       <span>
-        <a href="[% 'edit_list_request' | url_rel([list,'description'],{},'editor') %]"><i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i></a>
+        <a href="[% 'review' | url_rel([list,'editor']) %]">
+          <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]">
+          </i>
+        </a>
       </span>
     [% END %]
   </span>

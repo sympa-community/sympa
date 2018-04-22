@@ -177,7 +177,23 @@ sub _twist {
         $self->add_stash($request, 'intern');
         return undef;
     }
-    print $lock_fh $config;
+
+    # Write config.
+    # - Write out initial permanent owners/editors in <role>.dump files.
+    # - Write reminder to config file.
+    $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;      # normalize empty lines
+    open my $ifh, '<', \$config;                # open "in memory" file
+    my @config = do { local $RS = ''; <$ifh> };
+    close $ifh;
+    foreach my $role (qw(owner editor)) {
+        my $file = $list_dir . '/' . $role . '.dump';
+        if (!-e $file and open my $ofh, '>', $file) {
+            my $admins = join '', grep {/\A\s*$role\b/} @config;
+            print $ofh $admins;
+            close $ofh;
+        }
+    }
+    print $lock_fh join '', grep { !/\A\s*(owner|editor)\b/ } @config;
 
     ## Unlock config file
     $lock_fh->close;
@@ -235,11 +251,17 @@ sub _twist {
 
     ## Create list object
     my $list;
-    unless ($list = Sympa::List->new($listname, $robot_id)) {
+    unless ($list =
+        Sympa::List->new($listname, $robot_id, {skip_sync_admin => 1})) {
         $log->syslog('err', 'Unable to create list %s', $listname);
         $self->add_stash($request, 'intern');
         return undef;
     }
+
+    # Store initial permanent list users.
+    $list->restore_users('member');
+    $list->restore_users('owner');
+    $list->restore_users('editor');
 
     if ($listname ne $request->{listname}) {
         $self->add_stash($request, 'notice', 'listname_lowercased');

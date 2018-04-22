@@ -81,30 +81,15 @@ sub _twist {
         return undef;
     }
 
-    # Dump initial permanent owners/editors in config file.
-    if ($mode eq 'install') {
-        my ($fh, $fh_config);
-        foreach my $role (qw(owner editor)) {
-            my $file   = $list->{'dir'} . '/' . $role . '.dump';
-            my $config = $list->{'dir'} . '/config';
-
-            if (    !-e $file
-                and open($fh,        '>', $file)
-                and open($fh_config, '<', $config)) {
-                local $RS = '';    # read paragraph by each
-                my $admins = join '', grep {/\A\s*$role\b/} <$fh_config>;
-                print $fh $admins;
-                close $fh;
-                close $fh_config;
-            }
-        }
-    }
-    # Load permanent users.
-    $list->restore_users('member');
-    $list->restore_users('owner');
-    $list->restore_users('editor');
-    # Load initial transitional owners/editors from external data sources.
-    if ($mode eq 'install') {
+    if ($mode eq 'open') {
+        # Restore permanent/transitional list users dumped by close_list.
+        $list->restore_users('member');
+        $list->restore_users('owner');
+        $list->restore_users('editor');
+    } elsif ($mode eq 'install') {
+        # Since initial poermanent list users have been stored by create_list
+        # or create_automatic_list, add transitional owners/editors from
+        # external data sources.
         $list->sync_include_admin;
     }
 
