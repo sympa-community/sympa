@@ -83,6 +83,8 @@ unless (
         'conf_2_db',            'export_list',
         'health_check',         'send_digest',
         'keep_digest',          'upgrade_config_location',
+        'role=s',               'dump_users',
+        'restore_users',
     )
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -280,33 +282,111 @@ unless (Conf::checkfiles()) {
 }
 
 # Daemon called for dumping subscribers list
-if ($main::options{'dump'}) {
+if ($main::options{'dump'} or $main::options{'dump_users'}) {
+    my $all_lists;
 
-    my ($all_lists, $list);
-    if ($main::options{'dump'} eq 'ALL') {
-        $all_lists = Sympa::List::get_lists('*');
-    } else {
+    # Compat. for old style "--dump=LIST".
+    my $list_id = $main::options{'dump'} || $main::options{'list'};
 
-        ## The parameter can be a list address
-        unless ($main::options{'dump'} =~ /\@/) {
-            $log->syslog('err', 'Incorrect list address %s',
-                $main::options{'dump'});
-
-            exit;
+    if (defined $list_id and $list_id eq 'ALL') {
+        $all_lists =
+            Sympa::List::get_lists('*', filter => [status => 'open']);
+    } elsif (defined $list_id and length $list_id) {
+        # The parameter is list ID and list have to be open.
+        unless (0 < index $list_id, '@') {
+            $log->syslog('err', 'Incorrect list address %s', $list_id);
+            exit 1;
         }
-
-        my $list = Sympa::List->new($main::options{'dump'});
+        my $list = Sympa::List->new($list_id);
         unless (defined $list) {
-            $log->syslog('err', 'Unknown list %s', $main::options{'dump'});
-
-            exit;
+            $log->syslog('err', 'Unknown list %s', $list_id);
+            exit 1;
         }
-        push @$all_lists, $list;
+        unless ($list->{'admin'}{'status'} eq 'open') {
+            $log->syslog('err', 'List is not open: %s', $list);
+            exit 1;
+        }
+
+        $all_lists = [$list];
+    } else {
+        $log->syslog('err', 'No lists specified');
+        exit 1;
+    }
+
+    my @roles = qw(member);
+    if ($main::options{'role'}) {
+        my %roles = map { ($_ => 1) }
+            ($main::options{'role'} =~ /\b(member|owner|editor)\b/g);
+        @roles = sort keys %roles;
+        unless (@roles) {
+            $log->syslog('err', 'Unknown role %s', $main::options{'role'});
+            exit 1;
+        }
     }
 
     foreach my $list (@$all_lists) {
-        unless ($list->dump()) {
-            print STDERR "Could not dump list(s)\n";
+        foreach my $role (@roles) {
+            unless ($list->dump_users($role)) {
+                printf STDERR "%s: Could not dump list users (%s)\n",
+                    $list->get_id, $role;
+            } else {
+                printf STDERR "%s: Dumped list users (%s)\n",
+                    $list->get_id, $role;
+            }
+        }
+    }
+
+    exit 0;
+} elsif ($main::options{'restore_users'}) {
+    my $all_lists;
+
+    my $list_id = $main::options{'list'};
+
+    if (defined $list_id and $list_id eq 'ALL') {
+        $all_lists =
+            Sympa::List::get_lists('*', filter => [status => 'open']);
+    } elsif (defined $list_id and length $list_id) {
+        # The parameter is list ID and list have to be open.
+        unless (0 < index $list_id, '@') {
+            $log->syslog('err', 'Incorrect list address %s', $list_id);
+            exit 1;
+        }
+        my $list = Sympa::List->new($list_id);
+        unless (defined $list) {
+            $log->syslog('err', 'Unknown list %s', $list_id);
+            exit 1;
+        }
+        unless ($list->{'admin'}{'status'} eq 'open') {
+            $log->syslog('err', 'List is not open: %s', $list);
+            exit 1;
+        }
+
+        $all_lists = [$list];
+    } else {
+        $log->syslog('err', 'No lists specified');
+        exit 1;
+    }
+
+    my @roles = qw(member);
+    if ($main::options{'role'}) {
+        my %roles = map { ($_ => 1) }
+            ($main::options{'role'} =~ /\b(member|owner|editor)\b/g);
+        @roles = sort keys %roles;
+        unless (@roles) {
+            $log->syslog('err', 'Unknown role %s', $main::options{'role'});
+            exit 1;
+        }
+    }
+
+    foreach my $list (@$all_lists) {
+        foreach my $role (@roles) {
+            unless ($list->restore_users($role)) {
+                printf STDERR "%s: Could not restore list users (%s)\n",
+                    $list->get_id, $role;
+            } else {
+                printf STDERR "%s: Restored list users (%s)\n",
+                    $list->get_id, $role;
+            }
         }
     }
 
@@ -1080,7 +1160,8 @@ S<[ C<--import>=I<listname> ]>
 S<[ C<--close_list>=I<list>[I<@robot>] ]>
 S<[ C<--purge_list>=I<list>[I<@robot>] ]>
 S<[ C<--lowercase> ]> S<[ C<--make_alias_file> ]>
-S<[ C<--dump>=I<listname> | ALL ]>
+S<[ C<--dump_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
+S<[ C<--restore_users> C<--list>=I<list>@I<domain>|ALL [ C<--role>=I<roles> ] ]>
 
 =head1 DESCRIPTION
 
@@ -1151,10 +1232,25 @@ C<--input_file=>I</path/to/file.xml >
 
 Create a list with the XML file under robot robot_name.
 
-=item C<--dump=>I<list>@I<dom>|C<ALL>
+=item C<--dump=>I<list>@I<domain>|C<ALL>
 
-Dumps subscribers of for `listname' list or all lists. Subscribers are 
-dumped in subscribers.db.dump.
+Obsoleted option.  Use C<--dump_users>.
+
+=item C<--dump_users> C<--list=>I<list>@I<domain>|C<ALL> [ C<--role=>I<roles> ]
+
+Dumps users of a list or all lists.
+
+C<--role> may specify C<member>, C<owner>, C<editor> or any of them separated
+by comma (C<,>). Only C<member> is chosen by default.
+
+Users are dumped in files I<role>C<.dump> in each list directory.
+
+Note: On Sympa prior to 6.2.31b.1, subscribers were dumped in
+F<subscribers.db.dump> file, and owners and moderators could not be dumped.
+
+See also C<--restore_users>.
+
+Note: This option replaced C<--dump> on Sympa 6.2.34.
 
 =begin comment
 
@@ -1234,6 +1330,12 @@ Renames a list or move it to another virtual robot.
 
 Send digest right now.
 If C<--keep_digest> is specified, stocked digest will not be removed.
+
+=item C<--restore_users> C<--list=>I<list>@I<domain>|C<ALL> [ C<--role=>I<roles> ]
+
+Restore users from files dumped by C<--dump_users>.
+
+Note: This option was added on Sympa 6.2.34.
 
 =item C<--sync_include=>I<listname>@I<robot>
 

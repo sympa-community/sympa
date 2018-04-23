@@ -25,6 +25,7 @@ package Sympa::Request::Handler::open_list;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use File::Path qw();
 
 use Sympa;
@@ -80,16 +81,32 @@ sub _twist {
         return undef;
     }
 
-    unless (-f $list->{'dir'} . '/subscribers.closed.dump') {
-        $log->syslog('notice', 'No subscribers to restore');
-    }
-    my @users = Sympa::List::_load_list_members_file(
-        $list->{'dir'} . '/subscribers.closed.dump');
-    # Insert users in database.
-    $list->add_list_member(@users);
+    # Dump initial permanent owners/editors in config file.
+    if ($mode eq 'install') {
+        my ($fh, $fh_config);
+        foreach my $role (qw(owner editor)) {
+            my $file   = $list->{'dir'} . '/' . $role . '.dump';
+            my $config = $list->{'dir'} . '/config';
 
-    # Restore admins
-    $list->sync_include_admin;
+            if (    !-e $file
+                and open($fh,        '>', $file)
+                and open($fh_config, '<', $config)) {
+                local $RS = '';    # read paragraph by each
+                my $admins = join '', grep {/\A\s*$role\b/} <$fh_config>;
+                print $fh $admins;
+                close $fh;
+                close $fh_config;
+            }
+        }
+    }
+    # Load permanent users.
+    $list->restore_users('member');
+    $list->restore_users('owner');
+    $list->restore_users('editor');
+    # Load initial transitional owners/editors from external data sources.
+    if ($mode eq 'install') {
+        $list->sync_include_admin;
+    }
 
     # Install new aliases.
     my $aliases = Sympa::Aliases->new(

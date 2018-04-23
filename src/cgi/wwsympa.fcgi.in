@@ -278,7 +278,7 @@ our %comm = (
     'd_set_owner'          => 'do_d_set_owner',
     'd_admin'              => 'do_d_admin',
     'dump_scenario'        => 'do_dump_scenario',
-    'dump'                 => 'do_dump',
+    'export_member'        => 'do_export_member',
     'remind'               => 'do_remind',
     'move_user'            => 'do_move_user',
     'load_cert'            => 'do_load_cert',
@@ -337,6 +337,7 @@ my %comm_aliases = (
     'automatic_lists_request' => 'create_automatic_list_request',
     'change_email'            => 'move_user',
     'change_email_request'    => 'move_user',
+    'dump'                    => 'export_member',
     'ignoresig'               => 'decl_del',
     'ignoresub'               => 'decl_add',
     'del_fromsig'             => 'auth_del',
@@ -452,7 +453,7 @@ our %action_args = (
     'd_control'       => ['list', '@path'],
     'd_change_access' => ['list', '@path'],
     'd_set_owner'     => ['list', '@path'],
-    'dump'            => ['list', 'format'],
+    'export_member'   => ['list', 'format'],
     'search'          => ['list', 'filter'],
     'search_user'     => ['email'],
     'set_lang'        => ['lang'],
@@ -554,13 +555,13 @@ our %required_args = (
     'delete_pictures' => ['param.list', 'param.user.email'],
     'distribute'      => ['param.list', 'param.user.email', 'id|idspam'],
     'add_frommod'     => ['param.list', 'param.user.email', 'id'],
-    'dump'               => ['param.list'],
     'dump_scenario'      => ['param.list', 'pname'],
     'edit_list'          => ['param.user.email', 'param.list'],
     'edit_list_request'  => ['param.user.email', 'param.list'],
     'edit_template'      => ['webormail'],
     'editfile'           => ['param.user.email'],
     'editsubscriber'     => ['param.list', 'param.user.email', 'email'],
+    'export_member'      => ['param.list'],
     'get_closed_lists'   => ['param.user.email'],
     'get_inactive_lists' => ['param.user.email'],
     'get_latest_lists'   => ['param.user.email'],
@@ -748,8 +749,8 @@ my %action_type = (
     'd_admin'            => 'admin',
     'd_reject_shared'    => 'admin',
     'd_install_shared'   => 'admin',
+    'export_member'      => 'admin',
     'dump_scenario'      => 'admin',
-    'dump'               => 'admin',
     'open_list'          => 'admin',
     'remind'             => 'admin',
     #'subindex' => 'admin',
@@ -15908,87 +15909,103 @@ sub do_dump_scenario {
     return 1;
 }
 
-## Subscribers' list
-sub do_dump {
-    wwslog('info', '(%s)', $param->{'list'});
+# Subscribers' list
+# Old name: do_dump().
+sub do_export_member {
+    wwslog('info', '(%s, %s, %s)', $param->{'list'}, $in{'format'},
+        $in{'filter'});
 
-    ## Whatever the action return, it must never send a complex html page
-    $param->{'bypass'}       = 1;
-    $param->{'content_type'} = "text/plain";
-    $param->{'file'}         = undef;
-
-    ## Access control
-    unless (defined check_authz('do_dump', 'review')) {
-        undef $param->{'bypass'};
+    # Access control
+    unless (defined check_authz('do_export_member', 'review')) {
         return undef;
     }
 
-    $list->dump();
-    $param->{'file'} = $list->{'dir'} . '/subscribers.db.dump';
+    my $format = $in{'format'} || 'full';
+    my $filter = $in{'filter'};
+    $filter = '' unless defined $filter;
 
-    if ($in{'format'} eq 'light') {
-        unless (open(DUMP, $param->{'file'})) {
-            Sympa::WWW::Report::reject_report_web('intern', 'cannot_open_file',
-                {'file' => $param->{'file'}},
-                $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
-            wwslog('info', 'Unable to open file %s', $param->{'file'});
-            return undef;
-        }
-        unless (open(LIGHTDUMP, ">$param->{'file'}.light")) {
-            Sympa::WWW::Report::reject_report_web(
-                'intern',
-                'cannot_open_file',
-                {'file' => "$param->{'file'}.light"},
-                $param->{'action'},
-                '',
-                $param->{'user'}{'email'},
-                $robot
-            );
-            wwslog('err', 'Unable to create file %s.light', $param->{'file'});
-            return undef;
-        }
-        while (<DUMP>) {
-            next unless ($_ =~ /^email\s(.*)/);
-            print LIGHTDUMP "$1\n";
-        }
-        close LIGHTDUMP;
-        close DUMP;
-        $param->{'file'} = "$list->{'dir'}/subscribers.db.dump.light";
+    $param->{'bypass'} = 'extreme';
+    printf "Content-Type: text/plain; Charset=\"UTF-8\"; name=\"%s.txt\"\n"
+        . "Content-Disposition: attachment; filename=\"%s.txt\"\n"
+        . "Content-Transfer-Encoding: 8BIT\n" . "\n",
+        $list->get_id, $list->get_id;
 
+    if ($format eq 'bounce') {
+        print '# '
+            . join("\t",
+            'Email',
+            'Name',
+            'Bounce score',
+            'Bounce count',
+            'First bounce',
+            'Last bounce')
+            . "\n";
+    } elsif ($format eq 'light') {
+        ;
     } else {
-        $param->{'file'} = "$list->{'dir'}/select.dump";
-        wwslog('info', 'Opening %s', $param->{'file'});
-
-        unless (open(DUMP, ">$param->{'file'}")) {
-            Sympa::WWW::Report::reject_report_web('intern', 'file_update_failed',
-                {}, $param->{'action'}, '', $param->{'user'}{'email'},
-                $robot);
-            wwslog('err', 'Unable to create file %s', $param->{'file'});
-            return undef;
-        }
-
-        if ($in{'format'} eq 'bounce') {
-            $in{'size'} = 'all';
-            do_reviewbouncing();
-            print DUMP "# Exported bouncing subscribers\n";
-            print DUMP
-                "# Email\t\tName\tBounce score\tBounce count\tFirst bounce\tLast bounce\n";
-            foreach my $user (@{$param->{'members'}}) {
-                print DUMP
-                    "$user->{'email'}\t$user->{'gecos'}\t$user->{'bounce_score'}\t$user->{'bounce_count'}\t$user->{'first_bounce'}\t$user->{'last_bounce'}\n";
-            }
-        } else {
-            $in{'filter'} = $in{'format'};
-            do_search();
-            print DUMP
-                "# Exported subscribers with search filter \"$in{'format'}\"\n";
-            foreach my $user (@{$param->{'members'}}) {
-                print DUMP "$user->{'email'}\t$user->{'gecos'}\n";
-            }
-        }
-        close DUMP;
+        printf "# Exported subscribers with search filter \"%s\"\n", $filter;
     }
+    my $searchkey = Sympa::Tools::Text::foldcase($filter)
+        if defined $filter and length $filter;
+
+    for (
+        my $subscriber = _subscriber_first($list, type => $format);
+        $subscriber;
+        $subscriber = _subscriber_next($list, type => $format)
+        ) {
+        my $email = $subscriber->{email};
+        my $gecos = $subscriber->{gecos};
+        next unless defined $email and length $email;    # malformed record.
+
+        if (defined $searchkey and length $searchkey) {
+            my $e = Sympa::Tools::Text::foldcase($email);
+            my $g = Sympa::Tools::Text::foldcase($gecos);
+            next
+                unless 0 <= index $e, $searchkey
+                or 0 <= index $g, $searchkey;
+        }
+
+        if ($format eq 'bounce') {
+            print join "\t",
+                $email, $gecos,
+                @{$subscriber}
+                {qw(bounce_score bounce_count first_bounce last_bounce)};
+            print "\n";
+        } elsif ($format eq 'light') {
+            print "$email\n";
+        } else {
+            print join "\t", $email, $gecos;
+            print "\n";
+        }
+    }
+
     return 1;
+}
+
+sub _subscriber_first {
+    my $list    = shift;
+    my %options = @_;
+
+    if ($options{type} and $options{type} eq 'bounce') {
+        my $i = $list->get_first_bouncing_list_member;
+        $list->parse_list_member_bounce($i) if $i;
+        return $i;
+    } else {
+        return $list->get_first_list_member;
+    }
+}
+
+sub _subscriber_next {
+    my $list    = shift;
+    my %options = @_;
+
+    if ($options{type} and $options{type} eq 'bounce') {
+        my $i = $list->get_next_bouncing_list_member;
+        $list->parse_list_member_bounce($i) if $i;
+        return $i;
+    } else {
+        return $list->get_next_list_member;
+    }
 }
 
 ## returns a mailto according to list spam protection parameter

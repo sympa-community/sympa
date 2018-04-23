@@ -746,30 +746,29 @@ sub upgrade {
                     $list->{'name'}
                 );
 
-                my @users = Sympa::List::_load_list_members_file(
-                    "$list->{'dir'}/subscribers");
+                # Load <list dir>/subscribers to the DB
+                if (-e $list->{'dir'} . '/subscribers'
+                    and rename $list->{'dir'} . '/subscribers',
+                    $list->{'dir'} . '/member.dump'
+                    ) {
+                    $list->restore_users('member');
+
+                    my $total = $list->{'add_outcome'}{'added_members'};
+                    if (defined $list->{'add_outcome'}{'errors'}) {
+                        $log->syslog('err', 'Failed to add users: %s',
+                            $list->{'add_outcome'}{'errors'}
+                                {'error_message'});
+                    }
+                    $log->syslog('notice',
+                        '%d subscribers have been loaded into the database',
+                        $total);
+                }
 
                 $list->{'admin'}{'user_data_source'} = 'include2';
 
-                ## Add users to the DB
-                $list->add_list_member(@users);
-                my $total = $list->{'add_outcome'}{'added_members'};
-                if (defined $list->{'add_outcome'}{'errors'}) {
-                    $log->syslog(
-                        'err',
-                        'Failed to add users: %s',
-                        $list->{'add_outcome'}{'errors'}{'error_message'}
-                    );
-                }
-
-                $log->syslog('notice',
-                    '%d subscribers have been loaded into the database',
-                    $total);
-
                 unless ($list->save_config('automatic')) {
                     $log->syslog('err',
-                        'Failed to save config file for list %s',
-                        $list->{'name'});
+                        'Failed to save config file for list %s', $list);
                 }
             } elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
 
@@ -943,7 +942,7 @@ sub upgrade {
             'task_manager_pidfile' => 'No more used',
             'archived_pidfile'     => 'No more used',
             'bounced_pidfile'      => 'No more used',
-            'use_fast_cgi'         => 'No longer used', # 6.2.25b deprecated
+            'use_fast_cgi'         => 'No longer used',   # 6.2.25b deprecated
         );
 
         ## Set language of new file content
@@ -1773,6 +1772,38 @@ sub upgrade {
                 _get_canonical_read_date($sdm, 'update_admin')
             )
         );
+
+        $log->syslog('notice', 'Upgrading user dumps of closed lists.');
+        # Upgrading user dumps of closed lists.
+        my $lists =
+            Sympa::List::get_lists('*',
+            filter => [status => 'closed|family_closed']);
+        foreach my $list (@{$lists || []}) {
+            my $dir = $list->{'dir'};
+
+            if (-e $dir . '/subscribers.closed.dump') {
+                unlink $dir . '/member.dump.old';
+                rename $dir . '/member.dump', $dir . '/member.dump.old';
+                rename $dir . '/subscribers.closed.dump',
+                    $dir . '/member.dump';
+            }
+
+            my ($fh, $fh_config);
+            foreach my $role (qw(owner editor)) {
+                my $file   = $list->{'dir'} . '/' . $role . '.dump';
+                my $config = $list->{'dir'} . '/config';
+
+                if (!-e $file
+                    and open($fh, '>', $file)
+                    and open($fh_config, '<', $config)) {
+                    local $RS = '';     # read paragraph by each
+                    my $admins = join '', grep {/\A\s*$role\b/} <$fh_config>;
+                    print $fh $admins;
+                    close $fh;
+                    close $fh_config;
+                }
+            }
+        }
     }
 
     # GH Issue #240: PostgreSQL: Unable to edit owners/subscribers.

@@ -221,8 +221,9 @@ sub _move {
     my $aliases = Sympa::Aliases->new(
         Conf::get_robot_conf($current_list->{'domain'}, 'alias_manager'));
     $aliases->del($current_list) if $aliases;
-    $current_list->_save_list_members_file(
-        $current_list->{'dir'} . '/subscribers.closed.dump');
+    $current_list->dump_users('member');
+    $current_list->dump_users('owner');
+    $current_list->dump_users('editor');
 
     # Set list status to pending if creation list is moderated.
     # Save config file for the new() later to reload it.
