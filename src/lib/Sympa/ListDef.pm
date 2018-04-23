@@ -105,8 +105,8 @@ our %pinfo = (
     },
 
     'owner_include' => {
-        order        => 10.04,
-        'group'      => 'description',
+        order        => 60.02_1,
+        'group'      => 'data_source',
         'gettext_id' => 'Owners defined in an external data source',
         'format'     => {
             'source' => {
@@ -174,8 +174,8 @@ our %pinfo = (
     },
 
     'editor_include' => {
-        order        => 10.06,
-        'group'      => 'description',
+        order        => 60.02_2,
+        'group'      => 'data_source',
         'gettext_id' => 'Moderators defined in an external data source',
         'format'     => {
             'source' => {
