@@ -10,6 +10,11 @@ function refresh_mom_and_die() {
   self.close();
 }
 
+/* Loading foundation. */
+$(function() {
+    $(document).foundation();
+});
+
 /* Show error dialog.  It may be closed only when javascript is enabled. */
 $(function() {
     var closeButton =
