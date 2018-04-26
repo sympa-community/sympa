@@ -46,12 +46,6 @@ var lang = '[% lang %]';
 [%IF 0%]<script src="[% static_content_url %]/external/foundation/js/vendor/jquery.js"></script>[%END~%]
 <script src="[% static_content_url %]/external/foundation/js/vendor/what-input.js"></script>
 <script src="[% static_content_url %]/external/foundation/js/vendor/foundation.min.js"></script>
-[%# Loading foundation. ~%]
-<script>
-<!--
-$(document).foundation();
-//-->
-</script>
 
 [% IF use_html_editor -%]
 <script src="[% html_editor_url %]"></script>
