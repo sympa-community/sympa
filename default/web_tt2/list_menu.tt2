@@ -70,8 +70,8 @@
 [% END %]
 
 [% IF is_owner ||  is_editor %]
-  <li class="has-dropdown" ><a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Moderate[% END %]</a>
-    <ul class="dropdown">
+  <li><a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Moderate[% END %]</a>
+    <ul class="vertical menu">
     [% IF is_editor %]
       [% IF action == 'modindex' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
       <li  class="[% class %]"><a href="[% 'modindex' | url_rel([list]) %]">[%|loc%]Message[%END%] ([% mod_message %]) </a></li>

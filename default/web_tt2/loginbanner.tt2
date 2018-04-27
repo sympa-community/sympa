@@ -117,9 +117,9 @@
               <li class="divider hide-for-small"></li>
            [% END %] 
            [% IF use_passwd == '1' %]
-          <li id="login-dropdown" class="has-dropdown">
+          <li id="login-dropdown">
             <a href="#"><i class="fa fa-user"></i> [%|loc%]Login[%END%]</a>
-            <ul class="dropdown">
+            <ul class="vertical menu">
             <form action="[% path_cgi %]" method="post">
               <fieldset>
               <input type="hidden" name="previous_action" value="[% previous_action %]" />
