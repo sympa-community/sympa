@@ -16,9 +16,9 @@
 	[% END %]
 		[% IF top_menu %]		
 		[% IF action == 'search_list_request' or action == 'lists' or action == 'lists_categories' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		<li class="has-dropdown [% class %]">
+		<li class="[% class %]">
 			<a href="#"><i class="fa fa-search-plus"></i> [%|loc%]Search for List(s)[%END%]</a>
-			<ul class="dropdown">
+			<ul class="vertical menu">
 		[% END %]
 				[% IF action == 'search_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
 				<li class="[% class %]"><a href="[% 'search_list_request' | url_rel %]"><i class="fa fa-search"></i> [%|loc%]Search form[%END%]</a></li>
@@ -32,9 +32,9 @@
 		[% END %]
 		[% IF action == 'help' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
 		[% IF top_menu %]
-		<li class="has-dropdown [% class %]">
+		<li class="[% class %]">
 			<a href="#"><i class="fa fa-life-ring"></i> [%|loc%]Support[%END%]</a>
-			<ul class="dropdown">
+			<ul class="vertical menu">
 		[% END %]
 				[% IF action == 'help' && help_topic != 'faq' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
 				<li class="[% class %]"><a href="[% 'help' | url_rel %]" title="[%|loc%]Documentation[%END%]"><i class="fa fa-book"></i> [%|loc%]Documentation[%END%]</a></li>
@@ -75,9 +75,9 @@
 		[% END %]
 			[% IF top_menu %][% IF action == 'create_automatic_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %][% END %]
 			[% IF owns_family %]
-			<li class="has-dropdown [% class %]">
+			<li class="[% class %]">
 				<a href="#"><i class="fa fa-list-alt"></i> [%|loc%]Lists Families[%END%]</a>
-				<ul class="dropdown">
+				<ul class="vertical menu">
 					[% family_li %]
 				 </ul>
 			</li>
