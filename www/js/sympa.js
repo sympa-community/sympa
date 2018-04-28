@@ -13,6 +13,9 @@ function refresh_mom_and_die() {
 /* Loading foundation. */
 $(function() {
     $(document).foundation();
+    Foundation.Drilldown.defaults.backButton =
+        '<li class="js-drilldown-back"><a tabindex="0">' + sympa.backText
+            + '</a></li>';
 });
 
 /* Show error dialog.  It may be closed only when javascript is enabled. */
