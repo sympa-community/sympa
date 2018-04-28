@@ -1,54 +1,6 @@
 <!-- aside_menu.tt2 -->
-[% IF not top_menu %]
-  <aside class="medium-3 columns show-for-medium">
-  [% IF  conf.logo_html_definition %]
-    <div id="logo" >[% conf.logo_html_definition %]</div>
-  [% ELSE %]
-    <div id="logo" ><a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a></div>
-  [% END %]
-
-  [% IF user.email %]
-    <menu class="user">
-    <ul> 
-      [% PROCESS login_menu.tt2 %]
-    </ul>
-    </menu>
-  [% ELSE %]
-    <menu class="connect">
-    <ul> 
-      [% PROCESS loginbanner.tt2 %]
-    </ul>
-    </menu>
-  [% END %]
-
-  [% IF list %]
-    <menu class="list">
-    <ul> 
-      [% PROCESS list_menu.tt2 %]
-    </ul>
-    </menu>
-  [% END %]
-
-  <menu class="sympa">
-    <ul>
-      [% PROCESS 'sympa_menu.tt2' %]
-    </ul>
-  </menu>
-  </aside>
-[% ELSE %]
-  <aside class="medium-3 columns show-for-medium">
-  [% IF list %]
-    <menu class="list">
-    <ul>
-      [% PROCESS list_menu.tt2 %]
-    </ul>
-    </menu>
-  [% END %]
-  </aside>
-[% END %]
-
-<!-- for responsive view -->
 [%~ IF top_menu %]
+  <aside class="medium-3 columns">
   [% IF list %]
             <div class="title-bar"
              data-responsive-toggle="sympa-sub-bar" data-hide-for="medium">
@@ -60,17 +12,32 @@
               </div>
             </div>
 
-    <nav class="top-bar hide-for-medium" id="sympa-sub-bar" role="navigation">
-        <menu class="top-bar-right">
-            <ul class="vertical menu drilldown" data-drilldown>
+    <nav class="top-bar" id="sympa-sub-bar" role="navigation">
+        <menu class="top-bar-left list">
+            <ul class="vertical menu"
+             data-responsive-menu="drilldown medium-accordion">
               [% PROCESS list_menu.tt2 %]
             </ul>
         </menu>
     </nav>
   [% END %]
+  </aside>
 [% ELSE %]
+  <aside class="medium-3 columns">
+
+  <div id="logo" class="show-for-medium">
+  [% IF conf.logo_html_definition ~%]
+    [% conf.logo_html_definition %]
+  [%~ ELSE ~%]
+    <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
+  [%~ END %]
+  </div>
+
             <div class="title-bar"
              data-responsive-toggle="sympa-sub-bar" data-hide-for="medium">
+              <a class="menu-text" href="[% conf.wwsympa_url %]"
+               title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png"
+               alt="[%|loc%]SYMPA logo[%END%]" /></a>
               <div class="title-bar-right">
                 <div class="title-bar-title">
                   <span>[%|loc%]General Menu[%END%]</span>
@@ -79,20 +46,33 @@
               </div>
             </div>
 
-  <nav class="top-bar hide-for-medium" id="sympa-sub-bar" role="navigation">
-        <menu class="top-bar-right">
-            <ul class="vertical menu drilldown" data-drilldown>
+  <nav class="top-bar" id="sympa-sub-bar" role="navigation">
         [% IF user.email %]
+        <menu class="top-bar-left user">
+            <ul class="nested vertical menu">
             [% PROCESS login_menu.tt2 %]
+            </ul>
+        </menu>
         [% ELSE %]
-            <li>   [% PROCESS loginbanner.tt2 %]</li>
+        <menu class="top-bar-left connect">
+            <ul class="nested vertical menu">
+            [% PROCESS loginbanner.tt2 %]
+            </ul>
+        </menu>
         [% END %]
         [% IF list %]
+        <menu class="top-bar-left list">
+            <ul class="nested vertical menu">
             [% PROCESS list_menu.tt2 %]
+            </ul>
+        </menu>
         [% END %]
+        <menu class="top-bar-left sympa">
+            <ul class="nested vertical menu">
             [% PROCESS 'sympa_menu.tt2' %]
             </ul>
         </menu>
   </nav>
+  </aside>
 [% END %]
 <!-- end aside_menu.tt2 -->
