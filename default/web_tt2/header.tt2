@@ -33,18 +33,25 @@
         <!-- sympa menu start --> 
           [% PROCESS 'sympa_menu.tt2' %]
         <!-- end of sympa menu-->
-        [% IF user.email %]
+
+      [%# login banner or login button ~%]
+      [% IF user.email ~%]
         <li>
-            <a href="#"><i class="fa fa-user"></i> [% IF user.gecos %] [% user.gecos %][% ELSE %] [% user.email %] [% END %]</a>
-            <ul class="vertical menu">
-        [% END %]
-        <!-- login banner start -->
-          [% PROCESS 'loginbanner.tt2' %]
-        <!-- end of login banner-->
-        [% IF user.email %]
-            </ul>
+          <a href="#">
+            <i class="fa fa-user"></i> [% user.gecos || user.email %]
+          </a>
+          <ul class="vertical menu">
+            [% PROCESS 'loginbanner.tt2' %]
+          </ul>
         </li>
-        [% END %]
+      [%~ ELSIF use_passwd || use_sso || authentication_info_url ~%]
+        [% IF action == 'loginrequest'; SET class = 'active'; END ~%]
+        <li class="[% class %]">
+          <a href="[% 'loginrequest' | url_rel([action,list]) %]">
+            <i class="fa fa-user"></i> [%|loc%]Login[%END%]
+          </a>
+        </li>
+      [%~ END %]
     </ul>
 </menu>
 </nav>

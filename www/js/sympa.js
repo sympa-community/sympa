@@ -649,20 +649,3 @@ $(function() {
     });
 });
 
-/* Correction of disapeared top-bar-dropdown menu on input lost focus. */
-$(function() {
-    $('#login-dropdown').removeClass('not-click').on('mouseover',
-    function(){
-        $(this).addClass('hover');
-    }).on('mouseout',
-    function(e){
-        if (e.relatedTarget
-            && !$('#login-dropdown').has(e.relatedTarget).length) {
-            if ($(e.target).is(':input'))
-                $(e.target).blur();
-
-            $(this).removeClass('hover');
-        }
-    });
-});
-
