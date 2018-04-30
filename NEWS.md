@@ -1,5 +1,28 @@
 # Change Log
 
+## [6.2.33b.1](https://github.com/sympa-community/sympa/tree/6.2.33b.1) (2018-06-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.32...6.2.33b.1)
+
+**Changes:**
+
+- List parameter "host" was deprecated [\#43](https://github.com/sympa-community/sympa/issues/43).
+- Owners and moderators are no longer stored in list config file: They are stored only in database [\#49](https://github.com/sympa-community/sympa/issues/49).  New pages to configure them are added to web interface [\#275](https://github.com/sympa-community/sympa/pull/275) ([ikedas](https://github.com/ikedas)).
+
+**Implemented enhancements:**
+
+- Add support for the subscribers.db.dump format in sympa.pl [\#232](https://github.com/sympa-community/sympa/issues/232)
+
+**Fixed bugs:**
+
+- Erroneous typing in templates [\#266](https://github.com/sympa-community/sympa/issues/266)
+- cookie parameter protection [\#243](https://github.com/sympa-community/sympa/issues/243)
+- Spurious error on duplicate keys with admin sync [\#11](https://github.com/sympa-community/sympa/issues/11)
+
+**Merged pull requests:**
+
+- \#170: Least fixup [\#187](https://github.com/sympa-community/sympa/pull/187) ([ikedas](https://github.com/ikedas))
+
 ## [6.2.32](https://github.com/sympa-community/sympa/tree/6.2.32) (2018-04-19)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.30...6.2.32)
