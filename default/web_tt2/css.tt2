@@ -1,11 +1,65 @@
 [%# css.tt2 ~%]
 @charset "UTF-8";
 
+[% IF 0 ~%]
+Overview of document tree
+-------------------------
+```
+html
+  head
+  body
+    div#top
+    noscript                            // notice to users without js
+    header
+      div.title-bar
+        a.menu-text
+          img                           // logo for mobile mode
+        div.title-bar-right
+      nav#sympa-top-bar
+        ul.top-bar-left
+          li
+            span.menu-text
+              (logo_html_definition)    // logo for desktop mode
+        menu.top-bar-right
+          ul
+            (sympa_menu.tt2)
+            (loginbanner.tt2 or Login link)
+    div#loading
+    aside
+      div.title-bar
+        div.title-bar-right
+      nav#sympa-sub-bar
+        menu.top-bar-left
+          ul
+            (list_menu.tt2)
+    main#content-inner
+      h1
+      div.title-bar
+        div.title-bar-right
+      nav#sympa-nav-bar
+        menu.top-bar-left
+          ul
+            (see nav.tt2)
+      (${action}.tt2)
+    div.displayNone                     // link to #top
+    div.scroll-top-wrapper
+    footer
+```
+
+  * If template variable top_menu unset, there is no header, and
+    #sympa-sub-bar also contains div#logo, sympa_menu.tt2 and loginbanner.tt2.
+    Otherwise, #sympa-sub-bar is shown only in list context.
+  * div.title-bar is title bar launching menu used only on mobile mode.
+
+[%~ END # IF 0 %]
+
 [% IF custom_css -%]
 [% FOREACH color  IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] -%]
 /* [% color %]: [% $color %] */
 [% END -%]
 [% END -%]
+
+[% top_menu = 1 ~%]
 
 /**
  * CSS Reset (extended)
@@ -661,6 +715,7 @@ main h1.robot_name{
 }
 
 
+@media only screen and (min-width: 641px) {
 /* aside menu */
 aside {
     font-size: 0.9em;
@@ -678,99 +733,99 @@ aside li a {
     display: inline;
 }
 
-aside menu.connect{
+aside nav menu.connect {
     border: 1px solid [% color_9 %];
     background-color: [% color_7 %]!important;
 }
 
-aside menu.connect li{
+aside nav menu.connect li {
     background-color: transparent!important;
 }
 
-aside menu.connect ul li.has-dropdown ul{
+aside nav menu.connect ul li > ul.menu {
     margin: 0;
     padding: 0;
     width:90%;
 }
-aside menu.connect ul li.has-dropdown ul li{
+aside nav menu.connect ul li > ul.menu li{
     margin: 0;
     padding: 0;
     line-height:1;
 }
-aside menu.connect ul li.has-dropdown ul li label{
+aside nav menu.connect ul li > ul.menu li label{
     padding: 0;
     font-size: inherit;
 }
-aside menu.connect ul li.has-dropdown ul li input{
+aside nav menu.connect ul li > ul.menu li input{
     height:1.5rem;
 }
-aside menu li.divider, aside menu [role="separator"] {
+aside nav menu li.divider, aside nav menu [role="separator"] {
     display:block;
     margin:0!important;
     border-bottom: 1px solid [% color_5 %];
 }
-aside menu{
+#sympa-sub-bar menu {
     width:98%;
     max-width:250px;
     margin: 0 auto 1rem auto ;
     border-radius: 5px;
 }
 
-aside menu.user,aside menu.list,aside menu.sympa{
+aside nav menu.user, aside nav menu.list, aside nav menu.sympa {
     background-color:[% color_8 %];
     border:1px solid [% color_6 %];
 }
 
-aside menu a{
+aside nav menu a {
     color:[% color_6 %];
 }
-aside menu a:hover{
+aside nav menu a:hover {
     color:[% color_5 %];
 }
 
-aside menu ul {
+aside nav menu ul {
     padding-left:0;
 }
 
-aside menu ul li {
+aside nav menu ul li {
     padding-left:10px;
 }
 
-aside menu ul li:nth-child(even){
+aside nav menu ul li:nth-child(even) {
     background-color:[% color_7%];
 }
-aside menu ul li ul li{
+aside nav menu ul li ul li {
     background-color:inherit!important;
 }
-aside menu ul li ul{
+aside nav menu ul li ul {
     margin-top: 0;
     padding-left: 0.5rem;
 }
 
-aside menu ul#MainMenuLinks li ul li.menuLinks{
+aside nav menu ul#MainMenuLinks li ul li.menuLinks {
     line-height: 1.2rem;
 }
 
-aside menu ul li label{
+aside nav menu ul li label {
     margin-top:0;
     padding-left: 0;
     padding-bottom: 0.5rem;
     font-size:110%;
 }
-aside menu ul li.menu_title label {
+aside nav menu ul li.menu_title label {
     padding-bottom: 0.1rem;
     padding-top: 0.1rem;
     margin-bottom: 0.2rem;
     color:[% color_7 %];
     cursor: default;
 }
-aside menu ul li.menu_title, aside menu ul li.menu_title:hover{
+aside nav menu ul li.menu_title, aside nav menu ul li.menu_title:hover {
     background-color:[% color_6 %]!important;
 }
-aside menu ul li.active, aside menu ul li ul li.active{
+aside nav menu ul li.active, aside nav menu ul li ul li.active {
     background-color:[% color_5%]!important;
 }
-aside menu ul li.active a{
+aside nav menu ul li.active a {
     color:[% color_7 %];
 }
 aside ul li.role{
@@ -780,7 +835,17 @@ aside ul li.role{
 dd {
 	margin: 0 0 0 40px;
 }
+
+[%# Compat. with Foundation 5 ~%]
+#sympa-sub-bar menu ul {
+    background-color: inherit;
+    margin: 1em 0;
+}
+#sympa-sub-bar menu ul li a {
+    padding: 0;
+}
 /* end aside */
+}
 
 /*shared menu*/
 menu.shared{
@@ -836,8 +901,8 @@ menu.shared li{
 }
 
 /* Initials in list of lists */
-main .top-bar-section li.letter,
-main .top-bar-section li.letter a,
+main nav menu ul li.letter,
+main nav menu ul li.letter a,
 h4.letter {
     text-transform: capitalize;
 }
@@ -1955,27 +2020,44 @@ span.bottom_page, p.bottom_page{
 
 
 /*top-bar*/
-.top-bar form{
+nav menu form{
     margin:0;
     padding:0;
 }
-.top-bar ul li{
+#sympa-top-bar menu ul li,
+#sympa-top-bar menu ul li a,
+#sympa-top-bar menu ul li a:hover,
+#sympa-nav-bar menu ul li:not(.nolink),
+#sympa-nav-bar menu ul li a,
+#sympa-nav-bar menu ul li a:hover {
     font-family: 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;
     font-size:13px;
-    color:#fff;
+    color:#fff;                 [%~# FIXME:color_7? %]
+}
+[%# Compat. with Foundation 5 ~%]
+.top-bar {
+    padding: 0;
+}
+.top-bar, .top-bar ul {
+    background-color: transparent;
+}
+.is-dropdown-submenu {
+    border: 0;
 }
 
-.top-bar, .top-bar-section ul li, .top-bar-section li:not(.has-form) a:not(.button){
+#sympa-top-bar,
+#sympa-top-bar menu ul li,
+#sympa-top-bar menu ul li:not(.has-form) a:not(.button){
     background-color: [% color_6 %];
 }
-/* properly set active list item color when not hovered */
-.top-bar-section li.active:not(.has-form) a:not(.button){
+[%# properly set active list item color when not hovered ~%]
+#sympa-top-bar ul li.active:not(.has-form) a:not(.button){
     background-color: [% color_5%];
 }
-.top-bar .top-bar-section li:not(.has-form) a:not(.button):hover{
+#sympa-top-bar ul li:not(.has-form) a:not(.button):hover{
     background-color: [% color_5%];
 }
-.top-bar button{
+nav menu button{
     top:0;
     background-color:[% color_7 %];
     color:[% color_6 %];
@@ -1983,18 +2065,23 @@ span.bottom_page, p.bottom_page{
     font-size:13px;
 }
 
+@media only screen and (min-width: 641px) {
+/* top-bar */
+[%# FIXME:seems not used ~%]
 .top-bar-section ul li > a {
   padding: 0;
   padding-left: 15px;
 }
-.top-bar ul.right li label {
+
+[% IF 0 # No longer used --- loginbanner.tt2 embeded in top bar. ~%]
+#sympa-top-bar menu ul li label {
     margin-top:0;
     display:inline;
     color:[% color_7 %];
     font-weight:normal;
 }
 
-.top-bar .top-bar-section ul.right li.has-dropdown ul.dropdown li label {
+#sympa-top-bar menu ul li > ul.menu li label {
     display:block;
     color:[% color_7 %];
     background-color: transparent;
@@ -2005,7 +2092,7 @@ span.bottom_page, p.bottom_page{
     line-height:1.2;
 }
 
-.top-bar .top-bar-section ul.right li.has-dropdown ul.dropdown li input{
+#sympa-top-bar menu ul li > ul.menu li input{
     height:1.5rem;
     margin: 0;
     padding-top: 0;
@@ -2013,10 +2100,11 @@ span.bottom_page, p.bottom_page{
     width:15rem;
 }
 
-.top-bar .top-bar-section ul.right li.has-dropdown ul.dropdown li.role{
+#sympa-top-bar menu ul li > ul.menu li.role{
     line-height:1rem;
 }
 
+[%# Not used ~%]
 .top-bar .title-area {
     text-align:right;
 }
@@ -2050,48 +2138,86 @@ span.bottom_page, p.bottom_page{
         padding: 0.3rem;
 /*        vertical-align: top;*/
 }
+[%~ END # IF 0 %]
+
+[%# Founation 6 ~%]
+.top-bar {
+    height: 45px;
+    line-height: 45px;
+    padding: 0;
+}
+.top-bar menu ul li a {
+    line-height: inherit;
+}
+
+[%#
+  Foundation for Sites 6 stacks top-bar-left on top-bar-right by default.
+  To prevent this behavior, rebuilding SCSS is required.
+  As a workaround, make top-bar-left a zero-height block and top-bar-right
+  be overlying.
+~%]
+#sympa-top-bar .top-bar-left {
+    height: 0;
+    margin: 0;
+    overflow: visible;
+    width: 16.7%; /* Corresponds large-2 columns */
+}
+}
+
+/* end top-bar */
 
 /* main top-bar*/
- main .top-bar, main .top-bar .title-area, main .top-bar .active{
+#sympa-nav-bar,
+main .top-bar .active{
     height:30px;
+    line-height: 30px;
 }
- main .top-bar .title-area{
+main .top-bar {
     padding:0;
 }
-main .top-bar-section li.active:not(.has-form) a:not(.button){
+
+[%# Compat. with Foundation 5 ~%]
+#sympa-nav-bar menu ul li a {
+    /* padding: 0 10px; */
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+main nav menu ul li.active:not(.has-form) a:not(.button){
     line-height:30px;
     background-color: [% color_13 %];
 }
-main .top-bar-section ul li, main .top-bar-section li:not(.has-form) a:not(.button){
+main nav menu ul li, main nav menu ul li:not(.has-form) a:not(.button){
     background-color: [% color_10%];
     line-height: 30px;
     font-size:0.8rem;
 }
-main .top-bar-section li:not(.has-form) a:not(.button):hover{
+main nav menu ul li:not(.has-form) a:not(.button):hover{
     background-color: [% color_13%]!important;
 }
 
-main .top-bar-section > ul > .divider, main .top-bar-section > ul > [role="separator"] {
+main nav menu > ul > .divider, main nav menu > ul > [role="separator"] {
     border-right: solid 1px [% color_5%];
 }
 
-main .top-bar-section .has-dropdown > a:after {
+[%# FIXME:is this used? ~%]
+main nav menu .has-dropdown > a:after {
     top: 18px;
 }
 
-main .top-bar-section > ul > .divider, main .top-bar-section > ul > [role="separator"] {
+main nav menu > ul > .divider, main nav menu > ul > [role="separator"] {
     border-right: solid 1px [% color_13 %];
     height: 30px;
 }
 
-main .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
+main nav menu ul.menu li:not(.has-form):not(.active) > a:not(.button) {
     background-color: [% color_10 %];
 }
-main .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button):hover {
+main nav menu ul.menu li:not(.has-form):not(.active) > a:not(.button):hover {
     background-color: [% color_13 %];
 }
 
-main .top-bar-section li.nolink{
+main nav menu ul li.nolink{
     padding: 0 10px;
     color: [% color_3 %];
     background-color: [% color_8 %];
@@ -2219,49 +2345,96 @@ span.fa-stack i.fa-plus-circle {
 }
 
 @media only screen and (min-width: 641px){
-    .top-bar-section li:not(.has-form) a:not(.button) {
-      padding: 0 10px;
+    #sympa-top-bar menu ul li:not(.has-form) a:not(.button) {
+      /* padding: 0 10px; */
+        padding-top: 0;
+        padding-bottom: 0;
     }
-    .top-bar-section ul.dropdown li > span {
+    nav menu ul.menu li > span {
       display: block;
       padding-left: 10px;
     }
-    .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
+    #sympa-top-bar menu .menu li:not(.has-form):not(.active) > a:not(.button) {
         background-color: [% color_6 %];
     }
-    .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button):hover {
+    #sympa-top-bar menu .menu li:not(.has-form):not(.active) > a:not(.button):hover {
         background-color: [% color_5 %];
     }
     main .top-bar{
         background-color:[% color_10 %];
     }
+
+    [%# Compat. with Foundation 5 ~%]
+    .top-bar menu ul.menu li a {
+        white-space: nowrap;
+    }
 }
 @media only screen and (max-width: 640px){
+    /* title bar */
+    .title-bar {
+        height: 45px;
+        line-height: 45px;
+        padding: 0 1rem;
+    }
+    header .title-bar {
+        background-color: [% color_6 %];
+    }
+    aside .title-bar {
+        background-color: [% color_6 %];
+    }
+    main .title-bar {
+        background-color: [% color_10 %];
+    }
+
+    /* aside menu, mobile version */
+    #sympa-sub-bar,
+    #sympa-sub-bar menu ul li,
+    #sympa-sub-bar menu ul li:not(.has-form) a:not(.button){
+        background-color: [% color_6 %];
+    }
+    [%# properly set active list item color when not hovered ~%]
+    #sympa-sub-bar ul li.active:not(.has-form) a:not(.button){
+        background-color: [% color_5%];
+    }
+    #sympa-sub-bar ul li:not(.has-form) a:not(.button):hover{
+        background-color: [% color_5%];
+    }
+    /* Hide some items. */
+    #sympa-sub-bar menu ul li.nolink {
+      display: none;
+    }
+
     main .top-bar{
         background-color: [% color_10%];
     }
-    .top-bar ul.right li > span {
+    nav menu ul li > span {
       display: block;
       padding-left: 15px;
     }
-    .top-bar ul.right li label {
+    nav menu ul li label {
       padding-left: 10px;
       color:[% color_6%];
       background-color:[% color_7%];
     }
-    .top-bar-section ul li a {
+    nav menu ul li a,
+    nav menu ul li a:hover {
       color: [% color_7%];
     }
     /* Nonexisting item in list of lists. */
-    .top-bar-section ul li.nolink {
+    #sympa-nav-bar menu ul li.nolink {
       display: none;
+    }
+
+    [%# Compat. with Foundation 5 ~%]
+    aside.columns {
+        padding: 0;
     }
 }
 @media only screen and (max-width: 768px){
     table caption {
     display: none;
     }
-    aside menu ul li ul {
+    aside nav menu ul li ul {
     margin-left: 0;
     padding-left: 0;
     }
@@ -2275,11 +2448,12 @@ span.fa-stack i.fa-plus-circle {
         font-size:1em;
     }
 }
+[%# FIXME: Used only by mobile mode (max-width: 640px) ~%]
 @media only screen and (max-width: 1025px){
-    .top-bar .title-area img {
+    .title-bar img {
       height: 45px;
     }
-    .top-bar .title-area {
+    .title-bar {
         text-align:left;
     }
 }
