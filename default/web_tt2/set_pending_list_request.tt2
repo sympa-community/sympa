@@ -51,6 +51,21 @@
 </pre>
 </div>
 
+<h2>[%|loc%]Users[%END%]</h2>
+
+<ul>
+  <li>
+  <a href="[% 'review' | url_rel([list,'owner']) %]">
+    [%|loc%]Owners[%END%]
+  </a>
+  </li>
+  <li>
+  <a href="[% 'review' | url_rel([list,'editor']) %]">
+    [%|loc%]Moderators[%END%]
+  </a>
+  </li>
+</ul>
+
 <div class="block">
 <h2>[%|loc%]Configuration file[%END%]</h2>
 [% IF is_listmaster ~%]

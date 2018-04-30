@@ -248,6 +248,7 @@ our %comm = (
     'edit_config'              => 'do_edit_config',
     #XXX'submit_list' => 'do_submit_list',
     'editsubscriber'       => 'do_editsubscriber',
+    'edit'                 => 'do_edit',
     'viewbounce'           => 'do_viewbounce',
     'redirect'             => 'do_redirect',
     'rename_list_request'  => 'do_rename_list_request',
@@ -401,6 +402,7 @@ our %action_args = (
     #    ['list', 'email', 'previous_action', 'custom_attribute'],
     #'editsubscriber' => ['list', 'email', 'previous_action'],
     'editsubscriber' => ['list'],
+    'edit'           => ['list', 'role'],
     #'viewbounce' => ['list', 'email', '@file'],
     'viewbounce' => ['list', 'dir', '@file'],
     #'resetbounce'    => ['list', 'email'],
@@ -556,6 +558,7 @@ our %required_args = (
     'distribute'      => ['param.list', 'param.user.email', 'id|idspam'],
     'add_frommod'     => ['param.list', 'param.user.email', 'id'],
     'dump_scenario'      => ['param.list', 'pname'],
+    'edit'            => ['param.list', 'param.user.email', 'role', 'email'],
     'edit_list'          => ['param.user.email', 'param.list'],
     'edit_list_request'  => ['param.user.email', 'param.list'],
     'edit_template'      => ['webormail'],
@@ -663,6 +666,7 @@ our %required_privileges = (
     'distribute'        => ['editor', 'owner', 'listmaster'],
     'add_frommod'       => ['editor', 'owner'],
     'dump_scenario'     => ['listmaster'],
+    'edit'              => ['editor', 'owner', 'listmaster'],
     'edit_list'         => ['owner'],
     'edit_list_request' => ['owner'],
     'edit_template'     => ['listmaster'],
@@ -739,6 +743,7 @@ my %action_type = (
     'savefile'           => 'admin',
     'rebuildallarc'      => 'admin',    #FIXME: serveradmin?
     'reviewbouncing'     => 'admin',
+    'edit'               => 'admin',
     'edit_list_request'  => 'admin',
     'edit_list'          => 'admin',
     'editsubscriber'     => 'admin',
@@ -749,8 +754,8 @@ my %action_type = (
     'd_admin'            => 'admin',
     'd_reject_shared'    => 'admin',
     'd_install_shared'   => 'admin',
-    'export_member'      => 'admin',
     'dump_scenario'      => 'admin',
+    'export_member'      => 'admin',
     'open_list'          => 'admin',
     'remind'             => 'admin',
     #'subindex' => 'admin',
@@ -826,7 +831,7 @@ our %in_regexp = (
     'blacklist'            => '.*',
 
     ## Integer
-    'page' => '\d+',
+    'page' => '\d+|owner|editor',
     'size' => '\d+',
 
     ## Free data
@@ -903,6 +908,7 @@ our %in_regexp = (
     'new_email'  => Sympa::Regexps::email(),
     'sender'     => Sympa::Regexps::email(),
     'fromaddr'   => Sympa::Regexps::email(),
+    'del_emails' => '.*',
     'to' => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
     'automatic_list_part_*' => '[\w\-\.\+]*',
 
@@ -958,6 +964,9 @@ our %in_regexp = (
 
     ## Authentication/moderation key
     'authkey' => '\w+',
+
+    # Role
+    'role' => 'member|editor|owner',
 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -4757,6 +4766,75 @@ sub do_subscriber_count {
 ## Subscribers' list
 sub do_review {
     wwslog('info', '(%s)', $in{'page'});
+
+    $param->{'page'} = $in{'page'} || 1;
+    if ($param->{'page'} eq 'owner') {
+        return _review_user('owner');
+    } elsif ($in{'page'} eq 'editor') {
+        return _review_user('editor');
+    } else {
+        return _review_member();
+    }
+}
+
+# List of owners / editors
+sub _review_user {
+    wwslog('info', '(%s)', @_);
+    my $role = shift;
+
+    # Access control
+    return undef
+        unless Sympa::is_listmaster($list, $param->{'user'}{'email'})
+            or $list->is_admin('owner', $param->{'user'}{'email'});
+
+    # Delete/add users.
+    my @del_users = grep {$_} map { Sympa::Tools::Text::canonic_email($_) }
+        split /\0/, $in{'del_emails'};
+    my $new_users = [
+        grep { $_ and $_->{email} }
+        @{(_deserialize_changes() || {})->{user} || []}
+    ];
+    foreach my $email (@del_users) {
+        next if grep {$email eq $_->{email}} @$new_users;
+        $list->delete_list_admin($role, $email);
+    }
+    foreach my $user (@{(ref $new_users eq 'ARRAY') ? $new_users : []}) {
+        my $email = $user->{email};
+        if (grep {$email eq $_} @del_users) {
+            ; #FIXME: Update user?
+        } else {
+            unless ($list->add_list_admin($role, $user)) {
+                #FIXME: Report error
+            } else {
+                # Notify the new list owner/editor
+                Sympa::send_notify_to_user(
+                    $list,
+                    'added_as_listadmin',
+                    $email,
+                    {   admin_type => $role,
+                        delegator  => $param->{'user'}{'email'}
+                    }
+                );
+                Sympa::WWW::Report::notice_report_web('user_notified',
+                    {'notified_user' => $email},
+                    $param->{'action'});
+            }
+        }
+    }
+
+    # Users list
+    my $users =
+        [grep { $_->{role} eq $role } @{$list->get_current_admins || []}];
+    foreach my $user (@$users) {
+        $user->{sources} = $list->get_datasource_name($user->{id})
+            if $user->{id};
+    }
+    $param->{($role eq 'owner') ? 'owners' : 'editors'} = $users;
+
+    return 1;
+}
+
+sub _review_member {
     my $record;
     my @users;
     my $size;
@@ -4897,6 +4975,83 @@ sub do_review {
     }
 
     return 1;
+}
+
+sub do_edit {
+    wwslog('info', '(%s, %s)', $in{'role'}, $in{'email'});
+
+    my $role  = $in{'role'};
+    my $email = $in{'email'};
+
+    $param->{'role'} = $role;
+    $param->{'page'} = $role;   # For review action
+
+    my @keys = qw(gecos profile info reception visibility);
+
+    #FIXME: Provide config schema including privileges by Family.
+    my $schema = {};
+    my ($role_p, $priv_p) = $list->may_edit($role, $param->{'user'}{'email'});
+    foreach my $key (@keys) {
+        my ($role, $priv) =
+            $list->may_edit("$role.$key", $param->{'user'}{'email'});
+        my $pitem = $schema->{$key} = {};
+        $priv = $priv_p
+            if not $priv
+                or ($priv_p and $priv_p lt $priv);
+        $pitem->{privilege} = $priv
+            if not $pitem->{privilege}
+                or ($priv and $priv lt $pitem->{privilege});
+        $pitem->{privilege} ||= 'hidden';    # Implicit default
+    }
+
+    # Initial access. show current value.
+    unless ($in{'submit'}) {
+        $param->{'config_schema'} = $schema;
+        my ($user) =
+            grep { $_ and $_->{email} eq $email and $_->{role} eq $role }
+            @{$list->get_current_admins || []};
+        $param->{'config_values'} = {$role => [$user]} if $user;
+
+        $param->{'previous_action'} = $in{'previous_action'} || 'review';
+        return 1;
+    } else {
+        # Start parsing the data sent by the edition form.
+        my $new_config = _deserialize_changes();
+        my $new = $new_config->{$role}->[0] || {} if $new_config;
+
+        my $values = {};
+        foreach my $key (@keys) {
+            next unless $schema->{$key}{privilege}
+                and $schema->{$key}{privilege} eq 'write';
+
+            if ($key eq 'gecos') {
+                $values->{gecos} = (defined $new->{gecos}) ? $new->{gecos} : ''
+                    if exists $new->{gecos};
+            } elsif ($key eq 'reception') {
+                $values->{reception} = $new->{reception}
+                    if $new->{reception}
+                        and grep {$new->{reception} eq $_} qw(mail nomail);
+            } elsif ($key eq 'visibility') {
+                $values->{visibility} = $new->{visibility}
+                    if $new->{visibility}
+                        and grep {$new->{visibility} eq $_}
+                            qw(conceal noconceal);
+            } elsif ($key eq 'profile') {
+                $values->{profile} = $new->{profile}
+                    if $new->{profile}
+                        and grep {$new->{profile} eq $_} qw(normal privileged);
+            } elsif ($key eq 'info') {
+                $values->{info} = (defined $new->{info}) ? $new->{info} : ''
+                    if exists $new->{info};
+            }
+        }
+        $list->update_list_admin($email, $role, $values)
+            if $values and %$values;
+
+        $in{'page'} = $role;    # For review.
+        return $in{'previous_action'} || 'review';
+    }
+
 }
 
 ## Show the table of exclude
@@ -10734,29 +10889,6 @@ sub do_edit_list_request {
     wwslog('info', '(%s)', $in{'group'});
 
     return 1 unless $in{'group'};
-
-    # Sync owner/editor in list config with database.
-    # FIXME: TENTATIVE FIX.
-    my @static_admins =
-        grep {$_ and $_->{'subscribed'}} @{$list->_get_admins || []};
-    my @subparams;
-    # Current static owners.
-    my $static_owner =
-        [grep { $_->{'role'} and $_->{'role'} eq 'owner' } @static_admins];
-    @subparams = qw(email gecos info profile reception visibility);
-    foreach my $u (@$static_owner) {
-        $u = {map { $_ => $u->{$_} } @subparams};
-    }
-    $list->{'admin'}{'owner'} = $static_owner;
-    # Current static editors.
-    my $static_editor =
-        [grep { $_->{'role'} and $_->{'role'} eq 'editor' } @static_admins];
-    @subparams = qw(email gecos info reception visibility);
-    foreach my $u (@$static_editor) {
-        $u = {map { $_ => $u->{$_} } @subparams};
-    }
-    $list->{'admin'}{'editor'} = $static_editor;
-    # FIXME: END OF TENTATIVE FIX.
 
     my $config = Sympa::List::Config->new($list, config => $list->{'admin'});
     my $schema = $config->get_schema($param->{'user'}{'email'});

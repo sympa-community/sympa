@@ -529,7 +529,8 @@ $(function() {
 
 /* Add "Close" button to popup showing bounce. */
 $(function() {
-    $('#mainviewbounce, #mainviewmod').on('opened.fndtn.reveal', function(){
+    $('#edit, #mainviewbounce, #mainviewmod')
+    .on('opened.fndtn.reveal', function(){
         var closeButton =
             $('<a class="close-reveal-modal" aria-label="' + sympa.closeText
                 + '">&#215;</a>');

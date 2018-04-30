@@ -1,0 +1,110 @@
+<!-- edit.tt2 -->
+<h2>
+[% IF role == 'owner' ~%]
+  [%|loc%]Owner[%END%]
+[%~ ELSIF role == 'editor' ~%]
+  [%|loc%]Moderator[%END%]
+[%~ ELSE ~%]
+  [% RETURN %]
+[%~ END %]
+</h2>
+
+<form action="[% path_cgi %]" method="post">
+<fieldset>
+[% SET pV = config_values.${role}.0 ~%]
+
+  <input type="hidden" name="previous_action" value="[% previous_action %]" />
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="role" value="[% role %]" />
+  <input type="hidden" name="email" value="[% pV.email %]" />
+
+<div class="row">
+
+<div class="columns">
+  <label for="email">[%|loc%]Email:[%END%]  </label>
+  [% pV.email %]
+</div>
+
+<div class="columns">
+  <label for="gecos">[%|loc%]Name:[%END%]  </label>
+  <input type="text" name="single_param.[% role %].0.gecos" id="gecos"
+   value="[% pV.gecos %]" size="25" />
+</div>
+
+[% IF is_privileged_owner ~%]
+  <div class="columns">
+    <label for="info">[%|loc%]private information[%END%]  </label>
+    <input type="text" name="single_param.[% role %].0.info" id="info"
+     value="[% pV.info %]" size="30" />
+  </div>
+[%~ END %]
+
+[% IF role == 'owner' ~%]
+  <div class="columns">
+    <label for="profile">[%|loc%]profile[%END%]  </label>
+    [% IF is_listmaster ~%]
+      <select name="single_param.[% role %].0.profile" id="profile">
+      [% FOREACH r = ['normal', 'privileged'] ~%]
+        <option value="[% r %]"
+         [%~ IF r == pV.profile %] selected="selected"[% END ~%]
+        >
+        [%~ r | optdesc ~%]
+        </option>
+      [% END %]
+      </select>
+    [%~ ELSE  ~%]
+      [% pV.profile | optdesc %]
+    [%~ END %]
+  </div>
+[%~ END %]
+
+<div class="columns">
+  <label for="reception">[%|loc%]Receiving:[%END%]  </label>
+  <select name="single_param.[% role %].0.reception" id="reception">
+  [% FOREACH r = ['mail', 'nomail'] ~%]
+    <option value="[% r %]"
+     [%~ IF r == pV.reception %] selected="selected"[% END ~%]
+    >
+    [%~ r | optdesc ~%]
+    </option>
+  [% END %]
+  </select>
+</div>
+
+<div class="columns">
+  <label for="visibility">[%|loc%]Visibility:[%END%]  </label>
+  <select id="visibility" name="single_param.[% role %].0.visibility">
+  [% FOREACH r = ['noconceal', 'conceal'] ~%]
+    <option value="[% r %]"
+     [%~ IF r == pV.visibility %] selected="selected"[% END ~%]
+    >
+    [%~ r | optdesc ~%]
+    </option>
+  [% END %]
+  </select>
+</div>
+
+<div class="columns">
+  <label>[%|loc%]Delegated since:[%END%] </label>
+  [% pV.date | optdesc('unixtime') %]
+</div>
+
+<div class="columns">
+  <label>[%|loc%]Last update:[%END%] </label>
+  [% pV.update_date | optdesc('unixtime') %]
+</div>
+
+[% IF is_privileged_owner ~%]
+  <input type="hidden" name="submit" value="submit" />
+  <div class="columns">
+    <input class="MainMenuLinks" type="submit" name="action_edit"
+     value="[%|loc%]Update[%END%]" />
+  </div>
+[%~ END %]
+
+</div>
+
+</fieldset>
+</form>
+
+<!-- end edit.tt2 -->

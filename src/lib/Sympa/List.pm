@@ -743,13 +743,11 @@ sub dump_users {
             print $lock_fh "\n";
         }
     } else {
-        foreach my $user (@{$self->_get_admins || []}) {
+        my %map_field = _map_list_admin_cols();
+
+        foreach my $user (@{$self->get_current_admins || []}) {
             next unless $user->{role} eq $role;
-            foreach my $k (
-                qw(date update_date email gecos profile
-                reception visibility info
-                subscribed included id)
-                ) {
+            foreach my $k (sort keys %map_field) {
                 printf $lock_fh "%s %s\n", $k, $user->{$k}
                     if defined $user->{$k} and length $user->{$k};
     
@@ -2178,21 +2176,7 @@ sub delete_list_admin {
 
 # Delete all admin_table entries.
 # OBSOLETED: No longer used.
-sub delete_all_list_admin {
-    $log->syslog('debug2', '');
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    my $sth;
-
-    ## Delete record in ADMIN
-    unless ($sdm
-        and $sth = $sdm->do_prepared_query(q{DELETE FROM admin_table})) {
-        $log->syslog('err', 'Unable to remove all admin from database');
-        return undef;
-    }
-
-    return 1;
-}
+#sub delete_all_list_admin;
 
 # OBSOLETED: This may no longer be used.
 # Returns the cookie for a list, if any.
@@ -2811,6 +2795,48 @@ sub get_next_list_member {
     return $user;
 }
 
+# Mapping between var and field names.
+sub _map_list_admin_cols {
+    my %map_field = (
+        date        => 'date_epoch_admin',
+        update_date => 'update_epoch_admin',
+        gecos       => 'comment_admin',
+        email       => 'user_admin',
+        id          => 'include_sources_admin',
+    );
+
+    foreach my $f (
+        keys %{
+            {Sympa::DatabaseDescription::full_db_struct()}
+            ->{'admin_table'}->{fields}
+        }
+        ) {
+        next
+            if $f eq 'list_admin'
+                or $f eq 'robot_admin'
+                or $f eq 'role_admin';
+
+        my $k = {reverse %map_field}->{$f};
+        unless ($k) {
+            $k = $f;
+            $k =~ s/_admin\z//;
+            $map_field{$k} = $f;
+        }
+    }
+
+    return %map_field;
+}
+
+sub _list_admin_cols {
+    my $sdm = shift;
+
+    my %map_field = _map_list_admin_cols();
+    return join ', ', map {
+        my $col = $map_field{$_};
+        ($col eq $_) ? $col : sprintf('%s AS "%s"', $col, $_);
+    } sort keys %map_field;
+}
+
 ## Loop for all subsequent admin users with the role defined in
 ## get_first_list_admin.
 #DEPRECATED: Merged into _get_basic_admins().  Use get_admins() instead.
@@ -2881,7 +2907,8 @@ sub get_admins {
 
     my $admin_user = $self->_cache_get('admin_user');
     unless ($admin_user and @{$admin_user || []}) {
-        $admin_user = $self->_get_admins;   # Get recent admins from database
+        # Get recent admins from database.
+        $admin_user = $self->get_current_admins;
         if ($admin_user) {
             $self->_cache_put('admin_user', $admin_user);
         } else {
@@ -2943,8 +2970,9 @@ sub get_admins {
     return wantarray ? @users : [@users];
 }
 
-# Get recent admins from database.
-sub _get_admins {
+# Get all admins passing cache.
+# Note: Use with care. This increases database load.
+sub get_current_admins {
     my $self = shift;
 
     my $sdm = Sympa::DatabaseManager->instance;
@@ -2952,19 +2980,13 @@ sub _get_admins {
 
     unless (
         $sdm and $sth = $sdm->do_prepared_query(
-            q{SELECT user_admin AS email, comment_admin AS gecos,
-                     role_admin AS "role",
-                     reception_admin AS reception,
-                     visibility_admin AS visibility,
-                     date_epoch_admin AS "date",
-                     update_epoch_admin AS update_date,
-                     info_admin AS info, profile_admin AS profile,
-                     subscribed_admin AS subscribed,
-                     included_admin AS included,
-                     include_sources_admin AS id
-              FROM admin_table
-              WHERE list_admin = ? AND robot_admin = ?
-              ORDER BY user_admin},
+            sprintf(
+                q{SELECT %s, role_admin AS "role"
+                  FROM admin_table
+                  WHERE list_admin = ? AND robot_admin = ?
+                  ORDER BY user_admin},
+                _list_admin_cols($sdm)
+            ),
             $self->{'name'},
             $self->{'domain'}
         )
@@ -4010,6 +4032,9 @@ sub add_list_admin {
 
         $new_admin_user->{'subscribed'} ||= 0;
         $new_admin_user->{'included'}   ||= 0;
+
+        $new_admin_user->{'reception'}  ||= 'mail';
+        $new_admin_user->{'visibility'} ||= 'noconceal';
 
         my $sdm = Sympa::DatabaseManager->instance;
 
@@ -7024,277 +7049,13 @@ sub on_the_fly_sync_include {
 }
 
 sub sync_include_admin {
-    my ($self) = shift;
-    my $option = shift;
+    $log->syslog('debug2', '(%s)', @_);
+    my $self = shift;
 
-    my $name = $self->{'name'};
-    $log->syslog('debug2', '(%s)', $name);
-
-    ## don't care about listmaster role
+    # don't care about listmaster role.
     foreach my $role ('owner', 'editor') {
-        # Load a hash with the old admin users.
-        my $old_admin_users = {
-            map { ($_->{'email'} => $_) }
-                grep { $_ and $_->{'role'} and $_->{'role'} eq $role }
-                @{$self->_get_admins || []}
-        };
-
-        ## Load a hash with the new admin user list from an include source(s)
-        my $new_admin_users_include;
-        ## Load a hash with the new admin user users from the list config
-        my $new_admin_users_config;
-        unless ($option and $option eq 'purge') {
-            my $result = $self->_load_list_admin_from_include($role) || {};
-            $new_admin_users_include = $result->{users};
-            my @depend_on = @{$result->{depend_on} || []};
-
-            ## If include sources were not available, do not update admin
-            ## users
-            ## Use DB cache instead
-            unless (defined $new_admin_users_include) {
-                $log->syslog('err',
-                    'Could not get %ss from an include source for list %s',
-                    $role, $self);
-                Sympa::send_notify_to_listmaster($self,
-                    'sync_include_admin_failed', {});
-                return undef;
-            }
-
-            $new_admin_users_config =
-                $self->_load_list_admin_from_config($role);
-
-            unless (defined $new_admin_users_config) {
-                $log->syslog('err',
-                    'Could not get %ss from config for list %s',
-                    $role, $name);
-                return undef;
-            }
-
-            # Update inclusion dependency (added on 6.2.16).
-            $self->_update_inclusion_table($role, @depend_on);
-        }
-
-        my @add_tab;
-        my $admin_users_added   = 0;
-        my $admin_users_updated = 0;
-
-        ## Get an Exclusive lock
-        my $lock_fh =
-            Sympa::LockedFile->new($self->{'dir'} . '/include_admin_user',
-            20, '+');
-        unless ($lock_fh) {
-            $log->syslog('err', 'Could not create new lock');
-            return undef;
-        }
-
-        ## Go through new admin_users_include
-        foreach my $email (keys %{$new_admin_users_include}) {
-
-            # included and subscribed
-            if (defined $new_admin_users_config->{$email}) {
-                my $param;
-                foreach my $p ('reception', 'visibility', 'gecos', 'info',
-                    'profile') {
-                    #  config parameters have priority on include parameters
-                    #  in case of conflict
-                    $param->{$p} = $new_admin_users_config->{$email}{$p}
-                        if (defined $new_admin_users_config->{$email}{$p});
-                    $param->{$p} ||= $new_admin_users_include->{$email}{$p};
-                }
-
-                #Admin User was already in the DB
-                if (defined $old_admin_users->{$email}) {
-
-                    $param->{'included'} = 1;
-                    $param->{'id'} = $new_admin_users_include->{$email}{'id'};
-                    $param->{'subscribed'} = 1;
-
-                    my $param_update =
-                        is_update_param($param, $old_admin_users->{$email});
-
-                    # updating
-                    if (defined $param_update) {
-                        if (%{$param_update}) {
-                            $log->syslog('debug', 'Updating %s %s to list %s',
-                                $role, $email, $name);
-                            $param_update->{'update_date'} = time;
-
-                            unless (
-                                $self->update_list_admin(
-                                    $email, $role, $param_update
-                                )
-                                ) {
-                                $log->syslog('err',
-                                    '(%s) Failed to update %s %s',
-                                    $name, $role, $email);
-                                next;
-                            }
-                            $admin_users_updated++;
-                        }
-                    }
-                    # for the next foreach (sort of new_admin_users_config
-                    # that are not included)
-                    delete($new_admin_users_config->{$email});
-
-                    # add a new included and subscribed admin user
-                } else {
-                    $log->syslog('debug2', 'Adding %s %s to list %s',
-                        $email, $role, $name);
-
-                    foreach my $key (keys %{$param}) {
-                        $new_admin_users_config->{$email}{$key} =
-                            $param->{$key};
-                    }
-                    $new_admin_users_config->{$email}{'included'}   = 1;
-                    $new_admin_users_config->{$email}{'subscribed'} = 1;
-                    push(@add_tab, $new_admin_users_config->{$email});
-
-                    # for the next foreach (sort of new_admin_users_config
-                    # that are not included)
-                    delete($new_admin_users_config->{$email});
-                }
-
-                # only included
-            } else {
-                my $param = $new_admin_users_include->{$email};
-
-                #Admin User was already in the DB
-                if (defined($old_admin_users->{$email})) {
-
-                    $param->{'included'} = 1;
-                    $param->{'id'} = $new_admin_users_include->{$email}{'id'};
-                    $param->{'subscribed'} = 0;
-
-                    my $param_update =
-                        is_update_param($param, $old_admin_users->{$email});
-
-                    # updating
-                    if (defined $param_update) {
-                        if (%{$param_update}) {
-                            $log->syslog('debug', 'Updating %s %s to list %s',
-                                $role, $email, $name);
-                            $param_update->{'update_date'} = time;
-
-                            unless (
-                                $self->update_list_admin(
-                                    $email, $role, $param_update
-                                )
-                                ) {
-                                $log->syslog('err',
-                                    '(%s) Failed to update %s %s',
-                                    $name, $role, $email);
-                                next;
-                            }
-                            $admin_users_updated++;
-                        }
-                    }
-                    # add a new included admin user
-                } else {
-                    $log->syslog('debug2', 'Adding %s %s to list %s',
-                        $role, $email, $name);
-
-                    foreach my $key (keys %{$param}) {
-                        $new_admin_users_include->{$email}{$key} =
-                            $param->{$key};
-                    }
-                    $new_admin_users_include->{$email}{'included'} = 1;
-                    push(@add_tab, $new_admin_users_include->{$email});
-                }
-            }
-        }
-
-        ## Go through new admin_users_config (that are not included : only
-        ## subscribed)
-        foreach my $email (keys %{$new_admin_users_config}) {
-
-            my $param = $new_admin_users_config->{$email};
-
-            #Admin User was already in the DB
-            if (defined($old_admin_users->{$email})) {
-
-                $param->{'included'}   = 0;
-                $param->{'id'}         = '';
-                $param->{'subscribed'} = 1;
-                my $param_update =
-                    is_update_param($param, $old_admin_users->{$email});
-
-                # updating
-                if (defined $param_update) {
-                    if (%{$param_update}) {
-                        $log->syslog('debug', 'Updating %s %s to list %s',
-                            $role, $email, $name);
-                        $param_update->{'update_date'} = time;
-
-                        unless (
-                            $self->update_list_admin(
-                                $email, $role, $param_update
-                            )
-                            ) {
-                            $log->syslog('err', '(%s) Failed to update %s %s',
-                                $name, $role, $email);
-                            next;
-                        }
-                        $admin_users_updated++;
-                    }
-                }
-                # add a new subscribed admin user
-            } else {
-                $log->syslog('debug2', 'Adding %s %s to list %s',
-                    $role, $email, $name);
-
-                foreach my $key (keys %{$param}) {
-                    $new_admin_users_config->{$email}{$key} = $param->{$key};
-                }
-                $new_admin_users_config->{$email}{'subscribed'} = 1;
-                push(@add_tab, $new_admin_users_config->{$email});
-            }
-        }
-
-        if ($#add_tab >= 0) {
-            unless ($admin_users_added =
-                $self->add_list_admin($role, @add_tab)) {
-                $log->syslog('err', 'Failed to add new %s(s) to list %s',
-                    $role, $self);
-                return undef;
-            }
-        }
-
-        if ($admin_users_added) {
-            $log->syslog('debug', '(%s) %d %s(s) added',
-                $name, $admin_users_added, $role);
-        }
-
-        $log->syslog('debug', '(%s) %d %s(s) updated',
-            $name, $admin_users_updated, $role);
-
-        ## Go though old list of admin users
-        my $admin_users_removed = 0;
-        my @deltab;
-
-        foreach my $email (keys %$old_admin_users) {
-            unless (defined($new_admin_users_include->{$email})
-                || defined($new_admin_users_config->{$email})) {
-                $log->syslog('debug2', 'Removing %s %s to list %s',
-                    $role, $email, $name);
-                push(@deltab, $email);
-            }
-        }
-
-        if ($#deltab >= 0) {
-            unless ($admin_users_removed =
-                $self->delete_list_admin($role, @deltab)) {
-                $log->syslog('err', '(%s) Failed to delete %s %s',
-                    $name, $role, $admin_users_removed);
-                return undef;
-            }
-            $log->syslog('debug', '(%s) %d %s(s) removed',
-                $name, $admin_users_removed, $role);
-        }
-
-        ## Release lock
-        unless ($lock_fh->close()) {
-            return undef;
-        }
+        return undef
+            unless $self->_sync_include_user($role);
     }
 
     $self->_cache_publish_expiry('admin_user');
@@ -7303,30 +7064,153 @@ sub sync_include_admin {
     return scalar @{$self->get_admins('owner')};
 }
 
-## Load param admin users from the config of the list
-sub _load_list_admin_from_config {
+sub _sync_include_user {
     my $self = shift;
     my $role = shift;
-    my $name = $self->{'name'};
-    my %admin_users;
 
-    $log->syslog('debug2', '(%s) For list %s', $role, $name);
+    # Load a hash with the new users.
+    my $result    = $self->_load_list_admin_from_include($role) || {};
+    my $new_users = $result->{users};
+    my @depend_on = @{$result->{depend_on} || []};
 
-    foreach my $entry (@{$self->{'admin'}{$role}}) {
-        my $email = lc($entry->{'email'});
-        my %u;
-
-        $u{'email'}      = $email;
-        $u{'reception'}  = $entry->{'reception'};
-        $u{'visibility'} = $entry->{'visibility'};
-        $u{'gecos'}      = $entry->{'gecos'};
-        $u{'info'}       = $entry->{'info'};
-        $u{'profile'}    = $entry->{'profile'} if ($role eq 'owner');
-
-        $admin_users{$email} = \%u;
+    # If include sources were not available, do not update users.
+    # Use DB cache instead and warn the listmaster.
+    unless (defined $new_users) {
+        $log->syslog('err',
+            'Could not get %ss from an include source for list %s',
+            $role, $self);
+        Sympa::send_notify_to_listmaster($self, 'sync_include_admin_failed',
+            {});
+        return undef;
     }
-    return \%admin_users;
+
+    # Update inclusion dependency (added on 6.2.16).
+    $self->_update_inclusion_table($role, @depend_on);
+
+    # Get an Exclusive lock.
+    my $lock_fh =
+        Sympa::LockedFile->new($self->{'dir'} . '/include_admin_user',
+        20, '+');
+    unless ($lock_fh) {
+        $log->syslog('err', 'Could not create new lock');
+        return undef;
+    }
+
+    my (%users_added, %users_updated, $users_deleted);
+    my $time = time;
+    my $sdm  = Sympa::DatabaseManager->instance;
+    my $sth;
+
+    # Go through new admin_users_include
+    foreach my $user (values %$new_users) {
+        if ($users_added{$user->{email}} or $users_updated{$user->{email}}) {
+            next;
+        }
+
+        unless (
+            $sdm
+            and $sth = $sdm->do_prepared_query(
+                q{UPDATE admin_table
+                  SET included_admin = 1, include_sources_admin = ?,
+                      update_epoch_admin = ?
+                  WHERE role_admin = ? AND user_admin = ? AND
+                        list_admin = ? AND robot_admin = ?},
+                $user->{id},     $time,
+                $role,           $user->{email},
+                $self->{'name'}, $self->{'domain'}
+            )
+            and $sth->rows
+            ) {
+            unless (
+                $sdm
+                and $sth = $sdm->do_prepared_query(
+                    q{INSERT INTO admin_table
+                      (user_admin, comment_admin,
+                       list_admin, robot_admin,
+                       date_epoch_admin, update_epoch_admin,
+                       reception_admin, visibility_admin,
+                       subscribed_admin, included_admin,
+                       include_sources_admin,
+                       role_admin, info_admin, profile_admin)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 1, ?, ?, ?, ?)},
+                    $user->{email},     $user->{gecos},
+                    $self->{'name'},    $self->{'domain'},
+                    $time,              $time,
+                    $user->{reception}, $user->{visibility},
+                    $user->{id},
+                    $role, $user->{info}, $user->{profile}
+                )
+                and $sth->rows
+                ) {
+                $log->syslog('err', '(%s) Failed to update %s %s',
+                    $self, $role, $user->{email});
+            } else {
+                $users_added{$user->{email}} = 1;
+            }
+        } else {
+            $users_updated{$user->{email}} = 1;
+        }
+    }
+
+    $log->syslog(
+        'debug', '(%s) %d %s(s) added, %d %s(s) updated',
+        $self, scalar keys %users_added,
+        $role, scalar keys %users_updated, $role
+    );
+
+    # Go though old list of admin users.
+    $users_deleted = 0;
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{DELETE FROM admin_table
+              WHERE role_admin = ? AND list_admin = ? AND robot_admin = ? AND
+                    (subscribed_admin IS NULL OR subscribed_admin = 0) AND
+                    NOT (included_admin IS NULL OR included_admin = 0) AND
+                    (update_epoch_admin IS NULL OR update_epoch_admin < ?)},
+            $role, $self->{'name'}, $self->{'domain'},
+            $time
+        )
+        ) {
+        $log->syslog('err', '(%s) Failed to delete %s', $self, $role);
+    } else {
+        $users_deleted += $sth->rows;
+    }
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{UPDATE admin_table
+              SET included_admin = 0, include_sources_admin = NULL,
+                  update_epoch_admin = ?
+              WHERE role_admin = ? AND list_admin = ? AND robot_admin = ? AND
+                    subscribed_admin = 1 AND
+                    (update_epoch_admin IS NULL OR update_epoch_admin < ?)},
+            $time,
+            $role, $self->{'name'}, $self->{'domain'},
+            $time
+        )
+        ) {
+        $log->syslog('err', '(%s) Failed to delete %s', $self, $role);
+    } else {
+        $users_deleted += $sth->rows;
+    }
+
+    if ($users_deleted) {
+        $log->syslog('debug', '(%s) %d %s(s) removed',
+            $self, $users_deleted, $role);
+    }
+
+    # Release lock.
+    unless ($lock_fh->close()) {
+        return undef;
+    }
+
+    return 1;
 }
+
+## Load param admin users from the config of the list
+# No longer used.
+#sub _load_list_admin_from_config;
 
 ## return true if new_param has changed from old_param
 #  $new_param is changed to return only entries that need to
