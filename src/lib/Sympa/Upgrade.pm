@@ -1772,7 +1772,10 @@ sub upgrade {
                 _get_canonical_read_date($sdm, 'update_admin')
             )
         );
+    }
 
+    # Upgrade dump files for list users.
+    if (lower_version($previous_version, '6.2.33b.1')) {
         $log->syslog('notice', 'Upgrading user dumps of closed lists.');
         # Upgrading user dumps of closed lists.
         my $lists =
