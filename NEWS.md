@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.33b.1](https://github.com/sympa-community/sympa/tree/6.2.33b.1) (2018-06-XX)
+## [6.2.33b.1](https://github.com/sympa-community/sympa/tree/6.2.33b.1) (2018-05-03)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.32...6.2.33b.1)
 
@@ -15,6 +15,7 @@
 
 **Fixed bugs:**
 
+- Error message is missing one parameter [\#263](https://github.com/sympa-community/sympa/issues/263)
 - Erroneous typing in templates [\#266](https://github.com/sympa-community/sympa/issues/266)
 - cookie parameter protection [\#243](https://github.com/sympa-community/sympa/issues/243)
 - Spurious error on duplicate keys with admin sync [\#11](https://github.com/sympa-community/sympa/issues/11)
