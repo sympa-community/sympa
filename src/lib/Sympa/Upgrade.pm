@@ -1791,19 +1791,21 @@ sub upgrade {
                     $dir . '/member.dump';
             }
 
-            my ($fh, $fh_config);
+            my $fh;
+            next unless open $fh, '<', $dir . '/config';
+            my $config = do { local $RS; <$fh> };
+            close $fh;
+            # Write out initial permanent owners/editors in <role>.dump files.
+            $config =~ s/(\A|\n)[\t ]+(?=\n)/$1/g;  # normalize empty lines
+            open my $ifh, '<', \$config;            # open "in memory" file
+            my @config = do { local $RS = ''; <$ifh> };
+            close $ifh;
             foreach my $role (qw(owner editor)) {
-                my $file   = $list->{'dir'} . '/' . $role . '.dump';
-                my $config = $list->{'dir'} . '/config';
-
-                if (!-e $file
-                    and open($fh, '>', $file)
-                    and open($fh_config, '<', $config)) {
-                    local $RS = '';     # read paragraph by each
-                    my $admins = join '', grep {/\A\s*$role\b/} <$fh_config>;
-                    print $fh $admins;
-                    close $fh;
-                    close $fh_config;
+                my $file = $dir . '/' . $role . '.dump';
+                if (!-e $file and open my $ofh, '>', $file) {
+                    my $admins = join '', grep {/\A\s*$role\b/} @config;
+                    print $ofh $admins;
+                    close $ofh;
                 }
             }
         }
