@@ -161,11 +161,12 @@
           </ul>
     </li>
   [% IF is_owner ~%]
-    <li class="has-dropdown [% IF action == 'review' %]active[%END%]">
+    [% IF action == 'review' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][%END%]
+    <li class="[% class %]">
       <a href="#">
         [%|loc%]Users[%END%]
       </a>
-      <ul class="dropdown">
+      <ul class="vertical menu">
         <li [% IF page.match('^\d+$') %]class="active"[%END%]>
           <a  href="[% 'review' | url_rel([list]) %]" >
             [%|loc%]Subscribers[%END%]
