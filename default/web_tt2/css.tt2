@@ -2154,6 +2154,14 @@ nav menu button{
     .top-bar menu ul li a {
         line-height: inherit;
     }
+    [%#
+      Prevent spacing between items of top bar with inline-block rendering.
+      Foundation 5 used list-item so that such spaces were not rendered.
+    ~%]
+    #sympa-top-bar > menu > ul,
+    #sympa-nav-bar > menu > ul {
+        font-size: 0;
+    }
 
     [%#
       Foundation for Sites 6 stacks top-bar-left on top-bar-right by default.
