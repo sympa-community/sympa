@@ -618,17 +618,22 @@ table tr th, table tr td {
 }
 
 #loading {
+    position: absolute;
+    top: 0;
+    left: 0;
     width:100%;
     height:100%;
-    background-color:[% color_7 %];
+    background-color: rgba(255, 255, 255, 0.75);
     overflow: hidden;
     display: none;
+    z-index: 1;
 }
 
 #loadingText {
     width: 100%;
     text-align: center;
-    padding-top: 10rem;
+    line-height: 100vh;
+    vertical-align: middle;
     color: rgb(0, 75, 148);
     font-weight: 100;
     font-size: 2rem;
@@ -2161,6 +2166,9 @@ nav menu button{
         margin: 0;
         overflow: visible;
         width: 16.7%; /* Corresponds large-2 columns */
+        [%# Show logo in the front ~%]
+        position: relative;
+        z-index: 2;
     }
 }
 

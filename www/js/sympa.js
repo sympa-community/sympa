@@ -569,7 +569,6 @@ $(function() {
 
 	$('.heavyWork').on('click', function(){
 		$('#loading').show();
-		$('#content-inner').hide();
 	});
 });
 

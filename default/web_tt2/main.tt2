@@ -51,15 +51,7 @@
 [% END %]
 
 [%# Show loading notice only when javascript is enabled. ~%]
-[% IF top_menu ~%]
-  [% IF not list ~%]
-    <div id="loading" class="row"></div>
-  [%~ ELSE ~%]
-    <div id="loading" class="medium-9 columns"></div>
-  [%~ END %]
-[%~ ELSE ~%]
-  <div id="loading" class="medium-9 columns"></div>
-[%~ END %]
+<div id="loading"></div>
 
   [% PROCESS aside_menu.tt2 %]
   [% UNLESS action == 'home' ~%]
