@@ -2052,14 +2052,14 @@ nav menu form{
 
 #sympa-top-bar,
 #sympa-top-bar menu ul li,
-#sympa-top-bar menu ul li:not(.has-form) a:not(.button){
+#sympa-top-bar menu ul li a:not(.button) {
     background-color: [% color_6 %];
 }
 [%# properly set active list item color when not hovered ~%]
-#sympa-top-bar ul li.active:not(.has-form) a:not(.button){
+#sympa-top-bar ul li.active a:not(.button) {
     background-color: [% color_5%];
 }
-#sympa-top-bar ul li:not(.has-form) a:not(.button):hover{
+#sympa-top-bar ul li a:not(.button):hover {
     background-color: [% color_5%];
 }
 nav menu button{
@@ -2191,16 +2191,16 @@ main .top-bar {
     padding-bottom: 0;
 }
 
-main nav menu ul li.active:not(.has-form) a:not(.button){
+main nav menu ul li.active a:not(.button) {
     line-height:30px;
     background-color: [% color_13 %];
 }
-main nav menu ul li, main nav menu ul li:not(.has-form) a:not(.button){
+main nav menu ul li, main nav menu ul li a:not(.button) {
     background-color: [% color_10%];
     line-height: 30px;
     font-size:0.8rem;
 }
-main nav menu ul li:not(.has-form) a:not(.button):hover{
+main nav menu ul li a:not(.button):hover {
     background-color: [% color_13%]!important;
 }
 
@@ -2218,10 +2218,10 @@ main nav menu > ul > .divider, main nav menu > ul > [role="separator"] {
     height: 30px;
 }
 
-main nav menu ul.menu li:not(.has-form):not(.active) > a:not(.button) {
+main nav menu ul.menu li:not(.active) > a:not(.button) {
     background-color: [% color_10 %];
 }
-main nav menu ul.menu li:not(.has-form):not(.active) > a:not(.button):hover {
+main nav menu ul.menu li:not(.active) > a:not(.button):hover {
     background-color: [% color_13 %];
 }
 
@@ -2353,7 +2353,7 @@ span.fa-stack i.fa-plus-circle {
 }
 
 @media only screen and (min-width: 641px){
-    #sympa-top-bar menu ul li:not(.has-form) a:not(.button) {
+    #sympa-top-bar menu ul li a:not(.button) {
       /* padding: 0 10px; */
         padding-top: 0;
         padding-bottom: 0;
@@ -2362,10 +2362,10 @@ span.fa-stack i.fa-plus-circle {
       display: block;
       padding-left: 10px;
     }
-    #sympa-top-bar menu .menu li:not(.has-form):not(.active) > a:not(.button) {
+    #sympa-top-bar menu .menu li:not(.active) > a:not(.button) {
         background-color: [% color_6 %];
     }
-    #sympa-top-bar menu .menu li:not(.has-form):not(.active) > a:not(.button):hover {
+    #sympa-top-bar menu .menu li:not(.active) > a:not(.button):hover {
         background-color: [% color_5 %];
     }
     main .top-bar{
@@ -2397,14 +2397,14 @@ span.fa-stack i.fa-plus-circle {
     /* aside menu, mobile version */
     #sympa-sub-bar,
     #sympa-sub-bar menu ul li,
-    #sympa-sub-bar menu ul li:not(.has-form) a:not(.button){
+    #sympa-sub-bar menu ul li a:not(.button) {
         background-color: [% color_6 %];
     }
     [%# properly set active list item color when not hovered ~%]
-    #sympa-sub-bar ul li.active:not(.has-form) a:not(.button){
+    #sympa-sub-bar ul li.active a:not(.button) {
         background-color: [% color_5%];
     }
-    #sympa-sub-bar ul li:not(.has-form) a:not(.button):hover{
+    #sympa-sub-bar ul li a:not(.button):hover {
         background-color: [% color_5%];
     }
     /* Hide some items. */
