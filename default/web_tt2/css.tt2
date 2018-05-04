@@ -2159,6 +2159,10 @@ nav menu button{
     .top-bar menu ul li a {
         line-height: inherit;
     }
+    [%# Bug: .top-bar-left is always 100% even if in desktop mode. ~%]
+    .top-bar .medium-2 {
+        width: 16.66667%;
+    }
     [%#
       Prevent spacing between items of top bar with inline-block rendering.
       Foundation 5 used list-item so that such spaces were not rendered.
