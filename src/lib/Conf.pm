@@ -2426,17 +2426,7 @@ sub _save_config_hash_to_binary {
     }
 }
 
-sub _source_has_not_changed {
-    my $file = shift;
-
-    my $file_bin = $file . $binary_file_extension;
-    return 1
-        if -r $file
-        and -r $file_bin
-        and Sympa::Tools::File::get_mtime($file) <
-        Sympa::Tools::File::get_mtime($file_bin);
-    return 0;
-}
+sub _source_has_not_changed {0}
 
 sub _store_source_file_name {
     my $param = shift;
