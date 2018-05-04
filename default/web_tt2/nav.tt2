@@ -16,7 +16,7 @@
     <ul class="vertical medium-horizontal menu"
      data-responsive-menu="drilldown medium-dropdown">
         <li><a href="#list_create">[%|loc%]Create a list using a template[%END%]</a></li>
-        [% IF 0 %]<li class="divider"></li>[% END %]
+        [% IF 0 %]<li class="divider" role="separator"></li>[% END %]
         <li><a href="#list_copy">[%|loc%]Copy an existing list.[%END%]</a></li>
     </ul>
 </menu>
@@ -252,7 +252,7 @@
       <li class="[% UNLESS expert_page %]active not-click[%END%]">
         <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{type=>'directory',previous_action=>'d_read',show_user_page=>'1'}) %]">
           <i class="fa fa-user "></i> [%|loc%]User mode[%END%]</a> </li>
-      <li class="divider"></li>
+      [%IF 0%]<li class="divider" role="separator"></li>[%END%]
       <li class="[% IF expert_page %]active not-click[%END%]">
         <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{type=>'directory',previous_action=>'d_read',show_expert_page=>'1'}) %]">
           <i class="fa fa-cogs"></i> [%|loc%]Expert mode[%END%]</a> </li>
