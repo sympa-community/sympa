@@ -3,7 +3,6 @@
 <div class="block" id="create_switch">
 
 <div id="list_create">
-<h2><i class="fa fa-plus"></i> [%|loc%]Create list[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#create_list" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
 
 <form action="[% path_cgi %]" method="post">
 <fieldset>
@@ -75,11 +74,11 @@
 
 [% IF all_lists.size > 0 %]
 <div id="list_copy">
-  <h2>[%|loc%]Copy an existing list[%END%]</h2>
-<br />
-
+  <p>
   [%|loc%]You can create a list by using another existing list as a template.  The configuration will be copied to the new list. Please note that neither the list members, archives, nor shared documents will be duplicated. Only the lists you own may be used as templates.[%END%]
-  [%|loc%]After the list is created, you will be able to modify the configuration.[%END%] <br />
+  [%|loc%]After the list is created, you will be able to modify the configuration.[%END%]
+  </p>
+
   <form action="[% path_cgi %]" method="post">
   <fieldset>
   <select name="list">
