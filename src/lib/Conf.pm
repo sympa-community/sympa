@@ -32,14 +32,12 @@ package Conf;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use Storable;
 
 use Sympa;
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::DatabaseManager;
 use Sympa::Language;
-use Sympa::LockedFile;
 use Sympa::Log;
 use Sympa::Regexps;
 use Sympa::Tools::Data;
@@ -154,7 +152,7 @@ my %trusted_applications = (
         }
     }
 );
-my $binary_file_extension = ".bin";
+#XXXmy $binary_file_extension = ".bin";
 
 our $wwsconf;
 our %Conf = ();
@@ -186,17 +184,6 @@ sub load {
     my $config_err = 0;
     my %line_numbered_config;
 
-    if (_source_has_not_changed($config_file) and !$return_result) {
-        if (my $tmp_conf = _load_binary_cache(
-                {'config_file' => $config_file . $binary_file_extension}
-            )
-            ) {
-            %Conf = %{$tmp_conf};
-            # Will force the robot.conf reloading, as sympa.conf is the
-            # default.
-            $force_reload = 1;
-        }
-    } else {
         $log->syslog('debug3',
             'File %s has changed since the last cache. Loading file',
             $config_file);
@@ -252,8 +239,7 @@ sub load {
 
         _store_source_file_name(
             {'config_hash' => \%Conf, 'config_file' => $config_file});
-        _save_config_hash_to_binary({'config_hash' => \%Conf,});
-    }
+        #XXX_save_config_hash_to_binary({'config_hash' => \%Conf,});
 
     if (my $missing_modules_count =
         _check_cpan_modules_required_by_config({'config_hash' => \%Conf,})) {
@@ -399,27 +385,8 @@ sub get_wwsympa_conf {
 }
 
 # deletes all the *.conf.bin files.
-sub delete_binaries {
-    $log->syslog('debug2', '');
-    my @files = (get_sympa_conf(), get_wwsympa_conf());
-    foreach my $robot (@{get_robots_list()}) {
-        push @files, "$Conf{'etc'}/$robot/robot.conf";
-    }
-    foreach my $c_file (@files) {
-        my $binary_file = $c_file . $binary_file_extension;
-        if (-f $binary_file) {
-            if (-w $binary_file) {
-                unlink $binary_file;
-            } else {
-                $log->syslog(
-                    'err',
-                    'Could not remove file %s. You should remove it manually to ensure the configuration used is valid',
-                    $binary_file
-                );
-            }
-        }
-    }
-}
+# No longer used.
+#sub delete_binaries;
 
 # Return a reference to an array containing the names of the robots on the
 # server.
@@ -2173,27 +2140,7 @@ sub _load_single_robot_config {
 
     my $config_err;
     my $config_file  = "$Conf{'etc'}/$robot/robot.conf";
-    my $force_reload = $param->{'force_reload'};
-    if (!$force_reload and _source_has_not_changed($config_file)) {
-        $force_reload = 0;
-    }
-    if (!$force_reload) {
-        $log->syslog('debug3',
-            'File %s has not changed since the last cache. Using cache',
-            $config_file);
-        unless (-r $config_file) {
-            $log->syslog('err', 'No read access on %s', $config_file);
-            return undef;
-        }
-        unless (
-            $robot_conf = _load_binary_cache(
-                {'config_file' => $config_file . $binary_file_extension}
-            )
-            ) {
-            $force_reload = 1;
-        }
-    }
-    if ($force_reload) {
+
         if (my $config_loading_result = _load_config_file_to_hash(
                 {'path_to_config_file' => $config_file}
             )
@@ -2232,10 +2179,10 @@ sub _load_single_robot_config {
 
         _store_source_file_name(
             {'config_hash' => $robot_conf, 'config_file' => $config_file});
-        _save_config_hash_to_binary(
-            {'config_hash' => $robot_conf, 'source_file' => $config_file});
+        #XXX_save_config_hash_to_binary(
+        #XXX    {'config_hash' => $robot_conf, 'source_file' => $config_file});
         return undef if ($config_err);
-    }
+
     _replace_file_value_by_db_value({'config_hash' => $robot_conf})
         unless $param->{'no_db'};
     _load_robot_secondary_config_files({'config_hash' => $robot_conf});
@@ -2329,104 +2276,19 @@ sub _replace_file_value_by_db_value {
 
 # Stores the config hash binary representation to a file.
 # Returns 1 or undef if something went wrong.
-sub _save_binary_cache {
-    my $param = shift;
-
-    # Prevent world-readability to protect secure parameters like "cookie".
-    my $umask = umask(umask | 007);
-    my $lock_fh = Sympa::LockedFile->new($param->{'target_file'}, 2, '>');
-    unless ($lock_fh) {
-        $log->syslog('err', 'Could not create new lock');
-        umask $umask;
-        return undef;
-    }
-    umask $umask;
-
-    eval { Storable::store_fd($param->{'conf_to_save'}, $lock_fh); };
-    if ($EVAL_ERROR) {
-        $log->syslog(
-            'err',
-            'Failed to save the binary config %s. error: %s',
-            $param->{'target_file'}, $EVAL_ERROR
-        );
-        $lock_fh->close;
-        return undef;
-    }
-    eval {
-        chown(
-            (getpwnam(Sympa::Constants::USER))[2],
-            (getgrnam(Sympa::Constants::GROUP))[2],
-            $param->{'target_file'}
-        );
-    };
-    if ($EVAL_ERROR) {
-        $log->syslog(
-            'err',
-            'Failed to change owner of the binary file %s. error: %s',
-            $param->{'target_file'}, $EVAL_ERROR
-        );
-        $lock_fh->close;
-        return undef;
-    }
-
-    $lock_fh->close;
-    return 1;
-}
+# No longer used.
+#sub _save_binary_cache;
 
 # Loads the config hash binary representation from a file an returns it
 # Returns the hash or undef if something went wrong.
-sub _load_binary_cache {
-    my $param  = shift;
-    my $result = undef;
+# No longer used.
+#sub _load_binary_cache;
 
-    my $lock_fh = Sympa::LockedFile->new($param->{'config_file'}, 2, '<');
-    unless ($lock_fh) {
-        $log->syslog(
-            'err',
-            'Could not create new lock, error was : %s',
-            Sympa::LockedFile::last_error()
-        );
-        return undef;
-    }
+# No longer used.
+#sub _save_config_hash_to_binary;
 
-    eval { $result = Storable::fd_retrieve($lock_fh); };
-    if ($EVAL_ERROR) {
-        $log->syslog(
-            'err',
-            'Failed to load the binary config %s. error: %s',
-            $param->{'config_file'}, $EVAL_ERROR
-        );
-        unless ($lock_fh->close()) {
-            return undef;
-        }
-        return undef;
-    }
-    ## Release the lock
-    unless ($lock_fh->close()) {
-        return undef;
-    }
-    return $result;
-}
-
-sub _save_config_hash_to_binary {
-    my $param = shift;
-    unless (
-        _save_binary_cache(
-            {   'conf_to_save' => $param->{'config_hash'},
-                'target_file'  => $param->{'config_hash'}{'source_file'}
-                    . $binary_file_extension
-            }
-        )
-        ) {
-        $log->syslog(
-            'err',
-            'Could not save main config %s',
-            $param->{'config_hash'}{'source_file'}
-        );
-    }
-}
-
-sub _source_has_not_changed {0}
+# No longer used.
+#sub _source_has_not_changed;
 
 sub _store_source_file_name {
     my $param = shift;

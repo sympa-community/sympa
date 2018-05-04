@@ -126,8 +126,8 @@ sub upgrade {
         return undef;
     }
 
-    ## Always update config.bin files while upgrading
-    Conf::delete_binaries();
+    #XXX# Always update config.bin files while upgrading
+    #XXXConf::delete_binaries();
 
     ## Always update config.bin files while upgrading
     ## This is especially useful for character encoding reasons
