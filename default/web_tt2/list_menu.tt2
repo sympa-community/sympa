@@ -55,7 +55,10 @@
   </span></li>
 [%~ END %]
 
-<li class="menu_title"><label><i class="fa fa-envelope-square fa-lg"></i> [%|loc%]List Options[%END%]</label></li>
+<li class="menu_title[%IF top_menu%] nolink[%END%]">
+  <label><i class="fa fa-envelope-square fa-lg"></i>
+  [%|loc%]List Options[%END%]</label>
+</li>
 
 [% PROCESS 'list_panel.tt2' %]
 
