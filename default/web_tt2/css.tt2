@@ -113,9 +113,22 @@ q:before, q:after {
 	content: none;
 }
 
-[%# Compat. with Fooundation 5. ~%]
-ul.row {
-    width: 100%;
+/***
+  * Foundation 6: Preventing FOUC.
+  */
+
+.no-js .top-bar {
+  display: none;
+}
+
+@media screen and (min-width: 40em) {
+  .no-js .top-bar {
+    display: block;
+  }
+
+  .no-js .title-bar {
+    display: none;
+  }
 }
 
 /**
@@ -569,6 +582,11 @@ section.home-submenu .fa-envelope, section.home-submenu .fa-plus, section.home-s
 }
 section.home-submenu a:hover span i.fa-envelope, section.home-submenu a:hover span i.fa-plus, section.home-submenu a:hover span i.fa-search{
     color: [% color_7 %];
+}
+
+[%# Compat. with Fooundation 5. ~%]
+ul.row {
+    width: 100%;
 }
 
 /* Tables */
