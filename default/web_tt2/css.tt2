@@ -113,6 +113,24 @@ q:before, q:after {
 	content: none;
 }
 
+/***
+  * Foundation 6: Preventing FOUC.
+  */
+
+.no-js .top-bar {
+  display: none;
+}
+
+@media screen and (min-width: 40em) {
+  .no-js .top-bar {
+    display: block;
+  }
+
+  .no-js .title-bar {
+    display: none;
+  }
+}
+
 /**
  * UI root
  */
@@ -204,7 +222,7 @@ dfn {
 hr {
 	display: block;
 	height: 1px;
-	border-top: 1px solid [% color_9 %];
+	border-bottom: 1px solid [% color_9 %];
 	margin: 1em 0;
 }
 
@@ -388,7 +406,13 @@ button, input {
 	line-height: normal;
 }
 
-button, input[type="button"], input[type="reset"], input[type="submit"], a.button{
+button[type="button"],
+button[type="reset"],
+button[type="submit"],
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+a.button {
 	cursor: pointer;
 	*overflow: visible;
 	display: inline-block;
@@ -403,7 +427,13 @@ button, input[type="button"], input[type="reset"], input[type="submit"], a.butto
         transition: background-color 300ms ease-out;
 }
 
-button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover, a.button:hover {
+button[type="button"]:hover,
+button[type="submit"]:hover,
+button[type="reset"]:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+a.button:hover {
 	background: [% color_5 %] none no-repeat scroll bottom left;
 }
 
@@ -436,6 +466,11 @@ textarea {
 input:invalid, textarea:invalid {
 	background-color: [% color_13 %];
 	opacity:0.5;
+}
+
+[%# To align buttons in messages moderate form in reveal modal. ~%]
+div.reveal form[id*="moderate_"] {
+	display: inline-block;
 }
 
 div.columns {
@@ -549,6 +584,11 @@ section.home-submenu a:hover span i.fa-envelope, section.home-submenu a:hover sp
     color: [% color_7 %];
 }
 
+[%# Compat. with Fooundation 5. ~%]
+ul.row {
+    width: 100%;
+}
+
 /* Tables */
 table {
     background-color: [% color_7 %];
@@ -618,17 +658,22 @@ table tr th, table tr td {
 }
 
 #loading {
+    position: absolute;
+    top: 0;
+    left: 0;
     width:100%;
     height:100%;
-    background-color:[% color_7 %];
+    background-color: rgba(255, 255, 255, 0.75);
     overflow: hidden;
     display: none;
+    z-index: 1;
 }
 
 #loadingText {
     width: 100%;
     text-align: center;
-    padding-top: 10rem;
+    line-height: 100vh;
+    vertical-align: middle;
     color: rgb(0, 75, 148);
     font-weight: 100;
     font-size: 2rem;
@@ -686,12 +731,12 @@ header h1{
     text-align:center;
     padding:0.5rem 0 2rem 0;
     margin:0;
-    background-color:[% color_7 %];
+    background-color:[% color_7 %];     [%~# FIXME %]
 }
 
 /* main element */
 main{
-    background-color:[% color_7 %];
+    background-color:[% color_7 %];     [%~# FIXME %]
     padding-bottom:2rem;
     [% IF top_menu %]
     min-height:450px;
@@ -708,7 +753,7 @@ main.home{
 main h1.robot_name{
     width:100%;
     margin:0;
-    background-color:[% color_7 %];
+    background-color:[% color_7 %];     [%~# FIXME %]
     letter-spacing: 0.1rem;
     text-align: center;
     z-index:10;
@@ -727,9 +772,13 @@ main h1.robot_name{
         list-style-type:none;
     }
 
-    aside li a {
+    #sympa-sub-bar li a {
         padding-bottom: 0.5em;
         padding-top: 0.5em;
+    }
+    [%# To include link to review page, <a> would be inline,
+      but to align accordion icons, parents of submenus would be block. ~%]
+    #sympa-sub-bar li:not(.is-accordion-submenu-parent) a {
         display: inline;
     }
 
@@ -759,11 +808,13 @@ main h1.robot_name{
     aside nav menu.connect ul li > ul.menu li input{
         height:1.5rem;
     }
+    [% IF 0 # No longer used. ~%]
     aside nav menu li.divider, aside nav menu [role="separator"] {
         display:block;
         margin:0!important;
         border-bottom: 1px solid [% color_5 %];
     }
+    [%~ END # IF 0 %]
     #sympa-sub-bar menu {
         width:98%;
         max-width:250px;
@@ -774,6 +825,15 @@ main h1.robot_name{
     aside nav menu.user, aside nav menu.list, aside nav menu.sympa {
         background-color:[% color_8 %];
         border:1px solid [% color_6 %];
+    }
+    #sympa-sub-bar menu.user li.divider,
+    #sympa-sub-bar menu.user [role="separator"],
+    #sympa-sub-bar menu.list li.divider,
+    #sympa-sub-bar menu.list [role="separator"],
+    #sympa-sub-bar menu.sympa li.divider,
+    #sympa-sub-bar menu.sympa [role="separator"] {
+        border-top: 1px solid [% color_6 %];
+        margin: 0.5rem 0;
     }
 
     aside nav menu a {
@@ -837,11 +897,12 @@ main h1.robot_name{
     }
 
     [%# Compat. with Foundation 5 ~%]
-    #sympa-sub-bar menu ul {
-        background-color: inherit;
+    #sympa-sub-bar menu > ul {
+        background-color: transparent;
         margin: 1em 0;
     }
     #sympa-sub-bar menu ul li a {
+        background-color: transparent;
         padding: 0;
     }
     /* end aside */
@@ -2047,17 +2108,17 @@ nav menu form{
 
 #sympa-top-bar,
 #sympa-top-bar menu ul li,
-#sympa-top-bar menu ul li:not(.has-form) a:not(.button){
+#sympa-top-bar menu ul li a:not(.button) {
     background-color: [% color_6 %];
 }
 [%# properly set active list item color when not hovered ~%]
-#sympa-top-bar ul li.active:not(.has-form) a:not(.button){
+#sympa-top-bar menu ul li.active > a:not(.button) {
     background-color: [% color_5%];
 }
-#sympa-top-bar ul li:not(.has-form) a:not(.button):hover{
+#sympa-top-bar menu ul li a:not(.button):hover {
     background-color: [% color_5%];
 }
-nav menu button{
+.top-bar button {
     top:0;
     background-color:[% color_7 %];
     color:[% color_6 %];
@@ -2140,7 +2201,7 @@ nav menu button{
     }
     [%~ END # IF 0 %]
 
-    [%# Founation 6 ~%]
+    [%# Compat. with Founation 5 ~%]
     .top-bar {
         height: 45px;
         line-height: 45px;
@@ -2149,20 +2210,36 @@ nav menu button{
     .top-bar menu ul li a {
         line-height: inherit;
     }
+    [%# Bug: .top-bar-left is always 100% even if in desktop mode. ~%]
+    .top-bar .medium-2 {
+        width: 16.66667%;
+    }
+    [%#
+      Prevent spacing between items of top bar with inline-block rendering.
+      Foundation 5 used list-item so that such spaces were not rendered.
+    ~%]
+    #sympa-top-bar > menu > ul,
+    #sympa-nav-bar > menu > ul {
+        font-size: 0;
+    }
+}
 
     [%#
       Foundation for Sites 6 stacks top-bar-left on top-bar-right by default.
       To prevent this behavior, rebuilding SCSS is required.
       As a workaround, make top-bar-left a zero-height block and top-bar-right
       be overlying.
+      Note: this block is kept global to prevent fluttering in transition to
+      small mode.
     ~%]
     #sympa-top-bar .top-bar-left {
         height: 0;
         margin: 0;
         overflow: visible;
-        width: 16.7%; /* Corresponds large-2 columns */
+        [%# Show logo in the front ~%]
+        position: relative;
+        z-index: 2;
     }
-}
 
 /* end top-bar */
 
@@ -2183,21 +2260,36 @@ main .top-bar {
     padding-bottom: 0;
 }
 
-main nav menu ul li.active:not(.has-form) a:not(.button){
+main nav menu ul li.active a:not(.button) {
     line-height:30px;
     background-color: [% color_13 %];
 }
-main nav menu ul li, main nav menu ul li:not(.has-form) a:not(.button){
+main nav menu ul li,
+main nav menu ul li a:not(.button) {
     background-color: [% color_10%];
     line-height: 30px;
     font-size:0.8rem;
 }
-main nav menu ul li:not(.has-form) a:not(.button):hover{
+main nav menu ul li a:not(.button):hover {
     background-color: [% color_13%]!important;
 }
 
-main nav menu > ul > .divider, main nav menu > ul > [role="separator"] {
+[%# Divider for vertical menu. ~%]
+nav menu ul .divider,
+nav menu ul [role="separator"] {
+    border-top: solid 1px #1a1a1a;      [%~# FIXME %]
+}
+[%# Divider for top bar. ~%]
+header nav menu > ul > .divider,
+header nav menu > ul > [role="separator"],
+aside nav menu > ul > .divider,
+aside nav menu > ul > [role="separator"] {
     border-right: solid 1px [% color_5%];
+}
+main nav menu > ul > .divider,
+main nav menu > ul > [role="separator"] {
+    border-right: solid 1px [% color_13 %];
+    height: 30px;
 }
 
 [%# FIXME:is this used? ~%]
@@ -2205,15 +2297,10 @@ main nav menu .has-dropdown > a:after {
     top: 18px;
 }
 
-main nav menu > ul > .divider, main nav menu > ul > [role="separator"] {
-    border-right: solid 1px [% color_13 %];
-    height: 30px;
-}
-
-main nav menu ul.menu li:not(.has-form):not(.active) > a:not(.button) {
+main nav menu ul.menu li:not(.active) > a:not(.button) {
     background-color: [% color_10 %];
 }
-main nav menu ul.menu li:not(.has-form):not(.active) > a:not(.button):hover {
+main nav menu ul.menu li:not(.active) > a:not(.button):hover {
     background-color: [% color_13 %];
 }
 
@@ -2296,7 +2383,7 @@ span.fa-stack i.fa-plus-circle {
     }
     h2 {
             font-size: 1.3em;
-            margin-top: 0;
+            [%~IF 0%]margin-top: 0;[%END%]
     }
     h3 {
             font-size: 1.1em;
@@ -2326,7 +2413,7 @@ span.fa-stack i.fa-plus-circle {
     }
     h2 {
             font-size: 1.3em;
-            margin-top: 0;
+            [%~IF 0%]margin-top: 0;[%END%]
     }
     h3 {
             font-size: 1.1em;
@@ -2345,19 +2432,21 @@ span.fa-stack i.fa-plus-circle {
 }
 
 @media only screen and (min-width: 641px){
-    #sympa-top-bar menu ul li:not(.has-form) a:not(.button) {
+    #sympa-top-bar menu ul li a:not(.button) {
       /* padding: 0 10px; */
         padding-top: 0;
         padding-bottom: 0;
     }
+    [% IF 0 # Maybe no longer used ~%]
     nav menu ul.menu li > span {
       display: block;
       padding-left: 10px;
     }
-    #sympa-top-bar menu .menu li:not(.has-form):not(.active) > a:not(.button) {
+    [%~ END # IF 0 %]
+    #sympa-top-bar menu .menu li:not(.active) > a:not(.button) {
         background-color: [% color_6 %];
     }
-    #sympa-top-bar menu .menu li:not(.has-form):not(.active) > a:not(.button):hover {
+    #sympa-top-bar menu .menu li:not(.active) > a:not(.button):hover {
         background-color: [% color_5 %];
     }
     main .top-bar{
@@ -2376,6 +2465,9 @@ span.fa-stack i.fa-plus-circle {
         line-height: 45px;
         padding: 0 1rem;
     }
+    .title-bar .menu-text {
+        font-size: 13px;
+    }
     header .title-bar {
         background-color: [% color_6 %];
     }
@@ -2389,14 +2481,14 @@ span.fa-stack i.fa-plus-circle {
     /* aside menu, mobile version */
     #sympa-sub-bar,
     #sympa-sub-bar menu ul li,
-    #sympa-sub-bar menu ul li:not(.has-form) a:not(.button){
+    #sympa-sub-bar menu ul li a:not(.button) {
         background-color: [% color_6 %];
     }
     [%# properly set active list item color when not hovered ~%]
-    #sympa-sub-bar ul li.active:not(.has-form) a:not(.button){
+    #sympa-sub-bar ul li.active > a:not(.button) {
         background-color: [% color_5%];
     }
-    #sympa-sub-bar ul li:not(.has-form) a:not(.button):hover{
+    #sympa-sub-bar ul li a:not(.button):hover {
         background-color: [% color_5%];
     }
     /* Hide some items. */

@@ -114,7 +114,7 @@
            [% END %] 
             </li>
            [% IF use_passwd == '1' AND use_sso %]
-              <li class="divider hide-for-small"></li>
+              <li class="divider hide-for-small" role="separator"></li>
            [% END %] 
            [% IF use_passwd == '1' %]
           <li id="login-dropdown">
@@ -138,7 +138,7 @@
             </ul>
            </li>
            [% END %]
-           <li class="divider hide-for-small"></li>
+           <li class="divider hide-for-small" role="separator"></li>
            [% IF authentication_info_url %]
              <li><a class="menuLinks" href="[%authentication_info_url%]">
                [%|loc%]Authentication help[% END %]

@@ -55,11 +55,14 @@
   </span></li>
 [%~ END %]
 
-<li class="menu_title"><label><i class="fa fa-envelope-square fa-lg"></i> [%|loc%]List Options[%END%]</label></li>
+<li class="menu_title[%IF top_menu%] nolink[%END%]">
+  <label><i class="fa fa-envelope-square fa-lg"></i>
+  [%|loc%]List Options[%END%]</label>
+</li>
 
 [% PROCESS 'list_panel.tt2' %]
 
-<li class="divider"></li>
+<li class="divider" role="separator"></li>
 <li></li>
 [% IF action == 'info'%][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
 <li class="[% class %]"><a href="[% 'info' | url_rel([list]) %]">[%|loc%]List Home[%END%]</a></li>
@@ -117,7 +120,7 @@
 
 [% END %]
 
-<li class="divider"></li>
+<li class="divider" role="separator"></li>
 <li></li>
 [% IF is_archived %]
   [% IF user.email && arc_access || !user.email && arc_public_access %]

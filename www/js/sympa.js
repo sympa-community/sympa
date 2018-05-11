@@ -12,10 +12,10 @@ function refresh_mom_and_die() {
 
 /* Loading foundation. */
 $(function() {
-    $(document).foundation();
     Foundation.Drilldown.defaults.backButton =
         '<li class="js-drilldown-back"><a tabindex="0">' + sympa.backText
             + '</a></li>';
+    $(document).foundation();
 });
 
 /* Show error dialog.  It may be closed only when javascript is enabled. */
@@ -569,7 +569,6 @@ $(function() {
 
 	$('.heavyWork').on('click', function(){
 		$('#loading').show();
-		$('#content-inner').hide();
 	});
 });
 

@@ -3,9 +3,13 @@
 
     <div class="title-bar"
      data-responsive-toggle="sympa-top-bar" data-hide-for="medium">
-      <a class="menu-text" href="[% conf.wwsympa_url %]"
-       title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png"
-       alt="[%|loc%]SYMPA logo[%END%]" /></a>
+      <span class="menu-text" aria-hidden="true">
+                [% IF  conf.logo_html_definition %]
+                  [% conf.logo_html_definition %]
+                [% ELSE %]
+                  <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
+                [% END %]
+      </span>
       <div class="title-bar-right">
         <div class="title-bar-title">
           <span>[%|loc%]Sympa Menu[%END%]</span>
@@ -15,7 +19,7 @@
     </div>
 
 <nav class="top-bar" id="sympa-top-bar" role="navigation">
-    <ul class="top-bar-left large-2 columns show-for-medium">
+    <ul class="top-bar-left medium-2 columns show-for-medium">
       <li class="name">
         <span class="menu-text">
                 [% IF  conf.logo_html_definition %]
@@ -47,9 +51,17 @@
       [%~ ELSIF use_passwd || use_sso || authentication_info_url ~%]
         [% IF action == 'loginrequest'; SET class = 'active'; END ~%]
         <li class="[% class %]">
-          <a href="[% 'loginrequest' | url_rel([action,list]) %]">
-            <i class="fa fa-user"></i> [%|loc%]Login[%END%]
-          </a>
+          <form action="[% path_cgi %]" method="POST">
+            <fieldset>
+              <input type="hidden" name="previous_action"
+               value="[% action %]" />
+              <input type="hidden" name="previous_list" value="[% list %]" />
+              <button type="submit" name="action_loginrequest"
+               value="[%|loc%]Login[%END%]">
+                <i class="fa fa-user"></i> [%|loc%]Login[%END%]
+              </button>
+            </fieldset>
+          </form>
         </li>
       [%~ END %]
     </ul>

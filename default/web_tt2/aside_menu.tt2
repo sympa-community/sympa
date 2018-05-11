@@ -4,6 +4,9 @@
   [% IF list %]
             <div class="title-bar"
              data-responsive-toggle="sympa-sub-bar" data-hide-for="medium">
+              <span class="menu-text" aria-hidden="true">
+                <i class="fa fa-envelope-square fa-lg"></i>
+              </span>
               <div class="title-bar-right">
                 <div class="title-bar-title">
                   <span>[%|loc%]List Options Menu[%END%]</span>
@@ -35,9 +38,13 @@
 
             <div class="title-bar"
              data-responsive-toggle="sympa-sub-bar" data-hide-for="medium">
-              <a class="menu-text" href="[% conf.wwsympa_url %]"
-               title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png"
-               alt="[%|loc%]SYMPA logo[%END%]" /></a>
+              <span class="menu-text" aria-hidden="true">
+                [% IF conf.logo_html_definition %]
+                  [% conf.logo_html_definition %]
+                [% ELSE %]
+                  <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
+                [% END %]
+              </span>
               <div class="title-bar-right">
                 <div class="title-bar-title">
                   <span>[%|loc%]General Menu[%END%]</span>

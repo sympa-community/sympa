@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="[% lang %]" xml:lang="[% lang %]">
+<html class="no-js" lang="[% lang %]" xml:lang="[% lang %]">
 <!-- tt2_error.tt2 -->
 <head>
 <meta charset="UTF-8" />
@@ -26,15 +26,7 @@
 [% END %]
 
 [%# Show loading notice only when javascript is enabled. ~%]
-[% IF top_menu ~%]
-  [% IF not list ~%]
-    <div id="loading" class="row"></div>
-  [%~ ELSE ~%]
-    <div id="loading" class="medium-9 columns"></div>
-  [%~ END %]
-[%~ ELSE ~%]
-  <div id="loading" class="medium-9 columns"></div>
-[%~ END %]
+<div id="loading"></div>
 
     [% TRY; PROCESS aside_menu.tt2; CATCH; ''; END %]
     [% IF top_menu %]

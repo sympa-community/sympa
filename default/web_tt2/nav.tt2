@@ -1,11 +1,19 @@
 <!-- nav.tt2 -->
 [% IF action == 'create_list_request' %]
 [% IF all_lists.size > 0 ~%]
+  <h2 class="show-for-medium">
+    <i class="fa fa-plus"></i> [%|loc%]Create list[%END%]
+    <a  href="[% 'nomenu/help/admin' | url_rel %]#create_list" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
+  </h2>
+
     <div class="title-bar"
      data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
+      <span class="menu-text" aria-hidden="true">
+        <i class="fa fa-plus"></i>
+      </span>
       <div class="title-bar-right">
         <div class="title-bar-title">
-          <span>[%|loc%]Create List Menu[%END%]</span>
+          <span>[%|loc%]Create list[%END%]</span>
         </div>
         <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
       </div>
@@ -16,7 +24,7 @@
     <ul class="vertical medium-horizontal menu"
      data-responsive-menu="drilldown medium-dropdown">
         <li><a href="#list_create">[%|loc%]Create a list using a template[%END%]</a></li>
-        [% IF 0 %]<li class="divider"></li>[% END %]
+        [% IF 0 %]<li class="divider" role="separator"></li>[% END %]
         <li><a href="#list_copy">[%|loc%]Copy an existing list.[%END%]</a></li>
     </ul>
 </menu>
@@ -25,11 +33,18 @@
 [% END %]
 
 [% IF action == 'serveradmin' or action == 'skinsedit'  or action == 'edit_config' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' %]
+  <h2 class="show-for-medium">
+    <i class="fa fa-wrench"></i> [%|loc%]Listmaster Admin[%END%]
+  </h2>
+
     <div class="title-bar"
      data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
+      <span class="menu-text" aria-hidden="true">
+        <i class="fa fa-wrench"></i>
+      </span>
       <div class="title-bar-right">
         <div class="title-bar-title">
-          <span>[%|loc%]Listmaster Admin Menu[%END%]</span>
+          <span>[%|loc%]Listmaster Admin[%END%]</span>
         </div>
         <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
       </div>
@@ -80,12 +95,17 @@
 [% END %]
 
 [% IF action == 'lists' %]
-<h2>[%|loc%]Index of lists[%END%]</h2>
+  <h2 class="show-for-medium">
+    <i class="fa fa-list"></i> [%|loc%]Index of lists[%END%]
+  </h2>
 
 [% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] ~%]
 
     <div class="title-bar"
      data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
+      <span class="menu-text" aria-hidden="true">
+        <i class="fa fa-list"></i>
+      </span>
       <div class="title-bar-right">
         <div class="title-bar-title">
           <span>[%|loc%]Index of lists[%END%]</span>
@@ -118,24 +138,25 @@
 </nav>
 [% END %]
 
-[% IF action == 'admin' || action_type == 'admin' || action == 'editfile' %]
-<h2>[%|loc%]Basic Operations[%END%]</h2>
+[% IF action == 'admin' || action_type == 'admin' || action == 'editfile' ~%]
+<h2 class="show-for-medium">[%|loc%]Basic Operations[%END%]</h2>
 
     <div class="title-bar"
      data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
       <div class="title-bar-right">
         <div class="title-bar-title">
-          <span>[%|loc%]Menu[%END%]</span>
+          <span>[%|loc%]Basic Operations[%END%]</span>
         </div>
         <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
       </div>
     </div>
 
+[% IF action == 'edit_list_request' || action == 'editfile' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
+
 <nav class="top-bar" id="sympa-nav-bar">
 <menu class="top-bar-left">
   <ul class="vertical medium-horizontal menu"
    data-responsive-menu="drilldown medium-dropdown">
-[% IF action == 'edit_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     <li class="[% class %]"><a  href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Edit List Config[%END%]</a>
         <ul class="vertical menu">
         [% IF group == 'description' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
@@ -161,11 +182,12 @@
           </ul>
     </li>
   [% IF is_owner ~%]
-    <li class="has-dropdown [% IF action == 'review' %]active[%END%]">
+    [% IF action == 'review' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][%END%]
+    <li class="[% class %]">
       <a href="#">
         [%|loc%]Users[%END%]
       </a>
-      <ul class="dropdown">
+      <ul class="vertical menu">
         <li [% IF page.match('^\d+$') %]class="active"[%END%]>
           <a  href="[% 'review' | url_rel([list]) %]" >
             [%|loc%]Subscribers[%END%]
@@ -206,18 +228,35 @@
 [% END %]
 
 [% IF action == 'compose_mail' %]
+  <h2 class="show-for-medium">
+  [% IF subaction == "html_news_letter" ~%]
+    [%|loc%]Sending an html page to the list [%END%]
+  [%~ ELSE ~%]
+    [%|loc%]Sending a message to the list[%END%]
+  [%~ END %]
+    <a href="[% 'nomenu/help/sendmsg' | url_rel %]"
+     title="[%|loc%]Open in a new window[%END%]"
+     onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">
+      <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+    </a>
+  </h2>
 
     <div class="title-bar"
      data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
       <div class="title-bar-right">
         <div class="title-bar-title">
-          <span>[%|loc%]Menu[%END%]</span>
+          <span>
+          [% IF subaction == "html_news_letter" ~%]
+            [%|loc%]Sending an html page to the list [%END%]
+          [%~ ELSE ~%]
+            [%|loc%]Sending a message to the list[%END%]
+          [%~ END %]
+          </span>
         </div>
         <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
       </div>
     </div>
 
-[% IF action == 'edit_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
     [% IF subaction == '' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
 
 <nav class="top-bar" id="sympa-nav-bar">
@@ -233,12 +272,21 @@
 [% END %]
 
 [% IF action == 'd_read' ~%]
+  <h2 class="show-for-medium">
+    [%|loc%]Shared documents[%END%]
+    <a  href="[% 'nomenu/help/shared' | url_rel %]"
+     title="[%|loc%]Open in a new window[%END%]"
+     onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')"
+     target="wws_help">
+      <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+    </a>
+  </h2>
 
     <div class="title-bar"
      data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
       <div class="title-bar-right">
         <div class="title-bar-title">
-          <span>[%|loc%]Menu[%END%]</span>
+          <span>[%|loc%]Shared documents[%END%]</span>
         </div>
         <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
       </div>
@@ -251,7 +299,7 @@
       <li class="[% UNLESS expert_page %]active not-click[%END%]">
         <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{type=>'directory',previous_action=>'d_read',show_user_page=>'1'}) %]">
           <i class="fa fa-user "></i> [%|loc%]User mode[%END%]</a> </li>
-      <li class="divider"></li>
+      [%IF 0%]<li class="divider" role="separator"></li>[%END%]
       <li class="[% IF expert_page %]active not-click[%END%]">
         <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{type=>'directory',previous_action=>'d_read',show_expert_page=>'1'}) %]">
           <i class="fa fa-cogs"></i> [%|loc%]Expert mode[%END%]</a> </li>
