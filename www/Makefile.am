@@ -24,12 +24,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nobase_static_DATA = \
-	external/jqplot.barRenderer.min.js \
-	external/jqplot.canvasAxisTickRenderer.min.js \
-	external/jqplot.canvasTextRenderer.min.js \
-	external/jqplot.categoryAxisRenderer.min.js \
-	external/jquery.jqplot.css \
-	external/jquery.jqplot.min.js \
+	external/jqplot/jqplot.barRenderer.min.js \
+	external/jqplot/jqplot.canvasAxisTickRenderer.min.js \
+	external/jqplot/jqplot.canvasTextRenderer.min.js \
+	external/jqplot/jqplot.categoryAxisRenderer.min.js \
+	external/jqplot/jquery.jqplot.css \
+	external/jqplot/jquery.jqplot.min.js \
 	external/jquery.js \
 	external/jquery-migrate.js \
 	external/jquery-ui/images/ui-bg_flat_0_aaaaaa_40x100.png \
