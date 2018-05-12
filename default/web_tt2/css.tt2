@@ -760,7 +760,8 @@ main h1.robot_name{
 }
 
 
-@media only screen and (min-width: 641px) {
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
     /* aside menu */
     aside {
         font-size: 0.9em;
@@ -2126,7 +2127,8 @@ nav menu form{
     font-size:13px;
 }
 
-@media only screen and (min-width: 641px) {
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
     /* top-bar */
     [%# FIXME:seems not used ~%]
     .top-bar-section ul li > a {
@@ -2377,7 +2379,8 @@ span.fa-stack i.fa-plus-circle {
 }
 
 
-@media screen and (min-width: 0px) and (max-width: 419px) {
+[%~# 419px %]
+@media screen and (min-width: 0px) and (max-width: 26.125em) {
     h1 {
             font-size: 1.6em;
     }
@@ -2407,7 +2410,8 @@ span.fa-stack i.fa-plus-circle {
     }
 }
 
-@media screen and (min-width: 420px) and (max-width: 779px) {
+[%# 420px - 779px ~%]
+@media screen and (min-width: 26.1875em) and (max-width: 48.625em) {
     h1 {
             font-size: 1.6em;
     }
@@ -2431,7 +2435,8 @@ span.fa-stack i.fa-plus-circle {
     }
 }
 
-@media only screen and (min-width: 641px){
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
     #sympa-top-bar menu ul li a:not(.button) {
       /* padding: 0 10px; */
         padding-top: 0;
@@ -2458,7 +2463,8 @@ span.fa-stack i.fa-plus-circle {
         white-space: nowrap;
     }
 }
-@media only screen and (max-width: 640px){
+[%# 640px ~%]
+@media only screen and (max-width: 39.9375em) {
     /* title bar */
     .title-bar {
         height: 45px;
@@ -2522,7 +2528,8 @@ span.fa-stack i.fa-plus-circle {
         padding: 0;
     }
 }
-@media only screen and (max-width: 768px){
+[%# 768px ~%]
+@media only screen and (max-width: 47.9375em) {
     table caption {
     display: none;
     }
@@ -2540,8 +2547,9 @@ span.fa-stack i.fa-plus-circle {
         font-size:1em;
     }
 }
-[%# FIXME: Used only by mobile mode (max-width: 640px) ~%]
-@media only screen and (max-width: 1025px){
+[%# FIXME: Used only by mobile mode (max-width: 39.9375em) (640px) ~%]
+[%# 1025px ~%]
+@media only screen and (max-width: 64em) {
     .title-bar img {
       height: 45px;
     }
