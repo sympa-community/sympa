@@ -47,7 +47,6 @@ nobase_static_DATA = \
 	external/foundation/css/foundation.min.css \
 	external/foundation/css/foundation-float.css \
 	external/foundation/css/foundation-float.min.css \
-	external/foundation/js/foundation.min.js \
 	external/foundation/js/vendor/foundation.js \
 	external/foundation/js/vendor/foundation.min.js \
 	external/foundation/js/vendor/what-input.js \
