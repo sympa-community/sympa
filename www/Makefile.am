@@ -34,7 +34,6 @@ nobase_static_DATA = \
 	external/jquery-migrate.js \
 	external/jquery-ui.css \
 	external/jquery-ui.js \
-	external/modernizr.custom.js \
 	external/font-awesome/css/font-awesome.css \
 	external/font-awesome/css/font-awesome.min.css \
 	external/font-awesome/fonts/FontAwesome.otf \
