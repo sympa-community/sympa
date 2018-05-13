@@ -2106,6 +2106,54 @@ nav menu form{
 .is-dropdown-submenu {
     border: 0;
 }
+[%# Color of submenu icons ~%]
+[% IF 0 # We use default of F6 for accordion menu. ~%]
+.accordion-menu .is-accordion-submenu-parent:not(.has-submenu-toggle) > a:after,
+.submenu-toggle:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+[%~ END # IF 0 %]
+.drilldown .is-drilldown-submenu-parent > a:after,
+.drilldown.align-left .is-drilldown-submenu-parent > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.drilldown.align-right .is-drilldown-submenu-parent > a:after,
+.drilldown .js-drilldown-back > a:before {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu > li.is-dropdown-submenu-parent > a:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.vertical > li.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.vertical > li.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.dropdown.menu.medium-horizontal > li.is-dropdown-submenu-parent > a:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.medium-vertical > li.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.medium-vertical > li.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.dropdown.menu.large-horizontal > li.is-dropdown-submenu-parent > a:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.large-vertical > li.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.large-vertical > li.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.is-dropdown-submenu .is-dropdown-submenu-parent.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.is-dropdown-submenu .is-dropdown-submenu-parent.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
 
 #sympa-top-bar,
 #sympa-top-bar menu ul li,
