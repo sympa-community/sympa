@@ -76,8 +76,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
@@ -91,7 +91,7 @@ time, mark, audio, video {
 }
 
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, nav, section {
 	display: block;
 }
@@ -343,7 +343,7 @@ label.inlineLabel {
 label[for="connected_only"] {
 	display: inline;
 }
- 
+
 input {
 	/*border: 1px solid [% color_12 %];
 	border-radius: 3px;
@@ -602,10 +602,10 @@ table {
     border-spacing: 0;
     box-shadow: 0 1px 1px #ccc;
 }
-table.listOfItems tr { 
+table.listOfItems tr {
     height:2rem;
 }
-table.listOfItems td{ 
+table.listOfItems td{
     vertical-align:middle;
     text-align:center;
 }
@@ -627,13 +627,13 @@ table.listOfItems td form fieldset button.action, table.listOfItems td button.ac
 table.listOfItems td form fieldset button.action:hover, table.listOfItems td button.action:hover {
 	color: [% color_6 %];
 }
-table.ls_template th{ 
+table.ls_template th{
     border-right: 1px solid [% color_7 %];
 }
-table.ls_template th[colspan]{ 
+table.ls_template th[colspan]{
     border-bottom: 1px solid [% color_7 %];
 }
-table.ls_template td{ 
+table.ls_template td{
     border-right: 1px solid [% color_9 %];
 }
 
@@ -749,7 +749,7 @@ main{
     [% ELSE %]
     min-height:550px;
     [% END %]
-}  
+}
 main.home{
     min-height:inherit;
     text-align: justify;
@@ -1103,7 +1103,7 @@ h4.letter {
 
 [% IF 0 # No longer used. ~%]
 form#logs_form label,
-form.bold_label label { 
+form.bold_label label {
 }
 #Canvas {
 	min-height: 95%;
@@ -1128,7 +1128,7 @@ form.bold_label label {
 
 #Title {
 	text-align: left;
-	font-size:1.8em; 
+	font-size:1.8em;
 	font-weight: bold;
 	padding:1em 0 0 0;
 	z-index:520;
@@ -1152,23 +1152,23 @@ ul#MainMenuLinks li {
 	padding-right: 3px;
 }
 
-td.adminmenu { 
+td.adminmenu {
 	text-align: center;
 }
 
-.text_left { 
+.text_left {
 	text-align: left;
 }
 
-.text_right { 
+.text_right {
 	text-align: right!important;
 }
 
-td.text_right { 
+td.text_right {
 	text-align: right;
 }
 
-.text_justify { 
+.text_justify {
 	text-align: justify;
 }
 
@@ -1189,26 +1189,26 @@ td.text_right {
 	margin-left: 1em;
 }
 
-.smaller { 
+.smaller {
 	font-size: smaller;
 }
 
-.larger { 
+.larger {
 	font-size: larger;
 }
 
 [% IF 0 # No longer used. ~%]
-span.center { 
+span.center {
 	text-align: center;
 }
 [%~ END # IF 0 ~%]
 
-table td.review_cels { 
+table td.review_cels {
 	text-align: center;
 	padding:0 0.2em;
 }
 
-table td.review_cels_mail { 
+table td.review_cels_mail {
 	text-align: left;
 	padding:0 0 0 0.2em;
 }
@@ -1219,7 +1219,7 @@ table td.review_cels_mail {
 }
 
 #home_rss_news input {
-	border: 1px solid; 
+	border: 1px solid;
 	padding:0.05em 1em;
 	text-decoration: none;
 	font-size: 0.9em;
@@ -1234,16 +1234,16 @@ table td.review_cels_mail {
 	border-radius:10px;
 }
 
-#home_search_list { 
+#home_search_list {
 	clear: both;
 }
 
-#home_search_list form fieldset { 
+#home_search_list form fieldset {
 	display: inline;
 	vertical-align: top;
 }
 
-#home_container { 
+#home_container {
 	padding: 10px;
 	border: 1px dashed;
 	-moz-border-radius:4px;
@@ -1271,7 +1271,7 @@ table td.review_cels_mail {
 }
 
 [%# No longer used.
-.edit_list_request_enum{ 
+.edit_list_request_enum{
 	margin: 0 0 1rem;
 	padding-left: 1em;
 	text-align: left;
@@ -1280,7 +1280,7 @@ table td.review_cels_mail {
 
 ~%]
 [%# No longer used.
-.edit_list_request_enum span.divider:first-child { 
+.edit_list_request_enum span.divider:first-child {
 	display:none;
 }
 ~%]
@@ -1294,12 +1294,12 @@ table td.review_cels_mail {
 */
 ~%]
 
-.list_admin { 
+.list_admin {
 	font-size: 1em;
 }
 [%~ END # IF 0 ~%]
 
-.mailing_lists_menu { 
+.mailing_lists_menu {
 	padding: 10px;
 	margin: 5px 25px 5px 25px;
 	float: left;
@@ -1307,16 +1307,16 @@ table td.review_cels_mail {
 	text-align: left;
 }
 
-ul.no_style { 
+ul.no_style {
 	list-style: none;
 	margin: 0;
 }
 
-.align_top { 
+.align_top {
 	vertical-align: top;
 }
 
-#template_editor { 
+#template_editor {
 	margin-top: 10px;
 }
 
@@ -1329,7 +1329,7 @@ ul.no_style {
 }
 
 
-#color_table tr { 
+#color_table tr {
     background-color: [% color_7 %]!important;
 }
 
@@ -1340,11 +1340,11 @@ ul.no_style {
 	margin-bottom: 20px;
 }
 
-#help li { 
+#help li {
 	padding: 1px;
 }
 
-#help_editfile, #blaklist { 
+#help_editfile, #blaklist {
 	margin: 1em;
 }
 
@@ -1355,18 +1355,18 @@ ul.no_style {
 }
 [%~ END # IF 0 ~%]
 
-ul#set_pending_radio { 
+ul#set_pending_radio {
 	display: inline;
 	list-style-type: none;
 }
 
 ul#set_pending_radio li {
-	display: inline; 
-	margin-right: 1em; 
+	display: inline;
+	margin-right: 1em;
 	margin-left: 1em;
-} 
+}
 
-form#bold_label input { 
+form#bold_label input {
 	margin-left: 5px;
 	margin-top: 5px;
 }
@@ -1378,33 +1378,33 @@ form input[type="checkbox"] {
 }
 
 [% IF 0 # No longer used. ~%]
-#global_mailing_lists { 
+#global_mailing_lists {
 	text-align: center;
 }
 
-#show_cert { 
+#show_cert {
 	border: 1px solid;
 }
 
-#show_cert ul { 
+#show_cert ul {
 	list-style-type: none;
 	padding-top: 5px;
 	margin-bottom: 5px;
 }
 
-#show_cert ul li { 
+#show_cert ul li {
 	line-height: 1em;
 	padding-left: 3px;
 }
 [%~ END # IF 0 ~%]
 
-#cp_template { 
+#cp_template {
 	border: 1px solid;
 	padding: 3px;
 	width: 410px;
 }
 
-#cp_template fieldset { 
+#cp_template fieldset {
 	display: inline;
 	border: 1px solid;
 	vertical-align: top;
@@ -1412,11 +1412,11 @@ form input[type="checkbox"] {
 }
 
 #cp_template legend,
-#cp_template label { 
+#cp_template label {
 	padding-left: 3px;
 }
 
-pre.code { 
+pre.code {
 	font-family: monospace;
 	border: 1px dotted;
 	padding: 0.5em;
@@ -1472,7 +1472,7 @@ footer img {
 
 [% IF 0 # No longer used. ~%]
 .ContentBlock {
-    margin-top:1rem; 
+    margin-top:1rem;
     text-align: left;
 }
 [%~ END # IF 0 ~%]
@@ -1506,7 +1506,7 @@ a img.Pictures {
 	height:30px;
 }
 
-#pictures_block { 
+#pictures_block {
 	text-align: center;
 	height: 120px ;
 }
@@ -1516,7 +1516,7 @@ a img.Pictures {
 	float: left;
 }
 
-#large_picture { 
+#large_picture {
 	height: 80px;
 }
 
@@ -1724,7 +1724,7 @@ h7 strong {
 }
  */
 
-#ErrorMsg { 
+#ErrorMsg {
     position:absolute;
     width:60%;
     margin:20% 19%;
@@ -1736,12 +1736,12 @@ h7 strong {
     background-color:[% color_7 %];
     border-radius: 5px;
 }
-#ErrorMsg .alert-box, #ephemeralMsg .alert-box { 
+#ErrorMsg .alert-box, #ephemeralMsg .alert-box {
     margin-bottom:0;
     padding-top:1.5rem!important;
     padding-bottom:1.5rem!important;
 }
-#ErrorMsg .alert-box form{ 
+#ErrorMsg .alert-box form{
     margin-bottom:0;
 }
 #ErrorMsg input[type="button"]{
@@ -1871,7 +1871,7 @@ div.admin_cmd a {
 
 /* Calendar in mhonarc-ressources.tt2 */
 ul.calendar {
-	margin-left:0!important;	
+	margin-left:0!important;
 	padding-left:0!important;
 }
 
@@ -1880,7 +1880,7 @@ ul.calendar a {
 }
 
 ul.calendar li {
-	list-style: none; 
+	list-style: none;
 	display: inline;
 	padding: 0px 1px 0px 2px;
 	line-height: 2em;
@@ -1928,7 +1928,7 @@ p {
 	text-indent: 0px;
 }
 
-p.spacer { 
+p.spacer {
 	clear: both;
 }
 
@@ -1952,7 +1952,7 @@ span.retraitita {
 /* end notices in help. */
 
 a.input {
-	border: 1px solid; 
+	border: 1px solid;
 	padding: 0.2em 0.3em;
 	margin-left:0.2em;
 	text-decoration: none;
@@ -1987,10 +1987,10 @@ input.textbox {
 	padding: 3px;
 }
 
-input.button { 
+input.button {
 	border: 1px solid;
 	padding: 0px 2px;
-	margin:2px; 
+	margin:2px;
 }
 
 [% IF 0 # No longer used. ~%]
@@ -2031,17 +2031,17 @@ input.button {
 }
 [%~ END # IF 0 ~%]
 
-span.bottom_page, p.bottom_page{ 
+span.bottom_page, p.bottom_page{
     font-size: 0.8em;
     font-weight:bold;
 }
 
-.top { 
+.top {
 	float:right;
 	margin:0.5em 1em 1.5em 1em;
 }
 
-.noborder { 
+.noborder {
 	border: none!important;
 }
 
@@ -2644,7 +2644,7 @@ span.fa-stack i.fa-plus-circle {
     margin-left: 0;
     padding-left: 0;
     }
-    table.listOfItems tr:nth-of-type(1) { 
+    table.listOfItems tr:nth-of-type(1) {
         height:2rem!important;
     }
     .table-wrapper table th, .table-wrapper table td{
